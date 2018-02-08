@@ -5,7 +5,9 @@ import * as actions from './actions';
 
 let reducers = {};
 
-export type UIState = {}
+export type UIState = {
+   keyword?:string   
+}
 
 const DEFAULT_STATE: UIState = {}
 

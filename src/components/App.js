@@ -3,9 +3,10 @@ import React, { Component } from 'react';
 import SearchBar from 'material-ui-search-bar'
 import Paper from 'material-ui/Paper';
 import {MenuItem} from 'material-ui/Menu';
+import Button from 'material-ui/Button';
 import List,{ListItemText,ListItem} from 'material-ui/List';
 import Typography from 'material-ui/Typography';
-// import Loader from 'react-loader';
+import Loader from 'react-loader';
 
 import './App.css';
 
@@ -18,6 +19,7 @@ type Props = {
    },
    searches:{[string]:{}},
    hostFailure?:string,
+   loading?:boolean,
    keyword?:string,
    onSearchingKeyword:(k:string)=>void
 }
@@ -52,12 +54,12 @@ class App extends Component<Props,State> {
    }
 
    render() {
-      console.log("render",this.state,this.props)
+      // console.log("render",this.props,this.state)
 
       let message = [];
-      let results = this.props.searches[this.props.keyword];
+      let results ;
 
-      if(results)
+      if(this.props.keyword && (results = this.props.searches[this.props.keyword]))
       {
          let n = 0 ;
          if(results.numResults == 0) {
@@ -71,14 +73,14 @@ class App extends Component<Props,State> {
             r = r.dataRow
             n ++;
             message.push(
-               <MenuItem style={{marginBottom:"15px",paddingLeft:"0"}}>
+               <Button key={n} style={{padding:"0",marginBottom:"15px",width:"100%",textTransform:"none"}}>
                   <ListItem style={{paddingLeft:"0"}}>
                      <div style={{width:"30px",textAlign:"right"}}>{n}</div>
                      <ListItemText style={{width:"calc(100% - 30px)",height:"auto"}}
                         primary={r.lit.replace(/@[a-z-]+$/,"").replace(/^(.{80}[^ ]+)(.*)$/,"$1 (...)")}
                         secondary={r.s.replace(/.*> ([^<]+)<(.*)/,"$1")} />
                   </ListItem>
-               </MenuItem>
+               </Button>
             )
             /*
             <Typography>{r.lit}</Typography>
@@ -88,6 +90,7 @@ class App extends Component<Props,State> {
 
       return (
          <div className="App">
+            { this.props.loading && <Loader/> }
             <SearchBar
                disabled={this.props.hostFailure}
                onChange={(value:string) => { this.setState({keyword:value, dataSource: [ value, "possible suggestion","another possible suggestion"]}); } }

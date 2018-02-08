@@ -6,7 +6,7 @@ import * as actions from './actions';
 let reducers = {};
 
 export type DataState = {
-   searches:{[keyword:string]:{}|null},
+   searches:{keyword?:string,[keyword:string]:{}|null},
    failures: {[string]: string},
    config: { //[string]: {}},
       ldspdi:{
@@ -81,7 +81,8 @@ export const searchingKeyword = (state: DataState, action: Action) => {
         ...state,
         searches:{
            ...state.searches,
-           ... action.payload ? {[action.payload]:null}:{}
+           ... action.payload ? {[action.payload]:null,keyword:action.payload}:{}
+
         }
     }
 }

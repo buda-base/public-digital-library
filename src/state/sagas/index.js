@@ -46,11 +46,12 @@ export function* watchChoosingHost() {
 
 export function* searchKeyword(key) {
 
-   console.log("search",key);
+   // console.log("search",key);
 
    yield put(dataActions.loading(key, true));
    try {
       const result = yield call([api, api.getResults], key);
+      yield put(dataActions.loading(key, false));
       yield put(dataActions.foundResults(key, result));
       yield put(uiActions.showResults(key));
 

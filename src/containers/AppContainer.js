@@ -12,9 +12,11 @@ const mapStateToProps = (state) => {
    let hostFailure = state.data.failures.host ;
    let config = state.data.config ;
    let searches = state.data.searches ;
-   let keyword = state.ui.keyword ;
+   let keyword = state.data.searches.keyword
+   let loading ;
+   if(keyword) loading = state.data.loading[keyword] ;
 
-    return { config, hostFailure, searches, keyword }
+   return { config, hostFailure, searches, keyword, loading }
 
 };
 
