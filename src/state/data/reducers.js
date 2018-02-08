@@ -8,15 +8,25 @@ let reducers = {};
 export type DataState = {
    searches:{[keyword:string]:{}|null},
    failures: {[string]: string},
-   config: {[string]: {}},
+   config: { //[string]: {}},
+      ldspdi:{
+         endpoints:string[],
+         index:number
+      }
+   },
    loading: {[string]: boolean}
 }
 
 const DEFAULT_STATE: DataState = {
    searches:{},
    failures:{},
-   config:{},
-   loading:{}
+   loading:{},
+   config: {
+      ldspdi:{
+         endpoints:["http://buda1.bdrc.io:13280"],
+         index:0
+      }
+   },
 }
 
 export const loadedConfig = (state: DataState, action: Action) => {
@@ -41,8 +51,6 @@ reducers[actions.TYPES.hostError] = hostError;
 
 
 export const chosenHost = (state: DataState, action: Action) => {
-
-console.log(state);
 
     state = {
         ...state,

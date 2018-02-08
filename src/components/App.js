@@ -10,7 +10,12 @@ import Typography from 'material-ui/Typography';
 import './App.css';
 
 type Props = {
-   config:{},
+   config:{
+      ldspdi:{
+         endpoints:string[],
+         index:number
+      }
+   },
    searches:{[string]:{}},
    hostFailure?:string,
    keyword?:string,
@@ -70,7 +75,7 @@ class App extends Component<Props,State> {
                   <ListItem style={{paddingLeft:"0"}}>
                      <div style={{width:"30px",textAlign:"right"}}>{n}</div>
                      <ListItemText style={{width:"calc(100% - 30px)",height:"auto"}}
-                        primary={r.lit.replace(/@[a-z-]+$/,"").replace(/^(.{80}[^ ]+)(.*)$/,"$1 (...)")} 
+                        primary={r.lit.replace(/@[a-z-]+$/,"").replace(/^(.{80}[^ ]+)(.*)$/,"$1 (...)")}
                         secondary={r.s.replace(/.*> ([^<]+)<(.*)/,"$1")} />
                   </ListItem>
                </MenuItem>

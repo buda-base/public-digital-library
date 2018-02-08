@@ -152,7 +152,7 @@ export default class API {
   }
 
    async getResults(key: string): Promise<[] | null> {
-     let data: [];
+     let data = [];
 
      try {
          data = await this._getResultsData(key)
