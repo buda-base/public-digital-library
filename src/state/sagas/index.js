@@ -12,7 +12,7 @@ function* initiateApp() {
    try {
       const config = yield call([api, api.loadConfig]);
       yield put(dataActions.loadedConfig(config));
-      yield put(dataActions.choosingHost(config.ldspdi.endpoints[config.ldspdi.index]));
+      yield put(dataActions.choosingHost(config.ldspdi.endpoints[config.ldspdi.index]));      
    } catch(e) {
       console.log('initiateApp error: %o', e);
       // TODO: add action for initiation failure

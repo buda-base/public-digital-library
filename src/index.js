@@ -24,6 +24,7 @@ import rootSaga from './state/sagas'
 import { composeWithDevTools } from 'redux-devtools-extension';
 
 import rootReducer from './state/reducers';
+import * as data from './state/data/actions' ;
 
 
 const logger = store => next => action => {
@@ -77,3 +78,9 @@ ReactDOM.render(
 registerServiceWorker();
 
 //store.dispatch(helloWorld());
+setTimeout(function()
+{
+   store.dispatch(data.searchingKeyword("'od zer'"))
+},
+   500
+)

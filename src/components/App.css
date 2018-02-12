@@ -1,6 +1,10 @@
 /* CSS debug mode */
 /* * {background-color:rgba(255,0,128,0.1);} */
 
+.checkB,.checkedB { border-radius:50%; border:2px solid #666;width:22px;height:22px;display:inline-block; }
+.checkedB {}
+
+
 .App {
   text-align: center;
 }

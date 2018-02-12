@@ -106,7 +106,7 @@ export default class API {
           this._fetch( url,
           {// header pour accéder aux résultat en JSON !
             method: 'POST',
-            body:"searchType=BLMP&"+param+"L_NAME=\""+key+"\"",
+            body:"searchType=Res_withFacet&"+param+"L_NAME=\""+key+"\"",
             headers:new Headers({"Content-Type": "application/x-www-form-urlencoded"})
          }).then((response) => {
 
