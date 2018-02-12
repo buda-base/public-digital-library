@@ -121,7 +121,7 @@ class App extends Component<Props,State> {
                      control={
                         <Checkbox
                            icon={<span class='checkB'/>}
-                           checkedIcon={<span class='checkedB'><CheckCircle style={{color:"#444",margin:"-1px 0 0 -1px"}}/></span>} />
+                           checkedIcon={<span class='checkedB'><CheckCircle style={{color:"#444",margin:"-3px 0 0 -3px",width:"26px",height:"26px"}}/></span>} />
                      }
                      label={typ} />
                   </div>
