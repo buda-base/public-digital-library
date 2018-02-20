@@ -10,7 +10,7 @@ export interface APIResponse {
 
 type APIOptions = {
     server?: string,
-    fetch?: (req: string) => Promise<*>
+    fetch?: (req: string, args?:{}) => Promise<*>
 }
 
 export class ResourceNotFound extends Error {};
@@ -19,7 +19,7 @@ export class InvalidResource extends Error {};
 
 export default class API {
     _server: string;
-    _fetch: (req: string) => Promise<APIResponse>
+    _fetch: (req: string, args?:{}) => Promise<APIResponse>
 
     constructor(options: ?APIOptions) {
         if (options) {
@@ -31,7 +31,7 @@ export default class API {
     }
 
 
-     getURLContents(url: string, minSize : boolean = true): Promise<string> {
+     async getURLContents(url: string, minSize : boolean = true): Promise<string> {
          let text;
          return new Promise((resolve, reject) => {
 
@@ -99,14 +99,28 @@ export default class API {
       })
     }
 
-   getSearchContents(url: string, key:string, param:string="L_LANG=@bo-x-ewts&I_LIM=50&"): Promise<[]> {
-      let text;
+
+   async getQueryResults(url: string, key:string, param:{}={}): Promise<{}>
+   {
+
+
+      let res = {}
+      param = { searchType:"Res_withFacet",L_LANG:"@bo-x-ewts",I_LIM:5000, ...param }
+
+      console.log("query",param);
+
+      let body = Object.keys(param).map( (k) => k+"="+param[k] ).join('&') +"&L_NAME="+key
+      //searchType=Res_withFacet&"+param+"L_NAME=\""+key+"\"",
+
+      console.log("body",body);
+
       return new Promise((resolve, reject) => {
+
 
           this._fetch( url,
           {// header pour accéder aux résultat en JSON !
             method: 'POST',
-            body:"searchType=Res_withFacet&"+param+"L_NAME=\""+key+"\"",
+            body:body,
             headers:new Headers({"Content-Type": "application/x-www-form-urlencoded"})
          }).then((response) => {
 
@@ -123,27 +137,38 @@ export default class API {
 
               response.text().then((req) => {
 
-                  text = JSON.parse(req) //.results.bindings ;
+                  res = JSON.parse(req) //.results.bindings ;
 
-                  if(text.length === 0) {
-                     throw new InvalidResource('No results found');
-                  }
-
-                  resolve(text);
+                  resolve(res);
               }).catch((e) => {
                  reject(e);
-             });
+              });
           }).catch((e) => {
               reject(e);
           });
-      });
-   }
+       });
+      }
 
    async _getResultsData(key: string): Promise<[] | null> {
       try {
            let config = store.getState().data.config.ldspdi
            let url = config.endpoints[config.index]+"/resource/templates" ;
-           let data = this.getSearchContents(url, key);
+           let data = this.getQueryResults(url, key);
+           // let data = this.getSearchContents(url, key);
+
+           return data ;
+      } catch(e) {
+           throw e;
+      }
+  }
+
+   async getResultsDatatypes(key: string): Promise<{} | null> {
+      try {
+           let config = store.getState().data.config.ldspdi
+           let url = config.endpoints[config.index]+"/resource/templates" ;
+           let data = this.getQueryResults(url, key, {searchType:"Res_allDatatypes"});
+
+           console.log("datatypes",data)
 
            return data ;
       } catch(e) {

@@ -2,6 +2,6 @@
    "ldspdi":
    {
       "endpoints":["http://localhost:8080","http://localhost:13280","http://buda1.bdrc.io:13280"],
-      "index":0
+      "index":2
    }
 }

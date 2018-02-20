@@ -78,9 +78,4 @@ ReactDOM.render(
 registerServiceWorker();
 
 //store.dispatch(helloWorld());
-setTimeout(function()
-{
-   store.dispatch(data.searchingKeyword("'od zer'"))
-},
-   500
-)
+// setTimeout(function(){ store.dispatch(data.searchingKeyword("'od zer")) },  500 )

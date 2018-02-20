@@ -82,6 +82,12 @@ export const loading = (key: string, isLoading: boolean): LoadingAction => {
 TYPES.searchingKeyword = 'SEARCHING_KEYWORD';
 export const searchingKeyword = createAction(TYPES.searchingKeyword);
 
+TYPES.getDatatypes = 'GET_DATATYPES';
+export const getDatatypes = createAction(TYPES.getDatatypes);
+
+TYPES.notGettingDatatypes = 'NOT_GETTING_DATATYPES';
+export const notGettingDatatypes = createAction(TYPES.notGettingDatatypes);
+
 
 export type FoundResultsAction = {
     type: string,
@@ -90,11 +96,22 @@ export type FoundResultsAction = {
         results: []
     }
 }
- 
+
 TYPES.foundResults = 'FOUND_RESULTS';
 export const foundResults = (key: string, results: []): FoundResultsAction => {
     return {
         type: TYPES.foundResults,
+        payload: {
+            key,
+            results
+        }
+    }
+}
+
+TYPES.foundDatatypes = 'FOUND_DATATYPES';
+export const foundDatatypes = (key: string, results: []): FoundResultsAction => {
+    return {
+        type: TYPES.foundDatatypes,
         payload: {
             key,
             results

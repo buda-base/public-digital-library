@@ -38,11 +38,17 @@ type Props = {
    hostFailure?:string,
    loading?:boolean,
    keyword?:string,
-   onSearchingKeyword:(k:string)=>void
+   onSearchingKeyword:(k:string)=>void,
+   onGetDatatypes:(k:string)=>void
 }
 type State = {
+   checked?:string,
+   unchecked?:string,
    keyword:string,
-   dataSource : string[]
+   dataSource : string[],
+   filters:{
+      datatype:string[]
+   }
 }
 
 class App extends Component<Props,State> {
@@ -51,8 +57,10 @@ class App extends Component<Props,State> {
       super(props);
 
       this.requestSearch.bind(this);
+      this.handleCheck.bind(this);
 
       this.state = {
+         filters: {datatype:[]},
          dataSource: [],
          keyword:"",
          collapse:{
@@ -73,17 +81,48 @@ class App extends Component<Props,State> {
       return this.props.config.ldspdi.endpoints[this.props.config.ldspdi.index]
    }
 
+   componentWillUpdate() {
+       if(this.props.keyword && !this.props.gettingDatatypes && !this.props.datatypes)
+       {
+            this.props.onGetDatatypes(this.props.keyword)
+       }
+
+   }
+
+   handleCheck = (ev:Event,lab:string,val:boolean) => {
+
+      console.log("check",lab,val)
+
+      let f = this.state.filters.datatype
+      if(f.indexOf(lab) != -1 && !val) f.splice(f.indexOf(lab),1)
+      else if(f.indexOf(lab) == -1 && val) f.push(lab)
+
+
+      this.setState(
+         {
+            ...this.state,
+            filters:
+            {
+               ...this.state.filters,
+               datatype:f
+            }
+         }
+      )
+   }
+
    render() {
-      // console.log("render",this.props,this.state)
+      console.log("render",this.props,this.state)
+
 
       let message = [];
       let results ;
       let facetList = []
       let types = []
+      let loader ;
 
       if(this.props.keyword && (results = this.props.searches[this.props.keyword]))
       {
-         let n = 0 ;
+         let n = 0, m = 0 ;
          if(results.numResults == 0) {
             message.push(
                <Typography style={{fontSize:"1.5em",maxWidth:'700px',margin:'50px auto',zIndex:0}}>
@@ -91,42 +130,71 @@ class App extends Component<Props,State> {
                </Typography>
             )
          }
-         else for(let r of results.rows)
+         else
          {
-            r = r.dataRow
-            n ++;
-            let lit = r.lit.replace(/@[a-z-]+$/,"") ; /*.replace(/^(.{73}[^ ]+)(.*)$/,"$1 (...)") */
-            let typ = r.f.replace(/.*> ([^<]+)<(.*)/,"$1");
-            let id = r.s.replace(/.*> ([^<]+)<(.*)/,"$1")
-
-            message.push(
-               <Button key={n} style={{padding:"0",marginBottom:"15px",width:"100%",textTransform:"none"}}>
-                  <ListItem style={{paddingLeft:"0",display:"flex"}}>
-                     <div style={{width:"30px",textAlign:"right"}}>{n}</div>
-                     <ListItemText style={{height:"auto",flexGrow:10,flexShrink:10}}
-                        primary={lit }
-                        secondary={typ}
-                     />
-                     <div>{id}</div>
-                  </ListItem>
-               </Button>
-            )
-
-            if(types.indexOf(typ) === -1)
+            if(!this.props.datatypes || !this.props.datatypes.rows)
             {
-               types.push(typ);
-               facetList.push(
-                  <div style={{width:"150px",textAlign:"left"}}>
-                  <FormControlLabel
-                     control={
-                        <Checkbox
-                           icon={<span class='checkB'/>}
-                           checkedIcon={<span class='checkedB'><CheckCircle style={{color:"#444",margin:"-3px 0 0 -3px",width:"26px",height:"26px"}}/></span>} />
-                     }
-                     label={typ} />
-                  </div>
-               )
+               loader = <Loader loaded={false} className="datatypesLoader" style={{position:"relative"}}/>
+
             }
+            else if( this.props.datatypes.rows) for(let r of this.props.datatypes.rows){
+
+               r = r.dataRow
+               let typ = r.f.replace(/.*> ([^<]+)<(.*)/,"$1");
+
+               if(typ != "" && types.indexOf(typ) === -1)
+               {
+                  m++;
+                  types.push(typ);
+
+                  // console.log("r",r)
+
+                  let value = typ
+
+                  let box =
+                  <div key={m} style={{width:"150px",textAlign:"left"}}>
+                     <FormControlLabel
+                        control={
+                           <Checkbox
+                              //defaultChecked={true}
+                              icon={<span className='checkB'/>}
+                              checkedIcon={<span className='checkedB'><CheckCircle style={{color:"#444",margin:"-3px 0 0 -3px",width:"26px",height:"26px"}}/></span>}
+                              onChange={(event, checked) => this.handleCheck(event,value,checked)} />
+
+                        }
+                        label={typ}
+                     />
+                     </div>
+
+                  facetList.push(box)
+               }
+            }
+
+            for(let r of results.rows)
+            {
+               r = r.dataRow
+               let lit = r.lit.replace(/@[a-z-]+$/,"") ; /*.replace(/^(.{73}[^ ]+)(.*)$/,"$1 (...)") */
+               let typ = r.f.replace(/.*> ([^<]+)<(.*)/,"$1");
+               let id = r.s.replace(/.*> ([^<]+)<(.*)/,"$1")
+
+               if(this.state.filters.datatype.length == 0 || this.state.filters.datatype.indexOf(typ) !== -1)
+               {
+                  n ++;
+                  message.push(
+                     <Button key={n} style={{padding:"0",marginBottom:"15px",width:"100%",textTransform:"none"}}>
+                        <ListItem style={{paddingLeft:"0",display:"flex"}}>
+                           <div style={{width:"30px",textAlign:"right"}}>{n}</div>
+                           <ListItemText style={{height:"auto",flexGrow:10,flexShrink:10}}
+                              primary={lit }
+                              secondary={typ}
+                           />
+                           <div>{id}</div>
+                        </ListItem>
+                     </Button>
+                  )
+               }
+            }
+
             /*
             <Typography>{r.lit}</Typography>
             */
@@ -136,10 +204,26 @@ class App extends Component<Props,State> {
       const { classes } = this.props;
 
       return (
+<div>
+
+         {/* // embed UniversalViewer
+            <div
+            className="uv"
+            data-locale="en-GB:English (GB),cy-GB:Cymraeg"
+            data-config="/config.json"
+            data-uri="https://eap.bl.uk/archive-file/EAP676-12-4/manifest"
+            data-collectionindex="0"
+            data-manifestindex="0"
+            data-sequenceindex="0"
+            data-canvasindex="0"
+            data-zoom="-1.0064,0,3.0128,1.3791"
+            data-rotation="0"
+            style={{width:"100%",height:"calc(100vh)",backgroundColor: "#000"}}/> */}
+
          <div className="App" style={{display:"flex"}}>
             <div className="SidePane" style={{width:"25%",paddingTop:"150px"}}>
-               { message.length > 0 &&
-                  <div style={{width:"333px",float:"right"}}>
+               { this.props.datatypes &&
+                  <div style={{width:"333px",float:"right",position:"relative"}}>
                      <Typography style={{fontSize:"30px",marginBottom:"20px",textAlign:"left"}}>Refine Your Search</Typography>
                      <ListItem
                         style={{display:"flex",justifyContent:"space-between",padding:"0 20px",borderBottom:"1px solid #bbb",cursor:"pointer"}}
@@ -154,6 +238,7 @@ class App extends Component<Props,State> {
                         >
                         {facetList}
                      </Collapse>
+                     {loader}
                   </div>
                }
             </div>
@@ -195,6 +280,7 @@ class App extends Component<Props,State> {
             <div className="Pane" style={{width:"25%"}}>
             </div>
          </div>
+      </div>
       );
    }
 }

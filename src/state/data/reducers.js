@@ -14,13 +14,16 @@ export type DataState = {
          index:number
       }
    },
-   loading: {[string]: boolean}
+   loading: {[string]: boolean},
+   gettingDatatypes: boolean,
+   datatypes?:boolean|{}
 }
 
 const DEFAULT_STATE: DataState = {
    searches:{},
    failures:{},
    loading:{},
+   gettingDatatypes:false,
    config: {
       ldspdi:{
          endpoints:["http://buda1.bdrc.io:13280"],
@@ -79,6 +82,8 @@ reducers[actions.TYPES.chosenHost] = chosenHost;
 export const searchingKeyword = (state: DataState, action: Action) => {
     return {
         ...state,
+        gettingDatatypes:false,
+        datatypes:null,
         searches:{
            ...state.searches,
            ... action.payload ? {[action.payload]:null,keyword:action.payload}:{}
@@ -87,6 +92,23 @@ export const searchingKeyword = (state: DataState, action: Action) => {
     }
 }
 reducers[actions.TYPES.searchingKeyword] = searchingKeyword;
+
+export const getDatatypes = (state: DataState, action: Action) => {
+    return {
+        ...state,
+        gettingDatatypes:true,
+        datatypes:true
+    }
+}
+reducers[actions.TYPES.getDatatypes] = getDatatypes;
+
+export const notGettingDatatypes = (state: DataState, action: Action) => {
+    return {
+        ...state,
+        gettingDatatypes:false
+    }
+}
+reducers[actions.TYPES.notGettingDatatypes] = notGettingDatatypes;
 
 
 export const loading = (state: DataState, action: actions.LoadingAction) => {
@@ -114,6 +136,14 @@ export const foundResults = (state: DataState, action: actions.FoundResultsActio
 }
 reducers[actions.TYPES.foundResults] = foundResults;
 
+export const foundDatatypes = (state: DataState, action: actions.FoundResultsAction) => {
+
+      return {
+      ...state,
+      datatypes : action.payload.results
+   }
+}
+reducers[actions.TYPES.foundDatatypes] = foundDatatypes;
 
 // Data Reducer
 const reducer = createReducer(DEFAULT_STATE, reducers);

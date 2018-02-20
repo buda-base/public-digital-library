@@ -12,7 +12,7 @@ function* initiateApp() {
    try {
       const config = yield call([api, api.loadConfig]);
       yield put(dataActions.loadedConfig(config));
-      yield put(dataActions.choosingHost(config.ldspdi.endpoints[config.ldspdi.index]));      
+      yield put(dataActions.choosingHost(config.ldspdi.endpoints[config.ldspdi.index]));
    } catch(e) {
       console.log('initiateApp error: %o', e);
       // TODO: add action for initiation failure
@@ -44,6 +44,20 @@ export function* watchChoosingHost() {
    );
 }
 
+export function* getDatatypes(key) {
+
+   try {
+      const datatypes = yield call([api, api.getResultsDatatypes], key);
+
+      yield put(dataActions.foundDatatypes(key,datatypes));
+
+   } catch(e) {
+      yield put(dataActions.searchFailed(key, e.message));
+      yield put(dataActions.notGettingDatatypes());
+   }
+
+}
+
 export function* searchKeyword(key) {
 
    // console.log("search",key);
@@ -51,6 +65,7 @@ export function* searchKeyword(key) {
    yield put(dataActions.loading(key, true));
    try {
       const result = yield call([api, api.getResults], key);
+
       yield put(dataActions.loading(key, false));
       yield put(dataActions.foundResults(key, result));
       yield put(uiActions.showResults(key));
@@ -69,12 +84,21 @@ export function* watchSearchingKeyword() {
    );
 }
 
+export function* watchGetDatatypes() {
+
+   yield takeLatest(
+      dataActions.TYPES.getDatatypes,
+      (action) => getDatatypes(action.payload)
+   );
+}
+
 /** Root **/
 
 export default function* rootSaga() {
    yield all([
       watchInitiateApp(),
       watchChoosingHost(),
+      watchGetDatatypes(),
       watchSearchingKeyword()
    ])
 }
