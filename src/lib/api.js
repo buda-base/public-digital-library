@@ -149,7 +149,7 @@ export default class API {
        });
       }
 
-   async _getResultsData(key: string): Promise<[] | null> {
+   async _getResultsData(key: string): Promise<{} | null> {
       try {
            let config = store.getState().data.config.ldspdi
            let url = config.endpoints[config.index]+"/resource/templates" ;
@@ -176,7 +176,7 @@ export default class API {
       }
   }
 
-   async getResults(key: string): Promise<[] | null> {
+   async getResults(key: string): Promise<{} | null> {
      let data = [];
 
      try {

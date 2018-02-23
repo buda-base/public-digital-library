@@ -26,6 +26,10 @@ import { composeWithDevTools } from 'redux-devtools-extension';
 import rootReducer from './state/reducers';
 import * as data from './state/data/actions' ;
 
+import makeMainRoutes from './routes'
+import history from './history'
+import qs from 'query-string'
+
 
 const logger = store => next => action => {
   console.group(action.type)
@@ -56,7 +60,10 @@ export default store ;
 
 sagaMiddleware.run(rootSaga);
 
-store.dispatch(initiateApp());
+//const parsed = qs.parse(history.location.search);
+//console.log(parsed);
+
+store.dispatch(initiateApp(qs.parse(history.location.search)));
 
 const theme = createMuiTheme({
     palette: {
@@ -66,12 +73,7 @@ const theme = createMuiTheme({
 });
 
 ReactDOM.render(
-    // setup redux store
-    <Provider store={store}>
-        <MuiThemeProvider theme={theme}>
-            <AppContainer />
-        </MuiThemeProvider>
-    </Provider>,
+    makeMainRoutes(),
     document.getElementById('root')
 );
 

@@ -15,6 +15,7 @@ import Checkbox from 'material-ui/Checkbox';
 import FormControlLabel from 'material-ui/Form/FormControlLabel';
 import { withStyles } from 'material-ui/styles';
 import gray from 'material-ui/colors/green';
+import { Link } from 'react-router-dom'
 
 import './App.css';
 
@@ -38,6 +39,8 @@ type Props = {
    hostFailure?:string,
    loading?:boolean,
    keyword?:string,
+   datatypes:boolean|{},
+   history:{},
    onSearchingKeyword:(k:string)=>void,
    onGetDatatypes:(k:string)=>void
 }
@@ -48,6 +51,9 @@ type State = {
    dataSource : string[],
    filters:{
       datatype:string[]
+   },
+   collapse:{
+      datatype:boolean
    }
 }
 
@@ -74,6 +80,7 @@ class App extends Component<Props,State> {
       this.setState({dataSource:[]})
       console.log("search",this.state)
       this.props.onSearchingKeyword(this.state.keyword)
+      this.props.history.push("/search?q=\""+this.state.keyword+"\"")
    }
 
    getEndpoint():string
@@ -96,7 +103,6 @@ class App extends Component<Props,State> {
       let f = this.state.filters.datatype
       if(f.indexOf(lab) != -1 && !val) f.splice(f.indexOf(lab),1)
       else if(f.indexOf(lab) == -1 && val) f.push(lab)
-
 
       this.setState(
          {
@@ -201,10 +207,10 @@ class App extends Component<Props,State> {
          }
       }
 
-      const { classes } = this.props;
-
       return (
 <div>
+
+   {/* <Link to="/about">About</Link> */}
 
          {/* // embed UniversalViewer
             <div
@@ -248,7 +254,7 @@ class App extends Component<Props,State> {
                   disabled={this.props.hostFailure}
                   onChange={(value:string) => { this.setState({keyword:value, dataSource: [ value, "possible suggestion","another possible suggestion"]}); } }
                   onRequestSearch={this.requestSearch.bind(this)}
-                  value={this.props.hostFailure?"Endpoint error: "+this.props.hostFailure+" ("+this.getEndpoint()+")":this.state.keyword}
+                  value={this.props.hostFailure?"Endpoint error: "+this.props.hostFailure+" ("+this.getEndpoint()+")":this.props.keyword?this.props.keyword.replace(/"/g,""):this.state.keyword}
                   style={{
                      margin: '50px auto 0 auto',
                      maxWidth: "700px"

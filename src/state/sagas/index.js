@@ -8,11 +8,16 @@ import bdrcApi from '../../lib/api';
 
 const api = new bdrcApi();
 
-function* initiateApp() {
+function* initiateApp(params) {
    try {
       const config = yield call([api, api.loadConfig]);
       yield put(dataActions.loadedConfig(config));
       yield put(dataActions.choosingHost(config.ldspdi.endpoints[config.ldspdi.index]));
+
+      // console.log("params",params)
+
+      if(params.q) yield put(dataActions.searchingKeyword(params.q));
+
    } catch(e) {
       console.log('initiateApp error: %o', e);
       // TODO: add action for initiation failure
@@ -20,7 +25,10 @@ function* initiateApp() {
 }
 
 function* watchInitiateApp() {
-   yield takeLatest(INITIATE_APP, initiateApp);
+      yield takeLatest(
+         INITIATE_APP,
+         (action) => initiateApp(action.payload)
+      );
 }
 
 export function* chooseHost(host:string) {
