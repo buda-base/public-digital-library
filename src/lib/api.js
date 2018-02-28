@@ -105,7 +105,7 @@ export default class API {
 
 
       let res = {}
-      param = { searchType:"Res_withFacet",L_LANG:"@bo-x-ewts",I_LIM:5000, ...param }
+      param = { searchType:"Res_withFacet",LG_NAME:"bo-x-ewts",I_LIM:5000, ...param }
 
       console.log("query",param);
 
