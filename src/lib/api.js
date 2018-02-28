@@ -106,12 +106,22 @@ export default class API {
 
       let res = {}
       param = { searchType:"Res_withFacet",LG_NAME:"bo-x-ewts",I_LIM:5000, ...param }
+      if(key.indexOf("\"") === -1) key = "\""+key+"\""
+      param["L_NAME"] = key ;
 
       console.log("query",param);
 
-      if(key.indexOf("\"") === -1) key = "\""+key+"\""
-      let body = Object.keys(param).map( (k) => k+"="+param[k] ).join('&') +"&L_NAME="+key
+      // let body = Object.keys(param).map( (k) => k+"="+param[k] ).join('&') +"&L_NAME="+key
       //searchType=Res_withFacet&"+param+"L_NAME=\""+key+"\"",
+
+      var formData = new FormData();
+      for (var k in param) {
+          formData.append(k, param[k]);
+      }
+      // (using formData directly as body doesn't seem to work...)
+      let body = [...formData.entries()]
+                     .map(e => encodeURIComponent(e[0]) + "=" + encodeURIComponent(e[1]))
+                     .join('&')
 
       console.log("body",body);
 
@@ -122,7 +132,10 @@ export default class API {
           {// header pour accéder aux résultat en JSON !
             method: 'POST',
             body:body,
-            headers:new Headers({"Content-Type": "application/x-www-form-urlencoded"})
+            headers:new Headers({
+               "Content-Type": "application/x-www-form-urlencoded",
+               "Accept": "application/json"
+            })
          }).then((response) => {
 
               if (!response.ok) {
