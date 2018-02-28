@@ -109,6 +109,7 @@ export default class API {
 
       console.log("query",param);
 
+      if(key.indexOf("\"") === -1) key = "\""+key+"\""
       let body = Object.keys(param).map( (k) => k+"="+param[k] ).join('&') +"&L_NAME="+key
       //searchType=Res_withFacet&"+param+"L_NAME=\""+key+"\"",
 
