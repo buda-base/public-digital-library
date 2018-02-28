@@ -187,16 +187,19 @@ class App extends Component<Props,State> {
                {
                   n ++;
                   message.push(
+                     <Link to={"/resource?IRI="+id}>
                      <Button key={n} style={{padding:"0",marginBottom:"15px",width:"100%",textTransform:"none"}}>
-                        <ListItem style={{paddingLeft:"0",display:"flex"}}>
-                           <div style={{width:"30px",textAlign:"right"}}>{n}</div>
-                           <ListItemText style={{height:"auto",flexGrow:10,flexShrink:10}}
-                              primary={lit }
-                              secondary={typ}
-                           />
-                           <div>{id}</div>
-                        </ListItem>
+                           <ListItem style={{paddingLeft:"0",display:"flex"}}>
+                              <div style={{width:"30px",textAlign:"right"}}>{n}</div>
+                              <ListItemText style={{height:"auto",flexGrow:10,flexShrink:10}}
+                                 primary={lit }
+                                 secondary={typ}
+                              />
+                              <div>{id}</div>
+                           </ListItem>
                      </Button>
+                  </Link>
+
                   )
                }
             }

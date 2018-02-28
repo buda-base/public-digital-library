@@ -6,6 +6,7 @@ import history from './history';
 import { MuiThemeProvider, createMuiTheme } from 'material-ui/styles';
 import indigo from 'material-ui/colors/indigo';
 import { Provider } from 'react-redux';
+import ResourceViewerContainer from './containers/ResourceViewerContainer'
 
 import store from './index';
 
@@ -50,16 +51,9 @@ const makeMainRoutes = () => {
         <MuiThemeProvider theme={theme}>
            <Router history={history}>
              <Switch>
-                <Route exact path="/" render={(props) =>
-                   <AppContainer history={history}/> } />
-                <Route path="/search" render={(props) =>
-                         <AppContainer history={history}/> } />
-               <Route path="/resource" render={(props) =>
-                      {
-                        let get = qs.parse(props.location.search)
-                        console.log('qs',get)
-                        return (<div>resource {get.IRI}</div>) ;
-                     } } />
+                  <Route exact path="/" render={(props) => <AppContainer history={history}/> } />
+                  <Route path="/search" render={(props) => <AppContainer history={history}/> } />
+                  <Route path="/resource" render={(props) => <ResourceViewerContainer history={history}/> } />
                   <Route render={(props) => <Redirect404  history={history}/>}/>
                </Switch>
             </Router>

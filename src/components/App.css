@@ -7,6 +7,8 @@
 .SidePane .loader { position:absolute !important;margin-left:50%;margin-top:30px;}
 .datatypesLoader { left:0px !important;top:0 !important;}
 
+.SearchPane a {text-decoration:none}
+
 .App {
   text-align: center;
 }
