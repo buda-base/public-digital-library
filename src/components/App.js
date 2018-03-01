@@ -146,7 +146,7 @@ class App extends Component<Props,State> {
             else if( this.props.datatypes.rows) for(let r of this.props.datatypes.rows){
 
                r = r.dataRow
-               let typ = r.f.replace(/.*> ([^<]+)<(.*)/,"$1");
+               let typ = r.f.value.replace(/^.*?([^/]+)$/,"$1")
 
                if(typ != "" && types.indexOf(typ) === -1)
                {
@@ -179,9 +179,10 @@ class App extends Component<Props,State> {
             for(let r of results.rows)
             {
                r = r.dataRow
-               let lit = r.lit.replace(/@[a-z-]+$/,"") ; /*.replace(/^(.{73}[^ ]+)(.*)$/,"$1 (...)") */
-               let typ = r.f.replace(/.*> ([^<]+)<(.*)/,"$1");
-               let id = r.s.replace(/.*> ([^<]+)<(.*)/,"$1")
+
+               let id = r.s.value.replace(/^.*?([^/]+)$/,"$1")
+               let lit = r.lit.value
+               let typ = r.f.value.replace(/^.*?([^/]+)$/,"$1")
 
                if(this.state.filters.datatype.length == 0 || this.state.filters.datatype.indexOf(typ) !== -1)
                {
