@@ -43,6 +43,41 @@ class Redirect404 extends Component<Props>
    }
 }
 
+type State = { reloaded : boolean }
+
+class IIIFViewer extends Component<{},State>
+{
+   constructor(props)
+   {
+      super(props);
+
+      this.state = { reloaded : false}
+
+   }
+
+   render()
+   {
+      // add reload ?
+      return (
+         // embed UniversalViewer
+           <div
+           className="uv"
+           data-locale="en-GB:English (GB),cy-GB:Cymraeg"
+           data-config="/config.json"
+           data-uri="https://eap.bl.uk/archive-file/EAP676-12-4/manifest"
+           //data-uri="https://eroux.fr/manifest.json"
+           data-collectionindex="0"
+           data-manifestindex="0"
+           data-sequenceindex="0"
+           data-canvasindex="0"
+           data-zoom="-1.0064,0,3.0128,1.3791"
+           data-rotation="0"
+           style={{width:"100%",height:"calc(100vh)",backgroundColor: "#000"}}/>
+      );
+   }
+
+}
+
 const makeMainRoutes = () => {
 
 
@@ -53,6 +88,7 @@ const makeMainRoutes = () => {
              <Switch>
                   <Route exact path="/" render={(props) => <AppContainer history={history}/> } />
                   <Route path="/search" render={(props) => <AppContainer history={history}/> } />
+                  <Route path="/gallery" render={(props) => <IIIFViewer /> }/>
                   <Route path="/resource" render={(props) => <ResourceViewerContainer history={history}/> } />
                   <Route render={(props) => <Redirect404  history={history}/>}/>
                </Switch>
