@@ -20,7 +20,7 @@ class ResourceViewer extends Component<Props,State>
    render()
     {
       console.log("render",this.props,this.state)
-
+//
       let get = qs.parse(this.props.history.location.search)
       console.log('qs',get)
 
@@ -28,7 +28,7 @@ class ResourceViewer extends Component<Props,State>
       return (
          <div style={{overflow:"hidden",textAlign:"center"}}>
             <div style={{height:"50px",fontSize:"26px",display:"flex",justifyContent:"center",alignItems:"center"}}>resource {get.IRI}</div>
-            <Link to="/gallery" style={{textDecoration:"none"}}><Button>View a IIIF Gallery</Button></Link>
+            <Link to="/gallery?manifest=https://eroux.fr/manifest.json" style={{textDecoration:"none"}}><Button>View a IIIF Gallery</Button></Link>
             <iframe style={{width:"calc(100% - 100px)",margin:"50px",height:"calc(100vh - 160px)",border:"none"}} src={"http://purl.bdrc.io/resource/"+get.IRI}/>
          </div>
 

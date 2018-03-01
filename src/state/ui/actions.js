@@ -15,3 +15,11 @@ export const showResults = (key: string): Action => {
       payload: key
    }
 }
+
+TYPES.loadingGallery = 'LOADING_GALLERY';
+export const loadingGallery = (manifest: string): Action => {
+   return {
+      type: TYPES.loadingGallery,
+      payload: manifest
+   }
+}

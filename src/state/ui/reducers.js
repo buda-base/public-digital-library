@@ -18,6 +18,11 @@ export const helloWorld = (state: UIState, action: Action): UIState => {
 };
 reducers[actions.TYPES.helloWorld] = helloWorld
 
+export const loadingGallery = (state: UIState, action: Action): UIState => {
+    return {...state, loadingGallery:action.payload }
+};
+reducers[actions.TYPES.loadingGallery] = loadingGallery
+
 
 export const showResults = (state: UIState, action: Action) => {
 

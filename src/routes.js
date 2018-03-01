@@ -7,8 +7,10 @@ import { MuiThemeProvider, createMuiTheme } from 'material-ui/styles';
 import indigo from 'material-ui/colors/indigo';
 import { Provider } from 'react-redux';
 import ResourceViewerContainer from './containers/ResourceViewerContainer'
+import IIIFViewerContainer from './containers/IIIFViewerContainer'
 
 import store from './index';
+import * as ui from './state/ui/actions'
 
 import qs from 'query-string'
 
@@ -40,57 +42,29 @@ class Redirect404 extends Component<Props>
          <br/>
          Redirecting to homepage
       </div>)
+
    }
 }
 
-type State = { reloaded : boolean }
-
-class IIIFViewer extends Component<{},State>
-{
-   constructor(props)
-   {
-      super(props);
-
-      this.state = { reloaded : false}
-
-   }
-
-   render()
-   {
-      // add reload ?
-      return (
-         // embed UniversalViewer
-           <div
-           className="uv"
-           data-locale="en-GB:English (GB),cy-GB:Cymraeg"
-           data-config="/config.json"
-           data-uri="https://eap.bl.uk/archive-file/EAP676-12-4/manifest"
-           //data-uri="https://eroux.fr/manifest.json"
-           data-collectionindex="0"
-           data-manifestindex="0"
-           data-sequenceindex="0"
-           data-canvasindex="0"
-           data-zoom="-1.0064,0,3.0128,1.3791"
-           data-rotation="0"
-           style={{width:"100%",height:"calc(100vh)",backgroundColor: "#000"}}/>
-      );
-   }
-
-}
 
 const makeMainRoutes = () => {
 
 
-  return (
+   return (
      <Provider store={store}>
         <MuiThemeProvider theme={theme}>
            <Router history={history}>
              <Switch>
-                  <Route exact path="/" render={(props) => <AppContainer history={history}/> } />
-                  <Route path="/search" render={(props) => <AppContainer history={history}/> } />
-                  <Route path="/gallery" render={(props) => <IIIFViewer /> }/>
-                  <Route path="/resource" render={(props) => <ResourceViewerContainer history={history}/> } />
-                  <Route render={(props) => <Redirect404  history={history}/>}/>
+                  <Route exact path="/" render={(props) =>
+                     <AppContainer history={history}/> } />
+                  <Route path="/search" render={(props) =>
+                     <AppContainer history={history}/> } />
+                  <Route path="/gallery" render={(props) =>
+                     <IIIFViewerContainer location={history.location} history={history}/> }/>
+                  <Route path="/resource" render={(props) =>
+                     <ResourceViewerContainer history={history}/> } />
+                  <Route render={(props) =>
+                     <Redirect404  history={history}/>}/>
                </Switch>
             </Router>
          </MuiThemeProvider>
