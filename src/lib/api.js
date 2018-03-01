@@ -108,8 +108,10 @@ export default class API {
       param = { searchType:"Res_withFacet",LG_NAME:"bo-x-ewts",I_LIM:5000, ...param }
       if(key.indexOf("\"") === -1) key = "\""+key+"\""
       param["L_NAME"] = key ;
+      url += "/"+param["searchType"];
+      delete param["searchType"]
 
-      console.log("query",param);
+      console.log("query",url,param);
 
       // let body = Object.keys(param).map( (k) => k+"="+param[k] ).join('&') +"&L_NAME="+key
       //searchType=Res_withFacet&"+param+"L_NAME=\""+key+"\"",
@@ -166,7 +168,7 @@ export default class API {
    async _getResultsData(key: string): Promise<{} | null> {
       try {
            let config = store.getState().data.config.ldspdi
-           let url = config.endpoints[config.index]+"/resource/templates" ;
+           let url = config.endpoints[config.index]+"/query" ;
            let data = this.getQueryResults(url, key);
            // let data = this.getSearchContents(url, key);
 
@@ -179,7 +181,7 @@ export default class API {
    async getResultsDatatypes(key: string): Promise<{} | null> {
       try {
            let config = store.getState().data.config.ldspdi
-           let url = config.endpoints[config.index]+"/resource/templates" ;
+           let url = config.endpoints[config.index]+"/query" ;
            let data = this.getQueryResults(url, key, {searchType:"Res_allDatatypes"});
 
            console.log("datatypes",data)
