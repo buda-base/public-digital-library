@@ -79,8 +79,30 @@ export const loading = (key: string, isLoading: boolean): LoadingAction => {
     }
 }
 
+/*
 TYPES.searchingKeyword = 'SEARCHING_KEYWORD';
 export const searchingKeyword = createAction(TYPES.searchingKeyword);
+*/
+
+
+export type SearchAction = {
+    type: TYPES.SearchAction,
+    payload: {
+        keyword: string,
+        language: string
+    }
+}
+
+TYPES.searchingKeyword = 'SEARCHING_KEYWORD';
+export const searchingKeyword = (keyword: string, language: string): SearchAction => {
+    return {
+        type: TYPES.searchingKeyword,
+        payload: {
+            keyword,
+            language
+        }
+    }
+}
 
 TYPES.getDatatypes = 'GET_DATATYPES';
 export const getDatatypes = createAction(TYPES.getDatatypes);
@@ -90,7 +112,7 @@ export const notGettingDatatypes = createAction(TYPES.notGettingDatatypes);
 
 
 export type FoundResultsAction = {
-    type: string,
+    type: TYPES.FoundResultsAction,
     payload: {
         key: string,
         results: []

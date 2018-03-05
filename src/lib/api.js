@@ -103,15 +103,16 @@ export default class API {
    async getQueryResults(url: string, key:string, param:{}={}): Promise<{}>
    {
 
+      console.log("key",key)
 
       let res = {}
-      param = { searchType:"Res_withFacet",LG_NAME:"bo-x-ewts",I_LIM:5000, ...param }
+      param = { searchType:"Res_withFacet",LG_NAME:"bo-x-ewts",I_LIM:500, ...param }
       if(key.indexOf("\"") === -1) key = "\""+key+"\""
       param["L_NAME"] = key ;
       url += "/"+param["searchType"];
       delete param["searchType"]
 
-      console.log("query",url,param);
+      console.log("query",key,url,param);
 
       // let body = Object.keys(param).map( (k) => k+"="+param[k] ).join('&') +"&L_NAME="+key
       //searchType=Res_withFacet&"+param+"L_NAME=\""+key+"\"",
@@ -165,11 +166,11 @@ export default class API {
        });
       }
 
-   async _getResultsData(key: string): Promise<{} | null> {
+   async _getResultsData(key: string,lang: string): Promise<{} | null> {
       try {
            let config = store.getState().data.config.ldspdi
            let url = config.endpoints[config.index]+"/query" ;
-           let data = this.getQueryResults(url, key);
+           let data = this.getQueryResults(url, key, {LG_NAME:lang});
            // let data = this.getSearchContents(url, key);
 
            return data ;
@@ -192,11 +193,11 @@ export default class API {
       }
   }
 
-   async getResults(key: string): Promise<{} | null> {
+   async getResults(key: string,lang:string): Promise<{} | null> {
      let data = [];
 
      try {
-         data = await this._getResultsData(key)
+         data = await this._getResultsData(key,lang)
 
          return data ;
       } catch(e) {

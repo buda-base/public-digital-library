@@ -16,6 +16,10 @@ import FormControlLabel from 'material-ui/Form/FormControlLabel';
 import { withStyles } from 'material-ui/styles';
 import gray from 'material-ui/colors/green';
 import { Link } from 'react-router-dom'
+import Input, { InputLabel } from 'material-ui/Input';
+import { FormControl, FormHelperText } from 'material-ui/Form';
+import Select from 'material-ui/Select';
+import qs from 'query-string'
 
 import './App.css';
 
@@ -41,10 +45,12 @@ type Props = {
    keyword?:string,
    datatypes:boolean|{},
    history:{},
-   onSearchingKeyword:(k:string)=>void,
+   onSearchingKeyword:(k:string,lg:string)=>void,
    onGetDatatypes:(k:string)=>void
 }
 type State = {
+   willSearch?:boolean,
+   language:string,
    checked?:string,
    unchecked?:string,
    keyword:string,
@@ -65,10 +71,15 @@ class App extends Component<Props,State> {
       this.requestSearch.bind(this);
       this.handleCheck.bind(this);
 
+      let get = qs.parse(this.props.history.location.search)
+      console.log('qs',get)
+
+
       this.state = {
+         language:get.lg?get.lg:"bo-x-ewts",
          filters: {datatype:[]},
          dataSource: [],
-         keyword:"",
+         keyword:get.q?get.q.replace(/"/g,""):"",
          collapse:{
             datatype:true
          }
@@ -79,8 +90,8 @@ class App extends Component<Props,State> {
    {
       this.setState({dataSource:[]})
       console.log("search",this.state)
-      this.props.onSearchingKeyword(this.state.keyword)
-      this.props.history.push("/search?q=\""+this.state.keyword+"\"")
+      this.props.onSearchingKeyword(this.state.keyword,this.state.language)
+      this.props.history.push("/search?q=\""+this.state.keyword+"\"&lg="+this.state.language)
    }
 
    getEndpoint():string
@@ -89,11 +100,22 @@ class App extends Component<Props,State> {
    }
 
    componentWillUpdate() {
+
+
        if(this.props.keyword && !this.props.gettingDatatypes && !this.props.datatypes)
        {
             this.props.onGetDatatypes(this.props.keyword)
        }
 
+   }
+
+   componentDidUpdate()
+   {
+      if(this.state.willSearch)
+      {
+         this.requestSearch();
+         this.setState({willSearch:false})
+      }
    }
 
    handleCheck = (ev:Event,lab:string,val:boolean) => {
@@ -116,9 +138,14 @@ class App extends Component<Props,State> {
       )
    }
 
-   render() {
-      console.log("render",this.props,this.state)
 
+  handleLanguage = event => {
+    this.setState({ [event.target.name]: event.target.value, willSearch:true });
+  };
+
+   render() {
+
+      // console.log("render",this.props,this.state)
 
       let message = [];
       let results ;
@@ -232,7 +259,7 @@ class App extends Component<Props,State> {
 
          <div className="App" style={{display:"flex"}}>
             <div className="SidePane" style={{width:"25%",paddingTop:"150px"}}>
-               { this.props.datatypes &&
+               { this.props.datatypes && (results ? results.numResults > 0:true) &&
                   <div style={{width:"333px",float:"right",position:"relative"}}>
                      <Typography style={{fontSize:"30px",marginBottom:"20px",textAlign:"left"}}>Refine Your Search</Typography>
                      <ListItem
@@ -253,6 +280,7 @@ class App extends Component<Props,State> {
                }
             </div>
             <div className="SearchPane" style={{width:"50%"}}>
+               <div>
                { this.props.loading && <Loader/> }
                <SearchBar
                   disabled={this.props.hostFailure}
@@ -260,10 +288,27 @@ class App extends Component<Props,State> {
                   onRequestSearch={this.requestSearch.bind(this)}
                   value={this.props.hostFailure?"Endpoint error: "+this.props.hostFailure+" ("+this.getEndpoint()+")":this.props.keyword?this.props.keyword.replace(/"/g,""):this.state.keyword}
                   style={{
-                     margin: '50px auto 0 auto',
-                     maxWidth: "700px"
+                     marginTop: '50px',
+                     width: "700px"
                   }}
                />
+              <FormControl className="formControl">
+                <InputLabel htmlFor="language">Language</InputLabel>
+                <Select
+                  value={this.state.language}
+                  onChange={this.handleLanguage}
+                  inputProps={{
+                    name: 'language',
+                    id: 'language',
+                  }}
+                >
+                   <MenuItem value="zh">Chinese</MenuItem>
+                   <MenuItem value="en">English</MenuItem>
+                  <MenuItem value="bo">Tibetan</MenuItem>
+                  <MenuItem value="bo-x-ewts">Tibetan (Wylie)</MenuItem>
+                </Select>
+              </FormControl>
+           </div>
                { this.state.keyword.length > 0 && this.state.dataSource.length > 0 &&
                   <div style={{
                      maxWidth: "700px",

@@ -86,7 +86,7 @@ export const searchingKeyword = (state: DataState, action: Action) => {
         datatypes:null,
         searches:{
            ...state.searches,
-           ... action.payload ? {[action.payload]:null,keyword:action.payload}:{}
+           ... action.payload ? {[action.payload.keyword+"@"+action.payload.language]:null,keyword:action.payload.keyword}:{}
 
         }
     }

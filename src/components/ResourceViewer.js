@@ -19,7 +19,7 @@ class ResourceViewer extends Component<Props,State>
 
    render()
     {
-      console.log("render",this.props,this.state)
+      // console.log("render",this.props,this.state)
 //
       let get = qs.parse(this.props.history.location.search)
       console.log('qs',get)
