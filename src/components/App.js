@@ -145,7 +145,7 @@ class App extends Component<Props,State> {
 
    render() {
 
-      // console.log("render",this.props,this.state)
+      console.log("render",this.props,this.state)
 
       let message = [];
       let results ;
@@ -165,14 +165,14 @@ class App extends Component<Props,State> {
          }
          else
          {
-            if(!this.props.datatypes || !this.props.datatypes.rows)
+            if(!this.props.datatypes || !this.props.datatypes.results)
             {
                loader = <Loader loaded={false} className="datatypesLoader" style={{position:"relative"}}/>
 
             }
-            else if( this.props.datatypes.rows) for(let r of this.props.datatypes.rows){
+            else if( this.props.datatypes.results) for(let r of this.props.datatypes.results){
 
-               r = r.dataRow
+               r = r.bindings
                let typ = r.f.value.replace(/^.*?([^/]+)$/,"$1")
 
                if(typ != "" && types.indexOf(typ) === -1)
@@ -203,12 +203,13 @@ class App extends Component<Props,State> {
                }
             }
 
-            for(let r of results.rows)
+            for(let r of results.results)
             {
-               r = r.dataRow
+               r = r.bindings
 
                let id = r.s.value.replace(/^.*?([^/]+)$/,"$1")
-               let lit = r.lit.value
+               let lit ;
+               if(r.lit) lit = r.lit.value
                let typ = r.f.value.replace(/^.*?([^/]+)$/,"$1")
 
                if(this.state.filters.datatype.length == 0 || this.state.filters.datatype.indexOf(typ) !== -1)
