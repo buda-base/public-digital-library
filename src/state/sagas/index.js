@@ -52,10 +52,11 @@ export function* watchChoosingHost() {
    );
 }
 
-export function* getDatatypes(key) {
+export function* getDatatypes(key,lang) {
 
    try {
-      const datatypes = yield call([api, api.getResultsDatatypes], key);
+
+      const datatypes = yield call([api, api.getResultsDatatypes], key,lang);
 
       yield put(dataActions.foundDatatypes(key,datatypes));
 
@@ -96,7 +97,7 @@ export function* watchGetDatatypes() {
 
    yield takeLatest(
       dataActions.TYPES.getDatatypes,
-      (action) => getDatatypes(action.payload)
+      (action) => getDatatypes(action.payload.keyword,action.payload.language)
    );
 }
 

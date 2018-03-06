@@ -46,7 +46,7 @@ type Props = {
    datatypes:boolean|{},
    history:{},
    onSearchingKeyword:(k:string,lg:string)=>void,
-   onGetDatatypes:(k:string)=>void
+   onGetDatatypes:(k:string,lg:string)=>void
 }
 type State = {
    willSearch?:boolean,
@@ -64,6 +64,7 @@ type State = {
 }
 
 class App extends Component<Props,State> {
+    _gettingDatatypes : boolean = false  ;
 
    constructor(props : Props) {
       super(props);
@@ -73,7 +74,6 @@ class App extends Component<Props,State> {
 
       let get = qs.parse(this.props.history.location.search)
       console.log('qs',get)
-
 
       this.state = {
          language:get.lg?get.lg:"bo-x-ewts",
@@ -88,6 +88,7 @@ class App extends Component<Props,State> {
 
    requestSearch()
    {
+     this._gettingDatatypes = false ;
       this.setState({dataSource:[]})
       console.log("search",this.state)
       this.props.onSearchingKeyword(this.state.keyword,this.state.language)
@@ -101,12 +102,6 @@ class App extends Component<Props,State> {
 
    componentWillUpdate() {
 
-
-       if(this.props.keyword && !this.props.gettingDatatypes && !this.props.datatypes)
-       {
-            this.props.onGetDatatypes(this.props.keyword)
-       }
-
    }
 
    componentDidUpdate()
@@ -116,6 +111,11 @@ class App extends Component<Props,State> {
          this.requestSearch();
          this.setState({willSearch:false})
       }
+
+        if(this.props.keyword && !this.props.gettingDatatypes && !this.props.datatypes)
+        {
+           this.props.onGetDatatypes(this.state.keyword,this.state.language)
+        }
    }
 
    handleCheck = (ev:Event,lab:string,val:boolean) => {

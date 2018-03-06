@@ -105,7 +105,15 @@ export const searchingKeyword = (keyword: string, language: string): SearchActio
 }
 
 TYPES.getDatatypes = 'GET_DATATYPES';
-export const getDatatypes = createAction(TYPES.getDatatypes);
+export const getDatatypes = (keyword: string, language: string): SearchAction => {
+    return {
+        type: TYPES.getDatatypes,
+        payload: {
+            keyword,
+            language
+        }
+    }
+}
 
 TYPES.notGettingDatatypes = 'NOT_GETTING_DATATYPES';
 export const notGettingDatatypes = createAction(TYPES.notGettingDatatypes);

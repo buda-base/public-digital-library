@@ -33,8 +33,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       onSearchingKeyword:(k:string,lg:string) => {
          dispatch(data.searchingKeyword(k,lg))
       },
-      onGetDatatypes:(k:string) => {
-         dispatch(data.getDatatypes(k))
+      onGetDatatypes:(k:string,lg:string) => {
+         dispatch(data.getDatatypes(k,lg))
       }
    }
 }
