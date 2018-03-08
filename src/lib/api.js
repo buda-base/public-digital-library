@@ -107,7 +107,6 @@ export default class API {
 
       let res = {}
       param = { "searchType":"Res_withType","LG_NAME":"bo-x-ewts","I_LIM":500, ...param }
-      if(key.indexOf("\"") === -1) key = "\""+key+"\""
       param["L_NAME"] = key ;
       url += "/"+param["searchType"];
       delete param["searchType"]
@@ -192,6 +191,20 @@ export default class API {
            throw e;
       }
   }
+
+     async getResultsOneDatatype(datatype:string,key: string,lang: string): Promise<{} | null> {
+        try {
+             let config = store.getState().data.config.ldspdi
+             let url = config.endpoints[config.index]+"/query" ;
+             let data = this.getQueryResults(url, key, {"LG_NAME":lang,"searchType":"Res_oneType","R_RES":":"+datatype});
+
+             console.log("oneDatatype",data)
+
+             return data ;
+        } catch(e) {
+             throw e;
+        }
+    }
 
    async getResults(key: string,lang:string): Promise<{} | null> {
      let data = [];

@@ -130,7 +130,7 @@ export const foundResults = (state: DataState, action: actions.FoundResultsActio
 
       searches: {
             ...state.searches,
-            [action.payload.key]: action.payload.results
+            [action.payload.key + "@" + action.payload.lang]: action.payload.results
             }
    }
 }

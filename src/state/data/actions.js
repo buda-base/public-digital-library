@@ -88,6 +88,7 @@ export const searchingKeyword = createAction(TYPES.searchingKeyword);
 export type SearchAction = {
     type: TYPES.SearchAction,
     payload: {
+        datatype?:string,
         keyword: string,
         language: string
     }
@@ -115,6 +116,18 @@ export const getDatatypes = (keyword: string, language: string): SearchAction =>
     }
 }
 
+TYPES.getOneDatatype = 'GET_ONE_DATATYPE';
+export const getOneDatatype = (datatype: string,keyword: string, language: string): Action => {
+    return {
+        type: TYPES.getOneDatatype,
+        payload: {
+            datatype,
+            keyword,
+            language
+        }
+    }
+}
+
 TYPES.notGettingDatatypes = 'NOT_GETTING_DATATYPES';
 export const notGettingDatatypes = createAction(TYPES.notGettingDatatypes);
 
@@ -123,16 +136,18 @@ export type FoundResultsAction = {
     type: TYPES.FoundResultsAction,
     payload: {
         key: string,
+        lang: string,
         results: []
     }
 }
 
 TYPES.foundResults = 'FOUND_RESULTS';
-export const foundResults = (key: string, results: []): FoundResultsAction => {
+export const foundResults = (key: string, lang:string, results: []): FoundResultsAction => {
     return {
         type: TYPES.foundResults,
         payload: {
             key,
+            lang,
             results
         }
     }

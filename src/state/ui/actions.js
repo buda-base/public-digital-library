@@ -9,10 +9,10 @@ export const helloWorld = createAction(TYPES.helloWorld);
 
 
 TYPES.showResults = 'SHOW_RESULTS';
-export const showResults = (key: string): Action => {
+export const showResults = (key: string,lang:string): Action => {
    return {
       type: TYPES.showResults,
-      payload: key
+      payload: { key, lang }
    }
 }
 

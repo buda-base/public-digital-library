@@ -46,7 +46,8 @@ type Props = {
    datatypes:boolean|{},
    history:{},
    onSearchingKeyword:(k:string,lg:string)=>void,
-   onGetDatatypes:(k:string,lg:string)=>void
+   onGetDatatypes:(k:string,lg:string)=>void,
+   onCheckDatatype:(t:string,k:string,lg:string)=>void
 }
 type State = {
    willSearch?:boolean,
@@ -64,7 +65,6 @@ type State = {
 }
 
 class App extends Component<Props,State> {
-    _gettingDatatypes : boolean = false  ;
 
    constructor(props : Props) {
       super(props);
@@ -88,11 +88,13 @@ class App extends Component<Props,State> {
 
    requestSearch()
    {
-     this._gettingDatatypes = false ;
+     let key = this.state.keyword ;
+     if(key.indexOf("\"") === -1) key = "\""+key+"\""
+
       this.setState({dataSource:[]})
       console.log("search",this.state)
-      this.props.onSearchingKeyword(this.state.keyword,this.state.language)
-      this.props.history.push("/search?q=\""+this.state.keyword+"\"&lg="+this.state.language)
+      this.props.onSearchingKeyword(key,this.state.language)
+      this.props.history.push("/search?q="+key+"&lg="+this.state.language)
    }
 
    getEndpoint():string
@@ -112,10 +114,10 @@ class App extends Component<Props,State> {
          this.setState({willSearch:false})
       }
 
-        if(this.props.keyword && !this.props.gettingDatatypes && !this.props.datatypes)
-        {
-           this.props.onGetDatatypes(this.state.keyword,this.state.language)
-        }
+      if(this.props.keyword && !this.props.gettingDatatypes && !this.props.datatypes)
+      {
+         this.props.onGetDatatypes(this.state.keyword,this.state.language)
+      }
    }
 
    handleCheck = (ev:Event,lab:string,val:boolean) => {
@@ -136,6 +138,10 @@ class App extends Component<Props,State> {
             }
          }
       )
+
+      let key = this.state.keyword ;
+      if(key.indexOf("\"") === -1) key = "\""+key+"\""
+      this.props.onCheckDatatype(lab,key,this.state.language)
    }
 
 
@@ -153,7 +159,7 @@ class App extends Component<Props,State> {
       let types = []
       let loader ;
 
-      if(this.props.keyword && (results = this.props.searches[this.props.keyword]))
+      if(this.props.keyword && (results = this.props.searches[this.props.keyword+"@"+this.state.language]))
       {
          let n = 0, m = 0 ;
          if(results.numResults == 0) {

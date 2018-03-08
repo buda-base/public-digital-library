@@ -35,6 +35,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       },
       onGetDatatypes:(k:string,lg:string) => {
          dispatch(data.getDatatypes(k,lg))
+      },
+      onCheckDatatype:(t:string,k:string,lg:string) => {
+         dispatch(data.getOneDatatype(t,k,lg))
       }
    }
 }

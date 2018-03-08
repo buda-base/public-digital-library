@@ -76,8 +76,27 @@ export function* searchKeyword(keyword,language) {
       const result = yield call([api, api.getResults], keyword,language);
 
       yield put(dataActions.loading(keyword, false));
-      yield put(dataActions.foundResults(keyword, result));
-      yield put(uiActions.showResults(keyword));
+      yield put(dataActions.foundResults(keyword, language,result));
+      //yield put(uiActions.showResults(keyword, language));
+
+   } catch(e) {
+      yield put(dataActions.searchFailed(keyword, e.message));
+      yield put(dataActions.loading(keyword, false));
+   }
+}
+
+
+export function* getOneDatatype(datatype,keyword,language:string) {
+
+   console.log("searchK1DT",datatype,keyword,language);
+
+   yield put(dataActions.loading(keyword, true));
+   try {
+      const result = yield call([api, api.getResultsOneDatatype],datatype,keyword,language);
+
+      yield put(dataActions.loading(keyword, false));
+      yield put(dataActions.foundResults(keyword, language, result));
+      //yield put(uiActions.showResults(keyword, language));
 
    } catch(e) {
       yield put(dataActions.searchFailed(keyword, e.message));
@@ -101,6 +120,13 @@ export function* watchGetDatatypes() {
    );
 }
 
+export function* watchGetOneDatatype() {
+
+   yield takeLatest(
+      dataActions.TYPES.getOneDatatype,
+      (action) => getOneDatatype(action.payload.datatype,action.payload.keyword,action.payload.language)
+   );
+}
 /** Root **/
 
 export default function* rootSaga() {
@@ -108,6 +134,7 @@ export default function* rootSaga() {
       watchInitiateApp(),
       watchChoosingHost(),
       watchGetDatatypes(),
+      watchGetOneDatatype(),
       watchSearchingKeyword()
    ])
 }
