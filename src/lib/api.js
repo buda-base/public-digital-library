@@ -107,6 +107,7 @@ export default class API {
 
       let res = {}
       param = { "searchType":"Res_withType","LG_NAME":"bo-x-ewts","I_LIM":500, ...param }
+      if(key.indexOf("\"") === -1) key = "\""+key+"\""
       param["L_NAME"] = key ;
       url += "/"+param["searchType"];
       delete param["searchType"]

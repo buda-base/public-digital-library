@@ -139,9 +139,12 @@ class App extends Component<Props,State> {
          }
       )
 
-      let key = this.state.keyword ;
-      if(key.indexOf("\"") === -1) key = "\""+key+"\""
-      this.props.onCheckDatatype(lab,key,this.state.language)
+      if(val)
+      {
+         let key = this.state.keyword ;
+         if(key.indexOf("\"") === -1) key = "\""+key+"\""
+         this.props.onCheckDatatype(lab,key,this.state.language)
+      }
    }
 
 
