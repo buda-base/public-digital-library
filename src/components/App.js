@@ -59,9 +59,7 @@ type State = {
    filters:{
       datatype:string[]
    },
-   collapse:{
-      datatype:boolean
-   }
+   collapse:{ [string] : boolean }
 }
 
 class App extends Component<Props,State> {
@@ -80,9 +78,7 @@ class App extends Component<Props,State> {
          filters: {datatype:[]},
          dataSource: [],
          keyword:get.q?get.q.replace(/"/g,""):"",
-         collapse:{
-            datatype:true
-         }
+         collapse:{}
       };
    }
 
@@ -139,7 +135,7 @@ class App extends Component<Props,State> {
          }
       )
 
-      if(val)
+      if(val && this.props.keyword)
       {
          let key = this.state.keyword ;
          if(key.indexOf("\"") === -1) key = "\""+key+"\""
@@ -269,21 +265,77 @@ class App extends Component<Props,State> {
 
          <div className="App" style={{display:"flex"}}>
             <div className="SidePane" style={{width:"25%",paddingTop:"150px"}}>
-               { this.props.datatypes && (results ? results.numResults > 0:true) &&
+               { //this.props.datatypes && (results ? results.numResults > 0:true) &&
                   <div style={{width:"333px",float:"right",position:"relative"}}>
                      <Typography style={{fontSize:"30px",marginBottom:"20px",textAlign:"left"}}>Refine Your Search</Typography>
                      <ListItem
                         style={{display:"flex",justifyContent:"space-between",padding:"0 20px",borderBottom:"1px solid #bbb",cursor:"pointer"}}
-                        onClick={(e) => { this.setState({collapse:{datatype:!this.state.collapse.datatype} }); } }
+                        onClick={(e) => { this.setState({collapse:{"collection":!this.state.collapse["collection"]} }); } }
                         >
-                        <Typography style={{fontSize:"18px",lineHeight:"50px",}}>Data Type</Typography>
-                        {this.state.collapse.datatype ? <ExpandLess /> : <ExpandMore />}
+                        <Typography style={{fontSize:"18px",lineHeight:"50px",}}>Collection</Typography>
+                        {!this.state.collapse["collection"] ? <ExpandLess /> : <ExpandMore />}
                      </ListItem>
                      <Collapse
-                        in={this.state.collapse.datatype}
+                        in={!this.state.collapse["collection"]}
+                        style={{display:"flex",justifyContent:"flex-start",padding:"10px 0 0 50px",marginBottom:"30px"}}
+                        >
+                           <div key="buda" style={{width:"150px",textAlign:"left"}}>
+                              <FormControlLabel
+                                 control={
+                                    <Checkbox
+                                       //defaultChecked={true}
+                                       icon={<span className='checkB'/>}
+                                       checkedIcon={<span className='checkedB'><CheckCircle style={{color:"#444",margin:"-3px 0 0 -3px",width:"26px",height:"26px"}}/></span>}
+                                       //onChange={(event, checked) => this.handleCheck(event,"BUDA",checked)}
+                                    />
+
+                                 }
+                                 label="BUDA"
+                              />
+                              </div>
+                                 <div key="rkts" style={{width:"150px",textAlign:"left"}}>
+                                    <FormControlLabel
+                                       control={
+                                          <Checkbox
+                                             //defaultChecked={true}
+                                             icon={<span className='checkB'/>}
+                                             checkedIcon={<span className='checkedB'><CheckCircle style={{color:"#444",margin:"-3px 0 0 -3px",width:"26px",height:"26px"}}/></span>}
+                                             //onChange={(event, checked) => this.handleCheck(event,"rkts",checked)}
+                                          />
+
+                                       }
+                                       label="rKTs"
+                                    />
+                                    </div>
+                     </Collapse>
+                     <ListItem
+                        style={{display:"flex",justifyContent:"space-between",padding:"0 20px",borderBottom:"1px solid #bbb",cursor:"pointer"}}
+                        onClick={(e) => { this.setState({collapse:{"datatype":!this.state.collapse["datatype"]} }); } }
+                        >
+                        <Typography style={{fontSize:"18px",lineHeight:"50px",}}>Data Type</Typography>
+                        {!this.state.collapse.datatype ? <ExpandLess /> : <ExpandMore />}
+                     </ListItem>
+                     <Collapse
+                        in={!this.state.collapse["datatype"]}
                         style={{display:"flex",justifyContent:"flex-start",padding:"10px 0 0 50px"}}
                         >
-                        {facetList}
+                        {facetList&&facetList.length > 0?facetList:
+                           ["Person","Work","Place","Item","Etext","Role","Topic","Lineage"].map((i) =>
+                        <div key={i} style={{width:"150px",textAlign:"left"}}>
+                           <FormControlLabel
+                              control={
+                                 <Checkbox
+                                    //defaultChecked={true}
+                                    icon={<span className='checkB'/>}
+                                    checkedIcon={<span className='checkedB'><CheckCircle style={{color:"#444",margin:"-3px 0 0 -3px",width:"26px",height:"26px"}}/></span>}
+                                    onChange={(event, checked) => this.handleCheck(event,i,checked)} />
+
+                              }
+                              label={i}
+                           />
+                           </div>
+
+                     )}
                      </Collapse>
                      {loader}
                   </div>
