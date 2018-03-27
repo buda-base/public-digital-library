@@ -30,14 +30,14 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch, ownProps) => {
    return {
-      onSearchingKeyword:(k:string,lg:string) => {
-         dispatch(data.searchingKeyword(k,lg))
+      onSearchingKeyword:(k:string,lg:string,t:string[]) => {
+         dispatch(data.searchingKeyword(k,lg,t))
       },
       onGetDatatypes:(k:string,lg:string) => {
          dispatch(data.getDatatypes(k,lg))
       },
       onCheckDatatype:(t:string,k:string,lg:string) => {
-         dispatch(data.getOneDatatype(t,k,lg))
+         dispatch(data.getOneDatatype([t],k,lg))
       }
    }
 }

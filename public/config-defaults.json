@@ -3,5 +3,16 @@
    {
       "endpoints":["http://localhost:8080","http://localhost:13280","http://buda1.bdrc.io:13280","http://purl.bdrc.io"],
       "index":2
+   },
+   "rkts":
+   {
+      "endpoints":["http://localhost:8080"],
+      "index":0
+   },
+   "facets":{
+      "simple":[
+         { "bdo:Work": [ "bdo:ObjectType" ] },
+         { "bdo:Person": [ "bdo:Gender" ] }
+      ]
    }
 }

@@ -45,7 +45,7 @@ type Props = {
    keyword?:string,
    datatypes:boolean|{},
    history:{},
-   onSearchingKeyword:(k:string,lg:string)=>void,
+   onSearchingKeyword:(k:string,lg:string,t:string[])=>void,
    onGetDatatypes:(k:string,lg:string)=>void,
    onCheckDatatype:(t:string,k:string,lg:string)=>void
 }
@@ -75,10 +75,10 @@ class App extends Component<Props,State> {
 
       this.state = {
          language:get.lg?get.lg:"bo-x-ewts",
-         filters: {datatype:[]},
+         filters: {datatype:get.t?get.t.split(","):["Any"]},
          dataSource: [],
          keyword:get.q?get.q.replace(/"/g,""):"",
-         collapse:{}
+         collapse:{ "collection":false}
       };
    }
 
@@ -89,8 +89,16 @@ class App extends Component<Props,State> {
 
       this.setState({dataSource:[]})
       console.log("search",this.state)
-      this.props.onSearchingKeyword(key,this.state.language)
-      this.props.history.push("/search?q="+key+"&lg="+this.state.language)
+      if(this.state.filters.datatype.length === 0 || this.state.filters.datatype.indexOf("Any") !== -1 )
+      {
+         this.props.onSearchingKeyword(key,this.state.language)
+         this.props.history.push("/search?q="+key+"&lg="+this.state.language+"&t=Any")
+      }
+      else {
+         this.props.onSearchingKeyword(key,this.state.language,this.state.filters.datatype)
+         this.props.history.push("/search?q="+key+"&lg="+this.state.language+"&t="+this.state.filters.datatype.join(","))
+      }
+
    }
 
    getEndpoint():string
@@ -120,9 +128,12 @@ class App extends Component<Props,State> {
 
       console.log("check",lab,val)
 
+      /* // to be continued ...
       let f = this.state.filters.datatype
       if(f.indexOf(lab) != -1 && !val) f.splice(f.indexOf(lab),1)
       else if(f.indexOf(lab) == -1 && val) f.push(lab)
+      */
+      let f = [lab]
 
       this.setState(
          {
@@ -139,13 +150,21 @@ class App extends Component<Props,State> {
       {
          let key = this.state.keyword ;
          if(key.indexOf("\"") === -1) key = "\""+key+"\""
-         this.props.onCheckDatatype(lab,key,this.state.language)
+         if(lab != "Any") this.props.onCheckDatatype(lab,key,this.state.language)
+         else this.props.onSearchingKeyword(key,this.state.language,f)
+         this.props.history.push("/search?q="+key+"&lg="+this.state.language+"&t="+f.join(","))
       }
    }
 
 
   handleLanguage = event => {
-    this.setState({ [event.target.name]: event.target.value, willSearch:true });
+
+     let s = { [event.target.name]: event.target.value }
+     if(this.props.keyword) s = { ...s, willSearch:true }
+
+     // console.log("handle",s)
+
+     this.setState( s );
   };
 
    render() {
@@ -155,7 +174,7 @@ class App extends Component<Props,State> {
       let message = [];
       let results ;
       let facetList = []
-      let types = []
+      let types = ["Any"]
       let loader ;
 
       if(this.props.keyword && (results = this.props.searches[this.props.keyword+"@"+this.state.language]))
@@ -175,18 +194,18 @@ class App extends Component<Props,State> {
                loader = <Loader loaded={false} className="datatypesLoader" style={{position:"relative"}}/>
 
             }
-            else if( this.props.datatypes.results) for(let r of this.props.datatypes.results){
+            else if( this.props.datatypes.results) for(let r of this.props.datatypes.results.bindings){
 
-               r = r.bindings
+               //r = r.bindings
                let typ = r.f.value.replace(/^.*?([^/]+)$/,"$1")
 
                if(typ != "" && types.indexOf(typ) === -1)
                {
                   m++;
+
                   types.push(typ);
 
-                  // console.log("r",r)
-
+                  /*
                   let value = typ
 
                   let box =
@@ -194,7 +213,7 @@ class App extends Component<Props,State> {
                      <FormControlLabel
                         control={
                            <Checkbox
-                              //defaultChecked={true}
+                              checked={this.state.filters.datatype.indexOf(typ) !== -1}
                               icon={<span className='checkB'/>}
                               checkedIcon={<span className='checkedB'><CheckCircle style={{color:"#444",margin:"-3px 0 0 -3px",width:"26px",height:"26px"}}/></span>}
                               onChange={(event, checked) => this.handleCheck(event,value,checked)} />
@@ -203,21 +222,22 @@ class App extends Component<Props,State> {
                         label={typ}
                      />
                      </div>
+                     facetList.push(box)
+                        */
 
-                  facetList.push(box)
                }
             }
 
-            for(let r of results.results)
+            for(let r of results.results.bindings)
             {
-               r = r.bindings
+               //console.log("r",r);
 
                let id = r.s.value.replace(/^.*?([^/]+)$/,"$1")
                let lit ;
                if(r.lit) lit = r.lit.value
                let typ = r.f.value.replace(/^.*?([^/]+)$/,"$1")
 
-               if(this.state.filters.datatype.length == 0 || this.state.filters.datatype.indexOf(typ) !== -1)
+               if(this.state.filters.datatype.length == 0 || this.state.filters.datatype.indexOf("Any") !== -1 || this.state.filters.datatype.indexOf(typ) !== -1)
                {
                   n ++;
                   message.push(
@@ -243,6 +263,10 @@ class App extends Component<Props,State> {
             */
          }
       }
+
+      if(!results) types = ["Any","Person","Work","Corporation","Place","Item","Etext","Role","Topic","Lineage"]
+
+      types = types.sort()
 
       return (
 <div>
@@ -270,62 +294,50 @@ class App extends Component<Props,State> {
                      <Typography style={{fontSize:"30px",marginBottom:"20px",textAlign:"left"}}>Refine Your Search</Typography>
                      <ListItem
                         style={{display:"flex",justifyContent:"space-between",padding:"0 20px",borderBottom:"1px solid #bbb",cursor:"pointer"}}
-                        onClick={(e) => { this.setState({collapse:{"collection":!this.state.collapse["collection"]} }); } }
+                        onClick={(e) => { this.setState({collapse:{ ...this.state.collapse, "collection":!this.state.collapse["collection"]} }); } }
                         >
                         <Typography style={{fontSize:"18px",lineHeight:"50px",}}>Collection</Typography>
-                        {!this.state.collapse["collection"] ? <ExpandLess /> : <ExpandMore />}
+                        { !this.state.collapse["collection"] ? <ExpandLess /> : <ExpandMore />}
                      </ListItem>
                      <Collapse
                         in={!this.state.collapse["collection"]}
                         style={{display:"flex",justifyContent:"flex-start",padding:"10px 0 0 50px",marginBottom:"30px"}}
                         >
-                           <div key="buda" style={{width:"150px",textAlign:"left"}}>
+                           { ["BDRC" ,"rKTs" ].map((i) => <div key={i} style={{width:"150px",textAlign:"left"}}>
                               <FormControlLabel
                                  control={
                                     <Checkbox
-                                       //defaultChecked={true}
+                                       {... i=="rKTs" ?{}:{defaultChecked:true}}
+                                       disabled={true}
                                        icon={<span className='checkB'/>}
                                        checkedIcon={<span className='checkedB'><CheckCircle style={{color:"#444",margin:"-3px 0 0 -3px",width:"26px",height:"26px"}}/></span>}
-                                       //onChange={(event, checked) => this.handleCheck(event,"BUDA",checked)}
+                                       //onChange={(event, checked) => this.handleCheck(event,i,checked)}
                                     />
 
                                  }
-                                 label="BUDA"
+                                 label={i}
                               />
-                              </div>
-                                 <div key="rkts" style={{width:"150px",textAlign:"left"}}>
-                                    <FormControlLabel
-                                       control={
-                                          <Checkbox
-                                             //defaultChecked={true}
-                                             icon={<span className='checkB'/>}
-                                             checkedIcon={<span className='checkedB'><CheckCircle style={{color:"#444",margin:"-3px 0 0 -3px",width:"26px",height:"26px"}}/></span>}
-                                             //onChange={(event, checked) => this.handleCheck(event,"rkts",checked)}
-                                          />
-
-                                       }
-                                       label="rKTs"
-                                    />
-                                    </div>
+                           </div> )}
                      </Collapse>
                      <ListItem
                         style={{display:"flex",justifyContent:"space-between",padding:"0 20px",borderBottom:"1px solid #bbb",cursor:"pointer"}}
-                        onClick={(e) => { this.setState({collapse:{"datatype":!this.state.collapse["datatype"]} }); } }
+                        onClick={(e) => { this.setState({collapse:{ ...this.state.collapse, "datatype":!this.state.collapse["datatype"]} }); } }
                         >
                         <Typography style={{fontSize:"18px",lineHeight:"50px",}}>Data Type</Typography>
-                        {!this.state.collapse.datatype ? <ExpandLess /> : <ExpandMore />}
+                        { !this.state.collapse["datatype"] ? <ExpandLess /> : <ExpandMore />}
                      </ListItem>
                      <Collapse
                         in={!this.state.collapse["datatype"]}
                         style={{display:"flex",justifyContent:"flex-start",padding:"10px 0 0 50px"}}
                         >
-                        {facetList&&facetList.length > 0?facetList:
-                           ["Person","Work","Place","Item","Etext","Role","Topic","Lineage"].map((i) =>
+                        { //facetList&&facetList.length > 0?facetList.sort((a,b) => { return a.props.label < b.props.label } ):
+                           types.map((i) =>
                         <div key={i} style={{width:"150px",textAlign:"left"}}>
                            <FormControlLabel
                               control={
                                  <Checkbox
-                                    //defaultChecked={true}
+                                    //{...i=="Any"?{defaultChecked:true}:{}}
+                                    checked={this.state.filters.datatype.indexOf(i) !== -1}
                                     icon={<span className='checkB'/>}
                                     checkedIcon={<span className='checkedB'><CheckCircle style={{color:"#444",margin:"-3px 0 0 -3px",width:"26px",height:"26px"}}/></span>}
                                     onChange={(event, checked) => this.handleCheck(event,i,checked)} />
@@ -354,7 +366,7 @@ class App extends Component<Props,State> {
                      width: "700px"
                   }}
                />
-              <FormControl className="formControl">
+              <FormControl className="formControl" style={{textAlign:"left"}}>
                 <InputLabel htmlFor="language">Language</InputLabel>
                 <Select
                   value={this.state.language}
@@ -371,7 +383,7 @@ class App extends Component<Props,State> {
                 </Select>
               </FormControl>
            </div>
-               { this.state.keyword.length > 0 && this.state.dataSource.length > 0 &&
+               { false && this.state.keyword.length > 0 && this.state.dataSource.length > 0 &&
                   <div style={{
                      maxWidth: "700px",
                      margin: '0 auto',

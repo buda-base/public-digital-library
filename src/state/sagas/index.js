@@ -16,7 +16,7 @@ function* initiateApp(params) {
 
       // console.log("params",params)
 
-      if(params.q) yield put(dataActions.searchingKeyword(params.q,params.lg));
+      if(params.q) yield put(dataActions.searchingKeyword(params.q,params.lg,params.t?params.t.split(","):undefined));
 
    } catch(e) {
       console.log('initiateApp error: %o', e);
@@ -67,13 +67,18 @@ export function* getDatatypes(key,lang) {
 
 }
 
-export function* searchKeyword(keyword,language) {
+export function* searchKeyword(keyword,language,datatype) {
 
-   console.log("searchK",keyword,language);
+   console.log("searchK",keyword,language,datatype);
 
    yield put(dataActions.loading(keyword, true));
    try {
-      const result = yield call([api, api.getResults], keyword,language);
+      let result ;
+
+      if(!datatype || datatype.indexOf("Any") !== -1)
+         result = yield call([api, api.getResults], keyword,language);
+      else
+         result = yield call([api, api.getResultsOneDatatype],datatype,keyword,language);
 
       yield put(dataActions.loading(keyword, false));
       yield put(dataActions.foundResults(keyword, language,result));
@@ -108,7 +113,7 @@ export function* watchSearchingKeyword() {
 
    yield takeLatest(
       dataActions.TYPES.searchingKeyword,
-      (action) => searchKeyword(action.payload.keyword,action.payload.language)
+      (action) => searchKeyword(action.payload.keyword,action.payload.language,action.payload.datatype)
    );
 }
 
