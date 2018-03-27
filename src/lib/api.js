@@ -3,6 +3,7 @@ import store from '../index';
 
 const CONFIG_PATH = '/config.json'
 const CONFIGDEFAULTS_PATH = '/config-defaults.json'
+const ONTOLOGY_PATH = '/ontology.json'
 
 export interface APIResponse {
     text(): Promise<string>
@@ -50,6 +51,8 @@ export default class API {
                  response.text().then((reqText) => {
                      text = reqText;
 
+                     //console.log("RESPONSE text",reqText)
+
                      if(minSize && reqText.length <= 553) { throw new ResourceNotFound('The resource does not exist.'); }
 
                      resolve(text);
@@ -75,6 +78,13 @@ export default class API {
          return config ;
       }
    }
+
+       async loadOntology(): Promise<string>
+       {
+            let onto =  JSON.parse(await this.getURLContents(this._ontologyPath,false));
+            console.log("onto",onto)
+            return onto ;
+      }
 
     testHost(host : string): Promise<boolean>
     {
@@ -219,6 +229,16 @@ export default class API {
       }
   }
 
+     get _ontologyPath(): string {
+        let path = ONTOLOGY_PATH;
+
+       let config = store.getState().data.config.ldspdi
+       let url = config.endpoints[config.index] ;
+
+         path = url +  ONTOLOGY_PATH;
+
+        return path;
+    }
    get _configPath(): string {
       let path = CONFIG_PATH;
       if (this._server) {

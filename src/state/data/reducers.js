@@ -40,6 +40,14 @@ export const loadedConfig = (state: DataState, action: Action) => {
 }
 reducers[actions.TYPES.loadedConfig] = loadedConfig;
 
+export const loadedOntology = (state: DataState, action: Action) => {
+    return {
+        ...state,
+        ontology: action.payload
+    }
+}
+reducers[actions.TYPES.loadedOntology] = loadedOntology;
+
 export const hostError = (state: DataState, action: actions.SearchFailedAction) => {
     return {
         ...state,

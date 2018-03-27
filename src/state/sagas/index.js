@@ -10,10 +10,12 @@ const api = new bdrcApi();
 
 function* initiateApp(params) {
    try {
-      const config = yield call([api, api.loadConfig]);
+      const config = yield call([api, api.loadConfig]);               
       yield put(dataActions.loadedConfig(config));
       yield put(dataActions.choosingHost(config.ldspdi.endpoints[config.ldspdi.index]));
 
+      const onto = yield call([api, api.loadOntology]);
+      yield put(dataActions.loadedOntology(onto));
       // console.log("params",params)
 
       if(params.q) yield put(dataActions.searchingKeyword(params.q,params.lg,params.t?params.t.split(","):undefined));

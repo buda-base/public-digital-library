@@ -12,6 +12,15 @@ export const loadedConfig = (config: {}): Action => {
     }
 }
 
+TYPES.loadedOntology = 'LOADED_ONTOLOGY';
+export const loadedOntology = (onto: {}): Action => {
+    return {
+        type: TYPES.loadedOntology,
+        payload: onto
+    }
+}
+
+
 TYPES.choosingHost = 'CHOOSING_HOST';
 export const choosingHost = (host: string): Action => {
     return {

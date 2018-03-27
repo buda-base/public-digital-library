@@ -351,6 +351,24 @@ class App extends Component<Props,State> {
                         </div>
                      </Collapse>
                      {loader}
+                     { true &&
+                        <div>
+                        <ListItem
+                           style={{display:"flex",justifyContent:"space-between",padding:"0 20px",borderBottom:"1px solid #bbb",cursor:"pointer"}}
+                           onClick={(e) => { this.setState({collapse:{ ...this.state.collapse, "facet_":!this.state.collapse["facet_"]} }); } }
+                           >
+                           <Typography style={{fontSize:"18px",lineHeight:"50px",}}>Facet</Typography>
+                           { !this.state.collapse["facet_"] ? <ExpandLess /> : <ExpandMore />}
+                        </ListItem>
+                        <Collapse
+                           in={!this.state.collapse["facet_"]}
+                            style={{padding:"10px 0 0 50px"}} >
+                           <div>
+                           {}
+                           </div>
+                        </Collapse>
+                     </div>
+                     }
                   </div>
                }
             </div>
