@@ -301,7 +301,7 @@ class App extends Component<Props,State> {
                      </ListItem>
                      <Collapse
                         in={!this.state.collapse["collection"]}
-                        style={{display:"flex",justifyContent:"flex-start",padding:"10px 0 0 50px",marginBottom:"30px"}}
+                        style={{padding:"10px 0 0 50px",marginBottom:"30px"}}
                         >
                            { ["BDRC" ,"rKTs" ].map((i) => <div key={i} style={{width:"150px",textAlign:"left"}}>
                               <FormControlLabel
@@ -328,26 +328,27 @@ class App extends Component<Props,State> {
                      </ListItem>
                      <Collapse
                         in={!this.state.collapse["datatype"]}
-                        style={{display:"flex",justifyContent:"flex-start",padding:"10px 0 0 50px"}}
-                        >
+                         style={{padding:"10px 0 0 50px"}} >
+                        <div>
                         { //facetList&&facetList.length > 0?facetList.sort((a,b) => { return a.props.label < b.props.label } ):
-                           types.map((i) =>
-                        <div key={i} style={{width:"150px",textAlign:"left"}}>
-                           <FormControlLabel
-                              control={
-                                 <Checkbox
-                                    //{...i=="Any"?{defaultChecked:true}:{}}
-                                    checked={this.state.filters.datatype.indexOf(i) !== -1}
-                                    icon={<span className='checkB'/>}
-                                    checkedIcon={<span className='checkedB'><CheckCircle style={{color:"#444",margin:"-3px 0 0 -3px",width:"26px",height:"26px"}}/></span>}
-                                    onChange={(event, checked) => this.handleCheck(event,i,checked)} />
+                              types.map((i) =>
+                           <div key={i} style={{width:"150px",textAlign:"left"}}>
+                              <FormControlLabel
+                                 control={
+                                    <Checkbox
+                                       //{...i=="Any"?{defaultChecked:true}:{}}
+                                       checked={this.state.filters.datatype.indexOf(i) !== -1}
+                                       icon={<span className='checkB'/>}
+                                       checkedIcon={<span className='checkedB'><CheckCircle style={{color:"#444",margin:"-3px 0 0 -3px",width:"26px",height:"26px"}}/></span>}
+                                       onChange={(event, checked) => this.handleCheck(event,i,checked)} />
 
-                              }
-                              label={i}
-                           />
-                           </div>
+                                 }
+                                 label={i}
+                              />
+                              </div>
 
-                     )}
+                        )}
+                        </div>
                      </Collapse>
                      {loader}
                   </div>
