@@ -14,9 +14,9 @@ const mapStateToProps = (state) => {
    let config = state.data.config ;
    let searches = state.data.searches ;
    let keyword = state.data.searches.keyword
-   let gettingDatatypes = state.data.gettingDatatypes ;
    let datatypes = state.data.datatypes ;
    let ontology = state.data.ontology ;
+   let facets = state.data.facets ;
 
    let loading ;
    if(keyword) {
@@ -25,7 +25,7 @@ const mapStateToProps = (state) => {
 
    }
 
-   return { config, hostFailure, searches, keyword, loading,gettingDatatypes,datatypes,ontology }
+   return { config, hostFailure, searches, keyword, loading,datatypes,ontology,facets }
 
 };
 
@@ -36,6 +36,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       },
       onGetDatatypes:(k:string,lg:string) => {
          dispatch(data.getDatatypes(k,lg))
+      },
+      onGetFacetInfo:(k:string,lg:string,f:string) => {
+         dispatch(data.getFacetInfo(k,lg,f))
       },
       onCheckDatatype:(t:string,k:string,lg:string) => {
          dispatch(data.getOneDatatype([t],k,lg))

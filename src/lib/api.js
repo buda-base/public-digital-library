@@ -189,6 +189,20 @@ export default class API {
       }
   }
 
+     async getResultsSimpleFacet(key: string,lang: string,property:string): Promise<{} | null> {
+        try {
+             let config = store.getState().data.config.ldspdi
+             let url = config.endpoints[config.index]+"/query" ;
+             let data = this.getQueryResults(url, key, {"LG_NAME":lang,"searchType":"Res_simpleFacet","R_PROP":property});
+
+             console.log("simpleFacet",data)
+
+             return data ;
+        } catch(e) {
+             throw e;
+        }
+    }
+
    async getResultsDatatypes(key: string,lang: string): Promise<{} | null> {
       try {
            let config = store.getState().data.config.ldspdi

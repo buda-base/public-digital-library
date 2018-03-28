@@ -6,6 +6,7 @@ import * as actions from './actions';
 let reducers = {};
 
 export type DataState = {
+   facets?:{[string]:boolean|{}},
    searches:{keyword?:string,[keyword:string]:{}|null},
    failures: {[string]: string},
    config: { //[string]: {}},
@@ -15,7 +16,6 @@ export type DataState = {
       }
    },
    loading: {[string]: boolean},
-   gettingDatatypes: boolean,
    datatypes?:boolean|{}
 }
 
@@ -23,7 +23,6 @@ const DEFAULT_STATE: DataState = {
    searches:{},
    failures:{},
    loading:{},
-   gettingDatatypes:false,
    config: {
       ldspdi:{
          endpoints:["http://buda1.bdrc.io:13280"],
@@ -90,8 +89,8 @@ reducers[actions.TYPES.chosenHost] = chosenHost;
 export const searchingKeyword = (state: DataState, action: Action) => {
     return {
         ...state,
-        gettingDatatypes:false,
         datatypes:null,
+        facets:null,
         searches:{
            ...state.searches,
            ... action.payload ? {[action.payload.keyword+"@"+action.payload.language]:null,keyword:action.payload.keyword}:{}
@@ -101,19 +100,40 @@ export const searchingKeyword = (state: DataState, action: Action) => {
 }
 reducers[actions.TYPES.searchingKeyword] = searchingKeyword;
 
-export const getDatatypes = (state: DataState, action: Action) => {
+export const getOneDatatype = (state: DataState, action: Action) => {
+
+console.log("get1DT")
+
     return {
         ...state,
-        gettingDatatypes:true,
+        facets:null
+    }
+}
+reducers[actions.TYPES.getOneDatatype] = getOneDatatype;
+
+export const getDatatypes = (state: DataState, action: Action) => {
+
+   console.log("getDTs")
+
+    return {
+        ...state,
         datatypes:true
     }
 }
 reducers[actions.TYPES.getDatatypes] = getDatatypes;
 
+export const getFacetInfo = (state: DataState, action: actions.SearchAction) => {
+    return {
+        ...state,
+        facets:{ ...state.facets, [action.payload.property]:true }
+    }
+}
+reducers[actions.TYPES.getFacetInfo] = getFacetInfo;
+
 export const notGettingDatatypes = (state: DataState, action: Action) => {
     return {
         ...state,
-        gettingDatatypes:false
+        datatypes:null
     }
 }
 reducers[actions.TYPES.notGettingDatatypes] = notGettingDatatypes;
@@ -152,6 +172,17 @@ export const foundDatatypes = (state: DataState, action: actions.FoundResultsAct
    }
 }
 reducers[actions.TYPES.foundDatatypes] = foundDatatypes;
+
+
+export const foundFacetInfo = (state: DataState, action: actions.FoundResultsAction) => {
+
+      return {
+      ...state,
+      facets : {...state.facets, [action.payload.property]:action.payload.results }
+   }
+}
+reducers[actions.TYPES.foundFacetInfo] = foundFacetInfo;
+
 
 // Data Reducer
 const reducer = createReducer(DEFAULT_STATE, reducers);

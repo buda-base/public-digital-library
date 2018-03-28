@@ -39,15 +39,17 @@ type Props = {
          index:number
       }
    },
+   facets:{[string]:boolean|{}},
    searches:{[string]:{}},
    hostFailure?:string,
    loading?:boolean,
    keyword?:string,
    datatypes:boolean|{},
    history:{},
-   onSearchingKeyword:(k:string,lg:string,t:string[])=>void,
+   onSearchingKeyword:(k:string,lg:string,t?:string[])=>void,
    onGetDatatypes:(k:string,lg:string)=>void,
-   onCheckDatatype:(t:string,k:string,lg:string)=>void
+   onCheckDatatype:(t:string,k:string,lg:string)=>void,
+   onGetFacetInfo:(k:string,lg:string,f:string)=>void
 }
 
 type State = {
@@ -60,10 +62,13 @@ type State = {
    filters:{
       datatype:string[]
    },
-   collapse:{ [string] : boolean }
+   collapse:{ [string] : boolean },
+   loader:{[string]:Component<*>}
 }
 
 class App extends Component<Props,State> {
+   _facets : string[]  ;
+
 
    constructor(props : Props) {
       super(props);
@@ -79,7 +84,8 @@ class App extends Component<Props,State> {
          filters: {datatype:get.t?get.t.split(","):["Any"]},
          dataSource: [],
          keyword:get.q?get.q.replace(/"/g,""):"",
-         collapse:{}
+         collapse:{},
+         loader:{}
       };
    }
 
@@ -107,23 +113,45 @@ class App extends Component<Props,State> {
       return this.props.config.ldspdi.endpoints[this.props.config.ldspdi.index]
    }
 
-   componentWillUpdate() {
+   componentWillUpdate(newProps) {
 
-   }
+      console.log("willU",this.props,newProps)
 
-   componentDidUpdate()
-   {
-      if(this.state.willSearch)
+      let update = false ;
+      let state = this.state ;
+
+      if(state.willSearch)
       {
          this.requestSearch();
-         this.setState({willSearch:false})
+         state = { ...state, willSearch:false}
+         update = true ;
       }
 
-      if(this.props.keyword && !this.props.gettingDatatypes && !this.props.datatypes)
+      if(!newProps.datatypes) //  !this.props.datatypes.hash )
       {
          this.props.onGetDatatypes(this.state.keyword,this.state.language)
       }
+
+      if(!newProps.facets)
+      {
+         console.log("noFacet")
+
+         if(this.props.config.facets && this.state.filters.datatype && this.state.filters.datatype.length > 0
+          && this.state.filters.datatype.indexOf("Any") == -1)
+          {
+
+            if(this._facets) for(let f of this._facets) {
+
+               this.props.onGetFacetInfo(this.state.keyword,this.state.language,f)
+
+            }
+         }
+      }
+
+      if(update) this.setState(state)
    }
+
+
 
    handleCheck = (ev:Event,lab:string,val:boolean) => {
 
@@ -136,7 +164,7 @@ class App extends Component<Props,State> {
       */
       let f = [lab]
 
-      this.setState(
+      let state =
          {
             ...this.state,
             filters:
@@ -145,16 +173,16 @@ class App extends Component<Props,State> {
                datatype:f
             }
          }
-      )
 
       if(val && this.props.keyword)
       {
          let key = this.state.keyword ;
          if(key.indexOf("\"") === -1) key = "\""+key+"\""
-         if(lab != "Any") this.props.onCheckDatatype(lab,key,this.state.language)
+         if(lab != "Any") { this.props.onCheckDatatype(lab,key,this.state.language)  }
          else this.props.onSearchingKeyword(key,this.state.language,f)
          this.props.history.push("/search?q="+key+"&lg="+this.state.language+"&t="+f.join(","))
       }
+      this.setState( state )
    }
 
 
@@ -193,43 +221,47 @@ class App extends Component<Props,State> {
          {
             if(!this.props.datatypes || !this.props.datatypes.results)
             {
-               loader = <Loader loaded={false} className="datatypesLoader" style={{position:"relative"}}/>
-
             }
-            else if( this.props.datatypes.results) for(let r of this.props.datatypes.results.bindings){
+            else {
 
-               //r = r.bindings
-               let typ = r.f.value.replace(/^.*?([^/]+)$/,"$1")
+               //if(this.state.loader.datatype)
+               //   this.setState({ loader: { ...this.state.loader, datatype:false }})
 
-               if(typ != "" && types.indexOf(typ) === -1)
-               {
-                  m++;
+               if( this.props.datatypes.results) for(let r of this.props.datatypes.results.bindings){
 
-                  types.push(typ);
+                  //r = r.bindings
+                  let typ = r.f.value.replace(/^.*?([^/]+)$/,"$1")
 
-                  counts["datatype"][typ]=Number(r.cid.value)
-                  counts["datatype"]["Any"]+=Number(r.cid.value)
+                  if(typ != "" && types.indexOf(typ) === -1)
+                  {
+                     m++;
 
-                  /*
-                  let value = typ
+                     types.push(typ);
 
-                  let box =
-                  <div key={m} style={{width:"150px",textAlign:"left"}}>
-                     <FormControlLabel
-                        control={
-                           <Checkbox
-                              checked={this.state.filters.datatype.indexOf(typ) !== -1}
-                              icon={<span className='checkB'/>}
-                              checkedIcon={<span className='checkedB'><CheckCircle style={{color:"#444",margin:"-3px 0 0 -3px",width:"26px",height:"26px"}}/></span>}
-                              onChange={(event, checked) => this.handleCheck(event,value,checked)} />
+                     counts["datatype"][typ]=Number(r.cid.value)
+                     counts["datatype"]["Any"]+=Number(r.cid.value)
 
-                        }
-                        label={typ}
-                     />
-                     </div>
-                     facetList.push(box)
-                        */
+                     /*
+                     let value = typ
 
+                     let box =
+                     <div key={m} style={{width:"150px",textAlign:"left"}}>
+                        <FormControlLabel
+                           control={
+                              <Checkbox
+                                 checked={this.state.filters.datatype.indexOf(typ) !== -1}
+                                 icon={<span className='checkB'/>}
+                                 checkedIcon={<span className='checkedB'><CheckCircle style={{color:"#444",margin:"-3px 0 0 -3px",width:"26px",height:"26px"}}/></span>}
+                                 onChange={(event, checked) => this.handleCheck(event,value,checked)} />
+
+                           }
+                           label={typ}
+                        />
+                        </div>
+                        facetList.push(box)
+                           */
+
+                  }
                }
             }
 
@@ -273,14 +305,16 @@ class App extends Component<Props,State> {
 
       types = types.sort()
 
-      let facets ;
-      if(this.props.config.facets && this.state.filters.datatype && this.state.filters.datatype.length > 0
-        && this.state.filters.datatype.indexOf("Any") === -1)
-      {
-         facets = this.props.config.facets.simple["bdo:"+this.state.filters.datatype[0]]
-      }
+         this._facets = null ;
 
-      console.log("facets",facets,this.props.config.facets,this.state.filters.datatype)
+
+         if(this.props.config.facets && this.state.filters.datatype && this.state.filters.datatype.length > 0
+          && this.state.filters.datatype.indexOf("Any") == -1)
+          {
+             this._facets = this.props.config.facets.simple["bdo:"+this.state.filters.datatype[0]]
+
+         }
+         console.log("facets",this._facets,this.props.config.facets,this.state.filters.datatype)
 
       return (
 <div>
@@ -335,7 +369,9 @@ class App extends Component<Props,State> {
                               />
                            </div> )}
                      </Collapse>
-                     {loader}
+                     {  this.props.datatypes && !this.props.datatypes.hash &&
+                        <Loader loaded={false} className="datatypesLoader" style={{position:"relative"}}/>
+                     }
                      <ListItem
                         style={{display:"flex",justifyContent:"space-between",padding:"0 20px",borderBottom:"1px solid #bbb",cursor:"pointer"}}
                         onClick={(e) => { this.setState({collapse:{ ...this.state.collapse, "datatype":!this.state.collapse["datatype"]} }); } }
@@ -351,7 +387,7 @@ class App extends Component<Props,State> {
                         { //facetList&&facetList.length > 0?facetList.sort((a,b) => { return a.props.label < b.props.label } ):
                               types.map((i) => {
 
-                                 console.log("counts",i,counts["datatype"][i])
+                                 //console.log("counts",i,counts["datatype"][i])
 
                               return (
                                  <div key={i} style={{textAlign:"left"}}>
@@ -373,25 +409,28 @@ class App extends Component<Props,State> {
                         )}
                         </div>
                      </Collapse>
-                     { facets && this.props.ontology && facets.map((i) => {
+                     { this._facets && this.props.ontology && this._facets.map((i) => {
 
                         let label = this.props.ontology[i.replace(/bdo:/,"http://purl.bdrc.io/ontology/core/")]
                            ["http://www.w3.org/2000/01/rdf-schema#label"][0].value
 
-                        console.log("label",label)
+                        console.log("label",i,label)
 
                         return (
                            <div>
+                              {  this.props.facets&&this.props.facets[i] && !this.props.facets[i].hash &&
+                                 <Loader loaded={false} className="facetLoader" style={{position:"relative"}}/>
+                              }
                               <ListItem
                                  style={{display:"flex",justifyContent:"space-between",padding:"0 20px",borderBottom:"1px solid #bbb",cursor:"pointer"}}
-                                 onClick={(e) => { this.setState({collapse:{ ...this.state.collapse, i:!this.state.collapse[i]} }); } }
+                                 onClick={(e) => { this.setState({collapse:{ ...this.state.collapse, [i]:!this.state.collapse[i]} }); } }
                                  >
                                  <Typography style={{fontSize:"18px",lineHeight:"50px",textTransform:"capitalize"}}>{label}</Typography>
-                                 { !this.state.collapse[i] ? <ExpandLess /> : <ExpandMore />}
+                                 { this.state.collapse[i] ? <ExpandLess /> : <ExpandMore />}
                               </ListItem>
                               <Collapse
                                  className={["collapse",this.state.collapse[i]?"open":"close"]}
-                                 in={!this.state.collapse["facet_"]}
+                                 in={this.state.collapse[i]}
                                   style={{padding:"10px 0 0 50px"}} >
                                  <div>
                                  {}

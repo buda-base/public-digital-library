@@ -10,7 +10,7 @@ const api = new bdrcApi();
 
 function* initiateApp(params) {
    try {
-      const config = yield call([api, api.loadConfig]);               
+      const config = yield call([api, api.loadConfig]);
       yield put(dataActions.loadedConfig(config));
       yield put(dataActions.choosingHost(config.ldspdi.endpoints[config.ldspdi.index]));
 
@@ -111,6 +111,26 @@ export function* getOneDatatype(datatype,keyword,language:string) {
    }
 }
 
+
+export function* getFacetInfo(keyword,language:string,property:string) {
+
+   console.log("searchFacet",keyword,language,property);
+
+   //yield put(dataActions.loading(keyword, true));
+   try {
+      const result = yield call([api, api.getResultsSimpleFacet],keyword,language,property);
+
+      //yield put(dataActions.loading(keyword, false));
+      yield put(dataActions.foundFacetInfo(keyword, language, property, result));
+      //yield put(uiActions.showResults(keyword, language));
+
+   } catch(e) {
+      yield put(dataActions.searchFailed(keyword, e.message));
+      //yield put(dataActions.loading(keyword, false));
+   }
+
+}
+
 export function* watchSearchingKeyword() {
 
    yield takeLatest(
@@ -134,6 +154,14 @@ export function* watchGetOneDatatype() {
       (action) => getOneDatatype(action.payload.datatype,action.payload.keyword,action.payload.language)
    );
 }
+
+export function* watchGetFacetInfo() {
+
+   yield takeLatest(
+      dataActions.TYPES.getFacetInfo,
+      (action) => getFacetInfo(action.payload.keyword,action.payload.language,action.payload.property)
+   );
+}
 /** Root **/
 
 export default function* rootSaga() {
@@ -141,6 +169,7 @@ export default function* rootSaga() {
       watchInitiateApp(),
       watchChoosingHost(),
       watchGetDatatypes(),
+      watchGetFacetInfo(),
       watchGetOneDatatype(),
       watchSearchingKeyword()
    ])
