@@ -177,6 +177,7 @@ class App extends Component<Props,State> {
       let facetList = []
       let types = ["Any"]
       let loader ;
+      let counts = { "datatype" : { "Any" : 0 } }
 
       if(this.props.keyword && (results = this.props.searches[this.props.keyword+"@"+this.state.language]))
       {
@@ -205,6 +206,9 @@ class App extends Component<Props,State> {
                   m++;
 
                   types.push(typ);
+
+                  counts["datatype"][typ]=Number(r.cid.value)
+                  counts["datatype"]["Any"]+=Number(r.cid.value)
 
                   /*
                   let value = typ
@@ -276,7 +280,7 @@ class App extends Component<Props,State> {
          facets = this.props.config.facets.simple["bdo:"+this.state.filters.datatype[0]]
       }
 
-      // console.log("facets",facets,this.props.config.facets,this.state.filters.datatype )
+      console.log("facets",facets,this.props.config.facets,this.state.filters.datatype)
 
       return (
 <div>
@@ -345,22 +349,27 @@ class App extends Component<Props,State> {
                          style={{padding:"10px 0 0 50px"}} >
                         <div>
                         { //facetList&&facetList.length > 0?facetList.sort((a,b) => { return a.props.label < b.props.label } ):
-                              types.map((i) =>
-                           <div key={i} style={{width:"150px",textAlign:"left"}}>
-                              <FormControlLabel
-                                 control={
-                                    <Checkbox
-                                       //{...i=="Any"?{defaultChecked:true}:{}}
-                                       checked={this.state.filters.datatype.indexOf(i) !== -1}
-                                       icon={<span className='checkB'/>}
-                                       checkedIcon={<span className='checkedB'><CheckCircle style={{color:"#444",margin:"-3px 0 0 -3px",width:"26px",height:"26px"}}/></span>}
-                                       onChange={(event, checked) => this.handleCheck(event,i,checked)} />
+                              types.map((i) => {
 
-                                 }
-                                 label={i}
-                              />
-                              </div>
+                                 console.log("counts",i,counts["datatype"][i])
 
+                              return (
+                                 <div key={i} style={{textAlign:"left"}}>
+                                    <FormControlLabel
+                                       control={
+                                          <Checkbox
+                                             //{...i=="Any"?{defaultChecked:true}:{}}
+                                             checked={this.state.filters.datatype.indexOf(i) !== -1}
+                                             icon={<span className='checkB'/>}
+                                             checkedIcon={<span className='checkedB'><CheckCircle style={{color:"#444",margin:"-3px 0 0 -3px",width:"26px",height:"26px"}}/></span>}
+                                             onChange={(event, checked) => this.handleCheck(event,i,checked)} />
+
+                                       }
+                                       {...counts["datatype"][i]?{label:i + " ("+counts["datatype"][i]+")"}:{label:i}}
+                                    />
+                                 </div>
+                              )
+                           }
                         )}
                         </div>
                      </Collapse>

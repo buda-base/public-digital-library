@@ -193,7 +193,7 @@ export default class API {
       try {
            let config = store.getState().data.config.ldspdi
            let url = config.endpoints[config.index]+"/query" ;
-           let data = this.getQueryResults(url, key, {"LG_NAME":lang,"searchType":"Res_allTypes"});
+           let data = this.getQueryResults(url, key, {"LG_NAME":lang,"searchType":"Res_allTypes_withCount"});
 
            console.log("datatypes",data)
 
