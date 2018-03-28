@@ -16,6 +16,7 @@ const mapStateToProps = (state) => {
    let keyword = state.data.searches.keyword
    let gettingDatatypes = state.data.gettingDatatypes ;
    let datatypes = state.data.datatypes ;
+   let ontology = state.data.ontology ;
 
    let loading ;
    if(keyword) {
@@ -24,7 +25,7 @@ const mapStateToProps = (state) => {
 
    }
 
-   return { config, hostFailure, searches, keyword, loading,gettingDatatypes,datatypes }
+   return { config, hostFailure, searches, keyword, loading,gettingDatatypes,datatypes,ontology }
 
 };
 

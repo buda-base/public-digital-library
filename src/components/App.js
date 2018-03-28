@@ -49,6 +49,7 @@ type Props = {
    onGetDatatypes:(k:string,lg:string)=>void,
    onCheckDatatype:(t:string,k:string,lg:string)=>void
 }
+
 type State = {
    willSearch?:boolean,
    language:string,
@@ -78,7 +79,7 @@ class App extends Component<Props,State> {
          filters: {datatype:get.t?get.t.split(","):["Any"]},
          dataSource: [],
          keyword:get.q?get.q.replace(/"/g,""):"",
-         collapse:{ "collection":false}
+         collapse:{}
       };
    }
 
@@ -268,6 +269,15 @@ class App extends Component<Props,State> {
 
       types = types.sort()
 
+      let facets ;
+      if(this.props.config.facets && this.state.filters.datatype && this.state.filters.datatype.length > 0
+        && this.state.filters.datatype.indexOf("Any") === -1)
+      {
+         facets = this.props.config.facets.simple["bdo:"+this.state.filters.datatype[0]]
+      }
+
+      // console.log("facets",facets,this.props.config.facets,this.state.filters.datatype )
+
       return (
 <div>
 
@@ -297,11 +307,12 @@ class App extends Component<Props,State> {
                         onClick={(e) => { this.setState({collapse:{ ...this.state.collapse, "collection":!this.state.collapse["collection"]} }); } }
                         >
                         <Typography style={{fontSize:"18px",lineHeight:"50px",}}>Collection</Typography>
-                        { !this.state.collapse["collection"] ? <ExpandLess /> : <ExpandMore />}
+                        { this.state.collapse["collection"] ? <ExpandLess /> : <ExpandMore />}
                      </ListItem>
                      <Collapse
-                        in={!this.state.collapse["collection"]}
-                        style={{padding:"10px 0 0 50px",marginBottom:"30px"}}
+                        in={this.state.collapse["collection"]}
+                        className={["collapse",this.state.collapse["collection"]?"open":"close"]}
+                        style={{padding:"10px 0 0 50px"}} // ,marginBottom:"30px"
                         >
                            { ["BDRC" ,"rKTs" ].map((i) => <div key={i} style={{width:"150px",textAlign:"left"}}>
                               <FormControlLabel
@@ -309,6 +320,7 @@ class App extends Component<Props,State> {
                                     <Checkbox
                                        {... i=="rKTs" ?{}:{defaultChecked:true}}
                                        disabled={true}
+                                       className="checkbox disabled"
                                        icon={<span className='checkB'/>}
                                        checkedIcon={<span className='checkedB'><CheckCircle style={{color:"#444",margin:"-3px 0 0 -3px",width:"26px",height:"26px"}}/></span>}
                                        //onChange={(event, checked) => this.handleCheck(event,i,checked)}
@@ -319,15 +331,17 @@ class App extends Component<Props,State> {
                               />
                            </div> )}
                      </Collapse>
+                     {loader}
                      <ListItem
                         style={{display:"flex",justifyContent:"space-between",padding:"0 20px",borderBottom:"1px solid #bbb",cursor:"pointer"}}
                         onClick={(e) => { this.setState({collapse:{ ...this.state.collapse, "datatype":!this.state.collapse["datatype"]} }); } }
                         >
                         <Typography style={{fontSize:"18px",lineHeight:"50px",}}>Data Type</Typography>
-                        { !this.state.collapse["datatype"] ? <ExpandLess /> : <ExpandMore />}
+                        { this.state.collapse["datatype"] ? <ExpandLess /> : <ExpandMore />}
                      </ListItem>
                      <Collapse
-                        in={!this.state.collapse["datatype"]}
+                        in={this.state.collapse["datatype"]}
+                        className={["collapse",  this.state.collapse["datatype"]?"open":"close"]}
                          style={{padding:"10px 0 0 50px"}} >
                         <div>
                         { //facetList&&facetList.length > 0?facetList.sort((a,b) => { return a.props.label < b.props.label } ):
@@ -350,25 +364,35 @@ class App extends Component<Props,State> {
                         )}
                         </div>
                      </Collapse>
-                     {loader}
-                     { true &&
-                        <div>
-                        <ListItem
-                           style={{display:"flex",justifyContent:"space-between",padding:"0 20px",borderBottom:"1px solid #bbb",cursor:"pointer"}}
-                           onClick={(e) => { this.setState({collapse:{ ...this.state.collapse, "facet_":!this.state.collapse["facet_"]} }); } }
-                           >
-                           <Typography style={{fontSize:"18px",lineHeight:"50px",}}>Facet</Typography>
-                           { !this.state.collapse["facet_"] ? <ExpandLess /> : <ExpandMore />}
-                        </ListItem>
-                        <Collapse
-                           in={!this.state.collapse["facet_"]}
-                            style={{padding:"10px 0 0 50px"}} >
+                     { facets && this.props.ontology && facets.map((i) => {
+
+                        let label = this.props.ontology[i.replace(/bdo:/,"http://purl.bdrc.io/ontology/core/")]
+                           ["http://www.w3.org/2000/01/rdf-schema#label"][0].value
+
+                        console.log("label",label)
+
+                        return (
                            <div>
-                           {}
+                              <ListItem
+                                 style={{display:"flex",justifyContent:"space-between",padding:"0 20px",borderBottom:"1px solid #bbb",cursor:"pointer"}}
+                                 onClick={(e) => { this.setState({collapse:{ ...this.state.collapse, i:!this.state.collapse[i]} }); } }
+                                 >
+                                 <Typography style={{fontSize:"18px",lineHeight:"50px",textTransform:"capitalize"}}>{label}</Typography>
+                                 { !this.state.collapse[i] ? <ExpandLess /> : <ExpandMore />}
+                              </ListItem>
+                              <Collapse
+                                 className={["collapse",this.state.collapse[i]?"open":"close"]}
+                                 in={!this.state.collapse["facet_"]}
+                                  style={{padding:"10px 0 0 50px"}} >
+                                 <div>
+                                 {}
+                                 </div>
+                              </Collapse>
                            </div>
-                        </Collapse>
-                     </div>
-                     }
+                        )
+                        }
+                     )
+                  }
                   </div>
                }
             </div>
