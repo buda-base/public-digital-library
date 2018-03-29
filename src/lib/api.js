@@ -33,7 +33,31 @@ export default class API {
 
 
      async getURLContents(url: string, minSize : boolean = true): Promise<string> {
-         let text;
+
+         let response = await this._fetch( url )
+
+         if (!response.ok) {
+             if (response.status === '404') {
+                 throw new ResourceNotFound('The resource does not exist.');
+             }
+             else {
+                console.log("FETCH pb",response)
+                 throw new ResourceNotFound('Problem fetching the resource');
+             }
+         }
+
+         console.log("FETCH ok",url,response)
+
+         let text = await response.text()
+
+         //console.log("RESPONSE text",text)
+
+         if(minSize && text.length <= 553) { throw new ResourceNotFound('The resource does not exist.'); }
+
+         return text ;
+      }
+
+/*
          return new Promise((resolve, reject) => {
 
              this._fetch( url ).then((response) => {
@@ -64,6 +88,7 @@ export default class API {
              });
          });
      }
+     */
 
     async loadConfig(): Promise<string>
     {
@@ -138,6 +163,36 @@ export default class API {
 
       console.log("body",body);
 
+      let response = await this._fetch( url,
+      {// header pour accéder aux résultat en JSON !
+         method: 'POST',
+         body:body,
+         headers:new Headers({
+           "Content-Type": "application/x-www-form-urlencoded",
+           "Accept": "application/json"
+        })
+      })
+
+      if (!response.ok) {
+         if (response.status === '404') {
+             throw new ResourceNotFound('The search server '+url+' seem to have moved...');
+         }
+         else {
+            console.log("FETCH pb",response)
+             throw new ResourceNotFound('Problem fetching the results ['+response.message+']');
+         }
+     }
+     //console.log("FETCH ok",url,response)
+
+     res = JSON.parse(await response.text())
+
+
+      console.log("resolving",res)
+
+      return res ;
+   }
+
+      /*
       return new Promise((resolve, reject) => {
 
 
@@ -150,6 +205,7 @@ export default class API {
                "Accept": "application/json"
             })
          }).then((response) => {
+
 
               if (!response.ok) {
                   if (response.status === '404') {
@@ -164,7 +220,10 @@ export default class API {
 
               response.text().then((req) => {
 
+
                   res = JSON.parse(req) //.results.bindings ;
+
+                  console.log("resolving",res)
 
                   resolve(res);
               }).catch((e) => {
@@ -175,6 +234,7 @@ export default class API {
           });
        });
       }
+      */
 
    async _getResultsData(key: string,lang: string): Promise<{} | null> {
       try {
@@ -191,11 +251,13 @@ export default class API {
 
      async getResultsSimpleFacet(key: string,lang: string,property:string): Promise<{} | null> {
         try {
+            console.log("simpleFacet start",key,lang,property)
+
              let config = store.getState().data.config.ldspdi
              let url = config.endpoints[config.index]+"/query" ;
              let data = this.getQueryResults(url, key, {"LG_NAME":lang,"searchType":"Res_simpleFacet","R_PROP":property});
 
-             console.log("simpleFacet",data)
+             console.log("simpleFacet end",data)
 
              return data ;
         } catch(e) {

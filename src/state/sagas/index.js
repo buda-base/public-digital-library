@@ -112,20 +112,22 @@ export function* getOneDatatype(datatype,keyword,language:string) {
 }
 
 
-export function* getFacetInfo(keyword,language:string,property:string) {
+async function getFacetInfo(keyword,language:string,property:string) {
 
    console.log("searchFacet",keyword,language,property);
 
    //yield put(dataActions.loading(keyword, true));
    try {
-      const result = yield call([api, api.getResultsSimpleFacet],keyword,language,property);
+      const result = await api.getResultsSimpleFacet(keyword,language,property);
+
+      console.log("back from call",property,result);
 
       //yield put(dataActions.loading(keyword, false));
-      yield put(dataActions.foundFacetInfo(keyword, language, property, result));
+      store.dispatch(dataActions.foundFacetInfo(keyword, language, property, result));
       //yield put(uiActions.showResults(keyword, language));
 
    } catch(e) {
-      yield put(dataActions.searchFailed(keyword, e.message));
+      store.dispatch(dataActions.searchFailed(keyword, e.message));
       //yield put(dataActions.loading(keyword, false));
    }
 

@@ -100,16 +100,18 @@ export const searchingKeyword = (state: DataState, action: Action) => {
 }
 reducers[actions.TYPES.searchingKeyword] = searchingKeyword;
 
+/*
 export const getOneDatatype = (state: DataState, action: Action) => {
 
 console.log("get1DT")
 
     return {
         ...state,
-        facets:null
+        facets:true
     }
 }
 reducers[actions.TYPES.getOneDatatype] = getOneDatatype;
+*/
 
 export const getDatatypes = (state: DataState, action: Action) => {
 
@@ -175,6 +177,8 @@ reducers[actions.TYPES.foundDatatypes] = foundDatatypes;
 
 
 export const foundFacetInfo = (state: DataState, action: actions.FoundResultsAction) => {
+
+   console.log("facetinfo",action.payload.property,state.facets)
 
       return {
       ...state,
