@@ -199,30 +199,34 @@ class App extends Component<Props,State> {
       let key = this.state.keyword ;
       if(key.indexOf("\"") === -1) key = "\""+key+"\""
 
+      let state =  this.state
+
       if(val)
       {
-         let state =  this.state
 
          state = {  ...state,  filters: {  ...state.filters, facets: { ...state.filters.facets, [prop] : [lab] } } }
 
          if(lab == "Any")
          {
-            this.props.onSearchingKeyword(key,this.state.language,[typ])
+            this.props.onSearchingKeyword(key,state.language,[typ])
+
+            state = this.setFacets(state,state.filters.datatype[0]);
          }
          else {
-            this.props.onCheckFacet(key,this.state.language,{[prop]:lab})
+            this.props.onCheckFacet(key,state.language,{[prop]:lab})
          }
 
          this.setState( state )
       }
       else
       {
-         if(this.state.filters.facets && this.state.filters.facets[prop])
+         if(state.filters.facets && state.filters.facets[prop])
          {
-
             this.props.onSearchingKeyword(key,this.state.language,[typ])
 
-            this.setState( {  ...this.state,  filters: {  ...this.state.filters, facets: { [prop] : ["Any"] } } } )
+            state = this.setFacets(state,state.filters.datatype[0]);
+
+            this.setState( {  ...state,  filters: {  ...state.filters, facets: { [prop] : ["Any"] } } } )
          }
       }
 
@@ -563,7 +567,7 @@ class App extends Component<Props,State> {
                                  { !show && this.state.collapse[i] ? <ExpandLess /> : <ExpandMore />  }
                               </ListItem>
                               <Collapse
-                                 className={["collapse",this.state.collapse[i]?"open":"close"].join(" ")}
+                                 className={["collapse",!show && this.state.collapse[i]?"open":"close"].join(" ")}
                                  in={!show && this.state.collapse[i]}
                                   style={{padding:"10px 0 0 50px"}} >
                                   <div>
