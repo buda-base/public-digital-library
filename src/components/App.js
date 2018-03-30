@@ -96,6 +96,7 @@ class App extends Component<Props,State> {
    requestSearch()
    {
       let key = this.state.keyword ;
+      if(key == "") return ;
       if(key.indexOf("\"") === -1) key = "\""+key+"\""
 
       let state = { ...this.state, dataSource:[] }
@@ -114,7 +115,9 @@ class App extends Component<Props,State> {
       else {
          this.props.onSearchingKeyword(key,this.state.language,this.state.filters.datatype)
 
-         state = this.setFacets(state,this.state.filters.datatype[0]);
+         state = this.setFacets(this.props,state,this.state.filters.datatype[0]);
+
+         if(!this.props.datatypes) this.props.onGetDatatypes(this.state.keyword,this.state.language)
 
          this.props.history.push("/search?q="+key+"&lg="+this.state.language+"&t="+this.state.filters.datatype.join(","))
       }
@@ -152,10 +155,10 @@ class App extends Component<Props,State> {
       // console.log("newProps.facets",newProps.facets)
 
 
-      if(this.props.config.facets && !this._facetsRequested && !state.facets && state.filters.datatype.length > 0 && state.filters.datatype.indexOf("Any") === -1)
+      if(state.keyword != "" && newProps.config.facets && !this._facetsRequested && !state.facets && state.filters.datatype.length > 0 && state.filters.datatype.indexOf("Any") === -1)
       {
          this._facetsRequested = true ;
-         state = this.setFacets(state,state.filters.datatype[0])
+         state = this.setFacets(newProps,state,state.filters.datatype[0])
          console.log("facets ???",state)
          update = true ;
       }
@@ -164,13 +167,13 @@ class App extends Component<Props,State> {
       if(update) this.setState(state)
 
 
-      // console.log("willUfin",this.state.filters.datatype)
+      console.log("willUfin",this.state.filters.datatype)
    }
 
-   setFacets = (state:State,lab:string) =>
+   setFacets = (props:Props,state:State,lab:string) =>
    {
-      let facets = this.props.config.facets.simple["bdo:"+lab]
-      console.log("facets",facets,this.props.config.facets,this.state.filters.datatype)
+      let facets = props.config.facets.simple["bdo:"+lab]
+      console.log("facets",facets,props.config.facets,state.filters.datatype)
       if(facets)
       {
          state = {...state,facets}
@@ -181,7 +184,7 @@ class App extends Component<Props,State> {
             //t++;
             state = { ...state, filters:{ ...state.filters, facets:{ ...state.filters.facets, [f]:["Any"] } } }
 
-            this.props.onGetFacetInfo(this.state.keyword,this.state.language,f)
+            this.props.onGetFacetInfo(state.keyword,state.language,f)
         }
       }
       else {
@@ -210,7 +213,7 @@ class App extends Component<Props,State> {
          {
             this.props.onSearchingKeyword(key,state.language,[typ])
 
-            state = this.setFacets(state,state.filters.datatype[0]);
+            state = this.setFacets(this.props,state,state.filters.datatype[0]);
          }
          else {
             this.props.onCheckFacet(key,state.language,{[prop]:lab})
@@ -224,7 +227,7 @@ class App extends Component<Props,State> {
          {
             this.props.onSearchingKeyword(key,this.state.language,[typ])
 
-            state = this.setFacets(state,state.filters.datatype[0]);
+            state = this.setFacets(this.props,state,state.filters.datatype[0]);
 
             this.setState( {  ...state,  filters: {  ...state.filters, facets: { [prop] : ["Any"] } } } )
          }
@@ -234,13 +237,14 @@ class App extends Component<Props,State> {
 
    handleCheck = (ev:Event,lab:string,val:boolean) => {
 
-      console.log("check",lab,val)
+      console.log("check",lab,val,'('+this.state.keyword+')')
 
       /* // to be continued ...
       let f = this.state.filters.datatype
       if(f.indexOf(lab) != -1 && !val) f.splice(f.indexOf(lab),1)
       else if(f.indexOf(lab) == -1 && val) f.push(lab)
       */
+
       let f = [lab]
 
       let state =  {  ...this.state,  filters: {  ...this.state.filters, datatype:f } }
@@ -250,11 +254,12 @@ class App extends Component<Props,State> {
 
          let key = this.state.keyword ;
          if(key.indexOf("\"") === -1) key = "\""+key+"\""
+
          if(lab != "Any") {
 
             this.props.onCheckDatatype(lab,key,this.state.language)
 
-            state = this.setFacets(state,lab);
+            state = this.setFacets(this.props,state,lab);
 
 
          }
@@ -275,15 +280,17 @@ class App extends Component<Props,State> {
 
       if(!val)
       {
+
          state = {  ...this.state,  filters: {  ...this.state.filters, datatype:["Any"] } }
 
          if(this.props.keyword && this.state.filters.datatype && this.state.filters.datatype.indexOf(lab) !== -1)
          {
-            state = { ...state, facets:null}
 
             let key = this.state.keyword ;
+            if(key == "") return ;
             if(key.indexOf("\"") === -1) key = "\""+key+"\""
 
+            state = { ...state, facets:null}
             this.props.onSearchingKeyword(key,this.state.language)
 
             // no need because same saerch...
@@ -527,6 +534,9 @@ class App extends Component<Props,State> {
                            .replace(/adm:/,"http://purl.bdrc.io/ontology/admin/")
                         ]["http://www.w3.org/2000/01/rdf-schema#label"][0].value
 
+                        //if(label) label = label["http://www.w3.org/2000/01/rdf-schema#label"]
+                        //if(label) label = label[0].value
+
 
                         let show = false //(this.props.facets&&this.props.facets[i] && !this.props.facets[i].hash)
                         if(!this.props.facets || !this.props.facets[i] || !this.props.facets[i].hash ) show = true
@@ -537,8 +547,8 @@ class App extends Component<Props,State> {
                         if(values) values = values[i]
                         if(values) values = values.results
                             //{...counts["datatype"][i]?{label:i + " ("+counts["datatype"][i]+")"}:{label:i}}
-                        if(values && values.bindings && values.bindings.unshift) {
-                              if(values.bindings[0].val.value != "Any") {
+                        if(values && values.bindings && values.bindings.unshift && values.bindings[0]) {
+                              if(values.bindings[0].val && values.bindings[0].val.value && values.bindings[0].val.value != "Any") {
                                  values.bindings.sort(function(a,b){ return Number(a.cid.value) < Number(b.cid.value) } )
                                  values.bindings.unshift({
                                     cid:{datatype: "http://www.w3.org/2001/XMLSchema#integer", type: "literal", value:"?" },
