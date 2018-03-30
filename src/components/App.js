@@ -178,8 +178,9 @@ class App extends Component<Props,State> {
             // compulsory to delay to avoid saga's bug in quasi-simultaneous events...
             //setTimeout((function(that) { return function() { that.props.onGetFacetInfo(that.state.keyword,that.state.language,f) } })(this), t*10);
             //t++;
+            state = { ...state, filters:{ ...state.filters, facets:{ ...state.filters.facets, [f]:["Any"] } } }
 
-           this.props.onGetFacetInfo(this.state.keyword,this.state.language,f)
+            this.props.onGetFacetInfo(this.state.keyword,this.state.language,f)
         }
       }
       else {
@@ -193,9 +194,12 @@ class App extends Component<Props,State> {
 
       console.log("check",prop,lab,val)
 
+
       if(val)
       {
-         let state =  {  ...this.state,  filters: {  ...this.state.filters, facets: { [prop] : [lab] } } }
+         let state =  this.state
+
+         state = {  ...state,  filters: {  ...state.filters, facets: { ...state.filters.facets, [prop] : [lab] } } }
 
          this.setState( state )
       }
@@ -240,33 +244,36 @@ class App extends Component<Props,State> {
 
             this.props.onSearchingKeyword(key,this.state.language,f)
 
-            this.props.onGetDatatypes(this.state.keyword,this.state.language)
+            // no need because same search
+            //this.props.onGetDatatypes(this.state.keyword,this.state.language)
          }
 
 
          this.props.history.push("/search?q="+key+"&lg="+this.state.language+"&t="+f.join(","))
       }
 
-      this.setState( state ) //, function() {  console.log("CHECKED changed the state",state) } )
 
-
-      // bug : différence entre clic/déclic Role et Person
-
-      /*
       if(!val)
       {
-         if(this.state.filters.datatype && this.state.filters.datatype.indexOf(lab) !== -1)
+         state = {  ...this.state,  filters: {  ...this.state.filters, datatype:["Any"] } }
+
+         if(this.props.keyword && this.state.filters.datatype && this.state.filters.datatype.indexOf(lab) !== -1)
          {
+            state = { ...state, facets:null}
 
             let key = this.state.keyword ;
             if(key.indexOf("\"") === -1) key = "\""+key+"\""
-            this.props.onSearchingKeyword(key,this.state.language)
-            this.props.history.push("/search?q="+key+"&lg="+this.state.language+"&t=Any");
 
-            this.setState( {  ...this.state,  filters: {  ...this.state.filters, datatype:["Any"] } } )
+            this.props.onSearchingKeyword(key,this.state.language)
+
+            // no need because same saerch...
+            //this.props.onGetDatatypes(this.state.keyword,this.state.language)
+
+            this.props.history.push("/search?q="+key+"&lg="+this.state.language+"&t=Any");
          }
       }
-      */
+
+      this.setState( state ) //, function() {  console.log("CHECKED changed the state",state) } )
    }
 
 
@@ -385,9 +392,14 @@ class App extends Component<Props,State> {
          }
       }
 
-      if(!results) types = ["Any","Person","Work","Corporation","Place","Item","Etext","Role","Topic","Lineage"]
-
-      types = types.sort()
+      if(!results)
+      {
+         types = ["Any","Person","Work","Corporation","Place","Item","Etext","Role","Topic","Lineage"]
+         types = types.sort()
+      }
+      else {
+         types = types.sort(function(a,b) { return counts["datatype"][a] < counts["datatype"][b] })
+      }
 
       return (
 <div>
@@ -488,14 +500,35 @@ class App extends Component<Props,State> {
                      </Collapse>
                      { this.state.facets && this.props.ontology && this.state.facets.map((i) => {
 
-                        let label = this.props.ontology[i.replace(/bdo:/,"http://purl.bdrc.io/ontology/core/")]
-                           ["http://www.w3.org/2000/01/rdf-schema#label"][0].value
+                        let label = this.props.ontology[i
+                           .replace(/bdo:/,"http://purl.bdrc.io/ontology/core/")
+                           .replace(/adm:/,"http://purl.bdrc.io/ontology/admin/")
+                        ]["http://www.w3.org/2000/01/rdf-schema#label"][0].value
 
 
                         let show = false //(this.props.facets&&this.props.facets[i] && !this.props.facets[i].hash)
                         if(!this.props.facets || !this.props.facets[i] || !this.props.facets[i].hash ) show = true
 
-                        console.log("label",i,label,this.props.facets)
+                        console.log("label",i,label,this.props.facets,counts["datatype"][i])
+
+                        let values = this.props.facets
+                        if(values) values = values[i]
+                        if(values) values = values.results
+                            //{...counts["datatype"][i]?{label:i + " ("+counts["datatype"][i]+")"}:{label:i}}
+                        if(values && values.bindings && values.bindings.unshift) {
+                              if(values.bindings[0].val.value != "Any") {
+                                 values.bindings.sort(function(a,b){ return Number(a.cid.value) < Number(b.cid.value) } )
+                                 values.bindings.unshift({
+                                    cid:{datatype: "http://www.w3.org/2001/XMLSchema#integer", type: "literal", value:"?" },
+                                    val:{type: "uri", value: "Any"}
+                                 })
+                              }
+                              let n = counts["datatype"][this.state.filters.datatype[0]]
+                              if(n) {
+                                 values.bindings[0].cid.value = n
+                              }
+                        }
+
 
                         return (
                            <div key={label}>
@@ -505,21 +538,20 @@ class App extends Component<Props,State> {
                               <ListItem
                                  style={{display:"flex",justifyContent:"space-between",padding:"0 20px",borderBottom:"1px solid #bbb",cursor:"pointer"}}
                                  onClick={(e) => {
-                                    //if(!show)
+                                    if(!show)
                                        this.setState({collapse:{ ...this.state.collapse, [i]:!this.state.collapse[i]} }); } }
                                  >
                                  <Typography style={{fontSize:"18px",lineHeight:"50px",textTransform:"capitalize"}}>{label}</Typography>
-                                 { this.state.collapse[i] ? <ExpandLess /> : <ExpandMore />  }
+                                 { !show && this.state.collapse[i] ? <ExpandLess /> : <ExpandMore />  }
                               </ListItem>
                               <Collapse
                                  className={["collapse",this.state.collapse[i]?"open":"close"].join(" ")}
-                                 in={this.state.collapse[i]}
+                                 in={!show && this.state.collapse[i]}
                                   style={{padding:"10px 0 0 50px"}} >
                                   <div>
                                   {
                                      this.props.facets && this.props.facets[i] &&
-                                     this.props.facets[i].results &&
-                                        this.props.facets[i].results.bindings.map((j) => {
+                                     values && values.bindings.map((j,idx) => {
 
                                            //console.log("counts",i,counts["datatype"][i])
 
@@ -540,12 +572,13 @@ class App extends Component<Props,State> {
                                            let uri = j.val.value;
                                            if(!value) value = uri.replace(/^.*\/([^/]+)$/,"$1")
 
-                                           // console.log("value",j,value)
+                                           console.log("value",j,value)
 
                                            let checked = this.state.filters.facets && this.state.filters.facets[i]
 
                                            if(!checked) checked = false ;
                                            else checked = this.state.filters.facets[i].indexOf(uri) !== -1
+
 
                                            // console.log("checked",checked,i,uri)
 

@@ -88,7 +88,7 @@ reducers[actions.TYPES.chosenHost] = chosenHost;
 export const searchingKeyword = (state: DataState, action: Action) => {
     return {
         ...state,
-        datatypes:null,
+        //datatypes:null,
         facets:null,
         searches:{
            ...state.searches,
