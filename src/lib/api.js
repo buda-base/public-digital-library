@@ -293,6 +293,31 @@ export default class API {
         }
     }
 
+         async getResultsOneFacet(key: string,lang: string,facet:{[string]:string}): Promise<{} | null> {
+            try {
+
+
+                 let config = store.getState().data.config.ldspdi
+                 let url = config.endpoints[config.index]+"/query" ;
+                 let params = {"LG_NAME":lang,"searchType":"Res_simpleFacet_1value"}
+
+                 let i = 1
+                 for(let k of Object.keys(facet))
+                 {
+                    params = { ...params, ["R_PROP"+i] : k, ["R_VAL"+i] : facet[k] };
+                    i ++
+                 }
+
+                  let data = this.getQueryResults(url, key, params )
+
+                 console.log("oneFacet",data)
+
+                 return data ;
+            } catch(e) {
+                 throw e;
+            }
+        }
+
    async getResults(key: string,lang:string): Promise<{} | null> {
      let data = [];
 

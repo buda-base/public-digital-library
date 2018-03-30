@@ -115,6 +115,23 @@ async function getOneDatatype(datatype,keyword,language:string) {
    }
 }
 
+async function getOneFacet(keyword,language:string,facet:{[string]:string}) {
+
+   console.log("searchK1F",keyword,language,facet);
+
+   store.dispatch(uiActions.loading(keyword, true));
+   try {
+      const result = await api.getResultsOneFacet(keyword,language,facet);
+
+      store.dispatch(uiActions.loading(keyword, false));
+      store.dispatch(dataActions.foundResults(keyword, language, result));
+
+   } catch(e) {
+      store.dispatch(dataActions.searchFailed(keyword, e.message));
+      store.dispatch(uiActions.loading(keyword, false));
+   }
+}
+
 
 async function getFacetInfo(keyword,language:string,property:string) {
 
@@ -157,6 +174,14 @@ export function* watchGetOneDatatype() {
    );
 }
 
+export function* watchGetOneFacet() {
+
+   yield takeLatest(
+      dataActions.TYPES.getOneFacet,
+      (action) => getOneFacet(action.payload.keyword,action.payload.language,action.payload.facet)
+   );
+}
+
 export function* watchGetFacetInfo() {
 
    yield takeLatest(
@@ -173,6 +198,7 @@ export default function* rootSaga() {
       watchGetDatatypes(),
       watchGetFacetInfo(),
       watchGetOneDatatype(),
+      watchGetOneFacet(),
       watchSearchingKeyword()
    ])
 }

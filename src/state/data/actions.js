@@ -80,7 +80,8 @@ export type SearchAction = {
         property?:string,
         datatype?:string[],
         keyword: string,
-        language: string
+        language: string,
+        facet?: {[string]:string}
     }
 }
 
@@ -125,6 +126,18 @@ export const getOneDatatype = (datatype: string[],keyword: string, language: str
         type: TYPES.getOneDatatype,
         payload: {
             datatype,
+            keyword,
+            language
+        }
+    }
+}
+
+TYPES.getOneFacet = 'GET_ONE_FACET';
+export const getOneFacet = (keyword: string, language: string, facet:{[string]:string}): Action => {
+    return {
+        type: TYPES.getOneFacet,
+        payload: {
+            facet,
             keyword,
             language
         }

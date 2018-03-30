@@ -49,7 +49,8 @@ type Props = {
    onSearchingKeyword:(k:string,lg:string,t?:string[])=>void,
    onGetDatatypes:(k:string,lg:string)=>void,
    onCheckDatatype:(t:string,k:string,lg:string)=>void,
-   onGetFacetInfo:(k:string,lg:string,f:string)=>void
+   onGetFacetInfo:(k:string,lg:string,f:string)=>void,
+   onCheckFacet:(k:string,lg:string,f:{[string]:string})=> void
 }
 
 type State = {
@@ -194,6 +195,9 @@ class App extends Component<Props,State> {
 
       console.log("check",prop,lab,val)
 
+      let typ = this.state.filters.datatype[0]
+      let key = this.state.keyword ;
+      if(key.indexOf("\"") === -1) key = "\""+key+"\""
 
       if(val)
       {
@@ -201,13 +205,24 @@ class App extends Component<Props,State> {
 
          state = {  ...state,  filters: {  ...state.filters, facets: { ...state.filters.facets, [prop] : [lab] } } }
 
+         if(lab == "Any")
+         {
+            this.props.onSearchingKeyword(key,this.state.language,[typ])
+         }
+         else {
+            this.props.onCheckFacet(key,this.state.language,{[prop]:lab})
+         }
+
          this.setState( state )
       }
       else
       {
          if(this.state.filters.facets && this.state.filters.facets[prop])
          {
-            this.setState( {  ...this.state,  filters: {  ...this.state.filters, facets: { [prop] : [] } } } )
+
+            this.props.onSearchingKeyword(key,this.state.language,[typ])
+
+            this.setState( {  ...this.state,  filters: {  ...this.state.filters, facets: { [prop] : ["Any"] } } } )
          }
       }
 
@@ -232,6 +247,7 @@ class App extends Component<Props,State> {
          let key = this.state.keyword ;
          if(key.indexOf("\"") === -1) key = "\""+key+"\""
          if(lab != "Any") {
+
             this.props.onCheckDatatype(lab,key,this.state.language)
 
             state = this.setFacets(state,lab);
@@ -399,6 +415,8 @@ class App extends Component<Props,State> {
       }
       else {
          types = types.sort(function(a,b) { return counts["datatype"][a] < counts["datatype"][b] })
+
+         //console.log("counts",counts)
       }
 
       return (
@@ -509,7 +527,7 @@ class App extends Component<Props,State> {
                         let show = false //(this.props.facets&&this.props.facets[i] && !this.props.facets[i].hash)
                         if(!this.props.facets || !this.props.facets[i] || !this.props.facets[i].hash ) show = true
 
-                        console.log("label",i,label,this.props.facets,counts["datatype"][i])
+                        //console.log("label",i,label,this.props.facets,counts["datatype"][i])
 
                         let values = this.props.facets
                         if(values) values = values[i]
@@ -572,7 +590,7 @@ class App extends Component<Props,State> {
                                            let uri = j.val.value;
                                            if(!value) value = uri.replace(/^.*\/([^/]+)$/,"$1")
 
-                                           console.log("value",j,value)
+                                           //console.log("value",j,value)
 
                                            let checked = this.state.filters.facets && this.state.filters.facets[i]
 

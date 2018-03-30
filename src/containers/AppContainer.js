@@ -41,12 +41,10 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       },
       onCheckDatatype:(t:string,k:string,lg:string) => {
          dispatch(data.getOneDatatype([t],k,lg));
+      },
+      onCheckFacet:(k:string,lg:string,f:{[string]:string}) => {
+         dispatch(data.getOneFacet(k,lg,f));
       }
-      /*
-      onCheckFacet:(t:string,k:string,lg:string) => {
-         dispatch(data.getOneDatatype([t],k,lg))
-      }
-      */
    }
 }
 
