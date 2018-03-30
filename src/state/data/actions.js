@@ -68,26 +68,6 @@ export const searchFailed = (keyword: string, error: string): SearchFailedAction
 }
 
 
-export type LoadingAction = {
-    type: string,
-    payload: {
-        keyword: string,
-        isLoading: boolean
-    }
-}
-
-
-TYPES.loading = 'LOADING';
-export const loading = (key: string, isLoading: boolean): LoadingAction => {
-    return {
-        type: TYPES.loading,
-        payload: {
-            keyword: key,
-            isLoading
-        }
-    }
-}
-
 /*
 TYPES.searchingKeyword = 'SEARCHING_KEYWORD';
 export const searchingKeyword = createAction(TYPES.searchingKeyword);

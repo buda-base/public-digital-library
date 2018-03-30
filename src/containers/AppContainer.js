@@ -2,6 +2,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import * as data from '../state/data/actions';
+import * as ui from '../state/ui/actions';
 import store from '../index';
 
 // import selectors from 'state/selectors';
@@ -17,15 +18,13 @@ const mapStateToProps = (state) => {
    let datatypes = state.data.datatypes ;
    let ontology = state.data.ontology ;
    let facets = state.data.facets ;
+   let loading = state.ui.loading  ;
 
-   let loading ;
-   if(keyword) {
-         loading = state.data.loading[keyword] ;
+   let newState = { config, hostFailure, searches, keyword, loading,datatypes,ontology,facets }
 
+   console.log("mS2p",newState)
 
-   }
-
-   return { config, hostFailure, searches, keyword, loading,datatypes,ontology,facets }
+   return newState ;
 
 };
 
@@ -41,8 +40,13 @@ const mapDispatchToProps = (dispatch, ownProps) => {
          dispatch(data.getFacetInfo(k,lg,f))
       },
       onCheckDatatype:(t:string,k:string,lg:string) => {
+         dispatch(data.getOneDatatype([t],k,lg));
+      }
+      /*
+      onCheckFacet:(t:string,k:string,lg:string) => {
          dispatch(data.getOneDatatype([t],k,lg))
       }
+      */
    }
 }
 

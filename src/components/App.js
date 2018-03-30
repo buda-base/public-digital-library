@@ -53,6 +53,7 @@ type Props = {
 }
 
 type State = {
+   loading?:boolean,
    willSearch?:boolean,
    language:string,
    checked?:string,
@@ -60,16 +61,16 @@ type State = {
    keyword:string,
    dataSource : string[],
    filters:{
-      datatype:string[]
+      datatype:string[],
+      facets?:{[string]:string[]}
    },
    collapse:{ [string] : boolean },
    loader:{[string]:Component<*>},
    facets? : string[],
-   facetRequested?:boolean
 }
 
 class App extends Component<Props,State> {
-
+   _facetsRequested = false;
 
    constructor(props : Props) {
       super(props);
@@ -88,25 +89,38 @@ class App extends Component<Props,State> {
          collapse:{},
          loader:{}
       };
+
    }
 
    requestSearch()
    {
-     let key = this.state.keyword ;
-     if(key.indexOf("\"") === -1) key = "\""+key+"\""
+      let key = this.state.keyword ;
+      if(key.indexOf("\"") === -1) key = "\""+key+"\""
 
-      this.setState({dataSource:[]})
-      console.log("search",this.state)
+      let state = { ...this.state, dataSource:[] }
+
       if(this.state.filters.datatype.length === 0 || this.state.filters.datatype.indexOf("Any") !== -1 )
       {
          this.props.onSearchingKeyword(key,this.state.language)
+
+         state = { ...state, facets:null}
+
+         this.props.onGetDatatypes(this.state.keyword,this.state.language)
+
          this.props.history.push("/search?q="+key+"&lg="+this.state.language+"&t=Any")
+
       }
       else {
          this.props.onSearchingKeyword(key,this.state.language,this.state.filters.datatype)
+
+         state = this.setFacets(state,this.state.filters.datatype[0]);
+
          this.props.history.push("/search?q="+key+"&lg="+this.state.language+"&t="+this.state.filters.datatype.join(","))
       }
 
+      this.setState(state);
+
+      console.log("search",this.state)
    }
 
    getEndpoint():string
@@ -114,62 +128,86 @@ class App extends Component<Props,State> {
       return this.props.config.ldspdi.endpoints[this.props.config.ldspdi.index]
    }
 
-   componentWillUpdate(newProps) {
+   componentDidUpdate() {
 
-      console.log("willU",this.state.facets,this.props,newProps)
+      // console.log("didU",this.state.facets,this.props,this.state.filters.datatype)
+   }
+
+   componentWillUpdate(newProps,newState) {
+
+      console.log("willU",newProps,newState)
 
       let update = false ;
-      let state = this.state ;
+      let state = newState ;
 
-      if(state.willSearch)
+      if(newState.willSearch)
       {
          this.requestSearch();
          state = { ...state, willSearch:false}
          update = true ;
       }
 
-      if(!newProps.datatypes && this.props.keyword) //  !this.props.datatypes.hash )
+
+      // console.log("newProps.facets",newProps.facets)
+
+
+      if(this.props.config.facets && !this._facetsRequested && !state.facets && state.filters.datatype.length > 0 && state.filters.datatype.indexOf("Any") === -1)
       {
-         this.props.onGetDatatypes(this.state.keyword,this.state.language)
+         this._facetsRequested = true ;
+         state = this.setFacets(state,state.filters.datatype[0])
+         console.log("facets ???",state)
+         update = true ;
       }
 
-      console.log("newProps.facets",newProps.facets)
-
-      if(!newProps.facets  && this.props.keyword) // && !this.state.facetRequested)
-      {
-         if(state.facets) {
-            state = {...state, facets:null }
-            update = true
-         }
-
-         console.log("noFacet")
-
-         if(this.props.config.facets && this.state.filters.datatype && this.state.filters.datatype.length > 0
-          && this.state.filters.datatype.indexOf("Any") == -1)
-          {
-
-               let facets = this.props.config.facets.simple["bdo:"+this.state.filters.datatype[0]]
-               console.log("facets",facets,this.props.config.facets,this.state.filters.datatype)
-               if(facets)
-               {
-                  state = {...state, facets, facetRequested:true}
-                  update = true ;
-                  let t = 1
-                  for(let f of facets) {
-                     // compulsory to delay to avoid saga's bug in quasi-simultaneous events...
-                     //setTimeout((function(that) { return function() { that.props.onGetFacetInfo(that.state.keyword,that.state.language,f) } })(this), t*10);
-                     //t++;
-
-                      this.props.onGetFacetInfo(this.state.keyword,this.state.language,f)
-                  }
-            }
-         }
-      }
 
       if(update) this.setState(state)
+
+
+      // console.log("willUfin",this.state.filters.datatype)
    }
 
+   setFacets = (state:State,lab:string) =>
+   {
+      let facets = this.props.config.facets.simple["bdo:"+lab]
+      console.log("facets",facets,this.props.config.facets,this.state.filters.datatype)
+      if(facets)
+      {
+         state = {...state,facets}
+         let t = 1
+         for(let f of facets) {
+            // compulsory to delay to avoid saga's bug in quasi-simultaneous events...
+            //setTimeout((function(that) { return function() { that.props.onGetFacetInfo(that.state.keyword,that.state.language,f) } })(this), t*10);
+            //t++;
 
+           this.props.onGetFacetInfo(this.state.keyword,this.state.language,f)
+        }
+      }
+      else {
+         state = { ...state, facets:null }
+      }
+
+      return state
+   }
+
+   handleFacetCheck = (ev:Event,prop:string,lab:string,val:boolean) => {
+
+      console.log("check",prop,lab,val)
+
+      if(val)
+      {
+         let state =  {  ...this.state,  filters: {  ...this.state.filters, facets: { [prop] : [lab] } } }
+
+         this.setState( state )
+      }
+      else
+      {
+         if(this.state.filters.facets && this.state.filters.facets[prop])
+         {
+            this.setState( {  ...this.state,  filters: {  ...this.state.filters, facets: { [prop] : [] } } } )
+         }
+      }
+
+   }
 
    handleCheck = (ev:Event,lab:string,val:boolean) => {
 
@@ -182,27 +220,53 @@ class App extends Component<Props,State> {
       */
       let f = [lab]
 
-      let state =
-         {
-            ...this.state,
-            filters:
-            {
-               ...this.state.filters,
-               datatype:f
-            }
-         }
+      let state =  {  ...this.state,  filters: {  ...this.state.filters, datatype:f } }
 
       if(val && this.props.keyword)
       {
+
          let key = this.state.keyword ;
          if(key.indexOf("\"") === -1) key = "\""+key+"\""
          if(lab != "Any") {
             this.props.onCheckDatatype(lab,key,this.state.language)
+
+            state = this.setFacets(state,lab);
+
+
          }
-         else this.props.onSearchingKeyword(key,this.state.language,f)
+         else {
+
+            state = { ...state, facets:null}
+
+            this.props.onSearchingKeyword(key,this.state.language,f)
+
+            this.props.onGetDatatypes(this.state.keyword,this.state.language)
+         }
+
+
          this.props.history.push("/search?q="+key+"&lg="+this.state.language+"&t="+f.join(","))
       }
-      this.setState( state )
+
+      this.setState( state ) //, function() {  console.log("CHECKED changed the state",state) } )
+
+
+      // bug : différence entre clic/déclic Role et Person
+
+      /*
+      if(!val)
+      {
+         if(this.state.filters.datatype && this.state.filters.datatype.indexOf(lab) !== -1)
+         {
+
+            let key = this.state.keyword ;
+            if(key.indexOf("\"") === -1) key = "\""+key+"\""
+            this.props.onSearchingKeyword(key,this.state.language)
+            this.props.history.push("/search?q="+key+"&lg="+this.state.language+"&t=Any");
+
+            this.setState( {  ...this.state,  filters: {  ...this.state.filters, datatype:["Any"] } } )
+         }
+      }
+      */
    }
 
 
@@ -218,7 +282,7 @@ class App extends Component<Props,State> {
 
    render() {
 
-      console.log("render",this.props,this.state)
+      // console.log("render",this.props,this.state)
 
       let message = [];
       let results ;
@@ -296,10 +360,10 @@ class App extends Component<Props,State> {
 
                if(this.state.filters.datatype.length == 0 || this.state.filters.datatype.indexOf("Any") !== -1 || this.state.filters.datatype.indexOf(typ) !== -1)
                {
-                  n += 2;
+                  n ++;
                   message.push(
                      <Link key={n} to={"/resource?IRI="+id}>
-                     <Button key={n+1} style={{padding:"0",marginBottom:"15px",width:"100%",textTransform:"none"}}>
+                     <Button key={n+"_"} style={{padding:"0",marginBottom:"15px",width:"100%",textTransform:"none"}}>
                            <ListItem style={{paddingLeft:"0",display:"flex"}}>
                               <div style={{width:"30px",textAlign:"right"}}>{n}</div>
                               <ListItemText style={{height:"auto",flexGrow:10,flexShrink:10}}
@@ -388,17 +452,19 @@ class App extends Component<Props,State> {
                               this.setState({collapse:{ ...this.state.collapse, "datatype":!this.state.collapse["datatype"]} }); } }
                         >
                         <Typography style={{fontSize:"18px",lineHeight:"50px",}}>Data Type</Typography>
-                        { this.state.collapse["datatype"] ? <ExpandLess /> : <ExpandMore />}
+                        { !(this.props.datatypes && !this.props.datatypes.hash)&&this.state.collapse["datatype"] ? <ExpandLess /> : <ExpandMore />  }
                      </ListItem>
                      <Collapse
-                        in={this.state.collapse["datatype"]}
-                        className={["collapse",  this.state.collapse["datatype"]?"open":"close"].join(" ")}
+                        in={(!(this.props.datatypes && !this.props.datatypes.hash))&&this.state.collapse["datatype"]}
+                        className={["collapse",  !(this.props.datatypes && !this.props.datatypes.hash)&&this.state.collapse["datatype"]?"open":"close"].join(" ")}
                          style={{padding:"10px 0 0 50px"}} >
                         <div>
                         { //facetList&&facetList.length > 0?facetList.sort((a,b) => { return a.props.label < b.props.label } ):
                               types.map((i) => {
 
                                  //console.log("counts",i,counts["datatype"][i])
+
+
 
                               return (
                                  <div key={i} style={{textAlign:"left"}}>
@@ -425,9 +491,11 @@ class App extends Component<Props,State> {
                         let label = this.props.ontology[i.replace(/bdo:/,"http://purl.bdrc.io/ontology/core/")]
                            ["http://www.w3.org/2000/01/rdf-schema#label"][0].value
 
-                        console.log("label",i,label)
 
-                        let show = (this.props.facets&&this.props.facets[i] && !this.props.facets[i].hash)
+                        let show = false //(this.props.facets&&this.props.facets[i] && !this.props.facets[i].hash)
+                        if(!this.props.facets || !this.props.facets[i] || !this.props.facets[i].hash ) show = true
+
+                        console.log("label",i,label,this.props.facets)
 
                         return (
                            <div key={label}>
@@ -437,7 +505,7 @@ class App extends Component<Props,State> {
                               <ListItem
                                  style={{display:"flex",justifyContent:"space-between",padding:"0 20px",borderBottom:"1px solid #bbb",cursor:"pointer"}}
                                  onClick={(e) => {
-                                    if(!show)
+                                    //if(!show)
                                        this.setState({collapse:{ ...this.state.collapse, [i]:!this.state.collapse[i]} }); } }
                                  >
                                  <Typography style={{fontSize:"18px",lineHeight:"50px",textTransform:"capitalize"}}>{label}</Typography>
@@ -455,14 +523,31 @@ class App extends Component<Props,State> {
 
                                            //console.log("counts",i,counts["datatype"][i])
 
-                                             if(!j.val || j.val.cid == 0) return  ;
+                                             if(!j.val || j.cid.value == 0) return  ;
 
                                            let value = this.props.ontology[j.val.value]
-                                           if(value) value = value["http://www.w3.org/2000/01/rdf-schema#label"] ;
-                                           if(value) value = value[0].value
-                                           if(!value) value = j.val.value.replace(/^.*\/([^/]+)$/,"$1")
 
-                                           console.log("value",j,value)
+                                           //console.log("value",value)
+
+                                           if(value) value = value["http://www.w3.org/2000/01/rdf-schema#label"] ;
+                                           if(value) {
+                                              for(let l of value) {
+                                                 if(l.lang == "en") { value = l.value; break; }
+                                              }
+                                              //if(value.length) value = value[0].value;
+                                           }
+
+                                           let uri = j.val.value;
+                                           if(!value) value = uri.replace(/^.*\/([^/]+)$/,"$1")
+
+                                           // console.log("value",j,value)
+
+                                           let checked = this.state.filters.facets && this.state.filters.facets[i]
+
+                                           if(!checked) checked = false ;
+                                           else checked = this.state.filters.facets[i].indexOf(uri) !== -1
+
+                                           // console.log("checked",checked,i,uri)
 
                                         return (
                                            <div key={value} style={{textAlign:"left",textTransform:"capitalize"}}>
@@ -470,15 +555,15 @@ class App extends Component<Props,State> {
                                                  control={
                                                     <Checkbox
                                                        //{...i=="Any"?{defaultChecked:true}:{}}
-                                                       //checked={this.state.filters.datatype.indexOf(i) !== -1}
+                                                       checked={checked}
                                                        icon={<span className='checkB'/>}
                                                        checkedIcon={<span className='checkedB'><CheckCircle style={{color:"#444",margin:"-3px 0 0 -3px",width:"26px",height:"26px"}}/></span>}
-                                                       //onChange={(event, checked) => this.handleCheck(event,i,checked)}
+                                                       onChange={(event, checked) => this.handleFacetCheck(event,i,uri,checked)}
                                                     />
 
                                                  }
                                                  //{...counts["datatype"][i]?{label:i + " ("+counts["datatype"][i]+")"}:{label:i}}
-                                                 label={value}
+                                                 label={value+ " ("+j.cid.value+")" }
                                               />
                                            </div>
                                         )

@@ -7,7 +7,8 @@ import * as actions from './actions';
 let reducers = {};
 
 export type UIState = {
-   keyword?:string
+   keyword?:string,
+   loading?: boolean,
 }
 
 const DEFAULT_STATE: UIState = {}
@@ -32,6 +33,14 @@ export const showResults = (state: UIState, action: Action) => {
    }
 }
 reducers[actions.TYPES.showResults] = showResults;
+
+export const loading = (state: UIState, action: actions.LoadingAction) => {
+    return {
+        ...state,
+        loading: action.payload.isLoading
+    }
+}
+reducers[actions.TYPES.loading] = loading;
 
 
 // UI Reducer

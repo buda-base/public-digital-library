@@ -8,17 +8,22 @@ import bdrcApi from '../../lib/api';
 
 const api = new bdrcApi();
 
-function* initiateApp(params) {
+async function initiateApp(params) {
    try {
-      const config = yield call([api, api.loadConfig]);
-      yield put(dataActions.loadedConfig(config));
-      yield put(dataActions.choosingHost(config.ldspdi.endpoints[config.ldspdi.index]));
+      const config = await api.loadConfig();
+      store.dispatch(dataActions.loadedConfig(config));
+      store.dispatch(dataActions.choosingHost(config.ldspdi.endpoints[config.ldspdi.index]));
 
-      const onto = yield call([api, api.loadOntology]);
-      yield put(dataActions.loadedOntology(onto));
+      const onto = await api.loadOntology();
+      store.dispatch(dataActions.loadedOntology(onto));
       // console.log("params",params)
 
-      if(params.q) yield put(dataActions.searchingKeyword(params.q,params.lg,params.t?params.t.split(","):undefined));
+      if(params.q) {
+         store.dispatch(dataActions.searchingKeyword(params.q,params.lg,params.t?params.t.split(","):undefined));
+         setImmediate(
+            (function(params) {return function(){ store.dispatch(dataActions.getDatatypes(params.q,params.lg))}})
+            (params))
+      }
 
    } catch(e) {
       console.log('initiateApp error: %o', e);
@@ -68,46 +73,45 @@ export function* getDatatypes(key,lang) {
    }
 
 }
-
-export function* searchKeyword(keyword,language,datatype) {
+ async function searchKeyword(keyword,language,datatype) {
 
    console.log("searchK",keyword,language,datatype);
 
-   yield put(dataActions.loading(keyword, true));
+   // why is this action dispatched twice ???
+   store.dispatch(uiActions.loading(keyword, true));
    try {
       let result ;
 
       if(!datatype || datatype.indexOf("Any") !== -1)
-         result = yield call([api, api.getResults], keyword,language);
+         result = await api.getResults(keyword,language);
       else
-         result = yield call([api, api.getResultsOneDatatype],datatype,keyword,language);
+         result = await api.getResultsOneDatatype(datatype,keyword,language);
 
-      yield put(dataActions.loading(keyword, false));
-      yield put(dataActions.foundResults(keyword, language,result));
+      store.dispatch(uiActions.loading(keyword, false));
+      store.dispatch(dataActions.foundResults(keyword, language,result));
       //yield put(uiActions.showResults(keyword, language));
 
    } catch(e) {
-      yield put(dataActions.searchFailed(keyword, e.message));
-      yield put(dataActions.loading(keyword, false));
+      store.dispatch(dataActions.searchFailed(keyword, e.message));
+      store.dispatch(uiActions.loading(keyword, false));
    }
 }
 
 
-export function* getOneDatatype(datatype,keyword,language:string) {
+async function getOneDatatype(datatype,keyword,language:string) {
 
    console.log("searchK1DT",datatype,keyword,language);
 
-   yield put(dataActions.loading(keyword, true));
+   store.dispatch(uiActions.loading(keyword, true));
    try {
-      const result = yield call([api, api.getResultsOneDatatype],datatype,keyword,language);
+      const result = await api.getResultsOneDatatype(datatype,keyword,language);
 
-      yield put(dataActions.loading(keyword, false));
-      yield put(dataActions.foundResults(keyword, language, result));
-      //yield put(uiActions.showResults(keyword, language));
+      store.dispatch(uiActions.loading(keyword, false));
+      store.dispatch(dataActions.foundResults(keyword, language, result));
 
    } catch(e) {
-      yield put(dataActions.searchFailed(keyword, e.message));
-      yield put(dataActions.loading(keyword, false));
+      store.dispatch(dataActions.searchFailed(keyword, e.message));
+      store.dispatch(uiActions.loading(keyword, false));
    }
 }
 
@@ -116,19 +120,15 @@ async function getFacetInfo(keyword,language:string,property:string) {
 
    console.log("searchFacet",keyword,language,property);
 
-   //yield put(dataActions.loading(keyword, true));
    try {
       const result = await api.getResultsSimpleFacet(keyword,language,property);
 
-      console.log("back from call",property,result);
+      //console.log("back from call",property,result);
 
-      //yield put(dataActions.loading(keyword, false));
       store.dispatch(dataActions.foundFacetInfo(keyword, language, property, result));
-      //yield put(uiActions.showResults(keyword, language));
 
    } catch(e) {
       store.dispatch(dataActions.searchFailed(keyword, e.message));
-      //yield put(dataActions.loading(keyword, false));
    }
 
 }

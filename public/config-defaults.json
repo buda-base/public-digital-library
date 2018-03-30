@@ -11,8 +11,10 @@
    },
    "facets":{
       "simple":{
-          "bdo:Work": [ "bdo:workObjectType" ],
-          "bdo:Person": [ "bdo:personGender" ]
+          "bdo:Work": [ "bdo:workLangScript","bdo:workObjectType","bdo:workType","bdo:workPartType" ],
+          "bdo:Person": [ "bdo:personGender" ],
+          "bdo:Lineage": [ "bdo:lineageType" ],
+          "bdo:Place": [ "bdo:placeType" ]
       }
    }
 }

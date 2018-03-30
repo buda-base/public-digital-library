@@ -15,7 +15,6 @@ export type DataState = {
          index:number
       }
    },
-   loading: {[string]: boolean},
    datatypes?:boolean|{}
 }
 
@@ -100,18 +99,17 @@ export const searchingKeyword = (state: DataState, action: Action) => {
 }
 reducers[actions.TYPES.searchingKeyword] = searchingKeyword;
 
-/*
+
 export const getOneDatatype = (state: DataState, action: Action) => {
 
 console.log("get1DT")
 
     return {
         ...state,
-        facets:true
     }
 }
 reducers[actions.TYPES.getOneDatatype] = getOneDatatype;
-*/
+
 
 export const getDatatypes = (state: DataState, action: Action) => {
 
@@ -139,18 +137,6 @@ export const notGettingDatatypes = (state: DataState, action: Action) => {
     }
 }
 reducers[actions.TYPES.notGettingDatatypes] = notGettingDatatypes;
-
-
-export const loading = (state: DataState, action: actions.LoadingAction) => {
-    return {
-        ...state,
-        loading: {
-            ...state.loading,
-            [action.payload.keyword]: action.payload.isLoading
-        }
-    }
-}
-reducers[actions.TYPES.loading] = loading;
 
 
 export const foundResults = (state: DataState, action: actions.FoundResultsAction) => {

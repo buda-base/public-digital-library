@@ -138,7 +138,7 @@ export default class API {
    async getQueryResults(url: string, key:string, param:{}={}): Promise<{}>
    {
 
-      console.log("key",key)
+      //console.log("key",key)
 
       let res = {}
       param = { "searchType":"Res_withType","LG_NAME":"bo-x-ewts","I_LIM":500, ...param }
@@ -147,7 +147,7 @@ export default class API {
       url += "/"+param["searchType"];
       delete param["searchType"]
 
-      console.log("query",key,url,param);
+      //console.log("query",key,url,param);
 
       // let body = Object.keys(param).map( (k) => k+"="+param[k] ).join('&') +"&L_NAME="+key
       //searchType=Res_withFacet&"+param+"L_NAME=\""+key+"\"",
@@ -161,7 +161,7 @@ export default class API {
                      .map(e => encodeURIComponent(e[0]) + "=" + encodeURIComponent(e[1]))
                      .join('&')
 
-      console.log("body",body);
+      //console.log("body",body);
 
       let response = await this._fetch( url,
       {// header pour accéder aux résultat en JSON !
@@ -187,7 +187,7 @@ export default class API {
      res = JSON.parse(await response.text())
 
 
-      console.log("resolving",res)
+      //console.log("resolving",res)
 
       return res ;
    }
@@ -251,13 +251,13 @@ export default class API {
 
      async getResultsSimpleFacet(key: string,lang: string,property:string): Promise<{} | null> {
         try {
-            console.log("simpleFacet start",key,lang,property)
+            //console.log("simpleFacet start",key,lang,property)
 
              let config = store.getState().data.config.ldspdi
              let url = config.endpoints[config.index]+"/query" ;
              let data = this.getQueryResults(url, key, {"LG_NAME":lang,"searchType":"Res_simpleFacet","R_PROP":property});
 
-             console.log("simpleFacet end",data)
+             //console.log("simpleFacet end",data)
 
              return data ;
         } catch(e) {
