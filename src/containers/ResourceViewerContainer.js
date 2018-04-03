@@ -11,8 +11,9 @@ import ResourceViewer from '../components/ResourceViewer';
 const mapStateToProps = (state) => {
 
    let resources = state.data.resources
+   let ontology = state.data.ontology ;
 
-   let props = { resources }
+   let props = { resources, ontology }
 
    return props
 

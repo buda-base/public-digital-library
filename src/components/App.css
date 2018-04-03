@@ -1,6 +1,11 @@
 /* CSS debug mode */
 /* * {background-color:rgba(255,0,128,0.1);} */
 
+.resource { width:800px ; margin:auto; text-align:left;}
+.resource .data { text-align:left }
+.resource h3,.resource h4 { display:inline-block; margin-bottom:0px; font-size:16px; font-weight:normal; text-transform:capitalize }
+.resource h3 span { text-decoration: underline; font-weight:600;}
+
 .checkB,.checkedB { border-radius:50%; border:2px solid #666;width:20px;height:20px;display:inline-block; }
 .checkedB {}
 
