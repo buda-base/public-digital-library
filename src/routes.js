@@ -8,6 +8,7 @@ import indigo from 'material-ui/colors/indigo';
 import { Provider } from 'react-redux';
 import ResourceViewerContainer from './containers/ResourceViewerContainer'
 import IIIFViewerContainer from './containers/IIIFViewerContainer'
+import { initiateApp } from './state/actions';
 
 import store from './index';
 import * as ui from './state/ui/actions'
@@ -24,7 +25,7 @@ const theme = createMuiTheme({
 
 type Props = { history:{} }
 
-class Redirect404 extends Component<Props>
+export class Redirect404 extends Component<Props>
 {
    constructor(props)
    {
@@ -37,8 +38,12 @@ class Redirect404 extends Component<Props>
 
    render()
    {
+      let message = this.props.message ;
+      if(!message) message = "Page not found: "+this.props.history.location.pathname ;
+
+
       return (<div style={{textAlign:"center",marginTop:"100px",fontSize:"22px"}}>
-         Page not found: {this.props.history.location.pathname}
+         { message }
          <br/>
          Redirecting to homepage
       </div>)
@@ -49,20 +54,25 @@ class Redirect404 extends Component<Props>
 
 const makeMainRoutes = () => {
 
+   let get = qs.parse(history.location.search)
+   console.log('qs',get)
 
    return (
      <Provider store={store}>
         <MuiThemeProvider theme={theme}>
            <Router history={history}>
              <Switch>
-                  <Route exact path="/" render={(props) =>
-                     <AppContainer history={history}/> } />
-                  <Route path="/search" render={(props) =>
-                     <AppContainer history={history}/> } />
+                  <Route exact path="/" render={(props) => {
+                     store.dispatch(initiateApp());
+                     return ( <AppContainer history={history}/> ) } } />
+                  <Route path="/search" render={(props) => {
+                     store.dispatch(initiateApp(qs.parse(history.location.search)));
+                     return ( <AppContainer history={history}/> ) } } />
                   <Route path="/gallery" render={(props) =>
                      <IIIFViewerContainer location={history.location} history={history}/> }/>
-                  <Route path="/resource" render={(props) =>
-                     <ResourceViewerContainer history={history}/> } />
+                  <Route path="/resource" render={(props) => {
+                     store.dispatch(initiateApp(qs.parse(history.location.search),get.IRI));
+                     return ( <ResourceViewerContainer history={history} IRI={get.IRI}/> ) } }/>
                   <Route render={(props) =>
                      <Redirect404  history={history}/>}/>
                </Switch>

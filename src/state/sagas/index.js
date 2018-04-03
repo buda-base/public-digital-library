@@ -8,7 +8,7 @@ import bdrcApi from '../../lib/api';
 
 const api = new bdrcApi();
 
-async function initiateApp(params) {
+async function initiateApp(params,iri) {
    try {
       const config = await api.loadConfig();
       store.dispatch(dataActions.loadedConfig(config));
@@ -18,7 +18,11 @@ async function initiateApp(params) {
       store.dispatch(dataActions.loadedOntology(onto));
       // console.log("params",params)
 
-      if(params.q) {
+      if(true)
+      {
+         store.dispatch(dataActions.getResource(this.props.IRI));
+      }
+      else if(params && params.q) {
          store.dispatch(dataActions.searchingKeyword(params.q,params.lg,params.t?params.t.split(","):undefined));
          setImmediate(
             (function(params) {return function(){ store.dispatch(dataActions.getDatatypes(params.q,params.lg))}})

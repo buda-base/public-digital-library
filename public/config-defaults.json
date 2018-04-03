@@ -14,8 +14,7 @@
           "bdo:Work": [ "bdo:workLangScript","bdo:workObjectType","bdo:workType","bdo:workPartType" ],
           "bdo:Person": [ "bdo:personGender" ],
           "bdo:Lineage": [ "bdo:lineageType" ],
-          "bdo:Place": [ "bdo:placeType" ],
-          "bdo:Etext": [ "adm:Status" ]
+          "bdo:Place": [ "bdo:placeType" ]
       }
    }
 }

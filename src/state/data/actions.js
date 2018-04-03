@@ -37,6 +37,14 @@ export const chosenHost = (host: string): Action => {
     }
 }
 
+TYPES.getResource = 'GET_RESOURCE';
+export const getResource = (s: string): Action => {
+    return {
+        type: TYPES.getResource,
+        payload: s
+    }
+}
+
 export type SearchFailedAction = {
     type: string,
     payload: {

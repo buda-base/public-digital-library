@@ -16,6 +16,9 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch, ownProps) => {
    return {
+      onGetResource(s:string){
+         dispatch(data.getResource(s))
+      }
    }
 }
 

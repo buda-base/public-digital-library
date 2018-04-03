@@ -3,7 +3,6 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import AppContainer from './containers/AppContainer';
-import { initiateApp } from './state/actions';
 import { helloWorld } from './state/ui/actions';
 import registerServiceWorker from './lib/registerServiceWorker';
 
@@ -63,7 +62,6 @@ sagaMiddleware.run(rootSaga);
 //const parsed = qs.parse(history.location.search);
 //console.log(parsed);
 
-store.dispatch(initiateApp(qs.parse(history.location.search)));
 
 const theme = createMuiTheme({
     palette: {
