@@ -21,6 +21,8 @@ class ResourceViewer extends Component<Props,State>
       super(props);
 
       this.state = { uviewer : false }
+
+      console.log("props",props)
    }
 
    componentWillMount()

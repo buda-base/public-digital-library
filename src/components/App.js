@@ -396,7 +396,7 @@ class App extends Component<Props,State> {
                {
                   n ++;
                   message.push(
-                     <Link key={n} to={"/resource?IRI="+id}>
+                  <Link key={n} to={"/resource?IRI="+id}>
                      <Button key={n+"_"} style={{padding:"0",marginBottom:"15px",width:"100%",textTransform:"none"}}>
                            <ListItem style={{paddingLeft:"0",display:"flex"}}>
                               <div style={{width:"30px",textAlign:"right"}}>{n}</div>

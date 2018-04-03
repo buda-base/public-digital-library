@@ -54,9 +54,6 @@ export class Redirect404 extends Component<Props>
 
 const makeMainRoutes = () => {
 
-   let get = qs.parse(history.location.search)
-   console.log('qs',get)
-
    return (
      <Provider store={store}>
         <MuiThemeProvider theme={theme}>
@@ -66,11 +63,13 @@ const makeMainRoutes = () => {
                      store.dispatch(initiateApp());
                      return ( <AppContainer history={history}/> ) } } />
                   <Route path="/search" render={(props) => {
+                     let get = qs.parse(history.location.search)
                      store.dispatch(initiateApp(qs.parse(history.location.search)));
                      return ( <AppContainer history={history}/> ) } } />
                   <Route path="/gallery" render={(props) =>
                      <IIIFViewerContainer location={history.location} history={history}/> }/>
-                  <Route path="/resource" render={(props) => {
+                  <Route path="/resource" render={(props) => {                     
+                     let get = qs.parse(history.location.search)
                      store.dispatch(initiateApp(qs.parse(history.location.search),get.IRI));
                      return ( <ResourceViewerContainer history={history} IRI={get.IRI}/> ) } }/>
                   <Route render={(props) =>

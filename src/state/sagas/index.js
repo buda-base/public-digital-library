@@ -18,12 +18,14 @@ async function initiateApp(params,iri) {
       store.dispatch(dataActions.loadedOntology(onto));
       // console.log("params",params)
 
-      if(iri)
+      let state = !store.getState()
+
+      if(iri && (!state.resources || !state.resources.IRI))
       {
          let res = await api.loadResource(iri)
          store.dispatch(dataActions.gotResource(iri,res));
       }
-      else if(params && params.q) {
+      else if(!iri && params && params.q) {
          store.dispatch(dataActions.searchingKeyword(params.q,params.lg,params.t?params.t.split(","):undefined));
          setImmediate(
             (function(params) {return function(){ store.dispatch(dataActions.getDatatypes(params.q,params.lg))}})
