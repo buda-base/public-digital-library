@@ -37,11 +37,12 @@ export const chosenHost = (host: string): Action => {
     }
 }
 
-TYPES.getResource = 'GET_RESOURCE';
-export const getResource = (s: string): Action => {
+TYPES.gotResource = 'GOT_RESOURCE';
+export const gotResource = (iri: string,res:{}): Action => {
     return {
-        type: TYPES.getResource,
-        payload: s
+        type: TYPES.gotResource,
+        payload: iri,
+        meta:res
     }
 }
 

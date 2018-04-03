@@ -10,15 +10,16 @@ import ResourceViewer from '../components/ResourceViewer';
 
 const mapStateToProps = (state) => {
 
-   return { youpi:true}
+   let resources = state.data.resources
+
+   let props = { resources }
+
+   return props
 
 };
 
 const mapDispatchToProps = (dispatch, ownProps) => {
    return {
-      onGetResource(s:string){
-         dispatch(data.getResource(s))
-      }
    }
 }
 

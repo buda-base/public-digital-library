@@ -18,9 +18,10 @@ async function initiateApp(params,iri) {
       store.dispatch(dataActions.loadedOntology(onto));
       // console.log("params",params)
 
-      if(true)
+      if(iri)
       {
-         store.dispatch(dataActions.getResource(this.props.IRI));
+         let res = await api.loadResource(iri)
+         store.dispatch(dataActions.gotResource(iri,res));
       }
       else if(params && params.q) {
          store.dispatch(dataActions.searchingKeyword(params.q,params.lg,params.t?params.t.split(","):undefined));
@@ -38,7 +39,7 @@ async function initiateApp(params,iri) {
 function* watchInitiateApp() {
       yield takeLatest(
          INITIATE_APP,
-         (action) => initiateApp(action.payload)
+         (action) => initiateApp(action.payload,action.meta)
       );
 }
 

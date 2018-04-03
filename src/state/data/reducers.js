@@ -6,6 +6,8 @@ import * as actions from './actions';
 let reducers = {};
 
 export type DataState = {
+   iri?:string,
+   resources?:{[string]:{}},
    facets?:{[string]:boolean|{}},
    searches:{keyword?:string,[keyword:string]:{}|null},
    failures: {[string]: string},
@@ -45,6 +47,19 @@ export const loadedOntology = (state: DataState, action: Action) => {
     }
 }
 reducers[actions.TYPES.loadedOntology] = loadedOntology;
+
+
+export const gotResource = (state: DataState, action: Action) => {
+    return {
+        ...state,
+        "resources": {
+           ...state.resources,
+           [action.payload]:action.meta
+       }
+    }
+}
+reducers[actions.TYPES.gotResource] = gotResource;
+
 
 export const hostError = (state: DataState, action: actions.SearchFailedAction) => {
     return {

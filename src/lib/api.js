@@ -104,12 +104,19 @@ export default class API {
       }
    }
 
-       async loadOntology(): Promise<string>
-       {
-            let onto =  JSON.parse(await this.getURLContents(this._ontologyPath,false));
-            console.log("onto",onto)
-            return onto ;
-      }
+    async loadOntology(): Promise<string>
+    {
+         let onto =  JSON.parse(await this.getURLContents(this._ontologyPath,false));
+         console.log("onto",onto)
+         return onto ;
+   }
+
+    async loadResource(IRI:string): Promise<string>
+    {
+         let resource =  JSON.parse(await this.getURLContents(this._resourcePath(IRI),false));
+         console.log("resource",resource)
+         return resource ;
+   }
 
     testHost(host : string): Promise<boolean>
     {
@@ -329,6 +336,16 @@ export default class API {
          throw e;
       }
   }
+
+      _resourcePath(IRI:string): string {
+
+         let config = store.getState().data.config.ldspdi
+         let url = config.endpoints[config.index] ;
+
+          let path = url +  "/resource/" + IRI + ".json";
+
+          return path;
+      }
 
      get _ontologyPath(): string {
         let path = ONTOLOGY_PATH;
