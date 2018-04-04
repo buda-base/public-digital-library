@@ -43,6 +43,8 @@ class ResourceViewer extends Component<Props,State>
    {
       for(let p of prefixes) { str = str.replace(new RegExp(p,"g"),"") }
 
+      str = str.replace(/([a-z])([A-Z])/g,"$1 $2")
+
       return str ;
    }
 
@@ -66,23 +68,98 @@ class ResourceViewer extends Component<Props,State>
       return this.pretty(prop)
    }
 
-   ontology(prop:string)
+   hasValue(val:[],k:string)
+   {
+      for(let v of val) {
+         if(v.value == k) {
+            console.log("v("+v.value+")("+k+")")
+            return true;
+         }
+       }
+
+       return false;
+   }
+
+   uriformat(prop:string,elem:{})
+   {
+      if(elem) {
+
+         // test if ancestor/type of property has range subclassof entity
+
+         let q =[]
+         q.push(prop)
+
+
+         console.log("uriformat",prop,elem.value)
+
+         while(q.length > 0)
+         {
+            console.log("q",q)
+
+            let t = this.props.ontology[q.shift()]
+
+            if(t && t[rdfs+"range"] && t[rdfs+"range"][0] && t[rdfs+"range"][0].value)
+            {
+
+               let s = this.props.ontology[t[rdfs+"range"][0].value]
+
+
+               if(s && s[rdfs+"subClassOf"] && this.hasValue(s[rdfs+"subClassOf"],bdo+"Entity"))
+               {
+                  console.log("s",s)
+
+                  // we can return Link
+                  let pretty = this.pretty(elem.value);
+                  return (<Link to={"/resource?IRI="+pretty}>{pretty}</Link>)
+               }
+
+            }
+            else if(t)
+            {
+               console.log("t",t,t[rdfs+"subPropertyOf"])
+
+               t = t[rdfs+"subPropertyOf"]
+               if(t) for(let i of t) { q.push(i.value) }
+            }
+         }
+
+         return this.fullname(elem.value);
+      }
+   }
+
+   getResourceElem(prop:string)
    {
       if(!this.props.IRI || !this.props.resources || !this.props.resources[this.props.IRI]
          || !this.props.resources[this.props.IRI][bdr+this.props.IRI]
-         || !this.props.resources[this.props.IRI][bdr+this.props.IRI][prop]
-         || !this.props.resources[this.props.IRI][bdr+this.props.IRI][prop][0]) return "" ;
+         || !this.props.resources[this.props.IRI][bdr+this.props.IRI][prop]) return ;
 
-      let elem = this.props.resources[this.props.IRI][bdr+this.props.IRI][prop][0]
+      let elem = this.props.resources[this.props.IRI][bdr+this.props.IRI][prop]
 
-      let pretty = this.pretty(elem.value)
+      return elem
+   }
 
-      if(elem && elem.value)
-         if(elem.type != "bnode")
-            if(elem.type == "uri") return this.fullname(elem.value)
-            else return pretty;
-         else return "..." ;
+   format(Tag,prop:string,txt:string="")
+   {
+      let elem = this.getResourceElem(prop)
+
+      let ret = []
+
+      if(elem) for(let e of elem)
+      {
+         let pretty = this.pretty(e.value)
+         if(e.type != "bnode")
+         {
+            let tmp
+            if(e.type == "uri") tmp = this.uriformat(prop,e)
+            else tmp = pretty;
             // else  return ( <Link to={"/resource?IRI="+pretty}>{pretty}</Link> ) ;
+
+            ret.push(<Tag>{tmp}</Tag>)
+         }
+      }
+
+      return ret ;
+
    }
 
    render()
@@ -106,13 +183,19 @@ class ResourceViewer extends Component<Props,State>
       return (
          <div style={{overflow:"hidden",textAlign:"center"}}>
             <div className="resource">
-               <h1>{this.ontology(rdf+"type") + " " + get.IRI}</h1>
-               <h2>{this.ontology(skos+"prefLabel")}</h2>
+               {this.format("h1",rdf+"type",get.IRI)}
+               {this.format("h2",skos+"prefLabel")}
                <div className="data">
-                  { Object.keys(this.properties()).map((k) =>
-                     <div>
-                        <h3><span>{this.fullname(k)}</span>:&nbsp;</h3><h4>{this.ontology(k)}</h4>
-                     </div>
+                  { Object.keys(this.properties()).map((k) => {
+
+                     let elem = this.getResourceElem(k);
+
+                     if(!k.match(new RegExp(adm+"|prefLabel|"+rdf))) return (
+                        <div>
+                           <h3><span>{this.fullname(k)}</span>:&nbsp;</h3>
+                           {this.format("h4",k).map((e)=> [e," "] )}
+                        </div>
+                     ) }
                   ) }
                </div>
             </div>
