@@ -5,6 +5,7 @@ import qs from 'query-string'
 import Button from 'material-ui/Button';
 import { Link } from 'react-router-dom';
 import { Redirect404 } from "../routes.js"
+import Loader from "react-loader"
 
 type Props = {
    history:{},
@@ -12,7 +13,10 @@ type Props = {
    resources?:{},
    onGetResource: (s:string) => void
 }
-type State = { uviewer : boolean }
+type State = {
+   uviewer : boolean,
+   ready? : boolean
+ }
 
 
 const adm  = "http://purl.bdrc.io/ontology/admin/" ;
@@ -37,6 +41,22 @@ class ResourceViewer extends Component<Props,State>
 
    componentWillMount()
    {
+      console.log("mount")
+   }
+
+   componentWillUpdate(newProps)
+   {
+      console.log("state",this.state)
+
+      if(!this.state.ready && newProps.IRI && newProps.resources && newProps.resources[newProps.IRI] )
+      {
+         this.setState({...this.state,ready:true})
+      }
+      else if (this.state.ready && !(newProps.IRI && newProps.resources && newProps.resources[newProps.IRI]))
+      {
+         this.setState({...this.state,ready:false})
+
+      }
    }
 
    pretty(str:string)
@@ -72,7 +92,6 @@ class ResourceViewer extends Component<Props,State>
    {
       for(let v of val) {
          if(v.value == k) {
-            console.log("v("+v.value+")("+k+")")
             return true;
          }
        }
@@ -90,11 +109,11 @@ class ResourceViewer extends Component<Props,State>
          q.push(prop)
 
 
-         console.log("uriformat",prop,elem.value)
+         // console.log("uriformat",prop,elem.value)
 
          while(q.length > 0)
          {
-            console.log("q",q)
+            // console.log("q",q)
 
             let t = this.props.ontology[q.shift()]
 
@@ -106,7 +125,7 @@ class ResourceViewer extends Component<Props,State>
 
                if(s && s[rdfs+"subClassOf"] && this.hasValue(s[rdfs+"subClassOf"],bdo+"Entity"))
                {
-                  console.log("s",s)
+                  // console.log("s",s)
 
                   // we can return Link
                   let pretty = this.pretty(elem.value);
@@ -116,7 +135,7 @@ class ResourceViewer extends Component<Props,State>
             }
             else if(t)
             {
-               console.log("t",t,t[rdfs+"subPropertyOf"])
+               // console.log("t",t,t[rdfs+"subPropertyOf"])
 
                t = t[rdfs+"subPropertyOf"]
                if(t) for(let i of t) { q.push(i.value) }
@@ -154,7 +173,8 @@ class ResourceViewer extends Component<Props,State>
             else tmp = pretty;
             // else  return ( <Link to={"/resource?IRI="+pretty}>{pretty}</Link> ) ;
 
-            ret.push(<Tag>{tmp}</Tag>)
+            if(!txt) ret.push(<Tag>{tmp}</Tag>)
+            else ret.push(<Tag>{tmp+" "+txt}</Tag>)
          }
       }
 
@@ -182,6 +202,7 @@ class ResourceViewer extends Component<Props,State>
       // add nother route to UViewer Gallery page
       return (
          <div style={{overflow:"hidden",textAlign:"center"}}>
+            { !this.state.ready && <Loader loaded={false} /> }
             <div className="resource">
                {this.format("h1",rdf+"type",get.IRI)}
                {this.format("h2",skos+"prefLabel")}
