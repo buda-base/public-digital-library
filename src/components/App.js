@@ -46,6 +46,7 @@ type Props = {
    keyword?:string,
    datatypes:boolean|{},
    history:{},
+   onStartSearch:(k:string,lg:string)=>void,
    onSearchingKeyword:(k:string,lg:string,t?:string[])=>void,
    onGetDatatypes:(k:string,lg:string)=>void,
    onCheckDatatype:(t:string,k:string,lg:string)=>void,
@@ -103,21 +104,22 @@ class App extends Component<Props,State> {
 
       if(this.state.filters.datatype.length === 0 || this.state.filters.datatype.indexOf("Any") !== -1 )
       {
-         this.props.onSearchingKeyword(key,this.state.language)
+         if(!this.props.searches[key+"@"+this.state.language])
+            this.props.onStartSearch(key,this.state.language)
 
          state = { ...state, facets:null}
 
-         this.props.onGetDatatypes(this.state.keyword,this.state.language)
+         //this.props.onGetDatatypes(this.state.keyword,this.state.language)
 
          this.props.history.push("/search?q="+key+"&lg="+this.state.language+"&t=Any")
 
       }
       else {
+         if(!this.props.datatypes) this.props.onStartSearch(this.state.keyword,this.state.language)
+
          this.props.onSearchingKeyword(key,this.state.language,this.state.filters.datatype)
 
          state = this.setFacets(this.props,state,this.state.filters.datatype[0]);
-
-         if(!this.props.datatypes) this.props.onGetDatatypes(this.state.keyword,this.state.language)
 
          this.props.history.push("/search?q="+key+"&lg="+this.state.language+"&t="+this.state.filters.datatype.join(","))
       }

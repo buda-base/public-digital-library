@@ -26,10 +26,17 @@ async function initiateApp(params,iri) {
          store.dispatch(dataActions.gotResource(iri,res));
       }
       else if(!iri && params && params.q) {
-         store.dispatch(dataActions.searchingKeyword(params.q,params.lg,params.t?params.t.split(","):undefined));
-         setImmediate(
-            (function(params) {return function(){ store.dispatch(dataActions.getDatatypes(params.q,params.lg))}})
-            (params))
+         if(params.t)
+         {
+            store.dispatch(dataActions.searchingKeyword(params.q,params.lg,params.t.split(",")));
+            setImmediate(
+               (function(params) {return function(){ store.dispatch(dataActions.getDatatypes(params.q,params.lg))}})
+               (params) )
+         }
+         else
+         {
+            store.dispatch(dataActions.startSearch(params.q,params.lg));
+         }
       }
 
    } catch(e) {
@@ -80,6 +87,32 @@ export function* getDatatypes(key,lang) {
    }
 
 }
+ async function startSearch(keyword,language) {
+
+   console.log("sSsearch",keyword,language);
+
+   // why is this action dispatched twice ???
+   store.dispatch(uiActions.loading(keyword, true));
+   try {
+      let result ;
+
+      result = await api.getStartResults(keyword,language);
+
+      store.dispatch(uiActions.loading(keyword, false));
+
+
+      store.dispatch(dataActions.foundResults(keyword, language, JSON.parse(result.data)));
+
+      store.dispatch(dataActions.foundDatatypes(keyword, JSON.parse(result.metadata).results));
+      //store.dispatch(dataActions.foundResults(keyword, language,result));
+      //yield put(uiActions.showResults(keyword, language));
+
+   } catch(e) {
+      store.dispatch(dataActions.searchFailed(keyword, e.message));
+      store.dispatch(uiActions.loading(keyword, false));
+   }
+}
+
  async function searchKeyword(keyword,language,datatype) {
 
    console.log("searchK",keyword,language,datatype);
@@ -165,6 +198,14 @@ export function* watchSearchingKeyword() {
    );
 }
 
+export function* watchStartSearch() {
+
+   yield takeLatest(
+      dataActions.TYPES.startSearch,
+      (action) => startSearch(action.payload.keyword,action.payload.language)
+   );
+}
+
 export function* watchGetDatatypes() {
 
    yield takeLatest(
@@ -206,6 +247,7 @@ export default function* rootSaga() {
       watchGetFacetInfo(),
       watchGetOneDatatype(),
       watchGetOneFacet(),
-      watchSearchingKeyword()
+      watchSearchingKeyword(),
+      watchStartSearch()
    ])
 }

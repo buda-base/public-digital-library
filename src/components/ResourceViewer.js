@@ -157,6 +157,16 @@ class ResourceViewer extends Component<Props,State>
       return elem
    }
 
+   getResourceBNode(prop:string)
+   {
+      if(!this.props.IRI || !this.props.resources || !this.props.resources[this.props.IRI]
+         || !this.props.resources[this.props.IRI][prop]) return ;
+
+      let elem = this.props.resources[this.props.IRI][prop]
+
+      return elem
+   }
+
    format(Tag,prop:string,txt:string="")
    {
       let elem = this.getResourceElem(prop)
@@ -175,6 +185,10 @@ class ResourceViewer extends Component<Props,State>
 
             if(!txt) ret.push(<Tag>{tmp}</Tag>)
             else ret.push(<Tag>{tmp+" "+txt}</Tag>)
+         }
+         else {
+            elem = this.getResourceBNode(e.value)
+            console.log("bnode",e.value,elem)
          }
       }
 

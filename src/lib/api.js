@@ -142,7 +142,7 @@ export default class API {
     }
 
 
-   async getQueryResults(url: string, key:string, param:{}={}): Promise<{}>
+   async getQueryResults(url: string, key:string, param:{}={}, method:string = "POST"): Promise<{}>
    {
 
       //console.log("key",key)
@@ -168,15 +168,15 @@ export default class API {
                      .map(e => encodeURIComponent(e[0]) + "=" + encodeURIComponent(e[1]))
                      .join('&')
 
-      //console.log("body",body);
+      console.log("body",body);
 
-      let response = await this._fetch( url,
+      let response = await this._fetch( url + (method == "GET" ? "?" + body : ""),
       {// header pour accéder aux résultat en JSON !
-         method: 'POST',
-         body:body,
+         method: method,
+         ...( method == "POST" && {body:body} ),//body:body,
          headers:new Headers({
-           "Content-Type": "application/x-www-form-urlencoded",
-           "Accept": "application/json"
+            "Accept": ( method == "GET" ? "text/html" : "application/json"),
+         ...( method == "POST" && {"Content-Type": "application/x-www-form-urlencoded"})
         })
       })
 
@@ -255,6 +255,19 @@ export default class API {
            throw e;
       }
   }
+
+     async _getStartResultsData(key: string,lang: string): Promise<{} | null> {
+        try {
+             let config = store.getState().data.config.ldspdi
+             let url = config.endpoints[config.index]+"/lib" ;
+             let data = this.getQueryResults(url, key, {"searchType":"rootSearch","LG_NAME":lang},"GET");
+             // let data = this.getSearchContents(url, key);
+
+             return data ;
+        } catch(e) {
+             throw e;
+        }
+    }
 
      async getResultsSimpleFacet(key: string,lang: string,property:string): Promise<{} | null> {
         try {
@@ -336,6 +349,18 @@ export default class API {
          throw e;
       }
   }
+
+     async getStartResults(key: string,lang:string): Promise<{} | null> {
+       let data = [];
+
+       try {
+           data = await this._getStartResultsData(key,lang)
+
+           return data ;
+        } catch(e) {
+           throw e;
+        }
+    }
 
       _resourcePath(IRI:string): string {
 

@@ -92,6 +92,17 @@ export type SearchAction = {
         language: string,
         facet?: {[string]:string}
     }
+};
+
+TYPES.startSearch = 'START_SEARCH';
+export const startSearch = (keyword: string, language: string): SearchAction => {
+    return {
+        type: TYPES.startSearch,
+        payload: {
+            keyword,
+            language
+        }
+    }
 }
 
 TYPES.searchingKeyword = 'SEARCHING_KEYWORD';
