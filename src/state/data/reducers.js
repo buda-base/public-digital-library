@@ -1,5 +1,6 @@
 // @flow
 import type { Action } from '../actions';
+import type {SearchAction} from './actions';
 import createReducer from '../../lib/createReducer';
 import * as actions from './actions';
 
@@ -9,7 +10,9 @@ export type DataState = {
    iri?:string,
    resources?:{[string]:{}},
    facets?:{[string]:boolean|{}},
-   searches:{keyword?:string,[keyword:string]:{}|null},
+   keyword?:string,
+   language?:string,
+   searches:{[keyword:string]:{}|null},
    failures: {[string]: string},
    config: { //[string]: {}},
       ldspdi:{
@@ -100,15 +103,16 @@ reducers[actions.TYPES.chosenHost] = chosenHost;
 
 
 
-export const searchingKeyword = (state: DataState, action: Action) => {
+export const searchingKeyword = (state: DataState, action: SearchAction) => {
     return {
         ...state,
         //datatypes:null,
         facets:null,
+        //keyword:action.payload.keyword,
+        //language:action.payload.language,
         searches:{
            ...state.searches,
-           ... action.payload ? {[action.payload.keyword+"@"+action.payload.language]:null,keyword:action.payload.keyword}:{}
-
+           ... action.payload ? {[action.payload.keyword+"@"+action.payload.language]:null}:{}
         }
     }
 }
@@ -159,9 +163,11 @@ export const foundResults = (state: DataState, action: actions.FoundResultsActio
       return {
       ...state,
 
+      keyword:action.payload.keyword,
+      language:action.payload.language,
       searches: {
             ...state.searches,
-            [action.payload.key + "@" + action.payload.lang]: action.payload.results
+            [action.payload.keyword + "@" + action.payload.language]: action.payload.results
             }
    }
 }

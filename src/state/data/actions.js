@@ -171,43 +171,43 @@ export const notGettingDatatypes = createAction(TYPES.notGettingDatatypes);
 export type FoundResultsAction = {
     type: TYPES.FoundResultsAction,
     payload: {
-        key: string,
-        lang: string,
+        keyword: string,
+        language: string,
         property?:string,
         results: []
     }
 }
 
 TYPES.foundResults = 'FOUND_RESULTS';
-export const foundResults = (key: string, lang:string, results: []): FoundResultsAction => {
+export const foundResults = (keyword: string, language:string, results: []): FoundResultsAction => {
     return {
         type: TYPES.foundResults,
         payload: {
-            key,
-            lang,
+            keyword,
+            language,
             results
         }
     }
 }
 
 TYPES.foundDatatypes = 'FOUND_DATATYPES';
-export const foundDatatypes = (key: string, results: []): FoundResultsAction => {
+export const foundDatatypes = (keyword: string, results: []): FoundResultsAction => {
     return {
         type: TYPES.foundDatatypes,
         payload: {
-            key,
+            keyword,
             results
         }
     }
 }
 
 TYPES.foundFacetInfo = 'FOUND_FACET_INFO';
-export const foundFacetInfo = (key: string,lang:string,property:string, results: []): FoundResultsAction => {
+export const foundFacetInfo = (keyword: string,language:string,property:string, results: []): FoundResultsAction => {
     return {
         type: TYPES.foundFacetInfo,
         payload: {
-            key,
-            lang,
+            keyword,
+            language,
             property,
             results
         }

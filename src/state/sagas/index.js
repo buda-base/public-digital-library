@@ -100,10 +100,13 @@ export function* getDatatypes(key,lang) {
 
       store.dispatch(uiActions.loading(keyword, false));
 
+      let data = result.data
+      data = { numResults:Object.keys(data).length,results : { bindings: {...data } } }
+      store.dispatch(dataActions.foundResults(keyword, language, data));
 
-      store.dispatch(dataActions.foundResults(keyword, language, JSON.parse(result.data)));
 
-      store.dispatch(dataActions.foundDatatypes(keyword, JSON.parse(result.metadata).results));
+      store.dispatch(dataActions.foundDatatypes(keyword,{ metadata:result.metadata, hash:true}));
+      // store.dispatch(dataActions.foundDatatypes(keyword, JSON.parse(result.metadata).results));
       //store.dispatch(dataActions.foundResults(keyword, language,result));
       //yield put(uiActions.showResults(keyword, language));
 

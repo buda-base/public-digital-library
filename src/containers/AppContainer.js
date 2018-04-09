@@ -14,13 +14,14 @@ const mapStateToProps = (state) => {
    let hostFailure = state.data.failures.host ;
    let config = state.data.config ;
    let searches = state.data.searches ;
-   let keyword = state.data.searches.keyword
+   let keyword = state.data.keyword   
+   let language = state.data.language
    let datatypes = state.data.datatypes ;
    let ontology = state.data.ontology ;
    let facets = state.data.facets ;
    let loading = state.ui.loading  ;
 
-   let newState = { config, hostFailure, searches, keyword, loading,datatypes,ontology,facets }
+   let newState = { config, hostFailure, searches, keyword, language,loading,datatypes,ontology,facets }
 
    console.log("mS2p",newState)
 

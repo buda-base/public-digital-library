@@ -175,7 +175,7 @@ export default class API {
          method: method,
          ...( method == "POST" && {body:body} ),//body:body,
          headers:new Headers({
-            "Accept": ( method == "GET" ? "text/html" : "application/json"),
+            "Accept": "application/json",
          ...( method == "POST" && {"Content-Type": "application/x-www-form-urlencoded"})
         })
       })
@@ -191,7 +191,13 @@ export default class API {
      }
      //console.log("FETCH ok",url,response)
 
-     res = JSON.parse(await response.text())
+     let txt = await response.text()
+
+     //console.log("txt",txt)
+
+     res = JSON.parse(txt)
+
+     //console.log("res",res)
 
 
       //console.log("resolving",res)
@@ -292,6 +298,8 @@ export default class API {
            let data = this.getQueryResults(url, key, {"LG_NAME":lang,"searchType":"Res_allTypes_withCount"});
 
            console.log("datatypes",data)
+
+
 
            return data ;
       } catch(e) {

@@ -44,6 +44,7 @@ type Props = {
    hostFailure?:string,
    loading?:boolean,
    keyword?:string,
+   language?:string,
    datatypes:boolean|{},
    history:{},
    onStartSearch:(k:string,lg:string)=>void,
@@ -111,7 +112,9 @@ class App extends Component<Props,State> {
 
          //this.props.onGetDatatypes(this.state.keyword,this.state.language)
 
-         this.props.history.push("/search?q="+key+"&lg="+this.state.language+"&t=Any")
+
+         // /!\ temporary disable history
+         //this.props.history.push("/search?q="+key+"&lg="+this.state.language+"&t=Any")
 
       }
       else {
@@ -318,7 +321,7 @@ class App extends Component<Props,State> {
 
    render() {
 
-      // console.log("render",this.props,this.state)
+      console.log("render",this.props,this.state)
 
       let message = [];
       let results ;
@@ -327,8 +330,11 @@ class App extends Component<Props,State> {
       let loader ;
       let counts = { "datatype" : { "Any" : 0 } }
 
-      if(this.props.keyword && (results = this.props.searches[this.props.keyword+"@"+this.state.language]))
+      console.log("results?",results,this.props.searches[this.props.keyword+"@"+this.props.language])
+
+      if(this.props.keyword && (results = this.props.searches[this.props.keyword+"@"+this.props.language]))
       {
+
          let n = 0, m = 0 ;
          if(results.numResults == 0) {
             message.push(
@@ -339,18 +345,23 @@ class App extends Component<Props,State> {
          }
          else
          {
-            if(!this.props.datatypes || !this.props.datatypes.results)
+            if(!this.props.datatypes || !this.props.datatypes.metadata)
             {
+               console.log("dtp?",this.props.datatypes)
             }
             else {
 
                //if(this.state.loader.datatype)
                //   this.setState({ loader: { ...this.state.loader, datatype:false }})
 
-               if( this.props.datatypes.results) for(let r of this.props.datatypes.results.bindings){
+               console.log("whatelse");
+
+               if( this.props.datatypes.metadata) for(let r of Object.keys(this.props.datatypes.metadata) ){
 
                   //r = r.bindings
-                  let typ = r.f.value.replace(/^.*?([^/]+)$/,"$1")
+                  let typ = r.replace(/^.*?([^/]+)$/,"$1")
+
+                  console.log("typ",typ)
 
                   if(typ != "" && types.indexOf(typ) === -1)
                   {
@@ -358,8 +369,8 @@ class App extends Component<Props,State> {
 
                      types.push(typ);
 
-                     counts["datatype"][typ]=Number(r.cid.value)
-                     counts["datatype"]["Any"]+=Number(r.cid.value)
+                     counts["datatype"][typ]=Number(this.props.datatypes.metadata[r])
+                     counts["datatype"]["Any"]+=Number(this.props.datatypes.metadata[r])
 
                      /*
                      let value = typ
@@ -382,38 +393,67 @@ class App extends Component<Props,State> {
                            */
 
                   }
+
+                  types = types.sort(function(a,b) { return counts["datatype"][a] < counts["datatype"][b] })
+
+                  console.log("counts",counts)
+
                }
             }
 
-            for(let r of results.results.bindings)
+            let list = results.results.bindings
+
+            if(!list.length) list = Object.keys(list).map((o) => (
             {
-               //console.log("r",r);
+                f  : { type: "uri", value:list[o].type },
+                lit: { ...list[o].prefLabel, value:list[o].prefLabel.value.replace(/@.*$/,"")},
+                s  : { type: "uri", value:o }
+            } ) )
+            console.log("list",list)
 
-               let id = r.s.value.replace(/^.*?([^/]+)$/,"$1")
-               let lit ;
-               if(r.lit) lit = r.lit.value
-               let typ = r.f.value.replace(/^.*?([^/]+)$/,"$1")
+            for(let t of types) {
 
-               if(this.state.filters.datatype.length == 0 || this.state.filters.datatype.indexOf("Any") !== -1 || this.state.filters.datatype.indexOf(typ) !== -1)
+               if(t === "Any") continue ;
+
+               message.push(<MenuItem><h4>{t+"s"}</h4></MenuItem>);
+
+               let cpt = 0;
+               n = 0;
+               for(let r of list)
                {
-                  n ++;
-                  message.push(
-                  <Link key={n} to={"/resource?IRI="+id}>
-                     <Button key={n+"_"} style={{padding:"0",marginBottom:"15px",width:"100%",textTransform:"none"}}>
-                           <ListItem style={{paddingLeft:"0",display:"flex"}}>
-                              <div style={{width:"30px",textAlign:"right"}}>{n}</div>
-                              <ListItemText style={{height:"auto",flexGrow:10,flexShrink:10}}
-                                 primary={lit }
-                                 secondary={typ}
-                              />
-                              <div>{id}</div>
-                           </ListItem>
-                     </Button>
-                  </Link>
+                  // console.log("r",r);
 
-                  )
+                  let id = r.s.value.replace(/^.*?([^/]+)$/,"$1")
+                  let lit ;
+                  if(r.lit) lit = r.lit.value
+                  let typ = r.f.value.replace(/^.*?([^/]+)$/,"$1")
+
+                  //if(this.state.filters.datatype.length == 0 || this.state.filters.datatype.indexOf("Any") !== -1 || this.state.filters.datatype.indexOf(typ) !== -1)
+                  if(typ === t)
+                  {
+                     n ++;
+                     message.push(
+                     //<Link key={n} to={"/resource?IRI="+id}>
+                        <Button key={n+"_"} style={{padding:"0",marginBottom:"15px",width:"100%",textTransform:"none"}}>
+                              <ListItem style={{paddingLeft:"0",display:"flex"}}>
+                                 <div style={{width:"30px",textAlign:"right"}}>{n}</div>
+                                 <ListItemText style={{height:"auto",flexGrow:10,flexShrink:10}}
+                                    primary={lit }
+                                    secondary={id}
+                                 />
+                              </ListItem>
+                        </Button>
+                     //</Link>
+
+                     )
+
+                     cpt ++;
+                     if(cpt >= 3) break;
+                  }
                }
             }
+
+            //console.log("message",message)
 
             /*
             <Typography>{r.lit}</Typography>
@@ -425,11 +465,6 @@ class App extends Component<Props,State> {
       {
          types = ["Any","Person","Work","Corporation","Place","Item","Etext","Role","Topic","Lineage"]
          types = types.sort()
-      }
-      else {
-         types = types.sort(function(a,b) { return counts["datatype"][a] < counts["datatype"][b] })
-
-         //console.log("counts",counts)
       }
 
       return (
@@ -495,10 +530,10 @@ class App extends Component<Props,State> {
                               this.setState({collapse:{ ...this.state.collapse, "datatype":!this.state.collapse["datatype"]} }); } }
                         >
                         <Typography style={{fontSize:"18px",lineHeight:"50px",}}>Data Type</Typography>
-                        { !(this.props.datatypes && !this.props.datatypes.hash)&&this.state.collapse["datatype"] ? <ExpandLess /> : <ExpandMore />  }
+                        { this.props.datatypes && this.props.datatypes.hash && !this.state.collapse["datatype"] ? <ExpandLess /> : <ExpandMore />  }
                      </ListItem>
                      <Collapse
-                        in={(!(this.props.datatypes && !this.props.datatypes.hash))&&this.state.collapse["datatype"]}
+                        in={this.props.datatypes && this.props.datatypes.hash && !this.state.collapse["datatype"]}
                         className={["collapse",  !(this.props.datatypes && !this.props.datatypes.hash)&&this.state.collapse["datatype"]?"open":"close"].join(" ")}
                          style={{padding:"10px 0 0 50px"}} >
                         <div>
@@ -514,11 +549,14 @@ class App extends Component<Props,State> {
                                     <FormControlLabel
                                        control={
                                           <Checkbox
+                                             className="checkbox disabled"
+                                             disabled={true}
                                              //{...i=="Any"?{defaultChecked:true}:{}}
                                              checked={this.state.filters.datatype.indexOf(i) !== -1}
                                              icon={<span className='checkB'/>}
                                              checkedIcon={<span className='checkedB'><CheckCircle style={{color:"#444",margin:"-3px 0 0 -3px",width:"26px",height:"26px"}}/></span>}
-                                             onChange={(event, checked) => this.handleCheck(event,i,checked)} />
+                                             //onChange={(event, checked) => this.handleCheck(event,i,checked)}
+                                          />
 
                                        }
                                        {...counts["datatype"][i]?{label:i + " ("+counts["datatype"][i]+")"}:{label:i}}
