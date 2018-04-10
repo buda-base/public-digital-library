@@ -23,6 +23,15 @@ import qs from 'query-string'
 
 import './App.css';
 
+const adm  = "http://purl.bdrc.io/ontology/admin/" ;
+const bdo  = "http://purl.bdrc.io/ontology/core/";
+const bdr  = "http://purl.bdrc.io/resource/";
+const rdf  = "http://www.w3.org/1999/02/22-rdf-syntax-ns#";
+const rdfs = "http://www.w3.org/2000/01/rdf-schema#";
+const skos = "http://www.w3.org/2004/02/skos/core#";
+
+const prefixes = [adm, bdo,bdr,rdf,rdfs,skos]
+
 const styles = {
   checked: {
     color: "rgb(50,50,50)",
@@ -47,6 +56,7 @@ type Props = {
    language?:string,
    datatypes:boolean|{},
    history:{},
+   ontology:{},
    onStartSearch:(k:string,lg:string)=>void,
    onSearchingKeyword:(k:string,lg:string,t?:string[])=>void,
    onGetDatatypes:(k:string,lg:string)=>void,
@@ -319,6 +329,34 @@ class App extends Component<Props,State> {
      this.setState( s );
   };
 
+     pretty(str:string)
+     {
+        for(let p of prefixes) { str = str.replace(new RegExp(p,"g"),"") }
+
+        str = str.replace(/([a-z])([A-Z])/g,"$1 $2")
+
+        return str ;
+     }
+
+     fullname(prop:string)
+     {
+        if(this.props.ontology[prop] && this.props.ontology[prop][rdfs+"label"] && this.props.ontology[prop][rdfs+"label"][0]
+        && this.props.ontology[prop][rdfs+"label"][0].value) {
+           return this.props.ontology[prop][rdfs+"label"][0].value
+        }
+
+        return this.pretty(prop)
+     }
+
+     highlight(val,k):string
+     {
+
+        val = val.replace(/@.*/,"").split(k).map((l) => ([<span>{l}</span>,<span className="highlight">{k}</span>])) ;
+        val = [].concat.apply([],val);
+        val.pop();
+        return val;
+     }
+
    render() {
 
       console.log("render",this.props,this.state)
@@ -406,8 +444,9 @@ class App extends Component<Props,State> {
             if(!list.length) list = Object.keys(list).map((o) => (
             {
                 f  : { type: "uri", value:list[o].type },
-                lit: { ...list[o].prefLabel, value:list[o].prefLabel.value.replace(/@.*$/,"")},
-                s  : { type: "uri", value:o }
+                lit: { ...list[o].label, value:list[o].label.value.replace(/@.*$/,"")},
+                s  : { type: "uri", value:o },
+                match: list[o].matching
             } ) )
             console.log("list",list)
 
@@ -415,35 +454,51 @@ class App extends Component<Props,State> {
 
                if(t === "Any") continue ;
 
-               message.push(<MenuItem><h4>{t+"s"}</h4></MenuItem>);
+               message.push(<MenuItem><h4>{t+"s"+(counts["datatype"][t]?" ("+counts["datatype"][t]+")":"")}</h4></MenuItem>);
 
                let cpt = 0;
                n = 0;
                for(let r of list)
                {
                   // console.log("r",r);
+                  let k = this.props.keyword.replace(/"/g,"")
 
                   let id = r.s.value.replace(/^.*?([^/]+)$/,"$1")
                   let lit ;
-                  if(r.lit) lit = r.lit.value
+                  if(r.lit) { lit = this.highlight(r.lit.value,k) }
                   let typ = r.f.value.replace(/^.*?([^/]+)$/,"$1")
+
 
                   //if(this.state.filters.datatype.length == 0 || this.state.filters.datatype.indexOf("Any") !== -1 || this.state.filters.datatype.indexOf(typ) !== -1)
                   if(typ === t)
                   {
+                     //console.log("lit",lit)
+
                      n ++;
                      message.push(
-                     //<Link key={n} to={"/resource?IRI="+id}>
-                        <Button key={n+"_"} style={{padding:"0",marginBottom:"15px",width:"100%",textTransform:"none"}}>
+                        [
+                     <Link key={n} to={"/show/bdr:"+id} className="result">
+
+                        <Button key={t+"_"+n+"_"}>
                               <ListItem style={{paddingLeft:"0",display:"flex"}}>
                                  <div style={{width:"30px",textAlign:"right"}}>{n}</div>
                                  <ListItemText style={{height:"auto",flexGrow:10,flexShrink:10}}
-                                    primary={lit }
+                                    primary={lit}
                                     secondary={id}
                                  />
                               </ListItem>
                         </Button>
-                     //</Link>
+
+                     </Link>
+                        ,
+                        <div>{r.match.map((m) =>
+                           (!m.type.match(new RegExp(skos+"prefLabel"))?
+                              <div className="match">
+                                 <span className="label">{this.fullname(m.type)}:&nbsp;</span>
+                                 <span>{this.highlight(m.value,k)}</span>
+                              </div>
+                           :null))}</div>
+                     ]
 
                      )
 

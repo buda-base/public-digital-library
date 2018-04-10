@@ -129,7 +129,7 @@ class ResourceViewer extends Component<Props,State>
 
                   // we can return Link
                   let pretty = this.pretty(elem.value);
-                  return (<Link to={"/resource?IRI="+pretty}>{pretty}</Link>)
+                  return (<Link to={"/show/bdr:"+pretty}>{pretty}</Link>)
                }
 
             }
@@ -207,8 +207,8 @@ class ResourceViewer extends Component<Props,State>
          )
       }
 
-      let get = qs.parse(this.props.history.location.search)
-      console.log('qs',get)
+      //let get = qs.parse(this.props.history.location.search)
+      //console.log('qs',get)
 
       //<Link to="/gallery?manifest=https://eroux.fr/manifest.json" style={{textDecoration:"none"}}><Button>Preview IIIF Gallery</Button></Link>
       //<div style={{height:"50px",fontSize:"26px",display:"flex",justifyContent:"center",alignItems:"center"}}>resource {get.IRI}</div>
@@ -218,7 +218,7 @@ class ResourceViewer extends Component<Props,State>
          <div style={{overflow:"hidden",textAlign:"center"}}>
             { !this.state.ready && <Loader loaded={false} /> }
             <div className="resource">
-               {this.format("h1",rdf+"type",get.IRI)}
+               {this.format("h1",rdf+"type",this.props.IRI)}
                {this.format("h2",skos+"prefLabel")}
                <div className="data">
                   { Object.keys(this.properties()).map((k) => {
@@ -234,7 +234,7 @@ class ResourceViewer extends Component<Props,State>
                   ) }
                </div>
             </div>
-            <iframe style={{width:"calc(100% - 100px)",margin:"50px",height:"calc(100vh - 160px)",border:"none"}} src={"http://purl.bdrc.io/resource/"+get.IRI}/>
+            {/* <iframe style={{width:"calc(100% - 100px)",margin:"50px",height:"calc(100vh - 160px)",border:"none"}} src={"http://purl.bdrc.io/resource/"+get.IRI}/> */}
          </div>
 
       ) ;

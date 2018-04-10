@@ -33,7 +33,7 @@ export class Redirect404 extends Component<Props>
 
       // console.log("props404",props)
 
-      setTimeout((function(that) { return function() { that.props.history.push("/") } })(this), 3000) ;
+      //setTimeout((function(that) { return function() { that.props.history.push("/") } })(this), 3000) ;
    }
 
    render()
@@ -71,13 +71,12 @@ const makeMainRoutes = () => {
                      return ( <AppContainer history={history}/> ) } } />
                   <Route path="/gallery" render={(props) =>
                      <IIIFViewerContainer location={history.location} history={history}/> }/>
-                  <Route path="/resource" render={(props) => {
-                     let get = qs.parse(history.location.search)
-                     if(!store.getState().data.ontology)
+                  <Route path="/show/bdr::IRI" render={(props) => {
+                     if(!store.getState().data.resources || !store.getState().data.resources[props.match.params.IRI])
                      {
-                        store.dispatch(initiateApp(qs.parse(history.location.search),get.IRI));
+                        store.dispatch(initiateApp(qs.parse(history.location.search),props.match.params.IRI));
                      }
-                     return ( <ResourceViewerContainer history={history} IRI={get.IRI}/> ) } }/>
+                     return ( <ResourceViewerContainer history={history} IRI={props.match.params.IRI}/> ) } }/>
                   <Route render={(props) =>
                      <Redirect404  history={history}/>}/>
                </Switch>
