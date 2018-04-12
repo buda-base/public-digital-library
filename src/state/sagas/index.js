@@ -28,10 +28,7 @@ async function initiateApp(params,iri) {
       else if(!iri && params && params.q) {
          if(params.t)
          {
-            store.dispatch(dataActions.searchingKeyword(params.q,params.lg,params.t.split(",")));
-            setImmediate(
-               (function(params) {return function(){ store.dispatch(dataActions.getDatatypes(params.q,params.lg))}})
-               (params) )
+            store.dispatch(dataActions.startSearch(params.q,params.lg)); //,params.t.split(",")));
          }
          else
          {

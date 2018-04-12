@@ -6,6 +6,7 @@ import Button from 'material-ui/Button';
 import { Link } from 'react-router-dom';
 import { Redirect404 } from "../routes.js"
 import Loader from "react-loader"
+import {MapComponent} from './Map';
 
 type Props = {
    history:{},
@@ -42,6 +43,16 @@ class ResourceViewer extends Component<Props,State>
    componentWillMount()
    {
       console.log("mount")
+
+      if(!this.state.ready && this.props.IRI && this.props.resources && this.props.resources[this.props.IRI] )
+      {
+         this.setState({...this.state,ready:true})
+      }
+      else if (this.state.ready && !(this.props.IRI && this.props.resources && this.props.resources[this.props.IRI]))
+      {
+         this.setState({...this.state,ready:false})
+
+      }
    }
 
    componentWillUpdate(newProps)
@@ -64,6 +75,10 @@ class ResourceViewer extends Component<Props,State>
       for(let p of prefixes) { str = str.replace(new RegExp(p,"g"),"") }
 
       str = str.replace(/([a-z])([A-Z])/g,"$1 $2")
+
+      str = str.split("\n").map((i) => ([i,<br/>]))
+      str = [].concat.apply([],str);
+      str.pop();
 
       return str ;
    }
@@ -129,7 +144,7 @@ class ResourceViewer extends Component<Props,State>
 
                   // we can return Link
                   let pretty = this.pretty(elem.value);
-                  return (<Link to={"/show/bdr:"+pretty}>{pretty}</Link>)
+                  return ([<Link className="urilink" to={"/show/bdr:"+pretty}>{pretty}</Link>])
                }
 
             }
@@ -189,10 +204,58 @@ class ResourceViewer extends Component<Props,State>
          else {
             elem = this.getResourceBNode(e.value)
             console.log("bnode",e.value,elem)
+
+            let sub = []
+
+            let val = elem[rdf+"type"]
+            let lab = elem[rdfs+"label"]
+
+            console.log("val",val);
+            console.log("lab",lab);
+
+            if(val && val[0] && val[0].value) { sub.push(<Tag className='first type'>{this.fullname(val[0].value)+": "}</Tag>) }
+            if(lab && lab[0] && lab[0].value) for(let l of lab) {
+               sub.push(<Tag className='label'>{this.fullname(l.value)}</Tag>)
+            }
+            else {
+               for(let f of Object.keys(elem)) {
+                  let subsub = []
+                  if(f === rdf+"type") continue;
+                  else {
+                     subsub.push(<Tag className='first prop'//{...(val ? {className:'first prop'}:{className:'first type'}) }
+                     >{this.fullname(f)+": "}</Tag>)
+
+                     val = elem[f]
+                     for(let v of val)
+                     {
+                        let txt = v.value;
+                        if(v.type == 'uri') txt = this.uriformat(f,v)
+                        else txt = this.fullname(v.value)
+                        subsub.push(<Tag>{txt}</Tag>)
+                     }
+                  }
+                  sub.push(<div className="subsub">{subsub}</div>)
+               }
+
+            }
+
+            ret.push(<div className="sub">{sub}</div>)
          }
       }
 
       return ret ;
+
+   }
+
+   goBackToSearch()
+   {
+      let h = this.props.history
+      console.log("histo",h)
+      for(let i = h.index - 1; i >= 0 ; i --)
+      {
+         console.log("i",i);
+         if(h.entries[i].pathname === "/search") { h.go(i - h.index); break ; }
+      }
 
    }
 
@@ -213,24 +276,32 @@ class ResourceViewer extends Component<Props,State>
       //<Link to="/gallery?manifest=https://eroux.fr/manifest.json" style={{textDecoration:"none"}}><Button>Preview IIIF Gallery</Button></Link>
       //<div style={{height:"50px",fontSize:"26px",display:"flex",justifyContent:"center",alignItems:"center"}}>resource {get.IRI}</div>
 
+
       // add nother route to UViewer Gallery page
       return (
          <div style={{overflow:"hidden",textAlign:"center"}}>
             { !this.state.ready && <Loader loaded={false} /> }
             <div className="resource">
+               <Button onClick={this.goBackToSearch.bind(this)} style={{paddingLeft:"0"}}>&lt; Go back to search</Button>
                {this.format("h1",rdf+"type",this.props.IRI)}
                {this.format("h2",skos+"prefLabel")}
+               { /*<MapComponent tmp={this.props}/ */}
                <div className="data">
                   { Object.keys(this.properties()).map((k) => {
 
                      let elem = this.getResourceElem(k);
 
-                     if(!k.match(new RegExp(adm+"|prefLabel|"+rdf))) return (
-                        <div>
-                           <h3><span>{this.fullname(k)}</span>:&nbsp;</h3>
-                           {this.format("h4",k).map((e)=> [e," "] )}
-                        </div>
-                     ) }
+                     if(!k.match(new RegExp(adm+"|prefLabel|"+rdf+"|toberemoved"))) {
+                        let tags = this.format("h4",k)
+                        //console.log("tags",tags);
+                        return (
+                           <div>
+                              <h3><span>{this.fullname(k)}</span>:&nbsp;</h3>
+                              {tags.map((e)=> [e," "] )}
+                           </div>
+                           )
+                        }
+                     }
                   ) }
                </div>
             </div>

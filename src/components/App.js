@@ -32,6 +32,16 @@ const skos = "http://www.w3.org/2004/02/skos/core#";
 
 const prefixes = [adm, bdo,bdr,rdf,rdfs,skos]
 
+const languages = {
+   "zh-hant":"Chinese (Hanzi)",
+   "zl-latn-pinyin":"Chinese (Pinyin)",
+   "en":"English",
+   "sa-x-iast":"Sanskrit (IAST)",
+   "sa-Deva":"Sanskrit (Devanagari)",
+   "bo":"Tibetan (Unicode)",
+   "bo-x-ewts":"Tibetan (EWTS)"
+}
+
 const styles = {
   checked: {
     color: "rgb(50,50,50)",
@@ -122,12 +132,11 @@ class App extends Component<Props,State> {
 
          //this.props.onGetDatatypes(this.state.keyword,this.state.language)
 
-
-         // /!\ temporary disable history
-         //this.props.history.push("/search?q="+key+"&lg="+this.state.language+"&t=Any")
+         this.props.history.push("/search?q="+key+"&lg="+this.state.language+"&t=Any")
 
       }
-      else {
+      else { // TODO search with types already chosen TODO
+         /*
          if(!this.props.datatypes) this.props.onStartSearch(this.state.keyword,this.state.language)
 
          this.props.onSearchingKeyword(key,this.state.language,this.state.filters.datatype)
@@ -135,6 +144,7 @@ class App extends Component<Props,State> {
          state = this.setFacets(this.props,state,this.state.filters.datatype[0]);
 
          this.props.history.push("/search?q="+key+"&lg="+this.state.language+"&t="+this.state.filters.datatype.join(","))
+         */
       }
 
       this.setState(state);
@@ -351,7 +361,7 @@ class App extends Component<Props,State> {
      highlight(val,k):string
      {
 
-        val = val.replace(/@.*/,"").split(k).map((l) => ([<span>{l}</span>,<span className="highlight">{k}</span>])) ;
+        val = val.replace(/@.*/,"").split(new RegExp(k.replace(/ /g,"[ -]"))).map((l) => ([<span>{l}</span>,<span className="highlight">{k}</span>])) ;
         val = [].concat.apply([],val);
         val.pop();
         return val;
@@ -450,7 +460,9 @@ class App extends Component<Props,State> {
             } ) )
             console.log("list",list)
 
-            for(let t of types) {
+            let displayTypes = types //["Person"]
+
+            for(let t of displayTypes) {
 
                if(t === "Any") continue ;
 
@@ -503,7 +515,11 @@ class App extends Component<Props,State> {
                      )
 
                      cpt ++;
-                     if(cpt >= 3) break;
+                     if(displayTypes.length > 2) {
+                        if(cpt >= 3) break;
+                     } else {
+                        if(cpt >= 50) break;
+                     }
                   }
                }
             }
@@ -762,10 +778,7 @@ class App extends Component<Props,State> {
                     id: 'language',
                   }}
                 >
-                   <MenuItem value="zh">Chinese</MenuItem>
-                   <MenuItem value="en">English</MenuItem>
-                  <MenuItem value="bo">Tibetan</MenuItem>
-                  <MenuItem value="bo-x-ewts">Tibetan (Wylie)</MenuItem>
+                   { Object.keys(languages).map((k) => (<MenuItem value={k}>{languages[k]}</MenuItem>))}
                 </Select>
               </FormControl>
            </div>
