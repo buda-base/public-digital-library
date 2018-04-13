@@ -115,53 +115,40 @@ class App extends Component<Props,State> {
 
    }
 
-   requestSearch()
+   requestSearch(key:string,label?:string)
    {
-      let key = this.state.keyword ;
-      if(key == "") return ;
+      if(!key || key == "") return ;
       if(key.indexOf("\"") === -1) key = "\""+key+"\""
 
       let state = { ...this.state, dataSource:[] }
+            //this.setState(state);
 
-      if(this.state.filters.datatype.length === 0 || this.state.filters.datatype.indexOf("Any") !== -1 )
+      console.log("search",this.state,this.props)
+
+      if(label === "Any" || ( !label && ( this.state.filters.datatype.length === 0 || this.state.filters.datatype.indexOf("Any") !== -1 ) ) )
       {
          this.props.history.push({pathname:"/search",search:"?q="+key+"&lg="+this.state.language+"&t=Any"})
 
-         if(!this.props.searches[key+"@"+this.state.language]) { this.props.onStartSearch(key,this.state.language) }
+         if(!this.props.searches[key+"@"+this.state.language]) {
 
-      }
-      else if (this.state.filters.datatype.indexOf("Person") !== -1)
-      {
-         this.props.history.push({pathname:"/search",search:"?q="+key+"&lg="+this.state.language+"&t=Person"})
-
-         if(!this.props.searches["Person"] || !this.props.searches["Person"][key+"@"+this.state.language]) {
-            this.props.onStartSearch(key,this.state.language,["Person"])
+            this.props.onStartSearch(key,this.state.language)
          }
 
       }
-      else if(this.state.filters.datatype.indexOf("Work") !== -1)
+      else if (label || this.state.filters.datatype.filter((f)=>["Person","Work"].indexOf(f) !== -1).length > 0)
       {
-         this.props.history.push({pathname:"/search",search:"?q="+key+"&lg="+this.state.language+"&t=Work"})
+         if(!label) label = this.state.filters.datatype.filter((f)=>["Person","Work"].indexOf(f) !== -1)[0]
 
-         if(!this.props.searches["Work"] || !this.props.searches["Work"][key+"@"+this.state.language]) {
-            this.props.onStartSearch(key,this.state.language,["Work"])
+         this.props.history.push({pathname:"/search",search:"?q="+key+"&lg="+this.state.language+"&t="+label})
+
+         if(!this.props.searches[label] || !this.props.searches[label][key+"@"+this.state.language]) {
+
+            this.props.onStartSearch(key,this.state.language,[label])
          }
 
-
-         /*
-         if(!this.props.datatypes) this.props.onStartSearch(this.state.keyword,this.state.language)
-
-         this.props.onSearchingKeyword(key,this.state.language,this.state.filters.datatype)
-
-         state = this.setFacets(this.props,state,this.state.filters.datatype[0]);
-
-         this.props.history.push("/search?q="+key+"&lg="+this.state.language+"&t="+this.state.filters.datatype.join(","))
-         */
       }
 
-      this.setState(state);
 
-      console.log("search",this.state)
    }
 
    getEndpoint():string
@@ -183,7 +170,7 @@ class App extends Component<Props,State> {
 
       if(newState.willSearch)
       {
-         this.requestSearch();
+         this.requestSearch(this.state.keyword);
          state = { ...state, willSearch:false}
          update = true ;
       }
@@ -191,7 +178,7 @@ class App extends Component<Props,State> {
 
       // console.log("newProps.facets",newProps.facets)
 
-
+/*
       if(state.keyword != "" && newProps.config.facets && !this._facetsRequested && !state.facets && state.filters.datatype.length > 0 && state.filters.datatype.indexOf("Any") === -1)
       {
          this._facetsRequested = true ;
@@ -199,7 +186,7 @@ class App extends Component<Props,State> {
          console.log("facets ???",state)
          update = true ;
       }
-
+*/
 
       if(update) this.setState(state)
 
@@ -290,31 +277,28 @@ class App extends Component<Props,State> {
 
       if(val && this.props.keyword)
       {
+         if(lab === "Any")
+         {
+            console.log("youpi")
+            this.requestSearch(this.props.keyword,lab)
 
-         let key = this.state.keyword ;
-         if(key.indexOf("\"") === -1) key = "\""+key+"\""
+         }
+         else if(["Person","Work"].indexOf(lab) !== -1) {
 
-         if(lab != "Any") {
-
-            //this.props.onCheckDatatype(lab,key,this.state.language)
-
-            //state = this.setFacets(this.props,state,lab);
-
+            this.requestSearch(this.props.keyword,lab)
 
          }
          else {
-
-            //state = { ...state, facets:null}
-
-            //this.props.onSearchingKeyword(key,this.state.language,f)
-
-            // no need because same search
-            //this.props.onGetDatatypes(this.state.keyword,this.state.language)
+            this.props.history.push("/search?q="+this.props.keyword+"&lg="+this.state.language+"&t="+lab);
          }
 
-
-         this.props.history.push("/search?q="+key+"&lg="+this.state.language+"&t="+f.join(","))
       }
+
+      this.setState(state)
+
+
+      return
+
 
 
       if(!val)
@@ -330,7 +314,7 @@ class App extends Component<Props,State> {
             if(key.indexOf("\"") === -1) key = "\""+key+"\""
 
             state = { ...state, facets:null}
-            this.props.onSearchingKeyword(key,this.state.language)
+            //this.props.onSearchingKeyword(key,this.state.language)
 
             // no need because same saerch...
             //this.props.onGetDatatypes(this.state.keyword,this.state.language)
@@ -391,175 +375,183 @@ class App extends Component<Props,State> {
       let loader ;
       let counts = { "datatype" : { "Any" : 0 } }
 
-      console.log("results?",results,this.props.searches[this.props.keyword+"@"+this.props.language])
 
-      if(this.props.keyword && (results = this.props.searches[this.props.keyword+"@"+this.props.language]))
+
+      if(this.props.keyword)
       {
-
-         let n = 0, m = 0 ;
-         if(results.numResults == 0) {
-            message.push(
-               <Typography style={{fontSize:"1.5em",maxWidth:'700px',margin:'50px auto',zIndex:0}}>
-                  No result found.
-               </Typography>
-            )
-         }
+         if(this.props.searches[this.state.filters.datatype[0]])
+            results = this.props.searches[this.state.filters.datatype[0]][this.props.keyword+"@"+this.props.language]
          else
+            results = this.props.searches[this.props.keyword+"@"+this.props.language]
+
+         console.log("results?",results,this.props.searches[this.props.keyword+"@"+this.props.language])
+
+         if(results)
          {
-            if(!this.props.datatypes || !this.props.datatypes.metadata)
-            {
-               console.log("dtp?",this.props.datatypes)
+            let n = 0, m = 0 ;
+            if(results.numResults == 0) {
+               message.push(
+                  <Typography style={{fontSize:"1.5em",maxWidth:'700px',margin:'50px auto',zIndex:0}}>
+                     No result found.
+                  </Typography>
+               )
             }
-            else {
+            else
+            {
+               if(!this.props.datatypes || !this.props.datatypes.metadata)
+               {
+                  //console.log("dtp?",this.props.datatypes)
+               }
+               else {
 
-               //if(this.state.loader.datatype)
-               //   this.setState({ loader: { ...this.state.loader, datatype:false }})
+                  //if(this.state.loader.datatype)
+                  //   this.setState({ loader: { ...this.state.loader, datatype:false }})
 
-               console.log("whatelse");
+                  //console.log("whatelse");
 
-               if( this.props.datatypes.metadata) for(let r of Object.keys(this.props.datatypes.metadata) ){
+                  if( this.props.datatypes.metadata) for(let r of Object.keys(this.props.datatypes.metadata) ){
 
-                  //r = r.bindings
-                  let typ = r.replace(/^.*?([^/]+)$/,"$1")
+                     //r = r.bindings
+                     let typ = r.replace(/^.*?([^/]+)$/,"$1")
 
-                  console.log("typ",typ)
+                     console.log("typ",typ)
 
-                  if(typ != "" && types.indexOf(typ) === -1)
-                  {
-                     m++;
+                     if(typ != "" && types.indexOf(typ) === -1)
+                     {
+                        m++;
 
-                     types.push(typ);
+                        types.push(typ);
 
-                     counts["datatype"][typ]=Number(this.props.datatypes.metadata[r])
-                     counts["datatype"]["Any"]+=Number(this.props.datatypes.metadata[r])
+                        counts["datatype"][typ]=Number(this.props.datatypes.metadata[r])
+                        counts["datatype"]["Any"]+=Number(this.props.datatypes.metadata[r])
 
-                     /*
-                     let value = typ
+                        /*
+                        let value = typ
 
-                     let box =
-                     <div key={m} style={{width:"150px",textAlign:"left"}}>
-                        <FormControlLabel
-                           control={
-                              <Checkbox
-                                 checked={this.state.filters.datatype.indexOf(typ) !== -1}
-                                 icon={<span className='checkB'/>}
-                                 checkedIcon={<span className='checkedB'><CheckCircle style={{color:"#444",margin:"-3px 0 0 -3px",width:"26px",height:"26px"}}/></span>}
-                                 onChange={(event, checked) => this.handleCheck(event,value,checked)} />
+                        let box =
+                        <div key={m} style={{width:"150px",textAlign:"left"}}>
+                           <FormControlLabel
+                              control={
+                                 <Checkbox
+                                    checked={this.state.filters.datatype.indexOf(typ) !== -1}
+                                    icon={<span className='checkB'/>}
+                                    checkedIcon={<span className='checkedB'><CheckCircle style={{color:"#444",margin:"-3px 0 0 -3px",width:"26px",height:"26px"}}/></span>}
+                                    onChange={(event, checked) => this.handleCheck(event,value,checked)} />
 
-                           }
-                           label={typ}
-                        />
-                        </div>
-                        facetList.push(box)
-                           */
+                              }
+                              label={typ}
+                           />
+                           </div>
+                           facetList.push(box)
+                              */
+
+                     }
+
+                     types = types.sort(function(a,b) { return counts["datatype"][a] < counts["datatype"][b] })
+
+                     //console.log("counts",counts)
 
                   }
-
-                  types = types.sort(function(a,b) { return counts["datatype"][a] < counts["datatype"][b] })
-
-                  console.log("counts",counts)
-
                }
-            }
 
-            let list = results.results.bindings
+               let list = results.results.bindings
 
-            if(!list.length) list = Object.keys(list).map((o) => {
+               if(!list.length) list = Object.keys(list).map((o) => {
 
-               let label = list[o].label
-               if(!label) label = list[o].matching.filter((current) => (current.type === skos+"prefLabel"))[0]
-               if(!label)
-                  if(list[o].prefLabel) label = {"value": list[o].prefLabel }
-                  else label = {"value":"?"}
+                  let label = list[o].label
+                  if(!label) label = list[o].matching.filter((current) => (current.type === skos+"prefLabel"))[0]
+                  if(!label)
+                     if(list[o].prefLabel) label = {"value": list[o].prefLabel }
+                     else label = {"value":"?"}
 
 
-               return (
+                  return (
+                     {
+                         f  : { type: "uri", value:list[o].type },
+                         lit: { ...label,
+                                 value:label.value.replace(/@.*$/,"")
+                              },
+                         s  : { type: "uri", value:o },
+                         match: list[o].matching
+                     } ) } )
+
+               let displayTypes = types //["Person"]
+               if(this.state.filters.datatype.indexOf("Any") === -1) displayTypes = this.state.filters.datatype ;
+
+               console.log("list x types",list,types,displayTypes)
+
+               for(let t of displayTypes) {
+
+                  if(t === "Any") continue ;
+
+                  message.push(<MenuItem  onClick={(e)=>this.handleCheck(e,t,true)}><h4>{t+"s"+(counts["datatype"][t]?" ("+counts["datatype"][t]+")":"")}</h4></MenuItem>);
+
+                  let cpt = 0;
+                  n = 0;
+                  for(let r of list)
                   {
-                      f  : { type: "uri", value:list[o].type },
-                      lit: { ...label,
-                              value:label.value.replace(/@.*$/,"")
-                           },
-                      s  : { type: "uri", value:o },
-                      match: list[o].matching
-                  } ) } )
+                     // console.log("r",r);
+                     let k = this.props.keyword.replace(/"/g,"")
 
-            let displayTypes = types //["Person"]
-            if(this.state.filters.datatype.indexOf("Any") === -1) displayTypes = this.state.filters.datatype ;
-
-            console.log("list x types",list,types,displayTypes)
-
-            for(let t of displayTypes) {
-
-               if(t === "Any") continue ;
-
-               message.push(<MenuItem><h4>{t+"s"+(counts["datatype"][t]?" ("+counts["datatype"][t]+")":"")}</h4></MenuItem>);
-
-               let cpt = 0;
-               n = 0;
-               for(let r of list)
-               {
-                  // console.log("r",r);
-                  let k = this.props.keyword.replace(/"/g,"")
-
-                  let id = r.s.value.replace(/^.*?([^/]+)$/,"$1")
-                  let lit ;
-                  if(r.lit) { lit = this.highlight(r.lit.value,k) }
-                  let typ ;
-                  if(r.f && r.f.value) typ = r.f.value.replace(/^.*?([^/]+)$/,"$1")
+                     let id = r.s.value.replace(/^.*?([^/]+)$/,"$1")
+                     let lit ;
+                     if(r.lit) { lit = this.highlight(r.lit.value,k) }
+                     let typ ;
+                     if(r.f && r.f.value) typ = r.f.value.replace(/^.*?([^/]+)$/,"$1")
 
 
-                  //if(this.state.filters.datatype.length == 0 || this.state.filters.datatype.indexOf("Any") !== -1 || this.state.filters.datatype.indexOf(typ) !== -1)
-                  if(!typ || typ === t)
-                  {
-                     //console.log("lit",lit)
+                     //if(this.state.filters.datatype.length == 0 || this.state.filters.datatype.indexOf("Any") !== -1 || this.state.filters.datatype.indexOf(typ) !== -1)
+                     if(!typ || typ === t)
+                     {
+                        //console.log("lit",lit)
 
-                     n ++;
-                     message.push(
-                        [
-                     <Link key={n} to={"/show/bdr:"+id} className="result">
+                        n ++;
+                        message.push(
+                           [
+                        <Link key={n} to={"/show/bdr:"+id} className="result">
 
-                        <Button key={t+"_"+n+"_"}>
-                              <ListItem style={{paddingLeft:"0",display:"flex"}}>
-                                 <div style={{width:"30px",textAlign:"right"}}>{n}</div>
-                                 <ListItemText style={{height:"auto",flexGrow:10,flexShrink:10}}
-                                    primary={lit}
-                                    secondary={id}
-                                 />
-                              </ListItem>
-                        </Button>
+                           <Button key={t+"_"+n+"_"}>
+                                 <ListItem style={{paddingLeft:"0",display:"flex"}}>
+                                    <div style={{width:"30px",textAlign:"right"}}>{n}</div>
+                                    <ListItemText style={{height:"auto",flexGrow:10,flexShrink:10}}
+                                       primary={lit}
+                                       secondary={id}
+                                    />
+                                 </ListItem>
+                           </Button>
 
-                     </Link>
-                        ,
-                        <div>{r.match.map((m) =>
-                           (!m.type.match(new RegExp(skos+"prefLabel"))?
-                              <div className="match">
-                                 <span className="label">{this.fullname(m.type)}:&nbsp;</span>
-                                 <span>{this.highlight(m.value,k)}</span>
-                              </div>
-                           :null))}</div>
-                     ]
+                        </Link>
+                           ,
+                           <div>{r.match.map((m) =>
+                              (!m.type.match(new RegExp(skos+"prefLabel"))?
+                                 <div className="match">
+                                    <span className="label">{this.fullname(m.type)}:&nbsp;</span>
+                                    <span>{this.highlight(m.value,k)}</span>
+                                 </div>
+                              :null))}</div>
+                        ]
 
-                     )
+                        )
 
-                     cpt ++;
-                     if(displayTypes.length > 2) {
-                        if(cpt >= 3) break;
-                     } else {
-                        if(cpt >= 50) break;
+                        cpt ++;
+                        if(displayTypes.length > 2) {
+                           if(cpt >= 3) break;
+                        } else {
+                           if(cpt >= 50) break;
+                        }
                      }
                   }
                }
+
+               //console.log("message",message)
+
+               /*
+               <Typography>{r.lit}</Typography>
+               */
             }
-
-            //console.log("message",message)
-
-            /*
-            <Typography>{r.lit}</Typography>
-            */
          }
       }
-
-      if(!results)
+      else
       {
          types = ["Any","Person","Work","Corporation","Place","Item","Etext","Role","Topic","Lineage"]
          types = types.sort()
@@ -839,14 +831,14 @@ class App extends Component<Props,State> {
             </div>
             <div className="SidePane right" style={{width:"25%",paddingTop:"150px"}}>
                <div style={{width:"333px",float:"left",position:"relative"}}>
-                  <Typography style={{fontSize:"30px",marginBottom:"20px",textAlign:"left"}}>Preferences</Typography>
+                  <Typography style={{fontSize:"30px",marginBottom:"20px",textAlign:"left"}}>Display preferences</Typography>
                   {
-                     widget("UI Language","locale",
-                           ["English", "French", "Tibetan", "Chinese" ].map((i) => <div key={i} style={{width:"150px",textAlign:"left"}}>
+                     widget("UI language","locale",
+                           ["Chinese", "English", "Tibetan" ].map((i) => <div key={i} style={{width:"150px",textAlign:"left"}}>
                               <FormControlLabel
                                  control={
                                     <Checkbox
-                                       {... i!="French" ?{}:{defaultChecked:true}}
+                                       {... i!="English" ?{}:{defaultChecked:true}}
                                        disabled={true}
                                        className="checkbox disabled"
                                        icon={<span className='checkB'/>}

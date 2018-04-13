@@ -175,18 +175,20 @@ export type FoundResultsAction = {
         keyword: string,
         language: string,
         property?:string,
+        datatype?:string[],
         results: []
     }
 }
 
 TYPES.foundResults = 'FOUND_RESULTS';
-export const foundResults = (keyword: string, language:string, results: []): FoundResultsAction => {
+export const foundResults = (keyword: string, language:string, results: [], datatype?:string[]): FoundResultsAction => {
     return {
         type: TYPES.foundResults,
         payload: {
             keyword,
             language,
-            results
+            results,
+            datatype
         }
     }
 }

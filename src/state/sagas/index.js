@@ -26,7 +26,7 @@ async function initiateApp(params,iri) {
          store.dispatch(dataActions.gotResource(iri,res));
       }
       else if(!iri && params && params.q) {
-         if(params.t)
+         if(params.t && ["Person","Work"].indexOf(params.t) !== -1)
          {
             store.dispatch(dataActions.startSearch(params.q,params.lg,[params.t])); //,params.t.split(",")));
          }
@@ -90,8 +90,12 @@ export function* getDatatypes(key,lang) {
 
    // why is this action dispatched twice ???
    store.dispatch(uiActions.loading(keyword, true));
+   if(!datatype || datatype.indexOf("Any") !== -1) {
+      store.dispatch(dataActions.getDatatypes());
+   }
    try {
       let result ;
+
 
       result = await api.getStartResults(keyword,language,datatype);
 
@@ -99,15 +103,28 @@ export function* getDatatypes(key,lang) {
 
       let data = result.data
       data = { numResults:Object.keys(data).length,results : { bindings: {...data } } }
-      store.dispatch(dataActions.foundResults(keyword, language, data));
+      store.dispatch(dataActions.foundResults(keyword, language, data, datatype));
 
 
-      if(!datatype || datatype.indexOf("Any") !== -1) store.dispatch(dataActions.foundDatatypes(keyword,{ metadata:result.metadata, hash:true}));
+      if(!datatype || datatype.indexOf("Any") !== -1) {
+         store.dispatch(dataActions.foundDatatypes(keyword,{ metadata:result.metadata, hash:true}));
+      }
+      else if(!store.getState().data.searches[keyword+"@"+language]){
+         store.dispatch(dataActions.getDatatypes());
+         result = await api.getStartResults(keyword,language);
+         data = result.data
+         data = { numResults:Object.keys(data).length,results : { bindings: {...data } } }
+         store.dispatch(dataActions.foundResults(keyword, language, data));
+         store.dispatch(dataActions.foundDatatypes(keyword,{ metadata:result.metadata, hash:true}));
+      }
       // store.dispatch(dataActions.foundDatatypes(keyword, JSON.parse(result.metadata).results));
       //store.dispatch(dataActions.foundResults(keyword, language,result));
       //yield put(uiActions.showResults(keyword, language));
 
    } catch(e) {
+
+      console.log(e);
+
       store.dispatch(dataActions.searchFailed(keyword, e.message));
       store.dispatch(uiActions.loading(keyword, false));
    }
@@ -243,7 +260,7 @@ export default function* rootSaga() {
    yield all([
       watchInitiateApp(),
       watchChoosingHost(),
-      watchGetDatatypes(),
+      //watchGetDatatypes(),
       watchGetFacetInfo(),
       watchGetOneDatatype(),
       watchGetOneFacet(),

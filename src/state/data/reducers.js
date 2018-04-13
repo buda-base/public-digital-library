@@ -160,15 +160,31 @@ reducers[actions.TYPES.notGettingDatatypes] = notGettingDatatypes;
 
 export const foundResults = (state: DataState, action: actions.FoundResultsAction) => {
 
+   let searches
+
+   if(!action.payload.datatype || action.payload.datatype.indexOf("Any") !== -1)
+   {
+      searches = {
+            ...state.searches,
+            [action.payload.keyword + "@" + action.payload.language]: action.payload.results
+            }
+   }
+   else {
+      searches = {
+            ...state.searches,
+            [action.payload.datatype[0]] : {
+               ...state.searches[action.payload.datatype[0]],
+               [action.payload.keyword + "@" + action.payload.language]: action.payload.results
+            }
+      }
+   }
+
       return {
       ...state,
 
       keyword:action.payload.keyword,
       language:action.payload.language,
-      searches: {
-            ...state.searches,
-            [action.payload.keyword + "@" + action.payload.language]: action.payload.results
-            }
+      searches: searches
    }
 }
 reducers[actions.TYPES.foundResults] = foundResults;
