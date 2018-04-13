@@ -6,7 +6,7 @@ import Button from 'material-ui/Button';
 import { Link } from 'react-router-dom';
 import { Redirect404 } from "../routes.js"
 import Loader from "react-loader"
-import {MapComponent} from './Map';
+//import {MapComponent} from './Map';
 
 type Props = {
    history:{},
