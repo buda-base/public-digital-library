@@ -1,7 +1,7 @@
 // src/history.js
 
 import createHistory from 'history/createBrowserHistory'
-import { createMemoryHistory } from 'history'
+import { createBrowserHistory } from 'history'
 
 
-export default createMemoryHistory(); //createHistory()
+export default createBrowserHistory()

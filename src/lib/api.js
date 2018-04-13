@@ -262,11 +262,13 @@ export default class API {
       }
   }
 
-     async _getStartResultsData(key: string,lang: string): Promise<{} | null> {
+     async _getStartResultsData(key: string,lang: string,typ:string[]): Promise<{} | null> {
         try {
              let config = store.getState().data.config.ldspdi
              let url = config.endpoints[config.index]+"/lib" ;
-             let data = this.getQueryResults(url, key, {"searchType":"rootSearch","LG_NAME":lang},"GET");
+             let param = {"searchType":"rootSearch","LG_NAME":lang}
+             if(typ && typ.length >= 1 && typ[0] !== "Any") { param = { ...param, "searchType":typ[0].toLowerCase()+"Search" } }
+             let data = this.getQueryResults(url, key, param,"GET");
              // let data = this.getSearchContents(url, key);
 
              return data ;
@@ -358,11 +360,11 @@ export default class API {
       }
   }
 
-     async getStartResults(key: string,lang:string): Promise<{} | null> {
+     async getStartResults(key: string,lang:string,types:string[]): Promise<{} | null> {
        let data = [];
 
        try {
-           data = await this._getStartResultsData(key,lang)
+           data = await this._getStartResultsData(key,lang,types)
 
            return data ;
         } catch(e) {

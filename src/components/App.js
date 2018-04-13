@@ -67,7 +67,7 @@ type Props = {
    datatypes:boolean|{},
    history:{},
    ontology:{},
-   onStartSearch:(k:string,lg:string)=>void,
+   onStartSearch:(k:string,lg:string,t?:string)=>void,
    onSearchingKeyword:(k:string,lg:string,t?:string[])=>void,
    onGetDatatypes:(k:string,lg:string)=>void,
    onCheckDatatype:(t:string,k:string,lg:string)=>void,
@@ -125,17 +125,29 @@ class App extends Component<Props,State> {
 
       if(this.state.filters.datatype.length === 0 || this.state.filters.datatype.indexOf("Any") !== -1 )
       {
-         if(!this.props.searches[key+"@"+this.state.language])
-            this.props.onStartSearch(key,this.state.language)
+         this.props.history.push({pathname:"/search",search:"?q="+key+"&lg="+this.state.language+"&t=Any"})
 
-         state = { ...state, facets:null}
-
-         //this.props.onGetDatatypes(this.state.keyword,this.state.language)
-
-         this.props.history.push("/search?q="+key+"&lg="+this.state.language+"&t=Any")
+         if(!this.props.searches[key+"@"+this.state.language]) { this.props.onStartSearch(key,this.state.language) }
 
       }
-      else { // TODO search with types already chosen TODO
+      else if (this.state.filters.datatype.indexOf("Person") !== -1)
+      {
+         this.props.history.push({pathname:"/search",search:"?q="+key+"&lg="+this.state.language+"&t=Person"})
+
+         if(!this.props.searches["Person"] || !this.props.searches["Person"][key+"@"+this.state.language]) {
+            this.props.onStartSearch(key,this.state.language,["Person"])
+         }
+
+      }
+      else if(this.state.filters.datatype.indexOf("Work") !== -1)
+      {
+         this.props.history.push({pathname:"/search",search:"?q="+key+"&lg="+this.state.language+"&t=Work"})
+
+         if(!this.props.searches["Work"] || !this.props.searches["Work"][key+"@"+this.state.language]) {
+            this.props.onStartSearch(key,this.state.language,["Work"])
+         }
+
+
          /*
          if(!this.props.datatypes) this.props.onStartSearch(this.state.keyword,this.state.language)
 
@@ -197,6 +209,8 @@ class App extends Component<Props,State> {
 
    setFacets = (props:Props,state:State,lab:string) =>
    {
+      return ;
+
       let facets = props.config.facets.simple["bdo:"+lab]
       console.log("facets",facets,props.config.facets,state.filters.datatype)
       if(facets)
@@ -282,17 +296,17 @@ class App extends Component<Props,State> {
 
          if(lab != "Any") {
 
-            this.props.onCheckDatatype(lab,key,this.state.language)
+            //this.props.onCheckDatatype(lab,key,this.state.language)
 
-            state = this.setFacets(this.props,state,lab);
+            //state = this.setFacets(this.props,state,lab);
 
 
          }
          else {
 
-            state = { ...state, facets:null}
+            //state = { ...state, facets:null}
 
-            this.props.onSearchingKeyword(key,this.state.language,f)
+            //this.props.onSearchingKeyword(key,this.state.language,f)
 
             // no need because same search
             //this.props.onGetDatatypes(this.state.keyword,this.state.language)
@@ -360,7 +374,6 @@ class App extends Component<Props,State> {
 
      highlight(val,k):string
      {
-
         val = val.replace(/@.*/,"").split(new RegExp(k.replace(/ /g,"[ -]"))).map((l) => ([<span>{l}</span>,<span className="highlight">{k}</span>])) ;
         val = [].concat.apply([],val);
         val.pop();
@@ -451,16 +464,29 @@ class App extends Component<Props,State> {
 
             let list = results.results.bindings
 
-            if(!list.length) list = Object.keys(list).map((o) => (
-            {
-                f  : { type: "uri", value:list[o].type },
-                lit: { ...list[o].label, value:list[o].label.value.replace(/@.*$/,"")},
-                s  : { type: "uri", value:o },
-                match: list[o].matching
-            } ) )
-            console.log("list",list)
+            if(!list.length) list = Object.keys(list).map((o) => {
+
+               let label = list[o].label
+               if(!label) label = list[o].matching.filter((current) => (current.type === skos+"prefLabel"))[0]
+               if(!label)
+                  if(list[o].prefLabel) label = {"value": list[o].prefLabel }
+                  else label = {"value":"?"}
+
+
+               return (
+                  {
+                      f  : { type: "uri", value:list[o].type },
+                      lit: { ...label,
+                              value:label.value.replace(/@.*$/,"")
+                           },
+                      s  : { type: "uri", value:o },
+                      match: list[o].matching
+                  } ) } )
 
             let displayTypes = types //["Person"]
+            if(this.state.filters.datatype.indexOf("Any") === -1) displayTypes = this.state.filters.datatype ;
+
+            console.log("list x types",list,types,displayTypes)
 
             for(let t of displayTypes) {
 
@@ -478,11 +504,12 @@ class App extends Component<Props,State> {
                   let id = r.s.value.replace(/^.*?([^/]+)$/,"$1")
                   let lit ;
                   if(r.lit) { lit = this.highlight(r.lit.value,k) }
-                  let typ = r.f.value.replace(/^.*?([^/]+)$/,"$1")
+                  let typ ;
+                  if(r.f && r.f.value) typ = r.f.value.replace(/^.*?([^/]+)$/,"$1")
 
 
                   //if(this.state.filters.datatype.length == 0 || this.state.filters.datatype.indexOf("Any") !== -1 || this.state.filters.datatype.indexOf(typ) !== -1)
-                  if(typ === t)
+                  if(!typ || typ === t)
                   {
                      //console.log("lit",lit)
 
@@ -538,6 +565,23 @@ class App extends Component<Props,State> {
          types = types.sort()
       }
 
+      let widget = (title:string,txt:string,inCollapse:Component) => (
+         [<ListItem
+            style={{display:"flex",justifyContent:"space-between",padding:"0 20px",borderBottom:"1px solid #bbb",cursor:"pointer"}}
+            onClick={(e) => { this.setState({collapse:{ ...this.state.collapse, [txt]:!this.state.collapse[txt]} }); } }
+            >
+            <Typography style={{fontSize:"18px",lineHeight:"50px",}}>{title}</Typography>
+            { this.state.collapse[txt] ? <ExpandLess /> : <ExpandMore />}
+         </ListItem>,
+         <Collapse
+            in={this.state.collapse[txt]}
+            className={[txt,this.state.collapse[txt]?"open":"close"].join(" ")}
+            style={{padding:"10px 0 0 50px"}} // ,marginBottom:"30px"
+            >
+               {inCollapse}
+         </Collapse> ]
+      )
+
       return (
 <div>
 
@@ -558,23 +602,12 @@ class App extends Component<Props,State> {
             style={{width:"100%",height:"calc(100vh)",backgroundColor: "#000"}}/> */}
 
          <div className="App" style={{display:"flex"}}>
-            <div className="SidePane" style={{width:"25%",paddingTop:"150px"}}>
+            <div className="SidePane left" style={{width:"25%",paddingTop:"150px"}}>
                { //this.props.datatypes && (results ? results.numResults > 0:true) &&
                   <div style={{width:"333px",float:"right",position:"relative"}}>
                      <Typography style={{fontSize:"30px",marginBottom:"20px",textAlign:"left"}}>Refine Your Search</Typography>
-                     <ListItem
-                        style={{display:"flex",justifyContent:"space-between",padding:"0 20px",borderBottom:"1px solid #bbb",cursor:"pointer"}}
-                        onClick={(e) => { this.setState({collapse:{ ...this.state.collapse, "collection":!this.state.collapse["collection"]} }); } }
-                        >
-                        <Typography style={{fontSize:"18px",lineHeight:"50px",}}>Collection</Typography>
-                        { this.state.collapse["collection"] ? <ExpandLess /> : <ExpandMore />}
-                     </ListItem>
-                     <Collapse
-                        in={this.state.collapse["collection"]}
-                        className={["collapse",this.state.collapse["collection"]?"open":"close"].join(" ")}
-                        style={{padding:"10px 0 0 50px"}} // ,marginBottom:"30px"
-                        >
-                           { ["BDRC" ,"rKTs" ].map((i) => <div key={i} style={{width:"150px",textAlign:"left"}}>
+                     {
+                        widget("Collection","collection", ["BDRC" ,"rKTs" ].map((i) => <div key={i} style={{width:"150px",textAlign:"left"}}>
                               <FormControlLabel
                                  control={
                                     <Checkbox
@@ -588,23 +621,22 @@ class App extends Component<Props,State> {
 
                                  }
                                  label={i}
-                              />
-                           </div> )}
-                     </Collapse>
+                              /></div> ))
+                     }
                      {  this.props.datatypes && !this.props.datatypes.hash &&
                         <Loader loaded={false} className="datatypesLoader" style={{position:"relative"}}/>
                      }
                      <ListItem
                         style={{display:"flex",justifyContent:"space-between",padding:"0 20px",borderBottom:"1px solid #bbb",cursor:"pointer"}}
                         onClick={(e) => {
-                           if(!(this.props.datatypes && !this.props.datatypes.hash))
+                           //if(!(this.props.datatypes && !this.props.datatypes.hash))
                               this.setState({collapse:{ ...this.state.collapse, "datatype":!this.state.collapse["datatype"]} }); } }
                         >
                         <Typography style={{fontSize:"18px",lineHeight:"50px",}}>Data Type</Typography>
-                        { this.props.datatypes && this.props.datatypes.hash && !this.state.collapse["datatype"] ? <ExpandLess /> : <ExpandMore />  }
+                        { /*this.props.datatypes && this.props.datatypes.hash &&*/ !this.state.collapse["datatype"] ? <ExpandLess /> : <ExpandMore />  }
                      </ListItem>
                      <Collapse
-                        in={this.props.datatypes && this.props.datatypes.hash && !this.state.collapse["datatype"]}
+                        in={/*this.props.datatypes && this.props.datatypes.hash &&*/ !this.state.collapse["datatype"]}
                         className={["collapse",  !(this.props.datatypes && !this.props.datatypes.hash)&&this.state.collapse["datatype"]?"open":"close"].join(" ")}
                          style={{padding:"10px 0 0 50px"}} >
                         <div>
@@ -613,20 +645,20 @@ class App extends Component<Props,State> {
 
                                  //console.log("counts",i,counts["datatype"][i])
 
-
+                           let disabled = !this.props.keyword && ["Any","Person","Work"].indexOf(i)===-1
 
                               return (
                                  <div key={i} style={{textAlign:"left"}}>
                                     <FormControlLabel
                                        control={
                                           <Checkbox
-                                             className="checkbox disabled"
-                                             disabled={true}
+                                             className={"checkbox "+(disabled?"disabled":"")}
+                                             disabled={disabled}
                                              //{...i=="Any"?{defaultChecked:true}:{}}
                                              checked={this.state.filters.datatype.indexOf(i) !== -1}
                                              icon={<span className='checkB'/>}
                                              checkedIcon={<span className='checkedB'><CheckCircle style={{color:"#444",margin:"-3px 0 0 -3px",width:"26px",height:"26px"}}/></span>}
-                                             //onChange={(event, checked) => this.handleCheck(event,i,checked)}
+                                             onChange={(event, checked) => this.handleCheck(event,i,checked)}
                                           />
 
                                        }
@@ -805,7 +837,47 @@ class App extends Component<Props,State> {
                   { message }
                </List>
             </div>
-            <div className="Pane" style={{width:"25%"}}>
+            <div className="SidePane right" style={{width:"25%",paddingTop:"150px"}}>
+               <div style={{width:"333px",float:"left",position:"relative"}}>
+                  <Typography style={{fontSize:"30px",marginBottom:"20px",textAlign:"left"}}>Preferences</Typography>
+                  {
+                     widget("UI Language","locale",
+                           ["English", "French", "Tibetan", "Chinese" ].map((i) => <div key={i} style={{width:"150px",textAlign:"left"}}>
+                              <FormControlLabel
+                                 control={
+                                    <Checkbox
+                                       {... i!="French" ?{}:{defaultChecked:true}}
+                                       disabled={true}
+                                       className="checkbox disabled"
+                                       icon={<span className='checkB'/>}
+                                       checkedIcon={<span className='checkedB'><CheckCircle style={{color:"#444",margin:"-3px 0 0 -3px",width:"26px",height:"26px"}}/></span>}
+                                       //onChange={(event, checked) => this.handleCheck(event,i,checked)}
+                                    />
+
+                                 }
+                                 label={i}
+                              />
+                           </div> ))
+                  }{
+                     widget("Results preferred language","language",
+                           Object.keys(languages).map((i) => <div key={i} style={{width:"200px",textAlign:"left"}}>
+                              <FormControlLabel
+                                 control={
+                                    <Checkbox
+                                       {... i!="bo-x-ewts" ?{}:{defaultChecked:true}}
+                                       disabled={true}
+                                       className="checkbox disabled"
+                                       icon={<span className='checkB'/>}
+                                       checkedIcon={<span className='checkedB'><CheckCircle style={{color:"#444",margin:"-3px 0 0 -3px",width:"26px",height:"26px"}}/></span>}
+                                       //onChange={(event, checked) => this.handleCheck(event,i,checked)}
+                                    />
+
+                                 }
+                                 label={languages[i]}
+                              />
+                           </div> ))
+                  }
+               </div>
             </div>
          </div>
       </div>

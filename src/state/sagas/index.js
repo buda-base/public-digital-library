@@ -28,7 +28,7 @@ async function initiateApp(params,iri) {
       else if(!iri && params && params.q) {
          if(params.t)
          {
-            store.dispatch(dataActions.startSearch(params.q,params.lg)); //,params.t.split(",")));
+            store.dispatch(dataActions.startSearch(params.q,params.lg,[params.t])); //,params.t.split(",")));
          }
          else
          {
@@ -84,16 +84,16 @@ export function* getDatatypes(key,lang) {
    }
 
 }
- async function startSearch(keyword,language) {
+ async function startSearch(keyword,language,datatype) {
 
-   console.log("sSsearch",keyword,language);
+   console.log("sSsearch",keyword,language,datatype);
 
    // why is this action dispatched twice ???
    store.dispatch(uiActions.loading(keyword, true));
    try {
       let result ;
 
-      result = await api.getStartResults(keyword,language);
+      result = await api.getStartResults(keyword,language,datatype);
 
       store.dispatch(uiActions.loading(keyword, false));
 
@@ -102,7 +102,7 @@ export function* getDatatypes(key,lang) {
       store.dispatch(dataActions.foundResults(keyword, language, data));
 
 
-      store.dispatch(dataActions.foundDatatypes(keyword,{ metadata:result.metadata, hash:true}));
+      if(!datatype || datatype.indexOf("Any") !== -1) store.dispatch(dataActions.foundDatatypes(keyword,{ metadata:result.metadata, hash:true}));
       // store.dispatch(dataActions.foundDatatypes(keyword, JSON.parse(result.metadata).results));
       //store.dispatch(dataActions.foundResults(keyword, language,result));
       //yield put(uiActions.showResults(keyword, language));
@@ -202,7 +202,7 @@ export function* watchStartSearch() {
 
    yield takeLatest(
       dataActions.TYPES.startSearch,
-      (action) => startSearch(action.payload.keyword,action.payload.language)
+      (action) => startSearch(action.payload.keyword,action.payload.language,action.payload.datatype)
    );
 }
 

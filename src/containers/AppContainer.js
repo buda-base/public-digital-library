@@ -14,7 +14,7 @@ const mapStateToProps = (state) => {
    let hostFailure = state.data.failures.host ;
    let config = state.data.config ;
    let searches = state.data.searches ;
-   let keyword = state.data.keyword   
+   let keyword = state.data.keyword
    let language = state.data.language
    let datatypes = state.data.datatypes ;
    let ontology = state.data.ontology ;
@@ -31,8 +31,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch, ownProps) => {
    return {
-      onStartSearch:(k:string,lg:string) => {
-         dispatch(data.startSearch(k,lg))
+      onStartSearch:(k:string,lg:string,t?:string[]) => {
+         dispatch(data.startSearch(k,lg,t))
       },
       onSearchingKeyword:(k:string,lg:string,t:string[]) => {
          dispatch(data.searchingKeyword(k,lg,t))

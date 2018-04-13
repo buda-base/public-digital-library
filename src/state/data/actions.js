@@ -95,12 +95,13 @@ export type SearchAction = {
 };
 
 TYPES.startSearch = 'START_SEARCH';
-export const startSearch = (keyword: string, language: string): SearchAction => {
+export const startSearch = (keyword: string, language: string,datatype?:string[]): SearchAction => {
     return {
         type: TYPES.startSearch,
         payload: {
             keyword,
-            language
+            language,
+            datatype
         }
     }
 }

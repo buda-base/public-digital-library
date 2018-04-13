@@ -12,8 +12,10 @@ const mapStateToProps = (state) => {
 
    let resources = state.data.resources
    let ontology = state.data.ontology ;
+   let keyword = state.data.keyword
+   let language = state.data.language
 
-   let props = { resources, ontology }
+   let props = { resources, ontology, keyword, language }
 
    return props
 

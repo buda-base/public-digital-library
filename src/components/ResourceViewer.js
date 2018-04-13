@@ -247,18 +247,6 @@ class ResourceViewer extends Component<Props,State>
 
    }
 
-   goBackToSearch()
-   {
-      let h = this.props.history
-      console.log("histo",h)
-      for(let i = h.index - 1; i >= 0 ; i --)
-      {
-         console.log("i",i);
-         if(h.entries[i].pathname === "/search") { h.go(i - h.index); break ; }
-      }
-
-   }
-
    render()
     {
       console.log("render",this.props,this.state)
@@ -282,11 +270,19 @@ class ResourceViewer extends Component<Props,State>
          <div style={{overflow:"hidden",textAlign:"center"}}>
             { !this.state.ready && <Loader loaded={false} /> }
             <div className="resource">
-               <Button onClick={this.goBackToSearch.bind(this)} style={{paddingLeft:"0"}}>&lt; Go back to search</Button>
+
+               <Link className="goBack" to={this.props.keyword?"/search?q="+this.props.keyword+"&lg="+this.props.language:"/"}>
+                  <Button style={{paddingLeft:"0"}}>&lt; Go back to search</Button>
+               </Link>
                {this.format("h1",rdf+"type",this.props.IRI)}
                {this.format("h2",skos+"prefLabel")}
                { /*<MapComponent tmp={this.props}/ */}
                <div className="data">
+                  <div>
+                     <h3><span>Resource File</span>:&nbsp;</h3>
+                     <h4><a href={"http://purl.bdrc.io/resource/"+this.props.IRI+".json"}>{this.props.IRI}.json</a></h4>
+                     <h4><a href={"http://purl.bdrc.io/resource/"+this.props.IRI+".ttl"}>{this.props.IRI}.ttl</a></h4>
+                  </div>
                   { Object.keys(this.properties()).map((k) => {
 
                      let elem = this.getResourceElem(k);
