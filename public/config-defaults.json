@@ -10,11 +10,11 @@
       "index":0
    },
    "facets":{
-      "simple":{
-          "bdo:Work": [ "bdo:workLangScript","bdo:workObjectType","bdo:workType","bdo:workPartType" ],
-          "bdo:Person": [ "bdo:personGender" ],
-          "bdo:Lineage": [ "bdo:lineageType" ],
-          "bdo:Place": [ "bdo:placeType" ]
+      "Person": { "gender" : "http://purl.bdrc.io/ontology/core/Gender" },
+      "Work": {
+         "langScript": "http://purl.bdrc.io/ontology/core/LangScript",
+         "status":"http://purl.bdrc.io/ontology/admin/status",
+         "access":"http://purl.bdrc.io/ontology/admin/access",
+         "license":"http://purl.bdrc.io/ontology/admin/license"
       }
-   }
 }

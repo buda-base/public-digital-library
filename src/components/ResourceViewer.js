@@ -287,7 +287,8 @@ class ResourceViewer extends Component<Props,State>
 
                      let elem = this.getResourceElem(k);
 
-                     if(!k.match(new RegExp(adm+"|prefLabel|"+rdf+"|toberemoved"))) {
+                     //if(!k.match(new RegExp(adm+"|prefLabel|"+rdf+"|toberemoved"))) {
+                     if(!k.match(new RegExp("Revision|Entry|prefLabel|"+rdf+"|toberemoved"))) {
                         let tags = this.format("h4",k)
                         //console.log("tags",tags);
                         return (

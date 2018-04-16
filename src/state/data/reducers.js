@@ -201,11 +201,25 @@ reducers[actions.TYPES.foundDatatypes] = foundDatatypes;
 
 export const foundFacetInfo = (state: DataState, action: actions.FoundResultsAction) => {
 
-   console.log("facetinfo",action.payload.property,state.facets)
+   let key = action.payload.keyword + "@" + action.payload.language ;
+   let t = action.payload.datatype[0]
+   let searches = {
+         ...state.searches,
+         [t] : {
+            ...state.searches[t],
+            [key]: {
+               ...state.searches[t][key],
+               metadata : action.payload.results
+            }
+         }
+   }
 
-      return {
+   return {
       ...state,
-      facets : {...state.facets, [action.payload.property]:action.payload.results }
+      
+      keyword:action.payload.keyword,
+      language:action.payload.language,
+      searches: searches
    }
 }
 reducers[actions.TYPES.foundFacetInfo] = foundFacetInfo;

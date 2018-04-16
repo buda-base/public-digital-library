@@ -106,7 +106,9 @@ class App extends Component<Props,State> {
 
       this.state = {
          language:get.lg?get.lg:"bo-x-ewts",
-         filters: {datatype:get.t?get.t.split(","):["Any"]},
+         filters: {
+            datatype:get.t?get.t.split(","):["Any"]
+         },
          dataSource: [],
          keyword:get.q?get.q.replace(/"/g,""):"",
          collapse:{},
@@ -176,6 +178,8 @@ class App extends Component<Props,State> {
       }
 
 
+
+
       // console.log("newProps.facets",newProps.facets)
 
 /*
@@ -220,6 +224,25 @@ class App extends Component<Props,State> {
       return state
    }
 
+   handleCheckFacet = (ev:Event,prop:string,lab:string,val:boolean) => {
+
+      console.log("checkF",prop,lab,val)
+
+      let state =  this.state
+
+      if(val)
+      {
+         state = {  ...state,  filters: {  ...state.filters, facets: { ...state.filters.facets, [prop] : [lab] } } }
+      }
+      else if(state.filters.facets && state.filters.facets[prop])
+      {
+         state = {  ...state,  filters: {  ...state.filters, facets: { ...state.filters.facets, [prop] : ["Any"] } } }
+      }
+
+      this.setState( state )
+   }
+
+   /*
    handleFacetCheck = (ev:Event,prop:string,lab:string,val:boolean) => {
 
       console.log("check",prop,lab,val)
@@ -260,16 +283,17 @@ class App extends Component<Props,State> {
       }
 
    }
+   */
 
    handleCheck = (ev:Event,lab:string,val:boolean) => {
 
       console.log("check",lab,val,'('+this.state.keyword+')')
 
-      /* // to be continued ...
-      let f = this.state.filters.datatype
-      if(f.indexOf(lab) != -1 && !val) f.splice(f.indexOf(lab),1)
-      else if(f.indexOf(lab) == -1 && val) f.push(lab)
-      */
+      //  // to be continued ...
+      // let f = this.state.filters.datatype
+      // if(f.indexOf(lab) != -1 && !val) f.splice(f.indexOf(lab),1)
+      // else if(f.indexOf(lab) == -1 && val) f.push(lab)
+
 
       let f = [lab]
 
@@ -296,9 +320,9 @@ class App extends Component<Props,State> {
 
       this.setState(state)
 
+      /*
 
       return
-
 
 
       if(!val)
@@ -324,6 +348,7 @@ class App extends Component<Props,State> {
       }
 
       this.setState( state ) //, function() {  console.log("CHECKED changed the state",state) } )
+      */
    }
 
 
@@ -414,7 +439,7 @@ class App extends Component<Props,State> {
                      //r = r.bindings
                      let typ = r.replace(/^.*?([^/]+)$/,"$1")
 
-                     console.log("typ",typ)
+                     // console.log("typ",typ)
 
                      if(typ != "" && types.indexOf(typ) === -1)
                      {
@@ -472,13 +497,14 @@ class App extends Component<Props,State> {
                                  value:label.value.replace(/@.*$/,"")
                               },
                          s  : { type: "uri", value:o },
-                         match: list[o].matching
+                         match: list[o].matching,
+                         obj:list[o]
                      } ) } )
 
                let displayTypes = types //["Person"]
                if(this.state.filters.datatype.indexOf("Any") === -1) displayTypes = this.state.filters.datatype ;
 
-               console.log("list x types",list,types,displayTypes)
+               // console.log("list x types",list,types,displayTypes)
 
                for(let t of displayTypes) {
 
@@ -499,11 +525,26 @@ class App extends Component<Props,State> {
                      let typ ;
                      if(r.f && r.f.value) typ = r.f.value.replace(/^.*?([^/]+)$/,"$1")
 
+                     let filtered = true ;
+                     if(this.state.filters && this.state.filters.facets) for(let k of Object.keys(this.state.filters.facets)) {
+
+                        console.log("k",k,r.obj[k]);
+
+                        if(r.obj[k] && this.state.filters.facets[k].indexOf("Any") === -1 && this.state.filters.facets[k].indexOf(r.obj[k]) === -1) {
+
+                           console.log("filtered")
+                           filtered = false;
+
+                        }
+
+                     }
+
+                     console.log("typ",typ,t,filtered)
 
                      //if(this.state.filters.datatype.length == 0 || this.state.filters.datatype.indexOf("Any") !== -1 || this.state.filters.datatype.indexOf(typ) !== -1)
-                     if(!typ || typ === t)
+                     if((!typ || typ === t) && filtered)
                      {
-                        //console.log("lit",lit)
+                        console.log("lit",lit)
 
                         n ++;
                         message.push(
@@ -562,17 +603,26 @@ class App extends Component<Props,State> {
             style={{display:"flex",justifyContent:"space-between",padding:"0 20px",borderBottom:"1px solid #bbb",cursor:"pointer"}}
             onClick={(e) => { this.setState({collapse:{ ...this.state.collapse, [txt]:!this.state.collapse[txt]} }); } }
             >
-            <Typography style={{fontSize:"18px",lineHeight:"50px",}}>{title}</Typography>
+            <Typography style={{fontSize:"18px",lineHeight:"50px",textTransform:"capitalize"}}>{title}</Typography>
             { this.state.collapse[txt] ? <ExpandLess /> : <ExpandMore />}
          </ListItem>,
          <Collapse
             in={this.state.collapse[txt]}
-            className={[txt,this.state.collapse[txt]?"open":"close"].join(" ")}
+            className={["collapse",this.state.collapse[txt]?"open":"close"].join(" ")}
             style={{padding:"10px 0 0 50px"}} // ,marginBottom:"30px"
             >
                {inCollapse}
          </Collapse> ]
       )
+
+      let meta ;
+      if(this.state.filters.datatype && this.state.filters.datatype.indexOf("Any") === -1) {
+         if(this.props.searches && this.props.searches[this.state.filters.datatype[0]]) {
+            meta = this.props.searches[this.state.filters.datatype[0]][this.props.keyword+"@"+this.props.language]
+            if(meta) meta = meta.metadata
+         }
+      }
+      console.log("meta",meta)
 
       return (
 <div>
@@ -629,7 +679,7 @@ class App extends Component<Props,State> {
                      </ListItem>
                      <Collapse
                         in={/*this.props.datatypes && this.props.datatypes.hash &&*/ !this.state.collapse["datatype"]}
-                        className={["collapse",  !(this.props.datatypes && !this.props.datatypes.hash)&&this.state.collapse["datatype"]?"open":"close"].join(" ")}
+                        className={["collapse",  !(this.props.datatypes && !this.props.datatypes.hash)&&!this.state.collapse["datatype"]?"open":"close"].join(" ")}
                          style={{padding:"10px 0 0 50px"}} >
                         <div>
                         { //facetList&&facetList.length > 0?facetList.sort((a,b) => { return a.props.label < b.props.label } ):
@@ -662,7 +712,69 @@ class App extends Component<Props,State> {
                         )}
                         </div>
                      </Collapse>
-                     { this.state.facets && this.props.ontology && this.state.facets.map((i) => {
+                     {
+
+                        meta  && this.props.config && this.props.ontology && Object.keys(meta).map((j) => {
+
+                           if(["taxonomies","topics"].indexOf(j) !== -1) return ;
+
+                           let meta_sort = Object.keys(meta[j]).sort(function(a,b) { return Number(meta[j][a]) < Number(meta[j][b])});
+
+                           if(meta_sort.indexOf("Any") === -1) meta_sort.unshift("Any")
+                           meta[j]["Any"] =  counts["datatype"][this.state.filters.datatype[0]]
+
+                           let jpre = this.props.config.facets[this.state.filters.datatype[0]][j]
+                           if(!jpre) jpre = j
+                           let jlabel = this.props.ontology[jpre]
+                           if(jlabel) jlabel = jlabel["http://www.w3.org/2000/01/rdf-schema#label"]
+                           //if(jlabel) for(let l of jlabel) { if(l.lang == "en") jlabel = l.value }
+                           if(jlabel && jlabel.length) jlabel = jlabel[0].value
+                           else jlabel = this.pretty(jpre)
+
+                           return (
+
+                           widget(jlabel,j,
+                              meta_sort.map((i) => {
+
+                                 let label = this.props.ontology[i]
+                                 if(label) {
+                                    for(let l of label["http://www.w3.org/2000/01/rdf-schema#label"])
+                                       if(l.lang == "en") label = l.value
+                                    if(label["http://www.w3.org/2000/01/rdf-schema#label"]) label = label["http://www.w3.org/2000/01/rdf-schema#label"][0].value
+                                 }
+                                 else label = this.pretty(i)
+
+                                 // console.log("label",i,label)
+
+                                 let checked = this.state.filters.facets && this.state.filters.facets[j]
+                                 if(!checked) {
+                                    if(label === "Any") checked = true ;
+                                    else checked = false ;
+                                 }
+                                 else checked = this.state.filters.facets[j].indexOf(i) !== -1
+
+                                 // console.log("checked",checked)
+
+                                 return (<div key={i} style={{width:"280px",textAlign:"left"}}>
+                                 <FormControlLabel
+                                    control={
+                                       <Checkbox
+                                          checked={checked}
+                                          className="checkbox"
+                                          icon={<span className='checkB'/>}
+                                          checkedIcon={<span className='checkedB'><CheckCircle style={{color:"#444",margin:"-3px 0 0 -3px",width:"26px",height:"26px"}}/></span>}
+                                          onChange={(event, checked) => this.handleCheckFacet(event,j,i,checked)}
+                                       />
+
+                                    }
+                                    label={label+" ("+meta[j][i]+")"}
+                                 />
+                              </div>
+                           )})
+                        ))})
+                     }
+
+                     { /*false && this.state.facets && this.props.ontology && this.state.facets.map((i) => {
 
                         let label = this.props.ontology[i
                            .replace(/bdo:/,"http://purl.bdrc.io/ontology/core/")
@@ -758,7 +870,7 @@ class App extends Component<Props,State> {
                                                        checked={checked}
                                                        icon={<span className='checkB'/>}
                                                        checkedIcon={<span className='checkedB'><CheckCircle style={{color:"#444",margin:"-3px 0 0 -3px",width:"26px",height:"26px"}}/></span>}
-                                                       onChange={(event, checked) => this.handleFacetCheck(event,i,uri,checked)}
+                                                       //onChange={(event, checked) => this.handleFacetCheck(event,i,uri,checked)}
                                                     />
 
                                                  }
@@ -775,7 +887,7 @@ class App extends Component<Props,State> {
                         )
                         }
                      )
-                  }
+                  */ }
                   </div>
                }
             </div>

@@ -174,7 +174,7 @@ export type FoundResultsAction = {
     payload: {
         keyword: string,
         language: string,
-        property?:string,
+        //property?:string,
         datatype?:string[],
         results: []
     }
@@ -205,13 +205,14 @@ export const foundDatatypes = (keyword: string, results: []): FoundResultsAction
 }
 
 TYPES.foundFacetInfo = 'FOUND_FACET_INFO';
-export const foundFacetInfo = (keyword: string,language:string,property:string, results: []): FoundResultsAction => {
+export const foundFacetInfo = (keyword: string,language:string,datatype:string[], results: []): FoundResultsAction => {
     return {
         type: TYPES.foundFacetInfo,
         payload: {
             keyword,
             language,
-            property,
+            datatype,
+            //property,
             results
         }
     }

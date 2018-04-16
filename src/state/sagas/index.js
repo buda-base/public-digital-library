@@ -109,13 +109,24 @@ export function* getDatatypes(key,lang) {
       if(!datatype || datatype.indexOf("Any") !== -1) {
          store.dispatch(dataActions.foundDatatypes(keyword,{ metadata:result.metadata, hash:true}));
       }
-      else if(!store.getState().data.searches[keyword+"@"+language]){
-         store.dispatch(dataActions.getDatatypes());
-         result = await api.getStartResults(keyword,language);
-         data = result.data
-         data = { numResults:Object.keys(data).length,results : { bindings: {...data } } }
-         store.dispatch(dataActions.foundResults(keyword, language, data));
-         store.dispatch(dataActions.foundDatatypes(keyword,{ metadata:result.metadata, hash:true}));
+      else {
+
+         if(datatype.indexOf("Person") !== -1) {
+            store.dispatch(dataActions.foundFacetInfo(keyword,language,datatype,{"gender":result.metadata }))
+         }
+         else if(datatype.indexOf("Work") !== -1) {
+            store.dispatch(dataActions.foundFacetInfo(keyword,language,datatype,result.metadata))
+         }
+
+
+         if(!store.getState().data.searches[keyword+"@"+language]){
+            store.dispatch(dataActions.getDatatypes());
+            result = await api.getStartResults(keyword,language);
+            data = result.data
+            data = { numResults:Object.keys(data).length,results : { bindings: {...data } } }
+            store.dispatch(dataActions.foundResults(keyword, language, data));
+            store.dispatch(dataActions.foundDatatypes(keyword,{ metadata:result.metadata, hash:true}));
+         }
       }
       // store.dispatch(dataActions.foundDatatypes(keyword, JSON.parse(result.metadata).results));
       //store.dispatch(dataActions.foundResults(keyword, language,result));
