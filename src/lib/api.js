@@ -122,7 +122,7 @@ export default class API {
     {
       return new Promise((resolve, reject) =>
       {
-         this._fetch(host+"/resource/P1").then((response) =>
+         this._fetch(host+"/query/Person_details?R_RES=bdr:P1583").then((response) =>
          {
             if (response.ok)
             {

@@ -21,6 +21,8 @@ import { FormControl, FormHelperText } from 'material-ui/Form';
 import Select from 'material-ui/Select';
 import qs from 'query-string'
 
+import {I18n, Translate, Localize } from "react-redux-i18n" ;
+
 import './App.css';
 
 const adm  = "http://purl.bdrc.io/ontology/admin/" ;
@@ -33,13 +35,13 @@ const skos = "http://www.w3.org/2004/02/skos/core#";
 const prefixes = [adm, bdo,bdr,rdf,rdfs,skos]
 
 const languages = {
-   "zh-hant":"Chinese (Hanzi)",
-   "zl-latn-pinyin":"Chinese (Pinyin)",
-   "en":"English",
-   "sa-x-iast":"Sanskrit (IAST)",
-   "sa-Deva":"Sanskrit (Devanagari)",
-   "bo":"Tibetan (Unicode)",
-   "bo-x-ewts":"Tibetan (EWTS)"
+   "zh-hant":"lang.search.zhHant",
+   "zh-latn-pinyin":"lang.search.zhLatnPinyin",
+   "en":"lang.search.en",
+   "sa-x-iast":"lang.search.saXIast",
+   "sa-Deva":"lang.search.saDeva",
+   "bo":"lang.search.bo",
+   "bo-x-ewts":"lang.search.boXEwts"
 }
 
 const styles = {
@@ -72,7 +74,8 @@ type Props = {
    onGetDatatypes:(k:string,lg:string)=>void,
    onCheckDatatype:(t:string,k:string,lg:string)=>void,
    onGetFacetInfo:(k:string,lg:string,f:string)=>void,
-   onCheckFacet:(k:string,lg:string,f:{[string]:string})=> void
+   onCheckFacet:(k:string,lg:string,f:{[string]:string})=> void,
+   onSetLocale:(lg:string)=>void
 }
 
 type State = {
@@ -83,6 +86,9 @@ type State = {
    unchecked?:string,
    keyword:string,
    dataSource : string[],
+   UI:{
+      language:string
+   },
    filters:{
       datatype:string[],
       facets?:{[string]:string[]}
@@ -106,6 +112,7 @@ class App extends Component<Props,State> {
 
       this.state = {
          language:get.lg?get.lg:"bo-x-ewts",
+         UI:{language:"en"},
          filters: {
             datatype:get.t?get.t.split(","):["Any"]
          },
@@ -197,7 +204,7 @@ class App extends Component<Props,State> {
 
       console.log("willUfin",this.state.filters.datatype)
    }
-
+/*
    setFacets = (props:Props,state:State,lab:string) =>
    {
       return ;
@@ -223,7 +230,7 @@ class App extends Component<Props,State> {
 
       return state
    }
-
+*/
    handleCheckFacet = (ev:Event,prop:string,lab:string,val:boolean) => {
 
       console.log("checkF",prop,lab,val)
@@ -242,6 +249,26 @@ class App extends Component<Props,State> {
       this.setState( state )
    }
 
+      handleCheckUI = (ev:Event,prop:string,lab:string,val:boolean) => {
+
+         console.log("checkUI",prop,lab,val)
+
+         let state =  this.state
+
+         if(val)
+         {
+            if(prop === "language") this.props.onSetLocale(lab);
+            state = {  ...state,  UI: { ...state.UI, [prop] : lab } }
+         }
+         /* // no unchecking possible
+         else if(state.UI && state.UI[prop])
+         {
+            state = {  ...state,  UI: {  ...state.UI, [prop] : [] } }
+         }
+         */
+
+         this.setState( state )
+      }
    /*
    handleFacetCheck = (ev:Event,prop:string,lab:string,val:boolean) => {
 
@@ -510,7 +537,7 @@ class App extends Component<Props,State> {
 
                   if(t === "Any") continue ;
 
-                  message.push(<MenuItem  onClick={(e)=>this.handleCheck(e,t,true)}><h4>{t+"s"+(counts["datatype"][t]?" ("+counts["datatype"][t]+")":"")}</h4></MenuItem>);
+                  message.push(<MenuItem  onClick={(e)=>this.handleCheck(e,t,true)}><h4>{I18n.t("types."+t.toLowerCase())+"s"+(counts["datatype"][t]?" ("+counts["datatype"][t]+")":"")}</h4></MenuItem>);
 
                   let cpt = 0;
                   n = 0;
@@ -539,12 +566,12 @@ class App extends Component<Props,State> {
 
                      }
 
-                     console.log("typ",typ,t,filtered)
+                     //console.log("typ",typ,t,filtered)
 
                      //if(this.state.filters.datatype.length == 0 || this.state.filters.datatype.indexOf("Any") !== -1 || this.state.filters.datatype.indexOf(typ) !== -1)
                      if((!typ || typ === t) && filtered)
                      {
-                        console.log("lit",lit)
+                        //console.log("lit",lit)
 
                         n ++;
                         message.push(
@@ -603,7 +630,7 @@ class App extends Component<Props,State> {
             style={{display:"flex",justifyContent:"space-between",padding:"0 20px",borderBottom:"1px solid #bbb",cursor:"pointer"}}
             onClick={(e) => { this.setState({collapse:{ ...this.state.collapse, [txt]:!this.state.collapse[txt]} }); } }
             >
-            <Typography style={{fontSize:"18px",lineHeight:"50px",textTransform:"capitalize"}}>{title}</Typography>
+            <Typography style={{fontSize:"18px",lineHeight:"50px"}}>{title}</Typography>
             { this.state.collapse[txt] ? <ExpandLess /> : <ExpandMore />}
          </ListItem>,
          <Collapse
@@ -647,9 +674,12 @@ class App extends Component<Props,State> {
             <div className="SidePane left" style={{width:"25%",paddingTop:"150px"}}>
                { //this.props.datatypes && (results ? results.numResults > 0:true) &&
                   <div style={{width:"333px",float:"right",position:"relative"}}>
-                     <Typography style={{fontSize:"30px",marginBottom:"20px",textAlign:"left"}}>Refine Your Search</Typography>
+                     <Typography style={{fontSize:"30px",marginBottom:"20px",textAlign:"left"}}>
+                        <Translate value="Lsidebar.title" />
+                     </Typography>
                      {
-                        widget("Collection","collection", ["BDRC" ,"rKTs" ].map((i) => <div key={i} style={{width:"150px",textAlign:"left"}}>
+                        widget(I18n.t("Lsidebar.collection.title"),"collection",
+                        ["BDRC" ,"rKTs" ].map((i) => <div key={i} style={{width:"150px",textAlign:"left"}}>
                               <FormControlLabel
                                  control={
                                     <Checkbox
@@ -674,7 +704,9 @@ class App extends Component<Props,State> {
                            //if(!(this.props.datatypes && !this.props.datatypes.hash))
                               this.setState({collapse:{ ...this.state.collapse, "datatype":!this.state.collapse["datatype"]} }); } }
                         >
-                        <Typography style={{fontSize:"18px",lineHeight:"50px",}}>Data Type</Typography>
+                        <Typography style={{fontSize:"18px",lineHeight:"50px",}}>
+                           <Translate value="Lsidebar.datatypes.title"/>
+                        </Typography>
                         { /*this.props.datatypes && this.props.datatypes.hash &&*/ !this.state.collapse["datatype"] ? <ExpandLess /> : <ExpandMore />  }
                      </ListItem>
                      <Collapse
@@ -704,7 +736,7 @@ class App extends Component<Props,State> {
                                           />
 
                                        }
-                                       {...counts["datatype"][i]?{label:i + " ("+counts["datatype"][i]+")"}:{label:i}}
+                                       {...counts["datatype"][i]?{label:I18n.t("types."+i.toLowerCase()) + " ("+counts["datatype"][i]+")"}:{label:I18n.t("types."+i.toLowerCase())}}
                                     />
                                  </div>
                               )
@@ -905,7 +937,7 @@ class App extends Component<Props,State> {
                   }}
                />
               <FormControl className="formControl" style={{textAlign:"left"}}>
-                <InputLabel htmlFor="language">Language</InputLabel>
+                <InputLabel htmlFor="language"><Translate value="lang.lg"/></InputLabel>
                 <Select
                   value={this.state.language}
                   onChange={this.handleLanguage}
@@ -914,7 +946,7 @@ class App extends Component<Props,State> {
                     id: 'language',
                   }}
                 >
-                   { Object.keys(languages).map((k) => (<MenuItem value={k}>{languages[k]}</MenuItem>))}
+                   { Object.keys(languages).map((k) => (<MenuItem value={k}><Translate value={""+languages[k]}/></MenuItem>))}
                 </Select>
               </FormControl>
            </div>
@@ -943,27 +975,34 @@ class App extends Component<Props,State> {
             </div>
             <div className="SidePane right" style={{width:"25%",paddingTop:"150px"}}>
                <div style={{width:"333px",float:"left",position:"relative"}}>
-                  <Typography style={{fontSize:"30px",marginBottom:"20px",textAlign:"left"}}>Display preferences</Typography>
+                  <Typography style={{fontSize:"30px",marginBottom:"20px",textAlign:"left"}}>
+                     <Translate value='Rsidebar.title' />
+                  </Typography>
                   {
-                     widget("UI language","locale",
-                           ["Chinese", "English", "Tibetan" ].map((i) => <div key={i} style={{width:"150px",textAlign:"left"}}>
+                     widget(I18n.t('Rsidebar.UI.title'),"locale",
+                           ["zh", "en", "fr", "bo" ].map((i) => {
+
+                           let label = I18n.t("lang."+i);
+                           let disab = ["fr","en"].indexOf(i) === -1
+
+                           return ( <div key={i} style={{width:"150px",textAlign:"left"}}>
                               <FormControlLabel
                                  control={
                                     <Checkbox
-                                       {... i!="English" ?{}:{defaultChecked:true}}
-                                       disabled={true}
-                                       className="checkbox disabled"
+                                       checked={i === this.state.UI.language}
+                                       disabled={disab}
+                                       className={"checkbox "+ (disab?"disabled":"")}
                                        icon={<span className='checkB'/>}
                                        checkedIcon={<span className='checkedB'><CheckCircle style={{color:"#444",margin:"-3px 0 0 -3px",width:"26px",height:"26px"}}/></span>}
-                                       //onChange={(event, checked) => this.handleCheck(event,i,checked)}
+                                       onChange={(event, checked) => this.handleCheckUI(event,"language",i,checked)}
                                     />
 
                                  }
-                                 label={i}
+                                 label={label}
                               />
-                           </div> ))
+                           </div>)}))
                   }{
-                     widget("Results preferred language","language",
+                     widget(I18n.t("Rsidebar.results.title"),"language",
                            Object.keys(languages).map((i) => <div key={i} style={{width:"200px",textAlign:"left"}}>
                               <FormControlLabel
                                  control={
@@ -977,7 +1016,7 @@ class App extends Component<Props,State> {
                                     />
 
                                  }
-                                 label={languages[i]}
+                                 label={I18n.t(languages[i])}
                               />
                            </div> ))
                   }

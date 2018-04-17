@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import * as data from '../state/data/actions';
 import * as ui from '../state/ui/actions';
 import store from '../index';
+import { setLocale } from 'react-redux-i18n';
 
 // import selectors from 'state/selectors';
 
@@ -48,6 +49,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       },
       onCheckFacet:(k:string,lg:string,f:{[string]:string}) => {
          dispatch(data.getOneFacet(k,lg,f));
+      },
+      onSetLocale:(lg:string) => {
+         dispatch(setLocale(lg));
       }
    }
 }
