@@ -11,7 +11,7 @@ import { MuiThemeProvider, createMuiTheme } from 'material-ui/styles';
 import indigo from 'material-ui/colors/indigo';
 
 // Redux
-import { createStore, applyMiddleware } from 'redux';
+import { createStore, combineReducers, applyMiddleware } from 'redux';
 import { Provider } from 'react-redux';
 
 // Saga
@@ -19,16 +19,123 @@ import 'babel-polyfill';
 import createSagaMiddleware from 'redux-saga';
 import rootSaga from './state/sagas'
 
+// i18n
+import thunk from 'redux-thunk';
+import { loadTranslations, setLocale, syncTranslationWithStore, i18nReducer } from 'react-redux-i18n';
+
 // For dev only
 import { composeWithDevTools } from 'redux-devtools-extension';
 
-import rootReducer from './state/reducers';
+import uiReducer from './state/ui/reducers';
+import dataReducer from './state/data/reducers';
 import * as data from './state/data/actions' ;
 
 import makeMainRoutes from './routes'
 import history from './history'
 import qs from 'query-string'
 
+const translationsObject = {
+
+   en:{
+      lang:{
+         en:"English",
+         fr:"French",
+         zh:"Chinese",
+         bo:"Tibetan",
+         lg:"Language",
+         search:{
+            zhHant:"Chinese (Hanzi)",
+            zhLatnPinyin:"Chinese (Pinyin)",
+            en:"English",
+            saXIast:"Sanskrit (IAST)",
+            saDeva:"Sanskrit (Devanagari)",
+            bo:"Tibetan (Unicode)",
+            boXEwts:"Tibetan (EWTS)"
+         }
+      },
+      types:{
+         "any":"All",
+         "corporation":"Corporation",
+         "etext":"Etext",
+         "item":"Item",
+         "lineage":"Lineage",
+         "person":"Person",
+         "place":"Place",
+         "role":"Role",
+         "topic":"Topic",
+         "work":"Work"
+      },
+      Lsidebar:{
+         title:"Refine your Search",
+         collection:{
+            title:"Collection"
+         },
+         datatypes:{
+            title:"Data Types"
+         }
+      },
+      Rsidebar:{
+         title:"Display Preferences",
+         UI:{
+            title:"UI Language"
+         },
+         results:{
+            title:"Results Preferred Language"
+         }
+      }
+   },
+   fr:{
+      lang:{
+         en:"Anglais",
+         fr:"Français",
+         zh:"Chinois",
+         bo:"Tibétain",
+         lg:"Langue",
+         search:{
+            zhHant:"Chinois (Hanzi)",
+            zhLatnPinyin:"Chinois (Pinyin)",
+            en:"Anglais",
+            saXIast:"Sanskrit (IAST)",
+            saDeva:"Sanskrit (Devanagari)",
+            bo:"Tibétain (Unicode)",
+            boXEwts:"Tibétain (EWTS)"
+         }
+      },
+      types:{
+         "any":"Tous",
+         "corporation":"Entreprise",
+         "etext":"Etexte",
+         "item":"Élément",
+         "lineage":"Lignée",
+         "person":"Personne",
+         "place":"Lieu",
+         "role":"Rôle",
+         "topic":"Thème",
+         "work":"Oeuvre"
+      },
+      Lsidebar:{
+         title:"Affinez votre Requête",
+         collection:{
+            title:"Collection"
+         },
+         datatypes:{
+            title:"Types de Données"
+         }
+      },
+      Rsidebar:{
+         title:"Préférences d'Affichage",
+         UI : {
+            title :"Langue de l'UI"
+         },
+         results:{
+            title:"Langue Préférée des Résultats"
+         }
+      }
+   },
+   zh:{},
+   bo:{}
+
+}
 
 const logger = store => next => action => {
   console.group(action.type)
@@ -42,18 +149,30 @@ const logger = store => next => action => {
 const sagaMiddleware = createSagaMiddleware();
 let store;
 if (process.env.NODE_ENV === 'development') {
-    store = createStore(
-        rootReducer,
-        composeWithDevTools(
-            applyMiddleware(sagaMiddleware,logger)
-        )
+   store = createStore(
+      combineReducers({
+         data:dataReducer,
+         ui:uiReducer,
+         i18n: i18nReducer
+      }),
+      composeWithDevTools(
+         applyMiddleware(thunk,sagaMiddleware,logger)
+      )
     );
 } else {
     store = createStore(
-        rootReducer,
-        applyMiddleware(sagaMiddleware)
+      combineReducers({
+         data:dataReducer,
+         ui:uiReducer,
+         i18n: i18nReducer
+      }),
+        applyMiddleware(thunk,sagaMiddleware)
     );
 }
+
+syncTranslationWithStore(store)
+store.dispatch(loadTranslations(translationsObject));
+store.dispatch(setLocale('en'));
 
 export default store ;
 

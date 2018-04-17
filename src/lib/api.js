@@ -122,7 +122,7 @@ export default class API {
     {
       return new Promise((resolve, reject) =>
       {
-         this._fetch(host+"/resource/P1").then((response) =>
+         this._fetch(host+"/query/Person_details?R_RES=bdr:P1583").then((response) =>
          {
             if (response.ok)
             {
@@ -266,8 +266,8 @@ export default class API {
         try {
              let config = store.getState().data.config.ldspdi
              let url = config.endpoints[config.index]+"/lib" ;
-             let param = {"searchType":"rootSearch","LG_NAME":lang}
-             if(typ && typ.length >= 1 && typ[0] !== "Any") { param = { ...param, "searchType":typ[0].toLowerCase()+"Search" } }
+             let param = {"searchType":"rootSearchGraph","LG_NAME":lang}
+             if(typ && typ.length >= 1 && typ[0] !== "Any") { param = { ...param, "searchType":typ[0].toLowerCase()+"FacetGraph" } }
              let data = this.getQueryResults(url, key, param,"GET");
              // let data = this.getSearchContents(url, key);
 

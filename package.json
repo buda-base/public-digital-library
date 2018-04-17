@@ -14,13 +14,15 @@
     "react-dom": "^16.2.0",
     "react-loader": "^2.4.2",
     "react-redux": "^5.0.6",
+    "react-redux-i18n": "^1.9.2",
     "react-router": "^4.2.0",
     "react-router-dom": "^4.2.2",
     "react-scripts": "1.1.0",
     "redux": "^3.7.2",
     "redux-actions": "^2.2.1",
     "redux-devtools-extension": "^2.13.2",
-    "redux-saga": "^0.16.0"
+    "redux-saga": "^0.16.0",
+    "redux-thunk": "^2.2.0"
   },
   "scripts": {
     "start": "react-scripts start",
