@@ -512,8 +512,8 @@ class App extends Component<Props,State> {
 
                let list = results.results.bindings
 
-               if(!list.length) list = Object.keys(list).map((o) => {
-
+               //if(!list.length) list = Object.keys(list).map((o) => {
+                  /*
                   let label = list[o].label
                   if(!label) {
                      label = list[o].prefLabel
@@ -522,9 +522,7 @@ class App extends Component<Props,State> {
                         if(label.constructor.name == "Array")  label = label[0]
                         else label = { value:label }
                      }
-                  }
-
-                  // 1-prefLabel potentiellement dans matching
+                  }*/
 
                   /*
                   if(!label) label = list[o].matching.filter((current) => (current.type === skos+"prefLabel"))[0]
@@ -532,20 +530,23 @@ class App extends Component<Props,State> {
                      if(list[o].prefLabel) label = {"value": list[o].prefLabel }
                      else label = {"value":"?"} */
 
+                     /*
+                      { ...label,
+                            value:label.value.replace(/@.*$/,"")
+                         }, */
+
+                         /*
+                  let label = list[o].reduce((acc,e) => (e.type && e.type.match(/prefLabelMatch$/ ? e:null)))
 
                   return (
                      {
-                         f  : { type: "uri", value:list[o].type },
+                         //f  : { type: "uri", value:list[o].type },
                          lit: label,
-                         /*
-                           { ...label,
-                                 value:label.value.replace(/@.*$/,"")
-                              }, */
                          s  : { type: "uri", value:o },
-                         match: list[o].matching, // .filter((e) => (e.)),
-                         obj:list[o]
+                         match: list[o].filter((e) => (e.value && e.value.match(/[↦↤]/)))
                      } ) } )
 
+                     */
                let displayTypes = types //["Person"]
                if(this.state.filters.datatype.indexOf("Any") === -1) displayTypes = this.state.filters.datatype ;
 
@@ -557,18 +558,32 @@ class App extends Component<Props,State> {
 
                   message.push(<MenuItem  onClick={(e)=>this.handleCheck(e,t,true)}><h4>{I18n.t("types."+t.toLowerCase())+"s"+(counts["datatype"][t]?" ("+counts["datatype"][t]+")":"")}</h4></MenuItem>);
 
+                  let sublist = list[t.toLowerCase()+"s"]
+
                   let cpt = 0;
                   n = 0;
-                  for(let r of list)
+                  if(sublist) { for(let o of Object.keys(sublist))
                   {
-                     // console.log("r",r);
+
+                     let label = sublist[o].filter((e) => (e.type && e.type.match(/prefLabelMatch$/)))[0]
+                     if(!label) label = sublist[o].filter((e) => (e.type && e.type.match(/prefLabel$/) && e["xml:lang"] == "bo-x-ewts"))[0]
+
+                     let r = {
+                        //f  : { type: "uri", value:list[o].type },
+                        lit: label,
+                        s  : { type: "uri", value: o },
+                        match: sublist[o].filter((e) => (e.value && e.value.match(/[↦↤]/) && e.type && !e.type.match(/prefLabelMatch$/)))
+                     }
+
+
                      let k = this.props.keyword.replace(/"/g,"")
 
                      let id = r.s.value.replace(/^.*?([^/]+)$/,"$1")
                      let lit ;
                      if(r.lit) { lit = this.highlight(r.lit.value,k) }
                      let typ ;
-                     if(r.f && r.f.value) typ = r.f.value.replace(/^.*?([^/]+)$/,"$1")
+                     //if(r.f && r.f.value) typ = r.f.value.replace(/^.*?([^/]+)$/,"$1")
+                     console.log("r",o,sublist[o],r,label,lit);
 
                      let filtered = true ;
                      if(this.state.filters && this.state.filters.facets) for(let k of Object.keys(this.state.filters.facets)) {
@@ -611,7 +626,7 @@ class App extends Component<Props,State> {
                            <div>{r.match.map((m) =>
                               (!m.type.match(new RegExp(skos+"prefLabel"))?
                                  <div className="match">
-                                    <span className="label">{this.fullname(m.type)}:&nbsp;</span>
+                                    <span className="label">{this.fullname(m.type.replace(/.*altLabelMatch/,skos+"altLabel"))}:&nbsp;</span>
                                     <span>{this.highlight(m.value,k)}</span>
                                  </div>
                               :null))}</div>
@@ -627,7 +642,7 @@ class App extends Component<Props,State> {
                         }
                      }
                   }
-               }
+               } }
 
                //console.log("message",message)
 

@@ -35,6 +35,12 @@ async function initiateApp(params,iri) {
             store.dispatch(dataActions.startSearch(params.q,params.lg));
          }
       }
+      else if(!iri && params && params.r) {
+         if(params.t && ["Person","Place","Topic"].indexOf(params.t) !== -1)
+         {
+            store.dispatch(dataActions.startSearch(params.r,"",[params.t])); //,params.t.split(",")));
+         }
+      }
 
    } catch(e) {
       console.log('initiateApp error: %o', e);
@@ -84,6 +90,32 @@ export function* getDatatypes(key,lang) {
    }
 
 }
+
+function getData(result)  {
+
+   let data = result, numR = -1,metadata = result.metadata ;
+   if(data && data.people) {
+      data.persons = data.people
+      delete data.people
+   }
+
+   if(metadata)
+   {
+      let kZ = Object.keys(metadata)
+      if(kZ.reduce((acc,k) => (acc || k.match(/^http:/) ),false))
+         numR = kZ.reduce((acc,k) => ( acc+Number(metadata[k])),0)
+      else
+         numR = Object.keys(result.data).length ;
+      delete data.metadata
+   }
+   else {
+      numR = 777; //Object.values(result)[0].length
+   }
+   data = {  numResults:numR, results : { bindings: {...data } } }
+
+   return data
+}
+
  async function startSearch(keyword,language,datatype) {
 
    console.log("sSsearch",keyword,language,datatype);
@@ -96,34 +128,41 @@ export function* getDatatypes(key,lang) {
    try {
       let result ;
 
-
-      result = await api.getStartResults(keyword,language,datatype);
+      if(language != "")
+         result = await api.getStartResults(keyword,language,datatype);
+      else
+         result = await api.getAssocResults(keyword,datatype);
 
       store.dispatch(uiActions.loading(keyword, false));
 
-      let data = result.data
-      data = { numResults:Object.keys(data).length,results : { bindings: {...data } } }
+      let metadata = result.metadata;
+
+/*
+      if(datatype && datatype.indexOf("Any") === -1) {
+         result = { [datatype[0].toLowerCase()+"s"] : result.data }
+      }
+*/
+      let data = getData(result);
+
       store.dispatch(dataActions.foundResults(keyword, language, data, datatype));
 
-
       if(!datatype || datatype.indexOf("Any") !== -1) {
-         store.dispatch(dataActions.foundDatatypes(keyword,{ metadata:result.metadata, hash:true}));
+         store.dispatch(dataActions.foundDatatypes(keyword,{ metadata:metadata, hash:true}));
       }
       else {
 
          if(datatype.indexOf("Person") !== -1) {
-            store.dispatch(dataActions.foundFacetInfo(keyword,language,datatype,{"gender":result.metadata }))
+            store.dispatch(dataActions.foundFacetInfo(keyword,language,datatype,{"gender":metadata }))
          }
          else if(datatype.indexOf("Work") !== -1) {
-            store.dispatch(dataActions.foundFacetInfo(keyword,language,datatype,result.metadata))
+            store.dispatch(dataActions.foundFacetInfo(keyword,language,datatype,metadata))
          }
 
 
          if(!store.getState().data.searches[keyword+"@"+language]){
             store.dispatch(dataActions.getDatatypes());
             result = await api.getStartResults(keyword,language);
-            data = result.data
-            data = { numResults:Object.keys(data).length,results : { bindings: {...data } } }
+            data = getData(result);
             store.dispatch(dataActions.foundResults(keyword, language, data));
             store.dispatch(dataActions.foundDatatypes(keyword,{ metadata:result.metadata, hash:true}));
          }

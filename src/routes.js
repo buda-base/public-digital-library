@@ -33,7 +33,7 @@ export class Redirect404 extends Component<Props>
 
       // console.log("props404",props)
 
-      //setTimeout((function(that) { return function() { that.props.history.push("/") } })(this), 3000) ;
+      setTimeout((function(that) { return function() { that.props.history.push("/") } })(this), 3000) ;
    }
 
    render()

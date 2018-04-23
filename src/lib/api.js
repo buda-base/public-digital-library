@@ -277,6 +277,20 @@ export default class API {
         }
     }
 
+         async _getAssocResultsData(key: string,typ:string[]): Promise<{} | null> {
+            try {
+                 let config = store.getState().data.config.ldspdi
+                 let url = config.endpoints[config.index]+"/lib" ;
+                 let param = {"searchType":typ[0].toLowerCase()+"AllAssociations","R_RES":key,"L_NAME":"","LG_NAME":"" }
+                 let data = this.getQueryResults(url, key, param,"GET");
+                 // let data = this.getSearchContents(url, key);
+
+                 return data ;
+            } catch(e) {
+                 throw e;
+            }
+        }
+
      async getResultsSimpleFacet(key: string,lang: string,property:string): Promise<{} | null> {
         try {
             //console.log("simpleFacet start",key,lang,property)
@@ -371,6 +385,18 @@ export default class API {
            throw e;
         }
     }
+
+         async getAssocResults(key: string,types:string[]): Promise<{} | null> {
+           let data = [];
+
+           try {
+               data = await this._getAssocResultsData(key,types)
+
+               return data ;
+            } catch(e) {
+               throw e;
+            }
+        }
 
       _resourcePath(IRI:string): string {
 
