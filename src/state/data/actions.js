@@ -46,6 +46,15 @@ export const gotResource = (iri: string,res:{}): Action => {
     }
 }
 
+TYPES.gotAssocResources = 'GOT_ASSOCIATED_RESOURCES';
+export const gotAssocResources = (iri: string,res:{}): Action => {
+    return {
+        type: TYPES.gotAssocResources,
+        payload: iri,
+        meta:res
+    }
+}
+
 export type SearchFailedAction = {
     type: string,
     payload: {

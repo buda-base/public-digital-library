@@ -25,6 +25,16 @@ export const loadingGallery = (state: UIState, action: Action): UIState => {
 reducers[actions.TYPES.loadingGallery] = loadingGallery
 
 
+export const selectType = (state: UIState, action: Action) => {
+
+      return {
+      ...state,
+      datatype:action.payload
+   }
+}
+reducers[actions.TYPES.selectType] = selectType;
+
+
 export const showResults = (state: UIState, action: Action) => {
 
       return {

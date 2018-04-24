@@ -330,7 +330,7 @@ class App extends Component<Props,State> {
       {
          if(lab === "Any")
          {
-            console.log("youpi")
+            //console.log("youpi")
             this.requestSearch(this.props.keyword,lab)
 
          }
@@ -548,7 +548,7 @@ class App extends Component<Props,State> {
 
                      */
                let displayTypes = types //["Person"]
-               if(this.state.filters.datatype.indexOf("Any") === -1) displayTypes = this.state.filters.datatype ;
+               if(this.state.filters.datatype.indexOf("Any") === -1 && this.props.language != "") displayTypes = this.state.filters.datatype ;
 
                console.log("list x types",list,types,displayTypes)
 
@@ -583,66 +583,88 @@ class App extends Component<Props,State> {
                      if(r.lit) { lit = this.highlight(r.lit.value,k) }
                      let typ ;
                      //if(r.f && r.f.value) typ = r.f.value.replace(/^.*?([^/]+)$/,"$1")
-                     console.log("r",o,sublist[o],r,label,lit);
+
+                     // console.log("r",o,sublist[o],r,label,lit);
 
                      let filtered = true ;
-                     if(this.state.filters && this.state.filters.facets) for(let k of Object.keys(this.state.filters.facets)) {
 
-                        console.log("k",k,r.obj[k]);
+                     if(this.state.filters.datatype.indexOf("Any") === -1 && this.state.filters && this.state.filters.facets)
+                        for(let k of Object.keys(this.state.filters.facets)) {
 
-                        if(r.obj[k] && this.state.filters.facets[k].indexOf("Any") === -1 && this.state.filters.facets[k].indexOf(r.obj[k]) === -1) {
+                           let v = this.state.filters.facets[k]
 
-                           console.log("filtered")
-                           filtered = false;
+                           let hasProp = []
+                           for(let e of sublist[o]) { if(e.type == k && e.value == v) { hasProp.push(e); } }
 
+                           // console.log("k",k,v,hasProp);
+
+                           if(this.state.filters.facets[k].indexOf("Any") === -1 && (!hasProp || hasProp.length == 0)) {
+
+                              filtered = false
+
+                           }
+                           else {
+                              // console.log("good")
+                           }
+                           /*
+
+                           if(r.obj[k] && this.state.filters.facets[k].indexOf("Any") === -1 &&
+                           this.state.filters.facets[k].indexOf(r.obj[k]) === -1) {
+
+                              console.log("filtered")
+                              filtered = false;
+
+                           }
+                           */
                         }
 
-                     }
+                        //console.log("typ",typ,t,filtered)
 
-                     //console.log("typ",typ,t,filtered)
+                        //if(this.state.filters.datatype.length == 0 || this.state.filters.datatype.indexOf("Any") !== -1 || this.state.filters.datatype.indexOf(typ) !== -1)
+                        if((!typ || typ === t) && filtered)
+                        {
+                           //console.log("lit",lit)
 
-                     //if(this.state.filters.datatype.length == 0 || this.state.filters.datatype.indexOf("Any") !== -1 || this.state.filters.datatype.indexOf(typ) !== -1)
-                     if((!typ || typ === t) && filtered)
-                     {
-                        //console.log("lit",lit)
+                           n ++;
+                           message.push(
+                              [
+                           <Link key={n} to={"/show/bdr:"+id} className="result">
 
-                        n ++;
-                        message.push(
-                           [
-                        <Link key={n} to={"/show/bdr:"+id} className="result">
+                              <Button key={t+"_"+n+"_"}>
+                                    <ListItem style={{paddingLeft:"0",display:"flex"}}>
+                                       <div style={{width:"30px",textAlign:"right"}}>{n}</div>
+                                       <ListItemText style={{height:"auto",flexGrow:10,flexShrink:10}}
+                                          primary={lit}
+                                          secondary={id}
+                                       />
+                                    </ListItem>
+                              </Button>
 
-                           <Button key={t+"_"+n+"_"}>
-                                 <ListItem style={{paddingLeft:"0",display:"flex"}}>
-                                    <div style={{width:"30px",textAlign:"right"}}>{n}</div>
-                                    <ListItemText style={{height:"auto",flexGrow:10,flexShrink:10}}
-                                       primary={lit}
-                                       secondary={id}
-                                    />
-                                 </ListItem>
-                           </Button>
+                           </Link>
+                              ,
+                              <div>{r.match.map((m) =>
+                                 (!m.type.match(new RegExp(skos+"prefLabel"))?
+                                    <div className="match">
+                                       <span className="label">{this.fullname(m.type.replace(/.*altLabelMatch/,skos+"altLabel"))}:&nbsp;</span>
+                                       <span>{this.highlight(m.value,k)}</span>
+                                    </div>
+                                 :null))}</div>
+                           ]
 
-                        </Link>
-                           ,
-                           <div>{r.match.map((m) =>
-                              (!m.type.match(new RegExp(skos+"prefLabel"))?
-                                 <div className="match">
-                                    <span className="label">{this.fullname(m.type.replace(/.*altLabelMatch/,skos+"altLabel"))}:&nbsp;</span>
-                                    <span>{this.highlight(m.value,k)}</span>
-                                 </div>
-                              :null))}</div>
-                        ]
+                           )
 
-                        )
-
-                        cpt ++;
-                        if(displayTypes.length > 2) {
-                           if(cpt >= 3) break;
-                        } else {
-                           if(cpt >= 50) break;
+                           cpt ++;
+                           if(displayTypes.length > 2) {
+                              if(cpt >= 3) break;
+                           } else {
+                              if(cpt >= 50) break;
+                           }
                         }
                      }
+                     if(cpt == 0) { message.push(<Typography style={{margin:"20px 40px"}}><Translate value="search.filters.noresults"/></Typography>);}
+
                   }
-               } }
+               }
 
                //console.log("message",message)
 
@@ -663,7 +685,7 @@ class App extends Component<Props,State> {
             style={{display:"flex",justifyContent:"space-between",padding:"0 20px",borderBottom:"1px solid #bbb",cursor:"pointer"}}
             onClick={(e) => { this.setState({collapse:{ ...this.state.collapse, [txt]:!this.state.collapse[txt]} }); } }
             >
-            <Typography style={{fontSize:"18px",lineHeight:"50px"}}>{title}</Typography>
+            <Typography style={{fontSize:"18px",lineHeight:"50px",textTransform:"capitalize"}}>{title}</Typography>
             { this.state.collapse[txt] ? <ExpandLess /> : <ExpandMore />}
          </ListItem>,
          <Collapse
@@ -811,12 +833,12 @@ class App extends Component<Props,State> {
 
                                  // console.log("label",i,label)
 
-                                 let checked = this.state.filters.facets && this.state.filters.facets[j]
+                                 let checked = this.state.filters.facets && this.state.filters.facets[jpre]
                                  if(!checked) {
                                     if(label === "Any") checked = true ;
                                     else checked = false ;
                                  }
-                                 else checked = this.state.filters.facets[j].indexOf(i) !== -1
+                                 else checked = this.state.filters.facets[jpre].indexOf(i) !== -1
 
                                  // console.log("checked",checked)
 
@@ -828,7 +850,7 @@ class App extends Component<Props,State> {
                                           className="checkbox"
                                           icon={<span className='checkB'/>}
                                           checkedIcon={<span className='checkedB'><CheckCircle style={{color:"#444",margin:"-3px 0 0 -3px",width:"26px",height:"26px"}}/></span>}
-                                          onChange={(event, checked) => this.handleCheckFacet(event,j,i,checked)}
+                                          onChange={(event, checked) => this.handleCheckFacet(event,jpre,i,checked)}
                                        />
 
                                     }

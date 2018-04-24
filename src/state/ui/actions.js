@@ -16,6 +16,14 @@ export const showResults = (key: string,lang:string): Action => {
    }
 }
 
+TYPES.selectType = 'SELECT_TYPE';
+export const selectType = (datatype: string): Action => {
+   return {
+      type: TYPES.selectType,
+      payload: datatype
+   }
+}
+
 TYPES.loadingGallery = 'LOADING_GALLERY';
 export const loadingGallery = (manifest: string): Action => {
    return {

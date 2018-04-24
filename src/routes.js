@@ -64,7 +64,7 @@ const makeMainRoutes = () => {
                      return ( <AppContainer history={history}/> ) } } />
                   <Route path="/search" render={(props) => {
                      let get = qs.parse(history.location.search)
-                     if(!store.getState().data.ontology)
+                     //if(!store.getState().data.ontology)
                      {
                         store.dispatch(initiateApp(qs.parse(history.location.search)))
                      }
@@ -76,7 +76,7 @@ const makeMainRoutes = () => {
                      {
                         store.dispatch(initiateApp(qs.parse(history.location.search),props.match.params.IRI));
                      }
-                     return ( <ResourceViewerContainer history={history} IRI={props.match.params.IRI}/> ) } }/>
+                     return ( <ResourceViewerContainer theprops={props} history={history} IRI={props.match.params.IRI}/> ) } }/>
                   <Route render={(props) =>
                      <Redirect404  history={history}/>}/>
                </Switch>

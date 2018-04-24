@@ -20,6 +20,19 @@ type State = {
  }
 
 
+const dPrefix = {
+   "C" : "Corporation",
+   "E" : "Etext",
+   "I" : "Item",
+   "L" : "Lineage",
+   "G" : "Place",
+   "P" : "Person",
+   "R" : "Role",
+   "PR": "Product",
+   "T" : "Topic",
+   "W" : "Work"
+}
+
 const adm  = "http://purl.bdrc.io/ontology/admin/" ;
 const bdo  = "http://purl.bdrc.io/ontology/core/";
 const bdr  = "http://purl.bdrc.io/resource/";
@@ -271,9 +284,15 @@ class ResourceViewer extends Component<Props,State>
             { !this.state.ready && <Loader loaded={false} /> }
             <div className="resource">
 
-               <Link className="goBack" to={this.props.keyword?"/search?q="+this.props.keyword+"&lg="+this.props.language:"/"}>
+               <Link className="goBack" to={this.props.keyword?"/search?q="+this.props.keyword+"&lg="+this.props.language+(this.props.datatype?"&t="+this.props.datatype:""):"/"}>
                   <Button style={{paddingLeft:"0"}}>&lt; Go back to search</Button>
                </Link>
+               {
+                  this.props.IRI[0].match(/[PGT]/) &&
+                  <Link className="goBack" to={"/search?r=bdr:"+this.props.IRI+"&t="+dPrefix[this.props.IRI[0]]}>
+                     <Button style={{paddingLeft:"50px"}}>See associated resources &gt;</Button>
+                  </Link>
+               }
                {this.format("h1",rdf+"type",this.props.IRI)}
                {this.format("h2",skos+"prefLabel")}
                { /*<MapComponent tmp={this.props}/ */}

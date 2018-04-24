@@ -118,6 +118,13 @@ export default class API {
          return resource ;
    }
 
+   async loadAssocResources(IRI:string): Promise<string>
+   {
+      let resource =  JSON.parse(await this.getURLContents(this._assocResourcesPath(IRI),false));
+      console.log("assocResources",resource)
+      return resource ;
+   }
+
     testHost(host : string): Promise<boolean>
     {
       return new Promise((resolve, reject) =>
@@ -407,6 +414,16 @@ export default class API {
 
           return path;
       }
+
+            _assocResourcesPath(IRI:string): string {
+
+               let config = store.getState().data.config.ldspdi
+               let url = config.endpoints[config.index] ;
+
+                let path = url +  "/lib/allAssocResource?R_RES=bdr:" + IRI;
+
+                return path;
+            }
 
      get _ontologyPath(): string {
         let path = ONTOLOGY_PATH;

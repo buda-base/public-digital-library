@@ -10,12 +10,15 @@ import ResourceViewer from '../components/ResourceViewer';
 
 const mapStateToProps = (state) => {
 
+   console.log("state",state)
+
    let resources = state.data.resources
    let ontology = state.data.ontology ;
    let keyword = state.data.keyword
    let language = state.data.language
+   let datatype = state.ui.datatype
 
-   let props = { resources, ontology, keyword, language }
+   let props = { resources, ontology, keyword, language, datatype }
 
    return props
 

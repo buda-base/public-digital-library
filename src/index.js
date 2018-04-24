@@ -65,6 +65,11 @@ const translationsObject = {
          "topic":"Topic",
          "work":"Work"
       },
+      search:{
+         filters:{
+            noresults:"No results matching your filters."
+         }
+      },
       Lsidebar:{
          title:"Refine your Search",
          collection:{
@@ -120,6 +125,11 @@ const translationsObject = {
          },
          datatypes:{
             title:"Types de Données"
+         }
+      },
+      search:{
+         filters:{
+            noresults:"Pas de résultat correspondant à vos filtres."
          }
       },
       Rsidebar:{

@@ -24,11 +24,15 @@ async function initiateApp(params,iri) {
       {
          let res = await api.loadResource(iri)
          store.dispatch(dataActions.gotResource(iri,res));
+
+         let assocRes = await api.loadAssocResources(iri)
+         store.dispatch(dataActions.gotAssocResources(iri,assocRes));
       }
       else if(!iri && params && params.q) {
          if(params.t && ["Person","Work"].indexOf(params.t) !== -1)
          {
             store.dispatch(dataActions.startSearch(params.q,params.lg,[params.t])); //,params.t.split(",")));
+            store.dispatch(uiActions.selectType(params.t));
          }
          else
          {
@@ -98,6 +102,10 @@ function getData(result)  {
       data.persons = data.people
       delete data.people
    }
+   if(data && data.data) {
+      data.works = data.data
+      delete data.data
+   }
 
    if(metadata)
    {
@@ -105,7 +113,8 @@ function getData(result)  {
       if(kZ.reduce((acc,k) => (acc || k.match(/^http:/) ),false))
          numR = kZ.reduce((acc,k) => ( acc+Number(metadata[k])),0)
       else
-         numR = Object.keys(result.data).length ;
+         if(kZ.length == 0)
+            numR = 0
       delete data.metadata
    }
    else {
@@ -142,31 +151,53 @@ function getData(result)  {
          result = { [datatype[0].toLowerCase()+"s"] : result.data }
       }
 */
-      let data = getData(result);
 
-      store.dispatch(dataActions.foundResults(keyword, language, data, datatype));
 
-      if(!datatype || datatype.indexOf("Any") !== -1) {
-         store.dispatch(dataActions.foundDatatypes(keyword,{ metadata:metadata, hash:true}));
+      if(language == "")
+      {
+         metadata = {}
+         let data = {}
+         for(let k of Object.keys(result)) {
+            let t = k.replace(/^associated|s$/g,"").toLowerCase().replace(/people/,"person")
+            if(Object.keys(result[k]).length > 0) {
+               data = { ...data, [t+"s"]:result[k] }
+               metadata = { ...metadata, [t]:Object.keys(result[k]).length }
+            }
+         }
+         data = getData(data);
+         store.dispatch(dataActions.foundResults(keyword, language, data, datatype));
+         store.dispatch(dataActions.foundDatatypes(keyword,{ metadata, hash:true}));
       }
       else {
 
-         if(datatype.indexOf("Person") !== -1) {
-            store.dispatch(dataActions.foundFacetInfo(keyword,language,datatype,{"gender":metadata }))
+         let data = getData(result);
+
+         store.dispatch(dataActions.foundResults(keyword, language, data, datatype));
+
+         if(!datatype || datatype.indexOf("Any") !== -1) {
+            store.dispatch(dataActions.foundDatatypes(keyword,{ metadata:metadata, hash:true}));
          }
-         else if(datatype.indexOf("Work") !== -1) {
-            store.dispatch(dataActions.foundFacetInfo(keyword,language,datatype,metadata))
-         }
+         else {
+
+            if(datatype.indexOf("Person") !== -1) {
+               store.dispatch(dataActions.foundFacetInfo(keyword,language,datatype,{"gender":metadata }))
+            }
+            else if(datatype.indexOf("Work") !== -1) {
+               store.dispatch(dataActions.foundFacetInfo(keyword,language,datatype,metadata))
+            }
 
 
-         if(!store.getState().data.searches[keyword+"@"+language]){
-            store.dispatch(dataActions.getDatatypes());
-            result = await api.getStartResults(keyword,language);
-            data = getData(result);
-            store.dispatch(dataActions.foundResults(keyword, language, data));
-            store.dispatch(dataActions.foundDatatypes(keyword,{ metadata:result.metadata, hash:true}));
+            if(!store.getState().data.searches[keyword+"@"+language]){
+               store.dispatch(dataActions.getDatatypes());
+               result = await api.getStartResults(keyword,language);
+               metadata = result.metadata;
+               data = getData(result);
+               store.dispatch(dataActions.foundResults(keyword, language, data));
+               store.dispatch(dataActions.foundDatatypes(keyword,{ metadata, hash:true}));
+            }
          }
       }
+
       // store.dispatch(dataActions.foundDatatypes(keyword, JSON.parse(result.metadata).results));
       //store.dispatch(dataActions.foundResults(keyword, language,result));
       //yield put(uiActions.showResults(keyword, language));
