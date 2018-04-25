@@ -7,11 +7,13 @@ import { Link } from 'react-router-dom';
 import { Redirect404 } from "../routes.js"
 import Loader from "react-loader"
 //import {MapComponent} from './Map';
+import {getEntiType} from '../lib/api';
 
 type Props = {
    history:{},
    IRI:string,
    resources?:{},
+   assocResources?:{},
    onGetResource: (s:string) => void
 }
 type State = {
@@ -20,18 +22,6 @@ type State = {
  }
 
 
-const dPrefix = {
-   "C" : "Corporation",
-   "E" : "Etext",
-   "I" : "Item",
-   "L" : "Lineage",
-   "G" : "Place",
-   "P" : "Person",
-   "R" : "Role",
-   "PR": "Product",
-   "T" : "Topic",
-   "W" : "Work"
-}
 
 const adm  = "http://purl.bdrc.io/ontology/admin/" ;
 const bdo  = "http://purl.bdrc.io/ontology/core/";
@@ -153,11 +143,32 @@ class ResourceViewer extends Component<Props,State>
 
                if(s && s[rdfs+"subClassOf"] && this.hasValue(s[rdfs+"subClassOf"],bdo+"Entity"))
                {
-                  // console.log("s",s)
+                  let info ;
+                  if(this.props.assocResources) {
+                     let infoBase = this.props.assocResources[elem.value]
+                     if(infoBase) {
+                        info = infoBase.filter((e)=>(e.type==prop && e["xml:lang"]==this.props.prefLang))
+                        if(info[0]) info = info[0].value
+                        else {
+                           info = infoBase.filter((e) => e["xml:lang"]==this.props.prefLang)
+                           if(info[0]) info = info[0].value
+                           else {
+                              info = infoBase.filter((e) => e["xml:lang"]=="bo-x-ewts")
+                              if(info[0]) info = info[0].value
+                              else info = infoBase[0].value
+                           }
+                        }
+                     }
+                  }
+
+                  console.log("s",prop,s,info)
 
                   // we can return Link
                   let pretty = this.pretty(elem.value);
-                  return ([<Link className="urilink" to={"/show/bdr:"+pretty}>{pretty}</Link>])
+                  let ret = []
+                  if(info) ret.push(<Link className="urilink prefLabel" to={"/show/bdr:"+pretty}>{info}</Link>)
+                  else ret.push(<Link className="urilink" to={"/show/bdr:"+pretty}>{pretty}</Link>)
+                  return ret
                }
 
             }
@@ -284,13 +295,13 @@ class ResourceViewer extends Component<Props,State>
             { !this.state.ready && <Loader loaded={false} /> }
             <div className="resource">
 
-               <Link className="goBack" to={this.props.keyword?"/search?q="+this.props.keyword+"&lg="+this.props.language+(this.props.datatype?"&t="+this.props.datatype:""):"/"}>
-                  <Button style={{paddingLeft:"0"}}>&lt; Go back to search</Button>
+               <Link className="goBack" to={this.props.keyword&&!this.props.keyword.match(/^bdr:/)?"/search?q="+this.props.keyword+"&lg="+this.props.language+(this.props.datatype?"&t="+this.props.datatype:""):"/"}>
+                  <Button style={{paddingLeft:"0"}}>&lt; Go back to search page</Button>
                </Link>
                {
                   this.props.IRI[0].match(/[PGT]/) &&
-                  <Link className="goBack" to={"/search?r=bdr:"+this.props.IRI+"&t="+dPrefix[this.props.IRI[0]]}>
-                     <Button style={{paddingLeft:"50px"}}>See associated resources &gt;</Button>
+                  <Link className="goBack" to={"/search?r=bdr:"+this.props.IRI+"&e="+getEntiType(this.props.IRI)}>
+                     <Button style={{paddingLeft:"50px"}}>Browse associated resources &gt;</Button>
                   </Link>
                }
                {this.format("h1",rdf+"type",this.props.IRI)}
@@ -306,7 +317,7 @@ class ResourceViewer extends Component<Props,State>
 
                      let elem = this.getResourceElem(k);
 
-                     //if(!k.match(new RegExp(adm+"|prefLabel|"+rdf+"|toberemoved"))) {
+                     // if(!k.match(new RegExp(adm+"|prefLabel|"+rdf+"|toberemoved"))) {
                      if(!k.match(new RegExp("Revision|Entry|prefLabel|"+rdf+"|toberemoved"))) {
                         let tags = this.format("h4",k)
                         //console.log("tags",tags);

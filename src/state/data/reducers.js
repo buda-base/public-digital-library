@@ -9,6 +9,7 @@ let reducers = {};
 export type DataState = {
    iri?:string,
    resources?:{[string]:{}},
+   assocResources?:{[string]:{}},
    facets?:{[string]:boolean|{}},
    keyword?:string,
    language?:string,
@@ -63,6 +64,17 @@ export const gotResource = (state: DataState, action: Action) => {
 }
 reducers[actions.TYPES.gotResource] = gotResource;
 
+
+export const gotAssocResources = (state: DataState, action: Action) => {
+    return {
+        ...state,
+        "assocResources": {
+           ...state.assocResources,
+           [action.payload]:action.meta.data
+       }
+    }
+}
+reducers[actions.TYPES.gotAssocResources] = gotAssocResources;
 
 export const hostError = (state: DataState, action: actions.SearchFailedAction) => {
     return {
@@ -216,7 +228,7 @@ export const foundFacetInfo = (state: DataState, action: actions.FoundResultsAct
 
    return {
       ...state,
-      
+
       keyword:action.payload.keyword,
       language:action.payload.language,
       searches: searches

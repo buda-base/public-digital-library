@@ -20,9 +20,14 @@ const mapStateToProps = (state) => {
    let datatypes = state.data.datatypes ;
    let ontology = state.data.ontology ;
    let facets = state.data.facets ;
-   let loading = state.ui.loading  ;
 
-   let newState = { config, hostFailure, searches, keyword, language,loading,datatypes,ontology,facets }
+   let loading = state.ui.loading  ;
+   let prefLang = state.ui.prefLang  ;
+
+   let locale = state.i18n.locale
+
+   let newState = { config, hostFailure, searches, keyword, language,loading,datatypes,ontology,facets,
+      locale,prefLang }
 
    console.log("mS2p",newState)
 
@@ -53,6 +58,10 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       },
       onSetLocale:(lg:string) => {
          dispatch(setLocale(lg));
+         //dispatch(ui.setLocale(lg))
+      },
+      onSetPrefLang:(lg:string) => {
+         dispatch(ui.setPrefLang(lg));
       }
    }
 }

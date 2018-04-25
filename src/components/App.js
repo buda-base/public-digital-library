@@ -66,6 +66,8 @@ type Props = {
    loading?:boolean,
    keyword?:string,
    language?:string,
+   prefLang?:string,
+   locale?:string,
    datatypes:boolean|{},
    history:{},
    ontology:{},
@@ -75,7 +77,8 @@ type Props = {
    onCheckDatatype:(t:string,k:string,lg:string)=>void,
    onGetFacetInfo:(k:string,lg:string,f:string)=>void,
    onCheckFacet:(k:string,lg:string,f:{[string]:string})=> void,
-   onSetLocale:(lg:string)=>void
+   onSetLocale:(lg:string)=>void,
+   onSetPrefLang:(lg:string)=>void
 }
 
 type State = {
@@ -86,9 +89,6 @@ type State = {
    unchecked?:string,
    keyword:string,
    dataSource : string[],
-   UI:{
-      language:string
-   },
    filters:{
       datatype:string[],
       facets?:{[string]:string[]}
@@ -257,8 +257,9 @@ class App extends Component<Props,State> {
 
          if(val)
          {
-            if(prop === "language") this.props.onSetLocale(lab);
-            state = {  ...state,  UI: { ...state.UI, [prop] : lab } }
+            if(prop === "locale") this.props.onSetLocale(lab);
+            else if(prop === "prefLang") this.props.onSetPrefLang(lab);
+            //state = {  ...state,  UI: { ...state.UI, [prop] : lab } }
          }
          /* // no unchecking possible
          else if(state.UI && state.UI[prop])
@@ -267,7 +268,7 @@ class App extends Component<Props,State> {
          }
          */
 
-         this.setState( state )
+         //this.setState( state )
       }
    /*
    handleFacetCheck = (ev:Event,prop:string,lab:string,val:boolean) => {
@@ -315,6 +316,8 @@ class App extends Component<Props,State> {
    handleCheck = (ev:Event,lab:string,val:boolean) => {
 
       console.log("check",lab,val,'('+this.state.keyword+')')
+
+      if(this.props.language == "") return
 
       //  // to be continued ...
       // let f = this.state.filters.datatype
@@ -544,7 +547,7 @@ class App extends Component<Props,State> {
                          lit: label,
                          s  : { type: "uri", value:o },
                          match: list[o].filter((e) => (e.value && e.value.match(/[↦↤]/)))
-                     } ) } )
+                     } ) }message )
 
                      */
                let displayTypes = types //["Person"]
@@ -774,7 +777,7 @@ class App extends Component<Props,State> {
 
                                  //console.log("counts",i,counts["datatype"][i])
 
-                           let disabled = !this.props.keyword && ["Any","Person","Work"].indexOf(i)===-1
+                           let disabled = (!this.props.keyword && ["Any","Person","Work"].indexOf(i)===-1) || (this.props.language == "")
 
                               return (
                                  <div key={i} style={{textAlign:"left"}}>
@@ -1044,12 +1047,12 @@ class App extends Component<Props,State> {
                               <FormControlLabel
                                  control={
                                     <Checkbox
-                                       checked={i === this.state.UI.language}
+                                       checked={i === this.props.locale}
                                        disabled={disab}
                                        className={"checkbox "+ (disab?"disabled":"")}
                                        icon={<span className='checkB'/>}
                                        checkedIcon={<span className='checkedB'><CheckCircle style={{color:"#444",margin:"-3px 0 0 -3px",width:"26px",height:"26px"}}/></span>}
-                                       onChange={(event, checked) => this.handleCheckUI(event,"language",i,checked)}
+                                       onChange={(event, checked) => this.handleCheckUI(event,"locale",i,checked)}
                                     />
 
                                  }
@@ -1062,12 +1065,12 @@ class App extends Component<Props,State> {
                               <FormControlLabel
                                  control={
                                     <Checkbox
-                                       {... i!="bo-x-ewts" ?{}:{defaultChecked:true}}
-                                       disabled={true}
+                                       checked={i === this.props.prefLang}
+                                       disbaled={true}
                                        className="checkbox disabled"
                                        icon={<span className='checkB'/>}
                                        checkedIcon={<span className='checkedB'><CheckCircle style={{color:"#444",margin:"-3px 0 0 -3px",width:"26px",height:"26px"}}/></span>}
-                                       //onChange={(event, checked) => this.handleCheck(event,i,checked)}
+                                       onChange={(event, checked) => this.handleCheckUI(event,"prefLang",i,checked)}
                                     />
 
                                  }

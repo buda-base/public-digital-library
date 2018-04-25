@@ -24,6 +24,14 @@ export const selectType = (datatype: string): Action => {
    }
 }
 
+TYPES.setPrefLang = 'SET_PREFLANG';
+export const setPrefLang = (lang: string): Action => {
+   return {
+      type: TYPES.setPrefLang,
+      payload: lang
+   }
+}
+
 TYPES.loadingGallery = 'LOADING_GALLERY';
 export const loadingGallery = (manifest: string): Action => {
    return {

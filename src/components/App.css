@@ -36,6 +36,9 @@ h4 { margin-top:10px;margin-bottom:0px;font-size:24px; }
 .resource .subsub h4:not(.first):not(:last-child):after,
 .resource h4:not(:last-child):not(.first):after { content:","; pointer-events:none; }
 
+.resource .data a { text-decoration: none; color:rgba(229, 74, 53,1);}
+.resource .data a:hover { border-bottom:1px solid rgba(229, 74, 53,1); }
+
 .goBack { text-decoration: none; }
 
 .checkB,.checkedB { border-radius:50%; border:2px solid #666;width:20px;height:20px;display:inline-block; }

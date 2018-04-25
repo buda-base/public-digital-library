@@ -8,7 +8,7 @@ import store from '../index';
 
 import ResourceViewer from '../components/ResourceViewer';
 
-const mapStateToProps = (state) => {
+const mapStateToProps = (state,ownProps) => {
 
    console.log("state",state)
 
@@ -17,8 +17,11 @@ const mapStateToProps = (state) => {
    let keyword = state.data.keyword
    let language = state.data.language
    let datatype = state.ui.datatype
+   let assocResources = state.data.assocResources
+   if(assocResources) assocResources = assocResources[ownProps.IRI]
+   let prefLang = state.ui.prefLang
 
-   let props = { resources, ontology, keyword, language, datatype }
+   let props = { resources, ontology, keyword, language, datatype, assocResources, prefLang }
 
    return props
 

@@ -40,9 +40,10 @@ async function initiateApp(params,iri) {
          }
       }
       else if(!iri && params && params.r) {
-         if(params.t && ["Person","Place","Topic"].indexOf(params.t) !== -1)
+         let t = api.getEntiType(params.r)
+         if(params.e && ["Person","Place","Topic"].indexOf(params.e) !== -1)
          {
-            store.dispatch(dataActions.startSearch(params.r,"",[params.t])); //,params.t.split(",")));
+            store.dispatch(dataActions.startSearch(params.r,"",[t])); //,params.t.split(",")));
          }
       }
 
@@ -159,7 +160,7 @@ function getData(result)  {
          let data = {}
          for(let k of Object.keys(result)) {
             let t = k.replace(/^associated|s$/g,"").toLowerCase().replace(/people/,"person")
-            if(Object.keys(result[k]).length > 0) {
+            if(t != "metadata" && Object.keys(result[k]).length > 0) {
                data = { ...data, [t+"s"]:result[k] }
                metadata = { ...metadata, [t]:Object.keys(result[k]).length }
             }

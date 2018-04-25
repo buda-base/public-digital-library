@@ -9,9 +9,12 @@ let reducers = {};
 export type UIState = {
    keyword?:string,
    loading?: boolean,
+   prefLang:string
 }
 
-const DEFAULT_STATE: UIState = {}
+const DEFAULT_STATE: UIState = {
+   prefLang:"bo-x-ewts"
+}
 
 
 export const helloWorld = (state: UIState, action: Action): UIState => {
@@ -33,6 +36,15 @@ export const selectType = (state: UIState, action: Action) => {
    }
 }
 reducers[actions.TYPES.selectType] = selectType;
+
+export const setPrefLang = (state: UIState, action: Action) => {
+
+      return {
+      ...state,
+      prefLang:action.payload
+   }
+}
+reducers[actions.TYPES.setPrefLang] = setPrefLang;
 
 
 export const showResults = (state: UIState, action: Action) => {

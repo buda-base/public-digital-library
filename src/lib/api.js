@@ -5,6 +5,23 @@ const CONFIG_PATH = '/config.json'
 const CONFIGDEFAULTS_PATH = '/config-defaults.json'
 const ONTOLOGY_PATH = '/ontology.json'
 
+
+const dPrefix = {
+   "C" : "Corporation",
+   "E" : "Etext",
+   "I" : "Item",
+   "L" : "Lineage",
+   "G" : "Place",
+   "P" : "Person",
+   "R" : "Role",
+   "PR": "Product",
+   "T" : "Topic",
+   "W" : "Work"
+}
+
+export function getEntiType(t:string):string { return dPrefix[t.replace(/^([CEILGPRTW]+).*$/,"$1")]; }
+
+
 export interface APIResponse {
     text(): Promise<string>
 }
@@ -30,7 +47,6 @@ export default class API {
             this._fetch = window.fetch.bind(window);
         }
     }
-
 
      async getURLContents(url: string, minSize : boolean = true): Promise<string> {
 
@@ -284,19 +300,19 @@ export default class API {
         }
     }
 
-         async _getAssocResultsData(key: string,typ:string[]): Promise<{} | null> {
-            try {
-                 let config = store.getState().data.config.ldspdi
-                 let url = config.endpoints[config.index]+"/lib" ;
-                 let param = {"searchType":typ[0].toLowerCase()+"AllAssociations","R_RES":key,"L_NAME":"","LG_NAME":"" }
-                 let data = this.getQueryResults(url, key, param,"GET");
-                 // let data = this.getSearchContents(url, key);
+      async _getAssocResultsData(key: string,typ:string[]): Promise<{} | null> {
+         try {
+              let config = store.getState().data.config.ldspdi
+              let url = config.endpoints[config.index]+"/lib" ;
+              let param = {"searchType":typ[0].toLowerCase()+"AllAssociations","R_RES":key,"L_NAME":"","LG_NAME":"" }
+              let data = this.getQueryResults(url, key, param,"GET");
+              // let data = this.getSearchContents(url, key);
 
-                 return data ;
-            } catch(e) {
-                 throw e;
-            }
-        }
+              return data ;
+         } catch(e) {
+              throw e;
+         }
+     }
 
      async getResultsSimpleFacet(key: string,lang: string,property:string): Promise<{} | null> {
         try {
