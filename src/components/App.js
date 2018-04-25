@@ -93,6 +93,9 @@ type State = {
    unchecked?:string,
    keyword:string,
    dataSource : string[],
+   UI:{
+      language:string
+   },
    filters:{
       datatype:string[],
       facets?:{[string]:string[]}
@@ -283,7 +286,7 @@ class App extends Component<Props,State> {
          */
 
          //this.setState( state )
-      }
+}
    /*
    handleFacetCheck = (ev:Event,prop:string,lab:string,val:boolean) => {
 
@@ -580,7 +583,6 @@ class App extends Component<Props,State> {
                   message.push(<MenuItem  onClick={(e)=>this.handleCheck(e,t,true)}><h4>{I18n.t("types."+t.toLowerCase())+"s"+(counts["datatype"][t]?" ("+counts["datatype"][t]+")":"")}</h4></MenuItem>);
 
                   let sublist = list[t.toLowerCase()+"s"]
-
                   let cpt = 0;
                   n = 0;
                   if(sublist) { for(let o of Object.keys(sublist))
@@ -728,7 +730,7 @@ class App extends Component<Props,State> {
             style={{display:"flex",justifyContent:"space-between",padding:"0 20px",borderBottom:"1px solid #bbb",cursor:"pointer"}}
             onClick={(e) => { this.setState({collapse:{ ...this.state.collapse, [txt]:!this.state.collapse[txt]} }); } }
             >
-            <Typography style={{fontSize:"18px",lineHeight:"50px",textTransform:"capitalize"}}>{title}</Typography>
+            <Typography style={{fontSize:"18px",lineHeight:"50px"}}>{title}</Typography>
             { this.state.collapse[txt] ? <ExpandLess /> : <ExpandMore />}
          </ListItem>,
          <Collapse
@@ -1093,8 +1095,7 @@ class App extends Component<Props,State> {
                                        className={"checkbox "+ (disab?"disabled":"")}
                                        icon={<span className='checkB'/>}
                                        checkedIcon={<span className='checkedB'><CheckCircle style={{color:"#444",margin:"-3px 0 0 -3px",width:"26px",height:"26px"}}/></span>}
-                                       onChange={(event, checked) => this.handleCheckUI(event,"locale",i,checked)}
-                                    />
+                                       onChange={(event, checked) => this.handleCheckUI(event,"locale",i,checked)}                                    />
 
                                  }
                                  label={label}
