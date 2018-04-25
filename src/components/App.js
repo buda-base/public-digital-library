@@ -32,8 +32,10 @@ const bdr  = "http://purl.bdrc.io/resource/";
 const rdf  = "http://www.w3.org/1999/02/22-rdf-syntax-ns#";
 const rdfs = "http://www.w3.org/2000/01/rdf-schema#";
 const skos = "http://www.w3.org/2004/02/skos/core#";
+const tmp = "http://purl.bdrc.io/ontology/tmp/" ;
 
-const prefixes = [adm, bdo,bdr,rdf,rdfs,skos]
+
+const prefixes = [adm, bdo,bdr,rdf,rdfs,skos,tmp]
 
 const languages = {
    "zh":"lang.search.zh",
@@ -137,11 +139,13 @@ class App extends Component<Props,State> {
       console.log("search",this.state,this.props)
       if(key.match(/^bdr:[TPG]/))
       {
+         if(!label) label = this.state.filters.datatype.filter((f)=>["Person","Work"].indexOf(f) !== -1)[0]
+
          this.props.history.push({pathname:"/search",search:"?r="+key})
 
          if(!this.props.searches[key+"@"+this.state.language]) {
 
-            this.props.onStartSearch(key,"",[getEntiType(key)])
+            this.props.onStartSearch(key,"",[label],getEntiType(key))
          }
       }
       else if(label === "Any" || ( !label && ( this.state.filters.datatype.length === 0 || this.state.filters.datatype.indexOf("Any") !== -1 ) ) )
@@ -327,7 +331,7 @@ class App extends Component<Props,State> {
 
       console.log("check",lab,val,'('+this.state.keyword+')')
 
-      if(this.props.language == "") return
+      //if(this.props.language == "") return
 
       //  // to be continued ...
       // let f = this.state.filters.datatype
@@ -341,20 +345,24 @@ class App extends Component<Props,State> {
 
       if(val && this.props.keyword)
       {
-         if(lab === "Any")
+         if(this.props.language != "")
          {
-            //console.log("youpi")
-            this.requestSearch(this.props.keyword,lab)
+            if(lab === "Any")
+            {
+               //console.log("youpi")
+               this.requestSearch(this.props.keyword,lab)
 
-         }
-         else if(["Person","Work"].indexOf(lab) !== -1) {
+            }
+            else if(["Person","Work"].indexOf(lab) !== -1) {
 
-            this.requestSearch(this.props.keyword,lab)
+               this.requestSearch(this.props.keyword,lab)
 
+            }
+            else {
+               this.props.history.push("/search?q="+this.props.keyword+"&lg="+this.state.language+"&t="+lab);
+            }
          }
-         else {
-            this.props.history.push("/search?q="+this.props.keyword+"&lg="+this.state.language+"&t="+lab);
-         }
+
 
       }
 
@@ -561,7 +569,7 @@ class App extends Component<Props,State> {
 
                      */
                let displayTypes = types //["Person"]
-               if(this.state.filters.datatype.indexOf("Any") === -1 && this.props.language != "") displayTypes = this.state.filters.datatype ;
+               if(this.state.filters.datatype.indexOf("Any") === -1) displayTypes = this.state.filters.datatype ;
 
                console.log("list x types",list,types,displayTypes)
 
@@ -587,8 +595,16 @@ class App extends Component<Props,State> {
                         //f  : { type: "uri", value:list[o].type },
                         lit: label,
                         s  : { type: "uri", value: o },
-                        match: sublist[o].filter((e) => (e.value && e.value.match(/[↦↤]/) && e.type && !e.type.match(/prefLabelMatch$/)))
+                        match: sublist[o].filter((e) => (
+                            this.props.language != "" ? e.value && e.value.match(/[↦↤]/) && e.type && !e.type.match(/prefLabelMatch$/)
+                                                      : !e.lang && (e.value.match(new RegExp(bdr+this.props.keyword.replace(/bdr:/,"")))
+                                                                   || e.type.match(/relationType$/) )
+
+                                                   )
+                                                )
                      }
+
+
 
 
                      let k = this.props.keyword.replace(/"/g,"")
@@ -657,13 +673,25 @@ class App extends Component<Props,State> {
 
                            </Link>
                               ,
-                              <div>{r.match.map((m) =>
-                                 (!m.type.match(new RegExp(skos+"prefLabel"))?
-                                    <div className="match">
-                                       <span className="label">{this.fullname(m.type.replace(/.*altLabelMatch/,skos+"altLabel"))}:&nbsp;</span>
-                                       <span>{this.highlight(m.value,k)}</span>
-                                    </div>
-                                 :null))}</div>
+                              <div>
+                              {
+                                 r.match.map((m) => {
+                                       if(!m.type.match(new RegExp(skos+"prefLabel"))) {
+                                          let prop = this.fullname(m.type.replace(/.*altLabelMatch/,skos+"altLabel"))
+                                          let val = this.highlight(this.pretty(m.value),k)
+                                          let uri = this.props.keyword.replace(/bdr:/,"")
+                                          if(m.type.match(/relationType$/)) {
+                                             prop = val ;
+                                             val = uri
+                                          }
+                                          return (<div className="match">
+                                             <span className="label">{prop}:&nbsp;</span>
+                                             <span>{val}</span>
+                                          </div>)
+                                       }
+                                 })
+                              }
+                              </div>
                            ]
 
                            )
@@ -787,9 +815,10 @@ class App extends Component<Props,State> {
                         { //facetList&&facetList.length > 0?facetList.sort((a,b) => { return a.props.label < b.props.label } ):
                               types.map((i) => {
 
-                                 //console.log("counts",i,counts["datatype"][i])
+                                 console.log("counts",i,counts["datatype"][i],this.state.filters.datatype.indexOf(i))
 
-                           let disabled = (!this.props.keyword && ["Any","Person","Work"].indexOf(i)===-1) || (this.props.language == "")
+                           let disabled = (!this.props.keyword && ["Any","Person","Work"].indexOf(i)===-1 && this.props.language  != "")
+                           // || (this.props.language == "")
 
                               return (
                                  <div key={i} style={{textAlign:"left"}}>
@@ -797,7 +826,7 @@ class App extends Component<Props,State> {
                                        control={
                                           <Checkbox
                                              className={"checkbox "+(disabled?"disabled":"")}
-                                             disabled={disabled}
+                                             //disabled={disabled}
                                              //{...i=="Any"?{defaultChecked:true}:{}}
                                              checked={this.state.filters.datatype.indexOf(i) !== -1}
                                              icon={<span className='checkB'/>}

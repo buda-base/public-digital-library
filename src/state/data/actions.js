@@ -95,6 +95,7 @@ export const searchingKeyword = createAction(TYPES.searchingKeyword);
 export type SearchAction = {
     type: TYPES.SearchAction,
     payload: {
+        sourcetype?:string,
         property?:string,
         datatype?:string[],
         keyword: string,
@@ -104,13 +105,14 @@ export type SearchAction = {
 };
 
 TYPES.startSearch = 'START_SEARCH';
-export const startSearch = (keyword: string, language: string,datatype?:string[]): SearchAction => {
+export const startSearch = (keyword: string, language: string,datatype?:string[],sourcetype?:string): SearchAction => {
     return {
         type: TYPES.startSearch,
         payload: {
             keyword,
             language,
-            datatype
+            datatype,
+            sourcetype
         }
     }
 }

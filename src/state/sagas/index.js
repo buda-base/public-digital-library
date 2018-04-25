@@ -42,11 +42,14 @@ async function initiateApp(params,iri) {
       else if(!iri && params && params.r) {
          let t = getEntiType(params.r)
 
-         console.log("t",t)
+         // console.log("t",t)
+
+         let s = ["Any"]
+         if(params.t && params.t != "Any") { s = [ params.t ] }
 
          if(t && ["Person","Place","Topic"].indexOf(t) !== -1)
          {
-            store.dispatch(dataActions.startSearch(params.r,"",[t])); //,params.t.split(",")));
+            store.dispatch(dataActions.startSearch(params.r,"",s,t)); //,params.t.split(",")));
          }
       }
 
@@ -124,7 +127,7 @@ function getData(result)  {
       delete data.metadata
    }
    else if(Object.keys(result) == 0) { numR = 0 }
-   else 
+   else
    {
       numR = 777; //Object.values(result)[0].length
    }
@@ -133,9 +136,9 @@ function getData(result)  {
    return data
 }
 
- async function startSearch(keyword,language,datatype) {
+ async function startSearch(keyword,language,datatype,sourcetype) {
 
-   console.log("sSsearch",keyword,language,datatype);
+   console.log("sSsearch",keyword,language,datatype,sourcetype);
 
    // why is this action dispatched twice ???
    store.dispatch(uiActions.loading(keyword, true));
@@ -145,10 +148,10 @@ function getData(result)  {
    try {
       let result ;
 
-      if(language != "")
+      if(!sourcetype)
          result = await api.getStartResults(keyword,language,datatype);
       else
-         result = await api.getAssocResults(keyword,datatype);
+         result = await api.getAssocResults(keyword,sourcetype);
 
       store.dispatch(uiActions.loading(keyword, false));
 
@@ -161,7 +164,7 @@ function getData(result)  {
 */
 
 
-      if(language == "")
+      if(sourcetype)
       {
          metadata = {}
          let data = {}
@@ -174,7 +177,7 @@ function getData(result)  {
          }
          // console.log("data",data,result)
          data = getData(data);
-         store.dispatch(dataActions.foundResults(keyword, language, data));
+         store.dispatch(dataActions.foundResults(keyword, language, data, datatype));
          store.dispatch(dataActions.foundDatatypes(keyword,{ metadata, hash:true}));
       }
       else {
@@ -309,7 +312,7 @@ export function* watchStartSearch() {
 
    yield takeLatest(
       dataActions.TYPES.startSearch,
-      (action) => startSearch(action.payload.keyword,action.payload.language,action.payload.datatype)
+      (action) => startSearch(action.payload.keyword,action.payload.language,action.payload.datatype,action.payload.sourcetype)
    );
 }
 

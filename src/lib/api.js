@@ -303,11 +303,11 @@ export default class API {
         }
     }
 
-      async _getAssocResultsData(key: string,typ:string[]): Promise<{} | null> {
+      async _getAssocResultsData(key: string,typ:string): Promise<{} | null> {
          try {
               let config = store.getState().data.config.ldspdi
               let url = config.endpoints[config.index]+"/lib" ;
-              let param = {"searchType":typ[0].toLowerCase()+"AllAssociations","R_RES":key,"L_NAME":"","LG_NAME":"" }
+              let param = {"searchType":typ.toLowerCase()+"AllAssociations","R_RES":key,"L_NAME":"","LG_NAME":"" }
               let data = this.getQueryResults(url, key, param,"GET");
               // let data = this.getSearchContents(url, key);
 
