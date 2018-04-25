@@ -4,7 +4,7 @@ import * as dataActions from '../data/actions';
 import * as uiActions from '../ui/actions';
 import selectors from '../selectors';
 import store from '../../index';
-import bdrcApi from '../../lib/api';
+import bdrcApi, { getEntiType } from '../../lib/api';
 
 const api = new bdrcApi();
 
@@ -40,8 +40,11 @@ async function initiateApp(params,iri) {
          }
       }
       else if(!iri && params && params.r) {
-         let t = api.getEntiType(params.r)
-         if(params.e && ["Person","Place","Topic"].indexOf(params.e) !== -1)
+         let t = getEntiType(params.r)
+
+         console.log("t",t)
+
+         if(t && ["Person","Place","Topic"].indexOf(t) !== -1)
          {
             store.dispatch(dataActions.startSearch(params.r,"",[t])); //,params.t.split(",")));
          }
@@ -108,6 +111,8 @@ function getData(result)  {
       delete data.data
    }
 
+   // console.log("getData#result",result)
+
    if(metadata)
    {
       let kZ = Object.keys(metadata)
@@ -118,7 +123,9 @@ function getData(result)  {
             numR = 0
       delete data.metadata
    }
-   else {
+   else if(Object.keys(result) == 0) { numR = 0 }
+   else 
+   {
       numR = 777; //Object.values(result)[0].length
    }
    data = {  numResults:numR, results : { bindings: {...data } } }
@@ -165,8 +172,9 @@ function getData(result)  {
                metadata = { ...metadata, [t]:Object.keys(result[k]).length }
             }
          }
+         // console.log("data",data,result)
          data = getData(data);
-         store.dispatch(dataActions.foundResults(keyword, language, data, datatype));
+         store.dispatch(dataActions.foundResults(keyword, language, data));
          store.dispatch(dataActions.foundDatatypes(keyword,{ metadata, hash:true}));
       }
       else {

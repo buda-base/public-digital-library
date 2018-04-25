@@ -19,7 +19,10 @@ const dPrefix = {
    "W" : "Work"
 }
 
-export function getEntiType(t:string):string { return dPrefix[t.replace(/^([CEILGPRTW]+).*$/,"$1")]; }
+export function getEntiType(t:string):string {
+   let v = t.replace(/^(bdr:)?([CEILGPRTW]+).*$/,"$2")
+   // console.log("v",v,dPrefix[v])
+   return dPrefix[v]; }
 
 
 export interface APIResponse {

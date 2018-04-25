@@ -300,7 +300,7 @@ class ResourceViewer extends Component<Props,State>
                </Link>
                {
                   this.props.IRI[0].match(/[PGT]/) &&
-                  <Link className="goBack" to={"/search?r=bdr:"+this.props.IRI+"&e="+getEntiType(this.props.IRI)}>
+                  <Link className="goBack" to={"/search?r=bdr:"+this.props.IRI}>
                      <Button style={{paddingLeft:"50px"}}>Browse associated resources &gt;</Button>
                   </Link>
                }

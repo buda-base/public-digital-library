@@ -44,6 +44,7 @@ const translationsObject = {
          bo:"Tibetan",
          lg:"Language",
          search:{
+            zh:"Chinese",
             zhHant:"Chinese (Hanzi)",
             zhLatnPinyin:"Chinese (Pinyin)",
             en:"English",
@@ -97,6 +98,7 @@ const translationsObject = {
          bo:"Tibétain",
          lg:"Langue",
          search:{
+            zh:"Chinois",
             zhHant:"Chinois (Hanzi)",
             zhLatnPinyin:"Chinois (Pinyin)",
             en:"Anglais",

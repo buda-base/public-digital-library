@@ -23,6 +23,7 @@ import qs from 'query-string'
 
 import {I18n, Translate, Localize } from "react-redux-i18n" ;
 
+import {getEntiType} from '../lib/api';
 import './App.css';
 
 const adm  = "http://purl.bdrc.io/ontology/admin/" ;
@@ -35,6 +36,7 @@ const skos = "http://www.w3.org/2004/02/skos/core#";
 const prefixes = [adm, bdo,bdr,rdf,rdfs,skos]
 
 const languages = {
+   "zh":"lang.search.zh",
    "zh-hant":"lang.search.zhHant",
    "zh-latn-pinyin":"lang.search.zhLatnPinyin",
    "en":"lang.search.en",
@@ -127,14 +129,22 @@ class App extends Component<Props,State> {
    requestSearch(key:string,label?:string)
    {
       if(!key || key == "") return ;
-      if(key.indexOf("\"") === -1) key = "\""+key+"\""
+      if(!key.match(/^bdr:/) && key.indexOf("\"") === -1) key = "\""+key+"\""
 
       let state = { ...this.state, dataSource:[] }
             //this.setState(state);
 
       console.log("search",this.state,this.props)
+      if(key.match(/^bdr:[TPG]/))
+      {
+         this.props.history.push({pathname:"/search",search:"?r="+key})
 
-      if(label === "Any" || ( !label && ( this.state.filters.datatype.length === 0 || this.state.filters.datatype.indexOf("Any") !== -1 ) ) )
+         if(!this.props.searches[key+"@"+this.state.language]) {
+
+            this.props.onStartSearch(key,"",[getEntiType(key)])
+         }
+      }
+      else if(label === "Any" || ( !label && ( this.state.filters.datatype.length === 0 || this.state.filters.datatype.indexOf("Any") !== -1 ) ) )
       {
          this.props.history.push({pathname:"/search",search:"?q="+key+"&lg="+this.state.language+"&t=Any"})
 
@@ -569,7 +579,9 @@ class App extends Component<Props,State> {
                   {
 
                      let label = sublist[o].filter((e) => (e.type && e.type.match(/prefLabelMatch$/)))[0]
+                     if(!label) label = sublist[o].filter((e) => (e.type && e.type.match(/prefLabel$/) && e["xml:lang"] == this.props.prefLang))[0]
                      if(!label) label = sublist[o].filter((e) => (e.type && e.type.match(/prefLabel$/) && e["xml:lang"] == "bo-x-ewts"))[0]
+                     if(!label) label = sublist[o].filter((e) => (e.type && e.type.match(/prefLabel$/)))[0]
 
                      let r = {
                         //f  : { type: "uri", value:list[o].type },
@@ -1066,8 +1078,8 @@ class App extends Component<Props,State> {
                                  control={
                                     <Checkbox
                                        checked={i === this.props.prefLang}
-                                       disbaled={true}
-                                       className="checkbox disabled"
+                                       disabled={false}
+                                       className="checkbox"
                                        icon={<span className='checkB'/>}
                                        checkedIcon={<span className='checkedB'><CheckCircle style={{color:"#444",margin:"-3px 0 0 -3px",width:"26px",height:"26px"}}/></span>}
                                        onChange={(event, checked) => this.handleCheckUI(event,"prefLang",i,checked)}
