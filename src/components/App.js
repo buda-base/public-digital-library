@@ -23,6 +23,7 @@ import qs from 'query-string'
 
 import {I18n, Translate, Localize } from "react-redux-i18n" ;
 
+import ResourceViewerContainer from '../containers/ResourceViewerContainer';
 import {getEntiType} from '../lib/api';
 import './App.css';
 
@@ -93,9 +94,6 @@ type State = {
    unchecked?:string,
    keyword:string,
    dataSource : string[],
-   UI:{
-      language:string
-   },
    filters:{
       datatype:string[],
       facets?:{[string]:string[]}
@@ -730,7 +728,7 @@ class App extends Component<Props,State> {
             style={{display:"flex",justifyContent:"space-between",padding:"0 20px",borderBottom:"1px solid #bbb",cursor:"pointer"}}
             onClick={(e) => { this.setState({collapse:{ ...this.state.collapse, [txt]:!this.state.collapse[txt]} }); } }
             >
-            <Typography style={{fontSize:"18px",lineHeight:"50px"}}>{title}</Typography>
+            <Typography style={{fontSize:"18px",lineHeight:"50px",textTransform:"capitalize"}}>{title}</Typography>
             { this.state.collapse[txt] ? <ExpandLess /> : <ExpandMore />}
          </ListItem>,
          <Collapse

@@ -76,7 +76,7 @@ const makeMainRoutes = () => {
                      {
                         store.dispatch(initiateApp(qs.parse(history.location.search),props.match.params.IRI));
                      }
-                     return ( <ResourceViewerContainer theprops={props} history={history} IRI={props.match.params.IRI}/> ) } }/>
+                     return ( <ResourceViewerContainer history={history} IRI={props.match.params.IRI}/> ) } }/>
                   <Route render={(props) =>
                      <Redirect404  history={history}/>}/>
                </Switch>

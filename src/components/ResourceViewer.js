@@ -30,7 +30,21 @@ const rdf  = "http://www.w3.org/1999/02/22-rdf-syntax-ns#";
 const rdfs = "http://www.w3.org/2000/01/rdf-schema#";
 const skos = "http://www.w3.org/2004/02/skos/core#";
 
-const prefixes = [adm, bdo,bdr,rdf,rdfs,skos]
+const prefixes = {adm, bdo,bdr,rdf,rdfs,skos}
+
+let propOrder = {
+   "Corporation":[],
+   "Etext":[],
+   "Item":[],
+   "Lineage":[],
+   "Person" : [ "bdo:personName", "bdo:personGender","bdo:personEvent", "bdo:kinWith" , "bdo:personTeacherOf","bdo:personStudentOf",
+      "bdo:note" ],
+   "Place":[],
+   "Role":[],
+   "Topic":[],
+   "Work":[],
+   "Taxonomy":[]
+}
 
 class ResourceViewer extends Component<Props,State>
 {
@@ -41,6 +55,11 @@ class ResourceViewer extends Component<Props,State>
       this.state = { uviewer : false }
 
       console.log("props",props)
+
+      let tmp = {}
+      for(let k of Object.keys(propOrder)){ tmp[k] = propOrder[k].map((e) => this.expand(e)) }
+      console.log("tmp",tmp)
+      propOrder = tmp
    }
 
    componentWillMount()
@@ -73,9 +92,18 @@ class ResourceViewer extends Component<Props,State>
       }
    }
 
-   pretty(str:string)
+   expand(str:string) //,stripuri:boolean=true)
    {
-      for(let p of prefixes) { str = str.replace(new RegExp(p,"g"),"") }
+      for(let k of Object.keys(prefixes)) { str = str.replace(new RegExp(k+":"),prefixes[k]); }
+
+      return str ;
+   }
+
+   pretty(str:string) //,stripuri:boolean=true)
+   {
+      for(let p of Object.values(prefixes)) { str = str.replace(new RegExp(p,"g"),"") }
+
+      //if(stripuri) {
 
       str = str.replace(/([a-z])([A-Z])/g,"$1 $2")
 
@@ -83,15 +111,33 @@ class ResourceViewer extends Component<Props,State>
       str = [].concat.apply([],str);
       str.pop();
 
+      //}
+
       return str ;
    }
 
-   properties()
+   properties(sorted : boolean = false)
    {
       if(!this.props.IRI || !this.props.resources || !this.props.resources[this.props.IRI]
          || !this.props.resources[this.props.IRI][bdr+this.props.IRI]) return {}
 
-      return this.props.resources[this.props.IRI][bdr+this.props.IRI] ;
+      let prop = this.props.resources[this.props.IRI][bdr+this.props.IRI] ;
+      if(sorted) {
+         let sortProp = Object.keys(prop).sort((a,b)=> {
+            let t = getEntiType(this.props.IRI);
+            let ia = propOrder[t].indexOf(a)
+            let ib = propOrder[t].indexOf(b)
+            console.log(t,a,ia,b,ib)
+            if ((ia != -1 && ib != -1 && ia < ib) || (ia != -1 && ib == -1)) return -1
+            else return 1 ;
+         }).reduce((acc,e) => ({ ...acc, [e]:prop[e] }),{})
+
+         console.log("propSort",prop,sortProp)
+
+         return sortProp
+
+      }
+      return prop ;
    }
 
 
@@ -122,16 +168,16 @@ class ResourceViewer extends Component<Props,State>
       if(elem) {
 
          // test if ancestor/type of property has range subclassof entity
-
+/*
          let q =[]
          q.push(prop)
 
 
-         // console.log("uriformat",prop,elem.value)
+         console.log("uriformat",prop,elem.value)
 
          while(q.length > 0)
          {
-            // console.log("q",q)
+            console.log("q",q)
 
             let t = this.props.ontology[q.shift()]
 
@@ -143,6 +189,7 @@ class ResourceViewer extends Component<Props,State>
 
                if(s && s[rdfs+"subClassOf"] && this.hasValue(s[rdfs+"subClassOf"],bdo+"Entity"))
                {
+               */
                   let info ;
                   if(this.props.assocResources) {
                      let infoBase = this.props.assocResources[elem.value]
@@ -161,14 +208,17 @@ class ResourceViewer extends Component<Props,State>
                      }
                   }
 
-                  console.log("s",prop,s,info)
+                  console.log("s",prop,info)
 
                   // we can return Link
                   let pretty = this.pretty(elem.value);
                   let ret = []
                   if(info) ret.push(<Link className="urilink prefLabel" to={"/show/bdr:"+pretty}>{info}</Link>)
-                  else ret.push(<Link className="urilink" to={"/show/bdr:"+pretty}>{pretty}</Link>)
+                  else if(pretty.toString().match(/([A-Z]+[_0-9+])+/)) ret.push(<Link className="urilink" to={"/show/bdr:"+pretty}>{pretty}</Link>)
+                  else ret.push(pretty)
                   return ret
+
+                  /*
                }
 
             }
@@ -182,6 +232,7 @@ class ResourceViewer extends Component<Props,State>
          }
 
          return this.fullname(elem.value);
+         */
       }
    }
 
@@ -308,16 +359,11 @@ class ResourceViewer extends Component<Props,State>
                {this.format("h2",skos+"prefLabel")}
                { /*<MapComponent tmp={this.props}/ */}
                <div className="data">
-                  <div>
-                     <h3><span>Resource File</span>:&nbsp;</h3>
-                     <h4><a href={"http://purl.bdrc.io/resource/"+this.props.IRI+".json"}>{this.props.IRI}.json</a></h4>
-                     <h4><a href={"http://purl.bdrc.io/resource/"+this.props.IRI+".ttl"}>{this.props.IRI}.ttl</a></h4>
-                  </div>
-                  { Object.keys(this.properties()).map((k) => {
+                  { Object.keys(this.properties(true)).map((k) => {
 
                      let elem = this.getResourceElem(k);
 
-                     // if(!k.match(new RegExp(adm+"|prefLabel|"+rdf+"|toberemoved"))) {
+                     //if(!k.match(new RegExp(adm+"|prefLabel|"+rdf+"|toberemoved"))) {
                      if(!k.match(new RegExp("Revision|Entry|prefLabel|"+rdf+"|toberemoved"))) {
                         let tags = this.format("h4",k)
                         //console.log("tags",tags);
@@ -330,6 +376,11 @@ class ResourceViewer extends Component<Props,State>
                         }
                      }
                   ) }
+                  <div>
+                     <h3><span>Resource File</span>:&nbsp;</h3>
+                     <h4><a href={"http://purl.bdrc.io/resource/"+this.props.IRI+".json"}>{this.props.IRI}.json</a></h4>
+                     <h4><a href={"http://purl.bdrc.io/resource/"+this.props.IRI+".ttl"}>{this.props.IRI}.ttl</a></h4>
+                  </div>
                </div>
             </div>
             {/* <iframe style={{width:"calc(100% - 100px)",margin:"50px",height:"calc(100vh - 160px)",border:"none"}} src={"http://purl.bdrc.io/resource/"+get.IRI}/> */}

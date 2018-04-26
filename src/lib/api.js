@@ -16,11 +16,12 @@ const dPrefix = {
    "R" : "Role",
    "PR": "Product",
    "T" : "Topic",
-   "W" : "Work"
+   "W" : "Work",
+   "O" : "Taxonomy"
 }
 
 export function getEntiType(t:string):string {
-   let v = t.replace(/^(bdr:)?([CEILGPRTW]+).*$/,"$2")
+   let v = t.replace(/^(bdr:)?([CEILGPRTWO]+).*$/,"$2")
    // console.log("v",v,dPrefix[v])
    return dPrefix[v]; }
 
