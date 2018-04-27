@@ -36,14 +36,55 @@ let propOrder = {
    "Corporation":[],
    "Etext":[],
    "Item":[],
-   "Lineage":[],
-   "Person" : [ "bdo:personName", "bdo:personGender","bdo:personEvent", "bdo:kinWith" , "bdo:personTeacherOf","bdo:personStudentOf",
-      "bdo:note" ],
-   "Place":[],
+   "Lineage":[
+      "skos:altLabel",
+      "bdo:lineageObject",
+      "bdo:lineageType",
+      "bdo:workLocation",
+   ],
+   "Person" : [
+      "bdo:personName",
+      "bdo:personGender",
+      "bdo:personEvent",
+      "bdo:incarnationGeneral",
+      "bdo:isIncarnation",
+      "bdo:personTeacherOf",
+      "bdo:personStudentOf",
+      "bdo:kinWith",
+      "bdo:note",
+      "rdfs:seeAlso",
+    ],
+   "Place":[
+      "skos:altLabel",
+      "bdo:placeLocatedIn",
+      "bdo:placeContains",
+      "bdo:placeIsNear",
+      "bdo:placeType",
+      "bdo:placeEvent",
+      "bdo:placeLong",
+      "bdo:placeLat",
+   ],
    "Role":[],
    "Topic":[],
-   "Work":[],
-   "Taxonomy":[]
+   "Work":[
+      "bdo:workTitle",
+      "bdo:workIsAbout",
+      "bdo:workGenre",
+      "bdo:creatorMainAuthor",
+      "bdo:workCreator",
+      "bdo:workLangScript",
+      "bdo:workObjectType",
+      "bdo:workEvent",
+      "bdo:workHasItem",
+      "bdo:workHasItemImageAsset",
+      "bdo:workLocation",
+      "bdo:workPartOf",
+      "bdo:workHasPart",
+      "bdo:note",
+      "bdo:workHasSourcePrintery",
+   ],
+   "Taxonomy":[],
+   "Volume":[],
 }
 
 class ResourceViewer extends Component<Props,State>
@@ -107,9 +148,12 @@ class ResourceViewer extends Component<Props,State>
 
       str = str.replace(/([a-z])([A-Z])/g,"$1 $2")
 
-      str = str.split("\n").map((i) => ([i,<br/>]))
-      str = [].concat.apply([],str);
-      str.pop();
+      if(str.match(/^https?:\/\/[^ ]+$/)) { str = <a href={str} target="_blank">{str}</a> }
+      else {
+         str = str.split("\n").map((i) => ([i,<br/>]))
+         str = [].concat.apply([],str);
+         str.pop();
+      }
 
       //}
 
@@ -146,6 +190,9 @@ class ResourceViewer extends Component<Props,State>
    {
       if(this.props.ontology[prop] && this.props.ontology[prop][rdfs+"label"] && this.props.ontology[prop][rdfs+"label"][0]
       && this.props.ontology[prop][rdfs+"label"][0].value) {
+         //let comment = this.props.ontology[prop][rdfs+"comment"]
+         //if(comment) comment = comment[0].value
+         //return <a className="nolink" title={comment}>{this.props.ontology[prop][rdfs+"label"][0].value}</a>
          return this.props.ontology[prop][rdfs+"label"][0].value
       }
 
@@ -363,8 +410,8 @@ class ResourceViewer extends Component<Props,State>
 
                      let elem = this.getResourceElem(k);
 
-                     //if(!k.match(new RegExp(adm+"|prefLabel|"+rdf+"|toberemoved"))) {
-                     if(!k.match(new RegExp("Revision|Entry|prefLabel|"+rdf+"|toberemoved"))) {
+                     if(!k.match(new RegExp(adm+"|prefLabel|"+rdf+"|toberemoved"))) {
+                     //if(!k.match(new RegExp("Revision|Entry|prefLabel|"+rdf+"|toberemoved"))) {
                         let tags = this.format("h4",k)
                         //console.log("tags",tags);
                         return (
@@ -380,6 +427,10 @@ class ResourceViewer extends Component<Props,State>
                      <h3><span>Resource File</span>:&nbsp;</h3>
                      <h4><a href={"http://purl.bdrc.io/resource/"+this.props.IRI+".json"}>{this.props.IRI}.json</a></h4>
                      <h4><a href={"http://purl.bdrc.io/resource/"+this.props.IRI+".ttl"}>{this.props.IRI}.ttl</a></h4>
+                  </div>
+                     <h3><span>Associated Resources</span>:&nbsp;</h3>
+                  <div>
+
                   </div>
                </div>
             </div>

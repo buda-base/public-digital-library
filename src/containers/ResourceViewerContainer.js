@@ -10,7 +10,6 @@ import ResourceViewer from '../components/ResourceViewer';
 
 const mapStateToProps = (state,ownProps) => {
 
-   console.log("state",state)
 
    let resources = state.data.resources
    let ontology = state.data.ontology ;
@@ -19,9 +18,16 @@ const mapStateToProps = (state,ownProps) => {
    let datatype = state.ui.datatype
    let assocResources = state.data.assocResources
    if(assocResources) assocResources = assocResources[ownProps.IRI]
+
+   let searches = state.data.searches
+   if(searches && resources && searches["bdr:"+ownProps.IRI+"@"])
+      resources[ownProps.IRI+"@"] = searches["bdr:"+ownProps.IRI+"@"].results.bindings
+
    let prefLang = state.ui.prefLang
 
-   let props = { resources, ontology, keyword, language, datatype, assocResources, prefLang }
+   let props = { resources, ontology, keyword, language, datatype, assocResources, prefLang,  }
+
+   console.log("mS2p",state,props)
 
    return props
 

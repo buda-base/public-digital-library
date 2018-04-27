@@ -433,7 +433,7 @@ class App extends Component<Props,State> {
      highlight(val,k):string
      {
          if(!val.match(/↤/))
-            val = val.replace(/@.*/,"").split(new RegExp(k.replace(/ /g,"[ -]"))).map((l) => ([<span>{l}</span>,<span className="highlight">{k}</span>])) ;
+            val = /*val.replace(/@.* /,"")*/ val.split(new RegExp(k.replace(/ /g,"[ -]"))).map((l) => ([<span>{l}</span>,<span className="highlight">{k}</span>])) ;
          else
             val = val.split(/↦[^↤]+↤/).map((l) => ([<span>{l}</span>,<span className="highlight">{k}</span>])) ;
 

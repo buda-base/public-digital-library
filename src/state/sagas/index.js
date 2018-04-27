@@ -27,6 +27,11 @@ async function initiateApp(params,iri) {
 
          let assocRes = await api.loadAssocResources(iri)
          store.dispatch(dataActions.gotAssocResources(iri,assocRes));
+
+         let t = getEntiType(iri)
+         if(t && ["Person","Place","Topic"].indexOf(t) !== -1) {
+            store.dispatch(dataActions.startSearch("bdr:"+iri,"",["Any"],t)); //,params.t.split(",")));
+         }
       }
       else if(!iri && params && params.q) {
          if(params.t && ["Person","Work"].indexOf(params.t) !== -1)
@@ -45,10 +50,9 @@ async function initiateApp(params,iri) {
          // console.log("t",t)
 
          let s = ["Any"]
-         if(params.t && params.t != "Any") { s = [ params.t ] }
+         //if(params.t && params.t != "Any") { s = [ params.t ] }
 
-         if(t && ["Person","Place","Topic"].indexOf(t) !== -1)
-         {
+         if(t && ["Person","Place","Topic"].indexOf(t) !== -1) {
             store.dispatch(dataActions.startSearch(params.r,"",s,t)); //,params.t.split(",")));
          }
       }
