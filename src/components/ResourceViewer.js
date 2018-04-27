@@ -142,6 +142,7 @@ class ResourceViewer extends Component<Props,State>
 
    pretty(str:string) //,stripuri:boolean=true)
    {
+
       for(let p of Object.values(prefixes)) { str = str.replace(new RegExp(p,"g"),"") }
 
       //if(stripuri) {
@@ -188,6 +189,8 @@ class ResourceViewer extends Component<Props,State>
 
    fullname(prop:string)
    {
+      for(let p of Object.keys(prefixes)) { prop = prop.replace(new RegExp(p+":","g"),prefixes[p]) }
+
       if(this.props.ontology[prop] && this.props.ontology[prop][rdfs+"label"] && this.props.ontology[prop][rdfs+"label"][0]
       && this.props.ontology[prop][rdfs+"label"][0].value) {
          //let comment = this.props.ontology[prop][rdfs+"comment"]
@@ -210,7 +213,7 @@ class ResourceViewer extends Component<Props,State>
        return false;
    }
 
-   uriformat(prop:string,elem:{})
+   uriformat(prop:string,elem:{},dico:{} = this.props.assocResources)
    {
       if(elem) {
 
@@ -237,9 +240,11 @@ class ResourceViewer extends Component<Props,State>
                if(s && s[rdfs+"subClassOf"] && this.hasValue(s[rdfs+"subClassOf"],bdo+"Entity"))
                {
                */
+               console.log("dico",prop,elem,dico)
+
                   let info ;
-                  if(this.props.assocResources) {
-                     let infoBase = this.props.assocResources[elem.value]
+                  if(dico) {
+                     let infoBase = dico[elem.value]
                      if(infoBase) {
                         info = infoBase.filter((e)=>(e.type==prop && e["xml:lang"]==this.props.prefLang))
                         if(info[0]) info = info[0].value
@@ -386,12 +391,14 @@ class ResourceViewer extends Component<Props,State>
       //<Link to="/gallery?manifest=https://eroux.fr/manifest.json" style={{textDecoration:"none"}}><Button>Preview IIIF Gallery</Button></Link>
       //<div style={{height:"50px",fontSize:"26px",display:"flex",justifyContent:"center",alignItems:"center"}}>resource {get.IRI}</div>
 
+      let kZasso ;
+      if (this.props.assocResources) kZasso = Object.keys(this.props.assocResources) ;
 
       // add nother route to UViewer Gallery page
       return (
          <div style={{overflow:"hidden",textAlign:"center"}}>
             { !this.state.ready && <Loader loaded={false} /> }
-            <div className="resource">
+            <div className={"resource "+getEntiType(this.props.IRI).toLowerCase()}>
 
                <Link className="goBack" to={this.props.keyword&&!this.props.keyword.match(/^bdr:/)?"/search?q="+this.props.keyword+"&lg="+this.props.language+(this.props.datatype?"&t="+this.props.datatype:""):"/"}>
                   <Button style={{paddingLeft:"0"}}>&lt; Go back to search page</Button>
@@ -428,10 +435,52 @@ class ResourceViewer extends Component<Props,State>
                      <h4><a href={"http://purl.bdrc.io/resource/"+this.props.IRI+".json"}>{this.props.IRI}.json</a></h4>
                      <h4><a href={"http://purl.bdrc.io/resource/"+this.props.IRI+".ttl"}>{this.props.IRI}.ttl</a></h4>
                   </div>
-                     <h3><span>Associated Resources</span>:&nbsp;</h3>
-                  <div>
-
-                  </div>
+                  { ["Person","Place","Topic"].indexOf(getEntiType(this.props.IRI)) !== -1 &&
+                     <div>
+                        <h3><span>Associated Resources</span>:&nbsp;</h3>
+                        {
+                           this.props.resources && this.props.resources[this.props.IRI+"@"] &&
+                              Object.keys(this.props.resources[this.props.IRI+"@"]).map((e) =>
+                                 <div className="sub" id={e.replace(/s$/,"")}>
+                                    <h4 className="first type">{e}:</h4>
+                                    <h4 className="prop last">(<a href={"/search?r=bdr:"+this.props.IRI+"&t="+e.replace(/s$/,"")}>browse all</a>)</h4>
+                                    {
+                                       Object.keys(this.props.resources[this.props.IRI+"@"][e]).reduce((acc,k) => {
+                                          //acc = acc.concat(Object.keys(this.props.resources[this.props.IRI+"@"][e][v])) ;
+                                          this.props.resources[this.props.IRI+"@"][e][k].map((v) => {
+                                             let t = getEntiType(this.props.IRI)
+                                             console.log("k",k,v,t)
+                                             if(e == "lineages" && t == "Topic") {
+                                                if(acc.indexOf("bdo:lineageObject") == -1) acc.push("bdo:lineageObject") ;
+                                             }
+                                             else if(e == "works" && t == "Topic") {
+                                                if(acc.indexOf("bdo:workGenre") == -1) acc.push("bdo:workGenre") ;
+                                             }
+                                             else if(v.value == bdr+this.props.IRI && kZasso.indexOf(k) == -1)
+                                             {
+                                                //console.log("foundem")
+                                                if(acc.indexOf(v.type) == -1) acc.push(v.type) ;
+                                             }
+                                          } )
+                                          return acc ;
+                                       },[]).map((k) =>
+                                          <div className="subsub">
+                                             <h4 className="first prop">{this.fullname(k)}:</h4>
+                                             <div class="subsubsub">
+                                             {
+                                                Object.keys(this.props.resources[this.props.IRI+"@"][e]).map((v,i) => {
+                                                   if(i < 10) return <h4>{this.uriformat(skos+"prefLabel",{value:v},this.props.resources[this.props.IRI+"@"][e])}</h4>
+                                                   else if(i == 10) return [<h4>{this.uriformat(skos+"prefLabel",{value:v},this.props.resources[this.props.IRI+"@"][e])}</h4>,"..."]
+                                             } ) }
+                                          </div>
+                                          </div>
+                                       )
+                                    }
+                                 </div>
+                              )
+                        }
+                     </div>
+                  }
                </div>
             </div>
             {/* <iframe style={{width:"calc(100% - 100px)",margin:"50px",height:"calc(100vh - 160px)",border:"none"}} src={"http://purl.bdrc.io/resource/"+get.IRI}/> */}
