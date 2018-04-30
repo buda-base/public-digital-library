@@ -46,8 +46,10 @@ let propOrder = {
       "bdo:personName",
       "bdo:personGender",
       "bdo:personEvent",
-      "bdo:incarnationGeneral",
+      // "bdo:incarnationActivities",
       "bdo:isIncarnation",
+      "bdo:hasIncarnation",
+      // "bdo:incarnationGeneral",
       "bdo:personTeacherOf",
       "bdo:personStudentOf",
       "bdo:kinWith",
@@ -68,15 +70,18 @@ let propOrder = {
    "Topic":[],
    "Work":[
       "bdo:workTitle",
+      "bdo:workExpressionOf",
+      "bdo:workHasExpression",
       "bdo:workIsAbout",
       "bdo:workGenre",
-      "bdo:creatorMainAuthor",
+      // "bdo:creatorMainAuthor",
+      // "bdo:creatorContributingAuthor",
       "bdo:workCreator",
       "bdo:workLangScript",
       "bdo:workObjectType",
       "bdo:workEvent",
       "bdo:workHasItem",
-      "bdo:workHasItemImageAsset",
+      // "bdo:workHasItemImageAsset",
       "bdo:workLocation",
       "bdo:workPartOf",
       "bdo:workHasPart",
@@ -172,7 +177,7 @@ class ResourceViewer extends Component<Props,State>
             let t = getEntiType(this.props.IRI);
             let ia = propOrder[t].indexOf(a)
             let ib = propOrder[t].indexOf(b)
-            console.log(t,a,ia,b,ib)
+            //console.log(t,a,ia,b,ib)
             if ((ia != -1 && ib != -1 && ia < ib) || (ia != -1 && ib == -1)) return -1
             else return 1 ;
          }).reduce((acc,e) => ({ ...acc, [e]:prop[e] }),{})
@@ -213,7 +218,46 @@ class ResourceViewer extends Component<Props,State>
        return false;
    }
 
-   uriformat(prop:string,elem:{},dico:{} = this.props.assocResources)
+
+   showAssocResources(e:string,k:string)
+   {
+     let enti = getEntiType(this.props.IRI)
+
+     if(this.props.ontology[k] && this.props.ontology[k][bdo+"inferSubTree"]) return
+
+      // console.log("e k",e,k);
+      let vals = [], n=0;
+      for(let v of Object.keys(this.props.resources[this.props.IRI+"@"][e]))
+      {
+        // console.log("v",v);
+
+         let infoBase = this.props.resources[this.props.IRI+"@"][e][v]
+         let info = infoBase.filter((e)=>(enti == "Topic" || e.type == k)) // || e.value == bdr+this.props.IRI))
+
+         if(info.length > 0) {
+
+           info = infoBase.filter((e)=>(e.type == skos+"prefLabel" && e["xml:lang"]==this.props.prefLang))
+           // console.log("infoB",info)
+           if(info[0] && n <= 10) vals.push(<h4><Link className="urilink prefLabel" to={"/show/bdr:"+this.pretty(v)}>{info[0].value}</Link></h4>)
+           else if(n == 11) vals.push("...")
+           n ++
+         }
+      }
+
+      //).map((v,i) => {
+      //  if(i < 10) return <h4>{this.uriformat(k /*skos+"prefLabel"*/,{value:v},this.props.resources[this.props.IRI+"@"][e],k)}</h4>
+      //  else if(i == 10) return [<h4>{this.uriformat(k /*skos+"prefLabel"*/,{value:v},this.props.resources[this.props.IRI+"@"][e],k)}</h4>,"..."]
+
+
+     return ([
+       <h4 className="first prop">{this.fullname(k)}:</h4>
+       ,
+       <div class="subsubsub">
+       { vals }
+       </div>])
+   }
+
+   uriformat(prop:string,elem:{},dico:{} = this.props.assocResources, withProp:string)
    {
       if(elem) {
 
@@ -240,16 +284,22 @@ class ResourceViewer extends Component<Props,State>
                if(s && s[rdfs+"subClassOf"] && this.hasValue(s[rdfs+"subClassOf"],bdo+"Entity"))
                {
                */
-               console.log("dico",prop,elem,dico)
+                  // console.log("dico",prop,elem,dico)
 
                   let info ;
                   if(dico) {
                      let infoBase = dico[elem.value]
+
                      if(infoBase) {
                         info = infoBase.filter((e)=>(e.type==prop && e["xml:lang"]==this.props.prefLang))
+
+                        //console.log("info0",info)
+                        //if(info.value) info = "youpi"+info.value
+
                         if(info[0]) info = info[0].value
-                        else {
+                        else if(!withProp){
                            info = infoBase.filter((e) => e["xml:lang"]==this.props.prefLang)
+
                            if(info[0]) info = info[0].value
                            else {
                               info = infoBase.filter((e) => e["xml:lang"]=="bo-x-ewts")
@@ -260,7 +310,7 @@ class ResourceViewer extends Component<Props,State>
                      }
                   }
 
-                  console.log("s",prop,info)
+                  //console.log("s",prop,info)
 
                   // we can return Link
                   let pretty = this.pretty(elem.value);
@@ -269,6 +319,7 @@ class ResourceViewer extends Component<Props,State>
                   else if(pretty.toString().match(/([A-Z]+[_0-9+])+/)) ret.push(<Link className="urilink" to={"/show/bdr:"+pretty}>{pretty}</Link>)
                   else ret.push(pretty)
                   return ret
+
 
                   /*
                }
@@ -309,9 +360,14 @@ class ResourceViewer extends Component<Props,State>
       return elem
    }
 
-   format(Tag,prop:string,txt:string="")
+   format(Tag,prop:string,txt:string="",bnode:boolean=false)
    {
-      let elem = this.getResourceElem(prop)
+      let elem ;
+      //if(bnode) elem = this.getResourceBNode(prop)
+      //else
+      elem = this.getResourceElem(prop)
+
+      console.log("format",elem,prop,txt,bnode);
 
       let ret = []
 
@@ -356,9 +412,14 @@ class ResourceViewer extends Component<Props,State>
                      for(let v of val)
                      {
                         let txt = v.value;
-                        if(v.type == 'uri') txt = this.uriformat(f,v)
-                        else txt = this.fullname(v.value)
-                        subsub.push(<Tag>{txt}</Tag>)
+                        if(v.type == 'bnode'){
+                           subsub.push(this.format("h5",txt,"",true))
+                        }
+                        else {
+                           if(v.type == 'uri') txt = this.uriformat(f,v)
+                           else txt = this.fullname(v.value)
+                           subsub.push(<Tag>{txt}</Tag>)
+                        }
                      }
                   }
                   sub.push(<div className="subsub">{subsub}</div>)
@@ -449,7 +510,7 @@ class ResourceViewer extends Component<Props,State>
                                           //acc = acc.concat(Object.keys(this.props.resources[this.props.IRI+"@"][e][v])) ;
                                           this.props.resources[this.props.IRI+"@"][e][k].map((v) => {
                                              let t = getEntiType(this.props.IRI)
-                                             console.log("k",k,v,t)
+                                             //console.log("k",k,v,t)
                                              if(e == "lineages" && t == "Topic") {
                                                 if(acc.indexOf("bdo:lineageObject") == -1) acc.push("bdo:lineageObject") ;
                                              }
@@ -465,14 +526,7 @@ class ResourceViewer extends Component<Props,State>
                                           return acc ;
                                        },[]).map((k) =>
                                           <div className="subsub">
-                                             <h4 className="first prop">{this.fullname(k)}:</h4>
-                                             <div class="subsubsub">
-                                             {
-                                                Object.keys(this.props.resources[this.props.IRI+"@"][e]).map((v,i) => {
-                                                   if(i < 10) return <h4>{this.uriformat(skos+"prefLabel",{value:v},this.props.resources[this.props.IRI+"@"][e])}</h4>
-                                                   else if(i == 10) return [<h4>{this.uriformat(skos+"prefLabel",{value:v},this.props.resources[this.props.IRI+"@"][e])}</h4>,"..."]
-                                             } ) }
-                                          </div>
+                                            { this.showAssocResources(e,k) }
                                           </div>
                                        )
                                     }
