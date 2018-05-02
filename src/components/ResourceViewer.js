@@ -26,11 +26,12 @@ type State = {
 const adm  = "http://purl.bdrc.io/ontology/admin/" ;
 const bdo  = "http://purl.bdrc.io/ontology/core/";
 const bdr  = "http://purl.bdrc.io/resource/";
+const owl  = "http://www.w3.org/2002/07/owl#";
 const rdf  = "http://www.w3.org/1999/02/22-rdf-syntax-ns#";
 const rdfs = "http://www.w3.org/2000/01/rdf-schema#";
 const skos = "http://www.w3.org/2004/02/skos/core#";
 
-const prefixes = {adm, bdo,bdr,rdf,rdfs,skos}
+const prefixes = {adm, bdo, bdr, owl, rdf, rdfs, skos}
 
 let propOrder = {
    "Corporation":[],
@@ -257,6 +258,44 @@ class ResourceViewer extends Component<Props,State>
        </div>])
    }
 
+   hasSuper(k:string)
+   {
+      return (this.props.ontology[k] && this.props.ontology[k][rdfs+"subPropertyOf"])
+
+   }
+
+   hasSub(k:string)
+   {
+      return (this.props.ontology[k] && this.props.ontology[k][bdo+"inferSubTree"])
+
+   }
+
+   subProps(k:string,div:string="sub")
+   {
+      let ret = []
+      if(this.props.IRI && this.props.resources[this.props.IRI] && this.props.resources[this.props.IRI][bdr+this.props.IRI]) {
+
+         for(let p of Object.keys(this.props.resources[this.props.IRI][bdr+this.props.IRI])) {
+
+            if(this.props.ontology[p] && this.props.ontology[p][rdfs+"subPropertyOf"]
+               && this.props.ontology[p][rdfs+"subPropertyOf"].filter((e)=>(e.value == k)).length > 0)
+            {
+
+               let tmp = this.subProps(p,div+"sub")
+
+               if(tmp.length == 0) tmp = this.format("h4",p).map((e)=>[e," "]) 
+
+               if(div == "sub")
+                  ret.push(<div className='sub'><h4 className="first type">{this.fullname(p)}:</h4>{tmp}</div>)
+               else //if(div == "subsub")
+                  ret.push(<div className='subsub'><h4 className="first prop">{this.fullname(p)}:</h4>{tmp}</div>)
+
+            }
+         }
+      }
+      return ret
+   }
+
    uriformat(prop:string,elem:{},dico:{} = this.props.assocResources, withProp:string)
    {
       if(elem) {
@@ -480,17 +519,23 @@ class ResourceViewer extends Component<Props,State>
 
                      if(!k.match(new RegExp(adm+"|prefLabel|"+rdf+"|toberemoved"))) {
                      //if(!k.match(new RegExp("Revision|Entry|prefLabel|"+rdf+"|toberemoved"))) {
-                        let tags = this.format("h4",k)
-                        //console.log("tags",tags);
-                        return (
-                           <div>
-                              <h3><span>{this.fullname(k)}</span>:&nbsp;</h3>
-                              {tags.map((e)=> [e," "] )}
-                           </div>
-                           )
+
+                        if(!this.hasSuper(k))
+                        {
+                           let tags = this.format("h4",k)
+                           //console.log("tags",tags);
+                           return (
+                              <div>
+                                 <h3><span>{this.fullname(k)}</span>:&nbsp;</h3>
+                                 {this.hasSub(k)?this.subProps(k):tags.map((e)=> [e," "] )}
+                              </div>
+                              )
                         }
+
+
                      }
-                  ) }
+
+                  } ) }
                   <div>
                      <h3><span>Resource File</span>:&nbsp;</h3>
                      <h4><a href={"http://purl.bdrc.io/resource/"+this.props.IRI+".json"}>{this.props.IRI}.json</a></h4>
