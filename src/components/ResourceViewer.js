@@ -46,6 +46,7 @@ let propOrder = {
    "Person" : [
       "bdo:personName",
       "bdo:personGender",
+      "bdo:kinWith",
       "bdo:personEvent",
       // "bdo:incarnationActivities",
       "bdo:isIncarnation",
@@ -53,7 +54,6 @@ let propOrder = {
       // "bdo:incarnationGeneral",
       "bdo:personTeacherOf",
       "bdo:personStudentOf",
-      "bdo:kinWith",
       "bdo:note",
       "rdfs:seeAlso",
     ],
@@ -183,7 +183,7 @@ class ResourceViewer extends Component<Props,State>
             else return 1 ;
          }).reduce((acc,e) => ({ ...acc, [e]:prop[e] }),{})
 
-         console.log("propSort",prop,sortProp)
+         // console.log("propSort",prop,sortProp)
 
          return sortProp
 
@@ -253,7 +253,7 @@ class ResourceViewer extends Component<Props,State>
      return ([
        <h4 className="first prop">{this.fullname(k)}:</h4>
        ,
-       <div class="subsubsub">
+       <div>
        { vals }
        </div>])
    }
@@ -282,13 +282,17 @@ class ResourceViewer extends Component<Props,State>
             {
 
                let tmp = this.subProps(p,div+"sub")
+               let vals
 
-               if(tmp.length == 0) tmp = this.format("h4",p).map((e)=>[e," "]) 
+               if(tmp.length == 0) vals = this.format("h4",p).map((e)=>[e," "])
+               else vals = tmp
 
                if(div == "sub")
-                  ret.push(<div className='sub'><h4 className="first type">{this.fullname(p)}:</h4>{tmp}</div>)
-               else //if(div == "subsub")
-                  ret.push(<div className='subsub'><h4 className="first prop">{this.fullname(p)}:</h4>{tmp}</div>)
+                  ret.push(<div className='sub'><h4 className="first type">{this.fullname(p)}:</h4>{vals}</div>)
+               else if(div == "subsub")
+                  ret.push(<div className={'subsub'+(tmp.length>0?" full":"")}><h4 className="first prop">{this.fullname(p)}:</h4>{vals}</div>)
+               else if(div == "subsubsub")
+                  ret.push(<div className='subsubsub'><h4 className="first prop">{this.fullname(p)}:</h4>{vals}</div>)
 
             }
          }
@@ -402,16 +406,20 @@ class ResourceViewer extends Component<Props,State>
    format(Tag,prop:string,txt:string="",bnode:boolean=false)
    {
       let elem ;
-      //if(bnode) elem = this.getResourceBNode(prop)
-      //else
-      elem = this.getResourceElem(prop)
+      if(bnode) {
+         elem = this.getResourceBNode(prop)
+         elem = Object.values(elem) //.map((e) => ({[e]:elem[e]}))
+         elem = [].concat.apply([],elem);
+      }
+      else elem = this.getResourceElem(prop)
 
-      console.log("format",elem,prop,txt,bnode);
+      // console.log("format",prop,elem,txt,bnode);
 
       let ret = []
 
       if(elem) for(let e of elem)
       {
+         // console.log("e",e)
          let pretty = this.pretty(e.value)
          if(e.type != "bnode")
          {
@@ -425,15 +433,15 @@ class ResourceViewer extends Component<Props,State>
          }
          else {
             elem = this.getResourceBNode(e.value)
-            console.log("bnode",e.value,elem)
+            // console.log("bnode",e.value,elem)
 
             let sub = []
 
             let val = elem[rdf+"type"]
             let lab = elem[rdfs+"label"]
 
-            console.log("val",val);
-            console.log("lab",lab);
+            // console.log("val",val);
+            // console.log("lab",lab);
 
             if(val && val[0] && val[0].value) { sub.push(<Tag className='first type'>{this.fullname(val[0].value)+": "}</Tag>) }
             if(lab && lab[0] && lab[0].value) for(let l of lab) {
@@ -452,7 +460,7 @@ class ResourceViewer extends Component<Props,State>
                      {
                         let txt = v.value;
                         if(v.type == 'bnode'){
-                           subsub.push(this.format("h5",txt,"",true))
+                           subsub.push(this.format("h4",txt,"",true))
                         }
                         else {
                            if(v.type == 'uri') txt = this.uriformat(f,v)
@@ -538,8 +546,8 @@ class ResourceViewer extends Component<Props,State>
                   } ) }
                   <div>
                      <h3><span>Resource File</span>:&nbsp;</h3>
-                     <h4><a href={"http://purl.bdrc.io/resource/"+this.props.IRI+".json"}>{this.props.IRI}.json</a></h4>
-                     <h4><a href={"http://purl.bdrc.io/resource/"+this.props.IRI+".ttl"}>{this.props.IRI}.ttl</a></h4>
+                     <h4><a target="_blank" href={"http://purl.bdrc.io/resource/"+this.props.IRI+".jsonld"}>{this.props.IRI}.jsonld</a></h4>
+                     <h4><a target="_blank" href={"http://purl.bdrc.io/resource/"+this.props.IRI+".ttl"}>{this.props.IRI}.ttl</a></h4>
                   </div>
                   { ["Person","Place","Topic"].indexOf(getEntiType(this.props.IRI)) !== -1 &&
                      <div>

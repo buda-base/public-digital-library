@@ -32,9 +32,13 @@ h4 { margin-top:10px;margin-bottom:0px;font-size:24px; }
 /* .resource .subsub h4 { flex-shrink:0 ; } */
 .resource .subsub:first-child:before { content:"•";position:absolute; width:10px;margin-left:-10px;top:11px; }
 .resource .subsub:first-child { margin-top:10px; }
+.resource .subsub.full { flex-wrap:wrap; }
+.resource .subsub.full > h4.first { width:100%; }
 .resource h3 + .sub .subsub:first-child { margin-top:0px; }
 .resource .subsub h4:not(.first):not(:last-child):after,
 .resource h4:not(:last-child):not(.first):not(.last):after { content:" | "; pointer-events:none; }
+.resource .subsubsub { width:100%; padding-left:30px; display: flex;align-items: baseline;flex-wrap:nowrap;position:relative; box-sizing: border-box;}
+.resource .subsubsub h4.first.prop { font-size:0.7em;font-style:italic; }
 
 .person #person, .place #place { display:none;}
 
