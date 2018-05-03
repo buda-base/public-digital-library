@@ -10,7 +10,7 @@ import ResourceViewer from '../components/ResourceViewer';
 
 const mapStateToProps = (state,ownProps) => {
 
-
+   let failures = state.data.failures
    let resources = state.data.resources
    let ontology = state.data.ontology ;
    let keyword = state.data.keyword
@@ -25,7 +25,7 @@ const mapStateToProps = (state,ownProps) => {
 
    let prefLang = state.ui.prefLang
 
-   let props = { resources, ontology, keyword, language, datatype, assocResources, prefLang,  }
+   let props = { resources, ontology, keyword, language, datatype, assocResources, prefLang, failures }
 
    console.log("mS2p",state,props)
 

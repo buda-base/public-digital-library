@@ -403,7 +403,7 @@ class ResourceViewer extends Component<Props,State>
       return elem
    }
 
-   format(Tag,prop:string,txt:string="",bnode:boolean=false)
+   format(Tag,prop:string,txt:string="",bnode:boolean=false,div:string="sub")
    {
       let elem ;
       if(bnode) {
@@ -413,13 +413,13 @@ class ResourceViewer extends Component<Props,State>
       }
       else elem = this.getResourceElem(prop)
 
-      // console.log("format",prop,elem,txt,bnode);
+      console.log("format",prop,elem,txt,bnode);
 
       let ret = []
 
       if(elem) for(let e of elem)
       {
-         // console.log("e",e)
+         console.log("e",e)
          let pretty = this.pretty(e.value)
          if(e.type != "bnode")
          {
@@ -432,49 +432,80 @@ class ResourceViewer extends Component<Props,State>
             else ret.push(<Tag>{tmp+" "+txt}</Tag>)
          }
          else {
+
             elem = this.getResourceBNode(e.value)
-            // console.log("bnode",e.value,elem)
+            console.log("bnode",e.value,elem)
 
             let sub = []
 
             let val = elem[rdf+"type"]
             let lab = elem[rdfs+"label"]
 
-            // console.log("val",val);
-            // console.log("lab",lab);
+            console.log("val",val);
+            console.log("lab",lab);
 
-            if(val && val[0] && val[0].value) { sub.push(<Tag className='first type'>{this.fullname(val[0].value)+": "}</Tag>) }
-            if(lab && lab[0] && lab[0].value) for(let l of lab) {
-               sub.push(<Tag className='label'>{this.fullname(l.value)}</Tag>)
+            let noVal = true ;
+
+            // property name ?
+            if(val && val[0] && val[0].value)
+            {
+               noVal = false ;
+               sub.push(<Tag className='first type'>{this.fullname(val[0].value)+": "}</Tag>)
             }
-            else {
-               for(let f of Object.keys(elem)) {
+
+            // direct property value/label ?
+            if(lab && lab[0] && lab[0].value)
+            {
+               for(let l of lab) {
+                  sub.push(<Tag className='label'>{this.fullname(l.value)}</Tag>)
+               }
+
+               ret.push(<div className={div}>{sub}</div>)
+            }
+            else
+            {
+               for(let f of Object.keys(elem))
+               {
                   let subsub = []
+
+
                   if(f === rdf+"type") continue;
-                  else {
-                     subsub.push(<Tag className='first prop'//{...(val ? {className:'first prop'}:{className:'first type'}) }
-                     >{this.fullname(f)+": "}</Tag>)
+                  else
+                  {
+                     if(!noVal)
+                        subsub.push(<Tag className='first prop'>{this.fullname(f)+": "}</Tag>)
+                     //{...(val ? {className:'first prop'}:{className:'first type'}) }
+                     else
+                        sub.push(<Tag className='first type'>{this.fullname(f)+": "}</Tag>)
 
                      val = elem[f]
                      for(let v of val)
                      {
                         let txt = v.value;
-                        if(v.type == 'bnode'){
-                           subsub.push(this.format("h4",txt,"",true))
+                        if(v.type == 'bnode')
+                        {
+                           subsub.push(this.format("h4",txt,"",true,div+"sub"))
                         }
                         else {
                            if(v.type == 'uri') txt = this.uriformat(f,v)
                            else txt = this.fullname(v.value)
-                           subsub.push(<Tag>{txt}</Tag>)
+
+                           if(!noVal) subsub.push(<Tag>{txt}</Tag>)
+                           else sub.push(<Tag>{txt}</Tag>)
                         }
                      }
                   }
-                  sub.push(<div className="subsub">{subsub}</div>)
+                  if(!noVal)sub.push(<div className={div+"sub"}>{subsub}</div>)
+                  else {
+                     ret.push(<div className={div}>{sub}</div>)
+                     sub = []
+                  }
                }
+               if(!noVal)ret.push(<div className={div}>{sub}</div>)
 
             }
 
-            ret.push(<div className="sub">{sub}</div>)
+
          }
       }
 
@@ -486,10 +517,12 @@ class ResourceViewer extends Component<Props,State>
     {
       console.log("render",this.props,this.state)
 //
-      if(!this.props.IRI)
+      if(!this.props.IRI || (this.props.failures && this.props.failures[this.props.IRI]))
       {
+         let msg = "IRI undefined" ;
+         if(this.props.IRI) msg = "Resource "+this.props.IRI+" does not exist."
          return (
-            <Redirect404  history={this.props.history} message="IRI undefined"/>
+            <Redirect404  history={this.props.history} message={msg}/>
          )
       }
 
@@ -511,10 +544,16 @@ class ResourceViewer extends Component<Props,State>
                <Link className="goBack" to={this.props.keyword&&!this.props.keyword.match(/^bdr:/)?"/search?q="+this.props.keyword+"&lg="+this.props.language+(this.props.datatype?"&t="+this.props.datatype:""):"/"}>
                   <Button style={{paddingLeft:"0"}}>&lt; Go back to search page</Button>
                </Link>
+               <a className="goBack" target="_blank" href={"http://purl.bdrc.io/resource/"+this.props.IRI+".ttl"}>
+                  <Button style={{marginLeft:"50px",padding:0}}>export to ttl</Button>
+               </a>&nbsp;/&nbsp;
+               <a className="goBack" target="_blank" href={"http://purl.bdrc.io/resource/"+this.props.IRI+".jsonld"}>
+                  <Button style={{paddingLeft:0}}>json-ld</Button>
+               </a>
                {
                   this.props.IRI[0].match(/[PGT]/) &&
                   <Link className="goBack" to={"/search?r=bdr:"+this.props.IRI}>
-                     <Button style={{paddingLeft:"50px"}}>Browse associated resources &gt;</Button>
+                     <Button style={{marginLeft:"50px",paddingLeft:"0px"}}>Browse associated resources &gt;</Button>
                   </Link>
                }
                {this.format("h1",rdf+"type",this.props.IRI)}
@@ -544,11 +583,13 @@ class ResourceViewer extends Component<Props,State>
                      }
 
                   } ) }
+                  {/*
                   <div>
                      <h3><span>Resource File</span>:&nbsp;</h3>
                      <h4><a target="_blank" href={"http://purl.bdrc.io/resource/"+this.props.IRI+".jsonld"}>{this.props.IRI}.jsonld</a></h4>
                      <h4><a target="_blank" href={"http://purl.bdrc.io/resource/"+this.props.IRI+".ttl"}>{this.props.IRI}.ttl</a></h4>
                   </div>
+                  */}
                   { ["Person","Place","Topic"].indexOf(getEntiType(this.props.IRI)) !== -1 &&
                      <div>
                         <h3><span>Associated Resources</span>:&nbsp;</h3>

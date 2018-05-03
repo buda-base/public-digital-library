@@ -37,6 +37,16 @@ export const chosenHost = (host: string): Action => {
     }
 }
 
+TYPES.noResource = 'NO_RESOURCE';
+export const noResource = (iri: string, error:string): Action => {
+    return {
+        type: TYPES.noResource,
+        payload: iri,
+        meta:error
+    }
+}
+
+
 TYPES.gotResource = 'GOT_RESOURCE';
 export const gotResource = (iri: string,res:{}): Action => {
     return {

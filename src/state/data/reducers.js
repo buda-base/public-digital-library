@@ -64,6 +64,14 @@ export const gotResource = (state: DataState, action: Action) => {
 }
 reducers[actions.TYPES.gotResource] = gotResource;
 
+export const noResource = (state: DataState, action: Action) => {
+    return {
+        ...state,
+        failures:{...state.failures, [action.payload]:action.meta }
+    }
+}
+reducers[actions.TYPES.noResource] = noResource;
+
 
 export const gotAssocResources = (state: DataState, action: Action) => {
     return {

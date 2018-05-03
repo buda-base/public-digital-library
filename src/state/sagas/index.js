@@ -22,7 +22,15 @@ async function initiateApp(params,iri) {
 
       if(iri && (!state.resources || !state.resources.IRI))
       {
-         let res = await api.loadResource(iri)
+         let res ;
+
+         try {
+            res = await api.loadResource(iri)
+         }
+         catch(e){
+            store.dispatch(dataActions.noResource(iri,e));
+            return
+         }
          store.dispatch(dataActions.gotResource(iri,res));
 
          let assocRes = await api.loadAssocResources(iri)
