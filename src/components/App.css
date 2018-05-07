@@ -3,7 +3,7 @@
 
 
 /* CSS debug mode */
-* {background-color:rgba(255,0,128,0.05);}
+/* * {background-color:rgba(255,0,128,0.05);} */
 
 a.result { padding:0;margin-bottom:0;width:100%; }
 a.result button { text-transform:none; padding-bottom:0;}
@@ -25,24 +25,25 @@ h4 { margin-top:10px;margin-bottom:0px;font-size:24px; }
 .resource .data > div.parent > h3 { flex-shrink:0 }
 .resource h3,.resource h4 { display:inline-block; margin-bottom:0px; font-size:16px; font-weight:normal; margin-right:5px; line-height:18px;}
 .resource h3 span { /*text-decoration: underline;*/ font-weight:600;  text-transform:capitalize; }
-.resource .sub { width:100%; padding-left:30px;display:flex;flex-wrap:wrap; box-sizing: border-box;}
+.resource .sub { width:100%; padding-left:30px;display:flex;flex-wrap:wrap; box-sizing: border-box; position:relative;}
 .resource .sub h4.first { font-size:0.9em;font-style:italic; text-transform:capitalize; flex-shrink:0; }
 .resource .sub h4.first.prop { font-style:normal;font-size:0.8em; }
 .resource .subsub { width:100%; padding-left:30px; display: flex;align-items: baseline;flex-wrap:nowrap;position:relative; box-sizing: border-box;}
 /* .resource .subsub h4 { flex-shrink:0 ; } */
-
-.resource .subsub:first-child:before,
-.resource .sub .noVal
-{ content:"•";position:absolute; width:10px;margin-left:-10px;top:11px; }
-
+/* .resource .subsub:first-child:before, */
+.resource div .sub.here:before { content:"•";position:absolute; width:10px;margin-left:-10px;top:11px; }
 .resource .subsub:first-child { margin-top:10px; }
+.resource .subsubsub.full,
 .resource .subsub.full { flex-wrap:wrap; }
+.resource .subsubsub.full > h4.first,
 .resource .subsub.full > h4.first { width:100%; }
 .resource h3 + .sub .subsub:first-child { margin-top:0px; }
 .resource .subsub h4:not(.first):not(:last-child):after,
 .resource h4:not(:last-child):not(.first):not(.last):after { content:" | "; pointer-events:none; }
 .resource .subsubsub { width:100%; padding-left:30px; display: flex;align-items: baseline;flex-wrap:nowrap;position:relative; box-sizing: border-box;}
+.resource .subsub.full .subsub h4.first.prop,
 .resource .subsubsub h4.first.prop { font-size:0.7em;font-style:italic; }
+.resource .subsubsub .subsubsub h4.first.prop { font-style:normal; }
 
 .person #person, .place #place { display:none;}
 

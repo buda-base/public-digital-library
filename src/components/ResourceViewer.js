@@ -405,15 +405,42 @@ class ResourceViewer extends Component<Props,State>
 
    format(Tag,prop:string,txt:string="",bnode:boolean=false,div:string="sub")
    {
-      let elem ;
-      if(bnode) {
-         elem = this.getResourceBNode(prop)
-         elem = Object.values(elem) //.map((e) => ({[e]:elem[e]}))
-         elem = [].concat.apply([],elem);
-      }
-      else elem = this.getResourceElem(prop)
+      console.group("FORMAT")
 
-      console.log("format",prop,elem,txt,bnode);
+      let elemN,elem;
+      if(bnode) {
+
+         elem = [{ "type":"bnode","value":prop}] //[ this.getResourceBNode(prop) ]
+
+         //div = div +"sub"
+
+         // console.log("?bnode",elem)
+
+         //return this.format(Tag,prop,txt,false,div)
+
+         //elem = Object.values(elem)
+         //for(let i of Object.keys(elemN)) { if(!i === rdf+"type") { elem.push(elemN[i]); } }
+
+         //elem = [].concat.apply([],elem);
+
+      }
+      else {
+         elem = this.getResourceElem(prop)
+
+         // console.log("?normal",elem)
+      }
+
+      /*
+      if(elem) elem = elem.sort((a,b) => {
+         if(a.type == "uri" && b.type == "uri") {
+            if(a.value.match(new RegExp(bdr)) && b.value.match(new RegExp(bdo))) { return 1; }
+            else return 0 ;
+         }
+         else return 0;
+      })
+      */
+
+      console.log("format",prop,elem,txt,bnode,div);
 
       let ret = []
 
@@ -450,7 +477,7 @@ class ResourceViewer extends Component<Props,State>
             if(val && val[0] && val[0].value)
             {
                noVal = false ;
-               sub.push(<Tag className='first type'>{this.fullname(val[0].value)+": "}</Tag>)
+               sub.push(<Tag className={'first '+(div == "sub"?'type':'prop')}>{this.fullname(val[0].value)+": "}</Tag>)
             }
 
             // direct property value/label ?
@@ -464,19 +491,26 @@ class ResourceViewer extends Component<Props,State>
             }
             else
             {
+               let first = " here" ;
+
                for(let f of Object.keys(elem))
                {
                   let subsub = []
 
+                  if(!f.match(/[/]note/)) first="" ;
 
-                  if(f === rdf+"type") continue;
+                  console.log("f",f)
+
+                  let hasBnode = false ;
+
+                  if(f == rdf+"type") continue;
                   else
                   {
                      if(!noVal)
-                        subsub.push(<Tag className='first prop'>{this.fullname(f)+": "}</Tag>)
+                        subsub.push(<Tag className={'first '+(div == ""?'type':'prop')}>{this.fullname(f)+": "}</Tag>)
                      //{...(val ? {className:'first prop'}:{className:'first type'}) }
                      else
-                        sub.push(<Tag className='first type'>{this.fullname(f)+": "}</Tag>)
+                        sub.push(<Tag className={'first '+(!bnode?"type":"prop")}>{this.fullname(f)+": "}</Tag>)
 
                      val = elem[f]
                      for(let v of val)
@@ -484,6 +518,7 @@ class ResourceViewer extends Component<Props,State>
                         let txt = v.value;
                         if(v.type == 'bnode')
                         {
+                           hasBnode = true
                            subsub.push(this.format("h4",txt,"",true,div+"sub"))
                         }
                         else {
@@ -495,13 +530,15 @@ class ResourceViewer extends Component<Props,State>
                         }
                      }
                   }
-                  if(!noVal)sub.push(<div className={div+"sub"}>{subsub}</div>)
+                  if(!noVal)sub.push(<div className={div+"sub "+(hasBnode?"full":"")}>{subsub}</div>)
                   else {
-                     ret.push(<div className={div}>{sub}</div>)
+                     if(subsub.length > 0) sub.push(subsub) //<div className="sub">{subsub}</div>)
+                     ret.push(<div className={div+ first}>{sub}</div>)
                      sub = []
+                     first = ""
                   }
                }
-               if(!noVal)ret.push(<div className={div}>{sub}</div>)
+               if(!noVal)ret.push(<div className={div+" "+(bnode?"full":"")}>{sub}</div>)
 
             }
 
@@ -509,6 +546,7 @@ class ResourceViewer extends Component<Props,State>
          }
       }
 
+      console.groupEnd();
       return ret ;
 
    }
