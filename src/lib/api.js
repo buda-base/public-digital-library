@@ -18,7 +18,8 @@ const dPrefix = {
    "T" : "Topic",
    "W" : "Work",
    "O" : "Taxonomy",
-   "V" : "Volume"
+   "V" : "Volume",
+   "UT": "Etext", // ?
 }
 
 export function getEntiType(t:string):string {

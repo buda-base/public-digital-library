@@ -46,6 +46,7 @@ const translationsObject = {
          search:{
             zh:"Chinese",
             zhHant:"Chinese (Hanzi)",
+            //zhHans:"Chinese (Simplified)",
             zhLatnPinyin:"Chinese (Pinyin)",
             en:"English",
             saXIast:"Sanskrit (IAST)",
@@ -100,6 +101,7 @@ const translationsObject = {
          search:{
             zh:"Chinois",
             zhHant:"Chinois (Hanzi)",
+            //zhHans:"Chinois (Simplifié)",
             zhLatnPinyin:"Chinois (Pinyin)",
             en:"Anglais",
             saXIast:"Sanskrit (IAST)",

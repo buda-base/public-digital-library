@@ -174,19 +174,21 @@ class ResourceViewer extends Component<Props,State>
 
       let prop = this.props.resources[this.props.IRI][bdr+this.props.IRI] ;
       if(sorted) {
-         let sortProp = Object.keys(prop).sort((a,b)=> {
-            let t = getEntiType(this.props.IRI);
-            let ia = propOrder[t].indexOf(a)
-            let ib = propOrder[t].indexOf(b)
-            //console.log(t,a,ia,b,ib)
-            if ((ia != -1 && ib != -1 && ia < ib) || (ia != -1 && ib == -1)) return -1
-            else return 1 ;
-         }).reduce((acc,e) => ({ ...acc, [e]:prop[e] }),{})
+         let t = getEntiType(this.props.IRI);
+         if(t && propOrder[t])
+         {   
+            let sortProp = Object.keys(prop).sort((a,b)=> {
+               let ia = propOrder[t].indexOf(a)
+               let ib = propOrder[t].indexOf(b)
+               //console.log(t,a,ia,b,ib)
+               if ((ia != -1 && ib != -1 && ia < ib) || (ia != -1 && ib == -1)) return -1
+               else return 1 ;
+            }).reduce((acc,e) => ({ ...acc, [e]:prop[e] }),{})
 
          // console.log("propSort",prop,sortProp)
 
-         return sortProp
-
+            return sortProp
+         }
       }
       return prop ;
    }
@@ -197,12 +199,21 @@ class ResourceViewer extends Component<Props,State>
    {
       for(let p of Object.keys(prefixes)) { prop = prop.replace(new RegExp(p+":","g"),prefixes[p]) }
 
-      if(this.props.ontology[prop] && this.props.ontology[prop][rdfs+"label"] && this.props.ontology[prop][rdfs+"label"][0]
-      && this.props.ontology[prop][rdfs+"label"][0].value) {
+      console.log("full",prop)
+
+      if(this.props.ontology[prop] && this.props.ontology[prop][rdfs+"label"])
+      {
+         let ret = this.props.ontology[prop][rdfs+"label"].filter((e) => (e.lang == "en"))
+         if(ret.length == 0) ret = this.props.ontology[prop][rdfs+"label"].filter((e) => (e.lang == this.props.prefLang))
+         if(ret.length == 0) ret = this.props.ontology[prop][rdfs+"label"]
+
+         return ret[0].value
+
+       //&& this.props.ontology[prop][rdfs+"label"][0] && this.props.ontology[prop][rdfs+"label"][0].value) {
          //let comment = this.props.ontology[prop][rdfs+"comment"]
          //if(comment) comment = comment[0].value
          //return <a className="nolink" title={comment}>{this.props.ontology[prop][rdfs+"label"][0].value}</a>
-         return this.props.ontology[prop][rdfs+"label"][0].value
+         //return this.props.ontology[prop][rdfs+"label"][0].value
       }
 
       return this.pretty(prop)
@@ -356,7 +367,7 @@ class ResourceViewer extends Component<Props,State>
                   //console.log("s",prop,info)
 
                   // we can return Link
-                  let pretty = this.pretty(elem.value);
+                  let pretty = this.fullname(elem.value);
                   let ret = []
                   if(info) ret.push(<Link className="urilink prefLabel" to={"/show/bdr:"+pretty}>{info}</Link>)
                   else if(pretty.toString().match(/([A-Z]+[_0-9+])+/)) ret.push(<Link className="urilink" to={"/show/bdr:"+pretty}>{pretty}</Link>)
@@ -446,8 +457,10 @@ class ResourceViewer extends Component<Props,State>
 
       if(elem) for(let e of elem)
       {
-         console.log("e",e)
-         let pretty = this.pretty(e.value)
+         let pretty = this.fullname(e.value)
+
+         console.log("e",e,pretty)
+
          if(e.type != "bnode")
          {
             let tmp
@@ -461,15 +474,15 @@ class ResourceViewer extends Component<Props,State>
          else {
 
             elem = this.getResourceBNode(e.value)
-            console.log("bnode",e.value,elem)
+            //console.log("bnode",e.value,elem)
 
             let sub = []
 
             let val = elem[rdf+"type"]
             let lab = elem[rdfs+"label"]
 
-            console.log("val",val);
-            console.log("lab",lab);
+            //console.log("val",val);
+            //console.log("lab",lab);
 
             let noVal = true ;
 
@@ -499,7 +512,7 @@ class ResourceViewer extends Component<Props,State>
 
                   if(!f.match(/[/]note/)) first="" ;
 
-                  console.log("f",f)
+                  //console.log("f",f)
 
                   let hasBnode = false ;
 
@@ -547,6 +560,7 @@ class ResourceViewer extends Component<Props,State>
       }
 
       console.groupEnd();
+
       return ret ;
 
    }
