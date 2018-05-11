@@ -584,6 +584,7 @@ class App extends Component<Props,State> {
                   let sublist = list[t.toLowerCase()+"s"]
                   let cpt = 0;
                   n = 0;
+                  let categ = "Other" ;
                   if(sublist) { for(let o of Object.keys(sublist))
                   {
 
@@ -597,15 +598,21 @@ class App extends Component<Props,State> {
                         lit: label,
                         s  : { type: "uri", value: o },
                         match: sublist[o].filter((e) => (
-                            this.props.language != "" ? e.value && e.value.match(/[↦↤]/) && e.type && !e.type.match(/prefLabelMatch$/)
+                            ( this.props.language != "" ? e.value && e.value.match(/[↦↤]/) && e.type && !e.type.match(/prefLabelMatch$/)
                                                       : !e.lang && (e.value.match(new RegExp(bdr+this.props.keyword.replace(/bdr:/,"")))
-                                                                   || e.type.match(/relationType$/) )
+                                                                   || (e.type && e.type.match(/relationType$/) ) ) )
 
                                                    )
                                                 )
                      }
 
 
+                     // || (e.type && e.type.match(/[Ee]xpression/) )
+                     // || ( )
+
+                     let isAbs = sublist[o].filter((e) => e.value && e.value.match(/Abstract/))
+                     let hasExpr = sublist[o].filter((e) => e.type && e.type.match(/HasExpression/))
+                     let isExpr = sublist[o].filter((e) => e.type && e.type.match(/ExpressionOf/))
 
 
                      let k = this.props.keyword.replace(/"/g,"")
@@ -616,7 +623,7 @@ class App extends Component<Props,State> {
                      let typ ;
                      //if(r.f && r.f.value) typ = r.f.value.replace(/^.*?([^/]+)$/,"$1")
 
-                     // console.log("r",o,sublist[o],r,label,lit);
+                     console.log("r",o,sublist[o],r,label,lit);
 
                      let filtered = true ;
 
@@ -657,6 +664,11 @@ class App extends Component<Props,State> {
                         {
                            //console.log("lit",lit)
 
+                           if(isAbs.length > 0) { if(categ !== "Abstract") { message.push(<h5>Abstract</h5>); categ = "Abstract" ; n = cpt = 0; } }
+                           else if(hasExpr.length > 0) { if(categ !== "HasExpr") { message.push(<h5>Has Expression</h5>); categ = "HasExpr" ; n = cpt = 0; } }
+                           else if(isExpr.length > 0) { if(categ !== "ExprOf") { message.push(<h5>Expression Of</h5>) ; categ = "ExprOf" ; n = cpt = 0; } }
+                           else if(categ !== "Other") { message.push(<h5>Other</h5>); categ = "Other"; n = cpt = 0; }
+
                            n ++;
                            message.push(
                               [
@@ -677,6 +689,9 @@ class App extends Component<Props,State> {
                               <div>
                               {
                                  r.match.map((m) => {
+
+                                    console.log("m",m)
+
                                        if(!m.type.match(new RegExp(skos+"prefLabel"))) {
                                           let prop = this.fullname(m.type.replace(/.*altLabelMatch/,skos+"altLabel"))
                                           let val = this.highlight(this.pretty(m.value),k)
@@ -685,6 +700,9 @@ class App extends Component<Props,State> {
                                              prop = val ;
                                              val = uri
                                           }
+
+                                          console.log("prop",prop,val)
+
                                           return (<div className="match">
                                              <span className="label">{prop}:&nbsp;</span>
                                              <span>{val}</span>
