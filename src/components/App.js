@@ -575,7 +575,11 @@ class App extends Component<Props,State> {
 
                console.log("list x types",list,types,displayTypes)
 
+
+
                for(let t of displayTypes) {
+
+                  let willBreak = false ;
 
                   if(t === "Any") continue ;
 
@@ -614,6 +618,33 @@ class App extends Component<Props,State> {
                      let hasExpr = sublist[o].filter((e) => e.type && e.type.match(/HasExpression/))
                      let isExpr = sublist[o].filter((e) => e.type && e.type.match(/ExpressionOf/))
 
+                     if(isAbs.length > 0 || hasExpr.length > 0 || isExpr.length > 0)
+                     {
+                        let subL = sublist[o].filter((e) => (e.type && e.type.match(/work(Has)?Expression/) ) )
+
+                        console.log("subL",subL);
+
+                        let withKey = subL.reduce((acc,e) => {
+                           if(!acc[e.type]) acc[e.type] = []
+                           acc[e.type] = [].concat(acc[e.type]) ;
+                           acc[e.type].push(e.value);
+                           return acc;
+                        }, {} )
+
+                        console.log("wK",withKey);
+
+                        /*
+                        let withLab = withKey.reduce((acc,e) => {
+
+
+                           return acc;
+                        }, {})
+
+                        console.log("wL",withLab);
+                        */
+
+                        r.match = r.match.concat( Object.keys(withKey).reduce((acc,e)=>{acc.push({"type":e,"value":withKey[e]}); return acc;} ,[]) )
+                     }
 
                      let k = this.props.keyword.replace(/"/g,"")
 
@@ -664,13 +695,17 @@ class App extends Component<Props,State> {
                         {
                            //console.log("lit",lit)
 
-                           if(isAbs.length > 0) { if(categ !== "Abstract") { message.push(<h5>Abstract</h5>); categ = "Abstract" ; n = cpt = 0; } }
-                           else if(hasExpr.length > 0) { if(categ !== "HasExpr") { message.push(<h5>Has Expression</h5>); categ = "HasExpr" ; n = cpt = 0; } }
-                           else if(isExpr.length > 0) { if(categ !== "ExprOf") { message.push(<h5>Expression Of</h5>) ; categ = "ExprOf" ; n = cpt = 0; } }
-                           else if(categ !== "Other") { message.push(<h5>Other</h5>); categ = "Other"; n = cpt = 0; }
+                           if(isAbs.length > 0) { if(categ !== "Abstract") { message.push(<h5>Abstract</h5>); categ = "Abstract" ; n = cpt = 0; willBreak = false ;} }
+                           else if(hasExpr.length > 0) { if(categ !== "HasExpr") { message.push(<h5>Has Expression</h5>); categ = "HasExpr" ; n = cpt = 0; willBreak = false ;} }
+                           else if(isExpr.length > 0) { if(categ !== "ExprOf") { message.push(<h5>Expression Of</h5>) ; categ = "ExprOf" ; n = cpt = 0; willBreak = false ;} }
+                           else if(categ !== "Other") { message.push(<h5>Other</h5>); categ = "Other"; n = cpt = 0; willBreak = false ;}
+
+                           console.log("willB",n,willBreak,categ)
+                           //if(n != 0 && willBreak) break;
+                           //else willBreak = false ;
 
                            n ++;
-                           message.push(
+                           if(!willBreak) message.push(
                               [
                            <Link key={n} to={"/show/bdr:"+id} className="result">
 
@@ -694,7 +729,12 @@ class App extends Component<Props,State> {
 
                                        if(!m.type.match(new RegExp(skos+"prefLabel"))) {
                                           let prop = this.fullname(m.type.replace(/.*altLabelMatch/,skos+"altLabel"))
-                                          let val = this.highlight(this.pretty(m.value),k)
+                                          let val,isArray = false ;
+                                          if(Array.isArray(m.value)) { val = m.value.map((e)=>this.pretty(e)) ; isArray = true }
+                                          else val = this.highlight(this.pretty(m.value),k)
+
+                                          console.log("val",val,val.length)
+
                                           let uri = this.props.keyword.replace(/bdr:/,"")
                                           if(m.type.match(/relationType$/)) {
                                              prop = val ;
@@ -705,7 +745,8 @@ class App extends Component<Props,State> {
 
                                           return (<div className="match">
                                              <span className="label">{prop}:&nbsp;</span>
-                                             <span>{val}</span>
+                                             {!isArray && <span>{val}</span>}
+                                             {isArray && <div class="multi">{val.map((e)=><span><Link to={"/show/bdr:"+e}>{e}</Link></span>)}</div>}
                                           </div>)
                                        }
                                  })
@@ -716,8 +757,8 @@ class App extends Component<Props,State> {
                            )
 
                            cpt ++;
-                           if(displayTypes.length > 2) {
-                              if(cpt >= 3) break;
+                           if(displayTypes.length >= 2) {
+                              if(cpt >= 3) { if(categ == "Other") { break ; } else { willBreak = true; } }
                            } else {
                               if(cpt >= 50) break;
                            }

@@ -48,7 +48,9 @@ h4 { margin-top:10px;margin-bottom:0px;font-size:24px; }
 
 .person #person, .place #place { display:none;}
 
+.match .multi a,
 .resource .data a { text-decoration: none; color:rgba(229, 74, 53,1);}
+.match .multi a:hover,
 .resource .data a:hover { border-bottom:1px solid rgba(229, 74, 53,1); }
 
 .goBack { text-decoration: none;  }
@@ -65,7 +67,7 @@ h4 { margin-top:10px;margin-bottom:0px;font-size:24px; }
 .SearchPane .formControl { margin-top:50px; margin-left:25px; width:150px;}
 .SearchPane a {text-decoration:none}
 
-.SearchPane h5 { margin-left:16px; font-size : 16px; margin-bottom:16px; }
+.SearchPane h5 { margin-left:16px; font-size : 16px; margin-bottom:0px;margin-top:40px; }
 
 .collapse.open { margin-bottom:30px; }
 
@@ -73,6 +75,7 @@ h4 { margin-top:10px;margin-bottom:0px;font-size:24px; }
 
 h3 span.highlight,
 div.match span.highlight { border:1px solid rgba(229, 74, 53,1); padding:0px 4px ; background-color:rgba(229, 74, 53,0.15); border-radius:15px; }
+div.match div.multi > span:not(:last-child)::after { content:", "; }
 /* div.match span.highlight { background-color: rgba(229, 74, 53,1.0); color:white ; padding:0px 2px ;}  */
 
 
