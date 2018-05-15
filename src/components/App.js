@@ -458,7 +458,7 @@ class App extends Component<Props,State> {
 
       if(this.props.keyword)
       {
-         if(this.props.searches[this.state.filters.datatype[0]])
+         if(this.state.filters.datatype[0] != "Any" && this.props.searches[this.state.filters.datatype[0]])
             results = this.props.searches[this.state.filters.datatype[0]][this.props.keyword+"@"+this.props.language]
          else
             results = this.props.searches[this.props.keyword+"@"+this.props.language]
@@ -492,6 +492,7 @@ class App extends Component<Props,State> {
 
                      //r = r.bindings
                      let typ = r.replace(/^.*?([^/]+)$/,"$1")
+                     typ = typ[0].toUpperCase() + typ.slice(1) 
 
                      // console.log("typ",typ)
 
@@ -533,6 +534,7 @@ class App extends Component<Props,State> {
                   }
                }
 
+               console.log("results",results);
                let list = results.results.bindings
 
                //if(!list.length) list = Object.keys(list).map((o) => {
@@ -622,7 +624,7 @@ class App extends Component<Props,State> {
                      {
                         let subL = sublist[o].filter((e) => (e.type && e.type.match(/work(Has)?Expression/) ) )
 
-                        console.log("subL",subL);
+                        // console.log("subL",subL);
 
                         let withKey = subL.reduce((acc,e) => {
                            if(!acc[e.type]) acc[e.type] = []
@@ -631,7 +633,7 @@ class App extends Component<Props,State> {
                            return acc;
                         }, {} )
 
-                        console.log("wK",withKey);
+                        // console.log("wK",withKey);
 
                         /*
                         let withLab = withKey.reduce((acc,e) => {
@@ -654,7 +656,7 @@ class App extends Component<Props,State> {
                      let typ ;
                      //if(r.f && r.f.value) typ = r.f.value.replace(/^.*?([^/]+)$/,"$1")
 
-                     console.log("r",o,sublist[o],r,label,lit);
+                     //console.log("r",o,sublist[o],r,label,lit);
 
                      let filtered = true ;
 
@@ -700,7 +702,7 @@ class App extends Component<Props,State> {
                            else if(isExpr.length > 0) { if(categ !== "ExprOf") { message.push(<h5>Expression Of</h5>) ; categ = "ExprOf" ; n = cpt = 0; willBreak = false ;} }
                            else if(categ !== "Other") { message.push(<h5>Other</h5>); categ = "Other"; n = cpt = 0; willBreak = false ;}
 
-                           console.log("willB",n,willBreak,categ)
+                           //console.log("willB",n,willBreak,categ)
                            //if(n != 0 && willBreak) break;
                            //else willBreak = false ;
 
@@ -725,7 +727,7 @@ class App extends Component<Props,State> {
                               {
                                  r.match.map((m) => {
 
-                                    console.log("m",m)
+                                    //console.log("m",m)
 
                                        if(!m.type.match(new RegExp(skos+"prefLabel"))) {
                                           let prop = this.fullname(m.type.replace(/.*altLabelMatch/,skos+"altLabel"))
@@ -733,7 +735,7 @@ class App extends Component<Props,State> {
                                           if(Array.isArray(m.value)) { val = m.value.map((e)=>this.pretty(e)) ; isArray = true }
                                           else val = this.highlight(this.pretty(m.value),k)
 
-                                          console.log("val",val,val.length)
+                                          //console.log("val",val,val.length)
 
                                           let uri = this.props.keyword.replace(/bdr:/,"")
                                           if(m.type.match(/relationType$/)) {
@@ -741,7 +743,7 @@ class App extends Component<Props,State> {
                                              val = uri
                                           }
 
-                                          console.log("prop",prop,val)
+                                          //console.log("prop",prop,val)
 
                                           return (<div className="match">
                                              <span className="label">{prop}:&nbsp;</span>
@@ -802,8 +804,11 @@ class App extends Component<Props,State> {
 
       let meta ;
       if(this.state.filters.datatype && this.state.filters.datatype.indexOf("Any") === -1) {
+
          if(this.props.searches && this.props.searches[this.state.filters.datatype[0]]) {
+
             meta = this.props.searches[this.state.filters.datatype[0]][this.props.keyword+"@"+this.props.language]
+            console.log("ici",meta)
             if(meta) meta = meta.metadata
          }
       }

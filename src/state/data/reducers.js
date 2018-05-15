@@ -223,12 +223,16 @@ export const foundFacetInfo = (state: DataState, action: actions.FoundResultsAct
 
    let key = action.payload.keyword + "@" + action.payload.language ;
    let t = action.payload.datatype[0]
+   if(t == "Any") {
+      if(action.payload.results["gender"]) t = "Person" ;
+      else if(action.payload.results["license"]) t = "Work" ;
+   }
    let searches = {
          ...state.searches,
          [t] : {
-            ...state.searches[t],
+            ...state.searches&&state.searches[t]?state.searches[t]:{},
             [key]: {
-               ...state.searches[t][key],
+               ...state.searches&&state.searches[t]?state.searches[t][key]:{},
                metadata : action.payload.results
             }
          }

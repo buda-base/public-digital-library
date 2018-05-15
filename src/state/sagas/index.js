@@ -174,6 +174,31 @@ function getData(result)  {
    return data
 }
 
+
+   function getStats(cat:string,data:{})
+   {
+      let stat={}
+      let config = store.getState().data.config.facets
+
+      for(let p of Object.values(data["results"]["bindings"][cat.toLowerCase()+"s"]))
+      {
+         // console.log("p",p);
+         for(let f of Object.keys(config[cat]))
+         {
+            let tmp = p.filter((e) => (e.type == config[cat][f]))
+            if(tmp.length > 0) for(let t of tmp)
+            {
+               if(!stat[f]) stat[f] = {}
+               let pre = stat[f][t.value]
+               if(!pre) pre = 1
+               else pre ++ ;
+               stat[f][t.value] = pre ;
+               // console.log("f+1",f,tmp,pre)
+            }
+         }
+      }
+      return stat
+   }
  async function startSearch(keyword,language,datatype,sourcetype) {
 
    console.log("sSsearch",keyword,language,datatype,sourcetype);
@@ -204,6 +229,7 @@ function getData(result)  {
 
       if(sourcetype)
       {
+         let metaSav = result.metadata
          metadata = {}
          let data = {}
          for(let k of Object.keys(result)) {
@@ -217,6 +243,37 @@ function getData(result)  {
          data = getData(data);
          store.dispatch(dataActions.foundResults(keyword, language, data, datatype));
          store.dispatch(dataActions.foundDatatypes(keyword,{ metadata, hash:true}));
+
+         let newMeta = {}
+         if(data["results"] &&  data["results"]["bindings"] && data["results"]["bindings"]["persons"]){
+            // console.log("FOUND",data);
+            let stat = getStats("Person",data);
+            console.log("stat",stat)
+            store.dispatch(dataActions.foundResults(keyword, language, data, ["Person"]));
+            store.dispatch(dataActions.foundFacetInfo(keyword,language,datatype,stat))
+         }
+         if(data["results"] &&  data["results"]["bindings"] && data["results"]["bindings"]["works"]){
+            // console.log("FOUND",data);
+            let stat = getStats("Work",data);
+            console.log("stat",stat)
+            store.dispatch(dataActions.foundResults(keyword, language, data, ["Work"]));
+            store.dispatch(dataActions.foundFacetInfo(keyword,language,datatype,stat))
+         }
+         
+         /*
+         if(metaSav) {
+            if(metaSav.total) delete metaSav.total
+
+            if(metaSav["http://purl.bdrc.io/resource/GenderMale"] || metaSav["http://purl.bdrc.io/resource/GenderFemale"]) {
+               store.dispatch(dataActions.foundResults(keyword, language, data, ["Person"]));
+               store.dispatch(dataActions.foundFacetInfo(keyword,language,datatype,{"gender":metaSav }))
+            }
+            else if(metaSav["license"]) {
+               store.dispatch(dataActions.foundResults(keyword, language, data, ["Work"]));
+               store.dispatch(dataActions.foundFacetInfo(keyword,language,datatype,metaSav))
+            }
+         }
+         */
       }
       else {
 
