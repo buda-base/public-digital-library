@@ -176,7 +176,7 @@ class ResourceViewer extends Component<Props,State>
       if(sorted) {
          let t = getEntiType(this.props.IRI);
          if(t && propOrder[t])
-         {   
+         {
             let sortProp = Object.keys(prop).sort((a,b)=> {
                let ia = propOrder[t].indexOf(a)
                let ib = propOrder[t].indexOf(b)
@@ -340,12 +340,12 @@ class ResourceViewer extends Component<Props,State>
                */
                   // console.log("dico",prop,elem,dico)
 
-                  let info ;
+                  let info,infoBase ;
                   if(dico) {
-                     let infoBase = dico[elem.value]
+                     infoBase = dico[elem.value]
 
                      if(infoBase) {
-                        info = infoBase.filter((e)=>(e.type==prop && e["xml:lang"]==this.props.prefLang))
+                        info = infoBase.filter((e)=>(e["xml:lang"] && e.type==prop && e["xml:lang"]==this.props.prefLang))
 
                         //console.log("info0",info)
                         //if(info.value) info = "youpi"+info.value
@@ -369,8 +369,12 @@ class ResourceViewer extends Component<Props,State>
                   // we can return Link
                   let pretty = this.fullname(elem.value);
                   let ret = []
-                  if(info) ret.push(<Link className="urilink prefLabel" to={"/show/bdr:"+pretty}>{info}</Link>)
-                  else if(pretty.toString().match(/([A-Z]+[_0-9+])+/)) ret.push(<Link className="urilink" to={"/show/bdr:"+pretty}>{pretty}</Link>)
+                  if(info && infoBase && infoBase.filter(e=>e["xml:lang"]).length > 0) ret.push(<Link className="urilink prefLabel" to={"/show/bdr:"+pretty}>{info}</Link>)
+                  else if(pretty.toString().match(/^V[0-9A-Z]+_I[0-9A-Z]+$/)) { ret.push(<span>
+                     <Link className="urilink" to={"/show/bdr:"+pretty}>{pretty}</Link>&nbsp;
+                     <Link className="goBack" target="_blank" to={"/gallery?manifest=http://iiifpres.bdrc.io/2.1.1/v:bdr:"+pretty+"/manifest"}>{"(view image gallery)"}</Link>
+                  </span> ) }
+                  else if(pretty.toString().match(/^([A-Z]+[_0-9]+)+$/)) ret.push(<Link className="urilink" to={"/show/bdr:"+pretty}>{pretty}</Link>)
                   else ret.push(pretty)
                   return ret
 
@@ -584,8 +588,30 @@ class ResourceViewer extends Component<Props,State>
       //<Link to="/gallery?manifest=https://eroux.fr/manifest.json" style={{textDecoration:"none"}}><Button>Preview IIIF Gallery</Button></Link>
       //<div style={{height:"50px",fontSize:"26px",display:"flex",justifyContent:"center",alignItems:"center"}}>resource {get.IRI}</div>
 
+      let kZprop = Object.keys(this.properties(true))
       let kZasso ;
-      if (this.props.assocResources) kZasso = Object.keys(this.props.assocResources) ;
+      let hasImageAsset, multipleVolume ;
+      if (this.props.assocResources) {
+         kZasso = Object.keys(this.props.assocResources) ;
+
+         let elem = this.getResourceElem(bdo+"workHasItem")
+         if(elem) for(let e of elem)
+         {
+            let assoc = this.props.assocResources[e.value]
+
+            console.log("hImA",assoc,e.value)
+
+            if(assoc && assoc.length > 0) {
+               if(assoc.length == 1) hasImageAsset = this.pretty(assoc[0].value);
+               else { hasImageAsset = this.pretty(e.value);  multipleVolume = true; }
+            }
+         }
+      }
+
+      if(kZprop.indexOf(bdo+"imageList") !== -1)
+      {
+         hasImageAsset = this.props.IRI
+      }
 
       // add nother route to UViewer Gallery page
       return (
@@ -603,6 +629,12 @@ class ResourceViewer extends Component<Props,State>
                   <Button style={{paddingLeft:0}}>json-ld</Button>
                </a>
                {
+                  hasImageAsset &&
+                  <Link className="goBack" target="_blank" to={!multipleVolume ? "/gallery?manifest=http://iiifpres.bdrc.io/2.1.1/v:bdr:"+hasImageAsset+"/manifest":"/show/bdr:"+hasImageAsset}>
+                     <Button style={{marginLeft:"50px",fontWeight:"700","border":"1px solid black"}}>view image gallery</Button>
+                  </Link>
+               }
+               {
                   this.props.IRI[0].match(/[PGT]/) &&
                   <Link className="goBack" to={"/search?r=bdr:"+this.props.IRI}>
                      <Button style={{marginLeft:"50px",paddingLeft:"0px"}}>Browse associated resources &gt;</Button>
@@ -612,7 +644,7 @@ class ResourceViewer extends Component<Props,State>
                {this.format("h2",skos+"prefLabel")}
                { /*<MapComponent tmp={this.props}/ */}
                <div className="data">
-                  { Object.keys(this.properties(true)).map((k) => {
+                  { kZprop.map((k) => {
 
                      let elem = this.getResourceElem(k);
 
