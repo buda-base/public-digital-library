@@ -127,6 +127,13 @@ export default class API {
       }
    }
 
+       async loadManifest(url:string): Promise<string>
+       {
+            let manif =  JSON.parse(await this.getURLContents(url,false));
+            console.log("manif",manif)
+            return manif ;
+      }
+
     async loadOntology(): Promise<string>
     {
          let onto =  JSON.parse(await this.getURLContents(this._ontologyPath,false));

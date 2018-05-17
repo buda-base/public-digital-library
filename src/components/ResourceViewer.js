@@ -1,9 +1,13 @@
 //@flow
 
+import $ from 'jquery' ;
+import Fullscreen from 'material-ui-icons/Fullscreen';
+import Script from 'react-load-script'
 import React, { Component } from 'react';
 import qs from 'query-string'
 import Button from 'material-ui/Button';
 import { Link } from 'react-router-dom';
+import IIIFViewerContainer from '../containers/IIIFViewerContainer';
 import { Redirect404 } from "../routes.js"
 import Loader from "react-loader"
 //import {MapComponent} from './Map';
@@ -14,11 +18,16 @@ type Props = {
    IRI:string,
    resources?:{},
    assocResources?:{},
-   onGetResource: (s:string) => void
+   imageAsset?:string,
+   firstImage?:string,
+   onGetResource: (s:string) => void,
+   onHasImageAsset:(s:string) => void
 }
 type State = {
    uviewer : boolean,
-   ready? : boolean
+   ready? : boolean,
+   imageLoaded:boolean,
+   openUV?:boolean
  }
 
 
@@ -99,7 +108,7 @@ class ResourceViewer extends Component<Props,State>
    {
       super(props);
 
-      this.state = { uviewer : false }
+      this.state = { uviewer : false,imageLoaded:false }
 
       console.log("props",props)
 
@@ -199,7 +208,7 @@ class ResourceViewer extends Component<Props,State>
    {
       for(let p of Object.keys(prefixes)) { prop = prop.replace(new RegExp(p+":","g"),prefixes[p]) }
 
-      console.log("full",prop)
+      //console.log("full",prop)
 
       if(this.props.ontology[prop] && this.props.ontology[prop][rdfs+"label"])
       {
@@ -420,7 +429,7 @@ class ResourceViewer extends Component<Props,State>
 
    format(Tag,prop:string,txt:string="",bnode:boolean=false,div:string="sub")
    {
-      console.group("FORMAT")
+      //console.group("FORMAT")
 
       let elemN,elem;
       if(bnode) {
@@ -455,7 +464,7 @@ class ResourceViewer extends Component<Props,State>
       })
       */
 
-      console.log("format",prop,elem,txt,bnode,div);
+      //console.log("format",prop,elem,txt,bnode,div);
 
       let ret = []
 
@@ -463,7 +472,7 @@ class ResourceViewer extends Component<Props,State>
       {
          let pretty = this.fullname(e.value)
 
-         console.log("e",e,pretty)
+         //console.log("e",e,pretty)
 
          if(e.type != "bnode")
          {
@@ -563,7 +572,7 @@ class ResourceViewer extends Component<Props,State>
          }
       }
 
-      console.groupEnd();
+      //console.groupEnd();
 
       return ret ;
 
@@ -590,27 +599,71 @@ class ResourceViewer extends Component<Props,State>
 
       let kZprop = Object.keys(this.properties(true))
       let kZasso ;
-      let hasImageAsset, multipleVolume ;
       if (this.props.assocResources) {
          kZasso = Object.keys(this.props.assocResources) ;
 
          let elem = this.getResourceElem(bdo+"workHasItem")
-         if(elem) for(let e of elem)
+         if(!this.props.manifestError && elem) for(let e of elem)
          {
             let assoc = this.props.assocResources[e.value]
 
             console.log("hImA",assoc,e.value)
 
             if(assoc && assoc.length > 0) {
-               if(assoc.length == 1) hasImageAsset = this.pretty(assoc[0].value);
-               else { hasImageAsset = this.pretty(e.value);  multipleVolume = true; }
+               if(assoc.length == 1) { this.props.onHasImageAsset("http://iiifpres.bdrc.io/2.1.1/v:bdr:"+this.pretty(assoc[0].value)+"/manifest"); }
+               else { this.props.onHasImageAsset("http://iiifpres.bdrc.io/2.1.1/collection/i:bdr:"+this.pretty(e.value));  }
             }
          }
       }
 
+      if(!this.props.manifestError && this.props.imageAsset && this.state.openUV) {
+
+         let itv = setInterval((function(that){ return function(){
+
+            let iframe = $('.uv iframe')
+
+            // console.log("check");
+
+            if(iframe.length > 0){
+
+               if(iframe.offset().top == 0) {
+
+               // console.log("ready to stop");
+
+               clearInterval(itv);
+
+               itv = setInterval(function(){
+
+                  // console.log("quit?",that);
+
+                  if(iframe.offset().top > 0)
+                  {
+                     clearInterval(itv);
+
+                     that.setState({...this.state, openUV:false})
+
+                     window.location.reload();
+                  }
+
+               }, 1000);
+            }
+         }
+
+
+      }})(this), 1000);
+
+            /*
+            iframe.find("a.exitFullscreen").click(function(){
+                  alert("test");
+               });
+               */
+            //$("a.exitFullscreen").click(function(){ console.log("length",$("a.fullscreen").length)})
+
+      }
+
       if(kZprop.indexOf(bdo+"imageList") !== -1)
       {
-         hasImageAsset = this.props.IRI
+         this.props.onHasImageAsset("http://iiifpres.bdrc.io/2.1.1/v:bdr:"+ this.props.IRI);
       }
 
       // add nother route to UViewer Gallery page
@@ -629,10 +682,11 @@ class ResourceViewer extends Component<Props,State>
                   <Button style={{paddingLeft:0}}>json-ld</Button>
                </a>
                {
-                  hasImageAsset &&
-                  <Link className="goBack" target="_blank" to={!multipleVolume ? "/gallery?manifest=http://iiifpres.bdrc.io/2.1.1/v:bdr:"+hasImageAsset+"/manifest":"/show/bdr:"+hasImageAsset}>
-                     <Button style={{marginLeft:"50px",fontWeight:"700","border":"1px solid black"}}>view image gallery</Button>
-                  </Link>
+
+                  !this.props.manifestError && this.props.imageAsset &&
+                  <Button className="goBack" onClick={(e) => this.setState({...this.state, openUV:true})}
+                     style={{paddingLeft:"0px",marginLeft:"50px"/*,fontWeight:"700","border":"1px solid black"*/}}>view image gallery</Button>
+
                }
                {
                   this.props.IRI[0].match(/[PGT]/) &&
@@ -643,6 +697,46 @@ class ResourceViewer extends Component<Props,State>
                {this.format("h1",rdf+"type",this.props.IRI)}
                {this.format("h2",skos+"prefLabel")}
                { /*<MapComponent tmp={this.props}/ */}
+               {/*
+                  hasImageAsset && //this.props.openUV &&
+                  <IIIFViewerContainer
+                     manifest={!multipleVolume ? "http://iiifpres.bdrc.io/2.1.1/v:bdr:"+hasImageAsset+"/manifest"
+                                                :"http://iiifpres.bdrc.io/2.1.1/collection/i:bdr:"+hasImageAsset}
+                     location={this.props.history.location}
+                     history={this.props.history}/>
+                     */
+               }
+               {
+                  !this.props.manifestError && this.props.imageAsset && //!this.state.openUV &&
+                  <div className={"uvDefault "+(this.state.imageLoaded?"loaded":"")} onClick={(e)=>this.setState({openUV:true})}>
+                     <Loader className="uvLoader" loaded={this.state.imageLoaded} color="#fff"/>
+                     <img src={this.props.firstImage} onLoad={(e)=>this.setState({imageLoaded:true})}/>
+                     <div id="title">
+                        <span>View image gallery</span>
+                        <Fullscreen style={{transform: "scale(1.4)",position:"absolute",right:"3px",top:"3px"}}/>
+                     </div>
+                  </div>
+               }
+               {
+                  !this.props.manifestError && this.props.imageAsset && this.state.openUV &&
+                  [<div
+                  className="uv"
+                  data-locale="en-GB:English (GB),cy-GB:Cymraeg"
+                  //data-config="/config.json"
+                  //data-uri="https://eap.bl.uk/archive-file/EAP676-12-4/manifest"
+                  data-uri={this.props.imageAsset}
+                  data-collectionindex="0"
+                  data-manifestindex="0"
+                  data-sequenceindex="0"
+                  data-fullscreen="true"
+                  data-canvasindex="0"
+                  data-zoom="-1.0064,0,3.0128,1.3791"
+                  data-rotation="0"
+                  style={{width:"0",height:"0",backgroundColor: "#000"}}
+               />,
+                  <Script url={"http://universalviewer.io/uv/lib/embed.js"} />]
+
+               }
                <div className="data">
                   { kZprop.map((k) => {
 

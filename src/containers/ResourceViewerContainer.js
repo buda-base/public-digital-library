@@ -24,8 +24,11 @@ const mapStateToProps = (state,ownProps) => {
       resources[ownProps.IRI+"@"] = searches["bdr:"+ownProps.IRI+"@"].results.bindings
 
    let prefLang = state.ui.prefLang
+   let imageAsset = state.data.imageAsset
+   let firstImage = state.data.firstImage
+   let manifestError = state.data.manifestError
 
-   let props = { resources, ontology, keyword, language, datatype, assocResources, prefLang, failures }
+   let props = { resources, ontology, keyword, language, datatype, assocResources, prefLang, failures,imageAsset,firstImage,manifestError }
 
    console.log("mS2p",state,props)
 
@@ -35,6 +38,9 @@ const mapStateToProps = (state,ownProps) => {
 
 const mapDispatchToProps = (dispatch, ownProps) => {
    return {
+      onHasImageAsset:(url:string) => {
+         dispatch(data.getManifest(url));
+      }
    }
 }
 

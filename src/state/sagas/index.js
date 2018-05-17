@@ -99,6 +99,36 @@ export function* watchChoosingHost() {
    );
 }
 
+async function getManifest(url) {
+   try {
+      let manif = await api.loadManifest(url);
+      let image ;
+      //collection ?
+      if(!manif.sequences && manif.manifests ) {
+         manif = await api.loadManifest(manif.manifests[0]["@id"]);
+      }
+
+      if(manif.sequences && manif.sequences[0] && manif.sequences[0].canvases) {
+         for(let s of manif.sequences[0].canvases){
+            if(s.label === "p. 1" && s.images && s.images[0]) {
+
+               image = s.images[0].resource["@id"]
+               console.log("image",image)
+
+               store.dispatch(dataActions.firstImage(image))
+
+               break ;
+            }
+         }
+      }
+   }
+   catch(e){
+      console.log("ERRROR with manifest",e)
+
+      store.dispatch(dataActions.manifestError(url))
+   }
+}
+
 export function* getDatatypes(key,lang) {
 
    try {
@@ -259,7 +289,7 @@ function getData(result)  {
             store.dispatch(dataActions.foundResults(keyword, language, data, ["Work"]));
             store.dispatch(dataActions.foundFacetInfo(keyword,language,datatype,stat))
          }
-         
+
          /*
          if(metaSav) {
             if(metaSav.total) delete metaSav.total
@@ -419,6 +449,14 @@ export function* watchGetDatatypes() {
    );
 }
 
+export function* watchGetManifest() {
+
+   yield takeLatest(
+      dataActions.TYPES.getManifest,
+      (action) => getManifest(action.payload)
+   );
+}
+
 export function* watchGetOneDatatype() {
 
    yield takeLatest(
@@ -452,6 +490,7 @@ export default function* rootSaga() {
       watchGetFacetInfo(),
       watchGetOneDatatype(),
       watchGetOneFacet(),
+      watchGetManifest(),
       watchSearchingKeyword(),
       watchStartSearch()
    ])

@@ -78,6 +78,17 @@ div.match span.highlight { border:1px solid rgba(229, 74, 53,1); padding:0px 4px
 div.match div.multi > span:not(:last-child)::after { content:", "; }
 /* div.match span.highlight { background-color: rgba(229, 74, 53,1.0); color:white ; padding:0px 2px ;}  */
 
+#UView { width:800px;height:480px;border:none; overflow:visible; }
+
+.uvDefault { box-shadow: 0 0 10px black;display:inline-block;padding:5px;background:rgba(0,0,0,1.0);position:relative; min-width:100px;min-height:100px; }
+.uvDefault img {max-width:100%; position:relative;z-index:1;}
+.uvDefault.loaded { font-size:0; cursor:pointer; }
+.uvDefault.loaded #title { position:absolute;font-size:17px;left:20px;bottom:20px; z-index:2;background-color:rgba(229, 74, 53,1);color:white;
+   padding:5px 50px; border-radius:0px; border:1px solid rgba(229, 74, 53,1); }
+.uvDefault.loaded #title * { vertical-align:middle; }
+.uvDefault.loaded:hover #title { color:rgba(229, 74, 53,1);background:rgba(255, 230, 220,1);border-color:rgba(229, 74, 53,1); }
+
+.uvLoader { z-index:0 !important;}
 
 .App {
   text-align: center;

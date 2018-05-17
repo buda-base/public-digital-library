@@ -29,6 +29,22 @@ export const choosingHost = (host: string): Action => {
     }
 }
 
+TYPES.getManifest = 'GET_MANIFEST';
+export const getManifest = (url: string): Action => {
+    return {
+        type: TYPES.getManifest,
+        payload: url
+    }
+}
+
+TYPES.firstImage = 'FIRST_IMAGE';
+export const firstImage = (url: string): Action => {
+    return {
+        type: TYPES.firstImage,
+        payload: url
+    }
+}
+
 TYPES.chosenHost = 'CHOSEN_HOST';
 export const chosenHost = (host: string): Action => {
     return {
@@ -95,6 +111,16 @@ export const searchFailed = (keyword: string, error: string): SearchFailedAction
     }
 }
 
+TYPES.manifestError = 'MANIFEST_ERROR';
+export const manifestError = (url: string, error: string): SearchFailedAction => {
+    return {
+        type: TYPES.manifestError,
+        payload: {
+            keyword:url,
+            error
+        }
+    }
+}
 
 /*
 TYPES.searchingKeyword = 'SEARCHING_KEYWORD';

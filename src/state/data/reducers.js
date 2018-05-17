@@ -21,7 +21,9 @@ export type DataState = {
          index:number
       }
    },
-   datatypes?:boolean|{}
+   datatypes?:boolean|{},
+   imageAsset?:{},
+   firstImage?:string
 }
 
 const DEFAULT_STATE: DataState = {
@@ -34,6 +36,8 @@ const DEFAULT_STATE: DataState = {
          index:0
       }
    },
+   //firstImage:"http://iiif.bdrc.io/image/v2/bdr:V22084_I0886::08860003.tif/full/full/0/default.jpg"
+   //firstImage:"http://iiif.bdrc.io/image/v2/bdr:V1KG2788_I1KG3143::I1KG31430003.tif/full/full/0/default.jpg"
 }
 
 export const loadedConfig = (state: DataState, action: Action) => {
@@ -247,6 +251,38 @@ export const foundFacetInfo = (state: DataState, action: actions.FoundResultsAct
    }
 }
 reducers[actions.TYPES.foundFacetInfo] = foundFacetInfo;
+
+export const getManifest = (state: DataState, action: Action) => {
+
+    state = {
+        ...state,
+        imageAsset:action.payload
+    }
+    return state ;
+}
+reducers[actions.TYPES.getManifest] = getManifest;
+
+export const manifestError = (state: DataState, action: SearchFailedAction) => {
+
+    state = {
+        ...state,
+        manifestError:{ url:action.payload.keyword, error:action.payload.error }
+    }
+    return state ;
+}
+reducers[actions.TYPES.manifestError] = manifestError;
+
+
+export const firstImage = (state: DataState, action: Action) => {
+
+    state = {
+        ...state,
+        firstImage:action.payload
+    }
+    return state ;
+}
+reducers[actions.TYPES.firstImage] = firstImage;
+
 
 
 // Data Reducer
