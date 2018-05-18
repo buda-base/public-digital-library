@@ -1,6 +1,6 @@
 // @flow
 import type { Action } from '../actions';
-import type {SearchAction} from './actions';
+import type {SearchAction,SearchFailedAction} from './actions';
 import createReducer from '../../lib/createReducer';
 import * as actions from './actions';
 

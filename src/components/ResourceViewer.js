@@ -27,7 +27,9 @@ type State = {
    uviewer : boolean,
    ready? : boolean,
    imageLoaded:boolean,
-   openUV?:boolean
+   openUV?:boolean,
+   hideUV?:boolean,
+   toggleUV?:boolean
  }
 
 
@@ -108,7 +110,7 @@ class ResourceViewer extends Component<Props,State>
    {
       super(props);
 
-      this.state = { uviewer : false,imageLoaded:false }
+      this.state = { uviewer:false, imageLoaded:false }
 
       console.log("props",props)
 
@@ -578,6 +580,28 @@ class ResourceViewer extends Component<Props,State>
 
    }
 
+   showUV()
+   {
+      let state = { ...this.state, openUV:true, hideUV:false }
+      this.setState(state);
+
+/*
+       //window.addEventListener('uvLoaded', function (e) {
+           window.createUV('#uv', {
+               iiifResourceUri: this.props.imageAsset,
+               configUri: 'uv-config.json',
+               embedded:true,
+               isLightbox:true
+
+           }, new window.UV.URLDataProvider());
+
+           let remove = $.fn.remove
+           console.log("UV",$("#uv .uv"));
+       //}, false);
+
+       */
+   }
+
    render()
     {
       console.log("render",this.props,this.state)
@@ -609,57 +633,64 @@ class ResourceViewer extends Component<Props,State>
 
             console.log("hImA",assoc,e.value)
 
-            if(assoc && assoc.length > 0) {
+            if(assoc && assoc.length > 0 && !this.props.imageAsset ) {
                if(assoc.length == 1) { this.props.onHasImageAsset("http://iiifpres.bdrc.io/2.1.1/v:bdr:"+this.pretty(assoc[0].value)+"/manifest"); }
                else { this.props.onHasImageAsset("http://iiifpres.bdrc.io/2.1.1/collection/i:bdr:"+this.pretty(e.value));  }
             }
          }
       }
 
-      if(!this.props.manifestError && this.props.imageAsset && this.state.openUV) {
+
+      if(!this.props.manifestError && this.props.imageAsset && this.state.openUV && !this.state.hideUV) {
 
          let itv = setInterval((function(that){ return function(){
 
-            let iframe = $('.uv iframe')
+            let iframe = $('.uv:not(.hide) iframe')
 
-            // console.log("check");
+            console.log("check");
 
             if(iframe.length > 0){
 
-               if(iframe.offset().top == 0) {
+               //if(iframe.offset().top == 0) {
 
-               // console.log("ready to stop");
+               iframe.get(0).style.position = "absolute" ;
+
+               console.log("ready to stop");
 
                clearInterval(itv);
 
                itv = setInterval(function(){
 
-                  // console.log("quit?",that);
 
-                  if(iframe.offset().top > 0)
+                  iframe = $('.uv:not(.hide) iframe')
+
+                  console.log("quit?",that.state,iframe.get(0).style) //,iframe.length > 0?iframe.get(0).style.position:"null",that.state);
+
+                  if(iframe.length > 0 && iframe.get(0).style.position === "static" )
                   {
                      clearInterval(itv);
 
-                     that.setState({...this.state, openUV:false})
+                     that.setState({...that.state, hideUV:true, toggleUV:true})
 
-                     window.location.reload();
+                     console.log("quitted",that);
+
                   }
-
                }, 1000);
+               //}
             }
-         }
 
 
-      }})(this), 1000);
+         }})(this), 1000);
 
-            /*
-            iframe.find("a.exitFullscreen").click(function(){
-                  alert("test");
-               });
-               */
+
+            //iframe.find("a.exitFullscreen").click(function(){
+            //      alert("test");
+            //   });
+
             //$("a.exitFullscreen").click(function(){ console.log("length",$("a.fullscreen").length)})
 
       }
+
 
       if(kZprop.indexOf(bdo+"imageList") !== -1)
       {
@@ -684,7 +715,7 @@ class ResourceViewer extends Component<Props,State>
                {
 
                   !this.props.manifestError && this.props.imageAsset &&
-                  <Button className="goBack" onClick={(e) => this.setState({...this.state, openUV:true})}
+                  <Button className="goBack" onClick={this.showUV.bind(this)}
                      style={{paddingLeft:"0px",marginLeft:"50px"/*,fontWeight:"700","border":"1px solid black"*/}}>view image gallery</Button>
 
                }
@@ -708,7 +739,7 @@ class ResourceViewer extends Component<Props,State>
                }
                {
                   !this.props.manifestError && this.props.imageAsset && //!this.state.openUV &&
-                  <div className={"uvDefault "+(this.state.imageLoaded?"loaded":"")} onClick={(e)=>this.setState({openUV:true})}>
+                  <div className={"uvDefault "+(this.state.imageLoaded?"loaded":"")} onClick={this.showUV.bind(this)}>
                      <Loader className="uvLoader" loaded={this.state.imageLoaded} color="#fff"/>
                      <img src={this.props.firstImage} onLoad={(e)=>this.setState({imageLoaded:true})}/>
                      <div id="title">
@@ -718,9 +749,10 @@ class ResourceViewer extends Component<Props,State>
                   </div>
                }
                {
+
                   !this.props.manifestError && this.props.imageAsset && this.state.openUV &&
                   [<div
-                  className="uv"
+                  className={"uv "+(this.state.toggleUV?"toggled ":"")+(this.state.hideUV?"hide ":"")}
                   data-locale="en-GB:English (GB),cy-GB:Cymraeg"
                   //data-config="/config.json"
                   //data-uri="https://eap.bl.uk/archive-file/EAP676-12-4/manifest"
@@ -737,7 +769,7 @@ class ResourceViewer extends Component<Props,State>
                   <Script url={"http://universalviewer.io/uv/lib/embed.js"} />]
 
                }
-               <div className="data">
+               { (!this.state.openUV || this.state.hideUV || !this.state.toggleUV) && <div className="data">
                   { kZprop.map((k) => {
 
                      let elem = this.getResourceElem(k);
@@ -808,6 +840,7 @@ class ResourceViewer extends Component<Props,State>
                      </div>
                   }
                </div>
+            }
             </div>
             {/* <iframe style={{width:"calc(100% - 100px)",margin:"50px",height:"calc(100vh - 160px)",border:"none"}} src={"http://purl.bdrc.io/resource/"+get.IRI}/> */}
          </div>
