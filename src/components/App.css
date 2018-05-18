@@ -80,6 +80,9 @@ div.match div.multi > span:not(:last-child)::after { content:", "; }
 
 #UView { width:800px;height:480px;border:none; overflow:visible; }
 
+#fondUV:not(.hide) { position:fixed;width:100%;height:100%;background:rgba(0,0,0,0.5); left:0;top:0;z-index:10; }
+#fondUV.hide * { display:none !important; }
+
 .uv.toggled:not(.hide) iframe { z-index:10 !important;position:fixed !important;width:100% !important;left:0 !important;height:calc(100vh) !important;top:0 !important;  } */ */ */ */
 .uv.hide { display:none !important;}
 

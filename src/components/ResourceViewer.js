@@ -647,7 +647,7 @@ class ResourceViewer extends Component<Props,State>
 
             let iframe = $('.uv:not(.hide) iframe')
 
-            console.log("check");
+            //console.log("check");
 
             if(iframe.length > 0){
 
@@ -664,7 +664,7 @@ class ResourceViewer extends Component<Props,State>
 
                   iframe = $('.uv:not(.hide) iframe')
 
-                  console.log("quit?",that.state,iframe.get(0).style) //,iframe.length > 0?iframe.get(0).style.position:"null",that.state);
+                  //console.log("quit?",that.state,iframe.get(0).style) //,iframe.length > 0?iframe.get(0).style.position:"null",that.state);
 
                   if(iframe.length > 0 && iframe.get(0).style.position === "static" )
                   {
@@ -675,12 +675,12 @@ class ResourceViewer extends Component<Props,State>
                      console.log("quitted",that);
 
                   }
-               }, 1000);
+               }, 350);
                //}
             }
 
 
-         }})(this), 1000);
+         }})(this), 350);
 
 
             //iframe.find("a.exitFullscreen").click(function(){
@@ -751,8 +751,11 @@ class ResourceViewer extends Component<Props,State>
                {
 
                   !this.props.manifestError && this.props.imageAsset && this.state.openUV &&
-                  [<div
-                  className={"uv "+(this.state.toggleUV?"toggled ":"")+(this.state.hideUV?"hide ":"")}
+                  [<div id="fondUV" className={(this.state.hideUV?"hide":"")}>
+                     <Loader loaded={false} color="#fff"/>
+                  </div>,
+                  <div
+                  className={"uv "+(this.state.toggleUV?"toggled ":"")+(this.state.hideUV?"hide":"")}
                   data-locale="en-GB:English (GB),cy-GB:Cymraeg"
                   //data-config="/config.json"
                   //data-uri="https://eap.bl.uk/archive-file/EAP676-12-4/manifest"
