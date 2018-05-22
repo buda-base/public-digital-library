@@ -753,13 +753,18 @@ class ResourceViewer extends Component<Props,State>
 
       if(kZprop.indexOf(bdo+"imageList") !== -1)
       {
-         if(!this.props.manifestError) this.props.onHasImageAsset("http://iiifpres.bdrc.io/2.1.1/v:bdr:"+ this.props.IRI+ "/manifest",this.props.IRI);
+         if(!this.props.imageAsset && !this.props.manifestError) this.props.onHasImageAsset("http://iiifpres.bdrc.io/2.1.1/v:bdr:"+ this.props.IRI+ "/manifest",this.props.IRI);
       }
       else if(kZprop.indexOf(bdo+"hasIIIFManifest") !== -1)
       {
          let elem = this.getResourceElem(bdo+"hasIIIFManifest")
-         if(elem[0] && elem[0].value && !this.props.manifestError)
+         if(elem[0] && elem[0].value && !this.props.manifestError && !this.props.imageAsset)
             this.props.onHasImageAsset(elem[0].value,this.props.IRI);
+      }
+      else if(kZprop.indexOf(bdo+"workLocation") !== -1)
+      {
+         if(!this.props.imageAsset && !this.props.manifestError)
+            this.props.onHasImageAsset("http://presentation.bdrc.io/2.1.1/collection/wio:bdr:"+this.props.IRI,this.props.IRI)
       }
 
 
