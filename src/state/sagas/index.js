@@ -109,16 +109,26 @@ async function getManifest(url) {
       }
 
       if(manif.sequences && manif.sequences[0] && manif.sequences[0].canvases) {
+         let found = false ;
          for(let s of manif.sequences[0].canvases){
             if(s.label === "p. 1" && s.images && s.images[0]) {
 
                image = s.images[0].resource["@id"]
                console.log("image",image)
 
+               found = true ;
+
                store.dispatch(dataActions.firstImage(image))
 
                break ;
             }
+         }
+         if(!found) {
+            if(manif.sequences[0].canvases[2] && manif.sequences[0].canvases[2].images[0] &&
+               (image = manif.sequences[0].canvases[2].images[0].resource["@id"]))
+               {
+                  store.dispatch(dataActions.firstImage(image))
+               }
          }
       }
    }

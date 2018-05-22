@@ -385,7 +385,7 @@ class ResourceViewer extends Component<Props,State>
                      <Link className="urilink" to={"/show/bdr:"+pretty}>{pretty}</Link>&nbsp;
                      <Link className="goBack" target="_blank" to={"/gallery?manifest=http://iiifpres.bdrc.io/2.1.1/v:bdr:"+pretty+"/manifest"}>{"(view image gallery)"}</Link>
                   </span> ) }
-                  else if(pretty.toString().match(/^([A-Z]+[_0-9]+)+$/)) ret.push(<Link className="urilink" to={"/show/bdr:"+pretty}>{pretty}</Link>)
+                  else if(pretty.toString().match(/^([A-Z]+[_0-9-]+)+$/)) ret.push(<Link className="urilink" to={"/show/bdr:"+pretty}>{pretty}</Link>)
                   else ret.push(pretty)
                   return ret
 
