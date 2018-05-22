@@ -1,5 +1,6 @@
 //@flow
 
+import {CopyToClipboard} from 'react-copy-to-clipboard' ;
 import $ from 'jquery' ;
 import Fullscreen from 'material-ui-icons/Fullscreen';
 import Script from 'react-load-script'
@@ -744,6 +745,13 @@ class ResourceViewer extends Component<Props,State>
                <a className="goBack" target="_blank" href={"http://purl.bdrc.io/resource/"+this.props.IRI+".jsonld"}>
                   <Button style={{paddingLeft:0}}>json-ld</Button>
                </a>
+               <CopyToClipboard text={"http://purl.bdrc.io/resource/"+this.props.IRI} onCopy={(e) =>
+                        //alert("Resource url copied to clipboard\nCTRL+V to paste")
+                        prompt("Resource url has been copied to clipboard.\nCTRL+V to paste","http://purl.bdrc.io/resource/"+this.props.IRI)
+                  }>
+
+                  <Button className="goBack" style={{marginLeft:"30px"}}>Copy permalink</Button>
+               </CopyToClipboard>
                {
 
                   !this.props.manifestError && this.props.imageAsset &&
@@ -754,7 +762,7 @@ class ResourceViewer extends Component<Props,State>
                {
                   this.props.IRI[0].match(/[PGT]/) &&
                   <Link className="goBack" to={"/search?r=bdr:"+this.props.IRI}>
-                     <Button style={{marginLeft:"50px",paddingLeft:"0px"}}>Browse associated resources &gt;</Button>
+                     <Button style={{marginLeft:"30px"}}>Browse associated resources &gt;</Button>
                   </Link>
                }
                {this.format("h1",rdf+"type",this.props.IRI)}
