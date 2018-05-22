@@ -445,15 +445,15 @@ export default class API {
           return path;
       }
 
-            _assocResourcesPath(IRI:string): string {
+      _assocResourcesPath(IRI:string): string {
 
-               let config = store.getState().data.config.ldspdi
-               let url = config.endpoints[config.index] ;
+         let config = store.getState().data.config.ldspdi
+         let url = config.endpoints[config.index] ;
 
-                let path = url +  "/lib/allAssocResource?R_RES=bdr:" + IRI;
+          let path = url +  "/lib/allAssocResource?R_RES=bdr:" + IRI;
 
-                return path;
-            }
+          return path;
+      }
 
      get _ontologyPath(): string {
         let path = ONTOLOGY_PATH;

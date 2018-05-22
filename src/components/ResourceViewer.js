@@ -41,8 +41,9 @@ const owl  = "http://www.w3.org/2002/07/owl#";
 const rdf  = "http://www.w3.org/1999/02/22-rdf-syntax-ns#";
 const rdfs = "http://www.w3.org/2000/01/rdf-schema#";
 const skos = "http://www.w3.org/2004/02/skos/core#";
+const tmp  = "http://purl.bdrc.io/ontology/tmp/" ;
 
-const prefixes = {adm, bdo, bdr, owl, rdf, rdfs, skos}
+const prefixes = { adm, bdo, bdr, owl, rdf, rdfs, skos, tmp }
 
 let propOrder = {
    "Corporation":[],
@@ -91,6 +92,10 @@ let propOrder = {
       "bdo:workCreator",
       "bdo:workLangScript",
       "bdo:workObjectType",
+      "bdo:workMaterial",
+      "tmp:dimensions",
+      "bdo:workDimWidth",
+      "bdo:workDimHeight",
       "bdo:workEvent",
       "bdo:workHasItem",
       // "bdo:workHasItemImageAsset",
@@ -184,10 +189,29 @@ class ResourceViewer extends Component<Props,State>
          || !this.props.resources[this.props.IRI][bdr+this.props.IRI]) return {}
 
       let prop = this.props.resources[this.props.IRI][bdr+this.props.IRI] ;
+      let w = prop[bdo+"workDimWidth"]
+      let h = prop[bdo+"workDimHeight"]
+
+      if(w && h && w[0] && h[0] && !w[0].value.match(/cm/) && !h[0].value.match(/cm/)) {
+         prop[tmp+"dimensions"] = [ {type: "literal", value: w[0].value+"x"+h[0].value+"cm" } ]
+         delete prop[bdo+"workDimWidth"]
+         delete prop[bdo+"workDimHeight"]
+      }
+      else if(w && w[0] && !w[0].value.match(/cm/)) {
+         prop[bdo+"workDimWidth"] = [ { ...w[0], value:w[0].value+"cm" } ]
+      }
+      else if(h && h[0] && !h[0].value.match(/cm/)) {
+         prop[bdo+"workDimHeight"] = [ { ...h[0], value:h[0].value+"cm" } ]
+      }
+
+      //console.log("w h",w,h,prop)
+
+      //prop["bdr:workDimensions"] =
       if(sorted) {
          let t = getEntiType(this.props.IRI);
          if(t && propOrder[t])
          {
+
             let sortProp = Object.keys(prop).sort((a,b)=> {
                let ia = propOrder[t].indexOf(a)
                let ib = propOrder[t].indexOf(b)
@@ -195,6 +219,7 @@ class ResourceViewer extends Component<Props,State>
                if ((ia != -1 && ib != -1 && ia < ib) || (ia != -1 && ib == -1)) return -1
                else return 1 ;
             }).reduce((acc,e) => ({ ...acc, [e]:prop[e] }),{})
+
 
          // console.log("propSort",prop,sortProp)
 
