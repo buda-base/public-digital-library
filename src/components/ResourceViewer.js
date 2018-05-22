@@ -205,13 +205,16 @@ class ResourceViewer extends Component<Props,State>
          prop[bdo+"workDimHeight"] = [ { ...h[0], value:h[0].value+"cm" } ]
       }
 
-      //console.log("w h",w,h,prop)
+      console.log("w h",w,h,prop)
 
       //prop["bdr:workDimensions"] =
       if(sorted) {
          let t = getEntiType(this.props.IRI);
          if(t && propOrder[t])
          {
+            let that = this ;
+
+            console.log("sort",prop)
 
             let sortProp = Object.keys(prop).sort((a,b)=> {
                let ia = propOrder[t].indexOf(a)
@@ -219,7 +222,37 @@ class ResourceViewer extends Component<Props,State>
                //console.log(t,a,ia,b,ib)
                if ((ia != -1 && ib != -1 && ia < ib) || (ia != -1 && ib == -1)) return -1
                else return 1 ;
-            }).reduce((acc,e) => ({ ...acc, [e]:prop[e] }),{})
+            }).reduce((acc,e) => {
+
+               //console.log("sorting",e,prop[e])
+
+                  return ({ ...acc, [e]:prop[e].sort(function(A,B){
+               let a = A
+               let b = B
+               if(a.type == "bnode" && a.value) a = that.getResourceBNode(a.value)
+               if(b.type == "bnode" && b.value) b = that.getResourceBNode(b.value)
+
+               //console.log(a,b)
+
+               if(!a["value"] && a[rdfs+"label"] && a[rdfs+"label"][0]) a = a[rdfs+"label"][0]
+               if(a["lang"]) a = a["lang"]
+               else if(a["xml:lang"]) a = a["xml:lang"]
+               else a = null
+
+               if(!b["value"] && b[rdfs+"label"] && b[rdfs+"label"][0]) b = b[rdfs+"label"][0]
+               if(b["lang"]) b = b["lang"]
+               else if(b["xml:lang"]) b = b["xml:lang"]
+               else b = null
+
+               //console.log(a,b)
+
+               if( a && b ) {
+                  if(a < b ) return -1 ;
+                  else if(a > b) return 1 ;
+                  else return 0 ;
+               }
+               else return 0 ;
+            }) })},{})
 
 
          // console.log("propSort",prop,sortProp)
