@@ -194,7 +194,7 @@ class ResourceViewer extends Component<Props,State>
       let h = prop[bdo+"workDimHeight"]
 
       if(w && h && w[0] && h[0] && !w[0].value.match(/cm/) && !h[0].value.match(/cm/)) {
-         prop[tmp+"dimensions"] = [ {type: "literal", value: w[0].value+"x"+h[0].value+"cm" } ]
+         prop[tmp+"dimensions"] = [ {type: "literal", value: w[0].value+"×"+h[0].value+"cm" } ]
          delete prop[bdo+"workDimWidth"]
          delete prop[bdo+"workDimHeight"]
       }
@@ -659,7 +659,7 @@ class ResourceViewer extends Component<Props,State>
 
             console.log("hImA",assoc,e.value)
 
-            if(assoc && assoc.length > 0 && !this.props.imageAsset ) {
+            if(assoc && assoc.length > 0 && !this.props.imageAsset && !this.props.manifestError) {
                if(assoc.length == 1) { this.props.onHasImageAsset("http://iiifpres.bdrc.io/2.1.1/v:bdr:"+this.pretty(assoc[0].value)+"/manifest",this.props.IRI); }
                else { this.props.onHasImageAsset("http://iiifpres.bdrc.io/2.1.1/collection/i:bdr:"+this.pretty(e.value),this.props.IRI);  }
             }
@@ -720,12 +720,12 @@ class ResourceViewer extends Component<Props,State>
 
       if(kZprop.indexOf(bdo+"imageList") !== -1)
       {
-         this.props.onHasImageAsset("http://iiifpres.bdrc.io/2.1.1/v:bdr:"+ this.props.IRI+ "/manifest",this.props.IRI);
+         if(!this.props.manifestError) this.props.onHasImageAsset("http://iiifpres.bdrc.io/2.1.1/v:bdr:"+ this.props.IRI+ "/manifest",this.props.IRI);
       }
       else if(kZprop.indexOf(bdo+"hasIIIFManifest") !== -1)
       {
          let elem = this.getResourceElem(bdo+"hasIIIFManifest")
-         if(elem[0] && elem[0].value)
+         if(elem[0] && elem[0].value && !this.props.manifestError)
             this.props.onHasImageAsset(elem[0].value,this.props.IRI);
       }
 
