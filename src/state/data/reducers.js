@@ -22,8 +22,12 @@ export type DataState = {
       }
    },
    datatypes?:boolean|{},
-   imageAsset?:{},
-   firstImage?:string
+   IIIFinfo:{
+      [string]:{
+         imageAsset?:{},
+         firstImage?:string
+      }
+   }
 }
 
 const DEFAULT_STATE: DataState = {
@@ -254,9 +258,15 @@ reducers[actions.TYPES.foundFacetInfo] = foundFacetInfo;
 
 export const getManifest = (state: DataState, action: Action) => {
 
+   //console.log("getMa",action)
+
     state = {
         ...state,
-        imageAsset:action.payload
+        IIIFinfo:{ ...state.IIIFinfo,
+           [action.meta]:{ ...state.IIIFinfo?state.IIIFinfo[action.meta]:{},
+             imageAsset:action.payload
+            }
+         }
     }
     return state ;
 }
@@ -266,7 +276,11 @@ export const manifestError = (state: DataState, action: SearchFailedAction) => {
 
     state = {
         ...state,
-        manifestError:{ url:action.payload.keyword, error:action.payload.error }
+        IIIFinfo:{ ...state.IIIFinfo,
+           [action.meta]:{ ...state.IIIFinfo?state.IIIFinfo[action.meta]:{},
+             manifestError:{ url:action.payload.keyword, error:action.payload.error }
+            }
+         }
     }
     return state ;
 }
@@ -275,9 +289,15 @@ reducers[actions.TYPES.manifestError] = manifestError;
 
 export const firstImage = (state: DataState, action: Action) => {
 
+   //console.log("1im",action)
+
     state = {
         ...state,
-        firstImage:action.payload
+        IIIFinfo:{ ...state.IIIFinfo,
+           [action.meta]:{ ...state.IIIFinfo?state.IIIFinfo[action.meta]:{},
+             firstImage:action.payload
+            }
+         }
     }
     return state ;
 }

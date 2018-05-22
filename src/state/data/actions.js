@@ -30,18 +30,20 @@ export const choosingHost = (host: string): Action => {
 }
 
 TYPES.getManifest = 'GET_MANIFEST';
-export const getManifest = (url: string): Action => {
+export const getManifest = (url: string,IRI:string): Action => {
     return {
         type: TYPES.getManifest,
-        payload: url
+        payload: url,
+        meta:IRI
     }
 }
 
 TYPES.firstImage = 'FIRST_IMAGE';
-export const firstImage = (url: string): Action => {
+export const firstImage = (url: string,iri:string): Action => {
     return {
         type: TYPES.firstImage,
-        payload: url
+        payload: url,
+        meta:iri
     }
 }
 
@@ -112,13 +114,14 @@ export const searchFailed = (keyword: string, error: string): SearchFailedAction
 }
 
 TYPES.manifestError = 'MANIFEST_ERROR';
-export const manifestError = (url: string, error: string): SearchFailedAction => {
+export const manifestError = (url: string, error: string,iri:string): SearchFailedAction => {
     return {
         type: TYPES.manifestError,
         payload: {
             keyword:url,
             error
-        }
+        },
+        meta:iri
     }
 }
 

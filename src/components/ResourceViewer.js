@@ -383,7 +383,7 @@ class ResourceViewer extends Component<Props,State>
                   if(info && infoBase && infoBase.filter(e=>e["xml:lang"]).length > 0) ret.push(<Link className="urilink prefLabel" to={"/show/bdr:"+pretty}>{info}</Link>)
                   else if(pretty.toString().match(/^V[0-9A-Z]+_I[0-9A-Z]+$/)) { ret.push(<span>
                      <Link className="urilink" to={"/show/bdr:"+pretty}>{pretty}</Link>&nbsp;
-                     <Link className="goBack" target="_blank" to={"/gallery?manifest=http://iiifpres.bdrc.io/2.1.1/v:bdr:"+pretty+"/manifest"}>{"(view image gallery)"}</Link>
+                     {/* <Link className="goBack" target="_blank" to={"/gallery?manifest=http://iiifpres.bdrc.io/2.1.1/v:bdr:"+pretty+"/manifest"}>{"(view image gallery)"}</Link> */}
                   </span> ) }
                   else if(pretty.toString().match(/^([A-Z]+[_0-9-]+)+$/)) ret.push(<Link className="urilink" to={"/show/bdr:"+pretty}>{pretty}</Link>)
                   else ret.push(pretty)
@@ -634,8 +634,8 @@ class ResourceViewer extends Component<Props,State>
             console.log("hImA",assoc,e.value)
 
             if(assoc && assoc.length > 0 && !this.props.imageAsset ) {
-               if(assoc.length == 1) { this.props.onHasImageAsset("http://iiifpres.bdrc.io/2.1.1/v:bdr:"+this.pretty(assoc[0].value)+"/manifest"); }
-               else { this.props.onHasImageAsset("http://iiifpres.bdrc.io/2.1.1/collection/i:bdr:"+this.pretty(e.value));  }
+               if(assoc.length == 1) { this.props.onHasImageAsset("http://iiifpres.bdrc.io/2.1.1/v:bdr:"+this.pretty(assoc[0].value)+"/manifest",this.props.IRI); }
+               else { this.props.onHasImageAsset("http://iiifpres.bdrc.io/2.1.1/collection/i:bdr:"+this.pretty(e.value),this.props.IRI);  }
             }
          }
       }
@@ -694,8 +694,15 @@ class ResourceViewer extends Component<Props,State>
 
       if(kZprop.indexOf(bdo+"imageList") !== -1)
       {
-         this.props.onHasImageAsset("http://iiifpres.bdrc.io/2.1.1/v:bdr:"+ this.props.IRI);
+         this.props.onHasImageAsset("http://iiifpres.bdrc.io/2.1.1/v:bdr:"+ this.props.IRI+ "/manifest",this.props.IRI);
       }
+      else if(kZprop.indexOf(bdo+"hasIIIFManifest") !== -1)
+      {
+         let elem = this.getResourceElem(bdo+"hasIIIFManifest")
+         if(elem[0] && elem[0].value)
+            this.props.onHasImageAsset(elem[0].value,this.props.IRI);
+      }
+
 
       // add nother route to UViewer Gallery page
       return (

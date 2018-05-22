@@ -99,8 +99,11 @@ export function* watchChoosingHost() {
    );
 }
 
-async function getManifest(url) {
+async function getManifest(url,iri) {
    try {
+
+      console.log("getM",url,iri)
+
       let manif = await api.loadManifest(url);
       let image ;
       //collection ?
@@ -118,7 +121,7 @@ async function getManifest(url) {
 
                found = true ;
 
-               store.dispatch(dataActions.firstImage(image))
+               store.dispatch(dataActions.firstImage(image,iri))
 
                break ;
             }
@@ -127,7 +130,7 @@ async function getManifest(url) {
             if(manif.sequences[0].canvases[2] && manif.sequences[0].canvases[2].images[0] &&
                (image = manif.sequences[0].canvases[2].images[0].resource["@id"]))
                {
-                  store.dispatch(dataActions.firstImage(image))
+                  store.dispatch(dataActions.firstImage(image,iri))
                }
          }
       }
@@ -135,7 +138,7 @@ async function getManifest(url) {
    catch(e){
       console.log("ERRROR with manifest",e)
 
-      store.dispatch(dataActions.manifestError(url))
+      store.dispatch(dataActions.manifestError(url,e,iri))
    }
 }
 
@@ -463,7 +466,7 @@ export function* watchGetManifest() {
 
    yield takeLatest(
       dataActions.TYPES.getManifest,
-      (action) => getManifest(action.payload)
+      (action) => getManifest(action.payload,action.meta)
    );
 }
 

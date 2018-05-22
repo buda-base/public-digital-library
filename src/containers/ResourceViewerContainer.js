@@ -24,9 +24,21 @@ const mapStateToProps = (state,ownProps) => {
       resources[ownProps.IRI+"@"] = searches["bdr:"+ownProps.IRI+"@"].results.bindings
 
    let prefLang = state.ui.prefLang
-   let imageAsset = state.data.imageAsset
-   let firstImage = state.data.firstImage
-   let manifestError = state.data.manifestError
+
+
+   let firstImage
+   let imageAsset
+   let manifestError
+   let IIIFinfo = state.data.IIIFinfo
+
+   if(IIIFinfo) {
+      IIIFinfo = IIIFinfo[ownProps.IRI]
+      if(IIIFinfo) {
+         firstImage = IIIFinfo.firstImage
+         imageAsset = IIIFinfo.imageAsset
+         manifestError = IIIFinfo.manifestError
+      }
+   }
 
    let props = { resources, ontology, keyword, language, datatype, assocResources, prefLang, failures,imageAsset,firstImage,manifestError }
 
@@ -38,8 +50,8 @@ const mapStateToProps = (state,ownProps) => {
 
 const mapDispatchToProps = (dispatch, ownProps) => {
    return {
-      onHasImageAsset:(url:string) => {
-         dispatch(data.getManifest(url));
+      onHasImageAsset:(url:string,IRI:string) => {
+         dispatch(data.getManifest(url,IRI));
       }
    }
 }
