@@ -239,11 +239,13 @@ class ResourceViewer extends Component<Props,State>
                   if(!a["value"] && a[rdfs+"label"] && a[rdfs+"label"][0]) a = a[rdfs+"label"][0]
                   if(a["lang"]) a = a["lang"]
                   else if(a["xml:lang"]) a = a["xml:lang"]
+                  else if(a["type"] == "uri") a = a["value"]
                   else a = null
 
                   if(!b["value"] && b[rdfs+"label"] && b[rdfs+"label"][0]) b = b[rdfs+"label"][0]
                   if(b["lang"]) b = b["lang"]
                   else if(b["xml:lang"]) b = b["xml:lang"]
+                  else if(b["type"] == "uri") b = b["value"]
                   else b = null
 
                   //console.log(a,b)
@@ -569,6 +571,8 @@ class ResourceViewer extends Component<Props,State>
 
             elem = this.getResourceBNode(e.value)
             //console.log("bnode",e.value,elem)
+
+            if(!elem) continue ;
 
             let sub = []
 
