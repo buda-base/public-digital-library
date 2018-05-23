@@ -53,6 +53,9 @@ h4 { margin-top:10px;margin-bottom:0px;font-size:24px; }
 .match .multi a:hover,
 .resource .data a:hover { border-bottom:1px solid rgba(229, 74, 53,1); }
 
+.resource .data > div > h4 { width:100%; padding-left:30px; }
+.resource .data > div > h4::after { display:none !important; }
+
 .goBack { text-decoration: none;  }
 .goBack button { min-width:0 !important; }
 

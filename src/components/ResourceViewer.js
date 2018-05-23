@@ -85,6 +85,7 @@ let propOrder = {
    "Work":[
       "bdo:workTitle",
       "bdo:workExpressionOf",
+      "bdo:workType",
       "bdo:workHasExpression",
       "bdo:workIsAbout",
       "bdo:workGenre",
@@ -226,33 +227,34 @@ class ResourceViewer extends Component<Props,State>
 
                //console.log("sorting",e,prop[e])
 
-                  return ({ ...acc, [e]:prop[e].sort(function(A,B){
-               let a = A
-               let b = B
-               if(a.type == "bnode" && a.value) a = that.getResourceBNode(a.value)
-               if(b.type == "bnode" && b.value) b = that.getResourceBNode(b.value)
+               return ({ ...acc, [e]:prop[e].sort(function(A,B){
 
-               //console.log(a,b)
+                  let a = A
+                  let b = B
+                  if(a.type == "bnode" && a.value) a = that.getResourceBNode(a.value)
+                  if(b.type == "bnode" && b.value) b = that.getResourceBNode(b.value)
 
-               if(!a["value"] && a[rdfs+"label"] && a[rdfs+"label"][0]) a = a[rdfs+"label"][0]
-               if(a["lang"]) a = a["lang"]
-               else if(a["xml:lang"]) a = a["xml:lang"]
-               else a = null
+                  //console.log(a,b)
 
-               if(!b["value"] && b[rdfs+"label"] && b[rdfs+"label"][0]) b = b[rdfs+"label"][0]
-               if(b["lang"]) b = b["lang"]
-               else if(b["xml:lang"]) b = b["xml:lang"]
-               else b = null
+                  if(!a["value"] && a[rdfs+"label"] && a[rdfs+"label"][0]) a = a[rdfs+"label"][0]
+                  if(a["lang"]) a = a["lang"]
+                  else if(a["xml:lang"]) a = a["xml:lang"]
+                  else a = null
 
-               //console.log(a,b)
+                  if(!b["value"] && b[rdfs+"label"] && b[rdfs+"label"][0]) b = b[rdfs+"label"][0]
+                  if(b["lang"]) b = b["lang"]
+                  else if(b["xml:lang"]) b = b["xml:lang"]
+                  else b = null
 
-               if( a && b ) {
-                  if(a < b ) return -1 ;
-                  else if(a > b) return 1 ;
+                  //console.log(a,b)
+
+                  if( a && b ) {
+                     if(a < b ) return -1 ;
+                     else if(a > b) return 1 ;
+                     else return 0 ;
+                  }
                   else return 0 ;
-               }
-               else return 0 ;
-            }) })},{})
+               }) })},{})
 
 
          // console.log("propSort",prop,sortProp)
@@ -410,15 +412,33 @@ class ResourceViewer extends Component<Props,State>
                */
                   // console.log("dico",prop,elem,dico)
 
+
+
+                  let ret = []
+
                   let info,infoBase ;
                   if(dico) {
                      infoBase = dico[elem.value]
 
                      if(infoBase) {
-                        info = infoBase.filter((e)=>(e["xml:lang"] && e.type==prop && e["xml:lang"]==this.props.prefLang))
+                        if(prop == bdo+"workHasExpression") {
+                           prop = bdo+"workPartOf" ;
+                           ret.push("in ");
+                           infoBase = infoBase.sort(function(a,b) {
+                              if(a.type == prop && b.type == prop){
+                                 if(a.value < b.value) return -1 ;
+                                 else if(a.value > b.value) return 1 ;
+                                 else return 0 ;
+                              }
+                              else
+                                 return 0 ;
 
-                        //console.log("info0",info)
-                        //if(info.value) info = "youpi"+info.value
+                           })
+                        }
+
+                        info = infoBase.filter((e)=>(e["xml:lang"] && e.type==prop && e["xml:lang"]==this.props.prefLang))
+                           console.log("info0",info)
+                        //if(info.value) info = info.value
 
                         if(info[0]) info = info[0].value
                         else if(!withProp){
@@ -438,7 +458,7 @@ class ResourceViewer extends Component<Props,State>
 
                   // we can return Link
                   let pretty = this.fullname(elem.value);
-                  let ret = []
+
                   if(info && infoBase && infoBase.filter(e=>e["xml:lang"]).length > 0) ret.push(<Link className="urilink prefLabel" to={"/show/bdr:"+pretty}>{info}</Link>)
                   else if(pretty.toString().match(/^V[0-9A-Z]+_I[0-9A-Z]+$/)) { ret.push(<span>
                      <Link className="urilink" to={"/show/bdr:"+pretty}>{pretty}</Link>&nbsp;
@@ -490,7 +510,7 @@ class ResourceViewer extends Component<Props,State>
 
    format(Tag,prop:string,txt:string="",bnode:boolean=false,div:string="sub")
    {
-      //console.group("FORMAT")
+      console.group("FORMAT")
 
       let elemN,elem;
       if(bnode) {
@@ -525,7 +545,7 @@ class ResourceViewer extends Component<Props,State>
       })
       */
 
-      //console.log("format",prop,elem,txt,bnode,div);
+      console.log("format",prop,elem,txt,bnode,div);
 
       let ret = []
 
@@ -533,7 +553,7 @@ class ResourceViewer extends Component<Props,State>
       {
          let pretty = this.fullname(e.value)
 
-         //console.log("e",e,pretty)
+         console.log("e",e,pretty)
 
          if(e.type != "bnode")
          {
@@ -633,7 +653,7 @@ class ResourceViewer extends Component<Props,State>
          }
       }
 
-      //console.groupEnd();
+      console.groupEnd();
 
       return ret ;
 
@@ -693,8 +713,12 @@ class ResourceViewer extends Component<Props,State>
             console.log("hImA",assoc,e.value)
 
             if(assoc && assoc.length > 0 && !this.props.imageAsset && !this.props.manifestError) {
+
+               this.setState({...this.state, imageLoaded:false})
+
                if(assoc.length == 1) { this.props.onHasImageAsset("http://iiifpres.bdrc.io/2.1.1/v:bdr:"+this.pretty(assoc[0].value)+"/manifest",this.props.IRI); }
                else { this.props.onHasImageAsset("http://iiifpres.bdrc.io/2.1.1/collection/i:bdr:"+this.pretty(e.value),this.props.IRI);  }
+
             }
          }
       }
@@ -753,18 +777,25 @@ class ResourceViewer extends Component<Props,State>
 
       if(kZprop.indexOf(bdo+"imageList") !== -1)
       {
-         if(!this.props.imageAsset && !this.props.manifestError) this.props.onHasImageAsset("http://iiifpres.bdrc.io/2.1.1/v:bdr:"+ this.props.IRI+ "/manifest",this.props.IRI);
+         if(!this.props.imageAsset && !this.props.manifestError) {
+            this.setState({...this.state, imageLoaded:false})
+            this.props.onHasImageAsset("http://iiifpres.bdrc.io/2.1.1/v:bdr:"+ this.props.IRI+ "/manifest",this.props.IRI);
+         }
       }
       else if(kZprop.indexOf(bdo+"hasIIIFManifest") !== -1)
       {
          let elem = this.getResourceElem(bdo+"hasIIIFManifest")
-         if(elem[0] && elem[0].value && !this.props.manifestError && !this.props.imageAsset)
+         if(elem[0] && elem[0].value && !this.props.manifestError && !this.props.imageAsset) {
+            this.setState({...this.state, imageLoaded:false})
             this.props.onHasImageAsset(elem[0].value,this.props.IRI);
+         }
       }
       else if(kZprop.indexOf(bdo+"workLocation") !== -1)
       {
-         if(!this.props.imageAsset && !this.props.manifestError)
+         if(!this.props.imageAsset && !this.props.manifestError) {
+            this.setState({...this.state, imageLoaded:false})
             this.props.onHasImageAsset("http://presentation.bdrc.io/2.1.1/collection/wio:bdr:"+this.props.IRI,this.props.IRI)
+         }
       }
 
 
@@ -820,10 +851,13 @@ class ResourceViewer extends Component<Props,State>
                   <div className={"uvDefault "+(this.state.imageLoaded?"loaded":"")} onClick={this.showUV.bind(this)}>
                      <Loader className="uvLoader" loaded={this.state.imageLoaded} color="#fff"/>
                      <img src={this.props.firstImage} onLoad={(e)=>this.setState({imageLoaded:true})}/>
-                     <div id="title">
-                        <span>View image gallery</span>
-                        <Fullscreen style={{transform: "scale(1.4)",position:"absolute",right:"3px",top:"3px"}}/>
-                     </div>
+                     {
+                        this.props.firstImage && this.state.imageLoaded &&
+                        <div id="title">
+                           <span>View image gallery</span>
+                           <Fullscreen style={{transform: "scale(1.4)",position:"absolute",right:"3px",top:"3px"}}/>
+                        </div>
+                     }
                   </div>
                }
                {
