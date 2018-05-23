@@ -22,6 +22,9 @@ const theme = createMuiTheme({
     }
 });
 
+window.onpopstate = function(event) {
+    window.location.reload();
+};
 
 type Props = { history:{} }
 
