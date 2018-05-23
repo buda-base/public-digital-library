@@ -889,13 +889,21 @@ class ResourceViewer extends Component<Props,State>
 
                      let elem = this.getResourceElem(k);
 
-                     if(!k.match(new RegExp(adm+"|prefLabel|"+rdf+"|toberemoved"))) {
+                     console.log("prop",k,elem);
+
+                     if(!k.match(new RegExp(adm+"|prefLabel|"+rdf+"|toberemoved|workPartIndex|workPartTreeIndex"))) {
                      //if(!k.match(new RegExp("Revision|Entry|prefLabel|"+rdf+"|toberemoved"))) {
 
-                        if(!this.hasSuper(k))
+                        let sup = this.hasSuper(k)
+                        console.log("youpi?",sup)  ;
+
+
+                        if(!sup || sup.filter(e => e.value == bdo+"workRefs").length > 0)
                         {
                            let tags = this.format("h4",k)
-                           //console.log("tags",tags);
+
+                           console.log("tags",tags);
+
                            return (
                               <div>
                                  <h3><span>{this.fullname(k)}</span>:&nbsp;</h3>
