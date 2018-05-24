@@ -1,5 +1,5 @@
 //@flow
-
+import _ from "lodash";
 import {CopyToClipboard} from 'react-copy-to-clipboard' ;
 import $ from 'jquery' ;
 import Fullscreen from 'material-ui-icons/Fullscreen';
@@ -209,13 +209,53 @@ class ResourceViewer extends Component<Props,State>
       console.log("w h",w,h,prop)
 
       //prop["bdr:workDimensions"] =
-      if(sorted) {
+      if(sorted)
+      {
+
+
+         let parts = prop[bdo+"workHasPart"]
+
+         if(parts) {
+
+            let assoR = this.props.assocResources
+            if (assoR) {
+               console.log("AV parts",parts)
+
+               parts = parts.map((e) => {
+
+                  let index = assoR[e.value]
+
+                  if(index) index = index.filter(e => e.type == bdo+"workPartIndex")
+                  if(index[0] && index[0].value) index = Number(index[0].value)
+                  else index = null
+
+                  return ({ ...e, index })
+               })
+
+               console.log("aS?",_.sortBy(parts,'index'),parts.sort((a,b) => {
+                  if( a.index && b.index) return a.index - b.index
+                  return 0 ;
+               }))
+
+               /* // weird bug, sort all but leave 79 at @0 and 2 at @78 ...
+               parts = parts.sort((a,b) => {
+                  if( a.index && b.index) return a.index - b.index
+                  return 0 ;
+               })
+               */
+
+               prop[bdo+"workHasPart"] = _.sortBy(parts,'index')
+
+               console.log("AP parts",prop[bdo+"workHasPart"][0])
+            }
+         }
+
          let t = getEntiType(this.props.IRI);
          if(t && propOrder[t])
          {
             let that = this ;
 
-            console.log("sort",prop)
+            //console.log("sort",prop)
 
             let sortProp = Object.keys(prop).sort((a,b)=> {
                let ia = propOrder[t].indexOf(a)
@@ -226,6 +266,7 @@ class ResourceViewer extends Component<Props,State>
             }).reduce((acc,e) => {
 
                //console.log("sorting",e,prop[e])
+               if(e == bdo+"workHasPart") return { ...acc, [e]:prop[e] }
 
                return ({ ...acc, [e]:prop[e].sort(function(A,B){
 
@@ -238,14 +279,14 @@ class ResourceViewer extends Component<Props,State>
 
                   if(!a["value"] && a[rdfs+"label"] && a[rdfs+"label"][0]) a = a[rdfs+"label"][0]
                   if(a["lang"]) a = a["lang"]
-                  else if(a["xml:lang"]) a = a["xml:lang"]
-                  else if(a["type"] == "uri") a = a["value"]
+                  else if(a["xml:lang"] && a["xml:lang"] != "") a = a["xml:lang"]
+                  //else if(a["type"] == "uri") a = a["value"]
                   else a = null
 
                   if(!b["value"] && b[rdfs+"label"] && b[rdfs+"label"][0]) b = b[rdfs+"label"][0]
                   if(b["lang"]) b = b["lang"]
-                  else if(b["xml:lang"]) b = b["xml:lang"]
-                  else if(b["type"] == "uri") b = b["value"]
+                  else if(b["xml:lang"] && b["xml:lang"] != "") b = b["xml:lang"]
+                  //else if(b["type"] == "uri") b = b["value"]
                   else b = null
 
                   //console.log(a,b)
@@ -309,9 +350,11 @@ class ResourceViewer extends Component<Props,State>
    {
      let enti = getEntiType(this.props.IRI)
 
+     console.log("showAssoc e k",e,k);
+
      if(this.props.ontology[k] && this.props.ontology[k][bdo+"inferSubTree"]) return
 
-      // console.log("e k",e,k);
+
       let vals = [], n=0;
       for(let v of Object.keys(this.props.resources[this.props.IRI+"@"][e]))
       {
@@ -323,7 +366,7 @@ class ResourceViewer extends Component<Props,State>
          if(info.length > 0) {
 
            info = infoBase.filter((e)=>(e.type == skos+"prefLabel" && e["xml:lang"]==this.props.prefLang))
-           // console.log("infoB",info)
+           console.log("infoB",info)
            if(info[0] && n <= 10) vals.push(<h4><Link className="urilink prefLabel" to={"/show/bdr:"+this.pretty(v)}>{info[0].value}</Link></h4>)
            else if(n == 11) vals.push("...")
            n ++
@@ -439,7 +482,8 @@ class ResourceViewer extends Component<Props,State>
                         }
 
                         info = infoBase.filter((e)=>(e["xml:lang"] && e.type==prop && e["xml:lang"]==this.props.prefLang))
-                           console.log("info0",info)
+                        if(info.length == 0) info = infoBase.filter((e)=>(e["xml:lang"] && e.type==prop))
+                        //console.log("info0",info)
                         //if(info.value) info = info.value
 
                         if(info[0]) info = info[0].value
@@ -935,20 +979,25 @@ class ResourceViewer extends Component<Props,State>
                               Object.keys(this.props.resources[this.props.IRI+"@"]).map((e) =>
                                  <div className="sub" id={e.replace(/s$/,"")}>
                                     <h4 className="first type">{e}:</h4>
-                                    <h4 className="prop last">(<a href={"/search?r=bdr:"+this.props.IRI+"&t="+e.replace(/s$/,"")}>browse all</a>)</h4>
+                                    <h4 className="prop last">(<a href={"/search?r=bdr:"+this.props.IRI+"&t="+(e[0].toUpperCase()+e.slice(1).replace(/s$/,""))}>browse all</a>)</h4>
                                     {
                                        Object.keys(this.props.resources[this.props.IRI+"@"][e]).reduce((acc,k) => {
                                           //acc = acc.concat(Object.keys(this.props.resources[this.props.IRI+"@"][e][v])) ;
+
+                                          //console.log("redu",acc,k,this.props.resources[this.props.IRI+"@"][e][k]);
+
                                           this.props.resources[this.props.IRI+"@"][e][k].map((v) => {
                                              let t = getEntiType(this.props.IRI)
-                                             //console.log("k",k,v,t)
+
+                                             //console.log("k v t",k,v,t,bdr+this.props.IRI,kZasso.indexOf(k),kZasso)
+
                                              if(e == "lineages" && t == "Topic") {
                                                 if(acc.indexOf("bdo:lineageObject") == -1) acc.push("bdo:lineageObject") ;
                                              }
                                              else if(e == "works" && t == "Topic") {
                                                 if(acc.indexOf("bdo:workGenre") == -1) acc.push("bdo:workGenre") ;
                                              }
-                                             else if(v.value == bdr+this.props.IRI && kZasso.indexOf(k) == -1)
+                                             else if(v.value == bdr+this.props.IRI) // && kZasso.indexOf(k) == -1) // why ??
                                              {
                                                 //console.log("foundem")
                                                 if(acc.indexOf(v.type) == -1) acc.push(v.type) ;
