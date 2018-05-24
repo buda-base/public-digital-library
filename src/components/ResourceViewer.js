@@ -43,6 +43,7 @@ const rdf  = "http://www.w3.org/1999/02/22-rdf-syntax-ns#";
 const rdfs = "http://www.w3.org/2000/01/rdf-schema#";
 const skos = "http://www.w3.org/2004/02/skos/core#";
 const tmp  = "http://purl.bdrc.io/ontology/tmp/" ;
+const _tmp  = "http://purl.bdrc.io/ontology/tmp/" ;
 
 const prefixes = { adm, bdo, bdr, owl, rdf, rdfs, skos, tmp }
 
@@ -432,6 +433,9 @@ class ResourceViewer extends Component<Props,State>
    {
       if(elem) {
 
+         console.log("uriformat",prop,elem.value)
+
+
          // test if ancestor/type of property has range subclassof entity
 /*
          let q =[]
@@ -466,6 +470,7 @@ class ResourceViewer extends Component<Props,State>
                      infoBase = dico[elem.value]
 
                      if(infoBase) {
+                        /*
                         if(prop == bdo+"workHasExpression") {
                            prop = bdo+"workPartOf" ;
                            ret.push("in ");
@@ -480,6 +485,7 @@ class ResourceViewer extends Component<Props,State>
 
                            })
                         }
+                        */
 
                         info = infoBase.filter((e)=>(e["xml:lang"] && e.type==prop && e["xml:lang"]==this.props.prefLang))
                         if(info.length == 0) info = infoBase.filter((e)=>(e["xml:lang"] && e.type==prop))
@@ -606,6 +612,13 @@ class ResourceViewer extends Component<Props,State>
             let tmp
             if(e.type == "uri") tmp = this.uriformat(prop,e)
             else tmp = pretty;
+
+            if(this.props.assocResources && prop == bdo+"workHasExpression") {
+
+               let root = this.props.assocResources[e.value] //this.uriformat(_tmp+"workRootWork",e)
+               if(root) root = root.filter(e => e.type == _tmp+"workRootWork")
+               if(root.length > 0) tmp = [tmp," in ",this.uriformat(_tmp+"workRootWork",root[0])]
+            }
             // else  return ( <Link to={"/resource?IRI="+pretty}>{pretty}</Link> ) ;
 
             if(!txt) ret.push(<Tag>{tmp}</Tag>)
@@ -937,20 +950,20 @@ class ResourceViewer extends Component<Props,State>
 
                      let elem = this.getResourceElem(k);
 
-                     console.log("prop",k,elem);
+                     //console.log("prop",k,elem);
 
                      if(!k.match(new RegExp(adm+"|prefLabel|"+rdf+"|toberemoved|workPartIndex|workPartTreeIndex"))) {
                      //if(!k.match(new RegExp("Revision|Entry|prefLabel|"+rdf+"|toberemoved"))) {
 
                         let sup = this.hasSuper(k)
-                        console.log("youpi?",sup)  ;
+                        //console.log("youpi?",sup)  ;
 
 
                         if(!sup || sup.filter(e => e.value == bdo+"workRefs").length > 0)
                         {
                            let tags = this.format("h4",k)
 
-                           console.log("tags",tags);
+                           //console.log("tags",tags);
 
                            return (
                               <div>
