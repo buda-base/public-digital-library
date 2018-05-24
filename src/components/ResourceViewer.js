@@ -172,7 +172,7 @@ class ResourceViewer extends Component<Props,State>
 
       //if(stripuri) {
 
-      str = str.replace(/([a-z])([A-Z])/g,"$1 $2")
+      if(!str.match(/ /)) str = str.replace(/([a-z])([A-Z])/g,"$1 $2")
 
       if(str.match(/^https?:\/\/[^ ]+$/)) { str = <a href={str} target="_blank">{str}</a> }
       else {
