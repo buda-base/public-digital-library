@@ -15,7 +15,7 @@ export type DataState = {
    language?:string,
    searches:{[keyword:string]:{}|null},
    failures: {[string]: string},
-   config: { //[string]: {}},
+   config?: { //[string]: {}},
       ldspdi:{
          endpoints:string[],
          index:number
@@ -33,13 +33,7 @@ export type DataState = {
 const DEFAULT_STATE: DataState = {
    searches:{},
    failures:{},
-   loading:{},
-   config: {
-      ldspdi:{
-         endpoints:["http://buda1.bdrc.io:13280"],
-         index:0
-      }
-   },
+   loading:{}
    //firstImage:"http://iiif.bdrc.io/image/v2/bdr:V22084_I0886::08860003.tif/full/full/0/default.jpg"
    //firstImage:"http://iiif.bdrc.io/image/v2/bdr:V1KG2788_I1KG3143::I1KG31430003.tif/full/full/0/default.jpg"
 }

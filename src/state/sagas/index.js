@@ -10,17 +10,24 @@ const api = new bdrcApi();
 
 async function initiateApp(params,iri) {
    try {
-      const config = await api.loadConfig();
-      store.dispatch(dataActions.loadedConfig(config));
-      store.dispatch(dataActions.choosingHost(config.ldspdi.endpoints[config.ldspdi.index]));
+      let state = store.getState()
 
-      const onto = await api.loadOntology();
-      store.dispatch(dataActions.loadedOntology(onto));
+
+      if(!state.data.config)
+      {
+         const config = await api.loadConfig();
+         store.dispatch(dataActions.loadedConfig(config));
+         store.dispatch(dataActions.choosingHost(config.ldspdi.endpoints[config.ldspdi.index]));
+      }
+
+      if(!state.data.ontology)
+      {
+         const onto = await api.loadOntology();
+         store.dispatch(dataActions.loadedOntology(onto));
       // console.log("params",params)
+      }
 
-      let state = !store.getState()
-
-      if(iri && (!state.resources || !state.resources.IRI))
+      if(iri && (!state.data.resources || !state.data.resources.IRI))
       {
          let res ;
 
@@ -36,12 +43,13 @@ async function initiateApp(params,iri) {
          let assocRes = await api.loadAssocResources(iri)
          store.dispatch(dataActions.gotAssocResources(iri,assocRes));
 
-         let t = getEntiType(iri)
-         if(t && ["Person","Place","Topic"].indexOf(t) !== -1) {
-            store.dispatch(dataActions.startSearch("bdr:"+iri,"",["Any"],t)); //,params.t.split(",")));
-         }
+         //let t = getEntiType(iri)
+         //if(t && ["Person","Place","Topic"].indexOf(t) !== -1) {
+         //   store.dispatch(dataActions.startSearch("bdr:"+iri,"",["Any"],t)); //,params.t.split(",")));
+         //}
       }
       else if(!iri && params && params.q) {
+
          if(params.t && ["Person","Work"].indexOf(params.t) !== -1)
          {
             store.dispatch(dataActions.startSearch(params.q,params.lg,[params.t])); //,params.t.split(",")));

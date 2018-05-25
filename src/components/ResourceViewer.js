@@ -207,7 +207,7 @@ class ResourceViewer extends Component<Props,State>
          prop[bdo+"workDimHeight"] = [ { ...h[0], value:h[0].value+"cm" } ]
       }
 
-      console.log("w h",w,h,prop)
+      //console.log("w h",w,h,prop)
 
       //prop["bdr:workDimensions"] =
       if(sorted)
@@ -220,23 +220,23 @@ class ResourceViewer extends Component<Props,State>
 
             let assoR = this.props.assocResources
             if (assoR) {
-               console.log("AV parts",parts)
+               //console.log("AV parts",parts[0],parts)
 
                parts = parts.map((e) => {
 
                   let index = assoR[e.value]
 
+                  //console.log("index",index,e)
+
                   if(index) index = index.filter(e => e.type == bdo+"workPartIndex")
                   if(index && index[0] && index[0].value) index = Number(index[0].value)
                   else index = null
 
+                  //console.log("?",index)
+
                   return ({ ...e, index })
                })
 
-               console.log("aS?",_.sortBy(parts,'index'),parts.sort((a,b) => {
-                  if( a.index && b.index) return a.index - b.index
-                  return 0 ;
-               }))
 
                /* // weird bug, sort all but leave 79 at @0 and 2 at @78 ...
                parts = parts.sort((a,b) => {
@@ -245,9 +245,9 @@ class ResourceViewer extends Component<Props,State>
                })
                */
 
-               prop[bdo+"workHasPart"] = _.sortBy(parts,'index')
+               prop[bdo+"workHasPart"] = _.orderBy(parts,['index'],['asc'])
 
-               console.log("AP parts",prop[bdo+"workHasPart"][0])
+               //console.log("AP parts",prop[bdo+"workHasPart"][0])
             }
          }
 
@@ -268,7 +268,7 @@ class ResourceViewer extends Component<Props,State>
 
                //console.log("sorting",e,prop[e])
                if(e == bdo+"workHasPart") {
-                  console.log("skip sort parts",prop[e][0],prop[e])
+                  //console.log("skip sort parts",prop[e][0],prop[e])
                   return { ...acc, [e]:prop[e] }
                }
 
@@ -370,7 +370,7 @@ class ResourceViewer extends Component<Props,State>
          if(info.length > 0) {
 
            info = infoBase.filter((e)=>(e.type == skos+"prefLabel" && e["xml:lang"]==this.props.prefLang))
-           console.log("infoB",info)
+           //console.log("infoB",info)
            if(info[0] && n <= 10) vals.push(<h4><Link className="urilink prefLabel" to={"/show/bdr:"+this.pretty(v)}>{info[0].value}</Link></h4>)
            else if(n == 11) vals.push("...")
            n ++
@@ -436,7 +436,7 @@ class ResourceViewer extends Component<Props,State>
    {
       if(elem) {
 
-         console.log("uriformat",prop,elem.value)
+         //console.log("uriformat",prop,elem.value)
 
 
          // test if ancestor/type of property has range subclassof entity
@@ -565,7 +565,7 @@ class ResourceViewer extends Component<Props,State>
 
    format(Tag,prop:string,txt:string="",bnode:boolean=false,div:string="sub")
    {
-      console.group("FORMAT")
+      //console.group("FORMAT")
 
       let elemN,elem;
       if(bnode) {
@@ -600,7 +600,7 @@ class ResourceViewer extends Component<Props,State>
       })
       */
 
-      console.log("format",prop,elem,txt,bnode,div);
+      //console.log("format",prop,elem,txt,bnode,div);
 
       let ret = []
 
@@ -608,7 +608,7 @@ class ResourceViewer extends Component<Props,State>
       {
          let pretty = this.fullname(e.value)
 
-         console.log("e",e,pretty)
+         //console.log("e",e,pretty)
 
          if(e.type != "bnode")
          {
@@ -717,7 +717,7 @@ class ResourceViewer extends Component<Props,State>
          }
       }
 
-      console.groupEnd();
+      //console.groupEnd();
 
       return ret ;
 
@@ -966,7 +966,7 @@ class ResourceViewer extends Component<Props,State>
                         {
                            let tags = this.format("h4",k)
 
-                           console.log("tags",tags);
+                           //console.log("tags",tags);
 
                            if(k == bdo+"workHasExpression")
                            {
@@ -1016,7 +1016,8 @@ class ResourceViewer extends Component<Props,State>
                      <h4><a target="_blank" href={"http://purl.bdrc.io/resource/"+this.props.IRI+".ttl"}>{this.props.IRI}.ttl</a></h4>
                   </div>
                   */}
-                  { ["Person","Place","Topic"].indexOf(getEntiType(this.props.IRI)) !== -1 &&
+
+                  { /* ["Person","Place","Topic"].indexOf(getEntiType(this.props.IRI)) !== -1 &&
                      <div>
                         <h3><span>Associated Resources</span>:&nbsp;</h3>
                         {
@@ -1059,7 +1060,7 @@ class ResourceViewer extends Component<Props,State>
                               )
                         }
                      </div>
-                  }
+                  */ }
                </div>
             }
             </div>
