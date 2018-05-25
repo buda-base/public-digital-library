@@ -141,6 +141,8 @@ class ResourceViewer extends Component<Props,State>
          this.setState({...this.state,ready:false})
 
       }
+
+      
    }
 
    componentWillUpdate(newProps)
@@ -893,7 +895,7 @@ class ResourceViewer extends Component<Props,State>
 
                }
                {
-                  this.props.IRI[0].match(/[PGT]/) &&
+                  this.props.IRI[0].match(/[PGTW]/) &&
                   <Link className="goBack" to={"/search?r=bdr:"+this.props.IRI}>
                      <Button style={{marginLeft:"30px"}}>Browse associated resources &gt;</Button>
                   </Link>

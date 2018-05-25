@@ -139,7 +139,7 @@ class App extends Component<Props,State> {
             //this.setState(state);
 
       console.log("search",this.state,this.props)
-      if(key.match(/^bdr:[TPG]/))
+      if(key.match(/^bdr:[TPGW]/))
       {
          if(!label) label = this.state.filters.datatype.filter((f)=>["Person","Work"].indexOf(f) !== -1)[0]
 
@@ -492,7 +492,7 @@ class App extends Component<Props,State> {
 
                      //r = r.bindings
                      let typ = r.replace(/^.*?([^/]+)$/,"$1")
-                     typ = typ[0].toUpperCase() + typ.slice(1) 
+                     typ = typ[0].toUpperCase() + typ.slice(1)
 
                      // console.log("typ",typ)
 

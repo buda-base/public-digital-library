@@ -68,7 +68,7 @@ async function initiateApp(params,iri) {
          let s = ["Any"]
          //if(params.t && params.t != "Any") { s = [ params.t ] }
 
-         if(t && ["Person","Place","Topic"].indexOf(t) !== -1) {
+         if(t && ["Person","Place","Topic","Work"].indexOf(t) !== -1) {
             store.dispatch(dataActions.startSearch(params.r,"",s,t)); //,params.t.split(",")));
          }
       }
@@ -304,7 +304,7 @@ function getData(result)  {
          let data = {}
          for(let k of Object.keys(result)) {
             let t = k.replace(/^associated|s$/g,"").toLowerCase().replace(/people/,"person")
-            if(t != "metadata" && Object.keys(result[k]).length > 0) {
+            if(t != "metadata" && t != "tree" && Object.keys(result[k]).length > 0) {
                data = { ...data, [t+"s"]:result[k] }
                metadata = { ...metadata, [t]:Object.keys(result[k]).length }
             }
