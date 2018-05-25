@@ -115,8 +115,9 @@ async function getManifest(url,iri) {
       let manif = await api.loadManifest(url);
       let image ;
       //collection ?
-      if(!manif.sequences && manif.manifests ) {
-         manif = await api.loadManifest(manif.manifests[0]["@id"]);
+      if(!manif.sequences ) {
+         if (manif.manifests) manif = await api.loadManifest(manif.manifests[0]["@id"]);
+         else throw new Error("collection without manifest list")
       }
 
       if(manif.sequences && manif.sequences[0] && manif.sequences[0].canvases) {
