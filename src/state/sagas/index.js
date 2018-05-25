@@ -116,10 +116,10 @@ async function getManifest(url,iri) {
          for(let i in manif.sequences[0].canvases){
             let s = manif.sequences[0].canvases[i]
             if(s.label === "tbrc-1") {
-               s = manif.sequences[0].canvases[3]
+               s = manif.sequences[0].canvases[2]
                if(s && s.images && s.images[0])
                {
-                  image = manif.sequences[0].canvases[3].images[0].resource["@id"]
+                  image = manif.sequences[0].canvases[2].images[0].resource["@id"]
                   console.log("image",image)
 
                   found = true ;

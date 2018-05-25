@@ -227,7 +227,7 @@ class ResourceViewer extends Component<Props,State>
                   let index = assoR[e.value]
 
                   if(index) index = index.filter(e => e.type == bdo+"workPartIndex")
-                  if(index[0] && index[0].value) index = Number(index[0].value)
+                  if(index && index[0] && index[0].value) index = Number(index[0].value)
                   else index = null
 
                   return ({ ...e, index })
@@ -267,7 +267,10 @@ class ResourceViewer extends Component<Props,State>
             }).reduce((acc,e) => {
 
                //console.log("sorting",e,prop[e])
-               if(e == bdo+"workHasPart") return { ...acc, [e]:prop[e] }
+               if(e == bdo+"workHasPart") {
+                  console.log("skip sort parts",prop[e][0],prop[e])
+                  return { ...acc, [e]:prop[e] }
+               }
 
                return ({ ...acc, [e]:prop[e].sort(function(A,B){
 
@@ -616,8 +619,8 @@ class ResourceViewer extends Component<Props,State>
             if(this.props.assocResources && prop == bdo+"workHasExpression") {
 
                let root = this.props.assocResources[e.value] //this.uriformat(_tmp+"workRootWork",e)
-               if(root) root = root.filter(e => e.type == _tmp+"workRootWork")
-               if(root.length > 0) tmp = [tmp," in ",this.uriformat(_tmp+"workRootWork",root[0])]
+               if(root) root = root.filter(e => e.type == bdo+"workHasRoot")
+               if(root.length > 0) tmp = [tmp," in ",this.uriformat(bdo+"workHasRoot",root[0])]
             }
             // else  return ( <Link to={"/resource?IRI="+pretty}>{pretty}</Link> ) ;
 
@@ -963,7 +966,36 @@ class ResourceViewer extends Component<Props,State>
                         {
                            let tags = this.format("h4",k)
 
-                           //console.log("tags",tags);
+                           console.log("tags",tags);
+
+                           if(k == bdo+"workHasExpression")
+                           {
+                           // 1-map avec le nom du children[2] si ==3chldren et children[1] = " in "
+                              tags = tags.map(e => {
+                                 if(e.props.children.length == 3)
+                                 {
+                                    return { ...e , "exprKey" : e.props.children[2][0].props.children }
+                                 }
+                                 /*
+                                 else if(e.props.children.length == 1)
+                                 {
+                                    return { ...e , "exprKey" : e.props.children[0][0].props.children }
+                                 }
+                                 */
+
+                                 return { ...e, "exprKey": "" } ;
+                              });
+
+
+                           // 2-lodash sort
+                              tags = _.sortBy(tags,'exprKey')
+
+                              console.log("sorted tags",tags);
+
+                           }
+
+
+
 
                            return (
                               <div>
