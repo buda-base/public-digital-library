@@ -112,6 +112,8 @@ let propOrder = {
    "Volume":[],
 }
 
+let reload = false ;
+
 class ResourceViewer extends Component<Props,State>
 {
    constructor(props:Props)
@@ -128,6 +130,7 @@ class ResourceViewer extends Component<Props,State>
       propOrder = tmp
    }
 
+
    componentWillMount()
    {
       console.log("mount")
@@ -142,7 +145,10 @@ class ResourceViewer extends Component<Props,State>
 
       }
 
-      
+      window.onpopstate = function(event) {
+         if(reload) { window.location.reload(); }
+      };
+
    }
 
    componentWillUpdate(newProps)
@@ -730,6 +736,8 @@ class ResourceViewer extends Component<Props,State>
       let state = { ...this.state, openUV:true, hideUV:false }
       this.setState(state);
 
+
+      reload = true ;
 /*
        //window.addEventListener('uvLoaded', function (e) {
            window.createUV('#uv', {
