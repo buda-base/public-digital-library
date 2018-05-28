@@ -599,17 +599,41 @@ class App extends Component<Props,State> {
                      if(!label) label = sublist[o].filter((e) => (e.type && e.type.match(/prefLabel$/) && e["xml:lang"] == "bo-x-ewts"))[0]
                      if(!label) label = sublist[o].filter((e) => (e.type && e.type.match(/prefLabel$/)))[0]
 
+                     let preProps = sublist[o].filter((e) => e.type && e.type.match(/relationType$/ )).map(e => this.props.ontology[e.value])
+
                      let r = {
                         //f  : { type: "uri", value:list[o].type },
                         lit: label,
                         s  : { type: "uri", value: o },
-                        match: sublist[o].filter((e) => (
-                            ( this.props.language != "" ? e.value && e.value.match(/[↦↤]/) && e.type && !e.type.match(/prefLabelMatch$/)
-                                                      : !e.lang && (e.value.match(new RegExp(bdr+this.props.keyword.replace(/bdr:/,"")))
-                                                                   || (e.type && e.type.match(/relationType$/) ) ) )
+                        match: sublist[o].filter((e) => {
 
-                                                   )
-                                                )
+                           let use = true ;
+
+                           if(e.type && e.type.match(/relationType$/)) {
+                              let prop = this.props.ontology[e.value]
+                              //console.log("e",e,prop)
+                              if(prop)
+                                 for(let p of preProps) {
+
+                                    //console.log("::",p[rdfs+"subPropertyOf"])
+
+                                    if(p[rdfs+"subClassOf"] && p[rdfs+"subClassOf"].filter(q => q.value == e.value).length > 0) {
+                                       use = false ;
+                                       break ;
+                                    }
+                                    else if(p[rdfs+"subPropertyOf"] && p[rdfs+"subPropertyOf"].filter(q => q.value == e.value).length > 0) {
+                                       use = false ;
+                                       break ;
+                                    }
+                                 }
+                           }
+
+                           return use && (
+                           ( this.props.language != "" ? e.value && e.value.match(/[↦↤]/) && e.type && !e.type.match(/prefLabelMatch$/)
+                                                : !e.lang && (e.value.match(new RegExp(bdr+this.props.keyword.replace(/bdr:/,"")))
+                                                             || (e.type && e.type.match(/relationType$/) ) ) )
+
+                              ) } )
                      }
 
 
