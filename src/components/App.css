@@ -72,6 +72,8 @@ h4 { margin-top:10px;margin-bottom:0px;font-size:24px; }
 
 .SearchPane h5 { margin-left:16px; font-size : 16px; margin-bottom:0px;margin-top:40px; }
 
+.widget label { text-transform:capitalize }
+
 .collapse.open { margin-bottom:30px; }
 
 .checkbox.disabled { opacity:0.5; }

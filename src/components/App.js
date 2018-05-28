@@ -826,17 +826,23 @@ class App extends Component<Props,State> {
          </Collapse> ]
       )
 
-      let meta ;
+      let meta,metaK = [] ;
       if(this.state.filters.datatype && this.state.filters.datatype.indexOf("Any") === -1) {
 
          if(this.props.searches && this.props.searches[this.state.filters.datatype[0]]) {
 
             meta = this.props.searches[this.state.filters.datatype[0]][this.props.keyword+"@"+this.props.language]
-            console.log("ici",meta)
+            //console.log("ici",meta)
             if(meta) meta = meta.metadata
+            if(meta) {
+               let that = this.props.config["facets"][this.state.filters.datatype[0]]
+               if(that) that = Object.keys(that)
+               metaK = Object.keys(meta).sort((a,b) => that.indexOf(a)<that.indexOf(b)?-1:(that.indexOf(a)>that.indexOf(b)?1:0))
+            }
+
          }
       }
-      console.log("meta",meta)
+      console.log("metaK",metaK)
 
       return (
 <div>
@@ -934,13 +940,18 @@ class App extends Component<Props,State> {
                      </Collapse>
                      {
 
-                        meta  && this.props.config && this.props.ontology && Object.keys(meta).map((j) => {
+                        meta  && this.props.config && this.props.ontology && metaK.map((j) => {
 
                            if(["taxonomies","topics"].indexOf(j) !== -1) return ;
 
-                           let meta_sort = Object.keys(meta[j]).sort(function(a,b) { return Number(meta[j][a]) < Number(meta[j][b])});
+                           let meta_sort = Object.keys(meta[j]).sort((a,b) => {
+                              if(Number(meta[j][a]) < Number(meta[j][b])) return 1
+                              else if(Number(meta[j][a]) > Number(meta[j][b])) return -1
+                              else return 0 ;
+                           });
 
-                           if(meta_sort.indexOf("Any") === -1) meta_sort.unshift("Any")
+                           delete meta_sort[meta_sort.indexOf("Any")]
+                           meta_sort.unshift("Any")
                            meta[j]["Any"] =  counts["datatype"][this.state.filters.datatype[0]]
 
                            let jpre = this.props.config.facets[this.state.filters.datatype[0]][j]
@@ -975,7 +986,7 @@ class App extends Component<Props,State> {
 
                                  // console.log("checked",checked)
 
-                                 return (<div key={i} style={{width:"280px",textAlign:"left"}}>
+                                 return (<div key={i} style={{width:"280px",textAlign:"left"}} className="widget">
                                  <FormControlLabel
                                     control={
                                        <Checkbox
