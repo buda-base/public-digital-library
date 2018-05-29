@@ -763,7 +763,7 @@ class App extends Component<Props,State> {
 
                                           let uri = this.props.keyword.replace(/bdr:/,"")
                                           if(m.type.match(/relationType$/)) {
-                                             prop = val ;
+                                             prop = this.fullname(m.value) ;
                                              val = uri
                                           }
 
@@ -832,7 +832,9 @@ class App extends Component<Props,State> {
          if(this.props.searches && this.props.searches[this.state.filters.datatype[0]]) {
 
             meta = this.props.searches[this.state.filters.datatype[0]][this.props.keyword+"@"+this.props.language]
-            //console.log("ici",meta)
+
+            console.log("ici",meta)
+
             if(meta) meta = meta.metadata
             if(meta) {
                let that = this.props.config["facets"][this.state.filters.datatype[0]]

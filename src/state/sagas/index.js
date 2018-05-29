@@ -309,7 +309,9 @@ function getData(result)  {
                metadata = { ...metadata, [t]:Object.keys(result[k]).length }
             }
          }
-         // console.log("data",data,result)
+
+         console.log("data",data,result)
+
          data = getData(data);
          store.dispatch(dataActions.foundResults(keyword, language, data, datatype));
          store.dispatch(dataActions.foundDatatypes(keyword,{ metadata, hash:true}));
@@ -320,15 +322,23 @@ function getData(result)  {
             let stat = getStats("Person",data);
             console.log("stat",stat)
             store.dispatch(dataActions.foundResults(keyword, language, data, ["Person"]));
-            store.dispatch(dataActions.foundFacetInfo(keyword,language,datatype,stat))
+            store.dispatch(dataActions.foundFacetInfo(keyword,language,["Person"],stat))
          }
          if(data["results"] &&  data["results"]["bindings"] && data["results"]["bindings"]["works"]){
             // console.log("FOUND",data);
             let stat = getStats("Work",data);
             console.log("stat",stat)
             store.dispatch(dataActions.foundResults(keyword, language, data, ["Work"]));
-            store.dispatch(dataActions.foundFacetInfo(keyword,language,datatype,stat))
+            store.dispatch(dataActions.foundFacetInfo(keyword,language,["Work"],stat))
          }
+         if(data["results"] &&  data["results"]["bindings"] && data["results"]["bindings"]["lineages"]){
+            // console.log("FOUND",data);
+            let stat = getStats("Lineage",data);
+            console.log("stat",stat)
+            store.dispatch(dataActions.foundResults(keyword, language, data, ["Lineage"]));
+            store.dispatch(dataActions.foundFacetInfo(keyword,language,["Lineage"],stat))
+         }
+
 
          /*
          if(metaSav) {

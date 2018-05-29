@@ -159,7 +159,7 @@ export default class API {
     {
       return new Promise((resolve, reject) =>
       {
-         this._fetch(host+"/query/Person_details?R_RES=bdr:P1583").then((response) =>
+         this._fetch(host+"/").then((response) =>
          {
             if (response.ok)
             {
@@ -186,12 +186,16 @@ export default class API {
 
       let res = {}
       param = { "searchType":"Res_withType","LG_NAME":"bo-x-ewts","I_LIM":500, ...param }
+
       if(key.indexOf("\"") === -1) key = "\""+key+"\""
-      param["L_NAME"] = key ;
+      if(param["L_NAME"] != "") param["L_NAME"] = key ;
+      else { delete param["L_NAME"] ; delete param["LG_NAME"] ; }
+
+      //console.log("query",key,url,param);
+
       url += "/"+param["searchType"];
       delete param["searchType"]
 
-      //console.log("query",key,url,param);
 
       // let body = Object.keys(param).map( (k) => k+"="+param[k] ).join('&') +"&L_NAME="+key
       //searchType=Res_withFacet&"+param+"L_NAME=\""+key+"\"",
@@ -318,7 +322,7 @@ export default class API {
          try {
               let config = store.getState().data.config.ldspdi
               let url = config.endpoints[config.index]+"/lib" ;
-              let param = {"searchType":typ.toLowerCase()+"AllAssociations","R_RES":key,"L_NAME":"","LG_NAME":"" }
+              let param = {"searchType":typ.toLowerCase()+"AllAssociations","R_RES":key,"L_NAME":"","LG_NAME":"",LG_NAME:"" }
               let data = this.getQueryResults(url, key, param,"GET");
               // let data = this.getSearchContents(url, key);
 
