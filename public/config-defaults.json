@@ -10,6 +10,9 @@
       "index":0
    },
    "facets":{
+      "Place": {
+         "relation":"http://purl.bdrc.io/ontology/tmp/relationType"
+      },
       "Lineage": {
          "relation":"http://purl.bdrc.io/ontology/tmp/relationType"
       },

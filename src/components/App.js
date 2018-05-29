@@ -443,6 +443,26 @@ class App extends Component<Props,State> {
          return val;
      }
 
+   inserTree(k:string,p:{},tree:{}):boolean
+   {
+      console.log("ins",k,p,tree);
+
+      for(let t of Object.keys(tree))
+      {
+         console.log(" t",t)
+
+         if(p[rdfs+"subPropertyOf"].filter(e => e.value == t).length > 0)
+         {
+            console.log("  k",k)
+            tree[t] = { ...tree[t], [k]:{} }
+            return true
+         }
+         else if(this.inserTree(k,p,tree[t])) return true ;
+      }
+
+      return false ;
+   }
+
    render() {
 
       console.log("render",this.props,this.state)
@@ -463,7 +483,7 @@ class App extends Component<Props,State> {
          else
             results = this.props.searches[this.props.keyword+"@"+this.props.language]
 
-         console.log("results?",results,this.props.searches[this.props.keyword+"@"+this.props.language])
+         //console.log("results?",results,this.props.searches[this.props.keyword+"@"+this.props.language])
 
          if(results)
          {
@@ -534,7 +554,7 @@ class App extends Component<Props,State> {
                   }
                }
 
-               console.log("results",results);
+               //console.log("results",results);
                let list = results.results.bindings
 
                //if(!list.length) list = Object.keys(list).map((o) => {
@@ -575,9 +595,7 @@ class App extends Component<Props,State> {
                let displayTypes = types //["Person"]
                if(this.state.filters.datatype.indexOf("Any") === -1) displayTypes = this.state.filters.datatype ;
 
-               console.log("list x types",list,types,displayTypes)
-
-
+               //console.log("list x types",list,types,displayTypes)
 
                for(let t of displayTypes) {
 
@@ -833,7 +851,7 @@ class App extends Component<Props,State> {
 
             meta = this.props.searches[this.state.filters.datatype[0]][this.props.keyword+"@"+this.props.language]
 
-            console.log("ici",meta)
+            //console.log("ici",meta)
 
             if(meta) meta = meta.metadata
             if(meta) {
@@ -912,7 +930,7 @@ class App extends Component<Props,State> {
                         { //facetList&&facetList.length > 0?facetList.sort((a,b) => { return a.props.label < b.props.label } ):
                               types.map((i) => {
 
-                                 console.log("counts",i,counts["datatype"][i],this.state.filters.datatype.indexOf(i))
+                                 //console.log("counts",i,counts["datatype"][i],this.state.filters.datatype.indexOf(i))
 
                            let disabled = (!this.props.keyword && ["Any","Person","Work"].indexOf(i)===-1 && this.props.language  != "")
                            // || (this.props.language == "")
@@ -942,19 +960,8 @@ class App extends Component<Props,State> {
                      </Collapse>
                      {
 
-                        meta  && this.props.config && this.props.ontology && metaK.map((j) => {
-
-                           if(["taxonomies","topics"].indexOf(j) !== -1) return ;
-
-                           let meta_sort = Object.keys(meta[j]).sort((a,b) => {
-                              if(Number(meta[j][a]) < Number(meta[j][b])) return 1
-                              else if(Number(meta[j][a]) > Number(meta[j][b])) return -1
-                              else return 0 ;
-                           });
-
-                           delete meta_sort[meta_sort.indexOf("Any")]
-                           meta_sort.unshift("Any")
-                           meta[j]["Any"] =  counts["datatype"][this.state.filters.datatype[0]]
+                        meta  && this.props.config && this.props.ontology && metaK.map((j) =>
+                        {
 
                            let jpre = this.props.config.facets[this.state.filters.datatype[0]][j]
                            if(!jpre) jpre = j
@@ -964,47 +971,127 @@ class App extends Component<Props,State> {
                            if(jlabel && jlabel.length) jlabel = jlabel[0].value
                            else jlabel = this.pretty(jpre)
 
-                           return (
+                           if(["tree","relation","langScript"].indexOf(j) !== -1) {
 
-                           widget(jlabel,j,
-                              meta_sort.map((i) => {
+                              console.log("widgeTree",j,meta[j])
 
-                                 let label = this.props.ontology[i]
-                                 if(label) {
-                                    for(let l of label["http://www.w3.org/2000/01/rdf-schema#label"])
-                                       if(l.lang == "en") label = l.value
-                                    if(label["http://www.w3.org/2000/01/rdf-schema#label"]) label = label["http://www.w3.org/2000/01/rdf-schema#label"][0].value
-                                 }
-                                 else label = this.pretty(i)
+                              if(j == "langScript") { //manual sort of language hierarchy (not in ontology)
+                              }
+                              else if(j == "relation") { //sort according to ontology properties hierarchy
+                                 let tree = {}, tmProps = Object.keys(meta[j]).map(e => e), change = false
+                                 do // until every property has been put somewhere
+                                 {
+                                    change = false ;
+                                    for(let i in tmProps) { // try each one
+                                       let k = tmProps[i]
+                                       let p = this.props.ontology[k]
+                                       console.log("p",k,p)
+                                       if(!p) continue ;
+                                       else if(!p[rdfs+"subPropertyOf"]) // is it a root property ?
+                                       {
+                                          console.log("k",k)
+                                          tree[k] = {} ;
+                                          delete tmProps[i];
+                                          change = true ;
+                                          break ;
+                                       }
+                                       else // find its root property in tree
+                                       {
+                                          change = this.inserTree(k,p,tree)
+                                          if(change) {
+                                             delete tmProps[i];
+                                             break ;
+                                          }
+                                       }
+                                          /*
 
-                                 // console.log("label",i,label)
 
-                                 let checked = this.state.filters.facets && this.state.filters.facets[jpre]
-                                 if(!checked) {
-                                    if(label === "Any") checked = true ;
-                                    else checked = false ;
-                                 }
-                                 else checked = this.state.filters.facets[jpre].indexOf(i) !== -1
-
-                                 // console.log("checked",checked)
-
-                                 return (<div key={i} style={{width:"280px",textAlign:"left"}} className="widget">
-                                 <FormControlLabel
-                                    control={
-                                       <Checkbox
-                                          checked={checked}
-                                          className="checkbox"
-                                          icon={<span className='checkB'/>}
-                                          checkedIcon={<span className='checkedB'><CheckCircle style={{color:"#444",margin:"-3px 0 0 -3px",width:"26px",height:"26px"}}/></span>}
-                                          onChange={(event, checked) => this.handleCheckFacet(event,jpre,i,checked)}
-                                       />
+                                                let tmp = {}
+                                                tmTree[t] = { ...tmTree[t], [k]:tmp }
+                                                tmTree[k] = tmp
+                                                delete tmProps[tmProps.indexOf(k)];
+                                                change = true ;
+                                             }
+                                          }
+                                          */
 
                                     }
-                                    label={label+" ("+meta[j][i]+")"}
-                                 />
-                              </div>
-                           )})
-                        ))})
+                                    tmProps = tmProps.filter(String)
+                                    console.log("tree",tree,tmProps,change)
+                                    if(!change) break;
+                                 }
+                                 while(tmProps.length > 0);
+
+                              }
+                              else if(j == "tree") { //
+
+                              }
+
+                              return ;
+                           }
+                           else
+                           {
+
+                              let meta_sort = Object.keys(meta[j]).sort((a,b) => {
+                                 if(Number(meta[j][a]) < Number(meta[j][b])) return 1
+                                 else if(Number(meta[j][a]) > Number(meta[j][b])) return -1
+                                 else return 0 ;
+                              });
+
+                              delete meta_sort[meta_sort.indexOf("Any")]
+                              meta_sort.unshift("Any")
+
+
+                              meta[j]["Any"] =  counts["datatype"][this.state.filters.datatype[0]]
+
+                              return (
+
+                                 widget(jlabel,j,
+
+                                    meta_sort.map(  (i) =>
+                                    {
+
+                                       let label = this.props.ontology[i]
+                                       if(label) {
+                                          for(let l of label["http://www.w3.org/2000/01/rdf-schema#label"])
+                                             if(l.lang == "en") label = l.value
+                                          if(label["http://www.w3.org/2000/01/rdf-schema#label"]) label = label["http://www.w3.org/2000/01/rdf-schema#label"][0].value
+                                       }
+                                       else label = this.pretty(i)
+
+                                       // console.log("label",i,label)
+
+                                       let checked = this.state.filters.facets && this.state.filters.facets[jpre]
+                                       if(!checked) {
+                                          if(label === "Any") checked = true ;
+                                          else checked = false ;
+                                       }
+                                       else checked = this.state.filters.facets[jpre].indexOf(i) !== -1
+
+                                       // console.log("checked",checked)
+
+                                       return (
+                                          <div key={i} style={{width:"280px",textAlign:"left"}} className="widget">
+                                             <FormControlLabel
+                                                control={
+                                                   <Checkbox
+                                                      checked={checked}
+                                                      className="checkbox"
+                                                      icon={<span className='checkB'/>}
+                                                      checkedIcon={<span className='checkedB'><CheckCircle style={{color:"#444",margin:"-3px 0 0 -3px",width:"26px",height:"26px"}}/></span>}
+                                                      onChange={(event, checked) => this.handleCheckFacet(event,jpre,i,checked)}
+                                                   />
+
+                                                }
+                                                label={label+" ("+meta[j][i]+")"}
+                                             />
+                                          </div>
+                                       )
+                                    })
+                                 )
+                              )
+                           }
+                        })
                      }
 
                      { /*false && this.state.facets && this.props.ontology && this.state.facets.map((i) => {
