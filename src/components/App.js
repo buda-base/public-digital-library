@@ -34,7 +34,7 @@ const rdf  = "http://www.w3.org/1999/02/22-rdf-syntax-ns#";
 const rdfs = "http://www.w3.org/2000/01/rdf-schema#";
 const skos = "http://www.w3.org/2004/02/skos/core#";
 const tmp = "http://purl.bdrc.io/ontology/tmp/" ;
-
+const _tmp = tmp ;
 
 const prefixes = [adm, bdo,bdr,rdf,rdfs,skos,tmp]
 
@@ -412,48 +412,86 @@ class App extends Component<Props,State> {
      this.setState( s );
   };
 
-     pretty(str:string)
-     {
-        for(let p of prefixes) { str = str.replace(new RegExp(p,"g"),"") }
+   pretty(str:string)
+   {
+     for(let p of prefixes) { str = str.replace(new RegExp(p,"g"),"") }
 
-        str = str.replace(/([a-z])([A-Z])/g,"$1 $2")
+     str = str.replace(/([a-z])([A-Z])/g,"$1 $2")
 
-        return str ;
+     return str ;
+   }
+
+   fullname(prop:string)
+   {
+     if(this.props.ontology[prop] && this.props.ontology[prop][rdfs+"label"] && this.props.ontology[prop][rdfs+"label"][0]
+     && this.props.ontology[prop][rdfs+"label"][0].value) {
+        return this.props.ontology[prop][rdfs+"label"][0].value
      }
 
-     fullname(prop:string)
-     {
-        if(this.props.ontology[prop] && this.props.ontology[prop][rdfs+"label"] && this.props.ontology[prop][rdfs+"label"][0]
-        && this.props.ontology[prop][rdfs+"label"][0].value) {
-           return this.props.ontology[prop][rdfs+"label"][0].value
-        }
+     return this.pretty(prop)
+   }
 
-        return this.pretty(prop)
-     }
+   highlight(val,k):string
+   {
+      if(!val.match(/↤/))
+         val = /*val.replace(/@.* /,"")*/ val.split(new RegExp(k.replace(/ /g,"[ -]"))).map((l) => ([<span>{l}</span>,<span className="highlight">{k}</span>])) ;
+      else
+         val = val.split(/↦[^↤]+↤/).map((l) => ([<span>{l}</span>,<span className="highlight">{k}</span>])) ;
 
-     highlight(val,k):string
-     {
-         if(!val.match(/↤/))
-            val = /*val.replace(/@.* /,"")*/ val.split(new RegExp(k.replace(/ /g,"[ -]"))).map((l) => ([<span>{l}</span>,<span className="highlight">{k}</span>])) ;
-         else
-            val = val.split(/↦[^↤]+↤/).map((l) => ([<span>{l}</span>,<span className="highlight">{k}</span>])) ;
+      val = [].concat.apply([],val);
+      val.pop();
+      return val;
+   }
 
-         val = [].concat.apply([],val);
-         val.pop();
-         return val;
-     }
+   counTree(tree:{},meta:{}):[]
+   {
+      let ret = []
+      let tmp = Object.keys(tree).map(k => ({[k]:tree[k]}))
+      while(tmp.length > 0) {
+         let t = tmp[0]
+
+         let kZ = Object.keys(t)
+         let kZsub = Object.keys(t[kZ[0]])
+
+         let labels = this.props.ontology[kZ[0]]
+         if(labels) labels = labels[rdfs+"label"]
+         if(!labels) labels = []
+         //console.log("t",t,kZ,kZsub,labels)
+
+
+         tmp = tmp.concat(kZsub.map(k => ({[k]:t[kZ[0]][k]})))
+
+         let cpt ;
+         if(meta[kZ[0]]) cpt = meta[kZ[0]]
+         else cpt = kZsub.reduce((acc,e) => { return acc + meta[e] ; },0)
+
+         ret.push({"@id":kZ[0],"taxHasSubClass":kZsub,[_tmp+"count"]:cpt,"skos:prefLabel":labels})
+
+         delete tmp[0]
+         tmp = tmp.filter(e=> e != null);
+
+         //console.log("tmp",tmp,ret)
+         //break;
+      }
+
+      ret = [{"@id":"root", "hasTaxSubClass":Object.keys(tree)}].concat(ret)
+
+      return ret;
+   }
 
    inserTree(k:string,p:{},tree:{}):boolean
    {
-      console.log("ins",k,p,tree);
+      //console.log("ins",k,p,tree);
 
       for(let t of Object.keys(tree))
       {
-         console.log(" t",t)
+         //console.log(" t",t)
 
-         if(p[rdfs+"subPropertyOf"].filter(e => e.value == t).length > 0)
+         if(p[rdfs+"subPropertyOf"] && p[rdfs+"subPropertyOf"].filter(e => e.value == t).length > 0
+         || p[bdo+"taxSubClassOf"] && p[bdo+"taxSubClassOf"].filter(e => e.value == t).length > 0
+         || p[rdfs+"subClassOf"] && p[rdfs+"subClassOf"].filter(e => e.value == t).length > 0)
          {
-            console.log("  k",k)
+            //console.log("  k",k)
             tree[t] = { ...tree[t], [k]:{} }
             return true
          }
@@ -635,11 +673,10 @@ class App extends Component<Props,State> {
 
                                     //console.log("::",p[rdfs+"subPropertyOf"])
 
-                                    if(p[rdfs+"subClassOf"] && p[rdfs+"subClassOf"].filter(q => q.value == e.value).length > 0) {
-                                       use = false ;
-                                       break ;
-                                    }
-                                    else if(p[rdfs+"subPropertyOf"] && p[rdfs+"subPropertyOf"].filter(q => q.value == e.value).length > 0) {
+                                    if(p[rdfs+"subClassOf"] && p[rdfs+"subClassOf"].filter(q => q.value == e.value).length > 0
+                                       || p[rdfs+"taxSubClassOf"] && p[rdfs+"taxSubClassOf"].filter(q => q.value == e.value).length > 0
+                                       || p[rdfs+"subPropertyOf"] && p[rdfs+"subPropertyOf"].filter(q => q.value == e.value).length > 0
+                                    ) {
                                        use = false ;
                                        break ;
                                     }
@@ -975,21 +1012,24 @@ class App extends Component<Props,State> {
 
                               console.log("widgeTree",j,meta[j])
 
-                              if(j == "langScript") { //manual sort of language hierarchy (not in ontology)
+                              if(j == "tree") { //
+
                               }
-                              else if(j == "relation") { //sort according to ontology properties hierarchy
+                              else { //sort according to ontology properties hierarchy
                                  let tree = {}, tmProps = Object.keys(meta[j]).map(e => e), change = false
+                                 let rooTax = false
                                  do // until every property has been put somewhere
                                  {
+                                    //console.log("loop")
                                     change = false ;
                                     for(let i in tmProps) { // try each one
                                        let k = tmProps[i]
                                        let p = this.props.ontology[k]
-                                       console.log("p",k,p)
-                                       if(!p) continue ;
-                                       else if(!p[rdfs+"subPropertyOf"]) // is it a root property ?
+                                       //console.log("p",k,p)
+                                       if(!p || (!p[rdfs+"subPropertyOf"] && !p[rdfs+"subClassOf"]
+                                          && (!p[bdo+"taxSubClassOf"] || p[bdo+"taxSubClassOf"].filter(e => e.value == bdr+"LanguageTaxonomy").length != 0 ) ) ) // is it a root property ?
                                        {
-                                          console.log("k",k)
+                                          //console.log("root",k,p)
                                           tree[k] = {} ;
                                           delete tmProps[i];
                                           change = true ;
@@ -1003,27 +1043,32 @@ class App extends Component<Props,State> {
                                              break ;
                                           }
                                        }
-                                          /*
-
-
-                                                let tmp = {}
-                                                tmTree[t] = { ...tmTree[t], [k]:tmp }
-                                                tmTree[k] = tmp
-                                                delete tmProps[tmProps.indexOf(k)];
-                                                change = true ;
-                                             }
-                                          }
-                                          */
-
                                     }
                                     tmProps = tmProps.filter(String)
-                                    console.log("tree",tree,tmProps,change)
-                                    if(!change) break;
+
+                                    //if(rooTax) break ;
+
+                                    if(!change && !rooTax) {
+                                       //console.log("!no change!")
+                                       for(let i in tmProps) {
+                                          let k = tmProps[i]
+                                          let p = this.props.ontology[k]
+                                          // is it a root langage taxonomy property ?
+                                          if(p && p[bdo+"taxSubClassOf"] && p[bdo+"taxSubClassOf"].filter(q => tmProps.filter(r => r == q.value).length != 0).length == 0)
+                                          {
+                                             tmProps = tmProps.concat(p[bdo+"taxSubClassOf"].map(e => e.value));
+                                             //console.log(" k",k,tmProps)
+                                             change = true ;
+                                             rooTax = true ;
+                                          }
+                                       }
+                                       if(!change)break;
+                                    }
+
                                  }
                                  while(tmProps.length > 0);
 
-                              }
-                              else if(j == "tree") { //
+                                 console.log("tree",tree,tmProps,change,this.counTree(tree,meta[j]))
 
                               }
 
