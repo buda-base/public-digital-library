@@ -247,7 +247,7 @@ class App extends Component<Props,State> {
       return state
    }
 */
-   handleCheckFacet = (ev:Event,prop:string,lab:string,val:boolean) => {
+   handleCheckFacet = (ev:Event,prop:string,lab:string[],val:boolean) => {
 
       console.log("checkF",prop,lab,val)
 
@@ -255,7 +255,7 @@ class App extends Component<Props,State> {
 
       if(val)
       {
-         state = {  ...state,  filters: {  ...state.filters, facets: { ...state.filters.facets, [prop] : [lab] } } }
+         state = {  ...state,  filters: {  ...state.filters, facets: { ...state.filters.facets, [prop] : lab } } }
       }
       else if(state.filters.facets && state.filters.facets[prop])
       {
@@ -443,7 +443,7 @@ class App extends Component<Props,State> {
       return val;
    }
 
-   counTree(tree:{},meta:{}):[]
+   counTree(tree:{},meta:{},any:integer=0):[]
    {
       let ret = []
       let tmp = Object.keys(tree).map(k => ({[k]:tree[k]}))
@@ -456,16 +456,21 @@ class App extends Component<Props,State> {
          let labels = this.props.ontology[kZ[0]]
          if(labels) labels = labels[rdfs+"label"]
          if(!labels) labels = []
-         //console.log("t",t,kZ,kZsub,labels)
 
+         //console.log("t",t,kZ,kZsub,labels)
 
          tmp = tmp.concat(kZsub.map(k => ({[k]:t[kZ[0]][k]})))
 
-         let cpt ;
+         let cpt,checkSub ;
          if(meta[kZ[0]]) cpt = meta[kZ[0]]
-         else cpt = kZsub.reduce((acc,e) => { return acc + meta[e] ; },0)
+         else {
+            cpt = kZsub.reduce((acc,e) => { return acc + meta[e] ; },0)
+            checkSub = true ;
+         }
 
-         ret.push({"@id":kZ[0],"taxHasSubClass":kZsub,[_tmp+"count"]:cpt,"skos:prefLabel":labels})
+         var elem = {"@id":kZ[0],"taxHasSubClass":kZsub,[_tmp+"count"]:cpt,"skos:prefLabel":labels}
+         if(checkSub) elem = { ...elem, checkSub}
+         ret.push(elem)
 
          delete tmp[0]
          tmp = tmp.filter(e=> e != null);
@@ -474,7 +479,10 @@ class App extends Component<Props,State> {
          //break;
       }
 
-      ret = [{"@id":"root", "hasTaxSubClass":Object.keys(tree)}].concat(ret)
+      ret = [
+               {"@id":"root", "hasTaxSubClass":["Any"].concat(Object.keys(tree))},
+               {"@id":"Any",[_tmp+"count"]:any,"hasTaxSubClass":[]}
+           ].concat(ret)
 
       return ret;
    }
@@ -488,8 +496,8 @@ class App extends Component<Props,State> {
          //console.log(" t",t)
 
          if(p[rdfs+"subPropertyOf"] && p[rdfs+"subPropertyOf"].filter(e => e.value == t).length > 0
-         || p[bdo+"taxSubClassOf"] && p[bdo+"taxSubClassOf"].filter(e => e.value == t).length > 0
-         || p[rdfs+"subClassOf"] && p[rdfs+"subClassOf"].filter(e => e.value == t).length > 0)
+         || p[rdfs+"subClassOf"] && p[rdfs+"subClassOf"].filter(e => e.value == t).length > 0
+         || p[bdo+"taxSubClassOf"] && p[bdo+"taxSubClassOf"].filter(e => e.value == t).length > 0 )
          {
             //console.log("  k",k)
             tree[t] = { ...tree[t], [k]:{} }
@@ -674,8 +682,8 @@ class App extends Component<Props,State> {
                                     //console.log("::",p[rdfs+"subPropertyOf"])
 
                                     if(p[rdfs+"subClassOf"] && p[rdfs+"subClassOf"].filter(q => q.value == e.value).length > 0
-                                       || p[rdfs+"taxSubClassOf"] && p[rdfs+"taxSubClassOf"].filter(q => q.value == e.value).length > 0
                                        || p[rdfs+"subPropertyOf"] && p[rdfs+"subPropertyOf"].filter(q => q.value == e.value).length > 0
+                                       || p[bdo+"taxSubClassOf"] && p[bdo+"taxSubClassOf"].filter(q => q.value == e.value).length > 0
                                     ) {
                                        use = false ;
                                        break ;
@@ -1025,8 +1033,11 @@ class App extends Component<Props,State> {
                                     for(let i in tmProps) { // try each one
                                        let k = tmProps[i]
                                        let p = this.props.ontology[k]
+
                                        //console.log("p",k,p)
-                                       if(!p || (!p[rdfs+"subPropertyOf"] && !p[rdfs+"subClassOf"]
+
+                                       if(!p || (!p[rdfs+"subPropertyOf"]
+                                          && (!p[rdfs+"subClassOf"] || p[rdfs+"subClassOf"].filter(e => e.value == bdo+"Event").length != 0 )
                                           && (!p[bdo+"taxSubClassOf"] || p[bdo+"taxSubClassOf"].filter(e => e.value == bdr+"LanguageTaxonomy").length != 0 ) ) ) // is it a root property ?
                                        {
                                           //console.log("root",k,p)
@@ -1053,10 +1064,17 @@ class App extends Component<Props,State> {
                                        for(let i in tmProps) {
                                           let k = tmProps[i]
                                           let p = this.props.ontology[k]
-                                          // is it a root langage taxonomy property ?
+                                          // is it a root property ?
                                           if(p && p[bdo+"taxSubClassOf"] && p[bdo+"taxSubClassOf"].filter(q => tmProps.filter(r => r == q.value).length != 0).length == 0)
                                           {
                                              tmProps = tmProps.concat(p[bdo+"taxSubClassOf"].map(e => e.value));
+                                             //console.log(" k",k,tmProps)
+                                             change = true ;
+                                             rooTax = true ;
+                                          }
+                                          else if(p && p[rdfs+"subClassOf"] && p[rdfs+"subClassOf"].filter(q => tmProps.filter(r => r == q.value).length != 0).length == 0)
+                                          {
+                                             tmProps = tmProps.concat(p[rdfs+"subClassOf"].map(e => e.value));
                                              //console.log(" k",k,tmProps)
                                              change = true ;
                                              rooTax = true ;
@@ -1068,8 +1086,58 @@ class App extends Component<Props,State> {
                                  }
                                  while(tmProps.length > 0);
 
-                                 console.log("tree",tree,tmProps,change,this.counTree(tree,meta[j]))
+                                 console.log("inserTree",tree)
+                                 tree = this.counTree(tree,meta[j],counts["datatype"][this.state.filters.datatype[0]])
+                                 console.log("counTree",tree)
 
+                                 return widget(jlabel,j,tree[0]['hasTaxSubClass'].map(e => {
+
+                                    let label = this.fullname(e)
+
+                                    let cpt = tree.filter(f => f["@id"] == e)[0][_tmp+"count"]
+
+                                    let checkable = tree.filter(f => f["@id"] == e)
+                                    if(checkable.length > 0 && checkable[0].checkSub)
+                                       checkable = checkable[0]["taxHasSubClass"]
+                                    else
+                                       checkable = [e]
+
+                                    let checked = this.state.filters.facets && this.state.filters.facets[jpre]
+                                    if(!checked) {
+                                       if(label === "Any") checked = true ;
+                                       else checked = false
+                                    }
+                                    else {
+                                       if(checkable.indexOf(e) === -1) {
+                                         for(let c of checkable) {
+                                            checked = checked && this.state.filters.facets[jpre].indexOf(c) !== -1  ;
+                                         }
+                                       }
+                                       else checked = this.state.filters.facets[jpre].indexOf(e) !== -1
+                                    }
+
+                                    // console.log("checked",checked)
+
+                                    return (
+                                       <div key={e} style={{width:"280px",textAlign:"left"}} className="widget">
+                                          <FormControlLabel
+                                             control={
+                                                <Checkbox
+                                                   checked={checked}
+                                                   className="checkbox"
+                                                   icon={<span className='checkB'/>}
+                                                   checkedIcon={<span className='checkedB'><CheckCircle style={{color:"#444",margin:"-3px 0 0 -3px",width:"26px",height:"26px"}}/></span>}
+                                                   onChange={(event, checked) => this.handleCheckFacet(event,jpre,checkable,checked)}
+                                                />
+
+                                             }
+                                             label={label+" ("+cpt+")"}
+                                          />
+                                       </div>
+                                    )
+
+
+                                 }));
                               }
 
                               return ;
@@ -1124,7 +1192,7 @@ class App extends Component<Props,State> {
                                                       className="checkbox"
                                                       icon={<span className='checkB'/>}
                                                       checkedIcon={<span className='checkedB'><CheckCircle style={{color:"#444",margin:"-3px 0 0 -3px",width:"26px",height:"26px"}}/></span>}
-                                                      onChange={(event, checked) => this.handleCheckFacet(event,jpre,i,checked)}
+                                                      onChange={(event, checked) => this.handleCheckFacet(event,jpre,[i],checked)}
                                                    />
 
                                                 }
