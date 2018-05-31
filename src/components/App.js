@@ -1,4 +1,6 @@
 // @flow
+
+import _ from "lodash";
 import React, { Component } from 'react';
 import SearchBar from 'material-ui-search-bar'
 import Paper from 'material-ui/Paper';
@@ -421,12 +423,26 @@ class App extends Component<Props,State> {
      return str ;
    }
 
-   fullname(prop:string)
+   fullname(prop:string,preflabs:[])
    {
-     if(this.props.ontology[prop] && this.props.ontology[prop][rdfs+"label"] && this.props.ontology[prop][rdfs+"label"][0]
-     && this.props.ontology[prop][rdfs+"label"][0].value) {
+      if(this.props.ontology[prop] && this.props.ontology[prop][rdfs+"label"] && this.props.ontology[prop][rdfs+"label"][0]
+      && this.props.ontology[prop][rdfs+"label"][0].value) {
         return this.props.ontology[prop][rdfs+"label"][0].value
-     }
+      }
+      else if(preflabs)
+      {
+         if(!Array.isArray(preflabs)) preflabs = [ preflabs ]
+
+         let label = preflabs.filter(e => e["@language"] == this.props.locale)
+         if(label.length > 0) return label[0]["@value"]
+         label = preflabs.filter(e => e["@language"] == this.props.prefLang)
+         if(label.length > 0) return label[0]["@value"]
+         label = preflabs.filter(e => e["@language"] == "en")
+         if(label.length > 0) return label[0]["@value"]
+         label = preflabs.filter(e => e["@language"] == "bo-x-ewts")
+         if(label.length > 0) return label[0]["@value"]
+         //return preflabs[0]["@value"]
+      }
 
      return this.pretty(prop)
    }
@@ -480,8 +496,8 @@ class App extends Component<Props,State> {
       }
 
       ret = [
-               {"@id":"root", "hasTaxSubClass":["Any"].concat(Object.keys(tree))},
-               {"@id":"Any",[_tmp+"count"]:any,"hasTaxSubClass":[]}
+               {"@id":"root", "taxHasSubClass":["Any"].concat(Object.keys(tree))},
+               {"@id":"Any",[_tmp+"count"]:any,"taxHasSubClass":[]}
            ].concat(ret)
 
       return ret;
@@ -595,7 +611,7 @@ class App extends Component<Props,State> {
 
                      types = types.sort(function(a,b) { return counts["datatype"][a] < counts["datatype"][b] })
 
-                     //console.log("counts",counts)
+                     console.log("counts",counts)
 
                   }
                }
@@ -753,9 +769,12 @@ class App extends Component<Props,State> {
                            let v = this.state.filters.facets[k]
 
                            let hasProp = []
-                           for(let e of sublist[o]) { if(e.type == k && e.value == v) { hasProp.push(e); } }
+                           for(let e of sublist[o]) {
+                              //console.log("e",e)
+                              if(e.type == k && (e.value == v || (Array.isArray(v) && v.indexOf(e.value) !== -1))) { hasProp.push(e); }
+                           }
 
-                           // console.log("k",k,v,hasProp);
+                           //console.log("k",k,v,hasProp);
 
                            if(this.state.filters.facets[k].indexOf("Any") === -1 && (!hasProp || hasProp.length == 0)) {
 
@@ -763,7 +782,7 @@ class App extends Component<Props,State> {
 
                            }
                            else {
-                              // console.log("good")
+                              //console.log("good")
                            }
                            /*
 
@@ -888,6 +907,101 @@ class App extends Component<Props,State> {
                {inCollapse}
          </Collapse> ]
       )
+
+
+      let subWidget = (tree:[],jpre:string,subs:[]) => {
+
+         if(!Array.isArray(subs)) subs = [ subs ]
+
+         subs = subs.map(str => {
+            let index
+            let a = tree.filter(e => e["@id"] == str)
+            if(a.length > 0 && a[0][tmp+"count"]) index = Number(a[0][tmp+"count"])
+
+            return ({str,index})
+         })
+         subs = _.orderBy(subs,'index','desc').map(e => e.str)
+
+         //console.log("subW",subs,jpre)
+
+         let checkbox = subs.map(e => {
+
+            let elem = tree.filter(f => f["@id"] == e)
+
+            //console.log("elem",elem,e)
+
+            if(elem.length > 0) elem = elem[0]
+            else return
+
+
+            let label = this.fullname(e,elem["skos:prefLabel"])
+
+            //console.log("check",e,label,elem);
+
+            let cpt = tree.filter(f => f["@id"] == e)[0][_tmp+"count"]
+
+            let checkable = tree.filter(f => f["@id"] == e)
+            if(checkable.length > 0 && checkable[0].checkSub)
+               checkable = checkable[0]["taxHasSubClass"]
+            else
+               checkable = [e]
+
+            let checked = this.state.filters.facets && this.state.filters.facets[jpre]
+            if(!checked) {
+               if(label === "Any") checked = true ;
+               else checked = false
+            }
+            else {
+               if(checkable.indexOf(e) === -1) {
+                 for(let c of checkable) {
+                    checked = checked && this.state.filters.facets[jpre].indexOf(c) !== -1  ;
+                 }
+               }
+               else checked = this.state.filters.facets[jpre].indexOf(e) !== -1
+            }
+
+            // console.log("checked",checked)
+
+
+            return (
+               <div key={e} style={{width:"350px",textAlign:"left"}} className="widget">
+                  <FormControlLabel
+                     control={
+                        <Checkbox
+                           checked={checked}
+                           className="checkbox"
+                           icon={<span className='checkB'/>}
+                           checkedIcon={<span className='checkedB'><CheckCircle style={{color:"#444",margin:"-3px 0 0 -3px",width:"26px",height:"26px"}}/></span>}
+                           onChange={(event, checked) => this.handleCheckFacet(event,jpre,checkable,checked)}
+                        />
+
+                     }
+                     label={label+" ("+cpt+")"}
+                  />
+                  {
+                     elem && elem["taxHasSubClass"] && elem["taxHasSubClass"].length > 0 &&
+                     [
+                        <span className="subcollapse"
+                              onClick={(ev) => { this.setState({collapse:{ ...this.state.collapse, [e]:!this.state.collapse[e]} }); } }>
+                        { this.state.collapse[e] ? <ExpandLess /> : <ExpandMore />}
+                        </span>,
+                        <Collapse
+                           in={this.state.collapse[e]}
+                           className={["subcollapse",this.state.collapse[e]?"open":"close"].join(" ")}
+                           style={{paddingLeft:35+"px"}} // ,marginBottom:"30px"
+                           >
+                              { subWidget(tree,jpre,elem["taxHasSubClass"]) }
+                        </Collapse>
+                     ]
+                  }
+               </div>
+            )
+
+
+         })
+
+         return ( checkbox )
+      }
 
       let meta,metaK = [] ;
       if(this.state.filters.datatype && this.state.filters.datatype.indexOf("Any") === -1) {
@@ -1018,10 +1132,15 @@ class App extends Component<Props,State> {
 
                            if(["tree","relation","langScript"].indexOf(j) !== -1) {
 
-                              console.log("widgeTree",j,meta[j])
+                              console.log("widgeTree",j,jpre,meta[j])
 
                               if(j == "tree") { //
-
+                                 let tree = meta[j]["@graph"]
+                                 if(tree && tree[0] && tree[0]["taxHasSubClass"].indexOf("Any") === -1) {
+                                    tree[0]['taxHasSubClass'] = ['Any'].concat(tree[0]['taxHasSubClass'])
+                                    tree.splice(1,0,{"@id":"Any",taxHasSubClass:[],[tmp+"count"]:counts["datatype"][this.state.filters.datatype[0]]})
+                                 }
+                                 return widget("Taxonomy",j,subWidget(tree,jpre,tree[0]['taxHasSubClass']));
                               }
                               else { //sort according to ontology properties hierarchy
                                  let tree = {}, tmProps = Object.keys(meta[j]).map(e => e), change = false
@@ -1090,54 +1209,7 @@ class App extends Component<Props,State> {
                                  tree = this.counTree(tree,meta[j],counts["datatype"][this.state.filters.datatype[0]])
                                  console.log("counTree",tree)
 
-                                 return widget(jlabel,j,tree[0]['hasTaxSubClass'].map(e => {
-
-                                    let label = this.fullname(e)
-
-                                    let cpt = tree.filter(f => f["@id"] == e)[0][_tmp+"count"]
-
-                                    let checkable = tree.filter(f => f["@id"] == e)
-                                    if(checkable.length > 0 && checkable[0].checkSub)
-                                       checkable = checkable[0]["taxHasSubClass"]
-                                    else
-                                       checkable = [e]
-
-                                    let checked = this.state.filters.facets && this.state.filters.facets[jpre]
-                                    if(!checked) {
-                                       if(label === "Any") checked = true ;
-                                       else checked = false
-                                    }
-                                    else {
-                                       if(checkable.indexOf(e) === -1) {
-                                         for(let c of checkable) {
-                                            checked = checked && this.state.filters.facets[jpre].indexOf(c) !== -1  ;
-                                         }
-                                       }
-                                       else checked = this.state.filters.facets[jpre].indexOf(e) !== -1
-                                    }
-
-                                    // console.log("checked",checked)
-
-                                    return (
-                                       <div key={e} style={{width:"280px",textAlign:"left"}} className="widget">
-                                          <FormControlLabel
-                                             control={
-                                                <Checkbox
-                                                   checked={checked}
-                                                   className="checkbox"
-                                                   icon={<span className='checkB'/>}
-                                                   checkedIcon={<span className='checkedB'><CheckCircle style={{color:"#444",margin:"-3px 0 0 -3px",width:"26px",height:"26px"}}/></span>}
-                                                   onChange={(event, checked) => this.handleCheckFacet(event,jpre,checkable,checked)}
-                                                />
-
-                                             }
-                                             label={label+" ("+cpt+")"}
-                                          />
-                                       </div>
-                                    )
-
-
-                                 }));
+                                 return widget(jlabel,j,subWidget(tree,jpre,tree[0]['taxHasSubClass']));
                               }
 
                               return ;
