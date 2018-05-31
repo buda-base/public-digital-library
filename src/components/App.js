@@ -918,7 +918,7 @@ class App extends Component<Props,State> {
       )
 
 
-      let subWidget = (tree:[],jpre:string,subs:[]) => {
+      let subWidget = (tree:[],jpre:string,subs:[],disable:boolean=false) => {
 
          if(!Array.isArray(subs)) subs = [ subs ]
 
@@ -945,7 +945,7 @@ class App extends Component<Props,State> {
 
             let label = this.fullname(e,elem["skos:prefLabel"])
 
-            //console.log("check",e,label,elem);
+            console.log("check",e,label,elem,disable);
 
             let cpt = tree.filter(f => f["@id"] == e)[0][_tmp+"count"]
 
@@ -971,16 +971,18 @@ class App extends Component<Props,State> {
                else checked = this.state.filters.facets[jpre].indexOf(e) !== -1
             }
 
-            // console.log("checked",checked)
-
+            let isdisabled = true
+            if(! (disable && elem && elem["taxHasSubClass"] && elem["taxHasSubClass"].length > 0) ) isdisabled = false;
+            //console.log("disable",isdisabled)
 
             return (
                <div key={e} style={{width:"350px",textAlign:"left"}} className="widget">
                   <FormControlLabel
                      control={
                         <Checkbox
+                           disabled={isdisabled}
                            checked={checked}
-                           className="checkbox"
+                           className={"checkbox "+(isdisabled?"disabled":"")}
                            icon={<span className='checkB'/>}
                            checkedIcon={<span className='checkedB'><CheckCircle style={{color:"#444",margin:"-3px 0 0 -3px",width:"26px",height:"26px"}}/></span>}
                            onChange={(event, checked) => this.handleCheckFacet(event,jpre,checkable,checked)}
@@ -1001,7 +1003,7 @@ class App extends Component<Props,State> {
                            className={["subcollapse",this.state.collapse[e]?"open":"close"].join(" ")}
                            style={{paddingLeft:35+"px"}} // ,marginBottom:"30px"
                            >
-                              { subWidget(tree,jpre,elem["taxHasSubClass"]) }
+                              { subWidget(tree,jpre,elem["taxHasSubClass"],disable) }
                         </Collapse>
                      ]
                   }
@@ -1156,7 +1158,7 @@ class App extends Component<Props,State> {
                                        taxHasSubClass:[],"skos:prefLabel":[],
                                        [tmp+"count"]:counts["datatype"][this.state.filters.datatype[0]]})
                                  }
-                                 return widget(jlabel,j,subWidget(tree,jpre,tree[0]['taxHasSubClass']));
+                                 return widget(jlabel,j,subWidget(tree,jpre,tree[0]['taxHasSubClass'],true));
                               }
                               else { //sort according to ontology properties hierarchy
                                  let tree = {}, tmProps = Object.keys(meta[j]).map(e => e), change = false
