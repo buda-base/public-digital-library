@@ -945,7 +945,7 @@ class App extends Component<Props,State> {
 
             let label = this.fullname(e,elem["skos:prefLabel"])
 
-            console.log("check",e,label,elem,disable);
+            //console.log("check",e,label,elem,disable);
 
             let cpt = tree.filter(f => f["@id"] == e)[0][_tmp+"count"]
 
@@ -954,8 +954,35 @@ class App extends Component<Props,State> {
                checkable = checkable[0]["taxHasSubClass"]
             else
                checkable = [e]
-            checkable = checkable.map(e => e.replace(/bdr:/,bdr))
 
+                           //let isdisabled = true
+                           if( disable && elem && elem["taxHasSubClass"] && elem["taxHasSubClass"].length > 0)
+                           {
+                              if(!Array.isArray(elem["taxHasSubClass"])) elem["taxHasSubClass"] = [ elem["taxHasSubClass"] ]
+
+                              checkable = []
+                              let tmp = elem["taxHasSubClass"].map(e => e)
+                              while(tmp.length > 0)
+                              {
+                                 let t = tree.filter(f => f["@id"] == tmp[0])
+
+                                 //console.log("t",t);
+
+                                 if(t.length > 0) {
+                                    t = t[0]
+                                    if(t) {
+                                       if(!t["taxHasSubClass"] || t["taxHasSubClass"].length == 0)  { checkable.push(tmp[0]); }
+                                       else tmp = tmp.concat(t["taxHasSubClass"])
+                                    }
+                                 }
+
+                                 delete tmp[0]
+                                 tmp = tmp.filter(String)
+                                 //console.log("tmp",tmp,checkable)
+                              }
+                           }
+
+            checkable = checkable.map(e => e.replace(/bdr:/,bdr))
 
             let checked = this.state.filters.facets && this.state.filters.facets[jpre]
             if(!checked) {
@@ -971,8 +998,6 @@ class App extends Component<Props,State> {
                else checked = this.state.filters.facets[jpre].indexOf(e) !== -1
             }
 
-            let isdisabled = true
-            if(! (disable && elem && elem["taxHasSubClass"] && elem["taxHasSubClass"].length > 0) ) isdisabled = false;
             //console.log("disable",isdisabled)
 
             return (
@@ -980,9 +1005,8 @@ class App extends Component<Props,State> {
                   <FormControlLabel
                      control={
                         <Checkbox
-                           disabled={isdisabled}
                            checked={checked}
-                           className={"checkbox "+(isdisabled?"disabled":"")}
+                           className={"checkbox"}
                            icon={<span className='checkB'/>}
                            checkedIcon={<span className='checkedB'><CheckCircle style={{color:"#444",margin:"-3px 0 0 -3px",width:"26px",height:"26px"}}/></span>}
                            onChange={(event, checked) => this.handleCheckFacet(event,jpre,checkable,checked)}
