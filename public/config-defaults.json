@@ -25,7 +25,8 @@
          "langScript": "http://purl.bdrc.io/ontology/core/workLangScript",
          "status":"http://purl.bdrc.io/ontology/admin/status",
          "access":"http://purl.bdrc.io/ontology/admin/access",
-         "license":"http://purl.bdrc.io/ontology/admin/license"
+         "license":"http://purl.bdrc.io/ontology/admin/license",
+         "tree":"http://purl.bdrc.io/ontology/core/workGenre"
       }
    }
 }

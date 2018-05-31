@@ -73,9 +73,10 @@ h4 { margin-top:10px;margin-bottom:0px;font-size:24px; }
 .SearchPane h5 { margin-left:16px; font-size : 16px; margin-bottom:0px;margin-top:40px; }
 
 .widget label { text-transform:capitalize }
-.subcollapse label span:last-child { max-width:120px;}
+/* .subcollapse label span:last-child { max-width:120px;} */
 
-.collapse.open { margin-bottom:30px; overflow:visible; }
+.collapse { width:390px;}
+.collapse.open { margin-bottom:30px; }
 /* .collapse.open div { overflow:visible hidden;} */
 
 span.subcollapse svg { vertical-align:-8px; cursor:pointer; }

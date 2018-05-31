@@ -425,26 +425,35 @@ class App extends Component<Props,State> {
 
    fullname(prop:string,preflabs:[])
    {
-      if(this.props.ontology[prop] && this.props.ontology[prop][rdfs+"label"] && this.props.ontology[prop][rdfs+"label"][0]
-      && this.props.ontology[prop][rdfs+"label"][0].value) {
-        return this.props.ontology[prop][rdfs+"label"][0].value
+
+      if(this.props.ontology[prop] && this.props.ontology[prop][rdfs+"label"])
+      {
+         preflabs = this.props.ontology[prop][rdfs+"label"]
       }
-      else if(preflabs)
+
+      if(preflabs)
       {
          if(!Array.isArray(preflabs)) preflabs = [ preflabs ]
 
-         let label = preflabs.filter(e => e["@language"] == this.props.locale)
-         if(label.length > 0) return label[0]["@value"]
-         label = preflabs.filter(e => e["@language"] == this.props.prefLang)
-         if(label.length > 0) return label[0]["@value"]
-         label = preflabs.filter(e => e["@language"] == "en")
-         if(label.length > 0) return label[0]["@value"]
-         label = preflabs.filter(e => e["@language"] == "bo-x-ewts")
-         if(label.length > 0) return label[0]["@value"]
-         //return preflabs[0]["@value"]
+         //console.log("fullN",prop,preflabs,this.props.locale,this.props.prefLang,typeof preflabs[0])
+
+         let lang = "@language";
+         let val = "@value";
+         if(preflabs.length > 0 && preflabs[0]["lang"]) { lang = "lang" ; val = "value"; }
+         if(preflabs.length > 0 && preflabs[0]["xml:lang"]) { lang = "xml:lang" ; val = "value"; }
+
+         let label = preflabs.filter(e => e[lang] == this.props.locale )
+         if(label.length > 0) return label[0][val]
+         label = preflabs.filter(e => e[lang] == this.props.prefLang)
+         if(label.length > 0) return label[0][val]
+         label = preflabs.filter(e => e[lang] == "en")
+         if(label.length > 0) return label[0][val]
+         label = preflabs.filter(e => e[lang] == "bo-x-ewts")
+         if(label.length > 0) return label[0][val]
+         //return preflabs[0][value]
       }
 
-     return this.pretty(prop)
+      return this.pretty(prop)
    }
 
    highlight(val,k):string
@@ -945,6 +954,8 @@ class App extends Component<Props,State> {
                checkable = checkable[0]["taxHasSubClass"]
             else
                checkable = [e]
+            checkable = checkable.map(e => e.replace(/bdr:/,bdr))
+
 
             let checked = this.state.filters.facets && this.state.filters.facets[jpre]
             if(!checked) {
@@ -1132,15 +1143,20 @@ class App extends Component<Props,State> {
 
                            if(["tree","relation","langScript"].indexOf(j) !== -1) {
 
-                              console.log("widgeTree",j,jpre,meta[j])
+                              //console.log("widgeTree",j,jpre,meta[j],counts["datatype"],this.state.filters.datatype[0])
 
                               if(j == "tree") { //
                                  let tree = meta[j]["@graph"]
-                                 if(tree && tree[0] && tree[0]["taxHasSubClass"].indexOf("Any") === -1) {
+                                 if(tree && tree[0] && tree[0]["taxHasSubClass"].indexOf("Any") === -1
+                                    && this.state.filters && this.state.filters.datatype
+                                    && counts["datatype"][this.state.filters.datatype[0]])
+                                 {
                                     tree[0]['taxHasSubClass'] = ['Any'].concat(tree[0]['taxHasSubClass'])
-                                    tree.splice(1,0,{"@id":"Any",taxHasSubClass:[],[tmp+"count"]:counts["datatype"][this.state.filters.datatype[0]]})
+                                    tree.splice(1,0,{"@id":"Any",
+                                       taxHasSubClass:[],"skos:prefLabel":[],
+                                       [tmp+"count"]:counts["datatype"][this.state.filters.datatype[0]]})
                                  }
-                                 return widget("Taxonomy",j,subWidget(tree,jpre,tree[0]['taxHasSubClass']));
+                                 return widget(jlabel,j,subWidget(tree,jpre,tree[0]['taxHasSubClass']));
                               }
                               else { //sort according to ontology properties hierarchy
                                  let tree = {}, tmProps = Object.keys(meta[j]).map(e => e), change = false
