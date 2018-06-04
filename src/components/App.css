@@ -56,8 +56,12 @@ h4 { margin-top:10px;margin-bottom:0px;font-size:24px; }
 .resource .data > div > h4 { width:100%; padding-left:30px; }
 .resource .data > div > h4::after { display:none !important; }
 
-.goBack { text-decoration: none;  }
-.goBack button { min-width:0 !important; }
+.goBack { text-decoration: none; }
+.goBack:not(:first-child):not(.noML) { margin-left:35px !important; }
+.goBack button { min-width:0 !important;margin-left:0 !important; }
+
+#iiif { margin-left:0 !important;padding:0;min-width:0; margin-right:20px;}
+#iiif img { margin-left:0;width:28px;}
 
 .checkB,.checkedB { border-radius:50%; border:2px solid #666;width:20px;height:20px;display:inline-block; }
 .checkedB {}

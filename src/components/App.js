@@ -1171,8 +1171,11 @@ class App extends Component<Props,State> {
 
                               //console.log("widgeTree",j,jpre,meta[j],counts["datatype"],this.state.filters.datatype[0])
 
-                              if(j == "tree") { //
+                              if(j == "tree") { // && meta[j]["@graph"]) { //
                                  let tree = meta[j]["@graph"]
+
+                                 //console.log("meta tree",tree,meta[j])
+
                                  if(tree && tree[0] && tree[0]["taxHasSubClass"].indexOf("Any") === -1
                                     && this.state.filters && this.state.filters.datatype
                                     && counts["datatype"][this.state.filters.datatype[0]])
@@ -1181,8 +1184,9 @@ class App extends Component<Props,State> {
                                     tree.splice(1,0,{"@id":"Any",
                                        taxHasSubClass:[],"skos:prefLabel":[],
                                        [tmp+"count"]:counts["datatype"][this.state.filters.datatype[0]]})
+
+                                    return widget(jlabel,j,subWidget(tree,jpre,tree[0]['taxHasSubClass'],true));
                                  }
-                                 return widget(jlabel,j,subWidget(tree,jpre,tree[0]['taxHasSubClass'],true));
                               }
                               else { //sort according to ontology properties hierarchy
                                  let tree = {}, tmProps = Object.keys(meta[j]).map(e => e), change = false

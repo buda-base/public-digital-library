@@ -289,7 +289,7 @@ export const firstImage = (state: DataState, action: Action) => {
         ...state,
         IIIFinfo:{ ...state.IIIFinfo,
            [action.meta]:{ ...state.IIIFinfo?state.IIIFinfo[action.meta]:{},
-             firstImage:action.payload
+             firstImage:action.payload.replace(/full[/]0/,",600/0")
             }
          }
     }
