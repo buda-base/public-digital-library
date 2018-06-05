@@ -251,17 +251,36 @@ class App extends Component<Props,State> {
 */
    handleCheckFacet = (ev:Event,prop:string,lab:string[],val:boolean) => {
 
-      console.log("checkF",prop,lab,val)
-
       let state =  this.state
+
+      let propSet ;
+      if(state.filters.facets) propSet = state.filters.facets[prop]
+
+      let newF ;
+      if(prop == bdo+"workGenre") {
+         if(!val) lab = ["Any"]
+         //newF = { ...prop.map(p => ({ [p] : lab })).reduce((e,acc) => ({...acc,...e}),{}) }
+         newF = { [prop] : { alt : [ prop, bdo + "workIsAbout" ], val : lab } }
+      }
+      else
+      {
+         newF = { [prop] : lab }
+      }
+
+
+
+
+
+      console.log("checkF",prop,lab,val,newF)
+
 
       if(val)
       {
-         state = {  ...state,  filters: {  ...state.filters, facets: { ...state.filters.facets, [prop] : lab } } }
+         state = {  ...state,  filters: {  ...state.filters, facets: { ...state.filters.facets, ...newF } } }
       }
-      else if(state.filters.facets && state.filters.facets[prop])
+      else if(propSet)
       {
-         state = {  ...state,  filters: {  ...state.filters, facets: { ...state.filters.facets, [prop] : ["Any"] } } }
+         state = {  ...state,  filters: {  ...state.filters, facets: { ...state.filters.facets, ...newF } } }
       }
 
       this.setState( state )
@@ -777,15 +796,26 @@ class App extends Component<Props,State> {
 
                            let v = this.state.filters.facets[k]
 
+                           if(!Array.isArray(v) && v.alt)
+                           {
+
+                           }
+
                            let hasProp = []
                            for(let e of sublist[o]) {
                               //console.log("e",e)
                               if(e.type == k && (e.value == v || (Array.isArray(v) && v.indexOf(e.value) !== -1))) { hasProp.push(e); }
+                              else if(v.alt) for(let a of v.alt) {
+                                 if(e.type == a && (e.value == v.val || (Array.isArray(v.val) && v.val.indexOf(e.value) !== -1))) {
+
+                                    hasProp.push(e);
+                                 }
+                              }
                            }
 
                            //console.log("k",k,v,hasProp);
 
-                           if(this.state.filters.facets[k].indexOf("Any") === -1 && (!hasProp || hasProp.length == 0)) {
+                           if((this.state.filters.facets[k].val || this.state.filters.facets[k].indexOf("Any") === -1) && (!hasProp || hasProp.length == 0)) {
 
                               filtered = false
 
@@ -955,50 +985,56 @@ class App extends Component<Props,State> {
             else
                checkable = [e]
 
-                           //let isdisabled = true
-                           if( disable && elem && elem["taxHasSubClass"] && elem["taxHasSubClass"].length > 0)
-                           {
-                              if(!Array.isArray(elem["taxHasSubClass"])) elem["taxHasSubClass"] = [ elem["taxHasSubClass"] ]
+            //let isdisabled = true
+            if( disable && elem && elem["taxHasSubClass"] && elem["taxHasSubClass"].length > 0)
+            {
+               if(!Array.isArray(elem["taxHasSubClass"])) elem["taxHasSubClass"] = [ elem["taxHasSubClass"] ]
 
-                              checkable = []
-                              let tmp = elem["taxHasSubClass"].map(e => e)
-                              while(tmp.length > 0)
-                              {
-                                 let t = tree.filter(f => f["@id"] == tmp[0])
+               checkable = []
+               let tmp = elem["taxHasSubClass"].map(e => e)
+               while(tmp.length > 0)
+               {
+                  let t = tree.filter(f => f["@id"] == tmp[0])
 
-                                 //console.log("t",t);
+                  //console.log("t",t);
 
-                                 if(t.length > 0) {
-                                    t = t[0]
-                                    if(t) {
-                                       if(!t["taxHasSubClass"] || t["taxHasSubClass"].length == 0)  { checkable.push(tmp[0]); }
-                                       else tmp = tmp.concat(t["taxHasSubClass"])
-                                    }
-                                 }
+                  if(t.length > 0) {
+                     t = t[0]
+                     if(t) {
+                        if(!t["taxHasSubClass"] || t["taxHasSubClass"].length == 0)  { checkable.push(tmp[0]); }
+                        else tmp = tmp.concat(t["taxHasSubClass"])
+                     }
+                  }
 
-                                 delete tmp[0]
-                                 tmp = tmp.filter(String)
-                                 //console.log("tmp",tmp,checkable)
-                              }
-                           }
+                  delete tmp[0]
+                  tmp = tmp.filter(String)
+                  //console.log("tmp",tmp,checkable)
+               }
+            }
 
             checkable = checkable.map(e => e.replace(/bdr:/,bdr))
 
             let checked = this.state.filters.facets && this.state.filters.facets[jpre]
+
+            //console.log("checked1",jpre,e,checked)
+
+
             if(!checked) {
                if(label === "Any") checked = true ;
                else checked = false
             }
             else {
+               let toCheck = this.state.filters.facets[jpre]
+               if(toCheck.val) toCheck = toCheck.val
                if(checkable.indexOf(e) === -1) {
                  for(let c of checkable) {
-                    checked = checked && this.state.filters.facets[jpre].indexOf(c) !== -1  ;
+                    checked = checked && toCheck.indexOf(c) !== -1  ;
                  }
                }
-               else checked = this.state.filters.facets[jpre].indexOf(e) !== -1
+               else checked = toCheck.indexOf(e) !== -1
             }
 
-            //console.log("disable",isdisabled)
+            //console.log("checkedN",checked)
 
             return (
                <div key={e} style={{width:"350px",textAlign:"left"}} className="widget">
@@ -1169,21 +1205,24 @@ class App extends Component<Props,State> {
 
                            if(["tree","relation","langScript"].indexOf(j) !== -1) {
 
-                              //console.log("widgeTree",j,jpre,meta[j],counts["datatype"],this.state.filters.datatype[0])
+                              console.log("widgeTree",j,jpre,meta[j],counts["datatype"],this.state.filters.datatype[0])
 
                               if(j == "tree") { // && meta[j]["@graph"]) { //
                                  let tree = meta[j]["@graph"]
 
-                                 //console.log("meta tree",tree,meta[j])
+                                 console.log("meta tree",tree,meta[j],counts)
 
-                                 if(tree && tree[0] && tree[0]["taxHasSubClass"].indexOf("Any") === -1
+                                 if(tree && tree[0]
                                     && this.state.filters && this.state.filters.datatype
                                     && counts["datatype"][this.state.filters.datatype[0]])
                                  {
-                                    tree[0]['taxHasSubClass'] = ['Any'].concat(tree[0]['taxHasSubClass'])
-                                    tree.splice(1,0,{"@id":"Any",
-                                       taxHasSubClass:[],"skos:prefLabel":[],
-                                       [tmp+"count"]:counts["datatype"][this.state.filters.datatype[0]]})
+                                    if(tree[0]["taxHasSubClass"].indexOf("Any") === -1)
+                                    {
+                                       tree[0]['taxHasSubClass'] = ['Any'].concat(tree[0]['taxHasSubClass'])
+                                       tree.splice(1,0,{"@id":"Any",
+                                          taxHasSubClass:[],"skos:prefLabel":[],
+                                          [tmp+"count"]:counts["datatype"][this.state.filters.datatype[0]]})
+                                    }
 
                                     return widget(jlabel,j,subWidget(tree,jpre,tree[0]['taxHasSubClass'],true));
                                  }

@@ -527,7 +527,7 @@ class ResourceViewer extends Component<Props,State>
                      <Link className="urilink" to={"/show/bdr:"+pretty}>{pretty}</Link>&nbsp;
                      {/* <Link className="goBack" target="_blank" to={"/gallery?manifest=http://iiifpres.bdrc.io/2.1.1/v:bdr:"+pretty+"/manifest"}>{"(view image gallery)"}</Link> */}
                   </span> ) }
-                  else if(pretty.toString().match(/^([A-Z]+[_0-9-]+)+$/)) ret.push(<Link className="urilink" to={"/show/bdr:"+pretty}>{pretty}</Link>)
+                  else if(pretty.toString().match(/^([A-Z]+[_0-9-]+[A-Z]*)+$/)) ret.push(<Link className="urilink" to={"/show/bdr:"+pretty}>{pretty}</Link>)
                   else ret.push(pretty)
                   return ret
 
@@ -628,7 +628,7 @@ class ResourceViewer extends Component<Props,State>
 
                let root = this.props.assocResources[e.value] //this.uriformat(_tmp+"workRootWork",e)
                if(root) root = root.filter(e => e.type == bdo+"workHasRoot")
-               if(root.length > 0) tmp = [tmp," in ",this.uriformat(bdo+"workHasRoot",root[0])]
+               if(root && root.length > 0) tmp = [tmp," in ",this.uriformat(bdo+"workHasRoot",root[0])]
             }
             // else  return ( <Link to={"/resource?IRI="+pretty}>{pretty}</Link> ) ;
 
@@ -882,10 +882,10 @@ class ResourceViewer extends Component<Props,State>
                <Link className="goBack" to={this.props.keyword&&!this.props.keyword.match(/^bdr:/)?"/search?q="+this.props.keyword+"&lg="+this.props.language+(this.props.datatype?"&t="+this.props.datatype:""):"/"}>
                   <Button style={{paddingLeft:"0"}}>&lt; Go back to search page</Button>
                </Link>
-               <a className="goBack" target="_blank" rel="alternate" type="text/turtle" href={"http://purl.bdrc.io/resource/"+this.props.IRI+".ttl"}>
+               <a className="goBack" target="_blank" title="TTL version" rel="alternate" type="text/turtle" href={"http://purl.bdrc.io/resource/"+this.props.IRI+".ttl"}>
                   <Button style={{marginLeft:"50px",paddingRight:"0"}}>export to ttl</Button>
                </a>&nbsp;/&nbsp;
-               <a className="goBack noML" target="_blank" rel="alternate" type="application/ld+json" href={"http://purl.bdrc.io/resource/"+this.props.IRI+".jsonld"}>
+               <a className="goBack noML" target="_blank" title="JSON-LD version" rel="alternate" type="application/ld+json" href={"http://purl.bdrc.io/resource/"+this.props.IRI+".jsonld"}>
                   <Button style={{paddingLeft:0}}>json-ld</Button>
                </a>
                <CopyToClipboard text={"http://purl.bdrc.io/resource/"+this.props.IRI} onCopy={(e) =>
@@ -898,8 +898,8 @@ class ResourceViewer extends Component<Props,State>
                {
 
                   !this.props.manifestError && this.props.imageAsset &&
-                  [<Button className="goBack" onClick={this.showUV.bind(this)}
-                     style={{paddingRight:"0",marginRight:"20px"}}>view image gallery</Button>,
+                  [/* <Button className="goBack" onClick={this.showUV.bind(this)}
+                     style={{paddingRight:"0",marginRight:"20px"}}>view image gallery</Button>, */
 
                      <CopyToClipboard text={this.props.imageAsset} onCopy={(e) =>
                               //alert("Resource url copied to clipboard\nCTRL+V to paste")

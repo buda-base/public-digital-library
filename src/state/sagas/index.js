@@ -270,11 +270,17 @@ function getData(result)  {
       return stat
    }
 
-   function addMeta(keyword:string,language:string,data:{},t:string)
+   function addMeta(keyword:string,language:string,data:{},t:string,tree:{})
    {
       if(data["results"] &&  data["results"]["bindings"] && data["results"]["bindings"][t.toLowerCase()+"s"]){
-         // console.log("FOUND",data);
+         console.log("FOUND",data);
          let stat = getStats(t,data);
+
+         if(tree)
+         {
+            stat = { ...stat, tree }
+         }
+
          console.log("stat",stat)
          store.dispatch(dataActions.foundResults(keyword, language, data, [t]));
          store.dispatch(dataActions.foundFacetInfo(keyword,language,[t],stat))
@@ -316,7 +322,7 @@ function getData(result)  {
          let data = {}
          for(let k of Object.keys(result)) {
             let t = k.replace(/^associated|s$/g,"").toLowerCase().replace(/people/,"person")
-            if(t != "metadata" && t!= "tree" && Object.keys(result[k]).length > 0) {
+            if(t != "metadata" && t != "tree"  && Object.keys(result[k]).length > 0) {
                data = { ...data, [t+"s"]:result[k] }
                metadata = { ...metadata, [t]:Object.keys(result[k]).length }
             }
@@ -331,7 +337,7 @@ function getData(result)  {
          let newMeta = {}
 
          addMeta(keyword,language,data,"Person");
-         addMeta(keyword,language,data,"Work");
+         addMeta(keyword,language,data,"Work",result.tree);
          addMeta(keyword,language,data,"Lineage");
          addMeta(keyword,language,data,"Place");
 
