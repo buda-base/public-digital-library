@@ -1,5 +1,6 @@
 //@flow
 import _ from "lodash";
+import Tooltip from 'material-ui/Tooltip';
 import {CopyToClipboard} from 'react-copy-to-clipboard' ;
 import $ from 'jquery' ;
 import Fullscreen from 'material-ui-icons/Fullscreen';
@@ -977,8 +978,6 @@ class ResourceViewer extends Component<Props,State>
                      //if(!k.match(new RegExp("Revision|Entry|prefLabel|"+rdf+"|toberemoved"))) {
 
                         let sup = this.hasSuper(k)
-                        //console.log("youpi?",sup)  ;
-
 
                         if(!sup || sup.filter(e => e.value == bdo+"workRefs").length > 0)
                         {
@@ -986,7 +985,50 @@ class ResourceViewer extends Component<Props,State>
 
                            //console.log("tags",tags);
 
-                           if(k == bdo+"workHasExpression")
+
+                           if(k == bdo+"workLocation")
+                           {
+                              elem = this.getResourceElem(k)
+                              if(elem && Array.isArray(elem) && elem[0]) {
+                                 elem = this.getResourceBNode(elem[0].value)
+                                 let str = ""
+                                 console.log("loca",elem)
+
+                                 let loca = s => (elem[bdo+"workLocation"+s] && elem[bdo+"workLocation"+s][0]["value"] ? elem[bdo+"workLocation"+s][0]["value"]:null)
+
+                                 let vol = loca("Volume")
+                                 if(vol) str += "Vol."+vol+" " ;
+                                 let p = loca("Page")
+                                 if(p) str += "p."+p ;
+                                 let l = loca("Line")
+                                 if(l) str += "|"+l ;
+                                 str += " - "
+                                 let eV = loca("EndVolume")
+                                 if(eV) str += "Vol."+eV+" " ;
+                                 let eP = loca("EndPage")
+                                 if(eP) str += "p."+eP ;
+                                 let eL = loca("EndLine")
+                                 if(eL) str += "|"+eL ;
+
+                                 let w = loca("Work")
+                                 if(w) w = elem[bdo+"workLocationWork"][0]
+
+
+                                 tags = [<Tooltip placement="bottom-start" style={{marginLeft:"50px"}} title={
+                                    <div style={{margin:"10px"}}>
+                                       {vol && <div><span>Begin Volume:</span> {vol}</div>}
+                                       {p && <div><span>Begin Page:</span> {p}</div>}
+                                       {l && <div><span>Begin Line:</span> {l}</div>}
+                                       {eV && <div><span>End Volume:</span> {eV}</div>}
+                                       {eP && <div><span>End Page:</span> {eP}</div>}
+                                       {eL && <div><span>End Line:</span> {eL}</div>}
+                                    </div>
+                                 }>
+                                    <h4>{str}{w && " of "}{w && this.uriformat(bdo+"workLocationWork",w)}</h4>                                    
+                              </Tooltip>] ;
+                              }
+                           }
+                           else if(k == bdo+"workHasExpression")
                            {
                            // 1-map avec le nom du children[2] si ==3chldren et children[1] = " in "
                               tags = tags.map(e => {
@@ -1008,7 +1050,7 @@ class ResourceViewer extends Component<Props,State>
                            // 2-lodash sort
                               tags = _.sortBy(tags,'exprKey')
 
-                              console.log("sorted tags",tags);
+                              //console.log("sorted tags",tags);
 
                            }
 
