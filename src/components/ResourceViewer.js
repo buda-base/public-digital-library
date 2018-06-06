@@ -4,6 +4,8 @@ import Tooltip from 'material-ui/Tooltip';
 import {CopyToClipboard} from 'react-copy-to-clipboard' ;
 import $ from 'jquery' ;
 import Fullscreen from 'material-ui-icons/Fullscreen';
+import IconButton from 'material-ui/IconButton';
+import ShareIcon from 'material-ui-icons/Share';
 import Script from 'react-load-script'
 import React, { Component } from 'react';
 import qs from 'query-string'
@@ -894,7 +896,10 @@ class ResourceViewer extends Component<Props,State>
                         prompt("Resource url has been copied to clipboard.\nCTRL+V to paste","http://purl.bdrc.io/resource/"+this.props.IRI)
                   }>
 
-                  <Button className="goBack" style={{marginLeft:"30px"}}>Copy permalink</Button>
+                  {/* <Button className="goBack" style={{marginLeft:"30px"}}>Copy permalink</Button> */}
+                  <IconButton style={{marginLeft:"35px"}}>
+                     <ShareIcon />
+                  </IconButton>
                </CopyToClipboard>
                {
 
@@ -1013,7 +1018,6 @@ class ResourceViewer extends Component<Props,State>
                                  let w = loca("Work")
                                  if(w) w = elem[bdo+"workLocationWork"][0]
 
-
                                  tags = [<Tooltip placement="bottom-start" style={{marginLeft:"50px"}} title={
                                     <div style={{margin:"10px"}}>
                                        {vol && <div><span>Begin Volume:</span> {vol}</div>}
@@ -1024,7 +1028,7 @@ class ResourceViewer extends Component<Props,State>
                                        {eL && <div><span>End Line:</span> {eL}</div>}
                                     </div>
                                  }>
-                                    <h4>{str}{w && " of "}{w && this.uriformat(bdo+"workLocationWork",w)}</h4>                                    
+                                    <h4>{str}{w && " of "}{w && this.uriformat(bdo+"workLocationWork",w)}</h4>
                               </Tooltip>] ;
                               }
                            }

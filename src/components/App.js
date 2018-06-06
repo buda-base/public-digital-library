@@ -6,13 +6,18 @@ import SearchBar from 'material-ui-search-bar'
 import Paper from 'material-ui/Paper';
 import {MenuItem} from 'material-ui/Menu';
 import Button from 'material-ui/Button';
-import List,{ListItemText,ListItem} from 'material-ui/List';
+import List,{ListItemText,ListItem,ListItemIcon} from 'material-ui/List';
 import Typography from 'material-ui/Typography';
 import Loader from 'react-loader';
 import Collapse from 'material-ui/transitions/Collapse';
 import ExpandLess from 'material-ui-icons/ExpandLess';
 import ExpandMore from 'material-ui-icons/ExpandMore';
 import CheckCircle from 'material-ui-icons/CheckCircle';
+import CropFreeIcon from 'material-ui-icons/CropFree';
+import CropDin from 'material-ui-icons/CropDin';
+import CenterFocusWeak from 'material-ui-icons/CenterFocusWeak';
+import CenterFocusStrong from 'material-ui-icons/CenterFocusStrong';
+import FilterNone from 'material-ui-icons/FilterNone';
 import Checkbox from 'material-ui/Checkbox';
 import FormControlLabel from 'material-ui/Form/FormControlLabel';
 import { withStyles } from 'material-ui/styles';
@@ -750,6 +755,7 @@ class App extends Component<Props,State> {
                      let isAbs = sublist[o].filter((e) => e.value && e.value.match(/Abstract/))
                      let hasExpr = sublist[o].filter((e) => e.type && e.type.match(/HasExpression/))
                      let isExpr = sublist[o].filter((e) => e.type && e.type.match(/ExpressionOf/))
+                     let hasPart = sublist[o].filter((e) => e.type && e.type.match(/HasPart/))
 
                      if(isAbs.length > 0 || hasExpr.length > 0 || isExpr.length > 0)
                      {
@@ -842,10 +848,16 @@ class App extends Component<Props,State> {
                         {
                            //console.log("lit",lit)
 
-                           if(isAbs.length > 0) { if(categ !== "Abstract") { message.push(<h5>Abstract</h5>); categ = "Abstract" ; n = cpt = 0; willBreak = false ;} }
-                           else if(hasExpr.length > 0) { if(categ !== "HasExpr") { message.push(<h5>Has Expression</h5>); categ = "HasExpr" ; n = cpt = 0; willBreak = false ;} }
-                           else if(isExpr.length > 0) { if(categ !== "ExprOf") { message.push(<h5>Expression Of</h5>) ; categ = "ExprOf" ; n = cpt = 0; willBreak = false ;} }
-                           else if(categ !== "Other") { message.push(<h5>Other</h5>); categ = "Other"; n = cpt = 0; willBreak = false ;}
+                           let Tag ;
+                           if(isAbs.length > 0) { Tag = CropFreeIcon ; if(categ !== "Abstract") { message.push(<h5>Abstract</h5>); categ = "Abstract" ; n = cpt = 0; willBreak = false ;} }
+                           else if(hasExpr.length > 0) { Tag = CenterFocusStrong; if(categ !== "HasExpr") { message.push(<h5>Has Expression</h5>); categ = "HasExpr" ; n = cpt = 0; willBreak = false ;  } }
+                           else if(isExpr.length > 0) { Tag = CenterFocusWeak; if(categ !== "ExprOf") { message.push(<h5>Expression Of</h5>) ; categ = "ExprOf" ; n = cpt = 0; willBreak = false ;  } }
+                           else if(categ !== "Other") { Tag = CropDin; message.push(<h5>Other</h5>); categ = "Other"; n = cpt = 0; willBreak = false ;  }
+                           else if(categ === "Other") { Tag = CropDin; }
+
+                           if(Tag == CropDin && hasPart.length > 0) Tag = FilterNone;
+
+                           if(t !== "Work") Tag = null
 
                            //console.log("willB",n,willBreak,categ)
                            //if(n != 0 && willBreak) break;
@@ -856,13 +868,15 @@ class App extends Component<Props,State> {
                               [
                            <Link key={n} to={"/show/bdr:"+id} className="result">
 
-                              <Button key={t+"_"+n+"_"}>
+                              <Button key={t+"_"+n+"_"} >
                                     <ListItem style={{paddingLeft:"0",display:"flex"}}>
                                        <div style={{width:"30px",textAlign:"right"}}>{n}</div>
                                        <ListItemText style={{height:"auto",flexGrow:10,flexShrink:10}}
                                           primary={lit}
-                                          secondary={id}
-                                       />
+                                          //secondary={id}
+                                          secondary={[id,Tag?<Tag style={{height:"18px",verticalAlign:"-4px",marginLeft:"5px"}}/>:null]}
+                                       ></ListItemText>
+                                       {/* { Tag && <ListItemIcon><Tag/></ListItemIcon> } */}
                                     </ListItem>
                               </Button>
 
@@ -1208,7 +1222,8 @@ class App extends Component<Props,State> {
                               console.log("widgeTree",j,jpre,meta[j],counts["datatype"],this.state.filters.datatype[0])
 
                               if(j == "tree") { // && meta[j]["@graph"]) { //
-                                 let tree = meta[j]["@graph"]
+                                 let tree ;
+                                 if(meta[j]) tree = meta[j]["@graph"]
 
                                  console.log("meta tree",tree,meta[j],counts)
 
