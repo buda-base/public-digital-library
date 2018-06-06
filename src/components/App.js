@@ -109,6 +109,7 @@ type State = {
    collapse:{ [string] : boolean },
    loader:{[string]:Component<*>},
    facets? : string[],
+   autocheck?:boolean
 }
 
 class App extends Component<Props,State> {
@@ -209,7 +210,6 @@ class App extends Component<Props,State> {
 
 
 
-
       // console.log("newProps.facets",newProps.facets)
 
 /*
@@ -224,8 +224,6 @@ class App extends Component<Props,State> {
 
       if(update) this.setState(state)
 
-
-      console.log("willUfin",this.state.filters.datatype)
    }
 /*
    setFacets = (props:Props,state:State,lab:string) =>
@@ -647,8 +645,18 @@ class App extends Component<Props,State> {
                      console.log("counts",counts)
 
                   }
-               }
 
+
+                  if(types.length == 2 && !this.state.autocheck)
+                  {
+                     this.setState({ ...this.state, autocheck:true })
+
+                     console.log("autocheck",types)
+
+                     this.handleCheck(null, types[1], true)
+                  }
+
+               }
                //console.log("results",results);
                let list = results.results.bindings
 
