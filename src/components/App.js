@@ -1,6 +1,7 @@
 // @flow
 
 import _ from "lodash";
+import Tooltip from 'material-ui/Tooltip';
 import React, { Component } from 'react';
 import SearchBar from 'material-ui-search-bar'
 import Paper from 'material-ui/Paper';
@@ -482,8 +483,10 @@ class App extends Component<Props,State> {
    {
       if(!val.match(/↤/))
          val = /*val.replace(/@.* /,"")*/ val.split(new RegExp(k.replace(/ /g,"[ -]"))).map((l) => ([<span>{l}</span>,<span className="highlight">{k}</span>])) ;
-      else
-         val = val.split(/↦[^↤]+↤/).map((l) => ([<span>{l}</span>,<span className="highlight">{k}</span>])) ;
+      else {
+         let str = val.replace(/^.*↦([^↤]+)↤.*$/,"$1")
+         val = val.split(/↦[^↤]+↤/).map((l) => ([<span>{l}</span>,<span className="highlight">{str}</span>])) ;
+      }
 
       val = [].concat.apply([],val);
       val.pop();
@@ -856,12 +859,12 @@ class App extends Component<Props,State> {
                         {
                            //console.log("lit",lit)
 
-                           let Tag ;
-                           if(isAbs.length > 0) { Tag = CropFreeIcon ; if(categ !== "Abstract") { message.push(<h5>Abstract</h5>); categ = "Abstract" ; n = cpt = 0; willBreak = false ;} }
-                           else if(hasExpr.length > 0) { Tag = CenterFocusStrong; if(categ !== "HasExpr") { message.push(<h5>Has Expression</h5>); categ = "HasExpr" ; n = cpt = 0; willBreak = false ;  } }
-                           else if(isExpr.length > 0) { Tag = CenterFocusWeak; if(categ !== "ExprOf") { message.push(<h5>Expression Of</h5>) ; categ = "ExprOf" ; n = cpt = 0; willBreak = false ;  } }
-                           else if(categ !== "Other") { Tag = CropDin; message.push(<h5>Other</h5>); categ = "Other"; n = cpt = 0; willBreak = false ;  }
-                           else if(categ === "Other") { Tag = CropDin; }
+                           let Tag,tip ;
+                           if(isAbs.length > 0) { Tag = CropFreeIcon ; tip = "Abstract Work" ; if(categ !== "Abstract") { message.push(<h5>Abstract</h5>); categ = "Abstract" ; n = cpt = 0; willBreak = false ;} }
+                           else if(hasExpr.length > 0) { Tag = CenterFocusStrong; tip = "Work Has Expression" ; if(categ !== "HasExpr") { message.push(<h5>Has Expression</h5>); categ = "HasExpr" ; n = cpt = 0; willBreak = false ;  } }
+                           else if(isExpr.length > 0) { Tag = CenterFocusWeak; tip = "Work Expression Of"; if(categ !== "ExprOf") { message.push(<h5>Expression Of</h5>) ; categ = "ExprOf" ; n = cpt = 0; willBreak = false ;  } }
+                           else if(categ !== "Other") { Tag = CropDin; tip = "Work" ; message.push(<h5>Other</h5>); categ = "Other"; n = cpt = 0; willBreak = false ;  }
+                           else if(categ === "Other") { Tag = CropDin; tip = "Work" ; }
 
                            if(Tag == CropDin && hasPart.length > 0) Tag = FilterNone;
 
@@ -882,7 +885,12 @@ class App extends Component<Props,State> {
                                        <ListItemText style={{height:"auto",flexGrow:10,flexShrink:10}}
                                           primary={lit}
                                           //secondary={id}
-                                          secondary={[id,Tag?<Tag style={{height:"18px",verticalAlign:"-4px",marginLeft:"5px"}}/>:null]}
+                                          secondary={[id,
+                                             Tag?<Tooltip placement="bottom-start" style={{marginLeft:"50px"}} title={
+                                                <div style={{margin:"10px"}}>
+                                                   {tip}
+                                                </div>
+                                             }><Tag style={{height:"18px",verticalAlign:"-4px",marginLeft:"5px"}}/></Tooltip>:null]}
                                        ></ListItemText>
                                        {/* { Tag && <ListItemIcon><Tag/></ListItemIcon> } */}
                                     </ListItem>

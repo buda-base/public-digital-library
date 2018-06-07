@@ -26,6 +26,7 @@
          "status":"http://purl.bdrc.io/ontology/admin/status",
          "access":"http://purl.bdrc.io/ontology/admin/access",
          "license":"http://purl.bdrc.io/ontology/admin/license",
+         "type":"http://purl.bdrc.io/ontology/core/workType",
          "tree":"http://purl.bdrc.io/ontology/core/workGenre"
       }
    }
