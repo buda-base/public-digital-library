@@ -13,6 +13,8 @@ import Loader from 'react-loader';
 import Collapse from 'material-ui/transitions/Collapse';
 import ExpandLess from 'material-ui-icons/ExpandLess';
 import ExpandMore from 'material-ui-icons/ExpandMore';
+import NavigateBefore from 'material-ui-icons/NavigateBefore';
+import NavigateNext from 'material-ui-icons/NavigateNext';
 import CheckCircle from 'material-ui-icons/CheckCircle';
 import CropFreeIcon from 'material-ui-icons/CropFree';
 import CropDin from 'material-ui-icons/CropDin';
@@ -110,7 +112,8 @@ type State = {
    collapse:{ [string] : boolean },
    loader:{[string]:Component<*>},
    facets? : string[],
-   autocheck?:boolean
+   autocheck?:boolean,
+   paginate:{index:number,pages:number[]}
 }
 
 class App extends Component<Props,State> {
@@ -134,7 +137,8 @@ class App extends Component<Props,State> {
          dataSource: [],
          keyword:get.q?get.q.replace(/"/g,""):"",
          collapse:{},
-         loader:{}
+         loader:{},
+         paginate:{index:0,pages:[0]}
       };
 
    }
@@ -543,6 +547,18 @@ class App extends Component<Props,State> {
       return ret;
    }
 
+   prevPage()
+   {
+      let state = this.state.paginate
+      if(state.index > 0) { this.setState({ ...this.state, paginate:{...state, index:state.index - 1}}) }
+   }
+
+   nextPage()
+   {
+      let state = this.state.paginate
+      if(state.index < state.pages.length - 1) { this.setState({ ...this.state, paginate:{...state, index:state.index + 1}}) }
+   }
+
    inserTree(k:string,p:{},tree:{}):boolean
    {
       //console.log("ins",k,p,tree);
@@ -720,9 +736,12 @@ class App extends Component<Props,State> {
                   let sublist = list[t.toLowerCase()+"s"]
                   let cpt = 0;
                   n = 0;
+                  let begin = this.state.paginate.pages[this.state.paginate.index]
                   let categ = "Other" ;
                   if(sublist) { for(let o of Object.keys(sublist))
                   {
+                     if(cpt < begin) { cpt++ ; continue; }
+                     else if(cpt == begin) { cpt = 0 ; }
 
                      let label = sublist[o].filter((e) => (e.type && e.type.match(/prefLabelMatch$/)))[0]
                      if(!label) label = sublist[o].filter((e) => (e.type && e.type.match(/prefLabel$/) && e["xml:lang"] == this.props.prefLang))[0]
@@ -834,6 +853,7 @@ class App extends Component<Props,State> {
                      let filtered = true ;
 
                      if(this.state.filters.datatype.indexOf("Any") === -1 && this.state.filters && this.state.filters.facets)
+
                         for(let k of Object.keys(this.state.filters.facets)) {
 
                            let v = this.state.filters.facets[k]
@@ -885,10 +905,10 @@ class App extends Component<Props,State> {
                            //console.log("lit",lit)
 
                            let Tag,tip ;
-                           if(isAbs.length > 0) { Tag = CropFreeIcon ; tip = "Abstract Work" ; if(categ !== "Abstract") { message.push(<h5>Abstract</h5>); categ = "Abstract" ; n = cpt = 0; willBreak = false ;} }
-                           else if(hasExpr.length > 0) { Tag = CenterFocusStrong; tip = "Work Has Expression" ; if(categ !== "HasExpr") { message.push(<h5>Has Expression</h5>); categ = "HasExpr" ; n = cpt = 0; willBreak = false ;  } }
-                           else if(isExpr.length > 0) { Tag = CenterFocusWeak; tip = "Work Expression Of"; if(categ !== "ExprOf") { message.push(<h5>Expression Of</h5>) ; categ = "ExprOf" ; n = cpt = 0; willBreak = false ;  } }
-                           else if(categ !== "Other") { Tag = CropDin; tip = "Work" ; message.push(<h5>Other</h5>); categ = "Other"; n = cpt = 0; willBreak = false ;  }
+                           if(isAbs.length > 0) { Tag = CropFreeIcon ; tip = "Abstract Work" ; if(categ !== "Abstract") { message.push(<h5>Abstract</h5>); categ = "Abstract" ; n = 0; willBreak = false ;} }
+                           else if(hasExpr.length > 0) { Tag = CenterFocusStrong; tip = "Work Has Expression" ; if(categ !== "HasExpr") { message.push(<h5>Has Expression</h5>); categ = "HasExpr" ; n = 0; willBreak = false ;  } }
+                           else if(isExpr.length > 0) { Tag = CenterFocusWeak; tip = "Work Expression Of"; if(categ !== "ExprOf") { message.push(<h5>Expression Of</h5>) ; categ = "ExprOf" ; n = 0; willBreak = false ;  } }
+                           else if(categ !== "Other") { Tag = CropDin; tip = "Work" ; message.push(<h5>Other</h5>); categ = "Other"; n = 0; willBreak = false ;  }
                            else if(categ === "Other") { Tag = CropDin; tip = "Work" ; }
 
                            if(Tag == CropDin && hasPart.length > 0) Tag = FilterNone;
@@ -962,7 +982,12 @@ class App extends Component<Props,State> {
                            if(displayTypes.length >= 2) {
                               if(cpt >= 3) { if(categ == "Other") { break ; } else { willBreak = true; } }
                            } else {
-                              if(cpt >= 50) break;
+                              if(cpt >= 50) {
+                                 let next = this.state.paginate.pages[this.state.paginate.index] + 50
+                                 let size = this.state.paginate.index + 1
+                                 if(this.state.paginate.pages.indexOf(next) === -1) this.setState({...this.state, paginate:{...this.state.paginate, pages: this.state.paginate.pages.concat([next])}});
+                                 break;
+                              }
                            }
                         }
                      }
@@ -1585,6 +1610,10 @@ class App extends Component<Props,State> {
                }
                <List style={{maxWidth:"800px",margin:"50px auto",textAlign:"left",zIndex:0}}>
                   { message }
+                  <div id="pagine">
+                     <NavigateBefore onClick={this.prevPage.bind(this)}/>
+                     <NavigateNext  onClick={this.nextPage.bind(this)} />
+                  </div>
                </List>
             </div>
             <div className="SidePane right" style={{width:"25%",paddingTop:"150px"}}>

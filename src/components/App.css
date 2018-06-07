@@ -3,7 +3,10 @@
 
 
 /* CSS debug mode */
-/* * {background-color:rgba(255,0,128,0.05);} */
+* {background-color:rgba(255,0,128,0.05);}
+
+#pagine { width:100%;display:flex;padding:20px;justify-content: space-between; box-sizing:border-box}
+#pagine svg {height:36px;width:36px;}
 
 a.result { padding:0;margin-bottom:0;width:100%;display: inline-block;}
 a.result button { text-transform:none; padding-bottom:0;}
