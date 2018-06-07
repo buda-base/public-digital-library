@@ -147,12 +147,13 @@ class App extends Component<Props,State> {
       let state = { ...this.state, dataSource:[] }
             //this.setState(state);
 
-      console.log("search",this.state,this.props)
+      console.log("search",key,label,this.state,this.props)
+
       if(key.match(/^bdr:[TPGW]/))
       {
          if(!label) label = this.state.filters.datatype.filter((f)=>["Person","Work"].indexOf(f) !== -1)[0]
 
-         this.props.history.push({pathname:"/search",search:"?r="+key})
+         this.props.history.push({pathname:"/search",search:"?r="+key+(label?"&t="+label:"")})
 
          if(!this.props.searches[key+"@"+this.state.language]) {
 
@@ -356,7 +357,7 @@ class App extends Component<Props,State> {
 
    handleCheck = (ev:Event,lab:string,val:boolean) => {
 
-      console.log("check",lab,val,'('+this.state.keyword+')')
+      console.log("check",lab,val,this.props.keyword,'('+this.state.keyword+')')
 
       //if(this.props.language == "") return
 
@@ -372,22 +373,27 @@ class App extends Component<Props,State> {
 
       if(val && this.props.keyword)
       {
+
          if(this.props.language != "")
          {
-            if(lab === "Any")
+            //console.log("here?")
+
+            if(["Any","Person","Work"].indexOf(lab) !== -1)
             {
-               //console.log("youpi")
-               this.requestSearch(this.props.keyword,lab)
-
-            }
-            else if(["Person","Work"].indexOf(lab) !== -1) {
 
                this.requestSearch(this.props.keyword,lab)
 
             }
-            else {
+            else  {
+
                this.props.history.push("/search?q="+this.props.keyword+"&lg="+this.state.language+"&t="+lab);
             }
+         }
+         else {
+
+
+               this.props.history.push("/search?r="+this.props.keyword+"&t="+lab);
+
          }
 
 
@@ -645,7 +651,7 @@ class App extends Component<Props,State> {
 
                      types = types.sort(function(a,b) { return counts["datatype"][a] < counts["datatype"][b] })
 
-                     console.log("counts",counts)
+                     //console.log("counts",counts)
 
                   }
 
@@ -654,7 +660,7 @@ class App extends Component<Props,State> {
                   {
                      this.setState({ ...this.state, autocheck:true })
 
-                     console.log("autocheck",types)
+                     //console.log("autocheck",types)
 
                      this.handleCheck(null, types[1], true)
                   }
@@ -1235,13 +1241,13 @@ class App extends Component<Props,State> {
 
                            if(["tree","relation","langScript"].indexOf(j) !== -1) {
 
-                              console.log("widgeTree",j,jpre,meta[j],counts["datatype"],this.state.filters.datatype[0])
+                              //console.log("widgeTree",j,jpre,meta[j],counts["datatype"],this.state.filters.datatype[0])
 
                               if(j == "tree") { // && meta[j]["@graph"]) { //
                                  let tree ;
                                  if(meta[j]) tree = meta[j]["@graph"]
 
-                                 console.log("meta tree",tree,meta[j],counts)
+                                 //console.log("meta tree",tree,meta[j],counts)
 
                                  if(tree && tree[0]
                                     && this.state.filters && this.state.filters.datatype
@@ -1321,9 +1327,9 @@ class App extends Component<Props,State> {
                                  }
                                  while(tmProps.length > 0);
 
-                                 console.log("inserTree",tree)
+                                 //console.log("inserTree",tree)
                                  tree = this.counTree(tree,meta[j],counts["datatype"][this.state.filters.datatype[0]])
-                                 console.log("counTree",tree)
+                                 //console.log("counTree",tree)
 
                                  return widget(jlabel,j,subWidget(tree,jpre,tree[0]['taxHasSubClass']));
                               }

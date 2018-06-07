@@ -66,6 +66,7 @@ const makeMainRoutes = () => {
                      let get = qs.parse(history.location.search)
                      //if(!store.getState().data.ontology)
                      {
+                        //console.log("new route",props,store.getState())
                         store.dispatch(initiateApp(qs.parse(history.location.search)))
                      }
                      return ( <AppContainer history={history}/> ) } } />

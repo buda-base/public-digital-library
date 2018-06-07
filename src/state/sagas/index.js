@@ -13,6 +13,7 @@ async function initiateApp(params,iri) {
       let state = store.getState()
 
 
+
       if(!state.data.config)
       {
          const config = await api.loadConfig();
@@ -50,12 +51,15 @@ async function initiateApp(params,iri) {
       }
       else if(!iri && params && params.q) {
 
-         if(params.t && ["Person","Work"].indexOf(params.t) !== -1)
+         //console.log("state q",state.data.searches,params,iri)
+
+         if(params.t && ["Person","Work"].indexOf(params.t) !== -1
+            && (!state.data.searches || !state.data.searches[params.t] || !state.data.searches[params.t][params.q+"@"+params.lg]))
          {
             store.dispatch(dataActions.startSearch(params.q,params.lg,[params.t])); //,params.t.split(",")));
             store.dispatch(uiActions.selectType(params.t));
          }
-         else
+         else if(!state.data.searches || !state.data.searches[params.q+"@"+params.lg])
          {
             store.dispatch(dataActions.startSearch(params.q,params.lg));
          }
@@ -63,12 +67,14 @@ async function initiateApp(params,iri) {
       else if(!iri && params && params.r) {
          let t = getEntiType(params.r)
 
-         // console.log("t",t)
+         //console.log("state r",state.data.searches,params,iri)
 
          let s = ["Any"]
          //if(params.t && params.t != "Any") { s = [ params.t ] }
 
-         if(t && ["Person","Place","Topic","Work"].indexOf(t) !== -1) {
+         if(t && ["Person","Place","Topic","Work"].indexOf(t) !== -1
+            && (!state.data.searches || !state.data.searches[params.r+"@"]))
+         {
             store.dispatch(dataActions.startSearch(params.r,"",s,t)); //,params.t.split(",")));
          }
       }
