@@ -409,7 +409,8 @@ class ResourceViewer extends Component<Props,State>
 
    hasSub(k:string)
    {
-      return (this.props.ontology[k] && this.props.ontology[k][bdo+"inferSubTree"])
+      if(!k.match(/^http:\/\/purl\.bdrc\.io/)) return false
+      else return (this.props.ontology[k] && this.props.ontology[k][bdo+"inferSubTree"])
 
    }
 
@@ -449,6 +450,9 @@ class ResourceViewer extends Component<Props,State>
 
          //console.log("uriformat",prop,elem.value)
 
+         if(!elem.value.match(/^http:\/\/purl\.bdrc\.io/)) {
+            return <a href={elem.value} target="_blank">{decodeURI(elem.value)}</a> ;
+         }
 
          // test if ancestor/type of property has range subclassof entity
 /*
@@ -503,6 +507,7 @@ class ResourceViewer extends Component<Props,State>
 
                         info = infoBase.filter((e)=>(e["xml:lang"] && e.type==prop && e["xml:lang"]==this.props.prefLang))
                         if(info.length == 0) info = infoBase.filter((e)=>(e["xml:lang"] && e.type==prop))
+
                         //console.log("info0",info)
                         //if(info.value) info = info.value
 
@@ -637,6 +642,8 @@ class ResourceViewer extends Component<Props,State>
 
             if(!txt) ret.push(<Tag>{tmp}</Tag>)
             else ret.push(<Tag>{tmp+" "+txt}</Tag>)
+
+            //console.log("ret",ret)
          }
          else {
 
@@ -988,7 +995,7 @@ class ResourceViewer extends Component<Props,State>
                         {
                            let tags = this.format("h4",k)
 
-                           //console.log("tags",tags);
+                           console.log("tags",tags);
 
 
                            if(k == bdo+"workLocation")
@@ -1057,9 +1064,6 @@ class ResourceViewer extends Component<Props,State>
                               //console.log("sorted tags",tags);
 
                            }
-
-
-
 
                            return (
                               <div>

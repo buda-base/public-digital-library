@@ -46,6 +46,7 @@ h4 { margin-top:10px;margin-bottom:0px;font-size:24px; }
 .resource .subsubsub h4.first.prop { font-size:0.7em;font-style:italic; }
 .resource .subsubsub .subsubsub h4.first.prop { font-style:normal; }
 
+
 div[role="tooltip"] { margin-left:30px; font-size:16px; }
 div[role="tooltip"] span { font-weight:bold; }
 
@@ -56,8 +57,10 @@ div[role="tooltip"] span { font-weight:bold; }
 .match .multi a:hover,
 .resource .data a:hover { border-bottom:1px solid rgba(229, 74, 53,1); }
 
-.resource .data > div > h4 { width:100%; padding-left:30px; }
-.resource .data > div > h4::after { display:none !important; }
+.resource .data > div > h4,
+.resource .data > div > .sub > h4:not(.first) { width:100%; padding-left:30px; }
+.resource .data > div > h4::after,
+.resource .data > div > .sub > h4:not(.first)::after { display:none !important; }
 
 .goBack { text-decoration: none; }
 .goBack:not(:first-child):not(.noML) { margin-left:35px !important; }
