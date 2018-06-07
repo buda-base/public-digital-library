@@ -759,8 +759,8 @@ class App extends Component<Props,State> {
 
                            return use && (
                            ( this.props.language != "" ? e.value && e.value.match(/[↦↤]/) && e.type && !e.type.match(/prefLabelMatch$/)
-                                                : !e.lang && (e.value.match(new RegExp(bdr+this.props.keyword.replace(/bdr:/,"")))
-                                                             || (e.type && e.type.match(/relationType$/) ) ) )
+                                                       : !e.lang && (e.value.match(new RegExp(bdr+this.props.keyword.replace(/bdr:/,"")))
+                                                                     || (e.type && e.type.match(/relationType$/) ) ) )
 
                               ) } )
                      }
@@ -773,34 +773,53 @@ class App extends Component<Props,State> {
                      let hasExpr = sublist[o].filter((e) => e.type && e.type.match(/HasExpression/))
                      let isExpr = sublist[o].filter((e) => e.type && e.type.match(/ExpressionOf/))
                      let hasPart = sublist[o].filter((e) => e.type && e.type.match(/HasPart/))
+                     let hasRoot = sublist[o].filter((e) => e.type && e.type.match(/HasRoot/))
 
-                     if(isAbs.length > 0 || hasExpr.length > 0 || isExpr.length > 0)
-                     {
-                        let subL = sublist[o].filter((e) => (e.type && e.type.match(/work(Has)?Expression/) ) )
+                     let addTmpProp = (tab,prop,lab) => {
 
-                        // console.log("subL",subL);
+                        if(tab.length > 0)
+                        {
+                           let subL = sublist[o].filter((e) => (e.type && e.type.match(new RegExp(prop)))) ///(work(Has)?Expression)|(workHasRoot)/) ) )
 
-                        let withKey = subL.reduce((acc,e) => {
-                           if(!acc[e.type]) acc[e.type] = []
-                           acc[e.type] = [].concat(acc[e.type]) ;
-                           acc[e.type].push(e.value);
-                           return acc;
-                        }, {} )
+                           let subR,label ;
+                           if(subL.length == 1) {
+                              subR = sublist[o].filter((e) => (e.type && e.type.match(new RegExp(lab)))) //(rootPrefLabel)|(prefLabel(Has)?Expression)/) ) )
+                              if(subR.length > 0) {
+                                 label = subR.filter((e) => (e["xml:lang"] == this.props.prefLang))
+                                 if(!label || label.length == 0) label = subR.filter((e) => (e["xml:lang"] == "bo-x-ewts"))
+                                 if(!label || label.length == 0) if(subR.length > 0) label = subR
 
-                        // console.log("wK",withKey);
+                                 if(label && label[0] && label[0].value) label = label[0].value
+                                 else label = null
+                              }
+                           }
 
-                        /*
-                        let withLab = withKey.reduce((acc,e) => {
+                           //console.log("sub",subL,subR,label);
 
+                           let withKey = subL.reduce((acc,e) => {
+                              if(!acc[e.type]) acc[e.type] = []
+                              acc[e.type] = [].concat(acc[e.type]) ;
+                              acc[e.type].push(e.value);
+                              return acc;
+                           }, {} )
 
-                           return acc;
-                        }, {})
+                           //console.log("wK",withKey);
 
-                        console.log("wL",withLab);
-                        */
+                           r.match = r.match.concat( Object.keys(withKey).reduce((acc,e)=>{
+                              let elem = {"type":e,"value":withKey[e]}
+                              if(label) elem = { ...elem, "tmpLabel":label}
+                              acc.push(elem);
+                              return acc;
+                           } ,[]) )
 
-                        r.match = r.match.concat( Object.keys(withKey).reduce((acc,e)=>{acc.push({"type":e,"value":withKey[e]}); return acc;} ,[]) )
+                           //console.log("r.match",r.match)
+                        }
+
                      }
+
+                     addTmpProp(hasExpr,"workHasExpression","prefLabelHasExpression");
+                     addTmpProp(isExpr,"workExpression","prefLabelExpression");
+                     addTmpProp(hasRoot,"workHasRoot","rootPrefLabel");
 
                      let k = this.props.keyword.replace(/"/g,"")
 
@@ -908,7 +927,7 @@ class App extends Component<Props,State> {
                               {
                                  r.match.map((m) => {
 
-                                    //console.log("m",m)
+                                       //console.log("m",m)
 
                                        if(!m.type.match(new RegExp(skos+"prefLabel"))) {
                                           let prop = this.fullname(m.type.replace(/.*altLabelMatch/,skos+"altLabel"))
@@ -929,7 +948,7 @@ class App extends Component<Props,State> {
                                           return (<div className="match">
                                              <span className="label">{prop}:&nbsp;</span>
                                              {!isArray && <span>{val}</span>}
-                                             {isArray && <div class="multi">{val.map((e)=><span><Link to={"/show/bdr:"+e}>{e}</Link></span>)}</div>}
+                                             {isArray && <div class="multi">{val.map((e)=><span><Link to={"/show/bdr:"+e}>{m.tmpLabel?m.tmpLabel:e}</Link></span>)}</div>}
                                           </div>)
                                        }
                                  })
