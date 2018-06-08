@@ -740,16 +740,21 @@ class App extends Component<Props,State> {
                   let findNext = false ;
                   let findFirst = true ;
 
+                  let absi = -1
+
                   if(sublist) { for(let o of Object.keys(sublist))
                   {
+                     absi ++ ;
                      //console.log("cpt",cpt,n,begin,findFirst,findNext)
 
-                     if(cpt < begin && findFirst) { cpt++ ;  continue; }
+                     if(absi < begin && findFirst) { cpt++ ; continue; }
                      else if(cpt == begin && !findNext) {
                         cpt = 0 ;
                         findFirst = false ;
                         n = this.state.paginate.n[this.state.paginate.index];
                      }
+
+                     //message.push(["cpt="+cpt+"="+absi,<br/>])
 
                      let label = sublist[o].filter((e) => (e.type && e.type.match(/prefLabelMatch$/)))[0]
                      if(!label) label = sublist[o].filter((e) => (e.type && e.type.match(/prefLabel$/) && e["xml:lang"] == this.props.prefLang))[0]
@@ -786,12 +791,14 @@ class App extends Component<Props,State> {
                                  }
                            }
 
-                           return use && (
+                           //console.log("e",e,this.state.filters.facets)
+
+                           return ( /*(this.state.filters.facets && e.type && this.state.filters.facets[e.type]) ||*/ use && (
                            ( this.props.language != "" ? e.value && e.value.match(/[↦↤]/) && e.type && !e.type.match(/prefLabelMatch$/)
                                                        : !e.lang && (e.value.match(new RegExp(bdr+this.props.keyword.replace(/bdr:/,"")))
-                                                                     || (e.type && e.type.match(/relationType$/) ) ) )
+                                                                     || (e.type && e.type.match(/relationType$/) .match) ) )
 
-                              ) } )
+                              ) ) } )
                      }
 
 
@@ -889,7 +896,7 @@ class App extends Component<Props,State> {
                            }
                            else {
 
-                              //console.log("good!")
+                              //console.log("is good",cpt,n,r.s.value,r)
 
                            }
                            /*
@@ -911,7 +918,7 @@ class App extends Component<Props,State> {
                         {
                            if(findNext) {
 
-                              let next = this.state.paginate.pages[this.state.paginate.index] + 50
+                              let next = absi
 
                               //console.log("good!",next,)
 
@@ -1588,7 +1595,7 @@ class App extends Component<Props,State> {
                   </div>
                }
             </div>
-            <div className="SearchPane" style={{width:"50%"}}>
+            <div className="SearchPane" >
                <div>
                { this.props.loading && <Loader/> }
                <SearchBar

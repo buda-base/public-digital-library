@@ -79,6 +79,7 @@ div[role="tooltip"] span { font-weight:bold; }
 .SidePane .loader { position:absolute !important;margin-right:32px;margin-top:24px;right:0;}
 .datatypesLoader, .facetLoader { left:0px !important;top:0 !important;}
 
+.SearchPane { width:49.5%; margin:0 0.2%;}
 .SearchPane > div {display:flex;justify-content: center}
 .SearchPane .formControl { margin-top:50px; margin-left:25px; width:150px;}
 .SearchPane a {text-decoration:none}
