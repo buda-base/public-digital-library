@@ -448,7 +448,7 @@ class ResourceViewer extends Component<Props,State>
    {
       if(elem) {
 
-         //console.log("uriformat",prop,elem.value)
+         console.log("uriformat",prop,elem.value,dico)
 
          if(!elem.value.match(/^http:\/\/purl\.bdrc\.io/)) {
             return <a href={elem.value} target="_blank">{decodeURI(elem.value)}</a> ;
@@ -508,7 +508,7 @@ class ResourceViewer extends Component<Props,State>
                         info = infoBase.filter((e)=>(e["xml:lang"] && e.type==prop && e["xml:lang"]==this.props.prefLang))
                         if(info.length == 0) info = infoBase.filter((e)=>(e["xml:lang"] && e.type==prop))
 
-                        //console.log("info0",info)
+                        console.log("info0",info)
                         //if(info.value) info = info.value
 
                         if(info[0]) info = info[0].value
@@ -525,12 +525,12 @@ class ResourceViewer extends Component<Props,State>
                      }
                   }
 
-                  //console.log("s",prop,info)
+                  console.log("s",prop,info,infoBase)
 
                   // we can return Link
                   let pretty = this.fullname(elem.value);
 
-                  if(info && infoBase && infoBase.filter(e=>e["xml:lang"]).length > 0) ret.push(<Link className="urilink prefLabel" to={"/show/bdr:"+pretty}>{info}</Link>)
+                  if(info && infoBase && infoBase.filter(e=>e["xml:lang"]).length >= 0) ret.push(<Link className="urilink prefLabel" to={"/show/bdr:"+pretty}>{info}</Link>)
                   else if(pretty.toString().match(/^V[0-9A-Z]+_I[0-9A-Z]+$/)) { ret.push(<span>
                      <Link className="urilink" to={"/show/bdr:"+pretty}>{pretty}</Link>&nbsp;
                      {/* <Link className="goBack" target="_blank" to={"/gallery?manifest=http://iiifpres.bdrc.io/2.1.1/v:bdr:"+pretty+"/manifest"}>{"(view image gallery)"}</Link> */}
