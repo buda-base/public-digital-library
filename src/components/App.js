@@ -880,7 +880,7 @@ class App extends Component<Props,State> {
                               //console.log("e",e)
                               if(e.type == k && (e.value == v || (Array.isArray(v) && v.indexOf(e.value) !== -1))) { hasProp.push(e); }
                               else if(v.alt) for(let a of v.alt) {
-                                 if(e.type == a && (e.value == v.val || (Array.isArray(v.val) && v.val.indexOf(e.value) !== -1))) {
+                                 if(e.type == a && (e.value == v.val || (Array.isArray(v.val) && (v.val.indexOf(e.value) !== -1 || v.val.indexOf("Any") !== -1)))) {
 
                                     hasProp.push(e);
                                  }
