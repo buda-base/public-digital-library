@@ -159,7 +159,7 @@ export default class API {
     {
       return new Promise((resolve, reject) =>
       {
-         this._fetch(host+"/").then((response) =>
+         this._fetch(host+"").then((response) =>
          {
             if (response.ok)
             {

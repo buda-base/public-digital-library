@@ -18,7 +18,7 @@ async function initiateApp(params,iri) {
       {
          const config = await api.loadConfig();
          store.dispatch(dataActions.loadedConfig(config));
-         store.dispatch(dataActions.choosingHost(config.ldspdi.endpoints[config.ldspdi.index]));
+         //store.dispatch(dataActions.choosingHost(config.ldspdi.endpoints[config.ldspdi.index]));
       }
 
       if(!state.data.ontology)
@@ -546,7 +546,7 @@ export function* watchGetFacetInfo() {
 export default function* rootSaga() {
    yield all([
       watchInitiateApp(),
-      watchChoosingHost(),
+      //watchChoosingHost(),
       //watchGetDatatypes(),
       watchGetFacetInfo(),
       watchGetOneDatatype(),

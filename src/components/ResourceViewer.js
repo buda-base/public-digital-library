@@ -6,6 +6,7 @@ import $ from 'jquery' ;
 import Fullscreen from 'material-ui-icons/Fullscreen';
 import IconButton from 'material-ui/IconButton';
 import ShareIcon from 'material-ui-icons/Share';
+import HomeIcon from 'material-ui-icons/Home';
 import Script from 'react-load-script'
 import React, { Component } from 'react';
 import qs from 'query-string'
@@ -403,7 +404,31 @@ class ResourceViewer extends Component<Props,State>
 
    hasSuper(k:string)
    {
-      return (this.props.ontology[k] && this.props.ontology[k][rdfs+"subPropertyOf"])
+      if(!this.props.ontology[k] || (!this.props.ontology[k][rdfs+"subPropertyOf"] && !this.props.ontology[k][rdfs+"subClassOf"]))
+      {
+         return false
+      }
+      else  {
+         let tmp = this.props.ontology[k][rdfs+"subPropertyOf"].map(e => e)
+         if(!tmp) tmp = this.props.ontology[k][rdfs+"subClassOf"].map(e => e)
+         while(tmp && tmp.length > 0)
+         {
+            let e = tmp[0]
+
+            //console.log("k e",k,e.value,e, this.props.ontology[k], this.props.ontology[e.value])
+
+            if(this.props.ontology[e.value][rdfs+"subPropertyOf"])
+               tmp = tmp.concat(this.props.ontology[e.value][rdfs+"subPropertyOf"].map(f => f))
+            else if(this.props.ontology[e.value][rdfs+"subClassOf"])
+               tmp = tmp.concat(this.props.ontology[e.value][rdfs+"subClassOf"].map(f => f))
+
+            if(this.props.ontology[e.value] && this.props.ontology[e.value][bdo+"inferSubTree"]) return true ;
+
+            delete tmp[0]
+            tmp = tmp.filter(e => e != null)
+         }
+         return false ;
+      }
 
    }
 
@@ -448,7 +473,7 @@ class ResourceViewer extends Component<Props,State>
    {
       if(elem) {
 
-         console.log("uriformat",prop,elem.value,dico)
+         //console.log("uriformat",prop,elem.value,dico)
 
          if(!elem.value.match(/^http:\/\/purl\.bdrc\.io/)) {
             return <a href={elem.value} target="_blank">{decodeURI(elem.value)}</a> ;
@@ -508,7 +533,7 @@ class ResourceViewer extends Component<Props,State>
                         info = infoBase.filter((e)=>(e["xml:lang"] && e.type==prop && e["xml:lang"]==this.props.prefLang))
                         if(info.length == 0) info = infoBase.filter((e)=>(e["xml:lang"] && e.type==prop))
 
-                        console.log("info0",info)
+                        //console.log("info0",info)
                         //if(info.value) info = info.value
 
                         if(info[0]) info = info[0].value
@@ -525,7 +550,7 @@ class ResourceViewer extends Component<Props,State>
                      }
                   }
 
-                  console.log("s",prop,info,infoBase)
+                  //console.log("s",prop,info,infoBase)
 
                   // we can return Link
                   let pretty = this.fullname(elem.value);
@@ -616,7 +641,7 @@ class ResourceViewer extends Component<Props,State>
       })
       */
 
-      //console.log("format",prop,elem,txt,bnode,div);
+      console.log("format",prop,elem,txt,bnode,div);
 
       let ret = []
 
@@ -624,7 +649,7 @@ class ResourceViewer extends Component<Props,State>
       {
          let pretty = this.fullname(e.value)
 
-         //console.log("e",e,pretty)
+         console.log("e",e,pretty)
 
          if(e.type != "bnode")
          {
@@ -638,6 +663,22 @@ class ResourceViewer extends Component<Props,State>
                if(root) root = root.filter(e => e.type == bdo+"workHasRoot")
                if(root && root.length > 0) tmp = [tmp," in ",this.uriformat(bdo+"workHasRoot",root[0])]
             }
+
+            if(this.props.assocResources && this.props.assocResources[e.value] && this.props.assocResources[e.value].filter(f => f.type == bdo+"originalRecord").length > 0)
+            {
+
+               let elem = this.props.assocResources[e.value] //this.uriformat(_tmp+"workRootWork",e)
+
+               if(elem) {
+                  let ori = elem.filter(e => e.type == bdo+"originalRecord")
+                  let lab = elem.filter(e => e.type == bdo+"contentProvider")
+
+                  console.log("ori,lab",ori,lab)
+
+                  if(ori.length > 0 && lab.length > 0) tmp = [tmp," at ",<a href={ori[0].value} target="_blank">{lab[0].value}</a>]
+               }
+            }
+
             // else  return ( <Link to={"/resource?IRI="+pretty}>{pretty}</Link> ) ;
 
             if(!txt) ret.push(<Tag>{tmp}</Tag>)
@@ -889,8 +930,11 @@ class ResourceViewer extends Component<Props,State>
             { !this.state.ready && <Loader loaded={false} /> }
             <div className={"resource "+getEntiType(this.props.IRI).toLowerCase()}>
 
-               <Link className="goBack" to={this.props.keyword&&!this.props.keyword.match(/^bdr:/)?"/search?q="+this.props.keyword+"&lg="+this.props.language+(this.props.datatype?"&t="+this.props.datatype:""):"/"}>
-                  <Button style={{paddingLeft:"0"}}>&lt; Go back to search page</Button>
+               <Link style={{fontSize:"26px"}} className="goBack" to={this.props.keyword&&!this.props.keyword.match(/^bdr:/)?"/search?q="+this.props.keyword+"&lg="+this.props.language+(this.props.datatype?"&t="+this.props.datatype:""):"/"}>
+                  {/* <Button style={{paddingLeft:"0"}}>&lt; Go back to search page</Button> */}
+                  <IconButton style={{paddingLeft:0}} title="Go back to search page">
+                     <HomeIcon style={{fontSize:"30px"}}/>
+                  </IconButton>
                </Link>
                <a className="goBack" target="_blank" title="TTL version" rel="alternate" type="text/turtle" href={"http://purl.bdrc.io/resource/"+this.props.IRI+".ttl"}>
                   <Button style={{marginLeft:"50px",paddingRight:"0"}}>export to ttl</Button>
@@ -904,7 +948,7 @@ class ResourceViewer extends Component<Props,State>
                   }>
 
                   {/* <Button className="goBack" style={{marginLeft:"30px"}}>Copy permalink</Button> */}
-                  <IconButton style={{marginLeft:"35px"}}>
+                  <IconButton style={{marginLeft:"35px"}} title="Copy URL to clipboard">
                      <ShareIcon />
                   </IconButton>
                </CopyToClipboard>
@@ -929,7 +973,7 @@ class ResourceViewer extends Component<Props,State>
                      <Button style={{marginLeft:"30px"}}>Browse associated resources &gt;</Button>
                   </Link>
                }
-               {this.format("h1",rdf+"type",this.props.IRI)}
+               {/* {this.format("h1",rdf+"type",this.props.IRI)} */}
                {this.format("h2",skos+"prefLabel")}
                { /*<MapComponent tmp={this.props}/ */}
                {/*
@@ -984,14 +1028,15 @@ class ResourceViewer extends Component<Props,State>
 
                      let elem = this.getResourceElem(k);
 
-                     //console.log("prop",k,elem);
+                     console.log("prop",k,elem);
 
-                     if(!k.match(new RegExp(adm+"|prefLabel|"+rdf+"|toberemoved|workPartIndex|workPartTreeIndex"))) {
                      //if(!k.match(new RegExp("Revision|Entry|prefLabel|"+rdf+"|toberemoved"))) {
+                     if(!k.match(new RegExp(adm+"|prefLabel|"+rdf+"|toberemoved|workPartIndex|workPartTreeIndex")))
+                     {
 
                         let sup = this.hasSuper(k)
 
-                        if(!sup || sup.filter(e => e.value == bdo+"workRefs").length > 0)
+                        if(!sup) // || sup.filter(e => e.value == bdo+"workRefs").length > 0) //
                         {
                            let tags = this.format("h4",k)
 
@@ -1043,7 +1088,7 @@ class ResourceViewer extends Component<Props,State>
                            {
                            // 1-map avec le nom du children[2] si ==3chldren et children[1] = " in "
                               tags = tags.map(e => {
-                                 if(e.props.children.length == 3)
+                                 if(e.props.children.length == 3 && e.props.children[1] === " in ")
                                  {
                                     return { ...e , "exprKey" : e.props.children[2][0].props.children }
                                  }
