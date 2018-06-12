@@ -48,7 +48,7 @@ const _tmp = tmp ;
 
 const prefixes = [adm, bdo,bdr,rdf,rdfs,skos,tmp]
 
-const languages = {
+export const languages = {
    "zh":"lang.search.zh",
    "zh-hant":"lang.search.zhHant",
    //"zh-hans":"lang.search.zhHans",
@@ -969,7 +969,7 @@ class App extends Component<Props,State> {
                                        <ListItemText style={{height:"auto",flexGrow:10,flexShrink:10}}
                                           primary={[lit,lang?<Tooltip placement="bottom-end" title={
                                              <div style={{margin:"10px"}}>
-                                                <Translate value={languages[lang].replace(/search/,"tip")}/>
+                                                <Translate value={languages[lang]?languages[lang].replace(/search/,"tip"):lang}/>
                                              </div>
                                           }><span className="lang">{lang}</span></Tooltip>:null]}
                                           //secondary={id}
@@ -1016,7 +1016,7 @@ class App extends Component<Props,State> {
                                              <span className="label">{prop}:&nbsp;</span>
                                              {!isArray && <span>{[val,lang?<Tooltip placement="bottom-end" title={
                                                 <div style={{margin:"10px"}}>
-                                                   <Translate value={languages[lang].replace(/search/,"tip")}/>
+                                                   <Translate value={languages[lang]?languages[lang].replace(/search/,"tip"):lang}/>
                                                 </div>
                                              }><span className="lang">{lang}</span></Tooltip>:null]}</span>}
                                              {isArray && <div class="multi">
@@ -1025,7 +1025,7 @@ class App extends Component<Props,State> {
                                                       <Link to={"/show/bdr:"+e}>{m.tmpLabel?m.tmpLabel:e}</Link>
                                                       { m.lang && <Tooltip placement="bottom-end" title={
                                                          <div style={{margin:"10px"}}>
-                                                            <Translate value={languages[m.lang].replace(/search/,"tip")}/>
+                                                            <Translate value={languages[lang]?languages[lang].replace(/search/,"tip"):lang}/>
                                                          </div>
                                                       }><span className="lang">{m.lang}</span></Tooltip> }
                                                    </span>)}</div>}

@@ -20,9 +20,10 @@ a.result + div span.label { text-transform:capitalize; font-weight:700; float:le
 a.result + div span:not(.label) {  }
 .match { display:flex; margin-bottom:5px }
 
-a.result .lang, .match .lang
+a.result .lang, .match .lang,.data .lang,h2 .lang
 { font-size: 9px;display:inline-block;margin-left:5px;margin-top:7px;position:absolute; color:rgba(0,0,0,0.5);}
-
+.data .lang { position:relative;margin:0;line-height:0;vertical-align:-7px;padding:0 5px;padding-top:10px;}
+h2 .lang { margin-top:22px }
 h4 { margin-top:10px;margin-bottom:0px;font-size:24px; }
 
 .resource { width:100% ; padding:50px 100px; text-align:left; box-sizing: border-box;}

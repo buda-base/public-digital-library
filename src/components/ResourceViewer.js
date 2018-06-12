@@ -11,12 +11,14 @@ import Script from 'react-load-script'
 import React, { Component } from 'react';
 import qs from 'query-string'
 import Button from 'material-ui/Button';
+import {Translate} from 'react-redux-i18n';
 import { Link } from 'react-router-dom';
 import IIIFViewerContainer from '../containers/IIIFViewerContainer';
 import { Redirect404 } from "../routes.js"
 import Loader from "react-loader"
 //import {MapComponent} from './Map';
 import {getEntiType} from '../lib/api';
+import {languages} from './App';
 
 type Props = {
    history:{},
@@ -508,7 +510,7 @@ class ResourceViewer extends Component<Props,State>
 
                   let ret = []
 
-                  let info,infoBase ;
+                  let info,infoBase,lang ;
                   if(dico) {
                      infoBase = dico[elem.value]
 
@@ -529,22 +531,33 @@ class ResourceViewer extends Component<Props,State>
                            })
                         }
                         */
-
                         info = infoBase.filter((e)=>(e["xml:lang"] && e.type==prop && e["xml:lang"]==this.props.prefLang))
                         if(info.length == 0) info = infoBase.filter((e)=>(e["xml:lang"] && e.type==prop))
 
                         //console.log("info0",info)
                         //if(info.value) info = info.value
 
-                        if(info[0]) info = info[0].value
+                        if(info[0]) {
+                           lang = info[0]["xml:lang"]
+                           info = info[0].value
+                        }
                         else if(!withProp){
                            info = infoBase.filter((e) => e["xml:lang"]==this.props.prefLang)
 
-                           if(info[0]) info = info[0].value
+                           if(info[0]) {
+                              lang = info[0]["xml:lang"]
+                              info = info[0].value
+                           }
                            else {
                               info = infoBase.filter((e) => e["xml:lang"]=="bo-x-ewts")
-                              if(info[0]) info = info[0].value
-                              else info = infoBase[0].value
+                              if(info[0]) {
+                                 lang = info[0]["xml:lang"]
+                                 info = info[0].value
+                              }
+                              else {
+                                 lang = infoBase[0]["xml:lang"]
+                                 info = infoBase[0].value
+                              }
                            }
                         }
                      }
@@ -555,7 +568,13 @@ class ResourceViewer extends Component<Props,State>
                   // we can return Link
                   let pretty = this.fullname(elem.value);
 
-                  if(info && infoBase && infoBase.filter(e=>e["xml:lang"]).length >= 0) ret.push(<Link className="urilink prefLabel" to={"/show/bdr:"+pretty}>{info}</Link>)
+                  if(info && infoBase && infoBase.filter(e=>e["xml:lang"]).length >= 0) {
+                     ret.push([<Link className="urilink prefLabel" to={"/show/bdr:"+pretty}>{info}</Link>,lang?<Tooltip placement="bottom-end" title={
+                        <div style={{margin:"10px"}}>
+                           <Translate value={languages[lang]?languages[lang].replace(/search/,"tip"):lang}/>
+                        </div>
+                     }><span className="lang">{lang}</span></Tooltip>:null])
+                  }
                   else if(pretty.toString().match(/^V[0-9A-Z]+_I[0-9A-Z]+$/)) { ret.push(<span>
                      <Link className="urilink" to={"/show/bdr:"+pretty}>{pretty}</Link>&nbsp;
                      {/* <Link className="goBack" target="_blank" to={"/gallery?manifest=http://iiifpres.bdrc.io/2.1.1/v:bdr:"+pretty+"/manifest"}>{"(view image gallery)"}</Link> */}
@@ -606,7 +625,7 @@ class ResourceViewer extends Component<Props,State>
 
    format(Tag,prop:string,txt:string="",bnode:boolean=false,div:string="sub")
    {
-      //console.group("FORMAT")
+      console.group("FORMAT")
 
       let elemN,elem;
       if(bnode) {
@@ -655,7 +674,15 @@ class ResourceViewer extends Component<Props,State>
          {
             let tmp
             if(e.type == "uri") tmp = this.uriformat(prop,e)
-            else tmp = pretty;
+            else {
+               let lang = e["lang"]
+               if(!lang) lang = e["xml:lang"]
+               tmp = [pretty,lang?<Tooltip placement="bottom-end" title={
+               <div style={{margin:"10px"}}>
+                  <Translate value={languages[lang]?languages[lang].replace(/search/,"tip"):lang}/>
+               </div>
+            }><span className="lang">{lang}</span></Tooltip>:null];
+            }
 
             if(this.props.assocResources && prop == bdo+"workHasExpression") {
 
@@ -673,7 +700,7 @@ class ResourceViewer extends Component<Props,State>
                   let ori = elem.filter(e => e.type == bdo+"originalRecord")
                   let lab = elem.filter(e => e.type == bdo+"contentProvider")
 
-                  console.log("ori,lab",ori,lab)
+                  //console.log("ori,lab",ori,lab)
 
                   if(ori.length > 0 && lab.length > 0) tmp = [tmp," at ",<a href={ori[0].value} target="_blank">{lab[0].value}</a>]
                }
@@ -714,7 +741,13 @@ class ResourceViewer extends Component<Props,State>
             if(lab && lab[0] && lab[0].value)
             {
                for(let l of lab) {
-                  sub.push(<Tag className='label'>{this.fullname(l.value)}</Tag>)
+                  let lang = l["lang"]
+                  if(!lang) lang = l["xml:lang"]
+                  sub.push(<Tag className='label'>{[this.fullname(l.value),lang?<Tooltip placement="bottom-end" title={
+                     <div style={{margin:"10px"}}>
+                        <Translate value={languages[lang]?languages[lang].replace(/search/,"tip"):lang}/>
+                     </div>
+                  }><span className="lang">{lang}</span></Tooltip>:null]}</Tag>)
                }
 
                ret.push(<div className={div}>{sub}</div>)
@@ -729,7 +762,7 @@ class ResourceViewer extends Component<Props,State>
 
                   if(!f.match(/[/]note/)) first="" ;
 
-                  //console.log("f",f)
+                  console.log("f",f)
 
                   let hasBnode = false ;
 
@@ -776,7 +809,7 @@ class ResourceViewer extends Component<Props,State>
          }
       }
 
-      //console.groupEnd();
+      console.groupEnd();
 
       return ret ;
 
