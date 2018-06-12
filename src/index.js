@@ -34,120 +34,17 @@ import makeMainRoutes from './routes'
 import history from './history'
 import qs from 'query-string'
 
+import enTranslation from "./translations/en" ;
+import frTranslation from "./translations/fr" ;
+import zhTranslation from "./translations/zh" ;
+import boTranslation from "./translations/bo" ;
+
 const translationsObject = {
 
-   en:{
-      lang:{
-         en:"English",
-         fr:"French",
-         zh:"Chinese",
-         bo:"Tibetan",
-         lg:"Language",
-         search:{
-            zh:"Chinese",
-            zhHant:"Chinese (Hanzi)",
-            //zhHans:"Chinese (Simplified)",
-            zhLatnPinyin:"Chinese (Pinyin)",
-            en:"English",
-            saXIast:"Sanskrit (IAST)",
-            saDeva:"Sanskrit (Devanagari)",
-            bo:"Tibetan (Unicode)",
-            boXEwts:"Tibetan (EWTS)"
-         }
-      },
-      types:{
-         "any":"All",
-         "corporation":"Corporation",
-         "etext":"Etext",
-         "item":"Item",
-         "lineage":"Lineage",
-         "person":"Person",
-         "place":"Place",
-         "role":"Role",
-         "topic":"Topic",
-         "work":"Work"
-      },
-      search:{
-         filters:{
-            noresults:"No results matching your filters."
-         }
-      },
-      Lsidebar:{
-         title:"Refine your Search",
-         collection:{
-            title:"Collection"
-         },
-         datatypes:{
-            title:"Data Types"
-         }
-      },
-      Rsidebar:{
-         title:"Display Preferences",
-         UI:{
-            title:"UI Language"
-         },
-         results:{
-            title:"Results Preferred Language"
-         }
-      }
-   },
-   fr:{
-      lang:{
-         en:"Anglais",
-         fr:"Français",
-         zh:"Chinois",
-         bo:"Tibétain",
-         lg:"Langue",
-         search:{
-            zh:"Chinois",
-            zhHant:"Chinois (Hanzi)",
-            //zhHans:"Chinois (Simplifié)",
-            zhLatnPinyin:"Chinois (Pinyin)",
-            en:"Anglais",
-            saXIast:"Sanskrit (IAST)",
-            saDeva:"Sanskrit (Devanagari)",
-            bo:"Tibétain (Unicode)",
-            boXEwts:"Tibétain (EWTS)"
-         }
-      },
-      types:{
-         "any":"Tous",
-         "corporation":"Entreprise",
-         "etext":"Etexte",
-         "item":"Élément",
-         "lineage":"Lignée",
-         "person":"Personne",
-         "place":"Lieu",
-         "role":"Rôle",
-         "topic":"Thème",
-         "work":"Oeuvre"
-      },
-      Lsidebar:{
-         title:"Affinez votre Requête",
-         collection:{
-            title:"Collection"
-         },
-         datatypes:{
-            title:"Types de Données"
-         }
-      },
-      search:{
-         filters:{
-            noresults:"Pas de résultat correspondant à vos filtres."
-         }
-      },
-      Rsidebar:{
-         title:"Préférences d'Affichage",
-         UI : {
-            title :"Langue de l'UI"
-         },
-         results:{
-            title:"Langue Préférée des Résultats"
-         }
-      }
-   },
-   zh:{},
-   bo:{}
+   bo:boTranslation,
+   en:enTranslation,
+   fr:frTranslation,
+   zh:zhTranslation,
 
 }
 

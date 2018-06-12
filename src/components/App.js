@@ -817,7 +817,7 @@ class App extends Component<Props,State> {
                         {
                            let subL = sublist[o].filter((e) => (e.type && e.type.match(new RegExp(prop)))) ///(work(Has)?Expression)|(workHasRoot)/) ) )
 
-                           let subR,label ;
+                           let subR,label,lang ;
                            if(subL.length == 1) {
                               subR = sublist[o].filter((e) => (e.type && e.type.match(new RegExp(lab)))) //(rootPrefLabel)|(prefLabel(Has)?Expression)/) ) )
                               if(subR.length > 0) {
@@ -825,8 +825,13 @@ class App extends Component<Props,State> {
                                  if(!label || label.length == 0) label = subR.filter((e) => (e["xml:lang"] == "bo-x-ewts"))
                                  if(!label || label.length == 0) if(subR.length > 0) label = subR
 
-                                 if(label && label[0] && label[0].value) label = label[0].value
+                                 if(label && label[0] && label[0].value) {
+                                    lang = label[0]["xml:lang"] ;
+                                    if(!lang) lang = label[0]["lang"]
+                                    label = label[0].value;
+                                 }
                                  else label = null
+
                               }
                            }
 
@@ -842,7 +847,7 @@ class App extends Component<Props,State> {
                            //console.log("wK",withKey);
 
                            r.match = r.match.concat( Object.keys(withKey).reduce((acc,e)=>{
-                              let elem = {"type":e,"value":withKey[e]}
+                              let elem = {"type":e,"value":withKey[e],lang}
                               if(label) elem = { ...elem, "tmpLabel":label}
                               acc.push(elem);
                               return acc;
@@ -862,6 +867,8 @@ class App extends Component<Props,State> {
                      let id = r.s.value.replace(/^.*?([^/]+)$/,"$1")
                      let lit ;
                      if(r.lit) { lit = this.highlight(r.lit.value,k) }
+                     let lang = r.lit["lang"]
+                     if(!lang) lang = r.lit["xml:lang"]
                      let typ ;
                      //if(r.f && r.f.value) typ = r.f.value.replace(/^.*?([^/]+)$/,"$1")
 
@@ -960,7 +967,11 @@ class App extends Component<Props,State> {
                                     <ListItem style={{paddingLeft:"0",display:"flex"}}>
                                        <div style={{width:"30px",textAlign:"right",color:"black",fontSize:"0.9rem",marginLeft:"16px"}}>{n}</div>
                                        <ListItemText style={{height:"auto",flexGrow:10,flexShrink:10}}
-                                          primary={lit}
+                                          primary={[lit,lang?<Tooltip placement="bottom-end" title={
+                                             <div style={{margin:"10px"}}>
+                                                <Translate value={languages[lang].replace(/search/,"tip")}/>
+                                             </div>
+                                          }><span className="lang">{lang}</span></Tooltip>:null]}
                                           //secondary={id}
                                           secondary={[id,
                                              Tag?<Tooltip placement="bottom-start" style={{marginLeft:"50px"}} title={
@@ -987,7 +998,10 @@ class App extends Component<Props,State> {
                                           if(Array.isArray(m.value)) { val = m.value.map((e)=>this.pretty(e)) ; isArray = true }
                                           else val = this.highlight(this.pretty(m.value),k)
 
-                                          //console.log("val",val,val.length)
+                                          let lang = m["lang"]
+                                          if(!lang) lang = m["xml:lang"]
+
+                                          //console.log("val",val,val.length,lang)
 
                                           let uri = this.props.keyword.replace(/bdr:/,"")
                                           if(m.type.match(/relationType$/)) {
@@ -995,12 +1009,26 @@ class App extends Component<Props,State> {
                                              val = uri
                                           }
 
+
                                           //console.log("prop",prop,val)
 
                                           return (<div className="match">
                                              <span className="label">{prop}:&nbsp;</span>
-                                             {!isArray && <span>{val}</span>}
-                                             {isArray && <div class="multi">{val.map((e)=><span><Link to={"/show/bdr:"+e}>{m.tmpLabel?m.tmpLabel:e}</Link></span>)}</div>}
+                                             {!isArray && <span>{[val,lang?<Tooltip placement="bottom-end" title={
+                                                <div style={{margin:"10px"}}>
+                                                   <Translate value={languages[lang].replace(/search/,"tip")}/>
+                                                </div>
+                                             }><span className="lang">{lang}</span></Tooltip>:null]}</span>}
+                                             {isArray && <div class="multi">
+                                                {val.map((e)=>
+                                                   <span>
+                                                      <Link to={"/show/bdr:"+e}>{m.tmpLabel?m.tmpLabel:e}</Link>
+                                                      { m.lang && <Tooltip placement="bottom-end" title={
+                                                         <div style={{margin:"10px"}}>
+                                                            <Translate value={languages[m.lang].replace(/search/,"tip")}/>
+                                                         </div>
+                                                      }><span className="lang">{m.lang}</span></Tooltip> }
+                                                   </span>)}</div>}
                                           </div>)
                                        }
                                  })
