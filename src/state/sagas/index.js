@@ -8,6 +8,18 @@ import bdrcApi, { getEntiType } from '../../lib/api';
 
 const api = new bdrcApi();
 
+const adm  = "http://purl.bdrc.io/ontology/admin/" ;
+const bdo  = "http://purl.bdrc.io/ontology/core/";
+const bdr  = "http://purl.bdrc.io/resource/";
+const owl  = "http://www.w3.org/2002/07/owl#";
+const rdf  = "http://www.w3.org/1999/02/22-rdf-syntax-ns#";
+const rdfs = "http://www.w3.org/2000/01/rdf-schema#";
+const skos = "http://www.w3.org/2004/02/skos/core#";
+const tmp  = "http://purl.bdrc.io/ontology/tmp/" ;
+const _tmp  = "http://purl.bdrc.io/ontology/tmp/" ;
+
+const prefixes = { adm, bdo, bdr, owl, rdf, rdfs, skos, tmp }
+
 async function initiateApp(params,iri) {
    try {
       let state = store.getState()
@@ -30,19 +42,34 @@ async function initiateApp(params,iri) {
 
       if(iri && (!state.data.resources || !state.data.resources.IRI))
       {
-         let res ;
+         let res,Etext ;
+
+         Etext = iri.match(/^UT/)
 
          try {
-            res = await api.loadResource(iri)
+            if(!Etext) res = await api.loadResource(iri)
+            else res = await api.loadEtext(iri)
          }
          catch(e){
             store.dispatch(dataActions.noResource(iri,e));
             return
          }
-         store.dispatch(dataActions.gotResource(iri,res));
 
-         let assocRes = await api.loadAssocResources(iri)
-         store.dispatch(dataActions.gotAssocResources(iri,assocRes));
+         if(!Etext)
+         {
+            store.dispatch(dataActions.gotResource(iri,res));
+            let assocRes = await api.loadAssocResources(iri)
+            store.dispatch(dataActions.gotAssocResources(iri,assocRes));
+         }
+         else {
+            res = res["@graph"].filter(e => e["@id"] == "bdr:"+iri)
+            if(res.length > 0)
+            {
+               delete res[0]["@id"]
+               res = { [ bdr+iri] : res[0] }
+               store.dispatch(dataActions.gotResource(iri,res));
+            }
+         }
 
          //let t = getEntiType(iri)
          //if(t && ["Person","Place","Topic"].indexOf(t) !== -1) {

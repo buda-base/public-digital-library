@@ -664,9 +664,17 @@ class ResourceViewer extends Component<Props,State>
 
       let ret = []
 
+      if(elem && !Array.isArray(elem)) elem = [ elem ]
+
+      console.log(elem)
+
       if(elem) for(let e of elem)
       {
-         let pretty = this.fullname(e.value)
+         let value = ""+e
+         if(e.value) value = e.value
+         else if(e["@value"]) value = e["@value"]
+         else if(e["@id"]) value = e["@id"]
+         let pretty = this.fullname(value)
 
          console.log("e",e,pretty)
 
@@ -788,6 +796,15 @@ class ResourceViewer extends Component<Props,State>
                            if(v.type == 'uri') txt = this.uriformat(f,v)
                            else txt = this.fullname(v.value)
 
+                           if(v["lang"] || v["xml:lang"]) {
+                              let lang = v["lang"]
+                              if(!lang) lang = v["xml:lang"]
+                              txt = [txt,lang?<Tooltip placement="bottom-end" title={
+                                 <div style={{margin:"10px"}}>
+                                    <Translate value={languages[lang]?languages[lang].replace(/search/,"tip"):lang}/>
+                                 </div>
+                              }><span className="lang">{lang}</span></Tooltip>:null]
+                           }
                            if(!noVal) subsub.push(<Tag>{txt}</Tag>)
                            else sub.push(<Tag>{txt}</Tag>)
                         }
@@ -1064,7 +1081,7 @@ class ResourceViewer extends Component<Props,State>
                      console.log("prop",k,elem);
 
                      //if(!k.match(new RegExp("Revision|Entry|prefLabel|"+rdf+"|toberemoved"))) {
-                     if(!k.match(new RegExp(adm+"|prefLabel|"+rdf+"|toberemoved|workPartIndex|workPartTreeIndex")))
+                     if(!k.match(new RegExp(adm+"|adm:|TextTitle|SourcePath|prefLabel|"+rdf+"|toberemoved|workPartIndex|workPartTreeIndex")))
                      {
 
                         let sup = this.hasSuper(k)
