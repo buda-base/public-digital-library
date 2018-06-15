@@ -48,7 +48,7 @@ async function initiateApp(params,iri) {
 
          try {
             if(!Etext) res = await api.loadResource(iri)
-            else res = await api.loadEtext(iri)
+            else res = await api.loadEtextInfo(iri)
          }
          catch(e){
             store.dispatch(dataActions.noResource(iri,e));
@@ -62,13 +62,49 @@ async function initiateApp(params,iri) {
             store.dispatch(dataActions.gotAssocResources(iri,assocRes));
          }
          else {
-            res = res["@graph"].filter(e => e["@id"] == "bdr:"+iri)
-            if(res.length > 0)
-            {
-               delete res[0]["@id"]
-               res = { [ bdr+iri] : res[0] }
-               store.dispatch(dataActions.gotResource(iri,res));
-            }
+            /*
+            let res0 = { [ bdr+iri] : {...res["@graph"].reduce(
+               (acc,e) => {
+                  let obj = {}, q
+                  console.log("e",e)
+                  Object.keys(e).map(k => {
+                     if(!k.match(/[:@]/)) q = bdr+k
+                     else q = k
+                     console.log("k",k,q,e[k],e[k].length)
+                     if(!e[k].length && e[k]["@id"]) obj[q] = { value:e[k]["@id"].replace(/bdr:/,bdr), type:"uri"}
+                     else if(!e[k].length || Array.isArray(e[k]) || !e[k].match(/^bdr:[A-Z][A-Z0-9_]+$/)) obj[q] = e[k]
+                     else obj[q] = { value:e[k].replace(/bdr:/,bdr), type:"uri"}
+                  })
+                  return ({...acc,...obj})
+               },{}) } }
+            delete res0[bdr+iri]["@id"]
+            let lab = res0[bdr+iri][bdr+"eTextTitle"]
+            if(!lab["@value"]) lab = { "@value":lab, "@language":""}
+            console.log("lab",lab)
+            res0[bdr+iri][skos+"prefLabel"] = { "lang" : lab["@language"], value : lab["@value"] } //{ value:res0[bdr+iri]["eTextTitle"], lang:"" }
+            */
+            store.dispatch(dataActions.gotAssocResources(iri,{"data":Object.keys(res).reduce((acc,e)=>{
+               return ({...acc,[e]:Object.keys(res[e]).map(f => ( { type:f, ...res[e][f] } ) ) } )
+            },{})}));
+
+
+            store.dispatch(dataActions.gotResource(iri,{ [bdr+iri] : Object.keys(res).reduce((acc,e) => {
+
+               if(Object.keys(res[e]).indexOf(skos+"prefLabel") === -1)
+                  return ({...acc, ...res[e] })
+               else
+                  return acc
+                  /*Object.keys(res[bdr+iri][e]).reduce((ac,f) => {
+                  console.log("e,ac,f",e,ac,f)
+                  return ( { ...ac, ...res[bdr+iri][e][f] })
+               },{})})*/
+            },{}) }));
+
+            /*Object.keys(res).reduce((acc,e) => {
+               return ({ ...acc, ...res[e] })
+            },{})}));*/
+
+            //store.dispatch(dataActions.getEtext(iri))
          }
 
          //let t = getEntiType(iri)

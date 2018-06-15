@@ -625,7 +625,7 @@ class ResourceViewer extends Component<Props,State>
 
    format(Tag,prop:string,txt:string="",bnode:boolean=false,div:string="sub")
    {
-      console.group("FORMAT")
+      //console.group("FORMAT")
 
       let elemN,elem;
       if(bnode) {
@@ -660,13 +660,13 @@ class ResourceViewer extends Component<Props,State>
       })
       */
 
-      console.log("format",prop,elem,txt,bnode,div);
+      //console.log("format",prop,elem,txt,bnode,div);
 
       let ret = []
 
       if(elem && !Array.isArray(elem)) elem = [ elem ]
 
-      console.log(elem)
+      //console.log(elem)
 
       if(elem) for(let e of elem)
       {
@@ -676,7 +676,7 @@ class ResourceViewer extends Component<Props,State>
          else if(e["@id"]) value = e["@id"]
          let pretty = this.fullname(value)
 
-         console.log("e",e,pretty)
+         //console.log("e",e,pretty)
 
          if(e.type != "bnode")
          {
@@ -770,7 +770,7 @@ class ResourceViewer extends Component<Props,State>
 
                   if(!f.match(/[/]note/)) first="" ;
 
-                  console.log("f",f)
+                  //console.log("f",f)
 
                   let hasBnode = false ;
 
@@ -826,7 +826,7 @@ class ResourceViewer extends Component<Props,State>
          }
       }
 
-      console.groupEnd();
+      //console.groupEnd();
 
       return ret ;
 
@@ -973,6 +973,14 @@ class ResourceViewer extends Component<Props,State>
          }
       }
 
+      let titre ;
+
+      if(kZprop.indexOf(skos+"prefLabel") !== -1)
+         titre = this.format("h2",skos+"prefLabel")
+      else if(kZprop.indexOf(bdo+"eTextTitle") !== -1)
+         titre = this.format("h2",bdo+"eTextTitle")
+
+
 
       // add nother route to UViewer Gallery page
       return (
@@ -1024,7 +1032,7 @@ class ResourceViewer extends Component<Props,State>
                   </Link>
                }
                {/* {this.format("h1",rdf+"type",this.props.IRI)} */}
-               {this.format("h2",skos+"prefLabel")}
+               { titre }
                { /*<MapComponent tmp={this.props}/ */}
                {/*
                   hasImageAsset && //this.props.openUV &&
@@ -1078,7 +1086,7 @@ class ResourceViewer extends Component<Props,State>
 
                      let elem = this.getResourceElem(k);
 
-                     console.log("prop",k,elem);
+                     //console.log("prop",k,elem);
 
                      //if(!k.match(new RegExp("Revision|Entry|prefLabel|"+rdf+"|toberemoved"))) {
                      if(!k.match(new RegExp(adm+"|adm:|TextTitle|SourcePath|prefLabel|"+rdf+"|toberemoved|workPartIndex|workPartTreeIndex")))
@@ -1090,7 +1098,7 @@ class ResourceViewer extends Component<Props,State>
                         {
                            let tags = this.format("h4",k)
 
-                           console.log("tags",tags);
+                           //console.log("tags",tags);
 
 
                            if(k == bdo+"workLocation")
@@ -1138,7 +1146,10 @@ class ResourceViewer extends Component<Props,State>
                            {
                            // 1-map avec le nom du children[2] si ==3chldren et children[1] = " in "
                               tags = tags.map(e => {
-                                 if(e.props.children.length == 3 && e.props.children[1] === " in ")
+
+                                 console.log("e",e)
+
+                                 if(e.props.children.length == 3 && e.props.children[1] === " in " && e.props.children[2][0].props)
                                  {
                                     return { ...e , "exprKey" : e.props.children[2][0].props.children }
                                  }

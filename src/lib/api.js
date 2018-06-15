@@ -148,11 +148,25 @@ export default class API {
          return resource ;
    }
 
-       async loadEtext(IRI:string): Promise<string>
+       async loadEtextInfo(IRI:string): Promise<string>
        {
-            let resource =  JSON.parse(await this.getURLContents(this._etextPath(IRI),false));
-            console.log("etext",resource)
-            return resource ;
+            //let resource =  JSON.parse(await this.getURLContents(this._etextPath(IRI),false));
+
+            //console.log("etext",resource)
+            try {
+               let config = store.getState().data.config.ldspdi
+               let url = config.endpoints[config.index]+"/graph" ;
+               let param = {"searchType":"Etext_base","R_RES":"bdr:"+IRI,"L_NAME":"","LG_NAME":"" }
+               let data = await this.getQueryResults(url, IRI, param,"GET");
+
+               console.log("etextinfo",data)
+
+               return data ;
+            }
+            catch(e){
+               throw(e)
+            }
+
       }
 
    async loadAssocResources(IRI:string): Promise<string>
@@ -466,15 +480,6 @@ export default class API {
           return path;
       }
 
-            _etextPath(IRI:string): string {
-
-               let config = store.getState().data.config.ldspdi
-               let url = config.endpoints[config.index] ;
-
-                let path = url +  "/graph/Etext_base?R_RES=bdr:" + IRI;
-
-                return path;
-            }
 
      get _ontologyPath(): string {
         let path = ONTOLOGY_PATH;

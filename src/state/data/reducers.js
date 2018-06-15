@@ -76,13 +76,20 @@ reducers[actions.TYPES.noResource] = noResource;
 
 
 export const gotAssocResources = (state: DataState, action: Action) => {
-    return {
+
+
+
+    state = {
         ...state,
         "assocResources": {
            ...state.assocResources,
            [action.payload]:action.meta.data
        }
     }
+    
+    console.log("assocR",state,action)
+
+    return state ;
 }
 reducers[actions.TYPES.gotAssocResources] = gotAssocResources;
 

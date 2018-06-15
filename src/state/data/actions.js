@@ -76,6 +76,9 @@ export const gotResource = (iri: string,res:{}): Action => {
 
 TYPES.gotAssocResources = 'GOT_ASSOCIATED_RESOURCES';
 export const gotAssocResources = (iri: string,res:{}): Action => {
+
+   console.log("assocE",iri,res)
+
     return {
         type: TYPES.gotAssocResources,
         payload: iri,
