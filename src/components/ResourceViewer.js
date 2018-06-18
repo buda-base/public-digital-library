@@ -1149,9 +1149,12 @@ class ResourceViewer extends Component<Props,State>
 
                                  console.log("e",e)
 
-                                 if(e.props.children.length == 3 && e.props.children[1] === " in " && e.props.children[2][0].props)
+                                 if(e.props.children.length == 3 && e.props.children[1] === " in " && e.props.children[2][0][0].props)
                                  {
-                                    return { ...e , "exprKey" : e.props.children[2][0].props.children }
+                                    //console.log("key",e.props.children[2][0][0].props.children)
+
+                                    if(e.props.children[2][0][0].props.children)
+                                       return { ...e , "exprKey" : e.props.children[2][0][0].props.children.replace(/[/]/,"") }
                                  }
                                  /*
                                  else if(e.props.children.length == 1)
@@ -1167,7 +1170,7 @@ class ResourceViewer extends Component<Props,State>
                            // 2-lodash sort
                               tags = _.sortBy(tags,'exprKey')
 
-                              //console.log("sorted tags",tags);
+                              console.log("sorted tags",tags);
 
                            }
 
