@@ -189,7 +189,7 @@ async function getChunks(iri,next) {
 
       data = _.sortBy(data["@graph"],'seqNum')
       .filter(e => e.chunkContents)
-      .map(e => ({ value:e.chunkContents["@value"]+ " ("+e.seqNum+")" }))
+      .map(e => ({ value:e.chunkContents["@value"] })); //+ " ("+e.seqNum+")" }))
 
       console.log("dataC",iri,next,data)
 
