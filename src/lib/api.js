@@ -169,6 +169,27 @@ export default class API {
 
       }
 
+             async loadEtextChunks(IRI:string,next:number=0): Promise<string>
+             {
+                  //let resource =  JSON.parse(await this.getURLContents(this._etextPath(IRI),false));
+
+                  //console.log("etext",resource)
+                  try {
+                     let config = store.getState().data.config.ldspdi
+                     let url = config.endpoints[config.index]+"/graph" ;
+                     let param = {"searchType":"Chunks","R_RES":"bdr:"+IRI,"I_SEQ":next+1,"I_LIM":10,"L_NAME":"","LG_NAME":"" }
+                     let data = await this.getQueryResults(url, IRI, param,"GET","application/ld+json");
+
+                     console.log("etextchunks",data)
+
+                     return data ;
+                  }
+                  catch(e){
+                     throw(e)
+                  }
+
+            }
+
    async loadAssocResources(IRI:string): Promise<string>
    {
       let resource =  JSON.parse(await this.getURLContents(this._assocResourcesPath(IRI),false));
@@ -200,7 +221,7 @@ export default class API {
     }
 
 
-   async getQueryResults(url: string, key:string, param:{}={}, method:string = "POST"): Promise<{}>
+   async getQueryResults(url: string, key:string, param:{}={}, method:string = "POST", accept:string="application/json"): Promise<{}>
    {
 
       //console.log("key",key)
@@ -237,7 +258,7 @@ export default class API {
          method: method,
          ...( method == "POST" && {body:body} ),//body:body,
          headers:new Headers({
-            "Accept": "application/json",
+            "Accept": accept,
          ...( method == "POST" && {"Content-Type": "application/x-www-form-urlencoded"})
         })
       })
@@ -329,7 +350,7 @@ export default class API {
              let config = store.getState().data.config.ldspdi
              let url = config.endpoints[config.index]+"/lib" ;
              let param = {"searchType":"rootSearchGraph","LG_NAME":lang}
-             if(typ && typ.length >= 1 && typ[0] !== "Any") { param = { ...param, "searchType":typ[0].toLowerCase()+"FacetGraph" } }
+             if(typ && typ.length >= 1 && typ[0] !== "Any") { param = { ...param, "searchType":(typ[0] === "Etext"?"Chunks":typ[0]).toLowerCase()+"FacetGraph" } }
              let data = this.getQueryResults(url, key, param,"GET");
              // let data = this.getSearchContents(url, key);
 

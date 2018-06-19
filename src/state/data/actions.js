@@ -86,6 +86,33 @@ export const gotAssocResources = (iri: string,res:{}): Action => {
     }
 }
 
+
+TYPES.getChunks = 'GET_CHUNKS';
+export const getChunks = (iri: string,next:number=0): Action => {
+
+   console.log("getC",iri,next)
+
+    return {
+        type: TYPES.getChunks,
+        payload: iri,
+        meta: next
+    }
+}
+
+
+TYPES.gotNextChunks = 'GOT_NEXT_CHUNKS';
+export const gotNextChunks = (iri: string,data:{}): Action => {
+
+   //console.log("nextC",iri,next,data)
+
+    return {
+        type: TYPES.gotNextChunks,
+        payload: iri,
+        meta: data
+    }
+}
+
+
 export type SearchFailedAction = {
     type: string,
     payload: {

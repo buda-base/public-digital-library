@@ -1,3 +1,5 @@
+
+import _ from "lodash";
 import { call, put, takeLatest, select, all } from 'redux-saga/effects';
 import { INITIATE_APP } from '../actions';
 import * as dataActions from '../data/actions';
@@ -83,6 +85,9 @@ async function initiateApp(params,iri) {
             console.log("lab",lab)
             res0[bdr+iri][skos+"prefLabel"] = { "lang" : lab["@language"], value : lab["@value"] } //{ value:res0[bdr+iri]["eTextTitle"], lang:"" }
             */
+
+            store.dispatch(dataActions.getChunks(iri));
+
             store.dispatch(dataActions.gotAssocResources(iri,{"data":Object.keys(res).reduce((acc,e)=>{
                return ({...acc,[e]:Object.keys(res[e]).map(f => ( { type:f, ...res[e][f] } ) ) } )
             },{})}));
@@ -116,7 +121,7 @@ async function initiateApp(params,iri) {
 
          //console.log("state q",state.data.searches,params,iri)
 
-         if(params.t && ["Person","Work"].indexOf(params.t) !== -1
+         if(params.t && ["Person","Work","Etext"].indexOf(params.t) !== -1
             && (!state.data.searches || !state.data.searches[params.t] || !state.data.searches[params.t][params.q+"@"+params.lg]))
          {
             store.dispatch(dataActions.startSearch(params.q,params.lg,[params.t])); //,params.t.split(",")));
@@ -174,6 +179,28 @@ export function* watchChoosingHost() {
       dataActions.TYPES.choosingHost,
       (action) => chooseHost(action.payload)
    );
+}
+
+
+async function getChunks(iri,next) {
+   try {
+
+      let data = await api.loadEtextChunks(iri,next);
+
+      data = _.sortBy(data["@graph"],'seqNum')
+      .filter(e => e.chunkContents)
+      .map(e => ({ value:e.chunkContents["@value"]+ " ("+e.seqNum+")" }))
+
+      console.log("dataC",iri,next,data)
+
+      store.dispatch(dataActions.gotNextChunks(iri,data))
+   }
+   catch(e){
+      console.log("ERRROR with chunks",iri,next,e)
+
+      //store.dispatch(dataActions.chunkError(url,e,iri);
+   }
+
 }
 
 async function getManifest(url,iri) {
@@ -264,6 +291,12 @@ function getData(result)  {
       data.works = data.data
       delete data.data
    }
+   /*
+   if(data && data.chunks) {
+      data.etexts = data.chunks
+      delete data.chunks
+   }
+   */
 
 
    if(data.works) {
@@ -440,7 +473,7 @@ function getData(result)  {
             if(datatype.indexOf("Person") !== -1) {
                store.dispatch(dataActions.foundFacetInfo(keyword,language,datatype,{"gender":metadata }))
             }
-            else if(datatype.indexOf("Work") !== -1) {
+            else if(datatype.indexOf("Work") !== -1 || datatype.indexOf("Etext") !== -1) {
 
                metadata = { ...metadata, tree:result.tree}
 
@@ -581,6 +614,14 @@ export function* watchGetManifest() {
    );
 }
 
+export function* watchGetChunks() {
+
+   yield takeLatest(
+      dataActions.TYPES.getChunks,
+      (action) => getChunks(action.payload,action.meta)
+   );
+}
+
 export function* watchGetOneDatatype() {
 
    yield takeLatest(
@@ -611,6 +652,7 @@ export default function* rootSaga() {
       watchInitiateApp(),
       //watchChoosingHost(),
       //watchGetDatatypes(),
+      watchGetChunks(),
       watchGetFacetInfo(),
       watchGetOneDatatype(),
       watchGetOneFacet(),

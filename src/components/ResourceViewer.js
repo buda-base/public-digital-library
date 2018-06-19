@@ -1,4 +1,5 @@
 //@flow
+import InfiniteScroll from 'react-infinite-scroller';
 import _ from "lodash";
 import Tooltip from 'material-ui/Tooltip';
 import {CopyToClipboard} from 'react-copy-to-clipboard' ;
@@ -28,7 +29,8 @@ type Props = {
    imageAsset?:string,
    firstImage?:string,
    onGetResource: (s:string) => void,
-   onHasImageAsset:(s:string) => void
+   onHasImageAsset:(s:string) => void,
+   onGetChunks: (s:string,b:number) => void
 }
 type State = {
    uviewer : boolean,
@@ -1174,11 +1176,24 @@ class ResourceViewer extends Component<Props,State>
 
                            }
 
-                           return (
-                              <div>
-                                 <h3><span>{this.fullname(k)}</span>:&nbsp;</h3>
-                                 {this.hasSub(k)?this.subProps(k):tags.map((e)=> [e," "] )}
-                              </div>
+                           if(k != bdo+"eTextHasChunk")
+                              return (
+                                 <div>
+                                    <h3><span>{this.fullname(k)}</span>:&nbsp;</h3>
+                                    {this.hasSub(k)?this.subProps(k):tags.map((e)=> [e," "] )}
+                                 </div>
+                              )
+                           else
+                              return (
+                                 <InfiniteScroll
+                                    hasMore={true}
+                                    pageStart={0}
+                                    loadMore={(e) => this.props.onGetChunks(this.props.IRI,elem.length)}
+                                    //loader={<Loader loaded={false} />}
+                                    >
+                                    <h3><span>{this.fullname(k)}</span>:&nbsp;</h3>
+                                    {this.hasSub(k)?this.subProps(k):tags.map((e)=> [e," "] )}
+                                 </InfiniteScroll>
                               )
                         }
 

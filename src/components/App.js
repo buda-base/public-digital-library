@@ -174,9 +174,9 @@ class App extends Component<Props,State> {
          }
 
       }
-      else if (label || this.state.filters.datatype.filter((f)=>["Person","Work"].indexOf(f) !== -1).length > 0)
+      else if (label || this.state.filters.datatype.filter((f)=>["Person","Work","Etext"].indexOf(f) !== -1).length > 0)
       {
-         if(!label) label = this.state.filters.datatype.filter((f)=>["Person","Work"].indexOf(f) !== -1)[0]
+         if(!label) label = this.state.filters.datatype.filter((f)=>["Person","Work","Etext"].indexOf(f) !== -1)[0]
 
          this.props.history.push({pathname:"/search",search:"?q="+key+"&lg="+this.state.language+"&t="+label})
 
@@ -269,7 +269,7 @@ class App extends Component<Props,State> {
       if(prop == bdo+"workGenre") {
          if(!val) lab = ["Any"]
          //newF = { ...prop.map(p => ({ [p] : lab })).reduce((e,acc) => ({...acc,...e}),{}) }
-         newF = { [prop] : { alt : [ prop, bdo + "workIsAbout" ], val : lab } }
+         newF = { [prop] : { alt : [ prop, bdo + "workIsAbout", tmp + "etextAbout" ], val : lab } }
       }
       else
       {
@@ -379,7 +379,7 @@ class App extends Component<Props,State> {
          {
             //console.log("here?")
 
-            if(["Any","Person","Work"].indexOf(lab) !== -1)
+            if(["Any","Person","Work","Etext"].indexOf(lab) !== -1)
             {
 
                this.requestSearch(this.props.keyword,lab)

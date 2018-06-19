@@ -74,7 +74,6 @@ export const noResource = (state: DataState, action: Action) => {
 }
 reducers[actions.TYPES.noResource] = noResource;
 
-
 export const gotAssocResources = (state: DataState, action: Action) => {
 
 
@@ -86,12 +85,45 @@ export const gotAssocResources = (state: DataState, action: Action) => {
            [action.payload]:action.meta.data
        }
     }
-    
+
     console.log("assocR",state,action)
 
     return state ;
 }
 reducers[actions.TYPES.gotAssocResources] = gotAssocResources;
+
+
+export const gotNextChunks = (state: DataState, action: Action) => {
+
+   let res ;
+   if(state && state.resources && state.resources[action.payload]
+      && state.resources[action.payload]["http://purl.bdrc.io/resource/"+action.payload])
+      {
+         res = state.resources[action.payload]["http://purl.bdrc.io/resource/"+action.payload]         
+         if(!res["http://purl.bdrc.io/ontology/core/eTextHasChunk"]) res["http://purl.bdrc.io/ontology/core/eTextHasChunk"] = []
+         res["http://purl.bdrc.io/ontology/core/eTextHasChunk"] = res["http://purl.bdrc.io/ontology/core/eTextHasChunk"].concat(action.meta)
+
+         //res["http://purl.bdrc.io/ontology/core/eTextHasChunk"] = [ { value:"machin",lang:"" } ]
+      }
+
+
+    state = {
+        ...state,
+        "resources": {
+            ...state.resources,
+            [action.payload]:{
+               ["http://purl.bdrc.io/resource/"+action.payload]: res
+            }
+         }
+      }
+
+
+    console.log("nextC",state,action)
+
+    return state ;
+}
+reducers[actions.TYPES.gotNextChunks] = gotNextChunks;
+
 
 export const hostError = (state: DataState, action: actions.SearchFailedAction) => {
     return {
