@@ -30,7 +30,6 @@
          "tree":"http://purl.bdrc.io/ontology/core/workGenre"
       },
       "Etext": {
-         "work":"http://purl.bdrc.io/ontology/tmp/forWork",
          "tree":"http://purl.bdrc.io/ontology/core/workGenre"
       }
    }

@@ -797,8 +797,8 @@ class App extends Component<Props,State> {
                            //console.log("e",e,this.state.filters.facets)
 
                            return ( /*(this.state.filters.facets && e.type && this.state.filters.facets[e.type]) ||*/ use && (
-                           ( this.props.language != "" ? e.value && ((e.value.match(/[↦↤]/) && e.type && !e.type.match(/prefLabelMatch$/))
-                                                                     || e.type && e.type.match(/seqNum$/))
+                           ( this.props.language != "" ? e.value && ((e.value.match(/[↦↤]/) && e.type && !e.type.match(/prefLabelMatch$/)))
+                                                                     //|| e.type && e.type.match(/seqNum$/))
                                                        : !e.lang && (e.value.match(new RegExp(bdr+this.props.keyword.replace(/bdr:/,"")))
                                                                      || (e.type && e.type.match(/relationType$/) ) ) )
 
