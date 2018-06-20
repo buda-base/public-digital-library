@@ -728,6 +728,9 @@ class App extends Component<Props,State> {
 
                   if(t === "Any") continue ;
 
+
+                  console.log("t",t)
+
                   message.push(<MenuItem  onClick={(e)=>this.handleCheck(e,t,true)}><h4>{I18n.t("types."+t.toLowerCase())+"s"+(counts["datatype"][t]?" ("+counts["datatype"][t]+")":"")}</h4></MenuItem>);
 
                   let sublist = list[t.toLowerCase()+"s"]
@@ -756,12 +759,12 @@ class App extends Component<Props,State> {
 
                      //message.push(["cpt="+cpt+"="+absi,<br/>])
 
-                     let label = sublist[o].filter((e) => (e.type && e.type.match(/prefLabelMatch$/)))[0]
-                     if(!label) label = sublist[o].filter((e) => (e.type && e.type.match(/prefLabel$/) && e["xml:lang"] == this.props.prefLang))[0]
-                     if(!label) label = sublist[o].filter((e) => (e.type && e.type.match(/prefLabel$/) && e["xml:lang"] == "bo-x-ewts"))[0]
-                     if(!label) label = sublist[o].filter((e) => (e.type && e.type.match(/prefLabel$/)))[0]
+                     let label ; // sublist[o].filter((e) => (e.type && e.type.match(/prefLabelMatch$/)))[0]
+                     label = sublist[o].filter((e) => (e.type && e.type.match(/(prefLabel(Match)?|eTextTitle)$/) && (e["lang"] == this.props.prefLang || e["xml:lang"] == this.props.prefLang)))[0]
+                     if(!label || label.length == 0) label = sublist[o].filter((e) => (e.type && e.type.match(/(prefLabel(Match)?|eTextTitle)$/) && (e["lang"] == "bo-x-ewts" || e["xml:lang"] == "bo-x-ewts")))[0]
+                     if(!label || label.length == 0) label = sublist[o].filter((e) => (e.type && e.type.match(/(prefLabel(Match)?|eTextTitle)$/)))[0]
 
-                     //console.log("label",label)
+                     //console.log("label",label,sublist[o])
 
                      let preProps = sublist[o].filter((e) => e.type && e.type.match(/relationType$/ )).map(e => this.props.ontology[e.value])
 
@@ -794,13 +797,16 @@ class App extends Component<Props,State> {
                            //console.log("e",e,this.state.filters.facets)
 
                            return ( /*(this.state.filters.facets && e.type && this.state.filters.facets[e.type]) ||*/ use && (
-                           ( this.props.language != "" ? e.value && e.value.match(/[↦↤]/) && e.type && !e.type.match(/prefLabelMatch$/)
+                           ( this.props.language != "" ? e.value && ((e.value.match(/[↦↤]/) && e.type && !e.type.match(/prefLabelMatch$/))
+                                                                     || e.type && e.type.match(/seqNum$/))
                                                        : !e.lang && (e.value.match(new RegExp(bdr+this.props.keyword.replace(/bdr:/,"")))
                                                                      || (e.type && e.type.match(/relationType$/) ) ) )
 
                               ) ) } )
                      }
 
+
+                     //console.log("r",r,label);
 
                      // || (e.type && e.type.match(/[Ee]xpression/) )
                      // || ( )
@@ -810,6 +816,7 @@ class App extends Component<Props,State> {
                      let isExpr = sublist[o].filter((e) => e.type && e.type.match(/ExpressionOf/))
                      let hasPart = sublist[o].filter((e) => e.type && e.type.match(/HasPart/))
                      let hasRoot = sublist[o].filter((e) => e.type && e.type.match(/HasRoot/))
+                     let workLab = sublist[o].filter((e) => e.type && e.type.match(/workLabel/))
 
                      let addTmpProp = (tab,prop,lab) => {
 
@@ -861,16 +868,22 @@ class App extends Component<Props,State> {
                      addTmpProp(hasExpr,"workHasExpression","prefLabelHasExpression");
                      addTmpProp(isExpr,"workExpression","prefLabelExpression");
                      addTmpProp(hasRoot,"workHasRoot","rootPrefLabel");
+                     addTmpProp(workLab,"forWork","workLabel");
 
                      let k = this.props.keyword.replace(/"/g,"")
 
-                     let id = r.s.value.replace(/^.*?([^/]+)$/,"$1")
+
+                     let id = r.s.value
+                     if(sublist[o].filter(e => e.type && e.type === tmp+"forEtext").length > 0) id = sublist[o].filter(e => e.type === tmp+"forEtext")[0].value
+                     id = id.replace(/^.*?([^/]+)$/,"$1")
+
                      let lit ;
                      if(r.lit) { lit = this.highlight(r.lit.value,k) }
                      let lang = r.lit["lang"]
                      if(!lang) lang = r.lit["xml:lang"]
                      let typ ;
                      //if(r.f && r.f.value) typ = r.f.value.replace(/^.*?([^/]+)$/,"$1")
+
 
                      //console.log("r",o,sublist[o],r,label,lit);
 

@@ -291,12 +291,31 @@ function getData(result)  {
       data.works = data.data
       delete data.data
    }
-   /*
    if(data && data.chunks) {
-      data.etexts = data.chunks
+      console.log("sorting",Date.now())
+      data.etexts = Object.keys(data.chunks).map(e => ({ [e]:_.orderBy(data.chunks[e],"type") })).reduce((acc,e)=>({...acc,...e}),{})
+      console.log("sorted",Date.now())
+
+      /*
+       // sorting chunks by etext & seqnum might break fuseki match score order ... ?
+      let pre = []
+      for(let c of Object.keys(data.chunks))
+      {
+         let k = data.chunks[c].filter(e => e.type.match(/forEtext$/))
+         if(k && k.length > 0) k = k[0].value
+         else k = null ;
+         let n = data.chunks[c].filter(e => e.type.match(/seqNum$/))
+         if(n && n.length > 0) n = n[0].value
+         else n = null ;
+         pre.push({ e:_.sortBy(data.chunks[c],"type"), k, c, n })
+      }
+      data.etexts = _.sortBy(pre,["k","n"]).reduce((acc,e) => ({...acc, [e.c]:e.e}),{})
+      //console.log("pre",pre,data.etexts)
+      */
+
       delete data.chunks
    }
-   */
+
 
 
    if(data.works) {

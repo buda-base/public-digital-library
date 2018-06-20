@@ -975,7 +975,7 @@ class ResourceViewer extends Component<Props,State>
          }
       }
 
-      let titre ;
+      let titre = <br/>;
 
       if(kZprop.indexOf(skos+"prefLabel") !== -1)
          titre = this.format("h2",skos+"prefLabel")
