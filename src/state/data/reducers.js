@@ -76,17 +76,91 @@ reducers[actions.TYPES.noResource] = noResource;
 
 export const gotAssocResources = (state: DataState, action: Action) => {
 
+   const rdf  = "http://www.w3.org/1999/02/22-rdf-syntax-ns#";
+   const oa = "http://www.w3.org/ns/oa#" ;
+   const bdr  = "http://purl.bdrc.io/resource/";
+   const bdo  = "http://purl.bdrc.io/ontology/core/";
+   const rdfs = "http://www.w3.org/2000/01/rdf-schema#" ;
 
+   let res = state.resources
+   if(res) res = res[action.payload]
+   if(res) {
+      console.log("res",res)
+
+      let asso = action.meta.data
+      for(let k of Object.keys(asso))
+      {
+         let anno = asso[k].filter(e => e.type && e.type == rdf+"type" && e.value == oa+"Annotation")
+         if(anno && anno.length > 0)
+         {
+            console.log("anno",asso[k])
+
+            let targ = asso[k].filter(e => e.type && e.type == oa+"hasTarget")
+            let body = asso[k].filter(e => e.type && e.type == oa+"hasBody")
+            if(targ && targ.length > 0 && targ[0] && targ[0].value && body && body.length > 0)
+            {
+               let sta = asso[targ[0].value]
+               if(sta)
+               {
+                  console.log("sta",sta)
+
+                  let pred = sta.filter(e => e.type && e.type == rdf+"predicate")
+                  let obj = sta.filter(e => e.type && e.type == rdf+"object")
+                  if(pred && pred.length > 0 && obj && obj.length > 0)
+                  {
+                     console.log("pred obj",pred,obj)
+                     if(pred[0] && pred[0].value && obj[0] && obj[0].value)
+                     {
+                        let prop = res[bdr+action.payload][pred[0].value] ;
+                        if(prop)
+                        {
+                           console.log("prop",prop)
+
+                           let newP = []
+
+                           for(let o of prop)
+                           {
+                              if(o.value && o.value == obj[0].value)
+                              {
+                                 if(body[0] && body[0].value && asso[body[0].value])
+                                 {
+                                    console.log("body",body)
+                                    newP.push({ type: "bnode",value: body[0].value });
+                                    res[body[0].value] =
+                                    //[ {type:"uri",value:bdr+o.value} ]
+                                    {
+                                       [rdfs+"label"]: [ { type:"literal",value:"it's a test",lang:"en" } ]
+                                    }
+                                 }
+                              }
+                              else { newP.push(o); }
+                           }
+
+                           res[bdr+action.payload][pred[0].value] = newP
+                        }
+                     }
+                  }
+               }
+            }
+         }
+
+      }
+      // 3 -
+   }
 
     state = {
         ...state,
+        "resources": {
+           ...state.resources,
+           [action.payload] : res
+        },
         "assocResources": {
            ...state.assocResources,
            [action.payload]:action.meta.data
        }
     }
 
-    console.log("assocR",state,action)
+    console.log("assocR",res,state,action)
 
     return state ;
 }
@@ -99,7 +173,7 @@ export const gotNextChunks = (state: DataState, action: Action) => {
    if(state && state.resources && state.resources[action.payload]
       && state.resources[action.payload]["http://purl.bdrc.io/resource/"+action.payload])
       {
-         res = state.resources[action.payload]["http://purl.bdrc.io/resource/"+action.payload]         
+         res = state.resources[action.payload]["http://purl.bdrc.io/resource/"+action.payload]
          if(!res["http://purl.bdrc.io/ontology/core/eTextHasChunk"]) res["http://purl.bdrc.io/ontology/core/eTextHasChunk"] = []
          res["http://purl.bdrc.io/ontology/core/eTextHasChunk"] = res["http://purl.bdrc.io/ontology/core/eTextHasChunk"].concat(action.meta)
 
