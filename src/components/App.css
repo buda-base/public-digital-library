@@ -57,7 +57,7 @@ h4 { margin-top:10px;margin-bottom:0px;font-size:24px; }
 .resource .subsub.full .subsub h4.first.prop, .resource .subsubsub h4.first.prop, .resource  .subsub .subsubsub .subsubsub h4.first.prop,
 .resource  .sub .sub .subsub h4.first.prop { font-size:0.7em;font-style:italic; }
 .resource  .sub .sub .subsub h4.first.prop { font-style:normal;}
-
+.resource .sub .sub { padding-left:60px;}
 
 div[role="tooltip"] { margin:30px; font-size:16px; }
 div[role="tooltip"] span { font-weight:bold; }
