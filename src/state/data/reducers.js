@@ -76,6 +76,7 @@ reducers[actions.TYPES.noResource] = noResource;
 
 export const gotAssocResources = (state: DataState, action: Action) => {
 
+   const adm  = "http://purl.bdrc.io/ontology/admin/";
    const rdf  = "http://www.w3.org/1999/02/22-rdf-syntax-ns#";
    const oa = "http://www.w3.org/ns/oa#" ;
    const bdr  = "http://purl.bdrc.io/resource/";
@@ -120,20 +121,70 @@ export const gotAssocResources = (state: DataState, action: Action) => {
 
                            for(let o of prop)
                            {
+                              newP.push(o);
+
                               if(o.value && o.value == obj[0].value)
                               {
-                                 if(body[0] && body[0].value && asso[body[0].value])
+                                 if(body && body[0] && body[0].value && asso[body[0].value])
                                  {
                                     console.log("body",body)
                                     newP.push({ type: "bnode",value: body[0].value });
-                                    res[body[0].value] =
-                                    //[ {type:"uri",value:bdr+o.value} ]
+
+                                    let support = asso[body[0].value].filter(e => e.type && e.type === adm+"supportedBy") ;
+                                    console.log("support",support)
+
+                                    if(support && support[0] && support[0].value)
                                     {
-                                       [rdfs+"label"]: [ { type:"literal",value:"it's a test",lang:"en" } ]
+                                       res[body[0].value] =
+                                       //[ {type:"uri",value:bdr+o.value} ]
+                                       {
+                                          [adm+"supportedBy"] : [ { type:"bnode",value:support[0].value} ]
+                                       }
+
+                                       let score = asso[body[0].value].filter(e => e.type && e.type === adm+"statementScore") ;
+                                       if(score && score[0] && score[0].value)
+                                       {
+                                          res[body[0].value] = { ...res[body[0].value], [adm+"statementScore"]:[{type:"integer",value:score[0].value }]}
+                                       }
+
+                                       let assert = asso[support[0].value] ;
+
+                                       if(assert)
+                                       {
+                                          let t = assert.filter(e => e.type == rdf+"type") ;
+                                          let c = assert.filter(e => e.type == rdfs+"comment") ;
+                                          let w = assert.filter(e => e.type.match(/[Ww]orkLocation(Work)?$/)) ;
+                                          console.log("assert",assert,t,c,w) //,c[0])
+                                          if(t && t[0] && t[0].value) // && c && c[0])
+                                          {
+
+                                             if(c && c[0]) {
+                                                res[support[0].value] = {
+                                                   [t[0].value] : [ { type:"literal",value:c[0]["value"],lang:c[0]["lang"] } ],
+                                                }
+
+                                                if(w && w[0]){
+                                                   let work = asso[w[0]["value"]].filter(e => e.type === bdo+"workLocationWork")
+
+                                                   if(work && work[0])
+                                                   {
+                                                      res[support[0].value] = {
+                                                         ...res[support[0].value],
+                                                         [w[0].type] : [ { type:"uri",value:work[0]["value"] } ]
+                                                      }
+                                                   }
+                                                }
+                                             }
+                                             else if(w && w[0]){
+
+                                                res[support[0].value] = { [t[0].value.replace(/[/]W/,"/w")] : [ { type:"uri",value:w[0].value } ] }
+                                             }
+
+                                          }
+                                       }
                                     }
                                  }
                               }
-                              else { newP.push(o); }
                            }
 
                            res[bdr+action.payload][pred[0].value] = newP
