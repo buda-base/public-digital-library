@@ -128,7 +128,8 @@ export const gotAssocResources = (state: DataState, action: Action) => {
                                  if(body && body[0] && body[0].value && asso[body[0].value])
                                  {
                                     console.log("body",body)
-                                    newP.push({ type: "bnode",value: body[0].value });
+                                    let bnode = { type: "bnode",value: body[0].value }
+                                    newP.push(bnode);
 
                                     let support = asso[body[0].value].filter(e => e.type && e.type === adm+"supportedBy") ;
                                     console.log("support",support)
@@ -145,6 +146,7 @@ export const gotAssocResources = (state: DataState, action: Action) => {
                                        if(score && score[0] && score[0].value)
                                        {
                                           res[body[0].value] = { ...res[body[0].value], [adm+"statementScore"]:[{type:"integer",value:score[0].value }]}
+                                          o["score"] = score[0]["value"] ;
                                        }
 
                                        let assert = asso[support[0].value] ;
@@ -160,7 +162,7 @@ export const gotAssocResources = (state: DataState, action: Action) => {
 
                                              if(c && c[0]) {
                                                 res[support[0].value] = {
-                                                   [t[0].value] : [ { type:"literal",value:c[0]["value"],lang:c[0]["lang"] } ],
+                                                   [t[0].value] : [ { type:"literal",value:c[0]["value"],lang:c[0]["xml:lang"] } ],
                                                 }
 
                                                 if(w && w[0]){
@@ -172,12 +174,20 @@ export const gotAssocResources = (state: DataState, action: Action) => {
                                                          ...res[support[0].value],
                                                          [w[0].type] : [ { type:"uri",value:work[0]["value"] } ]
                                                       }
+
+                                                      o["hasAnno"] = work[0]["value"] ;
+                                                      o["collapseId"] = body[0].value
+                                                      bnode["inCollapse"] = true
                                                    }
                                                 }
                                              }
                                              else if(w && w[0]){
 
                                                 res[support[0].value] = { [t[0].value.replace(/[/]W/,"/w")] : [ { type:"uri",value:w[0].value } ] }
+
+                                                o["hasAnno"] = w[0]["value"] ;
+                                                o["collapseId"] = body[0].value
+                                                bnode["inCollapse"] = true
                                              }
 
                                           }

@@ -1,4 +1,5 @@
 //@flow
+import Collapse from 'material-ui/transitions/Collapse';
 import InfiniteScroll from 'react-infinite-scroller';
 import _ from "lodash";
 import Tooltip from 'material-ui/Tooltip';
@@ -38,7 +39,8 @@ type State = {
    imageLoaded:boolean,
    openUV?:boolean,
    hideUV?:boolean,
-   toggleUV?:boolean
+   toggleUV?:boolean,
+   collapse:{[string]:boolean}
  }
 
 
@@ -129,7 +131,7 @@ class ResourceViewer extends Component<Props,State>
    {
       super(props);
 
-      this.state = { uviewer:false, imageLoaded:false }
+      this.state = { uviewer:false, imageLoaded:false, collapse:{} }
 
       console.log("props",props)
 
@@ -626,9 +628,17 @@ class ResourceViewer extends Component<Props,State>
       return elem
    }
 
+   setCollapse(node)
+   {
+      this.setState({...this.state,collapse:{...this.state.collapse,[node.collapseId]:!this.state.collapse[node.collapseId]}})
+
+   }
+
    format(Tag,prop:string,txt:string="",bnode:boolean=false,div:string="sub")
    {
       //console.group("FORMAT")
+
+      let inCollapse = false
 
       let elemN,elem;
       if(bnode) {
@@ -665,7 +675,7 @@ class ResourceViewer extends Component<Props,State>
 
       //console.log("format",prop,elem,txt,bnode,div);
 
-      let ret = []
+      let ret = [],pre = []
 
       if(elem && !Array.isArray(elem)) elem = [ elem ]
 
@@ -683,16 +693,36 @@ class ResourceViewer extends Component<Props,State>
 
          if(e.type != "bnode")
          {
+
             let tmp
             if(e.type == "uri") tmp = this.uriformat(prop,e)
             else {
                let lang = e["lang"]
                if(!lang) lang = e["xml:lang"]
-               tmp = [pretty,lang?<Tooltip placement="bottom-end" title={
-               <div style={{margin:"10px"}}>
-                  <Translate value={languages[lang]?languages[lang].replace(/search/,"tip"):lang}/>
-               </div>
-            }><span className="lang">{lang}</span></Tooltip>:null];
+               tmp = [pretty]
+
+               if(lang)
+                  tmp.push(<Tooltip placement="bottom-end" title={
+                        <div style={{margin:"10px"}}>
+                           <Translate value={languages[lang]?languages[lang].replace(/search/,"tip"):lang}/>
+                        </div>
+                     }><span className="lang">{lang}</span></Tooltip>);
+
+            }
+
+
+            if(e.hasAnno && e.collapseId && Array.isArray(tmp)) {
+               let node = e
+               tmp.push(
+                  <span className={"anno"}>
+                     {"[cf. "}
+                     <span onClick={(event) => this.setCollapse(node)}>{this.pretty(e.hasAnno)}</span>
+                     {"]"}
+                  </span>)
+               if(e.score && Number(e.score) < 0)
+               {
+                  tmp = [<div className="faded">{tmp}</div>]
+               }
             }
 
             if(this.props.assocResources && prop == bdo+"workHasExpression") {
@@ -789,6 +819,8 @@ class ResourceViewer extends Component<Props,State>
                      val = elem[f]
                      for(let v of val)
                      {
+                        //console.log("v",v);
+
                         let txt = v.value;
                         if(v.type == 'bnode')
                         {
@@ -811,6 +843,7 @@ class ResourceViewer extends Component<Props,State>
                            if(!noVal) subsub.push(<Tag>{txt}</Tag>)
                            else sub.push(<Tag>{txt}</Tag>)
                         }
+
                      }
                   }
                   if(!noVal)sub.push(<div className={div+"sub "+(hasBnode?"full":"")}>{subsub}</div>)
@@ -823,13 +856,26 @@ class ResourceViewer extends Component<Props,State>
                }
                if(!noVal)ret.push(<div className={div+" "+(bnode?"full":"")}>{sub}</div>)
 
+               //console.log("ret",ret)
+
+               //ret = [ ret ]
             }
 
-
          }
+         //ret.push(<div class="mark">xx{bnode?"bnode":""}{e.inCollapse?"collap":""}</div>)
+         if(e.inCollapse && !bnode) pre.push(<Collapse in={this.state.collapse[e.value]}>{ret}</Collapse>)
+         else pre.push(ret)
+         ret = []
+
+
       }
 
+      ret = pre
+
+
       //console.groupEnd();
+
+      //if(inCollapse) { ret = [<Collapse in={true}>{ret}</Collapse>] }
 
       return ret ;
 
