@@ -48,6 +48,7 @@ type State = {
 const adm  = "http://purl.bdrc.io/ontology/admin/" ;
 const bdo  = "http://purl.bdrc.io/ontology/core/";
 const bdr  = "http://purl.bdrc.io/resource/";
+const foaf = "http://xmlns.com/foaf/0.1/" ;
 const owl  = "http://www.w3.org/2002/07/owl#";
 const oa = "http://www.w3.org/ns/oa#" ;
 const rdf  = "http://www.w3.org/1999/02/22-rdf-syntax-ns#";
@@ -56,7 +57,7 @@ const skos = "http://www.w3.org/2004/02/skos/core#";
 const tmp  = "http://purl.bdrc.io/ontology/tmp/" ;
 const _tmp  = "http://purl.bdrc.io/ontology/tmp/" ;
 
-const prefixes = { adm, bdo, bdr, oa, owl, rdf, rdfs, skos, tmp }
+const prefixes = { adm, bdo, bdr, foaf, oa, owl, rdf, rdfs, skos, tmp }
 
 let propOrder = {
    "Corporation":[],
@@ -1156,7 +1157,7 @@ class ResourceViewer extends Component<Props,State>
                               if(elem && Array.isArray(elem) && elem[0]) {
                                  elem = this.getResourceBNode(elem[0].value)
                                  let str = ""
-                                 console.log("loca",elem)
+                                 //console.log("loca",elem)
 
                                  let loca = s => (elem[bdo+"workLocation"+s] && elem[bdo+"workLocation"+s][0]["value"] ? elem[bdo+"workLocation"+s][0]["value"]:null)
 
@@ -1196,14 +1197,14 @@ class ResourceViewer extends Component<Props,State>
                            // 1-map avec le nom du children[2] si ==3chldren et children[1] = " in "
                               tags = tags.map(e => {
 
-                                 console.log("e",e)
+                                 //console.log("e",e)
 
-                                 if(e.props.children.length == 3 && e.props.children[1] === " in " && e.props.children[2][0][0].props)
+                                 if(e.props && e.props.children.length == 3 && e.props.children[1] === " in " && e.props.children[2][0][0] && e.props.children[2][0][0].props)
                                  {
                                     //console.log("key",e.props.children[2][0][0].props.children)
 
                                     if(e.props.children[2][0][0].props.children)
-                                       return { ...e , "exprKey" : e.props.children[2][0][0].props.children.replace(/[/]/,"") }
+                                       return { elem:e , "exprKey" : e.props.children[2][0][0].props.children.replace(/[/]/,"") }
                                  }
                                  /*
                                  else if(e.props.children.length == 1)
@@ -1212,24 +1213,35 @@ class ResourceViewer extends Component<Props,State>
                                  }
                                  */
 
-                                 return { ...e, "exprKey": "" } ;
+                                 return { elem:e, "exprKey": "" } ;
                               });
 
 
                            // 2-lodash sort
                               tags = _.sortBy(tags,'exprKey')
 
-                              console.log("sorted tags",tags);
+                              //console.log("sorted tags",tags);
 
+                              let cleantags = tags.map(e => e.elem )
+
+                              //console.log("clean tags",cleantags);
+
+                              tags = cleantags
                            }
 
-                           if(k != bdo+"eTextHasChunk")
+                           if(k != bdo+"eTextHasChunk") {
+
+                              let ret = this.hasSub(k)?this.subProps(k):tags.map((e)=> [e," "] )
+
+                              //console.log("render", ret)
+
                               return (
                                  <div>
                                     <h3><span>{this.fullname(k)}</span>:&nbsp;</h3>
-                                    {this.hasSub(k)?this.subProps(k):tags.map((e)=> [e," "] )}
+                                    {ret}
                                  </div>
                               )
+                           }
                            else
                               return (
                                  <InfiniteScroll
