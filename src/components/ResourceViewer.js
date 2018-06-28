@@ -1197,15 +1197,46 @@ class ResourceViewer extends Component<Props,State>
                            // 1-map avec le nom du children[2] si ==3chldren et children[1] = " in "
                               tags = tags.map(e => {
 
-                                 //console.log("e",e)
+                                 if(Array.isArray(e) && e.length > 0) e = e[0]
 
+                                 console.log("e",e)
+                                 let exprKey1 = "", exprKey2 = "";
+
+                                 if(e.props)
+                                 {
+                                    if(!Array.isArray(e.props.children)) exprKey1 = e.props.children
+                                    else if(e.props.children.length > 0)
+                                    {
+                                       exprKey1 = e.props.children[0]
+                                       if(Array.isArray(exprKey1) && exprKey1.length > 0) exprKey1 = exprKey1[0]
+                                       if(exprKey1 && exprKey1.props && exprKey1.props.children) exprKey1 = exprKey1.props.children
+                                       if(Array.isArray(exprKey1)) exprKey1 = exprKey1[0]
+                                       if(Array.isArray(exprKey1) && exprKey1.length > 0) exprKey1 = exprKey1[0]
+                                       if(exprKey1 && exprKey1.props && exprKey1.props.children) exprKey1 = exprKey1.props.children
+                                       exprKey1 = exprKey1.replace(/[/]$/,"")
+                                    }
+
+                                    console.log("eK1",exprKey1)
+
+                                    if(e.props.children.length == 3 && e.props.children[1] === " in ")
+                                    {
+                                       exprKey2 = e.props.children[2]
+                                       if(Array.isArray(exprKey2) && exprKey2.length > 0) exprKey2 = exprKey2[0]
+                                       if(exprKey2 && exprKey2.props && exprKey2.props.children) exprKey2 = exprKey2.props.children
+                                       if(Array.isArray(exprKey2)) exprKey2 = exprKey2[0]
+                                       if(Array.isArray(exprKey2) && exprKey2.length > 0) exprKey2 = exprKey2[0]
+                                       if(exprKey2 && exprKey2.props && exprKey2.props.children) exprKey2 = exprKey2.props.children
+                                       exprKey2 = exprKey2.replace(/[/]$/,"")
+                                    }
+                                 }
+                                 /*
                                  if(e.props && e.props.children.length == 3 && e.props.children[1] === " in " && e.props.children[2][0][0] && e.props.children[2][0][0].props)
                                  {
-                                    //console.log("key",e.props.children[2][0][0].props.children)
+                                    console.log("key",e.props.children[2][0][0].props.children)
 
                                     if(e.props.children[2][0][0].props.children)
-                                       return { elem:e , "exprKey" : e.props.children[2][0][0].props.children.replace(/[/]/,"") }
-                                 }
+                                       return { elem:e , "exprKey1":e.props.children[0][0][0].props.children, "exprKey2" : e.props.children[2][0][0].props.children.replace(/[/]/,"") }
+                                 }*/
                                  /*
                                  else if(e.props.children.length == 1)
                                  {
@@ -1213,14 +1244,14 @@ class ResourceViewer extends Component<Props,State>
                                  }
                                  */
 
-                                 return { elem:e, "exprKey": "" } ;
+                                 return { elem:e, exprKey1, exprKey2 } ;
                               });
 
 
                            // 2-lodash sort
-                              tags = _.sortBy(tags,'exprKey')
+                              tags = _.sortBy(tags,['exprKey1','exprKey2'])
 
-                              //console.log("sorted tags",tags);
+                              console.log("sorted tags",tags);
 
                               let cleantags = tags.map(e => e.elem )
 
