@@ -62,7 +62,10 @@ const prefixes = { adm, bdo, bdr, foaf, oa, owl, rdf, rdfs, skos, tmp }
 let propOrder = {
    "Corporation":[],
    "Etext":[],
-   "Item":[],
+   "Item":[
+      "bdo:itemForWork",
+      "bdo:itemVolumes"
+   ],
    "Lineage":[
       "skos:altLabel",
       "bdo:lineageObject",
@@ -192,7 +195,7 @@ class ResourceViewer extends Component<Props,State>
 
       //if(stripuri) {
 
-      if(!str.match(/ /)) str = str.replace(/([a-z])([A-Z])/g,"$1 $2")
+      if(!str.match(/ /) && !str.match(/^http[s]?:/)) str = str.replace(/([a-z])([A-Z])/g,"$1 $2")
 
       if(str.match(/^https?:\/\/[^ ]+$/)) { str = <a href={str} target="_blank">{str}</a> }
       else {
@@ -540,7 +543,6 @@ class ResourceViewer extends Component<Props,State>
                         info = infoBase.filter((e)=>(e["xml:lang"] && e.type==prop && e["xml:lang"]==this.props.prefLang))
                         if(info.length == 0) info = infoBase.filter((e)=>(e["xml:lang"] && e.type==prop))
 
-                        //console.log("info0",info)
                         //if(info.value) info = info.value
 
                         if(info[0]) {
@@ -563,6 +565,8 @@ class ResourceViewer extends Component<Props,State>
                               else {
                                  lang = infoBase[0]["xml:lang"]
                                  info = infoBase[0].value
+                                 if(infoBase[0].type && infoBase[0].type == bdo+"volumeNumber") info = "Volume "+info ;
+                                 //console.log("info0",info)
                               }
                            }
                         }
@@ -1029,6 +1033,8 @@ class ResourceViewer extends Component<Props,State>
          titre = this.format("h2",skos+"prefLabel")
       else if(kZprop.indexOf(bdo+"eTextTitle") !== -1)
          titre = this.format("h2",bdo+"eTextTitle")
+      else
+         titre = <h2>{getEntiType(this.props.IRI) + " " +this.props.IRI}</h2>
 
 
 
@@ -1148,10 +1154,37 @@ class ResourceViewer extends Component<Props,State>
                         {
                            let tags = this.format("h4",k)
 
-                           //console.log("tags",tags);
+
+                           if(k == bdo+"itemHasVolume")
+                           {
+
+                              tags = tags.map(e => {
+
+                                 let key = "";
+                                 if(Array.isArray(e) && e.length > 0) {
+                                    key = e[0]
+                                    key = key.props
+                                    if(key) key = key.children
+                                    if(key && key.length > 0) key = key[0]
+                                    if(key && key.length > 0) key = key[0]
+                                    if(key) key = key.props
+                                    if(key) key = key.children
+                                    if(key) key = Number((""+key).replace(/^Volume /,""))
+
+                              //   [0].props.children[0][0].props.children
+                                 }
+                                 return { elem:e, key}
+                              })
+
+                              //console.log("tags",tags);
+
+                              tags = _.orderBy(tags,['key'])
+
+                              tags = tags.map(e => e.elem)
 
 
-                           if(k == bdo+"workLocation")
+                           }
+                           else if(k == bdo+"workLocation")
                            {
                               elem = this.getResourceElem(k)
                               if(elem && Array.isArray(elem) && elem[0]) {
