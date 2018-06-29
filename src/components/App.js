@@ -1,6 +1,7 @@
 // @flow
 
 import _ from "lodash";
+import IconButton from 'material-ui/IconButton';
 import Tooltip from 'material-ui/Tooltip';
 import React, { Component } from 'react';
 import SearchBar from 'material-ui-search-bar'
@@ -11,6 +12,11 @@ import List,{ListItemText,ListItem,ListItemIcon} from 'material-ui/List';
 import Typography from 'material-ui/Typography';
 import Loader from 'react-loader';
 import Collapse from 'material-ui/transitions/Collapse';
+import Menu from 'material-ui-icons/Menu';
+import Settings from 'material-ui-icons/Settings';
+import TranslateIcon from 'material-ui-icons/Translate';
+import Apps from 'material-ui-icons/Apps';
+import Close from 'material-ui-icons/Close';
 import ExpandLess from 'material-ui-icons/ExpandLess';
 import ExpandMore from 'material-ui-icons/ExpandMore';
 import NavigateBefore from 'material-ui-icons/NavigateBefore';
@@ -106,6 +112,8 @@ type State = {
    unchecked?:string,
    keyword:string,
    dataSource : string[],
+   leftPane:boolean,
+   rightPane:boolean,
    filters:{
       datatype:string[],
       facets?:{[string]:string[]}
@@ -1270,9 +1278,10 @@ class App extends Component<Props,State> {
             style={{width:"100%",height:"calc(100vh)",backgroundColor: "#000"}}/> */}
 
          <div className="App" style={{display:"flex"}}>
-            <div className="SidePane left" style={{width:"25%",paddingTop:"150px"}}>
+            <div className={"SidePane left " +(this.state.leftPane?"visible":"")}>
+                  <IconButton className="close" onClick={e => this.setState({...this.state,leftPane:false})}><Close/></IconButton>
                { //this.props.datatypes && (results ? results.numResults > 0:true) &&
-                  <div style={{width:"333px",float:"right",position:"relative"}}>
+                  <div style={{width:"333px",position:"relative"}}>
                      <Typography style={{fontSize:"30px",marginBottom:"20px",textAlign:"left"}}>
                         <Translate value="Lsidebar.title" />
                      </Typography>
@@ -1637,15 +1646,19 @@ class App extends Component<Props,State> {
                }
             </div>
             <div className="SearchPane" >
+               <a target="_blank" href="https://www.buddhistarchive.org/" style={{marginBottom:"25px",display:"inline-block"}}>
+                  <img src="https://static1.squarespace.com/static/5a148f2f32601e0d7662f3ab/t/5a2857670852294eb5105634/1526679432234/?format=400w"/></a>
                <div>
-               { this.props.loading && <Loader/> }
+               <IconButton style={{marginRight:"25px"}} className={this.state.leftPane?"hidden":""} onClick={e => this.setState({...this.state,leftPane:!this.state.leftPane})}>
+                  <Menu/>
+               </IconButton>
                <SearchBar
                   disabled={this.props.hostFailure}
                   onChange={(value:string) => { this.setState({keyword:value, dataSource: [ value, "possible suggestion","another possible suggestion"]}); } }
                   onRequestSearch={this.requestSearch.bind(this)}
                   value={this.props.hostFailure?"Endpoint error: "+this.props.hostFailure+" ("+this.getEndpoint()+")":this.props.keyword?this.props.keyword.replace(/"/g,""):this.state.keyword}
                   style={{
-                     marginTop: '50px',
+                     marginTop: '0px',
                      width: "700px"
                   }}
                />
@@ -1662,6 +1675,9 @@ class App extends Component<Props,State> {
                    { Object.keys(languages).map((k) => (<MenuItem value={k}><Translate value={""+languages[k]}/></MenuItem>))}
                 </Select>
               </FormControl>
+              <IconButton style={{marginLeft:"25px"}}  className={this.state.rightPane?"hidden":""} onClick={e => this.setState({...this.state,rightPane:!this.state.rightPane})}>
+                 <Settings/>
+              </IconButton>
            </div>
                { false && this.state.keyword.length > 0 && this.state.dataSource.length > 0 &&
                   <div style={{
@@ -1683,6 +1699,7 @@ class App extends Component<Props,State> {
                   </div>
                }
                <List style={{maxWidth:"800px",margin:"50px auto",textAlign:"left",zIndex:0}}>
+                  { this.props.loading && <Loader/> }
                   { message }
                   <div id="pagine">
                      <NavigateBefore
@@ -1694,8 +1711,9 @@ class App extends Component<Props,State> {
                   </div>
                </List>
             </div>
-            <div className="SidePane right" style={{width:"25%",paddingTop:"150px"}}>
-               <div style={{width:"333px",float:"left",position:"relative"}}>
+            <div className={"SidePane right "+(this.state.rightPane?"visible":"")}>
+               <IconButton className="close" onClick={e => this.setState({...this.state,rightPane:false})} ><Close/></IconButton>
+               <div style={{width:"333px",position:"relative"}}>
                   <Typography style={{fontSize:"30px",marginBottom:"20px",textAlign:"left"}}>
                      <Translate value='Rsidebar.title' />
                   </Typography>

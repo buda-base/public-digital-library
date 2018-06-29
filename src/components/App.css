@@ -89,14 +89,34 @@ div[role="tooltip"] span { font-weight:bold; }
 .checkB,.checkedB { border-radius:50%; border:2px solid #666;width:20px;height:20px;display:inline-block; }
 .checkedB {}
 
+body {overflow-x:hidden; }
+
+/* .SearchPane .hidden { opacity:0; pointer-events:none; } */
+
+.App { height:100vh;}
+
+.SidePane > div { padding-bottom:50px; }
+
+.SidePane .close { position:absolute; top:0;right:0;}
+
+.SidePane { position:absolute;transition:all 400ms ease-in-out; background:white;height:100vh; position:fixed;padding:30px;
+   background:rgba(246,246,246,1); z-index:100;
+}
+.SidePane.left { left:-400px; box-shadow:2px 0 2px 0px rgba(0,0,0,0.35);}
+.SidePane.right { right:-400px; box-shadow:-2px 0 2px 0px rgba(0,0,0,0.35);}
+.SidePane.left.visible { left:0; overflow-y:auto;}
+.SidePane.right.visible { right:0; overflow-y:auto;}
 /* .SidePane > div { position:fixed } */
 .SidePane .loader { position:absolute !important;margin-right:32px;margin-top:24px;right:0;}
 .datatypesLoader, .facetLoader { left:0px !important;top:0 !important;}
 
-.SearchPane { width:49.5%; margin:0 0.2%;}
-.SearchPane > div {display:flex;justify-content: center}
-.SearchPane .formControl { margin-top:50px; margin-left:25px; width:150px;}
+/* .SidePane.visible + .SearchPane { padding-left:400px; } */
+
+.SearchPane { width:1000px; margin:auto;margin-top:10vh;max-width:90%; z-index:0;}
+.SearchPane > div {display:flex;justify-content: center;}
+.SearchPane .formControl { margin-top:0px; margin-left:25px; width:150px;}
 .SearchPane a {text-decoration:none}
+
 
 .SearchPane h5 { margin-left:16px; font-size : 16px; margin-bottom:0px;margin-top:40px; }
 
