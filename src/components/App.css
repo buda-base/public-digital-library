@@ -97,7 +97,7 @@ body {overflow-x:hidden; }
 
 .SidePane > div { padding-bottom:50px; }
 
-.SidePane .close { position:absolute; top:0;right:0;}
+.SidePane > .close { position:absolute; top:0;right:0;} 
 
 .SidePane { position:absolute;transition:all 400ms ease-in-out; background:white;height:100vh; position:fixed;padding:30px;
    background:rgba(246,246,246,1); z-index:100;

@@ -1649,7 +1649,7 @@ class App extends Component<Props,State> {
                <a target="_blank" href="https://www.buddhistarchive.org/" style={{marginBottom:"25px",display:"inline-block"}}>
                   <img src="https://static1.squarespace.com/static/5a148f2f32601e0d7662f3ab/t/5a2857670852294eb5105634/1526679432234/?format=400w"/></a>
                <div>
-               <IconButton style={{marginRight:"25px"}} className={this.state.leftPane?"hidden":""} onClick={e => this.setState({...this.state,leftPane:!this.state.leftPane})}>
+               <IconButton style={{marginRight:"15px"}} className={this.state.leftPane?"hidden":""} onClick={e => this.setState({...this.state,leftPane:!this.state.leftPane})}>
                   <Menu/>
                </IconButton>
                <SearchBar
@@ -1675,7 +1675,7 @@ class App extends Component<Props,State> {
                    { Object.keys(languages).map((k) => (<MenuItem value={k}><Translate value={""+languages[k]}/></MenuItem>))}
                 </Select>
               </FormControl>
-              <IconButton style={{marginLeft:"25px"}}  className={this.state.rightPane?"hidden":""} onClick={e => this.setState({...this.state,rightPane:!this.state.rightPane})}>
+              <IconButton style={{marginLeft:"15px"}}  className={this.state.rightPane?"hidden":""} onClick={e => this.setState({...this.state,rightPane:!this.state.rightPane})}>
                  <Settings/>
               </IconButton>
            </div>
