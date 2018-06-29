@@ -147,7 +147,8 @@ class App extends Component<Props,State> {
          keyword:get.q?get.q.replace(/"/g,""):"",
          collapse:{},
          loader:{},
-         paginate:{index:0,pages:[0],n:[0]}
+         paginate:{index:0,pages:[0],n:[0]},
+         leftPane:true
       };
 
    }
@@ -1646,8 +1647,11 @@ class App extends Component<Props,State> {
                }
             </div>
             <div className="SearchPane" >
-               <a target="_blank" href="https://www.buddhistarchive.org/" style={{marginBottom:"25px",display:"inline-block"}}>
-                  <img src="https://static1.squarespace.com/static/5a148f2f32601e0d7662f3ab/t/5a2857670852294eb5105634/1526679432234/?format=400w"/></a>
+               <a target="_blank" href="https://www.buddhistarchive.org/" style={{display:"inline-block",marginBottom:"25px"}}>
+                  <img src="/logo.svg" style={{width:"200px"}} />
+               </a>
+               {/* <h2>BUDA Platform</h2> */}
+               {/* <h3>Buddhist Digital Resource Center</h3> */}
                <div>
                <IconButton style={{marginRight:"15px"}} className={this.state.leftPane?"hidden":""} onClick={e => this.setState({...this.state,leftPane:!this.state.leftPane})}>
                   <Menu/>
