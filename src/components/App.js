@@ -592,8 +592,10 @@ class App extends Component<Props,State> {
    {
       //console.log("res",id,n,t,lit,lang,tip,Tag)
 
+      if(!id.match(/[:/]/)) id = "bdr:" +id 
+
       return (
-         <Link key={n} to={"/show/bdr:"+id} className="result">
+         <Link key={n} to={"/show/"+id} className="result">
             <div key={t+"_"+n+"_"} >
                   <ListItem style={{paddingLeft:"0",display:"flex"}}>
                      <div style={{width:"30px",textAlign:"right",color:"black",fontSize:"0.9rem",marginLeft:"16px"}}>{n}</div>
