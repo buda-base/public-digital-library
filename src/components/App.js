@@ -112,8 +112,8 @@ type State = {
    unchecked?:string,
    keyword:string,
    dataSource : string[],
-   leftPane:boolean,
-   rightPane:boolean,
+   leftPane?:boolean,
+   rightPane?:boolean,
    filters:{
       datatype:string[],
       facets?:{[string]:string[]}
@@ -148,7 +148,7 @@ class App extends Component<Props,State> {
          collapse:{},
          loader:{},
          paginate:{index:0,pages:[0],n:[0]},
-         leftPane:true
+         leftPane:(window.innerWidth > 1400)
       };
 
    }
@@ -588,11 +588,42 @@ class App extends Component<Props,State> {
       return false ;
    }
 
+   makeResult(id,n,t,lit,lang,tip,Tag)
+   {
+      //console.log("res",id,n,t,lit,lang,tip,Tag)
+
+      return (
+         <Link key={n} to={"/show/bdr:"+id} className="result">
+            <div key={t+"_"+n+"_"} >
+                  <ListItem style={{paddingLeft:"0",display:"flex"}}>
+                     <div style={{width:"30px",textAlign:"right",color:"black",fontSize:"0.9rem",marginLeft:"16px"}}>{n}</div>
+                     <ListItemText style={{height:"auto",flexGrow:10,flexShrink:10}}
+                        primary={[lit,lang?<Tooltip placement="bottom-end" title={
+                           <div style={{margin:"10px"}}>
+                              <Translate value={languages[lang]?languages[lang].replace(/search/,"tip"):lang}/>
+                           </div>
+                        }><span className="lang">{lang}</span></Tooltip>:null]}
+                        //secondary={id}
+                        secondary={[id,
+                           Tag?<Tooltip placement="bottom-start" style={{marginLeft:"50px"}} title={
+                              <div style={{margin:"10px"}}>
+                                 {tip}
+                              </div>
+                           }><Tag style={{height:"18px",verticalAlign:"-4px",marginLeft:"5px"}}/></Tooltip>:null]}
+                     ></ListItemText>
+                     {/* { Tag && <ListItemIcon><Tag/></ListItemIcon> } */}
+                  </ListItem>
+            </div>
+         </Link>
+      )
+
+   }
+
    render() {
 
-      console.log("render",this.props,this.state)
+      console.log("render",this.props.keyword,this.props,this.state)
 
-      let message = [];
+      let message = [],messageD = [];
       let results ;
       let facetList = []
       let types = ["Any"]
@@ -600,9 +631,37 @@ class App extends Component<Props,State> {
       let counts = { "datatype" : { "Any" : 0 } }
 
 
+      let TagTab = {
+         "Abstract Work":CropFreeIcon,
+         "Work Has Expression":CenterFocusStrong,
+         "Work Expression Of":CenterFocusWeak,
+         "Work":CropDin
+      }
 
-      if(this.props.keyword)
+
+      if(!this.props.keyword)
       {
+         if(this.props.config && this.props.config.links)
+         {
+            messageD.push(<h4 style={{marginLeft:"16px"}}>Sample Resources</h4>)
+            for(let l of this.props.config.links) {
+               //console.log("l",l)
+               if(!l.lang) l.lang = "bo-x-ewts" ;
+               messageD.push(<h5>{l.title}</h5>)
+               messageD.push(this.makeResult(l.id,null,getEntiType(l.id),l.label,l.lang,l.icon,TagTab[l.icon]))
+
+            }
+            //message.push(this.makeResult("W19740",null,"Work","spyod 'jug'","bo-x-ewts","Abstract Work",TagTab["Abstract Work"]))
+            //message.push(this.makeResult("P6161",null,"Person","zhi ba lha/","bo-x-ewts"))
+         }
+
+         types = ["Any","Person","Work","Corporation","Place","Item","Etext","Role","Topic","Lineage"]
+         types = types.sort()
+      }
+      else {
+
+         message = []
+
          if(this.state.filters.datatype[0] != "Any" && this.props.searches[this.state.filters.datatype[0]])
             results = this.props.searches[this.state.filters.datatype[0]][this.props.keyword+"@"+this.props.language]
          else
@@ -985,28 +1044,7 @@ class App extends Component<Props,State> {
                            end = n ;
                            if(!willBreak) message.push(
                               [
-                           <Link key={n} to={"/show/bdr:"+id} className="result">
-                              <div key={t+"_"+n+"_"} >
-                                    <ListItem style={{paddingLeft:"0",display:"flex"}}>
-                                       <div style={{width:"30px",textAlign:"right",color:"black",fontSize:"0.9rem",marginLeft:"16px"}}>{n}</div>
-                                       <ListItemText style={{height:"auto",flexGrow:10,flexShrink:10}}
-                                          primary={[lit,lang?<Tooltip placement="bottom-end" title={
-                                             <div style={{margin:"10px"}}>
-                                                <Translate value={languages[lang]?languages[lang].replace(/search/,"tip"):lang}/>
-                                             </div>
-                                          }><span className="lang">{lang}</span></Tooltip>:null]}
-                                          //secondary={id}
-                                          secondary={[id,
-                                             Tag?<Tooltip placement="bottom-start" style={{marginLeft:"50px"}} title={
-                                                <div style={{margin:"10px"}}>
-                                                   {tip}
-                                                </div>
-                                             }><Tag style={{height:"18px",verticalAlign:"-4px",marginLeft:"5px"}}/></Tooltip>:null]}
-                                       ></ListItemText>
-                                       {/* { Tag && <ListItemIcon><Tag/></ListItemIcon> } */}
-                                    </ListItem>
-                              </div>
-                           </Link>
+                                 this.makeResult(id,n,t,lit,lang,tip,Tag)
 
                               ,
                               <div>
@@ -1087,11 +1125,6 @@ class App extends Component<Props,State> {
             }
          }
       }
-      else
-      {
-         types = ["Any","Person","Work","Corporation","Place","Item","Etext","Role","Topic","Lineage"]
-         types = types.sort()
-      }
 
       let widget = (title:string,txt:string,inCollapse:Component) => (
          [<ListItem
@@ -1127,6 +1160,8 @@ class App extends Component<Props,State> {
          //console.log("subW",subs,jpre)
 
          let checkbox = subs.map(e => {
+
+            if(e === bdr+"LanguageTaxonomy") return ;
 
             let elem = tree.filter(f => f["@id"] == e)
 
@@ -1328,7 +1363,7 @@ class App extends Component<Props,State> {
 
                                  //console.log("counts",i,counts["datatype"][i],this.state.filters.datatype.indexOf(i))
 
-                           let disabled = (!this.props.keyword && ["Any","Person","Work"].indexOf(i)===-1 && this.props.language  != "")
+                           let disabled = (!this.props.keyword && ["Any","Etext","Person","Work"].indexOf(i)===-1 && this.props.language  != "")
                            // || (this.props.language == "")
 
                               return (
@@ -1702,9 +1737,9 @@ class App extends Component<Props,State> {
                      </Paper>
                   </div>
                }
+               { this.props.loading && <Loader className="mainloader"/> }
                <List style={{maxWidth:"800px",margin:"50px auto",textAlign:"left",zIndex:0}}>
-                  { this.props.loading && <Loader/> }
-                  { message }
+                  { message.length > 0 ? message : messageD }
                   <div id="pagine">
                      <NavigateBefore
                         className={this.state.paginate.index == 0 ? "hide":""}

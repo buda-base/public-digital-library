@@ -349,7 +349,8 @@ class ResourceViewer extends Component<Props,State>
          if(ret.length == 0) ret = this.props.ontology[prop][rdfs+"label"].filter((e) => (e.lang == this.props.prefLang))
          if(ret.length == 0) ret = this.props.ontology[prop][rdfs+"label"]
 
-         return ret[0].value
+         if(ret.length > 0 && ret[0].value && ret[0].value != "")
+            return ret[0].value
 
        //&& this.props.ontology[prop][rdfs+"label"][0] && this.props.ontology[prop][rdfs+"label"][0].value) {
          //let comment = this.props.ontology[prop][rdfs+"comment"]
@@ -688,11 +689,15 @@ class ResourceViewer extends Component<Props,State>
 
       if(elem) for(let e of elem)
       {
+
          let value = ""+e
          if(e.value) value = e.value
          else if(e["@value"]) value = e["@value"]
          else if(e["@id"]) value = e["@id"]
          let pretty = this.fullname(value)
+
+         if(value === bdr+"LanguageTaxonomy") continue ;
+
 
          //console.log("e",e,pretty)
 

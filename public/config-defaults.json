@@ -32,5 +32,9 @@
       "Etext": {
          "tree":"http://purl.bdrc.io/ontology/core/workGenre"
       }
-   }
+   },
+   "links":[
+      { "title":"Abstract text of the Bodhisattvacaryāvatāra", "id":"W19740", "label":"spyod 'jug'", "lang":"bo-x-ewts", "icon":"Abstract Work" },
+      { "title":"Shantideva", "id":"P6161", "label":"zhi ba lha/" }
+   ]
 }
