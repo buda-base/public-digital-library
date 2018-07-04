@@ -21,6 +21,9 @@ import Loader from "react-loader"
 //import {MapComponent} from './Map';
 import {getEntiType} from '../lib/api';
 import {languages} from './App';
+import Popover from 'material-ui/Popover';
+import {MenuItem} from 'material-ui/Menu';
+import List from 'material-ui/List';
 
 type Props = {
    history:{},
@@ -29,8 +32,11 @@ type Props = {
    assocResources?:{},
    imageAsset?:string,
    firstImage?:string,
+   pdfVolumes?:string,
+   onRequestPdf: (u:string,s:string) => void,
+   onCreatePdf: (s:string) => void,
    onGetResource: (s:string) => void,
-   onHasImageAsset:(s:string) => void,
+   onHasImageAsset:(u:string,s:string) => void,
    onGetChunks: (s:string,b:number) => void
 }
 type State = {
@@ -40,7 +46,9 @@ type State = {
    openUV?:boolean,
    hideUV?:boolean,
    toggleUV?:boolean,
-   collapse:{[string]:boolean}
+   collapse:{[string]:boolean},
+   pdfOpen?:boolean,
+   anchorEl?:any
  }
 
 
@@ -135,7 +143,7 @@ class ResourceViewer extends Component<Props,State>
    {
       super(props);
 
-      this.state = { uviewer:false, imageLoaded:false, collapse:{} }
+      this.state = { uviewer:false, imageLoaded:false, collapse:{}, pdfOpen:false }
 
       console.log("props",props)
 
@@ -915,6 +923,40 @@ class ResourceViewer extends Component<Props,State>
        */
    }
 
+
+   handlePdfClick = (event,pdf) => {
+      // This prevents ghost click.
+      event.preventDefault();
+
+      console.log("pdf",pdf)
+      if(!this.props.askPdf || this.props.askPdf != pdf)
+      {
+         this.props.onCreatePdf(pdf,this.props.IRI);
+      }
+
+      if(!this.state.pdfOpen == false)
+         this.setState({
+            ...this.state,
+            pdfOpen: false,
+            anchorEl: null,
+            click:true,
+         });
+   };
+
+
+   handleRequestClose = () => {
+
+
+      if(!this.state.pdfOpen == false)
+         this.setState({
+            ...this.state,
+            pdfOpen: false,
+            anchorEl:null,
+            close:true
+         });
+   };
+
+
    render()
     {
       console.log("render",this.props,this.state)
@@ -1041,6 +1083,13 @@ class ResourceViewer extends Component<Props,State>
       else
          titre = <h2>{getEntiType(this.props.IRI) + " " +this.props.IRI}</h2>
 
+      let pdfLink ;
+      if(this.props.imageAsset && this.props.imageAsset.match(/[.]bdrc[.]io/))
+      {
+         let id = this.props.IRI.slice(1);
+         if(this.props.imageAsset.match(/[/]i:/)) pdfLink = "http://iiif.bdrc.io/pdfdownload/wi:bdr:W"+id+"::bdr:I"+id ;
+      }
+
 
 
       // add nother route to UViewer Gallery page
@@ -1061,6 +1110,36 @@ class ResourceViewer extends Component<Props,State>
                <a className="goBack noML" target="_blank" title="JSON-LD version" rel="alternate" type="application/ld+json" href={"http://purl.bdrc.io/resource/"+this.props.IRI+".jsonld"}>
                   <Button style={{paddingLeft:0}}>json-ld</Button>
                </a>
+               {pdfLink &&
+                  [<a style={{fontSize:"26px"}} className="goBack pdfLoader">
+                        <Loader loaded={(!this.props.createPdf) && (!this.props.pdfVolumes || this.props.pdfVolumes != [])} options={{position:"relative",left:"16px",top:"-6px"}} />
+                        <IconButton style={{padding:0,minWidth:"0"}} title="Download as PDF" onClick={ev =>
+                              {
+                                 if(!this.props.pdfVolumes) this.props.onRequestPdf(this.props.IRI,pdfLink)
+                                 this.setState({...this.state, pdfOpen:true,anchorEl:ev.currentTarget})
+                              }
+                           }>
+                           <img src="/PDF_icon.png" height="28" style={{fontSize:"30px"}} />
+                        </IconButton>
+                        <Popover
+                           open={this.state.pdfOpen}
+                           anchorEl={this.state.anchorEl}
+                           onClose={this.handleRequestClose.bind(this)}
+                        >
+                           <List>
+                              {
+                                 this.props.pdfVolumes && this.props.pdfVolumes != [] && Object.keys(this.props.pdfVolumes).map(e =>
+                                    (<MenuItem onClick={ev => this.handlePdfClick(ev,this.props.pdfVolumes[e])}>
+                                       {e}
+                                       {/* <a target='_blank' href={"http://iiif.bdrc.io"+this.props.pdfVolumes[e].replace(/(pdfdownload)[/]v:(.*?):+([^:]+)$/,"$1/file/$2:$3.pdf")}>{e}</a> */}
+                                    </MenuItem>)
+                                 )
+                              }
+                           </List>
+                        </Popover>
+                  </a>
+               ]
+               }
                <CopyToClipboard text={"http://purl.bdrc.io/resource/"+this.props.IRI} onCopy={(e) =>
                         //alert("Resource url copied to clipboard\nCTRL+V to paste")
                         prompt("Resource url has been copied to clipboard.\nCTRL+V to paste","http://purl.bdrc.io/resource/"+this.props.IRI)
@@ -1108,7 +1187,7 @@ class ResourceViewer extends Component<Props,State>
                   !this.props.manifestError && this.props.imageAsset && //!this.state.openUV &&
                   <div className={"uvDefault "+(this.state.imageLoaded?"loaded":"")} onClick={this.showUV.bind(this)}>
                      <Loader className="uvLoader" loaded={this.state.imageLoaded} color="#fff"/>
-                     <img src={this.props.firstImage} onLoad={(e)=>this.setState({imageLoaded:true})}/>
+                     <img src={this.props.firstImage} onLoad={(e)=>this.setState({...this.state,imageLoaded:true})}/>
                      {
                         this.props.firstImage && this.state.imageLoaded &&
                         <div id="title">

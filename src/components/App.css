@@ -5,6 +5,8 @@
 /* CSS debug mode */
  /* * {background-color:rgba(255,0,128,0.05);} */
 
+
+
 #pagine { width:100%;display:flex;padding:20px;justify-content: space-between; box-sizing:border-box}
 #pagine svg {height:36px;width:36px; cursor:pointer;}
 
@@ -155,6 +157,10 @@ svg.hide { opacity:0;pointer-events:none; }
 .uvDefault.loaded:hover #title { color:rgba(229, 74, 53,1);background:rgba(255, 230, 220,1);border-color:rgba(229, 74, 53,1); }
 
 .uvLoader { z-index:0 !important;}
+
+.pdfLoader { vertical-align:-1px; }
+.pdfLoader > button { width:auto !important; }
+.pdfLoader .loader, .loadedContent { display:inline-block;pointer-events:none; }
 
 .App {
   text-align: center;

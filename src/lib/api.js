@@ -55,9 +55,9 @@ export default class API {
         }
     }
 
-     async getURLContents(url: string, minSize : boolean = true): Promise<string> {
+     async getURLContents(url: string, minSize : boolean = true,acc:string): Promise<string> {
 
-         let response = await this._fetch( url )
+         let response = await this._fetch( url, !acc?{}:{ method:"GET",headers:new Headers({"Accept":acc}) } )
 
          if (!response.ok) {
              if (response.status === '404') {

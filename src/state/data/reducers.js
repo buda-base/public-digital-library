@@ -395,6 +395,46 @@ export const foundDatatypes = (state: DataState, action: actions.FoundResultsAct
 reducers[actions.TYPES.foundDatatypes] = foundDatatypes;
 
 
+
+export const createPdf = (state: DataState, action: Action) => {
+
+      return {
+      ...state,
+      createPdf : action.payload
+   }
+}
+reducers[actions.TYPES.createPdf] = createPdf;
+
+
+export const requestPdf = (state: DataState, action: Action) => {
+
+   return {
+      ...state,
+      IIIFinfo : {
+         ...state.IIIFinfo,
+         [action.meta]:{ ...state.IIIFinfo?state.IIIFinfo[action.meta]:{},
+            pdfVolumes : []
+         }
+      }
+   }
+}
+reducers[actions.TYPES.requestPdf] = requestPdf;
+
+export const pdfVolumes = (state: DataState, action: Action) => {
+
+   return {
+      ...state,
+      IIIFinfo : {
+         ...state.IIIFinfo,
+         [action.meta]:{ ...state.IIIFinfo?state.IIIFinfo[action.meta]:{},
+            pdfVolumes : action.payload
+         }
+      }
+   }
+}
+reducers[actions.TYPES.pdfVolumes] = pdfVolumes;
+
+
 export const foundFacetInfo = (state: DataState, action: actions.FoundResultsAction) => {
 
    let key = action.payload.keyword + "@" + action.payload.language ;

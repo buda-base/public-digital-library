@@ -64,6 +64,42 @@ export const noResource = (iri: string, error:string): Action => {
     }
 }
 
+TYPES.requestPdf = 'REQUEST_PDF';
+export const requestPdf = (iri: string,link:string): Action => {
+    return {
+        type: TYPES.requestPdf,
+        payload: link,
+        meta:iri
+    }
+}
+
+TYPES.pdfVolumes = 'PDF_VOLUMES';
+export const pdfVolumes = (iri: string,data:{}): Action => {
+    return {
+        type: TYPES.pdfVolumes,
+        payload: data,
+        meta:iri
+    }
+}
+
+
+TYPES.createPdf = 'CREATE_PDF';
+export const createPdf = (url: string, iri:string): Action => {
+    return {
+        type: TYPES.createPdf,
+        payload: url,
+        meta:iri        
+    }
+}
+
+TYPES.pdfReady = 'PDF_READY';
+export const pdfReady = (url: string, iri:string): Action => {
+    return {
+        type: TYPES.pdfReady,
+        payload: url,
+        meta:iri
+    }
+}
 
 TYPES.gotResource = 'GOT_RESOURCE';
 export const gotResource = (iri: string,res:{}): Action => {

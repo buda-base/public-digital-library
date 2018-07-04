@@ -29,6 +29,7 @@ const mapStateToProps = (state,ownProps) => {
    let firstImage
    let imageAsset
    let manifestError
+   let pdfVolumes
    let IIIFinfo = state.data.IIIFinfo
 
    if(IIIFinfo) {
@@ -37,10 +38,16 @@ const mapStateToProps = (state,ownProps) => {
          firstImage = IIIFinfo.firstImage
          imageAsset = IIIFinfo.imageAsset
          manifestError = IIIFinfo.manifestError
+         pdfVolumes = IIIFinfo.pdfVolumes
+
+         console.log("IIIF",pdfVolumes,IIIFinfo)
       }
    }
 
-   let props = { resources, ontology, keyword, language, datatype, assocResources, prefLang, failures,imageAsset,firstImage,manifestError }
+   let createPdf = state.data.createPdf
+
+
+   let props = { resources, ontology, keyword, language, datatype, assocResources, prefLang, failures,imageAsset,firstImage,manifestError,pdfVolumes,createPdf }
 
    console.log("mS2p",state,props)
 
@@ -50,6 +57,12 @@ const mapStateToProps = (state,ownProps) => {
 
 const mapDispatchToProps = (dispatch, ownProps) => {
    return {
+      onRequestPdf:(iri:string,url:string) => {
+         dispatch(data.requestPdf(iri,url));
+      },
+      onCreatePdf:(url:string) => {
+         dispatch(data.createPdf(url));
+      },
       onHasImageAsset:(url:string,IRI:string) => {
          dispatch(data.getManifest(url,IRI));
       },
