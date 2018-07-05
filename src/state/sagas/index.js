@@ -1,4 +1,5 @@
 
+//import download from "downloadjs";
 //import fileDownload from "js-file-download" ;
 import _ from "lodash";
 import { call, put, takeLatest, select, all } from 'redux-saga/effects';
@@ -219,11 +220,12 @@ async function createPdf(url,iri) {
 
       store.dispatch(dataActions.pdfReady(IIIFurl+data.links,iri))
 
-      window.open(IIIFurl+data.links,url);
+      //window.open(IIIFurl+data.links,"pdf");
 
       //let fic = await api.getURLContents("http://iiif.bdrc.io"+data.links);
       //console.log("pdf here")
-      //fileDownload(fic,"name.pdf") ;
+      //fileDownload("http://iiif.bdrc.io"+data.links,"name.pdf") ;
+      //download("http://iiif.bdrc.io"+data.links);
 
    }
    catch(e){

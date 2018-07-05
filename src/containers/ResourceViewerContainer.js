@@ -45,9 +45,10 @@ const mapStateToProps = (state,ownProps) => {
    }
 
    let createPdf = state.data.createPdf
+   let pdfUrl = state.data.pdfUrl
 
 
-   let props = { resources, ontology, keyword, language, datatype, assocResources, prefLang, failures,imageAsset,firstImage,manifestError,pdfVolumes,createPdf }
+   let props = { resources, ontology, keyword, language, datatype, assocResources, prefLang, failures,imageAsset,firstImage,manifestError,pdfVolumes,createPdf,pdfUrl }
 
    console.log("mS2p",state,props)
 

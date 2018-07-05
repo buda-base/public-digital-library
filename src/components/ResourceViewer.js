@@ -1,4 +1,5 @@
 //@flow
+import NewWindow from 'react-new-window'
 import Collapse from 'material-ui/transitions/Collapse';
 import InfiniteScroll from 'react-infinite-scroller';
 import _ from "lodash";
@@ -928,7 +929,10 @@ class ResourceViewer extends Component<Props,State>
       // This prevents ghost click.
       event.preventDefault();
 
-      //window.open("",pdf);
+      // trick to prevent popup warning
+      //let current = window.self
+      //let win = window.open("","pdf");
+      //window.focus(current)
 
       console.log("pdf",pdf)
       if(!this.props.askPdf || this.props.askPdf != pdf)
@@ -936,6 +940,7 @@ class ResourceViewer extends Component<Props,State>
          this.props.onCreatePdf(pdf,this.props.IRI);
       }
 
+      /*
       if(!this.state.pdfOpen == false)
          this.setState({
             ...this.state,
@@ -943,6 +948,7 @@ class ResourceViewer extends Component<Props,State>
             anchorEl: null,
             click:true,
          });
+      */
    };
 
 
@@ -1115,7 +1121,6 @@ class ResourceViewer extends Component<Props,State>
                </a>
                {pdfLink &&
                   [<a style={{fontSize:"26px"}} className="goBack pdfLoader">
-                        <Loader loaded={(!this.props.createPdf) && (!this.props.pdfVolumes || this.props.pdfVolumes != [])} options={{position:"relative",left:"16px",top:"-6px"}} />
                         <IconButton style={{padding:0,minWidth:"0"}} title="Download as PDF" onClick={ev =>
                               {
                                  if(this.props.createPdf) return ;
@@ -1127,13 +1132,19 @@ class ResourceViewer extends Component<Props,State>
                         </IconButton>
                         { this.props.pdfVolumes && this.props.pdfVolumes.length > 0 &&
                            <Popover
-                              open={this.state.pdfOpen}
+                              open={this.state.pdfOpen || this.props.pdfReady}
                               anchorEl={this.state.anchorEl}
                               onClose={this.handleRequestClose.bind(this)}
                            >
+                              {/* <Loader loaded={(!this.props.createPdf) && (!this.props.pdfVolumes || this.props.pdfVolumes.length > 0)} options={{position:"relative",left:"16px",top:"-6px"}} /> */}
                               <List>
                                  {
-                                     this.props.pdfVolumes.map(e =>
+                                   this.props.pdfUrl &&
+                                  [<MenuItem onClick={e => this.setState({...this.state,pdfOpen:false})}><a href={this.props.pdfUrl} target="_blank">Download</a></MenuItem>
+                                  ,<hr/>]
+                                 }
+                                 {
+                                    this.props.pdfVolumes.map(e =>
                                        (<MenuItem onClick={ev => this.handlePdfClick(ev,e.link)}>
                                           {"Volume "+e.volume}
                                        </MenuItem>)

@@ -399,7 +399,8 @@ export const pdfReady = (state: DataState, action: Action) => {
 
       return {
       ...state,
-      createPdf:null
+      createPdf:null,
+      pdfUrl:action.payload
    }
 }
 reducers[actions.TYPES.pdfReady] = pdfReady;
