@@ -88,7 +88,7 @@ export const createPdf = (url: string, iri:string): Action => {
     return {
         type: TYPES.createPdf,
         payload: url,
-        meta:iri        
+        meta:iri
     }
 }
 
@@ -100,6 +100,7 @@ export const pdfReady = (url: string, iri:string): Action => {
         meta:iri
     }
 }
+
 
 TYPES.gotResource = 'GOT_RESOURCE';
 export const gotResource = (iri: string,res:{}): Action => {

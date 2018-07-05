@@ -395,6 +395,17 @@ export const foundDatatypes = (state: DataState, action: actions.FoundResultsAct
 reducers[actions.TYPES.foundDatatypes] = foundDatatypes;
 
 
+export const pdfReady = (state: DataState, action: Action) => {
+
+      return {
+      ...state,
+      createPdf:null
+   }
+}
+reducers[actions.TYPES.pdfReady] = pdfReady;
+
+
+
 
 export const createPdf = (state: DataState, action: Action) => {
 

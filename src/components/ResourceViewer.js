@@ -32,9 +32,9 @@ type Props = {
    assocResources?:{},
    imageAsset?:string,
    firstImage?:string,
-   pdfVolumes?:string,
+   pdfVolumes?:[],
    onRequestPdf: (u:string,s:string) => void,
-   onCreatePdf: (s:string) => void,
+   onCreatePdf: (s:string,u:string) => void,
    onGetResource: (s:string) => void,
    onHasImageAsset:(u:string,s:string) => void,
    onGetChunks: (s:string,b:number) => void
@@ -928,6 +928,8 @@ class ResourceViewer extends Component<Props,State>
       // This prevents ghost click.
       event.preventDefault();
 
+      //window.open("",pdf);
+
       console.log("pdf",pdf)
       if(!this.props.askPdf || this.props.askPdf != pdf)
       {
@@ -1087,7 +1089,8 @@ class ResourceViewer extends Component<Props,State>
       if(this.props.imageAsset && this.props.imageAsset.match(/[.]bdrc[.]io/))
       {
          let id = this.props.IRI.slice(1);
-         if(this.props.imageAsset.match(/[/]i:/)) pdfLink = "http://iiif.bdrc.io/pdfdownload/wi:bdr:W"+id+"::bdr:I"+id ;
+         if(this.props.imageAsset.match(/[/]i:/))
+            pdfLink = "http://iiif.bdrc.io/download/pdf/wi:bdr:W"+id+"::bdr:I"+id ;
       }
 
 
@@ -1115,28 +1118,30 @@ class ResourceViewer extends Component<Props,State>
                         <Loader loaded={(!this.props.createPdf) && (!this.props.pdfVolumes || this.props.pdfVolumes != [])} options={{position:"relative",left:"16px",top:"-6px"}} />
                         <IconButton style={{padding:0,minWidth:"0"}} title="Download as PDF" onClick={ev =>
                               {
+                                 if(this.props.createPdf) return ;
                                  if(!this.props.pdfVolumes) this.props.onRequestPdf(this.props.IRI,pdfLink)
                                  this.setState({...this.state, pdfOpen:true,anchorEl:ev.currentTarget})
                               }
                            }>
                            <img src="/PDF_icon.png" height="28" style={{fontSize:"30px"}} />
                         </IconButton>
-                        <Popover
-                           open={this.state.pdfOpen}
-                           anchorEl={this.state.anchorEl}
-                           onClose={this.handleRequestClose.bind(this)}
-                        >
-                           <List>
-                              {
-                                 this.props.pdfVolumes && this.props.pdfVolumes != [] && Object.keys(this.props.pdfVolumes).map(e =>
-                                    (<MenuItem onClick={ev => this.handlePdfClick(ev,this.props.pdfVolumes[e])}>
-                                       {e}
-                                       {/* <a target='_blank' href={"http://iiif.bdrc.io"+this.props.pdfVolumes[e].replace(/(pdfdownload)[/]v:(.*?):+([^:]+)$/,"$1/file/$2:$3.pdf")}>{e}</a> */}
-                                    </MenuItem>)
-                                 )
-                              }
-                           </List>
-                        </Popover>
+                        { this.props.pdfVolumes && this.props.pdfVolumes.length > 0 &&
+                           <Popover
+                              open={this.state.pdfOpen}
+                              anchorEl={this.state.anchorEl}
+                              onClose={this.handleRequestClose.bind(this)}
+                           >
+                              <List>
+                                 {
+                                     this.props.pdfVolumes.map(e =>
+                                       (<MenuItem onClick={ev => this.handlePdfClick(ev,e.link)}>
+                                          {"Volume "+e.volume}
+                                       </MenuItem>)
+                                    )
+                                 }
+                              </List>
+                           </Popover>
+                        }
                   </a>
                ]
                }
@@ -1398,7 +1403,7 @@ class ResourceViewer extends Component<Props,State>
                                     loadMore={(e) => this.props.onGetChunks(this.props.IRI,elem.length)}
                                     //loader={<Loader loaded={false} />}
                                     >
-                                    <h3><span>{this.fullname(k)}</span>:&nbsp;</h3>
+                                    <h3 class="chunk"><span>{this.fullname(k)}</span>:&nbsp;</h3>
                                     {this.hasSub(k)?this.subProps(k):tags.map((e)=> [e," "] )}
                                  </InfiniteScroll>
                               )
