@@ -1092,13 +1092,23 @@ class ResourceViewer extends Component<Props,State>
       else
          titre = <h2>{getEntiType(this.props.IRI) + " " +this.props.IRI}</h2>
 
-      let pdfLink,zipLink ;
+      let pdfLink,monoVol = true ;
       if(this.props.imageAsset && this.props.imageAsset.match(/[.]bdrc[.]io/))
       {
          let id = this.props.IRI.slice(1);
-         if(this.props.imageAsset.match(/[/][vi]:/))
+         if(this.props.imageAsset.match(/[/][i]:/)) {
+            monoVol = false ;
             pdfLink = "http://iiif.bdrc.io/download/pdf/wi:bdr:W"+id+"::bdr:I"+id ;
-            //zipLink = "http://iiif.bdrc.io/download/pdf/wi:bdr:W"+id+"::bdr:I"+id ;
+         }
+         /*
+         else if(this.props.imageAsset.match(/[/][v]:/)) {
+            let elem = this.getResourceElem(bdo+"imageCount")
+            if(!elem) elem = this.getResourceElem(bdo+"volumePagesTotal")
+            if(elem && elem.length > 0 && elem[0].value)
+               pdfLink = "http://iiif.bdrc.io/download/pdf/v:bdr:V"+id+"::1-"+elem[0].value ;
+
+         }
+         */
       }
 
 
@@ -1127,7 +1137,7 @@ class ResourceViewer extends Component<Props,State>
                         <IconButton title="Download as PDF/ZIP" onClick={ev =>
                               {
                                  //if(this.props.createPdf) return ;
-                                 if(!this.props.pdfVolumes) {
+                                 if(!this.props.pdfVolumes && !monoVol) {
                                     this.props.onRequestPdf(this.props.IRI,pdfLink)
                                  }
                                  this.setState({...this.state, pdfOpen:true,anchorEl:ev.currentTarget})
@@ -1135,7 +1145,7 @@ class ResourceViewer extends Component<Props,State>
                            }>
                            <img src="/DL_icon.svg" height="24" />
                         </IconButton>
-                        { this.props.pdfVolumes && this.props.pdfVolumes.length > 0 &&
+                        { (this.props.pdfVolumes && this.props.pdfVolumes.length > 0) &&
                            <Popover
                               className="poPdf"
                               open={this.state.pdfOpen == true || this.props.pdfReady == true}
