@@ -64,6 +64,15 @@ export const noResource = (iri: string, error:string): Action => {
     }
 }
 
+TYPES.initPdf = 'INIT_PDF';
+export const initPdf = (iri: string,link:string): Action => {
+    return {
+        type: TYPES.initPdf,
+        payload: link,
+        meta:iri
+    }
+}
+
 TYPES.requestPdf = 'REQUEST_PDF';
 export const requestPdf = (iri: string,link:string): Action => {
     return {
@@ -72,7 +81,6 @@ export const requestPdf = (iri: string,link:string): Action => {
         meta:iri
     }
 }
-
 TYPES.pdfVolumes = 'PDF_VOLUMES';
 export const pdfVolumes = (iri: string,data:{}): Action => {
     return {

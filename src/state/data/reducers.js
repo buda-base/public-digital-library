@@ -448,6 +448,19 @@ export const createPdf = (state: DataState, action: Action) => {
 }
 reducers[actions.TYPES.createPdf] = createPdf;
 
+export const initPdf = (state: DataState, action: Action) => {
+   return {
+         ...state,
+         IIIFinfo : {
+            ...state.IIIFinfo,
+            [action.meta.iri]:{ ...state.IIIFinfo?state.IIIFinfo[action.meta.iri]:{},
+               pdfVolumes:[{volume:action.meta.vol,link:action.payload.replace(/https?:..[^/]+/,"")}]
+            }
+         }
+   }
+}
+reducers[actions.TYPES.initPdf] = initPdf;
+
 
 export const requestPdf = (state: DataState, action: Action) => {
 

@@ -61,13 +61,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       onRequestPdf:(iri:string,url:string) => {
          dispatch(data.requestPdf(iri,url));
          dispatch(data.requestPdf(iri,url.replace(/pdf/,"zip")))
-         /*
-         setTimeout(
-            (
-               (dispatch,iri,url) => function(){ dispatch(data.requestPdf(iri,url.replace(/pdf/,"zip"))) }
-            )
-            (dispatch,iri,url), 100 )
-            */
+      },
+      onInitPdf:(url:string,iri:string) => {
+         dispatch(data.initPdf(url,iri));
       },
       onCreatePdf:(url:string,iri:string) => {
          dispatch(data.createPdf(url,iri));

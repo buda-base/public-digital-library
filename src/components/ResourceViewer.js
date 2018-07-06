@@ -34,6 +34,7 @@ type Props = {
    imageAsset?:string,
    firstImage?:string,
    pdfVolumes?:[],
+   onInitPdf: (u:string,s:string) => void,
    onRequestPdf: (u:string,s:string) => void,
    onCreatePdf: (s:string,u:string) => void,
    onGetResource: (s:string) => void,
@@ -1092,21 +1093,48 @@ class ResourceViewer extends Component<Props,State>
       else
          titre = <h2>{getEntiType(this.props.IRI) + " " +this.props.IRI}</h2>
 
-      let pdfLink,monoVol = true ;
+      let pdfLink,monoVol = -1 ;
       if(this.props.imageAsset && this.props.imageAsset.match(/[.]bdrc[.]io/))
       {
          let id = this.props.IRI.slice(1);
-         if(this.props.imageAsset.match(/[/][i]:/)) {
-            monoVol = false ;
+         if(this.props.imageAsset.match(/[/]i:/)) {
             pdfLink = "http://iiif.bdrc.io/download/pdf/wi:bdr:W"+id+"::bdr:I"+id ;
          }
-         else if(this.props.imageAsset.match(/[/][v]:/)) {
-            let elem = this.getResourceElem(bdo+"imageCount")
+         else if(this.props.imageAsset.match(/[/]v:/)) {
+
+            let elem = this.getResourceElem(bdo+"volumeNumber")
+            if(elem && elem.length > 0 && elem[0].value)
+               monoVol = Number(elem[0].value)
+
+            elem = this.getResourceElem(bdo+"imageCount")
             if(!elem) elem = this.getResourceElem(bdo+"volumePagesTotal")
             if(elem && elem.length > 0 && elem[0].value)
-               pdfLink = "http://iiif.bdrc.io/download/pdf/v:bdr:V"+id+"::1-"+elem[0].value ;
+               pdfLink = "http://iiif.bdrc.io/download/zip/v:bdr:V"+id+"::1-"+elem[0].value ;
+         }
+         /* // missing ImageItem
+         else if(this.props.imageAsset.match(/[/]wio:/))
+         {
+            let elem = this.getResourceElem(bdo+"workLocation")
+            if(elem && elem.length > 0 && elem[0].value)
+            {
+               elem = this.getResourceBNode(elem[0].value)
+               let work = elem[bdo+"workLocationWork"]
+               if(work && work.length > 0 && work[0].value) work = this.pretty(work[0].value)
+               let vol = elem[bdo+"workLocationVolume"]
+               if(vol && vol.length > 0 && vol[0].value) monoVol = Number(vol[0].value)
+               let begin = elem[bdo+"workLocationPage"]
+               if(begin && begin.length > 0 && begin[0].value) begin = Number(begin[0].value)
+               let end = elem[bdo+"workLocationEndPage"]
+               if(end && end.length > 0 && end[0].value) end = Number(end[0].value)
+               if(work && vol && begin && end)
+                  pdfLink = "http://iiif.bdrc.io/download/pdf/wv:bdr:"+work+"::bdr:V"+id+"::"+begin+"-"+end ;
+               console.log("loca",vol,begin,end,pdfLink)
+               // ex: http://iiif.bdrc.io/pdfdownload/wv:bdr:W29329::bdr:V29329_I1KG15043::1-10
+            }
 
          }
+         */
+
       }
 
 
@@ -1135,7 +1163,10 @@ class ResourceViewer extends Component<Props,State>
                         <IconButton title="Download as PDF/ZIP" onClick={ev =>
                               {
                                  //if(this.props.createPdf) return ;
-                                 if(!this.props.pdfVolumes && !monoVol) {
+                                  if(monoVol > 0){
+                                    this.props.onInitPdf({iri:this.props.IRI,vol:monoVol},pdfLink)
+                                  }
+                                  else if(!this.props.pdfVolumes) {
                                     this.props.onRequestPdf(this.props.IRI,pdfLink)
                                  }
                                  this.setState({...this.state, pdfOpen:true,anchorEl:ev.currentTarget})
