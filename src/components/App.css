@@ -87,7 +87,7 @@ div[role="tooltip"] span { font-weight:bold; }
 .goBack:not(:first-child):not(.noML) { margin-left:35px !important; }
 .goBack button { min-width:0 !important;margin-left:0 !important; }
 
-#iiif { padding:0;min-width:0;}
+#iiif { padding:0;min-width:48px;min-height: 48px;border-radius:50%;}
 #iiif img { margin-left:0;width:28px;}
 
 .checkB,.checkedB { border-radius:50%; border:2px solid #666;width:20px;height:20px;display:inline-block; }
@@ -162,12 +162,13 @@ svg.hide { opacity:0;pointer-events:none; }
 
 .pdfLoader { vertical-align:-3px; }
 .pdfLoader img { opacity:0.55; }
-.pdfLoader > button { width:auto !important; }
+/* .pdfLoader > button { width:auto !important; } */
 .pdfLoader .loader, .loadedContent { display:inline-block;pointer-events:none; }
 
 .poPdf a { cursor:pointer;}
 
 .pdfMenu a { position:relative;}
+.pdfMenu b { display:inline-block; white-space: nowrap;}
 .pdfLoading,.zipLoading { color:white; }
 .pdfSpinner,.zipSpinner { left: 55% !important;  top: 45% !important; }
 
