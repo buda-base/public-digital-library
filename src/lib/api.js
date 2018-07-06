@@ -130,7 +130,7 @@ export default class API {
        async loadManifest(url:string): Promise<string>
        {
             let manif =  JSON.parse(await this.getURLContents(url,false));
-            console.log("manif",manif)
+            //console.log("manif",manif)
             return manif ;
       }
 

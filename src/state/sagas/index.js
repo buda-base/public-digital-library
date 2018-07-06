@@ -123,6 +123,7 @@ async function initiateApp(params,iri) {
       }
       else if(!iri && params && params.q) {
 
+         if(!params.lg) params.lg = "bo-x-ewts"
          //console.log("state q",state.data.searches,params,iri)
 
          if(params.t && ["Person","Work","Etext"].indexOf(params.t) !== -1
@@ -212,13 +213,14 @@ async function createPdf(url,iri) {
    try
    {
 
+      url = url.replace(/zip/,iri.file)
       console.log("creaP",url,iri)
 
       let data = JSON.parse(await api.getURLContents(IIIFurl+url,false,"application/json"))
 
       console.log("pdf",data)
 
-      store.dispatch(dataActions.pdfReady(IIIFurl+data.links,iri))
+      store.dispatch(dataActions.pdfReady(IIIFurl+data.links,{url,iri:iri.iri}))
 
       //window.open(IIIFurl+data.links,"pdf");
 
@@ -245,9 +247,11 @@ async function requestPdf(url,iri) {
 
       data = _.sortBy(Object.keys(data).map(e => ({...data[e],volume:Number(data[e].volume),id:e})),["volume"])
 
-      console.log("pdf",data)
+      //console.log("pdf",url,iri,data,data[0])
 
       store.dispatch(dataActions.pdfVolumes(iri,data))
+
+
 
    }
    catch(e){

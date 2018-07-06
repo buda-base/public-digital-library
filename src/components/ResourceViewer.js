@@ -24,7 +24,7 @@ import {getEntiType} from '../lib/api';
 import {languages} from './App';
 import Popover from 'material-ui/Popover';
 import {MenuItem} from 'material-ui/Menu';
-import List from 'material-ui/List';
+import List,{ListItem} from 'material-ui/List';
 
 type Props = {
    history:{},
@@ -49,6 +49,7 @@ type State = {
    toggleUV?:boolean,
    collapse:{[string]:boolean},
    pdfOpen?:boolean,
+   pdfReady?:boolean,
    anchorEl?:any
  }
 
@@ -150,7 +151,7 @@ class ResourceViewer extends Component<Props,State>
 
       let tmp = {}
       for(let k of Object.keys(propOrder)){ tmp[k] = propOrder[k].map((e) => this.expand(e)) }
-      console.log("tmp",tmp)
+      //console.log("tmp",tmp)
       propOrder = tmp
    }
 
@@ -925,19 +926,19 @@ class ResourceViewer extends Component<Props,State>
    }
 
 
-   handlePdfClick = (event,pdf) => {
+   handlePdfClick = (event,pdf,askPdf,file = "pdf") => {
       // This prevents ghost click.
-      event.preventDefault();
 
       // trick to prevent popup warning
       //let current = window.self
       //let win = window.open("","pdf");
       //window.focus(current)
 
-      console.log("pdf",pdf)
-      if(!this.props.askPdf || this.props.askPdf != pdf)
+      if(!askPdf)
       {
-         this.props.onCreatePdf(pdf,this.props.IRI);
+         event.preventDefault();
+         console.log("pdf",pdf)
+         this.props.onCreatePdf(pdf,{iri:this.props.IRI,file});
       }
 
       /*
@@ -994,7 +995,7 @@ class ResourceViewer extends Component<Props,State>
          {
             let assoc = this.props.assocResources[e.value]
 
-            console.log("hImA",assoc,e.value)
+            //console.log("hImA",assoc,e.value)
 
             if(assoc && assoc.length > 0 && !this.props.imageAsset && !this.props.manifestError) {
 
@@ -1091,12 +1092,13 @@ class ResourceViewer extends Component<Props,State>
       else
          titre = <h2>{getEntiType(this.props.IRI) + " " +this.props.IRI}</h2>
 
-      let pdfLink ;
+      let pdfLink,zipLink ;
       if(this.props.imageAsset && this.props.imageAsset.match(/[.]bdrc[.]io/))
       {
          let id = this.props.IRI.slice(1);
-         if(this.props.imageAsset.match(/[/]i:/))
+         if(this.props.imageAsset.match(/[/][vi]:/))
             pdfLink = "http://iiif.bdrc.io/download/pdf/wi:bdr:W"+id+"::bdr:I"+id ;
+            //zipLink = "http://iiif.bdrc.io/download/pdf/wi:bdr:W"+id+"::bdr:I"+id ;
       }
 
 
@@ -1121,34 +1123,57 @@ class ResourceViewer extends Component<Props,State>
                </a>
                {pdfLink &&
                   [<a style={{fontSize:"26px"}} className="goBack pdfLoader">
-                        <IconButton style={{padding:0,minWidth:"0"}} title="Download as PDF" onClick={ev =>
+                     <Loader loaded={(!this.props.pdfVolumes || this.props.pdfVolumes.length > 0)} options={{position:"relative",left:"9px",top:"-7px"}} />
+                        <IconButton title="Download as PDF/ZIP" onClick={ev =>
                               {
-                                 if(this.props.createPdf) return ;
-                                 if(!this.props.pdfVolumes) this.props.onRequestPdf(this.props.IRI,pdfLink)
+                                 //if(this.props.createPdf) return ;
+                                 if(!this.props.pdfVolumes) {
+                                    this.props.onRequestPdf(this.props.IRI,pdfLink)
+                                 }
                                  this.setState({...this.state, pdfOpen:true,anchorEl:ev.currentTarget})
                               }
                            }>
-                           <img src="/PDF_icon.png" height="28" style={{fontSize:"30px"}} />
+                           <img src="/DL_icon.svg" height="24" />
                         </IconButton>
                         { this.props.pdfVolumes && this.props.pdfVolumes.length > 0 &&
                            <Popover
-                              open={this.state.pdfOpen || this.props.pdfReady}
+                              className="poPdf"
+                              open={this.state.pdfOpen == true || this.props.pdfReady == true}
                               anchorEl={this.state.anchorEl}
                               onClose={this.handleRequestClose.bind(this)}
                            >
-                              {/* <Loader loaded={(!this.props.createPdf) && (!this.props.pdfVolumes || this.props.pdfVolumes.length > 0)} options={{position:"relative",left:"16px",top:"-6px"}} /> */}
                               <List>
-                                 {
+                                 {/*
                                    this.props.pdfUrl &&
                                   [<MenuItem onClick={e => this.setState({...this.state,pdfOpen:false})}><a href={this.props.pdfUrl} target="_blank">Download</a></MenuItem>
                                   ,<hr/>]
-                                 }
+                                 */}
                                  {
-                                    this.props.pdfVolumes.map(e =>
-                                       (<MenuItem onClick={ev => this.handlePdfClick(ev,e.link)}>
-                                          {"Volume "+e.volume}
-                                       </MenuItem>)
-                                    )
+                                    this.props.pdfVolumes.map(e => {
+
+                                       let Ploading = e.pdfFile && e.pdfFile == true
+                                       let Ploaded = e.pdfFile && e.pdfFile != true
+                                       let Zloading = e.zipFile && e.zipFile == true
+                                       let Zloaded = e.zipFile && e.zipFile != true
+
+                                       return (<ListItem className="pdfMenu">
+                                             <b>{"Volume "+e.volume}:</b>
+                                             &nbsp;&nbsp;
+                                             <a onClick={ev => this.handlePdfClick(ev,e.link,e.pdfFile)}
+                                                {...(Ploaded ?{href:e.pdfFile}:{})}
+                                             >
+                                                { Ploading && <Loader className="pdfSpinner" loaded={Ploaded} scale={0.35}/> }
+                                                <span {... (Ploading?{className:"pdfLoading"}:{})}>PDF</span>
+                                             </a>
+                                             &nbsp;&nbsp;|&nbsp;&nbsp;
+                                             <a onClick={ev => this.handlePdfClick(ev,e.link,e.zipFile,"zip")}
+                                                {...(Zloaded ?{href:e.zipFile}:{})}
+                                             >
+                                                { Zloading && <Loader className="zipSpinner" loaded={Zloaded} scale={0.35}/> }
+                                                <span {... (Zloading?{className:"zipLoading"}:{})}>ZIP</span>
+                                          </a>
+                                          </ListItem>)
+                                    })
                                  }
                               </List>
                            </Popover>

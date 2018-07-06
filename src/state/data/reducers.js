@@ -397,22 +397,53 @@ reducers[actions.TYPES.foundDatatypes] = foundDatatypes;
 
 export const pdfReady = (state: DataState, action: Action) => {
 
+      let id = new RegExp(action.meta.url.replace(/[/](zip|pdf)[/]/,"/.../"))
+      let fileT = action.payload.replace(/^.*[.](...)$/,"$1File")
+      let pdfVolumes = state.IIIFinfo
+      if(pdfVolumes) pdfVolumes = pdfVolumes[action.meta.iri]
+      if(pdfVolumes) pdfVolumes = pdfVolumes.pdfVolumes
+      if(pdfVolumes) pdfVolumes = pdfVolumes.map(e => {
+         if(e.link.match(id)) return { ...e, [fileT]:action.payload }
+         return e ;
+      })
+      console.log("pdfV",pdfVolumes,action,id)
+
       return {
       ...state,
+      IIIFinfo : {
+         ...state.IIIFinfo,
+         [action.meta.iri]:{ ...state.IIIFinfo?state.IIIFinfo[action.meta.iri]:{},
+            pdfVolumes
+         }
+      }
+      /*
       createPdf:null,
       pdfUrl:action.payload
+      */
    }
 }
 reducers[actions.TYPES.pdfReady] = pdfReady;
 
-
-
-
 export const createPdf = (state: DataState, action: Action) => {
 
-      return {
-      ...state,
-      createPdf : action.payload
+         let id = new RegExp(action.payload.replace(/[/](zip|pdf)[/]/,"/.../"))
+         let fileT = action.meta.file + "File"
+         let pdfVolumes = state.IIIFinfo
+         if(pdfVolumes) pdfVolumes = pdfVolumes[action.meta.iri]
+         if(pdfVolumes) pdfVolumes = pdfVolumes.pdfVolumes
+         if(pdfVolumes) pdfVolumes = pdfVolumes.map(e => {
+            if(e.link.match(id)) return { ...e, [fileT]:true }
+            return e ;
+         })
+
+         return {
+         ...state,
+         IIIFinfo : {
+            ...state.IIIFinfo,
+            [action.meta.iri]:{ ...state.IIIFinfo?state.IIIFinfo[action.meta.iri]:{},
+               pdfVolumes
+            }
+         }
    }
 }
 reducers[actions.TYPES.createPdf] = createPdf;

@@ -40,7 +40,7 @@ const mapStateToProps = (state,ownProps) => {
          manifestError = IIIFinfo.manifestError
          pdfVolumes = IIIFinfo.pdfVolumes
 
-         console.log("IIIF",pdfVolumes,IIIFinfo)
+         //console.log("IIIF",pdfVolumes,IIIFinfo)
       }
    }
 
@@ -60,6 +60,14 @@ const mapDispatchToProps = (dispatch, ownProps) => {
    return {
       onRequestPdf:(iri:string,url:string) => {
          dispatch(data.requestPdf(iri,url));
+         dispatch(data.requestPdf(iri,url.replace(/pdf/,"zip")))
+         /*
+         setTimeout(
+            (
+               (dispatch,iri,url) => function(){ dispatch(data.requestPdf(iri,url.replace(/pdf/,"zip"))) }
+            )
+            (dispatch,iri,url), 100 )
+            */
       },
       onCreatePdf:(url:string,iri:string) => {
          dispatch(data.createPdf(url,iri));
