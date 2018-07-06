@@ -1100,7 +1100,6 @@ class ResourceViewer extends Component<Props,State>
             monoVol = false ;
             pdfLink = "http://iiif.bdrc.io/download/pdf/wi:bdr:W"+id+"::bdr:I"+id ;
          }
-         /*
          else if(this.props.imageAsset.match(/[/][v]:/)) {
             let elem = this.getResourceElem(bdo+"imageCount")
             if(!elem) elem = this.getResourceElem(bdo+"volumePagesTotal")
@@ -1108,7 +1107,6 @@ class ResourceViewer extends Component<Props,State>
                pdfLink = "http://iiif.bdrc.io/download/pdf/v:bdr:V"+id+"::1-"+elem[0].value ;
 
          }
-         */
       }
 
 
@@ -1133,7 +1131,7 @@ class ResourceViewer extends Component<Props,State>
                </a>
                {pdfLink &&
                   [<a style={{fontSize:"26px"}} className="goBack pdfLoader">
-                     <Loader loaded={(!this.props.pdfVolumes || this.props.pdfVolumes.length > 0)} options={{position:"relative",left:"9px",top:"-7px"}} />
+                     <Loader loaded={(!this.props.pdfVolumes || this.props.pdfVolumes.length > 0)} options={{position:"relative",left:"24px",top:"-7px"}} />
                         <IconButton title="Download as PDF/ZIP" onClick={ev =>
                               {
                                  //if(this.props.createPdf) return ;
