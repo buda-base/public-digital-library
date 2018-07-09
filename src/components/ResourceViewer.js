@@ -1110,6 +1110,11 @@ class ResourceViewer extends Component<Props,State>
             if(!elem) elem = this.getResourceElem(bdo+"volumePagesTotal")
             if(elem && elem.length > 0 && elem[0].value)
                pdfLink = "http://iiif.bdrc.io/download/zip/v:bdr:V"+id+"::1-"+elem[0].value ;
+            else {
+               elem = this.getResourceElem(bdo+"workHasItemImageAsset")
+               if(elem && elem.length > 0 && elem[0].value)
+                  pdfLink = "http://iiif.bdrc.io/download/zip/wi:bdr:W"+id+"::bdr:"+ this.pretty(elem[0].value) ;
+            }
          }
          /* // missing ImageItem
          else if(this.props.imageAsset.match(/[/]wio:/))

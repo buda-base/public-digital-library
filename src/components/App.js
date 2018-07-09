@@ -592,7 +592,7 @@ class App extends Component<Props,State> {
    {
       //console.log("res",id,n,t,lit,lang,tip,Tag)
 
-      if(!id.match(/[:/]/)) id = "bdr:" +id 
+      if(!id.match(/[:/]/)) id = "bdr:" +id
 
       return (
          <Link key={n} to={"/show/"+id} className="result">
@@ -641,7 +641,7 @@ class App extends Component<Props,State> {
       }
 
 
-      if(!this.props.keyword)
+      if(!this.props.keyword || this.props.keyword == "")
       {
          if(this.props.config && this.props.config.links)
          {
