@@ -1094,7 +1094,7 @@ class ResourceViewer extends Component<Props,State>
          titre = <h2>{getEntiType(this.props.IRI) + " " +this.props.IRI}</h2>
 
       let pdfLink,monoVol = -1 ;
-      if(this.props.imageAsset && this.props.imageAsset.match(/[.]bdrc[.]io/))
+      if(this.props.imageAsset &&  !this.props.manifestError && this.props.imageAsset.match(/[.]bdrc[.]io/))
       {
          let id = this.props.IRI.slice(1);
          if(this.props.imageAsset.match(/[/]i:/)) {

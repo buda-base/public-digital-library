@@ -287,6 +287,7 @@ async function getManifest(url,iri) {
 
                   found = true ;
 
+                  let test = await api.getURLContents(image)
                   store.dispatch(dataActions.firstImage(image,iri))
 
                   break ;
@@ -311,6 +312,7 @@ async function getManifest(url,iri) {
             if(manif.sequences[0].canvases[0] && manif.sequences[0].canvases[0].images[0] &&
                (image = manif.sequences[0].canvases[0].images[0].resource["@id"]))
                {
+                  let test = await api.getURLContents(image)
                   store.dispatch(dataActions.firstImage(image,iri))
                }
          }
