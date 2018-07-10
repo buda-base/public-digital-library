@@ -3,7 +3,7 @@
 
 
 /* CSS debug mode */
- /* * {background-color:rgba(255,0,128,0.05);} */
+/* * {background-color:rgba(255,0,128,0.05);} */
 
 
 
@@ -21,11 +21,13 @@ a.result + div span { display:inline ; line-height:1.2rem; }
 a.result + div span.label { text-transform:capitalize; font-weight:700; float:left;clear:both; flex-shrink:0; }
 a.result + div span:not(.label) {  }
 .match { display:flex; margin-bottom:5px }
+.match a { word-break:  break-word; }
 
 a.result .lang, .match .lang,.data .lang,h2 .lang
 { font-size: 9px;display:inline-block;margin-left:5px;margin-top:7px;position:absolute; color:rgba(0,0,0,0.5);}
 .data .lang { position:relative;margin:0;vertical-align:-7px;padding:5px;line-height:0;}
 h2 .lang { margin-top:22px }
+a.result .lang, .match .lang { min-width:50px;}
 
 .data .anno span {color : rgba(229, 74, 53,1); cursor:pointer; }
 .data .anno span:hover { text-decoration:underline; }
