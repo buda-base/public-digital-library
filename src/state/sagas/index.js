@@ -486,7 +486,7 @@ function getData(result)  {
 
       store.dispatch(uiActions.loading(keyword, false));
 
-      if(result.metadata && (result.metadata[bdo+"Etext"] || result.metadata[bdo+"Etext"] == 0))
+      if(result.metadata && result.metadata[bdo+"Etext"] == 0)
       {
          delete result.metadata[bdo+"Etext"]
          //console.log("deleted")
@@ -570,7 +570,7 @@ function getData(result)  {
                store.dispatch(dataActions.getDatatypes());
                result = await api.getStartResults(keyword,language);
 
-               if(result.metadata && (result.metadata[bdo+"Etext"] || result.metadata[bdo+"Etext"] == 0))
+               if(result.metadata && result.metadata[bdo+"Etext"] == 0)
                   delete result.metadata[bdo+"Etext"]
 
                metadata = result.metadata;
