@@ -578,7 +578,7 @@ class ResourceViewer extends Component<Props,State>
                                  lang = infoBase[0]["xml:lang"]
                                  info = infoBase[0].value
                                  if(infoBase[0].type && infoBase[0].type == bdo+"volumeNumber") info = "Volume "+info ;
-                                 else if(info.match(/purl[.]bdrc/)) info = null
+                                 else if(info && info.match(/purl[.]bdrc/)) info = null
                                  console.log("info0",info)
                               }
                            }
