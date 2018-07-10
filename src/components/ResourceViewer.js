@@ -579,7 +579,7 @@ class ResourceViewer extends Component<Props,State>
                                  info = infoBase[0].value
                                  if(infoBase[0].type && infoBase[0].type == bdo+"volumeNumber") info = "Volume "+info ;
                                  else if(info && info.match(/purl[.]bdrc/)) info = null
-                                 console.log("info0",info)
+                                 //console.log("info0",info)
                               }
                            }
                         }
@@ -1312,7 +1312,7 @@ class ResourceViewer extends Component<Props,State>
 
                      let elem = this.getResourceElem(k);
 
-                     console.log("prop",k,elem);
+                     //console.log("prop",k,elem);
 
                      //if(!k.match(new RegExp("Revision|Entry|prefLabel|"+rdf+"|toberemoved"))) {
                      if(!k.match(new RegExp(adm+"|adm:|TextTitle|SourcePath|prefLabel|"+rdf+"|toberemoved|workPartIndex|workPartTreeIndex")))
@@ -1324,14 +1324,14 @@ class ResourceViewer extends Component<Props,State>
                         {
                            let tags = this.format("h4",k)
 
-                           console.log("tags",tags)
+                           //console.log("tags",tags)
 
                            if(k == bdo+"itemHasVolume")
                            {
 
                               tags = tags.map(e => {
 
-                                 console.log("e",e)
+                                 //console.log("e",e)
                                  let key = "";
                                  if(Array.isArray(e) && e.length > 0) {
                                     key = e[0]
