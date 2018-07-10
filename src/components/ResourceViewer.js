@@ -1311,7 +1311,7 @@ class ResourceViewer extends Component<Props,State>
 
                      let elem = this.getResourceElem(k);
 
-                     //console.log("prop",k,elem);
+                     console.log("prop",k,elem);
 
                      //if(!k.match(new RegExp("Revision|Entry|prefLabel|"+rdf+"|toberemoved"))) {
                      if(!k.match(new RegExp(adm+"|adm:|TextTitle|SourcePath|prefLabel|"+rdf+"|toberemoved|workPartIndex|workPartTreeIndex")))
@@ -1323,29 +1323,48 @@ class ResourceViewer extends Component<Props,State>
                         {
                            let tags = this.format("h4",k)
 
+                           console.log("tags",tags)
 
                            if(k == bdo+"itemHasVolume")
                            {
 
                               tags = tags.map(e => {
 
+                                 console.log("e",e)
                                  let key = "";
                                  if(Array.isArray(e) && e.length > 0) {
                                     key = e[0]
                                     key = key.props
                                     if(key) key = key.children
-                                    if(key && key.length > 0) key = key[0]
-                                    if(key && key.length > 0) key = key[0]
-                                    if(key) key = key.props
-                                    if(key) key = key.children
-                                    if(key) key = Number((""+key).replace(/^Volume /,""))
 
-                              //   [0].props.children[0][0].props.children
+                                    if(key && key[0] && key[0].props && key[0].props.children == "Etext Volume: ")
+                                    {
+                                       // [0].props.children[0].props
+                                       if(key.length > 1) key = key[1]
+                                       if(key) key= key.props
+                                       if(key) key = key.children
+                                       if(key && key.length > 1) key = key[1]
+                                       if(key) key = key.props
+                                       if(key) key = key.children
+                                       if(key) key = Number(key)
+                                    }
+                                    else
+                                    {
+                                       // [0].props.children[0][0].props.children
+                                       if(key && key.length > 0) key = key[0]
+                                       if(key && key.length > 0) key = key[0]
+                                       key = key.props
+                                       if(key) key = key.children
+                                       if(key) key = Number((""+key).replace(/^Volume /,""))
+                                    }
+
+
                                  }
+
                                  return { elem:e, key}
                               })
 
-                              //console.log("tags",tags);
+                              console.log("tagsK",tags);
 
                               tags = _.orderBy(tags,['key'])
 
