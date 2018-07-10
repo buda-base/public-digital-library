@@ -1294,7 +1294,9 @@ class App extends Component<Props,State> {
 
          }
       }
-      console.log("metaK",metaK)
+      //console.log("metaK",metaK)
+
+      console.log("messageD",messageD)
 
       return (
 <div>
@@ -1740,17 +1742,23 @@ class App extends Component<Props,State> {
                   </div>
                }
                { this.props.loading && <Loader className="mainloader"/> }
-               <List style={{maxWidth:"800px",margin:"50px auto",textAlign:"left",zIndex:0}}>
-                  { message.length > 0 ? message : messageD }
-                  <div id="pagine">
-                     <NavigateBefore
-                        className={this.state.paginate.index == 0 ? "hide":""}
-                        onClick={this.prevPage.bind(this)}/>
-                     <NavigateNext
-                        className={this.state.paginate.index == this.state.paginate.pages.length - 1 ? "hide":""}
-                        onClick={this.nextPage.bind(this)} />
-                  </div>
-               </List>
+               { message.length == 0 &&
+                  <List id="samples" style={{maxWidth:"800px",margin:"50px auto",textAlign:"left",zIndex:0}}>
+                     { messageD }
+                  </List> }
+               { message.length > 0 &&
+                  <List id="results" style={{maxWidth:"800px",margin:"50px auto",textAlign:"left",zIndex:0}}>
+                     { message }
+                     <div id="pagine">
+                        <NavigateBefore
+                           className={this.state.paginate.index == 0 ? "hide":""}
+                           onClick={this.prevPage.bind(this)}/>
+                        <NavigateNext
+                           className={this.state.paginate.index == this.state.paginate.pages.length - 1 ? "hide":""}
+                           onClick={this.nextPage.bind(this)} />
+                     </div>
+                  </List>
+               }
             </div>
             <div className={"SidePane right "+(this.state.rightPane?"visible":"")}>
                <IconButton className="close" onClick={e => this.setState({...this.state,rightPane:false})} ><Close/></IconButton>
