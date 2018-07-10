@@ -1365,7 +1365,7 @@ class ResourceViewer extends Component<Props,State>
                                  return { elem:e, key}
                               })
 
-                              console.log("tagsK",tags);
+                              //console.log("tagsK",tags);
 
                               tags = _.orderBy(tags,['key'])
 

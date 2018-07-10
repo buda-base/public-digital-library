@@ -486,7 +486,14 @@ function getData(result)  {
 
       store.dispatch(uiActions.loading(keyword, false));
 
+      if(result.metadata && (result.metadata[bdo+"Etext"] || result.metadata[bdo+"Etext"] == 0))
+      {
+         delete result.metadata[bdo+"Etext"]
+         //console.log("deleted")
+      }
+
       let metadata = result.metadata;
+      //console.log("meta",metadata)
 
 /*
       if(datatype && datatype.indexOf("Any") === -1) {
@@ -562,6 +569,10 @@ function getData(result)  {
             if(!store.getState().data.searches[keyword+"@"+language]){
                store.dispatch(dataActions.getDatatypes());
                result = await api.getStartResults(keyword,language);
+
+               if(result.metadata && (result.metadata[bdo+"Etext"] || result.metadata[bdo+"Etext"] == 0))
+                  delete result.metadata[bdo+"Etext"]
+
                metadata = result.metadata;
                data = getData(result);
                store.dispatch(dataActions.foundResults(keyword, language, data));
