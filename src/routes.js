@@ -15,6 +15,14 @@ import * as ui from './state/ui/actions'
 
 import qs from 'query-string'
 
+import Auth from './Auth.js';
+
+const auth = new Auth();
+
+// Auth test: ok
+//auth.login();
+
+
 const theme = createMuiTheme({
     palette: {
         primary: indigo,
@@ -51,6 +59,11 @@ export class Redirect404 extends Component<Props>
    }
 }
 
+const handleAuthentication = (nextState, replace) => {
+  if (/access_token|id_token|error/.test(nextState.location.hash)) {
+    auth.handleAuthentication();
+  }
+}
 
 const makeMainRoutes = () => {
 
@@ -59,9 +72,18 @@ const makeMainRoutes = () => {
         <MuiThemeProvider theme={theme}>
            <Router history={history}>
              <Switch>
+                  <Route path="/auth/callback" render={(props) => {
+                     handleAuthentication(props);
+                     store.dispatch(ui.logEvent(true));
+                     return (
+                        <div style={{textAlign:"center",marginTop:"100px",fontSize:"22px"}}>
+                           Redirecting to homepage
+                        </div>
+                     )
+                  }}/>
                   <Route exact path="/" render={(props) => {
                      store.dispatch(initiateApp());
-                     return ( <AppContainer history={history}/> ) } } />
+                     return ( <AppContainer history={history} auth={auth}/> ) } } />
                   <Route path="/search" render={(props) => {
                      let get = qs.parse(history.location.search)
                      //if(!store.getState().data.ontology)
@@ -69,17 +91,17 @@ const makeMainRoutes = () => {
                         //console.log("new route",props,store.getState())
                         store.dispatch(initiateApp(qs.parse(history.location.search)))
                      }
-                     return ( <AppContainer history={history}/> ) } } />
+                     return ( <AppContainer history={history}  auth={auth}/> ) } } />
                   <Route path="/gallery" render={(props) =>
-                     <IIIFViewerContainer location={history.location} history={history}/> }/>
+                     <IIIFViewerContainer location={history.location} history={history}  auth={auth}/> }/>
                   <Route path="/show/bdr::IRI" render={(props) => {
                      if(!store.getState().data.resources || !store.getState().data.resources[props.match.params.IRI])
                      {
                         store.dispatch(initiateApp(qs.parse(history.location.search),props.match.params.IRI));
                      }
-                     return ( <ResourceViewerContainer history={history} IRI={props.match.params.IRI}/> ) } }/>
+                     return ( <ResourceViewerContainer  auth={auth} history={history} IRI={props.match.params.IRI}/> ) } }/>
                   <Route render={(props) =>
-                     <Redirect404  history={history}/>}/>
+                     <Redirect404  history={history}  auth={auth}/>}/>
                </Switch>
             </Router>
          </MuiThemeProvider>

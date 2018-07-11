@@ -1,5 +1,6 @@
 // @flow
 
+import type Auth from '../Auth';
 import _ from "lodash";
 import IconButton from 'material-ui/IconButton';
 import Tooltip from 'material-ui/Tooltip';
@@ -77,6 +78,7 @@ const styles = {
 };
 
 type Props = {
+   auth:Auth,
    config:{
       ldspdi:{
          endpoints:string[],
@@ -444,7 +446,15 @@ class App extends Component<Props,State> {
    }
 
 
-  handleLanguage = event => {
+   login() {
+      this.props.auth.login();
+   }
+
+   logout() {
+      this.props.auth.logout();
+   }
+
+   handleLanguage = event => {
 
      let s = { [event.target.name]: event.target.value }
      if(this.props.keyword) s = { ...s, willSearch:true }
@@ -623,7 +633,6 @@ class App extends Component<Props,State> {
 
    render() {
 
-      console.log("render",this.props.keyword,this.props,this.state)
 
       let message = [],messageD = [];
       let results ;
@@ -631,6 +640,10 @@ class App extends Component<Props,State> {
       let types = ["Any"]
       let loader ;
       let counts = { "datatype" : { "Any" : 0 } }
+
+      const { isAuthenticated } = this.props.auth;
+
+      console.log("render",this.props.keyword,this.props,this.state,isAuthenticated())
 
 
       let TagTab = {
@@ -1317,6 +1330,30 @@ class App extends Component<Props,State> {
             data-rotation="0"
             style={{width:"100%",height:"calc(100vh)",backgroundColor: "#000"}}/> */}
 
+         <div id="login">
+            {
+              !isAuthenticated() && (
+                  <Button
+                    bsStyle="primary"
+                    className="btn-margin"
+                    onClick={this.login.bind(this)}
+                  >
+                    Log In
+                  </Button>
+                )
+            }
+            {
+              isAuthenticated() && (
+                  <Button
+                    bsStyle="primary"
+                    className="btn-margin"
+                    onClick={this.logout.bind(this)}
+                  >
+                    Log Out
+                  </Button>
+                )
+            }
+         </div>
          <div className="App" style={{display:"flex"}}>
             <div className={"SidePane left " +(this.state.leftPane?"visible":"")}>
                   <IconButton className="close" onClick={e => this.setState({...this.state,leftPane:false})}><Close/></IconButton>

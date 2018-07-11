@@ -12,6 +12,7 @@ import App from '../components/App';
 
 const mapStateToProps = (state) => {
 
+   let logged = state.ui.logged ;
    let hostFailure = state.data.failures.host ;
    let config = state.data.config ;
    let searches = state.data.searches ;
@@ -26,7 +27,7 @@ const mapStateToProps = (state) => {
 
    let locale = state.i18n.locale
 
-   let newState = { config, hostFailure, searches, keyword, language,loading,datatypes,ontology,facets,
+   let newState = { logged,config, hostFailure, searches, keyword, language,loading,datatypes,ontology,facets,
       locale,prefLang }
 
    console.log("mS2p",newState)

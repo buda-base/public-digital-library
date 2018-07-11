@@ -5,7 +5,7 @@
 /* CSS debug mode */
 /* * {background-color:rgba(255,0,128,0.05);} */
 
-
+#login { position:absolute; top:0;right:0; }
 
 #pagine { width:100%;display:flex;padding:20px;justify-content: space-between; box-sizing:border-box}
 #pagine svg {height:36px;width:36px; cursor:pointer;}

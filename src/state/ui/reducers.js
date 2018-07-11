@@ -9,7 +9,8 @@ let reducers = {};
 export type UIState = {
    keyword?:string,
    loading?: boolean,
-   prefLang:string
+   prefLang:string,
+   logged?:boolean
 }
 
 const DEFAULT_STATE: UIState = {
@@ -21,6 +22,13 @@ export const helloWorld = (state: UIState, action: Action): UIState => {
     return {...state}
 };
 reducers[actions.TYPES.helloWorld] = helloWorld
+
+
+export const logEvent = (state: UIState, action: Action): UIState => {
+    return {...state, logged:action.payload }
+};
+reducers[actions.TYPES.logEvent] = logEvent
+
 
 export const loadingGallery = (state: UIState, action: Action): UIState => {
     return {...state, loadingGallery:action.payload }

@@ -24,6 +24,16 @@ export const selectType = (datatype: string): Action => {
    }
 }
 
+
+TYPES.logEvent = 'LOG_EVENT';
+export const logEvent = (login: boolean): Action => {
+   return {
+      type: TYPES.logEvent,
+      payload: login
+   }
+}
+
+
 TYPES.setPrefLang = 'SET_PREFLANG';
 export const setPrefLang = (lang: string): Action => {
    return {
