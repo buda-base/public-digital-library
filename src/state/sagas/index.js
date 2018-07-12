@@ -24,7 +24,7 @@ const _tmp  = "http://purl.bdrc.io/ontology/tmp/" ;
 
 const prefixes = { adm, bdo, bdr, owl, rdf, rdfs, skos, tmp }
 
-const IIIFurl = "http://iiif.bdrc.io" ;
+let IIIFurl = "http://iiif.bdrc.io" ;
 
 async function initiateApp(params,iri) {
    try {
@@ -216,6 +216,12 @@ async function createPdf(url,iri) {
       url = url.replace(/zip/,iri.file)
       console.log("creaP",url,iri)
 
+      let config = store.getState()
+      if(config) config = config.data
+      if(config) config = config.config
+      if(config) config = config.iiif
+      if(config) IIIFurl = config.endpoints[config.index]
+      //console.log("IIIF",IIIFurl)
       let data = JSON.parse(await api.getURLContents(IIIFurl+url,false,"application/json"))
 
       console.log("pdf",data)

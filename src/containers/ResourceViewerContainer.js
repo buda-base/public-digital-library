@@ -10,6 +10,7 @@ import ResourceViewer from '../components/ResourceViewer';
 
 const mapStateToProps = (state,ownProps) => {
 
+   let config = state.data.config ;
    let failures = state.data.failures
    let resources = state.data.resources
    let ontology = state.data.ontology ;
@@ -48,7 +49,7 @@ const mapStateToProps = (state,ownProps) => {
    let pdfUrl = state.data.pdfUrl
 
 
-   let props = { resources, ontology, keyword, language, datatype, assocResources, prefLang, failures,imageAsset,firstImage,manifestError,pdfVolumes,createPdf,pdfUrl }
+   let props = { config,resources, ontology, keyword, language, datatype, assocResources, prefLang, failures,imageAsset,firstImage,manifestError,pdfVolumes,createPdf,pdfUrl }
 
    console.log("mS2p",state,props)
 

@@ -1097,9 +1097,13 @@ class ResourceViewer extends Component<Props,State>
       let pdfLink,monoVol = -1 ;
       if(this.props.imageAsset &&  !this.props.manifestError && this.props.imageAsset.match(/[.]bdrc[.]io/))
       {
+         let iiif = "http://iiif.bdrc.io" ;
+         if(this.props.config && this.props.config.iiif) iiif = this.props.config.iiif.endpoints[this.props.config.iiif.index]
+         //console.log("iiif",iiif,this.props.config)
+
          let id = this.props.IRI.slice(1);
          if(this.props.imageAsset.match(/[/]i:/)) {
-            pdfLink = "http://iiif.bdrc.io/download/pdf/wi:bdr:W"+id+"::bdr:I"+id ;
+            pdfLink = iiif+"/download/pdf/wi:bdr:W"+id+"::bdr:I"+id ;
          }
          else if(this.props.imageAsset.match(/[/]v:/)) {
 
@@ -1110,11 +1114,11 @@ class ResourceViewer extends Component<Props,State>
             elem = this.getResourceElem(bdo+"imageCount")
             if(!elem) elem = this.getResourceElem(bdo+"volumePagesTotal")
             if(elem && elem.length > 0 && elem[0].value)
-               pdfLink = "http://iiif.bdrc.io/download/zip/v:bdr:V"+id+"::1-"+elem[0].value ;
+               pdfLink = iiif+"/download/zip/v:bdr:V"+id+"::1-"+elem[0].value ;
             else {
                elem = this.getResourceElem(bdo+"workHasItemImageAsset")
                if(elem && elem.length > 0 && elem[0].value)
-                  pdfLink = "http://iiif.bdrc.io/download/zip/wi:bdr:W"+id+"::bdr:"+ this.pretty(elem[0].value) ;
+                  pdfLink = iiif+"/download/zip/wi:bdr:W"+id+"::bdr:"+ this.pretty(elem[0].value) ;
             }
          }
          /* // missing ImageItem

@@ -4,6 +4,11 @@
       "endpoints":["http://localhost:8080","http://localhost:13280","http://buda1.bdrc.io:13280","http://purl.bdrc.io"],
       "index":2
    },
+   "iiif":
+   {
+      "endpoints":["http://localhost:9000","http://iiif.bdrc.io"],
+      "index":1
+   },
    "rkts":
    {
       "endpoints":["http://localhost:8080"],
