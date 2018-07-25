@@ -9,6 +9,7 @@ import * as uiActions from '../ui/actions';
 import selectors from '../selectors';
 import store from '../../index';
 import bdrcApi, { getEntiType } from '../../lib/api';
+import {auth} from '../../routes';
 
 const api = new bdrcApi();
 
@@ -26,18 +27,31 @@ const prefixes = { adm, bdo, bdr, owl, rdf, rdfs, skos, tmp }
 
 let IIIFurl = "http://iiif.bdrc.io" ;
 
-async function initiateApp(params,iri) {
+const handleAuthentication = (nextState, replace) => {
+  if (/access_token|id_token|error/.test(nextState.location.hash)) {
+    auth.handleAuthentication();
+  }
+}
+
+async function initiateApp(params,iri,myprops) {
    try {
       let state = store.getState()
 
-
+      console.log("youpla?",myprops)
 
       if(!state.data.config)
       {
          const config = await api.loadConfig();
+         auth.setConfig(config.auth)
+         console.log("auth?",auth)
+         if(myprops) {
+            console.log("youpi",myprops);
+            handleAuthentication(myprops);
+         }
          store.dispatch(dataActions.loadedConfig(config));
          //store.dispatch(dataActions.choosingHost(config.ldspdi.endpoints[config.ldspdi.index]));
       }
+
 
       if(!state.data.ontology)
       {
@@ -161,7 +175,7 @@ async function initiateApp(params,iri) {
 function* watchInitiateApp() {
       yield takeLatest(
          INITIATE_APP,
-         (action) => initiateApp(action.payload,action.meta)
+         (action) => initiateApp(action.payload,action.meta.iri,action.meta.auth)
       );
 }
 

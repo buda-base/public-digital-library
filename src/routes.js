@@ -17,8 +17,7 @@ import qs from 'query-string'
 
 import Auth from './Auth.js';
 
-//export ?
-const auth = new Auth();
+export const auth = new Auth();
 
 // Auth test: ok
 //auth.login();
@@ -74,7 +73,7 @@ const makeMainRoutes = () => {
            <Router history={history}>
              <Switch>
                   <Route path="/auth/callback" render={(props) => {
-                     handleAuthentication(props);
+                     store.dispatch(initiateApp(null,null,props));
                      store.dispatch(ui.logEvent(true));
                      return (
                         <div style={{textAlign:"center",marginTop:"100px",fontSize:"22px"}}>

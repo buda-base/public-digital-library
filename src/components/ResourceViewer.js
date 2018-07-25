@@ -1425,7 +1425,7 @@ class ResourceViewer extends Component<Props,State>
 
                                  if(Array.isArray(e) && e.length > 0) e = e[0]
 
-                                 console.log("e",e)
+                                 //console.log("e",e)
                                  let exprKey1 = "", exprKey2 = "";
 
                                  if(e.props)
@@ -1442,7 +1442,7 @@ class ResourceViewer extends Component<Props,State>
                                        exprKey1 = exprKey1.replace(/[/]$/,"")
                                     }
 
-                                    console.log("eK1",exprKey1)
+                                    //console.log("eK1",exprKey1)
 
                                     if(e.props.children.length == 3 && e.props.children[1] === " in ")
                                     {
