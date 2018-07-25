@@ -1,5 +1,6 @@
 //@flow
 import store from '../index';
+//import {auth} from '../routes'
 
 const CONFIG_PATH = '/config.json'
 const CONFIGDEFAULTS_PATH = '/config-defaults.json'
@@ -57,7 +58,15 @@ export default class API {
 
      async getURLContents(url: string, minSize : boolean = true,acc:string): Promise<string> {
 
-         let response = await this._fetch( url, !acc?{}:{ method:"GET",headers:new Headers({"Accept":acc}) } )
+         const access_token = localStorage.getItem('access_token');
+         //const id_token = localStorage.getItem('id_token');
+         //const expires_at = localStorage.getItem('expires_at');
+
+         let head = {}
+         if(acc) head = { ...head, "Accept":acc }
+         if(access_token) head = { ...head, "Authorization":"bearer "+access_token}
+
+         let response = await this._fetch( url, { method:"GET",headers:new Headers(head) } )
 
          if (!response.ok) {
              if (response.status === '404') {
@@ -253,12 +262,15 @@ export default class API {
 
       console.log("body",body);
 
+      const access_token = localStorage.getItem('access_token');
+
       let response = await this._fetch( url + (method == "GET" ? "?" + body : ""),
       {// header pour accéder aux résultat en JSON !
          method: method,
          ...( method == "POST" && {body:body} ),//body:body,
          headers:new Headers({
             "Accept": accept,
+            ...!access_token?{}:{"Authorization":"bearer "+access_token},
          ...( method == "POST" && {"Content-Type": "application/x-www-form-urlencoded"})
         })
       })

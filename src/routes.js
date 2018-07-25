@@ -17,6 +17,7 @@ import qs from 'query-string'
 
 import Auth from './Auth.js';
 
+//export ?
 const auth = new Auth();
 
 // Auth test: ok

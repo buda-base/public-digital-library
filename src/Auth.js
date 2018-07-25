@@ -10,7 +10,7 @@ export default class Auth {
     redirectUri: 'http://localhost:3000/auth/callback',
     audience: 'https://bdrc-io.auth0.com/userinfo',
     responseType: 'token id_token',
-    scope: 'openid'
+    scope: 'openid user_metadata app_metada'
   });
 
   login() {
@@ -27,6 +27,7 @@ export default class Auth {
    handleAuthentication() {
      this.auth0.parseHash((err, authResult) => {
         if (authResult && authResult.accessToken && authResult.idToken) {
+           console.log("authRes",authResult)
          this.setSession(authResult);
          history.replace('/');
         } else if (err) {
