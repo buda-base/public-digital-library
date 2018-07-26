@@ -40,6 +40,7 @@
          "access":"http://purl.bdrc.io/ontology/admin/access",
          "license":"http://purl.bdrc.io/ontology/admin/license",
          "type":"http://purl.bdrc.io/ontology/core/workType",
+         "partType":"http://purl.bdrc.io/ontology/core/workPartType",
          "tree":"http://purl.bdrc.io/ontology/core/workGenre"
       },
       "Etext": {

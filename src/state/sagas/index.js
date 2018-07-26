@@ -548,6 +548,7 @@ function getData(result)  {
          addMeta(keyword,language,data,"Lineage");
          addMeta(keyword,language,data,"Place");
 
+         console.log("sourcetype",data)
 
          /*
          if(metaSav) {
@@ -582,7 +583,8 @@ function getData(result)  {
 
                metadata = { ...metadata, tree:result.tree}
 
-               store.dispatch(dataActions.foundFacetInfo(keyword,language,datatype,metadata))
+               if(datatype.indexOf("Work") !== -1 ) addMeta(keyword,language,data,"Work",result.tree);
+               else store.dispatch(dataActions.foundFacetInfo(keyword,language,datatype,metadata))
             }
 
 
