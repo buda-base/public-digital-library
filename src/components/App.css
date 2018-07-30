@@ -70,6 +70,9 @@ h4 { margin-top:10px;margin-bottom:0px;font-size:24px; }
 
 .resource .data .chunk ~ h4 { font-size:25px;line-height:40px;margin-bottom:10px; }
 
+.resource .data h3 a.propref,.resource .data h4 a.propref { color:black; }
+.resource .data h3 a.propref:hover,.resource .data h4 a.propref:hover { border-bottom:1px solid black;}
+
 div[role="tooltip"] { margin:30px; font-size:16px; }
 div[role="tooltip"] span { font-weight:bold; }
 

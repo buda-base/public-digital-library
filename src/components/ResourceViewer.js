@@ -418,7 +418,7 @@ class ResourceViewer extends Component<Props,State>
 
 
      return ([
-       <h4 className="first prop">{this.fullname(k)}:</h4>
+       <h4 className="first prop">{this.proplink(k)}:</h4>
        ,
        <div>
        { vals }
@@ -480,11 +480,11 @@ class ResourceViewer extends Component<Props,State>
                else vals = tmp
 
                if(div == "sub")
-                  ret.push(<div className='sub'><h4 className="first type">{this.fullname(p)}:</h4>{vals}</div>)
+                  ret.push(<div className='sub'><h4 className="first type">{this.proplink(p)}:</h4>{vals}</div>)
                else if(div == "subsub")
-                  ret.push(<div className={'subsub'+(tmp.length>0?" full":"")}><h4 className="first prop">{this.fullname(p)}:</h4>{vals}</div>)
+                  ret.push(<div className={'subsub'+(tmp.length>0?" full":"")}><h4 className="first prop">{this.proplink(p)}:</h4>{vals}</div>)
                else if(div == "subsubsub")
-                  ret.push(<div className='subsubsub'><h4 className="first prop">{this.fullname(p)}:</h4>{vals}</div>)
+                  ret.push(<div className='subsubsub'><h4 className="first prop">{this.proplink(p)}:</h4>{vals}</div>)
 
             }
          }
@@ -797,7 +797,7 @@ class ResourceViewer extends Component<Props,State>
             if(val && val[0] && val[0].value)
             {
                noVal = false ;
-               sub.push(<Tag className={'first '+(div == "sub"?'type':'prop')}>{this.fullname(val[0].value)+": "}</Tag>)
+               sub.push(<Tag className={'first '+(div == "sub"?'type':'prop')}>{[this.proplink(val[0].value),": "]}</Tag>)
             }
 
             // direct property value/label ?
@@ -833,10 +833,10 @@ class ResourceViewer extends Component<Props,State>
                   else
                   {
                      if(!noVal)
-                        subsub.push(<Tag className={'first '+(div == ""?'type':'prop')}>{this.fullname(f)+": "}</Tag>)
+                        subsub.push(<Tag className={'first '+(div == ""?'type':'prop')}>{[this.proplink(f),": "]}</Tag>)
                      //{...(val ? {className:'first prop'}:{className:'first type'}) }
                      else
-                        sub.push(<Tag className={'first '+(!bnode?"type":"prop")}>{this.fullname(f)+": "}</Tag>)
+                        sub.push(<Tag className={'first '+(!bnode?"type":"prop")}>{[this.proplink(f),": "]}</Tag>)
 
                      val = elem[f]
                      for(let v of val)
@@ -966,6 +966,16 @@ class ResourceViewer extends Component<Props,State>
             close:true
          });
    };
+
+
+   proplink = (k) => {
+
+     let ret = (<a class="propref" {...(k.match(/purl[.]bdrc/) ? {"href":k}:{})} target="_blank">{this.fullname(k)}</a>)
+
+     //console.log("plink",ret)
+
+     return ret;
+   }
 
 
    render()
@@ -1494,7 +1504,7 @@ class ResourceViewer extends Component<Props,State>
 
                               return (
                                  <div>
-                                    <h3><span>{this.fullname(k)}</span>:&nbsp;</h3>
+                                    <h3><span>{this.proplink(k)}</span>:&nbsp;</h3>
                                     {ret}
                                  </div>
                               )
