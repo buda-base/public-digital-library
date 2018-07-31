@@ -1,5 +1,5 @@
 //@flow
-import NewWindow from 'react-new-window'
+//import NewWindow from 'react-new-window'
 import Collapse from 'material-ui/transitions/Collapse';
 import InfiniteScroll from 'react-infinite-scroller';
 import _ from "lodash";
