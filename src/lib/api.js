@@ -270,7 +270,7 @@ export default class API {
          ...( method == "POST" && {body:body} ),//body:body,
          headers:new Headers({
             "Accept": accept,
-            ...!access_token?{}:{"Authorization":"bearer "+access_token},
+            ...( access_token && {"Authorization":"bearer "+access_token}),
          ...( method == "POST" && {"Content-Type": "application/x-www-form-urlencoded"})
         })
       })

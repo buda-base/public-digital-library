@@ -970,7 +970,7 @@ class ResourceViewer extends Component<Props,State>
 
    proplink = (k) => {
 
-     let ret = (<a class="propref" {...(k.match(/purl[.]bdrc/) ? {"href":k}:{})} target="_blank">{this.fullname(k)}</a>)
+     let ret = (<a class="propref" {...(true || k.match(/purl[.]bdrc/) ? {"href":k}:{})} target="_blank">{this.fullname(k)}</a>)
 
      //console.log("plink",ret)
 
@@ -1352,8 +1352,18 @@ class ResourceViewer extends Component<Props,State>
                                     key = key.props
                                     if(key) key = key.children
 
-                                    if(key && key[0] && key[0].props && key[0].props.children == "Etext Volume: ")
+                                    console.log("key",key)
+
+                                    if(key && key[0] && key[0].props && key[0].props.children
+                                       && (
+                                             key[0].props.children == "Etext Volume: "
+                                             ||
+                                             (key[0].props.children[0] && key[0].props.children[0].props
+                                                && key[0].props.children[0].props.children == "Etext Volume")
+                                          )
+                                       )
                                     {
+
                                        // [0].props.children[0].props
                                        if(key.length > 1) key = key[1]
                                        if(key) key= key.props
