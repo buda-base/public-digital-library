@@ -1,11 +1,12 @@
 //@flow
 import store from '../index';
-//import {auth} from '../routes'
+import {auth} from '../routes'
 
 const CONFIG_PATH = '/config.json'
 const CONFIGDEFAULTS_PATH = '/config-defaults.json'
 const ONTOLOGY_PATH = '/ontology.json'
 
+const { isAuthenticated } = auth;
 
 const dPrefix = {
    "C" : "Corporation",
@@ -62,9 +63,11 @@ export default class API {
          //const id_token = localStorage.getItem('id_token');
          //const expires_at = localStorage.getItem('expires_at');
 
+         console.log("access",access_token,isAuthenticated())
+
          let head = {}
          if(acc) head = { ...head, "Accept":acc }
-         if(access_token) head = { ...head, "Authorization":"bearer "+access_token}
+         if(isAuthenticated() && url.match(/bdrc[.]io/)) head = { ...head, "Authorization":"bearer "+access_token}
 
          let response = await this._fetch( url, { method:"GET",headers:new Headers(head) } )
 
@@ -138,6 +141,7 @@ export default class API {
 
        async loadManifest(url:string): Promise<string>
        {
+
             let manif =  JSON.parse(await this.getURLContents(url,false));
             //console.log("manif",manif)
             return manif ;
@@ -270,7 +274,7 @@ export default class API {
          ...( method == "POST" && {body:body} ),//body:body,
          headers:new Headers({
             "Accept": accept,
-            ...( access_token && {"Authorization":"bearer "+access_token}),
+            ...( isAuthenticated() && {"Authorization":"bearer "+access_token}),
          ...( method == "POST" && {"Content-Type": "application/x-www-form-urlencoded"})
         })
       })

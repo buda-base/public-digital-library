@@ -30,7 +30,7 @@ export const choosingHost = (host: string): Action => {
 }
 
 TYPES.getManifest = 'GET_MANIFEST';
-export const getManifest = (url: string,IRI:string): Action => {
+export const getManifest = (url: string,IRI:string,ext:boolean): Action => {
     return {
         type: TYPES.getManifest,
         payload: url,
