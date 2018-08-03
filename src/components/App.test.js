@@ -1,13 +1,13 @@
+
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { shallow } from 'enzyme';
 //import makeMainRoutes from '../routes';
-//import App from './App';
-import AppContainer from '../containers/AppContainer';
-//import ResourceViewer from './ResourceViewer';
 
-describe('init test', function() {
+describe('main', () => {
+
    it('renders without crashing', () => {
-     ReactDOM.render(<AppContainer/>, document.getElementById('root'));
-     //ReactDOM.unmountComponentAtNode(document.getElementById('root'));
+     const div = document.createElement('div');
+     ReactDOM.render(<div/>, div);
    });
 })
