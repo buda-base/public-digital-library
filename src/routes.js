@@ -3,8 +3,8 @@ import AppContainer from './containers/AppContainer';
 import React, { Component } from 'react';
 import { Switch, Route, Router } from 'react-router-dom';
 import history from './history';
-import { MuiThemeProvider, createMuiTheme } from 'material-ui/styles';
-import indigo from 'material-ui/colors/indigo';
+import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
+import indigo from '@material-ui/core/colors/indigo';
 import { Provider } from 'react-redux';
 import ResourceViewerContainer from './containers/ResourceViewerContainer'
 import IIIFViewerContainer from './containers/IIIFViewerContainer'

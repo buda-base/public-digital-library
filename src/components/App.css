@@ -28,6 +28,25 @@ a.result .lang, .match .lang,.data .lang,h2 .lang
 .data .lang { position:relative;margin:0;vertical-align:-7px;padding:5px;line-height:0;}
 h2 .lang { margin-top:22px }
 a.result .lang, .match .lang { min-width:50px;}
+a.result .contenu ul { padding:12px 24px 12px 0px !important;}
+a.result .contenu ul > div:last-child {
+   padding:0 16px !important;
+   height: auto;
+   flex-grow: 10;
+   flex-shrink: 10;
+   flex: 1 1 auto;
+   min-width: 0;
+}
+
+a.result .contenu ul > div:last-child h3 {
+    color: rgba(0, 0, 0, 0.87); font-size: 1rem; font-weight: 400; font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+    line-height: 1.5em; display:block; margin:0;
+}
+
+a.result .contenu ul > div:last-child p {
+   color: rgba(0, 0, 0, 0.54);   font-size: 0.875rem;   font-weight: 400;   font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+   line-height: 1.46429em; margin: 0;  display: block;
+}
 
 .data .anno span {color : rgba(229, 74, 53,1); cursor:pointer; }
 .data .anno span:hover { text-decoration:underline; }
@@ -73,8 +92,8 @@ h4 { margin-top:10px;margin-bottom:0px;font-size:24px; }
 .resource .data h3 a.propref,.resource .data h4 a.propref { color:black; }
 .resource .data h3 a.propref:hover,.resource .data h4 a.propref:hover { border-bottom:1px solid black;}
 
-div[role="tooltip"] { margin:30px; font-size:16px; }
-div[role="tooltip"] span { font-weight:bold; }
+div[role="tooltip"] { margin:30px;  }
+div[role="tooltip"] div { font-weight:bold;font-size:16px; }
 
 .person #person, .place #place { display:none;}
 
@@ -105,7 +124,7 @@ body {overflow-x:hidden; }
 .App { height:100vh;}
 
 .SidePane > div { padding-bottom:50px; }
-
+.SidePane > div > ul { align-items: center; }
 .SidePane > .close { position:absolute; top:0;right:0;}
 
 .SidePane { position:absolute;transition:all 400ms ease-in-out; background:white;height:100vh; position:fixed;padding:30px;

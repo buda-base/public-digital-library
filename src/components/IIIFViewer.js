@@ -4,7 +4,7 @@ import Script from 'react-load-script';
 import $ from 'jquery' ;
 import React, { Component } from 'react';
 import qs from 'query-string'
-import Button from 'material-ui/Button';
+import Button from '@material-ui/core/Button';
 import { Link } from 'react-router-dom';
 import store from '../index';
 

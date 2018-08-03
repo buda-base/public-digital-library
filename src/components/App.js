@@ -2,40 +2,46 @@
 
 import type Auth from '../Auth';
 import _ from "lodash";
-import IconButton from 'material-ui/IconButton';
-import Tooltip from 'material-ui/Tooltip';
+import IconButton from '@material-ui/core/IconButton';
+import Tooltip from '@material-ui/core/Tooltip';
 import React, { Component } from 'react';
 import SearchBar from 'material-ui-search-bar'
-import Paper from 'material-ui/Paper';
-import {MenuItem} from 'material-ui/Menu';
-import Button from 'material-ui/Button';
-import List,{ListItemText,ListItem,ListItemIcon} from 'material-ui/List';
-import Typography from 'material-ui/Typography';
+import Paper from '@material-ui/core/Paper';
+//import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
+import Button from '@material-ui/core/Button';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/List';
+import ListItemText from '@material-ui/core/List';
+import ListItemIcon from '@material-ui/core/List';
+import Typography from '@material-ui/core/Typography';
 import Loader from 'react-loader';
-import Collapse from 'material-ui/transitions/Collapse';
-import Menu from 'material-ui-icons/Menu';
-import Settings from 'material-ui-icons/Settings';
-import TranslateIcon from 'material-ui-icons/Translate';
-import Apps from 'material-ui-icons/Apps';
-import Close from 'material-ui-icons/Close';
-import ExpandLess from 'material-ui-icons/ExpandLess';
-import ExpandMore from 'material-ui-icons/ExpandMore';
-import NavigateBefore from 'material-ui-icons/NavigateBefore';
-import NavigateNext from 'material-ui-icons/NavigateNext';
-import CheckCircle from 'material-ui-icons/CheckCircle';
-import CropFreeIcon from 'material-ui-icons/CropFree';
-import CropDin from 'material-ui-icons/CropDin';
-import CenterFocusWeak from 'material-ui-icons/CenterFocusWeak';
-import CenterFocusStrong from 'material-ui-icons/CenterFocusStrong';
-import FilterNone from 'material-ui-icons/FilterNone';
-import Checkbox from 'material-ui/Checkbox';
-import FormControlLabel from 'material-ui/Form/FormControlLabel';
-import { withStyles } from 'material-ui/styles';
-import gray from 'material-ui/colors/green';
+import Collapse from '@material-ui/core/Collapse';
+import Menu from '@material-ui/icons/Menu';
+import Settings from '@material-ui/icons/SettingsSharp';
+import TranslateIcon from '@material-ui/icons/Translate';
+import Apps from '@material-ui/icons/Apps';
+import Close from '@material-ui/icons/Close';
+import ExpandLess from '@material-ui/icons/ExpandLess';
+import ExpandMore from '@material-ui/icons/ExpandMore';
+import NavigateBefore from '@material-ui/icons/NavigateBefore';
+import NavigateNext from '@material-ui/icons/NavigateNext';
+import CheckCircle from '@material-ui/icons/CheckCircle';
+import CropFreeIcon from '@material-ui/icons/CropFree';
+import CropDin from '@material-ui/icons/CropDin';
+import CenterFocusWeak from '@material-ui/icons/CenterFocusWeak';
+import CenterFocusStrong from '@material-ui/icons/CenterFocusStrong';
+import FilterNone from '@material-ui/icons/FilterNone';
+import Checkbox from '@material-ui/core/Checkbox';
+import FormControl from '@material-ui/core/FormControl';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import withStyles from '@material-ui/core/styles/withStyles';
+import gray from '@material-ui/core/colors/green';
 import { Link } from 'react-router-dom'
-import Input, { InputLabel } from 'material-ui/Input';
-import { FormControl, FormHelperText } from 'material-ui/Form';
-import Select from 'material-ui/Select';
+import Input from '@material-ui/core/Input';
+import InputLabel from '@material-ui/core/InputLabel';
+import FormHelperText from '@material-ui/core/FormHelperText';
+import Select from '@material-ui/core/Select';
 import qs from 'query-string'
 
 import {I18n, Translate, Localize } from "react-redux-i18n" ;
@@ -606,23 +612,40 @@ class App extends Component<Props,State> {
 
       return (
          <Link key={n} to={"/show/"+id} className="result">
-            <div key={t+"_"+n+"_"} >
-                  <ListItem style={{paddingLeft:"0",display:"flex"}}>
+            <div key={t+"_"+n+"_"}  className="contenu">
+                  <ListItem style={{paddingLeft:"0",display:"flex",alignItems:"center"}}>
                      <div style={{width:"30px",textAlign:"right",color:"black",fontSize:"0.9rem",marginLeft:"16px"}}>{n}</div>
-                     <ListItemText style={{height:"auto",flexGrow:10,flexShrink:10}}
-                        primary={[lit,lang?<Tooltip placement="bottom-end" title={
-                           <div style={{margin:"10px"}}>
-                              <Translate value={languages[lang]?languages[lang].replace(/search/,"tip"):lang}/>
-                           </div>
-                        }><span className="lang">{lang}</span></Tooltip>:null]}
+                     {/* <ListItemText style={{height:"auto",flexGrow:10,flexShrink:10}}
+                        primary={ */}
+                           <div>
+                              <h3 key="lit">
+                                 {lit}
+                                 { lang && <Tooltip key={"tip"} placement="bottom-end" title={
+                                          <div style={{margin:"10px"}}>
+                                             <Translate value={languages[lang]?languages[lang].replace(/search/,"tip"):lang}/>
+                                          </div>
+                                       }>
+                                          <span className="lang">{lang}</span>
+                                       </Tooltip> }
+                              </h3>
+                        {/*   </div>
+                         }
                         //secondary={id}
-                        secondary={[id,
-                           Tag?<Tooltip placement="bottom-start" style={{marginLeft:"50px"}} title={
-                              <div style={{margin:"10px"}}>
-                                 {tip}
-                              </div>
-                           }><Tag style={{height:"18px",verticalAlign:"-4px",marginLeft:"5px"}}/></Tooltip>:null]}
-                     ></ListItemText>
+                        secondary={
+                           <div> */}
+                              <p key="id">
+                                 {id}
+                                 { Tag && <Tooltip key={"tip"} placement="bottom-start" style={{marginLeft:"50px"}} title={
+                                          <div style={{margin:"10px"}}>
+                                             {tip}
+                                          </div>
+                                       }>
+                                          <Tag style={{height:"18px",verticalAlign:"-4px",marginLeft:"5px"}}/>
+                                       </Tooltip>}
+                              </p>
+                           </div>
+                        {/* }
+                     ></ListItemText> */}
                      {/* { Tag && <ListItemIcon><Tag/></ListItemIcon> } */}
                   </ListItem>
             </div>
@@ -658,13 +681,14 @@ class App extends Component<Props,State> {
       {
          if(this.props.config && this.props.config.links)
          {
-            messageD.push(<h4 style={{marginLeft:"16px"}}>Sample Resources</h4>)
+            messageD.push(<h4 key={"sample"} style={{marginLeft:"16px"}}>Sample Resources</h4>)
+            let i = 0
             for(let l of this.props.config.links) {
                //console.log("l",l)
                if(!l.lang) l.lang = "bo-x-ewts" ;
-               messageD.push(<h5>{l.title}</h5>)
+               messageD.push(<h5 key={i}>{l.title}</h5>)
                messageD.push(this.makeResult(l.id,null,getEntiType(l.id),l.label,l.lang,l.icon,TagTab[l.icon]))
-
+               i++;
             }
             //message.push(this.makeResult("W19740",null,"Work","spyod 'jug'","bo-x-ewts","Abstract Work",TagTab["Abstract Work"]))
             //message.push(this.makeResult("P6161",null,"Person","zhi ba lha/","bo-x-ewts"))
@@ -1142,14 +1166,14 @@ class App extends Component<Props,State> {
       }
 
       let widget = (title:string,txt:string,inCollapse:Component) => (
-         [<ListItem
+         [<ListItem key={1}
             style={{display:"flex",justifyContent:"space-between",padding:"0 20px",borderBottom:"1px solid #bbb",cursor:"pointer"}}
             onClick={(e) => { this.setState({collapse:{ ...this.state.collapse, [txt]:!this.state.collapse[txt]} }); } }
             >
             <Typography style={{fontSize:"18px",lineHeight:"50px",textTransform:"capitalize"}}>{title}</Typography>
             { this.state.collapse[txt] ? <ExpandLess /> : <ExpandMore />}
          </ListItem>,
-         <Collapse
+         <Collapse key={2}
             in={this.state.collapse[txt]}
             className={["collapse",this.state.collapse[txt]?"open":"close"].join(" ")}
             style={{padding:"10px 0 0 50px"}} // ,marginBottom:"30px"
@@ -1334,7 +1358,7 @@ class App extends Component<Props,State> {
             {
               !isAuthenticated() && (
                   <Button
-                    bsStyle="primary"
+                    //bsStyle="primary"
                     className="btn-margin"
                     onClick={this.login.bind(this)}
                   >
@@ -1752,7 +1776,7 @@ class App extends Component<Props,State> {
                     id: 'language',
                   }}
                 >
-                   { Object.keys(languages).map((k) => (<MenuItem value={k}><Translate value={""+languages[k]}/></MenuItem>))}
+                   { Object.keys(languages).map((k) => (<MenuItem key={k} value={k}><Translate value={""+languages[k]}/></MenuItem>))}
                 </Select>
               </FormControl>
               <IconButton style={{marginLeft:"15px"}}  className={this.state.rightPane?"hidden":""} onClick={e => this.setState({...this.state,rightPane:!this.state.rightPane})}>
@@ -1784,7 +1808,7 @@ class App extends Component<Props,State> {
                      { messageD }
                   </List> }
                { message.length > 0 &&
-                  <List id="results" style={{maxWidth:"800px",margin:"50px auto",textAlign:"left",zIndex:0}}>
+                  <List key={2} id="results" style={{maxWidth:"800px",margin:"50px auto",textAlign:"left",zIndex:0}}>
                      { message }
                      <div id="pagine">
                         <NavigateBefore

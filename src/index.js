@@ -7,8 +7,8 @@ import { helloWorld } from './state/ui/actions';
 import registerServiceWorker from './lib/registerServiceWorker';
 
 // Material-UI
-import { MuiThemeProvider, createMuiTheme } from 'material-ui/styles';
-import indigo from 'material-ui/colors/indigo';
+import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
+import indigo from '@material-ui/core/colors/indigo';
 
 // Redux
 import { createStore, combineReducers, applyMiddleware } from 'redux';

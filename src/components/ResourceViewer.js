@@ -1,19 +1,19 @@
 //@flow
 //import NewWindow from 'react-new-window'
-import Collapse from 'material-ui/transitions/Collapse';
+import Collapse from '@material-ui/core/Collapse';
 import InfiniteScroll from 'react-infinite-scroller';
 import _ from "lodash";
-import Tooltip from 'material-ui/Tooltip';
+import Tooltip from '@material-ui/core/Tooltip';
 import {CopyToClipboard} from 'react-copy-to-clipboard' ;
 import $ from 'jquery' ;
-import Fullscreen from 'material-ui-icons/Fullscreen';
-import IconButton from 'material-ui/IconButton';
-import ShareIcon from 'material-ui-icons/Share';
-import HomeIcon from 'material-ui-icons/Home';
+import Fullscreen from '@material-ui/icons/Fullscreen';
+import IconButton from '@material-ui/core/IconButton';
+import ShareIcon from '@material-ui/icons/Share';
+import HomeIcon from '@material-ui/icons/Home';
 import Script from 'react-load-script'
 import React, { Component } from 'react';
 import qs from 'query-string'
-import Button from 'material-ui/Button';
+import Button from '@material-ui/core/Button';
 import {Translate} from 'react-redux-i18n';
 import { Link } from 'react-router-dom';
 import IIIFViewerContainer from '../containers/IIIFViewerContainer';
@@ -22,9 +22,9 @@ import Loader from "react-loader"
 //import {MapComponent} from './Map';
 import {getEntiType} from '../lib/api';
 import {languages} from './App';
-import Popover from 'material-ui/Popover';
-import {MenuItem} from 'material-ui/Menu';
-import List,{ListItem} from 'material-ui/List';
+import Popover from '@material-ui/core/Popover';
+import {MenuItem} from '@material-ui/core/Menu';
+import List,{ListItem} from '@material-ui/core/List';
 
 type Props = {
    history:{},
