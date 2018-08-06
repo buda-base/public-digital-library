@@ -30,7 +30,7 @@ import uiReducer from './state/ui/reducers';
 import dataReducer from './state/data/reducers';
 import * as data from './state/data/actions' ;
 
-import makeMainRoutes from './routes'
+
 import history from './history'
 import qs from 'query-string'
 
@@ -38,6 +38,8 @@ import enTranslation from "./translations/en" ;
 import frTranslation from "./translations/fr" ;
 import zhTranslation from "./translations/zh" ;
 import boTranslation from "./translations/bo" ;
+
+import makeMainRoutes from './routes'
 
 const translationsObject = {
 
@@ -100,12 +102,19 @@ const theme = createMuiTheme({
     }
 });
 
-ReactDOM.render(
-    makeMainRoutes(),
-    document.getElementById('root')
-);
-
 registerServiceWorker();
+
+const go = () => {
+
+   ReactDOM.render(
+       makeMainRoutes(),
+       document.getElementById('root')
+   );
+}
+
+// comment out before starting tests...
+go();
+
 
 //store.dispatch(helloWorld());
 // setTimeout(function(){ store.dispatch(data.searchingKeyword("'od zer")) },  500 )

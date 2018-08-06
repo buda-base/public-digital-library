@@ -22,7 +22,6 @@ export const auth = new Auth();
 // Auth test: ok
 //auth.login();
 
-
 const theme = createMuiTheme({
     palette: {
         primary: indigo,
@@ -108,4 +107,5 @@ const makeMainRoutes = () => {
       </Provider>
   );
 }
+
 export default makeMainRoutes ;

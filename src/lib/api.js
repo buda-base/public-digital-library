@@ -6,8 +6,6 @@ const CONFIG_PATH = '/config.json'
 const CONFIGDEFAULTS_PATH = '/config-defaults.json'
 const ONTOLOGY_PATH = '/ontology.json'
 
-const { isAuthenticated } = auth;
-
 const dPrefix = {
    "C" : "Corporation",
    "E" : "Etext",
@@ -22,7 +20,7 @@ const dPrefix = {
    "O" : "Taxonomy",
    "V" : "Volume",
    "UT": "Etext", // ?
-}
+};
 
 export function getEntiType(t:string):string {
    let v = t.replace(/^(bdr:)?([CEILGPRTWOV][RT]?).*$/,"$2")
@@ -58,6 +56,8 @@ export default class API {
     }
 
      async getURLContents(url: string, minSize : boolean = true,acc:string): Promise<string> {
+
+         const { isAuthenticated } = auth;
 
          const access_token = localStorage.getItem('access_token');
          //const id_token = localStorage.getItem('id_token');
@@ -268,6 +268,8 @@ export default class API {
       console.log("body",body);
 
       const access_token = localStorage.getItem('access_token');
+
+      const { isAuthenticated } = auth;
 
       let response = await this._fetch( url + (method == "GET" ? "?" + body : ""),
       {// header pour accéder aux résultat en JSON !

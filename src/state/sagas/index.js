@@ -37,15 +37,15 @@ async function initiateApp(params,iri,myprops) {
    try {
       let state = store.getState()
 
-      console.log("youpla?",myprops)
+      //console.log("youpla?",myprops)
 
       if(!state.data.config)
       {
          const config = await api.loadConfig();
          auth.setConfig(config.auth)
-         console.log("auth?",auth)
+         //console.log("auth?",auth)
          if(myprops) {
-            console.log("youpi",myprops);
+            //console.log("youpi",myprops);
             handleAuthentication(myprops);
          }
          store.dispatch(dataActions.loadedConfig(config));
@@ -167,7 +167,7 @@ async function initiateApp(params,iri,myprops) {
       }
 
    } catch(e) {
-      console.log('initiateApp error: %o', e);
+      console.error('initiateApp error: %o', e);
       // TODO: add action for initiation failure
    }
 }
@@ -215,7 +215,7 @@ async function getChunks(iri,next) {
       store.dispatch(dataActions.gotNextChunks(iri,data))
    }
    catch(e){
-      console.log("ERRROR with chunks",iri,next,e)
+      console.error("ERRROR with chunks",iri,next,e)
 
       //store.dispatch(dataActions.chunkError(url,e,iri);
    }
@@ -339,7 +339,7 @@ async function getManifest(url,iri) {
       }
    }
    catch(e){
-      console.log("ERRROR with manifest",e)
+      console.error("ERRROR with manifest",e)
 
       store.dispatch(dataActions.manifestError(url,e,iri))
    }
@@ -609,7 +609,7 @@ function getData(result)  {
 
    } catch(e) {
 
-      console.log(e);
+      console.error("startSearch failed",e);
 
       store.dispatch(dataActions.searchFailed(keyword, e.message));
       store.dispatch(uiActions.loading(keyword, false));
