@@ -67,8 +67,8 @@ export default class API {
 
          let head = {}
          if(acc) head = { ...head, "Accept":acc }
-         //if(isAuthenticated() && url.match(/bdrc[.]io/))
-         //   head = { ...head, "Authorization":"bearer "+access_token}
+         if(isAuthenticated() && url.match(/bdrc[.]io/))
+            head = { ...head, "Authorization":"bearer "+access_token}
 
          let response = await this._fetch( url, { method:"GET",headers:new Headers(head) } )
 
@@ -275,7 +275,7 @@ export default class API {
          ...( method == "POST" && {body:body} ),//body:body,
          headers:new Headers({
             "Accept": accept,
-            //...( isAuthenticated() && {"Authorization":"bearer "+access_token}),
+            ...( isAuthenticated() && {"Authorization":"bearer "+access_token}),
          ...( method == "POST" && {"Content-Type": "application/x-www-form-urlencoded"})
         })
       })
