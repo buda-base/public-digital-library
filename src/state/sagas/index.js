@@ -12,8 +12,7 @@ import bdrcApi, { getEntiType } from '../../lib/api';
 import {auth} from '../../routes';
 
 // to enable tests
-//const api = new bdrcApi({server:"http://localhost:5555"});
-const api = new bdrcApi();
+const api = new bdrcApi({...global.inTest ? {server:"http://localhost:5555"}:{}});
 
 const adm  = "http://purl.bdrc.io/ontology/admin/" ;
 const bdo  = "http://purl.bdrc.io/ontology/core/";

@@ -4,6 +4,8 @@ import Adapter from 'enzyme-adapter-react-16';
 import { XMLHttpRequest } from 'xmlhttprequest';
 global.XMLHttpRequest = XMLHttpRequest;
 
+global.inTest = true ;
+
 jasmine.DEFAULT_TIMEOUT_INTERVAL = 100000;
 
 configure({ adapter: new Adapter() });

@@ -113,7 +113,7 @@ const go = () => {
 }
 
 // comment out before starting tests...
-go();
+if(!global.inTest) go();
 
 
 //store.dispatch(helloWorld());
