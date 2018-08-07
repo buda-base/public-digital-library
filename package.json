@@ -54,6 +54,7 @@
     "babel-preset-stage-0": "^6.24.1",
     "eslint": "^4.17.0",
     "flow-bin": "^0.64.0",
-    "flow-typed": "^2.3.0"
+    "flow-typed": "^2.3.0",
+    "xmlhttprequest": "^1.8.0"
   }
 }

@@ -53,9 +53,11 @@ export default class API {
         } else {
             this._fetch = window.fetch.bind(window);
         }
-    }
 
-     async getURLContents(url: string, minSize : boolean = true,acc:string): Promise<string> {
+        console.log("fetch",this._fetch)
+      }
+
+     async getURLContents(url: string, minSize : boolean = true,acc?:string): Promise<string> {
 
          const { isAuthenticated } = auth;
 
@@ -63,7 +65,7 @@ export default class API {
          //const id_token = localStorage.getItem('id_token');
          //const expires_at = localStorage.getItem('expires_at');
 
-         console.log("access",access_token,isAuthenticated())
+         console.log("access",access_token,isAuthenticated(),url,minSize,acc)
 
          let head = {}
          if(acc) head = { ...head, "Accept":acc }
@@ -84,7 +86,7 @@ export default class API {
              }
          }
 
-         console.log("FETCH ok",url,response)
+         //console.log("FETCH ok",url,response)
 
          let text = await response.text()
 
@@ -128,7 +130,7 @@ export default class API {
      }
      */
 
-    async loadConfig(): Promise<string>
+    async loadConfig(): {}
     {
       try {
          let config =  JSON.parse(await this.getURLContents(this._configPath,false));
@@ -136,6 +138,9 @@ export default class API {
          return config ;
       }
       catch(e) {
+
+         console.error("fetching config.json",e);
+
          let config =  JSON.parse(await this.getURLContents(this._configDefaultsPath,false));
          console.log("config-defaults",config)
          return config ;
@@ -153,7 +158,7 @@ export default class API {
     async loadOntology(): Promise<string>
     {
          let onto =  JSON.parse(await this.getURLContents(this._ontologyPath,false));
-         console.log("onto",onto)
+         //console.log("onto",onto)
          return onto ;
    }
 
@@ -537,8 +542,10 @@ export default class API {
    get _configPath(): string {
       let path = CONFIG_PATH;
       if (this._server) {
-          path = this._server + '/' + CONFIG_PATH;
+          path = this._server + CONFIG_PATH;
       }
+
+      console.log("path",path)
 
       return path;
   }

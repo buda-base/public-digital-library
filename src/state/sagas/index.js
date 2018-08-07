@@ -11,6 +11,8 @@ import store from '../../index';
 import bdrcApi, { getEntiType } from '../../lib/api';
 import {auth} from '../../routes';
 
+// to enable tests
+//const api = new bdrcApi({server:"http://localhost:5555"});
 const api = new bdrcApi();
 
 const adm  = "http://purl.bdrc.io/ontology/admin/" ;
@@ -43,7 +45,9 @@ async function initiateApp(params,iri,myprops) {
       {
          const config = await api.loadConfig();
          auth.setConfig(config.auth)
-         //console.log("auth?",auth)
+
+         console.log("auth?",auth)
+
          if(myprops) {
             //console.log("youpi",myprops);
             handleAuthentication(myprops);
