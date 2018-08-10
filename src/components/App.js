@@ -169,7 +169,7 @@ class App extends Component<Props,State> {
       let state = { ...this.state, dataSource:[] }
             //this.setState(state);
 
-      console.log("search",key,label,this.state,this.props)
+      console.log("search",key,label,this.state,!global.inTest ? this.props:null)
 
       if(key.match(/^bdr:[TPGW]/))
       {
@@ -220,7 +220,7 @@ class App extends Component<Props,State> {
 
    componentWillUpdate(newProps,newState) {
 
-      console.log("willU",newProps,newState)
+      if(!global.inTest) console.log("willU",newProps,newState)
 
       let update = false ;
       let state = newState ;
@@ -635,7 +635,7 @@ class App extends Component<Props,State> {
                            <div> */}
                               <p key="id">
                                  {id}
-                                 { Tag && <Tooltip key={"tip"} placement="bottom-start" style={{marginLeft:"50px"}} title={
+                                 { Tag && <Tooltip key={"tip"} placement="bottom-start" title={
                                           <div style={{margin:"10px"}}>
                                              {tip}
                                           </div>
@@ -666,7 +666,7 @@ class App extends Component<Props,State> {
 
       const { isAuthenticated } = this.props.auth;
 
-      console.log("render",this.props.keyword,this.props,this.state,isAuthenticated())
+      if(!global.inTest) console.log("render",this.props.keyword,this.props,this.state,isAuthenticated())
 
 
       let TagTab = {

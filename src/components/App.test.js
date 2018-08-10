@@ -1,11 +1,11 @@
 //@flow
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { shallow } from 'enzyme';
+import { shallow,mount } from 'enzyme';
 import store from '../index';
 import {initiateApp} from '../state/actions';
 import tcpPortUsed from 'tcp-port-used'
-
+import SearchBar from 'material-ui-search-bar'
 
 require('../setupTests')
 let makeRoutes = require('../routes').default
@@ -36,8 +36,24 @@ describe('main App tests', () => {
          expect(compo).toMatchSnapshot()
 
          // inspired from https://stackoverflow.com/questions/51226539/formik-testing-error-the-document-global-was-defined-when-react-was-initializ
-         setTimeout( () => { done(); }, 200 ); // (100ms is too short on this computer but 200 is ok)
+         setTimeout( () => { done(); }, 400 );
+      })
+   })
+
+   /*
+   it('start a search', async done => {
+      tcpPortUsed.waitUntilUsed(5555).then(async () => {
+
+         let compo = mount(makeRoutes())
+
+         setTimeout( () => {
+            compo.find(SearchBar).prop('onRequestSearch')("'od zer")
+         }, 1000 );
+
+         // inspired from https://stackoverflow.com/questions/51226539/formik-testing-error-the-document-global-was-defined-when-react-was-initializ
+         setTimeout( () => { done(); }, 10000 );
       })
    });
+   */
 
 })

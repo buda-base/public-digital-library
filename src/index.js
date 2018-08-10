@@ -54,14 +54,14 @@ const logger = store => next => action => {
   console.group(action.type)
   console.info('dispatching', action)
   let result = next(action)
-  console.log('next state', store.getState())
+  if(!global.inTest) console.log('next state', store.getState())
   console.groupEnd(action.type)
   return result
 }
 
 const sagaMiddleware = createSagaMiddleware();
 let store;
-if (process.env.NODE_ENV === 'development') {
+if (process.env.NODE_ENV !== 'production') {
    store = createStore(
       combineReducers({
          data:dataReducer,

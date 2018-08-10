@@ -352,60 +352,78 @@ exports[`main App tests App initialization 1`] = `
 
 exports[`main App tests App initialization 2`] = `
 "{
-   \\"auth\\":{
-     \\"domain\\": \\"bdrc-io.auth0.com\\",
-     \\"clientID\\": \\"bZRCKQvibdCq5gF7gV2biIH9rLcqfVcS\\",
-     \\"redirectUri\\": \\"http://localhost:3000/auth/callback\\",
-     \\"audience\\": \\"https://bdrc-io.auth0.com/userinfo\\",
-     \\"responseType\\": \\"token id_token\\",
-     \\"scope\\": \\"openid user_metadata app_metada\\"
+  \\"auth\\": {
+    \\"domain\\": \\"bdrc-io.auth0.com\\",
+    \\"clientID\\": \\"bZRCKQvibdCq5gF7gV2biIH9rLcqfVcS\\",
+    \\"redirectUri\\": \\"http://localhost:3000/auth/callback\\",
+    \\"audience\\": \\"https://bdrc-io.auth0.com/userinfo\\",
+    \\"responseType\\": \\"token id_token\\",
+    \\"scope\\": \\"openid user_metadata app_metada\\"
   },
-   \\"ldspdi\\":
-   {
-      \\"endpoints\\":[\\"http://localhost:8080\\",\\"http://localhost:13280\\",\\"http://buda1.bdrc.io:13280\\",\\"http://purl.bdrc.io\\",\\"http://localhost:5555\\"],
-      \\"index\\":0
-   },
-   \\"iiif\\":
-   {
-      \\"endpoints\\":[\\"http://localhost:9000\\",\\"http://iiif.bdrc.io\\",\\"http://localhost:5555\\"],
-      \\"index\\":1
-   },
-   \\"rkts\\":
-   {
-      \\"endpoints\\":[\\"http://localhost:8080\\"],
-      \\"index\\":0
-   },
-   \\"facets\\":{
-      \\"Place\\": {
-         \\"relation\\":\\"http://purl.bdrc.io/ontology/tmp/relationType\\"
-      },
-      \\"Lineage\\": {
-         \\"relation\\":\\"http://purl.bdrc.io/ontology/tmp/relationType\\"
-      },
-      \\"Person\\": {
-         \\"relation\\":\\"http://purl.bdrc.io/ontology/tmp/relationType\\",
-         \\"gender\\" : \\"http://purl.bdrc.io/ontology/core/personGender\\"
-      },
-      \\"Work\\": {
-         \\"relation\\":\\"http://purl.bdrc.io/ontology/tmp/relationType\\",
-         \\"langScript\\": \\"http://purl.bdrc.io/ontology/core/workLangScript\\",
-         \\"status\\":\\"http://purl.bdrc.io/ontology/admin/status\\",
-         \\"access\\":\\"http://purl.bdrc.io/ontology/admin/access\\",
-         \\"license\\":\\"http://purl.bdrc.io/ontology/admin/license\\",
-         \\"type\\":\\"http://purl.bdrc.io/ontology/core/workType\\",
-         \\"partType\\":\\"http://purl.bdrc.io/ontology/core/workPartType\\",
-         \\"tree\\":\\"http://purl.bdrc.io/ontology/core/workGenre\\"
-      },
-      \\"Etext\\": {
-         \\"tree\\":\\"http://purl.bdrc.io/ontology/core/workGenre\\"
-      }
-   },
-   \\"links\\":[
-      { \\"title\\":\\"Abstract text of the Bodhisattvacaryāvatāra\\", \\"id\\":\\"W19740\\", \\"label\\":\\"spyod 'jug\\", \\"lang\\":\\"bo-x-ewts\\", \\"icon\\":\\"Abstract Work\\" },
-      { \\"title\\":\\"Shantideva\\", \\"id\\":\\"P6161\\", \\"label\\":\\"zhi ba lha/\\" }
-   ]
-}
-"
+  \\"ldspdi\\": {
+    \\"endpoints\\": [
+      \\"http://localhost:8080\\",
+      \\"http://localhost:13280\\",
+      \\"http://buda1.bdrc.io:13280\\",
+      \\"http://purl.bdrc.io\\",
+      \\"http://localhost:5555\\"
+    ],
+    \\"index\\": 4
+  },
+  \\"iiif\\": {
+    \\"endpoints\\": [
+      \\"http://localhost:9000\\",
+      \\"http://iiif.bdrc.io\\",
+      \\"http://localhost:5555\\"
+    ],
+    \\"index\\": 2
+  },
+  \\"rkts\\": {
+    \\"endpoints\\": [
+      \\"http://localhost:8080\\"
+    ],
+    \\"index\\": 0
+  },
+  \\"facets\\": {
+    \\"Place\\": {
+      \\"relation\\": \\"http://purl.bdrc.io/ontology/tmp/relationType\\"
+    },
+    \\"Lineage\\": {
+      \\"relation\\": \\"http://purl.bdrc.io/ontology/tmp/relationType\\"
+    },
+    \\"Person\\": {
+      \\"relation\\": \\"http://purl.bdrc.io/ontology/tmp/relationType\\",
+      \\"gender\\": \\"http://purl.bdrc.io/ontology/core/personGender\\"
+    },
+    \\"Work\\": {
+      \\"relation\\": \\"http://purl.bdrc.io/ontology/tmp/relationType\\",
+      \\"langScript\\": \\"http://purl.bdrc.io/ontology/core/workLangScript\\",
+      \\"status\\": \\"http://purl.bdrc.io/ontology/admin/status\\",
+      \\"access\\": \\"http://purl.bdrc.io/ontology/admin/access\\",
+      \\"license\\": \\"http://purl.bdrc.io/ontology/admin/license\\",
+      \\"type\\": \\"http://purl.bdrc.io/ontology/core/workType\\",
+      \\"partType\\": \\"http://purl.bdrc.io/ontology/core/workPartType\\",
+      \\"tree\\": \\"http://purl.bdrc.io/ontology/core/workGenre\\"
+    },
+    \\"Etext\\": {
+      \\"tree\\": \\"http://purl.bdrc.io/ontology/core/workGenre\\"
+    }
+  },
+  \\"links\\": [
+    {
+      \\"title\\": \\"Abstract text of the Bodhisattvacaryāvatāra\\",
+      \\"id\\": \\"W19740\\",
+      \\"label\\": \\"spyod 'jug\\",
+      \\"lang\\": \\"bo-x-ewts\\",
+      \\"icon\\": \\"Abstract Work\\"
+    },
+    {
+      \\"title\\": \\"Shantideva\\",
+      \\"id\\": \\"P6161\\",
+      \\"label\\": \\"zhi ba lha/\\"
+    }
+  ]
+}"
 `;
 
 exports[`main App tests App initialization 3`] = `
@@ -449,7 +467,7 @@ Object {
       "http://iiif.bdrc.io",
       "http://localhost:5555",
     ],
-    "index": 1,
+    "index": 2,
   },
   "ldspdi": Object {
     "endpoints": Array [
@@ -459,7 +477,83 @@ Object {
       "http://purl.bdrc.io",
       "http://localhost:5555",
     ],
+    "index": 4,
+  },
+  "links": Array [
+    Object {
+      "icon": "Abstract Work",
+      "id": "W19740",
+      "label": "spyod 'jug",
+      "lang": "bo-x-ewts",
+      "title": "Abstract text of the Bodhisattvacaryāvatāra",
+    },
+    Object {
+      "id": "P6161",
+      "label": "zhi ba lha/",
+      "title": "Shantideva",
+    },
+  ],
+  "rkts": Object {
+    "endpoints": Array [
+      "http://localhost:8080",
+    ],
     "index": 0,
+  },
+}
+`;
+
+exports[`main App tests start a search 1`] = `
+Object {
+  "auth": Object {
+    "audience": "https://bdrc-io.auth0.com/userinfo",
+    "clientID": "bZRCKQvibdCq5gF7gV2biIH9rLcqfVcS",
+    "domain": "bdrc-io.auth0.com",
+    "redirectUri": "http://localhost:3000/auth/callback",
+    "responseType": "token id_token",
+    "scope": "openid user_metadata app_metada",
+  },
+  "facets": Object {
+    "Etext": Object {
+      "tree": "http://purl.bdrc.io/ontology/core/workGenre",
+    },
+    "Lineage": Object {
+      "relation": "http://purl.bdrc.io/ontology/tmp/relationType",
+    },
+    "Person": Object {
+      "gender": "http://purl.bdrc.io/ontology/core/personGender",
+      "relation": "http://purl.bdrc.io/ontology/tmp/relationType",
+    },
+    "Place": Object {
+      "relation": "http://purl.bdrc.io/ontology/tmp/relationType",
+    },
+    "Work": Object {
+      "access": "http://purl.bdrc.io/ontology/admin/access",
+      "langScript": "http://purl.bdrc.io/ontology/core/workLangScript",
+      "license": "http://purl.bdrc.io/ontology/admin/license",
+      "partType": "http://purl.bdrc.io/ontology/core/workPartType",
+      "relation": "http://purl.bdrc.io/ontology/tmp/relationType",
+      "status": "http://purl.bdrc.io/ontology/admin/status",
+      "tree": "http://purl.bdrc.io/ontology/core/workGenre",
+      "type": "http://purl.bdrc.io/ontology/core/workType",
+    },
+  },
+  "iiif": Object {
+    "endpoints": Array [
+      "http://localhost:9000",
+      "http://iiif.bdrc.io",
+      "http://localhost:5555",
+    ],
+    "index": 2,
+  },
+  "ldspdi": Object {
+    "endpoints": Array [
+      "http://localhost:8080",
+      "http://localhost:13280",
+      "http://buda1.bdrc.io:13280",
+      "http://purl.bdrc.io",
+      "http://localhost:5555",
+    ],
+    "index": 4,
   },
   "links": Array [
     Object {

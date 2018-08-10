@@ -34,7 +34,7 @@ var localStorageMock = (function() {
 Object.defineProperty(window, 'localStorage', { value: localStorageMock });
 
 // debug mode VS quiet output
-console.log = () => {}
+//console.log = () => {}
 
 /*
 // deprecated - use json-server instead
@@ -45,13 +45,26 @@ Object.defineProperty(window, 'fetch', { value: function(url,options,param)
 });
 */
 
+
+const groups = [];
+const hr = '-'.repeat(80); // 80 dashes row line
+
+if (!console.group) {
+  console.group = function logGroupStart(label) {
+    groups.push(label);
+    console.log(hr+'\nBEGIN GROUP: '+ label);
+  };
+}
+if (!console.groupEnd) {
+  console.groupEnd = function logGroupEnd() {
+    console.log('END GROUP: '+ groups.pop() +"\n"+ hr);
+  };
+}
+
+
 tcpPortUsed.check(5555).then((inUse) => {
-
-   //console.log("checked port",inUse)
-
    if(!inUse)
    {
-
       const server = jsonServer.create()
       const router = jsonServer.router('src/tests/data.json')
       const middlewares = jsonServer.defaults()

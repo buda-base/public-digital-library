@@ -2,6 +2,8 @@
 import store from '../index';
 import {auth} from '../routes'
 
+require('formdata-polyfill')
+
 const CONFIG_PATH = '/config.json'
 const CONFIGDEFAULTS_PATH = '/config-defaults.json'
 const ONTOLOGY_PATH = '/ontology.json'
@@ -71,8 +73,8 @@ export default class API {
          if(acc) head = { ...head, "Accept":acc }
 
          // CORS issue - to be continued
-         //if(isAuthenticated() && url.match(/bdrc[.]io/))
-         //   head = { ...head, "Authorization":"bearer "+access_token}
+         if(isAuthenticated() && url.match(/bdrc[.]io/))
+            head = { ...head, "Authorization":"bearer "+access_token}
 
          let response = await this._fetch( url, { method:"GET",headers:new Headers(head) } )
 
@@ -254,11 +256,10 @@ export default class API {
       if(param["L_NAME"] != "") param["L_NAME"] = key ;
       else { delete param["L_NAME"] ; delete param["LG_NAME"] ; }
 
-      //console.log("query",key,url,param);
-
       url += "/"+param["searchType"];
       delete param["searchType"]
 
+      console.log("query",url,key,param,method,accept);
 
       // let body = Object.keys(param).map( (k) => k+"="+param[k] ).join('&') +"&L_NAME="+key
       //searchType=Res_withFacet&"+param+"L_NAME=\""+key+"\"",
@@ -267,8 +268,9 @@ export default class API {
       for (var k in param) {
           formData.append(k, param[k]);
       }
+
       // (using formData directly as body doesn't seem to work...)
-      let body = [...formData.entries()]
+      let body = [ ...formData.entries() ]
                      .map(e => encodeURIComponent(e[0]) + "=" + encodeURIComponent(e[1]))
                      .join('&')
 
@@ -285,7 +287,7 @@ export default class API {
          headers:new Headers({
             "Accept": accept,
             // CORS issue - to be continued
-            //...( isAuthenticated() && {"Authorization":"bearer "+access_token}),
+            ...( isAuthenticated() && {"Authorization":"bearer "+access_token}),
          ...( method == "POST" && {"Content-Type": "application/x-www-form-urlencoded"})
         })
       })

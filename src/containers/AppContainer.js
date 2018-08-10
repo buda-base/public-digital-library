@@ -30,7 +30,7 @@ const mapStateToProps = (state) => {
    let newState = { logged,config, hostFailure, searches, keyword, language,loading,datatypes,ontology,facets,
       locale,prefLang }
 
-   console.log("mS2p",newState)
+   if(!global.inTest) console.log("mS2p",newState)
 
    return newState ;
 
