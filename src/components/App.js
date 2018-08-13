@@ -837,7 +837,7 @@ class App extends Component<Props,State> {
                   if(t === "Any") continue ;
 
 
-                  console.log("t",t)
+                  //console.log("t",t)
 
                   message.push(<MenuItem  onClick={(e)=>this.handleCheck(e,t,true)}><h4>{I18n.t("types."+t.toLowerCase())+"s"+(counts["datatype"][t]?" ("+counts["datatype"][t]+")":"")}</h4></MenuItem>);
 

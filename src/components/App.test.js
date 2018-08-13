@@ -35,25 +35,29 @@ describe('main App tests', () => {
          ReactDOM.render( compo = makeRoutes(), div);
          expect(compo).toMatchSnapshot()
 
-         // inspired from https://stackoverflow.com/questions/51226539/formik-testing-error-the-document-global-was-defined-when-react-was-initializ
          setTimeout( () => { done(); }, 400 );
       })
    })
 
-   /*
+
    it('start a search', async done => {
       tcpPortUsed.waitUntilUsed(5555).then(async () => {
 
-         let compo = mount(makeRoutes())
+         let compo = makeRoutes()
+         let render = mount(compo)
 
          setTimeout( () => {
-            compo.find(SearchBar).prop('onRequestSearch')("'od zer")
-         }, 1000 );
+            render.find(SearchBar).prop('onRequestSearch')("'od zer")
 
-         // inspired from https://stackoverflow.com/questions/51226539/formik-testing-error-the-document-global-was-defined-when-react-was-initializ
-         setTimeout( () => { done(); }, 10000 );
+            setTimeout( () => {
+               expect(render.update().debug({ ignoreProps: true })).toMatchSnapshot()
+
+            }, 500 );
+         }, 100 );
+
+         setTimeout( () => { done(); }, 1000 );
       })
    });
-   */
+
 
 })
