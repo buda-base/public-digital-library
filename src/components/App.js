@@ -1,5 +1,6 @@
 // @flow
 
+import TextField from '@material-ui/core/TextField';
 import type Auth from '../Auth';
 import _ from "lodash";
 import IconButton from '@material-ui/core/IconButton';
@@ -71,7 +72,8 @@ export const languages = {
    "sa-x-iast":"lang.search.saXIast",
    "sa-Deva":"lang.search.saDeva",
    "bo":"lang.search.bo",
-   "bo-x-ewts":"lang.search.boXEwts"
+   "bo-x-ewts":"lang.search.boXEwts",
+   "other":"lang.search.other"
 }
 
 const styles = {
@@ -135,6 +137,7 @@ type State = {
 
 class App extends Component<Props,State> {
    _facetsRequested = false;
+   _customLang = null ;
 
    constructor(props : Props) {
       super(props);
@@ -177,18 +180,18 @@ class App extends Component<Props,State> {
 
          this.props.history.push({pathname:"/search",search:"?r="+key+(label?"&t="+label:"")})
 
-         if(!this.props.searches[key+"@"+this.state.language]) {
+         if(!this.props.searches[key+"@"+this.getLanguage()]) {
 
             this.props.onStartSearch(key,"",[label],getEntiType(key))
          }
       }
       else if(label === "Any" || ( !label && ( this.state.filters.datatype.length === 0 || this.state.filters.datatype.indexOf("Any") !== -1 ) ) )
       {
-         this.props.history.push({pathname:"/search",search:"?q="+key+"&lg="+this.state.language+"&t=Any"})
+         this.props.history.push({pathname:"/search",search:"?q="+key+"&lg="+this.getLanguage()+"&t=Any"})
 
-         if(!this.props.searches[key+"@"+this.state.language]) {
+         if(!this.props.searches[key+"@"+this.getLanguage()]) {
 
-            this.props.onStartSearch(key,this.state.language)
+            this.props.onStartSearch(key,this.getLanguage())
          }
 
       }
@@ -196,11 +199,11 @@ class App extends Component<Props,State> {
       {
          if(!label) label = this.state.filters.datatype.filter((f)=>["Person","Work","Etext"].indexOf(f) !== -1)[0]
 
-         this.props.history.push({pathname:"/search",search:"?q="+key+"&lg="+this.state.language+"&t="+label})
+         this.props.history.push({pathname:"/search",search:"?q="+key+"&lg="+this.getLanguage()+"&t="+label})
 
-         if(!this.props.searches[label] || !this.props.searches[label][key+"@"+this.state.language]) {
+         if(!this.props.searches[label] || !this.props.searches[label][key+"@"+this.getLanguage()]) {
 
-            this.props.onStartSearch(key,this.state.language,[label])
+            this.props.onStartSearch(key,this.getLanguage(),[label])
          }
 
       }
@@ -211,6 +214,14 @@ class App extends Component<Props,State> {
    getEndpoint():string
    {
       return this.props.config.ldspdi.endpoints[this.props.config.ldspdi.index]
+   }
+
+   getLanguage():string
+   {
+      let lang = this.state.language
+      if(lang === "other")
+         lang = this._customLang.value
+      return lang
    }
 
    componentDidUpdate() {
@@ -374,6 +385,7 @@ class App extends Component<Props,State> {
    }
    */
 
+
    handleCheck = (ev:Event,lab:string,val:boolean) => {
 
       console.log("check",lab,val,this.props.keyword,'('+this.state.keyword+')')
@@ -405,7 +417,7 @@ class App extends Component<Props,State> {
             }
             else  {
 
-               this.props.history.push("/search?q="+this.props.keyword+"&lg="+this.state.language+"&t="+lab);
+               this.props.history.push("/search?q="+this.props.keyword+"&lg="+this.getLanguage()+"&t="+lab);
             }
          }
          else {
@@ -461,14 +473,40 @@ class App extends Component<Props,State> {
    }
 
    handleLanguage = event => {
+      console.log("handleL",event)
 
-     let s = { [event.target.name]: event.target.value }
-     if(this.props.keyword) s = { ...s, willSearch:true }
+      if(event.target.value) {
+         let s = { [event.target.name]: event.target.value }
+         if(this.props.keyword) s = { ...s, willSearch:true }
 
-     // console.log("handle",s)
+         console.log("s",s)
 
-     this.setState( s );
+         this.setState( s );
+      }
+      else {
+         event.preventDefault();
+      }
   };
+
+     handleCustomLanguage(e)
+     {
+         console.log("handleCL",e)
+     }
+
+     handleCustomLanguageKey(e)
+     {
+        console.log("handleCLK",e)
+
+        if (e.key === 'Enter')
+        {
+
+            console.log("enter")
+           //this.handleLanguage(e,this._customLang.value)
+
+           this._customLang.value = "" ;
+        }
+     }
+
 
    pretty(str:string)
    {
@@ -1338,6 +1376,8 @@ class App extends Component<Props,State> {
 
       //console.log("messageD",messageD)
 
+      const textStyle = {marginLeft:"15px",marginBottom:"10px",marginRight:"15px"}
+
       return (
 <div>
 
@@ -1780,7 +1820,16 @@ class App extends Component<Props,State> {
                   }}
                 >
                    { Object.keys(languages).map((k) => (<MenuItem key={k} value={k}><Translate value={""+languages[k]}/></MenuItem>))}
-                </Select>
+               </Select>
+               { this.state.language == "other" && <TextField
+                  style={{marginBottom:"-32px"}}
+                  //label=""
+                  value="sa-x-rma"
+                  id="other-lang"
+                  type="text"
+                  inputRef={(str) => this._customLang = str } //; this._focus = false ;  console.log("ref");} }
+                  //onKeyPress={(e) => this.handleCustomLanguage(e)}
+               /> }
               </FormControl>
               <IconButton style={{marginLeft:"15px"}}  className={this.state.rightPane?"hidden":""} onClick={e => this.setState({...this.state,rightPane:!this.state.rightPane})}>
                  <Settings/>

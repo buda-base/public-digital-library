@@ -15,7 +15,8 @@ const frTranslation = {
          saXIast:"Sanskrit (IAST)",
          saDeva:"Sanskrit (Devanagari)",
          bo:"Tibétain (Unicode)",
-         boXEwts:"Tibétain (EWTS)"
+         boXEwts:"Tibétain (EWTS)",
+         other:"Autre..."
       },
       tip:{
          zh:"Chinois",
