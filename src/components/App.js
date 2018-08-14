@@ -606,12 +606,11 @@ class App extends Component<Props,State> {
 
    makeResult(id,n,t,lit,lang,tip,Tag)
    {
-      //console.log("res",id,n,t,lit,lang,tip,Tag)
+      console.log("res",id,n,t,lit,lang,tip,Tag)
 
       if(!id.match(/[:/]/)) id = "bdr:" +id
 
-      return (
-         <Link key={n} to={"/show/"+id} className="result">
+      let ret = (
             <div key={t+"_"+n+"_"}  className="contenu">
                   <ListItem style={{paddingLeft:"0",display:"flex",alignItems:"center"}}>
                      <div style={{width:"30px",textAlign:"right",color:"black",fontSize:"0.9rem",marginLeft:"16px"}}>{n}</div>
@@ -648,9 +647,13 @@ class App extends Component<Props,State> {
                      ></ListItemText> */}
                      {/* { Tag && <ListItemIcon><Tag/></ListItemIcon> } */}
                   </ListItem>
-            </div>
-         </Link>
-      )
+            </div> )
+
+         if(id.match(/^bdr:/))
+            return ( <Link key={n} to={"/show/"+id} className="result">{ret}</Link> )
+         else
+            return ( <Link key={n} to={id.replace(/^https?:/,"")} target="_blank" className="result">{ret}</Link> )
+
 
    }
 
@@ -983,7 +986,7 @@ class App extends Component<Props,State> {
 
                      let id = r.s.value
                      if(sublist[o].filter(e => e.type && e.type === tmp+"forEtext").length > 0) id = sublist[o].filter(e => e.type === tmp+"forEtext")[0].value
-                     id = id.replace(/^.*?([^/]+)$/,"$1")
+                     if(id.match(/bdrc[.]io/)) id = id.replace(/^.*?([^/]+)$/,"$1")
 
                      let lit ;
                      if(r.lit) { lit = this.highlight(r.lit.value,k) }
