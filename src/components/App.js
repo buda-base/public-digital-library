@@ -118,6 +118,7 @@ type State = {
    loading?:boolean,
    willSearch?:boolean,
    language:string,
+   langOpen:boolean,
    checked?:string,
    unchecked?:string,
    keyword:string,
@@ -150,6 +151,7 @@ class App extends Component<Props,State> {
 
       this.state = {
          language:get.lg?get.lg:"bo-x-ewts",
+         langOpen:false,
          UI:{language:"en"},
          filters: {
             datatype:get.t?get.t.split(","):["Any"]
@@ -216,12 +218,15 @@ class App extends Component<Props,State> {
       return this.props.config.ldspdi.endpoints[this.props.config.ldspdi.index]
    }
 
+
    getLanguage():string
    {
-      let lang = this.state.language
-      if(lang === "other")
-         lang = this._customLang.value
+      return this.state.language
+      /*
+      if(lang && lang === "other")
+         lang = this.state.customLang
       return lang
+      */
    }
 
    componentDidUpdate() {
@@ -488,9 +493,12 @@ class App extends Component<Props,State> {
       }
   };
 
+   /*
      handleCustomLanguage(e)
      {
          console.log("handleCL",e)
+
+         //this.setState({...this.state,customLang:this._customLang.value})
      }
 
      handleCustomLanguageKey(e)
@@ -506,7 +514,7 @@ class App extends Component<Props,State> {
            this._customLang.value = "" ;
         }
      }
-
+*/
 
    pretty(str:string)
    {
@@ -1809,8 +1817,19 @@ class App extends Component<Props,State> {
                      width: "700px"
                   }}
                />
-              <FormControl className="formControl" style={{textAlign:"left"}}>
+               <TextField
+                  className="formControl"
+                  id="lang"
+                  label={<Translate value="lang.lg"/>}
+                  //className={classes.textField}
+                  value={I18n.t(languages[this.state.language])}
+                  //onChange={this.handleChange('name')}
+                  margin="normal"
+               />
+
+              {/* <FormControl className="formControl" style={{textAlign:"left"}}>
                 <InputLabel htmlFor="language"><Translate value="lang.lg"/></InputLabel>
+
                 <Select
                   value={this.state.language}
                   onChange={this.handleLanguage}
@@ -1821,16 +1840,17 @@ class App extends Component<Props,State> {
                 >
                    { Object.keys(languages).map((k) => (<MenuItem key={k} value={k}><Translate value={""+languages[k]}/></MenuItem>))}
                </Select>
+
                { this.state.language == "other" && <TextField
                   style={{marginBottom:"-32px"}}
                   //label=""
-                  value="sa-x-rma"
+                  value={ this.state.customLang }
                   id="other-lang"
                   type="text"
-                  inputRef={(str) => this._customLang = str } //; this._focus = false ;  console.log("ref");} }
-                  //onKeyPress={(e) => this.handleCustomLanguage(e)}
+                  inputRef={(str) => { this._customLang = str }}
+                  onKeyPress={(e) => this.handleCustomLanguage(e)}
                /> }
-              </FormControl>
+              </FormControl> */}
               <IconButton style={{marginLeft:"15px"}}  className={this.state.rightPane?"hidden":""} onClick={e => this.setState({...this.state,rightPane:!this.state.rightPane})}>
                  <Settings/>
               </IconButton>

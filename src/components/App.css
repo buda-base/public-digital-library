@@ -143,6 +143,7 @@ body {overflow-x:hidden; }
 .SearchPane { width:1000px; margin:auto;margin-top:10vh;max-width:90%; z-index:0;}
 .SearchPane > div {display:flex;justify-content: center;}
 .SearchPane .formControl { margin-top:0px; margin-left:25px; width:150px;}
+.SearchPane .formControl:before {  left: 0; right: 0; bottom: 0; content: "\00a0";  position: absolute;  }
 .SearchPane a {text-decoration:none}
 
 

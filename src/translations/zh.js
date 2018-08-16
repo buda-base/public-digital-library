@@ -16,7 +16,7 @@ const zhTranslation = {
          saDeva:"Sanskrit (Devanagari)",
          bo:"Tibetan (Unicode)",
          boXEwts:"Tibetan (EWTS)",
-         other:"Other..."
+         other:"Other"
       }
    },
    types:{
