@@ -73,7 +73,7 @@ export const languages = {
    "sa-Deva":"lang.search.saDeva",
    "bo":"lang.search.bo",
    "bo-x-ewts":"lang.search.boXEwts",
-   "other":"lang.search.other"
+   //"other":"lang.search.other"
 }
 
 const styles = {
@@ -1817,6 +1817,7 @@ class App extends Component<Props,State> {
                      width: "700px"
                   }}
                />
+               {/* work in progress
                <TextField
                   className="formControl"
                   id="lang"
@@ -1825,9 +1826,9 @@ class App extends Component<Props,State> {
                   value={I18n.t(languages[this.state.language])}
                   //onChange={this.handleChange('name')}
                   margin="normal"
-               />
+               /> */}
 
-              {/* <FormControl className="formControl" style={{textAlign:"left"}}>
+              <FormControl className="formControl" style={{textAlign:"left"}}>
                 <InputLabel htmlFor="language"><Translate value="lang.lg"/></InputLabel>
 
                 <Select
@@ -1841,7 +1842,8 @@ class App extends Component<Props,State> {
                    { Object.keys(languages).map((k) => (<MenuItem key={k} value={k}><Translate value={""+languages[k]}/></MenuItem>))}
                </Select>
 
-               { this.state.language == "other" && <TextField
+               { /* // proof of concept
+                  this.state.language == "other" && <TextField
                   style={{marginBottom:"-32px"}}
                   //label=""
                   value={ this.state.customLang }
@@ -1849,8 +1851,8 @@ class App extends Component<Props,State> {
                   type="text"
                   inputRef={(str) => { this._customLang = str }}
                   onKeyPress={(e) => this.handleCustomLanguage(e)}
-               /> }
-              </FormControl> */}
+               /> */ }
+              </FormControl>
               <IconButton style={{marginLeft:"15px"}}  className={this.state.rightPane?"hidden":""} onClick={e => this.setState({...this.state,rightPane:!this.state.rightPane})}>
                  <Settings/>
               </IconButton>

@@ -64,17 +64,17 @@ export default class API {
          const { isAuthenticated } = auth;
 
          const access_token = localStorage.getItem('access_token');
-         //const id_token = localStorage.getItem('id_token');
+         const id_token = localStorage.getItem('id_token');
          //const expires_at = localStorage.getItem('expires_at');
 
-         console.log("access",access_token,isAuthenticated(),url,minSize,acc)
+         console.log("access",id_token,access_token,isAuthenticated(),url,minSize,acc)
 
          let head = {}
          if(acc) head = { ...head, "Accept":acc }
 
          // CORS issue - to be continued
          if(isAuthenticated() && url.match(/bdrc[.]io/))
-            head = { ...head, "Authorization":"bearer "+access_token}
+            head = { ...head, "Authorization":"bearer "+id_token}
 
          let response = await this._fetch( url, { method:"GET",headers:new Headers(head) } )
 
@@ -277,6 +277,7 @@ export default class API {
       console.log("body",body);
 
       const access_token = localStorage.getItem('access_token');
+      const id_token = localStorage.getItem('id_token');
 
       const { isAuthenticated } = auth;
 
@@ -287,7 +288,7 @@ export default class API {
          headers:new Headers({
             "Accept": accept,
             // CORS issue - to be continued
-            ...( isAuthenticated() && {"Authorization":"bearer "+access_token}),
+            ...( isAuthenticated() && {"Authorization":"bearer "+id_token}),
          ...( method == "POST" && {"Content-Type": "application/x-www-form-urlencoded"})
         })
       })
