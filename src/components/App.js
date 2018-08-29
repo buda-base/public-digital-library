@@ -66,7 +66,7 @@ export const prefixes = [adm, bdo,bdr,rdf,rdfs,skos,tmp,_tmp,oa]
 export const languages = {
    "zh":"lang.search.zh",
    "zh-hant":"lang.search.zhHant",
-   //"zh-hans":"lang.search.zhHans",
+   "zh-hans":"lang.search.zhHans",
    "zh-latn-pinyin":"lang.search.zhLatnPinyin",
    "en":"lang.search.en",
    "sa-x-iast":"lang.search.saXIast",

@@ -8,8 +8,8 @@ const boTranslation = {
       lg:"Language",
       search:{
          zh:"Chinese",
-         zhHant:"Chinese (Hanzi)",
-         //zhHans:"Chinese (Simplified)",
+         zhHant:"Chinese (Traditional)",
+         zhHans:"Chinese (Simplified)",
          zhLatnPinyin:"Chinese (Pinyin)",
          en:"English",
          saXIast:"Sanskrit (IAST)",

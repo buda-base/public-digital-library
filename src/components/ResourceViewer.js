@@ -1162,6 +1162,7 @@ class ResourceViewer extends Component<Props,State>
       // add nother route to UViewer Gallery page
       return (
          <div style={{overflow:"hidden",textAlign:"center"}}>
+            {/* <Script url="https://hypothes.is/embed.js" /> */}
             { !this.state.ready && <Loader loaded={false} /> }
             <div className={"resource "+getEntiType(this.props.IRI).toLowerCase()}>
 

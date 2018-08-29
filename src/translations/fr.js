@@ -8,8 +8,8 @@ const frTranslation = {
       lg:"Langue",
       search:{
          zh:"Chinois",
-         zhHant:"Chinois (Hanzi)",
-         //zhHans:"Chinois (Simplifié)",
+         zhHant:"Chinois (Traditionnel)",
+         zhHans:"Chinois (Simplifié)",
          zhLatnPinyin:"Chinois (Pinyin)",
          en:"Anglais",
          saXIast:"Sanskrit (IAST)",
