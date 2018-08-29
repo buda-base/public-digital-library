@@ -25,8 +25,8 @@ a.result + div span:not(.label) {  }
 
 a.result .lang, .match .lang,.data .lang,h2 .lang
 { font-size: 9px;display:inline-block;margin-left:5px;margin-top:7px;position:absolute; color:rgba(0,0,0,0.5);}
-.data .lang { position:relative;margin:0;vertical-align:-7px;padding:5px;line-height:0;}
-h2 .lang { margin-top:22px }
+h2 .lang,.data .lang { position:relative;margin:0;vertical-align:-7px;padding:5px;line-height:0;}
+h2 .lang { margin-top:22px;font-weight:normal; }
 a.result .lang, .match .lang { min-width:50px;}
 a.result .contenu ul { padding:12px 24px 12px 0px !important;}
 a.result .contenu ul > div:last-child {
@@ -48,10 +48,15 @@ a.result .contenu ul > div:last-child p {
    line-height: 1.46429em; margin: 0;  display: block;
 }
 
-.data .anno span {color : rgba(229, 74, 53,1); cursor:pointer; }
-.data .anno span:hover { text-decoration:underline; }
+.data .anno,svg.annoticon { vertical-align: -9px;margin-left:5px; color:rgba(0,0,0,0.0);}
+h2:hover svg.annoticon,h4:hover svg.annoticon {  color:rgba(0,0,0,0.5); cursor:pointer;}
+h2:hover svg.annoticon:hover,h4:hover svg.annoticon:hover { color:rgba(0,0,0,0.65); }
+.data .anno span {/*color : rgba(229, 74, 53,1);*/ cursor:pointer; color:rgba(0,0,0,0.5);}
+.data .anno span:hover { text-decoration:underline; color:rgba(0,0,0,0.65); }
 
-.data .faded { opacity:0.65;}
+.data .faded { display:inline-block; cursor:pointer; padding:3px; border-radius:16px; }
+.data .faded.score0 { background-color:rgba(255, 205, 3, 0.4);border:1px dashed rgba(167, 134, 1, 0.4);}
+.data .faded.score1 { background-color:rgba(17, 173, 17, 0.3);border:1px solid rgba(36, 106, 36, 0.4);}
 
 h4 { margin-top:10px;margin-bottom:0px;font-size:24px; }
 /* h4 + h4 { margin-top:5px;}  */

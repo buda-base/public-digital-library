@@ -10,6 +10,7 @@ import Fullscreen from '@material-ui/icons/Fullscreen';
 import IconButton from '@material-ui/core/IconButton';
 import ShareIcon from '@material-ui/icons/Share';
 import HomeIcon from '@material-ui/icons/Home';
+import ChatIcon from '@material-ui/icons/Chat';
 import Script from 'react-load-script'
 import React, { Component } from 'react';
 import qs from 'query-string'
@@ -735,16 +736,22 @@ class ResourceViewer extends Component<Props,State>
 
             if(e.hasAnno && e.collapseId && Array.isArray(tmp)) {
                let node = e
+               /*
                tmp.push(
                   <span className={"anno"}>
                      {"[cf. "}
                      <span onClick={(event) => this.setCollapse(node)}>{this.pretty(e.hasAnno)}</span>
                      {"]"}
-                  </span>)
-               if(e.score && Number(e.score) < 0)
-               {
-                  tmp = [<div className="faded">{tmp}</div>]
-               }
+                  </span>
+               )
+               */
+
+               let col = "score1";
+               if(e.score && Number(e.score) < 0) col = "score0"
+               tmp = [<div className={"faded "+col} onClick={(event) => this.setCollapse(node)}>
+                     {tmp}
+                     </div>]
+
             }
 
             if(this.props.assocResources && prop == bdo+"workHasExpression") {
@@ -771,8 +778,23 @@ class ResourceViewer extends Component<Props,State>
 
             // else  return ( <Link to={"/resource?IRI="+pretty}>{pretty}</Link> ) ;
 
+            /*
+            if(!Array.isArray(tmp)) tmp = [ tmp ]
+            let node = e
+            tmp.push(
+
+               <span className={"anno"}>
+                  <span onClick={(event) => this.setCollapse(node)}><ChatIcon/></span>
+               </span>
+            )
+            */
+
+            if(!Array.isArray(tmp)) tmp = [ tmp ]
+            tmp.push(<ChatIcon className="annoticon"/>)
+
             if(!txt) ret.push(<Tag>{tmp}</Tag>)
             else ret.push(<Tag>{tmp+" "+txt}</Tag>)
+
 
             //console.log("ret",ret)
          }
@@ -810,10 +832,11 @@ class ResourceViewer extends Component<Props,State>
                      <div style={{margin:"10px"}}>
                         <Translate value={languages[lang]?languages[lang].replace(/search/,"tip"):lang}/>
                      </div>
-                  }><span className="lang">{lang}</span></Tooltip>:null]}</Tag>)
+                  }><span className="lang">{lang}</span></Tooltip>:null]}<ChatIcon className="annoticon"/></Tag>)
                }
 
                ret.push(<div className={div}>{sub}</div>)
+
             }
             else
             {
@@ -862,6 +885,9 @@ class ResourceViewer extends Component<Props,State>
                                  </div>
                               }><span className="lang">{lang}</span></Tooltip>:null]
                            }
+                           if(!Array.isArray(txt)) txt = [txt]
+                           txt.push(<ChatIcon className="annoticon"/>)
+
                            if(!noVal) subsub.push(<Tag>{txt}</Tag>)
                            else sub.push(<Tag>{txt}</Tag>)
                         }
