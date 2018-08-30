@@ -198,6 +198,7 @@ export const gotAssocResources = (state: DataState, action: Action) => {
                            }
 
                            res[bdr+action.payload][pred[0].value] = newP
+                           console.log("newP",newP)
                         }
                      }
                   }

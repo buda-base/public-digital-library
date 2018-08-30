@@ -150,6 +150,8 @@ let reload = false ;
 
 class ResourceViewer extends Component<Props,State>
 {
+   _annoPane = [] ;
+
    constructor(props:Props)
    {
       super(props);
@@ -654,9 +656,14 @@ class ResourceViewer extends Component<Props,State>
       return elem
    }
 
-   setCollapse(node)
+   setCollapse(node,extra:{})
    {
-      this.setState({...this.state,collapse:{...this.state.collapse,[node.collapseId]:!this.state.collapse[node.collapseId]}})
+      this.setState(
+         {...this.state,
+            collapse:{...this.state.collapse,[node.collapseId]:!this.state.collapse[node.collapseId]},
+            ...extra
+         }
+      )
 
    }
 
@@ -743,22 +750,23 @@ class ResourceViewer extends Component<Props,State>
 
             if(e.hasAnno && e.collapseId && Array.isArray(tmp)) {
                let node = e
-               /*
-               tmp.push(
+
+               this._annoPane.push(
                   <span className={"anno"}>
                      {"[cf. "}
                      <span onClick={(event) => this.setCollapse(node)}>{this.pretty(e.hasAnno)}</span>
                      {"]"}
                   </span>
                )
-               */
 
                if(this.state.showAnno)
                {
                   let col = "score1";
                   if(e.score && Number(e.score) < 0) col = "score0"
                   // onClick={(event) => this.setCollapse(node)}>
-                  tmp = [<div className={"faded "+col}  onClick={e => this.setState({...this.state,annoPane:true})}>
+                  tmp = [<div className={"faded "+col}  onClick={e => {
+                        this.setCollapse(node,{annoPane:true})
+                     }}>
                            {tmp}
                         </div>]
                }
@@ -921,7 +929,11 @@ class ResourceViewer extends Component<Props,State>
 
          }
          //ret.push(<div class="mark">xx{bnode?"bnode":""}{e.inCollapse?"collap":""}</div>)
-         if(e.inCollapse && !bnode) pre.push(<Collapse in={this.state.collapse[e.value]}>{ret}</Collapse>)
+         if(e.inCollapse && !bnode)
+         {
+            this._annoPane.push(ret)
+            pre.push(<Collapse in={this.state.collapse[e.value]}>{ret}</Collapse>)
+         }
          else pre.push(ret)
          ret = []
 
@@ -1017,6 +1029,8 @@ class ResourceViewer extends Component<Props,State>
    render()
     {
       console.log("render",this.props,this.state)
+
+      this._annoPane = []
 //
       if(!this.props.IRI || (this.props.failures && this.props.failures[this.props.IRI]))
       {
@@ -1198,26 +1212,29 @@ class ResourceViewer extends Component<Props,State>
       // add nother route to UViewer Gallery page
       return (
          <div style={{overflow:"hidden",textAlign:"center"}}>
-            <div className={"SidePane right "  +(this.state.annoPane?"visible":"")} style={{paddingTop:"50px"}}>
-                  <IconButton className="hide" title="Toggle annotation markers" onClick={e => this.setState({...this.state,showAnno:!this.state.showAnno})}>
-                     { this.state.showAnno && <SpeakerNotesOff/> }
-                     { !this.state.showAnno && <ChatIcon/> }
-                  </IconButton>
-                  <IconButton className="close"  onClick={e => this.setState({...this.state,annoPane:false})}>
-                     <Close/>
-                  </IconButton>
-               { //this.props.datatypes && (results ? results.numResults > 0:true) &&
-                  <div style={{width:"333px",position:"relative"}}>
-                     <Typography style={{fontSize:"30px",marginBottom:"20px",textAlign:"left"}}>
-                        <Translate value="Asidebar.title" />
-                     </Typography>
-                  </div>
-               }
-            </div>
+
             {/* <Script url="https://hypothes.is/embed.js" /> */}
             { !this.state.ready && <Loader loaded={false} /> }
             <div className={"resource "+getEntiType(this.props.IRI).toLowerCase()}>
-
+               <div className={"SidePane right "  +(this.state.annoPane?"visible":"")} style={{top:"0",paddingTop:"50px"}}>
+                     <IconButton className="hide" title="Toggle annotation markers" onClick={e => this.setState({...this.state,showAnno:!this.state.showAnno})}>
+                        { this.state.showAnno && <SpeakerNotesOff/> }
+                        { !this.state.showAnno && <ChatIcon/> }
+                     </IconButton>
+                     <IconButton className="close"  onClick={e => this.setState({...this.state,annoPane:false})}>
+                        <Close/>
+                     </IconButton>
+                  { //this.props.datatypes && (results ? results.numResults > 0:true) &&
+                     <div className="data" style={{width:"333px",position:"relative"}}>
+                        <Typography style={{fontSize:"30px",marginBottom:"20px",textAlign:"left"}}>
+                           <Translate value="Asidebar.title" />
+                        </Typography>
+                        <div className="sub">
+                           {this._annoPane}
+                        </div>
+                     </div>
+                  }
+               </div>
                <Link style={{fontSize:"26px"}} className="goBack" to={this.props.keyword&&!this.props.keyword.match(/^bdr:/)?"/search?q="+this.props.keyword+"&lg="+this.props.language+(this.props.datatype?"&t="+this.props.datatype:""):"/"}>
                   {/* <Button style={{paddingLeft:"0"}}>&lt; Go back to search page</Button> */}
                   <IconButton style={{paddingLeft:0}} title="Go back to search page">
