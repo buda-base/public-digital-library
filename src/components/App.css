@@ -131,6 +131,7 @@ body {overflow-x:hidden; }
 .SidePane > div { padding-bottom:50px; }
 .SidePane > div > ul { align-items: center; }
 .SidePane > .close { position:absolute; top:0;right:0;}
+.SidePane > .hide { position:absolute; top:0;left:0;}
 
 .SidePane { position:absolute;transition:all 400ms ease-in-out; background:white;height:100vh; position:fixed;padding:30px;
    background:rgba(246,246,246,1); z-index:100;

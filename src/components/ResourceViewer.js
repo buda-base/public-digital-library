@@ -2,6 +2,8 @@
 
 import Typography from '@material-ui/core/Typography';
 import Close from '@material-ui/icons/Close';
+import SpeakerNotes from '@material-ui/icons/SpeakerNotes';
+import SpeakerNotesOff from '@material-ui/icons/SpeakerNotesOff';
 //import NewWindow from 'react-new-window'
 import Collapse from '@material-ui/core/Collapse';
 import InfiniteScroll from 'react-infinite-scroller';
@@ -56,7 +58,8 @@ type State = {
    pdfOpen?:boolean,
    pdfReady?:boolean,
    anchorEl?:any,
-   annoPane?:boolean
+   annoPane?:boolean,
+   showAnno?:boolean
  }
 
 
@@ -151,7 +154,7 @@ class ResourceViewer extends Component<Props,State>
    {
       super(props);
 
-      this.state = { uviewer:false, imageLoaded:false, collapse:{}, pdfOpen:false,annoPane:false }
+      this.state = { uviewer:false, imageLoaded:false, collapse:{}, pdfOpen:false, showAnno:true }
 
       console.log("props",props)
 
@@ -750,13 +753,15 @@ class ResourceViewer extends Component<Props,State>
                )
                */
 
-               let col = "score1";
-               if(e.score && Number(e.score) < 0) col = "score0"
-               // onClick={(event) => this.setCollapse(node)}>
-               tmp = [<div className={"faded "+col}>
-                        {tmp}
-                     </div>]
-
+               if(this.state.showAnno)
+               {
+                  let col = "score1";
+                  if(e.score && Number(e.score) < 0) col = "score0"
+                  // onClick={(event) => this.setCollapse(node)}>
+                  tmp = [<div className={"faded "+col}  onClick={e => this.setState({...this.state,annoPane:true})}>
+                           {tmp}
+                        </div>]
+               }
             }
 
             if(this.props.assocResources && prop == bdo+"workHasExpression") {
@@ -1193,7 +1198,11 @@ class ResourceViewer extends Component<Props,State>
       // add nother route to UViewer Gallery page
       return (
          <div style={{overflow:"hidden",textAlign:"center"}}>
-            <div className={"SidePane right "  +(this.state.annoPane?"visible":"")}>
+            <div className={"SidePane right "  +(this.state.annoPane?"visible":"")} style={{paddingTop:"50px"}}>
+                  <IconButton className="hide" title="Toggle annotation markers" onClick={e => this.setState({...this.state,showAnno:!this.state.showAnno})}>
+                     { this.state.showAnno && <SpeakerNotesOff/> }
+                     { !this.state.showAnno && <ChatIcon/> }
+                  </IconButton>
                   <IconButton className="close"  onClick={e => this.setState({...this.state,annoPane:false})}>
                      <Close/>
                   </IconButton>
