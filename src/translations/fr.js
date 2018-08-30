@@ -64,6 +64,9 @@ const frTranslation = {
       results:{
          title:"Langue Préférée des Résultats"
       }
+   },
+   Asidebar:{
+      title:"Annotations"
    }
 };
 

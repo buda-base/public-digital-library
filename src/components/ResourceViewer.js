@@ -1,4 +1,7 @@
 //@flow
+
+import Typography from '@material-ui/core/Typography';
+import Close from '@material-ui/icons/Close';
 //import NewWindow from 'react-new-window'
 import Collapse from '@material-ui/core/Collapse';
 import InfiniteScroll from 'react-infinite-scroller';
@@ -52,7 +55,8 @@ type State = {
    collapse:{[string]:boolean},
    pdfOpen?:boolean,
    pdfReady?:boolean,
-   anchorEl?:any
+   anchorEl?:any,
+   annoPane?:boolean
  }
 
 
@@ -147,7 +151,7 @@ class ResourceViewer extends Component<Props,State>
    {
       super(props);
 
-      this.state = { uviewer:false, imageLoaded:false, collapse:{}, pdfOpen:false }
+      this.state = { uviewer:false, imageLoaded:false, collapse:{}, pdfOpen:false,annoPane:false }
 
       console.log("props",props)
 
@@ -748,8 +752,9 @@ class ResourceViewer extends Component<Props,State>
 
                let col = "score1";
                if(e.score && Number(e.score) < 0) col = "score0"
-               tmp = [<div className={"faded "+col} onClick={(event) => this.setCollapse(node)}>
-                     {tmp}
+               // onClick={(event) => this.setCollapse(node)}>
+               tmp = [<div className={"faded "+col}>
+                        {tmp}
                      </div>]
 
             }
@@ -790,7 +795,7 @@ class ResourceViewer extends Component<Props,State>
             */
 
             if(!Array.isArray(tmp)) tmp = [ tmp ]
-            tmp.push(<ChatIcon className="annoticon"/>)
+            tmp.push(<ChatIcon className="annoticon"  onClick={e => this.setState({...this.state,annoPane:true})} />)
 
             if(!txt) ret.push(<Tag>{tmp}</Tag>)
             else ret.push(<Tag>{tmp+" "+txt}</Tag>)
@@ -832,7 +837,7 @@ class ResourceViewer extends Component<Props,State>
                      <div style={{margin:"10px"}}>
                         <Translate value={languages[lang]?languages[lang].replace(/search/,"tip"):lang}/>
                      </div>
-                  }><span className="lang">{lang}</span></Tooltip>:null]}<ChatIcon className="annoticon"/></Tag>)
+                  }><span className="lang">{lang}</span></Tooltip>:null]}<ChatIcon className="annoticon" onClick={e => this.setState({...this.state,annoPane:true})}/></Tag>)
                }
 
                ret.push(<div className={div}>{sub}</div>)
@@ -886,7 +891,7 @@ class ResourceViewer extends Component<Props,State>
                               }><span className="lang">{lang}</span></Tooltip>:null]
                            }
                            if(!Array.isArray(txt)) txt = [txt]
-                           txt.push(<ChatIcon className="annoticon"/>)
+                           txt.push(<ChatIcon className="annoticon" onClick={e => this.setState({...this.state,annoPane:true})}/>)
 
                            if(!noVal) subsub.push(<Tag>{txt}</Tag>)
                            else sub.push(<Tag>{txt}</Tag>)
@@ -1188,6 +1193,18 @@ class ResourceViewer extends Component<Props,State>
       // add nother route to UViewer Gallery page
       return (
          <div style={{overflow:"hidden",textAlign:"center"}}>
+            <div className={"SidePane right "  +(this.state.annoPane?"visible":"")}>
+                  <IconButton className="close"  onClick={e => this.setState({...this.state,annoPane:false})}>
+                     <Close/>
+                  </IconButton>
+               { //this.props.datatypes && (results ? results.numResults > 0:true) &&
+                  <div style={{width:"333px",position:"relative"}}>
+                     <Typography style={{fontSize:"30px",marginBottom:"20px",textAlign:"left"}}>
+                        <Translate value="Asidebar.title" />
+                     </Typography>
+                  </div>
+               }
+            </div>
             {/* <Script url="https://hypothes.is/embed.js" /> */}
             { !this.state.ready && <Loader loaded={false} /> }
             <div className={"resource "+getEntiType(this.props.IRI).toLowerCase()}>
@@ -1292,6 +1309,9 @@ class ResourceViewer extends Component<Props,State>
                      </CopyToClipboard>]
 
                }
+               <IconButton style={{marginLeft:"35px"}} title="Toggle annotations panel" onClick={e => this.setState({...this.state,annoPane:!this.state.annoPane})}>
+                  <ChatIcon />
+               </IconButton>
                {
                   this.props.IRI[0].match(/[PGTW]/) &&
                   <Link className="goBack" to={"/search?r=bdr:"+this.props.IRI}>

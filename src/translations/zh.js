@@ -53,6 +53,9 @@ const zhTranslation = {
       results:{
          title:"Results Preferred Language"
       }
+   },
+   Asidebar:{
+      title:"Annotations"
    }
 } ;
 

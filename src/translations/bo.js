@@ -53,6 +53,9 @@ const boTranslation = {
       results:{
          title:"Results Preferred Language"
       }
+   },
+   Asidebar:{
+      title:"Annotations"
    }
 } ;
 
