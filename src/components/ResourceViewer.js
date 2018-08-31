@@ -751,11 +751,12 @@ class ResourceViewer extends Component<Props,State>
             if(e.hasAnno && e.collapseId && Array.isArray(tmp)) {
                let node = e
 
+               this._annoPane.push(<div className="annoSepa"/>)
+
                this._annoPane.push(
                   <span className={"anno"}>
-                     {"[cf. "}
-                     <span onClick={(event) => this.setCollapse(node)}>{this.pretty(e.hasAnno)}</span>
-                     {"]"}
+                     {"Note"}
+                     {/* <span onClick={(event) => this.setCollapse(node)}>{this.pretty(e.hasAnno)}</span> */}
                   </span>
                )
 
@@ -765,8 +766,8 @@ class ResourceViewer extends Component<Props,State>
                   if(e.score && Number(e.score) < 0) col = "score0"
                   // onClick={(event) => this.setCollapse(node)}>
                   tmp = [<div className={"faded "+col}  onClick={e => {
-                        this.setCollapse(node,{annoPane:true})
-                     }}>
+                           this.setCollapse(node,{annoPane:true})
+                        }}>
                            {tmp}
                         </div>]
                }
