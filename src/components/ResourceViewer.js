@@ -59,7 +59,8 @@ type State = {
    pdfReady?:boolean,
    anchorEl?:any,
    annoPane?:boolean,
-   showAnno?:boolean
+   showAnno?:boolean,
+   viewAnno?:number
  }
 
 
@@ -660,7 +661,7 @@ class ResourceViewer extends Component<Props,State>
    {
       this.setState(
          {...this.state,
-            collapse:{...this.state.collapse,[node.collapseId]:!this.state.collapse[node.collapseId]},
+            //collapse:{...this.state.collapse,[node.collapseId]:!this.state.collapse[node.collapseId]},
             ...extra
          }
       )
@@ -714,6 +715,7 @@ class ResourceViewer extends Component<Props,State>
 
       //console.log(elem)
 
+      let viewAnno = false ;
       if(elem) for(let e of elem)
       {
 
@@ -751,22 +753,28 @@ class ResourceViewer extends Component<Props,State>
             if(e.hasAnno && e.collapseId && Array.isArray(tmp)) {
                let node = e
 
-               this._annoPane.push(<div className="annoSepa"/>)
-
-               this._annoPane.push(
-                  <span className={"anno"}>
-                     {"Note"}
-                     {/* <span onClick={(event) => this.setCollapse(node)}>{this.pretty(e.hasAnno)}</span> */}
-                  </span>
-               )
+               if(!this.state.viewAnno || this.state.viewAnno == e.collapseId) {
+                  viewAnno = true ;
+                  this._annoPane.push(<div className="annoSepa"/>)
+                  this._annoPane.push(
+                     <span className={"anno"} data-id={e.collapseId}>
+                        {"Note"}
+                        {/* <span onClick={(event) => this.setCollapse(node)}>{this.pretty(e.hasAnno)}</span> */}
+                     </span>
+                  )
+               }
+               else {
+                  viewAnno = false ;
+               }
 
                if(this.state.showAnno)
                {
                   let col = "score1";
                   if(e.score && Number(e.score) < 0) col = "score0"
                   // onClick={(event) => this.setCollapse(node)}>
-                  tmp = [<div className={"faded "+col}  onClick={e => {
-                           this.setCollapse(node,{annoPane:true})
+                  let id = e.collapseId
+                  tmp = [<div className={"faded "+col} data-id={e.collapseId}
+                              onClick={ev => {this.setCollapse(node,{annoPane:true,viewAnno:id})
                         }}>
                            {tmp}
                         </div>]
@@ -932,7 +940,7 @@ class ResourceViewer extends Component<Props,State>
          //ret.push(<div class="mark">xx{bnode?"bnode":""}{e.inCollapse?"collap":""}</div>)
          if(e.inCollapse && !bnode)
          {
-            this._annoPane.push(ret)
+            if(viewAnno) this._annoPane.push(ret)
             pre.push(<Collapse in={this.state.collapse[e.value]}>{ret}</Collapse>)
          }
          else pre.push(ret)
