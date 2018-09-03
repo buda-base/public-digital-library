@@ -1,9 +1,11 @@
 //@flow
-
+import ScrollableAnchor,{goToAnchor,configureAnchors } from 'react-scrollable-anchor'
 import Typography from '@material-ui/core/Typography';
 import Close from '@material-ui/icons/Close';
+import Visibility from '@material-ui/icons/Visibility';
 import SpeakerNotes from '@material-ui/icons/SpeakerNotes';
 import SpeakerNotesOff from '@material-ui/icons/SpeakerNotesOff';
+import Feedback from '@material-ui/icons/QuestionAnswer';
 //import NewWindow from 'react-new-window'
 import Collapse from '@material-ui/core/Collapse';
 import InfiniteScroll from 'react-infinite-scroller';
@@ -31,6 +33,8 @@ import {languages} from './App';
 import Popover from '@material-ui/core/Popover';
 import {MenuItem} from '@material-ui/core/Menu';
 import List,{ListItem} from '@material-ui/core/List';
+
+configureAnchors({offset: -60, scrollDuration: 400})
 
 type Props = {
    history:{},
@@ -755,9 +759,14 @@ class ResourceViewer extends Component<Props,State>
 
                if(!this.state.viewAnno || this.state.viewAnno == e.collapseId) {
                   viewAnno = true ;
+                  let id = e.collapseId
                   this._annoPane.push(<div className="annoSepa"/>)
                   this._annoPane.push(
-                     <span className={"anno"} data-id={e.collapseId}>
+                     <span className={"anno"} data-id={e.collapseId} >
+                        { <Feedback style={{right:"10px"}}  /> }
+                        { <Visibility style={{right:"40px"}}
+                                    onClick={(event) => { goToAnchor(id); /*this.setState({...this.state,viewAnno:id});*/ } }
+                        /> }
                         {"Note"}
                         {/* <span onClick={(event) => this.setCollapse(node)}>{this.pretty(e.hasAnno)}</span> */}
                      </span>
@@ -773,11 +782,12 @@ class ResourceViewer extends Component<Props,State>
                   if(e.score && Number(e.score) < 0) col = "score0"
                   // onClick={(event) => this.setCollapse(node)}>
                   let id = e.collapseId
-                  tmp = [<div className={"faded "+col} data-id={e.collapseId}
-                              onClick={ev => {this.setCollapse(node,{annoPane:true,viewAnno:id})
-                        }}>
+                  tmp = [<ScrollableAnchor id={id}>
+                           <div className={"faded "+col}
+                              onClick={ev => {this.setCollapse(node,{annoPane:true,viewAnno:id}) }}>
                            {tmp}
-                        </div>]
+                           </div>
+                        </ScrollableAnchor>]
                }
             }
 
@@ -1238,6 +1248,13 @@ class ResourceViewer extends Component<Props,State>
                         <Typography style={{fontSize:"30px",marginBottom:"20px",textAlign:"left"}}>
                            <Translate value="Asidebar.title" />
                         </Typography>
+                        {this.state.viewAnno && <a className="viewAll" onClick={(event) => {
+                           let s = this.state ;
+                           if(s.viewAnno) {
+                              delete(s.viewAnno);
+                              this.setState({...s})
+                           }
+                        }}>View all</a>}
                         <div className="sub">
                            {this._annoPane}
                         </div>

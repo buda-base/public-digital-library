@@ -187,6 +187,7 @@ export const gotAssocResources = (state: DataState, action: Action) => {
 
                                                 o["hasAnno"] = w[0]["value"] ;
                                                 o["collapseId"] = body[0].value
+                                                o["predicate"] = pred[0].value
                                                 bnode["inCollapse"] = true
                                              }
 

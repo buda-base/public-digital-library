@@ -106,13 +106,19 @@ div[role="tooltip"] div { font-weight:bold;font-size:16px; }
 .match .multi a:hover,
 .resource .data a:hover { border-bottom:1px solid rgba(229, 74, 53,1); }
 
+.resource button svg:hover { color:rgba(0,0,0,0.65); }
+
 .resource .data > div > h4,
 .resource .data > div > .sub > h4:not(.first) { width:100%; padding-left:30px; }
 .resource .data > div > h4::after,
 .resource .data > div > .sub > h4:not(.first)::after { display:none !important; }
 
+.resource .SidePane .viewAll { color:black; cursor:pointer; border-color:black !important;}
+
 .resource .SidePane .data .anno { background-color:#fdfdfd;width:100%;margin-left:0;padding-top:10px;border:1px solid #eee;border-bottom:none;border-right-color:#ccc;}
 .resource .SidePane .data .anno:not(:first-child) { margin-top:15px; }
+.resource .SidePane .data .anno svg { position:absolute;z-index:5;color:rgba(0,0,0,0.54);cursor:pointer;  }
+.resource .SidePane .data .anno svg:hover { color:rgba(0,0,0,0.65); }
 .resource .SidePane .data > .sub { padding-left:0;}/* :10px; background-color:#fdfdfd; margin-bottom:5px; }  */
 .resource .SidePane .data > .sub > .sub { padding-left:20px; background-color:#fdfdfd;border-left:1px solid #eee;border-right:1px solid #ccc;}
 .resource .SidePane .data > .sub > .sub > .subsub { padding-left:15px; flex-wrap: wrap;}
