@@ -2,6 +2,7 @@
 import ScrollableAnchor,{goToAnchor,configureAnchors } from 'react-scrollable-anchor'
 import Typography from '@material-ui/core/Typography';
 import Close from '@material-ui/icons/Close';
+import PlayArrow from '@material-ui/icons/PlayArrow';
 import Visibility from '@material-ui/icons/Visibility';
 import SpeakerNotes from '@material-ui/icons/SpeakerNotes';
 import SpeakerNotesOff from '@material-ui/icons/SpeakerNotesOff';
@@ -767,9 +768,9 @@ class ResourceViewer extends Component<Props,State>
                      <span className={"anno"} data-id={e.collapseId} >
                         { <Feedback style={{right:"10px"}}  /> }
                         { <Visibility style={{right:"40px"}}
-                                    onClick={(event) => { goToAnchor(id); /*this.setState({...this.state,viewAnno:id});*/ } }
+                                    onClick={(event) => { goToAnchor(id); this.setState({...this.state,viewAnno:id}); } }
                         /> }
-                        {this.proplink(e.predicate)}: {this.uriformat(e.predicate,e)}<hr style={{width:"calc(100% - 10px)",float:"left"}}/>
+                        {this.proplink(e.predicate)}: {this.uriformat(e.predicate,e)}<hr/>
                         {/* <span onClick={(event) => this.setCollapse(node)}>{this.pretty(e.hasAnno)}</span> */}
                      </span>
                   )
@@ -784,11 +785,13 @@ class ResourceViewer extends Component<Props,State>
                   if(e.score && Number(e.score) < 0) col = "score0"
                   // onClick={(event) => this.setCollapse(node)}>
                   let id = e.collapseId
-                  tmp = [<ScrollableAnchor id={id}>
+                  tmp = [
+                        this.state.viewAnno == id ? <PlayArrow style={{verticalAlign:"-8px",color:"rgba(0,0,0,0.5)"}}/>:null,
+                     <ScrollableAnchor id={id}>
                            <div className={"faded "+col}
                               onClick={ev => {this.setCollapse(node,{annoPane:true,viewAnno:id}) }}>
                            {tmp}
-                           </div>
+                        </div>
                         </ScrollableAnchor>]
                }
             }
@@ -1242,7 +1245,7 @@ class ResourceViewer extends Component<Props,State>
                         { this.state.showAnno && <SpeakerNotesOff/> }
                         { !this.state.showAnno && <ChatIcon/> }
                      </IconButton>
-                     <IconButton className="close"  onClick={e => this.setState({...this.state,annoPane:false})}>
+                     <IconButton className="close"  onClick={e => this.setState({...this.state,annoPane:false,viewAnno:false})}>
                         <Close/>
                      </IconButton>
                   { //this.props.datatypes && (results ? results.numResults > 0:true) &&
