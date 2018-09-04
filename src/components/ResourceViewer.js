@@ -757,6 +757,8 @@ class ResourceViewer extends Component<Props,State>
             if(e.hasAnno && e.collapseId && Array.isArray(tmp)) {
                let node = e
 
+               console.log("hasAnno",e);
+
                if(!this.state.viewAnno || this.state.viewAnno == e.collapseId) {
                   viewAnno = true ;
                   let id = e.collapseId
@@ -767,7 +769,7 @@ class ResourceViewer extends Component<Props,State>
                         { <Visibility style={{right:"40px"}}
                                     onClick={(event) => { goToAnchor(id); /*this.setState({...this.state,viewAnno:id});*/ } }
                         /> }
-                        {"Note"}
+                        {this.proplink(e.predicate)}: {this.uriformat(e.predicate,e)}<hr style={{width:"calc(100% - 10px)",float:"left"}}/>
                         {/* <span onClick={(event) => this.setCollapse(node)}>{this.pretty(e.hasAnno)}</span> */}
                      </span>
                   )
