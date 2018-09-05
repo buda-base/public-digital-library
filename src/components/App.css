@@ -54,7 +54,9 @@ h2:hover svg.annoticon:hover,h4:hover svg.annoticon:hover { color:rgba(0,0,0,0.6
 .data .anno span:not(.lang) {/*color : rgba(229, 74, 53,1);*/ cursor:pointer; color:rgba(0,0,0,0.5);}
 .data .anno span:not(.lang):hover { text-decoration:underline; color:rgba(0,0,0,0.65); }
 
-.data .faded { display:inline-block; cursor:pointer; padding:3px; border-radius:16px; }
+.data .faded { display:inline-block; cursor:pointer; padding:3px; border-radius:16px;
+   background-color:rgba(0, 0, 0, 0.1);
+}
 .data .faded.score0 { background-color:rgba(255, 205, 3, 0.4);border:1px dashed rgba(167, 134, 1, 0.4);}
 .data .faded.score1 { background-color:rgba(17, 173, 17, 0.3);border:1px solid rgba(36, 106, 36, 0.4);}
 
@@ -115,14 +117,16 @@ div[role="tooltip"] div { font-weight:bold;font-size:16px; }
 
 .resource .SidePane .viewAll { color:black; cursor:pointer; border-color:black !important;}
 
-.resource .SidePane .data .anno {text-decoration:none !important;}
+.resource .SidePane .data .anno {text-decoration:none !important; }
 .resource .SidePane .data .anno .propref { color:black; text-transform:capitalize;border-color:black; }
 .resource .SidePane .data .anno { background-color:#fdfdfd;width:100%;margin-left:0;padding-top:15px;border:1px solid #eee;
    border-bottom:none;border-right-color:#ccc;padding-right:60px;}
 .resource .SidePane .data .anno:not(:first-child) { margin-top:15px; }
+.resource .SidePane .data .anno.new { padding-right:10px;}
 .resource .SidePane .data .anno svg { position:absolute;z-index:5;color:rgba(0,0,0,0.54);cursor:pointer;margin-top:-2px;  }
 .resource .SidePane .data .anno svg:hover { color:rgba(0,0,0,0.65); }
 .resource .SidePane .data .anno hr { height:1px;border:none;background-color:rgba(0,0,0,0.25);width:calc(100% + 50px);float:left;}
+.resource .SidePane .data .anno.new hr { width:calc(100%); }
 
 .resource .SidePane .data > .sub { padding-left:0;}/* :10px; background-color:#fdfdfd; margin-bottom:5px; }  */
 .resource .SidePane .data > .sub > .sub { padding-left:20px; background-color:#fdfdfd;border-left:1px solid #eee;border-right:1px solid #ccc;}

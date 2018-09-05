@@ -65,7 +65,8 @@ type State = {
    anchorEl?:any,
    annoPane?:boolean,
    showAnno?:boolean,
-   viewAnno?:number
+   viewAnno?:number,
+   newAnno?:boolean|{}
  }
 
 
@@ -733,7 +734,7 @@ class ResourceViewer extends Component<Props,State>
          if(value === bdr+"LanguageTaxonomy") continue ;
 
 
-         //console.log("e",e,pretty)
+         console.log("e",e,pretty)
 
          if(e.type != "bnode")
          {
@@ -745,13 +746,13 @@ class ResourceViewer extends Component<Props,State>
                if(!lang) lang = e["xml:lang"]
                tmp = [pretty]
 
-               if(lang)
+               if(lang) {
                   tmp.push(<Tooltip placement="bottom-end" title={
                         <div style={{margin:"10px"}}>
                            <Translate value={languages[lang]?languages[lang].replace(/search/,"tip"):lang}/>
                         </div>
                      }><span className="lang">{lang}</span></Tooltip>);
-
+                  }
             }
 
 
@@ -786,10 +787,10 @@ class ResourceViewer extends Component<Props,State>
                   // onClick={(event) => this.setCollapse(node)}>
                   let id = e.collapseId
                   tmp = [
-                        this.state.viewAnno == id ? <PlayArrow style={{verticalAlign:"-8px",color:"rgba(0,0,0,0.5)"}}/>:null,
+                        this.state.viewAnno == id && this.state.annoPane && !this.state.newAnno ? <PlayArrow style={{verticalAlign:"-8px",color:"rgba(0,0,0,0.5)"}}/>:null,
                      <ScrollableAnchor id={id}>
                            <div className={"faded "+col}
-                              onClick={ev => {this.setCollapse(node,{annoPane:true,viewAnno:id}) }}>
+                              onClick={ev => {this.setCollapse(node,{annoPane:true,viewAnno:id,newAnno:false}) }}>
                            {tmp}
                         </div>
                         </ScrollableAnchor>]
@@ -831,8 +832,24 @@ class ResourceViewer extends Component<Props,State>
             )
             */
 
+            //console.log("newAnno?",tmp,this._plink)
+
             if(!Array.isArray(tmp)) tmp = [ tmp ]
-            tmp.push(<ChatIcon className="annoticon"  onClick={e => this.setState({...this.state,annoPane:true})} />)
+            tmp.push(<ChatIcon className="annoticon"  onClick={
+               (function(val,prop,v,ev){
+                  this.setState({...this.state,annoPane:true,newAnno:{prop:this.proplink(prop),val},viewAnno:prop+"@"+v})
+               }).bind(this,tmp,prop,value)
+
+            }/>)
+
+
+               //(function(ev,prop,val){return function(){ console.log("new",ev,prop,val) }})(event,this._plink,tmp)
+               /*
+               (ev,prop,val) => {
+               console.log("new")
+               this.setState({...this.state,annoPane:true,newAnno:{prop:this._plink,val:tmp}})}
+               */
+
 
             if(!txt) ret.push(<Tag>{tmp}</Tag>)
             else ret.push(<Tag>{tmp+" "+txt}</Tag>)
@@ -852,8 +869,8 @@ class ResourceViewer extends Component<Props,State>
             let val = elem[rdf+"type"]
             let lab = elem[rdfs+"label"]
 
-            //console.log("val",val);
-            //console.log("lab",lab);
+            console.log("val",val);
+            console.log("lab",lab);
 
             let noVal = true ;
 
@@ -874,7 +891,7 @@ class ResourceViewer extends Component<Props,State>
                      <div style={{margin:"10px"}}>
                         <Translate value={languages[lang]?languages[lang].replace(/search/,"tip"):lang}/>
                      </div>
-                  }><span className="lang">{lang}</span></Tooltip>:null]}<ChatIcon className="annoticon" onClick={e => this.setState({...this.state,annoPane:true})}/></Tag>)
+                  }><span className="lang">{lang}</span></Tooltip>:null]}<ChatIcon className="annoticon" onClick={e => this.setState({...this.state,annoPane:true,newAnno:true})}/></Tag>)
                }
 
                ret.push(<div className={div}>{sub}</div>)
@@ -928,12 +945,11 @@ class ResourceViewer extends Component<Props,State>
                               }><span className="lang">{lang}</span></Tooltip>:null]
                            }
                            if(!Array.isArray(txt)) txt = [txt]
-                           txt.push(<ChatIcon className="annoticon" onClick={e => this.setState({...this.state,annoPane:true})}/>)
+                           txt.push(<ChatIcon className="annoticon" onClick={e => this.setState({...this.state,annoPane:true,newAnno:true})}/>)
 
                            if(!noVal) subsub.push(<Tag>{txt}</Tag>)
                            else sub.push(<Tag>{txt}</Tag>)
                         }
-
                      }
                   }
                   if(!noVal)sub.push(<div className={div+"sub "+(hasBnode?"full":"")}>{subsub}</div>)
@@ -1043,8 +1059,6 @@ class ResourceViewer extends Component<Props,State>
    proplink = (k) => {
 
      let ret = (<a class="propref" {...(true || k.match(/purl[.]bdrc/) ? {"href":k}:{})} target="_blank">{this.fullname(k)}</a>)
-
-     //console.log("plink",ret)
 
      return ret;
    }
@@ -1253,7 +1267,7 @@ class ResourceViewer extends Component<Props,State>
                         <Typography style={{fontSize:"30px",marginBottom:"20px",textAlign:"left"}}>
                            <Translate value="Asidebar.title" />
                         </Typography>
-                        {this.state.viewAnno && <a className="viewAll" onClick={(event) => {
+                        {this.state.viewAnno && !this.state.newAnno && <a className="viewAll" onClick={(event) => {
                            let s = this.state ;
                            if(s.viewAnno) {
                               delete(s.viewAnno);
@@ -1261,7 +1275,13 @@ class ResourceViewer extends Component<Props,State>
                            }
                         }}>View all</a>}
                         <div className="sub">
-                           {this._annoPane}
+                           {!this.state.newAnno && this._annoPane}
+                           {
+                              this.state.newAnno && <div class="anno new">
+                                 {this.state.newAnno.prop}: {this.state.newAnno.val}
+                                 <hr/>
+                              </div>
+                           }
                         </div>
                      </div>
                   }
