@@ -755,7 +755,7 @@ class ResourceViewer extends Component<Props,State>
                   }
             }
 
-
+            let tmpAnno ;
             if(e.hasAnno && e.collapseId && Array.isArray(tmp)) {
                let node = e
 
@@ -786,7 +786,7 @@ class ResourceViewer extends Component<Props,State>
                   if(e.score && Number(e.score) < 0) col = "score0"
                   // onClick={(event) => this.setCollapse(node)}>
                   let id = e.collapseId
-                  tmp = [
+                  tmpAnno = [
                         this.state.viewAnno == id && this.state.annoPane && !this.state.newAnno ? <PlayArrow style={{verticalAlign:"-8px",color:"rgba(0,0,0,0.5)"}}/>:null,
                      <ScrollableAnchor id={id}>
                            <div className={"faded "+col}
@@ -834,13 +834,14 @@ class ResourceViewer extends Component<Props,State>
 
             //console.log("newAnno?",tmp,this._plink)
 
-            if(!Array.isArray(tmp)) tmp = [ tmp ]
-            tmp.push(<ChatIcon className="annoticon"  onClick={
+            let annoB = <ChatIcon className="annoticon"  onClick={
                (function(val,prop,v,ev){
                   this.setState({...this.state,annoPane:true,newAnno:{prop:this.proplink(prop),val},viewAnno:prop+"@"+v})
                }).bind(this,tmp,prop,value)
-
-            }/>)
+            }/>
+            if(!Array.isArray(tmp)) tmp = [ tmp ]
+            if(tmpAnno) { tmpAnno.push(annoB); tmp = tmpAnno ;}
+            else tmp.push(annoB);
 
 
                //(function(ev,prop,val){return function(){ console.log("new",ev,prop,val) }})(event,this._plink,tmp)
@@ -887,11 +888,22 @@ class ResourceViewer extends Component<Props,State>
                for(let l of lab) {
                   let lang = l["lang"]
                   if(!lang) lang = l["xml:lang"]
-                  sub.push(<Tag className='label'>{[this.fullname(l.value),lang?<Tooltip placement="bottom-end" title={
+                  let tip = [this.fullname(l.value),lang?<Tooltip placement="bottom-end" title={
                      <div style={{margin:"10px"}}>
                         <Translate value={languages[lang]?languages[lang].replace(/search/,"tip"):lang}/>
                      </div>
-                  }><span className="lang">{lang}</span></Tooltip>:null]}<ChatIcon className="annoticon" onClick={e => this.setState({...this.state,annoPane:true,newAnno:true})}/></Tag>)
+                  }><span className="lang">{lang}</span></Tooltip>:null]
+                  sub.push(
+                     <Tag className='label'>
+                        {tip}
+                        {/* <ChatIcon className="annoticon" onClick={e => this.setState({...this.state,annoPane:true,newAnno:true})}/> */}
+                        <ChatIcon className="annoticon"  onClick={
+                           (function(val,prop,v,ev){
+                              this.setState({...this.state,annoPane:true,newAnno:{prop:this.proplink(prop),val},viewAnno:prop+"@"+v})
+                           }).bind(this,tip,val[0].value,val[0].value)
+                        }/>
+                     </Tag>
+                  )
                }
 
                ret.push(<div className={div}>{sub}</div>)
@@ -945,7 +957,14 @@ class ResourceViewer extends Component<Props,State>
                               }><span className="lang">{lang}</span></Tooltip>:null]
                            }
                            if(!Array.isArray(txt)) txt = [txt]
-                           txt.push(<ChatIcon className="annoticon" onClick={e => this.setState({...this.state,annoPane:true,newAnno:true})}/>)
+                           txt.push(
+                              <ChatIcon className="annoticon"  onClick={
+                                 (function(val,prop,v,ev){
+                                    this.setState({...this.state,annoPane:true,newAnno:{prop:this.proplink(prop),val},viewAnno:prop+"@"+v})
+                                 }).bind(this,txt,f,value)
+                              }/>
+                           )
+                           //<ChatIcon className="annoticon" onClick={e => this.setState({...this.state,annoPane:true,newAnno:true})}/>
 
                            if(!noVal) subsub.push(<Tag>{txt}</Tag>)
                            else sub.push(<Tag>{txt}</Tag>)

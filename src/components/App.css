@@ -118,7 +118,8 @@ div[role="tooltip"] div { font-weight:bold;font-size:16px; }
 .resource .SidePane .viewAll { color:black; cursor:pointer; border-color:black !important;}
 
 .resource .SidePane .data .anno {text-decoration:none !important; }
-.resource .SidePane .data .anno .propref { color:black; text-transform:capitalize;border-color:black; }
+.resource .SidePane .data .anno .propref { color:black; text-transform:capitalize;border-color:black; border-bottom:1px solid black;  }
+.resource .SidePane .data .anno .propref + svg { display:none; }
 .resource .SidePane .data .anno { background-color:#fdfdfd;width:100%;margin-left:0;padding-top:15px;border:1px solid #eee;
    border-bottom:none;border-right-color:#ccc;padding-right:60px;}
 .resource .SidePane .data .anno:not(:first-child) { margin-top:15px; }
