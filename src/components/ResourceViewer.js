@@ -768,7 +768,11 @@ class ResourceViewer extends Component<Props,State>
                   this._annoPane.push(<div className="annoSepa"/>)
                   this._annoPane.push(
                      <span className={"anno"} data-id={e.collapseId} >
-                        { <Feedback style={{right:"10px"}}  /> }
+                        { <Feedback style={{right:"10px"}} onClick={
+                           (function(val,prop,v,ev){
+                              this.setState({...this.state,annoPane:true,newAnno:{prop:this.proplink(prop),val,replyTo:true},viewAnno:id})
+                           }).bind(this,this.uriformat(e.predicate,e),"http://www.w3.org/ns/oa#Annotation","http://www.w3.org/ns/oa#Annotation")
+                        } /> }
                         { <Visibility style={{right:"40px"}}
                                     onClick={(event) => { goToAnchor(id); this.setState({...this.state,viewAnno:id}); } }
                         /> }
@@ -1295,7 +1299,7 @@ class ResourceViewer extends Component<Props,State>
                            }
                         }}>View all</a>}
                         <div className="sub">
-                           {!this.state.newAnno && this._annoPane}
+                           {(!this.state.newAnno || this.state.newAnno.replyTo) && this._annoPane}
                            {
                               this.state.newAnno && [<div class="anno new">
                                  {this.state.newAnno.prop}: {this.state.newAnno.val}
