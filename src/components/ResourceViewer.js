@@ -12,6 +12,7 @@ import Collapse from '@material-ui/core/Collapse';
 import InfiniteScroll from 'react-infinite-scroller';
 import _ from "lodash";
 import Tooltip from '@material-ui/core/Tooltip';
+import TextField from '@material-ui/core/TextField';
 import {CopyToClipboard} from 'react-copy-to-clipboard' ;
 import $ from 'jquery' ;
 import Fullscreen from '@material-ui/icons/Fullscreen';
@@ -1296,10 +1297,24 @@ class ResourceViewer extends Component<Props,State>
                         <div className="sub">
                            {!this.state.newAnno && this._annoPane}
                            {
-                              this.state.newAnno && <div class="anno new">
+                              this.state.newAnno && [<div class="anno new">
                                  {this.state.newAnno.prop}: {this.state.newAnno.val}
                                  <hr/>
-                              </div>
+                              </div> ,
+                              <div class="sub">
+                                 <h4 class="first type">{this.proplink("http://purl.bdrc.io/ontology/admin/supportedBy")}:</h4>
+                                 <div class="subsub new">
+                                    <TextField type="text" label="Assertion" multiline={true} fullWidth={true} rows={5} defaultValue={""} helperText="some short help text"/>
+                                    <TextField type="text" label="Location" multiline={true} fullWidth={true} rows={3} defaultValue={""} helperText="some short help text"/>
+                                    <TextField type="text" label="URL" multiline={true} fullWidth={true} rows={1} defaultValue={""} helperText="some short help text"/>
+                                 </div>
+                              </div> ,
+                              <div class="sub">
+                                 <h4 class="first type">{this.proplink("http://purl.bdrc.io/ontology/admin/statementScore")}:</h4>
+                                 <div class="subsub new">
+                                    <TextField type="text" label="Value" multiline={true} fullWidth={true} rows={1} defaultValue={""} helperText="some short help text"/>
+                                 </div>
+                              </div> ]
                            }
                         </div>
                      </div>
