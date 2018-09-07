@@ -1,7 +1,13 @@
 //@flow
+import Input from '@material-ui/core/Input';
+import InputLabel from '@material-ui/core/InputLabel';
+import FormHelperText from '@material-ui/core/FormHelperText';
+import FormControl from '@material-ui/core/FormControl';
+import Select from '@material-ui/core/Select';
 import ScrollableAnchor,{goToAnchor,configureAnchors } from 'react-scrollable-anchor'
 import Typography from '@material-ui/core/Typography';
 import Close from '@material-ui/icons/Close';
+import Layers from '@material-ui/icons/Layers';
 import PlayArrow from '@material-ui/icons/PlayArrow';
 import Visibility from '@material-ui/icons/Visibility';
 import SpeakerNotes from '@material-ui/icons/SpeakerNotes';
@@ -33,8 +39,9 @@ import Loader from "react-loader"
 import {getEntiType} from '../lib/api';
 import {languages} from './App';
 import Popover from '@material-ui/core/Popover';
-import {MenuItem} from '@material-ui/core/Menu';
-import List,{ListItem} from '@material-ui/core/List';
+import MenuItem from '@material-ui/core/MenuItem';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
 
 configureAnchors({offset: -60, scrollDuration: 400})
 
@@ -63,11 +70,13 @@ type State = {
    collapse:{[string]:boolean},
    pdfOpen?:boolean,
    pdfReady?:boolean,
-   anchorEl?:any,
+   anchorElPdf?:any,
    annoPane?:boolean,
-   showAnno?:boolean,
+   showAnno?:boolean|string,
    viewAnno?:number,
-   newAnno?:boolean|{}
+   newAnno?:boolean|{},
+   annoCollecOpen?:boolean,
+   anchorElAnno?:any,
  }
 
 
@@ -759,10 +768,12 @@ class ResourceViewer extends Component<Props,State>
             let tmpAnno ;
             if(e.hasAnno && e.collapseId && Array.isArray(tmp)) {
                let node = e
+               let col = "score1";
+               if(e.score && Number(e.score) < 0) col = "score0"
 
                console.log("hasAnno",e);
 
-               if(!this.state.viewAnno || this.state.viewAnno == e.collapseId) {
+               if(((!this.state.showAnno || this.state.showAnno == true || this.state.showAnno == col)) && (!this.state.viewAnno || this.state.viewAnno == e.collapseId)) {
                   viewAnno = true ;
                   let id = e.collapseId
                   this._annoPane.push(<div className="annoSepa"/>)
@@ -787,18 +798,19 @@ class ResourceViewer extends Component<Props,State>
 
                if(this.state.showAnno)
                {
-                  let col = "score1";
-                  if(e.score && Number(e.score) < 0) col = "score0"
-                  // onClick={(event) => this.setCollapse(node)}>
-                  let id = e.collapseId
-                  tmpAnno = [
-                        this.state.viewAnno == id && this.state.annoPane && !this.state.newAnno ? <PlayArrow style={{verticalAlign:"-8px",color:"rgba(0,0,0,0.5)"}}/>:null,
-                     <ScrollableAnchor id={id}>
-                           <div className={"faded "+col}
-                              onClick={ev => {this.setCollapse(node,{annoPane:true,viewAnno:id,newAnno:false}) }}>
-                           {tmp}
-                        </div>
-                        </ScrollableAnchor>]
+                  if(this.state.showAnno == true || this.state.showAnno == col)
+                  {
+                     // onClick={(event) => this.setCollapse(node)}>
+                     let id = e.collapseId
+                     tmpAnno = [
+                           this.state.viewAnno == id && this.state.annoPane && !this.state.newAnno ? <PlayArrow style={{verticalAlign:"-8px",color:"rgba(0,0,0,0.5)"}}/>:null,
+                        <ScrollableAnchor id={id}>
+                              <div className={"faded "+col}
+                                 onClick={ev => {this.setCollapse(node,{annoPane:true,viewAnno:id,newAnno:false}) }}>
+                              {tmp}
+                           </div>
+                           </ScrollableAnchor>]
+                  }
                }
             }
 
@@ -1067,14 +1079,37 @@ class ResourceViewer extends Component<Props,State>
    };
 
 
-   handleRequestClose = () => {
+   handleRequestCloseAnno = () => {
+
+
+      if(!this.state.annoCollecOpen == false)
+         this.setState({
+            ...this.state,
+            annoCollecOpen: false,
+            anchorElAnno:null
+         });
+   };
+
+      handleAnnoCollec = (collec) =>
+      {
+
+         if(!this.state.annoCollecOpen == false)
+            this.setState({
+               ...this.state,
+               annoCollecOpen: false,
+               anchorElAnno:null,
+               showAnno:collec
+            });
+      }
+
+   handleRequestClosePdf = () => {
 
 
       if(!this.state.pdfOpen == false)
          this.setState({
             ...this.state,
             pdfOpen: false,
-            anchorEl:null,
+            anchorElPdf:null,
             close:true
          });
    };
@@ -1221,7 +1256,8 @@ class ResourceViewer extends Component<Props,State>
       {
          let iiif = "http://iiif.bdrc.io" ;
          if(this.props.config && this.props.config.iiif) iiif = this.props.config.iiif.endpoints[this.props.config.iiif.index]
-         //console.log("iiif",iiif,this.props.config)
+
+//         console.log("iiif",iiif,this.props.config)
 
          let id = this.props.IRI.slice(1);
          if(this.props.imageAsset.match(/[/]i:/)) {
@@ -1269,13 +1305,11 @@ class ResourceViewer extends Component<Props,State>
 
       }
 
-
+      console.log("pdf",pdfLink)
 
       // add nother route to UViewer Gallery page
       return (
          <div style={{overflow:"hidden",textAlign:"center"}}>
-
-            {/* <Script url="https://hypothes.is/embed.js" /> */}
             { !this.state.ready && <Loader loaded={false} /> }
             <div className={"resource "+getEntiType(this.props.IRI).toLowerCase()}>
                <div className={"SidePane right "  +(this.state.annoPane?"visible":"")} style={{top:"0",paddingTop:"50px"}}>
@@ -1283,6 +1317,18 @@ class ResourceViewer extends Component<Props,State>
                         { this.state.showAnno && <SpeakerNotesOff/> }
                         { !this.state.showAnno && <ChatIcon/> }
                      </IconButton>
+                     <IconButton id="annoCollec" title="Select displayed annotations collection" onClick={e => this.setState({...this.state,annoCollecOpen:true,anchorElAnno:e.currentTarget})}>
+                        <Layers className={this.state.showAnno && this.state.showAnno != true ? this.state.showAnno:""}/>
+                     </IconButton>
+                     <Popover
+                        open={this.state.annoCollecOpen == true}
+                        anchorEl={this.state.anchorElAnno}
+                        onClose={this.handleRequestCloseAnno.bind(this)}
+                        >
+                        <MenuItem onClick={this.handleAnnoCollec.bind(this,true)}>See All Annotations</MenuItem>
+                        <MenuItem onClick={this.handleAnnoCollec.bind(this,"score0")}>See Annotation Collection 0</MenuItem>
+                        <MenuItem onClick={this.handleAnnoCollec.bind(this,"score1")}>See Annotation Collection 1</MenuItem>
+                     </Popover>
                      <IconButton className="close"  onClick={e => this.setState({...this.state,annoPane:false,viewAnno:false})}>
                         <Close/>
                      </IconButton>
@@ -1348,7 +1394,7 @@ class ResourceViewer extends Component<Props,State>
                                   else if(!this.props.pdfVolumes) {
                                     this.props.onRequestPdf(this.props.IRI,pdfLink)
                                  }
-                                 this.setState({...this.state, pdfOpen:true,anchorEl:ev.currentTarget})
+                                 this.setState({...this.state, pdfOpen:true,anchorElPdf:ev.currentTarget})
                               }
                            }>
                            <img src="/DL_icon.svg" height="24" />
@@ -1357,8 +1403,8 @@ class ResourceViewer extends Component<Props,State>
                            <Popover
                               className="poPdf"
                               open={this.state.pdfOpen == true || this.props.pdfReady == true}
-                              anchorEl={this.state.anchorEl}
-                              onClose={this.handleRequestClose.bind(this)}
+                              anchorEl={this.state.anchorElPdf}
+                              onClose={this.handleRequestClosePdf.bind(this)}
                            >
                               <List>
                                  {/*

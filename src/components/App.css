@@ -5,6 +5,8 @@
 /* CSS debug mode */
 /* * {background-color:rgba(255,0,128,0.05);} */
 
+body { overflow:auto !important;padding-right:0 !important; }
+
 #login { position:absolute; top:0;right:0; }
 
 #pagine { width:100%;display:flex;padding:20px;justify-content: space-between; box-sizing:border-box}
@@ -115,14 +117,17 @@ div[role="tooltip"] div { font-weight:bold;font-size:16px; }
 .resource .data > div > h4::after,
 .resource .data > div > .sub > h4:not(.first)::after { display:none !important; }
 
-.resource .SidePane .viewAll { color:black; cursor:pointer; border-color:black !important;}
+.resource .SidePane .viewAll { color:black; cursor:pointer; margin-bottom:10px;display:inline-block;border-bottom:1px solid transparent;}
+.resource .SidePane .viewAll:hover { border-color:black !important; }
+
+.resource .SidePane .data > p:first-child { margin-bottom:10px !important;}
 
 .resource .SidePane .data .anno {text-decoration:none !important; }
 .resource .SidePane .data .anno .propref { color:black; text-transform:capitalize;border-color:black; border-bottom:1px solid black;  }
 .resource .SidePane .data .anno .propref + svg { display:none; }
 .resource .SidePane .data .anno { background-color:#fdfdfd;width:100%;margin-left:0;padding-top:15px;border:1px solid #eee;
    border-bottom:none;border-right-color:#ccc;padding-right:60px;}
-.resource .SidePane .data .anno:not(:first-child) { margin-top:15px; }
+.resource .SidePane .data .anno:not(:first-of-type) { margin-top:15px; }
 .resource .SidePane .data .anno.new { padding-right:10px;}
 .resource .SidePane .data .anno svg { position:absolute;z-index:5;color:rgba(0,0,0,0.54);cursor:pointer;margin-top:-2px;  }
 .resource .SidePane .data .anno svg:hover { color:rgba(0,0,0,0.65); }
@@ -172,7 +177,10 @@ body {overflow-x:hidden; }
 .SidePane > div { padding-bottom:50px; }
 .SidePane > div > ul { align-items: center; }
 .SidePane > .close { position:absolute; top:0;right:0;}
-.SidePane > .hide { position:absolute; top:0;left:0;}
+.SidePane > .hide { position:absolute; top:0px;left:0px;}
+.SidePane > #annoCollec { position:absolute; top:0px;left:40px;}
+.SidePane > #annoCollec svg.score0 { border-radius:50%; background-color:rgba(255, 205, 3, 0.4);border:1px dashed rgba(167, 134, 1, 0.4);}
+.SidePane > #annoCollec svg.score1 { border-radius:50%; background-color:rgba(17, 173, 17, 0.3);border:1px solid rgba(36, 106, 36, 0.4);}
 
 .SidePane { position:absolute;transition:all 400ms ease-in-out; background:white;height:100vh; position:fixed;padding:30px;
    background:rgba(246,246,246,1); z-index:100;
