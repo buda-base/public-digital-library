@@ -1,4 +1,9 @@
 //@flow
+import bbox from "@turf/bbox"
+import {Map,TileLayer,LayersControl,Marker,Popup,GeoJSON } from 'react-leaflet' ;
+import 'leaflet/dist/leaflet.css';
+// import {GoogleLayer} from 'react-leaflet-google'
+// const { BaseLayer} = LayersControl;
 import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
 import FormHelperText from '@material-ui/core/FormHelperText';
@@ -42,6 +47,17 @@ import Popover from '@material-ui/core/Popover';
 import MenuItem from '@material-ui/core/MenuItem';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
+import L from 'leaflet';
+
+//const { GeoJson } = ReactLeaflet;
+
+delete L.Icon.Default.prototype._getIconUrl;
+
+L.Icon.Default.mergeOptions({
+    iconRetinaUrl: require('leaflet/dist/images/marker-icon-2x.png'),
+    iconUrl: require('leaflet/dist/images/marker-icon.png'),
+    shadowUrl: require('leaflet/dist/images/marker-shadow.png')
+});
 
 configureAnchors({offset: -60, scrollDuration: 400})
 
@@ -124,13 +140,14 @@ let propOrder = {
     ],
    "Place":[
       "skos:altLabel",
-      "bdo:placeLocatedIn",
-      "bdo:placeContains",
-      "bdo:placeIsNear",
       "bdo:placeType",
+      "bdo:placeLocatedIn",
+      "bdo:placeIsNear",
       "bdo:placeEvent",
-      "bdo:placeLong",
       "bdo:placeLat",
+      "bdo:placeLong",
+      "bdo:placeRegionPoly",
+      "bdo:placeContains",
    ],
    "Role":[],
    "Topic":[],
@@ -1218,6 +1235,20 @@ class ResourceViewer extends Component<Props,State>
 
       }
 
+      let doMap = false, doRegion = false,regBox ;
+      if(kZprop.indexOf(bdo+"placeLong") !== -1 && kZprop.indexOf(bdo+"placeLat") !== -1)
+      {
+         doMap = [].concat(this.fullname(this.getResourceElem(bdo+"placeLat")[0].value)).concat(this.fullname(this.getResourceElem(bdo+"placeLong")[0].value))
+         console.log("map",doMap)
+      }
+      if(kZprop.indexOf(bdo+"placeRegionPoly") !== -1)
+      {
+         doRegion = JSON.parse(this.getResourceElem(bdo+"placeRegionPoly")[0].value)
+         regBox = bbox(doRegion)
+         regBox = [ [regBox[1],regBox[0]], [regBox[3],regBox[2]] ]
+         console.log("reg",doRegion,regBox)
+      }
+
 
       if(kZprop.indexOf(bdo+"imageList") !== -1)
       {
@@ -1714,7 +1745,29 @@ class ResourceViewer extends Component<Props,State>
                               tags = cleantags
                            }
 
-                           if(k != bdo+"eTextHasChunk") {
+                           if(k == bdo+"placeRegionPoly" || (k == bdo+"placeLong" && !doRegion))
+                           {
+
+                              return ( <div>
+                                          <h3><span>{this.proplink(k)}</span>:&nbsp;</h3> 
+                                          { k == bdo+"placeLong" && tags }
+                                          <div style={{width:"100%",marginTop:"10px"}}>
+                                             <Map style={{width:"400px",height:"400px"}} center={doMap} zoom={13} bounds={doRegion?regBox:null}>
+                                                <TileLayer
+                                                   //attribution="&amp;copy <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
+                                                   url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                                                />
+                                                <Marker position={doMap} >
+                                                    <Popup>
+                                                      A pretty CSS3 popup. <br /> Easily customizable.
+                                                    </Popup>
+                                                </Marker>
+                                                {doRegion && <GeoJSON data={doRegion} style={ {color: '#006400', weight: 5, opacity: 0.65} }/>}
+                                             </Map>
+                                          </div>
+                                       </div> )
+                           }
+                           else if(k != bdo+"eTextHasChunk") {
 
                               let ret = this.hasSub(k)?this.subProps(k):tags.map((e)=> [e," "] )
 
