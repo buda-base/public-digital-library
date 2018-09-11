@@ -168,6 +168,10 @@ div[role="tooltip"] div { font-weight:bold;font-size:16px; }
 .checkB,.checkedB { border-radius:50%; border:2px solid #666;width:20px;height:20px;display:inline-block; }
 .checkedB {}
 
+.leaflet-tooltip { padding:15px;}
+.leaflet-tooltip h2 {  font-size:16px; padding-bottom:0;margin:0 !important;margin-bottom:5px !important;}
+.leaflet-tooltip h2 svg { display:none;}
+
 body {overflow-x:hidden; }
 
 /* .SearchPane .hidden { opacity:0; pointer-events:none; } */

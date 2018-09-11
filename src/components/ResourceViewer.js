@@ -1,6 +1,6 @@
 //@flow
 import bbox from "@turf/bbox"
-import {Map,TileLayer,LayersControl,Marker,Popup,GeoJSON } from 'react-leaflet' ;
+import {Map,TileLayer,LayersControl,Marker,Popup,GeoJSON,Tooltip as ToolT} from 'react-leaflet' ;
 import 'leaflet/dist/leaflet.css';
 // import {GoogleLayer} from 'react-leaflet-google'
 // const { BaseLayer} = LayersControl;
@@ -1749,18 +1749,16 @@ class ResourceViewer extends Component<Props,State>
                            {
 
                               return ( <div>
-                                          <h3><span>{this.proplink(k)}</span>:&nbsp;</h3> 
+                                          <h3><span>{this.proplink(k)}</span>:&nbsp;</h3>
                                           { k == bdo+"placeLong" && tags }
-                                          <div style={{width:"100%",marginTop:"10px"}}>
-                                             <Map style={{width:"400px",height:"400px"}} center={doMap} zoom={13} bounds={doRegion?regBox:null}>
+                                          <div style={ {width:"100%",marginTop:"10px"} }>
+                                             <Map style={{width:"400px",height:"400px",boxShadow: "0 0 5px 0px rgba(0,0,0,0.5)"}} center={doMap} zoom={13} bounds={doRegion?regBox:null}>
                                                 <TileLayer
                                                    //attribution="&amp;copy <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
                                                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                                                 />
                                                 <Marker position={doMap} >
-                                                    <Popup>
-                                                      A pretty CSS3 popup. <br /> Easily customizable.
-                                                    </Popup>
+                                                    <ToolT direction="top">{titre}</ToolT>
                                                 </Marker>
                                                 {doRegion && <GeoJSON data={doRegion} style={ {color: '#006400', weight: 5, opacity: 0.65} }/>}
                                              </Map>
