@@ -1,4 +1,5 @@
 //@flow
+import Portal from 'react-leaflet-portal';
 import bbox from "@turf/bbox"
 import {Map,TileLayer,LayersControl,Marker,Popup,GeoJSON,Tooltip as ToolT} from 'react-leaflet' ;
 import 'leaflet/dist/leaflet.css';
@@ -93,6 +94,7 @@ type State = {
    newAnno?:boolean|{},
    annoCollecOpen?:boolean,
    anchorElAnno?:any,
+   largeMap?:boolean
  }
 
 
@@ -185,6 +187,7 @@ let reload = false ;
 class ResourceViewer extends Component<Props,State>
 {
    _annoPane = [] ;
+   _leafletMap = null
 
    constructor(props:Props)
    {
@@ -1752,15 +1755,26 @@ class ResourceViewer extends Component<Props,State>
                                           <h3><span>{this.proplink(k)}</span>:&nbsp;</h3>
                                           { k == bdo+"placeLong" && tags }
                                           <div style={ {width:"100%",marginTop:"10px"} }>
-                                             <Map style={{width:"400px",height:"400px",boxShadow: "0 0 5px 0px rgba(0,0,0,0.5)"}} center={doMap} zoom={13} bounds={doRegion?regBox:null}>
+                                             <Map ref={m => { this._leafletMap = m; }}
+                                                className={"placeMap" + (this.state.largeMap?" large":"")}
+                                                style={{boxShadow: "0 0 5px 0px rgba(0,0,0,0.5)"}}
+                                                center={doMap} zoom={13} bounds={doRegion?regBox:null}
+                                                attributionControl={false}>
                                                 <TileLayer
-                                                   //attribution="&amp;copy <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
+                                                   attribution="&amp;copy <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
                                                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                                                 />
                                                 <Marker position={doMap} >
                                                     <ToolT direction="top">{titre}</ToolT>
                                                 </Marker>
                                                 {doRegion && <GeoJSON data={doRegion} style={ {color: '#006400', weight: 5, opacity: 0.65} }/>}
+                                                <Portal position="bottomleft">
+                                                   <div class="leaflet-control-attribution leaflet-control" >
+                                                      <a onClick={ e => { setTimeout(((map)=> () => {map.leafletElement.invalidateSize();})( this._leafletMap), 200); this.setState({...this.state,largeMap:!this.state.largeMap}); } }>
+                                                         {!this.state.largeMap?"Enlarge":"Shrink"} Map
+                                                      </a>
+                                                   </div>
+                                                </Portal>
                                              </Map>
                                           </div>
                                        </div> )

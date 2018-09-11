@@ -6887,6 +6887,10 @@ react-leaflet-google@^3.3.1:
   version "3.3.1"
   resolved "https://registry.yarnpkg.com/react-leaflet-google/-/react-leaflet-google-3.3.1.tgz#29bb6e03f99638fda020c61937cd8ffeac1c939a"
 
+react-leaflet-portal@^0.1.11:
+  version "0.1.11"
+  resolved "https://registry.yarnpkg.com/react-leaflet-portal/-/react-leaflet-portal-0.1.11.tgz#bb7de8d7d016bbd3794c777218446e207c24830e"
+
 react-leaflet@^2.0.1:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/react-leaflet/-/react-leaflet-2.0.1.tgz#0d0543374ca1abd3507f4c4fa799e95fc8e51d85"

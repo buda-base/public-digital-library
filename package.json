@@ -29,6 +29,7 @@
     "react-infinite-scroller": "^1.1.4",
     "react-leaflet": "^2.0.1",
     "react-leaflet-google": "^3.3.1",
+    "react-leaflet-portal": "^0.1.11",
     "react-load-script": "^0.0.6",
     "react-loader": "^2.4.2",
     "react-new-window": "^0.0.7",
