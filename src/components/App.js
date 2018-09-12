@@ -187,9 +187,9 @@ class App extends Component<Props,State> {
             this.props.onStartSearch(key,"",[label],getEntiType(key))
          }
       }
-      else if(label === "Any" || ( !label && ( this.state.filters.datatype.length === 0 || this.state.filters.datatype.indexOf("Any") !== -1 ) ) )
+      else if(label === "Any" || ( !label)) // && ( this.state.filters.datatype.length === 0 || this.state.filters.datatype.indexOf("Any") !== -1 ) ) )
       {
-         this.props.history.push({pathname:"/search",search:"?q="+key+"&lg="+this.getLanguage()+"&t=Any"})
+         this.props.history.push({pathname:"/search",search:"?q="+key+"&lg="+this.getLanguage()+"&t="+this.state.filters.datatype[0]})
 
          if(!this.props.searches[key+"@"+this.getLanguage()]) {
 
@@ -482,7 +482,7 @@ class App extends Component<Props,State> {
 
       if(event.target.value) {
          let s = { [event.target.name]: event.target.value }
-         if(this.props.keyword) s = { ...s, willSearch:true }
+         if(this.props.keyword) s = { ...s } //, willSearch:true }
 
          console.log("s",s)
 
@@ -652,7 +652,7 @@ class App extends Component<Props,State> {
 
    makeResult(id,n,t,lit,lang,tip,Tag)
    {
-      console.log("res",id,n,t,lit,lang,tip,Tag)
+      //console.log("res",id,n,t,lit,lang,tip,Tag)
 
       if(!id.match(/[:/]/)) id = "bdr:" +id
 
