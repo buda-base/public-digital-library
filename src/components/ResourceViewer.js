@@ -1759,10 +1759,12 @@ class ResourceViewer extends Component<Props,State>
                                                 className={"placeMap" + (this.state.largeMap?" large":"")}
                                                 style={{boxShadow: "0 0 5px 0px rgba(0,0,0,0.5)"}}
                                                 center={doMap} zoom={13} bounds={doRegion?regBox:null}
-                                                attributionControl={false}>
+                                                //attributionControl={false}
+                                                >
                                                 <TileLayer
                                                    attribution="&amp;copy <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
-                                                   url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                                                   //url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                                                   url="https://{s}.tile.iosb.fraunhofer.de/tiles/osmde/{z}/{x}/{y}.png"
                                                 />
                                                 <Marker position={doMap} >
                                                     <ToolT direction="top">{titre}</ToolT>

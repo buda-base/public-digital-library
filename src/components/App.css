@@ -173,8 +173,8 @@ div[role="tooltip"] div { font-weight:bold;font-size:16px; }
 .leaflet-tooltip { padding:15px;}
 .leaflet-tooltip h2 {  font-size:16px; padding-bottom:0;margin:0 !important;margin-bottom:5px !important;}
 .leaflet-tooltip h2 svg { display:none;}
-.leaflet-bottom.leaflet-left .leaflet-control { margin-bottom:0 !important;margin-left:0 !important;background: rgba(255, 255, 255, 0.7); }
-.placeMap:not(.large) .leaflet-bottom.leaflet-left .leaflet-control { font-size:11px !important; }
+.placeMap .leaflet-bottom .leaflet-control { margin:0 !important;background: rgba(255, 255, 255, 0.7); }
+.placeMap:not(.large) .leaflet-control { font-size:11px !important; }
 
 body {overflow-x:hidden; }
 
