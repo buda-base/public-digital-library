@@ -3,6 +3,8 @@ import Portal from 'react-leaflet-portal';
 import bbox from "@turf/bbox"
 import {Map,TileLayer,LayersControl,Marker,Popup,GeoJSON,Tooltip as ToolT} from 'react-leaflet' ;
 import 'leaflet/dist/leaflet.css';
+import { GoogleLayer } from "react-leaflet-google" ;
+//import { GoogleMutant, GoogleApiLoader } from 'react-leaflet-googlemutant';
 // import {GoogleLayer} from 'react-leaflet-google'
 // const { BaseLayer} = LayersControl;
 import Input from '@material-ui/core/Input';
@@ -50,7 +52,6 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import L from 'leaflet';
 
-//const { GeoJson } = ReactLeaflet;
 
 delete L.Icon.Default.prototype._getIconUrl;
 
@@ -142,13 +143,13 @@ let propOrder = {
     ],
    "Place":[
       "skos:altLabel",
+      "bdo:placeLat",
+      "bdo:placeLong",
+      "bdo:placeRegionPoly",
       "bdo:placeType",
       "bdo:placeLocatedIn",
       "bdo:placeIsNear",
       "bdo:placeEvent",
-      "bdo:placeLat",
-      "bdo:placeLong",
-      "bdo:placeRegionPoly",
       "bdo:placeContains",
    ],
    "Role":[],
@@ -1147,6 +1148,10 @@ class ResourceViewer extends Component<Props,State>
     {
       console.log("render",this.props,this.state)
 
+      //const { GeoJson } = ReactLeaflet;
+      const { BaseLayer} = LayersControl;
+      const googleAPIkey = "AIzaSyDMaEbtgg2jCqvys9cUaAJEnF8R3ltiQ6E" ;
+
       this._annoPane = []
 //
       if(!this.props.IRI || (this.props.failures && this.props.failures[this.props.IRI]))
@@ -1758,18 +1763,38 @@ class ResourceViewer extends Component<Props,State>
                                              <Map ref={m => { this._leafletMap = m; }}
                                                 className={"placeMap" + (this.state.largeMap?" large":"")}
                                                 style={{boxShadow: "0 0 5px 0px rgba(0,0,0,0.5)"}}
-                                                center={doMap} zoom={13} bounds={doRegion?regBox:null}
+                                                center={doMap} zoom={17} bounds={doRegion?regBox:null}
                                                 //attributionControl={false}
                                                 >
-                                                <TileLayer
-                                                   attribution="&amp;copy <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
-                                                   //url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                                                   url="https://{s}.tile.iosb.fraunhofer.de/tiles/osmde/{z}/{x}/{y}.png"
-                                                />
+                                                <LayersControl position="topright">
+                                                   <BaseLayer checked name='Satellite+Roadmap'>
+
+                                                      <GoogleLayer googlekey={googleAPIkey} maptype='HYBRID'
+                                                            //attribution="&amp;copy <a href=&quot;http://osm.org/copyright&quot;></a> contributors"
+                                                            attribution="&amp;copy 2018 Google"
+                                                      />
+                                                   </BaseLayer>
+                                                   <BaseLayer name='Terrain'>
+                                                      <GoogleLayer googlekey={googleAPIkey} maptype='TERRAIN'/>
+                                                   </BaseLayer>
+                                                   <BaseLayer name='Satellite'>
+                                                      <GoogleLayer googlekey={googleAPIkey} maptype='SATELLITE'/>
+                                                   </BaseLayer>
+                                                   <BaseLayer name='Roadmap'>
+                                                      <GoogleLayer googlekey={googleAPIkey} maptype='ROADMAP'/>
+                                                   </BaseLayer>
+                                                   {/* <BaseLayer name='OpenStreetMap'>
+                                                      <TileLayer
+                                                         //attribution="&amp;copy <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
+                                                         //url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                                                         url="https://{s}.tile.iosb.fraunhofer.de/tiles/osmde/{z}/{x}/{y}.png"
+                                                      />
+                                                   </BaseLayer> */}
+                                                </LayersControl>
                                                 <Marker position={doMap} >
                                                     <ToolT direction="top">{titre}</ToolT>
                                                 </Marker>
-                                                {doRegion && <GeoJSON data={doRegion} style={ {color: '#006400', weight: 5, opacity: 0.65} }/>}
+                                                {doRegion && <GeoJSON data={doRegion} style={ {color: '#006699', weight: 5, opacity: 0.65} }/>}
                                                 <Portal position="bottomleft">
                                                    <div class="leaflet-control-attribution leaflet-control" >
                                                       <a onClick={ e => { setTimeout(((map)=> () => {map.leafletElement.invalidateSize();})( this._leafletMap), 200); this.setState({...this.state,largeMap:!this.state.largeMap}); } }>
