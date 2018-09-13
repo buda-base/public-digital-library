@@ -1150,7 +1150,6 @@ class ResourceViewer extends Component<Props,State>
 
       //const { GeoJson } = ReactLeaflet;
       const { BaseLayer} = LayersControl;
-      const googleAPIkey = "AIzaSyDMaEbtgg2jCqvys9cUaAJEnF8R3ltiQ6E" ;
 
       this._annoPane = []
 //
@@ -1767,29 +1766,31 @@ class ResourceViewer extends Component<Props,State>
                                                 //attributionControl={false}
                                                 >
                                                 <LayersControl position="topright">
-                                                   <BaseLayer checked name='Satellite+Roadmap'>
+                                                   { this.props.config.googleAPIkey && [
+                                                      <BaseLayer checked name='Satellite+Roadmap'>
 
-                                                      <GoogleLayer googlekey={googleAPIkey} maptype='HYBRID'
-                                                            //attribution="&amp;copy <a href=&quot;http://osm.org/copyright&quot;></a> contributors"
-                                                            attribution="&amp;copy 2018 Google"
-                                                      />
-                                                   </BaseLayer>
-                                                   <BaseLayer name='Terrain'>
-                                                      <GoogleLayer googlekey={googleAPIkey} maptype='TERRAIN'/>
-                                                   </BaseLayer>
-                                                   <BaseLayer name='Satellite'>
-                                                      <GoogleLayer googlekey={googleAPIkey} maptype='SATELLITE'/>
-                                                   </BaseLayer>
-                                                   <BaseLayer name='Roadmap'>
-                                                      <GoogleLayer googlekey={googleAPIkey} maptype='ROADMAP'/>
-                                                   </BaseLayer>
-                                                   {/* <BaseLayer name='OpenStreetMap'>
+                                                         <GoogleLayer googlekey={this.props.config.googleAPIkey} maptype='HYBRID'
+                                                               //attribution="&amp;copy <a href=&quot;http://osm.org/copyright&quot;></a> contributors"
+                                                               attribution="&amp;copy 2018 Google"
+                                                         />
+                                                      </BaseLayer>,
+                                                      <BaseLayer name='Terrain'>
+                                                         <GoogleLayer googlekey={this.props.config.googleAPIkey} maptype='TERRAIN'/>
+                                                      </BaseLayer>,
+                                                      <BaseLayer name='Satellite'>
+                                                         <GoogleLayer googlekey={this.props.config.googleAPIkey} maptype='SATELLITE'/>
+                                                      </BaseLayer>,
+                                                      <BaseLayer name='Roadmap'>
+                                                         <GoogleLayer googlekey={this.props.config.googleAPIkey} maptype='ROADMAP'/>
+                                                      </BaseLayer>]
+                                                   }
+                                                   { !this.props.config.googleAPIkey && <BaseLayer checked name='OpenStreetMap'>
                                                       <TileLayer
                                                          //attribution="&amp;copy <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
                                                          //url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                                                          url="https://{s}.tile.iosb.fraunhofer.de/tiles/osmde/{z}/{x}/{y}.png"
                                                       />
-                                                   </BaseLayer> */}
+                                                   </BaseLayer> }
                                                 </LayersControl>
                                                 <Marker position={doMap} >
                                                     <ToolT direction="top">{titre}</ToolT>
