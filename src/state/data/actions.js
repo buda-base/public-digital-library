@@ -110,6 +110,14 @@ export const pdfReady = (url: string, iri:string): Action => {
 }
 
 
+TYPES.getResource = 'GET_RESOURCE';
+export const getResource = (iri: string): Action => {
+    return {
+        type: TYPES.getResource,
+        payload: iri
+    }
+}
+
 TYPES.gotResource = 'GOT_RESOURCE';
 export const gotResource = (iri: string,res:{}): Action => {
     return {

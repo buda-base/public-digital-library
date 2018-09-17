@@ -76,6 +76,14 @@ export const languages = {
    //"other":"lang.search.other"
 }
 
+const TagTab = {
+   "Abstract Work":CropFreeIcon,
+   "Work Has Expression":CenterFocusStrong,
+   "Work Expression Of":CenterFocusWeak,
+   "Work":CropDin
+}
+
+
 const styles = {
   checked: {
     color: "rgb(50,50,50)",
@@ -95,6 +103,7 @@ type Props = {
    },
    facets:{[string]:boolean|{}},
    searches:{[string]:{}},
+   resources:{[string]:{}},
    hostFailure?:string,
    loading?:boolean,
    keyword?:string,
@@ -110,6 +119,7 @@ type Props = {
    onCheckDatatype:(t:string,k:string,lg:string)=>void,
    onGetFacetInfo:(k:string,lg:string,f:string)=>void,
    onCheckFacet:(k:string,lg:string,f:{[string]:string})=> void,
+   onGetResource:(iri:string)=>void,
    onSetLocale:(lg:string)=>void,
    onSetPrefLang:(lg:string)=>void
 }
@@ -718,14 +728,6 @@ class App extends Component<Props,State> {
       if(!global.inTest) console.log("render",this.props.keyword,this.props,this.state,isAuthenticated())
 
 
-      let TagTab = {
-         "Abstract Work":CropFreeIcon,
-         "Work Has Expression":CenterFocusStrong,
-         "Work Expression Of":CenterFocusWeak,
-         "Work":CropDin
-      }
-
-
       if(!this.props.keyword || this.props.keyword == "")
       {
          if(this.props.config && this.props.config.links)
@@ -755,12 +757,41 @@ class App extends Component<Props,State> {
          else
             results = this.props.searches[this.props.keyword+"@"+this.props.language]
 
+
          //console.log("results?",results,this.props.searches[this.props.keyword+"@"+this.props.language])
+
+         if(this.props.language == "")
+         {
+            if(!this.props.resources || !this.props.resources[this.props.keyword])
+            {
+               this.props.onGetResource(this.props.keyword);
+            }
+            else
+            {
+
+
+               let l ; // sublist[o].filter((e) => (e.type && e.type.match(/prefLabelMatch$/)))[0]
+               let labels = this.props.resources[this.props.keyword]
+               if(labels != true)
+               {
+                  if(labels) labels = labels[this.props.keyword.replace(/bdr:/,bdr)]
+                  if(labels) labels = labels[skos+"prefLabel"]
+                  if(labels) l = labels.filter((e) => (e.value && (e["lang"] == this.props.prefLang || e["xml:lang"] == this.props.prefLang)))[0]
+                  if(!l || l.length == 0) l = labels.filter((e) => (e.value && (e["lang"] == "bo-x-ewts" || e["xml:lang"] == "bo-x-ewts")))[0]
+                  if(!l || l.length == 0) l = labels.filter((e) => (e.value))[0]
+                  console.log("l",labels,l)
+                  if(l) {
+                     message.push(<h4 key="keyResource" style={{marginLeft:"16px"}}>Resource Id Matching (1)</h4>)
+                     message.push(this.makeResult(this.props.keyword,1,null,l.value,l.lang))
+                  }
+               }
+            }
+         }
 
          if(results)
          {
             let n = 0, m = 0 ;
-            if(results.numResults == 0) {
+            if(results.numResults == 0 && message.length == 0) {
                message.push(
                   <Typography style={{fontSize:"1.5em",maxWidth:'700px',margin:'50px auto',zIndex:0}}>
                      No result found.

@@ -54,6 +54,17 @@ export const loadedOntology = (state: DataState, action: Action) => {
 }
 reducers[actions.TYPES.loadedOntology] = loadedOntology;
 
+export const getResource = (state: DataState, action: Action) => {
+    return {
+        ...state,
+        "resources": {
+           ...state.resources,
+           [action.payload]:true
+       }
+    }
+}
+reducers[actions.TYPES.getResource] = getResource;
+
 
 export const gotResource = (state: DataState, action: Action) => {
     return {

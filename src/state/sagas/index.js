@@ -678,6 +678,17 @@ async function getOneFacet(keyword,language:string,facet:{[string]:string}) {
    }
 }
 
+async function getResource(iri:string) {
+   try {
+      let res = await api.loadResource(iri.replace(/bdr:/,""));
+
+      store.dispatch(dataActions.gotResource(iri, res));
+   }
+   catch(e) {
+      console.error("ERRROR with resource "+iri,e)
+   }
+
+}
 
 async function getFacetInfo(keyword,language:string,property:string) {
 
@@ -744,6 +755,14 @@ export function* watchCreatePdf() {
    );
 }
 
+export function* watchGetResource() {
+
+   yield takeLatest(
+      dataActions.TYPES.getResource,
+      (action) => getResource(action.payload)
+   );
+}
+
 export function* watchGetChunks() {
 
    yield takeLatest(
@@ -789,6 +808,7 @@ export default function* rootSaga() {
       watchGetManifest(),
       watchRequestPdf(),
       watchCreatePdf(),
+      watchGetResource(),
       watchSearchingKeyword(),
       watchStartSearch()
    ])

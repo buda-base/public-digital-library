@@ -21,6 +21,7 @@ const mapStateToProps = (state) => {
    let datatypes = state.data.datatypes ;
    let ontology = state.data.ontology ;
    let facets = state.data.facets ;
+   let resources = state.data.resources ;
 
    let loading = state.ui.loading  ;
    let prefLang = state.ui.prefLang  ;
@@ -28,7 +29,7 @@ const mapStateToProps = (state) => {
    let locale = state.i18n.locale
 
    let newState = { logged,config, hostFailure, searches, keyword, language,loading,datatypes,ontology,facets,
-      locale,prefLang }
+      locale,prefLang,resources }
 
    if(!global.inTest) console.log("mS2p",newState)
 
@@ -56,6 +57,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       },
       onCheckFacet:(k:string,lg:string,f:{[string]:string}) => {
          dispatch(data.getOneFacet(k,lg,f));
+      },
+      onGetResource:(iri:string) => {
+         dispatch(data.getResource(iri));
       },
       onSetLocale:(lg:string) => {
          dispatch(setLocale(lg));
