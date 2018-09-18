@@ -6,7 +6,7 @@ require('formdata-polyfill')
 
 const CONFIG_PATH = '/config.json'
 const CONFIGDEFAULTS_PATH = '/config-defaults.json'
-const ONTOLOGY_PATH = '/ontology.json'
+const ONTOLOGY_PATH = '/ontology/core.json'
 
 const dPrefix = {
    "C" : "Corporation",
