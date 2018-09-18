@@ -1846,6 +1846,16 @@ class ResourceViewer extends Component<Props,State>
                   </div>
                   */}
 
+                  { ["Role"].indexOf(getEntiType(this.props.IRI)) !== -1 &&
+                     <div>
+                        <h3><span>Associated Persons</span>:&nbsp;</h3>
+                     {   this.props.assocResources &&
+                           Object.keys(this.props.assocResources).map((e) =>
+                                 <h4>{this.uriformat(null,{value:e})}</h4>)
+                     }
+                     </div>
+                  }
+
                   { /* ["Person","Place","Topic"].indexOf(getEntiType(this.props.IRI)) !== -1 &&
                      <div>
                         <h3><span>Associated Resources</span>:&nbsp;</h3>
