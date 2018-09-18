@@ -167,6 +167,9 @@ async function initiateApp(params,iri,myprops) {
          {
             store.dispatch(dataActions.startSearch(params.r,"",s,t)); //,params.t.split(",")));
          }
+         else {
+            store.dispatch(dataActions.foundResults(params.r,"", {}, t));
+         }
       }
 
    } catch(e) {

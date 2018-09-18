@@ -1512,7 +1512,7 @@ class ResourceViewer extends Component<Props,State>
                   <ChatIcon />
                </IconButton>
                {
-                  this.props.IRI[0].match(/[PGTW]/) &&
+                  this.props.IRI[0].match(/[RPGTW]/) &&
                   <Link className="goBack" to={"/search?r=bdr:"+this.props.IRI}>
                      <Button style={{marginLeft:"30px"}}>Browse associated resources &gt;</Button>
                   </Link>
@@ -1850,8 +1850,8 @@ class ResourceViewer extends Component<Props,State>
                      <div>
                         <h3><span>Associated Persons</span>:&nbsp;</h3>
                      {   this.props.assocResources &&
-                           Object.keys(this.props.assocResources).map((e) =>
-                                 <h4>{this.uriformat(null,{value:e})}</h4>)
+                           Object.keys(this.props.assocResources).map((e,i) =>
+                                 i<20?<h4>{this.uriformat(null,{value:e})}</h4>:(i==20?<h4>(<a href={'/search?r=bdr:'+this.props.IRI}>browse all</a>)</h4>:null))
                      }
                      </div>
                   }
