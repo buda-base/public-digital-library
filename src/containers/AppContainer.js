@@ -22,6 +22,7 @@ const mapStateToProps = (state) => {
    let ontology = state.data.ontology ;
    let facets = state.data.facets ;
    let resources = state.data.resources ;
+   let ontoSearch = state.data.ontoSearch ;
 
    let loading = state.ui.loading  ;
    let prefLang = state.ui.prefLang  ;
@@ -29,7 +30,7 @@ const mapStateToProps = (state) => {
    let locale = state.i18n.locale
 
    let newState = { logged,config, hostFailure, searches, keyword, language,loading,datatypes,ontology,facets,
-      locale,prefLang,resources }
+      locale,prefLang,resources,ontoSearch }
 
    if(!global.inTest) console.log("mS2p",newState)
 
@@ -39,6 +40,9 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch, ownProps) => {
    return {
+      onOntoSearch:(k:string) => {
+         dispatch(data.ontoSearch(k));
+      },
       onStartSearch:(k:string,lg:string,t?:string[],s?:string) => {
          dispatch(data.startSearch(k,lg,t,s));
          if(t && t.length > 0) dispatch(ui.selectType(t[0]));

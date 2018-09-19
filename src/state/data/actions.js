@@ -110,6 +110,14 @@ export const pdfReady = (url: string, iri:string): Action => {
 }
 
 
+TYPES.ontoSearch = 'ONTO_SEARCH';
+export const ontoSearch = (k: string): Action => {
+    return {
+        type: TYPES.ontoSearch,
+        payload: k
+    }
+}
+
 TYPES.getResource = 'GET_RESOURCE';
 export const getResource = (iri: string): Action => {
     return {

@@ -138,6 +138,10 @@ async function initiateApp(params,iri,myprops) {
          //   store.dispatch(dataActions.startSearch("bdr:"+iri,"",["Any"],t)); //,params.t.split(",")));
          //}
       }
+      else if(!iri && params && params.p) {
+
+         store.dispatch(dataActions.ontoSearch(params.p));
+      }
       else if(!iri && params && params.q) {
 
          if(!params.lg) params.lg = "bo-x-ewts"

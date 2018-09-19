@@ -62,6 +62,7 @@ const tmp = "http://purl.bdrc.io/ontology/tmp/" ;
 const _tmp = tmp ;
 
 export const prefixes = [adm, bdo,bdr,rdf,rdfs,skos,tmp,_tmp,oa]
+export const prefixesMap = {adm, bdo,bdr,rdf,rdfs,skos,tmp,_tmp,oa}
 
 export const languages = {
    "zh":"lang.search.zh",
@@ -113,6 +114,8 @@ type Props = {
    datatypes:boolean|{},
    history:{},
    ontology:{},
+   ontoSearch:string,
+   onOntoSearch:(k:string)=>void,
    onStartSearch:(k:string,lg:string,t?:string)=>void,
    onSearchingKeyword:(k:string,lg:string,t?:string[])=>void,
    onGetDatatypes:(k:string,lg:string)=>void,
@@ -157,36 +160,47 @@ class App extends Component<Props,State> {
       this.handleCheck.bind(this);
 
       let get = qs.parse(this.props.history.location.search)
-      console.log('qs',get)
+
+      let lg = "bo-x-ewts"
+      if(get.p) lg = ""
+      else if(get.lg) lg = get.lg
+
+      let kw = ""
+      if(get.q) kw = get.q.replace(/"/g,"")
 
       this.state = {
-         language:get.lg?get.lg:"bo-x-ewts",
+         language:lg,
          langOpen:false,
          UI:{language:"en"},
          filters: {
             datatype:get.t?get.t.split(","):["Any"]
          },
          dataSource: [],
-         keyword:get.q?get.q.replace(/"/g,""):"",
+         keyword:kw,
          collapse:{},
          loader:{},
          paginate:{index:0,pages:[0],n:[0]},
-         leftPane:(window.innerWidth > 1400)
+         leftPane:(window.innerWidth > 1400),
       };
+
+      console.log('qs',get,this.state)
+
 
    }
 
    requestSearch(key:string,label?:string)
    {
+      console.log("key",key,label)
+
       if(!key || key == "") return ;
-      if(!key.match(/^bdr:/) && key.indexOf("\"") === -1) key = "\""+key+"\""
+      if(!key.match(/:/) && key.indexOf("\"") === -1) key = "\""+key+"\""
 
       let state = { ...this.state, dataSource:[] }
-            //this.setState(state);
+      //this.setState(state)
 
       console.log("search",key,label,this.state,!global.inTest ? this.props:null)
 
-      if(key.match(/^bdr:[TPGW]/))
+      if(key.match(/^bdr:[RTPGW]/))
       {
          if(!label) label = this.state.filters.datatype.filter((f)=>["Person","Work"].indexOf(f) !== -1)[0]
 
@@ -196,6 +210,23 @@ class App extends Component<Props,State> {
 
             this.props.onStartSearch(key,"",[label],getEntiType(key))
          }
+      }
+      else if(key.match(/^[^:]*:[^ ]+/))
+      {
+         this.props.history.push({pathname:"/search",search:"?p="+key})
+
+         if(!this.props.searches[key+"@"+this.getLanguage()]) {
+
+            this.props.onOntoSearch(key)
+         }
+         /*
+         let id = key.replace(/["]/g,"")
+         for(let k of Object.keys(prefixesMap)) {
+            id = id.replace(new RegExp(k+":"),prefixesMap[k])
+         }
+         state["ontoSearch"] = id
+         this.setState(state)
+         */
       }
       else if(label === "Any" || ( !label)) // && ( this.state.filters.datatype.length === 0 || this.state.filters.datatype.indexOf("Any") !== -1 ) ) )
       {
@@ -660,7 +691,7 @@ class App extends Component<Props,State> {
       return false ;
    }
 
-   makeResult(id,n,t,lit,lang,tip,Tag)
+   makeResult(id,n,t,lit,lang,tip,Tag,url)
    {
       //console.log("res",id,n,t,lit,lang,tip,Tag)
 
@@ -708,7 +739,7 @@ class App extends Component<Props,State> {
          if(id.match(/^bdr:/))
             return ( <Link key={n} to={"/show/"+id} className="result">{ret}</Link> )
          else
-            return ( <Link key={n} to={id.replace(/^https?:/,"")} target="_blank" className="result">{ret}</Link> )
+            return ( <Link key={n} to={url?url.replace(/^https?:/,""):id.replace(/^https?:/,"")} target="_blank" className="result">{ret}</Link> )
 
 
    }
@@ -726,7 +757,6 @@ class App extends Component<Props,State> {
       const { isAuthenticated } = this.props.auth;
 
       if(!global.inTest) console.log("render",this.props.keyword,this.props,this.state,isAuthenticated())
-
 
       if(!this.props.keyword || this.props.keyword == "")
       {
@@ -762,7 +792,51 @@ class App extends Component<Props,State> {
 
          if(this.props.language == "")
          {
-            if(!this.props.resources || !this.props.resources[this.props.keyword])
+            if(this.props.ontoSearch == this.props.keyword)
+            {
+               if(this.props.ontology)
+               {
+
+                  let iri = this.props.keyword
+                  let url = this.props.keyword
+                  for(let k of Object.keys(prefixesMap)) url = url.replace(new RegExp(k+":"),prefixesMap[k])
+
+                  let labels = this.props.ontology[url]
+                  if(!labels && this.props.keyword.match(/^:/))
+                  {
+                     for(let k of Object.keys(this.props.ontology)) {
+                        console.log(k.replace(/^.*?[/]([^/]+)$/,":$1"),this.props.keyword)
+                        if(k.replace(/^.*?[/]([^/]+)$/,":$1") === this.props.keyword)
+                        {
+                           labels = this.props.ontology[k]
+                           url = k
+                           iri = k
+                           for(let p of Object.keys(prefixesMap)) iri = iri.replace(new RegExp(prefixesMap[p]),p+":")
+                           break ;
+                        }
+                     }
+                  }
+
+                  console.log("onto lab",labels)
+
+                  if(labels)
+                  {
+                     let l = { value : this.props.keyword, lang :"" }
+                     if(labels) labels = labels[rdfs+"label"]
+                     if(labels) l = labels[0]
+                     message.push(<h4 key="keyResource" style={{marginLeft:"16px"}}>Ontology Property Matching (1)</h4>)
+                     message.push(this.makeResult(iri,1,null,l.value,l.lang,null,null,url))
+                  }
+                  else {
+                     message.push(
+                        <Typography style={{fontSize:"1.5em",maxWidth:'700px',margin:'50px auto',zIndex:0}}>
+                           No result found.
+                        </Typography>
+                     )
+                  }
+               }
+            }
+            else if(!this.props.resources || !this.props.resources[this.props.keyword])
             {
                this.props.onGetResource(this.props.keyword);
             }
@@ -772,17 +846,19 @@ class App extends Component<Props,State> {
 
                let l ; // sublist[o].filter((e) => (e.type && e.type.match(/prefLabelMatch$/)))[0]
                let labels = this.props.resources[this.props.keyword]
-               if(labels != true)
+               if(labels)
                {
                   if(labels) labels = labels[this.props.keyword.replace(/bdr:/,bdr)]
                   if(labels) labels = labels[skos+"prefLabel"]
-                  if(labels) l = labels.filter((e) => (e.value && (e["lang"] == this.props.prefLang || e["xml:lang"] == this.props.prefLang)))[0]
-                  if(!l || l.length == 0) l = labels.filter((e) => (e.value && (e["lang"] == "bo-x-ewts" || e["xml:lang"] == "bo-x-ewts")))[0]
-                  if(!l || l.length == 0) l = labels.filter((e) => (e.value))[0]
-                  console.log("l",labels,l)
-                  if(l) {
-                     message.push(<h4 key="keyResource" style={{marginLeft:"16px"}}>Resource Id Matching (1)</h4>)
-                     message.push(this.makeResult(this.props.keyword,1,null,l.value,l.lang))
+                  if(labels) {
+                     l = labels.filter((e) => (e.value && (e["lang"] == this.props.prefLang || e["xml:lang"] == this.props.prefLang)))[0]
+                     if(!l || l.length == 0) l = labels.filter((e) => (e.value && (e["lang"] == "bo-x-ewts" || e["xml:lang"] == "bo-x-ewts")))[0]
+                     if(!l || l.length == 0) l = labels.filter((e) => (e.value))[0]
+                     console.log("l",labels,l)
+                     if(l) {
+                        message.push(<h4 key="keyResource" style={{marginLeft:"16px"}}>Resource Id Matching (1)</h4>)
+                        message.push(this.makeResult(this.props.keyword,1,null,l.value,l.lang))
+                     }
                   }
                }
             }
@@ -970,11 +1046,11 @@ class App extends Component<Props,State> {
                               if(prop)
                                  for(let p of preProps) {
 
-                                    //console.log("::",p[rdfs+"subPropertyOf"])
+                                    //console.log("::",p,preProps) //p[rdfs+"subPropertyOf"])
 
-                                    if(p[rdfs+"subClassOf"] && p[rdfs+"subClassOf"].filter(q => q.value == e.value).length > 0
+                                    if(p && (p[rdfs+"subClassOf"] && p[rdfs+"subClassOf"].filter(q => q.value == e.value).length > 0
                                        || p[rdfs+"subPropertyOf"] && p[rdfs+"subPropertyOf"].filter(q => q.value == e.value).length > 0
-                                       || p[bdo+"taxSubClassOf"] && p[bdo+"taxSubClassOf"].filter(q => q.value == e.value).length > 0
+                                       || p[bdo+"taxSubClassOf"] && p[bdo+"taxSubClassOf"].filter(q => q.value == e.value).length > 0 )
                                     ) {
                                        use = false ;
                                        break ;

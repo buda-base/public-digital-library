@@ -54,6 +54,16 @@ export const loadedOntology = (state: DataState, action: Action) => {
 }
 reducers[actions.TYPES.loadedOntology] = loadedOntology;
 
+export const ontoSearch = (state: DataState, action: Action) => {
+    return {
+        ...state,
+        keyword: action.payload,
+        ontoSearch:action.payload,
+        language:""
+    }
+}
+reducers[actions.TYPES.ontoSearch] = ontoSearch;
+
 export const getResource = (state: DataState, action: Action) => {
     return {
         ...state,
