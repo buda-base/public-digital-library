@@ -842,7 +842,8 @@ class ResourceViewer extends Component<Props,State>
                if(root && root.length > 0) tmp = [tmp," in ",this.uriformat(bdo+"workHasRoot",root[0])]
             }
 
-            if(this.props.assocResources && this.props.assocResources[e.value] && this.props.assocResources[e.value].filter(f => f.type == bdo+"originalRecord").length > 0)
+            if(this.props.assocResources && this.props.assocResources[e.value]
+               && this.props.assocResources[e.value].filter(f => f.type == bdo+"originalRecord").length > 0)
             {
 
                let elem = this.props.assocResources[e.value] //this.uriformat(_tmp+"workRootWork",e)
@@ -899,7 +900,7 @@ class ResourceViewer extends Component<Props,State>
          else {
 
             elem = this.getResourceBNode(e.value)
-            //console.log("bnode",e.value,elem)
+            console.log("bnode",e.value,elem)
 
             if(!elem) continue ;
 
@@ -957,7 +958,7 @@ class ResourceViewer extends Component<Props,State>
 
                   if(!f.match(/[/]note/)) first="" ;
 
-                  //console.log("f",f)
+                  console.log("f",f)
 
                   let hasBnode = false ;
 
@@ -973,7 +974,7 @@ class ResourceViewer extends Component<Props,State>
                      val = elem[f]
                      for(let v of val)
                      {
-                        //console.log("v",v);
+                        console.log("v",v);
 
                         let txt = v.value;
                         if(v.type == 'bnode')
@@ -1586,7 +1587,11 @@ class ResourceViewer extends Component<Props,State>
 
                            //console.log("tags",tags)
 
-                           if(k == bdo+"itemHasVolume")
+                           if(k == bdo+"note")
+                           {
+                              console.log("note",tags,k);//tags = [<h4>Note</h4>]
+                           }
+                           else if(k == bdo+"itemHasVolume")
                            {
 
                               tags = tags.map(e => {
