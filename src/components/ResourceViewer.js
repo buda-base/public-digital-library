@@ -950,15 +950,33 @@ class ResourceViewer extends Component<Props,State>
             }
             else
             {
-               let first = " here" ;
+               let first = "" //" here" ;
 
-               for(let f of Object.keys(elem))
+               // 1-sort keys of elem when prop == Note
+               // 2-store Work & Location elems
+               // 3-finalize the new NoteText element
+
+               let keys = Object.keys(elem)
+               let noteVol,noteLoc
+               if(prop == bdo+"note")
+               {
+                  keys = _.orderBy(keys,function(elem) {
+                     var rank = { [bdo+"noteText"]:3, [bdo+"noteLocationStatement"]:2, [bdo+"noteWork"]:1 }
+                     if(rank[elem]) return rank[elem]
+                     else return 4 ;
+                  })
+                  noteVol = true
+                  noteLoc = true
+                  console.log("keys",keys)
+               }
+
+               for(let f of keys)
                {
                   let subsub = []
 
                   if(!f.match(/[/]note/)) first="" ;
 
-                  console.log("f",f)
+                  console.log("f",prop,f)
 
                   let hasBnode = false ;
 
@@ -1012,8 +1030,29 @@ class ResourceViewer extends Component<Props,State>
                   }
                   if(!noVal)sub.push(<div className={div+"sub "+(hasBnode?"full":"")}>{subsub}</div>)
                   else {
+
                      if(subsub.length > 0) sub.push(subsub) //<div className="sub">{subsub}</div>)
-                     ret.push(<div className={div+ first}>{sub}</div>)
+
+                     if(f == bdo+"noteLocationStatement" || f == bdo+"noteWork" || f == bdo+"noteText") {
+                        if(f == bdo+"noteText") {
+
+                           if(noteVol && noteVol != true) sub.push(noteVol)
+                           if(noteLoc && noteLoc != true) sub.push(noteLoc)
+                           ret.push(<div className={div+ first}>{sub}</div>)
+                        }
+                        else if(f == bdo+"noteLocationStatement")
+                        {
+                           noteLoc = <div className={div+ first}>{sub}</div>
+                        }
+                        else if(f == bdo+"noteWork")
+                        {
+                           noteVol = <div className={div+ first}>{sub}</div>
+                        }
+                     }
+                     else {
+                        ret.push(<div className={div+ first}>{sub}</div>)
+                     }
+
                      sub = []
                      first = ""
                   }
