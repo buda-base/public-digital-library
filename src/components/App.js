@@ -637,7 +637,7 @@ class App extends Component<Props,State> {
             checkSub = true ;
          }
 
-         var elem = {"@id":kZ[0],"taxHasSubClass":kZsub,[_tmp+"count"]:cpt,"skos:prefLabel":labels}
+         var elem = {"@id":kZ[0],"taxHasSubClass":kZsub,["tmp:count"]:cpt,"skos:prefLabel":labels}
          if(checkSub) elem = { ...elem, checkSub}
          ret.push(elem)
 
@@ -650,7 +650,7 @@ class App extends Component<Props,State> {
 
       ret = [
                {"@id":"root", "taxHasSubClass":["Any"].concat(Object.keys(tree))},
-               {"@id":"Any",[_tmp+"count"]:any,"taxHasSubClass":[]}
+               {"@id":"Any",["tmp:count"]:any,"taxHasSubClass":[]}
            ].concat(ret)
 
       return ret;
@@ -1354,7 +1354,7 @@ class App extends Component<Props,State> {
          subs = subs.map(str => {
             let index
             let a = tree.filter(e => e["@id"] == str)
-            if(a.length > 0 && a[0][tmp+"count"]) index = Number(a[0][tmp+"count"])
+            if(a.length > 0 && a[0]["tmp:count"]) index = Number(a[0]["tmp:count"])
 
             return ({str,index})
          })
@@ -1378,7 +1378,7 @@ class App extends Component<Props,State> {
 
             //console.log("check",e,label,elem,disable);
 
-            let cpt = tree.filter(f => f["@id"] == e)[0][_tmp+"count"]
+            let cpt = tree.filter(f => f["@id"] == e)[0]["tmp:count"]
 
             let checkable = tree.filter(f => f["@id"] == e)
             if(checkable.length > 0 && checkable[0].checkSub)
@@ -1652,7 +1652,7 @@ class App extends Component<Props,State> {
                                        tree[0]['taxHasSubClass'] = ['Any'].concat(tree[0]['taxHasSubClass'])
                                        tree.splice(1,0,{"@id":"Any",
                                           taxHasSubClass:[],"skos:prefLabel":[],
-                                          [tmp+"count"]:counts["datatype"][this.state.filters.datatype[0]]})
+                                          ["tmp:count"]:counts["datatype"][this.state.filters.datatype[0]]})
                                     }
 
                                     return widget(jlabel,j,subWidget(tree,jpre,tree[0]['taxHasSubClass'],true));
