@@ -673,6 +673,15 @@ class ResourceViewer extends Component<Props,State>
       }
    }
 
+   tooltip(lang:string)
+   {
+      return lang?<Tooltip placement="bottom-end" title={
+         <div style={{margin:"10px"}}>
+            <Translate value={languages[lang]?languages[lang].replace(/search/,"tip"):lang}/>
+         </div>
+      }><span className="lang">{lang}</span></Tooltip>:null
+   }
+
    getResourceElem(prop:string)
    {
       if(!this.props.IRI || !this.props.resources || !this.props.resources[this.props.IRI]
@@ -957,14 +966,16 @@ class ResourceViewer extends Component<Props,State>
                // 3-finalize the new NoteText element
 
                let keys = Object.keys(elem)
-               let noteVol,noteLoc
+               let noteVol,noteLoc,noteData = {}
                if(prop == bdo+"note")
                {
+                  keys.push(tmp+"noteFinal")
                   keys = _.orderBy(keys,function(elem) {
                      var rank = { [bdo+"noteText"]:3, [bdo+"noteLocationStatement"]:2, [bdo+"noteWork"]:1 }
                      if(rank[elem]) return rank[elem]
                      else return 4 ;
                   })
+
                   noteVol = true
                   noteLoc = true
                   console.log("keys",keys)
@@ -977,6 +988,71 @@ class ResourceViewer extends Component<Props,State>
                   if(!f.match(/[/]note/)) first="" ;
 
                   console.log("f",prop,f)
+
+                  if(f === tmp+"noteFinal")
+                  {
+                     let note = []
+                     console.log("noteData",noteData)
+                     if(noteData[bdo+"noteText"])
+                     {
+                        let workuri ;
+                        if(noteData[bdo+"noteWork"])
+                        {
+                           let loca ;
+                           if(noteData[bdo+"noteLocationStatement"])
+                           {
+                              loca = [" @ ",noteData[bdo+"noteLocationStatement"].value]
+                           }
+                           workuri = <div><Tag style={{fontSize:"14px"}}>(from {this.uriformat(bdo+"noteWork",noteData[bdo+"noteWork"])}{loca})</Tag></div>
+                        }
+
+                        note.push(
+                           <div class="sub">
+                              <Tag className="first type">{this.proplink(bdo+"noteText")}:</Tag>
+                              {workuri}
+                              <div class="subsub">
+                                 <Tag>
+                                    {this.pretty(noteData[bdo+"noteText"].value)}
+                                    {this.tooltip(noteData[bdo+"noteText"].lang)}
+                                    <ChatIcon className="annoticon"  onClick={
+                                       (function(val,prop,v,ev){
+                                          this.setState({...this.state,annoPane:true,newAnno:{prop:this.proplink(prop),val},viewAnno:prop+"@"+v})
+                                       }).bind(this,noteData[bdo+"noteText"].value,bdo+"noteText",noteData[bdo+"noteText"].value)
+                                    }/>
+                                 </Tag>
+                              </div>
+                           </div>)
+                     }
+                     else if(noteData[bdo+"noteWork"])
+                     {
+                        let loca
+                        if(noteData[bdo+"noteLocationStatement"])
+                        {
+                           loca = [" @ ",noteData[bdo+"noteLocationStatement"].value]
+                        }
+                        let workuri = this.uriformat(bdo+"noteWork",noteData[bdo+"noteWork"])
+                        note.push(
+                           <div class="sub">
+                              <Tag className="first type">{this.proplink(bdo+"noteWork")}:</Tag>
+                              <div class="subsub">
+                                 <Tag>{workuri}{loca}
+                                    <ChatIcon className="annoticon"  onClick={
+                                       (function(val,prop,v,ev){
+                                          this.setState({...this.state,annoPane:true,newAnno:{prop:this.proplink(prop),val},viewAnno:prop+"@"+v})
+                                       }).bind(this,[workuri,loca],bdo+"noteWork",noteData[bdo+"noteWork"].value)
+                                    }/>
+                                 </Tag>
+                              </div>
+                           </div>
+                        )
+
+                     }
+                     else if(noteData[bdo+"noteLocationStatement"])
+                     {
+                     }
+                     ret.push(note)
+                     continue;
+                  }
 
                   let hasBnode = false ;
 
@@ -993,6 +1069,10 @@ class ResourceViewer extends Component<Props,State>
                      for(let v of val)
                      {
                         console.log("v",v);
+
+                        if(f == bdo+"noteLocationStatement" || f == bdo+"noteWork" || f == bdo+"noteText") {
+                           noteData[f] = v
+                        }
 
                         let txt = v.value;
                         if(v.type == 'bnode')
@@ -1032,9 +1112,12 @@ class ResourceViewer extends Component<Props,State>
                   else {
 
                      if(subsub.length > 0) sub.push(subsub) //<div className="sub">{subsub}</div>)
-
                      if(f == bdo+"noteLocationStatement" || f == bdo+"noteWork" || f == bdo+"noteText") {
+                        // wait noteFinal
+                        /*
                         if(f == bdo+"noteText") {
+
+                           console.log("noteData",noteData)
 
                            if(noteVol && noteVol != true) sub.push(noteVol)
                            if(noteLoc && noteLoc != true) sub.push(noteLoc)
@@ -1048,6 +1131,7 @@ class ResourceViewer extends Component<Props,State>
                         {
                            noteVol = <div className={div+ first}>{sub}</div>
                         }
+                        */
                      }
                      else {
                         ret.push(<div className={div+ first}>{sub}</div>)

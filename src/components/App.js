@@ -825,7 +825,7 @@ class App extends Component<Props,State> {
                      if(labels) l = labels[0]
                      message.push(<h4 key="keyResource" style={{marginLeft:"16px"}}>Ontology Property Matching (1)</h4>)
                      message.push(this.makeResult(iri,1,null,l.value,l.lang,null,null,url))
-                     message.push(<iframe id="ontoFrame" className="ontoSearch" src={url} />)
+                     //message.push(<iframe id="ontoFrame" className="ontoSearch" src={url} />)
                         /* onLoad={() =>
                         {
                            let iframe = window.parent.document.getElementById("ontoFrame");
