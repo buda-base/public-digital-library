@@ -107,7 +107,7 @@ export const gotAssocResources = (state: DataState, action: Action) => {
    let res = state.resources
    if(res) res = res[action.payload]
    if(res) {
-      console.log("res",res)
+      console.log("res",res,action)
 
       let asso = action.meta.data
       for(let k of Object.keys(asso))
@@ -133,7 +133,7 @@ export const gotAssocResources = (state: DataState, action: Action) => {
                      console.log("pred obj",pred,obj)
                      if(pred[0] && pred[0].value && obj[0] && obj[0].value)
                      {
-                        let prop = res[bdr+action.payload][pred[0].value] ;
+                        let prop = res[action.payload.replace(/bdr:/,bdr)][pred[0].value] ;
                         if(prop)
                         {
                            console.log("prop",prop)
@@ -220,7 +220,7 @@ export const gotAssocResources = (state: DataState, action: Action) => {
                               }
                            }
 
-                           res[bdr+action.payload][pred[0].value] = newP
+                           res[action.payload.replace(/bdr:/,bdr)][pred[0].value] = newP
                            console.log("newP",newP)
                         }
                      }
