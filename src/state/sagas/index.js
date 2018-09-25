@@ -14,17 +14,9 @@ import {auth} from '../../routes';
 // to enable tests
 const api = new bdrcApi({...global.inTest ? {server:"http://localhost:5555"}:{}});
 
-const adm  = "http://purl.bdrc.io/ontology/admin/" ;
 const bdo  = "http://purl.bdrc.io/ontology/core/";
 const bdr  = "http://purl.bdrc.io/resource/";
-const owl  = "http://www.w3.org/2002/07/owl#";
-const rdf  = "http://www.w3.org/1999/02/22-rdf-syntax-ns#";
-const rdfs = "http://www.w3.org/2000/01/rdf-schema#";
 const skos = "http://www.w3.org/2004/02/skos/core#";
-const tmp  = "http://purl.bdrc.io/ontology/tmp/" ;
-const _tmp  = "http://purl.bdrc.io/ontology/tmp/" ;
-
-const prefixes = { adm, bdo, bdr, owl, rdf, rdfs, skos, tmp }
 
 let IIIFurl = "http://iiif.bdrc.io" ;
 

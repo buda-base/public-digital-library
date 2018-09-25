@@ -101,6 +101,8 @@ type State = {
 
 
 const adm  = "http://purl.bdrc.io/ontology/admin/" ;
+const bdac = "http://purl.bdrc.io/anncollection/" ;
+const bdan = "http://purl.bdrc.io/annotation/" ;
 const bdo  = "http://purl.bdrc.io/ontology/core/";
 const bdr  = "http://purl.bdrc.io/resource/";
 const foaf = "http://xmlns.com/foaf/0.1/" ;
@@ -112,7 +114,7 @@ const skos = "http://www.w3.org/2004/02/skos/core#";
 const tmp  = "http://purl.bdrc.io/ontology/tmp/" ;
 const _tmp  = "http://purl.bdrc.io/ontology/tmp/" ;
 
-const prefixes = { adm, bdo, bdr, foaf, oa, owl, rdf, rdfs, skos, tmp }
+const prefixes = { adm, bdac, bdan, bdo, bdr, foaf, oa, owl, rdf, rdfs, skos, tmp }
 
 let propOrder = {
    "Corporation":[],
@@ -1415,6 +1417,8 @@ class ResourceViewer extends Component<Props,State>
          titre = this.format("h2",skos+"prefLabel")
       else if(kZprop.indexOf(bdo+"eTextTitle") !== -1)
          titre = this.format("h2",bdo+"eTextTitle")
+      else if(kZprop.indexOf(rdfs+"label") !== -1)
+         titre = this.format("h2",rdfs+"label")
       else
          titre = <h2>{getEntiType(this.props.IRI) + " " +this.props.IRI}</h2>
 
@@ -1552,7 +1556,18 @@ class ResourceViewer extends Component<Props,State>
                      <Button style={{paddingLeft:0}}>json-ld</Button>
                   </a>]
                }
-               { /* TODO
+               {
+                  this.props.IRI.match(/^bda[nc]:/) &&
+                  [<a className="goBack" target="_blank" title="TTL version" rel="alternate" type="text/turtle"
+                     href={"http://purl.bdrc.io/"+(this.props.IRI.match(/^bdan:/)?"annotation/":"anncollection/")+this.props.IRI.replace(/bda[nc]:/,"")+".ttl"}>
+                        <Button style={{marginLeft:"50px",paddingRight:"0"}}>export to ttl</Button>
+                  </a>,<span>&nbsp;/&nbsp;</span>,
+                  <a className="goBack noML" target="_blank" title="JSON-LD version" rel="alternate" type="application/ld+json"
+                     href={"http://purl.bdrc.io/"+(this.props.IRI.match(/^bdan:/)?"annotation/":"anncollection/")+this.props.IRI.replace(/bda[nc]:/,"")+".jsonld"}>
+                        <Button style={{paddingLeft:0}}>json-ld</Button>
+                  </a>]
+               }
+               { /*  TODO // external resources ==> /graph/Resgraph?R_RES=
                   this.props.IRI.match(/^bda[cn]:/) &&
                */}
                {pdfLink &&
