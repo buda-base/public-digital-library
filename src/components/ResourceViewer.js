@@ -271,9 +271,9 @@ class ResourceViewer extends Component<Props,State>
    properties(sorted : boolean = false)
    {
       if(!this.props.IRI || !this.props.resources || !this.props.resources[this.props.IRI]
-         || !this.props.resources[this.props.IRI][bdr+this.props.IRI]) return {}
+         || !this.props.resources[this.props.IRI][this.expand(this.props.IRI)]) return {}
 
-      let prop = this.props.resources[this.props.IRI][bdr+this.props.IRI] ;
+      let prop = this.props.resources[this.props.IRI][this.expand(this.props.IRI)] ;
       let w = prop[bdo+"workDimWidth"]
       let h = prop[bdo+"workDimHeight"]
 
@@ -513,9 +513,9 @@ class ResourceViewer extends Component<Props,State>
    subProps(k:string,div:string="sub")
    {
       let ret = []
-      if(this.props.IRI && this.props.resources[this.props.IRI] && this.props.resources[this.props.IRI][bdr+this.props.IRI]) {
+      if(this.props.IRI && this.props.resources[this.props.IRI] && this.props.resources[this.props.IRI][this.expand(this.props.IRI)]) {
 
-         for(let p of Object.keys(this.props.resources[this.props.IRI][bdr+this.props.IRI])) {
+         for(let p of Object.keys(this.props.resources[this.props.IRI][this.expand(this.props.IRI)])) {
 
             if(this.props.ontology[p] && this.props.ontology[p][rdfs+"subPropertyOf"]
                && this.props.ontology[p][rdfs+"subPropertyOf"].filter((e)=>(e.value == k)).length > 0)
@@ -685,10 +685,10 @@ class ResourceViewer extends Component<Props,State>
    getResourceElem(prop:string)
    {
       if(!this.props.IRI || !this.props.resources || !this.props.resources[this.props.IRI]
-         || !this.props.resources[this.props.IRI][bdr+this.props.IRI]
-         || !this.props.resources[this.props.IRI][bdr+this.props.IRI][prop]) return ;
+         || !this.props.resources[this.props.IRI][this.expand(this.props.IRI)]
+         || !this.props.resources[this.props.IRI][this.expand(this.props.IRI)][prop]) return ;
 
-      let elem = this.props.resources[this.props.IRI][bdr+this.props.IRI][prop]
+      let elem = this.props.resources[this.props.IRI][this.expand(this.props.IRI)][prop]
 
       return elem
    }
@@ -774,7 +774,7 @@ class ResourceViewer extends Component<Props,State>
          if(value === bdr+"LanguageTaxonomy") continue ;
 
 
-         console.log("e",e,pretty)
+         //console.log("e",e,pretty)
 
          if(e.type != "bnode")
          {
@@ -909,7 +909,7 @@ class ResourceViewer extends Component<Props,State>
          else {
 
             elem = this.getResourceBNode(e.value)
-            console.log("bnode",e.value,elem)
+            //console.log("bnode",e.value,elem)
 
             if(!elem) continue ;
 
@@ -918,8 +918,8 @@ class ResourceViewer extends Component<Props,State>
             let val = elem[rdf+"type"]
             let lab = elem[rdfs+"label"]
 
-            console.log("val",val);
-            console.log("lab",lab);
+            //console.log("val",val);
+            //console.log("lab",lab);
 
             let noVal = true ;
 
@@ -978,7 +978,7 @@ class ResourceViewer extends Component<Props,State>
 
                   noteVol = true
                   noteLoc = true
-                  console.log("keys",keys)
+                  //console.log("keys",keys)
                }
 
                for(let f of keys)
@@ -987,12 +987,12 @@ class ResourceViewer extends Component<Props,State>
 
                   if(!f.match(/[/]note/)) first="" ;
 
-                  console.log("f",prop,f)
+                  //console.log("f",prop,f)
 
                   if(f === tmp+"noteFinal")
                   {
                      let note = []
-                     console.log("noteData",noteData)
+                     //console.log("noteData",noteData)
                      if(noteData[bdo+"noteText"])
                      {
                         let workuri ;
@@ -1068,7 +1068,7 @@ class ResourceViewer extends Component<Props,State>
                      val = elem[f]
                      for(let v of val)
                      {
-                        console.log("v",v);
+                        //console.log("v",v);
 
                         if(f == bdo+"noteLocationStatement" || f == bdo+"noteWork" || f == bdo+"noteText") {
                            noteData[f] = v
@@ -1385,7 +1385,7 @@ class ResourceViewer extends Component<Props,State>
       {
          if(!this.props.imageAsset && !this.props.manifestError) {
             this.setState({...this.state, imageLoaded:false})
-            this.props.onHasImageAsset("http://iiifpres.bdrc.io/2.1.1/v:bdr:"+ this.props.IRI+ "/manifest",this.props.IRI);
+            this.props.onHasImageAsset("http://iiifpres.bdrc.io/2.1.1/v:"+ this.props.IRI+ "/manifest",this.props.IRI);
          }
       }
       else if(kZprop.indexOf(bdo+"hasIIIFManifest") !== -1)
@@ -1400,7 +1400,7 @@ class ResourceViewer extends Component<Props,State>
       {
          if(!this.props.imageAsset && !this.props.manifestError) {
             this.setState({...this.state, imageLoaded:false})
-            this.props.onHasImageAsset("http://presentation.bdrc.io/2.1.1/collection/wio:bdr:"+this.props.IRI,this.props.IRI)
+            this.props.onHasImageAsset("http://presentation.bdrc.io/2.1.1/collection/wio:"+this.props.IRI,this.props.IRI)
          }
       }
 
@@ -1421,7 +1421,7 @@ class ResourceViewer extends Component<Props,State>
 
 //         console.log("iiif",iiif,this.props.config)
 
-         let id = this.props.IRI.slice(1);
+         let id = this.props.IRI.replace(/^[^:]+:./,"")
          if(this.props.imageAsset.match(/[/]i:/)) {
             pdfLink = iiif+"/download/pdf/wi:bdr:W"+id+"::bdr:I"+id ;
          }
@@ -1538,12 +1538,15 @@ class ResourceViewer extends Component<Props,State>
                      <HomeIcon style={{fontSize:"30px"}}/>
                   </IconButton>
                </Link>
-               <a className="goBack" target="_blank" title="TTL version" rel="alternate" type="text/turtle" href={"http://purl.bdrc.io/resource/"+this.props.IRI+".ttl"}>
-                  <Button style={{marginLeft:"50px",paddingRight:"0"}}>export to ttl</Button>
-               </a>&nbsp;/&nbsp;
-               <a className="goBack noML" target="_blank" title="JSON-LD version" rel="alternate" type="application/ld+json" href={"http://purl.bdrc.io/resource/"+this.props.IRI+".jsonld"}>
-                  <Button style={{paddingLeft:0}}>json-ld</Button>
-               </a>
+               {
+                  this.props.IRI.match(/^bdr:/) &&
+                  [<a className="goBack" target="_blank" title="TTL version" rel="alternate" type="text/turtle" href={"http://purl.bdrc.io/resource/"+this.props.IRI+".ttl"}>
+                     <Button style={{marginLeft:"50px",paddingRight:"0"}}>export to ttl</Button>
+                  </a>,<span>&nbsp;/&nbsp;</span>,
+                  <a className="goBack noML" target="_blank" title="JSON-LD version" rel="alternate" type="application/ld+json" href={"http://purl.bdrc.io/resource/"+this.props.IRI+".jsonld"}>
+                     <Button style={{paddingLeft:0}}>json-ld</Button>
+                  </a>]
+               }
                {pdfLink &&
                   [<a style={{fontSize:"26px"}} className="goBack pdfLoader">
                      <Loader loaded={(!this.props.pdfVolumes || this.props.pdfVolumes.length > 0)} options={{position:"relative",left:"24px",top:"-7px"}} />
@@ -1637,7 +1640,7 @@ class ResourceViewer extends Component<Props,State>
                </IconButton>
                {
                   this.props.IRI[0].match(/[RPGTW]/) &&
-                  <Link className="goBack" to={"/search?r=bdr:"+this.props.IRI}>
+                  <Link className="goBack" to={"/search?r="+this.props.IRI}>
                      <Button style={{marginLeft:"30px"}}>Browse associated resources &gt;</Button>
                   </Link>
                }
@@ -1712,7 +1715,7 @@ class ResourceViewer extends Component<Props,State>
 
                            if(k == bdo+"note")
                            {
-                              console.log("note",tags,k);//tags = [<h4>Note</h4>]
+                              //console.log("note",tags,k);//tags = [<h4>Note</h4>]
                            }
                            else if(k == bdo+"itemHasVolume")
                            {
@@ -1979,7 +1982,7 @@ class ResourceViewer extends Component<Props,State>
                         <h3><span>Associated Persons</span>:&nbsp;</h3>
                      {   this.props.assocResources &&
                            Object.keys(this.props.assocResources).map((e,i) =>
-                                 i<20?<h4>{this.uriformat(null,{value:e})}</h4>:(i==20?<h4>(<a href={'/search?r=bdr:'+this.props.IRI}>browse all</a>)</h4>:null))
+                                 i<20?<h4>{this.uriformat(null,{value:e})}</h4>:(i==20?<h4>(<a href={'/search?r='+this.props.IRI}>browse all</a>)</h4>:null))
                      }
                      </div>
                   }

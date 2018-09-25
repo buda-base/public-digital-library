@@ -824,7 +824,7 @@ class App extends Component<Props,State> {
                      if(labels) labels = labels[rdfs+"label"]
                      if(labels) l = labels[0]
                      message.push(<h4 key="keyResource" style={{marginLeft:"16px"}}>Ontology Property Matching (1)</h4>)
-                     message.push(this.makeResult(iri,1,null,l.value,l.lang,null,null,url))
+                     message.push(this.makeResult(iri,1,null,l.value,l.lang,null,null,"/show/"+iri))
                      //message.push(<iframe id="ontoFrame" className="ontoSearch" src={url} />)
                         /* onLoad={() =>
                         {

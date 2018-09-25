@@ -38,7 +38,7 @@ async function initiateApp(params,iri,myprops) {
    try {
       let state = store.getState()
 
-      //console.log("youpla?",myprops)
+//      console.log("youpla?",prefix)
 
       if(!state.data.config)
       {

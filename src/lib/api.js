@@ -166,20 +166,36 @@ export default class API {
 
     async loadResource(IRI:string): Promise<string>
     {
-         let resource =  JSON.parse(await this.getURLContents(this._resourcePath(IRI),false));
-         console.log("resource",resource)
-         return resource ;
+         if(!IRI.indexOf(':') === -1 ) IRI = "bdr:"+IRI
+         //let resource =  JSON.parse(await this.getURLContents(this._resourcePath(IRI),false));try {
+         try {
+            let config = store.getState().data.config.ldspdi
+            let url = config.endpoints[config.index]+"/graph" ;
+            let param = {"searchType":"Resgraph","R_RES":IRI,"L_NAME":"","LG_NAME":"" }
+            let data = await this.getQueryResults(url, IRI, param,"GET");
+
+
+            console.log("r e source",data)
+            return data ;
+         }
+         catch(e)
+         {
+            throw(e)
+         }
+
    }
 
        async loadEtextInfo(IRI:string): Promise<string>
        {
             //let resource =  JSON.parse(await this.getURLContents(this._etextPath(IRI),false));
 
+            if(!IRI.indexOf(':') === -1 ) IRI = "bdr:"+IRI
+
             //console.log("etext",resource)
             try {
                let config = store.getState().data.config.ldspdi
                let url = config.endpoints[config.index]+"/graph" ;
-               let param = {"searchType":"Etext_base","R_RES":"bdr:"+IRI,"L_NAME":"","LG_NAME":"" }
+               let param = {"searchType":"Etext_base","R_RES":IRI,"L_NAME":"","LG_NAME":"" }
                let data = await this.getQueryResults(url, IRI, param,"GET");
 
                console.log("etextinfo",data)
@@ -196,11 +212,13 @@ export default class API {
              {
                   //let resource =  JSON.parse(await this.getURLContents(this._etextPath(IRI),false));
 
+                  if(!IRI.indexOf(':') === -1) IRI = "bdr:"+IRI
+
                   //console.log("etext",resource)
                   try {
                      let config = store.getState().data.config.ldspdi
                      let url = config.endpoints[config.index]+"/graph" ;
-                     let param = {"searchType":"Chunks","R_RES":"bdr:"+IRI,"I_SEQ":next+1,"I_LIM":10,"L_NAME":"","LG_NAME":"" }
+                     let param = {"searchType":"Chunks","R_RES":IRI,"I_SEQ":next+1,"I_LIM":10,"L_NAME":"","LG_NAME":"" }
                      let data = await this.getQueryResults(url, IRI, param,"GET","application/ld+json");
 
                      console.log("etextchunks",data)
@@ -523,10 +541,12 @@ export default class API {
 
       _assocResourcesPath(IRI:string): string {
 
+         if(!IRI.indexOf(':') === -1) IRI = "bdr:"+IRI
+
          let config = store.getState().data.config.ldspdi
          let url = config.endpoints[config.index] ;
 
-          let path = url +  "/lib/allAssocResource?R_RES=bdr:" + IRI;
+          let path = url +  "/lib/allAssocResource?R_RES=" + IRI;
 
           return path;
       }
