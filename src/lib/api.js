@@ -196,7 +196,7 @@ export default class API {
                let config = store.getState().data.config.ldspdi
                let url = config.endpoints[config.index]+"/graph" ;
                let param = {"searchType":"Etext_base","R_RES":IRI,"L_NAME":"","LG_NAME":"" }
-               let data = await this.getQueryResults(url, IRI, param,"GET");
+               let data = await this.getQueryResults(url, IRI, param,"GET") //,"application/json");
 
                console.log("etextinfo",data)
 

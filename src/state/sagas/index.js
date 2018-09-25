@@ -67,7 +67,7 @@ async function initiateApp(params,iri,myprops) {
       {
          let res,Etext ;
 
-         Etext = iri.match(/^UT/)
+         Etext = iri.match(/^([^:]+:)?UT/)
 
          try {
             if(!Etext) res = await api.loadResource(iri)
@@ -114,7 +114,7 @@ async function initiateApp(params,iri,myprops) {
             },{})}));
 
 
-            store.dispatch(dataActions.gotResource(iri,{ [bdr+iri] : Object.keys(res).reduce((acc,e) => {
+            store.dispatch(dataActions.gotResource(iri,{ "youpi":true,[bdr+iri.replace(/^bdr:/,"")] : Object.keys(res).reduce((acc,e) => {
 
                if(Object.keys(res[e]).indexOf(skos+"prefLabel") === -1)
                   return ({...acc, ...res[e] })

@@ -277,6 +277,8 @@ class ResourceViewer extends Component<Props,State>
       let w = prop[bdo+"workDimWidth"]
       let h = prop[bdo+"workDimHeight"]
 
+      //console.log("propZ",prop)
+
       if(w && h && w[0] && h[0] && !w[0].value.match(/cm/) && !h[0].value.match(/cm/)) {
          prop[tmp+"dimensions"] = [ {type: "literal", value: w[0].value+"×"+h[0].value+"cm" } ]
          delete prop[bdo+"workDimWidth"]
@@ -386,7 +388,7 @@ class ResourceViewer extends Component<Props,State>
                }) })},{})
 
 
-         // console.log("propSort",prop,sortProp)
+           // console.log("propSort",prop,sortProp)
 
             return sortProp
          }
@@ -1293,6 +1295,9 @@ class ResourceViewer extends Component<Props,State>
       //<div style={{height:"50px",fontSize:"26px",display:"flex",justifyContent:"center",alignItems:"center"}}>resource {get.IRI}</div>
 
       let kZprop = Object.keys(this.properties(true))
+
+      console.log("kZprop",kZprop)
+
       let kZasso ;
       if (this.props.assocResources) {
          kZasso = Object.keys(this.props.assocResources) ;
@@ -1540,13 +1545,16 @@ class ResourceViewer extends Component<Props,State>
                </Link>
                {
                   this.props.IRI.match(/^bdr:/) &&
-                  [<a className="goBack" target="_blank" title="TTL version" rel="alternate" type="text/turtle" href={"http://purl.bdrc.io/resource/"+this.props.IRI+".ttl"}>
+                  [<a className="goBack" target="_blank" title="TTL version" rel="alternate" type="text/turtle" href={"http://purl.bdrc.io/resource/"+this.props.IRI.replace(/bdr:/,"")+".ttl"}>
                      <Button style={{marginLeft:"50px",paddingRight:"0"}}>export to ttl</Button>
                   </a>,<span>&nbsp;/&nbsp;</span>,
-                  <a className="goBack noML" target="_blank" title="JSON-LD version" rel="alternate" type="application/ld+json" href={"http://purl.bdrc.io/resource/"+this.props.IRI+".jsonld"}>
+                  <a className="goBack noML" target="_blank" title="JSON-LD version" rel="alternate" type="application/ld+json" href={"http://purl.bdrc.io/resource/"+this.props.IRI.replace(/bdr:/,"")+".jsonld"}>
                      <Button style={{paddingLeft:0}}>json-ld</Button>
                   </a>]
                }
+               { /* TODO
+                  this.props.IRI.match(/^bda[cn]:/) &&
+               */}
                {pdfLink &&
                   [<a style={{fontSize:"26px"}} className="goBack pdfLoader">
                      <Loader loaded={(!this.props.pdfVolumes || this.props.pdfVolumes.length > 0)} options={{position:"relative",left:"24px",top:"-7px"}} />
@@ -1699,7 +1707,7 @@ class ResourceViewer extends Component<Props,State>
 
                      let elem = this.getResourceElem(k);
 
-                     //console.log("prop",k,elem);
+                     console.log("prop",k,elem);
 
                      //if(!k.match(new RegExp("Revision|Entry|prefLabel|"+rdf+"|toberemoved"))) {
                      if(!k.match(new RegExp(adm+"|adm:|TextTitle|SourcePath|prefLabel|"+rdf+"|toberemoved|workPartIndex|workPartTreeIndex")))
@@ -1711,7 +1719,7 @@ class ResourceViewer extends Component<Props,State>
                         {
                            let tags = this.format("h4",k)
 
-                           //console.log("tags",tags)
+                           console.log("tags",tags)
 
                            if(k == bdo+"note")
                            {

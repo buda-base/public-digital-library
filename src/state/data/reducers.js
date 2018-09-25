@@ -256,9 +256,9 @@ export const gotNextChunks = (state: DataState, action: Action) => {
 
    let res ;
    if(state && state.resources && state.resources[action.payload]
-      && state.resources[action.payload]["http://purl.bdrc.io/resource/"+action.payload])
+      && state.resources[action.payload]["http://purl.bdrc.io/resource/"+action.payload.replace(/bdr:/,"")])
       {
-         res = state.resources[action.payload]["http://purl.bdrc.io/resource/"+action.payload]
+         res = state.resources[action.payload]["http://purl.bdrc.io/resource/"+action.payload.replace(/bdr:/,"")]
          if(!res["http://purl.bdrc.io/ontology/core/eTextHasChunk"]) res["http://purl.bdrc.io/ontology/core/eTextHasChunk"] = []
          res["http://purl.bdrc.io/ontology/core/eTextHasChunk"] = res["http://purl.bdrc.io/ontology/core/eTextHasChunk"].concat(action.meta)
 
@@ -271,7 +271,7 @@ export const gotNextChunks = (state: DataState, action: Action) => {
         "resources": {
             ...state.resources,
             [action.payload]:{
-               ["http://purl.bdrc.io/resource/"+action.payload]: res
+               ["http://purl.bdrc.io/resource/"+action.payload.replace(/bdr:/,"")]: res
             }
          }
       }
