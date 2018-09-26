@@ -135,6 +135,16 @@ export const gotResource = (iri: string,res:{}): Action => {
     }
 }
 
+TYPES.gotAnnoResource = 'GOT_ANNO_RESOURCE';
+export const gotAnnoResource = (iri: string,res:{}): Action => {
+    return {
+        type: TYPES.gotResource,
+        payload: iri,
+        meta:res
+    }
+}
+
+
 TYPES.gotAssocResources = 'GOT_ASSOCIATED_RESOURCES';
 export const gotAssocResources = (iri: string,res:{}): Action => {
 

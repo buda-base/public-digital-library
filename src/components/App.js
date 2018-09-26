@@ -1992,7 +1992,7 @@ class App extends Component<Props,State> {
                   </div>
                }
                { this.props.loading && <Loader className="mainloader"/> }
-               { message.length == 0 &&
+               { message.length == 0 && !this.props.loading &&
                   <List id="samples" style={{maxWidth:"800px",margin:"50px auto",textAlign:"left",zIndex:0}}>
                      { messageD }
                   </List> }

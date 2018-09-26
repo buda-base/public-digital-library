@@ -95,6 +95,12 @@ export const noResource = (state: DataState, action: Action) => {
 }
 reducers[actions.TYPES.noResource] = noResource;
 
+
+export const gotAnnoResource = (state: DataState, action: Action) => {
+}
+reducers[actions.TYPES.gotAnnoResource] = gotAnnoResource;
+
+
 export const gotAssocResources = (state: DataState, action: Action) => {
 
    const adm  = "http://purl.bdrc.io/ontology/admin/";
@@ -106,7 +112,7 @@ export const gotAssocResources = (state: DataState, action: Action) => {
 
    let res = state.resources
    if(res) res = res[action.payload]
-   if(res) {
+   if(false) { // res) {
       console.log("res",res,action)
 
       let asso = action.meta.data
