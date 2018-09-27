@@ -72,6 +72,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       onHasImageAsset:(url:string,IRI:string) => {
          dispatch(data.getManifest(url,IRI));
       },
+      onGetAnnotations:(IRI:string) => {
+         dispatch(data.getAnnotations(IRI));
+      },
       onGetChunks:(IRI:string,next:number=0) => {
          dispatch(data.getChunks(IRI,next));
       }

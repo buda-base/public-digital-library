@@ -282,6 +282,29 @@ async function requestPdf(url,iri) {
       //store.dispatch(dataActions.manifestError(url,e,iri))
    }
 }
+async function getAnnotations(iri) {
+   try {
+      console.log("getA",iri)
+
+      let listA = await api.loadAnnoList(iri)
+      console.log("listA",listA)
+
+      for(let k of Object.keys(listA))
+      {
+         console.log("k",k,listA[k])
+
+         let collec = await api.getQueryResults(k, "", {searchType:"",L_NAME:""}, "GET","application/json")
+            //,{"Prefer": "return=representation;include=\"http://www.w3.org/ns/oa#PreferContainedDescriptions\""})
+
+         console.log(collec);
+
+         store.dispatch(dataActions.gotAnnoResource(iri,collec))
+      }
+   }
+   catch(e){
+      console.error("ERRROR with Annotations",e)
+   }
+}
 
 async function getManifest(url,iri) {
    try {
@@ -793,6 +816,15 @@ export function* watchGetFacetInfo() {
       (action) => getFacetInfo(action.payload.keyword,action.payload.language,action.payload.property)
    );
 }
+
+export function* watchGetAnnotations() {
+
+   yield takeLatest(
+      dataActions.TYPES.getAnnotations,
+      (action) => getAnnotations(action.payload)
+   );
+}
+
 /** Root **/
 
 export default function* rootSaga() {
@@ -805,6 +837,7 @@ export default function* rootSaga() {
       watchGetOneDatatype(),
       watchGetOneFacet(),
       watchGetManifest(),
+      watchGetAnnotations(),
       watchRequestPdf(),
       watchCreatePdf(),
       watchGetResource(),

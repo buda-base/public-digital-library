@@ -185,6 +185,26 @@ export default class API {
 
    }
 
+
+   async loadAnnoList(IRI:string): Promise<string>
+   {
+         if(!IRI.indexOf(':') === -1 ) IRI = "bdr:"+IRI
+         //let resource =  JSON.parse(await this.getURLContents(this._resourcePath(IRI),false));try {
+         try {
+            let config = store.getState().data.config.ldspdi
+            let url = config.endpoints[config.index]+"/graph" ;
+            let param = {"searchType":"AnnCollection-forResource","R_RES":IRI,"L_NAME":"","LG_NAME":"" }
+            let data = await this.getQueryResults(url, IRI, param,"GET") //,"application/ld+json");
+            console.log("r e source",data)
+            return data ;
+         }
+         catch(e)
+         {
+            throw(e)
+         }
+
+   }
+
        async loadEtextInfo(IRI:string): Promise<string>
        {
             //let resource =  JSON.parse(await this.getURLContents(this._etextPath(IRI),false));
@@ -262,7 +282,7 @@ export default class API {
     }
 
 
-   async getQueryResults(url: string, key:string, param:{}={}, method:string = "POST", accept:string="application/json"): Promise<{}>
+   async getQueryResults(url: string, key:string, param:{}={}, method:string = "POST", accept:string="application/json",other?:{}): Promise<{}>
    {
 
       //console.log("key",key)
@@ -272,12 +292,13 @@ export default class API {
 
       if(key.indexOf("\"") === -1) key = "\""+key+"\""
       if(param["L_NAME"] != "") param["L_NAME"] = key ;
-      else { delete param["L_NAME"] ; delete param["LG_NAME"] ; }
+      else { delete param["L_NAME"] ; delete param["LG_NAME"] ;  }
 
-      url += "/"+param["searchType"];
+      if(param["searchType"] != "") url += "/"+param["searchType"];
+      else delete param["I_LIM"] ;
       delete param["searchType"]
 
-      console.log("query",url,key,param,method,accept);
+      console.log("query",url,key,param,method,accept,other);
 
       // let body = Object.keys(param).map( (k) => k+"="+param[k] ).join('&') +"&L_NAME="+key
       //searchType=Res_withFacet&"+param+"L_NAME=\""+key+"\"",
@@ -299,12 +320,13 @@ export default class API {
 
       const { isAuthenticated } = auth;
 
-      let response = await this._fetch( url + (method == "GET" ? "?" + body : ""),
+      let response = await this._fetch( url + (method == "GET" && body != "" ? "?" + body : ""),
       {// header pour accéder aux résultat en JSON !
          method: method,
          ...( method == "POST" && {body:body} ),//body:body,
          headers:new Headers({
             "Accept": accept,
+            ...other,
             // CORS issue - to be continued
             ...( isAuthenticated() && {"Authorization":"bearer "+id_token}),
          ...( method == "POST" && {"Content-Type": "application/x-www-form-urlencoded"})

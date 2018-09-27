@@ -68,6 +68,7 @@ type Props = {
    IRI:string,
    resources?:{},
    assocResources?:{},
+   annoCollec?:{},
    imageAsset?:string,
    firstImage?:string,
    pdfVolumes?:[],
@@ -75,6 +76,7 @@ type Props = {
    onRequestPdf: (u:string,s:string) => void,
    onCreatePdf: (s:string,u:string) => void,
    onGetResource: (s:string) => void,
+   onGetAnnotations: (s:string) => void,
    onHasImageAsset:(u:string,s:string) => void,
    onGetChunks: (s:string,b:number) => void
 }
@@ -227,9 +229,16 @@ class ResourceViewer extends Component<Props,State>
 
    }
 
-   componentWillUpdate(newProps)
+   componentWillUpdate(newProps,newState)
    {
-      console.log("state",this.state)
+      console.log("stateU",this.state,newState)
+
+
+      if(newState.annoPane && (!newProps.annoCollec || !newProps.annoCollec[this.props.IRI]))
+      {
+         this.props.onGetAnnotations(this.props.IRI)
+      }
+
 
       if(!this.state.ready && newProps.IRI && newProps.resources && newProps.resources[newProps.IRI] )
       {

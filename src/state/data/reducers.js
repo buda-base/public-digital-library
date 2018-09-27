@@ -96,12 +96,49 @@ export const noResource = (state: DataState, action: Action) => {
 reducers[actions.TYPES.noResource] = noResource;
 
 
-export const gotAnnoResource = (state: DataState, action: Action) => {
-}
-reducers[actions.TYPES.gotAnnoResource] = gotAnnoResource;
-
-
 export const gotAssocResources = (state: DataState, action: Action) => {
+
+   let res = state.resources
+   if(res) res = res[action.payload]
+
+       state = {
+           ...state,
+           "resources": {
+              ...state.resources,
+              [action.payload] : res
+           },
+           "assocResources": {
+              ...state.assocResources,
+              [action.payload]:action.meta.data
+          }
+       }
+
+       console.log("assocR",res,state,action)
+
+       return state ;
+}
+reducers[actions.TYPES.gotAssocResources] = gotAssocResources;
+
+
+export const getAnnotations = (state: DataState, action: Action) => {
+
+    state = {
+        ...state,
+        "annoCollec":{
+           ...state.annoCollec,
+           [action.payload]:true
+         }
+      }
+
+
+    console.log("gAnno",state,action)
+
+    return state ;
+}
+reducers[actions.TYPES.getAnnotations] = getAnnotations;
+
+
+export const gotAnnoResource = (state: DataState, action: Action) => {
 
    const adm  = "http://purl.bdrc.io/ontology/admin/";
    const rdf  = "http://www.w3.org/1999/02/22-rdf-syntax-ns#";
@@ -112,10 +149,11 @@ export const gotAssocResources = (state: DataState, action: Action) => {
 
    let res = state.resources
    if(res) res = res[action.payload]
-   if(false) { // res) {
+
+   if(res) {
       console.log("res",res,action)
 
-      let asso = action.meta.data
+      let asso = action.meta
       for(let k of Object.keys(asso))
       {
          let anno = asso[k].filter(e => e.type && e.type == rdf+"type" && e.value == oa+"Annotation")
@@ -245,17 +283,21 @@ export const gotAssocResources = (state: DataState, action: Action) => {
            ...state.resources,
            [action.payload] : res
         },
-        "assocResources": {
-           ...state.assocResources,
-           [action.payload]:action.meta.data
-       }
-    }
+        "annoCollec":{
+           ...state.annoCollec,
+           [action.payload]:
+            [].append(res).append(
+               state.annoCollec&&state.annoCollec[action.payload]?state.annoCollec[action.payload]:[]
+            )
+         }
+      }
 
-    console.log("assocR",res,state,action)
+
+    console.log("annoR",res,state,action)
 
     return state ;
 }
-reducers[actions.TYPES.gotAssocResources] = gotAssocResources;
+reducers[actions.TYPES.gotAnnoResource] = gotAnnoResource;
 
 
 export const gotNextChunks = (state: DataState, action: Action) => {
