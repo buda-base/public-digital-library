@@ -302,9 +302,18 @@ export const gotAnnoResource = (state: DataState, action: Action) => {
       if(assoRes) assoRes = assoRes[action.payload]
       else assoRes = {}
 
-      console.log("assoRes",assoRes,action.meta)
 
-    state = {
+      assoRes = {...assoRes, ...Object.keys(action.meta).reduce((acc,e) => (
+            {...acc,
+               [e]:Object.keys(action.meta[e]).reduce((ac,f) =>(
+                     [...ac,
+                        ...action.meta[e][f].map(g => ({...g,type:f}))
+                     ]),[])
+            }),{}) }
+
+            console.log("assoRes",action.meta,state.assocResources,assoRes)
+
+      state = {
         ...state,
         "resources": {
            ...state.resources,
@@ -318,10 +327,7 @@ export const gotAnnoResource = (state: DataState, action: Action) => {
         */
         "annoCollec":{
            ...state.annoCollec,
-           [action.payload]:
-            [].concat(res).concat(
-               state.annoCollec&&state.annoCollec[action.payload]?state.annoCollec[action.payload]:[]
-            )
+           [action.payload]:[action.meta,...(state.annoCollec?state.annoCollec[action.payload]:[])]
          }
       }
 
