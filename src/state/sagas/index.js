@@ -302,7 +302,9 @@ async function getAnnotations(iri) {
       }
    }
    catch(e){
-      console.error("ERRROR with Annotations",e)
+      //console.error("ERRROR with Annotations",e)
+      store.dispatch(dataActions.gotAnnoResource(iri,{}))
+
    }
 }
 

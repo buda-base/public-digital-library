@@ -557,7 +557,7 @@ class ResourceViewer extends Component<Props,State>
    {
       if(elem) {
 
-         console.log("uriformat",prop,elem.value,dico)
+         //console.log("uriformat",prop,elem.value,dico)
 
          if(!elem.value.match(/^http:\/\/purl\.bdrc\.io/)) {
             return <a href={elem.value} target="_blank">{decodeURI(elem.value)}</a> ;
@@ -1485,7 +1485,295 @@ class ResourceViewer extends Component<Props,State>
 
       }
 
-      console.log("pdf",pdfLink)
+      let theData = <div className="data">
+         { kZprop.map((k) => {
+
+            let elem = this.getResourceElem(k);
+
+            //console.log("prop",k,elem);
+
+            //if(!k.match(new RegExp("Revision|Entry|prefLabel|"+rdf+"|toberemoved"))) {
+            if(!k.match(new RegExp(adm+"|adm:|TextTitle|SourcePath|prefLabel|"+rdf+"|toberemoved|workPartIndex|workPartTreeIndex")))
+            {
+
+               let sup = this.hasSuper(k)
+
+               if(!sup) // || sup.filter(e => e.value == bdo+"workRefs").length > 0) //
+               {
+                  let tags = this.format("h4",k)
+
+                  //console.log("tags",tags)
+
+                  if(k == bdo+"note")
+                  {
+                     //console.log("note",tags,k);//tags = [<h4>Note</h4>]
+                  }
+                  else if(k == bdo+"itemHasVolume")
+                  {
+
+                     tags = tags.map(e => {
+
+                        //console.log("e",e)
+                        let key = "";
+                        if(Array.isArray(e) && e.length > 0) {
+                           key = e[0]
+                           key = key.props
+                           if(key) key = key.children
+
+                           console.log("key",key)
+
+                           if(key && key[0] && key[0].props && key[0].props.children
+                              && (
+                                    key[0].props.children == "Etext Volume: "
+                                    ||
+                                    (key[0].props.children[0] && key[0].props.children[0].props
+                                       && key[0].props.children[0].props.children == "Etext Volume")
+                                 )
+                              )
+                           {
+
+                              // [0].props.children[0].props
+                              if(key.length > 1) key = key[1]
+                              if(key) key= key.props
+                              if(key) key = key.children
+                              if(key && key.length > 1) key = key[1]
+                              if(key) key = key.props
+                              if(key) key = key.children
+                              if(key) key = Number(key)
+                           }
+                           else
+                           {
+                              // [0].props.children[0][0].props.children
+                              if(key && key.length > 0) key = key[0]
+                              if(key && key.length > 0) key = key[0]
+                              key = key.props
+                              if(key) key = key.children
+                              if(key) key = Number((""+key).replace(/^Volume /,""))
+                           }
+
+
+                        }
+
+                        return { elem:e, key}
+                     })
+
+                     //console.log("tagsK",tags);
+
+                     tags = _.orderBy(tags,['key'])
+
+                     tags = tags.map(e => e.elem)
+
+
+                  }
+                  else if(k == bdo+"workLocation")
+                  {
+                     elem = this.getResourceElem(k)
+                     if(elem && Array.isArray(elem) && elem[0]) {
+                        elem = this.getResourceBNode(elem[0].value)
+                        let str = ""
+                        //console.log("loca",elem)
+
+                        let loca = s => (elem[bdo+"workLocation"+s] && elem[bdo+"workLocation"+s][0]["value"] ? elem[bdo+"workLocation"+s][0]["value"]:null)
+
+                        let vol = loca("Volume")
+                        if(vol) str += "Vol."+vol+" " ;
+                        let p = loca("Page")
+                        if(p) str += "p."+p ;
+                        let l = loca("Line")
+                        if(l) str += "|"+l ;
+                        str += " - "
+                        let eV = loca("EndVolume")
+                        if(eV) str += "Vol."+eV+" " ;
+                        let eP = loca("EndPage")
+                        if(eP) str += "p."+eP ;
+                        let eL = loca("EndLine")
+                        if(eL) str += "|"+eL ;
+
+                        let w = loca("Work")
+                        if(w) w = elem[bdo+"workLocationWork"][0]
+
+                        tags = [<Tooltip placement="bottom-start" style={{marginLeft:"50px"}} title={
+                           <div style={{margin:"10px"}}>
+                              {vol && <div><span>Begin Volume:</span> {vol}</div>}
+                              {p && <div><span>Begin Page:</span> {p}</div>}
+                              {l && <div><span>Begin Line:</span> {l}</div>}
+                              {eV && <div><span>End Volume:</span> {eV}</div>}
+                              {eP && <div><span>End Page:</span> {eP}</div>}
+                              {eL && <div><span>End Line:</span> {eL}</div>}
+                           </div>
+                        }>
+                           <h4>{str}{w && " of "}{w && this.uriformat(bdo+"workLocationWork",w)}</h4>
+                     </Tooltip>] ;
+                     }
+                  }
+                  else if(k == bdo+"workHasExpression")
+                  {
+                  // 1-map avec le nom du children[2] si ==3chldren et children[1] = " in "
+                     tags = tags.map(e => {
+
+                        if(Array.isArray(e) && e.length > 0) e = e[0]
+
+                        //console.log("e",e)
+                        let exprKey1 = "", exprKey2 = "";
+
+                        if(e.props)
+                        {
+                           if(!Array.isArray(e.props.children)) exprKey1 = e.props.children
+                           else if(e.props.children.length > 0)
+                           {
+                              exprKey1 = e.props.children[0]
+                              if(Array.isArray(exprKey1) && exprKey1.length > 0) exprKey1 = exprKey1[0]
+                              if(exprKey1 && exprKey1.props && exprKey1.props.children) exprKey1 = exprKey1.props.children
+                              if(Array.isArray(exprKey1)) exprKey1 = exprKey1[0]
+                              if(Array.isArray(exprKey1) && exprKey1.length > 0) exprKey1 = exprKey1[0]
+                              if(exprKey1 && exprKey1.props && exprKey1.props.children) exprKey1 = exprKey1.props.children
+                              exprKey1 = exprKey1.replace(/[/]$/,"")
+                           }
+
+                           //console.log("eK1",exprKey1)
+
+                           if(e.props.children.length == 3 && e.props.children[1] === " in ")
+                           {
+                              exprKey2 = e.props.children[2]
+                              if(Array.isArray(exprKey2) && exprKey2.length > 0) exprKey2 = exprKey2[0]
+                              if(exprKey2 && exprKey2.props && exprKey2.props.children) exprKey2 = exprKey2.props.children
+                              if(Array.isArray(exprKey2)) exprKey2 = exprKey2[0]
+                              if(Array.isArray(exprKey2) && exprKey2.length > 0) exprKey2 = exprKey2[0]
+                              if(exprKey2 && exprKey2.props && exprKey2.props.children) exprKey2 = exprKey2.props.children
+                              exprKey2 = exprKey2.replace(/[/]$/,"")
+                           }
+                        }
+                        /*
+                        if(e.props && e.props.children.length == 3 && e.props.children[1] === " in " && e.props.children[2][0][0] && e.props.children[2][0][0].props)
+                        {
+                           console.log("key",e.props.children[2][0][0].props.children)
+
+                           if(e.props.children[2][0][0].props.children)
+                              return { elem:e , "exprKey1":e.props.children[0][0][0].props.children, "exprKey2" : e.props.children[2][0][0].props.children.replace(/[/]/,"") }
+                        }*/
+                        /*
+                        else if(e.props.children.length == 1)
+                        {
+                           return { ...e , "exprKey" : e.props.children[0][0].props.children }
+                        }
+                        */
+
+                        return { elem:e, exprKey1, exprKey2 } ;
+                     });
+
+
+                  // 2-lodash sort
+                     tags = _.sortBy(tags,['exprKey1','exprKey2'])
+
+                     console.log("sorted tags",tags);
+
+                     let cleantags = tags.map(e => e.elem )
+
+                     //console.log("clean tags",cleantags);
+
+                     tags = cleantags
+                  }
+
+                  if(k == bdo+"placeRegionPoly" || (k == bdo+"placeLong" && !doRegion))
+                  {
+
+                     return ( <div>
+                                 <h3><span>{this.proplink(k)}</span>:&nbsp;</h3>
+                                 { k == bdo+"placeLong" && tags }
+                                 <div style={ {width:"100%",marginTop:"10px"} }>
+                                    <Map ref={m => { this._leafletMap = m; }}
+                                       className={"placeMap" + (this.state.largeMap?" large":"")}
+                                       style={{boxShadow: "0 0 5px 0px rgba(0,0,0,0.5)"}}
+                                       center={doMap} zoom={17} bounds={doRegion?regBox:null}
+                                       //attributionControl={false}
+                                       >
+                                       <LayersControl position="topright">
+                                          { this.props.config.googleAPIkey && [
+                                             <BaseLayer checked name='Satellite+Roadmap'>
+
+                                                <GoogleLayer googlekey={this.props.config.googleAPIkey} maptype='HYBRID'
+                                                      //attribution="&amp;copy <a href=&quot;http://osm.org/copyright&quot;></a> contributors"
+                                                      attribution="&amp;copy 2018 Google"
+                                                />
+                                             </BaseLayer>,
+                                             <BaseLayer name='Terrain'>
+                                                <GoogleLayer googlekey={this.props.config.googleAPIkey} maptype='TERRAIN'/>
+                                             </BaseLayer>,
+                                             <BaseLayer name='Satellite'>
+                                                <GoogleLayer googlekey={this.props.config.googleAPIkey} maptype='SATELLITE'/>
+                                             </BaseLayer>,
+                                             <BaseLayer name='Roadmap'>
+                                                <GoogleLayer googlekey={this.props.config.googleAPIkey} maptype='ROADMAP'/>
+                                             </BaseLayer>]
+                                          }
+                                          { !this.props.config.googleAPIkey && <BaseLayer checked name='OpenStreetMap'>
+                                             <TileLayer
+                                                //attribution="&amp;copy <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
+                                                //url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                                                url="https://{s}.tile.iosb.fraunhofer.de/tiles/osmde/{z}/{x}/{y}.png"
+                                             />
+                                          </BaseLayer> }
+                                       </LayersControl>
+                                       <Marker position={doMap} >
+                                           <ToolT direction="top">{titre}</ToolT>
+                                       </Marker>
+                                       {doRegion && <GeoJSON data={doRegion} style={ {color: '#006699', weight: 5, opacity: 0.65} }/>}
+                                       <Portal position="bottomleft">
+                                          <div class="leaflet-control-attribution leaflet-control" >
+                                             <a onClick={ e => { setTimeout(((map)=> () => {map.leafletElement.invalidateSize();})( this._leafletMap), 200); this.setState({...this.state,largeMap:!this.state.largeMap}); } }>
+                                                {!this.state.largeMap?"Enlarge":"Shrink"} Map
+                                             </a>
+                                          </div>
+                                       </Portal>
+                                    </Map>
+                                 </div>
+                              </div> )
+                  }
+                  else if(k != bdo+"eTextHasChunk") {
+
+                     let ret = this.hasSub(k)?this.subProps(k):tags.map((e)=> [e," "] )
+
+                     //console.log("render", ret)
+
+                     return (
+                        <div>
+                           <h3><span>{this.proplink(k)}</span>:&nbsp;</h3>
+                           {ret}
+                        </div>
+                     )
+                  }
+                  else
+                     return (
+                        <InfiniteScroll
+                           hasMore={true}
+                           pageStart={0}
+                           loadMore={(e) => this.props.onGetChunks(this.props.IRI,elem.length)}
+                           //loader={<Loader loaded={false} />}
+                           >
+                           <h3 class="chunk"><span>{this.fullname(k)}</span>:&nbsp;</h3>
+                           {this.hasSub(k)?this.subProps(k):tags.map((e)=> [e," "] )}
+                        </InfiniteScroll>
+                     )
+               }
+
+
+            }
+
+         } ) }
+
+         { ["Role"].indexOf(getEntiType(this.props.IRI)) !== -1 &&
+            <div>
+               <h3><span>Associated Persons</span>:&nbsp;</h3>
+            {   this.props.assocResources &&
+                  Object.keys(this.props.assocResources).map((e,i) =>
+                        i<20?<h4>{this.uriformat(null,{value:e})}</h4>:(i==20?<h4>(<a href={'/search?r='+this.props.IRI}>browse all</a>)</h4>:null))
+            }
+            </div>
+         }
+      </div>
+
+
+      console.log("pdf",pdfLink,this._annoPane.length)
 
       // add nother route to UViewer Gallery page
       return (
@@ -1518,6 +1806,7 @@ class ResourceViewer extends Component<Props,State>
                            <Translate value="Asidebar.title" />
                         </Typography>
                         {this.props.annoCollec == true && <Loader loaded={false}/>}
+                        { !this.state.newAnno && this._annoPane.length == 0 && "No annotation to show for this resource."}
                         {this.state.viewAnno && !this.state.newAnno && <a className="viewAll" onClick={(event) => {
                            let s = this.state ;
                            if(s.viewAnno) {
@@ -1727,345 +2016,7 @@ class ResourceViewer extends Component<Props,State>
                   <Script url={"http://universalviewer.io/uv/lib/embed.js"} />]
 
                }
-               { (!this.state.openUV || this.state.hideUV || !this.state.toggleUV) && <div className="data">
-                  { kZprop.map((k) => {
-
-                     let elem = this.getResourceElem(k);
-
-                     //console.log("prop",k,elem);
-
-                     //if(!k.match(new RegExp("Revision|Entry|prefLabel|"+rdf+"|toberemoved"))) {
-                     if(!k.match(new RegExp(adm+"|adm:|TextTitle|SourcePath|prefLabel|"+rdf+"|toberemoved|workPartIndex|workPartTreeIndex")))
-                     {
-
-                        let sup = this.hasSuper(k)
-
-                        if(!sup) // || sup.filter(e => e.value == bdo+"workRefs").length > 0) //
-                        {
-                           let tags = this.format("h4",k)
-
-                           //console.log("tags",tags)
-
-                           if(k == bdo+"note")
-                           {
-                              //console.log("note",tags,k);//tags = [<h4>Note</h4>]
-                           }
-                           else if(k == bdo+"itemHasVolume")
-                           {
-
-                              tags = tags.map(e => {
-
-                                 //console.log("e",e)
-                                 let key = "";
-                                 if(Array.isArray(e) && e.length > 0) {
-                                    key = e[0]
-                                    key = key.props
-                                    if(key) key = key.children
-
-                                    console.log("key",key)
-
-                                    if(key && key[0] && key[0].props && key[0].props.children
-                                       && (
-                                             key[0].props.children == "Etext Volume: "
-                                             ||
-                                             (key[0].props.children[0] && key[0].props.children[0].props
-                                                && key[0].props.children[0].props.children == "Etext Volume")
-                                          )
-                                       )
-                                    {
-
-                                       // [0].props.children[0].props
-                                       if(key.length > 1) key = key[1]
-                                       if(key) key= key.props
-                                       if(key) key = key.children
-                                       if(key && key.length > 1) key = key[1]
-                                       if(key) key = key.props
-                                       if(key) key = key.children
-                                       if(key) key = Number(key)
-                                    }
-                                    else
-                                    {
-                                       // [0].props.children[0][0].props.children
-                                       if(key && key.length > 0) key = key[0]
-                                       if(key && key.length > 0) key = key[0]
-                                       key = key.props
-                                       if(key) key = key.children
-                                       if(key) key = Number((""+key).replace(/^Volume /,""))
-                                    }
-
-
-                                 }
-
-                                 return { elem:e, key}
-                              })
-
-                              //console.log("tagsK",tags);
-
-                              tags = _.orderBy(tags,['key'])
-
-                              tags = tags.map(e => e.elem)
-
-
-                           }
-                           else if(k == bdo+"workLocation")
-                           {
-                              elem = this.getResourceElem(k)
-                              if(elem && Array.isArray(elem) && elem[0]) {
-                                 elem = this.getResourceBNode(elem[0].value)
-                                 let str = ""
-                                 //console.log("loca",elem)
-
-                                 let loca = s => (elem[bdo+"workLocation"+s] && elem[bdo+"workLocation"+s][0]["value"] ? elem[bdo+"workLocation"+s][0]["value"]:null)
-
-                                 let vol = loca("Volume")
-                                 if(vol) str += "Vol."+vol+" " ;
-                                 let p = loca("Page")
-                                 if(p) str += "p."+p ;
-                                 let l = loca("Line")
-                                 if(l) str += "|"+l ;
-                                 str += " - "
-                                 let eV = loca("EndVolume")
-                                 if(eV) str += "Vol."+eV+" " ;
-                                 let eP = loca("EndPage")
-                                 if(eP) str += "p."+eP ;
-                                 let eL = loca("EndLine")
-                                 if(eL) str += "|"+eL ;
-
-                                 let w = loca("Work")
-                                 if(w) w = elem[bdo+"workLocationWork"][0]
-
-                                 tags = [<Tooltip placement="bottom-start" style={{marginLeft:"50px"}} title={
-                                    <div style={{margin:"10px"}}>
-                                       {vol && <div><span>Begin Volume:</span> {vol}</div>}
-                                       {p && <div><span>Begin Page:</span> {p}</div>}
-                                       {l && <div><span>Begin Line:</span> {l}</div>}
-                                       {eV && <div><span>End Volume:</span> {eV}</div>}
-                                       {eP && <div><span>End Page:</span> {eP}</div>}
-                                       {eL && <div><span>End Line:</span> {eL}</div>}
-                                    </div>
-                                 }>
-                                    <h4>{str}{w && " of "}{w && this.uriformat(bdo+"workLocationWork",w)}</h4>
-                              </Tooltip>] ;
-                              }
-                           }
-                           else if(k == bdo+"workHasExpression")
-                           {
-                           // 1-map avec le nom du children[2] si ==3chldren et children[1] = " in "
-                              tags = tags.map(e => {
-
-                                 if(Array.isArray(e) && e.length > 0) e = e[0]
-
-                                 //console.log("e",e)
-                                 let exprKey1 = "", exprKey2 = "";
-
-                                 if(e.props)
-                                 {
-                                    if(!Array.isArray(e.props.children)) exprKey1 = e.props.children
-                                    else if(e.props.children.length > 0)
-                                    {
-                                       exprKey1 = e.props.children[0]
-                                       if(Array.isArray(exprKey1) && exprKey1.length > 0) exprKey1 = exprKey1[0]
-                                       if(exprKey1 && exprKey1.props && exprKey1.props.children) exprKey1 = exprKey1.props.children
-                                       if(Array.isArray(exprKey1)) exprKey1 = exprKey1[0]
-                                       if(Array.isArray(exprKey1) && exprKey1.length > 0) exprKey1 = exprKey1[0]
-                                       if(exprKey1 && exprKey1.props && exprKey1.props.children) exprKey1 = exprKey1.props.children
-                                       exprKey1 = exprKey1.replace(/[/]$/,"")
-                                    }
-
-                                    //console.log("eK1",exprKey1)
-
-                                    if(e.props.children.length == 3 && e.props.children[1] === " in ")
-                                    {
-                                       exprKey2 = e.props.children[2]
-                                       if(Array.isArray(exprKey2) && exprKey2.length > 0) exprKey2 = exprKey2[0]
-                                       if(exprKey2 && exprKey2.props && exprKey2.props.children) exprKey2 = exprKey2.props.children
-                                       if(Array.isArray(exprKey2)) exprKey2 = exprKey2[0]
-                                       if(Array.isArray(exprKey2) && exprKey2.length > 0) exprKey2 = exprKey2[0]
-                                       if(exprKey2 && exprKey2.props && exprKey2.props.children) exprKey2 = exprKey2.props.children
-                                       exprKey2 = exprKey2.replace(/[/]$/,"")
-                                    }
-                                 }
-                                 /*
-                                 if(e.props && e.props.children.length == 3 && e.props.children[1] === " in " && e.props.children[2][0][0] && e.props.children[2][0][0].props)
-                                 {
-                                    console.log("key",e.props.children[2][0][0].props.children)
-
-                                    if(e.props.children[2][0][0].props.children)
-                                       return { elem:e , "exprKey1":e.props.children[0][0][0].props.children, "exprKey2" : e.props.children[2][0][0].props.children.replace(/[/]/,"") }
-                                 }*/
-                                 /*
-                                 else if(e.props.children.length == 1)
-                                 {
-                                    return { ...e , "exprKey" : e.props.children[0][0].props.children }
-                                 }
-                                 */
-
-                                 return { elem:e, exprKey1, exprKey2 } ;
-                              });
-
-
-                           // 2-lodash sort
-                              tags = _.sortBy(tags,['exprKey1','exprKey2'])
-
-                              console.log("sorted tags",tags);
-
-                              let cleantags = tags.map(e => e.elem )
-
-                              //console.log("clean tags",cleantags);
-
-                              tags = cleantags
-                           }
-
-                           if(k == bdo+"placeRegionPoly" || (k == bdo+"placeLong" && !doRegion))
-                           {
-
-                              return ( <div>
-                                          <h3><span>{this.proplink(k)}</span>:&nbsp;</h3>
-                                          { k == bdo+"placeLong" && tags }
-                                          <div style={ {width:"100%",marginTop:"10px"} }>
-                                             <Map ref={m => { this._leafletMap = m; }}
-                                                className={"placeMap" + (this.state.largeMap?" large":"")}
-                                                style={{boxShadow: "0 0 5px 0px rgba(0,0,0,0.5)"}}
-                                                center={doMap} zoom={17} bounds={doRegion?regBox:null}
-                                                //attributionControl={false}
-                                                >
-                                                <LayersControl position="topright">
-                                                   { this.props.config.googleAPIkey && [
-                                                      <BaseLayer checked name='Satellite+Roadmap'>
-
-                                                         <GoogleLayer googlekey={this.props.config.googleAPIkey} maptype='HYBRID'
-                                                               //attribution="&amp;copy <a href=&quot;http://osm.org/copyright&quot;></a> contributors"
-                                                               attribution="&amp;copy 2018 Google"
-                                                         />
-                                                      </BaseLayer>,
-                                                      <BaseLayer name='Terrain'>
-                                                         <GoogleLayer googlekey={this.props.config.googleAPIkey} maptype='TERRAIN'/>
-                                                      </BaseLayer>,
-                                                      <BaseLayer name='Satellite'>
-                                                         <GoogleLayer googlekey={this.props.config.googleAPIkey} maptype='SATELLITE'/>
-                                                      </BaseLayer>,
-                                                      <BaseLayer name='Roadmap'>
-                                                         <GoogleLayer googlekey={this.props.config.googleAPIkey} maptype='ROADMAP'/>
-                                                      </BaseLayer>]
-                                                   }
-                                                   { !this.props.config.googleAPIkey && <BaseLayer checked name='OpenStreetMap'>
-                                                      <TileLayer
-                                                         //attribution="&amp;copy <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
-                                                         //url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                                                         url="https://{s}.tile.iosb.fraunhofer.de/tiles/osmde/{z}/{x}/{y}.png"
-                                                      />
-                                                   </BaseLayer> }
-                                                </LayersControl>
-                                                <Marker position={doMap} >
-                                                    <ToolT direction="top">{titre}</ToolT>
-                                                </Marker>
-                                                {doRegion && <GeoJSON data={doRegion} style={ {color: '#006699', weight: 5, opacity: 0.65} }/>}
-                                                <Portal position="bottomleft">
-                                                   <div class="leaflet-control-attribution leaflet-control" >
-                                                      <a onClick={ e => { setTimeout(((map)=> () => {map.leafletElement.invalidateSize();})( this._leafletMap), 200); this.setState({...this.state,largeMap:!this.state.largeMap}); } }>
-                                                         {!this.state.largeMap?"Enlarge":"Shrink"} Map
-                                                      </a>
-                                                   </div>
-                                                </Portal>
-                                             </Map>
-                                          </div>
-                                       </div> )
-                           }
-                           else if(k != bdo+"eTextHasChunk") {
-
-                              let ret = this.hasSub(k)?this.subProps(k):tags.map((e)=> [e," "] )
-
-                              //console.log("render", ret)
-
-                              return (
-                                 <div>
-                                    <h3><span>{this.proplink(k)}</span>:&nbsp;</h3>
-                                    {ret}
-                                 </div>
-                              )
-                           }
-                           else
-                              return (
-                                 <InfiniteScroll
-                                    hasMore={true}
-                                    pageStart={0}
-                                    loadMore={(e) => this.props.onGetChunks(this.props.IRI,elem.length)}
-                                    //loader={<Loader loaded={false} />}
-                                    >
-                                    <h3 class="chunk"><span>{this.fullname(k)}</span>:&nbsp;</h3>
-                                    {this.hasSub(k)?this.subProps(k):tags.map((e)=> [e," "] )}
-                                 </InfiniteScroll>
-                              )
-                        }
-
-
-                     }
-
-                  } ) }
-                  {/*
-                  <div>
-                     <h3><span>Resource File</span>:&nbsp;</h3>
-                     <h4><a target="_blank" href={"http://purl.bdrc.io/resource/"+this.props.IRI+".jsonld"}>{this.props.IRI}.jsonld</a></h4>
-                     <h4><a target="_blank" href={"http://purl.bdrc.io/resource/"+this.props.IRI+".ttl"}>{this.props.IRI}.ttl</a></h4>
-                  </div>
-                  */}
-
-                  { ["Role"].indexOf(getEntiType(this.props.IRI)) !== -1 &&
-                     <div>
-                        <h3><span>Associated Persons</span>:&nbsp;</h3>
-                     {   this.props.assocResources &&
-                           Object.keys(this.props.assocResources).map((e,i) =>
-                                 i<20?<h4>{this.uriformat(null,{value:e})}</h4>:(i==20?<h4>(<a href={'/search?r='+this.props.IRI}>browse all</a>)</h4>:null))
-                     }
-                     </div>
-                  }
-
-                  { /* ["Person","Place","Topic"].indexOf(getEntiType(this.props.IRI)) !== -1 &&
-                     <div>
-                        <h3><span>Associated Resources</span>:&nbsp;</h3>
-                        {
-                           this.props.resources && this.props.resources[this.props.IRI+"@"] &&
-                              Object.keys(this.props.resources[this.props.IRI+"@"]).map((e) =>
-                                 <div className="sub" id={e.replace(/s$/,"")}>
-                                    <h4 className="first type">{e}:</h4>
-                                    <h4 className="prop last">(<a href={"/search?r=bdr:"+this.props.IRI+"&t="+(e[0].toUpperCase()+e.slice(1).replace(/s$/,""))}>browse all</a>)</h4>
-                                    {
-                                       Object.keys(this.props.resources[this.props.IRI+"@"][e]).reduce((acc,k) => {
-                                          //acc = acc.concat(Object.keys(this.props.resources[this.props.IRI+"@"][e][v])) ;
-
-                                          //console.log("redu",acc,k,this.props.resources[this.props.IRI+"@"][e][k]);
-
-                                          this.props.resources[this.props.IRI+"@"][e][k].map((v) => {
-                                             let t = getEntiType(this.props.IRI)
-
-                                             //console.log("k v t",k,v,t,bdr+this.props.IRI,kZasso.indexOf(k),kZasso)
-
-                                             if(e == "lineages" && t == "Topic") {
-                                                if(acc.indexOf("bdo:lineageObject") == -1) acc.push("bdo:lineageObject") ;
-                                             }
-                                             else if(e == "works" && t == "Topic") {
-                                                if(acc.indexOf("bdo:workGenre") == -1) acc.push("bdo:workGenre") ;
-                                             }
-                                             else if(v.value == bdr+this.props.IRI) // && kZasso.indexOf(k) == -1) // why ??
-                                             {
-                                                //console.log("foundem")
-                                                if(acc.indexOf(v.type) == -1) acc.push(v.type) ;
-                                             }
-                                          } )
-                                          return acc ;
-                                       },[]).map((k) =>
-                                          <div className="subsub">
-                                            { this.showAssocResources(e,k) }
-                                          </div>
-                                       )
-                                    }
-                                 </div>
-                              )
-                        }
-                     </div>
-                  */ }
-               </div>
-            }
+               { (!this.state.openUV || this.state.hideUV || !this.state.toggleUV) && theData }
             </div>
             {/* <iframe style={{width:"calc(100% - 100px)",margin:"50px",height:"calc(100vh - 160px)",border:"none"}} src={"http://purl.bdrc.io/resource/"+get.IRI}/> */}
          </div>

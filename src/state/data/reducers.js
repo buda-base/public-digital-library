@@ -319,12 +319,10 @@ export const gotAnnoResource = (state: DataState, action: Action) => {
            ...state.resources,
            [action.payload] : res
         },
-        /*
         "assocResources": {
            ...this.assocResources,
            [action.payload]:assoRes
         },
-        */
         "annoCollec":{
            ...state.annoCollec,
            [action.payload]:[action.meta,...(state.annoCollec?state.annoCollec[action.payload]:[])]
