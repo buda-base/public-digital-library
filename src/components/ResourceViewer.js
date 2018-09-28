@@ -231,10 +231,10 @@ class ResourceViewer extends Component<Props,State>
 
    componentWillUpdate(newProps,newState)
    {
-      console.log("stateU",this.state,newState)
+      console.log("stateU",this.state,newState,newProps)
 
 
-      if(newState.annoPane && (!newProps.annoCollec || !newProps.annoCollec[this.props.IRI]))
+      if(newState.annoPane && !newProps.annoCollec)
       {
          this.props.onGetAnnotations(this.props.IRI)
       }
@@ -557,7 +557,7 @@ class ResourceViewer extends Component<Props,State>
    {
       if(elem) {
 
-         //console.log("uriformat",prop,elem.value,dico)
+         console.log("uriformat",prop,elem.value,dico)
 
          if(!elem.value.match(/^http:\/\/purl\.bdrc\.io/)) {
             return <a href={elem.value} target="_blank">{decodeURI(elem.value)}</a> ;
@@ -1517,6 +1517,7 @@ class ResourceViewer extends Component<Props,State>
                         <Typography style={{fontSize:"30px",marginBottom:"20px",textAlign:"left"}}>
                            <Translate value="Asidebar.title" />
                         </Typography>
+                        {this.props.annoCollec == true && <Loader loaded={false}/>}
                         {this.state.viewAnno && !this.state.newAnno && <a className="viewAll" onClick={(event) => {
                            let s = this.state ;
                            if(s.viewAnno) {
@@ -1731,7 +1732,7 @@ class ResourceViewer extends Component<Props,State>
 
                      let elem = this.getResourceElem(k);
 
-                     console.log("prop",k,elem);
+                     //console.log("prop",k,elem);
 
                      //if(!k.match(new RegExp("Revision|Entry|prefLabel|"+rdf+"|toberemoved"))) {
                      if(!k.match(new RegExp(adm+"|adm:|TextTitle|SourcePath|prefLabel|"+rdf+"|toberemoved|workPartIndex|workPartTreeIndex")))
@@ -1743,7 +1744,7 @@ class ResourceViewer extends Component<Props,State>
                         {
                            let tags = this.format("h4",k)
 
-                           console.log("tags",tags)
+                           //console.log("tags",tags)
 
                            if(k == bdo+"note")
                            {

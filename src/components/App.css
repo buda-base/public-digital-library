@@ -158,7 +158,7 @@ div[role="tooltip"] div { font-weight:bold;font-size:16px; }
 .resource .SidePane .data .subsub.new > div > label { font-size:14px;}
 .resource .SidePane .data .subsub.new > div > label + div::before { border-color:rgba(0,0,0,0.15); }
 .resource .SidePane .data .subsub.new > div > label + div { font-size:12px;}
-.resource .SidePane .data .anno + .sub ~ .sub { padding-top:30px;}
+.resource .SidePane .data .anno.new + .sub + .sub { padding-top:30px;} 
 /* .resource .SidePane .data .subsub.new label + div { margin-top:0; } */
 
 .goBack { text-decoration: none; }

@@ -19,6 +19,8 @@ const mapStateToProps = (state,ownProps) => {
    let datatype = state.ui.datatype
    let assocResources = state.data.assocResources
    if(assocResources) assocResources = assocResources[ownProps.IRI]
+   let annoCollec = state.data.annoCollec
+   if(annoCollec) annoCollec = annoCollec[ownProps.IRI]
 
    let searches = state.data.searches
    if(searches && resources && searches["bdr:"+ownProps.IRI+"@"])
@@ -49,7 +51,9 @@ const mapStateToProps = (state,ownProps) => {
    let pdfUrl = state.data.pdfUrl
 
 
-   let props = { config,resources, ontology, keyword, language, datatype, assocResources, prefLang, failures,imageAsset,firstImage,manifestError,pdfVolumes,createPdf,pdfUrl }
+   let props = { config,resources, ontology, keyword, language, datatype, assocResources, prefLang, failures,
+      imageAsset,firstImage,manifestError,pdfVolumes,createPdf,pdfUrl,
+      annoCollec }
 
    console.log("mS2p",state,props)
 

@@ -150,28 +150,35 @@ export const gotAnnoResource = (state: DataState, action: Action) => {
    let res = state.resources
    if(res) res = res[action.payload]
 
+
    if(res) {
       console.log("res",res,action)
 
       let asso = action.meta
       for(let k of Object.keys(asso))
       {
-         let anno = asso[k].filter(e => e.type && e.type == rdf+"type" && e.value == oa+"Annotation")
+         let assoK = asso[k]
+
+         if(assoK) assoK = assoK[rdf+"type"]
+         if(!assoK) continue ;
+
+         let anno = assoK.filter(e => e.type && /*e.type == rdf+"type" &&*/ e.value == oa+"Annotation")
          if(anno && anno.length > 0)
          {
-            console.log("anno",asso[k])
+            console.log("anno",anno,assoK)
 
-            let targ = asso[k].filter(e => e.type && e.type == oa+"hasTarget")
-            let body = asso[k].filter(e => e.type && e.type == oa+"hasBody")
+            let targ = asso[k][oa+"hasTarget"]
+            let body = asso[k][oa+"hasBody"]
+
             if(targ && targ.length > 0 && targ[0] && targ[0].value && body && body.length > 0)
             {
-               let sta = asso[targ[0].value]
+               let sta = action.meta[targ[0].value]
                if(sta)
                {
                   console.log("sta",sta)
 
-                  let pred = sta.filter(e => e.type && e.type == rdf+"predicate")
-                  let obj = sta.filter(e => e.type && e.type == rdf+"object")
+                  let pred = sta[rdf+"predicate"]
+                  let obj = sta[rdf+"object"]
                   if(pred && pred.length > 0 && obj && obj.length > 0)
                   {
                      console.log("pred obj",pred,obj)
@@ -190,13 +197,14 @@ export const gotAnnoResource = (state: DataState, action: Action) => {
 
                               if(o.value && o.value == obj[0].value)
                               {
-                                 if(body && body[0] && body[0].value && asso[body[0].value])
+                                 if(body && body[0] && body[0].value && action.meta[body[0].value])
                                  {
                                     console.log("body",body)
                                     let bnode = { type: "bnode",value: body[0].value }
                                     newP.push(bnode);
 
-                                    let support = asso[body[0].value].filter(e => e.type && e.type === adm+"supportedBy") ;
+                                    let support = action.meta[body[0].value]
+                                    if(support) support = support[adm+"supportedBy"] ;
                                     console.log("support",support)
 
                                     if(support && support[0] && support[0].value)
@@ -207,32 +215,39 @@ export const gotAnnoResource = (state: DataState, action: Action) => {
                                           [adm+"supportedBy"] : [ { type:"bnode",value:support[0].value} ]
                                        }
 
-                                       let score = asso[body[0].value].filter(e => e.type && e.type === adm+"statementScore") ;
+                                       let score = action.meta[body[0].value]
+                                       if(score) score = score[adm+"statementScore"] ;
                                        if(score && score[0] && score[0].value)
                                        {
                                           res[body[0].value] = { ...res[body[0].value], [adm+"statementScore"]:[{type:"integer",value:score[0].value }]}
                                           o["score"] = score[0]["value"] ;
                                        }
 
-                                       let assert = asso[support[0].value] ;
+                                       let assert = action.meta[support[0].value]
 
                                        if(assert)
                                        {
-                                          let t = assert.filter(e => e.type == rdf+"type") ;
-                                          let c = assert.filter(e => e.type == rdfs+"comment") ;
-                                          let w = assert.filter(e => e.type.match(/[Ww]orkLocation(Work)?$/)) ;
+                                          let t = assert[rdf+"type"] ;
+                                          let c = assert[rdfs+"comment"] ;
+                                          let w = Object.keys(assert)
+                                                   .filter(e => e.match(/[Ww]orkLocation(Work)?$/))
+                                                   .reduce((acc,e) => ([...acc,...assert[e].map(f => ({...f,type:e}))]),[])
+
                                           console.log("assert",assert,t,c,w) //,c[0])
                                           if(t && t[0] && t[0].value) // && c && c[0])
                                           {
-
                                              if(c && c[0]) {
                                                 res[support[0].value] = {
                                                    [t[0].value] : [ { type:"literal",value:c[0]["value"],lang:c[0]["xml:lang"] } ],
                                                 }
 
                                                 if(w && w[0]){
-                                                   let work = asso[w[0]["value"]].filter(e => e.type === bdo+"workLocationWork")
+                                                   let work = action.meta[w[0]["value"]]
 
+                                                   console.log("work",work,w[0],w[0].value)
+                                                   w.map(e => console.log(e))
+
+                                                   if(work) work = work[bdo+"workLocationWork"]
                                                    if(work && work[0])
                                                    {
                                                       res[support[0].value] = {
@@ -246,6 +261,8 @@ export const gotAnnoResource = (state: DataState, action: Action) => {
                                                       bnode["inCollapse"] = true
                                                    }
                                                 }
+
+                                                console.log("o1",o,res)
                                              }
                                              else if(w && w[0]){
 
@@ -255,7 +272,10 @@ export const gotAnnoResource = (state: DataState, action: Action) => {
                                                 o["collapseId"] = body[0].value
                                                 o["predicate"] = pred[0].value
                                                 bnode["inCollapse"] = true
+
+                                                console.log("o2",o,res)
                                              }
+
 
                                           }
                                        }
@@ -266,6 +286,7 @@ export const gotAnnoResource = (state: DataState, action: Action) => {
 
                            res[action.payload.replace(/bdr:/,bdr)][pred[0].value] = newP
                            console.log("newP",newP)
+                           //newP.map(e => console.log(e))
                         }
                      }
                   }
@@ -277,16 +298,28 @@ export const gotAnnoResource = (state: DataState, action: Action) => {
       // 3 -
    }
 
+      let assoRes = state.assocResources
+      if(assoRes) assoRes = assoRes[action.payload]
+      else assoRes = {}
+
+      console.log("assoRes",assoRes,action.meta)
+
     state = {
         ...state,
         "resources": {
            ...state.resources,
            [action.payload] : res
         },
+        /*
+        "assocResources": {
+           ...this.assocResources,
+           [action.payload]:assoRes
+        },
+        */
         "annoCollec":{
            ...state.annoCollec,
            [action.payload]:
-            [].append(res).append(
+            [].concat(res).concat(
                state.annoCollec&&state.annoCollec[action.payload]?state.annoCollec[action.payload]:[]
             )
          }
