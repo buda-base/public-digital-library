@@ -814,9 +814,9 @@ class ResourceViewer extends Component<Props,State>
                let col = "score1";
                if(e.score && Number(e.score) < 0) col = "score0"
 
-               console.log("hasAnno",e);
+               console.log("hasAnno",e,this.state.showAnno);
 
-               if(((!this.state.showAnno || this.state.showAnno == true || this.state.showAnno == col)) && (!this.state.viewAnno || this.state.viewAnno == e.collapseId)) {
+               if(((!this.state.showAnno || this.state.showAnno == true || this.state.showAnno == e.collecId)) && (!this.state.viewAnno || this.state.viewAnno == e.collapseId)) {
                   viewAnno = true ;
                   let id = e.collapseId
                   this._annoPane.push(<div className="annoSepa"/>)
@@ -841,7 +841,7 @@ class ResourceViewer extends Component<Props,State>
 
                if(this.state.showAnno)
                {
-                  if(this.state.showAnno == true || this.state.showAnno == col)
+                  if(this.state.showAnno == true || this.state.showAnno == e.collecId)
                   {
                      // onClick={(event) => this.setCollapse(node)}>
                      let id = e.collapseId
@@ -1793,9 +1793,19 @@ class ResourceViewer extends Component<Props,State>
                         anchorEl={this.state.anchorElAnno}
                         onClose={this.handleRequestCloseAnno.bind(this)}
                         >
-                        <MenuItem onClick={this.handleAnnoCollec.bind(this,true)}>See All Annotations</MenuItem>
-                        <MenuItem onClick={this.handleAnnoCollec.bind(this,"score0")}>See Annotation Collection 0</MenuItem>
-                        <MenuItem onClick={this.handleAnnoCollec.bind(this,"score1")}>See Annotation Collection 1</MenuItem>
+                        <MenuItem onClick={this.handleAnnoCollec.bind(this,true)}>All Annotations</MenuItem>
+                        { this.props.annoCollec && Object.keys(this.props.annoCollec).map((e) => {
+                           let labels = this.props.annoCollec[e][rdfs+"label"]
+                           //console.log("labs",labels,this.props.annoCollec[e])
+                           let l = e
+                           if(labels) {
+                              l = labels.filter((e) => (e.value && (e["lang"] == this.props.prefLang || e["xml:lang"] == this.props.prefLang)))[0]
+                              if(!l || l.length == 0) l = labels.filter((e) => (e.value))[0]
+                           }
+                           return (<MenuItem onClick={this.handleAnnoCollec.bind(this,e)}>{l.value}</MenuItem>)
+                        }) }
+                        {/* <MenuItem onClick={this.handleAnnoCollec.bind(this,"score0")}>See Annotation Collection 0</MenuItem>
+                        <MenuItem onClick={this.handleAnnoCollec.bind(this,"score1")}>See Annotation Collection 1</MenuItem> */}
                      </Popover>
                      <IconButton className="close"  onClick={e => this.setState({...this.state,annoPane:false,viewAnno:false})}>
                         <Close/>
@@ -1806,7 +1816,7 @@ class ResourceViewer extends Component<Props,State>
                            <Translate value="Asidebar.title" />
                         </Typography>
                         {this.props.annoCollec == true && <Loader loaded={false}/>}
-                        { !this.state.newAnno && this._annoPane.length == 0 && "No annotation to show for this resource."}
+                        { (!this.props.annoCollec || Object.keys(this.props.annoCollec).length === 0 || this._annoPane.length == 0) && !this.state.newAnno &&  "No annotation to show for this "+(typeof this.state.showAnno === 'string' ? "collection":"resource")+"."}
                         {this.state.viewAnno && !this.state.newAnno && <a className="viewAll" onClick={(event) => {
                            let s = this.state ;
                            if(s.viewAnno) {

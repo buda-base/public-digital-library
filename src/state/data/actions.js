@@ -144,11 +144,11 @@ export const getAnnotations = (iri: string): Action => {
 }
 
 TYPES.gotAnnoResource = 'GOT_ANNO_RESOURCE';
-export const gotAnnoResource = (iri: string,res:{}): Action => {
+export const gotAnnoResource = (iri: string,data:{},collecId:string): Action => {
     return {
         type: TYPES.gotAnnoResource,
         payload: iri,
-        meta:res
+        meta:{data,collecId}
     }
 }
 

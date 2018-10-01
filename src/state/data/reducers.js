@@ -145,6 +145,7 @@ export const gotAnnoResource = (state: DataState, action: Action) => {
    const oa = "http://www.w3.org/ns/oa#" ;
    const bdr  = "http://purl.bdrc.io/resource/";
    const bdo  = "http://purl.bdrc.io/ontology/core/";
+   const bdac = "http://purl.bdrc.io/anncollection/" ;
    const rdfs = "http://www.w3.org/2000/01/rdf-schema#" ;
 
    let res = state.resources
@@ -153,8 +154,9 @@ export const gotAnnoResource = (state: DataState, action: Action) => {
 
    if(res) {
       console.log("res",res,action)
+      let colId = action.meta.collecId //.replace(new RegExp("^"+bdac),"bdac")
 
-      let asso = action.meta
+      let asso = action.meta.data
       for(let k of Object.keys(asso))
       {
          let assoK = asso[k]
@@ -172,7 +174,7 @@ export const gotAnnoResource = (state: DataState, action: Action) => {
 
             if(targ && targ.length > 0 && targ[0] && targ[0].value && body && body.length > 0)
             {
-               let sta = action.meta[targ[0].value]
+               let sta = action.meta.data[targ[0].value]
                if(sta)
                {
                   console.log("sta",sta)
@@ -197,13 +199,13 @@ export const gotAnnoResource = (state: DataState, action: Action) => {
 
                               if(o.value && o.value == obj[0].value)
                               {
-                                 if(body && body[0] && body[0].value && action.meta[body[0].value])
+                                 if(body && body[0] && body[0].value && action.meta.data[body[0].value])
                                  {
                                     console.log("body",body)
                                     let bnode = { type: "bnode",value: body[0].value }
                                     newP.push(bnode);
 
-                                    let support = action.meta[body[0].value]
+                                    let support = action.meta.data[body[0].value]
                                     if(support) support = support[adm+"supportedBy"] ;
                                     console.log("support",support)
 
@@ -215,7 +217,7 @@ export const gotAnnoResource = (state: DataState, action: Action) => {
                                           [adm+"supportedBy"] : [ { type:"bnode",value:support[0].value} ]
                                        }
 
-                                       let score = action.meta[body[0].value]
+                                       let score = action.meta.data[body[0].value]
                                        if(score) score = score[adm+"statementScore"] ;
                                        if(score && score[0] && score[0].value)
                                        {
@@ -223,7 +225,7 @@ export const gotAnnoResource = (state: DataState, action: Action) => {
                                           o["score"] = score[0]["value"] ;
                                        }
 
-                                       let assert = action.meta[support[0].value]
+                                       let assert = action.meta.data[support[0].value]
 
                                        if(assert)
                                        {
@@ -236,13 +238,19 @@ export const gotAnnoResource = (state: DataState, action: Action) => {
                                           console.log("assert",assert,t,c,w) //,c[0])
                                           if(t && t[0] && t[0].value) // && c && c[0])
                                           {
+
+                                             o["collecId"] = colId
+                                             o["collapseId"] = body[0].value
+                                             o["predicate"] = pred[0].value
+                                             bnode["inCollapse"] = true
+
                                              if(c && c[0]) {
                                                 res[support[0].value] = {
                                                    [t[0].value] : [ { type:"literal",value:c[0]["value"],lang:c[0]["xml:lang"] } ],
                                                 }
 
                                                 if(w && w[0]){
-                                                   let work = action.meta[w[0]["value"]]
+                                                   let work = action.meta.data[w[0]["value"]]
 
                                                    console.log("work",work,w[0],w[0].value)
                                                    w.map(e => console.log(e))
@@ -256,9 +264,6 @@ export const gotAnnoResource = (state: DataState, action: Action) => {
                                                       }
 
                                                       o["hasAnno"] = work[0]["value"] ;
-                                                      o["collapseId"] = body[0].value
-                                                      o["predicate"] = pred[0].value
-                                                      bnode["inCollapse"] = true
                                                    }
                                                 }
 
@@ -269,9 +274,6 @@ export const gotAnnoResource = (state: DataState, action: Action) => {
                                                 res[support[0].value] = { [t[0].value.replace(/[/]W/,"/w")] : [ { type:"uri",value:w[0].value } ] }
 
                                                 o["hasAnno"] = w[0]["value"] ;
-                                                o["collapseId"] = body[0].value
-                                                o["predicate"] = pred[0].value
-                                                bnode["inCollapse"] = true
 
                                                 console.log("o2",o,res)
                                              }
@@ -303,11 +305,11 @@ export const gotAnnoResource = (state: DataState, action: Action) => {
       else assoRes = {}
 
 
-      assoRes = {...assoRes, ...Object.keys(action.meta).reduce((acc,e) => (
+      assoRes = {...assoRes, ...Object.keys(action.meta.data).reduce((acc,e) => (
             {...acc,
-               [e]:Object.keys(action.meta[e]).reduce((ac,f) =>(
+               [e]:Object.keys(action.meta.data[e]).reduce((ac,f) =>(
                      [...ac,
-                        ...action.meta[e][f].map(g => ({...g,type:f}))
+                        ...action.meta.data[e][f].map(g => ({...g,type:f}))
                      ]),[])
             }),{}) }
 
@@ -325,7 +327,15 @@ export const gotAnnoResource = (state: DataState, action: Action) => {
         },
         "annoCollec":{
            ...state.annoCollec,
-           [action.payload]:[action.meta,...(state.annoCollec?state.annoCollec[action.payload]:[])]
+           [action.payload]:{
+             //...action.meta.data,
+             ...Object.keys(action.meta.data).reduce((acc,e) => {
+               if(action.meta.data[e][rdf+"type"] && action.meta.data[e][rdf+"type"].map(e => e.value).filter(e => e === bdo+"AnnotationLayer").length > 0)
+                  return {...acc,[e]:action.meta.data[e]}
+               else return acc ;
+             },
+                {}),
+             ...(state.annoCollec?state.annoCollec[action.payload]:{})}
          }
       }
 

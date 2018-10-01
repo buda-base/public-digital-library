@@ -298,7 +298,7 @@ async function getAnnotations(iri) {
 
          console.log(collec);
 
-         store.dispatch(dataActions.gotAnnoResource(iri,collec))
+         store.dispatch(dataActions.gotAnnoResource(iri,collec,k))
       }
    }
    catch(e){
