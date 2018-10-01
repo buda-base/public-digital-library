@@ -1987,7 +1987,7 @@ class ResourceViewer extends Component<Props,State>
                   <ChatIcon />
                </IconButton>
                {
-                  this.props.IRI[0].match(/[RPGTW]/) &&
+                  this.props.IRI.match(/^[^:]+:[RPGTW]/) &&
                   <Link className="goBack" to={"/search?r="+this.props.IRI}>
                      <Button style={{marginLeft:"30px"}}>Browse associated resources &gt;</Button>
                   </Link>
