@@ -1021,7 +1021,7 @@ class ResourceViewer extends Component<Props,State>
 
                         note.push(
                            <div class="sub">
-                              <Tag className="first type">{this.proplink(bdo+"noteText")}:</Tag>
+                              <Tag className="first type">{this.proplink(bdo+"noteText","Note")}:</Tag>
                               {workuri}
                               <div class="subsub">
                                  <Tag>
@@ -1043,10 +1043,23 @@ class ResourceViewer extends Component<Props,State>
                         {
                            loca = [" @ ",noteData[bdo+"noteLocationStatement"].value]
                         }
+                        let workuri = <div><Tag style={{fontSize:"14px"}}>(from {this.uriformat(bdo+"noteWork",noteData[bdo+"noteWork"])}{loca})</Tag></div>
+                        note.push(
+                           <div class="sub">
+                              <Tag className="first type">{this.proplink(bdo+"noteWork","Note")}:</Tag>
+                                 {workuri}
+                                 <ChatIcon className="annoticon"  onClick={
+                                    (function(val,prop,v,ev){
+                                       this.setState({...this.state,annoPane:true,newAnno:{prop:this.proplink(prop),val},viewAnno:prop+"@"+v})
+                                    }).bind(this,[workuri,loca],bdo+"noteWork",noteData[bdo+"noteWork"].value)
+                                 }/>
+                           </div>
+                        )
+                        /*
                         let workuri = this.uriformat(bdo+"noteWork",noteData[bdo+"noteWork"])
                         note.push(
                            <div class="sub">
-                              <Tag className="first type">{this.proplink(bdo+"noteWork")}:</Tag>
+                              { <Tag className="first type">{this.proplink(bdo+"noteWork","Note")}:</Tag>
                               <div class="subsub">
                                  <Tag>{workuri}{loca}
                                     <ChatIcon className="annoticon"  onClick={
@@ -1055,9 +1068,10 @@ class ResourceViewer extends Component<Props,State>
                                        }).bind(this,[workuri,loca],bdo+"noteWork",noteData[bdo+"noteWork"].value)
                                     }/>
                                  </Tag>
-                              </div>
+                              </div> }
                            </div>
                         )
+                        */
 
                      }
                      else if(noteData[bdo+"noteLocationStatement"])
@@ -1273,9 +1287,11 @@ class ResourceViewer extends Component<Props,State>
    };
 
 
-   proplink = (k) => {
+   proplink = (k,txt) => {
 
-     let ret = (<a class="propref" {...(true || k.match(/purl[.]bdrc/) ? {"href":k}:{})} target="_blank">{this.fullname(k)}</a>)
+      if(k === bdo+'note') txt = "Notes" ;
+
+     let ret = (<a class="propref" {...(true || k.match(/purl[.]bdrc/) ? {"href":k}:{})} target="_blank">{txt?txt:this.fullname(k)}</a>)
 
      return ret;
    }
