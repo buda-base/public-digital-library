@@ -94,7 +94,8 @@ const makeMainRoutes = () => {
                   <Route path="/gallery" render={(props) =>
                      <IIIFViewerContainer location={history.location} history={history}  auth={auth}/> }/>
                   <Route path="/show/:IRI" render={(props) => {
-                     if(!store.getState().data.resources || !store.getState().data.resources[props.match.params.IRI])
+                     if(!store.getState().data.resources || !store.getState().data.resources[props.match.params.IRI]
+                        || !store.getState().data.assocResources || !store.getState().data.assocResources[props.match.params.IRI])
                      {
                         store.dispatch(initiateApp(qs.parse(history.location.search),props.match.params.IRI));
                      }

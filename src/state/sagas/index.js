@@ -106,7 +106,7 @@ async function initiateApp(params,iri,myprops) {
             },{})}));
 
 
-            store.dispatch(dataActions.gotResource(iri,{ "youpi":true,[bdr+iri.replace(/^bdr:/,"")] : Object.keys(res).reduce((acc,e) => {
+            store.dispatch(dataActions.gotResource(iri,{ [bdr+iri.replace(/^bdr:/,"")] : Object.keys(res).reduce((acc,e) => {
 
                if(Object.keys(res[e]).indexOf(skos+"prefLabel") === -1)
                   return ({...acc, ...res[e] })
@@ -704,7 +704,7 @@ async function getOneFacet(keyword,language:string,facet:{[string]:string}) {
 
 async function getResource(iri:string) {
    try {
-      let res = await api.loadResource(iri.replace(/bdr:/,""));
+      let res = await api.loadResource(iri) //.replace(/bdr:/,""));
 
       store.dispatch(dataActions.gotResource(iri, res));
    }
