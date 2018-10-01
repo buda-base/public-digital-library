@@ -1802,7 +1802,7 @@ class ResourceViewer extends Component<Props,State>
                               l = labels.filter((e) => (e.value && (e["lang"] == this.props.prefLang || e["xml:lang"] == this.props.prefLang)))[0]
                               if(!l || l.length == 0) l = labels.filter((e) => (e.value))[0]
                            }
-                           return (<MenuItem onClick={this.handleAnnoCollec.bind(this,e)}>{l.value}</MenuItem>)
+                           return (<MenuItem className={e === this.state.showAnno ? "current":""} onClick={this.handleAnnoCollec.bind(this,e)}>{l.value}</MenuItem>)
                         }) }
                         {/* <MenuItem onClick={this.handleAnnoCollec.bind(this,"score0")}>See Annotation Collection 0</MenuItem>
                         <MenuItem onClick={this.handleAnnoCollec.bind(this,"score1")}>See Annotation Collection 1</MenuItem> */}
