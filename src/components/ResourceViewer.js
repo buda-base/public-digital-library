@@ -310,7 +310,6 @@ class ResourceViewer extends Component<Props,State>
 
 
          let parts = prop[bdo+"workHasPart"]
-
          if(parts) {
 
             let assoR = this.props.assocResources
@@ -346,6 +345,44 @@ class ResourceViewer extends Component<Props,State>
             }
          }
 
+
+         let expr = prop[bdo+"workHasExpression"]
+         if(expr) {
+
+            let assoR = this.props.assocResources
+            if (assoR) {
+
+               expr = expr.map((e) => {
+
+                  let label1,label2 ;
+
+                  //console.log("index",e,assoR[e.value])
+                  if(assoR[e.value])
+                  {
+                     label1 = assoR[e.value].filter(e => e.type === skos+"prefLabel" && (e.lang === this.props.prefLang || e["xml:lang"] === this.props.prefLang))
+                     if(label1.length === 0) label1 = assoR[e.value].filter(e => e.type === skos+"prefLabel")
+                     if(label1.length > 0) label1 = label1[0].value
+
+                     if(assoR[e.value].filter(e => e.type === bdo+"workHasRoot").length > 0)
+                     {
+                        label2 = assoR[assoR[e.value].filter(e => e.type === bdo+"workHasRoot")[0].value].filter(e => e.type === skos+"prefLabel" && (e.lang === this.props.prefLang || e["xml:lang"] === this.props.prefLang))
+                        if(label2.length === 0) label2 = assoR[assoR[e.value].filter(e => e.type === bdo+"workHasRoot")[0].value].filter(e => e.type === skos+"prefLabel")
+                        if(label2.length > 0) label2 = label2[0].value
+                        //console.log(label2)
+                     }
+                  }
+
+                  return ({ ...e, label1, label2 })
+               })
+
+               prop[bdo+"workHasExpression"] = _.sortBy(expr,['label1','label2'])
+
+               for(let o of prop[bdo+"workHasExpression"]) console.log(o.value,o.label1)
+
+            }
+         }
+
+
          let t = getEntiType(this.props.IRI);
          if(t && propOrder[t])
          {
@@ -362,7 +399,7 @@ class ResourceViewer extends Component<Props,State>
             }).reduce((acc,e) => {
 
                //console.log("sorting",e,prop[e])
-               if(e == bdo+"workHasPart") {
+               if(e === bdo+"workHasPart" || e === bdo+"workHasExpression" ) {
                   //console.log("skip sort parts",prop[e][0],prop[e])
                   return { ...acc, [e]:prop[e] }
                }
@@ -1507,6 +1544,7 @@ class ResourceViewer extends Component<Props,State>
             let elem = this.getResourceElem(k);
 
             //console.log("prop",k,elem);
+            //for(let e of elem) console.log(e.value,e.label1);
 
             //if(!k.match(new RegExp("Revision|Entry|prefLabel|"+rdf+"|toberemoved"))) {
             if(!k.match(new RegExp(adm+"|adm:|TextTitle|SourcePath|prefLabel|"+rdf+"|toberemoved|workPartIndex|workPartTreeIndex")))
@@ -1622,7 +1660,7 @@ class ResourceViewer extends Component<Props,State>
                      </Tooltip>] ;
                      }
                   }
-                  else if(k == bdo+"workHasExpression")
+                  else if(false) //k == bdo+"workHasExpression")
                   {
                   // 1-map avec le nom du children[2] si ==3chldren et children[1] = " in "
                      tags = tags.map(e => {
