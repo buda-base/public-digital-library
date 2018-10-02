@@ -293,8 +293,8 @@ async function getAnnotations(iri) {
       {
          console.log("k",k,listA[k])
 
-         let collec = await api.getQueryResults(k, "", {searchType:"",L_NAME:""}, "GET","application/json")
-            //,{"Prefer": "return=representation;include=\"http://www.w3.org/ns/oa#PreferContainedDescriptions\""})
+         let collec = await api.getQueryResults(k, "", {searchType:"",L_NAME:""}, "GET","application/json"
+            ,{"Prefer": "return=representation;include=\"http://www.w3.org/ns/oa#PreferContainedDescriptions\""})
 
          console.log(collec);
 
