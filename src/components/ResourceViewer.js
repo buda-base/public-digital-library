@@ -390,21 +390,33 @@ class ResourceViewer extends Component<Props,State>
 
             //console.log("sort",prop)
 
-            let sortProp = Object.keys(prop).sort((a,b)=> {
+            let sortProp = Object.keys(prop).map(e => {
+               let index = propOrder[t].indexOf(e)
+               if(index === -1) index = 99999 ;
+               return ({value:e,index})
+            })
+            sortProp = _.orderBy(sortProp,['index','value'],['asc','asc'])
+
+            console.log("sortProp",sortProp)
+
+            /*Object.keys(prop).sort((a,b)=> {
                let ia = propOrder[t].indexOf(a)
                let ib = propOrder[t].indexOf(b)
                //console.log(t,a,ia,b,ib)
                if ((ia != -1 && ib != -1 && ia < ib) || (ia != -1 && ib == -1)) return -1
+               else if(ia == -1 && ib == -1) return (a < b ? -1 : (a == b ? 0 : -1))
                else return 1 ;
-            }).reduce((acc,e) => {
+            })*/
+
+            sortProp = sortProp.reduce((acc,e) => {
 
                //console.log("sorting",e,prop[e])
-               if(e === bdo+"workHasPart" || e === bdo+"workHasExpression" ) {
+               if(e.value === bdo+"workHasPart" || e.value === bdo+"workHasExpression" ) {
                   //console.log("skip sort parts",prop[e][0],prop[e])
-                  return { ...acc, [e]:prop[e] }
+                  return { ...acc, [e.value]:prop[e.value] }
                }
 
-               return ({ ...acc, [e]:prop[e].sort(function(A,B){
+               return ({ ...acc, [e.value]:prop[e.value].sort(function(A,B){
 
                   let a = A
                   let b = B
@@ -816,15 +828,14 @@ class ResourceViewer extends Component<Props,State>
       {
 
          let value = ""+e
-         if(e.value) value = e.value
+         if(e.value || e.value === "") value = e.value
          else if(e["@value"]) value = e["@value"]
          else if(e["@id"]) value = e["@id"]
          let pretty = this.fullname(value)
 
          if(value === bdr+"LanguageTaxonomy") continue ;
 
-
-         //console.log("e",e,pretty)
+         //console.log("e",e,pretty,value)
 
          if(e.type != "bnode")
          {
