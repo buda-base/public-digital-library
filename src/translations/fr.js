@@ -16,6 +16,8 @@ const frTranslation = {
          saDeva:"Sanskrit (Devanagari)",
          bo:"Tibétain (Unicode)",
          boXEwts:"Tibétain (EWTS)",
+         boXDts:"Tibétain (DTS)",
+         boAlaLc:"Tibétain (ALA-LC)",
          other:"Autre"
       },
       tip:{

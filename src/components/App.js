@@ -73,6 +73,8 @@ export const languages = {
    "sa-Deva":"lang.search.saDeva",
    "bo":"lang.search.bo",
    "bo-x-ewts":"lang.search.boXEwts",
+   "bo-x-dts":"lang.search.boXDts",
+   "bo-alalc97":"lang.search.boAlaLc",
    //"other":"lang.search.other"
 }
 
