@@ -133,6 +133,7 @@ type State = {
    willSearch?:boolean,
    language:string,
    langOpen:boolean,
+   customLang?:string[],
    checked?:string,
    unchecked?:string,
    keyword:string,
@@ -183,6 +184,9 @@ class App extends Component<Props,State> {
          paginate:{index:0,pages:[0],n:[0]},
          leftPane:(window.innerWidth > 1400),
       };
+
+
+      if(!languages[lg]) this.state = { ...this.state, customLang:[lg]}
 
       console.log('qs',get,this.state)
 
@@ -520,18 +524,44 @@ class App extends Component<Props,State> {
    }
 
    handleLanguage = event => {
-      console.log("handleL",event)
+      console.log("handleL",event.target,event.key,event.target.value)
 
-      if(event.target.value) {
-         let s = { [event.target.name]: event.target.value }
+      if(!event.key && event.target.value!== undefined)
+      {
+         let s = { ...this.state, [event.target.name]: event.target.value, langOpen:false }
          if(this.props.keyword) s = { ...s } //, willSearch:true }
 
-         console.log("s",s)
+         console.log("s!!!",s)
 
          this.setState( s );
       }
       else {
-         event.preventDefault();
+
+         console.log("...",event,event.target.name,this._customLang.value)
+
+         let s = { ...this.state,
+               langOpen:true }
+
+         if (event.key === 'Enter')
+         {
+            let customLang = this.state.customLang
+            if(!customLang) customLang = []
+            if(this._customLang.value && customLang.indexOf(this._customLang.value) === -1 && !languages[this._customLang.value])
+               customLang.push(this._customLang.value)
+
+            s = { ...s, [event.target.name]: this._customLang.value, langOpen:false, customLang }
+
+            console.log("s",s)
+
+         }
+         else if(!event.target.name) {
+            s = { ...s, langOpen:false }
+
+         }
+
+
+         this.setState( s );
+
       }
   };
 
@@ -757,7 +787,7 @@ class App extends Component<Props,State> {
 
       const { isAuthenticated } = this.props.auth;
 
-      if(!global.inTest) console.log("render",this.props.keyword,this.props,this.state,isAuthenticated())
+      if(!global.inTest) console.log("render",this.props.keyword,this.props,this.state,isAuthenticated(),this._customLang)
 
       if(!this.props.keyword || this.props.keyword == "")
       {
@@ -1951,12 +1981,23 @@ class App extends Component<Props,State> {
                 <Select
                   value={this.state.language}
                   onChange={this.handleLanguage}
+                  open={this.state.langOpen}
+                  onOpen={(e) => this.setState({...this.state,langOpen:true})}
+                  onClose={this.handleLanguage} //(e) => this.setState({...this.state,langOpen:false})}
                   inputProps={{
                     name: 'language',
                     id: 'language',
                   }}
                 >
                    { Object.keys(languages).map((k) => (<MenuItem key={k} value={k}><Translate value={""+languages[k]}/></MenuItem>))}
+                   {this.state.customLang &&  this.state.customLang.map(e => (
+                      <MenuItem key="customLang_" value={e}>{e}</MenuItem>
+                     ))
+                   }
+                   <MenuItem key="customLang" >
+                      <TextField label="Other" name="language" onKeyPress={this.handleLanguage}
+                        inputRef={(str) => { this._customLang = str;}} />
+                   </MenuItem>
                </Select>
 
                { /* // proof of concept
