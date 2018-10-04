@@ -1064,13 +1064,15 @@ class App extends Component<Props,State> {
                      //message.push(["cpt="+cpt+"="+absi,<br/>])
 
                      let label ; // sublist[o].filter((e) => (e.type && e.type.match(/prefLabelMatch$/)))[0]
-                     label = sublist[o].filter((e) => (e.type && e.type.match(/(prefLabel(Match)?|eTextTitle)$/) && (e["lang"] == this.props.prefLang || e["xml:lang"] == this.props.prefLang)))[0]
+                     label = sublist[o].filter((e) => (e.type && e.type.match(/(prefLabel(Match)?|eTextTitle)$/) && (e["lang"] == this.props.language || e["xml:lang"] == this.props.language)))[0]
+                     if(!label || label.length == 0) label = sublist[o].filter((e) => (e.type && e.type.match(/(prefLabel(Match)?|eTextTitle)$/) && (e["lang"] == this.props.prefLang || e["xml:lang"] == this.props.prefLang)))[0]
                      if(!label || label.length == 0) label = sublist[o].filter((e) => (e.type && e.type.match(/(prefLabel(Match)?|eTextTitle)$/) && (e["lang"] == "bo-x-ewts" || e["xml:lang"] == "bo-x-ewts")))[0]
                      if(!label || label.length == 0) label = sublist[o].filter((e) => (e.type && e.type.match(/(prefLabel(Match)?|eTextTitle)$/)))[0]
 
-                     //console.log("label",label,sublist[o])
-
                      let preProps = sublist[o].filter((e) => e.type && e.type.match(/relationType$/ )).map(e => this.props.ontology[e.value])
+
+                     //console.log("label",label,sublist[o],preProps)
+
 
                      let r = {
                         //f  : { type: "uri", value:list[o].type },
