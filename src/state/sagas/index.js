@@ -145,7 +145,7 @@ async function initiateApp(params,iri,myprops) {
             store.dispatch(dataActions.startSearch(params.q,params.lg,[params.t])); //,params.t.split(",")));
             store.dispatch(uiActions.selectType(params.t));
          }
-         else if(!state.data.searches || !state.data.searches[params.q+"@"+params.lg])
+         else //if(!state.data.searches || !state.data.searches[params.q+"@"+params.lg])
          {
             store.dispatch(dataActions.startSearch(params.q,params.lg));
          }

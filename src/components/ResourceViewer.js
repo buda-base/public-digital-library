@@ -821,7 +821,7 @@ class ResourceViewer extends Component<Props,State>
       })
       */
 
-      console.log("format",prop,elem,txt,bnode,div);
+      //console.log("format",prop,elem,txt,bnode,div);
 
       let ret = [],pre = []
 
@@ -1573,7 +1573,7 @@ class ResourceViewer extends Component<Props,State>
                {
                   let tags = this.format("h4",k)
 
-                  console.log("tags",tags)
+                  //console.log("tags",tags)
 
                   if(k == bdo+"note")
                   {
@@ -1806,7 +1806,7 @@ class ResourceViewer extends Component<Props,State>
                      if(this.hasSub(k)) ret = this.subProps(k)
                      if(!ret || ret.length === 0) ret = tags.map((e)=> [e," "] )
 
-                     console.log("render", ret)
+                     //console.log("render", ret)
 
                      return (
                         <div>

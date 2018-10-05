@@ -78,6 +78,11 @@ export const languages = {
    //"other":"lang.search.other"
 }
 
+const langProfile = [ "en", "bo-x-ewts", "sa-x-iast", "zh-latn-pinyin",
+                      "sa-Deva",
+                      "bo","bo-x-dts","bo-alalc97",
+                      "zh-hans", "zh-hant", "zh"]
+
 const TagTab = {
    "Abstract Work":CropFreeIcon,
    "Work Has Expression":CenterFocusStrong,
@@ -632,7 +637,7 @@ class App extends Component<Props,State> {
 
    highlight(val,k):string
    {
-      console.log("hi:",val,k)
+      //console.log("hi:",val,k)
 
       if(!val.match(/↤/))
          val = /*val.replace(/@.* /,"")*/ val.split(new RegExp(k.replace(/ /g,"[ -]"))).map((l) => ([<span>{l}</span>,<span className="highlight">{k}</span>])) ;
@@ -640,7 +645,7 @@ class App extends Component<Props,State> {
          let str = val.replace(/^.*?(↦([^↤]+)↤([- ]↦([^↤]+)↤)*).*$/g,"$1").replace(/↤([- ])↦/g,"$1").replace(/[↤↦]/g,"")
          val = val.replace(/↦[^↤]+↤([- ]↦[^↤]+↤)*/g,"↦↤")
 
-         console.log("str:",str,"=",val)
+         //console.log("str:",str,"=",val)
 
          val = val.split(/↦↤/).map((l) => ([<span>{l}</span>,<span className="highlight">{str}</span>])) ;
       }
@@ -2091,7 +2096,8 @@ class App extends Component<Props,State> {
                            </div>)}))
                   }{
                      widget(I18n.t("Rsidebar.results.title"),"language",
-                           Object.keys(languages).map((i) => <div key={i} style={{width:"200px",textAlign:"left"}}>
+                           //Object.keys(languages)
+                           langProfile.map((i) => <div key={i} style={{width:"200px",textAlign:"left"}}>
                               <FormControlLabel
                                  control={
                                     <Checkbox
