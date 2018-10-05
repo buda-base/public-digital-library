@@ -1400,7 +1400,7 @@ class App extends Component<Props,State> {
          })
          subs = _.orderBy(subs,'index','desc').map(e => e.str)
 
-         //console.log("subW",subs,jpre)
+         console.log("subW",tree,subs,jpre)
 
          let checkbox = subs.map(e => {
 

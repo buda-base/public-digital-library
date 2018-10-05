@@ -574,14 +574,20 @@ class ResourceViewer extends Component<Props,State>
 
    subProps(k:string,div:string="sub")
    {
+
+      console.log("subP",k,div)
+
       let ret = []
       if(this.props.IRI && this.props.resources[this.props.IRI] && this.props.resources[this.props.IRI][this.expand(this.props.IRI)]) {
 
+
          for(let p of Object.keys(this.props.resources[this.props.IRI][this.expand(this.props.IRI)])) {
+
 
             if(this.props.ontology[p] && this.props.ontology[p][rdfs+"subPropertyOf"]
                && this.props.ontology[p][rdfs+"subPropertyOf"].filter((e)=>(e.value == k)).length > 0)
             {
+               console.log(p)
 
                let tmp = this.subProps(p,div+"sub")
                let vals
@@ -606,7 +612,7 @@ class ResourceViewer extends Component<Props,State>
    {
       if(elem) {
 
-         //console.log("uriformat",prop,elem.value,dico)
+         console.log("uriformat",prop,elem.value,dico)
 
          if(!elem.value.match(/^http:\/\/purl\.bdrc\.io/)) {
             return <a href={elem.value} target="_blank">{decodeURI(elem.value)}</a> ;
@@ -696,7 +702,7 @@ class ResourceViewer extends Component<Props,State>
                      }
                   }
 
-                  //console.log("s",prop,info,infoBase)
+                  console.log("s",prop,info,infoBase)
 
                   // we can return Link
                   let pretty = this.fullname(elem.value);
@@ -815,7 +821,7 @@ class ResourceViewer extends Component<Props,State>
       })
       */
 
-      //console.log("format",prop,elem,txt,bnode,div);
+      console.log("format",prop,elem,txt,bnode,div);
 
       let ret = [],pre = []
 
@@ -1567,7 +1573,7 @@ class ResourceViewer extends Component<Props,State>
                {
                   let tags = this.format("h4",k)
 
-                  //console.log("tags",tags)
+                  console.log("tags",tags)
 
                   if(k == bdo+"note")
                   {
@@ -1796,9 +1802,11 @@ class ResourceViewer extends Component<Props,State>
                   }
                   else if(k != bdo+"eTextHasChunk") {
 
-                     let ret = this.hasSub(k)?this.subProps(k):tags.map((e)=> [e," "] )
+                     let ret
+                     if(this.hasSub(k)) ret = this.subProps(k)
+                     if(!ret || ret.length === 0) ret = tags.map((e)=> [e," "] )
 
-                     //console.log("render", ret)
+                     console.log("render", ret)
 
                      return (
                         <div>
