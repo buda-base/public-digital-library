@@ -110,6 +110,28 @@ const langProfile = [
    "bo-alalc97"
 ]
 */
+
+
+export function getLangLabel(that,labels,proplang:boolean=false)
+{
+   if(labels)
+   {
+      let l,langs = [];
+      if(that.state.langProfile) langs = [ ...that.state.langProfile ] ;
+      if(proplang && that.props.language) langs = [ that.props.language, ...langs ]
+      for(let lang of langs) {
+         l = labels.filter((e) => (e.value && (e["lang"] == lang || e["xml:lang"] == lang)))
+         if(l.length > 0) {
+            console.log("lang",lang,l)
+            return l[0]
+         }
+      }
+      if(!l || l.length == 0) l = labels.filter((e) => (e.value))
+      return l[0]
+   }
+};
+
+
 const TagTab = {
    "Abstract Work":CropFreeIcon,
    "Work Has Expression":CenterFocusStrong,
@@ -166,6 +188,7 @@ type State = {
    language:string,
    langOpen:boolean,
    customLang?:string[],
+   langProfile?:string[],
    checked?:string,
    unchecked?:string,
    keyword:string,
@@ -205,6 +228,7 @@ class App extends Component<Props,State> {
       this.state = {
          language:lg,
          langOpen:false,
+         langProfile:[...langProfile],
          UI:{language:"en"},
          filters: {
             datatype:get.t?get.t.split(","):["Any"]
@@ -414,7 +438,22 @@ class App extends Component<Props,State> {
          {
             if(prop === "locale") this.props.onSetLocale(lab);
             else if(prop === "prefLang") this.props.onSetPrefLang(lab);
+            else if(prop === "langProfile") {
+               if(this.state.langProfile && this.state.langProfile.indexOf(lab) === -1)
+               {
+                  this.setState({...state, langProfile:[ ...langProfile.filter( e => (e === lab || this.state.langProfile.indexOf(e) !== -1)) ] })
+               }
+            }
             //state = {  ...state,  UI: { ...state.UI, [prop] : lab } }
+         }
+         else {
+
+            if(prop === "langProfile") {
+               if(this.state.langProfile && this.state.langProfile.indexOf(lab) !== -1)
+               {
+                  this.setState({...state, langProfile:[ ...langProfile.filter( e => (e !== lab && this.state.langProfile.indexOf(e) !== -1)) ] })
+               }
+            }
          }
          /* // no unchecking possible
          else if(state.UI && state.UI[prop])
@@ -648,8 +687,8 @@ class App extends Component<Props,State> {
          if(preflabs.length > 0 && preflabs[0]["lang"]) { lang = "lang" ; val = "value"; }
          if(preflabs.length > 0 && preflabs[0]["xml:lang"]) { lang = "xml:lang" ; val = "value"; }
 
-         let label = this.getLangLabel(preflabs)
-         console.log("full",label)
+         let label = getLangLabel(this,preflabs)
+         //console.log("full",label)
 
          /*
          let label = preflabs.filter(e => e[lang] == this.props.locale )
@@ -818,22 +857,6 @@ class App extends Component<Props,State> {
 
    }
 
-   getLangLabel(labels,proplang:boolean=false)
-   {
-      if(labels)
-      {
-         let l,langs = [ ...langProfile ] ;
-         if(proplang) langs = [ this.props.language, ...langs ]
-         for(let lang of langs) {
-            l = labels.filter((e) => (e.value && (e["lang"] == lang || e["xml:lang"] == lang)))
-            console.log("lang",lang,l)
-            if(l.length > 0) return l[0]
-         }
-         if(!l || l.length == 0) l = labels.filter((e) => (e.value))
-         return l[0]
-      }
-   }
-
    render() {
 
 
@@ -949,8 +972,8 @@ class App extends Component<Props,State> {
                {
                   if(labels) labels = labels[this.props.keyword.replace(/bdr:/,bdr)]
                   if(labels) {
-                     l = this.getLangLabel(labels[skos+"prefLabel"])
-                     console.log("l",labels,l)
+                     l = getLangLabel(this,labels[skos+"prefLabel"])
+                     //console.log("l",labels,l)
                      if(l) {
                         message.push(<h4 key="keyResource" style={{marginLeft:"16px"}}>Resource Id Matching (1)</h4>)
                         message.push(this.makeResult(this.props.keyword,1,null,l.value,l.lang))
@@ -1120,7 +1143,7 @@ class App extends Component<Props,State> {
                      //message.push(["cpt="+cpt+"="+absi,<br/>])
 
                      let label ; // sublist[o].filter((e) => (e.type && e.type.match(/prefLabelMatch$/)))[0]
-                     label = this.getLangLabel(sublist[o].filter( (e) => (e.type && e.type.match(/(prefLabel(Match)?|eTextTitle)$/)))) //, true)
+                     label = getLangLabel(this,sublist[o].filter( (e) => (e.type && e.type.match(/(prefLabel(Match)?|eTextTitle)$/))), true)
                      if(label.length > 0) label = label[0]
                      /*
                      label = sublist[o].filter(
@@ -1458,7 +1481,7 @@ class App extends Component<Props,State> {
          })
          subs = _.orderBy(subs,'index','desc').map(e => e.str)
 
-         console.log("subW",tree,subs,jpre)
+         //console.log("subW",tree,subs,jpre)
 
          let checkbox = subs.map(e => {
 
@@ -2154,12 +2177,12 @@ class App extends Component<Props,State> {
                               <FormControlLabel
                                  control={
                                     <Checkbox
-                                       checked={langProfile && langProfile.indexOf(i) !== -1} //i === this.props.prefLang}
+                                       checked={this.state.langProfile && this.state.langProfile.indexOf(i) !== -1} //i === this.props.prefLang}
                                        disabled={false}
                                        className="checkbox"
                                        icon={<span className='checkB'/>}
                                        checkedIcon={<span className='checkedB'><CheckCircle style={{color:"#444",margin:"-3px 0 0 -3px",width:"26px",height:"26px"}}/></span>}
-                                       onChange={(event, checked) => this.handleCheckUI(event,"prefLang",i,checked)}
+                                       onChange={(event, checked) => this.handleCheckUI(event,"langProfile",i,checked)}
                                     />
 
                                  }

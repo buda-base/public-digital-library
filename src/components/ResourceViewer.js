@@ -1,4 +1,5 @@
 //@flow
+
 import Portal from 'react-leaflet-portal';
 import bbox from "@turf/bbox"
 import {Map,TileLayer,LayersControl,Marker,Popup,GeoJSON,Tooltip as ToolT} from 'react-leaflet' ;
@@ -45,7 +46,7 @@ import { Redirect404 } from "../routes.js"
 import Loader from "react-loader"
 //import {MapComponent} from './Map';
 import {getEntiType} from '../lib/api';
-import {languages} from './App';
+import {languages,getLangLabel} from './App';
 import Popover from '@material-ui/core/Popover';
 import MenuItem from '@material-ui/core/MenuItem';
 import List from '@material-ui/core/List';
@@ -359,15 +360,21 @@ class ResourceViewer extends Component<Props,State>
                   //console.log("index",e,assoR[e.value])
                   if(assoR[e.value])
                   {
+                     /*
                      label1 = assoR[e.value].filter(e => e.type === skos+"prefLabel" && (e.lang === this.props.prefLang || e["xml:lang"] === this.props.prefLang))
                      if(label1.length === 0) label1 = assoR[e.value].filter(e => e.type === skos+"prefLabel")
-                     if(label1.length > 0) label1 = label1[0].value
+                     */
+                     label1 = getLangLabel(this, assoR[e.value].filter(e => e.type === skos+"prefLabel"))
+                     if(label1 && label1.length > 0) label1 = label1[0].value
 
                      if(assoR[e.value].filter(e => e.type === bdo+"workHasRoot").length > 0)
                      {
+                        /*
                         label2 = assoR[assoR[e.value].filter(e => e.type === bdo+"workHasRoot")[0].value].filter(e => e.type === skos+"prefLabel" && (e.lang === this.props.prefLang || e["xml:lang"] === this.props.prefLang))
                         if(label2.length === 0) label2 = assoR[assoR[e.value].filter(e => e.type === bdo+"workHasRoot")[0].value].filter(e => e.type === skos+"prefLabel")
-                        if(label2.length > 0) label2 = label2[0].value
+                        */
+                        label2 = getLangLabel(assoR[assoR[e.value].filter(e => e.type === bdo+"workHasRoot")[0].value].filter(e => e.type === skos+"prefLabel"))
+                        if(label2 && label2.length > 0) label2 = label2[0].value
                         //console.log(label2)
                      }
                   }
@@ -466,11 +473,13 @@ class ResourceViewer extends Component<Props,State>
 
       if(this.props.ontology[prop] && this.props.ontology[prop][rdfs+"label"])
       {
+         /*
          let ret = this.props.ontology[prop][rdfs+"label"].filter((e) => (e.lang == "en"))
          if(ret.length == 0) ret = this.props.ontology[prop][rdfs+"label"].filter((e) => (e.lang == this.props.prefLang))
          if(ret.length == 0) ret = this.props.ontology[prop][rdfs+"label"]
-
-         if(ret.length > 0 && ret[0].value && ret[0].value != "")
+         */
+         let ret = getLangLabel(this, this.props.ontology[prop][rdfs+"label"])
+         if(ret && ret.length > 0 && ret[0].value && ret[0].value != "")
             return ret[0].value
 
        //&& this.props.ontology[prop][rdfs+"label"][0] && this.props.ontology[prop][rdfs+"label"][0].value) {
@@ -514,9 +523,13 @@ class ResourceViewer extends Component<Props,State>
 
          if(info.length > 0) {
 
+            /*
            info = infoBase.filter((e)=>(e.type == skos+"prefLabel" && e["xml:lang"]==this.props.prefLang))
+          */
+           info = getLangLabel(this,  infoBase.filter((e)=>(e.type == skos+"prefLabel")))
+
            //console.log("infoB",info)
-           if(info[0] && n <= 10) vals.push(<h4><Link className="urilink prefLabel" to={"/show/bdr:"+this.pretty(v)}>{info[0].value}</Link></h4>)
+           if(info && info[0] && n <= 10) vals.push(<h4><Link className="urilink prefLabel" to={"/show/bdr:"+this.pretty(v)}>{info[0].value}</Link></h4>)
            else if(n == 11) vals.push("...")
            n ++
          }
@@ -668,25 +681,31 @@ class ResourceViewer extends Component<Props,State>
                            })
                         }
                         */
+                        /*
                         info = infoBase.filter((e)=>(e["xml:lang"] && e.type==prop && e["xml:lang"]==this.props.prefLang))
                         if(info.length == 0) info = infoBase.filter((e)=>(e["xml:lang"] && e.type==prop))
+                        */
+                        info = getLangLabel(this, infoBase.filter((e)=>(e["xml:lang"] && e.type==prop)))
 
                         //if(info.value) info = info.value
 
-                        if(info[0]) {
+                        if(info && info[0]) {
                            lang = info[0]["xml:lang"]
                            info = info[0].value
                         }
                         else if(!withProp){
-                           info = infoBase.filter((e) => e["xml:lang"]==this.props.prefLang)
+                           //info = infoBase.filter((e) => e["xml:lang"]==this.props.prefLang)
+                           info = getLangLabel(this, infoBase)
 
-                           if(info[0]) {
+                           if(info && info[0]) {
                               lang = info[0]["xml:lang"]
                               info = info[0].value
                            }
                            else {
-                              info = infoBase.filter((e) => e["xml:lang"]=="bo-x-ewts")
-                              if(info[0]) {
+                              //info = infoBase.filter((e) => e["xml:lang"]=="bo-x-ewts")
+                              info = getLangLabel(this, infoBase)
+
+                              if(info && info[0]) {
                                  lang = info[0]["xml:lang"]
                                  info = info[0].value
                               }
@@ -1872,8 +1891,12 @@ class ResourceViewer extends Component<Props,State>
                            //console.log("labs",labels,this.props.annoCollec[e])
                            let l = e
                            if(labels) {
+                              /*
                               l = labels.filter((e) => (e.value && (e["lang"] == this.props.prefLang || e["xml:lang"] == this.props.prefLang)))[0]
                               if(!l || l.length == 0) l = labels.filter((e) => (e.value))[0]
+                              */
+                              l = getLangLabel(this, labels.filter((e) => (e.value)))
+                              if(l && l.length > 0) l = l[0]
                            }
                            return (<MenuItem className={e === this.state.showAnno ? "current":""} onClick={this.handleAnnoCollec.bind(this,e)}>{l.value}</MenuItem>)
                         }) }
