@@ -13,6 +13,7 @@ const boTranslation = {
          zhLatnPinyin:"Chinese (Pinyin)",
          zhXPhonEn:"Chinese (Phonetic)",
          saXIast:"Sanskrit (IAST)",
+         saXNdia:"Sanskrit (Lenient)",
          saDeva:"Sanskrit (Devanagari)",
          en:"English",
          pi:"Pali",

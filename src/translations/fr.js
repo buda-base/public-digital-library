@@ -13,6 +13,7 @@ const frTranslation = {
          zhLatnPinyin:"Chinois (Pinyin)",
          zhXPhonEn:"Chinois (Phonétique)",
          saXIast:"Sanskrit (IAST)",
+         saXNdia:"Sanskrit (Lenient)",
          saDeva:"Sanskrit (Devanagari)",
          en:"Anglais",
          pi:"Pali",
