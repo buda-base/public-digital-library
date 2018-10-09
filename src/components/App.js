@@ -80,7 +80,7 @@ export const languages = {
    "bo-alalc97":"lang.search.boAlaLc",
    //"other":"lang.search.other"
 }
-
+/*
 export const langProfile = [
    "en",
    "bo-x-ewts",
@@ -96,8 +96,9 @@ export const langProfile = [
    "zh-hant",
    "zh"
 ]
-/*
-const langProfile = [
+*/
+
+export const langProfile = [
    "zh-hant",
    "zh-hans",
    "zh",
@@ -111,7 +112,6 @@ const langProfile = [
    "bo-x-dts",
    "bo-alalc97"
 ]
-*/
 
 
 export function getLangLabel(that,labels,proplang:boolean=false)
