@@ -11,6 +11,7 @@ const frTranslation = {
          zhHant:"Chinois (Traditionnel)",
          zhHans:"Chinois (Simplifié)",
          zhLatnPinyin:"Chinois (Pinyin)",
+         zhXPhonEn:"Chinois (Phonétique)",
          saXIast:"Sanskrit (IAST)",
          saDeva:"Sanskrit (Devanagari)",
          en:"Anglais",

@@ -11,6 +11,7 @@ const enTranslation = {
          zhHant:"Chinese (Traditional)",
          zhHans:"Chinese (Simplified)",
          zhLatnPinyin:"Chinese (Pinyin)",
+         zhXPhonEn:"Chinese (Phonetic)",
          saXIast:"Sanskrit (IAST)",
          saDeva:"Sanskrit (Devanagari)",
          en:"English",

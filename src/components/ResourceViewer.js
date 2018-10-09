@@ -46,7 +46,7 @@ import { Redirect404 } from "../routes.js"
 import Loader from "react-loader"
 //import {MapComponent} from './Map';
 import {getEntiType} from '../lib/api';
-import {languages,getLangLabel} from './App';
+import {languages,getLangLabel,langProfile} from './App';
 import Popover from '@material-ui/core/Popover';
 import MenuItem from '@material-ui/core/MenuItem';
 import List from '@material-ui/core/List';
@@ -98,7 +98,8 @@ type State = {
    newAnno?:boolean|{},
    annoCollecOpen?:boolean,
    anchorElAnno?:any,
-   largeMap?:boolean
+   largeMap?:boolean,
+   langProfile?:string[]
  }
 
 
@@ -199,7 +200,7 @@ class ResourceViewer extends Component<Props,State>
    {
       super(props);
 
-      this.state = { uviewer:false, imageLoaded:false, collapse:{}, pdfOpen:false, showAnno:true }
+      this.state = { uviewer:false, imageLoaded:false, collapse:{}, pdfOpen:false, showAnno:true, langProfile:[... langProfile] }
 
       console.log("props",props)
 
@@ -365,7 +366,7 @@ class ResourceViewer extends Component<Props,State>
                      if(label1.length === 0) label1 = assoR[e.value].filter(e => e.type === skos+"prefLabel")
                      */
                      label1 = getLangLabel(this, assoR[e.value].filter(e => e.type === skos+"prefLabel"))
-                     if(label1 && label1.length > 0) label1 = label1[0].value
+                     if(label1 && label1.value) label1 = label1.value
 
                      if(assoR[e.value].filter(e => e.type === bdo+"workHasRoot").length > 0)
                      {
@@ -374,7 +375,7 @@ class ResourceViewer extends Component<Props,State>
                         if(label2.length === 0) label2 = assoR[assoR[e.value].filter(e => e.type === bdo+"workHasRoot")[0].value].filter(e => e.type === skos+"prefLabel")
                         */
                         label2 = getLangLabel(assoR[assoR[e.value].filter(e => e.type === bdo+"workHasRoot")[0].value].filter(e => e.type === skos+"prefLabel"))
-                        if(label2 && label2.length > 0) label2 = label2[0].value
+                        if(label2 && label2.value > 0) label2 = label2.value
                         //console.log(label2)
                      }
                   }
@@ -479,8 +480,8 @@ class ResourceViewer extends Component<Props,State>
          if(ret.length == 0) ret = this.props.ontology[prop][rdfs+"label"]
          */
          let ret = getLangLabel(this, this.props.ontology[prop][rdfs+"label"])
-         if(ret && ret.length > 0 && ret[0].value && ret[0].value != "")
-            return ret[0].value
+         if(ret && ret.value && ret.value != "")
+            return ret.value
 
        //&& this.props.ontology[prop][rdfs+"label"][0] && this.props.ontology[prop][rdfs+"label"][0].value) {
          //let comment = this.props.ontology[prop][rdfs+"comment"]
@@ -588,7 +589,7 @@ class ResourceViewer extends Component<Props,State>
    subProps(k:string,div:string="sub")
    {
 
-      console.log("subP",k,div)
+      //console.log("subP",k,div)
 
       let ret = []
       if(this.props.IRI && this.props.resources[this.props.IRI] && this.props.resources[this.props.IRI][this.expand(this.props.IRI)]) {
@@ -600,7 +601,7 @@ class ResourceViewer extends Component<Props,State>
             if(this.props.ontology[p] && this.props.ontology[p][rdfs+"subPropertyOf"]
                && this.props.ontology[p][rdfs+"subPropertyOf"].filter((e)=>(e.value == k)).length > 0)
             {
-               console.log(p)
+               //console.log(p)
 
                let tmp = this.subProps(p,div+"sub")
                let vals
@@ -625,7 +626,7 @@ class ResourceViewer extends Component<Props,State>
    {
       if(elem) {
 
-         console.log("uriformat",prop,elem.value,dico)
+         //console.log("uriformat",prop,elem.value,dico,withProp)
 
          if(!elem.value.match(/^http:\/\/purl\.bdrc\.io/)) {
             return <a href={elem.value} target="_blank">{decodeURI(elem.value)}</a> ;
@@ -664,6 +665,8 @@ class ResourceViewer extends Component<Props,State>
                   if(dico) {
                      infoBase = dico[elem.value]
 
+                     //console.log("base",infoBase)
+
                      if(infoBase) {
                         /*
                         if(prop == bdo+"workHasExpression") {
@@ -685,7 +688,10 @@ class ResourceViewer extends Component<Props,State>
                         info = infoBase.filter((e)=>(e["xml:lang"] && e.type==prop && e["xml:lang"]==this.props.prefLang))
                         if(info.length == 0) info = infoBase.filter((e)=>(e["xml:lang"] && e.type==prop))
                         */
-                        info = getLangLabel(this, infoBase.filter((e)=>(e["xml:lang"] && e.type==prop)))
+                        info = [ getLangLabel(this, infoBase.filter((e)=>((e["xml:lang"] || e["lang"])))) ]
+                        if(!info) info = [ getLangLabel(this, infoBase.filter((e)=>((e["xml:lang"] || e["lang"]) && e.type==prop))) ]
+
+                        //console.log("info",info)
 
                         //if(info.value) info = info.value
 
@@ -699,6 +705,7 @@ class ResourceViewer extends Component<Props,State>
 
                            if(info && info[0]) {
                               lang = info[0]["xml:lang"]
+                              if(!lang) info[0]["lang"]
                               info = info[0].value
                            }
                            else {
@@ -721,7 +728,7 @@ class ResourceViewer extends Component<Props,State>
                      }
                   }
 
-                  console.log("s",prop,info,infoBase)
+                  //console.log("s",prop,elem,info,infoBase)
 
                   // we can return Link
                   let pretty = this.fullname(elem.value);
@@ -739,6 +746,7 @@ class ResourceViewer extends Component<Props,State>
                   </span> ) }
                   else if(pretty.toString().match(/^([A-Z]+[_0-9-]*[A-Z]*)+$/)) ret.push(<Link className="urilink" to={"/show/bdr:"+pretty}>{pretty}</Link>)
                   else ret.push(pretty)
+
                   return ret
 
 
@@ -1896,7 +1904,7 @@ class ResourceViewer extends Component<Props,State>
                               if(!l || l.length == 0) l = labels.filter((e) => (e.value))[0]
                               */
                               l = getLangLabel(this, labels.filter((e) => (e.value)))
-                              if(l && l.length > 0) l = l[0]
+                              //if(l&& l.length > 0) l = l[0]
                            }
                            return (<MenuItem className={e === this.state.showAnno ? "current":""} onClick={this.handleAnnoCollec.bind(this,e)}>{l.value}</MenuItem>)
                         }) }

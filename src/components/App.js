@@ -69,6 +69,7 @@ export const languages = {
    "zh-hant":"lang.search.zhHant",
    "zh-hans":"lang.search.zhHans",
    "zh-latn-pinyin":"lang.search.zhLatnPinyin",
+   "zh-x-phon-en":"lang.search.zhXPhonEn",
    "sa-x-iast":"lang.search.saXIast",
    "sa-Deva":"lang.search.saDeva",
    "en":"lang.search.en",
@@ -80,10 +81,11 @@ export const languages = {
    //"other":"lang.search.other"
 }
 
-const langProfile = [
+export const langProfile = [
    "en",
    "bo-x-ewts",
    "sa-x-iast",
+   "zh-x-phon-en",
    "zh-latn-pinyin",
    "pi",
    "sa-Deva",
@@ -116,13 +118,17 @@ export function getLangLabel(that,labels,proplang:boolean=false)
 {
    if(labels)
    {
+      //console.log("getL",that,labels,proplang);
+
       let l,langs = [];
       if(that.state.langProfile) langs = [ ...that.state.langProfile ] ;
+
       if(proplang && that.props.language) langs = [ that.props.language, ...langs ]
       for(let lang of langs) {
          l = labels.filter((e) => (e.value && (e["lang"] == lang || e["xml:lang"] == lang)))
+         //console.log("l?",l,lang);
          if(l.length > 0) {
-            console.log("lang",lang,l)
+            //console.log("lang",lang,l)
             return l[0]
          }
       }
