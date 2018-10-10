@@ -218,7 +218,7 @@ export default class API {
                let param = {"searchType":"Etext_base","R_RES":IRI,"L_NAME":"","LG_NAME":"" }
                let data = await this.getQueryResults(url, IRI, param,"GET") //,"application/json");
 
-               console.log("etextinfo",data)
+               //console.log("etextinfo",JSON.stringify(data,null,3))
 
                return data ;
             }
@@ -241,7 +241,7 @@ export default class API {
                      let param = {"searchType":"Chunks","R_RES":IRI,"I_SEQ":next+1,"I_LIM":10,"L_NAME":"","LG_NAME":"" }
                      let data = await this.getQueryResults(url, IRI, param,"GET","application/ld+json");
 
-                     console.log("etextchunks",data)
+                     //console.log("etextchunks",JSON.stringify(data,null,3))
 
                      return data ;
                   }

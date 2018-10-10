@@ -101,22 +101,35 @@ async function initiateApp(params,iri,myprops) {
 
             store.dispatch(dataActions.getChunks(iri));
 
-            store.dispatch(dataActions.gotAssocResources(iri,{"data":Object.keys(res).reduce((acc,e)=>{
-               return ({...acc,[e]:Object.keys(res[e]).map(f => ( { type:f, ...res[e][f] } ) ) } )
-            },{})}));
+            let assoRes = {"data":Object.keys(res).reduce((acc,e)=>{
+               //return ({...acc,[e]:Object.keys(res[e]).map(f => ( { type:f, ...res[e][f] } ) ) } )
+                  return ({...acc, [e]: Object.keys(res[e]).reduce(
+                     (acc,f) => ([...acc, ...res[e][f] ]),
+                     [])})
+            },{})}
 
+            //console.log("gotAR",JSON.stringify(assoRes,null,3));
 
-            store.dispatch(dataActions.gotResource(iri,{ [bdr+iri.replace(/^bdr:/,"")] : Object.keys(res).reduce((acc,e) => {
+            store.dispatch(dataActions.gotAssocResources(iri,assoRes));
 
-               if(Object.keys(res[e]).indexOf(skos+"prefLabel") === -1)
-                  return ({...acc, ...res[e] })
-               else
-                  return acc
+            res = { [bdr+iri.replace(/^bdr:/,"")] : Object.keys(res).reduce((acc,e) => {
+
+               //if(Object.keys(res[e]).indexOf(skos+"prefLabel") === -1)
+                  return ({...acc, ...Object.keys(res[e]).reduce(
+                     (acc,f) => ({...acc,[f]:res[e][f]}),
+                     {}) })
+               //else
+               //   return acc
                   /*Object.keys(res[bdr+iri][e]).reduce((ac,f) => {
                   console.log("e,ac,f",e,ac,f)
                   return ( { ...ac, ...res[bdr+iri][e][f] })
                },{})})*/
-            },{}) }));
+            },{}) }
+
+            store.dispatch(dataActions.gotResource(iri,res));
+
+            //console.log("gotR",JSON.stringify(res,null,3));
+
 
             /*Object.keys(res).reduce((acc,e) => {
                return ({ ...acc, ...res[e] })

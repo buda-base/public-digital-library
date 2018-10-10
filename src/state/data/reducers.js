@@ -354,6 +354,9 @@ export const gotNextChunks = (state: DataState, action: Action) => {
       && state.resources[action.payload]["http://purl.bdrc.io/resource/"+action.payload.replace(/bdr:/,"")])
       {
          res = state.resources[action.payload]["http://purl.bdrc.io/resource/"+action.payload.replace(/bdr:/,"")]
+
+         //console.log("av",JSON.stringify(res,null,3))
+
          if(!res["http://purl.bdrc.io/ontology/core/eTextHasChunk"]) res["http://purl.bdrc.io/ontology/core/eTextHasChunk"] = []
          res["http://purl.bdrc.io/ontology/core/eTextHasChunk"] = res["http://purl.bdrc.io/ontology/core/eTextHasChunk"].concat(action.meta)
 
@@ -371,8 +374,9 @@ export const gotNextChunks = (state: DataState, action: Action) => {
          }
       }
 
-
     console.log("nextC",state,action)
+
+    //console.log("ap",JSON.stringify(res,null,3))
 
     return state ;
 }

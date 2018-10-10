@@ -665,7 +665,7 @@ class ResourceViewer extends Component<Props,State>
                   if(dico) {
                      infoBase = dico[elem.value]
 
-                     //console.log("base",infoBase)
+                     //console.log("base",JSON.stringify(infoBase,null,3))
 
                      if(infoBase) {
                         /*
