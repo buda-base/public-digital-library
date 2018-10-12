@@ -737,7 +737,7 @@ class App extends Component<Props,State> {
       //console.log("hi:",val,k)
 
       if(!val.match(/↤/))
-         val = /*val.replace(/@.* /,"")*/ val.split(new RegExp(k.replace(/[ 'ʾ]/g,"[ -']"))).map((l) => ([<span>{l}</span>,<span className="highlight">{k}</span>])) ;
+         val = /*val.replace(/@.* /,"")*/ val.split(new RegExp(k.replace(/[ -'ʾ]/g,"[ -'ʾ]"))).map((l) => ([<span>{l}</span>,<span className="highlight">{k}</span>])) ;
       else {
          let str = val.replace(/^.*?(↦([^↤]+)↤([- ]↦([^↤]+)↤)*).*$/g,"$1").replace(/↤([- ])↦/g,"$1").replace(/[↤↦]/g,"")
          val = val.replace(/↦[^↤]+↤([- ]↦[^↤]+↤)*/g,"↦↤")
@@ -1169,7 +1169,13 @@ class App extends Component<Props,State> {
                      //message.push(["cpt="+cpt+"="+absi,<br/>])
 
                      let label ; // sublist[o].filter((e) => (e.type && e.type.match(/prefLabelMatch$/)))[0]
-                     label = getLangLabel(this,sublist[o].filter( (e) => (e.type && e.type.match(/(prefLabel(Match)?|eTextTitle)$/))), true)
+                     let sList = sublist[o].filter( (e) => (e.type && e.type.match(/(prefLabel(Match)?|eTextTitle)$/)))
+                     let listOrder = { "prefLabelMatch$" : 1, "prefLabel$":2,"eTextTitle$":3 }
+                     sList = _.sortBy(sList, (e) => {
+                        for(let k of Object.keys(listOrder)) { if(e.type && e.type.match(new RegExp(k))) return listOrder[k] }
+                     })
+                     //console.log(JSON.stringify(sList,null,3));
+                     label = getLangLabel(this,sList, true)
                      if(label.length > 0) label = label[0]
                      /*
                      label = sublist[o].filter(
