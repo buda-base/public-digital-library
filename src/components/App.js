@@ -134,7 +134,7 @@ export const langProfile = [
 ]
 
 
-export function getLangLabel(that,labels,proplang:boolean=false)
+export function getLangLabel(that,labels,proplang:boolean=false,uilang:boolean=false)
 {
    if(labels)
    {
@@ -142,17 +142,18 @@ export function getLangLabel(that,labels,proplang:boolean=false)
 
       let l,langs = [];
       if(that.state.langProfile) langs = [ ...that.state.langProfile ] ;
-
       if(proplang && that.props.language) langs = [ that.props.language, ...langs ]
+      if(uilang && that.state.UI && that.state.UI.language) langs = [ that.state.UI.language, ...langs ]
+
       for(let lang of langs) {
-         l = labels.filter((e) => (e.value && (e["lang"] == lang || e["xml:lang"] == lang)))
+         l = labels.filter((e) => ((e.value||e["@value"]) && (e["lang"] == lang || e["xml:lang"] == lang || e["@language"] == lang)))
          //console.log("l?",l,lang);
          if(l.length > 0) {
             //console.log("lang",lang,l)
             return l[0]
          }
       }
-      if(!l || l.length == 0) l = labels.filter((e) => (e.value))
+      if(!l || l.length == 0) l = labels.filter((e) => (e.value) || (e["@value"]))
       return l[0]
    }
 };
@@ -694,7 +695,7 @@ class App extends Component<Props,State> {
      return str ;
    }
 
-   fullname(prop:string,preflabs:[])
+   fullname(prop:string,preflabs:[],useUIlang:boolean=false)
    {
 
       if(this.props.ontology[prop] && this.props.ontology[prop][rdfs+"label"])
@@ -713,8 +714,8 @@ class App extends Component<Props,State> {
          if(preflabs.length > 0 && preflabs[0]["lang"]) { lang = "lang" ; val = "value"; }
          if(preflabs.length > 0 && preflabs[0]["xml:lang"]) { lang = "xml:lang" ; val = "value"; }
 
-         let label = getLangLabel(this,preflabs)
-         //console.log("full",label)
+         let label = getLangLabel(this,preflabs,false,useUIlang)
+         //console.log("full",prop,label,preflabs,useUIlang)
 
          /*
          let label = preflabs.filter(e => e[lang] == this.props.locale )
@@ -725,7 +726,7 @@ class App extends Component<Props,State> {
          if(label.length > 0) return label[0][val]
          label = preflabs.filter(e => e[lang] == "bo-x-ewts")
          */
-         if(label && label.length > 0) return label[0][val]
+         if(label) return label[val]
          //return preflabs[0][value]
       }
 
@@ -1527,7 +1528,7 @@ class App extends Component<Props,State> {
             else return
 
 
-            let label = this.fullname(e,elem["skos:prefLabel"])
+            let label = this.fullname(e,elem["skos:prefLabel"],true)
 
             //console.log("check",e,label,elem,disable);
 
