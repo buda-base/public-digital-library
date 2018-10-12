@@ -737,7 +737,7 @@ class App extends Component<Props,State> {
       //console.log("hi:",val,k)
 
       if(!val.match(/↤/))
-         val = /*val.replace(/@.* /,"")*/ val.split(new RegExp(k.replace(/ /g,"[ -]"))).map((l) => ([<span>{l}</span>,<span className="highlight">{k}</span>])) ;
+         val = /*val.replace(/@.* /,"")*/ val.split(new RegExp(k.replace(/[ 'ʾ]/g,"[ -']"))).map((l) => ([<span>{l}</span>,<span className="highlight">{k}</span>])) ;
       else {
          let str = val.replace(/^.*?(↦([^↤]+)↤([- ]↦([^↤]+)↤)*).*$/g,"$1").replace(/↤([- ])↦/g,"$1").replace(/[↤↦]/g,"")
          val = val.replace(/↦[^↤]+↤([- ]↦[^↤]+↤)*/g,"↦↤")
