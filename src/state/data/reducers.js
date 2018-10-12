@@ -179,6 +179,29 @@ export const gotAnnoResource = (state: DataState, action: Action) => {
                {
                   console.log("sta",sta)
 
+                  // (AN_001)  target [ statement  WCBC2237 :translator PCBC7  ] / motiv [ assessing [ supportedBy Assertion [ comment workLocation ] score ]
+                  // (AN_002)     "         "        "          "       PCBC47 ] /   "          "           "          "           x          "          "
+
+                  // (NER001_001) target [ workLocation WUTDEMO @ 58-69   ] / motiv [ identifying [ Work  [ "..."@ ] ] ]
+                  // (NER001_002) target [ workLocation WUTDEMO @ 581-591 ] / motiv [ identifying [ Place [ "kaushambi"@sa-x-iast ] ] ]
+                  // (NER001_003) target [ NER001_002 [ Annotation ... ]  ] / motiv [ questioning [ comment ] ]
+                  // (NER001_004) target [ NER001_003 [ Annotation ... ]  ] / motiv [ replying    [ TextualBody comment ] ]
+
+                  // (HIG001_001) target [ workLocation WUTDEMO @ 328-347 ] / motiv [ highlighting ]
+
+                  // (V01_001_0001) target [ workLocation WUTDEMO @ 1-26     ] / motiv [ PageMapping [ WorkLocation vol.1p.3@W22084+W4CZ5369+W30532 = vol.1p.1="1a"@WUTDEMO ] ]
+                  // (V01_001_0002) target [ workLocation WUTDEMO @ 27-675   ] / motiv [ PageMapping [ WorkLocation vol.1p.4@W22084+W4CZ5369+W30532 = vol.1p.2="1b"@WUTDEMO ] ]
+                  // (V01_001_0003) target [ workLocation WUTDEMO @ 676-1847 ] / motiv [ PageMapping [ WorkLocation vol.1p.5@W22084+W4CZ5369+W30532 = vol.1p.3="2a"@WUTDEMO ] ]
+
+                  // (V01_002_0001) target [ workLocation WUTDEMO @ 1-26    ] / motiv [ LineMapping [ WorkLocation vol.1p.1l.1@WUTDEMO ] ]
+                  // (V01_002_0002) target [ workLocation WUTDEMO @ 27-93   ] / motiv [ LineMapping [ WorkLocation vol.1p.2l.1@WUTDEMO ] ]
+                  // (V01_002_0003) target [ workLocation WUTDEMO @ 94-269  ] / motiv [ LineMapping [ WorkLocation vol.1p.2l.2@WUTDEMO ] ]
+                  // (V01_002_0004) target [ workLocation WUTDEMO @ 270-405 ] / motiv [ LineMapping [ WorkLocation vol.1p.2l.3@WUTDEMO ] ]
+                  // (V01_002_0005) target [ workLocation WUTDEMO @ 406-541 ] / motiv [ LineMapping [ WorkLocation vol.1p.2l.4@WUTDEMO ] ]
+                  // (V01_002_0006) target [ workLocation WUTDEMO @ 542-675 ] / motiv [ LineMapping [ WorkLocation vol.1p.2l.5@WUTDEMO ] ]
+                  // ...
+                  // (V01_002_0012) target [ workLocation WUTDEMO @ 1652-1847 ] / motiv [ LineMapping [ WorkLocation vol.1p.3l.6@WUTDEMO ] ]
+
                   let pred = sta[rdf+"predicate"]
                   let obj = sta[rdf+"object"]
                   if(pred && pred.length > 0 && obj && obj.length > 0)
