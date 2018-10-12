@@ -17,6 +17,7 @@ const frTranslation = {
          saDeva:"Sanskrit (Devanagari)",
          en:"Anglais",
          pi:"Pali",
+         piXIast:"Pali (Rom.)",
          bo:"Tibétain (Unicode)",
          boXEwts:"Tibétain (EWTS)",
          boXDts:"Tibétain (DTS)",

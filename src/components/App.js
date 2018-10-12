@@ -72,15 +72,30 @@ export const languages = {
    "zh-x-phon-en":"lang.search.zhXPhonEn",
    "sa-x-iast":"lang.search.saXIast",
    "sa-x-ndia":"lang.search.saXNdia",
-   "sa-Deva":"lang.search.saDeva",
+   "sa-deva":"lang.search.saDeva",
    "en":"lang.search.en",
    "pi":"lang.search.pi",
+   "pi-x-iast": "lang.search.piXIast",
    "bo":"lang.search.bo",
    "bo-x-ewts":"lang.search.boXEwts",
    "bo-x-dts":"lang.search.boXDts",
    "bo-alalc97":"lang.search.boAlaLc",
    //"other":"lang.search.other"
 }
+
+export const langSelect = [
+   "zh-hans",
+   "zh-latn-pinyin",
+   "bo",
+   "bo-x-ewts",
+   "bo-x-dts",
+   "bo-alalc97",
+   "sa-x-iast",
+   "sa-deva",
+   "en",
+   "pi-x-iast"
+]
+
 /*
 export const langProfile = [
    "en",
@@ -88,8 +103,9 @@ export const langProfile = [
    "sa-x-iast",
    "zh-x-phon-en",
    "zh-latn-pinyin",
+   "pi-x-iast",
    "pi",
-   "sa-Deva",
+   "sa-deva",
    "sa-x-ndia",
    "bo",
    "bo-x-dts",
@@ -104,11 +120,12 @@ export const langProfile = [
    "zh-hant",
    "zh-hans",
    "zh",
-   "sa-Deva",
+   "sa-deva",
    "sa-x-ndia",
    "sa-x-iast",
    "en",
    "pi",
+   "pi-x-iast",
    "zh-latn-pinyin",
    "bo",
    "bo-x-ewts",
@@ -2087,7 +2104,7 @@ class App extends Component<Props,State> {
                     id: 'language',
                   }}
                 >
-                   { Object.keys(languages).map((k) => (<MenuItem key={k} value={k}><Translate value={""+languages[k]}/></MenuItem>))}
+                   { langSelect.map((k) => (<MenuItem key={k} value={k}><Translate value={""+languages[k]}/></MenuItem>))}
                    {this.state.customLang &&  this.state.customLang.map(e => (
                       <MenuItem key="customLang_" value={e}>{e}</MenuItem>
                      ))
