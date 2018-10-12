@@ -83,6 +83,10 @@ export const languages = {
    //"other":"lang.search.other"
 }
 
+const searchLangSelec = {
+   "zh-hans":"lang.search.zh"
+}
+
 export const langSelect = [
    "zh-hans",
    "zh-latn-pinyin",
@@ -2111,7 +2115,7 @@ class App extends Component<Props,State> {
                     id: 'language',
                   }}
                 >
-                   { langSelect.map((k) => (<MenuItem key={k} value={k}><Translate value={""+languages[k]}/></MenuItem>))}
+                   { langSelect.map((k) => (<MenuItem key={k} value={k}><Translate value={""+(searchLangSelec[k]?searchLangSelec[k]:languages[k])}/></MenuItem>))}
                    {this.state.customLang &&  this.state.customLang.map(e => (
                       <MenuItem key="customLang_" value={e}>{e}</MenuItem>
                      ))
