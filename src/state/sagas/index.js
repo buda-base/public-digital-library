@@ -75,6 +75,8 @@ async function initiateApp(params,iri,myprops) {
             store.dispatch(dataActions.gotResource(iri,res));
             let assocRes = await api.loadAssocResources(iri)
             store.dispatch(dataActions.gotAssocResources(iri,assocRes));
+
+            store.dispatch(dataActions.getAnnotations(iri))
          }
          else {
             /*
