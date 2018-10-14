@@ -648,7 +648,7 @@ class App extends Component<Props,State> {
          {
             let customLang = this.state.customLang
             if(!customLang) customLang = []
-            if(this._customLang.value && customLang.indexOf(this._customLang.value) === -1 && !languages[this._customLang.value])
+            if(this._customLang.value && customLang.indexOf(this._customLang.value) === -1 && langSelect.indexOf(this._customLang.value) === -1)
                customLang.push(this._customLang.value)
 
             s = { ...s, [event.target.name]: this._customLang.value, langOpen:false, customLang }

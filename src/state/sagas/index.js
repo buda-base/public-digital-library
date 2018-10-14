@@ -55,7 +55,8 @@ async function initiateApp(params,iri,myprops) {
       // console.log("params",params)
       }
 
-      if(iri && (!state.data.resources || !state.data.resources.IRI))
+      // [TODO] load only missing info when needed (see click on "got to annotation" for WCBC2237)
+      if(iri) // && (!state.data.resources || !state.data.resources[iri]))
       {
          let res,Etext ;
 
