@@ -274,7 +274,7 @@ class App extends Component<Props,State> {
       };
 
 
-      if(!languages[lg]) this.state = { ...this.state, customLang:[lg]}
+      if(langSelect.indexOf(lg) === -1) this.state = { ...this.state, customLang:[lg]}
 
       console.log('qs',get,this.state)
 

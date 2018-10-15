@@ -467,21 +467,20 @@ function getData(result)  {
 
    // console.log("getData#result",result)
 
-   if(metadata)
-   {
-      let kZ = Object.keys(metadata)
-      if(kZ.reduce((acc,k) => (acc || k.match(/^http:/) ),false))
-         numR = kZ.reduce((acc,k) => ( acc+Number(metadata[k])),0)
-      else
-         if(kZ.length == 0)
-            numR = 0
-      delete data.metadata
-   }
-   else if(Object.keys(result) == 0) { numR = 0 }
+   if(Object.keys(result).length == 0) { numR = 0 }
    else
    {
-      numR = 777; //Object.values(result)[0].length
+      numR = Object.keys(result).reduce((acc,e) => { ( acc + e=="metadata"?0:Object.keys(result[e]).length) },0)
+      if(metadata)
+      {
+         let kZ = Object.keys(metadata)
+         if(kZ.reduce((acc,k) => (acc || k.match(/^http:/) ),false))
+            numR = kZ.reduce((acc,k) => ( acc+Number(metadata[k])),0)
+
+         delete data.metadata
+      }
    }
+
    data = {  numResults:numR, results : { bindings: {...data } } }
 
    return data
