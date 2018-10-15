@@ -94,6 +94,7 @@ export const langSelect = [
    "bo-x-ewts",
    "bo-x-dts",
    "bo-alalc97",
+   "sa-x-ndia",
    "sa-x-iast",
    "sa-deva",
    "en",
