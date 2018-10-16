@@ -546,6 +546,8 @@ function getData(result)  {
       else
          result = await api.getAssocResults(keyword,sourcetype);
 
+      if(result && result.data) result.data = Object.keys(result.data).reduce((acc,e)=>({ ...acc, [e.replace(/^.*?[/][^/]+$/)] : result.data[e] }),{})
+
       store.dispatch(uiActions.loading(keyword, false));
 
       if(result.metadata && result.metadata[bdo+"Etext"] == 0)
