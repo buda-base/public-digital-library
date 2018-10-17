@@ -338,7 +338,7 @@ exports[`main App tests App initialization 1`] = `
           render={[Function]}
         />
         <Route
-          path="/show/bdr::IRI"
+          path="/show/:IRI"
           render={[Function]}
         />
         <Route
@@ -352,78 +352,61 @@ exports[`main App tests App initialization 1`] = `
 
 exports[`main App tests App initialization 2`] = `
 "{
-  \\"auth\\": {
-    \\"domain\\": \\"bdrc-io.auth0.com\\",
-    \\"clientID\\": \\"bZRCKQvibdCq5gF7gV2biIH9rLcqfVcS\\",
-    \\"redirectUri\\": \\"http://localhost:3000/auth/callback\\",
-    \\"audience\\": \\"https://bdrc-io.auth0.com/userinfo\\",
-    \\"responseType\\": \\"token id_token\\",
-    \\"scope\\": \\"openid user_metadata app_metada\\"
+   \\"auth\\":{
+     \\"domain\\": \\"bdrc-io.auth0.com\\",
+     \\"clientID\\": \\"bZRCKQvibdCq5gF7gV2biIH9rLcqfVcS\\",
+     \\"redirectUri\\": \\"http://localhost:3000/auth/callback\\",
+     \\"audience\\": \\"https://bdrc-io.auth0.com/userinfo\\",
+     \\"responseType\\": \\"token id_token\\",
+     \\"scope\\": \\"openid user_metadata app_metada\\"
   },
-  \\"ldspdi\\": {
-    \\"endpoints\\": [
-      \\"http://localhost:8080\\",
-      \\"http://localhost:13280\\",
-      \\"http://buda1.bdrc.io:13280\\",
-      \\"http://purl.bdrc.io\\",
-      \\"http://localhost:5555\\"
-    ],
-    \\"index\\": 4
-  },
-  \\"iiif\\": {
-    \\"endpoints\\": [
-      \\"http://localhost:9000\\",
-      \\"http://iiif.bdrc.io\\",
-      \\"http://localhost:5555\\"
-    ],
-    \\"index\\": 2
-  },
-  \\"rkts\\": {
-    \\"endpoints\\": [
-      \\"http://localhost:8080\\"
-    ],
-    \\"index\\": 0
-  },
-  \\"facets\\": {
-    \\"Place\\": {
-      \\"relation\\": \\"http://purl.bdrc.io/ontology/tmp/relationType\\"
-    },
-    \\"Lineage\\": {
-      \\"relation\\": \\"http://purl.bdrc.io/ontology/tmp/relationType\\"
-    },
-    \\"Person\\": {
-      \\"relation\\": \\"http://purl.bdrc.io/ontology/tmp/relationType\\",
-      \\"gender\\": \\"http://purl.bdrc.io/ontology/core/personGender\\"
-    },
-    \\"Work\\": {
-      \\"relation\\": \\"http://purl.bdrc.io/ontology/tmp/relationType\\",
-      \\"langScript\\": \\"http://purl.bdrc.io/ontology/core/workLangScript\\",
-      \\"status\\": \\"http://purl.bdrc.io/ontology/admin/status\\",
-      \\"access\\": \\"http://purl.bdrc.io/ontology/admin/access\\",
-      \\"license\\": \\"http://purl.bdrc.io/ontology/admin/license\\",
-      \\"type\\": \\"http://purl.bdrc.io/ontology/core/workType\\",
-      \\"partType\\": \\"http://purl.bdrc.io/ontology/core/workPartType\\",
-      \\"tree\\": \\"http://purl.bdrc.io/ontology/core/workGenre\\"
-    },
-    \\"Etext\\": {
-      \\"tree\\": \\"http://purl.bdrc.io/ontology/core/workGenre\\"
-    }
-  },
-  \\"links\\": [
-    {
-      \\"title\\": \\"Abstract text of the Bodhisattvacaryāvatāra\\",
-      \\"id\\": \\"W19740\\",
-      \\"label\\": \\"spyod 'jug\\",
-      \\"lang\\": \\"bo-x-ewts\\",
-      \\"icon\\": \\"Abstract Work\\"
-    },
-    {
-      \\"title\\": \\"Shantideva\\",
-      \\"id\\": \\"P6161\\",
-      \\"label\\": \\"zhi ba lha/\\"
-    }
-  ]
-}"
+   \\"ldspdi\\":
+   {
+      \\"endpoints\\":[\\"http://localhost:8080\\",\\"http://localhost:13280\\",\\"http://buda1.bdrc.io:13280\\",\\"http://purl.bdrc.io\\",\\"http://localhost:5555\\"],
+      \\"index\\":0
+   },
+   \\"iiif\\":
+   {
+      \\"endpoints\\":[\\"http://localhost:9000\\",\\"http://iiif.bdrc.io\\",\\"http://localhost:5555\\"],
+      \\"index\\":1
+   },
+   \\"rkts\\":
+   {
+      \\"endpoints\\":[\\"http://localhost:8080\\"],
+      \\"index\\":0
+   },
+   \\"googleAPIkey\\" : \\"AIzaSyCvs29KHf7Q-oa0XcdWhV4GRSamst5ngYQ\\",
+   \\"facets\\":{
+      \\"Place\\": {
+         \\"relation\\":\\"http://purl.bdrc.io/ontology/tmp/relationType\\"
+      },
+      \\"Lineage\\": {
+         \\"relation\\":\\"http://purl.bdrc.io/ontology/tmp/relationType\\"
+      },
+      \\"Person\\": {
+         \\"relation\\":\\"http://purl.bdrc.io/ontology/tmp/relationType\\",
+         \\"gender\\" : \\"http://purl.bdrc.io/ontology/core/personGender\\"
+      },
+      \\"Work\\": {
+         \\"relation\\":\\"http://purl.bdrc.io/ontology/tmp/relationType\\",
+         \\"langScript\\": \\"http://purl.bdrc.io/ontology/core/workLangScript\\",
+         \\"status\\":\\"http://purl.bdrc.io/ontology/admin/status\\",
+         \\"access\\":\\"http://purl.bdrc.io/ontology/admin/access\\",
+         \\"license\\":\\"http://purl.bdrc.io/ontology/admin/license\\",
+         \\"type\\":\\"http://purl.bdrc.io/ontology/core/workType\\",
+         \\"partType\\":\\"http://purl.bdrc.io/ontology/core/workPartType\\",
+         \\"tree\\":\\"http://purl.bdrc.io/ontology/core/workGenre\\"
+      },
+      \\"Etext\\": {
+         \\"tree\\":\\"http://purl.bdrc.io/ontology/core/workGenre\\"
+      }
+   },
+   \\"links\\":[
+      { \\"title\\":\\"Abstract text of the Bodhisattvacaryāvatāra\\", \\"id\\":\\"W19740\\", \\"label\\":\\"spyod 'jug\\", \\"lang\\":\\"bo-x-ewts\\", \\"icon\\":\\"Abstract Work\\" },
+      { \\"title\\":\\"Shantideva\\", \\"id\\":\\"P6161\\", \\"label\\":\\"zhi ba lha/\\" }
+   ]
+}
+"
 `;
 
 exports[`main App tests App initialization 3`] = `
@@ -461,13 +444,14 @@ Object {
       "type": "http://purl.bdrc.io/ontology/core/workType",
     },
   },
+  "googleAPIkey": "AIzaSyCvs29KHf7Q-oa0XcdWhV4GRSamst5ngYQ",
   "iiif": Object {
     "endpoints": Array [
       "http://localhost:9000",
       "http://iiif.bdrc.io",
       "http://localhost:5555",
     ],
-    "index": 2,
+    "index": 1,
   },
   "ldspdi": Object {
     "endpoints": Array [
@@ -477,7 +461,7 @@ Object {
       "http://purl.bdrc.io",
       "http://localhost:5555",
     ],
-    "index": 4,
+    "index": 0,
   },
   "links": Array [
     Object {
@@ -703,6 +687,9 @@ exports[`main App tests start a search 1`] = `
                             </Transition>
                           </Collapse>
                         </WithStyles(Collapse)>
+                        <Component>
+                          <div />
+                        </Component>
                         <WithStyles(List)>
                           <List>
                             <ul>
@@ -788,7 +775,7 @@ exports[`main App tests start a search 1`] = `
                                               <WithStyles(Typography)>
                                                 <Typography>
                                                   <span>
-                                                    All (5967)
+                                                    All
                                                   </span>
                                                 </Typography>
                                               </WithStyles(Typography)>
@@ -832,7 +819,7 @@ exports[`main App tests start a search 1`] = `
                                               <WithStyles(Typography)>
                                                 <Typography>
                                                   <span>
-                                                    Etext (3630)
+                                                    Corporation
                                                   </span>
                                                 </Typography>
                                               </WithStyles(Typography)>
@@ -876,7 +863,7 @@ exports[`main App tests start a search 1`] = `
                                               <WithStyles(Typography)>
                                                 <Typography>
                                                   <span>
-                                                    Work (1970)
+                                                    Etext
                                                   </span>
                                                 </Typography>
                                               </WithStyles(Typography)>
@@ -920,7 +907,7 @@ exports[`main App tests start a search 1`] = `
                                               <WithStyles(Typography)>
                                                 <Typography>
                                                   <span>
-                                                    Person (338)
+                                                    Item
                                                   </span>
                                                 </Typography>
                                               </WithStyles(Typography)>
@@ -964,7 +951,7 @@ exports[`main App tests start a search 1`] = `
                                               <WithStyles(Typography)>
                                                 <Typography>
                                                   <span>
-                                                    Lineage (16)
+                                                    Lineage
                                                   </span>
                                                 </Typography>
                                               </WithStyles(Typography)>
@@ -1008,7 +995,7 @@ exports[`main App tests start a search 1`] = `
                                               <WithStyles(Typography)>
                                                 <Typography>
                                                   <span>
-                                                    Topic (10)
+                                                    Person
                                                   </span>
                                                 </Typography>
                                               </WithStyles(Typography)>
@@ -1052,7 +1039,7 @@ exports[`main App tests start a search 1`] = `
                                               <WithStyles(Typography)>
                                                 <Typography>
                                                   <span>
-                                                    Place (2)
+                                                    Place
                                                   </span>
                                                 </Typography>
                                               </WithStyles(Typography)>
@@ -1096,7 +1083,95 @@ exports[`main App tests start a search 1`] = `
                                               <WithStyles(Typography)>
                                                 <Typography>
                                                   <span>
-                                                    Role (1)
+                                                    Role
+                                                  </span>
+                                                </Typography>
+                                              </WithStyles(Typography)>
+                                            </label>
+                                          </FormControlLabel>
+                                        </WithStyles(FormControlLabel)>
+                                      </div>
+                                      <div>
+                                        <WithStyles(FormControlLabel)>
+                                          <FormControlLabel>
+                                            <label>
+                                              <WithStyles(Checkbox)>
+                                                <Checkbox>
+                                                  <WithStyles(SwitchBase)>
+                                                    <SwitchBase>
+                                                      <WithStyles(IconButton)>
+                                                        <IconButton>
+                                                          <WithStyles(ButtonBase)>
+                                                            <ButtonBase>
+                                                              <span>
+                                                                <span>
+                                                                  <span />
+                                                                  <input />
+                                                                </span>
+                                                                <WithStyles(TouchRipple)>
+                                                                  <TouchRipple>
+                                                                    <TransitionGroup>
+                                                                      <span />
+                                                                    </TransitionGroup>
+                                                                  </TouchRipple>
+                                                                </WithStyles(TouchRipple)>
+                                                              </span>
+                                                            </ButtonBase>
+                                                          </WithStyles(ButtonBase)>
+                                                        </IconButton>
+                                                      </WithStyles(IconButton)>
+                                                    </SwitchBase>
+                                                  </WithStyles(SwitchBase)>
+                                                </Checkbox>
+                                              </WithStyles(Checkbox)>
+                                              <WithStyles(Typography)>
+                                                <Typography>
+                                                  <span>
+                                                    Topic
+                                                  </span>
+                                                </Typography>
+                                              </WithStyles(Typography)>
+                                            </label>
+                                          </FormControlLabel>
+                                        </WithStyles(FormControlLabel)>
+                                      </div>
+                                      <div>
+                                        <WithStyles(FormControlLabel)>
+                                          <FormControlLabel>
+                                            <label>
+                                              <WithStyles(Checkbox)>
+                                                <Checkbox>
+                                                  <WithStyles(SwitchBase)>
+                                                    <SwitchBase>
+                                                      <WithStyles(IconButton)>
+                                                        <IconButton>
+                                                          <WithStyles(ButtonBase)>
+                                                            <ButtonBase>
+                                                              <span>
+                                                                <span>
+                                                                  <span />
+                                                                  <input />
+                                                                </span>
+                                                                <WithStyles(TouchRipple)>
+                                                                  <TouchRipple>
+                                                                    <TransitionGroup>
+                                                                      <span />
+                                                                    </TransitionGroup>
+                                                                  </TouchRipple>
+                                                                </WithStyles(TouchRipple)>
+                                                              </span>
+                                                            </ButtonBase>
+                                                          </WithStyles(ButtonBase)>
+                                                        </IconButton>
+                                                      </WithStyles(IconButton)>
+                                                    </SwitchBase>
+                                                  </WithStyles(SwitchBase)>
+                                                </Checkbox>
+                                              </WithStyles(Checkbox)>
+                                              <WithStyles(Typography)>
+                                                <Typography>
+                                                  <span>
+                                                    Work
                                                   </span>
                                                 </Typography>
                                               </WithStyles(Typography)>
@@ -1330,56 +1405,11 @@ exports[`main App tests start a search 1`] = `
                       <WithStyles(List)>
                         <List>
                           <ul>
-                            <WithStyles(MenuItem)>
-                              <MenuItem>
-                                <WithStyles(ListItem)>
-                                  <ListItem>
-                                    <WithStyles(ButtonBase)>
-                                      <ButtonBase>
-                                        <li>
-                                          <h4>
-                                            Etexts (3630)
-                                          </h4>
-                                          <WithStyles(TouchRipple)>
-                                            <TouchRipple>
-                                              <TransitionGroup>
-                                                <span />
-                                              </TransitionGroup>
-                                            </TouchRipple>
-                                          </WithStyles(TouchRipple)>
-                                        </li>
-                                      </ButtonBase>
-                                    </WithStyles(ButtonBase)>
-                                  </ListItem>
-                                </WithStyles(ListItem)>
-                              </MenuItem>
-                            </WithStyles(MenuItem)>
-                            <WithStyles(MenuItem)>
-                              <MenuItem>
-                                <WithStyles(ListItem)>
-                                  <ListItem>
-                                    <WithStyles(ButtonBase)>
-                                      <ButtonBase>
-                                        <li>
-                                          <h4>
-                                            Works (1970)
-                                          </h4>
-                                          <WithStyles(TouchRipple)>
-                                            <TouchRipple>
-                                              <TransitionGroup>
-                                                <span />
-                                              </TransitionGroup>
-                                            </TouchRipple>
-                                          </WithStyles(TouchRipple)>
-                                        </li>
-                                      </ButtonBase>
-                                    </WithStyles(ButtonBase)>
-                                  </ListItem>
-                                </WithStyles(ListItem)>
-                              </MenuItem>
-                            </WithStyles(MenuItem)>
+                            <h4>
+                              Sample Resources
+                            </h4>
                             <h5>
-                              Abstract
+                              Abstract text of the Bodhisattvacaryāvatāra
                             </h5>
                             <Link>
                               <a>
@@ -1387,20 +1417,10 @@ exports[`main App tests start a search 1`] = `
                                   <WithStyles(List)>
                                     <List>
                                       <ul>
-                                        <div>
-                                          1
-                                        </div>
+                                        <div />
                                         <div>
                                           <h3>
-                                            <span>
-                                              kun nas sgor &#39;jug pa&#39;i 
-                                            </span>
-                                            <span>
-                                              &#39;od zer
-                                            </span>
-                                            <span>
-                                               gtsug tor dri ma med par snang ba zhes bya ba&#39;i gzungs/
-                                            </span>
+                                            spyod &#39;jug
                                             <WithStyles(Tooltip)>
                                               <Tooltip>
                                                 <RootRef>
@@ -1415,7 +1435,7 @@ exports[`main App tests start a search 1`] = `
                                             </WithStyles(Tooltip)>
                                           </h3>
                                           <p>
-                                            bdr:W25510
+                                            bdr:W19740
                                             <WithStyles(Tooltip)>
                                               <Tooltip>
                                                 <RootRef>
@@ -1445,95 +1465,8 @@ exports[`main App tests start a search 1`] = `
                                 </div>
                               </a>
                             </Link>
-                            <div>
-                              <div>
-                                <span>
-                                  Bibliographic Title
-                                  : 
-                                </span>
-                                <span>
-                                  <span>
-                                    kun nas sgor &#39;jug pa&#39;i 
-                                  </span>
-                                  <span>
-                                    &#39;od zer
-                                  </span>
-                                  <span>
-                                     gtsug tor dri ma med par snang ba zhes bya ba&#39;i gzungs/
-                                  </span>
-                                  <WithStyles(Tooltip)>
-                                    <Tooltip>
-                                      <RootRef>
-                                        <span>
-                                          bo-x-ewts
-                                        </span>
-                                      </RootRef>
-                                      <WithTheme(Popper)>
-                                        <Popper />
-                                      </WithTheme(Popper)>
-                                    </Tooltip>
-                                  </WithStyles(Tooltip)>
-                                </span>
-                              </div>
-                              <div>
-                                <span>
-                                  Title page Title
-                                  : 
-                                </span>
-                                <span>
-                                  <span>
-                                    kun nas sgor &#39;jug pa&#39;i 
-                                  </span>
-                                  <span>
-                                    &#39;od zer
-                                  </span>
-                                  <span>
-                                     gtsug tor dri ma med par snang ba de bzhin gshegs pa thams cad kyi snying po dang dam tshig la rnam par lta ba zhes bya ba&#39;i gzungs/
-                                  </span>
-                                  <WithStyles(Tooltip)>
-                                    <Tooltip>
-                                      <RootRef>
-                                        <span>
-                                          bo-x-ewts
-                                        </span>
-                                      </RootRef>
-                                      <WithTheme(Popper)>
-                                        <Popper />
-                                      </WithTheme(Popper)>
-                                    </Tooltip>
-                                  </WithStyles(Tooltip)>
-                                </span>
-                              </div>
-                              <div>
-                                <span>
-                                  has expression
-                                  : 
-                                </span>
-                                <div>
-                                  <span>
-                                    <Link>
-                                      <a>
-                                        kun nas sgor &#39;jug pa&#39;i &#39;od zer gtsug tor dri ma med par snang ba de bzhin gshegs pa thams cad kyi snying po dang dam tshig la rnam par lta ba zhes bya ba&#39;i gzungs/
-                                      </a>
-                                    </Link>
-                                    <WithStyles(Tooltip)>
-                                      <Tooltip>
-                                        <RootRef>
-                                          <span>
-                                            bo-x-ewts
-                                          </span>
-                                        </RootRef>
-                                        <WithTheme(Popper)>
-                                          <Popper />
-                                        </WithTheme(Popper)>
-                                      </Tooltip>
-                                    </WithStyles(Tooltip)>
-                                  </span>
-                                </div>
-                              </div>
-                            </div>
                             <h5>
-                              Has Expression
+                              Shantideva
                             </h5>
                             <Link>
                               <a>
@@ -1541,20 +1474,10 @@ exports[`main App tests start a search 1`] = `
                                   <WithStyles(List)>
                                     <List>
                                       <ul>
-                                        <div>
-                                          1
-                                        </div>
+                                        <div />
                                         <div>
                                           <h3>
-                                            <span>
-                                              rtog pa las gsungs pa&#39;i cho ga 
-                                            </span>
-                                            <span>
-                                              &#39;od zer
-                                            </span>
-                                            <span>
-                                               can dkar mo&#39;i sgrub thabs/
-                                            </span>
+                                            zhi ba lha/
                                             <WithStyles(Tooltip)>
                                               <Tooltip>
                                                 <RootRef>
@@ -1569,28 +1492,7 @@ exports[`main App tests start a search 1`] = `
                                             </WithStyles(Tooltip)>
                                           </h3>
                                           <p>
-                                            bdr:W0RTT2346
-                                            <WithStyles(Tooltip)>
-                                              <Tooltip>
-                                                <RootRef>
-                                                  <pure(CenterFocusStrong)>
-                                                    <CenterFocusStrong>
-                                                      <WithStyles(SvgIcon)>
-                                                        <SvgIcon>
-                                                          <svg>
-                                                            <path />
-                                                            <path />
-                                                          </svg>
-                                                        </SvgIcon>
-                                                      </WithStyles(SvgIcon)>
-                                                    </CenterFocusStrong>
-                                                  </pure(CenterFocusStrong)>
-                                                </RootRef>
-                                                <WithTheme(Popper)>
-                                                  <Popper />
-                                                </WithTheme(Popper)>
-                                              </Tooltip>
-                                            </WithStyles(Tooltip)>
+                                            bdr:P6161
                                           </p>
                                         </div>
                                       </ul>
@@ -1599,1278 +1501,6 @@ exports[`main App tests start a search 1`] = `
                                 </div>
                               </a>
                             </Link>
-                            <div>
-                              <div>
-                                <span>
-                                  Bibliographic Title
-                                  : 
-                                </span>
-                                <span>
-                                  <span>
-                                    rtog pa las gsungs pa&#39;i cho ga 
-                                  </span>
-                                  <span>
-                                    &#39;od zer
-                                  </span>
-                                  <span>
-                                     can dkar mo&#39;i sgrub thabs/
-                                  </span>
-                                  <WithStyles(Tooltip)>
-                                    <Tooltip>
-                                      <RootRef>
-                                        <span>
-                                          bo-x-ewts
-                                        </span>
-                                      </RootRef>
-                                      <WithTheme(Popper)>
-                                        <Popper />
-                                      </WithTheme(Popper)>
-                                    </Tooltip>
-                                  </WithStyles(Tooltip)>
-                                </span>
-                              </div>
-                              <div>
-                                <span>
-                                  has expression
-                                  : 
-                                </span>
-                                <div>
-                                  <span>
-                                    <Link>
-                                      <a>
-                                        rtog pa las gsungs pa&#39;i cho ga &#39;od zer can dkar mo&#39;i sgrub thabs/
-                                      </a>
-                                    </Link>
-                                    <WithStyles(Tooltip)>
-                                      <Tooltip>
-                                        <RootRef>
-                                          <span>
-                                            bo-x-ewts
-                                          </span>
-                                        </RootRef>
-                                        <WithTheme(Popper)>
-                                          <Popper />
-                                        </WithTheme(Popper)>
-                                      </Tooltip>
-                                    </WithStyles(Tooltip)>
-                                  </span>
-                                </div>
-                              </div>
-                              <div>
-                                <span>
-                                  expression of
-                                  : 
-                                </span>
-                                <div>
-                                  <span>
-                                    <Link>
-                                      <a>
-                                        kalpoktavidhināsitamārīcīsādhana
-                                      </a>
-                                    </Link>
-                                    <WithStyles(Tooltip)>
-                                      <Tooltip>
-                                        <RootRef>
-                                          <span>
-                                            sa-x-iast
-                                          </span>
-                                        </RootRef>
-                                        <WithTheme(Popper)>
-                                          <Popper />
-                                        </WithTheme(Popper)>
-                                      </Tooltip>
-                                    </WithStyles(Tooltip)>
-                                  </span>
-                                </div>
-                              </div>
-                            </div>
-                            <Link>
-                              <a>
-                                <div>
-                                  <WithStyles(List)>
-                                    <List>
-                                      <ul>
-                                        <div>
-                                          2
-                                        </div>
-                                        <div>
-                                          <h3>
-                                            <span>
-                                              lha mo 
-                                            </span>
-                                            <span>
-                                              &#39;od zer
-                                            </span>
-                                            <span>
-                                               can gyi sgrub thabs/
-                                            </span>
-                                            <WithStyles(Tooltip)>
-                                              <Tooltip>
-                                                <RootRef>
-                                                  <span>
-                                                    bo-x-ewts
-                                                  </span>
-                                                </RootRef>
-                                                <WithTheme(Popper)>
-                                                  <Popper />
-                                                </WithTheme(Popper)>
-                                              </Tooltip>
-                                            </WithStyles(Tooltip)>
-                                          </h3>
-                                          <p>
-                                            bdr:W0RTT2481
-                                            <WithStyles(Tooltip)>
-                                              <Tooltip>
-                                                <RootRef>
-                                                  <pure(CenterFocusStrong)>
-                                                    <CenterFocusStrong>
-                                                      <WithStyles(SvgIcon)>
-                                                        <SvgIcon>
-                                                          <svg>
-                                                            <path />
-                                                            <path />
-                                                          </svg>
-                                                        </SvgIcon>
-                                                      </WithStyles(SvgIcon)>
-                                                    </CenterFocusStrong>
-                                                  </pure(CenterFocusStrong)>
-                                                </RootRef>
-                                                <WithTheme(Popper)>
-                                                  <Popper />
-                                                </WithTheme(Popper)>
-                                              </Tooltip>
-                                            </WithStyles(Tooltip)>
-                                          </p>
-                                        </div>
-                                      </ul>
-                                    </List>
-                                  </WithStyles(List)>
-                                </div>
-                              </a>
-                            </Link>
-                            <div>
-                              <div>
-                                <span>
-                                  Bibliographic Title
-                                  : 
-                                </span>
-                                <span>
-                                  <span>
-                                    lha mo 
-                                  </span>
-                                  <span>
-                                    &#39;od zer
-                                  </span>
-                                  <span>
-                                     can gyi sgrub thabs/
-                                  </span>
-                                  <WithStyles(Tooltip)>
-                                    <Tooltip>
-                                      <RootRef>
-                                        <span>
-                                          bo-x-ewts
-                                        </span>
-                                      </RootRef>
-                                      <WithTheme(Popper)>
-                                        <Popper />
-                                      </WithTheme(Popper)>
-                                    </Tooltip>
-                                  </WithStyles(Tooltip)>
-                                </span>
-                              </div>
-                              <div>
-                                <span>
-                                  has expression
-                                  : 
-                                </span>
-                                <div>
-                                  <span>
-                                    <Link>
-                                      <a>
-                                        W23703_3660
-                                      </a>
-                                    </Link>
-                                  </span>
-                                  <span>
-                                    <Link>
-                                      <a>
-                                        W23703_3661
-                                      </a>
-                                    </Link>
-                                  </span>
-                                </div>
-                              </div>
-                              <div>
-                                <span>
-                                  expression of
-                                  : 
-                                </span>
-                                <div>
-                                  <span>
-                                    <Link>
-                                      <a>
-                                        mārīcīdevīsādhana
-                                      </a>
-                                    </Link>
-                                    <WithStyles(Tooltip)>
-                                      <Tooltip>
-                                        <RootRef>
-                                          <span>
-                                            sa-x-iast
-                                          </span>
-                                        </RootRef>
-                                        <WithTheme(Popper)>
-                                          <Popper />
-                                        </WithTheme(Popper)>
-                                      </Tooltip>
-                                    </WithStyles(Tooltip)>
-                                  </span>
-                                </div>
-                              </div>
-                            </div>
-                            <h5>
-                              Expression Of
-                            </h5>
-                            <Link>
-                              <a>
-                                <div>
-                                  <WithStyles(List)>
-                                    <List>
-                                      <ul>
-                                        <div>
-                                          1
-                                        </div>
-                                        <div>
-                                          <h3>
-                                            <span>
-                                              &#39;phags ma 
-                                            </span>
-                                            <span>
-                                              &#39;od zer
-                                            </span>
-                                            <span>
-                                               can zhes bya ba&#39;i gzungs/
-                                            </span>
-                                            <WithStyles(Tooltip)>
-                                              <Tooltip>
-                                                <RootRef>
-                                                  <span>
-                                                    bo-x-ewts
-                                                  </span>
-                                                </RootRef>
-                                                <WithTheme(Popper)>
-                                                  <Popper />
-                                                </WithTheme(Popper)>
-                                              </Tooltip>
-                                            </WithStyles(Tooltip)>
-                                          </h3>
-                                          <p>
-                                            bdr:W22083_0524
-                                            <WithStyles(Tooltip)>
-                                              <Tooltip>
-                                                <RootRef>
-                                                  <pure(CenterFocusWeak)>
-                                                    <CenterFocusWeak>
-                                                      <WithStyles(SvgIcon)>
-                                                        <SvgIcon>
-                                                          <svg>
-                                                            <path />
-                                                            <path />
-                                                          </svg>
-                                                        </SvgIcon>
-                                                      </WithStyles(SvgIcon)>
-                                                    </CenterFocusWeak>
-                                                  </pure(CenterFocusWeak)>
-                                                </RootRef>
-                                                <WithTheme(Popper)>
-                                                  <Popper />
-                                                </WithTheme(Popper)>
-                                              </Tooltip>
-                                            </WithStyles(Tooltip)>
-                                          </p>
-                                        </div>
-                                      </ul>
-                                    </List>
-                                  </WithStyles(List)>
-                                </div>
-                              </a>
-                            </Link>
-                            <div>
-                              <div>
-                                <span>
-                                  Bibliographic Title
-                                  : 
-                                </span>
-                                <span>
-                                  <span>
-                                    &#39;phags ma 
-                                  </span>
-                                  <span>
-                                    &#39;od zer
-                                  </span>
-                                  <span>
-                                     can zhes bya ba&#39;i gzungs/
-                                  </span>
-                                  <WithStyles(Tooltip)>
-                                    <Tooltip>
-                                      <RootRef>
-                                        <span>
-                                          bo-x-ewts
-                                        </span>
-                                      </RootRef>
-                                      <WithTheme(Popper)>
-                                        <Popper />
-                                      </WithTheme(Popper)>
-                                    </Tooltip>
-                                  </WithStyles(Tooltip)>
-                                </span>
-                              </div>
-                              <div>
-                                <span>
-                                  expression of
-                                  : 
-                                </span>
-                                <div>
-                                  <span>
-                                    <Link>
-                                      <a>
-                                        &#39;phags ma &#39;od zer can zhes bya ba&#39;i gzungs/
-                                      </a>
-                                    </Link>
-                                    <WithStyles(Tooltip)>
-                                      <Tooltip>
-                                        <RootRef>
-                                          <span>
-                                            bo-x-ewts
-                                          </span>
-                                        </RootRef>
-                                        <WithTheme(Popper)>
-                                          <Popper />
-                                        </WithTheme(Popper)>
-                                      </Tooltip>
-                                    </WithStyles(Tooltip)>
-                                  </span>
-                                </div>
-                              </div>
-                            </div>
-                            <h5>
-                              Other
-                            </h5>
-                            <Link>
-                              <a>
-                                <div>
-                                  <WithStyles(List)>
-                                    <List>
-                                      <ul>
-                                        <div>
-                                          1
-                                        </div>
-                                        <div>
-                                          <h3>
-                                            <span>
-                                              &#39;phags pa 
-                                            </span>
-                                            <span>
-                                              &#39;od zer
-                                            </span>
-                                            <span>
-                                               dri ma med pa rnam par dag pa&#39;i &#39;od /
-                                            </span>
-                                            <WithStyles(Tooltip)>
-                                              <Tooltip>
-                                                <RootRef>
-                                                  <span>
-                                                    bo-x-ewts
-                                                  </span>
-                                                </RootRef>
-                                                <WithTheme(Popper)>
-                                                  <Popper />
-                                                </WithTheme(Popper)>
-                                              </Tooltip>
-                                            </WithStyles(Tooltip)>
-                                          </h3>
-                                          <p>
-                                            bdr:W3CN12210_0099
-                                            <WithStyles(Tooltip)>
-                                              <Tooltip>
-                                                <RootRef>
-                                                  <pure(CropDin)>
-                                                    <CropDin>
-                                                      <WithStyles(SvgIcon)>
-                                                        <SvgIcon>
-                                                          <svg>
-                                                            <path />
-                                                            <path />
-                                                          </svg>
-                                                        </SvgIcon>
-                                                      </WithStyles(SvgIcon)>
-                                                    </CropDin>
-                                                  </pure(CropDin)>
-                                                </RootRef>
-                                                <WithTheme(Popper)>
-                                                  <Popper />
-                                                </WithTheme(Popper)>
-                                              </Tooltip>
-                                            </WithStyles(Tooltip)>
-                                          </p>
-                                        </div>
-                                      </ul>
-                                    </List>
-                                  </WithStyles(List)>
-                                </div>
-                              </a>
-                            </Link>
-                            <div>
-                              <div>
-                                <span>
-                                  Title page Title
-                                  : 
-                                </span>
-                                <span>
-                                  <span>
-                                    &#39;phags pa 
-                                  </span>
-                                  <span>
-                                    &#39;od zer
-                                  </span>
-                                  <span>
-                                     dri ma med pa rnam par dag pa&#39;i &#39;od /
-                                  </span>
-                                  <WithStyles(Tooltip)>
-                                    <Tooltip>
-                                      <RootRef>
-                                        <span>
-                                          bo-x-ewts
-                                        </span>
-                                      </RootRef>
-                                      <WithTheme(Popper)>
-                                        <Popper />
-                                      </WithTheme(Popper)>
-                                    </Tooltip>
-                                  </WithStyles(Tooltip)>
-                                </span>
-                              </div>
-                            </div>
-                            <WithStyles(MenuItem)>
-                              <MenuItem>
-                                <WithStyles(ListItem)>
-                                  <ListItem>
-                                    <WithStyles(ButtonBase)>
-                                      <ButtonBase>
-                                        <li>
-                                          <h4>
-                                            Persons (338)
-                                          </h4>
-                                          <WithStyles(TouchRipple)>
-                                            <TouchRipple>
-                                              <TransitionGroup>
-                                                <span />
-                                              </TransitionGroup>
-                                            </TouchRipple>
-                                          </WithStyles(TouchRipple)>
-                                        </li>
-                                      </ButtonBase>
-                                    </WithStyles(ButtonBase)>
-                                  </ListItem>
-                                </WithStyles(ListItem)>
-                              </MenuItem>
-                            </WithStyles(MenuItem)>
-                            <Link>
-                              <a>
-                                <div>
-                                  <WithStyles(List)>
-                                    <List>
-                                      <ul>
-                                        <div>
-                                          1
-                                        </div>
-                                        <div>
-                                          <h3>
-                                            <span>
-                                              sangs rgyas 
-                                            </span>
-                                            <span>
-                                              &#39;od zer
-                                            </span>
-                                            <span>
-                                              /
-                                            </span>
-                                            <WithStyles(Tooltip)>
-                                              <Tooltip>
-                                                <RootRef>
-                                                  <span>
-                                                    bo-x-ewts
-                                                  </span>
-                                                </RootRef>
-                                                <WithTheme(Popper)>
-                                                  <Popper />
-                                                </WithTheme(Popper)>
-                                              </Tooltip>
-                                            </WithStyles(Tooltip)>
-                                          </h3>
-                                          <p>
-                                            bdr:P8LS12582
-                                          </p>
-                                        </div>
-                                      </ul>
-                                    </List>
-                                  </WithStyles(List)>
-                                </div>
-                              </a>
-                            </Link>
-                            <div>
-                              <div>
-                                <span>
-                                  Primary Name
-                                  : 
-                                </span>
-                                <span>
-                                  <span>
-                                    sangs rgyas 
-                                  </span>
-                                  <span>
-                                    &#39;od zer
-                                  </span>
-                                  <span>
-                                    /
-                                  </span>
-                                  <WithStyles(Tooltip)>
-                                    <Tooltip>
-                                      <RootRef>
-                                        <span>
-                                          bo-x-ewts
-                                        </span>
-                                      </RootRef>
-                                      <WithTheme(Popper)>
-                                        <Popper />
-                                      </WithTheme(Popper)>
-                                    </Tooltip>
-                                  </WithStyles(Tooltip)>
-                                </span>
-                              </div>
-                            </div>
-                            <Link>
-                              <a>
-                                <div>
-                                  <WithStyles(List)>
-                                    <List>
-                                      <ul>
-                                        <div>
-                                          2
-                                        </div>
-                                        <div>
-                                          <h3>
-                                            <span>
-                                              ngag dbang legs grub/
-                                            </span>
-                                            <WithStyles(Tooltip)>
-                                              <Tooltip>
-                                                <RootRef>
-                                                  <span>
-                                                    bo-x-ewts
-                                                  </span>
-                                                </RootRef>
-                                                <WithTheme(Popper)>
-                                                  <Popper />
-                                                </WithTheme(Popper)>
-                                              </Tooltip>
-                                            </WithStyles(Tooltip)>
-                                          </h3>
-                                          <p>
-                                            bdr:P809
-                                          </p>
-                                        </div>
-                                      </ul>
-                                    </List>
-                                  </WithStyles(List)>
-                                </div>
-                              </a>
-                            </Link>
-                            <div>
-                              <div>
-                                <span>
-                                  Personal Name
-                                  : 
-                                </span>
-                                <span>
-                                  <span>
-                                    ngag dbang blo gros snying po gzhan phan mtha&#39; yas pa&#39;i 
-                                  </span>
-                                  <span>
-                                    &#39;od zer
-                                  </span>
-                                  <span>
-                                    /
-                                  </span>
-                                  <WithStyles(Tooltip)>
-                                    <Tooltip>
-                                      <RootRef>
-                                        <span>
-                                          bo-x-ewts
-                                        </span>
-                                      </RootRef>
-                                      <WithTheme(Popper)>
-                                        <Popper />
-                                      </WithTheme(Popper)>
-                                    </Tooltip>
-                                  </WithStyles(Tooltip)>
-                                </span>
-                              </div>
-                            </div>
-                            <Link>
-                              <a>
-                                <div>
-                                  <WithStyles(List)>
-                                    <List>
-                                      <ul>
-                                        <div>
-                                          3
-                                        </div>
-                                        <div>
-                                          <h3>
-                                            <span>
-                                              rdo rje 
-                                            </span>
-                                            <span>
-                                              &#39;od zer
-                                            </span>
-                                            <span>
-                                              /
-                                            </span>
-                                            <WithStyles(Tooltip)>
-                                              <Tooltip>
-                                                <RootRef>
-                                                  <span>
-                                                    bo-x-ewts
-                                                  </span>
-                                                </RootRef>
-                                                <WithTheme(Popper)>
-                                                  <Popper />
-                                                </WithTheme(Popper)>
-                                              </Tooltip>
-                                            </WithStyles(Tooltip)>
-                                          </h3>
-                                          <p>
-                                            bdr:P10621
-                                          </p>
-                                        </div>
-                                      </ul>
-                                    </List>
-                                  </WithStyles(List)>
-                                </div>
-                              </a>
-                            </Link>
-                            <div>
-                              <div>
-                                <span>
-                                  Personal Name
-                                  : 
-                                </span>
-                                <span>
-                                  <span>
-                                    rdo rje 
-                                  </span>
-                                  <span>
-                                    &#39;od zer
-                                  </span>
-                                  <span>
-                                    /
-                                  </span>
-                                  <WithStyles(Tooltip)>
-                                    <Tooltip>
-                                      <RootRef>
-                                        <span>
-                                          bo-x-ewts
-                                        </span>
-                                      </RootRef>
-                                      <WithTheme(Popper)>
-                                        <Popper />
-                                      </WithTheme(Popper)>
-                                    </Tooltip>
-                                  </WithStyles(Tooltip)>
-                                </span>
-                              </div>
-                            </div>
-                            <WithStyles(MenuItem)>
-                              <MenuItem>
-                                <WithStyles(ListItem)>
-                                  <ListItem>
-                                    <WithStyles(ButtonBase)>
-                                      <ButtonBase>
-                                        <li>
-                                          <h4>
-                                            Lineages (16)
-                                          </h4>
-                                          <WithStyles(TouchRipple)>
-                                            <TouchRipple>
-                                              <TransitionGroup>
-                                                <span />
-                                              </TransitionGroup>
-                                            </TouchRipple>
-                                          </WithStyles(TouchRipple)>
-                                        </li>
-                                      </ButtonBase>
-                                    </WithStyles(ButtonBase)>
-                                  </ListItem>
-                                </WithStyles(ListItem)>
-                              </MenuItem>
-                            </WithStyles(MenuItem)>
-                            <Link>
-                              <a>
-                                <div>
-                                  <WithStyles(List)>
-                                    <List>
-                                      <ul>
-                                        <div>
-                                          1
-                                        </div>
-                                        <div>
-                                          <h3>
-                                            <span>
-                                              gtsug tor dri med pa lha lnga&#39;i ras bris kyi dkyil &#39;khor du rig gtad thob pa&#39;i brgyud pa/
-                                            </span>
-                                            <WithStyles(Tooltip)>
-                                              <Tooltip>
-                                                <RootRef>
-                                                  <span>
-                                                    bo-x-ewts
-                                                  </span>
-                                                </RootRef>
-                                                <WithTheme(Popper)>
-                                                  <Popper />
-                                                </WithTheme(Popper)>
-                                              </Tooltip>
-                                            </WithStyles(Tooltip)>
-                                          </h3>
-                                          <p>
-                                            bdr:L8LS13729
-                                          </p>
-                                        </div>
-                                      </ul>
-                                    </List>
-                                  </WithStyles(List)>
-                                </div>
-                              </a>
-                            </Link>
-                            <div>
-                              <div>
-                                <span>
-                                  variant label
-                                  : 
-                                </span>
-                                <span>
-                                  <span>
-                                    mkhas grub grags pa rin chen gyis mdzad pa&#39;i dkyil chog &#39;jug bde rab gsal gyi steng gnas &#39;phags pa kun nas sgor &#39;jug pa&#39;i 
-                                  </span>
-                                  <span>
-                                    &#39;od zer
-                                  </span>
-                                  <span>
-                                     gtsug tor dri med pa lha lha&#39;i ras bris kyi dkyil &#39;khor du rig gtad thob pa&#39;i brgyud pa/
-                                  </span>
-                                  <WithStyles(Tooltip)>
-                                    <Tooltip>
-                                      <RootRef>
-                                        <span>
-                                          bo-x-ewts
-                                        </span>
-                                      </RootRef>
-                                      <WithTheme(Popper)>
-                                        <Popper />
-                                      </WithTheme(Popper)>
-                                    </Tooltip>
-                                  </WithStyles(Tooltip)>
-                                </span>
-                              </div>
-                            </div>
-                            <Link>
-                              <a>
-                                <div>
-                                  <WithStyles(List)>
-                                    <List>
-                                      <ul>
-                                        <div>
-                                          2
-                                        </div>
-                                        <div>
-                                          <h3>
-                                            <span>
-                                              brtag gnyis kyi Tikka rnam bshad nyi ma&#39;i 
-                                            </span>
-                                            <span>
-                                              &#39;od zer
-                                            </span>
-                                            <span>
-                                               gyi brgyud pa/
-                                            </span>
-                                            <WithStyles(Tooltip)>
-                                              <Tooltip>
-                                                <RootRef>
-                                                  <span>
-                                                    bo-x-ewts
-                                                  </span>
-                                                </RootRef>
-                                                <WithTheme(Popper)>
-                                                  <Popper />
-                                                </WithTheme(Popper)>
-                                              </Tooltip>
-                                            </WithStyles(Tooltip)>
-                                          </h3>
-                                          <p>
-                                            bdr:L0RKL430
-                                          </p>
-                                        </div>
-                                      </ul>
-                                    </List>
-                                  </WithStyles(List)>
-                                </div>
-                              </a>
-                            </Link>
-                            <div />
-                            <Link>
-                              <a>
-                                <div>
-                                  <WithStyles(List)>
-                                    <List>
-                                      <ul>
-                                        <div>
-                                          3
-                                        </div>
-                                        <div>
-                                          <h3>
-                                            <span>
-                                              gsang &#39;dus lha bcu dgu&#39;i dkyil chog ngag &#39;don dbang nos pa&#39;i brgyud pa/
-                                            </span>
-                                            <WithStyles(Tooltip)>
-                                              <Tooltip>
-                                                <RootRef>
-                                                  <span>
-                                                    bo-x-ewts
-                                                  </span>
-                                                </RootRef>
-                                                <WithTheme(Popper)>
-                                                  <Popper />
-                                                </WithTheme(Popper)>
-                                              </Tooltip>
-                                            </WithStyles(Tooltip)>
-                                          </h3>
-                                          <p>
-                                            bdr:L8LS13994
-                                          </p>
-                                        </div>
-                                      </ul>
-                                    </List>
-                                  </WithStyles(List)>
-                                </div>
-                              </a>
-                            </Link>
-                            <div>
-                              <div>
-                                <span>
-                                  variant label
-                                  : 
-                                </span>
-                                <span>
-                                  <span>
-                                    slob dpon chen po jo bo mar me mdzad ye shes kyis legs par bkral ba&#39;i dpal gsang ba &#39;dus pa &#39;jig rten dbang phyug lha bcu dgu&#39;i ras bris kyi dkyil &#39;khor du byang gling chos rje bkra shis rgyal mtshan gyis mdzad pa&#39;i dkyil &#39;khor gyi las rim cho ga&#39;i ngag &#39;don khrigs chags lhan thabs thugs rje&#39;i 
-                                  </span>
-                                  <span>
-                                    &#39;od zer
-                                  </span>
-                                  <span>
-                                     gyi steng nas dbang nos pa&#39;i brgyud pa/
-                                  </span>
-                                  <WithStyles(Tooltip)>
-                                    <Tooltip>
-                                      <RootRef>
-                                        <span>
-                                          bo-x-ewts
-                                        </span>
-                                      </RootRef>
-                                      <WithTheme(Popper)>
-                                        <Popper />
-                                      </WithTheme(Popper)>
-                                    </Tooltip>
-                                  </WithStyles(Tooltip)>
-                                </span>
-                              </div>
-                            </div>
-                            <WithStyles(MenuItem)>
-                              <MenuItem>
-                                <WithStyles(ListItem)>
-                                  <ListItem>
-                                    <WithStyles(ButtonBase)>
-                                      <ButtonBase>
-                                        <li>
-                                          <h4>
-                                            Topics (10)
-                                          </h4>
-                                          <WithStyles(TouchRipple)>
-                                            <TouchRipple>
-                                              <TransitionGroup>
-                                                <span />
-                                              </TransitionGroup>
-                                            </TouchRipple>
-                                          </WithStyles(TouchRipple)>
-                                        </li>
-                                      </ButtonBase>
-                                    </WithStyles(ButtonBase)>
-                                  </ListItem>
-                                </WithStyles(ListItem)>
-                              </MenuItem>
-                            </WithStyles(MenuItem)>
-                            <Link>
-                              <a>
-                                <div>
-                                  <WithStyles(List)>
-                                    <List>
-                                      <ul>
-                                        <div>
-                                          1
-                                        </div>
-                                        <div>
-                                          <h3>
-                                            <span />
-                                            <span>
-                                              &#39;od zer
-                                            </span>
-                                            <span>
-                                               can ma khab skud can/
-                                            </span>
-                                            <WithStyles(Tooltip)>
-                                              <Tooltip>
-                                                <RootRef>
-                                                  <span>
-                                                    bo-x-ewts
-                                                  </span>
-                                                </RootRef>
-                                                <WithTheme(Popper)>
-                                                  <Popper />
-                                                </WithTheme(Popper)>
-                                              </Tooltip>
-                                            </WithStyles(Tooltip)>
-                                          </h3>
-                                          <p>
-                                            bdr:T687
-                                          </p>
-                                        </div>
-                                      </ul>
-                                    </List>
-                                  </WithStyles(List)>
-                                </div>
-                              </a>
-                            </Link>
-                            <div />
-                            <Link>
-                              <a>
-                                <div>
-                                  <WithStyles(List)>
-                                    <List>
-                                      <ul>
-                                        <div>
-                                          2
-                                        </div>
-                                        <div>
-                                          <h3>
-                                            <span>
-                                              gu ru drag po bde gshegs &#39;dus pa (nyang ral nyi ma 
-                                            </span>
-                                            <span>
-                                              &#39;od zer
-                                            </span>
-                                            <span>
-                                              )
-                                            </span>
-                                            <WithStyles(Tooltip)>
-                                              <Tooltip>
-                                                <RootRef>
-                                                  <span>
-                                                    bo-x-ewts
-                                                  </span>
-                                                </RootRef>
-                                                <WithTheme(Popper)>
-                                                  <Popper />
-                                                </WithTheme(Popper)>
-                                              </Tooltip>
-                                            </WithStyles(Tooltip)>
-                                          </h3>
-                                          <p>
-                                            bdr:T1401
-                                          </p>
-                                        </div>
-                                      </ul>
-                                    </List>
-                                  </WithStyles(List)>
-                                </div>
-                              </a>
-                            </Link>
-                            <div />
-                            <Link>
-                              <a>
-                                <div>
-                                  <WithStyles(List)>
-                                    <List>
-                                      <ul>
-                                        <div>
-                                          3
-                                        </div>
-                                        <div>
-                                          <h3>
-                                            <span />
-                                            <span>
-                                              &#39;od zer
-                                            </span>
-                                            <span>
-                                               dri med lha 6
-                                            </span>
-                                            <WithStyles(Tooltip)>
-                                              <Tooltip>
-                                                <RootRef>
-                                                  <span>
-                                                    bo-x-ewts
-                                                  </span>
-                                                </RootRef>
-                                                <WithTheme(Popper)>
-                                                  <Popper />
-                                                </WithTheme(Popper)>
-                                              </Tooltip>
-                                            </WithStyles(Tooltip)>
-                                          </h3>
-                                          <p>
-                                            bdr:T1005
-                                          </p>
-                                        </div>
-                                      </ul>
-                                    </List>
-                                  </WithStyles(List)>
-                                </div>
-                              </a>
-                            </Link>
-                            <div />
-                            <WithStyles(MenuItem)>
-                              <MenuItem>
-                                <WithStyles(ListItem)>
-                                  <ListItem>
-                                    <WithStyles(ButtonBase)>
-                                      <ButtonBase>
-                                        <li>
-                                          <h4>
-                                            Places (2)
-                                          </h4>
-                                          <WithStyles(TouchRipple)>
-                                            <TouchRipple>
-                                              <TransitionGroup>
-                                                <span />
-                                              </TransitionGroup>
-                                            </TouchRipple>
-                                          </WithStyles(TouchRipple)>
-                                        </li>
-                                      </ButtonBase>
-                                    </WithStyles(ButtonBase)>
-                                  </ListItem>
-                                </WithStyles(ListItem)>
-                              </MenuItem>
-                            </WithStyles(MenuItem)>
-                            <Link>
-                              <a>
-                                <div>
-                                  <WithStyles(List)>
-                                    <List>
-                                      <ul>
-                                        <div>
-                                          1
-                                        </div>
-                                        <div>
-                                          <h3>
-                                            <span>
-                                              &#39;bras tshal dgon/
-                                            </span>
-                                            <WithStyles(Tooltip)>
-                                              <Tooltip>
-                                                <RootRef>
-                                                  <span>
-                                                    bo-x-ewts
-                                                  </span>
-                                                </RootRef>
-                                                <WithTheme(Popper)>
-                                                  <Popper />
-                                                </WithTheme(Popper)>
-                                              </Tooltip>
-                                            </WithStyles(Tooltip)>
-                                          </h3>
-                                          <p>
-                                            bdr:G418
-                                          </p>
-                                        </div>
-                                      </ul>
-                                    </List>
-                                  </WithStyles(List)>
-                                </div>
-                              </a>
-                            </Link>
-                            <div>
-                              <div>
-                                <span>
-                                  variant label
-                                  : 
-                                </span>
-                                <span>
-                                  <span />
-                                  <span>
-                                    &#39;od zer
-                                  </span>
-                                  <span>
-                                     bsam gtan gling
-                                  </span>
-                                  <WithStyles(Tooltip)>
-                                    <Tooltip>
-                                      <RootRef>
-                                        <span>
-                                          bo-x-ewts
-                                        </span>
-                                      </RootRef>
-                                      <WithTheme(Popper)>
-                                        <Popper />
-                                      </WithTheme(Popper)>
-                                    </Tooltip>
-                                  </WithStyles(Tooltip)>
-                                </span>
-                              </div>
-                            </div>
-                            <Link>
-                              <a>
-                                <div>
-                                  <WithStyles(List)>
-                                    <List>
-                                      <ul>
-                                        <div>
-                                          2
-                                        </div>
-                                        <div>
-                                          <h3>
-                                            <span />
-                                            <span>
-                                              &#39;od zer
-                                            </span>
-                                            <span>
-                                               dgon/
-                                            </span>
-                                            <WithStyles(Tooltip)>
-                                              <Tooltip>
-                                                <RootRef>
-                                                  <span>
-                                                    bo-x-ewts
-                                                  </span>
-                                                </RootRef>
-                                                <WithTheme(Popper)>
-                                                  <Popper />
-                                                </WithTheme(Popper)>
-                                              </Tooltip>
-                                            </WithStyles(Tooltip)>
-                                          </h3>
-                                          <p>
-                                            bdr:G1KR106
-                                          </p>
-                                        </div>
-                                      </ul>
-                                    </List>
-                                  </WithStyles(List)>
-                                </div>
-                              </a>
-                            </Link>
-                            <div />
-                            <WithStyles(MenuItem)>
-                              <MenuItem>
-                                <WithStyles(ListItem)>
-                                  <ListItem>
-                                    <WithStyles(ButtonBase)>
-                                      <ButtonBase>
-                                        <li>
-                                          <h4>
-                                            Roles (1)
-                                          </h4>
-                                          <WithStyles(TouchRipple)>
-                                            <TouchRipple>
-                                              <TransitionGroup>
-                                                <span />
-                                              </TransitionGroup>
-                                            </TouchRipple>
-                                          </WithStyles(TouchRipple)>
-                                        </li>
-                                      </ButtonBase>
-                                    </WithStyles(ButtonBase)>
-                                  </ListItem>
-                                </WithStyles(ListItem)>
-                              </MenuItem>
-                            </WithStyles(MenuItem)>
-                            <Link>
-                              <a>
-                                <div>
-                                  <WithStyles(List)>
-                                    <List>
-                                      <ul>
-                                        <div>
-                                          1
-                                        </div>
-                                        <div>
-                                          <h3>
-                                            <span />
-                                            <span>
-                                              &#39;od zer
-                                            </span>
-                                            <span>
-                                               sprul sku&#39;i skye brgyud/
-                                            </span>
-                                            <WithStyles(Tooltip)>
-                                              <Tooltip>
-                                                <RootRef>
-                                                  <span>
-                                                    bo-x-ewts
-                                                  </span>
-                                                </RootRef>
-                                                <WithTheme(Popper)>
-                                                  <Popper />
-                                                </WithTheme(Popper)>
-                                              </Tooltip>
-                                            </WithStyles(Tooltip)>
-                                          </h3>
-                                          <p>
-                                            bdr:R8LS12807
-                                          </p>
-                                        </div>
-                                      </ul>
-                                    </List>
-                                  </WithStyles(List)>
-                                </div>
-                              </a>
-                            </Link>
-                            <div />
-                            <div>
-                              <pure(NavigateBefore)>
-                                <NavigateBefore>
-                                  <WithStyles(SvgIcon)>
-                                    <SvgIcon>
-                                      <svg>
-                                        <path />
-                                        <path />
-                                      </svg>
-                                    </SvgIcon>
-                                  </WithStyles(SvgIcon)>
-                                </NavigateBefore>
-                              </pure(NavigateBefore)>
-                              <pure(NavigateNext)>
-                                <NavigateNext>
-                                  <WithStyles(SvgIcon)>
-                                    <SvgIcon>
-                                      <svg>
-                                        <path />
-                                        <path />
-                                      </svg>
-                                    </SvgIcon>
-                                  </WithStyles(SvgIcon)>
-                                </NavigateNext>
-                              </pure(NavigateNext)>
-                            </div>
                           </ul>
                         </List>
                       </WithStyles(List)>
@@ -3176,7 +1806,134 @@ exports[`main App tests start a search 1`] = `
                                                           <ButtonBase>
                                                             <span>
                                                               <span>
-                                                                <span />
+                                                                <span>
+                                                                  <pure(CheckCircle)>
+                                                                    <CheckCircle>
+                                                                      <WithStyles(SvgIcon)>
+                                                                        <SvgIcon>
+                                                                          <svg>
+                                                                            <path />
+                                                                            <path />
+                                                                          </svg>
+                                                                        </SvgIcon>
+                                                                      </WithStyles(SvgIcon)>
+                                                                    </CheckCircle>
+                                                                  </pure(CheckCircle)>
+                                                                </span>
+                                                                <input />
+                                                              </span>
+                                                              <WithStyles(TouchRipple)>
+                                                                <TouchRipple>
+                                                                  <TransitionGroup>
+                                                                    <span />
+                                                                  </TransitionGroup>
+                                                                </TouchRipple>
+                                                              </WithStyles(TouchRipple)>
+                                                            </span>
+                                                          </ButtonBase>
+                                                        </WithStyles(ButtonBase)>
+                                                      </IconButton>
+                                                    </WithStyles(IconButton)>
+                                                  </SwitchBase>
+                                                </WithStyles(SwitchBase)>
+                                              </Checkbox>
+                                            </WithStyles(Checkbox)>
+                                            <WithStyles(Typography)>
+                                              <Typography>
+                                                <span>
+                                                  Chinese (Traditional)
+                                                </span>
+                                              </Typography>
+                                            </WithStyles(Typography)>
+                                          </label>
+                                        </FormControlLabel>
+                                      </WithStyles(FormControlLabel)>
+                                    </div>
+                                    <div>
+                                      <WithStyles(FormControlLabel)>
+                                        <FormControlLabel>
+                                          <label>
+                                            <WithStyles(Checkbox)>
+                                              <Checkbox>
+                                                <WithStyles(SwitchBase)>
+                                                  <SwitchBase>
+                                                    <WithStyles(IconButton)>
+                                                      <IconButton>
+                                                        <WithStyles(ButtonBase)>
+                                                          <ButtonBase>
+                                                            <span>
+                                                              <span>
+                                                                <span>
+                                                                  <pure(CheckCircle)>
+                                                                    <CheckCircle>
+                                                                      <WithStyles(SvgIcon)>
+                                                                        <SvgIcon>
+                                                                          <svg>
+                                                                            <path />
+                                                                            <path />
+                                                                          </svg>
+                                                                        </SvgIcon>
+                                                                      </WithStyles(SvgIcon)>
+                                                                    </CheckCircle>
+                                                                  </pure(CheckCircle)>
+                                                                </span>
+                                                                <input />
+                                                              </span>
+                                                              <WithStyles(TouchRipple)>
+                                                                <TouchRipple>
+                                                                  <TransitionGroup>
+                                                                    <span />
+                                                                  </TransitionGroup>
+                                                                </TouchRipple>
+                                                              </WithStyles(TouchRipple)>
+                                                            </span>
+                                                          </ButtonBase>
+                                                        </WithStyles(ButtonBase)>
+                                                      </IconButton>
+                                                    </WithStyles(IconButton)>
+                                                  </SwitchBase>
+                                                </WithStyles(SwitchBase)>
+                                              </Checkbox>
+                                            </WithStyles(Checkbox)>
+                                            <WithStyles(Typography)>
+                                              <Typography>
+                                                <span>
+                                                  Chinese (Simplified)
+                                                </span>
+                                              </Typography>
+                                            </WithStyles(Typography)>
+                                          </label>
+                                        </FormControlLabel>
+                                      </WithStyles(FormControlLabel)>
+                                    </div>
+                                    <div>
+                                      <WithStyles(FormControlLabel)>
+                                        <FormControlLabel>
+                                          <label>
+                                            <WithStyles(Checkbox)>
+                                              <Checkbox>
+                                                <WithStyles(SwitchBase)>
+                                                  <SwitchBase>
+                                                    <WithStyles(IconButton)>
+                                                      <IconButton>
+                                                        <WithStyles(ButtonBase)>
+                                                          <ButtonBase>
+                                                            <span>
+                                                              <span>
+                                                                <span>
+                                                                  <pure(CheckCircle)>
+                                                                    <CheckCircle>
+                                                                      <WithStyles(SvgIcon)>
+                                                                        <SvgIcon>
+                                                                          <svg>
+                                                                            <path />
+                                                                            <path />
+                                                                          </svg>
+                                                                        </SvgIcon>
+                                                                      </WithStyles(SvgIcon)>
+                                                                    </CheckCircle>
+                                                                  </pure(CheckCircle)>
+                                                                </span>
                                                                 <input />
                                                               </span>
                                                               <WithStyles(TouchRipple)>
@@ -3220,183 +1977,20 @@ exports[`main App tests start a search 1`] = `
                                                           <ButtonBase>
                                                             <span>
                                                               <span>
-                                                                <span />
-                                                                <input />
-                                                              </span>
-                                                              <WithStyles(TouchRipple)>
-                                                                <TouchRipple>
-                                                                  <TransitionGroup>
-                                                                    <span />
-                                                                  </TransitionGroup>
-                                                                </TouchRipple>
-                                                              </WithStyles(TouchRipple)>
-                                                            </span>
-                                                          </ButtonBase>
-                                                        </WithStyles(ButtonBase)>
-                                                      </IconButton>
-                                                    </WithStyles(IconButton)>
-                                                  </SwitchBase>
-                                                </WithStyles(SwitchBase)>
-                                              </Checkbox>
-                                            </WithStyles(Checkbox)>
-                                            <WithStyles(Typography)>
-                                              <Typography>
-                                                <span>
-                                                  Chinese (Hanzi)
-                                                </span>
-                                              </Typography>
-                                            </WithStyles(Typography)>
-                                          </label>
-                                        </FormControlLabel>
-                                      </WithStyles(FormControlLabel)>
-                                    </div>
-                                    <div>
-                                      <WithStyles(FormControlLabel)>
-                                        <FormControlLabel>
-                                          <label>
-                                            <WithStyles(Checkbox)>
-                                              <Checkbox>
-                                                <WithStyles(SwitchBase)>
-                                                  <SwitchBase>
-                                                    <WithStyles(IconButton)>
-                                                      <IconButton>
-                                                        <WithStyles(ButtonBase)>
-                                                          <ButtonBase>
-                                                            <span>
-                                                              <span>
-                                                                <span />
-                                                                <input />
-                                                              </span>
-                                                              <WithStyles(TouchRipple)>
-                                                                <TouchRipple>
-                                                                  <TransitionGroup>
-                                                                    <span />
-                                                                  </TransitionGroup>
-                                                                </TouchRipple>
-                                                              </WithStyles(TouchRipple)>
-                                                            </span>
-                                                          </ButtonBase>
-                                                        </WithStyles(ButtonBase)>
-                                                      </IconButton>
-                                                    </WithStyles(IconButton)>
-                                                  </SwitchBase>
-                                                </WithStyles(SwitchBase)>
-                                              </Checkbox>
-                                            </WithStyles(Checkbox)>
-                                            <WithStyles(Typography)>
-                                              <Typography>
-                                                <span>
-                                                  Chinese (Pinyin)
-                                                </span>
-                                              </Typography>
-                                            </WithStyles(Typography)>
-                                          </label>
-                                        </FormControlLabel>
-                                      </WithStyles(FormControlLabel)>
-                                    </div>
-                                    <div>
-                                      <WithStyles(FormControlLabel)>
-                                        <FormControlLabel>
-                                          <label>
-                                            <WithStyles(Checkbox)>
-                                              <Checkbox>
-                                                <WithStyles(SwitchBase)>
-                                                  <SwitchBase>
-                                                    <WithStyles(IconButton)>
-                                                      <IconButton>
-                                                        <WithStyles(ButtonBase)>
-                                                          <ButtonBase>
-                                                            <span>
-                                                              <span>
-                                                                <span />
-                                                                <input />
-                                                              </span>
-                                                              <WithStyles(TouchRipple)>
-                                                                <TouchRipple>
-                                                                  <TransitionGroup>
-                                                                    <span />
-                                                                  </TransitionGroup>
-                                                                </TouchRipple>
-                                                              </WithStyles(TouchRipple)>
-                                                            </span>
-                                                          </ButtonBase>
-                                                        </WithStyles(ButtonBase)>
-                                                      </IconButton>
-                                                    </WithStyles(IconButton)>
-                                                  </SwitchBase>
-                                                </WithStyles(SwitchBase)>
-                                              </Checkbox>
-                                            </WithStyles(Checkbox)>
-                                            <WithStyles(Typography)>
-                                              <Typography>
-                                                <span>
-                                                  English
-                                                </span>
-                                              </Typography>
-                                            </WithStyles(Typography)>
-                                          </label>
-                                        </FormControlLabel>
-                                      </WithStyles(FormControlLabel)>
-                                    </div>
-                                    <div>
-                                      <WithStyles(FormControlLabel)>
-                                        <FormControlLabel>
-                                          <label>
-                                            <WithStyles(Checkbox)>
-                                              <Checkbox>
-                                                <WithStyles(SwitchBase)>
-                                                  <SwitchBase>
-                                                    <WithStyles(IconButton)>
-                                                      <IconButton>
-                                                        <WithStyles(ButtonBase)>
-                                                          <ButtonBase>
-                                                            <span>
-                                                              <span>
-                                                                <span />
-                                                                <input />
-                                                              </span>
-                                                              <WithStyles(TouchRipple)>
-                                                                <TouchRipple>
-                                                                  <TransitionGroup>
-                                                                    <span />
-                                                                  </TransitionGroup>
-                                                                </TouchRipple>
-                                                              </WithStyles(TouchRipple)>
-                                                            </span>
-                                                          </ButtonBase>
-                                                        </WithStyles(ButtonBase)>
-                                                      </IconButton>
-                                                    </WithStyles(IconButton)>
-                                                  </SwitchBase>
-                                                </WithStyles(SwitchBase)>
-                                              </Checkbox>
-                                            </WithStyles(Checkbox)>
-                                            <WithStyles(Typography)>
-                                              <Typography>
-                                                <span>
-                                                  Sanskrit (IAST)
-                                                </span>
-                                              </Typography>
-                                            </WithStyles(Typography)>
-                                          </label>
-                                        </FormControlLabel>
-                                      </WithStyles(FormControlLabel)>
-                                    </div>
-                                    <div>
-                                      <WithStyles(FormControlLabel)>
-                                        <FormControlLabel>
-                                          <label>
-                                            <WithStyles(Checkbox)>
-                                              <Checkbox>
-                                                <WithStyles(SwitchBase)>
-                                                  <SwitchBase>
-                                                    <WithStyles(IconButton)>
-                                                      <IconButton>
-                                                        <WithStyles(ButtonBase)>
-                                                          <ButtonBase>
-                                                            <span>
-                                                              <span>
-                                                                <span />
+                                                                <span>
+                                                                  <pure(CheckCircle)>
+                                                                    <CheckCircle>
+                                                                      <WithStyles(SvgIcon)>
+                                                                        <SvgIcon>
+                                                                          <svg>
+                                                                            <path />
+                                                                            <path />
+                                                                          </svg>
+                                                                        </SvgIcon>
+                                                                      </WithStyles(SvgIcon)>
+                                                                    </CheckCircle>
+                                                                  </pure(CheckCircle)>
+                                                                </span>
                                                                 <input />
                                                               </span>
                                                               <WithStyles(TouchRipple)>
@@ -3440,7 +2034,362 @@ exports[`main App tests start a search 1`] = `
                                                           <ButtonBase>
                                                             <span>
                                                               <span>
-                                                                <span />
+                                                                <span>
+                                                                  <pure(CheckCircle)>
+                                                                    <CheckCircle>
+                                                                      <WithStyles(SvgIcon)>
+                                                                        <SvgIcon>
+                                                                          <svg>
+                                                                            <path />
+                                                                            <path />
+                                                                          </svg>
+                                                                        </SvgIcon>
+                                                                      </WithStyles(SvgIcon)>
+                                                                    </CheckCircle>
+                                                                  </pure(CheckCircle)>
+                                                                </span>
+                                                                <input />
+                                                              </span>
+                                                              <WithStyles(TouchRipple)>
+                                                                <TouchRipple>
+                                                                  <TransitionGroup>
+                                                                    <span />
+                                                                  </TransitionGroup>
+                                                                </TouchRipple>
+                                                              </WithStyles(TouchRipple)>
+                                                            </span>
+                                                          </ButtonBase>
+                                                        </WithStyles(ButtonBase)>
+                                                      </IconButton>
+                                                    </WithStyles(IconButton)>
+                                                  </SwitchBase>
+                                                </WithStyles(SwitchBase)>
+                                              </Checkbox>
+                                            </WithStyles(Checkbox)>
+                                            <WithStyles(Typography)>
+                                              <Typography>
+                                                <span>
+                                                  Sanskrit (Lenient)
+                                                </span>
+                                              </Typography>
+                                            </WithStyles(Typography)>
+                                          </label>
+                                        </FormControlLabel>
+                                      </WithStyles(FormControlLabel)>
+                                    </div>
+                                    <div>
+                                      <WithStyles(FormControlLabel)>
+                                        <FormControlLabel>
+                                          <label>
+                                            <WithStyles(Checkbox)>
+                                              <Checkbox>
+                                                <WithStyles(SwitchBase)>
+                                                  <SwitchBase>
+                                                    <WithStyles(IconButton)>
+                                                      <IconButton>
+                                                        <WithStyles(ButtonBase)>
+                                                          <ButtonBase>
+                                                            <span>
+                                                              <span>
+                                                                <span>
+                                                                  <pure(CheckCircle)>
+                                                                    <CheckCircle>
+                                                                      <WithStyles(SvgIcon)>
+                                                                        <SvgIcon>
+                                                                          <svg>
+                                                                            <path />
+                                                                            <path />
+                                                                          </svg>
+                                                                        </SvgIcon>
+                                                                      </WithStyles(SvgIcon)>
+                                                                    </CheckCircle>
+                                                                  </pure(CheckCircle)>
+                                                                </span>
+                                                                <input />
+                                                              </span>
+                                                              <WithStyles(TouchRipple)>
+                                                                <TouchRipple>
+                                                                  <TransitionGroup>
+                                                                    <span />
+                                                                  </TransitionGroup>
+                                                                </TouchRipple>
+                                                              </WithStyles(TouchRipple)>
+                                                            </span>
+                                                          </ButtonBase>
+                                                        </WithStyles(ButtonBase)>
+                                                      </IconButton>
+                                                    </WithStyles(IconButton)>
+                                                  </SwitchBase>
+                                                </WithStyles(SwitchBase)>
+                                              </Checkbox>
+                                            </WithStyles(Checkbox)>
+                                            <WithStyles(Typography)>
+                                              <Typography>
+                                                <span>
+                                                  Sanskrit (IAST)
+                                                </span>
+                                              </Typography>
+                                            </WithStyles(Typography)>
+                                          </label>
+                                        </FormControlLabel>
+                                      </WithStyles(FormControlLabel)>
+                                    </div>
+                                    <div>
+                                      <WithStyles(FormControlLabel)>
+                                        <FormControlLabel>
+                                          <label>
+                                            <WithStyles(Checkbox)>
+                                              <Checkbox>
+                                                <WithStyles(SwitchBase)>
+                                                  <SwitchBase>
+                                                    <WithStyles(IconButton)>
+                                                      <IconButton>
+                                                        <WithStyles(ButtonBase)>
+                                                          <ButtonBase>
+                                                            <span>
+                                                              <span>
+                                                                <span>
+                                                                  <pure(CheckCircle)>
+                                                                    <CheckCircle>
+                                                                      <WithStyles(SvgIcon)>
+                                                                        <SvgIcon>
+                                                                          <svg>
+                                                                            <path />
+                                                                            <path />
+                                                                          </svg>
+                                                                        </SvgIcon>
+                                                                      </WithStyles(SvgIcon)>
+                                                                    </CheckCircle>
+                                                                  </pure(CheckCircle)>
+                                                                </span>
+                                                                <input />
+                                                              </span>
+                                                              <WithStyles(TouchRipple)>
+                                                                <TouchRipple>
+                                                                  <TransitionGroup>
+                                                                    <span />
+                                                                  </TransitionGroup>
+                                                                </TouchRipple>
+                                                              </WithStyles(TouchRipple)>
+                                                            </span>
+                                                          </ButtonBase>
+                                                        </WithStyles(ButtonBase)>
+                                                      </IconButton>
+                                                    </WithStyles(IconButton)>
+                                                  </SwitchBase>
+                                                </WithStyles(SwitchBase)>
+                                              </Checkbox>
+                                            </WithStyles(Checkbox)>
+                                            <WithStyles(Typography)>
+                                              <Typography>
+                                                <span>
+                                                  English
+                                                </span>
+                                              </Typography>
+                                            </WithStyles(Typography)>
+                                          </label>
+                                        </FormControlLabel>
+                                      </WithStyles(FormControlLabel)>
+                                    </div>
+                                    <div>
+                                      <WithStyles(FormControlLabel)>
+                                        <FormControlLabel>
+                                          <label>
+                                            <WithStyles(Checkbox)>
+                                              <Checkbox>
+                                                <WithStyles(SwitchBase)>
+                                                  <SwitchBase>
+                                                    <WithStyles(IconButton)>
+                                                      <IconButton>
+                                                        <WithStyles(ButtonBase)>
+                                                          <ButtonBase>
+                                                            <span>
+                                                              <span>
+                                                                <span>
+                                                                  <pure(CheckCircle)>
+                                                                    <CheckCircle>
+                                                                      <WithStyles(SvgIcon)>
+                                                                        <SvgIcon>
+                                                                          <svg>
+                                                                            <path />
+                                                                            <path />
+                                                                          </svg>
+                                                                        </SvgIcon>
+                                                                      </WithStyles(SvgIcon)>
+                                                                    </CheckCircle>
+                                                                  </pure(CheckCircle)>
+                                                                </span>
+                                                                <input />
+                                                              </span>
+                                                              <WithStyles(TouchRipple)>
+                                                                <TouchRipple>
+                                                                  <TransitionGroup>
+                                                                    <span />
+                                                                  </TransitionGroup>
+                                                                </TouchRipple>
+                                                              </WithStyles(TouchRipple)>
+                                                            </span>
+                                                          </ButtonBase>
+                                                        </WithStyles(ButtonBase)>
+                                                      </IconButton>
+                                                    </WithStyles(IconButton)>
+                                                  </SwitchBase>
+                                                </WithStyles(SwitchBase)>
+                                              </Checkbox>
+                                            </WithStyles(Checkbox)>
+                                            <WithStyles(Typography)>
+                                              <Typography>
+                                                <span>
+                                                  Pali
+                                                </span>
+                                              </Typography>
+                                            </WithStyles(Typography)>
+                                          </label>
+                                        </FormControlLabel>
+                                      </WithStyles(FormControlLabel)>
+                                    </div>
+                                    <div>
+                                      <WithStyles(FormControlLabel)>
+                                        <FormControlLabel>
+                                          <label>
+                                            <WithStyles(Checkbox)>
+                                              <Checkbox>
+                                                <WithStyles(SwitchBase)>
+                                                  <SwitchBase>
+                                                    <WithStyles(IconButton)>
+                                                      <IconButton>
+                                                        <WithStyles(ButtonBase)>
+                                                          <ButtonBase>
+                                                            <span>
+                                                              <span>
+                                                                <span>
+                                                                  <pure(CheckCircle)>
+                                                                    <CheckCircle>
+                                                                      <WithStyles(SvgIcon)>
+                                                                        <SvgIcon>
+                                                                          <svg>
+                                                                            <path />
+                                                                            <path />
+                                                                          </svg>
+                                                                        </SvgIcon>
+                                                                      </WithStyles(SvgIcon)>
+                                                                    </CheckCircle>
+                                                                  </pure(CheckCircle)>
+                                                                </span>
+                                                                <input />
+                                                              </span>
+                                                              <WithStyles(TouchRipple)>
+                                                                <TouchRipple>
+                                                                  <TransitionGroup>
+                                                                    <span />
+                                                                  </TransitionGroup>
+                                                                </TouchRipple>
+                                                              </WithStyles(TouchRipple)>
+                                                            </span>
+                                                          </ButtonBase>
+                                                        </WithStyles(ButtonBase)>
+                                                      </IconButton>
+                                                    </WithStyles(IconButton)>
+                                                  </SwitchBase>
+                                                </WithStyles(SwitchBase)>
+                                              </Checkbox>
+                                            </WithStyles(Checkbox)>
+                                            <WithStyles(Typography)>
+                                              <Typography>
+                                                <span>
+                                                  Pali (Rom.)
+                                                </span>
+                                              </Typography>
+                                            </WithStyles(Typography)>
+                                          </label>
+                                        </FormControlLabel>
+                                      </WithStyles(FormControlLabel)>
+                                    </div>
+                                    <div>
+                                      <WithStyles(FormControlLabel)>
+                                        <FormControlLabel>
+                                          <label>
+                                            <WithStyles(Checkbox)>
+                                              <Checkbox>
+                                                <WithStyles(SwitchBase)>
+                                                  <SwitchBase>
+                                                    <WithStyles(IconButton)>
+                                                      <IconButton>
+                                                        <WithStyles(ButtonBase)>
+                                                          <ButtonBase>
+                                                            <span>
+                                                              <span>
+                                                                <span>
+                                                                  <pure(CheckCircle)>
+                                                                    <CheckCircle>
+                                                                      <WithStyles(SvgIcon)>
+                                                                        <SvgIcon>
+                                                                          <svg>
+                                                                            <path />
+                                                                            <path />
+                                                                          </svg>
+                                                                        </SvgIcon>
+                                                                      </WithStyles(SvgIcon)>
+                                                                    </CheckCircle>
+                                                                  </pure(CheckCircle)>
+                                                                </span>
+                                                                <input />
+                                                              </span>
+                                                              <WithStyles(TouchRipple)>
+                                                                <TouchRipple>
+                                                                  <TransitionGroup>
+                                                                    <span />
+                                                                  </TransitionGroup>
+                                                                </TouchRipple>
+                                                              </WithStyles(TouchRipple)>
+                                                            </span>
+                                                          </ButtonBase>
+                                                        </WithStyles(ButtonBase)>
+                                                      </IconButton>
+                                                    </WithStyles(IconButton)>
+                                                  </SwitchBase>
+                                                </WithStyles(SwitchBase)>
+                                              </Checkbox>
+                                            </WithStyles(Checkbox)>
+                                            <WithStyles(Typography)>
+                                              <Typography>
+                                                <span>
+                                                  Chinese (Pinyin)
+                                                </span>
+                                              </Typography>
+                                            </WithStyles(Typography)>
+                                          </label>
+                                        </FormControlLabel>
+                                      </WithStyles(FormControlLabel)>
+                                    </div>
+                                    <div>
+                                      <WithStyles(FormControlLabel)>
+                                        <FormControlLabel>
+                                          <label>
+                                            <WithStyles(Checkbox)>
+                                              <Checkbox>
+                                                <WithStyles(SwitchBase)>
+                                                  <SwitchBase>
+                                                    <WithStyles(IconButton)>
+                                                      <IconButton>
+                                                        <WithStyles(ButtonBase)>
+                                                          <ButtonBase>
+                                                            <span>
+                                                              <span>
+                                                                <span>
+                                                                  <pure(CheckCircle)>
+                                                                    <CheckCircle>
+                                                                      <WithStyles(SvgIcon)>
+                                                                        <SvgIcon>
+                                                                          <svg>
+                                                                            <path />
+                                                                            <path />
+                                                                          </svg>
+                                                                        </SvgIcon>
+                                                                      </WithStyles(SvgIcon)>
+                                                                    </CheckCircle>
+                                                                  </pure(CheckCircle)>
+                                                                </span>
                                                                 <input />
                                                               </span>
                                                               <WithStyles(TouchRipple)>
@@ -3520,6 +2469,120 @@ exports[`main App tests start a search 1`] = `
                                               <Typography>
                                                 <span>
                                                   Tibetan (EWTS)
+                                                </span>
+                                              </Typography>
+                                            </WithStyles(Typography)>
+                                          </label>
+                                        </FormControlLabel>
+                                      </WithStyles(FormControlLabel)>
+                                    </div>
+                                    <div>
+                                      <WithStyles(FormControlLabel)>
+                                        <FormControlLabel>
+                                          <label>
+                                            <WithStyles(Checkbox)>
+                                              <Checkbox>
+                                                <WithStyles(SwitchBase)>
+                                                  <SwitchBase>
+                                                    <WithStyles(IconButton)>
+                                                      <IconButton>
+                                                        <WithStyles(ButtonBase)>
+                                                          <ButtonBase>
+                                                            <span>
+                                                              <span>
+                                                                <span>
+                                                                  <pure(CheckCircle)>
+                                                                    <CheckCircle>
+                                                                      <WithStyles(SvgIcon)>
+                                                                        <SvgIcon>
+                                                                          <svg>
+                                                                            <path />
+                                                                            <path />
+                                                                          </svg>
+                                                                        </SvgIcon>
+                                                                      </WithStyles(SvgIcon)>
+                                                                    </CheckCircle>
+                                                                  </pure(CheckCircle)>
+                                                                </span>
+                                                                <input />
+                                                              </span>
+                                                              <WithStyles(TouchRipple)>
+                                                                <TouchRipple>
+                                                                  <TransitionGroup>
+                                                                    <span />
+                                                                  </TransitionGroup>
+                                                                </TouchRipple>
+                                                              </WithStyles(TouchRipple)>
+                                                            </span>
+                                                          </ButtonBase>
+                                                        </WithStyles(ButtonBase)>
+                                                      </IconButton>
+                                                    </WithStyles(IconButton)>
+                                                  </SwitchBase>
+                                                </WithStyles(SwitchBase)>
+                                              </Checkbox>
+                                            </WithStyles(Checkbox)>
+                                            <WithStyles(Typography)>
+                                              <Typography>
+                                                <span>
+                                                  Tibetan (DTS)
+                                                </span>
+                                              </Typography>
+                                            </WithStyles(Typography)>
+                                          </label>
+                                        </FormControlLabel>
+                                      </WithStyles(FormControlLabel)>
+                                    </div>
+                                    <div>
+                                      <WithStyles(FormControlLabel)>
+                                        <FormControlLabel>
+                                          <label>
+                                            <WithStyles(Checkbox)>
+                                              <Checkbox>
+                                                <WithStyles(SwitchBase)>
+                                                  <SwitchBase>
+                                                    <WithStyles(IconButton)>
+                                                      <IconButton>
+                                                        <WithStyles(ButtonBase)>
+                                                          <ButtonBase>
+                                                            <span>
+                                                              <span>
+                                                                <span>
+                                                                  <pure(CheckCircle)>
+                                                                    <CheckCircle>
+                                                                      <WithStyles(SvgIcon)>
+                                                                        <SvgIcon>
+                                                                          <svg>
+                                                                            <path />
+                                                                            <path />
+                                                                          </svg>
+                                                                        </SvgIcon>
+                                                                      </WithStyles(SvgIcon)>
+                                                                    </CheckCircle>
+                                                                  </pure(CheckCircle)>
+                                                                </span>
+                                                                <input />
+                                                              </span>
+                                                              <WithStyles(TouchRipple)>
+                                                                <TouchRipple>
+                                                                  <TransitionGroup>
+                                                                    <span />
+                                                                  </TransitionGroup>
+                                                                </TouchRipple>
+                                                              </WithStyles(TouchRipple)>
+                                                            </span>
+                                                          </ButtonBase>
+                                                        </WithStyles(ButtonBase)>
+                                                      </IconButton>
+                                                    </WithStyles(IconButton)>
+                                                  </SwitchBase>
+                                                </WithStyles(SwitchBase)>
+                                              </Checkbox>
+                                            </WithStyles(Checkbox)>
+                                            <WithStyles(Typography)>
+                                              <Typography>
+                                                <span>
+                                                  Tibetan (ALA-LC)
                                                 </span>
                                               </Typography>
                                             </WithStyles(Typography)>

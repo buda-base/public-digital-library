@@ -179,15 +179,15 @@ export const gotAnnoResource = (state: DataState, action: Action) => {
                {
                   console.log("sta",sta)
 
-                  // (AN_001)  target [ statement  WCBC2237 :translator PCBC7  ] / motiv [ assessing ] / body [ supportedBy Assertion [ comment workLocation ] score ]
-                  // (AN_002)     "         "        "          "       PCBC47 ] /   "          "           "          "           x          "          "
+                  // + (AN_001)  target [ statement  WCBC2237 :translator PCBC7  ] / motiv [ assessing ] / body [ supportedBy Assertion [ comment workLocation ] score ]
+                  // + (AN_002)     "         "        "          "       PCBC47 ] /   "          "           "          "           x          "          "
 
-                  // (NER001_001) target [ workLocation WUTDEMO @ 58-69   ] / motiv [ identifying ] / body [ Work  [ "..."@ ] ]
-                  // (NER001_002) target [ workLocation WUTDEMO @ 581-591 ] / motiv [ identifying ] / body [ Place [ "kaushambi"@sa-x-iast ] ]
-                  // (NER001_003) target NER001_002 / motiv [ questioning ] / body [ comment ]
-                  // (NER001_004) target NER001_003 / motiv [ replying    ] / body    [ TextualBody comment ] ]
+                  // + (NER001_001) target [ workLocation WUTDEMO @ 58-69   ] / motiv [ identifying ] / body [ Work  [ "..."@ ] ]
+                  // + (NER001_002) target [ workLocation WUTDEMO @ 581-591 ] / motiv [ identifying ] / body [ Place [ "kaushambi"@sa-x-iast ] ]
+                  // + (NER001_003) target NER001_002 / motiv [ questioning ] / body [ comment ]
+                  // + (NER001_004) target NER001_003 / motiv [ replying    ] / body [ TextualBody comment ] ]
 
-                  // (HIG001_001) target [ workLocation WUTDEMO @ 328-347 ] / motiv [ highlighting ]
+                  // + (HIG001_001) target [ workLocation WUTDEMO @ 328-347 ] / motiv [ highlighting ]
 
                   // (V01_001_0001) target [ workLocation WUTDEMO @ 1-26     ] / motiv [ PageMapping ] / body [ WorkLocation vol.1p.3@W22084+W4CZ5369+W30532 = vol.1p.1="1a"@WUTDEMO ]
                   // (V01_001_0002) target [ workLocation WUTDEMO @ 27-675   ] / motiv [ PageMapping ] / body [ WorkLocation vol.1p.4@W22084+W4CZ5369+W30532 = vol.1p.2="1b"@WUTDEMO ]
