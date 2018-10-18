@@ -244,6 +244,10 @@ alphanum-sort@^1.0.1, alphanum-sort@^1.0.2:
   resolved "https://registry.yarnpkg.com/alphanum-sort/-/alphanum-sort-1.0.2.tgz#97a1119649b211ad33691d9f9f486a8ec9fbe0a3"
   integrity sha1-l6ERlkmyEa0zaR2fn0hqjsn74KM=
 
+"annotated-etext-react@https://github.com/BuddhistDigitalResourceCenter/annotated-etext-react":
+  version "1.0.0"
+  resolved "https://github.com/BuddhistDigitalResourceCenter/annotated-etext-react#ee3e1b6bba0f7dba6f7ed9f8c6b129645df6780a"
+
 ansi-align@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/ansi-align/-/ansi-align-2.0.0.tgz#c36aeccba563b89ceb556f3690f0b1d9e3547f7f"
@@ -9899,6 +9903,10 @@ wbuf@^1.1.0, wbuf@^1.7.2:
   integrity sha512-O84QOnr0icsbFGLS0O3bI5FswxzRr8/gHwWkDlQFskhSPryQXvrTMxjxGP4+iWYoauLoBvfDpkrOauZ+0iZpDA==
   dependencies:
     minimalistic-assert "^1.0.0"
+
+"webannocoll-react@https://github.com/BuddhistDigitalResourceCenter/webannocoll-react":
+  version "0.0.0"
+  resolved "https://github.com/BuddhistDigitalResourceCenter/webannocoll-react#ae26bc6b5e829d2a5923356baf9463f448af620d"
 
 webidl-conversions@^3.0.0:
   version "3.0.1"

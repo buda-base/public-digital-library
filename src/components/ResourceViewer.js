@@ -41,7 +41,7 @@ import qs from 'query-string'
 import Button from '@material-ui/core/Button';
 import {Translate} from 'react-redux-i18n';
 import { Link } from 'react-router-dom';
-import AnnotatedEtextContainer from '../containers/AnnotatedEtextContainer';
+import AnnotatedEtextContainer from 'annotated-etext-react';
 import IIIFViewerContainer from '../containers/IIIFViewerContainer';
 import { Redirect404 } from "../routes.js"
 import Loader from "react-loader"
@@ -1846,8 +1846,6 @@ class ResourceViewer extends Component<Props,State>
                   else
                      return (
 
-                        //<AnnotatedEtextViewer />
-
                         <InfiniteScroll
                            hasMore={true}
                            pageStart={0}
@@ -1856,7 +1854,7 @@ class ResourceViewer extends Component<Props,State>
                            >
                            <h3 class="chunk"><span>{this.fullname(k)}</span>:&nbsp;</h3>
                            {/* {this.hasSub(k)?this.subProps(k):tags.map((e)=> [e," "] )} */}
-                           <div class="sub">                              
+                           <div class="sub">
                               <AnnotatedEtextContainer chunks={elem}/>
                            </div>
                         </InfiniteScroll>
