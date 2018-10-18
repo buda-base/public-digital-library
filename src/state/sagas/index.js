@@ -21,16 +21,16 @@ const skos = "http://www.w3.org/2004/02/skos/core#";
 let IIIFurl = "http://iiif.bdrc.io" ;
 
 const handleAuthentication = (nextState, replace) => {
-  if (/access_token|id_token|error/.test(nextState.location.hash)) {
-    auth.handleAuthentication();
-  }
+   if (/access_token|id_token|error/.test(nextState.location.hash)) {
+      auth.handleAuthentication();
+   }
 }
 
 async function initiateApp(params,iri,myprops) {
    try {
       let state = store.getState()
 
-//      console.log("youpla?",prefix)
+      //      console.log("youpla?",prefix)
 
       if(!state.data.config)
       {
@@ -52,7 +52,7 @@ async function initiateApp(params,iri,myprops) {
       {
          const onto = await api.loadOntology();
          store.dispatch(dataActions.loadedOntology(onto));
-      // console.log("params",params)
+         // console.log("params",params)
       }
 
       // [TODO] load only missing info when needed (see click on "got to annotation" for WCBC2237)
@@ -82,119 +82,119 @@ async function initiateApp(params,iri,myprops) {
          else {
             /*
             let res0 = { [ bdr+iri] : {...res["@graph"].reduce(
-               (acc,e) => {
-                  let obj = {}, q
-                  console.log("e",e)
-                  Object.keys(e).map(k => {
-                     if(!k.match(/[:@]/)) q = bdr+k
-                     else q = k
-                     console.log("k",k,q,e[k],e[k].length)
-                     if(!e[k].length && e[k]["@id"]) obj[q] = { value:e[k]["@id"].replace(/bdr:/,bdr), type:"uri"}
-                     else if(!e[k].length || Array.isArray(e[k]) || !e[k].match(/^bdr:[A-Z][A-Z0-9_]+$/)) obj[q] = e[k]
-                     else obj[q] = { value:e[k].replace(/bdr:/,bdr), type:"uri"}
-                  })
-                  return ({...acc,...obj})
-               },{}) } }
-            delete res0[bdr+iri]["@id"]
-            let lab = res0[bdr+iri][bdr+"eTextTitle"]
-            if(!lab["@value"]) lab = { "@value":lab, "@language":""}
-            console.log("lab",lab)
-            res0[bdr+iri][skos+"prefLabel"] = { "lang" : lab["@language"], value : lab["@value"] } //{ value:res0[bdr+iri]["eTextTitle"], lang:"" }
-            */
+            (acc,e) => {
+            let obj = {}, q
+            console.log("e",e)
+            Object.keys(e).map(k => {
+            if(!k.match(/[:@]/)) q = bdr+k
+            else q = k
+            console.log("k",k,q,e[k],e[k].length)
+            if(!e[k].length && e[k]["@id"]) obj[q] = { value:e[k]["@id"].replace(/bdr:/,bdr), type:"uri"}
+            else if(!e[k].length || Array.isArray(e[k]) || !e[k].match(/^bdr:[A-Z][A-Z0-9_]+$/)) obj[q] = e[k]
+            else obj[q] = { value:e[k].replace(/bdr:/,bdr), type:"uri"}
+         })
+         return ({...acc,...obj})
+      },{}) } }
+      delete res0[bdr+iri]["@id"]
+      let lab = res0[bdr+iri][bdr+"eTextTitle"]
+      if(!lab["@value"]) lab = { "@value":lab, "@language":""}
+      console.log("lab",lab)
+      res0[bdr+iri][skos+"prefLabel"] = { "lang" : lab["@language"], value : lab["@value"] } //{ value:res0[bdr+iri]["eTextTitle"], lang:"" }
+      */
 
-            store.dispatch(dataActions.getChunks(iri));
+      store.dispatch(dataActions.getChunks(iri));
 
-            let assoRes = {"data":Object.keys(res).reduce((acc,e)=>{
-               //return ({...acc,[e]:Object.keys(res[e]).map(f => ( { type:f, ...res[e][f] } ) ) } )
-                  return ({...acc, [e]: Object.keys(res[e]).reduce(
-                     (acc,f) => ([...acc, ...res[e][f] ]),
-                     [])})
-            },{})}
+      let assoRes = {"data":Object.keys(res).reduce((acc,e)=>{
+         //return ({...acc,[e]:Object.keys(res[e]).map(f => ( { type:f, ...res[e][f] } ) ) } )
+         return ({...acc, [e]: Object.keys(res[e]).reduce(
+            (acc,f) => ([...acc, ...res[e][f] ]),
+            [])})
+         },{})}
 
-            //console.log("gotAR",JSON.stringify(assoRes,null,3));
+         //console.log("gotAR",JSON.stringify(assoRes,null,3));
 
-            store.dispatch(dataActions.gotAssocResources(iri,assoRes));
+         store.dispatch(dataActions.gotAssocResources(iri,assoRes));
 
-            res = { [bdr+iri.replace(/^bdr:/,"")] : Object.keys(res).reduce((acc,e) => {
+         res = { [bdr+iri.replace(/^bdr:/,"")] : Object.keys(res).reduce((acc,e) => {
 
-               //if(Object.keys(res[e]).indexOf(skos+"prefLabel") === -1)
-                  return ({...acc, ...Object.keys(res[e]).reduce(
-                     (acc,f) => ({...acc,[f]:res[e][f]}),
-                     {}) })
+            //if(Object.keys(res[e]).indexOf(skos+"prefLabel") === -1)
+            return ({...acc, ...Object.keys(res[e]).reduce(
+               (acc,f) => ({...acc,[f]:res[e][f]}),
+               {}) })
                //else
                //   return acc
-                  /*Object.keys(res[bdr+iri][e]).reduce((ac,f) => {
-                  console.log("e,ac,f",e,ac,f)
-                  return ( { ...ac, ...res[bdr+iri][e][f] })
-               },{})})*/
-            },{}) }
+               /*Object.keys(res[bdr+iri][e]).reduce((ac,f) => {
+               console.log("e,ac,f",e,ac,f)
+               return ( { ...ac, ...res[bdr+iri][e][f] })
+            },{})})*/
+         },{}) }
 
-            store.dispatch(dataActions.gotResource(iri,res));
+         store.dispatch(dataActions.gotResource(iri,res));
 
-            //console.log("gotR",JSON.stringify(res,null,3));
+         //console.log("gotR",JSON.stringify(res,null,3));
 
 
-            /*Object.keys(res).reduce((acc,e) => {
-               return ({ ...acc, ...res[e] })
-            },{})}));*/
+         /*Object.keys(res).reduce((acc,e) => {
+         return ({ ...acc, ...res[e] })
+      },{})}));*/
 
-            //store.dispatch(dataActions.getEtext(iri))
-         }
+      //store.dispatch(dataActions.getEtext(iri))
+   }
 
-         //let t = getEntiType(iri)
-         //if(t && ["Person","Place","Topic"].indexOf(t) !== -1) {
-         //   store.dispatch(dataActions.startSearch("bdr:"+iri,"",["Any"],t)); //,params.t.split(",")));
-         //}
-      }
-      else if(!iri && params && params.p) {
+   //let t = getEntiType(iri)
+   //if(t && ["Person","Place","Topic"].indexOf(t) !== -1) {
+   //   store.dispatch(dataActions.startSearch("bdr:"+iri,"",["Any"],t)); //,params.t.split(",")));
+   //}
+}
+else if(!iri && params && params.p) {
 
-         store.dispatch(dataActions.ontoSearch(params.p));
-      }
-      else if(!iri && params && params.q) {
+   store.dispatch(dataActions.ontoSearch(params.p));
+}
+else if(!iri && params && params.q) {
 
-         if(!params.lg) params.lg = "bo-x-ewts"
-         //console.log("state q",state.data.searches,params,iri)
+   if(!params.lg) params.lg = "bo-x-ewts"
+   //console.log("state q",state.data.searches,params,iri)
 
-         if(params.t && ["Person","Work","Etext"].indexOf(params.t) !== -1
-            && (!state.data.searches || !state.data.searches[params.t] || !state.data.searches[params.t][params.q+"@"+params.lg]))
-         {
-            store.dispatch(dataActions.startSearch(params.q,params.lg,[params.t])); //,params.t.split(",")));
-            store.dispatch(uiActions.selectType(params.t));
-         }
-         else //if(!state.data.searches || !state.data.searches[params.q+"@"+params.lg])
-         {
-            store.dispatch(dataActions.startSearch(params.q,params.lg));
-         }
-      }
-      else if(!iri && params && params.r) {
-         let t = getEntiType(params.r)
+   if(params.t && ["Person","Work","Etext"].indexOf(params.t) !== -1
+   && (!state.data.searches || !state.data.searches[params.t] || !state.data.searches[params.t][params.q+"@"+params.lg]))
+   {
+      store.dispatch(dataActions.startSearch(params.q,params.lg,[params.t])); //,params.t.split(",")));
+      store.dispatch(uiActions.selectType(params.t));
+   }
+   else //if(!state.data.searches || !state.data.searches[params.q+"@"+params.lg])
+   {
+      store.dispatch(dataActions.startSearch(params.q,params.lg));
+   }
+}
+else if(!iri && params && params.r) {
+   let t = getEntiType(params.r)
 
-         //console.log("state r",state.data.searches,params,iri)
+   //console.log("state r",state.data.searches,params,iri)
 
-         let s = ["Any"]
-         //if(params.t && params.t != "Any") { s = [ params.t ] }
+   let s = ["Any"]
+   //if(params.t && params.t != "Any") { s = [ params.t ] }
 
-         if(t && ["Person","Place","Topic","Work"].indexOf(t) !== -1
-            && (!state.data.searches || !state.data.searches[params.r+"@"]))
-         {
-            store.dispatch(dataActions.startSearch(params.r,"",s,t)); //,params.t.split(",")));
-         }
-         else {
-            store.dispatch(dataActions.foundResults(params.r,"", {}, t));
-         }
-      }
-
-   } catch(e) {
-      console.error('initiateApp error: %o', e);
-      // TODO: add action for initiation failure
+   if(t && ["Person","Place","Topic","Work"].indexOf(t) !== -1
+   && (!state.data.searches || !state.data.searches[params.r+"@"]))
+   {
+      store.dispatch(dataActions.startSearch(params.r,"",s,t)); //,params.t.split(",")));
+   }
+   else {
+      store.dispatch(dataActions.foundResults(params.r,"", {}, t));
    }
 }
 
+} catch(e) {
+   console.error('initiateApp error: %o', e);
+   // TODO: add action for initiation failure
+}
+}
+
 function* watchInitiateApp() {
-      yield takeLatest(
-         INITIATE_APP,
-         (action) => initiateApp(action.payload,action.meta.iri,action.meta.auth)
-      );
+   yield takeLatest(
+      INITIATE_APP,
+      (action) => initiateApp(action.payload,action.meta.iri,action.meta.auth)
+   );
 }
 
 export function* chooseHost(host:string) {
@@ -271,7 +271,7 @@ async function createPdf(url,iri) {
    catch(e){
       console.error("ERRROR with pdf",e)
 
-         //store.dispatch(dataActions.manifestError(url,e,iri))
+      //store.dispatch(dataActions.manifestError(url,e,iri))
    }
 }
 
@@ -310,7 +310,7 @@ async function getAnnotations(iri) {
          console.log("k",k,listA[k])
 
          let collec = await api.getQueryResults(k, "", {searchType:"",L_NAME:""}, "GET","application/json"
-            ,{"Prefer": "return=representation;include=\"http://www.w3.org/ns/oa#PreferContainedDescriptions\""})
+         ,{"Prefer": "return=representation;include=\"http://www.w3.org/ns/oa#PreferContainedDescriptions\""})
 
          console.log(collec);
 
@@ -360,24 +360,24 @@ async function getManifest(url,iri) {
             /*
             if(s.label === "p. 1" && s.images && s.images[0]) {
 
-               image = s.images[0].resource["@id"]
-               console.log("image",image)
+            image = s.images[0].resource["@id"]
+            console.log("image",image)
 
-               found = true ;
+            found = true ;
 
-               store.dispatch(dataActions.firstImage(image,iri))
+            store.dispatch(dataActions.firstImage(image,iri))
 
-               break ;
-            }
-            */
+            break ;
          }
-         if(!found) {
-            if(manif.sequences[0].canvases[0] && manif.sequences[0].canvases[0].images[0] &&
-               (image = manif.sequences[0].canvases[0].images[0].resource["@id"]))
-               {
-                  let test = await api.getURLContents(image)
-                  store.dispatch(dataActions.firstImage(image,iri))
-               }
+         */
+      }
+      if(!found) {
+         if(manif.sequences[0].canvases[0] && manif.sequences[0].canvases[0].images[0] &&
+            (image = manif.sequences[0].canvases[0].images[0].resource["@id"]))
+            {
+               let test = await api.getURLContents(image)
+               store.dispatch(dataActions.firstImage(image,iri))
+            }
          }
       }
    }
@@ -419,117 +419,117 @@ function getData(result)  {
       data.etexts = Object.keys(data.chunks).map(e => ({ [e]:_.orderBy(data.chunks[e],"type") })).reduce((acc,e)=>({...acc,...e}),{})
 
       /*
-       // sorting chunks by etext & seqnum ? might break fuseki match score order
+      // sorting chunks by etext & seqnum ? might break fuseki match score order
       let pre = []
       for(let c of Object.keys(data.chunks))
       {
-         let k = data.chunks[c].filter(e => e.type.match(/forEtext$/))
-         if(k && k.length > 0) k = k[0].value
-         else k = null ;
-         let n = data.chunks[c].filter(e => e.type.match(/seqNum$/))
-         if(n && n.length > 0) n = n[0].value
-         else n = null ;
-         pre.push({ e:_.sortBy(data.chunks[c],"type"), k, c, n })
-      }
-      data.etexts = _.sortBy(pre,["k","n"]).reduce((acc,e) => ({...acc, [e.c]:e.e}),{})
-      //console.log("pre",pre,data.etexts)
-      */
-
-      delete data.chunks
+      let k = data.chunks[c].filter(e => e.type.match(/forEtext$/))
+      if(k && k.length > 0) k = k[0].value
+      else k = null ;
+      let n = data.chunks[c].filter(e => e.type.match(/seqNum$/))
+      if(n && n.length > 0) n = n[0].value
+      else n = null ;
+      pre.push({ e:_.sortBy(data.chunks[c],"type"), k, c, n })
    }
+   data.etexts = _.sortBy(pre,["k","n"]).reduce((acc,e) => ({...acc, [e.c]:e.e}),{})
+   //console.log("pre",pre,data.etexts)
+   */
 
-
-
-   if(data.works) {
-
-      let ordered = Object.keys(data.works).sort((a,b) => {
-         let propAbsA = data.works[a].filter((e)=>(e.value.match(/AbstractWork/)))
-         let propAbsB = data.works[b].filter((e)=>(e.value.match(/AbstractWork/)))
-         let propExpA = data.works[a].filter((e)=>(e.type.match(/HasExpression/)))
-         let propExpB = data.works[b].filter((e)=>(e.type.match(/HasExpression/)))
-         let propExpOfA = data.works[a].filter((e)=>(e.type.match(/ExpressionOf/)))
-         let propExpOfB = data.works[b].filter((e)=>(e.type.match(/ExpressionOf/)))
-
-         if(propAbsA.length > 0) return -1 ;
-         else if(propAbsB.length > 0) return 1 ;
-         else if(propExpA.length > 0 && propExpB.length == 0) return -1 ;
-         else if(propExpB.length > 0 && propExpA.length == 0) return 1 ;
-         else if(propExpOfA.length > 0 && propExpOfB.length == 0) return -1 ;
-         else if(propExpOfB.length > 0 && propExpOfA.length == 0) return 1 ;
-         else return 0;
-      })
-
-      let tmp = {}
-      for(let o of ordered) { tmp[o] = data.works[o]; }
-      data.works = tmp
-      // data.works = ordered.reduce((acc,k) => { acc[k]=data.works[k]; },{})
-   }
-
-   // console.log("getData#result",result)
-
-   if(Object.keys(result).length == 0) { numR = 0 }
-   else
-   {
-      numR = Object.keys(result).reduce((acc,e) => { ( acc + e=="metadata"?0:Object.keys(result[e]).length) },0)
-      if(metadata)
-      {
-         let kZ = Object.keys(metadata)
-         if(kZ.reduce((acc,k) => (acc || k.match(/^http:/) ),false))
-            numR = kZ.reduce((acc,k) => ( acc+Number(metadata[k])),0)
-
-         delete data.metadata
-      }
-   }
-
-   data = {  numResults:numR, results : { bindings: {...data } } }
-
-   return data
+   delete data.chunks
 }
 
 
-   function getStats(cat:string,data:{})
-   {
-      let stat={}
-      let config = store.getState().data.config.facets
 
-      for(let p of Object.values(data["results"]["bindings"][cat.toLowerCase()+"s"]))
+if(data.works) {
+
+   let ordered = Object.keys(data.works).sort((a,b) => {
+      let propAbsA = data.works[a].filter((e)=>(e.value.match(/AbstractWork/)))
+      let propAbsB = data.works[b].filter((e)=>(e.value.match(/AbstractWork/)))
+      let propExpA = data.works[a].filter((e)=>(e.type.match(/HasExpression/)))
+      let propExpB = data.works[b].filter((e)=>(e.type.match(/HasExpression/)))
+      let propExpOfA = data.works[a].filter((e)=>(e.type.match(/ExpressionOf/)))
+      let propExpOfB = data.works[b].filter((e)=>(e.type.match(/ExpressionOf/)))
+
+      if(propAbsA.length > 0) return -1 ;
+      else if(propAbsB.length > 0) return 1 ;
+      else if(propExpA.length > 0 && propExpB.length == 0) return -1 ;
+      else if(propExpB.length > 0 && propExpA.length == 0) return 1 ;
+      else if(propExpOfA.length > 0 && propExpOfB.length == 0) return -1 ;
+      else if(propExpOfB.length > 0 && propExpOfA.length == 0) return 1 ;
+      else return 0;
+   })
+
+   let tmp = {}
+   for(let o of ordered) { tmp[o] = data.works[o]; }
+   data.works = tmp
+   // data.works = ordered.reduce((acc,k) => { acc[k]=data.works[k]; },{})
+}
+
+// console.log("getData#result",result)
+
+if(Object.keys(result).length == 0) { numR = 0 }
+else
+{
+   numR = Object.keys(result).reduce((acc,e) => { ( acc + e=="metadata"?0:Object.keys(result[e]).length) },0)
+   if(metadata)
+   {
+      let kZ = Object.keys(metadata)
+      if(kZ.reduce((acc,k) => (acc || k.match(/^http:/) ),false))
+      numR = kZ.reduce((acc,k) => ( acc+Number(metadata[k])),0)
+
+      delete data.metadata
+   }
+}
+
+data = {  numResults:numR, results : { bindings: {...data } } }
+
+return data
+}
+
+
+function getStats(cat:string,data:{})
+{
+   let stat={}
+   let config = store.getState().data.config.facets
+
+   for(let p of Object.values(data["results"]["bindings"][cat.toLowerCase()+"s"]))
+   {
+      // console.log("p",p);
+      for(let f of Object.keys(config[cat]))
       {
-         // console.log("p",p);
-         for(let f of Object.keys(config[cat]))
+         let tmp = p.filter((e) => (e.type == config[cat][f]))
+         if(tmp.length > 0) for(let t of tmp)
          {
-            let tmp = p.filter((e) => (e.type == config[cat][f]))
-            if(tmp.length > 0) for(let t of tmp)
-            {
-               if(!stat[f]) stat[f] = {}
-               let pre = stat[f][t.value]
-               if(!pre) pre = 1
-               else pre ++ ;
-               stat[f][t.value] = pre ;
-               // console.log("f+1",f,tmp,pre)
-            }
+            if(!stat[f]) stat[f] = {}
+            let pre = stat[f][t.value]
+            if(!pre) pre = 1
+            else pre ++ ;
+            stat[f][t.value] = pre ;
+            // console.log("f+1",f,tmp,pre)
          }
       }
-      return stat
    }
+   return stat
+}
 
-   function addMeta(keyword:string,language:string,data:{},t:string,tree:{})
-   {
-      if(data["results"] &&  data["results"]["bindings"] && data["results"]["bindings"][t.toLowerCase()+"s"]){
-         console.log("FOUND",data);
-         let stat = getStats(t,data);
+function addMeta(keyword:string,language:string,data:{},t:string,tree:{})
+{
+   if(data["results"] &&  data["results"]["bindings"] && data["results"]["bindings"][t.toLowerCase()+"s"]){
+      console.log("FOUND",data);
+      let stat = getStats(t,data);
 
-         if(tree)
-         {
-            stat = { ...stat, tree }
-         }
-
-         console.log("stat",stat)
-         store.dispatch(dataActions.foundResults(keyword, language, data, [t]));
-         store.dispatch(dataActions.foundFacetInfo(keyword,language,[t],stat))
+      if(tree)
+      {
+         stat = { ...stat, tree }
       }
-   }
 
- async function startSearch(keyword,language,datatype,sourcetype) {
+      console.log("stat",stat)
+      store.dispatch(dataActions.foundResults(keyword, language, data, [t]));
+      store.dispatch(dataActions.foundFacetInfo(keyword,language,[t],stat))
+   }
+}
+
+async function startSearch(keyword,language,datatype,sourcetype) {
 
    console.log("sSsearch",keyword,language,datatype,sourcetype);
 
@@ -542,11 +542,16 @@ function getData(result)  {
       let result ;
 
       if(!sourcetype)
-         result = await api.getStartResults(keyword,language,datatype);
+      result = await api.getStartResults(keyword,language,datatype);
       else
-         result = await api.getAssocResults(keyword,sourcetype);
+      result = await api.getAssocResults(keyword,sourcetype);
 
-      if(result && result.data) result.data = Object.keys(result.data).reduce((acc,e)=>({ ...acc, [e.replace(/^.*?[/][^/]+$/)] : result.data[e] }),{})
+      // adapt to new JSON format
+      if(result)
+         result = Object.keys(result).reduce((acc,e)=>({ ...acc, [e.replace(/^.*[/](Etext)?([^/]+)$/,"$2s").toLowerCase()] : result[e] }),{})
+
+
+      console.log("newRes",result)
 
       store.dispatch(uiActions.loading(keyword, false));
 
@@ -559,108 +564,108 @@ function getData(result)  {
       let metadata = result.metadata;
       //console.log("meta",metadata)
 
-/*
+      /*
       if(datatype && datatype.indexOf("Any") === -1) {
-         result = { [datatype[0].toLowerCase()+"s"] : result.data }
+      result = { [datatype[0].toLowerCase()+"s"] : result.data }
+   }
+   */
+
+
+   if(sourcetype)
+   {
+      let metaSav = result.metadata
+      metadata = {}
+      let data = {}
+      for(let k of Object.keys(result)) {
+         let t = k.replace(/^associated|s$/g,"").toLowerCase().replace(/people/,"person")
+         if(t != "metadata" && t != "tree"  && Object.keys(result[k]).length > 0) {
+            data = { ...data, [t+"s"]:result[k] }
+            metadata = { ...metadata, [t]:Object.keys(result[k]).length }
+         }
       }
+
+      console.log("data",data,result)
+
+      data = getData(data);
+      store.dispatch(dataActions.foundResults(keyword, language, data, datatype));
+      store.dispatch(dataActions.foundDatatypes(keyword,{ metadata, hash:true}));
+
+      let newMeta = {}
+
+      addMeta(keyword,language,data,"Person");
+      addMeta(keyword,language,data,"Work",result.tree);
+      addMeta(keyword,language,data,"Lineage");
+      addMeta(keyword,language,data,"Place");
+
+      console.log("sourcetype",data)
+
+      /*
+      if(metaSav) {
+      if(metaSav.total) delete metaSav.total
+
+      if(metaSav["http://purl.bdrc.io/resource/GenderMale"] || metaSav["http://purl.bdrc.io/resource/GenderFemale"]) {
+      store.dispatch(dataActions.foundResults(keyword, language, data, ["Person"]));
+      store.dispatch(dataActions.foundFacetInfo(keyword,language,datatype,{"gender":metaSav }))
+   }
+   else if(metaSav["license"]) {
+   store.dispatch(dataActions.foundResults(keyword, language, data, ["Work"]));
+   store.dispatch(dataActions.foundFacetInfo(keyword,language,datatype,metaSav))
+}
+}
 */
+}
+else {
+
+   let data = getData(result);
+
+   store.dispatch(dataActions.foundResults(keyword, language, data, datatype));
+
+   if(!datatype || datatype.indexOf("Any") !== -1) {
+      store.dispatch(dataActions.foundDatatypes(keyword,{ metadata:metadata, hash:true}));
+   }
+   else {
+
+      if(datatype.indexOf("Person") !== -1) {
+         store.dispatch(dataActions.foundFacetInfo(keyword,language,datatype,{"gender":metadata }))
+      }
+      else if(datatype.indexOf("Work") !== -1 || datatype.indexOf("Etext") !== -1) {
+
+         metadata = { ...metadata, tree:result.tree}
+
+         if(datatype.indexOf("Work") !== -1 ) addMeta(keyword,language,data,"Work",result.tree);
+         else store.dispatch(dataActions.foundFacetInfo(keyword,language,datatype,metadata))
+      }
 
 
-      if(sourcetype)
-      {
-         let metaSav = result.metadata
-         metadata = {}
-         let data = {}
-         for(let k of Object.keys(result)) {
-            let t = k.replace(/^associated|s$/g,"").toLowerCase().replace(/people/,"person")
-            if(t != "metadata" && t != "tree"  && Object.keys(result[k]).length > 0) {
-               data = { ...data, [t+"s"]:result[k] }
-               metadata = { ...metadata, [t]:Object.keys(result[k]).length }
-            }
-         }
+      if(!store.getState().data.searches[keyword+"@"+language]){
+         store.dispatch(dataActions.getDatatypes());
+         result = await api.getStartResults(keyword,language);
 
-         console.log("data",data,result)
+         if(result.metadata && result.metadata[bdo+"Etext"] == 0)
+         delete result.metadata[bdo+"Etext"]
 
-         data = getData(data);
-         store.dispatch(dataActions.foundResults(keyword, language, data, datatype));
+         metadata = result.metadata;
+         data = getData(result);
+         store.dispatch(dataActions.foundResults(keyword, language, data));
          store.dispatch(dataActions.foundDatatypes(keyword,{ metadata, hash:true}));
-
-         let newMeta = {}
-
-         addMeta(keyword,language,data,"Person");
-         addMeta(keyword,language,data,"Work",result.tree);
-         addMeta(keyword,language,data,"Lineage");
-         addMeta(keyword,language,data,"Place");
-
-         console.log("sourcetype",data)
-
-         /*
-         if(metaSav) {
-            if(metaSav.total) delete metaSav.total
-
-            if(metaSav["http://purl.bdrc.io/resource/GenderMale"] || metaSav["http://purl.bdrc.io/resource/GenderFemale"]) {
-               store.dispatch(dataActions.foundResults(keyword, language, data, ["Person"]));
-               store.dispatch(dataActions.foundFacetInfo(keyword,language,datatype,{"gender":metaSav }))
-            }
-            else if(metaSav["license"]) {
-               store.dispatch(dataActions.foundResults(keyword, language, data, ["Work"]));
-               store.dispatch(dataActions.foundFacetInfo(keyword,language,datatype,metaSav))
-            }
-         }
-         */
       }
-      else {
-
-         let data = getData(result);
-
-         store.dispatch(dataActions.foundResults(keyword, language, data, datatype));
-
-         if(!datatype || datatype.indexOf("Any") !== -1) {
-            store.dispatch(dataActions.foundDatatypes(keyword,{ metadata:metadata, hash:true}));
-         }
-         else {
-
-            if(datatype.indexOf("Person") !== -1) {
-               store.dispatch(dataActions.foundFacetInfo(keyword,language,datatype,{"gender":metadata }))
-            }
-            else if(datatype.indexOf("Work") !== -1 || datatype.indexOf("Etext") !== -1) {
-
-               metadata = { ...metadata, tree:result.tree}
-
-               if(datatype.indexOf("Work") !== -1 ) addMeta(keyword,language,data,"Work",result.tree);
-               else store.dispatch(dataActions.foundFacetInfo(keyword,language,datatype,metadata))
-            }
-
-
-            if(!store.getState().data.searches[keyword+"@"+language]){
-               store.dispatch(dataActions.getDatatypes());
-               result = await api.getStartResults(keyword,language);
-
-               if(result.metadata && result.metadata[bdo+"Etext"] == 0)
-                  delete result.metadata[bdo+"Etext"]
-
-               metadata = result.metadata;
-               data = getData(result);
-               store.dispatch(dataActions.foundResults(keyword, language, data));
-               store.dispatch(dataActions.foundDatatypes(keyword,{ metadata, hash:true}));
-            }
-         }
-      }
-
-      // store.dispatch(dataActions.foundDatatypes(keyword, JSON.parse(result.metadata).results));
-      //store.dispatch(dataActions.foundResults(keyword, language,result));
-      //yield put(uiActions.showResults(keyword, language));
-
-   } catch(e) {
-
-      console.error("startSearch failed",e);
-
-      store.dispatch(dataActions.searchFailed(keyword, e.message));
-      store.dispatch(uiActions.loading(keyword, false));
    }
 }
 
- async function searchKeyword(keyword,language,datatype) {
+// store.dispatch(dataActions.foundDatatypes(keyword, JSON.parse(result.metadata).results));
+//store.dispatch(dataActions.foundResults(keyword, language,result));
+//yield put(uiActions.showResults(keyword, language));
+
+} catch(e) {
+
+   console.error("startSearch failed",e);
+
+   store.dispatch(dataActions.searchFailed(keyword, e.message));
+   store.dispatch(uiActions.loading(keyword, false));
+}
+}
+
+async function searchKeyword(keyword,language,datatype) {
 
    console.log("searchK",keyword,language,datatype);
 
@@ -670,9 +675,9 @@ function getData(result)  {
       let result ;
 
       if(!datatype || datatype.indexOf("Any") !== -1)
-         result = await api.getResults(keyword,language);
+      result = await api.getResults(keyword,language);
       else
-         result = await api.getResultsOneDatatype(datatype,keyword,language);
+      result = await api.getResultsOneDatatype(datatype,keyword,language);
 
       store.dispatch(uiActions.loading(keyword, false));
       store.dispatch(dataActions.foundResults(keyword, language,result));
