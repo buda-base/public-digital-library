@@ -465,9 +465,8 @@ if(data.works) {
    // data.works = ordered.reduce((acc,k) => { acc[k]=data.works[k]; },{})
 }
 
-// console.log("getData#result",result)
 
-if(Object.keys(result).length == 0) { numR = 0 }
+if(Object.keys(result).length == 0 || (Object.keys(result).length == 1 && result["metadata"])) { numR = 0 }
 else
 {
    numR = Object.keys(result).reduce((acc,e) => { ( acc + e=="metadata"?0:Object.keys(result[e]).length) },0)
@@ -480,6 +479,8 @@ else
       delete data.metadata
    }
 }
+
+console.log("getData#result",result,numR)
 
 data = {  numResults:numR, results : { bindings: {...data } } }
 
