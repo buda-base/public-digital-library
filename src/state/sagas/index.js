@@ -480,7 +480,7 @@ else
    }
 }
 
-console.log("getData#result",result,numR)
+//console.log("getData#result",result,numR)
 
 data = {  numResults:numR, results : { bindings: {...data } } }
 

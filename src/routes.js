@@ -80,6 +80,15 @@ const makeMainRoutes = () => {
                         </div>
                      )
                   }}/>
+                  <Route exact path="/logout" render={(props) => {
+                     auth.logout(1000);
+                     return (
+                        <div style={{textAlign:"center",marginTop:"100px",fontSize:"22px"}}>
+                           You have been logged out <br/>
+                           Redirecting to homepage
+                        </div>
+                     )
+                  }}/>
                   <Route exact path="/" render={(props) => {
                      store.dispatch(initiateApp());
                      return ( <AppContainer history={history} auth={auth}/> ) } } />
