@@ -1407,6 +1407,10 @@ class ResourceViewer extends Component<Props,State>
 
       console.log("kZprop",kZprop)
 
+      let iiifpres = "http://iiifpres.bdrc.io" ;
+      if(this.props.config && this.props.config.iiifpres) iiifpres = this.props.config.iiifpres.endpoints[this.props.config.iiifpres.index]
+
+
       let kZasso ;
       if (this.props.assocResources) {
          kZasso = Object.keys(this.props.assocResources) ;
@@ -1422,8 +1426,8 @@ class ResourceViewer extends Component<Props,State>
 
                this.setState({...this.state, imageLoaded:false})
 
-               if(assoc.length == 1) { this.props.onHasImageAsset("http://iiifpres.bdrc.io/2.1.1/v:bdr:"+this.pretty(assoc[0].value)+"/manifest",this.props.IRI); }
-               else { this.props.onHasImageAsset("http://iiifpres.bdrc.io/2.1.1/collection/i:bdr:"+this.pretty(e.value),this.props.IRI);  }
+               if(assoc.length == 1) { this.props.onHasImageAsset(iiifpres+"/2.1.1/v:bdr:"+this.pretty(assoc[0].value)+"/manifest",this.props.IRI); }
+               else { this.props.onHasImageAsset(iiifpres+"/2.1.1/collection/i:bdr:"+this.pretty(e.value),this.props.IRI);  }
 
             }
          }
@@ -1499,7 +1503,7 @@ class ResourceViewer extends Component<Props,State>
       {
          if(!this.props.imageAsset && !this.props.manifestError) {
             this.setState({...this.state, imageLoaded:false})
-            this.props.onHasImageAsset("http://iiifpres.bdrc.io/2.1.1/v:"+ this.props.IRI+ "/manifest",this.props.IRI);
+            this.props.onHasImageAsset(iiifpres+"/2.1.1/v:"+ this.props.IRI+ "/manifest",this.props.IRI);
          }
       }
       else if(kZprop.indexOf(bdo+"hasIIIFManifest") !== -1)
