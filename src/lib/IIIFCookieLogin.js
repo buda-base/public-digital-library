@@ -1,49 +1,55 @@
 import React,{ Component } from 'react';
 import { Route } from 'react-router-dom';
-import { withCookies } from 'react-cookie';
-import {auth} from '../routes'
+import bdrcApi from './api';
 
 class IIIFCookieLogin extends Component
 {
-   componentWillMount()
+   async componentWillMount()
    {
 
-         console.log("cookies",this.props.cookies,auth.isAuthenticated())
+       const api = new bdrcApi({...global.inTest ? {server:"http://localhost:5555"}:{}});
+       const config = await api.loadConfig();
+       this.props.auth.setConfig(config.auth)
 
-         let origin = this.props.get["origin"], messageId = this.props.get["messageId"]
-         let error, description
-         if(!origin || !messageId) {
-            error = "invalidRequest"
-            description = "argument missing:"
-            if(!origin) description += "origin"
-            if(!messageId) description += (description.match(/:$/)?'':', ')+"messageId"
-            if(!origin) origin = window.location.href
-         }
-         else if(auth.isAuthenticated())
-         {
-            error = false ;
-            this.props.cookies.set('auth0token', localStorage.getItem("access_token") );
-            console.log("cookies",this.props.cookies)
-         }
-         else
-         {
-            error = "unavailable"
-            description = "no valid token available"
-         }
-         if(error != false) {
-            window.parent.postMessage( { error, description }, origin );
-            console.error(this.props.cookies)
-         }
-         setTimeout(function() { window.close() }, 1000)
+       let isAuth = isAuth = this.props.auth.isAuthenticated()
+       console.log("cookies",document.cookie,isAuth)
+
+       let origin = this.props.get["origin"], messageId = this.props.get["messageId"]
+       let error, description
+       if(!origin || !messageId) {
+          error = "invalidRequest"
+          description = "argument missing:"
+          if(!origin) description += "origin"
+          if(!messageId) description += (description.match(/:$/)?'':', ')+"messageId"
+          if(!origin) origin = window.location.href
+       }
+       else if(isAuth)
+       {
+          error = false ;
+          //document.cookie = 'auth0token='+localStorage.getItem("access_token")+";path=*.bdrc.io;";
+          //console.log("cookies",document.cookie)
+       }
+       else
+       {
+          error = false
+          this.props.auth.login()
+       }
+       if(error != false) {
+          window.parent.postMessage( { error, description }, origin );
+          console.error(document.cookie)
+       }
+       setTimeout(function() { window.close() }, 1000)
+
 
    }
 
    render()
    {
+     console.log("render IIIF")
       return (<div>Cookie store<br/>Closing window</div>)
 
    }
 }
 
 
-export default withCookies(IIIFCookieLogin)
+export default IIIFCookieLogin

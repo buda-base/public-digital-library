@@ -10,7 +10,6 @@ import ResourceViewerContainer from './containers/ResourceViewerContainer'
 import IIIFViewerContainer from './containers/IIIFViewerContainer'
 import IIIFCookieLogin from './lib/IIIFCookieLogin';
 import { initiateApp } from './state/actions';
-import { CookiesProvider } from 'react-cookie';
 
 import store from './index';
 import * as ui from './state/ui/actions'
@@ -70,7 +69,6 @@ const handleAuthentication = (nextState, replace) => {
 const makeMainRoutes = () => {
 
    return (
-      <CookiesProvider>
         <Provider store={store}>
            <MuiThemeProvider theme={theme}>
               <Router history={history}>
@@ -85,12 +83,12 @@ const makeMainRoutes = () => {
                         )
                      }}/>
                      <Route exact path="/iiifcookielogin" render={(props) => {
-                        return (<IIIFCookieLogin get={qs.parse(history.location.search)}/>)
+                        return (<IIIFCookieLogin auth={auth} get={qs.parse(history.location.search)}/>)
                      } } />
                      <Route exact path="/iiiftoken" render={(props) => {
                         let get = qs.parse(history.location.search), messageId = get["messageId"], origin = get["origin"],
                            isAuth = auth.isAuthenticated()
-                        console.log("youpiii?",get)
+
                         if(isAuth && messageId && origin)
                         {
                            window.parent.postMessage(
@@ -155,26 +153,9 @@ const makeMainRoutes = () => {
                </Router>
             </MuiThemeProvider>
          </Provider>
-      </CookiesProvider>
   );
 }
 
- // to check whether postMessage is working (it is)
-window.addEventListener("message", receive_message);
-
-function receive_message(event) {
-    let data = event.data;
-    var token, error;
-    console.log(event);
-    //alert("message:"+JSON.stringify(data,null,3));
-
-    // if (data.hasOwnProperty('accessToken')) {
-    //     token = data.accessToken;
-    // } else {
-    //     // handle error condition
-    // }
-    // ...
-}
 
 
 export default makeMainRoutes ;
