@@ -110,6 +110,13 @@ export const pdfReady = (url: string, iri:string): Action => {
 }
 
 
+TYPES.resetSearch = 'RESET_SEARCH';
+export const resetSearch = (): Action => {
+    return {
+        type: TYPES.resetSearch
+    }
+}
+
 TYPES.ontoSearch = 'ONTO_SEARCH';
 export const ontoSearch = (k: string): Action => {
     return {

@@ -54,6 +54,16 @@ export const loadedOntology = (state: DataState, action: Action) => {
 }
 reducers[actions.TYPES.loadedOntology] = loadedOntology;
 
+export const resetSearch = (state: DataState, action: Action) => {
+    return {
+        ...state,
+        datatypes:null,
+        keyword: null,
+        language:"bo-x-ewts"
+    }
+}
+reducers[actions.TYPES.resetSearch] = resetSearch;
+
 export const ontoSearch = (state: DataState, action: Action) => {
     return {
         ...state,

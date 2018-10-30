@@ -202,6 +202,7 @@ type Props = {
    history:{},
    ontology:{},
    ontoSearch:string,
+   onResetSearch:()=>void,
    onOntoSearch:(k:string)=>void,
    onStartSearch:(k:string,lg:string,t?:string)=>void,
    onSearchingKeyword:(k:string,lg:string,t?:string[])=>void,
@@ -285,7 +286,7 @@ class App extends Component<Props,State> {
    {
       console.log("key",key,label)
 
-      if(!key || key == "") return ;
+      if(!key || key == "" || !key.match) return ;
       if(!key.match(/:/) && key.indexOf("\"") === -1) key = "\""+key+"\""
 
       let state = { ...this.state, dataSource:[] }
@@ -2082,6 +2083,7 @@ class App extends Component<Props,State> {
                   <Menu/>
                </IconButton>
                <SearchBar
+                  closeIcon={<Close className="searchClose" style={ {color:"rgba(0,0,0,1.0)",opacity:1} } onClick={() => { this.props.history.push({pathname:"/",search:""}); this.props.onResetSearch();} }/>}
                   disabled={this.props.hostFailure}
                   onChange={(value:string) => { this.setState({keyword:value, dataSource: [ value, "possible suggestion","another possible suggestion"]}); } }
                   onRequestSearch={this.requestSearch.bind(this)}

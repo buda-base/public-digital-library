@@ -1,6 +1,7 @@
 // @flow
 import React from 'react';
 import { connect } from 'react-redux';
+import {initiateApp} from '../state/actions';
 import * as data from '../state/data/actions';
 import * as ui from '../state/ui/actions';
 import store from '../index';
@@ -40,6 +41,9 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch, ownProps) => {
    return {
+      onResetSearch:() => {
+         dispatch(data.resetSearch())
+      },
       onOntoSearch:(k:string) => {
          dispatch(data.ontoSearch(k));
       },
