@@ -135,6 +135,7 @@ const makeMainRoutes = () => {
                         //if(!store.getState().data.ontology)
                         {
                            //console.log("new route",props,store.getState())
+                           //if(!store.getState().ui.loading) 
                            store.dispatch(initiateApp(qs.parse(history.location.search)))
                         }
                         return ( <AppContainer history={history}  auth={auth}/> ) } } />

@@ -300,36 +300,16 @@ class App extends Component<Props,State> {
 
          this.props.history.push({pathname:"/search",search:"?r="+key+(label?"&t="+label:"")})
 
-         if(!this.props.searches[key+"@"+this.getLanguage()]) {
-
-            this.props.onStartSearch(key,"",[label],getEntiType(key))
-         }
       }
       else if(key.match(/^[^:]*:[^ ]+/))
       {
          this.props.history.push({pathname:"/search",search:"?p="+key})
 
-         if(!this.props.searches[key+"@"+this.getLanguage()]) {
-
-            this.props.onOntoSearch(key)
-         }
-         /*
-         let id = key.replace(/["]/g,"")
-         for(let k of Object.keys(prefixesMap)) {
-            id = id.replace(new RegExp(k+":"),prefixesMap[k])
-         }
-         state["ontoSearch"] = id
-         this.setState(state)
-         */
       }
       else if(label === "Any" || ( !label)) // && ( this.state.filters.datatype.length === 0 || this.state.filters.datatype.indexOf("Any") !== -1 ) ) )
       {
          this.props.history.push({pathname:"/search",search:"?q="+key+"&lg="+this.getLanguage()+"&t="+this.state.filters.datatype[0]})
 
-         if(!this.props.searches[key+"@"+this.getLanguage()]) {
-
-            this.props.onStartSearch(key,this.getLanguage())
-         }
 
       }
       else if (label || this.state.filters.datatype.filter((f)=>["Person","Work","Etext"].indexOf(f) !== -1).length > 0)
@@ -338,10 +318,6 @@ class App extends Component<Props,State> {
 
          this.props.history.push({pathname:"/search",search:"?q="+key+"&lg="+this.getLanguage()+"&t="+label})
 
-         if(!this.props.searches[label] || !this.props.searches[label][key+"@"+this.getLanguage()]) {
-
-            this.props.onStartSearch(key,this.getLanguage(),[label])
-         }
 
       }
 
