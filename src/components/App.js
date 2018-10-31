@@ -1054,9 +1054,9 @@ class App extends Component<Props,State> {
 
                      }
 
-                     types = types.sort(function(a,b) { return counts["datatype"][a] < counts["datatype"][b] })
+                     types = types.sort(function(a,b) { return Number(counts["datatype"][b]) - Number(counts["datatype"][a]) })
 
-                     //console.log("counts",counts)
+                     console.log("counts",counts,types)
 
                   }
 
