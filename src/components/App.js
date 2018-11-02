@@ -343,11 +343,19 @@ class App extends Component<Props,State> {
    componentDidUpdate() {
 
       // console.log("didU",this.state.facets,this.props,this.state.filters.datatype)
+
+      if(this.props.language == "" && (!this.props.resources || !this.props.resources[this.props.keyword]))
+      {
+         console.log("gRes?",this.props.resources,this.props.keyword);
+         this.props.onGetResource(this.props.keyword);
+      }
+
    }
 
    componentWillUpdate(newProps,newState) {
 
       if(!global.inTest) console.log("willU",newProps,newState)
+
 
       let update = false ;
       let state = newState ;
@@ -967,17 +975,13 @@ class App extends Component<Props,State> {
                   }
                }
             }
-            else if(!this.props.resources || !this.props.resources[this.props.keyword])
-            {
-               this.props.onGetResource(this.props.keyword);
-            }
-            else
+            else if(this.props.resources &&  this.props.resources[this.props.keyword] )
             {
 
 
                let l ; // sublist[o].filter((e) => (e.type && e.type.match(/prefLabelMatch$/)))[0]
                let labels = this.props.resources[this.props.keyword]
-               if(labels)
+               if(labels && labels != true)
                {
                   if(labels) labels = labels[this.props.keyword.replace(/bdr:/,bdr)]
                   if(labels) {
@@ -1159,7 +1163,7 @@ class App extends Component<Props,State> {
                      })
                      //console.log(JSON.stringify(sList,null,3));
                      label = getLangLabel(this,sList, true)
-                     if(label.length > 0) label = label[0]
+                     if(label && label.length > 0) label = label[0]
                      /*
                      label = sublist[o].filter(
                         (e) => (e.type && e.type.match(/(prefLabel(Match)?|eTextTitle)$/) && (e["lang"] == this.props.language || e["xml:lang"] == this.props.language)))[0]
