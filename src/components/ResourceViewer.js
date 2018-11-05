@@ -1870,7 +1870,7 @@ class ResourceViewer extends Component<Props,State>
 
          } ) }
 
-         { ["Role"].indexOf(getEntiType(this.props.IRI)) !== -1 &&
+         { ["Role"].indexOf(getEntiType(this.props.IRI)) !== -1 && this.props.assocResources && Object.keys(this.props.assocResources).length > 0 &&
             <div>
                <h3><span>Associated Persons</span>:&nbsp;</h3>
             {   this.props.assocResources &&

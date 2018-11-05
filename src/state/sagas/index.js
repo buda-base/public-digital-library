@@ -174,7 +174,7 @@ else if(!iri && params && params.r) {
    let s = ["Any"]
    //if(params.t && params.t != "Any") { s = [ params.t ] }
 
-   if(t && ["Person","Place","Topic","Work"].indexOf(t) !== -1
+   if(t && ["Person","Place","Topic","Work","Role"].indexOf(t) !== -1
    && (!state.data.searches || !state.data.searches[params.r+"@"]))
    {
       store.dispatch(dataActions.startSearch(params.r,"",s,t)); //,params.t.split(",")));
@@ -565,6 +565,12 @@ async function startSearch(keyword,language,datatype,sourcetype) {
       {
          delete result.metadata[bdo+"Etext"]
          //console.log("deleted")
+      }
+
+      if(sourcetype == 'Role' && result.data)
+      {
+         result["people"] = { ...result.data }
+         delete result.data ;
       }
 
       let metadata = result.metadata;
