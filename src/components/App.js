@@ -1291,8 +1291,9 @@ class App extends Component<Props,State> {
 
                      let lit ;
                      if(r.lit) { lit = this.highlight(r.lit.value,k) }
-                     let lang = r.lit["lang"]
-                     if(!lang) lang = r.lit["xml:lang"]
+                     let lang ;
+                     if(r.lit) lang= r.lit["lang"]
+                     if(r.lit && !lang) lang = r.lit["xml:lang"]
                      let typ ;
                      //if(r.f && r.f.value) typ = r.f.value.replace(/^.*?([^/]+)$/,"$1")
 
