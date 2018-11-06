@@ -1623,7 +1623,7 @@ class ResourceViewer extends Component<Props,State>
                            key = key.props
                            if(key) key = key.children
 
-                           console.log("key",key)
+                           //console.log("key",key)
 
                            if(key && key[0] && key[0].props && key[0].props.children
                               && (

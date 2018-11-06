@@ -3,6 +3,7 @@ import type { Action } from '../actions';
 import type {SearchAction,SearchFailedAction} from './actions';
 import createReducer from '../../lib/createReducer';
 import * as actions from './actions';
+import _ from 'lodash';
 
 let reducers = {};
 
@@ -91,7 +92,40 @@ export const gotResource = (state: DataState, action: Action) => {
         ...state,
         "resources": {
            ...state.resources,
-           [action.payload]:action.meta
+           [action.payload]:Object.keys(action.meta).reduce((acc1,k1) => {
+             const bdo  = "http://purl.bdrc.io/ontology/core/";
+             const bdr  = "http://purl.bdrc.io/resource/";
+             let k = action.payload.replace(/bdr:/,bdr)
+             //console.log("k",k,k1)
+             if(k1 != k) return { ...acc1,[k1]:Object.keys(action.meta[k1]).reduce( (acc2,k2) => {
+                if(k2 != bdo+"volumeHasEtext") return { ...acc2, [k2]:action.meta[k1][k2] }
+                else {
+                  let tab = action.meta[k1][k2].map(e => {
+                    let index = action.meta[e.value]
+                    if(index) index = index[bdo+"seqNum"]
+                    if(index) index = index[0]
+                    if(index) index = Number(index.value)
+                    return ({...e, index})
+                  })
+                  tab = _.orderBy(tab,['index'],['ASC'])
+                  return {...acc2, [k2]:tab }
+                }
+             },{})}
+             else return {...acc1,[k1]:Object.keys(action.meta[k1]).reduce( (acc2,k2) => {
+                if(k2 != bdo+"itemHasVolume") return { ...acc2, [k2]:action.meta[k1][k2] }
+                else {
+                  let tab = action.meta[k1][k2].map(e => {
+                    let index = action.meta[e.value]
+                    if(index) index = index[bdo+"volumeNumber"]
+                    if(index) index = index[0]
+                    if(index) index = Number(index.value)
+                    return ({...e, index})
+                  })
+                  tab = _.orderBy(tab,['index'],['ASC'])
+                  return {...acc2, [k2]:tab }
+                }
+             },{})}
+           },{})
        }
     }
 }
