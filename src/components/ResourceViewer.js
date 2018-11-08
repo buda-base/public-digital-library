@@ -1859,7 +1859,7 @@ class ResourceViewer extends Component<Props,State>
                            <h3 class="chunk"><span>{this.fullname(k)}</span>:&nbsp;</h3>
                            {/* {this.hasSub(k)?this.subProps(k):tags.map((e)=> [e," "] )} */}
                            <div class="sub">
-                              <AnnotatedEtextContainer chunks={elem}/>
+                              <AnnotatedEtextContainer dontSelect={true} chunks={elem}/>
                            </div>
                         </InfiniteScroll>
                      )
