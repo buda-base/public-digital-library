@@ -588,7 +588,8 @@ reducers[actions.TYPES.foundDatatypes] = foundDatatypes;
 export const pdfReady = (state: DataState, action: Action) => {
 
       let id = new RegExp(action.meta.url.replace(/[/](zip|pdf)[/]/,"/.../"))
-      let fileT = action.payload.replace(/^.*[.](...)$/,"$1File")
+      //let fileT = action.payload.replace(/^.*[.](...)$/,"$1File")
+      let fileT = action.payload.replace(/^.*[/]file[/](...)[/].*$/,"$1File")
       let pdfVolumes = state.IIIFinfo
       if(pdfVolumes) pdfVolumes = pdfVolumes[action.meta.iri]
       if(pdfVolumes) pdfVolumes = pdfVolumes.pdfVolumes
