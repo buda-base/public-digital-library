@@ -1,5 +1,5 @@
 //@flow
-
+//import {Mirador, m3core} from 'mirador'
 import Portal from 'react-leaflet-portal';
 import bbox from "@turf/bbox"
 import {Map,TileLayer,LayersControl,Marker,Popup,GeoJSON,Tooltip as ToolT} from 'react-leaflet' ;
@@ -72,7 +72,9 @@ type Props = {
    assocResources?:{},
    annoCollec?:{},
    imageAsset?:string,
+   collecManif?:string,
    firstImage?:string,
+   canvasID?:string,
    pdfVolumes?:[],
    onInitPdf: (u:string,s:string) => void,
    onRequestPdf: (u:string,s:string) => void,
@@ -210,7 +212,6 @@ class ResourceViewer extends Component<Props,State>
       //console.log("tmp",tmp)
       propOrder = tmp
    }
-
 
    componentWillMount()
    {
@@ -1283,6 +1284,44 @@ class ResourceViewer extends Component<Props,State>
 
    showUV()
    {
+      if(!this.props.iiifViewer) // Mirador
+      {
+         if(!this.state.openUV || !$("#viewer").hasClass("hidden"))
+         {
+            let tiMir = setInterval( () => {
+               if(window.Mirador) {
+                  clearInterval(tiMir);
+                  let config = {id:"viewer", data: []}
+                  if(this.props.imageAsset.match(/[/]collection[/]/)) config.data.push({"collectionUri": this.props.imageAsset })
+                  else { config.data.push({"manifestUri": this.props.imageAsset })  }
+
+                  config["windowObjects"] = [ {
+                     loadedManifest: this.props.collecManif?this.props.collecManif:this.props.imageAsset,
+                     canvasID: this.props.canvasID,
+                     viewType: "ImageView"
+                  } ]
+
+                  config["mainMenuSettings"] = {
+                     "userButtons": [
+                       { "label": "Close",
+                         "iconClass": "fa fa-times",
+                         "attributes" : { onClick : "javascript:$('#viewer').addClass('hidden').hide()" } }
+                     ]
+                   }
+
+
+                  console.log("mir ador",window.Mirador,config,this.props)
+                  window.Mirador( config )
+               }
+            }, 10)
+         }
+         else
+         {
+            $('#viewer').removeClass('hidden').show()
+         }
+      }
+      //if(this.props.iiifViewer != "UV") return ;
+
       let state = { ...this.state, openUV:true, hideUV:false }
       this.setState(state);
 
@@ -1884,6 +1923,7 @@ class ResourceViewer extends Component<Props,State>
 
       console.log("pdf",pdfLink,this._annoPane.length)
 
+
       // add nother route to UViewer Gallery page
       return (
          <div style={{overflow:"hidden",textAlign:"center"}}>
@@ -2116,8 +2156,14 @@ class ResourceViewer extends Component<Props,State>
                   </div>
                }
                {
+                  !this.props.iiifViewer && !this.props.manifestError && this.props.imageAsset && this.state.openUV &&
+                  [<div id="viewer"></div>,
+                  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/mirador@2.6.0/dist/css/mirador-combined.css"/>,
+                  <Script url={"https://cdn.jsdelivr.net/npm/mirador@2.6.0/dist/mirador.js"}/>]
+               }
+               {
 
-                  !this.props.manifestError && this.props.imageAsset && this.state.openUV &&
+                  this.props.iiifViewer == "UV" && !this.props.manifestError && this.props.imageAsset && this.state.openUV &&
                   [<div id="fondUV" className={(this.state.hideUV?"hide":"")}>
                      <Loader loaded={false} color="#fff"/>
                   </div>,

@@ -26,7 +26,9 @@ export type DataState = {
    IIIFinfo:{
       [string]:{
          imageAsset?:{},
-         firstImage?:string
+         firstImage?:string,
+         canvasID?:string,
+         collecManif?:string
       }
    }
 }
@@ -749,8 +751,10 @@ export const firstImage = (state: DataState, action: Action) => {
     state = {
         ...state,
         IIIFinfo:{ ...state.IIIFinfo,
-           [action.meta]:{ ...state.IIIFinfo?state.IIIFinfo[action.meta]:{},
-             firstImage:action.payload.replace(/full[/]0/,",600/0")
+           [action.meta.iri]:{ ...state.IIIFinfo?state.IIIFinfo[action.meta.iri]:{},
+             firstImage:action.payload.replace(/full[/]0/,",600/0"),
+             canvasID:action.meta.canvasID,
+             collecManif:action.meta.collecManif
             }
          }
     }

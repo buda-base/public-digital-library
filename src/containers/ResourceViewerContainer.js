@@ -30,6 +30,8 @@ const mapStateToProps = (state,ownProps) => {
 
 
    let firstImage
+   let canvasID
+   let collecManif
    let imageAsset
    let manifestError
    let pdfVolumes
@@ -39,7 +41,9 @@ const mapStateToProps = (state,ownProps) => {
       IIIFinfo = IIIFinfo[ownProps.IRI]
       if(IIIFinfo) {
          firstImage = IIIFinfo.firstImage
+         canvasID = IIIFinfo.canvasID
          imageAsset = IIIFinfo.imageAsset
+         collecManif = IIIFinfo.collecManif
          manifestError = IIIFinfo.manifestError
          pdfVolumes = IIIFinfo.pdfVolumes
 
@@ -52,7 +56,7 @@ const mapStateToProps = (state,ownProps) => {
 
 
    let props = { config,resources, ontology, keyword, language, datatype, assocResources, prefLang, failures,
-      imageAsset,firstImage,manifestError,pdfVolumes,createPdf,pdfUrl,
+      imageAsset,firstImage,canvasID,collecManif,manifestError,pdfVolumes,createPdf,pdfUrl,
       annoCollec }
 
    console.log("mS2p",state,props)

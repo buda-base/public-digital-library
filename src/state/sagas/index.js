@@ -334,11 +334,12 @@ async function getManifest(url,iri) {
 
       console.log("getM",url,iri)
 
+      let collecManif
       let manif = await api.loadManifest(url);
-      let image ;
+      let image,canvasID ;
       //collection ?
       if(!manif.sequences ) {
-         if (manif.manifests) manif = await api.loadManifest(manif.manifests[0]["@id"]);
+         if (manif.manifests) manif = await api.loadManifest(collecManif = manif.manifests[0]["@id"]);
          else throw new Error("collection without manifest list")
       }
 
@@ -351,12 +352,14 @@ async function getManifest(url,iri) {
                if(s && s.images && s.images[0])
                {
                   image = manif.sequences[0].canvases[2].images[0].resource["@id"]
-                  console.log("image",image)
+                  canvasID = manif.sequences[0].canvases[2]["@id"]
+
+                  console.log("image",image,canvasID)
 
                   found = true ;
 
                   let test = await api.getURLContents(image)
-                  store.dispatch(dataActions.firstImage(image,iri))
+                  store.dispatch(dataActions.firstImage(image,iri,canvasID,collecManif))
 
                   break ;
 
@@ -380,8 +383,9 @@ async function getManifest(url,iri) {
          if(manif.sequences[0].canvases[0] && manif.sequences[0].canvases[0].images[0] &&
             (image = manif.sequences[0].canvases[0].images[0].resource["@id"]))
             {
+               canvasID = manif.sequences[0].canvases[0]["@id"]
                let test = await api.getURLContents(image)
-               store.dispatch(dataActions.firstImage(image,iri))
+               store.dispatch(dataActions.firstImage(image,iri,canvasID,collecManif))
             }
          }
       }
