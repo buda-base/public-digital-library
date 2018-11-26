@@ -88,6 +88,7 @@ type State = {
    uviewer : boolean,
    ready? : boolean,
    imageLoaded:boolean,
+   openMirador?:boolean,
    openUV?:boolean,
    hideUV?:boolean,
    toggleUV?:boolean,
@@ -407,7 +408,7 @@ class ResourceViewer extends Component<Props,State>
             })
             sortProp = _.orderBy(sortProp,['index','value'],['asc','asc'])
 
-            console.log("sortProp",sortProp)
+            //console.log("sortProp",sortProp)
 
             /*Object.keys(prop).sort((a,b)=> {
                let ia = propOrder[t].indexOf(a)
@@ -1284,7 +1285,7 @@ class ResourceViewer extends Component<Props,State>
 
    showUV()
    {
-      let state = { ...this.state, openUV:true, hideUV:false }
+      let state = { ...this.state, openUV:true, hideUV:false, openMirador:false }
       this.setState(state);
       reload = true ;
    }
@@ -1292,7 +1293,7 @@ class ResourceViewer extends Component<Props,State>
 
    showMirador()
    {
-      if(!this.state.openUV || !$("#viewer").hasClass("hidden"))
+      if(!this.state.openMirador || !$("#viewer").hasClass("hidden"))
       {
          let tiMir = setInterval( () => {
             if(window.Mirador) {
@@ -1316,7 +1317,7 @@ class ResourceViewer extends Component<Props,State>
                 }
 
 
-               console.log("mir ador",window.Mirador,config,this.props)
+               //console.log("mir ador",window.Mirador,config,this.props)
                window.Mirador( config )
             }
          }, 10)
@@ -1327,9 +1328,9 @@ class ResourceViewer extends Component<Props,State>
       }
 
 
-      let state = { ...this.state, openUV:true, hideUV:true }
+      let state = { ...this.state, openMirador:true }
+      //if(state.hideUV)
       this.setState(state);
-      reload = true ;
    }
 
 
@@ -1433,7 +1434,7 @@ class ResourceViewer extends Component<Props,State>
 
       let kZprop = Object.keys(this.properties(true))
 
-      console.log("kZprop",kZprop)
+      //console.log("kZprop",kZprop)
 
       let iiifpres = "http://iiifpres.bdrc.io" ;
       if(this.props.config && this.props.config.iiifpres) iiifpres = this.props.config.iiifpres.endpoints[this.props.config.iiifpres.index]
@@ -2151,14 +2152,14 @@ class ResourceViewer extends Component<Props,State>
                   </div>
                }
                {
-                  !this.props.manifestError && this.props.imageAsset && this.state.openUV &&
+                  !this.props.manifestError && this.props.imageAsset && this.state.openMirador  &&
                   [<div id="viewer"></div>,
                   <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/mirador@2.6.0/dist/css/mirador-combined.css"/>,
-                  <Script url={"https://cdn.jsdelivr.net/npm/mirador@2.6.0/dist/mirador.js"}/>]
+                  (!this.state.openUV || this.state.hideUV) && <Script url={"https://cdn.jsdelivr.net/npm/mirador@2.6.0/dist/mirador.js"}/>]
                }
                {
 
-                  !this.props.manifestError && this.props.imageAsset && this.state.openUV &&
+                  !this.props.manifestError && this.props.imageAsset && this.state.openUV  &&
                   [<div id="fondUV" className={(this.state.hideUV?"hide":"")}>
                      <Loader loaded={false} color="#fff"/>
                   </div>,
