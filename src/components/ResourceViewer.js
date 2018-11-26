@@ -1284,65 +1284,54 @@ class ResourceViewer extends Component<Props,State>
 
    showUV()
    {
-      if(!this.props.iiifViewer) // Mirador
-      {
-         if(!this.state.openUV || !$("#viewer").hasClass("hidden"))
-         {
-            let tiMir = setInterval( () => {
-               if(window.Mirador) {
-                  clearInterval(tiMir);
-                  let config = {id:"viewer", data: []}
-                  if(this.props.imageAsset.match(/[/]collection[/]/)) config.data.push({"collectionUri": this.props.imageAsset })
-                  else { config.data.push({"manifestUri": this.props.imageAsset })  }
-
-                  config["windowObjects"] = [ {
-                     loadedManifest: this.props.collecManif?this.props.collecManif:this.props.imageAsset,
-                     canvasID: this.props.canvasID,
-                     viewType: "ImageView"
-                  } ]
-
-                  config["mainMenuSettings"] = {
-                     "userButtons": [
-                       { "label": "Close",
-                         "iconClass": "fa fa-times",
-                         "attributes" : { onClick : "javascript:$('#viewer').addClass('hidden').hide()" } }
-                     ]
-                   }
-
-
-                  console.log("mir ador",window.Mirador,config,this.props)
-                  window.Mirador( config )
-               }
-            }, 10)
-         }
-         else
-         {
-            $('#viewer').removeClass('hidden').show()
-         }
-      }
-      //if(this.props.iiifViewer != "UV") return ;
-
       let state = { ...this.state, openUV:true, hideUV:false }
       this.setState(state);
-
-
       reload = true ;
-/*
-       //window.addEventListener('uvLoaded', function (e) {
-           window.createUV('#uv', {
-               iiifResourceUri: this.props.imageAsset,
-               configUri: 'uv-config.json',
-               embedded:true,
-               isLightbox:true
-
-           }, new window.UV.URLDataProvider());
-
-           let remove = $.fn.remove
-           console.log("UV",$("#uv .uv"));
-       //}, false);
-
-       */
    }
+
+
+   showMirador()
+   {
+      if(!this.state.openUV || !$("#viewer").hasClass("hidden"))
+      {
+         let tiMir = setInterval( () => {
+            if(window.Mirador) {
+               clearInterval(tiMir);
+               let config = {id:"viewer", data: []}
+               if(this.props.imageAsset.match(/[/]collection[/]/)) config.data.push({"collectionUri": this.props.imageAsset })
+               else { config.data.push({"manifestUri": this.props.imageAsset })  }
+
+               config["windowObjects"] = [ {
+                  loadedManifest: this.props.collecManif?this.props.collecManif:this.props.imageAsset,
+                  canvasID: this.props.canvasID,
+                  viewType: "ImageView"
+               } ]
+
+               config["mainMenuSettings"] = {
+                  "userButtons": [
+                    { "label": "Close",
+                      "iconClass": "fa fa-times",
+                      "attributes" : { onClick : "javascript:$('#viewer').addClass('hidden').hide()" } }
+                  ]
+                }
+
+
+               console.log("mir ador",window.Mirador,config,this.props)
+               window.Mirador( config )
+            }
+         }, 10)
+      }
+      else
+      {
+         $('#viewer').removeClass('hidden').show()
+      }
+
+
+      let state = { ...this.state, openUV:true, hideUV:true }
+      this.setState(state);
+      reload = true ;
+   }
+
 
 
    handlePdfClick = (event,pdf,askPdf,file = "pdf") => {
@@ -2143,27 +2132,33 @@ class ResourceViewer extends Component<Props,State>
                }
                {
                   !this.props.manifestError && this.props.imageAsset && //!this.state.openUV &&
-                  <div className={"uvDefault "+(this.state.imageLoaded?"loaded":"")} onClick={this.showUV.bind(this)}>
+                  <div className={"uvDefault "+(this.state.imageLoaded?"loaded":"")} >
                      <Loader className="uvLoader" loaded={this.state.imageLoaded} color="#fff"/>
                      <img src={this.props.firstImage} onLoad={(e)=>this.setState({...this.state,imageLoaded:true})}/>
                      {
                         this.props.firstImage && this.state.imageLoaded &&
                         <div id="title">
-                           <span>View image gallery</span>
-                           <Fullscreen style={{transform: "scale(1.4)",position:"absolute",right:"3px",top:"3px"}}/>
+                           <div onClick={this.showUV.bind(this)}>
+                              <span>View images in UV</span>
+                              <Fullscreen style={{transform: "scale(1.4)",position:"absolute",right:"3px",top:"3px"}}/>
+                           </div>
+                           <div onClick={this.showMirador.bind(this)}>
+                              <span>View images in Mirador</span>
+                              <Fullscreen style={{transform: "scale(1.4)",position:"absolute",right:"3px",top:"3px"}}/>
+                           </div>
                         </div>
                      }
                   </div>
                }
                {
-                  !this.props.iiifViewer && !this.props.manifestError && this.props.imageAsset && this.state.openUV &&
+                  !this.props.manifestError && this.props.imageAsset && this.state.openUV &&
                   [<div id="viewer"></div>,
                   <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/mirador@2.6.0/dist/css/mirador-combined.css"/>,
                   <Script url={"https://cdn.jsdelivr.net/npm/mirador@2.6.0/dist/mirador.js"}/>]
                }
                {
 
-                  this.props.iiifViewer == "UV" && !this.props.manifestError && this.props.imageAsset && this.state.openUV &&
+                  !this.props.manifestError && this.props.imageAsset && this.state.openUV &&
                   [<div id="fondUV" className={(this.state.hideUV?"hide":"")}>
                      <Loader loaded={false} color="#fff"/>
                   </div>,
