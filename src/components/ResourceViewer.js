@@ -1319,7 +1319,7 @@ class ResourceViewer extends Component<Props,State>
                else { config.data.push({"manifestUri": this.props.imageAsset+"?continuous=true" }) }
 
                config["windowObjects"] = [ {
-                  loadedManifest: (this.props.collecManif?this.props.collecManif:this.props.imageAsset)+"?continuous=true",
+                  loadedManifest: (this.props.collecManif?this.props.collecManif:this.props.imageAsset+"?continuous=true"), // 
                   canvasID: this.props.canvasID,
                   viewType: "ImageView"
                } ]
@@ -1333,7 +1333,7 @@ class ResourceViewer extends Component<Props,State>
                 }
 
 
-               //console.log("mir ador",window.Mirador,config,this.props)
+               console.log("mir ador",config,this.props)
                window.Mirador( config )
             }
          }, 10)
