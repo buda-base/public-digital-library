@@ -1299,11 +1299,11 @@ class ResourceViewer extends Component<Props,State>
             if(window.Mirador) {
                clearInterval(tiMir);
                let config = {id:"viewer", data: []}
-               if(this.props.imageAsset.match(/[/]collection[/]/)) config.data.push({"collectionUri": this.props.imageAsset })
-               else { config.data.push({"manifestUri": this.props.imageAsset })  }
+               if(this.props.imageAsset.match(/[/]collection[/]/)) config.data.push({"collectionUri": this.props.imageAsset +"?continuous=true" })
+               else { config.data.push({"manifestUri": this.props.imageAsset+"?continuous=true" }) }
 
                config["windowObjects"] = [ {
-                  loadedManifest: this.props.collecManif?this.props.collecManif:this.props.imageAsset,
+                  loadedManifest: (this.props.collecManif?this.props.collecManif:this.props.imageAsset)+"?continuous=true",
                   canvasID: this.props.canvasID,
                   viewType: "ImageView"
                } ]
