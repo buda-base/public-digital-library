@@ -1,5 +1,6 @@
 //@flow
 //import {Mirador, m3core} from 'mirador'
+import diva from "diva.js"
 import Portal from 'react-leaflet-portal';
 import bbox from "@turf/bbox"
 import {Map,TileLayer,LayersControl,Marker,Popup,GeoJSON,Tooltip as ToolT} from 'react-leaflet' ;
@@ -1291,6 +1292,21 @@ class ResourceViewer extends Component<Props,State>
    }
 
 
+   showDiva()
+   {
+      //if(!this.state.openDiva) // || !$("#viewer").hasClass("hidden"))
+      {
+         console.log("diva",diva);
+
+         let dv = new diva.create('#diva-wrapper',{
+                         objectData: this.props.imageAsset
+                     });
+
+         let state = { ...this.state, openDiva:true }
+         this.setState(state);
+      }
+   }
+
    showMirador()
    {
       if(!this.state.openMirador || !$("#viewer").hasClass("hidden"))
@@ -2147,9 +2163,19 @@ class ResourceViewer extends Component<Props,State>
                               <span>View images in Mirador</span>
                               <Fullscreen style={{transform: "scale(1.4)",position:"absolute",right:"3px",top:"3px"}}/>
                            </div>
+                           {/* <div onClick={this.showDiva.bind(this)}>
+                              <span>View images in Diva</span>
+                              <Fullscreen style={{transform: "scale(1.4)",position:"absolute",right:"3px",top:"3px"}}/>
+                           </div> */}
                         </div>
                      }
                   </div>
+               }
+               {
+                  !this.props.manifestError && this.props.imageAsset && this.state.openDiva  &&
+                  [<div id="diva-wrapper"></div>,
+                  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/diva.js/5.1.3/css/diva.css"/>]
+                  //(!this.state.openUV || this.state.hideUV) && <Script url={"https://cdnjs.cloudflare.com/ajax/libs/diva.js/5.1.3/js/diva.js"}/>]
                }
                {
                   !this.props.manifestError && this.props.imageAsset && this.state.openMirador  &&
