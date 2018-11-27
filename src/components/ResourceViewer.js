@@ -1314,24 +1314,46 @@ class ResourceViewer extends Component<Props,State>
          let tiMir = setInterval( () => {
             if(window.Mirador) {
                clearInterval(tiMir);
-               let config = {id:"viewer", data: []}
-               if(this.props.imageAsset.match(/[/]collection[/]/)) config.data.push({"collectionUri": this.props.imageAsset +"?continuous=true" })
-               else { config.data.push({"manifestUri": this.props.imageAsset+"?continuous=true" }) }
+               let config = {
+                  id:"viewer",
+                  data: [],
+                  showAddFromURLBox:false,
+                  //displayLayout:false,
+                  preserveManifestOrder: true,
+                  /*
+                     manifestsPanel: {
+                       name: "Collection Tree Manifests Panel",
+                       module: "CollectionTreeManifestsPanel",
+                     options: {}
+                     },
+                     windowSettings: {
+                       sidePanelVisible: false
+                     },
+                  */
+                  mainMenuSettings : {
+                     "userButtons": [
+                       { "label": "Close Mirador",
+                         "iconClass": "fa fa-times",
+                         "attributes" : { onClick : "javascript:$('#viewer').addClass('hidden').hide()" }
+                        }
+                     ]
+                  }
+               }
+               if(this.props.imageAsset.match(/[/]collection[/]/))
+               {
+                  config.data.push({"collectionUri": this.props.imageAsset +"?continuous=true", location:"Test Collection Location" })
+                  config["openManifestsPage"] = true
+               }
+               else
+               {
+                  config.data.push({"manifestUri": this.props.imageAsset+"?continuous=true", location:"Test Manifest Location" })
 
-               config["windowObjects"] = [ {
-                  loadedManifest: (this.props.collecManif?this.props.collecManif:this.props.imageAsset+"?continuous=true"), // 
-                  canvasID: this.props.canvasID,
-                  viewType: "ImageView"
-               } ]
-
-               config["mainMenuSettings"] = {
-                  "userButtons": [
-                    { "label": "Close",
-                      "iconClass": "fa fa-times",
-                      "attributes" : { onClick : "javascript:$('#viewer').addClass('hidden').hide()" } }
-                  ]
-                }
-
+                  config["windowObjects"] = [ {
+                     loadedManifest: this.props.imageAsset+"?continuous=true", //(this.props.collecManif?this.props.collecManif+"?continuous=true":this.props.imageAsset+"?continuous=true"),
+                     canvasID: this.props.canvasID,
+                     viewType: "ImageView"
+                  } ]
+               }
 
                console.log("mir ador",config,this.props)
                window.Mirador( config )
@@ -1631,6 +1653,9 @@ class ResourceViewer extends Component<Props,State>
          */
 
       }
+
+      let imageLabel = "images"
+      if(this.props.imageAsset && this.props.imageAsset.match(/[/]collection[/]/)) imageLabel = "collection"
 
       let theData = <div className="data">
          { kZprop.map((k) => {
@@ -2156,15 +2181,15 @@ class ResourceViewer extends Component<Props,State>
                         this.props.firstImage && this.state.imageLoaded &&
                         <div id="title">
                            <div onClick={this.showUV.bind(this)}>
-                              <span>View images in UV</span>
+                              <span>View {imageLabel} in UV</span>
                               <Fullscreen style={{transform: "scale(1.4)",position:"absolute",right:"3px",top:"3px"}}/>
                            </div>
                            <div onClick={this.showMirador.bind(this)}>
-                              <span>View images in Mirador</span>
+                              <span>View {imageLabel} in Mirador</span>
                               <Fullscreen style={{transform: "scale(1.4)",position:"absolute",right:"3px",top:"3px"}}/>
                            </div>
                            {/* <div onClick={this.showDiva.bind(this)}>
-                              <span>View images in Diva</span>
+                              <span>View {imageLabel} in Diva</span>
                               <Fullscreen style={{transform: "scale(1.4)",position:"absolute",right:"3px",top:"3px"}}/>
                            </div> */}
                         </div>
