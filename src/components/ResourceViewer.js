@@ -1303,6 +1303,9 @@ class ResourceViewer extends Component<Props,State>
                clearInterval(timerDiva);
                let dv = new diva.create('#diva-wrapper',{
                    objectData: !this.props.collecManif?this.props.imageAsset:this.props.collecManif,
+                   enableZoomControls:"slider",
+                   tileWidth:4000,
+                   tileHeight:4000
                    //plugins: [DownloadPlugin, ManipulationPlugin, MetadataPlugin],
                    //enableFullscreen:false
                });
