@@ -1319,7 +1319,6 @@ class ResourceViewer extends Component<Props,State>
                   data: [],
                   showAddFromURLBox:false,
                   //displayLayout:false,
-                  preserveManifestOrder: true,
                   /*
                      manifestsPanel: {
                        name: "Collection Tree Manifests Panel",
@@ -1339,17 +1338,21 @@ class ResourceViewer extends Component<Props,State>
                      ]
                   }
                }
-               if(this.props.imageAsset.match(/[/]collection[/]/))
+               if(this.props.imageAsset.match(/[/]collection[/]/) && !this.props.collecManif)
                {
                   config.data.push({"collectionUri": this.props.imageAsset +"?continuous=true", location:"Test Collection Location" })
                   config["openManifestsPage"] = true
+                  config["preserveManifestOrder"] = true,
+                  config["windowObjects"] = []
                }
                else
                {
-                  config.data.push({"manifestUri": this.props.imageAsset+"?continuous=true", location:"Test Manifest Location" })
+                  let manif = this.props.collecManif
+                  if(!manif) manif = this.props.imageAsset+"?continuous=true"
+                  config.data.push({"manifestUri": manif, location:"Test Manifest Location" })
 
                   config["windowObjects"] = [ {
-                     loadedManifest: this.props.imageAsset+"?continuous=true", //(this.props.collecManif?this.props.collecManif+"?continuous=true":this.props.imageAsset+"?continuous=true"),
+                     loadedManifest: manif, //(this.props.collecManif?this.props.collecManif+"?continuous=true":this.props.imageAsset+"?continuous=true"),
                      canvasID: this.props.canvasID,
                      viewType: "ImageView"
                   } ]
@@ -1655,7 +1658,7 @@ class ResourceViewer extends Component<Props,State>
       }
 
       let imageLabel = "images"
-      if(this.props.imageAsset && this.props.imageAsset.match(/[/]collection[/]/)) imageLabel = "collection"
+      if(!this.props.collecManif && this.props.imageAsset && this.props.imageAsset.match(/[/]collection[/]/)) imageLabel = "collection"
 
       let theData = <div className="data">
          { kZprop.map((k) => {
