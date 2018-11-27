@@ -1344,6 +1344,15 @@ class ResourceViewer extends Component<Props,State>
                   config["openManifestsPage"] = true
                   config["preserveManifestOrder"] = true,
                   config["windowObjects"] = []
+
+                  config["mainMenuSettings"]["userButtons"] =
+                  [
+                     {  "label": "Browse Collection",
+                        "iconClass": "fa fa-bars",
+                        "attributes" : { onClick : "javascript:$('.workspace-container > div > div > div.window > div.manifest-info > a.mirador-btn.mirador-icon-window-menu > ul > li.new-object-option > i,.addItemLink').first().click()" } //".slots[0].addItem()" }
+                     },
+                     ...config["mainMenuSettings"]["userButtons"]
+                  ]
                }
                else
                {
@@ -1358,7 +1367,7 @@ class ResourceViewer extends Component<Props,State>
                   } ]
                }
 
-               console.log("mir ador",config,this.props)
+               //console.log("mir ador",config,this.props)
                window.Mirador( config )
             }
          }, 10)
