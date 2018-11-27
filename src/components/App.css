@@ -264,6 +264,12 @@ svg.hide { opacity:0;pointer-events:none; }
 
 .uvLoader { z-index:0 !important;}
 
+#diva-wrapper { top: 0;left: 0; position: fixed; width: 100%; height: calc(100% - 10px); z-index: 10;
+   background: white; padding-top: 10px; }
+/*#diva-wrapper > div { top: 0;left: 0; position: fixed; width: 100%; height: calc(100% - 100px) !important; z-index: 10;
+   background: white; padding-top: 10px; }*/
+#diva-wrapper.hidden { display:none; }
+
 .pdfLoader { vertical-align:-3px; }
 .pdfLoader img { opacity:0.55; }
 /* .pdfLoader > button { width:auto !important; } */

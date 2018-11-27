@@ -1294,17 +1294,37 @@ class ResourceViewer extends Component<Props,State>
 
    showDiva()
    {
-      //if(!this.state.openDiva) // || !$("#viewer").hasClass("hidden"))
+      if(!this.state.openDiva || !$("#diva-wrapper").hasClass("hidden"))
       {
-         console.log("diva",diva);
 
-         let dv = new diva.create('#diva-wrapper',{
-                         objectData: this.props.imageAsset
-                     });
+         let timerDiva = setInterval( () => {
+            console.log("diva",diva);
+            if($("#diva-wrapper").length > 0) {
+               clearInterval(timerDiva);
+               let dv = new diva.create('#diva-wrapper',{
+                   objectData: !this.props.collecManif?this.props.imageAsset:this.props.collecManif,
+                   //plugins: [DownloadPlugin, ManipulationPlugin, MetadataPlugin],
+                   //enableFullscreen:false
+               });
 
-         let state = { ...this.state, openDiva:true }
-         this.setState(state);
+               let timerDiva2 = setInterval(() => {
+                  if($("#diva-1-fullscreen-icon").length > 0) {
+                     clearInterval(timerDiva2)
+                     $("#diva-1-link-icon").remove()
+                     $("#diva-1-fullscreen-icon").remove();
+                     $(".diva-view-menu").append(`<button type="button" id="diva-1-fullscreen-icon" class="diva-fullscreen-icon diva-button" title="Close viewer"
+                        onClick="javascript:document.getElementById(\'diva-wrapper\').classList.add(\'hidden\')"></button>`)
+                  }
+               }, 10)
+            }
+         }, 10)
       }
+      else {
+         $('#diva-wrapper').removeClass('hidden')
+      }
+      let state = { ...this.state, openDiva:true }
+      this.setState(state);
+
    }
 
    showMirador()
@@ -2200,10 +2220,12 @@ class ResourceViewer extends Component<Props,State>
                               <span>View {imageLabel} in Mirador</span>
                               <Fullscreen style={{transform: "scale(1.4)",position:"absolute",right:"3px",top:"3px"}}/>
                            </div>
-                           {/* <div onClick={this.showDiva.bind(this)}>
-                              <span>View {imageLabel} in Diva</span>
-                              <Fullscreen style={{transform: "scale(1.4)",position:"absolute",right:"3px",top:"3px"}}/>
-                           </div> */}
+                           {  imageLabel!=="collection" &&
+                              <div onClick={this.showDiva.bind(this)}>
+                                 <span>View {imageLabel} in Diva</span>
+                                 <Fullscreen style={{transform: "scale(1.4)",position:"absolute",right:"3px",top:"3px"}}/>
+                              </div>
+                           }
                         </div>
                      }
                   </div>
