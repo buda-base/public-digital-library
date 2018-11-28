@@ -1,6 +1,7 @@
 //@flow
 //import {Mirador, m3core} from 'mirador'
-import diva from "diva.js"
+//import diva from "diva.js" // v5.1.3
+//import diva from "diva.js" //v6.0, not working
 import Portal from 'react-leaflet-portal';
 import bbox from "@turf/bbox"
 import {Map,TileLayer,LayersControl,Marker,Popup,GeoJSON,Tooltip as ToolT} from 'react-leaflet' ;
@@ -1299,25 +1300,36 @@ class ResourceViewer extends Component<Props,State>
       {
 
          let timerDiva = setInterval( () => {
-            console.log("diva",diva);
-            if($("#diva-wrapper").length > 0) {
-               clearInterval(timerDiva);
 
-               /* // waiting for for diva.js 6.0...
-               eval(`let dv = new Diva('diva-wrapper',{
-                  "objectData": "${!this.props.collecManif?this.props.imageAsset:this.props.collecManif}",
-                  "enableZoomControls":"slider",
-                  "tileWidth":4000,
-                  "tileHeight":4000
-                  //plugins: [DownloadPlugin, ManipulationPlugin, MetadataPlugin],
-                  //enableFullscreen:false
-               });`)
-               */
+            if($("#diva-wrapper").length > 0 && window.Diva && window.Diva.DownloadPlugin && window.Diva.ManipulationPlugin && window.Diva.MetadataPlugin) {
+               clearInterval(timerDiva);
 
                let manif = this.props.collecManif
                if(!manif && this.props.manifests) manif = this.props.manifests[0]["@id"]
                if(!manif) manif = this.props.imageAsset
 
+               // v6.0 working from diva.js github demo site
+               let dv = new window.Diva('diva-wrapper',{
+                  "objectData": manif,
+                  "enableZoomControls":"slider",
+                  "tileWidth":4000,
+                  "tileHeight":4000,
+                  "plugins": [window.Diva.DownloadPlugin, window.Diva.ManipulationPlugin, window.Diva.MetadataPlugin],
+                  //enableFullscreen:false
+               });
+
+/*
+               // v6.0 not working as a import
+               let dv = new Diva('diva-wrapper',{
+                  "objectData": manif,
+                  "enableZoomControls":"slider",
+                  "tileWidth":4000,
+                  "tileHeight":4000,
+                  //"plugins": [Diva.DownloadPlugin, Diva.ManipulationPlugin, Diva.MetadataPlugin],
+                  //enableFullscreen:false
+               });
+*/
+               /* // fully working v5.1.3 (but no plugin)
 
                let dv = new diva.create('#diva-wrapper',{
                    objectData: manif,
@@ -1327,6 +1339,7 @@ class ResourceViewer extends Component<Props,State>
                    //plugins: [DownloadPlugin, ManipulationPlugin, MetadataPlugin],
                    //enableFullscreen:false
                });
+               */
 
                let timerDiva2 = setInterval(() => {
                   if($("#diva-1-fullscreen-icon").length > 0) {
@@ -1342,16 +1355,19 @@ class ResourceViewer extends Component<Props,State>
                         $("#volume").change(
                            function(){
                               dv.changeObject($(this).val())
-                              dv.changeView("document")
+                              dv.gotoPageByIndex(0);
                            }
                         )
 
                      }
                   }
                }, 10)
-
+               
             }
-         }, 10)
+            else {
+               this.forceUpdate();
+            }
+         }, 100)
       }
       else {
          $('#diva-wrapper').removeClass('hidden')
@@ -2268,18 +2284,17 @@ class ResourceViewer extends Component<Props,State>
                   !this.props.manifestError && this.props.imageAsset && this.state.openDiva  &&
                   [
                      <div id="diva-wrapper"></div>,
-                     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/diva.js/5.1.3/css/diva.css"/>
+                     //<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/diva.js/5.1.3/css/diva.css"/>
                      //(!this.state.openUV || this.state.hideUV) && <Script url={"https://cdnjs.cloudflare.com/ajax/libs/diva.js/5.1.3/js/diva.js"}/>]
-                     /* // waiting for diva.js v6.0 release...
+                      // waiting for diva.js v6.0 release...
                      <link rel="stylesheet" href="//ddmal.github.io/diva.js/try/css/diva.css" />,
                      (!this.state.openUV || this.state.hideUV) &&
                         [
                            <Script url="//ddmal.github.io/diva.js/try/js/diva.js"/>,
-                           //<Script url="//ddmal.github.io/diva.js/try/js/plugins/manipulation.js"/>,
-                           //<Script url="//ddmal.github.io/diva.js/try/js/plugins/download.js"/>,
-                           //<Script url="//ddmal.github.io/diva.js/try/js/plugins/metadata.js"/>
+                           window.Diva && <Script url="//ddmal.github.io/diva.js/try/js/plugins/manipulation.js"/>,
+                           window.Diva && <Script url="//ddmal.github.io/diva.js/try/js/plugins/download.js"/>,
+                           window.Diva && <Script url="//ddmal.github.io/diva.js/try/js/plugins/metadata.js"/>
                         ]
-                     */
                   ]
                }
                {
