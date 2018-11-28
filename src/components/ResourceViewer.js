@@ -1316,6 +1316,8 @@ class ResourceViewer extends Component<Props,State>
 
                let manif = this.props.collecManif
                if(!manif && this.props.manifests) manif = this.props.manifests[0]["@id"]
+               if(!manif) manif = this.props.imageAsset
+
 
                let dv = new diva.create('#diva-wrapper',{
                    objectData: manif,
