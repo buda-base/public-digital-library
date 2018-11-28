@@ -74,6 +74,7 @@ type Props = {
    annoCollec?:{},
    imageAsset?:string,
    collecManif?:string,
+   manifests?:[],
    firstImage?:string,
    canvasID?:string,
    pdfVolumes?:[],
@@ -1301,8 +1302,23 @@ class ResourceViewer extends Component<Props,State>
             console.log("diva",diva);
             if($("#diva-wrapper").length > 0) {
                clearInterval(timerDiva);
+
+               /* // waiting for for diva.js 6.0...
+               eval(`let dv = new Diva('diva-wrapper',{
+                  "objectData": "${!this.props.collecManif?this.props.imageAsset:this.props.collecManif}",
+                  "enableZoomControls":"slider",
+                  "tileWidth":4000,
+                  "tileHeight":4000
+                  //plugins: [DownloadPlugin, ManipulationPlugin, MetadataPlugin],
+                  //enableFullscreen:false
+               });`)
+               */
+
+               let manif = this.props.collecManif
+               if(!manif && this.props.manifests) manif = this.props.manifests[0]["@id"]
+
                let dv = new diva.create('#diva-wrapper',{
-                   objectData: !this.props.collecManif?this.props.imageAsset:this.props.collecManif,
+                   objectData: manif,
                    enableZoomControls:"slider",
                    tileWidth:4000,
                    tileHeight:4000
@@ -1317,8 +1333,21 @@ class ResourceViewer extends Component<Props,State>
                      $("#diva-1-fullscreen-icon").remove();
                      $(".diva-view-menu").append(`<button type="button" id="diva-1-fullscreen-icon" class="diva-fullscreen-icon diva-button" title="Close viewer"
                         onClick="javascript:document.getElementById(\'diva-wrapper\').classList.add(\'hidden\')"></button>`)
+                     if(this.props.manifests) {
+                        $("#diva-1-tools").append("<span>Browse collection</span><select id='volume'>"+this.props.manifests.map(
+                           (v,i) => ("<option value='"+v["@id"]+"' "+(i===0?"selected":"")+">"+v["label"]+"</option>")
+                        ) +"</select>")
+                        $("#volume").change(
+                           function(){
+                              dv.changeObject($(this).val())
+                              dv.changeView("document")
+                           }
+                        )
+
+                     }
                   }
                }, 10)
+
             }
          }, 10)
       }
@@ -2223,7 +2252,7 @@ class ResourceViewer extends Component<Props,State>
                               <span>View {imageLabel} in Mirador</span>
                               <Fullscreen style={{transform: "scale(1.4)",position:"absolute",right:"3px",top:"3px"}}/>
                            </div>
-                           {  imageLabel!=="collection" &&
+                           {  (imageLabel!=="collection" || this.props.manifests) &&
                               <div onClick={this.showDiva.bind(this)}>
                                  <span>View {imageLabel} in Diva</span>
                                  <Fullscreen style={{transform: "scale(1.4)",position:"absolute",right:"3px",top:"3px"}}/>
@@ -2235,9 +2264,21 @@ class ResourceViewer extends Component<Props,State>
                }
                {
                   !this.props.manifestError && this.props.imageAsset && this.state.openDiva  &&
-                  [<div id="diva-wrapper"></div>,
-                  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/diva.js/5.1.3/css/diva.css"/>]
-                  //(!this.state.openUV || this.state.hideUV) && <Script url={"https://cdnjs.cloudflare.com/ajax/libs/diva.js/5.1.3/js/diva.js"}/>]
+                  [
+                     <div id="diva-wrapper"></div>,
+                     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/diva.js/5.1.3/css/diva.css"/>
+                     //(!this.state.openUV || this.state.hideUV) && <Script url={"https://cdnjs.cloudflare.com/ajax/libs/diva.js/5.1.3/js/diva.js"}/>]
+                     /* // waiting for diva.js v6.0 release...
+                     <link rel="stylesheet" href="//ddmal.github.io/diva.js/try/css/diva.css" />,
+                     (!this.state.openUV || this.state.hideUV) &&
+                        [
+                           <Script url="//ddmal.github.io/diva.js/try/js/diva.js"/>,
+                           //<Script url="//ddmal.github.io/diva.js/try/js/plugins/manipulation.js"/>,
+                           //<Script url="//ddmal.github.io/diva.js/try/js/plugins/download.js"/>,
+                           //<Script url="//ddmal.github.io/diva.js/try/js/plugins/metadata.js"/>
+                        ]
+                     */
+                  ]
                }
                {
                   !this.props.manifestError && this.props.imageAsset && this.state.openMirador  &&

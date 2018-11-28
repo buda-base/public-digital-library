@@ -746,7 +746,7 @@ reducers[actions.TYPES.manifestError] = manifestError;
 
 export const firstImage = (state: DataState, action: Action) => {
 
-   //console.log("1im",action)
+    //console.log("1im",action)
 
     state = {
         ...state,
@@ -754,7 +754,8 @@ export const firstImage = (state: DataState, action: Action) => {
            [action.meta.iri]:{ ...state.IIIFinfo?state.IIIFinfo[action.meta.iri]:{},
              firstImage:action.payload.replace(/full[/]0/,",600/0"),
              canvasID:action.meta.canvasID,
-             collecManif:action.meta.collecManif
+             collecManif:action.meta.collecManif,
+             manifests:action.meta.manifests
             }
          }
     }

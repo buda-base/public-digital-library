@@ -269,6 +269,11 @@ svg.hide { opacity:0;pointer-events:none; }
 /*#diva-wrapper > div { top: 0;left: 0; position: fixed; width: 100%; height: calc(100% - 100px) !important; z-index: 10;
    background: white; padding-top: 10px; }*/
 #diva-wrapper.hidden { display:none; }
+#diva-wrapper #diva-1-tools { text-align:center; }
+#diva-wrapper #diva-1-tools select#volume { margin-top:10px;display:inline-block; font-size:16px;height:28px;
+   padding:0 10px;margin-left:15px;}
+.diva-tools-right { width:400px; }
+.diva-tools-left { padding-right:100px; width:300px;}
 
 .pdfLoader { vertical-align:-3px; }
 .pdfLoader img { opacity:0.55; }

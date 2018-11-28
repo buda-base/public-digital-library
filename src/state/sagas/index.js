@@ -337,13 +337,15 @@ async function getManifest(url,iri) {
       let collecManif
       let manif = await api.loadManifest(url);
       let image,canvasID ;
+      let manifests
       //collection ?
       if(!manif.sequences ) {
          if (manif.manifests) {
             let isSingle ;
             if(manif.manifests.length === 1) isSingle = true ;
-            manif = await   api.loadManifest(collecManif = manif.manifests[0]["@id"]);
-            if(!isSingle) collecManif = null //manif.manifests[0]["@id"]
+            else manifests = manif.manifests
+            manif = await api.loadManifest(collecManif = manif.manifests[0]["@id"]);
+            if(!isSingle) collecManif = null  //manif.manifests[0]["@id"]
          }
          else throw new Error("collection without manifest list")
       }
@@ -364,7 +366,7 @@ async function getManifest(url,iri) {
                   found = true ;
 
                   let test = await api.getURLContents(image)
-                  store.dispatch(dataActions.firstImage(image,iri,canvasID,collecManif))
+                  store.dispatch(dataActions.firstImage(image,iri,canvasID,collecManif,manifests))
 
                   break ;
 
@@ -390,7 +392,7 @@ async function getManifest(url,iri) {
             {
                canvasID = manif.sequences[0].canvases[0]["@id"]
                let test = await api.getURLContents(image)
-               store.dispatch(dataActions.firstImage(image,iri,canvasID,collecManif))
+               store.dispatch(dataActions.firstImage(image,iri,canvasID,collecManif,manifests))
             }
          }
       }

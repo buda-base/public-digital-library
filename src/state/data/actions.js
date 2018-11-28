@@ -39,11 +39,11 @@ export const getManifest = (url: string,IRI:string,ext:boolean): Action => {
 }
 
 TYPES.firstImage = 'FIRST_IMAGE';
-export const firstImage = (url: string,iri:string,canvasID:string,collecManif:string): Action => {
+export const firstImage = (url: string,iri:string,canvasID:string,collecManif:string,manifests:[]): Action => {
     return {
         type: TYPES.firstImage,
         payload: url,
-        meta:{iri,canvasID,collecManif}
+        meta:{iri,canvasID,collecManif,manifests}
     }
 }
 
