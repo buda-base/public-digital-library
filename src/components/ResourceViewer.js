@@ -1311,11 +1311,11 @@ class ResourceViewer extends Component<Props,State>
                // v6.0 working from diva.js github demo site
                let dv = new window.Diva('diva-wrapper',{
                   "objectData": manif,
-                  "enableZoomControls":"slider",
+                  //"enableZoomControls":"slider", // not compatible with v6
+                  "enableAutoTitle":false, // title not working by default (show first letter only, maybe because label is a list here ?)
                   "tileWidth":4000,
                   "tileHeight":4000,
                   "plugins": [window.Diva.DownloadPlugin, window.Diva.ManipulationPlugin, window.Diva.MetadataPlugin],
-                  //enableFullscreen:false
                });
 
 /*
@@ -1344,10 +1344,21 @@ class ResourceViewer extends Component<Props,State>
                let timerDiva2 = setInterval(() => {
                   if($("#diva-1-fullscreen-icon").length > 0) {
                      clearInterval(timerDiva2)
-                     $("#diva-1-link-icon").remove()
-                     $("#diva-1-fullscreen-icon").remove();
-                     $(".diva-view-menu").append(`<button type="button" id="diva-1-fullscreen-icon" class="diva-fullscreen-icon diva-button" title="Close viewer"
-                        onClick="javascript:document.getElementById(\'diva-wrapper\').classList.add(\'hidden\')"></button>`)
+
+                     /* // diva 5.1
+                       $("#diva-1-link-icon").remove()
+                       $("#diva-1-fullscreen-icon").remove();
+                       $(".diva-view-menu").append(`<button type="button" id="diva-1-fullscreen-icon" class="diva-fullscreen-icon diva-button" title="Close viewer"
+                          onClick="javascript:document.getElementById(\'diva-wrapper\').classList.add(\'hidden\')"></button>`)
+                      */
+
+                      //diva 6
+                      let svg = $("#diva-1-fullscreen-icon svg").remove();
+                      $("#diva-1-fullscreen-icon").remove();
+                      $(".diva-view-menu").append(`<button type="button" id="diva-1-fullscreen-icon" class="diva-fullscreen-icon diva-button" title="Close viewer"
+                         onClick="javascript:document.getElementById(\'diva-wrapper\').classList.add(\'hidden\')"></button>`)
+                      $("#diva-1-fullscreen-icon").append(svg)
+
                      if(this.props.manifests) {
                         $("#diva-1-tools").append("<span>Browse collection</span><select id='volume'>"+this.props.manifests.map(
                            (v,i) => ("<option value='"+v["@id"]+"' "+(i===0?"selected":"")+">"+v["label"]+"</option>")
@@ -1361,8 +1372,8 @@ class ResourceViewer extends Component<Props,State>
 
                      }
                   }
-               }, 10)
-               
+               }, 100)
+
             }
             else {
                this.forceUpdate();
@@ -2284,10 +2295,9 @@ class ResourceViewer extends Component<Props,State>
                   !this.props.manifestError && this.props.imageAsset && this.state.openDiva  &&
                   [
                      <div id="diva-wrapper"></div>,
-                     //<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/diva.js/5.1.3/css/diva.css"/>
-                     //(!this.state.openUV || this.state.hideUV) && <Script url={"https://cdnjs.cloudflare.com/ajax/libs/diva.js/5.1.3/js/diva.js"}/>]
-                      // waiting for diva.js v6.0 release...
-                     <link rel="stylesheet" href="//ddmal.github.io/diva.js/try/css/diva.css" />,
+                      //<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/diva.js/5.1.3/css/diva.css"/>,
+                      //(!this.state.openUV || this.state.hideUV) && <Script url={"https://cdnjs.cloudflare.com/ajax/libs/diva.js/5.1.3/js/diva.js"}/>]
+                      <link rel="stylesheet" href="//ddmal.github.io/diva.js/try/css/diva.css" />,
                      (!this.state.openUV || this.state.hideUV) &&
                         [
                            <Script url="//ddmal.github.io/diva.js/try/js/diva.js"/>,

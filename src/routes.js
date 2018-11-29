@@ -30,6 +30,26 @@ const theme = createMuiTheme({
     }
 });
 
+/* // something missing here...
+export class ScriptLoader extends Component
+{
+  _text : string = null ;
+
+  async getText()
+  {
+    let fic = await fetch("/"+this.props.url)
+    this._text = await fic.text()
+
+    console.log("script",this.props,fic,this._text)
+  }
+
+  render()
+  {
+    if(!this._text) this.getText();
+    return this._text ;
+  }
+}
+*/
 
 type Props = { history:{} }
 
@@ -82,6 +102,11 @@ const makeMainRoutes = () => {
                            </div>
                         )
                      }}/>
+                     {/*
+                     <Route exact path="/scripts/:URL" render={(props) => {
+                        return (<ScriptLoader url={props.match.params.URL}/>)
+                     } } />
+                     */}
                      <Route exact path="/iiifcookielogin" render={(props) => {
                         return (<IIIFCookieLogin auth={auth} get={qs.parse(history.location.search)}/>)
                      } } />
@@ -135,7 +160,7 @@ const makeMainRoutes = () => {
                         //if(!store.getState().data.ontology)
                         {
                            //console.log("new route",props,store.getState())
-                           //if(!store.getState().ui.loading) 
+                           //if(!store.getState().ui.loading)
                            store.dispatch(initiateApp(qs.parse(history.location.search)))
                         }
                         return ( <AppContainer history={history}  auth={auth}/> ) } } />

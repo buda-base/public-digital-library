@@ -270,7 +270,7 @@ svg.hide { opacity:0;pointer-events:none; }
    background: white; padding-top: 10px; }*/
 #diva-wrapper.hidden { display:none; }
 #diva-wrapper #diva-1-tools { text-align:center; }
-#diva-wrapper #diva-1-tools select#volume { margin-top:10px;display:inline-block; font-size:16px;height:28px;
+#diva-wrapper #diva-1-tools select#volume { display:inline-block; font-size:16px;height:28px; /* margin-top:10px; */
    padding:0 10px;margin-left:15px;}
 .diva-tools-right { width:400px; }
 .diva-tools-left { padding-right:100px; width:300px;}
