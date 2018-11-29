@@ -258,7 +258,7 @@ svg.hide { opacity:0;pointer-events:none; }
 .uvDefault.loaded #title { position:absolute;font-size:17px;left:20px;bottom:20px; z-index:2; }
 .uvDefault.loaded #title > div { background-color:rgba(229, 74, 53,1);color:white; display:inline-block;position:relative;
    padding:5px 50px; border-radius:0px; border:1px solid rgba(229, 74, 53,1); cursor:pointer;margin-right:20px;
-   width:200px;text-align:center;}
+   width:230px;text-align:center;}
 .uvDefault.loaded #title > div * { vertical-align:middle; }
 .uvDefault.loaded #title > div:hover { color:rgba(229, 74, 53,1);background:rgba(255, 230, 220,1);border-color:rgba(229, 74, 53,1); }
 
@@ -270,7 +270,7 @@ svg.hide { opacity:0;pointer-events:none; }
    background: white; padding-top: 10px; }*/
 #diva-wrapper.hidden { display:none; }
 #diva-wrapper #diva-1-tools { text-align:center; }
-#diva-wrapper #diva-1-tools select#volume { display:inline-block; font-size:16px;height:28px; /* margin-top:10px; */
+#diva-wrapper #diva-1-tools select#volume { display:inline-block; font-size:16px;height:28px; margin-top:10px;
    padding:0 10px;margin-left:15px;}
 .diva-tools-right { width:400px; }
 .diva-tools-left { padding-right:100px; width:300px;}

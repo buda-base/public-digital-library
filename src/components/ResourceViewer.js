@@ -1,6 +1,6 @@
 //@flow
 //import {Mirador, m3core} from 'mirador'
-//import diva from "diva.js" // v5.1.3
+import diva from "diva.js" // v5.1.3
 //import diva from "diva.js" //v6.0, not working
 import Portal from 'react-leaflet-portal';
 import bbox from "@turf/bbox"
@@ -1301,13 +1301,14 @@ class ResourceViewer extends Component<Props,State>
 
          let timerDiva = setInterval( () => {
 
-            if($("#diva-wrapper").length > 0 && window.Diva && window.Diva.DownloadPlugin && window.Diva.ManipulationPlugin && window.Diva.MetadataPlugin) {
+            if($("#diva-wrapper").length > 0) { // && window.Diva) && window.Diva.DownloadPlugin && window.Diva.ManipulationPlugin && window.Diva.MetadataPlugin) {
                clearInterval(timerDiva);
 
                let manif = this.props.collecManif
                if(!manif && this.props.manifests) manif = this.props.manifests[0]["@id"]
                if(!manif) manif = this.props.imageAsset
 
+               /*
                // v6.0 working from diva.js github demo site
                let dv = new window.Diva('diva-wrapper',{
                   "objectData": manif,
@@ -1317,6 +1318,11 @@ class ResourceViewer extends Component<Props,State>
                   "tileHeight":4000,
                   "plugins": [window.Diva.DownloadPlugin, window.Diva.ManipulationPlugin, window.Diva.MetadataPlugin],
                });
+               dv.disableScrollable()
+               dv.enableScrollable()
+               dv.disableDragScrollable()
+               dv.enableDragScrollable()
+               *
 
 /*
                // v6.0 not working as a import
@@ -1329,9 +1335,9 @@ class ResourceViewer extends Component<Props,State>
                   //enableFullscreen:false
                });
 */
-               /* // fully working v5.1.3 (but no plugin)
+               // fully working v5.1.3 (but no plugin)
 
-               let dv = new diva.create('#diva-wrapper',{
+               let dv = diva.create('#diva-wrapper',{
                    objectData: manif,
                    enableZoomControls:"slider",
                    tileWidth:4000,
@@ -1339,25 +1345,27 @@ class ResourceViewer extends Component<Props,State>
                    //plugins: [DownloadPlugin, ManipulationPlugin, MetadataPlugin],
                    //enableFullscreen:false
                });
-               */
+
 
                let timerDiva2 = setInterval(() => {
                   if($("#diva-1-fullscreen-icon").length > 0) {
                      clearInterval(timerDiva2)
 
-                     /* // diva 5.1
+                      // diva 5.1
                        $("#diva-1-link-icon").remove()
                        $("#diva-1-fullscreen-icon").remove();
                        $(".diva-view-menu").append(`<button type="button" id="diva-1-fullscreen-icon" class="diva-fullscreen-icon diva-button" title="Close viewer"
                           onClick="javascript:document.getElementById(\'diva-wrapper\').classList.add(\'hidden\')"></button>`)
-                      */
 
+
+                      /*
                       //diva 6
                       let svg = $("#diva-1-fullscreen-icon svg").remove();
                       $("#diva-1-fullscreen-icon").remove();
                       $(".diva-view-menu").append(`<button type="button" id="diva-1-fullscreen-icon" class="diva-fullscreen-icon diva-button" title="Close viewer"
                          onClick="javascript:document.getElementById(\'diva-wrapper\').classList.add(\'hidden\')"></button>`)
                       $("#diva-1-fullscreen-icon").append(svg)
+                      */
 
                      if(this.props.manifests) {
                         $("#diva-1-tools").append("<span>Browse collection</span><select id='volume'>"+this.props.manifests.map(
@@ -2295,17 +2303,18 @@ class ResourceViewer extends Component<Props,State>
                   !this.props.manifestError && this.props.imageAsset && this.state.openDiva  &&
                   [
                      <div id="diva-wrapper"></div>,
-                      //<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/diva.js/5.1.3/css/diva.css"/>,
+                      <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/diva.js/5.1.3/css/diva.css"/> ]
                       //(!this.state.openUV || this.state.hideUV) && <Script url={"https://cdnjs.cloudflare.com/ajax/libs/diva.js/5.1.3/js/diva.js"}/>]
-                      <link rel="stylesheet" href="//ddmal.github.io/diva.js/try/css/diva.css" />,
+                      /* // diva 6
+                        <link rel="stylesheet" href="//ddmal.github.io/diva.js/try/css/diva.css" />,
                      (!this.state.openUV || this.state.hideUV) &&
                         [
                            <Script url="//ddmal.github.io/diva.js/try/js/diva.js"/>,
                            window.Diva && <Script url="//ddmal.github.io/diva.js/try/js/plugins/manipulation.js"/>,
                            window.Diva && <Script url="//ddmal.github.io/diva.js/try/js/plugins/download.js"/>,
                            window.Diva && <Script url="//ddmal.github.io/diva.js/try/js/plugins/metadata.js"/>
-                        ]
-                  ]
+                        ] */
+
                }
                {
                   !this.props.manifestError && this.props.imageAsset && this.state.openMirador  &&
