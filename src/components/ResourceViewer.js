@@ -1430,6 +1430,7 @@ class ResourceViewer extends Component<Props,State>
                if(this.props.imageAsset.match(/[/]collection[/]/) && !this.props.collecManif)
                {
                   config.data.push({"collectionUri": this.props.imageAsset +"?continuous=true", location:"Test Collection Location" })
+                  if(this.props.manifests) config.data = this.props.manifests.map(m => ({manifestUri:m["@id"],label:m["label"]}))
                   config["openManifestsPage"] = true
                   config["preserveManifestOrder"] = true,
                   config["windowObjects"] = []
