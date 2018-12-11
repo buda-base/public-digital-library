@@ -10,11 +10,16 @@
    "ldspdi":
    {
       "endpoints":["http://localhost:8080","http://localhost:13280","http://buda1.bdrc.io:13280","http://purl.bdrc.io"],
-      "index":2
+      "index":1
    },
    "iiif":
    {
-      "endpoints":["http://localhost:9000","http://iiif.bdrc.io"],
+      "endpoints":["http://localhost:9000","http://localhost:13580","http://iiif.bdrc.io"],
+      "index":1
+   },
+   "iiifpres":
+   {
+      "endpoints":["http://localhost:9999","http://localhost:13480","http://iiifpres.bdrc.io","http://localhost:5555"],
       "index":1
    },
    "rkts":
