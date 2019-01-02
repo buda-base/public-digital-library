@@ -2228,16 +2228,18 @@ class ResourceViewer extends Component<Props,State>
                   </a>
                ]
                }
-               <CopyToClipboard text={"http://purl.bdrc.io/resource/"+this.props.IRI} onCopy={(e) =>
+
+
+               <CopyToClipboard text={"http://purl.bdrc.io/resource/"+this.props.IRI.replace(/^bdr:/,"")} onCopy={(e) =>
                         //alert("Resource url copied to clipboard\nCTRL+V to paste")
-                        prompt("Resource url has been copied to clipboard.\nCTRL+V to paste","http://purl.bdrc.io/resource/"+this.props.IRI)
+                        prompt("Resource url has been copied to clipboard.\nCTRL+V to paste","http://purl.bdrc.io/resource/"+this.props.IRI.replace(/^bdr:/,""))
                   }>
 
-                  {/* <Button className="goBack" style={{marginLeft:"30px"}}>Copy permalink</Button> */}
-                  <IconButton style={{marginLeft:"35px"}} title="Copy URL to clipboard">
+                  <IconButton style={{marginLeft:"35px"}} title="Permalink">
                      <ShareIcon />
                   </IconButton>
                </CopyToClipboard>
+
                {
 
                   !this.props.manifestError && this.props.imageAsset &&
