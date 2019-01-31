@@ -2336,7 +2336,7 @@ class ResourceViewer extends Component<Props,State>
                   data-locale="en-GB:English (GB),cy-GB:Cymraeg"
                   //data-config="/config.json"
                   //data-uri="https://eap.bl.uk/archive-file/EAP676-12-4/manifest"
-                  data-uri={this.props.imageAsset}
+                  data-uri={this.props.imageAsset.replace(/[/]i:/,"/ivo:")}
                   data-collectionindex="0"
                   data-manifestindex="0"
                   data-sequenceindex="0"
