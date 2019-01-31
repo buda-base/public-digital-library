@@ -1486,7 +1486,7 @@ class ResourceViewer extends Component<Props,State>
       if(!askPdf)
       {
          event.preventDefault();
-         console.log("pdf",pdf)
+         console.log("pdf",pdf,file)
          this.props.onCreatePdf(pdf,{iri:this.props.IRI,file});
       }
 
@@ -1596,7 +1596,7 @@ class ResourceViewer extends Component<Props,State>
                this.setState({...this.state, imageLoaded:false})
 
                if(assoc.length == 1) { this.props.onHasImageAsset(iiifpres+"/2.1.1/v:bdr:"+this.pretty(assoc[0].value)+"/manifest",this.props.IRI); }
-               else { this.props.onHasImageAsset(iiifpres+"/2.1.1/collection/i:bdr:"+this.pretty(e.value),this.props.IRI);  }
+               else { this.props.onHasImageAsset(iiifpres+"/2.1.1/collection/ivo:bdr:"+this.pretty(e.value),this.props.IRI);  }
 
             }
          }
@@ -1711,7 +1711,7 @@ class ResourceViewer extends Component<Props,State>
 //         console.log("iiif",iiif,this.props.config)
 
          let id = this.props.IRI.replace(/^[^:]+:./,"")
-         if(this.props.imageAsset.match(/[/]i:/)) {
+         if(this.props.imageAsset.match(/[/]ivo:/)) {
             pdfLink = iiif+"/download/pdf/wi:bdr:W"+id+"::bdr:I"+id ;
          }
          else if(this.props.imageAsset.match(/[/]v:/)) {

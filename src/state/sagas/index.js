@@ -250,8 +250,9 @@ async function createPdf(url,iri) {
    try
    {
 
-      url = url.replace(/zip/,iri.file)
-      console.log("creaP",url,iri)
+      let nUrl = url.replace(/(pdf|zip)/,iri.file)
+      console.log("creaP",url,nUrl,iri,iri.file)
+      url = nUrl
 
       let config = store.getState()
       if(config) config = config.data
