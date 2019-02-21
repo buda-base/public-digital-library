@@ -1,0 +1,26 @@
+{
+   "translations":{
+      "en":{
+         "bo":"Tibetan","inc":"Indic","pi":"Pali","sa":"Sanskrit","zh":"Chinese",
+         "hans":"Simplified","hant":"Traditional",
+         "deva":"Devanagari","newa":"Newari","sinh":"Sinhalese",
+         "x-ewts":"Wylie","x-dts":"DTS","alalc97":"ALA-LC","latn-pinyin":"Pinyin",
+         "latn":"Latin"
+      }
+   },
+   "languages": {
+      "bo":{ "latin":[ "x-ewts", "x-dts", "alalc97" ] },
+      "zh":{ "script": [ "hans", "hant" ], "latin":[ "latn-pinyin" ]},
+      "inc":{ "sub":["sa", "pi" ], "script":[ "deva", "newa", "sinh" ], "latin":[ "x-iast", "x-iso", "alalc97" ] }
+   },
+   "lang-script":{
+      "data":{
+         "presets":[
+            [ "bo-x-ewts", "sa-deva" ],
+            [ "bo", "zh-hans" ],
+            [ "zh-hant" ]
+         ],
+         "custom":[ "bo", "sa-deva", "zh-hant" ]
+      }
+   }
+}

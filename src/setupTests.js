@@ -9,7 +9,7 @@ global.XMLHttpRequest = XMLHttpRequest;
 
 global.inTest = true ;
 
-jasmine.DEFAULT_TIMEOUT_INTERVAL = 100000;
+//jasmine.DEFAULT_TIMEOUT_INTERVAL = 100000;
 
 configure({ adapter: new Adapter() });
 

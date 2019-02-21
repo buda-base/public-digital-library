@@ -22,7 +22,9 @@ const enTranslation = {
          boXEwts:"Tibetan (EWTS)",
          boXDts:"Tibetan (DTS)",
          boAlaLc:"Tibetan (ALA-LC)",
-         other:"Other"
+         other:"Other",
+         inc:"Indic",
+         sa:"Sanskrit"
       },
       tip:{
          zh:"Chinese",

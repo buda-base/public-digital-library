@@ -1,4 +1,9 @@
 //@flow
+
+/**
+ * @jest-environment jsdom
+ */
+
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { shallow,mount } from 'enzyme';
@@ -6,6 +11,7 @@ import store from '../index';
 import {initiateApp} from '../state/actions';
 import tcpPortUsed from 'tcp-port-used'
 import SearchBar from 'material-ui-search-bar'
+
 
 require('../setupTests')
 let makeRoutes = require('../routes').default
