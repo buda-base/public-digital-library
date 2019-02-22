@@ -51,7 +51,13 @@ export default class API {
     constructor(options: ?APIOptions) {
         if (options) {
             if (options.server) this._server = options.server;
-            this._fetch = (options.fetch) ? options.fetch : window.fetch.bind(window);
+            if(global.inTest){
+               let {fetch} = require('whatwg-fetch')
+               this._fetch = fetch
+            }
+            else if(options.fetch) this._fetch = options.fetch
+            else if (window.fetch) this._fetch = window.fetch.bind(window)
+
         } else {
             this._fetch = window.fetch.bind(window);
         }

@@ -7,7 +7,9 @@ import {auth} from "./routes"
 var tokenRenewalTimeout;
 
 function scheduleRenewal() {
-  var expiresAt = JSON.parse(localStorage.getItem('expires_at')) - 5*60*1000 ;
+  var token = localStorage.getItem('expires_at')
+  if(!token) return 
+  var expiresAt = JSON.parse(token) - 5*60*1000 ;
   var delay = expiresAt - Date.now();
   console.log("delay",delay)
   if (delay > 0) {

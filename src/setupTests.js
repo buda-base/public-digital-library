@@ -9,7 +9,13 @@ global.XMLHttpRequest = XMLHttpRequest;
 
 global.inTest = true ;
 
-//jasmine.DEFAULT_TIMEOUT_INTERVAL = 100000;
+jasmine.DEFAULT_TIMEOUT_INTERVAL = 1000;
+
+const { Response, Request, Headers, fetch } = require('whatwg-fetch');
+global.Response = Response;
+global.Request = Request;
+global.Headers = Headers;
+global.fetch = fetch;
 
 configure({ adapter: new Adapter() });
 
@@ -55,24 +61,27 @@ if (!console.group) {
     console.log(hr+'\nBEGIN GROUP: '+ label);
   };
 }
+
 if (!console.groupEnd) {
   console.groupEnd = function logGroupEnd() {
     console.log('END GROUP: '+ groups.pop() +"\n"+ hr);
   };
 }
-
-
+/*
 tcpPortUsed.check(5555).then((inUse) => {
    if(!inUse)
-   {
-      const server = jsonServer.create()
+   {*/
+      let server = jsonServer.create()
       const router = jsonServer.router('src/tests/data.json')
       const middlewares = jsonServer.defaults()
 
       server.use(middlewares)
       server.use(router)
-      server.listen(5555, () => {
+      server = server.listen(5555, () => {
          console.log('JSON Server is running')
+         global.jsonServer = server
       })
+      /*
    }
 })
+*/
