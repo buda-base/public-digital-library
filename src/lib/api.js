@@ -65,7 +65,7 @@ export default class API {
         console.log("fetch",this._fetch)
       }
 
-     async getURLContents(url: string, minSize : boolean = true,acc?:string): Promise<string> {
+     async getURLContents(url: string, minSize : boolean = true,acc?:string,lang?:string[]): Promise<string> {
 
          const { isAuthenticated } = auth;
 
@@ -78,9 +78,13 @@ export default class API {
          let head = {}
          if(acc) head = { ...head, "Accept":acc }
 
+         if(lang) head = { ...head, "Accept-Language":lang.join(",") }
+
          // CORS issue - to be continued
          if(isAuthenticated() && url.match(/bdrc[.]io/))
             head = { ...head, "Authorization":"bearer "+id_token}
+
+         //console.log(new Headers(head),head,lang)
 
          let response = await this._fetch( url, { method:"GET",headers:new Headers(head) } )
 
@@ -158,7 +162,7 @@ export default class API {
        async loadManifest(url:string): Promise<string>
        {
 
-            let manif =  JSON.parse(await this.getURLContents(url,false));
+            let manif =  JSON.parse(await this.getURLContents(url,false,null,["bo-Tibt"]));
             //console.log("manif",manif)
             return manif ;
       }
