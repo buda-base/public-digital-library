@@ -1408,16 +1408,16 @@ class ResourceViewer extends Component<Props,State>
                   data: [],
                   showAddFromURLBox:false,
                   //displayLayout:false,
-                  /*
-                     manifestsPanel: {
-                       name: "Collection Tree Manifests Panel",
-                       module: "CollectionTreeManifestsPanel",
-                     options: {}
-                     },
-                     windowSettings: {
-                       sidePanelVisible: false
-                     },
-                  */
+
+                  manifestsPanel: {
+                    name: "Collection Tree Manifests Panel",
+                    module: "CollectionTreeManifestsPanel",
+                  options: {}
+                  },
+                  windowSettings: {
+                    sidePanelVisible: false
+                  },
+
                   mainMenuSettings : {
                      "userButtons": [
                        { "label": "Close Mirador",
@@ -1430,7 +1430,7 @@ class ResourceViewer extends Component<Props,State>
                if(this.props.imageAsset.match(/[/]collection[/]/) && !this.props.collecManif)
                {
                   config.data.push({"collectionUri": this.props.imageAsset +"?continuous=true", location:"Test Collection Location" })
-                  if(this.props.manifests) config.data = this.props.manifests.map(m => ({manifestUri:m["@id"],label:m["label"]}))
+                  //if(this.props.manifests) config.data = this.props.manifests.map(m => ({manifestUri:m["@id"],label:m["label"]}))
                   config["openManifestsPage"] = true
                   config["preserveManifestOrder"] = true,
                   config["windowObjects"] = []
@@ -2324,8 +2324,8 @@ class ResourceViewer extends Component<Props,State>
                {
                   !this.props.manifestError && this.props.imageAsset && this.state.openMirador  &&
                   [<div id="viewer"></div>,
-                  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/mirador@2.6.0/dist/css/mirador-combined.css"/>,
-                  (!this.state.openUV || this.state.hideUV) && <Script url={"https://cdn.jsdelivr.net/npm/mirador@2.6.0/dist/mirador.js"}/>]
+                  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/mirador@2.7.2/dist/css/mirador-combined.css"/>,
+                  (!this.state.openUV || this.state.hideUV) && <Script url={"https://cdn.jsdelivr.net/npm/mirador@2.7.2/dist/mirador.js"}/>]
                }
                {
 

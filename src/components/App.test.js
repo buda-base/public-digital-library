@@ -49,7 +49,7 @@ describe('main App tests', () => {
       })
    })
 
-   /*
+
    it('App initialization', async done => {
       tcpPortUsed.waitUntilUsed(5555).then(async () => {
 
@@ -58,10 +58,10 @@ describe('main App tests', () => {
          ReactDOM.render( compo = makeRoutes(), div);
          expect(compo).toMatchSnapshot()
 
-         setTimeout( () => { done(); }, 1000 );
+         done();
       })
    })
-  */
+
   /*
    it('start a search', async done => {
       tcpPortUsed.waitUntilUsed(5555).then(async () => {

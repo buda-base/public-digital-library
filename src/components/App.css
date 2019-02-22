@@ -288,6 +288,7 @@ svg.hide { opacity:0;pointer-events:none; }
 .pdfSpinner,.zipSpinner { left: 55% !important;  top: 45% !important; }
 
 #viewer.mirador-container { position:fixed;width:100%;height:100%;top:0;left:0;z-index:10; }
+#collection-tree li[role=treeitem]:nth-child(-n+2) { display:none; }
 
 .App {
   text-align: center;

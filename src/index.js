@@ -112,8 +112,10 @@ const go = () => {
    );
 }
 
+console.log("global",global.inTest)
+
 // comment out before starting tests...
-go();
+if(!global.inTest) go();
 
 
 //store.dispatch(helloWorld());
