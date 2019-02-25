@@ -88,6 +88,15 @@ export const languages = {
    "x-ewts":"lang.search.xEwts","x-dts":"lang.search.sDts","alalc97":"lang.search.alalc97","latn-pinyin":"lang.search.latnPinyin"
 }
 
+export const langScripts = {
+   "zh":"lang.langscript.zh", "en":"lang.langscript.en", "pi":"lang.langscript.pi", "bo":"lang.langscript.bo", "sa":"lang.langscript.sa", "inc":"lang.langscript.inc",
+   "hans":"lang.langscript.hans","hant":"lang.langscript.hant",
+   "deva":"lang.langscript.deva","newa":"lang.langscript.newa","sinh":"lang.langscript.sinh",
+   "latn":"lang.langscript.ltn",
+   "x-ewts":"lang.langscript.xEwts","x-dts":"lang.langscript.sDts","alalc97":"lang.langscript.alalc97","latn-pinyin":"lang.langscript.latnPinyin"
+
+}
+
 const searchLangSelec = {
    "zh-hans":"lang.search.zh"
 }

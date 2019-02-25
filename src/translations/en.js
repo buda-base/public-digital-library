@@ -46,6 +46,24 @@ const enTranslation = {
          saDeva:"Sanskrit in Devanagari",
          bo:"Tibetan in Unicode",
          boXEwts:"Tibetan transliterated in EWTS"
+      },
+      langscript:{
+         zh:"Chinese",
+         en:"English",
+         pi:"Pali",
+         bo:"Tibetan",
+         inc:"Indic",
+         sa:"Sanskrit",
+         hans:"Simplified",
+         hant:"Traditional",
+         deva:"Devanagari",
+         newa:"Newari",
+         sinh:"Sinhalese",
+         latn:"Latin",
+         xEwts:"EWTS",
+         xDts:"DTS",
+         alalc97:"ALA-LC",
+         latnPinyin:"Pinyin"
       }
    },
    types:{
