@@ -22,7 +22,7 @@ const frTranslation = {
          boXEwts:"Tibétain (EWTS)",
          boXDts:"Tibétain (DTS)",
          boAlaLc:"Tibétain (ALA-LC)",
-         other:"Autre"
+         other:"Autre",
       },
       tip:{
          zh:"Chinois",

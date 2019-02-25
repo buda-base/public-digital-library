@@ -51,7 +51,24 @@
       "links":[
          { "title":"Abstract text of the Bodhisattvacaryāvatāra", "id":"W19740", "label":"spyod 'jug", "lang":"bo-x-ewts", "icon":"Abstract Work" },
          { "title":"Shantideva", "id":"P6161", "label":"zhi ba lha/" }
-      ]
+      ],
+      "language": {
+         "languages": {
+            "bo":{ "latin":[ "x-ewts", "x-dts", "alalc97" ] },
+            "zh":{ "script": [ "hans", "hant" ], "latin":[ "latn-pinyin" ]},
+            "inc":{ "sub":["sa", "pi" ], "script":[ "deva", "newa", "sinh" ], "latin":[ "x-iast", "x-iso", "alalc97" ] }
+         },
+         "lang-script":{
+            "data":{
+               "presets":[
+                  [ "bo-x-ewts", "sa-deva" ],
+                  [ "bo", "zh-hans" ],
+                  [ "zh-hant" ]
+               ],
+               "custom":[ "bo", "sa-deva", "zh-hant" ]
+            }
+         }
+      }
    },
    "lib":[{
       "id":"rootSearchGraph",

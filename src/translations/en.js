@@ -24,7 +24,17 @@ const enTranslation = {
          boAlaLc:"Tibetan (ALA-LC)",
          other:"Other",
          inc:"Indic",
-         sa:"Sanskrit"
+         sa:"Sanskrit",
+         hans:"Simplified",
+         hant:"Traditional",
+         deva:"Devanagari",
+         newa:"Newari",
+         sinh:"Sinhalese",
+         latn:"Latin",
+         xEwts:"EWTS",
+         xDts:"DTS",
+         alalc97:"ALA-LC",
+         latnPinyin:"Pinyin"
       },
       tip:{
          zh:"Chinese",

@@ -81,6 +81,11 @@ export const languages = {
    "bo-x-dts":"lang.search.boXDts",
    "bo-alalc97":"lang.search.boAlaLc",
    //"other":"lang.search.other"
+   "inc":"lang.search.inc","sa":"lang.search.sa",
+   "hans":"lang.search.hans","hant":"lang.search.hant",
+   "deva":"lang.search.deva","newa":"lang.search.newa","sinh":"lang.search.sinh",
+   "latn":"lang.search.ltn",
+   "x-ewts":"lang.search.xEwts","x-dts":"lang.search.sDts","alalc97":"lang.search.alalc97","latn-pinyin":"lang.search.latnPinyin"
 }
 
 const searchLangSelec = {

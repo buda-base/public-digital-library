@@ -23,7 +23,7 @@ afterAll( (done) => {
 })
 
 // to check json-server at http://localhost:5555/test/
-jest.setTimeout(10000)
+//jest.setTimeout(10000)
 
 describe('main App tests', () => {
 
@@ -48,6 +48,9 @@ describe('main App tests', () => {
 
          console.log("test loaded config",config)
 
+         console.log = () => {}
+         console.info = () => {}
+
          config =  await api.loadConfig();
          expect(config).toMatchSnapshot()
 
@@ -58,6 +61,9 @@ describe('main App tests', () => {
    it('App initialization', async done => {
       tcpPortUsed.waitUntilUsed(5555).then( () => {
 
+         console.log = () => {}
+         console.info = () => {}
+
          const div = document.createElement('div');
          let compo ;
          ReactDOM.render( compo = makeRoutes(), div);
@@ -67,8 +73,12 @@ describe('main App tests', () => {
       })
    })
 
+
    it('start a search', async done => {
-      tcpPortUsed.waitUntilUsed(5555).then(async () => {
+      tcpPortUsed.waitUntilUsed(5555).then( () => {
+
+         console.log = () => {}
+         console.info = () => {}
 
          let compo = makeRoutes()
          let render = mount(compo)
@@ -85,6 +95,5 @@ describe('main App tests', () => {
 
       })
    });
-
 
 })
