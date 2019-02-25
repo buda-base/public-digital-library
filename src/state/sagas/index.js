@@ -12,7 +12,7 @@ import bdrcApi, { getEntiType } from '../../lib/api';
 import {auth} from '../../routes';
 
 // to enable tests
-const api = new bdrcApi({...global.inTest ? {server:"http://localhost:5555"}:{}});
+const api = new bdrcApi({...process.env.NODE_ENV === 'test' ? {server:"http://localhost:5555/test"}:{}});
 
 const bdo  = "http://purl.bdrc.io/ontology/core/";
 const bdr  = "http://purl.bdrc.io/resource/";
@@ -486,7 +486,9 @@ if(data.works) {
 if(Object.keys(result).length == 0 || (Object.keys(result).length == 1 && result["metadata"])) { numR = 0 }
 else
 {
-   numR = Object.keys(result).reduce((acc,e) => { ( acc + e=="metadata"?0:Object.keys(result[e]).length) },0)
+   numR = Object.keys(result).reduce((acc,e) => {
+      return ( acc + e=="metadata"?0:Object.keys(result[e]).length)
+   },0)
    if(metadata)
    {
       let kZ = Object.keys(metadata)

@@ -112,10 +112,7 @@ const go = () => {
    );
 }
 
-console.log("global",global.inTest)
-
-// comment out before starting tests...
-if(!global.inTest) go();
+if(process.env.NODE_ENV !== 'test') go();
 
 
 //store.dispatch(helloWorld());

@@ -4,10 +4,9 @@ import Adapter from 'enzyme-adapter-react-16';
 import jsonServer from 'json-server'
 import tcpPortUsed from 'tcp-port-used'
 
-import { XMLHttpRequest } from 'xmlhttprequest';
-global.XMLHttpRequest = XMLHttpRequest;
+//import { XMLHttpRequest } from 'xmlhttprequest';
+//global.XMLHttpRequest = XMLHttpRequest;
 
-global.inTest = true ;
 
 jasmine.DEFAULT_TIMEOUT_INTERVAL = 1000;
 
@@ -67,21 +66,20 @@ if (!console.groupEnd) {
     console.log('END GROUP: '+ groups.pop() +"\n"+ hr);
   };
 }
-/*
+
 tcpPortUsed.check(5555).then((inUse) => {
    if(!inUse)
-   {*/
+   {
       let server = jsonServer.create()
       const router = jsonServer.router('src/tests/data.json')
       const middlewares = jsonServer.defaults()
 
       server.use(middlewares)
-      server.use(router)
+      server.use('/test',router)
       server = server.listen(5555, () => {
          console.log('JSON Server is running')
          global.jsonServer = server
       })
-      /*
+
    }
 })
-*/

@@ -13,6 +13,7 @@ import store from '../index';
 import {initiateApp} from '../state/actions';
 import tcpPortUsed from 'tcp-port-used'
 import SearchBar from 'material-ui-search-bar'
+import 'whatwg-fetch'
 
 let makeRoutes = require('../routes').default
 let bdrcAPI = require('../lib/api').default;
@@ -21,26 +22,31 @@ afterAll( (done) => {
    global.jsonServer.close(()=> { console.log("closed JSON server"); done(); })
 })
 
+// to check json-server at http://localhost:5555/test/
+jest.setTimeout(10000)
+
 describe('main App tests', () => {
 
     it('init json-server', async done => {
       tcpPortUsed.waitUntilUsed(5555).then( () => {
-            //console.log("youpi",global.jsonServer)
-
-            done();
+            var fic = fetch("http://localhost:5555/test/config.json").then(async (msg) => {
+               console.log("fetched",await msg.json())
+               done();
+            })
          })
       })
 
+   it('loading config file from json-server', async done => {
+      tcpPortUsed.waitUntilUsed(5555).then( async () => {
 
-   it('loading config file from json-server', () => {
-      tcpPortUsed.waitUntilUsed(5555).then( async done => {
+         const api = new bdrcAPI({server:"http://localhost:5555/test"});
 
-         const api = new bdrcAPI({server:"http://localhost:5555"});
+         console.log("testing loading config")
 
-         let config =  await api.getURLContents("http://localhost:5555/config.json",false);
+         let config =  await api.getURLContents("http://localhost:5555/test/config.json",false);
          expect(config).toMatchSnapshot()
 
-         console.log("config",config)
+         console.log("test loaded config",config)
 
          config =  await api.loadConfig();
          expect(config).toMatchSnapshot()
@@ -49,9 +55,8 @@ describe('main App tests', () => {
       })
    })
 
-
    it('App initialization', async done => {
-      tcpPortUsed.waitUntilUsed(5555).then(async () => {
+      tcpPortUsed.waitUntilUsed(5555).then( () => {
 
          const div = document.createElement('div');
          let compo ;
@@ -62,7 +67,6 @@ describe('main App tests', () => {
       })
    })
 
-  /*
    it('start a search', async done => {
       tcpPortUsed.waitUntilUsed(5555).then(async () => {
 
@@ -75,12 +79,12 @@ describe('main App tests', () => {
             setTimeout( () => {
                expect(render.update().debug({ ignoreProps: true })).toMatchSnapshot()
 
+               done();
             }, 500 );
          }, 100 );
 
-         setTimeout( () => { done(); }, 1000 );
       })
    });
- */
+
 
 })

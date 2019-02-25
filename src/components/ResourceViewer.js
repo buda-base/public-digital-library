@@ -711,7 +711,7 @@ class ResourceViewer extends Component<Props,State>
 
                            if(info && info[0]) {
                               lang = info[0]["xml:lang"]
-                              if(!lang) info[0]["lang"]
+                              if(!lang) lang = info[0]["lang"]
                               info = info[0].value
                            }
                            else {
@@ -1432,7 +1432,7 @@ class ResourceViewer extends Component<Props,State>
                   config.data.push({"collectionUri": this.props.imageAsset +"?continuous=true", location:"Test Collection Location" })
                   //if(this.props.manifests) config.data = this.props.manifests.map(m => ({manifestUri:m["@id"],label:m["label"]}))
                   config["openManifestsPage"] = true
-                  config["preserveManifestOrder"] = true,
+                  config["preserveManifestOrder"] = true
                   config["windowObjects"] = []
 
                   config["mainMenuSettings"]["userButtons"] =

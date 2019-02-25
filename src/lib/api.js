@@ -51,7 +51,7 @@ export default class API {
     constructor(options: ?APIOptions) {
         if (options) {
             if (options.server) this._server = options.server;
-            if(global.inTest){
+            if(process.env.NODE_ENV === 'test'){
                let {fetch} = require('whatwg-fetch')
                this._fetch = fetch
             }
@@ -59,10 +59,14 @@ export default class API {
             else if (window.fetch) this._fetch = window.fetch.bind(window)
 
         } else {
-            this._fetch = window.fetch.bind(window);
+           if(process.env.NODE_ENV === 'test'){
+              let fetch = require('whatwg-fetch')
+              this._fetch = fetch
+           }
+           else this._fetch = window.fetch.bind(window);
         }
 
-        console.log("fetch",this._fetch)
+        console.log("api options",options)
       }
 
      async getURLContents(url: string, minSize : boolean = true,acc?:string,lang?:string[]): Promise<string> {
@@ -93,7 +97,7 @@ export default class API {
                  throw new ResourceNotFound('The resource does not exist.');
              }
              else {
-                console.log("FETCH pb",response)
+                console.error("FETCH pb",response)
                  throw new ResourceNotFound('Problem fetching the resource');
              }
          }
