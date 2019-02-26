@@ -289,13 +289,15 @@ svg.hide { opacity:0;pointer-events:none; }
 
 #viewer.mirador-container { position:fixed;width:100%;height:100%;top:0;left:0;z-index:10; }
 #collection-tree > ul > li[role=treeitem]:nth-child(-n+2) { display:none; }
-
-.jstree-default .jstree-anchor {  line-height: 42px; height: 42px;  font-size: 20px; } /* texte */
-.jstree-default .jstree-icon:empty { line-height: 42px;  padding-right: 4px; } /* icone repertoire */
-.jstree-icon.jstree-ocl { vertical-align: -16px; } /* icone plier/déplier */
-#collection-tree { width: 20%;  max-width: 10000px; } /* largeur panel colectionTree */
-.member-select-results { margin-left: 20%; } /* alignement contenu sur largeur panel */
-
+.jstree-default .jstree-anchor {  line-height: 42px; height: 42px;  font-size: 20px; }
+.jstree-default .jstree-icon:empty { line-height: 42px;  padding-right: 4px; }
+.jstree-icon.jstree-ocl { vertical-align: -16px; }
+#collection-tree.jstree { width: 20%;  max-width: 10000px; }
+#collection-tree + .member-select-results { margin-left: 20%; }
+/* vertical scrollview in mirador*/
+.mirador-container .mirador-viewer .scroll-view { overflow-y:auto; }
+.mirador-container .mirador-viewer ul.scroll-listing-thumbs li  { display:block; }
+.mirador-container .mirador-viewer ul.scroll-listing-thumbs li img { max-width: 100%; height: auto; cursor:pointer; }
 
 
 .App {
