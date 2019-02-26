@@ -205,7 +205,7 @@ body {overflow-x:hidden; }
 .SidePane > #annoCollec svg.score1 { border-radius:50%; background-color:rgba(17, 173, 17, 0.3);border:1px solid rgba(36, 106, 36, 0.4);}
 
 .SidePane { position:absolute;transition:all 400ms ease-in-out; background:white;height:100vh; position:fixed;padding:30px;
-   background:rgba(246,246,246,1); z-index:100;
+   background:rgba(246,246,246,1); z-index:100; top:0 ;
 }
 .SidePane.left { left:-400px; box-shadow:2px 0 2px 0px rgba(0,0,0,0.35);}
 .SidePane.right { right:-400px; box-shadow:-2px 0 2px 0px rgba(0,0,0,0.35);}

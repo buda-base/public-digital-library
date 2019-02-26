@@ -10,6 +10,7 @@ import { GoogleLayer } from "react-leaflet-google" ;
 //import { GoogleMutant, GoogleApiLoader } from 'react-leaflet-googlemutant';
 // import {GoogleLayer} from 'react-leaflet-google'
 // const { BaseLayer} = LayersControl;
+import Settings from '@material-ui/icons/SettingsSharp';
 import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
 import FormHelperText from '@material-ui/core/FormHelperText';
@@ -45,6 +46,7 @@ import {Translate} from 'react-redux-i18n';
 import { Link } from 'react-router-dom';
 //import AnnotatedEtextContainer from 'annotated-etext-react';
 import IIIFViewerContainer from '../containers/IIIFViewerContainer';
+import LanguageSidePaneContainer from '../containers/LanguageSidePaneContainer';
 import { Redirect404 } from "../routes.js"
 import Loader from "react-loader"
 //import {MapComponent} from './Map';
@@ -106,7 +108,8 @@ type State = {
    annoCollecOpen?:boolean,
    anchorElAnno?:any,
    largeMap?:boolean,
-   langProfile?:string[]
+   langProfile?:string[],
+   rightPane?:boolean
  }
 
 
@@ -2061,7 +2064,7 @@ class ResourceViewer extends Component<Props,State>
 
       // add nother route to UViewer Gallery page
       return (
-         <div style={{overflow:"hidden",textAlign:"center"}}>
+         [<div style={{overflow:"hidden",textAlign:"center"}}>
             { !this.state.ready && <Loader loaded={false} /> }
             <div className={"resource "+getEntiType(this.props.IRI).toLowerCase()}>
                <div className={"SidePane right "  +(this.state.annoPane?"visible":"")} style={{top:"0",paddingTop:"50px"}}>
@@ -2144,6 +2147,9 @@ class ResourceViewer extends Component<Props,State>
                      <HomeIcon style={{fontSize:"30px"}}/>
                   </IconButton>
                </Link>
+              <IconButton style={{marginLeft:"15px"}}  className={this.state.rightPane?"hidden":""} onClick={e => this.setState({...this.state,rightPane:!this.state.rightPane})}>
+                 <Settings/>
+              </IconButton>
                {
                   this.props.IRI.match(/^bdr:/) &&
                   [<a className="goBack" target="_blank" title="TTL version" rel="alternate" type="text/turtle" href={"http://purl.bdrc.io/resource/"+this.props.IRI.replace(/bdr:/,"")+".ttl"}>
@@ -2354,7 +2360,8 @@ class ResourceViewer extends Component<Props,State>
                { (!this.state.openUV || this.state.hideUV || !this.state.toggleUV) && theData }
             </div>
             {/* <iframe style={{width:"calc(100% - 100px)",margin:"50px",height:"calc(100vh - 160px)",border:"none"}} src={"http://purl.bdrc.io/resource/"+get.IRI}/> */}
-         </div>
+         </div>,
+         <LanguageSidePaneContainer open={this.state.rightPane} locale={this.props.locale}/>]
 
       ) ;
 

@@ -46,6 +46,7 @@ import qs from 'query-string'
 
 import {I18n, Translate, Localize } from "react-redux-i18n" ;
 
+import LanguageSidePaneContainer from '../containers/LanguageSidePaneContainer';
 import ResourceViewerContainer from '../containers/ResourceViewerContainer';
 import {getEntiType} from '../lib/api';
 import './App.css';
@@ -2168,56 +2169,7 @@ class App extends Component<Props,State> {
                   </List>
                }
             </div>
-            <div className={"SidePane right "+(this.state.rightPane?"visible":"")}>
-               <IconButton className="close" onClick={e => this.setState({...this.state,rightPane:false})} ><Close/></IconButton>
-               <div style={{width:"333px",position:"relative"}}>
-                  <Typography style={{fontSize:"30px",marginBottom:"20px",textAlign:"left"}}>
-                     <Translate value='Rsidebar.title' />
-                  </Typography>
-                  {
-                     widget(I18n.t('Rsidebar.UI.title'),"locale",
-                           ["zh", "en", "fr", "bo" ].map((i) => {
-
-                           let label = I18n.t("lang."+i);
-                           let disab = ["fr","en"].indexOf(i) === -1
-
-                           return ( <div key={i} style={{width:"150px",textAlign:"left"}}>
-                              <FormControlLabel
-                                 control={
-                                    <Checkbox
-                                       checked={i === this.props.locale}
-                                       disabled={disab}
-                                       className={"checkbox "+ (disab?"disabled":"")}
-                                       icon={<span className='checkB'/>}
-                                       checkedIcon={<span className='checkedB'><CheckCircle style={{color:"#444",margin:"-3px 0 0 -3px",width:"26px",height:"26px"}}/></span>}
-                                       onChange={(event, checked) => this.handleCheckUI(event,"locale",i,checked)}                                    />
-
-                                 }
-                                 label={label}
-                              />
-                           </div>)}))
-                  }{
-                     widget(I18n.t("Rsidebar.results.title"),"language",
-                           //Object.keys(languages)
-                           langProfile.map((i) => <div key={i} style={{width:"200px",textAlign:"left"}}>
-                              <FormControlLabel
-                                 control={
-                                    <Checkbox
-                                       checked={this.state.langProfile && this.state.langProfile.indexOf(i) !== -1} //i === this.props.prefLang}
-                                       disabled={false}
-                                       className="checkbox"
-                                       icon={<span className='checkB'/>}
-                                       checkedIcon={<span className='checkedB'><CheckCircle style={{color:"#444",margin:"-3px 0 0 -3px",width:"26px",height:"26px"}}/></span>}
-                                       onChange={(event, checked) => this.handleCheckUI(event,"langProfile",i,checked)}
-                                    />
-
-                                 }
-                                 label={I18n.t(languages[i])}
-                              />
-                           </div> ))
-                  }
-               </div>
-            </div>
+            <LanguageSidePaneContainer open={this.state.rightPane} locale={this.props.locale}/>
          </div>
       </div>
       );
