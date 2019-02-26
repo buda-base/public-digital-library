@@ -53,12 +53,7 @@
          { "title":"Shantideva", "id":"P6161", "label":"zhi ba lha/" }
       ],
       "language": {
-         "languages": {
-            "bo":{ "latin":[ "x-ewts", "x-dts", "alalc97" ] },
-            "zh":{ "script": [ "hans", "hant" ], "latin":[ "latn-pinyin" ]},
-            "inc":{ "sub":["sa", "pi" ], "script":[ "deva", "newa", "sinh" ], "latin":[ "x-iast", "x-iso", "alalc97" ] }
-         },
-         "lang-script":{
+         "preferences":{
             "data":{
                "presets":[
                   [ "bo-x-ewts", "sa-deva" ],
