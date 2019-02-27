@@ -93,8 +93,7 @@ type State = {
    imageLoaded:boolean,
    openMirador?:boolean,
    openUV?:boolean,
-   hideUV?:boolean,
-   toggleUV?:boolean,
+   openDiva?:boolean,
    collapse:{[string]:boolean},
    pdfOpen?:boolean,
    pdfReady?:boolean,
@@ -1288,21 +1287,72 @@ class ResourceViewer extends Component<Props,State>
 
    showUV()
    {
+      if(!this.state.openUV) // || !$("#uv").hasClass("hidden"))
+      {
+         let timerUV = setInterval( () => {
+
+
+            if(window.UV && window.createUV) {
+               clearInterval(timerUV);
+
+               console.log("uv",window.UV)
+               console.log("createuv",window.createUV)
+
+               $("#fond").addClass("hidden");
+               $("#uv").addClass("open")
+
+               var myUV = window.createUV('#uv', {
+                  iiifResourceUri: this.props.imageAsset.replace(/[/]i:/,"/ivo:"),
+                  configUri: '../scripts/uv-config.json'
+               }, new window.UV.URLDataProvider());
+
+               timerUV = setInterval(() => {
+
+                  if($('button.fullScreen').length)
+                  {
+                     let btn = $('button.fullScreen')
+                     btn.parent().append('<button style="float:right" class="toggleUV btn imageBtn" title="Toggle UV"><i class="uv-icon uv-icon-fullscreen" aria-hidden="true"></i></button>').click((e) =>
+                     {
+                        $("#uv").addClass("hidden")
+                     })
+                     btn.remove()
+                     clearInterval(timerUV)
+                  }
+
+               }, 100)
+            }
+
+         },100)
+
+         let state = { ...this.state, openUV:true, openDiva:false, openMirador:false }
+         this.setState(state);
+      }
+      else {
+         $('#uv').removeClass('hidden')
+      }
+      //reload = true ;
+   }
+
+   /* // use with embedded v2.0.2
+   showUV()
+   {
       let state = { ...this.state, openUV:true, hideUV:false, openMirador:false }
       this.setState(state);
       reload = true ;
    }
-
+  */
 
    showDiva()
    {
-      if(!this.state.openDiva || !$("#diva-wrapper").hasClass("hidden"))
+      if(!this.state.openDiva) // || !$("#diva-wrapper").hasClass("hidden"))
       {
 
          let timerDiva = setInterval( () => {
 
             if($("#diva-wrapper").length > 0) { // && window.Diva) && window.Diva.DownloadPlugin && window.Diva.ManipulationPlugin && window.Diva.MetadataPlugin) {
                clearInterval(timerDiva);
+
+               $("#fond").addClass("hidden");
 
                let manif = this.props.collecManif
                if(!manif && this.props.manifests) manif = this.props.manifests[0]["@id"]
@@ -1391,18 +1441,21 @@ class ResourceViewer extends Component<Props,State>
       else {
          $('#diva-wrapper').removeClass('hidden')
       }
-      let state = { ...this.state, openDiva:true }
+      let state = { ...this.state, openDiva:true, openUV:false, openMirador:false }
       this.setState(state);
 
    }
 
    showMirador()
    {
-      if(!this.state.openMirador || !$("#viewer").hasClass("hidden"))
+      if(!this.state.openMirador) // || !$("#viewer").hasClass("hidden"))
       {
          let tiMir = setInterval( () => {
             if(window.Mirador) {
                clearInterval(tiMir);
+
+               $("#fond").addClass("hidden");
+
                let config = {
                   id:"viewer",
                   data: [],
@@ -1422,7 +1475,7 @@ class ResourceViewer extends Component<Props,State>
                      "userButtons": [
                        { "label": "Close Mirador",
                          "iconClass": "fa fa-times",
-                         "attributes" : { onClick : "javascript:$('#viewer').addClass('hidden').hide()" }
+                         "attributes" : { onClick : "javascript:$('#fond,#viewer').addClass('hidden').hide()" }
                         }
                      ]
                   }
@@ -1468,7 +1521,7 @@ class ResourceViewer extends Component<Props,State>
       }
 
 
-      let state = { ...this.state, openMirador:true }
+      let state = { ...this.state, openMirador:true, openDiva:false, openUV:false }
       //if(state.hideUV)
       this.setState(state);
    }
@@ -1513,17 +1566,17 @@ class ResourceViewer extends Component<Props,State>
          });
    };
 
-      handleAnnoCollec = (collec) =>
-      {
+   handleAnnoCollec = (collec) =>
+   {
 
-         if(!this.state.annoCollecOpen == false)
-            this.setState({
-               ...this.state,
-               annoCollecOpen: false,
-               anchorElAnno:null,
-               showAnno:collec
-            });
-      }
+      if(!this.state.annoCollecOpen == false)
+         this.setState({
+            ...this.state,
+            annoCollecOpen: false,
+            anchorElAnno:null,
+            showAnno:collec
+         });
+   }
 
    handleRequestClosePdf = () => {
 
@@ -1602,56 +1655,6 @@ class ResourceViewer extends Component<Props,State>
          }
       }
 
-
-      if(!this.props.manifestError && this.props.imageAsset && this.state.openUV && !this.state.hideUV) {
-
-         let itv = setInterval((function(that){ return function(){
-
-            let iframe = $('.uv:not(.hide) iframe')
-
-            //console.log("check");
-
-            if(iframe.length > 0){
-
-               //if(iframe.offset().top == 0) {
-
-               iframe.get(0).style.position = "absolute" ;
-
-               console.log("ready to stop");
-
-               clearInterval(itv);
-
-               itv = setInterval(function(){
-
-
-                  iframe = $('.uv:not(.hide) iframe')
-
-                  //console.log("quit?",that.state,iframe.get(0).style) //,iframe.length > 0?iframe.get(0).style.position:"null",that.state);
-
-                  if(iframe.length > 0 && iframe.get(0).style.position === "static" )
-                  {
-                     clearInterval(itv);
-
-                     that.setState({...that.state, hideUV:true, toggleUV:true})
-
-                     console.log("quitted",that);
-
-                  }
-               }, 350);
-               //}
-            }
-
-
-         }})(this), 350);
-
-
-            //iframe.find("a.exitFullscreen").click(function(){
-            //      alert("test");
-            //   });
-
-            //$("a.exitFullscreen").click(function(){ console.log("length",$("a.fullscreen").length)})
-
-      }
 
       let doMap = false, doRegion = false,regBox ;
       if(kZprop.indexOf(bdo+"placeLong") !== -1 && kZprop.indexOf(bdo+"placeLat") !== -1)
@@ -2055,9 +2058,7 @@ class ResourceViewer extends Component<Props,State>
          }
       </div>
 
-
       console.log("pdf",pdfLink,this._annoPane.length)
-
 
       // add nother route to UViewer Gallery page
       return (
@@ -2305,8 +2306,20 @@ class ResourceViewer extends Component<Props,State>
                   </div>
                }
                {
+                  !this.props.manifestError && this.props.imageAsset && this.state.openMirador  &&
+                  [<div id="fond">
+                     <Loader loaded={false} color="#fff"/>
+                  </div>,
+                  <div id="viewer"></div>,
+                  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/mirador@2.7.2/dist/css/mirador-combined.css"/>,
+                  <Script url={"https://cdn.jsdelivr.net/npm/mirador@2.7.2/dist/mirador.js"}/>]
+               }
+               {
                   !this.props.manifestError && this.props.imageAsset && this.state.openDiva  &&
                   [
+                     <div id="fond">
+                        <Loader loaded={false} color="#fff"/>
+                     </div>,
                      <div id="diva-wrapper"></div>,
                       <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/diva.js/5.1.3/css/diva.css"/> ]
                       //(!this.state.openUV || this.state.hideUV) && <Script url={"https://cdnjs.cloudflare.com/ajax/libs/diva.js/5.1.3/js/diva.js"}/>]
@@ -2321,14 +2334,7 @@ class ResourceViewer extends Component<Props,State>
                         ] */
 
                }
-               {
-                  !this.props.manifestError && this.props.imageAsset && this.state.openMirador  &&
-                  [<div id="viewer"></div>,
-                  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/mirador@2.7.2/dist/css/mirador-combined.css"/>,
-                  (!this.state.openUV || this.state.hideUV) && <Script url={"https://cdn.jsdelivr.net/npm/mirador@2.7.2/dist/mirador.js"}/>]
-               }
-               {
-
+               {/* // use with UV v2.0.2
                   !this.props.manifestError && this.props.imageAsset && this.state.openUV  &&
                   [<div id="fondUV" className={(this.state.hideUV?"hide":"")}>
                      <Loader loaded={false} color="#fff"/>
@@ -2336,7 +2342,7 @@ class ResourceViewer extends Component<Props,State>
                   <div
                   className={"uv "+(this.state.toggleUV?"toggled ":"")+(this.state.hideUV?"hide":"")}
                   data-locale="en-GB:English (GB),cy-GB:Cymraeg"
-                  //data-config="/config.json"
+                  data-config="http://localhost:3000/config.json"
                   //data-uri="https://eap.bl.uk/archive-file/EAP676-12-4/manifest"
                   data-uri={this.props.imageAsset.replace(/[/]i:/,"/ivo:")}
                   data-collectionindex="0"
@@ -2348,10 +2354,21 @@ class ResourceViewer extends Component<Props,State>
                   data-rotation="0"
                   style={{width:"0",height:"0",backgroundColor: "#000"}}
                />,
-                  <Script url={"http://universalviewer.io/uv/lib/embed.js"} />]
-
-               }
-               { (!this.state.openUV || this.state.hideUV || !this.state.toggleUV) && theData }
+                  <Script url={"http://universalviewer.io/uv/lib/embed.js"} />
+               ]*/}
+               {
+                  !this.props.manifestError && this.props.imageAsset && this.state.openUV  &&
+                  [<div id="fond">
+                     <Loader loaded={false} color="#fff"/>
+                  </div>,
+                  <div id="uv" className={"uv"}
+                  style={{backgroundColor: "#000"}}></div>,
+                  <link rel="stylesheet" type="text/css" href="../scripts/uv/uv.css"/>,
+                  <Script url={"../scripts/uv/lib/offline.js"} attributes={{async:false}}/>,
+                  <Script url={"../scripts/uv/helpers.js"} attributes={{async:false}}/>,
+                  <Script url={"../scripts/uv/uv.js"}  attributes={{async:false}}/>
+               ]}
+               { theData }
             </div>
             {/* <iframe style={{width:"calc(100% - 100px)",margin:"50px",height:"calc(100vh - 160px)",border:"none"}} src={"http://purl.bdrc.io/resource/"+get.IRI}/> */}
          </div>

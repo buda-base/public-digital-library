@@ -1,0 +1,13 @@
+{
+    "options": {
+
+    },
+    "modules": {
+      "contentLeftPanel": {
+           "options": {
+             "defaultToTreeEnabled": true,
+             "defaultToTreeIfGreaterThan": 0
+          }
+       }
+    }
+}
