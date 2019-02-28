@@ -1509,7 +1509,7 @@ class ResourceViewer extends Component<Props,State>
                if(this.props.imageAsset.match(/[/]collection[/]/) && !this.props.collecManif)
                {
                   config.data.push({"collectionUri": this.props.imageAsset +"?continuous=true", location:"Test Collection Location" })
-                  //if(this.props.manifests) config.data = this.props.manifests.map(m => ({manifestUri:m["@id"],label:m["label"]}))
+                  if(this.props.manifests) config.data = config.data.concat(this.props.manifests.map(m => ({manifestUri:m["@id"],label:m["label"]})))
                   config["openManifestsPage"] = true
                   config["preserveManifestOrder"] = true
                   config["windowObjects"] = []
@@ -1532,25 +1532,28 @@ class ResourceViewer extends Component<Props,State>
                   config["windowObjects"] = [ {
                      loadedManifest: manif, //(this.props.collecManif?this.props.collecManif+"?continuous=true":this.props.imageAsset+"?continuous=true"),
                      canvasID: this.props.canvasID,
-                     viewType: "ImageView"
+                     viewType: "ScrollView",
+                     availableViews: [ 'ImageView', 'ScrollView' ],
+                     displayLayout:false
                   } ]
                }
-               
-               /*
+
+
                //console.log("mir ador",config,this.props)
                window.Mirador( config )
 
+               /* // doesnt work that way
                let timerConf = setInterval( () => {
 
                   console.log("miraconf...")
-                  if($(".mirador-viewer .jstree-anchor").length)
+                  if($(".mirador-viewer #collection-tree > ul > li:nth-child(3) .jstree-anchor").length)
                   {
-                     console.log("miraconf ok")
+                     console.log("miraconf ok",$(".mirador-viewer #collection-tree > ul > li:nth-child(3) .jstree-anchor"))
                      clearInterval(timerConf);
-                     $(".mirador-viewer .jstree-anchor").click()
+                     $(".mirador-viewer #collection-tree > ul > li:nth-child(3) .jstree-anchor").trigger("click")
                   }
 
-               }, 100 )
+               }, 1000 )
                */
             }
          }, 10)
