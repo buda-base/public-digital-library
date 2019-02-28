@@ -5,9 +5,13 @@
 
 # testing
 /coverage
+/flow-typed
 
 # production
 /build
+
+# static files
+/public/scripts/
 
 # misc
 .DS_Store
