@@ -93,6 +93,7 @@ type State = {
    imageLoaded:boolean,
    openMirador?:boolean,
    openUV?:boolean,
+   UVcanLoad?:boolean,
    openDiva?:boolean,
    collapse:{[string]:boolean},
    pdfOpen?:boolean,
@@ -2364,9 +2365,9 @@ class ResourceViewer extends Component<Props,State>
                   <div id="uv" className={"uv"}
                   style={{backgroundColor: "#000"}}></div>,
                   <link rel="stylesheet" type="text/css" href="../scripts/uv/uv.css"/>,
-                  <Script url={"../scripts/uv/lib/offline.js"} attributes={{async:false}}/>,
-                  <Script url={"../scripts/uv/helpers.js"} attributes={{async:false}}/>,
-                  <Script url={"../scripts/uv/uv.js"}  attributes={{async:false}}/>
+                  <Script url={"../scripts/uv/lib/offline.js"} attributes={{async:false}} onLoad={()=>{this.setState({...this.state,UVcanLoad:true})}}/>,
+                  this.state.UVcanLoad && <Script url={"../scripts/uv/uv.js"}  attributes={{async:false}}/>,
+                  this.state.UVcanLoad && <Script url={"../scripts/uv/helpers.js"} attributes={{async:false}}/>
                ]}
                { theData }
             </div>
