@@ -73,6 +73,18 @@ const frTranslation = {
    },
    Asidebar:{
       title:"Annotations"
+   },
+   resource:{
+      back:"Revenir à la recherche",
+      browse:"Parcourir les ressources en relation",
+      collection:"la collection",
+      download:"Télécharger en",
+      export:"Exporter en",
+      in:"dans",
+      images:"les images",
+      settings:"Réglages",
+      toggle:"Panneau des annotations on/off",
+      view:"Voir",
    }
 };
 

@@ -70,10 +70,6 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       onGetResource:(iri:string) => {
          dispatch(data.getResource(iri));
       },
-      onSetLocale:(lg:string) => {
-         dispatch(setLocale(lg));
-         //dispatch(ui.setLocale(lg))
-      },
       onSetPrefLang:(lg:string) => {
          dispatch(ui.setPrefLang(lg));
       },

@@ -218,7 +218,6 @@ type Props = {
    onGetFacetInfo:(k:string,lg:string,f:string)=>void,
    onCheckFacet:(k:string,lg:string,f:{[string]:string})=> void,
    onGetResource:(iri:string)=>void,
-   onSetLocale:(lg:string)=>void,
    onSetPrefLang:(lg:string)=>void,
    onToggleLanguagePanel:()=>void
 }
@@ -452,42 +451,6 @@ class App extends Component<Props,State> {
       this.setState( state )
    }
 
-      handleCheckUI = (ev:Event,prop:string,lab:string,val:boolean) => {
-
-         console.log("checkUI",prop,lab,val)
-
-         let state =  this.state
-
-         if(val)
-         {
-            if(prop === "locale") this.props.onSetLocale(lab);
-            else if(prop === "prefLang") this.props.onSetPrefLang(lab);
-            else if(prop === "langProfile") {
-               if(this.state.langProfile && this.state.langProfile.indexOf(lab) === -1)
-               {
-                  this.setState({...state, langProfile:[ ...langProfile.filter( e => (e === lab || this.state.langProfile.indexOf(e) !== -1)) ] })
-               }
-            }
-            //state = {  ...state,  UI: { ...state.UI, [prop] : lab } }
-         }
-         else {
-
-            if(prop === "langProfile") {
-               if(this.state.langProfile && this.state.langProfile.indexOf(lab) !== -1)
-               {
-                  this.setState({...state, langProfile:[ ...langProfile.filter( e => (e !== lab && this.state.langProfile.indexOf(e) !== -1)) ] })
-               }
-            }
-         }
-         /* // no unchecking possible
-         else if(state.UI && state.UI[prop])
-         {
-            state = {  ...state,  UI: {  ...state.UI, [prop] : [] } }
-         }
-         */
-
-         //this.setState( state )
-}
    /*
    handleFacetCheck = (ev:Event,prop:string,lab:string,val:boolean) => {
 
@@ -2170,7 +2133,7 @@ class App extends Component<Props,State> {
                   </List>
                }
             </div>
-            <LanguageSidePaneContainer locale={this.props.locale}/>
+            <LanguageSidePaneContainer />
          </div>
       </div>
       );

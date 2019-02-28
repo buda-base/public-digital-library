@@ -3,14 +3,16 @@ import React from 'react';
 import { connect } from 'react-redux';
 import * as data from '../state/data/actions';
 import * as ui from '../state/ui/actions';
+import { setLocale } from 'react-redux-i18n';
 import store from '../index';
 import LanguageSidePane from '../components/LanguageSidePane';
 
 const mapStateToProps = (state,ownProps) => {
 
       let rightPanel = state.ui.rightPanel
+      let locale = state.i18n.locale
 
-      let props = { ...ownProps, open:rightPanel }
+      let props = { ...ownProps, open:rightPanel, locale }
 
       console.log("mS2p",state,props)
 
@@ -20,6 +22,9 @@ const mapStateToProps = (state,ownProps) => {
 
    const mapDispatchToProps = (dispatch, ownProps) => {
       return {
+         onSetLocale:(lg:string) => {
+            dispatch(setLocale(lg));
+         },
          onToggleLanguagePanel:() => {
             dispatch(ui.toggleLanguagePanel());
          }

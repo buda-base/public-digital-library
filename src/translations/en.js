@@ -103,6 +103,18 @@ const enTranslation = {
    },
    Asidebar:{
       title:"Annotations"
+   },
+   resource:{
+      back:"Go back to search page",
+      browse:"Browse associated resources",
+      collection:"",
+      download:"Download as",
+      export:"Export to",
+      in:"",
+      images:"",
+      settings:"Settings",
+      toggle:"Toggle annotations panel",
+      view:"View",
    }
 } ;
 

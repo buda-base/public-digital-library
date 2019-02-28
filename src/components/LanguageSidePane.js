@@ -15,6 +15,7 @@ import CheckCircle from '@material-ui/icons/CheckCircle';
 type Props = {
    locale?:string,
    open?:boolean,
+   onSetLocale:(lg:string)=>void,
    onToggleLanguagePanel:()=>void
 }
 
@@ -29,6 +30,18 @@ class LanguageSidePane extends Component<Props,State> {
 
       this.state = {
          collapse:{}
+      }
+   }
+
+   handleCheckUI = (ev:Event,prop:string,lab:string,val:boolean) => {
+
+      console.log("checkUI",prop,lab,val)
+
+      let state =  this.state
+
+      if(val)
+      {
+         if(prop === "locale") this.props.onSetLocale(lab);
       }
    }
 
@@ -75,7 +88,7 @@ class LanguageSidePane extends Component<Props,State> {
                               className={"checkbox "+ (disab?"disabled":"")}
                               icon={<span className='checkB'/>}
                               checkedIcon={<span className='checkedB'><CheckCircle style={{color:"#444",margin:"-3px 0 0 -3px",width:"26px",height:"26px"}}/></span>}
-                              //onChange={(event, checked) => this.handleCheckUI(event,"locale",i,checked)}
+                              onChange={(event, checked) => this.handleCheckUI(event,"locale",i,checked)}
                                  /> }
                         label={label}
                      />
