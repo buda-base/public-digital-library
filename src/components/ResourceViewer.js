@@ -1493,7 +1493,12 @@ class ResourceViewer extends Component<Props,State>
                   },
 
                   mainMenuSettings : {
+                     "buttons":[{"layout":"false"}],
                      "userButtons": [
+                       { "label": "Reading View",
+                         "iconClass": "fa fa-ellipsis-v",
+                         "attributes" : { style:"float:right", onClick : "javascript:$('.mirador-viewer li.scroll-option').click()" }
+                      },
                        { "label": "Close Mirador",
                          "iconClass": "fa fa-times",
                          "attributes" : { onClick : "javascript:$('#fond,#viewer').addClass('hidden').hide()" }
@@ -1530,9 +1535,23 @@ class ResourceViewer extends Component<Props,State>
                      viewType: "ImageView"
                   } ]
                }
-
+               
+               /*
                //console.log("mir ador",config,this.props)
                window.Mirador( config )
+
+               let timerConf = setInterval( () => {
+
+                  console.log("miraconf...")
+                  if($(".mirador-viewer .jstree-anchor").length)
+                  {
+                     console.log("miraconf ok")
+                     clearInterval(timerConf);
+                     $(".mirador-viewer .jstree-anchor").click()
+                  }
+
+               }, 100 )
+               */
             }
          }, 10)
       }

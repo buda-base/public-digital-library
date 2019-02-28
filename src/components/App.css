@@ -301,6 +301,8 @@ svg.hide { opacity:0;pointer-events:none; }
 .mirador-container .mirador-viewer ul.scroll-listing-thumbs li  { display:block; }
 .mirador-container .mirador-viewer ul.scroll-listing-thumbs li img { max-width: 100%; height: auto; cursor:pointer; }
 
+.mirador-container #manifest-select-menu .remove-object-option { display:none !important; }
+
 
 .App {
   text-align: center;
