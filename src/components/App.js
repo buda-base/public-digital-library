@@ -208,6 +208,7 @@ type Props = {
    history:{},
    ontology:{},
    ontoSearch:string,
+   rightPanel?:boolean,
    onResetSearch:()=>void,
    onOntoSearch:(k:string)=>void,
    onStartSearch:(k:string,lg:string,t?:string)=>void,
@@ -218,7 +219,8 @@ type Props = {
    onCheckFacet:(k:string,lg:string,f:{[string]:string})=> void,
    onGetResource:(iri:string)=>void,
    onSetLocale:(lg:string)=>void,
-   onSetPrefLang:(lg:string)=>void
+   onSetPrefLang:(lg:string)=>void,
+   onToggleLanguagePanel:()=>void
 }
 
 type State = {
@@ -233,7 +235,6 @@ type State = {
    keyword:string,
    dataSource : string[],
    leftPane?:boolean,
-   rightPane?:boolean,
    filters:{
       datatype:string[],
       facets?:{[string]:string[]}
@@ -2127,7 +2128,7 @@ class App extends Component<Props,State> {
                   onKeyPress={(e) => this.handleCustomLanguage(e)}
                /> */ }
               </FormControl>
-              <IconButton style={{marginLeft:"15px"}}  className={this.state.rightPane?"hidden":""} onClick={e => this.setState({...this.state,rightPane:!this.state.rightPane})}>
+              <IconButton style={{marginLeft:"15px"}}  onClick={e => this.props.onToggleLanguagePanel()}>
                  <Settings/>
               </IconButton>
            </div>
@@ -2169,7 +2170,7 @@ class App extends Component<Props,State> {
                   </List>
                }
             </div>
-            <LanguageSidePaneContainer open={this.state.rightPane} locale={this.props.locale}/>
+            <LanguageSidePaneContainer locale={this.props.locale}/>
          </div>
       </div>
       );

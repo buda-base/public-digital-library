@@ -10,7 +10,8 @@ export type UIState = {
    keyword?:string,
    loading?: boolean,
    prefLang:string,
-   logged?:boolean
+   logged?:boolean,
+   rightPanel?:boolean
 }
 
 const DEFAULT_STATE: UIState = {
@@ -22,6 +23,16 @@ export const helloWorld = (state: UIState, action: Action): UIState => {
     return {...state}
 };
 reducers[actions.TYPES.helloWorld] = helloWorld
+
+export const toggleLanguagePanel = (state: UIState, action: Action): UIState => {
+    return {...state, rightPanel:!state.rightPanel}
+};
+reducers[actions.TYPES.toggleLanguagePanel] = toggleLanguagePanel
+
+export const closeLanguagePanel = (state: UIState, action: Action): UIState => {
+    return {...state, rightPanel:false}
+};
+reducers[actions.TYPES.closeLanguagePanel] = closeLanguagePanel
 
 
 export const logEvent = (state: UIState, action: Action): UIState => {

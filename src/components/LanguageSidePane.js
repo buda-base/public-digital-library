@@ -14,7 +14,8 @@ import CheckCircle from '@material-ui/icons/CheckCircle';
 
 type Props = {
    locale?:string,
-   open?:boolean
+   open?:boolean,
+   onToggleLanguagePanel:()=>void
 }
 
 type State = {
@@ -53,7 +54,7 @@ class LanguageSidePane extends Component<Props,State> {
       )
 
       return ( <div className={"SidePane right "+(this.props.open?"visible":"")}>
-         <IconButton className="close" onClick={e => this.setState({...this.state,open:false})} ><Close/></IconButton>
+         <IconButton className="close" onClick={e => this.props.onToggleLanguagePanel()} ><Close/></IconButton>
          <div style={{width:"333px",position:"relative"}}>
             <Typography style={{fontSize:"30px",marginBottom:"20px",textAlign:"left"}}>
                <Translate value='Rsidebar.title' />

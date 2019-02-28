@@ -7,6 +7,9 @@ export const TYPES = {};
 TYPES.helloWorld = 'HELLO_WORLD';
 export const helloWorld = createAction(TYPES.helloWorld);
 
+TYPES.toggleLanguagePanel = 'TOGGLE_LANGUAGE_PANEL';
+export const toggleLanguagePanel = createAction(TYPES.toggleLanguagePanel);
+
 
 TYPES.showResults = 'SHOW_RESULTS';
 export const showResults = (key: string,lang:string): Action => {

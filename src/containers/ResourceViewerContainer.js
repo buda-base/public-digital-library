@@ -2,6 +2,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import * as data from '../state/data/actions';
+import * as ui from '../state/ui/actions';
 import store from '../index';
 
 // import selectors from 'state/selectors';
@@ -27,6 +28,7 @@ const mapStateToProps = (state,ownProps) => {
       resources[ownProps.IRI+"@"] = searches["bdr:"+ownProps.IRI+"@"].results.bindings
 
    let prefLang = state.ui.prefLang
+   let rightPanel = state.ui.rightPanel
 
 
    let firstImage
@@ -59,7 +61,7 @@ const mapStateToProps = (state,ownProps) => {
 
    let props = { config,resources, ontology, keyword, language, datatype, assocResources, prefLang, failures,
       imageAsset,firstImage,canvasID,collecManif,manifests,manifestError,pdfVolumes,createPdf,pdfUrl,
-      annoCollec }
+      annoCollec,rightPanel }
 
    console.log("mS2p",state,props)
 
@@ -87,6 +89,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       },
       onGetChunks:(IRI:string,next:number=0) => {
          dispatch(data.getChunks(IRI,next));
+      },
+      onToggleLanguagePanel:() => {
+         dispatch(ui.toggleLanguagePanel());
       }
    }
 }

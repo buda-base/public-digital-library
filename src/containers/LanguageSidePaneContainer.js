@@ -8,7 +8,9 @@ import LanguageSidePane from '../components/LanguageSidePane';
 
 const mapStateToProps = (state,ownProps) => {
 
-      let props = { ...ownProps }
+      let rightPanel = state.ui.rightPanel
+
+      let props = { ...ownProps, open:rightPanel }
 
       console.log("mS2p",state,props)
 
@@ -18,12 +20,9 @@ const mapStateToProps = (state,ownProps) => {
 
    const mapDispatchToProps = (dispatch, ownProps) => {
       return {
-         /*
-         onRequestPdf:(iri:string,url:string) => {
-            dispatch(data.requestPdf(iri,url));
-            dispatch(data.requestPdf(iri,url.replace(/pdf/,"zip")))
-         },
-         */
+         onToggleLanguagePanel:() => {
+            dispatch(ui.toggleLanguagePanel());
+         }
       }
    }
 

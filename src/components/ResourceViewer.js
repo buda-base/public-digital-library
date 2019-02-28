@@ -81,13 +81,15 @@ type Props = {
    firstImage?:string,
    canvasID?:string,
    pdfVolumes?:[],
+   rightPanel?:boolean,
    onInitPdf: (u:string,s:string) => void,
    onRequestPdf: (u:string,s:string) => void,
    onCreatePdf: (s:string,u:string) => void,
    onGetResource: (s:string) => void,
    onGetAnnotations: (s:string) => void,
    onHasImageAsset:(u:string,s:string) => void,
-   onGetChunks: (s:string,b:number) => void
+   onGetChunks: (s:string,b:number) => void,
+   onToggleLanguagePanel:()=>void
 }
 type State = {
    uviewer : boolean,
@@ -2141,13 +2143,13 @@ class ResourceViewer extends Component<Props,State>
                      </div>
                   }
                </div>
-               <Link style={{fontSize:"26px"}} className="goBack" to={this.props.keyword&&!this.props.keyword.match(/^bdr:/)?"/search?q="+this.props.keyword+"&lg="+this.props.language+(this.props.datatype?"&t="+this.props.datatype:""):"/"}>
+               <Link style={{fontSize:"20px"}} className="goBack" to={this.props.keyword&&!this.props.keyword.match(/^bdr:/)?"/search?q="+this.props.keyword+"&lg="+this.props.language+(this.props.datatype?"&t="+this.props.datatype:""):"/"}>
                   {/* <Button style={{paddingLeft:"0"}}>&lt; Go back to search page</Button> */}
                   <IconButton style={{paddingLeft:0}} title="Go back to search page">
                      <HomeIcon style={{fontSize:"30px"}}/>
                   </IconButton>
                </Link>
-              <IconButton style={{marginLeft:"15px"}}  className={this.state.rightPane?"hidden":""} onClick={e => this.setState({...this.state,rightPane:!this.state.rightPane})}>
+              <IconButton style={{marginLeft:"35px"}} onClick={e => this.props.onToggleLanguagePanel()}>
                  <Settings/>
               </IconButton>
                {
@@ -2361,7 +2363,7 @@ class ResourceViewer extends Component<Props,State>
             </div>
             {/* <iframe style={{width:"calc(100% - 100px)",margin:"50px",height:"calc(100vh - 160px)",border:"none"}} src={"http://purl.bdrc.io/resource/"+get.IRI}/> */}
          </div>,
-         <LanguageSidePaneContainer open={this.state.rightPane} locale={this.props.locale}/>]
+         <LanguageSidePaneContainer locale={this.props.locale}/>]
 
       ) ;
 

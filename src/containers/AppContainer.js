@@ -27,11 +27,12 @@ const mapStateToProps = (state) => {
 
    let loading = state.ui.loading  ;
    let prefLang = state.ui.prefLang  ;
+   let rightPanel = state.ui.rightPanel
 
    let locale = state.i18n.locale
 
    let newState = { logged,config, hostFailure, searches, keyword, language,loading,datatypes,ontology,facets,
-      locale,prefLang,resources,ontoSearch }
+      locale,prefLang,resources,ontoSearch,rightPanel }
 
    if(!global.inTest) console.log("mS2p",newState)
 
@@ -75,6 +76,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       },
       onSetPrefLang:(lg:string) => {
          dispatch(ui.setPrefLang(lg));
+      },
+      onToggleLanguagePanel:() => {
+         dispatch(ui.toggleLanguagePanel());
       }
    }
 }
