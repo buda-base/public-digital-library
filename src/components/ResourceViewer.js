@@ -259,6 +259,20 @@ class ResourceViewer extends Component<Props,State>
       }
    }
 
+   componentDidMount()
+   {
+      if(window.location.hash === "#mirador" || window.location.hash === "#diva") {
+         let timerViewer = setInterval(() => {
+            if(this.props.imageAsset && this.props.firstImage) {
+               clearInterval(timerViewer)
+               if(window.location.hash === "#mirador") this.showMirador()
+               else if(window.location.hash === "#diva") this.showDiva()
+               window.location.hash = "";
+            }
+         }, 10)
+      }
+   }
+
    expand(str:string) //,stripuri:boolean=true)
    {
       for(let k of Object.keys(prefixes)) { str = str.replace(new RegExp(k+":"),prefixes[k]); }
@@ -1290,6 +1304,7 @@ class ResourceViewer extends Component<Props,State>
    {
       if(!this.state.openUV) // || !$("#uv").hasClass("hidden"))
       {
+
          let timerUV = setInterval( () => {
 
 
@@ -1312,11 +1327,12 @@ class ResourceViewer extends Component<Props,State>
                   if($('button.fullScreen').length)
                   {
                      let btn = $('button.fullScreen')
-                     btn.parent().append('<button style="float:right" class="toggleUV btn imageBtn" title="Toggle UV"><i class="uv-icon uv-icon-fullscreen" aria-hidden="true"></i></button>').click((e) =>
+                     btn.parent().append('<button style="float:right;padding-right:0" class="toggleUV btn imageBtn" title="Toggle UV"><i class="uv-icon uv-icon-fullscreen" aria-hidden="true"></i></button>').click((e) =>
                      {
                         $("#uv").addClass("hidden")
                      })
                      btn.remove()
+                     $(".minimiseButtons .spacer").remove()
                      clearInterval(timerUV)
                   }
 
@@ -1347,6 +1363,8 @@ class ResourceViewer extends Component<Props,State>
    {
       if(!this.state.openDiva) // || !$("#diva-wrapper").hasClass("hidden"))
       {
+
+         if(this.state.UVcanLoad) { window.location.hash = "diva"; window.location.reload(); }
 
          let timerDiva = setInterval( () => {
 
@@ -1451,6 +1469,8 @@ class ResourceViewer extends Component<Props,State>
    {
       if(!this.state.openMirador) // || !$("#viewer").hasClass("hidden"))
       {
+         if(this.state.UVcanLoad) { window.location.hash = "mirador"; window.location.reload(); }
+
          let tiMir = setInterval( () => {
             if(window.Mirador) {
                clearInterval(tiMir);
