@@ -1,5 +1,6 @@
 //@flow
 import {I18n} from 'react-redux-i18n';
+import _ from 'lodash'
 
 export const langScripts = {
    "zh":"lang.langscript.zh", "en":"lang.langscript.en", "pi":"lang.langscript.pi", "bo":"lang.langscript.bo", "sa":"lang.langscript.sa", "inc":"lang.langscript.inc",
@@ -25,12 +26,32 @@ export function makeLangScriptLabel(code:string)
 
    if(!langScripts[lang]) throw new Error("Unknown lang code ("+lang+")")
    if(script && !langScripts[script]) throw new Error("Unknown script code ("+script+")")
-   console.log("code",code,lang,script)
+   //console.log("code",code,lang,script)
 
    let langLabel = I18n.t(langScripts[lang])
    let scriptLabel = "Unicode"
    if(script.length) scriptLabel = I18n.t(langScripts[script])
-   console.log("label",langLabel,scriptLabel)
+   //console.log("label",langLabel,scriptLabel)
 
    return langLabel + " (" + scriptLabel + ")"
+}
+
+export function sortLangScriptLabels(data:[],preset:string[])
+{
+   //console.log("data",data)
+   //console.log("preset",preset)
+
+   let data_ = _.orderBy(data.map(e => {
+      let k = e["lang"]
+      if(!k) k = e["xml:lang"]
+      if(!k) k = e["@language"]
+      if(!k) k = ""
+      k = preset.indexOf(k)
+      if(k === -1) k = preset.length
+      return {e,k}
+   }),['k'],["asc"]).map(e => e.e)
+
+   //console.log("data_",data_)
+
+   return data_
 }

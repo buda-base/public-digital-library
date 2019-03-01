@@ -14,7 +14,7 @@ import store from '../index';
 import {initiateApp} from '../state/actions';
 import tcpPortUsed from 'tcp-port-used'
 import 'whatwg-fetch'
-import {langScripts,makeLangScriptLabel} from "./language"
+import {langScripts,makeLangScriptLabel,sortLangScriptLabels} from "./language"
 
 
 let makeRoutes = require('../routes').default
@@ -26,6 +26,26 @@ afterAll( (done) => {
 
 // to check json-server at http://localhost:5555/test/
 jest.setTimeout(10000)
+
+const jsonldLabels1 = [
+   { "@language": "bo-x-ewts", "@value": "rdzogs chen/" },
+   { "@language": "en", "@value": "great perfection" },
+   { "@language": "zh-hans", "@value": "大圆满" },
+   { "@language": "bo-x-ewts","@value": "rdzogs pa chen po/" },
+   { "@language": "sa-alalc97", "@value": "mahasanti" }
+] ;
+
+const jsonLabels1 = [
+   { type: "literal", value: "rdzogs chen/", lang: "bo-x-ewts" },
+   { type: "literal", value: "great perfection", lang: "en" },
+   { type: "literal", value: "大圆满", lang: "zh-hans" },
+   { type: "literal", value: "rdzogs pa chen po/", lang: "bo-x-ewts" },
+   { type: "literal", value: "mahasanti", lang: "sa-alalc97" },
+] ;
+
+const preset1 = [ "bo-x-ewts", "sa-alalc97" ]
+const preset2 = [ "zh-hans", "bo-x-ewts", "en" ]
+
 
 describe('language settings tests', () => {
 
@@ -60,5 +80,55 @@ describe('language settings tests', () => {
 
          done();
       })
+   })
+
+
+   it('sorting json/jsonld labels', done => {
+
+      const jsonldLabels1sorted1 = [
+         { "@language": "bo-x-ewts", "@value": "rdzogs chen/" },
+         { "@language": "bo-x-ewts","@value": "rdzogs pa chen po/" },
+         { "@language": "sa-alalc97", "@value": "mahasanti" },
+         { "@language": "en", "@value": "great perfection" },
+         { "@language": "zh-hans", "@value": "大圆满" },
+      ] ;
+
+      const jsonLabels1sorted1 = [
+         { type: "literal", value: "rdzogs chen/", lang: "bo-x-ewts" },
+         { type: "literal", value: "rdzogs pa chen po/", lang: "bo-x-ewts" },
+         { type: "literal", value: "mahasanti", lang: "sa-alalc97" },
+         { type: "literal", value: "great perfection", lang: "en" },
+         { type: "literal", value: "大圆满", lang: "zh-hans" },
+      ] ;
+
+      const jsonResults11 = sortLangScriptLabels(jsonLabels1,preset1)
+      const jsonldResults11 = sortLangScriptLabels(jsonldLabels1,preset1)
+
+      expect(jsonResults11).toEqual(jsonLabels1sorted1)
+      expect(jsonldResults11).toEqual(jsonldLabels1sorted1)
+
+      const jsonldLabels1sorted2 = [
+         { "@language": "zh-hans", "@value": "大圆满" },
+         { "@language": "bo-x-ewts", "@value": "rdzogs chen/" },
+         { "@language": "bo-x-ewts","@value": "rdzogs pa chen po/" },
+         { "@language": "en", "@value": "great perfection" },
+         { "@language": "sa-alalc97", "@value": "mahasanti" },
+      ] ;
+
+      const jsonLabels1sorted2 = [
+         { type: "literal", value: "大圆满", lang: "zh-hans" },
+         { type: "literal", value: "rdzogs chen/", lang: "bo-x-ewts" },
+         { type: "literal", value: "rdzogs pa chen po/", lang: "bo-x-ewts" },
+         { type: "literal", value: "great perfection", lang: "en" },
+         { type: "literal", value: "mahasanti", lang: "sa-alalc97" },
+      ] ;
+
+      const jsonResults12 = sortLangScriptLabels(jsonLabels1, preset2)
+      const jsonldResults12 = sortLangScriptLabels(jsonldLabels1, preset2)
+
+      expect(jsonResults12).toEqual(jsonLabels1sorted2)
+      expect(jsonldResults12).toEqual(jsonldLabels1sorted2)
+
+      done();
    })
 })
