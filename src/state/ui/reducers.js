@@ -17,7 +17,8 @@ export type UIState = {
 
 const DEFAULT_STATE: UIState = {
    prefLang:"bo-x-ewts",
-   collapse:[]
+   collapse:{"locale":true,"priority":true},
+   rightPanel:false
 }
 
 

@@ -42,6 +42,8 @@ import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import Select from '@material-ui/core/Select';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faLanguage } from '@fortawesome/free-solid-svg-icons'
 import qs from 'query-string'
 
 import {I18n, Translate, Localize } from "react-redux-i18n" ;
@@ -1451,7 +1453,7 @@ class App extends Component<Props,State> {
          <Collapse key={2}
             in={this.state.collapse[txt]}
             className={["collapse",this.state.collapse[txt]?"open":"close"].join(" ")}
-            style={{padding:"10px 0 0 50px"}} // ,marginBottom:"30px"
+            style={{padding:"10px 0 0 40px"}} // ,marginBottom:"30px"
             >
                {inCollapse}
          </Collapse> ]
@@ -2092,7 +2094,7 @@ class App extends Component<Props,State> {
                /> */ }
               </FormControl>
               <IconButton style={{marginLeft:"15px"}}  onClick={e => this.props.onToggleLanguagePanel()}>
-                 <Settings/>
+                 <FontAwesomeIcon style={{fontSize:"28px"}} icon={faLanguage} />
               </IconButton>
            </div>
                { false && this.state.keyword.length > 0 && this.state.dataSource.length > 0 &&

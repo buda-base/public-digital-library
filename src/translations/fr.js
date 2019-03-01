@@ -34,6 +34,24 @@ const frTranslation = {
          saDeva:"Sanskrit en Devanagari",
          bo:"Tibétain en Unicode",
          boXEwts:"Tibétain translittéré en EWTS"
+      },
+      langscript:{
+         zh:"Chinois",
+         en:"Anglais",
+         pi:"Pali",
+         bo:"Tibétain",
+         inc:"Indien",
+         sa:"Sanskrit",
+         hans:"Simplifié",
+         hant:"Traditionnel",
+         deva:"Devanagari",
+         newa:"Newari",
+         sinh:"Sinhalais",
+         latn:"Latin",
+         xEwts:"EWTS",
+         xDts:"DTS",
+         alalc97:"ALA-LC",
+         latnPinyin:"Pinyin"
       }
    },
    types:{
@@ -69,6 +87,11 @@ const frTranslation = {
       },
       results:{
          title:"Langue Préférée des Résultats"
+      },
+      priority:{
+         title:"Priorité de Langue des Données",
+         help:"Please select the languages you want to have the data displayed in, by order of priority (you do not need to list them all)",
+         user:"Defini par l'Utilisateur"
       }
    },
    Asidebar:{

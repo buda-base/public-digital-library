@@ -99,6 +99,11 @@ const enTranslation = {
       },
       results:{
          title:"Results Preferred Language"
+      },
+      priority:{
+         title:"Data Language Priority",
+         help:"Please select the languages you want to have the data displayed in, by order of priority (you do not need to list them all)",
+         user:"User Defined"
       }
    },
    Asidebar:{
@@ -112,7 +117,7 @@ const enTranslation = {
       export:"Export to",
       in:"",
       images:"",
-      settings:"Settings",
+      settings:"Language Settings",
       toggle:"Toggle annotations panel",
       view:"View",
    }

@@ -11,6 +11,7 @@ import Checkbox from '@material-ui/core/Checkbox';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import IconButton from '@material-ui/core/IconButton';
 import CheckCircle from '@material-ui/icons/CheckCircle';
+import {makeLangScriptLabel} from '../lib/language';
 
 type Props = {
    locale?:string,
@@ -49,7 +50,7 @@ class LanguageSidePane extends Component<Props,State> {
    {
       console.log("LsP render",this.props,this.state)
 
-      let widget = (title:string,txt:string,inCollapse:Component) => (
+      let widget = (title:string,txt:string,help:string,inCollapse:Component) => (
          [<ListItem key={1}
             style={{display:"flex",justifyContent:"space-between",padding:"0 20px",borderBottom:"1px solid #bbb",cursor:"pointer"}}
             onClick={(e) => { this.props.onToggleCollapse(txt); } }
@@ -60,7 +61,7 @@ class LanguageSidePane extends Component<Props,State> {
          <Collapse key={2}
             in={this.props.collapse[txt]}
             className={["collapse",this.props.collapse[txt]?"open":"close"].join(" ")}
-            style={{padding:"10px 0 0 50px"}} // ,marginBottom:"30px"
+            style={{padding:"10px 0 0 40px"}} // ,marginBottom:"30px"
             >
                {inCollapse}
          </Collapse> ]
@@ -73,7 +74,7 @@ class LanguageSidePane extends Component<Props,State> {
                <Translate value='Rsidebar.title' />
             </Typography>
             {
-               widget(I18n.t('Rsidebar.UI.title'),"locale",
+               widget(I18n.t('Rsidebar.UI.title'),"locale","",
                   ["zh", "en", "fr", "bo" ].map((i) => {
 
                   let label = I18n.t("lang."+i);
@@ -93,6 +94,36 @@ class LanguageSidePane extends Component<Props,State> {
                         label={label}
                      />
                   </div>)}))
+            }
+            {
+               widget(I18n.t('Rsidebar.priority.title'),"priority",I18n.t('Rsidebar.priority.help'),
+
+                  [['bo-x-ewts','sa-deva'],
+                   [ "bo", "zh-hans" ],
+                   [ "zh-hant" ],
+                   []].map((list,i) => {
+
+                     let label
+                     if(list.length) label = list.map(l => makeLangScriptLabel(l)).join(" + ");
+                     else label = I18n.t("Rsidebar.priority.user");
+                     let disab = true ;
+
+                     return ( <div key={i} style={{width:"310px",textAlign:"left"}}>
+                        <FormControlLabel
+                           control={
+                              <Checkbox
+                                 //checked={i === this.props.locale}
+                                 disabled={disab}
+                                 className={"checkbox "+ (disab?"disabled":"")}
+                                 icon={<span className='checkB'/>}
+                                 checkedIcon={<span className='checkedB'><CheckCircle style={{color:"#444",margin:"-3px 0 0 -3px",width:"26px",height:"26px"}}/></span>}
+                                 //onChange={(event, checked) => this.handleCheckUI(event,"priority",i,checked)}
+                                    /> }
+                           label={label}
+                        />
+                     </div>)
+                  }
+               ))
             }
          </div>
       </div>)

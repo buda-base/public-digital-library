@@ -49,6 +49,8 @@ import IIIFViewerContainer from '../containers/IIIFViewerContainer';
 import LanguageSidePaneContainer from '../containers/LanguageSidePaneContainer';
 import { Redirect404 } from "../routes.js"
 import Loader from "react-loader"
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faLanguage } from '@fortawesome/free-solid-svg-icons'
 //import {MapComponent} from './Map';
 import {getEntiType} from '../lib/api';
 import {languages,getLangLabel,langProfile} from './App';
@@ -2151,7 +2153,7 @@ class ResourceViewer extends Component<Props,State>
                   </IconButton>
                </Link>
               <IconButton style={{marginLeft:"35px"}} onClick={e => this.props.onToggleLanguagePanel()} title={I18n.t("resource.settings")}>
-                 <Settings/>
+                 <FontAwesomeIcon style={{fontSize:"32px"}} icon={faLanguage} />
               </IconButton>
                {
                   this.props.IRI.match(/^bdr:/) &&
