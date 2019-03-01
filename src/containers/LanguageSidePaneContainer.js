@@ -9,10 +9,12 @@ import LanguageSidePane from '../components/LanguageSidePane';
 
 const mapStateToProps = (state,ownProps) => {
 
+      let collapse = state.ui.collapse
       let rightPanel = state.ui.rightPanel
       let locale = state.i18n.locale
 
-      let props = { ...ownProps, open:rightPanel, locale }
+
+      let props = { ...ownProps, open:rightPanel, locale, collapse }
 
       console.log("mS2p",state,props)
 
@@ -27,6 +29,9 @@ const mapStateToProps = (state,ownProps) => {
          },
          onToggleLanguagePanel:() => {
             dispatch(ui.toggleLanguagePanel());
+         },
+         onToggleCollapse:(txt:string) => {
+            dispatch(ui.toggleCollapse(txt));
          }
       }
    }

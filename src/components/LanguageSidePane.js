@@ -15,12 +15,13 @@ import CheckCircle from '@material-ui/icons/CheckCircle';
 type Props = {
    locale?:string,
    open?:boolean,
+   collapse:{[string]:boolean},
    onSetLocale:(lg:string)=>void,
-   onToggleLanguagePanel:()=>void
+   onToggleLanguagePanel:()=>void,
+   onToggleCollapse:()=>void
 }
 
 type State = {
-   collapse:{[string]:boolean},
 }
 
 class LanguageSidePane extends Component<Props,State> {
@@ -29,7 +30,6 @@ class LanguageSidePane extends Component<Props,State> {
       super(props);
 
       this.state = {
-         collapse:{}
       }
    }
 
@@ -52,14 +52,14 @@ class LanguageSidePane extends Component<Props,State> {
       let widget = (title:string,txt:string,inCollapse:Component) => (
          [<ListItem key={1}
             style={{display:"flex",justifyContent:"space-between",padding:"0 20px",borderBottom:"1px solid #bbb",cursor:"pointer"}}
-            onClick={(e) => { this.setState({collapse:{ ...this.state.collapse, [txt]:!this.state.collapse[txt]} }); } }
+            onClick={(e) => { this.props.onToggleCollapse(txt); } }
             >
             <Typography style={{fontSize:"18px",lineHeight:"50px",textTransform:"capitalize"}}>{title}</Typography>
-            { this.state.collapse[txt] ? <ExpandLess /> : <ExpandMore />}
+            { this.props.collapse[txt] ? <ExpandLess /> : <ExpandMore />}
          </ListItem>,
          <Collapse key={2}
-            in={this.state.collapse[txt]}
-            className={["collapse",this.state.collapse[txt]?"open":"close"].join(" ")}
+            in={this.props.collapse[txt]}
+            className={["collapse",this.props.collapse[txt]?"open":"close"].join(" ")}
             style={{padding:"10px 0 0 50px"}} // ,marginBottom:"30px"
             >
                {inCollapse}

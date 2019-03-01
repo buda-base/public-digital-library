@@ -10,6 +10,13 @@ export const helloWorld = createAction(TYPES.helloWorld);
 TYPES.toggleLanguagePanel = 'TOGGLE_LANGUAGE_PANEL';
 export const toggleLanguagePanel = createAction(TYPES.toggleLanguagePanel);
 
+TYPES.toggleCollapse = 'TOGGLE_COLLAPSE';
+export const toggleCollapse = (txt:string): Action => {
+   return {
+      type: TYPES.toggleCollapse,
+      payload: txt
+   }
+}
 
 TYPES.showResults = 'SHOW_RESULTS';
 export const showResults = (key: string,lang:string): Action => {

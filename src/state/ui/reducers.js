@@ -11,11 +11,13 @@ export type UIState = {
    loading?: boolean,
    prefLang:string,
    logged?:boolean,
-   rightPanel?:boolean
+   rightPanel?:boolean,
+   collapse:{[string]:boolean}
 }
 
 const DEFAULT_STATE: UIState = {
-   prefLang:"bo-x-ewts"
+   prefLang:"bo-x-ewts",
+   collapse:[]
 }
 
 
@@ -28,6 +30,11 @@ export const toggleLanguagePanel = (state: UIState, action: Action): UIState => 
     return {...state, rightPanel:!state.rightPanel}
 };
 reducers[actions.TYPES.toggleLanguagePanel] = toggleLanguagePanel
+
+export const toggleCollapse = (state: UIState, action: Action): UIState => {
+    return {...state, collapse:{...state.collapse, [action.payload]:!state.collapse[action.payload]}}
+};
+reducers[actions.TYPES.toggleCollapse] = toggleCollapse
 
 export const closeLanguagePanel = (state: UIState, action: Action): UIState => {
     return {...state, rightPanel:false}
