@@ -227,6 +227,8 @@ body {overflow-x:hidden; }
 .SearchPane h5 { margin-left:16px; font-size : 16px; margin-bottom:0px;margin-top:40px; }
 
 .widget label { text-transform:capitalize }
+.searchWidget > label > span:first-child,
+.dataWidget > label > span:first-child { height:42px;  }
 /* .subcollapse label span:last-child { max-width:120px;} */
 
 .collapse { width:390px;}

@@ -1551,7 +1551,7 @@ class App extends Component<Props,State> {
             //console.log("checkedN",checked)
 
             return (
-               <div key={e} style={{width:"350px",textAlign:"left"}} className="widget">
+               <div key={e} style={{width:"350px",textAlign:"left"}} className="widget searchWidget">
                   <FormControlLabel
                      control={
                         <Checkbox
@@ -1667,7 +1667,7 @@ class App extends Component<Props,State> {
                      </Typography>
                      {
                         widget(I18n.t("Lsidebar.collection.title"),"collection",
-                        ["BDRC" ,"rKTs" ].map((i) => <div key={i} style={{width:"150px",textAlign:"left"}}>
+                        ["BDRC" ,"rKTs" ].map((i) => <div key={i} style={{width:"150px",textAlign:"left"}} className="searchWidget">
                               <FormControlLabel
                                  control={
                                     <Checkbox
@@ -1711,7 +1711,7 @@ class App extends Component<Props,State> {
                            // || (this.props.language == "")
 
                               return (
-                                 <div key={i} style={{textAlign:"left"}}>
+                                 <div key={i} style={{textAlign:"left"}}  className="searchWidget">
                                     <FormControlLabel
                                        control={
                                           <Checkbox
@@ -1885,7 +1885,7 @@ class App extends Component<Props,State> {
                                        // console.log("checked",checked)
 
                                        return (
-                                          <div key={i} style={{width:"280px",textAlign:"left"}} className="widget">
+                                          <div key={i} style={{width:"280px",textAlign:"left"}} className="widget searchWidget">
                                              <FormControlLabel
                                                 control={
                                                    <Checkbox

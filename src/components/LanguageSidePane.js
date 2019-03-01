@@ -80,7 +80,7 @@ class LanguageSidePane extends Component<Props,State> {
                   let label = I18n.t("lang."+i);
                   let disab = ["fr","en"].indexOf(i) === -1
 
-                  return ( <div key={i} style={{width:"150px",textAlign:"left"}}>
+                  return ( <div key={i} style={{width:"150px",textAlign:"left"}} class="dataWidget">
                      <FormControlLabel
                         control={
                            <Checkbox
@@ -108,7 +108,7 @@ class LanguageSidePane extends Component<Props,State> {
                      else label = I18n.t("Rsidebar.priority.user");
                      let disab = true ;
 
-                     return ( <div key={i} style={{width:"310px",textAlign:"left"}}>
+                     return ( <div key={i} style={{width:"310px",textAlign:"left"}} class="dataWidget">
                         <FormControlLabel
                            control={
                               <Checkbox
