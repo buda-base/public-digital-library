@@ -267,6 +267,7 @@ class ResourceViewer extends Component<Props,State>
                clearInterval(timerViewer)
                if(window.location.hash === "#mirador") this.showMirador()
                else if(window.location.hash === "#diva") this.showDiva()
+
                window.location.hash = "";
             }
          }, 10)
@@ -1496,8 +1497,12 @@ class ResourceViewer extends Component<Props,State>
                      "buttons":[{"layout":"false"}],
                      "userButtons": [
                        { "label": "Reading View",
-                         "iconClass": "fa fa-ellipsis-v",
-                         "attributes" : { style:"float:right", onClick : "javascript:$('.mirador-viewer li.scroll-option').click()" }
+                         "iconClass": "fa fa-align-center",
+                         "attributes" : { style:"", onClick : "javascript:$('.mirador-viewer li.scroll-option').click()" }
+                      },
+                       { "label": "Zoom",
+                         "iconClass": "fa fa-search",
+                         "attributes" : { style:"", onClick : "javascript:$('.mirador-viewer li.single-image-option').click()" }
                       },
                        { "label": "Close Mirador",
                          "iconClass": "fa fa-times",
@@ -1516,9 +1521,12 @@ class ResourceViewer extends Component<Props,State>
 
                   config["mainMenuSettings"]["userButtons"] =
                   [
-                     {  "label": "Browse Collection",
+                     {
+                        "label": "Browse Collection",
                         "iconClass": "fa fa-bars",
-                        "attributes" : { onClick : "javascript:$('.workspace-container > div > div > div.window > div.manifest-info > a.mirador-btn.mirador-icon-window-menu > ul > li.new-object-option > i,.addItemLink').first().click()" } //".slots[0].addItem()" }
+                        "attributes" : {
+                           onClick : "javascript:eval('window.setMiradorClick()')"
+                        },
                      },
                      ...config["mainMenuSettings"]["userButtons"]
                   ]
@@ -1539,22 +1547,52 @@ class ResourceViewer extends Component<Props,State>
                }
 
 
+
                //console.log("mir ador",config,this.props)
                window.Mirador( config )
 
-               /* // doesnt work that way
+
                let timerConf = setInterval( () => {
 
                   console.log("miraconf...")
-                  if($(".mirador-viewer #collection-tree > ul > li:nth-child(3) .jstree-anchor").length)
+
+                  $(".user-buttons.mirador-main-menu li:first-child a span").removeClass("fa-bars").addClass("fa-list");
+
+                  if($(".mirador-viewer .member-select-results li[data-index-number=0]").length)
                   {
-                     console.log("miraconf ok",$(".mirador-viewer #collection-tree > ul > li:nth-child(3) .jstree-anchor"))
                      clearInterval(timerConf);
-                     $(".mirador-viewer #collection-tree > ul > li:nth-child(3) .jstree-anchor").trigger("click")
+
+                     if(!window.setMiradorClick) {
+                        window.setMiradorClick = () => {
+
+                           let elem = $('.workspace-container > div > div > div.window > div.manifest-info > a.mirador-btn.mirador-icon-window-menu > ul > li.new-object-option > i') //,.addItemLink').first().click() ;
+                           elem.first().click()
+
+                           let clickTimer = setInterval(() => {
+                              console.log("click interval")
+                              let added = false
+                              $(".mirador-viewer .member-select-results li[data-index-number]").each( (i,e) => {
+                                 let item = $(e)
+                                 if(!item.hasClass("setClick")) {
+                                    item.addClass("setClick").click(() => { $(".mirador-viewer li.scroll-option").click(); })
+                                    added = true ;
+                                 }
+                              })
+                              if(!added) clearInterval(clickTimer)
+                           }, 10) ;
+                        }
+
+                        window.setMiradorClick();
+                     }
+
+                     // open first volume ? or not
+                     //$(".mirador-viewer .member-select-results li[data-index-number=0]").click()
+                     //$('.mirador-viewer li.scroll-option').click()
+
                   }
 
-               }, 1000 )
-               */
+               }, 10 )
+
             }
          }, 10)
       }

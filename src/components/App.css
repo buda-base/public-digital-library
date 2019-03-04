@@ -300,9 +300,17 @@ svg.hide { opacity:0;pointer-events:none; }
 .mirador-container .mirador-viewer .scroll-view { overflow-y:auto; }
 .mirador-container .mirador-viewer ul.scroll-listing-thumbs li  { display:block; }
 .mirador-container .mirador-viewer ul.scroll-listing-thumbs li img { max-width: 100%; height: auto; cursor:pointer; }
-
+/* menu configuration */
 .mirador-container #manifest-select-menu .remove-object-option { display:none !important; }
-
+.mirador-viewer .view-container .thumbnail-view { display:none !important;opacity:0 !important;z-index:-10000 ! important;}
+.mirador-main-menu:empty,
+.mirador-btn.mirador-icon-view-type,
+.mirador-btn.mirador-icon-window-menu,
+.mirador-viewer .dropdown.image-list .thumbnails-option,
+.mirador-viewer .dropdown.image-list .book-option { display:none !important;}
+.mirador-container .window-manifest-title { margin-top: 0px !important; line-height: 35px;  }
+.user-buttons.mirador-main-menu { width:100%; }
+.user-buttons.mirador-main-menu li:last-child { float:right; }
 
 .App {
   text-align: center;
