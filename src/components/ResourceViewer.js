@@ -267,7 +267,6 @@ class ResourceViewer extends Component<Props,State>
                clearInterval(timerViewer)
                if(window.location.hash === "#mirador") this.showMirador()
                else if(window.location.hash === "#diva") this.showDiva()
-
                window.location.hash = "";
             }
          }, 10)
@@ -1306,6 +1305,8 @@ class ResourceViewer extends Component<Props,State>
       if(!this.state.openUV) // || !$("#uv").hasClass("hidden"))
       {
 
+         $("#fond").removeClass("hidden");
+
          let timerUV = setInterval( () => {
 
 
@@ -1364,6 +1365,8 @@ class ResourceViewer extends Component<Props,State>
    {
       if(!this.state.openDiva) // || !$("#diva-wrapper").hasClass("hidden"))
       {
+
+         $("#fond").removeClass("hidden");
 
          if(this.state.UVcanLoad) { window.location.hash = "diva"; window.location.reload(); }
 
@@ -1470,6 +1473,8 @@ class ResourceViewer extends Component<Props,State>
    {
       if(!this.state.openMirador) // || !$("#viewer").hasClass("hidden"))
       {
+         $("#fond").removeClass("hidden");
+
          if(this.state.UVcanLoad) { window.location.hash = "mirador"; window.location.reload(); }
 
          let tiMir = setInterval( () => {
@@ -1498,11 +1503,11 @@ class ResourceViewer extends Component<Props,State>
                      "userButtons": [
                        { "label": "Reading View",
                          "iconClass": "fa fa-align-center",
-                         "attributes" : { style:"", onClick : "javascript:$('.mirador-viewer li.scroll-option').click()" }
+                         "attributes" : { style:"", onClick : "eval('window.setMiradorScroll()')" }
                       },
                        { "label": "Zoom",
                          "iconClass": "fa fa-search",
-                         "attributes" : { style:"", onClick : "javascript:$('.mirador-viewer li.single-image-option').click()" }
+                         "attributes" : { style:"", onClick : "eval('window.setMiradorZoom()')" }
                       },
                        { "label": "Close Mirador",
                          "iconClass": "fa fa-times",
@@ -1556,7 +1561,7 @@ class ResourceViewer extends Component<Props,State>
 
                   console.log("miraconf...")
 
-                  $(".user-buttons.mirador-main-menu li:first-child a span").removeClass("fa-bars").addClass("fa-list");
+                  $(".user-buttons.mirador-main-menu span.fa-bars").removeClass("fa-bars").addClass("fa-list");
 
                   if($(".mirador-viewer .member-select-results li[data-index-number=0]").length)
                   {
@@ -1581,9 +1586,37 @@ class ResourceViewer extends Component<Props,State>
                               if(!added) clearInterval(clickTimer)
                            }, 10) ;
                         }
-
                         window.setMiradorClick();
                      }
+
+                     if(!window.setMiradorZoom) {
+                        window.setMiradorZoom = () => {
+                           let found = false
+                           $('.scroll-view > ul > li').each((i,e) => {
+                              let item = $(e)
+                              let o = item.offset()
+                              if(o.top > 0 && !found) {
+                                 item.find("img").click()
+                                 found = true;
+                              }
+                           })
+                        }
+                     }
+                     if(!window.setMiradorScroll) {
+                        window.setMiradorScroll = () => {
+                           let id = $(".panel-listing-thumbs li.highlight img")
+                           if(!id.length) $(".mirador-viewer li.scroll-option").click();
+                           else {
+                              $(".mirador-viewer li.scroll-option").click();
+                              setTimeout(() => {
+                                 let imgY = $(".scroll-view img[data-image-id='"+id.attr("data-image-id")+"']").parent().offset().top + $(".scroll-view").scrollTop()
+                                 console.log(imgY)
+                                 $(".scroll-view").animate({scrollTop:imgY-100},100);
+                              }, 250)
+                           }
+                        }
+                     }
+
 
                      // open first volume ? or not
                      //$(".mirador-viewer .member-select-results li[data-index-number=0]").click()
@@ -2388,7 +2421,7 @@ class ResourceViewer extends Component<Props,State>
                }
                {
                   !this.props.manifestError && this.props.imageAsset && this.state.openMirador  &&
-                  [<div id="fond">
+                  [<div id="fond" class="hidden">
                      <Loader loaded={false} color="#fff"/>
                   </div>,
                   <div id="viewer"></div>,
@@ -2398,7 +2431,7 @@ class ResourceViewer extends Component<Props,State>
                {
                   !this.props.manifestError && this.props.imageAsset && this.state.openDiva  &&
                   [
-                     <div id="fond">
+                     <div id="fond" class="hidden">
                         <Loader loaded={false} color="#fff"/>
                      </div>,
                      <div id="diva-wrapper"></div>,
@@ -2439,7 +2472,7 @@ class ResourceViewer extends Component<Props,State>
                ]*/}
                {
                   !this.props.manifestError && this.props.imageAsset && this.state.openUV  &&
-                  [<div id="fond">
+                  [<div id="fond" class="hidden">
                      <Loader loaded={false} color="#fff"/>
                   </div>,
                   <div id="uv" className={"uv"}
