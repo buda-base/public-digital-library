@@ -215,6 +215,8 @@ class ResourceViewer extends Component<Props,State>
       for(let k of Object.keys(propOrder)){ tmp[k] = propOrder[k].map((e) => this.expand(e)) }
       //console.log("tmp",tmp)
       propOrder = tmp
+
+      window.closeViewer = () => { this.setState({...this.state, openUV:false, openMirador:false, openDiva:false}); }
    }
 
    componentWillMount()
@@ -1331,7 +1333,8 @@ class ResourceViewer extends Component<Props,State>
                      let btn = $('button.fullScreen')
                      btn.parent().append('<button style="float:right;padding-right:0" class="toggleUV btn imageBtn" title="Toggle UV"><i class="uv-icon uv-icon-fullscreen" aria-hidden="true"></i></button>').click((e) =>
                      {
-                        $("#uv").addClass("hidden")
+                        //$("#uv").addClass("hidden")
+                        window.closeViewer()
                      })
                      btn.remove()
                      $(".minimiseButtons .spacer").remove()
@@ -1347,7 +1350,7 @@ class ResourceViewer extends Component<Props,State>
          this.setState(state);
       }
       else {
-         $('#uv').removeClass('hidden')
+         //$('#uv').removeClass('hidden')
       }
       //reload = true ;
    }
@@ -1421,14 +1424,14 @@ class ResourceViewer extends Component<Props,State>
 
 
                let timerDiva2 = setInterval(() => {
-                  if($("#diva-1-fullscreen-icon").length > 0) {
+                  if($(".diva-fullscreen-icon").length > 0) {
                      clearInterval(timerDiva2)
 
                       // diva 5.1
-                       $("#diva-1-link-icon").remove()
-                       $("#diva-1-fullscreen-icon").remove();
+                       $(".diva-link-icon").remove()
+                       $(".diva-fullscreen-icon").remove();
                        $(".diva-view-menu").append(`<button type="button" id="diva-1-fullscreen-icon" class="diva-fullscreen-icon diva-button" title="Close viewer"
-                          onClick="javascript:document.getElementById(\'diva-wrapper\').classList.add(\'hidden\')"></button>`)
+                          onClick="javascript:eval('window.closeViewer()')"></button>`)
 
 
                       /*
@@ -1441,7 +1444,7 @@ class ResourceViewer extends Component<Props,State>
                       */
 
                      if(this.props.manifests) {
-                        $("#diva-1-tools").append("<span>Browse collection</span><select id='volume'>"+this.props.manifests.map(
+                        $(".diva-tools").append("<span>Browse collection</span><select id='volume'>"+this.props.manifests.map(
                            (v,i) => ("<option value='"+v["@id"]+"' "+(i===0?"selected":"")+">"+v["label"]+"</option>")
                         ) +"</select>")
                         $("#volume").change(
@@ -1462,7 +1465,7 @@ class ResourceViewer extends Component<Props,State>
          }, 100)
       }
       else {
-         $('#diva-wrapper').removeClass('hidden')
+         //$('#diva-wrapper').removeClass('hidden')
       }
       let state = { ...this.state, openDiva:true, openUV:false, openMirador:false }
       this.setState(state);
@@ -1511,7 +1514,7 @@ class ResourceViewer extends Component<Props,State>
                       },
                        { "label": "Close Mirador",
                          "iconClass": "fa fa-times",
-                         "attributes" : { onClick : "javascript:$('#fond,#viewer').addClass('hidden').hide()" }
+                         "attributes" : { onClick : "javascript:eval('window.closeViewer()')" }
                         }
                      ]
                   }
@@ -1631,7 +1634,7 @@ class ResourceViewer extends Component<Props,State>
       }
       else
       {
-         $('#viewer').removeClass('hidden').show()
+         //$('#viewer').removeClass('hidden').show()
       }
 
 
