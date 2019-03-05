@@ -30,9 +30,10 @@ const mapStateToProps = (state) => {
    let rightPanel = state.ui.rightPanel
 
    let locale = state.i18n.locale
+   let langPreset = state.ui.langPreset
 
    let newState = { logged,config, hostFailure, searches, keyword, language,loading,datatypes,ontology,facets,
-      locale,prefLang,resources,ontoSearch,rightPanel }
+      locale,prefLang,resources,ontoSearch,rightPanel,langPreset }
 
    if(!global.inTest) console.log("mS2p",newState)
 

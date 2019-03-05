@@ -17,7 +17,10 @@ type Props = {
    locale?:string,
    open?:boolean,
    collapse:{[string]:boolean},
+   langPriority:{},
+   langIndex?:number,
    onSetLocale:(lg:string)=>void,
+   onSetLangPreset:(langs:string[])=>void,
    onToggleLanguagePanel:()=>void,
    onToggleCollapse:()=>void
 }
@@ -36,13 +39,14 @@ class LanguageSidePane extends Component<Props,State> {
 
    handleCheckUI = (ev:Event,prop:string,lab:string,val:boolean) => {
 
-      console.log("checkUI",prop,lab,val)
+      console.log("checkUI",prop,lab,val,this.props)
 
       let state =  this.state
 
       if(val)
       {
          if(prop === "locale") this.props.onSetLocale(lab);
+         else if(prop === "priority") this.props.onSetLangPreset(this.props.langPriority.presets[lab < 3 ? lab : "custom"],lab);
       }
    }
 
@@ -98,26 +102,28 @@ class LanguageSidePane extends Component<Props,State> {
             {
                widget(I18n.t('Rsidebar.priority.title'),"priority",I18n.t('Rsidebar.priority.help'),
 
-                  [['bo-x-ewts','sa-deva'],
-                   [ "bo", "zh-hans" ],
-                   [ "zh-hant" ],
-                   []].map((list,i) => {
+                  this.props.langPriority && Object.keys(this.props.langPriority.presets).map((k,i) => {
 
+                     let list = this.props.langPriority.presets[k]
                      let label
-                     if(list.length) label = list.map(l => makeLangScriptLabel(l)).join(" + ");
-                     else label = I18n.t("Rsidebar.priority.user");
-                     let disab = true ;
+                     let disab = false ;
+                     if(k !== "custom") label = list.map(l => makeLangScriptLabel(l)).join(" + ");
+                     else {
+                        label = I18n.t("Rsidebar.priority.user");
+                        disab = true
+                     }
+
 
                      return ( <div key={i} style={{width:"310px",textAlign:"left"}} class="dataWidget">
                         <FormControlLabel
                            control={
                               <Checkbox
-                                 //checked={i === this.props.locale}
+                                 checked={i == this.props.langIndex}
                                  disabled={disab}
                                  className={"checkbox "+ (disab?"disabled":"")}
                                  icon={<span className='checkB'/>}
                                  checkedIcon={<span className='checkedB'><CheckCircle style={{color:"#444",margin:"-3px 0 0 -3px",width:"26px",height:"26px"}}/></span>}
-                                 //onChange={(event, checked) => this.handleCheckUI(event,"priority",i,checked)}
+                                 onChange={(event, checked) => this.handleCheckUI(event,"priority",i,checked)}
                                     /> }
                            label={label}
                         />

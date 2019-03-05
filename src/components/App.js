@@ -51,6 +51,7 @@ import {I18n, Translate, Localize } from "react-redux-i18n" ;
 import LanguageSidePaneContainer from '../containers/LanguageSidePaneContainer';
 import ResourceViewerContainer from '../containers/ResourceViewerContainer';
 import {getEntiType} from '../lib/api';
+import {sortLangScriptLabels} from '../lib/language';
 import './App.css';
 
 const adm  = "http://purl.bdrc.io/ontology/admin/" ;
@@ -149,10 +150,19 @@ export const langProfile = [
 
 export function getLangLabel(that,labels,proplang:boolean=false,uilang:boolean=false)
 {
-   if(labels)
+   if(labels && labels.length)
    {
       //console.log("getL",that,labels,proplang);
 
+      let langs = []
+      if(that.props.langPreset) langs = that.props.langPreset
+      if(proplang || uilang) langs = [ that.props.locale, ...langs ]
+
+      let sortLabels =  sortLangScriptLabels(labels,langs)
+
+      return sortLabels[0]
+
+      /*
       let l,langs = [];
       if(that.state.langProfile) langs = [ ...that.state.langProfile ] ;
       if(proplang && that.props.language) langs = [ that.props.language, ...langs ]
@@ -168,6 +178,7 @@ export function getLangLabel(that,labels,proplang:boolean=false,uilang:boolean=f
       }
       if(!l || l.length == 0) l = labels.filter((e) => (e.value) || (e["@value"]))
       return l[0]
+      */
    }
 };
 
@@ -868,9 +879,10 @@ class App extends Component<Props,State> {
             let i = 0
             for(let l of this.props.config.links) {
                //console.log("l",l)
-               if(!l.lang) l.lang = "bo-x-ewts" ;
+               let who = getLangLabel(this, l.label)
+               console.log("who",who)
                messageD.push(<h5 key={i}>{l.title}</h5>)
-               messageD.push(this.makeResult(l.id,null,getEntiType(l.id),l.label,l.lang,l.icon,TagTab[l.icon]))
+               messageD.push(this.makeResult(l.id,null,getEntiType(l.id),who.value,who.lang,l.icon,TagTab[l.icon]))
                i++;
             }
             //message.push(this.makeResult("W19740",null,"Work","spyod 'jug'","bo-x-ewts","Abstract Work",TagTab["Abstract Work"]))

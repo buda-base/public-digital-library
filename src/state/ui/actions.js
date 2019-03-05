@@ -34,6 +34,15 @@ export const selectType = (datatype: string): Action => {
    }
 }
 
+TYPES.langPreset = 'LANG_PRESET';
+export const langPreset = (lang: string[],i?:number): Action => {
+   let meta = i
+   return {
+      type: TYPES.langPreset,
+      payload: lang,
+      meta
+   }
+}
 
 TYPES.logEvent = 'LOG_EVENT';
 export const logEvent = (login: boolean): Action => {

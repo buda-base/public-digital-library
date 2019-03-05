@@ -54,6 +54,7 @@ describe('language settings tests', () => {
 
          var config = (await(await fetch("http://localhost:5555/test/config.json")).json())
          expect(config.language).toMatchSnapshot()
+         expect(config.language.data.presets[0][0]).toEqual("bo-x-ewts")
 
          expect(I18n.t(langScripts["bo"])).toEqual("Tibetan")
 

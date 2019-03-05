@@ -9,14 +9,20 @@ import LanguageSidePane from '../components/LanguageSidePane';
 
 const mapStateToProps = (state,ownProps) => {
 
+      let langIndex = state.ui.langIndex
+      let langPriority = state.data.config ;
+      if(langPriority) {
+         langPriority = langPriority.language.data
+         if(state.ui.langIndex) langPriority.index = state.ui.langIndex
+      }
       let collapse = state.ui.collapse
       let rightPanel = state.ui.rightPanel
       let locale = state.i18n.locale
 
 
-      let props = { ...ownProps, open:rightPanel, locale, collapse }
+      let props = { ...ownProps, langIndex, langPriority, open:rightPanel, locale, collapse }
 
-      console.log("mS2p",state,props)
+      console.log("mS2p LSP",state,props)
 
       return props
 
@@ -26,6 +32,9 @@ const mapStateToProps = (state,ownProps) => {
       return {
          onSetLocale:(lg:string) => {
             dispatch(setLocale(lg));
+         },
+         onSetLangPreset:(langs:string[],i?:number) => {
+            dispatch(ui.langPreset(langs,i))
          },
          onToggleLanguagePanel:() => {
             dispatch(ui.toggleLanguagePanel());
