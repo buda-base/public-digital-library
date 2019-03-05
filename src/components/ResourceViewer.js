@@ -1338,10 +1338,10 @@ class ResourceViewer extends Component<Props,State>
                      })
                      btn.remove()
                      $(".minimiseButtons .spacer").remove()
-                     clearInterval(timerUV)
+                     //clearInterval(timerUV)
                   }
 
-               }, 100)
+               }, 1000)
             }
 
          },100)
