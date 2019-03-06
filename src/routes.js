@@ -17,8 +17,35 @@ import * as ui from './state/ui/actions'
 import qs from 'query-string'
 
 import Auth from './Auth.js';
-
 export const auth = new Auth();
+
+// ignore hash changes made by UV
+// (see https://stackoverflow.com/questions/45799823/react-router-ignore-hashchange)
+let previousLocation;
+const routerSetState = Router.prototype.setState;
+Router.prototype.setState = function(...args) {
+    const loc = this.props.history.location;
+    if (loc.pathname === previousLocation.pathname &&
+        loc.search   === previousLocation.search   &&
+        loc.hash     !== previousLocation.hash
+    ) {
+        previousLocation = {...loc};
+        return;
+    }
+
+    previousLocation = {...loc};
+    return routerSetState.apply(this, args);
+};
+const routerDidMount = Router.prototype.componentDidMount;
+Router.prototype.componentDidMount = function(...args) {
+    previousLocation = {
+        ...this.props.history.location,
+    };
+    if (typeof routerDidMount === 'function') {
+        return routerDidMount.apply(this, args);
+    }
+};
+
 
 // Auth test: ok
 //auth.login();
