@@ -42,12 +42,16 @@ import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import Select from '@material-ui/core/Select';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faLanguage } from '@fortawesome/free-solid-svg-icons'
 import qs from 'query-string'
 
 import {I18n, Translate, Localize } from "react-redux-i18n" ;
 
+import LanguageSidePaneContainer from '../containers/LanguageSidePaneContainer';
 import ResourceViewerContainer from '../containers/ResourceViewerContainer';
 import {getEntiType} from '../lib/api';
+import {sortLangScriptLabels} from '../lib/language';
 import './App.css';
 
 const adm  = "http://purl.bdrc.io/ontology/admin/" ;
@@ -144,12 +148,25 @@ export const langProfile = [
 ]
 
 
-export function getLangLabel(that,labels,proplang:boolean=false,uilang:boolean=false)
+export function getLangLabel(that:{},labels:[],proplang:boolean=false,uilang:boolean=false)
 {
-   if(labels)
+   if(labels && labels.length)
    {
-      //console.log("getL",that,labels,proplang);
+      //console.log("getL",labels,proplang);
 
+      let langs = []
+      if(that.props.langPreset) langs = that.props.langPreset
+      if(proplang || uilang) langs = [ that.props.locale, ...langs ]
+
+      //console.log(JSON.stringify(labels,null,3))
+
+      let sortLabels =  sortLangScriptLabels(labels,langs)
+
+      //console.log(JSON.stringify(sortLabels,null,3))
+
+      return sortLabels[0]
+
+      /*
       let l,langs = [];
       if(that.state.langProfile) langs = [ ...that.state.langProfile ] ;
       if(proplang && that.props.language) langs = [ that.props.language, ...langs ]
@@ -165,6 +182,7 @@ export function getLangLabel(that,labels,proplang:boolean=false,uilang:boolean=f
       }
       if(!l || l.length == 0) l = labels.filter((e) => (e.value) || (e["@value"]))
       return l[0]
+      */
    }
 };
 
@@ -207,6 +225,7 @@ type Props = {
    history:{},
    ontology:{},
    ontoSearch:string,
+   rightPanel?:boolean,
    onResetSearch:()=>void,
    onOntoSearch:(k:string)=>void,
    onStartSearch:(k:string,lg:string,t?:string)=>void,
@@ -216,8 +235,8 @@ type Props = {
    onGetFacetInfo:(k:string,lg:string,f:string)=>void,
    onCheckFacet:(k:string,lg:string,f:{[string]:string})=> void,
    onGetResource:(iri:string)=>void,
-   onSetLocale:(lg:string)=>void,
-   onSetPrefLang:(lg:string)=>void
+   onSetPrefLang:(lg:string)=>void,
+   onToggleLanguagePanel:()=>void
 }
 
 type State = {
@@ -232,7 +251,6 @@ type State = {
    keyword:string,
    dataSource : string[],
    leftPane?:boolean,
-   rightPane?:boolean,
    filters:{
       datatype:string[],
       facets?:{[string]:string[]}
@@ -450,42 +468,6 @@ class App extends Component<Props,State> {
       this.setState( state )
    }
 
-      handleCheckUI = (ev:Event,prop:string,lab:string,val:boolean) => {
-
-         console.log("checkUI",prop,lab,val)
-
-         let state =  this.state
-
-         if(val)
-         {
-            if(prop === "locale") this.props.onSetLocale(lab);
-            else if(prop === "prefLang") this.props.onSetPrefLang(lab);
-            else if(prop === "langProfile") {
-               if(this.state.langProfile && this.state.langProfile.indexOf(lab) === -1)
-               {
-                  this.setState({...state, langProfile:[ ...langProfile.filter( e => (e === lab || this.state.langProfile.indexOf(e) !== -1)) ] })
-               }
-            }
-            //state = {  ...state,  UI: { ...state.UI, [prop] : lab } }
-         }
-         else {
-
-            if(prop === "langProfile") {
-               if(this.state.langProfile && this.state.langProfile.indexOf(lab) !== -1)
-               {
-                  this.setState({...state, langProfile:[ ...langProfile.filter( e => (e !== lab && this.state.langProfile.indexOf(e) !== -1)) ] })
-               }
-            }
-         }
-         /* // no unchecking possible
-         else if(state.UI && state.UI[prop])
-         {
-            state = {  ...state,  UI: {  ...state.UI, [prop] : [] } }
-         }
-         */
-
-         //this.setState( state )
-}
    /*
    handleFacetCheck = (ev:Event,prop:string,lab:string,val:boolean) => {
 
@@ -901,9 +883,10 @@ class App extends Component<Props,State> {
             let i = 0
             for(let l of this.props.config.links) {
                //console.log("l",l)
-               if(!l.lang) l.lang = "bo-x-ewts" ;
+               let who = getLangLabel(this, l.label)
+               console.log("who",who)
                messageD.push(<h5 key={i}>{l.title}</h5>)
-               messageD.push(this.makeResult(l.id,null,getEntiType(l.id),l.label,l.lang,l.icon,TagTab[l.icon]))
+               messageD.push(this.makeResult(l.id,null,getEntiType(l.id),who.value,who.lang,l.icon,TagTab[l.icon]))
                i++;
             }
             //message.push(this.makeResult("W19740",null,"Work","spyod 'jug'","bo-x-ewts","Abstract Work",TagTab["Abstract Work"]))
@@ -1167,7 +1150,7 @@ class App extends Component<Props,State> {
                         for(let k of Object.keys(listOrder)) { if(e.type && e.type.match(new RegExp(k))) return listOrder[k] }
                      })
                      //console.log(JSON.stringify(sList,null,3));
-                     label = getLangLabel(this,sList, true)
+                     label = getLangLabel(this,sList) // ,true)
                      if(label && label.length > 0) label = label[0]
                      /*
                      label = sublist[o].filter(
@@ -1486,7 +1469,7 @@ class App extends Component<Props,State> {
          <Collapse key={2}
             in={this.state.collapse[txt]}
             className={["collapse",this.state.collapse[txt]?"open":"close"].join(" ")}
-            style={{padding:"10px 0 0 50px"}} // ,marginBottom:"30px"
+            style={{padding:"10px 0 0 40px"}} // ,marginBottom:"30px"
             >
                {inCollapse}
          </Collapse> ]
@@ -1584,7 +1567,7 @@ class App extends Component<Props,State> {
             //console.log("checkedN",checked)
 
             return (
-               <div key={e} style={{width:"350px",textAlign:"left"}} className="widget">
+               <div key={e} style={{width:"350px",textAlign:"left"}} className="widget searchWidget">
                   <FormControlLabel
                      control={
                         <Checkbox
@@ -1700,7 +1683,7 @@ class App extends Component<Props,State> {
                      </Typography>
                      {
                         widget(I18n.t("Lsidebar.collection.title"),"collection",
-                        ["BDRC" ,"rKTs" ].map((i) => <div key={i} style={{width:"150px",textAlign:"left"}}>
+                        ["BDRC" ,"rKTs" ].map((i) => <div key={i} style={{width:"150px",textAlign:"left"}} className="searchWidget">
                               <FormControlLabel
                                  control={
                                     <Checkbox
@@ -1744,7 +1727,7 @@ class App extends Component<Props,State> {
                            // || (this.props.language == "")
 
                               return (
-                                 <div key={i} style={{textAlign:"left"}}>
+                                 <div key={i} style={{textAlign:"left"}}  className="searchWidget">
                                     <FormControlLabel
                                        control={
                                           <Checkbox
@@ -1918,7 +1901,7 @@ class App extends Component<Props,State> {
                                        // console.log("checked",checked)
 
                                        return (
-                                          <div key={i} style={{width:"280px",textAlign:"left"}} className="widget">
+                                          <div key={i} style={{width:"280px",textAlign:"left"}} className="widget searchWidget">
                                              <FormControlLabel
                                                 control={
                                                    <Checkbox
@@ -2126,8 +2109,8 @@ class App extends Component<Props,State> {
                   onKeyPress={(e) => this.handleCustomLanguage(e)}
                /> */ }
               </FormControl>
-              <IconButton style={{marginLeft:"15px"}}  className={this.state.rightPane?"hidden":""} onClick={e => this.setState({...this.state,rightPane:!this.state.rightPane})}>
-                 <Settings/>
+              <IconButton style={{marginLeft:"15px"}}  onClick={e => this.props.onToggleLanguagePanel()}>
+                 <FontAwesomeIcon style={{fontSize:"28px"}} icon={faLanguage} />
               </IconButton>
            </div>
                { false && this.state.keyword.length > 0 && this.state.dataSource.length > 0 &&
@@ -2168,56 +2151,7 @@ class App extends Component<Props,State> {
                   </List>
                }
             </div>
-            <div className={"SidePane right "+(this.state.rightPane?"visible":"")}>
-               <IconButton className="close" onClick={e => this.setState({...this.state,rightPane:false})} ><Close/></IconButton>
-               <div style={{width:"333px",position:"relative"}}>
-                  <Typography style={{fontSize:"30px",marginBottom:"20px",textAlign:"left"}}>
-                     <Translate value='Rsidebar.title' />
-                  </Typography>
-                  {
-                     widget(I18n.t('Rsidebar.UI.title'),"locale",
-                           ["zh", "en", "fr", "bo" ].map((i) => {
-
-                           let label = I18n.t("lang."+i);
-                           let disab = ["fr","en"].indexOf(i) === -1
-
-                           return ( <div key={i} style={{width:"150px",textAlign:"left"}}>
-                              <FormControlLabel
-                                 control={
-                                    <Checkbox
-                                       checked={i === this.props.locale}
-                                       disabled={disab}
-                                       className={"checkbox "+ (disab?"disabled":"")}
-                                       icon={<span className='checkB'/>}
-                                       checkedIcon={<span className='checkedB'><CheckCircle style={{color:"#444",margin:"-3px 0 0 -3px",width:"26px",height:"26px"}}/></span>}
-                                       onChange={(event, checked) => this.handleCheckUI(event,"locale",i,checked)}                                    />
-
-                                 }
-                                 label={label}
-                              />
-                           </div>)}))
-                  }{
-                     widget(I18n.t("Rsidebar.results.title"),"language",
-                           //Object.keys(languages)
-                           langProfile.map((i) => <div key={i} style={{width:"200px",textAlign:"left"}}>
-                              <FormControlLabel
-                                 control={
-                                    <Checkbox
-                                       checked={this.state.langProfile && this.state.langProfile.indexOf(i) !== -1} //i === this.props.prefLang}
-                                       disabled={false}
-                                       className="checkbox"
-                                       icon={<span className='checkB'/>}
-                                       checkedIcon={<span className='checkedB'><CheckCircle style={{color:"#444",margin:"-3px 0 0 -3px",width:"26px",height:"26px"}}/></span>}
-                                       onChange={(event, checked) => this.handleCheckUI(event,"langProfile",i,checked)}
-                                    />
-
-                                 }
-                                 label={I18n.t(languages[i])}
-                              />
-                           </div> ))
-                  }
-               </div>
-            </div>
+            <LanguageSidePaneContainer />
          </div>
       </div>
       );

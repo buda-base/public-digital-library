@@ -49,19 +49,36 @@
          }
       },
       "links":[
-         { "title":"Abstract text of the Bodhisattvacaryāvatāra", "id":"W19740", "label":"spyod 'jug", "lang":"bo-x-ewts", "icon":"Abstract Work" },
-         { "title":"Shantideva", "id":"P6161", "label":"zhi ba lha/" }
+         { "title":"Abstract text of the Bodhisattvacaryāvatāra", "id":"W19740", "icon":"Abstract Work", "label":[
+               {"value":"སྤྱོད་འཇུག","lang":"bo"},
+               {"value":"spyod 'jug", "lang":"bo-x-ewts"},
+               {"value":"बोधिसत्त्वचर्यावतार", "lang":"sa-deva"},
+               {"value":"Bodhisattvacaryāvatāra","lang":"sa-x-iast"},
+               {"value":"菩提行經","lang":"zh-hant"},
+               {"value":"菩提行经","lang":"zh-hans"},
+               {"value":"pú tí xíng jīng","lang":"zh-latn-pinyin"}
+            ]
+         },
+         { "title":"Shantideva", "id":"P6161", "label":[
+               {"value":"ཞི་བ་ལྷ།", "lang":"bo"},
+               {"value":"zhi ba lha/", "lang":"bo-x-ewts" },
+               {"value":"शान्तिदेव", "lang":"sa-deva"},
+               {"value":"Śāntideva", "lang":"sa-x-iast"},
+               {"value":"寂天菩薩", "lang":"zh-hant"},
+               {"value":"寂天菩萨", "lang":"zh-hans"},
+               {"value":"jì tiān pú sà", "lang":"zh-latn-pinyin"}
+            ]
+         }
       ],
       "language": {
-         "preferences":{
-            "data":{
-               "presets":[
-                  [ "bo-x-ewts", "sa-deva" ],
-                  [ "bo", "zh-hans" ],
-                  [ "zh-hant" ]
-               ],
+         "data":{
+            "presets":{
+               "0":[ "bo-x-ewts", "sa-deva" ],
+               "1":[ "bo", "zh-hans" ],
+               "2":[ "zh-hant" ],
                "custom":[ "bo", "sa-deva", "zh-hant" ]
-            }
+            },
+            "index":0
          }
       }
    },

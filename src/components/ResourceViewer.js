@@ -10,6 +10,7 @@ import { GoogleLayer } from "react-leaflet-google" ;
 //import { GoogleMutant, GoogleApiLoader } from 'react-leaflet-googlemutant';
 // import {GoogleLayer} from 'react-leaflet-google'
 // const { BaseLayer} = LayersControl;
+import Settings from '@material-ui/icons/SettingsSharp';
 import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
 import FormHelperText from '@material-ui/core/FormHelperText';
@@ -41,12 +42,15 @@ import Script from 'react-load-script'
 import React, { Component } from 'react';
 import qs from 'query-string'
 import Button from '@material-ui/core/Button';
-import {Translate} from 'react-redux-i18n';
+import {Translate, I18n} from 'react-redux-i18n';
 import { Link } from 'react-router-dom';
 //import AnnotatedEtextContainer from 'annotated-etext-react';
 import IIIFViewerContainer from '../containers/IIIFViewerContainer';
+import LanguageSidePaneContainer from '../containers/LanguageSidePaneContainer';
 import { Redirect404 } from "../routes.js"
 import Loader from "react-loader"
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faLanguage } from '@fortawesome/free-solid-svg-icons'
 //import {MapComponent} from './Map';
 import {getEntiType} from '../lib/api';
 import {languages,getLangLabel,langProfile} from './App';
@@ -75,17 +79,21 @@ type Props = {
    annoCollec?:{},
    imageAsset?:string,
    collecManif?:string,
+   locale?:string,
+   langPreset:string[],
    manifests?:[],
    firstImage?:string,
    canvasID?:string,
    pdfVolumes?:[],
+   rightPanel?:boolean,
    onInitPdf: (u:string,s:string) => void,
    onRequestPdf: (u:string,s:string) => void,
    onCreatePdf: (s:string,u:string) => void,
    onGetResource: (s:string) => void,
    onGetAnnotations: (s:string) => void,
    onHasImageAsset:(u:string,s:string) => void,
-   onGetChunks: (s:string,b:number) => void
+   onGetChunks: (s:string,b:number) => void,
+   onToggleLanguagePanel:()=>void
 }
 type State = {
    uviewer : boolean,
@@ -106,7 +114,8 @@ type State = {
    annoCollecOpen?:boolean,
    anchorElAnno?:any,
    largeMap?:boolean,
-   langProfile?:string[]
+   langProfile?:string[],
+   rightPane?:boolean
  }
 
 
@@ -2179,7 +2188,7 @@ class ResourceViewer extends Component<Props,State>
 
       // add nother route to UViewer Gallery page
       return (
-         <div style={{overflow:"hidden",textAlign:"center"}}>
+         [<div style={{overflow:"hidden",textAlign:"center"}}>
             { !this.state.ready && <Loader loaded={false} /> }
             <div className={"resource "+getEntiType(this.props.IRI).toLowerCase()}>
                <div className={"SidePane right "  +(this.state.annoPane?"visible":"")} style={{top:"0",paddingTop:"50px"}}>
@@ -2256,16 +2265,19 @@ class ResourceViewer extends Component<Props,State>
                      </div>
                   }
                </div>
-               <Link style={{fontSize:"26px"}} className="goBack" to={this.props.keyword&&!this.props.keyword.match(/^bdr:/)?"/search?q="+this.props.keyword+"&lg="+this.props.language+(this.props.datatype?"&t="+this.props.datatype:""):"/"}>
+               <Link style={{fontSize:"20px"}} className="goBack" to={this.props.keyword&&!this.props.keyword.match(/^bdr:/)?"/search?q="+this.props.keyword+"&lg="+this.props.language+(this.props.datatype?"&t="+this.props.datatype:""):"/"}>
                   {/* <Button style={{paddingLeft:"0"}}>&lt; Go back to search page</Button> */}
-                  <IconButton style={{paddingLeft:0}} title="Go back to search page">
+                  <IconButton style={{paddingLeft:0}} title={I18n.t("resource.back")}>
                      <HomeIcon style={{fontSize:"30px"}}/>
                   </IconButton>
                </Link>
+              <IconButton style={{marginLeft:"35px"}} onClick={e => this.props.onToggleLanguagePanel()} title={I18n.t("resource.settings")}>
+                 <FontAwesomeIcon style={{fontSize:"32px"}} icon={faLanguage} />
+              </IconButton>
                {
                   this.props.IRI.match(/^bdr:/) &&
                   [<a className="goBack" target="_blank" title="TTL version" rel="alternate" type="text/turtle" href={"http://purl.bdrc.io/resource/"+this.props.IRI.replace(/bdr:/,"")+".ttl"}>
-                     <Button style={{marginLeft:"50px",paddingRight:"0"}}>export to ttl</Button>
+                     <Button style={{marginLeft:"50px",paddingRight:"0"}}>{I18n.t("resource.export")} ttl</Button>
                   </a>,<span>&nbsp;/&nbsp;</span>,
                   <a className="goBack noML" target="_blank" title="JSON-LD version" rel="alternate" type="application/ld+json" href={"http://purl.bdrc.io/resource/"+this.props.IRI.replace(/bdr:/,"")+".jsonld"}>
                      <Button style={{paddingLeft:0}}>json-ld</Button>
@@ -2275,7 +2287,7 @@ class ResourceViewer extends Component<Props,State>
                   this.props.IRI.match(/^bda[nc]:/) &&
                   [<a className="goBack" target="_blank" title="TTL version" rel="alternate" type="text/turtle"
                      href={"http://purl.bdrc.io/"+(this.props.IRI.match(/^bdan:/)?"annotation/":"anncollection/")+this.props.IRI.replace(/bda[nc]:/,"")+".ttl"}>
-                        <Button style={{marginLeft:"50px",paddingRight:"0"}}>export to ttl</Button>
+                        <Button style={{marginLeft:"50px",paddingRight:"0"}}>{I18n.t("resource.export")} ttl</Button>
                   </a>,<span>&nbsp;/&nbsp;</span>,
                   <a className="goBack noML" target="_blank" title="JSON-LD version" rel="alternate" type="application/ld+json"
                      href={"http://purl.bdrc.io/"+(this.props.IRI.match(/^bdan:/)?"annotation/":"anncollection/")+this.props.IRI.replace(/bda[nc]:/,"")+".jsonld"}>
@@ -2288,7 +2300,7 @@ class ResourceViewer extends Component<Props,State>
                {pdfLink &&
                   [<a style={{fontSize:"26px"}} className="goBack pdfLoader">
                      <Loader loaded={(!this.props.pdfVolumes || this.props.pdfVolumes.length > 0)} options={{position:"relative",left:"24px",top:"-7px"}} />
-                        <IconButton title="Download as PDF/ZIP" onClick={ev =>
+                        <IconButton title={I18n.t("resource.download")+" PDF/ZIP"} onClick={ev =>
                               {
                                  //if(this.props.createPdf) return ;
                                   if(monoVol > 0){
@@ -2371,17 +2383,17 @@ class ResourceViewer extends Component<Props,State>
                               prompt("IIIF Manifest url has been copied to clipboard.\nCTRL+V to paste",this.props.imageAsset)
                         }>
 
-                        <Button id="iiif" className="goBack" ><img src="/iiif.png"/></Button>
+                        <Button id="iiif" className="goBack" title="IIIF manifest"><img src="/iiif.png"/></Button>
                      </CopyToClipboard>]
 
                }
-               <IconButton style={{marginLeft:"35px"}} title="Toggle annotations panel" onClick={e => this.setState({...this.state,annoPane:!this.state.annoPane})}>
+               <IconButton style={{marginLeft:"35px"}} title={I18n.t("resource.toggle")} onClick={e => this.setState({...this.state,annoPane:!this.state.annoPane})}>
                   <ChatIcon />
                </IconButton>
                {
                   this.props.IRI.match(/^[^:]+:[RPGTW]/) &&
                   <Link className="goBack" to={"/search?r="+this.props.IRI}>
-                     <Button style={{marginLeft:"30px"}}>Browse associated resources &gt;</Button>
+                     <Button style={{marginLeft:"30px"}}>{I18n.t("resource.browse")} &gt;</Button>
                   </Link>
                }
                {/* {this.format("h1",rdf+"type",this.props.IRI)} */}
@@ -2405,16 +2417,16 @@ class ResourceViewer extends Component<Props,State>
                         this.props.firstImage && this.state.imageLoaded &&
                         <div id="title">
                            <div onClick={this.showUV.bind(this)}>
-                              <span>View {imageLabel} in UV</span>
+                              <span>{I18n.t("resource.view")} {I18n.t("resource."+imageLabel)} {I18n.t("resource.in")} UV</span>
                               <Fullscreen style={{transform: "scale(1.4)",position:"absolute",right:"3px",top:"3px"}}/>
                            </div>
                            <div onClick={this.showMirador.bind(this)}>
-                              <span>View {imageLabel} in Mirador</span>
+                              <span>{I18n.t("resource.view")} {I18n.t("resource."+imageLabel)} {I18n.t("resource.in")} Mirador</span>
                               <Fullscreen style={{transform: "scale(1.4)",position:"absolute",right:"3px",top:"3px"}}/>
                            </div>
                            {  (imageLabel!=="collection" || this.props.manifests) &&
                               <div onClick={this.showDiva.bind(this)}>
-                                 <span>View {imageLabel} in Diva</span>
+                                 <span>{I18n.t("resource.view")} {I18n.t("resource."+imageLabel)} {I18n.t("resource.in")} Diva</span>
                                  <Fullscreen style={{transform: "scale(1.4)",position:"absolute",right:"3px",top:"3px"}}/>
                               </div>
                            }
@@ -2488,7 +2500,8 @@ class ResourceViewer extends Component<Props,State>
                { theData }
             </div>
             {/* <iframe style={{width:"calc(100% - 100px)",margin:"50px",height:"calc(100vh - 160px)",border:"none"}} src={"http://purl.bdrc.io/resource/"+get.IRI}/> */}
-         </div>
+         </div>,
+         <LanguageSidePaneContainer />]
 
       ) ;
 

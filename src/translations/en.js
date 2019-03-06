@@ -99,10 +99,27 @@ const enTranslation = {
       },
       results:{
          title:"Results Preferred Language"
+      },
+      priority:{
+         title:"Data Language Priority",
+         help:"Please select the languages you want to have the data displayed in, by order of priority (you do not need to list them all)",
+         user:"User Defined"
       }
    },
    Asidebar:{
       title:"Annotations"
+   },
+   resource:{
+      back:"Go back to search page",
+      browse:"Browse associated resources",
+      collection:"",
+      download:"Download as",
+      export:"Export to",
+      in:"",
+      images:"",
+      settings:"Language Settings",
+      toggle:"Toggle annotations panel",
+      view:"View",
    }
 } ;
 

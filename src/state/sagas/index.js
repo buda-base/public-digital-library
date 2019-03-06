@@ -44,6 +44,9 @@ async function initiateApp(params,iri,myprops) {
             handleAuthentication(myprops);
          }
          store.dispatch(dataActions.loadedConfig(config));
+         //console.log("config",config)
+         store.dispatch(uiActions.langPreset(config.language.data.presets[config.language.data.index]))
+         //console.log("preset",config.language.data.presets[config.language.data.index])
          //store.dispatch(dataActions.choosingHost(config.ldspdi.endpoints[config.ldspdi.index]));
       }
 

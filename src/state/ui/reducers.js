@@ -10,11 +10,17 @@ export type UIState = {
    keyword?:string,
    loading?: boolean,
    prefLang:string,
-   logged?:boolean
+   logged?:boolean,
+   rightPanel?:boolean,
+   langPreset?:string[],
+   langIndex?:number,
+   collapse:{[string]:boolean}
 }
 
 const DEFAULT_STATE: UIState = {
-   prefLang:"bo-x-ewts"
+   prefLang:"bo-x-ewts",
+   collapse:{"locale":true,"priority":true},
+   rightPanel:false
 }
 
 
@@ -22,6 +28,29 @@ export const helloWorld = (state: UIState, action: Action): UIState => {
     return {...state}
 };
 reducers[actions.TYPES.helloWorld] = helloWorld
+
+export const toggleLanguagePanel = (state: UIState, action: Action): UIState => {
+    return {...state, rightPanel:!state.rightPanel}
+};
+reducers[actions.TYPES.toggleLanguagePanel] = toggleLanguagePanel
+
+export const toggleCollapse = (state: UIState, action: Action): UIState => {
+    return {...state, collapse:{...state.collapse, [action.payload]:!state.collapse[action.payload]}}
+};
+reducers[actions.TYPES.toggleCollapse] = toggleCollapse
+
+export const closeLanguagePanel = (state: UIState, action: Action): UIState => {
+    return {...state, rightPanel:false}
+};
+reducers[actions.TYPES.closeLanguagePanel] = closeLanguagePanel
+
+export const langPreset = (state: UIState, action: Action): UIState => {
+   state =  {...state, langPreset:action.payload }
+   if(action.meta != undefined) state = { ...state, langIndex:action.meta }  
+   return state
+};
+reducers[actions.TYPES.langPreset] = langPreset
+
 
 
 export const logEvent = (state: UIState, action: Action): UIState => {
