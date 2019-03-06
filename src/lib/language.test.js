@@ -14,8 +14,7 @@ import store from '../index';
 import {initiateApp} from '../state/actions';
 import tcpPortUsed from 'tcp-port-used'
 import 'whatwg-fetch'
-import {langScripts,makeLangScriptLabel,sortLangScriptLabels} from "./language"
-
+import {langScripts,makeLangScriptLabel,sortLangScriptLabels,transliterators, extendedPresets} from "./language"
 
 let makeRoutes = require('../routes').default
 let bdrcAPI = require('../lib/api').default;
@@ -45,6 +44,7 @@ const jsonLabels1 = [
 
 const preset1 = [ "bo-x-ewts", "sa-alalc97" ]
 const preset2 = [ "zh-hans", "bo-x-ewts", "en" ]
+const preset3 = [ "bo", "zh-hans" ]
 
 
 describe('language settings tests', () => {
@@ -84,7 +84,7 @@ describe('language settings tests', () => {
    })
 
 
-   it('sorting json/jsonld labels', done => {
+   it('sorting json/jsonld labels', () => {
 
       const jsonldLabels1sorted1 = [
          { "@language": "bo-x-ewts", "@value": "rdzogs chen/" },
@@ -130,6 +130,17 @@ describe('language settings tests', () => {
       expect(jsonResults12).toEqual(jsonLabels1sorted2)
       expect(jsonldResults12).toEqual(jsonldLabels1sorted2)
 
-      done();
+   })
+
+
+   it('testing transliterators/Wylie', () => {
+
+      expect(transliterators["bo"]["bo-x-ewts"]('ཀ')).toEqual('ka')
+      expect(transliterators["bo-x-ewts"]["bo"]('ka')).toEqual('ཀ')
+
+      let extPreset3 = extendedPresets(preset3)
+      sortLangScriptLabels(jsonLabels1, extPreset3)
+
+
    })
 })

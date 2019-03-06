@@ -1,6 +1,16 @@
 //@flow
 import {I18n} from 'react-redux-i18n';
 import _ from 'lodash'
+import {toWylie,fromWylie} from "wylie"
+
+export const transliterators = {
+   "bo":{
+      "bo-x-ewts":toWylie
+   },
+   "bo-x-ewts":{
+      "bo":fromWylie
+   },
+}
 
 export const langScripts = {
    "zh":"lang.langscript.zh", "en":"lang.langscript.en", "pi":"lang.langscript.pi", "bo":"lang.langscript.bo", "sa":"lang.langscript.sa", "inc":"lang.langscript.inc",
@@ -34,6 +44,15 @@ export function makeLangScriptLabel(code:string)
    //console.log("label",langLabel,scriptLabel)
 
    return langLabel + " (" + scriptLabel + ")"
+}
+
+export function extendedPresets(preset:string[])
+{
+   let preset_ =
+      preset
+      .map( k => [ k, ...(transliterators[k]?Object.keys(transliterators[k]):[]) ] )
+      .reduce( (acc,k) => [...acc,...(k.length == 1?k:[k])],[])
+   return preset_
 }
 
 export function sortLangScriptLabels(data:[],preset:string[])

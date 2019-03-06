@@ -75,7 +75,8 @@
     "redux-devtools-extension": "^2.13.2",
     "redux-saga": "^0.16.0",
     "redux-thunk": "^2.2.0",
-    "universalviewer": "^3.0.16"
+    "universalviewer": "^3.0.16",
+    "wylie": "^1.0.2"
   },
   "scripts": {
     "start": "react-scripts start",
