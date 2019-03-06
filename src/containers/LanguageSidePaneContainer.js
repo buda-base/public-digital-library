@@ -12,8 +12,9 @@ const mapStateToProps = (state,ownProps) => {
       let langIndex = state.ui.langIndex
       let langPriority = state.data.config ;
       if(langPriority) {
-         langPriority = langPriority.language.data
+         langPriority = { ...langPriority.language.data }
          if(state.ui.langIndex) langPriority.index = state.ui.langIndex
+         else langIndex = langPriority.index
       }
       let collapse = state.ui.collapse
       let rightPanel = state.ui.rightPanel

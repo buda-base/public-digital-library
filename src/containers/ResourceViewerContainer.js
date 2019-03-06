@@ -59,10 +59,11 @@ const mapStateToProps = (state,ownProps) => {
    let pdfUrl = state.data.pdfUrl
 
    let locale = state.i18n.locale
+   let langPreset = state.ui.langPreset
 
    let props = { config,resources, ontology, keyword, language, datatype, assocResources, prefLang, failures,
       imageAsset,firstImage,canvasID,collecManif,manifests,manifestError,pdfVolumes,createPdf,pdfUrl,
-      annoCollec,rightPanel,locale }
+      annoCollec,rightPanel,locale,langPreset }
 
    console.log("mS2p",state,props)
 

@@ -45,8 +45,9 @@ export const closeLanguagePanel = (state: UIState, action: Action): UIState => {
 reducers[actions.TYPES.closeLanguagePanel] = closeLanguagePanel
 
 export const langPreset = (state: UIState, action: Action): UIState => {
-   let langIndex = action.meta
-   return {...state, langPreset:action.payload, langIndex }
+   state =  {...state, langPreset:action.payload }
+   if(action.meta != undefined) state = { ...state, langIndex:action.meta }  
+   return state
 };
 reducers[actions.TYPES.langPreset] = langPreset
 

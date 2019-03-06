@@ -148,17 +148,21 @@ export const langProfile = [
 ]
 
 
-export function getLangLabel(that,labels,proplang:boolean=false,uilang:boolean=false)
+export function getLangLabel(that:{},labels:[],proplang:boolean=false,uilang:boolean=false)
 {
    if(labels && labels.length)
    {
-      //console.log("getL",that,labels,proplang);
+      //console.log("getL",labels,proplang);
 
       let langs = []
       if(that.props.langPreset) langs = that.props.langPreset
       if(proplang || uilang) langs = [ that.props.locale, ...langs ]
 
+      //console.log(JSON.stringify(labels,null,3))
+
       let sortLabels =  sortLangScriptLabels(labels,langs)
+
+      //console.log(JSON.stringify(sortLabels,null,3))
 
       return sortLabels[0]
 
@@ -1146,7 +1150,7 @@ class App extends Component<Props,State> {
                         for(let k of Object.keys(listOrder)) { if(e.type && e.type.match(new RegExp(k))) return listOrder[k] }
                      })
                      //console.log(JSON.stringify(sList,null,3));
-                     label = getLangLabel(this,sList, true)
+                     label = getLangLabel(this,sList) // ,true)
                      if(label && label.length > 0) label = label[0]
                      /*
                      label = sublist[o].filter(

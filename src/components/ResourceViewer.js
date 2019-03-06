@@ -80,6 +80,7 @@ type Props = {
    imageAsset?:string,
    collecManif?:string,
    locale?:string,
+   langPreset:string[],
    manifests?:[],
    firstImage?:string,
    canvasID?:string,
