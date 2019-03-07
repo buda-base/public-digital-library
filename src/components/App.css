@@ -3,7 +3,7 @@
 
 
 /* CSS debug mode */
- /* * {background-color:rgba(255,0,128,0.05);} */
+/* * {background-color:rgba(255,0,128,0.05);}*/
 
 
 body { overflow:auto !important;padding-right:0 !important;  }
@@ -229,6 +229,7 @@ body {overflow-x:hidden; }
 .widget label { text-transform:capitalize }
 .searchWidget > label > span:first-child,
 .dataWidget > label > span:first-child { height:42px;  }
+.SidePane .help { margin-left:-20px; text-align:left;font-style:italic;margin-bottom:10px; font-size:14px; width:300px;line-height:20px; }
 /* .subcollapse label span:last-child { max-width:120px;} */
 
 .collapse { width:390px;}

@@ -67,6 +67,7 @@ class LanguageSidePane extends Component<Props,State> {
             className={["collapse",this.props.collapse[txt]?"open":"close"].join(" ")}
             style={{padding:"10px 0 0 40px"}} // ,marginBottom:"30px"
             >
+               {help && help != "" && <div class="help">{help}</div>}
                {inCollapse}
          </Collapse> ]
       )
@@ -107,7 +108,7 @@ class LanguageSidePane extends Component<Props,State> {
                      let list = this.props.langPriority.presets[k]
                      let label
                      let disab = false ;
-                     if(k !== "custom") label = list.map(l => makeLangScriptLabel(l)).join(" + ");
+                     if(k !== "custom") label = list.map(l => makeLangScriptLabel(l)).join(" / ");
                      else {
                         label = I18n.t("Rsidebar.priority.user");
                         disab = true

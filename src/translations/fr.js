@@ -90,7 +90,7 @@ const frTranslation = {
       },
       priority:{
          title:"Priorité de Langue des Données",
-         help:"Please select the languages you want to have the data displayed in, by order of priority (you do not need to list them all)",
+         help:"Sélectionnez les langues d'affichage des données, par ordre de priorité (inutile de tout lister)",
          user:"Defini par l'Utilisateur"
       }
    },

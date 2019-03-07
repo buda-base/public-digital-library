@@ -2,14 +2,13 @@
 import {I18n} from 'react-redux-i18n';
 import _ from 'lodash'
 import {toWylie,fromWylie} from "wylie"
+import Sanscript from "@sanskrit-coders/sanscript"
 
 export const transliterators = {
-   "bo":{
-      "bo-x-ewts":toWylie
-   },
-   "bo-x-ewts":{
-      "bo":fromWylie
-   },
+   "bo":{ "bo-x-ewts": (val:string) => toWylie(val) },
+   "bo-x-ewts":{ "bo": (val:string) => fromWylie(val) },
+   "sa-deva":{ "sa-x-iast": (val:string) => Sanscript.t(val,"devanagari","iast") },
+   "sa-x-iast":{ "sa-deva": (val:string) => Sanscript.t(val.toLowerCase(),"iast","devanagari") },
 }
 
 export const langScripts = {
@@ -48,27 +47,59 @@ export function makeLangScriptLabel(code:string)
 
 export function extendedPresets(preset:string[])
 {
+    /*
    let preset_ =
       preset
       .map( k => [ k, ...(transliterators[k]?Object.keys(transliterators[k]):[]) ] )
       .reduce( (acc,k) => [...acc,...(k.length == 1?k:[k])],[])
-   return preset_
+      */
+
+   let extPreset = { flat:[], translit:{} }
+   for(let k of preset) {
+      extPreset.flat.push(k)
+      if(transliterators[k]) {
+         for(let t of Object.keys(transliterators[k])) {
+            extPreset.flat.push(t)
+            extPreset.translit[t] = k
+         }
+      }
+   }
+
+   //console.log("extP",extPreset)
+
+   return extPreset
 }
 
-export function sortLangScriptLabels(data:[],preset:string[])
+export function sortLangScriptLabels(data:[],preset:string[],translit:{}={})
 {
-   //console.log("data",data)
-   //console.log("preset",preset)
+   //console.log("sort",preset,translit) //,data)
 
-   let data_ = _.orderBy(data.map(e => {
+   let data_ = data.map(e => {
       let k = e["lang"]
       if(!k) k = e["xml:lang"]
       if(!k) k = e["@language"]
       if(!k) k = ""
-      k = preset.indexOf(k)
-      if(k === -1) k = preset.length
-      return {e,k}
-   }),['k'],["asc"]).map(e => e.e)
+      let v = e["value"]
+      if(!v) v = e["@value"]
+      if(!v) v = ""
+      let i = preset.indexOf(k)
+      if(i === -1) i = preset.length
+
+      let tLit
+      if(translit[k]) {
+         tLit = {} ;
+         let val = "@value", lan = "@language"
+         if(!e["@value"]) {  val = "value" ; lan = "lang" ; tLit["type"] = "literal" ; }
+         tLit[val] = transliterators[k][translit[k]](v)
+         tLit[lan] = translit[k]
+      }
+
+      return {e,tLit,i}
+   })
+
+   console.log("_",data_)
+
+   data_ = _.orderBy(data_,['i'],["asc"]).map(e => e.tLit?e.tLit:e.e )
 
    //console.log("data_",data_)
 

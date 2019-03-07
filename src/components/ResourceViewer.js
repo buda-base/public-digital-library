@@ -728,6 +728,7 @@ class ResourceViewer extends Component<Props,State>
 
                         if(info && info[0]) {
                            lang = info[0]["xml:lang"]
+                           if(!lang) lang = info[0]["lang"]
                            info = info[0].value
                         }
                         else if(!withProp){
@@ -745,10 +746,12 @@ class ResourceViewer extends Component<Props,State>
 
                               if(info && info[0]) {
                                  lang = info[0]["xml:lang"]
+                                 if(!lang) lang = info[0]["lang"]
                                  info = info[0].value
                               }
                               else {
                                  lang = infoBase[0]["xml:lang"]
+                                 if(!lang) lang = infoBase[0]["lang"]
                                  info = infoBase[0].value
                                  if(infoBase[0].type && infoBase[0].type == bdo+"volumeNumber") info = "Volume "+info ;
                                  else if(info && info.match(/purl[.]bdrc/)) info = null
@@ -764,7 +767,7 @@ class ResourceViewer extends Component<Props,State>
                   // we can return Link
                   let pretty = this.fullname(elem.value);
 
-                  if(info && infoBase && infoBase.filter(e=>e["xml:lang"]).length >= 0) {
+                  if(info && infoBase && infoBase.filter(e=>e["xml:lang"]||e["lang"]).length >= 0) {
                      ret.push([<Link className="urilink prefLabel" to={"/show/bdr:"+pretty}>{info}</Link>,lang?<Tooltip placement="bottom-end" title={
                         <div style={{margin:"10px"}}>
                            <Translate value={languages[lang]?languages[lang].replace(/search/,"tip"):lang}/>

@@ -51,7 +51,7 @@ import {I18n, Translate, Localize } from "react-redux-i18n" ;
 import LanguageSidePaneContainer from '../containers/LanguageSidePaneContainer';
 import ResourceViewerContainer from '../containers/ResourceViewerContainer';
 import {getEntiType} from '../lib/api';
-import {sortLangScriptLabels} from '../lib/language';
+import {sortLangScriptLabels, extendedPresets} from '../lib/language';
 import './App.css';
 
 const adm  = "http://purl.bdrc.io/ontology/admin/" ;
@@ -158,9 +158,12 @@ export function getLangLabel(that:{},labels:[],proplang:boolean=false,uilang:boo
       if(that.props.langPreset) langs = that.props.langPreset
       if(proplang || uilang) langs = [ that.props.locale, ...langs ]
 
+      // move that to redux state ?
+      langs = extendedPresets(langs)
+
       //console.log(JSON.stringify(labels,null,3))
 
-      let sortLabels =  sortLangScriptLabels(labels,langs)
+      let sortLabels =  sortLangScriptLabels(labels,langs.flat,langs.translit)
 
       //console.log(JSON.stringify(sortLabels,null,3))
 

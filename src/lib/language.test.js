@@ -31,7 +31,7 @@ const jsonldLabels1 = [
    { "@language": "en", "@value": "great perfection" },
    { "@language": "zh-hans", "@value": "大圆满" },
    { "@language": "bo-x-ewts","@value": "rdzogs pa chen po/" },
-   { "@language": "sa-alalc97", "@value": "mahasanti" }
+   { "@language": "sa-x-iast", "@value": "mahāśānti" }
 ] ;
 
 const jsonLabels1 = [
@@ -39,12 +39,12 @@ const jsonLabels1 = [
    { type: "literal", value: "great perfection", lang: "en" },
    { type: "literal", value: "大圆满", lang: "zh-hans" },
    { type: "literal", value: "rdzogs pa chen po/", lang: "bo-x-ewts" },
-   { type: "literal", value: "mahasanti", lang: "sa-alalc97" },
+   { type: "literal", value: "mahāśānti", lang: "sa-x-iast" },
 ] ;
 
-const preset1 = [ "bo-x-ewts", "sa-alalc97" ]
+const preset1 = [ "bo-x-ewts", "sa-x-iast" ]
 const preset2 = [ "zh-hans", "bo-x-ewts", "en" ]
-const preset3 = [ "bo", "zh-hans" ]
+const preset3 = [ "bo", "sa-deva", "zh-hans" ]
 
 
 describe('language settings tests', () => {
@@ -89,7 +89,7 @@ describe('language settings tests', () => {
       const jsonldLabels1sorted1 = [
          { "@language": "bo-x-ewts", "@value": "rdzogs chen/" },
          { "@language": "bo-x-ewts","@value": "rdzogs pa chen po/" },
-         { "@language": "sa-alalc97", "@value": "mahasanti" },
+         { "@language": "sa-x-iast", "@value": "mahāśānti" },
          { "@language": "en", "@value": "great perfection" },
          { "@language": "zh-hans", "@value": "大圆满" },
       ] ;
@@ -97,7 +97,7 @@ describe('language settings tests', () => {
       const jsonLabels1sorted1 = [
          { type: "literal", value: "rdzogs chen/", lang: "bo-x-ewts" },
          { type: "literal", value: "rdzogs pa chen po/", lang: "bo-x-ewts" },
-         { type: "literal", value: "mahasanti", lang: "sa-alalc97" },
+         { type: "literal", value: "mahāśānti", lang: "sa-x-iast" },
          { type: "literal", value: "great perfection", lang: "en" },
          { type: "literal", value: "大圆满", lang: "zh-hans" },
       ] ;
@@ -113,7 +113,7 @@ describe('language settings tests', () => {
          { "@language": "bo-x-ewts", "@value": "rdzogs chen/" },
          { "@language": "bo-x-ewts","@value": "rdzogs pa chen po/" },
          { "@language": "en", "@value": "great perfection" },
-         { "@language": "sa-alalc97", "@value": "mahasanti" },
+         { "@language": "sa-x-iast", "@value": "mahāśānti" },
       ] ;
 
       const jsonLabels1sorted2 = [
@@ -121,7 +121,7 @@ describe('language settings tests', () => {
          { type: "literal", value: "rdzogs chen/", lang: "bo-x-ewts" },
          { type: "literal", value: "rdzogs pa chen po/", lang: "bo-x-ewts" },
          { type: "literal", value: "great perfection", lang: "en" },
-         { type: "literal", value: "mahasanti", lang: "sa-alalc97" },
+         { type: "literal", value: "mahāśānti", lang: "sa-x-iast" },
       ] ;
 
       const jsonResults12 = sortLangScriptLabels(jsonLabels1, preset2)
@@ -138,8 +138,36 @@ describe('language settings tests', () => {
       expect(transliterators["bo"]["bo-x-ewts"]('ཀ')).toEqual('ka')
       expect(transliterators["bo-x-ewts"]["bo"]('ka')).toEqual('ཀ')
 
+      let extPreset1 = extendedPresets(preset1)
+      let extPreset2 = extendedPresets(preset2)
       let extPreset3 = extendedPresets(preset3)
-      sortLangScriptLabels(jsonLabels1, extPreset3)
+
+      expect(extPreset1).toEqual({ flat:[ "bo-x-ewts", "bo", "sa-x-iast", "sa-deva" ], translit:{ "bo":"bo-x-ewts", "sa-deva": 'sa-x-iast' } })
+      expect(extPreset2).toEqual({ flat:[ "zh-hans", "bo-x-ewts", "bo", "en" ], translit:{ "bo":"bo-x-ewts" } })
+      expect(extPreset3).toEqual({ flat:[ "bo", "bo-x-ewts", "sa-deva", "sa-x-iast", "zh-hans" ], translit:{ "bo-x-ewts":"bo", 'sa-x-iast': 'sa-deva' } } )
+
+      let extSortJson1 = [
+         { type: 'literal', value: 'རྫོགས་ཆེན༈', lang: 'bo' },
+         { type: 'literal', value: 'རྫོགས་པ་ཆེན་པོ༈', lang: 'bo' },
+         { type: 'literal', value: 'मह̄श̄न्ति', lang: 'sa-deva' },
+         { type: 'literal', value: '大圆满', lang: 'zh-hans' },
+         { type: 'literal', value: 'great perfection', lang: 'en' }
+      ]
+
+      let extSortResultsJson1 = sortLangScriptLabels(jsonLabels1, extPreset3.flat, extPreset3.translit)
+      expect(extSortResultsJson1).toEqual(extSortJson1);
+
+
+      let extSortJsonld1 = [
+         { '@value': 'རྫོགས་ཆེན༈', '@language': 'bo' },
+         { '@value': 'རྫོགས་པ་ཆེན་པོ༈', '@language': 'bo' },
+         { '@value': 'मह̄श̄न्ति', '@language': 'sa-deva' },
+         { '@language': 'zh-hans', '@value': '大圆满' },
+         { '@language': 'en', '@value': 'great perfection' },
+      ]
+
+      let extSortResultsJsonld1 = sortLangScriptLabels(jsonldLabels1, extPreset3.flat, extPreset3.translit)
+      expect(extSortResultsJsonld1).toEqual(extSortJsonld1);
 
 
    })
