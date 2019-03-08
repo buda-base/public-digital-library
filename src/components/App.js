@@ -1391,7 +1391,7 @@ class App extends Component<Props,State> {
                               {
                                  r.match.map((m) => {
 
-                                       console.log("m",m)
+                                       //console.log("m",m)
 
                                        if(!m.type.match(new RegExp(skos+"prefLabel"))) {
                                           let prop = this.fullname(m.type.replace(/.*altLabelMatch/,skos+"altLabel"))

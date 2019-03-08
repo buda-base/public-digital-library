@@ -97,7 +97,7 @@ export function sortLangScriptLabels(data:[],preset:string[],translit:{}={})
       return {e,tLit,i}
    })
 
-   console.log("_",data_)
+   //console.log("_",data_)
 
    data_ = _.orderBy(data_,['i'],["asc"]).map(e => e.tLit?e.tLit:e.e )
 
