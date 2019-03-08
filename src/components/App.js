@@ -717,7 +717,7 @@ class App extends Component<Props,State> {
    {
       //console.log("hi:",val,k)
 
-      if(!val.match(/↤/))
+      if(!val.match(/↤/) && k)
          val = /*val.replace(/@.* /,"")*/ val.split(new RegExp(k.replace(/[ -'ʾ]/g,"[ -'ʾ]"))).map((l) => ([<span>{l}</span>,<span className="highlight">{k}</span>])) ;
       else {
          let str = val.replace(/^.*?(↦([^↤]+)↤([- ]↦([^↤]+)↤)*).*$/g,"$1").replace(/↤([- ])↦/g,"$1").replace(/[↤↦]/g,"")
@@ -813,7 +813,7 @@ class App extends Component<Props,State> {
 
    makeResult(id,n,t,lit,lang,tip,Tag,url)
    {
-      //console.log("res",id,n,t,lit,lang,tip,Tag)
+      console.log("res",id,n,t,lit,lang,tip,Tag)
 
       if(!id.match(/[:/]/)) id = "bdr:" +id
 
@@ -1231,6 +1231,7 @@ class App extends Component<Props,State> {
                            if(subL.length == 1) {
                               subR = sublist[o].filter((e) => (e.type && e.type.match(new RegExp(lab)))) //(rootPrefLabel)|(prefLabel(Has)?Expression)/) ) )
                               if(subR.length > 0) {
+                                 /*
                                  label = subR.filter((e) => (e["xml:lang"] == this.props.prefLang))
                                  if(!label || label.length == 0) label = subR.filter((e) => (e["xml:lang"] == "bo-x-ewts"))
                                  if(!label || label.length == 0) if(subR.length > 0) label = subR
@@ -1241,7 +1242,11 @@ class App extends Component<Props,State> {
                                     label = label[0].value;
                                  }
                                  else label = null
-
+                                 */
+                                 let tLab = getLangLabel(this,subR)
+                                 lang = tLab["xml:lang"]
+                                 if(!lang) lang = tLab["lang"]
+                                 label = tLab["value"]
                               }
                            }
 
@@ -1386,16 +1391,22 @@ class App extends Component<Props,State> {
                               {
                                  r.match.map((m) => {
 
-                                       //console.log("m",m)
+                                       console.log("m",m)
 
                                        if(!m.type.match(new RegExp(skos+"prefLabel"))) {
                                           let prop = this.fullname(m.type.replace(/.*altLabelMatch/,skos+"altLabel"))
                                           let val,isArray = false ;
-                                          if(Array.isArray(m.value)) { val = m.value.map((e)=>this.pretty(e)) ; isArray = true }
-                                          else val = this.highlight(this.pretty(m.value),k)
-
                                           let lang = m["lang"]
                                           if(!lang) lang = m["xml:lang"]
+                                          if(Array.isArray(m.value)) { val = m.value.map((e)=>this.pretty(e)) ; isArray = true }
+                                          else {
+                                             //val = this.highlight(this.pretty(m.value),k)
+                                             let mLit = getLangLabel(this,[m])
+                                             val =  this.highlight(mLit["value"],k)
+                                             //val =  mLit["value"]
+                                             lang = mLit["lang"]
+                                             if(!lang) lang = mLit["xml:lang"]
+                                          }
 
                                           //console.log("val",val,val.length,lang)
 

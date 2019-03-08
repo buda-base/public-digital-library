@@ -915,6 +915,14 @@ class ResourceViewer extends Component<Props,State>
                tmp = [pretty]
 
                if(lang) {
+
+                  let tLab = getLangLabel(this,[e])
+                  let lang = tLab["lang"]
+                  if(!lang) lang = tLab["xml:lang"]
+                  let tVal = tLab["value"]
+                  if(!tVal) tVal = tLab["@value"]
+                  tmp = [ this.fullname(tVal) ]
+
                   tmp.push(<Tooltip placement="bottom-end" title={
                         <div style={{margin:"10px"}}>
                            <Translate value={languages[lang]?languages[lang].replace(/search/,"tip"):lang}/>
@@ -1061,10 +1069,15 @@ class ResourceViewer extends Component<Props,State>
             // direct property value/label ?
             if(lab && lab[0] && lab[0].value)
             {
+
                for(let l of lab) {
-                  let lang = l["lang"]
-                  if(!lang) lang = l["xml:lang"]
-                  let tip = [this.fullname(l.value),lang?<Tooltip placement="bottom-end" title={
+
+                  let tLab = getLangLabel(this, [ l ])
+                  let lang = tLab["lang"]
+                  if(!lang) lang = tLab["xml:lang"]
+                  let tVal = tLab.value
+
+                  let tip = [this.fullname(tVal),lang?<Tooltip placement="bottom-end" title={
                      <div style={{margin:"10px"}}>
                         <Translate value={languages[lang]?languages[lang].replace(/search/,"tip"):lang}/>
                      </div>
