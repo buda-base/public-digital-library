@@ -52,7 +52,7 @@
     "material-colors": "^1.2.5",
     "material-ui-search-bar": "^1.0.0-beta.4",
     "mirador": "https://github.com/buda-base/mirador#2.7.0-bdrc",
-    "openseadragon": "https://github.com/buda-base/openseadragon",
+    "openseadragon": "https://github.com/buda-base/openseadragon#fixes",
     "query-string": "^5.1.0",
     "react": "^16.2.0",
     "react-cookie": "^3.0.4",

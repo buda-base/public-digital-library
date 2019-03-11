@@ -9269,6 +9269,10 @@ onetime@^2.0.0:
   version "2.4.0"
   resolved "https://github.com/buda-base/openseadragon#6426f6fc21d2b5fe6ca8a52bbd6ce2b0769cdd11"
 
+"openseadragon@https://github.com/buda-base/openseadragon#fixes":
+  version "2.4.0"
+  resolved "https://github.com/buda-base/openseadragon#39b669b2956b11ca8852a8e7553bc32ba5897f49"
+
 opn@5.4.0, opn@^5.1.0:
   version "5.4.0"
   resolved "https://registry.yarnpkg.com/opn/-/opn-5.4.0.tgz#cb545e7aab78562beb11aa3bfabc7042e1761035"
