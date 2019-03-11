@@ -752,7 +752,7 @@ export const firstImage = (state: DataState, action: Action) => {
         ...state,
         IIIFinfo:{ ...state.IIIFinfo,
            [action.meta.iri]:{ ...state.IIIFinfo?state.IIIFinfo[action.meta.iri]:{},
-             firstImage:action.payload, //.replace(/full[/]0/,",600/0"), // "/full/,600/" returns error 400 
+             firstImage:action.payload, 
              canvasID:action.meta.canvasID,
              collecManif:action.meta.collecManif,
              manifests:action.meta.manifests
