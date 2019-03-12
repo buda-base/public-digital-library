@@ -1332,8 +1332,6 @@ class ResourceViewer extends Component<Props,State>
       if(!this.state.openUV) // || !$("#uv").hasClass("hidden"))
       {
 
-         $("#fond").removeClass("hidden");
-
          let timerUV = setInterval( () => {
 
 
@@ -1393,9 +1391,6 @@ class ResourceViewer extends Component<Props,State>
    {
       if(!this.state.openDiva) // || !$("#diva-wrapper").hasClass("hidden"))
       {
-
-         $("#fond").removeClass("hidden");
-
          if(this.state.UVcanLoad) { window.location.hash = "diva"; window.location.reload(); }
 
          let timerDiva = setInterval( () => {
@@ -1499,6 +1494,7 @@ class ResourceViewer extends Component<Props,State>
 
    showMirador()
    {
+
       if(!this.state.openMirador) // || !$("#viewer").hasClass("hidden"))
       {
          $("#fond").removeClass("hidden");
@@ -2461,7 +2457,7 @@ class ResourceViewer extends Component<Props,State>
                }
                {
                   !this.props.manifestError && this.props.imageAsset && this.state.openMirador  &&
-                  [<div id="fond" class="hidden">
+                  [<div id="fond" >
                      <Loader loaded={false} color="#fff"/>
                   </div>,
                   <div id="viewer"></div>,
@@ -2469,12 +2465,12 @@ class ResourceViewer extends Component<Props,State>
                   //<Script url={"https://cdn.jsdelivr.net/npm/mirador@2.7.2/dist/mirador.js"}/>]
                   <link rel="stylesheet" type="text/css" href="../scripts/mirador/css/mirador-combined.css"/>,
                   <Script url={"../scripts/mirador/mirador.js"} />]
-                  //<Script url={"http://library.bdrc.io/scripts/mirador/mirador.js"} onLoad={()=>{$("#fond").removeClass("hidden")}/>]
+                  //<Script url={"http://library-dev.bdrc.io/scripts/mirador/mirador.js"} onLoad={()=>{$("#fond").addClass("hidden")}} />]
                }
                {
                   !this.props.manifestError && this.props.imageAsset && this.state.openDiva  &&
                   [
-                     <div id="fond" class="hidden">
+                     <div id="fond" >
                         <Loader loaded={false} color="#fff"/>
                      </div>,
                      <div id="diva-wrapper"></div>,
@@ -2515,7 +2511,7 @@ class ResourceViewer extends Component<Props,State>
                ]*/}
                {
                   !this.props.manifestError && this.props.imageAsset && this.state.openUV  &&
-                  [<div id="fond" class="hidden">
+                  [<div id="fond">
                      <Loader loaded={false} color="#fff"/>
                   </div>,
                   <div id="uv" className={"uv"}
