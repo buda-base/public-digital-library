@@ -1607,7 +1607,16 @@ class ResourceViewer extends Component<Props,State>
                               $(".mirador-viewer .member-select-results li[data-index-number]").each( (i,e) => {
                                  let item = $(e)
                                  if(!item.hasClass("setClick")) {
-                                    item.addClass("setClick").click(() => { $(".mirador-viewer li.scroll-option").click(); })
+                                    item.addClass("setClick").click(() => {
+                                       $(".mirador-viewer li.scroll-option").click();
+                                       let scrollTimer = setInterval( () => {)
+                                          if($(".scroll-view").length)
+                                          {
+                                             $(".scroll-view").scrollTop(1)
+                                             clearInterval(scrollTimer)
+                                          }
+                                       }, 1000);
+                                    })
                                     added = true ;
                                  }
                               })
