@@ -1609,7 +1609,7 @@ class ResourceViewer extends Component<Props,State>
                                  if(!item.hasClass("setClick")) {
                                     item.addClass("setClick").click(() => {
                                        $(".mirador-viewer li.scroll-option").click();
-                                       let scrollTimer = setInterval( () => {)
+                                       let scrollTimer = setInterval( () => {
                                           if($(".scroll-view").length)
                                           {
                                              $(".scroll-view").scrollTop(1)
