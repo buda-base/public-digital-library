@@ -1614,8 +1614,8 @@ class ResourceViewer extends Component<Props,State>
                               if(!added) clearInterval(clickTimer)
                            }, 10) ;
                         }
-                        window.setMiradorClick();
                      }
+                     window.setMiradorClick();
 
                      if(!window.setMiradorZoom) {
                         window.setMiradorZoom = () => {
@@ -2459,7 +2459,8 @@ class ResourceViewer extends Component<Props,State>
                   //<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/mirador@2.7.2/dist/css/mirador-combined.css"/>,
                   //<Script url={"https://cdn.jsdelivr.net/npm/mirador@2.7.2/dist/mirador.js"}/>]
                   <link rel="stylesheet" type="text/css" href="../scripts/mirador/css/mirador-combined.css"/>,
-                  <Script url={"../scripts/mirador/mirador.js"}/>]
+                  <Script url={"../scripts/mirador/mirador.js"} />]
+                  //<Script url={"http://library.bdrc.io/scripts/mirador/mirador.js"} onLoad={()=>{$("#fond").removeClass("hidden")}/>]
                }
                {
                   !this.props.manifestError && this.props.imageAsset && this.state.openDiva  &&
