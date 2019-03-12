@@ -2456,10 +2456,10 @@ class ResourceViewer extends Component<Props,State>
                      <Loader loaded={false} color="#fff"/>
                   </div>,
                   <div id="viewer"></div>,
-                  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/mirador@2.7.2/dist/css/mirador-combined.css"/>,
-                  <Script url={"https://cdn.jsdelivr.net/npm/mirador@2.7.2/dist/mirador.js"}/>]
-                  //<link rel="stylesheet" type="text/css" href="../scripts/mirador/css/mirador-combined.css"/>,
-                  //<Script url={"../scripts/mirador/mirador.js"}/>]
+                  //<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/mirador@2.7.2/dist/css/mirador-combined.css"/>,
+                  //<Script url={"https://cdn.jsdelivr.net/npm/mirador@2.7.2/dist/mirador.js"}/>]
+                  <link rel="stylesheet" type="text/css" href="../scripts/mirador/css/mirador-combined.css"/>,
+                  <Script url={"../scripts/mirador/mirador.js"}/>]
                }
                {
                   !this.props.manifestError && this.props.imageAsset && this.state.openDiva  &&
