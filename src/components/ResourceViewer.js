@@ -1529,9 +1529,12 @@ class ResourceViewer extends Component<Props,State>
                          "iconClass": "fa fa-align-center",
                          "attributes" : { style:"", onClick : "eval('window.setMiradorScroll()')" }
                       },
-                       { "label": "Zoom",
-                         "iconClass": "fa fa-search",
+                       { "label": "Page View",
+                         "iconClass": "fa fa-file-o",
                          "attributes" : { style:"", onClick : "eval('window.setMiradorZoom()')" }
+                      },
+                       { "label": "Zoom",
+                         "iconClass": "fa fa-search"
                       },
                        { "label": "Close Mirador",
                          "iconClass": "fa fa-times",
@@ -1587,11 +1590,37 @@ class ResourceViewer extends Component<Props,State>
 
                   $(".user-buttons.mirador-main-menu span.fa-bars").removeClass("fa-bars").addClass("fa-list");
 
+                  if(!$(".mirador-main-menu #zoomer").length) {
+
+                     $(".user-buttons.mirador-main-menu li:last-child").before('<li><input oninput="javascript:eval(\'window.setZoom(this.value)\');" type="range" min="0" max="1" step="0.01" value="1" id="zoomer"/></li>')
+
+                     window.setZoom = (val) => {
+
+                        //if(window.maxW == undefined) return ;
+                        let scrollV = $(".scroll-view")
+
+                        // val = 1 => w =  1 * W
+                        // val = 0 => w =  x * W <=> x = dMin
+
+                        let dMin = scrollV.innerWidth() / window.maxW
+                        let coef = 1 - (1 - dMin) * (1 - val)
+
+                        let scrollT = $(".mirador-container ul.scroll-listing-thumbs")
+                        scrollT.css({"transform-origin":"0 "+(scrollV.scrollTop()+scrollV.innerHeight()/2)+"px","transform":"scale("+coef+")"})  //,"margin-top":- scrollT.offset().top + 40});
+                        scrollV.scrollLeft((window.maxW*coef - scrollV.innerWidth()) / 2)
+
+
+                        //console.log("val",val,window.maxW,dMin,coef);
+                     }
+
+                  }
+
                   if($(".mirador-viewer .member-select-results li[data-index-number=0]").length)
                   {
                      clearInterval(timerConf);
 
                      if(!window.setMiradorClick) {
+
                         window.setMiradorClick = () => {
 
                            let elem = $('.workspace-container > div > div > div.window > div.manifest-info > a.mirador-btn.mirador-icon-window-menu > ul > li.new-object-option > i') //,.addItemLink').first().click() ;
@@ -1608,7 +1637,13 @@ class ResourceViewer extends Component<Props,State>
                                        let scrollTimer = setInterval( () => {
                                           if($(".scroll-view").length)
                                           {
-                                             $(".scroll-view").scrollTop(1)
+                                             //console.log($(".mirador-container ul.scroll-listing-thumbs ").width(),$(window).width())
+                                             $(".scroll-view")
+                                                .scrollLeft(($(".mirador-container ul.scroll-listing-thumbs ").width() - $(window).width()) / 2)
+                                                .scrollTop(-1)
+
+                                             window.maxW = $(".mirador-container ul.scroll-listing-thumbs ").width()
+
                                              clearInterval(scrollTimer)
                                           }
                                        }, 1000);
@@ -1616,7 +1651,9 @@ class ResourceViewer extends Component<Props,State>
                                     added = true ;
                                  }
                               })
-                              if(!added) clearInterval(clickTimer)
+                              if(!added) {
+                                 clearInterval(clickTimer)
+                              }
                            }, 10) ;
                         }
                      }
@@ -1644,7 +1681,9 @@ class ResourceViewer extends Component<Props,State>
                               setTimeout(() => {
                                  let imgY = $(".scroll-view img[data-image-id='"+id.attr("data-image-id")+"']").parent().offset().top + $(".scroll-view").scrollTop()
                                  console.log(imgY)
-                                 $(".scroll-view").animate({scrollTop:imgY-100},100);
+                                 $(".scroll-view").animate({scrollTop:imgY-100,"scrollLeft": ($(".mirador-container ul.scroll-listing-thumbs ").width() - $(window).width()) / 2},100)
+
+
                               }, 250)
                            }
                         }

@@ -314,6 +314,13 @@ svg.hide { opacity:0;pointer-events:none; }
 .mirador-container .window-manifest-title { margin-top: 0px !important; line-height: 35px;  }
 .user-buttons.mirador-main-menu { width:100%; }
 .user-buttons.mirador-main-menu li:last-child { float:right; }
+/* diva style zoom */
+.mirador-container ul.scroll-listing-thumbs { max-width:10000px;display:block;text-align:center;position:static;width:fit-content;  }
+.mirador-container .mirador-viewer ul.scroll-listing-thumbs li {  width:auto;display:block;position:relative; }
+.mirador-container .mirador-viewer ul.scroll-listing-thumbs li img { position:relative; }
+.mirador-container ul.scroll-listing-thumbs li .thumb-label { display:inline-block; }
+.user-buttons.mirador-main-menu li:nth-last-child(2) { padding-left:5px;cursor:default;  }
+.user-buttons.mirador-main-menu li:nth-last-child(3) { padding-right:5px;cursor:default;  }
 
 
 .App {
