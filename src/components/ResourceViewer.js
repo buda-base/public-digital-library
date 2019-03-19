@@ -1529,12 +1529,12 @@ class ResourceViewer extends Component<Props,State>
                          "iconClass": "fa fa-align-center",
                          "attributes" : { style:"", onClick : "eval('window.setMiradorScroll()')" }
                       },
+                       { "label": " ",
+                         "iconClass": "fa fa-search"
+                      },
                        { "label": "Page View",
                          "iconClass": "fa fa-file-o",
                          "attributes" : { style:"", onClick : "eval('window.setMiradorZoom()')" }
-                      },
-                       { "label": "Zoom",
-                         "iconClass": "fa fa-search"
                       },
                        { "label": "Close Mirador",
                          "iconClass": "fa fa-times",
@@ -1592,7 +1592,7 @@ class ResourceViewer extends Component<Props,State>
 
                   if(!$(".mirador-main-menu #zoomer").length) {
 
-                     $(".user-buttons.mirador-main-menu li:last-child").before('<li><input oninput="javascript:eval(\'window.setZoom(this.value)\');" type="range" min="0" max="1" step="0.01" value="1" id="zoomer"/></li>')
+                     $(".user-buttons.mirador-main-menu li:nth-last-child(2)").before('<li><input oninput="javascript:eval(\'window.setZoom(this.value)\');" type="range" min="0" max="1" step="0.01" value="1" id="zoomer"/></li>')
 
                      window.setZoom = (val) => {
 
@@ -1610,18 +1610,53 @@ class ResourceViewer extends Component<Props,State>
                         scrollV.scrollLeft((window.maxW*coef - scrollV.innerWidth()) / 2)
 
 
-                        //console.log("val",val,window.maxW,dMin,coef);
+                        console.log("val",val,window.maxW,dMin,coef);
                      }
 
                   }
 
-                  if($(".mirador-viewer .member-select-results li[data-index-number=0]").length)
+
+                  if(! $(".mirador-viewer .member-select-results li[data-index-number=0]").length) {
+
+                     $(".mirador-container .mirador-main-menu li a").addClass('on');
+                     $(".mirador-container .mirador-main-menu li:nth-child(1) a").addClass('selec');
+
+                     let scrollTimer = setInterval( () => {
+                        if($(".scroll-view").length)
+                        {
+                           //console.log($(".mirador-container ul.scroll-listing-thumbs ").width(),$(window).width())
+                           $(".scroll-view")
+                              .scrollLeft(($(".mirador-container ul.scroll-listing-thumbs ").width() - $(window).width()) / 2)
+                              .scrollTop(1)
+
+                           window.maxW = $(".mirador-container ul.scroll-listing-thumbs ").width()
+                           if(window.maxW < $(".scroll-view").innerWidth())
+                           {
+                              $(".mirador-container ul.scroll-listing-thumbs ").css("width","auto");
+                           }
+                           else
+                           {
+                              $(".user-buttons.mirador-main-menu li:nth-last-child(n-5):nth-last-child(n+2)").addClass("on")
+
+                           }
+
+                           clearInterval(scrollTimer)
+                        }
+                     }, 1000);
+                  }
+                  else
                   {
+                     $(".mirador-container .mirador-main-menu li a").removeClass('on');
+                     $(".mirador-container .mirador-main-menu li:nth-child(1) a").addClass('on selec');
+
                      clearInterval(timerConf);
 
                      if(!window.setMiradorClick) {
 
                         window.setMiradorClick = () => {
+
+                           $(".mirador-container .mirador-main-menu li a").removeClass('selec');
+                           $(".mirador-container .mirador-main-menu li:nth-child(1) a").addClass('selec');
 
                            let elem = $('.workspace-container > div > div > div.window > div.manifest-info > a.mirador-btn.mirador-icon-window-menu > ul > li.new-object-option > i') //,.addItemLink').first().click() ;
                            elem.first().click()
@@ -1634,15 +1669,28 @@ class ResourceViewer extends Component<Props,State>
                                  if(!item.hasClass("setClick")) {
                                     item.addClass("setClick").click(() => {
                                        $(".mirador-viewer li.scroll-option").click();
+                                       $(".mirador-container .mirador-main-menu li a").removeClass('selec');
+                                       $(".mirador-container .mirador-main-menu li a .fa-align-center").parent().addClass('selec');
+                                       $(".user-buttons.mirador-main-menu li.off").removeClass('off')
+
                                        let scrollTimer = setInterval( () => {
                                           if($(".scroll-view").length)
                                           {
                                              //console.log($(".mirador-container ul.scroll-listing-thumbs ").width(),$(window).width())
                                              $(".scroll-view")
                                                 .scrollLeft(($(".mirador-container ul.scroll-listing-thumbs ").width() - $(window).width()) / 2)
-                                                .scrollTop(-1)
+                                                .scrollTop(1)
 
                                              window.maxW = $(".mirador-container ul.scroll-listing-thumbs ").width()
+                                             if(window.maxW < $(".scroll-view").innerWidth())
+                                             {
+                                                $(".mirador-container ul.scroll-listing-thumbs ").css("width","auto");
+                                             }
+                                             else
+                                             {
+                                                $(".user-buttons.mirador-main-menu li:nth-last-child(n-5):nth-last-child(n+2)").addClass("on")
+
+                                             }
 
                                              clearInterval(scrollTimer)
                                           }
@@ -1661,6 +1709,11 @@ class ResourceViewer extends Component<Props,State>
 
                      if(!window.setMiradorZoom) {
                         window.setMiradorZoom = () => {
+
+                           $(".mirador-container .mirador-main-menu li a").removeClass('selec');
+                           $(".mirador-container .mirador-main-menu li a .fa-file-o").parent().addClass('selec');
+                           $(".user-buttons.mirador-main-menu").find("li:nth-last-child(3),li:nth-last-child(4)").addClass('off')
+
                            let found = false
                            $('.scroll-view > ul > li').each((i,e) => {
                               let item = $(e)
@@ -1674,6 +1727,12 @@ class ResourceViewer extends Component<Props,State>
                      }
                      if(!window.setMiradorScroll) {
                         window.setMiradorScroll = () => {
+
+
+                           $(".mirador-container .mirador-main-menu li a").removeClass('selec');
+                           $(".mirador-container .mirador-main-menu li a .fa-align-center").parent().addClass('selec');
+                           $(".user-buttons.mirador-main-menu li.off").removeClass('off')
+
                            let id = $(".panel-listing-thumbs li.highlight img")
                            if(!id.length) $(".mirador-viewer li.scroll-option").click();
                            else {
