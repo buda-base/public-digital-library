@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Demo Viewer</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="mirador/css/mirador-combined.css">
+    <style>
+      #viewer {
+        width: 100%;
+        height: 100%;
+        position: fixed;
+      }
+      #collection-tree > ul > li[role=treeitem]:nth-child(-n+2) {  display: none; }
+      .jstree-default .jstree-anchor {  line-height: 42px; height: 42px;  font-size: 20px; }
+      .jstree-default .jstree-icon:empty { line-height: 42px;  padding-right: 4px; }
+      .jstree-icon.jstree-ocl { vertical-align: -16px; }
+      #collection-tree { width: 25%;  max-width: 10000px; }
+      .member-select-results { margin-left: 25%; }
+
+      .mirador-container .scroll-view { overflow-y:auto; }
+      .mirador-container ul.scroll-listing-thumbs li  { display:block; }
+      ul.scroll-listing-thumbs li img { max-width: 100%; height: auto; cursor:pointer; }
+
+    </style>
+    <script src="mirador/mirador.js"></script>
+  </head>
+  <body>
+    <div id="viewer"></div>
+    <script type="text/javascript">
+
+      let getCollectionLabel = (label) =>
+      {
+        return !Array.isArray(label)?label:label.map( e => (e["@value"]?e["@value"]+"@"+e["@language"]:e)).join("; ")
+     }
+
+      $(function() {
+        Mirador({
+          id: "viewer",
+	  showAddFromURLBox:false,
+	  openManifestsPage: true,
+	  preserveManifestOrder: true,
+	  bottomPanel: false,
+	  sidePanel: false,
+	  annotationLayer: false,
+          "windowSettings": {
+	    "sidePanelVisible": false
+          },
+	  "manifestsPanel": {
+	     "name": "Collection Tree Manifests Panel",
+	     "module": "CollectionTreeManifestsPanel",
+	     "options": {
+           labelToString: (label) => (!Array.isArray(label)?label:label.map( e => (e["@value"]?e["@value"]+"@"+e["@language"]:e)).join("; "))             
+         }
+	   },
+           "data": [
+            { "collectionUri": "tibcolldemo2.json", location: "BDRC - Palpung Collection"}
+        ]
+        });
+      });
+    </script>
+  </body>
+</html>

@@ -1492,6 +1492,19 @@ class ResourceViewer extends Component<Props,State>
 
    }
 
+   initMiradorMenu() {
+
+      $(".user-buttons.mirador-main-menu li:nth-last-child(n-5):nth-last-child(n+2)").addClass("on")
+      window.maxW = $(".mirador-container ul.scroll-listing-thumbs ").width()
+      if(window.maxW < $(".scroll-view").innerWidth())
+      {
+         window.maxW = 0
+         $(".mirador-container ul.scroll-listing-thumbs ").css("width","auto");
+         $(".user-buttons.mirador-main-menu").find("li:nth-last-child(3),li:nth-last-child(4)").removeClass("on").hide()
+      }
+      $("input#zoomer").trigger("input")
+   }
+
    showMirador()
    {
 
@@ -1516,7 +1529,9 @@ class ResourceViewer extends Component<Props,State>
                   manifestsPanel: {
                     name: "Collection Tree Manifests Panel",
                     module: "CollectionTreeManifestsPanel",
-                  options: {}
+                    options: {
+                        labelToString: (label) => (!Array.isArray(label)?label:label.map( e => (e["@value"]?e["@value"]+"@"+e["@language"]:e)).join("; "))
+                    }
                   },
                   windowSettings: {
                     sidePanelVisible: false
@@ -1596,7 +1611,9 @@ class ResourceViewer extends Component<Props,State>
 
                      window.setZoom = (val) => {
 
-                        //if(window.maxW == undefined) return ;
+                        if(!window.maxW) return ;
+
+                        let scrollT = $(".mirador-container ul.scroll-listing-thumbs")
                         let scrollV = $(".scroll-view")
 
                         // val = 1 => w =  1 * W
@@ -1605,12 +1622,16 @@ class ResourceViewer extends Component<Props,State>
                         let dMin = scrollV.innerWidth() / window.maxW
                         let coef = 1 - (1 - dMin) * (1 - val)
 
-                        let scrollT = $(".mirador-container ul.scroll-listing-thumbs")
-                        scrollT.css({"transform-origin":"0 "+(scrollV.scrollTop()+scrollV.innerHeight()/2)+"px","transform":"scale("+coef+")"})  //,"margin-top":- scrollT.offset().top + 40});
+                        let oldH = scrollT[0].getBoundingClientRect().height;
+
+                        scrollT.css({"transform":"scale("+coef+")"})
                         scrollV.scrollLeft((window.maxW*coef - scrollV.innerWidth()) / 2)
 
+                        let nuH = scrollT[0].getBoundingClientRect().height;
 
-                        console.log("val",val,window.maxW,dMin,coef);
+                        scrollV.scrollTop(scrollV.scrollTop() + (nuH - oldH)*(scrollV.scrollTop()/oldH))
+
+                        //console.log("h",oldH,nuH)
                      }
 
                   }
@@ -1629,16 +1650,7 @@ class ResourceViewer extends Component<Props,State>
                               .scrollLeft(($(".mirador-container ul.scroll-listing-thumbs ").width() - $(window).width()) / 2)
                               .scrollTop(1)
 
-                           window.maxW = $(".mirador-container ul.scroll-listing-thumbs ").width()
-                           if(window.maxW < $(".scroll-view").innerWidth())
-                           {
-                              $(".mirador-container ul.scroll-listing-thumbs ").css("width","auto");
-                           }
-                           else
-                           {
-                              $(".user-buttons.mirador-main-menu li:nth-last-child(n-5):nth-last-child(n+2)").addClass("on")
-
-                           }
+                           this.initMiradorMenu()
 
                            clearInterval(scrollTimer)
                         }
@@ -1667,11 +1679,24 @@ class ResourceViewer extends Component<Props,State>
                               $(".mirador-viewer .member-select-results li[data-index-number]").each( (i,e) => {
                                  let item = $(e)
                                  if(!item.hasClass("setClick")) {
+
+                                    item.find(".preview-images img").click( () => {
+
+                                       this.initMiradorMenu()
+
+                                       $(".mirador-container .mirador-main-menu li a").removeClass('selec');
+                                       $(".mirador-container .mirador-main-menu li a .fa-file-o").parent().addClass('selec');
+                                       $(".user-buttons.mirador-main-menu").find("li:nth-last-child(3),li:nth-last-child(4)").addClass('off')
+
+                                    })
+
                                     item.addClass("setClick").click(() => {
+
                                        $(".mirador-viewer li.scroll-option").click();
                                        $(".mirador-container .mirador-main-menu li a").removeClass('selec');
                                        $(".mirador-container .mirador-main-menu li a .fa-align-center").parent().addClass('selec');
                                        $(".user-buttons.mirador-main-menu li.off").removeClass('off')
+
 
                                        let scrollTimer = setInterval( () => {
                                           if($(".scroll-view").length)
@@ -1680,17 +1705,13 @@ class ResourceViewer extends Component<Props,State>
                                              $(".scroll-view")
                                                 .scrollLeft(($(".mirador-container ul.scroll-listing-thumbs ").width() - $(window).width()) / 2)
                                                 .scrollTop(1)
+                                                .find("img.thumbnail-image").click(()=>{
+                                                   $(".mirador-container .mirador-main-menu li a").removeClass('selec');
+                                                   $(".mirador-container .mirador-main-menu li a .fa-file-o").parent().addClass('selec');
+                                                   $(".user-buttons.mirador-main-menu").find("li:nth-last-child(3),li:nth-last-child(4)").addClass('off')
+                                                })
 
-                                             window.maxW = $(".mirador-container ul.scroll-listing-thumbs ").width()
-                                             if(window.maxW < $(".scroll-view").innerWidth())
-                                             {
-                                                $(".mirador-container ul.scroll-listing-thumbs ").css("width","auto");
-                                             }
-                                             else
-                                             {
-                                                $(".user-buttons.mirador-main-menu li:nth-last-child(n-5):nth-last-child(n+2)").addClass("on")
-
-                                             }
+                                             this.initMiradorMenu()
 
                                              clearInterval(scrollTimer)
                                           }
@@ -1740,7 +1761,9 @@ class ResourceViewer extends Component<Props,State>
                               setTimeout(() => {
                                  let imgY = $(".scroll-view img[data-image-id='"+id.attr("data-image-id")+"']").parent().offset().top + $(".scroll-view").scrollTop()
                                  console.log(imgY)
-                                 $(".scroll-view").animate({scrollTop:imgY-100,"scrollLeft": ($(".mirador-container ul.scroll-listing-thumbs ").width() - $(window).width()) / 2},100)
+                                 $(".scroll-view").animate({scrollTop:imgY-100}
+                                    //,"scrollLeft": ($(".mirador-container ul.scroll-listing-thumbs ").width() - $(window).width()) / 2}
+                                    ,100, () => { $("input#zoomer").trigger("input") })
 
 
                               }, 250)

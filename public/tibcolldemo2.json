@@ -1,0 +1,56 @@
+{
+  "@context": "http://iiif.io/api/presentation/2/context.json",
+  "@id": "http://eroux.fr/tibcolldemo",
+  "@type": "sc:Collection",
+  "label": [
+    "Demo Collection"
+  ],
+  "members": [
+        {
+          "@type": "sc:Collection",
+          "@id": "http://presentation.bdrc.io/2.1.1/collection/i:bdr:I00KG01636",
+          "label": "ཐུབ་བསྟན་ཆོས་འཁོར་གླིང་གི་བཅའ་ཡིག",
+          "viewingHint": "multi-part"
+        },
+        {
+          "@id": "http://presentation.bdrc.io/2.1.1/collection/wio:bdr:W22084",
+          "@type": "sc:Collection",
+          "label": "རྒྱ་ཆེན་བཀའ་མཛོད།（དཔལ་སྤུངས་པར་མ་འབྲུག་སྤ་གྲོའི་བསྐྱར་པར་མ།）",
+          "viewingHint": "multi-part"
+        }
+  ],
+  "collections": [
+    {
+      "@type": "sc:Collection",
+      "@id": "http://presentation.bdrc.io/2.1.1/collection/i:bdr:I00KG01636",
+      "label": "ཐུབ་བསྟན་ཆོས་འཁོར་གླིང་གི་བཅའ་ཡིག",
+      "viewingHint": "multi-part"
+    },
+    {
+      "@id": "http://presentation.bdrc.io/2.1.1/collection/wio:bdr:W22084",
+      "@type": "sc:Collection",
+      "label": "རྒྱ་ཆེན་བཀའ་མཛོད།（དཔལ་སྤུངས་པར་མ་འབྲུག་སྤ་གྲོའི་བསྐྱར་པར་མ།）",
+      "viewingHint": "multi-part"
+    }
+  ],
+  "attribution": [
+    {
+      "@language": "en",
+      "@value": "Buddhist Digital Resource Center"
+    },
+    {
+      "@language": "bo",
+      "@value": "ནང་བསྟན་དཔེ་ཚོགས་ལྟེ་གནས།"
+    },
+    {
+      "@language": "zh",
+      "@value": "佛教数字资源中心(BDRC)"
+    }
+  ],
+  "license": "https://creativecommons.org/publicdomain/mark/1.0/",
+  "logo": {
+    "@id": "https://s3.amazonaws.com/bdrcwebassets/prod/iiif-logo.png",
+    "format": "image/png"
+  },
+  "viewingHint": "multi-part"
+}

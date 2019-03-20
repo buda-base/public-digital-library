@@ -52,7 +52,7 @@
     "material-colors": "^1.2.5",
     "material-ui-search-bar": "^1.0.0-beta.4",
     "mirador": "https://github.com/buda-base/mirador#2.7.0-bdrc",
-    "openseadragon": "https://github.com/buda-base/openseadragon#fixes",
+    "openseadragon": "https://github.com/openseadragon/openseadragon#master",
     "query-string": "^5.1.0",
     "react": "^16.2.0",
     "react-cookie": "^3.0.4",
@@ -87,7 +87,7 @@
     "eject": "react-scripts eject",
     "flow": "flow",
     "cp-uv-to-public": "rm -rf public/scripts/uv && cp -R node_modules/universalviewer/uv public/scripts/",
-    "uv-custom-openseadragon": "# [TODO] .min.js file not built anymore... #cp -f node_modules/openseadragon/build/openseadragon/openseadragon.min.js public/scripts/uv/lib/",
+    "uv-custom-openseadragon": "cp -f node_modules/openseadragon/build/openseadragon/openseadragon.min.js public/scripts/uv/lib/",
     "cp-mirador-to-public": "rm -rf public/scripts/mirador && cp -R node_modules/mirador/dist public/scripts/mirador",
     "postinstall": "yarn cp-uv-to-public && yarn uv-custom-openseadragon && yarn cp-mirador-to-public"
   },

@@ -316,8 +316,8 @@ svg.hide { opacity:0;pointer-events:none; }
 .user-buttons.mirador-main-menu li:last-child { float:right; }
 /* diva style zoom */
 .mirador-container ul.scroll-listing-thumbs { max-width:10000px;display:block;text-align:center;position:static;width:fit-content;
-
-   transition:transform-origin 1000ms linear ;
+   transform-origin:0 0;
+   /* transition:transform-origin 1000ms linear ; */
 }
 .mirador-container .mirador-viewer ul.scroll-listing-thumbs li {  width:auto;display:block;position:relative; }
 .mirador-container .mirador-viewer ul.scroll-listing-thumbs li img { position:relative; }
