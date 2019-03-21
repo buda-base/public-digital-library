@@ -147,8 +147,8 @@ describe('language settings tests', () => {
       expect(extPreset3).toEqual({ flat:[ "bo", "bo-x-ewts", "sa-deva", "sa-x-iast", "zh-hans" ], translit:{ "bo-x-ewts":"bo", 'sa-x-iast': 'sa-deva' } } )
 
       let extSortJson1 = [
-         { type: 'literal', value: 'རྫོགས་ཆེན༈', lang: 'bo' },
-         { type: 'literal', value: 'རྫོགས་པ་ཆེན་པོ༈', lang: 'bo' },
+         { type: 'literal', value: 'རྫོགས་ཆེན།', lang: 'bo' },
+         { type: 'literal', value: 'རྫོགས་པ་ཆེན་པོ།', lang: 'bo' },
          { type: 'literal', value: 'मह̄श̄न्ति', lang: 'sa-deva' },
          { type: 'literal', value: '大圆满', lang: 'zh-hans' },
          { type: 'literal', value: 'great perfection', lang: 'en' }
@@ -159,8 +159,8 @@ describe('language settings tests', () => {
 
 
       let extSortJsonld1 = [
-         { '@value': 'རྫོགས་ཆེན༈', '@language': 'bo' },
-         { '@value': 'རྫོགས་པ་ཆེན་པོ༈', '@language': 'bo' },
+         { '@value': 'རྫོགས་ཆེན།', '@language': 'bo' },
+         { '@value': 'རྫོགས་པ་ཆེན་པོ།', '@language': 'bo' },
          { '@value': 'मह̄श̄न्ति', '@language': 'sa-deva' },
          { '@language': 'zh-hans', '@value': '大圆满' },
          { '@language': 'en', '@value': 'great perfection' },

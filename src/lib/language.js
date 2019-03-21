@@ -1,12 +1,13 @@
 //@flow
 import {I18n} from 'react-redux-i18n';
 import _ from 'lodash'
-import {toWylie,fromWylie} from "wylie"
+//import {toWylie,fromWylie} from "wylie"
 import Sanscript from "@sanskrit-coders/sanscript"
+import THLib from "./wylie.es6.js"
 
 export const transliterators = {
-   "bo":{ "bo-x-ewts": (val:string) => toWylie(val) },
-   "bo-x-ewts":{ "bo": (val:string) => fromWylie(val) },
+   "bo":{ "bo-x-ewts": (val:string) => THLib.toWylie(val) },
+   "bo-x-ewts":{ "bo": (val:string) => THLib.fromWylie(val) },
    "sa-deva":{ "sa-x-iast": (val:string) => Sanscript.t(val,"devanagari","iast") },
    "sa-x-iast":{ "sa-deva": (val:string) => Sanscript.t(val.toLowerCase(),"iast","devanagari") },
 }
