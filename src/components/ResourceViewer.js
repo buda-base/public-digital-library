@@ -776,7 +776,7 @@ class ResourceViewer extends Component<Props,State>
                   }
                   else if(pretty.toString().match(/^V[0-9A-Z]+_I[0-9A-Z]+$/)) { ret.push(<span>
                      <Link className="urilink" to={"/show/bdr:"+pretty}>{pretty}</Link>&nbsp;
-                     {/* <Link className="goBack" target="_blank" to={"/gallery?manifest=http://iiifpres.bdrc.io/2.1.1/vo:bdr:"+pretty+"/manifest"}>{"(view image gallery)"}</Link> */}
+                     {/* <Link className="goBack" target="_blank" to={"/gallery?manifest=http://iiifpres.bdrc.io/2.1.1/v:bdr:"+pretty+"/manifest"}>{"(view image gallery)"}</Link> */}
                   </span> ) }
                   else if(pretty.toString().match(/^([A-Z]+[_0-9-]*[A-Z]*)+$/)) ret.push(<Link className="urilink" to={"/show/bdr:"+pretty}>{pretty}</Link>)
                   else ret.push(pretty)
@@ -1345,7 +1345,7 @@ class ResourceViewer extends Component<Props,State>
                $("#uv").addClass("open")
 
                var myUV = window.createUV('#uv', {
-                  iiifResourceUri: this.props.imageAsset.replace(/[/]i:/,"/ivo:"),
+                  iiifResourceUri: this.props.imageAsset.replace(/[/]i:/,"/iv:"),
                   configUri: '../scripts/uv-config.json'
                }, new window.UV.URLDataProvider());
 
@@ -1572,7 +1572,7 @@ class ResourceViewer extends Component<Props,State>
                         "label": "Browse Collection",
                         "iconClass": "fa fa-bars",
                         "attributes" : {
-                           onClick : "javascript:eval('window.setMiradorClick()')"
+                           onClick : "window.setMiradorClick(event)"
                         },
                      },
                      ...config["mainMenuSettings"]["userButtons"]
@@ -1665,7 +1665,16 @@ class ResourceViewer extends Component<Props,State>
 
                      if(!window.setMiradorClick) {
 
-                        window.setMiradorClick = () => {
+                        window.setMiradorClick = (e) => {
+
+                           console.log("cliked",e)
+
+                           if($(".mirador-container .mirador-main-menu li:nth-child(1) a").hasClass('selec')) {
+                              if(e) {
+                                 e.stopPropagation()
+                                 return ;
+                              }
+                           }
 
                            $(".mirador-container .mirador-main-menu li a").removeClass('selec');
                            $(".mirador-container .mirador-main-menu li:nth-child(1) a").addClass('selec');
@@ -1731,6 +1740,11 @@ class ResourceViewer extends Component<Props,State>
                      if(!window.setMiradorZoom) {
                         window.setMiradorZoom = () => {
 
+                           if($(".mirador-container .mirador-main-menu li:nth-child(1) a").hasClass('selec')) {
+                              let elem = $('.workspace-container > div > div > div.window > div.manifest-info > a.mirador-btn.mirador-icon-window-menu > ul > li.new-object-option > i')
+                              elem.first().click()
+                           }
+
                            $(".mirador-container .mirador-main-menu li a").removeClass('selec');
                            $(".mirador-container .mirador-main-menu li a .fa-file-o").parent().addClass('selec');
                            $(".user-buttons.mirador-main-menu").find("li:nth-last-child(3),li:nth-last-child(4)").addClass('off')
@@ -1749,6 +1763,10 @@ class ResourceViewer extends Component<Props,State>
                      if(!window.setMiradorScroll) {
                         window.setMiradorScroll = () => {
 
+                           if($(".mirador-container .mirador-main-menu li:nth-child(1) a").hasClass('selec')) {
+                              let elem = $('.workspace-container > div > div > div.window > div.manifest-info > a.mirador-btn.mirador-icon-window-menu > ul > li.new-object-option > i')
+                              elem.first().click()
+                           }
 
                            $(".mirador-container .mirador-main-menu li a").removeClass('selec');
                            $(".mirador-container .mirador-main-menu li a .fa-align-center").parent().addClass('selec');
@@ -1916,7 +1934,7 @@ class ResourceViewer extends Component<Props,State>
 
                this.setState({...this.state, imageLoaded:false})
 
-               if(assoc.length == 1) { this.props.onHasImageAsset(iiifpres+"/2.1.1/vo:bdr:"+this.pretty(assoc[0].value)+"/manifest",this.props.IRI); }
+               if(assoc.length == 1) { this.props.onHasImageAsset(iiifpres+"/2.1.1/v:bdr:"+this.pretty(assoc[0].value)+"/manifest",this.props.IRI); }
                else { this.props.onHasImageAsset(iiifpres+"/2.1.1/collection/i:bdr:"+this.pretty(e.value),this.props.IRI);  }
 
             }
@@ -1943,7 +1961,7 @@ class ResourceViewer extends Component<Props,State>
       {
          if(!this.props.imageAsset && !this.props.manifestError) {
             this.setState({...this.state, imageLoaded:false})
-            this.props.onHasImageAsset(iiifpres+"/2.1.1/vo:"+ this.props.IRI+ "/manifest",this.props.IRI);
+            this.props.onHasImageAsset(iiifpres+"/2.1.1/v:"+ this.props.IRI+ "/manifest",this.props.IRI);
          }
       }
       else if(kZprop.indexOf(bdo+"hasIIIFManifest") !== -1)
@@ -1985,7 +2003,7 @@ class ResourceViewer extends Component<Props,State>
          if(this.props.imageAsset.match(/[/]i:/)) {
             pdfLink = iiif+"/download/pdf/wi:bdr:W"+id+"::bdr:I"+id ;
          }
-         else if(this.props.imageAsset.match(/[/]vo:/)) {
+         else if(this.props.imageAsset.match(/[/]v:/)) {
 
             let elem = this.getResourceElem(bdo+"volumeNumber")
             if(elem && elem.length > 0 && elem[0].value)
@@ -1994,7 +2012,7 @@ class ResourceViewer extends Component<Props,State>
             elem = this.getResourceElem(bdo+"imageCount")
             if(!elem) elem = this.getResourceElem(bdo+"volumePagesTotal")
             if(elem && elem.length > 0 && elem[0].value)
-               pdfLink = iiif+"/download/zip/vo:bdr:V"+id+"::1-"+elem[0].value ;
+               pdfLink = iiif+"/download/zip/v:bdr:V"+id+"::1-"+elem[0].value ;
             else {
                elem = this.getResourceElem(bdo+"workHasItemImageAsset")
                if(elem && elem.length > 0 && elem[0].value)
@@ -2618,7 +2636,7 @@ class ResourceViewer extends Component<Props,State>
                   data-locale="en-GB:English (GB),cy-GB:Cymraeg"
                   data-config="http://localhost:3000/config.json"
                   //data-uri="https://eap.bl.uk/archive-file/EAP676-12-4/manifest"
-                  data-uri={this.props.imageAsset.replace(/[/]i:/,"/ivo:")}
+                  data-uri={this.props.imageAsset.replace(/[/]i:/,"/iv:")}
                   data-collectionindex="0"
                   data-manifestindex="0"
                   data-sequenceindex="0"
