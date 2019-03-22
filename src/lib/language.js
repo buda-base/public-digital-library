@@ -3,7 +3,7 @@ import {I18n} from 'react-redux-i18n';
 import _ from 'lodash'
 //import {toWylie,fromWylie} from "wylie"
 import Sanscript from "@sanskrit-coders/sanscript"
-import THLib from "./wylie.es6.js"
+import THLib from "wylie"
 
 export const transliterators = {
    "bo":{ "bo-x-ewts": (val:string) => THLib.toWylie(val) },

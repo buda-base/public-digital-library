@@ -47,6 +47,7 @@ import { Link } from 'react-router-dom';
 //import AnnotatedEtextContainer from 'annotated-etext-react';
 import IIIFViewerContainer from '../containers/IIIFViewerContainer';
 import LanguageSidePaneContainer from '../containers/LanguageSidePaneContainer';
+import {miradorConfig, miradorSetUI} from '../lib/miradorSetup';
 import { Redirect404 } from "../routes.js"
 import Loader from "react-loader"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -291,14 +292,14 @@ class ResourceViewer extends Component<Props,State>
       return str ;
    }
 
-   pretty(str:string) //,stripuri:boolean=true)
+   pretty(str:string,isUrl:boolean=false) //,stripuri:boolean=true)
    {
 
       for(let p of Object.values(prefixes)) { str = str.replace(new RegExp(p,"g"),"") }
 
       //if(stripuri) {
 
-      if(!str.match(/ /) && !str.match(/^http[s]?:/)) str = str.replace(/([a-z])([A-Z])/g,"$1 $2")
+      if(!str.match(/ /) && !str.match(/^http[s]?:/)) str = str.replace(/([a-z])([A-Z])/g,"$1"+(isUrl?"":' ')+"$2")
 
       if(str.match(/^https?:\/\/[^ ]+$/)) { str = <a href={str} target="_blank">{str}</a> }
       else {
@@ -497,7 +498,7 @@ class ResourceViewer extends Component<Props,State>
 
 
 
-   fullname(prop:string)
+   fullname(prop:string,isUrl:boolean=false)
    {
       for(let p of Object.keys(prefixes)) { prop = prop.replace(new RegExp(p+":","g"),prefixes[p]) }
 
@@ -521,7 +522,7 @@ class ResourceViewer extends Component<Props,State>
          //return this.props.ontology[prop][rdfs+"label"][0].value
       }
 
-      return this.pretty(prop)
+      return this.pretty(prop,isUrl)
    }
 
    hasValue(val:[],k:string)
@@ -561,7 +562,7 @@ class ResourceViewer extends Component<Props,State>
            info = getLangLabel(this,  infoBase.filter((e)=>(e.type == skos+"prefLabel")))
 
            //console.log("infoB",info)
-           if(info && info[0] && n <= 10) vals.push(<h4><Link className="urilink prefLabel" to={"/show/bdr:"+this.pretty(v)}>{info[0].value}</Link></h4>)
+           if(info && info[0] && n <= 10) vals.push(<h4><Link className="urilink prefLabel" to={"/show/bdr:"+this.pretty(v,true)}>{info[0].value}</Link></h4>)
            else if(n == 11) vals.push("...")
            n ++
          }
@@ -765,7 +766,7 @@ class ResourceViewer extends Component<Props,State>
                   //console.log("s",prop,elem,info,infoBase)
 
                   // we can return Link
-                  let pretty = this.fullname(elem.value);
+                  let pretty = this.fullname(elem.value,true);
 
                   if(info && infoBase && infoBase.filter(e=>e["xml:lang"]||e["lang"]).length >= 0) {
                      ret.push([<Link className="urilink prefLabel" to={"/show/bdr:"+pretty}>{info}</Link>,lang?<Tooltip placement="bottom-end" title={
@@ -1492,18 +1493,6 @@ class ResourceViewer extends Component<Props,State>
 
    }
 
-   initMiradorMenu() {
-
-      $(".user-buttons.mirador-main-menu li:nth-last-child(n-5):nth-last-child(n+2)").addClass("on")
-      window.maxW = $(".mirador-container ul.scroll-listing-thumbs ").width()
-      if(window.maxW < $(".scroll-view").innerWidth())
-      {
-         window.maxW = 0
-         $(".mirador-container ul.scroll-listing-thumbs ").css("width","auto");
-         $(".user-buttons.mirador-main-menu").find("li:nth-last-child(3),li:nth-last-child(4)").removeClass("on").hide()
-      }
-      $("input#zoomer").trigger("input")
-   }
 
    showMirador()
    {
@@ -1515,289 +1504,32 @@ class ResourceViewer extends Component<Props,State>
          if(this.state.UVcanLoad) { window.location.hash = "mirador"; window.location.reload(); }
 
          let tiMir = setInterval( () => {
+
             if(window.Mirador) {
+
                clearInterval(tiMir);
 
                $("#fond").addClass("hidden");
 
-               let config = {
-                  id:"viewer",
-                  data: [],
-                  showAddFromURLBox:false,
-                  //displayLayout:false,
-
-                  manifestsPanel: {
-                    name: "Collection Tree Manifests Panel",
-                    module: "CollectionTreeManifestsPanel",
-                    options: {
-                        labelToString: (label) => (!Array.isArray(label)?label:label.map( e => (e["@value"]?e["@value"]+"@"+e["@language"]:e)).join("; "))
-                    }
-                  },
-                  windowSettings: {
-                    sidePanelVisible: false
-                  },
-
-                  mainMenuSettings : {
-                     "buttons":[{"layout":"false"}],
-                     "userButtons": [
-                       { "label": "Reading View",
-                         "iconClass": "fa fa-align-center",
-                         "attributes" : { style:"", onClick : "eval('window.setMiradorScroll()')" }
-                      },
-                       { "label": " ",
-                         "iconClass": "fa fa-search"
-                      },
-                       { "label": "Page View",
-                         "iconClass": "fa fa-file-o",
-                         "attributes" : { style:"", onClick : "eval('window.setMiradorZoom()')" }
-                      },
-                       { "label": "Close Mirador",
-                         "iconClass": "fa fa-times",
-                         "attributes" : { onClick : "javascript:eval('window.closeViewer()')" }
-                        }
-                     ]
-                  }
-               }
+               let data = [], manif, canvasID
                if(this.props.imageAsset.match(/[/]collection[/]/) && !this.props.collecManif)
                {
-                  config.data.push({"collectionUri": this.props.imageAsset +"?continuous=true", location:"Test Collection Location" })
-                  if(this.props.manifests) config.data = config.data.concat(this.props.manifests.map(m => ({manifestUri:m["@id"],label:m["label"]})))
-                  config["openManifestsPage"] = true
-                  config["preserveManifestOrder"] = true
-                  config["windowObjects"] = []
-
-                  config["mainMenuSettings"]["userButtons"] =
-                  [
-                     {
-                        "label": "Browse Collection",
-                        "iconClass": "fa fa-bars",
-                        "attributes" : {
-                           onClick : "window.setMiradorClick(event)"
-                        },
-                     },
-                     ...config["mainMenuSettings"]["userButtons"]
-                  ]
+                  data.push({"collectionUri": this.props.imageAsset +"?continuous=true", location:"Test Collection Location" })
+                  if(this.props.manifests) data = data.concat(this.props.manifests.map(m => ({manifestUri:m["@id"],label:m["label"]})))
                }
                else
                {
-                  let manif = this.props.collecManif
+                  manif = this.props.collecManif
                   if(!manif) manif = this.props.imageAsset+"?continuous=true"
-                  config.data.push({"manifestUri": manif, location:"Test Manifest Location" })
-
-                  config["windowObjects"] = [ {
-                     loadedManifest: manif, //(this.props.collecManif?this.props.collecManif+"?continuous=true":this.props.imageAsset+"?continuous=true"),
-                     canvasID: this.props.canvasID,
-                     viewType: "ScrollView",
-                     availableViews: [ 'ImageView', 'ScrollView' ],
-                     displayLayout:false
-                  } ]
+                  data.push({"manifestUri": manif, location:"Test Manifest Location" })
+                  canvasID = this.props.canvasID
                }
-
-
+               let config = miradorConfig(data,manif,canvasID);
 
                //console.log("mir ador",config,this.props)
                window.Mirador( config )
 
-
-               let timerConf = setInterval( () => {
-
-                  console.log("miraconf...")
-
-                  $(".user-buttons.mirador-main-menu span.fa-bars").removeClass("fa-bars").addClass("fa-list");
-
-                  if(!$(".mirador-main-menu #zoomer").length) {
-
-                     $(".user-buttons.mirador-main-menu li:nth-last-child(2)").before('<li><input oninput="javascript:eval(\'window.setZoom(this.value)\');" type="range" min="0" max="1" step="0.01" value="1" id="zoomer"/></li>')
-
-                     window.setZoom = (val) => {
-
-                        if(!window.maxW) return ;
-
-                        let scrollT = $(".mirador-container ul.scroll-listing-thumbs")
-                        let scrollV = $(".scroll-view")
-
-                        // val = 1 => w =  1 * W
-                        // val = 0 => w =  x * W <=> x = dMin
-
-                        let dMin = scrollV.innerWidth() / window.maxW
-                        let coef = 1 - (1 - dMin) * (1 - val)
-
-                        let oldH = scrollT[0].getBoundingClientRect().height;
-
-                        scrollT.css({"transform":"scale("+coef+")"})
-                        scrollV.scrollLeft((window.maxW*coef - scrollV.innerWidth()) / 2)
-
-                        let nuH = scrollT[0].getBoundingClientRect().height;
-
-                        scrollV.scrollTop(scrollV.scrollTop() + (nuH - oldH)*(scrollV.scrollTop()/oldH))
-
-                        //console.log("h",oldH,nuH)
-                     }
-
-                  }
-
-
-                  if(! $(".mirador-viewer .member-select-results li[data-index-number=0]").length) {
-
-                     $(".mirador-container .mirador-main-menu li a").addClass('on');
-                     $(".mirador-container .mirador-main-menu li:nth-child(1) a").addClass('selec');
-
-                     let scrollTimer = setInterval( () => {
-                        if($(".scroll-view").length)
-                        {
-                           //console.log($(".mirador-container ul.scroll-listing-thumbs ").width(),$(window).width())
-                           $(".scroll-view")
-                              .scrollLeft(($(".mirador-container ul.scroll-listing-thumbs ").width() - $(window).width()) / 2)
-                              .scrollTop(1)
-
-                           this.initMiradorMenu()
-
-                           clearInterval(scrollTimer)
-                        }
-                     }, 1000);
-                  }
-                  else
-                  {
-                     $(".mirador-container .mirador-main-menu li a").removeClass('on');
-                     $(".mirador-container .mirador-main-menu li:nth-child(1) a").addClass('on selec');
-
-                     clearInterval(timerConf);
-
-                     if(!window.setMiradorClick) {
-
-                        window.setMiradorClick = (e) => {
-
-                           console.log("cliked",e)
-
-                           if($(".mirador-container .mirador-main-menu li:nth-child(1) a").hasClass('selec')) {
-                              if(e) {
-                                 e.stopPropagation()
-                                 return ;
-                              }
-                           }
-
-                           $(".mirador-container .mirador-main-menu li a").removeClass('selec');
-                           $(".mirador-container .mirador-main-menu li:nth-child(1) a").addClass('selec');
-
-                           let elem = $('.workspace-container > div > div > div.window > div.manifest-info > a.mirador-btn.mirador-icon-window-menu > ul > li.new-object-option > i') //,.addItemLink').first().click() ;
-                           elem.first().click()
-
-                           let clickTimer = setInterval(() => {
-                              console.log("click interval")
-                              let added = false
-                              $(".mirador-viewer .member-select-results li[data-index-number]").each( (i,e) => {
-                                 let item = $(e)
-                                 if(!item.hasClass("setClick")) {
-
-                                    item.find(".preview-images img").click( () => {
-
-                                       this.initMiradorMenu()
-
-                                       $(".mirador-container .mirador-main-menu li a").removeClass('selec');
-                                       $(".mirador-container .mirador-main-menu li a .fa-file-o").parent().addClass('selec');
-                                       $(".user-buttons.mirador-main-menu").find("li:nth-last-child(3),li:nth-last-child(4)").addClass('off')
-
-                                    })
-
-                                    item.addClass("setClick").click(() => {
-
-                                       $(".mirador-viewer li.scroll-option").click();
-                                       $(".mirador-container .mirador-main-menu li a").removeClass('selec');
-                                       $(".mirador-container .mirador-main-menu li a .fa-align-center").parent().addClass('selec');
-                                       $(".user-buttons.mirador-main-menu li.off").removeClass('off')
-
-
-                                       let scrollTimer = setInterval( () => {
-                                          if($(".scroll-view").length)
-                                          {
-                                             //console.log($(".mirador-container ul.scroll-listing-thumbs ").width(),$(window).width())
-                                             $(".scroll-view")
-                                                .scrollLeft(($(".mirador-container ul.scroll-listing-thumbs ").width() - $(window).width()) / 2)
-                                                .scrollTop(1)
-                                                .find("img.thumbnail-image").click(()=>{
-                                                   $(".mirador-container .mirador-main-menu li a").removeClass('selec');
-                                                   $(".mirador-container .mirador-main-menu li a .fa-file-o").parent().addClass('selec');
-                                                   $(".user-buttons.mirador-main-menu").find("li:nth-last-child(3),li:nth-last-child(4)").addClass('off')
-                                                })
-
-                                             this.initMiradorMenu()
-
-                                             clearInterval(scrollTimer)
-                                          }
-                                       }, 1000);
-                                    })
-                                    added = true ;
-                                 }
-                              })
-                              if(!added) {
-                                 clearInterval(clickTimer)
-                              }
-                           }, 10) ;
-                        }
-                     }
-                     window.setMiradorClick();
-
-                     if(!window.setMiradorZoom) {
-                        window.setMiradorZoom = () => {
-
-                           if($(".mirador-container .mirador-main-menu li:nth-child(1) a").hasClass('selec')) {
-                              let elem = $('.workspace-container > div > div > div.window > div.manifest-info > a.mirador-btn.mirador-icon-window-menu > ul > li.new-object-option > i')
-                              elem.first().click()
-                           }
-
-                           $(".mirador-container .mirador-main-menu li a").removeClass('selec');
-                           $(".mirador-container .mirador-main-menu li a .fa-file-o").parent().addClass('selec');
-                           $(".user-buttons.mirador-main-menu").find("li:nth-last-child(3),li:nth-last-child(4)").addClass('off')
-
-                           let found = false
-                           $('.scroll-view > ul > li').each((i,e) => {
-                              let item = $(e)
-                              let o = item.offset()
-                              if(o.top > 0 && !found) {
-                                 item.find("img").click()
-                                 found = true;
-                              }
-                           })
-                        }
-                     }
-                     if(!window.setMiradorScroll) {
-                        window.setMiradorScroll = () => {
-
-                           if($(".mirador-container .mirador-main-menu li:nth-child(1) a").hasClass('selec')) {
-                              let elem = $('.workspace-container > div > div > div.window > div.manifest-info > a.mirador-btn.mirador-icon-window-menu > ul > li.new-object-option > i')
-                              elem.first().click()
-                           }
-
-                           $(".mirador-container .mirador-main-menu li a").removeClass('selec');
-                           $(".mirador-container .mirador-main-menu li a .fa-align-center").parent().addClass('selec');
-                           $(".user-buttons.mirador-main-menu li.off").removeClass('off')
-
-                           let id = $(".panel-listing-thumbs li.highlight img")
-                           if(!id.length) $(".mirador-viewer li.scroll-option").click();
-                           else {
-                              $(".mirador-viewer li.scroll-option").click();
-                              setTimeout(() => {
-                                 let imgY = $(".scroll-view img[data-image-id='"+id.attr("data-image-id")+"']").parent().offset().top + $(".scroll-view").scrollTop()
-                                 console.log(imgY)
-                                 $(".scroll-view").animate({scrollTop:imgY-100}
-                                    //,"scrollLeft": ($(".mirador-container ul.scroll-listing-thumbs ").width() - $(window).width()) / 2}
-                                    ,100, () => { $("input#zoomer").trigger("input") })
-
-
-                              }, 250)
-                           }
-                        }
-                     }
-
-
-                     // open first volume ? or not
-                     //$(".mirador-viewer .member-select-results li[data-index-number=0]").click()
-                     //$('.mirador-viewer li.scroll-option').click()
-
-                  }
-
-               }, 10 )
-
+               miradorSetUI();
             }
          }, 10)
       }
@@ -1934,8 +1666,8 @@ class ResourceViewer extends Component<Props,State>
 
                this.setState({...this.state, imageLoaded:false})
 
-               if(assoc.length == 1) { this.props.onHasImageAsset(iiifpres+"/2.1.1/v:bdr:"+this.pretty(assoc[0].value)+"/manifest",this.props.IRI); }
-               else { this.props.onHasImageAsset(iiifpres+"/2.1.1/collection/i:bdr:"+this.pretty(e.value),this.props.IRI);  }
+               if(assoc.length == 1) { this.props.onHasImageAsset(iiifpres+"/2.1.1/v:bdr:"+this.pretty(assoc[0].value,true)+"/manifest",this.props.IRI); }
+               else { this.props.onHasImageAsset(iiifpres+"/2.1.1/collection/i:bdr:"+this.pretty(e.value,true),this.props.IRI);  }
 
             }
          }
@@ -2016,7 +1748,7 @@ class ResourceViewer extends Component<Props,State>
             else {
                elem = this.getResourceElem(bdo+"workHasItemImageAsset")
                if(elem && elem.length > 0 && elem[0].value)
-                  pdfLink = iiif+"/download/zip/wi:bdr:W"+id+"::bdr:"+ this.pretty(elem[0].value) ;
+                  pdfLink = iiif+"/download/zip/wi:bdr:W"+id+"::bdr:"+ this.pretty(elem[0].value,true) ;
             }
          }
          /* // missing ImageItem
