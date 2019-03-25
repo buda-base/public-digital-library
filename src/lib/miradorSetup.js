@@ -12,10 +12,15 @@ import("jquery")
    jQ = window.jQuery
 })
 
-export function miradorSetUI()
-{
+let timerConf, scrollTimer, scrollTimer2, clickTimer
 
-   let timerConf = setInterval( () => {
+export function miradorSetUI(closeCollec)
+{
+   if(closeCollec == undefined) closeCollec = true
+
+
+   clearInterval(timerConf)
+   timerConf = setInterval( () => {
 
       console.log("miraconf...")
 
@@ -23,12 +28,23 @@ export function miradorSetUI()
 
       miradorAddZoomer();
 
+
+      jQ("#collection-tree li.jstree-leaf").click( (e) => {
+         console.log("jstree")
+         //$(e.target).closest("li").addClass("added-click");
+         miradorSetUI(false);
+      })
+
+
       if(! jQ(".mirador-viewer .member-select-results li[data-index-number=0]").length) {
+
 
          jQ(".mirador-container .mirador-main-menu li a").addClass('on');
          jQ(".mirador-container .mirador-main-menu li:nth-child(1) a").addClass('selec');
 
-         let scrollTimer = setInterval( () => {
+         clearInterval(scrollTimer2)
+         scrollTimer2 = setInterval( () => {
+
             if(jQ(".scroll-view").length)
             {
                //console.log(jQ(".mirador-container ul.scroll-listing-thumbs ").width(),jQ(window).width())
@@ -38,9 +54,9 @@ export function miradorSetUI()
 
                miradorInitMenu()
 
-               clearInterval(scrollTimer)
+               clearInterval(scrollTimer2)
             }
-         }, 1000);
+         }, 100);
       }
       else
       {
@@ -50,11 +66,11 @@ export function miradorSetUI()
          clearInterval(timerConf);
 
          miradorAddClick();
-         window.setMiradorClick();
+         window.setMiradorClick(closeCollec);
 
          miradorAddZoom();
-
          miradorAddScroll();
+
 
 
          // open first volume ? or not
@@ -63,7 +79,7 @@ export function miradorSetUI()
 
       }
 
-   }, 10 )
+   }, 350 )
 }
 
 export function miradorConfig(data, manifest, canvasID)
@@ -138,12 +154,12 @@ export function miradorConfig(data, manifest, canvasID)
    return config ;
 }
 
-function miradorAddClick(){
+function miradorAddClick(firstInit){
    if(!window.setMiradorClick) {
 
-      window.setMiradorClick = (e) => {
+      window.setMiradorClick = (firstInit,e) => {
 
-         console.log("cliked",e)
+         console.log("cliked",e,firstInit)
 
          if(jQ(".mirador-container .mirador-main-menu li:nth-child(1) a").hasClass('selec')) {
             if(e) {
@@ -156,16 +172,19 @@ function miradorAddClick(){
          jQ(".mirador-container .mirador-main-menu li:nth-child(1) a").addClass('selec');
 
          let elem = jQ('.workspace-container > div > div > div.window > div.manifest-info > a.mirador-btn.mirador-icon-window-menu > ul > li.new-object-option > i') //,.addItemLink').first().click() ;
-         elem.first().click()
+         if(firstInit) elem.first().click()
 
-         let clickTimer = setInterval(() => {
+         clearInterval(clickTimer);
+         clickTimer = setInterval(() => {
             console.log("click interval")
             let added = false
             jQ(".mirador-viewer .member-select-results li[data-index-number]").each( (i,e) => {
                let item = jQ(e)
                if(!item.hasClass("setClick")) {
 
-                  item.find(".preview-images img").click( () => {
+                  item.addClass("setClick");
+
+                  item.find(".preview-image").click( (e) => {
 
                      miradorInitMenu()
 
@@ -173,6 +192,11 @@ function miradorAddClick(){
                      jQ(".mirador-container .mirador-main-menu li a .fa-file-o").parent().addClass('selec');
                      jQ(".user-buttons.mirador-main-menu").find("li:nth-last-child(3),li:nth-last-child(4)").addClass('off')
 
+                     /*
+                     e.stopPropagation()
+                     e.preventDefault()
+                     return false
+                     */
                   })
 
                   item.addClass("setClick").click(() => {
@@ -182,8 +206,9 @@ function miradorAddClick(){
                      jQ(".mirador-container .mirador-main-menu li a .fa-align-center").parent().addClass('selec');
                      jQ(".user-buttons.mirador-main-menu li.off").removeClass('off')
 
+                     clearInterval(scrollTimer);
+                     scrollTimer = setInterval( () => {
 
-                     let scrollTimer = setInterval( () => {
                         if(jQ(".scroll-view").length)
                         {
                            //console.log(jQ(".mirador-container ul.scroll-listing-thumbs ").width(),jQ(window).width())
@@ -200,10 +225,12 @@ function miradorAddClick(){
 
                            clearInterval(scrollTimer)
                         }
-                     }, 1000);
+                     }, 10);
                   })
                   added = true ;
                }
+
+
             })
             if(!added) {
                clearInterval(clickTimer)
@@ -255,6 +282,7 @@ function miradorAddScroll()
          jQ(".user-buttons.mirador-main-menu li.off").removeClass('off')
 
          let id = jQ(".panel-listing-thumbs li.highlight img")
+         console.log("id?",id.length,id)
          if(!id.length) jQ(".mirador-viewer li.scroll-option").click();
          else {
             jQ(".mirador-viewer li.scroll-option").click();
@@ -280,6 +308,9 @@ function miradorAddZoomer() {
 
       window.setZoom = (val) => {
 
+         console.log("sZ",window.max)
+
+         if(!window.maxW) miradorInitMenu(true)
          if(!window.maxW) return ;
 
          let scrollT = jQ(".mirador-container ul.scroll-listing-thumbs")
@@ -300,27 +331,27 @@ function miradorAddZoomer() {
 
          scrollV.scrollTop(scrollV.scrollTop() + (nuH - oldH)*(scrollV.scrollTop()/oldH))
 
-         //console.log("h",oldH,nuH)
+         console.log("h",oldH,nuH)
       }
 
    }
 }
 
 
-function miradorInitMenu() {
+function miradorInitMenu(maxWonly) {
 
-      jQ(".user-buttons.mirador-main-menu li:nth-last-child(n-5):nth-last-child(n+2)").addClass("on")
-      window.maxW = jQ(".mirador-container ul.scroll-listing-thumbs ").width()
-      if(window.maxW < jQ(".scroll-view").innerWidth())
-      {
-         window.maxW = 0
+   if(maxWonly == undefined) maxWonly = false
+   if(!maxWonly) jQ(".user-buttons.mirador-main-menu li:nth-last-child(n-5):nth-last-child(n+2)").addClass("on")
+   window.maxW = jQ(".mirador-container ul.scroll-listing-thumbs ").width()
+   if(window.maxW < jQ(".scroll-view").innerWidth())
+   {
+      window.maxW = 0
+      if(!maxWonly)  {
          jQ(".mirador-container ul.scroll-listing-thumbs ").css("width","auto");
          jQ(".user-buttons.mirador-main-menu").find("li:nth-last-child(3),li:nth-last-child(4)").removeClass("on").hide()
       }
-      jQ("input#zoomer").trigger("input")
    }
+   if(!maxWonly) jQ("input#zoomer").trigger("input")
 
-export function miradorEvents()
-{
-
+   console.log("maxW",window.maxW)
 }
