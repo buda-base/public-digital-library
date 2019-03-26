@@ -315,7 +315,8 @@ svg.hide { opacity:0;pointer-events:none; }
 .user-buttons.mirador-main-menu { width:100%; }
 .user-buttons.mirador-main-menu li:last-child { float:right; }
 /* diva style zoom */
-.mirador-container ul.scroll-listing-thumbs { max-width:10000px;display:block;text-align:center;position:static;width:fit-content;
+.mirador-container ul.scroll-listing-thumbs { max-width:10000px;display:block;text-align:center;position:static;
+   width:-moz-fit-content;width:fit-content;
    transform-origin:0 0;
    /* transition:transform-origin 1000ms linear ; */
 }

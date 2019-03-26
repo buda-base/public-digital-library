@@ -20,7 +20,6 @@ let timerConf, scrollTimer, scrollTimer2, clickTimer
 export function miradorSetUI(closeCollec)
 {
    if(closeCollec == undefined) closeCollec = true
-
    if(!jQ) loadJQuery()
 
    clearInterval(scrollTimer)
@@ -29,12 +28,11 @@ export function miradorSetUI(closeCollec)
    clearInterval(timerConf)
    timerConf = setInterval( () => {
 
-      console.log("miraconf...")
+      console.log("miraconf...",window.maxW)
 
       jQ(".user-buttons.mirador-main-menu span.fa-bars").removeClass("fa-bars").addClass("fa-list");
 
       miradorAddZoomer();
-
 
       jQ("#collection-tree li.jstree-node").click( (e) => {
          console.log("jstree")
@@ -364,8 +362,14 @@ function miradorAddZoomer() {
 function miradorInitMenu(maxWonly) {
 
    if(maxWonly == undefined) maxWonly = false
+
+   console.log("maxWo",maxWonly)
+
    if(!maxWonly) jQ(".user-buttons.mirador-main-menu li:nth-last-child(n-5):nth-last-child(n+2)").addClass("on")
    window.maxW = jQ(".mirador-container ul.scroll-listing-thumbs ").width()
+
+   console.log("w",jQ(".mirador-container ul.scroll-listing-thumbs ").width())
+
    if(window.maxW < jQ(".scroll-view").innerWidth())
    {
       window.maxW = 0
