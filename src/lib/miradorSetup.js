@@ -42,17 +42,23 @@ export function miradorSetUI(closeCollec)
       })
 
 
-      if(! jQ(".mirador-viewer .member-select-results li[data-index-number=0]").length) {
+      if(! jQ(".mirador-viewer .member-select-results li[data-index-number=2]").length) {
 
 
          jQ(".mirador-container .mirador-main-menu li a").addClass('on');
          jQ(".mirador-container .mirador-main-menu li:nth-child(1) a").addClass('selec');
+
+         console.log("ici")
+
+         miradorAddZoom();
+         miradorAddScroll();
 
          clearInterval(scrollTimer2)
          scrollTimer2 = setInterval( () => {
 
             if(jQ(".scroll-view").length)
             {
+               clearInterval(timerConf)
                clearInterval(scrollTimer2)
                setTimeout( () => {
 
@@ -63,7 +69,8 @@ export function miradorSetUI(closeCollec)
 
                   miradorInitMenu()
 
-               }, 1000);
+
+               }, 100);
             }
          }, 100);
       }
