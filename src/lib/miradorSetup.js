@@ -1,22 +1,27 @@
 
+
 let jQ ;
 
-import("jquery")
-.then((val) => {
-   console.log("jQ",val)
-   jQ = val.default ;
-
-   console.log("jQ",jQ)
-})
-.catch((e) => {
-   jQ = window.jQuery
-})
+let loadJQuery = async () => {
+   try {
+      const val = await require("jquery")
+      console.log("jQ",val)
+      jQ = val //.default ;
+   }
+   catch(e)
+   {
+      jQ = window.jQuery
+   }
+}
+loadJQuery();
 
 let timerConf, scrollTimer, scrollTimer2, clickTimer
 
 export function miradorSetUI(closeCollec)
 {
    if(closeCollec == undefined) closeCollec = true
+
+   if(!jQ) loadJQuery()
 
    clearInterval(scrollTimer)
    clearInterval(scrollTimer2)
@@ -293,8 +298,8 @@ function miradorAddScroll()
          jQ(".user-buttons.mirador-main-menu li.off").removeClass('off')
 
          setTimeout(() => {
-            //let id = jQ(".panel-listing-thumbs li.highlight img").first()
-            //console.log("id?",id.length,id)
+            let id = jQ(".panel-listing-thumbs li.highlight img").first()
+            console.log("id?",id.length,id)
 
             jQ(".mirador-viewer li.scroll-option").click();
 
@@ -302,15 +307,14 @@ function miradorAddScroll()
             if(!sT) sT = 0
 
             let im
-            //if(id)
-            im = jQ(".scroll-listing-thumbs li.highlight img[data-image-id]") //img[data-image-id='"+id.attr("data-image-id")+"']")
-            //else im = jQ(".scroll-listing-thumbs li:first-child img[data-image-id]")
+            if(id) im = jQ(".scroll-view img[data-image-id='"+id.attr("data-image-id")+"']")
+            else im = jQ(".scroll-view img[data-image-id]").first()
 
             let imgY = im.parent().offset().top + sT
             console.log(imgY)
             jQ(".scroll-view").animate({scrollTop:imgY-100}
                //,"scrollLeft": (jQ(".mirador-container ul.scroll-listing-thumbs ").width() - jQ(window).width()) / 2}
-               ,10, () => { jQ("input#zoomer").trigger("input") })
+               ,100, () => { jQ("input#zoomer").trigger("input") })
 
 
          }, 250)
