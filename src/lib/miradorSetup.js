@@ -305,18 +305,25 @@ function miradorAddScroll()
             if(!sT) sT = 0
 
             let im
-            if(id) im = jQ(".scroll-view img[data-image-id='"+id.attr("data-image-id")+"']")
+            if(id) im = jQ(".scroll-view img[data-image-id='"+id.attr("data-image-id")+"']").first()
             else im = jQ(".scroll-view img[data-image-id]").first()
 
-            let imgY = im.parent().offset().top + sT
-            console.log(imgY)
-            jQ(".scroll-view").animate({scrollTop:imgY-100}
+            let imgY = im.parent().offset().top
+            console.log("y",sT,imgY,im)
+
+            jQ(".scroll-view").animate({scrollTop:sT+imgY-100}
                //,"scrollLeft": (jQ(".mirador-container ul.scroll-listing-thumbs ").width() - jQ(window).width()) / 2}
                ,100, () => { jQ("input#zoomer").trigger("input") })
 
 
+            jQ(".scroll-view img.thumbnail-image").click(()=>{
+               jQ(".mirador-container .mirador-main-menu li a").removeClass('selec');
+               jQ(".mirador-container .mirador-main-menu li a .fa-file-o").parent().addClass('selec');
+               jQ(".user-buttons.mirador-main-menu").find("li:nth-last-child(3),li:nth-last-child(4)").addClass('off')
+            })
+
          }, 250)
-      }
+       }
    }
 }
 
@@ -352,7 +359,11 @@ function miradorAddZoomer() {
          let sT = scrollV.scrollTop() + (nuH - oldH)*(scrollV.scrollTop()/oldH)
          scrollV.scrollTop(sT)
 
+         scrollT.css({"height":nuH})
+
          console.log("h",sT,oldH,nuH)
+
+
       }
 
    }

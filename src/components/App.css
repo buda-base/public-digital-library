@@ -320,6 +320,7 @@ svg.hide { opacity:0;pointer-events:none; }
    transform-origin:0 0;
    /* transition:transform-origin 1000ms linear ; */
 }
+.mirador-container .mirador-viewer .image-view { position:absolute; }
 .mirador-container .mirador-viewer ul.scroll-listing-thumbs li {  width:auto;display:block;position:relative; }
 .mirador-container .mirador-viewer ul.scroll-listing-thumbs li img { position:relative; }
 .mirador-container ul.scroll-listing-thumbs li .thumb-label { display:inline-block; }
@@ -330,6 +331,7 @@ svg.hide { opacity:0;pointer-events:none; }
 .mirador-container .mirador-main-menu li:not(.on) input,
 .mirador-container .mirador-main-menu li:not(.on):not(:last-child):not(:first-child) { opacity:0;pointer-events:none;transition:all 400ms ease-in-out; }
 .mirador-container .mirador-main-menu li a.selec {opacity:1; pointer-events:auto; }
+
 
 .App {
   text-align: center;
