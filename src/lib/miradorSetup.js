@@ -359,7 +359,7 @@ function miradorAddZoomer() {
          let sT = scrollV.scrollTop() + (nuH - oldH)*(scrollV.scrollTop()/oldH)
          scrollV.scrollTop(sT)
 
-         scrollT.css({"height":nuH})
+         //scrollT.css({"height":nuH}) // ok but then zoom bugs... TODO
 
          console.log("h",sT,oldH,nuH)
 
