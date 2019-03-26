@@ -7,22 +7,12 @@
     <link rel="stylesheet" type="text/css" href="mirador/css/mirador-combined.css">
     <link rel="stylesheet" type="text/css" href="src/components/App.css"/>
     <style>
-      #viewer {
-        width: 100%;
-        height: 100%;
-        position: fixed;
-      }
-      #collection-tree > ul > li[role=treeitem]:nth-child(-n+2) {  display: none; }
-      .jstree-default .jstree-anchor {  line-height: 42px; height: 42px;  font-size: 20px; }
-      .jstree-default .jstree-icon:empty { line-height: 42px;  padding-right: 4px; }
-      .jstree-icon.jstree-ocl { vertical-align: -16px; }
-      #collection-tree.jstree { width: 25%;  max-width: 10000px; }
-      .member-select-results { margin-left: 25%; }
-
-      .mirador-container .scroll-view { overflow-y:auto; }
-      .mirador-container ul.scroll-listing-thumbs li  { display:block; }
-      ul.scroll-listing-thumbs li img { max-width: 100%; height: auto; cursor:pointer; }
-
+         #collection-tree.jstree { width: 25%;  max-width: 10000px; }
+         #collection-tree + .member-select-results { margin-left: 25%; }
+         .mirador-container #load-controls { margin-top:0; }
+         .mirador-container .select-metadata { width:25%; }
+         .user-buttons.mirador-main-menu li:last-child { display:none; }
+         .mirador-container .items-listing li { background-color:white;}
     </style>
     <script src="mirador/mirador.js"></script>
   </head>

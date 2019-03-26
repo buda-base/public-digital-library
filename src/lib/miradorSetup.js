@@ -18,7 +18,9 @@ export function miradorSetUI(closeCollec)
 {
    if(closeCollec == undefined) closeCollec = true
 
-
+   clearInterval(scrollTimer)
+   clearInterval(scrollTimer2)
+   clearInterval(clickTimer)
    clearInterval(timerConf)
    timerConf = setInterval( () => {
 
@@ -29,9 +31,10 @@ export function miradorSetUI(closeCollec)
       miradorAddZoomer();
 
 
-      jQ("#collection-tree li.jstree-leaf").click( (e) => {
+      jQ("#collection-tree li.jstree-node").click( (e) => {
          console.log("jstree")
          //$(e.target).closest("li").addClass("added-click");
+
          miradorSetUI(false);
       })
 
@@ -47,14 +50,17 @@ export function miradorSetUI(closeCollec)
 
             if(jQ(".scroll-view").length)
             {
-               //console.log(jQ(".mirador-container ul.scroll-listing-thumbs ").width(),jQ(window).width())
-               jQ(".scroll-view")
-                  .scrollLeft((jQ(".mirador-container ul.scroll-listing-thumbs ").width() - jQ(window).width()) / 2)
-                  .scrollTop(1)
-
-               miradorInitMenu()
-
                clearInterval(scrollTimer2)
+               setTimeout( () => {
+
+                  console.log(jQ(".mirador-container ul.scroll-listing-thumbs ").width(),jQ(window).width())
+                  jQ(".scroll-view")
+                  .scrollLeft((jQ(".mirador-container ul.scroll-listing-thumbs ").width() - jQ(window).width()) / 2)
+                  .scrollTop(jQ(".scroll-view").scrollTop()+1)
+
+                  miradorInitMenu()
+
+               }, 1000);
             }
          }, 100);
       }
@@ -134,7 +140,7 @@ export function miradorConfig(data, manifest, canvasID)
             "label": "Browse Collection",
             "iconClass": "fa fa-bars",
             "attributes" : {
-               onClick : "window.setMiradorClick(event)"
+               onClick : "if(window.setMiradorClick) { window.setMiradorClick(event); }"
             },
          },
          ...config["mainMenuSettings"]["userButtons"]
@@ -211,19 +217,24 @@ function miradorAddClick(firstInit){
 
                         if(jQ(".scroll-view").length)
                         {
-                           //console.log(jQ(".mirador-container ul.scroll-listing-thumbs ").width(),jQ(window).width())
-                           jQ(".scroll-view")
+                           clearInterval(scrollTimer)
+
+                           setTimeout( () => {
+
+                              console.log(jQ(".mirador-container ul.scroll-listing-thumbs ").width(),jQ(window).width())
+                              jQ(".scroll-view")
                               .scrollLeft((jQ(".mirador-container ul.scroll-listing-thumbs ").width() - jQ(window).width()) / 2)
-                              .scrollTop(1)
+                              .scrollTop(jQ(".scroll-view").scrollTop()+1)
                               .find("img.thumbnail-image").click(()=>{
                                  jQ(".mirador-container .mirador-main-menu li a").removeClass('selec');
                                  jQ(".mirador-container .mirador-main-menu li a .fa-file-o").parent().addClass('selec');
                                  jQ(".user-buttons.mirador-main-menu").find("li:nth-last-child(3),li:nth-last-child(4)").addClass('off')
                               })
 
-                           miradorInitMenu()
+                              miradorInitMenu()
 
-                           clearInterval(scrollTimer)
+                           }, 1000);
+
                         }
                      }, 10);
                   })
@@ -281,21 +292,28 @@ function miradorAddScroll()
          jQ(".mirador-container .mirador-main-menu li a .fa-align-center").parent().addClass('selec');
          jQ(".user-buttons.mirador-main-menu li.off").removeClass('off')
 
-         let id = jQ(".panel-listing-thumbs li.highlight img")
-         console.log("id?",id.length,id)
-         if(!id.length) jQ(".mirador-viewer li.scroll-option").click();
-         else {
+         setTimeout(() => {
+            //let id = jQ(".panel-listing-thumbs li.highlight img").first()
+            //console.log("id?",id.length,id)
+
             jQ(".mirador-viewer li.scroll-option").click();
-            setTimeout(() => {
-               let imgY = jQ(".scroll-view img[data-image-id='"+id.attr("data-image-id")+"']").parent().offset().top + jQ(".scroll-view").scrollTop()
-               console.log(imgY)
-               jQ(".scroll-view").animate({scrollTop:imgY-100}
-                  //,"scrollLeft": (jQ(".mirador-container ul.scroll-listing-thumbs ").width() - jQ(window).width()) / 2}
-                  ,100, () => { jQ("input#zoomer").trigger("input") })
+
+            let sT = jQ(".scroll-view").scrollTop()
+            if(!sT) sT = 0
+
+            let im
+            //if(id)
+            im = jQ(".scroll-listing-thumbs li.highlight img[data-image-id]") //img[data-image-id='"+id.attr("data-image-id")+"']")
+            //else im = jQ(".scroll-listing-thumbs li:first-child img[data-image-id]")
+
+            let imgY = im.parent().offset().top + sT
+            console.log(imgY)
+            jQ(".scroll-view").animate({scrollTop:imgY-100}
+               //,"scrollLeft": (jQ(".mirador-container ul.scroll-listing-thumbs ").width() - jQ(window).width()) / 2}
+               ,10, () => { jQ("input#zoomer").trigger("input") })
 
 
-            }, 250)
-         }
+         }, 250)
       }
    }
 }
@@ -329,9 +347,10 @@ function miradorAddZoomer() {
 
          let nuH = scrollT[0].getBoundingClientRect().height;
 
-         scrollV.scrollTop(scrollV.scrollTop() + (nuH - oldH)*(scrollV.scrollTop()/oldH))
+         let sT = scrollV.scrollTop() + (nuH - oldH)*(scrollV.scrollTop()/oldH)
+         scrollV.scrollTop(sT)
 
-         console.log("h",oldH,nuH)
+         console.log("h",sT,oldH,nuH)
       }
 
    }
