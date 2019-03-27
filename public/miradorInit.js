@@ -19,31 +19,38 @@ async function init() {
       if(assocResData && assocResData.data) assocResData = assocResData.data
       console.log(assocResData)
 
+      let propK ;
       if(resData.status && resData.status == 404) { console.log("echec",work)}
-      else if(resData["@graph"]) {
-         const propK = resData["@graph"].filter(d => d["@id"] == work)[0]
-         console.log("pK",propK)
+      else if(resData["@graph"]) propK = resData["@graph"].filter(d => d["@id"] == work)[0]
+      else propK = resData
+      console.log("pK",propK)
+      if(propK)
+      {
          if(propK["workHasItem"]) {
             const item = propK["workHasItem"]
             const vol = assocResData[item.replace(/bdr:/,bdr)]
             console.log("vol",vol)
             if(vol.length > 1) {
                data = [
-                  { "collectionUri" : "http://iiifpres.bdrc.io"+"/2.1.1/collection/i:"+item, location:"BDRC" }
+                  { "collectionUri" : "http://iiifpres.bdrc.io"+"/2.1.1/collection/i:"+item, location:"" }
                ]
             }
             else {
                data = [
-                  { "manifestUri" : "http://iiifpres.bdrc.io"+"/2.1.1/v:bdr:"+vol[0]["value"].replace(new RegExp(bdr),"")+"/manifest", location:"BDRC" }
+                  { "manifestUri" : "http://iiifpres.bdrc.io"+"/2.1.1/v:bdr:"+vol[0]["value"].replace(new RegExp(bdr),"")+"/manifest", location:"" }
                ]
             }
          } else if(propK["imageList"]) {
-
+            data = [
+               { "manifestUri" : "http://iiifpres.bdrc.io"+"/2.1.1/v:"+work+"/manifest", location:"" }
+            ]
          } else if(propK["hasIIIFManifest"]) {
-
+            data = [
+               { "manifestUri" : propK["hasIIIFManifest"]["@id"], location:"" }
+            ]
          } else if(propK["workLocation"]) {
             data = [
-               { "collectionUri" : "http://iiifpres.bdrc.io"+"/2.1.1/collection/wio:"+work, location:"BDRC" }
+               { "collectionUri" : "http://iiifpres.bdrc.io"+"/2.1.1/collection/wio:"+work, location:"" }
             ]
          }
       }
