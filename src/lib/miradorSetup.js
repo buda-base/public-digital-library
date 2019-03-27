@@ -1,5 +1,7 @@
 
 
+//import {sortLangScriptLabels, extendedPresets} from './language.js';
+
 let jQ ;
 
 let loadJQuery = async () => {
@@ -42,7 +44,7 @@ export function miradorSetUI(closeCollec)
       })
 
 
-      if(jQ(".scroll-view li").length) {
+      if(jQ(".scroll-view li").length && !jQ("#manifest-select-menu").is(':visible')) {
 
          jQ(".mirador-container .mirador-main-menu li a").addClass('on');
          jQ(".mirador-container .mirador-main-menu li:nth-child(1) a").addClass('selec');
@@ -109,7 +111,23 @@ export function miradorConfig(data, manifest, canvasID)
         name: "Collection Tree Manifests Panel",
         module: "CollectionTreeManifestsPanel",
         options: {
-            labelToString: (label) => (!Array.isArray(label)?label:label.map( e => (e["@value"]?e["@value"]+"@"+e["@language"]:e)).join("; "))
+            labelToString: (label) => {
+               /*
+               let langs = extendedPresets([ "bo", "zh-hans" ])
+               let sortLabels =  sortLangScriptLabels(labels,langs.flat,langs.translit)
+               let label = sortLabels[0]
+               if(label["@value"]) return label["@value"]+"@"+label["@language"]
+               if(label["value"]) return label["value"]+"@"+label["language"]
+               else return label
+               */
+
+               if(Array.isArray(label)) return label.map( e => (e["@value"]?e["@value"]+"@"+e["@language"]:e)).join("; ")
+               else if(label["@value"]) return label["@value"]+"@"+label["@language"]
+               else if(label["value"]) return label["value"]+"@"+label["language"]
+               else return label
+
+
+            }
         }
       },
       windowSettings: {

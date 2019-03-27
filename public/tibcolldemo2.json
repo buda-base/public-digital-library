@@ -9,13 +9,25 @@
         {
           "@type": "sc:Collection",
           "@id": "http://presentation.bdrc.io/2.1.1/collection/i:bdr:I00KG01636",
-          "label": "ཐུབ་བསྟན་ཆོས་འཁོར་གླིང་གི་བཅའ་ཡིག",
+          "label": {
+             "@language":"bo",
+             "@value":"ཐུབ་བསྟན་ཆོས་འཁོར་གླིང་གི་བཅའ་ཡིག"
+          },
           "viewingHint": "multi-part"
         },
         {
           "@id": "http://presentation.bdrc.io/2.1.1/collection/wio:bdr:W22084",
           "@type": "sc:Collection",
-          "label": "རྒྱ་ཆེན་བཀའ་མཛོད།（དཔལ་སྤུངས་པར་མ་འབྲུག་སྤ་གྲོའི་བསྐྱར་པར་མ།）",
+          "label": [
+            {
+               "@language": "en",
+               "@value": "Derge Kangyur"
+            },
+            {
+               "@language": "bo-x-ewts",
+               "@value": "bka' 'gyur (sde dge par phud)"
+            }
+          ],
           "viewingHint": "multi-part"
         }
   ],
@@ -23,13 +35,25 @@
     {
       "@type": "sc:Collection",
       "@id": "http://presentation.bdrc.io/2.1.1/collection/i:bdr:I00KG01636",
-      "label": "ཐུབ་བསྟན་ཆོས་འཁོར་གླིང་གི་བཅའ་ཡིག",
+      "label": {
+         "@language":"bo",
+         "@value":"ཐུབ་བསྟན་ཆོས་འཁོར་གླིང་གི་བཅའ་ཡིག"
+      },
       "viewingHint": "multi-part"
     },
     {
       "@id": "http://presentation.bdrc.io/2.1.1/collection/wio:bdr:W22084",
       "@type": "sc:Collection",
-      "label": "རྒྱ་ཆེན་བཀའ་མཛོད།（དཔལ་སྤུངས་པར་མ་འབྲུག་སྤ་གྲོའི་བསྐྱར་པར་མ།）",
+      "label": [
+        {
+           "@language": "en",
+           "@value": "Derge Kangyur"
+        },
+        {
+           "@language": "bo-x-ewts",
+           "@value": "bka' 'gyur (sde dge par phud)"
+        }
+      ],
       "viewingHint": "multi-part"
     }
   ],
