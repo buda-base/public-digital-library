@@ -42,8 +42,7 @@ export function miradorSetUI(closeCollec)
       })
 
 
-      if(! jQ(".mirador-viewer .member-select-results li[data-index-number=2]").length) {
-
+      if(jQ(".scroll-view li").length) {
 
          jQ(".mirador-container .mirador-main-menu li a").addClass('on');
          jQ(".mirador-container .mirador-main-menu li:nth-child(1) a").addClass('selec');
@@ -74,7 +73,7 @@ export function miradorSetUI(closeCollec)
             }
          }, 100);
       }
-      else
+      else if(jQ(".mirador-viewer .member-select-results li[data-index-number=0]").length)
       {
          jQ(".mirador-container .mirador-main-menu li a").removeClass('on');
          jQ(".mirador-container .mirador-main-menu li:nth-child(1) a").addClass('on selec');
@@ -125,7 +124,8 @@ export function miradorConfig(data, manifest, canvasID)
              "attributes" : { style:"", onClick : "eval('window.setMiradorScroll()')" }
           },
            { "label": " ",
-             "iconClass": "fa fa-search"
+             "iconClass": "fa fa-search",
+             "attributes" : { "title":"Adjust zoom level" }
           },
            { "label": "Page View",
              "iconClass": "fa fa-file-o",
@@ -338,7 +338,8 @@ function miradorAddZoomer() {
 
    if(!jQ(".mirador-main-menu #zoomer").length) {
 
-      jQ(".user-buttons.mirador-main-menu li:nth-last-child(2)").before('<li><input oninput="javascript:eval(\'window.setZoom(this.value)\');" type="range" min="0" max="1" step="0.01" value="0" id="zoomer"/></li>')
+      jQ(".user-buttons.mirador-main-menu li:nth-last-child(2)")
+      .before('<li><input title="Adjust zoom level" oninput="javascript:eval(\'window.setZoom(this.value)\');" type="range" min="0" max="1" step="0.01" value="0" id="zoomer"/></li>')
 
       window.setZoom = (val) => {
 
