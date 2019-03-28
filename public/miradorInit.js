@@ -1,7 +1,7 @@
 
-import {miradorConfig,miradorSetUI} from "./src/lib/miradorSetup.js"
-
 const bdr = "http://purl.bdrc.io/resource/"
+
+let miradorConfig, miradorSetUI
 
 async function init() {
 
@@ -66,4 +66,14 @@ async function init() {
    miradorSetUI();
 }
 
-init()
+let waiter = setInterval( async ()=>{
+   console.log("waiting")
+
+   if(_ && window.jsEWTS) {
+      clearInterval(waiter);
+      miradorConfig = window.miradorConfig
+      miradorSetUI  = window.miradorSetUI
+      init();
+   }
+
+},100)

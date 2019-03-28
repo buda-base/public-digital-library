@@ -1,28 +1,34 @@
 
 
-//import {sortLangScriptLabels, extendedPresets} from './language.js';
+let jQ,extendedPresets,sortLangScriptLabels
 
-let jQ ;
-
-let loadJQuery = async () => {
+let importModules = async () => {
    try {
       const val = await require("jquery")
       console.log("jQ",val)
-      jQ = val //.default ;
+      jQ = val //.default
+
+      require(['./transliterators.js'],(module) => {
+         sortLangScriptLabels = module.sortLangScriptLabels
+         extendedPresets = module.extendedPresets ;
+      });
    }
    catch(e)
    {
       jQ = window.jQuery
    }
+
+
 }
-loadJQuery();
+importModules();
+
 
 let timerConf, scrollTimer, scrollTimer2, clickTimer
 
 export function miradorSetUI(closeCollec)
 {
    if(closeCollec == undefined) closeCollec = true
-   if(!jQ) loadJQuery()
+   if(!jQ) importModules()
 
    clearInterval(scrollTimer)
    clearInterval(scrollTimer2)
@@ -101,6 +107,11 @@ export function miradorSetUI(closeCollec)
 
 export function miradorConfig(data, manifest, canvasID)
 {
+   let _extendedPresets = extendedPresets
+   if(!_extendedPresets) _extendedPresets = window.extendedPresets
+   let _sortLangScriptLabels = sortLangScriptLabels
+   if(!_sortLangScriptLabels) _sortLangScriptLabels = window.sortLangScriptLabels
+
    let config = {
       id:"viewer",
       data: [],
@@ -111,21 +122,24 @@ export function miradorConfig(data, manifest, canvasID)
         name: "Collection Tree Manifests Panel",
         module: "CollectionTreeManifestsPanel",
         options: {
-            labelToString: (label) => {
-               /*
-               let langs = extendedPresets([ "bo", "zh-hans" ])
-               let sortLabels =  sortLangScriptLabels(labels,langs.flat,langs.translit)
-               let label = sortLabels[0]
-               if(label["@value"]) return label["@value"]+"@"+label["@language"]
-               if(label["value"]) return label["value"]+"@"+label["language"]
-               else return label
-               */
+            labelToString: (labels) => {
 
+               // we assume bo-x-ewts on unlocalized labels...
+               if(typeof labels == "string") labels = [ { "@value": labels, "@language":"bo-x-ewts" } ]
+
+               let langs = _extendedPresets([ "bo", "zh-hans" ])
+               let sortLabels = _sortLangScriptLabels(labels,langs.flat,langs.translit)
+               let label = sortLabels[0]
+               if(label["@value"]) return label["@value"] //+"@"+label["@language"]
+               if(label["value"]) return label["value"]  //+"@"+label["language"]
+               else return label
+
+               /*
                if(Array.isArray(label)) return label.map( e => (e["@value"]?e["@value"]+"@"+e["@language"]:e)).join("; ")
                else if(label["@value"]) return label["@value"]+"@"+label["@language"]
                else if(label["value"]) return label["value"]+"@"+label["language"]
                else return label
-
+               */
 
             }
         }
@@ -419,3 +433,6 @@ function miradorInitMenu(maxWonly) {
 
    console.log("maxW",window.maxW)
 }
+
+window.miradorConfig = miradorConfig
+window.miradorSetUI  = miradorSetUI

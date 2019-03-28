@@ -14,7 +14,8 @@ import store from '../index';
 import {initiateApp} from '../state/actions';
 import tcpPortUsed from 'tcp-port-used'
 import 'whatwg-fetch'
-import {langScripts,makeLangScriptLabel,sortLangScriptLabels,transliterators, extendedPresets} from "./language"
+import {langScripts,makeLangScriptLabel} from "./language"
+import {sortLangScriptLabels,transliterators, extendedPresets} from "./transliterators"
 
 let makeRoutes = require('../routes').default
 let bdrcAPI = require('../lib/api').default;

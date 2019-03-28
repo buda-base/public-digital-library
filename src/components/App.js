@@ -51,7 +51,7 @@ import {I18n, Translate, Localize } from "react-redux-i18n" ;
 import LanguageSidePaneContainer from '../containers/LanguageSidePaneContainer';
 import ResourceViewerContainer from '../containers/ResourceViewerContainer';
 import {getEntiType} from '../lib/api';
-import {sortLangScriptLabels, extendedPresets} from '../lib/language';
+import {sortLangScriptLabels, extendedPresets} from '../lib/transliterators';
 import './App.css';
 
 const adm  = "http://purl.bdrc.io/ontology/admin/" ;
