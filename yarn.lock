@@ -7779,9 +7779,10 @@ jsesc@~0.5.0:
   resolved "https://registry.yarnpkg.com/jsesc/-/jsesc-0.5.0.tgz#e7dee66e35d6fc16f710fe91d5cf69f70f08911d"
   integrity sha1-597mbjXW/Bb3EP6R1c9p9w8IkR0=
 
-"jsewts@https://github.com/buda-base/jsewts":
+jsewts@^1.0.1:
   version "1.0.1"
-  resolved "https://github.com/buda-base/jsewts#4db6cbd95f8324801f05f945d742a2507cab100c"
+  resolved "https://registry.yarnpkg.com/jsewts/-/jsewts-1.0.1.tgz#686a26666d0310e8364c69e97e36ab3f82fdfe9d"
+  integrity sha512-oTKiaX0r3MHxJkaUfka3s3K/uAwDqBwrnoV3Ohk/k3xc6gsg58vSPtVy1bYIRnYmDlmbJ3ENgiWCErKAhzAhsQ==
 
 json-parse-better-errors@^1.0.1, json-parse-better-errors@^1.0.2:
   version "1.0.2"
