@@ -2,16 +2,32 @@
 
 let jsEWTS,Sanscript,__
 
-const importModules = async () => {
+export const importModules = async () => {
+
    try {
-      __  = await require("lodash")
-      Sanscript = await require("@sanskrit-coders/sanscript")
-      jsEWTS = await require("jsewts").default
+     __  = await require("lodash")
+     Sanscript = await require("@sanskrit-coders/sanscript")
+     jsEWTS = await require("jsewts").default
    }
    catch(e)
    {
-      jsEWTS = window.jsEWTS
-      __ = eval('_')
+     try {
+
+         if(process && process.env.NODE_ENV === 'test')
+         {
+           __  = await import("lodash")
+           Sanscript = await import("@sanskrit-coders/sanscript")
+           jsEWTS = await import("jsewts/src/jsewts.js")
+
+           //console.log(jsEWTS,__,Sanscript)
+         }
+
+     }
+     catch(f) {
+       //console.error("f",f)
+       jsEWTS = window.jsEWTS
+       __ = eval('_')
+     }
    }
 
 }

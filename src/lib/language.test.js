@@ -15,7 +15,7 @@ import {initiateApp} from '../state/actions';
 import tcpPortUsed from 'tcp-port-used'
 import 'whatwg-fetch'
 import {langScripts,makeLangScriptLabel} from "./language"
-import {sortLangScriptLabels,transliterators, extendedPresets} from "./transliterators"
+import {sortLangScriptLabels,transliterators, extendedPresets, importModules} from "./transliterators"
 
 let makeRoutes = require('../routes').default
 let bdrcAPI = require('../lib/api').default;
@@ -134,10 +134,15 @@ describe('language settings tests', () => {
    })
 
 
-   it('testing transliterators/Wylie', () => {
+   it('testing transliterators/Wylie', async (done) => {
+
+      await importModules()
 
       expect(transliterators["bo"]["bo-x-ewts"]('ཀ')).toEqual('ka')
       expect(transliterators["bo-x-ewts"]["bo"]('ka')).toEqual('ཀ')
+
+      done()
+
 
       let extPreset1 = extendedPresets(preset1)
       let extPreset2 = extendedPresets(preset2)
