@@ -15,11 +15,10 @@ export const importModules = async () => {
 
          if(process && process.env.NODE_ENV === 'test')
          {
-           __  = await import("lodash")
-           jsEWTS = await import("jsewts")
-           Sanscript = await import("@sanskrit-coders/sanscript")
+           __  = await require("lodash")
+           jsEWTS = await require("jsewts")
+           Sanscript = await require("@sanskrit-coders/sanscript")
            console.log("modules?",jsEWTS,__,Sanscript)
-
          }
 
      }
