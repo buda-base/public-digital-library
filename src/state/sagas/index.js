@@ -365,13 +365,9 @@ async function getManifest(url,iri) {
                   image = manif.sequences[0].canvases[2].images[0].resource["@id"]
                   let h = manif.sequences[0].canvases[2].images[0].resource["height"]
                   canvasID = manif.sequences[0].canvases[2]["@id"]
-
-                  console.log("image",image,canvasID,h)
-
                   found = true ;
-
+                  if(h > 600) image = image.replace(/(full|max)[/]0/,",600/0")
                   let test = await api.getURLContents(image)
-                  if(h > 600) image = image.replace(/full[/]0/,",600/0")
                   store.dispatch(dataActions.firstImage(image,iri,canvasID,collecManif,manifests))
 
                   break ;
@@ -397,9 +393,9 @@ async function getManifest(url,iri) {
             (image = manif.sequences[0].canvases[0].images[0].resource["@id"]))
             {
                canvasID = manif.sequences[0].canvases[0]["@id"]
-               let test = await api.getURLContents(image)
                let h = manif.sequences[0].canvases[0].images[0].resource["height"]
-               if(h > 600) image = image.replace(/full[/]0/,",600/0")
+               if(h > 600) image = image.replace(/(full|max)[/]0/,",600/0")
+               let test = await api.getURLContents(image)
                store.dispatch(dataActions.firstImage(image,iri,canvasID,collecManif,manifests))
             }
          }

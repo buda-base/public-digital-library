@@ -109,9 +109,6 @@
       "whatwg-fetch": "^3.0.0"
    },
    "jest": {
-      "transformIgnorePatterns": [
-         "/node_modules/"
-      ],
       "transform": {
          "^.+\\.js$": "babel-jest"
       },
