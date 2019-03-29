@@ -141,9 +141,6 @@ describe('language settings tests', () => {
       expect(transliterators["bo"]["bo-x-ewts"]('ཀ')).toEqual('ka')
       expect(transliterators["bo-x-ewts"]["bo"]('ka')).toEqual('ཀ')
 
-      done()
-
-
       let extPreset1 = extendedPresets(preset1)
       let extPreset2 = extendedPresets(preset2)
       let extPreset3 = extendedPresets(preset3)
@@ -175,6 +172,6 @@ describe('language settings tests', () => {
       let extSortResultsJsonld1 = sortLangScriptLabels(jsonldLabels1, extPreset3.flat, extPreset3.translit)
       expect(extSortResultsJsonld1).toEqual(extSortJsonld1);
 
-
+      done()
    })
 })
