@@ -1,4 +1,5 @@
 // @flow
+import Script from 'react-load-script';
 import AppContainer from './containers/AppContainer';
 import React, { Component } from 'react';
 import { Switch, Route, Router } from 'react-router-dom';
@@ -9,6 +10,7 @@ import { Provider } from 'react-redux';
 import ResourceViewerContainer from './containers/ResourceViewerContainer'
 import IIIFViewerContainer from './containers/IIIFViewerContainer'
 import IIIFCookieLogin from './lib/IIIFCookieLogin';
+import {miradorSetUI, miradorConfig, miradorInitView} from './lib/miradorSetup';
 import { initiateApp } from './state/actions';
 
 import store from './index';
@@ -191,8 +193,19 @@ const makeMainRoutes = () => {
                            store.dispatch(initiateApp(qs.parse(history.location.search)))
                         }
                         return ( <AppContainer history={history}  auth={auth}/> ) } } />
-                     <Route path="/gallery" render={(props) =>
-                        <IIIFViewerContainer location={history.location} history={history}  auth={auth}/> }/>
+                     <Route path="/view/:IRI" render={(props) =>
+                        {
+                           console.log("props",props)
+
+                           miradorInitView(props);
+
+                           return [
+                                    <div id="viewer"></div>,
+                                    <link rel="stylesheet" type="text/css" href="../scripts/mirador/css/mirador-combined.css"/>,
+                                    <Script url={"../scripts/mirador/mirador.js"} />
+                                 ]
+                        }
+                     }/>
                      <Route path="/show/:IRI" render={(props) => {
                         //if(!store.getState().data.resources || !store.getState().data.resources[props.match.params.IRI]
                         //   || !store.getState().data.assocResources || !store.getState().data.assocResources[props.match.params.IRI])
