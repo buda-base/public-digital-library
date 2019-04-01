@@ -9,15 +9,24 @@ async function init() {
       { "collectionUri": "tibcolldemo2.json", location: "BDRC - Palpung Collection"}
    ]
    const urlParams = new URLSearchParams(window.location.search);
+   const id = urlParams.get('id');
    const work = urlParams.get('work');
-   if(work) {
+   if(id) {
+      let tag
+      if(id.match) {
+         if(id.match(/manifest$/)) tag = "manifestUri"
+         else if(id.match(/collection/)) tag = "collectionUri"
+         if(tag) data = [
+            { [tag] : id }
+         ]
+      }
+
+   }
+   else if(work) {
       console.log("work",work)
 
       const resData = await(await fetch("http://purl.bdrc.io/graph/Resgraph?I_LIM=500&R_RES="+work+"&format=jsonld")).json()
       console.log(resData)
-      let assocResData = await(await fetch("http://purl.bdrc.io/lib/allAssocResource?R_RES="+work)).json()
-      if(assocResData && assocResData.data) assocResData = assocResData.data
-      console.log(assocResData)
 
       let propK ;
       if(resData.status && resData.status == 404) { console.log("echec",work)}
@@ -26,13 +35,20 @@ async function init() {
       console.log("pK",propK)
       if(propK)
       {
-         if(propK["workHasItem"]) {
-            const item = propK["workHasItem"]
+         if(propK["workHasItemImageAsset"]) { //workHasItemImageAsset
+
+            const item = propK["workHasItemImageAsset"]
+
+            let assocResData = await(await fetch("http://purl.bdrc.io/lib/allAssocResource?R_RES="+work)).json()
+            if(assocResData && assocResData.data) assocResData = assocResData.data
+            console.log(assocResData)
+
             const vol = assocResData[item.replace(/bdr:/,bdr)]
             console.log("vol",vol)
+
             if(vol.length > 1) {
                data = [
-                  { "collectionUri" : "http://iiifpres.bdrc.io"+"/2.1.1/collection/i:"+item, location:"" }
+                  { "collectionUri" : "http://iiifpres.bdrc.io"+"/2.1.1/collection/wio:"+work, location:"" }
                ]
             }
             else {
