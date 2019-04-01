@@ -124,8 +124,9 @@ export function miradorConfig(data, manifest, canvasID)
         options: {
             labelToString: (labels) => {
 
-               // we assume bo-x-ewts on unlocalized labels...
-               if(typeof labels == "string") labels = [ { "@value": labels, "@language":"bo-x-ewts" } ]
+               // dont assume bo-x-ewts on unlocalized labels...
+               // if(typeof labels == "string") labels = [ { "@value": labels, "@language":"bo-x-ewts" } ]
+               if(typeof labels == "string") return labels
 
                let langs = _extendedPresets([ "bo", "zh-hans" ])
                let sortLabels = _sortLangScriptLabels(labels,langs.flat,langs.translit)
