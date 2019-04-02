@@ -345,13 +345,15 @@ async function getManifest(url,iri) {
       //collection ?
       if(!manif.sequences ) {
          while (!manif.manifests && manif.collections) {
+            if(!collecManif) collecManif = manif.collections[0]["@id"]
             manif = await api.loadManifest(manif.collections[0]["@id"]);
          }
          if (manif.manifests) {
             let isSingle ;
-            if(manif.manifests.length === 1) isSingle = true ;
+            if(!collecManif && manif.manifests.length === 1) isSingle = true ;
             else manifests = manif.manifests
-            manif = await api.loadManifest(collecManif = manif.manifests[0]["@id"]);
+            if(!collecManif) collecManif = manif.manifests[0]["@id"]
+            manif = await api.loadManifest(manif.manifests[0]["@id"]);
             if(!isSingle) collecManif = null  //manif.manifests[0]["@id"]
          }
          else throw new Error("collection without manifest list")
