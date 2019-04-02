@@ -344,6 +344,9 @@ async function getManifest(url,iri) {
       let manifests
       //collection ?
       if(!manif.sequences ) {
+         while (!manif.manifests && manif.collections) {
+            manif = await api.loadManifest(manif.collections[0]["@id"]);
+         }
          if (manif.manifests) {
             let isSingle ;
             if(manif.manifests.length === 1) isSingle = true ;

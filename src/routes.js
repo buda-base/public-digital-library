@@ -196,7 +196,7 @@ const makeMainRoutes = () => {
                         return ( <AppContainer history={history}  auth={auth}/> ) } } />
                      <Route path="/view/:IRI" render={(props) =>
                         {
-                        
+
                            console.log("props",props)
 
                            miradorInitView(props);
@@ -204,7 +204,7 @@ const makeMainRoutes = () => {
                            return [
                                     <div id="viewer" class="view"></div>,
                                     <link rel="stylesheet" type="text/css" href="../scripts/mirador/css/mirador-combined.css"/>,
-                                    <link rel="stylesheet" type="text/css" href="../scripts/src/components/App.css"/>,
+                                    <link rel="stylesheet" type="text/css" href="../scripts/src/lib/mirador.css"/>,
                                     <Script url={"../scripts/mirador/mirador.js"} />
                                  ]
                         }

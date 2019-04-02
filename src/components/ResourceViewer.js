@@ -1667,7 +1667,7 @@ class ResourceViewer extends Component<Props,State>
                this.setState({...this.state, imageLoaded:false})
 
                if(assoc.length == 1) { this.props.onHasImageAsset(iiifpres+"/2.1.1/v:bdr:"+this.pretty(assoc[0].value,true)+"/manifest",this.props.IRI); }
-               else { this.props.onHasImageAsset(iiifpres+"/2.1.1/collection/i:bdr:"+this.pretty(e.value,true),this.props.IRI);  }
+               else { this.props.onHasImageAsset(iiifpres+"/2.1.1/collection/wio:"+this.pretty(this.props.IRI,true),this.props.IRI);  }
 
             }
          }
@@ -2335,6 +2335,7 @@ class ResourceViewer extends Component<Props,State>
                   //<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/mirador@2.7.2/dist/css/mirador-combined.css"/>,
                   //<Script url={"https://cdn.jsdelivr.net/npm/mirador@2.7.2/dist/mirador.js"}/>]
                   <link rel="stylesheet" type="text/css" href="../scripts/mirador/css/mirador-combined.css"/>,
+                  <link rel="stylesheet" type="text/css" href="../scripts/src/lib/mirador.css"/>,
                   <Script url={"../scripts/mirador/mirador.js"} />]
                   //<Script url={"http://library-dev.bdrc.io/scripts/mirador/mirador.js"} onLoad={()=>{$("#fond").addClass("hidden")}} />]
                }

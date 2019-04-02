@@ -235,24 +235,21 @@ function miradorAddClick(firstInit){
 
                   item.addClass("setClick");
 
-                  item.find(".preview-image").click( (e) => {
 
+                  item.find(".preview-image").click( (e) => {
+                     /*
                      miradorInitMenu()
 
                      jQ(".mirador-container .mirador-main-menu li a").removeClass('selec');
                      jQ(".mirador-container .mirador-main-menu li a .fa-file-o").parent().addClass('selec');
                      jQ(".user-buttons.mirador-main-menu").find("li:nth-last-child(3),li:nth-last-child(4)").addClass('off')
-
-                     /*
-                     e.stopPropagation()
-                     e.preventDefault()
-                     return false
                      */
-                  })
+                  //})
+                  //item.addClass("setClick").click(() => {
 
-                  item.addClass("setClick").click(() => {
+                     miradorInitMenu()
 
-                     jQ(".mirador-viewer li.scroll-option").click();
+                     //jQ(".mirador-viewer li.scroll-option").click();
                      jQ(".mirador-container .mirador-main-menu li a").removeClass('selec');
                      jQ(".mirador-container .mirador-main-menu li a .fa-align-center").parent().addClass('selec');
                      jQ(".user-buttons.mirador-main-menu li.off").removeClass('off')
@@ -276,7 +273,6 @@ function miradorAddClick(firstInit){
                                  jQ(".user-buttons.mirador-main-menu").find("li:nth-last-child(3),li:nth-last-child(4)").addClass('off')
                               })
 
-                              miradorInitMenu()
 
                            }, 1000);
 
@@ -469,9 +465,12 @@ export async function miradorInitView(props) {
             console.log(assocData)
 
             let hasParts = assocData.filter(e => e.hasParts)[0]
-            if(hasParts && hasParts.value) hasParts = hasParts.value === "true"
+            if(hasParts && hasParts["hasParts"] && hasParts["hasParts"].value) hasParts = hasParts["hasParts"].value === "true"
             let nbVol = assocData.filter(e => e.nbVolumes)[0]
-            if(nbVol && nbVol.value) nbVol = Number(nbVol.value)
+            if(nbVol && nbVol["nbVolumes"] && nbVol["nbVolumes"].value) nbVol = Number(nbVol["nbVolumes"].value)
+
+            console.log(nbVol,hasParts)
+
             if( hasParts == true || nbVol > 1 ) {
                data = [
                   { "collectionUri" : "http://iiifpres.bdrc.io"+"/2.1.1/collection/wio:"+work, location:"" }
