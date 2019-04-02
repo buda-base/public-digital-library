@@ -463,21 +463,23 @@ export async function miradorInitView(props) {
 
             const item = propK["workHasItemImageAsset"]
 
-            let assocResData = await(await fetch("http://purl.bdrc.io/lib/allAssocResource?R_RES="+work)).json()
-            if(assocResData && assocResData.data) assocResData = assocResData.data
-            console.log(assocResData)
+            let assocData = await(await fetch("http://purl.bdrc.io/query/IIIFView-workInfo?R_RES="+work+"&format=json")).json()
+            if(assocData && assocData.results && assocData.results.bindings)
+              assocData = assocData.results.bindings
+            console.log(assocData)
 
-            const vol = assocResData[item.replace(/bdr:/,bdr)]
-            console.log("vol",vol)
-
-            if(vol.length > 1) {
+            let hasParts = assocData.filter(e => e.hasParts)[0]
+            if(hasParts && hasParts.value) hasParts = hasParts.value === "true"
+            let nbVol = assocData.filter(e => e.nbVolumes)[0]
+            if(nbVol && nbVol.value) nbVol = Number(nbVol.value)
+            if( hasParts == true || nbVol > 1 ) {
                data = [
                   { "collectionUri" : "http://iiifpres.bdrc.io"+"/2.1.1/collection/wio:"+work, location:"" }
                ]
             }
             else {
                data = [
-                  { "manifestUri" : "http://iiifpres.bdrc.io"+"/2.1.1/v:bdr:"+vol[0]["value"].replace(new RegExp(bdr),"")+"/manifest", location:"" }
+                  { "manifestUri" : "http://iiifpres.bdrc.io"+"/2.1.1/wv:"+work+"/manifest", location:"" }
                ]
             }
          } else if(propK["imageList"]) {

@@ -18,6 +18,7 @@ import * as ui from './state/ui/actions'
 
 import qs from 'query-string'
 
+
 import Auth from './Auth.js';
 export const auth = new Auth();
 
@@ -195,13 +196,15 @@ const makeMainRoutes = () => {
                         return ( <AppContainer history={history}  auth={auth}/> ) } } />
                      <Route path="/view/:IRI" render={(props) =>
                         {
+                        
                            console.log("props",props)
 
                            miradorInitView(props);
 
                            return [
-                                    <div id="viewer"></div>,
+                                    <div id="viewer" class="view"></div>,
                                     <link rel="stylesheet" type="text/css" href="../scripts/mirador/css/mirador-combined.css"/>,
+                                    <link rel="stylesheet" type="text/css" href="../scripts/src/components/App.css"/>,
                                     <Script url={"../scripts/mirador/mirador.js"} />
                                  ]
                         }

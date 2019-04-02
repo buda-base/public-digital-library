@@ -331,7 +331,9 @@ svg.hide { opacity:0;pointer-events:none; }
 .mirador-container .mirador-main-menu li:not(.on) input,
 .mirador-container .mirador-main-menu li:not(.on):not(:last-child):not(:first-child) { opacity:0;pointer-events:none;transition:all 400ms ease-in-out; }
 .mirador-container .mirador-main-menu li a.selec {opacity:1; pointer-events:auto; }
-
+#viewer.view #manifest-select-menu .manifest-panel-controls { display:none; }
+#viewer.view #collection-tree.jstree, #viewer.view .member-select-results { border:none; }
+#viewer.view .user-buttons.mirador-main-menu li:last-child { display:none; }
 
 .App {
   text-align: center;
