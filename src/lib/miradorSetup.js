@@ -346,7 +346,8 @@ function miradorAddScroll()
             if(id) im = jQ(".scroll-view img[data-image-id='"+id.attr("data-image-id")+"']").first()
             else im = jQ(".scroll-view img[data-image-id]").first()
 
-            let imgY = im.parent().offset().top
+            let imgY = 0 ;
+            if(id) imgY = im.parent().offset().top
             console.log("y",sT,imgY,im)
 
             jQ(".scroll-view").animate({scrollTop:sT+imgY-100}
@@ -455,9 +456,9 @@ export async function miradorInitView(props) {
       console.log("pK",propK)
       if(propK)
       {
-         if(propK["workHasItemImageAsset"]) { //workHasItemImageAsset
+         if(propK["workHasItemImageAsset"] || propK["workLocation"]) { //workHasItemImageAsset
 
-            const item = propK["workHasItemImageAsset"]
+            const item = propK["workHasItemImageAsset"]?propK["workHasItemImageAsset"]:propK["workLocation"]
 
             let assocData = await(await fetch("http://purl.bdrc.io/query/IIIFView-workInfo?R_RES="+work+"&format=json")).json()
             if(assocData && assocData.results && assocData.results.bindings)
@@ -489,17 +490,15 @@ export async function miradorInitView(props) {
             data = [
                { "manifestUri" : propK["hasIIIFManifest"]["@id"], location:"" }
             ]
-         } else if(propK["workLocation"]) {
-            data = [
-               { "collectionUri" : "http://iiifpres.bdrc.io"+"/2.1.1/collection/wio:"+work, location:"" }
-            ]
          }
       }
    }
 
-   console.log("data",data)
+   let manif = data.filter(e => e.manifestUri)[0]
+   if(manif && manif.manifestUri) manif = manif.manifestUri
+   console.log("data",data,manif)
 
-   let config = miradorConfig(data);
+   let config = miradorConfig(data,manif);
 
    let initTimer = setInterval( ((cfg) => () => {
       console.log("init?",cfg,window.Mirador)

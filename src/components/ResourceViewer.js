@@ -1515,7 +1515,7 @@ class ResourceViewer extends Component<Props,State>
                if(this.props.imageAsset.match(/[/]collection[/]/) && !this.props.collecManif)
                {
                   data.push({"collectionUri": this.props.imageAsset +"?continuous=true", location:"Test Collection Location" })
-                  if(this.props.manifests) data = data.concat(this.props.manifests.map(m => ({manifestUri:m["@id"],label:m["label"]})))
+                  //if(this.props.manifests) data = data.concat(this.props.manifests.map(m => ({manifestUri:m["@id"],label:m["label"]})))
                }
                else
                {
