@@ -93,8 +93,11 @@ export default class API {
          let response = await this._fetch( url, { method:"GET",headers:new Headers(head) } )
 
          if (!response.ok) {
-             if (response.status === '404') {
+             if (response.status === 404) {
                  throw new ResourceNotFound('The resource does not exist.');
+             }
+             else if (response.status === 401) {
+                 throw new ResourceNotFound('Restricted access');
              }
              else {
                 console.error("FETCH pb",response)

@@ -12,9 +12,8 @@ class IIIFCookieLogin extends Component
        this.props.auth.setConfig(config.auth)
 
        let isAuth = isAuth = this.props.auth.isAuthenticated()
-       console.log("cookies",document.cookie,isAuth)
-
        let origin = this.props.get["origin"], messageId = this.props.get["messageId"]
+       console.log("cookies",document.cookie,isAuth,origin,messageId)
        let error, description
        if(!origin || !messageId) {
           error = "invalidRequest"
