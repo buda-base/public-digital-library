@@ -815,7 +815,7 @@ class App extends Component<Props,State> {
 
    makeResult(id,n,t,lit,lang,tip,Tag,url)
    {
-      console.log("res",id,n,t,lit,lang,tip,Tag)
+      //console.log("res",id,n,t,lit,lang,tip,Tag)
 
       if(!id.match(/[:/]/)) id = "bdr:" +id
 

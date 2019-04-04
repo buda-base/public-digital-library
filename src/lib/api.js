@@ -66,10 +66,10 @@ export default class API {
            else this._fetch = window.fetch.bind(window);
         }
 
-        console.log("api options",options)
+        console.log("api options",options,this,process.env.NODE_ENV)
       }
 
-     async getURLContents(url: string, minSize : boolean = true,acc?:string,lang?:string[]): Promise<string> {
+     async getURLContents(url: string, minSize : boolean = true,acc?:string,lang?:string[],binary:boolean=false): Promise<string> {
 
          const { isAuthenticated } = auth;
 
@@ -86,7 +86,7 @@ export default class API {
 
          // CORS issue - to be continued
          if(isAuthenticated() && url.match(/bdrc[.]io/))
-            head = { ...head, "Authorization":"bearer "+id_token}
+            head = { ...head, "Authorization":"bearer "+id_token }
 
          //console.log(new Headers(head),head,lang)
 
@@ -104,13 +104,17 @@ export default class API {
 
          //console.log("FETCH ok",url,response)
 
-         let text = await response.text()
-
-         //console.log("RESPONSE text",text)
-
-         if(minSize && text.length <= 553) { throw new ResourceNotFound('The resource does not exist.'); }
-
-         return text ;
+         if(!binary) {
+            let text = await response.text()
+            //console.log("RESPONSE text",text)
+            if(minSize && text.length <= 553) { throw new ResourceNotFound('The resource does not exist.'); }
+            return text ;
+         }
+         else {
+            let buffer = await response.arrayBuffer() ;
+            console.log("buffer",buffer,response)
+            return buffer
+         }
       }
 
 /*
@@ -338,14 +342,16 @@ export default class API {
       {// header pour accéder aux résultat en JSON !
          method: method,
          ...( method == "POST" && {body:body} ),//body:body,
-         headers:new Headers({
+         headers: new Headers({
             "Accept": accept,
             ...other,
             // CORS issue - to be continued
-            ...( isAuthenticated() && {"Authorization":"bearer "+id_token}),
+            ...( isAuthenticated() && {"Authorization":"bearer "+id_token } ),
          ...( method == "POST" && {"Content-Type": "application/x-www-form-urlencoded"})
-        })
+         })
       })
+
+      console.log("apres fetch",response)
 
       if (!response.ok) {
          if (response.status === '404') {
