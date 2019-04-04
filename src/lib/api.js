@@ -327,7 +327,7 @@ export default class API {
                      .map(e => encodeURIComponent(e[0]) + "=" + encodeURIComponent(e[1]))
                      .join('&')
 
-      console.log("body",body);
+      console.log("body",body,param);
 
       const access_token = localStorage.getItem('access_token');
       const id_token = localStorage.getItem('id_token');

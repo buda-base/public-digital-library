@@ -314,6 +314,8 @@ class App extends Component<Props,State> {
 
       if(!key || key == "" || !key.match) return ;
       if(!key.match(/:/) && key.indexOf("\"") === -1) key = "\""+key+"\""
+      key = encodeURIComponent(key) // prevent from losing '+' when adding it to url
+
 
       let state = { ...this.state, dataSource:[] }
       //this.setState(state)
