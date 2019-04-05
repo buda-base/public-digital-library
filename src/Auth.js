@@ -125,8 +125,8 @@ export default class Auth {
           history.replace(redirect);
           store.dispatch(ui.logEvent(false))
 
-         let cookie = await api.getURLContents(iiif.endpoints[iiif.index]+"/setcookie",false)
-         console.log("cookie",cookie)
+         //let cookie = await api.getURLContents(iiif.endpoints[iiif.index]+"/setcookie",false)
+         //console.log("cookie",cookie)
 
           clearTimeout(tokenRenewalTimeout);
      })(this.iiif,this.api),delay)
