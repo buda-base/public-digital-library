@@ -53,9 +53,14 @@ export default class Auth {
 
    auth1 : WebAuth ;
 
-  setConfig(config)
+  async setConfig(config,iiif,api)
   {
      this.auth1 = new auth0.WebAuth(config)
+     console.log("auth1",this.isAuthenticated())
+     if(this.isAuthenticated() && iiif && api) {
+        let cookie = await api.getURLContents(iiif.endpoints[iiif.index]+"/setcookie",false)
+        console.log("cookie",cookie)
+     }
   }
 
   login(redirect) {
@@ -74,13 +79,15 @@ export default class Auth {
     this.setConfig.bind(this)
   }
 
-  handleAuthentication() {
-    this.auth1.parseHash((err, authResult) => {
+  handleAuthentication(api,iiif) {
+    this.auth1.parseHash(async (err, authResult) => {
       if (authResult && authResult.accessToken && authResult.idToken) {
         this.setSession(authResult);
         let redirect = JSON.parse(localStorage.getItem('auth0_redirect'))
         if(!redirect) redirect = '/'
         history.replace(redirect);
+        let cookie = await api.getURLContents(iiif.endpoints[iiif.index])
+        console.log("cookie set",cookie)
         //store.dispatch(ui.loggedIn())
       } else if (err) {
         history.replace('/');
@@ -95,8 +102,7 @@ export default class Auth {
     localStorage.setItem('access_token', authResult.accessToken);
     localStorage.setItem('id_token', authResult.idToken);
     localStorage.setItem('expires_at', expiresAt);
-    // navigate to the home route
-    history.replace('/');
+
   }
 
   logout(redirect:{}|string='/', delay:number=1000) {

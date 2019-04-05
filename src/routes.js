@@ -103,7 +103,7 @@ export class Redirect404 extends Component<Props>
       return (<div style={{textAlign:"center",marginTop:"100px",fontSize:"22px"}}>
          { message }
          <br/>
-         Redirecting... 
+         Redirecting...
       </div>)
 
    }
@@ -149,7 +149,7 @@ const makeMainRoutes = () => {
                            window.parent.postMessage(
                            {
                              messageId,
-                             "accessToken": localStorage.getItem('access_token'),
+                             "accessToken": localStorage.getItem('id_token'),
                              "expiresIn": 3600
                            },
                               origin

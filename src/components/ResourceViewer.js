@@ -2304,7 +2304,7 @@ class ResourceViewer extends Component<Props,State>
                   !this.props.manifestError &&  this.props.imageAsset  && //!this.state.openUV &&
                   <div className={"uvDefault "+(this.state.imageLoaded?"loaded":"")} >
                      <Loader className="uvLoader" loaded={this.state.imageLoaded} color="#fff"/>
-                     { this.props.imgData && <img /*src={this.props.firstImage}*/ src={`data:image/${this.props.firstImage.match(/png$/)?'png':'jpeg'};base64,${this.props.imgData}`}  onLoad={(e)=>this.setState({...this.state,imageLoaded:true})}/> }
+                     { this.props.firstImage && <img src={this.props.firstImage} /*src={`data:image/${this.props.firstImage.match(/png$/)?'png':'jpeg'};base64,${this.props.imgData}`}*/  onLoad={(e)=>this.setState({...this.state,imageLoaded:true})}/> }
                      {
                         this.props.firstImage && this.state.imageLoaded &&
                         <div id="title">
