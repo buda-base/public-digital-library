@@ -130,18 +130,24 @@ export default class Auth {
   logout(redirect:{}|string='/', delay:number=1000) {
      setTimeout(((iiif,api) => async () => {
 
-          // Clear Access Token and ID Token from local storage
-          localStorage.removeItem('access_token');
-          localStorage.removeItem('id_token');
-          localStorage.removeItem('expires_at');
-          // navigate to previous route if any
-          history.replace(redirect);
-          store.dispatch(ui.logEvent(false))
+         // Clear Access Token and ID Token from local storage
+         localStorage.removeItem('access_token');
+         localStorage.removeItem('id_token');
+         localStorage.removeItem('expires_at');
+         // navigate to previous route if any
+         history.replace(redirect);
+         store.dispatch(ui.logEvent(false))
 
-         //let cookie = await api.getURLContents(iiif.endpoints[iiif.index]+"/setcookie",false)
-         //console.log("cookie",cookie)
+         try {
+            let cookie = await api.getURLContents(iiif.endpoints[iiif.index]+"/setcookie",false)
+            console.log("unset cookie",cookie)
+         }
+         catch(e)
+         {
+            console.error("ERROR with cookie",e)
+         }
 
-          clearTimeout(tokenRenewalTimeout);
+ clearTimeout(tokenRenewalTimeout);
      })(this.iiif,this.api),delay)
   }
 
