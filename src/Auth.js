@@ -8,7 +8,7 @@ var tokenRenewalTimeout;
 
 function scheduleRenewal() {
   var token = localStorage.getItem('expires_at')
-  if(!token) return 
+  if(!token) return
   var expiresAt = JSON.parse(token) - 5*60*1000 ;
   var delay = expiresAt - Date.now();
   console.log("delay",delay)
@@ -53,14 +53,16 @@ export default class Auth {
 
    auth1 : WebAuth ;
 
-
   setConfig(config)
   {
      this.auth1 = new auth0.WebAuth(config)
   }
 
-  login() {
+  login(redirect) {
      // console.log("auth1",this.auth1,auth0)
+    console.log("redirect",redirect)
+    if(redirect) localStorage.setItem('auth0_redirect', JSON.stringify(redirect));
+    else localStorage.setItem('auth0_redirect', '/');
     this.auth1.authorize();
   }
 
@@ -76,7 +78,9 @@ export default class Auth {
     this.auth1.parseHash((err, authResult) => {
       if (authResult && authResult.accessToken && authResult.idToken) {
         this.setSession(authResult);
-        history.replace('/');
+        let redirect = JSON.parse(localStorage.getItem('auth0_redirect'))
+        if(!redirect) redirect = '/'
+        history.replace(redirect);
         //store.dispatch(ui.loggedIn())
       } else if (err) {
         history.replace('/');
@@ -95,15 +99,15 @@ export default class Auth {
     history.replace('/');
   }
 
-  logout(delay:number=10) {
+  logout(redirect:{}|string='/', delay:number=1000) {
      setTimeout(function() {
 
           // Clear Access Token and ID Token from local storage
           localStorage.removeItem('access_token');
           localStorage.removeItem('id_token');
           localStorage.removeItem('expires_at');
-          // navigate to the home route
-          history.replace('/');
+          // navigate to previous route if any
+          history.replace(redirect);
           store.dispatch(ui.logEvent(false))
           clearTimeout(tokenRenewalTimeout);
      },delay)

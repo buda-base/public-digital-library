@@ -103,7 +103,7 @@ export class Redirect404 extends Component<Props>
       return (<div style={{textAlign:"center",marginTop:"100px",fontSize:"22px"}}>
          { message }
          <br/>
-         Redirecting to homepage
+         Redirecting... 
       </div>)
 
    }
@@ -128,7 +128,7 @@ const makeMainRoutes = () => {
                         store.dispatch(ui.logEvent(true));
                         return (
                            <div style={{textAlign:"center",marginTop:"100px",fontSize:"22px"}}>
-                              Redirecting to homepage
+                              Redirecting...
                            </div>
                         )
                      }}/>
@@ -138,7 +138,7 @@ const makeMainRoutes = () => {
                      } } />
                      */}
                      <Route exact path="/iiifcookielogin" render={(props) => {
-                        return (<IIIFCookieLogin auth={auth} get={qs.parse(history.location.search)}/>)
+                        return (<IIIFCookieLogin auth={auth} history={history} get={qs.parse(history.location.search)}/>)
                      } } />
                      <Route exact path="/iiiftoken" render={(props) => {
                         let get = qs.parse(history.location.search), messageId = get["messageId"], origin = get["origin"],
@@ -174,11 +174,11 @@ const makeMainRoutes = () => {
                         return (<div/>)
                      }}/>
                      <Route exact path="/logout" render={(props) => {
-                        auth.logout(1000);
+                        auth.logout(this.props.history.location,1000);
                         return (
                            <div style={{textAlign:"center",marginTop:"100px",fontSize:"22px"}}>
                               You have been logged out <br/>
-                              Redirecting to homepage
+                              Redirecting...
                            </div>
                         )
                      }}/>

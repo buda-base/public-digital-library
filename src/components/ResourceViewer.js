@@ -2328,7 +2328,7 @@ class ResourceViewer extends Component<Props,State>
                }
                {
                   this.props.manifestError && this.props.manifestError.error.message.match(/Restricted access/) &&
-                  <h3><span style={{textTransform:"none"}}>Please <u>login</u> to get access to images from this work.</span></h3>
+                  <h3><span style={{textTransform:"none"}}>Please <a class="login" onClick={this.props.auth.login.bind(this,this.props.history.location)}>login</a> to get access to images from this work.</span></h3>
                }
                {
                   !this.props.manifestError && this.props.imageAsset && this.state.openMirador  &&

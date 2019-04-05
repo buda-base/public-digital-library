@@ -596,11 +596,11 @@ class App extends Component<Props,State> {
 
 
    login() {
-      this.props.auth.login();
+      this.props.auth.login(this.props.history.location);
    }
 
    logout() {
-      this.props.auth.logout();
+      this.props.auth.logout(this.props.history.location);
    }
 
    handleLanguage = event => {
