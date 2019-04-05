@@ -87,7 +87,7 @@ export default class API {
          // CORS issue - to be continued
          let xhrArgs
          if(isAuthenticated() && url.match(/bdrc[.]io/)) {
-            if(url.match(/setcookie/)) xhrArgs = { credentials: 'include', 'mode':'no-cors'}
+            if(url.match(/setcookie/)) xhrArgs = { credentials: 'include' } //, 'mode':'no-cors'}
             head = { ...head, "Authorization":"bearer "+id_token, ...xhrArgs }
          }
 
