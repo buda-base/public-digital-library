@@ -88,7 +88,7 @@ export default class API {
          if(isAuthenticated() && url.match(/bdrc[.]io/))
             head = { ...head, "Authorization":"bearer "+id_token }
 
-         //console.log(new Headers(head),head,lang)
+         console.log(new Headers(head),head,lang)
 
          let response = await this._fetch( url, { method:"GET",headers:new Headers(head) } )
 
@@ -105,7 +105,16 @@ export default class API {
              }
          }
 
-         //console.log("FETCH ok",url,response)
+         console.log("FETCH ok",url,response )
+         for(let c of response.headers.keys()) {
+            console.log(c,response.headers.get(c))
+         }
+         /*
+         let cookie = response.headers.get("Set-Cookie")
+         if(cookie) {
+            console.log("cookie!",cookie)
+         }
+         */
 
          if(!binary) {
             let text = await response.text()

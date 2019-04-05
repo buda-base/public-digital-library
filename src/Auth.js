@@ -52,11 +52,16 @@ window.addEventListener('load', function() {
 export default class Auth {
 
    auth1 : WebAuth ;
+   iiif:{};
+   api:{};
 
   async setConfig(config,iiif,api)
   {
      this.auth1 = new auth0.WebAuth(config)
      console.log("auth1",this.isAuthenticated())
+     this.iiif = iiif
+     this.api = api
+
      if(this.isAuthenticated() && iiif && api) {
         let cookie = await api.getURLContents(iiif.endpoints[iiif.index]+"/setcookie",false)
         console.log("cookie",cookie)
@@ -79,15 +84,13 @@ export default class Auth {
     this.setConfig.bind(this)
   }
 
-  handleAuthentication(api,iiif) {
+  handleAuthentication() {
     this.auth1.parseHash(async (err, authResult) => {
       if (authResult && authResult.accessToken && authResult.idToken) {
         this.setSession(authResult);
         let redirect = JSON.parse(localStorage.getItem('auth0_redirect'))
         if(!redirect) redirect = '/'
         history.replace(redirect);
-        let cookie = await api.getURLContents(iiif.endpoints[iiif.index])
-        console.log("cookie set",cookie)
         //store.dispatch(ui.loggedIn())
       } else if (err) {
         history.replace('/');
@@ -96,17 +99,23 @@ export default class Auth {
     });
   }
 
-  setSession(authResult) {
+  async setSession(authResult) {
     // Set the time that the Access Token will expire at
     let expiresAt = JSON.stringify((authResult.expiresIn * 1000) + new Date().getTime());
     localStorage.setItem('access_token', authResult.accessToken);
     localStorage.setItem('id_token', authResult.idToken);
     localStorage.setItem('expires_at', expiresAt);
 
+    console.log("session")
+    if(this.isAuthenticated() && this.iiif && this.api) {
+      let cookie = await this.api.getURLContents(this.iiif.endpoints[this.iiif.index]+"/setcookie",false)
+      console.log("cookie",cookie)
+    }
+
   }
 
   logout(redirect:{}|string='/', delay:number=1000) {
-     setTimeout(function() {
+     setTimeout(((iiif,api) => async () => {
 
           // Clear Access Token and ID Token from local storage
           localStorage.removeItem('access_token');
@@ -115,8 +124,12 @@ export default class Auth {
           // navigate to previous route if any
           history.replace(redirect);
           store.dispatch(ui.logEvent(false))
+
+         let cookie = await api.getURLContents(iiif.endpoints[iiif.index]+"/setcookie",false)
+         console.log("cookie",cookie)
+
           clearTimeout(tokenRenewalTimeout);
-     },delay)
+     })(this.iiif,this.api),delay)
   }
 
   isAuthenticated() {
