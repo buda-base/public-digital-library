@@ -63,8 +63,15 @@ export default class Auth {
      this.api = api
 
      if(this.isAuthenticated() && iiif && api) {
-        let cookie = await api.getURLContents(iiif.endpoints[iiif.index]+"/setcookie",false)
-        console.log("cookie",cookie)
+
+         try{
+            let cookie = await api.getURLContents(iiif.endpoints[iiif.index]+"/setcookie",false)
+            console.log("cookie",cookie)
+         }
+         catch(e)
+         {
+          console.error("ERROR with cookie",e)
+         }
      }
   }
 
@@ -108,8 +115,14 @@ export default class Auth {
 
     console.log("session")
     if(this.isAuthenticated() && this.iiif && this.api) {
-      let cookie = await this.api.getURLContents(this.iiif.endpoints[this.iiif.index]+"/setcookie",false)
-      console.log("cookie",cookie)
+      try {
+         let cookie = await this.api.getURLContents(this.iiif.endpoints[this.iiif.index]+"/setcookie",false)
+         console.log("cookie",cookie)
+      }
+      catch(e)
+      {
+         console.error("ERROR with cookie",e)
+      }
     }
 
   }
