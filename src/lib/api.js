@@ -85,12 +85,15 @@ export default class API {
          if(lang) head = { ...head, "Accept-Language":lang.join(",") }
 
          // CORS issue - to be continued
-         if(isAuthenticated() && url.match(/bdrc[.]io/))
-            head = { ...head, "Authorization":"bearer "+id_token }
+         let xhrArgs
+         if(isAuthenticated() && url.match(/bdrc[.]io/)) {
+            ///if(url.match(/setcookie/)) xhrArgs = { credentials: 'include'}
+            head = { ...head, "Authorization":"bearer "+id_token, ...xhrArgs }
+         }
 
          console.log(new Headers(head),head,lang)
 
-         let response = await this._fetch( url, { method:"GET",headers:new Headers(head) } )
+         let response = await this._fetch( url, { method:"GET",headers:new Headers(head), ...xhrArgs } )
 
          if (!response.ok) {
              if (response.status === 404) {
