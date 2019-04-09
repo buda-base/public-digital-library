@@ -69,7 +69,7 @@ export default class API {
         console.log("api options",options,this,process.env.NODE_ENV)
       }
 
-     async getURLContents(url: string, minSize : boolean = true,acc?:string,lang?:string[],binary:boolean=false): Promise<string> {
+     async getURLContents(url: string, minSize : boolean = true,acc?:string,lang?:string[],binary:boolean=false,cookie:string): Promise<string> {
 
          const { isAuthenticated } = auth;
 
@@ -77,7 +77,7 @@ export default class API {
          const id_token = localStorage.getItem('id_token');
          //const expires_at = localStorage.getItem('expires_at');
 
-         console.log("access",id_token,access_token,isAuthenticated(),url,minSize,acc)
+         console.log("access",id_token,access_token,isAuthenticated(),url,minSize,acc,cookie)
 
          let head = {}
          if(acc) head = { ...head, "Accept":acc }
@@ -88,7 +88,7 @@ export default class API {
          let xhrArgs
          if(isAuthenticated() && url.match(/bdrc[.]io/)) {
             if(url.match(/setcookie/)) xhrArgs = { credentials: 'include' } //, 'mode':'no-cors'}
-            head = { ...head, "Authorization":"bearer "+id_token, ...xhrArgs }
+            if(!cookie) head = { ...head, "Authorization":"bearer "+id_token }
          }
 
          console.log(new Headers(head),head,lang)

@@ -129,6 +129,17 @@ export default class Auth {
 
   logout(redirect:{}|string='/', delay:number=1000) {
      setTimeout(((iiif,api) => async () => {
+         try {
+            if(this.isAuthenticated()) {
+              let token = localStorage.getItem('id_token');
+              let cookie = await api.getURLContents(iiif.endpoints[iiif.index]+"/setcookie",false,null,null,false,"bdrc-auth-token="+token)
+              console.log("unset cookie",cookie)
+            }
+         }
+         catch(e)
+         {
+            console.error("ERROR with cookie",e,localStorage.getItem('id_token'))
+         }
 
          // Clear Access Token and ID Token from local storage
          localStorage.removeItem('access_token');
@@ -138,16 +149,8 @@ export default class Auth {
          history.replace(redirect);
          store.dispatch(ui.logEvent(false))
 
-         try {
-            let cookie = await api.getURLContents(iiif.endpoints[iiif.index]+"/setcookie",false)
-            console.log("unset cookie",cookie)
-         }
-         catch(e)
-         {
-            console.error("ERROR with cookie",e)
-         }
 
- clearTimeout(tokenRenewalTimeout);
+        clearTimeout(tokenRenewalTimeout);
      })(this.iiif,this.api),delay)
   }
 

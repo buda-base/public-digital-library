@@ -7740,6 +7740,11 @@ js-cookie@^2.2.0:
   resolved "https://registry.yarnpkg.com/js-cookie/-/js-cookie-2.2.0.tgz#1b2c279a6eece380a12168b92485265b35b1effb"
   integrity sha1-Gywnmm7s44ChIWi5JIUmWzWx7/s=
 
+js-cookies@^1.0.4:
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/js-cookies/-/js-cookies-1.0.4.tgz#d46e576c420ff6d5542c0f52b6d4ef7d637e754e"
+  integrity sha1-1G5XbEIP9tVULA9SttTvfWN+dU4=
+
 js-file-download@^0.4.1:
   version "0.4.5"
   resolved "https://registry.yarnpkg.com/js-file-download/-/js-file-download-0.4.5.tgz#3cf7bf4bc2231fe2e45663b1a5f8ad3a1949fe0a"
@@ -8707,7 +8712,7 @@ minizlib@^1.1.1:
 
 "mirador@https://github.com/buda-base/mirador#2.7.0-bdrc":
   version "2.7.0"
-  resolved "https://github.com/buda-base/mirador#6822cd44df9a96e4692d6c16bb2e0fa763708cc2"
+  resolved "https://github.com/buda-base/mirador#8ca823d535e0cba47d52c768e8e60bea33734c72"
   dependencies:
     bootbox "^4.4.0"
     bootstrap "^3.3.7"
