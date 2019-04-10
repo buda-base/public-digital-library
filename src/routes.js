@@ -27,10 +27,14 @@ export const auth = new Auth();
 let previousLocation;
 const routerSetState = Router.prototype.setState;
 Router.prototype.setState = function(...args) {
+
     const loc = this.props.history.location;
+
+    console.log("hash",previousLocation,loc,args)
+
     if (loc.pathname === previousLocation.pathname &&
         loc.search   === previousLocation.search   &&
-        loc.hash     !== previousLocation.hash
+        (loc.hash    !== previousLocation.hash || loc.hash === previousLocation.hash )
     ) {
         previousLocation = {...loc};
         return;
