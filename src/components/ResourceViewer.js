@@ -1339,6 +1339,17 @@ class ResourceViewer extends Component<Props,State>
             if(window.UV && window.createUV) {
                clearInterval(timerUV);
 
+               window.$.ajaxSetup( { beforeSend: (xhr) => {
+
+                    if (this.props.auth && this.props.auth.isAuthenticated()) {
+                        let token = localStorage.getItem('id_token');
+                        xhr.setRequestHeader("credentials", "include");
+                        //xhr.setRequestHeader("Authorization", "Bearer " + token);
+                        console.log("xhr",xhr)
+                    }
+                  }
+                })
+
                console.log("uv",window.UV)
                console.log("createuv",window.createUV)
 
@@ -2311,7 +2322,7 @@ class ResourceViewer extends Component<Props,State>
                {
                   fairUse && (!this.props.auth || !this.props.auth.isAuthenticated()) &&
                   <h3 style={{display:"block",marginBottom:"15px"}}><span style={{textTransform:"none"}}>Access limited to first &amp; last 20 pages.<br/>
-                  Please <a class="login" onClick={this.props.auth.login.bind(this,this.props.history.location)}>login</a> to get access to all images from this work.</span></h3>
+                  Please <a class="login" onClick={this.props.auth.login.bind(this,this.props.history.location)}>login</a> if you have sufficient credentials to get access to all images from this work.</span></h3>
                }
                {
                   !this.props.manifestError &&  this.props.imageAsset  && //!this.state.openUV &&
@@ -2341,7 +2352,7 @@ class ResourceViewer extends Component<Props,State>
                }
                {
                   this.props.manifestError && this.props.manifestError.error.message.match(/Restricted access/) &&
-                  <h3><span style={{textTransform:"none"}}>Please <a class="login" onClick={this.props.auth.login.bind(this,this.props.history.location)}>login</a> to get access to images from this work.</span></h3>
+                  <h3><span style={{textTransform:"none"}}>Please <a class="login" onClick={this.props.auth.login.bind(this,this.props.history.location)}>login</a> if you have sufficient credentials to get access to images from this work.</span></h3>
                }
                {
                   !this.props.manifestError && this.props.imageAsset && this.state.openMirador  &&

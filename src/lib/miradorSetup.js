@@ -439,7 +439,7 @@ export async function miradorInitView(props) {
    const bdr = "http://purl.bdrc.io/resource/"
 
    let data = [
-      { "collectionUri": "tibcolldemo2.json", location: "BDRC - Palpung Collection"}
+      { "collectionUri": "../tibcolldemo2.json", location: "BDRC - Palpung Collection"}
    ]
    const urlParams = new URLSearchParams(window.location.search);
    const work = props.match.params.IRI;

@@ -4,8 +4,8 @@
 .jstree-default .jstree-anchor {  line-height: 42px; height: 42px;  font-size: 20px; }
 .jstree-default .jstree-icon:empty { line-height: 42px;  padding-right: 4px; }
 .jstree-icon.jstree-ocl { vertical-align: -16px; }
-#collection-tree.jstree { width: 20%;  max-width: 10000px; }
-#collection-tree + .member-select-results { margin-left: 20%; }
+#collection-tree.jstree { width: 25%;  max-width: 10000px; }
+#collection-tree + .member-select-results { margin-left: 25%; }
 /* vertical scrollview in mirador */
 .mirador-container .mirador-viewer .scroll-view { overflow-y:auto; }
 .mirador-container .mirador-viewer ul.scroll-listing-thumbs li  { display:block; }
@@ -43,3 +43,12 @@
 #viewer.view .user-buttons.mirador-main-menu li:last-child { display:none; }
 #viewer .member-select-results li { cursor:auto; }
 #viewer .member-select-results li .preview-image { cursor:pointer; }
+
+.mirador-container .repo-image img { top: 10px; }
+#viewer .member-select-results li { display: block; height: 120px; }
+.mirador-container .select-metadata { width: 100%; max-width: 800px; min-width: 0; position: absolute; bottom: 24px; height: 20px;
+    left: 105px; }
+.mirador-container .item-info { position: absolute;  bottom: -16px; }
+.mirador-container .canvas-count { text-align: left; }
+.mirador-container .remaining { display:none; }
+.mirador-container .preview-images a:not(:first-child) { display:none; }
