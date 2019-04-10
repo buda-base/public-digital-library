@@ -1723,6 +1723,13 @@ class ResourceViewer extends Component<Props,State>
       else
          titre = <h2>{getEntiType(this.props.IRI) + " " +this.props.IRI}</h2>
 
+      let fairUse = false
+      if(kZprop.indexOf(adm+"access") !== -1) {
+         let elem = this.getResourceElem(adm+"access")
+         if(elem && elem.filter(e => e.value.match(/AccessFairUse$/)).length >= 1) fairUse = true
+         console.log("adm",elem,fairUse)
+      }
+
       let pdfLink,monoVol = -1 ;
       if(this.props.imageAsset &&  !this.props.manifestError && this.props.imageAsset.match(/[.]bdrc[.]io/))
       {
@@ -1779,6 +1786,7 @@ class ResourceViewer extends Component<Props,State>
 
       let imageLabel = "images"
       if(!this.props.collecManif && this.props.imageAsset && this.props.imageAsset.match(/[/]collection[/]/)) imageLabel = "collection"
+
 
       let theData = <div className="data">
          { kZprop.map((k) => {
@@ -2299,6 +2307,11 @@ class ResourceViewer extends Component<Props,State>
                      location={this.props.history.location}
                      history={this.props.history}/>
                      */
+               }
+               {
+                  fairUse && (!this.props.auth || !this.props.auth.isAuthenticated()) &&
+                  <h3 style={{display:"block",marginBottom:"15px"}}><span style={{textTransform:"none"}}>Access limited to first &amp; last 20 pages.<br/>
+                  Please <a class="login" onClick={this.props.auth.login.bind(this,this.props.history.location)}>login</a> to get access to all images from this work.</span></h3>
                }
                {
                   !this.props.manifestError &&  this.props.imageAsset  && //!this.state.openUV &&
