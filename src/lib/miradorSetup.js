@@ -38,14 +38,14 @@ export function miradorSetUI(closeCollec)
    clearInterval(timerConf)
    timerConf = setInterval( () => {
 
-      console.log("miraconf...",window.maxW)
+      //console.log("miraconf...",window.maxW)
 
       jQ(".user-buttons.mirador-main-menu span.fa-bars").removeClass("fa-bars").addClass("fa-list");
 
       miradorAddZoomer();
 
       jQ("#collection-tree li.jstree-node").click( (e) => {
-         console.log("jstree")
+         //console.log("jstree")
          //$(e.target).closest("li").addClass("added-click");
 
          miradorSetUI(false);
@@ -57,7 +57,7 @@ export function miradorSetUI(closeCollec)
          jQ(".mirador-container .mirador-main-menu li a").addClass('on');
          jQ(".mirador-container .mirador-main-menu li:nth-child(1) a").addClass('selec');
 
-         console.log("ici")
+         //console.log("ici")
 
          miradorAddZoom();
          miradorAddScroll();
@@ -71,7 +71,7 @@ export function miradorSetUI(closeCollec)
                clearInterval(scrollTimer2)
                setTimeout( () => {
 
-                  console.log(jQ(".mirador-container ul.scroll-listing-thumbs ").width(),jQ(window).width())
+                  //console.log(jQ(".mirador-container ul.scroll-listing-thumbs ").width(),jQ(window).width())
                   jQ(".scroll-view")
                   .scrollLeft((jQ(".mirador-container ul.scroll-listing-thumbs ").width() - jQ(window).width()) / 2)
                   .scrollTop(jQ(".scroll-view").scrollTop()+1)
@@ -210,7 +210,7 @@ function miradorAddClick(firstInit){
 
       window.setMiradorClick = (firstInit,e) => {
 
-         console.log("cliked",e,firstInit)
+         //console.log("cliked",e,firstInit)
 
          if(jQ(".mirador-container .mirador-main-menu li:nth-child(1) a").hasClass('selec')) {
             if(e) {
@@ -227,7 +227,7 @@ function miradorAddClick(firstInit){
 
          clearInterval(clickTimer);
          clickTimer = setInterval(() => {
-            console.log("click interval")
+            //console.log("click interval")
             let added = false
             jQ(".mirador-viewer .member-select-results li[data-index-number]").each( (i,e) => {
                let item = jQ(e)
@@ -274,7 +274,7 @@ function miradorAddClick(firstInit){
                               })
 
 
-                           }, 1000);
+                           }, 100);
 
                         }
                      }, 10);
@@ -347,7 +347,7 @@ function miradorAddScroll()
             else im = jQ(".scroll-view img[data-image-id]").first()
 
             let imgY = 0 ;
-            if(id) imgY = im.parent().offset().top
+            if(id && im && im.length > 0) imgY = im.parent().offset().top
             console.log("y",sT,imgY,im)
 
             jQ(".scroll-view").animate({scrollTop:sT+imgY-100}
@@ -375,7 +375,7 @@ function miradorAddZoomer() {
 
       window.setZoom = (val) => {
 
-         console.log("sZ",window.max)
+         //console.log("sZ",window.max)
 
          if(!window.maxW) miradorInitMenu(true)
          if(!window.maxW) return ;
@@ -401,7 +401,7 @@ function miradorAddZoomer() {
 
          //scrollT.css({"height":nuH}) // ok but then zoom bugs... TODO
 
-         console.log("h",sT,oldH,nuH)
+         //console.log("h",sT,oldH,nuH)
 
 
       }
@@ -414,12 +414,12 @@ function miradorInitMenu(maxWonly) {
 
    if(maxWonly == undefined) maxWonly = false
 
-   console.log("maxWo",maxWonly)
+   //console.log("maxWo",maxWonly)
 
    if(!maxWonly) jQ(".user-buttons.mirador-main-menu li:nth-last-child(n-5):nth-last-child(n+2)").addClass("on")
    window.maxW = jQ(".mirador-container ul.scroll-listing-thumbs ").width()
 
-   console.log("w",jQ(".mirador-container ul.scroll-listing-thumbs ").width())
+   //console.log("w",jQ(".mirador-container ul.scroll-listing-thumbs ").width())
 
    if(window.maxW < jQ(".scroll-view").innerWidth())
    {
@@ -431,7 +431,7 @@ function miradorInitMenu(maxWonly) {
    }
    if(!maxWonly) jQ("input#zoomer").trigger("input")
 
-   console.log("maxW",window.maxW)
+   //console.log("maxW",window.maxW)
 }
 
 export async function miradorInitView(props) {
