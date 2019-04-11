@@ -4,7 +4,7 @@ You can follow these steps in order to embed a IIIF collection viewer in your we
 
 * add `CSS` dependencies
 
-```
+```html
 <link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 <link rel="stylesheet" type="text/css" href="http://library.bdrc.io/scripts/src/lib/mirador/css/mirador-combined.css">
 <link rel="stylesheet" type="text/css" href="http://library.bdrc.io/scripts/src/lib/mirador.css"/>
@@ -12,7 +12,7 @@ You can follow these steps in order to embed a IIIF collection viewer in your we
 
 * add `JavaScript` dependencies
 
-```
+```html
 <script src="http://library.bdrc.io/scripts/src/lib/mirador/mirador.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.11/lodash.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/requirejs@2.3.6/require.js"></script>
@@ -23,7 +23,7 @@ You can follow these steps in order to embed a IIIF collection viewer in your we
 
 * initialize the viewer
 
-```
+```html
 <script type="module">
   let miradorConfig, miradorSetUI
   async function init() {
@@ -49,7 +49,7 @@ You can follow these steps in order to embed a IIIF collection viewer in your we
 
 
 Here is the complete file:
-```
+```html
 <!DOCTYPE html>
 <html lang="en">
   <head>
