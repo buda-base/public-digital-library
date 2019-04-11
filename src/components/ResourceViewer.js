@@ -1535,7 +1535,12 @@ class ResourceViewer extends Component<Props,State>
                   data.push({"manifestUri": manif, location:"Test Manifest Location" })
                   canvasID = this.props.canvasID
                }
-               let config = miradorConfig(data,manif,canvasID);
+
+               let withCredentials = false
+               let elem = this.getResourceElem(adm+"access")
+               if(elem && elem.filter(e => e.value.match(/(AccessFairUse)|(Restricted.*)$/)).length >= 1) withCredentials = true
+
+               let config = miradorConfig(data,manif,canvasID,withCredentials);
 
                //console.log("mir ador",config,this.props)
                window.Mirador( config )

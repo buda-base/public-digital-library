@@ -107,18 +107,18 @@ export function miradorSetUI(closeCollec)
    }, 350 )
 }
 
-export function miradorConfig(data, manifest, canvasID)
+export function miradorConfig(data, manifest, canvasID, useCredentials)
 {
    let _extendedPresets = extendedPresets
    if(!_extendedPresets) _extendedPresets = window.extendedPresets
    let _sortLangScriptLabels = sortLangScriptLabels
    if(!_sortLangScriptLabels) _sortLangScriptLabels = window.sortLangScriptLabels
 
+
    let config = {
       id:"viewer",
       data: [],
       showAddFromURLBox:false,
-      //displayLayout:false,
 
       manifestsPanel: {
         name: "Collection Tree Manifests Panel",
@@ -148,6 +148,7 @@ export function miradorConfig(data, manifest, canvasID)
         }
       },
       windowSettings: {
+        ajaxWithCredentials:useCredentials,
         sidePanelVisible: false
       },
 
