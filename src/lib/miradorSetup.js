@@ -32,6 +32,7 @@ export function miradorSetUI(closeCollec)
    if(closeCollec == undefined) closeCollec = true
    if(!jQ) importModules()
 
+
    clearInterval(scrollTimer)
    clearInterval(scrollTimer2)
    clearInterval(clickTimer)
@@ -39,6 +40,8 @@ export function miradorSetUI(closeCollec)
    timerConf = setInterval( () => {
 
       //console.log("miraconf...",window.maxW)
+      jQ(".mirador-container .mirador-main-menu li a").addClass('on');
+      jQ(".mirador-container .mirador-main-menu li:nth-child(1) a").addClass('selec');
 
       jQ(".user-buttons.mirador-main-menu span.fa-bars").removeClass("fa-bars").addClass("fa-list");
 
