@@ -2337,20 +2337,28 @@ class ResourceViewer extends Component<Props,State>
                      {
                         this.props.firstImage && this.state.imageLoaded &&
                         <div id="title">
-                           <div onClick={this.showUV.bind(this)}>
-                              <span>{I18n.t("resource.view")} {I18n.t("resource."+imageLabel)} {I18n.t("resource.in")} UV</span>
-                              <Fullscreen style={{transform: "scale(1.4)",position:"absolute",right:"3px",top:"3px"}}/>
-                           </div>
-                           <div onClick={this.showMirador.bind(this)}>
-                              <span>{I18n.t("resource.view")} {I18n.t("resource."+imageLabel)} {I18n.t("resource.in")} Mirador</span>
-                              <Fullscreen style={{transform: "scale(1.4)",position:"absolute",right:"3px",top:"3px"}}/>
-                           </div>
-                           {  (imageLabel!=="collection" || this.props.manifests) &&
-                              <div onClick={this.showDiva.bind(this)}>
-                                 <span>{I18n.t("resource.view")} {I18n.t("resource."+imageLabel)} {I18n.t("resource.in")} Diva</span>
+                          { (!this.props.config || !this.props.config.hideViewers) &&
+                            [<div onClick={this.showUV.bind(this)}>
+                                <span>{I18n.t("resource.view")} {I18n.t("resource."+imageLabel)} {I18n.t("resource.in")} UV</span>
+                                <Fullscreen style={{transform: "scale(1.4)",position:"absolute",right:"3px",top:"3px"}}/>
+                             </div>,
+                             <div onClick={this.showMirador.bind(this)}>
+                                <span>{I18n.t("resource.view")} {I18n.t("resource."+imageLabel)} {I18n.t("resource.in")} Mirador</span>
+                                <Fullscreen style={{transform: "scale(1.4)",position:"absolute",right:"3px",top:"3px"}}/>
+                             </div>,
+                             (imageLabel!=="collection" || this.props.manifests) &&
+                                <div onClick={this.showDiva.bind(this)}>
+                                   <span>{I18n.t("resource.view")} {I18n.t("resource."+imageLabel)} {I18n.t("resource.in")} Diva</span>
+                                   <Fullscreen style={{transform: "scale(1.4)",position:"absolute",right:"3px",top:"3px"}}/>
+                                </div>
+                              ]
+                           }
+                           { this.props.config && this.props.config.hideViewers &&
+                              <div onClick={this.showMirador.bind(this)}>
+                                 <span>{I18n.t("resource.view")} {I18n.t("resource."+imageLabel)}</span>
                                  <Fullscreen style={{transform: "scale(1.4)",position:"absolute",right:"3px",top:"3px"}}/>
                               </div>
-                           }
+                            }
                         </div>
                      }
                   </div>

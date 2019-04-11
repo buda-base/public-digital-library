@@ -7,12 +7,7 @@
     <link rel="stylesheet" type="text/css" href="mirador/css/mirador-combined.css">
     <link rel="stylesheet" type="text/css" href="src/lib/mirador.css"/>
     <style>
-         #collection-tree.jstree { width: 25%;  max-width: 10000px; }
-         #collection-tree + .member-select-results { margin-left: 25%; }
-         .mirador-container #load-controls { margin-top:0; }
-         .mirador-container .select-metadata { width:25%; }
          .user-buttons.mirador-main-menu li:last-child { display:none; }
-         .mirador-container .items-listing li { background-color:white;}
     </style>
   </head>
   <body>
@@ -24,34 +19,5 @@
     <script type="module" src="src/lib/transliterators.js"></script>
     <script type="module" src="src/lib/miradorSetup.js"></script>
     <script type="module" src="./miradorInit.js"></script>
-    <script>
-/*
-
-      $(function() {
-        Mirador({
-           id: "viewer",
-      	  showAddFromURLBox:false,
-      	  openManifestsPage: true,
-      	  preserveManifestOrder: true,
-      	  bottomPanel: false,
-      	  sidePanel: false,
-      	  annotationLayer: false,
-           "windowSettings": {
-	        "sidePanelVisible": false
-          },
-	  "manifestsPanel": {
-	     "name": "Collection Tree Manifests Panel",
-	     "module": "CollectionTreeManifestsPanel",
-	     "options": {
-           labelToString: (label) => (!Array.isArray(label)?label:label.map( e => (e["@value"]?e["@value"]+"@"+e["@language"]:e)).join("; "))
-         }
-	   },
-           "data": [
-            { "collectionUri": "tibcolldemo2.json", location: "BDRC - Palpung Collection"}
-        ]
-        });
-      });
-      */
-    </script>
   </body>
 </html>
