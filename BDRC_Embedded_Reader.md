@@ -1,6 +1,31 @@
 # Embedding a IIIF collection viewer
 
-You can follow these steps in order to embed a IIIF collection viewer in your website:
+## Using an `iframe`
+You can embed a viewer by using an `iframe` element pointing to `http://library.bdrc.io/scripts/embed-iframe.html?work=...` with `work` a BDRC resource ID such as `bdr:W22084`, eg:
+```html
+<iframe src="http://library.bdrc.io/scripts/embed-iframe.html?work=bdr:W22084"></iframe>
+```
+
+The following code will display a fullpage viewer:
+```html
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Demo Viewer</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  </head>
+  <body style="margin:0px">
+    <iframe
+      style="position:fixed;width:100%;height:100%;border:none;"
+      src="http://library.bdrc.io/scripts/embed-iframe.html?work=bdr:W22084">
+    </iframe>
+  </body>
+</html>
+```
+
+##  Using source files
+Alternatively you can also follow these steps in order to embed a IIIF collection viewer in your website:
 
 * add `CSS` dependencies
 
