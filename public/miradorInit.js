@@ -23,6 +23,7 @@ let waiter = setInterval( async ()=>{
       clearInterval(waiter);
       miradorConfig = window.miradorConfig
       miradorSetUI  = window.miradorSetUI
+      window.closeViewer = () => { parent.window.postMessage("close", "*"); }
       init();
    }
 

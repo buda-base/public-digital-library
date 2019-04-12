@@ -6,7 +6,7 @@ You can embed a viewer by using an `iframe` element pointing to `http://library.
 <iframe src="http://library.bdrc.io/scripts/embed-iframe.html?work=bdr:W22084"></iframe>
 ```
 
-The following code will display a fullpage viewer:
+The following code opens a static, fullpage viewer:
 ```html
 <!DOCTYPE html>
 <html lang="en">
@@ -20,6 +20,31 @@ The following code will display a fullpage viewer:
       style="position:fixed;width:100%;height:100%;border:none;"
       src="http://library.bdrc.io/scripts/embed-iframe.html?work=bdr:W22084">
     </iframe>
+  </body>
+</html>
+```
+
+You can also use a button to show the viewer only when needed:
+```html
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Demo Viewer</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <style>
+      iframe { position:fixed; width:100%; height:100%; border:none; left:0; top:0; transition:all 400ms ease-in-out; }
+      iframe.hidden { pointer-events:none; opacity:0; }
+    </style>
+  </head>
+  <body>
+    <iframe id="viewer" class="hidden" src="http://library.bdrc.io/scripts/embed-iframe.html?work=bdr:W22084"></iframe>
+    <button id="open">Open Viewer</button>
+    <script>
+      $("button#open").click( (e) => { $('iframe#viewer').removeClass('hidden'); })
+      window.addEventListener("message", (msg) => { if(msg.data === "close") { $("iframe#viewer").addClass("hidden"); } } )
+    </script>
   </body>
 </html>
 ```
