@@ -34,8 +34,8 @@ You can also use a button to show the viewer only when needed:
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <style>
-      iframe { position:fixed; width:100%; height:100%; border:none; left:0; top:0; transition:all 400ms ease-in-out; }
-      iframe.hidden { pointer-events:none; opacity:0; }
+      iframe#viewer { position:fixed; width:100%; height:100%; border:none; left:0; top:0; transition:all 400ms ease-in-out; }
+      iframe#viewer.hidden { pointer-events:none; opacity:0; }
     </style>
   </head>
   <body>
