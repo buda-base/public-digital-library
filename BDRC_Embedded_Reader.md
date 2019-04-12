@@ -24,7 +24,7 @@ The following code opens a static, fullpage viewer:
 </html>
 ```
 
-You can also use a button to show the viewer only when needed:
+You can also use button(s) to show the viewer only when needed:
 ```html
 <!DOCTYPE html>
 <html lang="en">
@@ -34,16 +34,25 @@ You can also use a button to show the viewer only when needed:
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <style>
-      iframe#viewer { position:fixed; width:100%; height:100%; border:none; left:0; top:0; transition:all 400ms ease-in-out; }
-      iframe#viewer.hidden { pointer-events:none; opacity:0; }
+      #container { position:fixed; width:100%; height:100%; border:none; left:0; top:0; transition:opacity 400ms ease-in-out;}
+      #container iframe { width:100%; height:100%; }
+      #container:not(.hidden) { background:url(https://cdnjs.cloudflare.com/ajax/libs/galleriffic/2.0.1/css/loader.gif) center no-repeat;  }
+      .hidden { pointer-events:none; opacity:0;  }
     </style>
   </head>
   <body>
-    <iframe id="viewer" class="hidden" src="http://library.bdrc.io/scripts/embed-iframe.html?work=bdr:W22084"></iframe>
-    <button id="open">Open Viewer</button>
+    <div id="container" class="hidden"><iframe class="hidden"></iframe></div>
+    <button class="open" data-rid="bdr:W22084" >View Collection A</button>
+    <button class="open" data-rid="bdr:W0CJ001">View Collection B</button>
     <script>
-      $("button#open").click( (e) => { $('iframe#viewer').removeClass('hidden'); })
-      window.addEventListener("message", (msg) => { if(msg.data === "close") { $("iframe#viewer").addClass("hidden"); } } )
+      $("#container iframe").on("load", () => { $('#container iframe').removeClass('hidden'); });
+      $("button.open").click( (e) => {
+        $("#container").removeClass("hidden");
+        let src = "http://library.bdrc.io/scripts/embed-iframe.html?work="+$(e.target).attr("data-rid");
+        if($("#container iframe").attr("src")!== src) { $("#container iframe").attr("src",src); }
+        else { $("#container iframe").trigger("load"); }
+      })
+      window.addEventListener("message", (msg) => { if(msg.data === "close") { $("#container,#container iframe").addClass("hidden"); } } )
     </script>
   </body>
 </html>
