@@ -34,9 +34,9 @@ You can also use button(s) to show the viewer only when needed:
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <style>
-      #container { position:fixed; width:100%; height:100%; border:none; left:0; top:0; transition:opacity 400ms ease-in-out;}
+      #container { position:fixed; width:100%; height:100%; border:none; left:0; top:0; transition:opacity 400ms ease-in-out;  }
+      #container:not(.loaded) { background:url(https://cdnjs.cloudflare.com/ajax/libs/galleriffic/2.0.1/css/loader.gif) center no-repeat;  }
       #container iframe { width:100%; height:100%; }
-      #container:not(.hidden) { background:url(https://cdnjs.cloudflare.com/ajax/libs/galleriffic/2.0.1/css/loader.gif) center no-repeat;  }
       .hidden { pointer-events:none; opacity:0;  }
     </style>
   </head>
@@ -45,14 +45,14 @@ You can also use button(s) to show the viewer only when needed:
     <button class="open" data-rid="bdr:W22084" >View Collection A</button>
     <button class="open" data-rid="bdr:W0CJ001">View Collection B</button>
     <script>
-      $("#container iframe").on("load", () => { $('#container iframe').removeClass('hidden'); });
+      $("#container iframe").on("load", () => { $('#container iframe').removeClass('hidden'); $("#container").addClass("loaded"); });
       $("button.open").click( (e) => {
         $("#container").removeClass("hidden");
         let src = "http://library.bdrc.io/scripts/embed-iframe.html?work="+$(e.target).attr("data-rid");
         if($("#container iframe").attr("src")!== src) { $("#container iframe").attr("src",src); }
         else { $("#container iframe").trigger("load"); }
       })
-      window.addEventListener("message", (msg) => { if(msg.data === "close") { $("#container,#container iframe").addClass("hidden"); } } )
+      window.addEventListener("message", (msg) => { if(msg.data === "close") { $("#container,#container iframe").addClass("hidden").removeClass("loaded"); } } )
     </script>
   </body>
 </html>
