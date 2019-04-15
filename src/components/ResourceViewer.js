@@ -1627,11 +1627,21 @@ class ResourceViewer extends Component<Props,State>
 
    proplink = (k,txt) => {
 
+      let tooltip
+      if(this.props.ontology[k] && this.props.ontology[k][rdfs+"comment"]) tooltip = this.props.ontology[k][rdfs+"comment"].filter(comm => !comm.value.match(/^([Mm]igration|[Dd]eprecated)/))
+
       if(k === bdo+'note') txt = "Notes" ;
 
-     let ret = (<a class="propref" {...(true || k.match(/purl[.]bdrc/) ? {"href":k}:{})} target="_blank">{txt?txt:this.fullname(k)}</a>)
+      console.log("proplink",k,txt,tooltip)
 
-     return ret;
+      let ret = (<a class="propref" {...(true || k.match(/purl[.]bdrc/) ? {"href":k}:{})} target="_blank">{txt?txt:this.fullname(k)}</a>)
+      let customW = {
+         maxWidth: 500
+       }
+
+      if(tooltip && tooltip.length > 0) ret = <Tooltip placement="bottom-start" classes={{tooltip:"commentT",popper:"commentP"}} style={{marginLeft:"50px"}} title={<div>{tooltip.map(tip => tip.value.split("\n").map(e => [e,<br/>]))}</div>}>{ret}</Tooltip>
+
+      return ret;
    }
 
 
