@@ -313,8 +313,10 @@ class App extends Component<Props,State> {
       console.log("key",key,label)
 
       if(!key || key == "" || !key.match) return ;
-      if(!key.match(/:/) && key.indexOf("\"") === -1) key = "\""+key+"\""
-      key = encodeURIComponent(key) // prevent from losing '+' when adding it to url
+      if(!key.match(/:/)) {
+        if(key.indexOf("\"") === -1) key = "\""+key+"\""
+        key = encodeURIComponent(key) // prevent from losing '+' when adding it to url
+      }
 
 
       let state = { ...this.state, dataSource:[] }
