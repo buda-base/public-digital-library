@@ -450,7 +450,7 @@ export async function miradorInitView(props) {
    if(work) {
       console.log("work",work)
 
-      const resData = await(await fetch("http://purl.bdrc.io/graph/Resgraph?I_LIM=500&R_RES="+work+"&format=jsonld")).json()
+      const resData = await(await fetch("http://purl.bdrc.io/query/graph/Resgraph?I_LIM=500&R_RES="+work+"&format=jsonld")).json()
       console.log(resData)
 
       let propK ;
@@ -464,7 +464,7 @@ export async function miradorInitView(props) {
 
             const item = propK["workHasItemImageAsset"]?propK["workHasItemImageAsset"]:propK["workLocation"]
 
-            let assocData = await(await fetch("http://purl.bdrc.io/query/IIIFView-workInfo?R_RES="+work+"&format=json")).json()
+            let assocData = await(await fetch("http://purl.bdrc.io/query/table/IIIFView-workInfo?R_RES="+work+"&format=json")).json()
             if(assocData && assocData.results && assocData.results.bindings)
               assocData = assocData.results.bindings
             console.log(assocData)

@@ -203,7 +203,7 @@ export default class API {
          //let resource =  JSON.parse(await this.getURLContents(this._resourcePath(IRI),false));try {
          try {
             let config = store.getState().data.config.ldspdi
-            let url = config.endpoints[config.index]+"/graph" ;
+            let url = config.endpoints[config.index]+"/query/graph" ;
             let param = {"searchType":"Resgraph","R_RES":IRI,"L_NAME":"","LG_NAME":"" }
             let data = await this.getQueryResults(url, IRI, param,"GET");
 
@@ -225,7 +225,7 @@ export default class API {
          //let resource =  JSON.parse(await this.getURLContents(this._resourcePath(IRI),false));try {
          try {
             let config = store.getState().data.config.ldspdi
-            let url = config.endpoints[config.index]+"/graph" ;
+            let url = config.endpoints[config.index]+"/query/graph" ;
             let param = {"searchType":"AnnCollection-forResource","R_RES":IRI,"L_NAME":"","LG_NAME":"" }
             let data = await this.getQueryResults(url, IRI, param,"GET") //,"application/ld+json");
             console.log("r e source",data)
@@ -247,7 +247,7 @@ export default class API {
             //console.log("etext",resource)
             try {
                let config = store.getState().data.config.ldspdi
-               let url = config.endpoints[config.index]+"/graph" ;
+               let url = config.endpoints[config.index]+"/query/graph" ;
                let param = {"searchType":"Etext_base","R_RES":IRI,"L_NAME":"","LG_NAME":"" }
                let data = await this.getQueryResults(url, IRI, param,"GET") //,"application/json");
 
@@ -270,7 +270,7 @@ export default class API {
                   //console.log("etext",resource)
                   try {
                      let config = store.getState().data.config.ldspdi
-                     let url = config.endpoints[config.index]+"/graph" ;
+                     let url = config.endpoints[config.index]+"/query/graph" ;
                      let param = {"searchType":"Chunks","R_RES":IRI,"I_SEQ":next+1,"I_LIM":10,"L_NAME":"","LG_NAME":"" }
                      let data = await this.getQueryResults(url, IRI, param,"GET","application/ld+json");
 
@@ -440,7 +440,7 @@ export default class API {
    async _getResultsData(key: string,lang: string): Promise<{} | null> {
       try {
            let config = store.getState().data.config.ldspdi
-           let url = config.endpoints[config.index]+"/query" ;
+           let url = config.endpoints[config.index]+"/query/table" ;
            let data = this.getQueryResults(url, key, {"LG_NAME":lang});
            // let data = this.getSearchContents(url, key);
 
@@ -484,7 +484,7 @@ export default class API {
             //console.log("simpleFacet start",key,lang,property)
 
              let config = store.getState().data.config.ldspdi
-             let url = config.endpoints[config.index]+"/query" ;
+             let url = config.endpoints[config.index]+"/query/table" ;
              let data = this.getQueryResults(url, key, {"LG_NAME":lang,"searchType":"Res_simpleFacet","R_PROP":property});
 
              //console.log("simpleFacet end",data)
@@ -498,7 +498,7 @@ export default class API {
    async getResultsDatatypes(key: string,lang: string): Promise<{} | null> {
       try {
            let config = store.getState().data.config.ldspdi
-           let url = config.endpoints[config.index]+"/query" ;
+           let url = config.endpoints[config.index]+"/query/table" ;
            let data = this.getQueryResults(url, key, {"LG_NAME":lang,"searchType":"Res_allTypes_withCount"});
 
            console.log("datatypes",data)
@@ -514,7 +514,7 @@ export default class API {
      async getResultsOneDatatype(datatype:string,key: string,lang: string): Promise<{} | null> {
         try {
              let config = store.getState().data.config.ldspdi
-             let url = config.endpoints[config.index]+"/query" ;
+             let url = config.endpoints[config.index]+"/query/table" ;
              let data = this.getQueryResults(url, key, {"LG_NAME":lang,"searchType":"Res_oneType","R_RES":":"+datatype});
 
              console.log("oneDatatype",data)
@@ -530,7 +530,7 @@ export default class API {
 
 
                  let config = store.getState().data.config.ldspdi
-                 let url = config.endpoints[config.index]+"/query" ;
+                 let url = config.endpoints[config.index]+"/query/table" ;
                  let params = {"LG_NAME":lang,"searchType":"Res_simpleFacet_1value"}
 
                  let i = 1

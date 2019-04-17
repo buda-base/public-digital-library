@@ -1632,12 +1632,7 @@ class ResourceViewer extends Component<Props,State>
 
       if(k === bdo+'note') txt = "Notes" ;
 
-      console.log("proplink",k,txt,tooltip)
-
       let ret = (<a class="propref" {...(true || k.match(/purl[.]bdrc/) ? {"href":k}:{})} target="_blank">{txt?txt:this.fullname(k)}</a>)
-      let customW = {
-         maxWidth: 500
-       }
 
       if(tooltip && tooltip.length > 0) ret = <Tooltip placement="bottom-start" classes={{tooltip:"commentT",popper:"commentP"}} style={{marginLeft:"50px"}} title={<div>{tooltip.map(tip => tip.value.split("\n").map(e => [e,<br/>]))}</div>}>{ret}</Tooltip>
 
@@ -2220,7 +2215,7 @@ class ResourceViewer extends Component<Props,State>
                         <Button style={{paddingLeft:0}}>json-ld</Button>
                   </a>]
                }
-               { /*  TODO // external resources ==> /graph/Resgraph?R_RES=
+               { /*  TODO // external resources ==> /query/graph/Resgraph?R_RES=
                   this.props.IRI.match(/^bda[cn]:/) &&
                */}
                {pdfLink &&
