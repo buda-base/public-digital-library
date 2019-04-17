@@ -27,6 +27,8 @@ import SpeakerNotesOff from '@material-ui/icons/SpeakerNotesOff';
 import Feedback from '@material-ui/icons/QuestionAnswer';
 //import NewWindow from 'react-new-window'
 import Collapse from '@material-ui/core/Collapse';
+import ExpandLess from '@material-ui/icons/ExpandLess';
+import ExpandMore from '@material-ui/icons/ExpandMore';
 import InfiniteScroll from 'react-infinite-scroller';
 import _ from "lodash";
 import Tooltip from '@material-ui/core/Tooltip';
@@ -1827,7 +1829,7 @@ class ResourceViewer extends Component<Props,State>
                {
                   let tags = this.format("h4",k)
 
-                  //console.log("tags",tags)
+                  //console.log("tags",tags,k,elem)
 
                   if(k == bdo+"note")
                   {
@@ -2060,14 +2062,25 @@ class ResourceViewer extends Component<Props,State>
                      if(this.hasSub(k)) ret = this.subProps(k)
                      if(!ret || ret.length === 0) ret = tags.map((e)=> [e," "] )
 
-                     //console.log("render", ret)
-
-                     return (
-                        <div>
-                           <h3><span>{this.proplink(k)}</span>:&nbsp;</h3>
-                           {ret}
-                        </div>
-                     )
+                     let expand
+                     if(elem.filter(t=>t.type === "uri" || t.type === "literal").length > 3) {
+                       return (
+                         <div>
+                            <h3><span>{this.proplink(k)}</span>:&nbsp;<span
+                              onClick={(e) => this.setState({...this.state,collapse:{...this.state.collapse,[k]:!this.state.collapse[k]}})}
+                              className="expand">{!this.state.collapse[k]?<ExpandMore/>:<ExpandLess/>}</span></h3>
+                            <Collapse className={"propCollapse in-"+(this.state.collapse[k]===true)} in={this.state.collapse[k]}>{ret}</Collapse>
+                         </div>
+                       )
+                     }
+                     else {
+                       return (
+                          <div>
+                             <h3><span>{this.proplink(k)}</span>:&nbsp;</h3>
+                             {ret}
+                          </div>
+                       )
+                     }
                   }
                   else
                      return (
