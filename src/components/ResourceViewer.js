@@ -2215,7 +2215,7 @@ class ResourceViewer extends Component<Props,State>
                         <Button style={{paddingLeft:0}}>json-ld</Button>
                   </a>]
                }
-               { /*  TODO // external resources ==> /query/graph/Resgraph?R_RES=
+               { /*  TODO // external resources ==> /query/graph/ResInfo?R_RES=
                   this.props.IRI.match(/^bda[cn]:/) &&
                */}
                {pdfLink &&

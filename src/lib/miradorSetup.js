@@ -450,7 +450,7 @@ export async function miradorInitView(props) {
    if(work) {
       console.log("work",work)
 
-      const resData = await(await fetch("http://purl.bdrc.io/query/graph/Resgraph?I_LIM=500&R_RES="+work+"&format=jsonld")).json()
+      const resData = await(await fetch("http://purl.bdrc.io/query/graph/ResInfo?I_LIM=500&R_RES="+work+"&format=jsonld")).json()
       console.log(resData)
 
       let propK ;

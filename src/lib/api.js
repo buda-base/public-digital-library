@@ -204,7 +204,7 @@ export default class API {
          try {
             let config = store.getState().data.config.ldspdi
             let url = config.endpoints[config.index]+"/query/graph" ;
-            let param = {"searchType":"Resgraph","R_RES":IRI,"L_NAME":"","LG_NAME":"" }
+            let param = {"searchType":"ResInfo","R_RES":IRI,"L_NAME":"","LG_NAME":"" }
             let data = await this.getQueryResults(url, IRI, param,"GET");
 
 
