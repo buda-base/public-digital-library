@@ -7,7 +7,8 @@ export const langScripts = {
    "hans":"lang.langscript.hans","hant":"lang.langscript.hant",
    "deva":"lang.langscript.deva","newa":"lang.langscript.newa","sinh":"lang.langscript.sinh",
    "latn":"lang.langscript.ltn",
-   "x-ewts":"lang.langscript.xEwts","x-dts":"lang.langscript.sDts","alalc97":"lang.langscript.alalc97","latn-pinyin":"lang.langscript.latnPinyin"
+   "x-ewts":"lang.langscript.xEwts","x-dts":"lang.langscript.sDts","alalc97":"lang.langscript.alalc97","latn-pinyin":"lang.langscript.latnPinyin",
+   "x-iast":"lang.langscript.xIast",
 
 }
 

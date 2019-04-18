@@ -50,6 +50,7 @@ const frTranslation = {
          latn:"Latin",
          xEwts:"EWTS",
          xDts:"DTS",
+         xIast:"IAST",
          alalc97:"ALA-LC",
          latnPinyin:"Pinyin"
       }

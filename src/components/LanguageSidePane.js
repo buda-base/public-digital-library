@@ -46,7 +46,11 @@ class LanguageSidePane extends Component<Props,State> {
       if(val)
       {
          if(prop === "locale") this.props.onSetLocale(lab);
-         else if(prop === "priority") this.props.onSetLangPreset(this.props.langPriority.presets[lab < 3 ? lab : "custom"],lab);
+         else if(prop === "priority") {
+           let idx = lab
+           if(idx == this.props.langPriority.presets.length - 1) idx = "custom"
+           this.props.onSetLangPreset(this.props.langPriority.presets[idx],lab);
+         }
       }
    }
 
