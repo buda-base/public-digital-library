@@ -2411,7 +2411,9 @@ class ResourceViewer extends Component<Props,State>
                   //<Script url={"https://cdn.jsdelivr.net/npm/mirador@2.7.2/dist/mirador.js"}/>]
                   <link rel="stylesheet" type="text/css" href="../scripts/mirador/css/mirador-combined.css"/>,
                   <link rel="stylesheet" type="text/css" href="../scripts/src/lib/mirador.css"/>,
-                  <Script url={"../scripts/mirador/mirador.js"} />]
+                  <Script url={"../scripts/mirador/mirador.js"} />,
+                  //<Script url={"https://cdn.jsdelivr.net/npm/@dbmdz/mirador-keyboardnavigation@1.1.0/keyboardNavigation.js"}/>, //jquery error...
+                  ]
                   //<Script url={"http://library-dev.bdrc.io/scripts/mirador/mirador.js"} onLoad={()=>{$("#fond").addClass("hidden")}} />]
                }
                {
