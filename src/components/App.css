@@ -3,7 +3,7 @@
 
 
 /* CSS debug mode */
-/* * {background-color:rgba(255,0,128,0.05);} */
+* {background-color:rgba(255,0,128,0.05);}
 
 
 body { overflow:auto !important;padding-right:0 !important;  }
@@ -121,13 +121,21 @@ a.login { text-decoration:underline; cursor:pointer; }
 
 .resource .data > div > h4,
 .resource .data > div > .sub > h4:not(.first),
-.propCollapse h4 { width:100%; padding-left:30px; }
+.propCollapse h4,
+.propCollapseHeader h4 { width:100%; padding-left:30px; }
 .resource .data > div > h4::after,
 .resource .data > div > .sub > h4:not(.first)::after,
-.propCollapse h4::after { display:none !important; }
-h3 .expand { display:inline-block; cursor:pointer;}
-h3 .expand svg { position:absolute; margin-top:-18px; }
+.propCollapse h4::after,
+.propCollapseHeader h4::after { display:none !important; }
+/*h3 .expand { display:inline-block; cursor:pointer;}
+h3 .expand svg { position:absolute; margin-top:-18px; }*/
 .propCollapse.in-false h4:first-child { margin-top:0;transition:all 200ms ease-in-out; }
+.expand { margin-bottom:10px; cursor:pointer; margin-left:30px; border-bottom:1px solid transparent; font-size:13px; }
+.expand:hover { border-bottom:1px solid black;  }
+/* .propCollapse.in-true + .expand { margin-bottom:10px; } */
+.propCollapse { width:100%; }
+.propCollapse.in-true { padding-bottom:10px;}
+/* .propCollapseHeader { width:100%; } */
 
 .resource .SidePane .viewAll { color:black; cursor:pointer; margin-bottom:10px;display:inline-block;border-bottom:1px solid transparent;}
 .resource .SidePane .viewAll:hover { border-color:black !important; }

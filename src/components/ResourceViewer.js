@@ -2064,6 +2064,7 @@ class ResourceViewer extends Component<Props,State>
 
                      let expand
                      if(elem.filter(t=>t.type === "uri" || t.type === "literal").length > 3) {
+                       /*
                        return (
                          <div>
                             <h3><span>{this.proplink(k)}</span>:&nbsp;<span
@@ -2072,6 +2073,21 @@ class ResourceViewer extends Component<Props,State>
                             <Collapse className={"propCollapse in-"+(this.state.collapse[k]===true)} in={this.state.collapse[k]}>{ret}</Collapse>
                          </div>
                        )
+                       */
+                         return (
+                            <div>
+                               <h3><span>{this.proplink(k)}</span>:&nbsp;</h3>
+                               <div style={{width:"100%"}} className="propCollapseHeader">{ret.splice(0,3)}</div>
+                                <Collapse className={"propCollapse in-"+(this.state.collapse[k]===true)} in={this.state.collapse[k]}>
+                                   {ret}
+                                </Collapse>
+                               { <span
+                                 onClick={(e) => this.setState({...this.state,collapse:{...this.state.collapse,[k]:!this.state.collapse[k]}})}
+                                 className="expand">
+                                  {"("+(this.state.collapse[k]?"hide":"...")+")"}
+                                </span> }
+                            </div>
+                         )
                      }
                      else {
                        return (
