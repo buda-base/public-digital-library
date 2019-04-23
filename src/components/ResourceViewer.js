@@ -1519,7 +1519,7 @@ class ResourceViewer extends Component<Props,State>
 
          let tiMir = setInterval( () => {
 
-            if(window.Mirador && window.Mirador.Viewer.prototype.setupViewer.toString().match(/Got key ←/)) {
+            if(window.Mirador && window.Mirador.Viewer.prototype.setupViewer.toString().match(/going to previous page/)) {
 
                clearInterval(tiMir);
 
