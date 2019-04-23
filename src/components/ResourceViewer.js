@@ -1543,7 +1543,7 @@ class ResourceViewer extends Component<Props,State>
                let elem = this.getResourceElem(adm+"access")
                if(elem && elem.filter(e => e.value.match(/(AccessFairUse)|(Restricted.*)$/)).length >= 1) withCredentials = true
 
-               let config = miradorConfig(data,manif,canvasID,withCredentials);
+               let config = miradorConfig(data,manif,canvasID,withCredentials,this.props.langPreset);
 
                //console.log("mir ador",config,this.props)
                window.Mirador( config )

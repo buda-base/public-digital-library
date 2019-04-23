@@ -110,13 +110,13 @@ export function miradorSetUI(closeCollec)
    }, 350 )
 }
 
-export function miradorConfig(data, manifest, canvasID, useCredentials)
+export function miradorConfig(data, manifest, canvasID, useCredentials, langList)
 {
    let _extendedPresets = extendedPresets
    if(!_extendedPresets) _extendedPresets = window.extendedPresets
    let _sortLangScriptLabels = sortLangScriptLabels
    if(!_sortLangScriptLabels) _sortLangScriptLabels = window.sortLangScriptLabels
-
+   if(langList === undefined) langList = [ "bo", "zh-hans" ]
 
    let config = {
       id:"viewer",
@@ -133,7 +133,7 @@ export function miradorConfig(data, manifest, canvasID, useCredentials)
                // if(typeof labels == "string") labels = [ { "@value": labels, "@language":"bo-x-ewts" } ]
                if(typeof labels == "string") return labels
 
-               let langs = _extendedPresets([ "bo", "zh-hans" ])
+               let langs = _extendedPresets(langList)
                let sortLabels = _sortLangScriptLabels(labels,langs.flat,langs.translit)
                let label = sortLabels[0]
                if(label["@value"]) return label["@value"] //+"@"+label["@language"]
