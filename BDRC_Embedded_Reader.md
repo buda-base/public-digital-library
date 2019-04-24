@@ -73,6 +73,7 @@ Alternatively you can also follow these steps in order to embed a IIIF collectio
 
 ```html
 <script src="http://library.bdrc.io/scripts/src/lib/mirador/mirador.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@dbmdz/mirador-keyboardnavigation@1.1.0/keyboardNavigation.min.js"></script>  
 <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.11/lodash.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/requirejs@2.3.6/require.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/jsewts@1.0.2/src/jsewts.min.js"></script>
@@ -122,6 +123,7 @@ Here is the complete file:
   <body>
     <div id="viewer" class="demo"></div>
     <script src="http://library.bdrc.io/scripts/src/lib/mirador/mirador.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@dbmdz/mirador-keyboardnavigation@1.1.0/keyboardNavigation.min.js"></script>      
     <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.11/lodash.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/requirejs@2.3.6/require.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/jsewts@1.0.2/src/jsewts.min.js"></script>

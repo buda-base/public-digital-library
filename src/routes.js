@@ -200,10 +200,11 @@ const makeMainRoutes = () => {
                         return ( <AppContainer history={history}  auth={auth}/> ) } } />
                      <Route path="/view/:IRI" render={(props) =>
                         {
-
-                           console.log("props",props)
-
-                           miradorInitView(props);
+                           let get = qs.parse(history.location.search)
+                           console.log("props",props,get)
+                           let lang = get["lang"]
+                           if(lang) lang = lang.split(",")
+                           miradorInitView(props,lang);
 
 
 

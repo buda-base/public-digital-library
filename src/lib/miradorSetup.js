@@ -438,9 +438,11 @@ function miradorInitMenu(maxWonly) {
    //console.log("maxW",window.maxW)
 }
 
-export async function miradorInitView(props) {
+export async function miradorInitView(props,lang) {
 
    const bdr = "http://purl.bdrc.io/resource/"
+
+   if(lang === undefined) lang = ["bo","zh-hans"]
 
    let data = [
       { "collectionUri": "../tibcolldemo2.json", location: "BDRC - Palpung Collection"}
@@ -502,7 +504,7 @@ export async function miradorInitView(props) {
    if(manif && manif.manifestUri) manif = manif.manifestUri
    console.log("data",data,manif)
 
-   let config = miradorConfig(data,manif);
+   let config = miradorConfig(data,manif,null,null,lang);
 
    let initTimer = setInterval( ((cfg) => () => {
       console.log("init?",cfg,window.Mirador)

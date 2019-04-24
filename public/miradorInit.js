@@ -10,8 +10,9 @@ async function init() {
    let data = [
       { "collectionUri" : "http://iiifpres.bdrc.io"+"/2.1.1/collection/wio:"+work, location:"" }
    ]
-
-   let config = miradorConfig(data);
+   let lg = urlParams.get('lang') || "bo,zh-hans";
+   lg = lg.split(",")
+   let config = miradorConfig(data,null,null,null,lg);
    window.Mirador( config )
    miradorSetUI();
 }
