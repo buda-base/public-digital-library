@@ -41,7 +41,6 @@ import ShareIcon from '@material-ui/icons/Share';
 import HomeIcon from '@material-ui/icons/Home';
 import ChatIcon from '@material-ui/icons/Chat';
 import Script from 'react-load-script'
-import ScriptTag from 'react-script-tag'
 import React, { Component } from 'react';
 import qs from 'query-string'
 import Button from '@material-ui/core/Button';
@@ -2412,7 +2411,7 @@ class ResourceViewer extends Component<Props,State>
                   //<Script url={"https://cdn.jsdelivr.net/npm/mirador@2.7.2/dist/mirador.js"}/>]
                   <link rel="stylesheet" type="text/css" href="../scripts/mirador/css/mirador-combined.css"/>,
                   <link rel="stylesheet" type="text/css" href="../scripts/src/lib/mirador.css"/>,
-                  <ScriptTag src={"../scripts/mirador/mirador.js"} onLoad={(e) => { require("@dbmdz/mirador-keyboardnavigation"); }} />,
+                  <Script url={"../scripts/mirador/mirador.js"} onLoad={(e) => { require("@dbmdz/mirador-keyboardnavigation"); }} />,
                   ]
                   //<Script url={"http://library-dev.bdrc.io/scripts/mirador/mirador.js"} onLoad={()=>{$("#fond").addClass("hidden")}} />]
                }
