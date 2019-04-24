@@ -277,6 +277,8 @@ function miradorAddClick(firstInit){
                                  jQ(".user-buttons.mirador-main-menu").find("li:nth-last-child(3),li:nth-last-child(4)").addClass('off')
                               })
 
+                              jQ(".mirador-container .scroll-view").attr("tabindex",-1).focus()
+
 
                            }, 100);
 
