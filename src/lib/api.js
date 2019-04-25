@@ -77,7 +77,7 @@ export default class API {
          const id_token = localStorage.getItem('id_token');
          //const expires_at = localStorage.getItem('expires_at');
 
-         console.log("access",id_token,access_token,isAuthenticated(),url,minSize,acc,cookie)
+         //console.log("access",id_token,access_token,isAuthenticated(),url,minSize,acc,cookie)
 
          let head = {}
          if(acc) head = { ...head, "Accept":acc }
@@ -90,8 +90,6 @@ export default class API {
             if(url.match(/setcookie/)) xhrArgs = { credentials: 'include' } //, 'mode':'no-cors'}
             if(!cookie) head = { ...head, "Authorization":"bearer "+id_token }
          }
-
-         console.log(new Headers(head),head,lang)
 
          let response = await this._fetch( url, { method:"GET",headers:new Headers(head), ...xhrArgs } )
 
@@ -109,9 +107,11 @@ export default class API {
          }
 
          console.log("FETCH ok",url,response )
+         /*
          for(let c of response.headers.keys()) {
             console.log(c,response.headers.get(c))
          }
+         */
          /*
          let cookie = response.headers.get("Set-Cookie")
          if(cookie) {
@@ -127,7 +127,7 @@ export default class API {
          }
          else {
             let buffer = await response.arrayBuffer() ;
-            console.log("buffer",buffer,response)
+            //console.log("buffer",buffer,response)
             return buffer
          }
       }
@@ -366,7 +366,7 @@ export default class API {
          })
       })
 
-      console.log("apres fetch",response)
+      //console.log("apres fetch",response)
 
       if (!response.ok) {
          if (response.status === '404') {

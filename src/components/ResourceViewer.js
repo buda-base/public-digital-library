@@ -1575,7 +1575,7 @@ class ResourceViewer extends Component<Props,State>
       if(!askPdf)
       {
          event.preventDefault();
-         console.log("pdf",pdf,file)
+         //console.log("pdf",pdf,file)
          this.props.onCreatePdf(pdf,{iri:this.props.IRI,file});
       }
 
@@ -1750,7 +1750,7 @@ class ResourceViewer extends Component<Props,State>
       if(kZprop.indexOf(adm+"access") !== -1) {
          let elem = this.getResourceElem(adm+"access")
          if(elem && elem.filter(e => e.value.match(/AccessFairUse$/)).length >= 1) fairUse = true
-         console.log("adm",elem,fairUse)
+         //console.log("adm",elem,fairUse)
       }
 
       let pdfLink,monoVol = -1 ;
@@ -1762,7 +1762,7 @@ class ResourceViewer extends Component<Props,State>
 //         console.log("iiif",iiif,this.props.config)
 
          let id = this.props.IRI.replace(/^[^:]+:./,"")
-         if(this.props.imageAsset.match(/[/](i|wio):/)) {
+         if(this.props.imageAsset.match(/[/]i:/) || (this.props.imageAsset.match(/[/]wio:/) && this.props.manifests)) {
             pdfLink = iiif+"/download/pdf/wi:bdr:W"+id+"::bdr:I"+id ;
          }
          else if(this.props.imageAsset.match(/[/]v:/)) {
@@ -2134,7 +2134,7 @@ class ResourceViewer extends Component<Props,State>
          }
       </div>
 
-      console.log("pdf",pdfLink,this._annoPane.length)
+      //console.log("pdf",pdfLink,this._annoPane.length)
 
       // add nother route to UViewer Gallery page
       return (

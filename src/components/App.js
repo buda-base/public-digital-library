@@ -1516,7 +1516,7 @@ class App extends Component<Props,State> {
 
             let elem = tree.filter(f => f["@id"] == e)
 
-            console.log("elem",elem,e)
+            //console.log("elem",elem,e)
 
             if(elem.length > 0) elem = elem[0]
             else return
@@ -1902,7 +1902,7 @@ class App extends Component<Props,State> {
                                     {
 
                                        let label = this.props.ontology[i]
-                                       console.log("label",label)
+                                       //console.log("label",label)
                                        if(label) {
                                           let labels = label["http://www.w3.org/2000/01/rdf-schema#label"]
                                           if(!labels) labels = label[skos+"prefLabel"]
@@ -1915,7 +1915,7 @@ class App extends Component<Props,State> {
                                        }
                                        else label = this.pretty(i)
 
-                                       console.log("label",i,label)
+                                       //console.log("label",i,label)
 
                                        let checked = this.state.filters.facets && this.state.filters.facets[jpre]
                                        if(!checked) {
