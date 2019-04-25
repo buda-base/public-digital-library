@@ -748,7 +748,8 @@ class App extends Component<Props,State> {
          let kZsub = Object.keys(t[kZ[0]])
 
          let labels = this.props.ontology[kZ[0]]
-         if(labels) labels = labels[rdfs+"label"]
+         if(labels && labels[rdfs+"label"]) labels = labels[rdfs+"label"]
+         else if(labels && labels[skos+"prefLabel"]) labels = labels[skos+"prefLabel"]
          if(!labels) labels = []
 
          //console.log("t",t,kZ,kZsub,labels)
@@ -1515,7 +1516,7 @@ class App extends Component<Props,State> {
 
             let elem = tree.filter(f => f["@id"] == e)
 
-            //console.log("elem",elem,e)
+            console.log("elem",elem,e)
 
             if(elem.length > 0) elem = elem[0]
             else return
@@ -1810,7 +1811,7 @@ class App extends Component<Props,State> {
                                  let rooTax = false
                                  do // until every property has been put somewhere
                                  {
-                                    //console.log("loop")
+                                    //console.log("loop",JSON.stringify(tmProps,null,3))
                                     change = false ;
                                     for(let i in tmProps) { // try each one
                                        let k = tmProps[i]
@@ -1819,7 +1820,7 @@ class App extends Component<Props,State> {
                                        //console.log("p",k,p)
 
                                        if(!p || (!p[rdfs+"subPropertyOf"]
-                                          && (!p[rdfs+"subClassOf"] || p[rdfs+"subClassOf"].filter(e => e.value == bdo+"Event").length != 0 )
+                                          && (!p[rdfs+"subClassOf"] || p[rdfs+"subClassOf"].filter(e => e.value == bdo+"Event").length != 0 || p[rdfs+"subClassOf"].filter(e => e.value == bdo+"LangScript").length != 0 )
                                           && (!p[bdo+"taxSubClassOf"] || p[bdo+"taxSubClassOf"].filter(e => e.value == bdr+"LanguageTaxonomy").length != 0 ) ) ) // is it a root property ?
                                        {
                                           //console.log("root",k,p)
@@ -1830,6 +1831,7 @@ class App extends Component<Props,State> {
                                        }
                                        else // find its root property in tree
                                        {
+                                          //console.log("inT")
                                           change = this.inserTree(k,p,tree)
                                           if(change) {
                                              delete tmProps[i];
@@ -1850,14 +1852,14 @@ class App extends Component<Props,State> {
                                           if(p && p[bdo+"taxSubClassOf"] && p[bdo+"taxSubClassOf"].filter(q => tmProps.filter(r => r == q.value).length != 0).length == 0)
                                           {
                                              tmProps = tmProps.concat(p[bdo+"taxSubClassOf"].map(e => e.value));
-                                             //console.log(" k",k,tmProps)
+                                             //console.log(" k1",k,tmProps)
                                              change = true ;
                                              rooTax = true ;
                                           }
                                           else if(p && p[rdfs+"subClassOf"] && p[rdfs+"subClassOf"].filter(q => tmProps.filter(r => r == q.value).length != 0).length == 0)
                                           {
                                              tmProps = tmProps.concat(p[rdfs+"subClassOf"].map(e => e.value));
-                                             //console.log(" k",k,tmProps)
+                                             //console.log(" k2",k,tmProps)
                                              change = true ;
                                              rooTax = true ;
                                           }
@@ -1900,14 +1902,20 @@ class App extends Component<Props,State> {
                                     {
 
                                        let label = this.props.ontology[i]
+                                       console.log("label",label)
                                        if(label) {
-                                          for(let l of label["http://www.w3.org/2000/01/rdf-schema#label"])
-                                             if(l.lang == "en") label = l.value
+                                          let labels = label["http://www.w3.org/2000/01/rdf-schema#label"]
+                                          if(!labels) labels = label[skos+"prefLabel"]
+                                          if(labels) {
+                                              for(let l of labels)
+                                                if(l.lang == this.props.locale) label = l.value
+                                          }
                                           if(label["http://www.w3.org/2000/01/rdf-schema#label"]) label = label["http://www.w3.org/2000/01/rdf-schema#label"][0].value
+                                          if(label[skos+"prefLabel"]) label = label[skos+"prefLabel"][0].value
                                        }
                                        else label = this.pretty(i)
 
-                                       // console.log("label",i,label)
+                                       console.log("label",i,label)
 
                                        let checked = this.state.filters.facets && this.state.filters.facets[jpre]
                                        if(!checked) {

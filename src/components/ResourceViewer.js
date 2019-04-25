@@ -2063,7 +2063,7 @@ class ResourceViewer extends Component<Props,State>
                      if(!ret || ret.length === 0) ret = tags.map((e)=> [e," "] )
 
                      let expand
-                     if(elem.filter(t=>t.type === "uri" || t.type === "literal").length > 3) {
+                     if(elem && elem.filter && elem.filter(t=>t.type === "uri" || t.type === "literal").length > 3) {
                        /*
                        return (
                          <div>
