@@ -460,58 +460,60 @@ function getData(result)  {
    //console.log("pre",pre,data.etexts)
    */
 
-   delete data.chunks
-}
+     delete data.chunks
+  }
 
 
 
-if(data.works) {
+  if(data.works) {
 
-   let ordered = Object.keys(data.works).sort((a,b) => {
-      let propAbsA = data.works[a].filter((e)=>(e.value.match(/AbstractWork/)))
-      let propAbsB = data.works[b].filter((e)=>(e.value.match(/AbstractWork/)))
-      let propExpA = data.works[a].filter((e)=>(e.type.match(/HasExpression/)))
-      let propExpB = data.works[b].filter((e)=>(e.type.match(/HasExpression/)))
-      let propExpOfA = data.works[a].filter((e)=>(e.type.match(/ExpressionOf/)))
-      let propExpOfB = data.works[b].filter((e)=>(e.type.match(/ExpressionOf/)))
+     let ordered = Object.keys(data.works).sort((a,b) => {
+        let propAbsA = data.works[a].filter((e)=>(e.value.match(/AbstractWork/)))
+        let propAbsB = data.works[b].filter((e)=>(e.value.match(/AbstractWork/)))
+        let propExpA = data.works[a].filter((e)=>(e.type.match(/HasExpression/)))
+        let propExpB = data.works[b].filter((e)=>(e.type.match(/HasExpression/)))
+        let propExpOfA = data.works[a].filter((e)=>(e.type.match(/ExpressionOf/)))
+        let propExpOfB = data.works[b].filter((e)=>(e.type.match(/ExpressionOf/)))
 
-      if(propAbsA.length > 0) return -1 ;
-      else if(propAbsB.length > 0) return 1 ;
-      else if(propExpA.length > 0 && propExpB.length == 0) return -1 ;
-      else if(propExpB.length > 0 && propExpA.length == 0) return 1 ;
-      else if(propExpOfA.length > 0 && propExpOfB.length == 0) return -1 ;
-      else if(propExpOfB.length > 0 && propExpOfA.length == 0) return 1 ;
-      else return 0;
-   })
+        if(propAbsA.length > 0) return -1 ;
+        else if(propAbsB.length > 0) return 1 ;
+        else if(propExpA.length > 0 && propExpB.length == 0) return -1 ;
+        else if(propExpB.length > 0 && propExpA.length == 0) return 1 ;
+        else if(propExpOfA.length > 0 && propExpOfB.length == 0) return -1 ;
+        else if(propExpOfB.length > 0 && propExpOfA.length == 0) return 1 ;
+        else return 0;
+     })
 
-   let tmp = {}
-   for(let o of ordered) { tmp[o] = data.works[o]; }
-   data.works = tmp
-   // data.works = ordered.reduce((acc,k) => { acc[k]=data.works[k]; },{})
-}
+     let tmp = {}
+     for(let o of ordered) { tmp[o] = data.works[o]; }
+     data.works = tmp
+     // data.works = ordered.reduce((acc,k) => { acc[k]=data.works[k]; },{})
+  }
 
+  console.log("result",result)
 
-if(Object.keys(result).length == 0 || (Object.keys(result).length == 1 && result["metadata"])) { numR = 0 }
-else
-{
-   numR = Object.keys(result).reduce((acc,e) => {
-      return ( acc + e=="metadata"?0:Object.keys(result[e]).length)
-   },0)
-   if(metadata)
-   {
-      let kZ = Object.keys(metadata)
-      if(kZ.reduce((acc,k) => (acc || k.match(/^http:/) ),false))
-      numR = kZ.reduce((acc,k) => ( acc+Number(metadata[k])),0)
+  if(Object.keys(result).length == 0 || (Object.keys(result).length == 1 && result["metadata"])) { numR = 0 }
+  else
+  {
+     numR = Object.keys(result).reduce((acc,e) => {
+        if(result[e]!=null) return ( acc + e=="metadata"?0:Object.keys(result[e]).length)
+        else return acc
+     },0)
+     if(metadata)
+     {
+        let kZ = Object.keys(metadata)
+        if(kZ.reduce((acc,k) => (acc || k.match(/^http:/) ),false))
+        numR = kZ.reduce((acc,k) => ( acc+Number(metadata[k])),0)
 
-      delete data.metadata
-   }
-}
+        delete data.metadata
+     }
+  }
 
-//console.log("getData#result",result,numR)
+  //console.log("getData#result",result,numR)
 
-data = {  numResults:numR, results : { bindings: {...data } } }
+  data = {  numResults:numR, results : { bindings: {...data } } }
 
-return data
+  return data
 }
 
 

@@ -748,8 +748,8 @@ class App extends Component<Props,State> {
       if(!val.match(/↤/) && k)
          val = /*val.replace(/@.* /,"")*/ val.split(new RegExp(k.replace(/[ -'ʾ]/g,"[ -'ʾ]"))).map((l) => ([<span>{l}</span>,<span className="highlight">{k}</span>])) ;
       else {
-         let str = val.replace(/^.*?(↦([^↤]+)↤([- ]↦([^↤]+)↤)*).*$/g,"$1").replace(/↤([- ])↦/g,"$1").replace(/[↤↦]/g,"")
-         val = val.replace(/↦[^↤]+↤([- ]↦[^↤]+↤)*/g,"↦↤")
+         let str = val.replace(/^.*?(↦([^↤]+)↤([-/_() ]+↦([^↤]+)↤)*).*$/g,"$1").replace(/↤([-/_() ]+)↦/g,"$1").replace(/[↤↦]/g,"")
+         val = val.replace(/↦[^↤]+↤([-/_() ]+↦[^↤]+↤)*/g,"↦↤")
 
          //console.log("str:",str,"=",val)
 
@@ -763,8 +763,10 @@ class App extends Component<Props,State> {
 
    counTree(tree:{},meta:{},any:integer=0):[]
    {
+     //console.log("cT",tree,meta,any)
       let ret = []
       let tmp = Object.keys(tree).map(k => ({[k]:tree[k]}))
+      //console.log("tmp",tmp)
       while(tmp.length > 0) {
          let t = tmp[0]
 
@@ -780,12 +782,16 @@ class App extends Component<Props,State> {
 
          tmp = tmp.concat(kZsub.map(k => ({[k]:t[kZ[0]][k]})))
 
+         //console.log("tmp",tmp)
+
          let cpt,checkSub ;
          if(meta[kZ[0]]) cpt = meta[kZ[0]]
          else {
-            cpt = kZsub.reduce((acc,e) => { return acc + meta[e] ; },0)
+            cpt = kZsub.reduce((acc,e) => { return acc + meta[e]?meta[e]:0 ; },0)
             checkSub = true ;
          }
+
+         //console.log("cpt",cpt)
 
          var elem = {"@id":kZ[0],"taxHasSubClass":kZsub,["tmp:count"]:cpt,"skos:prefLabel":labels}
          if(checkSub) elem = { ...elem, checkSub}
@@ -1095,7 +1101,7 @@ class App extends Component<Props,State> {
                   }
 
                }
-               //console.log("results",results);
+               console.log("results",results);
                let list = results.results.bindings
 
                //if(!list.length) list = Object.keys(list).map((o) => {
@@ -1164,7 +1170,7 @@ class App extends Component<Props,State> {
                   if(sublist) { for(let o of Object.keys(sublist))
                   {
                      absi ++ ;
-                     //console.log("cpt",cpt,n,begin,findFirst,findNext)
+                     console.log("cpt",cpt,n,begin,findFirst,findNext,o,sublist[o])
 
                      if(absi < begin && findFirst) { cpt++ ; continue; }
                      else if(cpt == begin && !findNext) {
@@ -1181,7 +1187,7 @@ class App extends Component<Props,State> {
                      sList = _.sortBy(sList, (e) => {
                         for(let k of Object.keys(listOrder)) { if(e.type && e.type.match(new RegExp(k))) return listOrder[k] }
                      })
-                     //console.log(JSON.stringify(sList,null,3));
+                     console.log("sList",JSON.stringify(sList,null,3));
                      label = getLangLabel(this,sList) // ,true)
                      if(label && label.length > 0) label = label[0]
                      /*
@@ -1810,7 +1816,7 @@ class App extends Component<Props,State> {
                               }
                               else { //sort according to ontology properties hierarchy
                                  let tree = {}, tmProps = Object.keys(meta[j]).map(e => e), change = false
-                                 let rooTax = false
+                                 //let rooTax = false
                                  do // until every property has been put somewhere
                                  {
                                     //console.log("loop",JSON.stringify(tmProps,null,3))
@@ -1833,8 +1839,8 @@ class App extends Component<Props,State> {
                                        }
                                        else // find its root property in tree
                                        {
-                                          //console.log("inT")
                                           change = this.inserTree(k,p,tree)
+                                          //console.log("inT",change)
                                           if(change) {
                                              delete tmProps[i];
                                              break ;
@@ -1843,27 +1849,29 @@ class App extends Component<Props,State> {
                                     }
                                     tmProps = tmProps.filter(String)
 
+                                    //console.log("ici?",tmProps,change)
                                     //if(rooTax) break ;
 
-                                    if(!change && !rooTax) {
+                                    if(!change) { //} && !rooTax) {
                                        //console.log("!no change!")
                                        for(let i in tmProps) {
                                           let k = tmProps[i]
                                           let p = this.props.ontology[k]
                                           // is it a root property ?
+                                          //console.log("k?",k,p)
                                           if(p && p[bdo+"taxSubClassOf"] && p[bdo+"taxSubClassOf"].filter(q => tmProps.filter(r => r == q.value).length != 0).length == 0)
                                           {
                                              tmProps = tmProps.concat(p[bdo+"taxSubClassOf"].map(e => e.value));
                                              //console.log(" k1",k,tmProps)
                                              change = true ;
-                                             rooTax = true ;
+                                             //rooTax = true ;
                                           }
                                           else if(p && p[rdfs+"subClassOf"] && p[rdfs+"subClassOf"].filter(q => tmProps.filter(r => r == q.value).length != 0).length == 0)
                                           {
                                              tmProps = tmProps.concat(p[rdfs+"subClassOf"].map(e => e.value));
                                              //console.log(" k2",k,tmProps)
                                              change = true ;
-                                             rooTax = true ;
+                                             //rooTax = true ;
                                           }
                                        }
                                        if(!change)break;
@@ -1874,7 +1882,7 @@ class App extends Component<Props,State> {
 
                                  //console.log("inserTree",tree)
                                  tree = this.counTree(tree,meta[j],counts["datatype"][this.state.filters.datatype[0]])
-                                 //console.log("counTree",tree)
+                                 //console.log("counTree",JSON.stringify(tree,null,3))
 
                                  return widget(jlabel,j,subWidget(tree,jpre,tree[0]['taxHasSubClass']));
                               }
