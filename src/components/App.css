@@ -9,6 +9,7 @@
 body { overflow:auto !important;padding-right:0 !important;  }
 
 #login { position:absolute; top:0;right:0; }
+#login button {color:rgba(0,0,0,0.54); }
 
 #pagine { width:100%;display:flex;padding:20px;justify-content: space-between; box-sizing:border-box}
 #pagine svg {height:36px;width:36px; cursor:pointer;}

@@ -43,7 +43,7 @@ import InputLabel from '@material-ui/core/InputLabel';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import Select from '@material-ui/core/Select';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faLanguage } from '@fortawesome/free-solid-svg-icons'
+import { faLanguage,faUserCircle,faSignOutAlt } from '@fortawesome/free-solid-svg-icons'
 import qs from 'query-string'
 
 import {I18n, Translate, Localize } from "react-redux-i18n" ;
@@ -1669,26 +1669,21 @@ class App extends Component<Props,State> {
             style={{width:"100%",height:"calc(100vh)",backgroundColor: "#000"}}/> */}
 
          <div id="login">
+            <IconButton style={{marginLeft:"15px"}}  onClick={e => this.props.onToggleLanguagePanel()}>
+              <FontAwesomeIcon style={{fontSize:"28px"}} icon={faLanguage} title="Display Preferences"/>
+            </IconButton>
             {
               !isAuthenticated() && (
-                  <Button
-                    //bsStyle="primary"
-                    className="btn-margin"
-                    onClick={this.login.bind(this)}
-                  >
-                    Log In
-                  </Button>
+                  <IconButton onClick={this.login.bind(this)} title="Log in">
+                    <FontAwesomeIcon style={{fontSize:"28px"}} icon={faUserCircle} />
+                  </IconButton>
                 )
             }
             {
               isAuthenticated() && (
-                  <Button
-                    bsStyle="primary"
-                    className="btn-margin"
-                    onClick={this.logout.bind(this)}
-                  >
-                    Log Out
-                  </Button>
+                  <IconButton onClick={this.logout.bind(this)} title="Log out">
+                    <FontAwesomeIcon style={{fontSize:"28px"}} icon={faSignOutAlt} />
+                  </IconButton>
                 )
             }
          </div>
@@ -2135,9 +2130,6 @@ class App extends Component<Props,State> {
                   onKeyPress={(e) => this.handleCustomLanguage(e)}
                /> */ }
               </FormControl>
-              <IconButton style={{marginLeft:"15px"}}  onClick={e => this.props.onToggleLanguagePanel()}>
-                 <FontAwesomeIcon style={{fontSize:"28px"}} icon={faLanguage} />
-              </IconButton>
            </div>
                { false && this.state.keyword.length > 0 && this.state.dataSource.length > 0 &&
                   <div style={{
