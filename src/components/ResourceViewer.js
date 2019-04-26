@@ -56,7 +56,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faLanguage } from '@fortawesome/free-solid-svg-icons'
 //import {MapComponent} from './Map';
 import {getEntiType} from '../lib/api';
-import {languages,getLangLabel,langProfile} from './App';
+import {languages,getLangLabel,langProfile,top_right_menu} from './App';
 import Popover from '@material-ui/core/Popover';
 import MenuItem from '@material-ui/core/MenuItem';
 import List from '@material-ui/core/List';
@@ -89,6 +89,7 @@ type Props = {
    canvasID?:string,
    pdfVolumes?:[],
    rightPanel?:boolean,
+   logged?:boolean,
    onInitPdf: (u:string,s:string) => void,
    onRequestPdf: (u:string,s:string) => void,
    onCreatePdf: (s:string,u:string) => void,
@@ -209,6 +210,143 @@ let propOrder = {
 }
 
 let reload = false ;
+
+function top_left_menu(that,pdfLink,monoVol)
+{
+  return (
+
+    <div id="top-left">
+       <Link style={{fontSize:"20px"}} className="goBack" to={that.props.keyword&&!that.props.keyword.match(/^bdr:/)?"/search?q="+that.props.keyword+"&lg="+that.props.language+(that.props.datatype?"&t="+that.props.datatype:""):"/"}>
+          {/* <Button style={{paddingLeft:"0"}}>&lt; Go back to search page</Button> */}
+          <IconButton style={{paddingLeft:0}} title={I18n.t("resource.back")}>
+             <HomeIcon style={{fontSize:"30px"}}/>
+          </IconButton>
+       </Link>
+       {
+          that.props.IRI.match(/^bdr:/) &&
+          [<a className="goBack" target="_blank" title="TTL version" rel="alternate" type="text/turtle" href={"http://purl.bdrc.io/resource/"+that.props.IRI.replace(/bdr:/,"")+".ttl"}>
+             <Button style={{marginLeft:"0px",paddingLeft:"10px",paddingRight:0}}>{I18n.t("resource.export")} ttl</Button>
+          </a>,<span>&nbsp;/&nbsp;</span>,
+          <a className="goBack noML" target="_blank" title="JSON-LD version" rel="alternate" type="application/ld+json" href={"http://purl.bdrc.io/resource/"+that.props.IRI.replace(/bdr:/,"")+".jsonld"}>
+             <Button style={{paddingLeft:0,paddingRight:"10px"}}>json-ld</Button>
+          </a>]
+       }
+       {
+          that.props.IRI.match(/^bda[nc]:/) &&
+          [<a className="goBack" target="_blank" title="TTL version" rel="alternate" type="text/turtle"
+             href={"http://purl.bdrc.io/"+(that.props.IRI.match(/^bdan:/)?"annotation/":"anncollection/")+that.props.IRI.replace(/bda[nc]:/,"")+".ttl"}>
+                <Button style={{marginLeft:"0px",paddingLeft:"10px",paddingRight:"0px"}}>{I18n.t("resource.export")} ttl</Button>
+          </a>,<span>&nbsp;/&nbsp;</span>,
+          <a className="goBack noML" target="_blank" title="JSON-LD version" rel="alternate" type="application/ld+json"
+             href={"http://purl.bdrc.io/"+(that.props.IRI.match(/^bdan:/)?"annotation/":"anncollection/")+that.props.IRI.replace(/bda[nc]:/,"")+".jsonld"}>
+                <Button style={{paddingLeft:0,paddingRight:"10px"}}>json-ld</Button>
+          </a>]
+       }
+       { /*  TODO // external resources ==> /query/graph/ResInfo?R_RES=
+          that.props.IRI.match(/^bda[cn]:/) &&
+       */}
+       {pdfLink &&
+          [<a style={{fontSize:"26px"}} className="goBack pdfLoader">
+             <Loader loaded={(!that.props.pdfVolumes || that.props.pdfVolumes.length > 0)} options={{position:"relative",left:"24px",top:"-7px"}} />
+                <IconButton title={I18n.t("resource.download")+" PDF/ZIP"} onClick={ev =>
+                      {
+                         //if(that.props.createPdf) return ;
+                          if(monoVol > 0){
+                            that.props.onInitPdf({iri:that.props.IRI,vol:monoVol},pdfLink)
+                          }
+                          else if(!that.props.pdfVolumes) {
+                            that.props.onRequestPdf(that.props.IRI,pdfLink)
+                         }
+                         that.setState({...that.state, pdfOpen:true,anchorElPdf:ev.currentTarget})
+                      }
+                   }>
+                   <img src="/DL_icon.svg" height="24" />
+                </IconButton>
+                { (that.props.pdfVolumes && that.props.pdfVolumes.length > 0) &&
+                   <Popover
+                      className="poPdf"
+                      open={that.state.pdfOpen == true || that.props.pdfReady == true}
+                      anchorEl={that.state.anchorElPdf}
+                      onClose={that.handleRequestClosePdf.bind(this)}
+                   >
+                      <List>
+                         {/*
+                           that.props.pdfUrl &&
+                          [<MenuItem onClick={e => that.setState({...that.state,pdfOpen:false})}><a href={that.props.pdfUrl} target="_blank">Download</a></MenuItem>
+                          ,<hr/>]
+                         */}
+                         {
+                            that.props.pdfVolumes.map(e => {
+
+                               let Ploading = e.pdfFile && e.pdfFile == true
+                               let Ploaded = e.pdfFile && e.pdfFile != true
+                               let Zloading = e.zipFile && e.zipFile == true
+                               let Zloaded = e.zipFile && e.zipFile != true
+
+                               return (<ListItem className="pdfMenu">
+                                     <b>{"Volume "+e.volume}:</b>
+                                     &nbsp;&nbsp;
+                                     <a onClick={ev => that.handlePdfClick(ev,e.link,e.pdfFile)}
+                                        {...(Ploaded ?{href:e.pdfFile}:{})}
+                                     >
+                                        { Ploading && <Loader className="pdfSpinner" loaded={Ploaded} scale={0.35}/> }
+                                        <span {... (Ploading?{className:"pdfLoading"}:{})}>PDF</span>
+                                     </a>
+                                     &nbsp;&nbsp;|&nbsp;&nbsp;
+                                     <a onClick={ev => that.handlePdfClick(ev,e.link,e.zipFile,"zip")}
+                                        {...(Zloaded ?{href:e.zipFile}:{})}
+                                     >
+                                        { Zloading && <Loader className="zipSpinner" loaded={Zloaded} scale={0.35}/> }
+                                        <span {... (Zloading?{className:"zipLoading"}:{})}>ZIP</span>
+                                  </a>
+                                  </ListItem>)
+                            })
+                         }
+                      </List>
+                   </Popover>
+                }
+          </a>
+       ]
+       }
+
+
+       <CopyToClipboard text={"http://purl.bdrc.io/resource/"+that.props.IRI.replace(/^bdr:/,"")} onCopy={(e) =>
+                //alert("Resource url copied to clipboard\nCTRL+V to paste")
+                prompt("Resource url has been copied to clipboard.\nCTRL+V to paste","http://purl.bdrc.io/resource/"+that.props.IRI.replace(/^bdr:/,""))
+          }>
+
+          <IconButton style={{marginLeft:"0px"}} title="Permalink">
+             <ShareIcon />
+          </IconButton>
+       </CopyToClipboard>
+
+       {
+
+          !that.props.manifestError && that.props.imageAsset &&
+          [/* <Button className="goBack" onClick={that.showUV.bind(this)}
+             style={{paddingRight:"0",marginRight:"20px"}}>view image gallery</Button>, */
+
+             <CopyToClipboard text={that.props.imageAsset} onCopy={(e) =>
+                      //alert("Resource url copied to clipboard\nCTRL+V to paste")
+                      prompt("IIIF Manifest url has been copied to clipboard.\nCTRL+V to paste",that.props.imageAsset)
+                }>
+
+                <Button id="iiif" className="goBack" title="IIIF manifest"><img src="/iiif.png"/></Button>
+             </CopyToClipboard>]
+
+       }
+       <IconButton style={{marginLeft:"0px"}} title={I18n.t("resource.toggle")} onClick={e => that.setState({...that.state,annoPane:!that.state.annoPane})}>
+          <ChatIcon />
+       </IconButton>
+       {
+          that.props.IRI.match(/^[^:]+:[RPGTW]/) &&
+          <Link className="goBack" to={"/search?r="+that.props.IRI}>
+             <Button style={{marginLeft:"0px",paddingLeft:0}}>{I18n.t("resource.browse")} &gt;</Button>
+          </Link>
+       }
+     </div>
+   )
+}
 
 class ResourceViewer extends Component<Props,State>
 {
@@ -2141,6 +2279,8 @@ class ResourceViewer extends Component<Props,State>
          [<div style={{overflow:"hidden",textAlign:"center"}}>
             { !this.state.ready && <Loader loaded={false} /> }
             <div className={"resource "+getEntiType(this.props.IRI).toLowerCase()}>
+                { top_right_menu(this) }
+                { top_left_menu(this,pdfLink,monoVol)  }
                <div className={"SidePane right "  +(this.state.annoPane?"visible":"")} style={{top:"0",paddingTop:"50px"}}>
                      <IconButton className="hide" title="Toggle annotation markers" onClick={e => this.setState({...this.state,showAnno:!this.state.showAnno})}>
                         { this.state.showAnno && <SpeakerNotesOff/> }
@@ -2215,137 +2355,6 @@ class ResourceViewer extends Component<Props,State>
                      </div>
                   }
                </div>
-               <Link style={{fontSize:"20px"}} className="goBack" to={this.props.keyword&&!this.props.keyword.match(/^bdr:/)?"/search?q="+this.props.keyword+"&lg="+this.props.language+(this.props.datatype?"&t="+this.props.datatype:""):"/"}>
-                  {/* <Button style={{paddingLeft:"0"}}>&lt; Go back to search page</Button> */}
-                  <IconButton style={{paddingLeft:0}} title={I18n.t("resource.back")}>
-                     <HomeIcon style={{fontSize:"30px"}}/>
-                  </IconButton>
-               </Link>
-              <IconButton style={{marginLeft:"35px"}} onClick={e => this.props.onToggleLanguagePanel()} title={I18n.t("resource.settings")}>
-                 <FontAwesomeIcon style={{fontSize:"32px"}} icon={faLanguage} />
-              </IconButton>
-               {
-                  this.props.IRI.match(/^bdr:/) &&
-                  [<a className="goBack" target="_blank" title="TTL version" rel="alternate" type="text/turtle" href={"http://purl.bdrc.io/resource/"+this.props.IRI.replace(/bdr:/,"")+".ttl"}>
-                     <Button style={{marginLeft:"50px",paddingRight:"0"}}>{I18n.t("resource.export")} ttl</Button>
-                  </a>,<span>&nbsp;/&nbsp;</span>,
-                  <a className="goBack noML" target="_blank" title="JSON-LD version" rel="alternate" type="application/ld+json" href={"http://purl.bdrc.io/resource/"+this.props.IRI.replace(/bdr:/,"")+".jsonld"}>
-                     <Button style={{paddingLeft:0}}>json-ld</Button>
-                  </a>]
-               }
-               {
-                  this.props.IRI.match(/^bda[nc]:/) &&
-                  [<a className="goBack" target="_blank" title="TTL version" rel="alternate" type="text/turtle"
-                     href={"http://purl.bdrc.io/"+(this.props.IRI.match(/^bdan:/)?"annotation/":"anncollection/")+this.props.IRI.replace(/bda[nc]:/,"")+".ttl"}>
-                        <Button style={{marginLeft:"50px",paddingRight:"0"}}>{I18n.t("resource.export")} ttl</Button>
-                  </a>,<span>&nbsp;/&nbsp;</span>,
-                  <a className="goBack noML" target="_blank" title="JSON-LD version" rel="alternate" type="application/ld+json"
-                     href={"http://purl.bdrc.io/"+(this.props.IRI.match(/^bdan:/)?"annotation/":"anncollection/")+this.props.IRI.replace(/bda[nc]:/,"")+".jsonld"}>
-                        <Button style={{paddingLeft:0}}>json-ld</Button>
-                  </a>]
-               }
-               { /*  TODO // external resources ==> /query/graph/ResInfo?R_RES=
-                  this.props.IRI.match(/^bda[cn]:/) &&
-               */}
-               {pdfLink &&
-                  [<a style={{fontSize:"26px"}} className="goBack pdfLoader">
-                     <Loader loaded={(!this.props.pdfVolumes || this.props.pdfVolumes.length > 0)} options={{position:"relative",left:"24px",top:"-7px"}} />
-                        <IconButton title={I18n.t("resource.download")+" PDF/ZIP"} onClick={ev =>
-                              {
-                                 //if(this.props.createPdf) return ;
-                                  if(monoVol > 0){
-                                    this.props.onInitPdf({iri:this.props.IRI,vol:monoVol},pdfLink)
-                                  }
-                                  else if(!this.props.pdfVolumes) {
-                                    this.props.onRequestPdf(this.props.IRI,pdfLink)
-                                 }
-                                 this.setState({...this.state, pdfOpen:true,anchorElPdf:ev.currentTarget})
-                              }
-                           }>
-                           <img src="/DL_icon.svg" height="24" />
-                        </IconButton>
-                        { (this.props.pdfVolumes && this.props.pdfVolumes.length > 0) &&
-                           <Popover
-                              className="poPdf"
-                              open={this.state.pdfOpen == true || this.props.pdfReady == true}
-                              anchorEl={this.state.anchorElPdf}
-                              onClose={this.handleRequestClosePdf.bind(this)}
-                           >
-                              <List>
-                                 {/*
-                                   this.props.pdfUrl &&
-                                  [<MenuItem onClick={e => this.setState({...this.state,pdfOpen:false})}><a href={this.props.pdfUrl} target="_blank">Download</a></MenuItem>
-                                  ,<hr/>]
-                                 */}
-                                 {
-                                    this.props.pdfVolumes.map(e => {
-
-                                       let Ploading = e.pdfFile && e.pdfFile == true
-                                       let Ploaded = e.pdfFile && e.pdfFile != true
-                                       let Zloading = e.zipFile && e.zipFile == true
-                                       let Zloaded = e.zipFile && e.zipFile != true
-
-                                       return (<ListItem className="pdfMenu">
-                                             <b>{"Volume "+e.volume}:</b>
-                                             &nbsp;&nbsp;
-                                             <a onClick={ev => this.handlePdfClick(ev,e.link,e.pdfFile)}
-                                                {...(Ploaded ?{href:e.pdfFile}:{})}
-                                             >
-                                                { Ploading && <Loader className="pdfSpinner" loaded={Ploaded} scale={0.35}/> }
-                                                <span {... (Ploading?{className:"pdfLoading"}:{})}>PDF</span>
-                                             </a>
-                                             &nbsp;&nbsp;|&nbsp;&nbsp;
-                                             <a onClick={ev => this.handlePdfClick(ev,e.link,e.zipFile,"zip")}
-                                                {...(Zloaded ?{href:e.zipFile}:{})}
-                                             >
-                                                { Zloading && <Loader className="zipSpinner" loaded={Zloaded} scale={0.35}/> }
-                                                <span {... (Zloading?{className:"zipLoading"}:{})}>ZIP</span>
-                                          </a>
-                                          </ListItem>)
-                                    })
-                                 }
-                              </List>
-                           </Popover>
-                        }
-                  </a>
-               ]
-               }
-
-
-               <CopyToClipboard text={"http://purl.bdrc.io/resource/"+this.props.IRI.replace(/^bdr:/,"")} onCopy={(e) =>
-                        //alert("Resource url copied to clipboard\nCTRL+V to paste")
-                        prompt("Resource url has been copied to clipboard.\nCTRL+V to paste","http://purl.bdrc.io/resource/"+this.props.IRI.replace(/^bdr:/,""))
-                  }>
-
-                  <IconButton style={{marginLeft:"35px"}} title="Permalink">
-                     <ShareIcon />
-                  </IconButton>
-               </CopyToClipboard>
-
-               {
-
-                  !this.props.manifestError && this.props.imageAsset &&
-                  [/* <Button className="goBack" onClick={this.showUV.bind(this)}
-                     style={{paddingRight:"0",marginRight:"20px"}}>view image gallery</Button>, */
-
-                     <CopyToClipboard text={this.props.imageAsset} onCopy={(e) =>
-                              //alert("Resource url copied to clipboard\nCTRL+V to paste")
-                              prompt("IIIF Manifest url has been copied to clipboard.\nCTRL+V to paste",this.props.imageAsset)
-                        }>
-
-                        <Button id="iiif" className="goBack" title="IIIF manifest"><img src="/iiif.png"/></Button>
-                     </CopyToClipboard>]
-
-               }
-               <IconButton style={{marginLeft:"35px"}} title={I18n.t("resource.toggle")} onClick={e => this.setState({...this.state,annoPane:!this.state.annoPane})}>
-                  <ChatIcon />
-               </IconButton>
-               {
-                  this.props.IRI.match(/^[^:]+:[RPGTW]/) &&
-                  <Link className="goBack" to={"/search?r="+this.props.IRI}>
-                     <Button style={{marginLeft:"30px"}}>{I18n.t("resource.browse")} &gt;</Button>
-                  </Link>
-               }
                {/* {this.format("h1",rdf+"type",this.props.IRI)} */}
                { titre }
                { /*<MapComponent tmp={this.props}/ */}

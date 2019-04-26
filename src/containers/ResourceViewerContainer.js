@@ -11,6 +11,7 @@ import ResourceViewer from '../components/ResourceViewer';
 
 const mapStateToProps = (state,ownProps) => {
 
+  let logged = state.ui.logged ;
    let config = state.data.config ;
    let failures = state.data.failures
    let resources = state.data.resources
@@ -63,7 +64,7 @@ const mapStateToProps = (state,ownProps) => {
    let locale = state.i18n.locale
    let langPreset = state.ui.langPreset
 
-   let props = { config,resources, ontology, keyword, language, datatype, assocResources, prefLang, failures,
+   let props = { logged,config,resources, ontology, keyword, language, datatype, assocResources, prefLang, failures,
       imageAsset,firstImage,canvasID,collecManif,manifests,manifestError,pdfVolumes,createPdf,pdfUrl,
       annoCollec,rightPanel,locale,langPreset,imgData }
 

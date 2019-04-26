@@ -189,6 +189,30 @@ export function getLangLabel(that:{},labels:[],proplang:boolean=false,uilang:boo
    }
 };
 
+export function top_right_menu(that)
+{
+  return (
+     <div id="login">
+        <IconButton style={{marginLeft:"15px"}}  onClick={e => that.props.onToggleLanguagePanel()}>
+          <FontAwesomeIcon style={{fontSize:"28px"}} icon={faLanguage} title="Display Preferences"/>
+        </IconButton>
+        {
+          !that.props.auth.isAuthenticated() && (
+              <IconButton onClick={that.props.auth.login.bind(that,that.props.history.location)} title="Log in">
+                <FontAwesomeIcon style={{fontSize:"28px"}} icon={faUserCircle} />
+              </IconButton>
+            )
+        }
+        {
+          that.props.auth.isAuthenticated() && (
+              <IconButton onClick={that.props.auth.logout.bind(that,that.props.history.location)} title="Log out">
+                <FontAwesomeIcon style={{fontSize:"28px"}} icon={faSignOutAlt} />
+              </IconButton>
+            )
+        }
+         </div>
+  )
+}
 
 const TagTab = {
    "Abstract Work":CropFreeIcon,
@@ -1668,25 +1692,8 @@ class App extends Component<Props,State> {
             data-rotation="0"
             style={{width:"100%",height:"calc(100vh)",backgroundColor: "#000"}}/> */}
 
-         <div id="login">
-            <IconButton style={{marginLeft:"15px"}}  onClick={e => this.props.onToggleLanguagePanel()}>
-              <FontAwesomeIcon style={{fontSize:"28px"}} icon={faLanguage} title="Display Preferences"/>
-            </IconButton>
-            {
-              !isAuthenticated() && (
-                  <IconButton onClick={this.login.bind(this)} title="Log in">
-                    <FontAwesomeIcon style={{fontSize:"28px"}} icon={faUserCircle} />
-                  </IconButton>
-                )
-            }
-            {
-              isAuthenticated() && (
-                  <IconButton onClick={this.logout.bind(this)} title="Log out">
-                    <FontAwesomeIcon style={{fontSize:"28px"}} icon={faSignOutAlt} />
-                  </IconButton>
-                )
-            }
-         </div>
+          { top_right_menu(this) }
+
          <div className="App" style={{display:"flex"}}>
             <div className={"SidePane left " +(this.state.leftPane?"visible":"")}>
                   <IconButton className="close" onClick={e => this.setState({...this.state,leftPane:false})}><Close/></IconButton>
