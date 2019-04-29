@@ -6,6 +6,19 @@ You can embed a viewer by using an `iframe` element pointing to `http://library.
 <iframe src="http://library.bdrc.io/scripts/embed-iframe.html?work=bdr:W22084"></iframe>
 ```
 
+Additionally, the query parameter `lang` allows for defining a comma-separated list of languages that you may prefer collection titles to be displayed into, provided that it is available in the manifest/collection file:
+
+```html
+<iframe src="http://library.bdrc.io/scripts/embed-iframe.html?work=bdr:W22084&lang=bo-x-ewts,sa-x-iast,zh-latn-pinyin"></iframe>
+```
+**Note**: `bo` (Tibetan in Unicode) `sa-deva` (Sanskrit in Devanagari) and `zh-hant` (Traditional Chinese) can respectively and automatically be transliterated from or into `bo-x-ewts` (Tibetan in Latin/EWTS) `sa-x-iast` (Sanskrit in Latin/IAST) `zh-latn-pinyin` (Chinese in Latin/Pinyin).
+
+
+<!-- when there is another language that can be used to be transliterated from,  -->
+
+
+
+
 The following code opens a static, fullpage viewer:
 ```html
 <!DOCTYPE html>
@@ -96,8 +109,8 @@ Alternatively you can also follow these steps in order to embed a IIIF collectio
      window.Mirador( config )
      miradorSetUI();
   }
-  let waiter = setInterval( async ()=>{
-     if(_ && window.jsEWTS) {
+  let waiter = setInterval( async ()=>{    
+     if(_ && window.moduleLoaded &&  window.moduleLoaded.JsEWTS && window.moduleLoaded.Sanscript && window.moduleLoaded.pinyin4js) {
         clearInterval(waiter);
         miradorConfig = window.miradorConfig
         miradorSetUI  = window.miradorSetUI
@@ -141,8 +154,8 @@ Here is the complete file:
          window.Mirador( config )
          miradorSetUI();
       }
-      let waiter = setInterval( async ()=>{
-         if(_ && window.jsEWTS) {
+      let waiter = setInterval( async ()=>{        
+         if(_ && window.moduleLoaded &&  window.moduleLoaded.JsEWTS && window.moduleLoaded.Sanscript && window.moduleLoaded.pinyin4js) { {
             clearInterval(waiter);
             miradorConfig = window.miradorConfig
             miradorSetUI  = window.miradorSetUI
