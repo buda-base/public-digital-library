@@ -1,21 +1,22 @@
 
 
-let jsEWTS,Sanscript,__
+let jsEWTS,Sanscript,pinyin4js,__
 
 export const importModules = async () => {
 
-   try {
-
-         __  = await require("lodash")
-         jsEWTS = await require("jsewts/src/jsewts.js")
-         Sanscript = await require("@sanskrit-coders/sanscript")
-         //console.log("modules?",jsEWTS,__,Sanscript)
-
+   try { // in react app
+       __  = await require("lodash")
+       jsEWTS = await require("jsewts/src/jsewts.js")
+       Sanscript = await require("@sanskrit-coders/sanscript")
+       pinyin4js = await require("pinyin4js")
    }
-   catch(f) {
-       //console.error("f",f)
-       jsEWTS = window.jsEWTS
+   catch(f) { // in embed iframe
+      //console.log("exception",f)
+       window.moduleLoaded = {}
        __ = eval('_')
+       jsEWTS = window.moduleLoaded.JsEWTS = window.jsEWTS ;
+       eval('require(["https://cdn.jsdelivr.net/npm/@sanskrit-coders/sanscript@1.0.2/sanscript.min.js"],(obj) => { Sanscript = obj; window.moduleLoaded.Sanscript = obj ; })')
+       eval('require(["https://cdn.jsdelivr.net/npm/pinyin4js@1.3.18/dist/pinyin4js.js"],(obj) => { pinyin4js = PinyinHelper; window.moduleLoaded.pinyin4js = PinyinHelper ; })')
    }
 }
 importModules();
@@ -25,6 +26,7 @@ export const transliterators = {
    "bo-x-ewts":{ "bo": (val) => jsEWTS.fromWylie(val) },
    "sa-deva":{ "sa-x-iast": (val) => Sanscript.t(val,"devanagari","iast") },
    "sa-x-iast":{ "sa-deva": (val) => Sanscript.t(val.toLowerCase(),"iast","devanagari") },
+   "zh-hant":{ "zh-latn-pinyin" : (val) => pinyin4js.convertToPinyinString(val, ' ', pinyin4js.WITH_TONE_MARK) },
 }
 
 export function extendedPresets(preset)
@@ -39,8 +41,8 @@ export function extendedPresets(preset)
    let extPreset = { flat:[], translit:{} }
    for(let k of preset) {
       extPreset.flat.push(k)
-      if(transliterators[k]) {
-         for(let t of Object.keys(transliterators[k])) {
+      for(let t of Object.keys(transliterators)) {
+         if(transliterators[t][k]) {
             extPreset.flat.push(t)
             extPreset.translit[t] = k
          }
@@ -56,7 +58,7 @@ export function sortLangScriptLabels(data,preset,translit)
 {
    if(translit == undefined) translit={}
    if(!Array.isArray(data)) data = [ data ]
-   //console.log("sort",preset,translit) //,data)
+   //console.log("sort",preset,translit) // ,data)
    let data_ = data.map(e => {
       let k = e["lang"]
       if(!k) k = e["xml:lang"]
@@ -67,7 +69,7 @@ export function sortLangScriptLabels(data,preset,translit)
       if(!v) v = ""
       let i = preset.indexOf(k)
       if(i === -1) i = preset.length
-
+      //console.log("k v",k,v,translit[k],e,transliterators)
       let tLit
       if(translit[k]) {
          tLit = {} ;
@@ -76,6 +78,8 @@ export function sortLangScriptLabels(data,preset,translit)
          tLit[val] = transliterators[k][translit[k]](v)
          tLit[lan] = translit[k]
       }
+
+      //console.log("tLit",tLit)
 
       return {e,tLit,i}
    })

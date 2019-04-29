@@ -9709,6 +9709,11 @@ pinkie@^2.0.0:
   resolved "https://registry.yarnpkg.com/pinkie/-/pinkie-2.0.4.tgz#72556b80cfa0d48a974e80e77248e80ed4f7f870"
   integrity sha1-clVrgM+g1IqXToDnckjoDtT3+HA=
 
+pinyin4js@^1.3.18:
+  version "1.3.18"
+  resolved "https://registry.yarnpkg.com/pinyin4js/-/pinyin4js-1.3.18.tgz#b40f52d875b7763de907a513c5501b2807ed19c3"
+  integrity sha512-XSh+ur74duB/oINgSBlvyDxlLbpi47abKoZnudkPDkm7d5HI9sqcOrZLNTEnMvpab+ZvyGp4Tts63htvLMXK6w==
+
 pirates@^4.0.1:
   version "4.0.1"
   resolved "https://registry.yarnpkg.com/pirates/-/pirates-4.0.1.tgz#643a92caf894566f91b2b986d2c66950a8e2fb87"

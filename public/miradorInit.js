@@ -20,7 +20,7 @@ async function init() {
 let waiter = setInterval( async ()=>{
    console.log("waiting")
 
-   if(_ && window.jsEWTS) {
+   if(_ && window.moduleLoaded &&  window.moduleLoaded.JsEWTS && window.moduleLoaded.Sanscript && window.moduleLoaded.pinyin4js) {
       clearInterval(waiter);
       miradorConfig = window.miradorConfig
       miradorSetUI  = window.miradorSetUI

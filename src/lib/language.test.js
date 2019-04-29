@@ -46,6 +46,7 @@ const jsonLabels1 = [
 const preset1 = [ "bo-x-ewts", "sa-x-iast" ]
 const preset2 = [ "zh-hans", "bo-x-ewts", "en" ]
 const preset3 = [ "bo", "sa-deva", "zh-hans" ]
+const preset4 = [ "en", "zh-latn-pinyin" ]
 
 
 describe('language settings tests', () => {
@@ -174,4 +175,21 @@ describe('language settings tests', () => {
 
       done()
    })
+
+    it('testing transliterators/others', async (done) => {
+
+        await importModules()
+
+        expect(transliterators["zh-hant"]["zh-latn-pinyin"]('厦门你好大厦厦门')).toEqual('xià mén nǐ hǎo dà shà xià mén')
+
+        let extPreset4 = extendedPresets(preset4)
+        let results = sortLangScriptLabels(
+                        {"xml:lang": "zh-hant", type: "http://www.w3.org/2004/02/skos/core#prefLabel", value: "僧迦提婆"},
+                        extPreset4.flat, extPreset4.translit
+                      )
+        expect(results).toEqual([ { type: 'literal',  value: 'sēng jiā tí pó', lang: 'zh-latn-pinyin' } ] )
+
+        done()
+    })
+
 })
