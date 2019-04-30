@@ -96,7 +96,7 @@ const searchLangSelec = {
    "zh-hans":"lang.search.zh"
 }
 
-export const langSelect = [
+const langSelect = [
    "zh-hans",
    "zh-latn-pinyin",
    "bo",
@@ -128,7 +128,7 @@ export const langProfile = [
    "zh-hant",
    "zh"
 ]
-*/
+
 
 export const langProfile = [
    "zh-hant",
@@ -146,6 +146,7 @@ export const langProfile = [
    "bo-x-dts",
    "bo-alalc97"
 ]
+*/
 
 
 export function getLangLabel(that:{},labels:[],proplang:boolean=false,uilang:boolean=false)
@@ -155,7 +156,7 @@ export function getLangLabel(that:{},labels:[],proplang:boolean=false,uilang:boo
       //console.log("getL",labels,proplang);
 
       let langs = []
-      if(that.props.langPreset) langs = that.props.langPreset
+      if(that.state.langPreset) langs = that.state.langPreset
       if(proplang || uilang) langs = [ that.props.locale, ...langs ]
 
       // move that to redux state ?
@@ -243,6 +244,7 @@ type Props = {
    searches:{[string]:{}},
    resources:{[string]:{}},
    hostFailure?:string,
+   langIndex?:integer,
    loading?:boolean,
    keyword?:string,
    language?:string,
@@ -272,7 +274,7 @@ type State = {
    language:string,
    langOpen:boolean,
    customLang?:string[],
-   langProfile?:string[],
+   langPreset?:string[],
    checked?:string,
    unchecked?:string,
    keyword:string,
@@ -311,7 +313,6 @@ class App extends Component<Props,State> {
       this.state = {
          language:lg,
          langOpen:false,
-         langProfile:[...langProfile],
          UI:{language:"en"},
          filters: {
             datatype:get.t?get.t.split(","):["Any"]
@@ -383,7 +384,6 @@ class App extends Component<Props,State> {
       return this.props.config.ldspdi.endpoints[this.props.config.ldspdi.index]
    }
 
-
    getLanguage():string
    {
       return this.state.language
@@ -392,6 +392,21 @@ class App extends Component<Props,State> {
          lang = this.state.customLang
       return lang
       */
+   }
+
+   static getDerivedStateFromProps(props:Props,state:State)
+   {
+     let eq = true
+
+     if(props.langPreset && state.langPreset) for(let i = 0 ; i < props.langPreset.length && eq; i ++ ) { eq = eq && props.langPreset[i] === state.langPreset[i] ; }
+     else eq = false ;
+
+     if(!eq) {
+       let s = { ...state, langPreset:props.langPreset }
+       if(props.langIndex) s = { ...s, language:props.langPreset[0] }
+       return s
+     }
+     console.log("gDsFp",eq)
    }
 
    componentDidUpdate() {
@@ -630,6 +645,7 @@ class App extends Component<Props,State> {
    }
 
    handleLanguage = event => {
+
       console.log("handleL",event.target,event.key,event.target.value)
 
       if(!event.key && event.target.value!== undefined)
@@ -898,6 +914,9 @@ class App extends Component<Props,State> {
 
 
    }
+
+
+
 
    render() {
 
@@ -2113,7 +2132,7 @@ class App extends Component<Props,State> {
                 <InputLabel htmlFor="language"><Translate value="lang.lg"/></InputLabel>
 
                 <Select
-                  value={this.state.language}
+                  value={this.getLanguage()}
                   onChange={this.handleLanguage}
                   open={this.state.langOpen}
                   onOpen={(e) => this.setState({...this.state,langOpen:true})}
@@ -2123,7 +2142,9 @@ class App extends Component<Props,State> {
                     id: 'language',
                   }}
                 >
-                   { langSelect.map((k) => (<MenuItem key={k} value={k}><Translate value={""+(searchLangSelec[k]?searchLangSelec[k]:languages[k])}/></MenuItem>))}
+                   { this.state.langPreset && this.state.langPreset.map((k) => (<MenuItem key={k} value={k}><Translate value={""+(searchLangSelec[k]?searchLangSelec[k]:languages[k])}/></MenuItem>))}
+                   { this.state.langPreset && <hr style={{width:"90%"}}/> }
+                   { langSelect.filter(e => !this.state.langPreset || this.state.langPreset.indexOf(e) === -1).map((k) => (<MenuItem key={k} value={k}><Translate value={""+(searchLangSelec[k]?searchLangSelec[k]:languages[k])}/></MenuItem>))}
                    {this.state.customLang &&  this.state.customLang.map(e => (
                       <MenuItem key="customLang_" value={e}>{e}</MenuItem>
                      ))

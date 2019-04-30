@@ -56,7 +56,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faLanguage } from '@fortawesome/free-solid-svg-icons'
 //import {MapComponent} from './Map';
 import {getEntiType} from '../lib/api';
-import {languages,getLangLabel,langProfile,top_right_menu} from './App';
+import {languages,getLangLabel,top_right_menu} from './App';
 import Popover from '@material-ui/core/Popover';
 import MenuItem from '@material-ui/core/MenuItem';
 import List from '@material-ui/core/List';
@@ -118,7 +118,6 @@ type State = {
    annoCollecOpen?:boolean,
    anchorElAnno?:any,
    largeMap?:boolean,
-   langProfile?:string[],
    rightPane?:boolean
  }
 
@@ -357,7 +356,7 @@ class ResourceViewer extends Component<Props,State>
    {
       super(props);
 
-      this.state = { uviewer:false, imageLoaded:false, collapse:{}, pdfOpen:false, showAnno:true, langProfile:[... langProfile] }
+      this.state = { uviewer:false, imageLoaded:false, collapse:{}, pdfOpen:false, showAnno:true }
 
       console.log("props",props)
 
