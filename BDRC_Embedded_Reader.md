@@ -1,17 +1,17 @@
 # Embedding a IIIF collection viewer
 
 ## Using an `iframe`
-You can embed a viewer by using an `iframe` element pointing to `http://library.bdrc.io/scripts/embed-iframe.html?work=...` with `work` a BDRC resource ID such as `bdr:W22084`, eg:
+You can embed a viewer by using an `iframe` element pointing to `http://library.bdrc.io/scripts/embed-iframe.html?work=...&origin=...` with `work` a BDRC resource ID such as `bdr:W22084`, and `origin` an identifier for the website embedding the iframe, eg:
 ```html
-<iframe src="http://library.bdrc.io/scripts/embed-iframe.html?work=bdr:W22084"></iframe>
+<iframe src="http://library.bdrc.io/scripts/embed-iframe.html?work=bdr:W22084&origin=website.com"></iframe>
 ```
 
 Additionally, the query parameter `lang` allows for defining a comma-separated list of languages that you may prefer collection titles to be displayed into, provided that it is available in the manifest/collection file:
 
 ```html
-<iframe src="http://library.bdrc.io/scripts/embed-iframe.html?work=bdr:W22084&lang=bo-x-ewts,sa-x-iast,zh-latn-pinyin"></iframe>
+<iframe src="http://library.bdrc.io/scripts/embed-iframe.html?work=bdr:W22084&origin=website.com&lang=bo-x-ewts,sa-x-iast,zh-latn-pinyin"></iframe>
 ```
-**Note**: `bo` (Tibetan in Unicode) `sa-deva` (Sanskrit in Devanagari) and `zh-hant` (Traditional Chinese) can respectively and automatically be transliterated from or into `bo-x-ewts` (Tibetan in Latin/EWTS) `sa-x-iast` (Sanskrit in Latin/IAST) `zh-latn-pinyin` (Chinese in Latin/Pinyin).
+**Note**: `bo` (Tibetan in Unicode) `sa-deva` (Sanskrit in Devanagari) and `zh-hant` (Traditional Chinese) can respectively and automatically be transliterated into `bo-x-ewts` (Tibetan in Latin/EWTS) `sa-x-iast` (Sanskrit in Latin/IAST) `zh-latn-pinyin` (Chinese in Latin/Pinyin) and reciprocally -- Chinese excepted.
 
 
 <!-- when there is another language that can be used to be transliterated from,  -->
