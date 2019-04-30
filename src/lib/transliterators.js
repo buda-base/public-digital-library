@@ -27,6 +27,7 @@ export const transliterators = {
    "sa-deva":{ "sa-x-iast": (val) => Sanscript.t(val,"devanagari","iast") },
    "sa-x-iast":{ "sa-deva": (val) => Sanscript.t(val.toLowerCase(),"iast","devanagari") },
    "zh-hant":{ "zh-latn-pinyin" : (val) => pinyin4js.convertToPinyinString(val, ' ', pinyin4js.WITH_TONE_MARK) },
+   "zh-hans":{ "zh-latn-pinyin" : (val) => pinyin4js.convertToPinyinString(val, ' ', pinyin4js.WITH_TONE_MARK) },
 }
 
 export function extendedPresets(preset)
