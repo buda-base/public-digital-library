@@ -403,7 +403,7 @@ class App extends Component<Props,State> {
 
      if(!eq) {
        let s = { ...state, langPreset:props.langPreset }
-       if(props.langIndex) s = { ...s, language:props.langPreset[0] }
+       if(props.langIndex !== undefined ) s = { ...s, language:props.langPreset[0] }
        return s
      }
      console.log("gDsFp",eq)
