@@ -157,6 +157,7 @@ export function getLangLabel(that:{},labels:[],proplang:boolean=false,uilang:boo
 
       let langs = []
       if(that.state.langPreset) langs = that.state.langPreset
+      else if(that.props.langPreset) langs = that.props.langPreset
       if(proplang || uilang) langs = [ that.props.locale, ...langs ]
 
       // move that to redux state ?
@@ -871,7 +872,7 @@ class App extends Component<Props,State> {
       let ret = (
             <div key={t+"_"+n+"_"}  className="contenu">
                   <ListItem style={{paddingLeft:"0",display:"flex",alignItems:"center"}}>
-                     <div style={{width:"30px",textAlign:"right",color:"black",fontSize:"0.9rem",marginLeft:"16px"}}>{n}</div>
+                     <div style={{width:"30px",textAlign:"right",color:"black",fontSize:"0.9rem",marginLeft:"16px",flexShrink:0}}>{n}</div>
                      {/* <ListItemText style={{height:"auto",flexGrow:10,flexShrink:10}}
                         primary={ */}
                            <div>

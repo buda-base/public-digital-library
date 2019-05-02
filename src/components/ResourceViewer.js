@@ -118,7 +118,7 @@ type State = {
    annoCollecOpen?:boolean,
    anchorElAnno?:any,
    largeMap?:boolean,
-   rightPane?:boolean
+   rightPane?:boolean,
  }
 
 
