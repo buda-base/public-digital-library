@@ -1,22 +1,20 @@
 # Embedding a IIIF collection viewer
 
 ## Using an `iframe`
-You can embed a viewer by using an `iframe` element pointing to `http://library.bdrc.io/scripts/embed-iframe.html?work=...&origin=...` with `work` a BDRC resource ID such as `bdr:W22084`, and `origin` an identifier for the website embedding the iframe, eg:
-```html
-<iframe src="http://library.bdrc.io/scripts/embed-iframe.html?work=bdr:W22084&origin=website.com"></iframe>
-```
+You can embed a viewer by using an `iframe` element pointing to `http://library.bdrc.io/scripts/embed-iframe.html?work=...&origin=...&lang=...` with:
+- `work` a BDRC resource ID such as `bdr:W22084`
+- `origin` an identifier for the website embedding the iframe
+- `lang`, a comma-separated list of preferred languages by order of preference, to be selected from [BDRC's lang tag conventions](https://github.com/buda-base/owl-schema/blob/master/lang-tags.md)
 
-Additionally, the query parameter `lang` allows for defining a comma-separated list of languages that you may prefer collection titles to be displayed into, provided that it is available in the manifest/collection file:
-
+For example:
 ```html
 <iframe src="http://library.bdrc.io/scripts/embed-iframe.html?work=bdr:W22084&origin=website.com&lang=bo-x-ewts,sa-x-iast,zh-latn-pinyin"></iframe>
 ```
+
 **Note**: `bo` (Tibetan in Unicode) `sa-deva` (Sanskrit in Devanagari) and `zh-hant` (Traditional Chinese) can respectively and automatically be transliterated into `bo-x-ewts` (Tibetan in Latin/EWTS) `sa-x-iast` (Sanskrit in Latin/IAST) `zh-latn-pinyin` (Chinese in Latin/Pinyin) and reciprocally -- Chinese excepted.
 
 
 <!-- when there is another language that can be used to be transliterated from,  -->
-
-
 
 
 The following code opens a static, fullpage viewer:
@@ -31,7 +29,7 @@ The following code opens a static, fullpage viewer:
   <body style="margin:0px">
     <iframe
       style="position:fixed;width:100%;height:100%;border:none;"
-      src="http://library.bdrc.io/scripts/embed-iframe.html?work=bdr:W22084">
+      src="http://library.bdrc.io/scripts/embed-iframe.html?work=bdr:W22084&origin=website.com">
     </iframe>
   </body>
 </html>
@@ -55,13 +53,13 @@ You can also use button(s) to show the viewer only when needed:
   </head>
   <body>
     <div id="container" class="hidden"><iframe class="hidden"></iframe></div>
-    <button class="open" data-rid="bdr:W22084" >View Collection A</button>
+    <button class="open" data-rid="bdr:W22084">View Collection A</button>
     <button class="open" data-rid="bdr:W0CJ001">View Collection B</button>
     <script>
       $("#container iframe").on("load", () => { $('#container iframe').removeClass('hidden'); $("#container").addClass("loaded"); });
       $("button.open").click( (e) => {
         $("#container").removeClass("hidden");
-        let src = "http://library.bdrc.io/scripts/embed-iframe.html?work="+$(e.target).attr("data-rid");
+        let src = "http://library.bdrc.io/scripts/embed-iframe.html?work="+$(e.target).attr("data-rid")+"&origin=website.com&lang=bo";
         if($("#container iframe").attr("src")!== src) { $("#container iframe").attr("src",src); }
         else { $("#container iframe").trigger("load"); }
       })
@@ -101,7 +99,7 @@ Alternatively you can also follow these steps in order to embed a IIIF collectio
   let miradorConfig, miradorSetUI
   async function init() {
      const urlParams = new URLSearchParams(window.location.search);
-     const work = urlParams.get('work') || "bdr:W0CJ001";
+     const work = urlParams.get('work');
      let data = [
         { "collectionUri" : "http://presentation.bdrc.io/2.1.1/collection/wio:"+work, location:"" }
      ]
@@ -146,7 +144,7 @@ Here is the complete file:
       let miradorConfig, miradorSetUI
       async function init() {
          const urlParams = new URLSearchParams(window.location.search);
-         const work = urlParams.get('work') || "bdr:W0CJ001";
+         const work = urlParams.get('work');
          let data = [
             { "collectionUri" : "http://presentation.bdrc.io/2.1.1/collection/wio:"+work, location:"" }
          ]
