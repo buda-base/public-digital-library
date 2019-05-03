@@ -2423,6 +2423,20 @@ class ResourceViewer extends Component<Props,State>
                   <h3><span style={{textTransform:"none"}}>Please <a class="login" onClick={this.props.auth.login.bind(this,this.props.history.location)}>login</a> if you have sufficient credentials to get access to images from this work.</span></h3>
                }
                {
+                 (pdfLink) &&
+                 <div><br/><a onClick={ ev => {
+                        //if(that.props.createPdf) return ;
+                         if(monoVol > 0){
+                           this.props.onInitPdf({iri:this.props.IRI,vol:monoVol},pdfLink)
+                         }
+                         else if(!this.props.pdfVolumes) {
+                           this.props.onRequestPdf(this.props.IRI,pdfLink)
+                        }
+                        this.setState({...this.state, pdfOpen:true,anchorElPdf:ev.currentTarget})
+                     }
+                 } class="download login">Download images as PDF/ZIP</a></div>
+               }
+               {
                   !this.props.manifestError && this.props.imageAsset && this.state.openMirador  &&
                   [<div id="fond" >
                      <Loader loaded={false} color="#fff"/>

@@ -123,6 +123,9 @@ a.login { text-decoration:underline; cursor:pointer; }
 
 .resource button svg:hover { color:rgba(0,0,0,0.65); }
 
+a.download { text-decoration:none; font-weight:bold; cursor:pointer; }
+a.download:hover { text-decoration:underline; }
+
 .resource .data > div > h4,
 .resource .data > div > .sub > h4:not(.first),
 .propCollapse h4,
