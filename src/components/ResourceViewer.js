@@ -2424,7 +2424,9 @@ class ResourceViewer extends Component<Props,State>
                }
                {
                  (pdfLink) &&
-                 <div><br/><a onClick={ ev => {
+                 [<br/>,<div style={{display:"inline-block"}}>
+                    <br/>
+                    <a onClick={ ev => {
                         //if(that.props.createPdf) return ;
                          if(monoVol > 0){
                            this.props.onInitPdf({iri:this.props.IRI,vol:monoVol},pdfLink)
@@ -2433,8 +2435,11 @@ class ResourceViewer extends Component<Props,State>
                            this.props.onRequestPdf(this.props.IRI,pdfLink)
                         }
                         this.setState({...this.state, pdfOpen:true,anchorElPdf:ev.currentTarget})
-                     }
-                 } class="download login">Download images as PDF/ZIP</a></div>
+                      }
+                    } class="download login">Download images as PDF/ZIP</a>
+                    <br/>
+                    <Loader loaded={(!this.props.pdfVolumes || this.props.pdfVolumes.length > 0)} options={{position:"relative",left:"115%",top:"-11px"}} />
+                  </div>]
                }
                {
                   !this.props.manifestError && this.props.imageAsset && this.state.openMirador  &&
