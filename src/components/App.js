@@ -765,8 +765,8 @@ class App extends Component<Props,State> {
       if(!val.match(/↤/) && k)
          val = /*val.replace(/@.* /,"")*/ val.split(new RegExp(k.replace(/[ -'ʾ]/g,"[ -'ʾ]"))).map((l) => ([<span>{l}</span>,<span className="highlight">{k}</span>])) ;
       else {
-         let str = val.replace(/^.*?(↦([^↤]+)↤([-/_() ]+↦([^↤]+)↤)*).*$/g,"$1").replace(/↤([-/_() ]+)↦/g,"$1").replace(/[↤↦]/g,"")
-         val = val.replace(/↦[^↤]+↤([-/_() ]+↦[^↤]+↤)*/g,"↦↤")
+         let str = val.replace(/^.*?(↦([^↤]+)↤([-/_()\[\]: ]+↦([^↤]+)↤)*).*$/g,"$1").replace(/↤([-/_() ]+)↦/g,"$1").replace(/[↤↦]/g,"")
+         val = val.replace(/↦[^↤]+↤([-/_()\[\]: ]+↦[^↤]+↤)*/g,"↦↤")
 
          //console.log("str:",str,"=",val)
 
