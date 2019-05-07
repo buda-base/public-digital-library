@@ -399,17 +399,26 @@ class App extends Component<Props,State> {
    {
      let eq = true
 
+     if(props.language == "" && (!props.resources || !props.resources[props.keyword]))
+     {
+        console.log("gRes?",props.resources,props.keyword);
+        props.onGetResource(props.keyword);
+     }
+
      if(props.langPreset && state.langPreset) for(let i = 0 ; i < props.langPreset.length && eq; i ++ ) { eq = eq && props.langPreset[i] === state.langPreset[i] ; }
      else eq = false ;
+
+     console.log("gDsFp",eq)
 
      if(!eq) {
        let s = { ...state, langPreset:props.langPreset }
        if(props.langIndex !== undefined ) s = { ...s, language:props.langPreset[0] }
        return s
      }
-     console.log("gDsFp",eq)
+     return null;
    }
 
+   /* // deprecated
    componentDidUpdate() {
 
       // console.log("didU",this.state.facets,this.props,this.state.filters.datatype)
@@ -421,6 +430,7 @@ class App extends Component<Props,State> {
       }
 
    }
+   */
 
    componentWillUpdate(newProps,newState) {
 
@@ -580,13 +590,11 @@ class App extends Component<Props,State> {
 
          if(this.props.language != "")
          {
-            //console.log("here?")
+            console.log("here?",lab)
 
             if(["Any","Person","Work","Etext"].indexOf(lab) !== -1)
             {
-
                this.requestSearch(this.props.keyword,lab)
-
             }
             else  {
 
@@ -942,7 +950,7 @@ class App extends Component<Props,State> {
             for(let l of this.props.config.links) {
                //console.log("l",l)
                let who = getLangLabel(this, l.label)
-               console.log("who",who)
+               //console.log("who",who)
                messageD.push(<h5 key={i}>{l.title}</h5>)
                messageD.push(this.makeResult(l.id,null,getEntiType(l.id),who.value,who.lang,l.icon,TagTab[l.icon]))
                i++;
@@ -1171,7 +1179,7 @@ class App extends Component<Props,State> {
                   if(t === "Any") continue ;
 
 
-                  //console.log("t",t)
+                  console.log("t",t,list)
 
                   message.push(<MenuItem  onClick={(e)=>this.handleCheck(e,t,true)}><h4>{I18n.t("types."+t.toLowerCase())+"s"+(counts["datatype"][t]?" ("+counts["datatype"][t]+")":"")}</h4></MenuItem>);
 
@@ -1190,7 +1198,7 @@ class App extends Component<Props,State> {
                   if(sublist) { for(let o of Object.keys(sublist))
                   {
                      absi ++ ;
-                     console.log("cpt",cpt,n,begin,findFirst,findNext,o,sublist[o])
+                     //console.log("cpt",cpt,n,begin,findFirst,findNext,o,sublist[o])
 
                      if(absi < begin && findFirst) { cpt++ ; continue; }
                      else if(cpt == begin && !findNext) {
@@ -1207,7 +1215,7 @@ class App extends Component<Props,State> {
                      sList = _.sortBy(sList, (e) => {
                         for(let k of Object.keys(listOrder)) { if(e.type && e.type.match(new RegExp(k))) return listOrder[k] }
                      })
-                     console.log("sList",JSON.stringify(sList,null,3));
+                     //console.log("sList",JSON.stringify(sList,null,3));
                      label = getLangLabel(this,sList) // ,true)
                      if(label && label.length > 0) label = label[0]
                      /*

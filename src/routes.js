@@ -30,15 +30,18 @@ Router.prototype.setState = function(...args) {
 
     const loc = this.props.history.location;
 
-    console.log("hash",previousLocation,loc,args)
+    //console.log("hash",JSON.stringify(previousLocation,null,3),JSON.stringify(loc,null,3),JSON.stringify(args,null,3))
 
     if (loc.pathname === previousLocation.pathname &&
         loc.search   === previousLocation.search   &&
-        (loc.hash    !== previousLocation.hash || loc.hash === previousLocation.hash )
+        loc.hash    !== previousLocation.hash // || loc.hash === previousLocation.hash )
     ) {
         previousLocation = {...loc};
+        //console.log("ici")
         return;
     }
+
+    //console.log("la")
 
     previousLocation = {...loc};
     return routerSetState.apply(this, args);
@@ -193,7 +196,7 @@ const makeMainRoutes = () => {
                         let get = qs.parse(history.location.search)
                         //if(!store.getState().data.ontology)
                         {
-                           //console.log("new route",props,store.getState())
+                           console.log("new route",props,store.getState())
                            //if(!store.getState().ui.loading)
                            store.dispatch(initiateApp(qs.parse(history.location.search)))
                         }

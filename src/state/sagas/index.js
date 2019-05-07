@@ -490,15 +490,20 @@ function getData(result)  {
      // data.works = ordered.reduce((acc,k) => { acc[k]=data.works[k]; },{})
   }
 
-  console.log("result",result)
+  console.log("resultR",result)
+  //&& Object.values(result).map(o => o?Object.keys(o):null).filter(k => (""+k).match(new RegExp(bdr))).length == 0)))
 
-  if(Object.keys(result).length == 0 || (Object.keys(result).length == 1 && result["metadata"])) { numR = 0 }
+  if(Object.keys(result).length == 0 || (Object.keys(result).length == 1 && result["metadata"] )) { numR = 0 }
   else
   {
      numR = Object.keys(result).reduce((acc,e) => {
-        if(result[e]!=null) return ( acc + e=="metadata"?0:Object.keys(result[e]).length)
+        console.log("res",result[e])
+        if(result[e]!=null) return ( acc + (e=="metadata"?0:Object.keys(result[e]).length))
         else return acc
      },0)
+
+     //console.log("numRa",numR)
+
      if(metadata)
      {
         let kZ = Object.keys(metadata)
@@ -507,6 +512,8 @@ function getData(result)  {
 
         delete data.metadata
      }
+
+     //console.log("numRb",numR)
   }
 
   //console.log("getData#result",result,numR)

@@ -59,6 +59,7 @@ export function miradorSetUI(closeCollec)
 
          jQ(".mirador-container .mirador-main-menu li a").addClass('on');
          jQ(".mirador-container .mirador-main-menu li:nth-child(1) a").addClass('selec');
+         jQ(".mirador-container .scroll-view").attr("tabindex",-1).focus()
 
          //console.log("ici")
 
