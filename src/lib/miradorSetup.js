@@ -500,6 +500,11 @@ export async function miradorInitView(props,lang) {
                { "manifestUri" : propK["hasIIIFManifest"]["@id"], location:"" }
             ]
          }
+         else {
+            data = [
+               { "collectionUri" : "http://iiifpres.bdrc.io"+"/2.1.1/collection/wio:"+work, location:"" }
+            ]
+         }
       }
    }
 
