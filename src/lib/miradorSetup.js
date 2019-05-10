@@ -119,6 +119,28 @@ export function miradorConfig(data, manifest, canvasID, useCredentials, langList
    if(!_sortLangScriptLabels) _sortLangScriptLabels = window.sortLangScriptLabels
    if(langList === undefined) langList = [ "bo", "zh-hans" ]
 
+   let labelToString = (labels) => {
+
+      // dont assume bo-x-ewts on unlocalized labels...
+      // if(typeof labels == "string") labels = [ { "@value": labels, "@language":"bo-x-ewts" } ]
+      if(typeof labels == "string") return labels
+
+      let langs = _extendedPresets(langList)
+      let sortLabels = _sortLangScriptLabels(labels,langs.flat,langs.translit)
+      let label = sortLabels[0]
+      if(label["@value"]) return label["@value"] //+"@"+label["@language"]
+      if(label["value"]) return label["value"]  //+"@"+label["language"]
+      else return label
+
+      /*
+      if(Array.isArray(label)) return label.map( e => (e["@value"]?e["@value"]+"@"+e["@language"]:e)).join("; ")
+      else if(label["@value"]) return label["@value"]+"@"+label["@language"]
+      else if(label["value"]) return label["value"]+"@"+label["language"]
+      else return label
+      */
+
+   }
+
    let config = {
       id:"viewer",
       data: [],
@@ -128,32 +150,13 @@ export function miradorConfig(data, manifest, canvasID, useCredentials, langList
         name: "Collection Tree Manifests Panel",
         module: "CollectionTreeManifestsPanel",
         options: {
-            labelToString: (labels) => {
-
-               // dont assume bo-x-ewts on unlocalized labels...
-               // if(typeof labels == "string") labels = [ { "@value": labels, "@language":"bo-x-ewts" } ]
-               if(typeof labels == "string") return labels
-
-               let langs = _extendedPresets(langList)
-               let sortLabels = _sortLangScriptLabels(labels,langs.flat,langs.translit)
-               let label = sortLabels[0]
-               if(label["@value"]) return label["@value"] //+"@"+label["@language"]
-               if(label["value"]) return label["value"]  //+"@"+label["language"]
-               else return label
-
-               /*
-               if(Array.isArray(label)) return label.map( e => (e["@value"]?e["@value"]+"@"+e["@language"]:e)).join("; ")
-               else if(label["@value"]) return label["@value"]+"@"+label["@language"]
-               else if(label["value"]) return label["value"]+"@"+label["language"]
-               else return label
-               */
-
-            }
+            labelToString 
         }
       },
       windowSettings: {
         ajaxWithCredentials:useCredentials,
-        sidePanelVisible: false
+        sidePanelVisible: false,
+        labelToString,
       },
 
       mainMenuSettings : {
