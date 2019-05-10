@@ -441,7 +441,7 @@ function miradorInitMenu(maxWonly) {
    //console.log("maxW",window.maxW)
 }
 
-export async function miradorInitView(props,lang) {
+export async function miradorInitView(work,lang) {
 
    const bdr = "http://purl.bdrc.io/resource/"
 
@@ -451,7 +451,7 @@ export async function miradorInitView(props,lang) {
       { "collectionUri": "../tibcolldemo2.json", location: "BDRC - Palpung Collection"}
    ]
    const urlParams = new URLSearchParams(window.location.search);
-   const work = props.match.params.IRI;
+   //const work = props.match.params.IRI;
    if(work) {
       console.log("work",work)
 
@@ -527,3 +527,4 @@ export async function miradorInitView(props,lang) {
 
 window.miradorConfig = miradorConfig
 window.miradorSetUI  = miradorSetUI
+window.miradorInitView  = miradorInitView

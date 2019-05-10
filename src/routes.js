@@ -207,7 +207,7 @@ const makeMainRoutes = () => {
                            console.log("props",props,get)
                            let lang = get["lang"]
                            if(lang) lang = lang.split(",")
-                           miradorInitView(props,lang);
+                           miradorInitView(props.match.params.IRI,lang);
 
 
 

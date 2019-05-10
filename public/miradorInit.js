@@ -33,7 +33,11 @@ let waiter = setInterval( async ()=>{
       miradorConfig = window.miradorConfig
       miradorSetUI  = window.miradorSetUI
       window.closeViewer = () => { parent.window.postMessage("close", "*"); }
-      init();
+      //init();
+      const work = urlParams.get('work') || "bdr:W22084";
+      let lg = urlParams.get('lang') || "bo,zh-hans";
+      lg = lg.split(",")
+      window.miradorInitView(work,lg);
    }
 
 },100)

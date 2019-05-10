@@ -370,8 +370,8 @@ async function getManifest(url,iri) {
                   found = true ;
                   if(h > 600) image = image.replace(/(full|max)[/]0/,",600/0")
                   let test = await api.getURLContents(image,null,null,null,true)
-                  let imgData = btoa(String.fromCharCode(...new Uint8Array(test)));
-                  store.dispatch(dataActions.firstImage(image,iri,canvasID,collecManif,manifests,imgData))
+                  //let imgData = btoa(String.fromCharCode(...new Uint8Array(test)));
+                  store.dispatch(dataActions.firstImage(image,iri,canvasID,collecManif,manifests)) //,imgData))
 
                   break ;
 
@@ -399,12 +399,13 @@ async function getManifest(url,iri) {
                let h = manif.sequences[0].canvases[0].images[0].resource["height"]
                if(h > 600) image = image.replace(/(full|max)[/]0/,",600/0")
                let test = await api.getURLContents(image,null,null,null,true)
-               //console.log("img",test)
-               let imgData = btoa(String.fromCharCode(...new Uint8Array(test)));
-               store.dispatch(dataActions.firstImage(image,iri,canvasID,collecManif,manifests,imgData))
+               console.log("img",test)
+               //let imgData = btoa(String.fromCharCode(...new Uint8Array(test)));
+               store.dispatch(dataActions.firstImage(image,iri,canvasID,collecManif,manifests)) //,imgData))
             }
          }
       }
+      console.log("here")
    }
    catch(e){
       console.error("ERRROR with manifest",e)

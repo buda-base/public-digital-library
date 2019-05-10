@@ -210,7 +210,7 @@ let propOrder = {
 
 let reload = false ;
 
-function top_left_menu(that,pdfLink,monoVol)
+function top_left_menu(that,pdfLink,monoVol,fairUse)
 {
   return (
 
@@ -244,7 +244,10 @@ function top_left_menu(that,pdfLink,monoVol)
        { /*  TODO // external resources ==> /query/graph/ResInfo?R_RES=
           that.props.IRI.match(/^bda[cn]:/) &&
        */}
-       {pdfLink &&
+       {pdfLink && 
+         ( (!(that.props.manifestError && that.props.manifestError.error.message.match(/Restricted access/)) && !fairUse) ||
+         (that.props.auth && that.props.auth.isAuthenticated()))
+         &&
           [<a style={{fontSize:"26px"}} className="goBack pdfLoader">
              <Loader loaded={(!that.props.pdfVolumes || that.props.pdfVolumes.length > 0)} options={{position:"relative",left:"24px",top:"-7px"}} />
                 <IconButton title={I18n.t("resource.download")+" PDF/ZIP"} onClick={ev =>
@@ -1899,7 +1902,7 @@ class ResourceViewer extends Component<Props,State>
       let fairUse = false
       if(kZprop.indexOf(adm+"access") !== -1) {
          let elem = this.getResourceElem(adm+"access")
-         if(elem && elem.filter(e => e.value.match(/AccessFairUse$/)).length >= 1) fairUse = true
+         if(elem && elem.filter(e => e.value.match(/(AccessFairUse|AccessRestrictedInChina)$/)).length >= 1) fairUse = true
          //console.log("adm",elem,fairUse)
       }
 
@@ -2292,7 +2295,7 @@ class ResourceViewer extends Component<Props,State>
             { !this.state.ready && <Loader loaded={false} /> }
             <div className={"resource "+getEntiType(this.props.IRI).toLowerCase()}>
                 { top_right_menu(this) }
-                { top_left_menu(this,pdfLink,monoVol)  }
+                { top_left_menu(this,pdfLink,monoVol,fairUse)  }
                <div className={"SidePane right "  +(this.state.annoPane?"visible":"")} style={{top:"0",paddingTop:"50px"}}>
                      <IconButton className="hide" title="Toggle annotation markers" onClick={e => this.setState({...this.state,showAnno:!this.state.showAnno})}>
                         { this.state.showAnno && <SpeakerNotesOff/> }
@@ -2424,6 +2427,8 @@ class ResourceViewer extends Component<Props,State>
                }
                {
                  (pdfLink) &&
+                 ( (!(this.props.manifestError && this.props.manifestError.error.message.match(/Restricted access/)) && !fairUse) ||
+                  (this.props.auth && this.props.auth.isAuthenticated())) &&
                  [<br/>,<div style={{display:"inline-block"}}>
                     <br/>
                     <a onClick={ ev => {

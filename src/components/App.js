@@ -2207,6 +2207,9 @@ class App extends Component<Props,State> {
                         <NavigateBefore
                            className={this.state.paginate.index == 0 ? "hide":""}
                            onClick={this.prevPage.bind(this)}/>
+                        <div style={{width:"60%"}}>
+                              <br/>
+                        </div>
                         <NavigateNext
                            className={this.state.paginate.index == this.state.paginate.pages.length - 1 ? "hide":""}
                            onClick={this.nextPage.bind(this)} />
