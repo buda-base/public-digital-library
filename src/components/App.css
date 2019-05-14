@@ -17,6 +17,10 @@ body { overflow:auto !important;padding-right:0 !important;  }
 #pagine { width:100%;display:flex;padding:20px;justify-content: space-between; box-sizing:border-box}
 #pagine svg {height:36px;width:36px; cursor:pointer;}
 
+#pagine div { line-height:36px; text-align:center;}
+#pagine div a { cursor:pointer; display:inline-block;margin-left:5px;margin-right:5px;}
+#pagine div a:hover { text-decoration:underline; }
+
 a.result { padding:0;margin-bottom:0;width:100%;display: inline-block;margin-top:10px;}
 a.result button { text-transform:none; padding-bottom:0;}
 /* a.result button::before { content:'Abstract Works';display:block;height:50px;position:absolute;left:0; }  */

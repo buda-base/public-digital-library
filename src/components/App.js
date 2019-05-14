@@ -271,7 +271,7 @@ type Props = {
 
 type State = {
    loading?:boolean,
-   willSearch?:boolean,
+   //willSearch?:boolean,
    language:string,
    langOpen:boolean,
    customLang?:string[],
@@ -288,8 +288,17 @@ type State = {
    collapse:{ [string] : boolean },
    loader:{[string]:Component<*>},
    facets? : string[],
-   autocheck?:boolean,
-   paginate:{index:number,pages:number[],n:number[]}
+   autocheck?:boolean,   
+   paginate:{},
+   results:{
+      [string]:{
+         message:[],
+         counts:{},
+         types:[],      
+         paginate:{index:number,pages:number[],n:number[]}
+      }
+      
+   }
 }
 
 class App extends Component<Props,State> {
@@ -301,6 +310,8 @@ class App extends Component<Props,State> {
 
       this.requestSearch.bind(this);
       this.handleCheck.bind(this);
+      this.handleResults.bind(this);
+      this.handleResOrOnto.bind(this);
 
       let get = qs.parse(this.props.history.location.search)
 
@@ -324,6 +335,7 @@ class App extends Component<Props,State> {
          loader:{},
          paginate:{index:0,pages:[0],n:[0]},
          leftPane:(window.innerWidth > 1400),
+         
       };
 
 
@@ -397,25 +409,27 @@ class App extends Component<Props,State> {
 
    static getDerivedStateFromProps(props:Props,state:State)
    {
-     let eq = true
+      let eq = true
 
-     if(props.language == "" && (!props.resources || !props.resources[props.keyword]))
-     {
-        console.log("gRes?",props.resources,props.keyword);
-        props.onGetResource(props.keyword);
-     }
+      if(props.language == "" && (!props.resources || !props.resources[props.keyword]))
+      {
+         console.log("gRes?",props.resources,props.keyword);
+         props.onGetResource(props.keyword);
+      }
 
-     if(props.langPreset && state.langPreset) for(let i = 0 ; i < props.langPreset.length && eq; i ++ ) { eq = eq && props.langPreset[i] === state.langPreset[i] ; }
-     else eq = false ;
+      if(props.langPreset && state.langPreset) for(let i = 0 ; i < props.langPreset.length && eq; i ++ ) { eq = eq && props.langPreset[i] === state.langPreset[i] ; }
+      else eq = false ;
 
-     console.log("gDsFp",eq)
+      console.log("gDsFp",eq,props,state)
+      let s ;
+      if(!eq) {
+         s = { ...state, langPreset:props.langPreset }
+         if(props.langIndex !== undefined ) s = { ...s, language:props.langPreset[0] }
+         return s
+      }
 
-     if(!eq) {
-       let s = { ...state, langPreset:props.langPreset }
-       if(props.langIndex !== undefined ) s = { ...s, language:props.langPreset[0] }
-       return s
-     }
-     return null;
+
+      else return null;
    }
 
    /* // deprecated
@@ -431,7 +445,7 @@ class App extends Component<Props,State> {
 
    }
    */
-
+   /* // deprecated
    componentWillUpdate(newProps,newState) {
 
       if(!global.inTest) console.log("willU",newProps,newState)
@@ -448,6 +462,10 @@ class App extends Component<Props,State> {
       }
 
 
+      if(update) this.setState(state)
+
+   }
+   */
 
       // console.log("newProps.facets",newProps.facets)
 
@@ -461,9 +479,6 @@ class App extends Component<Props,State> {
       }
 */
 
-      if(update) this.setState(state)
-
-   }
 /*
    setFacets = (props:Props,state:State,lab:string) =>
    {
@@ -837,16 +852,39 @@ class App extends Component<Props,State> {
       return ret;
    }
 
-   prevPage()
+   prevPage(id)
    {
-      let state = this.state.paginate
-      if(state.index > 0) { this.setState({ ...this.state, paginate:{...state, index:state.index - 1}}) }
+      let state = this.state.results[id] 
+      if(state) state = state.paginate
+      console.log("state",state)   
+      if(state && state.index > 0) { 
+         this.setState({ 
+            ...this.state, results:{...this.state.results[id], message:[] }, paginate:{...state, index:state.index - 1}
+         }) 
+      }
    }
 
-   nextPage()
+   goPage(id,i)
    {
-      let state = this.state.paginate
-      if(state.index < state.pages.length - 1) { this.setState({ ...this.state, paginate:{...state, index:state.index + 1}}) }
+      let state = this.state.results[id] 
+      if(state) state = state.paginate
+      console.log("state",state)   
+      if(state && i > 0) { 
+         this.setState({ 
+            ...this.state, results:{...this.state.results[id], message:[] }, paginate:{...state, index:i-1}
+         }) 
+      }
+   }
+
+   nextPage(id)
+   {
+      let state = this.state.results[id] 
+      if(state) state = state.paginate
+      if(state && state.index < state.pages.length - 1) { 
+         this.setState({ 
+            ...this.state, results:{...this.state.results[id], message:[] }, paginate:{...state, index:state.index + 1}
+         }) 
+      }
    }
 
    inserTree(k:string,p:{},tree:{}):boolean
@@ -924,23 +962,579 @@ class App extends Component<Props,State> {
 
    }
 
+   setTypeCounts(types,counts)
+   {
 
+      let m = 0 ;
+      if( this.props.datatypes.metadata) for(let r of Object.keys(this.props.datatypes.metadata) ){
+
+         //r = r.bindings
+         let typ = r.replace(/^.*?([^/]+)$/,"$1")
+         typ = typ[0].toUpperCase() + typ.slice(1)
+
+         // console.log("typ",typ)
+
+         if(typ != "" && types.indexOf(typ) === -1)
+         {
+            m++;
+
+            types.push(typ);
+
+            counts["datatype"][typ]=Number(this.props.datatypes.metadata[r])
+            counts["datatype"]["Any"]+=Number(this.props.datatypes.metadata[r])
+
+         }
+
+         types = types.sort(function(a,b) { return Number(counts["datatype"][b]) - Number(counts["datatype"][a]) })
+
+         //console.log("counts",counts,types)
+
+      }
+
+
+      if(types.length == 2 && !this.state.autocheck)
+      {
+         this.setState({ ...this.state, autocheck:true })
+
+         //console.log("autocheck",types)
+
+         this.handleCheck(null, types[1], true)
+      }
+
+      //console.log("types",types)
+   }
+
+   handleResOrOnto(message)
+   {
+      //message = []
+
+      // general search or with datatype ?
+      let results ; 
+      if(this.state.filters.datatype[0] != "Any" && this.props.searches[this.state.filters.datatype[0]])
+         results = this.props.searches[this.state.filters.datatype[0]][this.props.keyword+"@"+this.props.language]
+      else
+         results = this.props.searches[this.props.keyword+"@"+this.props.language]
+
+
+      //console.log("results?",results,this.props.searches[this.props.keyword+"@"+this.props.language])
+
+      // resource search ?
+      if(this.props.language == "")
+      {
+         // ontology property search ?
+         if(this.props.ontoSearch == this.props.keyword)
+         {
+            if(this.props.ontology)
+            {
+
+               let iri = this.props.keyword
+               let url = this.props.keyword
+               for(let k of Object.keys(prefixesMap)) url = url.replace(new RegExp(k+":"),prefixesMap[k])
+
+               let labels = this.props.ontology[url]
+               if(!labels && this.props.keyword.match(/^:/))
+               {
+                  for(let k of Object.keys(this.props.ontology)) {
+                     console.log(k.replace(/^.*?[/]([^/]+)$/,":$1"),this.props.keyword)
+                     if(k.replace(/^.*?[/]([^/]+)$/,":$1") === this.props.keyword)
+                     {
+                        labels = this.props.ontology[k]
+                        url = k
+                        iri = k
+                        for(let p of Object.keys(prefixesMap)) iri = iri.replace(new RegExp(prefixesMap[p]),p+":")
+                        break ;
+                     }
+                  }
+               }
+
+               console.log("onto lab",labels)
+
+               if(labels)
+               {
+                  let l = { value : this.props.keyword, lang :"" }
+                  if(labels) labels = labels[rdfs+"label"]
+                  if(labels) l = labels[0]
+                  message.push(<h4 key="keyResource" style={{marginLeft:"16px"}}>Ontology Property Matching (1)</h4>)
+                  message.push(this.makeResult(iri,1,null,l.value,l.lang,null,null,"/show/"+iri))
+                  //message.push(<iframe id="ontoFrame" className="ontoSearch" src={url} />)
+                     /* onLoad={() =>
+                     {
+                        let iframe = window.parent.document.getElementById("ontoFrame");
+                        var container = document.body
+                        iframe.style.height = container.offsetHeight + 'px';
+                     }} */
+
+
+               }
+               else {
+                  message.push(
+                     <Typography style={{fontSize:"1.5em",maxWidth:'700px',margin:'50px auto',zIndex:0}}>
+                        No result found.
+                     </Typography>
+                  )
+               }
+            }
+         }
+         // resource id matching ?
+         else if(this.props.resources &&  this.props.resources[this.props.keyword] )
+         {
+            let l ; // sublist[o].filter((e) => (e.type && e.type.match(/prefLabelMatch$/)))[0]
+            let labels = this.props.resources[this.props.keyword]
+            if(labels && labels != true)
+            {
+               if(labels) labels = labels[this.props.keyword.replace(/bdr:/,bdr)]
+               if(labels) {
+                  l = getLangLabel(this,labels[skos+"prefLabel"])
+                  //console.log("l",labels,l)
+                  if(l) {
+                     message.push(<h4 key="keyResource" style={{marginLeft:"16px"}}>Resource Id Matching (1)</h4>)
+                     message.push(this.makeResult(this.props.keyword,1,null,l.value,l.lang))
+                  }
+               }
+            }
+         }
+      }
+      return results ;
+   }
+
+   handleResults(types,counts,message,results,paginate) 
+   {
+
+      let n = 0, m = 0 ;
+      console.log("results",results,paginate);
+      let list = results.results.bindings
+
+      let displayTypes = types //["Person"]
+      if(this.state.filters.datatype.indexOf("Any") === -1) displayTypes = this.state.filters.datatype ;
+
+      console.log("list x types",list,types,displayTypes)
+
+      for(let t of displayTypes) {
+
+         let willBreak = false ;
+         let dontShow = false ;
+         let pagin ;
+         if(paginate.length) pagin = paginate[0]
+         else pagin = { index:0, n:[0], pages:[0] };
+         if(t === "Any") continue ;
+
+         console.log("t",t,list)
+
+         message.push(<MenuItem  onClick={(e)=>this.handleCheck(e,t,true)}><h4>{I18n.t("types."+t.toLowerCase())+"s"+(counts["datatype"][t]?" ("+counts["datatype"][t]+")":"")}</h4></MenuItem>);
+
+         let sublist = list[t.toLowerCase()+"s"]
+         let cpt = 0;
+         n = 0
+         let begin = pagin.pages[pagin.index]
+         let categ = "Other" ;
+         let end = n
+
+         let findNext = false ;
+         let findFirst = true ;
+
+         let absi = -1
+
+         if(sublist) { for(let o of Object.keys(sublist))
+         {
+            absi ++ ;
+            //console.log("cpt",cpt,n,begin,findFirst,findNext,o,sublist[o])
+
+            if(absi < begin && findFirst) { cpt++ ; continue; }
+            else if(cpt == begin && !findNext) {
+               cpt = 0 ;
+               findFirst = false ;
+               n = pagin.n[pagin.index];
+            }
+
+            //message.push(["cpt="+cpt+"="+absi,<br/>])
+
+            let label ; // sublist[o].filter((e) => (e.type && e.type.match(/prefLabelMatch$/)))[0]
+            let sList = sublist[o].filter( (e) => (e.type && e.type.match(/(prefLabel(Match)?|eTextTitle)$/)))
+            let listOrder = { "prefLabelMatch$" : 1, "prefLabel$":2,"eTextTitle$":3 }
+            sList = _.sortBy(sList, (e) => {
+               for(let k of Object.keys(listOrder)) { if(e.type && e.type.match(new RegExp(k))) return listOrder[k] }
+            })
+            //console.log("sList",JSON.stringify(sList,null,3));
+            label = getLangLabel(this,sList) // ,true)
+            if(label && label.length > 0) label = label[0]
+
+            let preProps = sublist[o].filter((e) => e.type && e.type.match(/relationType$/ )).map(e => this.props.ontology[e.value])
+
+            //console.log("label",label,sublist[o],preProps)
+
+
+            let r = {
+               //f  : { type: "uri", value:list[o].type },
+               lit: label,
+               s  : { type: "uri", value: o },
+               match: sublist[o].filter((e) => {
+
+                  let use = true ;
+
+                  if(e.type && e.type.match(/relationType$/)) {
+                     let prop = this.props.ontology[e.value]
+                     //console.log("e",e,prop)
+                     if(prop)
+                        for(let p of preProps) {
+
+                           //console.log("::",p,preProps) //p[rdfs+"subPropertyOf"])
+
+                           if(p && (p[rdfs+"subClassOf"] && p[rdfs+"subClassOf"].filter(q => q.value == e.value).length > 0
+                              || p[rdfs+"subPropertyOf"] && p[rdfs+"subPropertyOf"].filter(q => q.value == e.value).length > 0
+                              || p[bdo+"taxSubClassOf"] && p[bdo+"taxSubClassOf"].filter(q => q.value == e.value).length > 0 )
+                           ) {
+                              use = false ;
+                              break ;
+                           }
+                        }
+                  }
+
+                  //console.log("e",e,this.state.filters.facets)
+
+                  return ( /*(this.state.filters.facets && e.type && this.state.filters.facets[e.type]) ||*/ use && (
+                  ( this.props.language != "" ? e.value && ((e.value.match(/[↦↤]/) && e.type && !e.type.match(/prefLabelMatch$/)))
+                                                            //|| e.type && e.type.match(/seqNum$/))
+                                              : !e.lang && (e.value.match(new RegExp(bdr+this.props.keyword.replace(/bdr:/,"")))
+                                                            || (e.type && e.type.match(/relationType$/) ) ) )
+
+                     ) ) } )
+            }
+
+
+            //console.log("r",r,label);
+
+            // || (e.type && e.type.match(/[Ee]xpression/) )
+            // || ( )
+
+            let isAbs = sublist[o].filter((e) => e.value && e.value.match(/Abstract/))
+            let hasExpr = sublist[o].filter((e) => e.type && e.type.match(/HasExpression/))
+            let isExpr = sublist[o].filter((e) => e.type && e.type.match(/ExpressionOf/))
+            let hasPart = sublist[o].filter((e) => e.type && e.type.match(/HasPart/))
+            let hasRoot = sublist[o].filter((e) => e.type && e.type.match(/HasRoot/))
+            let workLab = sublist[o].filter((e) => e.type && e.type.match(/workLabel/))
+
+            let addTmpProp = (tab,prop,lab) => {
+
+               if(tab.length > 0)
+               {
+                  let subL = sublist[o].filter((e) => (e.type && e.type.match(new RegExp(prop)))) ///(work(Has)?Expression)|(workHasRoot)/) ) )
+
+                  let subR,label,lang ;
+                  if(subL.length == 1) {
+                     subR = sublist[o].filter((e) => (e.type && e.type.match(new RegExp(lab)))) //(rootPrefLabel)|(prefLabel(Has)?Expression)/) ) )
+                     if(subR.length > 0) {
+                        let tLab = getLangLabel(this,subR)
+                        lang = tLab["xml:lang"]
+                        if(!lang) lang = tLab["lang"]
+                        label = tLab["value"]
+                     }
+                  }
+
+                  //console.log("sub",subL,subR,label);
+
+                  let withKey = subL.reduce((acc,e) => {
+                     if(!acc[e.type]) acc[e.type] = []
+                     acc[e.type] = [].concat(acc[e.type]) ;
+                     acc[e.type].push(e.value);
+                     return acc;
+                  }, {} )
+
+                  //console.log("wK",withKey);
+
+                  r.match = r.match.concat( Object.keys(withKey).reduce((acc,e)=>{
+                     let elem = {"type":e,"value":withKey[e],lang}
+                     if(label) elem = { ...elem, "tmpLabel":label}
+                     acc.push(elem);
+                     return acc;
+                  } ,[]) )
+
+                  //console.log("r.match",r.match)
+               }
+
+            }
+
+            addTmpProp(hasExpr,"workHasExpression","prefLabelHasExpression");
+            addTmpProp(isExpr,"workExpression","prefLabelExpression");
+            addTmpProp(hasRoot,"workHasRoot","rootPrefLabel");
+            addTmpProp(workLab,"forWork","workLabel");
+
+            let k = this.props.keyword.replace(/"/g,"")
+
+
+            let id = r.s.value
+            if(sublist[o].filter(e => e.type && e.type === tmp+"forEtext").length > 0) id = sublist[o].filter(e => e.type === tmp+"forEtext")[0].value
+            if(id.match(/bdrc[.]io/)) id = id.replace(/^.*?([^/]+)$/,"$1")
+
+            let lit ;
+            if(r.lit) { lit = this.highlight(r.lit.value,k) }
+            let lang ;
+            if(r.lit) lang= r.lit["lang"]
+            if(r.lit && !lang) lang = r.lit["xml:lang"]
+            let typ ;
+            //if(r.f && r.f.value) typ = r.f.value.replace(/^.*?([^/]+)$/,"$1")
+
+
+            //console.log("r",o,sublist[o],r,label,lit);
+
+            let filtered = true ;
+
+            if(this.state.filters.datatype.indexOf("Any") === -1 && this.state.filters && this.state.filters.facets)
+
+               for(let k of Object.keys(this.state.filters.facets)) {
+
+                  let v = this.state.filters.facets[k]
+
+                  let hasProp = []
+                  for(let e of sublist[o]) {
+                     //console.log("e",e)
+                     if(e.type == k && (e.value == v || (Array.isArray(v) && v.indexOf(e.value) !== -1))) { hasProp.push(e); }
+                     else if(v.alt) for(let a of v.alt) {
+                        if(e.type == a && (e.value == v.val || (Array.isArray(v.val) && (v.val.indexOf(e.value) !== -1 || v.val.indexOf("Any") !== -1)))) {
+
+                           hasProp.push(e);
+                        }
+                     }
+                  }
+
+                  //console.log("k",k,v,hasProp);
+
+                  if((this.state.filters.facets[k].val || this.state.filters.facets[k].indexOf("Any") === -1) && (!hasProp || hasProp.length == 0)) {
+
+                     filtered = false
+
+                  }
+                  else {
+
+                     //console.log("is good",cpt,n,r.s.value,r)
+
+                  }
+               }
+
+               //console.log("typ",typ,t,filtered)
+
+               //if(this.state.filters.datatype.length == 0 || this.state.filters.datatype.indexOf("Any") !== -1 || this.state.filters.datatype.indexOf(typ) !== -1)
+               if((!typ || typ === t) && filtered)
+               {
+                  if(findNext) {
+
+                     let next = absi
+
+                     pagin = {
+                                 ...pagin,
+                                 pages: pagin.pages.concat([next]),
+                                 n: pagin.n.concat([end])
+                              };
+
+                     //console.log("good!",next,willBreak,pagin)
+
+                     /*
+                     if(this.state.paginate.pages.indexOf(next) === -1)
+                        this.setState({...this.state,
+                           paginate:{...this.state.paginate,
+                              pages: this.state.paginate.pages.concat([next]),
+                              n: this.state.paginate.n.concat([end])
+                           }});
+                     */
+                     findNext = false
+                     dontShow = true
+                     
+                     if(paginate.length) break ;
+
+                     /*
+                     
+
+                     if(displayTypes.length > 1)  continue; 
+                     else if(t === "Any") break; 
+
+                     */
+                  }
+
+                  //console.log("lit",lit,n)
+
+                  let Tag,tip ;
+                  if(isAbs.length > 0) { Tag = CropFreeIcon ; tip = "Abstract Work" ; if(categ !== "Abstract") { message.push(<h5>Abstract</h5>); categ = "Abstract" ; if(cpt!=0) {n = 0; } ; willBreak = false ;} }
+                  else if(hasExpr.length > 0) { Tag = CenterFocusStrong; tip = "Work Has Expression" ; if(categ !== "HasExpr") { message.push(<h5>Has Expression</h5>); categ = "HasExpr" ; if(cpt!=0) {n = 0; }; willBreak = false ;  } }
+                  else if(isExpr.length > 0) { Tag = CenterFocusWeak; tip = "Work Expression Of"; if(categ !== "ExprOf") { message.push(<h5>Expression Of</h5>) ; categ = "ExprOf" ; if(cpt!=0) {n = 0; }; willBreak = false ;  } }
+                  else if(categ !== "Other") { Tag = CropDin; tip = "Work" ; message.push(<h5>Other</h5>); categ = "Other"; if(cpt!=0) {n = 0; } willBreak = false ;  }
+                  else if(categ === "Other") { Tag = CropDin; tip = "Work" ; }
+
+                  if(Tag == CropDin && hasPart.length > 0) Tag = FilterNone;
+
+                  if(t !== "Work") Tag = null
+
+                  //console.log("lit",lit,n)
+
+                  //console.log("willB",n,willBreak,categ)
+                  //if(n != 0 && willBreak) break;
+                  //else willBreak = false ;
+
+                  n ++;
+                  end = n ;
+                  if(!willBreak && !dontShow) message.push(
+                     [
+                        this.makeResult(id,n,t,lit,lang,tip,Tag)
+
+                     ,
+                     <div>
+                     {
+                        r.match.map((m) => {
+
+                              //console.log("m",m)
+
+                              if(!m.type.match(new RegExp(skos+"prefLabel"))) {
+                                 let prop = this.fullname(m.type.replace(/.*altLabelMatch/,skos+"altLabel"))
+                                 let val,isArray = false ;
+                                 let lang = m["lang"]
+                                 if(!lang) lang = m["xml:lang"]
+                                 if(Array.isArray(m.value)) { val = m.value.map((e)=>this.pretty(e)) ; isArray = true }
+                                 else {
+                                    //val = this.highlight(this.pretty(m.value),k)
+                                    let mLit = getLangLabel(this,[m])
+                                    val =  this.highlight(mLit["value"],k)
+                                    //val =  mLit["value"]
+                                    lang = mLit["lang"]
+                                    if(!lang) lang = mLit["xml:lang"]
+                                 }
+
+                                 //console.log("val",val,val.length,lang)
+
+                                 let uri = this.props.keyword.replace(/bdr:/,"")
+                                 if(m.type.match(/relationType$/)) {
+                                    prop = this.fullname(m.value) ;
+                                    val = uri
+                                 }
+
+
+                                 //console.log("prop",prop,val)
+
+                                 return (<div className="match">
+                                    <span className="label">{prop}:&nbsp;</span>
+                                    {!isArray && <span>{[val,lang?<Tooltip placement="bottom-end" title={
+                                       <div style={{margin:"10px"}}>
+                                          <Translate value={languages[lang]?languages[lang].replace(/search/,"tip"):lang}/>
+                                       </div>
+                                    }><span className="lang">{lang}</span></Tooltip>:null]}</span>}
+                                    {isArray && <div class="multi">
+                                       {val.map((e)=>
+                                          <span>
+                                             <Link to={"/show/bdr:"+e}>{m.tmpLabel?m.tmpLabel:e}</Link>
+                                             { m.lang && <Tooltip placement="bottom-end" title={
+                                                <div style={{margin:"10px"}}>
+                                                   <Translate value={languages[lang]?languages[lang].replace(/search/,"tip"):lang}/>
+                                                </div>
+                                             }><span className="lang">{m.lang}</span></Tooltip> }
+                                          </span>)}</div>}
+                                 </div>)
+                              }
+                        })
+                     }
+                     </div>
+                  ]
+
+                  )
+
+                  cpt ++;
+                  if(displayTypes.length >= 2) {
+                     if(cpt >= 3) { if(categ == "Other") { break ; } else { willBreak = true; } }
+                  } else {
+                     if(cpt > 0 && cpt % 50 == 0 && !findFirst) {
+
+                        findNext = true ;
+
+                        //break;
+                     }
+                  }
+               }
+            }
+            if(cpt == 0 ) { message.push(<Typography style={{margin:"20px 40px"}}><Translate value="search.filters.noresults"/></Typography>);}
+
+         }
+         console.log("end pagin",pagin,paginate)
+         if(pagin && paginate.length == 0) { paginate.push(pagin); }
+      }
+   }
+
+   prepareResults()
+   {
+
+      let types = ["Any"]
+      let counts = { "datatype" : { "Any" : 0 } }
+      let message = []
+      let results = this.handleResOrOnto(message);
+      let id = this.state.filters.datatype + "#" + this.props.keyword + "@" + this.props.language
+
+      console.log("res:",results)
+
+      if(results) 
+      {
+         let sta = { ...this.state }
+         if(results.numResults == 0 && message.length == 0) {
+            message.push(
+               <Typography style={{fontSize:"1.5em",maxWidth:'700px',margin:'50px auto',zIndex:0}}>
+                  No result found.
+               </Typography>
+            )
+
+            if(!sta.results) sta.results = {}
+            sta.results[id] = { message, types, counts }
+            this.setState(sta);
+         }
+         else
+         {
+
+            if(!this.props.datatypes || !this.props.datatypes.metadata)
+            {
+               console.log("dtp?",this.props.datatypes)
+            }
+            else {
+               this.setTypeCounts(types,counts);
+            }
+            
+            let paginate = [];
+            if(!sta.results || !sta.results[id] || sta.results[id].message.length <= 1) { //types.length != types.length) {
+               //if(sta.results && sta.results[id] && sta.results[id].paginate) paginate = [ sta.results[id].paginate ]               
+               if(this.state.paginate && this.state.paginate.pages.length > 1) paginate = [ this.state.paginate ]
+               this.handleResults(types,counts,message,results,paginate);
+            }
+            else {
+               message = sta.results[id].message
+               paginate = [ sta.results[id].paginate ]
+            }
+
+            //console.log("mesg",message,types,counts,JSON.stringify(paginate,null,3))
+
+            if(!sta.results || !sta.results[id] || ( sta.results[id].message.length < message.length ) || sta.results[id].types.length != types.length) {
+               if(!sta.results) sta.results = {}
+               sta.results[id] = { message, types, counts, paginate:paginate[0] }
+               sta.paginate = paginate[0]
+               this.setState(sta);
+            }
+         }
+
+         //console.log("dt?",this.state.filters.datatype)
+         //if(!sta.results || !sta.results[id] || sta.results[id].types.length != types.length) {
+
+      }
+
+      return id ;
+   }
 
 
    render() {
 
 
       let message = [],messageD = [];
-      let results ;
+      //let results ;
       let facetList = []
       let types = ["Any"]
       let loader ;
       let counts = { "datatype" : { "Any" : 0 } }
-
+      let paginate,pageLinks
       const { isAuthenticated } = this.props.auth;
+      let id ;
 
       if(!global.inTest) console.log("render",this.props.keyword,this.props,this.state,isAuthenticated(),this._customLang)
-
+      // no search yet --> sample data
       if(!this.props.keyword || this.props.keyword == "")
       {
          if(this.props.config && this.props.config.links)
@@ -963,576 +1557,35 @@ class App extends Component<Props,State> {
          types = types.sort()
       }
       else {
+         
+         id = this.prepareResults();
 
-         message = []
+         //console.log("id",id)
 
-         if(this.state.filters.datatype[0] != "Any" && this.props.searches[this.state.filters.datatype[0]])
-            results = this.props.searches[this.state.filters.datatype[0]][this.props.keyword+"@"+this.props.language]
-         else
-            results = this.props.searches[this.props.keyword+"@"+this.props.language]
-
-
-         //console.log("results?",results,this.props.searches[this.props.keyword+"@"+this.props.language])
-
-         if(this.props.language == "")
+         if(this.state.results && this.state.results[id])
          {
-            if(this.props.ontoSearch == this.props.keyword)
-            {
-               if(this.props.ontology)
-               {
-
-                  let iri = this.props.keyword
-                  let url = this.props.keyword
-                  for(let k of Object.keys(prefixesMap)) url = url.replace(new RegExp(k+":"),prefixesMap[k])
-
-                  let labels = this.props.ontology[url]
-                  if(!labels && this.props.keyword.match(/^:/))
-                  {
-                     for(let k of Object.keys(this.props.ontology)) {
-                        console.log(k.replace(/^.*?[/]([^/]+)$/,":$1"),this.props.keyword)
-                        if(k.replace(/^.*?[/]([^/]+)$/,":$1") === this.props.keyword)
-                        {
-                           labels = this.props.ontology[k]
-                           url = k
-                           iri = k
-                           for(let p of Object.keys(prefixesMap)) iri = iri.replace(new RegExp(prefixesMap[p]),p+":")
-                           break ;
-                        }
-                     }
-                  }
-
-                  console.log("onto lab",labels)
-
-                  if(labels)
-                  {
-                     let l = { value : this.props.keyword, lang :"" }
-                     if(labels) labels = labels[rdfs+"label"]
-                     if(labels) l = labels[0]
-                     message.push(<h4 key="keyResource" style={{marginLeft:"16px"}}>Ontology Property Matching (1)</h4>)
-                     message.push(this.makeResult(iri,1,null,l.value,l.lang,null,null,"/show/"+iri))
-                     //message.push(<iframe id="ontoFrame" className="ontoSearch" src={url} />)
-                        /* onLoad={() =>
-                        {
-                           let iframe = window.parent.document.getElementById("ontoFrame");
-                           var container = document.body
-                           iframe.style.height = container.offsetHeight + 'px';
-                        }} */
-
-
-                  }
-                  else {
-                     message.push(
-                        <Typography style={{fontSize:"1.5em",maxWidth:'700px',margin:'50px auto',zIndex:0}}>
-                           No result found.
-                        </Typography>
-                     )
-                  }
+            message = this.state.results[id].message
+            counts = this.state.results[id].counts
+            types = this.state.results[id].types
+            paginate = this.state.results[id].paginate
+            if(paginate.pages.length > 1) {
+               pageLinks = []
+               let min = 1, max = paginate.pages.length
+               if(max > 10) { 
+                  min = paginate.index + 1 - 4 ;
+                  if(min < 1) min = 1
+                  max = min + 10 - 2
+                  if(max > paginate.pages.length) max = paginate.pages.length
                }
-            }
-            else if(this.props.resources &&  this.props.resources[this.props.keyword] )
-            {
 
-
-               let l ; // sublist[o].filter((e) => (e.type && e.type.match(/prefLabelMatch$/)))[0]
-               let labels = this.props.resources[this.props.keyword]
-               if(labels && labels != true)
-               {
-                  if(labels) labels = labels[this.props.keyword.replace(/bdr:/,bdr)]
-                  if(labels) {
-                     l = getLangLabel(this,labels[skos+"prefLabel"])
-                     //console.log("l",labels,l)
-                     if(l) {
-                        message.push(<h4 key="keyResource" style={{marginLeft:"16px"}}>Resource Id Matching (1)</h4>)
-                        message.push(this.makeResult(this.props.keyword,1,null,l.value,l.lang))
-                     }
-                  }
-               }
+               if(min > 1) pageLinks.push([<a onClick={this.goPage.bind(this,id,1)}>1</a>," ... "]) 
+               for(let i = min ; i <= max ; i++) { pageLinks.push(<a onClick={this.goPage.bind(this,id,i)}>{((i-1)===this.state.paginate.index?<b><u>{i}</u></b>:i)}</a>) }
+               if(max < paginate.pages.length) pageLinks.push([" ... ",<a onClick={this.goPage.bind(this,id,paginate.pages.length)}>{paginate.pages.length}</a>]) 
             }
+
+            //console.log("prep",message,counts,types,paginate)
          }
 
-         if(results)
-         {
-            let n = 0, m = 0 ;
-            if(results.numResults == 0 && message.length == 0) {
-               message.push(
-                  <Typography style={{fontSize:"1.5em",maxWidth:'700px',margin:'50px auto',zIndex:0}}>
-                     No result found.
-                  </Typography>
-               )
-            }
-            else
-            {
-               if(!this.props.datatypes || !this.props.datatypes.metadata)
-               {
-                  //console.log("dtp?",this.props.datatypes)
-               }
-               else {
-
-                  //if(this.state.loader.datatype)
-                  //   this.setState({ loader: { ...this.state.loader, datatype:false }})
-
-                  //console.log("whatelse");
-
-                  if( this.props.datatypes.metadata) for(let r of Object.keys(this.props.datatypes.metadata) ){
-
-                     //r = r.bindings
-                     let typ = r.replace(/^.*?([^/]+)$/,"$1")
-                     typ = typ[0].toUpperCase() + typ.slice(1)
-
-                     // console.log("typ",typ)
-
-                     if(typ != "" && types.indexOf(typ) === -1)
-                     {
-                        m++;
-
-                        types.push(typ);
-
-                        counts["datatype"][typ]=Number(this.props.datatypes.metadata[r])
-                        counts["datatype"]["Any"]+=Number(this.props.datatypes.metadata[r])
-
-                        /*
-                        let value = typ
-
-                        let box =
-                        <div key={m} style={{width:"150px",textAlign:"left"}}>
-                           <FormControlLabel
-                              control={
-                                 <Checkbox
-                                    checked={this.state.filters.datatype.indexOf(typ) !== -1}
-                                    icon={<span className='checkB'/>}
-                                    checkedIcon={<span className='checkedB'><CheckCircle style={{color:"#444",margin:"-3px 0 0 -3px",width:"26px",height:"26px"}}/></span>}
-                                    onChange={(event, checked) => this.handleCheck(event,value,checked)} />
-
-                              }
-                              label={typ}
-                           />
-                           </div>
-                           facetList.push(box)
-                              */
-
-                     }
-
-                     types = types.sort(function(a,b) { return Number(counts["datatype"][b]) - Number(counts["datatype"][a]) })
-
-                     console.log("counts",counts,types)
-
-                  }
-
-
-                  if(types.length == 2 && !this.state.autocheck)
-                  {
-                     this.setState({ ...this.state, autocheck:true })
-
-                     //console.log("autocheck",types)
-
-                     this.handleCheck(null, types[1], true)
-                  }
-
-               }
-               console.log("results",results);
-               let list = results.results.bindings
-
-               //if(!list.length) list = Object.keys(list).map((o) => {
-                  /*
-                  let label = list[o].label
-                  if(!label) {
-                     label = list[o].prefLabel
-                     if(label)
-                     {
-                        if(label.constructor.name == "Array")  label = label[0]
-                        else label = { value:label }
-                     }
-                  }*/
-
-                  /*
-                  if(!label) label = list[o].matching.filter((current) => (current.type === skos+"prefLabel"))[0]
-                  if(!label)
-                     if(list[o].prefLabel) label = {"value": list[o].prefLabel }
-                     else label = {"value":"?"} */
-
-                     /*
-                      { ...label,
-                            value:label.value.replace(/@.*$/,"")
-                         }, */
-
-                         /*
-                  let label = list[o].reduce((acc,e) => (e.type && e.type.match(/prefLabelMatch$/ ? e:null)))
-
-                  return (
-                     {
-                         //f  : { type: "uri", value:list[o].type },
-                         lit: label,
-                         s  : { type: "uri", value:o },
-                         match: list[o].filter((e) => (e.value && e.value.match(/[↦↤]/)))
-                     } ) }message )
-
-                     */
-               let displayTypes = types //["Person"]
-               if(this.state.filters.datatype.indexOf("Any") === -1) displayTypes = this.state.filters.datatype ;
-
-               //console.log("list x types",list,types,displayTypes)
-
-               for(let t of displayTypes) {
-
-                  let willBreak = false ;
-
-                  if(t === "Any") continue ;
-
-
-                  console.log("t",t,list)
-
-                  message.push(<MenuItem  onClick={(e)=>this.handleCheck(e,t,true)}><h4>{I18n.t("types."+t.toLowerCase())+"s"+(counts["datatype"][t]?" ("+counts["datatype"][t]+")":"")}</h4></MenuItem>);
-
-                  let sublist = list[t.toLowerCase()+"s"]
-                  let cpt = 0;
-                  n = 0
-                  let begin = this.state.paginate.pages[this.state.paginate.index]
-                  let categ = "Other" ;
-                  let end = n
-
-                  let findNext = false ;
-                  let findFirst = true ;
-
-                  let absi = -1
-
-                  if(sublist) { for(let o of Object.keys(sublist))
-                  {
-                     absi ++ ;
-                     //console.log("cpt",cpt,n,begin,findFirst,findNext,o,sublist[o])
-
-                     if(absi < begin && findFirst) { cpt++ ; continue; }
-                     else if(cpt == begin && !findNext) {
-                        cpt = 0 ;
-                        findFirst = false ;
-                        n = this.state.paginate.n[this.state.paginate.index];
-                     }
-
-                     //message.push(["cpt="+cpt+"="+absi,<br/>])
-
-                     let label ; // sublist[o].filter((e) => (e.type && e.type.match(/prefLabelMatch$/)))[0]
-                     let sList = sublist[o].filter( (e) => (e.type && e.type.match(/(prefLabel(Match)?|eTextTitle)$/)))
-                     let listOrder = { "prefLabelMatch$" : 1, "prefLabel$":2,"eTextTitle$":3 }
-                     sList = _.sortBy(sList, (e) => {
-                        for(let k of Object.keys(listOrder)) { if(e.type && e.type.match(new RegExp(k))) return listOrder[k] }
-                     })
-                     //console.log("sList",JSON.stringify(sList,null,3));
-                     label = getLangLabel(this,sList) // ,true)
-                     if(label && label.length > 0) label = label[0]
-                     /*
-                     label = sublist[o].filter(
-                        (e) => (e.type && e.type.match(/(prefLabel(Match)?|eTextTitle)$/) && (e["lang"] == this.props.language || e["xml:lang"] == this.props.language)))[0]
-                     if(!label || label.length == 0) label = sublist[o].filter(
-                        (e) => (e.type && e.type.match(/(prefLabel(Match)?|eTextTitle)$/) && (e["lang"] == this.props.prefLang || e["xml:lang"] == this.props.prefLang)))[0]
-                     if(!label || label.length == 0) label = sublist[o].filter(
-                        (e) => (e.type && e.type.match(/(prefLabel(Match)?|eTextTitle)$/) && (e["lang"] == "bo-x-ewts" || e["xml:lang"] == "bo-x-ewts")))[0]
-                     if(!label || label.length == 0) label = sublist[o].filter(
-                        (e) => (e.type && e.type.match(/(prefLabel(Match)?|eTextTitle)$/)))[0]
-                     */
-
-                     let preProps = sublist[o].filter((e) => e.type && e.type.match(/relationType$/ )).map(e => this.props.ontology[e.value])
-
-                     //console.log("label",label,sublist[o],preProps)
-
-
-                     let r = {
-                        //f  : { type: "uri", value:list[o].type },
-                        lit: label,
-                        s  : { type: "uri", value: o },
-                        match: sublist[o].filter((e) => {
-
-                           let use = true ;
-
-                           if(e.type && e.type.match(/relationType$/)) {
-                              let prop = this.props.ontology[e.value]
-                              //console.log("e",e,prop)
-                              if(prop)
-                                 for(let p of preProps) {
-
-                                    //console.log("::",p,preProps) //p[rdfs+"subPropertyOf"])
-
-                                    if(p && (p[rdfs+"subClassOf"] && p[rdfs+"subClassOf"].filter(q => q.value == e.value).length > 0
-                                       || p[rdfs+"subPropertyOf"] && p[rdfs+"subPropertyOf"].filter(q => q.value == e.value).length > 0
-                                       || p[bdo+"taxSubClassOf"] && p[bdo+"taxSubClassOf"].filter(q => q.value == e.value).length > 0 )
-                                    ) {
-                                       use = false ;
-                                       break ;
-                                    }
-                                 }
-                           }
-
-                           //console.log("e",e,this.state.filters.facets)
-
-                           return ( /*(this.state.filters.facets && e.type && this.state.filters.facets[e.type]) ||*/ use && (
-                           ( this.props.language != "" ? e.value && ((e.value.match(/[↦↤]/) && e.type && !e.type.match(/prefLabelMatch$/)))
-                                                                     //|| e.type && e.type.match(/seqNum$/))
-                                                       : !e.lang && (e.value.match(new RegExp(bdr+this.props.keyword.replace(/bdr:/,"")))
-                                                                     || (e.type && e.type.match(/relationType$/) ) ) )
-
-                              ) ) } )
-                     }
-
-
-                     //console.log("r",r,label);
-
-                     // || (e.type && e.type.match(/[Ee]xpression/) )
-                     // || ( )
-
-                     let isAbs = sublist[o].filter((e) => e.value && e.value.match(/Abstract/))
-                     let hasExpr = sublist[o].filter((e) => e.type && e.type.match(/HasExpression/))
-                     let isExpr = sublist[o].filter((e) => e.type && e.type.match(/ExpressionOf/))
-                     let hasPart = sublist[o].filter((e) => e.type && e.type.match(/HasPart/))
-                     let hasRoot = sublist[o].filter((e) => e.type && e.type.match(/HasRoot/))
-                     let workLab = sublist[o].filter((e) => e.type && e.type.match(/workLabel/))
-
-                     let addTmpProp = (tab,prop,lab) => {
-
-                        if(tab.length > 0)
-                        {
-                           let subL = sublist[o].filter((e) => (e.type && e.type.match(new RegExp(prop)))) ///(work(Has)?Expression)|(workHasRoot)/) ) )
-
-                           let subR,label,lang ;
-                           if(subL.length == 1) {
-                              subR = sublist[o].filter((e) => (e.type && e.type.match(new RegExp(lab)))) //(rootPrefLabel)|(prefLabel(Has)?Expression)/) ) )
-                              if(subR.length > 0) {
-                                 /*
-                                 label = subR.filter((e) => (e["xml:lang"] == this.props.prefLang))
-                                 if(!label || label.length == 0) label = subR.filter((e) => (e["xml:lang"] == "bo-x-ewts"))
-                                 if(!label || label.length == 0) if(subR.length > 0) label = subR
-
-                                 if(label && label[0] && label[0].value) {
-                                    lang = label[0]["xml:lang"] ;
-                                    if(!lang) lang = label[0]["lang"]
-                                    label = label[0].value;
-                                 }
-                                 else label = null
-                                 */
-                                 let tLab = getLangLabel(this,subR)
-                                 lang = tLab["xml:lang"]
-                                 if(!lang) lang = tLab["lang"]
-                                 label = tLab["value"]
-                              }
-                           }
-
-                           //console.log("sub",subL,subR,label);
-
-                           let withKey = subL.reduce((acc,e) => {
-                              if(!acc[e.type]) acc[e.type] = []
-                              acc[e.type] = [].concat(acc[e.type]) ;
-                              acc[e.type].push(e.value);
-                              return acc;
-                           }, {} )
-
-                           //console.log("wK",withKey);
-
-                           r.match = r.match.concat( Object.keys(withKey).reduce((acc,e)=>{
-                              let elem = {"type":e,"value":withKey[e],lang}
-                              if(label) elem = { ...elem, "tmpLabel":label}
-                              acc.push(elem);
-                              return acc;
-                           } ,[]) )
-
-                           //console.log("r.match",r.match)
-                        }
-
-                     }
-
-                     addTmpProp(hasExpr,"workHasExpression","prefLabelHasExpression");
-                     addTmpProp(isExpr,"workExpression","prefLabelExpression");
-                     addTmpProp(hasRoot,"workHasRoot","rootPrefLabel");
-                     addTmpProp(workLab,"forWork","workLabel");
-
-                     let k = this.props.keyword.replace(/"/g,"")
-
-
-                     let id = r.s.value
-                     if(sublist[o].filter(e => e.type && e.type === tmp+"forEtext").length > 0) id = sublist[o].filter(e => e.type === tmp+"forEtext")[0].value
-                     if(id.match(/bdrc[.]io/)) id = id.replace(/^.*?([^/]+)$/,"$1")
-
-                     let lit ;
-                     if(r.lit) { lit = this.highlight(r.lit.value,k) }
-                     let lang ;
-                     if(r.lit) lang= r.lit["lang"]
-                     if(r.lit && !lang) lang = r.lit["xml:lang"]
-                     let typ ;
-                     //if(r.f && r.f.value) typ = r.f.value.replace(/^.*?([^/]+)$/,"$1")
-
-
-                     //console.log("r",o,sublist[o],r,label,lit);
-
-                     let filtered = true ;
-
-                     if(this.state.filters.datatype.indexOf("Any") === -1 && this.state.filters && this.state.filters.facets)
-
-                        for(let k of Object.keys(this.state.filters.facets)) {
-
-                           let v = this.state.filters.facets[k]
-
-                           let hasProp = []
-                           for(let e of sublist[o]) {
-                              //console.log("e",e)
-                              if(e.type == k && (e.value == v || (Array.isArray(v) && v.indexOf(e.value) !== -1))) { hasProp.push(e); }
-                              else if(v.alt) for(let a of v.alt) {
-                                 if(e.type == a && (e.value == v.val || (Array.isArray(v.val) && (v.val.indexOf(e.value) !== -1 || v.val.indexOf("Any") !== -1)))) {
-
-                                    hasProp.push(e);
-                                 }
-                              }
-                           }
-
-                           //console.log("k",k,v,hasProp);
-
-                           if((this.state.filters.facets[k].val || this.state.filters.facets[k].indexOf("Any") === -1) && (!hasProp || hasProp.length == 0)) {
-
-                              filtered = false
-
-                           }
-                           else {
-
-                              //console.log("is good",cpt,n,r.s.value,r)
-
-                           }
-                           /*
-
-                           if(r.obj[k] && this.state.filters.facets[k].indexOf("Any") === -1 &&
-                           this.state.filters.facets[k].indexOf(r.obj[k]) === -1) {
-
-                              console.log("filtered")
-                              filtered = false;
-
-                           }
-                           */
-                        }
-
-                        //console.log("typ",typ,t,filtered)
-
-                        //if(this.state.filters.datatype.length == 0 || this.state.filters.datatype.indexOf("Any") !== -1 || this.state.filters.datatype.indexOf(typ) !== -1)
-                        if((!typ || typ === t) && filtered)
-                        {
-                           if(findNext) {
-
-                              let next = absi
-
-                              //console.log("good!",next,)
-
-                              if(this.state.paginate.pages.indexOf(next) === -1)
-                                 this.setState({...this.state,
-                                    paginate:{...this.state.paginate,
-                                       pages: this.state.paginate.pages.concat([next]),
-                                       n: this.state.paginate.n.concat([end])
-                                    }});
-
-                              break;
-                           }
-
-                           //console.log("lit",lit,n)
-
-                           let Tag,tip ;
-                           if(isAbs.length > 0) { Tag = CropFreeIcon ; tip = "Abstract Work" ; if(categ !== "Abstract") { message.push(<h5>Abstract</h5>); categ = "Abstract" ; if(cpt!=0) {n = 0; } ; willBreak = false ;} }
-                           else if(hasExpr.length > 0) { Tag = CenterFocusStrong; tip = "Work Has Expression" ; if(categ !== "HasExpr") { message.push(<h5>Has Expression</h5>); categ = "HasExpr" ; if(cpt!=0) {n = 0; }; willBreak = false ;  } }
-                           else if(isExpr.length > 0) { Tag = CenterFocusWeak; tip = "Work Expression Of"; if(categ !== "ExprOf") { message.push(<h5>Expression Of</h5>) ; categ = "ExprOf" ; if(cpt!=0) {n = 0; }; willBreak = false ;  } }
-                           else if(categ !== "Other") { Tag = CropDin; tip = "Work" ; message.push(<h5>Other</h5>); categ = "Other"; if(cpt!=0) {n = 0; } willBreak = false ;  }
-                           else if(categ === "Other") { Tag = CropDin; tip = "Work" ; }
-
-                           if(Tag == CropDin && hasPart.length > 0) Tag = FilterNone;
-
-                           if(t !== "Work") Tag = null
-
-                           //console.log("lit",lit,n)
-
-                           //console.log("willB",n,willBreak,categ)
-                           //if(n != 0 && willBreak) break;
-                           //else willBreak = false ;
-
-                           n ++;
-                           end = n ;
-                           if(!willBreak) message.push(
-                              [
-                                 this.makeResult(id,n,t,lit,lang,tip,Tag)
-
-                              ,
-                              <div>
-                              {
-                                 r.match.map((m) => {
-
-                                       //console.log("m",m)
-
-                                       if(!m.type.match(new RegExp(skos+"prefLabel"))) {
-                                          let prop = this.fullname(m.type.replace(/.*altLabelMatch/,skos+"altLabel"))
-                                          let val,isArray = false ;
-                                          let lang = m["lang"]
-                                          if(!lang) lang = m["xml:lang"]
-                                          if(Array.isArray(m.value)) { val = m.value.map((e)=>this.pretty(e)) ; isArray = true }
-                                          else {
-                                             //val = this.highlight(this.pretty(m.value),k)
-                                             let mLit = getLangLabel(this,[m])
-                                             val =  this.highlight(mLit["value"],k)
-                                             //val =  mLit["value"]
-                                             lang = mLit["lang"]
-                                             if(!lang) lang = mLit["xml:lang"]
-                                          }
-
-                                          //console.log("val",val,val.length,lang)
-
-                                          let uri = this.props.keyword.replace(/bdr:/,"")
-                                          if(m.type.match(/relationType$/)) {
-                                             prop = this.fullname(m.value) ;
-                                             val = uri
-                                          }
-
-
-                                          //console.log("prop",prop,val)
-
-                                          return (<div className="match">
-                                             <span className="label">{prop}:&nbsp;</span>
-                                             {!isArray && <span>{[val,lang?<Tooltip placement="bottom-end" title={
-                                                <div style={{margin:"10px"}}>
-                                                   <Translate value={languages[lang]?languages[lang].replace(/search/,"tip"):lang}/>
-                                                </div>
-                                             }><span className="lang">{lang}</span></Tooltip>:null]}</span>}
-                                             {isArray && <div class="multi">
-                                                {val.map((e)=>
-                                                   <span>
-                                                      <Link to={"/show/bdr:"+e}>{m.tmpLabel?m.tmpLabel:e}</Link>
-                                                      { m.lang && <Tooltip placement="bottom-end" title={
-                                                         <div style={{margin:"10px"}}>
-                                                            <Translate value={languages[lang]?languages[lang].replace(/search/,"tip"):lang}/>
-                                                         </div>
-                                                      }><span className="lang">{m.lang}</span></Tooltip> }
-                                                   </span>)}</div>}
-                                          </div>)
-                                       }
-                                 })
-                              }
-                              </div>
-                           ]
-
-                           )
-
-                           cpt ++;
-                           if(displayTypes.length >= 2) {
-                              if(cpt >= 3) { if(categ == "Other") { break ; } else { willBreak = true; } }
-                           } else {
-                              if(cpt >= 50 && !findFirst) {
-
-                                 findNext = true ;
-
-                                 //break;
-                              }
-                           }
-                        }
-                     }
-                     if(cpt == 0 ) { message.push(<Typography style={{margin:"20px 40px"}}><Translate value="search.filters.noresults"/></Typography>);}
-
-                  }
-               }
-
-               //console.log("message",message)
-
-               /*
-               <Typography>{r.lit}</Typography>
-               */
-            }
-         }
       }
 
       let widget = (title:string,txt:string,inCollapse:Component) => (
@@ -1703,7 +1756,7 @@ class App extends Component<Props,State> {
       }
       //console.log("metaK",metaK)
 
-      //console.log("messageD",messageD)
+      //console.log("messageD",messageD,message)
 
       const textStyle = {marginLeft:"15px",marginBottom:"10px",marginRight:"15px"}
 
@@ -2205,14 +2258,14 @@ class App extends Component<Props,State> {
                      { message }
                      <div id="pagine">
                         <NavigateBefore
-                           className={this.state.paginate.index == 0 ? "hide":""}
-                           onClick={this.prevPage.bind(this)}/>
+                           className={paginate && paginate.index == 0 ? "hide":""}
+                           onClick={this.prevPage.bind(this,id)}/>
                         <div style={{width:"60%"}}>
-                              <br/>
+                              { pageLinks }
                         </div>
                         <NavigateNext
-                           className={this.state.paginate.index == this.state.paginate.pages.length - 1 ? "hide":""}
-                           onClick={this.nextPage.bind(this)} />
+                           className={paginate && paginate.index == paginate.pages.length - 1 ? "hide":""}
+                           onClick={this.nextPage.bind(this,id)} />
                      </div>
                   </List>
                }
