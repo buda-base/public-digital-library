@@ -1493,7 +1493,7 @@ class App extends Component<Props,State> {
             let paginate = [];
             if(!sta.results || !sta.results[id] || sta.results[id].message.length <= 1) { //types.length != types.length) {
                //if(sta.results && sta.results[id] && sta.results[id].paginate) paginate = [ sta.results[id].paginate ]               
-               if(this.state.paginate && this.state.paginate.pages.length > 1) paginate = [ this.state.paginate ]
+               if(this.state.paginate && this.state.paginate.pages && this.state.paginate.pages.length > 1) paginate = [ this.state.paginate ]
                this.handleResults(types,counts,message,results,paginate);
             }
             else {
@@ -1568,7 +1568,7 @@ class App extends Component<Props,State> {
             counts = this.state.results[id].counts
             types = this.state.results[id].types
             paginate = this.state.results[id].paginate
-            if(paginate.pages.length > 1) {
+            if(paginate && paginate.pages && paginate.pages.length > 1) {
                pageLinks = []
                let min = 1, max = paginate.pages.length
                if(max > 10) { 
