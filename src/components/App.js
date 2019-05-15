@@ -289,7 +289,8 @@ type State = {
    loader:{[string]:Component<*>},
    facets? : string[],
    autocheck?:boolean,   
-   paginate:{},
+   paginate:{},   
+   repage:boolean,
    results:{
       [string]:{
          message:[],
@@ -376,9 +377,7 @@ class App extends Component<Props,State> {
       }
       else if(label === "Any" || ( !label)) // && ( this.state.filters.datatype.length === 0 || this.state.filters.datatype.indexOf("Any") !== -1 ) ) )
       {
-         this.props.history.push({pathname:"/search",search:"?q="+key+"&lg="+this.getLanguage()+"&t="+this.state.filters.datatype[0]})
-
-
+         this.props.history.push({pathname:"/search",search:"?q="+key+"&lg="+this.getLanguage()+"&t=Any"})
       }
       else if (label || this.state.filters.datatype.filter((f)=>["Person","Work","Etext"].indexOf(f) !== -1).length > 0)
       {
@@ -410,6 +409,7 @@ class App extends Component<Props,State> {
    static getDerivedStateFromProps(props:Props,state:State)
    {
       let eq = true
+      let s ;
 
       if(props.language == "" && (!props.resources || !props.resources[props.keyword]))
       {
@@ -417,18 +417,32 @@ class App extends Component<Props,State> {
          props.onGetResource(props.keyword);
       }
 
+      // update when datatype filter has changed 
+      if(state.filters && state.filters.datatype) {
+         let get = qs.parse(props.history.location.search)
+         let d_url = (get.t?get.t.split(","):["Any"])
+         let d_sta = state.filters.datatype
+         if(d_sta.filter(i => !d_url.includes(i)).length > 0) {
+            if(!s) s = { ...state }
+            s = { ...s, filters : { ...s.filters, datatype : d_url }, repage:true }
+            console.log("filt::",d_url)
+         }
+         console.log("what...",d_sta,d_url)
+      }
+      
+      // update when language has changed
       if(props.langPreset && state.langPreset) for(let i = 0 ; i < props.langPreset.length && eq; i ++ ) { eq = eq && props.langPreset[i] === state.langPreset[i] ; }
       else eq = false ;
 
-      console.log("gDsFp",eq,props,state)
-      let s ;
+      console.log("gDsFp",eq,props,state,s)
+
       if(!eq) {
-         s = { ...state, langPreset:props.langPreset }
+         if(!s) s = { ...state }
+         s = { ...s, langPreset:props.langPreset, repage:true }
          if(props.langIndex !== undefined ) s = { ...s, language:props.langPreset[0] }
-         return s
       }
 
-
+      if(s) return s ;
       else return null;
    }
 
@@ -526,15 +540,15 @@ class App extends Component<Props,State> {
 
       console.log("checkF",prop,lab,val,newF)
 
-      state = { ...state, paginate:{index:0,pages:[0],n:[0]} }
+      state = { ...state, paginate:{index:0,pages:[0],n:[0]}, repage: true }
 
       if(val)
       {
-         state = {  ...state,  filters: {  ...state.filters, facets: { ...state.filters.facets, ...newF } } }
+         state = {  ...state, filters: {  ...state.filters, facets: { ...state.filters.facets, ...newF } } }
       }
       else if(propSet)
       {
-         state = {  ...state,  filters: {  ...state.filters, facets: { ...state.filters.facets, ...newF } } }
+         state = {  ...state, filters: {  ...state.filters, facets: { ...state.filters.facets, ...newF } } }
       }
 
       this.setState( state )
@@ -586,7 +600,7 @@ class App extends Component<Props,State> {
 
    handleCheck = (ev:Event,lab:string,val:boolean) => {
 
-      console.log("check",lab,val,this.props.keyword,'('+this.state.keyword+')')
+      console.log("check::",lab,val,this.props.keyword,'('+this.state.keyword+')')
 
       //if(this.props.language == "") return
 
@@ -598,7 +612,7 @@ class App extends Component<Props,State> {
 
       let f = [lab]
 
-      let state =  {  ...this.state,  filters: {  ...this.state.filters, datatype:f }, paginate:{index:0,pages:[0],n:[0]} }
+      let state =  {  ...this.state,  filters: {  /*...this.state.filters, */ datatype:f }, paginate:{index:0,pages:[0],n:[0]}, repage: true  }
 
       if(val && this.props.keyword)
       {
@@ -1016,7 +1030,7 @@ class App extends Component<Props,State> {
          results = this.props.searches[this.props.keyword+"@"+this.props.language]
 
 
-      //console.log("results?",results,this.props.searches[this.props.keyword+"@"+this.props.language])
+      // console.log("results?",results,this.props.searches[this.props.keyword+"@"+this.props.language])
 
       // resource search ?
       if(this.props.language == "")
@@ -1066,6 +1080,7 @@ class App extends Component<Props,State> {
 
 
                }
+               /*
                else {
                   message.push(
                      <Typography style={{fontSize:"1.5em",maxWidth:'700px',margin:'50px auto',zIndex:0}}>
@@ -1073,6 +1088,7 @@ class App extends Component<Props,State> {
                      </Typography>
                   )
                }
+               */
             }
          }
          // resource id matching ?
@@ -1120,8 +1136,8 @@ class App extends Component<Props,State> {
 
          console.log("t",t,list)
 
-         message.push(<MenuItem  onClick={(e)=>this.handleCheck(e,t,true)}><h4>{I18n.t("types."+t.toLowerCase())+"s"+(counts["datatype"][t]?" ("+counts["datatype"][t]+")":"")}</h4></MenuItem>);
 
+         let iniTitle = false 
          let sublist = list[t.toLowerCase()+"s"]
          let cpt = 0;
          n = 0
@@ -1136,6 +1152,10 @@ class App extends Component<Props,State> {
 
          if(sublist) { for(let o of Object.keys(sublist))
          {
+            if(!iniTitle) {
+               iniTitle = true
+               message.push(<MenuItem  onClick={(e)=>this.handleCheck(e,t,true)}><h4>{I18n.t("types."+t.toLowerCase())+"s"+(counts["datatype"][t]?" ("+counts["datatype"][t]+")":"")}</h4></MenuItem>);
+            }
             absi ++ ;
             //console.log("cpt",cpt,n,begin,findFirst,findNext,o,sublist[o])
 
@@ -1449,6 +1469,11 @@ class App extends Component<Props,State> {
             if(cpt == 0 ) { message.push(<Typography style={{margin:"20px 40px"}}><Translate value="search.filters.noresults"/></Typography>);}
 
          }
+
+         if(!iniTitle && (displayTypes.length > 1 || displayTypes.indexOf("Any") !== -1) ) {
+            iniTitle = true
+            message.push(<MenuItem  onClick={(e)=>this.handleCheck(e,t,true)}><h4>{I18n.t("types."+t.toLowerCase())+"s"+(counts["datatype"][t]?" ("+counts["datatype"][t]+")":"")}</h4></MenuItem>);
+         }
          console.log("end pagin",pagin,paginate)
          if(pagin && paginate.length == 0) { paginate.push(pagin); }
       }
@@ -1460,61 +1485,60 @@ class App extends Component<Props,State> {
       let types = ["Any"]
       let counts = { "datatype" : { "Any" : 0 } }
       let message = []
-      let results = this.handleResOrOnto(message);
+      let results = this.handleResOrOnto(message);      
+      let resMatch = message.length
       let id = this.state.filters.datatype + "#" + this.props.keyword + "@" + this.props.language
 
-      console.log("res:",results)
+      console.log("res::",results,message,message.length)
 
-      if(results) 
-      {
-         let sta = { ...this.state }
-         if(results.numResults == 0 && message.length == 0) {
-            message.push(
-               <Typography style={{fontSize:"1.5em",maxWidth:'700px',margin:'50px auto',zIndex:0}}>
-                  No result found.
-               </Typography>
-            )
-
+      let sta = { ...this.state }
+      if(resMatch == 0 && (!results || results.numResults == 0) ) {
+         message.push(
+            <Typography style={{fontSize:"1.5em",maxWidth:'700px',margin:'50px auto',zIndex:0}}>
+               No result found.
+            </Typography>
+         )
+         if(!sta.results || !sta.results[id]) {
             if(!sta.results) sta.results = {}
-            sta.results[id] = { message, types, counts }
+            sta.results[id] = { message, types, counts, resMatch }
             this.setState(sta);
          }
-         else
+      }
+      else 
+      {
+         if(sta.results) console.log("results::",JSON.stringify(Object.keys(sta.results),null,3),sta)
+
+         if(!this.props.datatypes || !this.props.datatypes.metadata)
          {
+            console.log("dtp?",this.props.datatypes)
+         }
+         else {
+            this.setTypeCounts(types,counts);
+         }
+         
 
-            if(!this.props.datatypes || !this.props.datatypes.metadata)
-            {
-               console.log("dtp?",this.props.datatypes)
-            }
-            else {
-               this.setTypeCounts(types,counts);
-            }
-            
-            let paginate = [];
-            if(!sta.results || !sta.results[id] || sta.results[id].message.length <= 1) { //types.length != types.length) {
-               //if(sta.results && sta.results[id] && sta.results[id].paginate) paginate = [ sta.results[id].paginate ]               
-               if(this.state.paginate && this.state.paginate.pages && this.state.paginate.pages.length > 1) paginate = [ this.state.paginate ]
-               this.handleResults(types,counts,message,results,paginate);
-            }
-            else {
-               message = sta.results[id].message
-               paginate = [ sta.results[id].paginate ]
-            }
-
-            //console.log("mesg",message,types,counts,JSON.stringify(paginate,null,3))
-
-            if(!sta.results || !sta.results[id] || ( sta.results[id].message.length < message.length ) || sta.results[id].types.length != types.length) {
-               if(!sta.results) sta.results = {}
-               sta.results[id] = { message, types, counts, paginate:paginate[0] }
-               sta.paginate = paginate[0]
-               this.setState(sta);
-            }
+         let paginate = [];
+         if(sta.repage || !sta.results || !sta.results[id] || (sta.results[id].resMatch != resMatch) || ( !sta.results[id].message.length ) ) { 
+            if(this.state.paginate && this.state.paginate.pages && this.state.paginate.pages.length > 1) paginate = [ this.state.paginate ]
+            if(results) this.handleResults(types,counts,message,results,paginate);
+         }
+         else {
+            message = sta.results[id].message
+            paginate = [ sta.results[id].paginate ]
          }
 
-         //console.log("dt?",this.state.filters.datatype)
-         //if(!sta.results || !sta.results[id] || sta.results[id].types.length != types.length) {
+         //console.log("mesg",message,types,counts,JSON.stringify(paginate,null,3))
 
+         if(sta.repage || !sta.results || !sta.results[id] || (sta.results[id].resMatch != resMatch) || ( sta.results[id].message.length < message.length ) || sta.results[id].types.length != types.length) {
+            if(!sta.results) sta.results = {}
+            sta.results[id] = { message, types, counts, paginate:paginate[0], resMatch }
+            sta.paginate = paginate[0]
+            sta.repage = false 
+            this.setState(sta);
+         }
       }
+
+      
 
       return id ;
    }
@@ -2258,13 +2282,13 @@ class App extends Component<Props,State> {
                      { message }
                      <div id="pagine">
                         <NavigateBefore
-                           className={paginate && paginate.index == 0 ? "hide":""}
+                           className={!paginate || paginate.index == 0 ? "hide":""}
                            onClick={this.prevPage.bind(this,id)}/>
                         <div style={{width:"60%"}}>
                               { pageLinks }
                         </div>
                         <NavigateNext
-                           className={paginate && paginate.index == paginate.pages.length - 1 ? "hide":""}
+                           className={!paginate || paginate.index == paginate.pages.length - 1 ? "hide":""}
                            onClick={this.nextPage.bind(this,id)} />
                      </div>
                   </List>
