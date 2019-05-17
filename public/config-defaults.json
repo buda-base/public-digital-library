@@ -77,9 +77,11 @@
    "language": {
       "data":{
          "presets":{
-            "0":[ "bo-x-ewts", "sa-deva" ],
-            "1":[ "bo", "zh-hans" ],
-            "2":[ "zh-hant" ],
+            "0":[ "bo-x-ewts", "sa-x-iast" ],
+            "1":[ "sa-deva", "bo" ],
+            "2":[ "bo", "zh-hans" ],
+            "3":[ "zh-hant"],
+            "4":[ "en", "zh-latn-pinyin" ],
             "custom":[ "bo", "sa-deva", "zh-hant" ]
          },
          "index":0

@@ -296,7 +296,7 @@ type State = {
          message:[],
          counts:{},
          types:[],      
-         paginate:{index:number,pages:number[],n:number[]}
+         paginate:{index:number,pages:number[],n:number[],goto?:number}
       }
       
    }
@@ -427,7 +427,7 @@ class App extends Component<Props,State> {
             s = { ...s, filters : { ...s.filters, datatype : d_url }, repage:true }
             console.log("filt::",d_url)
          }
-         console.log("what...",d_sta,d_url)
+         //console.log("what...",d_sta,d_url)
       }
       
       // update when language has changed
@@ -598,7 +598,7 @@ class App extends Component<Props,State> {
    */
 
 
-   handleCheck = (ev:Event,lab:string,val:boolean) => {
+   handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
       console.log("check::",lab,val,this.props.keyword,'('+this.state.keyword+')')
 
@@ -612,7 +612,9 @@ class App extends Component<Props,State> {
 
       let f = [lab]
 
-      let state =  {  ...this.state,  filters: {  /*...this.state.filters, */ datatype:f }, paginate:{index:0,pages:[0],n:[0]}, repage: true  }
+      let state =  { ...this.state, collapse: { ...this.state.collapse, HasExpr:true, Other:true, ExprOf:true, Abstract:true }, 
+                     filters: {  /*...this.state.filters, */ datatype:f }, paginate:{index:0,pages:[0],n:[0]}, repage: true, 
+                     ...params  }
 
       if(val && this.props.keyword)
       {
@@ -1113,6 +1115,19 @@ class App extends Component<Props,State> {
       return results ;
    }
 
+   setWorkCateg(categ,paginate)
+   {
+      let show  ;
+      if(this.state.collapse[categ] == undefined) show = false
+      else show = !this.state.collapse[categ]
+      
+      console.log("categ",categ,paginate,show)
+
+      let params = {  repage:true, paginate:{...paginate, gotoCateg:true}, collapse:{...this.state.collapse, [categ]:show} }
+      if(this.state.filters.datatype.indexOf("Work") === -1) this.handleCheck(null, "Work", true, params )
+      else this.setState({...this.state, ...params})
+   }
+
    handleResults(types,counts,message,results,paginate) 
    {
 
@@ -1134,16 +1149,21 @@ class App extends Component<Props,State> {
          else pagin = { index:0, n:[0], pages:[0] };
          if(t === "Any") continue ;
 
-         console.log("t",t,list)
+         console.log("t",t,list,pagin)
 
 
          let iniTitle = false 
-         let sublist = list[t.toLowerCase()+"s"]
-         let cpt = 0;
+         let sublist = list[t.toLowerCase()+"s"]         
+         let cpt = 0
          n = 0
          let begin = pagin.pages[pagin.index]
+
+         console.log("begin",begin)
+
          let categ = "Other" ;
          let end = n
+         let max_cpt = 3
+         let canCollapse = false 
 
          let findNext = false ;
          let findFirst = true ;
@@ -1154,16 +1174,24 @@ class App extends Component<Props,State> {
          {
             if(!iniTitle) {
                iniTitle = true
-               message.push(<MenuItem  onClick={(e)=>this.handleCheck(e,t,true)}><h4>{I18n.t("types."+t.toLowerCase())+"s"+(counts["datatype"][t]?" ("+counts["datatype"][t]+")":"")}</h4></MenuItem>);
+               message.push(<MenuItem  onClick={(e)=>this.handleCheck(e,t,true)}><h4>{I18n.t("types."+t.toLowerCase())+"s"+(displayTypes.length>1&&counts["datatype"][t]?" ("+counts["datatype"][t]+")":"")}</h4></MenuItem>);
             }
             absi ++ ;
             //console.log("cpt",cpt,n,begin,findFirst,findNext,o,sublist[o])
 
-            if(absi < begin && findFirst) { cpt++ ; continue; }
+            if(absi < begin && findFirst) { cpt++ ; m++ ; continue; }
             else if(cpt == begin && !findNext) {
                cpt = 0 ;
+               m = 0 ;
                findFirst = false ;
                n = pagin.n[pagin.index];
+
+               if(pagin.gotoCateg) { 
+                  console.log("pagin.goto A",JSON.stringify(pagin,null,3))
+                  pagin.pages = pagin.pages.slice(0,pagin.index+1)
+                  pagin.n = pagin.n.slice(0,pagin.index+1)
+                  console.log("pagin.goto Z",JSON.stringify(pagin,null,3))
+               }
             }
 
             //message.push(["cpt="+cpt+"="+absi,<br/>])
@@ -1372,11 +1400,11 @@ class App extends Component<Props,State> {
                   //console.log("lit",lit,n)
 
                   let Tag,tip ;
-                  if(isAbs.length > 0) { Tag = CropFreeIcon ; tip = "Abstract Work" ; if(categ !== "Abstract") { message.push(<h5>Abstract</h5>); categ = "Abstract" ; if(cpt!=0) {n = 0; } ; willBreak = false ;} }
-                  else if(hasExpr.length > 0) { Tag = CenterFocusStrong; tip = "Work Has Expression" ; if(categ !== "HasExpr") { message.push(<h5>Has Expression</h5>); categ = "HasExpr" ; if(cpt!=0) {n = 0; }; willBreak = false ;  } }
-                  else if(isExpr.length > 0) { Tag = CenterFocusWeak; tip = "Work Expression Of"; if(categ !== "ExprOf") { message.push(<h5>Expression Of</h5>) ; categ = "ExprOf" ; if(cpt!=0) {n = 0; }; willBreak = false ;  } }
-                  else if(categ !== "Other") { Tag = CropDin; tip = "Work" ; message.push(<h5>Other</h5>); categ = "Other"; if(cpt!=0) {n = 0; } willBreak = false ;  }
-                  else if(categ === "Other") { Tag = CropDin; tip = "Work" ; }
+                  if(isAbs.length > 0) { Tag = CropFreeIcon ; tip = "Abstract Work" ; if(categ !== "Abstract") {  categ = "Abstract" ; if(!dontShow) message.push(<MenuItem className="menu-categ" onClick={this.setWorkCateg.bind(this,categ,pagin)}><h5>Abstract</h5></MenuItem>); if(cpt!=0) {n = 0; } ; willBreak = false ; max_cpt = cpt + 3 ; canCollapse = true ; } }
+                  else if(hasExpr.length > 0) { Tag = CenterFocusStrong; tip = "Work Has Expression" ; if(categ !== "HasExpr") { categ = "HasExpr" ; if(!dontShow) message.push(<MenuItem className="menu-categ"  onClick={this.setWorkCateg.bind(this,categ,pagin)}><h5>Has Expression</h5></MenuItem>);  if(cpt!=0) {n = 0; }; willBreak = false ; max_cpt = cpt + 3 ; canCollapse = true ; } }
+                  else if(isExpr.length > 0) { Tag = CenterFocusWeak; tip = "Work Expression Of"; if(categ !== "ExprOf") { categ = "ExprOf" ; if(!dontShow) message.push(<MenuItem className="menu-categ"  onClick={this.setWorkCateg.bind(this,categ,pagin)}><h5>Expression Of</h5></MenuItem>) ;  if(cpt!=0) {n = 0; }; willBreak = false ; max_cpt = cpt + 3 ; canCollapse = true ; } }
+                  else if(categ !== "Other") { Tag = CropDin; tip = "Work" ; categ = "Other"; if(!dontShow) message.push(<MenuItem className="menu-categ" onClick={this.setWorkCateg.bind(this,categ,pagin)}><h5>Other</h5></MenuItem>); if(cpt!=0) {n = 0; }; willBreak = false ; max_cpt = cpt + 3 ; canCollapse = true ; }
+                  else if(categ === "Other") { Tag = CropDin; tip = "Work" ; /*if(t == "Work" && canCollapse && !findFirst) message.push(<MenuItem className="menu-categ" onClick={this.setWorkCateg.bind(this,categ,pagin)}><h5>Other</h5></MenuItem>); */ }
 
                   if(Tag == CropDin && hasPart.length > 0) Tag = FilterNone;
 
@@ -1390,14 +1418,15 @@ class App extends Component<Props,State> {
 
                   n ++;
                   end = n ;
-                  if(!willBreak && !dontShow) message.push(
-                     [
-                        this.makeResult(id,n,t,lit,lang,tip,Tag)
+                  if(!willBreak && !dontShow) { 
+                     message.push(
+                        [
+                           this.makeResult(id,n,t,lit,lang,tip,Tag)
 
-                     ,
-                     <div>
-                     {
-                        r.match.map((m) => {
+                        ,
+                        <div>
+                        {
+                           r.match.map((m) => {
 
                               //console.log("m",m)
 
@@ -1446,24 +1475,32 @@ class App extends Component<Props,State> {
                                           </span>)}</div>}
                                  </div>)
                               }
-                        })
-                     }
-                     </div>
-                  ]
-
-                  )
-
+                           })
+                        }
+                        </div>
+                     ])
+                  }
                   cpt ++;
-                  if(displayTypes.length >= 2) {
-                     if(cpt >= 3) { if(categ == "Other") { break ; } else { willBreak = true; } }
-                  } else {
-                     if(cpt > 0 && cpt % 50 == 0 && !findFirst) {
+                  let isCollapsed = (canCollapse && (this.state.collapse[categ] || this.state.collapse[categ] == undefined))                  
+                  if(!isCollapsed || n <= 3) m++ ;
+                  //console.log("categ",cpt,categ,canCollapse,isCollapsed,m,this.state.collapse[categ])
 
-                        findNext = true ;
 
-                        //break;
+                  if(displayTypes.length > 1 || t == "Work") {
+                     if(cpt >= max_cpt && (t != "Work" || isCollapsed)) { 
+                        if(categ == "Other") { break ; } 
+                        else { willBreak = true; } 
                      }
                   }
+
+                  if(displayTypes.length == 1)
+                  {
+                     if(m > 0 && m % 50 == 0 && !findFirst) {
+
+                        findNext = true ;                     
+                     }  
+                  }
+               
                }
             }
             if(cpt == 0 ) { message.push(<Typography style={{margin:"20px 40px"}}><Translate value="search.filters.noresults"/></Typography>);}
@@ -1472,10 +1509,13 @@ class App extends Component<Props,State> {
 
          if(!iniTitle && (displayTypes.length > 1 || displayTypes.indexOf("Any") !== -1) ) {
             iniTitle = true
-            message.push(<MenuItem  onClick={(e)=>this.handleCheck(e,t,true)}><h4>{I18n.t("types."+t.toLowerCase())+"s"+(counts["datatype"][t]?" ("+counts["datatype"][t]+")":"")}</h4></MenuItem>);
+            message.push(<MenuItem  onClick={(e)=>this.handleCheck(e,t,true)}><h4>{I18n.t("types."+t.toLowerCase())+"s"+(displayTypes.length>1 && counts["datatype"][t]?" ("+counts["datatype"][t]+")":"")}</h4></MenuItem>);
          }
          console.log("end pagin",pagin,paginate)
-         if(pagin && paginate.length == 0) { paginate.push(pagin); }
+         if(pagin) {
+            if(pagin.gotoCateg) { paginate.length = 0 ; delete pagin.gotoCateg ; }
+            if(paginate.length == 0) { paginate.push(pagin); }
+         }
       }
    }
 
@@ -1489,11 +1529,11 @@ class App extends Component<Props,State> {
       let resMatch = message.length
       let id = this.state.filters.datatype + "#" + this.props.keyword + "@" + this.props.language
 
-      console.log("res::",results,message,message.length)
+      //console.log("res::",results,message,message.length)
 
       let sta = { ...this.state }
       if(resMatch == 0 && (!results || results.numResults == 0) ) {
-         message.push(
+         if(!this.props.loading && (!this.props.resource || !this.props.resource[this.props.keyword]) ) message.push(
             <Typography style={{fontSize:"1.5em",maxWidth:'700px',margin:'50px auto',zIndex:0}}>
                No result found.
             </Typography>
@@ -1506,7 +1546,7 @@ class App extends Component<Props,State> {
       }
       else 
       {
-         if(sta.results) console.log("results::",JSON.stringify(Object.keys(sta.results),null,3),sta)
+         //if(sta.results) console.log("results::",JSON.stringify(Object.keys(sta.results),null,3),sta)
 
          if(!this.props.datatypes || !this.props.datatypes.metadata)
          {
@@ -2282,12 +2322,14 @@ class App extends Component<Props,State> {
                      { message }
                      <div id="pagine">
                         <NavigateBefore
+                           title="Previous page"
                            className={!paginate || paginate.index == 0 ? "hide":""}
                            onClick={this.prevPage.bind(this,id)}/>
                         <div style={{width:"60%"}}>
                               { pageLinks }
                         </div>
                         <NavigateNext
+                           title="Next page"
                            className={!paginate || paginate.index == paginate.pages.length - 1 ? "hide":""}
                            onClick={this.nextPage.bind(this,id)} />
                      </div>

@@ -252,6 +252,8 @@ body {overflow-x:hidden; }
 
 
 .SearchPane h5 { margin-left:16px; font-size : 16px; margin-bottom:0px;margin-top:40px; }
+.SearchPane .menu-categ h5 { margin-left:0; font-size : 16px; margin-bottom:0px;margin-top:0px; }
+.menu-categ { padding:0;margin-bottom:0; } 
 
 .widget label { text-transform:capitalize }
 .searchWidget > label > span:first-child,

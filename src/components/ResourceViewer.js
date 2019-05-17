@@ -342,7 +342,7 @@ function top_left_menu(that,pdfLink,monoVol,fairUse)
        </IconButton>
        {
           that.props.IRI.match(/^[^:]+:[RPGTW]/) &&
-          <Link className="goBack" to={"/search?r="+that.props.IRI}>
+          <Link className="goBack" to={"/search?r="+that.props.IRI+"&t=Any"}>
              <Button style={{marginLeft:"0px",paddingLeft:"10px"}}>{I18n.t("resource.browse")} &gt;</Button>
           </Link>
        }
