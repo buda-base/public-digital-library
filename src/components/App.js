@@ -1115,20 +1115,32 @@ class App extends Component<Props,State> {
       return results ;
    }
 
-   setWorkCateg(categ,paginate)
+   setWorkCateg(categ,paginate) //,categIndex)
    {
       let show  ;
       if(this.state.collapse[categ] == undefined) show = false
       else show = !this.state.collapse[categ]
       
-      console.log("categ",categ,paginate,show)
+      let gotoCateg = paginate.index
+      if(show && paginate.pages.length > 1 && paginate.bookmarks && paginate.bookmarks[categ]) { 
+         for(let i in paginate.pages) { 
+            if(i > 0 && paginate.pages[i-1] <= paginate.bookmarks[categ] && paginate.bookmarks[categ] < paginate.pages[i]) { 
+               gotoCateg = i-1 ; 
+               console.log("catI",gotoCateg);
+               break ; 
+            }      
+         }
+      }      
 
-      let params = {  repage:true, paginate:{...paginate, gotoCateg:true}, collapse:{...this.state.collapse, [categ]:show} }
+      let params = {  repage:true, paginate:{...paginate, gotoCateg }, collapse:{...this.state.collapse, [categ]:show} }
+      
+      console.log("categ",categ,paginate,show,JSON.stringify(params,null,3))
+
       if(this.state.filters.datatype.indexOf("Work") === -1) this.handleCheck(null, "Work", true, params )
       else this.setState({...this.state, ...params})
    }
 
-   handleResults(types,counts,message,results,paginate) 
+   handleResults(types,counts,message,results,paginate,bookmarks) 
    {
 
       let n = 0, m = 0 ;
@@ -1145,12 +1157,23 @@ class App extends Component<Props,State> {
          let willBreak = false ;
          let dontShow = false ;
          let pagin ;
+         let categIndex = 0, index = 0
+
          if(paginate.length) pagin = paginate[0]
          else pagin = { index:0, n:[0], pages:[0] };
+         if(bookmarks) pagin.bookmarks = bookmarks
+         
+         if(t === "Work" && pagin.gotoCateg !== undefined) { 
+            console.log("pagin.goto A",JSON.stringify(pagin,null,3))                  
+            pagin.index = pagin.gotoCateg
+            pagin.pages = pagin.pages.slice(0,pagin.gotoCateg+1)
+            pagin.n = pagin.n.slice(0,pagin.gotoCateg+1)
+            console.log("pagin.goto Z",JSON.stringify(pagin,null,3))
+         }
+         
          if(t === "Any") continue ;
 
          console.log("t",t,list,pagin)
-
 
          let iniTitle = false 
          let sublist = list[t.toLowerCase()+"s"]         
@@ -1169,6 +1192,7 @@ class App extends Component<Props,State> {
          let findFirst = true ;
 
          let absi = -1
+         let lastN 
 
          if(sublist) { for(let o of Object.keys(sublist))
          {
@@ -1177,21 +1201,16 @@ class App extends Component<Props,State> {
                message.push(<MenuItem  onClick={(e)=>this.handleCheck(e,t,true)}><h4>{I18n.t("types."+t.toLowerCase())+"s"+(displayTypes.length>1&&counts["datatype"][t]?" ("+counts["datatype"][t]+")":"")}</h4></MenuItem>);
             }
             absi ++ ;
-            //console.log("cpt",cpt,n,begin,findFirst,findNext,o,sublist[o])
+
+            //console.log("cpt",cpt,n,begin,findFirst,findNext) //,o,sublist[o])
 
             if(absi < begin && findFirst) { cpt++ ; m++ ; continue; }
-            else if(cpt == begin && !findNext) {
+            else if(cpt == begin && !findNext && findFirst) {
                cpt = 0 ;
                m = 0 ;
                findFirst = false ;
                n = pagin.n[pagin.index];
-
-               if(pagin.gotoCateg) { 
-                  console.log("pagin.goto A",JSON.stringify(pagin,null,3))
-                  pagin.pages = pagin.pages.slice(0,pagin.index+1)
-                  pagin.n = pagin.n.slice(0,pagin.index+1)
-                  console.log("pagin.goto Z",JSON.stringify(pagin,null,3))
-               }
+               //console.log("=0",n)
             }
 
             //message.push(["cpt="+cpt+"="+absi,<br/>])
@@ -1373,7 +1392,7 @@ class App extends Component<Props,State> {
                                  n: pagin.n.concat([end])
                               };
 
-                     //console.log("good!",next,willBreak,pagin)
+                     console.log("good!",next,willBreak,pagin)
 
                      /*
                      if(this.state.paginate.pages.indexOf(next) === -1)
@@ -1385,8 +1404,11 @@ class App extends Component<Props,State> {
                      */
                      findNext = false
                      dontShow = true
+                     index ++ ;
                      
-                     if(paginate.length) break ;
+                     console.log("index",index)
+
+                     if(paginate.length && pagin.gotoCateg === undefined) break ;
 
                      /*
                      
@@ -1399,16 +1421,37 @@ class App extends Component<Props,State> {
 
                   //console.log("lit",lit,n)
 
-                  let Tag,tip ;
-                  if(isAbs.length > 0) { Tag = CropFreeIcon ; tip = "Abstract Work" ; if(categ !== "Abstract") {  categ = "Abstract" ; if(!dontShow) message.push(<MenuItem className="menu-categ" onClick={this.setWorkCateg.bind(this,categ,pagin)}><h5>Abstract</h5></MenuItem>); if(cpt!=0) {n = 0; } ; willBreak = false ; max_cpt = cpt + 3 ; canCollapse = true ; } }
-                  else if(hasExpr.length > 0) { Tag = CenterFocusStrong; tip = "Work Has Expression" ; if(categ !== "HasExpr") { categ = "HasExpr" ; if(!dontShow) message.push(<MenuItem className="menu-categ"  onClick={this.setWorkCateg.bind(this,categ,pagin)}><h5>Has Expression</h5></MenuItem>);  if(cpt!=0) {n = 0; }; willBreak = false ; max_cpt = cpt + 3 ; canCollapse = true ; } }
-                  else if(isExpr.length > 0) { Tag = CenterFocusWeak; tip = "Work Expression Of"; if(categ !== "ExprOf") { categ = "ExprOf" ; if(!dontShow) message.push(<MenuItem className="menu-categ"  onClick={this.setWorkCateg.bind(this,categ,pagin)}><h5>Expression Of</h5></MenuItem>) ;  if(cpt!=0) {n = 0; }; willBreak = false ; max_cpt = cpt + 3 ; canCollapse = true ; } }
-                  else if(categ !== "Other") { Tag = CropDin; tip = "Work" ; categ = "Other"; if(!dontShow) message.push(<MenuItem className="menu-categ" onClick={this.setWorkCateg.bind(this,categ,pagin)}><h5>Other</h5></MenuItem>); if(cpt!=0) {n = 0; }; willBreak = false ; max_cpt = cpt + 3 ; canCollapse = true ; }
-                  else if(categ === "Other") { Tag = CropDin; tip = "Work" ; /*if(t == "Work" && canCollapse && !findFirst) message.push(<MenuItem className="menu-categ" onClick={this.setWorkCateg.bind(this,categ,pagin)}><h5>Other</h5></MenuItem>); */ }
+                  let Tag,tip,categChange = false, showCateg = false, prevCateg = categ, tmpN = n  ;
+                  if(isAbs.length > 0)        { Tag = CropFreeIcon ;     tip = "Abstract Work" ;       if(categ !== "Abstract") { if(categ !== "Other" && cpt >= max_cpt) { categChange = true ; }; categ = "Abstract" ; if(!dontShow) { showCateg = true }; if(cpt!=0) {n = 0; }; willBreak = false ; max_cpt = cpt + 3 ; canCollapse = true ; } }
+                  else if(hasExpr.length > 0) { Tag = CenterFocusStrong; tip = "Work Has Expression" ; if(categ !== "HasExpr")  { if(categ !== "Other" && cpt >= max_cpt) { categChange = true ; }; categ = "HasExpr" ;  if(!dontShow) { showCateg = true }; if(cpt!=0) {n = 0; }; willBreak = false ; max_cpt = cpt + 3 ; canCollapse = true ; } }
+                  else if(isExpr.length > 0)  { Tag = CenterFocusWeak;   tip = "Work Expression Of";   if(categ !== "ExprOf")   { if(categ !== "Other" && cpt >= max_cpt) { categChange = true ; }; categ = "ExprOf" ;   if(!dontShow) { showCateg = true }; if(cpt!=0) {n = 0; }; willBreak = false ; max_cpt = cpt + 3 ; canCollapse = true ; } }
+                  else if(categ !== "Other")  { Tag = CropDin;           tip = "Work" ;                                           if(                     cpt >= max_cpt) { categChange = true ; }; categ = "Other";     if(!dontShow) { showCateg = true }; if(cpt!=0) {n = 0; }; willBreak = false ; max_cpt = cpt + 3 ; canCollapse = true ; } 
+                  else if(categ === "Other")  { Tag = CropDin;           tip = "Work" ; if(t == "Work" && !findFirst && m == 0) { showCateg = true ; } }
 
                   if(Tag == CropDin && hasPart.length > 0) Tag = FilterNone;
 
                   if(t !== "Work") Tag = null
+                  else {
+                     if(showCateg) {
+                        if(!pagin.bookmarks) pagin.bookmarks = {}
+                        if(!pagin.bookmarks[categ]) pagin.bookmarks[categ] = absi
+                        
+                        if(categChange && (cpt - lastN > 1 || tmpN > 3)) {// && (!pagin.bookmarks || (!pagin.bookmarks[categ] || !pagin.bookmarks[prevCateg] || pagin.bookmarks[categ] - pagin.bookmarks[prevCateg] > 3))) {
+                           console.log('bookM...',pagin.bookmarks)
+                           message.push(<MenuItem className="menu-categ-collapse" onClick={this.setWorkCateg.bind(this,prevCateg,pagin)}><h5>{I18n.t(this.state.collapse[prevCateg]==false?"misc.hide":"misc.show")/*+" "+prevCateg*/}</h5></MenuItem>);                      
+                        }
+
+                        //console.log("bookM",pagin.bookmarks)
+
+                        let h5 = tip
+                        if(h5 === "Work") h5 = "Other"
+                        else h5 = tip.replace(/ ?Work ?/,"")
+                        //categIndex = index
+                        if(!dontShow) message.push(<MenuItem className="menu-categ" onClick={this.setWorkCateg.bind(this,categ,pagin)}><h5>{h5}</h5></MenuItem>);
+
+                        console.log("categIndex",categIndex,h5)
+                     }  
+                  }
 
                   //console.log("lit",lit,n)
 
@@ -1419,6 +1462,7 @@ class App extends Component<Props,State> {
                   n ++;
                   end = n ;
                   if(!willBreak && !dontShow) { 
+                     lastN = cpt ;
                      message.push(
                         [
                            this.makeResult(id,n,t,lit,lang,tip,Tag)
@@ -1483,13 +1527,14 @@ class App extends Component<Props,State> {
                   cpt ++;
                   let isCollapsed = (canCollapse && (this.state.collapse[categ] || this.state.collapse[categ] == undefined))                  
                   if(!isCollapsed || n <= 3) m++ ;
-                  //console.log("categ",cpt,categ,canCollapse,isCollapsed,m,this.state.collapse[categ])
+                  
+                  //console.log("cpt",cpt,categ,canCollapse,isCollapsed,m,this.state.collapse[categ],index,n)
 
 
                   if(displayTypes.length > 1 || t == "Work") {
-                     if(cpt >= max_cpt && (t != "Work" || isCollapsed)) { 
+                     if(cpt >= max_cpt && (t != "Work" || isCollapsed)) {                      
                         if(categ == "Other") { break ; } 
-                        else { willBreak = true; } 
+                        else { willBreak = true;  } 
                      }
                   }
 
@@ -1507,13 +1552,18 @@ class App extends Component<Props,State> {
 
          }
 
+         if(cpt >= max_cpt && cpt - lastN >= 1 && pagin.index == pagin.pages.length - 1) message.push(<MenuItem className="menu-categ-collapse" onClick={this.setWorkCateg.bind(this,categ,pagin)}><h5>{I18n.t(this.state.collapse[categ]==false?"misc.hide":"misc.show")/*+" "+categ*/}</h5></MenuItem>);                      
+
          if(!iniTitle && (displayTypes.length > 1 || displayTypes.indexOf("Any") !== -1) ) {
             iniTitle = true
             message.push(<MenuItem  onClick={(e)=>this.handleCheck(e,t,true)}><h4>{I18n.t("types."+t.toLowerCase())+"s"+(displayTypes.length>1 && counts["datatype"][t]?" ("+counts["datatype"][t]+")":"")}</h4></MenuItem>);
          }
          console.log("end pagin",pagin,paginate)
          if(pagin) {
-            if(pagin.gotoCateg) { paginate.length = 0 ; delete pagin.gotoCateg ; }
+            
+            //console.log("bookM",pagin.bookmarks,pagin.gotoCateg)
+
+            if(pagin.gotoCateg !== undefined && paginate[0]) { paginate.length = 0; delete pagin.gotoCateg ; }
             if(paginate.length == 0) { paginate.push(pagin); }
          }
       }
@@ -1557,23 +1607,40 @@ class App extends Component<Props,State> {
          }
          
 
-         let paginate = [];
+         let paginate = [], bookmarks;
          if(sta.repage || !sta.results || !sta.results[id] || (sta.results[id].resMatch != resMatch) || ( !sta.results[id].message.length ) ) { 
             if(this.state.paginate && this.state.paginate.pages && this.state.paginate.pages.length > 1) paginate = [ this.state.paginate ]
-            if(results) this.handleResults(types,counts,message,results,paginate);
+            if(sta.results && sta.results[id] && sta.results[id].bookmarks) bookmarks = sta.results[id].bookmarks
+            if(results) this.handleResults(types,counts,message,results,paginate,bookmarks);
+            //console.log("bookM:",JSON.stringify(paginate,null,3))
+            
          }
          else {
             message = sta.results[id].message
             paginate = [ sta.results[id].paginate ]
+            bookmarks = sta.results[id].bookmarks      
+            //console.log("bookM!",JSON.stringify(paginate,null,3))
          }
 
          //console.log("mesg",message,types,counts,JSON.stringify(paginate,null,3))
 
          if(sta.repage || !sta.results || !sta.results[id] || (sta.results[id].resMatch != resMatch) || ( sta.results[id].message.length < message.length ) || sta.results[id].types.length != types.length) {
             if(!sta.results) sta.results = {}
-            sta.results[id] = { message, types, counts, paginate:paginate[0], resMatch }
-            sta.paginate = paginate[0]
+            if(!sta.results[id]) sta.results[id] = {}
+
+            let newSta = { message, types, counts, resMatch }
+            if(bookmarks) newSta.bookmarks = bookmarks
+            if(paginate[0]) { 
+               newSta.paginate = paginate[0]
+               newSta.bookmarks = { ...(bookmarks?bookmarks:paginate[0].bookmarks) }
+               delete paginate[0].bookmarks
+               sta.paginate = paginate[0]
+               sta.paginate.bookmarks = newSta.bookmarks
+            }
+            //console.log("bookM?",JSON.stringify(newSta.paginate,null,3))
+            sta.results[id] = newSta
             sta.repage = false 
+
             this.setState(sta);
          }
       }

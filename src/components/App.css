@@ -253,6 +253,9 @@ body {overflow-x:hidden; }
 
 .SearchPane h5 { margin-left:16px; font-size : 16px; margin-bottom:0px;margin-top:40px; }
 .SearchPane .menu-categ h5 { margin-left:0; font-size : 16px; margin-bottom:0px;margin-top:0px; }
+.SearchPane .menu-categ-collapse h5 { margin-left:16px; font-size : 13px; margin-bottom:0px;margin-top:0px; color:rgba(229, 74, 53,1); }
+/* .menu-categ-collapse + .menu-categ-collapse { display:none; } */
+.SearchPane .menu-categ-collapse h5:hover { text-decoration:underline; }
 .menu-categ { padding:0;margin-bottom:0; } 
 
 .widget label { text-transform:capitalize }

@@ -1,5 +1,9 @@
 
 const enTranslation = {
+   misc:{
+      show:"Show all",
+      hide:"Hide"
+   },
    lang:{
       en:"English",
       fr:"French",

@@ -1,5 +1,9 @@
 
 const frTranslation = {
+   misc:{
+      show:"Tout montrer",
+      hide:"Cacher"
+   },
    lang:{
       en:"Anglais",
       fr:"Français",
