@@ -446,80 +446,10 @@ class App extends Component<Props,State> {
       else return null;
    }
 
-   /* // deprecated
-   componentDidUpdate() {
-
-      // console.log("didU",this.state.facets,this.props,this.state.filters.datatype)
-
-      if(this.props.language == "" && (!this.props.resources || !this.props.resources[this.props.keyword]))
-      {
-         console.log("gRes?",this.props.resources,this.props.keyword);
-         this.props.onGetResource(this.props.keyword);
-      }
-
-   }
-   */
-   /* // deprecated
-   componentWillUpdate(newProps,newState) {
-
-      if(!global.inTest) console.log("willU",newProps,newState)
-
-
-      let update = false ;
-      let state = newState ;
-
-      if(newState.willSearch)
-      {
-         this.requestSearch(this.state.keyword);
-         state = { ...state, willSearch:false}
-         update = true ;
-      }
-
-
-      if(update) this.setState(state)
-
-   }
-   */
 
       // console.log("newProps.facets",newProps.facets)
 
-/*
-      if(state.keyword != "" && newProps.config.facets && !this._facetsRequested && !state.facets && state.filters.datatype.length > 0 && state.filters.datatype.indexOf("Any") === -1)
-      {
-         this._facetsRequested = true ;
-         state = this.setFacets(newProps,state,state.filters.datatype[0])
-         console.log("facets ???",state)
-         update = true ;
-      }
-*/
 
-/*
-   setFacets = (props:Props,state:State,lab:string) =>
-   {
-      return ;
-
-      let facets = props.config.facets.simple["bdo:"+lab]
-      console.log("facets",facets,props.config.facets,state.filters.datatype)
-      if(facets)
-      {
-         state = {...state,facets}
-         let t = 1
-         for(let f of facets) {
-            // compulsory to delay to avoid saga's bug in quasi-simultaneous events...
-            //setTimeout((function(that) { return function() { that.props.onGetFacetInfo(that.state.keyword,that.state.language,f) } })(this), t*10);
-            //t++;
-            state = { ...state, filters:{ ...state.filters, facets:{ ...state.filters.facets, [f]:["Any"] } } }
-
-            this.props.onGetFacetInfo(state.keyword,state.language,f)
-        }
-      }
-      else {
-         state = { ...state, facets:null }
-      }
-
-      return state
-   }
-*/
    handleCheckFacet = (ev:Event,prop:string,lab:string[],val:boolean) => {
 
       let state =  this.state
@@ -554,48 +484,6 @@ class App extends Component<Props,State> {
       this.setState( state )
    }
 
-   /*
-   handleFacetCheck = (ev:Event,prop:string,lab:string,val:boolean) => {
-
-      console.log("check",prop,lab,val)
-
-      let typ = this.state.filters.datatype[0]
-      let key = this.state.keyword ;
-      if(key.indexOf("\"") === -1) key = "\""+key+"\""
-
-      let state =  this.state
-
-      if(val)
-      {
-
-         state = {  ...state,  filters: {  ...state.filters, facets: { ...state.filters.facets, [prop] : [lab] } } }
-
-         if(lab == "Any")
-         {
-            this.props.onSearchingKeyword(key,state.language,[typ])
-
-            state = this.setFacets(this.props,state,state.filters.datatype[0]);
-         }
-         else {
-            this.props.onCheckFacet(key,state.language,{[prop]:lab})
-         }
-
-         this.setState( state )
-      }
-      else
-      {
-         if(state.filters.facets && state.filters.facets[prop])
-         {
-            this.props.onSearchingKeyword(key,this.state.language,[typ])
-
-            state = this.setFacets(this.props,state,state.filters.datatype[0]);
-
-            this.setState( {  ...state,  filters: {  ...state.filters, facets: { [prop] : ["Any"] } } } )
-         }
-      }
-
-   }
-   */
 
 
    handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
@@ -644,35 +532,6 @@ class App extends Component<Props,State> {
 
       this.setState(state)
 
-      /*
-
-      return
-
-
-      if(!val)
-      {
-
-         state = {  ...this.state,  filters: {  ...this.state.filters, datatype:["Any"] } }
-
-         if(this.props.keyword && this.state.filters.datatype && this.state.filters.datatype.indexOf(lab) !== -1)
-         {
-
-            let key = this.state.keyword ;
-            if(key == "") return ;
-            if(key.indexOf("\"") === -1) key = "\""+key+"\""
-
-            state = { ...state, facets:null}
-            //this.props.onSearchingKeyword(key,this.state.language)
-
-            // no need because same saerch...
-            //this.props.onGetDatatypes(this.state.keyword,this.state.language)
-
-            this.props.history.push("/search?q="+key+"&lg="+this.state.language+"&t=Any");
-         }
-      }
-
-      this.setState( state ) //, function() {  console.log("CHECKED changed the state",state) } )
-      */
    }
 
 
@@ -1198,7 +1057,8 @@ class App extends Component<Props,State> {
          {
             if(!iniTitle) {
                iniTitle = true
-               message.push(<MenuItem  onClick={(e)=>this.handleCheck(e,t,true)}><h4>{I18n.t("types."+t.toLowerCase())+"s"+(displayTypes.length>1&&counts["datatype"][t]?" ("+counts["datatype"][t]+")":"")}</h4></MenuItem>);
+               if(displayTypes.length > 1 || displayTypes.indexOf("Any") !== -1) message.push(<MenuItem  onClick={(e)=>this.handleCheck(e,t,true)}><h4>{I18n.t("types."+t.toLowerCase())+"s"+(displayTypes.length>1&&counts["datatype"][t]?" ("+counts["datatype"][t]+")":"")}</h4></MenuItem>);
+               else message.push(<MenuItem><h4>{I18n.t("types."+t.toLowerCase())+"s"+(displayTypes.length>1&&counts["datatype"][t]?" ("+counts["datatype"][t]+")":"")}</h4></MenuItem>);
             }
             absi ++ ;
 
@@ -1551,12 +1411,20 @@ class App extends Component<Props,State> {
             if(cpt == 0 ) { message.push(<Typography style={{margin:"20px 40px"}}><Translate value="search.filters.noresults"/></Typography>);}
 
          }
-
-         if(cpt >= max_cpt && cpt - lastN >= 1 && pagin.index == pagin.pages.length - 1) message.push(<MenuItem className="menu-categ-collapse" onClick={this.setWorkCateg.bind(this,categ,pagin)}><h5>{I18n.t(this.state.collapse[categ]==false?"misc.hide":"misc.show")/*+" "+categ*/}</h5></MenuItem>);                      
+         if(pagin.index == pagin.pages.length - 1) {
+            if(cpt >= max_cpt && cpt - lastN >= 1) {
+               //if(displayTypes.length > 1 || displayTypes.indexOf("Any") !== -1) 
+               if(displayTypes.indexOf("Any") !== -1 && t !== "Work") message.push(<MenuItem className="menu-categ-collapse" onClick={(e)=>this.handleCheck(e,t,true)}><h5>{I18n.t("misc.show") /*+" "+t+" "+categ*/}</h5></MenuItem>);                      
+               else if(t === "Work") message.push(<MenuItem className="menu-categ-collapse" onClick={this.setWorkCateg.bind(this,categ,pagin)}><h5>{I18n.t(this.state.collapse[categ]==false?"misc.hide":"misc.show")/*+" "+categ*/}</h5></MenuItem>);                      
+               else if(t !== "Work" && displayTypes.length === 1 && displayTypes.indexOf("Any") === -1) message.push(<MenuItem className="menu-categ-collapse" onClick={(e)=>this.handleCheck(e,"Any",true)}><h5>{I18n.t("misc.datatype")  /*+t+" "+categ*/}</h5></MenuItem>);                         
+            }
+            else if(t !== "Work" && displayTypes.length === 1 && displayTypes.indexOf("Any") === -1) message.push(<MenuItem className="menu-categ-collapse" onClick={(e)=>this.handleCheck(e,"Any",true)}><h5>{I18n.t("misc.datatype")  /*+t+" "+categ*/}</h5></MenuItem>);                      
+         }
 
          if(!iniTitle && (displayTypes.length > 1 || displayTypes.indexOf("Any") !== -1) ) {
             iniTitle = true
             message.push(<MenuItem  onClick={(e)=>this.handleCheck(e,t,true)}><h4>{I18n.t("types."+t.toLowerCase())+"s"+(displayTypes.length>1 && counts["datatype"][t]?" ("+counts["datatype"][t]+")":"")}</h4></MenuItem>);
+            message.push(<MenuItem className="menu-categ-collapse" onClick={(e)=>this.handleCheck(e,t,true)}><h5>{I18n.t("misc.show") /*+" "+t+" "+categ */ }</h5></MenuItem>);                      
          }
          console.log("end pagin",pagin,paginate)
          if(pagin) {

@@ -1,6 +1,7 @@
 
 const enTranslation = {
    misc:{
+      datatype:"Back to all datatypes",
       show:"Show all",
       hide:"Hide"
    },
