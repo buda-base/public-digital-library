@@ -20,6 +20,7 @@ const mapStateToProps = (state) => {
    let keyword = state.data.keyword
    let language = state.data.language
    let datatypes = state.data.datatypes ;
+   if(datatypes && datatypes[keyword+"@"+language]) datatypes = datatypes[keyword+"@"+language]
    let ontology = state.data.ontology ;
    let facets = state.data.facets ;
    let resources = state.data.resources ;

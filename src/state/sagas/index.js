@@ -153,18 +153,42 @@ else if(!iri && params && params.p) {
 else if(!iri && params && params.q) {
 
    if(!params.lg) params.lg = "bo-x-ewts"
-   //console.log("state q",state.data.searches,params,iri)
+   //console.log("state q",state.data,params,iri)
 
-   if(params.t && ["Person","Work","Etext"].indexOf(params.t) !== -1
-   && (!state.data.searches || !state.data.searches[params.t] || !state.data.searches[params.t][params.q+"@"+params.lg]))
+   if(params.t && ["Person","Work","Etext"].indexOf(params.t) !== -1){
+      if(!state.data.searches || !state.data.searches[params.t] || !state.data.searches[params.t][params.q+"@"+params.lg])      
+         store.dispatch(dataActions.startSearch(params.q,params.lg,[params.t])); //,params.t.split(",")));      
+      else {
+         store.dispatch(dataActions.foundResults(params.q,params.lg,state.data.searches[params.t][params.q+"@"+params.lg],params.t))  
+         store.dispatch(dataActions.foundDatatypes(params.q,params.lg,state.data.datatypes[params.q+"@"+params.lg]))
+      }
+
+      store.dispatch(uiActions.selectType(params.t));
+   }
+   else //if(params.t) { //} && ["Any"].indexOf(params.t) !== -1)   
    {
-      store.dispatch(dataActions.startSearch(params.q,params.lg,[params.t])); //,params.t.split(",")));
+      if(!state.data.searches || !state.data.searches[params.q+"@"+params.lg])
+         store.dispatch(dataActions.startSearch(params.q,params.lg)); //,params.t.split(",")));
+      else 
+         store.dispatch(dataActions.foundResults(params.q,params.lg,state.data.searches[params.q+"@"+params.lg]))
+
+      store.dispatch(uiActions.selectType(params.t?params.t:"Any"));
+   }
+   /*
+   else if(params.t && ["Any"].indexOf(params.t) === -1)   
+   {
+      if(!state.data.searches || !state.data.searches[params.q+"@"+params.lg])
+         store.dispatch(dataActions.startSearch(params.q,params.lg)); //,params.t.split(",")));
+      else
+         store.dispatch(dataActions.foundResults(params.q,params.lg,state.data.searches[params.q+"@"+params.lg]))
+
       store.dispatch(uiActions.selectType(params.t));
    }
    else //if(!state.data.searches || !state.data.searches[params.q+"@"+params.lg])
    {
       store.dispatch(dataActions.startSearch(params.q,params.lg));
    }
+   */
 }
 else if(!iri && params && params.r) {
    let t = getEntiType(params.r)
@@ -413,7 +437,7 @@ async function getManifest(url,iri) {
       store.dispatch(dataActions.manifestError(url,e,iri))
    }
 }
-
+/*
 export function* getDatatypes(key,lang) {
 
    try {
@@ -426,10 +450,12 @@ export function* getDatatypes(key,lang) {
       yield put(dataActions.searchFailed(key, e.message));
       yield put(dataActions.notGettingDatatypes());
    }
-
 }
+*/
 
 function getData(result)  {
+
+   //console.log("kz",JSON.stringify(Object.keys(result)))
 
    let data = result, numR = -1,metadata = result.metadata ;
    if(data && data.people) {
@@ -573,9 +599,9 @@ async function startSearch(keyword,language,datatype,sourcetype) {
 
    // why is this action dispatched twice ???
    store.dispatch(uiActions.loading(keyword, true));
-   if(!datatype || datatype.indexOf("Any") !== -1) {
-      store.dispatch(dataActions.getDatatypes());
-   }
+   //if(!datatype || datatype.indexOf("Any") !== -1) {
+   //   store.dispatch(dataActions.getDatatypes());
+   //}
    try {
       let result ;
 
@@ -632,7 +658,7 @@ async function startSearch(keyword,language,datatype,sourcetype) {
 
       data = getData(data);
       store.dispatch(dataActions.foundResults(keyword, language, data, datatype));
-      store.dispatch(dataActions.foundDatatypes(keyword,{ metadata, hash:true}));
+      store.dispatch(dataActions.foundDatatypes(keyword,language,{ metadata, hash:true}));
 
       let newMeta = {}
 
@@ -662,10 +688,12 @@ else {
 
    let data = getData(result);
 
+   //console.log("kz1",JSON.stringify(Object.keys(data.results.bindings)))
+
    store.dispatch(dataActions.foundResults(keyword, language, data, datatype));
 
    if(!datatype || datatype.indexOf("Any") !== -1) {
-      store.dispatch(dataActions.foundDatatypes(keyword,{ metadata:metadata, hash:true}));
+      store.dispatch(dataActions.foundDatatypes(keyword,language,{ metadata:metadata, hash:true}));
    }
    else {
 
@@ -682,16 +710,20 @@ else {
 
 
       if(!store.getState().data.searches[keyword+"@"+language]){
-         store.dispatch(dataActions.getDatatypes());
+         store.dispatch(dataActions.getDatatypes(keyword,language));
          result = await api.getStartResults(keyword,language);
+         result = Object.keys(result).reduce((acc,e)=>({ ...acc, [e.replace(/^.*[/](Etext)?([^/]+)$/,"$2s").toLowerCase()] : result[e] }),{})
 
          if(result.metadata && result.metadata[bdo+"Etext"] == 0)
          delete result.metadata[bdo+"Etext"]
 
          metadata = result.metadata;
          data = getData(result);
+
+         //console.log("kz2",JSON.stringify(Object.keys(data.results.bindings)))
+
          store.dispatch(dataActions.foundResults(keyword, language, data));
-         store.dispatch(dataActions.foundDatatypes(keyword,{ metadata, hash:true}));
+         store.dispatch(dataActions.foundDatatypes(keyword,language,{ metadata, hash:true}));
       }
    }
 }
@@ -813,6 +845,7 @@ export function* watchStartSearch() {
    );
 }
 
+/*
 export function* watchGetDatatypes() {
 
    yield takeLatest(
@@ -820,6 +853,7 @@ export function* watchGetDatatypes() {
       (action) => getDatatypes(action.payload.keyword,action.payload.language)
    );
 }
+*/
 
 export function* watchGetManifest() {
 

@@ -360,11 +360,12 @@ export const foundResults = (keyword: string, language:string, results: [], data
 }
 
 TYPES.foundDatatypes = 'FOUND_DATATYPES';
-export const foundDatatypes = (keyword: string, results: []): FoundResultsAction => {
+export const foundDatatypes = (keyword: string, language:"",results: []): FoundResultsAction => {
     return {
         type: TYPES.foundDatatypes,
         payload: {
             keyword,
+            language,
             results
         }
     }

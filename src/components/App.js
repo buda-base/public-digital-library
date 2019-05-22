@@ -270,6 +270,7 @@ type Props = {
 }
 
 type State = {
+   id?:string,
    loading?:boolean,
    //willSearch?:boolean,
    language:string,
@@ -375,7 +376,7 @@ class App extends Component<Props,State> {
          this.props.history.push({pathname:"/search",search:"?p="+key})
 
       }
-      else if(label === "Any" || ( !label)) // && ( this.state.filters.datatype.length === 0 || this.state.filters.datatype.indexOf("Any") !== -1 ) ) )
+      else if(label === "Any") // || ( !label)) // && ( this.state.filters.datatype.length === 0 || this.state.filters.datatype.indexOf("Any") !== -1 ) ) )
       {
          this.props.history.push({pathname:"/search",search:"?q="+key+"&lg="+this.getLanguage()+"&t=Any"})
       }
@@ -384,8 +385,10 @@ class App extends Component<Props,State> {
          if(!label) label = this.state.filters.datatype.filter((f)=>["Person","Work","Etext"].indexOf(f) !== -1)[0]
 
          this.props.history.push({pathname:"/search",search:"?q="+key+"&lg="+this.getLanguage()+"&t="+label})
-
-
+      }
+      else 
+      {
+         this.props.history.push({pathname:"/search",search:"?q="+key+"&lg="+this.getLanguage()+"&t=Any"})
       }
 
 
@@ -442,7 +445,16 @@ class App extends Component<Props,State> {
          if(props.langIndex !== undefined ) s = { ...s, language:props.langPreset[0] }
       }
 
-      if(s) return s ;
+      if(state.id !== state.filters.datatype+"#"+props.keyword+"@"+props.language) { 
+         if(!s) s = { ...state }
+         for(let c of ["Other","ExprOf", "HasExpr", "Abstract"]) if(s.collapse[c] != undefined) delete s.collapse[c]
+      }
+
+
+      if(s) { 
+         console.log("newS",s)
+         return s ;
+      }
       else return null;
    }
 
@@ -1003,13 +1015,13 @@ class App extends Component<Props,State> {
    {
 
       let n = 0, m = 0 ;
-      console.log("results",results,paginate);
+      //console.log("results",results,paginate);
       let list = results.results.bindings
 
       let displayTypes = types //["Person"]
       if(this.state.filters.datatype.indexOf("Any") === -1) displayTypes = this.state.filters.datatype ;
 
-      console.log("list x types",list,types,displayTypes)
+      //console.log("list x types",list,types,displayTypes)
 
       for(let t of displayTypes) {
 
@@ -1032,15 +1044,16 @@ class App extends Component<Props,State> {
          
          if(t === "Any") continue ;
 
-         console.log("t",t,list,pagin)
+         //console.log("t",t,list,pagin)
 
          let iniTitle = false 
          let sublist = list[t.toLowerCase()+"s"]         
+         //if(!sublist) sublist = list[bdo+t]         
          let cpt = 0
          n = 0
          let begin = pagin.pages[pagin.index]
 
-         console.log("begin",begin)
+         //console.log("begin",begin,JSON.stringify(counts,null,3))
 
          let categ = "Other" ;
          let end = n
@@ -1058,7 +1071,7 @@ class App extends Component<Props,State> {
             if(!iniTitle) {
                iniTitle = true
                if(displayTypes.length > 1 || displayTypes.indexOf("Any") !== -1) message.push(<MenuItem  onClick={(e)=>this.handleCheck(e,t,true)}><h4>{I18n.t("types."+t.toLowerCase())+"s"+(displayTypes.length>1&&counts["datatype"][t]?" ("+counts["datatype"][t]+")":"")}</h4></MenuItem>);
-               else message.push(<MenuItem><h4>{I18n.t("types."+t.toLowerCase())+"s"+(displayTypes.length>1&&counts["datatype"][t]?" ("+counts["datatype"][t]+")":"")}</h4></MenuItem>);
+               else message.push(<MenuItem><h4>{I18n.t("types."+t.toLowerCase())+"s"+(displayTypes.length>=1&&counts["datatype"][t]?" ("+counts["datatype"][t]+")":"")}</h4></MenuItem>);
             }
             absi ++ ;
 
@@ -1252,7 +1265,7 @@ class App extends Component<Props,State> {
                                  n: pagin.n.concat([end])
                               };
 
-                     console.log("good!",next,willBreak,pagin)
+                     //console.log("good!",next,willBreak,pagin)
 
                      /*
                      if(this.state.paginate.pages.indexOf(next) === -1)
@@ -1266,7 +1279,7 @@ class App extends Component<Props,State> {
                      dontShow = true
                      index ++ ;
                      
-                     console.log("index",index)
+                     //console.log("index",index)
 
                      if(paginate.length && pagin.gotoCateg === undefined) break ;
 
@@ -1293,11 +1306,14 @@ class App extends Component<Props,State> {
                   if(t !== "Work") Tag = null
                   else {
                      if(showCateg) {
-                        if(!pagin.bookmarks) pagin.bookmarks = {}
-                        if(!pagin.bookmarks[categ]) pagin.bookmarks[categ] = absi
+                        //if(displayTypes.length === 1) 
+                        {
+                           if(!pagin.bookmarks) pagin.bookmarks = {}
+                           if(!pagin.bookmarks[categ]) pagin.bookmarks[categ] = absi
+                        }
                         
                         if(categChange && (cpt - lastN > 1 || tmpN > 3)) {// && (!pagin.bookmarks || (!pagin.bookmarks[categ] || !pagin.bookmarks[prevCateg] || pagin.bookmarks[categ] - pagin.bookmarks[prevCateg] > 3))) {
-                           console.log('bookM...',pagin.bookmarks)
+                           //console.log("bookM...",pagin.bookmarks)
                            message.push(<MenuItem className="menu-categ-collapse" onClick={this.setWorkCateg.bind(this,prevCateg,pagin)}><h5>{I18n.t(this.state.collapse[prevCateg]==false?"misc.hide":"misc.show")/*+" "+prevCateg*/}</h5></MenuItem>);                      
                         }
 
@@ -1309,7 +1325,7 @@ class App extends Component<Props,State> {
                         //categIndex = index
                         if(!dontShow) message.push(<MenuItem className="menu-categ" onClick={this.setWorkCateg.bind(this,categ,pagin)}><h5>{h5}</h5></MenuItem>);
 
-                        console.log("categIndex",categIndex,h5)
+                        //console.log("categIndex",categIndex,h5)
                      }  
                   }
 
@@ -1392,11 +1408,12 @@ class App extends Component<Props,State> {
 
 
                   if(displayTypes.length > 1 || t == "Work") {
-                     if(cpt >= max_cpt && (t != "Work" || isCollapsed)) {                      
+                     if(cpt >= max_cpt&& (t != "Work" || isCollapsed)) {                      
                         if(categ == "Other") { break ; } 
                         else { willBreak = true;  } 
                      }
                   }
+                  
 
                   if(displayTypes.length == 1)
                   {
@@ -1426,7 +1443,7 @@ class App extends Component<Props,State> {
             message.push(<MenuItem  onClick={(e)=>this.handleCheck(e,t,true)}><h4>{I18n.t("types."+t.toLowerCase())+"s"+(displayTypes.length>1 && counts["datatype"][t]?" ("+counts["datatype"][t]+")":"")}</h4></MenuItem>);
             message.push(<MenuItem className="menu-categ-collapse" onClick={(e)=>this.handleCheck(e,t,true)}><h5>{I18n.t("misc.show") /*+" "+t+" "+categ */ }</h5></MenuItem>);                      
          }
-         console.log("end pagin",pagin,paginate)
+         //console.log("end pagin",pagin,paginate)
          if(pagin) {
             
             //console.log("bookM",pagin.bookmarks,pagin.gotoCateg)
@@ -1447,7 +1464,7 @@ class App extends Component<Props,State> {
       let resMatch = message.length
       let id = this.state.filters.datatype + "#" + this.props.keyword + "@" + this.props.language
 
-      //console.log("res::",results,message,message.length)
+      //console.log("res::",id,results,message,message.length)
 
       let sta = { ...this.state }
       if(resMatch == 0 && (!results || results.numResults == 0) ) {
@@ -1468,16 +1485,15 @@ class App extends Component<Props,State> {
 
          if(!this.props.datatypes || !this.props.datatypes.metadata)
          {
-            console.log("dtp?",this.props.datatypes)
+            //console.log("dtp?",this.props.datatypes)
          }
          else {
             this.setTypeCounts(types,counts);
          }
-         
 
          let paginate = [], bookmarks;
-         if(sta.repage || !sta.results || !sta.results[id] || (sta.results[id].resMatch != resMatch) || ( !sta.results[id].message.length ) ) { 
-            if(this.state.paginate && this.state.paginate.pages && this.state.paginate.pages.length > 1) paginate = [ this.state.paginate ]
+         if(sta.id !== id || sta.repage || !sta.results || !sta.results[id] || (sta.results[id].resMatch != resMatch) || ( sta.results[id].message.length <= 1) ) { 
+            if(sta.id == id && this.state.paginate && this.state.paginate.pages && this.state.paginate.pages.length > 1) paginate = [ this.state.paginate ]
             if(sta.results && sta.results[id] && sta.results[id].bookmarks) bookmarks = sta.results[id].bookmarks
             if(results) this.handleResults(types,counts,message,results,paginate,bookmarks);
             //console.log("bookM:",JSON.stringify(paginate,null,3))
@@ -1490,12 +1506,12 @@ class App extends Component<Props,State> {
             //console.log("bookM!",JSON.stringify(paginate,null,3))
          }
 
-         //console.log("mesg",message,types,counts,JSON.stringify(paginate,null,3))
+         //console.log("mesg",id,message,types,counts,JSON.stringify(paginate,null,3))
 
-         if(sta.repage || !sta.results || !sta.results[id] || (sta.results[id].resMatch != resMatch) || ( sta.results[id].message.length < message.length ) || sta.results[id].types.length != types.length) {
+         if(sta.id !== id || sta.repage || !sta.results || !sta.results[id] || (sta.results[id].resMatch != resMatch) || ( sta.results[id].message.length < message.length ) || sta.results[id].types.length != types.length) {
             if(!sta.results) sta.results = {}
             if(!sta.results[id]) sta.results[id] = {}
-
+            
             let newSta = { message, types, counts, resMatch }
             if(bookmarks) newSta.bookmarks = bookmarks
             if(paginate[0]) { 
@@ -1508,7 +1524,8 @@ class App extends Component<Props,State> {
             //console.log("bookM?",JSON.stringify(newSta.paginate,null,3))
             sta.results[id] = newSta
             sta.repage = false 
-
+            sta.id = id
+            
             this.setState(sta);
          }
       }
@@ -1559,7 +1576,7 @@ class App extends Component<Props,State> {
          
          id = this.prepareResults();
 
-         //console.log("id",id)
+         console.log("id",id)
 
          if(this.state.results && this.state.results[id])
          {

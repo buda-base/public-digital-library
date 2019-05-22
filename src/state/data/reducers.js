@@ -526,7 +526,10 @@ export const getDatatypes = (state: DataState, action: Action) => {
 
     return {
         ...state,
-        datatypes:true
+      datatypes : {
+         ...state.datatypes,
+         [action.payload.keyword+"@"+action.payload.language]: true
+      }
     }
 }
 reducers[actions.TYPES.getDatatypes] = getDatatypes;
@@ -581,11 +584,15 @@ reducers[actions.TYPES.foundResults] = foundResults;
 
 export const foundDatatypes = (state: DataState, action: actions.FoundResultsAction) => {
 
-      return {
+   return {
       ...state,
-      datatypes : action.payload.results
+      datatypes : {
+         ...state.datatypes,
+         [action.payload.keyword+"@"+action.payload.language]: action.payload.results         
+      }
    }
 }
+
 reducers[actions.TYPES.foundDatatypes] = foundDatatypes;
 
 
