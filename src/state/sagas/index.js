@@ -517,14 +517,14 @@ function getData(result)  {
      // data.works = ordered.reduce((acc,k) => { acc[k]=data.works[k]; },{})
   }
 
-  console.log("resultR",result)
+  //console.log("resultR",result)
   //&& Object.values(result).map(o => o?Object.keys(o):null).filter(k => (""+k).match(new RegExp(bdr))).length == 0)))
 
   if(Object.keys(result).length == 0 || (Object.keys(result).length == 1 && result["metadata"] )) { numR = 0 }
   else
   {
      numR = Object.keys(result).reduce((acc,e) => {
-        console.log("res",result[e])
+        //console.log("res",result[e])
         if(result[e]!=null) return ( acc + (e=="metadata"?0:Object.keys(result[e]).length))
         else return acc
      },0)

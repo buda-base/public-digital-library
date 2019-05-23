@@ -23,7 +23,7 @@ const mapStateToProps = (state,ownProps) => {
 
       let props = { ...ownProps, langIndex, langPriority, open:rightPanel, locale, collapse }
 
-      console.log("mS2p LSP",state,props)
+      //console.log("mS2p LSP",state,props)
 
       return props
 

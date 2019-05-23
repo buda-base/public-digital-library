@@ -56,7 +56,7 @@ class LanguageSidePane extends Component<Props,State> {
 
    render()
    {
-      console.log("LsP render",this.props,this.state)
+     // console.log("LsP render",this.props,this.state)
 
       let widget = (title:string,txt:string,help:string,inCollapse:Component) => (
          [<ListItem key={1}

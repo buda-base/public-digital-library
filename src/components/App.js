@@ -1320,7 +1320,11 @@ class App extends Component<Props,State> {
                            if(!pagin.bookmarks[categ]) { 
                               pagin.bookmarks[categ] = {i:absi}
                            }
-                           if(absi != 0) pagin.bookmarks[prevCateg] = { ...pagin.bookmarks[prevCateg], nb:absi - pagin.bookmarks[prevCateg].i }
+                           //console.log("bookMa",JSON.stringify(pagin.bookmarks,null,3))
+
+                           if(pagin.bookmarks[prevCateg] && pagin.bookmarks[prevCateg].i < absi && pagin.bookmarks[prevCateg].nb === undefined) pagin.bookmarks[prevCateg] = { ...pagin.bookmarks[prevCateg], nb:absi - pagin.bookmarks[prevCateg].i }
+
+                           //console.log("bookMb",JSON.stringify(pagin.bookmarks,null,3))
                         }
 
                         if(categChange && (cpt - lastN > 1 || tmpN > 3)) {// && (!pagin.bookmarks || (!pagin.bookmarks[categ] || !pagin.bookmarks[prevCateg] || pagin.bookmarks[categ] - pagin.bookmarks[prevCateg] > 3))) {
@@ -1468,8 +1472,8 @@ class App extends Component<Props,State> {
 
             if(pagin && pagin.bookmarks && pagin.bookmarks[categ] && pagin.bookmarks[categ].nb === undefined) { 
                pagin.bookmarks[categ] = { ...pagin.bookmarks[categ], nb:Object.keys(sublist).length - pagin.bookmarks[categ].i }
+               //console.log("bookM2",JSON.stringify(pagin.bookmarks,null,3))
             }
-            //console.log("bookM",JSON.stringify(pagin.bookmarks,null,3),pagin.gotoCateg)
 
             if(pagin.gotoCateg !== undefined && paginate[0]) { paginate.length = 0; delete pagin.gotoCateg ; }
             if(paginate.length == 0) { paginate.push(pagin); }
@@ -1608,7 +1612,7 @@ class App extends Component<Props,State> {
          
          id = this.prepareResults();
 
-         console.log("id",id)
+         //console.log("id",id)
 
          if(this.state.results && this.state.results[id])
          {
