@@ -599,9 +599,9 @@ async function startSearch(keyword,language,datatype,sourcetype) {
 
    // why is this action dispatched twice ???
    store.dispatch(uiActions.loading(keyword, true));
-   //if(!datatype || datatype.indexOf("Any") !== -1) {
-   //   store.dispatch(dataActions.getDatatypes());
-   //}
+   if(!datatype || datatype.indexOf("Any") !== -1) {
+      store.dispatch(dataActions.getDatatypes());
+   }
    try {
       let result ;
 

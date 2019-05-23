@@ -45,6 +45,7 @@ import Select from '@material-ui/core/Select';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faLanguage,faUserCircle,faSignOutAlt } from '@fortawesome/free-solid-svg-icons'
 import qs from 'query-string'
+import store from "../index"
 
 import {I18n, Translate, Localize } from "react-redux-i18n" ;
 
@@ -445,11 +446,16 @@ class App extends Component<Props,State> {
          if(props.langIndex !== undefined ) s = { ...s, language:props.langPreset[0] }
       }
 
+      // pagination settings
+      let d
       if(state.id !== state.filters.datatype+"#"+props.keyword+"@"+props.language) { 
          if(!s) s = { ...state }
-         for(let c of ["Other","ExprOf", "HasExpr", "Abstract"]) if(s.collapse[c] != undefined) delete s.collapse[c]
+         let sameKW = state.id && state.id.match(new RegExp("#"+props.keyword+"@"+props.language+"$"))
+         let fromAny2Work = state.id && state.filters.datatype.indexOf("Work") !== -1 && state.id.match(/^Any/)
+         //console.log("colla",sameKW,fromAny2Work)
+         if(!state.id || !(sameKW && fromAny2Work)) 
+            for(let c of ["Other","ExprOf", "HasExpr", "Abstract"]) if(s.collapse[c] != undefined) delete s.collapse[c]
       }
-
 
       if(s) { 
          console.log("newS",s)
@@ -995,7 +1001,7 @@ class App extends Component<Props,State> {
       let gotoCateg = paginate.index
       if(show && paginate.pages.length > 1 && paginate.bookmarks && paginate.bookmarks[categ]) { 
          for(let i in paginate.pages) { 
-            if(i > 0 && paginate.pages[i-1] <= paginate.bookmarks[categ] && paginate.bookmarks[categ] < paginate.pages[i]) { 
+            if(i > 0 && paginate.pages[i-1] <= paginate.bookmarks[categ].i && paginate.bookmarks[categ].i < paginate.pages[i]) { 
                gotoCateg = i-1 ; 
                console.log("catI",gotoCateg);
                break ; 
@@ -1064,7 +1070,9 @@ class App extends Component<Props,State> {
          let findFirst = true ;
 
          let absi = -1
-         let lastN 
+         let lastN
+         
+         let h5
 
          if(sublist) { for(let o of Object.keys(sublist))
          {
@@ -1075,7 +1083,7 @@ class App extends Component<Props,State> {
             }
             absi ++ ;
 
-            //console.log("cpt",cpt,n,begin,findFirst,findNext) //,o,sublist[o])
+            //console.log("cpt",absi,cpt,n,begin,findFirst,findNext) //,o,sublist[o])
 
             if(absi < begin && findFirst) { cpt++ ; m++ ; continue; }
             else if(cpt == begin && !findNext && findFirst) {
@@ -1294,7 +1302,7 @@ class App extends Component<Props,State> {
 
                   //console.log("lit",lit,n)
 
-                  let Tag,tip,categChange = false, showCateg = false, prevCateg = categ, tmpN = n  ;
+                  let Tag,tip,categChange = false, showCateg = false, prevCateg = categ, tmpN = n, prevH5 = h5  ;
                   if(isAbs.length > 0)        { Tag = CropFreeIcon ;     tip = "Abstract Work" ;       if(categ !== "Abstract") { if(categ !== "Other" && cpt >= max_cpt) { categChange = true ; }; categ = "Abstract" ; if(!dontShow) { showCateg = true }; if(cpt!=0) {n = 0; }; willBreak = false ; max_cpt = cpt + 3 ; canCollapse = true ; } }
                   else if(hasExpr.length > 0) { Tag = CenterFocusStrong; tip = "Work Has Expression" ; if(categ !== "HasExpr")  { if(categ !== "Other" && cpt >= max_cpt) { categChange = true ; }; categ = "HasExpr" ;  if(!dontShow) { showCateg = true }; if(cpt!=0) {n = 0; }; willBreak = false ; max_cpt = cpt + 3 ; canCollapse = true ; } }
                   else if(isExpr.length > 0)  { Tag = CenterFocusWeak;   tip = "Work Expression Of";   if(categ !== "ExprOf")   { if(categ !== "Other" && cpt >= max_cpt) { categChange = true ; }; categ = "ExprOf" ;   if(!dontShow) { showCateg = true }; if(cpt!=0) {n = 0; }; willBreak = false ; max_cpt = cpt + 3 ; canCollapse = true ; } }
@@ -1309,21 +1317,28 @@ class App extends Component<Props,State> {
                         //if(displayTypes.length === 1) 
                         {
                            if(!pagin.bookmarks) pagin.bookmarks = {}
-                           if(!pagin.bookmarks[categ]) pagin.bookmarks[categ] = absi
+                           if(!pagin.bookmarks[categ]) { 
+                              pagin.bookmarks[categ] = {i:absi}
+                           }
+                           if(absi != 0) pagin.bookmarks[prevCateg] = { ...pagin.bookmarks[prevCateg], nb:absi - pagin.bookmarks[prevCateg].i }
                         }
-                        
+
                         if(categChange && (cpt - lastN > 1 || tmpN > 3)) {// && (!pagin.bookmarks || (!pagin.bookmarks[categ] || !pagin.bookmarks[prevCateg] || pagin.bookmarks[categ] - pagin.bookmarks[prevCateg] > 3))) {
                            //console.log("bookM...",pagin.bookmarks)
-                           message.push(<MenuItem className="menu-categ-collapse" onClick={this.setWorkCateg.bind(this,prevCateg,pagin)}><h5>{I18n.t(this.state.collapse[prevCateg]==false?"misc.hide":"misc.show")/*+" "+prevCateg*/}</h5></MenuItem>);                      
+                           message.push(<MenuItem className="menu-categ-collapse" onClick={this.setWorkCateg.bind(this,prevCateg,pagin)}><h5>{I18n.t(this.state.collapse[prevCateg]==false?"misc.hide":"misc.show" ) + " " + t + "s / " + prevH5.replace(/ \([0-9]+\)$/,"") /*+" "+prevCateg*/}</h5></MenuItem>);                      
                         }
 
                         //console.log("bookM",pagin.bookmarks)
 
-                        let h5 = tip
+                        h5 = tip
                         if(h5 === "Work") h5 = "Other"
                         else h5 = tip.replace(/ ?Work ?/,"")
-                        //categIndex = index
-                        if(!dontShow) message.push(<MenuItem className="menu-categ" onClick={this.setWorkCateg.bind(this,categ,pagin)}><h5>{h5}</h5></MenuItem>);
+                        if(pagin && pagin.bookmarks && pagin.bookmarks[categ] && pagin.bookmarks[categ].nb) h5 += " ("+pagin.bookmarks[categ].nb+")"
+                        if(!dontShow) message.push(
+                           <MenuItem className="menu-categ" onClick={this.setWorkCateg.bind(this,categ,pagin)}>
+                              <h5>{h5}</h5>
+                              { pagin.bookmarks && pagin.bookmarks[categ] && pagin.bookmarks[categ].nb > 3 && (this.state.collapse[categ]==false?<ExpandLess/>:<ExpandMore/>) }
+                           </MenuItem>);
 
                         //console.log("categIndex",categIndex,h5)
                      }  
@@ -1429,24 +1444,32 @@ class App extends Component<Props,State> {
 
          }
          if(pagin.index == pagin.pages.length - 1) {
+
             if(cpt >= max_cpt && cpt - lastN >= 1) {
                //if(displayTypes.length > 1 || displayTypes.indexOf("Any") !== -1) 
-               if(displayTypes.indexOf("Any") !== -1 && t !== "Work") message.push(<MenuItem className="menu-categ-collapse" onClick={(e)=>this.handleCheck(e,t,true)}><h5>{I18n.t("misc.show") /*+" "+t+" "+categ*/}</h5></MenuItem>);                      
-               else if(t === "Work") message.push(<MenuItem className="menu-categ-collapse" onClick={this.setWorkCateg.bind(this,categ,pagin)}><h5>{I18n.t(this.state.collapse[categ]==false?"misc.hide":"misc.show")/*+" "+categ*/}</h5></MenuItem>);                      
-               else if(t !== "Work" && displayTypes.length === 1 && displayTypes.indexOf("Any") === -1) message.push(<MenuItem className="menu-categ-collapse" onClick={(e)=>this.handleCheck(e,"Any",true)}><h5>{I18n.t("misc.datatype")  /*+t+" "+categ*/}</h5></MenuItem>);                         
+               if(displayTypes.indexOf("Any") !== -1 && t !== "Work") message.push(<MenuItem className="menu-categ-collapse" onClick={(e)=>this.handleCheck(e,t,true)}><h5>{I18n.t("misc.show") +" "+t+"s" /*+" "+categ*/}</h5></MenuItem>);                      
+               else { 
+                  if(t === "Work") message.push(<MenuItem className="menu-categ-collapse" onClick={this.setWorkCateg.bind(this,categ,pagin)}><h5>{I18n.t(this.state.collapse[categ]==false?"misc.hide":"misc.show") + " " + t + "s / " + h5.replace(/ \([0-9]+\)$/,"") /*+" "+categ*/}</h5></MenuItem>);                      
+
+                  if(/*t !== "Work" &&*/ displayTypes.length === 1 && displayTypes.indexOf("Any") === -1) message.push(<MenuItem className="menu-categ-collapse datatype" onClick={(e)=>this.handleCheck(e,"Any",true)}><h5>{I18n.t("misc.datatype")  /*+t+" "+categ*/}</h5></MenuItem>);                         
+               }
             }
-            else if(t !== "Work" && displayTypes.length === 1 && displayTypes.indexOf("Any") === -1) message.push(<MenuItem className="menu-categ-collapse" onClick={(e)=>this.handleCheck(e,"Any",true)}><h5>{I18n.t("misc.datatype")  /*+t+" "+categ*/}</h5></MenuItem>);                      
+            else if(t !== "Work" && displayTypes.length === 1 && displayTypes.indexOf("Any") === -1 && iniTitle) message.push(<MenuItem className="menu-categ-collapse datatype" onClick={(e)=>this.handleCheck(e,"Any",true)}><h5>{I18n.t("misc.datatype")  /*+" "+categ*/}</h5></MenuItem>);                      
          }
 
          if(!iniTitle && (displayTypes.length > 1 || displayTypes.indexOf("Any") !== -1) ) {
             iniTitle = true
             message.push(<MenuItem  onClick={(e)=>this.handleCheck(e,t,true)}><h4>{I18n.t("types."+t.toLowerCase())+"s"+(displayTypes.length>1 && counts["datatype"][t]?" ("+counts["datatype"][t]+")":"")}</h4></MenuItem>);
-            message.push(<MenuItem className="menu-categ-collapse" onClick={(e)=>this.handleCheck(e,t,true)}><h5>{I18n.t("misc.show") /*+" "+t+" "+categ */ }</h5></MenuItem>);                      
+            message.push(<MenuItem className="menu-categ-collapse" onClick={(e)=>this.handleCheck(e,t,true)}><h5>{I18n.t("misc.show") +" "+t+"s" /*" "+categ */ }</h5></MenuItem>);                      
          }
          //console.log("end pagin",pagin,paginate)
          if(pagin) {
             
-            //console.log("bookM",pagin.bookmarks,pagin.gotoCateg)
+
+            if(pagin && pagin.bookmarks && pagin.bookmarks[categ] && pagin.bookmarks[categ].nb === undefined) { 
+               pagin.bookmarks[categ] = { ...pagin.bookmarks[categ], nb:Object.keys(sublist).length - pagin.bookmarks[categ].i }
+            }
+            //console.log("bookM",JSON.stringify(pagin.bookmarks,null,3),pagin.gotoCateg)
 
             if(pagin.gotoCateg !== undefined && paginate[0]) { paginate.length = 0; delete pagin.gotoCateg ; }
             if(paginate.length == 0) { paginate.push(pagin); }
@@ -1491,10 +1514,11 @@ class App extends Component<Props,State> {
             this.setTypeCounts(types,counts);
          }
 
-         let paginate = [], bookmarks;
-         if(sta.id !== id || sta.repage || !sta.results || !sta.results[id] || (sta.results[id].resMatch != resMatch) || ( sta.results[id].message.length <= 1) ) { 
+         let paginate = [], bookmarks, noBookM = false;
+         if(sta.id !== id || sta.repage || !sta.results || !sta.results[id] || (sta.results[id].resMatch != resMatch) || ( sta.results[id].message.length <= 1) || Object.keys(sta.results[id].counts.datatype).length != Object.keys(counts.datatype).length ) { 
             if(sta.id == id && this.state.paginate && this.state.paginate.pages && this.state.paginate.pages.length > 1) paginate = [ this.state.paginate ]
-            if(sta.results && sta.results[id] && sta.results[id].bookmarks) bookmarks = sta.results[id].bookmarks
+            if(sta.results && sta.results[id] && sta.results[id].bookmarks) bookmarks = sta.results[id].bookmarks                        
+            else noBookM = true
             if(results) this.handleResults(types,counts,message,results,paginate,bookmarks);
             //console.log("bookM:",JSON.stringify(paginate,null,3))
             
@@ -1508,12 +1532,14 @@ class App extends Component<Props,State> {
 
          //console.log("mesg",id,message,types,counts,JSON.stringify(paginate,null,3))
 
-         if(sta.id !== id || sta.repage || !sta.results || !sta.results[id] || (sta.results[id].resMatch != resMatch) || ( sta.results[id].message.length < message.length ) || sta.results[id].types.length != types.length) {
+         if(sta.id !== id || sta.repage || !sta.results || !sta.results[id] || (sta.results[id].resMatch != resMatch) || ( sta.results[id].message.length < message.length ) || Object.keys(sta.results[id].counts.datatype).length != Object.keys(counts.datatype).length) {
             if(!sta.results) sta.results = {}
             if(!sta.results[id]) sta.results[id] = {}
             
             let newSta = { message, types, counts, resMatch }
-            if(bookmarks) newSta.bookmarks = bookmarks
+            if(bookmarks) { 
+               newSta.bookmarks = bookmarks
+            }
             if(paginate[0]) { 
                newSta.paginate = paginate[0]
                newSta.bookmarks = { ...(bookmarks?bookmarks:paginate[0].bookmarks) }
@@ -1523,9 +1549,15 @@ class App extends Component<Props,State> {
             }
             //console.log("bookM?",JSON.stringify(newSta.paginate,null,3))
             sta.results[id] = newSta
-            sta.repage = false 
+            sta.repage = false
             sta.id = id
+
+            if(noBookM && paginate[0] && paginate[0].bookmarks) sta.repage = true
+
+            //else sta.repage = false
             
+            //console.log("repage?",sta.repage)
+
             this.setState(sta);
          }
       }

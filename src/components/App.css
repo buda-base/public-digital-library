@@ -21,7 +21,7 @@ body { overflow:auto !important;padding-right:0 !important;  }
 #pagine div a { cursor:pointer; display:inline-block;margin-left:5px;margin-right:5px;}
 #pagine div a:hover { text-decoration:underline; }
 
-a.result { padding:0;margin-bottom:0;width:100%;display: inline-block;margin-top:10px;}
+a.result { padding:0;margin-bottom:10px;width:100%;display: inline-block;margin-top:0px;}
 a.result button { text-transform:none; padding-bottom:0;}
 /* a.result button::before { content:'Abstract Works';display:block;height:50px;position:absolute;left:0; }  */
 a.result + div:not(#pagine) { margin-top:-20px!important;padding:20px 0 0px 35px ; margin-left:41px; font-size:0.9rem; margin-bottom:20px; border-left: 1px solid rgba(0,0,0,0.25) ; }
@@ -256,7 +256,9 @@ body {overflow-x:hidden; }
 .SearchPane .menu-categ-collapse h5 { margin-left:16px; font-size : 13px; margin-bottom:0px;margin-top:0px; color:rgba(229, 74, 53,1); }
 /* .menu-categ-collapse + .menu-categ-collapse { display:none; } */
 .SearchPane .menu-categ-collapse h5:hover { text-decoration:underline; }
-.menu-categ { padding:0;margin-bottom:0; } 
+.menu-categ { padding:0;margin-bottom:0;margin-top:10px !important; } 
+.menu-categ-collapse + .menu-categ-collapse.datatype { padding-left:0; } 
+.menu-categ-collapse + li:not(.menu-categ) + a.result { margin-top:10px; }
 
 .widget label { text-transform:capitalize }
 .searchWidget > label > span:first-child,
