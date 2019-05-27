@@ -24,6 +24,7 @@ import Apps from '@material-ui/icons/Apps';
 import Close from '@material-ui/icons/Close';
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
+import PanoramaFishEye from '@material-ui/icons/PanoramaFishEye';
 import NavigateBefore from '@material-ui/icons/NavigateBefore';
 import NavigateNext from '@material-ui/icons/NavigateNext';
 import CheckCircle from '@material-ui/icons/CheckCircle';
@@ -46,6 +47,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faLanguage,faUserCircle,faSignOutAlt } from '@fortawesome/free-solid-svg-icons'
 import qs from 'query-string'
 import store from "../index"
+import FormGroup from '@material-ui/core/FormGroup';
 
 import {I18n, Translate, Localize } from "react-redux-i18n" ;
 
@@ -110,6 +112,8 @@ const langSelect = [
    "en",
    "pi-x-iast"
 ]
+
+const searchTypes = ["All","Work","Etext","Topic","Person","Place","Lineage","Corporation","Role"]
 
 /*
 export const langProfile = [
@@ -332,12 +336,13 @@ class App extends Component<Props,State> {
          filters: {
             datatype:get.t?get.t.split(","):["Any"]
          },
+         searchTypes: ["Any"],
          dataSource: [],
          keyword:kw,
          collapse:{},
          loader:{},
          paginate:{index:0,pages:[0],n:[0]},
-         leftPane:(window.innerWidth > 1400),
+         leftPane:false //(window.innerWidth > 1400),
          
       };
 
@@ -421,18 +426,22 @@ class App extends Component<Props,State> {
          props.onGetResource(props.keyword);
       }
 
+      /*
       // update when datatype filter has changed 
       if(state.filters && state.filters.datatype) {
          let get = qs.parse(props.history.location.search)
-         let d_url = (get.t?get.t.split(","):["Any"])
-         let d_sta = state.filters.datatype
-         if(d_sta.filter(i => !d_url.includes(i)).length > 0) {
-            if(!s) s = { ...state }
-            s = { ...s, filters : { ...s.filters, datatype : d_url }, repage:true }
-            console.log("filt::",d_url)
+         let d_url = (get.t?get.t.split(","):[])
+         if(d_url.length) {
+            let d_sta = state.filters.datatype
+            if(d_sta.filter(i => !d_url.includes(i)).length > 0) {
+               if(!s) s = { ...state }
+               s = { ...s, filters : { ...s.filters, datatype : d_url }, repage:true }
+               console.log("filt::",d_url)
+            }
+            //console.log("what...",d_sta,d_url)
          }
-         //console.log("what...",d_sta,d_url)
       }
+      */
       
       // update when language has changed
       if(props.langPreset && state.langPreset) for(let i = 0 ; i < props.langPreset.length && eq; i ++ ) { eq = eq && props.langPreset[i] === state.langPreset[i] ; }
@@ -503,8 +512,98 @@ class App extends Component<Props,State> {
    }
 
 
+   handleSearchTypes = (ev:Event,lab:string,val:boolean) => {
+
+      if(lab === I18n.t("types.any")) lab = "Any"
+
+      console.log("checkST::",this,lab,val)
+
+      if(!val) {
+
+         let dt = [ ...this.state.searchTypes ]
+
+         if(lab === "Any") { dt = [] ; }
+         else 
+         {
+            if(dt.indexOf("Any") !== -1) { dt = [ ...searchTypes.slice(1) ]; }
+            let i ;
+            if((i = dt.indexOf(lab))   !== -1) { delete dt[i]; }
+            dt = dt.filter(e => e);
+         }
+
+         this.setState( { ...this.state, searchTypes:dt }  );
+      }
+      else {
+         let dt = [ ...this.state.searchTypes ]         
+         
+         if(dt.indexOf(lab) === -1 && dt.indexOf("Any") === -1) dt.push(lab);
+
+         if(searchTypes.slice(1).filter(i => !dt.includes(i)).length == 0 || lab === "Any" ) { dt = [ "Any" ] }
+
+         this.setState( { ...this.state, searchTypes:dt }  );
+      }
+   }
+
 
    handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
+
+      console.log("check::",lab,val,this.props.keyword,'('+this.state.keyword+')')
+
+      //if(this.props.language == "") return
+
+      //  // to be continued ...
+      // let f = this.state.filters.datatype
+      // if(f.indexOf(lab) != -1 && !val) f.splice(f.indexOf(lab),1)
+      // else if(f.indexOf(lab) == -1 && val) f.push(lab)
+
+      let types = searchTypes.slice(1) //[ "Person","Work","Corporation","Place","Etext", "Role","Topic","Lineage"]
+      if(this.state.results && this.state.results[this.state.id] && this.state.results[this.state.id].types) types = this.state.results[this.state.id].types
+
+      let f = [lab]
+
+      let state =  { ...this.state, collapse: { ...this.state.collapse, HasExpr:true, Other:true, ExprOf:true, Abstract:true }, 
+                     filters: {  datatype:f }, paginate:{index:0,pages:[0],n:[0]}, repage: true, 
+                     ...params  }
+     
+      if(val)
+      {
+         if(lab === "Any") state = { ...state, filters:{ ...state.filters, datatype:["Any"] }}
+         else {
+            let dt = [ ...this.state.filters.datatype ]
+            if(dt.indexOf(lab) === -1 && dt.indexOf("Any") === -1) dt.push(lab);
+
+            console.log("dt:!:",dt)
+
+            if(types.filter(i => !dt.includes(i)).length == 0) { dt = [ "Any" ] }
+
+            state = { ...state, filters:{ ...state.filters, datatype: dt }}
+         }
+      }
+      else if(!val)
+      {
+
+         if(lab === "Any") state = { ...state, filters:{ ...state.filters, datatype:[] }}
+         else {
+            let dt = [ ...this.state.filters.datatype ]
+            let i
+            if(i = dt.indexOf("Any") !== -1) { dt = [ ...types ] }
+            if((i = dt.indexOf(lab)) !== -1) { delete dt[i] }
+            if((i = dt.indexOf("Any")) !== -1) { delete dt[i] }
+            dt = dt.filter(e => e)
+
+            console.log("dt::",dt)
+
+
+            state = { ...state, filters:{ ...state.filters, datatype: dt }}
+         }
+      }
+
+      this.setState(state)
+
+   }
+
+/*
+handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
       console.log("check::",lab,val,this.props.keyword,'('+this.state.keyword+')')
 
@@ -519,7 +618,7 @@ class App extends Component<Props,State> {
       let f = [lab]
 
       let state =  { ...this.state, collapse: { ...this.state.collapse, HasExpr:true, Other:true, ExprOf:true, Abstract:true }, 
-                     filters: {  /*...this.state.filters, */ datatype:f }, paginate:{index:0,pages:[0],n:[0]}, repage: true, 
+                     filters: {   datatype:f }, paginate:{index:0,pages:[0],n:[0]}, repage: true, 
                      ...params  }
 
       if(val && this.props.keyword)
@@ -551,6 +650,7 @@ class App extends Component<Props,State> {
       this.setState(state)
 
    }
+*/
 
 
    login() {
@@ -1434,7 +1534,7 @@ class App extends Component<Props,State> {
                   }
                   
 
-                  if(displayTypes.length == 1)
+                  if(displayTypes.length === 1)
                   {
                      if(m > 0 && m % 50 == 0 && !findFirst) {
 
@@ -1605,8 +1705,8 @@ class App extends Component<Props,State> {
             //message.push(this.makeResult("P6161",null,"Person","zhi ba lha/","bo-x-ewts"))
          }
 
-         types = ["Any","Person","Work","Corporation","Place","Item","Etext","Role","Topic","Lineage"]
-         types = types.sort()
+         types = [ "Any", ...searchTypes.slice(1) ] //["Any","Person","Work","Corporation","Place", /*"Item",*/ "Etext","Role","Topic","Lineage"]
+         //types = types.sort()
       }
       else {
          
@@ -1651,7 +1751,7 @@ class App extends Component<Props,State> {
          <Collapse key={2}
             in={this.state.collapse[txt]}
             className={["collapse",this.state.collapse[txt]?"open":"close"].join(" ")}
-            style={{padding:"10px 0 0 40px"}} // ,marginBottom:"30px"
+            style={{padding:"10px 0 0 20px"}} // ,marginBottom:"30px"
             >
                {inCollapse}
          </Collapse> ]
@@ -1755,8 +1855,8 @@ class App extends Component<Props,State> {
                         <Checkbox
                            checked={checked}
                            className={"checkbox"}
-                           icon={<span className='checkB'/>}
-                           checkedIcon={<span className='checkedB'><CheckCircle style={{color:"#444",margin:"-3px 0 0 -3px",width:"26px",height:"26px"}}/></span>}
+                           icon={<PanoramaFishEye/>}
+                           checkedIcon={<CheckCircle />}
                            onChange={(event, checked) => this.handleCheckFacet(event,jpre,checkable,checked)}
                         />
 
@@ -1850,8 +1950,8 @@ class App extends Component<Props,State> {
                                        {... i=="rKTs" ?{}:{defaultChecked:true}}
                                        disabled={true}
                                        className="checkbox disabled"
-                                       icon={<span className='checkB'/>}
-                                       checkedIcon={<span className='checkedB'><CheckCircle style={{color:"#444",margin:"-3px 0 0 -3px",width:"26px",height:"26px"}}/></span>}
+                                       icon={<PanoramaFishEye/>}
+                                       checkedIcon={<CheckCircle/>}
                                        //onChange={(event, checked) => this.handleCheck(event,i,checked)}
                                     />
 
@@ -1876,14 +1976,14 @@ class App extends Component<Props,State> {
                      <Collapse
                         in={/*this.props.datatypes && this.props.datatypes.hash &&*/ !this.state.collapse["datatype"]}
                         className={["collapse",  !(this.props.datatypes && !this.props.datatypes.hash)&&!this.state.collapse["datatype"]?"open":"close"].join(" ")}
-                         style={{padding:"10px 0 0 50px"}} >
+                         style={{padding:"10px 0 0 20px"}} >
                         <div>
                         { //facetList&&facetList.length > 0?facetList.sort((a,b) => { return a.props.label < b.props.label } ):
                               types.map((i) => {
 
                                  //console.log("counts",i,counts["datatype"][i],this.state.filters.datatype.indexOf(i))
 
-                           let disabled = (!this.props.keyword && ["Any","Etext","Person","Work"].indexOf(i)===-1 && this.props.language  != "")
+                              let disabled = false // (!this.props.keyword && ["Any","Etext","Person","Work"].indexOf(i)===-1 && this.props.language  != "")
                            // || (this.props.language == "")
 
                               return (
@@ -1894,9 +1994,10 @@ class App extends Component<Props,State> {
                                              className={"checkbox "+(disabled?"disabled":"")}
                                              //disabled={disabled}
                                              //{...i=="Any"?{defaultChecked:true}:{}}
-                                             checked={this.state.filters.datatype.indexOf(i) !== -1}
-                                             icon={<span className='checkB'/>}
-                                             checkedIcon={<span className='checkedB'><CheckCircle style={{color:"#444",margin:"-3px 0 0 -3px",width:"26px",height:"26px"}}/></span>}
+                                             color="black"
+                                             checked={this.state.filters.datatype.indexOf(i) !== -1  || this.state.filters.datatype.indexOf("Any") !== -1 }
+                                             icon={<PanoramaFishEye/>}
+                                             checkedIcon={<CheckCircle/>}
                                              onChange={(event, checked) => this.handleCheck(event,i,checked)}
                                           />
 
@@ -2076,8 +2177,8 @@ class App extends Component<Props,State> {
                                                    <Checkbox
                                                       checked={checked}
                                                       className="checkbox"
-                                                      icon={<span className='checkB'/>}
-                                                      checkedIcon={<span className='checkedB'><CheckCircle style={{color:"#444",margin:"-3px 0 0 -3px",width:"26px",height:"26px"}}/></span>}
+                                                      icon={<PanoramaFishEye/>}
+                                                      checkedIcon={<CheckCircle/>}
                                                       onChange={(event, checked) => this.handleCheckFacet(event,jpre,[i],checked)}
                                                    />
 
@@ -2280,6 +2381,16 @@ class App extends Component<Props,State> {
                   onKeyPress={(e) => this.handleCustomLanguage(e)}
                /> */ }
               </FormControl>
+           </div>
+           <div id="data-checkbox">
+            <FormGroup row>
+               { 
+                  searchTypes.map(d => 
+                     <FormControlLabel className="data-checkbox" control={
+                        <Checkbox onChange={(event, checked) => this.handleSearchTypes(event,d,checked)} checked={ this.state.searchTypes.indexOf("Any") !== -1 || this.state.searchTypes.indexOf(d) !== -1} color="black" icon={<PanoramaFishEye/>} checkedIcon={<CheckCircle/>} /> 
+                     } label={d} /> ) 
+               }
+            </FormGroup>
            </div>
                { false && this.state.keyword.length > 0 && this.state.dataSource.length > 0 &&
                   <div style={{

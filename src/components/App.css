@@ -8,6 +8,14 @@
 
 body { overflow:auto !important;padding-right:0 !important;  }
 
+#data-checkbox { display:flex;justify-content: flex-start;padding-left:90px; }
+.data-checkbox{ margin-left:4px !important; }
+.data-checkbox span svg { font-size:16px !important; }
+.data-checkbox > span:last-child { font-size:13px !important; }
+.data-checkbox > span:first-child { width:24px; color:rgba(0,0,0,0.7) !important;}
+.data-checkbox > span > span { width:24px;height:24px;}
+.data-checkbox > span > span:last-child { margin-top:12px; }
+
 #login { position:absolute; top:0;right:0; }
 #login button {color:rgba(0,0,0,0.54); }
 
@@ -262,8 +270,8 @@ body {overflow-x:hidden; }
 
 .widget label { text-transform:capitalize }
 .searchWidget > label > span:first-child,
-.dataWidget > label > span:first-child { height:42px;  }
-.SidePane .help { margin-left:-20px; text-align:left;font-style:italic;margin-bottom:10px; font-size:14px; width:300px;line-height:20px; }
+.dataWidget > label > span:first-child { height:32px; color:rgba(0,0,0,0.7);  }
+.SidePane .help { text-align:left;font-style:italic;margin-bottom:10px; font-size:14px; width:300px;line-height:20px; }
 /* .subcollapse label span:last-child { max-width:120px;} */
 
 .collapse { width:390px;}

@@ -11,6 +11,7 @@ import Checkbox from '@material-ui/core/Checkbox';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import IconButton from '@material-ui/core/IconButton';
 import CheckCircle from '@material-ui/icons/CheckCircle';
+import PanoramaFishEye from '@material-ui/icons/PanoramaFishEye';
 import {makeLangScriptLabel} from '../lib/language';
 
 type Props = {
@@ -69,7 +70,7 @@ class LanguageSidePane extends Component<Props,State> {
          <Collapse key={2}
             in={this.props.collapse[txt]}
             className={["collapse",this.props.collapse[txt]?"open":"close"].join(" ")}
-            style={{padding:"10px 0 0 40px"}} // ,marginBottom:"30px"
+            style={{padding:"10px 0 0 20px"}} // ,marginBottom:"30px"
             >
                {help && help != "" && <div class="help">{help}</div>}
                {inCollapse}
@@ -96,8 +97,8 @@ class LanguageSidePane extends Component<Props,State> {
                               checked={i === this.props.locale}
                               disabled={disab}
                               className={"checkbox "+ (disab?"disabled":"")}
-                              icon={<span className='checkB'/>}
-                              checkedIcon={<span className='checkedB'><CheckCircle style={{color:"#444",margin:"-3px 0 0 -3px",width:"26px",height:"26px"}}/></span>}
+                              icon={<PanoramaFishEye/>}
+                              checkedIcon={<CheckCircle/>}
                               onChange={(event, checked) => this.handleCheckUI(event,"locale",i,checked)}
                                  /> }
                         label={label}
@@ -126,8 +127,8 @@ class LanguageSidePane extends Component<Props,State> {
                                  checked={i == this.props.langIndex}
                                  disabled={disab}
                                  className={"checkbox "+ (disab?"disabled":"")}
-                                 icon={<span className='checkB'/>}
-                                 checkedIcon={<span className='checkedB'><CheckCircle style={{color:"#444",margin:"-3px 0 0 -3px",width:"26px",height:"26px"}}/></span>}
+                                 icon={<PanoramaFishEye/>}
+                                 checkedIcon={<CheckCircle/>}
                                  onChange={(event, checked) => this.handleCheckUI(event,"priority",i,checked)}
                                     /> }
                            label={label}
