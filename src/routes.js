@@ -18,8 +18,7 @@ import * as ui from './state/ui/actions'
 
 import qs from 'query-string'
 
-
-import Auth from './Auth.js';
+import Auth,{Profile} from './Auth.js';
 export const auth = new Auth();
 
 // ignore hash changes made by UV
@@ -139,6 +138,14 @@ const makeMainRoutes = () => {
                            </div>
                         )
                      }}/>
+                     {
+                        <Route exact path="/user" render={(props) => {
+
+                           store.dispatch(initiateApp());
+
+                           return (<Profile auth={auth} history={history} />)
+                        } } />
+                     }
                      {/*
                      <Route exact path="/scripts/:URL" render={(props) => {
                         return (<ScriptLoader url={props.match.params.URL}/>)
