@@ -3,6 +3,12 @@ import history from "./history"
 import store from "./index"
 import * as ui from "./state/ui/actions"
 import {auth} from "./routes"
+import React, { Component } from 'react';
+import Panel from 'react-bootstrap/lib/Panel';
+import ControlLabel from 'react-bootstrap/lib/ControlLabel';
+import Glyphicon from 'react-bootstrap/lib/Glyphicon';
+import { Link } from 'react-router-dom';
+
 
 var tokenRenewalTimeout;
 
@@ -55,15 +61,34 @@ export default class Auth {
    iiif:{};
    api:{};
 
+
+  getProfile(cb) {
+    let tO = setInterval( () => {
+      console.log("getP",this.auth1)
+      if(this.auth1)  {
+        clearInterval(tO);
+        var token = localStorage.getItem('access_token')
+        if(token) this.auth1.client.userInfo(token, (err, profile) => {
+          if (profile) {
+            this.userProfile = profile;
+          }
+          cb(err, profile);
+        });
+      }
+    }, 100);
+  }
+
+
   async setConfig(config,iiif,api)
   {
      this.auth1 = new auth0.WebAuth(config)
      console.log("auth1",this.isAuthenticated())
      this.iiif = iiif
-     this.api = api
+     this.api = api         
+     
 
      if(this.isAuthenticated() && iiif && api) {
-
+          
          try{
             let cookie = await api.getURLContents(iiif.endpoints[iiif.index]+"/setcookie",false)
             console.log("cookie",cookie)
@@ -89,6 +114,7 @@ export default class Auth {
     this.handleAuthentication = this.handleAuthentication.bind(this);
     this.isAuthenticated = this.isAuthenticated.bind(this);
     this.setConfig.bind(this)
+    this.getProfile = this.getProfile.bind(this);
   }
 
   handleAuthentication() {
@@ -112,6 +138,7 @@ export default class Auth {
     localStorage.setItem('access_token', authResult.accessToken);
     localStorage.setItem('id_token', authResult.idToken);
     localStorage.setItem('expires_at', expiresAt);
+
 
     console.log("session")
     if(this.isAuthenticated() && this.iiif && this.api) {
@@ -225,3 +252,55 @@ export default class Auth {
 
 }
 */
+
+export class Profile extends Component {  
+
+  componentWillMount() {
+    this.setState({ profile: {} });
+    const { userProfile, getProfile } = this.props.auth;
+    if (!userProfile) {
+      getProfile((err, profile) => {
+        this.setState({ profile });
+      });
+    } else {
+      this.setState({ profile: userProfile });
+    }
+  }
+  render() {
+    const { profile } = this.state;
+    console.log("profile",profile)
+    let message = "Getting user info..."
+    if(!profile || !Object.keys(profile).length) {
+      if(!auth.isAuthenticated()) { 
+        //message = <span>Please <a onclick={this.props.auth.login(this.props.history.location)}>log in</a></span>
+        message = "Not logged in... Redirecting"
+        this.tO = setTimeout(() => { 
+          window.location.href = "/" 
+        }, 1500)
+        
+      }
+      return <div style={{margin:"50px"}}>{message}</div>
+    }
+    else {
+        if(this.tO) clearTimeout(this.tO)
+        return (
+          <div className="container" style={{marginLeft:"50px"}}>
+          <div className="profile-area">
+            <h1>{profile.name}</h1>
+            <Panel header="Profile picture: ">
+              <img src={profile.picture} alt="profile" />
+              <div>
+                <ControlLabel><Glyphicon glyph="user" />Nickname: </ControlLabel>
+                <h3 style={{display:"inline-block"}}>{profile.nickname}</h3>
+              </div>
+              <pre>{JSON.stringify(profile, null, 2)}</pre>
+            </Panel>
+          </div>
+          <Link to='/'>Back to search</Link>
+        </div>
+      );
+    }
+  }
+}
+
+
