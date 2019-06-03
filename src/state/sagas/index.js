@@ -153,17 +153,21 @@ else if(!iri && params && params.p) {
 else if(!iri && params && params.q) {
 
    if(!params.lg) params.lg = "bo-x-ewts"
-   //console.log("state q",state.data,params,iri)
+   
+   console.log("state q",state.data,params,iri)
 
-   if(params.t && ["Person","Work","Etext"].indexOf(params.t) !== -1){
-      if(!state.data.searches || !state.data.searches[params.t] || !state.data.searches[params.t][params.q+"@"+params.lg])      
-         store.dispatch(dataActions.startSearch(params.q,params.lg,[params.t])); //,params.t.split(",")));      
+   let dontGetDT = false
+   if(params.t) for(let pt of params.t.split(",")) if(!params.t.match(/,/) && ["Person","Work","Etext"].indexOf(pt) !== -1) {
+      if(!state.data.searches || !state.data.searches[pt] || !state.data.searches[pt][params.q+"@"+params.lg])  {
+         store.dispatch(dataActions.startSearch(params.q,params.lg,[pt],null,dontGetDT)); 
+         dontGetDT = true
+      }
       else {
-         store.dispatch(dataActions.foundResults(params.q,params.lg,state.data.searches[params.t][params.q+"@"+params.lg],params.t))  
+         store.dispatch(dataActions.foundResults(params.q,params.lg,state.data.searches[pt][params.q+"@"+params.lg],pt))  
          store.dispatch(dataActions.foundDatatypes(params.q,params.lg,state.data.datatypes[params.q+"@"+params.lg]))
       }
 
-      store.dispatch(uiActions.selectType(params.t));
+      //store.dispatch(uiActions.selectType(pt));
    }
    else //if(params.t) { //} && ["Any"].indexOf(params.t) !== -1)   
    {
@@ -172,7 +176,7 @@ else if(!iri && params && params.q) {
       else 
          store.dispatch(dataActions.foundResults(params.q,params.lg,state.data.searches[params.q+"@"+params.lg]))
 
-      store.dispatch(uiActions.selectType(params.t?params.t:"Any"));
+      //store.dispatch(uiActions.selectType(params.t?params.t:"Any"));
    }
    /*
    else if(params.t && ["Any"].indexOf(params.t) === -1)   
@@ -593,7 +597,7 @@ function addMeta(keyword:string,language:string,data:{},t:string,tree:{})
    }
 }
 
-async function startSearch(keyword,language,datatype,sourcetype) {
+async function startSearch(keyword,language,datatype,sourcetype,dontGetDT) {
 
    console.log("sSsearch",keyword,language,datatype,sourcetype);
 
@@ -699,17 +703,21 @@ else {
 
       if(datatype.indexOf("Person") !== -1) {
          store.dispatch(dataActions.foundFacetInfo(keyword,language,datatype,{"gender":metadata }))
+         //store.dispatch(dataActions.foundDatatypes(keyword,language,{ metadata:{ [bdo+"Person"]:data.numResults } } ));
       }
       else if(datatype.indexOf("Work") !== -1 || datatype.indexOf("Etext") !== -1) {
 
          metadata = { ...metadata, tree:result.tree}
 
-         if(datatype.indexOf("Work") !== -1 ) addMeta(keyword,language,data,"Work",result.tree);
+         let dt = "Etext" ;
+         if(datatype.indexOf("Work") !== -1 ) { dt="Work" ; addMeta(keyword,language,data,"Work",result.tree); }
          else store.dispatch(dataActions.foundFacetInfo(keyword,language,datatype,metadata))
+
+         //store.dispatch(dataActions.foundDatatypes(keyword,language,{ metadata:{ [bdo+dt]:data.numResults } } ));
       }
 
-
-      if(!store.getState().data.searches[keyword+"@"+language]){
+      
+      if(!dontGetDT && !store.getState().data.searches[keyword+"@"+language]){
          store.dispatch(dataActions.getDatatypes(keyword,language));
          result = await api.getStartResults(keyword,language);
          result = Object.keys(result).reduce((acc,e)=>({ ...acc, [e.replace(/^.*[/](Etext)?([^/]+)$/,"$2s").toLowerCase()] : result[e] }),{})
@@ -841,7 +849,7 @@ export function* watchStartSearch() {
 
    yield takeLatest(
       dataActions.TYPES.startSearch,
-      (action) => startSearch(action.payload.keyword,action.payload.language,action.payload.datatype,action.payload.sourcetype)
+      (action) => startSearch(action.payload.keyword,action.payload.language,action.payload.datatype,action.payload.sourcetype,action.payload.dontGetDT)
    );
 }
 

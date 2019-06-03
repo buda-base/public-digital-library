@@ -329,6 +329,14 @@ class App extends Component<Props,State> {
       let kw = ""
       if(get.q) kw = get.q.replace(/"/g,"")
 
+      let types = [ ...searchTypes.slice(1) ]
+      let e = types.indexOf("Etext")
+      if(e !== -1) { 
+         delete types[e]
+         types = types.filter(e => e)
+         console.log("types",types)
+      }
+
       this.state = {
          language:lg,
          langOpen:false,
@@ -336,13 +344,13 @@ class App extends Component<Props,State> {
          filters: {
             datatype:get.t?get.t.split(","):["Any"]
          },
-         searchTypes: ["Any"],
+         searchTypes: get.t?get.t.split(","):types,
          dataSource: [],
          keyword:kw,
          collapse:{},
          loader:{},
          paginate:{index:0,pages:[0],n:[0]},
-         leftPane:false //(window.innerWidth > 1400),
+         //leftPane:false //(window.innerWidth > 1400 && this.props.keyword),
          
       };
 
@@ -356,7 +364,7 @@ class App extends Component<Props,State> {
 
    requestSearch(key:string,label?:string)
    {
-      console.log("key",key,label)
+      console.log("key",key,label,this.state.searchTypes)
 
       if(!key || key == "" || !key.match) return ;
       if(!key.match(/:/)) {
@@ -364,15 +372,23 @@ class App extends Component<Props,State> {
         key = encodeURIComponent(key) // prevent from losing '+' when adding it to url
       }
 
+      let searchDT = this.state.searchTypes
+      if(!label) label = searchDT
+      if(!label || label.length === 0) { 
+         searchDT = [ "Any" ]
+         label = [ "Any" ] 
+      }
+      if(label.indexOf("Any") !== -1) label = "Any" 
+      else label = label.join(",")
 
-      let state = { ...this.state, dataSource:[] }
-      //this.setState(state)
+      let state = { ...this.state, dataSource:[], leftPane:true, filters:{ datatype:[ ...searchDT ] } }
+      this.setState(state)
 
-      console.log("search",key,label,this.state,!global.inTest ? this.props:null)
+      console.log("search",key,label) //,this.state,!global.inTest ? this.props:null)
 
       if(key.match(/^bdr:[RTPGW]/))
       {
-         if(!label) label = this.state.filters.datatype.filter((f)=>["Person","Work"].indexOf(f) !== -1)[0]
+         //if(!label) label = this.state.filters.datatype.filter((f)=>["Person","Work"].indexOf(f) !== -1)[0]
 
          this.props.history.push({pathname:"/search",search:"?r="+key+(label?"&t="+label:"")})
 
@@ -382,6 +398,11 @@ class App extends Component<Props,State> {
          this.props.history.push({pathname:"/search",search:"?p="+key})
 
       }
+      else {
+         
+         this.props.history.push({pathname:"/search",search:"?q="+key+"&lg="+this.getLanguage()+"&t="+label})
+      }
+      /*
       else if(label === "Any") // || ( !label)) // && ( this.state.filters.datatype.length === 0 || this.state.filters.datatype.indexOf("Any") !== -1 ) ) )
       {
          this.props.history.push({pathname:"/search",search:"?q="+key+"&lg="+this.getLanguage()+"&t=Any"})
@@ -396,6 +417,7 @@ class App extends Component<Props,State> {
       {
          this.props.history.push({pathname:"/search",search:"?q="+key+"&lg="+this.getLanguage()+"&t=Any"})
       }
+      */
 
 
    }
@@ -426,6 +448,7 @@ class App extends Component<Props,State> {
          props.onGetResource(props.keyword);
       }
 
+
       /*
       // update when datatype filter has changed 
       if(state.filters && state.filters.datatype) {
@@ -442,6 +465,12 @@ class App extends Component<Props,State> {
          }
       }
       */
+
+      if(state.leftPane === undefined && props.keyword) {
+         if(!s) s = { ...state }
+         s.leftPane=  true 
+      }
+
       
       // update when language has changed
       if(props.langPreset && state.langPreset) for(let i = 0 ; i < props.langPreset.length && eq; i ++ ) { eq = eq && props.langPreset[i] === state.langPreset[i] ; }
@@ -457,7 +486,7 @@ class App extends Component<Props,State> {
 
       // pagination settings
       let d
-      if(state.id !== state.filters.datatype+"#"+props.keyword+"@"+props.language) { 
+      if(state.id !== state.filters.datatype.sort()+"#"+props.keyword+"@"+props.language) { 
          if(!s) s = { ...state }
          let sameKW = state.id && state.id.match(new RegExp("#"+props.keyword+"@"+props.language+"$"))
          let fromAny2Work = state.id && state.filters.datatype.indexOf("Work") !== -1 && state.id.match(/^Any/)
@@ -545,7 +574,7 @@ class App extends Component<Props,State> {
    }
 
 
-   handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
+   handleCheck = (ev:Event,lab:string,val:boolean,params?:{},force?:boolean) => {
 
       console.log("check::",lab,val,this.props.keyword,'('+this.state.keyword+')')
 
@@ -560,6 +589,8 @@ class App extends Component<Props,State> {
       if(this.state.results && this.state.results[this.state.id] && this.state.results[this.state.id].types) types = this.state.results[this.state.id].types
 
       let f = [lab]
+
+      let prevDT = [ ...this.state.filters.datatype ]
 
       let state =  { ...this.state, collapse: { ...this.state.collapse, HasExpr:true, Other:true, ExprOf:true, Abstract:true }, 
                      filters: {  datatype:f }, paginate:{index:0,pages:[0],n:[0]}, repage: true, 
@@ -576,7 +607,15 @@ class App extends Component<Props,State> {
 
             if(types.filter(i => !dt.includes(i)).length == 0) { dt = [ "Any" ] }
 
-            state = { ...state, filters:{ ...state.filters, datatype: dt }}
+            if(force) dt = [lab]
+            else prevDT = null
+
+            state = { ...state, filters:{ ...state.filters, datatype: dt, prevDT }}
+         }
+
+         if(["Any","Person","Work","Etext"].indexOf(lab) !== -1)
+         {
+            this.requestSearch(this.props.keyword,[lab])
          }
       }
       else if(!val)
@@ -593,8 +632,9 @@ class App extends Component<Props,State> {
 
             console.log("dt::",dt)
 
+            if(prevDT.length <= 1) prevDT = null
 
-            state = { ...state, filters:{ ...state.filters, datatype: dt }}
+            state = { ...state, filters:{ ...state.filters, datatype: dt, prevDT }}
          }
       }
 
@@ -957,15 +997,15 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
    setTypeCounts(types,counts)
    {
-
+      
       let m = 0 ;
-      if( this.props.datatypes.metadata) for(let r of Object.keys(this.props.datatypes.metadata) ){
+      if( this.props.datatypes && this.props.datatypes.metadata) for(let r of Object.keys(this.props.datatypes.metadata) ){
 
          //r = r.bindings
          let typ = r.replace(/^.*?([^/]+)$/,"$1")
          typ = typ[0].toUpperCase() + typ.slice(1)
 
-         // console.log("typ",typ)
+         //console.log("typ1",typ)
 
          if(typ != "" && types.indexOf(typ) === -1)
          {
@@ -978,12 +1018,38 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
          }
 
-         types = types.sort(function(a,b) { return Number(counts["datatype"][b]) - Number(counts["datatype"][a]) })
 
          //console.log("counts",counts,types)
 
       }
+      else if(this.state.searchTypes) for(let typ of this.state.searchTypes) {
+         
+         //console.log("typ2",typ)
 
+         if(typ != "" && types.indexOf(typ) === -1)
+         {
+
+            let n ; 
+            
+            if(this.props.searches[typ] && this.props.searches[typ][this.props.keyword+"@"+this.props.language]) {
+               n = this.props.searches[typ][this.props.keyword+"@"+this.props.language].numResults
+               if(n) n = Number(n)
+            }
+
+            types.push(typ);
+
+            if(n) {
+               counts["datatype"][typ]= n
+               counts["datatype"]["Any"]+= n
+            }
+
+         }
+
+         
+
+      }
+
+      if(types.length) types = types.sort(function(a,b) { return Number(counts["datatype"][b]) - Number(counts["datatype"][a]) })
 
       if(types.length == 2 && !this.state.autocheck)
       {
@@ -994,7 +1060,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          this.handleCheck(null, types[1], true)
       }
 
-      //console.log("types",types)
+      console.log("types",types,counts)
    }
 
    handleResOrOnto(message)
@@ -1002,14 +1068,25 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
       //message = []
 
       // general search or with datatype ?
-      let results ; 
-      if(this.state.filters.datatype[0] != "Any" && this.props.searches[this.state.filters.datatype[0]])
-         results = this.props.searches[this.state.filters.datatype[0]][this.props.keyword+"@"+this.props.language]
-      else
+      let results 
+      if(this.state.filters.datatype.indexOf("Any") !== -1 || this.state.filters.datatype.filter(d => ["Work","Etext","Person"].indexOf(d) === -1).length) {
          results = this.props.searches[this.props.keyword+"@"+this.props.language]
+      }
+      let Ts = [ ...this.state.searchTypes ]
+      for(let dt of this.state.filters.datatype) { 
+         if(dt === "Any") for(let t of searchTypes) { if(Ts.indexOf(t) === -1) Ts.push(t) }
+         else if(Ts.indexOf(dt) === -1) Ts.push(dt)
+      }
+      for(let dt of Ts) if(this.props.searches[dt]) {         
+         let res = this.props.searches[dt][this.props.keyword+"@"+this.props.language]
+         console.log("res",res)
+         if(res) {
+            if(!results) results = { results: { bindings:{} } }; 
+            results = { ...results, results:{bindings:{ ...results.results.bindings, ...res.results.bindings }}}
+         }
+      }
 
-
-      // console.log("results?",results,this.props.searches[this.props.keyword+"@"+this.props.language])
+      console.log("results?",this.state.filters.datatype,results,this.props.searches[this.props.keyword+"@"+this.props.language])
 
       // resource search ?
       if(this.props.language == "")
@@ -1092,6 +1169,14 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
       return results ;
    }
 
+   resetDT()
+   {
+      let datatype = this.state.filters.prevDT
+      if(!datatype) datatype  = [ "Any" ]
+      this.setState({ ...this.state, filters: { ...this.state.filters, datatype } } ) 
+      /*this.handleCheck(e,"Any",true,{},true)*/
+   }
+
    setWorkCateg(categ,paginate) //,categIndex)
    {
       let show  ;
@@ -1113,7 +1198,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
       
       console.log("categ",categ,paginate,show,JSON.stringify(params,null,3))
 
-      if(this.state.filters.datatype.indexOf("Work") === -1) this.handleCheck(null, "Work", true, params )
+      if(this.state.filters.datatype.indexOf("Work") === -1 || this.state.filters.datatype.length > 1) this.handleCheck(null, "Work", true, params, true )
       else this.setState({...this.state, ...params})
    }
 
@@ -1125,9 +1210,13 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
       let list = results.results.bindings
 
       let displayTypes = types //["Person"]
-      if(this.state.filters.datatype.indexOf("Any") === -1) displayTypes = this.state.filters.datatype ;
+      if(this.state.filters.datatype.indexOf("Any") === -1) { 
+         displayTypes = displayTypes.filter(d => this.state.filters.datatype.indexOf(d) !== -1) ;
+      }
 
-      //console.log("list x types",list,types,displayTypes)
+      //if(displayTypes.length) displayTypes = displayTypes.sort(function(a,b) { return searchTypes.indexOf(a) - searchTypes.indexOf(b) })
+
+      console.log("list x types",list,types,displayTypes)
 
       for(let t of displayTypes) {
 
@@ -1178,8 +1267,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          {
             if(!iniTitle) {
                iniTitle = true
-               if(displayTypes.length > 1 || displayTypes.indexOf("Any") !== -1) message.push(<MenuItem  onClick={(e)=>this.handleCheck(e,t,true)}><h4>{I18n.t("types."+t.toLowerCase())+"s"+(displayTypes.length>1&&counts["datatype"][t]?" ("+counts["datatype"][t]+")":"")}</h4></MenuItem>);
-               else message.push(<MenuItem><h4>{I18n.t("types."+t.toLowerCase())+"s"+(displayTypes.length>=1&&counts["datatype"][t]?" ("+counts["datatype"][t]+")":"")}</h4></MenuItem>);
+               if(displayTypes.length > 1 || displayTypes.indexOf("Any") !== -1) message.push(<MenuItem  onClick={(e)=>this.handleCheck(e,t,true,{},true)}><h4>{I18n.t("types."+t.toLowerCase())+"s"+(false && displayTypes.length>1&&counts["datatype"][t]?" ("+counts["datatype"][t]+")":"")}</h4></MenuItem>);
+               else message.push(<MenuItem><h4>{I18n.t("types."+t.toLowerCase())+"s"+(false && displayTypes.length>=1&&counts["datatype"][t]?" ("+counts["datatype"][t]+")":"")}</h4></MenuItem>);
             }
             absi ++ ;
 
@@ -1429,7 +1518,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
                         if(categChange && (cpt - lastN > 1 || tmpN > 3)) {// && (!pagin.bookmarks || (!pagin.bookmarks[categ] || !pagin.bookmarks[prevCateg] || pagin.bookmarks[categ] - pagin.bookmarks[prevCateg] > 3))) {
                            //console.log("bookM...",pagin.bookmarks)
-                           message.push(<MenuItem className="menu-categ-collapse" onClick={this.setWorkCateg.bind(this,prevCateg,pagin)}><h5>{I18n.t(this.state.collapse[prevCateg]==false?"misc.hide":"misc.show" ) + " " + t + "s / " + prevH5.replace(/ \([0-9]+\)$/,"") /*+" "+prevCateg*/}</h5></MenuItem>);                      
+                           message.push(<MenuItem className="menu-categ-collapse" onClick={this.setWorkCateg.bind(this,prevCateg,pagin)}><h5>{I18n.t(this.state.collapse[prevCateg]==false?"misc.hide":"misc.show" ) + " " + t + "s / " + prevH5.replace(/ \([0-9]+\)$/,"") + (pagin.bookmarks[prevCateg].nb ? " ("+pagin.bookmarks[prevCateg].nb +")":"") /*+" "+prevCateg*/}</h5></MenuItem>);                      
                         }
 
                         //console.log("bookM",pagin.bookmarks)
@@ -1437,7 +1526,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                         h5 = tip
                         if(h5 === "Work") h5 = "Other"
                         else h5 = tip.replace(/ ?Work ?/,"")
-                        if(pagin && pagin.bookmarks && pagin.bookmarks[categ] && pagin.bookmarks[categ].nb) h5 += " ("+pagin.bookmarks[categ].nb+")"
+                        //if(pagin && pagin.bookmarks && pagin.bookmarks[categ] && pagin.bookmarks[categ].nb) h5 += " ("+pagin.bookmarks[categ].nb+")"
                         if(!dontShow) message.push(
                            <MenuItem className="menu-categ" onClick={this.setWorkCateg.bind(this,categ,pagin)}>
                               <h5>{h5}</h5>
@@ -1551,20 +1640,20 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
             if(cpt >= max_cpt && cpt - lastN >= 1) {
                //if(displayTypes.length > 1 || displayTypes.indexOf("Any") !== -1) 
-               if(displayTypes.indexOf("Any") !== -1 && t !== "Work") message.push(<MenuItem className="menu-categ-collapse" onClick={(e)=>this.handleCheck(e,t,true)}><h5>{I18n.t("misc.show") +" "+t+"s" /*+" "+categ*/}</h5></MenuItem>);                      
+               if((displayTypes.length > 1 || displayTypes.indexOf("Any") !== -1) && t !== "Work") message.push(<MenuItem className="menu-categ-collapse" onClick={(e)=>this.handleCheck(e,t,true,{},true)}><h5>{I18n.t("misc.show") +" "+t+"s" +(counts["datatype"][t]?" ("+counts["datatype"][t]+")":"")/*+" "+categ*/}</h5></MenuItem>);                      
                else { 
-                  if(t === "Work") message.push(<MenuItem className="menu-categ-collapse" onClick={this.setWorkCateg.bind(this,categ,pagin)}><h5>{I18n.t(this.state.collapse[categ]==false?"misc.hide":"misc.show") + " " + t + "s / " + h5.replace(/ \([0-9]+\)$/,"") /*+" "+categ*/}</h5></MenuItem>);                      
+                  if(t === "Work") message.push(<MenuItem className="menu-categ-collapse" onClick={this.setWorkCateg.bind(this,categ,pagin)}><h5>{I18n.t(this.state.collapse[categ]==false?"misc.hide":"misc.show") + " " + t + "s / " + h5.replace(/ \([0-9]+\)$/,"") + (pagin.bookmarks[categ].nb ? " ("+pagin.bookmarks[categ].nb +")":"") /*+" "+categ*/}</h5></MenuItem>);                      
 
-                  if(/*t !== "Work" &&*/ displayTypes.length === 1 && displayTypes.indexOf("Any") === -1) message.push(<MenuItem className="menu-categ-collapse datatype" onClick={(e)=>this.handleCheck(e,"Any",true)}><h5>{I18n.t("misc.datatype")  /*+t+" "+categ*/}</h5></MenuItem>);                         
+                  if(/*t !== "Work" &&*/ displayTypes.length === 1 && displayTypes.indexOf("Any") === -1) message.push(<MenuItem className="menu-categ-collapse datatype" onClick={(e)=> this.resetDT() }><h5>{I18n.t("misc.datatype")  /*+t+" "+categ*/}</h5></MenuItem>);                         
                }
             }
-            else if(t !== "Work" && displayTypes.length === 1 && displayTypes.indexOf("Any") === -1 && iniTitle) message.push(<MenuItem className="menu-categ-collapse datatype" onClick={(e)=>this.handleCheck(e,"Any",true)}><h5>{I18n.t("misc.datatype")  /*+" "+categ*/}</h5></MenuItem>);                      
+            else if(t !== "Work" && displayTypes.length === 1 && displayTypes.indexOf("Any") === -1 && iniTitle) message.push(<MenuItem className="menu-categ-collapse datatype" onClick={(e)=>this.handleCheck(e,"Any",true,{},true)}><h5>{I18n.t("misc.datatype")  /*+" "+categ*/}</h5></MenuItem>);                      
          }
 
          if(!iniTitle && (displayTypes.length > 1 || displayTypes.indexOf("Any") !== -1) ) {
             iniTitle = true
-            message.push(<MenuItem  onClick={(e)=>this.handleCheck(e,t,true)}><h4>{I18n.t("types."+t.toLowerCase())+"s"+(displayTypes.length>1 && counts["datatype"][t]?" ("+counts["datatype"][t]+")":"")}</h4></MenuItem>);
-            message.push(<MenuItem className="menu-categ-collapse" onClick={(e)=>this.handleCheck(e,t,true)}><h5>{I18n.t("misc.show") +" "+t+"s" /*" "+categ */ }</h5></MenuItem>);                      
+            message.push(<MenuItem  onClick={(e)=>this.handleCheck(e,t,true,{},true)}><h4>{I18n.t("types."+t.toLowerCase())+"s"+(false && displayTypes.length>1 && counts["datatype"][t]?" ("+counts["datatype"][t]+")":"")}</h4></MenuItem>);
+            message.push(<MenuItem className="menu-categ-collapse" onClick={(e)=>this.handleCheck(e,t,true,{},true)}><h5>{I18n.t("misc.show") +" "+t+"s"+(counts["datatype"][t]?" ("+counts["datatype"][t]+")":"") /*" "+categ */ }</h5></MenuItem>);                      
          }
          //console.log("end pagin",pagin,paginate)
          if(pagin) {
@@ -1589,15 +1678,25 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
       let message = []
       let results = this.handleResOrOnto(message);      
       let resMatch = message.length
-      let id = this.state.filters.datatype + "#" + this.props.keyword + "@" + this.props.language
+      let resLength = 0;
+      if(results && results.results && results.results.bindings)
+         resLength = Object.keys(results.results.bindings).filter(d => { 
+                        let t = d[0].toUpperCase()+d.slice(1).replace(/s$/,"")
+                        console.log("t",t)
+                        return searchTypes.indexOf(t) !== -1 
+                     }).reduce((acc,e)=>acc+Object.keys(results.results.bindings[e]).length,0)
+      let id = this.state.filters.datatype.sort() + "#" + this.props.keyword + "@" + this.props.language
 
-      //console.log("res::",id,results,message,message.length)
+      console.log("res::",id,results,message,message.length,resLength)
 
       let sta = { ...this.state }
-      if(resMatch == 0 && (!results || results.numResults == 0) ) {
+
+      this.setTypeCounts(types,counts);
+
+      if(counts.datatype["Any"] === 0 && !this.props.loading && !this.props.datatypes) { //resMatch == 0 && (!results  || results.numResults == 0) ) {
          if(!this.props.loading && (!this.props.resource || !this.props.resource[this.props.keyword]) ) message.push(
             <Typography style={{fontSize:"1.5em",maxWidth:'700px',margin:'50px auto',zIndex:0}}>
-               No result found.
+               No result found. 
             </Typography>
          )
          if(!sta.results || !sta.results[id]) {
@@ -1610,16 +1709,19 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
       {
          //if(sta.results) console.log("results::",JSON.stringify(Object.keys(sta.results),null,3),sta)
 
+         /*
          if(!this.props.datatypes || !this.props.datatypes.metadata)
          {
             //console.log("dtp?",this.props.datatypes)
          }
          else {
-            this.setTypeCounts(types,counts);
+            
          }
+         */
+            
 
          let paginate = [], bookmarks, noBookM = false;
-         if(sta.id !== id || sta.repage || !sta.results || !sta.results[id] || (sta.results[id].resMatch != resMatch) || ( sta.results[id].message.length <= 1) || Object.keys(sta.results[id].counts.datatype).length != Object.keys(counts.datatype).length ) { 
+         if(sta.id !== id || sta.repage || !sta.results || !sta.results[id] || (sta.results[id].resLength != resLength) || (sta.results[id].resMatch != resMatch) || ( sta.results[id].message.length <= 1) || Object.keys(sta.results[id].counts.datatype).length != Object.keys(counts.datatype).length ) { 
             if(sta.id == id && this.state.paginate && this.state.paginate.pages && this.state.paginate.pages.length > 1) paginate = [ this.state.paginate ]
             if(sta.results && sta.results[id] && sta.results[id].bookmarks) bookmarks = sta.results[id].bookmarks                        
             else noBookM = true
@@ -1636,11 +1738,11 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
          //console.log("mesg",id,message,types,counts,JSON.stringify(paginate,null,3))
 
-         if(sta.id !== id || sta.repage || !sta.results || !sta.results[id] || (sta.results[id].resMatch != resMatch) || ( sta.results[id].message.length < message.length ) || Object.keys(sta.results[id].counts.datatype).length != Object.keys(counts.datatype).length) {
+         if(sta.id !== id || sta.repage || !sta.results || !sta.results[id] || (sta.results[id].resLength != resLength) || (sta.results[id].resMatch != resMatch) || ( sta.results[id].message.length < message.length ) || Object.keys(sta.results[id].counts.datatype).length != Object.keys(counts.datatype).length) {
             if(!sta.results) sta.results = {}
             if(!sta.results[id]) sta.results[id] = {}
             
-            let newSta = { message, types, counts, resMatch }
+            let newSta = { message, types, counts, resMatch, resLength }
             if(bookmarks) { 
                newSta.bookmarks = bookmarks
             }
@@ -1705,7 +1807,15 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             //message.push(this.makeResult("P6161",null,"Person","zhi ba lha/","bo-x-ewts"))
          }
 
-         types = [ "Any", ...searchTypes.slice(1) ] //["Any","Person","Work","Corporation","Place", /*"Item",*/ "Etext","Role","Topic","Lineage"]
+         types = this.state.searchTypes //[ /*"Any",*/ ...searchTypes.slice(1) ] //["Any","Person","Work","Corporation","Place", /*"Item",*/ "Etext","Role","Topic","Lineage"]
+         /*
+         let e = types.indexOf("Etext")
+         if(e !== -1) { 
+            delete types[e]
+            types = types.filter(e => e)
+            console.log("types",types)
+         }
+         */
          //types = types.sort()
       }
       else {
@@ -2012,7 +2122,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      </Collapse>
                      {
 
-                        meta  && this.props.config && this.props.ontology && metaK.map((j) =>
+                        meta && this.state.filters.datatype && this.state.filters.datatype.length === 1 && this.state.filters.datatype.indexOf("Any") === -1 && this.props.config && this.props.ontology && metaK.map((j) =>
                         {
 
                            let jpre = this.props.config.facets[this.state.filters.datatype[0]][j]
@@ -2385,10 +2495,16 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
            <div id="data-checkbox">
             <FormGroup row>
                { 
-                  searchTypes.map(d => 
+                  this.state.searchTypes.indexOf("Any") === -1 && searchTypes.map(d => 
                      <FormControlLabel className="data-checkbox" control={
                         <Checkbox onChange={(event, checked) => this.handleSearchTypes(event,d,checked)} checked={ this.state.searchTypes.indexOf("Any") !== -1 || this.state.searchTypes.indexOf(d) !== -1} color="black" icon={<PanoramaFishEye/>} checkedIcon={<CheckCircle/>} /> 
                      } label={d} /> ) 
+               }
+               { 
+                  this.state.searchTypes.indexOf("Any") !== -1 &&
+                     <FormControlLabel className="data-checkbox" control={
+                        <Checkbox onChange={(event, checked) => this.handleSearchTypes(event,"Any",checked)} checked={ true } color="black" icon={<PanoramaFishEye/>} checkedIcon={<CheckCircle/>} /> 
+                     } label={"All Data Types"} />  
                }
             </FormGroup>
            </div>
@@ -2413,11 +2529,11 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                }
                { this.props.loading && <Loader className="mainloader"/> }
                { message.length == 0 && !this.props.loading &&
-                  <List id="samples" style={{maxWidth:"800px",margin:"50px auto",textAlign:"left",zIndex:0}}>
+                  <List id="samples" style={{maxWidth:"800px",margin:"20px auto",textAlign:"left",zIndex:0}}>
                      { messageD }
                   </List> }
                { message.length > 0 &&
-                  <List key={2} id="results" style={{maxWidth:"800px",margin:"50px auto",textAlign:"left",zIndex:0}}>
+                  <List key={2} id="results" style={{maxWidth:"800px",margin:"20px auto",textAlign:"left",zIndex:0}}>
                      { message }
                      <div id="pagine">
                         <NavigateBefore

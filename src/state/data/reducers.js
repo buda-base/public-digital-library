@@ -584,11 +584,18 @@ reducers[actions.TYPES.foundResults] = foundResults;
 
 export const foundDatatypes = (state: DataState, action: actions.FoundResultsAction) => {
 
+   let DT = state.datatypes;
+   if(DT) DT = DT[action.payload.keyword+"@"+action.payload.language]
+
    return {
       ...state,
       datatypes : {
          ...state.datatypes,
-         [action.payload.keyword+"@"+action.payload.language]: action.payload.results         
+         [action.payload.keyword+"@"+action.payload.language]: {
+            ...DT,
+            ...action.payload.results,
+            metadata:{ ...(DT && DT.metadata?DT.metadata:{}), ...action.payload.results.metadata }
+         }
       }
    }
 }
