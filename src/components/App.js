@@ -635,10 +635,14 @@ class App extends Component<Props,State> {
             if(prevDT.length <= 1) prevDT = null
 
             state = { ...state, filters:{ ...state.filters, datatype: dt, prevDT }}
+
+            if(dt.length === 1) this.requestSearch(this.props.keyword,[dt[0]]);
          }
+
       }
 
       this.setState(state)
+      console.log("state::",JSON.stringify(state.collapse,null,3))
 
    }
 
@@ -1069,7 +1073,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
       // general search or with datatype ?
       let results 
-      if(this.state.filters.datatype.indexOf("Any") !== -1 || this.state.filters.datatype.filter(d => ["Work","Etext","Person"].indexOf(d) === -1).length) {
+      if(this.state.filters.datatype.indexOf("Any") !== -1 || this.state.filters.datatype.length > 1 || this.state.filters.datatype.filter(d => ["Work","Etext","Person"].indexOf(d) === -1).length ) {
          results = this.props.searches[this.props.keyword+"@"+this.props.language]
       }
       let Ts = [ ...this.state.searchTypes ]
