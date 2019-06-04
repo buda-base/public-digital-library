@@ -157,7 +157,9 @@ else if(!iri && params && params.q) {
    console.log("state q",state.data,params,iri)
 
    let dontGetDT = false
-   if(params.t) for(let pt of params.t.split(",")) if(!params.t.match(/,/) && ["Person","Work","Etext"].indexOf(pt) !== -1) {
+   let pt = params.t
+   if(pt && !pt.match(/,/) && ["Person","Work","Etext"].indexOf(pt) !== -1)  {
+
       if(!state.data.searches || !state.data.searches[pt] || !state.data.searches[pt][params.q+"@"+params.lg])  {
          store.dispatch(dataActions.startSearch(params.q,params.lg,[pt],null,dontGetDT)); 
          dontGetDT = true
@@ -166,7 +168,7 @@ else if(!iri && params && params.q) {
          store.dispatch(dataActions.foundResults(params.q,params.lg,state.data.searches[pt][params.q+"@"+params.lg],pt))  
          store.dispatch(dataActions.foundDatatypes(params.q,params.lg,state.data.datatypes[params.q+"@"+params.lg]))
       }
-
+   
       //store.dispatch(uiActions.selectType(pt));
    }
    else //if(params.t) { //} && ["Any"].indexOf(params.t) !== -1)   

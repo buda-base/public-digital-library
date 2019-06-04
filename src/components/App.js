@@ -1693,7 +1693,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
       this.setTypeCounts(types,counts);
 
-      if(counts.datatype["Any"] === 0 && !this.props.loading && !this.props.datatypes) { //resMatch == 0 && (!results  || results.numResults == 0) ) {
+      if((results && results.numResults === 0) || (counts.datatype["Any"] === 0 && !this.props.loading && !this.props.datatypes) ) { //resMatch == 0 && (!results  || results.numResults == 0) ) {
          if(!this.props.loading && (!this.props.resource || !this.props.resource[this.props.keyword]) ) message.push(
             <Typography style={{fontSize:"1.5em",maxWidth:'700px',margin:'50px auto',zIndex:0}}>
                No result found. 

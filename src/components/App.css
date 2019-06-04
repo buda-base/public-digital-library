@@ -381,5 +381,5 @@ svg.hide { opacity:0;pointer-events:none; }
    .SearchPane { width: calc(100% - 400px); }
    .SidePane:not(.visible) + .SearchPane { width:100%; }
 
-   #data-checkbox { justify-content: center;padding-left:0px;padding-right:110px; }
+   /* #data-checkbox { justify-content: center;padding-left:0px;padding-right:110px; } */
 }
