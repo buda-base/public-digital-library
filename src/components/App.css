@@ -120,7 +120,9 @@ h4 { margin-top:10px;margin-bottom:0px;font-size:24px; }
 .resource  .sub .sub .subsub h4.first.prop { font-style:normal;}
 .resource .sub .sub { padding-left:60px;}
 
-.resource .data .chunk ~ h4 { font-size:25px;line-height:40px;margin-bottom:10px; }
+.resource .data #etext-scroll,
+.resource .data .chunk { display:block;}
+.resource .data .chunk ~ h4 { font-size:25px;line-height:40px;margin-bottom:10px; display:inline; }
 
 .resource .data h3 a.propref,.resource .data h4 a.propref { color:black; }
 .resource .data h3 a.propref:hover,.resource .data h4 a.propref:hover { border-bottom:1px solid black;}

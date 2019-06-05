@@ -141,7 +141,13 @@ const prefixes = { adm, bdac, bdan, bdo, bdr, foaf, oa, owl, rdf, rdfs, skos, tm
 
 let propOrder = {
    "Corporation":[],
-   "Etext":[],
+   "Etext":[
+      "bdo:itemForWork",
+      "bdo:eTextInVolume",
+      "bdo:eTextVolumeIndex",
+      "bdo:eTextInItem",
+      "bdo:isRoot",
+   ],
    "Item":[
       "bdo:itemForWork",
       "bdo:itemVolumes"
@@ -436,7 +442,7 @@ class ResourceViewer extends Component<Props,State>
       return str ;
    }
 
-   pretty(str:string,isUrl:boolean=false) //,stripuri:boolean=true)
+   pretty(str:string,isUrl:boolean=false,noNewline:boolean=false) //,stripuri:boolean=true)
    {
 
       for(let p of Object.values(prefixes)) { str = str.replace(new RegExp(p,"g"),"") }
@@ -446,7 +452,7 @@ class ResourceViewer extends Component<Props,State>
       if(!str.match(/ /) && !str.match(/^http[s]?:/)) str = str.replace(/([a-z])([A-Z])/g,"$1"+(isUrl?"":' ')+"$2")
 
       if(str.match(/^https?:\/\/[^ ]+$/)) { str = <a href={str} target="_blank">{str}</a> }
-      else {
+      else if(!noNewline) {
          str = str.split("\n").map((i) => ([i,<br/>]))
          str = [].concat.apply([],str);
          str.pop();
@@ -572,7 +578,7 @@ class ResourceViewer extends Component<Props,State>
          {
             let that = this ;
 
-            //console.log("sort",prop)
+            //console.log("sort",prop,propOrder[t])
 
             let sortProp = Object.keys(prop).map(e => {
                let index = propOrder[t].indexOf(e)
@@ -594,7 +600,10 @@ class ResourceViewer extends Component<Props,State>
 
             sortProp = sortProp.reduce((acc,e) => {
 
+               if(e.value === bdo+"eTextHasChunk") return { ...acc, [e.value]:prop[e.value]}
+
                //console.log("sorting",e,prop[e])
+
                if(e.value === bdo+"workHasPart" || e.value === bdo+"workHasExpression" ) {
                   //console.log("skip sort parts",prop[e][0],prop[e])
                   return { ...acc, [e.value]:prop[e.value] }
@@ -632,7 +641,7 @@ class ResourceViewer extends Component<Props,State>
                }) })},{})
 
 
-           // console.log("propSort",prop,sortProp)
+            //console.log("propSort",prop,sortProp)
 
             return sortProp
          }
@@ -642,7 +651,7 @@ class ResourceViewer extends Component<Props,State>
 
 
 
-   fullname(prop:string,isUrl:boolean=false)
+   fullname(prop:string,isUrl:boolean=false,noNewline:boolean=false)
    {
       for(let p of Object.keys(prefixes)) { prop = prop.replace(new RegExp(p+":","g"),prefixes[p]) }
 
@@ -666,7 +675,7 @@ class ResourceViewer extends Component<Props,State>
          //return this.props.ontology[prop][rdfs+"label"][0].value
       }
 
-      return this.pretty(prop,isUrl)
+      return this.pretty(prop,isUrl,noNewline)
    }
 
    hasValue(val:[],k:string)
@@ -802,7 +811,7 @@ class ResourceViewer extends Component<Props,State>
    {
       if(elem) {
 
-         //console.log("uriformat",prop,elem.value,dico,withProp)
+         console.log("uriformat",prop,elem.value,dico,withProp)
 
          if(!elem.value.match(/^http:\/\/purl\.bdrc\.io/)) {
             return <a href={elem.value} target="_blank">{decodeURI(elem.value)}</a> ;
@@ -969,10 +978,14 @@ class ResourceViewer extends Component<Props,State>
 
    getResourceBNode(prop:string)
    {
-      if(!this.props.IRI || !this.props.resources || !this.props.resources[this.props.IRI]
-         || !this.props.resources[this.props.IRI][prop]) return ;
 
-      let elem = this.props.resources[this.props.IRI][prop]
+      if(!this.props.IRI)  return ;         
+
+      let elem ; 
+      if(this.props.resources && this.props.resources[this.props.IRI] && this.props.resources[this.props.IRI][prop])
+         elem = this.props.resources[this.props.IRI][prop]
+      //else if(this.props.assocResources && this.props.assocResources[prop])
+      //   elem = this.props.assocResources[prop].reduce((acc,e) =>({...acc,[e.fromKey]:[e]}),{})
 
       return elem
    }
@@ -1043,7 +1056,7 @@ class ResourceViewer extends Component<Props,State>
          if(e.value || e.value === "") value = e.value
          else if(e["@value"]) value = e["@value"]
          else if(e["@id"]) value = e["@id"]
-         let pretty = this.fullname(value)
+         let pretty = this.fullname(value,null,prop === bdo+"eTextHasChunk")
 
          if(value === bdr+"LanguageTaxonomy") continue ;
 
@@ -2269,12 +2282,13 @@ class ResourceViewer extends Component<Props,State>
                      return (
 
                         <InfiniteScroll
+                           id="etext-scroll"
                            hasMore={true}
                            pageStart={0}
                            loadMore={(e) => this.props.onGetChunks(this.props.IRI,elem.length)}
                            //loader={<Loader loaded={false} />}
                            >
-                           <h3 class="chunk"><span>{this.fullname(k)}</span>:&nbsp;</h3>
+                           <h3 class="chunk"><span>{this.proplink(k)}</span>:&nbsp;</h3>
                               {this.hasSub(k)?this.subProps(k):tags.map((e)=> [e," "] )}
                            {/* // import make test fail...
                               <div class="sub">

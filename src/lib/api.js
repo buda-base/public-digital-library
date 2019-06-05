@@ -25,8 +25,8 @@ const dPrefix = {
 };
 
 export function getEntiType(t:string):string {
-   let v = t.replace(/^(bdr:)?([CEILGPRTWOV][RT]?).*$/,"$2")
-   // console.log("v",v,dPrefix[v])
+   let v = t.replace(/^(bdr:)?([CEILGPRTWOVU][RT]?).*$/,"$2")
+   //console.log("v",v,dPrefix[v])
    if(!dPrefix[v]) return "" ;
    else return dPrefix[v]; }
 

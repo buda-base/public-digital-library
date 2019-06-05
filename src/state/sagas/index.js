@@ -104,11 +104,19 @@ async function initiateApp(params,iri,myprops) {
 
       store.dispatch(dataActions.getChunks(iri));
 
+         
+
       let assoRes = {"data":Object.keys(res).reduce((acc,e)=>{
          //return ({...acc,[e]:Object.keys(res[e]).map(f => ( { type:f, ...res[e][f] } ) ) } )
-         return ({...acc, [e]: Object.keys(res[e]).reduce(
-            (acc,f) => ([...acc, ...res[e][f] ]),
-            [])})
+            let val = Object.keys(res[e]).reduce(
+               (acc,f) => { 
+                  if(f.match(/[Ll]abel/))
+                     return ([...acc, ...res[e][f] ]) 
+                  else return acc ;
+                  },
+               [])
+            if(!val.length) return acc ;
+            else return ({...acc, [e]:val })
          },{})}
 
          //console.log("gotAR",JSON.stringify(assoRes,null,3));
@@ -118,7 +126,7 @@ async function initiateApp(params,iri,myprops) {
          res = { [bdr+iri.replace(/^bdr:/,"")] : Object.keys(res).reduce((acc,e) => {
 
             //if(Object.keys(res[e]).indexOf(skos+"prefLabel") === -1)
-            return ({...acc, ...Object.keys(res[e]).reduce(
+            return ({...acc, ...Object.keys(res[e]).filter(k => k !== bdo+"itemHasVolume").reduce(
                (acc,f) => ({...acc,[f]:res[e][f]}),
                {}) })
                //else
