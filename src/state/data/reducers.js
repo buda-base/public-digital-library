@@ -157,7 +157,12 @@ export const gotAssocResources = (state: DataState, action: Action) => {
            },
            "assocResources": {
               ...state.assocResources,
-              [action.payload]:action.meta.data
+              [action.payload]:{ ...action.meta.data, ...Object.keys(res).reduce((acc,k) => {
+                     return { ...acc,[k]:Object.keys(res[k]).reduce( (accR,kR) => {
+                        return [ ...accR, ...res[k][kR].map(e => ({ ...e, "fromKey":kR }) ) ]
+                     },[]) }
+                  },{}) 
+              }
           }
        }
 

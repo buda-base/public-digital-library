@@ -999,7 +999,7 @@ class ResourceViewer extends Component<Props,State>
 
          //div = div +"sub"
 
-         // console.log("?bnode",elem)
+         //console.log("?bnode",elem)
 
          //return this.format(Tag,prop,txt,false,div)
 
@@ -1012,7 +1012,7 @@ class ResourceViewer extends Component<Props,State>
       else {
          elem = this.getResourceElem(prop)
 
-         // console.log("?normal",elem)
+         //console.log("?normal",elem)
       }
 
       /*
@@ -1046,6 +1046,11 @@ class ResourceViewer extends Component<Props,State>
          if(value === bdr+"LanguageTaxonomy") continue ;
 
          //console.log("e",e,pretty,value)
+
+         if(this.props.assocResources && this.props.assocResources[value] && this.props.assocResources[value][0] && this.props.assocResources[value][0].fromKey) { 
+            e.type = "bnode"
+            //console.log("aRes",this.props.assocResources[value])
+         }
 
          if(e.type != "bnode")
          {
@@ -1188,6 +1193,7 @@ class ResourceViewer extends Component<Props,State>
          else {
 
             elem = this.getResourceBNode(e.value)
+            
             //console.log("bnode",e.value,elem)
 
             if(!elem) continue ;
