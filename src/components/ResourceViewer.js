@@ -1996,7 +1996,7 @@ class ResourceViewer extends Component<Props,State>
                   {
                      //console.log("note",tags,k);//tags = [<h4>Note</h4>]
                   }
-                  else if(k == bdo+"itemHasVolume")
+                  else if(k == bdo+"itemHasVolume" || k == bdo+"volumeHasEtext")
                   {
 
                      tags = tags.map(e => {
@@ -2008,9 +2008,15 @@ class ResourceViewer extends Component<Props,State>
                            key = key.props
                            if(key) key = key.children
 
-                           //console.log("key",key)
-
-                           if(key && key[0] && key[0].props && key[0].props.children
+                           if(key && key[1] && key[1].props && key[1].props.children)
+                           {
+                              key = key[1].props.children
+                              if(key && key[1] && key[1].props && key[1].props.children) {
+                                 key = Number(key[1].props.children[0])
+                                 //console.log("key",key)
+                              }
+                           }
+                           else if(key && key[0] && key[0].props && key[0].props.children
                               && (
                                     key[0].props.children == "Etext Volume: "
                                     ||
