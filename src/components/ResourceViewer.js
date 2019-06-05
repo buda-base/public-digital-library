@@ -188,7 +188,8 @@ let propOrder = {
       "bdo:workGenre",
       // "bdo:creatorMainAuthor",
       // "bdo:creatorContributingAuthor",
-      "bdo:workCreator",
+      "bdo:creator",
+      //"bdo:workCreator",
       "bdo:workLangScript",
       "bdo:workObjectType",
       "bdo:workMaterial",
@@ -202,6 +203,7 @@ let propOrder = {
       "bdo:workPartOf",
       "bdo:workHasPart",
       "bdo:note",
+      "bdo:workCatalogInfo",
       "bdo:workHasSourcePrintery",
    ],
    "Taxonomy":[],
@@ -1282,7 +1284,7 @@ class ResourceViewer extends Component<Props,State>
                   if(f === tmp+"noteFinal")
                   {
                      let note = []
-                     //console.log("noteData",noteData)
+                     console.log("noteData",noteData)
                      if(noteData[bdo+"noteText"])
                      {
                         let workuri ;
@@ -1412,7 +1414,7 @@ class ResourceViewer extends Component<Props,State>
                         }
                      }
                   }
-                  if(!noVal)sub.push(<div className={div+"sub "+(hasBnode?"full":"")}>{subsub}</div>)
+                  if(!noVal && !f.match(/[/]note[^F]/)) sub.push(<div className={div+"sub "+(hasBnode?"full":"")}>{subsub}</div>)
                   else {
 
                      if(subsub.length > 0) sub.push(subsub) //<div className="sub">{subsub}</div>)
