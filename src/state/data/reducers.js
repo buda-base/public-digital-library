@@ -573,7 +573,7 @@ export const foundResults = (state: DataState, action: actions.FoundResultsActio
    {
       searches = {
             ...state.searches,
-            [action.payload.keyword + "@" + action.payload.language]: action.payload.results
+            [action.payload.keyword + "@" + action.payload.language]: { ...action.payload.results, time:Date.now() }
             }
    }
    else {
@@ -581,7 +581,7 @@ export const foundResults = (state: DataState, action: actions.FoundResultsActio
             ...state.searches,
             [action.payload.datatype[0]] : {
                ...state.searches[action.payload.datatype[0]],
-               [action.payload.keyword + "@" + action.payload.language]: action.payload.results
+               [action.payload.keyword + "@" + action.payload.language]: { ...action.payload.results, time:Date.now() }
             }
       }
    }

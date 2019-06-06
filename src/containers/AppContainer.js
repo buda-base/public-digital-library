@@ -53,7 +53,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       },
       onStartSearch:(k:string,lg:string,t?:string[],s?:string) => {
          dispatch(data.startSearch(k,lg,t,s));
-         if(t && t.length > 0) dispatch(ui.selectType(t[0]));
+         //if(t && t.length > 0) dispatch(ui.selectType(t[0]));
       },
       onSearchingKeyword:(k:string,lg:string,t:string[]) => {
          dispatch(data.searchingKeyword(k,lg,t))

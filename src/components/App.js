@@ -57,6 +57,7 @@ import {getEntiType} from '../lib/api';
 import {sortLangScriptLabels, extendedPresets} from '../lib/transliterators';
 import './App.css';
 
+const admd  = "http://purl.bdrc.io/admindata/" ;
 const adm  = "http://purl.bdrc.io/ontology/admin/" ;
 const bdo  = "http://purl.bdrc.io/ontology/core/";
 const bdr  = "http://purl.bdrc.io/resource/";
@@ -67,7 +68,7 @@ const skos = "http://www.w3.org/2004/02/skos/core#";
 const tmp = "http://purl.bdrc.io/ontology/tmp/" ;
 const _tmp = tmp ;
 
-export const prefixes = [adm, bdo,bdr,rdf,rdfs,skos,tmp,_tmp,oa]
+export const prefixes = [adm, admd, bdo,bdr,rdf,rdfs,skos,tmp,_tmp,oa]
 export const prefixesMap = {adm, bdo,bdr,rdf,rdfs,skos,tmp,_tmp,oa}
 
 
@@ -399,7 +400,7 @@ class App extends Component<Props,State> {
 
       }
       else {
-         
+         console.log("here")         
          this.props.history.push({pathname:"/search",search:"?q="+key+"&lg="+this.getLanguage()+"&t="+label})
       }
       /*
@@ -492,7 +493,100 @@ class App extends Component<Props,State> {
          let fromAny2Work = state.id && state.filters.datatype.indexOf("Work") !== -1 && state.id.match(/^Any/)
          //console.log("colla",sameKW,fromAny2Work)
          if(!state.id || !(sameKW && fromAny2Work)) 
-            for(let c of ["Other","ExprOf", "HasExpr", "Abstract"]) if(s.collapse[c] != undefined) delete s.collapse[c]
+            for(let c of ["Other","ExprOf", "HasExpr", "Abstract"]) if(s.collapse[c] != undefined) delete s.collapse[c]         
+      }
+
+      if(state.id && (!state.results || !state.results[state.id] || !state.results[state.id].results 
+         || (props.searches[props.keyword+"@"+props.language] && props.searches[props.keyword+"@"+props.language].time > state.results[state.id].results.time)
+         )) {
+         
+         console.log("ehoh")
+
+         let time
+         if(props.searches[props.keyword+"@"+props.language]) { 
+            time = props.searches[props.keyword+"@"+props.language].time
+         }
+         else {
+
+         }
+
+         let results
+         if(state.filters.datatype.indexOf("Any") !== -1 || state.filters.datatype.length > 1 || state.filters.datatype.filter(d => ["Work","Etext","Person"].indexOf(d) === -1).length ) {
+            results = props.searches[props.keyword+"@"+props.language]
+         }
+         let Ts = [ ...state.searchTypes ]
+         for(let dt of state.filters.datatype) { 
+            if(dt === "Any") for(let t of searchTypes) { if(Ts.indexOf(t) === -1) Ts.push(t) }
+            else if(Ts.indexOf(dt) === -1) Ts.push(dt)
+         }
+         for(let dt of Ts) if(props.searches[dt]) {         
+            let res = props.searches[dt][props.keyword+"@"+props.language]
+            
+            console.log("res!",res)
+            
+            if(res) {
+               let dts = dt.toLowerCase()+"s"
+               if(!results) {
+                  results = props.searches[props.keyword+"@"+props.language]
+                  if(results) { results = { time:results.time, results: { bindings:{ [dts]:{ ...results.results.bindings[dts] } } } }; }
+                  else results = { results: { bindings:{ } } }
+               }
+               results = { ...res, results:{bindings:{ [dts]:{ ...results.results.bindings[dts], ...Object.keys(res.results.bindings[dts]).reduce( (acc,k) =>{
+                  //console.log("dts",dts,k,results.results.bindings)
+                  return {
+                     ...acc, 
+                     [k]:[ ...res.results.bindings[dts][k].filter( p => (!time || !p.value || !p.value.match(/[Aa]bstract|[Mm]atch/ || !p.type || !p.type.match(/[Ee]xpression/)))),                      
+                           ...(!time||dts!=="works"?[]:results.results.bindings[dts][k]) //.filter( p => (p.type && p.type.match(/[Aa]bstract|[Ee]xpression/)))) 
+                        ] 
+                  }
+               }, {}) } } } }
+
+               console.log("rootres",JSON.stringify(results,null,3))
+
+            }
+         }
+         if(!results) { 
+            //results = { results:{ bindings:{} }, numResults:0 }
+         }
+         else {
+
+            if(results && results.results && results.results.bindings && results.results.bindings.works) {
+
+               let works = results.results.bindings.works
+
+               let ordered = Object.keys(works).sort((a,b) => {
+                  let propAbsA = works[a].filter((e)=>(e.value.match(/AbstractWork/)))
+                  let propAbsB = works[b].filter((e)=>(e.value.match(/AbstractWork/)))
+                  let propExpA = works[a].filter((e)=>(e.type.match(/HasExpression/)))
+                  let propExpB = works[b].filter((e)=>(e.type.match(/HasExpression/)))
+                  let propExpOfA = works[a].filter((e)=>(e.type.match(/ExpressionOf/)))
+                  let propExpOfB = works[b].filter((e)=>(e.type.match(/ExpressionOf/)))
+
+                  if(propAbsA.length > 0) return -1 ;
+                  else if(propAbsB.length > 0) return 1 ;
+                  else if(propExpA.length > 0 && propExpB.length == 0) return -1 ;
+                  else if(propExpB.length > 0 && propExpA.length == 0) return 1 ;
+                  else if(propExpOfA.length > 0 && propExpOfB.length == 0) return -1 ;
+                  else if(propExpOfB.length > 0 && propExpOfA.length == 0) return 1 ;
+                  else return 0;
+               })
+
+               let tmp = {}
+               for(let o of ordered) { tmp[o] = works[o]; 
+               
+                  //console.log("o",o,tmp[o].filter(e => e.value && e.value.match(/[Aa]bstract/)))
+               }
+               results.results.bindings.works = tmp
+               // results = ordered.reduce((acc,k) => { acc[k]=results[k]; },{})
+            }
+
+            if(!s) s = { ...state }
+            if(!s.results) s.results = {}
+            if(!s.results[s.id]) s.results[s.id] = {}
+            s.results[s.id].results = results        
+            s.results[s.id].repage = true
+            if(time) s.results[s.id].results.time = time
+         }
       }
 
       if(s) { 
@@ -616,6 +710,7 @@ class App extends Component<Props,State> {
          if(["Any","Person","Work","Etext"].indexOf(lab) !== -1)
          {
             this.requestSearch(this.props.keyword,[lab])
+            //state = { ...state, filters:{ ...state.filters, datatype: [lab] }}
          }
       }
       else if(!val)
@@ -1067,30 +1162,15 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
       console.log("types",types,counts)
    }
 
-   handleResOrOnto(message)
+   handleResOrOnto(message,id)
    {
       //message = []
 
       // general search or with datatype ?
-      let results 
-      if(this.state.filters.datatype.indexOf("Any") !== -1 || this.state.filters.datatype.length > 1 || this.state.filters.datatype.filter(d => ["Work","Etext","Person"].indexOf(d) === -1).length ) {
-         results = this.props.searches[this.props.keyword+"@"+this.props.language]
-      }
-      let Ts = [ ...this.state.searchTypes ]
-      for(let dt of this.state.filters.datatype) { 
-         if(dt === "Any") for(let t of searchTypes) { if(Ts.indexOf(t) === -1) Ts.push(t) }
-         else if(Ts.indexOf(dt) === -1) Ts.push(dt)
-      }
-      for(let dt of Ts) if(this.props.searches[dt]) {         
-         let res = this.props.searches[dt][this.props.keyword+"@"+this.props.language]
-         console.log("res",res)
-         if(res) {
-            if(!results) results = { results: { bindings:{} } }; 
-            results = { ...results, results:{bindings:{ ...results.results.bindings, ...res.results.bindings }}}
-         }
-      }
-
-      console.log("results?",this.state.filters.datatype,results,this.props.searches[this.props.keyword+"@"+this.props.language])
+      let results ;
+      if(this.state.results && this.state.results[id] && this.state.results[id].results) results = this.state.results[id].results
+      
+      //console.log("results?",this.state.filters.datatype,JSON.stringify(results,null,3),this.props.searches[this.props.keyword+"@"+this.props.language])
 
       // resource search ?
       if(this.props.language == "")
@@ -1679,8 +1759,9 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
       let types = ["Any"]
       let counts = { "datatype" : { "Any" : 0 } }
+      let id = this.state.filters.datatype.sort() + "#" + this.props.keyword + "@" + this.props.language
       let message = []
-      let results = this.handleResOrOnto(message);      
+      let results = this.handleResOrOnto(message,id);      
       let resMatch = message.length
       let resLength = 0;
       if(results && results.results && results.results.bindings)
@@ -1689,7 +1770,6 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                         console.log("t",t)
                         return searchTypes.indexOf(t) !== -1 
                      }).reduce((acc,e)=>acc+Object.keys(results.results.bindings[e]).length,0)
-      let id = this.state.filters.datatype.sort() + "#" + this.props.keyword + "@" + this.props.language
 
       console.log("res::",id,results,message,message.length,resLength)
 
@@ -1705,7 +1785,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          )
          if(!sta.results || !sta.results[id]) {
             if(!sta.results) sta.results = {}
-            sta.results[id] = { message, types, counts, resMatch }
+            sta.results[id] = { message, types, counts, resMatch, results }
             this.setState(sta);
          }
       }
@@ -1746,7 +1826,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             if(!sta.results) sta.results = {}
             if(!sta.results[id]) sta.results[id] = {}
             
-            let newSta = { message, types, counts, resMatch, resLength }
+            let newSta = { message, types, counts, resMatch, resLength, results }
             if(bookmarks) { 
                newSta.bookmarks = bookmarks
             }
