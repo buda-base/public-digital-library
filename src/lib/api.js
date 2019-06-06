@@ -281,7 +281,7 @@ export default class API {
                   try {
                      let config = store.getState().data.config.ldspdi
                      let url = config.endpoints[config.index]+"/query/graph" ;
-                     let param = {"searchType":"Chunks","R_RES":IRI,"I_START":next,"I_END":next+1000,"L_NAME":"","LG_NAME":"" }
+                     let param = {"searchType":"Chunks","R_RES":IRI,"I_START":next,"I_END":next+10000,"L_NAME":"","LG_NAME":"" }
                      let data = await this.getQueryResults(url, IRI, param,"GET","application/ld+json");
 
                      //console.log("etextchunks",JSON.stringify(data,null,3))

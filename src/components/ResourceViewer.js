@@ -145,9 +145,11 @@ let propOrder = {
    "Corporation":[],
    "Etext":[
       "bdo:itemForWork",
+      "bdo:eTextIsVolume",
       "bdo:eTextInVolume",
       "bdo:eTextVolumeIndex",
       "bdo:eTextInItem",
+      "tmp:imageVolumeId",
       "bdo:isRoot",
    ],
    "Item":[
