@@ -90,6 +90,7 @@ type Props = {
    pdfVolumes?:[],
    rightPanel?:boolean,
    logged?:boolean,
+   nextChunk?:number,
    onInitPdf: (u:string,s:string) => void,
    onRequestPdf: (u:string,s:string) => void,
    onCreatePdf: (s:string,u:string) => void,
@@ -119,6 +120,7 @@ type State = {
    anchorElAnno?:any,
    largeMap?:boolean,
    rightPane?:boolean,
+   nextChunk?:number
  }
 
 
@@ -816,7 +818,7 @@ class ResourceViewer extends Component<Props,State>
    {
       if(elem) {
 
-         console.log("uriformat",prop,elem.value,dico,withProp)
+         //console.log("uriformat",prop,elem.value,dico,withProp)
 
          if(!elem.value.match(/^http:\/\/purl\.bdrc\.io/)) {
             return <a href={elem.value} target="_blank">{decodeURI(elem.value)}</a> ;
@@ -2085,7 +2087,7 @@ class ResourceViewer extends Component<Props,State>
                         let str = ""
                         //console.log("loca",elem)
 
-                        let loca = s => (elem[bdo+"workLocation"+s] && elem[bdo+"workLocation"+s][0]["value"] ? elem[bdo+"workLocation"+s][0]["value"]:null)
+                        let loca = s => (elem && elem[bdo+"workLocation"+s] && elem[bdo+"workLocation"+s][0] && elem[bdo+"workLocation"+s][0]["value"] ? elem[bdo+"workLocation"+s][0]["value"]:null)
 
                         let vol = loca("Volume")
                         if(vol) str += "Vol."+vol+" " ;
@@ -2283,25 +2285,41 @@ class ResourceViewer extends Component<Props,State>
                        )
                      }
                   }
-                  else
+                  else {
+                     
+                     let next = 0;
+                     if(elem && elem.length) next = elem.filter(e => e.value && e.end)
+                     if(next && next.length) next = next[next.length - 1].end + 1
+                     else next = 0
+                     
+                     
                      return (
-
+                        
                         <InfiniteScroll
-                           id="etext-scroll"
-                           hasMore={true}
-                           pageStart={0}
-                           loadMore={(e) => this.props.onGetChunks(this.props.IRI,elem.length)}
-                           //loader={<Loader loaded={false} />}
-                           >
+                        id="etext-scroll"
+                        hasMore={true}
+                        pageStart={0}
+                        loadMore={(e) => { 
+                           
+                              //console.log("next?",this.props.nextChunk,next,JSON.stringify(elem,null,3))
+
+                              if(this.props.nextChunk !== next) {                               
+                                 this.props.onGetChunks(this.props.IRI,next); 
+                              } 
+                           }
+                        }
+                        //loader={<Loader loaded={false} />}
+                        >
                            <h3 class="chunk"><span>{this.proplink(k)}</span>:&nbsp;</h3>
                               {this.hasSub(k)?this.subProps(k):tags.map((e)=> [e," "] )}
                            {/* // import make test fail...
                               <div class="sub">
                               <AnnotatedEtextContainer dontSelect={true} chunks={elem}/>
-                           </div>
+                              </div>
                            */}
                         </InfiniteScroll>
                      )
+                  }
                }
 
 

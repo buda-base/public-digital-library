@@ -31,6 +31,8 @@ const mapStateToProps = (state,ownProps) => {
    let prefLang = state.ui.prefLang
    let rightPanel = state.ui.rightPanel
 
+   let nextChunk = state.data.nextChunk
+
 
    let firstImage
    let canvasID
@@ -66,7 +68,7 @@ const mapStateToProps = (state,ownProps) => {
 
    let props = { logged,config,resources, ontology, keyword, language, datatype, assocResources, prefLang, failures,
       imageAsset,firstImage,canvasID,collecManif,manifests,manifestError,pdfVolumes,createPdf,pdfUrl,
-      annoCollec,rightPanel,locale,langPreset,imgData }
+      annoCollec,rightPanel,locale,langPreset,imgData, nextChunk }
 
    console.log("mS2p",state,props)
 

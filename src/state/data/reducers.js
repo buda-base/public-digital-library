@@ -90,6 +90,15 @@ export const getResource = (state: DataState, action: Action) => {
 }
 reducers[actions.TYPES.getResource] = getResource;
 
+export const getChunks = (state: DataState, action: Action) => {
+   return {
+       ...state,
+       "nextChunk": action.meta
+   }
+}
+reducers[actions.TYPES.getChunks] = getChunks;
+
+
 
 export const gotResource = (state: DataState, action: Action) => {
     return {
