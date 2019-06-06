@@ -480,6 +480,28 @@ function getData(result)  {
       data.works = data.data
       delete data.data
    }
+   if(data && data.publishedworks)
+   {
+      data.works = { ...data.publishedworks, ...data.works }
+      delete data.publishedworks
+      if(metadata[bdo+"Work"] && metadata[bdo+"PublishedWork"]) {
+         metadata[bdo+"Work"] += metadata[bdo+"PublishedWork"]
+         delete metadata[bdo+"PublishedWork"]
+      }
+      //console.log("data?W",data,metadata)
+   }
+   if(data && data.abstractworks)
+   {
+      data.works = { ...Object.keys(data.abstractworks).reduce( (acc,k)=>{
+         return {[k]:[ ...data.abstractworks[k], { "type":bdo+"WorkType","value":bdo+"AbstractWork" } ] }
+      },{}), ...data.works }
+      delete data.abstractworks
+      if(metadata[bdo+"Work"] && metadata[bdo+"AbstractWork"]) {
+         metadata[bdo+"Work"] += metadata[bdo+"AbstractWork"]
+         delete metadata[bdo+"AbstractWork"]
+      }
+      console.log("data?W",data,metadata)
+   }
    if(data && data.chunks) {
 
       data.etexts = Object.keys(data.chunks).map(e => ({ [e]:_.orderBy(data.chunks[e],"type") })).reduce((acc,e)=>({...acc,...e}),{})
