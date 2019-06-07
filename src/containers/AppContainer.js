@@ -34,10 +34,12 @@ const mapStateToProps = (state) => {
    let langPreset = state.ui.langPreset
    let langIndex = state.ui.langIndex
 
-   let newState = { logged,config, hostFailure, searches, keyword, language,loading,datatypes,ontology,facets,
-      locale,prefLang,resources,ontoSearch,rightPanel,langPreset, langIndex }
+   let failures = state.data.failures ;
 
-   if(!global.inTest) console.log("mS2p",newState)
+   let newState = { logged,config, hostFailure, searches, keyword, language,loading,datatypes,ontology,facets,
+      locale,prefLang,resources,ontoSearch,rightPanel,langPreset, langIndex, failures }
+
+   if(!global.inTest) console.log("mS2p",state,newState)
 
    return newState ;
 

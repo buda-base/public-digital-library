@@ -823,6 +823,7 @@ async function getResource(iri:string) {
    }
    catch(e) {
       console.error("ERRROR with resource "+iri,e)
+      store.dispatch(dataActions.noResource(iri,e));
    }
 
 }
