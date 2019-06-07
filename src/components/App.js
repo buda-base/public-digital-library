@@ -444,6 +444,9 @@ class App extends Component<Props,State> {
       let eq = true
       let s ;
 
+
+      //console.log("collap?",JSON.stringify(state.collapse,null,3))
+
       if(props.language == "" && (!props.resources || !props.resources[props.keyword]))
       {
          console.log("gRes?",props.resources,props.keyword);
@@ -487,14 +490,32 @@ class App extends Component<Props,State> {
       }
 
       // pagination settings
-      let d
-      if(state.id !== state.filters.datatype.sort()+"#"+props.keyword+"@"+props.language) { 
+      let d, newid = state.filters.datatype.sort()+"#"+props.keyword+"@"+props.language
+      if(state.id !== newid && props.keyword && props.language) { 
          if(!s) s = { ...state }
-         let sameKW = state.id && state.id.match(new RegExp("#"+props.keyword+"@"+props.language+"$"))
+
+         /*
          let fromAny2Work = state.id && state.filters.datatype.indexOf("Work") !== -1 && state.id.match(/^Any/)
-         //console.log("colla",sameKW,fromAny2Work)
          if(!state.id || !(sameKW && fromAny2Work)) 
+         */   
+
+         let sameKW = state.id && state.id.match(new RegExp("#"+props.keyword+"@"+props.language+"$"))
+         
+         //console.log("new id",state.id,newid,sameKW,state.filters.datatype)
+
+         if(!sameKW || (state.filters.datatype.indexOf("Work") !== -1 && (!state.id || !state.id.match(/Work/) ) ) )
             for(let c of ["Other","ExprOf", "HasExpr", "Abstract"]) if(s.collapse[c] != undefined) delete s.collapse[c]         
+         //s.id = newid
+         s.paginate = {index:0,pages:[0],n:[0]}         
+         s.repage = true 
+         if(sameKW && state.id.match(/Work/) && state.results[s.id] && state.results[s.id].bookmarks) {            
+            if(!s.results) s.results = {}
+            s.results[newid] = { bookmarks: state.results[s.id].bookmarks }
+         }
+
+
+         //console.log("collap!",JSON.stringify(state.collapse,null,3))
+
       }
 
       // 
@@ -502,7 +523,7 @@ class App extends Component<Props,State> {
          || (props.searches[props.keyword+"@"+props.language] && props.searches[props.keyword+"@"+props.language].time > state.results[state.id].results.time)
          )) {
          
-         console.log("ehoh", props.keyword)
+         //console.log("ehoh", props.keyword)
 
          let time
          if(props.searches[props.keyword+"@"+props.language]) { 
@@ -590,6 +611,7 @@ class App extends Component<Props,State> {
             if(!s) s = { ...state }
             if(!s.results) s.results = {}
             if(!s.results[s.id]) s.results[s.id] = {}
+            //if(s.results[s.id].bookmarks) delete s.results[s.id].bookmarks
             s.results[s.id].results = results        
             s.results[s.id].repage = true
             s.results[s.id].paginate = {index:0,pages:[0],n:[0]}
@@ -707,7 +729,7 @@ class App extends Component<Props,State> {
             let dt = [ ...this.state.filters.datatype ]
             if(dt.indexOf(lab) === -1 && dt.indexOf("Any") === -1) dt.push(lab);
 
-            console.log("dt:!:",dt)
+            console.log("dt:!:",dt,force,JSON.stringify(params,null,3))
 
             if(types.filter(i => !dt.includes(i)).length == 0) { dt = [ "Any" ] }
 
@@ -1277,6 +1299,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
       if(this.state.collapse[categ] == undefined) show = false
       else show = !this.state.collapse[categ]
       
+      console.log("setWC",categ,JSON.stringify(paginate,null,3))
+
       let gotoCateg = paginate.index
       if(show && paginate.pages.length > 1 && paginate.bookmarks && paginate.bookmarks[categ]) { 
          for(let i in paginate.pages) { 
@@ -1617,7 +1641,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                         //console.log("categC",categChange,lastN,tmpN,categ)
 
                         if(categChange && (cpt - lastN > 1 || tmpN > 3)) {// && (!pagin.bookmarks || (!pagin.bookmarks[categ] || !pagin.bookmarks[prevCateg] || pagin.bookmarks[categ] - pagin.bookmarks[prevCateg] > 3))) {
-                           console.log("bookM...",pagin.bookmarks)
+                           //console.log("bookM...",pagin.bookmarks)
                            message.push(<MenuItem className="menu-categ-collapse" onClick={this.setWorkCateg.bind(this,prevCateg,pagin)}><h5>{I18n.t(this.state.collapse[prevCateg]==false?"misc.hide":"misc.show" ) + " " + t + "s / " + prevH5.replace(/ \([0-9]+\)$/,"") + (pagin.bookmarks[prevCateg].nb ? " ("+pagin.bookmarks[prevCateg].nb +")":"") /*+" "+prevCateg*/}</h5></MenuItem>);                      
                         }
 
@@ -1739,7 +1763,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          }
          if(pagin.index == pagin.pages.length - 1) {
 
-            if(cpt >= max_cpt && cpt - lastN >= 1 && Object.keys(sublist).length > 3) {
+            if(cpt >= max_cpt && cpt - lastN >= 1 && Object.keys(sublist).length > 3 && (t != "Work" || pagin.bookmarks[categ].nb > 3) ) {
                //if(displayTypes.length > 1 || displayTypes.indexOf("Any") !== -1) 
                if((displayTypes.length > 1 || displayTypes.indexOf("Any") !== -1) && t !== "Work") message.push(<MenuItem className="menu-categ-collapse" onClick={(e)=>this.handleCheck(e,t,true,{},true)}><h5>{I18n.t("misc.show") +" "+t+"s" +(counts["datatype"][t]?" ("+counts["datatype"][t]+")":"")/*+" "+categ*/}</h5></MenuItem>);                      
                else { 

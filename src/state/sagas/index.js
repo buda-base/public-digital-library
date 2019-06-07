@@ -168,13 +168,14 @@ else if(!iri && params && params.q) {
    let pt = params.t
    if(pt && !pt.match(/,/) && ["Person","Work","Etext"].indexOf(pt) !== -1)  {
 
-      if(!state.data.searches || !state.data.searches[pt] || !state.data.searches[pt][params.q+"@"+params.lg])  {
+      if(!state.data.searches || !state.data.searches[pt] || !state.data.searches[pt][params.q+"@"+params.lg]) {
          store.dispatch(dataActions.startSearch(params.q,params.lg,[pt],null,dontGetDT)); 
          dontGetDT = true
       }
       else {
          store.dispatch(dataActions.foundResults(params.q,params.lg,state.data.searches[pt][params.q+"@"+params.lg],pt))  
-         store.dispatch(dataActions.foundDatatypes(params.q,params.lg,state.data.datatypes[params.q+"@"+params.lg]))
+         if(state.data.datatypes && state.data.datatypes[params.q+"@"+params.lg])
+            store.dispatch(dataActions.foundDatatypes(params.q,params.lg,state.data.datatypes[params.q+"@"+params.lg]))
       }
    
       //store.dispatch(uiActions.selectType(pt));
