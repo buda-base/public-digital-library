@@ -496,11 +496,12 @@ class App extends Component<Props,State> {
             for(let c of ["Other","ExprOf", "HasExpr", "Abstract"]) if(s.collapse[c] != undefined) delete s.collapse[c]         
       }
 
+      // 
       if(state.id && (!state.results || !state.results[state.id] || !state.results[state.id].results 
          || (props.searches[props.keyword+"@"+props.language] && props.searches[props.keyword+"@"+props.language].time > state.results[state.id].results.time)
          )) {
          
-         console.log("ehoh")
+         console.log("ehoh", props.keyword)
 
          let time
          if(props.searches[props.keyword+"@"+props.language]) { 
@@ -513,16 +514,19 @@ class App extends Component<Props,State> {
          let results
          if(state.filters.datatype.indexOf("Any") !== -1 || state.filters.datatype.length > 1 || state.filters.datatype.filter(d => ["Work","Etext","Person"].indexOf(d) === -1).length ) {
             results = props.searches[props.keyword+"@"+props.language]
+            console.log("any")
          }
          let Ts = [ ...state.searchTypes ]
          for(let dt of state.filters.datatype) { 
-            if(dt === "Any") for(let t of searchTypes) { if(Ts.indexOf(t) === -1) Ts.push(t) }
+            if(dt === "Any") for(let t of searchTypes.slice(1)) { if(Ts.indexOf(t) === -1) Ts.push(t) }
             else if(Ts.indexOf(dt) === -1) Ts.push(dt)
          }
-         for(let dt of Ts) if(props.searches[dt]) {         
+         console.log("Ts",Ts)
+         let merge = {}
+         if(props.searches[props.keyword+"@"+props.language]) for(let dt of Ts) if(props.searches[dt]) {         
             let res = props.searches[dt][props.keyword+"@"+props.language]
             
-            console.log("res!",res)
+            console.log("res!",res,results)
             
             if(res) {
                let dts = dt.toLowerCase()+"s"
@@ -531,18 +535,20 @@ class App extends Component<Props,State> {
                   if(results) { results = { time:results.time, results: { bindings:{ [dts]:{ ...results.results.bindings[dts] } } } }; }
                   else results = { results: { bindings:{ } } }
                }
-               results = { ...res, results:{bindings:{ [dts]:{ ...results.results.bindings[dts], ...Object.keys(res.results.bindings[dts]).reduce( (acc,k) =>{
+               merge[dts] = { ...results.results.bindings[dts], ...Object.keys(res.results.bindings[dts]).reduce( (acc,k) =>{
+                  
                   //console.log("dts",dts,k,results.results.bindings)
+                  
                   return {
                      ...acc, 
                      [k]:[ ...res.results.bindings[dts][k].filter( p => (!time || !p.value || !p.value.match(/[Aa]bstract|[Mm]atch/ || !p.type || !p.type.match(/[Ee]xpression/)))),                      
                            ...(!time||dts!=="works"?[]:results.results.bindings[dts][k]) //.filter( p => (p.type && p.type.match(/[Aa]bstract|[Ee]xpression/)))) 
                         ] 
                   }
-               }, {}) } } } }
+               }, {}) }
 
-               console.log("rootres",JSON.stringify(results,null,3))
-
+               //console.log("rootres",JSON.stringify(results,null,3))
+               results.bindings = { ...merge }
             }
          }
          if(!results) { 
@@ -585,7 +591,10 @@ class App extends Component<Props,State> {
             if(!s.results[s.id]) s.results[s.id] = {}
             s.results[s.id].results = results        
             s.results[s.id].repage = true
-            if(time) s.results[s.id].results.time = time
+            s.results[s.id].paginate = {index:0,pages:[0],n:[0]}
+            if(time) s.results[s.id].results.time = time    
+
+            console.log("s.id",s.id,s.results[s.id])        
          }
       }
 
@@ -2611,7 +2620,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      </Paper>
                   </div>
                }
-               { this.props.loading && <Loader className="mainloader"/> }
+               { (this.props.loading || (this.props.datatypes && !this.props.datatypes.hash)) && <Loader className="mainloader"/> }
                { message.length == 0 && !this.props.loading &&
                   <List id="samples" style={{maxWidth:"800px",margin:"20px auto",textAlign:"left",zIndex:0}}>
                      { messageD }
