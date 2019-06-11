@@ -588,7 +588,7 @@ function getStats(cat:string,data:{})
    return stat
 }
 
-function addMeta(keyword:string,language:string,data:{},t:string,tree:{})
+function addMeta(keyword:string,language:string,data:{},t:string,tree:{},found:boolean=true)
 {
    if(data["results"] &&  data["results"]["bindings"] && data["results"]["bindings"][t.toLowerCase()+"s"]){
       console.log("FOUND",data);
@@ -600,7 +600,7 @@ function addMeta(keyword:string,language:string,data:{},t:string,tree:{})
       }
 
       console.log("stat",stat)
-      store.dispatch(dataActions.foundResults(keyword, language, data, [t]));
+      if(found) store.dispatch(dataActions.foundResults(keyword, language, data, [t]));
       store.dispatch(dataActions.foundFacetInfo(keyword,language,[t],stat))
    }
 }
@@ -718,7 +718,7 @@ else {
          metadata = { ...metadata, tree:result.tree}
 
          let dt = "Etext" ;
-         if(datatype.indexOf("Work") !== -1 ) { dt="Work" ; addMeta(keyword,language,data,"Work",result.tree); }
+         if(datatype.indexOf("Work") !== -1 ) { dt="Work" ; addMeta(keyword,language,data,"Work",result.tree,false); }
          else store.dispatch(dataActions.foundFacetInfo(keyword,language,datatype,metadata))
 
          //store.dispatch(dataActions.foundDatatypes(keyword,language,{ metadata:{ [bdo+dt]:data.numResults } } ));

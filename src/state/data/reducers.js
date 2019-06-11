@@ -569,6 +569,8 @@ export const foundResults = (state: DataState, action: actions.FoundResultsActio
 
    let searches
 
+   if(Array.isArray(action.payload.datatype)) action.payload.datatype = action.payload.datatype[0]
+
    if(!action.payload.datatype || action.payload.datatype.indexOf("Any") !== -1)
    {
       searches = {
@@ -579,8 +581,8 @@ export const foundResults = (state: DataState, action: actions.FoundResultsActio
    else {
       searches = {
             ...state.searches,
-            [action.payload.datatype[0]] : {
-               ...state.searches[action.payload.datatype[0]],
+            [action.payload.datatype] : {
+               ...state.searches[action.payload.datatype],
                [action.payload.keyword + "@" + action.payload.language]: { ...action.payload.results, time:Date.now() }
             }
       }

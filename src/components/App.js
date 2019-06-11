@@ -439,10 +439,12 @@ class App extends Component<Props,State> {
       */
    }
 
-   static getDerivedStateFromProps(props:Props,state:State)
+   static getDerivedStateFromProps(prop:Props,state:State)
    {
       let eq = true
       let s ;
+
+      let props = { ...prop }
 
 
       //console.log("collap?",JSON.stringify(state.collapse,null,3))
@@ -501,7 +503,7 @@ class App extends Component<Props,State> {
 
          let sameKW = state.id && state.id.match(new RegExp("#"+props.keyword+"@"+props.language+"$"))
          
-         //console.log("new id",state.id,newid,sameKW,state.filters.datatype)
+         console.log("new id",state.id,newid,sameKW,state.filters.datatype)
 
          if(!sameKW || (state.filters.datatype.indexOf("Work") !== -1 && (!state.id || !state.id.match(/Work/) ) ) )
             for(let c of ["Other","ExprOf", "HasExpr", "Abstract"]) if(s.collapse[c] != undefined) delete s.collapse[c]         
@@ -519,11 +521,10 @@ class App extends Component<Props,State> {
       }
 
       // 
-      if(state.id && (!state.results || !state.results[state.id] || !state.results[state.id].results 
+      if(state.id && (!state.results || !state.results[state.id] || !state.results[state.id].results  //|| !state.results[state.id].results.resLength //|| !Object.keys(state.results[state.id].results).length
          || (props.searches[props.keyword+"@"+props.language] && props.searches[props.keyword+"@"+props.language].time > state.results[state.id].results.time)
          )) {
          
-         //console.log("ehoh", props.keyword)
 
          let time
          if(props.searches[props.keyword+"@"+props.language]) { 
@@ -532,51 +533,103 @@ class App extends Component<Props,State> {
          else {
 
          }
+         
+         console.log("ehoh", props.keyword, time)
 
          let results
          if(state.filters.datatype.indexOf("Any") !== -1 || state.filters.datatype.length > 1 || state.filters.datatype.filter(d => ["Work","Etext","Person"].indexOf(d) === -1).length ) {
-            results = props.searches[props.keyword+"@"+props.language]
-            console.log("any")
+            results = { ...props.searches[props.keyword+"@"+props.language] }
+            //console.log("any")
          }
-         let Ts = [ ...state.searchTypes ]
+         let Ts = [ ...state.searchTypes.filter(e => e !== "Any") ]
          for(let dt of state.filters.datatype) { 
             if(dt === "Any") for(let t of searchTypes.slice(1)) { if(Ts.indexOf(t) === -1) Ts.push(t) }
             else if(Ts.indexOf(dt) === -1) Ts.push(dt)
          }
-         //console.log("Ts",Ts)
-         let merge = {}
-         if(props.searches[props.keyword+"@"+props.language]) for(let dt of Ts) if(props.searches[dt]) {         
-            let res = props.searches[dt][props.keyword+"@"+props.language]
+         
+         console.log("Ts",Ts)
+
+         let merge 
+         if(props.searches[props.keyword+"@"+props.language]) for(let dt of Ts) { 
             
-            //console.log("res!",res,results)
+            let res ;
+            if(props.searches[dt]) res = { ...props.searches[dt][props.keyword+"@"+props.language] }
+                        
+            if(!results) {
+               results = { ...props.searches[props.keyword+"@"+props.language] }
+               if(results) { results = { time:results.time, results: { bindings:{ ...results.results.bindings } } }; }
+               else results = { results: { time, bindings:{ } } }
+            }
             
-            if(res) {
-               let dts = dt.toLowerCase()+"s"
-               if(!results) {
-                  results = props.searches[props.keyword+"@"+props.language]
-                  if(results) { results = { time:results.time, results: { bindings:{ ...results.results.bindings } } }; }
-                  else results = { results: { bindings:{ } } }
-               }
-               merge[dts] = { ...results.results.bindings[dts], ...Object.keys(res.results.bindings[dts]).reduce( (acc,k) =>{
-                  
-                  //console.log("dts",dts,k,results.results.bindings)
+            let dts = dt.toLowerCase()+"s"
+            if(!merge) merge = {}
+
+            console.log("dts",dts,results,res)
+
+            if(!res || !res.results || !res.results.bindings || !res.results.bindings[dts]) { 
+
+               if(results.results.bindings[dts]) merge[dts] = { ...results.results.bindings[dts] } 
+            }
+            else {
+
+
+               merge[dts] = { 
+                  ...Object.keys(res.results.bindings[dts]).reduce( (acc,k) =>{
+
+                        let m = [ ...res.results.bindings[dts][k].filter(p => (!p.value || !p.value.match(/[Aa]bstract/)) && (!p.type || !p.type.match(/[Mm]atch|[Ee]xpression/))), 
+                                 ...(!results.results.bindings[dts]||!results.results.bindings[dts][k]?[]:results.results.bindings[dts][k]) ]
+
+                        console.log("m?",dts,k,m.length) //,m)
+
+                        return {
+                           ...acc, 
+                           [k]:m 
+                        }
+                     }, {}),
+
+                  ...(!results.results.bindings[dts]?[]:Object.keys(results.results.bindings[dts]).reduce( (acc,k) => {
+                        return {
+                           ...acc, 
+                           ...(!res.results.bindings[dts][k]?{[k]:results.results.bindings[dts][k]}:{})
+                        }
+                  },{}))
+               } 
+
+               // merge[dts] = { ...merge[dts], ...res.results.bindings[dts] } 
+               /*...Object.keys(res.results.bindings[dts]).reduce( (acc,k) =>{
                   
                   return {
                      ...acc, 
-                     [k]:[ ...res.results.bindings[dts][k].filter( p => (!time || !p.value || !p.value.match(/[Aa]bstract|[Mm]atch/ || !p.type || !p.type.match(/[Ee]xpression/)))),                      
-                           ...(!time||dts!=="works"?[]:results.results.bindings[dts][k]) //.filter( p => (p.type && p.type.match(/[Aa]bstract|[Ee]xpression/)))) 
+                     [k]:[ ...res.results.bindings[dts][k].filter( p => (!time || !p.value || !p.value.match(/[Aa]bstract|[Mm]atch/) || !p.type || !p.type.match(/[Ee]xpression/)))),                      
+                           ...(!time||dts!=="works"?[]:results.results.bindings[dts][k].filter( p => (!p.type || !p.type.match(/[Mm]atch/))))
                         ] 
                   }
-               }, {}) }
+               }, {}) } */
 
-               //console.log("rootres",JSON.stringify(results,null,3))
-               results.bindings = { ...merge }
             }
+            
+
+            //console.log("res!",dts,JSON.stringify(merge[dts],null,3))
+         }         
+         if(merge) { 
+            if(!results.results) results = { results: {} }
+            else results = { ...results, results: { ...results.results } }
+            results.results.bindings = { ...merge }
          }
-         if(!results) { 
-            //results = { results:{ bindings:{} }, numResults:0 }
+         //console.log("rootres",JSON.stringify(results,null,3))
+
+         /*
+         if(!results) {
+
+            if(Ts.indexOf("Etext")!==-1 && props.searches["Etext"] && props.searches["Etext"][props.keyword+"@"+props.language])
+            {
+               console.log("etexts?",props.searches["Etext"][props.keyword+"@"+props.language])
+               results = { ...props.searches["Etext"][props.keyword+"@"+props.language] }
+            }
+            ////results = { results:{ bindings:{} }, numResults:0 }
          }
-         else {
+         */
+         if(results) {
 
             if(results && results.results && results.results.bindings && results.results.bindings.works) {
 
@@ -612,10 +665,12 @@ class App extends Component<Props,State> {
             if(!s.results) s.results = {}
             if(!s.results[s.id]) s.results[s.id] = {}
             //if(s.results[s.id].bookmarks) delete s.results[s.id].bookmarks
-            s.results[s.id].results = results        
-            s.results[s.id].repage = true
-            s.results[s.id].paginate = {index:0,pages:[0],n:[0]}
-            if(time) s.results[s.id].results.time = time    
+            if(results && results.results && results.results.bindings && Object.keys(results.results.bindings).length) {
+               s.results[s.id].results = results        
+               s.results[s.id].repage = true
+               s.results[s.id].paginate = {index:0,pages:[0],n:[0]}
+            }
+            if(time && s.results[s.id].results) s.results[s.id].results.time = time    
 
             console.log("s.id",s.id,s.results[s.id])        
          }
@@ -952,12 +1007,13 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
       if(!val.match(/↤/) && k)
          val = /*val.replace(/@.* /,"")*/ val.split(new RegExp(k.replace(/[ -'ʾ]/g,"[ -'ʾ]"))).map((l) => ([<span>{l}</span>,<span className="highlight">{k}</span>])) ;
       else {
-         let str = val.replace(/^.*?(↦([^↤]+)↤([-/_()\[\]: ]+↦([^↤]+)↤)*).*$/g,"$1").replace(/↤([-/_() ]+)↦/g,"$1").replace(/[↤↦]/g,"")
-         val = val.replace(/↦[^↤]+↤([-/_()\[\]: ]+↦[^↤]+↤)*/g,"↦↤")
+         let str = val.replace(/[\n\r]+/g," ").replace(/^.*?(↦([^↤]+)↤([-/_()\[\]: ]+↦([^↤]+)↤)*).*$/g,"$1").replace(/↤([-/_() ]+)↦/g,"$1").replace(/[↤↦]/g,"")
+                      .replace(/[\[\]]+/g,"")
+         let ret = val.replace(/↦[^↤]+↤([-/_()\[\]: ]+↦[^↤]+↤)*/g,"↦↤")
 
-         //console.log("str:",str,"=",val)
+         //console.log("str:",str,"=",ret)
 
-         val = val.split(/↦↤/).map((l) => ([<span>{l}</span>,<span className="highlight">{str}</span>])) ;
+         val = ret.split(/[\[\] ]*↦↤[\[\] ]*/).map((l) => ([<span>{l}</span>,<span className="highlight">{str}</span>])) ;
       }
 
       val = [].concat.apply([],val);
@@ -1182,14 +1238,16 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
       if(types.length) types = types.sort(function(a,b) { return Number(counts["datatype"][b]) - Number(counts["datatype"][a]) })
 
+      /*
       if(types.length == 2 && !this.state.autocheck)
       {
          this.setState({ ...this.state, autocheck:true })
 
-         //console.log("autocheck",types)
+         console.log("autocheck",types)
 
          this.handleCheck(null, types[1], true)
       }
+      */
 
       //console.log("types",types,counts)
    }
@@ -1334,7 +1392,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
       //if(displayTypes.length) displayTypes = displayTypes.sort(function(a,b) { return searchTypes.indexOf(a) - searchTypes.indexOf(b) })
 
-      //console.log("list x types",list,types,displayTypes)
+      console.log("list x types",list,types,displayTypes)
 
       for(let t of displayTypes) {
 
@@ -1812,7 +1870,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                         return searchTypes.indexOf(t) !== -1 
                      }).reduce((acc,e)=>acc+Object.keys(results.results.bindings[e]).length,0)
 
-      //console.log("res::",id,results,message,message.length,resLength,resMatch)
+      console.log("res::",id,results,message,message.length,resLength,resMatch)
 
       let sta = { ...this.state }
 
@@ -1848,6 +1906,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          }
          */
             
+         console.log("sta?",sta.id !== id,sta.repage,"=repage",!sta.results,!sta.result || !sta.results[id], sta.result && sta.result[id] && (sta.results[id].resLength != resLength),sta.result && sta.result[id] && (sta.results[id].resMatch != resMatch))
 
          let paginate = [], bookmarks, noBookM = false;
          if(sta.id !== id || sta.repage || !sta.results || !sta.results[id] || (sta.results[id].resLength != resLength) || (sta.results[id].resMatch != resMatch) || ( sta.results[id].message.length <= 1) || Object.keys(sta.results[id].counts.datatype).length != Object.keys(counts.datatype).length ) { 
@@ -1891,7 +1950,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
             //else sta.repage = false
             
-            //console.log("repage?",sta.repage)
+            console.log("repage?",sta.repage)
 
             this.setState(sta);
          }
