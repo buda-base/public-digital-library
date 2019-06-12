@@ -573,17 +573,26 @@ export const foundResults = (state: DataState, action: actions.FoundResultsActio
 
    if(!action.payload.datatype || action.payload.datatype.indexOf("Any") !== -1)
    {
+      let time = Date.now()
+      if(state.searches && state.searches[action.payload.keyword + "@" + action.payload.language]) 
+         time = state.searches[action.payload.keyword + "@" + action.payload.language].time
+
       searches = {
             ...state.searches,
-            [action.payload.keyword + "@" + action.payload.language]: { ...action.payload.results, time:Date.now() }
+            [action.payload.keyword + "@" + action.payload.language]: { ...action.payload.results, time }
             }
    }
    else {
+
+      let time = Date.now()
+      if(state.searches && state.searches[action.payload.datatype] && state.searches[action.payload.datatype][action.payload.keyword + "@" + action.payload.language]) 
+         time = state.searches[action.payload.datatype][action.payload.keyword + "@" + action.payload.language].time
+
       searches = {
             ...state.searches,
             [action.payload.datatype] : {
                ...state.searches[action.payload.datatype],
-               [action.payload.keyword + "@" + action.payload.language]: { ...action.payload.results, time:Date.now() }
+               [action.payload.keyword + "@" + action.payload.language]: { ...action.payload.results, time }
             }
       }
    }

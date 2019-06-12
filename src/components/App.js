@@ -505,7 +505,7 @@ class App extends Component<Props,State> {
          
          console.log("new id",state.id,newid,sameKW,state.filters.datatype)
 
-         if(!sameKW || (state.filters.datatype.indexOf("Work") !== -1 && (!state.id || !state.id.match(/Work/) ) ) )
+         if(!sameKW || (state.filters.datatype.indexOf("Work") !== -1 && (!state.id || (!state.id.match(/Work/)&&!state.id.match(/Any/)) ) ) )
             for(let c of ["Other","ExprOf", "HasExpr", "Abstract"]) if(s.collapse[c] != undefined) delete s.collapse[c]         
          //s.id = newid
          s.paginate = {index:0,pages:[0],n:[0]}         
@@ -515,33 +515,63 @@ class App extends Component<Props,State> {
             s.results[newid] = { bookmarks: state.results[s.id].bookmarks }
          }
 
-
+         
          //console.log("collap!",JSON.stringify(state.collapse,null,3))
 
       }
+      else {
+         newid = null
+      }
 
-      // 
-      if(state.id && (!state.results || !state.results[state.id] || !state.results[state.id].results  //|| !state.results[state.id].results.resLength //|| !Object.keys(state.results[state.id].results).length
-         || (props.searches[props.keyword+"@"+props.language] && props.searches[props.keyword+"@"+props.language].time > state.results[state.id].results.time)
-         )) {
-         
-
-         let time
-         if(props.searches[props.keyword+"@"+props.language]) { 
-            time = props.searches[props.keyword+"@"+props.language].time
+      let needRefresh, time, current ;
+      if(state.id && !newid) {
+         if(!state.results || !state.results[state.id] || !state.results[state.id].results) //|| !state.results[state.id].results.resLength //|| !Object.keys(state.results[state.id].results).length
+         {
+            needRefresh = true
+            time = 1
+            console.log("refreshA",time)
          }
          else {
-
+            current = state.results[state.id].results.time
+            let k = props.keyword+"@"+props.language
+            if(props.searches && props.searches[k]) { // && props.searches[k].time > state.results[state.id].results.time) {
+               needRefresh = true ;
+               time = props.searches[k].time
+               console.log("refreshB",time)
+            }
+            for(let d of ["Etext","Person","Work"]) {
+               if(props.searches && props.searches[d] && props.searches[d][k]) {
+                  if(!time || props.searches[d][k].time > time) { 
+                     time = props.searches[d][k].time 
+                     needRefresh = true 
+                     console.log("refreshC",time,d)
+                  }
+               }  
+            }      
+            //|| (state.id.match(/Etext/) && state.results[state.id].results && state.results[state.id].results.results && state.results[state.id].results.results.bindings && !state.results[state.id].results.results.bindings.etexts)         
+            //|| (state.id.match(/Work#/) && state.results[state.id].results && props.searches && props.searches["Work"] && props.searches["Work"][props.keyword+"@"+props.language] && state.results[state.id].results.time < props.searches["Work"][props.keyword+"@"+props.language])
          }
-         
-         console.log("ehoh", props.keyword, time)
+      }
+
+      // 
+      if(state.id && needRefresh && time && (!current || time > current))
+      {
+         console.group("NEED REFRESH")
+
+         if(props.searches[props.keyword+"@"+props.language] && (!time || time == 1)) { 
+            time = props.searches[props.keyword+"@"+props.language].time
+         }
+
+         console.log("K", props.keyword, time, current)
 
          let results
          if(state.filters.datatype.indexOf("Any") !== -1 || state.filters.datatype.length > 1 || state.filters.datatype.filter(d => ["Work","Etext","Person"].indexOf(d) === -1).length ) {
             results = { ...props.searches[props.keyword+"@"+props.language] }
             //console.log("any")
          }
-         let Ts = [ ...state.searchTypes.filter(e => e !== "Any") ]
+         //console.log("Ts1",JSON.stringify(state.searchTypes,null,3),JSON.stringify(state.filters.datatype,null,3))
+
+         let Ts = [ ] //[ ...state.searchTypes.filter(e => e !== "Any") ]
          for(let dt of state.filters.datatype) { 
             if(dt === "Any") for(let t of searchTypes.slice(1)) { if(Ts.indexOf(t) === -1) Ts.push(t) }
             else if(Ts.indexOf(dt) === -1) Ts.push(dt)
@@ -576,7 +606,7 @@ class App extends Component<Props,State> {
                merge[dts] = { 
                   ...Object.keys(res.results.bindings[dts]).reduce( (acc,k) =>{
 
-                        let m = [ ...res.results.bindings[dts][k].filter(p => (!p.value || !p.value.match(/[Aa]bstract/)) && (!p.type || !p.type.match(/[Mm]atch|[Ee]xpression/))), 
+                        let m = [ ...res.results.bindings[dts][k].filter(p => (!p.value || !p.value.match(/([Aa]bstract)|([↦↤])/)) && (!p.type || !p.type.match(/[Mm]atch|[Ee]xpression/))), 
                                  ...(!results.results.bindings[dts]||!results.results.bindings[dts][k]?[]:results.results.bindings[dts][k]) ]
 
                         console.log("m?",dts,k,m.length) //,m)
@@ -668,12 +698,14 @@ class App extends Component<Props,State> {
             if(results && results.results && results.results.bindings && Object.keys(results.results.bindings).length) {
                s.results[s.id].results = results        
                s.results[s.id].repage = true
-               s.results[s.id].paginate = {index:0,pages:[0],n:[0]}
+               //s.results[s.id].paginate = {index:0,pages:[0],n:[0]}
             }
             if(time && s.results[s.id].results) s.results[s.id].results.time = time    
 
-            console.log("s.id",s.id,s.results[s.id])        
+            console.log("s.id",s.id,s.results[s.id],time)        
          }
+
+         console.groupEnd()
       }
 
       if(s) { 
@@ -784,12 +816,12 @@ class App extends Component<Props,State> {
             let dt = [ ...this.state.filters.datatype ]
             if(dt.indexOf(lab) === -1 && dt.indexOf("Any") === -1) dt.push(lab);
 
-            console.log("dt:!:",dt,force,JSON.stringify(params,null,3))
-
             if(types.filter(i => !dt.includes(i)).length == 0) { dt = [ "Any" ] }
 
             if(force) dt = [lab]
             else prevDT = null
+
+            console.log("dt:!:",dt,force,JSON.stringify(params,null,3))
 
             state = { ...state, filters:{ ...state.filters, datatype: dt, prevDT }}
          }
@@ -1672,13 +1704,15 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   
                   if(pagin.bookmarks && pagin.bookmarks[categ] && pagin.bookmarks[categ].nb && pagin.bookmarks[categ].nb == n) { categChange = true; }
 
+                  
                   if(isAbs.length > 0)        { Tag = CropFreeIcon ;     tip = "Abstract Work" ;       if(categ !== "Abstract") { if(categ !== "Other" && cpt >= max_cpt) { categChange = true ; }; categ = "Abstract" ; if(!dontShow) { showCateg = true }; if(cpt!=0) {n = 0; }; willBreak = false ; max_cpt = cpt + 3 ; canCollapse = true ; } }
                   else if(hasExpr.length > 0) { Tag = CenterFocusStrong; tip = "Work Has Expression" ; if(categ !== "HasExpr")  { if(categ !== "Other" && cpt >= max_cpt) { categChange = true ; }; categ = "HasExpr" ;  if(!dontShow) { showCateg = true }; if(cpt!=0) {n = 0; }; willBreak = false ; max_cpt = cpt + 3 ; canCollapse = true ; } }
                   else if(isExpr.length > 0)  { Tag = CenterFocusWeak;   tip = "Work Expression Of";   if(categ !== "ExprOf")   { if(categ !== "Other" && cpt >= max_cpt) { categChange = true ; }; categ = "ExprOf" ;   if(!dontShow) { showCateg = true }; if(cpt!=0) {n = 0; }; willBreak = false ; max_cpt = cpt + 3 ; canCollapse = true ; } }
                   else if(categ !== "Other")  { Tag = CropDin;           tip = "Work" ;                                           if(                     cpt >= max_cpt)  { categChange = true ; }; categ = "Other";     if(!dontShow) { showCateg = true }; if(cpt!=0) {n = 0; }; willBreak = false ; max_cpt = cpt + 3 ; canCollapse = true ; } 
-                  else if(categ === "Other")  { Tag = CropDin;           tip = "Work" ; if(t == "Work" && !findFirst && m == 0) { showCateg = true ; } ; canCollapse = true ; }
+                  else if(categ === "Other")  { Tag = CropDin;           tip = "Work" ; if(t == "Work" && !findFirst && m == 0) { showCateg = true ; } ; if(t == "Work") { canCollapse = true ; } }
 
                   if(Tag == CropDin && hasPart.length > 0) Tag = FilterNone;
+               
 
                   if(t !== "Work") Tag = null
                   else {
@@ -1823,14 +1857,18 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
             if(cpt >= max_cpt && cpt - lastN >= 1 && Object.keys(sublist).length > 3 && (t != "Work" || pagin.bookmarks[categ].nb > 3) ) {
                //if(displayTypes.length > 1 || displayTypes.indexOf("Any") !== -1) 
-               if((displayTypes.length > 1 || displayTypes.indexOf("Any") !== -1) && t !== "Work") message.push(<MenuItem className="menu-categ-collapse" onClick={(e)=>this.handleCheck(e,t,true,{},true)}><h5>{I18n.t("misc.show") +" "+t+"s" +(counts["datatype"][t]?" ("+counts["datatype"][t]+")":"")/*+" "+categ*/}</h5></MenuItem>);                      
+               if((displayTypes.length > 1 || displayTypes.indexOf("Any") !== -1) && t !== "Work") 
+                  message.push(<MenuItem className="menu-categ-collapse" onClick={(e)=>this.handleCheck(e,t,true,{},true)}><h5>{I18n.t("misc.show") +" "+t+"s" +(counts["datatype"][t]?" ("+counts["datatype"][t]+")":"")/*+" "+categ*/}</h5></MenuItem>);                      
                else { 
-                  if(t === "Work") message.push(<MenuItem className="menu-categ-collapse" onClick={this.setWorkCateg.bind(this,categ,pagin)}><h5>{I18n.t(this.state.collapse[categ]==false?"misc.hide":"misc.show") + " " + t + "s / " + h5.replace(/ \([0-9]+\)$/,"") + (pagin.bookmarks[categ].nb ? " ("+pagin.bookmarks[categ].nb +")":"") /*+" "+categ*/}</h5></MenuItem>);                      
+                  if(t === "Work") 
+                     message.push(<MenuItem className="menu-categ-collapse" onClick={this.setWorkCateg.bind(this,categ,pagin)}><h5>{I18n.t(this.state.collapse[categ]==false?"misc.hide":"misc.show") + " " + t + "s / " + h5.replace(/ \([0-9]+\)$/,"") + (pagin.bookmarks[categ].nb ? " ("+pagin.bookmarks[categ].nb +")":"") /*+" "+categ*/}</h5></MenuItem>);                      
 
-                  if(/*t !== "Work" &&*/ displayTypes.length === 1 && displayTypes.indexOf("Any") === -1) message.push(<MenuItem className="menu-categ-collapse datatype" onClick={(e)=> this.resetDT() }><h5>{I18n.t("misc.datatype")  /*+t+" "+categ*/}</h5></MenuItem>);                         
+                  if(/*t !== "Work" &&*/ displayTypes.length === 1 && displayTypes.indexOf("Any") === -1) 
+                     message.push(<MenuItem className="menu-categ-collapse datatype" onClick={(e)=> this.resetDT() }><h5>{I18n.t("misc.datatype")  /*+t+" "+categ*/}</h5></MenuItem>);                         
                }
             }
-            else if(t !== "Work" && displayTypes.length === 1 && displayTypes.indexOf("Any") === -1 && iniTitle) message.push(<MenuItem className="menu-categ-collapse datatype" onClick={(e)=>this.handleCheck(e,"Any",true,{},true)}><h5>{I18n.t("misc.datatype")  /*+" "+categ*/}</h5></MenuItem>);                      
+            else if(/*t !== "Work" &&*/ displayTypes.length === 1 && displayTypes.indexOf("Any") === -1 && iniTitle) 
+               message.push(<MenuItem className="menu-categ-collapse datatype" onClick={(e)=>this.handleCheck(e,"Any",true,{},true)}><h5>{I18n.t("misc.datatype")  /*+" "+categ*/}</h5></MenuItem>);                      
          }
 
          if(!iniTitle && (displayTypes.length > 1 || displayTypes.indexOf("Any") !== -1) ) {
@@ -1876,7 +1914,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
       this.setTypeCounts(types,counts);
 
-      if(!resMatch && ( (this.props.failures[this.props.keyword]) || (results && results.numResults === 0) || (counts.datatype["Any"] === 0 && !this.props.loading && !this.props.datatypes) ) ) { //resMatch == 0 && (!results  || results.numResults == 0) ) {
+      if(!resMatch && ((this.props.failures[this.props.keyword]) || (counts.datatype["Any"] === 0 && !this.props.loading && !this.props.datatypes) ) ) { //resMatch == 0 && (!results  || results.numResults == 0) ) {
          
          if(!this.props.loading && (this.props.failures[this.props.keyword] || !this.props.resource || !this.props.resource[this.props.keyword]) ) {             
             message.push(
@@ -1905,11 +1943,25 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             
          }
          */
-            
-         console.log("sta?",sta.id !== id,sta.repage,"=repage",!sta.results,!sta.result || !sta.results[id], sta.result && sta.result[id] && (sta.results[id].resLength != resLength),sta.result && sta.result[id] && (sta.results[id].resMatch != resMatch))
+
+
+         console.log("sta?",sta.id !== id,sta.repage,"=repage",
+            !sta.results,
+            !sta.results || !sta.results[id], 
+            sta.results && sta.results[id] && (sta.results[id].resLength != resLength),
+            sta.results && sta.results[id] && (sta.results[id].resMatch != resMatch),
+            sta.results && sta.results[id] && sta.results[id].message && sta.results[id].message.length <= 1, 
+            sta.results && sta.results[id] && sta.results[id].counts && sta.results[id].counts.datatype && Object.keys(sta.results[id].counts.datatype) && Object.keys(sta.results[id].counts.datatype).length != Object.keys(counts.datatype).length)
 
          let paginate = [], bookmarks, noBookM = false;
-         if(sta.id !== id || sta.repage || !sta.results || !sta.results[id] || (sta.results[id].resLength != resLength) || (sta.results[id].resMatch != resMatch) || ( sta.results[id].message.length <= 1) || Object.keys(sta.results[id].counts.datatype).length != Object.keys(counts.datatype).length ) { 
+         if(sta.id !== id || sta.repage 
+         || !sta.results 
+         || !sta.results[id] 
+         || (sta.results[id].resLength != resLength) 
+         || (sta.results[id].resMatch != resMatch) 
+         || ( sta.results[id].message.length <= 1) 
+         || Object.keys(sta.results[id].counts.datatype).length != Object.keys(counts.datatype).length ) { 
+            
             if(sta.id == id && this.state.paginate && this.state.paginate.pages && this.state.paginate.pages.length > 1) paginate = [ this.state.paginate ]
             if(sta.results && sta.results[id] && sta.results[id].bookmarks) bookmarks = sta.results[id].bookmarks                        
             else noBookM = true
@@ -1964,7 +2016,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
    render() {
 
-
+      let results
       let message = [],messageD = [];
       //let results ;
       let facetList = []
@@ -2014,6 +2066,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
          if(this.state.results && this.state.results[id])
          {
+            results = this.state.results[id].results
             message = this.state.results[id].message
             counts = this.state.results[id].counts
             types = this.state.results[id].types
@@ -2032,9 +2085,19 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                for(let i = min ; i <= max ; i++) { pageLinks.push(<a onClick={this.goPage.bind(this,id,i)}>{((i-1)===this.state.paginate.index?<b><u>{i}</u></b>:i)}</a>) }
                if(max < paginate.pages.length) pageLinks.push([" ... ",<a onClick={this.goPage.bind(this,id,paginate.pages.length)}>{paginate.pages.length}</a>]) 
             }
-
+            
             //console.log("prep",message,counts,types,paginate)
+            if(!message.length && ( (this.props.searches[this.props.keyword+"@"+this.props.language] && !this.props.searches[this.props.keyword+"@"+this.props.language].numResults ) 
+                  || (!this.props.loading && results && results.results && results.results.bindings && !results.results.bindings.numResults) ) )
+               {
+                  message.push(
+                     <Typography style={{fontSize:"1.5em",maxWidth:'700px',margin:'50px auto',zIndex:0}}>
+                           No result found.
+                     </Typography>
+                  ) 
+            }
          }
+
 
       }
 
