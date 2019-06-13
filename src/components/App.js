@@ -503,18 +503,18 @@ class App extends Component<Props,State> {
 
          let sameKW = state.id && state.id.match(new RegExp("#"+props.keyword+"@"+props.language+"$"))
          
-         console.log("new id",state.id,newid,sameKW,state.filters.datatype)
 
-         if(!sameKW || (state.filters.datatype.indexOf("Work") !== -1 && (!state.id || (!state.id.match(/Work/)&&!state.id.match(/Any/)) ) ) )
+         if(!sameKW || (state.filters.datatype.length > 1 || state.filters.datatype.indexOf("Any") !== -1)) //((state.filters.datatype.indexOf("Work") !== -1 || state.filters.datatype.indexOf("Any") !== -1) && (!state.id || state.filters.datatype.length > 1 || (!state.id.match(/Work/)&&!state.id.match(/Any/)) ) ) )
             for(let c of ["Other","ExprOf", "HasExpr", "Abstract"]) if(s.collapse[c] != undefined) delete s.collapse[c]         
          //s.id = newid
          s.paginate = {index:0,pages:[0],n:[0]}         
          s.repage = true 
-         if(sameKW && state.id.match(/Work/) && state.results[s.id] && state.results[s.id].bookmarks) {            
+         if(sameKW && /*state.id.match(/Work/) &&*/ state.results[state.id] && state.results[state.id].bookmarks && Object.keys(state.results[state.id].bookmarks).length) {            
             if(!s.results) s.results = {}
-            s.results[newid] = { bookmarks: state.results[s.id].bookmarks }
+            s.results[newid] = { bookmarks: state.results[state.id].bookmarks }
          }
 
+         //console.log("new id",state.id,newid,sameKW,state.filters.datatype,s.results&&s.results[newid]?JSON.stringify(s.results[newid].bookmarks,null,3):null)
          
          //console.log("collap!",JSON.stringify(state.collapse,null,3))
 
@@ -529,7 +529,7 @@ class App extends Component<Props,State> {
          {
             needRefresh = true
             time = 1
-            console.log("refreshA",time)
+            //console.log("refreshA",time)
          }
          else {
             current = state.results[state.id].results.time
@@ -537,14 +537,14 @@ class App extends Component<Props,State> {
             if(props.searches && props.searches[k]) { // && props.searches[k].time > state.results[state.id].results.time) {
                needRefresh = true ;
                time = props.searches[k].time
-               console.log("refreshB",time)
+               //console.log("refreshB",time)
             }
             for(let d of ["Etext","Person","Work"]) {
                if(props.searches && props.searches[d] && props.searches[d][k]) {
                   if(!time || props.searches[d][k].time > time) { 
                      time = props.searches[d][k].time 
                      needRefresh = true 
-                     console.log("refreshC",time,d)
+                     //console.log("refreshC",time,d)
                   }
                }  
             }      
@@ -556,13 +556,13 @@ class App extends Component<Props,State> {
       // 
       if(state.id && needRefresh && time && (!current || time > current))
       {
-         console.group("NEED REFRESH")
+         //console.group("NEED REFRESH")
 
          if(props.searches[props.keyword+"@"+props.language] && (!time || time == 1)) { 
             time = props.searches[props.keyword+"@"+props.language].time
          }
 
-         console.log("K", props.keyword, time, current)
+         //console.log("K", props.keyword, time, current)
 
          let results
          if(state.filters.datatype.indexOf("Any") !== -1 || state.filters.datatype.length > 1 || state.filters.datatype.filter(d => ["Work","Etext","Person"].indexOf(d) === -1).length ) {
@@ -577,7 +577,7 @@ class App extends Component<Props,State> {
             else if(Ts.indexOf(dt) === -1) Ts.push(dt)
          }
          
-         console.log("Ts",Ts)
+         //console.log("Ts",Ts)
 
          let merge 
          if(props.searches[props.keyword+"@"+props.language]) for(let dt of Ts) { 
@@ -594,7 +594,7 @@ class App extends Component<Props,State> {
             let dts = dt.toLowerCase()+"s"
             if(!merge) merge = {}
 
-            console.log("dts",dts,results,res)
+            //console.log("dts",dts,results,res)
 
             if(!res || !res.results || !res.results.bindings || !res.results.bindings[dts]) { 
 
@@ -609,7 +609,7 @@ class App extends Component<Props,State> {
                         let m = [ ...res.results.bindings[dts][k].filter(p => (!p.value || !p.value.match(/([Aa]bstract)|([↦↤])/)) && (!p.type || !p.type.match(/[Mm]atch|[Ee]xpression/))), 
                                  ...(!results.results.bindings[dts]||!results.results.bindings[dts][k]?[]:results.results.bindings[dts][k]) ]
 
-                        console.log("m?",dts,k,m.length) //,m)
+                        //console.log("m?",dts,k,m.length) //,m)
 
                         return {
                            ...acc, 
@@ -702,7 +702,7 @@ class App extends Component<Props,State> {
             }
             if(time && s.results[s.id].results) s.results[s.id].results.time = time    
 
-            console.log("s.id",s.id,s.results[s.id],time)        
+            //console.log("s.id",s.id,s.results[s.id],time)        
          }
 
          console.groupEnd()
@@ -1424,7 +1424,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
       //if(displayTypes.length) displayTypes = displayTypes.sort(function(a,b) { return searchTypes.indexOf(a) - searchTypes.indexOf(b) })
 
-      console.log("list x types",list,types,displayTypes)
+      //console.log("list x types",list,types,displayTypes)
 
       for(let t of displayTypes) {
 
@@ -1438,11 +1438,11 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          if(bookmarks) pagin.bookmarks = bookmarks
          
          if(t === "Work" && pagin.gotoCateg !== undefined) { 
-            console.log("pagin.goto A",JSON.stringify(pagin,null,3))                  
+            //console.log("pagin.goto A",JSON.stringify(pagin,null,3))                  
             pagin.index = pagin.gotoCateg
             pagin.pages = pagin.pages.slice(0,pagin.gotoCateg+1)
             pagin.n = pagin.n.slice(0,pagin.gotoCateg+1)
-            console.log("pagin.goto Z",JSON.stringify(pagin,null,3))
+            //console.log("pagin.goto Z",JSON.stringify(pagin,null,3))
          }
          
          if(t === "Any") continue ;
@@ -1908,7 +1908,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                         return searchTypes.indexOf(t) !== -1 
                      }).reduce((acc,e)=>acc+Object.keys(results.results.bindings[e]).length,0)
 
-      console.log("res::",id,results,message,message.length,resLength,resMatch)
+      //console.log("res::",id,results,message,message.length,resLength,resMatch)
 
       let sta = { ...this.state }
 
@@ -1944,7 +1944,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          }
          */
 
-
+         /*
          console.log("sta?",sta.id !== id,sta.repage,"=repage",
             !sta.results,
             !sta.results || !sta.results[id], 
@@ -1952,7 +1952,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             sta.results && sta.results[id] && (sta.results[id].resMatch != resMatch),
             sta.results && sta.results[id] && sta.results[id].message && sta.results[id].message.length <= 1, 
             sta.results && sta.results[id] && sta.results[id].counts && sta.results[id].counts.datatype && Object.keys(sta.results[id].counts.datatype) && Object.keys(sta.results[id].counts.datatype).length != Object.keys(counts.datatype).length)
-
+         */
          let paginate = [], bookmarks, noBookM = false;
          if(sta.id !== id || sta.repage 
          || !sta.results 
@@ -2002,7 +2002,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
             //else sta.repage = false
             
-            console.log("repage?",sta.repage)
+            //console.log("repage?",sta.repage)
 
             this.setState(sta);
          }
