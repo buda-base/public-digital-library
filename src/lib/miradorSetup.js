@@ -1,6 +1,6 @@
 
 
-let jQ,extendedPresets,sortLangScriptLabels
+let jQ,extendedPresets,sortLangScriptLabels,__
 
 let importModules = async () => {
    try {
@@ -12,10 +12,13 @@ let importModules = async () => {
          sortLangScriptLabels = module.sortLangScriptLabels
          extendedPresets = module.extendedPresets ;
       });
+
+      __ = await require("lodash")
    }
    catch(e)
    {
       jQ = window.jQuery
+      __ = eval('_')
    }
 
 
@@ -24,8 +27,7 @@ importModules();
 
 
 
-let timerConf, scrollTimer, scrollTimer2, clickTimer
-
+let timerConf, scrollTimer, scrollTimer2, clickTimer ;
 
 export function miradorSetUI(closeCollec)
 {
@@ -111,6 +113,9 @@ export function miradorSetUI(closeCollec)
    }, 350 )
 }
 
+const NB_PAGES = 10 ; 
+let etextPages = {};
+
 export function miradorConfig(data, manifest, canvasID, useCredentials, langList)
 {
    let _extendedPresets = extendedPresets
@@ -119,7 +124,7 @@ export function miradorConfig(data, manifest, canvasID, useCredentials, langList
    if(!_sortLangScriptLabels) _sortLangScriptLabels = window.sortLangScriptLabels
    if(langList === undefined) langList = [ "bo", "zh-hans" ]
 
-   let labelToString = (labels) => {
+   let labelToString = (labels,labelArray) => {
 
       // dont assume bo-x-ewts on unlocalized labels...
       // if(typeof labels == "string") labels = [ { "@value": labels, "@language":"bo-x-ewts" } ]
@@ -128,6 +133,11 @@ export function miradorConfig(data, manifest, canvasID, useCredentials, langList
       let langs = _extendedPresets(langList)
       let sortLabels = _sortLangScriptLabels(labels,langs.flat,langs.translit)
       let label = sortLabels[0]
+
+      if(labelArray) labelArray.push(label);
+
+      //console.log("label",JSON.stringify(label,null,3))
+
       if(label["@value"]) return label["@value"] //+"@"+label["@language"]
       if(label["value"]) return label["value"]  //+"@"+label["language"]
       else return label
@@ -141,22 +151,124 @@ export function miradorConfig(data, manifest, canvasID, useCredentials, langList
 
    }
 
+   let getEtextPage ;
+   if(true && manifest) {
+
+
+      let ut = manifest.replace(/^.*bdr:V([^/]+).*$/,"bdr:UT$1_0000")
+
+      //console.log("data",data,ut)
+
+      getEtextPage = async (canvas) => { 
+
+         if(!canvas || !ut) return "(issue with canvas data: "+JSON.stringify(canvas,null,3)+")" ;
+
+         let id = canvas.label ;
+         if(id && id[0] && id[0]["@value"]) id = id[0]["@value"].replace(/[^0-9]/g,"")
+
+         if(!id || id.match(/[^0-9]/)) return "(issue with canvas label: "+JSON.stringify(canvas.label,null,3)+")" ;
+         else id = Number(id)
+
+         //console.log("page " +id+ "?",JSON.stringify(etextPages[ut],null,3))
+
+         if(!etextPages[ut]) etextPages[ut] = {}
+         if(!etextPages[ut][id]) {            
+
+            etextPages[ut][id] = true ; 
+            let data = await window.fetch("http://purl.bdrc.io/query/graph/ChunksByPage?R_RES="+ut+"&I_START="+id+"&I_END="+(id+NB_PAGES-1)) ;
+            let json = await data.json() ;
+
+            console.log("DATA OK");
+
+            if(json && json["@graph"]) json = json["@graph"]
+            let pages = json.filter(e => e.type && e.type === "EtextPage")
+            pages = __.orderBy(pages,['seqNum'],['asc'])
+            let chunks = json.filter(e => e.chunkContents)
+            chunks = __.orderBy(chunks,['seqNum'],['asc'])
+            for(let p of pages) {               
+               etextPages[ut][p["seqNum"]] = p
+               
+               if(!p.chunks) p.chunks = []
+               for(let c of chunks) {
+                  //console.log(p,c)
+                  let content = c["chunkContents"], start = -1, end = -1
+/*
+                  if( c.sliceStartChar >= p.sliceStartChar && c.sliceStartChar <= p.sliceEndChar 
+                   || c.sliceEndChar >= p.sliceStartChar   && c.sliceEndChar <= p.sliceEndChar  ) {
+
+                      if(c.sliceStartChar < p.sliceStartChar) start = p.sliceStartChar - c.sliceStartChar
+                      else start = 0
+
+                      if(c.sliceEndChar > p.slideEndChar) end = p.sliceEndChar - c.sliceStartChar
+                      else end = c.sliceEndChar - c.sliceStartChar
+*/
+                  
+                  if( p.sliceStartChar >= c.sliceStartChar && p.sliceStartChar <= c.sliceEndChar 
+                   || p.sliceEndChar >= c.sliceStartChar   && p.sliceEndChar <= c.sliceEndChar  ) {
+
+                      if(p.sliceStartChar < c.sliceStartChar) start = 0
+                      else start = p.sliceStartChar - c.sliceStartChar
+
+                      if(p.sliceEndChar > c.sliceEndChar) end = c.sliceEndChar - c.sliceStartChar
+                      else end = p.sliceEndChar - c.sliceStartChar
+                  }
+                  else if( p.sliceStartChar <= c.sliceStartChar && p.sliceEndChar >= c.sliceEndChar )
+                  {
+                     start = 0
+                     end = c.sliceEndChar - c.sliceStartChar
+                  }
+                  /*
+                  if(p.sliceStartChar >= c.sliceStartChar && p.sliceStartChar <= c.sliceEndChar) {
+                     start = p.sliceStartChar - c.sliceStartChar
+                     if(p.sliceEndChar <= c.sliceEndChar) end = p.sliceEndChar - c.sliceStartChar
+                     else end = c.sliceEndChar - c.sliceStartChar
+                  }
+                  else if(p.sliceEndChar >= c.sliceStartChar && p.sliceEndChar <= c.sliceEndChar) {
+                     
+                     start = c.sliceStartChar
+                     end = p.sliceEndChar - c.sliceStartChar                     
+                  }
+                  */
+                  if(start >= 0 && end >= 0) {
+                     if(content["@value"] && content["@language"]) p.chunks.push({"@language":content["@language"],"@value":content["@value"].substring(start,end)})
+                     else p.chunks.push({"@language":"en", "@value":"issue with chunk data " + JSON.stringify(c,null,3)})
+                  }
+                  
+               }
+
+               //console.log("etext p.",p["seqNum"],JSON.stringify(etextPages[ut][p["seqNum"]],null,3));
+            }
+            //for(let i = id ; i < NB_PAGES ; i++) etextPages[ut][i] = true ; 
+
+            //console.log(etextPages)
+
+         }
+
+         if(etextPages[ut][id] && etextPages[ut][id] !== true && etextPages[ut][id].chunks && etextPages[ut][id].chunks.length) 
+            return etextPages[ut][id].chunks ;
+
+         return [{"@language":"en","@value":"no data found (yet !?)"}]
+
+      }
+   }
+
    let config = {
       id:"viewer",
       data: [],
       showAddFromURLBox:false,
 
       manifestsPanel: {
-        name: "Collection Tree Manifests Panel",
-        module: "CollectionTreeManifestsPanel",
-        options: {
+         name: "Collection Tree Manifests Panel",
+         module: "CollectionTreeManifestsPanel",
+         options: {
             labelToString 
-        }
+         }
       },
       windowSettings: {
-        ajaxWithCredentials:useCredentials,
-        sidePanelVisible: false,
-        labelToString,
+         ajaxWithCredentials:useCredentials,
+         sidePanelVisible: false,
+         labelToString,         
+         getEtextPage
       },
 
       mainMenuSettings : {

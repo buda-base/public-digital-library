@@ -70,6 +70,7 @@ export const resetSearch = (state: DataState, action: Action) => {
 reducers[actions.TYPES.resetSearch] = resetSearch;
 
 export const ontoSearch = (state: DataState, action: Action) => {
+    if(state.datatypes) delete state.datatypes
     return {
         ...state,
         keyword: action.payload,
@@ -602,7 +603,7 @@ export const foundResults = (state: DataState, action: actions.FoundResultsActio
 
       keyword:action.payload.keyword,
       language:action.payload.language,
-      searches: searches
+      searches: searches,
    }
 }
 reducers[actions.TYPES.foundResults] = foundResults;

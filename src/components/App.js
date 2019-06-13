@@ -483,7 +483,6 @@ class App extends Component<Props,State> {
       if(props.langPreset && state.langPreset) for(let i = 0 ; i < props.langPreset.length && eq; i ++ ) { eq = eq && props.langPreset[i] === state.langPreset[i] ; }
       else eq = false ;
 
-      console.log("gDsFp",eq,props,state,s)
 
       if(!eq) {
          if(!s) s = { ...state }
@@ -491,9 +490,11 @@ class App extends Component<Props,State> {
          if(props.langIndex !== undefined ) s = { ...s, language:props.langPreset[0] }
       }
 
+      console.log("gDsFp",eq,props,state,s,state.id)
+
       // pagination settings
-      let d, newid = state.filters.datatype.sort()+"#"+props.keyword+"@"+props.language
-      if(state.id !== newid && props.keyword && props.language) { 
+      let d, newid = state.filters.datatype.sort()+"#"+props.keyword+"@"+props.language      
+      if(state.id !== newid && props.keyword) { // && props.language) { 
          if(!s) s = { ...state }
 
          /*
@@ -514,7 +515,7 @@ class App extends Component<Props,State> {
             s.results[newid] = { bookmarks: state.results[state.id].bookmarks }
          }
 
-         //console.log("new id",state.id,newid,sameKW,state.filters.datatype,s.results&&s.results[newid]?JSON.stringify(s.results[newid].bookmarks,null,3):null)
+         console.log("new id",state.id,newid,sameKW,state.filters.datatype,s.results&&s.results[newid]?JSON.stringify(s.results[newid].bookmarks,null,3):null)
          
          //console.log("collap!",JSON.stringify(state.collapse,null,3))
 
@@ -562,7 +563,7 @@ class App extends Component<Props,State> {
             time = props.searches[props.keyword+"@"+props.language].time
          }
 
-         //console.log("K", props.keyword, time, current)
+         console.log("K", props.keyword, time, current)
 
          let results
          if(state.filters.datatype.indexOf("Any") !== -1 || state.filters.datatype.length > 1 || state.filters.datatype.filter(d => ["Work","Etext","Person"].indexOf(d) === -1).length ) {
@@ -607,7 +608,7 @@ class App extends Component<Props,State> {
                   ...Object.keys(res.results.bindings[dts]).reduce( (acc,k) =>{
 
                         let m = [ ...res.results.bindings[dts][k].filter(p => (!p.value || !p.value.match(/([Aa]bstract)|([↦↤])/)) && (!p.type || !p.type.match(/[Mm]atch|[Ee]xpression/))), 
-                                 ...(!results.results.bindings[dts]||!results.results.bindings[dts][k]?[]:results.results.bindings[dts][k]) ]
+                                 ...(!results.results.bindings[dts]||!results.results.bindings[dts][k]||!props.language?[]:results.results.bindings[dts][k]) ]
 
                         //console.log("m?",dts,k,m.length) //,m)
 
@@ -617,7 +618,7 @@ class App extends Component<Props,State> {
                         }
                      }, {}),
 
-                  ...(!results.results.bindings[dts]?[]:Object.keys(results.results.bindings[dts]).reduce( (acc,k) => {
+                  ...(!results.results.bindings[dts]||!props.language?[]:Object.keys(results.results.bindings[dts]).reduce( (acc,k) => {
                         return {
                            ...acc, 
                            ...(!res.results.bindings[dts][k]?{[k]:results.results.bindings[dts][k]}:{})
@@ -1925,9 +1926,12 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          }
          if(!sta.results || !sta.results[id] || sta.results[id].message.length != message.length) 
          {
+            let change
             if(!sta.results) sta.results = {}
-            sta.results[id] = { message, types, counts, resMatch, results }
-            this.setState(sta);
+            if(!sta.results[id]) {
+               sta.results[id] = { message, types, counts, resMatch, results }
+               this.setState(sta);
+            }
          }
       }
       else 
