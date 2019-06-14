@@ -161,7 +161,7 @@ export function miradorConfig(data, manifest, canvasID, useCredentials, langList
 
       userButtons = [
             { 
-               "custom":"<span><input style='vertical-align:text-bottom;cursor:pointer;' type='checkbox' checked/> Show Etext</span>",
+               "custom":"<span><input style='vertical-align:text-bottom;cursor:pointer;' type='checkbox' id='showEtext'/> Show Etext</span>",
                 "iconClass": "fa",
                "attributes" : { style:"width:auto;", onClick : "javascript:window.setEtext(this,event)" }             
             }
@@ -171,12 +171,12 @@ export function miradorConfig(data, manifest, canvasID, useCredentials, langList
          let checkB = jQ(obj).find("input[type=checkbox]").get(0)
          if(e.target.tagName.toLowerCase() !== 'input') checkB.checked = !checkB.checked
          if(!checkB.checked) {  jQ(".etext-content").each( (i,elem) => { 
-            jQ(".etext-content").hide();
+            jQ(".etext-content").addClass("hide");
             //elem = jQ(elem);
             //elem.attr("data-h",elem.height());
             //elem.animate({"height":0,"margin-top":"-100%"}, 400);
          })}
-         else {  jQ(".etext-content").show(); }
+         else {  jQ(".etext-content").removeClass("hide"); }
       }
 
       getEtextPage = async (canvas) => { 
@@ -193,14 +193,16 @@ export function miradorConfig(data, manifest, canvasID, useCredentials, langList
 
          if(!etextPages[ut]) etextPages[ut] = {}
          if(!etextPages[ut][id]) {            
-
-            etextPages[ut][id] = true ; 
+             
+            for(let i = id ; i <= id+NB_PAGES-1 ; i++) etextPages[ut][i] = true ;
             let data = await window.fetch("http://purl.bdrc.io/query/graph/ChunksByPage?R_RES="+ut+"&I_START="+id+"&I_END="+(id+NB_PAGES-1)) ;
             let json = await data.json() ;
 
             //console.log("DATA OK");
 
             if(json && json["@graph"]) json = json["@graph"]
+            if(!json.filter) 
+               return [{"@language":"en","@value":"no data found (yet !?)"}]
             let pages = json.filter(e => e.type && e.type === "EtextPage")
             pages = __.orderBy(pages,['seqNum'],['asc'])
             let chunks = json.filter(e => e.chunkContents)
