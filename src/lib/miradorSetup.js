@@ -151,13 +151,33 @@ export function miradorConfig(data, manifest, canvasID, useCredentials, langList
 
    }
 
-   let getEtextPage ;
+   let getEtextPage,userButtons ;
    if(true && manifest) {
 
 
       let ut = manifest.replace(/^.*bdr:V([^/]+).*$/,"bdr:UT$1_0000")
 
       //console.log("data",data,ut)
+
+      userButtons = [
+            { 
+               "custom":"<span><input style='vertical-align:text-bottom;cursor:pointer;' type='checkbox' checked/> Show Etext</span>",
+                "iconClass": "fa",
+               "attributes" : { style:"width:auto;", onClick : "javascript:window.setEtext(this,event)" }             
+            }
+         ]
+      window.setEtext = (obj,e) => {
+         console.log("setetext",obj,e,e.target.tagName)
+         let checkB = jQ(obj).find("input[type=checkbox]").get(0)
+         if(e.target.tagName.toLowerCase() !== 'input') checkB.checked = !checkB.checked
+         if(!checkB.checked) {  jQ(".etext-content").each( (i,elem) => { 
+            jQ(".etext-content").hide();
+            //elem = jQ(elem);
+            //elem.attr("data-h",elem.height());
+            //elem.animate({"height":0,"margin-top":"-100%"}, 400);
+         })}
+         else {  jQ(".etext-content").show(); }
+      }
 
       getEtextPage = async (canvas) => { 
 
@@ -178,7 +198,7 @@ export function miradorConfig(data, manifest, canvasID, useCredentials, langList
             let data = await window.fetch("http://purl.bdrc.io/query/graph/ChunksByPage?R_RES="+ut+"&I_START="+id+"&I_END="+(id+NB_PAGES-1)) ;
             let json = await data.json() ;
 
-            console.log("DATA OK");
+            //console.log("DATA OK");
 
             if(json && json["@graph"]) json = json["@graph"]
             let pages = json.filter(e => e.type && e.type === "EtextPage")
@@ -192,16 +212,6 @@ export function miradorConfig(data, manifest, canvasID, useCredentials, langList
                for(let c of chunks) {
                   //console.log(p,c)
                   let content = c["chunkContents"], start = -1, end = -1
-/*
-                  if( c.sliceStartChar >= p.sliceStartChar && c.sliceStartChar <= p.sliceEndChar 
-                   || c.sliceEndChar >= p.sliceStartChar   && c.sliceEndChar <= p.sliceEndChar  ) {
-
-                      if(c.sliceStartChar < p.sliceStartChar) start = p.sliceStartChar - c.sliceStartChar
-                      else start = 0
-
-                      if(c.sliceEndChar > p.slideEndChar) end = p.sliceEndChar - c.sliceStartChar
-                      else end = c.sliceEndChar - c.sliceStartChar
-*/
                   
                   if( p.sliceStartChar >= c.sliceStartChar && p.sliceStartChar <= c.sliceEndChar 
                    || p.sliceEndChar >= c.sliceStartChar   && p.sliceEndChar <= c.sliceEndChar  ) {
@@ -217,37 +227,20 @@ export function miradorConfig(data, manifest, canvasID, useCredentials, langList
                      start = 0
                      end = c.sliceEndChar - c.sliceStartChar
                   }
-                  /*
-                  if(p.sliceStartChar >= c.sliceStartChar && p.sliceStartChar <= c.sliceEndChar) {
-                     start = p.sliceStartChar - c.sliceStartChar
-                     if(p.sliceEndChar <= c.sliceEndChar) end = p.sliceEndChar - c.sliceStartChar
-                     else end = c.sliceEndChar - c.sliceStartChar
-                  }
-                  else if(p.sliceEndChar >= c.sliceStartChar && p.sliceEndChar <= c.sliceEndChar) {
-                     
-                     start = c.sliceStartChar
-                     end = p.sliceEndChar - c.sliceStartChar                     
-                  }
-                  */
+
                   if(start >= 0 && end >= 0) {
                      if(content["@value"] && content["@language"]) p.chunks.push({"@language":content["@language"],"@value":content["@value"].substring(start,end)})
                      else p.chunks.push({"@language":"en", "@value":"issue with chunk data " + JSON.stringify(c,null,3)})
                   }
                   
                }
-
-               //console.log("etext p.",p["seqNum"],JSON.stringify(etextPages[ut][p["seqNum"]],null,3));
             }
-            //for(let i = id ; i < NB_PAGES ; i++) etextPages[ut][i] = true ; 
-
-            //console.log(etextPages)
-
          }
 
          if(etextPages[ut][id] && etextPages[ut][id] !== true && etextPages[ut][id].chunks && etextPages[ut][id].chunks.length) 
             return etextPages[ut][id].chunks ;
 
-         return [{"@language":"en","@value":"no data found (yet !?)"}]
+         //return [{"@language":"en","@value":"no data found (yet !?)"}]
 
       }
    }
@@ -268,7 +261,8 @@ export function miradorConfig(data, manifest, canvasID, useCredentials, langList
          ajaxWithCredentials:useCredentials,
          sidePanelVisible: false,
          labelToString,         
-         getEtextPage
+         getEtextPage,
+         userButtons
       },
 
       mainMenuSettings : {
