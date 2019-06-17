@@ -248,51 +248,51 @@ export default class API {
 
    }
 
-       async loadEtextInfo(IRI:string): Promise<string>
-       {
-            //let resource =  JSON.parse(await this.getURLContents(this._etextPath(IRI),false));
+   async loadEtextInfo(IRI:string): Promise<string>
+   {
+      //let resource =  JSON.parse(await this.getURLContents(this._etextPath(IRI),false));
 
-            if(!IRI.indexOf(':') === -1 ) IRI = "bdr:"+IRI
+      if(!IRI.indexOf(':') === -1 ) IRI = "bdr:"+IRI
 
-            //console.log("etext",resource)
-            try {
-               let config = store.getState().data.config.ldspdi
-               let url = config.endpoints[config.index]+"/query/graph" ;
-               let param = {"searchType":"Etext_base","R_RES":IRI,"L_NAME":"","LG_NAME":"" }
-               let data = await this.getQueryResults(url, IRI, param,"GET") //,"application/json");
+      //console.log("etext",resource)
+      try {
+         let config = store.getState().data.config.ldspdi
+         let url = config.endpoints[config.index]+"/query/graph" ;
+         let param = {"searchType":"Etext_base","R_RES":IRI,"L_NAME":"","LG_NAME":"" }
+         let data = await this.getQueryResults(url, IRI, param,"GET") //,"application/json");
 
-               //console.log("etextinfo",JSON.stringify(data,null,3))
+         console.log("etextinfo",data) //JSON.stringify(data,null,3))
 
-               return data ;
-            }
-            catch(e){
-               throw(e)
-            }
-
+         return data ;
+      }
+      catch(e){
+         throw(e)
       }
 
-             async loadEtextChunks(IRI:string,next:number=0): Promise<string>
-             {
-                  //let resource =  JSON.parse(await this.getURLContents(this._etextPath(IRI),false));
+   }
 
-                  if(!IRI.indexOf(':') === -1) IRI = "bdr:"+IRI
+   async loadEtextChunks(IRI:string,next:number=0): Promise<string>
+   {
+      //let resource =  JSON.parse(await this.getURLContents(this._etextPath(IRI),false));
 
-                  //console.log("etext",resource)
-                  try {
-                     let config = store.getState().data.config.ldspdi
-                     let url = config.endpoints[config.index]+"/query/graph" ;
-                     let param = {"searchType":"Chunks","R_RES":IRI,"I_START":next,"I_END":next+10000,"L_NAME":"","LG_NAME":"" }
-                     let data = await this.getQueryResults(url, IRI, param,"GET","application/ld+json");
+      if(!IRI.indexOf(':') === -1) IRI = "bdr:"+IRI
 
-                     //console.log("etextchunks",JSON.stringify(data,null,3))
+      //console.log("etext",resource)
+      try {
+         let config = store.getState().data.config.ldspdi
+         let url = config.endpoints[config.index]+"/query/graph" ;
+         let param = {"searchType":"Chunks","R_RES":IRI,"I_START":next,"I_END":next+10000,"L_NAME":"","LG_NAME":"" }
+         let data = await this.getQueryResults(url, IRI, param,"GET","application/ld+json");
 
-                     return data ;
-                  }
-                  catch(e){
-                     throw(e)
-                  }
+         //console.log("etextchunks",JSON.stringify(data,null,3))
 
-            }
+         return data ;
+      }
+      catch(e){
+         throw(e)
+      }
+
+   }
 
    async loadAssocResources(IRI:string): Promise<string>
    {

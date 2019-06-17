@@ -185,6 +185,18 @@ export const getChunks = (iri: string,next:number=0): Action => {
     }
 }
 
+TYPES.getPages = 'GET_PAGES';
+export const getPages = (iri: string,next:number=0): Action => {
+
+   console.log("getP",iri,next)
+
+    return {
+        type: TYPES.getPages,
+        payload: iri,
+        meta: next
+    }
+}
+
 
 TYPES.gotNextChunks = 'GOT_NEXT_CHUNKS';
 export const gotNextChunks = (iri: string,data:{}): Action => {
@@ -197,6 +209,19 @@ export const gotNextChunks = (iri: string,data:{}): Action => {
         meta: data
     }
 }
+
+TYPES.gotNextPages = 'GOT_NEXT_PAGES';
+export const gotNextPages = (iri: string,data:{}): Action => {
+
+   //console.log("nextP",iri,next,data)
+
+    return {
+        type: TYPES.gotNextPages,
+        payload: iri,
+        meta: data
+    }
+}
+
 
 
 export type SearchFailedAction = {

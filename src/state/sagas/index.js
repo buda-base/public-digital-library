@@ -102,10 +102,9 @@ async function initiateApp(params,iri,myprops) {
       res0[bdr+iri][skos+"prefLabel"] = { "lang" : lab["@language"], value : lab["@value"] } //{ value:res0[bdr+iri]["eTextTitle"], lang:"" }
       */
 
-      store.dispatch(dataActions.getChunks(iri));
 
-         
-
+      let bdrIRI = bdr+iri.replace(/^bdr:/,"") ;
+      
       let assoRes = {"data":Object.keys(res).reduce((acc,e)=>{
          //return ({...acc,[e]:Object.keys(res[e]).map(f => ( { type:f, ...res[e][f] } ) ) } )
             let val = Object.keys(res[e]).reduce(
@@ -119,34 +118,34 @@ async function initiateApp(params,iri,myprops) {
             else return ({...acc, [e]:val })
          },{})}
 
-         //console.log("gotAR",JSON.stringify(assoRes,null,3));
+      //console.log("gotAR",JSON.stringify(assoRes,null,3));
 
-         store.dispatch(dataActions.gotAssocResources(iri,assoRes));
+      store.dispatch(dataActions.gotAssocResources(iri,assoRes));
 
-         res = { [bdr+iri.replace(/^bdr:/,"")] : Object.keys(res).reduce((acc,e) => {
+      res = { [bdrIRI] : Object.keys(res).reduce((acc,e) => {
 
-            //if(Object.keys(res[e]).indexOf(skos+"prefLabel") === -1)
-            return ({...acc, ...Object.keys(res[e]).filter(k => k !== bdo+"itemHasVolume").reduce(
-               (acc,f) => ({...acc,[f]:res[e][f]}),
-               {}) })
-               //else
-               //   return acc
-               /*Object.keys(res[bdr+iri][e]).reduce((ac,f) => {
-               console.log("e,ac,f",e,ac,f)
-               return ( { ...ac, ...res[bdr+iri][e][f] })
-            },{})})*/
-         },{}) }
+         //if(Object.keys(res[e]).indexOf(skos+"prefLabel") === -1)
+         return ({...acc, ...Object.keys(res[e]).filter(k => k !== bdo+"itemHasVolume").reduce(
+            (acc,f) => ({...acc,[f]:res[e][f]}),
+            {}) })
+            //else
+            //   return acc
+            /*Object.keys(res[bdr+iri][e]).reduce((ac,f) => {
+            console.log("e,ac,f",e,ac,f)
+            return ( { ...ac, ...res[bdr+iri][e][f] })
+         },{})})*/
+      },{}) }
 
-         store.dispatch(dataActions.gotResource(iri,res));
+      if(res[bdrIRI]) {
+         if(!res[bdrIRI][bdo+"eTextHasPage"]) store.dispatch(dataActions.getChunks(iri));
+         else {
+            res[bdrIRI][bdo+"eTextHasPage"] = []
+            store.dispatch(dataActions.getPages(iri)); 
+         }
+      }         
 
-         //console.log("gotR",JSON.stringify(res,null,3));
+      store.dispatch(dataActions.gotResource(iri,res));
 
-
-         /*Object.keys(res).reduce((acc,e) => {
-         return ({ ...acc, ...res[e] })
-      },{})}));*/
-
-      //store.dispatch(dataActions.getEtext(iri))
    }
 
    //let t = getEntiType(iri)
@@ -280,6 +279,30 @@ async function getChunks(iri,next) {
       console.error("ERRROR with chunks",iri,next,e)
 
       //store.dispatch(dataActions.chunkError(url,e,iri);
+   }
+
+}
+
+async function getPages(iri,next) {
+   try {
+
+      let data = await api.loadEtextChunks(iri,next);
+
+      data = _.sortBy(data["@graph"],'seqNum')
+      .filter(e => e.chunkContents)
+      .map(e => ({
+        value:e.chunkContents["@value"],
+        seq:e.seqNum,
+        start:e.sliceStartChar,
+        end:e.sliceEndChar
+       })); //+ " ("+e.seqNum+")" }))
+
+      console.log("dataP",iri,next,data)
+
+      store.dispatch(dataActions.gotNextPages(iri,data))
+   }
+   catch(e){
+      console.error("ERRROR with pages",iri,next,e)
    }
 
 }
@@ -912,6 +935,14 @@ export function* watchGetChunks() {
    );
 }
 
+export function* watchGetPages() {
+
+   yield takeLatest(
+      dataActions.TYPES.getPages,
+      (action) => getPages(action.payload,action.meta)
+   );
+}
+
 export function* watchGetOneDatatype() {
 
    yield takeLatest(
@@ -952,6 +983,7 @@ export default function* rootSaga() {
       //watchChoosingHost(),
       //watchGetDatatypes(),
       watchGetChunks(),
+      watchGetPages(),
       watchGetFacetInfo(),
       watchGetOneDatatype(),
       watchGetOneFacet(),

@@ -32,7 +32,7 @@ const mapStateToProps = (state,ownProps) => {
    let rightPanel = state.ui.rightPanel
 
    let nextChunk = state.data.nextChunk
-
+   let nextPage = state.data.nextPage
 
    let firstImage
    let canvasID
@@ -68,7 +68,7 @@ const mapStateToProps = (state,ownProps) => {
 
    let props = { logged,config,resources, ontology, keyword, language, datatype, assocResources, prefLang, failures,
       imageAsset,firstImage,canvasID,collecManif,manifests,manifestError,pdfVolumes,createPdf,pdfUrl,
-      annoCollec,rightPanel,locale,langPreset,imgData, nextChunk }
+      annoCollec,rightPanel,locale,langPreset,imgData, nextChunk, nextPage }
 
    console.log("mS2p",state,props)
 
@@ -96,6 +96,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       },
       onGetChunks:(IRI:string,next:number=0) => {
          dispatch(data.getChunks(IRI,next));
+      },
+      onGetPages:(IRI:string,next:number=0) => {
+         dispatch(data.getPages(IRI,next));
       },
       onToggleLanguagePanel:() => {
          dispatch(ui.toggleLanguagePanel());

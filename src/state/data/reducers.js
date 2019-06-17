@@ -32,7 +32,9 @@ export type DataState = {
          manifests?:[],
          imgData?:string
       }
-   }
+   },
+   nextChunk?:number,
+   nextPage?:number,
 }
 
 const DEFAULT_STATE: DataState = {
@@ -99,6 +101,14 @@ export const getChunks = (state: DataState, action: Action) => {
 }
 reducers[actions.TYPES.getChunks] = getChunks;
 
+
+export const getPages = (state: DataState, action: Action) => {
+   return {
+       ...state,
+       "nextPage": action.meta
+   }
+}
+reducers[actions.TYPES.getPages] = getPages;
 
 
 export const gotResource = (state: DataState, action: Action) => {
@@ -467,6 +477,38 @@ export const gotNextChunks = (state: DataState, action: Action) => {
     return state ;
 }
 reducers[actions.TYPES.gotNextChunks] = gotNextChunks;
+
+
+export const gotNextPages = (state: DataState, action: Action) => {
+
+   let res ;
+   if(state && state.resources && state.resources[action.payload]
+      && state.resources[action.payload]["http://purl.bdrc.io/resource/"+action.payload.replace(/bdr:/,"")])
+      {
+         res = state.resources[action.payload]["http://purl.bdrc.io/resource/"+action.payload.replace(/bdr:/,"")]
+
+         if(!res["http://purl.bdrc.io/ontology/core/eTextHasPage"]) res["http://purl.bdrc.io/ontology/core/eTextHasPage"] = []
+         res["http://purl.bdrc.io/ontology/core/eTextHasPage"] = res["http://purl.bdrc.io/ontology/core/eTextHasPage"].concat(action.meta)
+
+      }
+
+
+    state = {
+        ...state,
+        "resources": {
+            ...state.resources,
+            [action.payload]:{
+               ["http://purl.bdrc.io/resource/"+action.payload.replace(/bdr:/,"")]: res
+            }
+         }
+      }
+
+    console.log("nextP",state,action)
+
+    return state ;
+}
+reducers[actions.TYPES.gotNextPages] = gotNextPages;
+
 
 
 export const hostError = (state: DataState, action: actions.SearchFailedAction) => {

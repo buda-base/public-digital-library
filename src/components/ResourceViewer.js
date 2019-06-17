@@ -98,6 +98,7 @@ type Props = {
    onGetAnnotations: (s:string) => void,
    onHasImageAsset:(u:string,s:string) => void,
    onGetChunks: (s:string,b:number) => void,
+   onGetPages: (s:string,b:number) => void,
    onToggleLanguagePanel:()=>void
 }
 type State = {
@@ -151,6 +152,9 @@ let propOrder = {
       "bdo:eTextInItem",
       "tmp:imageVolumeId",
       "bdo:isRoot",
+      "bdo:eTextTitle",
+      "bdo:eTextHasPage",
+      "bdo:eTextHasChunk",
    ],
    "Item":[
       "bdo:itemForWork",
@@ -1065,7 +1069,7 @@ class ResourceViewer extends Component<Props,State>
          if(e.value || e.value === "") value = e.value
          else if(e["@value"]) value = e["@value"]
          else if(e["@id"]) value = e["@id"]
-         let pretty = this.fullname(value,null,prop === bdo+"eTextHasChunk")
+         let pretty = this.fullname(value,null,prop === bdo+"eTextHasChunk" || prop === bdo+"eTextHasPage")
 
          if(value === bdr+"LanguageTaxonomy") continue ;
 
@@ -2003,7 +2007,7 @@ class ResourceViewer extends Component<Props,State>
             //for(let e of elem) console.log(e.value,e.label1);
 
             //if(!k.match(new RegExp("Revision|Entry|prefLabel|"+rdf+"|toberemoved"))) {
-            if(!k.match(new RegExp(adm+"|adm:|TextTitle|SourcePath|prefLabel|"+rdf+"|toberemoved|workPartIndex|workPartTreeIndex")))
+            if(!k.match(new RegExp(adm+"|adm:|SourcePath|prefLabel|"+rdf+"|toberemoved|workPartIndex|workPartTreeIndex")))
             {
 
                let sup = this.hasSuper(k)
@@ -2245,7 +2249,78 @@ class ResourceViewer extends Component<Props,State>
                                  </div>
                               </div> )
                   }
-                  else if(k != bdo+"eTextHasChunk") {
+                  else if(k == bdo+"eTextHasPage") {
+                     
+                     let next = 0;
+                     /*
+                     if(elem && elem.length) next = elem.filter(e => e.value && e.end)
+                     if(next && next.length) next = next[next.length - 1].end + 1
+                     else next = 0                     
+                     */
+
+                     return (
+                        
+                        <InfiniteScroll
+                        id="etext-scroll"
+                        hasMore={true}
+                        pageStart={0}
+                        loadMore={(e) => { 
+                           
+                              //console.log("next?",this.props.nextChunk,next,JSON.stringify(elem,null,3))
+
+                              if(this.props.nextPage !== next) {                               
+                                 this.props.onGetPages(this.props.IRI,next); 
+                              } 
+                           }
+                        }
+                        //loader={<Loader loaded={false} />}
+                        >
+                           <h3 class="chunk"><span>{this.proplink(k)}</span>:&nbsp;</h3>
+                              {this.hasSub(k)?this.subProps(k):tags.map((e)=> [e," "] )}
+                           {/* // import make test fail...
+                              <div class="sub">
+                              <AnnotatedEtextContainer dontSelect={true} chunks={elem}/>
+                              </div>
+                           */}
+                        </InfiniteScroll>
+                     )
+                  }
+                  else if(k == bdo+"eTextHasChunk" && kZprop.indexOf(bdo+"eTextHasPage") === -1) {
+                     
+                     let next = 0;
+                     if(elem && elem.length) next = elem.filter(e => e.value && e.end)
+                     if(next && next.length) next = next[next.length - 1].end + 1
+                     else next = 0
+                     
+                     
+                     return (
+                        
+                        <InfiniteScroll
+                        id="etext-scroll"
+                        hasMore={true}
+                        pageStart={0}
+                        loadMore={(e) => { 
+                           
+                              //console.log("next?",this.props.nextChunk,next,JSON.stringify(elem,null,3))
+
+                              if(this.props.nextChunk !== next) {                               
+                                 this.props.onGetChunks(this.props.IRI,next); 
+                              } 
+                           }
+                        }
+                        //loader={<Loader loaded={false} />}
+                        >
+                           <h3 class="chunk"><span>{this.proplink(k)}</span>:&nbsp;</h3>
+                              {this.hasSub(k)?this.subProps(k):tags.map((e)=> [e," "] )}
+                           {/* // import make test fail...
+                              <div class="sub">
+                              <AnnotatedEtextContainer dontSelect={true} chunks={elem}/>
+                              </div>
+                           */}
+                        </InfiniteScroll>
+                     )
+                  }
+                  else if(k !== bdo+"eTextHasChunk") {
 
                      let ret
                      if(this.hasSub(k)) ret = this.subProps(k)
@@ -2286,41 +2361,6 @@ class ResourceViewer extends Component<Props,State>
                           </div>
                        )
                      }
-                  }
-                  else {
-                     
-                     let next = 0;
-                     if(elem && elem.length) next = elem.filter(e => e.value && e.end)
-                     if(next && next.length) next = next[next.length - 1].end + 1
-                     else next = 0
-                     
-                     
-                     return (
-                        
-                        <InfiniteScroll
-                        id="etext-scroll"
-                        hasMore={true}
-                        pageStart={0}
-                        loadMore={(e) => { 
-                           
-                              //console.log("next?",this.props.nextChunk,next,JSON.stringify(elem,null,3))
-
-                              if(this.props.nextChunk !== next) {                               
-                                 this.props.onGetChunks(this.props.IRI,next); 
-                              } 
-                           }
-                        }
-                        //loader={<Loader loaded={false} />}
-                        >
-                           <h3 class="chunk"><span>{this.proplink(k)}</span>:&nbsp;</h3>
-                              {this.hasSub(k)?this.subProps(k):tags.map((e)=> [e," "] )}
-                           {/* // import make test fail...
-                              <div class="sub">
-                              <AnnotatedEtextContainer dontSelect={true} chunks={elem}/>
-                              </div>
-                           */}
-                        </InfiniteScroll>
-                     )
                   }
                }
 
