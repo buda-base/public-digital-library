@@ -189,20 +189,36 @@ export function miradorConfig(data, manifest, canvasID, useCredentials, langList
          if(!id || id.match(/[^0-9]/)) return "(issue with canvas label: "+JSON.stringify(canvas.label,null,3)+")" ;
          else id = Number(id)
 
-         //console.log("page " +id+ "?",JSON.stringify(etextPages[ut],null,3))
+         //console.log("page " +id);
 
          if(!etextPages[ut]) etextPages[ut] = {}
-         if(!etextPages[ut][id]) {            
+         if(etextPages[ut][id] === true) {            
+            return new Promise((resolve,reject) => {
+               let timer = setInterval(()=>{
+                  //console.log("id?",etextPages[ut][id])
+                  if(etextPages[ut][id] && etextPages[ut][id] !== true) {
+                     resolve(etextPages[ut][id].chunks);
+                     clearInterval(timer);
+                  }
+               },100);   
+            })
+         }
+         else if(!etextPages[ut][id]) {            
              
+            //console.log("loading DATA",id);
+
             for(let i = id ; i <= id+NB_PAGES-1 ; i++) etextPages[ut][i] = true ;
             let data = await window.fetch("http://purl.bdrc.io/query/graph/ChunksByPage?R_RES="+ut+"&I_START="+id+"&I_END="+(id+NB_PAGES-1)) ;
+            
             let json = await data.json() ;
 
-            //console.log("DATA OK");
+            //console.log("DATA OK",id,json);
 
             if(json && json["@graph"]) json = json["@graph"]
-            if(!json.filter) 
-               return [{"@language":"en","@value":"no data found (yet !?)"}]
+            if(!json.filter) {
+               console.error("ERROR",json)
+               return ; //[{"@language":"en","@value":"no data found (yet !?)"}]
+            }
             let pages = json.filter(e => e.type && e.type === "EtextPage")
             pages = __.orderBy(pages,['seqNum'],['asc'])
             let chunks = json.filter(e => e.chunkContents)
