@@ -166,7 +166,7 @@ export async function miradorConfig(data, manifest, canvasID, useCredentials, la
 
          userButtons = [
                { 
-                  "custom":"<span><input style='vertical-align:text-bottom;cursor:pointer;' type='checkbox' id='showEtext' checked/> Show Etext</span>",
+                  "custom":"<span><input style='vertical-align:text-bottom;cursor:pointer;' type='checkbox' id='showEtext' "+(window.MiradorUseEtext?"checked":"")+"/> Show Etext</span>",
                   "iconClass": "fa",
                   "attributes" : { style:"width:auto;", onClick : "javascript:window.setEtext(this,event)" }             
                }
@@ -175,12 +175,15 @@ export async function miradorConfig(data, manifest, canvasID, useCredentials, la
             console.log("setetext",obj,e,e.target.tagName)
             let checkB = jQ(obj).find("input[type=checkbox]").get(0)
             if(e.target.tagName.toLowerCase() !== 'input') checkB.checked = !checkB.checked
-            if(!checkB.checked) {  jQ(".etext-content").each( (i,elem) => { 
-               jQ(".etext-content").addClass("hide");
-               //elem = jQ(elem);
-               //elem.attr("data-h",elem.height());
-               //elem.animate({"height":0,"margin-top":"-100%"}, 400);
-            })}
+            if(!checkB.checked) {  
+               window.MiradorUseEtext = false ;
+               jQ(".etext-content").each( (i,elem) => { 
+                  jQ(".etext-content").addClass("hide");
+                  //elem = jQ(elem);
+                  //elem.attr("data-h",elem.height());
+                  //elem.animate({"height":0,"margin-top":"-100%"}, 400);
+               })
+            }
             else {  jQ(".etext-content").removeClass("hide"); }
          }
 

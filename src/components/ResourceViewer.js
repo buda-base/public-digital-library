@@ -400,7 +400,10 @@ class ResourceViewer extends Component<Props,State>
       //console.log("tmp",tmp)
       propOrder = tmp
 
-      window.closeViewer = () => { this.setState({...this.state, openUV:false, openMirador:false, openDiva:false}); }
+      window.closeViewer = () => { 
+         this.setState({...this.state, openUV:false, openMirador:false, openDiva:false}); 
+         window.MiradorUseEtext = false ;
+      }
    }
 
    componentWillMount()
@@ -2324,7 +2327,7 @@ class ResourceViewer extends Component<Props,State>
                                           })}
                                        </h4>
                                        <IconButton title="Show page scan"><PhotoIcon/></IconButton>
-                                       <h5><a title="Open image+text view in Mirador" onClick={this.showMirador.bind(this)}>p.{e.seq}</a></h5>
+                                       <h5><a title="Open image+text view in Mirador" onClick={e => { window.MiradorUseEtext = true ; this.showMirador(); }}>p.{e.seq}</a></h5>
                                     </div>))}
                               {/* // import make test fail...
                                  <div class="sub">
