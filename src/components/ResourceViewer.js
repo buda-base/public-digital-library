@@ -40,6 +40,7 @@ import IconButton from '@material-ui/core/IconButton';
 import ShareIcon from '@material-ui/icons/Share';
 import HomeIcon from '@material-ui/icons/Home';
 import ChatIcon from '@material-ui/icons/Chat';
+import PhotoIcon from '@material-ui/icons/PhotoSizeSelectActual';
 import Script from 'react-load-script'
 import React, { Component } from 'react';
 import qs from 'query-string'
@@ -260,11 +261,11 @@ function top_left_menu(that,pdfLink,monoVol,fairUse)
        { /*  TODO // external resources ==> /query/graph/ResInfo?R_RES=
           that.props.IRI.match(/^bda[cn]:/) &&
        */}
-       { that.props.IRI && getEntiType(that.props.IRI) === "Etext" && <a target="_blank" style={{fontSize:"26px"}} download={that.props.IRI?that.props.IRI.replace(/bdr:/,"")+".txt":""} className="goBack pdfLoader" href={that.props.IRI?that.props.IRI.replace(/bdr:/,bdr)+".txt":""}>
+       { /*that.props.IRI && getEntiType(that.props.IRI) === "Etext" && <a target="_blank" style={{fontSize:"26px"}} download={that.props.IRI?that.props.IRI.replace(/bdr:/,"")+".txt":""} className="goBack pdfLoader" href={that.props.IRI?that.props.IRI.replace(/bdr:/,bdr)+".txt":""}>
                 <IconButton title={I18n.t("resource.download")+" TXT"}>
                    <img src="/DL_icon.svg" height="24" />
                 </IconButton>
-               </a> }
+               </a>*/ }
        {pdfLink && 
          ( (!(that.props.manifestError && that.props.manifestError.error.message.match(/Restricted access/)) && !fairUse) ||
          (that.props.auth && that.props.auth.isAuthenticated()))
@@ -321,7 +322,17 @@ function top_left_menu(that,pdfLink,monoVol,fairUse)
                                      >
                                         { Zloading && <Loader className="zipSpinner" loaded={Zloaded} scale={0.35}/> }
                                         <span {... (Zloading?{className:"zipLoading"}:{})}>ZIP</span>
-                                  </a>
+                                       </a>
+                                       { that.props.IRI && getEntiType(that.props.IRI) === "Etext" && <div>
+
+                                             &nbsp;&nbsp;|&nbsp;&nbsp;
+
+                                             <a target="_blank" download={that.props.IRI?that.props.IRI.replace(/bdr:/,"")+".txt":""} 
+                                                   href={that.props.IRI?that.props.IRI.replace(/bdr:/,bdr)+".txt":""} >
+                                                <span>TXT</span>
+                                             </a>
+                                          </div>
+                                       }
                                   </ListItem>)
                             })
                          }
@@ -978,13 +989,15 @@ class ResourceViewer extends Component<Props,State>
       }><span className="lang">{lang}</span></Tooltip>:null
    }
 
-   getResourceElem(prop:string)
+   getResourceElem(prop:string, IRI?:string)
    {
-      if(!this.props.IRI || !this.props.resources || !this.props.resources[this.props.IRI]
-         || !this.props.resources[this.props.IRI][this.expand(this.props.IRI)]
-         || !this.props.resources[this.props.IRI][this.expand(this.props.IRI)][prop]) return ;
+      if(!IRI) IRI = this.props.IRI
 
-      let elem = this.props.resources[this.props.IRI][this.expand(this.props.IRI)][prop]
+      if(!IRI || !this.props.resources || !this.props.resources[IRI]
+         || !this.props.resources[IRI][this.expand(IRI)]
+         || !this.props.resources[IRI][this.expand(IRI)][prop]) return ;
+
+      let elem = this.props.resources[IRI][this.expand(IRI)][prop]
 
       return elem
    }
@@ -1690,7 +1703,7 @@ class ResourceViewer extends Component<Props,State>
 
          if(this.state.UVcanLoad) { window.location.hash = "mirador"; window.location.reload(); }
 
-         let tiMir = setInterval( () => {
+         let tiMir = setInterval( async () => {
 
             if(window.Mirador && window.Mirador.Viewer.prototype.setupViewer.toString().match(/going to previous page/)) {
 
@@ -1716,7 +1729,7 @@ class ResourceViewer extends Component<Props,State>
                let elem = this.getResourceElem(adm+"access")
                if(elem && elem.filter(e => e.value.match(/(AccessFairUse)|(Restricted.*)$/)).length >= 1) withCredentials = true
 
-               let config = miradorConfig(data,manif,canvasID,withCredentials,this.props.langPreset);
+               let config = await miradorConfig(data,manif,canvasID,withCredentials,this.props.langPreset);
 
                //console.log("mir ador",config,this.props)
                window.Mirador( config )
@@ -1893,6 +1906,15 @@ class ResourceViewer extends Component<Props,State>
             this.props.onHasImageAsset(iiifpres+"/2.1.1/v:"+ this.props.IRI+ "/manifest",this.props.IRI);
          }
       }
+      else if(kZprop.indexOf(tmp+"imageVolumeId") !== -1)
+      {
+         let elem = this.getResourceElem(tmp+"imageVolumeId")
+         if(!this.props.imageAsset && !this.props.manifestError) {
+            this.setState({...this.state, imageLoaded:false})
+            this.props.onHasImageAsset(iiifpres+"/2.1.1/v:"+ elem[0].value.replace(new RegExp(bdr), "bdr:") + "/manifest",this.props.IRI);
+            this.props.onGetResource("bdr:"+this.pretty(elem[0].value));
+         }
+      }
       else if(kZprop.indexOf(bdo+"hasIIIFManifest") !== -1)
       {
          let elem = this.getResourceElem(bdo+"hasIIIFManifest")
@@ -1946,7 +1968,7 @@ class ResourceViewer extends Component<Props,State>
          let iiif = "http://iiif.bdrc.io" ;
          if(this.props.config && this.props.config.iiif) iiif = this.props.config.iiif.endpoints[this.props.config.iiif.index]
 
-//         console.log("iiif",iiif,this.props.config)
+         console.log("iiif",this.props.imageAsset,iiif,this.props.config)
 
          let id = this.props.IRI.replace(/^[^:]+:./,"")
          if(this.props.imageAsset.match(/[/]i:/) || (this.props.imageAsset.match(/[/]wio:/) && this.props.manifests)) {
@@ -1954,18 +1976,36 @@ class ResourceViewer extends Component<Props,State>
          }
          else if(this.props.imageAsset.match(/[/]v:/)) {
 
-            let elem = this.getResourceElem(bdo+"volumeNumber")
-            if(elem && elem.length > 0 && elem[0].value)
-               monoVol = Number(elem[0].value)
+            let elem = this.getResourceElem(tmp+"imageVolumeId")
 
-            elem = this.getResourceElem(bdo+"imageCount")
-            if(!elem) elem = this.getResourceElem(bdo+"volumePagesTotal")
-            if(elem && elem.length > 0 && elem[0].value)
-               pdfLink = iiif+"/download/zip/v:bdr:V"+id+"::1-"+elem[0].value ;
-            else {
-               elem = this.getResourceElem(bdo+"workHasItemImageAsset")
+            if(elem && elem.length > 0 && elem[0].value) {
+
+               let iriV = elem[0].value.replace(new RegExp(bdr),"bdr:")
+
+               elem = this.getResourceElem(bdo+"imageCount",iriV)
+               if(!elem) elem = this.getResourceElem(bdo+"volumePagesTotal",iriV)                  
                if(elem && elem.length > 0 && elem[0].value)
-                  pdfLink = iiif+"/download/zip/wi:bdr:W"+id+"::bdr:"+ this.pretty(elem[0].value,true) ;
+                  pdfLink = iiif+"/download/zip/v:"+iriV+"::1-"+elem[0].value ;
+
+               elem = this.getResourceElem(bdo+"volumeNumber",iriV)
+               if(elem && elem.length > 0 && elem[0].value)
+                  monoVol = Number(elem[0].value)
+
+            } else {
+               elem = this.getResourceElem(bdo+"volumeNumber")
+               if(elem && elem.length > 0 && elem[0].value)
+                  monoVol = Number(elem[0].value)
+
+               elem = this.getResourceElem(bdo+"imageCount")
+               if(!elem) elem = this.getResourceElem(bdo+"volumePagesTotal")            
+               if(elem && elem.length > 0 && elem[0].value)
+                  pdfLink = iiif+"/download/zip/v:bdr:V"+id+"::1-"+elem[0].value ;
+               else {
+                  elem = this.getResourceElem(bdo+"workHasItemImageAsset")
+                  if(elem && elem.length > 0 && elem[0].value)
+                     pdfLink = iiif+"/download/zip/wi:bdr:W"+id+"::bdr:"+ this.pretty(elem[0].value,true) ;
+                  
+               }
             }
          }
          /* // missing ImageItem
@@ -2273,15 +2313,24 @@ class ResourceViewer extends Component<Props,State>
                         }
                         //loader={<Loader loaded={false} />}
                         >
-                           <h3 class="chunk page">
-                            {/* <span>{this.proplink(k)}</span>:&nbsp; */}
-                            </h3>
-                              {this.hasSub(k)?this.subProps(k):tags.map((e)=> [e," "] )}
-                           {/* // import make test fail...
-                              <div class="sub">
-                              <AnnotatedEtextContainer dontSelect={true} chunks={elem}/>
-                              </div>
-                           */}
+                                 {/* {this.hasSub(k)?this.subProps(k):tags.map((e)=> [e," "] )} */}
+                                 { elem.map(e => (
+                                    <div class="etextPage">
+                                       <h4 class="page">{e.value.split("\n").map(f => {
+                                             //let label = getLangLabel(this,[{"@language":e.language,"@value":f}])
+                                             //if(label) label = label["@value"]
+                                             let label = f
+                                             return ([label,<br/>])
+                                          })}
+                                       </h4>
+                                       <IconButton title="Show page scan"><PhotoIcon/></IconButton>
+                                       <h5><a title="Open image+text view in Mirador" onClick={this.showMirador.bind(this)}>p.{e.seq}</a></h5>
+                                    </div>))}
+                              {/* // import make test fail...
+                                 <div class="sub">
+                                 <AnnotatedEtextContainer dontSelect={true} chunks={elem}/>
+                                 </div>
+                              */}
                         </InfiniteScroll>
                      )
                   }

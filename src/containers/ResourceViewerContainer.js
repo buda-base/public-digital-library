@@ -100,6 +100,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       onGetPages:(IRI:string,next:number=0) => {
          dispatch(data.getPages(IRI,next));
       },
+      onGetResource:(IRI:string) => {
+         dispatch(data.getResource(IRI));
+      },
       onToggleLanguagePanel:() => {
          dispatch(ui.toggleLanguagePanel());
       }

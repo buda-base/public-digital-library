@@ -111,7 +111,7 @@ h4 { margin-top:10px;margin-bottom:0px;font-size:24px; }
 .resource .subsub.full > h4.first { width:100%; }
 .resource h3 + .sub .subsub:first-child { margin-top:0px; }
 .resource .subsub h4:not(.first):not(:last-child):after,
-.resource h4:not(:last-child):not(.first):not(.last):after { content:" | "; pointer-events:none; }
+.resource h4:not(:last-child):not(.first):not(.last):not(.page):after { content:" | "; pointer-events:none; }
 .resource .subsubsub { width:100%; padding-left:30px; display: flex;align-items: baseline;flex-wrap:nowrap;position:relative; box-sizing: border-box;}
 .resource .subsubsub .subsubsub h4.first.prop,.resource .subsub.full .subsubsub h4.first.prop,
 .resource .sub .sub h4.first.type { font-style:normal; }
@@ -120,11 +120,16 @@ h4 { margin-top:10px;margin-bottom:0px;font-size:24px; }
 .resource  .sub .sub .subsub h4.first.prop { font-style:normal;}
 .resource .sub .sub { padding-left:60px;}
 
+#etext-scroll > .etextPage:first-child { margin-top:20px; }
+
 .resource .data #etext-scroll,
-.resource .data .chunk { display:block;}
-.resource .data .chunk ~ h4 { font-size:24px;line-height:40px;margin-bottom:10px; display:inline; }
-.resource .data .chunk.page ~ h4 { display:inline-block; padding-left:0; border-top:1px solid black; padding-top:25px;}
-.resource .data .chunk.page ~ h4 + h3 { display:block; }
+.resource .data .chunk, .etextPage { display:block; position: relative;}
+.resource .data .chunk ~ h4, .etextPage h4 { font-size:24px;line-height:40px;margin-bottom:10px; display:inline; }
+
+.etextPage h4.page { display:inline-block; padding-left:0; border-top:1px solid #999; padding-top:25px;width:100%;margin-bottom:0;}
+.etextPage h5 { margin-top:0; color:#777; display:inline-block; }
+.etextPage h5 a { cursor:pointer; }
+.etextPage button { margin-left:-12px !important; }
 
 .resource .data h3 a.propref,.resource .data h4 a.propref { color:black; }
 .resource .data h3 a.propref:hover,.resource .data h4 a.propref:hover { border-bottom:1px solid black;}

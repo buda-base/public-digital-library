@@ -166,7 +166,7 @@ export async function miradorConfig(data, manifest, canvasID, useCredentials, la
 
          userButtons = [
                { 
-                  "custom":"<span><input style='vertical-align:text-bottom;cursor:pointer;' type='checkbox' id='showEtext'/> Show Etext</span>",
+                  "custom":"<span><input style='vertical-align:text-bottom;cursor:pointer;' type='checkbox' id='showEtext' checked/> Show Etext</span>",
                   "iconClass": "fa",
                   "attributes" : { style:"width:auto;", onClick : "javascript:window.setEtext(this,event)" }             
                }
