@@ -288,13 +288,23 @@ async function getPages(iri,next) {
 
       let data = await api.loadEtextChunks(iri,next);
 
-      data = _.sortBy(data["@graph"],'seqNum')
-      .filter(e => e.chunkContents)
-      .map(e => ({
-        value:e.chunkContents["@value"],
-        seq:e.seqNum,
-        start:e.sliceStartChar,
-        end:e.sliceEndChar
+      let chunk = _.sortBy(data["@graph"].filter(e => e.chunkContents),'seqNum')                  
+      let start = chunk[0].sliceStartChar
+      let lang = chunk[0].chunkContents["@language"]
+      chunk = chunk.map(e => e.chunkContents["@value"].replace(/.$/,"")).join()
+      
+      console.log("chunk@"+start,chunk)
+
+      let pages = _.sortBy(data["@graph"].filter(e => e.type && e.type === "EtextPage"),'seqNum')
+
+      console.log("pages",pages)
+
+      data = pages.map(e => ({
+         value:(chunk.substring(e.sliceStartChar - start,e.sliceEndChar - start)).replace(/[\n\r]+/,"\n").replace(/(^\n)|(\n$)/,""),
+         language:lang,
+         seq:e.seqNum,
+         start:e.sliceStartChar,
+         end:e.sliceEndChar        
        })); //+ " ("+e.seqNum+")" }))
 
       console.log("dataP",iri,next,data)

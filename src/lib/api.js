@@ -294,6 +294,8 @@ export default class API {
 
    }
 
+
+
    async loadAssocResources(IRI:string): Promise<string>
    {
       let resource =  JSON.parse(await this.getURLContents(this._assocResourcesPath(IRI),false));

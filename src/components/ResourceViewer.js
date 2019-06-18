@@ -1069,7 +1069,7 @@ class ResourceViewer extends Component<Props,State>
          if(e.value || e.value === "") value = e.value
          else if(e["@value"]) value = e["@value"]
          else if(e["@id"]) value = e["@id"]
-         let pretty = this.fullname(value,null,prop === bdo+"eTextHasChunk" || prop === bdo+"eTextHasPage")
+         let pretty = this.fullname(value,null,prop === bdo+"eTextHasChunk") // || prop === bdo+"eTextHasPage")
 
          if(value === bdr+"LanguageTaxonomy") continue ;
 
@@ -2252,11 +2252,9 @@ class ResourceViewer extends Component<Props,State>
                   else if(k == bdo+"eTextHasPage") {
                      
                      let next = 0;
-                     /*
                      if(elem && elem.length) next = elem.filter(e => e.value && e.end)
                      if(next && next.length) next = next[next.length - 1].end + 1
                      else next = 0                     
-                     */
 
                      return (
                         
@@ -2275,7 +2273,9 @@ class ResourceViewer extends Component<Props,State>
                         }
                         //loader={<Loader loaded={false} />}
                         >
-                           <h3 class="chunk"><span>{this.proplink(k)}</span>:&nbsp;</h3>
+                           <h3 class="chunk page">
+                            {/* <span>{this.proplink(k)}</span>:&nbsp; */}
+                            </h3>
                               {this.hasSub(k)?this.subProps(k):tags.map((e)=> [e," "] )}
                            {/* // import make test fail...
                               <div class="sub">
