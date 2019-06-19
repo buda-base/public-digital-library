@@ -29,7 +29,7 @@ importModules();
 
 let timerConf, scrollTimer, scrollTimer2, clickTimer ;
 
-export function miradorSetUI(closeCollec)
+export function miradorSetUI(closeCollec, num)
 {
    if(closeCollec == undefined) closeCollec = true
    if(!jQ) importModules()
@@ -67,6 +67,7 @@ export function miradorSetUI(closeCollec)
 
          miradorAddZoom();
          miradorAddScroll();
+         window.setMiradorScroll(num !== undefined)
 
          clearInterval(scrollTimer2)
          scrollTimer2 = setInterval( () => {
@@ -77,15 +78,24 @@ export function miradorSetUI(closeCollec)
                clearInterval(scrollTimer2)
                setTimeout( () => {
 
-                  //console.log(jQ(".mirador-container ul.scroll-listing-thumbs ").width(),jQ(window).width())
+                  /*
                   jQ(".scroll-view")
                   .scrollLeft((jQ(".mirador-container ul.scroll-listing-thumbs ").width() - jQ(window).width()) / 2)
-                  .scrollTop(jQ(".scroll-view").scrollTop()+1)
+                  .scrollTop(jQ(".scroll-view").scrollTop() + 1)
+                  */
+
+                  jQ(window).resize()
+
+                  if(num !== undefined) { 
+
+                     setTimeout(() => window.scrollToImage(num), 100)
+
+                  }
 
                   miradorInitMenu()
 
 
-               }, 100);
+               }, 250);
             }
          }, 100);
       }
@@ -176,7 +186,7 @@ export async function miradorConfig(data, manifest, canvasID, useCredentials, la
             let checkB = jQ(obj).find("input[type=checkbox]").get(0)
             if(e.target.tagName.toLowerCase() !== 'input') checkB.checked = !checkB.checked
             if(!checkB.checked) {  
-               window.MiradorUseEtext = false ;
+               delete window.MiradorUseEtext ;
                jQ(".etext-content").each( (i,elem) => { 
                   jQ(".etext-content").addClass("hide");
                   //elem = jQ(elem);
@@ -417,7 +427,7 @@ function miradorAddClick(firstInit){
                               jQ(".mirador-container .scroll-view").attr("tabindex",-1).focus()
 
 
-                           }, 100);
+                           }, 10);
 
                         }
                      }, 10);
@@ -462,10 +472,47 @@ function miradorAddZoom()
    }
 }
 
-function miradorAddScroll()
+function miradorAddScroll(toImage)
 {
    if(!window.setMiradorScroll) {
-      window.setMiradorScroll = () => {
+
+      window.scrollToImage = (id) => {
+
+            //console.log("id:",id)
+
+            if(!id) id = jQ(".panel-listing-thumbs li.highlight img").first()
+            else id = jQ(".scroll-view img[data-image-id='"+id+"']").first()
+            
+            //console.log("id?",id.length,id)
+
+            //if(jQ("#showEtext").length) jQ("#showEtext").parent().parent().show()
+
+            jQ(".mirador-viewer li.scroll-option").click();
+
+            let sT = jQ(".scroll-view").scrollTop()
+            if(!sT) sT = 0
+
+            let sTd = jQ(document).scrollTop()
+            if(!sTd) sTd = 0
+
+            let im
+            if(id) im = jQ(".scroll-view img[data-image-id='"+id.attr("data-image-id")+"']").first()
+            else im = jQ(".scroll-view img[data-image-id]").first()
+
+            let imgY = 0 ;
+            if(id && im && im.length > 0) imgY = im.parent().offset().top
+
+            //console.log("y",sT,sTd,imgY,im)
+
+            jQ(".scroll-view").stop().animate({scrollTop:-sTd+sT+imgY-100}
+               //,"scrollLeft": (jQ(".mirador-container ul.scroll-listing-thumbs ").width() - jQ(window).width()) / 2}
+               ,0, () => { jQ("input#zoomer").trigger("input") })
+
+      }
+
+      window.setMiradorScroll = (notToImage) => {
+
+         //console.log("setScroll")
 
          if(jQ(".mirador-container .mirador-main-menu li:nth-child(1) a").hasClass('selec')) {
             let elem = jQ('.workspace-container > div > div > div.window > div.manifest-info > a.mirador-btn.mirador-icon-window-menu > ul > li.new-object-option > i')
@@ -476,35 +523,13 @@ function miradorAddScroll()
          jQ(".mirador-container .mirador-main-menu li a .fa-align-center").parent().addClass('selec');
          jQ(".user-buttons.mirador-main-menu li.off").removeClass('off')
 
-         setTimeout(() => {
-            let id = jQ(".panel-listing-thumbs li.highlight img").first()
-            console.log("id?",id.length,id)
+         if(!notToImage) setTimeout(window.scrollToImage, 650)
 
-            jQ(".mirador-viewer li.scroll-option").click();
-
-            let sT = jQ(".scroll-view").scrollTop()
-            if(!sT) sT = 0
-
-            let im
-            if(id) im = jQ(".scroll-view img[data-image-id='"+id.attr("data-image-id")+"']").first()
-            else im = jQ(".scroll-view img[data-image-id]").first()
-
-            let imgY = 0 ;
-            if(id && im && im.length > 0) imgY = im.parent().offset().top
-            console.log("y",sT,imgY,im)
-
-            jQ(".scroll-view").animate({scrollTop:sT+imgY-100}
-               //,"scrollLeft": (jQ(".mirador-container ul.scroll-listing-thumbs ").width() - jQ(window).width()) / 2}
-               ,100, () => { jQ("input#zoomer").trigger("input") })
-
-
-            jQ(".scroll-view img.thumbnail-image").click(()=>{
-               jQ(".mirador-container .mirador-main-menu li a").removeClass('selec');
-               jQ(".mirador-container .mirador-main-menu li a .fa-file-o").parent().addClass('selec');
-               jQ(".user-buttons.mirador-main-menu").find("li:nth-last-child(3),li:nth-last-child(4)").addClass('off')
-            })
-
-         }, 250)
+         jQ(".scroll-view img.thumbnail-image").click(()=>{
+            jQ(".mirador-container .mirador-main-menu li a").removeClass('selec');
+            jQ(".mirador-container .mirador-main-menu li a .fa-file-o").parent().addClass('selec');
+            jQ(".user-buttons.mirador-main-menu").find("li:nth-last-child(3),li:nth-last-child(4)").addClass('off')
+         })
        }
    }
 }

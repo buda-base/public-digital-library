@@ -126,9 +126,10 @@ h4 { margin-top:10px;margin-bottom:0px;font-size:24px; }
 .resource .data .chunk, .etextPage { display:block; position: relative;}
 .resource .data .chunk ~ h4, .etextPage h4 { font-size:24px;line-height:40px;margin-bottom:10px; display:inline; }
 
-.etextPage h4.page { display:inline-block; padding-left:0; border-top:1px solid #999; padding-top:25px;width:100%;margin-bottom:0;}
+.etextPage { border-top:1px solid #999; padding-top:25px; }
+.etextPage h4.page { display:inline-block; padding-left:0; width:100%;margin-bottom:0;}
 .etextPage h5 { margin-top:0; color:#777; display:inline-block; }
-.etextPage h5 a { cursor:pointer; }
+.etextPage > img, .etextPage h5 a { cursor:pointer; }
 .etextPage button { margin-left:-12px !important; }
 
 .resource .data h3 a.propref,.resource .data h4 a.propref { color:black; }

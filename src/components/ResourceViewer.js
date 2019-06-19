@@ -1697,7 +1697,7 @@ class ResourceViewer extends Component<Props,State>
    }
 
 
-   showMirador()
+   showMirador(num?:number)
    {
 
       if(!this.state.openMirador) // || !$("#viewer").hasClass("hidden"))
@@ -1705,6 +1705,8 @@ class ResourceViewer extends Component<Props,State>
          $("#fond").removeClass("hidden");
 
          if(this.state.UVcanLoad) { window.location.hash = "mirador"; window.location.reload(); }
+
+         console.log("num",num)
 
          let tiMir = setInterval( async () => {
 
@@ -1734,10 +1736,10 @@ class ResourceViewer extends Component<Props,State>
 
                let config = await miradorConfig(data,manif,canvasID,withCredentials,this.props.langPreset);
 
-               //console.log("mir ador",config,this.props)
+               //console.log("mir ador",num,config,this.props)
                window.Mirador( config )
 
-               miradorSetUI();
+               miradorSetUI(true, num);
             }
          }, 10)
       }
@@ -2297,7 +2299,21 @@ class ResourceViewer extends Component<Props,State>
                      let next = 0;
                      if(elem && elem.length) next = elem.filter(e => e.value && e.end)
                      if(next && next.length) next = next[next.length - 1].end + 1
-                     else next = 0                     
+                     else next = 0                  
+
+                     let imageLinks = {}
+                     if(this.props.resourceManifest && this.props.resourceManifest.sequences && this.props.resourceManifest.sequences[0] && this.props.resourceManifest.sequences[0].canvases) {
+                        let nc = 0, np = 0
+                        imageLinks = this.props.resourceManifest.sequences[0].canvases.reduce( (acc,e) => ({
+                           ...acc, [Number(e.label[0]["@value"].replace(/[^0-9]/g,""))]:{id:e["@id"],image:e.images[0].resource["@id"]}
+                        }),{})
+                     }
+
+                     let openMiradorAtPage = (num) => {
+                        //console.log("num?",num)
+                        window.MiradorUseEtext = true ; 
+                        this.showMirador(num);
+                     }
 
                      return (
                         
@@ -2317,8 +2333,12 @@ class ResourceViewer extends Component<Props,State>
                         //loader={<Loader loaded={false} />}
                         >
                                  {/* {this.hasSub(k)?this.subProps(k):tags.map((e)=> [e," "] )} */}
-                                 { elem.map(e => (
+                                 { elem.map( e => (
                                     <div class="etextPage">
+                                       {
+                                          this.state.collapse["image-"+this.props.IRI+"-"+e.seq] && imageLinks[e.seq] &&
+                                          <img title="Open image+text view in Mirador" onClick={eve => { openMiradorAtPage(imageLinks[e.seq].id) }} style={{maxWidth:"100%"}} src={imageLinks[e.seq].image} />
+                                       }
                                        <h4 class="page">{e.value.split("\n").map(f => {
                                              //let label = getLangLabel(this,[{"@language":e.language,"@value":f}])
                                              //if(label) label = label["@value"]
@@ -2326,8 +2346,13 @@ class ResourceViewer extends Component<Props,State>
                                              return ([label,<br/>])
                                           })}
                                        </h4>
-                                       <IconButton title="Show page scan"><PhotoIcon/></IconButton>
-                                       <h5><a title="Open image+text view in Mirador" onClick={e => { window.MiradorUseEtext = true ; this.showMirador(); }}>p.{e.seq}</a></h5>
+                                       <IconButton title="Show page scan" 
+                                       onClick={(eve) => {
+                                             let id = "image-"+this.props.IRI+"-"+e.seq
+                                             this.setState({...this.state, collapse:{...this.state.collapse, [id]:!this.state.collapse[id]}}) 
+                                          }}> <PhotoIcon/>
+                                       </IconButton>
+                                       <h5><a title="Open image+text view in Mirador" onClick={eve => { openMiradorAtPage(imageLinks[e.seq].id) }}>p.{e.seq}</a></h5>
                                     </div>))}
                               {/* // import make test fail...
                                  <div class="sub">

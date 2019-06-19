@@ -38,6 +38,15 @@ export const getManifest = (url: string,IRI:string,ext:boolean): Action => {
     }
 }
 
+TYPES.gotManifest = 'GOT_MANIFEST';
+export const gotManifest = (manifest: {},IRI:string): Action => {
+    return {
+        type: TYPES.gotManifest,
+        payload: manifest,
+        meta:IRI
+    }
+}
+
 TYPES.firstImage = 'FIRST_IMAGE';
 export const firstImage = (url: string,iri:string,canvasID:string,collecManif:string,manifests:[],imgData:string): Action => {
     return {

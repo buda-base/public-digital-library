@@ -409,6 +409,7 @@ async function getManifest(url,iri) {
 
       let collecManif
       let manif = await api.loadManifest(url);
+      store.dispatch(dataActions.gotManifest(manif,iri))
       let image,canvasID ;
       let manifests
       //collection ?
@@ -426,7 +427,7 @@ async function getManifest(url,iri) {
             if(!isSingle) collecManif = null  //manif.manifests[0]["@id"]
          }
          else throw new Error("collection without manifest list")
-      }
+      }      
 
       if(manif.sequences && manif.sequences[0] && manif.sequences[0].canvases) {
          let found = false ;

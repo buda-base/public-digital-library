@@ -30,7 +30,8 @@ export type DataState = {
          canvasID?:string,
          collecManif?:string,
          manifests?:[],
-         imgData?:string
+         imgData?:string,
+         resourceManifest?:{}
       }
    },
    nextChunk?:number,
@@ -812,6 +813,22 @@ export const getManifest = (state: DataState, action: Action) => {
     return state ;
 }
 reducers[actions.TYPES.getManifest] = getManifest;
+
+export const gotManifest = (state: DataState, action: Action) => {
+
+   //console.log("gotMa",action)
+
+    state = {
+        ...state,
+        IIIFinfo:{ ...state.IIIFinfo,
+           [action.meta]:{ ...state.IIIFinfo?state.IIIFinfo[action.meta]:{},
+               resourceManifest:action.payload
+            }
+         }
+    }
+    return state ;
+}
+reducers[actions.TYPES.gotManifest] = gotManifest;
 
 export const manifestError = (state: DataState, action: SearchFailedAction) => {
 
