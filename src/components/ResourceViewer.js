@@ -1867,26 +1867,6 @@ class ResourceViewer extends Component<Props,State>
 
 
       let kZasso ;
-      if (this.props.assocResources) {
-         kZasso = Object.keys(this.props.assocResources) ;
-
-         let elem = this.getResourceElem(bdo+"workHasItem")
-         if(!this.props.manifestError && elem) for(let e of elem)
-         {
-            let assoc = this.props.assocResources[e.value]
-
-            //console.log("hImA",assoc,e.value)
-
-            if(assoc && assoc.length > 0 && !this.props.imageAsset && !this.props.manifestError) {
-
-               this.setState({...this.state, imageLoaded:false})
-
-               if(assoc.length == 1) { this.props.onHasImageAsset(iiifpres+"/2.1.1/v:bdr:"+this.pretty(assoc[0].value,true)+"/manifest",this.props.IRI); }
-               else { this.props.onHasImageAsset(iiifpres+"/2.1.1/collection/wio:"+this.pretty(this.props.IRI,true),this.props.IRI);  }
-
-            }
-         }
-      }
 
 
       let doMap = false, doRegion = false,regBox ;
@@ -1947,6 +1927,30 @@ class ResourceViewer extends Component<Props,State>
               manif = "http://presentation.bdrc.io/2.1.1/collection/wio:"+work[0].value.replace(new RegExp(bdr),"bdr:")
             this.props.onHasImageAsset(manif,this.props.IRI)
          }
+      }
+      else {
+         
+         if (this.props.assocResources) {
+            kZasso = Object.keys(this.props.assocResources) ;
+
+            let elem = this.getResourceElem(bdo+"workHasItem")
+            if(!this.props.manifestError && elem) for(let e of elem)
+            {
+               let assoc = this.props.assocResources[e.value]
+
+               //console.log("hImA",assoc,e.value)
+
+               if(assoc && assoc.length > 0 && !this.props.imageAsset && !this.props.manifestError && assoc.filter(e => e.type === tmp+"itemType" && e.value === bdo+"ItemImageAsset").length) {
+
+                  this.setState({...this.state, imageLoaded:false})
+
+                  if(assoc.length == 1) { this.props.onHasImageAsset(iiifpres+"/2.1.1/v:bdr:"+this.pretty(assoc[0].value,true)+"/manifest",this.props.IRI); }
+                  else { this.props.onHasImageAsset(iiifpres+"/2.1.1/collection/wio:"+this.pretty(this.props.IRI,true),this.props.IRI);  }
+
+               }
+            }
+         }
+         
       }
 
       let titre = <br/>;
