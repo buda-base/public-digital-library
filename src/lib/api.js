@@ -88,7 +88,7 @@ export default class API {
          let xhrArgs
          if(isAuthenticated() && url.match(/bdrc[.]io/)) {
             if(url.match(/setcookie/)) xhrArgs = { credentials: 'include' } //, 'mode':'no-cors'}
-            if(!cookie) head = { ...head, "Authorization":"bearer "+id_token }
+            if(!cookie) head = { ...head, "Authorization":"Bearer "+id_token }
          }
 
          let response = await this._fetch( url, { method:"GET",headers:new Headers(head), ...xhrArgs } )
@@ -373,7 +373,7 @@ export default class API {
             "Accept": accept,
             ...other,
             // CORS issue - to be continued
-            ...( isAuthenticated() && {"Authorization":"bearer "+id_token } ),
+            ...( isAuthenticated() && {"Authorization":"Bearer "+id_token } ),
          ...( method == "POST" && {"Content-Type": "application/x-www-form-urlencoded"})
          })
       })
