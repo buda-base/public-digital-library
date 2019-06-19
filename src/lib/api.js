@@ -373,7 +373,7 @@ export default class API {
             "Accept": accept,
             ...other,
             // CORS issue - to be continued
-            ...( isAuthenticated() && {"Authorization":"bearer "+id_token } ),
+            ...( isAuthenticated() && {"Authorization":"Bearer "+id_token } ),
          ...( method == "POST" && {"Content-Type": "application/x-www-form-urlencoded"})
          })
       })
