@@ -128,6 +128,7 @@ h4 { margin-top:10px;margin-bottom:0px;font-size:24px; }
 
 .etextPage { border-top:1px solid #999; padding-top:25px; }
 .etextPage h4.page { display:inline-block; padding-left:0; width:100%;margin-bottom:0;}
+.etextPage h4.page:last-child { padding-bottom:25px; }
 .etextPage h5 { margin-top:0; color:#777; display:inline-block; }
 .etextPage > img, .etextPage h5 a { cursor:pointer; }
 .etextPage button { margin-left:-12px !important; }

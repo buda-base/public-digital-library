@@ -2313,6 +2313,8 @@ class ResourceViewer extends Component<Props,State>
                         }),{})
                      }
 
+                     console.log("imaL",imageLinks)
+
                      let openMiradorAtPage = (num) => {
                         //console.log("num?",num)
                         window.MiradorUseEtext = true ; 
@@ -2340,7 +2342,7 @@ class ResourceViewer extends Component<Props,State>
                                  { elem.map( e => (
                                     <div class="etextPage">
                                        {
-                                          this.state.collapse["image-"+this.props.IRI+"-"+e.seq] && imageLinks[e.seq] &&
+                                          e.seq && this.state.collapse["image-"+this.props.IRI+"-"+e.seq] && imageLinks[e.seq] &&
                                           <img title="Open image+text view in Mirador" onClick={eve => { openMiradorAtPage(imageLinks[e.seq].id) }} style={{maxWidth:"100%"}} src={imageLinks[e.seq].image} />
                                        }
                                        <h4 class="page">{e.value.split("\n").map(f => {
@@ -2350,13 +2352,14 @@ class ResourceViewer extends Component<Props,State>
                                              return ([label,<br/>])
                                           })}
                                        </h4>
-                                       <IconButton title="Show page scan" 
-                                       onClick={(eve) => {
-                                             let id = "image-"+this.props.IRI+"-"+e.seq
-                                             this.setState({...this.state, collapse:{...this.state.collapse, [id]:!this.state.collapse[id]}}) 
-                                          }}> <PhotoIcon/>
-                                       </IconButton>
-                                       <h5><a title="Open image+text view in Mirador" onClick={eve => { openMiradorAtPage(imageLinks[e.seq].id) }}>p.{e.seq}</a></h5>
+                                       { e.seq &&
+                                          <IconButton title="Show page scan" 
+                                          onClick={(eve) => {
+                                                let id = "image-"+this.props.IRI+"-"+e.seq
+                                                this.setState({...this.state, collapse:{...this.state.collapse, [id]:!this.state.collapse[id]}}) 
+                                             }}> <PhotoIcon/>
+                                          </IconButton> }
+                                       { e.seq && <h5><a title="Open image+text view in Mirador" onClick={eve => { openMiradorAtPage(imageLinks[e.seq].id) }}>p.{e.seq}</a></h5> }
                                     </div>))}
                               {/* // import make test fail...
                                  <div class="sub">

@@ -233,8 +233,9 @@ export async function miradorConfig(data, manifest, canvasID, useCredentials, la
                //console.log("DATA OK",id,json);
 
                if(json && json["@graph"]) json = json["@graph"]
-               if(!json.filter) {
-                  console.error("ERROR",json)
+               if(json.status === 404 || !json.filter) {
+                  for(let i = id ; i <= id+NB_PAGES-1 ; i++) delete etextPages[ut][i]  ;
+                  //console.error("Etext ERROR",json)
                   return ; //[{"@language":"en","@value":"no data found (yet !?)"}]
                }
                let pages = json.filter(e => e.type && e.type === "EtextPage")
