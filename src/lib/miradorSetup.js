@@ -187,17 +187,21 @@ export async function miradorConfig(data, manifest, canvasID, useCredentials, la
             if(e.target.tagName.toLowerCase() !== 'input') checkB.checked = !checkB.checked
             if(!checkB.checked) {  
                delete window.MiradorUseEtext ;
+               jQ(".etext-content").addClass("hide");
+                  /*
                jQ(".etext-content").each( (i,elem) => { 
-                  jQ(".etext-content").addClass("hide");
                   //elem = jQ(elem);
                   //elem.attr("data-h",elem.height());
                   //elem.animate({"height":0,"margin-top":"-100%"}, 400);
                })
+               */
             }
             else {  jQ(".etext-content").removeClass("hide"); }
          }
 
          getEtextPage = async (canvas) => { 
+
+            
 
             if(!canvas || !ut) return "(issue with canvas data: "+JSON.stringify(canvas,null,3)+")" ;
 
@@ -363,6 +367,7 @@ function miradorAddClick(firstInit){
       window.setMiradorClick = (firstInit,e) => {
 
          //console.log("cliked",e,firstInit)
+         window.itemClick = 0 ;
 
          if(jQ(".mirador-container .mirador-main-menu li:nth-child(1) a").hasClass('selec')) {
             if(e) {
@@ -386,7 +391,6 @@ function miradorAddClick(firstInit){
                if(!item.hasClass("setClick")) {
 
                   item.addClass("setClick");
-
 
                   item.find(".preview-image").click( (e) => {
                      /*
@@ -415,10 +419,10 @@ function miradorAddClick(firstInit){
 
                            setTimeout( () => {
 
-                              console.log(jQ(".mirador-container ul.scroll-listing-thumbs ").width(),jQ(window).width())
+                              //console.log(jQ(".mirador-container ul.scroll-listing-thumbs ").width(),jQ(window).width())
                               jQ(".scroll-view")
                               .scrollLeft((jQ(".mirador-container ul.scroll-listing-thumbs ").width() - jQ(window).width()) / 2)
-                              .scrollTop(jQ(".scroll-view").scrollTop()+1)
+                              .scrollTop(0) //jQ(".scroll-view").scrollTop()+1)
                               .find("img.thumbnail-image").click(()=>{
                                  jQ(".mirador-container .mirador-main-menu li a").removeClass('selec');
                                  jQ(".mirador-container .mirador-main-menu li a .fa-file-o").parent().addClass('selec');
@@ -434,14 +438,17 @@ function miradorAddClick(firstInit){
                      }, 10);
                   })
                   added = true ;
+                  window.itemClick ++ ;
                }
 
 
             })
-            if(!added) {
+            if(!added && window.itemClick > 0) {
                clearInterval(clickTimer)
+               //console.log("clear Inter...");
+               setTimeout(window.setMiradorClick, 250);
             }
-         }, 10) ;
+         }, 100) ;
       }
    }
 }
