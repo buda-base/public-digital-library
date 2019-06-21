@@ -402,7 +402,7 @@ class ResourceViewer extends Component<Props,State>
 
       window.closeViewer = () => { 
          this.setState({...this.state, openUV:false, openMirador:false, openDiva:false}); 
-         window.MiradorUseEtext = false ;
+         if(window.MiradorUseEtext) delete window.MiradorUseEtext ;
       }
    }
 

@@ -123,45 +123,9 @@ export function miradorSetUI(closeCollec, num)
    }, 350 )
 }
 
-const NB_PAGES = 10 ; 
-let etextPages = {};
 
-export async function miradorConfig(data, manifest, canvasID, useCredentials, langList)
-{
-   let _extendedPresets = extendedPresets
-   if(!_extendedPresets) _extendedPresets = window.extendedPresets
-   let _sortLangScriptLabels = sortLangScriptLabels
-   if(!_sortLangScriptLabels) _sortLangScriptLabels = window.sortLangScriptLabels
-   if(langList === undefined) langList = [ "bo", "zh-hans" ]
 
-   let labelToString = (labels,labelArray) => {
-
-      // dont assume bo-x-ewts on unlocalized labels...
-      // if(typeof labels == "string") labels = [ { "@value": labels, "@language":"bo-x-ewts" } ]
-      if(typeof labels == "string") return labels
-
-      let langs = _extendedPresets(langList)
-      let sortLabels = _sortLangScriptLabels(labels,langs.flat,langs.translit)
-      let label = sortLabels[0]
-
-      if(labelArray) labelArray.push(label);
-
-      //console.log("label",JSON.stringify(label,null,3))
-
-      if(label["@value"]) return label["@value"] //+"@"+label["@language"]
-      if(label["value"]) return label["value"]  //+"@"+label["language"]
-      else return label
-
-      /*
-      if(Array.isArray(label)) return label.map( e => (e["@value"]?e["@value"]+"@"+e["@language"]:e)).join("; ")
-      else if(label["@value"]) return label["@value"]+"@"+label["@language"]
-      else if(label["value"]) return label["value"]+"@"+label["language"]
-      else return label
-      */
-
-   }
-
-   let getEtextPage,userButtons ;
+async function hasEtextPage(manifest) {
 
    if(manifest) {
       let ut = manifest.replace(/^.*bdr:V([^/]+).*$/,"bdr:UT$1_0000")
@@ -172,36 +136,26 @@ export async function miradorConfig(data, manifest, canvasID, useCredentials, la
 
       if(hasEtext) {
 
-         console.log("data",data,ut)
+         //console.log("data",data,ut)
 
-         userButtons = [
-               { 
-                  "custom":"<span><input style='vertical-align:text-bottom;cursor:pointer;' type='checkbox' id='showEtext' "+(window.MiradorUseEtext?"checked":"")+"/> Show Etext</span>",
-                  "iconClass": "fa",
-                  "attributes" : { style:"width:auto;", onClick : "javascript:window.setEtext(this,event)" }             
+         if(!window.setEtext) { 
+            window.setEtext = (obj,e) => {
+               console.log("setetext",obj,e,e.target.tagName)
+               let checkB = jQ(obj).find("input[type=checkbox]").get(0)
+               if(e.target.tagName.toLowerCase() !== 'input') checkB.checked = !checkB.checked
+               if(!checkB.checked) {  
+                  delete window.MiradorUseEtext ;
+                  jQ(".etext-content").addClass("hide");
                }
-            ]
-         window.setEtext = (obj,e) => {
-            console.log("setetext",obj,e,e.target.tagName)
-            let checkB = jQ(obj).find("input[type=checkbox]").get(0)
-            if(e.target.tagName.toLowerCase() !== 'input') checkB.checked = !checkB.checked
-            if(!checkB.checked) {  
-               delete window.MiradorUseEtext ;
-               jQ(".etext-content").addClass("hide");
-                  /*
-               jQ(".etext-content").each( (i,elem) => { 
-                  //elem = jQ(elem);
-                  //elem.attr("data-h",elem.height());
-                  //elem.animate({"height":0,"margin-top":"-100%"}, 400);
-               })
-               */
+               else {  
+                  window.MiradorUseEtext = true;
+                  jQ(".etext-content").removeClass("hide"); 
+                  //setTimeout(() => window.mirador.viewer.workspace.windows[0].focusModules.ScrollView.reloadImages(), 250)
+               }               
             }
-            else {  jQ(".etext-content").removeClass("hide"); }
          }
 
-         getEtextPage = async (canvas) => { 
-
-            
+         let getEtextPage = async (canvas) => { 
 
             if(!canvas || !ut) return "(issue with canvas data: "+JSON.stringify(canvas,null,3)+")" ;
 
@@ -284,8 +238,54 @@ export async function miradorConfig(data, manifest, canvasID, useCredentials, la
             //return [{"@language":"en","@value":"no data found (yet !?)"}]
 
          }
+
+         
+         return getEtextPage ;
+
       }
    }
+}
+
+const NB_PAGES = 10 ; 
+let etextPages = {};
+
+export async function miradorConfig(data, manifest, canvasID, useCredentials, langList)
+{
+   let _extendedPresets = extendedPresets
+   if(!_extendedPresets) _extendedPresets = window.extendedPresets
+   let _sortLangScriptLabels = sortLangScriptLabels
+   if(!_sortLangScriptLabels) _sortLangScriptLabels = window.sortLangScriptLabels
+   if(langList === undefined) langList = [ "bo", "zh-hans" ]
+
+   let labelToString = (labels,labelArray) => {
+
+      if(!labels) return ;
+
+      // dont assume bo-x-ewts on unlocalized labels...
+      // if(typeof labels == "string") labels = [ { "@value": labels, "@language":"bo-x-ewts" } ]
+      if(typeof labels == "string") return labels
+
+      let langs = _extendedPresets(langList)
+      let sortLabels = _sortLangScriptLabels(labels,langs.flat,langs.translit)
+      let label = sortLabels[0]
+
+      if(labelArray) labelArray.push(label);
+
+      //console.log("label",JSON.stringify(label,null,3))
+
+      if(label["@value"]) return label["@value"] //+"@"+label["@language"]
+      if(label["value"]) return label["value"]  //+"@"+label["language"]
+      else return label
+
+      /*
+      if(Array.isArray(label)) return label.map( e => (e["@value"]?e["@value"]+"@"+e["@language"]:e)).join("; ")
+      else if(label["@value"]) return label["@value"]+"@"+label["@language"]
+      else if(label["value"]) return label["value"]+"@"+label["language"]
+      else return label
+      */
+
+   }
+
 
    let config = {
       id:"viewer",
@@ -299,12 +299,19 @@ export async function miradorConfig(data, manifest, canvasID, useCredentials, la
             labelToString 
          }
       },
+
       windowSettings: {
          ajaxWithCredentials:useCredentials,
          sidePanelVisible: false,
          labelToString,         
-         getEtextPage,
-         userButtons
+         getEtextPage: await hasEtextPage(manifest),
+         userButtons: [
+               { 
+                  "custom":"<span><input style='vertical-align:text-bottom;cursor:pointer;' type='checkbox' id='showEtext' "+(window.MiradorUseEtext?"checked":"")+"/> Show Etext</span>",
+                  "iconClass": "fa",
+                  "attributes" : { style:"width:auto;", onClick : "javascript:window.setEtext(this,event)" }             
+               }
+            ]
       },
 
       mainMenuSettings : {
@@ -392,7 +399,7 @@ function miradorAddClick(firstInit){
 
                   item.addClass("setClick");
 
-                  item.find(".preview-image").click( (e) => {
+                  item.find(".preview-image").click( async (e) => {
                      /*
                      miradorInitMenu()
 
@@ -402,6 +409,24 @@ function miradorAddClick(firstInit){
                      */
                   //})
                   //item.addClass("setClick").click(() => {
+
+                     if(window.Mirador.ThumbnailsView) {
+                        let manif = jQ(e.target);
+                        if(manif.length) manif = manif.parent().parent().attr("data-manifest")
+                        let getEtext = await hasEtextPage(manif);
+                        //console.log("manif",manif,getEtext)
+                        if(getEtext) window.getEtextPage = getEtext;
+                        else if(window.getEtextPage) delete window.getEtextPage ;
+                        if(jQ("#showEtext").length && getEtext) { 
+                           jQ("#showEtext").parent().show();
+                           if(window.MiradorUseEtext) { 
+                              jQ("#showEtext").get(0).checked = true ;
+                              jQ(".etext-content.hide").removeClass("hide");
+                           }
+                           setTimeout(() => window.mirador.viewer.workspace.windows[0].focusModules.ScrollView.reloadImages(), 100)
+                        }
+
+                     }
 
                      miradorInitMenu()
 
@@ -687,7 +712,7 @@ export async function miradorInitView(work,lang) {
       console.log("init?",cfg,window.Mirador)
       if(window.Mirador !== undefined) {
          clearInterval(initTimer);
-         window.Mirador( cfg )
+         window.mirador = window.Mirador( cfg )
          miradorSetUI();
       }
    })(config), 1000)

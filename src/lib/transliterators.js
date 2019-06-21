@@ -59,7 +59,7 @@ export function sortLangScriptLabels(data,preset,translit)
 {
    if(translit == undefined) translit={}
    if(!Array.isArray(data)) data = [ data ]
-   //console.log("sort",preset,translit) // ,data)
+   //console.log("sort",preset,translit,data)
    let data_ = data.map(e => {
       let k = e["lang"]
       if(!k) k = e["xml:lang"]
