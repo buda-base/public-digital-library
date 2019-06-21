@@ -64,6 +64,7 @@ export function miradorSetUI(closeCollec, num)
          jQ(".mirador-container .scroll-view").attr("tabindex",-1).focus()
 
          //console.log("ici")
+         if(window.MiradorHasNoEtext) jQ("#showEtext").parent().hide()
 
          miradorAddZoom();
          miradorAddScroll();
@@ -131,10 +132,21 @@ async function hasEtextPage(manifest) {
       let ut = manifest.replace(/^.*bdr:V([^/]+).*$/,"bdr:UT$1_0000")
       let hasEtext = true ;
       const bdr = "http://purl.bdrc.io/resource/"
-      let check = await window.fetch(ut.replace(/bdr:/,bdr)+".json") ;
+      let utR = ut.replace(/bdr:/,bdr)
+      let check = await window.fetch(utR+".json") ;
       if(check.status === 404) hasEtext = false ;
+      else {
+         let page = await check.json()
+         if(!page || !page[utR] || !page[utR]["http://purl.bdrc.io/ontology/core/eTextHasPage"]) hasEtext = false
 
-      if(hasEtext) {
+      } 
+      console.log("hasetext")
+      if(!hasEtext) {
+         window.MiradorHasNoEtext = true ;
+      }
+      else {
+
+         if(window.MiradorHasNoEtext) delete window.MiradorHasNoEtext ;
 
          //console.log("data",data,ut)
 
@@ -659,6 +671,7 @@ export async function miradorInitView(work,lang) {
       console.log("pK",propK)
       if(propK)
       {
+         
          if(propK["workHasItemImageAsset"] || propK["workLocation"]) { //workHasItemImageAsset
 
             const item = propK["workHasItemImageAsset"]?propK["workHasItemImageAsset"]:propK["workLocation"]
@@ -685,7 +698,7 @@ export async function miradorInitView(work,lang) {
                   { "manifestUri" : "http://iiifpres.bdrc.io"+"/2.1.1/wv:"+work+"/manifest", location:"" }
                ]
             }
-         } else if(propK["imageList"]) {
+         } else if(propK["imageList"] || propK[""]) {
             data = [
                { "manifestUri" : "http://iiifpres.bdrc.io"+"/2.1.1/v:"+work+"/manifest", location:"" }
             ]
@@ -693,7 +706,19 @@ export async function miradorInitView(work,lang) {
             data = [
                { "manifestUri" : propK["hasIIIFManifest"]["@id"], location:"" }
             ]
-         }
+         } else if(propK["eTextInItem"]) {
+            let checkV = await (await fetch("http://purl.bdrc.io/query/graph/Etext_base?I_LIM=500&R_RES="+work)).json()
+            if(checkV["@graph"]) checkV = checkV["@graph"]
+            let res = checkV.filter(e => e["@id"] === work)
+            if(res.length && res[0]["tmp:imageVolumeId"]) {
+               data = [
+                   { "manifestUri" : "http://iiifpres.bdrc.io"+"/2.1.1/v:"+res[0]["tmp:imageVolumeId"]["@id"]+"/manifest", location:"" }
+               ]
+            }
+
+            //console.log(checkV)
+            
+         }         
          else {
             data = [
                { "collectionUri" : "http://iiifpres.bdrc.io"+"/2.1.1/collection/wio:"+work, location:"" }
