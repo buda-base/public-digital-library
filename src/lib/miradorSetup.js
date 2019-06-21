@@ -140,7 +140,7 @@ async function hasEtextPage(manifest) {
          if(!page || !page[utR] || !page[utR]["http://purl.bdrc.io/ontology/core/eTextHasPage"]) hasEtext = false
 
       } 
-      console.log("hasetext")
+      console.log("hasetext",hasEtext)
       if(!hasEtext) {
          window.MiradorHasNoEtext = true ;
       }
@@ -436,6 +436,11 @@ function miradorAddClick(firstInit){
                               jQ(".etext-content.hide").removeClass("hide");
                            }
                            setTimeout(() => window.mirador.viewer.workspace.windows[0].focusModules.ScrollView.reloadImages(), 100)
+                        }
+                        else {
+                           jQ("#showEtext").parent().hide();
+                           jQ("#showEtext").get(0).checked = false ;
+                           jQ(".etext-content").addClass("hide")
                         }
 
                      }

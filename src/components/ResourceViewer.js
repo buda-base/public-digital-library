@@ -1737,7 +1737,7 @@ class ResourceViewer extends Component<Props,State>
                let config = await miradorConfig(data,manif,canvasID,withCredentials,this.props.langPreset);
 
                //console.log("mir ador",num,config,this.props)
-               window.Mirador( config )
+               window.mirador = window.Mirador( config )
 
                miradorSetUI(true, num);
             }
