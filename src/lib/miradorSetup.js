@@ -319,9 +319,14 @@ export async function miradorConfig(data, manifest, canvasID, useCredentials, la
          getEtextPage: await hasEtextPage(manifest),
          userButtons: [
                { 
-                  "custom":"<span><input style='vertical-align:text-bottom;cursor:pointer;' type='checkbox' id='showEtext' "+(window.MiradorUseEtext?"checked":"")+"/> Show Etext</span>",
+                  "custom":"<span>Show Etext <input style='vertical-align:text-bottom;cursor:pointer;' type='checkbox' id='showEtext' "+(window.MiradorUseEtext?"checked":"")+"/></span>",
                   "iconClass": "fa",
                   "attributes" : { style:"width:auto;", onClick : "javascript:window.setEtext(this,event)" }             
+               },
+               { 
+                  "custom":"<span>Go to p. <input style='width:30px;height:16px;' type='text' id='gotoPage' onInput='javascript:jQuery(\"#gotoPage\").removeClass(\"error\");' onChange='javascript:window.scrollToImage(event.target.value);'/></span>",
+                  "iconClass": "fa",
+                  "attributes" : { style:"width:auto;" }             
                }
             ]
       },
@@ -528,12 +533,32 @@ function miradorAddScroll(toImage)
 
       window.scrollToImage = (id) => {
 
-            //console.log("id:",id)
+            console.log("id:",id)
 
-            if(!id) id = jQ(".panel-listing-thumbs li.highlight img").first()
-            else id = jQ(".scroll-view img[data-image-id='"+id+"']").first()
+            let fromInp = false 
+            if(id !== undefined) {
+               if(id && id.match && !id.match(/^http/)) {
+                  fromInp = true
+                  if(id.match(/^[0-9]+$/)) { 
+                     id = jQ(".scroll-view img[title~='"+id+"']").first()
+                  }
+                  else id = false
+               }
+               else id = jQ(".scroll-view img[data-image-id='"+id+"']").first()
+            }
             
-            //console.log("id?",id.length,id)
+            if(!id || !id.length) id = jQ(".panel-listing-thumbs li.highlight img").first()
+            
+            console.log("id?",id.length,id,fromInp)
+
+            if(!id || !id.length) { 
+               if(fromInp) {
+                  jQ("#gotoPage").addClass("error");
+                  jQ("#gotoPage").val("≤"+jQ(".scroll-view img[data-image-id]").last().attr('title').replace(/[^0-9]+/g,""));
+               }
+               return  ;
+            }
+
 
             //if(jQ("#showEtext").length) jQ("#showEtext").parent().parent().show()
 

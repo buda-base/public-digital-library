@@ -54,3 +54,7 @@
 .mirador-container .preview-images a:not(:first-child) { display:none; }
 
 /* #viewer.demo .user-buttons.mirador-main-menu li:last-child { display:none; } */
+
+.window-manifest-navigation a span { display:inline-block;margin-top:-2px;}
+
+#gotoPage.error { color:red ; }
