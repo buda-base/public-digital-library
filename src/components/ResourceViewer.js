@@ -2340,7 +2340,7 @@ class ResourceViewer extends Component<Props,State>
                         >
                                  {/* {this.hasSub(k)?this.subProps(k):tags.map((e)=> [e," "] )} */}
                                  { elem.map( e => (
-                                    <div class="etextPage">
+                                    <div class={"etextPage"+(this.props.manifestError?" manifest-error":"")}>
                                        {
                                           e.seq && this.state.collapse["image-"+this.props.IRI+"-"+e.seq] && imageLinks[e.seq] &&
                                           <img title="Open image+text view in Mirador" onClick={eve => { openMiradorAtPage(imageLinks[e.seq].id) }} style={{maxWidth:"100%"}} src={imageLinks[e.seq].image} />
@@ -2352,14 +2352,14 @@ class ResourceViewer extends Component<Props,State>
                                              return ([label,<br/>])
                                           })}
                                        </h4>
-                                       { e.seq &&
+                                       { e.seq && 
                                           <IconButton title="Show page scan" 
                                           onClick={(eve) => {
                                                 let id = "image-"+this.props.IRI+"-"+e.seq
                                                 this.setState({...this.state, collapse:{...this.state.collapse, [id]:!this.state.collapse[id]}}) 
                                              }}> <PhotoIcon/>
                                           </IconButton> }
-                                       { e.seq && <h5><a title="Open image+text view in Mirador" onClick={eve => { openMiradorAtPage(imageLinks[e.seq].id) }}>p.{e.seq}</a></h5> }
+                                       { e.seq && <h5><a title="Open image+text view in Mirador" onClick={eve => { openMiradorAtPage(imageLinks[e.seq].id) }}>p.{e.seq}</a></h5> }                                       
                                     </div>))}
                               {/* // import make test fail...
                                  <div class="sub">

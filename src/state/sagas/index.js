@@ -288,7 +288,7 @@ async function getPages(iri,next) {
 
       let data = await api.loadEtextChunks(iri,next);
 
-      let chunk = _.sortBy(data["@graph"].filter(e => e.chunkContents),'seqNum')                  
+      let chunk = _.sortBy(data["@graph"].filter(e => e.chunkContents),'sliceStartChar')                  
       let start = chunk[0].sliceStartChar
       let lang = chunk[0].chunkContents["@language"]
       chunk = chunk.map(e => e.chunkContents["@value"].replace(/.$/,"")).join()

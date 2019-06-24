@@ -132,6 +132,7 @@ h4 { margin-top:10px;margin-bottom:0px;font-size:24px; }
 .etextPage h5 { margin-top:0; color:#777; display:inline-block; }
 .etextPage > img, .etextPage h5 a { cursor:pointer; }
 .etextPage button { margin-left:-12px !important; }
+.etextPage.manifest-error h5, .etextPage.manifest-error button { opacity:0.5;pointer-events:none; }
 
 .resource .data h3 a.propref,.resource .data h4 a.propref { color:black; }
 .resource .data h3 a.propref:hover,.resource .data h4 a.propref:hover { border-bottom:1px solid black;}
