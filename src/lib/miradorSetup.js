@@ -211,7 +211,7 @@ async function hasEtextPage(manifest) {
                let pages = json.filter(e => e.type && e.type === "EtextPage")
                pages = __.orderBy(pages,['seqNum'],['asc'])
                let chunks = json.filter(e => e.chunkContents)
-               chunks = __.orderBy(chunks,['seqNum'],['asc'])
+               chunks = __.orderBy(chunks,['sliceStartChar'],['asc'])
                for(let p of pages) {               
                   etextPages[ut][p["seqNum"]] = p
                   
