@@ -3,7 +3,7 @@
 
 
 /* CSS debug mode */
- /* * {background-color:rgba(255,0,128,0.05);} */
+ * {background-color:rgba(255,0,128,0.05);}
 
 
 body { overflow:auto !important;padding-right:0 !important;  }
@@ -131,6 +131,7 @@ h4 { margin-top:10px;margin-bottom:0px;font-size:24px; }
 .etextPage h4.page:last-child { padding-bottom:25px; }
 .etextPage h5 { margin-top:0; color:#777; display:inline-block; }
 .etextPage > img, .etextPage h5 a { cursor:pointer; }
+.etextPage > img { box-shadow:1px 1px 7px rgba(0,0,0.2); display:block;}
 .etextPage button { margin-left:-12px !important; }
 .etextPage.manifest-error h5, .etextPage.manifest-error button { opacity:0.5;pointer-events:none; }
 

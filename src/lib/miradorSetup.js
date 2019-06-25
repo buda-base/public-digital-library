@@ -129,6 +129,7 @@ export function miradorSetUI(closeCollec, num)
 async function hasEtextPage(manifest) {
 
    if(manifest) {
+      /*
       let ut = manifest.replace(/^.*bdr:V([^/]+).*$/,"bdr:UT$1_0000")
       let hasEtext = true ;
       const bdr = "http://purl.bdrc.io/resource/"
@@ -140,15 +141,33 @@ async function hasEtextPage(manifest) {
          if(!page || !page[utR] || !page[utR]["http://purl.bdrc.io/ontology/core/eTextHasPage"]) hasEtext = false
 
       } 
+      */
+
+      let IRI = manifest.replace(/^.*bdr:([^/]+).*$/,"bdr:$1")
+      const bdr = "http://purl.bdrc.io/resource/"
+      //let utR = ut.replace(/bdr:/,bdr)
+      let check = await window.fetch("http://purl.bdrc.io/lib/allAssocResource?R_RES="+IRI+"") ;
+      let hasEtext = true ;
+
       console.log("hasetext",hasEtext)
       if(!hasEtext) {
          window.MiradorHasNoEtext = true ;
       }
       else {
 
+         let ut = await check.json()
+         if(ut) ut = ut.data 
+         if(ut) ut = ut[IRI.replace(/bdr:/,bdr)]
+
+         if(ut) ut = ut.filter(e => e.type && e.type.match(/tmp[/]hasEtextRes/));
+
+         if(ut && ut.length) ut = ut[0].value
+         if(ut) ut = ut.replace(new RegExp(bdr),"bdr:")
+
+         //console.log("ut3",ut)
+
          if(window.MiradorHasNoEtext) delete window.MiradorHasNoEtext ;
 
-         //console.log("data",data,ut)
 
          if(!window.setEtext) { 
             window.setEtext = (obj,e) => {

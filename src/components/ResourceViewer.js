@@ -1890,7 +1890,7 @@ class ResourceViewer extends Component<Props,State>
             this.setState({...this.state, imageLoaded:false})
             this.props.onHasImageAsset(iiifpres+"/2.1.1/v:"+ this.props.IRI+ "/manifest",this.props.IRI);
          }
-      }
+      }/*
       else if(kZprop.indexOf(tmp+"imageVolumeId") !== -1)
       {
          let elem = this.getResourceElem(tmp+"imageVolumeId")
@@ -1899,7 +1899,7 @@ class ResourceViewer extends Component<Props,State>
             this.props.onHasImageAsset(iiifpres+"/2.1.1/v:"+ elem[0].value.replace(new RegExp(bdr), "bdr:") + "/manifest",this.props.IRI);
             this.props.onGetResource("bdr:"+this.pretty(elem[0].value));
          }
-      }
+      }*/
       else if(kZprop.indexOf(bdo+"hasIIIFManifest") !== -1)
       {
          let elem = this.getResourceElem(bdo+"hasIIIFManifest")
@@ -2352,14 +2352,15 @@ class ResourceViewer extends Component<Props,State>
                                              return ([label,<br/>])
                                           })}
                                        </h4>
-                                       { e.seq && 
+                                       { e.seq && <div> 
                                           <IconButton title="Show page scan" 
                                           onClick={(eve) => {
                                                 let id = "image-"+this.props.IRI+"-"+e.seq
                                                 this.setState({...this.state, collapse:{...this.state.collapse, [id]:!this.state.collapse[id]}}) 
                                              }}> <PhotoIcon/>
-                                          </IconButton> }
-                                       { e.seq && <h5><a title="Open image+text view in Mirador" onClick={eve => { openMiradorAtPage(imageLinks[e.seq].id) }}>p.{e.seq}</a></h5> }                                       
+                                          </IconButton> 
+                                          <h5><a title="Open image+text view in Mirador" onClick={eve => { openMiradorAtPage(imageLinks[e.seq].id) }}>p.{e.seq}</a></h5> 
+                                       </div> }
                                     </div>))}
                               {/* // import make test fail...
                                  <div class="sub">
