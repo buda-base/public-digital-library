@@ -30,7 +30,7 @@ export const choosingHost = (host: string): Action => {
 }
 
 TYPES.getManifest = 'GET_MANIFEST';
-export const getManifest = (url: string,IRI:string,ext:boolean): Action => {
+export const getManifest = (url: string,IRI:string): Action => {
     return {
         type: TYPES.getManifest,
         payload: url,
@@ -42,6 +42,24 @@ TYPES.gotManifest = 'GOT_MANIFEST';
 export const gotManifest = (manifest: {},IRI:string): Action => {
     return {
         type: TYPES.gotManifest,
+        payload: manifest,
+        meta:IRI
+    }
+}
+
+TYPES.getImageVolumeManifest = 'GET_IMAGE_VOLUME_MANIFEST';
+export const getImageVolumeManifest = (url: string,IRI:string): Action => {
+    return {
+        type: TYPES.getImageVolumeManifest,
+        payload: url,
+        meta:IRI
+    }
+}
+
+TYPES.gotImageVolumeManifest = 'GOT_IMAGE_VOLUME_MANIFEST';
+export const gotImageVolumeManifest = (manifest:{},IRI:string): Action => {
+    return {
+        type: TYPES.gotImageVolumeManifest,
         payload: manifest,
         meta:IRI
     }

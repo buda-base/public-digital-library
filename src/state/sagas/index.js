@@ -402,6 +402,22 @@ async function getAnnotations(iri) {
    }
 }
 
+async function getImageVolumeManifest(url,iri) {
+   try {
+
+      console.log("getIVM",url,iri)
+
+      let manif = await api.loadManifest(url);
+      store.dispatch(dataActions.gotImageVolumeManifest(manif,iri))
+
+   }
+   catch(e){
+      console.error("ERRROR with manifest",e)
+
+      store.dispatch(dataActions.manifestError(url,e,iri))
+   }
+}
+
 async function getManifest(url,iri) {
    try {
 
@@ -914,6 +930,14 @@ export function* watchGetManifest() {
    );
 }
 
+export function* watchGetImageVolumeManifest() {
+
+   yield takeLatest(
+      dataActions.TYPES.getImageVolumeManifest,
+      (action) => getImageVolumeManifest(action.payload,action.meta)
+   );
+}
+
 export function* watchRequestPdf() {
 
    yield takeLatest(
@@ -999,6 +1023,7 @@ export default function* rootSaga() {
       watchGetOneDatatype(),
       watchGetOneFacet(),
       watchGetManifest(),
+      watchGetImageVolumeManifest(),
       watchGetAnnotations(),
       watchRequestPdf(),
       watchCreatePdf(),

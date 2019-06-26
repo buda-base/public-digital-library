@@ -43,6 +43,7 @@ const mapStateToProps = (state,ownProps) => {
    let manifestError
    let pdfVolumes
    let resourceManifest
+   let imageVolumeManifests
    let IIIFinfo = state.data.IIIFinfo
 
    if(IIIFinfo) {
@@ -57,6 +58,7 @@ const mapStateToProps = (state,ownProps) => {
          pdfVolumes = IIIFinfo.pdfVolumes
          imgData = IIIFinfo.imgData
          resourceManifest = IIIFinfo.resourceManifest
+         imageVolumeManifests = IIIFinfo.imageVolumeManifests
 
          //console.log("IIIF",pdfVolumes,IIIFinfo)
       }
@@ -70,7 +72,7 @@ const mapStateToProps = (state,ownProps) => {
 
    let props = { logged,config,resources, ontology, keyword, language, datatype, assocResources, prefLang, failures,
       imageAsset,firstImage,canvasID,collecManif,manifests,manifestError,pdfVolumes,createPdf,pdfUrl,
-      annoCollec,rightPanel,locale,langPreset,imgData, nextChunk, nextPage, resourceManifest }
+      annoCollec,rightPanel,locale,langPreset,imgData, nextChunk, nextPage, resourceManifest, imageVolumeManifests }
 
    console.log("mS2p",state,props)
 
@@ -92,6 +94,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       },
       onHasImageAsset:(url:string,IRI:string) => {
          dispatch(data.getManifest(url,IRI));
+      },
+      onImageVolumeManifest:(url:string,IRI:string) => {
+         dispatch(data.getImageVolumeManifest(url,IRI));
       },
       onGetAnnotations:(IRI:string) => {
          dispatch(data.getAnnotations(IRI));

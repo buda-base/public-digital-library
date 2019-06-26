@@ -31,7 +31,8 @@ export type DataState = {
          collecManif?:string,
          manifests?:[],
          imgData?:string,
-         resourceManifest?:{}
+         resourceManifest?:{},
+         imageVolumeManifests?:{}
       }
    },
    nextChunk?:number,
@@ -813,6 +814,54 @@ export const getManifest = (state: DataState, action: Action) => {
     return state ;
 }
 reducers[actions.TYPES.getManifest] = getManifest;
+
+
+export const getImageVolumeManifest = (state: DataState, action: Action) => {
+
+   let imageVolumeManifests ;
+   let iiif = state.IIIFinfo   
+   if(iiif) iiif = iiif[action.meta]
+   if(iiif) imageVolumeManifests = iiif.imageVolumeManifests ;
+   if(!imageVolumeManifests) imageVolumeManifests = true
+
+    state = {
+        ...state,
+        IIIFinfo:{ ...state.IIIFinfo,
+           [action.meta]:{ ...state.IIIFinfo?state.IIIFinfo[action.meta]:{},
+               imageVolumeManifests
+            }
+         }
+    }
+    return state ;
+}
+reducers[actions.TYPES.getImageVolumeManifest] = getImageVolumeManifest;
+
+export const gotImageVolumeManifest = (state: DataState, action: Action) => {
+
+
+   let imageVolumeManifests ;
+   let iiif = state.IIIFinfo   
+   if(iiif) iiif = iiif[action.meta]
+   if(iiif) imageVolumeManifests = iiif.imageVolumeManifests ;
+   if(!imageVolumeManifests) imageVolumeManifests = true
+   else { 
+      let manif = action.payload ;
+      let id = manif["@id"].replace(/^.*(bdr:[^/]+).*$/,"$1");
+      imageVolumeManifests = { ...imageVolumeManifests, [id]:manif }
+   }
+
+    state = {
+        ...state,
+        IIIFinfo:{ ...state.IIIFinfo,
+           [action.meta]:{ ...state.IIIFinfo?state.IIIFinfo[action.meta]:{},
+               imageVolumeManifests
+            }
+         }
+    }
+    return state ;
+}
+reducers[actions.TYPES.gotImageVolumeManifest] = gotImageVolumeManifest;
+
 
 export const gotManifest = (state: DataState, action: Action) => {
 

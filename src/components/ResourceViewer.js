@@ -92,6 +92,8 @@ type Props = {
    rightPanel?:boolean,
    logged?:boolean,
    nextChunk?:number,
+   resourceManifest?:{},
+   imageVolumeManifests?:{},
    onInitPdf: (u:string,s:string) => void,
    onRequestPdf: (u:string,s:string) => void,
    onCreatePdf: (s:string,u:string) => void,
@@ -2304,15 +2306,41 @@ class ResourceViewer extends Component<Props,State>
                      if(elem && elem.length) next = elem.filter(e => e.value && e.end)
                      if(next && next.length) next = next[next.length - 1].end + 1
                      else next = 0                  
-
+                     
                      let imageLinks = {}
-                     if(this.props.resourceManifest && this.props.resourceManifest.sequences && this.props.resourceManifest.sequences[0] && this.props.resourceManifest.sequences[0].canvases) {
+                     
+                     if(!this.props.imageVolumeManifests) // && !this.props.manifestError)
+                     {
+
+                        if(kZprop.indexOf(tmp+"imageVolumeId") !== -1)
+                        {
+                           let elem = this.getResourceElem(tmp+"imageVolumeId")
+                           //console.log("elem",elem)
+                           for(let e of elem) {
+                              this.props.onImageVolumeManifest(iiifpres+"/2.1.1/v:"+ e.value.replace(new RegExp(bdr), "bdr:") + "/manifest",this.props.IRI);
+                           }
+                        }
+                     }
+                     else if(this.props.imageVolumeManifests !== true) for(let id of Object.keys(this.props.imageVolumeManifests)) {
+                        let manif = this.props.imageVolumeManifests[id]
+                        //console.log("k",id,manif)
+                        if(manif && manif.sequences && manif.sequences[0] && manif.sequences[0].canvases) {
+                           let nc = 0, np = 0                           
+                           imageLinks[id] = manif.sequences[0].canvases.reduce( (acc,e) => ({
+                              ...acc, [Number(e.label[0]["@value"].replace(/[^0-9]/g,""))]:{id:e["@id"],image:e.images[0].resource["@id"]}
+                           }),{})
+                        }
+                     }
+
+                     /*
+                     if(!this.props.resourceManifest && this.props.resourceManifest.sequences && this.props.resourceManifest.sequences[0] && this.props.resourceManifest.sequences[0].canvases) {
                         let nc = 0, np = 0
                         imageLinks = this.props.resourceManifest.sequences[0].canvases.reduce( (acc,e) => ({
                            ...acc, [Number(e.label[0]["@value"].replace(/[^0-9]/g,""))]:{id:e["@id"],image:e.images[0].resource["@id"]}
                         }),{})
                      }
 
+                     */
                      console.log("imaL",imageLinks)
 
                      let openMiradorAtPage = (num) => {
@@ -2341,9 +2369,12 @@ class ResourceViewer extends Component<Props,State>
                                  {/* {this.hasSub(k)?this.subProps(k):tags.map((e)=> [e," "] )} */}
                                  { elem.map( e => (
                                     <div class={"etextPage"+(this.props.manifestError?" manifest-error":"")}>
-                                       {
+                                       {/*                                          
                                           e.seq && this.state.collapse["image-"+this.props.IRI+"-"+e.seq] && imageLinks[e.seq] &&
                                           <img title="Open image+text view in Mirador" onClick={eve => { openMiradorAtPage(imageLinks[e.seq].id) }} style={{maxWidth:"100%"}} src={imageLinks[e.seq].image} />
+                                       */}
+                                       {
+                                          e.seq && Object.keys(imageLinks).sort().map(id => (<img title="Open image+text view in Mirador" src={imageLinks[id][e.seq].image}/> ))
                                        }
                                        <h4 class="page">{e.value.split("\n").map(f => {
                                              //let label = getLangLabel(this,[{"@language":e.language,"@value":f}])
@@ -2353,15 +2384,17 @@ class ResourceViewer extends Component<Props,State>
                                           })}
                                        </h4>
                                        { e.seq && <div> 
-                                          <IconButton title="Show page scan" 
+                                          <IconButton title="Show page scan" style={{marginLeft:"8px"}}
                                           onClick={(eve) => {
                                                 let id = "image-"+this.props.IRI+"-"+e.seq
                                                 this.setState({...this.state, collapse:{...this.state.collapse, [id]:!this.state.collapse[id]}}) 
-                                             }}> <PhotoIcon/>
+                                             }}> 
+                                             <img src="/scan_icon.svg"/>
                                           </IconButton> 
-                                          <h5><a title="Open image+text view in Mirador" onClick={eve => { openMiradorAtPage(imageLinks[e.seq].id) }}>p.{e.seq}</a></h5> 
+                                          {/* { <h5><a title="Open image+text view in Mirador" onClick={eve => { openMiradorAtPage(imageLinks[e.seq].id) }}>p.{e.seq}</a></h5> } */}
+                                          { <h5>p.{e.seq}</h5> }
                                        </div> }
-                                    </div>))}
+                                    </div>))  }
                               {/* // import make test fail...
                                  <div class="sub">
                                  <AnnotatedEtextContainer dontSelect={true} chunks={elem}/>
