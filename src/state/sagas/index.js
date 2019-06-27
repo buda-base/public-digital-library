@@ -285,27 +285,67 @@ async function getChunks(iri,next) {
 
 async function getPages(iri,next) {
    try {
+      let data, chunk, pages ;
+      /*
+      if(next == 0) {
+         data = await api.loadEtextChunks(iri,next,1000);  
+         chunk = _.sortBy(data["@graph"].filter(e => e.type === "EtextPage"),'sliceStartChar')    
+         next = Number(chunk[0].seqNum)
+      }
+      data = await api.loadEtextPages(iri,next);
+      chunk = _.sortBy(data["@graph"].filter(e => e.chunkContents),'sliceStartChar')                  
+      */
 
-      let data = await api.loadEtextChunks(iri,next);
 
-      let chunk = _.sortBy(data["@graph"].filter(e => e.chunkContents),'sliceStartChar')                  
-      let start = chunk[0].sliceStartChar
+      data = await api.loadEtextChunks(iri,next);
+      chunk = _.sortBy(data["@graph"].filter(e => e.chunkContents),'sliceStartChar')                  
+      pages = _.sortBy(data["@graph"].filter(e => e.type && e.type === "EtextPage"),'seqNum')
+
       let lang = chunk[0].chunkContents["@language"]
-      chunk = chunk.map(e => e.chunkContents["@value"].replace(/.$/,"")).join()
-      
-      console.log("chunk@"+start,chunk)
 
-      let pages = _.sortBy(data["@graph"].filter(e => e.type && e.type === "EtextPage"),'seqNum')
+      //let start = chunk[0].sliceStartChar
+      //chunk = chunk.map(e => e.chunkContents["@value"]).join() //.replace(/..$/,"--")).join()      
+      //console.log("chunk@"+start,chunk)
+
 
       console.log("pages",pages)
 
-      data = pages.map(e => ({
-         value:(chunk.substring(e.sliceStartChar - start,e.sliceEndChar - start)).replace(/[\n\r]+/,"\n").replace(/(^\n)|(\n$)/,""),
-         language:lang,
-         seq:e.seqNum,
-         start:e.sliceStartChar,
-         end:e.sliceEndChar        
-       })); //+ " ("+e.seqNum+")" }))
+      data = pages.map(e => {
+         //console.log("page?",e,e.sliceStartChar,e.sliceEndChar,start)
+         if(e.sliceEndChar <= chunk[chunk.length - 1].sliceEndChar) 
+            return {
+               //value:(chunk.substring(e.sliceStartChar - start,e.sliceEndChar - start - 1)).replace(/[\n\r]+/,"\n").replace(/(^\n)|(\n$)/,""),
+               value:chunk.reduce( (acc,c) => { 
+                  let content = c["chunkContents"], start = -1, end = -1
+                        
+                  if( e.sliceStartChar >= c.sliceStartChar && e.sliceStartChar <= c.sliceEndChar 
+                  || e.sliceEndChar >= c.sliceStartChar   && e.sliceEndChar <= c.sliceEndChar  ) {
+
+                     if(e.sliceStartChar < c.sliceStartChar) start = 0
+                     else start = e.sliceStartChar - c.sliceStartChar
+
+                     if(e.sliceEndChar > c.sliceEndChar) end = c.sliceEndChar - c.sliceStartChar
+                     else end = e.sliceEndChar - c.sliceStartChar
+                  }
+                  else if( e.sliceStartChar <= c.sliceStartChar && e.sliceEndChar >= c.sliceEndChar )
+                  {
+                     start = 0
+                     end = c.sliceEndChar - c.sliceStartChar
+                  }
+
+                  if(start >= 0 && end >= 0) {
+                     acc += content["@value"].substring(start,end) ;
+                  }
+
+                  return acc ; 
+               },"").replace(/[\n\r]+/,"\n").replace(/(^\n)|(\n$)/,""),
+               language:lang,
+               seq:e.seqNum,
+               start:e.sliceStartChar,
+               end:e.sliceEndChar        
+            }
+         
+      }).filter(e => e); //+ " ("+e.seqNum+")" }))
 
       console.log("dataP",iri,next,data)
 

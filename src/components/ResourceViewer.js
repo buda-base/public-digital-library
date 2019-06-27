@@ -2307,6 +2307,15 @@ class ResourceViewer extends Component<Props,State>
                      if(next && next.length) next = next[next.length - 1].end + 1
                      else next = 0                  
                      
+                     /*
+                     let next = 0;
+                     if(elem && elem.length) next = elem.filter(e => e.value && e.end)
+                     if(next && next.length) next = next[next.length - 1].seq + 1
+                     else next = 0
+                     
+                     console.log("nextP?",next)     
+                     */
+                     
                      let imageLinks = {}
                      
                      if(!this.props.imageVolumeManifests) // && !this.props.manifestError)
@@ -2374,7 +2383,7 @@ class ResourceViewer extends Component<Props,State>
                                           <img title="Open image+text view in Mirador" onClick={eve => { openMiradorAtPage(imageLinks[e.seq].id) }} style={{maxWidth:"100%"}} src={imageLinks[e.seq].image} />
                                        */}
                                        {
-                                          e.seq && Object.keys(imageLinks).sort().map(id => (<img title="Open image+text view in Mirador" src={imageLinks[id][e.seq].image}/> ))
+                                          e.seq && this.state.collapse["image-"+this.props.IRI+"-"+e.seq] && Object.keys(imageLinks).sort().map(id => (<img title="Open image+text view in Mirador" src={imageLinks[id][e.seq].image}/> ))
                                        }
                                        <h4 class="page">{e.value.split("\n").map(f => {
                                              //let label = getLangLabel(this,[{"@language":e.language,"@value":f}])

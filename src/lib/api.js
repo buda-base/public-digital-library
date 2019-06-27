@@ -271,7 +271,7 @@ export default class API {
 
    }
 
-   async loadEtextChunks(IRI:string,next:number=0): Promise<string>
+   async loadEtextChunks(IRI:string,next:number=0,nb:number=10000): Promise<string>
    {
       //let resource =  JSON.parse(await this.getURLContents(this._etextPath(IRI),false));
 
@@ -281,7 +281,7 @@ export default class API {
       try {
          let config = store.getState().data.config.ldspdi
          let url = config.endpoints[config.index]+"/query/graph" ;
-         let param = {"searchType":"Chunks","R_RES":IRI,"I_START":next,"I_END":next+10000,"L_NAME":"","LG_NAME":"" }
+         let param = {"searchType":"Chunks","R_RES":IRI,"I_START":next,"I_END":next+nb,"L_NAME":"","LG_NAME":"" }
          let data = await this.getQueryResults(url, IRI, param,"GET","application/ld+json");
 
          //console.log("etextchunks",JSON.stringify(data,null,3))
@@ -293,6 +293,31 @@ export default class API {
       }
 
    }
+
+
+   async loadEtextPages(IRI:string,next:number=0): Promise<string>
+   {
+      //let resource =  JSON.parse(await this.getURLContents(this._etextPath(IRI),false));
+
+      if(!IRI.indexOf(':') === -1) IRI = "bdr:"+IRI
+
+      //console.log("etext",resource)
+      try {
+         let config = store.getState().data.config.ldspdi
+         let url = config.endpoints[config.index]+"/query/graph" ;
+         let param = {"searchType":"ChunksByPage","R_RES":IRI,"I_START":next,"I_END":next+10,"L_NAME":"","LG_NAME":"" }
+         let data = await this.getQueryResults(url, IRI, param,"GET","application/ld+json");
+
+         //console.log("etextchunks",JSON.stringify(data,null,3))
+
+         return data ;
+      }
+      catch(e){
+         throw(e)
+      }
+
+   }
+
 
 
 
