@@ -836,7 +836,7 @@ class ResourceViewer extends Component<Props,State>
       return ret
    }
 
-   uriformat(prop:string,elem:{},dico:{} = this.props.assocResources, withProp:string)
+   uriformat(prop:string,elem:{},dico:{} = this.props.assocResources, withProp?:string,show:string="show")
    {
       if(elem) {
 
@@ -951,17 +951,17 @@ class ResourceViewer extends Component<Props,State>
                   let pretty = this.fullname(elem.value,true);
 
                   if(info && infoBase && infoBase.filter(e=>e["xml:lang"]||e["lang"]).length >= 0) {
-                     ret.push([<Link className="urilink prefLabel" to={"/show/bdr:"+pretty}>{info}</Link>,lang?<Tooltip placement="bottom-end" title={
+                     ret.push([<Link className="urilink prefLabel" to={"/"+show+"/bdr:"+pretty}>{info}</Link>,lang?<Tooltip placement="bottom-end" title={
                         <div style={{margin:"10px"}}>
                            <Translate value={languages[lang]?languages[lang].replace(/search/,"tip"):lang}/>
                         </div>
                      }><span className="lang">{lang}</span></Tooltip>:null])
                   }
                   else if(pretty.toString().match(/^V[0-9A-Z]+_I[0-9A-Z]+$/)) { ret.push(<span>
-                     <Link className="urilink" to={"/show/bdr:"+pretty}>{pretty}</Link>&nbsp;
+                     <Link className="urilink" to={"/"+show+"/bdr:"+pretty}>{pretty}</Link>&nbsp;
                      {/* <Link className="goBack" target="_blank" to={"/gallery?manifest=http://iiifpres.bdrc.io/2.1.1/v:bdr:"+pretty+"/manifest"}>{"(view image gallery)"}</Link> */}
                   </span> ) }
-                  else if(pretty.toString().match(/^([A-Z]+[_0-9-]*[A-Z]*)+$/)) ret.push(<Link className="urilink" to={"/show/bdr:"+pretty}>{pretty}</Link>)
+                  else if(pretty.toString().match(/^([A-Z]+[_0-9-]*[A-Z]*)+$/)) ret.push(<Link className="urilink" to={"/"+show+"/bdr:"+pretty}>{pretty}</Link>)
                   else ret.push(pretty)
 
                   return ret
@@ -2306,7 +2306,7 @@ class ResourceViewer extends Component<Props,State>
                      if(elem && elem.length) next = elem.filter(e => e.value && e.end)
                      if(next && next.length) next = next[next.length - 1].end + 1
                      else next = 0                  
-                     
+
                      /*
                      let next = 0;
                      if(elem && elem.length) next = elem.filter(e => e.value && e.end)
@@ -2383,15 +2383,22 @@ class ResourceViewer extends Component<Props,State>
                                           <img title="Open image+text view in Mirador" onClick={eve => { openMiradorAtPage(imageLinks[e.seq].id) }} style={{maxWidth:"100%"}} src={imageLinks[e.seq].image} />
                                        */}
                                        {
-                                          e.seq && this.state.collapse["image-"+this.props.IRI+"-"+e.seq] && Object.keys(imageLinks).sort().map(id => (<img title="Open image+text view in Mirador" src={imageLinks[id][e.seq].image}/> ))
+                                          e.seq && this.state.collapse["image-"+this.props.IRI+"-"+e.seq] && Object.keys(imageLinks).sort().map(id => {
+                                             return <div>
+                                                      <img class="page" /*title="Open image+text view in Mirador"*/ src={imageLinks[id][e.seq].image}/> 
+                                                      <div class="small">in {this.uriformat(null,{value:id.replace(/bdr:/,bdr)})}</div>
+                                                    </div>
+                                          })
                                        }
-                                       <h4 class="page">{e.value.split("\n").map(f => {
-                                             //let label = getLangLabel(this,[{"@language":e.language,"@value":f}])
-                                             //if(label) label = label["@value"]
-                                             let label = f
-                                             return ([label,<br/>])
-                                          })}
-                                       </h4>
+                                       <div class="overpage">
+                                          <h4 class="page">{e.value.split("\n").map(f => {
+                                                //let label = getLangLabel(this,[{"@language":e.language,"@value":f}])
+                                                //if(label) label = label["@value"]
+                                                let label = f
+                                                return ([label,<br/>])
+                                             })}
+                                          </h4>
+                                       </div>
                                        { e.seq && <div> 
                                           <IconButton title="Show page scan" style={{marginLeft:"8px"}}
                                           onClick={(eve) => {
