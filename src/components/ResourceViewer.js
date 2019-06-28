@@ -11,6 +11,7 @@ import { GoogleLayer } from "react-leaflet-google" ;
 // import {GoogleLayer} from 'react-leaflet-google'
 // const { BaseLayer} = LayersControl;
 import Settings from '@material-ui/icons/SettingsSharp';
+import SettingsApp from '@material-ui/icons/SettingsApplications';
 import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
 import FormHelperText from '@material-ui/core/FormHelperText';
@@ -2399,11 +2400,13 @@ class ResourceViewer extends Component<Props,State>
                                                       <img class="page" title="Open image+text view in Mirador" src={imageLinks[id][e.seq].image} onClick={eve => { 
                                                          let manif = this.props.imageVolumeManifests[id]
                                                          openMiradorAtPage(imageLinks[id][e.seq].id,manif["@id"])
-                                                      }}/> 
+                                                      }}/>          
                                                       <div class="small"><a title="Open image+text view in Mirador" onClick={eve => { 
                                                          let manif = this.props.imageVolumeManifests[id]
                                                          openMiradorAtPage(imageLinks[id][e.seq].id,manif["@id"])
-                                                      }}>p.{e.seq}</a> from {this.uriformat(null,{value:id.replace(/bdr:/,bdr).replace(/[/]V([^_]+)_I.+$/,"/W$1")})}</div>
+                                                      }}>p.{e.seq}</a> from {this.uriformat(null,{value:id.replace(/bdr:/,bdr).replace(/[/]V([^_]+)_I.+$/,"/W$1")})}<br/>
+                                                      {/* [<a class="toggle-volume">hide</a>]*/}
+                                                      </div>                  
                                                     </div>
                                           })
                                        }
@@ -2428,7 +2431,26 @@ class ResourceViewer extends Component<Props,State>
                                           { <h5><a title={(!this.state.collapse["image-"+this.props.IRI+"-"+e.seq]?"Show":"Hide")+" available scans for this page"} onClick={(eve) => {
                                                 let id = "image-"+this.props.IRI+"-"+e.seq
                                                 this.setState({...this.state, collapse:{...this.state.collapse, [id]:!this.state.collapse[id]}}) 
-                                             }}>p.{e.seq}</a></h5> } 
+                                             }}>p.{e.seq}</a>                                             
+                                                <IconButton className="close" title="Configure which image volumes to display" 
+                                                   //onClick={e => this.setState({...this.state,annoPane:false,viewAnno:false})}
+                                                   >
+                                                   <SettingsApp/>
+                                                </IconButton> 
+                                             </h5> 
+
+                                             // <Popover
+                                             //    open={this.state.collapse[]}
+                                             //    anchorEl={this.state.anchorElAnno}
+                                             //    onClose={this.handleRequestCloseAnno.bind(this)}
+                                             //    >
+                                             //    <MenuItem onClick={this.handleAnnoCollec.bind(this,true)}>All Annotations</MenuItem>
+                                             //    { this.props.annoCollec && Object.keys(this.props.annoCollec).map((e) => {
+                                                   
+                                             //       return (<MenuItem className={e === this.state.showAnno ? "current":""} onClick={this.handleAnnoCollec.bind(this,e)}>{l.value}</MenuItem>)
+                                             //    }) }
+                                             // </Popover>
+                                             }                  
                                           {/* -- available from { Object.keys(imageLinks).sort().map(id => <span>{this.uriformat(null,{value:id.replace(/bdr:/,bdr)})}</span>)} </h4> } */}
                                        </div> }
                                     </div>))  }
