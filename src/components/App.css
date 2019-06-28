@@ -132,6 +132,8 @@ h4 { margin-top:10px;margin-bottom:0px;font-size:24px; }
 }
 /* .etextPage h4.page:last-child { padding-bottom:25px; } */
 .etextPage .overpage { overflow-x: auto; }
+.etextPage.unformated  { padding-bottom:25px; }
+.etextPage.unformated h4.page { white-space: normal;  }
 .etextPage h5 { margin-top:0; color:#777; display:inline-block; }
 .etextPage h4 + h5 { margin-top:15px;margin-bottom:30px;}
 .etextPage img.page, .etextPage h5 a, .etextPage .small a { cursor:pointer; } 

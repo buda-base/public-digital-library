@@ -2342,12 +2342,13 @@ class ResourceViewer extends Component<Props,State>
                      }
                      else if(this.props.imageVolumeManifests !== true) for(let id of Object.keys(this.props.imageVolumeManifests)) {
                         let manif = this.props.imageVolumeManifests[id]
-                        //console.log("k",id,manif)
+                        console.log("k",id,manif)
                         if(manif && manif.sequences && manif.sequences[0] && manif.sequences[0].canvases) {
                            let nc = 0, np = 0                           
-                           imageLinks[id] = manif.sequences[0].canvases.reduce( (acc,e) => ({
-                              ...acc, [Number(e.label[0]["@value"].replace(/[^0-9]/g,""))]:{id:e["@id"],image:e.images[0].resource["@id"]}
-                           }),{})
+                           imageLinks[id] = manif.sequences[0].canvases.reduce( (acc,e) => {
+                              if(e.label) return ({
+                                 ...acc, [Number(e.label[0]["@value"].replace(/[^0-9]/g,""))]:{id:e["@id"],image:e.images[0].resource["@id"]}
+                           })},{})
                         }
                      }
 
@@ -2387,7 +2388,7 @@ class ResourceViewer extends Component<Props,State>
                         >
                                  {/* {this.hasSub(k)?this.subProps(k):tags.map((e)=> [e," "] )} */}
                                  { elem.map( e => (
-                                    <div class={"etextPage"+(this.props.manifestError?" manifest-error":"")}>
+                                    <div class={"etextPage"+(this.props.manifestError?" manifest-error":"")+ (!e.value.match(/[\n\r]/)?" unformated":"")}>
                                        {/*                                          
                                           e.seq && this.state.collapse["image-"+this.props.IRI+"-"+e.seq] && imageLinks[e.seq] &&
                                           <img title="Open image+text view in Mirador" onClick={eve => { openMiradorAtPage(imageLinks[e.seq].id) }} style={{maxWidth:"100%"}} src={imageLinks[e.seq].image} />
