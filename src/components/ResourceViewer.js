@@ -1699,7 +1699,7 @@ class ResourceViewer extends Component<Props,State>
    }
 
 
-   showMirador(num?:number)
+   showMirador(num?:number,useManifest?:{})
    {
 
       if(!this.state.openMirador) // || !$("#viewer").hasClass("hidden"))
@@ -1708,7 +1708,7 @@ class ResourceViewer extends Component<Props,State>
 
          if(this.state.UVcanLoad) { window.location.hash = "mirador"; window.location.reload(); }
 
-         console.log("num",num)
+         console.log("num",num,useManifest)
 
          let tiMir = setInterval( async () => {
 
@@ -1719,14 +1719,24 @@ class ResourceViewer extends Component<Props,State>
                $("#fond").addClass("hidden");
 
                let data = [], manif, canvasID
-               if(this.props.imageAsset.match(/[/]collection[/]/) && !this.props.collecManif)
+               if(this.props.imageAsset) 
                {
-                  data.push({"collectionUri": this.props.imageAsset +"?continuous=true", location:"Test Collection Location" })
-                  //if(this.props.manifests) data = data.concat(this.props.manifests.map(m => ({manifestUri:m["@id"],label:m["label"]})))
+                  if(this.props.imageAsset.match(/[/]collection[/]/) && !this.props.collecManif)
+                  {
+                     data.push({"collectionUri": this.props.imageAsset +"?continuous=true", location:"Test Collection Location" })
+                     //if(this.props.manifests) data = data.concat(this.props.manifests.map(m => ({manifestUri:m["@id"],label:m["label"]})))
+                  }
+                  else
+                  {
+                     manif = this.props.collecManif
+                     if(!manif) manif = this.props.imageAsset+"?continuous=true"
+                     data.push({"manifestUri": manif, location:"Test Manifest Location" })
+                     canvasID = this.props.canvasID
+                  }
                }
-               else
+               else if(useManifest)
                {
-                  manif = this.props.collecManif
+                  manif = useManifest
                   if(!manif) manif = this.props.imageAsset+"?continuous=true"
                   data.push({"manifestUri": manif, location:"Test Manifest Location" })
                   canvasID = this.props.canvasID
@@ -2352,10 +2362,10 @@ class ResourceViewer extends Component<Props,State>
                      */
                      console.log("imaL",imageLinks)
 
-                     let openMiradorAtPage = (num) => {
+                     let openMiradorAtPage = (num,manif) => {
                         //console.log("num?",num)
                         window.MiradorUseEtext = true ; 
-                        this.showMirador(num);
+                        this.showMirador(num,manif);
                      }
 
                      return (
@@ -2385,8 +2395,14 @@ class ResourceViewer extends Component<Props,State>
                                        {
                                           e.seq && this.state.collapse["image-"+this.props.IRI+"-"+e.seq] && Object.keys(imageLinks).sort().map(id => {
                                              return <div>
-                                                      <img class="page" /*title="Open image+text view in Mirador"*/ src={imageLinks[id][e.seq].image}/> 
-                                                      <div class="small">in {this.uriformat(null,{value:id.replace(/bdr:/,bdr)})}</div>
+                                                      <img class="page" title="Open image+text view in Mirador" src={imageLinks[id][e.seq].image} onClick={eve => { 
+                                                         let manif = this.props.imageVolumeManifests[id]
+                                                         openMiradorAtPage(imageLinks[id][e.seq].id,manif["@id"])
+                                                      }}/> 
+                                                      <div class="small"><a title="Open image+text view in Mirador" onClick={eve => { 
+                                                         let manif = this.props.imageVolumeManifests[id]
+                                                         openMiradorAtPage(imageLinks[id][e.seq].id,manif["@id"])
+                                                      }}>p.{e.seq}</a> from {this.uriformat(null,{value:id.replace(/bdr:/,bdr).replace(/[/]V([^_]+)_I.+$/,"/W$1")})}</div>
                                                     </div>
                                           })
                                        }
@@ -2400,7 +2416,7 @@ class ResourceViewer extends Component<Props,State>
                                           </h4>
                                        </div>
                                        { e.seq && <div> 
-                                          <IconButton title="Show page scan" style={{marginLeft:"8px"}}
+                                          <IconButton  title={(!this.state.collapse["image-"+this.props.IRI+"-"+e.seq]?"Show":"Hide")+" available scans for this page"} style={{marginLeft:"8px"}}
                                           onClick={(eve) => {
                                                 let id = "image-"+this.props.IRI+"-"+e.seq
                                                 this.setState({...this.state, collapse:{...this.state.collapse, [id]:!this.state.collapse[id]}}) 
@@ -2408,7 +2424,11 @@ class ResourceViewer extends Component<Props,State>
                                              <img src="/scan_icon.svg"/>
                                           </IconButton> 
                                           {/* { <h5><a title="Open image+text view in Mirador" onClick={eve => { openMiradorAtPage(imageLinks[e.seq].id) }}>p.{e.seq}</a></h5> } */}
-                                          { <h5>p.{e.seq}</h5> }
+                                          { <h5><a title={(!this.state.collapse["image-"+this.props.IRI+"-"+e.seq]?"Show":"Hide")+" available scans for this page"} onClick={(eve) => {
+                                                let id = "image-"+this.props.IRI+"-"+e.seq
+                                                this.setState({...this.state, collapse:{...this.state.collapse, [id]:!this.state.collapse[id]}}) 
+                                             }}>p.{e.seq}</a></h5> } 
+                                          {/* -- available from { Object.keys(imageLinks).sort().map(id => <span>{this.uriformat(null,{value:id.replace(/bdr:/,bdr)})}</span>)} </h4> } */}
                                        </div> }
                                     </div>))  }
                               {/* // import make test fail...
@@ -2674,7 +2694,7 @@ class ResourceViewer extends Component<Props,State>
                   </div>]
                }
                {
-                  !this.props.manifestError && this.props.imageAsset && this.state.openMirador  &&
+                  !this.props.manifestError && (this.props.imageAsset || this.props.imageVolumeManifests) && this.state.openMirador  &&
                   [<div id="fond" >
                      <Loader loaded={false} color="#fff"/>
                   </div>,
