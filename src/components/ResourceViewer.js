@@ -123,9 +123,11 @@ type State = {
    newAnno?:boolean|{},
    annoCollecOpen?:boolean,
    anchorElAnno?:any,
+   anchorElemImaVol?:any,
    largeMap?:boolean,
    rightPane?:boolean,
-   nextChunk?:number
+   nextChunk?:number,
+   imageLinks?:{}
  }
 
 
@@ -2327,7 +2329,9 @@ class ResourceViewer extends Component<Props,State>
                      console.log("nextP?",next)     
                      */
                      
-                     let imageLinks = {}
+                     let imageLinks ;
+                     if(this.state.imageLinks) imageLinks = this.state.imageLinks[this.props.IRI]
+                     if(!imageLinks) imageLinks = {}
                      
                      if(!this.props.imageVolumeManifests) // && !this.props.manifestError)
                      {
@@ -2342,16 +2346,22 @@ class ResourceViewer extends Component<Props,State>
                         }
                      }
                      else if(this.props.imageVolumeManifests !== true) for(let id of Object.keys(this.props.imageVolumeManifests)) {
-                        let manif = this.props.imageVolumeManifests[id]
-                        console.log("k",id,manif)
-                        if(manif && manif.sequences && manif.sequences[0] && manif.sequences[0].canvases) {
-                           let nc = 0, np = 0                           
-                           imageLinks[id] = manif.sequences[0].canvases.reduce( (acc,e) => {
-                              if(e.label) return ({
-                                 ...acc, [Number(e.label[0]["@value"].replace(/[^0-9]/g,""))]:{id:e["@id"],image:e.images[0].resource["@id"]}
-                           })},{})
+                        if(!imageLinks[id])
+                        {
+                           let manif = this.props.imageVolumeManifests[id]
+                           console.log("k",id,manif)
+                           if(manif && manif.sequences && manif.sequences[0] && manif.sequences[0].canvases) {
+                              let nc = 0, np = 0                           
+                              imageLinks[id] = manif.sequences[0].canvases.reduce( (acc,e) => {
+                                 if(e.label) return ({
+                                    ...acc, [Number(e.label[0]["@value"].replace(/[^0-9]/g,""))]:{id:e["@id"],image:e.images[0].resource["@id"]}
+                              })},{})
+                              console.log("imaL",imageLinks)
+                              this.setState({ ...this.state,imageLinks:{...this.state.imageLinks, [this.props.IRI]: imageLinks } })
+                           }
                         }
                      }
+                     
 
                      /*
                      if(!this.props.resourceManifest && this.props.resourceManifest.sequences && this.props.resourceManifest.sequences[0] && this.props.resourceManifest.sequences[0].canvases) {
@@ -2362,7 +2372,6 @@ class ResourceViewer extends Component<Props,State>
                      }
 
                      */
-                     console.log("imaL",imageLinks)
 
                      let openMiradorAtPage = (num,manif) => {
                         //console.log("num?",num)
@@ -2372,7 +2381,7 @@ class ResourceViewer extends Component<Props,State>
 
                      return (
                         
-                        <InfiniteScroll
+                        [<InfiniteScroll
                         id="etext-scroll"
                         hasMore={true}
                         pageStart={0}
@@ -2415,8 +2424,7 @@ class ResourceViewer extends Component<Props,State>
                                                 //let label = getLangLabel(this,[{"@language":e.language,"@value":f}])
                                                 //if(label) label = label["@value"]
                                                 let label = f
-                                                return ([label,<br/>])
-                                             })}
+                                                return ([label,<br/>])})}
                                           </h4>
                                        </div>
                                        { e.seq && <div> 
@@ -2428,28 +2436,19 @@ class ResourceViewer extends Component<Props,State>
                                              <img src="/scan_icon.svg"/>
                                           </IconButton> 
                                           {/* { <h5><a title="Open image+text view in Mirador" onClick={eve => { openMiradorAtPage(imageLinks[e.seq].id) }}>p.{e.seq}</a></h5> } */}
-                                          { <h5><a title={(!this.state.collapse["image-"+this.props.IRI+"-"+e.seq]?"Show":"Hide")+" available scans for this page"} onClick={(eve) => {
+                                          {   [ <h5><a title={(!this.state.collapse["image-"+this.props.IRI+"-"+e.seq]?"Show":"Hide")+" available scans for this page"} onClick={(eve) => {
                                                 let id = "image-"+this.props.IRI+"-"+e.seq
                                                 this.setState({...this.state, collapse:{...this.state.collapse, [id]:!this.state.collapse[id]}}) 
                                              }}>p.{e.seq}</a>                                             
-                                                <IconButton className="close" title="Configure which image volumes to display" 
-                                                   //onClick={e => this.setState({...this.state,annoPane:false,viewAnno:false})}
-                                                   >
-                                                   <SettingsApp/>
-                                                </IconButton> 
-                                             </h5> 
-
-                                             // <Popover
-                                             //    open={this.state.collapse[]}
-                                             //    anchorEl={this.state.anchorElAnno}
-                                             //    onClose={this.handleRequestCloseAnno.bind(this)}
-                                             //    >
-                                             //    <MenuItem onClick={this.handleAnnoCollec.bind(this,true)}>All Annotations</MenuItem>
-                                             //    { this.props.annoCollec && Object.keys(this.props.annoCollec).map((e) => {
-                                                   
-                                             //       return (<MenuItem className={e === this.state.showAnno ? "current":""} onClick={this.handleAnnoCollec.bind(this,e)}>{l.value}</MenuItem>)
-                                             //    }) }
-                                             // </Popover>
+                                             </h5> ,
+                                             <IconButton className="close" title="Configure which image volumes to display" 
+                                                onClick={e => this.setState({...this.state,
+                                                      collapse:{...this.state.collapse, imageVolumeDisplay:!this.state.collapse.imageVolumeDisplay},
+                                                      anchorElemImaVol:e.target
+                                                   })}
+                                                >
+                                                <SettingsApp/>
+                                             </IconButton>]
                                              }                  
                                           {/* -- available from { Object.keys(imageLinks).sort().map(id => <span>{this.uriformat(null,{value:id.replace(/bdr:/,bdr)})}</span>)} </h4> } */}
                                        </div> }
@@ -2459,7 +2458,24 @@ class ResourceViewer extends Component<Props,State>
                                  <AnnotatedEtextContainer dontSelect={true} chunks={elem}/>
                                  </div>
                               */}
-                        </InfiniteScroll>
+                        </InfiniteScroll>,
+                        <Popover
+                           open={this.state.collapse.imageVolumeDisplay}
+                           anchorEl={this.state.anchorElemImaVol}
+                           onClose={e => { if(!this.state.collapse.imageVolumeDisplay == false)
+                              this.setState({
+                                 ...this.state,
+                                 collapse:{ ...this.state.collapse, imageVolumeDisplay:false },
+                                 anchorElemImaVol:null   
+                              });
+                           }}
+                           >
+                              <MenuItem /*onClick={this.handleAnnoCollec.bind(this,true)}*/>All volumes</MenuItem>
+                              { /*this.props.annoCollec && Object.keys(this.props.annoCollec).map((e) => {
+                              
+                                 return (<MenuItem className={e === this.state.showAnno ? "current":""} onClick={this.handleAnnoCollec.bind(this,e)}>{l.value}</MenuItem>)
+                              }) */}
+                        </Popover>]
                      )
                   }
                   else if(k == bdo+"eTextHasChunk" && kZprop.indexOf(bdo+"eTextHasPage") === -1) {

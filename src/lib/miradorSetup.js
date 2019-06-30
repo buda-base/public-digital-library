@@ -147,135 +147,134 @@ async function hasEtextPage(manifest) {
       const bdr = "http://purl.bdrc.io/resource/"
       //let utR = ut.replace(/bdr:/,bdr)
       let check = await window.fetch("http://purl.bdrc.io/lib/allAssocResource?R_RES="+IRI+"") ;
-      let hasEtext = true ;
+      
 
-      console.log("hasetext",hasEtext)
-      if(!hasEtext) {
-         window.MiradorHasNoEtext = true ;
+      let ut = await check.json()
+      if(ut) ut = ut.data 
+      if(ut) ut = ut[IRI.replace(/bdr:/,bdr)]
+
+      if(ut) ut = ut.filter(e => e.type && e.type.match(/tmp[/]hasEtextRes/));
+
+      if(ut && ut.length) ut = ut[0].value
+      if(ut) ut = ut.replace(new RegExp(bdr),"bdr:")
+
+      
+      //console.log("ut3",ut)
+      if(!ut) { 
+         window.MiradorHasNoEtext = false
+         return 
       }
-      else {
-
-         let ut = await check.json()
-         if(ut) ut = ut.data 
-         if(ut) ut = ut[IRI.replace(/bdr:/,bdr)]
-
-         if(ut) ut = ut.filter(e => e.type && e.type.match(/tmp[/]hasEtextRes/));
-
-         if(ut && ut.length) ut = ut[0].value
-         if(ut) ut = ut.replace(new RegExp(bdr),"bdr:")
-
-         //console.log("ut3",ut)
-
-         if(window.MiradorHasNoEtext) delete window.MiradorHasNoEtext ;
+      
+      if(window.MiradorHasNoEtext) delete window.MiradorHasNoEtext ;
 
 
-         if(!window.setEtext) { 
-            window.setEtext = (obj,e) => {
-               console.log("setetext",obj,e,e.target.tagName)
-               let checkB = jQ(obj).find("input[type=checkbox]").get(0)
-               if(e.target.tagName.toLowerCase() !== 'input') checkB.checked = !checkB.checked
-               if(!checkB.checked) {  
-                  delete window.MiradorUseEtext ;
-                  jQ(".etext-content").addClass("hide");
-               }
-               else {  
-                  window.MiradorUseEtext = true;
-                  jQ(".etext-content").removeClass("hide"); 
-                  //setTimeout(() => window.mirador.viewer.workspace.windows[0].focusModules.ScrollView.reloadImages(), 250)
-               }               
+      if(!window.setEtext) { 
+         window.setEtext = (obj,e) => {
+            console.log("setetext",obj,e,e.target.tagName)
+            let checkB = jQ(obj).find("input[type=checkbox]").get(0)
+            if(e.target.tagName.toLowerCase() !== 'input') checkB.checked = !checkB.checked
+            if(!checkB.checked) {  
+               delete window.MiradorUseEtext ;
+               jQ(".etext-content").addClass("hide");
             }
+            else {  
+               window.MiradorUseEtext = true;
+               jQ(".etext-content").removeClass("hide"); 
+               //setTimeout(() => window.mirador.viewer.workspace.windows[0].focusModules.ScrollView.reloadImages(), 250)
+            }               
          }
+      }
 
-         let getEtextPage = async (canvas) => { 
+      let getEtextPage = async (canvas) => { 
 
-            if(!canvas || !ut) return "(issue with canvas data: "+JSON.stringify(canvas,null,3)+")" ;
+         if(!canvas || !ut) return "(issue with canvas data: "+JSON.stringify(canvas,null,3)+")" ;
 
-            let id = canvas.label ;
-            if(id && id[0] && id[0]["@value"]) id = id[0]["@value"].replace(/[^0-9]/g,"")
+         let id = canvas.label ;
+         if(id && id[0] && id[0]["@value"]) id = id[0]["@value"].replace(/[^0-9]/g,"")
 
-            if(!id || id.match(/[^0-9]/)) return "(issue with canvas label: "+JSON.stringify(canvas.label,null,3)+")" ;
-            else id = Number(id)
+         if(!id || id.match(/[^0-9]/)) return "(issue with canvas label: "+JSON.stringify(canvas.label,null,3)+")" ;
+         else id = Number(id)
 
-            //console.log("page " +id);
+         //console.log("page " +id);
 
-            if(!etextPages[ut]) etextPages[ut] = {}
-            if(etextPages[ut][id] === true) {            
-               return new Promise((resolve,reject) => {
-                  let timer = setInterval(()=>{
-                     //console.log("id?",etextPages[ut][id])
-                     if(etextPages[ut][id] && etextPages[ut][id] !== true) {
-                        resolve(etextPages[ut][id].chunks);
-                        clearInterval(timer);
-                     }
-                  },100);   
-               })
-            }
-            else if(!etextPages[ut][id]) {            
-               
-               //console.log("loading DATA",id);
-
-               for(let i = id ; i <= id+NB_PAGES-1 ; i++) etextPages[ut][i] = true ;
-               let data = await window.fetch("http://purl.bdrc.io/query/graph/ChunksByPage?R_RES="+ut+"&I_START="+id+"&I_END="+(id+NB_PAGES-1)) ;
-               
-               let json = await data.json() ;
-
-               //console.log("DATA OK",id,json);
-
-               if(json && json["@graph"]) json = json["@graph"]
-               if(json.status === 404 || !json.filter) {
-                  for(let i = id ; i <= id+NB_PAGES-1 ; i++) delete etextPages[ut][i]  ;
-                  //console.error("Etext ERROR",json)
-                  return ; //[{"@language":"en","@value":"no data found (yet !?)"}]
-               }
-               let pages = json.filter(e => e.type && e.type === "EtextPage")
-               pages = __.orderBy(pages,['seqNum'],['asc'])
-               let chunks = json.filter(e => e.chunkContents)
-               chunks = __.orderBy(chunks,['sliceStartChar'],['asc'])
-               for(let p of pages) {               
-                  etextPages[ut][p["seqNum"]] = p
-                  
-                  if(!p.chunks) p.chunks = []
-                  for(let c of chunks) {
-                     //console.log(p,c)
-                     let content = c["chunkContents"], start = -1, end = -1
-                     
-                     if( p.sliceStartChar >= c.sliceStartChar && p.sliceStartChar <= c.sliceEndChar 
-                     || p.sliceEndChar >= c.sliceStartChar   && p.sliceEndChar <= c.sliceEndChar  ) {
-
-                        if(p.sliceStartChar < c.sliceStartChar) start = 0
-                        else start = p.sliceStartChar - c.sliceStartChar
-
-                        if(p.sliceEndChar > c.sliceEndChar) end = c.sliceEndChar - c.sliceStartChar
-                        else end = p.sliceEndChar - c.sliceStartChar
-                     }
-                     else if( p.sliceStartChar <= c.sliceStartChar && p.sliceEndChar >= c.sliceEndChar )
-                     {
-                        start = 0
-                        end = c.sliceEndChar - c.sliceStartChar
-                     }
-
-                     if(start >= 0 && end >= 0) {
-                        if(content["@value"] && content["@language"]) p.chunks.push({"@language":content["@language"],"@value":content["@value"].substring(start,end)})
-                        else p.chunks.push({"@language":"en", "@value":"issue with chunk data " + JSON.stringify(c,null,3)})
-                     }
-                     
+         if(!etextPages[ut]) etextPages[ut] = {}
+         if(etextPages[ut][id] === true) {            
+            return new Promise((resolve,reject) => {
+               let timer = setInterval(()=>{
+                  //console.log("id?",etextPages[ut][id])
+                  if(etextPages[ut][id] && etextPages[ut][id] !== true) {
+                     resolve(etextPages[ut][id].chunks);
+                     clearInterval(timer);
                   }
+               },100);   
+            })
+         }
+         else if(!etextPages[ut][id]) {            
+            
+            //console.log("loading DATA",id);
+
+            for(let i = id ; i <= id+NB_PAGES-1 ; i++) etextPages[ut][i] = true ;
+            let data = await window.fetch("http://purl.bdrc.io/query/graph/ChunksByPage?R_RES="+ut+"&I_START="+id+"&I_END="+(id+NB_PAGES-1)) ;
+            
+            let json = await data.json() ;
+
+            //console.log("DATA OK",id,json);
+
+            if(json && json["@graph"]) json = json["@graph"]
+            if(json.status === 404 || !json.filter) {
+               for(let i = id ; i <= id+NB_PAGES-1 ; i++) delete etextPages[ut][i]  ;
+               //console.error("Etext ERROR",json)
+               return ; //[{"@language":"en","@value":"no data found (yet !?)"}]
+            }
+            let pages = json.filter(e => e.type && e.type === "EtextPage")
+            pages = __.orderBy(pages,['seqNum'],['asc'])
+            let chunks = json.filter(e => e.chunkContents)
+            chunks = __.orderBy(chunks,['sliceStartChar'],['asc'])
+            for(let p of pages) {               
+               etextPages[ut][p["seqNum"]] = p
+               
+               if(!p.chunks) p.chunks = []
+               for(let c of chunks) {
+                  //console.log(p,c)
+                  let content = c["chunkContents"], start = -1, end = -1
+                  
+                  if( p.sliceStartChar >= c.sliceStartChar && p.sliceStartChar <= c.sliceEndChar 
+                  || p.sliceEndChar >= c.sliceStartChar   && p.sliceEndChar <= c.sliceEndChar  ) {
+
+                     if(p.sliceStartChar < c.sliceStartChar) start = 0
+                     else start = p.sliceStartChar - c.sliceStartChar
+
+                     if(p.sliceEndChar > c.sliceEndChar) end = c.sliceEndChar - c.sliceStartChar
+                     else end = p.sliceEndChar - c.sliceStartChar
+                  }
+                  else if( p.sliceStartChar <= c.sliceStartChar && p.sliceEndChar >= c.sliceEndChar )
+                  {
+                     start = 0
+                     end = c.sliceEndChar - c.sliceStartChar
+                  }
+
+                  if(start >= 0 && end >= 0) {
+                     if(content["@value"] && content["@language"]) p.chunks.push({"@language":content["@language"],"@value":content["@value"].substring(start,end)})
+                     else p.chunks.push({"@language":"en", "@value":"issue with chunk data " + JSON.stringify(c,null,3)})
+                  }
+                  
                }
             }
-
-            if(etextPages[ut][id] && etextPages[ut][id] !== true && etextPages[ut][id].chunks && etextPages[ut][id].chunks.length) 
-               return etextPages[ut][id].chunks ;
-
-            //return [{"@language":"en","@value":"no data found (yet !?)"}]
-
          }
 
-         
-         return getEtextPage ;
+         if(etextPages[ut][id] && etextPages[ut][id] !== true && etextPages[ut][id].chunks && etextPages[ut][id].chunks.length) 
+            return etextPages[ut][id].chunks ;
+
+         //return [{"@language":"en","@value":"no data found (yet !?)"}]
 
       }
+
+      
+      return getEtextPage ;
+
    }
 }
+
 
 const NB_PAGES = 10 ; 
 let etextPages = {};
