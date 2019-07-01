@@ -31,6 +31,8 @@ import Feedback from '@material-ui/icons/QuestionAnswer';
 import Collapse from '@material-ui/core/Collapse';
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
+import CheckCircle from '@material-ui/icons/CheckCircle';
+import PanoramaFishEye from '@material-ui/icons/PanoramaFishEye';
 import InfiniteScroll from 'react-infinite-scroller';
 import _ from "lodash";
 import Tooltip from '@material-ui/core/Tooltip';
@@ -2492,11 +2494,11 @@ class ResourceViewer extends Component<Props,State>
                                  this.setState({...this.state,collapse})
                               }}>Show all volumes</MenuItem>  */}
                               { imageLinks && Object.keys(imageLinks).sort().map(id => <MenuItem onClick={e => {
-                                    this.setState({...this.state,collapse:{...this.state.collapse, imageVolumeDisplay:false, ["imageVolume-"+id]:!this.state.collapse["imageVolume-"+id]}})
-                                    setTimeout(() => {$(".close.show").removeClass("show");},350)
+                                    this.setState({...this.state,collapse:{...this.state.collapse, /*imageVolumeDisplay:false,*/ ["imageVolume-"+id]:!this.state.collapse["imageVolume-"+id]}})
+                                    //setTimeout(() => {$(".close.show").removeClass("show");},350)
                                  }}>{[
-                                    (!this.state.collapse["imageVolume-"+id]?"Hide ":"Show "),
-                                    <span>&nbsp;</span>,
+                                    (this.state.collapse["imageVolume-"+id]?<PanoramaFishEye style={{opacity:0.65}}/>:<CheckCircle style={{opacity:0.65}}/>),
+                                    <span>&nbsp;&nbsp;</span>,
                                     this.uriformat(null,{value:id.replace(/bdr:/,bdr).replace(/[/]V([^_]+)_I.+$/,"/W$1")},undefined,undefined,"view")
                                  ]}
                               </MenuItem>) }                             
