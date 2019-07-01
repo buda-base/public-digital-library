@@ -23,6 +23,7 @@ import Close from '@material-ui/icons/Close';
 import Layers from '@material-ui/icons/Layers';
 import PlayArrow from '@material-ui/icons/PlayArrow';
 import Visibility from '@material-ui/icons/Visibility';
+import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import SpeakerNotes from '@material-ui/icons/SpeakerNotes';
 import SpeakerNotesOff from '@material-ui/icons/SpeakerNotesOff';
 import Feedback from '@material-ui/icons/QuestionAnswer';
@@ -839,11 +840,11 @@ class ResourceViewer extends Component<Props,State>
       return ret
    }
 
-   uriformat(prop:string,elem:{},dico:{} = this.props.assocResources, withProp?:string,show:string="show")
+   uriformat(prop:string,elem:{},dico:{} = this.props.assocResources, withProp?:string,show?:string="show")
    {
       if(elem) {
 
-         //console.log("uriformat",prop,elem.value,dico,withProp)
+         //console.log("uriformat",prop,elem.value,dico,withProp,show)
 
          if(!elem.value.match(/^http:\/\/purl\.bdrc\.io/)) {
             return <a href={elem.value} target="_blank">{decodeURI(elem.value)}</a> ;
@@ -2071,7 +2072,8 @@ class ResourceViewer extends Component<Props,State>
             //for(let e of elem) console.log(e.value,e.label1);
 
             //if(!k.match(new RegExp("Revision|Entry|prefLabel|"+rdf+"|toberemoved"))) {
-            if(!k.match(new RegExp(adm+"|adm:|SourcePath|prefLabel|"+rdf+"|toberemoved|workPartIndex|workPartTreeIndex")))
+            if(!k.match(new RegExp(adm+"|adm:|SourcePath|prefLabel|"+rdf+"|toberemoved|workPartIndex|workPartTreeIndex")) 
+            && (k !== bdo+"eTextHasChunk" || kZprop.indexOf(bdo+"eTextHasPage") === -1) )
             {
 
                let sup = this.hasSuper(k)
@@ -2398,14 +2400,14 @@ class ResourceViewer extends Component<Props,State>
                         >
                                  {/* {this.hasSub(k)?this.subProps(k):tags.map((e)=> [e," "] )} */}
                                  { elem.map( e => (
-                                    <div class={"etextPage"+(this.props.manifestError?" manifest-error":"")+ (!e.value.match(/[\n\r]/)?" unformated":"")}>
+                                    <div class={"etextPage"+(this.props.manifestError?" manifest-error":"")+ (!e.value.match(/[\n\r]/)?" unformated":"")+(e.language === "bo"?" lang-bo":"")}>
                                        {/*                                          
                                           e.seq && this.state.collapse["image-"+this.props.IRI+"-"+e.seq] && imageLinks[e.seq] &&
                                           <img title="Open image+text view in Mirador" onClick={eve => { openMiradorAtPage(imageLinks[e.seq].id) }} style={{maxWidth:"100%"}} src={imageLinks[e.seq].image} />
                                        */}
                                        {
                                           e.seq && this.state.collapse["image-"+this.props.IRI+"-"+e.seq] && Object.keys(imageLinks).sort().map(id => {
-                                             return <div>
+                                             if(!this.state.collapse["imageVolume-"+id]) return <div class="imagePage">
                                                       <img class="page" title="Open image+text view in Mirador" src={imageLinks[id][e.seq].image} onClick={eve => { 
                                                          let manif = this.props.imageVolumeManifests[id]
                                                          openMiradorAtPage(imageLinks[id][e.seq].id,manif["@id"])
@@ -2413,9 +2415,16 @@ class ResourceViewer extends Component<Props,State>
                                                       <div class="small"><a title="Open image+text view in Mirador" onClick={eve => { 
                                                          let manif = this.props.imageVolumeManifests[id]
                                                          openMiradorAtPage(imageLinks[id][e.seq].id,manif["@id"])
-                                                      }}>p.{e.seq}</a> from {this.uriformat(null,{value:id.replace(/bdr:/,bdr).replace(/[/]V([^_]+)_I.+$/,"/W$1")})}<br/>
+                                                      }}>p.{e.seq}</a> from {this.uriformat(null,{value:id.replace(/bdr:/,bdr).replace(/[/]V([^_]+)_I.+$/,"/W$1")})}                                                      
+                                                      <IconButton className="hide" title={"Hide this image volume"} 
+                                                         onClick={(eve) => {
+                                                            this.setState({...this.state, collapse:{...this.state.collapse, ["imageVolume-"+id]:true}}) 
+                                                         }}> 
+                                                         <VisibilityOff/>
+                                                      </IconButton> 
+                                                      <br/>
                                                       {/* [<a class="toggle-volume">hide</a>]*/}
-                                                      </div>                  
+                                                      </div>        
                                                     </div>
                                           })
                                        }
@@ -2441,11 +2450,13 @@ class ResourceViewer extends Component<Props,State>
                                                 this.setState({...this.state, collapse:{...this.state.collapse, [id]:!this.state.collapse[id]}}) 
                                              }}>p.{e.seq}</a>                                             
                                              </h5> ,
-                                             <IconButton className="close" title="Configure which image volumes to display" 
-                                                onClick={e => this.setState({...this.state,
+                                             <IconButton className="close" data-seq={"image-"+this.props.IRI+"-"+e.seq} title="Configure which image volumes to display" 
+                                                onClick={e => { 
+                                                   $(e.target).closest("button").addClass("show");
+                                                   this.setState({...this.state,
                                                       collapse:{...this.state.collapse, imageVolumeDisplay:!this.state.collapse.imageVolumeDisplay},
                                                       anchorElemImaVol:e.target
-                                                   })}
+                                                   })} }
                                                 >
                                                 <SettingsApp/>
                                              </IconButton>]
@@ -2460,21 +2471,35 @@ class ResourceViewer extends Component<Props,State>
                               */}
                         </InfiniteScroll>,
                         <Popover
+                           className="imageVolumePopup"
                            open={this.state.collapse.imageVolumeDisplay}
                            anchorEl={this.state.anchorElemImaVol}
-                           onClose={e => { if(!this.state.collapse.imageVolumeDisplay == false)
-                              this.setState({
-                                 ...this.state,
-                                 collapse:{ ...this.state.collapse, imageVolumeDisplay:false },
-                                 anchorElemImaVol:null   
-                              });
+                           onClose={e => { 
+                              if(!this.state.collapse.imageVolumeDisplay == false)
+                              {
+                                 setTimeout(() => {$(".close.show").removeClass("show");},500)
+                                 this.setState({
+                                    ...this.state,
+                                    collapse:{ ...this.state.collapse, imageVolumeDisplay:false },
+                                    anchorElemImaVol:null   
+                                 });
+                              }
                            }}
                            >
-                              <MenuItem /*onClick={this.handleAnnoCollec.bind(this,true)}*/>All volumes</MenuItem>
-                              { /*this.props.annoCollec && Object.keys(this.props.annoCollec).map((e) => {
-                              
-                                 return (<MenuItem className={e === this.state.showAnno ? "current":""} onClick={this.handleAnnoCollec.bind(this,e)}>{l.value}</MenuItem>)
-                              }) */}
+                              {/* <MenuItem onClick={(e) => {
+                                 let collapse = { ...this.state.collapse, imageVolumeDisplay:false }             
+                                 Object.keys(imageLinks).map(id => { if(collapse["imageVolume-"+id] !== undefined) { delete collapse["imageVolume-"+id]; } })
+                                 this.setState({...this.state,collapse})
+                              }}>Show all volumes</MenuItem>  */}
+                              { imageLinks && Object.keys(imageLinks).sort().map(id => <MenuItem onClick={e => {
+                                    this.setState({...this.state,collapse:{...this.state.collapse, imageVolumeDisplay:false, ["imageVolume-"+id]:!this.state.collapse["imageVolume-"+id]}})
+                                    setTimeout(() => {$(".close.show").removeClass("show");},350)
+                                 }}>{[
+                                    (!this.state.collapse["imageVolume-"+id]?"Hide ":"Show "),
+                                    <span>&nbsp;</span>,
+                                    this.uriformat(null,{value:id.replace(/bdr:/,bdr).replace(/[/]V([^_]+)_I.+$/,"/W$1")},undefined,undefined,"view")
+                                 ]}
+                              </MenuItem>) }                             
                         </Popover>]
                      )
                   }

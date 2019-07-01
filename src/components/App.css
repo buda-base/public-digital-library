@@ -44,10 +44,11 @@ a.result + div span:not(.label) {  }
 .match { display:flex; margin-bottom:5px }
 .match a { word-break:  break-word; }
 
-a.result .lang, .match .lang,.data .lang,h2 .lang
+a.result .lang, .match .lang,.data .lang,h2 .lang, .imageVolumePopup .lang
 { font-size: 9px;display:inline-block;margin-left:5px;margin-top:7px;position:absolute; color:rgba(0,0,0,0.5);}
 h2 .lang,.data .lang { position:relative;margin:0;vertical-align:-7px;padding:5px;line-height:0;}
 h2 .lang { margin-top:22px;font-weight:normal; }
+.imageVolumePopup .lang { position:relative;padding:0px;margin-top:12px; }
 a.result .lang, .match .lang { min-width:50px;}
 a.result .contenu ul { padding:12px 24px 12px 0px !important;}
 a.result .contenu ul > div:last-child {
@@ -124,10 +125,10 @@ h4 { margin-top:10px;margin-bottom:0px;font-size:24px; }
 
 .resource .data #etext-scroll,
 .resource .data .chunk, .etextPage { display:block; position: relative;}
-.resource .data .chunk ~ h4, .etextPage h4.page { font-size:24px;line-height:40px;margin-bottom:10px; display:inline; }
+.resource .data .chunk ~ h4, .etextPage h4.page { font-size:24px;line-height:40px;margin-bottom:10px; display:inline-block; }
 
 .etextPage { border-top:1px solid #999; padding-top:25px;  }
-.etextPage h4.page { display:inline-block; padding-left:0; /*width:100%; */margin-bottom:0; font-size:calc( 32 * 100vw / 2500) ;  line-height:calc( 60 * 100vw / 2500) ; 
+.etextPage h4.page { display:inline-block; padding-left:0; margin-bottom:0; font-size:calc( 30 * 100vw / 2500) ;  line-height:calc( 60 * 100vw / 2500) ; 
    white-space: nowrap;margin-right:0;
 }
 /* .etextPage h4.page:last-child { padding-bottom:25px; } */
@@ -143,15 +144,32 @@ h4 { margin-top:10px;margin-bottom:0px;font-size:24px; }
 .etextPage button img { height:28px;transform:rotate(-90deg); opacity:0.75;}
 .etextPage button:hover img { opacity:1;}
 .etextPage.manifest-error h5, .etextPage.manifest-error button { opacity:0.5;pointer-events:none; }
-.etextPage .small { /* transform:scale(0.8);*/ width:100%; text-align:center;  margin-bottom:25px;margin-top:10px;}
+.etextPage .small { padding:0 50px; text-align:center;  margin-bottom:25px;margin-top:10px; position:relative;display:inline-block;}
 .etextPage > div { position:relative; }
+.etextPage > .imagePage { position:relative; text-align:center; }
 .etextPage > div .lang { position:absolute;line-height:24px;  }
 /* .etextPage .toggle-volume { font-size:12px; } */
-/* .etextPage .close { position:absolute; bottom:6px;left:80px;opacity:0} */
-.etextPage .close { opacity:0}
-.etextPage:hover > div .close { opacity:1;  }
-.etextPage:hover > div .close svg { font-size:30px; }
-.etextPage:hover > div .close  { margin-top:0px; left:6px;}
+/* .etextPage button.hide { position:absolute; bottom:6px;left:80px;opacity:0}  */
+.etextPage .close {  margin-top:0px; left:6px;}
+.etextPage > div .close svg { font-size:30px; }
+.etextPage:hover > div .close,.etextPage > div .close.show { opacity:1;  }
+.etextPage:not(:hover) .close:not(.show) { opacity:0; }
+.etextPage button.hide { position:absolute; left:10px;top:-15px;opacity:0; }
+.etextPage > .imagePage:hover button.hide { opacity:1; }
+.etextPage.lang-bo h4.page { font-family:"Tibetan Machine Uni";}
+
+
+@font-face {
+   font-family: 'Tibetan Machine Uni';
+   src: url('/Tibetan_Machine_Uni.woff2') format('woff2'),
+       url('/Tibetan_Machine_Uni.woff') format('woff');
+   font-weight: normal;
+   font-style: normal;
+ }
+
+ 
+/* .imageVolumePopup .lang { display:none; } */
+.imageVolumePopup a { color:rgba(229, 74, 53,1); text-decoration: none; pointer-events: none;}
 
 .resource .data h3 a.propref,.resource .data h4 a.propref { color:black; }
 .resource .data h3 a.propref:hover,.resource .data h4 a.propref:hover { border-bottom:1px solid black;}
