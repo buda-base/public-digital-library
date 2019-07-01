@@ -2402,7 +2402,7 @@ class ResourceViewer extends Component<Props,State>
                         >
                                  {/* {this.hasSub(k)?this.subProps(k):tags.map((e)=> [e," "] )} */}
                                  { elem.map( e => (
-                                    <div class={"etextPage"+(this.props.manifestError?" manifest-error":"")+ (!e.value.match(/[\n\r]/)?" unformated":"")+(e.language === "bo"?" lang-bo":"")}>
+                                    <div class={"etextPage"+(this.props.manifestError&&!imageLinks?" manifest-error":"")+ (!e.value.match(/[\n\r]/)?" unformated":"")+(e.language === "bo"?" lang-bo":"")}>
                                        {/*                                          
                                           e.seq && this.state.collapse["image-"+this.props.IRI+"-"+e.seq] && imageLinks[e.seq] &&
                                           <img title="Open image+text view in Mirador" onClick={eve => { openMiradorAtPage(imageLinks[e.seq].id) }} style={{maxWidth:"100%"}} src={imageLinks[e.seq].image} />
@@ -2760,7 +2760,7 @@ class ResourceViewer extends Component<Props,State>
                   </div>]
                }
                {
-                  !this.props.manifestError && (this.props.imageAsset || this.props.imageVolumeManifests) && this.state.openMirador  &&
+                  (!this.props.manifestError || (this.props.imageVolumeManifests && Object.keys(this.props.imageVolumeManifests).length)) && (this.props.imageAsset || this.props.imageVolumeManifests) && this.state.openMirador  &&
                   [<div id="fond" >
                      <Loader loaded={false} color="#fff"/>
                   </div>,
