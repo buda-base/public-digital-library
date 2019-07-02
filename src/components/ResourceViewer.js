@@ -255,6 +255,11 @@ function top_left_menu(that,pdfLink,monoVol,fairUse)
              <Button style={{paddingLeft:0,paddingRight:"10px"}}>json-ld</Button>
           </a>]
        }
+       { that.props.IRI && getEntiType(that.props.IRI) === "Etext" && <a target="_blank" style={{fontSize:"26px"}} download className="goBack pdfLoader" href={that.props.IRI?that.props.IRI.replace(/bdr:/,bdr)+".txt":""}>
+                <IconButton title={I18n.t("resource.download")+" TXT"}>
+                   <img src="/DL_icon.svg" height="24" />
+                </IconButton>
+               </a> }
        {
           that.props.IRI.match(/^bda[nc]:/) &&
           [<a className="goBack" target="_blank" title="TTL version" rel="alternate" type="text/turtle"
