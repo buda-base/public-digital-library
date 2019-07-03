@@ -1009,12 +1009,13 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
          //console.log("fullN",prop,preflabs,this.props.locale,this.props.prefLang,typeof preflabs[0])
 
-         let lang = "@language";
-         let val = "@value";
-         if(preflabs.length > 0 && preflabs[0]["lang"]) { lang = "lang" ; val = "value"; }
+         let lang = "lang";
+         let val = "value";
+         if(preflabs.length > 0 && preflabs[0]["@language"]) { lang = "@language" ; val = "@value"; }
          if(preflabs.length > 0 && preflabs[0]["xml:lang"]) { lang = "xml:lang" ; val = "value"; }
 
          let label = getLangLabel(this,preflabs,false,useUIlang)
+
          //console.log("full",prop,label,preflabs,useUIlang)
 
          /*
@@ -1039,15 +1040,32 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
       if(!val.match(/↤/) && k)
          val = /*val.replace(/@.* /,"")*/ val.split(new RegExp(k.replace(/[ -'ʾ]/g,"[ -'ʾ]"))).map((l) => ([<span>{l}</span>,<span className="highlight">{k}</span>])) ;
+      else if (val.match(/↤.*?[^-/_()\[\]: ]+.*?↦/))
+      {
+         val = val.split(/↦/).map(e => { 
+            //console.log("e",e)
+            if(e.length) {
+               let f = e.split(/↤/)
+               if(f.length > 1) {
+                  return [<span className="highlight">{f[0]}</span>,<span>{f[1]}</span>]
+               }
+               else {
+                  return [<span>{f[0]}</span>]
+               }
+            }
+         })
+
+      }       
       else {
          let str = val.replace(/[\n\r]+/g," ").replace(/^.*?(↦([^↤]+)↤([-/_()\[\]: ]+↦([^↤]+)↤)*).*$/g,"$1").replace(/↤([-/_() ]+)↦/g,"$1").replace(/[↤↦]/g,"")
-                      .replace(/[\[\]]+/g,"")
+                     .replace(/[\[\]]+/g,"")
          let ret = val.replace(/↦[^↤]+↤([-/_()\[\]: ]+↦[^↤]+↤)*/g,"↦↤")
 
          //console.log("str:",str,"=",ret)
 
          val = ret.split(/[\[\] ]*↦↤[\[\] ]*/).map((l) => ([<span>{l}</span>,<span className="highlight">{str}</span>])) ;
       }
+      
 
       val = [].concat.apply([],val);
       val.pop();
@@ -1538,8 +1556,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   //console.log("e",e,this.state.filters.facets)
 
                   return ( /*(this.state.filters.facets && e.type && this.state.filters.facets[e.type]) ||*/ use && (
-                  ( this.props.language != "" ? e.value && ((e.value.match(/[↦↤]/) && e.type && !e.type.match(/prefLabelMatch$/)))
-                                                            //|| e.type && e.type.match(/seqNum$/))
+                  ( this.props.language != "" ? e.value && ((e.value.match(/[↦↤]/) && e.type && !e.type.match(/(prefLabelMatch$)|(creator)/) ))
+                                                            //|| e.type && e.type.match(/Matching$/))
                                               : !e.lang && (e.value.match(new RegExp(bdr+this.props.keyword.replace(/bdr:/,"")))
                                                             || (e.type && e.type.match(/relationType$/) ) ) )
 
@@ -1558,12 +1576,13 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             let hasPart = sublist[o].filter((e) => e.type && e.type.match(/HasPart/))
             let hasRoot = sublist[o].filter((e) => e.type && e.type.match(/HasRoot/))
             let workLab = sublist[o].filter((e) => e.type && e.type.match(/workLabel/))
+            let creator = sublist[o].filter((e) => e.type && e.type.match(/creator/))
 
-            let addTmpProp = (tab,prop,lab) => {
+            let addTmpProp = (tab,prop,lab,multiP:boolean = false) => {
 
                if(tab.length > 0)
                {
-                  let subL = sublist[o].filter((e) => (e.type && e.type.match(new RegExp(prop)))) ///(work(Has)?Expression)|(workHasRoot)/) ) )
+                  let subL = sublist[o].filter((e) => (e.type && e.type.match(new RegExp(prop)))) ///(work(Has)?Expression)|(workHasRoot)/) ) )                  
 
                   let subR,label,lang ;
                   if(subL.length == 1) {
@@ -1575,19 +1594,33 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                         label = tLab["value"]
                      }
                   }
+                  else if(multiP) {
+                     subR = sublist[o].filter((e) => (e.type && e.type.match(new RegExp(lab))))
+                     if(subR.length > 0) {
+                        let tLab = getLangLabel(this,subR)
+                        lang = tLab["xml:lang"]
+                        if(!lang) lang = tLab["lang"]
+                        label = tLab["value"]
+                     }
+                  }
 
                   //console.log("sub",subL,subR,label);
 
-                  let withKey = subL.reduce((acc,e) => {
+                  let withKey ;
+                  if(!multiP) withKey= subL.reduce((acc,e) => {
                      if(!acc[e.type]) acc[e.type] = []
                      acc[e.type] = [].concat(acc[e.type]) ;
                      acc[e.type].push(e.value);
                      return acc;
                   }, {} )
+                  else withKey = subL.reduce((acc,e) => {
+                     acc[e.value.toLowerCase()] = label
+                     return acc;
+                  }, {} )
 
                   //console.log("wK",withKey);
 
-                  r.match = r.match.concat( Object.keys(withKey).reduce((acc,e)=>{
+                  r.match = r.match.concat( Object.keys(withKey).sort().reduce((acc,e)=>{
                      let elem = {"type":e,"value":withKey[e],lang}
                      if(label) elem = { ...elem, "tmpLabel":label}
                      acc.push(elem);
@@ -1599,13 +1632,14 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
             }
 
+            addTmpProp(creator,"creatorRole","creatorLabel", true);
             addTmpProp(hasExpr,"workHasExpression","prefLabelHasExpression");
             addTmpProp(isExpr,"workExpression","prefLabelExpression");
             addTmpProp(hasRoot,"workHasRoot","rootPrefLabel");
             addTmpProp(workLab,"forWork","workLabel");
 
-            let k = this.props.keyword.replace(/"/g,"")
 
+            let k = this.props.keyword.replace(/"/g,"")
 
             let id = r.s.value
             if(sublist[o].filter(e => e.type && e.type === tmp+"forEtext").length > 0) id = sublist[o].filter(e => e.type === tmp+"forEtext")[0].value

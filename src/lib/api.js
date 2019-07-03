@@ -653,8 +653,9 @@ export default class API {
        let url = config.endpoints[config.index] ;
 
          path = url +  ONTOLOGY_PATH;
+         
          // to use with ldspdi running locally
-         //path = "http://purl.bdrc.io" +  ONTOLOGY_PATH;
+         path = "http://purl.bdrc.io" +  ONTOLOGY_PATH;
 
         return path;
     }
