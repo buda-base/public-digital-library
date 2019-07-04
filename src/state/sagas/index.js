@@ -496,8 +496,12 @@ async function getManifest(url,iri) {
                   image = manif.sequences[0].canvases[2].images[0].resource["@id"]
                   let h = manif.sequences[0].canvases[2].images[0].resource["height"]
                   canvasID = manif.sequences[0].canvases[2]["@id"]
-                  found = true ;
                   if(h > 600) image = image.replace(/(full|max)[/]0/,",600/0")
+                  found = true ;
+
+                  console.log("canvasID1",canvasID,image)
+                  if(image.match(/cudl[.]lib.*jp2/)) image += "/full/max/0/default.jpg"
+
                   let test = await api.getURLContents(image,null,null,null,true)
                   //let imgData = btoa(String.fromCharCode(...new Uint8Array(test)));
                   store.dispatch(dataActions.firstImage(image,iri,canvasID,collecManif,manifests)) //,imgData))
@@ -527,8 +531,12 @@ async function getManifest(url,iri) {
                canvasID = manif.sequences[0].canvases[0]["@id"]
                let h = manif.sequences[0].canvases[0].images[0].resource["height"]
                if(h > 600) image = image.replace(/(full|max)[/]0/,",600/0")
+
+               console.log("canvasID2",canvasID,image)
+               if(image.match(/cudl[.]lib.*jp2/)) image += "/full/max/0/default.jpg"
+
                let test = await api.getURLContents(image,null,null,null,true)
-               console.log("img",test)
+               //console.log("img",test)
                //let imgData = btoa(String.fromCharCode(...new Uint8Array(test)));
                store.dispatch(dataActions.firstImage(image,iri,canvasID,collecManif,manifests)) //,imgData))
             }

@@ -107,6 +107,8 @@ export function miradorSetUI(closeCollec, num)
 
          clearInterval(timerConf);
 
+         if(window.MiradorHasNoEtext) jQ("#showEtext").parent().hide()
+
          miradorAddClick();
          window.setMiradorClick(closeCollec);
 
@@ -161,7 +163,7 @@ async function hasEtextPage(manifest) {
       
       //console.log("ut3",ut)
       if(!ut) { 
-         window.MiradorHasNoEtext = false
+         window.MiradorHasNoEtext = true
          return 
       }
       
