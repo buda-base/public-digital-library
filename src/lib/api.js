@@ -202,22 +202,26 @@ export default class API {
 
          //let resource =  JSON.parse(await this.getURLContents(this._resourcePath(IRI),false));try {
          try {
-            /*
+            
             if(!IRI.indexOf(':') === -1 ) IRI = "bdr:"+IRI
             let config = store.getState().data.config.ldspdi
             let url = config.endpoints[config.index]+"/query/graph" ;            
             let param = {"searchType":"ResInfo","R_RES":IRI,"L_NAME":"","LG_NAME":"" }
             let data = await this.getQueryResults(url, IRI, param,"GET");
+            
             console.log("r e source",param,data)
-            */
+            
 
+            /*
             const bdr  = "http://purl.bdrc.io/resource/";
             IRI = IRI.replace(new RegExp("(bdr:)|("+bdr+")"),"")
             let config = store.getState().data.config.ldspdi
-            let url = config.endpoints[config.index]+"/resource/"+IRI+".json" ;            
+            let url = config.endpoints[config.index]+"/resource/"+IRI+".json" ;
             let data = await JSON.parse(await  this.getURLContents(url))
 
             console.log("resource",data)
+            */
+
 
             return data ;
          }
