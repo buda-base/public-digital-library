@@ -595,7 +595,7 @@ class App extends Component<Props,State> {
             let dts = dt.toLowerCase()+"s"
             if(!merge) merge = {}
 
-            console.log("dts",dts,results,res)
+            //console.log("dts",dts,results,res)
 
             if(!res || !res.results || !res.results.bindings || !res.results.bindings[dts]) { 
 
@@ -1524,7 +1524,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
             let preProps = sublist[o].filter((e) => e.type && e.type.match(/relationType$/ )).map(e => this.props.ontology[e.value])
 
-            console.log("label",label,sublist[o],preProps)
+            //console.log("label",label,sublist[o],preProps)
 
 
             let r = {
@@ -1731,7 +1731,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      */
                   }
 
-                  console.log("lit",lit,n,cpt,max_cpt,categ,isAbs)
+                  //console.log("lit",lit,n,cpt,max_cpt,categ,isAbs)
 
 
                   let Tag,tip,categChange = false, showCateg = false, prevCateg = categ, tmpN = n, prevH5 = h5  ;
@@ -1764,7 +1764,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                            //console.log("bookMb",JSON.stringify(pagin.bookmarks,null,3))
                         }
 
-                        console.log("categC",categChange,lastN,tmpN,categ)
+                        //console.log("categC",categChange,lastN,tmpN,categ)
 
                         if(categChange && (cpt - lastN > 1 || tmpN > 3)) {// && (!pagin.bookmarks || (!pagin.bookmarks[categ] || !pagin.bookmarks[prevCateg] || pagin.bookmarks[categ] - pagin.bookmarks[prevCateg] > 3))) {
                            //console.log("bookM...",pagin.bookmarks)
@@ -1833,13 +1833,9 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                                     val = uri ;
                                     lang = null 
                                     let label = this.props.resources[this.props.keyword]
-                                    console.log("label",label)
                                     if(label) label = label[bdr+uri]
-                                    console.log("label",label)
                                     if(label) label = label[skos+"prefLabel"]
-                                    console.log("label",label)
                                     if(label) label = getLangLabel(this,label)
-                                    console.log("label",label)
                                     if(label) {
                                        if(label.value) {
                                           val = label.value
@@ -2025,14 +2021,14 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             if(sta.results && sta.results[id] && sta.results[id].bookmarks) bookmarks = sta.results[id].bookmarks                        
             else noBookM = true
             if(results) this.handleResults(types,counts,message,results,paginate,bookmarks);
-            console.log("bookM:",JSON.stringify(paginate,null,3))
+            //console.log("bookM:",JSON.stringify(paginate,null,3))
             
          }
          else {
             message = sta.results[id].message
             paginate = [ sta.results[id].paginate ]
             bookmarks = sta.results[id].bookmarks      
-            console.log("bookM!",JSON.stringify(paginate,null,3))
+            //console.log("bookM!",JSON.stringify(paginate,null,3))
          }
 
          //console.log("mesg",id,message,types,counts,JSON.stringify(paginate,null,3))
