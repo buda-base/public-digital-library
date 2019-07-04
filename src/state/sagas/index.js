@@ -558,11 +558,13 @@ export function* getDatatypes(key,lang) {
 }
 */
 
-function getData(result)  {
+function getData(result,inMeta,outMeta)  {
 
-   //console.log("kz",JSON.stringify(Object.keys(result)))
+   console.log("kz",JSON.stringify(Object.keys(result)))
 
-   let data = result, numR = -1,metadata = result.metadata ;
+   let data = result, numR = -1
+   if(!result.metadata && inMeta) result.metadata = { ...inMeta } 
+   let metadata = result.metadata ;
    if(data && data.people) {
       data.persons = data.people
       delete data.people
@@ -579,6 +581,10 @@ function getData(result)  {
          metadata[bdo+"Work"] += metadata[bdo+"PublishedWork"]
          delete metadata[bdo+"PublishedWork"]
       }
+      else if(metadata["work"] && metadata["publishedwork"]) {
+         metadata["work"] += metadata["publishedwork"]
+         delete metadata["publishedwork"]
+      }
       //console.log("data?W",data,metadata)
    }
    if(data && data.abstractworks)
@@ -591,8 +597,14 @@ function getData(result)  {
          metadata[bdo+"Work"] += metadata[bdo+"AbstractWork"]
          delete metadata[bdo+"AbstractWork"]
       }
-      console.log("data?W",data,metadata)
+      else if(metadata["work"] && metadata["abstractwork"]) {
+         metadata["work"] += metadata["abstractwork"]
+         delete metadata["abstractwork"]
+      }
    }
+   
+   console.log("data?W",data,metadata)
+
    if(data && data.chunks) {
 
       data.etexts = Object.keys(data.chunks).map(e => ({ [e]:_.orderBy(data.chunks[e],"type") })).reduce((acc,e)=>({...acc,...e}),{})
@@ -638,6 +650,8 @@ function getData(result)  {
         let kZ = Object.keys(metadata)
         if(kZ.reduce((acc,k) => (acc || k.match(/^http:/) ),false))
         numR = kZ.reduce((acc,k) => ( acc+Number(metadata[k])),0)
+
+        if(outMeta) Object.keys(data.metadata).map(k => outMeta[k] = data.metadata[k])  
 
         delete data.metadata
      }
@@ -758,9 +772,10 @@ async function startSearch(keyword,language,datatype,sourcetype,dontGetDT) {
 
       console.log("data",data,result)
 
-      data = getData(data);
+      let metaD = {}
+      data = getData(data,metadata,metaD);
       store.dispatch(dataActions.foundResults(keyword, language, data, datatype));
-      store.dispatch(dataActions.foundDatatypes(keyword,language,{ metadata, hash:true}));
+      store.dispatch(dataActions.foundDatatypes(keyword,language,{ metadata:metaD, hash:true}));
 
       let newMeta = {}
 

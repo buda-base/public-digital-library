@@ -595,7 +595,7 @@ class App extends Component<Props,State> {
             let dts = dt.toLowerCase()+"s"
             if(!merge) merge = {}
 
-            //console.log("dts",dts,results,res)
+            console.log("dts",dts,results,res)
 
             if(!res || !res.results || !res.results.bindings || !res.results.bindings[dts]) { 
 
@@ -607,7 +607,7 @@ class App extends Component<Props,State> {
                merge[dts] = { 
                   ...Object.keys(res.results.bindings[dts]).reduce( (acc,k) =>{
 
-                        let m = [ ...res.results.bindings[dts][k].filter(p => (!p.value || !p.value.match(/([Aa]bstract)|([↦↤])/)) && (!p.type || !p.type.match(/[Mm]atch|[Ee]xpression/))), 
+                        let m = [ ...res.results.bindings[dts][k].filter(p => (!p.value || !p.value.match( /*/([Aa]bstract)*/ /([↦↤])/)) /*&& (!p.type || !p.type.match(/[Mm]atch|[Ee]xpression/))*/ ), 
                                  ...(!results.results.bindings[dts]||!results.results.bindings[dts][k]||!props.language?[]:results.results.bindings[dts][k]) ]
 
                         //console.log("m?",dts,k,m.length) //,m)
@@ -706,7 +706,7 @@ class App extends Component<Props,State> {
             //console.log("s.id",s.id,s.results[s.id],time)        
          }
 
-         console.groupEnd()
+         //console.groupEnd()
       }
 
       if(s) { 
@@ -1433,7 +1433,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
    {
 
       let n = 0, m = 0 ;
-      //console.log("results",results,paginate);
+      console.log("results",results,paginate);
       let list = results.results.bindings
 
       let displayTypes = types //["Person"]
@@ -1524,7 +1524,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
             let preProps = sublist[o].filter((e) => e.type && e.type.match(/relationType$/ )).map(e => this.props.ontology[e.value])
 
-            //console.log("label",label,sublist[o],preProps)
+            console.log("label",label,sublist[o],preProps)
 
 
             let r = {
@@ -1638,7 +1638,6 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             addTmpProp(hasRoot,"workHasRoot","rootPrefLabel");
             addTmpProp(workLab,"forWork","workLabel");
 
-
             let k = this.props.keyword.replace(/"/g,"")
 
             let id = r.s.value
@@ -1732,7 +1731,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      */
                   }
 
-                  //console.log("lit",lit,n,cpt,max_cpt,categ)
+                  console.log("lit",lit,n,cpt,max_cpt,categ,isAbs)
 
 
                   let Tag,tip,categChange = false, showCateg = false, prevCateg = categ, tmpN = n, prevH5 = h5  ;
@@ -1765,7 +1764,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                            //console.log("bookMb",JSON.stringify(pagin.bookmarks,null,3))
                         }
 
-                        //console.log("categC",categChange,lastN,tmpN,categ)
+                        console.log("categC",categChange,lastN,tmpN,categ)
 
                         if(categChange && (cpt - lastN > 1 || tmpN > 3)) {// && (!pagin.bookmarks || (!pagin.bookmarks[categ] || !pagin.bookmarks[prevCateg] || pagin.bookmarks[categ] - pagin.bookmarks[prevCateg] > 3))) {
                            //console.log("bookM...",pagin.bookmarks)
@@ -1827,10 +1826,32 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
                                  //console.log("val",val,val.length,lang)
 
-                                 let uri = this.props.keyword.replace(/bdr:/,"")
+                                 let uri
                                  if(m.type.match(/relationType$/)) {
                                     prop = this.fullname(m.value) ;
-                                    val = uri
+                                    uri = this.props.keyword.replace(/bdr:/,"")
+                                    val = uri ;
+                                    lang = null 
+                                    let label = this.props.resources[this.props.keyword]
+                                    console.log("label",label)
+                                    if(label) label = label[bdr+uri]
+                                    console.log("label",label)
+                                    if(label) label = label[skos+"prefLabel"]
+                                    console.log("label",label)
+                                    if(label) label = getLangLabel(this,label)
+                                    console.log("label",label)
+                                    if(label) {
+                                       if(label.value) {
+                                          val = label.value
+                                          lang = label.lang
+                                       }
+                                       else if(label["@value"]) {
+                                          val = label["@value"]
+                                          lang = label["@language"]
+                                       }
+                                        
+                                    }
+                                    
                                  }
 
 
@@ -1838,7 +1859,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
                                  return (<div className="match">
                                     <span className="label">{prop}:&nbsp;</span>
-                                    {!isArray && <span>{[val,lang?<Tooltip placement="bottom-end" title={
+                                    {!isArray && <span>{[!uri?val:<Link class="urilink" to={"/show/bdr:"+uri}>{val}</Link>,lang?<Tooltip placement="bottom-end" title={
                                        <div style={{margin:"10px"}}>
                                           <Translate value={languages[lang]?languages[lang].replace(/search/,"tip"):lang}/>
                                        </div>
@@ -2004,14 +2025,14 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             if(sta.results && sta.results[id] && sta.results[id].bookmarks) bookmarks = sta.results[id].bookmarks                        
             else noBookM = true
             if(results) this.handleResults(types,counts,message,results,paginate,bookmarks);
-            //console.log("bookM:",JSON.stringify(paginate,null,3))
+            console.log("bookM:",JSON.stringify(paginate,null,3))
             
          }
          else {
             message = sta.results[id].message
             paginate = [ sta.results[id].paginate ]
             bookmarks = sta.results[id].bookmarks      
-            //console.log("bookM!",JSON.stringify(paginate,null,3))
+            console.log("bookM!",JSON.stringify(paginate,null,3))
          }
 
          //console.log("mesg",id,message,types,counts,JSON.stringify(paginate,null,3))
