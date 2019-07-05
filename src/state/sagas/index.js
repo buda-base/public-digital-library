@@ -74,6 +74,7 @@ async function initiateApp(params,iri,myprops) {
             return
          }
 
+         
          try {    
             let adminRes = await api.loadResource(iri.replace(/bdr:/,"bda:"));
 
@@ -81,7 +82,7 @@ async function initiateApp(params,iri,myprops) {
             
             let prop = [ "originalRecord", "metadataLegal" ]
             for(let p of prop) 
-               res[iri.replace(/bdr:/,bdr)][adm+p] = adminRes[iri.replace(/bdr:/,bda)][adm+p]
+               if(adminRes[iri.replace(/bdr:/,bda)][adm+p]) res[iri.replace(/bdr:/,bdr)][adm+p] = adminRes[iri.replace(/bdr:/,bda)][adm+p]
 
             console.log("adminRes",adminRes,res)
          }
