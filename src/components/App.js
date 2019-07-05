@@ -97,11 +97,11 @@ export const languages = {
 }
 
 const searchLangSelec = {
-   "zh-hans":"lang.search.zh"
+   "zh-hant":"lang.search.zh"
 }
 
 const langSelect = [
-   "zh-hans",
+   "zh-hant",
    "zh-latn-pinyin",
    "bo",
    "bo-x-ewts",

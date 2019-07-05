@@ -14,6 +14,9 @@ import {auth} from '../../routes';
 // to enable tests
 const api = new bdrcApi({...process.env.NODE_ENV === 'test' ? {server:"http://localhost:5555/test"}:{}});
 
+
+const adm  = "http://purl.bdrc.io/ontology/admin/" ;
+const bda  = "http://purl.bdrc.io/admindata/"
 const bdo  = "http://purl.bdrc.io/ontology/core/";
 const bdr  = "http://purl.bdrc.io/resource/";
 const skos = "http://www.w3.org/2004/02/skos/core#";
@@ -70,6 +73,22 @@ async function initiateApp(params,iri,myprops) {
             store.dispatch(dataActions.noResource(iri,e));
             return
          }
+
+         try {    
+            let adminRes = await api.loadResource(iri.replace(/bdr:/,"bda:"));
+
+            //store.dispatch(dataActions.gotAdminResource(iri, res));
+            
+            let prop = [ "originalRecord", "metadataLegal" ]
+            for(let p of prop) 
+               res[iri.replace(/bdr:/,bdr)][adm+p] = adminRes[iri.replace(/bdr:/,bda)][adm+p]
+
+            console.log("adminRes",adminRes,res)
+         }
+         catch(e) {
+            console.error("no admin data for "+iri,e)
+         }
+
 
          if(!Etext)
          {

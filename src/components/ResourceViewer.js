@@ -138,6 +138,7 @@ type State = {
 const adm  = "http://purl.bdrc.io/ontology/admin/" ;
 const bdac = "http://purl.bdrc.io/anncollection/" ;
 const bdan = "http://purl.bdrc.io/annotation/" ;
+const bda  = "http://purl.bdrc.io/admindata/";
 const bdo  = "http://purl.bdrc.io/ontology/core/";
 const bdr  = "http://purl.bdrc.io/resource/";
 const foaf = "http://xmlns.com/foaf/0.1/" ;
@@ -149,7 +150,7 @@ const skos = "http://www.w3.org/2004/02/skos/core#";
 const tmp  = "http://purl.bdrc.io/ontology/tmp/" ;
 const _tmp  = "http://purl.bdrc.io/ontology/tmp/" ;
 
-const prefixes = { adm, bdac, bdan, bdo, bdr, foaf, oa, owl, rdf, rdfs, skos, tmp }
+const prefixes = { adm, bdac, bdan, bda, bdo, bdr, foaf, oa, owl, rdf, rdfs, skos, tmp }
 
 let propOrder = {
    "Corporation":[],
@@ -851,7 +852,7 @@ class ResourceViewer extends Component<Props,State>
    {
       if(elem) {
 
-         //console.log("uriformat",prop,elem.value,dico,withProp,show)
+         console.log("uriformat",prop,elem.value,dico,withProp,show)
 
          if(!elem.value.match(/^http:\/\/purl\.bdrc\.io/)) {
             return <a href={elem.value} target="_blank">{decodeURI(elem.value)}</a> ;
@@ -2075,11 +2076,12 @@ class ResourceViewer extends Component<Props,State>
 
             let elem = this.getResourceElem(k);
 
-            //console.log("prop",k,elem);
+            console.log("prop",k,elem);
             //for(let e of elem) console.log(e.value,e.label1);
 
             //if(!k.match(new RegExp("Revision|Entry|prefLabel|"+rdf+"|toberemoved"))) {
-            if(!k.match(new RegExp(adm+"|adm:|SourcePath|prefLabel|"+rdf+"|toberemoved|workPartIndex|workPartTreeIndex")) 
+            if((!k.match(new RegExp(adm+"|adm:|isRoot$|SourcePath|prefLabel|"+rdf+"|toberemoved|workPartIndex|workPartTreeIndex")) 
+               ||k.match(/(originalRecord|metadataLegal)$/))
             && (k !== bdo+"eTextHasChunk" || kZprop.indexOf(bdo+"eTextHasPage") === -1) )
             {
 
