@@ -1827,8 +1827,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                                  //console.log("val",val,val.length,lang)
 
                                  let uri
-                                 if(m.type.match(/relationType$/)) {
-                                    prop = this.fullname(m.value) ;
+                                 if(m.type.match(/relationType$/) || (m.value && m.value.match && m.value.match(new RegExp("^("+bdr+")?"+this.props.keyword.replace(/bdr:/,"(bdr:)?")+"$")))) {
+                                    if(m.type.match(/relationType$/))  prop = this.fullname(m.value) ;
                                     uri = this.props.keyword.replace(/bdr:/,"")
                                     val = uri ;
                                     lang = null 
@@ -1855,7 +1855,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
                                  return (<div className="match">
                                     <span className="label">{prop}:&nbsp;</span>
-                                    {!isArray && <span>{[!uri?val:<Link class="urilink" to={"/show/bdr:"+uri}>{val}</Link>,lang?<Tooltip placement="bottom-end" title={
+                                    {!isArray && <span>{[!uri?val:<span>{val}</span>,lang?<Tooltip placement="bottom-end" title={
                                        <div style={{margin:"10px"}}>
                                           <Translate value={languages[lang]?languages[lang].replace(/search/,"tip"):lang}/>
                                        </div>
