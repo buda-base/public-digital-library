@@ -852,7 +852,7 @@ class ResourceViewer extends Component<Props,State>
    {
       if(elem) {
 
-         console.log("uriformat",prop,elem.value,dico,withProp,show)
+         //console.log("uriformat",prop,elem.value,dico,withProp,show)
 
          if(!elem.value.match(/^http:\/\/purl\.bdrc\.io/)) {
             return <a href={elem.value} target="_blank">{decodeURI(elem.value)}</a> ;
@@ -2076,7 +2076,7 @@ class ResourceViewer extends Component<Props,State>
 
             let elem = this.getResourceElem(k);
 
-            console.log("prop",k,elem);
+            //console.log("prop",k,elem);
             //for(let e of elem) console.log(e.value,e.label1);
 
             //if(!k.match(new RegExp("Revision|Entry|prefLabel|"+rdf+"|toberemoved"))) {

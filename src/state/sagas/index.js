@@ -548,8 +548,14 @@ async function getManifest(url,iri) {
          if(manif.sequences[0].canvases[0] && manif.sequences[0].canvases[0].images[0] &&
             (image = manif.sequences[0].canvases[0].images[0].resource["@id"]))
             {
-               canvasID = manif.sequences[0].canvases[0]["@id"]
-               let h = manif.sequences[0].canvases[0].images[0].resource["height"]
+               let imageIndex = 0
+               if(image.match(/archivelab[.]org.*rashodgson13[$]0[/]full/)) {
+                  imageIndex = 1
+                  image = manif.sequences[0].canvases[imageIndex].images[0].resource["@id"]
+               }
+
+               canvasID = manif.sequences[0].canvases[imageIndex]["@id"]
+               let h = manif.sequences[0].canvases[imageIndex].images[0].resource["height"]
                if(h > 600) image = image.replace(/(full|max)[/]0/,",600/0")
 
                console.log("canvasID2",canvasID,image)
