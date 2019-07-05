@@ -58,3 +58,5 @@
 .window-manifest-navigation a span { display:inline-block;margin-top:-2px;}
 
 #gotoPage.error { color:red ; }
+
+.scroll-view [data-image-id="https://iiif.archivelab.org/iiif/rashodgson13$0/canvas"] { display:none !important; }
