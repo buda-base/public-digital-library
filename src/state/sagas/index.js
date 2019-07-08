@@ -568,7 +568,7 @@ async function getManifest(url,iri) {
             }
          }
       }
-      console.log("here")
+      //console.log("here")
    }
    catch(e){
       console.error("ERRROR with manifest",e)

@@ -2003,7 +2003,7 @@ class ResourceViewer extends Component<Props,State>
          if(title.value) title = <h2>{title.value}{this.tooltip(title.lang)}</h2>
       }
 
-      console.log("ttlm",titlElem)
+      //console.log("ttlm",titlElem)
 
 
    /*

@@ -1036,35 +1036,38 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
    highlight(val,k):string
    {
-      //console.log("hi:",val,k)
+      console.log("hi:",val,k)
+
+      val = val.replace(/↦↤/g,"");
 
       if(!val.match(/↤/) && k)
          val = /*val.replace(/@.* /,"")*/ val.split(new RegExp(k.replace(/[ -'ʾ]/g,"[ -'ʾ]"))).map((l) => ([<span>{l}</span>,<span className="highlight">{k}</span>])) ;
-      else if (val.match(/↤.*?[^-/_()\[\]: ]+.*?↦/))
-      {
-         val = val.split(/↦/).map(e => { 
-            //console.log("e",e)
+      else //if (val.match(/↤.*?[^-/_()\[\]: ]+.*?↦/))
+      {      
+         val = val.split(/↦/).map((e,i) => { 
+            console.log("e",i,e,e.length)
             if(e.length) {
                let f = e.split(/↤/)
                if(f.length > 1) {
-                  return [<span className="highlight">{f[0]}</span>,<span>{f[1]}</span>]
+                  return [<span className="highlight">{f[0]}</span>,<span>{f[1]}</span>,<span></span>]
                }
                else {
-                  return [<span>{f[0]}</span>]
+                  return [<span>{f[0]}</span>,<span></span>]
                }
             }
          })
 
-      }       
-      else {
-         let str = val.replace(/[\n\r]+/g," ").replace(/^.*?(↦([^↤]+)↤([-/_()\[\]: ]+↦([^↤]+)↤)*).*$/g,"$1").replace(/↤([-/_() ]+)↦/g,"$1").replace(/[↤↦]/g,"")
-                     .replace(/[\[\]]+/g,"")
-         let ret = val.replace(/↦[^↤]+↤([-/_()\[\]: ]+↦[^↤]+↤)*/g,"↦↤")
+      }    
+      
+      // else {
+      //    let str = val.replace(/[\n\r]+/g," ").replace(/^.*?(↦([^↤]+)↤([-/_()\[\]: ]+↦([^↤]+)↤)*).*$/g,"$1").replace(/↤([-/_() ]+)↦/g,"$1").replace(/[↤↦]/g,"")
+      //                .replace(/[\[\]]+/g,"")
+      //    let ret = val.replace(/↦[^↤]+↤([-/_()\[\]: ]+↦[^↤]+↤)*/g,"↦↤")
 
-         //console.log("str:",str,"=",ret)
+      //    //console.log("str:",str,"=",ret)
 
-         val = ret.split(/[\[\] ]*↦↤[\[\] ]*/).map((l) => ([<span>{l}</span>,<span className="highlight">{str}</span>])) ;
-      }
+      //    val = ret.split(/[\[\] ]*↦↤[\[\] ]*/).map((l) => ([<span>{l}</span>,<span className="highlight">{str}</span>])) ;
+      // }
       
 
       val = [].concat.apply([],val);
@@ -1855,7 +1858,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
                                  return (<div className="match">
                                     <span className="label">{prop}:&nbsp;</span>
-                                    {!isArray && <span>{[!uri?val:<span>{val}</span>,lang?<Tooltip placement="bottom-end" title={
+                                    {!isArray && <span>{[!uri?val:<Link className="urilink" to={"/show/"+this.props.keyword}>{val}</Link>,lang?<Tooltip placement="bottom-end" title={
                                        <div style={{margin:"10px"}}>
                                           <Translate value={languages[lang]?languages[lang].replace(/search/,"tip"):lang}/>
                                        </div>

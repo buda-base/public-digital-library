@@ -180,11 +180,11 @@ div[role="tooltip"] > div { font-weight:bold;font-size:16px; }
 
 .person #person, .place #place { display:none;}
 
-/* .match .urilink,  */
+.match .urilink,  
 .match .multi a,
 .resource .data a, a.login { text-decoration: none; color:rgba(229, 74, 53,1);}
 a.login { text-decoration:underline; cursor:pointer; }
-/* .match .urilink:hover, */
+.match .urilink:hover, 
 .match .multi a:hover,
 .resource .data a:hover { border-bottom:1px solid rgba(229, 74, 53,1); }
 
