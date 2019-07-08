@@ -488,7 +488,7 @@ class ResourceViewer extends Component<Props,State>
 
       for(let p of Object.values(prefixes)) { str = str.replace(new RegExp(p,"g"),"") }
 
-      console.log('pretty',str)
+      //console.log("pretty",str)
 
       //if(stripuri) {
 
@@ -963,19 +963,21 @@ class ResourceViewer extends Component<Props,State>
 
                   // we can return Link
                   let pretty = this.fullname(elem.value,true);
+                  let prefix = "bdr:"
+                  if(elem.value.match(new RegExp(bda))) prefix = "bda:"
 
                   if(info && infoBase && infoBase.filter(e=>e["xml:lang"]||e["lang"]).length >= 0) {
-                     ret.push([<Link className="urilink prefLabel" to={"/"+show+"/bdr:"+pretty}>{info}</Link>,lang?<Tooltip placement="bottom-end" title={
+                     ret.push([<Link className="urilink prefLabel" to={"/"+show+"/"+prefix+pretty}>{info}</Link>,lang?<Tooltip placement="bottom-end" title={
                         <div style={{margin:"10px"}}>
                            <Translate value={languages[lang]?languages[lang].replace(/search/,"tip"):lang}/>
                         </div>
                      }><span className="lang">{lang}</span></Tooltip>:null])
                   }
                   else if(pretty.toString().match(/^V[0-9A-Z]+_I[0-9A-Z]+$/)) { ret.push(<span>
-                     <Link className="urilink" to={"/"+show+"/bdr:"+pretty}>{pretty}</Link>&nbsp;
+                     <Link className="urilink" to={"/"+show+"/"+prefix+pretty}>{pretty}</Link>&nbsp;
                      {/* <Link className="goBack" target="_blank" to={"/gallery?manifest=http://iiifpres.bdrc.io/2.1.1/v:bdr:"+pretty+"/manifest"}>{"(view image gallery)"}</Link> */}
                   </span> ) }
-                  else if(pretty.toString().match(/^([A-Z]+[_0-9-]*[A-Z]*)+$/)) ret.push(<Link className="urilink" to={"/"+show+"/bdr:"+pretty}>{pretty}</Link>)
+                  else if(pretty.toString().match(/^([A-Z]+[_0-9-]*[A-Z]*)+$/)) ret.push(<Link className="urilink" to={"/"+show+"/"+prefix+pretty}>{pretty}</Link>)
                   else ret.push(pretty)
 
                   return ret
@@ -1085,7 +1087,7 @@ class ResourceViewer extends Component<Props,State>
       })
       */
 
-      console.log("format",prop,elem,txt,bnode,div);
+      //console.log("format",prop,elem,txt,bnode,div);
 
       let ret = [],pre = []
 
@@ -1105,7 +1107,7 @@ class ResourceViewer extends Component<Props,State>
 
          if(value === bdr+"LanguageTaxonomy") continue ;
 
-         console.log("e",e,pretty,value)
+         //console.log("e",e,pretty,value)
 
          if(this.props.assocResources && this.props.assocResources[value] && this.props.assocResources[value][0] && this.props.assocResources[value][0].fromKey) 
          { 
@@ -1249,7 +1251,7 @@ class ResourceViewer extends Component<Props,State>
             else ret.push(<Tag>{tmp+" "+txt}</Tag>)
 
 
-            console.log("ret",ret)
+            //console.log("ret",ret)
          }
          else {
 
