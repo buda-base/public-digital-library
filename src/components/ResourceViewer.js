@@ -155,14 +155,14 @@ const prefixes = { adm, bdac, bdan, bda, bdo, bdr, foaf, oa, owl, rdf, rdfs, sko
 let propOrder = {
    "Corporation":[],
    "Etext":[
-      "bdo:itemForWork",
+      "bdo:eTextTitle",
       "bdo:eTextIsVolume",
       "bdo:eTextInVolume",
+      "tmp:imageVolumeId",
       "bdo:eTextVolumeIndex",
       "bdo:eTextInItem",
-      "tmp:imageVolumeId",
+      "bdo:itemForWork",
       "bdo:isRoot",
-      "bdo:eTextTitle",
       "bdo:eTextHasPage",
       "bdo:eTextHasChunk",
    ],
@@ -487,6 +487,8 @@ class ResourceViewer extends Component<Props,State>
    {
 
       for(let p of Object.values(prefixes)) { str = str.replace(new RegExp(p,"g"),"") }
+
+      console.log('pretty',str)
 
       //if(stripuri) {
 
@@ -1083,7 +1085,7 @@ class ResourceViewer extends Component<Props,State>
       })
       */
 
-      //console.log("format",prop,elem,txt,bnode,div);
+      console.log("format",prop,elem,txt,bnode,div);
 
       let ret = [],pre = []
 
@@ -1103,9 +1105,10 @@ class ResourceViewer extends Component<Props,State>
 
          if(value === bdr+"LanguageTaxonomy") continue ;
 
-         //console.log("e",e,pretty,value)
+         console.log("e",e,pretty,value)
 
-         if(this.props.assocResources && this.props.assocResources[value] && this.props.assocResources[value][0] && this.props.assocResources[value][0].fromKey) { 
+         if(this.props.assocResources && this.props.assocResources[value] && this.props.assocResources[value][0] && this.props.assocResources[value][0].fromKey) 
+         { 
             e.type = "bnode"
             //console.log("aRes",this.props.assocResources[value])
          }
@@ -1246,7 +1249,7 @@ class ResourceViewer extends Component<Props,State>
             else ret.push(<Tag>{tmp+" "+txt}</Tag>)
 
 
-            //console.log("ret",ret)
+            console.log("ret",ret)
          }
          else {
 
@@ -1977,8 +1980,31 @@ class ResourceViewer extends Component<Props,State>
          
       }
 
-      let titre = <br/>;
+      let title,titlElem ;
 
+      if(kZprop.indexOf(skos+"prefLabel") !== -1)       {
+         titlElem = this.getResourceElem(skos+"prefLabel");
+      }
+      else if(kZprop.indexOf(bdo+"eTextTitle") !== -1)     {
+         titlElem = this.getResourceElem(bdo+"eTextTitle");
+      }
+      else if(kZprop.indexOf(rdfs+"label") !== -1)   {
+         titlElem = this.getResourceElem(rdfs+"label");
+      }
+      else {
+         title = <h2>{getEntiType(this.props.IRI) + " " +this.props.IRI}</h2>
+      }
+      
+      if(!title && titlElem) {
+         if(typeof titlElem !== 'object') titlElem =  { "value" : titlElem, "lang":""}
+         title = getLangLabel(this,titlElem)
+         if(title.value) title = <h2>{title.value}{this.tooltip(title.lang)}</h2>
+      }
+
+      console.log("ttlm",titlElem)
+
+
+   /*
       if(kZprop.indexOf(skos+"prefLabel") !== -1)
          titre = this.format("h2",skos+"prefLabel")
       else if(kZprop.indexOf(bdo+"eTextTitle") !== -1)
@@ -1987,7 +2013,7 @@ class ResourceViewer extends Component<Props,State>
          titre = this.format("h2",rdfs+"label")
       else
          titre = <h2>{getEntiType(this.props.IRI) + " " +this.props.IRI}</h2>
-
+   */
       let fairUse = false
       if(kZprop.indexOf(adm+"access") !== -1) {
          let elem = this.getResourceElem(adm+"access")
@@ -2310,7 +2336,7 @@ class ResourceViewer extends Component<Props,State>
                                           </BaseLayer> }
                                        </LayersControl>
                                        <Marker position={doMap} >
-                                           <ToolT direction="top">{titre}</ToolT>
+                                           <ToolT direction="top">{title}</ToolT>
                                        </Marker>
                                        {doRegion && <GeoJSON data={doRegion} style={ {color: '#006699', weight: 5, opacity: 0.65} }/>}
                                        <Portal position="bottomleft">
@@ -2691,7 +2717,7 @@ class ResourceViewer extends Component<Props,State>
                   }
                </div>
                {/* {this.format("h1",rdf+"type",this.props.IRI)} */}
-               { titre }
+               { title }
                { /*<MapComponent tmp={this.props}/ */}
                {/*
                   hasImageAsset && //this.props.openUV &&
