@@ -1061,7 +1061,7 @@ class ResourceViewer extends Component<Props,State>
 
          //div = div +"sub"
 
-         //console.log("?bnode",elem)
+         console.log("?bnode",elem)
 
          //return this.format(Tag,prop,txt,false,div)
 
@@ -1074,7 +1074,7 @@ class ResourceViewer extends Component<Props,State>
       else {
          elem = this.getResourceElem(prop)
 
-         //console.log("?normal",elem)
+         console.log("?normal",elem)
       }
 
       /*
@@ -1087,7 +1087,7 @@ class ResourceViewer extends Component<Props,State>
       })
       */
 
-      //console.log("format",prop,elem,txt,bnode,div);
+      console.log("format",prop,elem,txt,bnode,div);
 
       let ret = [],pre = []
 
@@ -2388,14 +2388,22 @@ class ResourceViewer extends Component<Props,State>
                         if(!imageLinks[id])
                         {
                            let manif = this.props.imageVolumeManifests[id]
-                           console.log("k",id,manif)
+                           //console.log("k",id,manif)
                            if(manif && manif.sequences && manif.sequences[0] && manif.sequences[0].canvases) {
                               let nc = 0, np = 0                           
                               imageLinks[id] = manif.sequences[0].canvases.reduce( (acc,e) => {
-                                 if(e.label) return ({
-                                    ...acc, [Number(e.label[0]["@value"].replace(/[^0-9]/g,""))]:{id:e["@id"],image:e.images[0].resource["@id"]}
-                              })},{})
-                              console.log("imaL",imageLinks)
+                                 if(e.label) { 
+                                    //console.log("label",e.label)
+                                    return ({
+                                       ...acc, [Number(e.label[0]["@value"].replace(/[^0-9]/g,""))]:{id:e["@id"],image:e.images[0].resource["@id"]}
+                                    })
+                                 }
+                                 else {
+                                    //console.log("no lab",e)
+                                    return acc ; 
+                                 }
+                              },{})
+                              //console.log("imaL",imageLinks)
                               this.setState({ ...this.state,imageLinks:{...this.state.imageLinks, [this.props.IRI]: imageLinks } })
                            }
                         }
@@ -2417,6 +2425,8 @@ class ResourceViewer extends Component<Props,State>
                         window.MiradorUseEtext = true ; 
                         this.showMirador(num,manif);
                      }
+
+                     //console.log("imL",imageLinks)
 
                      return (
                         
@@ -2444,7 +2454,7 @@ class ResourceViewer extends Component<Props,State>
                                        */}
                                        {
                                           e.seq && this.state.collapse["image-"+this.props.IRI+"-"+e.seq] && Object.keys(imageLinks).sort().map(id => {
-                                             if(!this.state.collapse["imageVolume-"+id]) return <div class="imagePage">
+                                             if(!this.state.collapse["imageVolume-"+id] && imageLinks[id][e.seq]) return <div class="imagePage">
                                                       <img class="page" title="Open image+text view in Mirador" src={imageLinks[id][e.seq].image} onClick={eve => { 
                                                          let manif = this.props.imageVolumeManifests[id]
                                                          openMiradorAtPage(imageLinks[id][e.seq].id,manif["@id"])

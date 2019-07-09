@@ -139,7 +139,7 @@ h4 { margin-top:10px;margin-bottom:0px;font-size:24px; }
 .etextPage h4 + h5 { margin-top:15px;margin-bottom:30px;}
 .etextPage img.page, .etextPage h5 a, .etextPage .small a { cursor:pointer; } 
 .etextPage img.page { box-shadow:1px 1px 7px rgba(0,0,0.2); display:block; max-width:100%; margin-bottom:0px; margin-top:3px;
-   margin-left: auto; margin-right: auto;}
+   margin-left: auto; margin-right: auto; max-height:80vh;}
 .etextPage button { margin-left:-8px !important; }
 .etextPage button img { height:28px;transform:rotate(-90deg); opacity:0.75;}
 .etextPage button:hover img { opacity:1;}
