@@ -120,6 +120,7 @@ h4 { margin-top:10px;margin-bottom:0px;font-size:24px; }
 .resource  .sub .sub .subsub h4.first.prop { font-size:0.7em;font-style:italic; }
 .resource  .sub .sub .subsub h4.first.prop { font-style:normal;}
 .resource .sub .sub { padding-left:60px;}
+.resource .subsub.full .subsub .subsubsub h4.first.prop { font-style:normal; }
 
 #etext-scroll > .etextPage:first-child { margin-top:20px; }
 

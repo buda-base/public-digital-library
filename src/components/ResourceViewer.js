@@ -1061,7 +1061,7 @@ class ResourceViewer extends Component<Props,State>
 
          //div = div +"sub"
 
-         console.log("?bnode",elem)
+         //console.log("?bnode",elem)
 
          //return this.format(Tag,prop,txt,false,div)
 
@@ -1074,7 +1074,7 @@ class ResourceViewer extends Component<Props,State>
       else {
          elem = this.getResourceElem(prop)
 
-         console.log("?normal",elem)
+         //console.log("?normal",elem)
       }
 
       /*
@@ -1087,7 +1087,7 @@ class ResourceViewer extends Component<Props,State>
       })
       */
 
-      console.log("format",prop,elem,txt,bnode,div);
+      //console.log("format",prop,elem,txt,bnode,div);
 
       let ret = [],pre = []
 
@@ -1114,6 +1114,7 @@ class ResourceViewer extends Component<Props,State>
             e.type = "bnode"
             //console.log("aRes",this.props.assocResources[value])
          }
+
 
          if(e.type != "bnode")
          {
@@ -1426,6 +1427,8 @@ class ResourceViewer extends Component<Props,State>
                   if(f == rdf+"type") continue;
                   else
                   {
+                     //console.log("what",this.props.resources[this.props.IRI][elem[f][0].value])
+
                      if(!noVal)
                         subsub.push(<Tag className={'first '+(div == ""?'type':'prop')}>{[this.proplink(f),": "]}</Tag>)
                      //{...(val ? {className:'first prop'}:{className:'first type'}) }
@@ -1439,6 +1442,10 @@ class ResourceViewer extends Component<Props,State>
 
                         if(f == bdo+"noteLocationStatement" || f == bdo+"noteWork" || f == bdo+"noteText") {
                            noteData[f] = v
+                        }
+                        else if(elem[f][0] && elem[f][0].value && this.props.resources && this.props.resources[this.props.IRI] && this.props.resources[this.props.IRI][elem[f][0].value])
+                        {
+                           v.type = "bnode"
                         }
 
                         let txt = v.value;
