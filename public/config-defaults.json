@@ -5,12 +5,12 @@
      "redirectUri": "http://library.bdrc.io/auth/callback",
      "audience": "https://bdrc-io.auth0.com/userinfo",
      "responseType": "token id_token",
-     "scope": "openid user_metadata app_metada"
+     "scope": "openid user_metadata app_metada profile"
   },
    "ldspdi":
    {
       "endpoints":["http://localhost:8080","http://localhost:13280","http://buda1.bdrc.io:13280","http://purl.bdrc.io","http://localhost:5555/test"],
-      "index":1
+      "index":3   
    },
    "iiif":
    {
@@ -40,17 +40,20 @@
       },
       "Work": {
          "relation":"http://purl.bdrc.io/ontology/tmp/relationType",
+         "tree":"http://purl.bdrc.io/ontology/core/workGenre",
          "langScript": "http://purl.bdrc.io/ontology/core/workLangScript",
-         "status":"http://purl.bdrc.io/ontology/admin/status",
-         "access":"http://purl.bdrc.io/ontology/admin/access",
          "license":"http://purl.bdrc.io/ontology/admin/license",
+         "access":"http://purl.bdrc.io/ontology/admin/access",
+         "status":"http://purl.bdrc.io/ontology/admin/status",
          "type":"http://purl.bdrc.io/ontology/core/workType",
-         "partType":"http://purl.bdrc.io/ontology/core/workPartType",
-         "tree":"http://purl.bdrc.io/ontology/core/workGenre"
+         "partType":"http://purl.bdrc.io/ontology/core/workPartType"
       },
       "Etext": {
          "tree":"http://purl.bdrc.io/ontology/core/workGenre"
       }
+   },
+   "facets-hide-unlogged": { 
+      "Work": [ "status" ] 
    },
    "links":[
       { "title":"Abstract text of the Bodhisattvacaryāvatāra", "id":"W19740", "icon":"Abstract Work", "label":[
@@ -86,5 +89,6 @@
          },
          "index":0
       }
-   }
+   },
+   "hideViewers":true
 }

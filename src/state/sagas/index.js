@@ -704,14 +704,25 @@ function getData(result,inMeta,outMeta)  {
 function getStats(cat:string,data:{})
 {
    let stat={}
-   let config = store.getState().data.config.facets
+   let config = store.getState().data.config
+
+   let keys = Object.keys(config.facets[cat])
+   
+   if(auth && !auth.isAuthenticated()) {
+      let hide = config["facets-hide-unlogged"][cat]
+      console.log("hide",hide)
+      if(hide && hide.length) {
+         keys = keys.reduce( (acc,k) => (hide.indexOf(k)===-1?[...acc,k]:acc),[])
+      }
+   }
+   
 
    for(let p of Object.values(data["results"]["bindings"][cat.toLowerCase()+"s"]))
    {
       // console.log("p",p);
-      for(let f of Object.keys(config[cat]))
+      for(let f of keys)
       {
-         let tmp = p.filter((e) => (e.type == config[cat][f]))
+         let tmp = p.filter((e) => (e.type == config.facets[cat][f]))
          if(tmp.length > 0) for(let t of tmp)
          {
             if(!stat[f]) stat[f] = {}

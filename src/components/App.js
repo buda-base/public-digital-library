@@ -1036,7 +1036,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
    highlight(val,k):string
    {
-      console.log("hi:",val,k)
+      //console.log("hi:",val,k)
 
       val = val.replace(/↦↤/g,"");
 
@@ -1045,7 +1045,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
       else //if (val.match(/↤.*?[^-/_()\[\]: ]+.*?↦/))
       {      
          val = val.split(/↦/).map((e,i) => { 
-            console.log("e",i,e,e.length)
+            //console.log("e",i,e,e.length)
             if(e.length) {
                let f = e.split(/↤/)
                if(f.length > 1) {
