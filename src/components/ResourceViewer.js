@@ -205,6 +205,7 @@ let propOrder = {
    "Topic":[],
    "Work":[
       "bdo:workTitle",
+      "skos:altLabel",
       "bdo:workExpressionOf",
       "bdo:workType",
       "bdo:workHasExpression",
@@ -215,6 +216,7 @@ let propOrder = {
       "bdo:creator",
       //"bdo:workCreator",
       "bdo:workLangScript",
+      "bdo:workOtherLangScript",
       "bdo:workObjectType",
       "bdo:workMaterial",
       "tmp:dimensions",
@@ -1443,7 +1445,7 @@ class ResourceViewer extends Component<Props,State>
                         if(f == bdo+"noteLocationStatement" || f == bdo+"noteWork" || f == bdo+"noteText") {
                            noteData[f] = v
                         }
-                        else if(elem[f][0] && elem[f][0].value && this.props.resources && this.props.resources[this.props.IRI] && this.props.resources[this.props.IRI][elem[f][0].value])
+                        else if(f.match(/[Ll]ineage/) && elem[f][0] && elem[f][0].value && this.props.resources && this.props.resources[this.props.IRI] && this.props.resources[this.props.IRI][elem[f][0].value])
                         {
                            v.type = "bnode"
                         }
@@ -2007,7 +2009,10 @@ class ResourceViewer extends Component<Props,State>
       if(!title && titlElem) {
          if(typeof titlElem !== 'object') titlElem =  { "value" : titlElem, "lang":""}
          title = getLangLabel(this,titlElem)
-         if(title.value) title = <h2>{title.value}{this.tooltip(title.lang)}</h2>
+         if(title.value) {
+            document.title = title.value + " - Public Digital Library"
+            title = <h2>{title.value}{this.tooltip(title.lang)}</h2>
+         }
       }
 
       //console.log("ttlm",titlElem)

@@ -719,17 +719,20 @@ function getStats(cat:string,data:{})
 
    for(let p of Object.values(data["results"]["bindings"][cat.toLowerCase()+"s"]))
    {
-      // console.log("p",p);
+      //console.log("p",p);
       for(let f of keys)
       {
+         //console.log("f",f);
          let tmp = p.filter((e) => (e.type == config.facets[cat][f]))
          if(tmp.length > 0) for(let t of tmp)
          {
             if(!stat[f]) stat[f] = {}
-            let pre = stat[f][t.value]
+            if(!stat[f][t.value]) stat[f][t.value] = { n:0, elem:[] }
+            let pre = stat[f][t.value].n
             if(!pre) pre = 1
             else pre ++ ;
-            stat[f][t.value] = pre ;
+            stat[f][t.value].n = pre ;
+            stat[f][t.value].elem.push(p)
             // console.log("f+1",f,tmp,pre)
          }
       }

@@ -446,6 +446,8 @@ class App extends Component<Props,State> {
 
       let props = { ...prop }
 
+      if(props.keyword) document.title = "'"+props.keyword+"' search results - Public Digital Library"
+
 
       //console.log("collap?",JSON.stringify(state.collapse,null,3))
 
@@ -1099,9 +1101,9 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          //console.log("tmp",tmp)
 
          let cpt,checkSub ;
-         if(meta[kZ[0]]) cpt = meta[kZ[0]]
+         if(meta[kZ[0]].n) cpt = meta[kZ[0]].n
          else {
-            cpt = kZsub.reduce((acc,e) => { return acc + meta[e]?meta[e]:0 ; },0)
+            cpt = kZsub.reduce((acc,e) => { return acc + (meta[e]&&meta[e].n?meta[e].n:0) ; },0)
             checkSub = true ;
          }
 
@@ -2314,7 +2316,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
             meta = this.props.searches[this.state.filters.datatype[0]][this.props.keyword+"@"+this.props.language]
 
-            //console.log("ici",meta)
+            console.log("ici",meta)
 
             if(meta) meta = meta.metadata
             if(meta) {
@@ -2442,7 +2444,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                            if(jlabel && jlabel.length) jlabel = jlabel[0].value
                            else jlabel = this.pretty(jpre)
 
-                           if(["tree","relation","langScript"].indexOf(j) !== -1) {
+                           // need to fix this after info is not in ontology anymore... make tree from relation/langScript 
+                           if(["tree",/*"relation" ,"langScript"*/].indexOf(j) !== -1) {
 
                               //console.log("widgeTree",j,jpre,meta[j],counts["datatype"],this.state.filters.datatype[0])
 
@@ -2546,8 +2549,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                            {
 
                               let meta_sort = Object.keys(meta[j]).sort((a,b) => {
-                                 if(Number(meta[j][a]) < Number(meta[j][b])) return 1
-                                 else if(Number(meta[j][a]) > Number(meta[j][b])) return -1
+                                 if(Number(meta[j][a].n) < Number(meta[j][b].n)) return 1
+                                 else if(Number(meta[j][a].n) > Number(meta[j][b].n)) return -1
                                  else return 0 ;
                               });
 
@@ -2555,7 +2558,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                               meta_sort.unshift("Any")
 
 
-                              meta[j]["Any"] =  counts["datatype"][this.state.filters.datatype[0]]
+                              meta[j]["Any"] =  { n:/*"? / "+ */ counts["datatype"][this.state.filters.datatype[0]]}
 
                               return (
 
@@ -2602,7 +2605,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                                                    />
 
                                                 }
-                                                label={label+" ("+meta[j][i]+")"}
+                                                label={label+" ("+meta[j][i].n+")"}
                                              />
                                           </div>
                                        )

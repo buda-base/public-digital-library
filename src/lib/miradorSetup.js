@@ -560,7 +560,16 @@ function miradorAddScroll(toImage)
                if(id && id.match && !id.match(/^http/)) {
                   fromInp = true
                   if(id.match(/^[0-9]+$/)) { 
+                     let num = id
+                     id = jQ(".scroll-view img[title~='"+num+"']").first()
+                     //console.log("id=",id)
+                     if(!id.length) id = jQ(".scroll-view img[title~='\["+num+"\]']").first()
+                     //console.log("id==",id)
+                  }
+                  else if(id.match(/^[0-9]+[rv]$/))
+                  {
                      id = jQ(".scroll-view img[title~='"+id+"']").first()
+                     //console.log("id=",id)
                   }
                   else id = false
                }
