@@ -14,6 +14,8 @@ export type DataState = {
    facets?:{[string]:boolean|{}},
    keyword?:string,
    language?:string,
+   ontology?:{},
+   dictionary?:{},
    searches:{[keyword:string]:{}|null},
    failures: {[string]: string},
    config?: { //[string]: {}},
@@ -62,6 +64,14 @@ export const loadedOntology = (state: DataState, action: Action) => {
     }
 }
 reducers[actions.TYPES.loadedOntology] = loadedOntology;
+
+export const loadedDictionary = (state: DataState, action: Action) => {
+    return {
+        ...state,
+        dictionary: action.payload
+    }
+}
+reducers[actions.TYPES.loadedDictionary] = loadedDictionary;
 
 export const resetSearch = (state: DataState, action: Action) => {
     return {

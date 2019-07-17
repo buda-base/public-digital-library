@@ -22,6 +22,7 @@ const mapStateToProps = (state) => {
    let datatypes = state.data.datatypes ;
    if(datatypes && datatypes[keyword+"@"+language]) datatypes = datatypes[keyword+"@"+language]
    let ontology = state.data.ontology ;
+   let dictionary = state.data.dictionary ;
    let facets = state.data.facets ;
    let resources = state.data.resources ;
    let ontoSearch = state.data.ontoSearch ;
@@ -37,7 +38,7 @@ const mapStateToProps = (state) => {
    let failures = state.data.failures ;
 
    let newState = { logged,config, hostFailure, searches, keyword, language,loading,datatypes,ontology,facets,
-      locale,prefLang,resources,ontoSearch,rightPanel,langPreset, langIndex, failures }
+      locale,prefLang,resources,ontoSearch,rightPanel,langPreset, langIndex, failures,dictionary }
 
    if(!global.inTest) console.log("mS2p",state,newState)
 

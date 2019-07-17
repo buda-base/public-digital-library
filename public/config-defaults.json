@@ -40,8 +40,8 @@
       },
       "Work": {
          "relation":"http://purl.bdrc.io/ontology/tmp/relationType",
-         "tree":"http://purl.bdrc.io/ontology/core/workGenre",
          "langScript": "http://purl.bdrc.io/ontology/core/workLangScript",
+         "tree":"http://purl.bdrc.io/ontology/core/workGenre",
          "license":"http://purl.bdrc.io/ontology/admin/license",
          "access":"http://purl.bdrc.io/ontology/admin/access",
          "status":"http://purl.bdrc.io/ontology/admin/status",

@@ -7,6 +7,7 @@ require('formdata-polyfill')
 const CONFIG_PATH = '/config.json'
 const CONFIGDEFAULTS_PATH = '/config-defaults.json'
 const ONTOLOGY_PATH = '/ontology/core.json'
+const DICTIONARY_PATH = '/ontology/data/json'
 
 const dPrefix = {
    "C" : "Corporation",
@@ -196,6 +197,14 @@ export default class API {
          //console.log("onto",onto)
          return onto ;
    }
+
+    async loadDictionary(): Promise<string>
+    {
+         let dico =  JSON.parse(await this.getURLContents(this._dictionaryPath,false));
+         console.log("dico",dico)
+         return dico ;
+   }
+
 
     async loadResource(IRI:string): Promise<string>
     {
@@ -663,6 +672,22 @@ export default class API {
 
         return path;
     }
+
+     get _dictionaryPath(): string {
+        let path = DICTIONARY_PATH
+
+       let config = store.getState().data.config.ldspdi
+       let url = config.endpoints[config.index] ;
+
+         path = url +  DICTIONARY_PATH;
+
+         // to use with ldspdi running locally
+         path = "http://purl.bdrc.io" +  DICTIONARY_PATH;
+
+        return path;
+    }
+
+
    get _configPath(): string {
       let path = CONFIG_PATH;
       if (this._server) {

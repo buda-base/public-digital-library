@@ -58,6 +58,13 @@ async function initiateApp(params,iri,myprops) {
          // console.log("params",params)
       }
 
+      if(!iri && !state.data.dictionary)
+      {
+         const dico = await api.loadDictionary()
+         store.dispatch(dataActions.loadedDictionary(dico));         
+         
+      }
+
       // [TODO] load only missing info when needed (see click on "got to annotation" for WCBC2237)
       if(iri) // && (!state.data.resources || !state.data.resources[iri]))
       {

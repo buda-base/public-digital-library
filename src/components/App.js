@@ -71,6 +71,9 @@ const _tmp = tmp ;
 export const prefixes = [adm, admd, bdo,bdr,rdf,rdfs,skos,tmp,_tmp,oa]
 export const prefixesMap = {adm, bdo,bdr,rdf,rdfs,skos,tmp,_tmp,oa}
 
+const facetLabel = {
+   "tree":"Genre / Is About"
+}
 
 export const languages = {
    "zh":"lang.search.zh",
@@ -260,6 +263,7 @@ type Props = {
    datatypes:boolean|{},
    history:{},
    ontology:{},
+   dictionary:{},
    ontoSearch:string,
    rightPanel?:boolean,
    failures?:{},
@@ -446,7 +450,7 @@ class App extends Component<Props,State> {
 
       let props = { ...prop }
 
-      if(props.keyword) document.title = "'"+props.keyword+"' search results - Public Digital Library"
+      if(props.keyword) document.title = /*""+*/ props.keyword+" search results - Public Digital Library"
 
 
       //console.log("collap?",JSON.stringify(state.collapse,null,3))
@@ -2438,12 +2442,15 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
                            let jpre = this.props.config.facets[this.state.filters.datatype[0]][j]
                            if(!jpre) jpre = j
-                           let jlabel = this.props.ontology[jpre]
-                           if(jlabel) jlabel = jlabel["http://www.w3.org/2000/01/rdf-schema#label"]
-                           //if(jlabel) for(let l of jlabel) { if(l.lang == "en") jlabel = l.value }
-                           if(jlabel && jlabel.length) jlabel = jlabel[0].value
-                           else jlabel = this.pretty(jpre)
-
+                           let jlabel ;
+                           if(facetLabel[j]) jlabel = facetLabel[j];   
+                           else {
+                              jlabel = this.props.ontology[jpre]
+                              if(jlabel) jlabel = jlabel["http://www.w3.org/2000/01/rdf-schema#label"]
+                              //if(jlabel) for(let l of jlabel) { if(l.lang == "en") jlabel = l.value }
+                              if(jlabel && jlabel.length) jlabel = jlabel[0].value
+                              else jlabel = this.pretty(jpre)
+                           }
                            // need to fix this after info is not in ontology anymore... make tree from relation/langScript 
                            if(["tree",/*"relation" ,"langScript"*/].indexOf(j) !== -1) {
 
@@ -2558,7 +2565,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                               meta_sort.unshift("Any")
 
 
-                              meta[j]["Any"] =  { n:/*"? / "+ */ counts["datatype"][this.state.filters.datatype[0]]}
+                              meta[j]["Any"] =  { n:"? / "+ counts["datatype"][this.state.filters.datatype[0]]}
 
                               return (
 
@@ -2568,6 +2575,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                                     {
 
                                        let label = this.props.ontology[i]
+                                       if(!label) label = this.props.dictionary[i]
                                        //console.log("label",label)
                                        if(label) {
                                           let labels = label["http://www.w3.org/2000/01/rdf-schema#label"]

@@ -20,6 +20,14 @@ export const loadedOntology = (onto: {}): Action => {
     }
 }
 
+TYPES.loadedDictionary = 'LOADED_DICTIONARY';
+export const loadedDictionary = (dico: {}): Action => {
+    return {
+        type: TYPES.loadedDictionary,
+        payload: dico
+    }
+}
+
 
 TYPES.choosingHost = 'CHOOSING_HOST';
 export const choosingHost = (host: string): Action => {
