@@ -543,34 +543,40 @@ class ResourceViewer extends Component<Props,State>
 
             let assoR = this.props.assocResources
             if (assoR) {
-               //console.log("AV parts",parts[0],parts)
-
                parts = parts.map((e) => {
 
                   let index = assoR[e.value]
-
-                  //console.log("index",index,e)
 
                   if(index) index = index.filter(e => e.type == bdo+"workPartIndex")
                   if(index && index[0] && index[0].value) index = Number(index[0].value)
                   else index = null
 
-                  //console.log("?",index)
+                  return ({ ...e, index })
+               })
+
+               prop[bdo+"workHasPart"] = _.orderBy(parts,['index'],['asc'])
+            }
+         }
+
+
+         parts = prop[bdo+"itemHasVolume"]
+         if(parts) {
+
+            let assoR = this.props.assocResources
+            if (assoR) {
+
+               parts = parts.map((e) => {
+
+                  let index = assoR[e.value]
+
+                  if(index) index = index.filter(e => e.type == bdo+"volumeNumber")
+                  if(index && index[0] && index[0].value) index = Number(index[0].value)
+                  else index = null
 
                   return ({ ...e, index })
                })
 
-
-               /* // weird bug, sort all but leave 79 at @0 and 2 at @78 ...
-               parts = parts.sort((a,b) => {
-                  if( a.index && b.index) return a.index - b.index
-                  return 0 ;
-               })
-               */
-
-               prop[bdo+"workHasPart"] = _.orderBy(parts,['index'],['asc'])
-
-               //console.log("AP parts",prop[bdo+"workHasPart"][0])
+               prop[bdo+"itemHasVolume"] = _.orderBy(parts,['index'],['asc'])
             }
          }
 
@@ -1109,7 +1115,7 @@ class ResourceViewer extends Component<Props,State>
 
          if(value === bdr+"LanguageTaxonomy") continue ;
 
-         //console.log("e",e,pretty,value)
+         console.log("e",e,pretty,value)
 
          if(this.props.assocResources && this.props.assocResources[value] && this.props.assocResources[value][0] && this.props.assocResources[value][0].fromKey) 
          { 
@@ -2137,7 +2143,7 @@ class ResourceViewer extends Component<Props,State>
                   {
                      //console.log("note",tags,k);//tags = [<h4>Note</h4>]
                   }
-                  else if(k == bdo+"itemHasVolume" || k == bdo+"volumeHasEtext")
+                  else if(/*k == bdo+"itemHasVolume" ||*/ k == bdo+"volumeHasEtext")
                   {
 
                      tags = tags.map(e => {
