@@ -1083,7 +1083,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
    counTree(tree:{},meta:{},any:integer=0):[]
    {
-     //console.log("cT",tree,meta,any)
+      //console.log("cT",tree,meta,any)
       let ret = []
       let tmp = Object.keys(tree).map(k => ({[k]:tree[k]}))
       //console.log("tmp",tmp)
@@ -1105,9 +1105,10 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          //console.log("tmp",tmp)
 
          let cpt,checkSub ;
-         if(meta[kZ[0]].n) cpt = meta[kZ[0]].n
+         if(meta[kZ[0]] && meta[kZ[0]].n) cpt = meta[kZ[0]].n
          else {
             cpt = kZsub.reduce((acc,e) => { return acc + (meta[e]&&meta[e].n?meta[e].n:0) ; },0)
+            if(any && cpt > any) cpt = any ;
             checkSub = true ;
          }
 
