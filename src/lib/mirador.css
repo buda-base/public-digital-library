@@ -44,7 +44,7 @@
 #viewer .member-select-results li { cursor:auto; }
 #viewer .member-select-results li .preview-image { cursor:pointer; }
 
-.mirador-container .repo-image img { top: 10px; }
+.mirador-container .repo-image img { top: 0px; }
 #viewer .member-select-results li { display: block; height: 120px; }
 .mirador-container .select-metadata { width: 100%; max-width: 800px; min-width: 0; position: absolute; bottom: 24px; height: 20px;
     left: 105px; }

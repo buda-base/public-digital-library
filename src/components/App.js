@@ -2452,7 +2452,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                               else jlabel = this.pretty(jpre)
                            }
                            // need to fix this after info is not in ontology anymore... make tree from relation/langScript 
-                           if(["tree",/*"relation" ,"langScript"*/].indexOf(j) !== -1) {
+                           if(["tree","relation" /*,"langScript"*/].indexOf(j) !== -1) {
 
                               //console.log("widgeTree",j,jpre,meta[j],counts["datatype"],this.state.filters.datatype[0])
 
@@ -2565,7 +2565,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                               meta_sort.unshift("Any")
 
 
-                              meta[j]["Any"] =  { n:"? / "+ counts["datatype"][this.state.filters.datatype[0]]}
+                              meta[j]["Any"] =  { n: /*"? / "+*/ counts["datatype"][this.state.filters.datatype[0]]}
 
                               return (
 

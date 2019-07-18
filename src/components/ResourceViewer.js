@@ -1115,7 +1115,7 @@ class ResourceViewer extends Component<Props,State>
 
          if(value === bdr+"LanguageTaxonomy") continue ;
 
-         console.log("e",e,pretty,value)
+         //console.log("e",e,pretty,value)
 
          if(this.props.assocResources && this.props.assocResources[value] && this.props.assocResources[value][0] && this.props.assocResources[value][0].fromKey) 
          { 
@@ -1354,7 +1354,7 @@ class ResourceViewer extends Component<Props,State>
                   if(f === tmp+"noteFinal")
                   {
                      let note = []
-                     console.log("noteData",noteData)
+                     //console.log("noteData",noteData)
                      if(noteData[bdo+"noteText"])
                      {
                         let workuri ;
@@ -2041,8 +2041,10 @@ class ResourceViewer extends Component<Props,State>
          //console.log("adm",elem,fairUse)
       }
 
+      // [TODO] test external pdf download using "rendering" field of manifest
+
       let pdfLink,monoVol = -1 ;
-      if(this.props.imageAsset &&  !this.props.manifestError && this.props.imageAsset.match(/[.]bdrc[.]io/))
+      if(this.props.firstImage &&  !this.props.manifestError && this.props.firstImage.match(/[.]bdrc[.]io/))
       {
          let iiif = "http://iiif.bdrc.io" ;
          if(this.props.config && this.props.config.iiif) iiif = this.props.config.iiif.endpoints[this.props.config.iiif.index]
@@ -2765,7 +2767,7 @@ class ResourceViewer extends Component<Props,State>
                }
                {
                   !this.props.manifestError &&  this.props.imageAsset  && //!this.state.openUV &&
-                  <div className={"uvDefault "+(this.state.imageLoaded?"loaded":"")} {...(this.props.config.hideViewers?{"onClick":this.showMirador.bind(this),"style":{cursor:"pointer"}}:{})} >
+                  <div className={"firstImage "+(this.state.imageLoaded?"loaded":"")} {...(this.props.config.hideViewers?{"onClick":this.showMirador.bind(this),"style":{cursor:"pointer"}}:{})} >
                      <Loader className="uvLoader" loaded={this.state.imageLoaded} color="#fff"/>
                      { this.props.firstImage && <img src={this.props.firstImage} /*src={`data:image/${this.props.firstImage.match(/png$/)?'png':'jpeg'};base64,${this.props.imgData}`}*/  onLoad={(e)=>this.setState({...this.state,imageLoaded:true})}/> }
                      {
@@ -2805,8 +2807,7 @@ class ResourceViewer extends Component<Props,State>
                  (pdfLink) &&
                  ( (!(this.props.manifestError && this.props.manifestError.error.message.match(/Restricted access/)) && !fairUse) ||
                   (this.props.auth && this.props.auth.isAuthenticated())) &&
-                 [<br/>,<div style={{display:"inline-block"}}>
-                    <br/>
+                 [<br/>,<div style={{display:"inline-block",marginTop:"20px"}}>
                     <a onClick={ ev => {
                         //if(that.props.createPdf) return ;
                          if(monoVol > 0){
@@ -2818,7 +2819,6 @@ class ResourceViewer extends Component<Props,State>
                         this.setState({...this.state, pdfOpen:true,anchorElPdf:ev.currentTarget})
                       }
                     } class="download login">Download images as PDF/ZIP</a>
-                    <br/>
                     <Loader loaded={(!this.props.pdfVolumes || this.props.pdfVolumes.length > 0)} options={{position:"relative",left:"115%",top:"-11px"}} />
                   </div>]
                }
