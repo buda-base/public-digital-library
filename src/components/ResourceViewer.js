@@ -1972,6 +1972,19 @@ class ResourceViewer extends Component<Props,State>
             this.props.onHasImageAsset(manif,this.props.IRI)
          }
       }
+      else if(kZprop.indexOf(bdo+"itemHasVolume") !== -1)
+      {
+         let elem = this.getResourceElem(bdo+"itemHasVolume")
+         let nbVol = this.getResourceElem(bdo+"itemVolumes")
+         let work = this.getResourceElem(bdo+"itemForWork")
+         if(elem[0] && elem[0].value && !this.props.imageAsset && !this.props.manifestError) {
+            this.setState({...this.state, imageLoaded:false})
+            let manif = "http://presentation.bdrc.io/2.1.1/v:"+elem[0].value.replace(new RegExp(bdr),"bdr:")+"/manifest"
+            if(nbVol && nbVol[0] && nbVol[0].value && nbVol[0].value > 1 && work && work[0] && work[0].value)
+              manif = "http://presentation.bdrc.io/2.1.1/collection/wio:"+work[0].value.replace(new RegExp(bdr),"bdr:")
+            this.props.onHasImageAsset(manif,this.props.IRI)
+         }
+      }
       else {
          
          if (this.props.assocResources) {
