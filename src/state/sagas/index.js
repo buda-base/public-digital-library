@@ -82,7 +82,7 @@ async function initiateApp(params,iri,myprops) {
          }
 
          
-         try {    
+         if(iri.match(/([.]bdrc[.])|(bdr:)/)) try {    
             let adminRes = await api.loadResource(iri.replace(/bdr:/,"bda:"));
 
             //store.dispatch(dataActions.gotAdminResource(iri, res));

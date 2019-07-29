@@ -150,7 +150,9 @@ const skos = "http://www.w3.org/2004/02/skos/core#";
 const tmp  = "http://purl.bdrc.io/ontology/tmp/" ;
 const _tmp  = "http://purl.bdrc.io/ontology/tmp/" ;
 
-const prefixes = { adm, bdac, bdan, bda, bdo, bdr, foaf, oa, owl, rdf, rdfs, skos, tmp }
+const dila  = "http://purl.dila.edu.tw/resource/";
+
+const prefixes = { adm, bdac, bdan, bda, bdo, bdr, foaf, oa, owl, rdf, rdfs, skos, tmp, dila }
 
 let propOrder = {
    "Corporation":[],
@@ -177,6 +179,8 @@ let propOrder = {
       "bdo:workLocation",
    ],
    "Person" : [
+      "skos:altLabel",
+      "owl:sameAs",
       "bdo:personName",
       "bdo:personGender",
       "bdo:kinWith",
