@@ -10,28 +10,33 @@ const ONTOLOGY_PATH = '/ontology/core.json'
 const DICTIONARY_PATH = '/ontology/data/json'
 
 const dPrefix = {
-   "C" : "Corporation",
-   "E" : "Etext",
-   "I" : "Item",
-   "L" : "Lineage",
-   "G" : "Place",
-   "PL": "Place", // dila
-   "P" : "Person",
-   "A" : "Person", // dila
-   "R" : "Role",
-   "PR": "Product",
-   "T" : "Topic",
-   "W" : "Work",
-   "O" : "Taxonomy",
-   "V" : "Volume",
-   "UT": "Etext", // ?
+   "bdr": {
+      "C" : "Corporation",
+      "E" : "Etext",
+      "I" : "Item",
+      "L" : "Lineage",
+      "G" : "Place",
+      "P" : "Person",    
+      "R" : "Role",
+      "PR": "Product",
+      "T" : "Topic",
+      "W" : "Work",
+      "O" : "Taxonomy",
+      "V" : "Volume",
+      "UT": "Etext", // ?
+   },
+   "dila" : {
+      "PL": "Place", 
+      "A" : "Person"
+   }
 };
 
 export function getEntiType(t:string):string {
+   let p = t.replace(/^([^:]+):.*$/,"$1")
    let v = t.replace(/^([^:]+:)?([ACEILGPRTWOVU][RTL]?).*$/,"$2")
    //console.log("v",v,dPrefix[v])
-   if(!dPrefix[v]) return "" ;
-   else return dPrefix[v]; }
+   if(!dPrefix[p] || !dPrefix[p][v]) return "" ;
+   else return dPrefix[p][v]; }
 
 
 export interface APIResponse {
