@@ -15,7 +15,7 @@ import {initiateApp} from '../state/actions';
 import tcpPortUsed from 'tcp-port-used'
 import 'whatwg-fetch'
 import {langScripts,makeLangScriptLabel} from "./language"
-import {sortLangScriptLabels,transliterators, extendedPresets, importModules} from "./transliterators"
+import {sortLangScriptLabels,transliterators,translitHelper,extendedPresets, importModules} from "./transliterators"
 
 let makeRoutes = require('../routes').default
 let bdrcAPI = require('../lib/api').default;
@@ -47,6 +47,8 @@ const preset1 = [ "bo-x-ewts", "sa-x-iast" ]
 const preset2 = [ "zh-hans", "bo-x-ewts", "en" ]
 const preset3 = [ "bo", "sa-deva", "zh-hans" ]
 const preset4 = [ "en", "zh-latn-pinyin" ]
+const preset5 = [ "bo-Tibt", "sa-deva" ]
+
 
 
 describe('language settings tests', () => {
@@ -145,10 +147,12 @@ describe('language settings tests', () => {
       let extPreset1 = extendedPresets(preset1)
       let extPreset2 = extendedPresets(preset2)
       let extPreset3 = extendedPresets(preset3)
+      let extPreset5 = extendedPresets(preset5)
 
-      expect(extPreset1).toEqual({ flat:[ "bo-x-ewts", "bo", "sa-x-iast", "sa-deva" ], translit:{ "bo":"bo-x-ewts", "sa-deva": 'sa-x-iast' } })
-      expect(extPreset2).toEqual({ flat:[ "zh-hans", "bo-x-ewts", "bo", "en" ], translit:{ "bo":"bo-x-ewts" } })
+      expect(extPreset1).toEqual({ flat:[ "bo-x-ewts", "bo", "bo-[Tt]ibt", "sa-x-iast", "sa-deva" ], translit:{ "bo":"bo-x-ewts", "bo-[Tt]ibt": "bo-x-ewts", "sa-deva": 'sa-x-iast' } })
+      expect(extPreset2).toEqual({ flat:[ "zh-hans", "bo-x-ewts", "bo", "bo-[Tt]ibt", "en" ], translit:{ "bo":"bo-x-ewts", "bo-[Tt]ibt": "bo-x-ewts" } })
       expect(extPreset3).toEqual({ flat:[ "bo", "bo-x-ewts", "sa-deva", "sa-x-iast", "zh-hans" ], translit:{ "bo-x-ewts":"bo", 'sa-x-iast': 'sa-deva' } } )
+      expect(extPreset5).toEqual({ flat:[ "bo-Tibt", "bo-x-ewts", "sa-deva", "sa-x-iast" ], translit:{ "bo-x-ewts":"bo-Tibt", 'sa-x-iast': 'sa-deva' } } ) 
 
       let extSortJson1 = [
          { type: 'literal', value: 'རྫོགས་ཆེན།', lang: 'bo' },
@@ -173,6 +177,17 @@ describe('language settings tests', () => {
       let extSortResultsJsonld1 = sortLangScriptLabels(jsonldLabels1, extPreset3.flat, extPreset3.translit)
       expect(extSortResultsJsonld1).toEqual(extSortJsonld1);
 
+      let extSortJson2 = [
+         { type: 'literal', value: 'རྫོགས་ཆེན།', lang: 'bo-Tibt' },
+         { type: 'literal', value: 'རྫོགས་པ་ཆེན་པོ།', lang: 'bo-Tibt' },
+         { type: 'literal', value: 'मह̄श̄न्ति', lang: 'sa-deva' },
+         { type: 'literal', value: 'great perfection', lang: 'en' },
+         { type: 'literal', value: '大圆满', lang: 'zh-hans' },
+      ]
+
+      let extSortResultsJson2 = sortLangScriptLabels(jsonLabels1, extPreset5.flat, extPreset5.translit)
+      expect(extSortResultsJson2).toEqual(extSortJson2);
+
       done()
    })
 
@@ -180,7 +195,7 @@ describe('language settings tests', () => {
 
         await importModules()
 
-        expect(transliterators["zh-hant"]["zh-latn-pinyin"]('厦门你好大厦厦门')).toEqual('xià mén nǐ hǎo dà shà xià mén')
+        expect(translitHelper("zh-hant","zh-latn-pinyin")('厦门你好大厦厦门')).toEqual('xià mén nǐ hǎo dà shà xià mén')
 
         let extPreset4 = extendedPresets(preset4)
         let results = sortLangScriptLabels(

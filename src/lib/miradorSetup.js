@@ -23,7 +23,7 @@ let importModules = async () => {
 
 
 }
-importModules();
+if(process.env.NODE_ENV !== 'test') importModules();
 
 
 

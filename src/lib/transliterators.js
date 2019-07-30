@@ -24,10 +24,23 @@ importModules();
 export const transliterators = {
    "bo":{ "bo-x-ewts": (val) => jsEWTS.toWylie(val) },
    "bo-x-ewts":{ "bo": (val) => jsEWTS.fromWylie(val) },
+   
    "sa-deva":{ "sa-x-iast": (val) => Sanscript.t(val,"devanagari","iast") },
    "sa-x-iast":{ "sa-deva": (val) => Sanscript.t(val.toLowerCase(),"iast","devanagari") },
-   "zh-hant":{ "zh-latn-pinyin" : (val) => pinyin4js.convertToPinyinString(val, ' ', pinyin4js.WITH_TONE_MARK) },
-   "zh-hans":{ "zh-latn-pinyin" : (val) => pinyin4js.convertToPinyinString(val, ' ', pinyin4js.WITH_TONE_MARK) },
+   
+   "zh-[Hh]an[st]":{ "zh-latn-pinyin" : (val) => pinyin4js.convertToPinyinString(val, ' ', pinyin4js.WITH_TONE_MARK) },
+
+   "(.*?)-[Tt]ibt":{ "(.*?)-x-ewts": (val) => jsEWTS.toWylie(val) },
+   "(.*?)-x-ewts" :{ "(.*?)-Tibt"  : (val) => jsEWTS.fromWylie(val) },
+}
+
+export function translitHelper(src,dst) {
+   if(transliterators[src] && transliterators[src][dst]) return transliterators[src][dst];
+   else for(let k of Object.keys(transliterators)) { 
+      if(src.match(new RegExp("^"+k+"$"))) for(let v of Object.keys(transliterators[k])) {
+         if(dst.match(new RegExp("^"+v+"$"))) return transliterators[k][v]
+      }  
+   }
 }
 
 export function extendedPresets(preset)
@@ -39,6 +52,8 @@ export function extendedPresets(preset)
       .reduce( (acc,k) => [...acc,...(k.length == 1?k:[k])],[])
       */
 
+   // v2
+   /*
    let extPreset = { flat:[], translit:{} }
    for(let k of preset) {
       extPreset.flat.push(k)
@@ -46,6 +61,32 @@ export function extendedPresets(preset)
          if(transliterators[t][k]) {
             extPreset.flat.push(t)
             extPreset.translit[t] = k
+         }
+      }
+   }
+   */
+
+   // v3
+
+   let extPreset = { flat:[], translit:{} }
+   for(let lg of preset) {
+      //console.log("lg",lg) 
+      extPreset.flat.push(lg)
+      for(let src of Object.keys(transliterators)) {
+         //console.log("  src",src)
+         for(let dst of Object.keys(transliterators[src])) {
+            //console.log("    dst",dst)
+            let regexp 
+            if(regexp = lg.match(new RegExp("^"+dst+"$"))) {
+               //console.log("rx",regexp)
+               if(src.indexOf("(.*?)") !== -1) src = src.replace(/\(([^)]+)\)/,regexp[1])
+               if(dst.indexOf("(.*?)") !== -1) dst = dst.replace(/\(([^)]+)\)/,regexp[1])
+
+               extPreset.flat.push(src)
+               extPreset.translit[src] = dst
+              
+               //console.log("eP!",extPreset)
+            }
          }
       }
    }
@@ -59,7 +100,9 @@ export function sortLangScriptLabels(data,preset,translit)
 {
    if(translit == undefined) translit={}
    if(!Array.isArray(data)) data = [ data ]
+   
    //console.log("sort",preset,translit,data)
+
    let data_ = data.map(e => {
       let k = e["lang"]
       if(!k) k = e["xml:lang"]
@@ -69,18 +112,31 @@ export function sortLangScriptLabels(data,preset,translit)
       if(!v) v = e["@value"]
       if(!v) v = ""
       let i = preset.indexOf(k)
-      if(i === -1) i = preset.length
-      //console.log("k v",k,v,translit[k],e,transliterators)
+      
+      let regexp ;
+      if(i === -1) { 
+         for(let x in preset) {
+            if(regexp = k.match(new RegExp("^"+preset[x]+"$"))) {               
+               i = x ; 
+               k = preset[x]
+               break ; 
+            }
+         }
+         if(i === -1) i = preset.length ;
+      }      
+
+      //console.log("k v",k,v,translit[k],e) //,transliterators)
+
       let tLit
       if(translit[k]) {
          tLit = {} ;
          let val = "@value", lan = "@language"
          if(!e["@value"]) {  val = "value" ; lan = "lang" ; tLit["type"] = "literal" ; }
-         tLit[val] = transliterators[k][translit[k]](v)
+         tLit[val] = translitHelper(k,translit[k])(v)
          tLit[lan] = translit[k]
       }
 
-      //console.log("tLit",tLit)
+      //console.log("tLit",tLit,i)
 
       return {e,tLit,i}
    })
