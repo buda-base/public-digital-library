@@ -870,7 +870,9 @@ else {
    else {
 
       if(datatype.indexOf("Person") !== -1) {
-         store.dispatch(dataActions.foundFacetInfo(keyword,language,datatype,{"gender":metadata }))
+
+         addMeta(keyword,language,data,"Person",null,false);
+         //store.dispatch(dataActions.foundFacetInfo(keyword,language,datatype,{"gender":metadata }))
          //store.dispatch(dataActions.foundDatatypes(keyword,language,{ metadata:{ [bdo+"Person"]:data.numResults } } ));
       }
       else if(datatype.indexOf("Work") !== -1 || datatype.indexOf("Etext") !== -1) {

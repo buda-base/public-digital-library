@@ -1093,7 +1093,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          let kZ = Object.keys(t)
          let kZsub = Object.keys(t[kZ[0]])
 
-         let labels = this.props.ontology[kZ[0]]
+         let labels = this.props.dictionary[kZ[0]]
          if(labels && labels[rdfs+"label"]) labels = labels[rdfs+"label"]
          else if(labels && labels[skos+"prefLabel"]) labels = labels[skos+"prefLabel"]
          if(!labels) labels = []
@@ -2453,7 +2453,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                               else jlabel = this.pretty(jpre)
                            }
                            // need to fix this after info is not in ontology anymore... make tree from relation/langScript 
-                           if(["tree","relation" /*,"langScript"*/].indexOf(j) !== -1) {
+                           if(["tree","relation","langScript"].indexOf(j) !== -1) {
 
                               //console.log("widgeTree",j,jpre,meta[j],counts["datatype"],this.state.filters.datatype[0])
 
@@ -2487,7 +2487,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                                     change = false ;
                                     for(let i in tmProps) { // try each one
                                        let k = tmProps[i]
-                                       let p = this.props.ontology[k]
+                                       let p = this.props.dictionary[k]
 
                                        //console.log("p",k,p)
 
@@ -2520,7 +2520,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                                        //console.log("!no change!")
                                        for(let i in tmProps) {
                                           let k = tmProps[i]
-                                          let p = this.props.ontology[k]
+                                          let p = this.props.dictionary[k]
                                           // is it a root property ?
                                           //console.log("k?",k,p)
                                           if(p && p[bdo+"taxSubClassOf"] && p[bdo+"taxSubClassOf"].filter(q => tmProps.filter(r => r == q.value).length != 0).length == 0)
@@ -2590,7 +2590,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                                        }
                                        else label = this.pretty(i)
 
-                                       //console.log("label",i,label)
+                                       //console.log("label",i,j,jpre,label,meta)
 
                                        let checked = this.state.filters.facets && this.state.filters.facets[jpre]
                                        if(!checked) {
