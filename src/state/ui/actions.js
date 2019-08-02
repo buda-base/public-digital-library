@@ -70,6 +70,16 @@ export const loadingGallery = (manifest: string): Action => {
 }
 
 
+TYPES.updateFacets = 'UPDATE_FACETS';
+export const updateFacets = (facets: {[string]:string []}, meta:{[string]:{}}, cfg:{[string]:string}): Action => {
+   return {
+      type: TYPES.updateFacets,
+      payload: facets,
+      meta:{facets:meta,config:cfg}
+   }
+}
+
+
 export type LoadingAction = {
     type: string,
     payload: {

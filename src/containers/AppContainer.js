@@ -81,6 +81,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       },
       onToggleLanguagePanel:() => {
          dispatch(ui.toggleLanguagePanel());
+      },
+      onUpdateFacets:(f:{[string]:string[]},m:{[string]:{}},cfg:{[string]:string})=> {
+         dispatch(ui.updateFacets(f,m,cfg));
       }
    }
 }

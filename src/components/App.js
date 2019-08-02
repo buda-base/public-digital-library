@@ -275,6 +275,7 @@ type Props = {
    onCheckDatatype:(t:string,k:string,lg:string)=>void,
    onGetFacetInfo:(k:string,lg:string,f:string)=>void,
    onCheckFacet:(k:string,lg:string,f:{[string]:string})=> void,
+   onUpdateFacets:(f:{[string]:string[],m:{[string]:{}}},cfg:{[string]:string})=> void,
    onGetResource:(iri:string)=>void,
    onSetPrefLang:(lg:string)=>void,
    onToggleLanguagePanel:()=>void
@@ -747,15 +748,22 @@ class App extends Component<Props,State> {
       console.log("checkF",prop,lab,val,newF)
 
       state = { ...state, paginate:{index:0,pages:[0],n:[0]}, repage: true }
+      
 
-      if(val)
+      if(val || propSet)
       {
-         state = {  ...state, filters: {  ...state.filters, facets: { ...state.filters.facets, ...newF } } }
+         let facets = { ...state.filters.facets, ...newF }
+         state = {  ...state, filters: {  ...state.filters, facets } }
+
+         if(this.state.filters.datatype && this.state.filters.datatype.indexOf("Any") === -1 && this.props.searches && this.props.searches[this.state.filters.datatype[0]])          
+            this.props.onUpdateFacets(facets,this.props.searches[this.state.filters.datatype[0]][this.props.keyword+"@"+this.props.language].metadata,this.props.config.facets[this.state.filters.datatype[0]]);
       }
+      /*
       else if(propSet)
       {
          state = {  ...state, filters: {  ...state.filters, facets: { ...state.filters.facets, ...newF } } }
       }
+      */
 
       this.setState( state )
    }
@@ -1266,7 +1274,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
          }
 
-
+;
          //console.log("counts",counts,types)
 
       }
@@ -2491,8 +2499,21 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
                                        //console.log("p",k,p)
 
+                                       /* // not really useful, better change bdr:BoTibt label to "Tibetan in Tibetan script" (see bdr:EnLatn)
+                                       let isSubClassOfASubClassOfLangScript ;
+                                       if(p && p[rdfs+"subClassOf"]) for(let q of p[rdfs+"subClassOf"]) {
+                                          q = this.props.dictionary[q.value]
+                                          if(q && q[rdfs+"subClassOf"] && q[rdfs+"subClassOf"].filter(e => e.value === bdo+"LangScript").length) {
+                                             isSubClassOfASubClassOfLangScript = true ;
+                                             break ;
+                                          }
+                                       }
+                                       */
+
                                        if(!p || (!p[rdfs+"subPropertyOf"]
-                                          && (!p[rdfs+"subClassOf"] || p[rdfs+"subClassOf"].filter(e => e.value == bdo+"Event").length != 0 || p[rdfs+"subClassOf"].filter(e => e.value == bdo+"LangScript").length != 0 )
+                                          && (!p[rdfs+"subClassOf"] || p[rdfs+"subClassOf"].filter(e => e.value == bdo+"Event").length != 0  || p[rdfs+"subClassOf"].filter(e => e.value == bdo+"LangScript").length != 0 
+                                                                    //|| isSubClassOfASubClassOfLangScript 
+                                          )
                                           && (!p[bdo+"taxSubClassOf"] || p[bdo+"taxSubClassOf"].filter(e => e.value == bdr+"LanguageTaxonomy").length != 0 ) ) ) // is it a root property ?
                                        {
                                           //console.log("root",k,p)

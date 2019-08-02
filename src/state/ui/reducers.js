@@ -14,7 +14,8 @@ export type UIState = {
    rightPanel?:boolean,
    langPreset?:string[],
    langIndex?:number,
-   collapse:{[string]:boolean}
+   collapse:{[string]:boolean},
+   metadata:{[string]:{}},
 }
 
 const DEFAULT_STATE: UIState = {
@@ -100,6 +101,54 @@ export const loading = (state: UIState, action: actions.LoadingAction) => {
     }
 }
 reducers[actions.TYPES.loading] = loading;
+
+export const updateFacets = (state: UIState, action: actions.LoadingAction) => {
+
+    let update = {}
+    let facets = Object.keys(action.meta.facets).map(k => {
+        let prop = action.meta.config[k]
+        if(k != "tree") {
+            update[k] = {}
+            console.log("k",k)
+            let meta = action.meta.facets[k]
+            for(let q of Object.keys(meta)) {
+                if(q !== "Any") {
+                    update[k][q] = { n:action.meta.facets[k][q].n, elem:action.meta.facets[k][q].elem, i:0}
+                    console.log("q",q,meta[q])
+                    if(meta[q].elem) for(let e of meta[q].elem) {
+                        let flat = {}
+                        for(let f of e)  {
+                            let val = flat[f.type]
+                            if(!val) val = []
+                            val.push(f.value)
+                            flat[f.type] = val 
+                        }
+                        //console.log("f",flat)
+                        let hasAll = true
+                        for(let p of Object.keys(action.payload)) {
+                            if(prop !== p) {
+                                if(!flat[p] || flat[p].length !== 1 || action.payload.length !== 1 || action.payload[0] !== flat[p][0])
+                                {
+                                    //console.log("p",p,flat[p])
+                                    hasAll = false ;
+                                    break ;
+                                }
+                            }
+                        }
+                        if(hasAll) update[k][q].i ++ ;
+                    }
+                }
+            }
+            console.log("uF",update[k])
+        }
+    })
+
+    return {
+        ...state,
+        //loading: action.payload
+    }
+}
+reducers[actions.TYPES.updateFacets] = updateFacets;
 
 
 // UI Reducer

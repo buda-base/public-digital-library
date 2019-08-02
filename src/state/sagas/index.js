@@ -618,11 +618,13 @@ function getData(result,inMeta,outMeta)  {
    {
       data.works = { ...data.publishedworks, ...data.works }
       delete data.publishedworks
-      if(metadata[bdo+"Work"] && metadata[bdo+"PublishedWork"]) {
+      if(metadata[bdo+"PublishedWork"]) {
+         if(!metadata[bdo+"Work"]) metadata[bdo+"Work"] = 0
          metadata[bdo+"Work"] += metadata[bdo+"PublishedWork"]
          delete metadata[bdo+"PublishedWork"]
       }
-      else if(metadata["work"] && metadata["publishedwork"]) {
+      else if(metadata["publishedwork"]) {
+         if(!metadata["work"]) metadata["work"] = 0 
          metadata["work"] += metadata["publishedwork"]
          delete metadata["publishedwork"]
       }
