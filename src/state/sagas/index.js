@@ -539,23 +539,26 @@ async function getManifest(url,iri) {
       if(manif.sequences && manif.sequences[0] && manif.sequences[0].canvases) {
          if(manif.sequences[0].canvases[0] && manif.sequences[0].canvases[0].images[0] &&
             manif.sequences[0].canvases[0].images[0].resource["@id"])
-            {
-               let imageIndex = 0
-               if (image.match(/archivelab[.]org.*rashodgson13[$]0[/]full/))
-                  imageIndex = 1
+         {
+            let imageres = manif.sequences[0].canvases[0].images[0].resource
+            //console.log("image",imageres )
 
-               let imageres = manif.sequences[0].canvases[imageIndex].images[0].resource
-
-               let canvasID = manif.sequences[0].canvases[imageIndex]["@id"]
-
-               let image = getiiifthumbnailurl(imageres)
-
-               let test = await api.getURLContents(image,null,null,null,true)
-               //console.log("img",test)
-               //let imgData = btoa(String.fromCharCode(...new Uint8Array(test)));
-               store.dispatch(dataActions.firstImage(image,iri,canvasID,collecManif,manifests)) //,imgData))
+            let imageIndex = 0
+            if (imageres && imageres["@id"] && imageres["@id"].match(/archivelab[.]org.*rashodgson13[$]0[/]full/)) {
+               imageIndex = 1
+               imageres = manif.sequences[0].canvases[imageIndex].images[0].resource
             }
+
+            let canvasID = manif.sequences[0].canvases[imageIndex]["@id"]
+
+            let image = getiiifthumbnailurl(imageres)
+
+            let test = await api.getURLContents(image,null,null,null,true)
+            //console.log("img",test)
+            //let imgData = btoa(String.fromCharCode(...new Uint8Array(test)));
+            store.dispatch(dataActions.firstImage(image,iri,canvasID,collecManif,manifests)) //,imgData))
          }
+      }
    }
    catch(e){
       console.error("ERRROR with manifest",e)
