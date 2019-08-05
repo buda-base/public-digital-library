@@ -153,7 +153,7 @@ async function hasEtextPage(manifest) {
       let IRI = manifest.replace(/^.*bdr:([^/]+).*$/,"bdr:$1")
       const bdr = "http://purl.bdrc.io/resource/"
       //let utR = ut.replace(/bdr:/,bdr)
-      let check = await window.fetch("http://purl.bdrc.io/lib/allAssocResource?R_RES="+IRI+"") ;
+      let check = await window.fetch("//purl.bdrc.io/lib/allAssocResource?R_RES="+IRI+"") ;
       
 
       let ut = await check.json()
@@ -221,7 +221,7 @@ async function hasEtextPage(manifest) {
             //console.log("loading DATA",id);
 
             for(let i = id ; i <= id+NB_PAGES-1 ; i++) etextPages[ut][i] = true ;
-            let data = await window.fetch("http://purl.bdrc.io/query/graph/ChunksByPage?R_RES="+ut+"&I_START="+id+"&I_END="+(id+NB_PAGES-1)) ;
+            let data = await window.fetch("//purl.bdrc.io/query/graph/ChunksByPage?R_RES="+ut+"&I_START="+id+"&I_END="+(id+NB_PAGES-1)) ;
             
             let json = await data.json() ;
 
@@ -725,7 +725,7 @@ export async function miradorInitView(work,lang) {
    if(work) {
       console.log("work",work)
 
-      const resData = await(await fetch("http://purl.bdrc.io/query/graph/ResInfo?I_LIM=500&R_RES="+work+"&format=jsonld")).json()
+      const resData = await(await fetch("//purl.bdrc.io/query/graph/ResInfo?I_LIM=500&R_RES="+work+"&format=jsonld")).json()
       console.log(resData)
 
       let propK ;
@@ -740,7 +740,7 @@ export async function miradorInitView(work,lang) {
 
             const item = propK["workHasItemImageAsset"]?propK["workHasItemImageAsset"]:propK["workLocation"]
 
-            let assocData = await(await fetch("http://purl.bdrc.io/query/table/IIIFView-workInfo?R_RES="+work+"&format=json")).json()
+            let assocData = await(await fetch("//purl.bdrc.io/query/table/IIIFView-workInfo?R_RES="+work+"&format=json")).json()
             if(assocData && assocData.results && assocData.results.bindings)
               assocData = assocData.results.bindings
             console.log(assocData)
@@ -754,29 +754,29 @@ export async function miradorInitView(work,lang) {
 
             if( hasParts == true || nbVol > 1 ) {
                data = [
-                  { "collectionUri" : "http://iiifpres.bdrc.io"+"/2.1.1/collection/wio:"+work, location:"" }
+                  { "collectionUri" : "//iiifpres.bdrc.io"+"/2.1.1/collection/wio:"+work, location:"" }
                ]
             }
             else {
                data = [
-                  { "manifestUri" : "http://iiifpres.bdrc.io"+"/2.1.1/wv:"+work+"/manifest", location:"" }
+                  { "manifestUri" : "//iiifpres.bdrc.io"+"/2.1.1/wv:"+work+"/manifest", location:"" }
                ]
             }
          } else if(propK["imageList"] || propK[""]) {
             data = [
-               { "manifestUri" : "http://iiifpres.bdrc.io"+"/2.1.1/v:"+work+"/manifest", location:"" }
+               { "manifestUri" : "//iiifpres.bdrc.io"+"/2.1.1/v:"+work+"/manifest", location:"" }
             ]
          } else if(propK["hasIIIFManifest"]) {
             data = [
                { "manifestUri" : propK["hasIIIFManifest"]["@id"], location:"" }
             ]
          } else if(propK["eTextInItem"]) {
-            let checkV = await (await fetch("http://purl.bdrc.io/query/graph/Etext_base?I_LIM=500&R_RES="+work)).json()
+            let checkV = await (await fetch("//purl.bdrc.io/query/graph/Etext_base?I_LIM=500&R_RES="+work)).json()
             if(checkV["@graph"]) checkV = checkV["@graph"]
             let res = checkV.filter(e => e["@id"] === work)
             if(res.length && res[0]["tmp:imageVolumeId"]) {
                data = [
-                   { "manifestUri" : "http://iiifpres.bdrc.io"+"/2.1.1/v:"+res[0]["tmp:imageVolumeId"]["@id"]+"/manifest", location:"" }
+                   { "manifestUri" : "//iiifpres.bdrc.io"+"/2.1.1/v:"+res[0]["tmp:imageVolumeId"]["@id"]+"/manifest", location:"" }
                ]
             }
 
@@ -785,7 +785,7 @@ export async function miradorInitView(work,lang) {
          }         
          else {
             data = [
-               { "collectionUri" : "http://iiifpres.bdrc.io"+"/2.1.1/collection/wio:"+work, location:"" }
+               { "collectionUri" : "//iiifpres.bdrc.io"+"/2.1.1/collection/wio:"+work, location:"" }
             ]
          }
       }
