@@ -23,7 +23,12 @@ let importModules = async () => {
 
 
 }
-if(process.env.NODE_ENV !== 'test') importModules();
+try { 
+   if(process.env.NODE_ENV !== 'test') importModules();
+}
+catch(e){
+   console.log("(not running in a node environment)")
+}
 
 
 
