@@ -485,6 +485,31 @@ async function getImageVolumeManifest(url,iri) {
    }
 }
 
+// changes the dimension of a iiif url to the specified dimension string
+function changedims(imgurl, newdimstr) {
+   let fragments = imgurl.split('/')
+   fragments[fragments.length-3] = newdimstr
+   return fragments.join('/')
+}
+
+// gets a reasonable thumbnail url from a iiif image resource
+function getiiifthumbnailurl(imgres) {
+   let origurl = imgres["@id"]
+   // for odd CUDL manifests
+   if (origurl.match(/cudl[.]lib.*jp2/)) origurl += "/full/max/0/default.jpg"
+   let h = imgres["height"]
+   let w = imgres["width"]
+   let maxh = 1000
+   let maxw = 4000
+   let resulth = 600
+   let resultw = 2000
+   if (h < maxh && w < maxw)
+      return origurl
+   if (!h || h >= maxh)
+      return changedims(origurl, resulth+",")
+   return changedims(origurl, ","+resultw)
+}
+
 async function getManifest(url,iri) {
    try {
 
@@ -493,7 +518,6 @@ async function getManifest(url,iri) {
       let collecManif
       let manif = await api.loadManifest(url);
       store.dispatch(dataActions.gotManifest(manif,iri))
-      let image,canvasID ;
       let manifests
       //collection ?
       if(!manif.sequences ) {
@@ -513,60 +537,18 @@ async function getManifest(url,iri) {
       }      
 
       if(manif.sequences && manif.sequences[0] && manif.sequences[0].canvases) {
-         let found = false ;
-         for(let i in manif.sequences[0].canvases){
-            let s = manif.sequences[0].canvases[i]
-            if(s.label === "tbrc-1") {
-               s = manif.sequences[0].canvases[2]
-               if(s && s.images && s.images[0])
-               {
-                  image = manif.sequences[0].canvases[2].images[0].resource["@id"]
-                  let h = manif.sequences[0].canvases[2].images[0].resource["height"]
-                  canvasID = manif.sequences[0].canvases[2]["@id"]
-                  if(h > 600) image = image.replace(/[/][^/]+([/]0[/][^/]+)$/,"/,600$1")
-                  found = true ;
-
-                  console.log("canvasID1",canvasID,image)
-                  if(image.match(/cudl[.]lib.*jp2/)) image += "/full/max/0/default.jpg"
-
-                  let test = await api.getURLContents(image,null,null,null,true)
-                  //let imgData = btoa(String.fromCharCode(...new Uint8Array(test)));
-                  store.dispatch(dataActions.firstImage(image,iri,canvasID,collecManif,manifests)) //,imgData))
-
-                  break ;
-
-               }
-            }
-            /*
-            if(s.label === "p. 1" && s.images && s.images[0]) {
-
-            image = s.images[0].resource["@id"]
-            console.log("image",image)
-
-            found = true ;
-
-            store.dispatch(dataActions.firstImage(image,iri))
-
-            break ;
-         }
-         */
-      }
-      if(!found) {
          if(manif.sequences[0].canvases[0] && manif.sequences[0].canvases[0].images[0] &&
-            (image = manif.sequences[0].canvases[0].images[0].resource["@id"]))
+            manif.sequences[0].canvases[0].images[0].resource["@id"])
             {
                let imageIndex = 0
-               if(image.match(/archivelab[.]org.*rashodgson13[$]0[/]full/)) {
+               if (image.match(/archivelab[.]org.*rashodgson13[$]0[/]full/))
                   imageIndex = 1
-                  image = manif.sequences[0].canvases[imageIndex].images[0].resource["@id"]
-               }
 
-               canvasID = manif.sequences[0].canvases[imageIndex]["@id"]
-               let h = manif.sequences[0].canvases[imageIndex].images[0].resource["height"]
-               if(h > 600) image = image.replace(/[/][^/]+([/]0[/][^/]+)$/,"/,600$1")
+               let imageres = manif.sequences[0].canvases[imageIndex].images[0].resource
 
-               console.log("canvasID2",canvasID,image)
-               if(image.match(/cudl[.]lib.*jp2/)) image += "/full/max/0/default.jpg"
+               let canvasID = manif.sequences[0].canvases[imageIndex]["@id"]
+
+               let image = getiiifthumbnailurl(imageres)
 
                let test = await api.getURLContents(image,null,null,null,true)
                //console.log("img",test)
@@ -574,8 +556,6 @@ async function getManifest(url,iri) {
                store.dispatch(dataActions.firstImage(image,iri,canvasID,collecManif,manifests)) //,imgData))
             }
          }
-      }
-      //console.log("here")
    }
    catch(e){
       console.error("ERRROR with manifest",e)
