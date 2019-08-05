@@ -523,7 +523,7 @@ async function getManifest(url,iri) {
                   image = manif.sequences[0].canvases[2].images[0].resource["@id"]
                   let h = manif.sequences[0].canvases[2].images[0].resource["height"]
                   canvasID = manif.sequences[0].canvases[2]["@id"]
-                  if(h > 600) image = image.replace(/(full|max)[/]0/,",600/0")
+                  if(h > 600) image = image.replace(/(full|max|(pct:100))[/]0/,",600/0")
                   found = true ;
 
                   console.log("canvasID1",canvasID,image)
@@ -563,7 +563,7 @@ async function getManifest(url,iri) {
 
                canvasID = manif.sequences[0].canvases[imageIndex]["@id"]
                let h = manif.sequences[0].canvases[imageIndex].images[0].resource["height"]
-               if(h > 600) image = image.replace(/(full|max)[/]0/,",600/0")
+               if(h > 600) image = image.replace(/(full|max|(pct:100))[/]0/,",600/0")
 
                console.log("canvasID2",canvasID,image)
                if(image.match(/cudl[.]lib.*jp2/)) image += "/full/max/0/default.jpg"
