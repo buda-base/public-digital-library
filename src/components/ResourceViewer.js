@@ -254,11 +254,11 @@ function top_left_menu(that,pdfLink,monoVol,fairUse)
           </IconButton>
        </Link>
        {
-          that.props.IRI.match(/^bdr:/) &&
-          [<a className="goBack" target="_blank" title="TTL version" rel="alternate" type="text/turtle" href={"http://purl.bdrc.io/resource/"+that.props.IRI.replace(/bdr:/,"")+".ttl"}>
+          that.props.IRI.match(/^bd[ra]:/) &&
+          [<a className="goBack" target="_blank" title="TTL version" rel="alternate" type="text/turtle" href={"http://purl.bdrc.io/"+that.props.IRI.replace(/bdr:/,"resource/").replace(/bda:/,"admindata/")+".ttl"}>
              <Button style={{marginLeft:"0px",paddingLeft:"10px",paddingRight:0}}>{I18n.t("resource.export")} ttl</Button>
           </a>,<span>&nbsp;/&nbsp;</span>,
-          <a className="goBack noML" target="_blank" title="JSON-LD version" rel="alternate" type="application/ld+json" href={"http://purl.bdrc.io/resource/"+that.props.IRI.replace(/bdr:/,"")+".jsonld"}>
+          <a className="goBack noML" target="_blank" title="JSON-LD version" rel="alternate" type="application/ld+json" href={"http://purl.bdrc.io/"+that.props.IRI.replace(/bdr:/,"resource/").replace(/bda:/,"admindata/")+".jsonld"}>
              <Button style={{paddingLeft:0,paddingRight:"10px"}}>json-ld</Button>
           </a>]
        }

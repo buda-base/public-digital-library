@@ -755,8 +755,8 @@ class App extends Component<Props,State> {
          let facets = { ...state.filters.facets, ...newF }
          state = {  ...state, filters: {  ...state.filters, facets } }
 
-         if(this.state.filters.datatype && this.state.filters.datatype.indexOf("Any") === -1 && this.props.searches && this.props.searches[this.state.filters.datatype[0]])          
-            this.props.onUpdateFacets(facets,this.props.searches[this.state.filters.datatype[0]][this.props.keyword+"@"+this.props.language].metadata,this.props.config.facets[this.state.filters.datatype[0]]);
+         //if(this.state.filters.datatype && this.state.filters.datatype.indexOf("Any") === -1 && this.props.searches && this.props.searches[this.state.filters.datatype[0]])          
+         //  this.props.onUpdateFacets(facets,this.props.searches[this.state.filters.datatype[0]][this.props.keyword+"@"+this.props.language].metadata,this.props.config.facets[this.state.filters.datatype[0]]);
       }
       /*
       else if(propSet)
