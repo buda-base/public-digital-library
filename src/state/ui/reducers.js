@@ -104,17 +104,23 @@ reducers[actions.TYPES.loading] = loading;
 
 export const updateFacets = (state: UIState, action: actions.LoadingAction) => {
 
+    let searches = {  ...state.searches    }
+    let t = action.meta.datatype
+    let key = action.meta.key
     let update = {}
     let facets = Object.keys(action.meta.facets).map(k => {
         let prop = action.meta.config[k]
-        if(k != "tree") {
+        let keys = Object.keys(action.payload)
+        if(keys.length > 0 && k != "tree" && (!action.payload[prop] || keys.length > 1)) {
             update[k] = {}
             console.log("k",k)
             let meta = action.meta.facets[k]
             for(let q of Object.keys(meta)) {
                 if(q !== "Any") {
-                    update[k][q] = { n:action.meta.facets[k][q].n, elem:action.meta.facets[k][q].elem, i:0}
+                    update[k][q] = { i:0 } //{ n:action.meta.facets[k][q].n, elem:action.meta.facets[k][q].elem, i:0}
                     console.log("q",q,meta[q])
+
+
                     if(meta[q].elem) for(let e of meta[q].elem) {
                         let flat = {}
                         for(let f of e)  {
@@ -126,8 +132,8 @@ export const updateFacets = (state: UIState, action: actions.LoadingAction) => {
                         //console.log("f",flat)
                         let hasAll = true
                         for(let p of Object.keys(action.payload)) {
-                            if(prop !== p) {
-                                if(!flat[p] || flat[p].length !== 1 || action.payload.length !== 1 || action.payload[0] !== flat[p][0])
+                            if(prop !== p && action.payload[p].indexOf("Any") === -1) {
+                                if(!flat[p] || flat[p].length !== 1 || action.payload[p].length !== 1 || action.payload[p][0] !== flat[p][0])
                                 {
                                     //console.log("p",p,flat[p])
                                     hasAll = false ;
@@ -139,13 +145,23 @@ export const updateFacets = (state: UIState, action: actions.LoadingAction) => {
                     }
                 }
             }
+            
+            update[k]["Any"] = { i:Object.keys(update[k]).reduce((acc,v)=>acc+Number(update[k][v].i),0)  }
+
+            searches[t] = {
+                ...state.searches&&state.searches[t]?state.searches[t]:{},
+                [key]: {
+                    ...state.searches&&state.searches[t]?state.searches[t][key]:{},
+                    metadata : { ...update }
+                }
+            }
             console.log("uF",update[k])
         }
     })
 
     return {
         ...state,
-        //loading: action.payload
+        metadata:{ ... update }
     }
 }
 reducers[actions.TYPES.updateFacets] = updateFacets;

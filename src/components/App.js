@@ -250,7 +250,7 @@ type Props = {
          index:number
       }
    },
-   facets:{[string]:boolean|{}},
+   facets?:{[string]:boolean|{}},
    searches:{[string]:{}},
    resources:{[string]:{}},
    hostFailure?:string,
@@ -275,7 +275,7 @@ type Props = {
    onCheckDatatype:(t:string,k:string,lg:string)=>void,
    onGetFacetInfo:(k:string,lg:string,f:string)=>void,
    onCheckFacet:(k:string,lg:string,f:{[string]:string})=> void,
-   onUpdateFacets:(f:{[string]:string[],m:{[string]:{}}},cfg:{[string]:string})=> void,
+   onUpdateFacets:(key:string,t:string,f:{[string]:string[],m:{[string]:{}}},cfg:{[string]:string})=> void,
    onGetResource:(iri:string)=>void,
    onSetPrefLang:(lg:string)=>void,
    onToggleLanguagePanel:()=>void
@@ -755,8 +755,11 @@ class App extends Component<Props,State> {
          let facets = { ...state.filters.facets, ...newF }
          state = {  ...state, filters: {  ...state.filters, facets } }
 
-         //if(this.state.filters.datatype && this.state.filters.datatype.indexOf("Any") === -1 && this.props.searches && this.props.searches[this.state.filters.datatype[0]])          
-         //  this.props.onUpdateFacets(facets,this.props.searches[this.state.filters.datatype[0]][this.props.keyword+"@"+this.props.language].metadata,this.props.config.facets[this.state.filters.datatype[0]]);
+         if(this.state.filters.datatype && this.state.filters.datatype.indexOf("Any") === -1 && this.props.searches && this.props.searches[this.state.filters.datatype[0]])          
+           this.props.onUpdateFacets(this.props.keyword+"@"+this.props.language,this.state.filters.datatype[0],Object.keys(facets).reduce((acc,f) => {
+              if(facets[f].indexOf("Any") !== -1) return acc ;
+              else return { ...acc, [f]:facets[f] }
+           },{}),this.props.searches[this.state.filters.datatype[0]][this.props.keyword+"@"+this.props.language].metadata,this.props.config.facets[this.state.filters.datatype[0]]);
       }
       /*
       else if(propSet)
@@ -2587,7 +2590,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                               meta_sort.unshift("Any")
 
 
-                              meta[j]["Any"] =  { n: /*"? / "+*/ counts["datatype"][this.state.filters.datatype[0]]}
+                              meta[j]["Any"] =  { n: counts["datatype"][this.state.filters.datatype[0]]}
 
                               return (
 
@@ -2635,7 +2638,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                                                    />
 
                                                 }
-                                                label={label+" ("+meta[j][i].n+")"}
+                                                label={label+" ("+(this.props.metadata && this.props.metadata[j] && this.props.metadata[j][i] && this.props.metadata[j][i].i !== undefined ? this.props.metadata[j][i].i + " / ":"")+meta[j][i].n+")"}
                                              />
                                           </div>
                                        )

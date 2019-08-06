@@ -37,8 +37,10 @@ const mapStateToProps = (state) => {
 
    let failures = state.data.failures ;
 
+   let metadata = state.ui.metadata
+
    let newState = { logged,config, hostFailure, searches, keyword, language,loading,datatypes,ontology,facets,
-      locale,prefLang,resources,ontoSearch,rightPanel,langPreset, langIndex, failures,dictionary }
+      locale,prefLang,resources,ontoSearch,rightPanel,langPreset, langIndex, failures,dictionary,metadata }
 
    if(!global.inTest) console.log("mS2p",state,newState)
 
@@ -82,8 +84,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       onToggleLanguagePanel:() => {
          dispatch(ui.toggleLanguagePanel());
       },
-      onUpdateFacets:(f:{[string]:string[]},m:{[string]:{}},cfg:{[string]:string})=> {
-         dispatch(ui.updateFacets(f,m,cfg));
+      onUpdateFacets:(key:string,t:string,f:{[string]:string[]},m:{[string]:{}},cfg:{[string]:string})=> {
+         dispatch(ui.updateFacets(key,t,f,m,cfg));
       }
    }
 }

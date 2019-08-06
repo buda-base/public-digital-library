@@ -71,11 +71,11 @@ export const loadingGallery = (manifest: string): Action => {
 
 
 TYPES.updateFacets = 'UPDATE_FACETS';
-export const updateFacets = (facets: {[string]:string []}, meta:{[string]:{}}, cfg:{[string]:string}): Action => {
+export const updateFacets = (key:string,datatype:string,facets: {[string]:string []}, meta:{[string]:{}}, cfg:{[string]:string}): Action => {
    return {
       type: TYPES.updateFacets,
       payload: facets,
-      meta:{facets:meta,config:cfg}
+      meta:{facets:meta,config:cfg,key,datatype}
    }
 }
 
