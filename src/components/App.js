@@ -2089,6 +2089,14 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
       return id ;
    }
 
+   subcount(u,v) 
+   {
+      if(this.props.metadata && this.props.metadata[u] && this.props.metadata[u][v] && this.props.metadata[u][v].i !== undefined)
+         return this.props.metadata[u][v].i + " / "
+      else
+         return ""
+   }
+
 
    render() {
 
@@ -2195,7 +2203,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
       )
 
 
-      let subWidget = (tree:[],jpre:string,subs:[],disable:boolean=false) => {
+      let subWidget = (tree:[],jpre:string,subs:[],disable:boolean=false,tag:string) => {
 
          if(!Array.isArray(subs)) subs = [ subs ]
 
@@ -2208,7 +2216,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          })
          subs = _.orderBy(subs,'index','desc').map(e => e.str)
 
-         //console.log("subW",tree,subs,jpre)
+         //console.log("subW",tree,subs,jpre,tag)
 
          let checkbox = subs.map(e => {
 
@@ -2298,7 +2306,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                         />
 
                      }
-                     label={label+" ("+cpt+")"}
+                     label={label+" ("+(tag?this.subcount(tag,e):"")+cpt+")"}
                   />
                   {
                      elem && elem["taxHasSubClass"] && elem["taxHasSubClass"].length > 0 &&
@@ -2312,7 +2320,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                            className={["subcollapse",this.state.collapse[e]?"open":"close"].join(" ")}
                            style={{paddingLeft:35+"px"}} // ,marginBottom:"30px"
                            >
-                              { subWidget(tree,jpre,elem["taxHasSubClass"],disable) }
+                              { subWidget(tree,jpre,elem["taxHasSubClass"],disable,tag) }
                         </Collapse>
                      ]
                   }
@@ -2570,9 +2578,9 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
                                  //console.log("inserTree",tree)
                                  tree = this.counTree(tree,meta[j],counts["datatype"][this.state.filters.datatype[0]])
-                                 //console.log("counTree",JSON.stringify(tree,null,3))
+                                 //console.log("counTree",JSON.stringify(tree,null,3),j)
 
-                                 return widget(jlabel,j,subWidget(tree,jpre,tree[0]['taxHasSubClass']));
+                                 return widget(jlabel,j,subWidget(tree,jpre,tree[0]['taxHasSubClass'],false,j));
                               }
 
                               return ;
@@ -2638,7 +2646,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                                                    />
 
                                                 }
-                                                label={label+" ("+(this.props.metadata && this.props.metadata[j] && this.props.metadata[j][i] && this.props.metadata[j][i].i !== undefined ? this.props.metadata[j][i].i + " / ":"")+meta[j][i].n+")"}
+                                                label={label+" ("+this.subcount(j,i)+meta[j][i].n+")"}
                                              />
                                           </div>
                                        )

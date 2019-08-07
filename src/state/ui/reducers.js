@@ -133,7 +133,8 @@ export const updateFacets = (state: UIState, action: actions.LoadingAction) => {
                         let hasAll = true
                         for(let p of Object.keys(action.payload)) {
                             if(prop !== p && action.payload[p].indexOf("Any") === -1) {
-                                if(!flat[p] || flat[p].length !== 1 || action.payload[p].length !== 1 || action.payload[p][0] !== flat[p][0])
+                                //if(!flat[p] || flat[p].length !== 1 || action.payload[p].length !== 1 || action.payload[p][0] !== flat[p][0])
+                                if(!flat[p] || action.payload[p].length > 1 || flat[p].indexOf(action.payload[p][0]) === -1)
                                 {
                                     //console.log("p",p,flat[p])
                                     hasAll = false ;
