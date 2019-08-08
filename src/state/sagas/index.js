@@ -199,6 +199,7 @@ else if(!iri && params && params.q) {
          dontGetDT = true
       }
       else {
+         store.dispatch(uiActions.loading(params.q, false));
          store.dispatch(dataActions.foundResults(params.q,params.lg,state.data.searches[pt][params.q+"@"+params.lg],pt))  
          if(state.data.datatypes && state.data.datatypes[params.q+"@"+params.lg])
             store.dispatch(dataActions.foundDatatypes(params.q,params.lg,state.data.datatypes[params.q+"@"+params.lg]))
@@ -210,9 +211,10 @@ else if(!iri && params && params.q) {
    {
       if(!state.data.searches || !state.data.searches[params.q+"@"+params.lg])
          store.dispatch(dataActions.startSearch(params.q,params.lg)); //,params.t.split(",")));
-      else 
+      else {
+         store.dispatch(uiActions.loading(params.q, false));
          store.dispatch(dataActions.foundResults(params.q,params.lg,state.data.searches[params.q+"@"+params.lg]))
-
+      }
       //store.dispatch(uiActions.selectType(params.t?params.t:"Any"));
    }
    /*
@@ -245,6 +247,7 @@ else if(!iri && params && params.r) {
       store.dispatch(dataActions.startSearch(params.r,"",s,t)); //,params.t.split(",")));
    }
    else {
+      store.dispatch(uiActions.loading(params.r, false));
       store.dispatch(dataActions.foundResults(params.r,"", {}, t));
    }
 }
