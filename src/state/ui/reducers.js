@@ -95,6 +95,7 @@ export const showResults = (state: UIState, action: Action) => {
 reducers[actions.TYPES.showResults] = showResults;
 
 export const loading = (state: UIState, action: actions.LoadingAction) => {
+    if(state.metadata) delete state.metadata 
     return {
         ...state,
         loading: action.payload.isLoading

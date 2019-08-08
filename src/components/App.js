@@ -1092,11 +1092,12 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
       return val;
    }
 
-   counTree(tree:{},meta:{},any:integer=0):[]
+   counTree(tree:{},meta:{},any:integer=0,tag:string):[]
    {
       //console.log("cT",tree,meta,any)
-      let ret = []
+      let ret = [], idx = 0
       let tmp = Object.keys(tree).map(k => ({[k]:tree[k]}))
+      let index = {}
       //console.log("tmp",tmp)
       while(tmp.length > 0) {
          let t = tmp[0]
@@ -1115,19 +1116,35 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
          //console.log("tmp",tmp)
 
-         let cpt,checkSub ;
-         if(meta[kZ[0]] && meta[kZ[0]].n) cpt = meta[kZ[0]].n
+         let cpt,checkSub ;         
+         if(meta[kZ[0]] && meta[kZ[0]].n) 
+            cpt = meta[kZ[0]].n
          else {
             cpt = kZsub.reduce((acc,e) => { return acc + (meta[e]&&meta[e].n?meta[e].n:0) ; },0)
             if(any && cpt > any) cpt = any ;
             checkSub = true ;
          }
 
+         let cpt_i ;
+         if(tag && this.props.metadata && this.props.metadata[tag]) {
+
+            cpt_i = this.subcount(tag,kZ[0])         
+            /*
+            kZsub.reduce((acc,e) => { return acc + (meta[e]&&meta[e].i?meta[e].i:0) ; },0)
+            if(cpt && cpt_i > cpt) cpt_i = cpt ;
+            cpt_i = cpt_i + " / "
+            */
+         }
+         
+
          //console.log("cpt",cpt)
 
          var elem = {"@id":kZ[0],"taxHasSubClass":kZsub,["tmp:count"]:cpt,"skos:prefLabel":labels}
+         if(cpt_i !== "") elem["tmp:subCount"] = cpt_i ;
          if(checkSub) elem = { ...elem, checkSub}
          ret.push(elem)
+         index[kZ[0]] = idx + 2
+         idx ++
 
          delete tmp[0]
          tmp = tmp.filter(e=> e != null);
@@ -1140,6 +1157,26 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                {"@id":"root", "taxHasSubClass":["Any"].concat(Object.keys(tree))},
                {"@id":"Any",["tmp:count"]:any,"taxHasSubClass":[]}
            ].concat(ret)
+
+      //console.log("index",index)
+
+      if(tag && this.props.metadata && this.props.metadata[tag]) {
+         let any_i = 0
+         for(let e of ret[0]["taxHasSubClass"]) {
+            if(e !== "Any") {
+               let root = ret[index[e]]
+               //console.log("root",root)
+               root["tmp:subCount"] = 0
+               for(let f of root["taxHasSubClass"]) {
+                  let i = ret[index[f]]["tmp:subCount"] 
+                  if(i) root["tmp:subCount"] += Number(i.replace(/[^0-9]/g,""))
+               }
+               any_i += root["tmp:subCount"]
+               root["tmp:subCount"] = root["tmp:subCount"] + " / "
+            }
+         }
+         ret[1]["tmp:subCount"] = any_i + " / "
+      }
 
       return ret;
    }
@@ -2234,7 +2271,9 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
             //console.log("check",e,label,elem,disable);
 
-            let cpt = tree.filter(f => f["@id"] == e)[0]["tmp:count"]
+            let cpt   = tree.filter(f => f["@id"] == e)[0]["tmp:count"]
+            let cpt_i = tree.filter(f => f["@id"] == e)[0]["tmp:subCount"]
+            if(!cpt_i) cpt_i = ""
 
             let checkable = tree.filter(f => f["@id"] == e)
             if(checkable.length > 0 && checkable[0].checkSub)
@@ -2306,7 +2345,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                         />
 
                      }
-                     label={label+" ("+(tag?this.subcount(tag,e):"")+cpt+")"}
+                     label={label+" ("+cpt_i+cpt+")"}
                   />
                   {
                      elem && elem["taxHasSubClass"] && elem["taxHasSubClass"].length > 0 &&
@@ -2577,7 +2616,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                                  while(tmProps.length > 0);
 
                                  //console.log("inserTree",tree)
-                                 tree = this.counTree(tree,meta[j],counts["datatype"][this.state.filters.datatype[0]])
+                                 tree = this.counTree(tree,meta[j],counts["datatype"][this.state.filters.datatype[0]],j)
                                  //console.log("counTree",JSON.stringify(tree,null,3),j)
 
                                  return widget(jlabel,j,subWidget(tree,jpre,tree[0]['taxHasSubClass'],false,j));
