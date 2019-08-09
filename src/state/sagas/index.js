@@ -199,8 +199,9 @@ else if(!iri && params && params.q) {
          dontGetDT = true
       }
       else {
-         store.dispatch(uiActions.loading(params.q, false));
+         store.dispatch(uiActions.loading(params.q, false));         
          store.dispatch(dataActions.foundResults(params.q,params.lg,state.data.searches[pt][params.q+"@"+params.lg],pt))  
+
          if(state.data.datatypes && state.data.datatypes[params.q+"@"+params.lg])
             store.dispatch(dataActions.foundDatatypes(params.q,params.lg,state.data.datatypes[params.q+"@"+params.lg]))
       }
@@ -248,7 +249,9 @@ else if(!iri && params && params.r) {
    }
    else {
       store.dispatch(uiActions.loading(params.r, false));
-      store.dispatch(dataActions.foundResults(params.r,"", {}, t));
+      store.dispatch(dataActions.foundResults(params.r,"", state.data.searches[params.r+"@"], params.t));
+      if(state.data.searches[params.t] && state.data.searches[params.t][params.r+"@"] && state.data.searches[params.t][params.r+"@"].metadata)
+         store.dispatch(dataActions.foundFacetInfo(params.r,"", [params.t],state.data.searches[params.t][params.r+"@"].metadata ));
    }
 }
 
