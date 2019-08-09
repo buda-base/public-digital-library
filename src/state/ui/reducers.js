@@ -121,7 +121,6 @@ export const updateFacets = (state: UIState, action: actions.LoadingAction) => {
                     update[k][q] = { i:0 } //{ n:action.meta.facets[k][q].n, elem:action.meta.facets[k][q].elem, i:0}
                     console.log("q",q,meta[q])
 
-
                     if(meta[q].elem) for(let e of meta[q].elem) {
                         let flat = {}
                         for(let f of e)  {
@@ -133,14 +132,23 @@ export const updateFacets = (state: UIState, action: actions.LoadingAction) => {
                         //console.log("f",flat)
                         let hasAll = true
                         for(let p of Object.keys(action.payload)) {
+                            
                             if(prop !== p && action.payload[p].indexOf("Any") === -1) {
-                                //if(!flat[p] || flat[p].length !== 1 || action.payload[p].length !== 1 || action.payload[p][0] !== flat[p][0])
-                                if(!flat[p] || action.payload[p].length > 1 || flat[p].indexOf(action.payload[p][0]) === -1)
-                                {
-                                    //console.log("p",p,flat[p])
-                                    hasAll = false ;
-                                    break ;
+                                
+                                for(let v of action.payload[p]) {
+                                    if(v === "unspecified") {
+                                        if(flat[p]) {
+                                            hasAll = false ;
+                                            break ;
+                                        }
+                                    }
+                                    else if(!flat[p] || flat[p].indexOf(v) === -1) 
+                                    {
+                                        hasAll = false ;
+                                        break ;
+                                    }
                                 }
+                                if(!hasAll) break ;
                             }
                         }
                         if(hasAll) update[k][q].i ++ ;

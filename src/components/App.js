@@ -1165,14 +1165,16 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          for(let e of ret[0]["taxHasSubClass"]) {
             if(e !== "Any") {
                let root = ret[index[e]]
+               /*
                //console.log("root",root)
                root["tmp:subCount"] = 0
                for(let f of root["taxHasSubClass"]) {
                   let i = ret[index[f]]["tmp:subCount"] 
                   if(i) root["tmp:subCount"] += Number(i.replace(/[^0-9]/g,""))
                }
-               any_i += root["tmp:subCount"]
-               root["tmp:subCount"] = root["tmp:subCount"] + " / "
+               */
+               any_i += Number(root["tmp:subCount"].replace(/[^0-9]/g,""))
+               root["tmp:subCount"] = root["tmp:subCount"] //+ " / "
             }
          }
          ret[1]["tmp:subCount"] = any_i + " / "
@@ -1722,9 +1724,13 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   let v = this.state.filters.facets[k]
 
                   let hasProp = []
+                  let withProp = false                   
                   for(let e of sublist[o]) {
-                     //console.log("e",e)
-                     if(e.type == k && (e.value == v || (Array.isArray(v) && v.indexOf(e.value) !== -1))) { hasProp.push(e); }
+                     //console.log("e",e,k,v)
+                     
+                     if(e.type == k) withProp = true
+
+                     if(e.type == k && (e.value == v || (Array.isArray(v) && v.indexOf(e.value) !== -1) ) ) { hasProp.push(e); }
                      else if(v.alt) for(let a of v.alt) {
                         if(e.type == a && (e.value == v.val || (Array.isArray(v.val) && (v.val.indexOf(e.value) !== -1 || v.val.indexOf("Any") !== -1)))) {
 
@@ -1733,9 +1739,14 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      }
                   }
 
-                  //console.log("k",k,v,hasProp);
 
-                  if((this.state.filters.facets[k].val || this.state.filters.facets[k].indexOf("Any") === -1) && (!hasProp || hasProp.length == 0)) {
+                  if( !withProp && ( v === "unspecified" || (Array.isArray(v) && v.indexOf("unspecified") !== -1) ) ) 
+                  {
+
+                     //console.log("k",o,sublist[o],k,v,hasProp,withProp);
+
+                  }
+                  else if( (this.state.filters.facets[k].val || this.state.filters.facets[k].indexOf("Any") === -1) && (!hasProp || hasProp.length == 0) ) {
 
                      filtered = false
 

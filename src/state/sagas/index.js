@@ -714,6 +714,7 @@ function getStats(cat:string,data:{})
       }
    }
    
+   let unspecTag = "unspecified"
 
    for(let p of Object.values(data["results"]["bindings"][cat.toLowerCase()+"s"]))
    {
@@ -733,8 +734,23 @@ function getStats(cat:string,data:{})
             stat[f][t.value].elem.push(p)
             // console.log("f+1",f,tmp,pre)
          }
+         else {
+            if(!stat[f]) stat[f] = {}
+            if(!stat[f][unspecTag]) stat[f][unspecTag] = { n:0, elem:[] }
+            let pre = stat[f][unspecTag].n
+            if(!pre) pre = 1
+            else pre ++ ;
+            stat[f][unspecTag].n = pre ;
+            stat[f][unspecTag].elem.push(p)
+         }       
       }
    }
+  
+   for(let f of keys)
+   {
+      if(Object.keys(stat[f]).length === 1 && stat[f][unspecTag]) delete stat[f] ;
+   }
+
    return stat
 }
 
