@@ -112,9 +112,10 @@ export const updateFacets = (state: UIState, action: actions.LoadingAction) => {
     let facets = Object.keys(action.meta.facets).map(k => {
         let prop = action.meta.config[k]
         let keys = Object.keys(action.payload)
-        if(keys.length > 0 && k != "tree" && (!action.payload[prop] || keys.length > 1)) {
+        if(keys.length > 0 && (!action.payload[prop] || keys.length > 1)) {
             update[k] = {}
             console.log("k",k)
+
             let meta = action.meta.facets[k]
             for(let q of Object.keys(meta)) {
                 if(q !== "Any") {
@@ -132,20 +133,39 @@ export const updateFacets = (state: UIState, action: actions.LoadingAction) => {
                         //console.log("f",flat)
                         let hasAll = true
                         for(let p of Object.keys(action.payload)) {
-                            
-                            if(prop !== p && action.payload[p].indexOf("Any") === -1) {
-                                
-                                for(let v of action.payload[p]) {
-                                    if(v === "unspecified") {
-                                        if(flat[p]) {
+                            let val = action.payload[p]
+                            if(val.val) val = val.val 
+                            if(prop !== p && val.indexOf("Any") === -1) {
+                                if(!action.payload[p].alt)  { 
+                                    for(let v of val) {
+                                        if(v === "unspecified") {
+                                            if(flat[p]) {
+                                                hasAll = false ;
+                                                break ;
+                                            }
+                                        }
+                                        else if(!flat[p] || flat[p].indexOf(v) === -1) 
+                                        {
                                             hasAll = false ;
                                             break ;
                                         }
                                     }
-                                    else if(!flat[p] || flat[p].indexOf(v) === -1) 
-                                    {
-                                        hasAll = false ;
-                                        break ;
+                                }
+                                else {
+                                    let alt = action.payload[p].alt
+                                    hasAll = false
+                                    //console.log("alt",alt,val,flat)
+                                    for(let v of val) {
+                                        if(v === "unspecified") {
+                                            let hasAlt = false 
+                                            for(let a of alt) if(flat[a]) { hasAlt = true ; break }
+                                            if(hasAlt) { hasAll = false ;  break ; }
+                                        }
+                                        else {
+                                            let hasAlt = false 
+                                            for(let a of alt) if(flat[a] && flat[a].indexOf(v) !== -1) { hasAlt = true ; break }
+                                            if(hasAlt) { hasAll = true ;  break ; }                                        
+                                        }
                                     }
                                 }
                                 if(!hasAll) break ;

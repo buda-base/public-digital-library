@@ -757,7 +757,7 @@ class App extends Component<Props,State> {
 
          if(this.state.filters.datatype && this.state.filters.datatype.indexOf("Any") === -1 && this.props.searches && this.props.searches[this.state.filters.datatype[0]])          
            this.props.onUpdateFacets(this.props.keyword+"@"+this.props.language,this.state.filters.datatype[0],Object.keys(facets).reduce((acc,f) => {
-              if(facets[f].indexOf("Any") !== -1) return acc ;
+              if(facets[f].indexOf && facets[f].indexOf("Any") !== -1) return acc ;
               else return { ...acc, [f]:facets[f] }
            },{}),this.props.searches[this.state.filters.datatype[0]][this.props.keyword+"@"+this.props.language].metadata,this.props.config.facets[this.state.filters.datatype[0]]);
       }
