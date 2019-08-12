@@ -2138,7 +2138,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
    }
 
    subcount(u,v) 
-   {
+   {     
       if(this.props.metadata && this.props.metadata[u] && this.props.metadata[u][v] && this.props.metadata[u][v].i !== undefined)
          return this.props.metadata[u][v].i + " / "
       else
@@ -2284,7 +2284,14 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
             let cpt   = tree.filter(f => f["@id"] == e)[0]["tmp:count"]
             let cpt_i = tree.filter(f => f["@id"] == e)[0]["tmp:subCount"]
-            if(!cpt_i) cpt_i = ""
+            if(!cpt_i) {                
+               let id = elem["@id"].replace(/bdr:/,bdr)
+               //console.log("@id",id)
+               if(this.props.metadata && this.props.metadata[tag] && this.props.metadata[tag][id]) { 
+                  cpt_i = this.props.metadata[tag][id].i + " / "
+               }
+               else cpt_i = ""
+            }
 
             let checkable = tree.filter(f => f["@id"] == e)
             if(checkable.length > 0 && checkable[0].checkSub)
@@ -2544,7 +2551,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                                           ["tmp:count"]:counts["datatype"][this.state.filters.datatype[0]]})
                                     }
 
-                                    return widget(jlabel,j,subWidget(tree,jpre,tree[0]['taxHasSubClass'],true));
+                                    return widget(jlabel,j,subWidget(tree,jpre,tree[0]['taxHasSubClass'],true,j));
                                  }
                               }
                               else { //sort according to ontology properties hierarchy

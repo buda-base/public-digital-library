@@ -117,12 +117,14 @@ export const updateFacets = (state: UIState, action: actions.LoadingAction) => {
             console.log("k",k)
 
             let meta = action.meta.facets[k]
-            for(let q of Object.keys(meta)) {
+            let props = Object.keys(meta)
+            if(k === "tree") props = meta["@graph"].map(i => i["@id"].replace(/bdr:/,"http://purl.bdrc.io/resource/"))
+            for(let q of props) {
                 if(q !== "Any") {
                     update[k][q] = { i:0 } //{ n:action.meta.facets[k][q].n, elem:action.meta.facets[k][q].elem, i:0}
                     console.log("q",q,meta[q])
 
-                    if(meta[q].elem) for(let e of meta[q].elem) {
+                    if(meta[q] && meta[q].elem) for(let e of meta[q].elem) {
                         let flat = {}
                         for(let f of e)  {
                             let val = flat[f.type]
