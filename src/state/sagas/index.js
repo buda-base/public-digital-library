@@ -20,6 +20,8 @@ const bda  = "http://purl.bdrc.io/admindata/"
 const bdo  = "http://purl.bdrc.io/ontology/core/";
 const bdr  = "http://purl.bdrc.io/resource/";
 const skos = "http://www.w3.org/2004/02/skos/core#";
+const tmp = "http://purl.bdrc.io/ontology/tmp/" ;
+const _tmp = tmp ;
 
 let IIIFurl = "http://iiif.bdrc.io" ;
 
@@ -716,13 +718,17 @@ function getStats(cat:string,data:{})
    
    let unspecTag = "unspecified"
 
-   for(let p of Object.values(data["results"]["bindings"][cat.toLowerCase()+"s"]))
+   for(let _p of Object.keys(data["results"]["bindings"][cat.toLowerCase()+"s"]))   
    {
+      let p = data["results"]["bindings"][cat.toLowerCase()+"s"][_p]
       //console.log("p",p);
       for(let f of keys)
       {
          //console.log("f",f);
-         let tmp = p.filter((e) => (e.type == config.facets[cat][f]))
+         let genre = [bdo+"workGenre", bdo + "workIsAbout", _tmp + "etextAbout" ] 
+         let tmp ;
+         if(f !== "tree") tmp = p.filter((e) => (e.type == config.facets[cat][f]))
+         else tmp = p.filter((e) => (genre.indexOf(e.type) !== -1))
          if(tmp.length > 0) for(let t of tmp)
          {
             if(!stat[f]) stat[f] = {}
@@ -732,7 +738,7 @@ function getStats(cat:string,data:{})
             else pre ++ ;
             stat[f][t.value].n = pre ;
             stat[f][t.value].elem.push(p)
-            // console.log("f+1",f,tmp,pre)
+            //console.log("f+1",f,tmp,pre)
          }
          else {
             if(!stat[f]) stat[f] = {}
@@ -742,13 +748,17 @@ function getStats(cat:string,data:{})
             else pre ++ ;
             stat[f][unspecTag].n = pre ;
             stat[f][unspecTag].elem.push(p)
-         }       
+            //if(f==="tree") console.log("unspec+1",_p,p,f,tmp,pre)
+         }      
+         
       }
    }
   
+   //console.log("f unspec",stat["tree"][unspecTag]); 
+
    for(let f of keys)
    {
-      if(Object.keys(stat[f]).length === 1 && stat[f][unspecTag]) delete stat[f] ;
+      if(stat[f] && Object.keys(stat[f]).length === 1 && stat[f][unspecTag]) delete stat[f] ;
    }
 
    return stat
@@ -762,6 +772,10 @@ function addMeta(keyword:string,language:string,data:{},t:string,tree:{},found:b
 
       if(tree)
       {
+         if(stat["tree"]["unspecified"]) {
+            tree["@graph"][0]["taxHasSubClass"].push("unspecified")
+            tree["@graph"].push({"@id":"unspecified","taxHasSubClass":[],"tmp:count":stat["tree"]["unspecified"].n})
+         }
          stat = { ...stat, tree }
       }
 

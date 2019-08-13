@@ -758,6 +758,7 @@ class App extends Component<Props,State> {
          if(this.state.filters.datatype && this.state.filters.datatype.indexOf("Any") === -1 && this.props.searches && this.props.searches[this.state.filters.datatype[0]])          
            this.props.onUpdateFacets(this.props.keyword+"@"+this.props.language,this.state.filters.datatype[0],Object.keys(facets).reduce((acc,f) => {
               if(facets[f].indexOf && facets[f].indexOf("Any") !== -1) return acc ;
+              else if(facets[f].val && facets[f].val.indexOf("Any") !== -1) return acc ;
               else return { ...acc, [f]:facets[f] }
            },{}),this.props.searches[this.state.filters.datatype[0]][this.props.keyword+"@"+this.props.language].metadata,this.props.config.facets[this.state.filters.datatype[0]]);
       }
@@ -1559,7 +1560,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             }
             absi ++ ;
 
-            //console.log("cpt",absi,cpt,n,begin,findFirst,findNext) //,o,sublist[o])
+            //console.log("cpt",absi,cpt,n,begin,findFirst,findNext,o) //,sublist[o])
 
             if(absi < begin && findFirst) { cpt++ ; m++ ;  continue; }
             else if(cpt == begin && !findNext && findFirst) {
@@ -1723,39 +1724,40 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
                   let v = this.state.filters.facets[k]
 
-                  let hasProp = []
-                  let withProp = false                   
+                  //console.log("k",k,v)
+
+                  let withProp = false, hasProp = false                   
                   for(let e of sublist[o]) {
-                     //console.log("e",e,k,v)
-                     
-                     if(e.type == k) withProp = true
 
-                     if(e.type == k && (e.value == v || (Array.isArray(v) && v.indexOf(e.value) !== -1) ) ) { hasProp.push(e); }
-                     else if(v.alt) for(let a of v.alt) {
-                        if(e.type == a && (e.value == v.val || (Array.isArray(v.val) && (v.val.indexOf(e.value) !== -1 || v.val.indexOf("Any") !== -1)))) {
-
-                           hasProp.push(e);
+                     if(v.alt) { 
+                        for(let a of v.alt) {
+                           if(e.type === a) { 
+                              hasProp = hasProp || true ;
+                              //console.log("e sub",e)
+                              if(e.value === v.val || v.val.indexOf(e.value) !== -1 || v.val.indexOf("Any") !== -1)  withProp = withProp || true ;                              
+                           }
                         }
                      }
-                  }
-
-
-                  if( !withProp && ( v === "unspecified" || (Array.isArray(v) && v.indexOf("unspecified") !== -1) ) ) 
-                  {
-
-                     //console.log("k",o,sublist[o],k,v,hasProp,withProp);
+                     else if(e.type === k) {
+                        hasProp = true ;
+                        if(e.value === v || v.indexOf(e.value) !== -1 || v.indexOf("Any") !== -1 )  withProp = true ;                                                                        
+                     }
 
                   }
-                  else if( (this.state.filters.facets[k].val || this.state.filters.facets[k].indexOf("Any") === -1) && (!hasProp || hasProp.length == 0) ) {
 
-                     filtered = false
+                  // bug  http://purl.bdrc.io/resource/W1KG4884_0761 / tree / unspecified 
 
+                  if((v.alt && v.val.indexOf("unspecified") !== -1) || (!v.alt && v.indexOf("unspecified") !== -1)) {
+                     if(hasProp) { 
+                        filtered = false 
+                     }
+                     //else console.log("filt unspec",o)
                   }
-                  else {
-
-                     //console.log("is good",cpt,n,r.s.value,r)
-
+                  else if((v.alt && v.val.indexOf("Any") === -1) || (!v.alt && v.indexOf("Any") === -1)) {
+                     if(!withProp) filtered = false
                   }
+
+                  //console.log("hP",o, hasProp,withProp,filtered,k,v,sublist[o])
                }
 
                //console.log("typ",typ,t,filtered)
