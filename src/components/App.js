@@ -1745,8 +1745,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
                   }
 
-                  // bug  http://purl.bdrc.io/resource/W1KG4884_0761 / tree / unspecified 
-
+                 
                   if((v.alt && v.val.indexOf("unspecified") !== -1) || (!v.alt && v.indexOf("unspecified") !== -1)) {
                      if(hasProp) { 
                         filtered = false 

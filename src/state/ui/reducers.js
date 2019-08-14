@@ -118,7 +118,10 @@ export const updateFacets = (state: UIState, action: actions.LoadingAction) => {
 
             let meta = action.meta.facets[k]
             let props = Object.keys(meta)
-            if(k === "tree") props = meta["@graph"].map(i => i["@id"].replace(/bdr:/,"http://purl.bdrc.io/resource/"))
+            if(k === "tree") { 
+                props = meta["@graph"].map(i => i["@id"].replace(/bdr:/,"http://purl.bdrc.io/resource/"))
+                meta = meta["@metadata"]
+            }
             for(let q of props) {
                 if(q !== "Any") {
                     update[k][q] = { i:0 } //{ n:action.meta.facets[k][q].n, elem:action.meta.facets[k][q].elem, i:0}
@@ -133,47 +136,46 @@ export const updateFacets = (state: UIState, action: actions.LoadingAction) => {
                             flat[f.type] = val 
                         }
                         //console.log("f",flat)
-                        let hasAll = true
+                        let hasAllProp = true
                         for(let p of Object.keys(action.payload)) {
                             let val = action.payload[p]
                             if(val.val) val = val.val 
                             if(prop !== p && val.indexOf("Any") === -1) {
                                 if(!action.payload[p].alt)  { 
+                                    let hasAnyVal = false ;
                                     for(let v of val) {
                                         if(v === "unspecified") {
-                                            if(flat[p]) {
-                                                hasAll = false ;
-                                                break ;
-                                            }
+                                            if(flat[p]) { hasAllProp = false ; break ; }
+                                            else { hasAnyVal = true ; break; }
                                         }
-                                        else if(!flat[p] || flat[p].indexOf(v) === -1) 
-                                        {
-                                            hasAll = false ;
-                                            break ;
+                                        else {
+                                            if(flat[p] && flat[p].indexOf(v) !== -1) {  hasAnyVal = true ; break ;  }
                                         }
                                     }
+                                    if(!hasAnyVal) { hasAllProp = false ; break ; }
                                 }
                                 else {
                                     let alt = action.payload[p].alt
-                                    hasAll = false
-                                    //console.log("alt",alt,val,flat)
+                                    let hasAnyVal = false ;
                                     for(let v of val) {
                                         if(v === "unspecified") {
                                             let hasAlt = false 
-                                            for(let a of alt) if(flat[a]) { hasAlt = true ; break }
-                                            if(hasAlt) { hasAll = false ;  break ; }
+                                            for(let a of alt) if(flat[a]) { hasAlt = true ; break ;  }
+                                            if(hasAlt) { hasAllProp = false ;  break ; }
+                                            else { hasAnyVal = true ; break; }
                                         }
                                         else {
                                             let hasAlt = false 
                                             for(let a of alt) if(flat[a] && flat[a].indexOf(v) !== -1) { hasAlt = true ; break }
-                                            if(hasAlt) { hasAll = true ;  break ; }                                        
+                                            if(hasAlt) { hasAnyVal = true; break; } 
                                         }
                                     }
+                                    if(!hasAnyVal) { hasAllProp = false; break;  }
                                 }
-                                if(!hasAll) break ;
+                                if(!hasAllProp) break ;
                             }
                         }
-                        if(hasAll) update[k][q].i ++ ;
+                        if(hasAllProp) update[k][q].i ++ ;
                     }
                 }
             }

@@ -773,8 +773,15 @@ function addMeta(keyword:string,language:string,data:{},t:string,tree:{},found:b
       if(tree)
       {
          if(stat["tree"]["unspecified"]) {
+
+            let elem = data["results"]["bindings"][t.toLowerCase()+"s"]
+
+            //console.log("elem tree",elem,stat)
+
             tree["@graph"][0]["taxHasSubClass"].push("unspecified")
             tree["@graph"].push({"@id":"unspecified","taxHasSubClass":[],"tmp:count":stat["tree"]["unspecified"].n})
+         
+            tree["@metadata"] = stat.tree
          }
          stat = { ...stat, tree }
       }
