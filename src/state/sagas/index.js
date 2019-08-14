@@ -732,22 +732,22 @@ function getStats(cat:string,data:{})
          if(tmp.length > 0) for(let t of tmp)
          {
             if(!stat[f]) stat[f] = {}
-            if(!stat[f][t.value]) stat[f][t.value] = { n:0, elem:[] }
+            if(!stat[f][t.value]) stat[f][t.value] = { n:0, dict:{} }
             let pre = stat[f][t.value].n
             if(!pre) pre = 1
             else pre ++ ;
             stat[f][t.value].n = pre ;
-            stat[f][t.value].elem.push(p)
+            stat[f][t.value].dict[_p] = p
             //console.log("f+1",f,tmp,pre)
          }
          else {
             if(!stat[f]) stat[f] = {}
-            if(!stat[f][unspecTag]) stat[f][unspecTag] = { n:0, elem:[] }
+            if(!stat[f][unspecTag]) stat[f][unspecTag] = { n:0, dict:{} }
             let pre = stat[f][unspecTag].n
             if(!pre) pre = 1
             else pre ++ ;
             stat[f][unspecTag].n = pre ;
-            stat[f][unspecTag].elem.push(p)
+            stat[f][unspecTag].dict[_p] = p
             //if(f==="tree") console.log("unspec+1",_p,p,f,tmp,pre)
          }      
          
@@ -781,8 +781,8 @@ function addMeta(keyword:string,language:string,data:{},t:string,tree:{},found:b
             tree["@graph"][0]["taxHasSubClass"].push("unspecified")
             tree["@graph"].push({"@id":"unspecified","taxHasSubClass":[],"tmp:count":stat["tree"]["unspecified"].n})
          
-            tree["@metadata"] = stat.tree
          }
+         tree["@metadata"] = stat.tree
          stat = { ...stat, tree }
       }
 

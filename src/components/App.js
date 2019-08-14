@@ -1635,7 +1635,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             let hasExpr = sublist[o].filter((e) => e.type && e.type.match(/HasExpression/))
             let isExpr = sublist[o].filter((e) => e.type && e.type.match(/ExpressionOf/))
             let hasPart = sublist[o].filter((e) => e.type && e.type.match(/HasPart/))
-            let hasRoot = sublist[o].filter((e) => e.type && e.type.match(/HasRoot/))
+            let hasRoot = sublist[o].filter((e) => e.type && e.type.match(/HasRoot/) && e.value && !e.value.match(o) )
             let workLab = sublist[o].filter((e) => e.type && e.type.match(/workLabel/))
             let creator = sublist[o].filter((e) => e.type && e.type.match(/creator/))
 
@@ -2284,14 +2284,15 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             //console.log("check",e,label,elem,disable);
 
             let cpt   = tree.filter(f => f["@id"] == e)[0]["tmp:count"]
-            let cpt_i = tree.filter(f => f["@id"] == e)[0]["tmp:subCount"]
-            if(!cpt_i) {                
-               let id = elem["@id"].replace(/bdr:/,bdr)
-               //console.log("@id",id)
-               if(this.props.metadata && this.props.metadata[tag] && this.props.metadata[tag][id]) { 
-                  cpt_i = this.props.metadata[tag][id].i + " / "
-               }
-               else cpt_i = ""
+            let cpt_i                
+            let id = elem["@id"].replace(/bdr:/,bdr)
+            //console.log("@id",id)
+            if(this.props.metadata && this.props.metadata[tag] && this.props.metadata[tag][id]) { 
+               cpt_i = this.props.metadata[tag][id].i + " / "
+            }
+            else {
+               cpt_i = tree.filter(f => f["@id"] == e)[0]["tmp:subCount"]
+               if(!cpt_i) cpt_i = ""
             }
 
             let checkable = tree.filter(f => f["@id"] == e)

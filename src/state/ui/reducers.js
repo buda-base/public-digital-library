@@ -105,7 +105,6 @@ reducers[actions.TYPES.loading] = loading;
 
 export const updateFacets = (state: UIState, action: actions.LoadingAction) => {
 
-    let searches = {  ...state.searches    }
     let t = action.meta.datatype
     let key = action.meta.key
     let update = {}
@@ -114,7 +113,7 @@ export const updateFacets = (state: UIState, action: actions.LoadingAction) => {
         let keys = Object.keys(action.payload)
         if(keys.length > 0 && (!action.payload[prop] || keys.length > 1)) {
             update[k] = {}
-            console.log("k",k)
+            //console.log("k",k)
 
             let meta = action.meta.facets[k]
             let props = Object.keys(meta)
@@ -122,12 +121,16 @@ export const updateFacets = (state: UIState, action: actions.LoadingAction) => {
                 props = meta["@graph"].map(i => i["@id"].replace(/bdr:/,"http://purl.bdrc.io/resource/"))
                 meta = meta["@metadata"]
             }
+
+            let total_i = {}
+
             for(let q of props) {
                 if(q !== "Any") {
-                    update[k][q] = { i:0 } //{ n:action.meta.facets[k][q].n, elem:action.meta.facets[k][q].elem, i:0}
-                    console.log("q",q,meta[q])
+                    update[k][q] = { i:0 } 
+                    //console.log("q",q,meta[q])
 
-                    if(meta[q] && meta[q].elem) for(let e of meta[q].elem) {
+                    if(meta[q] && meta[q].dict) for(let _e of Object.keys(meta[q].dict)) {
+                        let e = meta[q].dict[_e]
                         let flat = {}
                         for(let f of e)  {
                             let val = flat[f.type]
@@ -175,20 +178,17 @@ export const updateFacets = (state: UIState, action: actions.LoadingAction) => {
                                 if(!hasAllProp) break ;
                             }
                         }
-                        if(hasAllProp) update[k][q].i ++ ;
-                    }
+                        if(hasAllProp) { 
+                            update[k][q].i ++ ;
+                            total_i[_e] = e
+                        }
+                    }                    
                 }
             }
             
-            update[k]["Any"] = { i:Object.keys(update[k]).reduce((acc,v)=>acc+Number(update[k][v].i),0)  }
+            //update[k]["Any"] = { i:0 } //Object.keys(update[k]).reduce((acc,v)=>acc+Number(update[k][v].i),0)  }            
+            update[k]["Any"] = { i:Object.keys(total_i).length  }
 
-            searches[t] = {
-                ...state.searches&&state.searches[t]?state.searches[t]:{},
-                [key]: {
-                    ...state.searches&&state.searches[t]?state.searches[t][key]:{},
-                    metadata : { ...update }
-                }
-            }
             console.log("uF",update[k])
         }
     })
