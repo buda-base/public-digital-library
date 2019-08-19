@@ -286,8 +286,18 @@ async function hasEtextPage(manifest) {
 const NB_PAGES = 10 ; 
 let etextPages = {};
 
-export async function miradorConfig(data, manifest, canvasID, useCredentials, langList)
+export async function miradorConfig(data, manifest, canvasID, useCredentials, langList, cornerButton)
 {
+   console.log("cB",cornerButton)
+
+   if(cornerButton === undefined) cornerButton = 
+   { 
+      "label": "Close Viewer",
+      "iconClass": "fa fa-times",
+      "attributes" : { onClick : "javascript:eval('window.closeViewer()')" }
+   }
+
+
    let _extendedPresets = extendedPresets
    if(!_extendedPresets) _extendedPresets = window.extendedPresets
    let _sortLangScriptLabels = sortLangScriptLabels
@@ -371,10 +381,7 @@ export async function miradorConfig(data, manifest, canvasID, useCredentials, la
              "iconClass": "fa fa-file-o",
              "attributes" : { style:"", onClick : "eval('window.setMiradorZoom()')" }
           },
-           { "label": "Close Mirador",
-             "iconClass": "fa fa-times",
-             "attributes" : { onClick : "javascript:eval('window.closeViewer()')" }
-            }
+            cornerButton
          ]
       }
    }
@@ -795,7 +802,12 @@ export async function miradorInitView(work,lang) {
    if(manif && manif.manifestUri) manif = manif.manifestUri
    console.log("data",data,manif)
 
-   let config = await miradorConfig(data,manif,null,null,lang);
+   let config = await miradorConfig(data,manif,null,null,lang,
+   { 
+      "label": "Full Screen",
+      "iconClass": "fa fa-lg fa-fw fa-expand fs",
+      "attributes" : { onClick : "javascript:eval('if(window.Mirador.fullscreenElement()) { window.Mirador.exitFullscreen(); $(\".user-buttons .fs\").addClass(\"fs-expand\").removeClass(\"fa-compress\"); } else { window.Mirador.enterFullscreen($(\".mirador-container\")[0]) ; $(\".user-buttons .fs\").removeClass(\"fs-expand\").addClass(\"fa-compress\"); }')" }
+   });
 
    let initTimer = setInterval( ((cfg) => () => {
       console.log("init?",cfg,window.Mirador)

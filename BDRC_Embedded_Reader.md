@@ -8,7 +8,7 @@ You can embed a viewer by using an `iframe` element pointing to `http://library.
 
 For example:
 ```html
-<iframe src="http://library.bdrc.io/scripts/embed-iframe.html?work=bdr:W22084&origin=website.com&lang=bo-x-ewts,sa-x-iast,zh-latn-pinyin"></iframe>
+<iframe allowfullscreen src="http://library.bdrc.io/scripts/embed-iframe.html?work=bdr:W22084&origin=website.com&lang=bo-x-ewts,sa-x-iast,zh-latn-pinyin"></iframe>
 ```
 
 **Note**: `bo` (Tibetan in Unicode) `sa-deva` (Sanskrit in Devanagari) and `zh-hant` (Traditional Chinese) can respectively and automatically be transliterated into `bo-x-ewts` (Tibetan in Latin/EWTS) `sa-x-iast` (Sanskrit in Latin/IAST) `zh-latn-pinyin` (Chinese in Latin/Pinyin) and reciprocally -- Chinese excepted.
@@ -28,6 +28,7 @@ The following code opens a static, fullpage viewer:
   </head>
   <body style="margin:0px">
     <iframe
+      allowfullscreen
       style="position:fixed;width:100%;height:100%;border:none;"
       src="http://library.bdrc.io/scripts/embed-iframe.html?work=bdr:W22084&origin=website.com">
     </iframe>
@@ -52,7 +53,7 @@ You can also use button(s) to show the viewer only when needed:
     </style>
   </head>
   <body>
-    <div id="container" class="hidden"><iframe class="hidden"></iframe></div>
+    <div id="container" class="hidden"><iframe allowfullscreen class="hidden"></iframe></div>
     <button class="open" data-rid="bdr:W22084">View Collection A</button>
     <button class="open" data-rid="bdr:W0CJ001">View Collection B</button>
     <script>
