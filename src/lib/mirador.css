@@ -4,7 +4,7 @@
 .jstree-default .jstree-anchor {  line-height: 42px; height: 42px;  font-size: 20px; }
 .jstree-default .jstree-icon:empty { line-height: 42px;  padding-right: 4px; }
 .jstree-icon.jstree-ocl { vertical-align: -16px; }
-#collection-tree.jstree { min-width: 25%;  max-width: 50%; width:auto; padding-right:36px; }
+#collection-tree.jstree { min-width: 25%;  max-width: 75%; width:auto; padding-right:36px; }
 #collection-tree + .member-select-results { margin-left: 25%; }
 /* vertical scrollview in mirador */
 .mirador-container .mirador-viewer .scroll-view { overflow-y:auto; }
