@@ -162,8 +162,11 @@ async function hasEtextPage(manifest) {
 
       if(ut) ut = ut.filter(e => e.type && e.type.match(/tmp[/]hasEtextRes/));
 
-      if(ut && ut.length) ut = ut[0].value
-      if(ut) ut = ut.replace(new RegExp(bdr),"bdr:")
+      if(ut && ut.length) { 
+         ut = ut[0].value
+         if(ut) ut = ut.replace(new RegExp(bdr),"bdr:")
+      }
+      else ut = false ;
 
       
       //console.log("ut3",ut)
