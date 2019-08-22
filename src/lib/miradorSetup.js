@@ -633,6 +633,8 @@ function miradorAddScroll(toImage)
 
          //console.log("setScroll")
 
+         setTimeout(() => { jQ(".mirador-container .scroll-view").show().fadeTo(1,250); }, 250)
+
          if(jQ(".mirador-container .mirador-main-menu li:nth-child(1) a").hasClass('selec')) {
             let elem = jQ('.workspace-container > div > div > div.window > div.manifest-info > a.mirador-btn.mirador-icon-window-menu > ul > li.new-object-option > i')
             elem.first().click()
