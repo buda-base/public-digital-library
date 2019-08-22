@@ -627,6 +627,7 @@ function miradorAddScroll(toImage)
                //,"scrollLeft": (jQ(".mirador-container ul.scroll-listing-thumbs ").width() - jQ(window).width()) / 2}
                ,0, () => { jQ("input#zoomer").trigger("input") })
 
+            jQ(".mirador-container .scroll-view").show().fadeTo(1,250); 
       }
 
       window.setMiradorScroll = (notToImage) => {
