@@ -179,8 +179,8 @@ let propOrder = {
       "bdo:workLocation",
    ],
    "Person" : [
-      "skos:altLabel",
       "owl:sameAs",
+      "skos:altLabel",
       "bdo:personName",
       "bdo:personGender",
       "bdo:kinWith",
@@ -254,11 +254,11 @@ function top_left_menu(that,pdfLink,monoVol,fairUse)
           </IconButton>
        </Link>
        {
-          that.props.IRI.match(/^bd[ra]:/) &&
-          [<a className="goBack" target="_blank" title="TTL version" rel="alternate" type="text/turtle" href={"http://purl.bdrc.io/"+that.props.IRI.replace(/bdr:/,"resource/").replace(/bda:/,"admindata/")+".ttl"}>
+          that.props.IRI.match(/^(bd[ra])|(dila):/) &&
+          [<a className="goBack" target="_blank" title="TTL version" rel="alternate" type="text/turtle" href={that.expand(that.props.IRI)+".ttl"}>
              <Button style={{marginLeft:"0px",paddingLeft:"10px",paddingRight:0}}>{I18n.t("resource.export")} ttl</Button>
           </a>,<span>&nbsp;/&nbsp;</span>,
-          <a className="goBack noML" target="_blank" title="JSON-LD version" rel="alternate" type="application/ld+json" href={"http://purl.bdrc.io/"+that.props.IRI.replace(/bdr:/,"resource/").replace(/bda:/,"admindata/")+".jsonld"}>
+          <a className="goBack noML" target="_blank" title="JSON-LD version" rel="alternate" type="application/ld+json" href={that.expand(that.props.IRI)+".jsonld"}>
              <Button style={{paddingLeft:0,paddingRight:"10px"}}>json-ld</Button>
           </a>]
        }

@@ -222,7 +222,7 @@ export default class API {
             if(!IRI.indexOf(':') === -1 ) IRI = "bdr:"+IRI
             let config = store.getState().data.config.ldspdi
             let url = config.endpoints[config.index]+"/query/graph" ;            
-            let param = {"searchType":"ResInfo","R_RES":IRI,"L_NAME":"","LG_NAME":"" }
+            let param = {"searchType":"ResInfo-SameAs","R_RES":IRI,"L_NAME":"","LG_NAME":"" }
             let data = await this.getQueryResults(url, IRI, param,"GET");
             
             console.log("r e source",param,data)
