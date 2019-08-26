@@ -64,7 +64,7 @@ class LanguageSidePane extends Component<Props,State> {
             style={{display:"flex",justifyContent:"space-between",padding:"0 20px",borderBottom:"1px solid #bbb",cursor:"pointer"}}
             onClick={(e) => { this.props.onToggleCollapse(txt); } }
             >
-            <Typography style={{fontSize:"18px",lineHeight:"50px",textTransform:"capitalize"}}>{title}</Typography>
+            <Typography style={{fontSize:"16px",lineHeight:"30px",textTransform:"capitalize"}}>{title}</Typography>
             { this.props.collapse[txt] ? <ExpandLess /> : <ExpandMore />}
          </ListItem>,
          <Collapse key={2}
@@ -80,7 +80,7 @@ class LanguageSidePane extends Component<Props,State> {
       return ( <div className={"SidePane right "+(this.props.open?"visible":"")}>
          <IconButton className="close" onClick={e => this.props.onToggleLanguagePanel()} ><Close/></IconButton>
          <div style={{width:"333px",position:"relative"}}>
-            <Typography style={{fontSize:"30px",marginBottom:"20px",textAlign:"left"}}>
+            <Typography style={{fontSize:"25px",marginBottom:"20px",textAlign:"center"}}>
                <Translate value='Rsidebar.title' />
             </Typography>
             {

@@ -2239,13 +2239,13 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             style={{display:"flex",justifyContent:"space-between",padding:"0 20px",borderBottom:"1px solid #bbb",cursor:"pointer"}}
             onClick={(e) => { this.setState({collapse:{ ...this.state.collapse, [txt]:!this.state.collapse[txt]} }); } }
             >
-            <Typography style={{fontSize:"18px",lineHeight:"50px",textTransform:"capitalize"}}>{title}</Typography>
+            <Typography style={{fontSize:"16px",lineHeight:"30px",textTransform:"capitalize"}}>{title}</Typography>
             { this.state.collapse[txt] ? <ExpandLess /> : <ExpandMore />}
          </ListItem>,
          <Collapse key={2}
             in={this.state.collapse[txt]}
             className={["collapse",this.state.collapse[txt]?"open":"close"].join(" ")}
-            style={{padding:"10px 0 0 20px"}} // ,marginBottom:"30px"
+            style={{padding:"5px 0 0 20px"}} // ,marginBottom:"30px"
             >
                {inCollapse}
          </Collapse> ]
@@ -2353,7 +2353,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             //console.log("checkedN",checked)
 
             return (
-               <div key={e} style={{width:"350px",textAlign:"left"}} className="widget searchWidget">
+               <div key={e} style={{width:"auto",textAlign:"left"}} className="widget searchWidget">
                   <FormControlLabel
                      control={
                         <Checkbox
@@ -2365,12 +2365,12 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                         />
 
                      }
-                     label={label+" ("+cpt_i+cpt+")"}
+                     label={<span>{label+" ("}<span class="facet-count">{cpt_i+cpt}</span>{")"}</span>}
                   />
                   {
                      elem && elem["taxHasSubClass"] && elem["taxHasSubClass"].length > 0 &&
                      [
-                        <span className="subcollapse"
+                        <span className="subcollapse" /*style={{width:"335px"}}*/
                               onClick={(ev) => { this.setState({collapse:{ ...this.state.collapse, [e]:!this.state.collapse[e]} }); } }>
                         { this.state.collapse[e] ? <ExpandLess /> : <ExpandMore />}
                         </span>,
@@ -2441,8 +2441,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             <div className={"SidePane left " +(this.state.leftPane?"visible":"")}>
                   <IconButton className="close" onClick={e => this.setState({...this.state,leftPane:false})}><Close/></IconButton>
                { //this.props.datatypes && (results ? results.numResults > 0:true) &&
-                  <div style={{width:"333px",position:"relative"}}>
-                     <Typography style={{fontSize:"30px",marginBottom:"20px",textAlign:"left"}}>
+                  <div style={{minWidth:"335px",position:"relative"}}>
+                     <Typography style={{fontSize:"25px",marginBottom:"20px",textAlign:"center"}}>
                         <Translate value="Lsidebar.title" />
                      </Typography>
                      {
@@ -2472,7 +2472,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                            //if(!(this.props.datatypes && !this.props.datatypes.hash))
                               this.setState({collapse:{ ...this.state.collapse, "datatype":!this.state.collapse["datatype"]} }); } }
                         >
-                        <Typography style={{fontSize:"18px",lineHeight:"50px",}}>
+                        <Typography style={{fontSize:"16px",lineHeight:"30px",}}>
                            <Translate value="Lsidebar.datatypes.title"/>
                         </Typography>
                         { /*this.props.datatypes && this.props.datatypes.hash &&*/ !this.state.collapse["datatype"] ? <ExpandLess /> : <ExpandMore />  }
@@ -2480,7 +2480,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      <Collapse
                         in={/*this.props.datatypes && this.props.datatypes.hash &&*/ !this.state.collapse["datatype"]}
                         className={["collapse",  !(this.props.datatypes && !this.props.datatypes.hash)&&!this.state.collapse["datatype"]?"open":"close"].join(" ")}
-                         style={{padding:"10px 0 0 20px"}} >
+                         style={{padding:"5px 0 0 20px"}} >
                         <div>
                         { //facetList&&facetList.length > 0?facetList.sort((a,b) => { return a.props.label < b.props.label } ):
                               types.map((i) => {
@@ -2506,7 +2506,9 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                                           />
 
                                        }
-                                       {...counts["datatype"][i]?{label:I18n.t("types."+i.toLowerCase()) + " ("+counts["datatype"][i]+")"}:{label:I18n.t("types."+i.toLowerCase())}}
+                                       {...counts["datatype"][i]
+                                       ?{label:<span>{I18n.t("types."+i.toLowerCase()) + " ("}<span class="facet-count">{counts["datatype"][i]}</span>{")"}</span>}
+                                       :{label:I18n.t("types."+i.toLowerCase())}}
                                     />
                                  </div>
                               )
@@ -2705,7 +2707,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                                                    />
 
                                                 }
-                                                label={label+" ("+this.subcount(j,i)+meta[j][i].n+")"}
+                                                label={<span>{label+" ("}<span class="facet-count">{this.subcount(j,i)+meta[j][i].n}</span>{")"}</span>}
                                              />
                                           </div>
                                        )
