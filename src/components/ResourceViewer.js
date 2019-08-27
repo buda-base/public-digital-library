@@ -1101,7 +1101,7 @@ class ResourceViewer extends Component<Props,State>
       })
       */
 
-      console.log("format",prop,elem,txt,bnode,div);
+      //console.log("format",prop,elem,txt,bnode,div);
 
       let ret = [],pre = []
 
@@ -1272,7 +1272,7 @@ class ResourceViewer extends Component<Props,State>
 
             elem = this.getResourceBNode(e.value)
             
-            console.log("bnode",e.value,elem)
+            //console.log("bnode",e.value,elem)
 
             if(!elem) continue ;
 
@@ -1281,8 +1281,8 @@ class ResourceViewer extends Component<Props,State>
             let val = elem[rdf+"type"]
             let lab = elem[rdfs+"label"]
 
-            console.log("val",val);
-            console.log("lab",lab);
+            //console.log("val",val);
+            //console.log("lab",lab);
 
             let noVal = true ;
 
@@ -1479,7 +1479,10 @@ class ResourceViewer extends Component<Props,State>
                         }
 
                         let txt = v.value;
-                        if(v.type == 'bnode')
+                        if(v.value== e.value) {
+                           continue ;
+                        }
+                        else if(v.type == 'bnode')
                         {
                            hasBnode = true
                            subsub.push(this.format("h4",txt,"",true,div+"sub"))
