@@ -60,7 +60,7 @@ async function initiateApp(params,iri,myprops) {
          // console.log("params",params)
       }
 
-      if(!iri && !state.data.dictionary)
+      if(!state.data.dictionary)
       {
          const dico = await api.loadDictionary()
          store.dispatch(dataActions.loadedDictionary(dico));         

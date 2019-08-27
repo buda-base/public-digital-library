@@ -98,6 +98,8 @@ type Props = {
    nextChunk?:number,
    resourceManifest?:{},
    imageVolumeManifests?:{},
+   ontology:{},
+   dictionary:{},
    onInitPdf: (u:string,s:string) => void,
    onRequestPdf: (u:string,s:string) => void,
    onCreatePdf: (s:string,u:string) => void,
@@ -1099,7 +1101,7 @@ class ResourceViewer extends Component<Props,State>
       })
       */
 
-      //console.log("format",prop,elem,txt,bnode,div);
+      console.log("format",prop,elem,txt,bnode,div);
 
       let ret = [],pre = []
 
@@ -1270,7 +1272,7 @@ class ResourceViewer extends Component<Props,State>
 
             elem = this.getResourceBNode(e.value)
             
-            //console.log("bnode",e.value,elem)
+            console.log("bnode",e.value,elem)
 
             if(!elem) continue ;
 
@@ -1279,13 +1281,29 @@ class ResourceViewer extends Component<Props,State>
             let val = elem[rdf+"type"]
             let lab = elem[rdfs+"label"]
 
-            //console.log("val",val);
-            //console.log("lab",lab);
+            console.log("val",val);
+            console.log("lab",lab);
 
             let noVal = true ;
 
-            // property name ?
-            if(val && val[0] && val[0].value)
+            let valSort ;
+            if(prop === bdo+'workTitle' && this.props.dictionary) {
+               valSort = val.map(v => {
+                  let p = this.props.dictionary[v.value]
+                  if(p) p = p[rdfs+"subClassOf"]
+                  if(p) return {v,k:p.filter(f => f.value === bdo+"WorkTitle").length}
+                  else return {v,k:-1}
+               })
+               valSort = _.orderBy(valSort,['k'],['desc']).map(e => e.v)
+               console.log("valSort!",valSort)               
+            }
+            // property name ?            
+            if(valSort) {
+               console.log("valSort?",valSort)               
+               noVal = false ;
+               sub.push(<Tag className={'first '+(div == "sub"?'type':'prop')}>{[valSort.map((v,i) => i==0?[this.proplink(v.value)]:[" / ",this.proplink(v.value)]),": "]}</Tag>)
+            }
+            else if(val && val[0] && val[0].value)
             {
                noVal = false ;
                sub.push(<Tag className={'first '+(div == "sub"?'type':'prop')}>{[this.proplink(val[0].value),": "]}</Tag>)
