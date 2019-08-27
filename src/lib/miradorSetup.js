@@ -475,7 +475,7 @@ function miradorAddClick(firstInit){
                               jQ("#showEtext").get(0).checked = true ;
                               jQ(".etext-content.hide").removeClass("hide");
                            }
-                           setTimeout(() => window.mirador.viewer.workspace.windows[0].focusModules.ScrollView.reloadImages(), 100)
+                           //setTimeout(() => window.mirador.viewer.workspace.windows[0].focusModules.ScrollView.reloadImages(), 100)
                         }
                         else {
                            jQ("#showEtext").parent().hide();
@@ -627,14 +627,14 @@ function miradorAddScroll(toImage)
                //,"scrollLeft": (jQ(".mirador-container ul.scroll-listing-thumbs ").width() - jQ(window).width()) / 2}
                ,0, () => { jQ("input#zoomer").trigger("input") })
 
-            jQ(".mirador-container .scroll-view").show().fadeTo(1,250); 
+            jQ(".mirador-container .scroll-view").show().fadeTo(250,1); 
       }
 
       window.setMiradorScroll = (notToImage) => {
 
          //console.log("setScroll")
 
-         setTimeout(() => { jQ(".mirador-container .scroll-view").show().fadeTo(1,250); }, 250)
+         setTimeout(() => { jQ(".mirador-container .scroll-view").show().fadeTo(250,1); }, 250)
 
          if(jQ(".mirador-container .mirador-main-menu li:nth-child(1) a").hasClass('selec')) {
             let elem = jQ('.workspace-container > div > div > div.window > div.manifest-info > a.mirador-btn.mirador-icon-window-menu > ul > li.new-object-option > i')
