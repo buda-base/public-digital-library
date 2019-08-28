@@ -727,6 +727,7 @@ class App extends Component<Props,State> {
       // console.log("newProps.facets",newProps.facets)
 
 
+/*
    handleCheckFacet = (ev:Event,prop:string,lab:string[],val:boolean) => {
 
       let state =  this.state
@@ -761,17 +762,15 @@ class App extends Component<Props,State> {
               else if(facets[f].val && facets[f].val.indexOf("Any") !== -1) return acc ;
               else return { ...acc, [f]:facets[f] }
            },{}),this.props.searches[this.state.filters.datatype[0]][this.props.keyword+"@"+this.props.language].metadata,this.props.config.facets[this.state.filters.datatype[0]]);
-      }
-      /*
-      else if(propSet)
-      {
-         state = {  ...state, filters: {  ...state.filters, facets: { ...state.filters.facets, ...newF } } }
-      }
-      */
+      }      
+      //else if(propSet)
+      //{
+      //   state = {  ...state, filters: {  ...state.filters, facets: { ...state.filters.facets, ...newF } } }
+      //}
 
       this.setState( state )
    }
-
+   */
 
    handleSearchTypes = (ev:Event,lab:string,val:boolean) => {
 
@@ -805,6 +804,56 @@ class App extends Component<Props,State> {
       }
    }
 
+
+   handleCheckFacet = (ev:Event,prop:string,lab:string[],val:boolean) => {
+
+      let state =  this.state
+
+      let propSet ;
+      if(state.filters.facets) propSet = state.filters.facets[prop]
+      if(!propSet) propSet = [ "Any" ]
+      else if(propSet.val) propSet = propSet.val
+
+      if(val) propSet = propSet.concat(lab);
+      else { propSet = propSet.filter(v => lab.indexOf(v) === -1) ; }
+
+      if(!propSet.length) propSet = [ "Any" ] ;
+
+      if(lab.indexOf("Any") !== -1) {
+         if(val) propSet = [ "Any" ]
+      }
+      else {
+         if(propSet.indexOf("Any") !== -1) propSet = propSet.filter(v => v !== "Any")
+      }
+
+      
+      let facets = state.filters.facets ;
+      if(!facets) facets = {}
+      if(prop == bdo+"workGenre") {
+
+         facets = { ...facets, [prop] : { alt : [ prop, bdo + "workIsAbout", tmp + "etextAbout" ], val : propSet } }
+      }
+      else
+      {
+         facets = { ...facets, [prop] : propSet }
+      }
+
+      state = { ...state, paginate:{index:0,pages:[0],n:[0]}, repage: true, filters:{ ...state.filters, facets }  }      
+
+      if(this.state.filters.datatype && this.state.filters.datatype.indexOf("Any") === -1 && this.props.searches && this.props.searches[this.state.filters.datatype[0]])          
+         this.props.onUpdateFacets(this.props.keyword+"@"+this.props.language,this.state.filters.datatype[0],Object.keys(facets).reduce((acc,f) => {
+            if(facets[f].indexOf && facets[f].indexOf("Any") !== -1) return acc ;
+            else if(facets[f].val && facets[f].val.indexOf("Any") !== -1) return acc ;
+            else return { ...acc, [f]:facets[f] }
+         },{}),this.props.searches[this.state.filters.datatype[0]][this.props.keyword+"@"+this.props.language].metadata,this.props.config.facets[this.state.filters.datatype[0]]);
+
+
+      console.log("checkF",prop,lab,val,facets,state);
+
+
+      this.setState(state);
+
+   }
 
    handleCheck = (ev:Event,lab:string,val:boolean,params?:{},force?:boolean) => {
 
@@ -1747,7 +1796,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
                  
                   if((v.alt && v.val.indexOf("unspecified") !== -1) || (!v.alt && v.indexOf("unspecified") !== -1)) {
-                     if(hasProp) { 
+                     if(hasProp && !withProp) { // && ((!v.alt && v.length === 1) || (v.alt && v.alt.length === 1) ) ) { 
                         filtered = false 
                      }
                      //else console.log("filt unspec",o)
@@ -2835,7 +2884,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   </div>
                }
             </div>
-            <div className={"SearchPane"+(message.length > 0?" resultPage":"")} >
+            <div className={"SearchPane"+(this.props.keyword ?" resultPage":"")} >
                <a target="_blank" href="https://www.buddhistarchive.org/" style={{display:"inline-block",marginBottom:"25px"}}>
                   <img src="/logo.svg" style={{width:"200px"}} />
                </a>

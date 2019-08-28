@@ -16,7 +16,7 @@ body { overflow:auto !important;padding-right:0 !important;  }
 .data-checkbox > span > span { width:24px;height:24px;}
 .data-checkbox > span > span:last-child { margin-top:12px; }
 
-#login { position:absolute; top:0;right:0; }
+#login { position:absolute; top:0;right:0;z-index:1; }
 #login button {color:rgba(0,0,0,0.54); }
 
 #top-left { position:absolute; top:0;left:0; }
@@ -316,12 +316,14 @@ body {overflow-x:hidden; }
 .SearchPane .formControl:before {  left: 0; right: 0; bottom: 0; content: "\00a0";  position: absolute;  }
 .SearchPane a {text-decoration:none}
 
+/* .SearchPane > a:first-child img { transition: all 200ms ease-in-out; }  */
+
 .SearchPane.resultPage { margin-top:2vh; }
-.SearchPane.resultPage  a:first-child img { height:100px !important; } 
+.SearchPane.resultPage > a:first-child img { width:100px !important; } 
 .SearchPane.resultPage #results, 
 .SearchPane.resultPage #results > li,
 .SearchPane.resultPage #results h4 { margin-top:0 !important; } 
-.SearchPane.resultPage #results > li { margin-bottom:-10px;}
+/* .SearchPane.resultPage #results > li + li { margin-top:-10px !important;}  */
 
 .SearchPane h5 { margin-left:16px; font-size : 16px; margin-bottom:0px;margin-top:40px; }
 .SearchPane .menu-categ h5 { margin-left:0; font-size : 16px; margin-bottom:0px;margin-top:0px; }
