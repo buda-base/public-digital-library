@@ -824,8 +824,8 @@ class App extends Component<Props,State> {
       }
       else {
          if(propSet.indexOf("Any") !== -1) propSet = propSet.filter(v => v !== "Any")
+         if(!propSet.length) propSet = [ "Any" ] ;
       }
-
       
       let facets = state.filters.facets ;
       if(!facets) facets = {}
