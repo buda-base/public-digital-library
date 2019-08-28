@@ -24,10 +24,10 @@ import Apps from '@material-ui/icons/Apps';
 import Close from '@material-ui/icons/Close';
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
-import PanoramaFishEye from '@material-ui/icons/PanoramaFishEye';
+import PanoramaFishEye from '@material-ui/icons/CheckBoxOutlineBlank';
 import NavigateBefore from '@material-ui/icons/NavigateBefore';
 import NavigateNext from '@material-ui/icons/NavigateNext';
-import CheckCircle from '@material-ui/icons/CheckCircle';
+import CheckCircle from '@material-ui/icons/CheckBox';
 import CropFreeIcon from '@material-ui/icons/CropFree';
 import CropDin from '@material-ui/icons/CropDin';
 import CenterFocusWeak from '@material-ui/icons/CenterFocusWeak';
@@ -2377,7 +2377,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                         <Collapse
                            in={this.state.collapse[e]}
                            className={["subcollapse",this.state.collapse[e]?"open":"close"].join(" ")}
-                           style={{paddingLeft:35+"px"}} // ,marginBottom:"30px"
+                           style={{paddingLeft:20+"px"}} // ,marginBottom:"30px"
                            >
                               { subWidget(tree,jpre,elem["taxHasSubClass"],disable,tag) }
                         </Collapse>

@@ -330,10 +330,10 @@ body {overflow-x:hidden; }
 .widget label { text-transform:capitalize;  }
 .searchWidget > label > span,
 .dataWidget > label > span { font-size:13px; }
-.searchWidget > label > span svg, 
-.dataWidget > label > span svg { width:20px; height:20px; }
+.searchWidget > label > span svg { width:16px; height:16px; } 
+.dataWidget > label > span svg { width:17px; height:17px; }
 .searchWidget > label > span:first-child,
-.dataWidget > label > span:first-child { height:25px; color:rgba(0,0,0,0.7);  }
+.dataWidget > label > span:first-child { width:22px;height:22px; color:rgba(0,0,0,0.7); margin-left:9px;margin-right:2px; }
 .SidePane .help { text-align:left;font-style:italic;margin-bottom:10px; font-size:12px; width:300px;line-height:16px; }
 /* .subcollapse label span:last-child { max-width:120px;} */
 
@@ -345,7 +345,7 @@ body {overflow-x:hidden; }
 .searchWidget .subcollapse.open { width:auto; max-width:350px; }
 
 span.subcollapse { opacity:0; transition:opacity 50ms ease-in-out ; }
-span.subcollapse svg { vertical-align:-8px; cursor:pointer; font-size:18px; }
+span.subcollapse svg { vertical-align:-6px; cursor:pointer; font-size:18px; }
 .collapse.open > div > div > .searchWidget > span.subcollapse, 
 .collapse.open .subcollapse.open > div > div > .searchWidget > span.subcollapse
 { position:absolute;  opacity:1; transition:opacity 150ms ease-in-out 50ms; } 
