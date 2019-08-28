@@ -480,9 +480,15 @@ class App extends Component<Props,State> {
       }
       */
 
-      if(state.leftPane === undefined && props.keyword) {
+      if(!state.leftPane && props.keyword) {
          if(!s) s = { ...state }
-         s.leftPane=  true 
+         s.leftPane =  true 
+      }
+
+      if(props.keyword && (!props.datatypes || !props.datatypes.hash || !props.datatypes.metadata || Object.keys(props.datatypes.metadata).length === 0)) {
+         if(!s) s = { ...state }
+         s.leftPane = false 
+         console.log("no leftPane")
       }
 
       
