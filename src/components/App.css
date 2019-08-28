@@ -34,14 +34,14 @@ body { overflow:auto !important;padding-right:0 !important;  }
 a.result { padding:0;margin-bottom:10px;width:100%;display: inline-block;margin-top:0px;}
 a.result button { text-transform:none; padding-bottom:0;}
 /* a.result button::before { content:'Abstract Works';display:block;height:50px;position:absolute;left:0; }  */
-a.result + div:not(#pagine) { margin-top:-20px!important;padding:20px 0 0px 35px ; margin-left:41px; font-size:0.9rem; margin-bottom:20px; border-left: 1px solid rgba(0,0,0,0.25) ; }
+a.result + div:not(#pagine) { margin-top:-15px!important;padding:2px 0 0px 35px ; margin-left:41px; font-size:0.8rem; margin-bottom:5px; border-left: 1px solid rgba(0,0,0,0.25) ; }
 a.result + div:not(#pagine):empty { margin-bottom:8px; margin-top:0 !important;padding-top:0 !important;}
 
    /* box-shadow:-5px 0 5px -4px rgba(0,0,0,0.2);  } */
 a.result + div span { display:inline ; line-height:1.2rem; }
 a.result + div span.label { text-transform:capitalize; font-weight:700; float:left;clear:both; flex-shrink:0; }
 a.result + div span:not(.label) {  }
-.match { display:flex; margin-bottom:5px }
+.match { display:flex; margin-bottom:0px }
 .match a { word-break:  break-word; }
 
 a.result .lang, .match .lang,.data .lang,h2 .lang, .imageVolumePopup .lang
@@ -50,7 +50,7 @@ h2 .lang,.data .lang { position:relative;margin:0;vertical-align:-7px;padding:5p
 h2 .lang { margin-top:22px;font-weight:normal; }
 .imageVolumePopup .lang { position:relative;padding:0px;margin-top:12px; }
 a.result .lang, .match .lang { min-width:50px;}
-a.result .contenu ul { padding:12px 24px 12px 0px !important;}
+a.result .contenu ul { padding:6px 24px 6px 0px !important;}
 a.result .contenu ul > div:last-child {
    padding:0 16px !important;
    height: auto;
@@ -63,12 +63,12 @@ a.result .contenu ul > div:last-child {
 a.result .contenu ul > div:last-child h3 > span:first-child { word-break: break-all; }
 
 a.result .contenu ul > div:last-child h3 {
-    color: rgba(0, 0, 0, 0.87); font-size: 1rem; font-weight: 400; font-family: "Roboto", "Helvetica", "Arial", sans-serif;
-    line-height: 1.5em; display:block; margin:0;
+    color: rgba(0, 0, 0, 0.87); font-size: 0.875rem; font-weight: 400; font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+    line-height: 1.35em; display:block; margin:0;
 }
 
 a.result .contenu ul > div:last-child p {
-   color: rgba(0, 0, 0, 0.54);   font-size: 0.875rem;   font-weight: 400;   font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+   color: rgba(0, 0, 0, 0.54);   font-size: 0.85rem;   font-weight: 400;   font-family: "Roboto", "Helvetica", "Arial", sans-serif;
    line-height: 1.46429em; margin: 0;  display: block;
 }
 
@@ -316,6 +316,12 @@ body {overflow-x:hidden; }
 .SearchPane .formControl:before {  left: 0; right: 0; bottom: 0; content: "\00a0";  position: absolute;  }
 .SearchPane a {text-decoration:none}
 
+.SearchPane.resultPage { margin-top:2vh; }
+.SearchPane.resultPage  a:first-child img { height:100px !important; } 
+.SearchPane.resultPage #results, 
+.SearchPane.resultPage #results > li,
+.SearchPane.resultPage #results h4 { margin-top:0 !important; } 
+.SearchPane.resultPage #results > li { margin-bottom:-10px;}
 
 .SearchPane h5 { margin-left:16px; font-size : 16px; margin-bottom:0px;margin-top:40px; }
 .SearchPane .menu-categ h5 { margin-left:0; font-size : 16px; margin-bottom:0px;margin-top:0px; }

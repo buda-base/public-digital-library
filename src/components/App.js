@@ -2045,7 +2045,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                </Typography>
             )
          }
-         if(!sta.results || !sta.results[id] || sta.results[id].message.length != message.length) 
+         if(!sta.results || !sta.results[id] || (sta.results[id].message && message && sta.results[id].message.length != message.length))
          {
             let change
             if(!sta.results) sta.results = {}
@@ -2835,7 +2835,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   </div>
                }
             </div>
-            <div className="SearchPane" >
+            <div className={"SearchPane"+(message.length > 0?" resultPage":"")} >
                <a target="_blank" href="https://www.buddhistarchive.org/" style={{display:"inline-block",marginBottom:"25px"}}>
                   <img src="/logo.svg" style={{width:"200px"}} />
                </a>
