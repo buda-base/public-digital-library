@@ -407,7 +407,8 @@ function top_left_menu(that,pdfLink,monoVol,fairUse)
 class ResourceViewer extends Component<Props,State>
 {
    _annoPane = [] ;
-   _leafletMap = null
+   _leafletMap = null ;
+   _properties = {} ;
 
    constructor(props:Props)
    {
@@ -543,49 +544,55 @@ class ResourceViewer extends Component<Props,State>
       if(sorted)
       {
 
+         let customSort = [ bdo+"workHasPart", bdo+"workHasExpression", bdo+"workTitle", bdo+"personName" ]
 
-         let parts = prop[bdo+"workHasPart"]
-         if(parts) {
+         let sortBySubPropNumber = (tag:string,idx:string) => {
+            let parts = prop[tag]
+            if(parts) {
 
-            let assoR = this.props.assocResources
-            if (assoR) {
-               parts = parts.map((e) => {
+               let assoR = this.props.assocResources
+               if (assoR) {
+                  parts = parts.map((e) => {
 
-                  let index = assoR[e.value]
+                     let index = assoR[e.value]
 
-                  if(index) index = index.filter(e => e.type == bdo+"workPartIndex")
-                  if(index && index[0] && index[0].value) index = Number(index[0].value)
-                  else index = null
+                     if(index) index = index.filter(e => e.type === idx)
+                     if(index && index[0] && index[0].value) index = Number(index[0].value)
+                     else index = null
 
-                  return ({ ...e, index })
-               })
+                     return ({ ...e, index })
+                  })
 
-               prop[bdo+"workHasPart"] = _.orderBy(parts,['index'],['asc'])
+                  parts = _.orderBy(parts,['index'],['asc'])
+               }
+               return parts ;
             }
+
          }
 
+         if(prop[bdo+"workHasPart"]) prop[bdo+"workHasPart"] = sortBySubPropNumber(bdo+"workHasPart",bdo+"workPartIndex");
 
-         parts = prop[bdo+"itemHasVolume"]
-         if(parts) {
+         if(prop[bdo+"itemHasVolume"]) prop[bdo+"itemHasVolume"] = sortBySubPropNumber(bdo+"itemHasVolume", bdo+"volumeNumber");
 
-            let assoR = this.props.assocResources
-            if (assoR) {
-
-               parts = parts.map((e) => {
-
-                  let index = assoR[e.value]
-
-                  if(index) index = index.filter(e => e.type == bdo+"volumeNumber")
-                  if(index && index[0] && index[0].value) index = Number(index[0].value)
-                  else index = null
-
-                  return ({ ...e, index })
-               })
-
-               prop[bdo+"itemHasVolume"] = _.orderBy(parts,['index'],['asc'])
+         let sortBySubPropURI = (tagEnd:string) => {
+            let assoR = this.props.assocResources            
+            let valSort = prop[bdo+tagEnd] 
+            if(this.props.dictionary && this.props.assocResources) {
+               valSort = valSort.map(v => ({...v,type:'bnode'})).map(w => w.type!=='bnode'||!assoR[w.value]?w:{'bnode':w.value,'k':assoR[w.value].filter(e => e.fromKey === rdf+"type").reduce( (acc,e) => {
+                  let p = this.props.dictionary[e.value]
+                  if(p) p = p[rdfs+"subClassOf"]
+                  if(p) p = p.filter(f => f.value === bdo+tagEnd[0].toUpperCase()+tagEnd.substring(1)).length
+                  if(p) return e.value + ";" + acc  
+                  else return acc+e.value+";"
+               },"")})              
+               valSort = _.orderBy(valSort,['k'],['asc']).map(e => ({'type':'bnode','value':e.bnode,'sorted':true}))               
             }
+            return valSort ;
          }
-
+                  
+         if(prop[bdo+'workTitle']) prop[bdo+'workTitle'] = sortBySubPropURI("workTitle") ;
+         
+         if(prop[bdo+'personName']) prop[bdo+'personName'] = sortBySubPropURI("personName") ;
 
          let expr = prop[bdo+"workHasExpression"]
          if(expr) {
@@ -624,7 +631,7 @@ class ResourceViewer extends Component<Props,State>
 
                prop[bdo+"workHasExpression"] = _.sortBy(expr,['label1','label2'])
 
-               for(let o of prop[bdo+"workHasExpression"]) console.log(o.value,o.label1)
+               //for(let o of prop[bdo+"workHasExpression"]) console.log(o.value,o.label1)
 
             }
          }
@@ -661,7 +668,7 @@ class ResourceViewer extends Component<Props,State>
 
                //console.log("sorting",e,prop[e])
 
-               if(e.value === bdo+"workHasPart" || e.value === bdo+"workHasExpression" ) {
+               if(customSort.indexOf(e.value) !== -1) {
                   //console.log("skip sort parts",prop[e][0],prop[e])
                   return { ...acc, [e.value]:prop[e.value] }
                }
@@ -700,6 +707,7 @@ class ResourceViewer extends Component<Props,State>
 
             //console.log("propSort",prop,sortProp)
 
+            this._properties = prop ;
             return sortProp
          }
       }
@@ -1032,7 +1040,10 @@ class ResourceViewer extends Component<Props,State>
          || !this.props.resources[IRI][this.expand(IRI)]
          || !this.props.resources[IRI][this.expand(IRI)][prop]) return ;
 
-      let elem = this.props.resources[IRI][this.expand(IRI)][prop]
+
+      let elem ;
+      if(this._properties) elem = this._properties[prop]
+      elem = this.props.resources[IRI][this.expand(IRI)][prop]
 
       return elem
    }
@@ -1101,7 +1112,7 @@ class ResourceViewer extends Component<Props,State>
       })
       */
 
-      //console.log("format",prop,elem,txt,bnode,div);
+      //console.log("format",prop,JSON.stringify(elem,null,3),txt,bnode,div);
 
       let ret = [],pre = []
 
@@ -1285,7 +1296,7 @@ class ResourceViewer extends Component<Props,State>
             //console.log("lab",lab);
 
             let noVal = true ;
-
+            
             let valSort ;
             if(prop === bdo+'workTitle' && this.props.dictionary) {
                valSort = val.map(v => {
