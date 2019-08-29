@@ -151,10 +151,11 @@ const rdfs = "http://www.w3.org/2000/01/rdf-schema#";
 const skos = "http://www.w3.org/2004/02/skos/core#";
 const tmp  = "http://purl.bdrc.io/ontology/tmp/" ;
 const _tmp  = "http://purl.bdrc.io/ontology/tmp/" ;
+const  xsd  = "http://www.w3.org/2001/XMLSchema#" ;
 
 const dila  = "http://purl.dila.edu.tw/resource/";
 
-const prefixes = { adm, bdac, bdan, bda, bdo, bdr, foaf, oa, owl, rdf, rdfs, skos, tmp, dila }
+const prefixes = { adm, bdac, bdan, bda, bdo, bdr, foaf, oa, owl, rdf, rdfs, skos, xsd, tmp, dila }
 
 let propOrder = {
    "Corporation":[],
@@ -562,12 +563,10 @@ class ResourceViewer extends Component<Props,State>
 
                      return ({ ...e, index })
                   })
-
                   parts = _.orderBy(parts,['index'],['asc'])
                }
                return parts ;
             }
-
          }
 
          if(prop[bdo+"workHasPart"]) prop[bdo+"workHasPart"] = sortBySubPropNumber(bdo+"workHasPart",bdo+"workPartIndex");
@@ -587,7 +586,7 @@ class ResourceViewer extends Component<Props,State>
                },"")})              
                valSort = _.orderBy(valSort,['k'],['asc']).map(e => ({'type':'bnode','value':e.bnode,'sorted':true}))               
             }
-            return valSort ;
+            return valSort ; //
          }
                   
          if(prop[bdo+'workTitle']) prop[bdo+'workTitle'] = sortBySubPropURI("workTitle") ;
@@ -876,7 +875,7 @@ class ResourceViewer extends Component<Props,State>
    {
       if(elem) {
 
-         //console.log("uriformat",prop,elem.value,dico,withProp,show)
+         console.log("uriformat",prop,elem.value,dico,withProp,show)
 
          if(!elem.value.match(/^http:\/\/purl\.bdrc\.io/)) {
             return <a href={elem.value} target="_blank">{decodeURI(elem.value)}</a> ;
@@ -1112,7 +1111,7 @@ class ResourceViewer extends Component<Props,State>
       })
       */
 
-      //console.log("format",prop,JSON.stringify(elem,null,3),txt,bnode,div);
+      console.log("format",prop,JSON.stringify(elem,null,3),txt,bnode,div);
 
       let ret = [],pre = []
 
@@ -1145,7 +1144,7 @@ class ResourceViewer extends Component<Props,State>
          {
 
             let tmp
-            if(e.type == "uri") tmp = this.uriformat(prop,e)
+            if(e.type == "uri" || (e.type === 'literal' && e.datatype === xsd+'anyURI' )) tmp = this.uriformat(prop,e)
             else {
                let lang = e["lang"]
                if(!lang) lang = e["xml:lang"]
@@ -1283,7 +1282,7 @@ class ResourceViewer extends Component<Props,State>
 
             elem = this.getResourceBNode(e.value)
             
-            //console.log("bnode",e.value,elem)
+            console.log("bnode",e.value,elem)
 
             if(!elem) continue ;
 
@@ -1292,8 +1291,8 @@ class ResourceViewer extends Component<Props,State>
             let val = elem[rdf+"type"]
             let lab = elem[rdfs+"label"]
 
-            //console.log("val",val);
-            //console.log("lab",lab);
+            console.log("val",val);
+            console.log("lab",lab);
 
             let noVal = true ;
             
@@ -1468,7 +1467,7 @@ class ResourceViewer extends Component<Props,State>
                   if(f == rdf+"type") continue;
                   else
                   {
-                     //console.log("what",this.props.resources[this.props.IRI][elem[f][0].value])
+                     console.log("what",this.props.resources[this.props.IRI][elem[f][0].value])
 
                      if(!noVal)
                         subsub.push(<Tag className={'first '+(div == ""?'type':'prop')}>{[this.proplink(f),": "]}</Tag>)
@@ -1479,7 +1478,7 @@ class ResourceViewer extends Component<Props,State>
                      val = elem[f]
                      for(let v of val)
                      {
-                        //console.log("v",v);
+                        console.log("v",v);
 
                         if(f == bdo+"noteLocationStatement" || f == bdo+"noteWork" || f == bdo+"noteText") {
                            noteData[f] = v
