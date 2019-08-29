@@ -1498,17 +1498,35 @@ class ResourceViewer extends Component<Props,State>
                            subsub.push(this.format("h4",txt,"",true,div+"sub"))
                         }
                         else {
+                           let dic ;
                            if(v.type == 'uri') txt = this.uriformat(f,v)
-                           else txt = this.fullname(v.value)
+                           else if(v.type === 'literal' && v.datatype && this.props.dictionary && (dic = this.props.dictionary[v.datatype]) && dic[rdfs+"subClassOf"] 
+                              && dic[rdfs+"subClassOf"].filter(s => s.value === bdo+"AnyDate").length) {
 
-                           if(v["lang"] || v["xml:lang"]) {
-                              let lang = v["lang"]
-                              if(!lang) lang = v["xml:lang"]
-                              txt = [txt,lang?<Tooltip placement="bottom-end" title={
-                                 <div style={{margin:"10px"}}>
-                                    <Translate value={languages[lang]?languages[lang].replace(/search/,"tip"):lang}/>
-                                 </div>
-                              }><span className="lang">{lang}</span></Tooltip>:null]
+                              let dateC = dic[rdfs+"comment"]
+                              if(dateC) dateC = dateC[0]
+                              if(dateC) dateC = dateC.value
+
+                              let dateL = dic[rdfs+"label"]
+                              if(dateL) dateL = dateL[0]
+                              if(dateL) dateL = dateL.value
+                              if(dateL) dateL = dateL.replace(/ date$/,"")
+
+                              txt = [txt,<Tooltip placement="bottom-end" title={<div style={{margin:"10px"}}>{dateC}</div>}><span className="lang">{dateL}</span></Tooltip>]
+                           }
+                           else { txt = this.fullname(v.value)
+
+                              console.log("txt",txt)
+
+                              if(v["lang"] || v["xml:lang"]) {
+                                 let lang = v["lang"]
+                                 if(!lang) lang = v["xml:lang"]
+                                 txt = [txt,lang?<Tooltip placement="bottom-end" title={
+                                    <div style={{margin:"10px"}}>
+                                       <Translate value={languages[lang]?languages[lang].replace(/search/,"tip"):lang}/>
+                                    </div>
+                                 }><span className="lang">{lang}</span></Tooltip>:null]
+                              }
                            }
                            if(!Array.isArray(txt)) txt = [txt]
                            txt.push(
