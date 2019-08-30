@@ -31,7 +31,9 @@ body { overflow:auto !important;padding-right:0 !important;  }
 
 #results > li > h4 + svg { margin-top:10px; }
 
-a.result { padding:0;margin-bottom:10px;width:100%;display: inline-block;margin-top:0px;}
+li + a.result { margin-top:-5px; }
+
+a.result { padding:0;margin-bottom:10px;width:100%;display: inline-block;margin-top:3px;}
 a.result button { text-transform:none; padding-bottom:0;}
 /* a.result button::before { content:'Abstract Works';display:block;height:50px;position:absolute;left:0; }  */
 a.result + div:not(#pagine) { margin-top:-15px!important;padding:2px 0 0px 35px ; margin-left:41px; font-size:0.8rem; margin-bottom:5px; border-left: 1px solid rgba(0,0,0,0.25) ; }
