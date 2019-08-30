@@ -325,6 +325,7 @@ body {overflow-x:hidden; }
 .SearchPane.resultPage #results, 
 .SearchPane.resultPage #results > li,
 .SearchPane.resultPage #results h4 { margin-top:0 !important; } 
+.SearchPane.resultPage #results > h4 { margin-top:12px !important; } 
 /* .SearchPane.resultPage #results > li + li { margin-top:-10px !important;}  */
 
 .SearchPane h5 { margin-left:16px; font-size : 16px; margin-bottom:0px;margin-top:40px; }

@@ -395,7 +395,7 @@ class App extends Component<Props,State> {
 
       console.log("search",key,label) //,this.state,!global.inTest ? this.props:null)
 
-      if(key.match(/^bdr:[RTPGW]/))
+      if(key.match(/^(bdr|dila):[A-Z]/))
       {
          //if(!label) label = this.state.filters.datatype.filter((f)=>["Person","Work"].indexOf(f) !== -1)[0]
 
@@ -1298,7 +1298,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
       return false ;
    }
 
-   makeResult(id,n,t,lit,lang,tip,Tag,url)
+   makeResult(id,n,t,lit,lang,tip,Tag,url,rmatch = [], facet)
    {
       //console.log("res",id,n,t,lit,lang,tip,Tag)
 
@@ -1349,12 +1349,86 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   </ListItem>
             </div> )
 
+         let retList 
          if(prettId.match(/^([^:])+:/))
-            return ( <Link key={n} to={"/show/"+prettId} className="result">{ret}</Link> )
+            retList = [ ( <Link key={n} to={"/show/"+prettId} className="result">{ret}</Link> ) ]
          else
-            return ( <Link key={n} to={url?url.replace(/^https?:/,""):id.replace(/^https?:/,"")} target="_blank" className="result">{ret}</Link> )
+            retList = [ ( <Link key={n} to={url?url.replace(/^https?:/,""):id.replace(/^https?:/,"")} target="_blank" className="result">{ret}</Link> ) ]
 
 
+         if(rmatch && rmatch.length) retList.push( <div>
+            {
+               rmatch.map((m) => {
+
+                  //console.log("m",m)
+
+                  if(true || !m.type.match(new RegExp(skos+"prefLabel"))) {
+                     let prop = this.fullname(m.type.replace(/.*altLabelMatch/,skos+"altLabel"))
+                     let val,isArray = false ;
+                     let lang = m["lang"]
+                     if(!lang) lang = m["xml:lang"]
+                     if(Array.isArray(m.value)) { val = m.value.map((e)=>this.pretty(e)) ; isArray = true }
+                     else {
+                        //val = this.highlight(this.pretty(m.value),k)
+                        let mLit = getLangLabel(this,[m])
+                        val =  this.highlight(mLit["value"],facet)
+                        //val =  mLit["value"]
+                        lang = mLit["lang"]
+                        if(!lang) lang = mLit["xml:lang"]
+                     }
+
+                     //console.log("val",val,val.length,lang)
+
+                     let uri
+                     if(m.type.match(/relationType$/) || (m.value && m.value.match && m.value.match(new RegExp("^("+bdr+")?"+this.props.keyword.replace(/bdr:/,"(bdr:)?")+"$")))) {
+                        if(m.type.match(/relationType$/))  prop = this.fullname(m.value) ;
+                        uri = this.props.keyword.replace(/bdr:/,"")
+                        val = uri ;
+                        lang = null 
+                        let label = this.props.resources[this.props.keyword]
+                        if(label) label = label[bdr+uri]
+                        if(label) label = label[skos+"prefLabel"]
+                        if(label) label = getLangLabel(this,label)
+                        if(label) {
+                           if(label.value) {
+                              val = label.value
+                              lang = label.lang
+                           }
+                           else if(label["@value"]) {
+                              val = label["@value"]
+                              lang = label["@language"]
+                           }
+                              
+                        }
+                        
+                     }
+
+
+                     //console.log("prop",prop,val)
+
+                     return (<div className="match">
+                        <span className="label">{prop}:&nbsp;</span>
+                        {!isArray && <span>{[!uri?val:<Link className="urilink" to={"/show/"+this.props.keyword}>{val}</Link>,lang?<Tooltip placement="bottom-end" title={
+                           <div style={{margin:"10px"}}>
+                              <Translate value={languages[lang]?languages[lang].replace(/search/,"tip"):lang}/>
+                           </div>
+                        }><span className="lang">{lang}</span></Tooltip>:null]}</span>}
+                        {isArray && <div class="multi">
+                           {val.map((e)=>
+                              <span>
+                                 <Link to={"/show/bdr:"+e}>{m.tmpLabel?m.tmpLabel:e}</Link>
+                                 { m.lang && <Tooltip placement="bottom-end" title={
+                                    <div style={{margin:"10px"}}>
+                                       <Translate value={languages[lang]?languages[lang].replace(/search/,"tip"):lang}/>
+                                    </div>
+                                 }><span className="lang">{m.lang}</span></Tooltip> }
+                              </span>)}</div>}
+                     </div>)
+                  }
+               })
+            }
+            </div> )
+      return retList
    }
 
    setTypeCounts(types,counts)
@@ -1931,84 +2005,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   if(!willBreak && !dontShow) { 
                      lastN = cpt ;
                      //console.log("lastN",lastN)
-                     message.push(
-                        [
-                           this.makeResult(id,n,t,lit,lang,tip,Tag)
-
-                        ,
-                        <div>
-                        {
-                           r.match.map((m) => {
-
-                              //console.log("m",m)
-
-                              if(true || !m.type.match(new RegExp(skos+"prefLabel"))) {
-                                 let prop = this.fullname(m.type.replace(/.*altLabelMatch/,skos+"altLabel"))
-                                 let val,isArray = false ;
-                                 let lang = m["lang"]
-                                 if(!lang) lang = m["xml:lang"]
-                                 if(Array.isArray(m.value)) { val = m.value.map((e)=>this.pretty(e)) ; isArray = true }
-                                 else {
-                                    //val = this.highlight(this.pretty(m.value),k)
-                                    let mLit = getLangLabel(this,[m])
-                                    val =  this.highlight(mLit["value"],k)
-                                    //val =  mLit["value"]
-                                    lang = mLit["lang"]
-                                    if(!lang) lang = mLit["xml:lang"]
-                                 }
-
-                                 //console.log("val",val,val.length,lang)
-
-                                 let uri
-                                 if(m.type.match(/relationType$/) || (m.value && m.value.match && m.value.match(new RegExp("^("+bdr+")?"+this.props.keyword.replace(/bdr:/,"(bdr:)?")+"$")))) {
-                                    if(m.type.match(/relationType$/))  prop = this.fullname(m.value) ;
-                                    uri = this.props.keyword.replace(/bdr:/,"")
-                                    val = uri ;
-                                    lang = null 
-                                    let label = this.props.resources[this.props.keyword]
-                                    if(label) label = label[bdr+uri]
-                                    if(label) label = label[skos+"prefLabel"]
-                                    if(label) label = getLangLabel(this,label)
-                                    if(label) {
-                                       if(label.value) {
-                                          val = label.value
-                                          lang = label.lang
-                                       }
-                                       else if(label["@value"]) {
-                                          val = label["@value"]
-                                          lang = label["@language"]
-                                       }
-                                        
-                                    }
-                                    
-                                 }
-
-
-                                 //console.log("prop",prop,val)
-
-                                 return (<div className="match">
-                                    <span className="label">{prop}:&nbsp;</span>
-                                    {!isArray && <span>{[!uri?val:<Link className="urilink" to={"/show/"+this.props.keyword}>{val}</Link>,lang?<Tooltip placement="bottom-end" title={
-                                       <div style={{margin:"10px"}}>
-                                          <Translate value={languages[lang]?languages[lang].replace(/search/,"tip"):lang}/>
-                                       </div>
-                                    }><span className="lang">{lang}</span></Tooltip>:null]}</span>}
-                                    {isArray && <div class="multi">
-                                       {val.map((e)=>
-                                          <span>
-                                             <Link to={"/show/bdr:"+e}>{m.tmpLabel?m.tmpLabel:e}</Link>
-                                             { m.lang && <Tooltip placement="bottom-end" title={
-                                                <div style={{margin:"10px"}}>
-                                                   <Translate value={languages[lang]?languages[lang].replace(/search/,"tip"):lang}/>
-                                                </div>
-                                             }><span className="lang">{m.lang}</span></Tooltip> }
-                                          </span>)}</div>}
-                                 </div>)
-                              }
-                           })
-                        }
-                        </div>
-                     ])
+                     message.push(this.makeResult(id,n,t,lit,lang,tip,Tag,null,r.match,k))
                   }
                   cpt ++;
                   let isCollapsed = (canCollapse && (this.state.collapse[categ] || this.state.collapse[categ] == undefined))                  
