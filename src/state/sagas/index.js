@@ -60,7 +60,7 @@ async function initiateApp(params,iri,myprops) {
          // console.log("params",params)
       }
 
-      if(!iri && !state.data.dictionary)
+      if(!state.data.dictionary)
       {
          const dico = await api.loadDictionary()
          store.dispatch(dataActions.loadedDictionary(dico));         
@@ -89,7 +89,7 @@ async function initiateApp(params,iri,myprops) {
 
             //store.dispatch(dataActions.gotAdminResource(iri, res));
             
-            let prop = [ "originalRecord", "metadataLegal" ]
+            let prop = [ "originalRecord", "metadataLegal", "contentProvider" ]
             for(let p of prop) 
                if(adminRes[iri.replace(/bdr:/,bda)][adm+p]) res[iri.replace(/bdr:/,bdr)][adm+p] = adminRes[iri.replace(/bdr:/,bda)][adm+p]
 

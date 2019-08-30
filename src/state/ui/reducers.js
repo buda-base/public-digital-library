@@ -1,4 +1,5 @@
 // @flow
+import _ from "lodash";
 import store from '../../index';
 import type { Action } from '../actions';
 import createReducer from '../../lib/createReducer';
@@ -143,6 +144,7 @@ export const updateFacets = (state: UIState, action: actions.LoadingAction) => {
                         for(let p of Object.keys(action.payload)) {
                             let val = action.payload[p]
                             if(val.val) val = val.val 
+                            val = _.orderBy(val, (elem) => elem === "unspecified"?1:0) 
                             if(prop !== p && val.indexOf("Any") === -1) {
                                 if(!action.payload[p].alt)  { 
                                     let hasAnyVal = false ;

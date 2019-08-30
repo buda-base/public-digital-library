@@ -16,6 +16,7 @@ const mapStateToProps = (state,ownProps) => {
    let failures = state.data.failures
    let resources = state.data.resources
    let ontology = state.data.ontology ;
+   let dictionary = state.data.dictionary ;
    let keyword = state.data.keyword
    let language = state.data.language
    let datatype = state.ui.datatype
@@ -70,7 +71,7 @@ const mapStateToProps = (state,ownProps) => {
    let locale = state.i18n.locale
    let langPreset = state.ui.langPreset
 
-   let props = { logged,config,resources, ontology, keyword, language, datatype, assocResources, prefLang, failures,
+   let props = { logged,config,resources, ontology, dictionary, keyword, language, datatype, assocResources, prefLang, failures,
       imageAsset,firstImage,canvasID,collecManif,manifests,manifestError,pdfVolumes,createPdf,pdfUrl,
       annoCollec,rightPanel,locale,langPreset,imgData, nextChunk, nextPage, resourceManifest, imageVolumeManifests }
 

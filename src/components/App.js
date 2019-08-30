@@ -24,10 +24,10 @@ import Apps from '@material-ui/icons/Apps';
 import Close from '@material-ui/icons/Close';
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
-import PanoramaFishEye from '@material-ui/icons/PanoramaFishEye';
+import PanoramaFishEye from '@material-ui/icons/CheckBoxOutlineBlank';
 import NavigateBefore from '@material-ui/icons/NavigateBefore';
 import NavigateNext from '@material-ui/icons/NavigateNext';
-import CheckCircle from '@material-ui/icons/CheckCircle';
+import CheckCircle from '@material-ui/icons/CheckBox';
 import CropFreeIcon from '@material-ui/icons/CropFree';
 import CropDin from '@material-ui/icons/CropDin';
 import CenterFocusWeak from '@material-ui/icons/CenterFocusWeak';
@@ -480,9 +480,15 @@ class App extends Component<Props,State> {
       }
       */
 
-      if(state.leftPane === undefined && props.keyword) {
+      if(!state.leftPane && props.keyword) {
          if(!s) s = { ...state }
-         s.leftPane=  true 
+         s.leftPane =  true 
+      }
+
+      if(props.keyword && (!props.datatypes || !props.datatypes.hash || !props.datatypes.metadata || Object.keys(props.datatypes.metadata).length === 0)) {
+         if(!s) s = { ...state }
+         s.leftPane = false 
+         console.log("no leftPane")
       }
 
       
@@ -727,6 +733,7 @@ class App extends Component<Props,State> {
       // console.log("newProps.facets",newProps.facets)
 
 
+/*
    handleCheckFacet = (ev:Event,prop:string,lab:string[],val:boolean) => {
 
       let state =  this.state
@@ -761,17 +768,15 @@ class App extends Component<Props,State> {
               else if(facets[f].val && facets[f].val.indexOf("Any") !== -1) return acc ;
               else return { ...acc, [f]:facets[f] }
            },{}),this.props.searches[this.state.filters.datatype[0]][this.props.keyword+"@"+this.props.language].metadata,this.props.config.facets[this.state.filters.datatype[0]]);
-      }
-      /*
-      else if(propSet)
-      {
-         state = {  ...state, filters: {  ...state.filters, facets: { ...state.filters.facets, ...newF } } }
-      }
-      */
+      }      
+      //else if(propSet)
+      //{
+      //   state = {  ...state, filters: {  ...state.filters, facets: { ...state.filters.facets, ...newF } } }
+      //}
 
       this.setState( state )
    }
-
+   */
 
    handleSearchTypes = (ev:Event,lab:string,val:boolean) => {
 
@@ -805,6 +810,56 @@ class App extends Component<Props,State> {
       }
    }
 
+
+   handleCheckFacet = (ev:Event,prop:string,lab:string[],val:boolean) => {
+
+      let state =  this.state
+
+      let propSet ;
+      if(state.filters.facets) propSet = state.filters.facets[prop]
+      if(!propSet) propSet = [ "Any" ]
+      else if(propSet.val) propSet = propSet.val
+
+      if(val) propSet = propSet.concat(lab);
+      else { propSet = propSet.filter(v => lab.indexOf(v) === -1) ; }
+
+      if(!propSet.length) propSet = [ "Any" ] ;
+
+      if(lab.indexOf("Any") !== -1) {
+         if(val) propSet = [ "Any" ]
+      }
+      else {
+         if(propSet.indexOf("Any") !== -1) propSet = propSet.filter(v => v !== "Any")
+         if(!propSet.length) propSet = [ "Any" ] ;
+      }
+      
+      let facets = state.filters.facets ;
+      if(!facets) facets = {}
+      if(prop == bdo+"workGenre") {
+
+         facets = { ...facets, [prop] : { alt : [ prop, bdo + "workIsAbout", tmp + "etextAbout" ], val : propSet } }
+      }
+      else
+      {
+         facets = { ...facets, [prop] : propSet }
+      }
+
+      state = { ...state, paginate:{index:0,pages:[0],n:[0]}, repage: true, filters:{ ...state.filters, facets }  }      
+
+      if(this.state.filters.datatype && this.state.filters.datatype.indexOf("Any") === -1 && this.props.searches && this.props.searches[this.state.filters.datatype[0]])          
+         this.props.onUpdateFacets(this.props.keyword+"@"+this.props.language,this.state.filters.datatype[0],Object.keys(facets).reduce((acc,f) => {
+            if(facets[f].indexOf && facets[f].indexOf("Any") !== -1) return acc ;
+            else if(facets[f].val && facets[f].val.indexOf("Any") !== -1) return acc ;
+            else return { ...acc, [f]:facets[f] }
+         },{}),this.props.searches[this.state.filters.datatype[0]][this.props.keyword+"@"+this.props.language].metadata,this.props.config.facets[this.state.filters.datatype[0]]);
+
+
+      console.log("checkF",prop,lab,val,facets,state);
+
+
+      this.setState(state);
+
+   }
 
    handleCheck = (ev:Event,lab:string,val:boolean,params?:{},force?:boolean) => {
 
@@ -1747,7 +1802,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
                  
                   if((v.alt && v.val.indexOf("unspecified") !== -1) || (!v.alt && v.indexOf("unspecified") !== -1)) {
-                     if(hasProp) { 
+                     if(hasProp && !withProp) { // && ((!v.alt && v.length === 1) || (v.alt && v.alt.length === 1) ) ) { 
                         filtered = false 
                      }
                      //else console.log("filt unspec",o)
@@ -2045,7 +2100,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                </Typography>
             )
          }
-         if(!sta.results || !sta.results[id] || sta.results[id].message.length != message.length) 
+         if(!sta.results || !sta.results[id] || (sta.results[id].message && message && sta.results[id].message.length != message.length))
          {
             let change
             if(!sta.results) sta.results = {}
@@ -2239,13 +2294,13 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             style={{display:"flex",justifyContent:"space-between",padding:"0 20px",borderBottom:"1px solid #bbb",cursor:"pointer"}}
             onClick={(e) => { this.setState({collapse:{ ...this.state.collapse, [txt]:!this.state.collapse[txt]} }); } }
             >
-            <Typography style={{fontSize:"18px",lineHeight:"50px",textTransform:"capitalize"}}>{title}</Typography>
+            <Typography style={{fontSize:"16px",lineHeight:"30px",textTransform:"capitalize"}}>{title}</Typography>
             { this.state.collapse[txt] ? <ExpandLess /> : <ExpandMore />}
          </ListItem>,
          <Collapse key={2}
             in={this.state.collapse[txt]}
             className={["collapse",this.state.collapse[txt]?"open":"close"].join(" ")}
-            style={{padding:"10px 0 0 20px"}} // ,marginBottom:"30px"
+            style={{padding:"5px 0 0 20px"}} // ,marginBottom:"30px"
             >
                {inCollapse}
          </Collapse> ]
@@ -2353,7 +2408,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             //console.log("checkedN",checked)
 
             return (
-               <div key={e} style={{width:"350px",textAlign:"left"}} className="widget searchWidget">
+               <div key={e} style={{width:"auto",textAlign:"left"}} className="widget searchWidget">
                   <FormControlLabel
                      control={
                         <Checkbox
@@ -2365,19 +2420,19 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                         />
 
                      }
-                     label={label+" ("+cpt_i+cpt+")"}
+                     label={<span>{label+" ("}<span class="facet-count">{cpt_i+cpt}</span>{")"}</span>}
                   />
                   {
                      elem && elem["taxHasSubClass"] && elem["taxHasSubClass"].length > 0 &&
                      [
-                        <span className="subcollapse"
+                        <span className="subcollapse" /*style={{width:"335px"}}*/
                               onClick={(ev) => { this.setState({collapse:{ ...this.state.collapse, [e]:!this.state.collapse[e]} }); } }>
                         { this.state.collapse[e] ? <ExpandLess /> : <ExpandMore />}
                         </span>,
                         <Collapse
                            in={this.state.collapse[e]}
                            className={["subcollapse",this.state.collapse[e]?"open":"close"].join(" ")}
-                           style={{paddingLeft:35+"px"}} // ,marginBottom:"30px"
+                           style={{paddingLeft:20+"px"}} // ,marginBottom:"30px"
                            >
                               { subWidget(tree,jpre,elem["taxHasSubClass"],disable,tag) }
                         </Collapse>
@@ -2441,8 +2496,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             <div className={"SidePane left " +(this.state.leftPane?"visible":"")}>
                   <IconButton className="close" onClick={e => this.setState({...this.state,leftPane:false})}><Close/></IconButton>
                { //this.props.datatypes && (results ? results.numResults > 0:true) &&
-                  <div style={{width:"333px",position:"relative"}}>
-                     <Typography style={{fontSize:"30px",marginBottom:"20px",textAlign:"left"}}>
+                  <div style={{minWidth:"335px",position:"relative"}}>
+                     <Typography style={{fontSize:"25px",marginBottom:"20px",textAlign:"center"}}>
                         <Translate value="Lsidebar.title" />
                      </Typography>
                      {
@@ -2472,7 +2527,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                            //if(!(this.props.datatypes && !this.props.datatypes.hash))
                               this.setState({collapse:{ ...this.state.collapse, "datatype":!this.state.collapse["datatype"]} }); } }
                         >
-                        <Typography style={{fontSize:"18px",lineHeight:"50px",}}>
+                        <Typography style={{fontSize:"16px",lineHeight:"30px",}}>
                            <Translate value="Lsidebar.datatypes.title"/>
                         </Typography>
                         { /*this.props.datatypes && this.props.datatypes.hash &&*/ !this.state.collapse["datatype"] ? <ExpandLess /> : <ExpandMore />  }
@@ -2480,7 +2535,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      <Collapse
                         in={/*this.props.datatypes && this.props.datatypes.hash &&*/ !this.state.collapse["datatype"]}
                         className={["collapse",  !(this.props.datatypes && !this.props.datatypes.hash)&&!this.state.collapse["datatype"]?"open":"close"].join(" ")}
-                         style={{padding:"10px 0 0 20px"}} >
+                         style={{padding:"5px 0 0 20px"}} >
                         <div>
                         { //facetList&&facetList.length > 0?facetList.sort((a,b) => { return a.props.label < b.props.label } ):
                               types.map((i) => {
@@ -2506,7 +2561,9 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                                           />
 
                                        }
-                                       {...counts["datatype"][i]?{label:I18n.t("types."+i.toLowerCase()) + " ("+counts["datatype"][i]+")"}:{label:I18n.t("types."+i.toLowerCase())}}
+                                       {...counts["datatype"][i]
+                                       ?{label:<span>{I18n.t("types."+i.toLowerCase()) + " ("}<span class="facet-count">{counts["datatype"][i]}</span>{")"}</span>}
+                                       :{label:I18n.t("types."+i.toLowerCase())}}
                                     />
                                  </div>
                               )
@@ -2705,7 +2762,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                                                    />
 
                                                 }
-                                                label={label+" ("+this.subcount(j,i)+meta[j][i].n+")"}
+                                                label={<span>{label+" ("}<span class="facet-count">{this.subcount(j,i)+meta[j][i].n}</span>{")"}</span>}
                                              />
                                           </div>
                                        )
@@ -2833,7 +2890,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   </div>
                }
             </div>
-            <div className="SearchPane" >
+            <div className={"SearchPane"+(this.props.keyword ?" resultPage":"")} >
                <a target="_blank" href="https://www.buddhistarchive.org/" style={{display:"inline-block",marginBottom:"25px"}}>
                   <img src="/logo.svg" style={{width:"200px"}} />
                </a>

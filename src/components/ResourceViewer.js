@@ -98,6 +98,8 @@ type Props = {
    nextChunk?:number,
    resourceManifest?:{},
    imageVolumeManifests?:{},
+   ontology:{},
+   dictionary:{},
    onInitPdf: (u:string,s:string) => void,
    onRequestPdf: (u:string,s:string) => void,
    onCreatePdf: (s:string,u:string) => void,
@@ -149,10 +151,11 @@ const rdfs = "http://www.w3.org/2000/01/rdf-schema#";
 const skos = "http://www.w3.org/2004/02/skos/core#";
 const tmp  = "http://purl.bdrc.io/ontology/tmp/" ;
 const _tmp  = "http://purl.bdrc.io/ontology/tmp/" ;
+const  xsd  = "http://www.w3.org/2001/XMLSchema#" ;
 
 const dila  = "http://purl.dila.edu.tw/resource/";
 
-const prefixes = { adm, bdac, bdan, bda, bdo, bdr, foaf, oa, owl, rdf, rdfs, skos, tmp, dila }
+const prefixes = { adm, bdac, bdan, bda, bdo, bdr, foaf, oa, owl, rdf, rdfs, skos, xsd, tmp, dila }
 
 let propOrder = {
    "Corporation":[],
@@ -235,6 +238,8 @@ let propOrder = {
       "bdo:note",
       "bdo:workCatalogInfo",
       "bdo:workHasSourcePrintery",
+      "adm:contentProvider",
+      "adm:metadataLegal",
    ],
    "Taxonomy":[],
    "Volume":[],
@@ -405,7 +410,8 @@ function top_left_menu(that,pdfLink,monoVol,fairUse)
 class ResourceViewer extends Component<Props,State>
 {
    _annoPane = [] ;
-   _leafletMap = null
+   _leafletMap = null ;
+   _properties = {} ;
 
    constructor(props:Props)
    {
@@ -541,49 +547,53 @@ class ResourceViewer extends Component<Props,State>
       if(sorted)
       {
 
+         let customSort = [ bdo+"workHasPart", bdo+"workHasExpression", bdo+"workTitle", bdo+"personName" ]
 
-         let parts = prop[bdo+"workHasPart"]
-         if(parts) {
+         let sortBySubPropNumber = (tag:string,idx:string) => {
+            let parts = prop[tag]
+            if(parts) {
 
-            let assoR = this.props.assocResources
-            if (assoR) {
-               parts = parts.map((e) => {
+               let assoR = this.props.assocResources
+               if (assoR) {
+                  parts = parts.map((e) => {
 
-                  let index = assoR[e.value]
+                     let index = assoR[e.value]
 
-                  if(index) index = index.filter(e => e.type == bdo+"workPartIndex")
-                  if(index && index[0] && index[0].value) index = Number(index[0].value)
-                  else index = null
+                     if(index) index = index.filter(e => e.type === idx)
+                     if(index && index[0] && index[0].value) index = Number(index[0].value)
+                     else index = null
 
-                  return ({ ...e, index })
-               })
-
-               prop[bdo+"workHasPart"] = _.orderBy(parts,['index'],['asc'])
+                     return ({ ...e, index })
+                  })
+                  parts = _.orderBy(parts,['index'],['asc'])
+               }
+               return parts ;
             }
          }
 
+         if(prop[bdo+"workHasPart"]) prop[bdo+"workHasPart"] = sortBySubPropNumber(bdo+"workHasPart",bdo+"workPartIndex");
 
-         parts = prop[bdo+"itemHasVolume"]
-         if(parts) {
+         if(prop[bdo+"itemHasVolume"]) prop[bdo+"itemHasVolume"] = sortBySubPropNumber(bdo+"itemHasVolume", bdo+"volumeNumber");
 
-            let assoR = this.props.assocResources
-            if (assoR) {
-
-               parts = parts.map((e) => {
-
-                  let index = assoR[e.value]
-
-                  if(index) index = index.filter(e => e.type == bdo+"volumeNumber")
-                  if(index && index[0] && index[0].value) index = Number(index[0].value)
-                  else index = null
-
-                  return ({ ...e, index })
-               })
-
-               prop[bdo+"itemHasVolume"] = _.orderBy(parts,['index'],['asc'])
+         let sortBySubPropURI = (tagEnd:string) => {
+            let assoR = this.props.assocResources            
+            let valSort = prop[bdo+tagEnd] 
+            if(this.props.dictionary && this.props.assocResources) {
+               valSort = valSort.map(v => ({...v,type:'bnode'})).map(w => w.type!=='bnode'||!assoR[w.value]?w:{'bnode':w.value,'k':assoR[w.value].filter(e => e.fromKey === rdf+"type").reduce( (acc,e) => {
+                  let p = this.props.dictionary[e.value]
+                  if(p) p = p[rdfs+"subClassOf"]
+                  if(p) p = p.filter(f => f.value === bdo+tagEnd[0].toUpperCase()+tagEnd.substring(1)).length
+                  if(p) return e.value + ";" + acc  
+                  else return acc+e.value+";"
+               },"")})              
+               valSort = _.orderBy(valSort,['k'],['asc']).map(e => ({'type':'bnode','value':e.bnode,'sorted':true}))               
             }
+            return valSort ; //
          }
-
+                  
+         if(prop[bdo+'workTitle']) prop[bdo+'workTitle'] = sortBySubPropURI("workTitle") ;
+         
+         if(prop[bdo+'personName']) prop[bdo+'personName'] = sortBySubPropURI("personName") ;
 
          let expr = prop[bdo+"workHasExpression"]
          if(expr) {
@@ -622,7 +632,7 @@ class ResourceViewer extends Component<Props,State>
 
                prop[bdo+"workHasExpression"] = _.sortBy(expr,['label1','label2'])
 
-               for(let o of prop[bdo+"workHasExpression"]) console.log(o.value,o.label1)
+               //for(let o of prop[bdo+"workHasExpression"]) console.log(o.value,o.label1)
 
             }
          }
@@ -659,7 +669,7 @@ class ResourceViewer extends Component<Props,State>
 
                //console.log("sorting",e,prop[e])
 
-               if(e.value === bdo+"workHasPart" || e.value === bdo+"workHasExpression" ) {
+               if(customSort.indexOf(e.value) !== -1) {
                   //console.log("skip sort parts",prop[e][0],prop[e])
                   return { ...acc, [e.value]:prop[e.value] }
                }
@@ -698,6 +708,7 @@ class ResourceViewer extends Component<Props,State>
 
             //console.log("propSort",prop,sortProp)
 
+            this._properties = prop ;
             return sortProp
          }
       }
@@ -1030,7 +1041,10 @@ class ResourceViewer extends Component<Props,State>
          || !this.props.resources[IRI][this.expand(IRI)]
          || !this.props.resources[IRI][this.expand(IRI)][prop]) return ;
 
-      let elem = this.props.resources[IRI][this.expand(IRI)][prop]
+
+      let elem ;
+      if(this._properties) elem = this._properties[prop]
+      elem = this.props.resources[IRI][this.expand(IRI)][prop]
 
       return elem
    }
@@ -1099,7 +1113,7 @@ class ResourceViewer extends Component<Props,State>
       })
       */
 
-      //console.log("format",prop,elem,txt,bnode,div);
+      //console.log("format",prop,JSON.stringify(elem,null,3),txt,bnode,div);
 
       let ret = [],pre = []
 
@@ -1132,7 +1146,7 @@ class ResourceViewer extends Component<Props,State>
          {
 
             let tmp
-            if(e.type == "uri") tmp = this.uriformat(prop,e)
+            if(e.type == "uri" || (e.type === 'literal' && e.datatype === xsd+'anyURI' )) tmp = this.uriformat(prop,e)
             else {
                let lang = e["lang"]
                if(!lang) lang = e["xml:lang"]
@@ -1283,9 +1297,25 @@ class ResourceViewer extends Component<Props,State>
             //console.log("lab",lab);
 
             let noVal = true ;
-
-            // property name ?
-            if(val && val[0] && val[0].value)
+            
+            let valSort ;
+            if(prop === bdo+'workTitle' && this.props.dictionary) {
+               valSort = val.map(v => {
+                  let p = this.props.dictionary[v.value]
+                  if(p) p = p[rdfs+"subClassOf"]
+                  if(p) return {v,k:p.filter(f => f.value === bdo+"WorkTitle").length}
+                  else return {v,k:-1}
+               })
+               valSort = _.orderBy(valSort,['k'],['desc']).map(e => e.v)
+               //console.log("valSort!",valSort)               
+            }
+            // property name ?            
+            if(valSort) {
+               //console.log("valSort?",valSort)               
+               noVal = false ;
+               sub.push(<Tag className={'first '+(div == "sub"?'type':'prop')}>{[valSort.map((v,i) => i==0?[this.proplink(v.value)]:[" / ",this.proplink(v.value)]),": "]}</Tag>)
+            }
+            else if(val && val[0] && val[0].value)
             {
                noVal = false ;
                sub.push(<Tag className={'first '+(div == "sub"?'type':'prop')}>{[this.proplink(val[0].value),": "]}</Tag>)
@@ -1461,23 +1491,44 @@ class ResourceViewer extends Component<Props,State>
                         }
 
                         let txt = v.value;
-                        if(v.type == 'bnode')
+                        if(v.value== e.value) {
+                           continue ;
+                        }
+                        else if(v.type == 'bnode')
                         {
                            hasBnode = true
                            subsub.push(this.format("h4",txt,"",true,div+"sub"))
                         }
                         else {
+                           let dic ;
                            if(v.type == 'uri') txt = this.uriformat(f,v)
-                           else txt = this.fullname(v.value)
+                           else if(v.type === 'literal' && v.datatype && this.props.dictionary && (dic = this.props.dictionary[v.datatype]) && dic[rdfs+"subClassOf"] 
+                              && dic[rdfs+"subClassOf"].filter(s => s.value === bdo+"AnyDate").length) {
 
-                           if(v["lang"] || v["xml:lang"]) {
-                              let lang = v["lang"]
-                              if(!lang) lang = v["xml:lang"]
-                              txt = [txt,lang?<Tooltip placement="bottom-end" title={
-                                 <div style={{margin:"10px"}}>
-                                    <Translate value={languages[lang]?languages[lang].replace(/search/,"tip"):lang}/>
-                                 </div>
-                              }><span className="lang">{lang}</span></Tooltip>:null]
+                              let dateC = dic[rdfs+"comment"]
+                              if(dateC) dateC = dateC[0]
+                              if(dateC) dateC = dateC.value
+
+                              let dateL = dic[rdfs+"label"]
+                              if(dateL) dateL = dateL[0]
+                              if(dateL) dateL = dateL.value
+                              if(dateL) dateL = dateL.replace(/ date$/,"")
+
+                              txt = [txt,<Tooltip placement="bottom-end" title={<div style={{margin:"10px"}}>{dateC}</div>}><span className="lang">{dateL}</span></Tooltip>]
+                           }
+                           else { txt = this.fullname(v.value)
+
+                              //console.log("txt",txt)
+
+                              if(v["lang"] || v["xml:lang"]) {
+                                 let lang = v["lang"]
+                                 if(!lang) lang = v["xml:lang"]
+                                 txt = [txt,lang?<Tooltip placement="bottom-end" title={
+                                    <div style={{margin:"10px"}}>
+                                       <Translate value={languages[lang]?languages[lang].replace(/search/,"tip"):lang}/>
+                                    </div>
+                                 }><span className="lang">{lang}</span></Tooltip>:null]
+                              }
                            }
                            if(!Array.isArray(txt)) txt = [txt]
                            txt.push(
@@ -2146,7 +2197,7 @@ class ResourceViewer extends Component<Props,State>
 
             //if(!k.match(new RegExp("Revision|Entry|prefLabel|"+rdf+"|toberemoved"))) {
             if((!k.match(new RegExp(adm+"|adm:|isRoot$|SourcePath|prefLabel|"+rdf+"|toberemoved|workPartIndex|workPartTreeIndex")) 
-               ||k.match(/(originalRecord|metadataLegal)$/)
+               ||k.match(/(originalRecord|metadataLegal|contentProvider)$/)
                || (this.props.IRI.match(/^bda:/) && (k.match(new RegExp(adm+"|adm:")))))
             && (k !== bdo+"eTextHasChunk" || kZprop.indexOf(bdo+"eTextHasPage") === -1) )
             {
