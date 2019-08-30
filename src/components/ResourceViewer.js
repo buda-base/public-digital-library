@@ -238,6 +238,8 @@ let propOrder = {
       "bdo:note",
       "bdo:workCatalogInfo",
       "bdo:workHasSourcePrintery",
+      "adm:contentProvider",
+      "adm:metadataLegal",
    ],
    "Taxonomy":[],
    "Volume":[],
@@ -875,7 +877,7 @@ class ResourceViewer extends Component<Props,State>
    {
       if(elem) {
 
-         console.log("uriformat",prop,elem.value,dico,withProp,show)
+         //console.log("uriformat",prop,elem.value,dico,withProp,show)
 
          if(!elem.value.match(/^http:\/\/purl\.bdrc\.io/)) {
             return <a href={elem.value} target="_blank">{decodeURI(elem.value)}</a> ;
@@ -1111,7 +1113,7 @@ class ResourceViewer extends Component<Props,State>
       })
       */
 
-      console.log("format",prop,JSON.stringify(elem,null,3),txt,bnode,div);
+      //console.log("format",prop,JSON.stringify(elem,null,3),txt,bnode,div);
 
       let ret = [],pre = []
 
@@ -1282,7 +1284,7 @@ class ResourceViewer extends Component<Props,State>
 
             elem = this.getResourceBNode(e.value)
             
-            console.log("bnode",e.value,elem)
+            //console.log("bnode",e.value,elem)
 
             if(!elem) continue ;
 
@@ -1291,8 +1293,8 @@ class ResourceViewer extends Component<Props,State>
             let val = elem[rdf+"type"]
             let lab = elem[rdfs+"label"]
 
-            console.log("val",val);
-            console.log("lab",lab);
+            //console.log("val",val);
+            //console.log("lab",lab);
 
             let noVal = true ;
             
@@ -1305,11 +1307,11 @@ class ResourceViewer extends Component<Props,State>
                   else return {v,k:-1}
                })
                valSort = _.orderBy(valSort,['k'],['desc']).map(e => e.v)
-               console.log("valSort!",valSort)               
+               //console.log("valSort!",valSort)               
             }
             // property name ?            
             if(valSort) {
-               console.log("valSort?",valSort)               
+               //console.log("valSort?",valSort)               
                noVal = false ;
                sub.push(<Tag className={'first '+(div == "sub"?'type':'prop')}>{[valSort.map((v,i) => i==0?[this.proplink(v.value)]:[" / ",this.proplink(v.value)]),": "]}</Tag>)
             }
@@ -1467,7 +1469,7 @@ class ResourceViewer extends Component<Props,State>
                   if(f == rdf+"type") continue;
                   else
                   {
-                     console.log("what",this.props.resources[this.props.IRI][elem[f][0].value])
+                     //console.log("what",this.props.resources[this.props.IRI][elem[f][0].value])
 
                      if(!noVal)
                         subsub.push(<Tag className={'first '+(div == ""?'type':'prop')}>{[this.proplink(f),": "]}</Tag>)
@@ -1478,7 +1480,7 @@ class ResourceViewer extends Component<Props,State>
                      val = elem[f]
                      for(let v of val)
                      {
-                        console.log("v",v);
+                        //console.log("v",v);
 
                         if(f == bdo+"noteLocationStatement" || f == bdo+"noteWork" || f == bdo+"noteText") {
                            noteData[f] = v
@@ -1516,7 +1518,7 @@ class ResourceViewer extends Component<Props,State>
                            }
                            else { txt = this.fullname(v.value)
 
-                              console.log("txt",txt)
+                              //console.log("txt",txt)
 
                               if(v["lang"] || v["xml:lang"]) {
                                  let lang = v["lang"]
@@ -2195,7 +2197,7 @@ class ResourceViewer extends Component<Props,State>
 
             //if(!k.match(new RegExp("Revision|Entry|prefLabel|"+rdf+"|toberemoved"))) {
             if((!k.match(new RegExp(adm+"|adm:|isRoot$|SourcePath|prefLabel|"+rdf+"|toberemoved|workPartIndex|workPartTreeIndex")) 
-               ||k.match(/(originalRecord|metadataLegal)$/)
+               ||k.match(/(originalRecord|metadataLegal|contentProvider)$/)
                || (this.props.IRI.match(/^bda:/) && (k.match(new RegExp(adm+"|adm:")))))
             && (k !== bdo+"eTextHasChunk" || kZprop.indexOf(bdo+"eTextHasPage") === -1) )
             {

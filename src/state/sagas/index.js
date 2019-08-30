@@ -89,7 +89,7 @@ async function initiateApp(params,iri,myprops) {
 
             //store.dispatch(dataActions.gotAdminResource(iri, res));
             
-            let prop = [ "originalRecord", "metadataLegal" ]
+            let prop = [ "originalRecord", "metadataLegal", "contentProvider" ]
             for(let p of prop) 
                if(adminRes[iri.replace(/bdr:/,bda)][adm+p]) res[iri.replace(/bdr:/,bdr)][adm+p] = adminRes[iri.replace(/bdr:/,bda)][adm+p]
 
