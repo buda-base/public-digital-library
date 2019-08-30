@@ -67,9 +67,11 @@ const rdfs = "http://www.w3.org/2000/01/rdf-schema#";
 const skos = "http://www.w3.org/2004/02/skos/core#";
 const tmp = "http://purl.bdrc.io/ontology/tmp/" ;
 const _tmp = tmp ;
+const dila  = "http://purl.dila.edu.tw/resource/";
+
 
 export const prefixes = [adm, admd, bdo,bdr,rdf,rdfs,skos,tmp,_tmp,oa]
-export const prefixesMap = {adm, bdo,bdr,rdf,rdfs,skos,tmp,_tmp,oa}
+export const prefixesMap = {adm, dila, bdo,bdr,rdf,rdfs,skos,tmp,_tmp,oa}
 
 const facetLabel = {
    "tree":"Genre / Is About"
@@ -1300,7 +1302,13 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
    {
       //console.log("res",id,n,t,lit,lang,tip,Tag)
 
-      if(!id.match(/[:/]/)) id = "bdr:" +id
+      if(!id.match(/[:/]/)) id = "bdr:" + id
+
+      let prettId = id ;
+      for(let k of Object.keys(prefixesMap)) prettId = prettId.replace(new RegExp(prefixesMap[k]),k+":")
+
+      console.log("id",id,prettId)
+
 
       let ret = (
             <div key={t+"_"+n+"_"}  className="contenu">
@@ -1325,7 +1333,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                         secondary={
                            <div> */}
                               <p key="id">
-                                 {id}
+                                 {prettId}
                                  { Tag && <Tooltip key={"tip"} placement="bottom-start" title={
                                           <div style={{margin:"10px"}}>
                                              {tip}
@@ -1341,8 +1349,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   </ListItem>
             </div> )
 
-         if(id.match(/^bdr:/))
-            return ( <Link key={n} to={"/show/"+id} className="result">{ret}</Link> )
+         if(prettId.match(/^([^:])+:/))
+            return ( <Link key={n} to={"/show/"+prettId} className="result">{ret}</Link> )
          else
             return ( <Link key={n} to={url?url.replace(/^https?:/,""):id.replace(/^https?:/,"")} target="_blank" className="result">{ret}</Link> )
 
@@ -1672,16 +1680,16 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   //console.log("e",e,this.state.filters.facets)
 
                   return ( /*(this.state.filters.facets && e.type && this.state.filters.facets[e.type]) ||*/ use && (
-                  ( this.props.language != "" ? e.value && ((e.value.match(/[↦↤]/) && e.type && !e.type.match(/(prefLabelMatch$)|(creator)/) ))
+                  ( this.props.language != "" ? e.value && ((e.value.match(/[↦↤]/) && e.type && (!e.type.match(/(prefLabelMatch$)|(creator)/) || (!label.value.match(/[↦↤]/))) ))
                                                             //|| e.type && e.type.match(/Matching$/))
                                               : !e.lang && (e.value.match(new RegExp(bdr+this.props.keyword.replace(/bdr:/,"")))
                                                             || (e.type && e.type.match(/relationType$/) ) ) )
 
-                     ) ) } )
+                     ) ) } ).map(e => e.type.match(/prefLabelMatch$/) ? { ...e, type:skos+"prefLabel" }:e)
             }
 
 
-            //console.log("r",r,label);
+            console.log("r",r,label);
 
             // || (e.type && e.type.match(/[Ee]xpression/) )
             // || ( )
@@ -1934,7 +1942,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
                               //console.log("m",m)
 
-                              if(!m.type.match(new RegExp(skos+"prefLabel"))) {
+                              if(true || !m.type.match(new RegExp(skos+"prefLabel"))) {
                                  let prop = this.fullname(m.type.replace(/.*altLabelMatch/,skos+"altLabel"))
                                  let val,isArray = false ;
                                  let lang = m["lang"]
