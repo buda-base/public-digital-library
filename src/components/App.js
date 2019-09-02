@@ -62,6 +62,7 @@ const adm  = "http://purl.bdrc.io/ontology/admin/" ;
 const bdo  = "http://purl.bdrc.io/ontology/core/";
 const bdr  = "http://purl.bdrc.io/resource/";
 const oa = "http://www.w3.org/ns/oa#" ;
+const owl = "http://www.w3.org/2002/07/owl#" ; 
 const rdf  = "http://www.w3.org/1999/02/22-rdf-syntax-ns#";
 const rdfs = "http://www.w3.org/2000/01/rdf-schema#";
 const skos = "http://www.w3.org/2004/02/skos/core#";
@@ -1298,7 +1299,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
       return false ;
    }
 
-   makeResult(id,n,t,lit,lang,tip,Tag,url,rmatch = [], facet)
+   makeResult(id,n,t,lit,lang,tip,Tag,url,rmatch = [],facet,sameAsRes)
    {
       //console.log("res",id,n,t,lit,lang,tip,Tag)
 
@@ -1324,7 +1325,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                                              <Translate value={languages[lang]?languages[lang].replace(/search/,"tip"):lang}/>
                                           </div>
                                        }>
-                                          <span className="lang">{lang}</span>
+                                          <span className="lang">&nbsp;{lang}</span>
                                        </Tooltip> }
                               </h3>
                         {/*   </div>
@@ -1355,8 +1356,54 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          else
             retList = [ ( <Link key={n} to={url?url.replace(/^https?:/,""):id.replace(/^https?:/,"")} target="_blank" className="result">{ret}</Link> ) ]
 
+         if(!sameAsRes) sameAsRes = []
+         if(!sameAsRes.length) sameAsRes = sameAsRes.concat(rmatch.filter(e => e.value === owl+"sameAs")).map(e => ({ "type":owl+"sameAs", "value":this.props.keyword}))
 
-         if(rmatch && rmatch.length) retList.push( <div>
+         if(sameAsRes.length) {
+            console.log("sameAs",sameAsRes)
+         //}
+            let sources = []
+            let hasDILAres //= prettId.match(new RegExp("^dila:|^"+dila))
+            let hasBDRCres //= prettId.match(new RegExp("^bdr:|^"+bdr))
+
+
+
+            for(let res of sameAsRes) {
+               
+               console.log("res",res)
+
+               if(res.value.match(new RegExp("(^dila:)|(^"+dila+")"))) hasDILAres = res.value.replace(new RegExp(dila),"dila:")
+               else if(res.value.match(new RegExp("(^bdr:)|(^"+bdr+")"))) hasBDRCres = res.value.replace(new RegExp(bdr),"bdr:")
+
+               console.log(hasDILAres,hasBDRCres);
+            }
+
+
+            if(!hasDILAres && prettId.match(new RegExp("(^dila:)|(^"+dila+")"))) hasDILAres = prettId
+            if(!hasBDRCres && prettId.match(new RegExp("(^bdr:)|(^"+bdr+")")))   hasBDRCres = prettId
+
+
+            console.log("final",hasDILAres,hasBDRCres);
+
+            if(hasDILAres) { 
+               sources.push(<Tooltip placement="bottom-end" title={<div style={{margin:"10px"}}>Show data from DILA</div>}>
+                  <Link to={"/show/"+hasDILAres}><img src="http://authority.dila.edu.tw/favicon.ico"/>
+               </Link></Tooltip>)  
+            }
+
+            if(hasBDRCres) { 
+               sources.push(<Tooltip placement="bottom-end" title={<div style={{margin:"10px"}}>Show data from BDRC</div>}>
+                  <Link to={"/show/"+hasBDRCres}><img src="/logo.svg"/></Link>
+               </Tooltip>) 
+            }
+
+            
+
+            if(sources.length > 1 || sources.length == 1 && !hasBDRCres ) retList.push(<div class="source">{sources}</div>)
+            
+         }
+
+         if(rmatch && rmatch.length) retList.push( <div id='matches'>
             {
                rmatch.map((m) => {
 
@@ -1412,7 +1459,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                            <div style={{margin:"10px"}}>
                               <Translate value={languages[lang]?languages[lang].replace(/search/,"tip"):lang}/>
                            </div>
-                        }><span className="lang">{lang}</span></Tooltip>:null]}</span>}
+                        }><span className="lang">&nbsp;{lang}</span></Tooltip>:null]}</span>}
                         {isArray && <div class="multi">
                            {val.map((e)=>
                               <span>
@@ -1421,14 +1468,17 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                                     <div style={{margin:"10px"}}>
                                        <Translate value={languages[lang]?languages[lang].replace(/search/,"tip"):lang}/>
                                     </div>
-                                 }><span className="lang">{m.lang}</span></Tooltip> }
+                                 }><span className="lang">&nbsp;{m.lang}</span></Tooltip> }
                               </span>)}</div>}
                      </div>)
                   }
                })
             }
             </div> )
-      return retList
+
+      retList.push(<hr/>);
+
+      return <div className="result-content">{retList}</div>
    }
 
    setTypeCounts(types,counts)
@@ -1754,8 +1804,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   //console.log("e",e,this.state.filters.facets)
 
                   return ( /*(this.state.filters.facets && e.type && this.state.filters.facets[e.type]) ||*/ use && (
-                  ( this.props.language != "" ? e.value && ((e.value.match(/[↦↤]/) && e.type && (!e.type.match(/(prefLabelMatch$)|(creator)/) || (!label.value.match(/[↦↤]/))) ))
-                                                            //|| e.type && e.type.match(/Matching$/))
+                  ( this.props.language != "" ? e.value && ((e.value.match(/[↦↤]/) && e.type && (!e.type.match(/(prefLabelMatch$)|(creator)/) || (!label.value.match(/[↦↤]/)))))
+                                                            //|| e.type && e.type.match(/sameAs$/))
                                               : !e.lang && (e.value.match(new RegExp(bdr+this.props.keyword.replace(/bdr:/,"")))
                                                             || (e.type && e.type.match(/relationType$/) ) ) )
 
@@ -2005,7 +2055,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   if(!willBreak && !dontShow) { 
                      lastN = cpt ;
                      //console.log("lastN",lastN)
-                     message.push(this.makeResult(id,n,t,lit,lang,tip,Tag,null,r.match,k))
+                     message.push(this.makeResult(id,n,t,lit,lang,tip,Tag,null,r.match,k,sublist[o].filter(p => p.type === owl+"sameAs")))
                   }
                   cpt ++;
                   let isCollapsed = (canCollapse && (this.state.collapse[categ] || this.state.collapse[categ] == undefined))                  
