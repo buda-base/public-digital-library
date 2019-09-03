@@ -69,10 +69,14 @@ const skos = "http://www.w3.org/2004/02/skos/core#";
 const tmp = "http://purl.bdrc.io/ontology/tmp/" ;
 const _tmp = tmp ;
 const dila  = "http://purl.dila.edu.tw/resource/";
+const wd = "http://www.wikidata.org/entity/"
+const viaf = "http://viaf.org/viaf/"
+const ol = "https://openlibrary.org/authors/"
 
 
-export const prefixes = [adm, admd, bdo,bdr,rdf,rdfs,skos,tmp,_tmp,oa]
-export const prefixesMap = {adm, dila, bdo,bdr,rdf,rdfs,skos,tmp,_tmp,oa}
+export const prefixes = [adm, admd, bdo,bdr,rdf,rdfs,skos,tmp,_tmp,oa,wd,ol,viaf]
+export const prefixesMap = {adm, dila, bdo,bdr,rdf,rdfs,skos,tmp,_tmp,oa,wd,ol,viaf}
+export const sameAsMap = { wd:"WikiData", ol:"OpenLibrary", bdr:"BDRC" }
 
 const facetLabel = {
    "tree":"Genre / Is About"
@@ -171,6 +175,10 @@ export function getLangLabel(that:{},labels:[],proplang:boolean=false,uilang:boo
       if(that.state.langPreset) langs = that.state.langPreset
       else if(that.props.langPreset) langs = that.props.langPreset
       if(proplang || uilang) langs = [ that.props.locale, ...langs ]
+
+      if(langs.indexOf(that.props.locale) === -1) { 
+         langs = [ ...langs, that.props.locale ]
+      }            
 
       // move that to redux state ?
       langs = extendedPresets(langs)
@@ -1356,50 +1364,51 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          else
             retList = [ ( <Link key={n} to={url?url.replace(/^https?:/,""):id.replace(/^https?:/,"")} target="_blank" className="result">{ret}</Link> ) ]
 
+         let dico
          if(!sameAsRes) sameAsRes = []
          if(!sameAsRes.length) sameAsRes = sameAsRes.concat(rmatch.filter(e => e.value === owl+"sameAs")).map(e => ({ "type":owl+"sameAs", "value":this.props.keyword}))
+         else {
+            dico = sameAsRes.filter(p => p["lang"]!== undefined || p["xml:lang"]!== undefined || p["@language"]!== undefined).reduce( (acc,e) => {
+               let id = acc[e.type]
+               if(!id) id= []
+               id.push(e);
+               return ({...acc,[e.type]:id})
+            },{}) 
+            
+            sameAsRes = sameAsRes.filter(p => p.type === owl+"sameAs")
+            rmatch = rmatch.concat(sameAsRes)
+            //console.log("dico",dico)
+         }
 
          if(sameAsRes.length) {
-            console.log("sameAs",sameAsRes)
-         //}
+            console.log("sameAs",dico,rmatch,sameAsRes)
+         
             let sources = []
-            let hasDILAres //= prettId.match(new RegExp("^dila:|^"+dila))
-            let hasBDRCres //= prettId.match(new RegExp("^bdr:|^"+bdr))
+            let hasRes = {}
+            let img = { 
+               "dila": "http://authority.dila.edu.tw/favicon.ico", 
+               "bdr":  "/logo.svg", 
+               "wd":   "https://upload.wikimedia.org/wikipedia/commons/f/ff/Wikidata-logo.svg",
+               "viaf": "http://valentincarrera.es/wp-content/uploads/2017/07/logo-viaf.png",
+               "ol":   "https://d2.alternativeto.net/dist/icons/open-library_143935.png?width=64&height=64"  //"https://openlibrary.org/static/images/openlibrary-logo-tighter.svg" //"https://seeklogo.com/images/O/open-library-logo-0AB99DA900-seeklogo.com.png", 
+            } 
 
+            for(let res of sameAsRes) 
+               for(let src of Object.keys(img))                
+                  if(res.value.match(new RegExp("(^"+src+":)|(^"+prefixesMap[src]+")"))) hasRes[src] = res.value.replace(new RegExp(prefixesMap[src]),src+":")
 
+            for(let src of Object.keys(img)) 
+               if(!hasRes[src] && prettId.match(new RegExp("(^"+src+":)|(^"+prefixesMap[src]+")"))) 
+                  hasRes[src] = prettId
 
-            for(let res of sameAsRes) {
+            for(let src of Object.keys(img)) 
+               if(hasRes[src]) 
+                  sources.push(
+                     <Tooltip placement="bottom-end" title={<div style={{margin:"10px"}}>Show data from {sameAsMap[src]?sameAsMap[src]:src.toUpperCase()}</div>}>
+                        <Link to={"/show/"+hasRes[src]}><img src={img[src]}/>
+                     </Link></Tooltip>)  
                
-               console.log("res",res)
-
-               if(res.value.match(new RegExp("(^dila:)|(^"+dila+")"))) hasDILAres = res.value.replace(new RegExp(dila),"dila:")
-               else if(res.value.match(new RegExp("(^bdr:)|(^"+bdr+")"))) hasBDRCres = res.value.replace(new RegExp(bdr),"bdr:")
-
-               console.log(hasDILAres,hasBDRCres);
-            }
-
-
-            if(!hasDILAres && prettId.match(new RegExp("(^dila:)|(^"+dila+")"))) hasDILAres = prettId
-            if(!hasBDRCres && prettId.match(new RegExp("(^bdr:)|(^"+bdr+")")))   hasBDRCres = prettId
-
-
-            console.log("final",hasDILAres,hasBDRCres);
-
-            if(hasDILAres) { 
-               sources.push(<Tooltip placement="bottom-end" title={<div style={{margin:"10px"}}>Show data from DILA</div>}>
-                  <Link to={"/show/"+hasDILAres}><img src="http://authority.dila.edu.tw/favicon.ico"/>
-               </Link></Tooltip>)  
-            }
-
-            if(hasBDRCres) { 
-               sources.push(<Tooltip placement="bottom-end" title={<div style={{margin:"10px"}}>Show data from BDRC</div>}>
-                  <Link to={"/show/"+hasBDRCres}><img src="/logo.svg"/></Link>
-               </Tooltip>) 
-            }
-
-            
-
-            if(sources.length > 1 || sources.length == 1 && !hasBDRCres ) retList.push(<div class="source">{sources}</div>)
+            if(sources.length > 1 || sources.length == 1 && !hasRes["bdr"] ) retList.push(<div class="source">{sources}</div>)
             
          }
 
@@ -1426,15 +1435,39 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
                      //console.log("val",val,val.length,lang)
 
-                     let uri
-                     if(m.type.match(/relationType$/) || (m.value && m.value.match && m.value.match(new RegExp("^("+bdr+")?"+this.props.keyword.replace(/bdr:/,"(bdr:)?")+"$")))) {
-                        if(m.type.match(/relationType$/))  prop = this.fullname(m.value) ;
+                     let uri,from
+                     if(m.type.match(/sameAs$/)) {
+                        val = m.value;
+                        let label = dico[val]
+                        if(label) label = getLangLabel(this,label)
+                        if(label) {
+                           uri = val
+                           for(let k of Object.keys(prefixesMap)) { 
+                              if(uri.startsWith(prefixesMap[k])) prop = "Same As " + (sameAsMap[k]?sameAsMap[k]:k.toUpperCase())
+                              uri = uri.replace(new RegExp(prefixesMap[k]),k+":")
+                           }
+                           uri = "/show/"+uri
+                           if(label.value) {
+                              val = label.value
+                              lang = label.lang
+                           }
+                           else if(label["@value"]) {
+                              val = label["@value"]
+                              lang = label["@language"]
+                           }
+                           if(label["xml:lang"]) lang = label["xml:lang"]                              
+                           
+                        }
+                     }
+                     else if(m.type.match(/relationType$/) || (m.value && m.value.match && m.value.match(new RegExp("^("+bdr+")?"+this.props.keyword.replace(/bdr:/,"(bdr:)?")+"$")))) {
+                        
                         uri = this.props.keyword.replace(/bdr:/,"")
                         val = uri ;
                         lang = null 
                         let label = this.props.resources[this.props.keyword]
                         if(label) label = label[bdr+uri]
                         if(label) label = label[skos+"prefLabel"]
+                        if(!label) label = dico[this.props.keyword]
                         if(label) label = getLangLabel(this,label)
                         if(label) {
                            if(label.value) {
@@ -1445,17 +1478,28 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                               val = label["@value"]
                               lang = label["@language"]
                            }
+                           if(label["xml:lang"]) lang = label["xml:lang"]                              
                               
                         }
-                        
+                        if(m.type.match(/relationType$/))  {
+                           if(m.value.match(/sameAs$/)) {
+                              uri = this.props.keyword
+                              for(let k of Object.keys(prefixesMap)) { 
+                                 if(uri.startsWith(k+":")) prop = "Same As " + (sameAsMap[k]?sameAsMap[k]:k.toUpperCase())
+                              }
+                              uri = "/show/"+uri
+                           } else {
+                              prop = this.fullname(m.value) 
+                              uri = "/show/"+this.props.keyword
+                           }
+                        }                        
                      }
-
 
                      //console.log("prop",prop,val)
 
                      return (<div className="match">
-                        <span className="label">{prop}:&nbsp;</span>
-                        {!isArray && <span>{[!uri?val:<Link className="urilink" to={"/show/"+this.props.keyword}>{val}</Link>,lang?<Tooltip placement="bottom-end" title={
+                        <span className="label">{(!from?prop:from)}:&nbsp;</span>
+                        {!isArray && <span>{[!uri?val:<Link className="urilink" to={uri}>{val}</Link>,lang?<Tooltip placement="bottom-end" title={
                            <div style={{margin:"10px"}}>
                               <Translate value={languages[lang]?languages[lang].replace(/search/,"tip"):lang}/>
                            </div>
@@ -2055,7 +2099,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   if(!willBreak && !dontShow) { 
                      lastN = cpt ;
                      //console.log("lastN",lastN)
-                     message.push(this.makeResult(id,n,t,lit,lang,tip,Tag,null,r.match,k,sublist[o].filter(p => p.type === owl+"sameAs")))
+                     message.push(this.makeResult(id,n,t,lit,lang,tip,Tag,null,r.match,k,sublist[o])) 
                   }
                   cpt ++;
                   let isCollapsed = (canCollapse && (this.state.collapse[categ] || this.state.collapse[categ] == undefined))                  

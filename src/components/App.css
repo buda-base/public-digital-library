@@ -51,7 +51,7 @@ a.result ~ #matches:empty { margin-bottom:8px; margin-top:-20px !important;paddi
 
 .result-content { position:relative;  }
 .source { position:absolute; top:0; margin-top:9px; margin-left:0px; display:inline-block; }
-.source a img { height:22px; margin:0 2px; padding-top:7px; }
+.source a img { height:18px; margin:0 5px; padding-top:0px; }
 /* .source a:last-child img { height:35px; vertical-align:top;  } */
 
 a.result .lang, .match .lang,.data .lang,h2 .lang, .imageVolumePopup .lang
