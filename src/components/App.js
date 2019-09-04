@@ -1386,11 +1386,11 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             let sources = []
             let hasRes = {}
             let img = { 
-               "dila": "http://authority.dila.edu.tw/favicon.ico", 
+               "dila": "/DILA-favicon.ico", 
                "bdr":  "/logo.svg", 
-               "wd":   "https://upload.wikimedia.org/wikipedia/commons/f/ff/Wikidata-logo.svg",
-               "viaf": "http://valentincarrera.es/wp-content/uploads/2017/07/logo-viaf.png",
-               "ol":   "https://d2.alternativeto.net/dist/icons/open-library_143935.png?width=64&height=64"  //"https://openlibrary.org/static/images/openlibrary-logo-tighter.svg" //"https://seeklogo.com/images/O/open-library-logo-0AB99DA900-seeklogo.com.png", 
+               "wd":   "/WD.svg",
+               "viaf": "/VIAF.png",
+               "ol":   "/OL.png"  //"https://openlibrary.org/static/images/openlibrary-logo-tighter.svg" //"https://seeklogo.com/images/O/open-library-logo-0AB99DA900-seeklogo.com.png", 
             } 
 
             for(let res of sameAsRes) 

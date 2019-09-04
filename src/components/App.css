@@ -45,13 +45,13 @@ a.result ~ #matches:empty { margin-bottom:8px; margin-top:-20px !important;paddi
 /* box-shadow:-5px 0 5px -4px rgba(0,0,0,0.2);  } */
 #matches span { display:inline ; line-height:1.2rem; }
 #matches span.label { text-transform:capitalize; font-weight:700; float:left;clear:both; flex-shrink:0; }
-#matches span:not(.label) {  }
+/* #matches span:not(.label) {  } */
 .match { display:flex; margin-bottom:0px }
 .match a { /*word-break:  break-word;*/ overflow-wrap: break-word; }
 
 .result-content { position:relative;  }
 .source { position:absolute; top:0; margin-top:9px; margin-left:0px; display:inline-block; }
-.source a img { height:18px; margin:0 5px; padding-top:0px; }
+.source a img { height:32px; margin:0 5px; padding-top:2px; }
 /* .source a:last-child img { height:35px; vertical-align:top;  } */
 
 a.result .lang, .match .lang,.data .lang,h2 .lang, .imageVolumePopup .lang
