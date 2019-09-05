@@ -57,25 +57,28 @@ import {getEntiType} from '../lib/api';
 import {sortLangScriptLabels, extendedPresets} from '../lib/transliterators';
 import './App.css';
 
-const admd  = "http://purl.bdrc.io/admindata/" ;
-const adm  = "http://purl.bdrc.io/ontology/admin/" ;
-const bdo  = "http://purl.bdrc.io/ontology/core/";
-const bdr  = "http://purl.bdrc.io/resource/";
-const oa = "http://www.w3.org/ns/oa#" ;
-const owl = "http://www.w3.org/2002/07/owl#" ; 
-const rdf  = "http://www.w3.org/1999/02/22-rdf-syntax-ns#";
-const rdfs = "http://www.w3.org/2000/01/rdf-schema#";
-const skos = "http://www.w3.org/2004/02/skos/core#";
-const tmp = "http://purl.bdrc.io/ontology/tmp/" ;
-const _tmp = tmp ;
+const adm   = "http://purl.bdrc.io/ontology/admin/" ;
+const bda   = "http://purl.bdrc.io/admindata/";
+const bdac  = "http://purl.bdrc.io/anncollection/" ;
+const bdan  = "http://purl.bdrc.io/annotation/" ;
+const bdo   = "http://purl.bdrc.io/ontology/core/"
+const bdr   = "http://purl.bdrc.io/resource/";
 const dila  = "http://purl.dila.edu.tw/resource/";
-const wd = "http://www.wikidata.org/entity/"
-const viaf = "http://viaf.org/viaf/"
-const ol = "https://openlibrary.org/authors/"
+const foaf  = "http://xmlns.com/foaf/0.1/" ;
+const oa    = "http://www.w3.org/ns/oa#" ;
+const ol    = "https://openlibrary.org/authors/" 
+const owl   = "http://www.w3.org/2002/07/owl#" ; 
+const rdf   = "http://www.w3.org/1999/02/22-rdf-syntax-ns#";
+const rdfs  = "http://www.w3.org/2000/01/rdf-schema#";
+const skos  = "http://www.w3.org/2004/02/skos/core#";
+const tmp   = "http://purl.bdrc.io/ontology/tmp/" ;
+const _tmp  = tmp ;
+const viaf  = "http://viaf.org/viaf/"
+const wd    = "http://www.wikidata.org/entity/"
+const xsd   = "http://www.w3.org/2001/XMLSchema#" ;
 
-
-export const prefixes = [adm, admd, bdo,bdr,rdf,rdfs,skos,tmp,_tmp,oa,wd,ol,viaf]
-export const prefixesMap = {adm, dila, bdo,bdr,rdf,rdfs,skos,tmp,_tmp,oa,wd,ol,viaf}
+export const prefixesMap = { adm, bda, bdac, bdan, bdo, bdr, dila, foaf, oa, owl, rdf, rdfs, skos, wd, ol, viaf, xsd, tmp }
+export const prefixes = Object.values(prefixesMap) ;
 export const sameAsMap = { wd:"WikiData", ol:"OpenLibrary", bdr:"BDRC" }
 
 const facetLabel = {

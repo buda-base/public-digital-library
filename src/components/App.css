@@ -62,7 +62,7 @@ a.result .lang, .match .lang,.data .lang,h2 .lang, .imageVolumePopup .lang
    position: relative;
    top: 0.5em;
 }
-h2 .lang,.data .lang { position:relative;margin:0;vertical-align:-7px;padding:5px;line-height:0;}
+h2 .lang,.data .lang { position:relative;margin:0;vertical-align:-2px;padding:5px;line-height:0;}
 h2 .lang { margin-top:22px;font-weight:normal; }
 .imageVolumePopup .lang { position:relative;padding:0px;margin-top:12px; }
 /* a.result .lang, .match .lang { min-width:50px;} */
@@ -103,21 +103,22 @@ h2:hover svg.annoticon:hover,h4:hover svg.annoticon:hover { color:rgba(0,0,0,0.6
 .data .faded.score0 { background-color:rgba(255, 205, 3, 0.4);border:1px dashed rgba(167, 134, 1, 0.4);}
 .data .faded.score1 { background-color:rgba(17, 173, 17, 0.3);border:1px solid rgba(36, 106, 36, 0.4);}
 
-h4 { margin-top:10px;margin-bottom:0px;font-size:24px; }
+h4 { margin-top:0px;margin-bottom:0px;font-size:24px; }
 /* h4 + h4 { margin-top:5px;}  */
 
-.resource { width:100% ; padding:90px 100px; text-align:left; box-sizing: border-box;}
+.resource { width:100% ; padding:40px 100px; text-align:left; box-sizing: border-box;}
 .resource .data { text-align:left }
 .resource .data > div { display:flex;align-items:baseline;flex-wrap:wrap;box-sizing: border-box;width:100%;}
 .resource .data > div.parent { flex-wrap:wrap; }
 .resource .data > div.parent > h3 { flex-shrink:0 }
-.resource h3,.resource h4 { display:inline-block; margin-bottom:0px; font-size:16px; font-weight:normal; margin-right:5px; line-height:18px;}
+.resource h3,.resource h4 { display:inline-block; margin-bottom:0px; font-size:14px; font-weight:normal; margin-right:5px; line-height:20px;}
 .resource h3 span { /*text-decoration: underline;*/ font-weight:600;  text-transform:capitalize; }
-.resource .sub { width:100%; padding-left:30px;display:flex;flex-wrap:wrap; box-sizing: border-box; position:relative;}
+.resource h3 { font-size:14px;margin-top:6px; }
+.resource .sub { width:100%; padding-left:20px;display:flex;flex-wrap:wrap; box-sizing: border-box; position:relative;}
 .resource .sub h4.first { font-size:0.9em;font-style:italic; text-transform:capitalize; flex-shrink:0; }
  .resource .sub .sub h4.first.type,
 .resource .sub h4.first.prop { font-style:normal;font-size:0.8em; line-height:20px }
-.resource .subsub { width:100%; padding-left:30px; display: flex;align-items: baseline;flex-wrap:nowrap;position:relative; box-sizing: border-box;}
+.resource .subsub { width:100%; padding-left:20px; display: flex;align-items: baseline;flex-wrap:nowrap;position:relative; box-sizing: border-box;}
 /* .resource .subsub h4 { flex-shrink:0 ; } */
 /* .resource .subsub:first-child:before, */
 .resource div .sub.here:before { content:"•";position:absolute; width:10px;margin-left:-10px;top:11px; }
@@ -129,7 +130,7 @@ h4 { margin-top:10px;margin-bottom:0px;font-size:24px; }
 .resource h3 + .sub .subsub:first-child { margin-top:0px; }
 .resource .subsub h4:not(.first):not(:last-child):after,
 .resource h4:not(:last-child):not(.first):not(.last):not(.page):after { content:" | "; pointer-events:none; padding-right:30px; }
-.resource .subsubsub { width:100%; padding-left:30px; display: flex;align-items: baseline;flex-wrap:nowrap;position:relative; box-sizing: border-box;}
+.resource .subsubsub { width:100%; padding-left:20px; display: flex;align-items: baseline;flex-wrap:nowrap;position:relative; box-sizing: border-box;}
 .resource .subsubsub .subsubsub h4.first.prop,.resource .subsub.full .subsubsub h4.first.prop,
 .resource .sub .sub h4.first.type { font-style:normal; }
 .resource .subsub.full .subsub h4.first.prop, .resource .subsubsub h4.first.prop, .resource  .subsub .subsubsub .subsubsub h4.first.prop,
@@ -205,17 +206,29 @@ a.login { text-decoration:underline; cursor:pointer; }
 .match .multi a:hover,
 .resource .data a:hover { border-bottom:1px solid rgba(229, 74, 53,1); }
 
+.urilink { position:relative; }
+.urilink.dila,.urilink.wd,.urilink.ol, /*.urilink.bdr,*/ .urilink.viaf { padding-left:0px; }
+.urilink.dila::before,.urilink.wd::before,.urilink.ol::before, /*.urilink.bdr::before,*/ .urilink.viaf::before 
+{ content:''; position:relative;display:inline-block;width:20px;height:20px; background-color:white;  vertical-align: -5px;padding-right:5px; 
+   background-position:right 5px center;background-size:contain;background-repeat:no-repeat;
+}
+.urilink.dila::before { background-image:url("/DILA-favicon.ico"); }
+.urilink.wd::before { background-image:url("/WD.svg"); }
+.urilink.ol::before { background-image:url("/OL.png"); }
+.urilink.viaf::before { background-image:url("/VIAF.png"); }
+
 .resource button svg:hover { color:rgba(0,0,0,0.65); }
 
 a.download { text-decoration:none; font-weight:bold; cursor:pointer; }
 a.download:hover { text-decoration:underline; }
 
-.resource .data > div > h4,
-.resource .data > div > .sub > h4:not(.first),
+/*.resource .data > div > h4,*/ /* « object type: manuscript » */
+.resource .data > div > h4.multiple,
+/*.resource .data > div > .sub > h4:not(.first),*/ /*  eg « title: biblio title: » */
 /* .resource .data > div > .sub > .subsub > h4:not(.first),  */
 /* :not(:nth-child(2):last-child), */
 .propCollapse > div > div > h4,
-.propCollapseHeader > h4 { width:100%; padding-left:30px; }
+.propCollapseHeader > h4 { width:100%; padding-left:20px; }
 .resource .data > div > h4::after,
 .resource .data > div > .sub > h4:not(.first)::after,
 .propCollapse > div > div > h4::after,
@@ -223,12 +236,14 @@ a.download:hover { text-decoration:underline; }
 /*h3 .expand { display:inline-block; cursor:pointer;}
 h3 .expand svg { position:absolute; margin-top:-18px; }*/
 .propCollapse.in-false h4:first-child { margin-top:0;transition:all 200ms ease-in-out; }
-.expand { margin-bottom:10px; cursor:pointer; margin-left:30px; border-bottom:1px solid transparent; font-size:13px; }
+.expand { margin-bottom:10px; cursor:pointer; margin-left:20px; border-bottom:1px solid transparent; font-size:13px;  }
 .expand:hover { border-bottom:1px solid black;  }
 /* .propCollapse.in-true + .expand { margin-bottom:10px; } */
 .propCollapse { width:100%; }
 .propCollapse.in-true { padding-bottom:10px;}
 /* .propCollapseHeader { width:100%; } */
+.propCollapse.in-false + .expand { margin-top:-20px;transition:all 300ms ease-in-out;}
+.propCollapse.in-true + .expand { margin-top:-5px;}
 
 .resource .SidePane .viewAll { color:black; cursor:pointer; margin-bottom:10px;display:inline-block;border-bottom:1px solid transparent;}
 .resource .SidePane .viewAll:hover { border-color:black !important; }
