@@ -408,7 +408,8 @@ function top_left_menu(that,pdfLink,monoVol,fairUse)
           <ChatIcon />
        </IconButton>
        {
-          that.props.IRI.match(/^[^:]+:[RPGTW]/) &&
+          //that.props.IRI.match(/^[^:]+:[RPGTW]/) &&
+          prefixes[that.props.IRI.replace(/^([^:]+):.*$/,"$1")] &&
           <Link className="goBack" to={"/search?r="+that.props.IRI+"&t=Any"}>
              <Button style={{marginLeft:"0px",paddingLeft:"10px"}}>{I18n.t("resource.browse")} &gt;</Button>
           </Link>
@@ -693,15 +694,15 @@ class ResourceViewer extends Component<Props,State>
 
                   //console.log(a,b)
 
-                  if(!a["value"] && a[rdfs+"label"] && a[rdfs+"label"][0]) a = a[rdfs+"label"][0]
-                  if(a["lang"]) a = a["lang"]
-                  else if(a["xml:lang"] && a["xml:lang"] != "") a = a["xml:lang"]
+                  if(a && !a["value"] && a[rdfs+"label"] && a[rdfs+"label"][0]) a = a[rdfs+"label"][0]
+                  if(a && a["lang"]) a = a["lang"]
+                  else if(a && a["xml:lang"] && a["xml:lang"] != "") a = a["xml:lang"]
                   //else if(a["type"] == "uri") a = a["value"]
                   else a = null
 
-                  if(!b["value"] && b[rdfs+"label"] && b[rdfs+"label"][0]) b = b[rdfs+"label"][0]
-                  if(b["lang"]) b = b["lang"]
-                  else if(b["xml:lang"] && b["xml:lang"] != "") b = b["xml:lang"]
+                  if(b && !b["value"] && b[rdfs+"label"] && b[rdfs+"label"][0]) b = b[rdfs+"label"][0]
+                  if(b && b["lang"]) b = b["lang"]
+                  else if(b && b["xml:lang"] && b["xml:lang"] != "") b = b["xml:lang"]
                   //else if(b["type"] == "uri") b = b["value"]
                   else b = null
 
