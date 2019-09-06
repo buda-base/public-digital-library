@@ -24,10 +24,12 @@ import Apps from '@material-ui/icons/Apps';
 import Close from '@material-ui/icons/Close';
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
-import PanoramaFishEye from '@material-ui/icons/CheckBoxOutlineBlank';
 import NavigateBefore from '@material-ui/icons/NavigateBefore';
 import NavigateNext from '@material-ui/icons/NavigateNext';
-import CheckCircle from '@material-ui/icons/CheckBox';
+import PanoramaFishEye from '@material-ui/icons/PanoramaFishEye';
+import CheckCircle from '@material-ui/icons/CheckCircle';
+import CheckBoxOutlineBlank from '@material-ui/icons/CheckBoxOutlineBlank';
+import CheckBox from '@material-ui/icons/CheckBox';
 import CropFreeIcon from '@material-ui/icons/CropFree';
 import CropDin from '@material-ui/icons/CropDin';
 import CenterFocusWeak from '@material-ui/icons/CenterFocusWeak';
@@ -899,6 +901,16 @@ class App extends Component<Props,State> {
      
       if(val)
       {
+         prevDT = null
+
+         state = { ...state, filters:{ ...state.filters, datatype:[ lab ], prevDT }}
+         
+         if(["Any","Person","Work","Etext"].indexOf(lab) !== -1)
+         {
+            this.requestSearch(this.props.keyword,[ lab ]);
+         }
+         
+         /*
          if(lab === "Any") state = { ...state, filters:{ ...state.filters, datatype:["Any"] }}
          else {
             let dt = [ ...this.state.filters.datatype ]
@@ -919,10 +931,17 @@ class App extends Component<Props,State> {
             this.requestSearch(this.props.keyword,[lab])
             //state = { ...state, filters:{ ...state.filters, datatype: [lab] }}
          }
+         */
       }
       else if(!val)
-      {
+      {            
+         prevDT = null
 
+         state = { ...state, filters:{ ...state.filters, datatype:[ "Any" ], prevDT }}
+         
+         this.requestSearch(this.props.keyword,["Any"]);
+         
+         /*
          if(lab === "Any") state = { ...state, filters:{ ...state.filters, datatype:[] }}
          else {
             let dt = [ ...this.state.filters.datatype ]
@@ -940,7 +959,7 @@ class App extends Component<Props,State> {
 
             if(dt.length === 1) this.requestSearch(this.props.keyword,[dt[0]]);
          }
-
+         */
       }
 
       this.setState(state)
@@ -2516,8 +2535,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                         <Checkbox
                            checked={checked}
                            className={"checkbox"}
-                           icon={<PanoramaFishEye/>}
-                           checkedIcon={<CheckCircle />}
+                           icon={<CheckBoxOutlineBlank/>}
+                           checkedIcon={<CheckBox />}
                            onChange={(event, checked) => this.handleCheckFacet(event,jpre,checkable,checked)}
                         />
 
@@ -2656,7 +2675,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                                              //disabled={disabled}
                                              //{...i=="Any"?{defaultChecked:true}:{}}
                                              color="black"
-                                             checked={this.state.filters.datatype.indexOf(i) !== -1  || this.state.filters.datatype.indexOf("Any") !== -1 }
+                                             checked={this.state.filters.datatype.indexOf(i) !== -1} 
                                              icon={<PanoramaFishEye/>}
                                              checkedIcon={<CheckCircle/>}
                                              onChange={(event, checked) => this.handleCheck(event,i,checked)}
@@ -2858,8 +2877,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                                                    <Checkbox
                                                       checked={checked}
                                                       className="checkbox"
-                                                      icon={<PanoramaFishEye/>}
-                                                      checkedIcon={<CheckCircle/>}
+                                                      icon={<CheckBoxOutlineBlank/>}
+                                                      checkedIcon={<CheckBox/>}
                                                       onChange={(event, checked) => this.handleCheckFacet(event,jpre,[i],checked)}
                                                    />
 
@@ -3068,13 +3087,16 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                { 
                   this.state.searchTypes.indexOf("Any") === -1 && searchTypes.map(d => 
                      <FormControlLabel className="data-checkbox" control={
-                        <Checkbox onChange={(event, checked) => this.handleSearchTypes(event,d,checked)} checked={ this.state.searchTypes.indexOf("Any") !== -1 || this.state.searchTypes.indexOf(d) !== -1} color="black" icon={<PanoramaFishEye/>} checkedIcon={<CheckCircle/>} /> 
+                        <Checkbox onChange={(event, checked) => this.handleSearchTypes(event,d,checked)} 
+                           checked={ this.state.searchTypes.indexOf("Any") !== -1 || this.state.searchTypes.indexOf(d) !== -1} 
+                           color="black" icon={<CheckBoxOutlineBlank/>} checkedIcon={<CheckBox/>} /> 
                      } label={d} /> ) 
                }
                { 
                   this.state.searchTypes.indexOf("Any") !== -1 &&
                      <FormControlLabel className="data-checkbox" control={
-                        <Checkbox onChange={(event, checked) => this.handleSearchTypes(event,"Any",checked)} checked={ true } color="black" icon={<PanoramaFishEye/>} checkedIcon={<CheckCircle/>} /> 
+                        <Checkbox onChange={(event, checked) => this.handleSearchTypes(event,"Any",checked)} checked={ true } 
+                           color="black" icon={<CheckBoxOutlineBlank/>} checkedIcon={<CheckBox/>} /> 
                      } label={"All Data Types"} />  
                }
             </FormGroup>
