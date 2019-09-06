@@ -383,7 +383,7 @@ class App extends Component<Props,State> {
 
       let searchDT = this.state.searchTypes
       if(!label) label = searchDT
-      if(!label || label.length === 0) { 
+      if(!label || label.length === 0 || label.length > 1) { 
          searchDT = [ "Any" ]
          label = [ "Any" ] 
       }
@@ -782,7 +782,7 @@ class App extends Component<Props,State> {
 
    handleSearchTypes = (ev:Event,lab:string,val:boolean) => {
 
-      if(lab === I18n.t("types.any")) lab = "Any"
+      if(lab === "All" ) lab = "Any"
 
       console.log("checkST::",this,lab,val)
 
@@ -863,6 +863,80 @@ class App extends Component<Props,State> {
 
    }
 
+   /*
+   handleCheckMulti = (ev:Event,lab:string,val:boolean,params?:{},force?:boolean) => {
+
+      console.log("check::",lab,val,this.props.keyword,'('+this.state.keyword+')')
+
+      //if(this.props.language == "") return
+
+      //  // to be continued ...
+      // let f = this.state.filters.datatype
+      // if(f.indexOf(lab) != -1 && !val) f.splice(f.indexOf(lab),1)
+      // else if(f.indexOf(lab) == -1 && val) f.push(lab)
+
+      let types = searchTypes.slice(1) //[ "Person","Work","Corporation","Place","Etext", "Role","Topic","Lineage"]
+      if(this.state.results && this.state.results[this.state.id] && this.state.results[this.state.id].types) types = this.state.results[this.state.id].types
+
+      let f = [lab]
+
+      let prevDT = [ ...this.state.filters.datatype ]
+
+      let state =  { ...this.state, collapse: { ...this.state.collapse, HasExpr:true, Other:true, ExprOf:true, Abstract:true }, 
+                     filters: {  datatype:f }, paginate:{index:0,pages:[0],n:[0]}, repage: true, 
+                     ...params  }
+     
+      if(val)
+      {
+        
+         if(lab === "Any") state = { ...state, filters:{ ...state.filters, datatype:["Any"] }}
+         else {
+            let dt = [ ...this.state.filters.datatype ]
+            if(dt.indexOf(lab) === -1 && dt.indexOf("Any") === -1) dt.push(lab);
+
+            if(types.filter(i => !dt.includes(i)).length == 0) { dt = [ "Any" ] }
+
+            if(force) dt = [lab]
+            else prevDT = null
+
+            console.log("dt:!:",dt,force,JSON.stringify(params,null,3))
+
+            state = { ...state, filters:{ ...state.filters, datatype: dt, prevDT }}
+         }
+
+         if(["Any","Person","Work","Etext"].indexOf(lab) !== -1)
+         {
+            this.requestSearch(this.props.keyword,[lab])
+            //state = { ...state, filters:{ ...state.filters, datatype: [lab] }}
+         }
+      }
+      else if(!val)
+      {           
+         if(lab === "Any") state = { ...state, filters:{ ...state.filters, datatype:[] }}
+         else {
+            let dt = [ ...this.state.filters.datatype ]
+            let i
+            if(i = dt.indexOf("Any") !== -1) { dt = [ ...types ] }
+            if((i = dt.indexOf(lab)) !== -1) { delete dt[i] }
+            if((i = dt.indexOf("Any")) !== -1) { delete dt[i] }
+            dt = dt.filter(e => e)
+
+            console.log("dt::",dt)
+
+            if(prevDT.length <= 1) prevDT = null
+
+            state = { ...state, filters:{ ...state.filters, datatype: dt, prevDT }}
+
+            if(dt.length === 1) this.requestSearch(this.props.keyword,[dt[0]]);
+         }
+      }
+
+      this.setState(state)
+      console.log("state::",JSON.stringify(state.collapse,null,3))
+
+   }
+   */
+
    handleCheck = (ev:Event,lab:string,val:boolean,params?:{},force?:boolean) => {
 
       console.log("check::",lab,val,this.props.keyword,'('+this.state.keyword+')')
@@ -896,28 +970,6 @@ class App extends Component<Props,State> {
             this.requestSearch(this.props.keyword,[ lab ]);
          }
          
-         /*
-         if(lab === "Any") state = { ...state, filters:{ ...state.filters, datatype:["Any"] }}
-         else {
-            let dt = [ ...this.state.filters.datatype ]
-            if(dt.indexOf(lab) === -1 && dt.indexOf("Any") === -1) dt.push(lab);
-
-            if(types.filter(i => !dt.includes(i)).length == 0) { dt = [ "Any" ] }
-
-            if(force) dt = [lab]
-            else prevDT = null
-
-            console.log("dt:!:",dt,force,JSON.stringify(params,null,3))
-
-            state = { ...state, filters:{ ...state.filters, datatype: dt, prevDT }}
-         }
-
-         if(["Any","Person","Work","Etext"].indexOf(lab) !== -1)
-         {
-            this.requestSearch(this.props.keyword,[lab])
-            //state = { ...state, filters:{ ...state.filters, datatype: [lab] }}
-         }
-         */
       }
       else if(!val)
       {            
@@ -927,32 +979,12 @@ class App extends Component<Props,State> {
          
          this.requestSearch(this.props.keyword,["Any"]);
          
-         /*
-         if(lab === "Any") state = { ...state, filters:{ ...state.filters, datatype:[] }}
-         else {
-            let dt = [ ...this.state.filters.datatype ]
-            let i
-            if(i = dt.indexOf("Any") !== -1) { dt = [ ...types ] }
-            if((i = dt.indexOf(lab)) !== -1) { delete dt[i] }
-            if((i = dt.indexOf("Any")) !== -1) { delete dt[i] }
-            dt = dt.filter(e => e)
-
-            console.log("dt::",dt)
-
-            if(prevDT.length <= 1) prevDT = null
-
-            state = { ...state, filters:{ ...state.filters, datatype: dt, prevDT }}
-
-            if(dt.length === 1) this.requestSearch(this.props.keyword,[dt[0]]);
-         }
-         */
       }
 
       this.setState(state)
       console.log("state::",JSON.stringify(state.collapse,null,3))
 
    }
-
 /*
 handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
