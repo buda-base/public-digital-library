@@ -68,7 +68,7 @@ const bdr   = "http://purl.bdrc.io/resource/";
 const dila  = "http://purl.dila.edu.tw/resource/";
 const foaf  = "http://xmlns.com/foaf/0.1/" ;
 const oa    = "http://www.w3.org/ns/oa#" ;
-const ol    = "https://openlibrary.org/authors/" 
+const ola    = "https://openlibrary.org/authors/" 
 const owl   = "http://www.w3.org/2002/07/owl#" ; 
 const rdf   = "http://www.w3.org/1999/02/22-rdf-syntax-ns#";
 const rdfs  = "http://www.w3.org/2000/01/rdf-schema#";
@@ -79,7 +79,7 @@ const viaf  = "http://viaf.org/viaf/"
 const wd    = "http://www.wikidata.org/entity/"
 const xsd   = "http://www.w3.org/2001/XMLSchema#" ;
 
-export const prefixesMap = { adm, bda, bdac, bdan, bdo, bdr, dila, foaf, oa, owl, rdf, rdfs, skos, wd, ol, viaf, xsd, tmp }
+export const prefixesMap = { adm, bda, bdac, bdan, bdo, bdr, dila, foaf, oa, owl, rdf, rdfs, skos, wd, ola, viaf, xsd, tmp }
 export const prefixes = Object.values(prefixesMap) ;
 export const sameAsMap = { wd:"WikiData", ol:"OpenLibrary", bdr:"BDRC" }
 
@@ -1331,7 +1331,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
    makeResult(id,n,t,lit,lang,tip,Tag,url,rmatch = [],facet,sameAsRes)
    {
-      //console.log("res",id,n,t,lit,lang,tip,Tag)
+      console.log("res",id,n,t,lit,lang,tip,Tag,sameAsRes)
 
       if(!id.match(/[:/]/)) id = "bdr:" + id
 
@@ -1490,6 +1490,17 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                         if(label) label = label[bdr+uri]
                         if(label) label = label[skos+"prefLabel"]
                         if(!label) label = dico[this.props.keyword]
+                        if(!label) {
+                           label = this.props.resources[this.props.keyword]
+                           let fullURI = this.props.keyword
+                           for(let k of Object.keys(prefixesMap)) fullURI = fullURI.replace(new RegExp(k+":"),prefixesMap[k])
+                           label = label[fullURI]               
+                           if(label) label = label[skos+"prefLabel"]
+                           if(!label) { 
+                              label = this.props.resources[this.props.keyword]
+                              if(label) label = label[foaf+"name"]
+                           }
+                        }
                         if(label) label = getLangLabel(this,label)
                         if(label) {
                            if(label.value) {
@@ -1693,13 +1704,15 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             let labels = this.props.resources[this.props.keyword]
             if(labels && labels != true)
             {
-               if(labels) labels = labels[this.props.keyword.replace(/bdr:/,bdr)]
+               let fullURI = this.props.keyword
+               for(let k of Object.keys(prefixesMap)) fullURI = fullURI.replace(new RegExp(k+":"),prefixesMap[k])
+               if(labels) labels = labels[fullURI]
                if(labels) {
                   l = getLangLabel(this,labels[skos+"prefLabel"])
                   //console.log("l",labels,l)
                   if(l) {
                      message.push(<h4 key="keyResource" style={{marginLeft:"16px"}}>Resource Id Matching (1)</h4>)
-                     message.push(this.makeResult(this.props.keyword,1,null,l.value,l.lang))
+                     message.push(this.makeResult(this.props.keyword,1,null,l.value,l.lang)) //,null,null,null,[],null,this.props.resources[this.props.keyword]))
                   }
                }
             }
