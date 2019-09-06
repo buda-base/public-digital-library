@@ -73,7 +73,7 @@ const enTranslation = {
       }
    },
    types:{
-      "any":"All",
+      "any":"Any",
       "corporation":"Corporation",
       "etext":"Etext",
       "item":"Item",
