@@ -207,14 +207,14 @@ a.login { text-decoration:underline; cursor:pointer; }
 .resource .data a:hover { border-bottom:1px solid rgba(229, 74, 53,1); }
 
 .urilink { position:relative; }
-.urilink.dila,.urilink.wd,.urilink.ol, /*.urilink.bdr,*/ .urilink.viaf { padding-left:0px; }
-.urilink.dila::before,.urilink.wd::before,.urilink.ol::before, /*.urilink.bdr::before,*/ .urilink.viaf::before 
+.urilink.dila,.urilink.wd,.urilink.ola, /*.urilink.bdr,*/ .urilink.viaf { padding-left:0px; }
+.urilink.dila::before,.urilink.wd::before,.urilink.ola::before, /*.urilink.bdr::before,*/ .urilink.viaf::before 
 { content:''; position:relative;display:inline-block;width:20px;height:20px; background-color:white;  vertical-align: -5px;padding-right:5px; 
    background-position:right 5px center;background-size:contain;background-repeat:no-repeat;
 }
 .urilink.dila::before { background-image:url("/DILA-favicon.ico"); }
 .urilink.wd::before { background-image:url("/WD.svg"); }
-.urilink.ol::before { background-image:url("/OL.png"); }
+.urilink.ola::before { background-image:url("/OL.png"); }
 .urilink.viaf::before { background-image:url("/VIAF.png"); }
 
 .resource button svg:hover { color:rgba(0,0,0,0.65); }
