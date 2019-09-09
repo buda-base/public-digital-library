@@ -514,8 +514,8 @@ function getiiifthumbnailurl(imgres) {
    if (h < maxh && w < maxw)
       return origurl
    if (!h || h >= maxh)
-      return changedims(origurl, resulth+",")
-   return changedims(origurl, ","+resultw)
+      return changedims(origurl, ","+resulth)
+   return changedims(origurl, resultw+",")
 }
 
 async function getManifest(url,iri) {
