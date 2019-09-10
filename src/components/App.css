@@ -54,6 +54,27 @@ a.result ~ #matches:empty { margin-bottom:8px; margin-top:-20px !important;paddi
 .source a img { height:32px; margin:0 5px; padding-top:2px; }
 /* .source a:last-child img { height:35px; vertical-align:top;  } */
 
+.source-data,
+.source-data a { display:inline-block; position:relative; }
+.source-data span { width:0;height:0;display:inline-block;position:absolute;background:transparent;
+   border:8px solid transparent;border-left-color:rgba(229, 74, 53,1);transform:rotate(-45deg);
+   top:-8px;right:-4px; opacity:0;transition:all 300ms ease-in-out;  pointer-events: none;
+}
+.source-data:hover span { opacity:1; pointer-events: auto; cursor:pointer;}
+a.menu-item-source {
+   position: absolute;
+   padding-left: 16px;
+   left: 0;
+   top: 0;
+   width: 100%;
+   display: flex;
+   height: 100%;
+   align-items: center;
+   color:rgba(0,0,0,0.87);
+   text-decoration: none;
+}
+span.void { opacity:0; pointer-events: none; }
+
 a.result .lang, .match .lang,.data .lang,h2 .lang, .imageVolumePopup .lang
 { font-size: 9px;display:inline-block;margin-left:2px;/*margin-top:7px; position:absolute; */ color:rgba(0,0,0,0.5); display:inline; white-space: nowrap; 
    /*vertical-align: -4px; margin-bottom:-4px;*/ 

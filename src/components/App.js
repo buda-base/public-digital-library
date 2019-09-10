@@ -7,7 +7,7 @@ import Tooltip from '@material-ui/core/Tooltip';
 import React, { Component } from 'react';
 import SearchBar from 'material-ui-search-bar'
 import Paper from '@material-ui/core/Paper';
-//import Menu from '@material-ui/core/Menu';
+import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import Button from '@material-ui/core/Button';
 import List from '@material-ui/core/List';
@@ -17,7 +17,7 @@ import ListItemIcon from '@material-ui/core/List';
 import Typography from '@material-ui/core/Typography';
 import Loader from 'react-loader';
 import Collapse from '@material-ui/core/Collapse';
-import Menu from '@material-ui/icons/Menu';
+import MenuIcon from '@material-ui/icons/Menu';
 import Settings from '@material-ui/icons/SettingsSharp';
 import TranslateIcon from '@material-ui/icons/Translate';
 import Apps from '@material-ui/icons/Apps';
@@ -50,6 +50,7 @@ import { faLanguage,faUserCircle,faSignOutAlt } from '@fortawesome/free-solid-sv
 import qs from 'query-string'
 import store from "../index"
 import FormGroup from '@material-ui/core/FormGroup';
+import Popover from '@material-ui/core/Popover';
 
 import {I18n, Translate, Localize } from "react-redux-i18n" ;
 
@@ -298,6 +299,7 @@ type Props = {
 }
 
 type State = {
+   anchor:{[string]:{}},
    id?:string,
    loading?:boolean,
    //willSearch?:boolean,
@@ -334,6 +336,7 @@ type State = {
 class App extends Component<Props,State> {
    _facetsRequested = false;
    _customLang = null ;
+   _menus = {}
 
    constructor(props : Props) {
       super(props);
@@ -342,6 +345,7 @@ class App extends Component<Props,State> {
       this.handleCheck.bind(this);
       this.handleResults.bind(this);
       this.handleResOrOnto.bind(this);
+      this.makeResult.bind(this);
 
       let get = qs.parse(this.props.history.location.search)
 
@@ -373,6 +377,7 @@ class App extends Component<Props,State> {
          collapse:{},
          loader:{},
          paginate:{index:0,pages:[0],n:[0]},
+         anchor:{}
          //leftPane:false //(window.innerWidth > 1400 && this.props.keyword),
          
       };
@@ -1361,11 +1366,26 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
       return false ;
    }
 
+   handleOpenSourceMenu(event,src) {
+      this.setState({ ...this.state,
+         anchor:{...this.state.anchor,[src]:event.currentTarget},
+         collapse:{...this.state.collapse,[src]:true}
+      })
+   }
+
+   handleCloseSourceMenu(event,src) {
+      this.setState({ ...this.state,
+         anchor:{...this.state.anchor,[src]:null},
+         collapse:{...this.state.collapse,[src]:false}
+      })
+   }
+
    makeResult(id,n,t,lit,lang,tip,Tag,url,rmatch = [],facet,sameAsRes)
    {
       //console.log("res",id,n,t,lit,lang,tip,Tag,rmatch,sameAsRes)
 
       if(!id.match(/[:/]/)) id = "bdr:" + id
+
 
       let prettId = id ;
       for(let k of Object.keys(prefixesMap)) prettId = prettId.replace(new RegExp(prefixesMap[k]),k+":")
@@ -1412,7 +1432,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   </ListItem>
             </div> )
 
-         let retList 
+         let retList
          if(prettId.match(/^([^:])+:/))
             retList = [ ( <Link key={n} to={"/show/"+prettId} className="result">{ret}</Link> ) ]
          else
@@ -1438,8 +1458,9 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          }
 
          if(sameAsRes.length) {
-            //console.log("sameAs",dico,rmatch,sameAsRes)
+            console.log("sameAs",dico,rmatch,sameAsRes)
          
+            let menus = {}
             let sources = []
             let hasRes = {}
             let img = { 
@@ -1451,21 +1472,53 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             } 
 
             for(let res of sameAsRes) 
-               for(let src of Object.keys(img))                
-                  if(res.value.match(new RegExp("(^"+src+":)|(^"+prefixesMap[src]+")"))) hasRes[src] = res.value.replace(new RegExp(prefixesMap[src]),src+":")
+               for(let src of Object.keys(img)) {
+                  if(res.value.match(new RegExp("(^"+src+":)|(^"+prefixesMap[src]+")"))) hasRes[src] = res.value.replace(new RegExp(prefixesMap[src]),src+":")                  
+               }
 
             for(let src of Object.keys(img)) 
                if(!hasRes[src] && prettId.match(new RegExp("(^"+src+":)|(^"+prefixesMap[src]+")"))) 
                   hasRes[src] = prettId
 
             for(let src of Object.keys(img)) 
-               if(hasRes[src]) 
+               if(hasRes[src]) {             
+                  
                   sources.push(
+                     <div class="source-data" id={src}>
+                        <Link to={"/show/"+hasRes[src]}><img src={img[src]}/></Link>
+                        {src !== "bdr" && <span onMouseEnter={(ev) => this.handleOpenSourceMenu(ev,"menu-"+src+"-"+prettId)}></span> }
+                     </div>
+                  )
+
+                  menus["menu-"+src+"-"+prettId] = { full: hasRes[src].replace(new RegExp(src+":"), prefixesMap[src]), short:hasRes[src] }
+
+                  //console.log("menu","menu-"+src+"-"+prettId)
+
+
+
+                     /*
+                     <Popover 
+                        className="menu-source"
+                        id={"menu-"+src+"-"+prettId} 
+                        anchorEl={(()=>{ console.log("where!!!???"); return this.state.anchor["menu-"+src+"-"+prettId]})()} 
+                        open={(() => { console.log("what!!!???"); return this.state.collapse["menu-"+src+"-"+prettId]})()}                       
+                        onClose={(ev) => this.handleCloseSourceMenu(ev,"menu-"+src+"-"+prettId)}
+                        >
+                           <MenuItem onClick={(ev) => this.handleCloseSourceMenu(ev,"menu-"+src+"-"+prettId)}>View data in Public Digital Library</MenuItem>
+                           <MenuItem onClick={(ev) => this.handleCloseSourceMenu(ev,"menu-"+src+"-"+prettId)}><a href={id} class="menu-item-source" target="_blank">Go to external website</a></MenuItem>
+                     </Popover>
+                     */
+               }
+                     /*
                      <Tooltip placement="bottom-end" title={<div style={{margin:"10px"}}>Show data from {sameAsMap[src]?sameAsMap[src]:src.toUpperCase()}</div>}>
                         <Link to={"/show/"+hasRes[src]}><img src={img[src]}/>
-                     </Link></Tooltip>)  
+                     </Link></Tooltip>
+                     */
                
-            if(sources.length > 1 || sources.length == 1 && !hasRes["bdr"] ) retList.push(<div class="source">{sources}</div>)
+            if(sources.length > 1 || sources.length == 1 && !hasRes["bdr"] ) { 
+               retList.push(<div class="source">{sources}</div>)
+               this._menus = { ...this._menus, ...menus } 
+            }
             
          }
 
@@ -1588,7 +1641,9 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
       retList.push(<hr/>);
 
-      return <div className="result-content">{retList}</div>
+      retList = <div className="result-content">{retList}</div>
+      
+      return retList
    }
 
    setTypeCounts(types,counts)
@@ -1791,6 +1846,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
    handleResults(types,counts,message,results,paginate,bookmarks) 
    {
+      this._menus = {}
 
       let n = 0, m = 0 ;
       console.log("results",results,paginate);
@@ -2167,7 +2223,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   if(!willBreak && !dontShow) { 
                      lastN = cpt ;
                      //console.log("lastN",lastN)
-                     message.push(this.makeResult(id,n,t,lit,lang,tip,Tag,null,r.match,k,sublist[o])) 
+                     message.push(this.makeResult(id,n,t,lit,lang,tip,Tag,null,r.match,k,sublist[o]))
                   }
                   cpt ++;
                   let isCollapsed = (canCollapse && (this.state.collapse[categ] || this.state.collapse[categ] == undefined))                  
@@ -2233,6 +2289,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             if(paginate.length == 0) { paginate.push(pagin); }
          }
       }
+
    }
 
    prepareResults()
@@ -2398,8 +2455,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                messageD.push(this.makeResult(l.id,null,getEntiType(l.id),who.value,who.lang,l.icon,TagTab[l.icon]))
                i++;
             }
-            //message.push(this.makeResult("W19740",null,"Work","spyod 'jug'","bo-x-ewts","Abstract Work",TagTab["Abstract Work"]))
-            //message.push(this.makeResult("P6161",null,"Person","zhi ba lha/","bo-x-ewts"))
+            //message.push(this. akeResult("W19740",null,"Work","spyod 'jug'","bo-x-ewts","Abstract Work",TagTab["Abstract Work"]))
+            //message.push(this. akeResult("P6161",null,"Person","zhi ba lha/","bo-x-ewts"))
          }
 
          types = this.state.searchTypes //[ /*"Any",*/ ...searchTypes.slice(1) ] //["Any","Person","Work","Corporation","Place", /*"Item",*/ "Etext","Role","Topic","Lineage"]
@@ -2634,7 +2691,40 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
       }
       //console.log("metaK",metaK)
 
-      //console.log("messageD",messageD,message)
+      /*
+
+         <Popover 
+            className="menu-source"
+            id={"menu-"+src+"-"+prettId} 
+            anchorEl={(()=>{ console.log("where!!!???"); return this.state.anchor["menu-"+src+"-"+prettId]})()} 
+            open={(() => { console.log("what!!!???"); return this.state.collapse["menu-"+src+"-"+prettId]})()}                       
+            onClose={(ev) => this.handleCloseSourceMenu(ev,"menu-"+src+"-"+prettId)}
+            >
+               <MenuItem onClick={(ev) => this.handleCloseSourceMenu(ev,"menu-"+src+"-"+prettId)}>View data in Public Digital Library</MenuItem>
+               <MenuItem onClick={(ev) => this.handleCloseSourceMenu(ev,"menu-"+src+"-"+prettId)}><a href={id} class="menu-item-source" target="_blank">Go to external website</a></MenuItem>
+         </Popover>
+
+      */ 
+
+      let showMenus = Object.keys(this._menus).map(id => 
+            <Popover 
+               transformOrigin={{ vertical: 'bottom', horizontal: 'left'}} 
+               anchorOrigin={{vertical: 'bottom', horizontal: 'left'}} 
+               anchorEl={this.state.anchor[id]} 
+               open={this.state.collapse[id]} 
+               onClose={(ev) => this.handleCloseSourceMenu(ev,id)}>
+                  <MenuItem onClick={(ev) => this.handleCloseSourceMenu(ev,id)}>
+                     <span className="void">View data in Public Digital Library</span>
+                     <Link className="menu-item-source" to={"/show/"+this._menus[id].short}>View data in Public Digital Library</Link>
+                  </MenuItem>
+                  <MenuItem onClick={(ev) => this.handleCloseSourceMenu(ev,id)}>
+                     <span className="void">Go to external website</span>
+                     <a href={this._menus[id].full} class="menu-item-source" target="_blank">Go to external website</a>
+                  </MenuItem>
+            </Popover> 
+      );
+
+      console.log("messageD",this._menus,showMenus,messageD,message)
 
       const textStyle = {marginLeft:"15px",marginBottom:"10px",marginRight:"15px"}
 
@@ -3056,7 +3146,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   */ }
                   </div>
                }
-            </div>
+            </div>            
+            { showMenus }
             <div className={"SearchPane"+(this.props.keyword ?" resultPage":"")} >
                <a target="_blank" href="https://www.buddhistarchive.org/" style={{display:"inline-block",marginBottom:"25px"}}>
                   <img src="/logo.svg" style={{width:"200px"}} />
@@ -3065,7 +3156,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                {/* <h3>Buddhist Digital Resource Center</h3> */}
                <div>
                <IconButton style={{marginRight:"15px"}} className={this.state.leftPane?"hidden":""} onClick={e => this.setState({...this.state,leftPane:!this.state.leftPane})}>
-                  <Menu/>
+                  <MenuIcon/>
                </IconButton>
                <SearchBar
                   closeIcon={<Close className="searchClose" style={ {color:"rgba(0,0,0,1.0)",opacity:1} } onClick={() => { this.props.history.push({pathname:"/",search:""}); this.props.onResetSearch();} }/>}
