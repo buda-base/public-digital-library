@@ -1485,29 +1485,13 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   
                   sources.push(
                      <div class="source-data" id={src}>
-                        <Link to={"/show/"+hasRes[src]}><img src={img[src]}/></Link>
+                        <Link onTouchStart={(ev) => this.handleOpenSourceMenu(ev,"menu-"+src+"-"+prettId)} to={"/show/"+hasRes[src]}><img src={img[src]}/></Link>
                         {src !== "bdr" && <span onMouseEnter={(ev) => this.handleOpenSourceMenu(ev,"menu-"+src+"-"+prettId)}></span> }
                      </div>
                   )
 
                   menus["menu-"+src+"-"+prettId] = { full: hasRes[src].replace(new RegExp(src+":"), prefixesMap[src]), short:hasRes[src] }
 
-                  //console.log("menu","menu-"+src+"-"+prettId)
-
-
-
-                     /*
-                     <Popover 
-                        className="menu-source"
-                        id={"menu-"+src+"-"+prettId} 
-                        anchorEl={(()=>{ console.log("where!!!???"); return this.state.anchor["menu-"+src+"-"+prettId]})()} 
-                        open={(() => { console.log("what!!!???"); return this.state.collapse["menu-"+src+"-"+prettId]})()}                       
-                        onClose={(ev) => this.handleCloseSourceMenu(ev,"menu-"+src+"-"+prettId)}
-                        >
-                           <MenuItem onClick={(ev) => this.handleCloseSourceMenu(ev,"menu-"+src+"-"+prettId)}>View data in Public Digital Library</MenuItem>
-                           <MenuItem onClick={(ev) => this.handleCloseSourceMenu(ev,"menu-"+src+"-"+prettId)}><a href={id} class="menu-item-source" target="_blank">Go to external website</a></MenuItem>
-                     </Popover>
-                     */
                }
                      /*
                      <Tooltip placement="bottom-end" title={<div style={{margin:"10px"}}>Show data from {sameAsMap[src]?sameAsMap[src]:src.toUpperCase()}</div>}>
