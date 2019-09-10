@@ -1485,7 +1485,9 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   
                   sources.push(
                      <div class="source-data" id={src}>
-                        <Link onTouchStart={(ev) => this.handleOpenSourceMenu(ev,"menu-"+src+"-"+prettId)} to={"/show/"+hasRes[src]}><img src={img[src]}/></Link>
+                        <Link onTouchStart={(ev) => { if(src !== "bdr") { ev.preventDefault(); this.handleOpenSourceMenu(ev,"menu-"+src+"-"+prettId) }}} to={"/show/"+hasRes[src]}>
+                           <img src={img[src]}/>
+                        </Link>
                         {src !== "bdr" && <span onMouseEnter={(ev) => this.handleOpenSourceMenu(ev,"menu-"+src+"-"+prettId)}></span> }
                      </div>
                   )
