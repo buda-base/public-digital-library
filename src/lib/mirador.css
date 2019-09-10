@@ -63,7 +63,7 @@
 
 
 @media (max-width:768px) {
-    .mirador-container .mirador-main-menu.user-buttons li:nth-last-child(-n+5):not(:last-child) { display:none; }
+    /* .mirador-container .mirador-main-menu.user-buttons li:nth-last-child(-n+5):not(:last-child) { display:none; } */
 
     .mirador-container .repo-image { position:absolute;right:0; display:none;}
 
@@ -75,8 +75,13 @@
     #viewer .member-select-results li   { height:auto;position:relative;bottom:0 }
 
     .mirador-container .select-metadata { left:5px;}
-
     .mirador-container .manifest-title h3 { line-height:1.5em; }
 
-    #viewer .member-select-results li { display: flex;flex-wrap: wrap; flex-direction: column-reverse; }
+    #viewer .member-select-results li { display: flex;flex-wrap: wrap; flex-direction: column-reverse; overflow-x: auto; }
+
+    .mirador-main-menu-bar .user-buttons.mirador-main-menu a { font-size:0 ; }
+    .mirador-main-menu-bar .user-buttons.mirador-main-menu a span { font-size:18px !important; }
+
+    .window-manifest-navigation { min-width:200px; }
+    .window-manifest-navigation .mirador-btn.mirador-osd-fullscreen { display:none; }
 }

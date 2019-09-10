@@ -374,7 +374,7 @@ export async function miradorConfig(data, manifest, canvasID, useCredentials, la
          "userButtons": [
            { "label": "Reading View",
              "iconClass": "fa fa-align-center",
-             "attributes" : { style:"", onClick : "eval('window.setMiradorScroll()')" }
+             "attributes" : { style:"", onClick : "eval('window.setMiradorScroll()')",  "title":"Reading view" }
           },
            { "label": " ",
              "iconClass": "fa fa-search",
@@ -382,7 +382,7 @@ export async function miradorConfig(data, manifest, canvasID, useCredentials, la
           },
            { "label": "Page View",
              "iconClass": "fa fa-file-o",
-             "attributes" : { style:"", onClick : "eval('window.setMiradorZoom()')" }
+             "attributes" : { style:"", onClick : "eval('window.setMiradorZoom()')",  "title":"Page view" }
           },
             cornerButton
          ]
@@ -400,7 +400,8 @@ export async function miradorConfig(data, manifest, canvasID, useCredentials, la
             "label": "Browse Collection",
             "iconClass": "fa fa-bars",
             "attributes" : {
-               onClick : "if(window.setMiradorClick) { window.setMiradorClick(event); }"
+               title:"Browse collection",
+               onClick : "if(window.setMiradorClick) { window.setMiradorClick(event); }",
             },
          },
          ...config["mainMenuSettings"]["userButtons"]
@@ -812,7 +813,9 @@ export async function miradorInitView(work,lang) {
    { 
       "label": "Full Screen",
       "iconClass": "fa fa-lg fa-fw fa-expand fs",
-      "attributes" : { onClick : "javascript:eval('if(window.Mirador.fullscreenElement()) { window.Mirador.exitFullscreen(); $(\".user-buttons .fs\").addClass(\"fs-expand\").removeClass(\"fa-compress\"); } else { window.Mirador.enterFullscreen($(\".mirador-container\")[0]) ; $(\".user-buttons .fs\").removeClass(\"fs-expand\").addClass(\"fa-compress\"); }')" }
+      "attributes" : { 
+         title:"Toggle fullscreen mode",
+         onClick : "javascript:eval('if(window.Mirador.fullscreenElement()) { window.Mirador.exitFullscreen(); $(\".user-buttons .fs\").addClass(\"fs-expand\").removeClass(\"fa-compress\"); } else { window.Mirador.enterFullscreen($(\".mirador-container\")[0]) ; $(\".user-buttons .fs\").removeClass(\"fs-expand\").addClass(\"fa-compress\"); }')" }
    });
 
    let initTimer = setInterval( ((cfg) => () => {
