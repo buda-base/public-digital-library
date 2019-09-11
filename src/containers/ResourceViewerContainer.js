@@ -111,6 +111,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       onGetResource:(IRI:string) => {
          dispatch(data.getResource(IRI));
       },
+      onUserProfile:(url:{}) => {
+         dispatch(ui.userProfile(url));
+      },
       onToggleLanguagePanel:() => {
          dispatch(ui.toggleLanguagePanel());
       }

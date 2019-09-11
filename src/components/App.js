@@ -208,7 +208,7 @@ export function top_right_menu(that)
      <div id="login">
         <IconButton style={{marginLeft:"15px"}}  onClick={e => that.props.onToggleLanguagePanel()}>
           <FontAwesomeIcon style={{fontSize:"28px"}} icon={faLanguage} title="Display Preferences"/>
-        </IconButton>
+        </IconButton> 
         {
           !that.props.auth.isAuthenticated() && (
               <IconButton onClick={that.props.auth.login.bind(that,that.props.history.location)} title="Log in">
@@ -218,9 +218,13 @@ export function top_right_menu(that)
         }
         {
           that.props.auth.isAuthenticated() && (
+              [<IconButton title="User Profile" onClick={(e) => { that.props.onUserProfile(that.props.history.location); that.props.history.push("/user");    }}>
+                  <FontAwesomeIcon style={{fontSize:"28px"}} icon={faUserCircle} />
+              </IconButton>,
+         
               <IconButton onClick={that.props.auth.logout.bind(that,that.props.history.location)} title="Log out">
                 <FontAwesomeIcon style={{fontSize:"28px"}} icon={faSignOutAlt} />
-              </IconButton>
+              </IconButton> ]
             )
         }
          </div>
@@ -280,7 +284,9 @@ type Props = {
    onUpdateFacets:(key:string,t:string,f:{[string]:string[],m:{[string]:{}}},cfg:{[string]:string})=> void,
    onGetResource:(iri:string)=>void,
    onSetPrefLang:(lg:string)=>void,
-   onToggleLanguagePanel:()=>void
+   onToggleLanguagePanel:()=>void,
+   onUserProfile:(url:{})=>void
+
 }
 
 type State = {
