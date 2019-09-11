@@ -374,7 +374,7 @@ export async function miradorConfig(data, manifest, canvasID, useCredentials, la
          "userButtons": [
            { "label": "Reading View",
              "iconClass": "fa fa-align-center",
-             "attributes" : { style:"", onClick : "eval('window.setMiradorScroll()')" }
+             "attributes" : { style:"", onClick : "eval('window.setMiradorScroll()')",  "title":"Reading view" }
           },
            { "label": " ",
              "iconClass": "fa fa-search",
@@ -382,7 +382,7 @@ export async function miradorConfig(data, manifest, canvasID, useCredentials, la
           },
            { "label": "Page View",
              "iconClass": "fa fa-file-o",
-             "attributes" : { style:"", onClick : "eval('window.setMiradorZoom()')" }
+             "attributes" : { style:"", onClick : "eval('window.setMiradorZoom()')",  "title":"Page view" }
           },
             cornerButton
          ]
@@ -400,7 +400,8 @@ export async function miradorConfig(data, manifest, canvasID, useCredentials, la
             "label": "Browse Collection",
             "iconClass": "fa fa-bars",
             "attributes" : {
-               onClick : "if(window.setMiradorClick) { window.setMiradorClick(event); }"
+               title:"Browse collection",
+               onClick : "if(window.setMiradorClick) { window.setMiradorClick(event); }",
             },
          },
          ...config["mainMenuSettings"]["userButtons"]
@@ -665,29 +666,55 @@ function miradorAddZoomer() {
 
       window.setZoom = (val) => {
 
-         //console.log("sZ",window.max)
+         console.log("sZ",window.maxW,window.maxWimg)
 
-         if(!window.maxW) miradorInitMenu(true)
-         if(!window.maxW) return ;
+         if(!window.maxW && !window.maxWimg) miradorInitMenu(true)
+         if(!window.maxW && !window.maxWimg) return ;
 
          let scrollT = jQ(".mirador-container ul.scroll-listing-thumbs")
          let scrollV = jQ(".scroll-view")
 
-         // val = 1 => w =  1 * W
-         // val = 0 => w =  x * W <=> x = dMin
+         let _max = window.maxW
+         if(window.maxWimg) _max = window.maxWimg
 
-         let dMin = scrollV.innerWidth() / window.maxW
-         let coef = 1 - (1 - dMin) * (1 - val)
+         if(!window.maxWimg) // ~ "landscape" images
+         {
+            // val = 1 => w =  1 * W
+            // val = 0 => w =  x * W <=> x = dMin
 
-         let oldH = scrollT[0].getBoundingClientRect().height;
+            let dMin = scrollV.innerWidth() / _max
+            let coef = 1 - (1 - dMin) * (1 - val)
+            let oldH = scrollT[0].getBoundingClientRect().height;
 
-         scrollT.css({"transform":"scale("+coef+")"})
-         scrollV.scrollLeft((window.maxW*coef - scrollV.innerWidth() + 20) / 2)
+            scrollT.css({
+               "transform":"scale("+coef+")",
+               "margin-bottom":"-500000px" // no more empty space at bottom 
+            })
+            scrollV.scrollLeft((_max * coef - scrollV.innerWidth() + 20) / 2)
 
-         let nuH = scrollT[0].getBoundingClientRect().height;
+            let nuH = scrollT[0].getBoundingClientRect().height;
+            let sT = scrollV.scrollTop() + (nuH - oldH)*(scrollV.scrollTop()/oldH)
+            scrollV.scrollTop(sT)
 
-         let sT = scrollV.scrollTop() + (nuH - oldH)*(scrollV.scrollTop()/oldH)
-         scrollV.scrollTop(sT)
+         }
+         else { // ~ "portrait" images
+
+            // val = 0 => coef = 1
+            // val = x => coef = 1 + (dMax - 1) * x
+            // val = 1 => coef = dMax
+
+            let dMax = _max / window.Wimg
+            let coef = 1 + dMax * val
+
+            let oldH = scrollT[0].getBoundingClientRect().height;
+
+            scrollT.css({"transform":"scale("+coef+")"})
+            
+            let nuH = scrollT[0].getBoundingClientRect().height;
+            let sT = scrollV.scrollTop() + (nuH - oldH)*(scrollV.scrollTop()/oldH)
+            scrollV.scrollTop(sT)
+            
+         }
 
          //scrollT.css({"height":nuH}) // ok but then zoom bugs... TODO
 
@@ -709,16 +736,25 @@ function miradorInitMenu(maxWonly) {
    if(!maxWonly) jQ(".user-buttons.mirador-main-menu li:nth-last-child(n-5):nth-last-child(n+2)").addClass("on")
    window.maxW = jQ(".mirador-container ul.scroll-listing-thumbs ").width()
 
+   let maxWimg = 0, n, Wimg ; 
+   jQ(".mirador-container .mirador-viewer ul.scroll-listing-thumbs li img").each((i,v) => {
+      if((n=Number(jQ(v).attr("data-full-width"))) > maxWimg) { maxWimg = n ; Wimg = jQ(v).attr("width") ; }
+   })
+   
+   if(maxWimg > window.maxW) { window.maxWimg = maxWimg; window.Wimg = Wimg ; }
+   else window.maxWimg = 0
+
    //console.log("w",jQ(".mirador-container ul.scroll-listing-thumbs ").width())
 
    if(window.maxW < jQ(".scroll-view").innerWidth())
    {
       window.maxW = 0
       if(!maxWonly)  {
-         jQ(".mirador-container ul.scroll-listing-thumbs ").css("width","auto");
-         jQ(".user-buttons.mirador-main-menu").find("li:nth-last-child(3),li:nth-last-child(4)").removeClass("on").hide()
+         jQ(".mirador-container ul.scroll-listing-thumbs ").css({"transform-origin":"50% 0"});
+         if(!window.maxWimg) jQ(".user-buttons.mirador-main-menu").find("li:nth-last-child(3),li:nth-last-child(4)").removeClass("on").hide()
       }
    }
+   
    if(!maxWonly) jQ("input#zoomer").trigger("input")
 
    //console.log("maxW",window.maxW)
@@ -812,7 +848,9 @@ export async function miradorInitView(work,lang) {
    { 
       "label": "Full Screen",
       "iconClass": "fa fa-lg fa-fw fa-expand fs",
-      "attributes" : { onClick : "javascript:eval('if(window.Mirador.fullscreenElement()) { window.Mirador.exitFullscreen(); $(\".user-buttons .fs\").addClass(\"fs-expand\").removeClass(\"fa-compress\"); } else { window.Mirador.enterFullscreen($(\".mirador-container\")[0]) ; $(\".user-buttons .fs\").removeClass(\"fs-expand\").addClass(\"fa-compress\"); }')" }
+      "attributes" : { 
+         title:"Toggle fullscreen mode",
+         onClick : "javascript:eval('if(window.Mirador.fullscreenElement()) { window.Mirador.exitFullscreen(); $(\".user-buttons .fs\").addClass(\"fs-expand\").removeClass(\"fa-compress\"); } else { window.Mirador.enterFullscreen($(\".mirador-container\")[0]) ; $(\".user-buttons .fs\").removeClass(\"fs-expand\").addClass(\"fa-compress\"); }')" }
    });
 
    let initTimer = setInterval( ((cfg) => () => {

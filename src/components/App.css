@@ -467,6 +467,14 @@ svg.hide { opacity:0;pointer-events:none; }
 .pdfLoading,.zipLoading { color:white; }
 .pdfSpinner,.zipSpinner { left: 55% !important;  top: 45% !important; }
 
+.profile-container { padding:40px 100px; }
+.profile-area h1 { margin-top:0; }
+.profile-area img { height: 64px; vertical-align: middle;  border: 1px solid #ccc; display:inline-block; margin-right:16px;}
+.profile-area h5 { font-size:14px; color:rgba(229, 74, 53,1); cursor:pointer; margin-top:50px;}
+.profile-area h5:hover { text-decoration: underline; }
+
+.profile-area .FC { min-width:200px; margin-right:20px;}
+
 .App {
   text-align: center;
 }

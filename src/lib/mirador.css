@@ -24,7 +24,7 @@
 /* diva style zoom */
 .mirador-container ul.scroll-listing-thumbs { max-width:10000px;display:block;text-align:center;position:static;
    width:-moz-fit-content;width:fit-content;
-   transform-origin:0 0;
+   transform-origin:0 0; margin:auto;
    /* transition:transform-origin 1000ms linear ; */
 }
 .mirador-container .mirador-viewer .image-view { position:absolute; }
@@ -60,3 +60,29 @@
 #gotoPage.error { color:red ; }
 
 .scroll-view [data-image-id="https://iiif.archivelab.org/iiif/rashodgson13$0/canvas"] { display:none !important; }
+
+.mirador-container .mirador-viewer ul.scroll-listing-thumbs li img[data=''] { display:none; }
+
+@media (max-width:768px) {
+    /* .mirador-container .mirador-main-menu.user-buttons li:nth-last-child(-n+5):not(:last-child) { display:none; } */
+
+    .mirador-container .repo-image { position:absolute;right:0; display:none;}
+
+    .mirador-container .preview-thumb { position:relative; margin-bottom:5px;}
+    
+    .mirador-container .select-metadata,
+    .mirador-container .item-info,
+    .mirador-container .manifest-title h3,
+    #viewer .member-select-results li   { height:auto;position:relative;bottom:0 }
+
+    .mirador-container .select-metadata { left:5px;}
+    .mirador-container .manifest-title h3 { line-height:1.5em; }
+
+    #viewer .member-select-results li { display: flex;flex-wrap: wrap; flex-direction: column-reverse; overflow-x: auto; }
+
+    .mirador-main-menu-bar .user-buttons.mirador-main-menu a { font-size:0 ; }
+    .mirador-main-menu-bar .user-buttons.mirador-main-menu a span { font-size:18px !important; }
+
+    .window-manifest-navigation { min-width:200px; }
+    .window-manifest-navigation .mirador-btn.mirador-osd-fullscreen { display:none; }
+}       

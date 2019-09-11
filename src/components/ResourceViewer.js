@@ -108,7 +108,8 @@ type Props = {
    onHasImageAsset:(u:string,s:string) => void,
    onGetChunks: (s:string,b:number) => void,
    onGetPages: (s:string,b:number) => void,
-   onToggleLanguagePanel:()=>void
+   onToggleLanguagePanel:()=>void,
+   onUserProfile:(url:{})=>void
 }
 type State = {
    uviewer : boolean,
