@@ -704,7 +704,7 @@ function miradorAddZoomer() {
             // val = 1 => coef = dMax
 
             let dMax = _max / scrollV.innerWidth()
-            let coef = 1 + (dMax - 1) * val
+            let coef = 1 + dMax * val
 
             let oldH = scrollT[0].getBoundingClientRect().height;
 
