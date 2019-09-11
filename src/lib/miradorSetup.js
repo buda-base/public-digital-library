@@ -686,7 +686,10 @@ function miradorAddZoomer() {
             let coef = 1 - (1 - dMin) * (1 - val)
             let oldH = scrollT[0].getBoundingClientRect().height;
 
-            scrollT.css({ "transform":"scale("+coef+")" })
+            scrollT.css({
+               "transform":"scale("+coef+")",
+               "margin-bottom":"-500000px" // no more empty space at bottom 
+            })
             scrollV.scrollLeft((_max * coef - scrollV.innerWidth() + 20) / 2)
 
             let nuH = scrollT[0].getBoundingClientRect().height;
