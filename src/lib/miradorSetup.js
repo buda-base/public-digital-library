@@ -666,7 +666,7 @@ function miradorAddZoomer() {
 
       window.setZoom = (val) => {
 
-         //console.log("sZ",window.maxW,window.maxWimg)
+         console.log("sZ",window.maxW,window.maxWimg)
 
          if(!window.maxW && !window.maxWimg) miradorInitMenu(true)
          if(!window.maxW && !window.maxWimg) return ;
@@ -703,7 +703,7 @@ function miradorAddZoomer() {
             // val = x => coef = 1 + (dMax - 1) * x
             // val = 1 => coef = dMax
 
-            let dMax = _max / scrollV.innerWidth()
+            let dMax = _max / window.Wimg
             let coef = 1 + dMax * val
 
             let oldH = scrollT[0].getBoundingClientRect().height;
@@ -736,12 +736,12 @@ function miradorInitMenu(maxWonly) {
    if(!maxWonly) jQ(".user-buttons.mirador-main-menu li:nth-last-child(n-5):nth-last-child(n+2)").addClass("on")
    window.maxW = jQ(".mirador-container ul.scroll-listing-thumbs ").width()
 
-   let maxWimg = 0, n ; 
+   let maxWimg = 0, n, Wimg ; 
    jQ(".mirador-container .mirador-viewer ul.scroll-listing-thumbs li img").each((i,v) => {
-      if((n=Number(jQ(v).attr("data-full-width"))) > maxWimg) maxWimg = n
+      if((n=Number(jQ(v).attr("data-full-width"))) > maxWimg) { maxWimg = n ; Wimg = jQ(v).attr("width") ; }
    })
    
-   if(maxWimg > window.maxW) window.maxWimg = maxWimg
+   if(maxWimg > window.maxW) { window.maxWimg = maxWimg; window.Wimg = Wimg ; }
    else window.maxWimg = 0
 
    //console.log("w",jQ(".mirador-container ul.scroll-listing-thumbs ").width())
@@ -750,7 +750,7 @@ function miradorInitMenu(maxWonly) {
    {
       window.maxW = 0
       if(!maxWonly)  {
-         jQ(".mirador-container ul.scroll-listing-thumbs ").css({"width":"auto","transform-origin":"50% 0"});
+         jQ(".mirador-container ul.scroll-listing-thumbs ").css({"transform-origin":"50% 0"});
          if(!window.maxWimg) jQ(".user-buttons.mirador-main-menu").find("li:nth-last-child(3),li:nth-last-child(4)").removeClass("on").hide()
       }
    }

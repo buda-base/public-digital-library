@@ -24,7 +24,7 @@
 /* diva style zoom */
 .mirador-container ul.scroll-listing-thumbs { max-width:10000px;display:block;text-align:center;position:static;
    width:-moz-fit-content;width:fit-content;
-   transform-origin:0 0;
+   transform-origin:0 0; margin:auto;
    /* transition:transform-origin 1000ms linear ; */
 }
 .mirador-container .mirador-viewer .image-view { position:absolute; }
