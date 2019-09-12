@@ -170,8 +170,9 @@ export const langProfile = [
 ]
 */
 
+const preferUIlang = [ bdo+"placeType", bdo+"workIsAbout", bdo+"workGenre" ]
 
-export function getLangLabel(that:{},labels:[],proplang:boolean=false,uilang:boolean=false)
+export function getLangLabel(that:{},prop:string="",labels:[],proplang:boolean=false,uilang:boolean=false)
 {
    if(labels && labels.length)
    {
@@ -180,7 +181,7 @@ export function getLangLabel(that:{},labels:[],proplang:boolean=false,uilang:boo
       let langs = []
       if(that.state.langPreset) langs = that.state.langPreset
       else if(that.props.langPreset) langs = that.props.langPreset
-      if(proplang || uilang) langs = [ that.props.locale, ...langs ]
+      if(proplang || uilang || preferUIlang.indexOf(prop) !== -1) langs = [ that.props.locale, ...langs ]
 
       if(langs.indexOf(that.props.locale) === -1) { 
          langs = [ ...langs, that.props.locale ]
@@ -1163,7 +1164,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          if(preflabs.length > 0 && preflabs[0]["@language"]) { lang = "@language" ; val = "@value"; }
          if(preflabs.length > 0 && preflabs[0]["xml:lang"]) { lang = "xml:lang" ; val = "value"; }
 
-         let label = getLangLabel(this,preflabs,false,useUIlang)
+         let label = getLangLabel(this,prop,preflabs,false,useUIlang)
 
          //console.log("full",prop,label,preflabs,useUIlang)
 
@@ -1528,7 +1529,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      if(Array.isArray(m.value)) { val = m.value.map((e)=>this.pretty(e)) ; isArray = true }
                      else {
                         //val = this.highlight(this.pretty(m.value),k)
-                        let mLit = getLangLabel(this,[m])
+                        let mLit = getLangLabel(this,"",[m])
                         val =  this.highlight(mLit["value"],facet)
                         //val =  mLit["value"]
                         lang = mLit["lang"]
@@ -1542,7 +1543,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                         val = m.value;
                         if(val === id) return ;
                         let label = dico[val]
-                        if(label) label = getLangLabel(this,label)
+                        if(label) label = getLangLabel(this,"",label)
                         if(label) {
                            uri = val
                            for(let k of Object.keys(prefixesMap)) { 
@@ -1579,7 +1580,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                            if(label && label[skos+"prefLabel"]) label = label[skos+"prefLabel"]
                            else if(label) label = label[foaf+"name"]
                         }
-                        if(label) label = getLangLabel(this,label)
+                        if(label) label = getLangLabel(this,"",label)
                         if(label) {
                            if(label.value) {
                               val = label.value
@@ -1788,7 +1789,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                for(let k of Object.keys(prefixesMap)) fullURI = fullURI.replace(new RegExp(k+":"),prefixesMap[k])
                if(labels) labels = labels[fullURI]
                if(labels) {
-                  l = getLangLabel(this,labels[skos+"prefLabel"]?labels[skos+"prefLabel"]:labels[foaf+"name"])
+                  l = getLangLabel(this,"",labels[skos+"prefLabel"]?labels[skos+"prefLabel"]:labels[foaf+"name"])
                   //console.log("l",labels,l)
                   if(l) {
                      message.push(<h4 key="keyResource" style={{marginLeft:"16px"}}>Resource Id Matching (1)</h4>)
@@ -1927,7 +1928,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                for(let k of Object.keys(listOrder)) { if(e.type && e.type.match(new RegExp(k))) return listOrder[k] }
             })
             //console.log("sList",JSON.stringify(sList,null,3));
-            label = getLangLabel(this,sList) // ,true)
+            label = getLangLabel(this,"",sList) // ,true)
             if(label && label.length > 0) label = label[0]
 
             let preProps = sublist[o].filter((e) => e.type && e.type.match(/relationType$/ )).map(e => this.props.ontology[e.value])
@@ -1996,7 +1997,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   if(subL.length == 1) {
                      subR = sublist[o].filter((e) => (e.type && e.type.match(new RegExp(lab)))) //(rootPrefLabel)|(prefLabel(Has)?Expression)/) ) )
                      if(subR.length > 0) {
-                        let tLab = getLangLabel(this,subR)
+                        let tLab = getLangLabel(this,"",subR)
                         lang = tLab["xml:lang"]
                         if(!lang) lang = tLab["lang"]
                         label = tLab["value"]
@@ -2005,7 +2006,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   else if(multiP) {
                      subR = sublist[o].filter((e) => (e.type && e.type.match(new RegExp(lab))))
                      if(subR.length > 0) {
-                        let tLab = getLangLabel(this,subR)
+                        let tLab = getLangLabel(this,"",subR)
                         lang = tLab["xml:lang"]
                         if(!lang) lang = tLab["lang"]
                         label = tLab["value"]
@@ -2441,7 +2442,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             let i = 0
             for(let l of this.props.config.links) {
                //console.log("l",l)
-               let who = getLangLabel(this, l.label)
+               let who = getLangLabel(this,"", l.label)
                //console.log("who",who)
                messageD.push(<h5 key={i}>{l.title}</h5>)
                messageD.push(this.makeResult(l.id,null,getEntiType(l.id),who.value,who.lang,l.icon,TagTab[l.icon]))
