@@ -677,7 +677,8 @@ function miradorAddZoomer() {
          let _max = window.maxW
          if(window.maxWimg) _max = window.maxWimg
 
-         if(!window.maxWimg) // ~ "landscape" images
+         if(!window.maxWimg // ~ "landscape" images
+            || Math.abs(window.maxWimg - window.maxW) / Math.max(window.maxWimg,window.maxW) < 0.05)  // fix for special cases of 'large' horizontal images eg bdr:V1KG89131_I1KG89313
          {
             // val = 1 => w =  1 * W
             // val = 0 => w =  x * W <=> x = dMin

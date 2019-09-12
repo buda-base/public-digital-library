@@ -26,7 +26,7 @@ function scheduleRenewal() {
 }
 
 function renewToken() {
-  auth.auth1.checkSession({},
+  if(auth && auth.auth1) auth.auth1.checkSession({},
     function(err, result) {
       if (err) {
         console.log("renew token error",err);
