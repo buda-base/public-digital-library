@@ -61,7 +61,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faLanguage } from '@fortawesome/free-solid-svg-icons'
 //import {MapComponent} from './Map';
 import {getEntiType} from '../lib/api';
-import {languages,getLangLabel,top_right_menu} from './App';
+import {languages,getLangLabel,top_right_menu,prefixesMap as prefixes,sameAsMap} from './App';
 import Popover from '@material-ui/core/Popover';
 import MenuItem from '@material-ui/core/MenuItem';
 import List from '@material-ui/core/List';
@@ -108,7 +108,8 @@ type Props = {
    onHasImageAsset:(u:string,s:string) => void,
    onGetChunks: (s:string,b:number) => void,
    onGetPages: (s:string,b:number) => void,
-   onToggleLanguagePanel:()=>void
+   onToggleLanguagePanel:()=>void,
+   onUserProfile:(url:{})=>void
 }
 type State = {
    uviewer : boolean,
@@ -136,26 +137,30 @@ type State = {
  }
 
 
-
-const adm  = "http://purl.bdrc.io/ontology/admin/" ;
-const bdac = "http://purl.bdrc.io/anncollection/" ;
-const bdan = "http://purl.bdrc.io/annotation/" ;
-const bda  = "http://purl.bdrc.io/admindata/";
-const bdo  = "http://purl.bdrc.io/ontology/core/";
-const bdr  = "http://purl.bdrc.io/resource/";
-const foaf = "http://xmlns.com/foaf/0.1/" ;
-const owl  = "http://www.w3.org/2002/07/owl#";
-const oa = "http://www.w3.org/ns/oa#" ;
-const rdf  = "http://www.w3.org/1999/02/22-rdf-syntax-ns#";
-const rdfs = "http://www.w3.org/2000/01/rdf-schema#";
-const skos = "http://www.w3.org/2004/02/skos/core#";
-const tmp  = "http://purl.bdrc.io/ontology/tmp/" ;
-const _tmp  = "http://purl.bdrc.io/ontology/tmp/" ;
-const  xsd  = "http://www.w3.org/2001/XMLSchema#" ;
-
+const adm   = "http://purl.bdrc.io/ontology/admin/" ;
+const bda   = "http://purl.bdrc.io/admindata/";
+const bdac  = "http://purl.bdrc.io/anncollection/" ;
+const bdan  = "http://purl.bdrc.io/annotation/" ;
+const bdo   = "http://purl.bdrc.io/ontology/core/"
+const bdr   = "http://purl.bdrc.io/resource/";
 const dila  = "http://purl.dila.edu.tw/resource/";
+const foaf  = "http://xmlns.com/foaf/0.1/" ;
+const oa    = "http://www.w3.org/ns/oa#" ;
+const ola    = "https://openlibrary.org/authors/" 
+const owl   = "http://www.w3.org/2002/07/owl#" ; 
+const rdf   = "http://www.w3.org/1999/02/22-rdf-syntax-ns#";
+const rdfs  = "http://www.w3.org/2000/01/rdf-schema#";
+const skos  = "http://www.w3.org/2004/02/skos/core#";
+const tmp   = "http://purl.bdrc.io/ontology/tmp/" ;
+const _tmp  = tmp ;
+const viaf  = "http://viaf.org/viaf/"
+const wd    = "http://www.wikidata.org/entity/"
+const xsd   = "http://www.w3.org/2001/XMLSchema#" ;
 
-const prefixes = { adm, bdac, bdan, bda, bdo, bdr, foaf, oa, owl, rdf, rdfs, skos, xsd, tmp, dila }
+
+
+//const prefixes = { adm, bdac, bdan, bda, bdo, bdr, foaf, oa, owl, rdf, rdfs, skos, xsd, tmp, dila }
+
 
 let propOrder = {
    "Corporation":[],
@@ -183,7 +188,6 @@ let propOrder = {
    ],
    "Person" : [
       "skos:altLabel",
-      "owl:sameAs",
       "bdo:personName",
       "bdo:personGender",
       "bdo:kinWith",
@@ -195,6 +199,13 @@ let propOrder = {
       "bdo:personTeacherOf",
       "bdo:personStudentOf",
       "bdo:note",
+      "bdo:sameAsVIAF",
+      "adm:sameAsVIAF",
+      "adm:sameAsrKTs",
+      "adm:sameAsToL",
+      "adm:sameAsWorldCat",   
+      "adm:sameAsWikidata",
+      "owl:sameAs",
       "rdfs:seeAlso",
     ],
    "Place":[
@@ -259,11 +270,11 @@ function top_left_menu(that,pdfLink,monoVol,fairUse)
           </IconButton>
        </Link>
        {
-          that.props.IRI.match(/^bd[ra]:/) &&
-          [<a className="goBack" target="_blank" title="TTL version" rel="alternate" type="text/turtle" href={"http://purl.bdrc.io/"+that.props.IRI.replace(/bdr:/,"resource/").replace(/bda:/,"admindata/")+".ttl"}>
+          that.props.IRI.match(/^(bd[ra])|(dila):/) &&
+          [<a className="goBack" target="_blank" title="TTL version" rel="alternate" type="text/turtle" href={that.expand(that.props.IRI)+".ttl"}>
              <Button style={{marginLeft:"0px",paddingLeft:"10px",paddingRight:0}}>{I18n.t("resource.export")} ttl</Button>
           </a>,<span>&nbsp;/&nbsp;</span>,
-          <a className="goBack noML" target="_blank" title="JSON-LD version" rel="alternate" type="application/ld+json" href={"http://purl.bdrc.io/"+that.props.IRI.replace(/bdr:/,"resource/").replace(/bda:/,"admindata/")+".jsonld"}>
+          <a className="goBack noML" target="_blank" title="JSON-LD version" rel="alternate" type="application/ld+json" href={that.expand(that.props.IRI)+".jsonld"}>
              <Button style={{paddingLeft:0,paddingRight:"10px"}}>json-ld</Button>
           </a>]
        }
@@ -398,7 +409,8 @@ function top_left_menu(that,pdfLink,monoVol,fairUse)
           <ChatIcon />
        </IconButton>
        {
-          that.props.IRI.match(/^[^:]+:[RPGTW]/) &&
+          //that.props.IRI.match(/^[^:]+:[RPGTW]/) &&
+          prefixes[that.props.IRI.replace(/^([^:]+):.*$/,"$1")] &&
           <Link className="goBack" to={"/search?r="+that.props.IRI+"&t=Any"}>
              <Button style={{marginLeft:"0px",paddingLeft:"10px"}}>{I18n.t("resource.browse")} &gt;</Button>
           </Link>
@@ -683,15 +695,15 @@ class ResourceViewer extends Component<Props,State>
 
                   //console.log(a,b)
 
-                  if(!a["value"] && a[rdfs+"label"] && a[rdfs+"label"][0]) a = a[rdfs+"label"][0]
-                  if(a["lang"]) a = a["lang"]
-                  else if(a["xml:lang"] && a["xml:lang"] != "") a = a["xml:lang"]
+                  if(a && !a["value"] && a[rdfs+"label"] && a[rdfs+"label"][0]) a = a[rdfs+"label"][0]
+                  if(a && a["lang"]) a = a["lang"]
+                  else if(a && a["xml:lang"] && a["xml:lang"] != "") a = a["xml:lang"]
                   //else if(a["type"] == "uri") a = a["value"]
                   else a = null
 
-                  if(!b["value"] && b[rdfs+"label"] && b[rdfs+"label"][0]) b = b[rdfs+"label"][0]
-                  if(b["lang"]) b = b["lang"]
-                  else if(b["xml:lang"] && b["xml:lang"] != "") b = b["xml:lang"]
+                  if(b && !b["value"] && b[rdfs+"label"] && b[rdfs+"label"][0]) b = b[rdfs+"label"][0]
+                  if(b && b["lang"]) b = b["lang"]
+                  else if(b && b["xml:lang"] && b["xml:lang"] != "") b = b["xml:lang"]
                   //else if(b["type"] == "uri") b = b["value"]
                   else b = null
 
@@ -877,9 +889,9 @@ class ResourceViewer extends Component<Props,State>
    {
       if(elem) {
 
-         //console.log("uriformat",prop,elem.value,dico,withProp,show)
+         console.log("uriformat",prop,elem.value,dico,withProp,show)
 
-         if(!elem.value.match(/^http:\/\/purl\.bdrc\.io/)) {
+         if(!elem.value.match(/^http:\/\/purl\.bdrc\.io/) && (!dico || !dico[elem.value])) {
             return <a href={elem.value} target="_blank">{decodeURI(elem.value)}</a> ;
          }
 
@@ -982,25 +994,26 @@ class ResourceViewer extends Component<Props,State>
                      }
                   }
 
-                  //console.log("s",prop,elem,info,infoBase)
 
                   // we can return Link
                   let pretty = this.fullname(elem.value,true);
                   let prefix = "bdr:"
-                  if(elem.value.match(new RegExp(bda))) prefix = "bda:"
+                  for(let p of Object.keys(prefixes)) if(elem.value.match(new RegExp(prefixes[p]))) prefix = p 
+
+                  console.log("s",prop,prefix,pretty,elem,info,infoBase)
 
                   if(info && infoBase && infoBase.filter(e=>e["xml:lang"]||e["lang"]).length >= 0) {
-                     ret.push([<Link className="urilink prefLabel" to={"/"+show+"/"+prefix+pretty}>{info}</Link>,lang?<Tooltip placement="bottom-end" title={
+                     ret.push([<Link className={"urilink prefLabel " + prefix} to={"/"+show+"/"+prefix+":"+pretty}>{info}</Link>,lang?<Tooltip placement="bottom-end" title={
                         <div style={{margin:"10px"}}>
                            <Translate value={languages[lang]?languages[lang].replace(/search/,"tip"):lang}/>
                         </div>
                      }><span className="lang">{lang}</span></Tooltip>:null])
                   }
                   else if(pretty.toString().match(/^V[0-9A-Z]+_I[0-9A-Z]+$/)) { ret.push(<span>
-                     <Link className="urilink" to={"/"+show+"/"+prefix+pretty}>{pretty}</Link>&nbsp;
+                     <Link className={"urilink "+prefix} to={"/"+show+"/"+prefix+":"+pretty}>{pretty}</Link>&nbsp;
                      {/* <Link className="goBack" target="_blank" to={"/gallery?manifest=http://iiifpres.bdrc.io/2.1.1/v:bdr:"+pretty+"/manifest"}>{"(view image gallery)"}</Link> */}
                   </span> ) }
-                  else if(pretty.toString().match(/^([A-Z]+[_0-9-]*[A-Z]*)+$/)) ret.push(<Link className="urilink" to={"/"+show+"/"+prefix+pretty}>{pretty}</Link>)
+                  else if(pretty.toString().match(/^([A-Z]+[_0-9-]*[A-Z]*)+$/)) ret.push(<Link className={"urilink "+ prefix} to={"/"+show+"/"+prefix+":"+pretty}>{pretty}</Link>)
                   else ret.push(pretty)
 
                   return ret
@@ -1113,7 +1126,7 @@ class ResourceViewer extends Component<Props,State>
       })
       */
 
-      //console.log("format",prop,JSON.stringify(elem,null,3),txt,bnode,div);
+      console.log("format",Tag, prop,JSON.stringify(elem,null,3),txt,bnode,div);
 
       let ret = [],pre = []
 
@@ -1274,8 +1287,8 @@ class ResourceViewer extends Component<Props,State>
                */
 
 
-            if(!txt) ret.push(<Tag>{tmp}</Tag>)
-            else ret.push(<Tag>{tmp+" "+txt}</Tag>)
+            if(!txt) ret.push(<Tag className={(elem.length > 1?"multiple":"")}>{tmp}</Tag>)
+            else ret.push(<Tag className={(elem.length > 1?"multiple":"")}>{tmp+" "+txt}</Tag>)
 
 
             //console.log("ret",ret)

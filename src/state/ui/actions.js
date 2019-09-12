@@ -80,6 +80,14 @@ export const updateFacets = (key:string,datatype:string,facets: {[string]:string
 }
 
 
+TYPES.userProfile = 'USER_PROFILE';
+export const userProfile = (url: {}): Action => {
+   return {
+      type: TYPES.userProfile,
+      payload: url
+   }
+}
+
 export type LoadingAction = {
     type: string,
     payload: {

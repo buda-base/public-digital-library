@@ -28,12 +28,16 @@ const dPrefix = {
    "dila" : {
       "PL": "Place", 
       "A" : "Person"
+   },
+   "wd" : {
+      "Q" : "Person"
    }
 };
 
 export function getEntiType(t:string):string {
    let p = t.replace(/^([^:]+):.*$/,"$1")
-   let v = t.replace(/^([^:]+:)?([ACEILGPRTWOVU][RTL]?).*$/,"$2")
+   if(p === "ola") return "Person" ;
+   let v = t.replace(/^([^:]+:)?([ACEILGPQRTWOVU][RTL]?).*$/,"$2")
    //console.log("v",v,dPrefix[v])
    if(!dPrefix[p] || !dPrefix[p][v]) return "" ;
    else return dPrefix[p][v]; }

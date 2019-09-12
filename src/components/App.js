@@ -7,7 +7,7 @@ import Tooltip from '@material-ui/core/Tooltip';
 import React, { Component } from 'react';
 import SearchBar from 'material-ui-search-bar'
 import Paper from '@material-ui/core/Paper';
-//import Menu from '@material-ui/core/Menu';
+import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import Button from '@material-ui/core/Button';
 import List from '@material-ui/core/List';
@@ -17,7 +17,7 @@ import ListItemIcon from '@material-ui/core/List';
 import Typography from '@material-ui/core/Typography';
 import Loader from 'react-loader';
 import Collapse from '@material-ui/core/Collapse';
-import Menu from '@material-ui/icons/Menu';
+import MenuIcon from '@material-ui/icons/Menu';
 import Settings from '@material-ui/icons/SettingsSharp';
 import TranslateIcon from '@material-ui/icons/Translate';
 import Apps from '@material-ui/icons/Apps';
@@ -50,6 +50,7 @@ import { faLanguage,faUserCircle,faSignOutAlt } from '@fortawesome/free-solid-sv
 import qs from 'query-string'
 import store from "../index"
 import FormGroup from '@material-ui/core/FormGroup';
+import Popover from '@material-ui/core/Popover';
 
 import {I18n, Translate, Localize } from "react-redux-i18n" ;
 
@@ -59,19 +60,29 @@ import {getEntiType} from '../lib/api';
 import {sortLangScriptLabels, extendedPresets} from '../lib/transliterators';
 import './App.css';
 
-const admd  = "http://purl.bdrc.io/admindata/" ;
-const adm  = "http://purl.bdrc.io/ontology/admin/" ;
-const bdo  = "http://purl.bdrc.io/ontology/core/";
-const bdr  = "http://purl.bdrc.io/resource/";
-const oa = "http://www.w3.org/ns/oa#" ;
-const rdf  = "http://www.w3.org/1999/02/22-rdf-syntax-ns#";
-const rdfs = "http://www.w3.org/2000/01/rdf-schema#";
-const skos = "http://www.w3.org/2004/02/skos/core#";
-const tmp = "http://purl.bdrc.io/ontology/tmp/" ;
-const _tmp = tmp ;
+const adm   = "http://purl.bdrc.io/ontology/admin/" ;
+const bda   = "http://purl.bdrc.io/admindata/";
+const bdac  = "http://purl.bdrc.io/anncollection/" ;
+const bdan  = "http://purl.bdrc.io/annotation/" ;
+const bdo   = "http://purl.bdrc.io/ontology/core/"
+const bdr   = "http://purl.bdrc.io/resource/";
+const dila  = "http://purl.dila.edu.tw/resource/";
+const foaf  = "http://xmlns.com/foaf/0.1/" ;
+const oa    = "http://www.w3.org/ns/oa#" ;
+const ola    = "https://openlibrary.org/authors/" 
+const owl   = "http://www.w3.org/2002/07/owl#" ; 
+const rdf   = "http://www.w3.org/1999/02/22-rdf-syntax-ns#";
+const rdfs  = "http://www.w3.org/2000/01/rdf-schema#";
+const skos  = "http://www.w3.org/2004/02/skos/core#";
+const tmp   = "http://purl.bdrc.io/ontology/tmp/" ;
+const _tmp  = tmp ;
+const viaf  = "http://viaf.org/viaf/"
+const wd    = "http://www.wikidata.org/entity/"
+const xsd   = "http://www.w3.org/2001/XMLSchema#" ;
 
-export const prefixes = [adm, admd, bdo,bdr,rdf,rdfs,skos,tmp,_tmp,oa]
-export const prefixesMap = {adm, bdo,bdr,rdf,rdfs,skos,tmp,_tmp,oa}
+export const prefixesMap = { adm, bda, bdac, bdan, bdo, bdr, dila, foaf, oa, owl, rdf, rdfs, skos, wd, ola, viaf, xsd, tmp }
+export const prefixes = Object.values(prefixesMap) ;
+export const sameAsMap = { wd:"WikiData", ol:"OpenLibrary", bdr:"BDRC" }
 
 const facetLabel = {
    "tree":"Genre / Is About"
@@ -171,6 +182,10 @@ export function getLangLabel(that:{},labels:[],proplang:boolean=false,uilang:boo
       else if(that.props.langPreset) langs = that.props.langPreset
       if(proplang || uilang) langs = [ that.props.locale, ...langs ]
 
+      if(langs.indexOf(that.props.locale) === -1) { 
+         langs = [ ...langs, that.props.locale ]
+      }            
+
       // move that to redux state ?
       langs = extendedPresets(langs)
 
@@ -208,7 +223,7 @@ export function top_right_menu(that)
      <div id="login">
         <IconButton style={{marginLeft:"15px"}}  onClick={e => that.props.onToggleLanguagePanel()}>
           <FontAwesomeIcon style={{fontSize:"28px"}} icon={faLanguage} title="Display Preferences"/>
-        </IconButton>
+        </IconButton> 
         {
           !that.props.auth.isAuthenticated() && (
               <IconButton onClick={that.props.auth.login.bind(that,that.props.history.location)} title="Log in">
@@ -218,9 +233,13 @@ export function top_right_menu(that)
         }
         {
           that.props.auth.isAuthenticated() && (
+              [<IconButton title="User Profile" onClick={(e) => { that.props.onUserProfile(that.props.history.location); that.props.history.push("/user");    }}>
+                  <FontAwesomeIcon style={{fontSize:"28px"}} icon={faUserCircle} />
+              </IconButton>,
+         
               <IconButton onClick={that.props.auth.logout.bind(that,that.props.history.location)} title="Log out">
                 <FontAwesomeIcon style={{fontSize:"28px"}} icon={faSignOutAlt} />
-              </IconButton>
+              </IconButton> ]
             )
         }
          </div>
@@ -280,10 +299,13 @@ type Props = {
    onUpdateFacets:(key:string,t:string,f:{[string]:string[],m:{[string]:{}}},cfg:{[string]:string})=> void,
    onGetResource:(iri:string)=>void,
    onSetPrefLang:(lg:string)=>void,
-   onToggleLanguagePanel:()=>void
+   onToggleLanguagePanel:()=>void,
+   onUserProfile:(url:{})=>void
+
 }
 
 type State = {
+   anchor:{[string]:{}},
    id?:string,
    loading?:boolean,
    //willSearch?:boolean,
@@ -320,6 +342,7 @@ type State = {
 class App extends Component<Props,State> {
    _facetsRequested = false;
    _customLang = null ;
+   _menus = {}
 
    constructor(props : Props) {
       super(props);
@@ -328,6 +351,7 @@ class App extends Component<Props,State> {
       this.handleCheck.bind(this);
       this.handleResults.bind(this);
       this.handleResOrOnto.bind(this);
+      this.makeResult.bind(this);
 
       let get = qs.parse(this.props.history.location.search)
 
@@ -359,6 +383,7 @@ class App extends Component<Props,State> {
          collapse:{},
          loader:{},
          paginate:{index:0,pages:[0],n:[0]},
+         anchor:{}
          //leftPane:false //(window.innerWidth > 1400 && this.props.keyword),
          
       };
@@ -395,7 +420,7 @@ class App extends Component<Props,State> {
 
       console.log("search",key,label) //,this.state,!global.inTest ? this.props:null)
 
-      if(key.match(/^bdr:[RTPGW]/))
+      if(prefixesMap[key.replace(/^([^:]+):.*$/,"$1")])
       {
          //if(!label) label = this.state.filters.datatype.filter((f)=>["Person","Work"].indexOf(f) !== -1)[0]
 
@@ -614,7 +639,7 @@ class App extends Component<Props,State> {
 
             if(!res || !res.results || !res.results.bindings || !res.results.bindings[dts]) { 
 
-               if(results.results.bindings[dts]) merge[dts] = { ...results.results.bindings[dts] } 
+               if(results.results && results.results.bindings[dts]) merge[dts] = { ...results.results.bindings[dts] } 
             }
             else {
 
@@ -1122,7 +1147,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
    fullname(prop:string,preflabs:[],useUIlang:boolean=false)
    {
 
-      if(this.props.ontology[prop] && this.props.ontology[prop][rdfs+"label"])
+      if(this.props.ontology && this.props.ontology[prop] && this.props.ontology[prop][rdfs+"label"])
       {
          preflabs = this.props.ontology[prop][rdfs+"label"]
       }
@@ -1347,11 +1372,32 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
       return false ;
    }
 
-   makeResult(id,n,t,lit,lang,tip,Tag,url)
-   {
-      //console.log("res",id,n,t,lit,lang,tip,Tag)
+   handleOpenSourceMenu(event,src) {
+      this.setState({ ...this.state,
+         anchor:{...this.state.anchor,[src]:event.currentTarget},
+         collapse:{...this.state.collapse,[src]:true}
+      })
+   }
 
-      if(!id.match(/[:/]/)) id = "bdr:" +id
+   handleCloseSourceMenu(event,src) {
+      this.setState({ ...this.state,
+         anchor:{...this.state.anchor,[src]:null},
+         collapse:{...this.state.collapse,[src]:false}
+      })
+   }
+
+   makeResult(id,n,t,lit,lang,tip,Tag,url,rmatch = [],facet,sameAsRes)
+   {
+      //console.log("res",id,n,t,lit,lang,tip,Tag,rmatch,sameAsRes)
+
+      if(!id.match(/[:/]/)) id = "bdr:" + id
+
+
+      let prettId = id ;
+      for(let k of Object.keys(prefixesMap)) prettId = prettId.replace(new RegExp(prefixesMap[k]),k+":")
+
+      console.log("id",id,prettId)
+
 
       let ret = (
             <div key={t+"_"+n+"_"}  className="contenu">
@@ -1367,7 +1413,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                                              <Translate value={languages[lang]?languages[lang].replace(/search/,"tip"):lang}/>
                                           </div>
                                        }>
-                                          <span className="lang">{lang}</span>
+                                          <span className="lang">&nbsp;{lang}</span>
                                        </Tooltip> }
                               </h3>
                         {/*   </div>
@@ -1376,7 +1422,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                         secondary={
                            <div> */}
                               <p key="id">
-                                 {id}
+                                 {prettId}
                                  { Tag && <Tooltip key={"tip"} placement="bottom-start" title={
                                           <div style={{margin:"10px"}}>
                                              {tip}
@@ -1392,12 +1438,204 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   </ListItem>
             </div> )
 
-         if(id.match(/^bdr:/))
-            return ( <Link key={n} to={"/show/"+id} className="result">{ret}</Link> )
+         let retList
+         if(prettId.match(/^([^:])+:/))
+            retList = [ ( <Link key={n} to={"/show/"+prettId} className="result">{ret}</Link> ) ]
          else
-            return ( <Link key={n} to={url?url.replace(/^https?:/,""):id.replace(/^https?:/,"")} target="_blank" className="result">{ret}</Link> )
+            retList = [ ( <Link key={n} to={url?url.replace(/^https?:/,""):id.replace(/^https?:/,"")} target="_blank" className="result">{ret}</Link> ) ]
 
+         let dico
+         if(!sameAsRes) sameAsRes = []        
 
+         if(rmatch.filter(e => e.type === owl+"sameAs")) sameAsRes.push({type:owl+"sameAs",value:id});
+
+         if(!sameAsRes.length) sameAsRes = sameAsRes.concat(rmatch.filter(e => e.value === owl+"sameAs")).map(e => ({ "type":owl+"sameAs", "value":this.props.keyword}))
+         else {
+            dico = sameAsRes.filter(p => p["lang"]!== undefined || p["xml:lang"]!== undefined || p["@language"]!== undefined).reduce( (acc,e) => {
+               let id = acc[e.type]
+               if(!id) id= []
+               id.push(e);
+               return ({...acc,[e.type]:id})
+            },{}) 
+            
+            sameAsRes = sameAsRes.filter(p => p.type === owl+"sameAs")
+            rmatch = rmatch.concat(sameAsRes)
+            //console.log("dico",dico)
+         }
+
+         if(sameAsRes.length) {
+            console.log("sameAs",dico,rmatch,sameAsRes)
+         
+            let menus = {}
+            let sources = []
+            let hasRes = {}
+            let img = { 
+               "dila": "/DILA-favicon.ico", 
+               "wd":   "/WD.svg",
+               "viaf": "/VIAF.png",
+               "ola":  "/OL.png",  //"https://openlibrary.org/static/images/openlibrary-logo-tighter.svg" //"https://seeklogo.com/images/O/open-library-logo-0AB99DA900-seeklogo.com.png", 
+               "bdr":  "/logo.svg", 
+            } 
+
+            for(let res of sameAsRes) 
+               for(let src of Object.keys(img)) {
+                  if(res.value.match(new RegExp("(^"+src+":)|(^"+prefixesMap[src]+")"))) hasRes[src] = res.value.replace(new RegExp(prefixesMap[src]),src+":")                  
+               }
+
+            for(let src of Object.keys(img)) 
+               if(!hasRes[src] && prettId.match(new RegExp("(^"+src+":)|(^"+prefixesMap[src]+")"))) 
+                  hasRes[src] = prettId
+
+            for(let src of Object.keys(img)) 
+               if(hasRes[src]) {             
+                  
+                  sources.push(
+                     <div class="source-data" id={src}>
+                        <Link onTouchEnd={(ev) => { if(src !== "bdr") { ev.stopPropagation(); ev.preventDefault(); this.handleOpenSourceMenu(ev,"menu-"+src+"-"+prettId); return false ; }}} to={"/show/"+hasRes[src]}>
+                           <img src={img[src]}/>
+                        </Link>
+                        {src !== "bdr" && <span onMouseEnter={(ev) => this.handleOpenSourceMenu(ev,"menu-"+src+"-"+prettId)}></span> }
+                     </div>
+                  )
+
+                  menus["menu-"+src+"-"+prettId] = { full: hasRes[src].replace(new RegExp(src+":"), prefixesMap[src]), short:hasRes[src] }
+
+               }
+                     /*
+                     <Tooltip placement="bottom-end" title={<div style={{margin:"10px"}}>Show data from {sameAsMap[src]?sameAsMap[src]:src.toUpperCase()}</div>}>
+                        <Link to={"/show/"+hasRes[src]}><img src={img[src]}/>
+                     </Link></Tooltip>
+                     */
+               
+            if(sources.length > 1 || sources.length == 1 && !hasRes["bdr"] ) { 
+               retList.push(<div class="source">{sources}</div>)
+               this._menus = { ...this._menus, ...menus } 
+            }
+            
+         }
+
+         if(rmatch && rmatch.length) retList.push( <div id='matches'>
+            {
+               rmatch.map((m) => {
+
+                  //console.log("m",m)
+
+                  if(true || !m.type.match(new RegExp(skos+"prefLabel"))) {
+                     let prop = this.fullname(m.type.replace(/.*altLabelMatch/,skos+"altLabel"))
+                     let val,isArray = false ;
+                     let lang = m["lang"]
+                     if(!lang) lang = m["xml:lang"]
+                     if(Array.isArray(m.value)) { val = m.value.map((e)=>this.pretty(e)) ; isArray = true }
+                     else {
+                        //val = this.highlight(this.pretty(m.value),k)
+                        let mLit = getLangLabel(this,[m])
+                        val =  this.highlight(mLit["value"],facet)
+                        //val =  mLit["value"]
+                        lang = mLit["lang"]
+                        if(!lang) lang = mLit["xml:lang"]
+                     }
+
+                     //console.log("val",val,val.length,lang)
+
+                     let uri,from
+                     if(m.type.match(/sameAs$/)) {
+                        val = m.value;
+                        if(val === id) return ;
+                        let label = dico[val]
+                        if(label) label = getLangLabel(this,label)
+                        if(label) {
+                           uri = val
+                           for(let k of Object.keys(prefixesMap)) { 
+                              if(uri.startsWith(prefixesMap[k])) prop = "Same As " + (sameAsMap[k]?sameAsMap[k]:k.toUpperCase())
+                              uri = uri.replace(new RegExp(prefixesMap[k]),k+":")
+                           }
+                           uri = "/show/"+uri
+                           if(label.value) {
+                              val = label.value
+                              lang = label.lang
+                           }
+                           else if(label["@value"]) {
+                              val = label["@value"]
+                              lang = label["@language"]
+                           }
+                           if(label["xml:lang"]) lang = label["xml:lang"]                              
+                           
+                        }
+                     }
+                     else if(m.type.match(/relationType$/) || (m.value && m.value.match && m.value.match(new RegExp("^("+bdr+")?"+this.props.keyword.replace(/bdr:/,"(bdr:)?")+"$")))) {
+                        
+                        uri = this.props.keyword.replace(/bdr:/,"")
+                        val = uri ;
+                        lang = null 
+                        let label = this.props.resources[this.props.keyword]
+                        if(label) label = label[bdr+uri]
+                        if(label) label = label[skos+"prefLabel"]
+                        if(!label) label = dico[this.props.keyword]
+                        if(!label) {
+                           label = this.props.resources[this.props.keyword]
+                           let fullURI = this.props.keyword
+                           for(let k of Object.keys(prefixesMap)) fullURI = fullURI.replace(new RegExp(k+":"),prefixesMap[k])
+                           label = label[fullURI]                 
+                           if(label && label[skos+"prefLabel"]) label = label[skos+"prefLabel"]
+                           else if(label) label = label[foaf+"name"]
+                        }
+                        if(label) label = getLangLabel(this,label)
+                        if(label) {
+                           if(label.value) {
+                              val = label.value
+                              lang = label.lang
+                           }
+                           else if(label["@value"]) {
+                              val = label["@value"]
+                              lang = label["@language"]
+                           }
+                           if(label["xml:lang"]) lang = label["xml:lang"]                              
+                              
+                        }
+                        if(m.type.match(/relationType$/))  {
+                           if(m.value.match(/sameAs$/)) {
+                              uri = this.props.keyword
+                              for(let k of Object.keys(prefixesMap)) { 
+                                 if(uri.startsWith(k+":")) prop = "Same As " + (sameAsMap[k]?sameAsMap[k]:k.toUpperCase())
+                              }
+                              uri = "/show/"+uri
+                           } else {
+                              prop = this.fullname(m.value) 
+                              uri = "/show/"+this.props.keyword
+                           }
+                        }                        
+                     }
+
+                     //console.log("prop",prop,val)
+
+                     return (<div className="match">
+                        <span className="label">{(!from?prop:from)}:&nbsp;</span>
+                        {!isArray && <span>{[!uri?val:<Link className="urilink" to={uri}>{val}</Link>,lang?<Tooltip placement="bottom-end" title={
+                           <div style={{margin:"10px"}}>
+                              <Translate value={languages[lang]?languages[lang].replace(/search/,"tip"):lang}/>
+                           </div>
+                        }><span className="lang">&nbsp;{lang}</span></Tooltip>:null]}</span>}
+                        {isArray && <div class="multi">
+                           {val.map((e)=>
+                              <span>
+                                 <Link to={"/show/bdr:"+e}>{m.tmpLabel?m.tmpLabel:e}</Link>
+                                 { m.lang && <Tooltip placement="bottom-end" title={
+                                    <div style={{margin:"10px"}}>
+                                       <Translate value={languages[lang]?languages[lang].replace(/search/,"tip"):lang}/>
+                                    </div>
+                                 }><span className="lang">&nbsp;{m.lang}</span></Tooltip> }
+                              </span>)}</div>}
+                     </div>)
+                  }
+               })
+            }
+            </div> )
+
+      retList.push(<hr/>);
+
+      retList = <div className="result-content">{retList}</div>
+      
+      return retList
    }
 
    setTypeCounts(types,counts)
@@ -1546,13 +1784,15 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             let labels = this.props.resources[this.props.keyword]
             if(labels && labels != true)
             {
-               if(labels) labels = labels[this.props.keyword.replace(/bdr:/,bdr)]
+               let fullURI = this.props.keyword
+               for(let k of Object.keys(prefixesMap)) fullURI = fullURI.replace(new RegExp(k+":"),prefixesMap[k])
+               if(labels) labels = labels[fullURI]
                if(labels) {
-                  l = getLangLabel(this,labels[skos+"prefLabel"])
+                  l = getLangLabel(this,labels[skos+"prefLabel"]?labels[skos+"prefLabel"]:labels[foaf+"name"])
                   //console.log("l",labels,l)
                   if(l) {
                      message.push(<h4 key="keyResource" style={{marginLeft:"16px"}}>Resource Id Matching (1)</h4>)
-                     message.push(this.makeResult(this.props.keyword,1,null,l.value,l.lang))
+                     message.push(this.makeResult(this.props.keyword,1,null,l.value,l.lang,null,null,null,[],null,[{"type":owl+"sameAs","value":this.props.keyword}]))
                   }
                }
             }
@@ -1598,6 +1838,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
    handleResults(types,counts,message,results,paginate,bookmarks) 
    {
+      this._menus = {}
 
       let n = 0, m = 0 ;
       console.log("results",results,paginate);
@@ -1723,12 +1964,12 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   //console.log("e",e,this.state.filters.facets)
 
                   return ( /*(this.state.filters.facets && e.type && this.state.filters.facets[e.type]) ||*/ use && (
-                  ( this.props.language != "" ? e.value && ((e.value.match(/[↦↤]/) && e.type && !e.type.match(/(prefLabelMatch$)|(creator)/) ))
-                                                            //|| e.type && e.type.match(/Matching$/))
+                  ( this.props.language != "" ? e.value && ((e.value.match(/[↦↤]/) && e.type && (!e.type.match(/(prefLabelMatch$)|(creator)/) || (!label.value.match(/[↦↤]/)))))
+                                                            //|| e.type && e.type.match(/sameAs$/))
                                               : !e.lang && (e.value.match(new RegExp(bdr+this.props.keyword.replace(/bdr:/,"")))
                                                             || (e.type && e.type.match(/relationType$/) ) ) )
 
-                     ) ) } )
+                     ) ) } ).map(e => e.type.match(/prefLabelMatch$/) ? { ...e, type:skos+"prefLabel" }:e)
             }
 
 
@@ -1974,84 +2215,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   if(!willBreak && !dontShow) { 
                      lastN = cpt ;
                      //console.log("lastN",lastN)
-                     message.push(
-                        [
-                           this.makeResult(id,n,t,lit,lang,tip,Tag)
-
-                        ,
-                        <div>
-                        {
-                           r.match.map((m) => {
-
-                              //console.log("m",m)
-
-                              if(!m.type.match(new RegExp(skos+"prefLabel"))) {
-                                 let prop = this.fullname(m.type.replace(/.*altLabelMatch/,skos+"altLabel"))
-                                 let val,isArray = false ;
-                                 let lang = m["lang"]
-                                 if(!lang) lang = m["xml:lang"]
-                                 if(Array.isArray(m.value)) { val = m.value.map((e)=>this.pretty(e)) ; isArray = true }
-                                 else {
-                                    //val = this.highlight(this.pretty(m.value),k)
-                                    let mLit = getLangLabel(this,[m])
-                                    val =  this.highlight(mLit["value"],k)
-                                    //val =  mLit["value"]
-                                    lang = mLit["lang"]
-                                    if(!lang) lang = mLit["xml:lang"]
-                                 }
-
-                                 //console.log("val",val,val.length,lang)
-
-                                 let uri
-                                 if(m.type.match(/relationType$/) || (m.value && m.value.match && m.value.match(new RegExp("^("+bdr+")?"+this.props.keyword.replace(/bdr:/,"(bdr:)?")+"$")))) {
-                                    if(m.type.match(/relationType$/))  prop = this.fullname(m.value) ;
-                                    uri = this.props.keyword.replace(/bdr:/,"")
-                                    val = uri ;
-                                    lang = null 
-                                    let label = this.props.resources[this.props.keyword]
-                                    if(label) label = label[bdr+uri]
-                                    if(label) label = label[skos+"prefLabel"]
-                                    if(label) label = getLangLabel(this,label)
-                                    if(label) {
-                                       if(label.value) {
-                                          val = label.value
-                                          lang = label.lang
-                                       }
-                                       else if(label["@value"]) {
-                                          val = label["@value"]
-                                          lang = label["@language"]
-                                       }
-                                        
-                                    }
-                                    
-                                 }
-
-
-                                 //console.log("prop",prop,val)
-
-                                 return (<div className="match">
-                                    <span className="label">{prop}:&nbsp;</span>
-                                    {!isArray && <span>{[!uri?val:<Link className="urilink" to={"/show/"+this.props.keyword}>{val}</Link>,lang?<Tooltip placement="bottom-end" title={
-                                       <div style={{margin:"10px"}}>
-                                          <Translate value={languages[lang]?languages[lang].replace(/search/,"tip"):lang}/>
-                                       </div>
-                                    }><span className="lang">{lang}</span></Tooltip>:null]}</span>}
-                                    {isArray && <div class="multi">
-                                       {val.map((e)=>
-                                          <span>
-                                             <Link to={"/show/bdr:"+e}>{m.tmpLabel?m.tmpLabel:e}</Link>
-                                             { m.lang && <Tooltip placement="bottom-end" title={
-                                                <div style={{margin:"10px"}}>
-                                                   <Translate value={languages[lang]?languages[lang].replace(/search/,"tip"):lang}/>
-                                                </div>
-                                             }><span className="lang">{m.lang}</span></Tooltip> }
-                                          </span>)}</div>}
-                                 </div>)
-                              }
-                           })
-                        }
-                        </div>
-                     ])
+                     message.push(this.makeResult(id,n,t,lit,lang,tip,Tag,null,r.match,k,sublist[o]))
                   }
                   cpt ++;
                   let isCollapsed = (canCollapse && (this.state.collapse[categ] || this.state.collapse[categ] == undefined))                  
@@ -2117,6 +2281,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             if(paginate.length == 0) { paginate.push(pagin); }
          }
       }
+
    }
 
    prepareResults()
@@ -2282,8 +2447,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                messageD.push(this.makeResult(l.id,null,getEntiType(l.id),who.value,who.lang,l.icon,TagTab[l.icon]))
                i++;
             }
-            //message.push(this.makeResult("W19740",null,"Work","spyod 'jug'","bo-x-ewts","Abstract Work",TagTab["Abstract Work"]))
-            //message.push(this.makeResult("P6161",null,"Person","zhi ba lha/","bo-x-ewts"))
+            //message.push(this. akeResult("W19740",null,"Work","spyod 'jug'","bo-x-ewts","Abstract Work",TagTab["Abstract Work"]))
+            //message.push(this. akeResult("P6161",null,"Person","zhi ba lha/","bo-x-ewts"))
          }
 
          types = this.state.searchTypes //[ /*"Any",*/ ...searchTypes.slice(1) ] //["Any","Person","Work","Corporation","Place", /*"Item",*/ "Etext","Role","Topic","Lineage"]
@@ -2518,7 +2683,40 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
       }
       //console.log("metaK",metaK)
 
-      //console.log("messageD",messageD,message)
+      /*
+
+         <Popover 
+            className="menu-source"
+            id={"menu-"+src+"-"+prettId} 
+            anchorEl={(()=>{ console.log("where!!!???"); return this.state.anchor["menu-"+src+"-"+prettId]})()} 
+            open={(() => { console.log("what!!!???"); return this.state.collapse["menu-"+src+"-"+prettId]})()}                       
+            onClose={(ev) => this.handleCloseSourceMenu(ev,"menu-"+src+"-"+prettId)}
+            >
+               <MenuItem onClick={(ev) => this.handleCloseSourceMenu(ev,"menu-"+src+"-"+prettId)}>View data in Public Digital Library</MenuItem>
+               <MenuItem onClick={(ev) => this.handleCloseSourceMenu(ev,"menu-"+src+"-"+prettId)}><a href={id} class="menu-item-source" target="_blank">Go to external website</a></MenuItem>
+         </Popover>
+
+      */ 
+
+      let showMenus = Object.keys(this._menus).map(id => 
+            <Popover 
+               transformOrigin={{ vertical: 'bottom', horizontal: 'left'}} 
+               anchorOrigin={{vertical: 'bottom', horizontal: 'left'}} 
+               anchorEl={this.state.anchor[id]} 
+               open={this.state.collapse[id]} 
+               onClose={(ev) => this.handleCloseSourceMenu(ev,id)}>
+                  <MenuItem onClick={(ev) => this.handleCloseSourceMenu(ev,id)}>
+                     <span className="void">View data in Public Digital Library</span>
+                     <Link className="menu-item-source" to={"/show/"+this._menus[id].short}>View data in Public Digital Library</Link>
+                  </MenuItem>
+                  <MenuItem onClick={(ev) => this.handleCloseSourceMenu(ev,id)}>
+                     <span className="void">Go to external website</span>
+                     <a href={this._menus[id].full} class="menu-item-source" target="_blank">Go to external website</a>
+                  </MenuItem>
+            </Popover> 
+      );
+
+      console.log("messageD",this._menus,showMenus,messageD,message)
 
       const textStyle = {marginLeft:"15px",marginBottom:"10px",marginRight:"15px"}
 
@@ -2940,7 +3138,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   */ }
                   </div>
                }
-            </div>
+            </div>            
+            { showMenus }
             <div className={"SearchPane"+(this.props.keyword ?" resultPage":"")} >
                <a target="_blank" href="https://www.buddhistarchive.org/" style={{display:"inline-block",marginBottom:"25px"}}>
                   <img src="/logo.svg" style={{width:"200px"}} />
@@ -2949,7 +3148,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                {/* <h3>Buddhist Digital Resource Center</h3> */}
                <div>
                <IconButton style={{marginRight:"15px"}} className={this.state.leftPane?"hidden":""} onClick={e => this.setState({...this.state,leftPane:!this.state.leftPane})}>
-                  <Menu/>
+                  <MenuIcon/>
                </IconButton>
                <SearchBar
                   closeIcon={<Close className="searchClose" style={ {color:"rgba(0,0,0,1.0)",opacity:1} } onClick={() => { this.props.history.push({pathname:"/",search:""}); this.props.onResetSearch();} }/>}
