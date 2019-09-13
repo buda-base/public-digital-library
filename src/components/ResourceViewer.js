@@ -2198,6 +2198,7 @@ class ResourceViewer extends Component<Props,State>
             //if(!k.match(new RegExp("Revision|Entry|prefLabel|"+rdf+"|toberemoved"))) {
             if((!k.match(new RegExp(adm+"|adm:|isRoot$|SourcePath|prefLabel|"+rdf+"|toberemoved|workPartIndex|workPartTreeIndex")) 
                ||k.match(/(originalRecord|metadataLegal|contentProvider)$/)
+               ||k.match(/([/]see|[/]sameAs)[^/]*$/) // quickfix [TODO] test property ancestors
                || (this.props.IRI.match(/^bda:/) && (k.match(new RegExp(adm+"|adm:")))))
             && (k !== bdo+"eTextHasChunk" || kZprop.indexOf(bdo+"eTextHasPage") === -1) )
             {
