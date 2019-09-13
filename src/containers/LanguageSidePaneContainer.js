@@ -15,6 +15,7 @@ const mapStateToProps = (state,ownProps) => {
          langPriority = { ...langPriority.language.data }
          if(state.ui.langIndex) langPriority.index = state.ui.langIndex
          else langIndex = langPriority.index
+         if(state.ui.langPreset && langIndex === "custom") langPriority.presets["custom"] = state.ui.langPreset
       }
       let collapse = state.ui.collapse
       let rightPanel = state.ui.rightPanel
@@ -23,7 +24,7 @@ const mapStateToProps = (state,ownProps) => {
 
       let props = { ...ownProps, langIndex, langPriority, open:rightPanel, locale, collapse }
 
-      //console.log("mS2p LSP",state,props)
+      console.log("mS2p LSP",state,props)
 
       return props
 

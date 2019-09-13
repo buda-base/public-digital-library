@@ -1000,7 +1000,7 @@ class ResourceViewer extends Component<Props,State>
                   let prefix = "bdr:"
                   for(let p of Object.keys(prefixes)) if(elem.value.match(new RegExp(prefixes[p]))) prefix = p 
 
-                  console.log("s",prop,prefix,pretty,elem,info,infoBase)
+                  //console.log("s",prop,prefix,pretty,elem,info,infoBase)
 
                   if(info && infoBase && infoBase.filter(e=>e["xml:lang"]||e["lang"]).length >= 0) {
                      ret.push([<Link className={"urilink prefLabel " + prefix} to={"/"+show+"/"+prefix+":"+pretty}>{info}</Link>,lang?<Tooltip placement="bottom-end" title={

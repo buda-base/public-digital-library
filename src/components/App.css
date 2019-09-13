@@ -390,15 +390,20 @@ body {overflow-x:hidden; }
 .facet-count { font-style:italic; opacity:0.65; font-size:11px; font-weight:400; }
 .widget label { text-transform:capitalize;  }
 .searchWidget > label > span,
-.dataWidget > label > span { font-size:13px; }
+.dataWidget label > span { font-size:13px; }
 .searchWidget > label > span svg { width:16px; height:16px; } 
 .dataWidget > label > span svg { width:17px; height:17px; }
 .searchWidget > label > span:first-child,
 .dataWidget > label > span:first-child { width:22px;height:22px; color:rgba(0,0,0,0.7); margin-left:9px;margin-right:2px; }
 .SidePane .help { text-align:left;font-style:italic;margin-bottom:10px; font-size:12px; width:300px;line-height:16px; }
 /* .subcollapse label span:last-child { max-width:120px;} */
-
+.dataWidget ol { margin:0; font-size:13px;padding-left:16px; list-style: none; counter-reset: li}
+.dataWidget ol li {counter-increment: li; z-index:100;}
+.dataWidget ol li::before {content: counter(li);  display: inline-block; width: 1.1em; margin-left: -1.1em ; font-weight:800; }
 /* .collapse { width:390px;}*/
+
+/* custom language reordering */
+body > li:last-child { font-size:13px; list-style-type: none; }
 
 .collapse.open { margin-bottom:20px; }
 /* .collapse.open div { overflow:visible hidden;} */
@@ -407,8 +412,8 @@ body {overflow-x:hidden; }
 
 span.subcollapse { opacity:0; transition:opacity 50ms ease-in-out ; }
 span.subcollapse svg { vertical-align:-6px; cursor:pointer; font-size:18px; }
-.collapse.open > div > div > .searchWidget > span.subcollapse, 
-.collapse.open .subcollapse.open > div > div > .searchWidget > span.subcollapse
+.collapse.open > div > div > .widget > span.subcollapse, 
+.collapse.open .subcollapse.open > div > div > .widget > span.subcollapse
 { position:absolute;  opacity:1; transition:opacity 150ms ease-in-out 50ms; } 
 
 .checkbox.disabled { opacity:0.5; }

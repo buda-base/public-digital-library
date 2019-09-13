@@ -13,6 +13,8 @@ import IconButton from '@material-ui/core/IconButton';
 import CheckCircle from '@material-ui/icons/CheckCircle';
 import PanoramaFishEye from '@material-ui/icons/PanoramaFishEye';
 import {makeLangScriptLabel} from '../lib/language';
+import {SortableContainer, SortableElement} from 'react-sortable-hoc';
+import arrayMove from 'array-move';
 
 type Props = {
    locale?:string,
@@ -33,24 +35,20 @@ class LanguageSidePane extends Component<Props,State> {
 
    constructor(props : Props) {
       super(props);
-
-      this.state = {
-      }
    }
 
-   handleCheckUI = (ev:Event,prop:string,lab:string,val:boolean) => {
+   handleCheckUI = (ev:Event,prop:string,lab:string,val:boolean,list:string[]) => {
 
       console.log("checkUI",prop,lab,val,this.props)
 
       let state =  this.state
-
+      
       if(val)
       {
          if(prop === "locale") this.props.onSetLocale(lab);
          else if(prop === "priority") {
-           let idx = lab
-           if(idx == this.props.langPriority.presets.length - 1) idx = "custom"
-           this.props.onSetLangPreset(this.props.langPriority.presets[idx],lab);
+            if(!list && this.props.langPriority && this.props.langPriority.presets) list = this.props.langPriority.presets[lab]
+            if(list) this.props.onSetLangPreset(list,lab);
          }
       }
    }
@@ -90,7 +88,7 @@ class LanguageSidePane extends Component<Props,State> {
                   let label = I18n.t("lang."+i);
                   let disab = ["fr","en"].indexOf(i) === -1
 
-                  return ( <div key={i} style={{width:"150px",textAlign:"left"}} class="dataWidget">
+                  return ( <div key={i} style={{width:"150px",textAlign:"left"}} class="dataWidget widget">
                      <FormControlLabel
                         control={
                            <Checkbox
@@ -111,28 +109,56 @@ class LanguageSidePane extends Component<Props,State> {
                   this.props.langPriority && Object.keys(this.props.langPriority.presets).map((k,i) => {
 
                      let list = this.props.langPriority.presets[k]
-                     let label
+                     let label,subcollapse
                      let disab = false ;
                      if(k !== "custom") label = list.map(l => makeLangScriptLabel(l)).join(" / ");
                      else {
                         label = I18n.t("Rsidebar.priority.user");
-                        disab = true
+
+                        const SortableItem = SortableElement(({value}) => <li style={{height:"22px",color:"rgba(0,0,0,0.87)",zIndex:"100"}}><label><span>{makeLangScriptLabel(value)}</span></label></li>);
+
+                        const SortableList = SortableContainer(({items}) => {
+                        return (
+                           <ol>
+                              {items.map((value, index) => (
+                                 <SortableItem key={`item-${value}`} index={index} value={value} />
+                              ))}
+                           </ol>
+                        );
+                        });
+
+                        //disab = true
+                        subcollapse = [
+                           <span className="subcollapse" /*style={{width:"335px"}}*/
+                                 onClick={(ev) => {  this.props.onToggleCollapse("custom-lang"); }}>
+                              { this.props.collapse["custom-lang"] ? <ExpandLess /> : <ExpandMore />}
+                           </span>,
+                           <Collapse key={2}
+                              in={!this.props.collapse["custom-lang"]}
+                              className={["subcollapse",this.props.collapse["custom-lang"]?"open":"close"].join(" ")}
+                              style={{padding:"4px 0 0 18px"}} // ,marginBottom:"30px"
+                              >
+                                 <SortableList items={list} onSortEnd={({oldIndex, newIndex}) => { this.props.onSetLangPreset(arrayMove(list, oldIndex, newIndex),"custom") }} />
+                           
+                           </Collapse>
+                        ]
                      }
 
 
-                     return ( <div key={i} style={{width:"310px",textAlign:"left"}} class="dataWidget">
+                     return ( <div key={i} style={{width:"310px",textAlign:"left"}} class="dataWidget widget">
                         <FormControlLabel
                            control={
                               <Checkbox
-                                 checked={i == this.props.langIndex}
+                                 checked={k === this.props.langIndex || i === this.props.langIndex}
                                  disabled={disab}
                                  className={"checkbox "+ (disab?"disabled":"")}
                                  icon={<PanoramaFishEye/>}
                                  checkedIcon={<CheckCircle/>}
-                                 onChange={(event, checked) => this.handleCheckUI(event,"priority",i,checked)}
+                                 onChange={(event, checked) => this.handleCheckUI(event,"priority",k,checked)}
                                     /> }
                            label={label}
                         />
+                        {subcollapse}
                      </div>)
                   }
                ))
