@@ -7,14 +7,19 @@ import Collapse from '@material-ui/core/Collapse';
 import Close from '@material-ui/icons/Close';
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
+import Settings from '@material-ui/icons/SettingsSharp';
+import Delete from '@material-ui/icons/Delete';
+import AddBox from '@material-ui/icons/AddBox';
 import Checkbox from '@material-ui/core/Checkbox';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import IconButton from '@material-ui/core/IconButton';
 import CheckCircle from '@material-ui/icons/CheckCircle';
 import PanoramaFishEye from '@material-ui/icons/PanoramaFishEye';
+import DragIndicator from '@material-ui/icons/DragIndicator';
 import {makeLangScriptLabel} from '../lib/language';
 import {SortableContainer, SortableElement} from 'react-sortable-hoc';
 import arrayMove from 'array-move';
+import $ from 'jquery' ;
 
 type Props = {
    locale?:string,
@@ -32,6 +37,7 @@ type State = {
 }
 
 class LanguageSidePane extends Component<Props,State> {
+   _sorting = false ;
 
    constructor(props : Props) {
       super(props);
@@ -115,16 +121,31 @@ class LanguageSidePane extends Component<Props,State> {
                      else {
                         label = I18n.t("Rsidebar.priority.user");
 
-                        const SortableItem = SortableElement(({value}) => <li style={{height:"22px",color:"rgba(0,0,0,0.87)",zIndex:"100"}}><label><span>{makeLangScriptLabel(value)}</span></label></li>);
+                        const SortableItem = SortableElement((args) =>  {
+                              const { value } = args
+                             
+                              return  (
+                                 <div class="ol-li-lang">
+                                    <a title="Reorder"><DragIndicator className="drag"/></a>
+                                    <li>
+                                       <label><span>{makeLangScriptLabel(value)}</span></label>
+                                       <a title="Modify"><Settings className="modify"/></a>
+                                       <a title="Delete"><Delete className="delete" onClick={(ev) => this.props.onSetLangPreset(this.props.langPriority.presets[k].filter(v=>v!==value),"custom")}/></a>
+                                    </li> 
+                                 </div>
+                                 )
+                              }
+                           );
 
                         const SortableList = SortableContainer(({items}) => {
-                        return (
-                           <ol>
-                              {items.map((value, index) => (
-                                 <SortableItem key={`item-${value}`} index={index} value={value} />
-                              ))}
-                           </ol>
-                        );
+                           return (
+                              <ol>
+                                 {items.map((value, index) => (
+                                    <SortableItem key={`item-${value}`} index={index} value={value} />
+                                 ))}
+                                 <div class="ol-li-lang"><li><label><span>More...</span></label></li></div>
+                              </ol>
+                           );
                         });
 
                         //disab = true
@@ -135,11 +156,13 @@ class LanguageSidePane extends Component<Props,State> {
                            </span>,
                            <Collapse key={2}
                               in={!this.props.collapse["custom-lang"]}
-                              className={["subcollapse",this.props.collapse["custom-lang"]?"open":"close"].join(" ")}
+                              className={["subcollapse custom-lang",this.props.collapse["custom-lang"]?"open":"close"].join(" ")}
                               style={{padding:"4px 0 0 18px"}} // ,marginBottom:"30px"
                               >
-                                 <SortableList items={list} onSortEnd={({oldIndex, newIndex}) => { this.props.onSetLangPreset(arrayMove(list, oldIndex, newIndex),"custom") }} />
-                           
+                                 <SortableList lockAxis="y" items={list} shouldCancelStart={(ev)=>$(ev.target).closest("svg:not(.drag)").length}
+                                    onSortStart={ () => $(".subcollapse.custom-lang").addClass("sorting") } 
+                                    onSortEnd={({oldIndex, newIndex}) => { $(".subcollapse.custom-lang").removeClass("sorting"); this.props.onSetLangPreset(arrayMove(list, oldIndex, newIndex),"custom") }} />
+
                            </Collapse>
                         ]
                      }
