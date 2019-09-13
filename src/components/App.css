@@ -408,6 +408,8 @@ body > .ol-li-lang:last-child li::before,
 .subcollapse.custom-lang:not(.sorting) .ol-li-lang:hover svg.drag { opacity:1; cursor: row-resize; }
 .subcollapse.custom-lang.sorting, .subcollapse.custom-lang.sorting * { cursor:row-resize; }
 .ol-li-lang { z-index:100 !important;height:22px;color:rgba(0,0,0,0.87);position:relative;}
+ol .ol-li-lang:last-child li:before { display:none; }
+.ol-li-lang:last-child .add { position: absolute; margin-left: -19px; margin-top: -1px; opacity:1; }
 /* custom language reordering */
 body > .ol-li-lang:last-child { z-index:101 !important; position:relative; }
 body > .ol-li-lang:last-child li { font-size:13px; list-style-type: none; }

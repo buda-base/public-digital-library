@@ -143,7 +143,7 @@ class LanguageSidePane extends Component<Props,State> {
                                  {items.map((value, index) => (
                                     <SortableItem key={`item-${value}`} index={index} value={value} />
                                  ))}
-                                 <div class="ol-li-lang"><li><label><span>More...</span></label></li></div>
+                                 <div class="ol-li-lang"><li><a title="Add"><AddBox className="add"/></a><label><span>More</span></label></li></div>
                               </ol>
                            );
                         });
@@ -157,7 +157,7 @@ class LanguageSidePane extends Component<Props,State> {
                            <Collapse key={2}
                               in={!this.props.collapse["custom-lang"]}
                               className={["subcollapse custom-lang",this.props.collapse["custom-lang"]?"open":"close"].join(" ")}
-                              style={{padding:"4px 0 0 18px"}} // ,marginBottom:"30px"
+                              style={{padding:"4px 0 0 20px"}} // ,marginBottom:"30px"
                               >
                                  <SortableList lockAxis="y" items={list} shouldCancelStart={(ev)=>$(ev.target).closest("svg:not(.drag)").length}
                                     onSortStart={ () => $(".subcollapse.custom-lang").addClass("sorting") } 
