@@ -20,8 +20,11 @@ import {makeLangScriptLabel} from '../lib/language';
 import {SortableContainer, SortableElement} from 'react-sortable-hoc';
 import arrayMove from 'array-move';
 import $ from 'jquery' ;
+import Popover from '@material-ui/core/Popover';
+import MenuItem from '@material-ui/core/MenuItem';
 
 type Props = {
+   anchor?:{},
    locale?:string,
    open?:boolean,
    collapse:{[string]:boolean},
@@ -30,7 +33,7 @@ type Props = {
    onSetLocale:(lg:string)=>void,
    onSetLangPreset:(langs:string[])=>void,
    onToggleLanguagePanel:()=>void,
-   onToggleCollapse:()=>void
+   onToggleCollapse:(txt:string,arg?:string)=>void
 }
 
 type State = {
@@ -41,6 +44,8 @@ class LanguageSidePane extends Component<Props,State> {
 
    constructor(props : Props) {
       super(props);
+
+      this.state = {}
    }
 
    handleCheckUI = (ev:Event,prop:string,lab:string,val:boolean,list:string[]) => {
@@ -81,12 +86,17 @@ class LanguageSidePane extends Component<Props,State> {
          </Collapse> ]
       )
 
+      let rect 
+      if(this.props.anchor) rect = this.props.anchor.getBoundingClientRect();
+      console.log("rect",rect)
+
       return ( <div className={"SidePane right "+(this.props.open?"visible":"")}>
          <IconButton className="close" onClick={e => this.props.onToggleLanguagePanel()} ><Close/></IconButton>
          <div style={{width:"333px",position:"relative"}}>
             <Typography style={{fontSize:"25px",marginBottom:"20px",textAlign:"center"}}>
                <Translate value='Rsidebar.title' />
             </Typography>
+            
             {
                widget(I18n.t('Rsidebar.UI.title'),"locale","",
                   ["zh", "en", "fr", "bo" ].map((i) => {
@@ -129,7 +139,7 @@ class LanguageSidePane extends Component<Props,State> {
                                     <a title="Reorder"><DragIndicator className="drag"/></a>
                                     <li>
                                        <label><span>{makeLangScriptLabel(value)}</span></label>
-                                       <a title="Modify"><Settings className="modify"/></a>
+                                       <a title="Modify" onClick={(ev) => {  this.props.onToggleCollapse("popover-lang",ev.currentTarget,value); } } ><Settings className="modify"/></a>
                                        <a title="Delete"><Delete className="delete" onClick={(ev) => this.props.onSetLangPreset(this.props.langPriority.presets[k].filter(v=>v!==value),"custom")}/></a>
                                     </li> 
                                  </div>
@@ -138,14 +148,23 @@ class LanguageSidePane extends Component<Props,State> {
                            );
 
                         const SortableList = SortableContainer(({items}) => {
-                           return (
+                           return ([
                               <ol>
                                  {items.map((value, index) => (
                                     <SortableItem key={`item-${value}`} index={index} value={value} />
                                  ))}
-                                 <div class="ol-li-lang"><li><a title="Add"><AddBox className="add"/></a><label><span>More</span></label></li></div>
-                              </ol>
-                           );
+                                 <div class="ol-li-lang"><li><a title="Add" onClick={(ev) => { this.props.onToggleCollapse("popover-lang",ev.currentTarget) } } ><AddBox className="add"/></a><label><span>More</span></label></li></div>
+                              </ol>,
+                              <Popover 
+                                 transformOrigin={{ vertical: 'bottom', horizontal: 'left'}} 
+                                 anchorOrigin={{vertical: 'bottom', horizontal: 'left'}} 
+                                 open={this.props.collapse["popover-lang"]}
+                                 anchorEl={() => {console.log("anchor",this.props.anchor); return this.props.anchor; }}               
+                                 onClose={ (ev) => this.props.onToggleCollapse("popover-lang") }
+                              >
+                                 <MenuItem>hello</MenuItem>
+                              </Popover>
+                           ]);
                         });
 
                         //disab = true

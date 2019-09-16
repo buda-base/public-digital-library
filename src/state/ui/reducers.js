@@ -8,6 +8,7 @@ import * as actions from './actions';
 let reducers = {};
 
 export type UIState = {
+   anchor?:{},
    keyword?:string,
    loading?: boolean,
    prefLang:string,
@@ -43,7 +44,8 @@ export const toggleLanguagePanel = (state: UIState, action: Action): UIState => 
 reducers[actions.TYPES.toggleLanguagePanel] = toggleLanguagePanel
 
 export const toggleCollapse = (state: UIState, action: Action): UIState => {
-    return {...state, collapse:{...state.collapse, [action.payload]:!state.collapse[action.payload]}}
+    let anchor = action.meta.target
+    return {...state, collapse:{...state.collapse, [action.payload]:!state.collapse[action.payload]}, anchor}
 };
 reducers[actions.TYPES.toggleCollapse] = toggleCollapse
 

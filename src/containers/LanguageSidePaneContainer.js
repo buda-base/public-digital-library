@@ -21,8 +21,9 @@ const mapStateToProps = (state,ownProps) => {
       let rightPanel = state.ui.rightPanel
       let locale = state.i18n.locale
 
+      let anchor = state.ui.anchor
 
-      let props = { ...ownProps, langIndex, langPriority, open:rightPanel, locale, collapse }
+      let props = { ...ownProps, langIndex, langPriority, open:rightPanel, locale, collapse, anchor }
 
       console.log("mS2p LSP",state,props)
 
@@ -41,8 +42,8 @@ const mapStateToProps = (state,ownProps) => {
          onToggleLanguagePanel:() => {
             dispatch(ui.toggleLanguagePanel());
          },
-         onToggleCollapse:(txt:string) => {
-            dispatch(ui.toggleCollapse(txt));
+         onToggleCollapse:(txt:string,target:{},arg?:string) => {
+            dispatch(ui.toggleCollapse(txt,target,arg));
          }
       }
    }

@@ -11,10 +11,11 @@ TYPES.toggleLanguagePanel = 'TOGGLE_LANGUAGE_PANEL';
 export const toggleLanguagePanel = createAction(TYPES.toggleLanguagePanel);
 
 TYPES.toggleCollapse = 'TOGGLE_COLLAPSE';
-export const toggleCollapse = (txt:string): Action => {
+export const toggleCollapse = (txt:string,target?:{},value?:string): Action => {
    return {
       type: TYPES.toggleCollapse,
-      payload: txt
+      payload: txt,
+      meta:{target,value}
    }
 }
 
