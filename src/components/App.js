@@ -1395,8 +1395,12 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
       if(!id.match(/[:/]/)) id = "bdr:" + id
 
 
-      let prettId = id ;
-      for(let k of Object.keys(prefixesMap)) prettId = prettId.replace(new RegExp(prefixesMap[k]),k+":")
+      let prettId = id, fullId = id ;
+      for(let k of Object.keys(prefixesMap)) {
+         prettId = prettId.replace(new RegExp(prefixesMap[k]),k+":")  
+         fullId = fullId.replace(new RegExp(k+":"),prefixesMap[k])
+      }
+
 
       //console.log("id",id,prettId)
 
@@ -1461,12 +1465,12 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             },{}) 
             
             rmatch = rmatch.concat(sameAsRes.filter(p => p.type === owl+"sameAs")) // || p.type.match(/sameAsMBBT$/)))
-            sameAsRes = sameAsRes.filter(p => p.type === owl+"sameAs" || p.type === adm+"canonicalHtml") // || p.type.match(/sameAsMBBT$/))
+            sameAsRes = sameAsRes.filter(p => (p.type === owl+"sameAs" || p.type === adm+"canonicalHtml")) // || p.type.match(/sameAsMBBT$/))
             //console.log("dico",dico)
          }
 
          if(sameAsRes.length) {
-            //console.log("sameAs",dico,rmatch,sameAsRes)
+            console.log("sameAs",prettId,id,dico,rmatch,sameAsRes)
          
             let menus = {}
             let sources = []
@@ -1552,12 +1556,12 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                         if(!lang) lang = mLit["xml:lang"]
                      }
 
-                     //console.log("val",val,val.length,lang)
+                     console.log("val",val,val.length,lang)
 
                      let uri,from
                      if(m.type.match(/[/#]sameAs/)) {
                         val = m.value;
-                        if(val === id) return ;
+                        if(val === fullId || val == prettId) return ;
                         let label = dico[val]
                         if(!label && this.props.assoRes) label = this.props.assoRes[val]
                         if(label) label = getLangLabel(this,label)
