@@ -85,6 +85,20 @@ export const prefixesMap = { adm, bda, bdac, bdan, bdo, bdr, dila, foaf, oa, mbb
 export const prefixes = Object.values(prefixesMap) ;
 export const sameAsMap = { wd:"WikiData", ol:"OpenLibrary", bdr:"BDRC", mbbt:"Marcus Bingenheimer" }
 
+export function fullUri(id:string) {
+   for(let k of Object.keys(prefixesMap)) {
+      id = id.replace(new RegExp(k+":"),prefixesMap[k])
+   }
+   return id ;
+}
+
+export function shortUri(id:string) {
+   for(let k of Object.keys(prefixesMap)) {
+      id = id.replace(new RegExp(prefixesMap[k]),k+":")  
+   }
+   return id ;
+}
+
 const facetLabel = {
    "tree":"Genre / Is About"
 }

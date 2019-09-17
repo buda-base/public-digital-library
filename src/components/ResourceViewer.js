@@ -199,13 +199,14 @@ let propOrder = {
       "bdo:personTeacherOf",
       "bdo:personStudentOf",
       "bdo:note",
+      "owl:sameAs",
       "bdo:sameAsVIAF",
+      "adm:sameAsMBBT",
       "adm:sameAsVIAF",
       "adm:sameAsrKTs",
       "adm:sameAsToL",
       "adm:sameAsWorldCat",   
       "adm:sameAsWikidata",
-      "owl:sameAs",
       "rdfs:seeAlso",
     ],
    "Place":[
@@ -227,6 +228,7 @@ let propOrder = {
       "bdo:workExpressionOf",
       "bdo:workType",
       "bdo:workHasExpression",
+      "bdo:workHasDerivative",
       "bdo:workIsAbout",
       "bdo:workGenre",
       // "bdo:creatorMainAuthor",
@@ -246,6 +248,16 @@ let propOrder = {
       "bdo:workLocation",
       "bdo:workPartOf",
       "bdo:workHasPart",
+      "bdo:workRefTaisho",
+      "bdo:sameAsVIAF",
+      "owl:sameAs",
+      "adm:sameAsMBBT",
+      "adm:sameAsVIAF",
+      "adm:sameAsrKTs",
+      "adm:sameAsToL",
+      "adm:sameAsWorldCat",   
+      "adm:sameAsWikidata",
+      "rdfs:seeAlso",
       "bdo:note",
       "bdo:workCatalogInfo",
       "bdo:workHasSourcePrintery",
@@ -889,7 +901,7 @@ class ResourceViewer extends Component<Props,State>
    {
       if(elem) {
 
-         console.log("uriformat",prop,elem.value,dico,withProp,show)
+         //console.log("uriformat",prop,elem.value,dico,withProp,show)
 
          if(!elem.value.match(/^http:\/\/purl\.bdrc\.io/) && (!dico || !dico[elem.value])) {
             return <a href={elem.value} target="_blank">{decodeURI(elem.value)}</a> ;
@@ -1000,7 +1012,7 @@ class ResourceViewer extends Component<Props,State>
                   let prefix = "bdr:"
                   for(let p of Object.keys(prefixes)) if(elem.value.match(new RegExp(prefixes[p]))) prefix = p 
 
-                  console.log("s",prop,prefix,pretty,elem,info,infoBase)
+                  //console.log("s",prop,prefix,pretty,elem,info,infoBase)
 
                   if(info && infoBase && infoBase.filter(e=>e["xml:lang"]||e["lang"]).length >= 0) {
                      ret.push([<Link className={"urilink prefLabel " + prefix + (prefix !== "bdr"&&prop.match(/[/#]sameAs/)?" sameAs":"")} to={"/"+show+"/"+prefix+":"+pretty}>{info}</Link>,lang?<Tooltip placement="bottom-end" title={
@@ -1126,7 +1138,7 @@ class ResourceViewer extends Component<Props,State>
       })
       */
 
-      console.log("format",Tag, prop,JSON.stringify(elem,null,3),txt,bnode,div);
+      //console.log("format",Tag, prop,JSON.stringify(elem,null,3),txt,bnode,div);
 
       let ret = [],pre = []
 
@@ -1135,7 +1147,7 @@ class ResourceViewer extends Component<Props,State>
       //console.log(elem)
 
       let viewAnno = false ;
-      if(elem) for(let e of elem)
+      if(elem) for(const e of elem)
       {
 
          let value = ""+e
@@ -1148,9 +1160,10 @@ class ResourceViewer extends Component<Props,State>
 
          //console.log("e",e,pretty,value)
 
-         if(this.props.assocResources && this.props.assocResources[value] && this.props.assocResources[value][0] && this.props.assocResources[value][0].fromKey) 
+         if(this.props.assocResources && this.props.assocResources[value] && this.props.assocResources[value][0] && this.props.assocResources[value][0].fromKey && !prop.match(/[/#]sameAs/) ) 
          { 
-            e.type = "bnode"
+            e.type = "bnode" 
+
             //console.log("aRes",this.props.assocResources[value])
          }
 
@@ -2205,7 +2218,7 @@ class ResourceViewer extends Component<Props,State>
 
             let elem = this.getResourceElem(k);
 
-            console.log("prop",k,elem);
+            console.log("prop",k,elem)
             //for(let e of elem) console.log(e.value,e.label1);
 
             //if(!k.match(new RegExp("Revision|Entry|prefLabel|"+rdf+"|toberemoved"))) {

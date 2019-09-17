@@ -10,6 +10,7 @@ import selectors from '../selectors';
 import store from '../../index';
 import bdrcApi, { getEntiType } from '../../lib/api';
 import {auth} from '../../routes';
+import {shortUri,fullUri} from '../../components/App'
 
 // to enable tests
 const api = new bdrcApi({...process.env.NODE_ENV === 'test' ? {server:"http://localhost:5555/test"}:{}});
@@ -104,8 +105,21 @@ async function initiateApp(params,iri,myprops) {
          if(!Etext)
          {
             store.dispatch(dataActions.gotResource(iri,res));
+            
             let assocRes = await api.loadAssocResources(iri)
-            store.dispatch(dataActions.gotAssocResources(iri,assocRes));
+            store.dispatch(dataActions.gotAssocResources(iri,assocRes))
+
+            let url = fullUri(iri)
+
+            for(let k of Object.keys(res[url])) {
+               if(k.match(/[#/]sameAs/)) {
+                  for(let a of res[url][k]) {
+                     let shortU = shortUri(a.value)
+                     assocRes = await api.loadAssocResources(shortU)
+                     store.dispatch(dataActions.gotAssocResources(iri,assocRes))
+                  }
+               }
+            }
 
             store.dispatch(dataActions.getAnnotations(iri))
          }
@@ -173,7 +187,7 @@ async function initiateApp(params,iri,myprops) {
             store.dispatch(dataActions.getPages(iri)); 
          }
       }         
-
+   
       store.dispatch(dataActions.gotResource(iri,res));
 
    }

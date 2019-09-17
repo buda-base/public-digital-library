@@ -4,6 +4,7 @@ import type {SearchAction,SearchFailedAction} from './actions';
 import createReducer from '../../lib/createReducer';
 import * as actions from './actions';
 import _ from 'lodash';
+import {fullUri} from '../../components/App'
 
 let reducers = {};
 
@@ -124,20 +125,47 @@ reducers[actions.TYPES.getPages] = getPages;
 
 
 export const gotResource = (state: DataState, action: Action) => {
+
+   let data = action.meta
+   let uri = fullUri(action.payload)
+   let sameR = {}
+   if(data[uri]) {
+      for(let k of Object.keys(data[uri])) {                  
+         if(k.match(/[/#]sameAs/)) {
+            data[uri][k] = data[uri][k].map(e => { 
+               sameR[e.value] = data[e.value]
+               return ( { ...e, type:"uri"})
+            })
+         }                   
+      }
+
+      for(let k of Object.keys(sameR)) {
+         for(let p of Object.keys(sameR[k])) {
+            if(!data[uri][p] && p.match(/purl\.bdrc\.io/)) { 
+               data[uri][p] = sameR[k][p].filter(e => !e.value || e.value !== uri)
+               if(!data[uri][p].length) delete data[uri][p]
+            }
+         }  
+      }
+   }
+
+   console.log("sameAs data", sameR,data)
+
+
     return {
         ...state,
         "resources": {
            ...state.resources,
-           [action.payload]:Object.keys(action.meta).reduce((acc1,k1) => {
+           [action.payload]:Object.keys(data).reduce((acc1,k1) => {
              const bdo  = "http://purl.bdrc.io/ontology/core/";
              const bdr  = "http://purl.bdrc.io/resource/";
              let k = action.payload.replace(/bdr:/,bdr)
              //console.log("k",k,k1)
-             if(k1 != k) return { ...acc1,[k1]:Object.keys(action.meta[k1]).reduce( (acc2,k2) => {
-                if(k2 != bdo+"volumeHasEtext") return { ...acc2, [k2]:action.meta[k1][k2] }
+             if(k1 != k) return { ...acc1,[k1]:Object.keys(data[k1]).reduce( (acc2,k2) => {
+                if(k2 != bdo+"volumeHasEtext") return { ...acc2, [k2]:data[k1][k2] }
                 else {
-                  let tab = action.meta[k1][k2].map(e => {
-                    let index = action.meta[e.value]
+                  let tab = data[k1][k2].map(e => {
+                    let index = data[e.value]
                     if(index) index = index[bdo+"seqNum"]
                     if(index) index = index[0]
                     if(index) index = Number(index.value)
@@ -147,11 +175,11 @@ export const gotResource = (state: DataState, action: Action) => {
                   return {...acc2, [k2]:tab }
                 }
              },{})}
-             else return {...acc1,[k1]:Object.keys(action.meta[k1]).reduce( (acc2,k2) => {
-                if(k2 != bdo+"itemHasVolume") return { ...acc2, [k2]:action.meta[k1][k2] }
+             else return {...acc1,[k1]:Object.keys(data[k1]).reduce( (acc2,k2) => {
+                if(k2 != bdo+"itemHasVolume") return { ...acc2, [k2]:data[k1][k2] }
                 else {
-                  let tab = action.meta[k1][k2].map(e => {
-                    let index = action.meta[e.value]
+                  let tab = data[k1][k2].map(e => {
+                    let index = data[e.value]
                     if(index) index = index[bdo+"volumeNumber"]
                     if(index) index = index[0]
                     if(index) index = Number(index.value)
@@ -181,6 +209,9 @@ export const gotAssocResources = (state: DataState, action: Action) => {
    let res = state.resources
    if(res) res = res[action.payload]
 
+   let assoR = state.assocResources
+   if(assoR) assoR = assoR[action.payload]
+
        state = {
            ...state,
            "resources": {
@@ -189,11 +220,11 @@ export const gotAssocResources = (state: DataState, action: Action) => {
            },
            "assocResources": {
               ...state.assocResources,
-              [action.payload]:{ ...action.meta.data, ...(res?Object.keys(res).reduce((acc,k) => {
+              [action.payload]:{ ...assoR, ...action.meta.data, ...(res?Object.keys(res).reduce((acc,k) => {
                      return { ...acc,[k]:Object.keys(res[k]).reduce( (accR,kR) => {
                         return [ ...accR, ...res[k][kR].map(e => ({ ...e, "fromKey":kR }) ) ]
                      },[]) }
-                  },{}):{}) 
+                  },{}):{})  
               }
           }
        }
