@@ -145,6 +145,7 @@ const bdo   = "http://purl.bdrc.io/ontology/core/"
 const bdr   = "http://purl.bdrc.io/resource/";
 const dila  = "http://purl.dila.edu.tw/resource/";
 const foaf  = "http://xmlns.com/foaf/0.1/" ;
+const mbbt  = "http://mbingenheimer.net/tools/bibls/" ;
 const oa    = "http://www.w3.org/ns/oa#" ;
 const ola    = "https://openlibrary.org/authors/" 
 const owl   = "http://www.w3.org/2002/07/owl#" ; 
@@ -156,7 +157,6 @@ const _tmp  = tmp ;
 const viaf  = "http://viaf.org/viaf/"
 const wd    = "http://www.wikidata.org/entity/"
 const xsd   = "http://www.w3.org/2001/XMLSchema#" ;
-
 
 
 //const prefixes = { adm, bdac, bdan, bda, bdo, bdr, foaf, oa, owl, rdf, rdfs, skos, xsd, tmp, dila }
