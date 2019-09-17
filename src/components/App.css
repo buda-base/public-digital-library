@@ -234,8 +234,8 @@ a.login { text-decoration:underline; cursor:pointer; }
 .resource .data a:hover { border-bottom:1px solid rgba(229, 74, 53,1); }
 
 .urilink { position:relative; }
-.urilink.dila,.urilink.wd,.urilink.ola, /*.urilink.bdr,*/ .urilink.viaf { padding-left:0px; }
-.urilink.dila::before,.urilink.wd::before,.urilink.ola::before, /*.urilink.bdr::before,*/ .urilink.viaf::before 
+.urilink.sameAs { padding-left:0px; }
+.urilink.sameAs::before 
 { content:''; position:relative;display:inline-block;width:20px;height:20px; background-color:white;  vertical-align: -5px;padding-right:5px; 
    background-position:right 5px center;background-size:contain;background-repeat:no-repeat;
 }
@@ -243,11 +243,17 @@ a.login { text-decoration:underline; cursor:pointer; }
 .urilink.wd::before { background-image:url("/WD.svg"); }
 .urilink.ola::before { background-image:url("/OL.png"); }
 .urilink.viaf::before { background-image:url("/VIAF.png"); }
+.urilink.mbbt::before { background-image:url("/MB-icon.jpg"); }
 
 .resource button svg:hover { color:rgba(0,0,0,0.65); }
 
 a.download { text-decoration:none; font-weight:bold; cursor:pointer; }
 a.download:hover { text-decoration:underline; }
+
+h3 + h4.multiple,
+h3 + .propCollapseHeader,
+h3 + .sub 
+{ margin-top:2px; }
 
 /*.resource .data > div > h4,*/ /* « object type: manuscript » */
 .resource .data > div > h4.multiple,
