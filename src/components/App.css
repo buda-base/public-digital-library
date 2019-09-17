@@ -244,6 +244,8 @@ h4:not(.sameAs) .urilink.sameAs::before, h4.sameAs::before
 .sameAs.ola::before { background-image:url("/OL.png"); }
 .sameAs.viaf::before { background-image:url("/VIAF.png"); }
 .sameAs.mbbt::before { background-image:url("/MB-icon.jpg"); }
+.sameAs.bdr::before { background-image:url("/logo.svg"); background-size:17px auto;}
+
 
 .resource button svg:hover { color:rgba(0,0,0,0.65); }
 
