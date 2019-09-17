@@ -83,7 +83,7 @@ const xsd   = "http://www.w3.org/2001/XMLSchema#" ;
 
 export const prefixesMap = { adm, bda, bdac, bdan, bdo, bdr, dila, foaf, oa, mbbt, owl, rdf, rdfs, skos, wd, ola, viaf, xsd, tmp }
 export const prefixes = Object.values(prefixesMap) ;
-export const sameAsMap = { wd:"WikiData", ol:"OpenLibrary", bdr:"BDRC" }
+export const sameAsMap = { wd:"WikiData", ol:"OpenLibrary", bdr:"BDRC", mbbt:"Marcus Bingenheimer" }
 
 const facetLabel = {
    "tree":"Genre / Is About"
@@ -289,6 +289,7 @@ type Props = {
    ontoSearch:string,
    rightPanel?:boolean,
    failures?:{},
+   assoRes?:{},
    onResetSearch:()=>void,
    onOntoSearch:(k:string)=>void,
    onStartSearch:(k:string,lg:string,t?:string)=>void,
@@ -1397,7 +1398,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
       let prettId = id ;
       for(let k of Object.keys(prefixesMap)) prettId = prettId.replace(new RegExp(prefixesMap[k]),k+":")
 
-      console.log("id",id,prettId)
+      //console.log("id",id,prettId)
 
 
       let ret = (
@@ -1459,23 +1460,24 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                return ({...acc,[e.type]:id})
             },{}) 
             
-            sameAsRes = sameAsRes.filter(p => p.type === owl+"sameAs")
-            rmatch = rmatch.concat(sameAsRes)
+            rmatch = rmatch.concat(sameAsRes.filter(p => p.type === owl+"sameAs")) // || p.type.match(/sameAsMBBT$/)))
+            sameAsRes = sameAsRes.filter(p => p.type === owl+"sameAs" || p.type === adm+"canonicalHtml") // || p.type.match(/sameAsMBBT$/))
             //console.log("dico",dico)
          }
 
          if(sameAsRes.length) {
-            console.log("sameAs",dico,rmatch,sameAsRes)
+            //console.log("sameAs",dico,rmatch,sameAsRes)
          
             let menus = {}
             let sources = []
             let hasRes = {}
             let img = { 
+               //"bdr":  "/logo.svg", 
                "dila": "/DILA-favicon.ico", 
-               "wd":   "/WD.svg",
-               "viaf": "/VIAF.png",
+               "mbbt": "/MB-icon.jpg",
                "ola":  "/OL.png",  //"https://openlibrary.org/static/images/openlibrary-logo-tighter.svg" //"https://seeklogo.com/images/O/open-library-logo-0AB99DA900-seeklogo.com.png", 
-               "bdr":  "/logo.svg", 
+               "viaf": "/VIAF.png",
+               "wd":   "/WD.svg",
             } 
 
             for(let res of sameAsRes) 
@@ -1499,7 +1501,20 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      </div>
                   )
 
-                  menus["menu-"+src+"-"+prettId] = { full: hasRes[src].replace(new RegExp(src+":"), prefixesMap[src]), short:hasRes[src] }
+                  let url = hasRes[src].replace(new RegExp(src+":"), prefixesMap[src])
+
+                  if(url.match(new RegExp("^("+src+":)|("+prefixesMap[src]+")"))) {
+                     let canonUrl = sameAsRes.filter(p => p.type === adm+"canonicalHtml")                     
+                     if(canonUrl.length) url = canonUrl[0].value
+                  }
+                  
+                  if(this.props.assoRes && this.props.assoRes[url]) {
+                     let canonUrl = this.props.assoRes[url]
+                     if(canonUrl) canonUrl = canonUrl.filter(p => p.type === adm+"canonicalHtml")
+                     if(canonUrl.length) url = canonUrl[0].value
+                  }
+
+                  menus["menu-"+src+"-"+prettId] = { full: url, short:hasRes[src] }
 
                }
                      /*
@@ -1510,6 +1525,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                
             if(sources.length > 1 || sources.length == 1 && !hasRes["bdr"] ) { 
                retList.push(<div class="source">{sources}</div>)
+               retList = [ <div class="result-box">{retList}</div> ]
                this._menus = { ...this._menus, ...menus } 
             }
             
@@ -1539,10 +1555,11 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      //console.log("val",val,val.length,lang)
 
                      let uri,from
-                     if(m.type.match(/sameAs$/)) {
+                     if(m.type.match(/[/#]sameAs/)) {
                         val = m.value;
                         if(val === id) return ;
                         let label = dico[val]
+                        if(!label && this.props.assoRes) label = this.props.assoRes[val]
                         if(label) label = getLangLabel(this,label)
                         if(label) {
                            uri = val
@@ -1792,8 +1809,12 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   l = getLangLabel(this,labels[skos+"prefLabel"]?labels[skos+"prefLabel"]:labels[foaf+"name"])
                   //console.log("l",labels,l)
                   if(l) {
+                     let sameAs = this.props.resources[this.props.keyword]
+                     if(sameAs) sameAs = sameAs[fullURI]
+                     if(sameAs) sameAs = Object.keys(sameAs).filter(k => k === adm+"canonicalHtml" || k === owl+"sameAs").reduce( (acc,k) => ([...acc, ...sameAs[k].map( s => ({ ...s, type:k }))]),[])
+                     console.log("res sameAs", sameAs)
                      message.push(<h4 key="keyResource" style={{marginLeft:"16px"}}>Resource Id Matching (1)</h4>)
-                     message.push(this.makeResult(this.props.keyword,1,null,l.value,l.lang,null,null,null,[],null,[{"type":owl+"sameAs","value":this.props.keyword}]))
+                     message.push(this.makeResult(this.props.keyword,1,null,l.value,l.lang,null,null,null,[],null,sameAs)) //[{"type":owl+"sameAs","value":this.props.keyword}]))
                   }
                }
             }

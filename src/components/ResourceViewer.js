@@ -2205,7 +2205,7 @@ class ResourceViewer extends Component<Props,State>
 
             let elem = this.getResourceElem(k);
 
-            //console.log("prop",k,elem);
+            console.log("prop",k,elem);
             //for(let e of elem) console.log(e.value,e.label1);
 
             //if(!k.match(new RegExp("Revision|Entry|prefLabel|"+rdf+"|toberemoved"))) {

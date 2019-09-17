@@ -68,9 +68,10 @@ async function initiateApp(params,iri,myprops) {
       }
 
       // [TODO] load only missing info when needed (see click on "got to annotation" for WCBC2237)
-      if(iri) // && (!state.data.resources || !state.data.resources[iri]))
+      if(iri || (params && params.r)) // && (!state.data.resources || !state.data.resources[iri]))
       {
          let res,Etext ;
+         if(!iri) iri = params.r
 
          Etext = iri.match(/^([^:]+:)?UT/)
 
@@ -182,11 +183,12 @@ async function initiateApp(params,iri,myprops) {
    //   store.dispatch(dataActions.startSearch("bdr:"+iri,"",["Any"],t)); //,params.t.split(",")));
    //}
 }
-else if(!iri && params && params.p) {
+
+if(params && params.p) {
 
    store.dispatch(dataActions.ontoSearch(params.p));
 }
-else if(!iri && params && params.q) {
+else if(params && params.q) {
 
    if(!params.lg) params.lg = "bo-x-ewts"
    
@@ -236,7 +238,7 @@ else if(!iri && params && params.q) {
    }
    */
 }
-else if(!iri && params && params.r) {
+else if(params && params.r) {
    let t = getEntiType(params.r)
 
    //console.log("state r",state.data.searches,params,iri)
