@@ -125,31 +125,41 @@ reducers[actions.TYPES.getPages] = getPages;
 
 
 export const gotResource = (state: DataState, action: Action) => {
-
+ 
+   const owl   = "http://www.w3.org/2002/07/owl#" ; 
    let data = action.meta
    let uri = fullUri(action.payload)
-   let sameR = {}
+   let sameR = {}, sameP = {}
    if(data[uri]) {
       for(let k of Object.keys(data[uri])) {                  
          if(k.match(/[/#]sameAs/)) {
             data[uri][k] = data[uri][k].map(e => { 
                sameR[e.value] = data[e.value]
+               sameP[k] = data[uri][k]
                return ( { ...e, type:"uri"})
             })
          }                   
       }
 
       for(let k of Object.keys(sameR)) {
-         for(let p of Object.keys(sameR[k])) {
+         if(sameR[k]) for(let p of Object.keys(sameR[k])) {
             if(!data[uri][p] && p.match(/purl\.bdrc\.io/)) { 
-               data[uri][p] = sameR[k][p].filter(e => !e.value || e.value !== uri)
+               data[uri][p] = sameR[k][p].filter(e => !e.value || e.value !== uri).map(e => ({...e,"fromSameAs":k}))
                if(!data[uri][p].length) delete data[uri][p]
             }
-         }  
+         }
+      }
+
+      for(let k of Object.keys(sameP)) {
+         if(k.match(/[/#]sameAs[^/]+$/)) {             
+            data[uri][k] = data[uri][k].filter(e => !sameP[owl+"sameAs"] || !sameP[owl+"sameAs"].filter(s => s.value === e.value).length) 
+            if(!data[uri][k].length) delete data[uri][k]
+            console.log("sA??",uri,k,data[uri][k])
+         }
       }
    }
 
-   console.log("sameAs data", sameR,data)
+   console.log("sameAs data", sameP, sameR, data)
 
 
     return {

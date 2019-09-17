@@ -32,6 +32,8 @@ const handleAuthentication = (nextState, replace) => {
    }
 }
 
+let sameAsR = {}
+
 async function initiateApp(params,iri,myprops) {
    try {
       let state = store.getState()
@@ -115,8 +117,13 @@ async function initiateApp(params,iri,myprops) {
                if(k.match(/[#/]sameAs/)) {
                   for(let a of res[url][k]) {
                      let shortU = shortUri(a.value)
-                     assocRes = await api.loadAssocResources(shortU)
-                     store.dispatch(dataActions.gotAssocResources(iri,assocRes))
+                     if(!sameAsR[shortU])
+                     {
+                        sameAsR[shortU] = true ;
+                        assocRes = await api.loadAssocResources(shortU)
+                        store.dispatch(dataActions.gotAssocResources(iri,assocRes))
+                        store.dispatch(dataActions.gotAssocResources(a.value,assocRes))
+                     }
                   }
                }
             }

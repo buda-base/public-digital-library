@@ -897,15 +897,22 @@ class ResourceViewer extends Component<Props,State>
       return ret
    }
 
-   uriformat(prop:string,elem:{},dico:{} = this.props.assocResources, withProp?:string,show?:string="show")
+   uriformat(prop:string,elem:{},dic:{} = this.props.assocResources, withProp?:string,show?:string="show")
    {
       if(elem) {
 
-         //console.log("uriformat",prop,elem.value,dico,withProp,show)
+         console.log("uriformat",prop,elem.value,dic,withProp,show)
 
-         if(!elem.value.match(/^http:\/\/purl\.bdrc\.io/) && (!dico || !dico[elem.value])) {
+         if(!elem.value.match(/^http:\/\/purl\.bdrc\.io/) && (!dic || !dic[elem.value])) {
             return <a href={elem.value} target="_blank">{decodeURI(elem.value)}</a> ;
          }
+
+         let dico ;
+         if(dic) dico = Object.keys(dic).reduce( (acc,k) =>{ 
+               let val = dic[k].filter(e => e.type === skos+"prefLabel" || e.fromKey === skos+"prefLabel" || e.fromKey === foaf+"name" )
+               if(!val) val = dic[k]
+               return ({...acc,[k]:val})
+            },{})
 
          // test if ancestor/type of property has range subclassof entity
 /*
@@ -993,7 +1000,8 @@ class ResourceViewer extends Component<Props,State>
                                  if(!lang) lang = info[0]["lang"]
                                  info = info[0].value
                               }
-                              else {
+                              else if(infoBase.length) {
+                                 
                                  lang = infoBase[0]["xml:lang"]
                                  if(!lang) lang = infoBase[0]["lang"]
                                  info = infoBase[0].value
@@ -1009,13 +1017,16 @@ class ResourceViewer extends Component<Props,State>
 
                   // we can return Link
                   let pretty = this.fullname(elem.value,true);
-                  let prefix = "bdr:"
-                  for(let p of Object.keys(prefixes)) if(elem.value.match(new RegExp(prefixes[p]))) prefix = p 
+                  let prefix = "bdr:", sameAsPrefix ;
+                  for(let p of Object.keys(prefixes)) { 
+                     if(elem.value.match(new RegExp(prefixes[p]))) prefix = p 
+                     if(elem.fromSameAs && elem.fromSameAs.match(new RegExp(prefixes[p]))) sameAsPrefix = p 
+                  }
 
                   //console.log("s",prop,prefix,pretty,elem,info,infoBase)
 
                   if(info && infoBase && infoBase.filter(e=>e["xml:lang"]||e["lang"]).length >= 0) {
-                     ret.push([<Link className={"urilink prefLabel " + prefix + (prefix !== "bdr"&&prop.match(/[/#]sameAs/)?" sameAs":"")} to={"/"+show+"/"+prefix+":"+pretty}>{info}</Link>,lang?<Tooltip placement="bottom-end" title={
+                     ret.push([<Link className={"urilink prefLabel " + (sameAsPrefix?sameAsPrefix:'') + " " + prefix + (prefix !== "bdr"&&(prop.match(/[/#]sameAs/) || sameAsPrefix)?" sameAs":"")} to={"/"+show+"/"+prefix+":"+pretty}>{info}</Link>,lang?<Tooltip placement="bottom-end" title={
                         <div style={{margin:"10px"}}>
                            <Translate value={languages[lang]?languages[lang].replace(/search/,"tip"):lang}/>
                         </div>
@@ -1299,9 +1310,11 @@ class ResourceViewer extends Component<Props,State>
                this.setState({...this.state,annoPane:true,newAnno:{prop:this._plink,val:tmp}})}
                */
 
+            let sameAsPrefix ;
+            for(let p of Object.keys(prefixes)) { if(e.fromSameAs && e.fromSameAs.match(new RegExp(prefixes[p]))) { sameAsPrefix = p } }
 
-            if(!txt) ret.push(<Tag className={(elem.length > 1?"multiple":"")}>{tmp}</Tag>)
-            else ret.push(<Tag className={(elem.length > 1?"multiple":"")}>{tmp+" "+txt}</Tag>)
+            if(!txt) ret.push(<Tag className={(elem.length > 1?"multiple ":"") + (sameAsPrefix?sameAsPrefix+" sameAs":"") }>{tmp}</Tag>)
+            else ret.push(<Tag className={(elem.length > 1?"multiple ":"") +  (sameAsPrefix?sameAsPrefix+" sameAs":"") }>{tmp+" "+txt}</Tag>)
 
 
             //console.log("ret",ret)
