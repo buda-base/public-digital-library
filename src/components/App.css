@@ -138,11 +138,11 @@ h4 { margin-top:0px;margin-bottom:0px;font-size:24px; }
 .resource .data > div { display:flex;align-items:baseline;flex-wrap:wrap;box-sizing: border-box;width:100%;}
 .resource .data > div.parent { flex-wrap:wrap; }
 .resource .data > div.parent > h3 { flex-shrink:0 }
-.resource h3,.resource h4 { display:inline-block; margin-bottom:0px; font-size:14px; font-weight:normal; margin-right:5px; line-height:20px;}
+.resource h3,.resource h4 { display:inline-block; margin-bottom:0px; font-size:14px; font-weight:normal; margin-right:5px; line-height:21px;}
 .resource h3 span { /*text-decoration: underline;*/ font-weight:600;  text-transform:capitalize; }
 .resource h3 { font-size:14px;margin-top:6px; }
 .resource .sub { width:100%; padding-left:20px;display:flex;flex-wrap:wrap; box-sizing: border-box; position:relative;}
-.resource .sub h4.first { font-size:0.9em;font-style:italic; text-transform:capitalize; flex-shrink:0; }
+.resource .sub h4.first { font-size:0.85em;font-style:italic; text-transform:capitalize; flex-shrink:0; }
  .resource .sub .sub h4.first.type,
 .resource .sub h4.first.prop { font-style:normal;font-size:0.8em; line-height:20px }
 .resource .subsub { width:100%; padding-left:20px; display: flex;align-items: baseline;flex-wrap:nowrap;position:relative; box-sizing: border-box;}

@@ -5,6 +5,8 @@ import createReducer from '../../lib/createReducer';
 import * as actions from './actions';
 import _ from 'lodash';
 import {fullUri} from '../../components/App'
+import qs from 'query-string'
+import history from '../../history';
 
 let reducers = {};
 
@@ -131,6 +133,10 @@ export const gotResource = (state: DataState, action: Action) => {
    let uri = fullUri(action.payload)
    let sameR = {}, sameP = {}
    if(data[uri]) {
+
+      let get = qs.parse(history.location.search)            
+
+      // preventing from displaying sameAs resource as subproperties
       for(let k of Object.keys(data[uri])) {                  
          if(k.match(/[/#]sameAs/)) {
             data[uri][k] = data[uri][k].map(e => { 
@@ -141,20 +147,22 @@ export const gotResource = (state: DataState, action: Action) => {
          }                   
       }
 
-      for(let k of Object.keys(sameR)) {
+      // merging data into resource
+      if(get["cw"] !== "none") for(let k of Object.keys(sameR)) {
          if(sameR[k]) for(let p of Object.keys(sameR[k])) {
-            if(!data[uri][p] && p.match(/purl\.bdrc\.io/)) { 
-               data[uri][p] = sameR[k][p].filter(e => !e.value || e.value !== uri).map(e => ({...e,"fromSameAs":k}))
+            if(p.match(/purl\.bdrc\.io/)) {
+               if(!data[uri][p]) data[uri][p] = []
+               data[uri][p] = data[uri][p].concat(sameR[k][p].filter(e => !e.value || e.value !== uri).map(e => ({...e,"fromSameAs":k})))
                if(!data[uri][p].length) delete data[uri][p]
             }
          }
       }
 
+      // remove sameAsXyz when already in sameAs
       for(let k of Object.keys(sameP)) {
          if(k.match(/[/#]sameAs[^/]+$/)) {             
             data[uri][k] = data[uri][k].filter(e => !sameP[owl+"sameAs"] || !sameP[owl+"sameAs"].filter(s => s.value === e.value).length) 
             if(!data[uri][k].length) delete data[uri][k]
-            console.log("sA??",uri,k,data[uri][k])
          }
       }
    }

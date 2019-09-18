@@ -1,6 +1,8 @@
 //@flow
 import store from '../index';
 import {auth} from '../routes'
+import qs from 'query-string'
+import history from '../history';
 
 require('formdata-polyfill')
 
@@ -227,10 +229,14 @@ export default class API {
          //let resource =  JSON.parse(await this.getURLContents(this._resourcePath(IRI),false));try {
          try {
             
+            let query = "ResInfo-SameAs"
+            let get = qs.parse(history.location.search)
+            if(get["cw"] === "none") query = "ResInfo"
+
             if(!IRI.indexOf(':') === -1 ) IRI = "bdr:"+IRI
             let config = store.getState().data.config.ldspdi
             let url = config.endpoints[config.index]+"/query/graph" ;            
-            let param = {"searchType":"ResInfo-SameAs","R_RES":IRI,"L_NAME":"","LG_NAME":"" }
+            let param = {"searchType":query,"R_RES":IRI,"L_NAME":"","LG_NAME":"" }
             let data = await this.getQueryResults(url, IRI, param,"GET");
             
             console.log("r e source",param,data)
