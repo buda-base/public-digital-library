@@ -135,7 +135,7 @@ h4 { margin-top:0px;margin-bottom:0px;font-size:24px; }
 
 .resource { width:100% ; padding:40px 100px; text-align:left; box-sizing: border-box;}
 .resource .data { text-align:left }
-.resource .data > div { display:flex;align-items:baseline;flex-wrap:wrap;box-sizing: border-box;width:100%;}
+.resource .data > div { display:flex;align-items:baseline;flex-wrap:wrap;box-sizing: border-box;width:100%;position:relative;}
 .resource .data > div.parent { flex-wrap:wrap; }
 .resource .data > div.parent > h3 { flex-shrink:0 }
 .resource h3,.resource h4 { display:inline-block; margin-bottom:0px; font-size:14px; font-weight:normal; margin-right:5px; line-height:21px;}
@@ -271,14 +271,16 @@ h3 + .sub
 /*h3 .expand { display:inline-block; cursor:pointer;}
 h3 .expand svg { position:absolute; margin-top:-18px; }*/
 .propCollapse.in-false h4:first-child { margin-top:0;transition:all 200ms ease-in-out; }
-.expand { margin-bottom:10px; cursor:pointer; margin-left:20px; border-bottom:1px solid transparent; font-size:13px;  }
-.expand:hover { border-bottom:1px solid black;  }
 /* .propCollapse.in-true + .expand { margin-bottom:10px; } */
-.propCollapse { width:100%; }
-.propCollapse.in-true { padding-bottom:10px;}
+.propCollapse { width:100%; margin-bottom:20px; }
+.propCollapse.in-true { padding-bottom:10px;margin-bottom:15px; }
+.propCollapse.in-false { height:0; } 
 /* .propCollapseHeader { width:100%; } */
-.propCollapse.in-false + .expand { margin-top:-20px;transition:all 300ms ease-in-out;}
-.propCollapse.in-true + .expand { margin-top:-5px;}
+
+.expand { margin-bottom:0px; cursor:pointer; margin-left:20px; border-bottom:1px solid transparent; font-size:13px; position:absolute;bottom:0; margin-bottom:5px; }
+.expand:hover { border-bottom:1px solid black;  }
+.propCollapse.in-false + .expand { margin-top:0px;transition:all 300ms ease-in-out;} 
+.propCollapse.in-true + .expand { margin-top:-5px;} 
 
 .resource .SidePane .viewAll { color:black; cursor:pointer; margin-bottom:10px;display:inline-block;border-bottom:1px solid transparent;}
 .resource .SidePane .viewAll:hover { border-color:black !important; }

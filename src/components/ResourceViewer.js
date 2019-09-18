@@ -901,7 +901,7 @@ class ResourceViewer extends Component<Props,State>
    {
       if(elem) {
 
-         console.log("uriformat",prop,elem.value,dic,withProp,show)
+         //console.log("uriformat",prop,elem.value,dic,withProp,show)
 
          if(!elem.value.match(/^http:\/\/purl\.bdrc\.io/) && (!dic || !dic[elem.value])) {
             return <a href={elem.value} target="_blank">{decodeURI(elem.value)}</a> ;
@@ -1149,7 +1149,7 @@ class ResourceViewer extends Component<Props,State>
       })
       */
 
-      //console.log("format",Tag, prop,JSON.stringify(elem,null,3),txt,bnode,div);
+      console.log("format",Tag, prop,JSON.stringify(elem,null,3),txt,bnode,div);
 
       let ret = [],pre = []
 
@@ -1360,6 +1360,8 @@ class ResourceViewer extends Component<Props,State>
                sub.push(<Tag className={'first '+(div == "sub"?'type':'prop')}>{[this.proplink(val[0].value),": "]}</Tag>)
             }
 
+            console.log("lab",lab)
+
             // direct property value/label ?
             if(lab && lab[0] && lab[0].value)
             {
@@ -1376,8 +1378,14 @@ class ResourceViewer extends Component<Props,State>
                         <Translate value={languages[lang]?languages[lang].replace(/search/,"tip"):lang}/>
                      </div>
                   }><span className="lang">{lang}</span></Tooltip>:null]
+
+
+                  let sameAsPrefix ;
+                  for(let p of Object.keys(prefixes)) { if(l.fromSameAs && l.fromSameAs.match(new RegExp(prefixes[p]))) { sameAsPrefix = p } }
+
+
                   sub.push(
-                     <Tag className='label'>
+                     <Tag className={'label ' + sameAsPrefix }>
                         {tip}
                         {/* <ChatIcon className="annoticon" onClick={e => this.setState({...this.state,annoPane:true,newAnno:true})}/> */}
                         <ChatIcon className="annoticon"  onClick={
