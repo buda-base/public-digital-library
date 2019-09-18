@@ -87,7 +87,7 @@ async function initiateApp(params,iri,myprops) {
             return
          }
 
-         
+         /*
          if(iri.match(/([.]bdrc[.])|(bdr:)/)) try {    
             let adminRes = await api.loadResource(iri.replace(/bdr:/,"bda:"));
 
@@ -102,6 +102,7 @@ async function initiateApp(params,iri,myprops) {
          catch(e) {
             console.error("no admin data for "+iri,e)
          }
+         */
 
 
          if(!Etext)

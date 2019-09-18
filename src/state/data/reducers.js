@@ -129,17 +129,35 @@ reducers[actions.TYPES.getPages] = getPages;
 export const gotResource = (state: DataState, action: Action) => {
  
    const owl   = "http://www.w3.org/2002/07/owl#" ; 
-   let data = action.meta
+   const tmp   = "http://purl.bdrc.io/ontology/tmp/" ;
+   const adm   = "http://purl.bdrc.io/ontology/admin/"
+   let data = { ...action.meta }
    let uri = fullUri(action.payload)
    let sameR = {}, sameP = {}
+   let admDs = [ "originalRecord", "metadataLegal", "contentProvider" ]
    if(data[uri]) {
+
+      // handling admindata
+      let mergeAdminData = (res) => {
+         if(data[res][tmp+"hasAdminData"]) {
+            let admin = data[res][tmp+"hasAdminData"][0]
+            if(admin) admin = admin.value
+            for(let a of admDs) {
+               if(data[admin][adm+a]) data[res][adm+a] = data[admin][adm+a]
+            }
+            delete data[res][tmp+"hasAdminData"]
+         }
+      }
+      
+      mergeAdminData(uri);
 
       let get = qs.parse(history.location.search)            
 
       // preventing from displaying sameAs resource as subproperties
       for(let k of Object.keys(data[uri])) {                  
-         if(k.match(/[/#]sameAs/)) {
+         if(k.match(/[/#]sameAs/)) {            
             data[uri][k] = data[uri][k].map(e => { 
+               mergeAdminData(e.value);
                sameR[e.value] = data[e.value]
                sameP[k] = data[uri][k]
                return ( { ...e, type:"uri"})
@@ -166,6 +184,8 @@ export const gotResource = (state: DataState, action: Action) => {
          }
       }
    }
+
+
 
    console.log("sameAs data", sameP, sameR, data)
 
