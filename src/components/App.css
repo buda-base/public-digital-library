@@ -234,18 +234,21 @@ a.login { text-decoration:underline; cursor:pointer; }
 .resource .data a:hover { border-bottom:1px solid rgba(229, 74, 53,1); }
 
 .urilink { position:relative; }
-h4:not(.sameAs) .urilink.sameAs, h4.sameAs { padding-left:0px; }
-h4:not(.sameAs) .urilink.sameAs::before, h4.sameAs::before
+/*h4:not(.sameAs)*/ .urilink.sameAs, h4.sameAs { padding-left:0px; }
+/*h4:not(.sameAs)*/ .urilink.sameAs::before, h4.sameAs::before
 { content:''; position:relative;display:inline-block;width:13px;height:13px; background-color:white;  vertical-align: -4px;padding-right:8px; padding-bottom:2px;
    background-position:right 5px top;background-size:13px auto;background-repeat:no-repeat;
 }
+.sameAs.bdr::before { background-image:url("/logo.svg"); background-size:17px auto;}
 .sameAs.dila::before { background-image:url("/DILA-favicon.ico"); }
-.sameAs.wd::before { background-image:url("/WD.svg"); }
+.sameAs.EAP::before { background-image:url("/BL.gif"); background-size:auto 13px; background-position:left 5px top; }
+.sameAs.gretil::before { background-image:url("/GRETIL.png"); background-size:auto 13px; }
+.sameAs.mbbt::before { background-image:url("/MB-icon.jpg"); }
 .sameAs.ola::before { background-image:url("/OL.png"); }
 .sameAs.viaf::before { background-image:url("/VIAF.png"); }
-.sameAs.mbbt::before { background-image:url("/MB-icon.jpg"); }
-.sameAs.bdr::before { background-image:url("/logo.svg"); background-size:17px auto;}
+.sameAs.wd::before { background-image:url("/WD.svg"); }
 
+h4.sameAs .urilink.sameAs { margin-left:-21px; }
 
 .resource button svg:hover { color:rgba(0,0,0,0.65); }
 

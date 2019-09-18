@@ -234,7 +234,7 @@ let propOrder = {
       // "bdo:creatorMainAuthor",
       // "bdo:creatorContributingAuthor",
       "bdo:creator",
-      //"bdo:workCreator",
+      "bdo:workCreator",
       "bdo:workLangScript",
       "bdo:workOtherLangScript",
       "bdo:workObjectType",
@@ -603,14 +603,14 @@ class ResourceViewer extends Component<Props,State>
             let assoR = this.props.assocResources            
             let valSort = prop[bdo+tagEnd] 
             if(this.props.dictionary && this.props.assocResources) {
-               valSort = valSort.map(v => ({...v,type:'bnode'})).map(w => w.type!=='bnode'||!assoR[w.value]?w:{'bnode':w.value,'k':assoR[w.value].filter(e => e.fromKey === rdf+"type").reduce( (acc,e) => {
+               valSort = valSort.map(v => ({...v,type:'bnode'})).map(w => w.type!=='bnode'||!assoR[w.value]?w:{...w,'bnode':w.value,'k':assoR[w.value].filter(e => e.fromKey === rdf+"type").reduce( (acc,e) => {
                   let p = this.props.dictionary[e.value]
                   if(p) p = p[rdfs+"subClassOf"]
                   if(p) p = p.filter(f => f.value === bdo+tagEnd[0].toUpperCase()+tagEnd.substring(1)).length
                   if(p) return e.value + ";" + acc  
                   else return acc+e.value+";"
                },"")})              
-               valSort = _.orderBy(valSort,['k'],['asc']).map(e => ({'type':'bnode','value':e.bnode,'sorted':true}))               
+               valSort = _.orderBy(valSort,['k'],['asc']).map(e => ({'type':'bnode','value':e.bnode,'sorted':true, ...e.fromSameAs?{fromSameAs:e.fromSameAs}:{}}))               
             }
             return valSort ; //
          }
@@ -1020,13 +1020,18 @@ class ResourceViewer extends Component<Props,State>
                   let prefix = "bdr:", sameAsPrefix ;
                   for(let p of Object.keys(prefixes)) { 
                      if(elem.value.match(new RegExp(prefixes[p]))) prefix = p 
-                     if(elem.fromSameAs && elem.fromSameAs.match(new RegExp(prefixes[p]))) sameAsPrefix = p 
+                     if(elem.fromSameAs && elem.fromSameAs.match(new RegExp(prefixes[p]))) sameAsPrefix = p + " sameAs"
+                  }
+                  let isExtW
+                  if(this.props.assocResources && this.props.assocResources[elem.value] && (isExtW = this.props.assocResources[elem.value].filter(e => e.type === adm+"metadataLegal")).length) {
+                     if(isExtW.filter(e => e.value === bda+"LD_GRETIL").length) sameAsPrefix = "gretil sameAs "
+                     else if(isExtW.filter(e => e.value === bda+"LD_EAP_metadata").length) sameAsPrefix = "EAP sameAs "
                   }
 
                   //console.log("s",prop,prefix,pretty,elem,info,infoBase)
 
                   if(info && infoBase && infoBase.filter(e=>e["xml:lang"]||e["lang"]).length >= 0) {
-                     ret.push([<Link className={"urilink prefLabel " + (sameAsPrefix?sameAsPrefix:'') + " " + prefix + (prefix !== "bdr"&&(prop.match(/[/#]sameAs/) || sameAsPrefix)?" sameAs":"")} to={"/"+show+"/"+prefix+":"+pretty}>{info}</Link>,lang?<Tooltip placement="bottom-end" title={
+                     ret.push([<Link className={"urilink prefLabel " + (sameAsPrefix?sameAsPrefix:'')  + prefix + (prefix !== "bdr"&&(prop.match(/[/#]sameAs/) || sameAsPrefix)?" sameAs":"") } to={"/"+show+"/"+prefix+":"+pretty}>{info}</Link>,lang?<Tooltip placement="bottom-end" title={
                         <div style={{margin:"10px"}}>
                            <Translate value={languages[lang]?languages[lang].replace(/search/,"tip"):lang}/>
                         </div>
@@ -1149,7 +1154,7 @@ class ResourceViewer extends Component<Props,State>
       })
       */
 
-      console.log("format",Tag, prop,JSON.stringify(elem,null,3),txt,bnode,div);
+      //console.log("format",Tag, prop,JSON.stringify(elem,null,3),txt,bnode,div);
 
       let ret = [],pre = []
 
@@ -1348,19 +1353,24 @@ class ResourceViewer extends Component<Props,State>
                valSort = _.orderBy(valSort,['k'],['desc']).map(e => e.v)
                //console.log("valSort!",valSort)               
             }
+
+            let sameAsPrefix ;
+            for(let p of Object.keys(prefixes)) { if(e.fromSameAs && e.fromSameAs.match(new RegExp(prefixes[p]))) { sameAsPrefix = p } }
+
+            
             // property name ?            
             if(valSort) {
                //console.log("valSort?",valSort)               
                noVal = false ;
-               sub.push(<Tag className={'first '+(div == "sub"?'type':'prop')}>{[valSort.map((v,i) => i==0?[this.proplink(v.value)]:[" / ",this.proplink(v.value)]),": "]}</Tag>)
+               sub.push(<Tag className={'first '+(div == "sub"?'type':'prop') +" "+ (sameAsPrefix?sameAsPrefix+" sameAs":"")}>{[valSort.map((v,i) => i==0?[this.proplink(v.value)]:[" / ",this.proplink(v.value)]),": "]}</Tag>)
             }
             else if(val && val[0] && val[0].value)
             {
                noVal = false ;
-               sub.push(<Tag className={'first '+(div == "sub"?'type':'prop')}>{[this.proplink(val[0].value),": "]}</Tag>)
+               sub.push(<Tag className={'first '+(div == "sub"?'type':'prop') +" "+ (sameAsPrefix?sameAsPrefix+" sameAs":"")}>{[this.proplink(val[0].value),": "]}</Tag>)
             }
 
-            console.log("lab",lab)
+            //console.log("lab",lab)
 
             // direct property value/label ?
             if(lab && lab[0] && lab[0].value)
@@ -1379,13 +1389,8 @@ class ResourceViewer extends Component<Props,State>
                      </div>
                   }><span className="lang">{lang}</span></Tooltip>:null]
 
-
-                  let sameAsPrefix ;
-                  for(let p of Object.keys(prefixes)) { if(l.fromSameAs && l.fromSameAs.match(new RegExp(prefixes[p]))) { sameAsPrefix = p } }
-
-
                   sub.push(
-                     <Tag className={'label ' + sameAsPrefix }>
+                     <Tag className={'label '}>
                         {tip}
                         {/* <ChatIcon className="annoticon" onClick={e => this.setState({...this.state,annoPane:true,newAnno:true})}/> */}
                         <ChatIcon className="annoticon"  onClick={
@@ -2239,7 +2244,7 @@ class ResourceViewer extends Component<Props,State>
 
             let elem = this.getResourceElem(k);
 
-            console.log("prop",k,elem)
+            //console.log("prop",k,elem)
             //for(let e of elem) console.log(e.value,e.label1);
 
             //if(!k.match(new RegExp("Revision|Entry|prefLabel|"+rdf+"|toberemoved"))) {
