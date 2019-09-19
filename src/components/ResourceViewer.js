@@ -1021,7 +1021,9 @@ class ResourceViewer extends Component<Props,State>
                   let isExtW
                   if(this.props.assocResources && this.props.assocResources[elem.value] && (isExtW = this.props.assocResources[elem.value].filter(e => e.type === adm+"provider")).length) {
                      if(isExtW.filter(e => e.value === "GRETIL").length) sameAsPrefix = "gretil sameAs "
-                     else if(isExtW.filter(e => e.value === "EAP").length) sameAsPrefix = "EAP sameAs "
+                     else if(isExtW.filter(e => e.value === "EAP").length) sameAsPrefix = "eap sameAs "
+                     else if(isExtW.filter(e => e.value === "BnF").length) sameAsPrefix = "bnf sameAs "
+                     else if(isExtW.filter(e => e.value === "Internet Archives").length) sameAsPrefix = "ia sameAs "
                   }
 
                   //console.log("s",prop,prefix,pretty,elem,info,infoBase)
