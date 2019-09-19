@@ -139,11 +139,11 @@ export const gotResource = (state: DataState, action: Action) => {
 
       // handling admindata
       let mergeAdminData = (res) => {
-         if(data[res][tmp+"hasAdminData"]) {
+         if(data[res] && data[res][tmp+"hasAdminData"]) {
             let admin = data[res][tmp+"hasAdminData"][0]
             if(admin) admin = admin.value
             for(let a of admDs) {
-               if(data[admin][adm+a]) data[res][adm+a] = data[admin][adm+a]
+               if(data[admin] && data[admin][adm+a]) data[res][adm+a] = data[admin][adm+a]
             }
             delete data[res][tmp+"hasAdminData"]
          }
@@ -183,6 +183,7 @@ export const gotResource = (state: DataState, action: Action) => {
             if(!data[uri][k].length) delete data[uri][k]
          }
       }
+
    }
 
 

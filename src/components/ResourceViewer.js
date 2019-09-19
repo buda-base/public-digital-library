@@ -907,12 +907,17 @@ class ResourceViewer extends Component<Props,State>
             return <a href={elem.value} target="_blank">{decodeURI(elem.value)}</a> ;
          }
 
-         let dico ;
+         let dico = dic ;
+
+
+         /*  // [TODO] much too slow to be done each time here... (but needed to display sameAs people in P6161)
+         
          if(dic) dico = Object.keys(dic).reduce( (acc,k) =>{ 
                let val = dic[k].filter(e => e.type === skos+"prefLabel" || e.fromKey === skos+"prefLabel" || e.fromKey === foaf+"name" )
                if(!val) val = dic[k]
                return ({...acc,[k]:val})
             },{})
+         */
 
          // test if ancestor/type of property has range subclassof entity
 /*
