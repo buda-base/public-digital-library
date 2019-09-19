@@ -1013,23 +1013,44 @@ class ResourceViewer extends Component<Props,State>
 
                   // we can return Link
                   let pretty = this.fullname(elem.value,true);
-                  let prefix = "bdr:", sameAsPrefix ;
+                  let prefix = "bdr:", sameAsPrefix = "";
                   for(let p of Object.keys(prefixes)) { 
-                     if(elem.value.match(new RegExp(prefixes[p]))) prefix = p 
-                     if(elem.fromSameAs && elem.fromSameAs.match(new RegExp(prefixes[p]))) sameAsPrefix = p + " sameAs"
+                     if(elem.value.match(new RegExp(prefixes[p]))) { prefix = p; if(!p.match(/^bd[ar]$/) && !this.props.IRI.match(new RegExp("^"+p+":"))) { sameAsPrefix = p + " sameAs hasIcon "; } }
+                     if(elem.fromSameAs && elem.fromSameAs.match(new RegExp(prefixes[p]))) sameAsPrefix = p + " sameAs hasIcon "
                   }
                   let isExtW
                   if(this.props.assocResources && this.props.assocResources[elem.value] && (isExtW = this.props.assocResources[elem.value].filter(e => e.type === adm+"provider")).length) {
-                     if(isExtW.filter(e => e.value === "GRETIL").length) sameAsPrefix = "gretil sameAs "
-                     else if(isExtW.filter(e => e.value === "EAP").length) sameAsPrefix = "eap sameAs "
-                     else if(isExtW.filter(e => e.value === "BnF").length) sameAsPrefix = "bnf sameAs "
-                     else if(isExtW.filter(e => e.value === "Internet Archives").length) sameAsPrefix = "ia sameAs "
+                     if(isExtW.filter(e => e.value === "GRETIL").length) sameAsPrefix += "gretil provider hasIcon "
+                     else if(isExtW.filter(e => e.value === "EAP").length) sameAsPrefix += "eap provider hasIcon "
+                     else if(isExtW.filter(e => e.value === "BnF").length) sameAsPrefix += "bnf provider hasIcon "
+                     else if(isExtW.filter(e => e.value === "Internet Archives").length) sameAsPrefix += "ia provider hasIcon "
                   }
 
                   //console.log("s",prop,prefix,pretty,elem,info,infoBase)
 
+                  const providers = { 
+                     "eap":"Endangered Archives Programme",
+                     "gretil":"Göttingen Register of Electronic Texts in Indian Languages",
+                     "mbbt":"Marcus Bingenheimer",
+                     "bnf":"Bibliothèque nationale de France",
+                     "ia":"Internet Archive",                     
+                   }
+
+                  let before = (elem,pref) => {
+                     console.log("elem?",elem)
+                     let src = pref.replace(/^([^ ]+) .*$/,"$1").toLowerCase()
+                     if(this.props.assocResources && this.props.assocResources[elem.value]) console.log("elem assoR",this.props.assocResources[elem.value])
+                     return <Tooltip placement="bottom-start" title={<div class={"uriTooltip "}><span class={"logo "+src}></span><span class="text">{providers[src]}</span></div>}><span class="before"></span></Tooltip>
+                  }
+
                   if(info && infoBase && infoBase.filter(e=>e["xml:lang"]||e["lang"]).length >= 0) {
-                     ret.push([<Link className={"urilink prefLabel " + (sameAsPrefix?sameAsPrefix:'')  + prefix + (prefix !== "bdr"&&(prop.match(/[/#]sameAs/) || sameAsPrefix)?" sameAs":"") } to={"/"+show+"/"+prefix+":"+pretty}><span class="before"></span>{info}</Link>,lang?<Tooltip placement="bottom-end" title={
+                     let link,orec, befo = before(elem,sameAsPrefix) ;
+                     if(this.props.assocResources && this.props.assocResources[elem.value]) {
+                        orec = this.props.assocResources[elem.value].filter(r => r.type === adm+"originalRecord")
+                     }
+                     if(! orec.length) link = <Link className={"urilink prefLabel " } to={"/"+show+"/"+prefix+":"+pretty}>{befo}{info}</Link>
+                     else link = <a class="urilink prefLabel" href={orec[0].value} target="_blank">{befo}{info}</a>
+                     ret.push([<span class={"ulink " + (sameAsPrefix?sameAsPrefix:'')  }>{link}</span>,lang?<Tooltip placement="bottom-end" title={
                         <div style={{margin:"10px"}}>
                            <Translate value={languages[lang]?languages[lang].replace(/search/,"tip"):lang}/>
                         </div>
@@ -1316,8 +1337,8 @@ class ResourceViewer extends Component<Props,State>
             let sameAsPrefix ;
             for(let p of Object.keys(prefixes)) { if(e.fromSameAs && e.fromSameAs.match(new RegExp(prefixes[p]))) { sameAsPrefix = p } }
 
-            if(!txt) ret.push(<Tag className={(elem.length > 1?"multiple ":"") + (sameAsPrefix?sameAsPrefix+" sameAs":"") }><span class="before"></span>{tmp}</Tag>)
-            else ret.push(<Tag className={(elem.length > 1?"multiple ":"") +  (sameAsPrefix?sameAsPrefix+" sameAs":"") }><span class="before"></span>{tmp+" "+txt}</Tag>)
+            if(!txt) ret.push(<Tag className={(elem.length > 1?"multiple ":"") + (sameAsPrefix?sameAsPrefix+" sameAs hasIcon":"") }><span class="before"></span>{tmp}</Tag>)
+            else ret.push(<Tag className={(elem.length > 1?"multiple ":"") +  (sameAsPrefix?sameAsPrefix+" sameAs hasIcon":"") }><span class="before"></span>{tmp+" "+txt}</Tag>)
 
 
             //console.log("ret",ret)
@@ -1360,12 +1381,12 @@ class ResourceViewer extends Component<Props,State>
             if(valSort) {
                //console.log("valSort?",valSort)               
                noVal = false ;
-               sub.push(<Tag className={'first '+(div == "sub"?'type':'prop') +" "+ (sameAsPrefix?sameAsPrefix+" sameAs":"")}><span class="before"></span>{[valSort.map((v,i) => i==0?[this.proplink(v.value)]:[" / ",this.proplink(v.value)]),": "]}</Tag>)
+               sub.push(<Tag className={'first '+(div == "sub"?'type':'prop') +" "+ (sameAsPrefix?sameAsPrefix+" sameAs hasIcon":"")}><span class="before"></span>{[valSort.map((v,i) => i==0?[this.proplink(v.value)]:[" / ",this.proplink(v.value)]),": "]}</Tag>)
             }
             else if(val && val[0] && val[0].value)
             {
                noVal = false ;
-               sub.push(<Tag className={'first '+(div == "sub"?'type':'prop') +" "+ (sameAsPrefix?sameAsPrefix+" sameAs":"")}><span class="before"></span>{[this.proplink(val[0].value),": "]}</Tag>)
+               sub.push(<Tag className={'first '+(div == "sub"?'type':'prop') +" "+ (sameAsPrefix?sameAsPrefix+" sameAs hasIcon":"")}><span class="before"></span>{[this.proplink(val[0].value),": "]}</Tag>)
             }
 
             //console.log("lab",lab)

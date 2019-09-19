@@ -118,7 +118,7 @@ a.result .contenu ul > div:last-child p {
 iframe.ontoSearch { width:calc(100% - 10px); border:none; margin-left:10px; height:500px;
    box-shadow:0 0 5px rgba(0,0,0,0.5); background-color:rgba(0,0,0,0.015);}
 
-.data .anno,svg.annoticon { vertical-align: -9px;margin-left:5px; color:rgba(0,0,0,0.0);}
+.data .anno,svg.annoticon { vertical-align: -9px;margin-left:5px; color:rgba(0,0,0,0.0); display:none;}
 h2:hover svg.annoticon,h4:hover svg.annoticon {  color:rgba(0,0,0,0.5); cursor:pointer;}
 h2:hover svg.annoticon:hover,h4:hover svg.annoticon:hover { color:rgba(0,0,0,0.65); }
 .data .anno span:not(.lang) {/*color : rgba(229, 74, 53,1);*/ cursor:pointer; color:rgba(0,0,0,0.5);}
@@ -234,23 +234,52 @@ a.login { text-decoration:underline; cursor:pointer; }
 .resource .data a:hover { border-bottom:1px solid rgba(229, 74, 53,1); }
 
 .urilink { position:relative; }
-/*h4:not(.sameAs)*/ .urilink.sameAs, h4.sameAs { padding-left:0px; }
-/*h4:not(.sameAs)*/ .urilink.sameAs::before, h4.sameAs::before
-{ content:''; position:relative;display:inline-block;width:13px;height:13px; background-color:white;  vertical-align: -4px;padding-right:8px; padding-bottom:2px;
-   background-position:right 5px top;background-size:13px auto;background-repeat:no-repeat;
+/*h4:not(.sameAs)*/ .urilink.hasIcon, h4.hasIcon { padding-left:0px; }
+/*h4:not(.sameAs)*/ .ulink.hasIcon .before, h4.hasIcon .before
+{ content:''; position:relative;display:inline-block;width:13px;height:13px; background-color:white;  vertical-align: -4px;padding-right:8px; padding-bottom:3px;
+   background-position:right 5px center;background-size:13px auto;background-repeat:no-repeat;
 }
-.sameAs.bdr::before { background-image:url("/logo.svg"); background-size:17px auto; }
-.sameAs.bnf::before { background-image:url("/BNF.svg"); background-size:19px auto;background-position:top 3px left;}
-.sameAs.dila::before { background-image:url("/DILA-favicon.ico"); }
-.sameAs.eap::before { background-image:url("/BL.gif"); background-size:auto 13px; background-position:left 5px top; }
-.sameAs.gretil::before { background-image:url("/GRETIL.png"); background-size:auto 13px; }
-.sameAs.ia::before { background-image:url("/IA.png"); background-size:auto 13px;background-position:top 0px left 3px;}
-.sameAs.mbbt::before { background-image:url("/MB-icon.jpg"); }
-.sameAs.ola::before { background-image:url("/OL.png"); }
-.sameAs.viaf::before { background-image:url("/VIAF.png"); }
-.sameAs.wd::before { background-image:url("/WD.svg"); }
+.sameAs.bdr .before { background-image:url("/logo.svg"); background-size:17px auto; background-position:top 1px right 5px; }
+.sameAs.bnf .before { background-image:url("/BNF.svg"); background-size:19px auto;background-position:top 4px left;}
+.sameAs.dila .before { background-image:url("/DILA-favicon.ico"); background-position:top 1px right 5px;}
+.sameAs.eap .before { background-image:url("/BL.gif"); background-size:auto 13px; background-position:left 4px top; }
+.sameAs.gretil .before { background-image:url("/GRETIL.png"); background-size:auto 13px; background-position:top 1px right 6px;}
+.sameAs.ia .before { background-image:url("/IA.png"); background-size:auto 13px;background-position:top 0px left 2px;}
+.sameAs.mbbt .before { background-image:url("/MB-icon.jpg"); background-position:top 1px right 6px;} 
+.sameAs.ola .before { background-image:url("/OL.png"); }
+.sameAs.viaf .before { background-image:url("/VIAF.png"); }
+.sameAs.wd .before { background-image:url("/WD.svg");  background-size:18px auto; background-position:top 2px left 2px;}
 
-h4.sameAs .urilink.sameAs { margin-left:-21px; }
+.provider.bdr .before { background-image:url("/logo.svg"); background-size:17px auto; background-position:top 1px right 5px; }
+.provider.bnf .before { background-image:url("/BNF.svg"); background-size:19px auto;background-position:top 4px left;}
+.provider.dila .before { background-image:url("/DILA-favicon.ico"); background-position:top 1px right 5px;}
+.provider.eap .before { background-image:url("/BL.gif"); background-size:auto 13px; background-position:left 4px top; }
+.provider.gretil .before { background-image:url("/GRETIL.png"); background-size:auto 13px; background-position:top 1px right 6px;}
+.provider.ia .before { background-image:url("/IA.png"); background-size:auto 13px;background-position:top 0px left 2px;}
+.provider.mbbt .before { background-image:url("/MB-icon.jpg"); background-position:top 1px right 6px;} 
+.provider.ola .before { background-image:url("/OL.png"); }
+.provider.viaf .before { background-image:url("/VIAF.png"); }
+.provider.wd .before { background-image:url("/WD.svg");  background-size:18px auto; background-position:top 2px left 2px;}
+
+h4.sameAs .ulink.sameAs { margin-left:-21px; }
+
+h4.hasIcon + .subsub { padding-left:40px; }
+
+.uriTooltip { margin:10px; display:flex; align-items: center; align-content: center;}
+.uriTooltip .logo { display:inline-block;vertical-align:middle;width:64px;height:64px; background-color:white; margin-right:20px; flex-shrink:0; background-size: auto 52px;
+   background-repeat:no-repeat;background-position:center;}
+.uriTooltip .logo.bdr  { background-image:url("/logo.svg");}
+.uriTooltip .logo.bnf  { background-image:url("/BNF.svg");  background-size: 52px auto; }
+.uriTooltip .logo.dila  { background-image:url("/DILA-favicon.ico"); }
+.uriTooltip .logo.eap  { background-image:url("/BL.gif"); }
+.uriTooltip .logo.gretil {  background-image:url("/GRETIL.png"); } 
+.uriTooltip .logo.ia  { background-image:url("/IA.png"); }
+.uriTooltip .logo.mbbt  { background-image:url("/MB-icon.jpg"); } 
+.uriTooltip .logo.ola  { background-image:url("/OL.png"); }
+.uriTooltip .logo.viaf  { background-image:url("/VIAF.png"); }
+.uriTooltip .logo.wd  { background-image:url("/WD.svg"); }
+
+.uriTooltip .text { }
 
 .resource button svg:hover { color:rgba(0,0,0,0.65); }
 
@@ -310,7 +339,7 @@ h3 .expand svg { position:absolute; margin-top:-18px; }*/
 .resource .SidePane .data > div > h4, .SidePane .data > div > .sub > h4:not(.first) { width:auto;padding-left:0;}
 .resource .SidePane .sub .sub .subsub h4.first.prop { width:100%;}
 .resource .SidePane .sub .sub .subsub h4.first.prop + h4 { padding-left:15px;margin-right:0;padding-right:10px; } /* height:48px;overflow:hidden;margin-bottom:16px;} */
-/* .resource .sub .sub .subsub h4.first.prop + h4:after { content:'(...)'; display:block;position:absolute;top:88px;} */
+/* .resource .sub .sub .subsub h4.first.prop + h4:after { content:'(...)'; display:block;position:absolute;to:88px;} */
 .resource .SidePane h3, .resource .SidePane h4 { font-size:12px;line-height:16px; }
 /* .resource .SidePane h4.first.prop + h4 { height:48px; overflow:hidden;  text-overflow: ellipsis; display:inline-block; } */
 .resource .SidePane .data .anno, .resource .SidePane svg.annoticon {  vertical-align: -12px; }

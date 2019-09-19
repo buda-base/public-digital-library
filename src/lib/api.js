@@ -230,8 +230,8 @@ export default class API {
          try {
             
             let query = "ResInfo-SameAs"
-            let get = qs.parse(history.location.search)
-            if(get["cw"] === "none") query = "ResInfo"
+            //let get = qs.parse(history.location.search)
+            //if(get["cw"] === "none") query = "ResInfo"
 
             if(!IRI.indexOf(':') === -1 ) IRI = "bdr:"+IRI
             let config = store.getState().data.config.ldspdi

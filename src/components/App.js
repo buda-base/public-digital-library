@@ -1500,7 +1500,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
             for(let res of sameAsRes) 
                for(let src of Object.keys(img)) {
-                  if(res.value.match(new RegExp("(^"+src+":)|(^"+prefixesMap[src]+")"))) hasRes[src] = res.value.replace(new RegExp(prefixesMap[src]),src+":")                  
+                  if(res.value.match(new RegExp("(^"+src+":)|(^"+prefixesMap[src]+")"))) hasRes[src] = res.value //.replace(new RegExp(prefixesMap[src]),src+":")                  
                }
 
             for(let src of Object.keys(img)) 
@@ -1570,7 +1570,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                         if(!lang) lang = mLit["xml:lang"]
                      }
 
-                     console.log("val",val,val.length,lang)
+                     //console.log("val",val,val.length,lang)
 
                      let uri,from
                      if(m.type.match(/[/#]sameAs/)) {
@@ -2710,7 +2710,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
             meta = this.props.searches[this.state.filters.datatype[0]][this.props.keyword+"@"+this.props.language]
 
-            console.log("ici",meta)
+            //console.log("ici",meta)
 
             if(meta) meta = meta.metadata
             if(meta) {
@@ -2756,7 +2756,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             </Popover> 
       );
 
-      console.log("messageD",this._menus,showMenus,messageD,message)
+      //console.log("messageD",this._menus,showMenus,messageD,message)
 
       const textStyle = {marginLeft:"15px",marginBottom:"10px",marginRight:"15px"}
 
