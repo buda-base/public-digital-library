@@ -1034,12 +1034,14 @@ class ResourceViewer extends Component<Props,State>
                      "mbbt":"Marcus Bingenheimer",
                      "bnf":"Bibliothèque nationale de France",
                      "ia":"Internet Archive",                 
-                     "dila":"Dharma Drum Institute of Liberal Arts"    
+                     "dila":"Dharma Drum Institute of Liberal Arts",
+                     "bdr":"Buddhist Digital Resource Center" 
                    }
 
                   let before = (elem,pref) => {
                      console.log("elem?",elem)
-                     let src = pref.replace(/^([^ ]+) .*$/,"$1").toLowerCase()
+                     let src = pref.replace(/^.*?([^ ]+) provider .*$/,"$1").toLowerCase()
+                     if(src.match(/bdr/)) src = "bdr"
                      if(this.props.assocResources && this.props.assocResources[elem.value]) console.log("elem assoR",this.props.assocResources[elem.value])
                      return <Tooltip placement="bottom-start" title={<div class={"uriTooltip "}><span class={"logo "+src}></span><span class="text">{providers[src]}</span></div>}><span class="before"></span></Tooltip>
                   }

@@ -268,7 +268,7 @@ h4.hasIcon + .subsub { padding-left:40px; }
 .uriTooltip { margin:10px; display:flex; align-items: center; align-content: center;}
 .uriTooltip .logo { display:inline-block;vertical-align:middle;width:64px;height:64px; background-color:white; margin-right:20px; flex-shrink:0; background-size: auto 52px;
    background-repeat:no-repeat;background-position:center;}
-.uriTooltip .logo.bdr  { background-image:url("/logo.svg");}
+.uriTooltip .logo.bdr  { background-image:url("/logo.svg");  background-size: 52px auto;}
 .uriTooltip .logo.bnf  { background-image:url("/BNF.svg");  background-size: 52px auto; }
 .uriTooltip .logo.dila  { background-image:url("/DILA-big.png"); }
 .uriTooltip .logo.eap  { background-image:url("/BL.gif"); }
