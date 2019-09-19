@@ -1033,7 +1033,8 @@ class ResourceViewer extends Component<Props,State>
                      "gretil":"Göttingen Register of Electronic Texts in Indian Languages",
                      "mbbt":"Marcus Bingenheimer",
                      "bnf":"Bibliothèque nationale de France",
-                     "ia":"Internet Archive",                     
+                     "ia":"Internet Archive",                 
+                     "dila":"Dharma Drum Institute of Liberal Arts"    
                    }
 
                   let before = (elem,pref) => {

@@ -270,7 +270,7 @@ h4.hasIcon + .subsub { padding-left:40px; }
    background-repeat:no-repeat;background-position:center;}
 .uriTooltip .logo.bdr  { background-image:url("/logo.svg");}
 .uriTooltip .logo.bnf  { background-image:url("/BNF.svg");  background-size: 52px auto; }
-.uriTooltip .logo.dila  { background-image:url("/DILA-favicon.ico"); }
+.uriTooltip .logo.dila  { background-image:url("/DILA-big.png"); }
 .uriTooltip .logo.eap  { background-image:url("/BL.gif"); }
 .uriTooltip .logo.gretil {  background-image:url("/GRETIL.png"); } 
 .uriTooltip .logo.ia  { background-image:url("/IA.png"); }
