@@ -1019,14 +1019,22 @@ class ResourceViewer extends Component<Props,State>
                      if(elem.fromSameAs && elem.fromSameAs.match(new RegExp(prefixes[p]))) sameAsPrefix = p + " sameAs hasIcon "
                   }
                   let isExtW
-                  if(this.props.assocResources && this.props.assocResources[elem.value] && (isExtW = this.props.assocResources[elem.value].filter(e => e.type === adm+"provider")).length) {
-                     if(isExtW.filter(e => e.value === "GRETIL").length) sameAsPrefix += "gretil provider hasIcon "
-                     else if(isExtW.filter(e => e.value === "EAP").length) sameAsPrefix += "eap provider hasIcon "
-                     else if(isExtW.filter(e => e.value === "BnF").length) sameAsPrefix += "bnf provider hasIcon "
-                     else if(isExtW.filter(e => e.value === "Internet Archives").length) sameAsPrefix += "ia provider hasIcon "
+                  if(this.props.assocResources && this.props.assocResources[elem.value] && (isExtW = this.props.assocResources[elem.value].filter(e => e.type === tmp+"provider")).length) {
+
+
+                     let provLab = this.props.dictionary[isExtW[0].value]
+                     if(provLab) provLab = provLab[skos+"prefLabel"]
+                     if(provLab && provLab.length) provLab = provLab[0].value 
+                     
+                     //console.log("isExtW",isExtW,this.props.dictionary,provLab)
+
+                     if(provLab === "GRETIL") sameAsPrefix += "gretil provider hasIcon "
+                     else if(provLab === "EAP") sameAsPrefix += "eap provider hasIcon "
+                     else if(provLab === "BnF") sameAsPrefix += "bnf provider hasIcon "
+                     else if(provLab === "Internet Archives") sameAsPrefix += "ia provider hasIcon "
                   }
 
-                  //console.log("s",prop,prefix,pretty,elem,info,infoBase)
+                  console.log("s",prop,prefix,pretty,elem,info,infoBase)
 
                   const providers = { 
                      "eap":"Endangered Archives Programme",
