@@ -1043,13 +1043,16 @@ class ResourceViewer extends Component<Props,State>
                   console.log("s",prop,prefix,pretty,elem,info,infoBase)
 
                   const providers = { 
+                     "bdr":"Buddhist Digital Resource Center",
+                     "bnf":"Bibliothèque nationale de France",
+                     "dila":"Dharma Drum Institute of Liberal Arts",
                      "eap":"Endangered Archives Programme",
+                     "ia":"Internet Archive",                 
                      "gretil":"Göttingen Register of Electronic Texts in Indian Languages",
                      "mbbt":"Marcus Bingenheimer",
-                     "bnf":"Bibliothèque nationale de France",
-                     "ia":"Internet Archive",                 
-                     "dila":"Dharma Drum Institute of Liberal Arts",
-                     "bdr":"Buddhist Digital Resource Center" 
+                     "wd":"Wikidata",
+                     "ola":"Open Library",
+                     "viaf":"Virtual International Authority File"
                    }
 
 
@@ -1072,11 +1075,11 @@ class ResourceViewer extends Component<Props,State>
                         link = <a class="urilink prefLabel" href={canUrl[0].value} target="_blank">{info}</a>
                         if(srcProv.indexOf(" ") !== -1) srcProv = srcSame
                      }
-                     //else if(src !== "bdr") link = <a class="urilink prefLabel" href={elem.value} target="_blank">{info}</a>
+                     else if(src !== "bdr") link = <a class="urilink prefLabel" href={elem.value} target="_blank">{info}</a>
                      else link = <Link className={"urilink prefLabel " } to={"/"+show+"/"+prefix+":"+pretty}>{info}</Link>
                      
                      let befo = [],src
-                     if(providers[src = srcProv]) { // || ( src !== "bdr" && providers[src = srcSame])) { 
+                     if(providers[src = srcProv] && !prop.match(/[/#]sameAs/)) { // || ( src !== "bdr" && providers[src = srcSame])) { 
                         befo.push( 
 
                            [ //<span class="meta-before"></span>,
@@ -1090,20 +1093,42 @@ class ResourceViewer extends Component<Props,State>
                            </Tooltip> ]
                         )
                      }
-                     else if(providers[src = srcSame]) { 
+                     else if(providers[src = srcSame] && !prop.match(/[/#]sameAs/)) { 
                         befo.push(
 
                            [ //<span class="meta-before"></span>,
                               <Tooltip placement="bottom-start" title={
                               <div class={"uriTooltip "}>
-                                 <span class="title">Data loaded from:</span>
-                                 <span class={"logo "+src}></span>
-                                 <span class="text">{providers[src]}</span>
+                              { src !== "bdr" && 
+                                 [
+                                    <span class="title">Data loaded from:</span>,
+                                    <span class={"logo "+src}></span>,
+                                    <span class="text">{providers[src]}</span> 
+                                 ]  }
+                              { src === "bdr" && <span>Data loaded from BDRC resource</span> }
                            </div>}>
-                                 <span><span class="before">{link}</span></span>
+                                 <span class={(sameAsPrefix?sameAsPrefix:'')}><span class="before">{link}</span></span>
                               </Tooltip> 
                            ]
                         )
+                     }
+                     else if(sameAsPrefix.indexOf("sameAs") !== -1) {
+                        //link = [ <span class="before"></span>,link ] 
+
+                        befo.push(  [ //<span class="meta-before"></span>,
+                              <Tooltip placement="bottom-start" title={
+                              <div class={"uriTooltip "}>
+                              { src !== "bdr" && 
+                                 [
+                                    <span class="title">Same resource from:</span>,
+                                    <span class={"logo "+src}></span>,
+                                    <span class="text">{providers[src]}</span> 
+                                 ]  }
+                              { src === "bdr" && <span>Same resource from BDRC</span> }
+                           </div>}>
+                                 <span class={(sameAsPrefix?sameAsPrefix:'')}><span class="before">{link}</span></span>
+                              </Tooltip> 
+                           ])
                      }
                      
                      
