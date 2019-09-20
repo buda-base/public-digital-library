@@ -237,8 +237,11 @@ a.login { text-decoration:underline; cursor:pointer; }
 /*h4:not(.sameAs)*/ .urilink.hasIcon, h4.hasIcon { padding-left:0px; }
 /*h4:not(.sameAs)*/ .ulink.hasIcon .before, h4.hasIcon .before
 { content:''; position:relative;display:inline-block;width:13px;height:13px; background-color:white;  vertical-align: -4px;padding-right:8px; padding-bottom:3px;
-   background-position:right 5px center;background-size:13px auto;background-repeat:no-repeat;
+   background-position:right 5px center;background-size:13px auto;background-repeat:no-repeat; 
 }
+.before a {font-size:0; position:absolute;width:100%;height:100%;}
+.before:hover a { border:none !important; }
+
 .sameAs.bdr .before { background-image:url("/logo.svg"); background-size:17px auto; background-position:top 1px right 5px; }
 .sameAs.bnf .before { background-image:url("/BNF.svg"); background-size:19px auto;background-position:top 4px left;}
 .sameAs.dila .before { background-image:url("/DILA-favicon.ico"); background-position:top 1px right 5px;}
@@ -261,12 +264,12 @@ a.login { text-decoration:underline; cursor:pointer; }
 .provider.viaf .before { background-image:url("/VIAF.png"); }
 .provider.wd .before { background-image:url("/WD.svg");  background-size:18px auto; background-position:top 2px left 2px;}
 
-h4.sameAs .ulink.sameAs { margin-left:-21px; }
+h4.sameAs .ulink.sameAs { margin-left:-21px; } 
 
 h4.hasIcon + .subsub { padding-left:40px; }
 
-.uriTooltip { margin:10px; display:flex; align-items: center; align-content: center;}
-.uriTooltip .logo { display:inline-block;vertical-align:middle;width:64px;height:64px; background-color:white; margin-right:20px; flex-shrink:0; background-size: auto 52px;
+.uriTooltip { margin:10px; display:flex; align-items: center; align-content: center; margin-bottom:13px;}
+.uriTooltip .logo { display:inline-block;vertical-align:middle;width:64px;height:64px; background-color:white; margin-right:15px; flex-shrink:0; background-size: auto 52px;
    background-repeat:no-repeat;background-position:center;}
 .uriTooltip .logo.bdr  { background-image:url("/logo.svg");  background-size: 52px auto;}
 .uriTooltip .logo.bnf  { background-image:url("/BNF.svg");  background-size: 52px auto; }
@@ -279,7 +282,9 @@ h4.hasIcon + .subsub { padding-left:40px; }
 .uriTooltip .logo.viaf  { background-image:url("/VIAF.png"); }
 .uriTooltip .logo.wd  { background-image:url("/WD.svg"); }
 
-.uriTooltip .text { }
+.uriTooltip .logo, .uriTooltip .text { margin-top:30px;}
+
+.uriTooltip .title { position:absolute; top:0;font-size:12px;text-decoration:underline; margin-top:10px; }
 
 .resource button svg:hover { color:rgba(0,0,0,0.65); }
 

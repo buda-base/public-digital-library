@@ -1038,22 +1038,62 @@ class ResourceViewer extends Component<Props,State>
                      "bdr":"Buddhist Digital Resource Center" 
                    }
 
-                  let before = (elem,pref) => {
-                     console.log("elem?",elem)
-                     let src = pref.replace(/^.*?([^ ]+) provider .*$/,"$1").toLowerCase()
-                     if(src.match(/bdr/)) src = "bdr"
-                     if(this.props.assocResources && this.props.assocResources[elem.value]) console.log("elem assoR",this.props.assocResources[elem.value])
-                     return <Tooltip placement="bottom-start" title={<div class={"uriTooltip "}><span class={"logo "+src}></span><span class="text">{providers[src]}</span></div>}><span class="before"></span></Tooltip>
-                  }
 
                   if(info && infoBase && infoBase.filter(e=>e["xml:lang"]||e["lang"]).length >= 0) {
-                     let link,orec, befo = before(elem,sameAsPrefix) ;
+                     let link,orec,canUrl;
                      if(this.props.assocResources && this.props.assocResources[elem.value]) {
-                        orec = this.props.assocResources[elem.value].filter(r => r.type === adm+"originalRecord")
+                        orec = this.props.assocResources[elem.value].filter(r => r.type === adm+"originalRecord" || r.fromKey === adm+"originalRecord")
+                        canUrl = this.props.assocResources[elem.value].filter(r => r.type === adm+"canonicalHtml" ||  r.fromKey === adm+"canonicalHtml")
+                        console.log("orec",prop,sameAsPrefix,orec,canUrl, this.props.assocResources[elem.value])
                      }
-                     if(! orec.length) link = <Link className={"urilink prefLabel " } to={"/"+show+"/"+prefix+":"+pretty}>{befo}{info}</Link>
-                     else link = <a class="urilink prefLabel" href={orec[0].value} target="_blank">{befo}{info}</a>
-                     ret.push([<span class={"ulink " + (sameAsPrefix?sameAsPrefix:'')  }>{link}</span>,lang?<Tooltip placement="bottom-end" title={
+
+
+                     let srcProv = sameAsPrefix.replace(/^.*?([^ ]+) provider .*$/,"$1").toLowerCase()
+                     let srcSame = sameAsPrefix.replace(/^.*?([^ ]+) sameAs .*$/,"$1").toLowerCase()
+                     console.log("src",srcProv,srcSame)
+                     //if(src.match(/bdr/)) src = "bdr"
+
+                     if(orec.length) link = <a class="urilink prefLabel" href={orec[0].value} target="_blank">{info}</a>
+                     else if(canUrl.length) { 
+                        link = <a class="urilink prefLabel" href={canUrl[0].value} target="_blank">{info}</a>
+                        if(srcProv.indexOf(" ") !== -1) srcProv = srcSame
+                     }
+                     //else if(src !== "bdr") link = <a class="urilink prefLabel" href={elem.value} target="_blank">{info}</a>
+                     else link = <Link className={"urilink prefLabel " } to={"/"+show+"/"+prefix+":"+pretty}>{info}</Link>
+                     
+                     let befo = [],src
+                     if(providers[src = srcProv]) { // || ( src !== "bdr" && providers[src = srcSame])) { 
+                        befo.push( 
+
+                           [ //<span class="meta-before"></span>,
+                           <Tooltip placement="bottom-start" title={
+                              <div class={"uriTooltip "}>
+                                 <span class="title">External resource from:</span>
+                                 <span class={"logo "+src}></span>
+                                 <span class="text">{providers[src]}</span>
+                              </div>}>
+                                 <span><span class="before">{link}</span></span>
+                           </Tooltip> ]
+                        )
+                     }
+                     else if(providers[src = srcSame]) { 
+                        befo.push(
+
+                           [ //<span class="meta-before"></span>,
+                              <Tooltip placement="bottom-start" title={
+                              <div class={"uriTooltip "}>
+                                 <span class="title">Data loaded from:</span>
+                                 <span class={"logo "+src}></span>
+                                 <span class="text">{providers[src]}</span>
+                           </div>}>
+                                 <span><span class="before">{link}</span></span>
+                              </Tooltip> 
+                           ]
+                        )
+                     }
+                     
+                     
+                     ret.push([<span class={"ulink " + (sameAsPrefix?sameAsPrefix:'')  }>{befo}{link}</span>,lang?<Tooltip placement="bottom-end" title={
                         <div style={{margin:"10px"}}>
                            <Translate value={languages[lang]?languages[lang].replace(/search/,"tip"):lang}/>
                         </div>
