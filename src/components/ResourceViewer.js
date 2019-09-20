@@ -943,6 +943,12 @@ class ResourceViewer extends Component<Props,State>
                   if(dico) {
                      infoBase = dico[elem.value]
 
+                     if(!infoBase)  {
+                        infoBase = this.props.dictionary[elem.value]
+                        console.log("ib",infoBase,dico)
+                        if(infoBase) infoBase = infoBase[skos+"prefLabel"]
+                     }
+
                      //console.log("base",JSON.stringify(infoBase,null,3))
 
                      if(infoBase) {
@@ -1061,8 +1067,8 @@ class ResourceViewer extends Component<Props,State>
                      console.log("src",srcProv,srcSame)
                      //if(src.match(/bdr/)) src = "bdr"
 
-                     if(orec.length) link = <a class="urilink prefLabel" href={orec[0].value} target="_blank">{info}</a>
-                     else if(canUrl.length) { 
+                     if(orec && orec.length) link = <a class="urilink prefLabel" href={orec[0].value} target="_blank">{info}</a>
+                     else if(canUrl && canUrl.length) { 
                         link = <a class="urilink prefLabel" href={canUrl[0].value} target="_blank">{info}</a>
                         if(srcProv.indexOf(" ") !== -1) srcProv = srcSame
                      }
