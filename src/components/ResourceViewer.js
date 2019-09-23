@@ -225,8 +225,9 @@ let propOrder = {
    "Work":[
       "bdo:workTitle",
       "skos:altLabel",
-      "bdo:workExpressionOf",
       "bdo:workType",
+      "bdo:workExpressionOf",
+      "bdo:workDerivativeOf",
       "bdo:workHasExpression",
       "bdo:workHasDerivative",
       "bdo:workIsAbout",
@@ -632,19 +633,11 @@ class ResourceViewer extends Component<Props,State>
                   //console.log("index",e,assoR[e.value])
                   if(assoR[e.value])
                   {
-                     /*
-                     label1 = assoR[e.value].filter(e => e.type === skos+"prefLabel" && (e.lang === this.props.prefLang || e["xml:lang"] === this.props.prefLang))
-                     if(label1.length === 0) label1 = assoR[e.value].filter(e => e.type === skos+"prefLabel")
-                     */
                      label1 = getLangLabel(this, assoR[e.value].filter(e => e.type === skos+"prefLabel"))
                      if(label1 && label1.value) label1 = label1.value
 
                      if(assoR[e.value].filter(e => e.type === bdo+"workHasRoot").length > 0)
                      {
-                        /*
-                        label2 = assoR[assoR[e.value].filter(e => e.type === bdo+"workHasRoot")[0].value].filter(e => e.type === skos+"prefLabel" && (e.lang === this.props.prefLang || e["xml:lang"] === this.props.prefLang))
-                        if(label2.length === 0) label2 = assoR[assoR[e.value].filter(e => e.type === bdo+"workHasRoot")[0].value].filter(e => e.type === skos+"prefLabel")
-                        */
                         label2 = getLangLabel(assoR[assoR[e.value].filter(e => e.type === bdo+"workHasRoot")[0].value].filter(e => e.type === skos+"prefLabel"))
                         if(label2 && label2.value > 0) label2 = label2.value
                         //console.log(label2)
@@ -705,7 +698,7 @@ class ResourceViewer extends Component<Props,State>
                   if(a.type == "bnode" && a.value) a = that.getResourceBNode(a.value)
                   if(b.type == "bnode" && b.value) b = that.getResourceBNode(b.value)
 
-                  //console.log(a,b)
+                  //console.log("A,B",A,B,a,b)
 
                   if(a && !a["value"] && a[rdfs+"label"] && a[rdfs+"label"][0]) a = a[rdfs+"label"][0]
                   if(a && a["lang"]) a = a["lang"]
@@ -719,7 +712,7 @@ class ResourceViewer extends Component<Props,State>
                   //else if(b["type"] == "uri") b = b["value"]
                   else b = null
 
-                  //console.log(a,b)
+                  //console.log("a,b",a,b)
 
                   if( a && b ) {
                      if(a < b ) return -1 ;
@@ -1067,7 +1060,7 @@ class ResourceViewer extends Component<Props,State>
 
                      let srcProv = sameAsPrefix.replace(/^.*?([^ ]+) provider .*$/,"$1").toLowerCase()
                      let srcSame = sameAsPrefix.replace(/^.*?([^ ]+) sameAs .*$/,"$1").toLowerCase()
-                     console.log("src",srcProv,srcSame)
+                     //console.log("src",src,srcProv,srcSame)
                      //if(src.match(/bdr/)) src = "bdr"
 
                      if(orec && orec.length) link = <a class="urilink prefLabel" href={orec[0].value} target="_blank">{info}</a>
@@ -1075,7 +1068,7 @@ class ResourceViewer extends Component<Props,State>
                         link = <a class="urilink prefLabel" href={canUrl[0].value} target="_blank">{info}</a>
                         if(srcProv.indexOf(" ") !== -1) srcProv = srcSame
                      }
-                     else if(src !== "bdr") link = <a class="urilink prefLabel" href={elem.value} target="_blank">{info}</a>
+                     else if(!elem.value.match(/[.]bdrc[.]/)) link = <a class="urilink prefLabel" href={elem.value} target="_blank">{info}</a>
                      else link = <Link className={"urilink prefLabel " } to={"/"+show+"/"+prefix+":"+pretty}>{info}</Link>
                      
                      let befo = [],src
@@ -2835,7 +2828,7 @@ class ResourceViewer extends Component<Props,State>
                      if(!ret || ret.length === 0) ret = tags.map((e)=> [e," "] )
 
                      let expand
-                     if(elem && elem.filter && elem.filter(t=>t.type === "uri" || t.type === "literal").length > 3) {
+                     if(elem && elem.filter && elem.filter(t=>t.type === "uri" || t.type === "literal").length > 10) {
                        /*
                        return (
                          <div>
@@ -2849,14 +2842,14 @@ class ResourceViewer extends Component<Props,State>
                          return (
                             <div>
                                <h3><span>{this.proplink(k)}</span>:&nbsp;</h3>
-                               <div style={{width:"100%"}} className="propCollapseHeader">{ret.splice(0,3)}</div>
+                               <div style={{width:"100%"}} className="propCollapseHeader">{ret.splice(0,10)}</div>
                                 <Collapse className={"propCollapse in-"+(this.state.collapse[k]===true)} in={this.state.collapse[k]}>
                                    {ret}
                                 </Collapse>
                                { <span
                                  onClick={(e) => this.setState({...this.state,collapse:{...this.state.collapse,[k]:!this.state.collapse[k]}})}
                                  className="expand">
-                                  {"("+(this.state.collapse[k]?"hide":"...")+")"}
+                                  {"("+(this.state.collapse[k]?"hide":"see more")+")"}
                                 </span> }
                             </div>
                          )

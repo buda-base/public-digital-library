@@ -1484,7 +1484,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          }
 
          if(sameAsRes.length) {
-            console.log("sameAs",prettId,id,dico,rmatch,sameAsRes)
+            console.log("sameAs",prettId,id,dico,rmatch,sameAsRes,sameAsRes)
          
             let menus = {}
             let sources = []
@@ -1498,7 +1498,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                "wd":   "/WD.svg",
             } 
 
-            for(let res of sameAsRes) 
+            for(let res of sameAsRes.filter(r => r.type.match(/[#/]sameAs[^/]*$/))) 
                for(let src of Object.keys(img)) {
                   if(res.value.match(new RegExp("(^"+src+":)|(^"+prefixesMap[src]+")"))) hasRes[src] = res.value //.replace(new RegExp(prefixesMap[src]),src+":")                  
                }
@@ -1510,18 +1510,21 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             for(let src of Object.keys(img)) 
                if(hasRes[src]) {             
                   
+                  let shortU = shortUri(hasRes[src])
+                  //let shortU = hasRes[src]
+
                   sources.push(
                      <div class="source-data" id={src}>
-                        <Link onTouchEnd={(ev) => { if(src !== "bdr") { ev.stopPropagation(); ev.preventDefault(); this.handleOpenSourceMenu(ev,"menu-"+src+"-"+prettId); return false ; }}} to={"/show/"+hasRes[src]}>
+                        <Link onTouchEnd={(ev) => { if(src !== "bdr") { ev.stopPropagation(); ev.preventDefault(); this.handleOpenSourceMenu(ev,"menu-"+src+"-"+prettId); return false ; }}} to={"/show/"+shortU}>
                            <img src={img[src]}/>
                         </Link>
                         {src !== "bdr" && <span onMouseEnter={(ev) => this.handleOpenSourceMenu(ev,"menu-"+src+"-"+prettId)}></span> }
                      </div>
                   )
 
-                  let url = hasRes[src].replace(new RegExp(src+":"), prefixesMap[src])
+                  let url = hasRes[src]                  
 
-                  if(url.match(new RegExp("^("+src+":)|("+prefixesMap[src]+")"))) {
+                  if(url.match(new RegExp("^("+src+":)|("+prefixesMap[src]+")"))) {                     
                      let canonUrl = sameAsRes.filter(p => p.type === adm+"canonicalHtml")                     
                      if(canonUrl.length) url = canonUrl[0].value
                   }
@@ -1531,8 +1534,9 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      if(canonUrl) canonUrl = canonUrl.filter(p => p.type === adm+"canonicalHtml")
                      if(canonUrl.length) url = canonUrl[0].value
                   }
+                  
 
-                  menus["menu-"+src+"-"+prettId] = { full: url, short:hasRes[src] }
+                  menus["menu-"+src+"-"+prettId] = { full: url, short:shortU }
 
                }
                      /*

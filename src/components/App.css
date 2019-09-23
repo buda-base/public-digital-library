@@ -316,10 +316,10 @@ h3 .expand svg { position:absolute; margin-top:-18px; }*/
 .propCollapse.in-false { height:0; } 
 /* .propCollapseHeader { width:100%; } */
 
-.expand { margin-bottom:0px; cursor:pointer; margin-left:20px; border-bottom:1px solid transparent; font-size:13px; position:absolute;bottom:0; margin-bottom:5px; }
+.expand { margin-bottom:0px; cursor:pointer; margin-left:20px; border-bottom:1px solid transparent; font-size:13px; position:absolute;bottom:0; margin-bottom:3px; }
 .expand:hover { border-bottom:1px solid black;  }
 .propCollapse.in-false + .expand { margin-top:0px;transition:all 300ms ease-in-out;} 
-.propCollapse.in-true + .expand { margin-top:-5px;} 
+.propCollapse.in-true + .expand { margin-top:-5px; margin-bottom:5px;} 
 
 .resource .SidePane .viewAll { color:black; cursor:pointer; margin-bottom:10px;display:inline-block;border-bottom:1px solid transparent;}
 .resource .SidePane .viewAll:hover { border-color:black !important; }
