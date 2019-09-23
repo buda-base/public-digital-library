@@ -61,7 +61,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faLanguage } from '@fortawesome/free-solid-svg-icons'
 //import {MapComponent} from './Map';
 import {getEntiType} from '../lib/api';
-import {languages,getLangLabel,top_right_menu,prefixesMap as prefixes,sameAsMap} from './App';
+import {languages,getLangLabel,top_right_menu,prefixesMap as prefixes,sameAsMap,shortUri} from './App';
 import Popover from '@material-ui/core/Popover';
 import MenuItem from '@material-ui/core/MenuItem';
 import List from '@material-ui/core/List';
@@ -552,7 +552,7 @@ class ResourceViewer extends Component<Props,State>
       let w = prop[bdo+"workDimWidth"]
       let h = prop[bdo+"workDimHeight"]
 
-      //console.log("propZ",prop)
+      console.log("propZ",prop)
 
       if(w && h && w[0] && h[0] && !w[0].value.match(/cm/) && !h[0].value.match(/cm/)) {
          prop[tmp+"dimensions"] = [ {type: "literal", value: w[0].value+"×"+h[0].value+"cm" } ]
@@ -648,6 +648,75 @@ class ResourceViewer extends Component<Props,State>
                })
 
                prop[bdo+"workHasExpression"] = _.sortBy(expr,['label1','label2'])
+
+               //for(let o of prop[bdo+"workHasExpression"]) console.log(o.value,o.label1)
+
+            }
+         }
+
+         expr = prop[tmp+"workHasDerivativeInCanonicalLanguage"]
+         if(expr !== undefined) {
+
+            console.log("hasDerivCa",expr)
+
+            let assoR = this.props.assocResources
+            if (assoR) {
+
+               let canoLang = ["Bo","Pi","Sa","Zh"]
+               expr = expr.filter(e => {
+                  let lang = assoR[e.value]
+                  if(lang) lang = lang.filter(l => l.type === bdo+"workLangScript")
+                  if(lang && lang.length) lang = lang[0].value
+                  else return true
+                  return canoLang.filter(v => !lang || lang.match(new RegExp("/"+v+"[^/]*$"))).length
+               }).map((e) => {
+                  let label1,label2 ;
+                  if(assoR[e.value])                  {
+                     label1 = getLangLabel(this, assoR[e.value].filter(e => e.type === skos+"prefLabel"))
+                     if(label1 && label1.value) label1 = label1.value
+                     if(assoR[e.value].filter(e => e.type === bdo+"workLangScript").length > 0)
+                     {
+                        label2 = assoR[e.value].filter(e => e.type === bdo+"workLangScript")[0].value
+                     }
+                  }
+                  return ({ ...e, label1, label2 })
+               })
+
+               prop[tmp+"workHasDerivativeInCanonicalLanguage"] = _.sortBy(expr,['label2','label1'])
+
+               //for(let o of prop[bdo+"workHasExpression"]) console.log(o.value,o.label1)
+
+            }
+         }
+          expr = prop[tmp+"workHasDerivativeInNonCanonicalLanguage"]
+         if(expr !== undefined) {
+
+            console.log("hasDerivCa",expr)
+
+            let assoR = this.props.assocResources
+            if (assoR) {
+
+               let canoLang = ["Bo","Pi","Sa","Zh"]
+               expr = expr.filter(e => {
+                  let lang = assoR[e.value]
+                  if(lang) lang = lang.filter(l => l.type === bdo+"workLangScript")
+                  if(lang && lang.length) lang = lang[0].value
+                  else return true
+                  return !canoLang.filter(v => !lang || lang.match(new RegExp("/"+v+"[^/]*$"))).length
+               }).map((e) => {
+                  let label1,label2 ;
+                  if(assoR[e.value])                  {
+                     label1 = getLangLabel(this, assoR[e.value].filter(e => e.type === skos+"prefLabel"))
+                     if(label1 && label1.value) label1 = label1.value
+                     if(assoR[e.value].filter(e => e.type === bdo+"workLangScript").length > 0)
+                     {
+                        label2 = assoR[e.value].filter(e => e.type === bdo+"workLangScript")[0].value
+                     }
+                  }
+                  return ({ ...e, label1, label2 })
+               })
+
+               prop[tmp+"workHasDerivativeInNonCanonicalLanguage"] = _.sortBy(expr,['label2','label1'])
 
                //for(let o of prop[bdo+"workHasExpression"]) console.log(o.value,o.label1)
 
@@ -938,7 +1007,7 @@ class ResourceViewer extends Component<Props,State>
 
                      if(!infoBase)  {
                         infoBase = this.props.dictionary[elem.value]
-                        console.log("ib",infoBase,dico)
+                        //console.log("ib",infoBase,dico)
                         if(infoBase) infoBase = infoBase[skos+"prefLabel"]
                      }
 
@@ -1033,7 +1102,7 @@ class ResourceViewer extends Component<Props,State>
                      else if(provLab === "Internet Archives") sameAsPrefix += "ia provider hasIcon "
                   }
 
-                  console.log("s",prop,prefix,pretty,elem,info,infoBase)
+                  //console.log("s",prop,prefix,pretty,elem,info,infoBase)
 
                   const providers = { 
                      "bdr":"Buddhist Digital Resource Center",
@@ -1054,7 +1123,7 @@ class ResourceViewer extends Component<Props,State>
                      if(this.props.assocResources && this.props.assocResources[elem.value]) {
                         orec = this.props.assocResources[elem.value].filter(r => r.type === adm+"originalRecord" || r.fromKey === adm+"originalRecord")
                         canUrl = this.props.assocResources[elem.value].filter(r => r.type === adm+"canonicalHtml" ||  r.fromKey === adm+"canonicalHtml")
-                        console.log("orec",prop,sameAsPrefix,orec,canUrl, this.props.assocResources[elem.value])
+                        //console.log("orec",prop,sameAsPrefix,orec,canUrl, this.props.assocResources[elem.value])
                      }
 
 
@@ -1359,6 +1428,29 @@ class ResourceViewer extends Component<Props,State>
                let root = this.props.assocResources[e.value] //this.uriformat(_tmp+"workRootWork",e)
                if(root) root = root.filter(e => e.type == bdo+"workHasRoot")
                if(root && root.length > 0) tmp = [tmp," in ",this.uriformat(bdo+"workHasRoot",root[0])]
+            }
+            else if(this.props.assocResources && prop == bdo+"workHasDerivative") {
+
+               let script = this.props.assocResources[e.value] 
+               if(script) script = script.filter(e => e.type == bdo+"workLangScript")
+               if(script && script.length > 0) { 
+                  let lang = script[0].value
+                  if(this.props.dictionary[lang]) {
+                     lang = this.props.dictionary[lang][skos+"prefLabel"]
+                     if(lang && lang.length) {
+                        let uilang = lang.filter(l => l["lang"] === this.props.locale)
+                        if(uilang.length) lang = uilang[0].value 
+                        else {
+                           uilang = lang.filter(l => l["lang"] === "en")
+                           if(uilang.length) lang = uilang[0].value 
+                           else lang = lang[0].value
+                        }
+                     }
+
+                  }
+                  //if(lang && script && script.length) tmp = [tmp,"(in ",<Link to={"/show/"+shortUri(script[0].value)}>{lang}</Link>,")"]
+                  if(lang && script && script.length) tmp = [tmp,<span className="" style={{fontSize:"12px",color:"#333"}}>(in {lang})</span>]
+               }
             }
 
             if(this.props.assocResources && this.props.assocResources[e.value]
@@ -2532,8 +2624,7 @@ class ResourceViewer extends Component<Props,State>
 
                      tags = cleantags
                   }
-
-                  if(k == bdo+"placeRegionPoly" || (k == bdo+"placeLong" && !doRegion))
+                  else if(k == bdo+"placeRegionPoly" || (k == bdo+"placeLong" && !doRegion))
                   {
 
                      return ( <div>

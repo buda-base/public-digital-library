@@ -1522,7 +1522,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      </div>
                   )
 
-                  let url = hasRes[src]                  
+                  let url = fullUri(hasRes[src])
 
                   if(url.match(new RegExp("^("+src+":)|("+prefixesMap[src]+")"))) {                     
                      let canonUrl = sameAsRes.filter(p => p.type === adm+"canonicalHtml")                     

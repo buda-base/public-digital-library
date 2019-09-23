@@ -61,9 +61,23 @@ export const loadedConfig = (state: DataState, action: Action) => {
 reducers[actions.TYPES.loadedConfig] = loadedConfig;
 
 export const loadedOntology = (state: DataState, action: Action) => {
+
+   let ontology = action.payload
+
+   ontology["http://purl.bdrc.io/ontology/core/workHasDerivative"]["http://purl.bdrc.io/ontology/core/inferSubTree"] = [{type: "literal", value: "true", datatype: "http://www.w3.org/2001/XMLSchema#boolean"}]
+
+   ontology["http://purl.bdrc.io/ontology/tmp/workHasDerivativeInCanonicalLanguage"] = {
+      "http://www.w3.org/2000/01/rdf-schema#label": [{type: "literal", value: "canonical languages", lang: "en"}],
+      "http://www.w3.org/2000/01/rdf-schema#subPropertyOf": [{type: "uri", value: "http://purl.bdrc.io/ontology/core/workHasDerivative"}]
+   }
+   ontology["http://purl.bdrc.io/ontology/tmp/workHasDerivativeInNonCanonicalLanguage"] = {
+      "http://www.w3.org/2000/01/rdf-schema#label": [{type: "literal", value: "other languages", lang: "en"}],
+      "http://www.w3.org/2000/01/rdf-schema#subPropertyOf": [{type: "uri", value: "http://purl.bdrc.io/ontology/core/workHasDerivative"}]
+   }
+
     return {
         ...state,
-        ontology: action.payload
+        ontology
     }
 }
 reducers[actions.TYPES.loadedOntology] = loadedOntology;
@@ -131,6 +145,7 @@ export const gotResource = (state: DataState, action: Action) => {
    const owl   = "http://www.w3.org/2002/07/owl#" ; 
    const tmp   = "http://purl.bdrc.io/ontology/tmp/" ;
    const adm   = "http://purl.bdrc.io/ontology/admin/"
+   const bdo   = "http://purl.bdrc.io/ontology/core/"
    let data = { ...action.meta }
    let uri = fullUri(action.payload)
    let sameR = {}, sameP = {}
@@ -182,6 +197,30 @@ export const gotResource = (state: DataState, action: Action) => {
             data[uri][k] = data[uri][k].filter(e => !sameP[owl+"sameAs"] || !sameP[owl+"sameAs"].filter(s => s.value === e.value).length) 
             if(!data[uri][k].length) delete data[uri][k]
          }
+      }
+
+      if(data[uri][bdo+"workHasDerivative"]) {
+         
+         console.log("deriv",data[uri][bdo+"workHasDerivative"])
+            /*
+         let cano = [], nonCano = []
+         let canoLang = ["Bo","Pi","Sa","Zh"]
+         for(let w of data[uri][bdo+"workHasDerivative"]) {
+            let lang 
+            console.log("w",w)
+            if(state.assocResources && state.assocResources[w.value] && (lang = state.assocResources[w.value][bdo+"workLangScript"]))
+            {
+               if(canoLang.filter(v => lang.value.match(new RegExp("/[/]"+v+"/i"))).length) cano.push(w) 
+               else nonCano.push(w)
+            }
+         }
+            */
+         //if(cano.length && nonCano.length) {
+            data[uri][tmp+"workHasDerivativeInCanonicalLanguage"] = [ ...data[uri][bdo+"workHasDerivative"] ]
+            data[uri][tmp+"workHasDerivativeInNonCanonicalLanguage"] = [ ...data[uri][bdo+"workHasDerivative"] ]
+         //}
+
+         //delete data[uri][bdo+"workHasDerivative"]
       }
 
    }

@@ -20,14 +20,23 @@ const mapStateToProps = (state,ownProps) => {
    let keyword = state.data.keyword
    let language = state.data.language
    let datatype = state.ui.datatype
-   let assocResources = state.data.assocResources
-   if(assocResources) assocResources = assocResources[ownProps.IRI]
+   
    let annoCollec = state.data.annoCollec
    if(annoCollec) annoCollec = annoCollec[ownProps.IRI]
 
    let searches = state.data.searches
    if(searches && resources && searches["bdr:"+ownProps.IRI+"@"])
       resources[ownProps.IRI+"@"] = searches["bdr:"+ownProps.IRI+"@"].results.bindings
+
+   let assocResources = state.data.assocResources
+   if(assocResources) assocResources = assocResources[ownProps.IRI]
+   /* not the pb...
+   let same
+   if(resources && resources[ownProps.IRI] && (same = Object.keys(resources[ownProps.IRI]).filter(k => k.match(/[#/]sameAs[^/]*$/))).length) for(let s of same)
+   {
+      assocResources = { ...assocResources,  ...state.data.assocResources[s.value] }
+   } 
+   */
 
    let prefLang = state.ui.prefLang
    let rightPanel = state.ui.rightPanel
