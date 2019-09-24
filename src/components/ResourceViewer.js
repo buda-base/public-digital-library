@@ -271,6 +271,22 @@ let propOrder = {
 
 let reload = false ;
 
+function getOntoLabel(dict,locale,lang,prop = skos+"prefLabel") {
+   if(dict[lang]) {
+      lang = dict[lang][prop]
+      if(lang && lang.length) {
+         let uilang = lang.filter(l => l["lang"] === locale)
+         if(uilang.length) lang = uilang[0].value 
+         else {
+            uilang = lang.filter(l => l["lang"] === "en")
+            if(uilang.length) lang = uilang[0].value 
+            else lang = lang[0].value
+         }
+      }
+   }
+   return lang;
+}
+
 function top_left_menu(that,pdfLink,monoVol,fairUse)
 {
   return (
@@ -548,6 +564,7 @@ class ResourceViewer extends Component<Props,State>
       if(!this.props.IRI || !this.props.resources || !this.props.resources[this.props.IRI]
          || !this.props.resources[this.props.IRI][this.expand(this.props.IRI)]) return {}
 
+      let onto = this.props.ontology
       let prop = this.props.resources[this.props.IRI][this.expand(this.props.IRI)] ;
       let w = prop[bdo+"workDimWidth"]
       let h = prop[bdo+"workDimHeight"]
@@ -654,7 +671,24 @@ class ResourceViewer extends Component<Props,State>
             }
          }
 
-         expr = prop[tmp+"workHasDerivativeInCanonicalLanguage"]
+         let sortByLangScript = (deriv) => { 
+            deriv = deriv.map((e) => {
+               let label1,label2 ;
+               let assoR = this.props.assocResources
+               if(assoR[e.value])                  {
+                  label1 = getLangLabel(this, assoR[e.value].filter(e => e.type === skos+"prefLabel"))
+                  if(label1 && label1.value) label1 = label1.value
+                  if(assoR[e.value].filter(e => e.type === bdo+"workLangScript").length > 0)
+                  {
+                     label2 = assoR[e.value].filter(e => e.type === bdo+"workLangScript")[0].value
+                  }
+               }
+               return ({ ...e, label1, label2 })
+            })
+            return _.sortBy(deriv,['label2','label1'])
+         }
+         
+         expr = prop[bdo+"workHasDerivative"]
          if(expr !== undefined) {
 
             console.log("hasDerivCa",expr)
@@ -662,68 +696,50 @@ class ResourceViewer extends Component<Props,State>
             let assoR = this.props.assocResources
             if (assoR) {
 
+               let cano = [], nonCano = [], subLangDeriv = {}
                let canoLang = ["Bo","Pi","Sa","Zh"]
-               expr = expr.filter(e => {
-                  let lang = assoR[e.value]
-                  if(lang) lang = lang.filter(l => l.type === bdo+"workLangScript")
-                  if(lang && lang.length) lang = lang[0].value
-                  else return true
-                  return canoLang.filter(v => !lang || lang.match(new RegExp("/"+v+"[^/]*$"))).length
-               }).map((e) => {
-                  let label1,label2 ;
-                  if(assoR[e.value])                  {
-                     label1 = getLangLabel(this, assoR[e.value].filter(e => e.type === skos+"prefLabel"))
-                     if(label1 && label1.value) label1 = label1.value
-                     if(assoR[e.value].filter(e => e.type === bdo+"workLangScript").length > 0)
-                     {
-                        label2 = assoR[e.value].filter(e => e.type === bdo+"workLangScript")[0].value
-                     }
+               expr.filter(e => {
+                  let lang = assoR[e.value],langLab
+                  if(lang) lang = lang.filter(l => l.type === bdo+"workLangScript")                  
+                  if(lang && lang.length) { 
+                     lang = lang[0].value                  
+                     langLab = getOntoLabel(this.props.dictionary,this.props.locale,lang)
                   }
-                  return ({ ...e, label1, label2 })
+                  if(lang && canoLang.filter(v => lang.match(new RegExp("/"+v+"[^/]*$"))).length) {
+                     let ontoProp = tmp+"workHasDerivativeInCanonicalLanguage"+lang.replace(/^.*[/]([^/]+)$/,"$1")
+                     onto[ontoProp] = {
+                        [rdfs+"label"]: [{type: "literal", value: langLab, lang: "en"}],
+                        [rdfs+"subPropertyOf"]: [{type: "uri", value: tmp+"workHasDerivativeInCanonicalLanguage"}],
+                        [tmp+"langKey"]: [{type:"literal", value:lang}]
+                     }
+                     if(!subLangDeriv[ontoProp]) subLangDeriv[ontoProp] = []
+                     subLangDeriv[ontoProp].push(e)
+                     cano.push(e);
+                  }
+                  else if(lang) {
+                     let ontoProp = tmp+"workHasDerivativeInNonCanonicalLanguage"+lang.replace(/.*[/]([^/]+)$/,"$1")
+                     onto[ontoProp] = {
+                        [rdfs+"label"]: [{type: "literal", value: langLab, lang: "en"}],
+                        [rdfs+"subPropertyOf"]: [{type: "uri", value: tmp+"workHasDerivativeInNonCanonicalLanguage"}],
+                        [tmp+"langKey"]: [{type:"literal", value:lang}]
+                     }
+                     if(!subLangDeriv[ontoProp]) subLangDeriv[ontoProp] = []
+                     subLangDeriv[ontoProp].push(e)
+                     nonCano.push(e);
+                  }
+                  return true
                })
-
-               prop[tmp+"workHasDerivativeInCanonicalLanguage"] = _.sortBy(expr,['label2','label1'])
-
-               //for(let o of prop[bdo+"workHasExpression"]) console.log(o.value,o.label1)
-
+               for(let k of Object.keys(subLangDeriv)) {
+                  prop[k] = sortByLangScript(subLangDeriv[k])
+                  //console.log("k",k,prop[k],onto[k])
+               }
+               if(cano.length && nonCano.length) {
+                  prop[tmp+"workHasDerivativeInCanonicalLanguage"] = sortByLangScript(cano)
+                  prop[tmp+"workHasDerivativeInNonCanonicalLanguage"] = sortByLangScript(nonCano)
+               }
+               else prop[bdo+"workHasDerivative"] = _.sortBy(expr,['label2','label1'])
             }
          }
-          expr = prop[tmp+"workHasDerivativeInNonCanonicalLanguage"]
-         if(expr !== undefined) {
-
-            console.log("hasDerivCa",expr)
-
-            let assoR = this.props.assocResources
-            if (assoR) {
-
-               let canoLang = ["Bo","Pi","Sa","Zh"]
-               expr = expr.filter(e => {
-                  let lang = assoR[e.value]
-                  if(lang) lang = lang.filter(l => l.type === bdo+"workLangScript")
-                  if(lang && lang.length) lang = lang[0].value
-                  else return true
-                  return !canoLang.filter(v => !lang || lang.match(new RegExp("/"+v+"[^/]*$"))).length
-               }).map((e) => {
-                  let label1,label2 ;
-                  if(assoR[e.value])                  {
-                     label1 = getLangLabel(this, assoR[e.value].filter(e => e.type === skos+"prefLabel"))
-                     if(label1 && label1.value) label1 = label1.value
-                     if(assoR[e.value].filter(e => e.type === bdo+"workLangScript").length > 0)
-                     {
-                        label2 = assoR[e.value].filter(e => e.type === bdo+"workLangScript")[0].value
-                     }
-                  }
-                  return ({ ...e, label1, label2 })
-               })
-
-               prop[tmp+"workHasDerivativeInNonCanonicalLanguage"] = _.sortBy(expr,['label2','label1'])
-
-               //for(let o of prop[bdo+"workHasExpression"]) console.log(o.value,o.label1)
-
-            }
-         }
-
-
          let t = getEntiType(this.props.IRI);
          if(t && propOrder[t])
          {
@@ -899,7 +915,7 @@ class ResourceViewer extends Component<Props,State>
          {
             let e = tmp[0]
 
-            //console.log("k e",k,e.value,e, this.props.ontology[k], this.props.ontology[e.value])
+            //console.log("super e",k,e.value,e, this.props.ontology[k], this.props.ontology[e.value])
 
             if(this.props.ontology[e.value][rdfs+"subPropertyOf"])
                tmp = tmp.concat(this.props.ontology[e.value][rdfs+"subPropertyOf"].map(f => f))
@@ -926,19 +942,41 @@ class ResourceViewer extends Component<Props,State>
    subProps(k:string,div:string="sub")
    {
 
-      //console.log("subP",k,div)
+      //console.log("subP",div,k)
 
       let ret = []
       if(this.props.IRI && this.props.resources[this.props.IRI] && this.props.resources[this.props.IRI][this.expand(this.props.IRI)]) {
 
+         let res = this.props.resources[this.props.IRI][this.expand(this.props.IRI)]
+         let onto = this.props.ontology
+         let dict = this.props.dictionary
+         let subKeys = Object.keys(res).map(q => {
+            let key,alphaK="zz",numK=1000
+            if(onto[q] && onto[q][tmp+"langKey"]) {
+               key = onto[q][tmp+"langKey"]
+               if(key && key.length) {
+                  key = key[0].value
+                  key = key.replace(/^.*[/]([^/][^/])[^/]*$/,"$1").toLowerCase()
+                  alphaK = key
+                  for(let i in this.props.langPreset) {
+                     let l = this.props.langPreset[i]
+                     if(l === key) numK = i
+                     else if(l.match(new RegExp("^"+key))) numK = 100 + Number(i)
+                  }
+               }            
+            }
+            return {"val":q, numK,alphaK}
+         })
+         //console.log("subK",subKeys)
+         subKeys = _.orderBy(subKeys,['numK','alphaK'],['asc','asc']).map(q => q.val)
 
-         for(let p of Object.keys(this.props.resources[this.props.IRI][this.expand(this.props.IRI)])) {
+         for(let p of subKeys) {
 
 
             if(this.props.ontology[p] && this.props.ontology[p][rdfs+"subPropertyOf"]
                && this.props.ontology[p][rdfs+"subPropertyOf"].filter((e)=>(e.value == k)).length > 0)
             {
-               //console.log(p)
+               //console.log("p",p)
 
                let tmp = this.subProps(p,div+"sub")
                let vals
@@ -1317,7 +1355,7 @@ class ResourceViewer extends Component<Props,State>
       })
       */
 
-      //console.log("format",Tag, prop,JSON.stringify(elem,null,3),txt,bnode,div);
+      //console.log("format",Tag, prop) //,JSON.stringify(elem,null,3),txt,bnode,div);
 
       let ret = [],pre = []
 
@@ -1429,29 +1467,19 @@ class ResourceViewer extends Component<Props,State>
                if(root) root = root.filter(e => e.type == bdo+"workHasRoot")
                if(root && root.length > 0) tmp = [tmp," in ",this.uriformat(bdo+"workHasRoot",root[0])]
             }
-            else if(this.props.assocResources && prop == bdo+"workHasDerivative") {
+            /*
+            else if(this.props.assocResources && prop.match(/[/]workHasDerivative[^/]*$/))  {
 
                let script = this.props.assocResources[e.value] 
                if(script) script = script.filter(e => e.type == bdo+"workLangScript")
                if(script && script.length > 0) { 
-                  let lang = script[0].value
-                  if(this.props.dictionary[lang]) {
-                     lang = this.props.dictionary[lang][skos+"prefLabel"]
-                     if(lang && lang.length) {
-                        let uilang = lang.filter(l => l["lang"] === this.props.locale)
-                        if(uilang.length) lang = uilang[0].value 
-                        else {
-                           uilang = lang.filter(l => l["lang"] === "en")
-                           if(uilang.length) lang = uilang[0].value 
-                           else lang = lang[0].value
-                        }
-                     }
-
-                  }
+                  let lang = getOntoLabel(this.props.dictionary,this.props.locale,script[0].value)
+                  
                   //if(lang && script && script.length) tmp = [tmp,"(in ",<Link to={"/show/"+shortUri(script[0].value)}>{lang}</Link>,")"]
-                  if(lang && script && script.length) tmp = [tmp,<span className="" style={{fontSize:"12px",color:"#333"}}>(in {lang})</span>]
+                  if(lang && script && script.length) tmp = [tmp,<span className="" style={{fontSize:"12px",color:"#333"}}> / {lang}</span>]
                }
             }
+            */
 
             if(this.props.assocResources && this.props.assocResources[e.value]
                && this.props.assocResources[e.value].filter(f => f.type == bdo+"originalRecord").length > 0)
@@ -2163,7 +2191,7 @@ class ResourceViewer extends Component<Props,State>
 
       if(k === bdo+'note') txt = "Notes" ;
 
-      let ret = (<a class="propref" {...(true || k.match(/purl[.]bdrc/) ? {"href":k}:{})} target="_blank">{txt?txt:this.fullname(k)}</a>)
+      let ret = (<a class="propref" {...(k.match(/purl[.]bdrc[.]io/) && !k.match(/[/]tmp[/]/) ? {"href":k}:{})} target="_blank">{txt?txt:this.fullname(k)}</a>)
 
       if(tooltip && tooltip.length > 0) ret = <Tooltip placement="bottom-start" classes={{tooltip:"commentT",popper:"commentP"}} style={{marginLeft:"50px"}} title={<div>{tooltip.map(tip => tip.value.split("\n").map(e => [e,<br/>]))}</div>}>{ret}</Tooltip>
 
@@ -2914,12 +2942,16 @@ class ResourceViewer extends Component<Props,State>
                   }
                   else if(k !== bdo+"eTextHasChunk") {
 
-                     let ret
-                     if(this.hasSub(k)) ret = this.subProps(k)
+                     let ret,isSub
+                     if(this.hasSub(k)) { 
+                        isSub = true
+                        ret = this.subProps(k)
+                     }
                      if(!ret || ret.length === 0) ret = tags.map((e)=> [e," "] )
 
                      let expand
-                     if(elem && elem.filter && elem.filter(t=>t.type === "uri" || t.type === "literal").length > 10) {
+                     const maxDisplay = 10
+                     if(!isSub && elem && elem.filter && elem.filter(t=>t.type === "uri" || t.type === "literal").length > maxDisplay) {
                        /*
                        return (
                          <div>
@@ -2933,7 +2965,7 @@ class ResourceViewer extends Component<Props,State>
                          return (
                             <div>
                                <h3><span>{this.proplink(k)}</span>:&nbsp;</h3>
-                               <div style={{width:"100%"}} className="propCollapseHeader">{ret.splice(0,10)}</div>
+                               <div style={{width:"100%"}} className="propCollapseHeader">{ret.splice(0,maxDisplay)}</div>
                                 <Collapse className={"propCollapse in-"+(this.state.collapse[k]===true)} in={this.state.collapse[k]}>
                                    {ret}
                                 </Collapse>

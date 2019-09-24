@@ -199,29 +199,6 @@ export const gotResource = (state: DataState, action: Action) => {
          }
       }
 
-      if(data[uri][bdo+"workHasDerivative"]) {
-         
-         console.log("deriv",data[uri][bdo+"workHasDerivative"])
-            /*
-         let cano = [], nonCano = []
-         let canoLang = ["Bo","Pi","Sa","Zh"]
-         for(let w of data[uri][bdo+"workHasDerivative"]) {
-            let lang 
-            console.log("w",w)
-            if(state.assocResources && state.assocResources[w.value] && (lang = state.assocResources[w.value][bdo+"workLangScript"]))
-            {
-               if(canoLang.filter(v => lang.value.match(new RegExp("/[/]"+v+"/i"))).length) cano.push(w) 
-               else nonCano.push(w)
-            }
-         }
-            */
-         //if(cano.length && nonCano.length) {
-            data[uri][tmp+"workHasDerivativeInCanonicalLanguage"] = [ ...data[uri][bdo+"workHasDerivative"] ]
-            data[uri][tmp+"workHasDerivativeInNonCanonicalLanguage"] = [ ...data[uri][bdo+"workHasDerivative"] ]
-         //}
-
-         //delete data[uri][bdo+"workHasDerivative"]
-      }
 
    }
 

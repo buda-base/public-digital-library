@@ -145,7 +145,9 @@ h4 { margin-top:0px;margin-bottom:0px;font-size:24px; }
 .resource .sub h4.first { font-size:0.85em;font-style:italic; text-transform:capitalize; flex-shrink:0; }
  .resource .sub .sub h4.first.type,
 .resource .sub h4.first.prop { font-style:normal;font-size:0.8em; line-height:20px }
-.resource .subsub { width:100%; padding-left:20px; display: flex;align-items: baseline;flex-wrap:nowrap;position:relative; box-sizing: border-box;}
+
+.resource .subsub { width:100%; padding-left:20px; display: flex;align-items: baseline;flex-wrap:wrap;position:relative; box-sizing: border-box;}
+
 /* .resource .subsub h4 { flex-shrink:0 ; } */
 /* .resource .subsub:first-child:before, */
 .resource div .sub.here:before { content:"•";position:absolute; width:10px;margin-left:-10px;top:11px; }
@@ -296,6 +298,7 @@ h3 + .propCollapseHeader,
 h3 + .sub 
 { margin-top:2px; }
 
+.resource .data > div .sub .subsub > h4.multiple,
 .resource .data > div .sub > h4.multiple,
 /*.resource .data > div > h4,*/ /* « object type: manuscript » */
 .resource .data > div > h4.multiple,
@@ -304,6 +307,7 @@ h3 + .sub
 /* :not(:nth-child(2):last-child), */
 .propCollapse > div > div > h4,
 .propCollapseHeader > h4 { width:100%; padding-left:20px; }
+.resource .data > div .sub .subsub > h4.multiple::after,
 .resource .data > div .sub > h4.multiple::after,
 .resource .data > div > h4::after,
 .resource .data > div > .sub > h4:not(.first)::after,
