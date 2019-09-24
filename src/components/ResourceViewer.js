@@ -671,16 +671,16 @@ class ResourceViewer extends Component<Props,State>
             }
          }
 
-         let sortByLangScript = (deriv) => { 
+         let sortByLang = (deriv) => { 
             deriv = deriv.map((e) => {
                let label1,label2 ;
                let assoR = this.props.assocResources
                if(assoR[e.value])                  {
                   label1 = getLangLabel(this, assoR[e.value].filter(e => e.type === skos+"prefLabel"))
                   if(label1 && label1.value) label1 = label1.value
-                  if(assoR[e.value].filter(e => e.type === bdo+"workLangScript").length > 0)
+                  if(assoR[e.value].filter(e => e.type === bdo+"workLangScript"|| e.type === tmp+"language").length > 0)
                   {
-                     label2 = assoR[e.value].filter(e => e.type === bdo+"workLangScript")[0].value
+                     label2 = assoR[e.value].filter(e => e.type === bdo+"workLangScript"|| e.type === tmp+"language")[0].value
                   }
                }
                return ({ ...e, label1, label2 })
@@ -691,7 +691,7 @@ class ResourceViewer extends Component<Props,State>
          expr = prop[bdo+"workHasDerivative"]
          if(expr !== undefined) {
 
-            console.log("hasDerivCa",expr)
+            //console.log("hasDerivCa",expr)
 
             let assoR = this.props.assocResources
             if (assoR) {
@@ -700,9 +700,9 @@ class ResourceViewer extends Component<Props,State>
                let canoLang = ["Bo","Pi","Sa","Zh"]
                expr.filter(e => {
                   let lang = assoR[e.value],langLab
-                  if(lang) lang = lang.filter(l => l.type === bdo+"workLangScript")                  
+                  if(lang) lang = lang.filter(l => l.type === bdo+"workLangScript" || l.type === tmp+"language")                  
                   if(lang && lang.length) { 
-                     lang = lang[0].value                  
+                     lang = lang[0].value.replace(/[/]Lang/,"/")                  
                      langLab = getOntoLabel(this.props.dictionary,this.props.locale,lang)
                   }
                   if(lang && canoLang.filter(v => lang.match(new RegExp("/"+v+"[^/]*$"))).length) {
@@ -730,12 +730,12 @@ class ResourceViewer extends Component<Props,State>
                   return true
                })
                for(let k of Object.keys(subLangDeriv)) {
-                  prop[k] = sortByLangScript(subLangDeriv[k])
+                  prop[k] = sortByLang(subLangDeriv[k])
                   //console.log("k",k,prop[k],onto[k])
                }
                if(cano.length && nonCano.length) {
-                  prop[tmp+"workHasDerivativeInCanonicalLanguage"] = sortByLangScript(cano)
-                  prop[tmp+"workHasDerivativeInNonCanonicalLanguage"] = sortByLangScript(nonCano)
+                  prop[tmp+"workHasDerivativeInCanonicalLanguage"] = sortByLang(cano)
+                  prop[tmp+"workHasDerivativeInNonCanonicalLanguage"] = sortByLang(nonCano)
                }
                else prop[bdo+"workHasDerivative"] = _.sortBy(expr,['label2','label1'])
             }
