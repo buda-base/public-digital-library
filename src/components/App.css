@@ -244,6 +244,23 @@ a.login { text-decoration:underline; cursor:pointer; }
 .before a {font-size:0; position:absolute;width:100%;height:100%;}
 .before:hover a { border:none !important; }
 
+/* // WIP
+
+.ulink { position:relative; z-index:1;}
+.ulink+span { z-index:0;}
+
+.hoverlink { 
+   position:absolute;display:inline-block;width:15px;height:15px; background-color:white;  vertical-align: -6px; padding:3px 5px;
+   background-position:center;background-size:15px auto;background-repeat:no-repeat; 
+   background-image:url("/logo.svg"); background-size:17px auto; opacity:0;pointer-events:none;
+}
+
+.hoverlink:hover { border:none !important; }
+div:hover > h4:not(.multiple) > .hoverlink,
+div:hover > h4:not(.multiple) > span .hoverlink,
+h4:hover .hoverlink { opacity:1;pointer-events: auto;}
+*/
+
 .sameAs.bdr .before { background-image:url("/logo.svg"); background-size:17px auto; background-position:top 1px right 5px; }
 .sameAs.bnf .before { background-image:url("/BNF.svg"); background-size:19px auto;background-position:top 4px left;}
 .sameAs.dila .before { background-image:url("/DILA-favicon.ico"); background-position:top 1px right 5px;}

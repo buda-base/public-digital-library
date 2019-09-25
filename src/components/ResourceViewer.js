@@ -230,6 +230,8 @@ let propOrder = {
       "bdo:workDerivativeOf",
       "bdo:workHasExpression",
       "bdo:workHasDerivative",
+      "tmp:workHasDerivativeInCanonicalLanguage",
+      "tmp:workHasDerivativeInNonCanonicalLanguage",
       "bdo:workIsAbout",
       "bdo:workGenre",
       // "bdo:creatorMainAuthor",
@@ -655,16 +657,15 @@ class ResourceViewer extends Component<Props,State>
 
                      if(assoR[e.value].filter(e => e.type === bdo+"workHasRoot").length > 0)
                      {
-                        label2 = getLangLabel(assoR[assoR[e.value].filter(e => e.type === bdo+"workHasRoot")[0].value].filter(e => e.type === skos+"prefLabel"))
-                        if(label2 && label2.value > 0) label2 = label2.value
-                        //console.log(label2)
+                        label2 = getLangLabel(this,assoR[assoR[e.value].filter(e => e.type === bdo+"workHasRoot")[0].value].filter(e => e.type === skos+"prefLabel"))                        
+                        label2 = label2.value
                      }
                   }
 
                   return ({ ...e, label1, label2 })
                })
 
-               prop[bdo+"workHasExpression"] = _.sortBy(expr,['label1','label2'])
+               prop[bdo+"workHasExpression"] = _.orderBy(expr,['label1','label2'])
 
                //for(let o of prop[bdo+"workHasExpression"]) console.log(o.value,o.label1)
 
@@ -685,7 +686,8 @@ class ResourceViewer extends Component<Props,State>
                }
                return ({ ...e, label1, label2 })
             })
-            return _.sortBy(deriv,['label2','label1'])
+           
+            return _.orderBy(deriv,['label2','label1'])
          }
          
          expr = prop[bdo+"workHasDerivative"]
@@ -705,6 +707,7 @@ class ResourceViewer extends Component<Props,State>
                      lang = lang[0].value.replace(/[/]Lang/,"/")                  
                      langLab = getOntoLabel(this.props.dictionary,this.props.locale,lang)
                   }
+                  else lang = false ;
                   if(lang && canoLang.filter(v => lang.match(new RegExp("/"+v+"[^/]*$"))).length) {
                      let ontoProp = tmp+"workHasDerivativeInCanonicalLanguage"+lang.replace(/^.*[/]([^/]+)$/,"$1")
                      onto[ontoProp] = {
@@ -942,7 +945,7 @@ class ResourceViewer extends Component<Props,State>
    subProps(k:string,div:string="sub")
    {
 
-      //console.log("subP",div,k)
+      console.log("subP",div,k)
 
       let ret = []
       if(this.props.IRI && this.props.resources[this.props.IRI] && this.props.resources[this.props.IRI][this.expand(this.props.IRI)]) {
@@ -967,8 +970,10 @@ class ResourceViewer extends Component<Props,State>
             }
             return {"val":q, numK,alphaK}
          })
-         //console.log("subK",subKeys)
-         subKeys = _.orderBy(subKeys,['numK','alphaK'],['asc','asc']).map(q => q.val)
+         subKeys = _.orderBy(subKeys,['numK','alphaK','val'])
+         //console.log("subK",JSON.stringify(subKeys,null,3))
+         subKeys = subKeys.map(q => q.val)
+         
 
          for(let p of subKeys) {
 
@@ -976,7 +981,7 @@ class ResourceViewer extends Component<Props,State>
             if(this.props.ontology[p] && this.props.ontology[p][rdfs+"subPropertyOf"]
                && this.props.ontology[p][rdfs+"subPropertyOf"].filter((e)=>(e.value == k)).length > 0)
             {
-               //console.log("p",p)
+               console.log("p",p)
 
                let tmp = this.subProps(p,div+"sub")
                let vals
@@ -1170,13 +1175,19 @@ class ResourceViewer extends Component<Props,State>
                      //console.log("src",src,srcProv,srcSame)
                      //if(src.match(/bdr/)) src = "bdr"
 
+                     let bdrcData 
+                     ///bdrcData = <Link className={"hoverlink"} to={"/"+show+"/"+prefix+":"+pretty}></Link>
+
                      if(orec && orec.length) link = <a class="urilink prefLabel" href={orec[0].value} target="_blank">{info}</a>
                      else if(canUrl && canUrl.length) { 
                         link = <a class="urilink prefLabel" href={canUrl[0].value} target="_blank">{info}</a>
                         if(srcProv.indexOf(" ") !== -1) srcProv = srcSame
                      }
                      else if(!elem.value.match(/[.]bdrc[.]/)) link = <a class="urilink prefLabel" href={elem.value} target="_blank">{info}</a>
-                     else link = <Link className={"urilink prefLabel " } to={"/"+show+"/"+prefix+":"+pretty}>{info}</Link>
+                     else { 
+                        link = <Link className={"urilink prefLabel " } to={"/"+show+"/"+prefix+":"+pretty}>{info}</Link>
+                        //bdrcData = null
+                     }
                      
                      let befo = [],src
                      if(providers[src = srcProv] && !prop.match(/[/#]sameAs/)) { // || ( src !== "bdr" && providers[src = srcSame])) { 
@@ -1192,6 +1203,8 @@ class ResourceViewer extends Component<Props,State>
                                  <span><span class="before">{link}</span></span>
                            </Tooltip> ]
                         )
+
+                        //bdrcData =  <Tooltip placement="top-end" title={<div class={"uriTooltip "}>View BDRC data for this resource</div>}><span>{bdrcData}</span></Tooltip>
                      }
                      else if(providers[src = srcSame] && !prop.match(/[/#]sameAs/)) { 
                         befo.push(
@@ -1211,6 +1224,8 @@ class ResourceViewer extends Component<Props,State>
                               </Tooltip> 
                            ]
                         )
+
+                        //bdrcData =  <Tooltip placement="top-end" title={<div class={"uriTooltip "}>View BDRC data for this resource</div>}><span>{bdrcData}</span></Tooltip>
                      }
                      else if(sameAsPrefix.indexOf("sameAs") !== -1) {
                         //link = [ <span class="before"></span>,link ] 
@@ -1229,6 +1244,8 @@ class ResourceViewer extends Component<Props,State>
                                  <span class={(sameAsPrefix?sameAsPrefix:'')}><span class="before">{link}</span></span>
                               </Tooltip> 
                            ])
+
+                        //bdrcData =  <Tooltip placement="top-end" title={<div class={"uriTooltip "}>View BDRC data for this resource</div>}><span>{bdrcData}</span></Tooltip>
                      }
                      
                      
@@ -1236,7 +1253,7 @@ class ResourceViewer extends Component<Props,State>
                         <div style={{margin:"10px"}}>
                            <Translate value={languages[lang]?languages[lang].replace(/search/,"tip"):lang}/>
                         </div>
-                     }><span className="lang">{lang}</span></Tooltip>:null])
+                     }><span className="lang">{lang}</span></Tooltip>:null,bdrcData])
                   }
                   else if(pretty.toString().match(/^V[0-9A-Z]+_I[0-9A-Z]+$/)) { ret.push(<span>
                      <Link className={"urilink "+prefix} to={"/"+show+"/"+prefix+":"+pretty}>{pretty}</Link>&nbsp;
