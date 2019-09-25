@@ -729,15 +729,15 @@ class ResourceViewer extends Component<Props,State>
                   }
                   return true
                })
-               for(let k of Object.keys(subLangDeriv)) {
-                  prop[k] = sortByLang(subLangDeriv[k])
-                  //console.log("k",k,prop[k],onto[k])
-               }
-               if(cano.length && nonCano.length) {
-                  prop[tmp+"workHasDerivativeInCanonicalLanguage"] = sortByLang(cano)
-                  prop[tmp+"workHasDerivativeInNonCanonicalLanguage"] = sortByLang(nonCano)
-               }
-               else prop[bdo+"workHasDerivative"] = _.sortBy(expr,['label2','label1'])
+               let keys = Object.keys(subLangDeriv)
+               if(keys.length >= 2) {
+                  for(let k of keys) {
+                     prop[k] = sortByLang(subLangDeriv[k])
+                  }
+                  if(cano.length) { prop[tmp+"workHasDerivativeInCanonicalLanguage"] = sortByLang(cano) }
+                  if(nonCano.length) { prop[tmp+"workHasDerivativeInNonCanonicalLanguage"] = sortByLang(nonCano) }
+                }
+                else prop[bdo+"workHasDerivative"] = sortByLang(expr)
             }
          }
          let t = getEntiType(this.props.IRI);
