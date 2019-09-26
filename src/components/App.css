@@ -57,8 +57,12 @@ a.result button { text-transform:none; padding-bottom:0;}
 .result-box { display:flex; }
 
 .source { /*position:absolute;*/ top:0; margin-top:9px; margin-left:0px; display:inline-block; flex-shrink:0;}
-.source a img { height:32px; margin:0 5px; padding-top:2px; }
+
+.sameAsLogo,
+.source a img { height:32px; margin:0 5px; padding-top:2px; display:inline-block;}
 /* .source a:last-child img { height:35px; vertical-align:top;  } */
+
+.sameAsLogo { color:black; font-weight:bold; background-color:#eee;border:1px solid #aaa;display:flex;font-size:10px;align-items: center; padding-top:0px;padding:0px 1px;   }
 
 .source-data,
 .source-data a { display:inline-block; position:relative; }
