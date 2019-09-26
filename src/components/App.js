@@ -74,6 +74,7 @@ const ola    = "https://openlibrary.org/authors/"
 const owl   = "http://www.w3.org/2002/07/owl#" ; 
 const rdf   = "http://www.w3.org/1999/02/22-rdf-syntax-ns#";
 const rdfs  = "http://www.w3.org/2000/01/rdf-schema#";
+const rkts  = "http://purl.rkts.eu/resource/";
 const skos  = "http://www.w3.org/2004/02/skos/core#";
 const tmp   = "http://purl.bdrc.io/ontology/tmp/" ;
 const _tmp  = tmp ;
@@ -81,7 +82,7 @@ const viaf  = "http://viaf.org/viaf/"
 const wd    = "http://www.wikidata.org/entity/"
 const xsd   = "http://www.w3.org/2001/XMLSchema#" ;
 
-export const prefixesMap = { adm, bda, bdac, bdan, bdo, bdr, dila, foaf, oa, mbbt, owl, rdf, rdfs, skos, wd, ola, viaf, xsd, tmp }
+export const prefixesMap = { adm, bda, bdac, bdan, bdo, bdr, dila, foaf, oa, mbbt, owl, rdf, rdfs, rkts, skos, wd, ola, viaf, xsd, tmp }
 export const prefixes = Object.values(prefixesMap) ;
 export const sameAsMap = { wd:"WikiData", ol:"OpenLibrary", bdr:"BDRC", mbbt:"Marcus Bingenheimer" }
 
@@ -1408,6 +1409,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
       if(!id.match(/[:/]/)) id = "bdr:" + id
 
+      let litLang = lang
+      let savLit = "" + lit
 
       let prettId = id, fullId = id ;
       for(let k of Object.keys(prefixesMap)) {
@@ -1459,10 +1462,21 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             </div> )
 
          let retList
-         if(prettId.match(/^([^:])+:/))
+         
+         if(!prettId.match(/^bdr:/) && (!sameAsRes || !sameAsRes.filter(s => s.value.match(/[#/]sameAs/) || (s.type.match(/[#/]sameAs/) && (s.value.indexOf(".bdrc.io") !== -1 || s.value.indexOf("bdr:") !== -1))).length))   {
+            let u 
+            if((u = sameAsRes.filter(s => s.type === adm+"canonicalHtml")).length) u = u[0].value
+            else u = fullId
+
+            retList = [ ( <a target="_blank" href={u} className="result">{ret}</a> ) ]                  
+
+            rmatch = [ { type:tmp+"sameAsBDRC", value:prettId,  lit } ]
+         }
+         else if(prettId.match(/^([^:])+:/))
             retList = [ ( <Link key={n} to={"/show/"+prettId} className="result">{ret}</Link> ) ]
          else
             retList = [ ( <Link key={n} to={url?url.replace(/^https?:/,""):id.replace(/^https?:/,"")} target="_blank" className="result">{ret}</Link> ) ]
+         
 
          let dico
          if(!sameAsRes) sameAsRes = []        
@@ -1484,7 +1498,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          }
 
          if(sameAsRes.length) {
-            console.log("sameAs",prettId,id,dico,rmatch,sameAsRes,sameAsRes)
+            //console.log("sameAs",prettId,id,dico,rmatch,sameAsRes,sameAsRes)
          
             let menus = {}
             let sources = []
@@ -1496,24 +1510,39 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                "ola":  "/OL.png",  //"https://openlibrary.org/static/images/openlibrary-logo-tighter.svg" //"https://seeklogo.com/images/O/open-library-logo-0AB99DA900-seeklogo.com.png", 
                "viaf": "/VIAF.png",
                "wd":   "/WD.svg",
+               "rkts": "/RKTS.png"
             } 
+
+            const providers = { 
+               "ia":"Internet Archive",                 
+               "mbbt":"Marcus Bingenheimer",
+               "wd":"Wikidata",
+               "ola":"Open Library",
+            }
 
             for(let res of sameAsRes.filter(r => r.type.match(/[#/]sameAs[^/]*$/))) 
                for(let src of Object.keys(img)) {
-                  if(res.value.match(new RegExp("(^"+src+":)|(^"+prefixesMap[src]+")"))) hasRes[src] = res.value //.replace(new RegExp(prefixesMap[src]),src+":")                  
+                  if(res.value.match(new RegExp("(^"+src+":)|(^"+prefixesMap[src]+")"))) { 
+                     if(!hasRes[src]) hasRes[src] = [ res.value ] //.replace(new RegExp(prefixesMap[src]),src+":")                  
+                     else hasRes[src].push(res.value)
+                  }
                }
 
             for(let src of Object.keys(img)) 
                if(!hasRes[src] && prettId.match(new RegExp("(^"+src+":)|(^"+prefixesMap[src]+")"))) 
-                  hasRes[src] = prettId
+                  if(!hasRes[src]) hasRes[src] = [ prettId ]
+                  else  hasRes[src].push(prettId)
 
             for(let src of Object.keys(img)) 
-               if(hasRes[src]) {             
+               if(hasRes[src]) for(let h in hasRes[src]) {             
                   
-                  let shortU = shortUri(hasRes[src])
+                  let hres = hasRes[src][h]
+
+                  let shortU = shortUri(hres)
+                  if(src === "rkts") shortU = prettId
                   //let shortU = hasRes[src]
 
-                  sources.push(
+                  if(h == 0) sources.push(
                      <div class="source-data" id={src}>
                         <Link onTouchEnd={(ev) => { if(src !== "bdr") { ev.stopPropagation(); ev.preventDefault(); this.handleOpenSourceMenu(ev,"menu-"+src+"-"+prettId); return false ; }}} to={"/show/"+shortU}>
                            <img src={img[src]}/>
@@ -1522,7 +1551,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      </div>
                   )
 
-                  let url = fullUri(hasRes[src])
+                  let url = fullUri(hres)
 
                   if(url.match(new RegExp("^("+src+":)|("+prefixesMap[src]+")"))) {                     
                      let canonUrl = sameAsRes.filter(p => p.type === adm+"canonicalHtml")                     
@@ -1535,8 +1564,17 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      if(canonUrl.length) url = canonUrl[0].value
                   }
                   
+                  let menuId = "menu-"+src+"-"+prettId
 
-                  menus["menu-"+src+"-"+prettId] = { full: url, short:shortU }
+                  //console.log("menuId",menuId,menus[menuId])
+
+                  let prov = src.toUpperCase()
+                  if(providers[src]) prov = providers[src]
+
+                  if(!menus[menuId]) menus[menuId] = { full: [ url ], short:shortU, src:prov }
+                  else if(menus[menuId].full.indexOf(url) === -1) {
+                     menus[menuId] = { ...menus[menuId], full:[ ...menus[menuId].full, url ] }
+                  }
 
                }
                      /*
@@ -1559,7 +1597,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
                   //console.log("m",m)
 
-                  if(true || !m.type.match(new RegExp(skos+"prefLabel"))) {
+                  {
                      let prop = this.fullname(m.type.replace(/.*altLabelMatch/,skos+"altLabel"))
                      let val,isArray = false ;
                      let lang = m["lang"]
@@ -1577,11 +1615,22 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      //console.log("val",val,val.length,lang)
 
                      let uri,from
-                     if(m.type.match(/[/#]sameAs/)) {
+                     if(m.type === tmp +"sameAsBDRC") {
+                        prop = "Same As BDRC"
+                        uri = "/show/"+m.value ;
+                        val = m.lit
+                        if(litLang) {
+                           lang = litLang                              
+                        }
+                     }
+                     else if(m.type.match(/[/#]sameAs/)) {
                         val = m.value;
                         if(val === fullId || val == prettId) return ;
                         let label = dico[val]
-                        if(!label && this.props.assoRes) label = this.props.assoRes[val]
+                        if(!label && this.props.assoRes) {
+                           label = this.props.assoRes[val]                           
+                        }
+                        //console.log("val",label,val,lit,lang)
                         if(label) label = getLangLabel(this,label)
                         if(label) {
                            uri = val
@@ -1600,6 +1649,13 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                            }
                            if(label["xml:lang"]) lang = label["xml:lang"]                              
                            
+                        }
+                        else if(val.indexOf(rkts) !== -1) {                           
+                           prop = "Same As RKTS"
+                           val = [<a class="urilink" href={val}>{val.replace(new RegExp(rkts),"rkts:")}</a>]
+                           if(litLang) {
+                              lang = litLang                              
+                           }
                         }
                      }
                      else if(m.type.match(/relationType$/) || (m.value && m.value.match && m.value.match(new RegExp("^("+bdr+")?"+this.props.keyword.replace(/bdr:/,"(bdr:)?")+"$")))) {
@@ -2753,10 +2809,12 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      <span className="void">View data in Public Digital Library</span>
                      <Link className="menu-item-source" to={"/show/"+this._menus[id].short}>View data in Public Digital Library</Link>
                   </MenuItem>
-                  <MenuItem onClick={(ev) => this.handleCloseSourceMenu(ev,id)}>
-                     <span className="void">Go to external website</span>
-                     <a href={this._menus[id].full} class="menu-item-source" target="_blank">Go to external website</a>
-                  </MenuItem>
+                  { this._menus[id].full.map( u => (
+                     <MenuItem onClick={(ev) => this.handleCloseSourceMenu(ev,id)}>
+                        <span className="void">Open {this._menus[id].full.length > 1 ?<b>&nbsp;{this._menus[id].short}&nbsp;</b>:"resource"} in {this._menus[id].src} website</span>
+                        <a href={u} class="menu-item-source" target="_blank">Open {this._menus[id].full.length > 1 ?<b>&nbsp;{this._menus[id].short}&nbsp;</b>:"resource"} in {this._menus[id].src} website</a>
+                     </MenuItem>))
+                  }
             </Popover> 
       );
 
