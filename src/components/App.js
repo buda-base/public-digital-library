@@ -1567,14 +1567,17 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
                   if(h == 0) sources.push(
                      <div class="source-data" id={src}>
-                        {!directSameAs &&
+                        {/*!directSameAs &&
                         <Link onTouchEnd={(ev) => { if(src !== "bdr") { ev.stopPropagation(); ev.preventDefault(); this.handleOpenSourceMenu(ev,"menu-"+src+"-"+prettId); return false ; }}} to={"/show/"+shortU}>
                            {image}
                         </Link> }
                         {directSameAs &&
                         <a onTouchEnd={(ev) => { if(src !== "bdr") { ev.stopPropagation(); ev.preventDefault(); this.handleOpenSourceMenu(ev,"menu-"+src+"-"+prettId); return false ; }}} href={url} target="_blank">
                            {image}
-                        </a> }                        
+                        </a> */}                        
+                        <a onTouchEnd={(ev) => { if(src !== "bdr") { ev.stopPropagation(); ev.preventDefault(); this.handleOpenSourceMenu(ev,"menu-"+src+"-"+prettId); return false ; }}} href={url} target="_blank">
+                           {image}
+                        </a>
                         {src !== "bdr" && <span onMouseEnter={(ev) => this.handleOpenSourceMenu(ev,"menu-"+src+"-"+prettId)}></span> }
                      </div>
                   )
