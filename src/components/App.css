@@ -497,7 +497,9 @@ span.subcollapse svg { vertical-align:-6px; cursor:pointer; font-size:18px; }
 
 h3 span.highlight,
 div.match span.highlight { border:1px solid rgba(229, 74, 53,1); padding:0px 4px ; background-color:rgba(229, 74, 53,0.15); border-radius:15px; }
-div.match div.multi > span:not(:last-child)::after { content:", "; }
+#matches div.match div.multi > span { display:block; }
+/* div.match div.multi > span:not(:last-child)::after {  content:", "; } */
+
 /* div.match span.highlight { background-color: rgba(229, 74, 53,1.0); color:white ; padding:0px 2px ;}  */
 
 .urilink .highlight { color:rgba(179, 14, 0,1); } 

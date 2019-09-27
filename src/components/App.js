@@ -1404,10 +1404,12 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
       })
    }
 
-   makeResult(id,n,t,lit,lang,tip,Tag,url,rmatch = [],facet,sameAsRes)
+   makeResult(id,n,t,lit,lang,tip,Tag,url,rmatch = [],facet,allProps)
    {
       //console.log("res",id,n,t,lit,lang,tip,Tag,rmatch,sameAsRes)
 
+      let sameAsRes ;
+      if(allProps) sameAsRes = [ ...allProps ]
       if(!id.match(/[:/]/)) id = "bdr:" + id
 
       let litLang = lang
@@ -1560,7 +1562,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   let prov = src.toUpperCase()
                   if(providers[src]) prov = providers[src]
 
-                  let image = <div class="sameAsLogo">{prov}</div>
+                  let image = <div class="sameAsLogo"><div>{prov}</div></div>
                   if(img[src]) image = <img src={img[src]}/>
 
                   if(h == 0) sources.push(
@@ -1612,14 +1614,27 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             {
                rmatch.map((m) => {
 
-                  //console.log("m",m)
+                  console.log("m",m,allProps)
 
                   {
                      let prop = this.fullname(m.type.replace(/.*altLabelMatch/,skos+"altLabel"))
                      let val,isArray = false ;
                      let lang = m["lang"]
                      if(!lang) lang = m["xml:lang"]
-                     if(Array.isArray(m.value)) { val = m.value.map((e)=>this.pretty(e)) ; isArray = true }
+                     if(Array.isArray(m.value)) 
+                     { 
+                        val = m.value.map((e)=> {
+                           let lab =  getLangLabel(this,allProps.filter(l => l.type === e))
+                           if(!lab) return this.pretty(e)
+                           else {
+                              let lang = lab.lang
+                              if(!lang) lang = lab["xml:lang"]
+                              if(!lang) lang = lab["@language"]
+                              return { url:e, label:lab.value, lang} 
+                           }
+                        })
+                        isArray = true 
+                     }
                      else {
                         //val = this.highlight(this.pretty(m.value),k)
                         let mLit = getLangLabel(this,[m])
@@ -1736,15 +1751,22 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                            </div>
                         }><span className="lang">&nbsp;{lang}</span></Tooltip>:null]}</span>}
                         {isArray && <div class="multi">
-                           {val.map((e)=>
-                              <span>
-                                 <Link to={"/show/bdr:"+e}>{m.tmpLabel?m.tmpLabel:e}</Link>
-                                 { m.lang && <Tooltip placement="bottom-end" title={
-                                    <div style={{margin:"10px"}}>
-                                       <Translate value={languages[lang]?languages[lang].replace(/search/,"tip"):lang}/>
-                                    </div>
-                                 }><span className="lang">&nbsp;{m.lang}</span></Tooltip> }
-                              </span>)}</div>}
+                           {val.map((e)=> {
+                              let url = e, label = e, lang = m.lang
+                              if(e.url) url = shortUri(e.url)
+                              if(e.label) label = e.label
+                              if(e.lang) lang = e.lang
+                              return (
+                                 <span>
+                                    <Link to={"/show/"+url}>{m.tmpLabel?m.tmpLabel:label}</Link>
+                                    { lang && <Tooltip placement="bottom-end" title={
+                                       <div style={{margin:"10px"}}>
+                                          <Translate value={languages[lang]?languages[lang].replace(/search/,"tip"):lang}/>
+                                       </div>
+                                    }><span className="lang">&nbsp;{lang}</span></Tooltip> }
+                              
+                                 </span> )
+                           })}</div>}
                      </div>)
                   }
                })
@@ -2150,7 +2172,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      return acc;
                   }, {} )
 
-                  //console.log("wK",withKey);
+                  console.log("wK",withKey);
 
                   r.match = r.match.concat( Object.keys(withKey).sort().reduce((acc,e)=>{
                      let elem = {"type":e,"value":withKey[e],lang}
@@ -2833,11 +2855,14 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      <span className="void">View data in Public Digital Library</span>
                      <Link className="menu-item-source" to={"/show/"+this._menus[id].short}>View data in Public Digital Library</Link>
                   </MenuItem>
-                  { this._menus[id].full.map( u => (
-                     <MenuItem onClick={(ev) => this.handleCloseSourceMenu(ev,id)}>
-                        <span className="void">Open {this._menus[id].full.length > 1 ?<b>&nbsp;{this._menus[id].short}&nbsp;</b>:"resource"} in {this._menus[id].src} website</span>
-                        <a href={u} class="menu-item-source" target="_blank">Open {this._menus[id].full.length > 1 ?<b>&nbsp;{this._menus[id].short}&nbsp;</b>:"resource"} in {this._menus[id].src} website</a>
-                     </MenuItem>))
+                  { this._menus[id].full.map( u =>  {
+                     let short = shortUri(u)
+                     return (
+                        <MenuItem onClick={(ev) => this.handleCloseSourceMenu(ev,id)}>
+                           <span className="void">Open {this._menus[id].full.length > 1 ?<b>&nbsp;{short}&nbsp;</b>:"resource"} in {this._menus[id].src} website</span>
+                           <a href={u} class="menu-item-source" target="_blank">Open {this._menus[id].full.length > 1 ?<b>&nbsp;{short}&nbsp;</b>:"resource"} in {this._menus[id].src} website</a>
+                        </MenuItem>)
+                     })
                   }
             </Popover> 
       );
