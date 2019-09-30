@@ -230,8 +230,9 @@ let propOrder = {
       "bdo:workDerivativeOf",
       "bdo:workHasExpression",
       "bdo:workHasDerivative",
-      "tmp:workHasDerivativeInCanonicalLanguage",
-      "tmp:workHasDerivativeInNonCanonicalLanguage",
+      "bdo:workHasTranslation",
+      "tmp:workHasTranslationInCanonicalLanguage",
+      "tmp:workHasTranslationInNonCanonicalLanguage",
       "bdo:workIsAbout",
       "bdo:workGenre",
       // "bdo:creatorMainAuthor",
@@ -462,7 +463,7 @@ class ResourceViewer extends Component<Props,State>
 
       this.state = { uviewer:false, imageLoaded:false, collapse:{}, pdfOpen:false, showAnno:true }
 
-      console.log("props",props)
+      //console.log("props",props)
 
       let tmp = {}
       for(let k of Object.keys(propOrder)){ tmp[k] = propOrder[k].map((e) => this.expand(e)) }
@@ -571,7 +572,7 @@ class ResourceViewer extends Component<Props,State>
       let w = prop[bdo+"workDimWidth"]
       let h = prop[bdo+"workDimHeight"]
 
-      console.log("propZ",prop)
+      //console.log("propZ",prop)
 
       if(w && h && w[0] && h[0] && !w[0].value.match(/cm/) && !h[0].value.match(/cm/)) {
          prop[tmp+"dimensions"] = [ {type: "literal", value: w[0].value+"×"+h[0].value+"cm" } ]
@@ -690,7 +691,7 @@ class ResourceViewer extends Component<Props,State>
             return _.orderBy(deriv,['label2','label1'])
          }
          
-         expr = prop[bdo+"workHasDerivative"]
+         expr = prop[bdo+"workHasTranslation"]
          if(expr !== undefined) {
 
             //console.log("hasDerivCa",expr)
@@ -709,10 +710,10 @@ class ResourceViewer extends Component<Props,State>
                   }
                   else lang = false ;
                   if(lang && canoLang.filter(v => lang.match(new RegExp("/"+v+"[^/]*$"))).length) {
-                     let ontoProp = tmp+"workHasDerivativeInCanonicalLanguage"+lang.replace(/^.*[/]([^/]+)$/,"$1")
+                     let ontoProp = tmp+"workHasTranslationInCanonicalLanguage"+lang.replace(/^.*[/]([^/]+)$/,"$1")
                      onto[ontoProp] = {
                         [rdfs+"label"]: [{type: "literal", value: langLab, lang: "en"}],
-                        [rdfs+"subPropertyOf"]: [{type: "uri", value: tmp+"workHasDerivativeInCanonicalLanguage"}],
+                        [rdfs+"subPropertyOf"]: [{type: "uri", value: tmp+"workHasTranslationInCanonicalLanguage"}],
                         [tmp+"langKey"]: [{type:"literal", value:lang}]
                      }
                      if(!subLangDeriv[ontoProp]) subLangDeriv[ontoProp] = []
@@ -720,10 +721,10 @@ class ResourceViewer extends Component<Props,State>
                      cano.push(e);
                   }
                   else if(lang) {
-                     let ontoProp = tmp+"workHasDerivativeInNonCanonicalLanguage"+lang.replace(/.*[/]([^/]+)$/,"$1")
+                     let ontoProp = tmp+"workHasTranslationInNonCanonicalLanguage"+lang.replace(/.*[/]([^/]+)$/,"$1")
                      onto[ontoProp] = {
                         [rdfs+"label"]: [{type: "literal", value: langLab, lang: "en"}],
-                        [rdfs+"subPropertyOf"]: [{type: "uri", value: tmp+"workHasDerivativeInNonCanonicalLanguage"}],
+                        [rdfs+"subPropertyOf"]: [{type: "uri", value: tmp+"workHasTranslationInNonCanonicalLanguage"}],
                         [tmp+"langKey"]: [{type:"literal", value:lang}]
                      }
                      if(!subLangDeriv[ontoProp]) subLangDeriv[ontoProp] = []
@@ -737,10 +738,10 @@ class ResourceViewer extends Component<Props,State>
                   for(let k of keys) {
                      prop[k] = sortByLang(subLangDeriv[k])
                   }
-                  if(cano.length) { prop[tmp+"workHasDerivativeInCanonicalLanguage"] = sortByLang(cano) }
-                  if(nonCano.length) { prop[tmp+"workHasDerivativeInNonCanonicalLanguage"] = sortByLang(nonCano) }
+                  if(cano.length) { prop[tmp+"workHasTranslationInCanonicalLanguage"] = sortByLang(cano) }
+                  if(nonCano.length) { prop[tmp+"workHasTranslationInNonCanonicalLanguage"] = sortByLang(nonCano) }
                 }
-                else prop[bdo+"workHasDerivative"] = sortByLang(expr)
+                else prop[bdo+"workHasTranslation"] = sortByLang(expr)
             }
          }
          let t = getEntiType(this.props.IRI);
@@ -907,6 +908,8 @@ class ResourceViewer extends Component<Props,State>
 
    hasSuper(k:string)
    {
+      //console.log("sup",k)
+
       if(!this.props.ontology[k] || (!this.props.ontology[k][rdfs+"subPropertyOf"] && !this.props.ontology[k][rdfs+"subClassOf"]))
       {
          return false
@@ -918,7 +921,7 @@ class ResourceViewer extends Component<Props,State>
          {
             let e = tmp[0]
 
-            //console.log("super e",k,e.value,e, this.props.ontology[k], this.props.ontology[e.value])
+            //console.log("super e",e.value) //tmp,k,e.value,e, this.props.ontology[k], this.props.ontology[e.value])
 
             if(this.props.ontology[e.value][rdfs+"subPropertyOf"])
                tmp = tmp.concat(this.props.ontology[e.value][rdfs+"subPropertyOf"].map(f => f))
@@ -926,6 +929,7 @@ class ResourceViewer extends Component<Props,State>
                tmp = tmp.concat(this.props.ontology[e.value][rdfs+"subClassOf"].map(f => f))
 
             if(this.props.ontology[e.value] && this.props.ontology[e.value][bdo+"inferSubTree"]) return true ;
+            else if(e.value===bdo+"workTranslationOf") return k === e.value ;
 
             delete tmp[0]
             tmp = tmp.filter(e => e != null)
@@ -945,7 +949,7 @@ class ResourceViewer extends Component<Props,State>
    subProps(k:string,div:string="sub")
    {
 
-      console.log("subP",div,k)
+      //console.log("subP",div,k)
 
       let ret = []
       if(this.props.IRI && this.props.resources[this.props.IRI] && this.props.resources[this.props.IRI][this.expand(this.props.IRI)]) {
@@ -981,7 +985,7 @@ class ResourceViewer extends Component<Props,State>
             if(this.props.ontology[p] && this.props.ontology[p][rdfs+"subPropertyOf"]
                && this.props.ontology[p][rdfs+"subPropertyOf"].filter((e)=>(e.value == k)).length > 0)
             {
-               console.log("p",p)
+               //console.log("p",p)
 
                let tmp = this.subProps(p,div+"sub")
                let vals
@@ -1485,7 +1489,7 @@ class ResourceViewer extends Component<Props,State>
                if(root && root.length > 0) tmp = [tmp," in ",this.uriformat(bdo+"workHasRoot",root[0])]
             }
             /*
-            else if(this.props.assocResources && prop.match(/[/]workHasDerivative[^/]*$/))  {
+            else if(this.props.assocResources && prop.match(/[/]workhasTranslation[^/]*$/))  {
 
                let script = this.props.assocResources[e.value] 
                if(script) script = script.filter(e => e.type == bdo+"workLangScript")
@@ -3021,7 +3025,7 @@ class ResourceViewer extends Component<Props,State>
          }
       </div>
 
-      //console.log("pdf",pdfLink,this._annoPane.length)
+      console.log("pdf",pdfLink,this._annoPane.length)
 
       // add nother route to UViewer Gallery page
       return (
