@@ -265,6 +265,8 @@ export const gotAssocResources = (state: DataState, action: Action) => {
    let res = state.resources
    if(res) res = res[action.payload]
 
+   const skos = "http://www.w3.org/2004/02/skos/core#"
+
    let assoR = state.assocResources
    if(assoR) assoR = assoR[action.payload]
 
@@ -278,7 +280,11 @@ export const gotAssocResources = (state: DataState, action: Action) => {
               ...state.assocResources,
               [action.payload]:{ ...assoR, ...action.meta.data, ...(res?Object.keys(res).reduce((acc,k) => {
                      return { ...acc,[k]:Object.keys(res[k]).reduce( (accR,kR) => {
-                        if(!kR.match(/(description|type|comment)$/)) return [ ...accR, ...res[k][kR].map(e => ({ ...e, "fromKey":kR }) ) ]
+                        if(!kR.match(/(description|type|comment)$/)) return [ ...accR, ...res[k][kR].map(e => ({ 
+                           ...e, 
+                           "fromKey":kR, 
+                           ...(kR===skos+"prefLabel"&&!e.lang&&!e["@language"]&&!e["xml:lang"]?{"xml:lang":" "}:{}) 
+                        }) ) ]
                         else return [ ...accR ]
                      },[]) }
                   },{}):{})  
