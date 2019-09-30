@@ -636,13 +636,17 @@ function getData(result,inMeta,outMeta)  {
       if(metadata[bdo+"PublishedWork"]) {
          if(!metadata[bdo+"Work"]) metadata[bdo+"Work"] = 0
          metadata[bdo+"Work"] += metadata[bdo+"PublishedWork"]
-         delete metadata[bdo+"PublishedWork"]
       }
       else if(metadata["publishedwork"]) {
          if(!metadata["work"]) metadata["work"] = 0 
          metadata["work"] += metadata["publishedwork"]
-         delete metadata["publishedwork"]
       }
+      else  {
+         metadata["work"] = metadata["abstractwork"]
+      }
+      delete metadata[bdo+"PublishedWork"]
+      delete metadata["publishedwork"]
+
       //console.log("data?W",data,metadata)
    }
    if(data && data.abstractworks)
@@ -653,15 +657,17 @@ function getData(result,inMeta,outMeta)  {
       delete data.abstractworks
       if(metadata[bdo+"Work"] && metadata[bdo+"AbstractWork"]) {
          metadata[bdo+"Work"] += metadata[bdo+"AbstractWork"]
-         delete metadata[bdo+"AbstractWork"]
       }
       else if(metadata["work"] && metadata["abstractwork"]) {
          metadata["work"] += metadata["abstractwork"]
-         delete metadata["abstractwork"]
       }
+      else  {
+         metadata["work"] = metadata["abstractwork"]
+      }
+      delete metadata[bdo+"AbstractWork"]
+      delete metadata["abstractwork"]
    }
    
-   console.log("data?W",data,metadata)
 
    if(data && data.chunks) {
 
@@ -687,6 +693,26 @@ function getData(result,inMeta,outMeta)  {
      delete data.chunks
   }
 
+   if(data && data.unicodeworks)
+   {
+      data.etexts = { ...Object.keys(data.unicodeworks).reduce( (acc,k)=>{
+         return { ...acc, [k]:[ ...data.unicodeworks[k] ] }
+      },{}), ...data.etexts }
+      delete data.unicodeworks
+      if(metadata[bdo+"Etext"] && metadata[bdo+"UnicodeWork"]) {
+         metadata[bdo+"Etext"] += metadata[bdo+"UnicodeWork"]
+      }
+      else if(metadata["etext"] && metadata["unicodework"]) {
+         metadata["etext"] += metadata["unicodework"]
+      }
+      else {
+         metadata["etext"] = metadata["unicodework"]
+      }
+      delete metadata[bdo+"UnicodeWork"]
+      delete metadata["unicodework"]
+   }  
+
+   console.log("data?W",data,metadata)
 
 
   //console.log("resultR",result)
@@ -701,7 +727,7 @@ function getData(result,inMeta,outMeta)  {
         else return acc
      },0)
 
-     //console.log("numRa",numR)
+     console.log("numRa",numR,metadata)
 
      if(metadata)
      {
@@ -717,7 +743,7 @@ function getData(result,inMeta,outMeta)  {
      //console.log("numRb",numR)
   }
 
-  //console.log("getData#result",result,numR)
+  console.log("getData#result",result,numR)
 
   data = {  numResults:numR, results : { bindings: {...data } } }
 
