@@ -291,7 +291,7 @@ h4:hover .hoverlink { opacity:1;pointer-events: auto;}
 
 h4.sameAs .ulink.sameAs { margin-left:-21px; } 
 
-h4.hasIcon + .subsub { padding-left:40px; }
+h4.hasIcon ~ .subsub { padding-left:40px; }
 
 .uriTooltip { margin:10px; display:flex; align-items: center; align-content: center; margin-bottom:13px;}
 .uriTooltip .logo { display:inline-block;vertical-align:middle;width:64px;height:64px; background-color:white; margin-right:15px; flex-shrink:0; background-size: auto 52px;

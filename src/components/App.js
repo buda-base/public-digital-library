@@ -1617,7 +1617,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             {
                rmatch.map((m) => {
 
-                  console.log("m",m,allProps)
+                  //console.log("m",m,allProps)
 
                   {
                      let prop = this.fullname(m.type.replace(/.*altLabelMatch/,skos+"altLabel"))
