@@ -274,6 +274,7 @@ h4:hover .hoverlink { opacity:1;pointer-events: auto;}
 .sameAs.mbbt .before { background-image:url("/MB-icon.jpg"); background-position:top 1px right 6px;} 
 .sameAs.ola .before { background-image:url("/OL.png"); }
 .sameAs.viaf .before { background-image:url("/VIAF.png"); }
+.sameAs.rkts .before { background-image:url("/RKTS.png"); background-position:top 2px left 2px; }
 .sameAs.wd .before { background-image:url("/WD.svg");  background-size:18px auto; background-position:top 2px left 2px;}
 
 .provider.bdr .before { background-image:url("/logo.svg"); background-size:17px auto; background-position:top 1px right 5px; }
@@ -286,6 +287,7 @@ h4:hover .hoverlink { opacity:1;pointer-events: auto;}
 .provider.ola .before { background-image:url("/OL.png"); }
 .provider.viaf .before { background-image:url("/VIAF.png"); }
 .provider.wd .before { background-image:url("/WD.svg");  background-size:18px auto; background-position:top 2px left 2px;}
+.provider.rkts .before { background-image:url("/RKTS.png"); }
 
 h4.sameAs .ulink.sameAs { margin-left:-21px; } 
 
@@ -304,6 +306,7 @@ h4.hasIcon + .subsub { padding-left:40px; }
 .uriTooltip .logo.ola  { background-image:url("/OL.png"); }
 .uriTooltip .logo.viaf  { background-image:url("/VIAF.png"); }
 .uriTooltip .logo.wd  { background-image:url("/WD.svg"); }
+.uriTooltip .logo.rkts  { background-image:url("/RKTS.png");background-size: 52px auto; }
 
 .uriTooltip .logo, .uriTooltip .text { margin-top:30px;}
 

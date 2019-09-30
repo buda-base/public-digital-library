@@ -151,6 +151,7 @@ const ola    = "https://openlibrary.org/authors/"
 const owl   = "http://www.w3.org/2002/07/owl#" ; 
 const rdf   = "http://www.w3.org/1999/02/22-rdf-syntax-ns#";
 const rdfs  = "http://www.w3.org/2000/01/rdf-schema#";
+const rkts  = "http://purl.rkts.eu/resource/";
 const skos  = "http://www.w3.org/2004/02/skos/core#";
 const tmp   = "http://purl.bdrc.io/ontology/tmp/" ;
 const _tmp  = tmp ;
@@ -1012,7 +1013,7 @@ class ResourceViewer extends Component<Props,State>
 
          //console.log("uriformat",prop,elem.value,dic,withProp,show)
 
-         if(!elem.value.match(/^http:\/\/purl\.bdrc\.io/) && (!dic || !dic[elem.value])) {
+         if(!elem.value.match(/^http:\/\/purl\.bdrc\.io/) && ((!dic || !dic[elem.value]) && !prop.match(/[/#]sameAs/))) {
             return <a href={elem.value} target="_blank">{decodeURI(elem.value)}</a> ;
          }
 
@@ -1158,6 +1159,7 @@ class ResourceViewer extends Component<Props,State>
                      "eap":"Endangered Archives Programme",
                      "ia":"Internet Archive",                 
                      "gretil":"Göttingen Register of Electronic Texts in Indian Languages",
+                     "rkts":"Resources for Kanjur & Tanjur Studies",
                      "mbbt":"Marcus Bingenheimer",
                      "wd":"Wikidata",
                      "ola":"Open Library",
@@ -1165,14 +1167,14 @@ class ResourceViewer extends Component<Props,State>
                    }
 
 
-                  if(info && infoBase && infoBase.filter(e=>e["xml:lang"]||e["lang"]).length >= 0) {
+                  if((info && infoBase && infoBase.filter(e=>e["xml:lang"]||e["lang"]).length >= 0) || prop.match(/[/#]sameAs/)) {
+
                      let link,orec,canUrl;
                      if(this.props.assocResources && this.props.assocResources[elem.value]) {
                         orec = this.props.assocResources[elem.value].filter(r => r.type === adm+"originalRecord" || r.fromKey === adm+"originalRecord")
                         canUrl = this.props.assocResources[elem.value].filter(r => r.type === adm+"canonicalHtml" ||  r.fromKey === adm+"canonicalHtml")
                         //console.log("orec",prop,sameAsPrefix,orec,canUrl, this.props.assocResources[elem.value])
                      }
-
 
                      let srcProv = sameAsPrefix.replace(/^.*?([^ ]+) provider .*$/,"$1").toLowerCase()
                      let srcSame = sameAsPrefix.replace(/^.*?([^ ]+) sameAs .*$/,"$1").toLowerCase()
@@ -1187,7 +1189,10 @@ class ResourceViewer extends Component<Props,State>
                         link = <a class="urilink prefLabel" href={canUrl[0].value} target="_blank">{info}</a>
                         if(srcProv.indexOf(" ") !== -1) srcProv = srcSame
                      }
-                     else if(!elem.value.match(/[.]bdrc[.]/)) link = <a class="urilink prefLabel" href={elem.value} target="_blank">{info}</a>
+                     else if(!elem.value.match(/[.]bdrc[.]/)) {
+                        if(!info) info = shortUri(elem.value)
+                        link = <a class="urilink prefLabel" href={elem.value} target="_blank">{info}</a>
+                     } 
                      else { 
                         link = <Link className={"urilink prefLabel " } to={"/"+show+"/"+prefix+":"+pretty}>{info}</Link>
                         //bdrcData = null
