@@ -182,14 +182,16 @@ let propOrder = {
       "bdo:itemVolumes"
    ],
    "Lineage":[
+      "skos:prefLabel",
       "skos:altLabel",
       "bdo:lineageObject",
       "bdo:lineageType",
       "bdo:workLocation",
    ],
    "Person" : [
-      "skos:altLabel",
       "bdo:personName",
+      "skos:prefLabel",
+      "skos:altLabel",
       "bdo:personGender",
       "bdo:kinWith",
       "bdo:personEvent",
@@ -211,6 +213,7 @@ let propOrder = {
       "rdfs:seeAlso",
     ],
    "Place":[
+      "skos:prefLabel",
       "skos:altLabel",
       "bdo:placeLat",
       "bdo:placeLong",
@@ -225,6 +228,7 @@ let propOrder = {
    "Topic":[],
    "Work":[
       "bdo:workTitle",
+      "skos:prefLabel",
       "skos:altLabel",
       "bdo:workType",
       "bdo:workExpressionOf",
@@ -1014,7 +1018,7 @@ class ResourceViewer extends Component<Props,State>
          //console.log("uriformat",prop,elem.value,dic,withProp,show)
 
          if(!elem.value.match(/^http:\/\/purl\.bdrc\.io/) && ((!dic || !dic[elem.value]) && !prop.match(/[/#]sameAs/))) {
-            return <a href={elem.value} target="_blank">{decodeURI(elem.value)}</a> ;
+            return <a href={elem.value} target="_blank">{shortUri(decodeURI(elem.value))}</a> ;
          }
 
          let dico = dic ;
@@ -1082,7 +1086,7 @@ class ResourceViewer extends Component<Props,State>
                         info = infoBase.filter((e)=>(e["xml:lang"] && e.type==prop && e["xml:lang"]==this.props.prefLang))
                         if(info.length == 0) info = infoBase.filter((e)=>(e["xml:lang"] && e.type==prop))
                         */
-                        info = [ getLangLabel(this, infoBase.filter((e)=>((e["xml:lang"] || e["lang"])))) ]
+                        info = [ getLangLabel(this, infoBase.filter((e)=>((e["xml:lang"] || e["lang"] || e.fromKey && e.fromKey === foaf+"name")))) ]                        
                         if(!info) info = [ getLangLabel(this, infoBase.filter((e)=>((e["xml:lang"] || e["lang"]) && e.type==prop))) ]
 
                         //console.log("info",info)
@@ -2488,7 +2492,7 @@ class ResourceViewer extends Component<Props,State>
             //for(let e of elem) console.log(e.value,e.label1);
 
             //if(!k.match(new RegExp("Revision|Entry|prefLabel|"+rdf+"|toberemoved"))) {
-            if((!k.match(new RegExp(adm+"|adm:|isRoot$|SourcePath|prefLabel|"+rdf+"|toberemoved|workPartIndex|workPartTreeIndex")) 
+            if((!k.match(new RegExp(adm+"|adm:|isRoot$|SourcePath|"+rdf+"|toberemoved|workPartIndex|workPartTreeIndex")) 
                ||k.match(/(originalRecord|metadataLegal|contentProvider)$/)
                ||k.match(/([/]see|[/]sameAs)[^/]*$/) // quickfix [TODO] test property ancestors
                || (this.props.IRI.match(/^bda:/) && (k.match(new RegExp(adm+"|adm:")))))
@@ -2497,8 +2501,25 @@ class ResourceViewer extends Component<Props,State>
 
                let sup = this.hasSuper(k)
 
+               // [T0D0] #89 display hidden prefLabels as altLabels
+               // + display prefLabel from conflated data
+
+               if(k === skos+"prefLabel") return ;
+               /*
+               if(k === skos+"prefLabel" || k === skos+"altLabel")
+               {
+
+                  let elemPref = this.getResourceElem(skos+"prefLabel")
+                  let elemAlt = this.getResourceElem(skos+"altLabel")
+
+
+                  if(elemPref && elemAlt) continue 
+               }
+               */
+               
                if(!sup) // || sup.filter(e => e.value == bdo+"workRefs").length > 0) //
                {
+                  
                   let tags = this.format("h4",k)
 
                   //console.log("tags",tags,k,elem)

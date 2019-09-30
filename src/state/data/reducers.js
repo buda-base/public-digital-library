@@ -184,7 +184,7 @@ export const gotResource = (state: DataState, action: Action) => {
       // merging data into resource
       if(get["cw"] !== "none") for(let k of Object.keys(sameR)) {
          if(sameR[k]) for(let p of Object.keys(sameR[k])) {
-            if(p.match(/purl\.bdrc\.io/)) {
+         if(p.match(/purl\.bdrc\.io/)  || p.match(/(pref|alt)Label$/)) { 
                if(!data[uri][p]) data[uri][p] = []
                data[uri][p] = data[uri][p].concat(sameR[k][p].filter(e => !e.value || e.value !== uri).map(e => ({...e,"fromSameAs":k})))
                if(!data[uri][p].length) delete data[uri][p]
