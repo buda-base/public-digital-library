@@ -233,6 +233,7 @@ let propOrder = {
       "bdo:workType",
       "bdo:workExpressionOf",
       "bdo:workDerivativeOf",
+      "bdo:workTranslationOf",
       "bdo:workHasExpression",
       "bdo:workHasDerivative",
       "bdo:workHasTranslation",
@@ -934,7 +935,7 @@ class ResourceViewer extends Component<Props,State>
                tmp = tmp.concat(this.props.ontology[e.value][rdfs+"subClassOf"].map(f => f))
 
             if(this.props.ontology[e.value] && this.props.ontology[e.value][bdo+"inferSubTree"]) return true ;
-            else if(e.value===bdo+"workTranslationOf") return k === e.value ;
+            else if(e.value===bdo+"workTranslationOf") return false
 
             delete tmp[0]
             tmp = tmp.filter(e => e != null)
