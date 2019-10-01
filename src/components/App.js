@@ -1205,6 +1205,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
    {
       //console.log("hi:",val,k)
 
+      val = val.replace(/\[([↦↤])\]/g,"$1");
       val = val.replace(/↦↤/g,"");
 
       if(!val.match(/↤/) && k)
@@ -1469,14 +1470,14 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          let retList
          
          let directSameAs = false
-         if(!prettId.match(/^bdr:/) && (fullId.match(new RegExp(cbct)) || !sameAsRes || !sameAsRes.filter(s => s.value.match(/[#/]sameAs/) || (s.type.match(/[#/]sameAs/) && (s.value.indexOf(".bdrc.io") !== -1 || s.value.indexOf("bdr:") !== -1))).length))   {
+         if(!prettId.match(/^bdr:/) && (fullId.match(new RegExp(cbct+"|"+rkts)) || !sameAsRes || !sameAsRes.filter(s => s.value.match(/[#/]sameAs/) || (s.type.match(/[#/]sameAs/) && (s.value.indexOf(".bdrc.io") !== -1 || s.value.indexOf("bdr:") !== -1))).length))   {
             let u 
             if((u = sameAsRes.filter(s => s.type === adm+"canonicalHtml")).length) u = u[0].value
             else u = fullId
 
             retList = [ ( <a target="_blank" href={u} className="result">{ret}</a> ) ]                  
 
-            if(!fullId.match(new RegExp(cbct))) rmatch = [ { type:tmp+"sameAsBDRC", value:prettId,  lit } ]
+            if(!fullId.match(new RegExp(cbct+"|"+rkts))) rmatch = [ { type:tmp+"sameAsBDRC", value:prettId,  lit } ]
 
             directSameAs = true
          }
@@ -1585,7 +1586,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   
                   if(this.props.assoRes && this.props.assoRes[url]) {
                      let canonUrl = this.props.assoRes[url]
-                     if(canonUrl) canonUrl = canonUrl.filter(p => p.type === adm+"canonicalHtml")
+                     if(canonUrl && canonUrl.filter) canonUrl = canonUrl.filter(p => p.type === adm+"canonicalHtml")
                      if(canonUrl.length) url = canonUrl[0].value
                   }
                   
@@ -1687,14 +1688,14 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                         }
                         else if(val.indexOf(rkts) !== -1) {                           
                            prop = "Same As RKTS"
-                           val = [<a class="urilink" href={val}>{val.replace(new RegExp(rkts),"rkts:")}</a>]
+                           val = [<a class="urilink" href={val}>{shortUri(val)}</a>]
                            if(litLang) {
                               lang = litLang                              
                            }
                         }
                         else if(val.indexOf(cbct) !== -1) {                           
                            prop = "Same As CBC@"
-                           val = [<a class="urilink" href={val}>{val.replace(new RegExp(cbct),"cbct:")}</a>]
+                           val = [<a class="urilink" href={val}>{shortUri(val)}</a>]
                            if(litLang) {
                               lang = litLang                              
                            }
@@ -2175,7 +2176,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      return acc;
                   }, {} )
 
-                  console.log("wK",withKey);
+                  //console.log("wK",withKey);
 
                   r.match = r.match.concat( Object.keys(withKey).sort().reduce((acc,e)=>{
                      let elem = {"type":e,"value":withKey[e],lang}

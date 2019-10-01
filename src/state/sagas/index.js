@@ -20,6 +20,7 @@ const adm  = "http://purl.bdrc.io/ontology/admin/" ;
 const bda  = "http://purl.bdrc.io/admindata/"
 const bdo  = "http://purl.bdrc.io/ontology/core/";
 const bdr  = "http://purl.bdrc.io/resource/";
+const owl   = "http://www.w3.org/2002/07/owl#" ; 
 const skos = "http://www.w3.org/2004/02/skos/core#";
 const tmp = "http://purl.bdrc.io/ontology/tmp/" ;
 const _tmp = tmp ;
@@ -641,9 +642,6 @@ function getData(result,inMeta,outMeta)  {
          if(!metadata["work"]) metadata["work"] = 0 
          metadata["work"] += metadata["publishedwork"]
       }
-      else  {
-         metadata["work"] = metadata["abstractwork"]
-      }
       delete metadata[bdo+"PublishedWork"]
       delete metadata["publishedwork"]
 
@@ -655,14 +653,13 @@ function getData(result,inMeta,outMeta)  {
          return { ...acc, [k]:[ ...data.abstractworks[k], { "type":bdo+"WorkType","value":bdo+"AbstractWork" } ] }
       },{}), ...data.works }
       delete data.abstractworks
-      if(metadata[bdo+"Work"] && metadata[bdo+"AbstractWork"]) {
+      if(metadata[bdo+"AbstractWork"]) {
+         if(!metadata[bdo+"Work"]) metadata[bdo+"Work"] = 0
          metadata[bdo+"Work"] += metadata[bdo+"AbstractWork"]
       }
-      else if(metadata["work"] && metadata["abstractwork"]) {
+      else if(metadata["abstractwork"]) {
+         if(!metadata["work"]) metadata["work"] = 0
          metadata["work"] += metadata["abstractwork"]
-      }
-      else  {
-         metadata["work"] = metadata["abstractwork"]
       }
       delete metadata[bdo+"AbstractWork"]
       delete metadata["abstractwork"]
@@ -844,6 +841,67 @@ function addMeta(keyword:string,language:string,data:{},t:string,tree:{},found:b
    }
 }
 
+function mergeSameAs(result,withSameAs,init = true,rootRes = result, force = false)
+{
+   //console.log("res",result,rootRes)
+
+   if(!result) return
+ 
+   if(init) for(let t of Object.keys(result)) {
+      if(t !== "metadata" && t !== "tree") {
+         let fullT = bdo+t[0].toUpperCase()+t.substring(1,t.length - 1)
+         let keys = Object.keys(result[t])
+         if(keys) for(let k of keys) {
+            if(!k.match(/purl[.]bdrc/)) {
+               let same = result[t][k].filter(s => s.type && s.type === owl+"sameAs" && s.value !== k && s.value.match(/purl[.]bdrc/))
+               if(same.length || force) withSameAs[k] = { t, fullT, props:{ ...result[t][k]}, same:same.map(s=>s.value) }
+            }
+         }
+      }
+   } 
+
+   let keys = Object.keys(withSameAs)
+   if(keys) for(let i in keys) {
+      let k = keys[i]
+      let r = withSameAs[k]
+      if(force && !rootRes[r.t][k]) {
+         delete result[r.t][k]
+      }
+      else for(let s of r.same) {
+         let noK 
+         if(result[r.t] && !result[r.t][s]) { 
+            result[r.t][s] = []
+            noK = true
+         }
+         if(result[r.t] && result[r.t][k] && result[r.t][s]) {
+            //console.log("same?",k,r.t,s,result[r.t][s])
+            for(let v of result[r.t][k])
+            {
+               let found = false ;
+               for(let w of result[r.t][s])
+               {
+                  if(v.type === w.type && v.value === w.value && v["xml:lang"] === w["xml:lang"]) {
+                     found = true
+                     break;
+                  }
+               }
+               if(!found) result[r.t][s].push(v)
+            }
+            delete result[r.t][k]
+            if(!noK && result.metadata && result.metadata[r.fullT]) {
+               result.metadata[r.fullT] --
+               //console.log("meta",result.metadata[r.fullT]) 
+            }
+         }
+      }
+   }
+
+   console.log("wSa",withSameAs)
+
+   return result
+}
+
+
 async function startSearch(keyword,language,datatype,sourcetype,dontGetDT) {
 
    console.log("sSsearch",keyword,language,datatype,sourcetype);
@@ -864,7 +922,11 @@ async function startSearch(keyword,language,datatype,sourcetype,dontGetDT) {
       // adapt to new JSON format
       if(result)
          result = Object.keys(result).reduce((acc,e)=>({ ...acc, [e.replace(/^.*[/](Etext)?([^/]+)$/,"$2s").toLowerCase()] : result[e] }),{})
-
+         
+      let rootRes
+      if(datatype) rootRes = store.getState().data.searches[keyword+"@"+language]
+      if(rootRes) rootRes = rootRes.results.bindings  
+      result = mergeSameAs(result,{},true,rootRes,true)
 
       console.log("newRes",result)
 
@@ -971,6 +1033,17 @@ else {
          store.dispatch(dataActions.getDatatypes(keyword,language));
          result = await api.getStartResults(keyword,language);
          result = Object.keys(result).reduce((acc,e)=>({ ...acc, [e.replace(/^.*[/](Etext)?([^/]+)$/,"$2s").toLowerCase()] : result[e] }),{})
+         
+         let withSameAs = {}
+         result = mergeSameAs(result,withSameAs)
+
+         console.log("newRes",result,data)
+
+         let keys = Object.keys(withSameAs)
+         if(keys.length) {
+            data.results.bindings = mergeSameAs(data.results.bindings,withSameAs,false)
+            store.dispatch(dataActions.foundResults(keyword, language, data, datatype));
+         }
 
          if(result.metadata && result.metadata[bdo+"Etext"] == 0)
          delete result.metadata[bdo+"Etext"]
