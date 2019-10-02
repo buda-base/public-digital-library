@@ -264,7 +264,7 @@ div:hover > h4:not(.multiple) > span .hoverlink,
 h4:hover .hoverlink { opacity:1;pointer-events: auto;}
 
 .hover-anchor { display:inline-block; }
-
+.hover-anchor ~ .hover-anchor { display:none; }
 :not(.lang) + .hover-anchor .hoverlink { margin-left:5px;}
 
 .sameAs.bdr .before { background-image:url("/logo.svg"); background-size:17px auto; background-position:top 1px right 5px; }
