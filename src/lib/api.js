@@ -402,6 +402,8 @@ export default class API {
       else delete param["I_LIM"] ;
       delete param["searchType"]
 
+      if(accept === "application/json") param["format"] = "json"
+
       console.log("query",url,key,param,method,accept,other);
 
       // let body = Object.keys(param).map( (k) => k+"="+param[k] ).join('&') +"&L_NAME="+key
