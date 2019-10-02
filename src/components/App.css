@@ -93,7 +93,7 @@ a.result .lang, .match .lang,.data .lang,h2 .lang, .imageVolumePopup .lang
    position: relative;
    top: 0.5em;
 }
-h2 .lang,.data .lang { position:relative;margin:0;vertical-align:-2px;padding:5px;line-height:0;}
+h2 .lang,.data .lang { position:relative;margin:0;vertical-align:-2px;padding:5px;line-height:0;z-index:1;}
 h2 .lang { margin-top:22px;font-weight:normal; }
 .imageVolumePopup .lang { position:relative;padding:0px;margin-top:12px; }
 /* a.result .lang, .match .lang { min-width:50px;} */
@@ -248,22 +248,24 @@ a.login { text-decoration:underline; cursor:pointer; }
 .before a {font-size:0; position:absolute;width:100%;height:100%;}
 .before:hover a { border:none !important; }
 
-/* // WIP
 
 .ulink { position:relative; z-index:1;}
 .ulink+span { z-index:0;}
 
 .hoverlink { 
-   position:absolute;display:inline-block;width:15px;height:15px; background-color:white;  vertical-align: -6px; padding:3px 5px;
+   position:absolute;display:inline-block;width:15px;height:15px; background-color:white;  vertical-align: 0px; padding:3px ; margin-top:-16px; 
    background-position:center;background-size:15px auto;background-repeat:no-repeat; 
-   background-image:url("/logo.svg"); background-size:17px auto; opacity:0;pointer-events:none;
+   background-image:url("/logo.svg"); background-size:20px auto; opacity:0;pointer-events:none;
 }
 
 .hoverlink:hover { border:none !important; }
 div:hover > h4:not(.multiple) > .hoverlink,
 div:hover > h4:not(.multiple) > span .hoverlink,
 h4:hover .hoverlink { opacity:1;pointer-events: auto;}
-*/
+
+.hover-anchor { display:inline-block; }
+
+:not(.lang) + .hover-anchor .hoverlink { margin-left:5px;}
 
 .sameAs.bdr .before { background-image:url("/logo.svg"); background-size:17px auto; background-position:top 1px right 5px; }
 .sameAs.bnf .before { background-image:url("/BNF.svg"); background-size:19px auto;background-position:top 4px left;}

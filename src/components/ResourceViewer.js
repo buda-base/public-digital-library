@@ -1016,7 +1016,7 @@ class ResourceViewer extends Component<Props,State>
    {
       if(elem) {
 
-         //console.log("uriformat",prop,elem.value,dic,withProp,show)
+         //console.log("uriformat",prop,elem.value,elem,dic,withProp,show)
 
          if(!elem.value.match(/^http:\/\/purl\.bdrc\.io/) && ((!dic || !dic[elem.value]) && !prop.match(/[/#]sameAs/))) {
             return <a href={elem.value} target="_blank">{shortUri(decodeURI(elem.value))}</a> ;
@@ -1187,7 +1187,7 @@ class ResourceViewer extends Component<Props,State>
                      //if(src.match(/bdr/)) src = "bdr"
 
                      let bdrcData 
-                     ///bdrcData = <Link className={"hoverlink"} to={"/"+show+"/"+prefix+":"+pretty}></Link>
+                     bdrcData = <Link className={"hoverlink"} to={"/"+show+"/"+prefix+":"+pretty}></Link>
 
                      if(orec && orec.length) link = <a class="urilink prefLabel" href={orec[0].value} target="_blank">{info}</a>
                      else if(canUrl && canUrl.length) { 
@@ -1200,7 +1200,7 @@ class ResourceViewer extends Component<Props,State>
                      } 
                      else { 
                         link = <Link className={"urilink prefLabel " } to={"/"+show+"/"+prefix+":"+pretty}>{info}</Link>
-                        //bdrcData = null
+                        bdrcData = null
                      }
                      
                      let befo = [],src
@@ -1218,9 +1218,14 @@ class ResourceViewer extends Component<Props,State>
                            </Tooltip> ]
                         )
 
-                        //bdrcData =  <Tooltip placement="top-end" title={<div class={"uriTooltip "}>View BDRC data for this resource</div>}><span>{bdrcData}</span></Tooltip>
+                        bdrcData =  <Tooltip placement="top-end" title={<div class={"uriTooltip "}>View BDRC data for this resource</div>}><span class="hover-anchor">{bdrcData}</span></Tooltip>
                      }
                      else if(providers[src = srcSame] && !prop.match(/[/#]sameAs/)) { 
+
+                        let locaLink = link
+                        if(!bdrcData && elem.fromSameAs) locaLink = <Link to={"/"+show+"/"+shortUri(elem.fromSameAs)}></Link>
+
+
                         befo.push(
 
                            [ //<span class="meta-before"></span>,
@@ -1234,12 +1239,12 @@ class ResourceViewer extends Component<Props,State>
                                  ]  }
                               { src === "bdr" && <span>Data loaded from BDRC resource</span> }
                            </div>}>
-                                 <span class={(sameAsPrefix?sameAsPrefix:'')}><span class="before">{link}</span></span>
+                                 <span class={(sameAsPrefix?sameAsPrefix:'')}><span class="before">{locaLink}</span></span>
                               </Tooltip> 
                            ]
                         )
 
-                        //bdrcData =  <Tooltip placement="top-end" title={<div class={"uriTooltip "}>View BDRC data for this resource</div>}><span>{bdrcData}</span></Tooltip>
+                        bdrcData =  <Tooltip placement="top-end" title={<div class={"uriTooltip "}>View BDRC data for this resource</div>}><span class="hover-anchor">{bdrcData}</span></Tooltip>
                      }
                      else if(sameAsPrefix.indexOf("sameAs") !== -1) {
                         //link = [ <span class="before"></span>,link ] 
@@ -1259,7 +1264,7 @@ class ResourceViewer extends Component<Props,State>
                               </Tooltip> 
                            ])
 
-                        //bdrcData =  <Tooltip placement="top-end" title={<div class={"uriTooltip "}>View BDRC data for this resource</div>}><span>{bdrcData}</span></Tooltip>
+                        bdrcData =  <Tooltip placement="top-end" title={<div class={"uriTooltip "}>View BDRC data for this resource</div>}><span class="hover-anchor">{bdrcData}</span></Tooltip>
                      }
                      
                      
@@ -1563,8 +1568,8 @@ class ResourceViewer extends Component<Props,State>
             let sameAsPrefix ;
             for(let p of Object.keys(prefixes)) { if(e.fromSameAs && e.fromSameAs.match(new RegExp(prefixes[p]))) { sameAsPrefix = p } }
 
-            if(!txt) ret.push(<Tag className={(elem.length > 1?"multiple ":"") + (sameAsPrefix?sameAsPrefix+" sameAs hasIcon":"") }><span class="before"></span>{tmp}</Tag>)
-            else ret.push(<Tag className={(elem.length > 1?"multiple ":"") +  (sameAsPrefix?sameAsPrefix+" sameAs hasIcon":"") }><span class="before"></span>{tmp+" "+txt}</Tag>)
+            if(!txt) ret.push(<Tag className={(elem.length > 1?"multiple ":"") + (sameAsPrefix?sameAsPrefix+" sameAs hasIcon":"") }><span class="before b11"></span>{tmp}</Tag>)
+            else ret.push(<Tag className={(elem.length > 1?"multiple ":"") +  (sameAsPrefix?sameAsPrefix+" sameAs hasIcon":"") }><span class="before b12"></span>{tmp+" "+txt}</Tag>)
 
 
             //console.log("ret",ret)
@@ -1607,12 +1612,12 @@ class ResourceViewer extends Component<Props,State>
             if(valSort) {
                //console.log("valSort?",valSort)               
                noVal = false ;
-               sub.push(<Tag className={'first '+(div == "sub"?'type':'prop') +" "+ (sameAsPrefix?sameAsPrefix+" sameAs hasIcon":"")}><span class="before"></span>{[valSort.map((v,i) => i==0?[this.proplink(v.value)]:[" / ",this.proplink(v.value)]),": "]}</Tag>)
+               sub.push(<Tag className={'first '+(div == "sub"?'type':'prop') +" "+ (sameAsPrefix?sameAsPrefix+" sameAs hasIcon":"")}><span class="before b21"></span>{[valSort.map((v,i) => i==0?[this.proplink(v.value)]:[" / ",this.proplink(v.value)]),": "]}</Tag>)
             }
             else if(val && val[0] && val[0].value)
             {
                noVal = false ;
-               sub.push(<Tag className={'first '+(div == "sub"?'type':'prop') +" "+ (sameAsPrefix?sameAsPrefix+" sameAs hasIcon":"")}><span class="before"></span>{[this.proplink(val[0].value),": "]}</Tag>)
+               sub.push(<Tag className={'first '+(div == "sub"?'type':'prop') +" "+ (sameAsPrefix?sameAsPrefix+" sameAs hasIcon":"")}><span class="before b22"></span>{[this.proplink(val[0].value),": "]}</Tag>)
             }
 
             //console.log("lab",lab)
