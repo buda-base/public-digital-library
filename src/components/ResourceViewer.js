@@ -1232,7 +1232,7 @@ class ResourceViewer extends Component<Props,State>
                            </Tooltip> ]
                         )
 
-                        bdrcData =  <Tooltip placement="top-end" title={<div class={"uriTooltip "}>View BDRC data for this resource</div>}><span class="hover-anchor">{bdrcData}</span></Tooltip>
+                        bdrcData =  <Tooltip placement="top-end" title={<div class={"uriTooltip "}>View this resource on BUDA</div>}><span class="hover-anchor">{bdrcData}</span></Tooltip>
                      }
                      else if(providers[src = srcSame] && !prop.match(/[/#]sameAs/)) { 
 
@@ -1256,13 +1256,14 @@ class ResourceViewer extends Component<Props,State>
                                  ]  }
                               { src === "bdr" && <span>Data loaded from BDRC resource</span> }
                            </div>}>
-                                 <span class={(sameAsPrefix?sameAsPrefix:'')}><span class="before">{locaLink}</span></span>
+                                 <span class={(sameAsPrefix?sameAsPrefix:'')}><span class="before">{}</span></span>
                               </Tooltip> 
                            ]
                         )
 
-                        if(src !== "bdr") bdrcData =  <Tooltip placement="top-end" title={<div class={"uriTooltip "}>View BDRC data for original source of this property</div>}><span class="hover-anchor">{bdrcData}</span></Tooltip>
-                        else bdrcData = null
+                        //if(src !== "bdr") bdrcData =  <Tooltip placement="top-end" title={<div class={"uriTooltip "}>View BDRC data for original source of this property</div>}><span class="hover-anchor">{bdrcData}</span></Tooltip>
+                        //else 
+                        bdrcData = null
                      }
                      else if(sameAsPrefix.indexOf("sameAs") !== -1) {
                         //link = [ <span class="before"></span>,link ] 
@@ -1282,7 +1283,7 @@ class ResourceViewer extends Component<Props,State>
                               </Tooltip> 
                            ])
 
-                        bdrcData =  <Tooltip placement="top-end" title={<div class={"uriTooltip "}>View BDRC data for this resource</div>}><span class="hover-anchor">{bdrcData}</span></Tooltip>
+                        bdrcData =  <Tooltip placement="top-end" title={<div class={"uriTooltip "}>View this resource on BUDA</div>}><span class="hover-anchor">{bdrcData}</span></Tooltip>
                      }
                      else {
                         bdrcData = null
@@ -1398,13 +1399,14 @@ class ResourceViewer extends Component<Props,State>
                   ]  }
                { src === "bdr" && <span>Data loaded from BDRC resource</span> }
             </div>}>
-                  <span class={(sameAsPrefix?sameAsPrefix:'')}><span class="before">{link}</span></span>
+                  <span class={(sameAsPrefix?sameAsPrefix:'')}><span class="before">{}</span></span>
                </Tooltip> 
             ]
          
 
-         if(e.fromSameAs.indexOf(bdr) === -1) bdrcData =  <Tooltip placement="top-end" title={<div class={"uriTooltip "}>View BDRC data for original source of this property</div>}><span class="hover-anchor">{bdrcData}</span></Tooltip>
-         else bdrcData = null
+         //if(e.fromSameAs.indexOf(bdr) === -1) bdrcData =  <Tooltip placement="top-end" title={<div class={"uriTooltip "}>View BDRC data for original source of this property</div>}><span class="hover-anchor">{bdrcData}</span></Tooltip>
+         //else 
+         bdrcData = null
       }
       return { befo,bdrcData }
    }
