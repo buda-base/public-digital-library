@@ -53,7 +53,7 @@
 .mirador-container .remaining { display:none; }
 .mirador-container .preview-images a:not(:first-child) { display:none; }
 
-.mirador-container .panel-thumbnail-view ul.panel-listing-thumbs li img { max-height:80px !important; }
+.mirador-container .panel-thumbnail-view ul.panel-listing-thumbs li img { max-height:80px !important; width:auto !important;min-height:0 !important;}
 
 
 /* #viewer.demo .user-buttons.mirador-main-menu li:last-child { display:none; } */

@@ -677,49 +677,36 @@ function miradorAddZoomer() {
          let maxW = window.maxW
          let maxH = window.maxH
 
-         //if(!window.maxWimg) // ~ "landscape" images
-            //|| Math.abs(window.maxWimg - window.maxW) / Math.max(window.maxWimg,window.maxW) < 0.05)  // fix for special cases of 'large' horizontal images eg bdr:V1KG89131_I1KG89313
-         {
-            // val = 1 => w =  1 * W
-            // val = 0 => w =  x * W <=> x = dMin
+      
+         // val = 1 => w =  1 * W
+         // val = 0 => w =  x * W <=> x = dMin
 
-            let coef = 1, nuW = scrollV.innerWidth()
+         let coef = 1, nuW = scrollV.innerWidth(), trX = 0
 
-            if(maxW) {
+         if(maxW) {
+            let dMinW =  scrollV.innerWidth() / maxW
+            let coefW = 1 - (1 - dMinW) * (1 - val)            
+            coef = coefW            
+            nuW = maxW * coef
+         }
 
-               let dMinW =  scrollV.innerWidth() / maxW
-               let coefW = 1 - (1 - dMinW) * (1 - val)
-               
-               coef = coefW
-               
-               nuW = maxW * coef
+         if(maxH) {
+            let dMinH = 0.9 * scrollV.innerHeight() / maxH
+            let coefH = 1 - (1 - dMinH) * (1 - val)            
+            coef = Math.min(coef,coefH)
+            nuW = maxW * coef
+            if(nuW < scrollV.width() && coef < 1) {
+               trX = ( scrollV.width() - nuW ) / 2
             }
-
-            if(maxH) {
-               let dMinH = 0.9 * scrollV.innerHeight() / maxH
-               let coefH = 1 - (1 - dMinH) * (1 - val)
-               
-               coef = Math.min(coef,coefH)
-
-               nuW = maxW * coef
-
-               if(nuW < scrollV.width()) {
-
-                  //scrollT.width(scrollV.width() / coef )
-
-                  //scrollT.css({"margin-right":"-50000px"})
-               }
-            }            
             
-            console.log("coef1",coef,val)
+            //console.log("coef1",coef,val);
 
             let oldH = scrollT[0].getBoundingClientRect().height;
 
             scrollT.css({
-               "transform":"scale("+coef+") translateY("+10/coef+"px)",
+               "transform":"scale("+coef+") translateY("+10/coef+"px) translateX("+trX/coef+"px)",
                "margin-bottom":"-500000px" // no more empty space at bottom 
-            })
-            
+            })            
             
             scrollT.find(".thumb-label").css({
                "margin":10/coef,
@@ -728,65 +715,12 @@ function miradorAddZoomer() {
             })
             
             let nuH = scrollT[0].getBoundingClientRect().height;
-
             let sT = scrollV.scrollTop() + (nuH - oldH)*(scrollV.scrollTop()/oldH)
-            scrollV.scrollTop(sT)
+            scrollV.scrollTop(sT)            
             scrollV.scrollLeft((nuW - scrollV.innerWidth() ) / 2)
 
          }
-         /*
-         else if(window.Wimg > scrollV.innerWidth()) { // very large horizontal images
-
-            // val = 0 => coef = 1
-            // val = x => coef = 1 + (dMax - 1) * x
-            // val = 1 => coef = dMax
-
-            let dMax = _max / window.Wimg
-            let dMin = scrollV.innerWidth() / window.Wimg ;
-            let coef = dMin + dMax * val
-
-            console.log("coef2",coef,dMin,dMax,val)
-
-            let oldH = scrollT[0].getBoundingClientRect().height;
-
-            scrollT.css({"transform":"scale("+coef+")",
-               "margin-bottom":"-500000px"}) // no more empty space at bottom 
-            
-            let nuH = scrollT[0].getBoundingClientRect().height;
-            let sT = scrollV.scrollTop() + (nuH - oldH)*(scrollV.scrollTop()/oldH)
-            scrollV.scrollTop(sT)
-            scrollV.scrollLeft((jQ() * coef - scrollV.innerWidth() + 20) / 2)
-
-         } 
-         else { // ~ "portrait" images
-
-            // val = 0 => coef = 1
-            // val = x => coef = 1 + (dMax - 1) * x
-            // val = 1 => coef = dMax
-
-
-            let dMax = _max / window.Wimg
-            let coef = 1 + dMax * val
-            let oldH = scrollT[0].getBoundingClientRect().height;
-            
-            console.log("coef3",coef,dMax,val)
-
-            scrollT.css({"transform":"scale("+coef+")",
-               "margin-bottom":"-500000px" }) // no more empty space at bottom 
-            
-            let nuH = scrollT[0].getBoundingClientRect().height;
-            let sT = scrollV.scrollTop() + (nuH - oldH)*(scrollV.scrollTop()/oldH)
-            scrollV.scrollTop(sT)
-            
-         }
-      */
-
-
-         //console.log("h",sT,oldH,nuH)
-
-
       }
-
    }
 }
 
@@ -795,39 +729,28 @@ function miradorInitMenu(maxWonly) {
 
    if(maxWonly == undefined) maxWonly = false
 
-   //console.log("maxWo",maxWonly)
+   console.log("maxWo",maxWonly)
 
    if(!maxWonly) jQ(".user-buttons.mirador-main-menu li:nth-last-child(n-5):nth-last-child(n+2)").addClass("on")
    window.maxW = jQ(".mirador-container ul.scroll-listing-thumbs ").width()
 
    let maxH = 0, n, maxW = 0
    jQ(".mirador-container .mirador-viewer ul.scroll-listing-thumbs li img").each((i,v) => {
-      //if((n=Number(jQ(v).css("max-width"))) > maxWimg) { maxWimg = n ; Wimg = jQ(v).attr("width") ; }
       let im = jQ(v), w = im.width(), h = im.height()
-      if(/*w < h &&*/ h > maxH) maxH = h
+      if(h > maxH) { 
+         maxH = h
+         //console.log("h",h,window.Himg,maxH,im.attr("height"),im.height())
+      }
 
-      //if(w > window.maxW) window.maxW = w
-
-      /*
-      if(!im.get(0).naturalWidth) {
-         im.get(0).onload = function() {
-            console.log("loaded",this.naturalWidth, this.naturalHeight)
-
-            if(this.naturalWidth > this.naturalHeight && this.naturalWidth < window.maxW) { 
-               this.width = this.naturalWidth
-               jQ(this).css("min-height",this.naturalHeight+"px")
-               window.maxW = this.naturalWidth ; 
-               jQ("input#zoomer").trigger("input"); 
-            }
-         }
-      } 
-      */
    })
 
-   //if(maxW && maxW < window.maxW) window.maxW = maxW
    
    if(maxH) { window.maxH = maxH;  }
-   else if(window.maxH) delete window.maxH
+   else { 
+      if(window.maxH) delete window.maxH
+      if(window.Himg) delete window.Himg
+      if(window.Hratio) delete window.Hratio
+   }
 
    //console.log("w",jQ(".mirador-container ul.scroll-listing-thumbs ").width())
 
