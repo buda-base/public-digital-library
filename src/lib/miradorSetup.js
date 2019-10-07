@@ -664,6 +664,17 @@ function miradorAddZoomer() {
       jQ(".user-buttons.mirador-main-menu li:nth-last-child(2)")
       .before('<li><input title="Adjust zoom level" oninput="javascript:eval(\'window.setZoom(this.value)\');" type="range" min="0" max="1" step="0.01" value="0" id="zoomer"/></li>')
 
+      jQ(window).resize(() => {
+         delete window.maxW 
+         delete window.maxH
+         miradorInitMenu(true) 
+               
+         if(window.maxW <= jQ(".scroll-view").innerWidth() + 1)  jQ(".mirador-container ul.scroll-listing-thumbs ").addClass("transOri50"); 
+         else jQ(".mirador-container ul.scroll-listing-thumbs ").removeClass("transOri50"); 
+
+         jQ("input#zoomer").trigger("input")
+      })
+
       window.setZoom = (val) => {
 
          console.log("sZ",window.maxW,window.maxH)
@@ -684,7 +695,7 @@ function miradorAddZoomer() {
          let coef = 1, nuW = scrollV.innerWidth(), trX = 0
 
          if(maxW) {
-            let dMinW =  scrollV.innerWidth() / maxW
+            let dMinW = 0.95 * scrollV.innerWidth() / maxW
             let coefW = 1 - (1 - dMinW) * (1 - val)            
             coef = coefW            
             nuW = maxW * coef
@@ -695,31 +706,35 @@ function miradorAddZoomer() {
             let coefH = 1 - (1 - dMinH) * (1 - val)            
             coef = Math.min(coef,coefH)
             nuW = maxW * coef
-            if(nuW < scrollV.width() && coef < 1) {
-               trX = ( scrollV.width() - nuW ) / 2
+            
+            if(nuW < scrollV.innerWidth() && coef < 1 && maxW > scrollV.innerWidth()) {
+               trX = ( scrollV.innerWidth() - nuW ) / 2
             }
-            
-            //console.log("coef1",coef,val);
-
-            let oldH = scrollT[0].getBoundingClientRect().height;
-
-            scrollT.css({
-               "transform":"scale("+coef+") translateY("+10/coef+"px) translateX("+trX/coef+"px)",
-               "margin-bottom":"-500000px" // no more empty space at bottom 
-            })            
-            
-            scrollT.find(".thumb-label").css({
-               "margin":10/coef,
-               "margin-bottom":20/coef,
-               "transform":"scale("+1/coef+")"
-            })
-            
-            let nuH = scrollT[0].getBoundingClientRect().height;
-            let sT = scrollV.scrollTop() + (nuH - oldH)*(scrollV.scrollTop()/oldH)
-            scrollV.scrollTop(sT)            
-            scrollV.scrollLeft((nuW - scrollV.innerWidth() ) / 2)
-
          }
+
+
+         //console.log("coef1",coef,val)
+         //console.log("nuW",nuW,scrollV.innerWidth(),trX);
+
+         let oldH = scrollT[0].getBoundingClientRect().height;
+
+         scrollT.css({
+            "transform":"scale("+coef+") translateY("+10/coef+"px) translateX("+trX/coef+"px)",
+            "margin-bottom":"-500000px" // no more empty space at bottom 
+         })            
+         
+         scrollT.find(".thumb-label").css({
+            "margin":10/coef,
+            "margin-bottom":20/coef,
+            "transform":"scale("+1/coef+")"
+         })
+         
+         let nuH = scrollT[0].getBoundingClientRect().height;
+         let sT = scrollV.scrollTop() + (nuH - oldH)*(scrollV.scrollTop()/oldH)
+         scrollV.scrollTop(sT)            
+         scrollV.scrollLeft((nuW - scrollV.innerWidth() ) / 2)
+
+         
       }
    }
 }
@@ -754,16 +769,17 @@ function miradorInitMenu(maxWonly) {
 
    //console.log("w",jQ(".mirador-container ul.scroll-listing-thumbs ").width())
 
+
    if(window.maxW < jQ(".scroll-view").innerWidth())
    {
-      window.maxW = 0
+      //window.maxW = 0
       if(!maxWonly)  {
-         jQ(".mirador-container ul.scroll-listing-thumbs ").css({"transform-origin":"50% 0"});
+         jQ(".mirador-container ul.scroll-listing-thumbs ").addClass("transOri50"); 
          //if(!window.maxWimg) 
          jQ(".user-buttons.mirador-main-menu").find("li:nth-last-child(3),li:nth-last-child(4)").removeClass("on").hide()
       }
    }
-   
+ 
    if(!maxWonly) jQ("input#zoomer").trigger("input")
 
    //console.log("maxW",window.maxW)

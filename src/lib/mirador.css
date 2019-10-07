@@ -27,6 +27,8 @@
    transform-origin:0 0; margin:auto;
    /* transition:transform-origin 1000ms linear ; */
 }
+.mirador-container ul.scroll-listing-thumbs.transOri50 { transform-origin: 50% 0; }
+
 .mirador-container .mirador-viewer .image-view { position:absolute; }
 .mirador-container .mirador-viewer ul.scroll-listing-thumbs li {  width:auto;display:block;position:relative; padding:0; margin-bottom:0; }
 .mirador-container .mirador-viewer ul.scroll-listing-thumbs li img { position:relative; }
