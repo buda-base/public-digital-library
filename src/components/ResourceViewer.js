@@ -1869,7 +1869,8 @@ class ResourceViewer extends Component<Props,State>
                            else if(v.type === 'literal' && v.datatype && this.props.dictionary && (dic = this.props.dictionary[v.datatype]) && dic[rdfs+"subClassOf"] 
                               && dic[rdfs+"subClassOf"].filter(s => s.value === bdo+"AnyDate").length) {
 
-                              let dateC = dic[rdfs+"comment"]
+                              let dateC = dic[adm+"userTooltip"]
+                              if(!dateC) dateC = dic[rdfs+"comment"]
                               if(dateC) dateC = dateC[0]
                               if(dateC) dateC = dateC.value
 
@@ -2285,7 +2286,12 @@ class ResourceViewer extends Component<Props,State>
    proplink = (k,txt) => {
 
       let tooltip
-      if(this.props.ontology[k] && this.props.ontology[k][rdfs+"comment"]) tooltip = this.props.ontology[k][rdfs+"comment"].filter(comm => !comm.value.match(/^([Mm]igration|[Dd]eprecated)/))
+      if(this.props.ontology[k]) {
+         if(this.props.ontology[k][adm+"userTooltip"]) 
+            tooltip = this.props.ontology[k][adm+"userTooltip"]
+         else if(this.props.ontology[k][rdfs+"comment"]) 
+            tooltip = this.props.ontology[k][rdfs+"comment"].filter(comm => !comm.value.match(/^([Mm]igration|[Dd]eprecated)/))
+      }
 
       if(k === bdo+'note') txt = "Notes" ;
 

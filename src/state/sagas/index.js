@@ -841,29 +841,43 @@ function addMeta(keyword:string,language:string,data:{},t:string,tree:{},found:b
    }
 }
 
-function mergeSameAs(result,withSameAs,init = true,rootRes = result, force = false)
+function mergeSameAs(result,withSameAs,init = true,rootRes = result, force = false, keyword)
 {
-   //console.log("res",result,rootRes)
+   console.log("res",result,rootRes,keyword)
 
    if(!result) return
+
+   let rData, sameBDRC
+   if(keyword) { 
+      rData = store.getState().data.resources
+      if(rData) rData = rData[keyword]
+      if(rData) rData = rData[fullUri(keyword)]
+      if(rData) rData = rData[owl+"sameAs"]
+      if(rData) rData = rData.filter(r => r.value.match(new RegExp(bdr)))
+      if(rData && rData.length) sameBDRC = rData[0].value
+      console.log("rData",rData)
+   } 
  
    if(init) for(let t of Object.keys(result)) {
       if(t !== "metadata" && t !== "tree") {
          let fullT = bdo+t[0].toUpperCase()+t.substring(1,t.length - 1)
          let keys = Object.keys(result[t])
          if(keys) for(let k of keys) {
-            if(!k.match(/purl[.]bdrc/)) {
-               let same = result[t][k].filter(s => s.type && s.type === owl+"sameAs" && s.value !== k && s.value.match(/purl[.]bdrc/))
-               if(same.length || force) withSameAs[k] = { t, fullT, props:{ ...result[t][k]}, same:same.map(s=>s.value) }
+            if(!k.match(/purl[.]bdrc/) || (keyword && keyword.match(new RegExp(bdr)))) {
+               let same = result[t][k].filter(s => (s.type && s.type === owl+"sameAs" && s.value !== k && s.value.match(/purl[.]bdrc/)) || (s.type === tmp+"relationType" && s.value === owl+"sameAs"))
+               if(same.length || force) withSameAs[k] = { t, fullT, props:{ ...result[t][k]}, same:same.map(s=>s.type!==tmp+"relationType"?s.value:(sameBDRC?sameBDRC:(keyword?keyword:"?"))) }
             }
          }
       }
-   } 
+   }
+
+   console.log("wSa",withSameAs)
 
    let keys = Object.keys(withSameAs)
    if(keys) for(let i in keys) {
       let k = keys[i]
       let r = withSameAs[k]
+      console.log("k r",k,r)
       if(force && !rootRes[r.t][k]) {
          delete result[r.t][k]
       }
@@ -896,8 +910,6 @@ function mergeSameAs(result,withSameAs,init = true,rootRes = result, force = fal
       }
    }
 
-   console.log("wSa",withSameAs)
-
    return result
 }
 
@@ -926,7 +938,7 @@ async function startSearch(keyword,language,datatype,sourcetype,dontGetDT) {
       let rootRes
       if(datatype) rootRes = store.getState().data.searches[keyword+"@"+language]
       if(rootRes) rootRes = rootRes.results.bindings  
-      result = mergeSameAs(result,{},true,rootRes,true)
+      result = mergeSameAs(result,{},true,rootRes,true,!language?keyword:null)
 
       console.log("newRes",result)
 
