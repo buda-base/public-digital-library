@@ -61,7 +61,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faLanguage } from '@fortawesome/free-solid-svg-icons'
 //import {MapComponent} from './Map';
 import {getEntiType} from '../lib/api';
-import {languages,getLangLabel,top_right_menu} from './App';
+import {languages,getLangLabel,top_right_menu,prefixesMap as prefixes,sameAsMap,shortUri} from './App';
 import Popover from '@material-ui/core/Popover';
 import MenuItem from '@material-ui/core/MenuItem';
 import List from '@material-ui/core/List';
@@ -108,7 +108,8 @@ type Props = {
    onHasImageAsset:(u:string,s:string) => void,
    onGetChunks: (s:string,b:number) => void,
    onGetPages: (s:string,b:number) => void,
-   onToggleLanguagePanel:()=>void
+   onToggleLanguagePanel:()=>void,
+   onUserProfile:(url:{})=>void
 }
 type State = {
    uviewer : boolean,
@@ -136,26 +137,45 @@ type State = {
  }
 
 
-
-const adm  = "http://purl.bdrc.io/ontology/admin/" ;
-const bdac = "http://purl.bdrc.io/anncollection/" ;
-const bdan = "http://purl.bdrc.io/annotation/" ;
-const bda  = "http://purl.bdrc.io/admindata/";
-const bdo  = "http://purl.bdrc.io/ontology/core/";
-const bdr  = "http://purl.bdrc.io/resource/";
-const foaf = "http://xmlns.com/foaf/0.1/" ;
-const owl  = "http://www.w3.org/2002/07/owl#";
-const oa = "http://www.w3.org/ns/oa#" ;
-const rdf  = "http://www.w3.org/1999/02/22-rdf-syntax-ns#";
-const rdfs = "http://www.w3.org/2000/01/rdf-schema#";
-const skos = "http://www.w3.org/2004/02/skos/core#";
-const tmp  = "http://purl.bdrc.io/ontology/tmp/" ;
-const _tmp  = "http://purl.bdrc.io/ontology/tmp/" ;
-const  xsd  = "http://www.w3.org/2001/XMLSchema#" ;
-
+const adm   = "http://purl.bdrc.io/ontology/admin/" ;
+const bda   = "http://purl.bdrc.io/admindata/";
+const bdac  = "http://purl.bdrc.io/anncollection/" ;
+const bdan  = "http://purl.bdrc.io/annotation/" ;
+const bdo   = "http://purl.bdrc.io/ontology/core/"
+const bdr   = "http://purl.bdrc.io/resource/";
 const dila  = "http://purl.dila.edu.tw/resource/";
+const foaf  = "http://xmlns.com/foaf/0.1/" ;
+const mbbt  = "http://mbingenheimer.net/tools/bibls/" ;
+const oa    = "http://www.w3.org/ns/oa#" ;
+const ola    = "https://openlibrary.org/authors/" 
+const owl   = "http://www.w3.org/2002/07/owl#" ; 
+const rdf   = "http://www.w3.org/1999/02/22-rdf-syntax-ns#";
+const rdfs  = "http://www.w3.org/2000/01/rdf-schema#";
+const rkts  = "http://purl.rkts.eu/resource/";
+const skos  = "http://www.w3.org/2004/02/skos/core#";
+const tmp   = "http://purl.bdrc.io/ontology/tmp/" ;
+const _tmp  = tmp ;
+const viaf  = "http://viaf.org/viaf/"
+const wd    = "http://www.wikidata.org/entity/"
+const xsd   = "http://www.w3.org/2001/XMLSchema#" ;
 
-const prefixes = { adm, bdac, bdan, bda, bdo, bdr, foaf, oa, owl, rdf, rdfs, skos, xsd, tmp, dila }
+
+const providers = { 
+   "bdr":"Buddhist Digital Resource Center",
+   "bnf":"Bibliothèque nationale de France",
+   "dila":"Dharma Drum Institute of Liberal Arts",
+   "eap":"Endangered Archives Programme",
+   "ia":"Internet Archive",                 
+   "gretil":"Göttingen Register of Electronic Texts in Indian Languages",
+   "rkts":"Resources for Kanjur & Tanjur Studies",
+   "mbbt":"Marcus Bingenheimer",
+   "wd":"Wikidata",
+   "ola":"Open Library",
+   "viaf":"Virtual International Authority File"
+   }
+   
+//const prefixes = { adm, bdac, bdan, bda, bdo, bdr, foaf, oa, owl, rdf, rdfs, skos, xsd, tmp, dila }
+
 
 let propOrder = {
    "Corporation":[],
@@ -176,15 +196,16 @@ let propOrder = {
       "bdo:itemVolumes"
    ],
    "Lineage":[
+      "skos:prefLabel",
       "skos:altLabel",
       "bdo:lineageObject",
       "bdo:lineageType",
       "bdo:workLocation",
    ],
    "Person" : [
-      "skos:altLabel",
-      "owl:sameAs",
       "bdo:personName",
+      "skos:prefLabel",
+      "skos:altLabel",
       "bdo:personGender",
       "bdo:kinWith",
       "bdo:personEvent",
@@ -195,9 +216,18 @@ let propOrder = {
       "bdo:personTeacherOf",
       "bdo:personStudentOf",
       "bdo:note",
+      "owl:sameAs",
+      "bdo:sameAsVIAF",
+      "adm:sameAsMBBT",
+      "adm:sameAsVIAF",
+      "adm:sameAsrKTs",
+      "adm:sameAsToL",
+      "adm:sameAsWorldCat",   
+      "adm:sameAsWikidata",
       "rdfs:seeAlso",
     ],
    "Place":[
+      "skos:prefLabel",
       "skos:altLabel",
       "bdo:placeLat",
       "bdo:placeLong",
@@ -212,16 +242,23 @@ let propOrder = {
    "Topic":[],
    "Work":[
       "bdo:workTitle",
+      "skos:prefLabel",
       "skos:altLabel",
-      "bdo:workExpressionOf",
       "bdo:workType",
+      "bdo:workExpressionOf",
+      "bdo:workDerivativeOf",
+      "bdo:workTranslationOf",
       "bdo:workHasExpression",
+      "bdo:workHasDerivative",
+      "bdo:workHasTranslation",
+      "tmp:workHasTranslationInCanonicalLanguage",
+      "tmp:workHasTranslationInNonCanonicalLanguage",
       "bdo:workIsAbout",
       "bdo:workGenre",
       // "bdo:creatorMainAuthor",
       // "bdo:creatorContributingAuthor",
       "bdo:creator",
-      //"bdo:workCreator",
+      "bdo:workCreator",
       "bdo:workLangScript",
       "bdo:workOtherLangScript",
       "bdo:workObjectType",
@@ -235,6 +272,16 @@ let propOrder = {
       "bdo:workLocation",
       "bdo:workPartOf",
       "bdo:workHasPart",
+      "bdo:workRefTaisho",
+      "bdo:sameAsVIAF",
+      "owl:sameAs",
+      "adm:sameAsMBBT",
+      "adm:sameAsVIAF",
+      "adm:sameAsrKTs",
+      "adm:sameAsToL",
+      "adm:sameAsWorldCat",   
+      "adm:sameAsWikidata",
+      "rdfs:seeAlso",
       "bdo:note",
       "bdo:workCatalogInfo",
       "bdo:workHasSourcePrintery",
@@ -246,6 +293,35 @@ let propOrder = {
 }
 
 let reload = false ;
+
+function getRealUrl(that,url) {
+
+   if(that.props.assocResources && that.props.assocResources[url]) {
+      let orec, canUrl ;
+      orec = that.props.assocResources[url].filter(r => r.type === adm+"originalRecord" || r.fromKey === adm+"originalRecord")
+      if(orec && orec.length) return orec[0].value
+      canUrl = that.props.assocResources[url].filter(r => r.type === adm+"canonicalHtml" ||  r.fromKey === adm+"canonicalHtml")
+      if(canUrl && canUrl.length) return canUrl[0].value
+   }
+
+   return url ;
+}
+
+function getOntoLabel(dict,locale,lang,prop = skos+"prefLabel") {
+   if(dict[lang]) {
+      lang = dict[lang][prop]
+      if(lang && lang.length) {
+         let uilang = lang.filter(l => l["lang"] === locale)
+         if(uilang.length) lang = uilang[0].value 
+         else {
+            uilang = lang.filter(l => l["lang"] === "en")
+            if(uilang.length) lang = uilang[0].value 
+            else lang = lang[0].value
+         }
+      }
+   }
+   return lang;
+}
 
 function top_left_menu(that,pdfLink,monoVol,fairUse)
 {
@@ -259,11 +335,11 @@ function top_left_menu(that,pdfLink,monoVol,fairUse)
           </IconButton>
        </Link>
        {
-          that.props.IRI.match(/^bd[ra]:/) &&
-          [<a className="goBack" target="_blank" title="TTL version" rel="alternate" type="text/turtle" href={"http://purl.bdrc.io/"+that.props.IRI.replace(/bdr:/,"resource/").replace(/bda:/,"admindata/")+".ttl"}>
+          that.props.IRI.match(/^(bd[ra])|(dila):/) &&
+          [<a className="goBack" target="_blank" title="TTL version" rel="alternate" type="text/turtle" href={that.expand(that.props.IRI)+".ttl"}>
              <Button style={{marginLeft:"0px",paddingLeft:"10px",paddingRight:0}}>{I18n.t("resource.export")} ttl</Button>
           </a>,<span>&nbsp;/&nbsp;</span>,
-          <a className="goBack noML" target="_blank" title="JSON-LD version" rel="alternate" type="application/ld+json" href={"http://purl.bdrc.io/"+that.props.IRI.replace(/bdr:/,"resource/").replace(/bda:/,"admindata/")+".jsonld"}>
+          <a className="goBack noML" target="_blank" title="JSON-LD version" rel="alternate" type="application/ld+json" href={that.expand(that.props.IRI)+".jsonld"}>
              <Button style={{paddingLeft:0,paddingRight:"10px"}}>json-ld</Button>
           </a>]
        }
@@ -398,7 +474,8 @@ function top_left_menu(that,pdfLink,monoVol,fairUse)
           <ChatIcon />
        </IconButton>
        {
-          that.props.IRI.match(/^[^:]+:[RPGTW]/) &&
+          //that.props.IRI.match(/^[^:]+:[RPGTW]/) &&
+          prefixes[that.props.IRI.replace(/^([^:]+):.*$/,"$1")] &&
           <Link className="goBack" to={"/search?r="+that.props.IRI+"&t=Any"}>
              <Button style={{marginLeft:"0px",paddingLeft:"10px"}}>{I18n.t("resource.browse")} &gt;</Button>
           </Link>
@@ -419,7 +496,7 @@ class ResourceViewer extends Component<Props,State>
 
       this.state = { uviewer:false, imageLoaded:false, collapse:{}, pdfOpen:false, showAnno:true }
 
-      console.log("props",props)
+      //console.log("props",props)
 
       let tmp = {}
       for(let k of Object.keys(propOrder)){ tmp[k] = propOrder[k].map((e) => this.expand(e)) }
@@ -523,6 +600,7 @@ class ResourceViewer extends Component<Props,State>
       if(!this.props.IRI || !this.props.resources || !this.props.resources[this.props.IRI]
          || !this.props.resources[this.props.IRI][this.expand(this.props.IRI)]) return {}
 
+      let onto = this.props.ontology
       let prop = this.props.resources[this.props.IRI][this.expand(this.props.IRI)] ;
       let w = prop[bdo+"workDimWidth"]
       let h = prop[bdo+"workDimHeight"]
@@ -576,17 +654,22 @@ class ResourceViewer extends Component<Props,State>
          if(prop[bdo+"itemHasVolume"]) prop[bdo+"itemHasVolume"] = sortBySubPropNumber(bdo+"itemHasVolume", bdo+"volumeNumber");
 
          let sortBySubPropURI = (tagEnd:string) => {
-            let assoR = this.props.assocResources            
             let valSort = prop[bdo+tagEnd] 
-            if(this.props.dictionary && this.props.assocResources) {
-               valSort = valSort.map(v => ({...v,type:'bnode'})).map(w => w.type!=='bnode'||!assoR[w.value]?w:{'bnode':w.value,'k':assoR[w.value].filter(e => e.fromKey === rdf+"type").reduce( (acc,e) => {
-                  let p = this.props.dictionary[e.value]
-                  if(p) p = p[rdfs+"subClassOf"]
-                  if(p) p = p.filter(f => f.value === bdo+tagEnd[0].toUpperCase()+tagEnd.substring(1)).length
-                  if(p) return e.value + ";" + acc  
-                  else return acc+e.value+";"
-               },"")})              
-               valSort = _.orderBy(valSort,['k'],['asc']).map(e => ({'type':'bnode','value':e.bnode,'sorted':true}))               
+            if(this.props.dictionary && this.props.resources) {
+               let assoR = this.props.resources[this.props.IRI]
+               if(assoR) { 
+                  let lang
+                  valSort = valSort.map(v => ({...v,type:'bnode'})).map(w => w.type!=='bnode'||!assoR[w.value]?w:{...w,'bnode':w.value,'k':!assoR[w.value]||!assoR[w.value][rdf+"type"]?"":assoR[w.value][rdf+"type"].reduce( (acc,e) => {
+                     let p = this.props.dictionary[e.value]
+                     //console.log(p)
+                     if(p) p = p[rdfs+"subClassOf"]
+                     if(p) p = p.filter(f => f.value === bdo+tagEnd[0].toUpperCase()+tagEnd.substring(1)).length
+                     if(p) return e.value + ";" + acc  
+                     else return acc+e.value+";"
+                  },"") + ((lang = getLangLabel(this, assoR[w.value][rdfs+"label"]))&&lang.lang?lang.lang+";"+lang.value:"") })
+                  //console.log("valsort",assoR,valSort)
+                  valSort = _.orderBy(valSort,['k'],['asc']).map(e => ({'type':'bnode','value':e.bnode,'sorted':true, ...e.fromSameAs?{fromSameAs:e.fromSameAs}:{}}))               
+               }
             }
             return valSort ; //
          }
@@ -608,36 +691,97 @@ class ResourceViewer extends Component<Props,State>
                   //console.log("index",e,assoR[e.value])
                   if(assoR[e.value])
                   {
-                     /*
-                     label1 = assoR[e.value].filter(e => e.type === skos+"prefLabel" && (e.lang === this.props.prefLang || e["xml:lang"] === this.props.prefLang))
-                     if(label1.length === 0) label1 = assoR[e.value].filter(e => e.type === skos+"prefLabel")
-                     */
                      label1 = getLangLabel(this, assoR[e.value].filter(e => e.type === skos+"prefLabel"))
                      if(label1 && label1.value) label1 = label1.value
 
                      if(assoR[e.value].filter(e => e.type === bdo+"workHasRoot").length > 0)
                      {
-                        /*
-                        label2 = assoR[assoR[e.value].filter(e => e.type === bdo+"workHasRoot")[0].value].filter(e => e.type === skos+"prefLabel" && (e.lang === this.props.prefLang || e["xml:lang"] === this.props.prefLang))
-                        if(label2.length === 0) label2 = assoR[assoR[e.value].filter(e => e.type === bdo+"workHasRoot")[0].value].filter(e => e.type === skos+"prefLabel")
-                        */
-                        label2 = getLangLabel(assoR[assoR[e.value].filter(e => e.type === bdo+"workHasRoot")[0].value].filter(e => e.type === skos+"prefLabel"))
-                        if(label2 && label2.value > 0) label2 = label2.value
-                        //console.log(label2)
+                        label2 = getLangLabel(this,assoR[assoR[e.value].filter(e => e.type === bdo+"workHasRoot")[0].value].filter(e => e.type === skos+"prefLabel"))                        
+                        label2 = label2.value
                      }
                   }
 
                   return ({ ...e, label1, label2 })
                })
 
-               prop[bdo+"workHasExpression"] = _.sortBy(expr,['label1','label2'])
+               prop[bdo+"workHasExpression"] = _.orderBy(expr,['label1','label2'])
 
                //for(let o of prop[bdo+"workHasExpression"]) console.log(o.value,o.label1)
 
             }
          }
 
+         let sortByLang = (deriv) => { 
+            deriv = deriv.map((e) => {
+               let label1,label2 ;
+               let assoR = this.props.assocResources
+               if(assoR[e.value])                  {
+                  label1 = getLangLabel(this, assoR[e.value].filter(e => e.type === skos+"prefLabel"))
+                  if(label1 && label1.value) label1 = label1.value
+                  if(assoR[e.value].filter(e => e.type === bdo+"workLangScript"|| e.type === tmp+"language").length > 0)
+                  {
+                     label2 = assoR[e.value].filter(e => e.type === bdo+"workLangScript"|| e.type === tmp+"language")[0].value
+                  }
+               }
+               return ({ ...e, label1, label2 })
+            })
+           
+            return _.orderBy(deriv,['label2','label1'])
+         }
+         
+         expr = prop[bdo+"workHasTranslation"]
+         if(expr !== undefined) {
 
+            //console.log("hasDerivCa",expr)
+
+            let assoR = this.props.assocResources
+            if (assoR) {
+
+               let cano = [], nonCano = [], subLangDeriv = {}
+               let canoLang = ["Bo","Pi","Sa","Zh"]
+               expr.filter(e => {
+                  let lang = assoR[e.value],langLab
+                  if(lang) lang = lang.filter(l => l.type === bdo+"workLangScript" || l.type === tmp+"language")                  
+                  if(lang && lang.length) { 
+                     lang = lang[0].value.replace(/[/]Lang/,"/")                  
+                     langLab = getOntoLabel(this.props.dictionary,this.props.locale,lang)
+                  }
+                  else lang = false ;
+                  if(lang && canoLang.filter(v => lang.match(new RegExp("/"+v+"[^/]*$"))).length) {
+                     let ontoProp = tmp+"workHasTranslationInCanonicalLanguage"+lang.replace(/^.*[/]([^/]+)$/,"$1")
+                     onto[ontoProp] = {
+                        [rdfs+"label"]: [{type: "literal", value: langLab, lang: "en"}],
+                        [rdfs+"subPropertyOf"]: [{type: "uri", value: tmp+"workHasTranslationInCanonicalLanguage"}],
+                        [tmp+"langKey"]: [{type:"literal", value:lang}]
+                     }
+                     if(!subLangDeriv[ontoProp]) subLangDeriv[ontoProp] = []
+                     subLangDeriv[ontoProp].push(e)
+                     cano.push(e);
+                  }
+                  else if(lang) {
+                     let ontoProp = tmp+"workHasTranslationInNonCanonicalLanguage"+lang.replace(/.*[/]([^/]+)$/,"$1")
+                     onto[ontoProp] = {
+                        [rdfs+"label"]: [{type: "literal", value: langLab, lang: "en"}],
+                        [rdfs+"subPropertyOf"]: [{type: "uri", value: tmp+"workHasTranslationInNonCanonicalLanguage"}],
+                        [tmp+"langKey"]: [{type:"literal", value:lang}]
+                     }
+                     if(!subLangDeriv[ontoProp]) subLangDeriv[ontoProp] = []
+                     subLangDeriv[ontoProp].push(e)
+                     nonCano.push(e);
+                  }
+                  return true
+               })
+               let keys = Object.keys(subLangDeriv)
+               if(keys.length >= 2) {
+                  for(let k of keys) {
+                     prop[k] = sortByLang(subLangDeriv[k])
+                  }
+                  if(cano.length) { prop[tmp+"workHasTranslationInCanonicalLanguage"] = sortByLang(cano) }
+                  if(nonCano.length) { prop[tmp+"workHasTranslationInNonCanonicalLanguage"] = sortByLang(nonCano) }
+                }
+                else prop[bdo+"workHasTranslation"] = sortByLang(expr)
+            }
+         }
          let t = getEntiType(this.props.IRI);
          if(t && propOrder[t])
          {
@@ -681,21 +825,21 @@ class ResourceViewer extends Component<Props,State>
                   if(a.type == "bnode" && a.value) a = that.getResourceBNode(a.value)
                   if(b.type == "bnode" && b.value) b = that.getResourceBNode(b.value)
 
-                  //console.log(a,b)
+                  //console.log("A,B",A,B,a,b)
 
-                  if(!a["value"] && a[rdfs+"label"] && a[rdfs+"label"][0]) a = a[rdfs+"label"][0]
-                  if(a["lang"]) a = a["lang"]
-                  else if(a["xml:lang"] && a["xml:lang"] != "") a = a["xml:lang"]
+                  if(a && !a["value"] && a[rdfs+"label"] && a[rdfs+"label"][0]) a = a[rdfs+"label"][0]
+                  if(a && a["lang"]) a = a["lang"]
+                  else if(a && a["xml:lang"] && a["xml:lang"] != "") a = a["xml:lang"]
                   //else if(a["type"] == "uri") a = a["value"]
                   else a = null
 
-                  if(!b["value"] && b[rdfs+"label"] && b[rdfs+"label"][0]) b = b[rdfs+"label"][0]
-                  if(b["lang"]) b = b["lang"]
-                  else if(b["xml:lang"] && b["xml:lang"] != "") b = b["xml:lang"]
+                  if(b && !b["value"] && b[rdfs+"label"] && b[rdfs+"label"][0]) b = b[rdfs+"label"][0]
+                  if(b && b["lang"]) b = b["lang"]
+                  else if(b && b["xml:lang"] && b["xml:lang"] != "") b = b["xml:lang"]
                   //else if(b["type"] == "uri") b = b["value"]
                   else b = null
 
-                  //console.log(a,b)
+                  //console.log("a,b",a,b)
 
                   if( a && b ) {
                      if(a < b ) return -1 ;
@@ -802,6 +946,8 @@ class ResourceViewer extends Component<Props,State>
 
    hasSuper(k:string)
    {
+      //console.log("sup",k)
+
       if(!this.props.ontology[k] || (!this.props.ontology[k][rdfs+"subPropertyOf"] && !this.props.ontology[k][rdfs+"subClassOf"]))
       {
          return false
@@ -813,7 +959,7 @@ class ResourceViewer extends Component<Props,State>
          {
             let e = tmp[0]
 
-            //console.log("k e",k,e.value,e, this.props.ontology[k], this.props.ontology[e.value])
+            //console.log("super e",e.value) //tmp,k,e.value,e, this.props.ontology[k], this.props.ontology[e.value])
 
             if(this.props.ontology[e.value][rdfs+"subPropertyOf"])
                tmp = tmp.concat(this.props.ontology[e.value][rdfs+"subPropertyOf"].map(f => f))
@@ -821,6 +967,7 @@ class ResourceViewer extends Component<Props,State>
                tmp = tmp.concat(this.props.ontology[e.value][rdfs+"subClassOf"].map(f => f))
 
             if(this.props.ontology[e.value] && this.props.ontology[e.value][bdo+"inferSubTree"]) return true ;
+            else if(e.value===bdo+"workTranslationOf") return false
 
             delete tmp[0]
             tmp = tmp.filter(e => e != null)
@@ -840,19 +987,43 @@ class ResourceViewer extends Component<Props,State>
    subProps(k:string,div:string="sub")
    {
 
-      //console.log("subP",k,div)
+      //console.log("subP",div,k)
 
       let ret = []
       if(this.props.IRI && this.props.resources[this.props.IRI] && this.props.resources[this.props.IRI][this.expand(this.props.IRI)]) {
 
+         let res = this.props.resources[this.props.IRI][this.expand(this.props.IRI)]
+         let onto = this.props.ontology
+         let dict = this.props.dictionary
+         let subKeys = Object.keys(res).map(q => {
+            let key,alphaK="zz",numK=1000
+            if(onto[q] && onto[q][tmp+"langKey"]) {
+               key = onto[q][tmp+"langKey"]
+               if(key && key.length) {
+                  key = key[0].value
+                  key = key.replace(/^.*[/]([^/][^/])[^/]*$/,"$1").toLowerCase()
+                  alphaK = key
+                  for(let i in this.props.langPreset) {
+                     let l = this.props.langPreset[i]
+                     if(l === key) numK = i
+                     else if(l.match(new RegExp("^"+key))) numK = 100 + Number(i)
+                  }
+               }            
+            }
+            return {"val":q, numK,alphaK}
+         })
+         subKeys = _.orderBy(subKeys,['numK','alphaK','val'])
+         //console.log("subK",JSON.stringify(subKeys,null,3))
+         subKeys = subKeys.map(q => q.val)
+         
 
-         for(let p of Object.keys(this.props.resources[this.props.IRI][this.expand(this.props.IRI)])) {
+         for(let p of subKeys) {
 
 
             if(this.props.ontology[p] && this.props.ontology[p][rdfs+"subPropertyOf"]
                && this.props.ontology[p][rdfs+"subPropertyOf"].filter((e)=>(e.value == k)).length > 0)
             {
-               //console.log(p)
+               //console.log("p",p)
 
                let tmp = this.subProps(p,div+"sub")
                let vals
@@ -873,16 +1044,19 @@ class ResourceViewer extends Component<Props,State>
       return ret
    }
 
-   uriformat(prop:string,elem:{},dico:{} = this.props.assocResources, withProp?:string,show?:string="show")
+   uriformat(prop:string,elem:{},dic:{} = this.props.assocResources, withProp?:string,show?:string="show")
    {
       if(elem) {
 
-         //console.log("uriformat",prop,elem.value,dico,withProp,show)
+         //console.log("uriformat",prop,elem.value,elem,dic,withProp,show)
 
-         if(!elem.value.match(/^http:\/\/purl\.bdrc\.io/)) {
-            return <a href={elem.value} target="_blank">{decodeURI(elem.value)}</a> ;
+         if(!elem.value.match(/^http:\/\/purl\.bdrc\.io/) && ((!dic || !dic[elem.value]) && !prop.match(/[/#]sameAs/))) {
+            return <a href={elem.value} target="_blank">{shortUri(decodeURI(elem.value))}</a> ;
          }
 
+         let dico = dic ;
+
+         
          // test if ancestor/type of property has range subclassof entity
 /*
          let q =[]
@@ -916,6 +1090,12 @@ class ResourceViewer extends Component<Props,State>
                   if(dico) {
                      infoBase = dico[elem.value]
 
+                     if(!infoBase)  {
+                        infoBase = this.props.dictionary[elem.value]
+                        //console.log("ib",infoBase,dico)
+                        if(infoBase) infoBase = infoBase[skos+"prefLabel"]
+                     }
+
                      //console.log("base",JSON.stringify(infoBase,null,3))
 
                      if(infoBase) {
@@ -939,7 +1119,7 @@ class ResourceViewer extends Component<Props,State>
                         info = infoBase.filter((e)=>(e["xml:lang"] && e.type==prop && e["xml:lang"]==this.props.prefLang))
                         if(info.length == 0) info = infoBase.filter((e)=>(e["xml:lang"] && e.type==prop))
                         */
-                        info = [ getLangLabel(this, infoBase.filter((e)=>((e["xml:lang"] || e["lang"])))) ]
+                        info = [ getLangLabel(this, infoBase.filter((e)=>((e["xml:lang"] || e["lang"] || e.fromKey && e.fromKey === foaf+"name")))) ]                        
                         if(!info) info = [ getLangLabel(this, infoBase.filter((e)=>((e["xml:lang"] || e["lang"]) && e.type==prop))) ]
 
                         //console.log("info",info)
@@ -969,7 +1149,8 @@ class ResourceViewer extends Component<Props,State>
                                  if(!lang) lang = info[0]["lang"]
                                  info = info[0].value
                               }
-                              else {
+                              else if(infoBase.length) {
+                                 
                                  lang = infoBase[0]["xml:lang"]
                                  if(!lang) lang = infoBase[0]["lang"]
                                  info = infoBase[0].value
@@ -982,25 +1163,149 @@ class ResourceViewer extends Component<Props,State>
                      }
                   }
 
-                  //console.log("s",prop,elem,info,infoBase)
 
                   // we can return Link
                   let pretty = this.fullname(elem.value,true);
-                  let prefix = "bdr:"
-                  if(elem.value.match(new RegExp(bda))) prefix = "bda:"
+                  let prefix = "bdr:", sameAsPrefix = "";
+                  for(let p of Object.keys(prefixes)) { 
+                     if(elem.value.match(new RegExp(prefixes[p]))) { prefix = p; if(!p.match(/^bd[ar]$/) && !this.props.IRI.match(new RegExp("^"+p+":"))) { sameAsPrefix = p + " sameAs hasIcon "; } }
+                     if(elem.fromSameAs && elem.fromSameAs.match(new RegExp(prefixes[p]))) sameAsPrefix = p + " sameAs hasIcon "
+                  }
+                  let isExtW
+                  if(this.props.assocResources && this.props.assocResources[elem.value] && (isExtW = this.props.assocResources[elem.value].filter(e => e.type === tmp+"provider")).length) {
 
-                  if(info && infoBase && infoBase.filter(e=>e["xml:lang"]||e["lang"]).length >= 0) {
-                     ret.push([<Link className="urilink prefLabel" to={"/"+show+"/"+prefix+pretty}>{info}</Link>,lang?<Tooltip placement="bottom-end" title={
+
+                     let provLab = this.props.dictionary[isExtW[0].value]
+                     if(provLab) provLab = provLab[skos+"prefLabel"]
+                     if(provLab && provLab.length) provLab = provLab[0].value 
+                     
+                     //console.log("isExtW",isExtW,this.props.dictionary,provLab)
+
+                     if(provLab === "GRETIL") sameAsPrefix += "gretil provider hasIcon "
+                     else if(provLab === "EAP") sameAsPrefix += "eap provider hasIcon "
+                     else if(provLab === "BnF") sameAsPrefix += "bnf provider hasIcon "
+                     else if(provLab === "Internet Archives") sameAsPrefix += "ia provider hasIcon "
+                  }
+
+                  //console.log("s",prop,prefix,pretty,elem,info,infoBase)
+
+
+                  if((info && infoBase && infoBase.filter(e=>e["xml:lang"]||e["lang"]).length >= 0) || prop.match(/[/#]sameAs/)) {
+
+
+                     let link,orec,canUrl;
+                     if(this.props.assocResources && this.props.assocResources[elem.value]) {
+                        orec = this.props.assocResources[elem.value].filter(r => r.type === adm+"originalRecord" || r.fromKey === adm+"originalRecord")
+                        canUrl = this.props.assocResources[elem.value].filter(r => r.type === adm+"canonicalHtml" ||  r.fromKey === adm+"canonicalHtml")
+                        //console.log("orec",prop,sameAsPrefix,orec,canUrl, this.props.assocResources[elem.value])
+                     }
+
+                     let srcProv = sameAsPrefix.replace(/^.*?([^ ]+) provider .*$/,"$1").toLowerCase()
+                     let srcSame = sameAsPrefix.replace(/^.*?([^ ]+) sameAs .*$/,"$1").toLowerCase()
+                     //console.log("src",src,srcProv,srcSame)
+                     //if(src.match(/bdr/)) src = "bdr"
+
+                     let bdrcData 
+                     bdrcData = <Link className={"hoverlink"} to={"/"+show+"/"+prefix+":"+pretty}></Link>
+
+                     if(orec && orec.length) link = <a class="urilink prefLabel" href={orec[0].value} target="_blank">{info}</a>
+                     else if(canUrl && canUrl.length) { 
+                        link = <a class="urilink prefLabel" href={canUrl[0].value} target="_blank">{info}</a>
+                        if(srcProv.indexOf(" ") !== -1) srcProv = srcSame
+                     }
+                     else if(!elem.value.match(/[.]bdrc[.]/)) {
+                        if(!info) info = shortUri(elem.value)
+                        link = <a class="urilink prefLabel" href={elem.value} target="_blank">{info}</a>
+                     } 
+                     else { 
+                        link = <Link className={"urilink prefLabel " } to={"/"+show+"/"+prefix+":"+pretty}>{info}</Link>
+                        bdrcData = null
+                     }
+                     
+                     let befo = [],src
+                     if(providers[src = srcProv] && !prop.match(/[/#]sameAs/)) { // || ( src !== "bdr" && providers[src = srcSame])) { 
+                        befo.push( 
+
+                           [ //<span class="meta-before"></span>,
+                           <Tooltip placement="bottom-start" title={
+                              <div class={"uriTooltip "}>
+                                 <span class="title">External resource from:</span>
+                                 <span class={"logo "+src}></span>
+                                 <span class="text">{providers[src]}</span>
+                              </div>}>
+                                 <span><span class="before">{link}</span></span>
+                           </Tooltip> ]
+                        )
+
+                        bdrcData =  <Tooltip placement="top-end" title={<div class={"uriTooltip "}>View this resource on BUDA</div>}><span class="hover-anchor">{bdrcData}</span></Tooltip>
+                     }
+                     else if(providers[src = srcSame] && !prop.match(/[/#]sameAs/)) { 
+
+                        let locaLink = link
+                        if(/*!bdrcData &&*/ elem.fromSameAs) {                            
+                           if(src !== "bdr") locaLink = <a class="urilink" href={getRealUrl(this,elem.fromSameAs)} target="_blank"></a>
+                           else locaLink = <Link to={"/"+show+"/"+shortUri(elem.fromSameAs)}></Link>
+                           bdrcData = <Link className="hoverlink" to={"/"+show+"/"+shortUri(elem.fromSameAs)}></Link>
+                        }
+
+                        befo.push(
+
+                           [ //<span class="meta-before"></span>,
+                              <Tooltip placement="bottom-start" title={
+                              <div class={"uriTooltip "}>
+                              { src !== "bdr" && 
+                                 [
+                                    <span class="title">Data loaded from:</span>,
+                                    <span class={"logo "+src}></span>,
+                                    <span class="text">{providers[src]}</span> 
+                                 ]  }
+                              { src === "bdr" && <span>Data loaded from BDRC resource</span> }
+                           </div>}>
+                                 <span class={(sameAsPrefix?sameAsPrefix:'')}><span class="before">{}</span></span>
+                              </Tooltip> 
+                           ]
+                        )
+
+                        //if(src !== "bdr") bdrcData =  <Tooltip placement="top-end" title={<div class={"uriTooltip "}>View BDRC data for original source of this property</div>}><span class="hover-anchor">{bdrcData}</span></Tooltip>
+                        //else 
+                        bdrcData = null
+                     }
+                     else if(sameAsPrefix.indexOf("sameAs") !== -1) {
+                        //link = [ <span class="before"></span>,link ] 
+
+                        befo.push(  [ //<span class="meta-before"></span>,
+                              <Tooltip placement="bottom-start" title={
+                              <div class={"uriTooltip "}>
+                              { src !== "bdr" && 
+                                 [
+                                    <span class="title">Same resource from:</span>,
+                                    <span class={"logo "+src}></span>,
+                                    <span class="text">{providers[src]}</span> 
+                                 ]  }
+                              { src === "bdr" && <span>Same resource from BDRC</span> }
+                           </div>}>
+                                 <span class={(sameAsPrefix?sameAsPrefix:'')}><span class="before">{link}</span></span>
+                              </Tooltip> 
+                           ])
+
+                        bdrcData =  <Tooltip placement="top-end" title={<div class={"uriTooltip "}>View this resource on BUDA</div>}><span class="hover-anchor">{bdrcData}</span></Tooltip>
+                     }
+                     else {
+                        bdrcData = null
+                     }
+                     
+                     
+                     ret.push([<span class={"ulink " + (sameAsPrefix?sameAsPrefix:'')  }>{befo}{link}</span>,lang?<Tooltip placement="bottom-end" title={
                         <div style={{margin:"10px"}}>
                            <Translate value={languages[lang]?languages[lang].replace(/search/,"tip"):lang}/>
                         </div>
-                     }><span className="lang">{lang}</span></Tooltip>:null])
+                     }><span className="lang">{lang}</span></Tooltip>:null,bdrcData])
                   }
                   else if(pretty.toString().match(/^V[0-9A-Z]+_I[0-9A-Z]+$/)) { ret.push(<span>
-                     <Link className="urilink" to={"/"+show+"/"+prefix+pretty}>{pretty}</Link>&nbsp;
+                     <Link className={"urilink "+prefix} to={"/"+show+"/"+prefix+":"+pretty}>{pretty}</Link>&nbsp;
                      {/* <Link className="goBack" target="_blank" to={"/gallery?manifest=http://iiifpres.bdrc.io/2.1.1/v:bdr:"+pretty+"/manifest"}>{"(view image gallery)"}</Link> */}
                   </span> ) }
-                  else if(pretty.toString().match(/^([A-Z]+[_0-9-]*[A-Z]*)+$/)) ret.push(<Link className="urilink" to={"/"+show+"/"+prefix+pretty}>{pretty}</Link>)
+                  else if(pretty.toString().match(/^([A-Z]+[_0-9-]*[A-Z]*)+$/)) ret.push(<Link className={"urilink "+ prefix} to={"/"+show+"/"+prefix+":"+pretty}>{pretty}</Link>)
                   else ret.push(pretty)
 
                   return ret
@@ -1074,6 +1379,43 @@ class ResourceViewer extends Component<Props,State>
 
    }
 
+   getSameLink(e,sameAsPrefix) {
+            
+      let befo = [], bdrcData = null
+
+      if(e.fromSameAs ) { 
+         //console.log("e.f",e.fromSameAs)
+
+         bdrcData = <Link className="hoverlink" to={"/show/"+shortUri(e.fromSameAs)}></Link>               
+         let src = sameAsPrefix 
+         let link = <a href="urilink" target="_blank" href={getRealUrl(this,e.fromSameAs)}></a>
+         if(src === "bdr") link =  <Link className="urilink" to={"/show/"+shortUri(e.fromSameAs)}></Link>               
+
+         befo = 
+
+            [ //<span class="meta-before"></span>,
+               <Tooltip placement="bottom-start" title={
+               <div class={"uriTooltip "}>
+               { src !== "bdr" && 
+                  [
+                     <span class="title">Data loaded from:</span>,
+                     <span class={"logo "+src}></span>,
+                     <span class="text">{providers[src]}</span> 
+                  ]  }
+               { src === "bdr" && <span>Data loaded from BDRC resource</span> }
+            </div>}>
+                  <span class={(sameAsPrefix?sameAsPrefix:'')}><span class="before">{}</span></span>
+               </Tooltip> 
+            ]
+         
+
+         //if(e.fromSameAs.indexOf(bdr) === -1) bdrcData =  <Tooltip placement="top-end" title={<div class={"uriTooltip "}>View BDRC data for original source of this property</div>}><span class="hover-anchor">{bdrcData}</span></Tooltip>
+         //else 
+         bdrcData = null
+      }
+      return { befo,bdrcData }
+   }
+
    format(Tag,prop:string,txt:string="",bnode:boolean=false,div:string="sub")
    {
       //console.group("FORMAT")
@@ -1113,7 +1455,7 @@ class ResourceViewer extends Component<Props,State>
       })
       */
 
-      //console.log("format",prop,JSON.stringify(elem,null,3),txt,bnode,div);
+      //console.log("format",Tag, prop) //,JSON.stringify(elem,null,3),txt,bnode,div);
 
       let ret = [],pre = []
 
@@ -1122,7 +1464,7 @@ class ResourceViewer extends Component<Props,State>
       //console.log(elem)
 
       let viewAnno = false ;
-      if(elem) for(let e of elem)
+      if(elem) for(const e of elem)
       {
 
          let value = ""+e
@@ -1135,9 +1477,10 @@ class ResourceViewer extends Component<Props,State>
 
          //console.log("e",e,pretty,value)
 
-         if(this.props.assocResources && this.props.assocResources[value] && this.props.assocResources[value][0] && this.props.assocResources[value][0].fromKey) 
+         if(this.props.assocResources && this.props.assocResources[value] && this.props.assocResources[value][0] && this.props.assocResources[value][0].fromKey && !prop.match(/[/#]sameAs/) ) 
          { 
-            e.type = "bnode"
+            e.type = "bnode" 
+
             //console.log("aRes",this.props.assocResources[value])
          }
 
@@ -1224,6 +1567,19 @@ class ResourceViewer extends Component<Props,State>
                if(root) root = root.filter(e => e.type == bdo+"workHasRoot")
                if(root && root.length > 0) tmp = [tmp," in ",this.uriformat(bdo+"workHasRoot",root[0])]
             }
+            /*
+            else if(this.props.assocResources && prop.match(/[/]workhasTranslation[^/]*$/))  {
+
+               let script = this.props.assocResources[e.value] 
+               if(script) script = script.filter(e => e.type == bdo+"workLangScript")
+               if(script && script.length > 0) { 
+                  let lang = getOntoLabel(this.props.dictionary,this.props.locale,script[0].value)
+                  
+                  //if(lang && script && script.length) tmp = [tmp,"(in ",<Link to={"/show/"+shortUri(script[0].value)}>{lang}</Link>,")"]
+                  if(lang && script && script.length) tmp = [tmp,<span className="" style={{fontSize:"12px",color:"#333"}}> / {lang}</span>]
+               }
+            }
+            */
 
             if(this.props.assocResources && this.props.assocResources[e.value]
                && this.props.assocResources[e.value].filter(f => f.type == bdo+"originalRecord").length > 0)
@@ -1273,9 +1629,13 @@ class ResourceViewer extends Component<Props,State>
                this.setState({...this.state,annoPane:true,newAnno:{prop:this._plink,val:tmp}})}
                */
 
+            let sameAsPrefix ;
+            for(let p of Object.keys(prefixes)) { if(e.fromSameAs && e.fromSameAs.match(new RegExp(prefixes[p]))) { sameAsPrefix = p } }
 
-            if(!txt) ret.push(<Tag>{tmp}</Tag>)
-            else ret.push(<Tag>{tmp+" "+txt}</Tag>)
+            const {befo,bdrcData} = this.getSameLink(e,sameAsPrefix)            
+
+            if(!txt) ret.push(<Tag className={(elem.length > 1?"multiple ":"") + (sameAsPrefix?sameAsPrefix+" sameAs hasIcon":"") }>{befo}{tmp}{bdrcData}</Tag>)
+            else ret.push(<Tag className={(elem.length > 1?"multiple ":"") +  (sameAsPrefix?sameAsPrefix+" sameAs hasIcon":"") }>{befo}{tmp+" "+txt}{bdrcData}</Tag>)
 
 
             //console.log("ret",ret)
@@ -1309,17 +1669,25 @@ class ResourceViewer extends Component<Props,State>
                valSort = _.orderBy(valSort,['k'],['desc']).map(e => e.v)
                //console.log("valSort!",valSort)               
             }
+
+            let sameAsPrefix ;
+            for(let p of Object.keys(prefixes)) { if(e.fromSameAs && e.fromSameAs.match(new RegExp(prefixes[p]))) { sameAsPrefix = p } }
+            
+            const {befo,bdrcData} = this.getSameLink(e,sameAsPrefix)
+
             // property name ?            
             if(valSort) {
                //console.log("valSort?",valSort)               
                noVal = false ;
-               sub.push(<Tag className={'first '+(div == "sub"?'type':'prop')}>{[valSort.map((v,i) => i==0?[this.proplink(v.value)]:[" / ",this.proplink(v.value)]),": "]}</Tag>)
+               sub.push(<Tag className={'first '+(div == "sub"?'type':'prop') +" "+ (sameAsPrefix?sameAsPrefix+" sameAs hasIcon":"")}>{befo}{[valSort.map((v,i) => i==0?[this.proplink(v.value)]:[" / ",this.proplink(v.value)]),": "]}{bdrcData}</Tag>)
             }
             else if(val && val[0] && val[0].value)
             {
                noVal = false ;
-               sub.push(<Tag className={'first '+(div == "sub"?'type':'prop')}>{[this.proplink(val[0].value),": "]}</Tag>)
+               sub.push(<Tag className={'first '+(div == "sub"?'type':'prop') +" "+ (sameAsPrefix?sameAsPrefix+" sameAs hasIcon":"")}>{befo}{[this.proplink(val[0].value),": "]}{bdrcData}</Tag>)
             }
+
+            //console.log("lab",lab)
 
             // direct property value/label ?
             if(lab && lab[0] && lab[0].value)
@@ -1337,8 +1705,9 @@ class ResourceViewer extends Component<Props,State>
                         <Translate value={languages[lang]?languages[lang].replace(/search/,"tip"):lang}/>
                      </div>
                   }><span className="lang">{lang}</span></Tooltip>:null]
+
                   sub.push(
-                     <Tag className='label'>
+                     <Tag className={'label '}>
                         {tip}
                         {/* <ChatIcon className="annoticon" onClick={e => this.setState({...this.state,annoPane:true,newAnno:true})}/> */}
                         <ChatIcon className="annoticon"  onClick={
@@ -1505,7 +1874,8 @@ class ResourceViewer extends Component<Props,State>
                            else if(v.type === 'literal' && v.datatype && this.props.dictionary && (dic = this.props.dictionary[v.datatype]) && dic[rdfs+"subClassOf"] 
                               && dic[rdfs+"subClassOf"].filter(s => s.value === bdo+"AnyDate").length) {
 
-                              let dateC = dic[rdfs+"comment"]
+                              let dateC = dic[adm+"userTooltip"]
+                              if(!dateC) dateC = dic[rdfs+"comment"]
                               if(dateC) dateC = dateC[0]
                               if(dateC) dateC = dateC.value
 
@@ -1921,11 +2291,16 @@ class ResourceViewer extends Component<Props,State>
    proplink = (k,txt) => {
 
       let tooltip
-      if(this.props.ontology[k] && this.props.ontology[k][rdfs+"comment"]) tooltip = this.props.ontology[k][rdfs+"comment"].filter(comm => !comm.value.match(/^([Mm]igration|[Dd]eprecated)/))
+      if(this.props.ontology[k]) {
+         if(this.props.ontology[k][adm+"userTooltip"]) 
+            tooltip = this.props.ontology[k][adm+"userTooltip"]
+         else if(this.props.ontology[k][rdfs+"comment"]) 
+            tooltip = this.props.ontology[k][rdfs+"comment"].filter(comm => !comm.value.match(/^([Mm]igration|[Dd]eprecated)/))
+      }
 
       if(k === bdo+'note') txt = "Notes" ;
 
-      let ret = (<a class="propref" {...(true || k.match(/purl[.]bdrc/) ? {"href":k}:{})} target="_blank">{txt?txt:this.fullname(k)}</a>)
+      let ret = (<a class="propref" {...(k.match(/purl[.]bdrc[.]io/) && !k.match(/[/]tmp[/]/) ? {"href":k}:{})} target="_blank">{txt?txt:this.fullname(k)}</a>)
 
       if(tooltip && tooltip.length > 0) ret = <Tooltip placement="bottom-start" classes={{tooltip:"commentT",popper:"commentP"}} style={{marginLeft:"50px"}} title={<div>{tooltip.map(tip => tip.value.split("\n").map(e => [e,<br/>]))}</div>}>{ret}</Tooltip>
 
@@ -2186,17 +2561,18 @@ class ResourceViewer extends Component<Props,State>
       let imageLabel = "images"
       if(!this.props.collecManif && this.props.imageAsset && this.props.imageAsset.match(/[/]collection[/]/)) imageLabel = "collection"
 
+      let assoP 
 
       let theData = <div className="data">
          { kZprop.map((k) => {
 
             let elem = this.getResourceElem(k);
 
-            //console.log("prop",k,elem);
+            //console.log("prop",k,elem)
             //for(let e of elem) console.log(e.value,e.label1);
 
             //if(!k.match(new RegExp("Revision|Entry|prefLabel|"+rdf+"|toberemoved"))) {
-            if((!k.match(new RegExp(adm+"|adm:|isRoot$|SourcePath|prefLabel|"+rdf+"|toberemoved|workPartIndex|workPartTreeIndex")) 
+            if((!k.match(new RegExp(adm+"|adm:|isRoot$|SourcePath|"+rdf+"|toberemoved|workPartIndex|workPartTreeIndex")) 
                ||k.match(/(originalRecord|metadataLegal|contentProvider)$/)
                ||k.match(/([/]see|[/]sameAs)[^/]*$/) // quickfix [TODO] test property ancestors
                || (this.props.IRI.match(/^bda:/) && (k.match(new RegExp(adm+"|adm:")))))
@@ -2205,8 +2581,25 @@ class ResourceViewer extends Component<Props,State>
 
                let sup = this.hasSuper(k)
 
+               // [T0D0] #89 display hidden prefLabels as altLabels
+               // + display prefLabel from conflated data
+
+               if(k === skos+"prefLabel") return ;
+               /*
+               if(k === skos+"prefLabel" || k === skos+"altLabel")
+               {
+
+                  let elemPref = this.getResourceElem(skos+"prefLabel")
+                  let elemAlt = this.getResourceElem(skos+"altLabel")
+
+
+                  if(elemPref && elemAlt) continue 
+               }
+               */
+               
                if(!sup) // || sup.filter(e => e.value == bdo+"workRefs").length > 0) //
                {
+                  
                   let tags = this.format("h4",k)
 
                   //console.log("tags",tags,k,elem)
@@ -2386,8 +2779,7 @@ class ResourceViewer extends Component<Props,State>
 
                      tags = cleantags
                   }
-
-                  if(k == bdo+"placeRegionPoly" || (k == bdo+"placeLong" && !doRegion))
+                  else if(k == bdo+"placeRegionPoly" || (k == bdo+"placeLong" && !doRegion))
                   {
 
                      return ( <div>
@@ -2677,12 +3069,16 @@ class ResourceViewer extends Component<Props,State>
                   }
                   else if(k !== bdo+"eTextHasChunk") {
 
-                     let ret
-                     if(this.hasSub(k)) ret = this.subProps(k)
+                     let ret,isSub
+                     if(this.hasSub(k)) { 
+                        isSub = true
+                        ret = this.subProps(k)
+                     }
                      if(!ret || ret.length === 0) ret = tags.map((e)=> [e," "] )
 
                      let expand
-                     if(elem && elem.filter && elem.filter(t=>t.type === "uri" || t.type === "literal").length > 3) {
+                     const maxDisplay = 10
+                     if(!isSub && elem && elem.filter && elem.filter(t=>t.type === "uri" || t.type === "literal").length > maxDisplay) {
                        /*
                        return (
                          <div>
@@ -2696,14 +3092,14 @@ class ResourceViewer extends Component<Props,State>
                          return (
                             <div>
                                <h3><span>{this.proplink(k)}</span>:&nbsp;</h3>
-                               <div style={{width:"100%"}} className="propCollapseHeader">{ret.splice(0,3)}</div>
+                               <div style={{width:"100%"}} className="propCollapseHeader">{ret.splice(0,maxDisplay)}</div>
                                 <Collapse className={"propCollapse in-"+(this.state.collapse[k]===true)} in={this.state.collapse[k]}>
                                    {ret}
                                 </Collapse>
                                { <span
                                  onClick={(e) => this.setState({...this.state,collapse:{...this.state.collapse,[k]:!this.state.collapse[k]}})}
                                  className="expand">
-                                  {"("+(this.state.collapse[k]?"hide":"...")+")"}
+                                  {"("+(this.state.collapse[k]?"hide":"see more")+")"}
                                 </span> }
                             </div>
                          )
@@ -2728,14 +3124,17 @@ class ResourceViewer extends Component<Props,State>
             <div>
                <h3><span>Associated Persons</span>:&nbsp;</h3>
             {   this.props.assocResources &&
-                  Object.keys(this.props.assocResources).map((e,i) =>
-                        i<20?<h4>{this.uriformat(null,{value:e})}</h4>:(i==20?<h4>(<a href={'/search?r='+this.props.IRI}>browse all</a>)</h4>:null))
+                  (assoP = Object.keys(this.props.assocResources).filter(e => !this.props.assocResources[e].filter(f => f.fromKey).length)).map((e,i) =>
+                        i<20?
+                           <h4 class={assoP.length>1 ? "multiple" : ""}>{this.uriformat(tmp+"AssociatedPersons",{value:e})}</h4>
+                        :(i==20?
+                           <h4 class="multiple"><a href={'/search?r='+this.props.IRI}>browse all</a>)</h4>:null))
             }
             </div>
          }
       </div>
 
-      //console.log("pdf",pdfLink,this._annoPane.length)
+      console.log("pdf",pdfLink,this._annoPane.length)
 
       // add nother route to UViewer Gallery page
       return (

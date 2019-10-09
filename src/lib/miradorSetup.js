@@ -664,66 +664,78 @@ function miradorAddZoomer() {
       jQ(".user-buttons.mirador-main-menu li:nth-last-child(2)")
       .before('<li><input title="Adjust zoom level" oninput="javascript:eval(\'window.setZoom(this.value)\');" type="range" min="0" max="1" step="0.01" value="0" id="zoomer"/></li>')
 
+      jQ(window).resize(() => {
+         delete window.maxW 
+         delete window.maxH
+         miradorInitMenu(true) 
+               
+         if(window.maxW <= jQ(".scroll-view").innerWidth() + 1)  jQ(".mirador-container ul.scroll-listing-thumbs ").addClass("transOri50"); 
+         else jQ(".mirador-container ul.scroll-listing-thumbs ").removeClass("transOri50"); 
+
+         jQ("input#zoomer").trigger("input")
+      })
+
       window.setZoom = (val) => {
 
-         console.log("sZ",window.maxW,window.maxWimg)
+         console.log("sZ",window.maxW,window.maxH)
 
-         if(!window.maxW && !window.maxWimg) miradorInitMenu(true)
-         if(!window.maxW && !window.maxWimg) return ;
+         if(!window.maxW && !window.maxH) miradorInitMenu(true)
+         if(!window.maxW && !window.maxH) return ;
 
          let scrollT = jQ(".mirador-container ul.scroll-listing-thumbs")
          let scrollV = jQ(".scroll-view")
 
-         let _max = window.maxW
-         if(window.maxWimg) _max = window.maxWimg
+         let maxW = window.maxW
+         let maxH = window.maxH
 
-         if(!window.maxWimg // ~ "landscape" images
-            || Math.abs(window.maxWimg - window.maxW) / Math.max(window.maxWimg,window.maxW) < 0.05)  // fix for special cases of 'large' horizontal images eg bdr:V1KG89131_I1KG89313
-         {
-            // val = 1 => w =  1 * W
-            // val = 0 => w =  x * W <=> x = dMin
+      
+         // val = 1 => w =  1 * W
+         // val = 0 => w =  x * W <=> x = dMin
 
-            let dMin = scrollV.innerWidth() / _max
-            let coef = 1 - (1 - dMin) * (1 - val)
-            let oldH = scrollT[0].getBoundingClientRect().height;
+         let coef = 1, nuW = scrollV.innerWidth(), trX = 0
 
-            scrollT.css({
-               "transform":"scale("+coef+")",
-               "margin-bottom":"-500000px" // no more empty space at bottom 
-            })
-            scrollV.scrollLeft((_max * coef - scrollV.innerWidth() + 20) / 2)
-
-            let nuH = scrollT[0].getBoundingClientRect().height;
-            let sT = scrollV.scrollTop() + (nuH - oldH)*(scrollV.scrollTop()/oldH)
-            scrollV.scrollTop(sT)
-
-         }
-         else { // ~ "portrait" images
-
-            // val = 0 => coef = 1
-            // val = x => coef = 1 + (dMax - 1) * x
-            // val = 1 => coef = dMax
-
-            let dMax = _max / window.Wimg
-            let coef = 1 + dMax * val
-
-            let oldH = scrollT[0].getBoundingClientRect().height;
-
-            scrollT.css({"transform":"scale("+coef+")"})
-            
-            let nuH = scrollT[0].getBoundingClientRect().height;
-            let sT = scrollV.scrollTop() + (nuH - oldH)*(scrollV.scrollTop()/oldH)
-            scrollV.scrollTop(sT)
-            
+         if(maxW) {
+            let dMinW = 0.95 * scrollV.innerWidth() / maxW
+            let coefW = 1 - (1 - dMinW) * (1 - val)            
+            coef = coefW            
+            nuW = maxW * coef
          }
 
-         //scrollT.css({"height":nuH}) // ok but then zoom bugs... TODO
+         if(maxH) {
+            let dMinH = 0.9 * scrollV.innerHeight() / maxH
+            let coefH = 1 - (1 - dMinH) * (1 - val)            
+            coef = Math.min(coef,coefH)
+            nuW = maxW * coef
+            
+            if(nuW < scrollV.innerWidth() && coef < 1 && maxW > scrollV.innerWidth()) {
+               trX = ( scrollV.innerWidth() - nuW ) / 2
+            }
+         }
 
-         //console.log("h",sT,oldH,nuH)
 
+         //console.log("coef1",coef,val)
+         //console.log("nuW",nuW,scrollV.innerWidth(),trX);
 
+         let oldH = scrollT[0].getBoundingClientRect().height;
+
+         scrollT.css({
+            "transform":"scale("+coef+") translateY("+10/coef+"px) translateX("+trX/coef+"px)",
+            "margin-bottom":"-500000px" // no more empty space at bottom 
+         })            
+         
+         scrollT.find(".thumb-label").css({
+            "margin":10/coef,
+            "margin-bottom":20/coef,
+            "transform":"scale("+1/coef+")"
+         })
+         
+         let nuH = scrollT[0].getBoundingClientRect().height;
+         let sT = scrollV.scrollTop() + (nuH - oldH)*(scrollV.scrollTop()/oldH)
+         scrollV.scrollTop(sT)            
+         scrollV.scrollLeft((nuW - scrollV.innerWidth() ) / 2)
+
+         
       }
-
    }
 }
 
@@ -732,30 +744,42 @@ function miradorInitMenu(maxWonly) {
 
    if(maxWonly == undefined) maxWonly = false
 
-   //console.log("maxWo",maxWonly)
+   console.log("maxWo",maxWonly)
 
    if(!maxWonly) jQ(".user-buttons.mirador-main-menu li:nth-last-child(n-5):nth-last-child(n+2)").addClass("on")
    window.maxW = jQ(".mirador-container ul.scroll-listing-thumbs ").width()
 
-   let maxWimg = 0, n, Wimg ; 
+   let maxH = 0, n, maxW = 0
    jQ(".mirador-container .mirador-viewer ul.scroll-listing-thumbs li img").each((i,v) => {
-      if((n=Number(jQ(v).attr("data-full-width"))) > maxWimg) { maxWimg = n ; Wimg = jQ(v).attr("width") ; }
+      let im = jQ(v), w = im.width(), h = im.height()
+      if(h > maxH) { 
+         maxH = h
+         //console.log("h",h,window.Himg,maxH,im.attr("height"),im.height())
+      }
+
    })
+
    
-   if(maxWimg > window.maxW) { window.maxWimg = maxWimg; window.Wimg = Wimg ; }
-   else window.maxWimg = 0
+   if(maxH) { window.maxH = maxH;  }
+   else { 
+      if(window.maxH) delete window.maxH
+      if(window.Himg) delete window.Himg
+      if(window.Hratio) delete window.Hratio
+   }
 
    //console.log("w",jQ(".mirador-container ul.scroll-listing-thumbs ").width())
 
+
    if(window.maxW < jQ(".scroll-view").innerWidth())
    {
-      window.maxW = 0
+      //window.maxW = 0
       if(!maxWonly)  {
-         jQ(".mirador-container ul.scroll-listing-thumbs ").css({"transform-origin":"50% 0"});
-         if(!window.maxWimg) jQ(".user-buttons.mirador-main-menu").find("li:nth-last-child(3),li:nth-last-child(4)").removeClass("on").hide()
+         jQ(".mirador-container ul.scroll-listing-thumbs ").addClass("transOri50"); 
+         //if(!window.maxWimg) 
+         jQ(".user-buttons.mirador-main-menu").find("li:nth-last-child(3),li:nth-last-child(4)").removeClass("on").hide()
       }
    }
-   
+ 
    if(!maxWonly) jQ("input#zoomer").trigger("input")
 
    //console.log("maxW",window.maxW)

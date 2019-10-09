@@ -203,6 +203,12 @@ describe('language settings tests', () => {
                         extPreset4.flat, extPreset4.translit
                       )
         expect(results).toEqual([ { type: 'literal',  value: 'sēng jiā tí pó', lang: 'zh-latn-pinyin' } ] )
+        
+        results = sortLangScriptLabels(
+                        {"xml:lang": "zh-Hant", type: "http://www.w3.org/2004/02/skos/core#prefLabel", value: "無著菩薩"},
+                        extPreset4.flat, extPreset4.translit
+                      )
+        expect(results).toEqual([ { type: 'literal',  value: 'wú zhuó pú sà', lang: 'zh-latn-pinyin' } ] )
 
         done()
     })

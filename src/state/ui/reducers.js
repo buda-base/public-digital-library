@@ -17,6 +17,7 @@ export type UIState = {
    langIndex?:number,
    collapse:{[string]:boolean},
    metadata:{[string]:{}},
+   profileFromUrl?:{}
 }
 
 const DEFAULT_STATE: UIState = {
@@ -30,6 +31,11 @@ export const helloWorld = (state: UIState, action: Action): UIState => {
     return {...state}
 };
 reducers[actions.TYPES.helloWorld] = helloWorld
+
+export const userProfile = (state: UIState, action: Action): UIState => {
+    return { ...state, profileFromUrl:action.payload }
+};
+reducers[actions.TYPES.userProfile] = userProfile
 
 export const toggleLanguagePanel = (state: UIState, action: Action): UIState => {
     return {...state, rightPanel:!state.rightPanel}
