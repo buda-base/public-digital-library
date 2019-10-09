@@ -847,11 +847,14 @@ function mergeSameAs(result,withSameAs,init = true,rootRes = result, force = fal
 
    if(!result) return
 
+   let fullKW
+   if(keyword) fullKW = fullUri(keyword)
+
    let rData, sameBDRC
    if(keyword) { 
       rData = store.getState().data.resources
       if(rData) rData = rData[keyword]
-      if(rData) rData = rData[fullUri(keyword)]
+      if(rData) rData = rData[fullKW]
       if(rData) rData = rData[owl+"sameAs"]
       if(rData) rData = rData.filter(r => r.value.match(new RegExp(bdr)))
       if(rData && rData.length) sameBDRC = rData[0].value
@@ -863,11 +866,12 @@ function mergeSameAs(result,withSameAs,init = true,rootRes = result, force = fal
          let fullT = bdo+t[0].toUpperCase()+t.substring(1,t.length - 1)
          let keys = Object.keys(result[t])
          if(keys) for(let k of keys) {
-            if(!k.match(/purl[.]bdrc/) || (keyword && keyword.match(new RegExp(bdr)))) {
+            if(!k.match(/purl[.]bdrc/)) { 
                let same = result[t][k].filter(s => (s.type && s.type === owl+"sameAs" && s.value !== k && s.value.match(/purl[.]bdrc/)) || (s.type === tmp+"relationType" && s.value === owl+"sameAs"))
-               if(same.length || force) withSameAs[k] = { t, fullT, props:{ ...result[t][k]}, same:same.map(s=>s.type!==tmp+"relationType"?s.value:(sameBDRC?sameBDRC:(keyword?keyword:"?"))) }
+               if(same.length || force) withSameAs[k] = { t, fullT, props:{ ...result[t][k]}, same:same.map(s=>s.type!==tmp+"relationType"?s.value:(sameBDRC?sameBDRC:(keyword?fullKW:"?"))) }
             }
          }
+         
       }
    }
 
@@ -883,13 +887,14 @@ function mergeSameAs(result,withSameAs,init = true,rootRes = result, force = fal
       }
       else for(let s of r.same) {
          let noK 
-         if(result[r.t] && !result[r.t][s]) { 
+         let isRid = (fullKW && s === fullKW)
+         if(result[r.t] && !result[r.t][s] && !isRid) { 
             result[r.t][s] = []
             noK = true
          }
-         if(result[r.t] && result[r.t][k] && result[r.t][s]) {
-            //console.log("same?",k,r.t,s,result[r.t][s])
-            for(let v of result[r.t][k])
+         if(result[r.t] && result[r.t][k] && (result[r.t][s] || isRid)) {
+            console.log("same?",k,r.t,s,result[r.t][s])
+            if(!isRid) for(let v of result[r.t][k])
             {
                let found = false ;
                for(let w of result[r.t][s])
@@ -902,6 +907,7 @@ function mergeSameAs(result,withSameAs,init = true,rootRes = result, force = fal
                if(!found) result[r.t][s].push(v)
             }
             delete result[r.t][k]
+            if(isRid && result[r.t][s]) delete result[r.t][s]
             if(!noK && result.metadata && result.metadata[r.fullT]) {
                result.metadata[r.fullT] --
                //console.log("meta",result.metadata[r.fullT]) 

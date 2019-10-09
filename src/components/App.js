@@ -1733,11 +1733,14 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                         }
                         if(m.type.match(/relationType$/))  {
                            if(m.value.match(/sameAs$/)) {
+                              return ;
+                              /* // not needed anymore - alreadey returned by query 
                               uri = this.props.keyword
                               for(let k of Object.keys(prefixesMap)) { 
                                  if(uri.startsWith(k+":")) prop = "Same As " + (sameAsMap[k]?sameAsMap[k]:k.toUpperCase())
                               }
                               uri = "/show/"+uri
+                              */
                            } else {
                               prop = this.fullname(m.value) 
                               uri = "/show/"+this.props.keyword
