@@ -334,6 +334,7 @@ type State = {
    checked?:string,
    unchecked?:string,
    keyword:string,
+   newKW:string,
    dataSource : string[],
    leftPane?:boolean,
    filters:{
@@ -377,8 +378,9 @@ class App extends Component<Props,State> {
       if(get.p) lg = ""
       else if(get.lg) lg = get.lg
 
-      let kw = ""
+      let kw = "", newKW
       if(get.q) kw = get.q.replace(/"/g,"")
+      if(kw) newKW = kw
 
       let types = [ ...searchTypes.slice(1) ]
       let e = types.indexOf("Etext")
@@ -396,9 +398,9 @@ class App extends Component<Props,State> {
             datatype:get.t?get.t.split(","):["Any"]
          },
          searchTypes: get.t?get.t.split(","):types,
-         dataSource: [],
-         keyword:kw,
+         dataSource: [],         
          collapse:{},
+         newKW,
          loader:{},
          paginate:{index:0,pages:[0],n:[0]},
          anchor:{}
@@ -496,7 +498,20 @@ class App extends Component<Props,State> {
 
       let props = { ...prop }
 
-      if(props.keyword) document.title = /*""+*/ props.keyword+" search results - Public Digital Library"
+      if(props.keyword) { 
+         document.title = /*""+*/ props.keyword+" search results - Public Digital Library"
+         
+      }
+
+      if(!state.newKW || state.newKW !== props.keyword || props.keyword === null) { 
+         if(!s) s = { ...state }
+         if(s.newKW !== props.keyword) {
+            s.newKW = props.keyword
+            s.keyword = props.keyword
+            if(!props.keyword) s.leftPane = false ;
+         }
+
+      }
 
 
       //console.log("collap?",JSON.stringify(state.collapse,null,3))
@@ -3314,7 +3329,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   disabled={this.props.hostFailure}
                   onChange={(value:string) => { this.setState({keyword:value, dataSource: [ value, "possible suggestion","another possible suggestion"]}); } }
                   onRequestSearch={this.requestSearch.bind(this)}
-                  value={this.props.hostFailure?"Endpoint error: "+this.props.hostFailure+" ("+this.getEndpoint()+")":this.props.keyword?this.props.keyword.replace(/"/g,""):this.state.keyword}
+                  value={this.props.hostFailure?"Endpoint error: "+this.props.hostFailure+" ("+this.getEndpoint()+")":this.state.keyword !== undefined && this.state.keyword!==this.state.newKW?this.state.keyword:this.props.keyword&&this.state.newKW?this.state.newKW.replace(/\"/g,""):""}
                   style={{
                      marginTop: '0px',
                      width: "700px"
