@@ -654,17 +654,22 @@ class ResourceViewer extends Component<Props,State>
          if(prop[bdo+"itemHasVolume"]) prop[bdo+"itemHasVolume"] = sortBySubPropNumber(bdo+"itemHasVolume", bdo+"volumeNumber");
 
          let sortBySubPropURI = (tagEnd:string) => {
-            let assoR = this.props.assocResources            
             let valSort = prop[bdo+tagEnd] 
-            if(this.props.dictionary && this.props.assocResources) {
-               valSort = valSort.map(v => ({...v,type:'bnode'})).map(w => w.type!=='bnode'||!assoR[w.value]?w:{...w,'bnode':w.value,'k':assoR[w.value].filter(e => e.fromKey === rdf+"type").reduce( (acc,e) => {
-                  let p = this.props.dictionary[e.value]
-                  if(p) p = p[rdfs+"subClassOf"]
-                  if(p) p = p.filter(f => f.value === bdo+tagEnd[0].toUpperCase()+tagEnd.substring(1)).length
-                  if(p) return e.value + ";" + acc  
-                  else return acc+e.value+";"
-               },"")})              
-               valSort = _.orderBy(valSort,['k'],['asc']).map(e => ({'type':'bnode','value':e.bnode,'sorted':true, ...e.fromSameAs?{fromSameAs:e.fromSameAs}:{}}))               
+            if(this.props.dictionary && this.props.resources) {
+               let assoR = this.props.resources[this.props.IRI]
+               if(assoR) { 
+                  let lang
+                  valSort = valSort.map(v => ({...v,type:'bnode'})).map(w => w.type!=='bnode'||!assoR[w.value]?w:{...w,'bnode':w.value,'k':!assoR[w.value]||!assoR[w.value][rdf+"type"]?"":assoR[w.value][rdf+"type"].reduce( (acc,e) => {
+                     let p = this.props.dictionary[e.value]
+                     //console.log(p)
+                     if(p) p = p[rdfs+"subClassOf"]
+                     if(p) p = p.filter(f => f.value === bdo+tagEnd[0].toUpperCase()+tagEnd.substring(1)).length
+                     if(p) return e.value + ";" + acc  
+                     else return acc+e.value+";"
+                  },"") + ((lang = getLangLabel(this, assoR[w.value][rdfs+"label"]))&&lang.lang?lang.lang+";"+lang.value:"") })
+                  //console.log("valsort",assoR,valSort)
+                  valSort = _.orderBy(valSort,['k'],['asc']).map(e => ({'type':'bnode','value':e.bnode,'sorted':true, ...e.fromSameAs?{fromSameAs:e.fromSameAs}:{}}))               
+               }
             }
             return valSort ; //
          }
