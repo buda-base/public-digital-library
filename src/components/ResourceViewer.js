@@ -1379,7 +1379,7 @@ class ResourceViewer extends Component<Props,State>
       let befo = [], bdrcData = null
 
       if(e.fromSameAs ) { 
-         console.log("e.f",e.fromSameAs)
+         //console.log("e.f",e.fromSameAs)
 
          bdrcData = <Link className="hoverlink" to={"/show/"+shortUri(e.fromSameAs)}></Link>               
          let src = sameAsPrefix 

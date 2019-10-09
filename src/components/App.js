@@ -1507,7 +1507,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          }
 
          if(sameAsRes.length) {
-            //console.log("sameAs",prettId,id,dico,rmatch,sameAsRes,sameAsRes)
+            //console.log("sameAs",prettId,id,dico,rmatch,sameAsRes)
          
             let menus = {}
             let sources = []
@@ -1560,6 +1560,12 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      if(canonUrl.length) url = canonUrl[0].value
                   }
 
+                  if(this.props.assoRes && this.props.assoRes[url]) {
+                     let canonUrl = this.props.assoRes[url]
+                     if(canonUrl && canonUrl.filter) canonUrl = canonUrl.filter(p => p.type === adm+"canonicalHtml" || p.fromKey === adm+"canonicalHtml")
+                     if(canonUrl.length) url = canonUrl[0].value
+                  }
+
                   let prov = src.toUpperCase()
                   if(providers[src]) prov = providers[src]
 
@@ -1584,11 +1590,6 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   )
 
                   
-                  if(this.props.assoRes && this.props.assoRes[url]) {
-                     let canonUrl = this.props.assoRes[url]
-                     if(canonUrl && canonUrl.filter) canonUrl = canonUrl.filter(p => p.type === adm+"canonicalHtml")
-                     if(canonUrl.length) url = canonUrl[0].value
-                  }
                   
                   let menuId = "menu-"+src+"-"+prettId
 
@@ -1944,7 +1945,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      if(sameAs) sameAs = sameAs[fullURI]
                      if(sameAs) sameAs = Object.keys(sameAs).filter(k => k === adm+"canonicalHtml" || k === owl+"sameAs").reduce( (acc,k) => ([...acc, ...sameAs[k].map( s => ({ ...s, type:k }))]),[])
                      console.log("res sameAs", sameAs)
-                     message.push(<h4 key="keyResource" style={{marginLeft:"16px"}}>Resource Id Matching (1)</h4>)
+                     message.push(<h4 key="keyResource" style={{marginLeft:"16px"}}>Resource Id Matching</h4>)
                      message.push(this.makeResult(this.props.keyword,1,null,l.value,l.lang,null,null,null,[],null,sameAs)) //[{"type":owl+"sameAs","value":this.props.keyword}]))
                   }
                }

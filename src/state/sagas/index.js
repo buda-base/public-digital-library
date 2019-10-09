@@ -858,7 +858,7 @@ function mergeSameAs(result,withSameAs,init = true,rootRes = result, force = fal
       if(rData) rData = rData[owl+"sameAs"]
       if(rData) rData = rData.filter(r => r.value.match(new RegExp(bdr)))
       if(rData && rData.length) sameBDRC = rData[0].value
-      console.log("rData",rData)
+      //console.log("rData",rData)
    } 
  
    if(init) for(let t of Object.keys(result)) {
@@ -875,7 +875,7 @@ function mergeSameAs(result,withSameAs,init = true,rootRes = result, force = fal
       }
    }
 
-   console.log("wSa",withSameAs)
+   //console.log("wSa",withSameAs)
 
    let keys = Object.keys(withSameAs)
    if(keys) for(let i in keys) {
@@ -893,7 +893,7 @@ function mergeSameAs(result,withSameAs,init = true,rootRes = result, force = fal
             noK = true
          }
          if(result[r.t] && result[r.t][k] && (result[r.t][s] || isRid)) {
-            console.log("same?",k,r.t,s,result[r.t][s])
+            //console.log("same?",k,r.t,s,result[r.t][s])
             if(!isRid) for(let v of result[r.t][k])
             {
                let found = false ;
@@ -915,6 +915,7 @@ function mergeSameAs(result,withSameAs,init = true,rootRes = result, force = fal
          }
       }
    }
+   
 
    return result
 }
