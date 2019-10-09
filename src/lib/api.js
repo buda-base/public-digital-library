@@ -1,6 +1,8 @@
 //@flow
 import store from '../index';
 import {auth} from '../routes'
+import qs from 'query-string'
+import history from '../history';
 
 require('formdata-polyfill')
 
@@ -31,12 +33,16 @@ const dPrefix = {
    },
    "wd" : {
       "Q" : "Person"
+   },
+   "mbbt" : {
+      "text": "Work"
    }
 };
 
 export function getEntiType(t:string):string {
    let p = t.replace(/^([^:]+):.*$/,"$1")
    if(p === "ola") return "Person" ;
+   else if(p == "mbbt" ) return "Work" ; // [TODO]
    let v = t.replace(/^([^:]+:)?([ACEILGPQRTWOVU][RTL]?).*$/,"$2")
    //console.log("v",v,dPrefix[v])
    if(!dPrefix[p] || !dPrefix[p][v]) return "" ;
@@ -223,10 +229,14 @@ export default class API {
          //let resource =  JSON.parse(await this.getURLContents(this._resourcePath(IRI),false));try {
          try {
             
+            let query = "ResInfo-SameAs"
+            //let get = qs.parse(history.location.search)
+            //if(get["cw"] === "none") query = "ResInfo"
+
             if(!IRI.indexOf(':') === -1 ) IRI = "bdr:"+IRI
             let config = store.getState().data.config.ldspdi
             let url = config.endpoints[config.index]+"/query/graph" ;            
-            let param = {"searchType":"ResInfo","R_RES":IRI,"L_NAME":"","LG_NAME":"" }
+            let param = {"searchType":query,"R_RES":IRI,"L_NAME":"","LG_NAME":"" }
             let data = await this.getQueryResults(url, IRI, param,"GET");
             
             console.log("r e source",param,data)
@@ -391,6 +401,8 @@ export default class API {
       if(param["searchType"] != "") url += "/"+param["searchType"];
       else delete param["I_LIM"] ;
       delete param["searchType"]
+
+      if(accept === "application/json") param["format"] = "json"
 
       console.log("query",url,key,param,method,accept,other);
 

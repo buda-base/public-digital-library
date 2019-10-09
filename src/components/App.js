@@ -66,13 +66,16 @@ const bdac  = "http://purl.bdrc.io/anncollection/" ;
 const bdan  = "http://purl.bdrc.io/annotation/" ;
 const bdo   = "http://purl.bdrc.io/ontology/core/"
 const bdr   = "http://purl.bdrc.io/resource/";
+const cbct  = "https://dazangthings.nz/cbc/text/"
 const dila  = "http://purl.dila.edu.tw/resource/";
 const foaf  = "http://xmlns.com/foaf/0.1/" ;
+const mbbt  = "http://mbingenheimer.net/tools/bibls/" ;
 const oa    = "http://www.w3.org/ns/oa#" ;
 const ola    = "https://openlibrary.org/authors/" 
 const owl   = "http://www.w3.org/2002/07/owl#" ; 
 const rdf   = "http://www.w3.org/1999/02/22-rdf-syntax-ns#";
 const rdfs  = "http://www.w3.org/2000/01/rdf-schema#";
+const rkts  = "http://purl.rkts.eu/resource/";
 const skos  = "http://www.w3.org/2004/02/skos/core#";
 const tmp   = "http://purl.bdrc.io/ontology/tmp/" ;
 const _tmp  = tmp ;
@@ -80,9 +83,23 @@ const viaf  = "http://viaf.org/viaf/"
 const wd    = "http://www.wikidata.org/entity/"
 const xsd   = "http://www.w3.org/2001/XMLSchema#" ;
 
-export const prefixesMap = { adm, bda, bdac, bdan, bdo, bdr, dila, foaf, oa, owl, rdf, rdfs, skos, wd, ola, viaf, xsd, tmp }
+export const prefixesMap = { adm, bda, bdac, bdan, bdo, bdr, cbct, dila, foaf, oa, mbbt, owl, rdf, rdfs, rkts, skos, wd, ola, viaf, xsd, tmp }
 export const prefixes = Object.values(prefixesMap) ;
-export const sameAsMap = { wd:"WikiData", ol:"OpenLibrary", bdr:"BDRC" }
+export const sameAsMap = { wd:"WikiData", ol:"OpenLibrary", bdr:"BDRC", mbbt:"Marcus Bingenheimer" }
+
+export function fullUri(id:string) {
+   for(let k of Object.keys(prefixesMap)) {
+      id = id.replace(new RegExp(k+":"),prefixesMap[k])
+   }
+   return id ;
+}
+
+export function shortUri(id:string) {
+   for(let k of Object.keys(prefixesMap)) {
+      id = id.replace(new RegExp(prefixesMap[k]),k+":")  
+   }
+   return id.replace(/[/]$/,"") ;
+}
 
 const facetLabel = {
    "tree":"Genre / Is About"
@@ -289,6 +306,7 @@ type Props = {
    ontoSearch:string,
    rightPanel?:boolean,
    failures?:{},
+   assoRes?:{},
    onResetSearch:()=>void,
    onOntoSearch:(k:string)=>void,
    onStartSearch:(k:string,lg:string,t?:string)=>void,
@@ -1188,6 +1206,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
    {
       //console.log("hi:",val,k)
 
+      val = val.replace(/\[([↦↤])\]/g,"$1");
       val = val.replace(/↦↤/g,"");
 
       if(!val.match(/↤/) && k)
@@ -1387,17 +1406,27 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
       })
    }
 
-   makeResult(id,n,t,lit,lang,tip,Tag,url,rmatch = [],facet,sameAsRes)
+   makeResult(id,n,t,lit,lang,tip,Tag,url,rmatch = [],facet,allProps)
    {
       //console.log("res",id,n,t,lit,lang,tip,Tag,rmatch,sameAsRes)
 
+      let sameAsRes ;
+      if(allProps) sameAsRes = [ ...allProps ]
       if(!id.match(/[:/]/)) id = "bdr:" + id
 
+      let litLang = lang
+      let savLit = "" + lit
 
-      let prettId = id ;
-      for(let k of Object.keys(prefixesMap)) prettId = prettId.replace(new RegExp(prefixesMap[k]),k+":")
+      let prettId = id, fullId = id ;      
+      for(let k of Object.keys(prefixesMap)) {
+         prettId = prettId.replace(new RegExp(prefixesMap[k]),k+":")  
+         fullId = fullId.replace(new RegExp(k+":"),prefixesMap[k])
+      }
+      prettId = prettId.replace(/[/]$/,"");
 
-      console.log("id",id,prettId)
+      if(!lit) lit = prettId
+
+      //console.log("id",id,prettId)
 
 
       let ret = (
@@ -1440,10 +1469,24 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             </div> )
 
          let retList
-         if(prettId.match(/^([^:])+:/))
+         
+         let directSameAs = false
+         if(!prettId.match(/^bdr:/) && (fullId.match(new RegExp(cbct+"|"+rkts)) || !sameAsRes || !sameAsRes.filter(s => s.value.match(/[#/]sameAs/) || (s.type.match(/[#/]sameAs/) && (s.value.indexOf(".bdrc.io") !== -1 || s.value.indexOf("bdr:") !== -1))).length))   {
+            let u 
+            if((u = sameAsRes.filter(s => s.type === adm+"canonicalHtml")).length) u = u[0].value
+            else u = fullId
+
+            retList = [ ( <a target="_blank" href={u} className="result">{ret}</a> ) ]                  
+
+            if(!fullId.match(new RegExp(cbct+"|"+rkts))) rmatch = [ { type:tmp+"sameAsBDRC", value:prettId,  lit } ]
+
+            directSameAs = true
+         }
+         else if(prettId.match(/^([^:])+:/))
             retList = [ ( <Link key={n} to={"/show/"+prettId} className="result">{ret}</Link> ) ]
          else
             retList = [ ( <Link key={n} to={url?url.replace(/^https?:/,""):id.replace(/^https?:/,"")} target="_blank" className="result">{ret}</Link> ) ]
+         
 
          let dico
          if(!sameAsRes) sameAsRes = []        
@@ -1459,47 +1502,104 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                return ({...acc,[e.type]:id})
             },{}) 
             
-            sameAsRes = sameAsRes.filter(p => p.type === owl+"sameAs")
-            rmatch = rmatch.concat(sameAsRes)
+            rmatch = rmatch.concat(sameAsRes.filter(p => p.type === owl+"sameAs")) // || p.type.match(/sameAsMBBT$/)))
+            sameAsRes = sameAsRes.filter(p => (p.type === owl+"sameAs" || p.type === adm+"canonicalHtml")) // || p.type.match(/sameAsMBBT$/))
             //console.log("dico",dico)
          }
 
          if(sameAsRes.length) {
-            console.log("sameAs",dico,rmatch,sameAsRes)
+            //console.log("sameAs",prettId,id,dico,rmatch,sameAsRes)
          
             let menus = {}
             let sources = []
             let hasRes = {}
             let img = { 
+               //"bdr":  "/logo.svg", 
                "dila": "/DILA-favicon.ico", 
-               "wd":   "/WD.svg",
-               "viaf": "/VIAF.png",
+               "mbbt": "/MB-icon.jpg",
                "ola":  "/OL.png",  //"https://openlibrary.org/static/images/openlibrary-logo-tighter.svg" //"https://seeklogo.com/images/O/open-library-logo-0AB99DA900-seeklogo.com.png", 
-               "bdr":  "/logo.svg", 
+               "viaf": "/VIAF.png",
+               "wd":   "/WD.svg",
+               "rkts": "/RKTS.png",
+               "cbct": false,
             } 
 
-            for(let res of sameAsRes) 
+            const providers = { 
+               "ia":"Internet Archive",                 
+               "mbbt":"Marcus Bingenheimer",
+               "wd":"Wikidata",
+               "ola":"Open Library",
+               "cbct": "CBC@"
+            }
+
+            for(let res of sameAsRes.filter(r => r.type.match(/[#/]sameAs[^/]*$/))) 
                for(let src of Object.keys(img)) {
-                  if(res.value.match(new RegExp("(^"+src+":)|(^"+prefixesMap[src]+")"))) hasRes[src] = res.value.replace(new RegExp(prefixesMap[src]),src+":")                  
+                  if(res.value.match(new RegExp("(^"+src+":)|(^"+prefixesMap[src]+")"))) { 
+                     if(!hasRes[src]) hasRes[src] = [ res.value ] //.replace(new RegExp(prefixesMap[src]),src+":")                  
+                     else hasRes[src].push(res.value)
+                  }
                }
 
             for(let src of Object.keys(img)) 
                if(!hasRes[src] && prettId.match(new RegExp("(^"+src+":)|(^"+prefixesMap[src]+")"))) 
-                  hasRes[src] = prettId
+                  if(!hasRes[src]) hasRes[src] = [ prettId ]
+                  else  hasRes[src].push(prettId)
 
             for(let src of Object.keys(img)) 
-               if(hasRes[src]) {             
+               if(hasRes[src]) for(let h in hasRes[src]) {             
                   
-                  sources.push(
+                  let hres = hasRes[src][h]
+
+                  let shortU = shortUri(hres)
+                  if(src === "rkts" || src == "cbct") shortU = prettId
+                  //let shortU = hasRes[src]
+
+                  let url = fullUri(hres)
+
+                  if(url.match(new RegExp("^("+src+":)|("+prefixesMap[src]+")"))) {                     
+                     let canonUrl = sameAsRes.filter(p => p.type === adm+"canonicalHtml")                     
+                     if(canonUrl.length) url = canonUrl[0].value
+                  }
+
+                  if(this.props.assoRes && this.props.assoRes[url]) {
+                     let canonUrl = this.props.assoRes[url]
+                     if(canonUrl && canonUrl.filter) canonUrl = canonUrl.filter(p => p.type === adm+"canonicalHtml" || p.fromKey === adm+"canonicalHtml")
+                     if(canonUrl.length) url = canonUrl[0].value
+                  }
+
+                  let prov = src.toUpperCase()
+                  if(providers[src]) prov = providers[src]
+
+                  let image = <div class="sameAsLogo"><div>{prov}</div></div>
+                  if(img[src]) image = <img src={img[src]}/>
+
+                  if(h == 0) sources.push(
                      <div class="source-data" id={src}>
-                        <Link onTouchEnd={(ev) => { if(src !== "bdr") { ev.stopPropagation(); ev.preventDefault(); this.handleOpenSourceMenu(ev,"menu-"+src+"-"+prettId); return false ; }}} to={"/show/"+hasRes[src]}>
-                           <img src={img[src]}/>
-                        </Link>
+                        {/*!directSameAs &&
+                        <Link onTouchEnd={(ev) => { if(src !== "bdr") { ev.stopPropagation(); ev.preventDefault(); this.handleOpenSourceMenu(ev,"menu-"+src+"-"+prettId); return false ; }}} to={"/show/"+shortU}>
+                           {image}
+                        </Link> }
+                        {directSameAs &&
+                        <a onTouchEnd={(ev) => { if(src !== "bdr") { ev.stopPropagation(); ev.preventDefault(); this.handleOpenSourceMenu(ev,"menu-"+src+"-"+prettId); return false ; }}} href={url} target="_blank">
+                           {image}
+                        </a> */}                        
+                        <a onTouchEnd={(ev) => { if(src !== "bdr") { ev.stopPropagation(); ev.preventDefault(); this.handleOpenSourceMenu(ev,"menu-"+src+"-"+prettId); return false ; }}} href={url} target="_blank">
+                           {image}
+                        </a>
                         {src !== "bdr" && <span onMouseEnter={(ev) => this.handleOpenSourceMenu(ev,"menu-"+src+"-"+prettId)}></span> }
                      </div>
                   )
 
-                  menus["menu-"+src+"-"+prettId] = { full: hasRes[src].replace(new RegExp(src+":"), prefixesMap[src]), short:hasRes[src] }
+                  
+                  
+                  let menuId = "menu-"+src+"-"+prettId
+
+                  //console.log("menuId",menuId,menus[menuId])
+
+                  if(!menus[menuId]) menus[menuId] = { full: [ url ], short:shortU, src:prov }
+                  else if(menus[menuId].full.indexOf(url) === -1) {
+                     menus[menuId] = { ...menus[menuId], full:[ ...menus[menuId].full, url ] }
+                  }
 
                }
                      /*
@@ -1510,6 +1610,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                
             if(sources.length > 1 || sources.length == 1 && !hasRes["bdr"] ) { 
                retList.push(<div class="source">{sources}</div>)
+               retList = [ <div class="result-box">{retList}</div> ]
                this._menus = { ...this._menus, ...menus } 
             }
             
@@ -1519,14 +1620,27 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             {
                rmatch.map((m) => {
 
-                  //console.log("m",m)
+                  //console.log("m",m,allProps)
 
-                  if(true || !m.type.match(new RegExp(skos+"prefLabel"))) {
+                  {
                      let prop = this.fullname(m.type.replace(/.*altLabelMatch/,skos+"altLabel"))
                      let val,isArray = false ;
                      let lang = m["lang"]
                      if(!lang) lang = m["xml:lang"]
-                     if(Array.isArray(m.value)) { val = m.value.map((e)=>this.pretty(e)) ; isArray = true }
+                     if(Array.isArray(m.value)) 
+                     { 
+                        val = m.value.map((e)=> {
+                           let lab =  getLangLabel(this,"",allProps.filter(l => l.type === e))
+                           if(!lab) return this.pretty(e)
+                           else {
+                              let lang = lab.lang
+                              if(!lang) lang = lab["xml:lang"]
+                              if(!lang) lang = lab["@language"]
+                              return { url:e, label:lab.value, lang} 
+                           }
+                        })
+                        isArray = true 
+                     }
                      else {
                         //val = this.highlight(this.pretty(m.value),k)
                         let mLit = getLangLabel(this,"",[m])
@@ -1539,10 +1653,22 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      //console.log("val",val,val.length,lang)
 
                      let uri,from
-                     if(m.type.match(/sameAs$/)) {
+                     if(m.type === tmp +"sameAsBDRC") {
+                        prop = "Same As BDRC"
+                        uri = "/show/"+m.value ;
+                        val = m.lit
+                        if(litLang) {
+                           lang = litLang                              
+                        }
+                     }
+                     else if(m.type.match(/[/#]sameAs/)) {
                         val = m.value;
-                        if(val === id) return ;
+                        if(val === fullId || val == prettId) return ;
                         let label = dico[val]
+                        if(!label && this.props.assoRes) {
+                           label = this.props.assoRes[val]                           
+                        }
+                        //console.log("val",label,val,lit,lang)
                         if(label) label = getLangLabel(this,"",label)
                         if(label) {
                            uri = val
@@ -1561,6 +1687,20 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                            }
                            if(label["xml:lang"]) lang = label["xml:lang"]                              
                            
+                        }
+                        else if(val.indexOf(rkts) !== -1) {                           
+                           prop = "Same As RKTS"
+                           val = [<a class="urilink" href={val}>{shortUri(val)}</a>]
+                           if(litLang) {
+                              lang = litLang                              
+                           }
+                        }
+                        else if(val.indexOf(cbct) !== -1) {                           
+                           prop = "Same As CBC@"
+                           val = [<a class="urilink" href={val}>{shortUri(val)}</a>]
+                           if(litLang) {
+                              lang = litLang                              
+                           }
                         }
                      }
                      else if(m.type.match(/relationType$/) || (m.value && m.value.match && m.value.match(new RegExp("^("+bdr+")?"+this.props.keyword.replace(/bdr:/,"(bdr:)?")+"$")))) {
@@ -1595,11 +1735,14 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                         }
                         if(m.type.match(/relationType$/))  {
                            if(m.value.match(/sameAs$/)) {
+                              return ;
+                              /* // not needed anymore - alreadey returned by query 
                               uri = this.props.keyword
                               for(let k of Object.keys(prefixesMap)) { 
                                  if(uri.startsWith(k+":")) prop = "Same As " + (sameAsMap[k]?sameAsMap[k]:k.toUpperCase())
                               }
                               uri = "/show/"+uri
+                              */
                            } else {
                               prop = this.fullname(m.value) 
                               uri = "/show/"+this.props.keyword
@@ -1617,15 +1760,22 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                            </div>
                         }><span className="lang">&nbsp;{lang}</span></Tooltip>:null]}</span>}
                         {isArray && <div class="multi">
-                           {val.map((e)=>
-                              <span>
-                                 <Link to={"/show/bdr:"+e}>{m.tmpLabel?m.tmpLabel:e}</Link>
-                                 { m.lang && <Tooltip placement="bottom-end" title={
-                                    <div style={{margin:"10px"}}>
-                                       <Translate value={languages[lang]?languages[lang].replace(/search/,"tip"):lang}/>
-                                    </div>
-                                 }><span className="lang">&nbsp;{m.lang}</span></Tooltip> }
-                              </span>)}</div>}
+                           {val.map((e)=> {
+                              let url = e, label = e, lang = m.lang
+                              if(e.url) url = shortUri(e.url)
+                              if(e.label) label = e.label
+                              if(e.lang) lang = e.lang
+                              return (
+                                 <span>
+                                    <Link to={"/show/"+url}>{m.tmpLabel?m.tmpLabel:label}</Link>
+                                    { lang && <Tooltip placement="bottom-end" title={
+                                       <div style={{margin:"10px"}}>
+                                          <Translate value={languages[lang]?languages[lang].replace(/search/,"tip"):lang}/>
+                                       </div>
+                                    }><span className="lang">&nbsp;{lang}</span></Tooltip> }
+                              
+                                 </span> )
+                           })}</div>}
                      </div>)
                   }
                })
@@ -1792,8 +1942,12 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   l = getLangLabel(this,"",labels[skos+"prefLabel"]?labels[skos+"prefLabel"]:labels[foaf+"name"])
                   //console.log("l",labels,l)
                   if(l) {
-                     message.push(<h4 key="keyResource" style={{marginLeft:"16px"}}>Resource Id Matching (1)</h4>)
-                     message.push(this.makeResult(this.props.keyword,1,null,l.value,l.lang,null,null,null,[],null,[{"type":owl+"sameAs","value":this.props.keyword}]))
+                     let sameAs = this.props.resources[this.props.keyword]
+                     if(sameAs) sameAs = sameAs[fullURI]
+                     if(sameAs) sameAs = Object.keys(sameAs).filter(k => k === adm+"canonicalHtml" || k === owl+"sameAs").reduce( (acc,k) => ([...acc, ...sameAs[k].map( s => ({ ...s, type:k }))]),[])
+                     console.log("res sameAs", sameAs)
+                     message.push(<h4 key="keyResource" style={{marginLeft:"16px"}}>Resource Id Matching</h4>)
+                     message.push(this.makeResult(this.props.keyword,1,null,l.value,l.lang,null,null,null,[],null,sameAs)) //[{"type":owl+"sameAs","value":this.props.keyword}]))
                   }
                }
             }
@@ -1965,7 +2119,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   //console.log("e",e,this.state.filters.facets)
 
                   return ( /*(this.state.filters.facets && e.type && this.state.filters.facets[e.type]) ||*/ use && (
-                  ( this.props.language != "" ? e.value && ((e.value.match(/[↦↤]/) && e.type && (!e.type.match(/(prefLabelMatch$)|(creator)/) || (!label.value.match(/[↦↤]/)))))
+                  ( this.props.language != "" ? e.value && ((e.value.match(/[↦↤]/) && e.type  && !e.type.match(/(creator)/) && (!e.type.match(/(prefLabelMatch$)/) || (!label.value.match(/[↦↤]/)))))
                                                             //|| e.type && e.type.match(/sameAs$/))
                                               : !e.lang && (e.value.match(new RegExp(bdr+this.props.keyword.replace(/bdr:/,"")))
                                                             || (e.type && e.type.match(/relationType$/) ) ) )
@@ -2671,7 +2825,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
             meta = this.props.searches[this.state.filters.datatype[0]][this.props.keyword+"@"+this.props.language]
 
-            console.log("ici",meta)
+            //console.log("ici",meta)
 
             if(meta) meta = meta.metadata
             if(meta) {
@@ -2710,14 +2864,19 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      <span className="void">View data in Public Digital Library</span>
                      <Link className="menu-item-source" to={"/show/"+this._menus[id].short}>View data in Public Digital Library</Link>
                   </MenuItem>
-                  <MenuItem onClick={(ev) => this.handleCloseSourceMenu(ev,id)}>
-                     <span className="void">Go to external website</span>
-                     <a href={this._menus[id].full} class="menu-item-source" target="_blank">Go to external website</a>
-                  </MenuItem>
+                  { this._menus[id].full.map( u =>  {
+                     let short = shortUri(u)
+                     return (
+                        <MenuItem onClick={(ev) => this.handleCloseSourceMenu(ev,id)}>
+                           <span className="void">Open {this._menus[id].full.length > 1 ?<b>&nbsp;{short}&nbsp;</b>:"resource"} in {this._menus[id].src} website</span>
+                           <a href={u} class="menu-item-source" target="_blank">Open {this._menus[id].full.length > 1 ?<b>&nbsp;{short}&nbsp;</b>:"resource"} in {this._menus[id].src} website</a>
+                        </MenuItem>)
+                     })
+                  }
             </Popover> 
       );
 
-      console.log("messageD",this._menus,showMenus,messageD,message)
+      //console.log("messageD",this._menus,showMenus,messageD,message)
 
       const textStyle = {marginLeft:"15px",marginBottom:"10px",marginRight:"15px"}
 

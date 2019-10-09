@@ -4,6 +4,9 @@ import type {SearchAction,SearchFailedAction} from './actions';
 import createReducer from '../../lib/createReducer';
 import * as actions from './actions';
 import _ from 'lodash';
+import {fullUri} from '../../components/App'
+import qs from 'query-string'
+import history from '../../history';
 
 let reducers = {};
 
@@ -58,10 +61,25 @@ export const loadedConfig = (state: DataState, action: Action) => {
 reducers[actions.TYPES.loadedConfig] = loadedConfig;
 
 export const loadedOntology = (state: DataState, action: Action) => {
-    return {
-        ...state,
-        ontology: action.payload
-    }
+
+   let ontology = action.payload
+
+   ontology["http://purl.bdrc.io/ontology/core/workHasTranslation"]["http://purl.bdrc.io/ontology/core/inferSubTree"] = [{type: "literal", value: "true", datatype: "http://www.w3.org/2001/XMLSchema#boolean"}]
+  
+   ontology["http://purl.bdrc.io/ontology/tmp/workHasTranslationInCanonicalLanguage"] = {
+      "http://www.w3.org/2000/01/rdf-schema#label": [{type: "literal", value: "canonical languages", lang: "en"}],
+      "http://www.w3.org/2000/01/rdf-schema#subPropertyOf": [{type: "uri", value: "http://purl.bdrc.io/ontology/core/workHasTranslation"}]
+   }
+   
+   ontology["http://purl.bdrc.io/ontology/tmp/workHasTranslationInNonCanonicalLanguage"] = {
+      "http://www.w3.org/2000/01/rdf-schema#label": [{type: "literal", value: "other languages", lang: "en"}],
+      "http://www.w3.org/2000/01/rdf-schema#subPropertyOf": [{type: "uri", value: "http://purl.bdrc.io/ontology/core/workHasTranslation"}]
+   }
+
+   return {
+      ...state,
+      ontology
+   }
 }
 reducers[actions.TYPES.loadedOntology] = loadedOntology;
 
@@ -124,20 +142,86 @@ reducers[actions.TYPES.getPages] = getPages;
 
 
 export const gotResource = (state: DataState, action: Action) => {
+ 
+   const owl   = "http://www.w3.org/2002/07/owl#" ; 
+   const tmp   = "http://purl.bdrc.io/ontology/tmp/" ;
+   const adm   = "http://purl.bdrc.io/ontology/admin/"
+   const bdo   = "http://purl.bdrc.io/ontology/core/"
+   let data = { ...action.meta }
+   let uri = fullUri(action.payload)
+   let sameR = {}, sameP = {}
+   let admDs = [ "originalRecord", "metadataLegal", "contentProvider" ]
+   if(data[uri]) {
+
+      // handling admindata
+      let mergeAdminData = (res) => {
+         if(data[res] && data[res][tmp+"hasAdminData"]) {
+            let admin = data[res][tmp+"hasAdminData"][0]
+            if(admin) admin = admin.value
+            for(let a of admDs) {
+               if(data[admin] && data[admin][adm+a]) data[res][adm+a] = data[admin][adm+a]
+            }
+            delete data[res][tmp+"hasAdminData"]
+         }
+      }
+      
+      mergeAdminData(uri);
+
+      let get = qs.parse(history.location.search)            
+
+      // preventing from displaying sameAs resource as subproperties
+      for(let k of Object.keys(data[uri])) {                  
+         if(k.match(/[/#]sameAs/)) {            
+            data[uri][k] = data[uri][k].map(e => { 
+               mergeAdminData(e.value);
+               sameR[e.value] = data[e.value]
+               sameP[k] = data[uri][k]
+               return ( { ...e, type:"uri"})
+            })
+         }                   
+      }
+
+      // merging data into resource
+      if(get["cw"] !== "none") for(let k of Object.keys(sameR)) {
+         if(sameR[k]) for(let p of Object.keys(sameR[k])) {
+         if(p.match(/purl\.bdrc\.io/)  || p.match(/(pref|alt)Label$/)) { 
+               if(!data[uri][p]) data[uri][p] = []
+               data[uri][p] = data[uri][p].concat(sameR[k][p].filter(e => !e.value || e.value !== uri).map(e => ({...e,"fromSameAs":k})))
+               if(!data[uri][p].length) delete data[uri][p]
+            }
+         }
+      }
+
+      // remove sameAsXyz when already in sameAs
+      for(let k of Object.keys(sameP)) {
+         if(k.match(/[/#]sameAs[^/]+$/)) {             
+            data[uri][k] = data[uri][k].filter(e => !sameP[owl+"sameAs"] || !sameP[owl+"sameAs"].filter(s => s.value === e.value).length) 
+            if(!data[uri][k].length) delete data[uri][k]
+         }
+      }
+
+
+   }
+
+
+
+   console.log("sameAs data", sameP, sameR, data)
+
+
     return {
         ...state,
         "resources": {
            ...state.resources,
-           [action.payload]:Object.keys(action.meta).reduce((acc1,k1) => {
+           [action.payload]:Object.keys(data).reduce((acc1,k1) => {
              const bdo  = "http://purl.bdrc.io/ontology/core/";
              const bdr  = "http://purl.bdrc.io/resource/";
              let k = action.payload.replace(/bdr:/,bdr)
              //console.log("k",k,k1)
-             if(k1 != k) return { ...acc1,[k1]:Object.keys(action.meta[k1]).reduce( (acc2,k2) => {
-                if(k2 != bdo+"volumeHasEtext") return { ...acc2, [k2]:action.meta[k1][k2] }
+             if(k1 != k) return { ...acc1,[k1]:Object.keys(data[k1]).reduce( (acc2,k2) => {
+                if(k2 != bdo+"volumeHasEtext") return { ...acc2, [k2]:data[k1][k2] }
                 else {
-                  let tab = action.meta[k1][k2].map(e => {
-                    let index = action.meta[e.value]
+                  let tab = data[k1][k2].map(e => {
+                    let index = data[e.value]
                     if(index) index = index[bdo+"seqNum"]
                     if(index) index = index[0]
                     if(index) index = Number(index.value)
@@ -147,11 +231,11 @@ export const gotResource = (state: DataState, action: Action) => {
                   return {...acc2, [k2]:tab }
                 }
              },{})}
-             else return {...acc1,[k1]:Object.keys(action.meta[k1]).reduce( (acc2,k2) => {
-                if(k2 != bdo+"itemHasVolume") return { ...acc2, [k2]:action.meta[k1][k2] }
+             else return {...acc1,[k1]:Object.keys(data[k1]).reduce( (acc2,k2) => {
+                if(k2 != bdo+"itemHasVolume") return { ...acc2, [k2]:data[k1][k2] }
                 else {
-                  let tab = action.meta[k1][k2].map(e => {
-                    let index = action.meta[e.value]
+                  let tab = data[k1][k2].map(e => {
+                    let index = data[e.value]
                     if(index) index = index[bdo+"volumeNumber"]
                     if(index) index = index[0]
                     if(index) index = Number(index.value)
@@ -181,6 +265,11 @@ export const gotAssocResources = (state: DataState, action: Action) => {
    let res = state.resources
    if(res) res = res[action.payload]
 
+   const skos = "http://www.w3.org/2004/02/skos/core#"
+
+   let assoR = state.assocResources
+   if(assoR) assoR = assoR[action.payload]
+
        state = {
            ...state,
            "resources": {
@@ -189,11 +278,16 @@ export const gotAssocResources = (state: DataState, action: Action) => {
            },
            "assocResources": {
               ...state.assocResources,
-              [action.payload]:{ ...action.meta.data, ...(res?Object.keys(res).reduce((acc,k) => {
+              [action.payload]:{ ...assoR, ...action.meta.data, ...(res?Object.keys(res).reduce((acc,k) => {
                      return { ...acc,[k]:Object.keys(res[k]).reduce( (accR,kR) => {
-                        return [ ...accR, ...res[k][kR].map(e => ({ ...e, "fromKey":kR }) ) ]
+                        if(!kR.match(/(description|type|comment)$/)) return [ ...accR, ...res[k][kR].map(e => ({ 
+                           ...e, 
+                           "fromKey":kR, 
+                           ...(kR===skos+"prefLabel"&&!e.lang&&!e["@language"]&&!e["xml:lang"]?{"xml:lang":" "}:{}) 
+                        }) ) ]
+                        else return [ ...accR ]
                      },[]) }
-                  },{}):{}) 
+                  },{}):{})  
               }
           }
        }

@@ -25,6 +25,9 @@ const mapStateToProps = (state) => {
    let dictionary = state.data.dictionary ;
    let facets = state.data.facets ;
    let resources = state.data.resources ;
+   let assoRes = state.data.assocResources;
+   if(keyword && assoRes && assoRes[keyword]) assoRes = assoRes[keyword]
+
    let ontoSearch = state.data.ontoSearch ;
 
    let loading = state.ui.loading  ;
@@ -40,7 +43,7 @@ const mapStateToProps = (state) => {
    let metadata = state.ui.metadata
 
    let newState = { logged,config, hostFailure, searches, keyword, language,loading,datatypes,ontology,facets,
-      locale,prefLang,resources,ontoSearch,rightPanel,langPreset, langIndex, failures,dictionary,metadata }
+      locale,prefLang,resources,ontoSearch,rightPanel,langPreset, langIndex, failures,dictionary,metadata, assoRes }
 
    if(!global.inTest) console.log("mS2p",state,newState)
 

@@ -122,7 +122,10 @@ export function sortLangScriptLabels(data,preset,translit)
                break ; 
             }
          }
-         if(i === -1) i = preset.length ;
+         if(i === -1) { 
+            i = preset.length ;
+            if(!k) i++
+         }
       }      
 
       //console.log("k v",k,v,translit[k],e) //,transliterators)
