@@ -2556,6 +2556,7 @@ class ResourceViewer extends Component<Props,State>
       let imageLabel = "images"
       if(!this.props.collecManif && this.props.imageAsset && this.props.imageAsset.match(/[/]collection[/]/)) imageLabel = "collection"
 
+      let assoP 
 
       let theData = <div className="data">
          { kZprop.map((k) => {
@@ -3118,8 +3119,11 @@ class ResourceViewer extends Component<Props,State>
             <div>
                <h3><span>Associated Persons</span>:&nbsp;</h3>
             {   this.props.assocResources &&
-                  Object.keys(this.props.assocResources).map((e,i) =>
-                        i<20?<h4>{this.uriformat(null,{value:e})}</h4>:(i==20?<h4>(<a href={'/search?r='+this.props.IRI}>browse all</a>)</h4>:null))
+                  (assoP = Object.keys(this.props.assocResources).filter(e => !this.props.assocResources[e].filter(f => f.fromKey).length)).map((e,i) =>
+                        i<20?
+                           <h4 class={assoP.length>1 ? "multiple" : ""}>{this.uriformat(tmp+"AssociatedPersons",{value:e})}</h4>
+                        :(i==20?
+                           <h4 class="multiple"><a href={'/search?r='+this.props.IRI}>browse all</a>)</h4>:null))
             }
             </div>
          }
