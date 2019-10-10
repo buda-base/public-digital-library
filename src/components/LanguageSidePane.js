@@ -153,16 +153,16 @@ class LanguageSidePane extends Component<Props,State> {
                                  {items.map((value, index) => (
                                     <SortableItem key={`item-${value}`} index={index} value={value} />
                                  ))}
-                                 <div class="ol-li-lang"><li><a title="Add" onClick={(ev) => { this.props.onToggleCollapse("popover-lang",ev.currentTarget) } } ><AddBox className="add"/></a><label><span>More</span></label></li></div>
+                                 <div class="ol-li-lang"><li><a title="Add" onClick={(ev) => { this.props.onToggleCollapse("popover-lang",$(ev.currentTarget).closest(".widget")[0]) } }><AddBox className="add"/></a><label><span>More</span></label></li></div>
                               </ol>,
                               <Popover 
-                                 transformOrigin={{ vertical: 'bottom', horizontal: 'left'}} 
+                                 transformOrigin={{ vertical: 'bottom', horizontal: 'right'}} 
                                  anchorOrigin={{vertical: 'bottom', horizontal: 'left'}} 
                                  open={this.props.collapse["popover-lang"]}
                                  anchorEl={() => {console.log("anchor",this.props.anchor); return this.props.anchor; }}               
                                  onClose={ (ev) => this.props.onToggleCollapse("popover-lang") }
                               >
-                                 <MenuItem>hello</MenuItem>
+                                 <MenuItem>Work in progress...</MenuItem>
                               </Popover>
                            ]);
                         });
@@ -170,7 +170,8 @@ class LanguageSidePane extends Component<Props,State> {
                         //disab = true
                         subcollapse = [
                            <span className="subcollapse" /*style={{width:"335px"}}*/
-                                 onClick={(ev) => {  this.props.onToggleCollapse("custom-lang"); }}>
+                                 onClick={(ev) => {  this.props.onToggleCollapse("custom-lang"); }}
+                              >
                               { this.props.collapse["custom-lang"] ? <ExpandLess /> : <ExpandMore />}
                            </span>,
                            <Collapse key={2}

@@ -28,7 +28,7 @@ let waiter = setInterval( async ()=>{
       window.$("#viewer").html("<div style='margin:20px'><h2>Embedded iframe must set <i>origin</i> parameter.<br/>See <a target='_blank' href='https://github.com/buda-base/public-digital-library/blob/master/BDRC_Embedded_Reader.md'>documentation</a> for further information.</h2></div>")
       clearInterval(waiter)
    }
-   else if(_ && window.moduleLoaded &&  window.moduleLoaded.JsEWTS && window.moduleLoaded.Sanscript && window.moduleLoaded.pinyin4js) {
+   else if(_ && window.moduleLoaded &&  window.moduleLoaded.JsEWTS && window.moduleLoaded.Sanscript && window.moduleLoaded.pinyin4js && window.moduleLoaded.hanziConv) {
       clearInterval(waiter);
       miradorConfig = window.miradorConfig
       miradorSetUI  = window.miradorSetUI

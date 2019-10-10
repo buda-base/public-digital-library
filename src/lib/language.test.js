@@ -48,6 +48,8 @@ const preset2 = [ "zh-hans", "bo-x-ewts", "en" ]
 const preset3 = [ "bo", "sa-deva", "zh-hans" ]
 const preset4 = [ "en", "zh-latn-pinyin" ]
 const preset5 = [ "bo-Tibt", "sa-deva" ]
+const preset6 = [ "zh-hans", "zh-hant", "sa-deva" ]
+const preset7 = [ "sa-deva", "zh-hant", "zh-hans" ]
 
 
 
@@ -150,8 +152,8 @@ describe('language settings tests', () => {
       let extPreset5 = extendedPresets(preset5)
 
       expect(extPreset1).toEqual({ flat:[ "bo-x-ewts", "bo", "bo-[Tt]ibt", "sa-x-iast", "sa-deva" ], translit:{ "bo":"bo-x-ewts", "bo-[Tt]ibt": "bo-x-ewts", "sa-deva": 'sa-x-iast' } })
-      expect(extPreset2).toEqual({ flat:[ "zh-hans", "bo-x-ewts", "bo", "bo-[Tt]ibt", "en" ], translit:{ "bo":"bo-x-ewts", "bo-[Tt]ibt": "bo-x-ewts" } })
-      expect(extPreset3).toEqual({ flat:[ "bo", "bo-x-ewts", "sa-deva", "sa-x-iast", "zh-hans" ], translit:{ "bo-x-ewts":"bo", 'sa-x-iast': 'sa-deva' } } )
+      expect(extPreset2).toEqual({ flat:[ "zh-hans", "zh-[Hh]ant", "bo-x-ewts", "bo", "bo-[Tt]ibt", "en" ], translit:{ "bo":"bo-x-ewts", "bo-[Tt]ibt": "bo-x-ewts", "zh-[Hh]ant": "zh-hans"} })
+      expect(extPreset3).toEqual({ flat:[ "bo", "bo-x-ewts", "sa-deva", "sa-x-iast", "zh-hans", "zh-[Hh]ant" ], translit:{ "bo-x-ewts":"bo", 'sa-x-iast': 'sa-deva', "zh-[Hh]ant": "zh-hans" } } )
       expect(extPreset5).toEqual({ flat:[ "bo-Tibt", "bo-x-ewts", "sa-deva", "sa-x-iast" ], translit:{ "bo-x-ewts":"bo-Tibt", 'sa-x-iast': 'sa-deva' } } ) 
 
       let extSortJson1 = [
@@ -210,7 +212,33 @@ describe('language settings tests', () => {
                       )
         expect(results).toEqual([ { type: 'literal',  value: 'wú zhuó pú sà', lang: 'zh-latn-pinyin' } ] )
 
+
+         let jsonLabels = [
+            {type: "literal", value: "寂天", lang: "zh-hant"},
+            {type: "literal", value: "Śāntideva", lang: "sa-x-iast"},
+            {type: "literal", value: "寂鎧", lang: "zh-hant"},
+            {type: "literal", value: "Shi-ba lha", lang: "bo-x-dts"},
+            {type: "literal", value: "寂鎧梵", lang: "zh-hant"}     
+         ]
+
+         let extSortJson = [
+            {type: "literal", value: "寂天", lang: "zh-hans"},
+            {type: "literal", value: "寂铠", lang: "zh-hans"},
+            {type: "literal", value: "寂铠梵", lang: "zh-hans"},
+            {type: "literal", value: "शान्तिदेव", lang: "sa-deva"},
+            {type: "literal", value: "Shi-ba lha", lang: "bo-x-dts"}
+         ]
+
+
+         let extPreset6 = extendedPresets(preset6)
+         results = sortLangScriptLabels(jsonLabels,extPreset6.flat, extPreset6.translit)
+
+         expect(results).toEqual(extSortJson)
+
+ 
         done()
     })
 
 })
+
+
