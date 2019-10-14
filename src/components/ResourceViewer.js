@@ -246,6 +246,7 @@ let propOrder = {
       "skos:altLabel",
       "bdo:workType",
       "bdo:workExpressionOf",
+      "tmp:siblingExpressions",
       "bdo:workDerivativeOf",
       "bdo:workTranslationOf",
       "bdo:workHasExpression",
@@ -625,7 +626,7 @@ class ResourceViewer extends Component<Props,State>
       if(sorted)
       {
 
-         let customSort = [ bdo+"workHasPart", bdo+"workHasExpression", bdo+"workTitle", bdo+"personName" ]
+         let customSort = [ bdo+"workHasPart", bdo+"workHasExpression", tmp+"siblingExpressions", bdo+"workTitle", bdo+"personName" ]
 
          let sortBySubPropNumber = (tag:string,idx:string) => {
             let parts = prop[tag]
@@ -678,36 +679,41 @@ class ResourceViewer extends Component<Props,State>
          
          if(prop[bdo+'personName']) prop[bdo+'personName'] = sortBySubPropURI("personName") ;
 
-         let expr = prop[bdo+"workHasExpression"]
-         if(expr) {
 
-            let assoR = this.props.assocResources
-            if (assoR) {
+         let expr 
+         for(let xp of [ bdo+"workHasExpression", tmp+"siblingExpressions" ]) 
+         {
+            expr = prop[xp]
+            if(expr) {
 
-               expr = expr.map((e) => {
+               let assoR = this.props.assocResources
+               if (assoR) {
 
-                  let label1,label2 ;
+                  expr = expr.map((e) => {
 
-                  //console.log("index",e,assoR[e.value])
-                  if(assoR[e.value])
-                  {
-                     label1 = getLangLabel(this, assoR[e.value].filter(e => e.type === skos+"prefLabel"))
-                     if(label1 && label1.value) label1 = label1.value
+                     let label1,label2 ;
 
-                     if(assoR[e.value].filter(e => e.type === bdo+"workHasRoot").length > 0)
+                     //console.log("index",e,assoR[e.value])
+                     if(assoR[e.value])
                      {
-                        label2 = getLangLabel(this,assoR[assoR[e.value].filter(e => e.type === bdo+"workHasRoot")[0].value].filter(e => e.type === skos+"prefLabel"))                        
-                        label2 = label2.value
+                        label1 = getLangLabel(this, assoR[e.value].filter(e => e.type === skos+"prefLabel"))
+                        if(label1 && label1.value) label1 = label1.value
+
+                        if(assoR[e.value].filter(e => e.type === bdo+"workHasRoot").length > 0)
+                        {
+                           label2 = getLangLabel(this,assoR[assoR[e.value].filter(e => e.type === bdo+"workHasRoot")[0].value].filter(e => e.type === skos+"prefLabel"))                        
+                           label2 = label2.value
+                        }
                      }
-                  }
 
-                  return ({ ...e, label1, label2 })
-               })
+                     return ({ ...e, label1, label2 })
+                  })
 
-               prop[bdo+"workHasExpression"] = _.orderBy(expr,['label1','label2'])
+                  prop[xp] = _.orderBy(expr,['label1','label2'])
 
-               //for(let o of prop[bdo+"workHasExpression"]) console.log(o.value,o.label1)
+                  //for(let o of prop[bdo+"workHasExpression"]) console.log(o.value,o.label1)
 
+               }
             }
          }
 
@@ -1561,7 +1567,7 @@ class ResourceViewer extends Component<Props,State>
                }
             }
 
-            if(this.props.assocResources && prop == bdo+"workHasExpression") {
+            if(this.props.assocResources && (prop == bdo+"workHasExpression" || prop == _tmp+"siblingExpressions") ) {
 
                let root = this.props.assocResources[e.value] //this.uriformat(_tmp+"workRootWork",e)
                if(root) root = root.filter(e => e.type == bdo+"workHasRoot")
