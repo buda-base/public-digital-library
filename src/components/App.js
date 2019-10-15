@@ -337,6 +337,7 @@ type State = {
    newKW:string,
    dataSource : string[],
    leftPane?:boolean,
+   closeLeftPane?:boolean,
    filters:{
       datatype:string[],
       facets?:{[string]:string[]}
@@ -540,7 +541,7 @@ class App extends Component<Props,State> {
       }
       */
 
-      if(!state.leftPane && props.keyword) {
+      if(!state.leftPane && props.keyword && !state.closeLeftPane) {
          if(!s) s = { ...state }
          s.leftPane =  true 
       }
@@ -2917,7 +2918,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
          <div className="App" style={{display:"flex"}}>
             <div className={"SidePane left " +(this.state.leftPane?"visible":"")}>
-                  <IconButton className="close" onClick={e => this.setState({...this.state,leftPane:false})}><Close/></IconButton>
+                  <IconButton className="close" onClick={e => this.setState({...this.state,leftPane:false,closeLeftPane:true})}><Close/></IconButton>
                { //this.props.datatypes && (results ? results.numResults > 0:true) &&
                   <div style={{minWidth:"335px",position:"relative"}}>
                      <Typography style={{fontSize:"25px",marginBottom:"20px",textAlign:"center"}}>
@@ -3321,7 +3322,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                {/* <h2>BUDA Platform</h2> */}
                {/* <h3>Buddhist Digital Resource Center</h3> */}
                <div>
-               <IconButton style={{marginRight:"15px"}} className={this.state.leftPane?"hidden":""} onClick={e => this.setState({...this.state,leftPane:!this.state.leftPane})}>
+               <IconButton style={{marginRight:"15px"}} className={this.state.leftPane?"hidden":""} onClick={e => this.setState({...this.state,leftPane:true,closeLeftPane:false})}>
                   <MenuIcon/>
                </IconButton>
                <SearchBar

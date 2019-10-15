@@ -92,6 +92,9 @@ const mapStateToProps = (state,ownProps) => {
 
 const mapDispatchToProps = (dispatch, ownProps) => {
    return {
+      onResetSearch:() => {
+         dispatch(data.resetSearch())
+      },
       onRequestPdf:(iri:string,url:string) => {
          dispatch(data.requestPdf(iri,url));
          dispatch(data.requestPdf(iri,url.replace(/pdf/,"zip")))

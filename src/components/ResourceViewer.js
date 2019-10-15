@@ -109,6 +109,7 @@ type Props = {
    onGetChunks: (s:string,b:number) => void,
    onGetPages: (s:string,b:number) => void,
    onToggleLanguagePanel:()=>void,
+   onResetSearch:()=>void,
    onUserProfile:(url:{})=>void
 }
 type State = {
@@ -331,7 +332,8 @@ function top_left_menu(that,pdfLink,monoVol,fairUse)
   return (
 
     <div id="top-left">
-       <Link style={{fontSize:"20px"}} className="goBack" to={that.props.keyword&&!that.props.keyword.match(/^bdr:/)?"/search?q="+that.props.keyword+"&lg="+that.props.language+(that.props.datatype?"&t="+that.props.datatype:""):"/"}>
+       <Link style={{fontSize:"20px"}} className="goBack" to="/" onClick={that.props.onResetSearch()} //that.props.keyword&&!that.props.keyword.match(/^bdr:/)?"/search?q="+that.props.keyword+"&lg="+that.props.language+(that.props.datatype?"&t="+that.props.datatype:""):"/"
+       >
           {/* <Button style={{paddingLeft:"0"}}>&lt; Go back to search page</Button> */}
           <IconButton style={{paddingLeft:0}} title={I18n.t("resource.back")}>
              <HomeIcon style={{fontSize:"30px"}}/>
