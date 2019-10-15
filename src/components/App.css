@@ -316,8 +316,10 @@ h4.hasIcon ~ .subsub { padding-left:40px; }
 
 .resource button svg:hover { color:rgba(0,0,0,0.65); }
 
-a.download { text-decoration:none; font-weight:bold; cursor:pointer; }
+a.download { text-decoration:none; font-weight:bold; cursor:pointer;  }
 a.download:hover { text-decoration:underline; }
+
+.firstImage + br + div > .download { font-size:14px; text-transform: capitalize; } 
 
 h3 + h4.multiple,
 h3 + .propCollapseHeader,
@@ -521,7 +523,8 @@ svg.hide { opacity:0;pointer-events:none; }
 }
 .uv.hidden,.uv.hide { display:none !important;}
 
-.firstImage { box-shadow: 0 0 10px black;display:inline-block;padding:5px;background:rgba(0,0,0,1.0);position:relative; min-width:360px;min-height:100px;text-align:center; }
+.firstImage { box-shadow: 0 0 10px black;display:inline-block;padding:5px;background:rgba(0,0,0,1.0);position:relative; min-width:360px;min-height:100px;text-align:center; 
+   margin-top:5px; }
 .firstImage img {max-width:100%; position:relative;z-index:1; max-height:444px;}
 .firstImage.loaded { font-size:0;  }
 .firstImage.loaded #title { position:absolute;font-size:17px;left:20px;bottom:20px; z-index:2; }
@@ -532,6 +535,10 @@ svg.hide { opacity:0;pointer-events:none; }
 .firstImage.loaded #title > div:hover { color:rgba(229, 74, 53,1);background:rgba(255, 230, 220,1);border-color:rgba(229, 74, 53,1); }
 
 .firstImage + .data { margin-top:15px; }
+
+h2 + .browse { margin-bottom:15px;}
+
+h2 + .browse a { font-size:14px; text-transform:capitalize;}
 
 .uvLoader { z-index:0 !important;}
 

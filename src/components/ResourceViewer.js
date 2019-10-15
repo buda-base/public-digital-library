@@ -44,6 +44,7 @@ import IconButton from '@material-ui/core/IconButton';
 import ShareIcon from '@material-ui/icons/Share';
 import HomeIcon from '@material-ui/icons/Home';
 import ChatIcon from '@material-ui/icons/Chat';
+import SearchIcon from '@material-ui/icons/Search';
 import PhotoIcon from '@material-ui/icons/PhotoSizeSelectActual';
 import Script from 'react-load-script'
 import React, { Component } from 'react';
@@ -478,12 +479,16 @@ function top_left_menu(that,pdfLink,monoVol,fairUse)
        <IconButton style={{marginLeft:"0px"}} title={I18n.t("resource.toggle")} onClick={e => that.setState({...that.state,annoPane:!that.state.annoPane})}>
           <ChatIcon />
        </IconButton>
-       {
+       { 
           //that.props.IRI.match(/^[^:]+:[RPGTW]/) &&
           prefixes[that.props.IRI.replace(/^([^:]+):.*$/,"$1")] &&
           <Link className="goBack" to={"/search?r="+that.props.IRI+"&t=Any"}>
-             <Button style={{marginLeft:"0px",paddingLeft:"10px"}}>{I18n.t("resource.browse")} &gt;</Button>
+          <IconButton style={{paddingLeft:0}} title={I18n.t("resource.browse")}>
+             <SearchIcon style={{fontSize:"30px"}}/>
+          </IconButton>
+          
           </Link>
+
        }
      </div>
    )
@@ -3118,6 +3123,13 @@ class ResourceViewer extends Component<Props,State>
                </div>
                {/* {this.format("h1",rdf+"type",this.props.IRI)} */}
                { title }
+               {
+                  this.props.resources && this.props.resources[this.props.IRI] && <div class="browse">
+                     <Link className="download login" to={"/search?r="+this.props.IRI+"&t=Any"}>
+                        &gt; {I18n.t("resource.browse")}
+                     </Link>
+                  </div>
+               }
                { /*<MapComponent tmp={this.props}/ */}
                {/*
                   hasImageAsset && //this.props.openUV &&
@@ -3186,7 +3198,7 @@ class ResourceViewer extends Component<Props,State>
                         }
                         this.setState({...this.state, pdfOpen:true,anchorElPdf:ev.currentTarget})
                       }
-                    } class="download login">Download images as PDF/ZIP</a>
+                    } class="download login">&gt; Download images as PDF/ZIP</a>
                     <Loader loaded={(!this.props.pdfVolumes || this.props.pdfVolumes.length > 0)} options={{position:"relative",left:"115%",top:"-11px"}} />
                   </div>]
                }
