@@ -193,6 +193,7 @@ let propOrder = {
    ],
    "Item":[
       "bdo:itemForWork",
+      "bdo:itemHasVolume",
       "bdo:itemVolumes"
    ],
    "Lineage":[
@@ -268,6 +269,7 @@ let propOrder = {
       "bdo:workDimWidth",
       "bdo:workDimHeight",
       "bdo:workEvent",
+      "tmp:hasEtext",
       "bdo:workHasItem",
       // "bdo:workHasItemImageAsset",
       "bdo:workLocation",
@@ -626,7 +628,7 @@ class ResourceViewer extends Component<Props,State>
       if(sorted)
       {
 
-         let customSort = [ bdo+"workHasPart", bdo+"workHasExpression", tmp+"siblingExpressions", bdo+"workTitle", bdo+"personName" ]
+         let customSort = [ bdo+"workHasPart", bdo+"itemHasVolume", bdo+"workHasExpression", tmp+"siblingExpressions", bdo+"workTitle", bdo+"personName", bdo+"volumeHasEtext" ]
 
          let sortBySubPropNumber = (tag:string,idx:string) => {
             let parts = prop[tag]
@@ -638,7 +640,7 @@ class ResourceViewer extends Component<Props,State>
 
                      let index = assoR[e.value]
 
-                     if(index) index = index.filter(e => e.type === idx)
+                     if(index) index = index.filter(e => e.type === idx || e.fromKey === idx)
                      if(index && index[0] && index[0].value) index = Number(index[0].value)
                      else index = null
 
@@ -649,6 +651,24 @@ class ResourceViewer extends Component<Props,State>
                return parts ;
             }
          }
+
+         if(prop[bdo+"workHasItem"]) {
+            let elem = this.getResourceElem(bdo+"workHasItem")
+            let items = []
+            let txtItem = []
+            if(this.props.assocResources && elem) for(let e of elem)
+            {
+               let assoc = this.props.assocResources[e.value]
+               if(!assoc || !assoc.filter(e => e.type === tmp+"itemType" && e.value === bdo+"ItemEtext").length) items.push(e)
+               else txtItem.push(e)
+            }
+            if(txtItem.length) {
+               prop[tmp+"hasEtext"] = txtItem
+               if(items.length) prop[bdo+"workHasItem"] = items
+            }
+         }
+
+         if(prop[bdo+"volumeHasEtext"]) prop[bdo+"volumeHasEtext"] = sortBySubPropNumber(bdo+"volumeHasEtext",bdo+"seqNum");
 
          if(prop[bdo+"workHasPart"]) prop[bdo+"workHasPart"] = sortBySubPropNumber(bdo+"workHasPart",bdo+"workPartIndex");
 
@@ -836,13 +856,13 @@ class ResourceViewer extends Component<Props,State>
                   if(a && !a["value"] && a[rdfs+"label"] && a[rdfs+"label"][0]) a = a[rdfs+"label"][0]
                   if(a && a["lang"]) a = a["lang"]
                   else if(a && a["xml:lang"] && a["xml:lang"] != "") a = a["xml:lang"]
-                  //else if(a["type"] == "uri") a = a["value"]
+                  else if(a["type"] == "uri") a = a["value"]
                   else a = null
 
                   if(b && !b["value"] && b[rdfs+"label"] && b[rdfs+"label"][0]) b = b[rdfs+"label"][0]
                   if(b && b["lang"]) b = b["lang"]
                   else if(b && b["xml:lang"] && b["xml:lang"] != "") b = b["xml:lang"]
-                  //else if(b["type"] == "uri") b = b["value"]
+                  else if(b["type"] == "uri") b = b["value"]
                   else b = null
 
                   //console.log("a,b",a,b)
@@ -2430,14 +2450,15 @@ class ResourceViewer extends Component<Props,State>
             if(!this.props.manifestError && elem) for(let e of elem)
             {
                let assoc = this.props.assocResources[e.value]
+               let imItem = assoc
 
                //console.log("hImA",assoc,e.value)
 
-               if(assoc && assoc.length > 0 && !this.props.imageAsset && !this.props.manifestError && assoc.filter(e => e.type === tmp+"itemType" && e.value === bdo+"ItemImageAsset").length) {
+               if(assoc && assoc.length > 0 && !this.props.imageAsset && !this.props.manifestError && (imItem = assoc.filter(e => e.type === tmp+"itemType" && e.value === bdo+"ItemImageAsset")).length) {
 
                   this.setState({...this.state, imageLoaded:false})
 
-                  if(assoc.length == 1) { this.props.onHasImageAsset(iiifpres+"/2.1.1/v:bdr:"+this.pretty(assoc[0].value,true)+"/manifest",this.props.IRI); }
+                  if(assoc.length == 1) { this.props.onHasImageAsset(iiifpres+"/2.1.1/v:bdr:"+this.pretty(imItem[0].value,true)+"/manifest",this.props.IRI); }
                   else { this.props.onHasImageAsset(iiifpres+"/2.1.1/collection/wio:"+this.pretty(this.props.IRI,true),this.props.IRI);  }
 
                }
@@ -2613,70 +2634,7 @@ class ResourceViewer extends Component<Props,State>
                   if(k == bdo+"note")
                   {
                      //console.log("note",tags,k);//tags = [<h4>Note</h4>]
-                  }
-                  else if(/*k == bdo+"itemHasVolume" ||*/ k == bdo+"volumeHasEtext")
-                  {
-
-                     tags = tags.map(e => {
-
-                        //console.log("e",e)
-                        let key = "";
-                        if(Array.isArray(e) && e.length > 0) {
-                           key = e[0]
-                           key = key.props
-                           if(key) key = key.children
-
-                           if(key && key[1] && key[1].props && key[1].props.children)
-                           {
-                              key = key[1].props.children
-                              if(key && key[1] && key[1].props && key[1].props.children) {
-                                 key = Number(key[1].props.children[0])
-                                 //console.log("key",key)
-                              }
-                           }
-                           else if(key && key[0] && key[0].props && key[0].props.children
-                              && (
-                                    key[0].props.children == "Etext Volume: "
-                                    ||
-                                    (key[0].props.children[0] && key[0].props.children[0].props
-                                       && key[0].props.children[0].props.children == "Etext Volume")
-                                 )
-                              )
-                           {
-
-                              // [0].props.children[0].props
-                              if(key.length > 1) key = key[1]
-                              if(key) key= key.props
-                              if(key) key = key.children
-                              if(key && key.length > 1) key = key[1]
-                              if(key) key = key.props
-                              if(key) key = key.children
-                              if(key) key = Number(key)
-                           }
-                           else
-                           {
-                              // [0].props.children[0][0].props.children
-                              if(key && key.length > 0) key = key[0]
-                              if(key && key.length > 0) key = key[0]
-                              key = key.props
-                              if(key) key = key.children
-                              if(key) key = Number((""+key).replace(/^Volume /,""))
-                           }
-
-
-                        }
-
-                        return { elem:e, key}
-                     })
-
-                     //console.log("tagsK",tags);
-
-                     tags = _.orderBy(tags,['key'])
-
-                     tags = tags.map(e => e.elem)
-
-
-                  }
+                  }           
                   else if(k == bdo+"workLocation")
                   {
                      elem = this.getResourceElem(k)
@@ -2717,74 +2675,7 @@ class ResourceViewer extends Component<Props,State>
                            <h4>{str}{w && " of "}{w && this.uriformat(bdo+"workLocationWork",w)}</h4>
                      </Tooltip>] ;
                      }
-                  }
-                  else if(false) //k == bdo+"workHasExpression")
-                  {
-                  // 1-map avec le nom du children[2] si ==3chldren et children[1] = " in "
-                     tags = tags.map(e => {
-
-                        if(Array.isArray(e) && e.length > 0) e = e[0]
-
-                        //console.log("e",e)
-                        let exprKey1 = "", exprKey2 = "";
-
-                        if(e.props)
-                        {
-                           if(!Array.isArray(e.props.children)) exprKey1 = e.props.children
-                           else if(e.props.children.length > 0)
-                           {
-                              exprKey1 = e.props.children[0]
-                              if(Array.isArray(exprKey1) && exprKey1.length > 0) exprKey1 = exprKey1[0]
-                              if(exprKey1 && exprKey1.props && exprKey1.props.children) exprKey1 = exprKey1.props.children
-                              if(Array.isArray(exprKey1)) exprKey1 = exprKey1[0]
-                              if(Array.isArray(exprKey1) && exprKey1.length > 0) exprKey1 = exprKey1[0]
-                              if(exprKey1 && exprKey1.props && exprKey1.props.children) exprKey1 = exprKey1.props.children
-                              exprKey1 = exprKey1.replace(/[/]$/,"")
-                           }
-
-                           //console.log("eK1",exprKey1)
-
-                           if(e.props.children.length == 3 && e.props.children[1] === " in ")
-                           {
-                              exprKey2 = e.props.children[2]
-                              if(Array.isArray(exprKey2) && exprKey2.length > 0) exprKey2 = exprKey2[0]
-                              if(exprKey2 && exprKey2.props && exprKey2.props.children) exprKey2 = exprKey2.props.children
-                              if(Array.isArray(exprKey2)) exprKey2 = exprKey2[0]
-                              if(Array.isArray(exprKey2) && exprKey2.length > 0) exprKey2 = exprKey2[0]
-                              if(exprKey2 && exprKey2.props && exprKey2.props.children) exprKey2 = exprKey2.props.children
-                              exprKey2 = exprKey2.replace(/[/]$/,"")
-                           }
-                        }
-                        /*
-                        if(e.props && e.props.children.length == 3 && e.props.children[1] === " in " && e.props.children[2][0][0] && e.props.children[2][0][0].props)
-                        {
-                           console.log("key",e.props.children[2][0][0].props.children)
-
-                           if(e.props.children[2][0][0].props.children)
-                              return { elem:e , "exprKey1":e.props.children[0][0][0].props.children, "exprKey2" : e.props.children[2][0][0].props.children.replace(/[/]/,"") }
-                        }*/
-                        /*
-                        else if(e.props.children.length == 1)
-                        {
-                           return { ...e , "exprKey" : e.props.children[0][0].props.children }
-                        }
-                        */
-
-                        return { elem:e, exprKey1, exprKey2 } ;
-                     });
-
-
-                  // 2-lodash sort
-                     tags = _.sortBy(tags,['exprKey1','exprKey2'])
-
-                     console.log("sorted tags",tags);
-
-                     let cleantags = tags.map(e => e.elem )
-
-                     //console.log("clean tags",cleantags);
-
-                     tags = cleantags
-                  }
+                  }             
                   else if(k == bdo+"placeRegionPoly" || (k == bdo+"placeLong" && !doRegion))
                   {
 

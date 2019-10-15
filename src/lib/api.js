@@ -25,6 +25,7 @@ const dPrefix = {
       "W" : "Work",
       "O" : "Taxonomy",
       "V" : "Volume",
+      "VL" : "Volume",
       "UT": "Etext", // ?
    },
    "dila" : {
