@@ -150,7 +150,7 @@ export const gotResource = (state: DataState, action: Action) => {
    let data = { ...action.meta }
    let uri = fullUri(action.payload)
    let sameR = {}, sameP = {}
-   let admDs = [ "originalRecord", "metadataLegal", "contentProvider" ]
+   let admDs = [ "originalRecord", "metadataLegal", "contentProvider", "replaceWith", "status" ]
    if(data[uri]) {
 
       // handling admindata

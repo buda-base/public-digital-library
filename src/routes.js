@@ -96,8 +96,10 @@ export class Redirect404 extends Component<Props>
       super(props);
 
       // console.log("props404",props)
+      let to = "/"
+      if(props.to) to = props.to
 
-      setTimeout((function(that) { return function() { that.props.history.push("/") } })(this), 3000) ;
+      setTimeout((function(that) { return function() { that.props.history.push(to) } })(this), 3000) ;
    }
 
    render()

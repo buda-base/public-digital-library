@@ -107,6 +107,13 @@ a.result .contenu ul > div:last-child {
    min-width: 0;
 }
 
+.resource h3.withdrawn { font-style:italic; opacity:1; margin-top:15px; display:block;}
+
+h3.withdrawn svg { vertical-align:text-bottom; margin:0px 10px; opacity:0.55; font-size:16px;} /*color:rgba(229, 74, 53,1)}*/
+h3.withdrawn svg:first-child { margin-left:0; }
+
+h3.withdrawn ~ * { opacity:0.45;}
+
 
 a.result .contenu ul > div:last-child h3 > span:first-child { /*word-break: break-all;*/ overflow-wrap: break-word; }
 

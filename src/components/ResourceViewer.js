@@ -23,6 +23,7 @@ import Close from '@material-ui/icons/Close';
 import Layers from '@material-ui/icons/Layers';
 import PlayArrow from '@material-ui/icons/PlayArrow';
 import Visibility from '@material-ui/icons/Visibility';
+import WarnIcon from '@material-ui/icons/Warning';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import SpeakerNotes from '@material-ui/icons/SpeakerNotes';
 import SpeakerNotesOff from '@material-ui/icons/SpeakerNotesOff';
@@ -62,7 +63,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faLanguage } from '@fortawesome/free-solid-svg-icons'
 //import {MapComponent} from './Map';
 import {getEntiType} from '../lib/api';
-import {languages,getLangLabel,top_right_menu,prefixesMap as prefixes,sameAsMap,shortUri} from './App';
+import {languages,getLangLabel,top_right_menu,prefixesMap as prefixes,sameAsMap,shortUri,fullUri} from './App';
 import Popover from '@material-ui/core/Popover';
 import MenuItem from '@material-ui/core/MenuItem';
 import List from '@material-ui/core/List';
@@ -2349,6 +2350,7 @@ class ResourceViewer extends Component<Props,State>
     {
       console.log("render",this.props,this.state)
 
+   
       //const { GeoJson } = ReactLeaflet;
       const { BaseLayer} = LayersControl;
 
@@ -2362,6 +2364,26 @@ class ResourceViewer extends Component<Props,State>
             <Redirect404  history={this.props.history} message={msg}/>
          )
       }
+
+      let redir, withdrawn
+      if(this.props.resources && (redir = this.props.resources[this.props.IRI]) && (redir = redir[fullUri(this.props.IRI)]))
+      {
+         console.log("WithD?",redir);
+         if(redir[adm+"replaceWith"]) {
+            redir = shortUri(redir[adm+"replaceWith"][0].value)
+            
+            return (
+               <Redirect404  history={this.props.history} message={"Record withdrawn in favor of "+redir} to={"/show/"+redir}/>
+            )
+         }
+         else if(redir[adm+"status"] && (redir = redir[adm+"status"]).length && redir[0].value === bda+"StatusWithdrawn"){
+            withdrawn = true 
+            console.log("WithD");
+         }
+         
+         //this.props.history.push("/show/"+redir)
+      }
+      console.log("WithD...",redir);
 
       //let get = qs.parse(this.props.history.location.search)
       //console.log('qs',get)
@@ -2611,7 +2633,7 @@ class ResourceViewer extends Component<Props,State>
 
             //if(!k.match(new RegExp("Revision|Entry|prefLabel|"+rdf+"|toberemoved"))) {
             if((!k.match(new RegExp(adm+"|adm:|isRoot$|SourcePath|"+rdf+"|toberemoved|workPartIndex|workPartTreeIndex")) 
-               ||k.match(/(originalRecord|metadataLegal|contentProvider)$/)
+               ||k.match(/(originalRecord|metadataLegal|contentProvider|replaceWith)$/)
                ||k.match(/([/]see|[/]sameAs)[^/]*$/) // quickfix [TODO] test property ancestors
                || (this.props.IRI.match(/^bda:/) && (k.match(new RegExp(adm+"|adm:")))))
             && (k !== bdo+"eTextHasChunk" || kZprop.indexOf(bdo+"eTextHasPage") === -1) )
@@ -3125,6 +3147,7 @@ class ResourceViewer extends Component<Props,State>
                      </div>
                   }
                </div>
+               { withdrawn && <h3 class="withdrawn"><WarnIcon/>This record has been withdrawn.<WarnIcon/></h3>}
                {/* {this.format("h1",rdf+"type",this.props.IRI)} */}
                { title }
                {
