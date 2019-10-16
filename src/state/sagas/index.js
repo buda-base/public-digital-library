@@ -754,6 +754,8 @@ function getStats(cat:string,data:{})
    let config = store.getState().data.config
 
    let keys = Object.keys(config.facets[cat])
+
+   console.log("keys",keys)
    
    if(auth && !auth.isAuthenticated()) {
       let hide = config["facets-hide-unlogged"][cat]
@@ -823,9 +825,10 @@ function addMeta(keyword:string,language:string,data:{},t:string,tree:{},found:b
 
             let elem = data["results"]["bindings"][t.toLowerCase()+"s"]
 
-            //console.log("elem tree",elem,stat)
+            //console.log("elem tree",tree["@graph"][0]) ; //elem,stat)
+
             if(!tree["@graph"].length) tree["@graph"] = []
-            if(!tree["@graph"][0].length) tree["@graph"][0] = {}
+            //if(!tree["@graph"][0].length) tree["@graph"][0] = {}
             if(!tree["@graph"][0]["taxHasSubClass"]) tree["@graph"][0]["taxHasSubClass"] = []
             tree["@graph"][0]["taxHasSubClass"].push("unspecified")
             tree["@graph"].push({"@id":"unspecified","taxHasSubClass":[],"tmp:count":stat["tree"]["unspecified"].n})

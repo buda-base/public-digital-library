@@ -18,6 +18,8 @@ import Typography from '@material-ui/core/Typography';
 import Loader from 'react-loader';
 import Collapse from '@material-ui/core/Collapse';
 import MenuIcon from '@material-ui/icons/Menu';
+import ErrorIcon from '@material-ui/icons/Error';
+import WarnIcon from '@material-ui/icons/Warning';
 import Settings from '@material-ui/icons/SettingsSharp';
 import TranslateIcon from '@material-ui/icons/Translate';
 import Apps from '@material-ui/icons/Apps';
@@ -56,6 +58,7 @@ import {I18n, Translate, Localize } from "react-redux-i18n" ;
 
 import LanguageSidePaneContainer from '../containers/LanguageSidePaneContainer';
 import ResourceViewerContainer from '../containers/ResourceViewerContainer';
+import {getOntoLabel} from './ResourceViewer';
 import {getEntiType} from '../lib/api';
 import {sortLangScriptLabels, extendedPresets} from '../lib/transliterators';
 import './App.css';
@@ -1443,11 +1446,27 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
       //console.log("id",id,prettId)
 
+      let status,warnStatus,warnLabel
+      if(allProps) status = allProps.filter(k => k.type === adm+"status")
+      if(status && status.length) status = status[0].value
+      else status = null
+       
+      //if(status) warnLabel = getOntoLabel(this.props.dictionary,this.props.locale,status)
+      if(!warnLabel && status)  warnLabel = status.replace(/^.*[/]([^/]+)$/,"$1")
+
+      if(status && !status.match(/Released/)) warnStatus = <ErrorIcon/>
+      if(status && status.match(/Withdra/)) warnStatus = <WarnIcon/>
+
+      if(warnStatus) warnStatus = <Tooltip key={"tip"} placement="bottom-end" title={<div style={{margin:"10px"}}>{warnLabel}</div>}>{warnStatus}</Tooltip>
+
+      if(status) status = status.replace(/^.*[/]([^/]+)$/,"$1")
+      else status = ""
+
 
       let ret = (
-            <div key={t+"_"+n+"_"}  className="contenu">
+            <div key={t+"_"+n+"_"}  className={"contenu" }>
                   <ListItem style={{paddingLeft:"0",display:"flex",alignItems:"center"}}>
-                     <div style={{width:"30px",textAlign:"right",color:"black",fontSize:"0.9rem",marginLeft:"16px",flexShrink:0}}>{n}</div>
+                     <div style={{width:"30px",textAlign:"right",color:"black",fontSize:"0.9rem",marginLeft:"16px",flexShrink:0}}>{warnStatus}{n}</div>
                      {/* <ListItemText style={{height:"auto",flexGrow:10,flexShrink:10}}
                         primary={ */}
                            <div>
@@ -1799,7 +1818,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
       retList.push(<hr/>);
 
-      retList = <div className="result-content">{retList}</div>
+      retList = <div className={"result-content " + status}>{retList}</div>
       
       return retList
    }

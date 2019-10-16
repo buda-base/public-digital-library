@@ -107,17 +107,22 @@ a.result .contenu ul > div:last-child {
    min-width: 0;
 }
 
+
 a.result .contenu ul > div:last-child h3 > span:first-child { /*word-break: break-all;*/ overflow-wrap: break-word; }
 
 a.result .contenu ul > div:last-child h3 {
-    color: rgba(0, 0, 0, 0.87); font-size: 0.875rem; font-weight: 400; font-family: "Roboto", "Helvetica", "Arial", sans-serif;
-    line-height: 1.35em; display:block; margin:0;
+   color: rgba(0, 0, 0, 0.87); font-size: 0.875rem; font-weight: 400; font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+   line-height: 1.35em; display:block; margin:0;
 }
 
 a.result .contenu ul > div:last-child p {
    color: rgba(0, 0, 0, 0.54);   font-size: 0.85rem;   font-weight: 400;   font-family: "Roboto", "Helvetica", "Arial", sans-serif;
    line-height: 1.46429em; margin: 0;  display: block;
 }
+
+.result-content.StatusEditing,.result-content.StatusWithdrawn { opacity:0.45;} 
+a.result .contenu ul > div:first-child { position:relative;}
+a.result .contenu ul > div:first-child > svg { position:absolute; top:-16px; right:16px;font-size:14px; }
 
 iframe.ontoSearch { width:calc(100% - 10px); border:none; margin-left:10px; height:500px;
    box-shadow:0 0 5px rgba(0,0,0,0.5); background-color:rgba(0,0,0,0.015);}

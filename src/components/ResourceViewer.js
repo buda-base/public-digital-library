@@ -316,7 +316,7 @@ function getRealUrl(that,url) {
    return url ;
 }
 
-function getOntoLabel(dict,locale,lang,prop = skos+"prefLabel") {
+export function getOntoLabel(dict,locale,lang,prop = skos+"prefLabel") {
    if(dict[lang]) {
       lang = dict[lang][prop]
       if(lang && lang.length) {
