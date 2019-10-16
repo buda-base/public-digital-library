@@ -3322,7 +3322,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                {/* <h2>BUDA Platform</h2> */}
                {/* <h3>Buddhist Digital Resource Center</h3> */}
                <div>
-               <IconButton style={{marginRight:"15px"}} className={this.state.leftPane?"hidden":""} onClick={e => this.setState({...this.state,leftPane:true,closeLeftPane:false})}>
+               <IconButton style={{marginRight:"15px"}} className={this.state.leftPane?"hidden":""} onClick={e => this.setState({...this.state,leftPane:!this.state.leftPane,closeLeftPane:!this.state.closeLeftPane})}>
                   <MenuIcon/>
                </IconButton>
                <SearchBar
