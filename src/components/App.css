@@ -127,7 +127,7 @@ a.result .contenu ul > div:last-child p {
    line-height: 1.46429em; margin: 0;  display: block;
 }
 
-.result-content.StatusEditing,.result-content.StatusWithdrawn { opacity:0.45;} 
+.result-content.StatusEditing,.result-content.StatusWithdrawn,.result-content.StatusProvisional { opacity:0.45;} 
 a.result .contenu ul > div:first-child { position:relative;}
 a.result .contenu ul > div:first-child > svg { position:absolute; top:-16px; right:16px;font-size:14px; }
 

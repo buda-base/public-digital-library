@@ -14,6 +14,7 @@ import store from '../index';
 import {initiateApp} from '../state/actions';
 import tcpPortUsed from 'tcp-port-used'
 import 'whatwg-fetch'
+import {narrowWithString} from "./langdetect"
 import {langScripts,makeLangScriptLabel} from "./language"
 import {sortLangScriptLabels,transliterators,translitHelper,extendedPresets, importModules} from "./transliterators"
 
@@ -238,6 +239,29 @@ describe('language settings tests', () => {
  
         done()
     })
+
+   it('language autodetection', async (done) => {
+
+      // typical usage: we know that the user is likely to use (in that order)
+      // ewts, iast, anything else, we call:
+
+      let userprefs = ["ewts", "iast", "pinyin"];
+      let userprefs2 = [ "pinyin", "ewts", "iast"];
+
+      expect(narrowWithString("d+har ma", userprefs)).toEqual(['ewts']);
+      expect(narrowWithString("པདྨ", userprefs)).toEqual(['tibt']);
+      expect(narrowWithString("ऩ", userprefs)).toEqual(['deva']);
+      expect(narrowWithString("長阿含經", userprefs)).toEqual(['hani']);
+      expect(narrowWithString("amṛta", userprefs)).toEqual(['iast']);
+      expect(narrowWithString("cháng ā hán jīng", userprefs)).toEqual(['pinyin']);
+
+      // this one is ambiguous and gives an array of two elements, but ordered according to the
+      // user prefs, so the first is probably right
+      expect(narrowWithString("Āgama", userprefs)).toEqual(['iast','pinyin']);
+      expect(narrowWithString("Āgama", userprefs2)).toEqual(['pinyin','iast']);
+
+      done()
+   })
 
 })
 

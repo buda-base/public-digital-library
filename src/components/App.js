@@ -60,6 +60,7 @@ import LanguageSidePaneContainer from '../containers/LanguageSidePaneContainer';
 import ResourceViewerContainer from '../containers/ResourceViewerContainer';
 import {getOntoLabel} from './ResourceViewer';
 import {getEntiType} from '../lib/api';
+import {narrowWithString} from "../lib/langdetect"
 import {sortLangScriptLabels, extendedPresets} from '../lib/transliterators';
 import './App.css';
 
@@ -335,6 +336,7 @@ type State = {
    langOpen:boolean,
    customLang?:string[],
    langPreset?:string[],
+   langDetect?:string[],
    checked?:string,
    unchecked?:string,
    keyword:string,
@@ -498,7 +500,6 @@ class App extends Component<Props,State> {
 
    static getDerivedStateFromProps(prop:Props,state:State)
    {
-      let eq = true
       let s ;
 
       let props = { ...prop }
@@ -558,14 +559,22 @@ class App extends Component<Props,State> {
 
       
       // update when language has changed
+      let eq = true
       if(props.langPreset && state.langPreset) for(let i = 0 ; i < props.langPreset.length && eq; i ++ ) { eq = eq && props.langPreset[i] === state.langPreset[i] ; }
       else eq = false ;
-
-
       if(!eq) {
          if(!s) s = { ...state }
-         s = { ...s, langPreset:props.langPreset, repage:true }
+         let langDetect = [ "ewts", "iast", "pinyin" ]
+         let langP = [], i
+         if(props.langPreset) { 
+            langP = props.langPreset.map(p => p.replace(/^.*?(ewts|iast|pinyin)?$/,"$1")).filter(e => e)
+            langDetect = langDetect.map(d => ({d,i:(i=langP.indexOf(d))!==-1?i:99}))
+            console.log("langP",langDetect,langP,props.langPreset)         
+            langDetect = _.orderBy(langDetect, ["i","d"],["asc","asc"]).map(v => v.d)
+         }
+         s = { ...s, langPreset:props.langPreset, repage:true, langDetect }
          if(props.langIndex !== undefined ) s = { ...s, language:props.langPreset[0] }
+
       }
 
       console.log("gDsFp",eq,props,state,s,state.id)
@@ -3348,7 +3357,18 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                <SearchBar
                   closeIcon={<Close className="searchClose" style={ {color:"rgba(0,0,0,1.0)",opacity:1} } onClick={() => { this.props.history.push({pathname:"/",search:""}); this.props.onResetSearch();} }/>}
                   disabled={this.props.hostFailure}
-                  onChange={(value:string) => { this.setState({keyword:value, dataSource: [ value, "possible suggestion","another possible suggestion"]}); } }
+                  onChange={(value:string) => { 
+                     let language = this.state.language
+                     let detec = narrowWithString(value, this.state.langDetect)
+                     let possible = [ ...this.state.langPreset, ...langSelect ]
+                     if(detec.length < 3) { 
+                        if(detec[0] === "tibt") for(let p of possible) { if(p === "bo" || p.match(/-[Tt]ibt$/)) { language = p ; break ; } }
+                        else if(detec[0] === "hani") for(let p of possible) { if(p.match(/^zh((-[Hh])|$)/)) { language = p ; break ; } }
+                        else if(["ewts","iast","deva","pinyin"].indexOf(detec[0]) !== -1) for(let p of possible) { if(p.match(new RegExp(detec[0]+"$"))) { language = p ; break ; } }
+                     }
+                     console.log("detec",possible,detec,this.state.langPreset,this.state.langDetect)
+                     this.setState({keyword:value, dataSource: [ value, "possible suggestion","another possible suggestion"], language}); 
+                  }}
                   onRequestSearch={this.requestSearch.bind(this)}
                   value={this.props.hostFailure?"Endpoint error: "+this.props.hostFailure+" ("+this.getEndpoint()+")":this.state.keyword !== undefined && this.state.keyword!==this.state.newKW?this.state.keyword:this.props.keyword&&this.state.newKW?this.state.newKW.replace(/\"/g,""):""}
                   style={{
