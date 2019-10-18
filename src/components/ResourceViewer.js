@@ -23,6 +23,7 @@ import Close from '@material-ui/icons/Close';
 import Layers from '@material-ui/icons/Layers';
 import PlayArrow from '@material-ui/icons/PlayArrow';
 import Visibility from '@material-ui/icons/Visibility';
+import WarnIcon from '@material-ui/icons/Warning';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import SpeakerNotes from '@material-ui/icons/SpeakerNotes';
 import SpeakerNotesOff from '@material-ui/icons/SpeakerNotesOff';
@@ -44,6 +45,7 @@ import IconButton from '@material-ui/core/IconButton';
 import ShareIcon from '@material-ui/icons/Share';
 import HomeIcon from '@material-ui/icons/Home';
 import ChatIcon from '@material-ui/icons/Chat';
+import SearchIcon from '@material-ui/icons/Search';
 import PhotoIcon from '@material-ui/icons/PhotoSizeSelectActual';
 import Script from 'react-load-script'
 import React, { Component } from 'react';
@@ -61,7 +63,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faLanguage } from '@fortawesome/free-solid-svg-icons'
 //import {MapComponent} from './Map';
 import {getEntiType} from '../lib/api';
-import {languages,getLangLabel,top_right_menu,prefixesMap as prefixes,sameAsMap,shortUri} from './App';
+import {languages,getLangLabel,top_right_menu,prefixesMap as prefixes,sameAsMap,shortUri,fullUri} from './App';
 import Popover from '@material-ui/core/Popover';
 import MenuItem from '@material-ui/core/MenuItem';
 import List from '@material-ui/core/List';
@@ -109,6 +111,7 @@ type Props = {
    onGetChunks: (s:string,b:number) => void,
    onGetPages: (s:string,b:number) => void,
    onToggleLanguagePanel:()=>void,
+   onResetSearch:()=>void,
    onUserProfile:(url:{})=>void
 }
 type State = {
@@ -193,6 +196,7 @@ let propOrder = {
    ],
    "Item":[
       "bdo:itemForWork",
+      "bdo:itemHasVolume",
       "bdo:itemVolumes"
    ],
    "Lineage":[
@@ -246,6 +250,7 @@ let propOrder = {
       "skos:altLabel",
       "bdo:workType",
       "bdo:workExpressionOf",
+      "tmp:siblingExpressions",
       "bdo:workDerivativeOf",
       "bdo:workTranslationOf",
       "bdo:workHasExpression",
@@ -267,6 +272,7 @@ let propOrder = {
       "bdo:workDimWidth",
       "bdo:workDimHeight",
       "bdo:workEvent",
+      "tmp:hasEtext",
       "bdo:workHasItem",
       // "bdo:workHasItemImageAsset",
       "bdo:workLocation",
@@ -289,7 +295,11 @@ let propOrder = {
       "adm:metadataLegal",
    ],
    "Taxonomy":[],
-   "Volume":[],
+   "Volume":[
+      "bdo:volumeOf",
+      "bdo:volumeNumber",
+      "bdo:volumeHasEtext"
+   ],
 }
 
 let reload = false ;
@@ -307,7 +317,7 @@ function getRealUrl(that,url) {
    return url ;
 }
 
-function getOntoLabel(dict,locale,lang,prop = skos+"prefLabel") {
+export function getOntoLabel(dict,locale,lang,prop = skos+"prefLabel") {
    if(dict[lang]) {
       lang = dict[lang][prop]
       if(lang && lang.length) {
@@ -328,7 +338,8 @@ function top_left_menu(that,pdfLink,monoVol,fairUse)
   return (
 
     <div id="top-left">
-       <Link style={{fontSize:"20px"}} className="goBack" to={that.props.keyword&&!that.props.keyword.match(/^bdr:/)?"/search?q="+that.props.keyword+"&lg="+that.props.language+(that.props.datatype?"&t="+that.props.datatype:""):"/"}>
+       <Link style={{fontSize:"20px"}} className="goBack" to="/" onClick={(e) => that.props.onResetSearch()} //that.props.keyword&&!that.props.keyword.match(/^bdr:/)?"/search?q="+that.props.keyword+"&lg="+that.props.language+(that.props.datatype?"&t="+that.props.datatype:""):"/"
+       >
           {/* <Button style={{paddingLeft:"0"}}>&lt; Go back to search page</Button> */}
           <IconButton style={{paddingLeft:0}} title={I18n.t("resource.back")}>
              <HomeIcon style={{fontSize:"30px"}}/>
@@ -473,12 +484,16 @@ function top_left_menu(that,pdfLink,monoVol,fairUse)
        <IconButton style={{marginLeft:"0px"}} title={I18n.t("resource.toggle")} onClick={e => that.setState({...that.state,annoPane:!that.state.annoPane})}>
           <ChatIcon />
        </IconButton>
-       {
+       { 
           //that.props.IRI.match(/^[^:]+:[RPGTW]/) &&
           prefixes[that.props.IRI.replace(/^([^:]+):.*$/,"$1")] &&
           <Link className="goBack" to={"/search?r="+that.props.IRI+"&t=Any"}>
-             <Button style={{marginLeft:"0px",paddingLeft:"10px"}}>{I18n.t("resource.browse")} &gt;</Button>
+          <IconButton style={{paddingLeft:0}} title={I18n.t("resource.browse")}>
+             <SearchIcon style={{fontSize:"30px"}}/>
+          </IconButton>
+          
           </Link>
+
        }
      </div>
    )
@@ -625,7 +640,7 @@ class ResourceViewer extends Component<Props,State>
       if(sorted)
       {
 
-         let customSort = [ bdo+"workHasPart", bdo+"workHasExpression", bdo+"workTitle", bdo+"personName" ]
+         let customSort = [ bdo+"workHasPart", bdo+"itemHasVolume", bdo+"workHasExpression", tmp+"siblingExpressions", bdo+"workTitle", bdo+"personName", bdo+"volumeHasEtext" ]
 
          let sortBySubPropNumber = (tag:string,idx:string) => {
             let parts = prop[tag]
@@ -637,7 +652,7 @@ class ResourceViewer extends Component<Props,State>
 
                      let index = assoR[e.value]
 
-                     if(index) index = index.filter(e => e.type === idx)
+                     if(index) index = index.filter(e => e.type === idx || e.fromKey === idx)
                      if(index && index[0] && index[0].value) index = Number(index[0].value)
                      else index = null
 
@@ -648,6 +663,24 @@ class ResourceViewer extends Component<Props,State>
                return parts ;
             }
          }
+
+         if(prop[bdo+"workHasItem"]) {
+            let elem = this.getResourceElem(bdo+"workHasItem")
+            let items = []
+            let txtItem = []
+            if(this.props.assocResources && elem) for(let e of elem)
+            {
+               let assoc = this.props.assocResources[e.value]
+               if(!assoc || !assoc.filter(e => e.type === tmp+"itemType" && e.value === bdo+"ItemEtext").length) items.push(e)
+               else txtItem.push(e)
+            }
+            if(txtItem.length) {
+               prop[tmp+"hasEtext"] = txtItem
+               if(items.length) prop[bdo+"workHasItem"] = items
+            }
+         }
+
+         if(prop[bdo+"volumeHasEtext"]) prop[bdo+"volumeHasEtext"] = sortBySubPropNumber(bdo+"volumeHasEtext",bdo+"seqNum");
 
          if(prop[bdo+"workHasPart"]) prop[bdo+"workHasPart"] = sortBySubPropNumber(bdo+"workHasPart",bdo+"workPartIndex");
 
@@ -678,39 +711,47 @@ class ResourceViewer extends Component<Props,State>
          
          if(prop[bdo+'personName']) prop[bdo+'personName'] = sortBySubPropURI("personName") ;
 
-         let expr = prop[bdo+"workHasExpression"]
-         if(expr) {
 
-            let assoR = this.props.assocResources
-            if (assoR) {
+         let expr 
+         for(let xp of [ bdo+"workHasExpression", tmp+"siblingExpressions" ]) 
+         {
+            expr = prop[xp]
+            if(expr) {
 
-               expr = expr.map((e) => {
+               let assoR = this.props.assocResources
+               if (assoR) {
 
-                  let label1,label2 ;
+                  expr = expr.map((e) => {
 
-                  //console.log("index",e,assoR[e.value])
-                  if(assoR[e.value])
-                  {
-                     label1 = getLangLabel(this, "", assoR[e.value].filter(e => e.type === skos+"prefLabel"))
-                     if(label1 && label1.value) label1 = label1.value
-
-                     if(assoR[e.value].filter(e => e.type === bdo+"workHasRoot").length > 0)
+                     //console.log("index",e,assoR[e.value])
+                     if(assoR[e.value])
                      {
-                        label2 = getLangLabel(this, "", assoR[assoR[e.value].filter(e => e.type === bdo+"workHasRoot")[0].value].filter(e => e.type === skos+"prefLabel"))
-                        if(label2 && label2.value) label2 = label2.value
-                        //console.log(label2)
+                        let label1,label2 ;
+                        label1 = getLangLabel(this, "", assoR[e.value].filter(e => e.type === skos+"prefLabel"))
+                        if(label1 && label1.value) label1 = label1.value
+
+                        //console.log("index",e,assoR[e.value])
+                        if(assoR[e.value])
+                        {
+                           label1 = getLangLabel(this, "", assoR[e.value].filter(e => e.type === skos+"prefLabel"))
+                           if(label1 && label1.value) label1 = label1.value
+
+                           if(assoR[e.value].filter(e => e.type === bdo+"workHasRoot").length > 0)
+                           {
+                              label2 = getLangLabel(this, "", assoR[assoR[e.value].filter(e => e.type === bdo+"workHasRoot")[0].value].filter(e => e.type === skos+"prefLabel"))                        
+                              label2 = label2.value
+                           }
+                        }
+
+                        return ({ ...e, label1, label2 })
                      }
-                  }
+                  })
+                  
+                  prop[xp] = _.orderBy(expr,['label1','label2'])
 
-                  return ({ ...e, label1, label2 })
-               })
+                  //for(let o of prop[bdo+"workHasExpression"]) console.log(o.value,o.label1)
 
-               console.log("expr",expr)
-
-               prop[bdo+"workHasExpression"] = _.orderBy(expr,['label1','label2'])
-
-               //for(let o of prop[bdo+"workHasExpression"]) console.log(o.value,o.label1)
-
+               }
             }
          }
 
@@ -833,13 +874,13 @@ class ResourceViewer extends Component<Props,State>
                   if(a && !a["value"] && a[rdfs+"label"] && a[rdfs+"label"][0]) a = a[rdfs+"label"][0]
                   if(a && a["lang"]) a = a["lang"]
                   else if(a && a["xml:lang"] && a["xml:lang"] != "") a = a["xml:lang"]
-                  //else if(a["type"] == "uri") a = a["value"]
+                  else if(a["type"] == "uri") a = a["value"]
                   else a = null
 
                   if(b && !b["value"] && b[rdfs+"label"] && b[rdfs+"label"][0]) b = b[rdfs+"label"][0]
                   if(b && b["lang"]) b = b["lang"]
                   else if(b && b["xml:lang"] && b["xml:lang"] != "") b = b["xml:lang"]
-                  //else if(b["type"] == "uri") b = b["value"]
+                  else if(b["type"] == "uri") b = b["value"]
                   else b = null
 
                   //console.log("a,b",a,b)
@@ -1564,7 +1605,7 @@ class ResourceViewer extends Component<Props,State>
                }
             }
 
-            if(this.props.assocResources && prop == bdo+"workHasExpression") {
+            if(this.props.assocResources && (prop == bdo+"workHasExpression" || prop == _tmp+"siblingExpressions") ) {
 
                let root = this.props.assocResources[e.value] //this.uriformat(_tmp+"workRootWork",e)
                if(root) root = root.filter(e => e.type == bdo+"workHasRoot")
@@ -2315,6 +2356,7 @@ class ResourceViewer extends Component<Props,State>
     {
       console.log("render",this.props,this.state)
 
+   
       //const { GeoJson } = ReactLeaflet;
       const { BaseLayer} = LayersControl;
 
@@ -2328,6 +2370,26 @@ class ResourceViewer extends Component<Props,State>
             <Redirect404  history={this.props.history} message={msg}/>
          )
       }
+
+      let redir, withdrawn
+      if(this.props.resources && (redir = this.props.resources[this.props.IRI]) && (redir = redir[fullUri(this.props.IRI)]))
+      {
+         console.log("WithD?",redir);
+         if(redir[adm+"replaceWith"]) {
+            redir = shortUri(redir[adm+"replaceWith"][0].value)
+            
+            return (
+               <Redirect404  history={this.props.history} message={"Record withdrawn in favor of "+redir} to={"/show/"+redir}/>
+            )
+         }
+         else if(redir[adm+"status"] && (redir = redir[adm+"status"]).length && redir[0].value === bda+"StatusWithdrawn"){
+            withdrawn = true 
+            console.log("WithD");
+         }
+         
+         //this.props.history.push("/show/"+redir)
+      }
+      console.log("WithD...",redir);
 
       //let get = qs.parse(this.props.history.location.search)
       //console.log('qs',get)
@@ -2427,14 +2489,15 @@ class ResourceViewer extends Component<Props,State>
             if(!this.props.manifestError && elem) for(let e of elem)
             {
                let assoc = this.props.assocResources[e.value]
+               let imItem = assoc
 
                //console.log("hImA",assoc,e.value)
 
-               if(assoc && assoc.length > 0 && !this.props.imageAsset && !this.props.manifestError && assoc.filter(e => e.type === tmp+"itemType" && e.value === bdo+"ItemImageAsset").length) {
+               if(assoc && assoc.length > 0 && !this.props.imageAsset && !this.props.manifestError && (imItem = assoc.filter(e => e.type === tmp+"itemType" && e.value === bdo+"ItemImageAsset")).length) {
 
                   this.setState({...this.state, imageLoaded:false})
 
-                  if(assoc.length == 1) { this.props.onHasImageAsset(iiifpres+"/2.1.1/v:bdr:"+this.pretty(assoc[0].value,true)+"/manifest",this.props.IRI); }
+                  if(assoc.length == 1) { this.props.onHasImageAsset(iiifpres+"/2.1.1/v:bdr:"+this.pretty(imItem[0].value,true)+"/manifest",this.props.IRI); }
                   else { this.props.onHasImageAsset(iiifpres+"/2.1.1/collection/wio:"+this.pretty(this.props.IRI,true),this.props.IRI);  }
 
                }
@@ -2576,7 +2639,7 @@ class ResourceViewer extends Component<Props,State>
 
             //if(!k.match(new RegExp("Revision|Entry|prefLabel|"+rdf+"|toberemoved"))) {
             if((!k.match(new RegExp(adm+"|adm:|isRoot$|SourcePath|"+rdf+"|toberemoved|workPartIndex|workPartTreeIndex")) 
-               ||k.match(/(originalRecord|metadataLegal|contentProvider)$/)
+               ||k.match(/(originalRecord|metadataLegal|contentProvider|replaceWith)$/)
                ||k.match(/([/]see|[/]sameAs)[^/]*$/) // quickfix [TODO] test property ancestors
                || (this.props.IRI.match(/^bda:/) && (k.match(new RegExp(adm+"|adm:")))))
             && (k !== bdo+"eTextHasChunk" || kZprop.indexOf(bdo+"eTextHasPage") === -1) )
@@ -2610,70 +2673,7 @@ class ResourceViewer extends Component<Props,State>
                   if(k == bdo+"note")
                   {
                      //console.log("note",tags,k);//tags = [<h4>Note</h4>]
-                  }
-                  else if(/*k == bdo+"itemHasVolume" ||*/ k == bdo+"volumeHasEtext")
-                  {
-
-                     tags = tags.map(e => {
-
-                        //console.log("e",e)
-                        let key = "";
-                        if(Array.isArray(e) && e.length > 0) {
-                           key = e[0]
-                           key = key.props
-                           if(key) key = key.children
-
-                           if(key && key[1] && key[1].props && key[1].props.children)
-                           {
-                              key = key[1].props.children
-                              if(key && key[1] && key[1].props && key[1].props.children) {
-                                 key = Number(key[1].props.children[0])
-                                 //console.log("key",key)
-                              }
-                           }
-                           else if(key && key[0] && key[0].props && key[0].props.children
-                              && (
-                                    key[0].props.children == "Etext Volume: "
-                                    ||
-                                    (key[0].props.children[0] && key[0].props.children[0].props
-                                       && key[0].props.children[0].props.children == "Etext Volume")
-                                 )
-                              )
-                           {
-
-                              // [0].props.children[0].props
-                              if(key.length > 1) key = key[1]
-                              if(key) key= key.props
-                              if(key) key = key.children
-                              if(key && key.length > 1) key = key[1]
-                              if(key) key = key.props
-                              if(key) key = key.children
-                              if(key) key = Number(key)
-                           }
-                           else
-                           {
-                              // [0].props.children[0][0].props.children
-                              if(key && key.length > 0) key = key[0]
-                              if(key && key.length > 0) key = key[0]
-                              key = key.props
-                              if(key) key = key.children
-                              if(key) key = Number((""+key).replace(/^Volume /,""))
-                           }
-
-
-                        }
-
-                        return { elem:e, key}
-                     })
-
-                     //console.log("tagsK",tags);
-
-                     tags = _.orderBy(tags,['key'])
-
-                     tags = tags.map(e => e.elem)
-
-
-                  }
+                  }           
                   else if(k == bdo+"workLocation")
                   {
                      elem = this.getResourceElem(k)
@@ -2714,74 +2714,7 @@ class ResourceViewer extends Component<Props,State>
                            <h4>{str}{w && " of "}{w && this.uriformat(bdo+"workLocationWork",w)}</h4>
                      </Tooltip>] ;
                      }
-                  }
-                  else if(false) //k == bdo+"workHasExpression")
-                  {
-                  // 1-map avec le nom du children[2] si ==3chldren et children[1] = " in "
-                     tags = tags.map(e => {
-
-                        if(Array.isArray(e) && e.length > 0) e = e[0]
-
-                        //console.log("e",e)
-                        let exprKey1 = "", exprKey2 = "";
-
-                        if(e.props)
-                        {
-                           if(!Array.isArray(e.props.children)) exprKey1 = e.props.children
-                           else if(e.props.children.length > 0)
-                           {
-                              exprKey1 = e.props.children[0]
-                              if(Array.isArray(exprKey1) && exprKey1.length > 0) exprKey1 = exprKey1[0]
-                              if(exprKey1 && exprKey1.props && exprKey1.props.children) exprKey1 = exprKey1.props.children
-                              if(Array.isArray(exprKey1)) exprKey1 = exprKey1[0]
-                              if(Array.isArray(exprKey1) && exprKey1.length > 0) exprKey1 = exprKey1[0]
-                              if(exprKey1 && exprKey1.props && exprKey1.props.children) exprKey1 = exprKey1.props.children
-                              exprKey1 = exprKey1.replace(/[/]$/,"")
-                           }
-
-                           //console.log("eK1",exprKey1)
-
-                           if(e.props.children.length == 3 && e.props.children[1] === " in ")
-                           {
-                              exprKey2 = e.props.children[2]
-                              if(Array.isArray(exprKey2) && exprKey2.length > 0) exprKey2 = exprKey2[0]
-                              if(exprKey2 && exprKey2.props && exprKey2.props.children) exprKey2 = exprKey2.props.children
-                              if(Array.isArray(exprKey2)) exprKey2 = exprKey2[0]
-                              if(Array.isArray(exprKey2) && exprKey2.length > 0) exprKey2 = exprKey2[0]
-                              if(exprKey2 && exprKey2.props && exprKey2.props.children) exprKey2 = exprKey2.props.children
-                              exprKey2 = exprKey2.replace(/[/]$/,"")
-                           }
-                        }
-                        /*
-                        if(e.props && e.props.children.length == 3 && e.props.children[1] === " in " && e.props.children[2][0][0] && e.props.children[2][0][0].props)
-                        {
-                           console.log("key",e.props.children[2][0][0].props.children)
-
-                           if(e.props.children[2][0][0].props.children)
-                              return { elem:e , "exprKey1":e.props.children[0][0][0].props.children, "exprKey2" : e.props.children[2][0][0].props.children.replace(/[/]/,"") }
-                        }*/
-                        /*
-                        else if(e.props.children.length == 1)
-                        {
-                           return { ...e , "exprKey" : e.props.children[0][0].props.children }
-                        }
-                        */
-
-                        return { elem:e, exprKey1, exprKey2 } ;
-                     });
-
-
-                  // 2-lodash sort
-                     tags = _.sortBy(tags,['exprKey1','exprKey2'])
-
-                     console.log("sorted tags",tags);
-
-                     let cleantags = tags.map(e => e.elem )
-
-                     //console.log("clean tags",cleantags);
-
-                     tags = cleantags
-                  }
+                  }             
                   else if(k == bdo+"placeRegionPoly" || (k == bdo+"placeLong" && !doRegion))
                   {
 
@@ -3220,8 +3153,16 @@ class ResourceViewer extends Component<Props,State>
                      </div>
                   }
                </div>
+               { withdrawn && <h3 class="withdrawn"><WarnIcon/>This record has been withdrawn.<WarnIcon/></h3>}
                {/* {this.format("h1",rdf+"type",this.props.IRI)} */}
                { title }
+               {
+                  this.props.resources && this.props.resources[this.props.IRI] && <div class="browse">
+                     <Link className="download login" to={"/search?r="+this.props.IRI+"&t=Any"}>
+                        &gt; {I18n.t("resource.browse")}
+                     </Link>
+                  </div>
+               }
                { /*<MapComponent tmp={this.props}/ */}
                {/*
                   hasImageAsset && //this.props.openUV &&
@@ -3290,7 +3231,7 @@ class ResourceViewer extends Component<Props,State>
                         }
                         this.setState({...this.state, pdfOpen:true,anchorElPdf:ev.currentTarget})
                       }
-                    } class="download login">Download images as PDF/ZIP</a>
+                    } class="download login">&gt; Download images as PDF/ZIP</a>
                     <Loader loaded={(!this.props.pdfVolumes || this.props.pdfVolumes.length > 0)} options={{position:"relative",left:"115%",top:"-11px"}} />
                   </div>]
                }

@@ -18,6 +18,8 @@ import Typography from '@material-ui/core/Typography';
 import Loader from 'react-loader';
 import Collapse from '@material-ui/core/Collapse';
 import MenuIcon from '@material-ui/icons/Menu';
+import ErrorIcon from '@material-ui/icons/Error';
+import WarnIcon from '@material-ui/icons/Warning';
 import Settings from '@material-ui/icons/SettingsSharp';
 import TranslateIcon from '@material-ui/icons/Translate';
 import Apps from '@material-ui/icons/Apps';
@@ -56,6 +58,7 @@ import {I18n, Translate, Localize } from "react-redux-i18n" ;
 
 import LanguageSidePaneContainer from '../containers/LanguageSidePaneContainer';
 import ResourceViewerContainer from '../containers/ResourceViewerContainer';
+import {getOntoLabel} from './ResourceViewer';
 import {getEntiType} from '../lib/api';
 import {sortLangScriptLabels, extendedPresets} from '../lib/transliterators';
 import './App.css';
@@ -335,8 +338,10 @@ type State = {
    checked?:string,
    unchecked?:string,
    keyword:string,
+   newKW:string,
    dataSource : string[],
    leftPane?:boolean,
+   closeLeftPane?:boolean,
    filters:{
       datatype:string[],
       facets?:{[string]:string[]}
@@ -378,8 +383,9 @@ class App extends Component<Props,State> {
       if(get.p) lg = ""
       else if(get.lg) lg = get.lg
 
-      let kw = ""
+      let kw = "", newKW
       if(get.q) kw = get.q.replace(/"/g,"")
+      if(kw) newKW = kw
 
       let types = [ ...searchTypes.slice(1) ]
       let e = types.indexOf("Etext")
@@ -397,9 +403,9 @@ class App extends Component<Props,State> {
             datatype:get.t?get.t.split(","):["Any"]
          },
          searchTypes: get.t?get.t.split(","):types,
-         dataSource: [],
-         keyword:kw,
+         dataSource: [],         
          collapse:{},
+         newKW,
          loader:{},
          paginate:{index:0,pages:[0],n:[0]},
          anchor:{}
@@ -497,7 +503,20 @@ class App extends Component<Props,State> {
 
       let props = { ...prop }
 
-      if(props.keyword) document.title = /*""+*/ props.keyword+" search results - Public Digital Library"
+      if(props.keyword) { 
+         document.title = /*""+*/ props.keyword+" search results - Public Digital Library"
+         
+      }
+
+      if(!state.newKW || state.newKW !== props.keyword || props.keyword === null) { 
+         if(!s) s = { ...state }
+         if(s.newKW !== props.keyword) {
+            s.newKW = props.keyword
+            s.keyword = props.keyword
+            if(!props.keyword) s.leftPane = false ;
+         }
+
+      }
 
 
       //console.log("collap?",JSON.stringify(state.collapse,null,3))
@@ -526,7 +545,7 @@ class App extends Component<Props,State> {
       }
       */
 
-      if(!state.leftPane && props.keyword) {
+      if(!state.leftPane && props.keyword && !state.closeLeftPane) {
          if(!s) s = { ...state }
          s.leftPane =  true 
       }
@@ -1428,11 +1447,27 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
       //console.log("id",id,prettId)
 
+      let status,warnStatus,warnLabel
+      if(allProps) status = allProps.filter(k => k.type === adm+"status")
+      if(status && status.length) status = status[0].value
+      else status = null
+       
+      //if(status) warnLabel = getOntoLabel(this.props.dictionary,this.props.locale,status)
+      if(!warnLabel && status)  warnLabel = status.replace(/^.*[/]([^/]+)$/,"$1")
+
+      if(status && !status.match(/Released/)) warnStatus = <ErrorIcon/>
+      if(status && status.match(/Withdra/)) warnStatus = <WarnIcon/>
+
+      if(warnStatus) warnStatus = <Tooltip key={"tip"} placement="bottom-end" title={<div style={{margin:"10px"}}>{warnLabel}</div>}>{warnStatus}</Tooltip>
+
+      if(status) status = status.replace(/^.*[/]([^/]+)$/,"$1")
+      else status = ""
+
 
       let ret = (
-            <div key={t+"_"+n+"_"}  className="contenu">
+            <div key={t+"_"+n+"_"}  className={"contenu" }>
                   <ListItem style={{paddingLeft:"0",display:"flex",alignItems:"center"}}>
-                     <div style={{width:"30px",textAlign:"right",color:"black",fontSize:"0.9rem",marginLeft:"16px",flexShrink:0}}>{n}</div>
+                     <div style={{width:"30px",textAlign:"right",color:"black",fontSize:"0.9rem",marginLeft:"16px",flexShrink:0}}>{warnStatus}{n}</div>
                      {/* <ListItemText style={{height:"auto",flexGrow:10,flexShrink:10}}
                         primary={ */}
                            <div>
@@ -1784,7 +1819,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
       retList.push(<hr/>);
 
-      retList = <div className="result-content">{retList}</div>
+      retList = <div className={"result-content " + status}>{retList}</div>
       
       return retList
    }
@@ -2903,7 +2938,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
          <div className="App" style={{display:"flex"}}>
             <div className={"SidePane left " +(this.state.leftPane?"visible":"")}>
-                  <IconButton className="close" onClick={e => this.setState({...this.state,leftPane:false})}><Close/></IconButton>
+                  <IconButton className="close" onClick={e => this.setState({...this.state,leftPane:false,closeLeftPane:true})}><Close/></IconButton>
                { //this.props.datatypes && (results ? results.numResults > 0:true) &&
                   <div style={{minWidth:"335px",position:"relative"}}>
                      <Typography style={{fontSize:"25px",marginBottom:"20px",textAlign:"center"}}>
@@ -3307,7 +3342,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                {/* <h2>BUDA Platform</h2> */}
                {/* <h3>Buddhist Digital Resource Center</h3> */}
                <div>
-               <IconButton style={{marginRight:"15px"}} className={this.state.leftPane?"hidden":""} onClick={e => this.setState({...this.state,leftPane:!this.state.leftPane})}>
+               <IconButton style={{marginRight:"15px"}} className={this.state.leftPane?"hidden":""} onClick={e => this.setState({...this.state,leftPane:!this.state.leftPane,closeLeftPane:!this.state.closeLeftPane})}>
                   <MenuIcon/>
                </IconButton>
                <SearchBar
@@ -3315,7 +3350,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   disabled={this.props.hostFailure}
                   onChange={(value:string) => { this.setState({keyword:value, dataSource: [ value, "possible suggestion","another possible suggestion"]}); } }
                   onRequestSearch={this.requestSearch.bind(this)}
-                  value={this.props.hostFailure?"Endpoint error: "+this.props.hostFailure+" ("+this.getEndpoint()+")":this.props.keyword?this.props.keyword.replace(/"/g,""):this.state.keyword}
+                  value={this.props.hostFailure?"Endpoint error: "+this.props.hostFailure+" ("+this.getEndpoint()+")":this.state.keyword !== undefined && this.state.keyword!==this.state.newKW?this.state.keyword:this.props.keyword&&this.state.newKW?this.state.newKW.replace(/\"/g,""):""}
                   style={{
                      marginTop: '0px',
                      width: "700px"
