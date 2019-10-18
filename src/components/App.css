@@ -1,12 +1,12 @@
 
 /* @import url('https://fonts.googleapis.com/css?family=Lato:400,600,700,800'); */
-
+@import url('https://fonts.googleapis.com/css?family=Noto+Sans:400,700&display=swap');
 
 /* CSS debug mode */
 /* * {background-color:rgba(255,0,128,0.05);}   */
 
 
-body { overflow:auto !important;padding-right:0 !important;  }
+body { overflow:auto !important;padding-right:0 !important; font-family:"Roboto", "Helvetica", "Arial", sans-serif; }
 
 #data-checkbox { display:flex;justify-content: flex-start;padding-left:90px; }
 .data-checkbox{ margin-left:4px !important; }
@@ -118,12 +118,12 @@ h3.withdrawn ~ * { opacity:0.45;}
 a.result .contenu ul > div:last-child h3 > span:first-child { /*word-break: break-all;*/ overflow-wrap: break-word; }
 
 a.result .contenu ul > div:last-child h3 {
-   color: rgba(0, 0, 0, 0.87); font-size: 0.875rem; font-weight: 400; font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+   color: rgba(0, 0, 0, 0.87); font-size: 0.875rem; font-weight: 400; 
    line-height: 1.35em; display:block; margin:0;
 }
 
 a.result .contenu ul > div:last-child p {
-   color: rgba(0, 0, 0, 0.54);   font-size: 0.85rem;   font-weight: 400;   font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+   color: rgba(0, 0, 0, 0.54);   font-size: 0.85rem;   font-weight: 400; 
    line-height: 1.46429em; margin: 0;  display: block;
 }
 
@@ -148,6 +148,8 @@ h2:hover svg.annoticon:hover,h4:hover svg.annoticon:hover { color:rgba(0,0,0,0.6
 
 h4 { margin-top:0px;margin-bottom:0px;font-size:24px; }
 /* h4 + h4 { margin-top:5px;}  */
+
+.resource > h2 {   font-family: "Noto Sans", "Roboto", "Helvetica", "Arial", sans-serif; }
 
 .resource { width:100% ; padding:40px 100px; text-align:left; box-sizing: border-box;}
 .resource .data { text-align:left }
