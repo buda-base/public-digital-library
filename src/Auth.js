@@ -14,6 +14,13 @@ import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
+import TextField from '@material-ui/core/TextField';
+
+
+import IconButton from '@material-ui/core/IconButton';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faLanguage,faUserCircle,faSignOutAlt } from '@fortawesome/free-solid-svg-icons'
+
 
 var tokenRenewalTimeout;
 
@@ -258,11 +265,78 @@ export default class Auth {
 }
 */
 
+
+
+
+
+
+
+
+type TTState = {
+   profile:{}
+}
+
+export class TestToken extends Component<TTState> {  
+
+  
+  componentWillMount() {
+    this.setState({ profile: {} });
+    const { userProfile, getProfile } = this.props.auth;
+    if (!userProfile) {
+      getProfile((err, profile) => {
+        this.setState({ profile });
+      });
+    } else {
+      this.setState({ profile: userProfile });
+    }
+  }
+  render() {
+    const { profile } = this.state;
+    console.log("profile",profile)
+
+    let isAuth = auth.isAuthenticated()
+
+    return <div>
+        <div>
+          {!isAuth && <IconButton onClick={(e) => { auth.login(history.location) }} title="Log in">
+              <FontAwesomeIcon style={{fontSize:"28px"}} icon={faUserCircle} />
+          </IconButton> }
+          {isAuth && <IconButton onClick={(e) => { auth.logout(history.location) }} title="Log out">
+              <FontAwesomeIcon style={{fontSize:"28px"}} icon={faSignOutAlt} />
+          </IconButton>  }
+          
+          <FormControl className="FC">
+              <TextField        
+                helperText={!isAuth?"You are not logged in.":""}
+                id="standard-name"
+                label="Endpoint"
+                // value={values.name}
+                // onChange={handleChange('name')}
+              />                                    
+          </FormControl>
+        </div>
+    </div> ;
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
 type State = {
    gender:string,
    region:string,
    affiliation:string,
-   interest:string
+   interest:string,
+   profile:{}
 }
 export class Profile extends Component<State> {  
 

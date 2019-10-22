@@ -18,7 +18,7 @@ import * as ui from './state/ui/actions'
 
 import qs from 'query-string'
 
-import Auth,{Profile} from './Auth.js';
+import Auth,{Profile, TestToken} from './Auth.js';
 export const auth = new Auth();
 
 // ignore hash changes made by UV
@@ -131,6 +131,13 @@ const makeMainRoutes = () => {
            <MuiThemeProvider theme={theme}>
               <Router history={history}>
                 <Switch>
+                     <Route path="/testToken" render={(props) => {
+
+                        store.dispatch(initiateApp());
+
+                        return (<TestToken auth={auth} history={history} />)
+
+                     } }/>
                      <Route path="/auth/callback" render={(props) => {
                         store.dispatch(initiateApp(null,null,props));
                         store.dispatch(ui.logEvent(true));
