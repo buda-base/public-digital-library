@@ -587,6 +587,15 @@ h2 + .browse a { font-size:14px; text-transform:capitalize;}
 
 .profile-area .FC { min-width:200px; margin-right:20px;}
 
+
+#TestToken { padding:5px;  }
+
+.FCTT { width:400px;  padding-top:5px;  }
+.FCTT + h2 { margin:0 50px;padding:0;text-align:right;}
+.FCTT + h2 pre { margin-bottom:0; }
+.FCTT ~ pre { margin:50px ; max-width:calc(100% - 100px); overflow:auto ; padding:20px; box-shadow:0 0 5px rgba(0,0,0,0.4); margin-top:5px;}
+
+
 .App {
   text-align: center;
 }

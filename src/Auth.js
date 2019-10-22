@@ -10,6 +10,8 @@ import Glyphicon from 'react-bootstrap/lib/Glyphicon';
 import { Link } from 'react-router-dom';
 import {top_right_menu} from './components/App';
 
+import bdrcApi from './lib/api';
+
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
@@ -273,11 +275,17 @@ export default class Auth {
 
 
 type TTState = {
-   profile:{}
+  endpoint:string,
+  profile:{},
+  response:string
 }
 
 export class TestToken extends Component<TTState> {  
 
+  constructor(props) {
+    super(props);
+    this.state = { endpoint:"" }
+  }
   
   componentWillMount() {
     this.setState({ profile: {} });
@@ -292,29 +300,43 @@ export class TestToken extends Component<TTState> {
   }
   render() {
     const { profile } = this.state;
-    console.log("profile",profile)
+    //console.log("profile",profile)
 
     let isAuth = auth.isAuthenticated()
 
-    return <div>
-        <div>
-          {!isAuth && <IconButton onClick={(e) => { auth.login(history.location) }} title="Log in">
-              <FontAwesomeIcon style={{fontSize:"28px"}} icon={faUserCircle} />
-          </IconButton> }
-          {isAuth && <IconButton onClick={(e) => { auth.logout(history.location) }} title="Log out">
-              <FontAwesomeIcon style={{fontSize:"28px"}} icon={faSignOutAlt} />
-          </IconButton>  }
-          
-          <FormControl className="FC">
-              <TextField        
-                helperText={!isAuth?"You are not logged in.":""}
-                id="standard-name"
-                label="Endpoint"
-                // value={values.name}
-                // onChange={handleChange('name')}
-              />                                    
-          </FormControl>
-        </div>
+
+    return  <div id="TestToken">
+        {!isAuth && <IconButton onClick={(e) => { auth.login(history.location) }} title="Log in">
+            <FontAwesomeIcon style={{fontSize:"28px"}} icon={faUserCircle} />
+        </IconButton> }
+        {isAuth && <IconButton onClick={(e) => { auth.logout(history.location) }} title="Log out">
+            <FontAwesomeIcon style={{fontSize:"28px"}} icon={faSignOutAlt} />
+        </IconButton>  }
+        
+        <FormControl className="FCTT">
+            <TextField        
+              helperText={!isAuth?"You are not logged in.":"Logged in" + (profile.name?" as "+profile.name+"":"")+ "."}
+              id="standard-name"
+              label="Endpoint"
+              fullWidth
+              value={this.state.endpoint}
+              onChange={ (e) => {
+                this.setState({...this.state,endpoint:e.target.value})
+              }} 
+              onKeyPress={ (e) => { if (e.key === 'Enter') {                  
+                const api = new bdrcApi();
+                let getContent = async () => {
+                  let test = await api.getURLContents(this.state.endpoint)                  
+                  this.setState({ ...this.state, response:test})
+                }
+                getContent();
+                this.setState({...this.state, response:"" })
+              }}}
+            />                                    
+        </FormControl>
+
+        { this.state.response && <h2><pre>{this.state.endpoint}</pre></h2>}
+        { this.state.response && this.state.response !== "" && <pre>{this.state.response}</pre> }
     </div> ;
   }
 }
