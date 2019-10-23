@@ -72,6 +72,7 @@
       "react-new-window": "^0.0.7",
       "react-redux": "^5.0.6",
       "react-redux-i18n": "^1.9.2",
+      "react-resizable": "^1.8.0",
       "react-router": "^4.2.0",
       "react-router-dom": "^4.2.2",
       "react-scripts": "^2.1.5",

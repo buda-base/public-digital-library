@@ -1,4 +1,5 @@
 // @flow
+import { ResizableBox } from 'react-resizable';
 import TextField from '@material-ui/core/TextField';
 import type Auth from '../Auth';
 import _ from "lodash";
@@ -340,6 +341,7 @@ type State = {
    newKW:string,
    dataSource : string[],
    leftPane?:boolean,
+   LpanelWidth:number,
    closeLeftPane?:boolean,
    filters:{
       datatype:string[],
@@ -407,7 +409,8 @@ class App extends Component<Props,State> {
          newKW,
          loader:{},
          paginate:{index:0,pages:[0],n:[0]},
-         anchor:{}
+         anchor:{},
+         LpanelWidth:350
          //leftPane:false //(window.innerWidth > 1400 && this.props.keyword),
          
       };
@@ -567,7 +570,7 @@ class App extends Component<Props,State> {
          if(props.langIndex !== undefined ) s = { ...s, language:props.langPreset[0] }
       }
 
-      console.log("gDsFp",eq,props,state,s,state.id)
+      console.log("gDsFp",eq,props,state,s,state.id,state.LpanelWidth)
 
       // pagination settings
       let d, newid = state.filters.datatype.sort()+"#"+props.keyword+"@"+props.language      
@@ -1446,7 +1449,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
       //console.log("id",id,prettId)
 
-      let status,warnStatus,warnLabel
+      let status = "",warnStatus,warnLabel
 
       if(this.props.auth.isAuthenticated())
       {
@@ -2829,7 +2832,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                         />
 
                      }
-                     label={<span>{label+" ("}<span class="facet-count">{cpt_i+cpt}</span>{")"}</span>}
+                     label={<span>{label}&nbsp;{"("}<span class="facet-count">{cpt_i+cpt}</span>{")"}</span>}
                   />
                   {
                      elem && elem["taxHasSubClass"] && elem["taxHasSubClass"].length > 0 &&
@@ -2940,10 +2943,12 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
           { top_right_menu(this) }
 
          <div className="App" style={{display:"flex"}}>
-            <div className={"SidePane left " +(this.state.leftPane?"visible":"")}>
+            <ResizableBox id="resizableLeftPane" width={this.state.LpanelWidth} axis="x" minConstraints={[250,Infinity]} maxConstraints={[500,Infinity]} 
+               onResizeStop={ (event, {element, size, handle}) => { console.log("rsize",size); this.setState({ ...this.state,  LpanelWidth: size.width })}} >
+                <div className={"SidePane left " +(this.state.leftPane?"visible":"")}>
                   <IconButton className="close" onClick={e => this.setState({...this.state,leftPane:false,closeLeftPane:true})}><Close/></IconButton>
                { //this.props.datatypes && (results ? results.numResults > 0:true) &&
-                  <div style={{minWidth:"335px",position:"relative"}}>
+                  <div style={{ /*minWidth:"335px",*/ position:"relative"}}>
                      <Typography style={{fontSize:"25px",marginBottom:"20px",textAlign:"center"}}>
                         <Translate value="Lsidebar.title" />
                      </Typography>
@@ -3336,7 +3341,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   */ }
                   </div>
                }
-            </div>            
+               </div>
+            </ResizableBox>            
             { showMenus }
             <div className={"SearchPane"+(this.props.keyword ?" resultPage":"")} >
                <a target="_blank" href="https://www.buddhistarchive.org/" style={{display:"inline-block",marginBottom:"25px"}}>

@@ -452,10 +452,10 @@ body {overflow-x:hidden; }
 .SidePane > #annoCollec svg.score0 { border-radius:50%; background-color:rgba(255, 205, 3, 0.4);border:1px dashed rgba(167, 134, 1, 0.4);}
 .SidePane > #annoCollec svg.score1 { border-radius:50%; background-color:rgba(17, 173, 17, 0.3);border:1px solid rgba(36, 106, 36, 0.4);}
 
-.SidePane { position:absolute;transition:all 400ms ease-in-out; background:white;height:100vh; position:fixed;padding:20px;
+.SidePane { position:absolute;transition:left 400ms ease-in-out,right 400ms ease-in-out; background:white;height:100vh; position:fixed;padding:20px;
    background:rgba(246,246,246,1); z-index:100; top:0 
 }
-.SidePane.left { left:-500px; box-shadow:2px 0 2px 0px rgba(0,0,0,0.35);}
+.SidePane.left {  box-shadow:2px 0 2px 0px rgba(0,0,0,0.35);}
 .SidePane.left.visible { left:0; overflow-y:auto;}
 .SidePane.right { right:-500px; box-shadow:-2px 0 2px 0px rgba(0,0,0,0.35);}
 .SidePane.right.visible { right:0; overflow-y:auto;}
@@ -463,7 +463,19 @@ body {overflow-x:hidden; }
 .SidePane .loader { position:absolute !important;margin-right:32px;margin-top:24px;right:0;}
 .datatypesLoader, .facetLoader { left:0px !important;top:0 !important;}
 
+#resizableLeftPane { position:fixed; z-index:10; } 
+#resizableLeftPane .SidePane { position:relative; overflow-x:hidden;}
 
+.react-resizable-handle {
+   position: absolute;
+   width: 10px;
+   height: 100%;
+   bottom: 0;
+   right: -5px;
+   box-sizing: border-box;
+   cursor: e-resize;
+   z-index:101;
+ }
 
 .SearchPane { width:1000px; margin:auto;margin-top:10vh;max-width:90%; z-index:0;}
 .SearchPane > div {display:flex;justify-content: center;}
@@ -507,6 +519,8 @@ body {overflow-x:hidden; }
 /* .collapse.open div { overflow:visible hidden;} */
 .searchWidget .subcollapse:not(.open) { width:250px; }
 .searchWidget .subcollapse.open { width:auto; max-width:350px; }
+.searchWidget > label + .subcollapse { width:auto !important; }
+.searchWidget > label { margin-right:5px;}
 
 span.subcollapse { opacity:0; transition:opacity 50ms ease-in-out ; }
 span.subcollapse svg { vertical-align:-6px; cursor:pointer; font-size:18px; }
