@@ -1447,20 +1447,24 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
       //console.log("id",id,prettId)
 
       let status,warnStatus,warnLabel
-      if(allProps) status = allProps.filter(k => k.type === adm+"status")
-      if(status && status.length) status = status[0].value
-      else status = null
-       
-      //if(status) warnLabel = getOntoLabel(this.props.dictionary,this.props.locale,status)
-      if(!warnLabel && status)  warnLabel = status.replace(/^.*[/]([^/]+)$/,"$1")
 
-      if(status && !status.match(/Released/)) warnStatus = <ErrorIcon/>
-      if(status && status.match(/Withdra/)) warnStatus = <WarnIcon/>
+      if(this.props.auth.isAuthenticated())
+      {
+         if(allProps) status = allProps.filter(k => k.type === adm+"status")
+         if(status && status.length) status = status[0].value
+         else status = null
+         
+         //if(status) warnLabel = getOntoLabel(this.props.dictionary,this.props.locale,status)
+         if(!warnLabel && status)  warnLabel = status.replace(/^.*[/]([^/]+)$/,"$1")
 
-      if(warnStatus) warnStatus = <Tooltip key={"tip"} placement="bottom-end" title={<div style={{margin:"10px"}}>{warnLabel}</div>}>{warnStatus}</Tooltip>
+         if(status && !status.match(/Released/)) warnStatus = <ErrorIcon/>
+         if(status && status.match(/Withdra/)) warnStatus = <WarnIcon/>
 
-      if(status) status = status.replace(/^.*[/]([^/]+)$/,"$1")
-      else status = ""
+         if(warnStatus) warnStatus = <Tooltip key={"tip"} placement="bottom-end" title={<div style={{margin:"10px"}}>{warnLabel}</div>}>{warnStatus}</Tooltip>
+
+         if(status) status = status.replace(/^.*[/]([^/]+)$/,"$1")
+         else status = ""
+      }
 
 
       let ret = (

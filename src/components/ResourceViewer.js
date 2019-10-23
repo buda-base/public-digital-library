@@ -2376,7 +2376,7 @@ class ResourceViewer extends Component<Props,State>
                <Redirect404  history={this.props.history} message={"Record withdrawn in favor of "+redir} to={"/show/"+redir}/>
             )
          }
-         else if(redir[adm+"status"] && (redir = redir[adm+"status"]).length && redir[0].value === bda+"StatusWithdrawn"){
+         else if(this.props.auth.isAuthenticated() && redir[adm+"status"] && (redir = redir[adm+"status"]).length && redir[0].value === bda+"StatusWithdrawn"){
             withdrawn = true 
             console.log("WithD");
          }
