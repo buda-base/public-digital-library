@@ -276,8 +276,9 @@ export default class Auth {
 
 type TTState = {
   endpoint:string,
-  profile:{},
-  response:string
+  profile?:{},
+  error?:boolean,
+  response?:string
 }
 
 export class TestToken extends Component<TTState> {  
@@ -304,6 +305,11 @@ export class TestToken extends Component<TTState> {
 
     let isAuth = auth.isAuthenticated()
 
+    let url
+    if(this.state.response) {
+      url = this.state.display
+      if(!url.match(/^http[s]?:/)) url = url.replace(/^[/:]*/,"http://")
+    }
 
     return  <div id="TestToken">
         {!isAuth && <IconButton onClick={(e) => { auth.login(history.location) }} title="Log in">
@@ -326,16 +332,26 @@ export class TestToken extends Component<TTState> {
               onKeyPress={ (e) => { if (e.key === 'Enter') {                  
                 const api = new bdrcApi();
                 let getContent = async () => {
-                  let test = await api.getURLContents(this.state.endpoint)                  
-                  this.setState({ ...this.state, response:test})
+                  let test,error
+                  try {
+                    let url = this.state.endpoint
+                    if(!url.match(/^http[s]?:/)) url = url.replace(/^[/:]*/,"http://")
+                    test = await api.getURLContents(url)                  
+                  }
+                  catch(e) {
+                    console.error(e)
+                    test = ""+e
+                    error = true
+                  }
+                  this.setState({ ...this.state, response:test, error})
                 }
                 getContent();
-                this.setState({...this.state, response:"" })
+                this.setState({...this.state, response:"", display:this.state.endpoint })
               }}}
             />                                    
         </FormControl>
 
-        { this.state.response && <h2><pre>{this.state.endpoint}</pre></h2>}
+        { this.state.response && <h2 {...(this.state.error?{style:{color:"red"}}:{})}><pre>{url}</pre></h2>}
         { this.state.response && this.state.response !== "" && <pre>{this.state.response}</pre> }
     </div> ;
   }
