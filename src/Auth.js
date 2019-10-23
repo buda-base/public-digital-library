@@ -336,7 +336,7 @@ export class TestToken extends Component<TTState> {
                   try {
                     let url = this.state.endpoint
                     if(!url.match(/^http[s]?:/)) url = url.replace(/^[/:]*/,"http://")
-                    test = await api.getURLContents(url)                  
+                    test = await api.getURLContents(url, false)                  
                   }
                   catch(e) {
                     console.error(e)
