@@ -410,7 +410,7 @@ class App extends Component<Props,State> {
          loader:{},
          paginate:{index:0,pages:[0],n:[0]},
          anchor:{},
-         LpanelWidth:350
+         LpanelWidth:375
          //leftPane:false //(window.innerWidth > 1400 && this.props.keyword),
          
       };
@@ -2945,7 +2945,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          <div className="App" style={{display:"flex"}}>
             <ResizableBox id="resizableLeftPane" width={this.state.LpanelWidth} axis="x" minConstraints={[250,Infinity]} maxConstraints={[500,Infinity]} 
                onResizeStop={ (event, {element, size, handle}) => { console.log("rsize",size); this.setState({ ...this.state,  LpanelWidth: size.width })}} >
-                <div className={"SidePane left " +(this.state.leftPane?"visible":"")}>
+            <div className={"SidePane left " +(this.state.leftPane?"visible":"")}>
                   <IconButton className="close" onClick={e => this.setState({...this.state,leftPane:false,closeLeftPane:true})}><Close/></IconButton>
                { //this.props.datatypes && (results ? results.numResults > 0:true) &&
                   <div style={{ /*minWidth:"335px",*/ position:"relative"}}>
