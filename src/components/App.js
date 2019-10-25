@@ -2943,9 +2943,9 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
           { top_right_menu(this) }
 
          <div className="App" style={{display:"flex"}}>
-            <ResizableBox id="resizableLeftPane" width={this.state.LpanelWidth} axis="x" minConstraints={[250,Infinity]} maxConstraints={[500,Infinity]} 
+            <div className={(this.state.leftPane?"visible":"")}><ResizableBox id="resizableLeftPane" width={this.state.LpanelWidth} axis="x" minConstraints={[250,Infinity]} maxConstraints={[500,Infinity]} 
                onResizeStop={ (event, {element, size, handle}) => { console.log("rsize",size); this.setState({ ...this.state,  LpanelWidth: size.width })}} >
-            <div className={"SidePane left " +(this.state.leftPane?"visible":"")}>
+            <div className={"SidePane left"}>
                   <IconButton className="close" onClick={e => this.setState({...this.state,leftPane:false,closeLeftPane:true})}><Close/></IconButton>
                { //this.props.datatypes && (results ? results.numResults > 0:true) &&
                   <div style={{ /*minWidth:"335px",*/ position:"relative"}}>
@@ -3342,7 +3342,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   </div>
                }
                </div>
-            </ResizableBox>            
+            </ResizableBox></div>
             { showMenus }
             <div className={"SearchPane"+(this.props.keyword ?" resultPage":"")} >
                <a target="_blank" href="https://www.buddhistarchive.org/" style={{display:"inline-block",marginBottom:"25px"}}>

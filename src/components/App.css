@@ -369,6 +369,8 @@ h3 .expand svg { position:absolute; margin-top:-18px; }*/
 .propCollapse.in-false + .expand { margin-top:0px;transition:all 300ms ease-in-out;} 
 .propCollapse.in-true + .expand { margin-top:-5px; margin-bottom:5px;} 
 
+.toggle-expand { position:absolute; margin-top: -2px; cursor:pointer; }
+
 .resource .SidePane .viewAll { color:black; cursor:pointer; margin-bottom:10px;display:inline-block;border-bottom:1px solid transparent;}
 .resource .SidePane .viewAll:hover { border-color:black !important; }
 
@@ -452,17 +454,22 @@ body {overflow-x:hidden; }
 .SidePane > #annoCollec svg.score0 { border-radius:50%; background-color:rgba(255, 205, 3, 0.4);border:1px dashed rgba(167, 134, 1, 0.4);}
 .SidePane > #annoCollec svg.score1 { border-radius:50%; background-color:rgba(17, 173, 17, 0.3);border:1px solid rgba(36, 106, 36, 0.4);}
 
-.SidePane { position:absolute;transition:left 400ms ease-in-out,right 400ms ease-in-out; background:white;height:100vh; position:fixed;padding:20px;
-   background:rgba(246,246,246,1); z-index:100; top:0; }
-.SidePane.left {  box-shadow:2px 0 2px 0px rgba(0,0,0,0.35); left:-500px;}
-.SidePane.left.visible { left:0; overflow-y:auto;}
+.SidePane { position:absolute;transition:left 400ms ease-in-out,right 400ms ease-in-out; background:white;height:calc(100vh - 40px); position:fixed;padding:20px;
+   background:rgba(246,246,246,0.935); z-index:100; top:0; }
+.SidePane.left {  box-shadow:2px 0 2px 0px rgba(0,0,0,0.35); } 
+.visible .SidePane.left { overflow-y:auto;}
 .SidePane.right { right:-500px; box-shadow:-2px 0 2px 0px rgba(0,0,0,0.35);}
 .SidePane.right.visible { right:0; overflow-y:auto;}
 /* .SidePane > div { position:fixed } */
 .SidePane .loader { position:absolute !important;margin-right:32px;margin-top:24px;right:0;}
 .datatypesLoader, .facetLoader { left:0px !important;top:0 !important;}
 
-#resizableLeftPane { position:fixed; z-index:10; } 
+.App > :first-child { position:absolute; z-index:10; transition:left 400ms ease-in-out;}
+.App > :not(.visible):first-child { left:-500px; }
+.App > :not(.visible):first-child #resizableLeftPane { position:absolute;  } 
+.App > .visible:first-child { left:0; }
+.App > .visible:first-child #resizableLeftPane { position:fixed; } 
+
 #resizableLeftPane .SidePane { position:relative; overflow-x:hidden;} 
 
 .react-resizable-handle {

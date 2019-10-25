@@ -3021,7 +3021,12 @@ class ResourceViewer extends Component<Props,State>
                        */
                          return (
                             <div>
-                               <h3><span>{this.proplink(k)}</span>:&nbsp;</h3>
+                               <h3><span>{this.proplink(k)}</span>:&nbsp;<span
+                                 onClick={(e) => this.setState({...this.state,collapse:{...this.state.collapse,[k]:!this.state.collapse[k]}})}
+                                 className="toggle-expand">
+                                  { this.state.collapse[k] && <ExpandLess/>}
+                                  { !this.state.collapse[k] && <ExpandMore/>}
+                                </span></h3>
                                <div style={{width:"100%"}} className="propCollapseHeader">{ret.splice(0,maxDisplay)}</div>
                                 <Collapse className={"propCollapse in-"+(this.state.collapse[k]===true)} in={this.state.collapse[k]}>
                                    {ret}
