@@ -85,7 +85,7 @@ export default class API {
            else this._fetch = window.fetch.bind(window);
         }
 
-        console.log("api options",options,this,process.env.NODE_ENV)
+        //console.log("api options",options,this,process.env.NODE_ENV)
       }
 
      async getURLContents(url: string, minSize : boolean = true,acc?:string,lang?:string[],binary:boolean=false,cookie:string): Promise<string> {
@@ -105,7 +105,7 @@ export default class API {
 
          // CORS issue - to be continued
          let xhrArgs
-         if(isAuthenticated() && url.match(/bdrc[.]io/)) {
+         if(isAuthenticated() && (url.match(/bdrc[.]io/) || url.match(/localhost/))) {
             if(url.match(/setcookie/)) xhrArgs = { credentials: 'include' } //, 'mode':'no-cors'}
             if(!cookie) head = { ...head, "Authorization":"Bearer "+id_token }
          }
