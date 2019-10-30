@@ -15,15 +15,17 @@ const mapStateToProps = (state,ownProps) => {
          langPriority = { ...langPriority.language.data }
          if(state.ui.langIndex) langPriority.index = state.ui.langIndex
          else langIndex = langPriority.index
+         if(state.ui.langPreset && langIndex === "custom") langPriority.presets["custom"] = state.ui.langPreset
       }
       let collapse = state.ui.collapse
       let rightPanel = state.ui.rightPanel
       let locale = state.i18n.locale
 
+      let anchor = state.ui.anchor
 
-      let props = { ...ownProps, langIndex, langPriority, open:rightPanel, locale, collapse }
+      let props = { ...ownProps, langIndex, langPriority, open:rightPanel, locale, collapse, anchor }
 
-      //console.log("mS2p LSP",state,props)
+      console.log("mS2p LSP",state,props)
 
       return props
 
@@ -40,8 +42,8 @@ const mapStateToProps = (state,ownProps) => {
          onToggleLanguagePanel:() => {
             dispatch(ui.toggleLanguagePanel());
          },
-         onToggleCollapse:(txt:string) => {
-            dispatch(ui.toggleCollapse(txt));
+         onToggleCollapse:(txt:string,target:{},arg?:string) => {
+            dispatch(ui.toggleCollapse(txt,target,arg));
          }
       }
    }

@@ -70,10 +70,10 @@ function narrowWithChar(char, wordlen, lttotest) {
 	return lttotest.filter(lt => okforlt(char, wordlen, lt));
 }
 
-function narrowWithString(strtoguess, transtotest) {
+export function narrowWithString(strtoguess, transtotest) {
 	var wordlen = 0;
 	var triedrange = false;
-	for (char of strtoguess) { // iterates on Unicode code points, not code units
+	for (let char of strtoguess) { // iterates on Unicode code points, not code units
 		if (char == " ") {
 			wordlen = 0;
 			continue
@@ -91,19 +91,3 @@ function narrowWithString(strtoguess, transtotest) {
 	}
 	return transtotest;
 }
-
-// typical usage: we know that the user is likely to use (in that order)
-// ewts, iast, anything else, we call:
-
-userprefs = ["ewts", "iast", "pinyin"];
-
-console.log(narrowWithString("d+har ma", userprefs));
-console.log(narrowWithString("པདྨ", userprefs));
-console.log(narrowWithString("ऩ", userprefs));
-console.log(narrowWithString("長阿含經", userprefs));
-console.log(narrowWithString("amṛta", userprefs));
-console.log(narrowWithString("cháng ā hán jīng", userprefs));
-
-// this one is ambiguous and gives an array of two elements, but ordered according to the
-// user prefs, so the first is probably right
-console.log(narrowWithString("Āgama", userprefs));

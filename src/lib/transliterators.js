@@ -1,6 +1,6 @@
 
 
-let jsEWTS,Sanscript,pinyin4js,__
+let hanziConv,jsEWTS,Sanscript,pinyin4js,__
 
 export const importModules = async () => {
 
@@ -9,14 +9,16 @@ export const importModules = async () => {
        jsEWTS = await require("jsewts/src/jsewts.js")
        Sanscript = await require("@sanskrit-coders/sanscript")
        pinyin4js = await require("pinyin4js")
+       hanziConv = (await require("hanzi-tsconv")).conv
    }
    catch(f) { // in embed iframe
       //console.log("exception",f)
        window.moduleLoaded = {}
        __ = eval('_')
        jsEWTS = window.moduleLoaded.JsEWTS = window.jsEWTS ;
-       eval('require(["https://cdn.jsdelivr.net/npm/@sanskrit-coders/sanscript@1.0.2/sanscript.min.js"],(obj) => { Sanscript = obj; window.moduleLoaded.Sanscript = obj ; })')
-       eval('require(["https://cdn.jsdelivr.net/npm/pinyin4js@1.3.18/dist/pinyin4js.js"],(obj) => { pinyin4js = PinyinHelper; window.moduleLoaded.pinyin4js = PinyinHelper ; })')
+       eval('require(["https://cdn.jsdelivr.net/npm/@sanskrit-coders/sanscript@1.0.2/sanscript.min.js"],(obj) => { Sanscript = obj; console.log("obj",obj); window.moduleLoaded.Sanscript = obj ; })')
+       eval('require(["https://cdn.jsdelivr.net/npm/pinyin4js@1.3.18/dist/pinyin4js.js"],(obj) => { pinyin4js = PinyinHelper; window.moduleLoaded.pinyin4js = PinyinHelper ; })')       
+       eval('require(["https://cdn.jsdelivr.net/npm/hanzi-tsconv@0.1.1/dist/main.js"],(obj) => { hanziConv = window["hanzi-tsconv"].conv ; console.log("obj",hanziConv); window.moduleLoaded.hanziConv = hanziConv ; })')
    }
 }
 importModules();
@@ -29,6 +31,9 @@ export const transliterators = {
    "sa-x-iast":{ "sa-deva": (val) => Sanscript.t(val.toLowerCase(),"iast","devanagari") },
    
    "zh-[Hh]an[st]":{ "zh-latn-pinyin" : (val) => pinyin4js.convertToPinyinString(val, ' ', pinyin4js.WITH_TONE_MARK) },
+
+   "zh-[Hh]ant":{ "zh-hans" : (val) => hanziConv.tc2sc(val) },
+   "zh-[Hh]ans":{ "zh-hant" : (val) => hanziConv.sc2tc(val) },
 
    "(.*?)-[Tt]ibt":{ "(.*?)-x-ewts": (val) => jsEWTS.toWylie(val) },
    "(.*?)-x-ewts" :{ "(.*?)-Tibt"  : (val) => jsEWTS.fromWylie(val) },
@@ -114,7 +119,7 @@ export function sortLangScriptLabels(data,preset,translit)
       let i = preset.indexOf(k)
       
       let regexp ;
-      if(i === -1) { 
+      //if(i === -1) { 
          for(let x in preset) {
             if(regexp = k.match(new RegExp("^"+preset[x]+"$"))) {               
                i = x ; 
@@ -126,7 +131,7 @@ export function sortLangScriptLabels(data,preset,translit)
             i = preset.length ;
             if(!k) i++
          }
-      }      
+      //}      
 
       //console.log("k v",k,v,translit[k],e) //,transliterators)
 

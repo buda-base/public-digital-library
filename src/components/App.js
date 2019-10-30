@@ -61,6 +61,7 @@ import LanguageSidePaneContainer from '../containers/LanguageSidePaneContainer';
 import ResourceViewerContainer from '../containers/ResourceViewerContainer';
 import {getOntoLabel} from './ResourceViewer';
 import {getEntiType} from '../lib/api';
+import {narrowWithString} from "../lib/langdetect"
 import {sortLangScriptLabels, extendedPresets} from '../lib/transliterators';
 import './App.css';
 
@@ -191,8 +192,9 @@ export const langProfile = [
 ]
 */
 
+const preferUIlang = [ bdo+"placeType", bdo+"workIsAbout", bdo+"workGenre" ]
 
-export function getLangLabel(that:{},labels:[],proplang:boolean=false,uilang:boolean=false)
+export function getLangLabel(that:{},prop:string="",labels:[],proplang:boolean=false,uilang:boolean=false)
 {
    if(labels && labels.length)
    {
@@ -201,7 +203,7 @@ export function getLangLabel(that:{},labels:[],proplang:boolean=false,uilang:boo
       let langs = []
       if(that.state.langPreset) langs = that.state.langPreset
       else if(that.props.langPreset) langs = that.props.langPreset
-      if(proplang || uilang) langs = [ that.props.locale, ...langs ]
+      if(proplang || uilang || preferUIlang.indexOf(prop) !== -1) langs = [ that.props.locale, ...langs ]
 
       if(langs.indexOf(that.props.locale) === -1) { 
          langs = [ ...langs, that.props.locale ]
@@ -335,6 +337,7 @@ type State = {
    langOpen:boolean,
    customLang?:string[],
    langPreset?:string[],
+   langDetect?:string[],
    checked?:string,
    unchecked?:string,
    keyword:string,
@@ -500,7 +503,6 @@ class App extends Component<Props,State> {
 
    static getDerivedStateFromProps(prop:Props,state:State)
    {
-      let eq = true
       let s ;
 
       let props = { ...prop }
@@ -560,14 +562,22 @@ class App extends Component<Props,State> {
 
       
       // update when language has changed
+      let eq = true
       if(props.langPreset && state.langPreset) for(let i = 0 ; i < props.langPreset.length && eq; i ++ ) { eq = eq && props.langPreset[i] === state.langPreset[i] ; }
       else eq = false ;
-
-
       if(!eq) {
          if(!s) s = { ...state }
-         s = { ...s, langPreset:props.langPreset, repage:true }
+         let langDetect = [ "ewts", "iast", "pinyin" ]
+         let langP = [], i
+         if(props.langPreset) { 
+            langP = props.langPreset.map(p => p.replace(/^.*?(ewts|iast|pinyin)?$/,"$1")).filter(e => e)
+            langDetect = langDetect.map(d => ({d,i:(i=langP.indexOf(d))!==-1?i:99}))
+            console.log("langP",langDetect,langP,props.langPreset)         
+            langDetect = _.orderBy(langDetect, ["i","d"],["asc","asc"]).map(v => v.d)
+         }
+         s = { ...s, langPreset:props.langPreset, repage:true, langDetect }
          if(props.langIndex !== undefined ) s = { ...s, language:props.langPreset[0] }
+
       }
 
       console.log("gDsFp",eq,props,state,s,state.id,state.LpanelWidth)
@@ -1203,7 +1213,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          if(preflabs.length > 0 && preflabs[0]["@language"]) { lang = "@language" ; val = "@value"; }
          if(preflabs.length > 0 && preflabs[0]["xml:lang"]) { lang = "xml:lang" ; val = "value"; }
 
-         let label = getLangLabel(this,preflabs,false,useUIlang)
+         let label = getLangLabel(this,prop,preflabs,false,useUIlang)
 
          //console.log("full",prop,label,preflabs,useUIlang)
 
@@ -1671,7 +1681,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      if(Array.isArray(m.value)) 
                      { 
                         val = m.value.map((e)=> {
-                           let lab =  getLangLabel(this,allProps.filter(l => l.type === e))
+                           let lab =  getLangLabel(this,"",allProps.filter(l => l.type === e))
                            if(!lab) return this.pretty(e)
                            else {
                               let lang = lab.lang
@@ -1684,7 +1694,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      }
                      else {
                         //val = this.highlight(this.pretty(m.value),k)
-                        let mLit = getLangLabel(this,[m])
+                        let mLit = getLangLabel(this,"",[m])
                         val =  this.highlight(mLit["value"],facet)
                         //val =  mLit["value"]
                         lang = mLit["lang"]
@@ -1710,7 +1720,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                            label = this.props.assoRes[val]                           
                         }
                         //console.log("val",label,val,lit,lang)
-                        if(label) label = getLangLabel(this,label)
+                        if(label) label = getLangLabel(this,"",label)
                         if(label) {
                            uri = val
                            for(let k of Object.keys(prefixesMap)) { 
@@ -1761,7 +1771,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                            if(label && label[skos+"prefLabel"]) label = label[skos+"prefLabel"]
                            else if(label) label = label[foaf+"name"]
                         }
-                        if(label) label = getLangLabel(this,label)
+                        if(label) label = getLangLabel(this,"",label)
                         if(label) {
                            if(label.value) {
                               val = label.value
@@ -1980,7 +1990,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                for(let k of Object.keys(prefixesMap)) fullURI = fullURI.replace(new RegExp(k+":"),prefixesMap[k])
                if(labels) labels = labels[fullURI]
                if(labels) {
-                  l = getLangLabel(this,labels[skos+"prefLabel"]?labels[skos+"prefLabel"]:labels[foaf+"name"])
+                  l = getLangLabel(this,"",labels[skos+"prefLabel"]?labels[skos+"prefLabel"]:labels[foaf+"name"])
                   //console.log("l",labels,l)
                   if(l) {
                      let sameAs = this.props.resources[this.props.keyword]
@@ -2123,7 +2133,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                for(let k of Object.keys(listOrder)) { if(e.type && e.type.match(new RegExp(k))) return listOrder[k] }
             })
             //console.log("sList",JSON.stringify(sList,null,3));
-            label = getLangLabel(this,sList) // ,true)
+            label = getLangLabel(this,"",sList) // ,true)
             if(label && label.length > 0) label = label[0]
 
             let preProps = sublist[o].filter((e) => e.type && e.type.match(/relationType$/ )).map(e => this.props.ontology[e.value])
@@ -2192,7 +2202,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   if(subL.length == 1) {
                      subR = sublist[o].filter((e) => (e.type && e.type.match(new RegExp(lab)))) //(rootPrefLabel)|(prefLabel(Has)?Expression)/) ) )
                      if(subR.length > 0) {
-                        let tLab = getLangLabel(this,subR)
+                        let tLab = getLangLabel(this,"",subR)
                         lang = tLab["xml:lang"]
                         if(!lang) lang = tLab["lang"]
                         label = tLab["value"]
@@ -2201,7 +2211,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   else if(multiP) {
                      subR = sublist[o].filter((e) => (e.type && e.type.match(new RegExp(lab))))
                      if(subR.length > 0) {
-                        let tLab = getLangLabel(this,subR)
+                        let tLab = getLangLabel(this,"",subR)
                         lang = tLab["xml:lang"]
                         if(!lang) lang = tLab["lang"]
                         label = tLab["value"]
@@ -2637,7 +2647,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             let i = 0
             for(let l of this.props.config.links) {
                //console.log("l",l)
-               let who = getLangLabel(this, l.label)
+               let who = getLangLabel(this,"", l.label)
                //console.log("who",who)
                messageD.push(<h5 key={i}>{l.title}</h5>)
                messageD.push(this.makeResult(l.id,null,getEntiType(l.id),who.value,who.lang,l.icon,TagTab[l.icon]))
@@ -3357,7 +3367,18 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                <SearchBar
                   closeIcon={<Close className="searchClose" style={ {color:"rgba(0,0,0,1.0)",opacity:1} } onClick={() => { this.props.history.push({pathname:"/",search:""}); this.props.onResetSearch();} }/>}
                   disabled={this.props.hostFailure}
-                  onChange={(value:string) => { this.setState({keyword:value, dataSource: [ value, "possible suggestion","another possible suggestion"]}); } }
+                  onChange={(value:string) => { 
+                     let language = this.state.language
+                     let detec = narrowWithString(value, this.state.langDetect)
+                     let possible = [ ...this.state.langPreset, ...langSelect ]
+                     if(detec.length < 3) { 
+                        if(detec[0] === "tibt") for(let p of possible) { if(p === "bo" || p.match(/-[Tt]ibt$/)) { language = p ; break ; } }
+                        else if(detec[0] === "hani") for(let p of possible) { if(p.match(/^zh((-[Hh])|$)/)) { language = p ; break ; } }
+                        else if(["ewts","iast","deva","pinyin"].indexOf(detec[0]) !== -1) for(let p of possible) { if(p.match(new RegExp(detec[0]+"$"))) { language = p ; break ; } }
+                     }
+                     console.log("detec",possible,detec,this.state.langPreset,this.state.langDetect)
+                     this.setState({keyword:value, dataSource: [ value, "possible suggestion","another possible suggestion"], language}); 
+                  }}
                   onRequestSearch={this.requestSearch.bind(this)}
                   value={this.props.hostFailure?"Endpoint error: "+this.props.hostFailure+" ("+this.getEndpoint()+")":this.state.keyword !== undefined && this.state.keyword!==this.state.newKW?this.state.keyword:this.props.keyword&&this.state.newKW?this.state.newKW.replace(/\"/g,""):""}
                   style={{

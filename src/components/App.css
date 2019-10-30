@@ -127,7 +127,7 @@ a.result .contenu ul > div:last-child p {
    line-height: 1.46429em; margin: 0;  display: block;
 }
 
-.result-content.StatusEditing,.result-content.StatusWithdrawn { opacity:0.45;} 
+.result-content.StatusEditing,.result-content.StatusWithdrawn,.result-content.StatusProvisional { opacity:0.45;} 
 a.result .contenu ul > div:first-child { position:relative;}
 a.result .contenu ul > div:first-child > svg { position:absolute; top:-16px; right:16px;font-size:14px; }
 
@@ -160,7 +160,7 @@ h4 { margin-top:0px;margin-bottom:0px;font-size:24px; }
 .resource h3 span { /*text-decoration: underline;*/ font-weight:600;  text-transform:capitalize; }
 .resource h3 { font-size:14px;margin-top:6px; }
 .resource .sub { width:100%; padding-left:20px;display:flex;flex-wrap:wrap; box-sizing: border-box; position:relative;}
-.resource .sub h4.first { font-size:0.85em;font-style:italic; text-transform:capitalize; flex-shrink:0; }
+.resource .sub h4.first { font-size:0.85em;font-style:italic; text-transform:capitalize; flex-shrink:0; line-height:1.6em;}
  .resource .sub .sub h4.first.type,
 .resource .sub h4.first.prop { font-style:normal;font-size:0.8em; line-height:20px }
 
@@ -459,7 +459,7 @@ body {overflow-x:hidden; }
 .SidePane.left {  box-shadow:2px 0 2px 0px rgba(0,0,0,0.35); } 
 .visible .SidePane.left { overflow-y:auto;}
 .SidePane.right { right:-500px; box-shadow:-2px 0 2px 0px rgba(0,0,0,0.35);}
-.SidePane.right.visible { right:0; overflow-y:auto;}
+.SidePane.right.visible { right:0; /*overflow-y:auto; */ }
 /* .SidePane > div { position:fixed } */
 .SidePane .loader { position:absolute !important;margin-right:32px;margin-top:24px;right:0;}
 .datatypesLoader, .facetLoader { left:0px !important;top:0 !important;}
@@ -511,15 +511,32 @@ body {overflow-x:hidden; }
 .facet-count { font-style:italic; opacity:0.65; font-size:11px; font-weight:400; }
 .widget label { text-transform:capitalize;  }
 .searchWidget > label > span,
-.dataWidget > label > span { font-size:13px; }
+.dataWidget label > span { font-size:13px; }
 .searchWidget > label > span svg { width:16px; height:16px; } 
 .dataWidget > label > span svg { width:17px; height:17px; }
 .searchWidget > label > span:first-child,
 .dataWidget > label > span:first-child { width:22px;height:22px; color:rgba(0,0,0,0.7); margin-left:9px;margin-right:2px; }
 .SidePane .help { text-align:left;font-style:italic;margin-bottom:10px; font-size:12px; width:300px;line-height:16px; }
 /* .subcollapse label span:last-child { max-width:120px;} */
-
+.dataWidget ol { margin:0; font-size:13px;padding-left:16px; list-style: none; counter-reset: li}
+.dataWidget ol li {counter-increment: li; z-index:100;}
+body > .ol-li-lang:last-child li::before,
+.dataWidget ol li::before {content: counter(li);  display: inline-block; width: 1.1em; margin-left: -1.1em ; font-weight:800; }
 /* .collapse { width:390px;}*/
+.ol-li-lang svg { color:rgba(0,0,0,0.65); font-size:17px; opacity:0;vertical-align:middle;margin-left:5px;cursor:pointer;display:inline-block;}
+.ol-li-lang svg.drag { position:absolute; margin-left:-36px;font-size:17px;margin-top:-1px;  padding-right: 5px;}
+.subcollapse.custom-lang:not(.sorting) .ol-li-lang:hover svg { opacity:1; }
+.subcollapse.custom-lang:not(.sorting) .ol-li-lang:hover svg.drag { opacity:1; cursor: row-resize; }
+.subcollapse.custom-lang.sorting, .subcollapse.custom-lang.sorting * { cursor:row-resize; }
+.ol-li-lang { z-index:100 !important;height:22px;color:rgba(0,0,0,0.87);position:relative;}
+.ol-li-lang a { position:relative; }
+ol .ol-li-lang:last-child li:before { display:none; }
+.ol-li-lang:last-child .add { position: absolute; margin-left: -19px; margin-top: -1px; opacity:1; }
+/* custom language reordering */
+body > .ol-li-lang:last-child { z-index:101 !important; position:relative; }
+body > .ol-li-lang:last-child li { font-size:13px; list-style-type: none; }
+body > .ol-li-lang:last-child svg { opacity:1;}
+body > .ol-li-lang:last-child li::before { content:'-';}
 
 .collapse.open { margin-bottom:20px; }
 /* .collapse.open div { overflow:visible hidden;} */
@@ -542,8 +559,8 @@ body {overflow-x:hidden; }
 
 span.subcollapse { opacity:0; transition:opacity 50ms ease-in-out ; }
 span.subcollapse svg { vertical-align:-6px; cursor:pointer; font-size:18px; }
-.collapse.open > div > div > .searchWidget > span.subcollapse, 
-.collapse.open .subcollapse.open > div > div > .searchWidget > span.subcollapse
+.collapse.open > div > div > .widget > span.subcollapse, 
+.collapse.open .subcollapse.open > div > div > .widget > span.subcollapse
 { position:absolute;  opacity:1; transition:opacity 150ms ease-in-out 50ms; } 
 
 .checkbox.disabled { opacity:0.5; }
