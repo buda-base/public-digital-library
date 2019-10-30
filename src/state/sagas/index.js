@@ -115,7 +115,7 @@ async function initiateApp(params,iri,myprops) {
 
             let url = fullUri(iri)
 
-            for(let k of Object.keys(res[url])) {
+            if(res[url]) for(let k of Object.keys(res[url])) {
                if(k.match(/[#/]sameAs/)) {
                   for(let a of res[url][k]) {
                      let shortU = shortUri(a.value)
@@ -156,7 +156,8 @@ async function initiateApp(params,iri,myprops) {
       */
 
 
-      let bdrIRI = bdr+iri.replace(/^bdr:/,"") ;
+      let bdrIRI = fullUri(iri) 
+
       
       let assoRes = {"data":Object.keys(res).reduce((acc,e)=>{
          //return ({...acc,[e]:Object.keys(res[e]).map(f => ( { type:f, ...res[e][f] } ) ) } )
@@ -188,6 +189,8 @@ async function initiateApp(params,iri,myprops) {
             return ( { ...ac, ...res[bdr+iri][e][f] })
          },{})})*/
       },{}) }
+
+
 
       if(res[bdrIRI]) {
          if(!res[bdrIRI][bdo+"eTextHasPage"]) store.dispatch(dataActions.getChunks(iri));
@@ -830,6 +833,7 @@ function addMeta(keyword:string,language:string,data:{},t:string,tree:{},found:b
             if(!tree["@graph"].length) tree["@graph"] = []
             //if(!tree["@graph"][0].length) tree["@graph"][0] = {}
             if(!tree["@graph"][0]["taxHasSubClass"]) tree["@graph"][0]["taxHasSubClass"] = []
+            else if(!Array.isArray(tree["@graph"][0]["taxHasSubClass"])) tree["@graph"][0]["taxHasSubClass"] = [ tree["@graph"][0]["taxHasSubClass"] ]
             tree["@graph"][0]["taxHasSubClass"].push("unspecified")
             tree["@graph"].push({"@id":"unspecified","taxHasSubClass":[],"tmp:count":stat["tree"]["unspecified"].n})
          
@@ -846,7 +850,7 @@ function addMeta(keyword:string,language:string,data:{},t:string,tree:{},found:b
 
 function mergeSameAs(result,withSameAs,init = true,rootRes = result, force = false, keyword)
 {
-   console.log("res",result,rootRes,keyword)
+   //console.log("res",result,rootRes,keyword)
 
    if(!result) return
 
@@ -884,7 +888,7 @@ function mergeSameAs(result,withSameAs,init = true,rootRes = result, force = fal
    if(keys) for(let i in keys) {
       let k = keys[i]
       let r = withSameAs[k]
-      console.log("k r",k,r)
+      //console.log("k r",k,r)
       if(force && !rootRes[r.t][k]) {
          delete result[r.t][k]
       }
@@ -902,7 +906,7 @@ function mergeSameAs(result,withSameAs,init = true,rootRes = result, force = fal
                let found = false ;
                for(let w of result[r.t][s])
                {
-                  if(v.type === w.type && v.value === w.value && v["xml:lang"] === w["xml:lang"]) {
+                  if( (v.type.match(/sameAs[^/]*$/) && s === v.value) || (v.type === w.type && v.value === w.value && v["xml:lang"] === w["xml:lang"])) {
                      found = true
                      break;
                   }

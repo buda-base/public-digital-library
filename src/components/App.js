@@ -71,6 +71,7 @@ const bdac  = "http://purl.bdrc.io/anncollection/" ;
 const bdan  = "http://purl.bdrc.io/annotation/" ;
 const bdo   = "http://purl.bdrc.io/ontology/core/"
 const bdr   = "http://purl.bdrc.io/resource/";
+const cbcp  = "https://dazangthings.nz/cbc/person/"
 const cbct  = "https://dazangthings.nz/cbc/text/"
 const dila  = "http://purl.dila.edu.tw/resource/";
 const foaf  = "http://xmlns.com/foaf/0.1/" ;
@@ -88,7 +89,7 @@ const viaf  = "http://viaf.org/viaf/"
 const wd    = "http://www.wikidata.org/entity/"
 const xsd   = "http://www.w3.org/2001/XMLSchema#" ;
 
-export const prefixesMap = { adm, bda, bdac, bdan, bdo, bdr, cbct, dila, foaf, oa, mbbt, owl, rdf, rdfs, rkts, skos, wd, ola, viaf, xsd, tmp }
+export const prefixesMap = { adm, bda, bdac, bdan, bdo, bdr, cbcp, cbct, dila, foaf, oa, mbbt, owl, rdf, rdfs, rkts, skos, wd, ola, viaf, xsd, tmp }
 export const prefixes = Object.values(prefixesMap) ;
 export const sameAsMap = { wd:"WikiData", ol:"OpenLibrary", bdr:"BDRC", mbbt:"Marcus Bingenheimer" }
 
@@ -1522,14 +1523,14 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          let retList
          
          let directSameAs = false
-         if(!prettId.match(/^bdr:/) && (fullId.match(new RegExp(cbct+"|"+rkts)) || !sameAsRes || !sameAsRes.filter(s => s.value.match(/[#/]sameAs/) || (s.type.match(/[#/]sameAs/) && (s.value.indexOf(".bdrc.io") !== -1 || s.value.indexOf("bdr:") !== -1))).length))   {
+         if(!prettId.match(/^bdr:/) && (fullId.match(new RegExp(cbcp+"|"+cbct+"|"+rkts)) || !sameAsRes || !sameAsRes.filter(s => s.value.match(/[#/]sameAs/) || (s.type.match(/[#/]sameAs/) && (s.value.indexOf(".bdrc.io") !== -1 || s.value.indexOf("bdr:") !== -1))).length))   {
             let u 
             if((u = sameAsRes.filter(s => s.type === adm+"canonicalHtml")).length) u = u[0].value
             else u = fullId
 
             retList = [ ( <a target="_blank" href={u} className="result">{ret}</a> ) ]                  
 
-            if(!fullId.match(new RegExp(cbct+"|"+rkts))) rmatch = [ { type:tmp+"sameAsBDRC", value:prettId,  lit } ]
+            if(!this.props.language && !fullId.match(new RegExp(cbcp+"|"+cbct+"|"+rkts))) rmatch = [ { type:tmp+"sameAsBDRC", value:prettId,  lit } ]
 
             directSameAs = true
          }
@@ -1573,6 +1574,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                "wd":   "/WD.svg",
                "rkts": "/RKTS.png",
                "cbct": false,
+               "cbcp": false,
             } 
 
             const providers = { 
@@ -1580,6 +1582,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                "mbbt":"Marcus Bingenheimer",
                "wd":"Wikidata",
                "ola":"Open Library",
+               "cbcp": "CBC@",
                "cbct": "CBC@"
             }
 
@@ -1602,7 +1605,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   let hres = hasRes[src][h]
 
                   let shortU = shortUri(hres)
-                  if(src === "rkts" || src == "cbct") shortU = prettId
+                  if(src === "rkts" || src == "cbct" || src == "cbcp") shortU = prettId
                   //let shortU = hasRes[src]
 
                   let url = fullUri(hres)
@@ -1705,6 +1708,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
                      let uri,from
                      if(m.type === tmp +"sameAsBDRC") {
+                        if(m.value === fullId || m.value == prettId) return ;
                         prop = "Same As BDRC"
                         uri = "/show/"+m.value ;
                         val = m.lit
@@ -1719,7 +1723,9 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                         if(!label && this.props.assoRes) {
                            label = this.props.assoRes[val]                           
                         }
+                        
                         //console.log("val",label,val,lit,lang)
+
                         if(label) label = getLangLabel(this,"",label)
                         if(label) {
                            uri = val
@@ -1746,7 +1752,14 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                               lang = litLang                              
                            }
                         }
-                        else if(val.indexOf(cbct) !== -1) {                           
+                        else if(val.indexOf(wd) !== -1) {                           
+                           prop = "Same As WikiData"
+                           val = [<a class="urilink" href={val}>{shortUri(val)}</a>]
+                           if(litLang) {
+                              lang = litLang                              
+                           }
+                        }
+                        else if(val.indexOf(cbct) !== -1 || val.indexOf(cbcp) !== -1) {                           
                            prop = "Same As CBC@"
                            val = [<a class="urilink" href={val}>{shortUri(val)}</a>]
                            if(litLang) {
@@ -1754,8 +1767,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                            }
                         }
                      }
-                     else if(m.type.match(/relationType$/) || (m.value && m.value.match && m.value.match(new RegExp("^("+bdr+")?"+this.props.keyword.replace(/bdr:/,"(bdr:)?")+"$")))) {
-                        
+                     else if(m.type.match(/relationType$/) || (m.value && m.value.match && m.value.match(new RegExp("^("+bdr+")?"+this.props.keyword.replace(/bdr:/,"(bdr:)?")+"$")))) {                       
+                       
                         uri = this.props.keyword.replace(/bdr:/,"")
                         val = uri ;
                         lang = null 
@@ -1785,9 +1798,10 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                               
                         }
                         if(m.type.match(/relationType$/))  {
+                           
                            if(m.value.match(/sameAs$/)) {
                               return ;
-                              /* // not needed anymore - alreadey returned by query 
+                              /* // not needed anymore - already returned by query 
                               uri = this.props.keyword
                               for(let k of Object.keys(prefixesMap)) { 
                                  if(uri.startsWith(k+":")) prop = "Same As " + (sameAsMap[k]?sameAsMap[k]:k.toUpperCase())
@@ -1795,13 +1809,16 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                               uri = "/show/"+uri
                               */
                            } else {
+                              return ;
+                              /* // redundant
                               prop = this.fullname(m.value) 
                               uri = "/show/"+this.props.keyword
+                              */
                            }
                         }                        
                      }
 
-                     //console.log("prop",prop,val)
+                     //console.log("prop",prop,val,m.value)
 
                      return (<div className="match">
                         <span className="label">{(!from?prop:from)}:&nbsp;</span>

@@ -723,8 +723,8 @@ class ResourceViewer extends Component<Props,State>
 
                   expr = expr.map((e) => {
 
-                     //console.log("index",e,assoR[e.value])
-                     if(assoR[e.value])
+                     console.log("index",e) //,assoR[e.value])
+                     if(e && assoR[e.value])
                      {
                         let label1,label2 ;
                         label1 = getLangLabel(this, "", assoR[e.value].filter(e => e.type === skos+"prefLabel"))
@@ -874,13 +874,13 @@ class ResourceViewer extends Component<Props,State>
                   if(a && !a["value"] && a[rdfs+"label"] && a[rdfs+"label"][0]) a = a[rdfs+"label"][0]
                   if(a && a["lang"]) a = a["lang"]
                   else if(a && a["xml:lang"] && a["xml:lang"] != "") a = a["xml:lang"]
-                  else if(a["type"] == "uri") a = a["value"]
+                  else if(a && a["type"] == "uri") a = a["value"]
                   else a = null
 
                   if(b && !b["value"] && b[rdfs+"label"] && b[rdfs+"label"][0]) b = b[rdfs+"label"][0]
                   if(b && b["lang"]) b = b["lang"]
                   else if(b && b["xml:lang"] && b["xml:lang"] != "") b = b["xml:lang"]
-                  else if(b["type"] == "uri") b = b["value"]
+                  else if(b && b["type"] == "uri") b = b["value"]
                   else b = null
 
                   //console.log("a,b",a,b)
@@ -1505,10 +1505,10 @@ class ResourceViewer extends Component<Props,State>
 
       if(elem && !Array.isArray(elem)) elem = [ elem ]
 
-      //console.log(elem)
+      //console.log("elem", elem)
 
       let viewAnno = false ;
-      if(elem) for(const e of elem)
+      if(elem) for(const e of elem) if(e)
       {
 
          let value = ""+e
@@ -3014,7 +3014,7 @@ class ResourceViewer extends Component<Props,State>
 
                      let expand
                      const maxDisplay = 10
-                     if(!isSub && elem && elem.filter && elem.filter(t=>t.type === "uri" || t.type === "literal").length > maxDisplay) {
+                     if(!isSub && elem && elem.filter && elem.filter(t=>t && (t.type === "uri" || t.type === "literal")).length > maxDisplay) {
                        /*
                        return (
                          <div>
