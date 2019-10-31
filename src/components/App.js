@@ -1799,7 +1799,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                         }
                         if(m.type.match(/relationType$/))  {
                            
-                           if(m.value.match(/sameAs$/)) {
+                           if(m.value.match(/sameAs[^/]*$/)) {
                               return ;
                               /* // not needed anymore - already returned by query 
                               uri = this.props.keyword
@@ -1809,11 +1809,9 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                               uri = "/show/"+uri
                               */
                            } else {
-                              return ;
-                              /* // redundant
+
                               prop = this.fullname(m.value) 
-                              uri = "/show/"+this.props.keyword
-                              */
+                              uri = "/show/"+this.props.keyword                              
                            }
                         }                        
                      }
