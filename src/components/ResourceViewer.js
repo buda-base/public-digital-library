@@ -1882,7 +1882,8 @@ class ResourceViewer extends Component<Props,State>
                   if(f == rdf+"type") continue;
                   else
                   {
-                     //console.log("what",this.props.resources[this.props.IRI][elem[f][0].value])
+                     let what = this.props.resources[this.props.IRI][elem[f][0].value]
+                     //console.log("what",what)
 
                      if(!noVal)
                         subsub.push(<Tag className={'first '+(div == ""?'type':'prop')}>{[this.proplink(f),": "]}</Tag>)
@@ -1914,7 +1915,34 @@ class ResourceViewer extends Component<Props,State>
                         }
                         else {
                            let dic ;
-                           if(v.type == 'uri') txt = this.uriformat(f,v)
+                           
+                           if(what && f === bdo+"dateIndication") { 
+                              let era,year
+                              if((year = what[bdo+"yearInEra"]) && year.length) year = year[0].value
+                              if(year) txt = year ;
+                              if((era = what[bdo+"era"]) && era.length) era = era[0].value
+                              if(era) { 
+                                 dic = this.props.dictionary[era]
+                                 if(dic) {
+                                    let tip = dic[adm+"userTooltip"]
+                                    if(!tip) tip = dic[rdfs+"comment"]
+                                    if(tip) tip = tip[0]
+                                    if(tip) tip = tip.value
+
+                                    let pit = dic[bdo+"uiAbbrFormat"]
+                                    if(pit) pit = pit[0]
+                                    if(pit) pit = pit.value
+                                    if(pit) pit = pit.replace(/[ .]|%s/g,"")
+
+                                    txt = [txt,<Tooltip placement="bottom-end" title={<div style={{margin:"10px"}}>{tip}</div>}><span className="lang">{pit}</span></Tooltip>]
+                                 }
+                              }
+                           }
+                           else if(v.type == 'uri') txt = this.uriformat(f,v)
+                           else if(v.type === 'literal' && v.datatype === xsd+"gYear") {
+
+                              txt = [txt,<Tooltip placement="bottom-end" title={<div style={{margin:"10px"}}>{"Gregorian Calendar"}</div>}><span className="lang">{"GC"}</span></Tooltip>]
+                           }
                            else if(v.type === 'literal' && v.datatype && this.props.dictionary && (dic = this.props.dictionary[v.datatype]) && dic[rdfs+"subClassOf"] 
                               && dic[rdfs+"subClassOf"].filter(s => s.value === bdo+"AnyDate").length) {
 
