@@ -2,29 +2,29 @@
    "auth":{
      "domain": "bdrc-io.auth0.com",
      "clientID": "bZRCKQvibdCq5gF7gV2biIH9rLcqfVcS",
-     "redirectUri": "http://library.bdrc.io/auth/callback",
+     "redirectUri": "//library.bdrc.io/auth/callback",
      "audience": "https://bdrc-io.auth0.com/userinfo",
      "responseType": "token id_token",
      "scope": "openid user_metadata app_metada profile"
   },
    "ldspdi":
    {
-      "endpoints":["http://localhost:8080","http://localhost:13280","http://buda1.bdrc.io:13280","http://purl.bdrc.io","http://localhost:5555/test"],
+      "endpoints":["//localhost:8080","//localhost:13280","//buda1.bdrc.io:13280","//purl.bdrc.io","//localhost:5555/test"],
       "index":3   
    },
    "iiif":
    {
-      "endpoints":["http://localhost:9000","http://localhost:13580","http://iiif.bdrc.io"],
+      "endpoints":["//localhost:9000","//localhost:13580","//iiif.bdrc.io"],
       "index":1
    },
    "iiifpres":
    {
-      "endpoints":["http://localhost:9999","http://localhost:13480","http://iiifpres.bdrc.io","http://localhost:5555"],
+      "endpoints":["//localhost:9999","//localhost:13480","//iiifpres.bdrc.io","//localhost:5555"],
       "index":1
    },
    "rkts":
    {
-      "endpoints":["http://localhost:8080"],
+      "endpoints":["//localhost:8080"],
       "index":0
    },
    "facets":{

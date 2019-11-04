@@ -692,7 +692,7 @@ export default class API {
          path = url +  ONTOLOGY_PATH;
          
          // to use with ldspdi running locally
-         path = "http://purl.bdrc.io" +  ONTOLOGY_PATH;
+         path = "//purl.bdrc.io" +  ONTOLOGY_PATH;
 
         return path;
     }
@@ -706,7 +706,7 @@ export default class API {
          path = url +  DICTIONARY_PATH;
 
          // to use with ldspdi running locally
-         path = "http://purl.bdrc.io" +  DICTIONARY_PATH;
+         path = "//purl.bdrc.io" +  DICTIONARY_PATH;
 
         return path;
     }
