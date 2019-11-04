@@ -168,7 +168,7 @@ const providers = {
    "bnf":"Bibliothèque nationale de France",
    "dila":"Dharma Drum Institute of Liberal Arts",
    "eap":"Endangered Archives Programme",
-   "eftr":"Translating The Words Of the Buddha",
+   "eftr":"Translating The Words Of The Buddha",
    "ia":"Internet Archive",                 
    "gretil":"Göttingen Register of Electronic Texts in Indian Languages",
    "rkts":"Resources for Kanjur & Tanjur Studies",
@@ -621,7 +621,7 @@ class ResourceViewer extends Component<Props,State>
       let w = prop[bdo+"workDimWidth"]
       let h = prop[bdo+"workDimHeight"]
 
-      //console.log("propZ",prop)
+      //console.log("propZ",prop,sorted)
 
       if(w && h && w[0] && h[0] && !w[0].value.match(/cm/) && !h[0].value.match(/cm/)) {
          prop[tmp+"dimensions"] = [ {type: "literal", value: w[0].value+"×"+h[0].value+"cm" } ]
@@ -717,6 +717,9 @@ class ResourceViewer extends Component<Props,State>
          for(let xp of [ bdo+"workHasExpression", tmp+"siblingExpressions" ]) 
          {
             expr = prop[xp]
+
+            //console.log("xp",xp,expr)
+
             if(expr) {
 
                let assoR = this.props.assocResources
@@ -725,9 +728,9 @@ class ResourceViewer extends Component<Props,State>
                   expr = expr.map((e) => {
 
                      console.log("index",e) //,assoR[e.value])
+                     let label1,label2 ;
                      if(e && assoR[e.value])
                      {
-                        let label1,label2 ;
                         label1 = getLangLabel(this, "", assoR[e.value].filter(e => e.type === skos+"prefLabel"))
                         if(label1 && label1.value) label1 = label1.value
 
@@ -743,14 +746,13 @@ class ResourceViewer extends Component<Props,State>
                               label2 = label2.value
                            }
                         }
-
-                        return ({ ...e, label1, label2 })
-                     }
+                     }  
+                     return ({ ...e, label1, label2 })
                   })
                   
                   prop[xp] = _.orderBy(expr,['label1','label2'])
 
-                  //for(let o of prop[bdo+"workHasExpression"]) console.log(o.value,o.label1)
+                  //for(let o of prop[bdo+"workHasExpression"]) console.log("xp",o.value,o.label1)
 
                }
             }
@@ -914,12 +916,18 @@ class ResourceViewer extends Component<Props,State>
 
       if(this.props.ontology[prop] && this.props.ontology[prop][rdfs+"label"])
       {
+         let ret = getLangLabel(this, prop, this.props.ontology[prop][rdfs+"label"])
+         if(ret && ret.value && ret.value != "")
+            return ret.value
+      }
+      else if(this.props.dictionary[prop] && this.props.dictionary[prop][rdfs+"label"])
+      {
          /*
          let ret = this.props.ontology[prop][rdfs+"label"].filter((e) => (e.lang == "en"))
          if(ret.length == 0) ret = this.props.ontology[prop][rdfs+"label"].filter((e) => (e.lang == this.props.prefLang))
          if(ret.length == 0) ret = this.props.ontology[prop][rdfs+"label"]
          */
-         let ret = getLangLabel(this, prop, this.props.ontology[prop][rdfs+"label"])
+         let ret = getLangLabel(this, prop, this.props.dictionary[prop][rdfs+"label"])
          if(ret && ret.value && ret.value != "")
             return ret.value
 
@@ -1094,8 +1102,11 @@ class ResourceViewer extends Component<Props,State>
       if(elem) {
 
          //console.log("uriformat",prop,elem.value,elem,dic,withProp,show)
-
-         if(!elem.value.match(/^http:\/\/purl\.bdrc\.io/) && ((!dic || !dic[elem.value]) && !prop.match(/[/#]sameAs/))) {
+         
+         //let hasExtPref = false ;
+         //for(let p of Object.keys(prefixes)) if(elem.value === prefixes[p]) { hasExtPref = true ;  break; }
+                     
+         if(!elem.value.match(/^http:\/\/purl\.bdrc\.io/) /* && !hasExtPref */ && ((!dic || !dic[elem.value]) && !prop.match(/[/#]sameAs/))) {
             return <a href={elem.value} target="_blank">{shortUri(decodeURI(elem.value))}</a> ;
          }
 
@@ -1211,16 +1222,17 @@ class ResourceViewer extends Component<Props,State>
 
                   // we can return Link
                   let pretty = this.fullname(elem.value,true);
-                  let prefix = "bdr:", sameAsPrefix = "";
+                  let prefix = "bdr", sameAsPrefix = "";
                   for(let p of Object.keys(prefixes)) { 
                      if(elem.value.match(new RegExp(prefixes[p]))) { prefix = p; if(!p.match(/^bd[ar]$/) && !this.props.IRI.match(new RegExp("^"+p+":"))) { sameAsPrefix = p + " sameAs hasIcon "; } }
                      if(elem.fromSameAs && elem.fromSameAs.match(new RegExp(prefixes[p]))) sameAsPrefix = p + " sameAs hasIcon "
                   }
-                  let isExtW
-                  if(this.props.assocResources && this.props.assocResources[elem.value] && (isExtW = this.props.assocResources[elem.value].filter(e => e.type === tmp+"provider")).length) {
+                  
+                  let isExtW,provLab                  
+                  if(this.props.assocResources && this.props.assocResources[elem.value] && (isExtW = this.props.assocResources[elem.value].filter(e => e.type === tmp+"provider")).length && !isExtW[0].value.match(/LegalData$/)) {
 
 
-                     let provLab = this.props.dictionary[isExtW[0].value]
+                     provLab = this.props.dictionary[isExtW[0].value]
                      if(provLab) provLab = provLab[skos+"prefLabel"]
                      if(provLab && provLab.length) provLab = provLab[0].value 
                      
@@ -1230,8 +1242,14 @@ class ResourceViewer extends Component<Props,State>
                      else if(provLab === "EAP") sameAsPrefix += "eap provider hasIcon "
                      else if(provLab === "BnF") sameAsPrefix += "bnf provider hasIcon "
                      else if(provLab === "Internet Archives") sameAsPrefix += "ia provider hasIcon "
+                     else if(provLab === "EFT") sameAsPrefix += "eftr provider hasIcon "
+                     //else if(provLab === "rKTs") sameAsPrefix += "rkts provider hasIcon "
+                  }                  
+                  
+                  if(prefix !== "bdr" && !provLab) {
+                     sameAsPrefix += "generic " + prefix + " provider hasIcon "
                   }
-
+                  
                   //console.log("s",prop,prefix,pretty,elem,info,infoBase)
 
 
@@ -1244,6 +1262,7 @@ class ResourceViewer extends Component<Props,State>
                         canUrl = this.props.assocResources[elem.value].filter(r => r.type === adm+"canonicalHtml" ||  r.fromKey === adm+"canonicalHtml")
                         //console.log("orec",prop,sameAsPrefix,orec,canUrl, this.props.assocResources[elem.value])
                      }
+                     if(prefix !== "bdr" && (!canUrl || !canUrl.length)) canUrl = [ { value : elem.value } ]
 
                      let srcProv = sameAsPrefix.replace(/^.*?([^ ]+) provider .*$/,"$1").toLowerCase()
                      let srcSame = sameAsPrefix.replace(/^.*?([^ ]+) sameAs .*$/,"$1").toLowerCase()
@@ -1255,6 +1274,7 @@ class ResourceViewer extends Component<Props,State>
 
                      if(orec && orec.length) link = <a class="urilink prefLabel" href={orec[0].value} target="_blank">{info}</a>
                      else if(canUrl && canUrl.length) { 
+                        if(!info) info = shortUri(elem.value)
                         link = <a class="urilink prefLabel" href={canUrl[0].value} target="_blank">{info}</a>
                         if(srcProv.indexOf(" ") !== -1) srcProv = srcSame
                      }
@@ -1263,6 +1283,7 @@ class ResourceViewer extends Component<Props,State>
                         link = <a class="urilink prefLabel" href={elem.value} target="_blank">{info}</a>
                      } 
                      else { 
+                        if(!info) info = shortUri(elem.value)
                         link = <Link className={"urilink prefLabel " } to={"/"+show+"/"+prefix+":"+pretty}>{info}</Link>
                         bdrcData = null
                      }
@@ -1509,7 +1530,7 @@ class ResourceViewer extends Component<Props,State>
       //console.log("elem", elem)
 
       let viewAnno = false ;
-      if(elem) for(const e of elem) if(e)
+      if(elem) for(const e of elem) //if(e)
       {
 
          let value = ""+e
@@ -1611,6 +1632,8 @@ class ResourceViewer extends Component<Props,State>
                let root = this.props.assocResources[e.value] //this.uriformat(_tmp+"workRootWork",e)
                if(root) root = root.filter(e => e.type == bdo+"workHasRoot")
                if(root && root.length > 0) tmp = [tmp," in ",this.uriformat(bdo+"workHasRoot",root[0])]
+
+               console.log("root",root)
             }
             /*
             else if(this.props.assocResources && prop.match(/[/]workhasTranslation[^/]*$/))  {

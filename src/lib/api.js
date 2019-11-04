@@ -37,6 +37,9 @@ const dPrefix = {
    },
    "mbbt" : {
       "text": "Work"
+   },
+   "eftr" : {
+      "W": "Work"
    }
 };
 

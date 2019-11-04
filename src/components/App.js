@@ -74,6 +74,7 @@ const bdr   = "http://purl.bdrc.io/resource/";
 const cbcp  = "https://dazangthings.nz/cbc/person/"
 const cbct  = "https://dazangthings.nz/cbc/text/"
 const dila  = "http://purl.dila.edu.tw/resource/";
+const eftr  = "http://purl.84000.co/resource/core/" ;
 const foaf  = "http://xmlns.com/foaf/0.1/" ;
 const mbbt  = "http://mbingenheimer.net/tools/bibls/" ;
 const oa    = "http://www.w3.org/ns/oa#" ;
@@ -88,7 +89,6 @@ const _tmp  = tmp ;
 const viaf  = "http://viaf.org/viaf/"
 const wd    = "http://www.wikidata.org/entity/"
 const xsd   = "http://www.w3.org/2001/XMLSchema#" ;
-const eftr  = "http://purl.84000.co/resource/core/" ;
 
 export const prefixesMap = { adm, bda, bdac, bdan, bdo, bdr, cbcp, cbct, dila, eftr, foaf, oa, mbbt, owl, rdf, rdfs, rkts, skos, wd, ola, viaf, xsd, tmp }
 export const prefixes = Object.values(prefixesMap) ;
