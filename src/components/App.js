@@ -88,10 +88,11 @@ const _tmp  = tmp ;
 const viaf  = "http://viaf.org/viaf/"
 const wd    = "http://www.wikidata.org/entity/"
 const xsd   = "http://www.w3.org/2001/XMLSchema#" ;
+const eftr  = "http://purl.84000.co/resource/core/" ;
 
-export const prefixesMap = { adm, bda, bdac, bdan, bdo, bdr, cbcp, cbct, dila, foaf, oa, mbbt, owl, rdf, rdfs, rkts, skos, wd, ola, viaf, xsd, tmp }
+export const prefixesMap = { adm, bda, bdac, bdan, bdo, bdr, cbcp, cbct, dila, eftr, foaf, oa, mbbt, owl, rdf, rdfs, rkts, skos, wd, ola, viaf, xsd, tmp }
 export const prefixes = Object.values(prefixesMap) ;
-export const sameAsMap = { wd:"WikiData", ol:"OpenLibrary", bdr:"BDRC", mbbt:"Marcus Bingenheimer" }
+export const sameAsMap = { wd:"WikiData", ol:"OpenLibrary", bdr:"BDRC", mbbt:"Marcus Bingenheimer", eftr:"84000" }
 
 export function fullUri(id:string) {
    for(let k of Object.keys(prefixesMap)) {
@@ -1573,6 +1574,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                "viaf": "/VIAF.png",
                "wd":   "/WD.svg",
                "rkts": "/RKTS.png",
+               "eftr": "/84000.svg",
                "cbct": false,
                "cbcp": false,
             } 
@@ -1582,6 +1584,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                "mbbt":"Marcus Bingenheimer",
                "wd":"Wikidata",
                "ola":"Open Library",
+               "eftr":"84000",
                "cbcp": "CBC@",
                "cbct": "CBC@"
             }

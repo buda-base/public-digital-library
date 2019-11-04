@@ -168,6 +168,7 @@ const providers = {
    "bnf":"Bibliothèque nationale de France",
    "dila":"Dharma Drum Institute of Liberal Arts",
    "eap":"Endangered Archives Programme",
+   "eftr":"Translating The Words Of the Buddha",
    "ia":"Internet Archive",                 
    "gretil":"Göttingen Register of Electronic Texts in Indian Languages",
    "rkts":"Resources for Kanjur & Tanjur Studies",
@@ -175,7 +176,7 @@ const providers = {
    "wd":"Wikidata",
    "ola":"Open Library",
    "viaf":"Virtual International Authority File"
-   }
+}
    
 //const prefixes = { adm, bdac, bdan, bda, bdo, bdr, foaf, oa, owl, rdf, rdfs, skos, xsd, tmp, dila }
 
