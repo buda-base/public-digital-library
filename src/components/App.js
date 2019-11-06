@@ -1727,7 +1727,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                            label = this.props.assoRes[val]                           
                         }
                         
-                        //console.log("val",label,val,lit,lang)
+                        console.log("val",label,val,lit,lang,dico)
 
                         if(label) label = getLangLabel(this,"",label)
                         if(label) {

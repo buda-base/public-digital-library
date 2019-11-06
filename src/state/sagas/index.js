@@ -850,7 +850,7 @@ function addMeta(keyword:string,language:string,data:{},t:string,tree:{},found:b
 
 function mergeSameAs(result,withSameAs,init = true,rootRes = result, force = false, keyword)
 {
-   //console.log("res",result,rootRes,keyword)
+   console.log("res",result,rootRes,keyword)
 
    if(!result) return
 
@@ -882,13 +882,13 @@ function mergeSameAs(result,withSameAs,init = true,rootRes = result, force = fal
       }
    }
 
-   //console.log("wSa",withSameAs)
+   console.log("wSa",withSameAs)
 
    let keys = Object.keys(withSameAs)
    if(keys) for(let i in keys) {
       let k = keys[i]
       let r = withSameAs[k]
-      //console.log("k r",k,r)
+      console.log("k r",k,r)
       if(force && !rootRes[r.t][k]) {
          delete result[r.t][k]
       }
@@ -900,18 +900,26 @@ function mergeSameAs(result,withSameAs,init = true,rootRes = result, force = fal
             noK = true
          }
          if(result[r.t] && result[r.t][k] && (result[r.t][s] || isRid)) {
-            //console.log("same?",k,r.t,s,result[r.t][s])
-            if(!isRid) for(let v of result[r.t][k])
-            {
-               let found = false ;
-               for(let w of result[r.t][s])
+            console.log("same?",k,r.t,s,result[r.t][k],result[r.t][s])
+            if(!isRid) { 
+               let hasSameK = false
+               for(let v of result[r.t][k])
                {
-                  if( (v.type.match(/sameAs[^/]*$/) && s === v.value) || (v.type === w.type && v.value === w.value && v["xml:lang"] === w["xml:lang"])) {
-                     found = true
-                     break;
+                  if(v.type === owl+"sameAs" && v.value === k) hasSameK = true
+                  let found = false ;
+                  for(let w of result[r.t][s])
+                  {
+                     if( (v.type.match(/sameAs[^/]*$/) && s === v.value) || (v.type === w.type && v.value === w.value && v["xml:lang"] === w["xml:lang"])) {
+                        found = true
+                        break;
+                     }
                   }
+                  let v_ = { ...v }
+                  if(v.type && v.type === skos+"prefLabel") v_.type = k
+                  if(v.type && v.type === s) v_.type = skos+"prefLabel"
+                  if(!found) result[r.t][s].push(v_)
                }
-               if(!found) result[r.t][s].push(v)
+               if(noK && !hasSameK && init) result[r.t][s].push({type:owl+"sameAs",value:k})
             }
             delete result[r.t][k]
             if(isRid && result[r.t][s]) delete result[r.t][s]
@@ -954,7 +962,7 @@ async function startSearch(keyword,language,datatype,sourcetype,dontGetDT) {
       if(rootRes) rootRes = rootRes.results.bindings  
       result = mergeSameAs(result,{},true,rootRes,true,!language?keyword:null)
 
-      console.log("newRes",result)
+      console.log("newRes1",result)
 
       store.dispatch(uiActions.loading(keyword, false));
 
@@ -1063,9 +1071,10 @@ else {
          let withSameAs = {}
          result = mergeSameAs(result,withSameAs)
 
-         console.log("newRes",result,data)
-
          let keys = Object.keys(withSameAs)
+
+         console.log("newRes2",result,data,keys)
+
          if(keys.length) {
             data.results.bindings = mergeSameAs(data.results.bindings,withSameAs,false)
             store.dispatch(dataActions.foundResults(keyword, language, data, datatype));
