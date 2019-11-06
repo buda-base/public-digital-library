@@ -2,7 +2,7 @@
    "auth":{
      "domain": "bdrc-io.auth0.com",
      "clientID": "bZRCKQvibdCq5gF7gV2biIH9rLcqfVcS",
-     "redirectUri": "//library.bdrc.io/auth/callback",
+     "redirectUri": "http://library.bdrc.io/auth/callback",
      "audience": "https://bdrc-io.auth0.com/userinfo",
      "responseType": "token id_token",
      "scope": "openid user_metadata app_metada profile"

@@ -18,7 +18,7 @@ export const importModules = async () => {
        jsEWTS = window.moduleLoaded.JsEWTS = window.jsEWTS ;
        eval('require(["https://cdn.jsdelivr.net/npm/@sanskrit-coders/sanscript@1.0.2/sanscript.min.js"],(obj) => { Sanscript = obj; console.log("obj",obj); window.moduleLoaded.Sanscript = obj ; })')
        eval('require(["https://cdn.jsdelivr.net/npm/pinyin4js@1.3.18/dist/pinyin4js.js"],(obj) => { pinyin4js = PinyinHelper; window.moduleLoaded.pinyin4js = PinyinHelper ; })')       
-       eval('require(["https://cdn.jsdelivr.net/npm/hanzi-tsconv@0.1.1/dist/main.js"],(obj) => { hanziConv = window["hanzi-tsconv"].conv ; console.log("obj",hanziConv); window.moduleLoaded.hanziConv = hanziConv ; })')
+       eval('require(["https://cdn.jsdelivr.net/npm/hanzi-tsconv@0.1.2/dist/main.js"],(obj) => { hanziConv = window["hanzi-tsconv"].conv ; console.log("obj",hanziConv); window.moduleLoaded.hanziConv = hanziConv ; })')
    }
 }
 importModules();

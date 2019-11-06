@@ -1633,7 +1633,7 @@ class ResourceViewer extends Component<Props,State>
                if(root) root = root.filter(e => e.type == bdo+"workHasRoot")
                if(root && root.length > 0) tmp = [tmp," in ",this.uriformat(bdo+"workHasRoot",root[0])]
 
-               console.log("root",root)
+               //console.log("root",root)
             }
             /*
             else if(this.props.assocResources && prop.match(/[/]workhasTranslation[^/]*$/))  {
