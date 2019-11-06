@@ -9,7 +9,8 @@ export const importModules = async () => {
        jsEWTS = await require("jsewts/src/jsewts.js")
        Sanscript = await require("@sanskrit-coders/sanscript")
        pinyin4js = await require("pinyin4js")
-       hanziConv = (await require("hanzi-tsconv")).conv
+       hanziConv = await require("hanzi-tsconv")
+       hanziConv = window["hanzi-tsconv"].conv
    }
    catch(f) { // in embed iframe
       //console.log("exception",f)
