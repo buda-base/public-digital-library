@@ -850,7 +850,7 @@ function addMeta(keyword:string,language:string,data:{},t:string,tree:{},found:b
 
 function mergeSameAs(result,withSameAs,init = true,rootRes = result, force = false, keyword)
 {
-   console.log("mSa",result,rootRes,keyword,init,force)
+   //console.log("mSa",result,rootRes,keyword,init,force)
 
    if(!result) return
 
@@ -882,13 +882,13 @@ function mergeSameAs(result,withSameAs,init = true,rootRes = result, force = fal
       }
    }
 
-   console.log("wSa",withSameAs)
+   //console.log("wSa",withSameAs)
 
    let keys = Object.keys(withSameAs)
    if(keys) for(let i in keys) {
       let k = keys[i]
       let r = withSameAs[k]
-      console.log("k r",r,k)
+      //console.log("k r",r,k)
       if(force && !rootRes[r.t][k]) {
          delete result[r.t][k]
       }
@@ -900,7 +900,7 @@ function mergeSameAs(result,withSameAs,init = true,rootRes = result, force = fal
             noK = true
          }
          if(result[r.t] && result[r.t][k] && (result[r.t][s] || isRid)) {
-            console.log("same?",k,r.t,s,result[r.t][k],result[r.t][s])
+            //console.log("same?",k,r.t,s,result[r.t][k],result[r.t][s])
             if(!isRid) { 
                let hasSameK = false
                for(let v of result[r.t][k])
@@ -923,7 +923,7 @@ function mergeSameAs(result,withSameAs,init = true,rootRes = result, force = fal
             }
          }
          let erase = [ k , ...(init||isRid?[]:r.props.filter(p => p.type === owl+"sameAs").map(p => p.value)) ]
-         console.log("erase",erase)
+         //console.log("erase",erase)
          for(let e of erase) {
             if(result[r.t] && result[r.t][e]) {
                delete result[r.t][e]
