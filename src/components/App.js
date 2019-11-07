@@ -559,7 +559,7 @@ class App extends Component<Props,State> {
       if(props.keyword && (!props.datatypes || !props.datatypes.hash || !props.datatypes.metadata || Object.keys(props.datatypes.metadata).length === 0)) {
          if(!s) s = { ...state }
          s.leftPane = false 
-         console.log("no leftPane")
+         //console.log("no leftPane")
       }
 
       
@@ -1727,7 +1727,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                            label = this.props.assoRes[val]                           
                         }
                         
-                        console.log("val",label,val,lit,lang,dico)
+                        //console.log("val",label,val,lit,lang,dico)
 
                         if(label) label = getLangLabel(this,"",label)
                         if(label) {

@@ -88,7 +88,7 @@ class LanguageSidePane extends Component<Props,State> {
 
       let rect 
       if(this.props.anchor) rect = this.props.anchor.getBoundingClientRect();
-      console.log("rect",rect)
+      //console.log("rect",rect)
 
       return ( <div className={"SidePane right "+(this.props.open?"visible":"")}>
          <IconButton className="close" onClick={e => this.props.onToggleLanguagePanel()} ><Close/></IconButton>

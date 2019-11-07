@@ -850,7 +850,7 @@ function addMeta(keyword:string,language:string,data:{},t:string,tree:{},found:b
 
 function mergeSameAs(result,withSameAs,init = true,rootRes = result, force = false, keyword)
 {
-   console.log("res",result,rootRes,keyword)
+   console.log("mSa",result,rootRes,keyword,init,force)
 
    if(!result) return
 
@@ -875,7 +875,7 @@ function mergeSameAs(result,withSameAs,init = true,rootRes = result, force = fal
          if(keys) for(let k of keys) {
             if(!k.match(/purl[.]bdrc/)) { 
                let same = result[t][k].filter(s => (s.type && s.type === owl+"sameAs" && s.value !== k && s.value.match(/purl[.]bdrc/)) || (s.type === tmp+"relationType" && s.value === owl+"sameAs"))
-               if(same.length || force) withSameAs[k] = { t, fullT, props:{ ...result[t][k]}, same:same.map(s=>s.type!==tmp+"relationType"?s.value:(sameBDRC?sameBDRC:(keyword?fullKW:"?"))) }
+               if(same.length || force) withSameAs[k] = { t, fullT, props:[ ...result[t][k] ], same:same.map(s=>s.type!==tmp+"relationType"?s.value:(sameBDRC?sameBDRC:(keyword?fullKW:"?"))) }
             }
          }
          
@@ -888,7 +888,7 @@ function mergeSameAs(result,withSameAs,init = true,rootRes = result, force = fal
    if(keys) for(let i in keys) {
       let k = keys[i]
       let r = withSameAs[k]
-      console.log("k r",k,r)
+      console.log("k r",r,k)
       if(force && !rootRes[r.t][k]) {
          delete result[r.t][k]
       }
@@ -921,11 +921,17 @@ function mergeSameAs(result,withSameAs,init = true,rootRes = result, force = fal
                }
                if(noK && !hasSameK && init) result[r.t][s].push({type:owl+"sameAs",value:k})
             }
-            delete result[r.t][k]
-            if(isRid && result[r.t][s]) delete result[r.t][s]
-            if(!noK && result.metadata && result.metadata[r.fullT]) {
-               result.metadata[r.fullT] --
-               //console.log("meta",result.metadata[r.fullT]) 
+         }
+         let erase = [ k , ...(init||isRid?[]:r.props.filter(p => p.type === owl+"sameAs").map(p => p.value)) ]
+         console.log("erase",erase)
+         for(let e of erase) {
+            if(result[r.t] && result[r.t][e]) {
+               delete result[r.t][e]
+               if(isRid && result[r.t][s]) delete result[r.t][s]
+               if(!noK && result.metadata && result.metadata[r.fullT]) {
+                  result.metadata[r.fullT] --
+                  //console.log("meta",result.metadata[r.fullT]) 
+               }
             }
          }
       }
