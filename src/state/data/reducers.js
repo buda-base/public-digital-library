@@ -147,11 +147,23 @@ export const gotResource = (state: DataState, action: Action) => {
    const tmp   = "http://purl.bdrc.io/ontology/tmp/" ;
    const adm   = "http://purl.bdrc.io/ontology/admin/"
    const bdo   = "http://purl.bdrc.io/ontology/core/"
+   const bdr   = "http://purl.bdrc.io/resource/"
    let data = { ...action.meta }
    let uri = fullUri(action.payload)
    let sameR = {}, sameP = {}
    let admDs = [ "originalRecord", "metadataLegal", "contentProvider", "replaceWith", "status" ]
    if(data[uri]) {
+
+      // getting/cleaning sameAs info
+      let sameAsInfo = {}
+      for(let k of Object.keys(data)) {                        
+         let keys = Object.keys(data[k])
+         if(keys.length === 1 && data[k][tmp+"withSameAs"]) { 
+            if(!sameAsInfo[k]) sameAsInfo[k] = {}
+            data[k][tmp+"withSameAs"].map(p => { sameAsInfo[k][p.value] = true; })
+            delete data[k] ; 
+         }
+      }
 
       // handling admindata
       let mergeAdminData = (res) => {
@@ -170,9 +182,9 @@ export const gotResource = (state: DataState, action: Action) => {
       let get = qs.parse(history.location.search)            
 
       // preventing from displaying sameAs resource as subproperties
-      for(let k of Object.keys(data[uri])) {                  
+      for(let k of Object.keys(data[uri])) {                           
          if(k.match(/[/#]sameAs/)) {            
-            data[uri][k] = data[uri][k].map(e => { 
+            data[uri][k] = data[uri][k].filter(e => e.value !== uri).map(e => { 
                mergeAdminData(e.value);
                sameR[e.value] = data[e.value]
                sameP[k] = data[uri][k]
@@ -181,24 +193,32 @@ export const gotResource = (state: DataState, action: Action) => {
          }                   
       }
 
-      console.log("sameR",sameR,sameP,uri)
+      console.log("sameR",sameR,sameP,uri,data,sameAsInfo)
 
       // merging data into resource
       if(get["cw"] !== "none") for(let k of Object.keys(sameR)) {
+         //console.log("same k",k)
          if(sameR[k]) for(let p of Object.keys(sameR[k])) {
-         console.log("p",p)
-         if(p.match(/purl\.bdrc\.io/) || p.match(/(pref|alt)Label$/) ) { 
+            //console.log("p",p)
+            if(p.match(/purl\.bdrc\.io/) || p.match(/(pref|alt)Label$/) ) { 
                if(!data[uri][p]) data[uri][p] = []
                
+               let getVal = (o) => o["value"]?o["value"]:(o["@value"]?o["@value"]:null)
+               let getLg  = (o) => o["lang"]?o["lang"]:(o["xml:lang"]?o["xml:lang"]:(o["@language"]?o["@language"]:null))
+
                let val = sameR[k][p].filter(e => !e.value || e.value !== uri) 
                for(let v of val) {
-                  console.log("check",v)
+                  //console.log("check",v)
                   let found = false
+                  let v_val = getVal(v), w_val
                   for(let w of data[uri][p]) {
-                     console.log("check",w)
-                     let getVal = (o) => o["value"]?o["value"]:(o["@value"]?o["@value"]:null)
-                     let getLg  = (o) => o["lang"]?o["lang"]:(o["xml:lang"]?o["xml:lang"]:(o["@language"]?o["@language"]:null))
-                     if(getVal(v) === getVal(w) && getLg(v) === getLg(w)) { 
+                     w_val = getVal(w)
+                     //console.log("check",v_val,w_val,v,w)
+                     if(v_val === w_val && getLg(v) === getLg(w)) { 
+                        found = w
+                        break; 
+                     }
+                     else if((sameAsInfo[v_val]&&sameAsInfo[v_val][w_val])||(sameAsInfo[w_val]&&sameAsInfo[w_val][v_val])) { 
                         found = w
                         break; 
                      }
@@ -207,11 +227,18 @@ export const gotResource = (state: DataState, action: Action) => {
                      v.allSameAs = [ k ]
                      v.fromSameAs = k
                      data[uri][p].push(v)
+                     //console.log("new v",JSON.stringify(v))
                   } 
                   else {
                      if(!found.allSameAs) { found.allSameAs = [ uri ] ; }
-                     if(!found.fromSameAs) found.fromSameAs = uri
-                     found.allSameAs.push(k) ;
+                     if(!found.fromSameAs) found.fromSameAs = k
+
+                     if(w_val.match(new RegExp(bdr))) { found.value = w_val ; }
+                     else if(v_val.match(new RegExp(bdr))) { found.value = v_val ; }
+
+                     if(found.allSameAs.indexOf(k) === -1) found.allSameAs.push(k) ;
+
+                     //console.log("found v",JSON.stringify(found))
                   }
                }
                   

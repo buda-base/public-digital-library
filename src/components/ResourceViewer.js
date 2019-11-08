@@ -729,7 +729,7 @@ class ResourceViewer extends Component<Props,State>
 
                   expr = expr.map((e) => {
 
-                     console.log("index",e) //,assoR[e.value])
+                     //console.log("index",e) //,assoR[e.value])
                      let label1,label2 ;
                      if(e && assoR[e.value])
                      {
@@ -1250,39 +1250,30 @@ class ResourceViewer extends Component<Props,State>
             }
             
             let befo = [],src
-            if(providers[src = srcProv] && !prop.match(/[/#]sameAs/)) { // || ( src !== "bdr" && providers[src = srcSame])) { 
-               befo.push( 
-
-                  [ //<span class="meta-before"></span>,
-                  <Tooltip placement="bottom-start" title={
-                     <div class={"uriTooltip "}>
-                        <span class="title">External resource from:</span>
-                        <span class={"logo "+src}></span>
-                        <span class="text">{providers[src]}</span>
-                     </div>}>
-                        <span><span class="before">{link}</span></span>
-                  </Tooltip> ]
-               )
-
-               bdrcData =  <Tooltip placement="top-end" title={<div class={"uriTooltip "}>View this resource on BUDA</div>}><span class="hover-anchor">{bdrcData}</span></Tooltip>
-            }
-            else if(providers[src = srcSame] && !prop.match(/[/#]sameAs/)) { 
+            if(providers[src = srcSame] && !prop.match(/[/#]sameAs/)) { 
 
                let locaLink = link,srcPrefix,srcUri,srcList 
 
-
                if(elem.fromSameAs) srcList = [ elem.fromSameAs ]
                if(elem.allSameAs)  srcList = elem.allSameAs 
+               
+               //console.log("srcL",srcList)
+
+               let uriPrefix 
+               for(let p of Object.keys(prefixes)) if(this.props.keyword && this.props.keyword.match(new RegExp("^"+p))) { uriPrefix = p ; break ; }
 
                for(srcUri of srcList) {
                   
                   srcPrefix = src
-                  for(let p of Object.keys(prefixes)) if(srcUri.match(new RegExp(prefixes[p]))) srcPrefix = p 
+                  for(let p of Object.keys(prefixes)) if(srcUri.match(new RegExp(prefixes[p]))) { srcPrefix = p ; break ; }
+
+                  //console.log("srcP",srcPrefix)
 
                   if(srcPrefix !== "bdr") locaLink = <a class="urilink" href={getRealUrl(this,srcUri)} target="_blank"></a>
                   else locaLink = <Link to={"/"+show+"/"+shortUri(srcUri)}></Link>
                   bdrcData = <Link className="hoverlink" to={"/"+show+"/"+shortUri(srcUri)}></Link>
 
+                  
                   befo.push(
 
                      [ //<span class="meta-before"></span>,
@@ -1305,6 +1296,22 @@ class ResourceViewer extends Component<Props,State>
                //if(src !== "bdr") bdrcData =  <Tooltip placement="top-end" title={<div class={"uriTooltip "}>View BDRC data for original source of this property</div>}><span class="hover-anchor">{bdrcData}</span></Tooltip>
                //else 
                bdrcData = null
+            }
+            else if(providers[src = srcProv] && !prop.match(/[/#]sameAs/)) { // || ( src !== "bdr" && providers[src = srcSame])) { 
+               befo.push( 
+
+                  [ //<span class="meta-before"></span>,
+                  <Tooltip placement="bottom-start" title={
+                     <div class={"uriTooltip "}>
+                        <span class="title">External resource from:</span>
+                        <span class={"logo "+src}></span>
+                        <span class="text">{providers[src]}</span>
+                     </div>}>
+                        <span><span class="before">{link}</span></span>
+                  </Tooltip> ]
+               )
+
+               bdrcData =  <Tooltip placement="top-end" title={<div class={"uriTooltip "}>View this resource on BUDA</div>}><span class="hover-anchor">{bdrcData}</span></Tooltip>
             }
             else if(sameAsPrefix.indexOf("sameAs") !== -1) {
                //link = [ <span class="before"></span>,link ] 
@@ -2381,7 +2388,7 @@ class ResourceViewer extends Component<Props,State>
       let redir, withdrawn
       if(this.props.resources && (redir = this.props.resources[this.props.IRI]) && (redir = redir[fullUri(this.props.IRI)]))
       {
-         console.log("WithD?",redir);
+         //console.log("WithD?",redir);
          if(redir[adm+"replaceWith"]) {
             redir = shortUri(redir[adm+"replaceWith"][0].value)
             
@@ -2391,12 +2398,12 @@ class ResourceViewer extends Component<Props,State>
          }
          else if(this.props.auth.isAuthenticated() && redir[adm+"status"] && (redir = redir[adm+"status"]).length && redir[0].value === bda+"StatusWithdrawn"){
             withdrawn = true 
-            console.log("WithD");
+            //console.log("WithD");
          }
          
          //this.props.history.push("/show/"+redir)
       }
-      console.log("WithD...",redir);
+      //console.log("WithD...",redir);
 
       //let get = qs.parse(this.props.history.location.search)
       //console.log('qs',get)
@@ -2651,7 +2658,7 @@ class ResourceViewer extends Component<Props,State>
             //for(let e of elem) console.log(e.value,e.label1);
 
             //if(!k.match(new RegExp("Revision|Entry|prefLabel|"+rdf+"|toberemoved"))) {
-            if((!k.match(new RegExp(adm+"|adm:|isRoot$|SourcePath|"+rdf+"|toberemoved|workPartIndex|workPartTreeIndex")) 
+            if((!k.match(new RegExp(adm+"|adm:|isRoot$|SourcePath|"+rdf+"|toberemoved|workPartIndex|workPartTreeIndex|withSameAs")) 
                ||k.match(/(originalRecord|metadataLegal|contentProvider|replaceWith)$/)
                ||k.match(/([/]see|[/]sameAs)[^/]*$/) // quickfix [TODO] test property ancestors
                || (this.props.IRI.match(/^bda:/) && (k.match(new RegExp(adm+"|adm:")))))
