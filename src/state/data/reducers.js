@@ -205,9 +205,7 @@ export const gotResource = (state: DataState, action: Action) => {
                      let getVal = (o) => o["value"]?o["value"]:(o["@value"]?o["@value"]:null)
                      let getLg  = (o) => o["lang"]?o["lang"]:(o["xml:lang"]?o["xml:lang"]:(o["@language"]?o["@language"]:null))
                      if(getVal(v) === getVal(w) && getLg(v) === getLg(w)) { 
-                        found = true ; 
-                        if(!w.allSameAs) { w.allSameAs = [ uri ] ; }
-                        w.allSameAs.push(k) ;
+                        found = w
                         break; 
                      }
                   }
@@ -216,6 +214,11 @@ export const gotResource = (state: DataState, action: Action) => {
                      v.fromSameAs = k
                      data[uri][p].push(v)
                   } 
+                  else {
+                     if(!found.allSameAs) { found.allSameAs = [ uri ] ; }
+                     if(!found.fromSameAs) found.fromSameAs = uri
+                     found.allSameAs.push(k) ;
+                  }
                }
                   
 

@@ -1266,30 +1266,39 @@ class ResourceViewer extends Component<Props,State>
             }
             else if(providers[src = srcSame] && !prop.match(/[/#]sameAs/)) { 
 
-               let locaLink = link
-               if(/*!bdrcData &&*/ elem.fromSameAs) {                            
-                  if(src !== "bdr") locaLink = <a class="urilink" href={getRealUrl(this,elem.fromSameAs)} target="_blank"></a>
-                  else locaLink = <Link to={"/"+show+"/"+shortUri(elem.fromSameAs)}></Link>
-                  bdrcData = <Link className="hoverlink" to={"/"+show+"/"+shortUri(elem.fromSameAs)}></Link>
+               let locaLink = link,srcPrefix,srcUri,srcList 
+
+
+               if(elem.fromSameAs) srcList = [ elem.fromSameAs ]
+               if(elem.allSameAs)  srcList = elem.allSameAs 
+
+               for(srcUri of srcList) {
+                  
+                  srcPrefix = src
+                  for(let p of Object.keys(prefixes)) if(srcUri.match(new RegExp(prefixes[p]))) srcPrefix = p 
+
+                  if(srcPrefix !== "bdr") locaLink = <a class="urilink" href={getRealUrl(this,srcUri)} target="_blank"></a>
+                  else locaLink = <Link to={"/"+show+"/"+shortUri(srcUri)}></Link>
+                  bdrcData = <Link className="hoverlink" to={"/"+show+"/"+shortUri(srcUri)}></Link>
+
+                  befo.push(
+
+                     [ //<span class="meta-before"></span>,
+                        <Tooltip placement="bottom-start" title={
+                        <div class={"uriTooltip "}>
+                        { srcPrefix !== "bdr" && 
+                           [
+                              <span class="title">Data loaded from:</span>,
+                              <span class={"logo "+srcPrefix}></span>,
+                              <span class="text">{providers[srcPrefix]}</span> 
+                           ]  }
+                        { srcPrefix === "bdr" && <span>Data loaded from BDRC resource</span> }
+                     </div>}>
+                           <span class={srcPrefix+" sameAs hasIcon"}><span class="before">{}</span></span>
+                        </Tooltip> 
+                     ]
+                  )
                }
-
-               befo.push(
-
-                  [ //<span class="meta-before"></span>,
-                     <Tooltip placement="bottom-start" title={
-                     <div class={"uriTooltip "}>
-                     { src !== "bdr" && 
-                        [
-                           <span class="title">Data loaded from:</span>,
-                           <span class={"logo "+src}></span>,
-                           <span class="text">{providers[src]}</span> 
-                        ]  }
-                     { src === "bdr" && <span>Data loaded from BDRC resource</span> }
-                  </div>}>
-                        <span class={(sameAsPrefix?sameAsPrefix:'')}><span class="before">{}</span></span>
-                     </Tooltip> 
-                  ]
-               )
 
                //if(src !== "bdr") bdrcData =  <Tooltip placement="top-end" title={<div class={"uriTooltip "}>View BDRC data for original source of this property</div>}><span class="hover-anchor">{bdrcData}</span></Tooltip>
                //else 

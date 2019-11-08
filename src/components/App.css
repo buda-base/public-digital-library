@@ -283,18 +283,18 @@ h4:hover .hoverlink { opacity:1;pointer-events: auto;}
 .hover-anchor ~ .hover-anchor { display:none; }
 :not(.lang) + .hover-anchor .hoverlink { margin-left:5px;}
 
-.sameAs.bdr .before { background-image:url("/logo.svg"); background-size:17px auto; background-position:top 1px right 5px; }
-.sameAs.bnf .before { background-image:url("/BNF.svg"); background-size:19px auto;background-position:top 4px left;}
-.sameAs.dila .before { background-image:url("/DILA-favicon.ico"); background-position:top 1px right 5px;}
-.sameAs.eap .before { background-image:url("/BL.gif"); background-size:auto 13px; background-position:left 4px top; }
-.sameAs.gretil .before { background-image:url("/GRETIL.png"); background-size:auto 13px; background-position:top 1px right 6px;}
-.sameAs.ia .before { background-image:url("/IA.png"); background-size:auto 13px;background-position:top 0px left 2px;}
-.sameAs.mbbt .before { background-image:url("/MB-icon.jpg"); background-position:top 1px right 6px;} 
-.sameAs.ola .before { background-image:url("/OL.png"); }
-.sameAs.viaf .before { background-image:url("/VIAF.png"); }
-.sameAs.eftr .before { background-image:url("/84000.svg"); background-size:16px auto; background-position:top 4px left 0px;}
-.sameAs.rkts .before { background-image:url("/RKTS.png"); background-position:top 2px left 2px; }
-.sameAs.wd .before { background-image:url("/WD.svg");  background-size:18px auto; background-position:top 2px left 2px;}
+.sameAs.bdr    > .before { background-image:url("/logo.svg"); background-size:17px auto; background-position:top 1px right 5px; }
+.sameAs.bnf    > .before { background-image:url("/BNF.svg"); background-size:19px auto;background-position:top 4px left;}
+.sameAs.dila   > .before { background-image:url("/DILA-favicon.ico"); background-position:top 1px right 5px;}
+.sameAs.eap    > .before { background-image:url("/BL.gif"); background-size:auto 13px; background-position:left 4px top; }
+.sameAs.gretil > .before { background-image:url("/GRETIL.png"); background-size:auto 13px; background-position:top 1px right 6px;}
+.sameAs.ia     > .before { background-image:url("/IA.png"); background-size:auto 13px;background-position:top 0px left 2px;}
+.sameAs.mbbt   > .before { background-image:url("/MB-icon.jpg"); background-position:top 1px right 6px;} 
+.sameAs.ola    > .before { background-image:url("/OL.png"); }
+.sameAs.viaf   > .before { background-image:url("/VIAF.png"); }
+.sameAs.eftr   > .before { background-image:url("/84000.svg"); background-size:16px auto; background-position:top 4px left 0px;}
+.sameAs.rkts   > .before { background-image:url("/RKTS.png"); background-position:top 2px left 2px; }
+.sameAs.wd     > .before { background-image:url("/WD.svg");  background-size:18px auto; background-position:top 2px left 2px;}
 
 .provider.bdr .before { background-image:url("/logo.svg"); background-size:17px auto; background-position:top 1px right 5px; }
 .provider.bnf .before { background-image:url("/BNF.svg"); background-size:19px auto;background-position:top 4px left;}
