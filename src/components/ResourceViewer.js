@@ -1408,7 +1408,7 @@ class ResourceViewer extends Component<Props,State>
          //console.log("e.f",e.fromSameAs)
 
          bdrcData = <Link className="hoverlink" to={"/show/"+shortUri(e.fromSameAs)}></Link>               
-         let src = sameAsPrefix 
+         let src = sameAsPrefix.replace(/^([^ ]+) .*$/,"$1") 
          let link = <a href="urilink" target="_blank" href={getRealUrl(this,e.fromSameAs)}></a>
          if(src === "bdr") link =  <Link className="urilink" to={"/show/"+shortUri(e.fromSameAs)}></Link>               
 
@@ -2535,7 +2535,7 @@ class ResourceViewer extends Component<Props,State>
          if(title.value) {
             document.title = title.value + " - Public Digital Library"
             let _befo
-            if(title.fromSameAs) {
+            if(title.fromSameAs && !title.fromSameAs.match(new RegExp(bdr))) {
                const {befo,bdrcData} = this.getSameLink(title,shortUri(title.fromSameAs).split(":")[0]+" sameAs hasIcon")            
                _befo = befo
             }
