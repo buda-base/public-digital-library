@@ -190,18 +190,12 @@ export const gotResource = (state: DataState, action: Action) => {
          if(p.match(/purl\.bdrc\.io/) || p.match(/(pref|alt)Label$/) ) { 
                if(!data[uri][p]) data[uri][p] = []
                
-               // not that simple...
-               //data[uri][p] = data[uri][p].concat(sameR[k][p].filter(e => !e.value || e.value !== uri).map(e => ({...e,"fromSameAs":k})))
-
-               
-
-               ///data[uri][p] 
-               //sameR[k][p]               
-
-               let val = sameR[k][p].filter(e => !e.value || e.value !== uri) //.map(e => ({...e,"fromSameAs":k}))
+               let val = sameR[k][p].filter(e => !e.value || e.value !== uri) 
                for(let v of val) {
+                  console.log("check",v)
                   let found = false
                   for(let w of data[uri][p]) {
+                     console.log("check",w)
                      let getVal = (o) => o["value"]?o["value"]:(o["@value"]?o["@value"]:null)
                      let getLg  = (o) => o["lang"]?o["lang"]:(o["xml:lang"]?o["xml:lang"]:(o["@language"]?o["@language"]:null))
                      if(getVal(v) === getVal(w) && getLg(v) === getLg(w)) { 

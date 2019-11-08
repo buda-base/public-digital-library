@@ -222,6 +222,7 @@ let propOrder = {
       "bdo:personStudentOf",
       "bdo:note",
       "owl:sameAs",
+      "adm:sameAsBDRC",
       "bdo:sameAsVIAF",
       "adm:sameAsMBBT",
       "adm:sameAsVIAF",
@@ -282,6 +283,7 @@ let propOrder = {
       "bdo:workRefTaisho",
       "bdo:sameAsVIAF",
       "owl:sameAs",
+      "adm:sameAsBDRC",
       "adm:sameAsMBBT",
       "adm:sameAsVIAF",
       "adm:sameAsrKTs",
@@ -1398,7 +1400,7 @@ class ResourceViewer extends Component<Props,State>
 
    }
 
-   getSameLink(e,sameAsPrefix) {
+   getSameLink(e,sameAsPrefix,useLink = false) {
             
       let befo = [], bdrcData = null
 
@@ -1423,7 +1425,7 @@ class ResourceViewer extends Component<Props,State>
                   ]  }
                { src === "bdr" && <span>Data loaded from BDRC resource</span> }
             </div>}>
-                  <span class={(sameAsPrefix?sameAsPrefix:'')}><span class="before">{}</span></span>
+                  <span class={(sameAsPrefix?sameAsPrefix:'')}><span class="before">{useLink?link:null}</span></span>
                </Tooltip> 
             ]
          
@@ -2529,9 +2531,15 @@ class ResourceViewer extends Component<Props,State>
       if(!title && titlElem) {
          if(typeof titlElem !== 'object') titlElem =  { "value" : titlElem, "lang":""}
          title = getLangLabel(this,"", titlElem)
+         console.log("ttl",title)
          if(title.value) {
             document.title = title.value + " - Public Digital Library"
-            title = <h2>{title.value}{this.tooltip(title.lang)}</h2>
+            let _befo
+            if(title.fromSameAs) {
+               const {befo,bdrcData} = this.getSameLink(title,shortUri(title.fromSameAs).split(":")[0]+" sameAs hasIcon")            
+               _befo = befo
+            }
+            title = <h2>{_befo}{title.value}{this.tooltip(title.lang)}</h2>
          }
       }
 
