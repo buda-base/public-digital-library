@@ -112,6 +112,7 @@ async function initiateApp(params,iri,myprops) {
             
             let assocRes = await api.loadAssocResources(iri)
             store.dispatch(dataActions.gotAssocResources(iri,assocRes))
+            sameAsR[iri] = true ;
 
             let url = fullUri(iri)
 
@@ -123,8 +124,8 @@ async function initiateApp(params,iri,myprops) {
                      {
                         sameAsR[shortU] = true ;
                         assocRes = await api.loadAssocResources(a.value)
-                        store.dispatch(dataActions.gotAssocResources(iri,assocRes))
-                        store.dispatch(dataActions.gotAssocResources(a.value,assocRes))
+                        if(!sameAsR[iri]) store.dispatch(dataActions.gotAssocResources(iri,assocRes))
+                        store.dispatch(dataActions.gotAssocResources(shortU,assocRes))
                      }
                   }
                }

@@ -29,7 +29,7 @@ const mapStateToProps = (state,ownProps) => {
       resources[ownProps.IRI+"@"] = searches["bdr:"+ownProps.IRI+"@"].results.bindings
 
    let assocResources = state.data.assocResources
-   if(assocResources) assocResources = assocResources[ownProps.IRI]
+   if(assocResources) assocResources = Object.keys(assocResources).reduce( (acc,k) => ({...acc, ...assocResources[k]}),{})
    /* not the pb...
    let same
    if(resources && resources[ownProps.IRI] && (same = Object.keys(resources[ownProps.IRI]).filter(k => k.match(/[#/]sameAs[^/]*$/))).length) for(let s of same)

@@ -250,10 +250,11 @@ export const gotResource = (state: DataState, action: Action) => {
       }
 
       // remove sameAsXyz when already in sameAs
-      for(let k of Object.keys(sameP)) {
+      for(let k of Object.keys(data[uri])) {
          if(k.match(/[/#]sameAs[^/]+$/)) {             
             data[uri][k] = data[uri][k].filter(e => !sameP[owl+"sameAs"] || !sameP[owl+"sameAs"].filter(s => s.value === e.value).length) 
             if(!data[uri][k].length) delete data[uri][k]
+            console.log("filtered",k)
          }
       }
 
@@ -319,8 +320,10 @@ reducers[actions.TYPES.noResource] = noResource;
 
 export const gotAssocResources = (state: DataState, action: Action) => {
 
-   let res = state.resources
+   let res = state.resources,oldRes
    if(res) res = res[action.payload]
+   if(res) oldRes = { [action.payload] : res }
+
 
    const skos = "http://www.w3.org/2004/02/skos/core#"
 
@@ -331,7 +334,7 @@ export const gotAssocResources = (state: DataState, action: Action) => {
            ...state,
            "resources": {
               ...state.resources,
-              [action.payload] : res
+              ...oldRes
            },
            "assocResources": {
               ...state.assocResources,
