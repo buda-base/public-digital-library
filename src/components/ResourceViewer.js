@@ -166,6 +166,8 @@ const xsd   = "http://www.w3.org/2001/XMLSchema#" ;
 const providers = { 
    "bdr":"Buddhist Digital Resource Center",
    "bnf":"Bibliothèque nationale de France",
+   "cbcp":"Chinese Buddhist Canonical Attributions",
+   "cbct":"Chinese Buddhist Canonical Attributions",
    "dila":"Dharma Drum Institute of Liberal Arts",
    "eap":"Endangered Archives Programme",
    "eftr":"Translating The Words Of The Buddha",
@@ -1111,7 +1113,7 @@ class ResourceViewer extends Component<Props,State>
       if(info && info[0]) {
          lang = info[0]["xml:lang"]
          if(!lang) lang = info[0]["lang"]
-         info = info[0].value
+         info = info[0].value 
       }
       else if(!withProp){
          //info = infoBase.filter((e) => e["xml:lang"]==this.props.prefLang)
@@ -1120,7 +1122,7 @@ class ResourceViewer extends Component<Props,State>
          if(info && info[0]) {
             lang = info[0]["xml:lang"]
             if(!lang) lang = info[0]["lang"]
-            info = info[0].value
+            info = info[0].value 
          }
          else {
             //info = infoBase.filter((e) => e["xml:lang"]=="bo-x-ewts")
@@ -1135,7 +1137,8 @@ class ResourceViewer extends Component<Props,State>
                
                lang = infoBase[0]["xml:lang"]
                if(!lang) lang = infoBase[0]["lang"]
-               info = infoBase[0].value
+               if(lang) info = infoBase[0].value 
+               else info = null
                if(infoBase[0].type && infoBase[0].type == bdo+"volumeNumber") info = "Volume "+info ;
                else if(info && info.match(/purl[.]bdrc/)) info = null
                //console.log("info0",info)
@@ -1175,7 +1178,7 @@ class ResourceViewer extends Component<Props,State>
    {
       if(elem) {
 
-         //console.log("uriformat",prop,elem.value,elem,dic,withProp,show)
+         console.log("uriformat",prop,elem.value,elem,dic,withProp,show)
          
          if(!elem.value.match(/^http:\/\/purl\.bdrc\.io/) /* && !hasExtPref */ && ((!dic || !dic[elem.value]) && !prop.match(/[/#]sameAs/))) {
             return <a href={elem.value} target="_blank">{shortUri(decodeURI(elem.value))}</a> ;
@@ -1199,6 +1202,8 @@ class ResourceViewer extends Component<Props,State>
                let { _info, _lang } = this.getInfo(prop,infoBase,withProp) 
                info = _info
                lang = _lang
+
+               if(!info) info = shortUri(elem.value)
             }
          }
 
@@ -1212,7 +1217,7 @@ class ResourceViewer extends Component<Props,State>
          
          sameAsPrefix = this.setProvLab(elem,prefix,sameAsPrefix)   
          
-         //console.log("s",prop,prefix,pretty,elem,info,infoBase)
+         console.log("s",prop,prefix,sameAsPrefix,pretty,elem,info,infoBase)
 
          if((info && infoBase && infoBase.filter(e=>e["xml:lang"]||e["lang"]).length >= 0) || prop.match(/[/#]sameAs/)) {
 
@@ -1257,22 +1262,25 @@ class ResourceViewer extends Component<Props,State>
                if(elem.fromSameAs) srcList = [ elem.fromSameAs ]
                if(elem.allSameAs)  srcList = elem.allSameAs 
                
-               //console.log("srcL",srcList)
+               console.log("srcL",srcList)
 
                let uriPrefix 
                for(let p of Object.keys(prefixes)) if(this.props.keyword && this.props.keyword.match(new RegExp("^"+p))) { uriPrefix = p ; break ; }
 
+               let srcPrefixList = []
                for(srcUri of srcList) {
                   
                   srcPrefix = src
                   for(let p of Object.keys(prefixes)) if(srcUri.match(new RegExp(prefixes[p]))) { srcPrefix = p ; break ; }
 
+                  if(srcPrefix) srcPrefixList.push(srcPrefix);
+
                   //console.log("srcP",srcPrefix)
 
                   if(srcPrefix !== "bdr") locaLink = <a class="urilink" href={getRealUrl(this,srcUri)} target="_blank"></a>
                   else locaLink = <Link to={"/"+show+"/"+shortUri(srcUri)}></Link>
-                  bdrcData = <Link className="hoverlink" to={"/"+show+"/"+shortUri(srcUri)}></Link>
 
+                  bdrcData = <Link className="hoverlink" to={"/"+show+"/"+shortUri(srcUri)}></Link>
                   
                   befo.push(
 
@@ -1293,9 +1301,8 @@ class ResourceViewer extends Component<Props,State>
                   )
                }
 
-               //if(src !== "bdr") bdrcData =  <Tooltip placement="top-end" title={<div class={"uriTooltip "}>View BDRC data for original source of this property</div>}><span class="hover-anchor">{bdrcData}</span></Tooltip>
-               //else 
-               bdrcData = null
+               if(srcPrefixList.indexOf("bdr") === -1) bdrcData =  <Tooltip placement="top-end" title={<div class={"uriTooltip "}>View this resource on BUDA</div>}><span class="hover-anchor">{bdrcData}</span></Tooltip>
+               else bdrcData = null
             }
             else if(providers[src = srcProv] && !prop.match(/[/#]sameAs/)) { // || ( src !== "bdr" && providers[src = srcSame])) { 
                befo.push( 
@@ -1312,7 +1319,7 @@ class ResourceViewer extends Component<Props,State>
                )
 
                bdrcData =  <Tooltip placement="top-end" title={<div class={"uriTooltip "}>View this resource on BUDA</div>}><span class="hover-anchor">{bdrcData}</span></Tooltip>
-            }
+            }            
             else if(sameAsPrefix.indexOf("sameAs") !== -1) {
                //link = [ <span class="before"></span>,link ] 
 
@@ -1492,8 +1499,9 @@ class ResourceViewer extends Component<Props,State>
       //console.log("elem", elem)
 
       let viewAnno = false ;
-      if(elem) for(const e of elem) //if(e)
+      if(elem) for(const _e of elem) 
       {
+         let e = { ..._e }
 
          let value = ""+e
          if(e.value || e.value === "") value = e.value
@@ -1505,7 +1513,8 @@ class ResourceViewer extends Component<Props,State>
 
          //console.log("e",e,pretty,value)
 
-         if(this.props.assocResources && this.props.assocResources[value] && this.props.assocResources[value][0] && this.props.assocResources[value][0].fromKey && !prop.match(/[/#]sameAs/) ) 
+         //if(this.props.assocResources && this.props.assocResources[value] && this.props.assocResources[value][0] && this.props.assocResources[value][0].fromKey && !prop.match(/[/#]sameAs/) ) 
+         if(this.props.resources && this.props.resources[this.props.IRI] && this.props.resources[this.props.IRI][value] && !prop.match(/[/#]sameAs/) ) 
          { 
             e.type = "bnode" 
 
