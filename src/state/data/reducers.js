@@ -182,7 +182,8 @@ export const gotResource = (state: DataState, action: Action) => {
       let get = qs.parse(history.location.search)            
 
       // preventing from displaying sameAs resource as subproperties
-      for(let k of Object.keys(data[uri])) {                           
+      let keys 
+      if(data[uri] && (keys = Object.keys(data[uri])) && keys.length) for(let k of keys) {                           
          if(k.match(/[/#]sameAs/)) {            
             data[uri][k] = data[uri][k].filter(e => e.value !== uri).map(e => { 
                mergeAdminData(e.value);
@@ -250,7 +251,7 @@ export const gotResource = (state: DataState, action: Action) => {
       }
 
       // remove sameAsXyz when already in sameAs
-      for(let k of Object.keys(data[uri])) {
+      if(data[uri] && (keys = Object.keys(data[uri])) && keys.length) for(let k of keys) {
          if(k.match(/[/#]sameAs[^/]+$/)) {             
             data[uri][k] = data[uri][k].filter(e => !sameP[owl+"sameAs"] || !sameP[owl+"sameAs"].filter(s => s.value === e.value).length) 
             if(!data[uri][k].length) delete data[uri][k]

@@ -78,7 +78,7 @@ const eftr  = "http://purl.84000.co/resource/core/" ;
 const foaf  = "http://xmlns.com/foaf/0.1/" ;
 const mbbt  = "http://mbingenheimer.net/tools/bibls/" ;
 const oa    = "http://www.w3.org/ns/oa#" ;
-const ola    = "https://openlibrary.org/authors/" 
+const ola   = "https://openlibrary.org/authors/" 
 const owl   = "http://www.w3.org/2002/07/owl#" ; 
 const rdf   = "http://www.w3.org/1999/02/22-rdf-syntax-ns#";
 const rdfs  = "http://www.w3.org/2000/01/rdf-schema#";
@@ -92,7 +92,7 @@ const xsd   = "http://www.w3.org/2001/XMLSchema#" ;
 
 export const prefixesMap = { adm, bda, bdac, bdan, bdo, bdr, cbcp, cbct, dila, eftr, foaf, oa, mbbt, owl, rdf, rdfs, rkts, skos, wd, ola, viaf, xsd, tmp }
 export const prefixes = Object.values(prefixesMap) ;
-export const sameAsMap = { wd:"WikiData", ol:"OpenLibrary", bdr:"BDRC", mbbt:"Marcus Bingenheimer", eftr:"84000" }
+export const sameAsMap = { wd:"WikiData", ol:"Open Library", ola:"Open Library", bdr:"BDRC", mbbt:"Marcus Bingenheimer", eftr:"84000" }
 
 export function fullUri(id:string) {
    for(let k of Object.keys(prefixesMap)) {
@@ -1531,7 +1531,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
             retList = [ ( <a target="_blank" href={u} className="result">{ret}</a> ) ]                  
 
-            if(!this.props.language && !fullId.match(new RegExp(cbcp+"|"+cbct+"|"+rkts))) rmatch = [ { type:tmp+"sameAsBDRC", value:prettId,  lit } ]
+            if(!this.props.language && !fullId.match(new RegExp(cbcp+"|"+cbct+"|"+rkts)) && fullId.match(new RegExp(bdr))) rmatch = [ { type:tmp+"sameAsBDRC", value:prettId,  lit } ]
 
             directSameAs = true
          }
@@ -1594,7 +1594,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   if(res.value.match(new RegExp("(^"+src+":)|(^"+prefixesMap[src]+")"))) { 
                      if(!hasRes[src]) hasRes[src] = [ res.value ] //.replace(new RegExp(prefixesMap[src]),src+":")                  
                      else hasRes[src].push(res.value)
-                  }
+                  }  
                }
 
             for(let src of Object.keys(img)) 
@@ -1723,13 +1723,18 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                         val = m.value;
                         if(val === fullId || val == prettId) return ;
                         let label = dico[val]
-                        if(!label && this.props.assoRes) {
-                           label = this.props.assoRes[val]                           
+                        if(!label && this.props.assoRes && this.props.assoRes[val]) {
+
+                           //console.log("assoR",this.props.assoRes[val])
+
+                           label = this.props.assoRes[val].filter(v => v['lang'] || v['xml:lang'] || v['@language'] || v['fromKey'] === foaf+"name" )     
+
+                           if(!label.length) label = null
                         }
                         
                         //console.log("val",label,val,lit,lang,dico)
 
-                        if(label) label = getLangLabel(this,"",label)
+                        if(label && label.length) label = getLangLabel(this,"",label)
                         if(label) {
                            uri = val
                            for(let k of Object.keys(prefixesMap)) { 
@@ -1747,6 +1752,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                            }
                            if(label["xml:lang"]) lang = label["xml:lang"]                              
                            
+
+                           //console.log("lang",label,lang,uri,val);
                         }
                         else if(val.indexOf(rkts) !== -1) {                           
                            prop = "Same As RKTS"
@@ -1800,6 +1807,9 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                            if(label["xml:lang"]) lang = label["xml:lang"]                              
                               
                         }
+
+                        console.log("rTy",uri,val,lang,label)
+
                         if(m.type.match(/relationType$/))  {
                            
                            if(m.value.match(/sameAs[^/]*$/)) {
