@@ -1721,9 +1721,9 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      }
                      else if(m.type.match(/[/#]sameAs/)) {
                         val = m.value;
-                        if(val === fullId || val == prettId) return ;
+                        if(val === fullId || val == prettId || shortUri(val) === fullUri(val) ) return ;
                         let label = dico[val]
-                        if(!label && this.props.assoRes && this.props.assoRes[val]) {
+                        if(!label && this.props.assoRes && this.props.assoRes[val] && this.props.assoRes[val].filter) {
 
                            //console.log("assoR",this.props.assoRes[val])
 

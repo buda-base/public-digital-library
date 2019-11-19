@@ -889,7 +889,7 @@ function mergeSameAs(result,withSameAs,init = true,rootRes = result, force = fal
    if(keys) for(let i in keys) {
       let k = keys[i]
       let r = withSameAs[k]
-      //console.log("k r",r,k)
+      //console.log("k r",k,r)
       if(force && !rootRes[r.t][k]) {
          delete result[r.t][k]
       }
@@ -900,10 +900,14 @@ function mergeSameAs(result,withSameAs,init = true,rootRes = result, force = fal
             result[r.t][s] = []
             noK = true
          }
+         let hasSameK 
          if(result[r.t] && result[r.t][k] && (result[r.t][s] || isRid)) {
-            //console.log("same?",k,r.t,s,result[r.t][k],result[r.t][s])
+            //console.log("same?",isRid,k,r.t,s,result[r.t][k],result[r.t][s])
             if(!isRid) { 
-               let hasSameK = false
+               hasSameK = false
+               
+               result[r.t][k].push({type:owl+"sameAs",value:k})
+
                for(let v of result[r.t][k])
                {
                   if(v.type === owl+"sameAs" && v.value === k) hasSameK = true
@@ -924,7 +928,7 @@ function mergeSameAs(result,withSameAs,init = true,rootRes = result, force = fal
             }
          }
          let erase = [ k , ...(init||isRid?[]:r.props.filter(p => p.type === owl+"sameAs").map(p => p.value)) ]
-         //console.log("erase",erase)
+         //console.log("erase",erase,noK,hasSameK)
          for(let e of erase) {
             if(result[r.t] && result[r.t][e]) {
                delete result[r.t][e]
