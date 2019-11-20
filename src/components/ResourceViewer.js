@@ -307,6 +307,8 @@ let propOrder = {
    ],
 }
 
+const canoLang = ["Bo","Pi","Sa","Zh"]
+
 let reload = false ;
 
 function getRealUrl(that,url) {
@@ -789,7 +791,6 @@ class ResourceViewer extends Component<Props,State>
             if (assoR) {
 
                let cano = [], nonCano = [], subLangDeriv = {}
-               let canoLang = ["Bo","Pi","Sa","Zh"]
                expr.filter(e => {
                   let lang = assoR[e.value],langLab
                   if(lang) lang = lang.filter(l => l.type === bdo+"workLangScript" || l.type === tmp+"language")                  
@@ -878,6 +879,7 @@ class ResourceViewer extends Component<Props,State>
 
                   //console.log("A,B",A,B,a,b)
 
+                  
                   if(a && !a["value"] && a[rdfs+"label"] && a[rdfs+"label"][0]) a = a[rdfs+"label"][0]
                   if(a && a["lang"]) a = a["lang"]
                   else if(a && a["xml:lang"] && a["xml:lang"] != "") a = a["xml:lang"]
@@ -893,7 +895,11 @@ class ResourceViewer extends Component<Props,State>
                   //console.log("a,b",a,b)
 
                   if( a && b ) {
-                     if(a < b ) return -1 ;
+                     let _a = shortUri(a) ;
+                     let _b = shortUri(b) ;
+                     if( _a !== a && _b === b ) return -1 ; 
+                     else if( _a === a && _b !== b ) return 1 ;
+                     else if(a < b ) return -1 ;
                      else if(a > b) return 1 ;
                      else return 0 ;
                   }
@@ -1178,7 +1184,7 @@ class ResourceViewer extends Component<Props,State>
    {
       if(elem) {
 
-         console.log("uriformat",prop,elem.value,elem,dic,withProp,show)
+         //console.log("uriformat",prop,elem.value,elem,dic,withProp,show)
          
          if(!elem.value.match(/^http:\/\/purl\.bdrc\.io/) /* && !hasExtPref */ && ((!dic || !dic[elem.value]) && !prop.match(/[/#]sameAs/))) {
             return <a href={elem.value} target="_blank">{shortUri(decodeURI(elem.value))}</a> ;
@@ -1217,7 +1223,7 @@ class ResourceViewer extends Component<Props,State>
          
          sameAsPrefix = this.setProvLab(elem,prefix,sameAsPrefix)   
          
-         console.log("s",prop,prefix,sameAsPrefix,pretty,elem,info,infoBase)
+         //console.log("s",prop,prefix,sameAsPrefix,pretty,elem,info,infoBase)
 
          if((info && infoBase && infoBase.filter(e=>e["xml:lang"]||e["lang"]).length >= 0) || prop.match(/[/#]sameAs/)) {
 
@@ -1262,7 +1268,7 @@ class ResourceViewer extends Component<Props,State>
                if(elem.fromSameAs) srcList = [ elem.fromSameAs ]
                if(elem.allSameAs)  srcList = elem.allSameAs 
                
-               console.log("srcL",srcList)
+               //console.log("srcL",srcList)
 
                let uriPrefix 
                for(let p of Object.keys(prefixes)) if(this.props.keyword && this.props.keyword.match(new RegExp("^"+p))) { uriPrefix = p ; break ; }
@@ -1451,7 +1457,7 @@ class ResourceViewer extends Component<Props,State>
       return { befo,bdrcData }
    }
 
-   format(Tag,prop:string,txt:string="",bnode:boolean=false,div:string="sub")
+   format(Tag,prop:string,txt:string="",bnode:boolean=false,div:string="sub",otherElem:[])
    {
       //console.group("FORMAT")
 
@@ -1473,6 +1479,9 @@ class ResourceViewer extends Component<Props,State>
 
          //elem = [].concat.apply([],elem);
 
+      }
+      else if(otherElem) {
+         elem = otherElem
       }
       else {
          elem = this.getResourceElem(prop)
@@ -2529,7 +2538,7 @@ class ResourceViewer extends Component<Props,State>
          
       }
 
-      let title,titlElem ;
+      let title,titlElem,otherLabels = [] ;
 
       if(kZprop.indexOf(skos+"prefLabel") !== -1)       {
          titlElem = this.getResourceElem(skos+"prefLabel");
@@ -2546,8 +2555,8 @@ class ResourceViewer extends Component<Props,State>
       
       if(!title && titlElem) {
          if(typeof titlElem !== 'object') titlElem =  { "value" : titlElem, "lang":""}
-         title = getLangLabel(this,"", titlElem)
-         console.log("ttl",title)
+         title = getLangLabel(this,"", titlElem, false, false, otherLabels)
+         console.log("titl",title,otherLabels)
          if(title.value) {
             document.title = title.value + " - Public Digital Library"
             let _befo
@@ -2662,6 +2671,7 @@ class ResourceViewer extends Component<Props,State>
          { kZprop.map((k) => {
 
             let elem = this.getResourceElem(k);
+            let hasMaxDisplay ;
 
             //console.log("prop",k,elem)
             //for(let e of elem) console.log(e.value,e.label1);
@@ -2675,27 +2685,26 @@ class ResourceViewer extends Component<Props,State>
             {
 
                let sup = this.hasSuper(k)
-
-               // [T0D0] #89 display hidden prefLabels as altLabels
-               // + display prefLabel from conflated data
-
-               if(k === skos+"prefLabel") return ;
-               /*
-               if(k === skos+"prefLabel" || k === skos+"altLabel")
-               {
-
-                  let elemPref = this.getResourceElem(skos+"prefLabel")
-                  let elemAlt = this.getResourceElem(skos+"altLabel")
-
-
-                  if(elemPref && elemAlt) continue 
+               
+               if(k === skos+"prefLabel") {
+                  if(!otherLabels || !otherLabels.length)
+                     return ;               
+                  else if(kZprop.indexOf(skos+"altLabel") === -1)
+                     k = skos+"altLabel"                  
+                  else 
+                     return
                }
-               */
                
                if(!sup) // || sup.filter(e => e.value == bdo+"workRefs").length > 0) //
                {
-                  
-                  let tags = this.format("h4",k)
+                  let allLabels
+                  if(k === skos+"altLabel" && otherLabels && otherLabels.length) {
+                     allLabels = this.getResourceElem(k)
+                     if(!allLabels) allLabels = []
+                     allLabels = [ ...otherLabels, ...allLabels ]
+                  } 
+
+                  let tags = this.format("h4",k,"",false,"sub",allLabels)
 
                   //console.log("tags",tags,k,elem)
 
@@ -3043,6 +3052,7 @@ class ResourceViewer extends Component<Props,State>
 
                      let expand
                      const maxDisplay = 10
+                     if(hasMaxDisplay) maxDisplay = hasMaxDisplay ;
                      if(!isSub && elem && elem.filter && elem.filter(t=>t && (t.type === "uri" || t.type === "literal")).length > maxDisplay) {
                        /*
                        return (

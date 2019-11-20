@@ -123,9 +123,11 @@ async function initiateApp(params,iri,myprops) {
                      if(!sameAsR[shortU])
                      {
                         sameAsR[shortU] = true ;
-                        assocRes = await api.loadAssocResources(a.value)
-                        if(!sameAsR[iri]) store.dispatch(dataActions.gotAssocResources(iri,assocRes))
-                        store.dispatch(dataActions.gotAssocResources(shortU,assocRes))
+                        if(shortU !== a.value) {
+                           assocRes = await api.loadAssocResources(a.value)
+                           if(!sameAsR[iri]) store.dispatch(dataActions.gotAssocResources(iri,assocRes))
+                           store.dispatch(dataActions.gotAssocResources(shortU,assocRes))
+                        }
                      }
                   }
                }

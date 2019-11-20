@@ -196,7 +196,7 @@ export const langProfile = [
 
 const preferUIlang = [ bdo+"placeType", bdo+"workIsAbout", bdo+"workGenre" ]
 
-export function getLangLabel(that:{},prop:string="",labels:[],proplang:boolean=false,uilang:boolean=false)
+export function getLangLabel(that:{},prop:string="",labels:[],proplang:boolean=false,uilang:boolean=false,otherLabels:[])
 {
    if(labels && labels.length)
    {
@@ -219,6 +219,12 @@ export function getLangLabel(that:{},prop:string="",labels:[],proplang:boolean=f
       let sortLabels =  sortLangScriptLabels(labels,langs.flat,langs.translit)
 
       //console.log(JSON.stringify(sortLabels,null,3))
+
+      if(otherLabels) {
+         let labels = [ ...sortLabels ]
+         labels.shift()
+         for(let e of labels) otherLabels.push(e)
+      }
 
       return sortLabels[0]
 
