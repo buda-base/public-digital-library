@@ -138,11 +138,12 @@ export function sortLangScriptLabels(data,preset,translit)
 
       let tLit
       if(translit[k]) {
-         tLit = {} ;
+         tLit = { ...e }
          let val = "@value", lan = "@language"
          if(!e["@value"]) {  val = "value" ; lan = "lang" ; tLit["type"] = "literal" ; }
          tLit[val] = translitHelper(k,translit[k])(v)
          tLit[lan] = translit[k]
+         if(tLit["xml:lang"]) delete tLit["xml:lang"]
       }
 
       //console.log("tLit",tLit,i)

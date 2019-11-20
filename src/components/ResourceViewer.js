@@ -2701,7 +2701,20 @@ class ResourceViewer extends Component<Props,State>
                   if(k === skos+"altLabel" && otherLabels && otherLabels.length) {
                      allLabels = this.getResourceElem(k)
                      if(!allLabels) allLabels = []
-                     allLabels = [ ...otherLabels, ...allLabels ]
+                     allLabels = [ ...otherLabels, ...allLabels ].map(l => {
+                        let lang
+                        if(l["lang"]) lang = l["lang"] ; else if(l["xml:lang"]) lang = l["@language"] ; else if(l["xml:lang"]) lang = l["xml:lang"] ;
+                        let index = 100
+                        if(lang) for(let i in canoLang) { let c = canoLang[i].toLowerCase(); if(lang.match(new RegExp("^"+c))) { index = i ; break ; } }
+                        return { index1:index, index2:lang, l }
+                     })
+                     allLabels = _.orderBy(allLabels, ['index1','index2']).map(a => a.l)
+
+                     /*
+                     let sortLabel = []
+                     let label = getLangLabel(this,"",allLabels,false,false,sortLabel,true)
+                     allLabels = [ label, ...sortLabel ]
+                     */
                   } 
 
                   let tags = this.format("h4",k,"",false,"sub",allLabels)

@@ -196,7 +196,7 @@ export const langProfile = [
 
 const preferUIlang = [ bdo+"placeType", bdo+"workIsAbout", bdo+"workGenre" ]
 
-export function getLangLabel(that:{},prop:string="",labels:[],proplang:boolean=false,uilang:boolean=false,otherLabels:[])
+export function getLangLabel(that:{},prop:string="",labels:[],proplang:boolean=false,uilang:boolean=false,otherLabels:[],dontUseUI:boolean=false)
 {
    if(labels && labels.length)
    {
@@ -207,7 +207,7 @@ export function getLangLabel(that:{},prop:string="",labels:[],proplang:boolean=f
       else if(that.props.langPreset) langs = that.props.langPreset
       if(proplang || uilang || preferUIlang.indexOf(prop) !== -1) langs = [ that.props.locale, ...langs ]
 
-      if(langs.indexOf(that.props.locale) === -1) { 
+      if(langs.indexOf(that.props.locale) === -1 && !dontUseUI) { 
          langs = [ ...langs, that.props.locale ]
       }            
 
