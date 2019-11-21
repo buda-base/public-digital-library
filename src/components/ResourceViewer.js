@@ -1244,16 +1244,18 @@ class ResourceViewer extends Component<Props,State>
             let bdrcData 
             bdrcData = <Link className={"hoverlink"} to={"/"+show+"/"+prefix+":"+pretty}></Link>
 
-            if(orec && orec.length) link = <a class="urilink prefLabel" href={orec[0].value} target="_blank">{info}</a>
-            else if(canUrl && canUrl.length) { 
-               if(!info) info = shortUri(elem.value)
-               link = <a class="urilink prefLabel" href={canUrl[0].value} target="_blank">{info}</a>
-               if(srcProv.indexOf(" ") !== -1) srcProv = srcSame
+            if(!elem.value.match(/[.]bdrc[.]/)) { 
+               if(orec && orec.length) link = <a class="urilink prefLabel" href={orec[0].value} target="_blank">{info}</a>
+               else if(canUrl && canUrl.length) { 
+                  if(!info) info = shortUri(elem.value)
+                  link = <a class="urilink prefLabel" href={canUrl[0].value} target="_blank">{info}</a>
+                  if(srcProv.indexOf(" ") !== -1) srcProv = srcSame
+               }
+               else {
+                  if(!info) info = shortUri(elem.value)
+                  link = <a class="urilink prefLabel" href={elem.value} target="_blank">{info}</a>
+               } 
             }
-            else if(!elem.value.match(/[.]bdrc[.]/)) {
-               if(!info) info = shortUri(elem.value)
-               link = <a class="urilink prefLabel" href={elem.value} target="_blank">{info}</a>
-            } 
             else { 
                if(!info) info = shortUri(elem.value)
                link = <Link className={"urilink prefLabel " } to={"/"+show+"/"+prefix+":"+pretty}>{info}</Link>
@@ -1261,7 +1263,23 @@ class ResourceViewer extends Component<Props,State>
             }
             
             let befo = [],src
-            if(providers[src = srcSame] && !prop.match(/[/#]sameAs/)) { 
+            if(providers[src = srcProv] && !prop.match(/[/#]sameAs/)) { // || ( src !== "bdr" && providers[src = srcSame])) { 
+               befo.push( 
+
+                  [ //<span class="meta-before"></span>,
+                  <Tooltip placement="bottom-start" title={
+                     <div class={"uriTooltip "}>
+                        <span class="title">External resource from:</span>
+                        <span class={"logo "+src}></span>
+                        <span class="text">{providers[src]}</span>
+                     </div>}>
+                        <span><span class="before">{link}</span></span>
+                  </Tooltip> ]
+               )
+
+               bdrcData =  <Tooltip placement="top-end" title={<div class={"uriTooltip "}>View this resource on BUDA</div>}><span class="hover-anchor">{bdrcData}</span></Tooltip>
+            }            
+            else if(providers[src = srcSame] && !prop.match(/[/#]sameAs/)) { 
 
                let locaLink = link,srcPrefix,srcUri,srcList 
 
@@ -1281,12 +1299,12 @@ class ResourceViewer extends Component<Props,State>
 
                   if(srcPrefix) srcPrefixList.push(srcPrefix);
 
-                  //console.log("srcP",srcPrefix)
+                  //console.log("srcP",srcPrefix,srcUri)
 
                   if(srcPrefix !== "bdr") locaLink = <a class="urilink" href={getRealUrl(this,srcUri)} target="_blank"></a>
                   else locaLink = <Link to={"/"+show+"/"+shortUri(srcUri)}></Link>
 
-                  bdrcData = <Link className="hoverlink" to={"/"+show+"/"+shortUri(srcUri)}></Link>
+                  //bdrcData = <Link className="hoverlink" to={"/"+show+"/"+shortUri(srcUri)}></Link>
                   
                   befo.push(
 
@@ -1310,22 +1328,6 @@ class ResourceViewer extends Component<Props,State>
                if(srcPrefixList.indexOf("bdr") === -1) bdrcData =  <Tooltip placement="top-end" title={<div class={"uriTooltip "}>View this resource on BUDA</div>}><span class="hover-anchor">{bdrcData}</span></Tooltip>
                else bdrcData = null
             }
-            else if(providers[src = srcProv] && !prop.match(/[/#]sameAs/)) { // || ( src !== "bdr" && providers[src = srcSame])) { 
-               befo.push( 
-
-                  [ //<span class="meta-before"></span>,
-                  <Tooltip placement="bottom-start" title={
-                     <div class={"uriTooltip "}>
-                        <span class="title">External resource from:</span>
-                        <span class={"logo "+src}></span>
-                        <span class="text">{providers[src]}</span>
-                     </div>}>
-                        <span><span class="before">{link}</span></span>
-                  </Tooltip> ]
-               )
-
-               bdrcData =  <Tooltip placement="top-end" title={<div class={"uriTooltip "}>View this resource on BUDA</div>}><span class="hover-anchor">{bdrcData}</span></Tooltip>
-            }            
             else if(sameAsPrefix.indexOf("sameAs") !== -1) {
                //link = [ <span class="before"></span>,link ] 
 
