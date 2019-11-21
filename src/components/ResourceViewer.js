@@ -2709,6 +2709,15 @@ class ResourceViewer extends Component<Props,State>
                         return { index1:index, index2:lang, l }
                      })
                      allLabels = _.orderBy(allLabels, ['index1','index2']).map(a => a.l)
+                     elem = allLabels
+                     let hasCano 
+                     for(let i in allLabels) {
+                        let l = allLabels[i]
+                        let lang, found
+                        if(l["lang"]) lang = l["lang"] ; else if(l["xml:lang"]) lang = l["@language"] ; else if(l["xml:lang"]) lang = l["xml:lang"] ;                        
+                        if(lang) for(let c of canoLang) { c = c.toLowerCase(); if(lang.match(new RegExp("^"+c))) { found = true; hasCano = true ; break ; } }
+                        if(hasCano && !found && i < 10) { hasMaxDisplay = Number(i) ; break ; } 
+                     }
 
                      /*
                      let sortLabel = []
@@ -3064,7 +3073,7 @@ class ResourceViewer extends Component<Props,State>
                      if(!ret || ret.length === 0) ret = tags.map((e)=> [e," "] )
 
                      let expand
-                     const maxDisplay = 10
+                     let maxDisplay = 10
                      if(hasMaxDisplay) maxDisplay = hasMaxDisplay ;
                      if(!isSub && elem && elem.filter && elem.filter(t=>t && (t.type === "uri" || t.type === "literal")).length > maxDisplay) {
                        /*
