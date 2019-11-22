@@ -1,6 +1,7 @@
 import auth0 from 'auth0-js';
 import history from "./history"
 import store from "./index"
+import * as data  from "./state/data/actions"
 import * as ui from "./state/ui/actions"
 import {auth} from "./routes"
 import React, { Component } from 'react';
@@ -9,6 +10,7 @@ import ControlLabel from 'react-bootstrap/lib/ControlLabel';
 import Glyphicon from 'react-bootstrap/lib/Glyphicon';
 import { Link } from 'react-router-dom';
 import {top_right_menu} from './components/App';
+import ResourceViewerContainer from './containers/ResourceViewerContainer'
 
 import bdrcApi from './lib/api';
 
@@ -377,7 +379,7 @@ type State = {
    profile:{}
 }
 export class Profile extends Component<State> {  
-
+  
   constructor(props : Props) {
     super(props);
     this.state = { gender:"", region:"",affiliation:"",interest:"" }
@@ -387,11 +389,13 @@ export class Profile extends Component<State> {
     this.setState({ profile: {} });
     const { userProfile, getProfile } = this.props.auth;
     if (!userProfile) {
-      getProfile((err, profile) => {
-        this.setState({ profile });
+      getProfile(async (err, profile) => {
+        this.setState({ profile } );
+        store.dispatch(data.getUser(profile))
       });
     } else {
-      this.setState({ profile: userProfile });
+      this.setState({ profile:userProfile });
+      store.dispatch(data.getUser(userProfile))
     }
   }
   render() {
@@ -412,81 +416,89 @@ export class Profile extends Component<State> {
     else {
         if(this.tO) clearTimeout(this.tO)
 
-        let handleChange = (e,val1,val2) => {
-          //console.log("e",e,val1,val2)
-          this.setState({...this.state,[e.target.name]:e.target.value})
-        }
 
-        return (
-          <div className="profile-container">
-            <div className="profile-area">
-              <h1><img src={profile.picture} alt="profile" />{profile.name}</h1>
-              { /*}
-              <Panel header="Profile picture: ">
-                <img src={profile.picture} alt="profile" /> 
-                <div>
-                  <ControlLabel><Glyphicon glyph="user" />Nickname: </ControlLabel>
-                  <h3 style={{display:"inline-block"}}>{profile.nickname}</h3>
-                </div>
-                <pre>{JSON.stringify(profile, null, 2)}</pre>
-              </Panel> 
-              */}
-              <form autoComplete="off">
-                <FormControl className="FC">
-                  <InputLabel htmlFor="gender">Gender</InputLabel>
-                  <Select
-                    value={this.state.gender}
-                    onChange={handleChange}
-                    inputProps={{ name: 'gender', id: 'gender'}}
-                  >
-                    <MenuItem value={"male"}>Male</MenuItem>
-                    <MenuItem value={"female"}>Female</MenuItem>
-                    <MenuItem value={"no-answer"}>Prefer not to answer</MenuItem>
-                  </Select>
-                </FormControl>
-                <FormControl className="FC">
-                  <InputLabel htmlFor="region">Cultural Region</InputLabel>
-                  <Select
-                    value={this.state.region}
-                    onChange={handleChange}
-                    inputProps={{ name: 'region', id: 'region'}}
-                  >
-                    <MenuItem value={"kham"}>Kham</MenuItem>
-                    <MenuItem value={"amdo"}>Amdo</MenuItem>
-                    <MenuItem value={"u-tsang"}>U-tsang</MenuItem>
-                    <MenuItem value={"other"}>Other</MenuItem>
-                  </Select>
-                </FormControl>
-                {/* <br/> */}
-                <FormControl className="FC">
-                  <InputLabel htmlFor="region">Affiliation</InputLabel>
-                  <Select
-                    value={this.state.affiliation}
-                    onChange={handleChange}
-                    inputProps={{ name:"affiliation", id: 'affiliation'}}
-                  >
-                    <MenuItem value={".."}>...</MenuItem>
-                  </Select>
-                </FormControl>
-                <FormControl className="FC">
-                  <InputLabel htmlFor="region">Area of Interest</InputLabel>
-                  <Select
-                    value={this.state.interest}
-                    onChange={handleChange}
-                    inputProps={{ name:"interest", id: 'interest'}}
-                  >
-                    <MenuItem value={"..."}>...</MenuItem>
-                  </Select>
-                </FormControl>
-              </form>
-              <h5 onClick={ (e) => { 
-                let url = store.getState().ui.profileFromUrl
-                if(!url) url = "/"
-                history.push(url)
-              }}>Back</h5>
-            </div>
-          </div>
-      );
+        //let handleChange = (e,val1,val2) => {
+        //  //console.log("e",e,val1,val2)
+        //  this.setState({...this.state,[e.target.name]:e.target.value})
+        //}       
+        //                
+        
+        const { userProfile, getProfile } = this.props.auth;
+
+        return ( <ResourceViewerContainer auth={auth} history={history} IRI={"http://purl.bdrc.io/resource-nc/user/U678062094"} authUser={userProfile}/> ) 
+
+        // ResoruceViewer
+
+      //   return (
+      //     <div className="profile-container">
+      //       <div className="profile-area">
+      //         <h1><img src={profile.picture} alt="profile" />{profile.name}</h1>
+      //         { /*}
+      //         <Panel header="Profile picture: ">
+      //           <img src={profile.picture} alt="profile" /> 
+      //           <div>
+      //             <ControlLabel><Glyphicon glyph="user" />Nickname: </ControlLabel>
+      //             <h3 style={{display:"inline-block"}}>{profile.nickname}</h3>
+      //           </div>
+      //           <pre>{JSON.stringify(profile, null, 2)}</pre>
+      //         </Panel> 
+      //         */}
+      //         <form autoComplete="off">
+      //           <FormControl className="FC">
+      //             <InputLabel htmlFor="gender">Gender</InputLabel>
+      //             <Select
+      //               value={this.state.gender}
+      //               onChange={handleChange}
+      //               inputProps={{ name: 'gender', id: 'gender'}}
+      //             >
+      //               <MenuItem value={"male"}>Male</MenuItem>
+      //               <MenuItem value={"female"}>Female</MenuItem>
+      //               <MenuItem value={"no-answer"}>Prefer not to answer</MenuItem>
+      //             </Select>
+      //           </FormControl>
+      //           <FormControl className="FC">
+      //             <InputLabel htmlFor="region">Cultural Region</InputLabel>
+      //             <Select
+      //               value={this.state.region}
+      //               onChange={handleChange}
+      //               inputProps={{ name: 'region', id: 'region'}}
+      //             >
+      //               <MenuItem value={"kham"}>Kham</MenuItem>
+      //               <MenuItem value={"amdo"}>Amdo</MenuItem>
+      //               <MenuItem value={"u-tsang"}>U-tsang</MenuItem>
+      //               <MenuItem value={"other"}>Other</MenuItem>
+      //             </Select>
+      //           </FormControl>
+      //           {/* <br/> */}
+      //           <FormControl className="FC">
+      //             <InputLabel htmlFor="region">Affiliation</InputLabel>
+      //             <Select
+      //               value={this.state.affiliation}
+      //               onChange={handleChange}
+      //               inputProps={{ name:"affiliation", id: 'affiliation'}}
+      //             >
+      //               <MenuItem value={".."}>...</MenuItem>
+      //             </Select>
+      //           </FormControl>
+      //           <FormControl className="FC">
+      //             <InputLabel htmlFor="region">Area of Interest</InputLabel>
+      //             <Select
+      //               value={this.state.interest}
+      //               onChange={handleChange}
+      //               inputProps={{ name:"interest", id: 'interest'}}
+      //             >
+      //               <MenuItem value={"..."}>...</MenuItem>
+      //             </Select>
+      //           </FormControl>
+      //         </form>
+      //         <h5 onClick={ (e) => { 
+      //           let url = store.getState().ui.profileFromUrl
+      //           if(!url) url = "/"
+      //           history.push(url)
+      //         }}>Back</h5>
+      //       </div>
+      //     </div>
+      // );
     }
   }
 }

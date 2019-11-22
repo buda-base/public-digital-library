@@ -10,6 +10,7 @@ const CONFIG_PATH = '/config.json'
 const CONFIGDEFAULTS_PATH = '/config-defaults.json'
 const ONTOLOGY_PATH = '/ontology/core.json'
 const DICTIONARY_PATH = '/ontology/data/json'
+const USER_PATH = '/resource-nc/user/me'
 
 const dPrefix = {
    "bdr": {
@@ -211,6 +212,12 @@ export default class API {
             //console.log("manif",manif)
             return manif ;
       }
+
+    async loadUser()
+    {
+         let user =  JSON.parse(await this.getURLContents(this._userPath,false));
+         return user ;
+   }
 
     async loadOntology(): Promise<string>
     {
@@ -685,6 +692,17 @@ export default class API {
           return path;
       }
 
+
+     get _userPath(): string {
+        let path = USER_PATH;
+
+       let config = store.getState().data.config.ldspdi
+       let url = config.endpoints[config.index] ;
+
+         path = url +  USER_PATH;
+         
+        return path;
+    }
 
      get _ontologyPath(): string {
         let path = ONTOLOGY_PATH;

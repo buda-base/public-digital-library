@@ -160,6 +160,17 @@ export const ontoSearch = (k: string): Action => {
     }
 }
 
+
+TYPES.getUser = 'GET_USER';
+export const getUser = (profile: string): Action => {
+    return {
+        type: TYPES.getUser,
+        payload: profile
+    }
+}
+
+
+
 TYPES.getResource = 'GET_RESOURCE';
 export const getResource = (iri: string): Action => {
     return {

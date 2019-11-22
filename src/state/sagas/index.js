@@ -301,6 +301,52 @@ function* watchInitiateApp() {
    );
 }
 
+async function getUser(profile)
+{
+   let user = await api.loadUser()
+   if(user) {
+      let id = user["@id"] ;
+      user = Object.keys(user).reduce( (acc,k) => {
+
+         let val = user[k]
+         if(k === "type") k = "rdfs:type"
+
+         //console.log(acc,k,val)
+
+         let toJson = (o) => {
+            //console.log("o",o)
+            if(o.match) {
+               if(o.match(/^https?:/)) 
+                  return { type:'uri', value:o}
+               else              
+                  return { type:'literal', value:o}             
+            }
+            else return o
+         }
+
+         if(!Array.isArray(val)) {
+            val = [ toJson(val) ];
+         } else {
+            val = val.map(e => toJson(e))
+         }
+            
+         if(!k.match(/^@/)) return ({ ...acc, [fullUri(k)]:val})
+         else return acc ;
+      },{})
+      
+      store.dispatch(dataActions.gotResource(id, user));
+      console.log("user",id,profile,user)
+   }
+
+}
+
+function* watchGetUser() {
+   yield takeLatest(
+      dataActions.TYPES.getUser,
+      (action) => getUser(action.payload)
+   );
+}
+
 export function* chooseHost(host:string) {
    try
    {
@@ -1328,6 +1374,7 @@ export function* watchGetAnnotations() {
 export default function* rootSaga() {
    yield all([
       watchInitiateApp(),
+      watchGetUser(),
       //watchChoosingHost(),
       //watchGetDatatypes(),
       watchGetChunks(),
