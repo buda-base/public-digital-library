@@ -306,7 +306,7 @@ async function getUser(profile)
    let user = await api.loadUser()
    if(user) {
       let id = user["@id"] ;
-      user = Object.keys(user).reduce( (acc,k) => {
+      user = { [id] : Object.keys(user).reduce( (acc,k) => {
 
          let val = user[k]
          if(k === "type") k = "rdfs:type"
@@ -332,7 +332,7 @@ async function getUser(profile)
             
          if(!k.match(/^@/)) return ({ ...acc, [fullUri(k)]:val})
          else return acc ;
-      },{})
+      },{}) }
       
       store.dispatch(dataActions.gotResource(id, user));
       console.log("user",id,profile,user)
