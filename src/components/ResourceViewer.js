@@ -102,6 +102,7 @@ type Props = {
    imageVolumeManifests?:{},
    ontology:{},
    dictionary:{},
+   authUser?:{},
    onInitPdf: (u:string,s:string) => void,
    onRequestPdf: (u:string,s:string) => void,
    onCreatePdf: (s:string,u:string) => void,
@@ -145,7 +146,9 @@ const bda   = "http://purl.bdrc.io/admindata/";
 const bdac  = "http://purl.bdrc.io/anncollection/" ;
 const bdan  = "http://purl.bdrc.io/annotation/" ;
 const bdo   = "http://purl.bdrc.io/ontology/core/"
+const bdou  = "http://purl.bdrc.io/ontology/ext/user/" ;
 const bdr   = "http://purl.bdrc.io/resource/";
+const bdu   = "http://purl.bdrc.io/resource-nc/user/" ; 
 const dila  = "http://purl.dila.edu.tw/resource/";
 const foaf  = "http://xmlns.com/foaf/0.1/" ;
 const mbbt  = "http://mbingenheimer.net/tools/bibls/" ;
@@ -305,6 +308,10 @@ let propOrder = {
       "bdo:volumeNumber",
       "bdo:volumeHasEtext"
    ],
+   "User" : [
+      "skos:prefLabel",
+      "skos:altLabel",
+   ]
 }
 
 const canoLang = ["Bo","Pi","Sa","Zh"]
@@ -930,7 +937,7 @@ class ResourceViewer extends Component<Props,State>
          if(ret && ret.value && ret.value != "")
             return ret.value
       }
-      else if(this.props.dictionary[prop] && this.props.dictionary[prop][rdfs+"label"])
+      else if(this.props.dictionary && this.props.dictionary[prop] && this.props.dictionary[prop][rdfs+"label"])
       {
          /*
          let ret = this.props.ontology[prop][rdfs+"label"].filter((e) => (e.lang == "en"))
@@ -2384,7 +2391,45 @@ class ResourceViewer extends Component<Props,State>
 
       return ret;
    }
+   
+   getH2 = (title,_befo) => {
+      return <h2>{_befo}{title.value}{this.tooltip(title.lang)}</h2>
+   }
 
+   setTitle = (kZprop) => {
+
+      let title,titlElem,otherLabels = [] ;
+
+      if(kZprop.indexOf(skos+"prefLabel") !== -1)       {
+         titlElem = this.getResourceElem(skos+"prefLabel");
+      }
+      else if(kZprop.indexOf(bdo+"eTextTitle") !== -1)     {
+         titlElem = this.getResourceElem(bdo+"eTextTitle");
+      }
+      else if(kZprop.indexOf(rdfs+"label") !== -1)   {
+         titlElem = this.getResourceElem(rdfs+"label");
+      }
+      else {
+         title = <h2>{getEntiType(this.props.IRI) + " " +shortUri(this.props.IRI)}</h2>
+      }
+      
+      if(!title && titlElem) {
+         if(typeof titlElem !== 'object') titlElem =  { "value" : titlElem, "lang":""}
+         title = getLangLabel(this,"", titlElem, false, false, otherLabels)
+         console.log("titl",title,otherLabels)
+         if(title.value) {
+            document.title = title.value + " - Public Digital Library"
+            let _befo
+            if(title.fromSameAs && !title.fromSameAs.match(new RegExp(bdr))) {
+               const {befo,bdrcData} = this.getSameLink(title,shortUri(title.fromSameAs).split(":")[0]+" sameAs hasIcon")            
+               _befo = befo
+            }
+            title = this.getH2(title,_befo)
+         }
+      }
+
+      return { title, titlElem, otherLabels }
+   }
 
    render()
     {
@@ -2540,35 +2585,7 @@ class ResourceViewer extends Component<Props,State>
          
       }
 
-      let title,titlElem,otherLabels = [] ;
-
-      if(kZprop.indexOf(skos+"prefLabel") !== -1)       {
-         titlElem = this.getResourceElem(skos+"prefLabel");
-      }
-      else if(kZprop.indexOf(bdo+"eTextTitle") !== -1)     {
-         titlElem = this.getResourceElem(bdo+"eTextTitle");
-      }
-      else if(kZprop.indexOf(rdfs+"label") !== -1)   {
-         titlElem = this.getResourceElem(rdfs+"label");
-      }
-      else {
-         title = <h2>{getEntiType(this.props.IRI) + " " +this.props.IRI}</h2>
-      }
-      
-      if(!title && titlElem) {
-         if(typeof titlElem !== 'object') titlElem =  { "value" : titlElem, "lang":""}
-         title = getLangLabel(this,"", titlElem, false, false, otherLabels)
-         console.log("titl",title,otherLabels)
-         if(title.value) {
-            document.title = title.value + " - Public Digital Library"
-            let _befo
-            if(title.fromSameAs && !title.fromSameAs.match(new RegExp(bdr))) {
-               const {befo,bdrcData} = this.getSameLink(title,shortUri(title.fromSameAs).split(":")[0]+" sameAs hasIcon")            
-               _befo = befo
-            }
-            title = <h2>{_befo}{title.value}{this.tooltip(title.lang)}</h2>
-         }
-      }
+      let { title,titlElem,otherLabels } = this.setTitle(kZprop) ;
 
       //console.log("ttlm",titlElem)
 
@@ -2688,7 +2705,7 @@ class ResourceViewer extends Component<Props,State>
 
                let sup = this.hasSuper(k)
                
-               if(k === skos+"prefLabel") {
+               if(k === skos+"prefLabel" && !this.props.authUser) {
                   if(!otherLabels || !otherLabels.length)
                      return ;               
                   else if(kZprop.indexOf(skos+"altLabel") === -1)

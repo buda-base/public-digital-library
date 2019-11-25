@@ -8,6 +8,7 @@ import * as actions from './actions';
 let reducers = {};
 
 export type UIState = {
+   userID?:url,
    anchor?:{},
    keyword?:string,
    loading?: boolean,
@@ -102,6 +103,15 @@ export const showResults = (state: UIState, action: Action) => {
    }
 }
 reducers[actions.TYPES.showResults] = showResults;
+
+export const gotUserID = (state: UIState, action: Action) => {
+
+      return {
+      ...state,
+      userID:action.payload
+   }
+}
+reducers[actions.TYPES.gotUserID] = gotUserID ;
 
 export const loading = (state: UIState, action: actions.LoadingAction) => {
     if(state.metadata) delete state.metadata 

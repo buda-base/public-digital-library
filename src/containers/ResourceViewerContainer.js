@@ -8,6 +8,7 @@ import store from '../index';
 // import selectors from 'state/selectors';
 
 import ResourceViewer from '../components/ResourceViewer';
+import UserViewer from '../components/UserViewer';
 
 const mapStateToProps = (state,ownProps) => {
 
@@ -149,3 +150,9 @@ const ResourceViewerContainer = connect(
 )(ResourceViewer);
 
 export default ResourceViewerContainer;
+
+
+export const UserViewerContainer = connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(UserViewer);

@@ -3,6 +3,7 @@ import store from '../index';
 import {auth} from '../routes'
 import qs from 'query-string'
 import history from '../history';
+import {shortUri} from '../components/App';
 
 require('formdata-polyfill')
 
@@ -29,6 +30,9 @@ const dPrefix = {
       "VL" : "Volume",
       "UT": "Etext", // ?
    },
+   "bdu": {
+      "U" : "User",
+   },
    "dila" : {
       "PL": "Place", 
       "A" : "Person"
@@ -45,11 +49,12 @@ const dPrefix = {
 };
 
 export function getEntiType(t:string):string {
-   let p = t.replace(/^([^:]+):.*$/,"$1")
+   let uri = shortUri(t)
+   let p = uri.replace(/^([^:]+):.*$/,"$1")
    if(p === "ola") return "Person" ;
    else if(p == "mbbt" ) return "Work" ; // [TODO]
-   let v = t.replace(/^([^:]+:)?([ACEILGPQRTWOVU][RTL]?).*$/,"$2")
-   //console.log("v",v,dPrefix[v])
+   let v = uri.replace(/^([^:]+:)?([ACEILGPQRTWOVU][RTL]?).*$/,"$2")
+   //console.log("v",v,p)
    if(!dPrefix[p] || !dPrefix[p][v]) return "" ;
    else return dPrefix[p][v]; }
 

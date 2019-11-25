@@ -334,6 +334,7 @@ async function getUser(profile)
          else return acc ;
       },{}) }
       
+      store.dispatch(uiActions.gotUserID(id));
       store.dispatch(dataActions.gotResource(id, user));
       console.log("user",id,profile,user)
    }

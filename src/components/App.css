@@ -435,6 +435,8 @@ h3 .expand svg { position:absolute; margin-top:-18px; }*/
 .resource .SidePane .data .anno.new + .sub + .sub { padding-top:30px;}
 /* .resource .SidePane .data .subsub.new label + div { margin-top:0; } */
 
+.resource.user h2 + .browse { display:none; }
+.resource.user h2 img { vertical-align:middle;display:inline-block; margin-right:10px; }
 
 [role=menuitem].current { text-decoration:underline !important; }
 

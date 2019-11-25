@@ -89,6 +89,16 @@ export const userProfile = (url: {}): Action => {
    }
 }
 
+
+TYPES.gotUserID = 'GOT_USER_ID';
+export const gotUserID = (userID: url): Action => {
+   return {
+      type: TYPES.gotUserID,
+      payload: userID
+   }
+}
+
+
 export type LoadingAction = {
     type: string,
     payload: {
