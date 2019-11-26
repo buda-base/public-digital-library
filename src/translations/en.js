@@ -1,5 +1,8 @@
 
 const enTranslation = {
+   user:{
+      photo:"Update profile picture"
+   },
    misc:{
       datatype:"Back to datatypes",
       show:"Show all",

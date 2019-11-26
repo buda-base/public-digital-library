@@ -127,6 +127,7 @@ type State = {
    pdfOpen?:boolean,
    pdfReady?:boolean,
    anchorElPdf?:any,
+   anchorElPopover?:any,
    annoPane?:boolean,
    showAnno?:boolean|string,
    viewAnno?:number,
@@ -495,9 +496,11 @@ function top_left_menu(that,pdfLink,monoVol,fairUse)
              </CopyToClipboard>]
 
        }
+       { /* // not in release 1.0 
        <IconButton style={{marginLeft:"0px"}} title={I18n.t("resource.toggle")} onClick={e => that.setState({...that.state,annoPane:!that.state.annoPane})}>
           <ChatIcon />
        </IconButton>
+       */ }
        { 
           //that.props.IRI.match(/^[^:]+:[RPGTW]/) &&
           prefixes[that.props.IRI.replace(/^([^:]+):.*$/,"$1")] &&
@@ -518,6 +521,7 @@ class ResourceViewer extends Component<Props,State>
    _annoPane = [] ;
    _leafletMap = null ;
    _properties = {} ;
+   _dontMatchProp = "" ;
 
    constructor(props:Props)
    {
@@ -2696,7 +2700,7 @@ class ResourceViewer extends Component<Props,State>
             //for(let e of elem) console.log(e.value,e.label1);
 
             //if(!k.match(new RegExp("Revision|Entry|prefLabel|"+rdf+"|toberemoved"))) {
-            if((!k.match(new RegExp(adm+"|adm:|isRoot$|SourcePath|"+rdf+"|toberemoved|workPartIndex|workPartTreeIndex|withSameAs")) 
+            if((!k.match(new RegExp(adm+"|adm:|isRoot$|SourcePath|"+rdf+"|toberemoved|workPartIndex|workPartTreeIndex|withSameAs"+(this._dontMatchProp?"|"+this._dontMatchProp:"")))
                ||k.match(/(originalRecord|metadataLegal|contentProvider|replaceWith)$/)
                ||k.match(/([/]see|[/]sameAs)[^/]*$/) // quickfix [TODO] test property ancestors
                || (this.props.IRI.match(/^bda:/) && (k.match(new RegExp(adm+"|adm:")))))
