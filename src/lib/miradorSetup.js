@@ -876,7 +876,7 @@ export async function miradorInitView(work,lang,callerURI) {
       corner = { 
          "label": "Close Viewer",
          "iconClass": "fa fa-times",
-         "attributes" : { href : "bdrclibapp://?action=close" }
+         "attributes" : { href : callerURI + "?action=close" }
       }
    else
       corner = { 
