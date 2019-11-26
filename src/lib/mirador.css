@@ -42,7 +42,7 @@
 .mirador-container .mirador-main-menu li a.selec {opacity:1; pointer-events:auto; }
 #viewer #manifest-select-menu .manifest-panel-controls { display:none; }
 #viewer #collection-tree.jstree, #viewer .member-select-results { border:none; }
-#viewer.view .user-buttons.mirador-main-menu li:last-child { display:none; }
+#viewer.view:not(.hasCallerURI) .user-buttons.mirador-main-menu li:last-child { display:none; }
 #viewer .member-select-results li { cursor:auto; }
 #viewer .member-select-results li .preview-image { cursor:pointer; }
 

@@ -785,7 +785,7 @@ function miradorInitMenu(maxWonly) {
    //console.log("maxW",window.maxW)
 }
 
-export async function miradorInitView(work,lang) {
+export async function miradorInitView(work,lang,callerURI) {
 
    const bdr = "http://purl.bdrc.io/resource/"
 
@@ -867,16 +867,27 @@ export async function miradorInitView(work,lang) {
 
    let manif = data.filter(e => e.manifestUri)[0]
    if(manif && manif.manifestUri) manif = manif.manifestUri
-   console.log("data",data,manif)
+   console.log("data",data,manif,callerURI)
 
-   let config = await miradorConfig(data,manif,null,null,lang,
-   { 
-      "label": "Full Screen",
-      "iconClass": "fa fa-lg fa-fw fa-expand fs",
-      "attributes" : { 
-         title:"Toggle fullscreen mode",
-         onClick : "javascript:eval('if(window.Mirador.fullscreenElement()) { window.Mirador.exitFullscreen(); $(\".user-buttons .fs\").addClass(\"fs-expand\").removeClass(\"fa-compress\"); } else { window.Mirador.enterFullscreen($(\".mirador-container\")[0]) ; $(\".user-buttons .fs\").removeClass(\"fs-expand\").addClass(\"fa-compress\"); }')" }
-   });
+   
+   let corner ;
+   
+   if(callerURI) 
+      corner = { 
+         "label": "Close Viewer",
+         "iconClass": "fa fa-times",
+         "attributes" : { href : "bdrclibapp://?action=close" }
+      }
+   else
+      corner = { 
+         "label": "Full Screen",
+         "iconClass": "fa fa-lg fa-fw fa-expand fs",
+         "attributes" : { 
+            title:"Toggle fullscreen mode",
+            onClick : "javascript:eval('if(window.Mirador.fullscreenElement()) { window.Mirador.exitFullscreen(); $(\".user-buttons .fs\").addClass(\"fs-expand\").removeClass(\"fa-compress\"); } else { window.Mirador.enterFullscreen($(\".mirador-container\")[0]) ; $(\".user-buttons .fs\").removeClass(\"fs-expand\").addClass(\"fa-compress\"); }')" }
+      }
+
+   let config = await miradorConfig(data,manif,null,null,lang,corner);
 
    let initTimer = setInterval( ((cfg) => () => {
       console.log("init?",cfg,window.Mirador)

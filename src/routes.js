@@ -223,12 +223,13 @@ const makeMainRoutes = () => {
                            console.log("props",props,get)
                            let lang = get["lang"]
                            if(lang) lang = lang.split(",")
-                           miradorInitView(props.match.params.IRI,lang);
+                           let callerURI = get["callerURI"]
 
+                           miradorInitView(props.match.params.IRI,lang,callerURI);
 
 
                            return [
-                                    <div id="viewer" class="view"></div>,
+                                    <div id="viewer" class={"view " + (callerURI?" hasCallerURI":"")}></div>,
                                     <link rel="stylesheet" type="text/css" href="../scripts/mirador/css/mirador-combined.css"/>,
                                     <link rel="stylesheet" type="text/css" href="../scripts/src/lib/mirador.css"/>,
                                     <Script url={"../scripts/mirador/mirador.js"} onLoad={(e)=>{ require("@dbmdz/mirador-keyboardnavigation");  }} />,
