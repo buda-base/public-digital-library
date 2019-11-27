@@ -1,7 +1,12 @@
 
 const enTranslation = {
    user:{
-      photo:"Update profile picture"
+      photo:{ 
+         hover:"Update profile picture",
+         label:"Profile Picture",                                
+         helperText:"Paste a direct link to an existing picture",
+         error:"Error: cannot find image, please check your link"
+      }
    },
    misc:{
       datatype:"Back to datatypes",

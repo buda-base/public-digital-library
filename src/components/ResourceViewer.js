@@ -124,6 +124,8 @@ type State = {
    UVcanLoad?:boolean,
    openDiva?:boolean,
    collapse:{[string]:boolean},
+   errors:{[string]:boolean},
+   updates?:{},
    pdfOpen?:boolean,
    pdfReady?:boolean,
    anchorElPdf?:any,
@@ -138,7 +140,9 @@ type State = {
    largeMap?:boolean,
    rightPane?:boolean,
    nextChunk?:number,
-   imageLinks?:{}
+   imageLinks?:{},
+   resource?:{},
+   IRI?:url
  }
 
 
@@ -527,7 +531,7 @@ class ResourceViewer extends Component<Props,State>
    {
       super(props);
 
-      this.state = { uviewer:false, imageLoaded:false, collapse:{}, pdfOpen:false, showAnno:true }
+      this.state = { uviewer:false, imageLoaded:false, collapse:{}, pdfOpen:false, showAnno:true, errors:{},updates:{} }
 
       //console.log("props",props)
 
