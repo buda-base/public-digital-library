@@ -500,11 +500,11 @@ function top_left_menu(that,pdfLink,monoVol,fairUse)
              </CopyToClipboard>]
 
        }
-       { /* // not in release 1.0 
+       { /*  // annotations not in release 1.0 
        <IconButton style={{marginLeft:"0px"}} title={I18n.t("resource.toggle")} onClick={e => that.setState({...that.state,annoPane:!that.state.annoPane})}>
           <ChatIcon />
        </IconButton>
-       */ }
+        */ }
        { 
           //that.props.IRI.match(/^[^:]+:[RPGTW]/) &&
           prefixes[that.props.IRI.replace(/^([^:]+):.*$/,"$1")] &&
@@ -2439,77 +2439,8 @@ class ResourceViewer extends Component<Props,State>
       return { title, titlElem, otherLabels }
    }
 
-   render()
-    {
-      console.log("render",this.props,this.state)
-
-   
-      //const { GeoJson } = ReactLeaflet;
-      const { BaseLayer} = LayersControl;
-
-      this._annoPane = []
-//
-      if(!this.props.IRI || (this.props.failures && this.props.failures[this.props.IRI]))
-      {
-         let msg = "IRI undefined" ;
-         if(this.props.IRI) msg = "Resource "+this.props.IRI+" does not exist."
-         return (
-            <Redirect404  history={this.props.history} message={msg}/>
-         )
-      }
-
-      let redir, withdrawn
-      if(this.props.resources && (redir = this.props.resources[this.props.IRI]) && (redir = redir[fullUri(this.props.IRI)]))
-      {
-         //console.log("WithD?",redir);
-         if(redir[adm+"replaceWith"]) {
-            redir = shortUri(redir[adm+"replaceWith"][0].value)
-            
-            return (
-               <Redirect404  history={this.props.history} message={"Record withdrawn in favor of "+redir} to={"/show/"+redir}/>
-            )
-         }
-         else if(this.props.auth.isAuthenticated() && redir[adm+"status"] && (redir = redir[adm+"status"]).length && redir[0].value === bda+"StatusWithdrawn"){
-            withdrawn = true 
-            //console.log("WithD");
-         }
-         
-         //this.props.history.push("/show/"+redir)
-      }
-      //console.log("WithD...",redir);
-
-      //let get = qs.parse(this.props.history.location.search)
-      //console.log('qs',get)
-
-      //<Link to="/gallery?manifest=https://eroux.fr/manifest.json" style={{textDecoration:"none"}}><Button>Preview IIIF Gallery</Button></Link>
-      //<div style={{height:"50px",fontSize:"26px",display:"flex",justifyContent:"center",alignItems:"center"}}>resource {get.IRI}</div>
-
-      let kZprop = Object.keys(this.properties(true))
-
-      //console.log("kZprop",kZprop)
-
-      let iiifpres = "http://iiifpres.bdrc.io" ;
-      if(this.props.config && this.props.config.iiifpres) iiifpres = this.props.config.iiifpres.endpoints[this.props.config.iiifpres.index]
-
-
-      let kZasso ;
-
-
-      let doMap = false, doRegion = false,regBox ;
-      if(kZprop.indexOf(bdo+"placeLong") !== -1 && kZprop.indexOf(bdo+"placeLat") !== -1)
-      {
-         doMap = [].concat(this.fullname(this.getResourceElem(bdo+"placeLat")[0].value)).concat(this.fullname(this.getResourceElem(bdo+"placeLong")[0].value))
-         console.log("map",doMap)
-      }
-      if(kZprop.indexOf(bdo+"placeRegionPoly") !== -1)
-      {
-         doRegion = JSON.parse(this.getResourceElem(bdo+"placeRegionPoly")[0].value)
-         regBox = bbox(doRegion)
-         regBox = [ [regBox[1],regBox[0]], [regBox[3],regBox[2]] ]
-         console.log("reg",doRegion,regBox)
-      }
-
-
+   setManifest = (kZprop,iiifpres) => {
+      
       if(kZprop.indexOf(bdo+"imageList") !== -1)
       {
          if(!this.props.imageAsset && !this.props.manifestError) {
@@ -2570,7 +2501,7 @@ class ResourceViewer extends Component<Props,State>
       else {
          
          if (this.props.assocResources) {
-            kZasso = Object.keys(this.props.assocResources) ;
+            let kZasso = Object.keys(this.props.assocResources) ;
 
             let elem = this.getResourceElem(bdo+"workHasItem")
             if(!this.props.manifestError && elem) for(let e of elem)
@@ -2592,30 +2523,10 @@ class ResourceViewer extends Component<Props,State>
          }
          
       }
-
-      let { title,titlElem,otherLabels } = this.setTitle(kZprop) ;
-
-      //console.log("ttlm",titlElem)
+   }
 
 
-   /*
-      if(kZprop.indexOf(skos+"prefLabel") !== -1)
-         titre = this.format("h2",skos+"prefLabel")
-      else if(kZprop.indexOf(bdo+"eTextTitle") !== -1)
-         titre = this.format("h2",bdo+"eTextTitle")
-      else if(kZprop.indexOf(rdfs+"label") !== -1)
-         titre = this.format("h2",rdfs+"label")
-      else
-         titre = <h2>{getEntiType(this.props.IRI) + " " +this.props.IRI}</h2>
-   */
-      let fairUse = false
-      if(kZprop.indexOf(adm+"access") !== -1) {
-         let elem = this.getResourceElem(adm+"access")
-         if(elem && elem.filter(e => e.value.match(/(AccessFairUse|AccessRestrictedInChina)$/)).length >= 1) fairUse = true
-         //console.log("adm",elem,fairUse)
-      }
-
-      // [TODO] test external pdf download using "rendering" field of manifest
+   getPdfLink = () =>  {
 
       let pdfLink,monoVol = -1 ;
       if(this.props.firstImage &&  !this.props.manifestError && this.props.firstImage.match(/[.]bdrc[.]io/))
@@ -2688,13 +2599,436 @@ class ResourceViewer extends Component<Props,State>
          */
 
       }
+      return { pdfLink, monoVol}
+   }
 
-      let imageLabel = "images"
-      if(!this.props.collecManif && this.props.imageAsset && this.props.imageAsset.match(/[/]collection[/]/)) imageLabel = "collection"
+
+   getMapInfo = (kZprop) => {
+
+      let doMap = false, doRegion = false,regBox ;
+      if(kZprop.indexOf(bdo+"placeLong") !== -1 && kZprop.indexOf(bdo+"placeLat") !== -1)
+      {
+         doMap = [].concat(this.fullname(this.getResourceElem(bdo+"placeLat")[0].value)).concat(this.fullname(this.getResourceElem(bdo+"placeLong")[0].value))
+         console.log("map",doMap)
+      }
+      if(kZprop.indexOf(bdo+"placeRegionPoly") !== -1)
+      {
+         doRegion = JSON.parse(this.getResourceElem(bdo+"placeRegionPoly")[0].value)
+         regBox = bbox(doRegion)
+         regBox = [ [regBox[1],regBox[0]], [regBox[3],regBox[2]] ]
+         console.log("reg",doRegion,regBox)
+      }
+
+      return { doMap, doRegion, regBox }
+   }
+
+   getWorkLocation = (elem, k) => {
+
+      if(elem && Array.isArray(elem) && elem[0]) {
+         elem = this.getResourceBNode(elem[0].value)
+         let str = ""
+         //console.log("loca",elem)
+
+         let loca = s => (elem && elem[bdo+"workLocation"+s] && elem[bdo+"workLocation"+s][0] && elem[bdo+"workLocation"+s][0]["value"] ? elem[bdo+"workLocation"+s][0]["value"]:null)
+
+         let vol = loca("Volume")
+         if(vol) str += "Vol."+vol+" " ;
+         let p = loca("Page")
+         if(p) str += "p."+p ;
+         let l = loca("Line")
+         if(l) str += "|"+l ;
+         str += " - "
+         let eV = loca("EndVolume")
+         if(eV) str += "Vol."+eV+" " ;
+         let eP = loca("EndPage")
+         if(eP) str += "p."+eP ;
+         let eL = loca("EndLine")
+         if(eL) str += "|"+eL ;
+
+         let w = loca("Work")
+         if(w) w = elem[bdo+"workLocationWork"][0]
+
+         return ( 
+            [<Tooltip placement="bottom-start" style={{marginLeft:"50px"}} title={
+                  <div style={{margin:"10px"}}>
+                     {vol && <div><span>Begin Volume:</span> {vol}</div>}
+                     {p && <div><span>Begin Page:</span> {p}</div>}
+                     {l && <div><span>Begin Line:</span> {l}</div>}
+                     {eV && <div><span>End Volume:</span> {eV}</div>}
+                     {eP && <div><span>End Page:</span> {eP}</div>}
+                     {eL && <div><span>End Line:</span> {eL}</div>}
+                  </div>
+               }>
+                  <h4>{str}{w && " of "}{w && this.uriformat(bdo+"workLocationWork",w)}</h4>
+            </Tooltip>] 
+         );
+      }
+   }
+
+   renderMap = (elem, k, tags, kZprop, doMap, doRegion, regBox, title ) => {
+
+      const { BaseLayer} = LayersControl;
+
+      return ( 
+         <div>
+            <h3><span>{this.proplink(k)}</span>:&nbsp;</h3>
+            { k == bdo+"placeLong" && tags }
+            <div style={ {width:"100%",marginTop:"10px"} }>
+               <Map ref={m => { this._leafletMap = m; }}
+                  className={"placeMap" + (this.state.largeMap?" large":"")}
+                  style={{boxShadow: "0 0 5px 0px rgba(0,0,0,0.5)"}}
+                  center={doMap} zoom={17} bounds={doRegion?regBox:null}
+                  //attributionControl={false}
+                  >
+                  <LayersControl position="topright">
+                     { this.props.config.googleAPIkey && [
+                        <BaseLayer checked name='Satellite+Roadmap'>
+
+                           <GoogleLayer googlekey={this.props.config.googleAPIkey} maptype='HYBRID'
+                                 //attribution="&amp;copy <a href=&quot;http://osm.org/copyright&quot;></a> contributors"
+                                 attribution="&amp;copy 2018 Google"
+                           />
+                        </BaseLayer>,
+                        <BaseLayer name='Terrain'>
+                           <GoogleLayer googlekey={this.props.config.googleAPIkey} maptype='TERRAIN'/>
+                        </BaseLayer>,
+                        <BaseLayer name='Satellite'>
+                           <GoogleLayer googlekey={this.props.config.googleAPIkey} maptype='SATELLITE'/>
+                        </BaseLayer>,
+                        <BaseLayer name='Roadmap'>
+                           <GoogleLayer googlekey={this.props.config.googleAPIkey} maptype='ROADMAP'/>
+                        </BaseLayer>]
+                     }
+                     { !this.props.config.googleAPIkey && <BaseLayer checked name='OpenStreetMap'>
+                        <TileLayer
+                           //attribution="&amp;copy <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
+                           //url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                           url="https://{s}.tile.iosb.fraunhofer.de/tiles/osmde/{z}/{x}/{y}.png"
+                        />
+                     </BaseLayer> }
+                  </LayersControl>
+                  <Marker position={doMap} >
+                        <ToolT direction="top">{title}</ToolT>
+                  </Marker>
+                  {doRegion && <GeoJSON data={doRegion} style={ {color: '#006699', weight: 5, opacity: 0.65} }/>}
+                  <Portal position="bottomleft">
+                     <div class="leaflet-control-attribution leaflet-control" >
+                        <a onClick={ e => { setTimeout(((map)=> () => {map.leafletElement.invalidateSize();})( this._leafletMap), 200); this.setState({...this.state,largeMap:!this.state.largeMap}); } }>
+                           {!this.state.largeMap?"Enlarge":"Shrink"} Map
+                        </a>
+                     </div>
+                  </Portal>
+               </Map>
+            </div>
+         </div> 
+      )
+   }
+
+
+   renderGenericProp = (elem, k, tags, hasMaxDisplay) => {
+
+      let ret,isSub
+      if(this.hasSub(k)) { 
+         isSub = true
+         ret = this.subProps(k)
+      }
+      if(!ret || ret.length === 0) ret = tags.map((e)=> [e," "] )
+
+      let expand
+      let maxDisplay = 10
+      if(hasMaxDisplay) maxDisplay = hasMaxDisplay ;
+      if(!isSub && elem && elem.filter && elem.filter(t=>t && (t.type === "uri" || t.type === "literal")).length > maxDisplay) {      
+         return (
+            <div>
+               <h3><span>{this.proplink(k)}</span>:&nbsp;<span
+               onClick={(e) => this.setState({...this.state,collapse:{...this.state.collapse,[k]:!this.state.collapse[k]}})}
+               className="toggle-expand">
+                  { this.state.collapse[k] && <ExpandLess/>}
+                  { !this.state.collapse[k] && <ExpandMore/>}
+               </span></h3>
+               <div style={{width:"100%"}} className="propCollapseHeader">{ret.splice(0,maxDisplay)}</div>
+               <Collapse className={"propCollapse in-"+(this.state.collapse[k]===true)} in={this.state.collapse[k]}>
+                  {ret}
+               </Collapse>
+               { <span
+               onClick={(e) => this.setState({...this.state,collapse:{...this.state.collapse,[k]:!this.state.collapse[k]}})}
+               className="expand">
+                  {"("+(this.state.collapse[k]?"hide":"see more")+")"}
+               </span> }
+            </div>
+         )
+      }
+      else {
+         return (
+            <div>
+               <h3><span>{this.proplink(k)}</span>:&nbsp;</h3>
+               {ret}
+            </div>
+         )
+      }
+   }
+
+   renderEtextHasChunk = (elem, k, tags) => {
+
+      let next = 0;
+      if(elem && elem.length) next = elem.filter(e => e.value && e.end)
+      if(next && next.length) next = next[next.length - 1].end + 1
+      else next = 0      
+      
+      return (
+         
+         <InfiniteScroll
+         id="etext-scroll"
+         hasMore={true}
+         pageStart={0}
+         loadMore={(e) => { 
+            
+               //console.log("next?",this.props.nextChunk,next,JSON.stringify(elem,null,3))
+
+               if(this.props.nextChunk !== next) {                               
+                  this.props.onGetChunks(this.props.IRI,next); 
+               } 
+            }
+         }
+         //loader={<Loader loaded={false} />}
+         >
+            <h3 class="chunk"><span>{this.proplink(k)}</span>:&nbsp;</h3>
+               {this.hasSub(k)?this.subProps(k):tags.map((e)=> [e," "] )}
+            {/* // import make test fail...
+               <div class="sub">
+               <AnnotatedEtextContainer dontSelect={true} chunks={elem}/>
+               </div>
+            */}
+         </InfiniteScroll>
+      )
+   }
+
+   renderEtextHasPage = (elem, kZprop, iiifpres) => {
+
+      let next = 0;
+      if(elem && elem.length) next = elem.filter(e => e.value && e.end)
+      if(next && next.length) next = next[next.length - 1].end + 1
+      else next = 0                  
+
+      /*
+      let next = 0;
+      if(elem && elem.length) next = elem.filter(e => e.value && e.end)
+      if(next && next.length) next = next[next.length - 1].seq + 1
+      else next = 0
+      
+      console.log("nextP?",next)     
+      */
+      
+      let imageLinks ;
+      if(this.state.imageLinks) imageLinks = this.state.imageLinks[this.props.IRI]
+      if(!imageLinks) imageLinks = {}
+      
+      if(!this.props.imageVolumeManifests) // && !this.props.manifestError)
+      {
+
+         if(kZprop.indexOf(tmp+"imageVolumeId") !== -1)
+         {
+            let elem = this.getResourceElem(tmp+"imageVolumeId")
+            //console.log("elem",elem)
+            for(let e of elem) {
+               this.props.onImageVolumeManifest(iiifpres+"/2.1.1/v:"+ e.value.replace(new RegExp(bdr), "bdr:") + "/manifest",this.props.IRI);
+            }
+         }
+      }
+      else if(this.props.imageVolumeManifests !== true) for(let id of Object.keys(this.props.imageVolumeManifests)) {
+         if(!imageLinks[id])
+         {
+            let manif = this.props.imageVolumeManifests[id]
+            //console.log("k",id,manif)
+            if(manif && manif.sequences && manif.sequences[0] && manif.sequences[0].canvases) {
+               let nc = 0, np = 0                           
+               imageLinks[id] = manif.sequences[0].canvases.reduce( (acc,e) => {
+                  if(e.label) { 
+                     //console.log("label",e.label)
+                     return ({
+                        ...acc, [Number(e.label[0]["@value"].replace(/[^0-9]/g,""))]:{id:e["@id"],image:e.images[0].resource["@id"]}
+                     })
+                  }
+                  else {
+                     //console.log("no lab",e)
+                     return acc ; 
+                  }
+               },{})
+               //console.log("imaL",imageLinks)
+               this.setState({ ...this.state,imageLinks:{...this.state.imageLinks, [this.props.IRI]: imageLinks } })
+            }
+         }
+      }
+      
+
+      /*
+      if(!this.props.resourceManifest && this.props.resourceManifest.sequences && this.props.resourceManifest.sequences[0] && this.props.resourceManifest.sequences[0].canvases) {
+         let nc = 0, np = 0
+         imageLinks = this.props.resourceManifest.sequences[0].canvases.reduce( (acc,e) => ({
+            ...acc, [Number(e.label[0]["@value"].replace(/[^0-9]/g,""))]:{id:e["@id"],image:e.images[0].resource["@id"]}
+         }),{})
+      }
+
+      */
+
+      let openMiradorAtPage = (num,manif) => {
+         //console.log("num?",num)
+         window.MiradorUseEtext = true ; 
+         this.showMirador(num,manif);
+      }
+
+      //console.log("imL",imageLinks)
+
+      return (
+         
+         [<InfiniteScroll
+            id="etext-scroll"
+            hasMore={true}
+            pageStart={0}
+            loadMore={(e) => { 
+            
+               //console.log("next?",this.props.nextChunk,next,JSON.stringify(elem,null,3))
+
+               if(this.props.nextPage !== next) {                               
+                  this.props.onGetPages(this.props.IRI,next); 
+               } 
+            }
+         }
+         //loader={<Loader loaded={false} />}
+         >
+         {/* {this.hasSub(k)?this.subProps(k):tags.map((e)=> [e," "] )} */}
+         { elem.map( e => (
+            <div class={"etextPage"+(this.props.manifestError&&!imageLinks?" manifest-error":"")+ (!e.value.match(/[\n\r]/)?" unformated":"")+(e.language === "bo"?" lang-bo":"")}>
+               {/*                                          
+                  e.seq && this.state.collapse["image-"+this.props.IRI+"-"+e.seq] && imageLinks[e.seq] &&
+                  <img title="Open image+text view in Mirador" onClick={eve => { openMiradorAtPage(imageLinks[e.seq].id) }} style={{maxWidth:"100%"}} src={imageLinks[e.seq].image} />
+               */}
+               {
+                  e.seq && this.state.collapse["image-"+this.props.IRI+"-"+e.seq] && Object.keys(imageLinks).sort().map(id => {
+                     if(!this.state.collapse["imageVolume-"+id] && imageLinks[id][e.seq]) 
+                        return (
+                           <div class="imagePage">
+                              <img class="page" title="Open image+text view in Mirador" src={imageLinks[id][e.seq].image} onClick={eve => { 
+                                 let manif = this.props.imageVolumeManifests[id]
+                                 openMiradorAtPage(imageLinks[id][e.seq].id,manif["@id"])
+                              }}/>          
+                              <div class="small"><a title="Open image+text view in Mirador" onClick={eve => { 
+                                 let manif = this.props.imageVolumeManifests[id]
+                                 openMiradorAtPage(imageLinks[id][e.seq].id,manif["@id"])
+                              }}>p.{e.seq}</a> from {this.uriformat(null,{value:id.replace(/bdr:/,bdr).replace(/[/]V([^_]+)_I.+$/,"/W$1")})}                                                      
+                              <IconButton className="hide" title={"Hide this image volume"} 
+                                 onClick={(eve) => {
+                                    this.setState({...this.state, collapse:{...this.state.collapse, ["imageVolume-"+id]:true}}) 
+                                 }}> 
+                                 <VisibilityOff/>
+                              </IconButton> 
+                              <br/>
+                              {/* [<a class="toggle-volume">hide</a>]*/}
+                              </div>        
+                           </div>
+                        )
+                  })
+               }
+               <div class="overpage">
+                  <h4 class="page">{e.value.split("\n").map(f => {
+                        //let label = getLangLabel(this,[{"@language":e.language,"@value":f}])
+                        //if(label) label = label["@value"]
+                        let label = f
+                        return ([label,<br/>])})}
+                  </h4>
+               </div>
+               { e.seq && <div> 
+                  <IconButton  title={(!this.state.collapse["image-"+this.props.IRI+"-"+e.seq]?"Show":"Hide")+" available scans for this page"} style={{marginLeft:"8px"}}
+                  onClick={(eve) => {
+                        let id = "image-"+this.props.IRI+"-"+e.seq
+                        this.setState({...this.state, collapse:{...this.state.collapse, [id]:!this.state.collapse[id]}}) 
+                     }}> 
+                     <img src="/scan_icon.svg"/>
+                  </IconButton> 
+                  {/* { <h5><a title="Open image+text view in Mirador" onClick={eve => { openMiradorAtPage(imageLinks[e.seq].id) }}>p.{e.seq}</a></h5> } */}
+                  {   [ <h5><a title={(!this.state.collapse["image-"+this.props.IRI+"-"+e.seq]?"Show":"Hide")+" available scans for this page"} onClick={(eve) => {
+                        let id = "image-"+this.props.IRI+"-"+e.seq
+                        this.setState({...this.state, collapse:{...this.state.collapse, [id]:!this.state.collapse[id]}}) 
+                     }}>p.{e.seq}</a>                                             
+                     </h5> ,
+                     <IconButton className="close" data-seq={"image-"+this.props.IRI+"-"+e.seq} title="Configure which image volumes to display" 
+                        onClick={e => { 
+                           $(e.target).closest("button").addClass("show");
+                           this.setState({...this.state,
+                              collapse:{...this.state.collapse, imageVolumeDisplay:!this.state.collapse.imageVolumeDisplay},
+                              anchorElemImaVol:e.target
+                           })} }
+                        >
+                        <SettingsApp/>
+                     </IconButton>]
+                     }                  
+                  {/* -- available from { Object.keys(imageLinks).sort().map(id => <span>{this.uriformat(null,{value:id.replace(/bdr:/,bdr)})}</span>)} </h4> } */}
+               </div> }
+            </div>))  }
+            {/* // import make test fail...
+               <div class="sub">
+               <AnnotatedEtextContainer dontSelect={true} chunks={elem}/>
+               </div>
+            */}
+         </InfiniteScroll>,
+         <Popover
+            className="imageVolumePopup"
+            open={this.state.collapse.imageVolumeDisplay}
+            anchorEl={this.state.anchorElemImaVol}
+            onClose={e => { 
+               if(!this.state.collapse.imageVolumeDisplay == false)
+               {
+                  setTimeout(() => {$(".close.show").removeClass("show");},500)
+                  this.setState({
+                     ...this.state,
+                     collapse:{ ...this.state.collapse, imageVolumeDisplay:false },
+                     anchorElemImaVol:null   
+                  });
+               }
+            }}
+            >
+               {/* <MenuItem onClick={(e) => {
+                  let collapse = { ...this.state.collapse, imageVolumeDisplay:false }             
+                  Object.keys(imageLinks).map(id => { if(collapse["imageVolume-"+id] !== undefined) { delete collapse["imageVolume-"+id]; } })
+                  this.setState({...this.state,collapse})
+               }}>Show all volumes</MenuItem>  */}
+               { imageLinks && Object.keys(imageLinks).sort().map(id => <MenuItem onClick={e => {
+                     this.setState({...this.state,collapse:{...this.state.collapse, /*imageVolumeDisplay:false,*/ ["imageVolume-"+id]:!this.state.collapse["imageVolume-"+id]}})
+                     //setTimeout(() => {$(".close.show").removeClass("show");},350)
+                  }}>{[
+                     (this.state.collapse["imageVolume-"+id]?<PanoramaFishEye style={{opacity:0.65}}/>:<CheckCircle style={{opacity:0.65}}/>),
+                     <span>&nbsp;&nbsp;</span>,
+                     this.uriformat(null,{value:id.replace(/bdr:/,bdr).replace(/[/]V([^_]+)_I.+$/,"/W$1")},undefined,undefined,"view")
+                  ]}
+               </MenuItem>) }                             
+         </Popover>]
+      )
+   }
+
+   renderRoles = () => {
 
       let assoP 
 
-      let theData = <div className="data">
+      if(["Role"].indexOf(getEntiType(this.props.IRI)) !== -1 && this.props.assocResources && Object.keys(this.props.assocResources).length > 0 )
+         return (
+            <div>
+               <h3><span>Associated Persons</span>:&nbsp;</h3>
+            {   this.props.assocResources &&
+                  (assoP = Object.keys(this.props.assocResources).filter(e => !this.props.assocResources[e].filter(f => f.fromKey).length)).map((e,i) =>
+                        i<20?
+                           <h4 class={assoP.length>1 ? "multiple" : ""}>{this.uriformat(tmp+"AssociatedPersons",{value:e})}</h4>
+                        :(i==20?
+                           <h4 class="multiple"><a href={'/search?r='+this.props.IRI}>browse all</a>)</h4>:null))
+            }
+            </div>
+         )
+   }
+
+   renderData = (kZprop, iiifpres, title, otherLabels) => {
+
+      let { doMap, doRegion, regBox } = this.getMapInfo(kZprop);
+
+      return <div className="data">
          { kZprop.map((k) => {
 
             let elem = this.getResourceElem(k);
@@ -2763,642 +3097,285 @@ class ResourceViewer extends Component<Props,State>
                   }           
                   else if(k == bdo+"workLocation")
                   {
-                     elem = this.getResourceElem(k)
-                     if(elem && Array.isArray(elem) && elem[0]) {
-                        elem = this.getResourceBNode(elem[0].value)
-                        let str = ""
-                        //console.log("loca",elem)
-
-                        let loca = s => (elem && elem[bdo+"workLocation"+s] && elem[bdo+"workLocation"+s][0] && elem[bdo+"workLocation"+s][0]["value"] ? elem[bdo+"workLocation"+s][0]["value"]:null)
-
-                        let vol = loca("Volume")
-                        if(vol) str += "Vol."+vol+" " ;
-                        let p = loca("Page")
-                        if(p) str += "p."+p ;
-                        let l = loca("Line")
-                        if(l) str += "|"+l ;
-                        str += " - "
-                        let eV = loca("EndVolume")
-                        if(eV) str += "Vol."+eV+" " ;
-                        let eP = loca("EndPage")
-                        if(eP) str += "p."+eP ;
-                        let eL = loca("EndLine")
-                        if(eL) str += "|"+eL ;
-
-                        let w = loca("Work")
-                        if(w) w = elem[bdo+"workLocationWork"][0]
-
-                        tags = [<Tooltip placement="bottom-start" style={{marginLeft:"50px"}} title={
-                           <div style={{margin:"10px"}}>
-                              {vol && <div><span>Begin Volume:</span> {vol}</div>}
-                              {p && <div><span>Begin Page:</span> {p}</div>}
-                              {l && <div><span>Begin Line:</span> {l}</div>}
-                              {eV && <div><span>End Volume:</span> {eV}</div>}
-                              {eP && <div><span>End Page:</span> {eP}</div>}
-                              {eL && <div><span>End Line:</span> {eL}</div>}
-                           </div>
-                        }>
-                           <h4>{str}{w && " of "}{w && this.uriformat(bdo+"workLocationWork",w)}</h4>
-                     </Tooltip>] ;
-                     }
+                     tags = this.getWorkLocation(elem,k)
                   }             
-                  else if(k == bdo+"placeRegionPoly" || (k == bdo+"placeLong" && !doRegion))
-                  {
-
-                     return ( <div>
-                                 <h3><span>{this.proplink(k)}</span>:&nbsp;</h3>
-                                 { k == bdo+"placeLong" && tags }
-                                 <div style={ {width:"100%",marginTop:"10px"} }>
-                                    <Map ref={m => { this._leafletMap = m; }}
-                                       className={"placeMap" + (this.state.largeMap?" large":"")}
-                                       style={{boxShadow: "0 0 5px 0px rgba(0,0,0,0.5)"}}
-                                       center={doMap} zoom={17} bounds={doRegion?regBox:null}
-                                       //attributionControl={false}
-                                       >
-                                       <LayersControl position="topright">
-                                          { this.props.config.googleAPIkey && [
-                                             <BaseLayer checked name='Satellite+Roadmap'>
-
-                                                <GoogleLayer googlekey={this.props.config.googleAPIkey} maptype='HYBRID'
-                                                      //attribution="&amp;copy <a href=&quot;http://osm.org/copyright&quot;></a> contributors"
-                                                      attribution="&amp;copy 2018 Google"
-                                                />
-                                             </BaseLayer>,
-                                             <BaseLayer name='Terrain'>
-                                                <GoogleLayer googlekey={this.props.config.googleAPIkey} maptype='TERRAIN'/>
-                                             </BaseLayer>,
-                                             <BaseLayer name='Satellite'>
-                                                <GoogleLayer googlekey={this.props.config.googleAPIkey} maptype='SATELLITE'/>
-                                             </BaseLayer>,
-                                             <BaseLayer name='Roadmap'>
-                                                <GoogleLayer googlekey={this.props.config.googleAPIkey} maptype='ROADMAP'/>
-                                             </BaseLayer>]
-                                          }
-                                          { !this.props.config.googleAPIkey && <BaseLayer checked name='OpenStreetMap'>
-                                             <TileLayer
-                                                //attribution="&amp;copy <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
-                                                //url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                                                url="https://{s}.tile.iosb.fraunhofer.de/tiles/osmde/{z}/{x}/{y}.png"
-                                             />
-                                          </BaseLayer> }
-                                       </LayersControl>
-                                       <Marker position={doMap} >
-                                           <ToolT direction="top">{title}</ToolT>
-                                       </Marker>
-                                       {doRegion && <GeoJSON data={doRegion} style={ {color: '#006699', weight: 5, opacity: 0.65} }/>}
-                                       <Portal position="bottomleft">
-                                          <div class="leaflet-control-attribution leaflet-control" >
-                                             <a onClick={ e => { setTimeout(((map)=> () => {map.leafletElement.invalidateSize();})( this._leafletMap), 200); this.setState({...this.state,largeMap:!this.state.largeMap}); } }>
-                                                {!this.state.largeMap?"Enlarge":"Shrink"} Map
-                                             </a>
-                                          </div>
-                                       </Portal>
-                                    </Map>
-                                 </div>
-                              </div> )
+                  
+                  if(k == bdo+"placeRegionPoly" || (k == bdo+"placeLong" && !doRegion)) {
+                     return this.renderMap(elem, k, tags, kZprop, doMap, doRegion, regBox, title)
                   }
                   else if(k == bdo+"eTextHasPage") {
-                     
-                     let next = 0;
-                     if(elem && elem.length) next = elem.filter(e => e.value && e.end)
-                     if(next && next.length) next = next[next.length - 1].end + 1
-                     else next = 0                  
-
-                     /*
-                     let next = 0;
-                     if(elem && elem.length) next = elem.filter(e => e.value && e.end)
-                     if(next && next.length) next = next[next.length - 1].seq + 1
-                     else next = 0
-                     
-                     console.log("nextP?",next)     
-                     */
-                     
-                     let imageLinks ;
-                     if(this.state.imageLinks) imageLinks = this.state.imageLinks[this.props.IRI]
-                     if(!imageLinks) imageLinks = {}
-                     
-                     if(!this.props.imageVolumeManifests) // && !this.props.manifestError)
-                     {
-
-                        if(kZprop.indexOf(tmp+"imageVolumeId") !== -1)
-                        {
-                           let elem = this.getResourceElem(tmp+"imageVolumeId")
-                           //console.log("elem",elem)
-                           for(let e of elem) {
-                              this.props.onImageVolumeManifest(iiifpres+"/2.1.1/v:"+ e.value.replace(new RegExp(bdr), "bdr:") + "/manifest",this.props.IRI);
-                           }
-                        }
-                     }
-                     else if(this.props.imageVolumeManifests !== true) for(let id of Object.keys(this.props.imageVolumeManifests)) {
-                        if(!imageLinks[id])
-                        {
-                           let manif = this.props.imageVolumeManifests[id]
-                           //console.log("k",id,manif)
-                           if(manif && manif.sequences && manif.sequences[0] && manif.sequences[0].canvases) {
-                              let nc = 0, np = 0                           
-                              imageLinks[id] = manif.sequences[0].canvases.reduce( (acc,e) => {
-                                 if(e.label) { 
-                                    //console.log("label",e.label)
-                                    return ({
-                                       ...acc, [Number(e.label[0]["@value"].replace(/[^0-9]/g,""))]:{id:e["@id"],image:e.images[0].resource["@id"]}
-                                    })
-                                 }
-                                 else {
-                                    //console.log("no lab",e)
-                                    return acc ; 
-                                 }
-                              },{})
-                              //console.log("imaL",imageLinks)
-                              this.setState({ ...this.state,imageLinks:{...this.state.imageLinks, [this.props.IRI]: imageLinks } })
-                           }
-                        }
-                     }
-                     
-
-                     /*
-                     if(!this.props.resourceManifest && this.props.resourceManifest.sequences && this.props.resourceManifest.sequences[0] && this.props.resourceManifest.sequences[0].canvases) {
-                        let nc = 0, np = 0
-                        imageLinks = this.props.resourceManifest.sequences[0].canvases.reduce( (acc,e) => ({
-                           ...acc, [Number(e.label[0]["@value"].replace(/[^0-9]/g,""))]:{id:e["@id"],image:e.images[0].resource["@id"]}
-                        }),{})
-                     }
-
-                     */
-
-                     let openMiradorAtPage = (num,manif) => {
-                        //console.log("num?",num)
-                        window.MiradorUseEtext = true ; 
-                        this.showMirador(num,manif);
-                     }
-
-                     //console.log("imL",imageLinks)
-
-                     return (
-                        
-                        [<InfiniteScroll
-                        id="etext-scroll"
-                        hasMore={true}
-                        pageStart={0}
-                        loadMore={(e) => { 
-                           
-                              //console.log("next?",this.props.nextChunk,next,JSON.stringify(elem,null,3))
-
-                              if(this.props.nextPage !== next) {                               
-                                 this.props.onGetPages(this.props.IRI,next); 
-                              } 
-                           }
-                        }
-                        //loader={<Loader loaded={false} />}
-                        >
-                                 {/* {this.hasSub(k)?this.subProps(k):tags.map((e)=> [e," "] )} */}
-                                 { elem.map( e => (
-                                    <div class={"etextPage"+(this.props.manifestError&&!imageLinks?" manifest-error":"")+ (!e.value.match(/[\n\r]/)?" unformated":"")+(e.language === "bo"?" lang-bo":"")}>
-                                       {/*                                          
-                                          e.seq && this.state.collapse["image-"+this.props.IRI+"-"+e.seq] && imageLinks[e.seq] &&
-                                          <img title="Open image+text view in Mirador" onClick={eve => { openMiradorAtPage(imageLinks[e.seq].id) }} style={{maxWidth:"100%"}} src={imageLinks[e.seq].image} />
-                                       */}
-                                       {
-                                          e.seq && this.state.collapse["image-"+this.props.IRI+"-"+e.seq] && Object.keys(imageLinks).sort().map(id => {
-                                             if(!this.state.collapse["imageVolume-"+id] && imageLinks[id][e.seq]) return <div class="imagePage">
-                                                      <img class="page" title="Open image+text view in Mirador" src={imageLinks[id][e.seq].image} onClick={eve => { 
-                                                         let manif = this.props.imageVolumeManifests[id]
-                                                         openMiradorAtPage(imageLinks[id][e.seq].id,manif["@id"])
-                                                      }}/>          
-                                                      <div class="small"><a title="Open image+text view in Mirador" onClick={eve => { 
-                                                         let manif = this.props.imageVolumeManifests[id]
-                                                         openMiradorAtPage(imageLinks[id][e.seq].id,manif["@id"])
-                                                      }}>p.{e.seq}</a> from {this.uriformat(null,{value:id.replace(/bdr:/,bdr).replace(/[/]V([^_]+)_I.+$/,"/W$1")})}                                                      
-                                                      <IconButton className="hide" title={"Hide this image volume"} 
-                                                         onClick={(eve) => {
-                                                            this.setState({...this.state, collapse:{...this.state.collapse, ["imageVolume-"+id]:true}}) 
-                                                         }}> 
-                                                         <VisibilityOff/>
-                                                      </IconButton> 
-                                                      <br/>
-                                                      {/* [<a class="toggle-volume">hide</a>]*/}
-                                                      </div>        
-                                                    </div>
-                                          })
-                                       }
-                                       <div class="overpage">
-                                          <h4 class="page">{e.value.split("\n").map(f => {
-                                                //let label = getLangLabel(this,[{"@language":e.language,"@value":f}])
-                                                //if(label) label = label["@value"]
-                                                let label = f
-                                                return ([label,<br/>])})}
-                                          </h4>
-                                       </div>
-                                       { e.seq && <div> 
-                                          <IconButton  title={(!this.state.collapse["image-"+this.props.IRI+"-"+e.seq]?"Show":"Hide")+" available scans for this page"} style={{marginLeft:"8px"}}
-                                          onClick={(eve) => {
-                                                let id = "image-"+this.props.IRI+"-"+e.seq
-                                                this.setState({...this.state, collapse:{...this.state.collapse, [id]:!this.state.collapse[id]}}) 
-                                             }}> 
-                                             <img src="/scan_icon.svg"/>
-                                          </IconButton> 
-                                          {/* { <h5><a title="Open image+text view in Mirador" onClick={eve => { openMiradorAtPage(imageLinks[e.seq].id) }}>p.{e.seq}</a></h5> } */}
-                                          {   [ <h5><a title={(!this.state.collapse["image-"+this.props.IRI+"-"+e.seq]?"Show":"Hide")+" available scans for this page"} onClick={(eve) => {
-                                                let id = "image-"+this.props.IRI+"-"+e.seq
-                                                this.setState({...this.state, collapse:{...this.state.collapse, [id]:!this.state.collapse[id]}}) 
-                                             }}>p.{e.seq}</a>                                             
-                                             </h5> ,
-                                             <IconButton className="close" data-seq={"image-"+this.props.IRI+"-"+e.seq} title="Configure which image volumes to display" 
-                                                onClick={e => { 
-                                                   $(e.target).closest("button").addClass("show");
-                                                   this.setState({...this.state,
-                                                      collapse:{...this.state.collapse, imageVolumeDisplay:!this.state.collapse.imageVolumeDisplay},
-                                                      anchorElemImaVol:e.target
-                                                   })} }
-                                                >
-                                                <SettingsApp/>
-                                             </IconButton>]
-                                             }                  
-                                          {/* -- available from { Object.keys(imageLinks).sort().map(id => <span>{this.uriformat(null,{value:id.replace(/bdr:/,bdr)})}</span>)} </h4> } */}
-                                       </div> }
-                                    </div>))  }
-                              {/* // import make test fail...
-                                 <div class="sub">
-                                 <AnnotatedEtextContainer dontSelect={true} chunks={elem}/>
-                                 </div>
-                              */}
-                        </InfiniteScroll>,
-                        <Popover
-                           className="imageVolumePopup"
-                           open={this.state.collapse.imageVolumeDisplay}
-                           anchorEl={this.state.anchorElemImaVol}
-                           onClose={e => { 
-                              if(!this.state.collapse.imageVolumeDisplay == false)
-                              {
-                                 setTimeout(() => {$(".close.show").removeClass("show");},500)
-                                 this.setState({
-                                    ...this.state,
-                                    collapse:{ ...this.state.collapse, imageVolumeDisplay:false },
-                                    anchorElemImaVol:null   
-                                 });
-                              }
-                           }}
-                           >
-                              {/* <MenuItem onClick={(e) => {
-                                 let collapse = { ...this.state.collapse, imageVolumeDisplay:false }             
-                                 Object.keys(imageLinks).map(id => { if(collapse["imageVolume-"+id] !== undefined) { delete collapse["imageVolume-"+id]; } })
-                                 this.setState({...this.state,collapse})
-                              }}>Show all volumes</MenuItem>  */}
-                              { imageLinks && Object.keys(imageLinks).sort().map(id => <MenuItem onClick={e => {
-                                    this.setState({...this.state,collapse:{...this.state.collapse, /*imageVolumeDisplay:false,*/ ["imageVolume-"+id]:!this.state.collapse["imageVolume-"+id]}})
-                                    //setTimeout(() => {$(".close.show").removeClass("show");},350)
-                                 }}>{[
-                                    (this.state.collapse["imageVolume-"+id]?<PanoramaFishEye style={{opacity:0.65}}/>:<CheckCircle style={{opacity:0.65}}/>),
-                                    <span>&nbsp;&nbsp;</span>,
-                                    this.uriformat(null,{value:id.replace(/bdr:/,bdr).replace(/[/]V([^_]+)_I.+$/,"/W$1")},undefined,undefined,"view")
-                                 ]}
-                              </MenuItem>) }                             
-                        </Popover>]
-                     )
+                     return this.renderEtextHasPage(elem, kZprop, iiifpres)
                   }
                   else if(k == bdo+"eTextHasChunk" && kZprop.indexOf(bdo+"eTextHasPage") === -1) {
-                     
-                     let next = 0;
-                     if(elem && elem.length) next = elem.filter(e => e.value && e.end)
-                     if(next && next.length) next = next[next.length - 1].end + 1
-                     else next = 0
-                     
-                     
-                     return (
-                        
-                        <InfiniteScroll
-                        id="etext-scroll"
-                        hasMore={true}
-                        pageStart={0}
-                        loadMore={(e) => { 
-                           
-                              //console.log("next?",this.props.nextChunk,next,JSON.stringify(elem,null,3))
-
-                              if(this.props.nextChunk !== next) {                               
-                                 this.props.onGetChunks(this.props.IRI,next); 
-                              } 
-                           }
-                        }
-                        //loader={<Loader loaded={false} />}
-                        >
-                           <h3 class="chunk"><span>{this.proplink(k)}</span>:&nbsp;</h3>
-                              {this.hasSub(k)?this.subProps(k):tags.map((e)=> [e," "] )}
-                           {/* // import make test fail...
-                              <div class="sub">
-                              <AnnotatedEtextContainer dontSelect={true} chunks={elem}/>
-                              </div>
-                           */}
-                        </InfiniteScroll>
-                     )
+                     return this.renderEtextHasChunk(elem, k, tags)                     
                   }
                   else if(k !== bdo+"eTextHasChunk") {
-
-                     let ret,isSub
-                     if(this.hasSub(k)) { 
-                        isSub = true
-                        ret = this.subProps(k)
-                     }
-                     if(!ret || ret.length === 0) ret = tags.map((e)=> [e," "] )
-
-                     let expand
-                     let maxDisplay = 10
-                     if(hasMaxDisplay) maxDisplay = hasMaxDisplay ;
-                     if(!isSub && elem && elem.filter && elem.filter(t=>t && (t.type === "uri" || t.type === "literal")).length > maxDisplay) {
-                       /*
-                       return (
-                         <div>
-                            <h3><span>{this.proplink(k)}</span>:&nbsp;<span
-                              onClick={(e) => this.setState({...this.state,collapse:{...this.state.collapse,[k]:!this.state.collapse[k]}})}
-                              className="expand">{!this.state.collapse[k]?<ExpandMore/>:<ExpandLess/>}</span></h3>
-                            <Collapse className={"propCollapse in-"+(this.state.collapse[k]===true)} in={this.state.collapse[k]}>{ret}</Collapse>
-                         </div>
-                       )
-                       */
-                         return (
-                            <div>
-                               <h3><span>{this.proplink(k)}</span>:&nbsp;<span
-                                 onClick={(e) => this.setState({...this.state,collapse:{...this.state.collapse,[k]:!this.state.collapse[k]}})}
-                                 className="toggle-expand">
-                                  { this.state.collapse[k] && <ExpandLess/>}
-                                  { !this.state.collapse[k] && <ExpandMore/>}
-                                </span></h3>
-                               <div style={{width:"100%"}} className="propCollapseHeader">{ret.splice(0,maxDisplay)}</div>
-                                <Collapse className={"propCollapse in-"+(this.state.collapse[k]===true)} in={this.state.collapse[k]}>
-                                   {ret}
-                                </Collapse>
-                               { <span
-                                 onClick={(e) => this.setState({...this.state,collapse:{...this.state.collapse,[k]:!this.state.collapse[k]}})}
-                                 className="expand">
-                                  {"("+(this.state.collapse[k]?"hide":"see more")+")"}
-                                </span> }
-                            </div>
-                         )
-                     }
-                     else {
-                       return (
-                          <div>
-                             <h3><span>{this.proplink(k)}</span>:&nbsp;</h3>
-                             {ret}
-                          </div>
-                       )
-                     }
+                     return this.renderGenericProp(elem, k, tags, hasMaxDisplay)
                   }
                }
-
-
             }
-
          } ) }
-
-         { ["Role"].indexOf(getEntiType(this.props.IRI)) !== -1 && this.props.assocResources && Object.keys(this.props.assocResources).length > 0 &&
-            <div>
-               <h3><span>Associated Persons</span>:&nbsp;</h3>
-            {   this.props.assocResources &&
-                  (assoP = Object.keys(this.props.assocResources).filter(e => !this.props.assocResources[e].filter(f => f.fromKey).length)).map((e,i) =>
-                        i<20?
-                           <h4 class={assoP.length>1 ? "multiple" : ""}>{this.uriformat(tmp+"AssociatedPersons",{value:e})}</h4>
-                        :(i==20?
-                           <h4 class="multiple"><a href={'/search?r='+this.props.IRI}>browse all</a>)</h4>:null))
-            }
-            </div>
-         }
+         { this.renderRoles() }
       </div>
+   }
+   
+   renderAnnoPanel = () => {
+      return (
+         <div className={"SidePane right "  +(this.state.annoPane?"visible":"")} style={{top:"0",paddingTop:"50px"}}>
+               <IconButton className="hide" title="Toggle annotation markers" onClick={e => this.setState({...this.state,showAnno:!this.state.showAnno})}>
+                  { this.state.showAnno && <SpeakerNotesOff/> }
+                  { !this.state.showAnno && <ChatIcon/> }
+               </IconButton>
+               <IconButton id="annoCollec" title="Select displayed annotations collection" onClick={e => this.setState({...this.state,annoCollecOpen:true,anchorElAnno:e.currentTarget})}>
+                  <Layers className={this.state.showAnno && this.state.showAnno != true ? this.state.showAnno:""}/>
+               </IconButton>
+               <Popover
+                  open={this.state.annoCollecOpen == true}
+                  anchorEl={this.state.anchorElAnno}
+                  onClose={this.handleRequestCloseAnno.bind(this)}
+                  >
+                  <MenuItem onClick={this.handleAnnoCollec.bind(this,true)}>All Annotations</MenuItem>
+                  { this.props.annoCollec && Object.keys(this.props.annoCollec).map((e) => {
+                     let labels = this.props.annoCollec[e][rdfs+"label"]
+                     //console.log("labs",labels,this.props.annoCollec[e])
+                     let l = e
+                     if(labels) {
+                        /*
+                        l = labels.filter((e) => (e.value && (e["lang"] == this.props.prefLang || e["xml:lang"] == this.props.prefLang)))[0]
+                        if(!l || l.length == 0) l = labels.filter((e) => (e.value))[0]
+                        */
+                        l = getLangLabel(this, "", labels.filter((e) => (e.value)))
+                        //if(l&& l.length > 0) l = l[0]
+                     }
+                     return (<MenuItem className={e === this.state.showAnno ? "current":""} onClick={this.handleAnnoCollec.bind(this,e)}>{l.value}</MenuItem>)
+                  }) }
+                  {/* <MenuItem onClick={this.handleAnnoCollec.bind(this,"score0")}>See Annotation Collection 0</MenuItem>
+                  <MenuItem onClick={this.handleAnnoCollec.bind(this,"score1")}>See Annotation Collection 1</MenuItem> */}
+               </Popover>
+               <IconButton className="close"  onClick={e => this.setState({...this.state,annoPane:false,viewAnno:false})}>
+                  <Close/>
+               </IconButton>
+            { //this.props.datatypes && (results ? results.numResults > 0:true) &&
+               <div className="data" style={{width:"333px",position:"relative"}}>
+                  <Typography style={{fontSize:"30px",marginBottom:"20px",textAlign:"left"}}>
+                     <Translate value="Asidebar.title" />
+                  </Typography>
+                  {this.props.annoCollec == true && <Loader loaded={false}/>}
+                  { (!this.props.annoCollec || Object.keys(this.props.annoCollec).length === 0 || this._annoPane.length == 0) && !this.state.newAnno &&  "No annotation to show for this "+(typeof this.state.showAnno === 'string' ? "collection":"resource")+"."}
+                  {this.state.viewAnno && !this.state.newAnno && <a className="viewAll" onClick={(event) => {
+                     let s = this.state ;
+                     if(s.viewAnno) {
+                        delete(s.viewAnno);
+                        this.setState({...s})
+                     }
+                  }}>View all</a>}
+                  <div className="sub">
+                     {(!this.state.newAnno || this.state.newAnno.replyTo) && this._annoPane}
+                     {
+                        this.state.newAnno && [<div class="anno new">
+                           {this.state.newAnno.prop}: {this.state.newAnno.val}
+                           <hr/>
+                        </div> ,
+                        <div class="sub">
+                           <h4 class="first type">{this.proplink("http://purl.bdrc.io/ontology/admin/supportedBy")}:</h4>
+                           <div class="subsub new">
+                              <TextField type="text" label="Assertion" multiline={true} fullWidth={true} rows={5} defaultValue={""} helperText="some short help text"/>
+                              <TextField type="text" label="Location" multiline={true} fullWidth={true} rows={3} defaultValue={""} helperText="some short help text"/>
+                              <TextField type="text" label="URL" multiline={true} fullWidth={true} rows={1} defaultValue={""} helperText="some short help text"/>
+                           </div>
+                        </div> ,
+                        <div class="sub">
+                           <h4 class="first type">{this.proplink("http://purl.bdrc.io/ontology/admin/statementScore")}:</h4>
+                           <div class="subsub new">
+                              <TextField type="text" label="Value" multiline={true} fullWidth={true} rows={1} defaultValue={""} helperText="some short help text"/>
+                           </div>
+                        </div> ]
+                     }
+                  </div>
+               </div>
+            }
+         </div>               
+      )
+   }
 
-      console.log("pdf",pdfLink,this._annoPane.length)
+   renderWithdrawn = (withdrawn) => {
 
-      // add nother route to UViewer Gallery page
+      if(withdrawn) return <h3 class="withdrawn"><WarnIcon/>This record has been withdrawn.<WarnIcon/></h3>
+   }
+
+   renderBrowseAssoRes = () => {
+      if(this.props.resources && this.props.resources[this.props.IRI])
+         return (
+            <div class="browse">
+               <Link className="download login" to={"/search?r="+this.props.IRI+"&t=Any"}>
+                  &gt; {I18n.t("resource.browse")}
+               </Link>
+            </div>
+         )
+   }
+
+   renderFirstImage = () => {
+
+      let imageLabel = "images"
+      if(!this.props.collecManif && this.props.imageAsset && this.props.imageAsset.match(/[/]collection[/]/)) imageLabel = "collection"
+
+      if(!this.props.manifestError &&  this.props.imageAsset)
+         return  ( 
+            <div className={"firstImage "+(this.state.imageLoaded?"loaded":"")} {...(this.props.config.hideViewers?{"onClick":this.showMirador.bind(this),"style":{cursor:"pointer"}}:{})} >
+               <Loader className="uvLoader" loaded={this.state.imageLoaded} color="#fff"/>
+               { this.props.firstImage && <img src={this.props.firstImage} /*src={`data:image/${this.props.firstImage.match(/png$/)?'png':'jpeg'};base64,${this.props.imgData}`}*/  onLoad={(e)=>this.setState({...this.state,imageLoaded:true})}/> }
+               {
+                  this.props.firstImage && this.state.imageLoaded &&
+                  <div id="title">
+                     { (!this.props.config || !this.props.config.hideViewers) &&
+                        [<div onClick={this.showUV.bind(this)}>
+                           <span>{I18n.t("resource.view")} {I18n.t("resource."+imageLabel)} {I18n.t("resource.in")} UV</span>
+                           <Fullscreen style={{transform: "scale(1.4)",position:"absolute",right:"3px",top:"3px"}}/>
+                        </div>,
+                        <div onClick={this.showMirador.bind(this)}>
+                           <span>{I18n.t("resource.view")} {I18n.t("resource."+imageLabel)} {I18n.t("resource.in")} Mirador</span>
+                           <Fullscreen style={{transform: "scale(1.4)",position:"absolute",right:"3px",top:"3px"}}/>
+                        </div>,
+                        (imageLabel!=="collection" || this.props.manifests) &&
+                           <div onClick={this.showDiva.bind(this)}>
+                              <span>{I18n.t("resource.view")} {I18n.t("resource."+imageLabel)} {I18n.t("resource.in")} Diva</span>
+                              <Fullscreen style={{transform: "scale(1.4)",position:"absolute",right:"3px",top:"3px"}}/>
+                           </div>
+                        ]
+                     }
+                     { /* this.props.config && this.props.config.hideViewers &&
+                        <div onClick={this.showMirador.bind(this)}>
+                           <span>{I18n.t("resource.view")} {I18n.t("resource."+imageLabel)}</span>
+                           <Fullscreen style={{transform: "scale(1.4)",position:"absolute",right:"3px",top:"3px"}}/>
+                        </div>
+                        */ }
+                  </div>
+               }
+            </div>
+         )
+   }
+
+   renderNoAccess = (fairUse) => {
+      if(fairUse && (!this.props.auth || !this.props.auth.isAuthenticated()) )
+         return <h3 style={{display:"block",marginBottom:"15px"}}><span style={{textTransform:"none"}}>Access limited to first &amp; last 20 pages.<br/>
+                  Please <a class="login" onClick={this.props.auth.login.bind(this,this.props.history.location)}>login</a> if you have sufficient credentials to get access to all images from this work.</span></h3>
+   }
+
+   // TODO check if this is actually used ??
+   renderAccess = () => {
+      if ( this.props.manifestError && this.props.manifestError.error.message.match(/Restricted access/) )
+         return  <h3><span style={{textTransform:"none"}}>Please <a class="login" onClick={this.props.auth.login.bind(this,this.props.history.location)}>login</a> if you have sufficient credentials to get access to images from this work.</span></h3>
+   }
+
+   renderPdfLink = (pdfLink, monoVol, fairUse) => {
+      if( (pdfLink) &&
+                 ( (!(this.props.manifestError && this.props.manifestError.error.message.match(/Restricted access/)) && !fairUse) ||
+                  (this.props.auth && this.props.auth.isAuthenticated())) )
+         return [<br/>,<div style={{display:"inline-block",marginTop:"20px"}}>
+                  <a onClick={ ev => {
+                        //if(that.props.createPdf) return ;
+                        if(monoVol > 0){
+                           this.props.onInitPdf({iri:this.props.IRI,vol:monoVol},pdfLink)
+                        }
+                        else if(!this.props.pdfVolumes) {
+                           this.props.onRequestPdf(this.props.IRI,pdfLink)
+                        }
+                        this.setState({...this.state, pdfOpen:true,anchorElPdf:ev.currentTarget})
+                     }
+                  } class="download login">&gt; Download images as PDF/ZIP</a>
+                  <Loader loaded={(!this.props.pdfVolumes || this.props.pdfVolumes.length > 0)} options={{position:"relative",left:"115%",top:"-11px"}} />
+               </div>]
+   } 
+
+   renderMirador = () => {
+      
+      if((!this.props.manifestError || (this.props.imageVolumeManifests && Object.keys(this.props.imageVolumeManifests).length)) && (this.props.imageAsset || this.props.imageVolumeManifests) && this.state.openMirador)
+         return [<div id="fond" >
+                  <Loader loaded={false} color="#fff"/>
+               </div>,
+               <div id="viewer"></div>,
+               //<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/mirador@2.7.2/dist/css/mirador-combined.css"/>,
+               //<Script url={"https://cdn.jsdelivr.net/npm/mirador@2.7.2/dist/mirador.js"}/>]
+               <link rel="stylesheet" type="text/css" href="../scripts/mirador/css/mirador-combined.css"/>,
+               <link rel="stylesheet" type="text/css" href="../scripts/src/lib/mirador.css"/>,
+               <Script url={"../scripts/mirador/mirador.js"} onLoad={(e) => { require("@dbmdz/mirador-keyboardnavigation"); }} />,
+            ]
+   }
+
+   render()
+   {
+      console.log("render",this.props,this.state)
+   
+      this._annoPane = []
+//
+      if(!this.props.IRI || (this.props.failures && this.props.failures[this.props.IRI]))
+      {
+         let msg = "IRI undefined" ;
+         if(this.props.IRI) msg = "Resource "+this.props.IRI+" does not exist."
+         return (
+            <Redirect404  history={this.props.history} message={msg}/>
+         )
+      }
+
+      let redir, withdrawn
+      if(this.props.resources && (redir = this.props.resources[this.props.IRI]) && (redir = redir[fullUri(this.props.IRI)]))
+      {
+         //console.log("WithD?",redir);
+         if(redir[adm+"replaceWith"]) {
+            redir = shortUri(redir[adm+"replaceWith"][0].value)            
+            return (
+               <Redirect404  history={this.props.history} message={"Record withdrawn in favor of "+redir} to={"/show/"+redir}/>
+            )
+         }
+         else if(this.props.auth.isAuthenticated() && redir[adm+"status"] && (redir = redir[adm+"status"]).length && redir[0].value === bda+"StatusWithdrawn"){
+            withdrawn = true 
+            //console.log("WithD");
+         }         
+      }
+      //console.log("WithD...",redir);
+
+
+      let kZprop = Object.keys(this.properties(true))
+      //console.log("kZprop",kZprop)
+
+      // [TODO] test external pdf download using "rendering" field of manifest
+      let { pdfLink, monoVol } = this.getPdfLink();
+      //console.log("pdf",pdfLink,this._annoPane.length)
+      
+      let fairUse = false
+      if(kZprop.indexOf(adm+"access") !== -1) {
+         let elem = this.getResourceElem(adm+"access")
+         if(elem && elem.filter(e => e.value.match(/(AccessFairUse|AccessRestrictedInChina)$/)).length >= 1) fairUse = true
+         //console.log("adm",elem,fairUse)
+      }
+
+      let iiifpres = "http://iiifpres.bdrc.io" ;
+      if(this.props.config && this.props.config.iiifpres) iiifpres = this.props.config.iiifpres.endpoints[this.props.config.iiifpres.index]      
+
+      this.setManifest(kZprop,iiifpres)    
+
+      let { title,titlElem,otherLabels } = this.setTitle(kZprop) ;
+      //console.log("ttlm",titlElem)
+      
+      let theData = this.renderData(kZprop,iiifpres,title,otherLabels)      
+
       return (
          [<div style={{overflow:"hidden",textAlign:"center"}}>
             { !this.state.ready && <Loader loaded={false} /> }
             <div className={"resource "+getEntiType(this.props.IRI).toLowerCase()}>
-                { top_right_menu(this) }
-                { top_left_menu(this,pdfLink,monoVol,fairUse)  }
-               <div className={"SidePane right "  +(this.state.annoPane?"visible":"")} style={{top:"0",paddingTop:"50px"}}>
-                     <IconButton className="hide" title="Toggle annotation markers" onClick={e => this.setState({...this.state,showAnno:!this.state.showAnno})}>
-                        { this.state.showAnno && <SpeakerNotesOff/> }
-                        { !this.state.showAnno && <ChatIcon/> }
-                     </IconButton>
-                     <IconButton id="annoCollec" title="Select displayed annotations collection" onClick={e => this.setState({...this.state,annoCollecOpen:true,anchorElAnno:e.currentTarget})}>
-                        <Layers className={this.state.showAnno && this.state.showAnno != true ? this.state.showAnno:""}/>
-                     </IconButton>
-                     <Popover
-                        open={this.state.annoCollecOpen == true}
-                        anchorEl={this.state.anchorElAnno}
-                        onClose={this.handleRequestCloseAnno.bind(this)}
-                        >
-                        <MenuItem onClick={this.handleAnnoCollec.bind(this,true)}>All Annotations</MenuItem>
-                        { this.props.annoCollec && Object.keys(this.props.annoCollec).map((e) => {
-                           let labels = this.props.annoCollec[e][rdfs+"label"]
-                           //console.log("labs",labels,this.props.annoCollec[e])
-                           let l = e
-                           if(labels) {
-                              /*
-                              l = labels.filter((e) => (e.value && (e["lang"] == this.props.prefLang || e["xml:lang"] == this.props.prefLang)))[0]
-                              if(!l || l.length == 0) l = labels.filter((e) => (e.value))[0]
-                              */
-                              l = getLangLabel(this, "", labels.filter((e) => (e.value)))
-                              //if(l&& l.length > 0) l = l[0]
-                           }
-                           return (<MenuItem className={e === this.state.showAnno ? "current":""} onClick={this.handleAnnoCollec.bind(this,e)}>{l.value}</MenuItem>)
-                        }) }
-                        {/* <MenuItem onClick={this.handleAnnoCollec.bind(this,"score0")}>See Annotation Collection 0</MenuItem>
-                        <MenuItem onClick={this.handleAnnoCollec.bind(this,"score1")}>See Annotation Collection 1</MenuItem> */}
-                     </Popover>
-                     <IconButton className="close"  onClick={e => this.setState({...this.state,annoPane:false,viewAnno:false})}>
-                        <Close/>
-                     </IconButton>
-                  { //this.props.datatypes && (results ? results.numResults > 0:true) &&
-                     <div className="data" style={{width:"333px",position:"relative"}}>
-                        <Typography style={{fontSize:"30px",marginBottom:"20px",textAlign:"left"}}>
-                           <Translate value="Asidebar.title" />
-                        </Typography>
-                        {this.props.annoCollec == true && <Loader loaded={false}/>}
-                        { (!this.props.annoCollec || Object.keys(this.props.annoCollec).length === 0 || this._annoPane.length == 0) && !this.state.newAnno &&  "No annotation to show for this "+(typeof this.state.showAnno === 'string' ? "collection":"resource")+"."}
-                        {this.state.viewAnno && !this.state.newAnno && <a className="viewAll" onClick={(event) => {
-                           let s = this.state ;
-                           if(s.viewAnno) {
-                              delete(s.viewAnno);
-                              this.setState({...s})
-                           }
-                        }}>View all</a>}
-                        <div className="sub">
-                           {(!this.state.newAnno || this.state.newAnno.replyTo) && this._annoPane}
-                           {
-                              this.state.newAnno && [<div class="anno new">
-                                 {this.state.newAnno.prop}: {this.state.newAnno.val}
-                                 <hr/>
-                              </div> ,
-                              <div class="sub">
-                                 <h4 class="first type">{this.proplink("http://purl.bdrc.io/ontology/admin/supportedBy")}:</h4>
-                                 <div class="subsub new">
-                                    <TextField type="text" label="Assertion" multiline={true} fullWidth={true} rows={5} defaultValue={""} helperText="some short help text"/>
-                                    <TextField type="text" label="Location" multiline={true} fullWidth={true} rows={3} defaultValue={""} helperText="some short help text"/>
-                                    <TextField type="text" label="URL" multiline={true} fullWidth={true} rows={1} defaultValue={""} helperText="some short help text"/>
-                                 </div>
-                              </div> ,
-                              <div class="sub">
-                                 <h4 class="first type">{this.proplink("http://purl.bdrc.io/ontology/admin/statementScore")}:</h4>
-                                 <div class="subsub new">
-                                    <TextField type="text" label="Value" multiline={true} fullWidth={true} rows={1} defaultValue={""} helperText="some short help text"/>
-                                 </div>
-                              </div> ]
-                           }
-                        </div>
-                     </div>
-                  }
-               </div>
-               { withdrawn && <h3 class="withdrawn"><WarnIcon/>This record has been withdrawn.<WarnIcon/></h3>}
-               {/* {this.format("h1",rdf+"type",this.props.IRI)} */}
+               { top_right_menu(this) }
+               { top_left_menu(this,pdfLink,monoVol,fairUse)  }
+               { this.renderAnnoPanel() }
+               { this.renderWithdrawn() }             
                { title }
-               {
-                  this.props.resources && this.props.resources[this.props.IRI] && <div class="browse">
-                     <Link className="download login" to={"/search?r="+this.props.IRI+"&t=Any"}>
-                        &gt; {I18n.t("resource.browse")}
-                     </Link>
-                  </div>
-               }
-               { /*<MapComponent tmp={this.props}/ */}
-               {/*
-                  hasImageAsset && //this.props.openUV &&
-                  <IIIFViewerContainer
-                     manifest={!multipleVolume ? "http://iiifpres.bdrc.io/2.1.1/v:bdr:"+hasImageAsset+"/manifest"
-                                                :"http://iiifpres.bdrc.io/2.1.1/collection/i:bdr:"+hasImageAsset}
-                     location={this.props.history.location}
-                     history={this.props.history}/>
-                     */
-               }
-               {
-                  fairUse && (!this.props.auth || !this.props.auth.isAuthenticated()) &&
-                  <h3 style={{display:"block",marginBottom:"15px"}}><span style={{textTransform:"none"}}>Access limited to first &amp; last 20 pages.<br/>
-                  Please <a class="login" onClick={this.props.auth.login.bind(this,this.props.history.location)}>login</a> if you have sufficient credentials to get access to all images from this work.</span></h3>
-               }
-               {
-                  !this.props.manifestError &&  this.props.imageAsset  && //!this.state.openUV &&
-                  <div className={"firstImage "+(this.state.imageLoaded?"loaded":"")} {...(this.props.config.hideViewers?{"onClick":this.showMirador.bind(this),"style":{cursor:"pointer"}}:{})} >
-                     <Loader className="uvLoader" loaded={this.state.imageLoaded} color="#fff"/>
-                     { this.props.firstImage && <img src={this.props.firstImage} /*src={`data:image/${this.props.firstImage.match(/png$/)?'png':'jpeg'};base64,${this.props.imgData}`}*/  onLoad={(e)=>this.setState({...this.state,imageLoaded:true})}/> }
-                     {
-                        this.props.firstImage && this.state.imageLoaded &&
-                        <div id="title">
-                          { (!this.props.config || !this.props.config.hideViewers) &&
-                            [<div onClick={this.showUV.bind(this)}>
-                                <span>{I18n.t("resource.view")} {I18n.t("resource."+imageLabel)} {I18n.t("resource.in")} UV</span>
-                                <Fullscreen style={{transform: "scale(1.4)",position:"absolute",right:"3px",top:"3px"}}/>
-                             </div>,
-                             <div onClick={this.showMirador.bind(this)}>
-                                <span>{I18n.t("resource.view")} {I18n.t("resource."+imageLabel)} {I18n.t("resource.in")} Mirador</span>
-                                <Fullscreen style={{transform: "scale(1.4)",position:"absolute",right:"3px",top:"3px"}}/>
-                             </div>,
-                             (imageLabel!=="collection" || this.props.manifests) &&
-                                <div onClick={this.showDiva.bind(this)}>
-                                   <span>{I18n.t("resource.view")} {I18n.t("resource."+imageLabel)} {I18n.t("resource.in")} Diva</span>
-                                   <Fullscreen style={{transform: "scale(1.4)",position:"absolute",right:"3px",top:"3px"}}/>
-                                </div>
-                              ]
-                           }
-                           { /* this.props.config && this.props.config.hideViewers &&
-                              <div onClick={this.showMirador.bind(this)}>
-                                 <span>{I18n.t("resource.view")} {I18n.t("resource."+imageLabel)}</span>
-                                 <Fullscreen style={{transform: "scale(1.4)",position:"absolute",right:"3px",top:"3px"}}/>
-                              </div>
-                            */ }
-                        </div>
-                     }
-                  </div>
-               }
-               {
-                  this.props.manifestError && this.props.manifestError.error.message.match(/Restricted access/) &&
-                  <h3><span style={{textTransform:"none"}}>Please <a class="login" onClick={this.props.auth.login.bind(this,this.props.history.location)}>login</a> if you have sufficient credentials to get access to images from this work.</span></h3>
-               }
-               {
-                 (pdfLink) &&
-                 ( (!(this.props.manifestError && this.props.manifestError.error.message.match(/Restricted access/)) && !fairUse) ||
-                  (this.props.auth && this.props.auth.isAuthenticated())) &&
-                 [<br/>,<div style={{display:"inline-block",marginTop:"20px"}}>
-                    <a onClick={ ev => {
-                        //if(that.props.createPdf) return ;
-                         if(monoVol > 0){
-                           this.props.onInitPdf({iri:this.props.IRI,vol:monoVol},pdfLink)
-                         }
-                         else if(!this.props.pdfVolumes) {
-                           this.props.onRequestPdf(this.props.IRI,pdfLink)
-                        }
-                        this.setState({...this.state, pdfOpen:true,anchorElPdf:ev.currentTarget})
-                      }
-                    } class="download login">&gt; Download images as PDF/ZIP</a>
-                    <Loader loaded={(!this.props.pdfVolumes || this.props.pdfVolumes.length > 0)} options={{position:"relative",left:"115%",top:"-11px"}} />
-                  </div>]
-               }
-               {
-                  (!this.props.manifestError || (this.props.imageVolumeManifests && Object.keys(this.props.imageVolumeManifests).length)) && (this.props.imageAsset || this.props.imageVolumeManifests) && this.state.openMirador  &&
-                  [<div id="fond" >
-                     <Loader loaded={false} color="#fff"/>
-                  </div>,
-                  <div id="viewer"></div>,
-                  //<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/mirador@2.7.2/dist/css/mirador-combined.css"/>,
-                  //<Script url={"https://cdn.jsdelivr.net/npm/mirador@2.7.2/dist/mirador.js"}/>]
-                  <link rel="stylesheet" type="text/css" href="../scripts/mirador/css/mirador-combined.css"/>,
-                  <link rel="stylesheet" type="text/css" href="../scripts/src/lib/mirador.css"/>,
-                  <Script url={"../scripts/mirador/mirador.js"} onLoad={(e) => { require("@dbmdz/mirador-keyboardnavigation"); }} />,
-                  ]
-                  //<Script url={"http://library-dev.bdrc.io/scripts/mirador/mirador.js"} onLoad={()=>{$("#fond").addClass("hidden")}} />]
-               }
-               {
-                  !this.props.manifestError && this.props.imageAsset && this.state.openDiva  &&
-                  [
-                     <div id="fond" >
-                        <Loader loaded={false} color="#fff"/>
-                     </div>,
-                     <div id="diva-wrapper"></div>,
-                      <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/diva.js/5.1.3/css/diva.css"/> ]
-                      //(!this.state.openUV || this.state.hideUV) && <Script url={"https://cdnjs.cloudflare.com/ajax/libs/diva.js/5.1.3/js/diva.js"}/>]
-                      /* // diva 6
-                        <link rel="stylesheet" href="//ddmal.github.io/diva.js/try/css/diva.css" />,
-                     (!this.state.openUV || this.state.hideUV) &&
-                        [
-                           <Script url="//ddmal.github.io/diva.js/try/js/diva.js"/>,
-                           window.Diva && <Script url="//ddmal.github.io/diva.js/try/js/plugins/manipulation.js"/>,
-                           window.Diva && <Script url="//ddmal.github.io/diva.js/try/js/plugins/download.js"/>,
-                           window.Diva && <Script url="//ddmal.github.io/diva.js/try/js/plugins/metadata.js"/>
-                        ] */
-
-               }
-               {/* // use with UV v2.0.2
-                  !this.props.manifestError && this.props.imageAsset && this.state.openUV  &&
-                  [<div id="fondUV" className={(this.state.hideUV?"hide":"")}>
-                     <Loader loaded={false} color="#fff"/>
-                  </div>,
-                  <div
-                  className={"uv "+(this.state.toggleUV?"toggled ":"")+(this.state.hideUV?"hide":"")}
-                  data-locale="en-GB:English (GB),cy-GB:Cymraeg"
-                  data-config="http://localhost:3000/config.json"
-                  //data-uri="https://eap.bl.uk/archive-file/EAP676-12-4/manifest"
-                  data-uri={this.props.imageAsset.replace(/[/]i:/,"/iv:")}
-                  data-collectionindex="0"
-                  data-manifestindex="0"
-                  data-sequenceindex="0"
-                  data-fullscreen="true"
-                  data-canvasindex="0"
-                  data-zoom="-1.0064,0,3.0128,1.3791"
-                  data-rotation="0"
-                  style={{width:"0",height:"0",backgroundColor: "#000"}}
-               />,
-                  <Script url={"http://universalviewer.io/uv/lib/embed.js"} />
-               ]*/}
-               {
-                  !this.props.manifestError && this.props.imageAsset && this.state.openUV  &&
-                  [<div id="fond">
-                     <Loader loaded={false} color="#fff"/>
-                  </div>,
-                  <div id="uv" className={"uv"}
-                  style={{backgroundColor: "#000"}}></div>,
-                  <link rel="stylesheet" type="text/css" href="../scripts/uv/uv.css"/>,
-                  <Script url={"../scripts/uv/lib/offline.js"} attributes={{async:false}} onLoad={()=>{this.setState({...this.state,UVcanLoad:true})}}/>,
-                  this.state.UVcanLoad && <Script url={"../scripts/uv/uv.js"}  attributes={{async:false}}/>,
-                  this.state.UVcanLoad && <Script url={"../scripts/uv/helpers.js"} attributes={{async:false}}/>
-               ]}
+               { this.renderBrowseAssoRes() }
+               { this.renderNoAccess(fairUse) }
+               { this.renderFirstImage() }
+               { this.renderAccess() }
+               { this.renderPdfLink(pdfLink,monoVol,fairUse) }
+               { this.renderMirador() }           
                { theData }
             </div>
-            {/* <iframe style={{width:"calc(100% - 100px)",margin:"50px",height:"calc(100vh - 160px)",border:"none"}} src={"http://purl.bdrc.io/resource/"+get.IRI}/> */}
          </div>,
          <LanguageSidePaneContainer />]
 

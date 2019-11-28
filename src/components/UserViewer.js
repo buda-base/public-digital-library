@@ -112,7 +112,7 @@ class UserViewer extends ResourceViewer
         let range = this.props.dictionary, isOk = true        
         if(range) range = range[tag]
         if(range) range = range[rdfs+"range"]
-        if(range) for(let propType of range) isOk = isOk && (await this._validators[propType.value](value))
+        if(range) for(let propType of range) isOk = isOk && (!this._validators[propType.value] || (await this._validators[propType.value](value)))
         return isOk
     }
 
@@ -134,7 +134,7 @@ class UserViewer extends ResourceViewer
             else {            
                 if(close) setTimeout( () => this.togglePopover(event, tag), 10) ;
                 if(this.state.errors[tag]) delete this.state.errors[tag]
-                if(!state.resource[tag] || state.resource[tag][0].value !== value) state.updates[tag] = value
+                if(!state.resource[tag] || state.resource[tag][0].value !== value || state.updates[tag] && state.updates[tag] !== value) state.updates[tag] = value
             }
 
             this.setState(state)
