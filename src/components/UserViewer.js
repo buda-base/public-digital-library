@@ -15,8 +15,10 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import bdrcApi from '../lib/api';
 
-const foaf  = "http://xmlns.com/foaf/0.1/" ;
 const bdou  = "http://purl.bdrc.io/ontology/ext/user/" ;
+const foaf  = "http://xmlns.com/foaf/0.1/" ;
+const rdfs  = "http://www.w3.org/2000/01/rdf-schema#" ;
+const xsd   = "http://www.w3.org/2001/XMLSchema#" ;
 
 const api = new bdrcApi({...process.env.NODE_ENV === 'test' ? {server:"http://localhost:5555/test"}:{}});
 
@@ -30,10 +32,11 @@ class UserViewer extends ResourceViewer
         super(props);
         this.togglePopover.bind(this)
         this.valueChanged.bind(this)
-        this.validateUrl.bind(this)
+        this.validateURI.bind(this)
+        this.dataValidation.bind(this)
 
         this._validators = {
-            [bdou+"image"] : this.validateUrl
+            [xsd+"anyURI"] : this.validateURI  
         }
     }
     
@@ -47,7 +50,7 @@ class UserViewer extends ResourceViewer
         }
     }   
 
-    validateUrl = async (url) => {
+    validateURI = async (url) => {
         if(url && !url.match(/^https?:[/][/]/i)) return false
 
         try {
@@ -105,6 +108,14 @@ class UserViewer extends ResourceViewer
         )
     }    
 
+    dataValidation = async (tag:string, value:string) => {
+        let range = this.props.dictionary, isOk = true        
+        if(range) range = range[tag]
+        if(range) range = range[rdfs+"range"]
+        if(range) for(let propType of range) isOk = isOk && (await this._validators[propType.value](value))
+        return isOk
+    }
+
     valueChanged = (event:Event, tag:string, close:boolean = false) => {
         
         console.log("vCh",event.target,event.key,close)
@@ -115,7 +126,7 @@ class UserViewer extends ResourceViewer
 
             let value = event.target.value
             let state = { ...this.state }
-            let isOk = await this._validators[tag](value)
+            let isOk = await this.dataValidation(tag, value)            
 
             if(!isOk) { 
                 state.errors = { ...state.errors, [tag] : true }
