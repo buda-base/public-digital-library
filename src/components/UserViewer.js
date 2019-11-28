@@ -1,8 +1,12 @@
 
 import React, { Component } from 'react';
 import ResourceViewer from './ResourceViewer' ;
-import PhotoIcon from '@material-ui/icons/Settings'; //PhotoOutlined';
+import SettingsIcon from '@material-ui/icons/Settings'; 
 import CheckIcon from '@material-ui/icons/Check'; 
+import DeleteIcon from '@material-ui/icons/Delete'; 
+import LibraryAddIcon from '@material-ui/icons/LibraryAdd';
+import VisibilityIcon from '@material-ui/icons/Visibility';
+import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
 import CancelIcon from '@material-ui/icons/CancelOutlined'; 
 import CloseIcon from '@material-ui/icons/Close'; 
 import InputAdornment from '@material-ui/core/InputAdornment';
@@ -54,8 +58,7 @@ class UserViewer extends ResourceViewer
         if(url && !url.match(/^https?:[/][/]/i)) return false
 
         try {
-
-            let test = await api._fetch( url, { method:"GET", mode:"no-cors" } )
+            let test = await api._fetch( url, { method:"GET", mode:"no-cors" } )            
             //console.log("valid",url,test)
             return true
         }
@@ -146,6 +149,18 @@ class UserViewer extends ResourceViewer
 
     }
  
+    preprop = (k) => {
+        return (
+            <div class="preprop">
+                <a title={I18n.t("user.edit.del")}><DeleteIcon/></a>
+                <a title={I18n.t("user.edit.add")}><LibraryAddIcon/></a>
+                <a title={I18n.t("user.edit.set")}><SettingsIcon/></a>
+                <a title={I18n.t("user.edit.hide")}><VisibilityOffIcon/></a> 
+                { false && <a title={I18n.t("user.edit.show")}><VisibilityIcon/></a>  }
+            </div>
+        )
+    }
+
     getH2 = () => {
         let email,picUrl,pic
         if(this.state.resource) {
@@ -160,7 +175,7 @@ class UserViewer extends ResourceViewer
                 if(this.state.updates[bdou+"image"]) picUrl = this.state.updates[bdou+"image"]
                 pic = 
                     <div id="avatar">
-                        <a class="hover" onClick={(e) => this.togglePopover(e, bdou+"image")} title={I18n.t("user.photo.hover")}><PhotoIcon/></a>
+                        <a class="hover" onClick={(e) => this.togglePopover(e, bdou+"image")} title={I18n.t("user.photo.hover")}><SettingsIcon/></a>
                         <img src={picUrl} width="80"/>
                         { 
                             this.renderPopover(

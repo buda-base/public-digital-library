@@ -6,6 +6,13 @@ const enTranslation = {
          label:"Profile Picture",                                
          helperText:"Paste a direct link to an existing picture",
          error:"Error: cannot find image, please check your link"
+      },
+      edit:{
+         add:"Add another value to property",
+         del:"Delete property",
+         set:"Modify value",
+         hide:"Set private",
+         show:"Set public",
       }
    },
    misc:{

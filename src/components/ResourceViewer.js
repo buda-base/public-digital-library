@@ -2380,7 +2380,6 @@ class ResourceViewer extends Component<Props,State>
          });
    };
 
-
    proplink = (k,txt) => {
 
       let tooltip
@@ -2399,7 +2398,10 @@ class ResourceViewer extends Component<Props,State>
 
       return ret;
    }
-   
+
+   // to be redefined in subclass
+   preprop = (k) => {} 
+
    getH2 = (title,_befo) => {
       return <h2>{_befo}{title.value}{this.tooltip(title.lang)}</h2>
    }
@@ -2760,8 +2762,8 @@ class ResourceViewer extends Component<Props,State>
       }
       else {
          return (
-            <div>
-               <h3><span>{this.proplink(k)}</span>:&nbsp;</h3>
+            <div>               
+               <h3>{this.preprop(k)}<span>{this.proplink(k)}</span>:&nbsp;</h3>
                {ret}
             </div>
          )
@@ -3302,6 +3304,9 @@ class ResourceViewer extends Component<Props,State>
             ]
    }
 
+   // to be redefined in subclass
+   renderPostData = () => {}
+
    render()
    {
       console.log("render",this.props,this.state)
@@ -3375,6 +3380,7 @@ class ResourceViewer extends Component<Props,State>
                { this.renderPdfLink(pdfLink,monoVol,fairUse) }
                { this.renderMirador() }           
                { theData }
+               { this.renderPostData() }           
             </div>
          </div>,
          <LanguageSidePaneContainer />]
