@@ -24,6 +24,7 @@ import {shortUri,fullUri} from './App'
 const bdg   = "http://purl.bdrc.io/graph/" ;
 const bdou  = "http://purl.bdrc.io/ontology/ext/user/" ;
 const foaf  = "http://xmlns.com/foaf/0.1/" ;
+const rdf   = "http://www.w3.org/1999/02/22-rdf-syntax-ns#" ;
 const rdfs  = "http://www.w3.org/2000/01/rdf-schema#" ;
 const xsd   = "http://www.w3.org/2001/XMLSchema#" ;
 
@@ -64,7 +65,6 @@ class UserViewer extends ResourceViewer
         if(!IRI || !this.props.resources || !this.props.resources[IRI]
             || !this.props.resources[IRI][this.expand(IRI)]
             || !this.props.resources[IRI][this.expand(IRI)][prop]) return ;
-
 
         let elem ;
         elem = [ ...this.props.resources[IRI][this.expand(IRI)][prop] ]
@@ -248,10 +248,24 @@ class UserViewer extends ResourceViewer
         return <h2>{pic}{email}</h2>
     }
 
+    getPatchValue = (tag:string, value:any) => {
+        let prop, T, start='', end=''
+        prop = this.props.dictionary[tag]
+        if(prop) {
+            T = prop[rdfs+"range"]
+            //console.log("prop",prop,T)
+            if(T && T.length) {
+                     if(T[0].value === xsd+"anyURI")       { start = "<" ; end = ">" ; }
+                else if(T[0].value === rdf+"PlainLiteral") { start = '"' ; end = '"' ; }                
+            }
+        }
+        return start + value + end
+    }
+
     getPatch = (tag:string, graph:string) => {
         return `\
-D  <${ this.props.IRI }> <${ tag }> <${ this.state.resource[tag][0].value }> <${ graph }> .
-A  <${ this.props.IRI }> <${ tag }> <${ this.state.updates[tag] }> <${ graph }> .`  
+D  <${ this.props.IRI }> <${ tag }> ${ this.getPatchValue(tag, this.state.resource[tag][0].value) } <${ graph }> .
+A  <${ this.props.IRI }> <${ tag }> ${ this.getPatchValue(tag, this.state.updates[tag]) } <${ graph }> .`  
     }
 
     renderPostData = () => {

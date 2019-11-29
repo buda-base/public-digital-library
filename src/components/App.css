@@ -454,8 +454,8 @@ h3 .expand svg { position:absolute; margin-top:-18px; }*/
 .userPopoverContent .buttons a:first-child svg { color:green; }
 .userPopoverContent .buttons a:last-child  svg { color:red; }
 
-.resource.user #patch { background:#eee; border:1px solid #999; padding:20px; position:relative; margin-top:30px; overflow-x:auto;}
-.resource.user #patch::before { content:'RDF Patch:'; position:absolute;left:-1px; top:-20px;display:block; }
+.resource.user #patch { background:#eee; border:1px solid #999; padding:20px; position:relative; margin-top:30px; overflow-x:auto; overflow-y:visible;}
+/* .resource.user #patch::before { content:'RDF Patch:'; position:absolute;left:-1px; top:-20px;display:block; } */
 
 /* .resource h3 { position:relative; } */
 .resource h3 .preprop .menu { position:absolute; text-align:right; right:100%; top:0px; padding:5px; display:none;  width:100px;}
