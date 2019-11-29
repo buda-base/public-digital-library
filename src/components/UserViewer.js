@@ -18,7 +18,10 @@ import MenuItem from '@material-ui/core/MenuItem';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import bdrcApi from '../lib/api';
+import {shortUri,fullUri} from './App'
 
+
+const bdg   = "http://purl.bdrc.io/graph/" ;
 const bdou  = "http://purl.bdrc.io/ontology/ext/user/" ;
 const foaf  = "http://xmlns.com/foaf/0.1/" ;
 const rdfs  = "http://www.w3.org/2000/01/rdf-schema#" ;
@@ -243,6 +246,31 @@ class UserViewer extends ResourceViewer
             }
         }
         return <h2>{pic}{email}</h2>
+    }
+
+    getPatch = (tag:string, graph:string) => {
+        return `\
+D  <${ this.props.IRI }> <${ tag }> <${ this.state.resource[tag][0].value }> <${ graph }> .
+A  <${ this.props.IRI }> <${ tag }> <${ this.state.updates[tag] }> <${ graph }> .`  
+    }
+
+    renderPostData = () => {
+        let mods = Object.keys(this.state.updates)
+        let id = shortUri(this.props.IRI).split(':')[1]
+        let graph = bdg+id
+
+        if(mods && mods.length) 
+            return (
+                <pre id="patch" contenteditable="true">
+                { `\
+H  id      "..."
+H  graph   "${ graph }"
+H  mapping "${ graph }-user" .
+TX . 
+${ mods.map(k => this.getPatch(k,graph)).join("\n") }
+TC . `          } 
+                </pre>
+            )
     }
 }
 

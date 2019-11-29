@@ -477,7 +477,7 @@ function top_left_menu(that,pdfLink,monoVol,fairUse)
 
        <CopyToClipboard text={"http://purl.bdrc.io/resource/"+that.props.IRI.replace(/^bdr:/,"")} onCopy={(e) =>
                 //alert("Resource url copied to clipboard\nCTRL+V to paste")
-                prompt("Resource url has been copied to clipboard.\nCTRL+V to paste","http://purl.bdrc.io/resource/"+that.props.IRI.replace(/^bdr:/,""))
+                prompt("Resource url has been copied to clipboard.\nCTRL+V to paste",fullUri(that.props.IRI))
           }>
 
           <IconButton style={{marginLeft:"0px"}} title="Permalink">
