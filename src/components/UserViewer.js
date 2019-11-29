@@ -20,6 +20,7 @@ import ListItem from '@material-ui/core/ListItem';
 import bdrcApi from '../lib/api';
 import {shortUri,fullUri} from './App'
 
+const uuid = require('uuid/v1')
 
 const bdg   = "http://purl.bdrc.io/graph/" ;
 const bdou  = "http://purl.bdrc.io/ontology/ext/user/" ;
@@ -35,6 +36,7 @@ class UserViewer extends ResourceViewer
     _dontMatchProp = "mbox|type|isActive|hasUserProfile" ;
     _timeOut ;
     _validators ; 
+    _uuid ;
     
     constructor(props){
         super(props);
@@ -56,6 +58,7 @@ class UserViewer extends ResourceViewer
 
             return { ...state, IRI:props.IRI, resource:res, ready:true }
         }
+        return null ;
     }   
     
     
@@ -273,11 +276,15 @@ A  <${ this.props.IRI }> <${ tag }> ${ this.getPatchValue(tag, this.state.update
         let id = shortUri(this.props.IRI).split(':')[1]
         let graph = bdg+id
 
-        if(mods && mods.length) 
+        if(mods && mods.length) {
+        
+            // TODO change uuid after patch sent or canceled
+            if(!this._uuid) this._uuid = uuid()
+
             return (
                 <pre id="patch" contenteditable="true">
                 { `\
-H  id      "..."
+H  id      "${ this._uuid }"
 H  graph   "${ graph }"
 H  mapping "${ graph }-user" .
 TX . 
@@ -285,6 +292,7 @@ ${ mods.map(k => this.getPatch(k,graph)).join("\n") }
 TC . `          } 
                 </pre>
             )
+        }
     }
 }
 
