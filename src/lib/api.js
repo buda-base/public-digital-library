@@ -12,6 +12,7 @@ const CONFIGDEFAULTS_PATH = '/config-defaults.json'
 const ONTOLOGY_PATH = '/ontology/core.json'
 const DICTIONARY_PATH = '/ontology/data/json'
 const USER_PATH = '/resource-nc/user/me'
+const USER_EDIT_POLICIES_PATH = '/userEditPolicies'
 
 const dPrefix = {
    "bdr": {
@@ -217,6 +218,13 @@ export default class API {
             //console.log("manif",manif)
             return manif ;
       }
+
+   async loadUserEditPolicies()
+   {
+         let userEditPolicies =  JSON.parse(await this.getURLContents(this._userEditPoliciesPath,false));
+         return userEditPolicies ;
+   }
+
 
     async loadUser()
     {
@@ -697,6 +705,19 @@ export default class API {
           return path;
       }
 
+      get _userEditPoliciesPath(): string {
+         let path = USER_EDIT_POLICIES_PATH;
+
+         let config = store.getState().data.config.ldspdi
+         let url = config.endpoints[config.index] ;
+
+         path = url + USER_EDIT_POLICIES_PATH;
+         
+         // to use with ldspdi running locally
+         path = "//purl.bdrc.io" + USER_EDIT_POLICIES_PATH;
+
+         return path;
+      }
 
      get _userPath(): string {
         let path = USER_PATH;

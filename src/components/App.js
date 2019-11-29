@@ -3392,7 +3392,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             </ResizableBox></div>
             { showMenus }
             <div className={"SearchPane"+(this.props.keyword ?" resultPage":"")} >
-               <a target="_blank" href="https://www.buddhistarchive.org/" style={{display:"inline-block",marginBottom:"25px"}}>
+               <a target="_blank" href="https://www.tbrc.org/" style={{display:"inline-block",marginBottom:"25px"}}>
                   <img src="/logo.svg" style={{width:"200px"}} />
                </a>
                {/* <h2>BUDA Platform</h2> */}

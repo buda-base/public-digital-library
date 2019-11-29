@@ -161,6 +161,15 @@ export const ontoSearch = (k: string): Action => {
 }
 
 
+TYPES.gotUserEditPolicies = 'GOT_USER_EDIT_POLICIES';
+export const gotUserEditPolicies = (data: {}): Action => {
+    return {
+        type: TYPES.gotUserEditPolicies,
+        payload: data
+    }
+}
+    
+
 TYPES.getUser = 'GET_USER';
 export const getUser = (profile: string): Action => {
     return {
@@ -168,7 +177,6 @@ export const getUser = (profile: string): Action => {
         payload: profile
     }
 }
-
 
 
 TYPES.getResource = 'GET_RESOURCE';

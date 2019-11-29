@@ -303,7 +303,14 @@ function* watchInitiateApp() {
 
 async function getUser(profile)
 {
+   let userEditPolicies = store.getState().data.userEditPolicies 
+   if(!userEditPolicies) {
+      userEditPolicies = await api.loadUserEditPolicies()
+      store.dispatch(dataActions.gotUserEditPolicies(userEditPolicies))
+   }
+
    let user = await api.loadUser()
+
    if(user) {
       let id = user["@id"] ;
       user = { [id] : Object.keys(user).reduce( (acc,k) => {

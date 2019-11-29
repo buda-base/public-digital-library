@@ -86,6 +86,8 @@ const mapStateToProps = (state,ownProps) => {
       }
    }
 
+   let userEditPolicies = state.data.userEditPolicies
+
    let createPdf = state.data.createPdf
    let pdfUrl = state.data.pdfUrl
 
@@ -94,7 +96,7 @@ const mapStateToProps = (state,ownProps) => {
 
    let props = { logged,config,resources, ontology, dictionary, keyword, language, datatype, assocResources, prefLang, failures,
       imageAsset,firstImage,canvasID,collecManif,manifests,manifestError,pdfVolumes,createPdf,pdfUrl,
-      annoCollec,rightPanel,locale,langPreset,imgData, nextChunk, nextPage, resourceManifest, imageVolumeManifests }
+      annoCollec,rightPanel,locale,langPreset,imgData, nextChunk, nextPage, resourceManifest, imageVolumeManifests, userEditPolicies }
 
    console.log("mS2p",state,props)
 

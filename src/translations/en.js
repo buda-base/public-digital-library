@@ -39,7 +39,7 @@ const enTranslation = {
          pi:"Pali",
          piXIast:"Pali (Rom.)",
          bo:"Tibetan (Unicode)",
-         boXEwts:"Tibetan (EWTS)",
+         boXEwts:"Tibetan (Wylie)",
          boXDts:"Tibetan (DTS)",
          boAlaLc:"Tibetan (ALA-LC)",
          other:"Other",
@@ -51,7 +51,7 @@ const enTranslation = {
          newa:"Newari",
          sinh:"Sinhalese",
          latn:"Latin",
-         xEwts:"EWTS",
+         xEwts:"Wylie",
          xDts:"DTS",
          alalc97:"ALA-LC",
          latnPinyin:"Pinyin"
@@ -65,7 +65,7 @@ const enTranslation = {
          saXIast:"Sanskrit transliterated in IAST",
          saDeva:"Sanskrit in Devanagari",
          bo:"Tibetan in Unicode",
-         boXEwts:"Tibetan transliterated in EWTS"
+         boXEwts:"Tibetan transliterated in Wylie"
       },
       langscript:{
          zh:"Chinese",
@@ -80,7 +80,7 @@ const enTranslation = {
          newa:"Newari",
          sinh:"Sinhalese",
          latn:"Latin",
-         xEwts:"EWTS",
+         xEwts:"Wylie",
          xDts:"DTS",
          xIast:"IAST",
          alalc97:"ALA-LC",

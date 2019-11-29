@@ -142,7 +142,9 @@ type State = {
    nextChunk?:number,
    imageLinks?:{},
    resource?:{},
-   IRI?:url
+   IRI?:url,
+   publicProps?:{},
+   emptyPopover?:boolean
  }
 
 
