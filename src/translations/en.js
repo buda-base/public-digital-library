@@ -8,7 +8,7 @@ const enTranslation = {
          error:"Error: cannot find image, please check your link"
       },      
       edit:{
-         add:"Add another value to property",
+         add:"Add another value for property",
          del:"Delete property",
          set:"Modify value",
          hide:"Set private",

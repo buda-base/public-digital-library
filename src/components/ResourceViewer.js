@@ -2736,12 +2736,18 @@ class ResourceViewer extends Component<Props,State>
          isSub = true
          ret = this.subProps(k)
       }
-      if(!ret || ret.length === 0) ret = tags.map((e)=> [e," "] )
+      if(!ret || ret.length === 0) ret = tags.reduce((acc,e)=> [...acc, e," "], [] )
 
       let expand
       let maxDisplay = 10
       if(hasMaxDisplay) maxDisplay = hasMaxDisplay ;
-      if(!isSub && elem && elem.filter && elem.filter(t=>t && (t.type === "uri" || t.type === "literal")).length > maxDisplay) {      
+
+      let n = 0
+      if(elem && elem.filter) n = elem.filter(t=>t && (t.type === "uri" || t.type === "literal")).length
+      if(n > 1) ret = ret.reduce( (acc,e,i) => [ ...acc, ...(e !== " " ? [ e, this.preprop(k,i) ] : [e]) ], [] )
+
+      if(!isSub && n > maxDisplay) {      
+         
          return (
             <div>
                <h3><span>{this.proplink(k)}</span>:&nbsp;<span
@@ -2765,7 +2771,8 @@ class ResourceViewer extends Component<Props,State>
       else {
          return (
             <div>               
-               <h3>{this.preprop(k)}<span>{this.proplink(k)}</span>:&nbsp;</h3>
+               <h3><span>{this.proplink(k)}</span>:&nbsp;</h3>
+               {this.preprop(k)}
                {ret}
             </div>
          )

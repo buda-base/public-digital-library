@@ -443,7 +443,7 @@ h3 .expand svg { position:absolute; margin-top:-18px; }*/
    opacity:0; color:rgba(255,255,255,0.35);transition:all 75ms ease-in-out; }
 .resource.user #avatar:hover .hover { cursor:pointer; opacity:1; }
 
-.resource.user .data > div { margin-left:-50px; padding-left:50px; }
+.resource.user .data > div h3 { margin-left:-50px; padding-left:50px; }
 
 .userPopoverContent { padding:10px; min-width:350px;} 
 .userPopoverContent > div > label:first-child { text-transform: capitalize; }
@@ -462,11 +462,15 @@ h3 .expand svg { position:absolute; margin-top:-18px; }*/
 
 
 /* .resource h3 { position:relative; } */
-.resource h3 .preprop .menu { position:absolute; text-align:right; right:calc(100% - 50px); top:0px; padding:5px; display:none;  width:100px;}
-.resource h3 .preprop .menu a svg { font-size:18px; vertical-align:middle; cursor:pointer; margin-right:2px; color:rgba(0,0,0,0.55); }
-.resource h3 .preprop .menu a { border-bottom:none !important; }
-.resource .data > div:hover > h3 .preprop .menu { display:block; }
-.resource h3 .preprop .popover { position:relative;  }
+.resource .preprop .menu { position:absolute; text-align:right; right:calc(100% /*- 50px*/); /*top:0px;*/ margin-top:-20px; height:26px; padding:5px; display:none;  width:60px;}
+.resource h4 + .preprop .menu { right:calc(100% /*- 50px*/ - 20px); margin-top:-26px; }
+.resource .preprop .menu a svg { font-size:18px; vertical-align:middle; cursor:pointer; margin-right:2px; color:rgba(0,0,0,0.55); }
+.resource .preprop .menu a { border-bottom:none !important; }
+.preprop:hover .menu,
+.resource .data > div > h3:hover + .preprop .menu,
+.resource .data > div > h4:hover + .preprop .menu { display:block; }
+
+/* .resource .preprop .popover { position:relative; } */
 
 [role=menuitem].current { text-decoration:underline !important; }
 
