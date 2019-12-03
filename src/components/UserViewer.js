@@ -134,13 +134,14 @@ class UserViewer extends ResourceViewer
 
     valueChanged = (event:Event, tag:string, index:integer, close:boolean = false) => {
         
-        console.log("vCh",event.target,event.key,close,index)
+        console.log("vCh",close,index)
 
         if(this._timeOut) clearTimeout(this._timeOut)
 
         this._timeOut = setTimeout(((event,tag,close,index) => async () => {             
 
-            let value = event.target.value
+            let value = "" 
+            if(event && event.target) value = event.target.value
             let state = { ...this.state }
             let {isOk, range} = await this.dataValidation(tag, value)            
 
@@ -154,25 +155,27 @@ class UserViewer extends ResourceViewer
             else {            
                 if(this.state.errors[tag]) delete this.state.errors[tag]
                  
-                if(!state.resource[tag] || state.resource[tag][0].value !== value || (state.updates[tag] && state.updates[tag] !== value) ) { 
+                if(!state.resource[tag] || state.resource[tag][0].value !== value || (state.updates[tag] && state.updates[tag] !== value) ) {                     
                     if(!state.updates[tag]) state.updates[tag] = []                    
                     if(!state.updates[tag].length) state.updates[tag] = [ ...state.resource[tag] ]
                     
                     let type 
                     if(range && range.length && ontoTypes[range[0].value]) type = ontoTypes[range[0].value]
  
-                    if(index === -1) state.updates[tag].push({ value, type })
+                    if(state.emptyPopover) state.updates[tag].push({ value, type })
                     else state.updates[tag][index] = { ...state.updates[tag][index], value: value }
                 }
 
                 if(close) setTimeout( () => this.togglePopover(event, tag, index), 10) ;
             }
 
+            // not working: "delete state.emptyPopover" (???)
+            if(state.emptyPopover) state.emptyPopover = false ; 
             this.setState(state)
 
             this._timeOut = 0
 
-        })({...event},tag,close,index),!close?650:10) // shorter delay if popover is supposed to be closing
+        })({...event},tag,close,index),10); //!close?650:10) // shorter delay if popover is supposed to be closing
 
     }
      
@@ -180,25 +183,31 @@ class UserViewer extends ResourceViewer
 
         if(this._timeOut) return ;
 
+        let state = { ...this.state } //, collapse:{...this.state.collapse, [tag]:val}, anchorElPopover:anchor})
+        let update 
+
+        if(index === -1) {
+            if(state.updates[tag]) index = state.updates[tag].length
+            else index = state.resource[tag].length
+        }
 
         let itag = tag 
         if(index !== undefined) itag += "_" + index
         else index = 0
 
-        let val = !this.state.collapse[itag]
+        let val = !state.collapse[itag]
 
         console.log("toggle",val, event, tag, index, clearMod)
 
-        let state = { ...this.state } //, collapse:{...this.state.collapse, [tag]:val}, anchorElPopover:anchor})
-        let update 
-
-        if(val || !this.state.errors[tag] || clearMod) { 
+        if(val || !state.errors[tag] || clearMod) { 
             if(val) {
                 if(!anchor) anchor = event.currentTarget.parentNode        
                 else anchor = anchor(event)
+        
+                if( (!state.updates[tag] && index >= state.resource[tag].length) || (state.updates[tag] && index >= state.updates[tag].length) ) this.valueChanged(null, tag, index)
             }
             update = true ;
-            state.collapse = {...this.state.collapse, [itag]:val} 
+            state.collapse[itag] = val
             state.anchorElPopover = anchor
             if(empty) state.emptyPopover = true
         }
@@ -206,8 +215,6 @@ class UserViewer extends ResourceViewer
         if(!val)  {
             console.log("!val",tag,index,clearMod,empty)
             update = true ;
-            // not working: "delete state.emptyPopover" (???)
-            if(state.emptyPopover) state.emptyPopover = false ; 
             if(clearMod) {
                 if(state.errors[tag]) delete state.errors[tag]
                 if(state.updates[tag] && state.updates[tag][index]) { 
@@ -235,10 +242,10 @@ class UserViewer extends ResourceViewer
 
         if(Array.isArray(value) && value[index]) { 
             value = value[index]
-            if(value && value.value) value = value.value
+            if(value && value.value !== undefined) value = value.value
         }
 
-        if(!value) index = -1
+        //if(!value) index = -1
 
         let label, helper, error ;
         if(info) { 
@@ -283,8 +290,8 @@ class UserViewer extends ResourceViewer
                     { (this.state.updates[tag] || this.state.errors[tag]) && 
                         <div class="buttons bottom">
                             { !this.state.errors[tag] && 
-                                <a title="Save" onClick={(e) => this.togglePopover(e,tag,index) } ><CheckIcon /></a> }
-                            <a title="Cancel" onClick={(e) => this.togglePopover(e,tag,index,true) } ><CloseIcon /></a>
+                                <a title="Update" onClick={(e) => this.togglePopover(e,tag,index) } ><CheckIcon /></a> }
+                            <a title="Reset" onClick={(e) => this.togglePopover(e,tag,index,true) } ><CloseIcon /></a>
                         </div> 
                     }
                 </div>
@@ -311,7 +318,7 @@ class UserViewer extends ResourceViewer
                         </a> }
                     { !isUnique && 
                         <a title={I18n.t("user.edit.add")}
-                           onClick={(e) => this.togglePopover(e, k, i, false, (e) => e.currentTarget.parentNode.parentNode.parentNode, true ) }>
+                           onClick={(e) => this.togglePopover(e, k, -1, false, (e) => e?e.currentTarget.parentNode.parentNode.parentNode:null, true ) }>
                             <LibraryAddIcon/>
                         </a> }
                     { showSet && 
