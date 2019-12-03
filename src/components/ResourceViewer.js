@@ -2744,7 +2744,7 @@ class ResourceViewer extends Component<Props,State>
 
       let n = 0
       if(elem && elem.filter) n = elem.filter(t=>t && (t.type === "uri" || t.type === "literal")).length
-      if(n > 1) ret = ret.reduce( (acc,e,i) => [ ...acc, ...(e !== " " ? [ e, this.preprop(k,i) ] : [e]) ], [] )
+      if(n > 1) ret = ret.reduce( (acc,e,i) => [ ...acc, ...(e !== " " ? [ e, this.preprop(k,Math.floor(i/2)) ] : [e]) ], [] )
 
       if(!isSub && n > maxDisplay) {      
          
@@ -2772,7 +2772,7 @@ class ResourceViewer extends Component<Props,State>
          return (
             <div>               
                <h3><span>{this.proplink(k)}</span>:&nbsp;</h3>
-               {this.preprop(k)}
+               {this.preprop(k,0,n)}
                {ret}
             </div>
          )

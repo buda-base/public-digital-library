@@ -50,6 +50,7 @@ class UserViewer extends ResourceViewer
     constructor(props){
         super(props);
         this.togglePopover.bind(this)
+        this.delValue.bind(this)
         this.valueChanged.bind(this)
         //this.validateURI.bind(this)
         //this.dataValidation.bind(this)
@@ -121,6 +122,16 @@ class UserViewer extends ResourceViewer
         return { isOk, range }
     }
 
+    delValue = (event:Event, tag:string, index:integer) => {
+        let state = { ...this.state }
+        if(!state.updates[tag]) state.updates[tag] = [ ...state.resource[tag] ]
+        if(state.updates[tag][index]) delete state.updates[tag][index]
+        state.updates[tag] = state.updates[tag].filter(e=>e)
+        if(!state.updates[tag].length) delete state.updates[tag]
+        console.log("del",state,tag,index)
+        this.setState(state);
+    }
+
     valueChanged = (event:Event, tag:string, index:integer, close:boolean = false) => {
         
         console.log("vCh",event.target,event.key,close,index)
@@ -133,18 +144,19 @@ class UserViewer extends ResourceViewer
             let state = { ...this.state }
             let {isOk, range} = await this.dataValidation(tag, value)            
 
+            let itag = tag 
+            if(index !== undefined) itag += "_" + index
+            else index = 0 
+
             if(!isOk) { 
                 state.errors = { ...state.errors, [tag] : true }
             } 
             else {            
-                if(close) setTimeout( () => this.togglePopover(event, tag, index), 10) ;
                 if(this.state.errors[tag]) delete this.state.errors[tag]
                  
                 if(!state.resource[tag] || state.resource[tag][0].value !== value || (state.updates[tag] && state.updates[tag] !== value) ) { 
                     if(!state.updates[tag]) state.updates[tag] = []                    
                     if(!state.updates[tag].length) state.updates[tag] = [ ...state.resource[tag] ]
-
-                    if(index === undefined) index = 0 
                     
                     let type 
                     if(range && range.length && ontoTypes[range[0].value]) type = ontoTypes[range[0].value]
@@ -152,34 +164,39 @@ class UserViewer extends ResourceViewer
                     if(index === -1) state.updates[tag].push({ value, type })
                     else state.updates[tag][index] = { ...state.updates[tag][index], value: value }
                 }
+
+                if(close) setTimeout( () => this.togglePopover(event, tag, index), 10) ;
             }
 
             this.setState(state)
 
             this._timeOut = 0
 
-
         })({...event},tag,close,index),!close?650:10) // shorter delay if popover is supposed to be closing
 
     }
      
     togglePopover = (event:Event, tag:string, index:integer, clearMod:boolean=false, anchor:(Event)=>any, empty: boolean = false) => {
-        
+
         if(this._timeOut) return ;
+
 
         let itag = tag 
         if(index !== undefined) itag += "_" + index
+        else index = 0
+
         let val = !this.state.collapse[itag]
 
-        if(val) {
-            if(!anchor) anchor = event.currentTarget.parentNode        
-            else anchor = anchor(event)
-        }
+        console.log("toggle",val, event, tag, index, clearMod)
 
         let state = { ...this.state } //, collapse:{...this.state.collapse, [tag]:val}, anchorElPopover:anchor})
         let update 
 
         if(val || !this.state.errors[tag] || clearMod) { 
+            if(val) {
+                if(!anchor) anchor = event.currentTarget.parentNode        
+                else anchor = anchor(event)
+            }
             update = true ;
             state.collapse = {...this.state.collapse, [itag]:val} 
             state.anchorElPopover = anchor
@@ -187,19 +204,23 @@ class UserViewer extends ResourceViewer
         }
         
         if(!val)  {
+            console.log("!val",tag,index,clearMod,empty)
             update = true ;
             // not working: "delete state.emptyPopover" (???)
-            //console.log("!!empty",state.emptyPopover)
             if(state.emptyPopover) state.emptyPopover = false ; 
             if(clearMod) {
-                if(state.updates[tag] && state.updates[tag][index]) delete state.updates[tag][index]
                 if(state.errors[tag]) delete state.errors[tag]
+                if(state.updates[tag] && state.updates[tag][index]) { 
+                    delete state.updates[tag][index]
+                    state.updates[tag] = state.updates[tag].filter(e=>e)
+                    if(!state.updates[tag].length) delete state.updates[tag]
+                }
             }
         }
 
 
         if(update) { 
-            console.log("!!state",state)
+            console.log("upd",state)
             this.setState(state)
         }
     }
@@ -251,6 +272,7 @@ class UserViewer extends ResourceViewer
 
         let itag = tag 
         if(index !== undefined) itag += "_" + index
+        else index = 0
         
         return (
             <Popover anchorEl={this.state.anchorElPopover }  open={this.state.collapse[itag]} onClose={(e) => this.togglePopover(e,tag,index)}
@@ -270,25 +292,33 @@ class UserViewer extends ResourceViewer
         )
     }    
     
-    preprop = (k:string,i:integer) => {
+    preprop = (k:string,i:integer=0,maxN:integer) => {
 
         let isPublic = this.state.publicProps.indexOf(k) !== -1
         let isBasePublic = basePublicProps.indexOf(k) === -1
         let isUnique = false
 
+        let showSet = !maxN || (maxN === 1)
+        let canDel  = (k !== skos+"prefLabel" || !maxN ) 
+
         return (
             <div class="preprop">
                 <div class="menu">
-                    {/* <a title={I18n.t("user.edit.del")}><DeleteIcon/></a> */}
+                    { canDel && 
+                        <a title={I18n.t("user.edit.del")}
+                           onClick={(e) => this.delValue(e, k, i) }>
+                            <DeleteIcon/>
+                        </a> }
                     { !isUnique && 
                         <a title={I18n.t("user.edit.add")}
                            onClick={(e) => this.togglePopover(e, k, i, false, (e) => e.currentTarget.parentNode.parentNode.parentNode, true ) }>
                             <LibraryAddIcon/>
                         </a> }
+                    { showSet && 
                         <a title={I18n.t("user.edit.set")}  
                            onClick={(e) => this.togglePopover(e, k, i, false, (e) => e.currentTarget.parentNode.parentNode.parentNode ) }>
                             <SettingsIcon/>
-                        </a>
+                        </a> }
                     { ( isBasePublic && isPublic ) && 
                         <a title={I18n.t("user.edit.hide")}><VisibilityOffIcon/></a>  }
                     { !isPublic && <a title={I18n.t("user.edit.show")}><VisibilityIcon/></a> }
@@ -357,14 +387,16 @@ class UserViewer extends ResourceViewer
             // TODO change uuid after patch sent or canceled
             if(!this._uuid) this._uuid = uuid()
 
-            return (
+            let patch = mods.map(k => this.getPatch(k,graph)).join("\n")
+
+            if(patch) return (
                 <pre id="patch" contentEditable="true">
                 { `\
 H  id      "${ this._uuid }"
 H  graph   "${ graph }"
 H  mapping "${ graph }-user" .
 TX . 
-${ mods.map(k => this.getPatch(k,graph)).join("\n") }
+${ patch }
 TC . `          } 
                 </pre>
             )
