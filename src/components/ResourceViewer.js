@@ -664,7 +664,8 @@ class ResourceViewer extends Component<Props,State>
       if(sorted)
       {
 
-         let customSort = [ bdo+"workHasPart", bdo+"itemHasVolume", bdo+"workHasExpression", tmp+"siblingExpressions", bdo+"workTitle", bdo+"personName", bdo+"volumeHasEtext" ]
+         let customSort = [ bdo+"workHasPart", bdo+"itemHasVolume", bdo+"workHasExpression", tmp+"siblingExpressions", bdo+"workTitle", bdo+"personName", bdo+"volumeHasEtext",
+                            bdo+"personEvent", bdo+"placeEvent", bdo+"workEvent" ]
 
          let sortBySubPropNumber = (tag:string,idx:string) => {
             let parts = prop[tag]
@@ -725,7 +726,7 @@ class ResourceViewer extends Component<Props,State>
                      else return acc+e.value+";"
                   },"") + ((lang = getLangLabel(this, "", assoR[w.value][rdfs+"label"]))&&lang.lang?lang.lang+";"+lang.value:"") })
                   //console.log("valsort",assoR,valSort)
-                  valSort = _.orderBy(valSort,['k'],['asc']).map(e => ({'type':'bnode','value':e.bnode,'sorted':true, ...e.fromSameAs?{fromSameAs:e.fromSameAs}:{}}))               
+                  valSort = _.orderBy(valSort,['k'],['asc']).map(e => ({'type':'bnode','k':e.k,'value':e.bnode,'sorted':true, ...e.fromSameAs?{fromSameAs:e.fromSameAs}:{}}))               
                }
             }
             return valSort ; //
@@ -734,6 +735,59 @@ class ResourceViewer extends Component<Props,State>
          if(prop[bdo+'workTitle']) prop[bdo+'workTitle'] = sortBySubPropURI("workTitle") ;
          
          if(prop[bdo+'personName']) prop[bdo+'personName'] = sortBySubPropURI("personName") ;
+
+
+         let sortByEventDate = (tagEnd:string) => {
+            
+            const rank = { [bdo+"PersonBirth"]:1, [bdo+"PersonDeath"]:2, [bdo+"PlaceFounded"]:1 }                                 
+
+            let valSort = prop[bdo+tagEnd] 
+            if(this.props.dictionary && this.props.resources) {
+               let assoR = this.props.resources[this.props.IRI]
+               if(assoR) { 
+                  let lang
+                  valSort = valSort.map(v => ({...v,type:'bnode'})).map(w => {                   
+                     let n = 3
+                     let k = ''
+                     let d
+                     if(assoR[w.value]) {
+                        if(assoR[w.value][rdf+"type"]) {
+                           for(let t of assoR[w.value][rdf+"type"]) { 
+                              let p = this.props.dictionary[t.value]
+                              if(p) p = p[rdfs+"subClassOf"]
+                              if(p) p = p.filter(f => f.value === bdo+tagEnd[0].toUpperCase()+tagEnd.substring(1)).length
+                              if(p) { 
+                                 k = t.value
+                                 if(rank[t.value])  { 
+                                    n = rank[t.value] ; 
+                                    break ; 
+                                 }
+                              }
+                           }
+                        }
+                        if(assoR[w.value][bdo+"onYear"]) { 
+                           d = assoR[w.value][bdo+"onYear"][0]
+                           if(d) d = d.value
+                        }                           
+                        else if(assoR[w.value][bdo+"notBefore"]) {
+                           d = assoR[w.value][bdo+"notBefore"][0]
+                           if(d) d = d.value
+                        }
+                     }  
+                     if(!d) d = 100000
+                     if(w.type!=='bnode'||!assoR[w.value]) return w
+                     else return { ...w, d, n, k, bnode:w.value }
+                  })
+                  //console.log("valsort",assoR,valSort)
+                  valSort = _.orderBy(valSort,['n', 'k', 'd'],['asc']).map(e => ({'type':'bnode','n':e.n,'k':e.k,'d':e.d,'value':e.bnode,'sorted':true, ...e.fromSameAs?{fromSameAs:e.fromSameAs}:{}}))               
+               }
+            }
+            return valSort ; //
+         }
+
+         if(prop[bdo+'personEvent']) prop[bdo+'personEvent'] = sortByEventDate("personEvent") ;
+         if(prop[bdo+'placeEvent']) prop[bdo+'placeEvent'] = sortByEventDate("placeEvent") ;
+         if(prop[bdo+'workEvent']) prop[bdo+'workEvent'] = sortByEventDate("workEvent") ;
 
 
          let expr 
@@ -1093,7 +1147,7 @@ class ResourceViewer extends Component<Props,State>
             return {"val":q, numK,alphaK}
          })
          subKeys = _.orderBy(subKeys,['numK','alphaK','val'])
-         //console.log("subK",JSON.stringify(subKeys,null,3))
+         //console.log("subK",k,JSON.stringify(subKeys,null,3))
          subKeys = subKeys.map(q => q.val)
          
 
@@ -1798,19 +1852,28 @@ class ResourceViewer extends Component<Props,State>
                // 3-finalize the new NoteText element
 
                let keys = Object.keys(elem)
+
                let noteVol,noteLoc,noteData = {}
                if(prop == bdo+"note")
                {
                   keys.push(tmp+"noteFinal")
                   keys = _.orderBy(keys,function(elem) {
-                     var rank = { [bdo+"noteText"]:3, [bdo+"noteLocationStatement"]:2, [bdo+"noteWork"]:1 }
+                     const rank = { [bdo+"noteText"]:3, [bdo+"noteLocationStatement"]:2, [bdo+"noteWork"]:1 }
                      if(rank[elem]) return rank[elem]
                      else return 4 ;
                   })
 
                   noteVol = true
                   noteLoc = true
-                  //console.log("keys",keys)
+               }
+               else if(prop.match(/Event$/)) {
+                  const rank = { [bdo+"onYear"]:1, [bdo+"notBefore"]:2, [bdo+"notAfter"]:3, [bdo+"dateIndication"]:4 }                     
+                  keys = keys.map(elem => {
+                     if(rank[elem]) return { k:rank[elem], tag:elem }
+                     else return { k:5, tag:elem }
+                  } )
+                  keys = _.orderBy(keys,['k','tag'],[ "asc" ]).map(e => e.tag)
+                  //console.log("key5",keys)
                }
 
                for(let f of keys)
@@ -2736,7 +2799,7 @@ class ResourceViewer extends Component<Props,State>
          isSub = true
          ret = this.subProps(k)
       }
-      if(!ret || ret.length === 0) ret = tags.reduce((acc,e)=> [...acc, e," "], [] )
+      if(!ret || ret.length === 0) ret = tags.reduce((acc,e)=> [...acc, e /*," "*/], [] )
 
       let expand
       let maxDisplay = 10
@@ -2744,7 +2807,7 @@ class ResourceViewer extends Component<Props,State>
 
       let n = 0
       if(elem && elem.filter) n = elem.filter(t=>t && (t.type === "uri" || t.type === "literal")).length
-      if(n > 1) ret = ret.reduce( (acc,e,i) => [ ...acc, ...(e !== " " ? [ e, this.preprop(k,Math.floor(i/2)) ] : [e]) ], [] )
+      if(n > 1) ret = ret.reduce( (acc,e,i) => [ ...acc, ...(e !== " " ? [ e, this.preprop(k,Math.floor(i/2)) ] : [e]) ], [] ).filter(e=>e)
 
       if(!isSub && n > maxDisplay) {      
          
@@ -3090,6 +3153,8 @@ class ResourceViewer extends Component<Props,State>
                         if(lang) for(let c of canoLang) { c = c.toLowerCase(); if(lang.match(new RegExp("^"+c))) { found = true; hasCano = true ; break ; } }
                         if(hasCano && !found && i < 10) { hasMaxDisplay = Number(i) ; break ; } 
                      }
+
+                     //console.log("hMd",allLabels,hasMaxDisplay)
 
                      /*
                      let sortLabel = []
