@@ -30,9 +30,9 @@ export function makeLangScriptLabel(code:string)
    //console.log("code",code,lang,script)
 
    let langLabel = I18n.t(langScripts[lang])
-   let scriptLabel = "Unicode"
+   let scriptLabel ; //= "Unicode"
    if(script.length) scriptLabel = I18n.t(langScripts[script])
    //console.log("label",langLabel,scriptLabel)
 
-   return langLabel + " (" + scriptLabel + ")"
+   return langLabel + (scriptLabel?" (" + scriptLabel + ")":"")
 }

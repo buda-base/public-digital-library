@@ -18,7 +18,9 @@ import * as ui from './state/ui/actions'
 
 import qs from 'query-string'
 
-import Auth,{Profile, TestToken} from './Auth.js';
+import Auth,{TestToken} from './Auth.js';
+import ProfileContainer from './containers/ProfileContainer';
+
 export const auth = new Auth();
 
 // ignore hash changes made by UV
@@ -152,7 +154,7 @@ const makeMainRoutes = () => {
 
                            store.dispatch(initiateApp());
 
-                           return (<Profile auth={auth} history={history} />)
+                           return (<ProfileContainer auth={auth} history={history} />)
                         } } />
                      }
                      {/*

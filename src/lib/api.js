@@ -3,6 +3,7 @@ import store from '../index';
 import {auth} from '../routes'
 import qs from 'query-string'
 import history from '../history';
+import {shortUri} from '../components/App';
 
 require('formdata-polyfill')
 
@@ -10,6 +11,8 @@ const CONFIG_PATH = '/config.json'
 const CONFIGDEFAULTS_PATH = '/config-defaults.json'
 const ONTOLOGY_PATH = '/ontology/core.json'
 const DICTIONARY_PATH = '/ontology/data/json'
+const USER_PATH = '/resource-nc/user/me'
+const USER_EDIT_POLICIES_PATH = '/userEditPolicies'
 
 const dPrefix = {
    "bdr": {
@@ -28,6 +31,9 @@ const dPrefix = {
       "VL" : "Volume",
       "UT": "Etext", // ?
    },
+   "bdu": {
+      "U" : "User",
+   },
    "dila" : {
       "PL": "Place", 
       "A" : "Person"
@@ -44,11 +50,12 @@ const dPrefix = {
 };
 
 export function getEntiType(t:string):string {
-   let p = t.replace(/^([^:]+):.*$/,"$1")
+   let uri = shortUri(t)
+   let p = uri.replace(/^([^:]+):.*$/,"$1")
    if(p === "ola") return "Person" ;
    else if(p == "mbbt" ) return "Work" ; // [TODO]
-   let v = t.replace(/^([^:]+:)?([ACEILGPQRTWOVU][RTL]?).*$/,"$2")
-   //console.log("v",v,dPrefix[v])
+   let v = uri.replace(/^([^:]+:)?([ACEILGPQRTWOVU][RTL]?).*$/,"$2")
+   //console.log("v",v,p)
    if(!dPrefix[p] || !dPrefix[p][v]) return "" ;
    else return dPrefix[p][v]; }
 
@@ -211,6 +218,19 @@ export default class API {
             //console.log("manif",manif)
             return manif ;
       }
+
+   async loadUserEditPolicies()
+   {
+         let userEditPolicies =  JSON.parse(await this.getURLContents(this._userEditPoliciesPath,false));
+         return userEditPolicies ;
+   }
+
+
+    async loadUser()
+    {
+         let user =  JSON.parse(await this.getURLContents(this._userPath,false));
+         return user ;
+   }
 
     async loadOntology(): Promise<string>
     {
@@ -685,6 +705,33 @@ export default class API {
           return path;
       }
 
+      get _userEditPoliciesPath(): string {
+         let path = USER_EDIT_POLICIES_PATH;
+
+         let config = store.getState().data.config.ldspdi
+         let url = config.endpoints[config.index] ;
+
+         path = url + USER_EDIT_POLICIES_PATH;
+         
+         // to use with ldspdi running locally
+         path = "//editserv.bdrc.io" + USER_EDIT_POLICIES_PATH;
+
+         return path;
+      }
+
+     get _userPath(): string {
+        let path = USER_PATH;
+
+       let config = store.getState().data.config.ldspdi
+       let url = config.endpoints[config.index] ;
+
+         path = url +  USER_PATH;
+
+         // to use with ldspdi running locally
+         path = "//editserv.bdrc.io" + USER_PATH
+         
+        return path;
+    }
 
      get _ontologyPath(): string {
         let path = ONTOLOGY_PATH;

@@ -70,7 +70,9 @@ const bda   = "http://purl.bdrc.io/admindata/";
 const bdac  = "http://purl.bdrc.io/anncollection/" ;
 const bdan  = "http://purl.bdrc.io/annotation/" ;
 const bdo   = "http://purl.bdrc.io/ontology/core/"
+const bdou  = "http://purl.bdrc.io/ontology/ext/user/" ;
 const bdr   = "http://purl.bdrc.io/resource/";
+const bdu   = "http://purl.bdrc.io/resource-nc/user/" ;
 const cbcp  = "https://dazangthings.nz/cbc/person/"
 const cbct  = "https://dazangthings.nz/cbc/text/"
 const dila  = "http://purl.dila.edu.tw/resource/";
@@ -90,7 +92,7 @@ const viaf  = "http://viaf.org/viaf/"
 const wd    = "http://www.wikidata.org/entity/"
 const xsd   = "http://www.w3.org/2001/XMLSchema#" ;
 
-export const prefixesMap = { adm, bda, bdac, bdan, bdo, bdr, cbcp, cbct, dila, eftr, foaf, oa, mbbt, owl, rdf, rdfs, rkts, skos, wd, ola, viaf, xsd, tmp }
+export const prefixesMap = { adm, bda, bdac, bdan, bdo, bdou, bdr, bdu, cbcp, cbct, dila, eftr, foaf, oa, mbbt, owl, rdf, rdfs, rkts, skos, wd, ola, viaf, xsd, tmp }
 export const prefixes = Object.values(prefixesMap) ;
 export const sameAsMap = { wd:"WikiData", ol:"Open Library", ola:"Open Library", bdr:"BDRC", mbbt:"Marcus Bingenheimer", eftr:"84000" }
 
@@ -250,6 +252,7 @@ export function getLangLabel(that:{},prop:string="",labels:[],proplang:boolean=f
 
 export function top_right_menu(that)
 {
+
   return (
      <div id="login">
         <IconButton style={{marginLeft:"15px"}}  onClick={e => that.props.onToggleLanguagePanel()}>
@@ -268,7 +271,7 @@ export function top_right_menu(that)
                   <FontAwesomeIcon style={{fontSize:"28px"}} icon={faUserCircle} />
               </IconButton>,
          
-              <IconButton onClick={that.props.auth.logout.bind(that,that.props.history.location)} title="Log out">
+              <IconButton onClick={that.props.auth.logout.bind(that,that.props.history.location.pathname!=="/user"?that.props.history.location:"/")} title="Log out">
                 <FontAwesomeIcon style={{fontSize:"28px"}} icon={faSignOutAlt} />
               </IconButton> ]
             )
@@ -3389,7 +3392,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             </ResizableBox></div>
             { showMenus }
             <div className={"SearchPane"+(this.props.keyword ?" resultPage":"")} >
-               <a target="_blank" href="https://www.buddhistarchive.org/" style={{display:"inline-block",marginBottom:"25px"}}>
+               <a target="_blank" href="https://www.tbrc.org/" style={{display:"inline-block",marginBottom:"25px"}}>
                   <img src="/logo.svg" style={{width:"200px"}} />
                </a>
                {/* <h2>BUDA Platform</h2> */}

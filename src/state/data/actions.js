@@ -160,6 +160,25 @@ export const ontoSearch = (k: string): Action => {
     }
 }
 
+
+TYPES.gotUserEditPolicies = 'GOT_USER_EDIT_POLICIES';
+export const gotUserEditPolicies = (data: {}): Action => {
+    return {
+        type: TYPES.gotUserEditPolicies,
+        payload: data
+    }
+}
+    
+
+TYPES.getUser = 'GET_USER';
+export const getUser = (profile: string): Action => {
+    return {
+        type: TYPES.getUser,
+        payload: profile
+    }
+}
+
+
 TYPES.getResource = 'GET_RESOURCE';
 export const getResource = (iri: string): Action => {
     return {

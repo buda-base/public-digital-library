@@ -42,6 +42,7 @@ export type DataState = {
    },
    nextChunk?:number,
    nextPage?:number,
+   userEditPolicies?:{}
 }
 
 const DEFAULT_STATE: DataState = {
@@ -111,6 +112,14 @@ export const ontoSearch = (state: DataState, action: Action) => {
     }
 }
 reducers[actions.TYPES.ontoSearch] = ontoSearch;
+
+export const gotUserEditPolicies = (state: DataState, action: Action) => {
+   return {
+       ...state,
+       "userEditPolicies": action.payload
+   }
+}
+reducers[actions.TYPES.gotUserEditPolicies] = gotUserEditPolicies;
 
 export const getResource = (state: DataState, action: Action) => {
     return {
