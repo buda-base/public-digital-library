@@ -779,7 +779,7 @@ class ResourceViewer extends Component<Props,State>
                      else return { ...w, d, n, k, bnode:w.value }
                   })
                   //console.log("valsort",assoR,valSort)
-                  valSort = _.orderBy(valSort,['n', 'k', 'd'],['asc']).map(e => ({'type':'bnode','n':e.n,'k':e.k,'d':e.d,'value':e.bnode,'sorted':true, ...e.fromSameAs?{fromSameAs:e.fromSameAs}:{}}))               
+                  valSort = _.orderBy(valSort,['n', 'd', 'k'],['asc']).map(e => ({'type':'bnode','n':e.n,'k':e.k,'d':e.d,'value':e.bnode,'sorted':true, ...e.fromSameAs?{fromSameAs:e.fromSameAs}:{}}))               
                }
             }
             return valSort ; //
@@ -1572,7 +1572,7 @@ class ResourceViewer extends Component<Props,State>
       })
       */
 
-      //console.log("format",Tag, prop,JSON.stringify(elem,null,3),txt,bnode,div);
+      console.log("format",Tag, prop,JSON.stringify(elem,null,3),txt,bnode,div);
 
       let ret = [],pre = []
 
@@ -2465,7 +2465,8 @@ class ResourceViewer extends Component<Props,State>
    }
 
    // to be redefined in subclass
-   preprop = (k) => {} 
+   preprop = (k) => {} ;
+   insertPreprop = (tag,n,ret) => ret ;
 
    getH2 = (title,_befo) => {
       return <h2>{_befo}{title.value}{this.tooltip(title.lang)}</h2>
@@ -2807,7 +2808,7 @@ class ResourceViewer extends Component<Props,State>
 
       let n = 0
       if(elem && elem.filter) n = elem.filter(t=>t && (t.type === "uri" || t.type === "literal")).length
-      if(n > 1) ret = ret.reduce( (acc,e,i) => [ ...acc, ...(e !== " " ? [ e, this.preprop(k,Math.floor(i/2)) ] : [e]) ], [] ).filter(e=>e)
+      ret = this.insertPreprop(k, n, ret)
 
       if(!isSub && n > maxDisplay) {      
          

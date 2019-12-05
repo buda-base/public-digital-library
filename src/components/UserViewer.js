@@ -259,6 +259,8 @@ class UserViewer extends ResourceViewer
             error = "Error"
         }        
 
+        console.log('popC',value,label,tag,index)
+
         return (
             <TextField
                 label={label}
@@ -334,6 +336,11 @@ class UserViewer extends ResourceViewer
             </div>
         )
     }
+
+   insertPreprop = (tag,n,ret) => { 
+      if(n > 1) ret = ret.reduce( (acc,e,i) => [ ...acc, ...(e !== " " ? [ e, this.preprop(tag,i) ] : [e]) ], [] ).filter(e=>e)
+      return ret
+   }
 
     getH2 = () => {
         let email,picUrl,pic
