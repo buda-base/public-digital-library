@@ -121,18 +121,25 @@ class UserViewer extends ResourceViewer
         if(range) for(let propType of range) isOk = isOk && (!this._validators[propType.value] || (await this._validators[propType.value](value)))
         return { isOk, range }
     }
-
+ 
     delValue = (event:Event, tag:string, index:integer) => {
         let state = { ...this.state }
         if(!state.updates[tag]) state.updates[tag] = [ ...state.resource[tag] ]
-        if(state.updates[tag][index]) delete state.updates[tag][index]
-        state.updates[tag] = state.updates[tag].filter(e=>e)
-        if(!state.updates[tag].length) delete state.updates[tag]
+        state = this.delUpdate(state, tag, index);
         console.log("del",state,tag,index)
         this.setState(state);
     }
 
-    valueChanged = (event:Event, tag:string, index:integer, close:boolean = false) => {
+    delUpdate(state:State,tag:string,index:integer) {
+        if(state.updates[tag]) {
+            if(state.updates[tag][index]) delete state.updates[tag][index]
+            state.updates[tag] = state.updates[tag].filter(e=>e)
+            if(!state.updates[tag].length) delete state.updates[tag]
+        }
+        return state
+    }
+
+    valueChanged = (event:Event, tag:string, index:integer, close:boolean = false, newVal:boolean = false) => {
         
         console.log("vCh",close,index)
 
@@ -149,7 +156,7 @@ class UserViewer extends ResourceViewer
             if(index !== undefined) itag += "_" + index
             else index = 0 
 
-            if(!isOk) { 
+            if(!isOk || (!value && !newVal) ) { 
                 state.errors = { ...state.errors, [tag] : true }
             } 
             else {            
@@ -162,8 +169,11 @@ class UserViewer extends ResourceViewer
                     let type 
                     if(range && range.length && ontoTypes[range[0].value]) type = ontoTypes[range[0].value]
  
-                    if(state.emptyPopover) state.updates[tag].push({ value, type })
-                    else state.updates[tag][index] = { ...state.updates[tag][index], value: value }
+                    if(state.emptyPopover) state.updates[tag].push({ value, type, newVal:true })
+                    else { 
+                        if(state.updates[tag][index].newVal) delete state.updates[tag][index].newVal
+                        state.updates[tag][index] = { ...state.updates[tag][index], value: value }
+                    }
                 }
 
                 if(close) setTimeout( () => this.togglePopover(event, tag, index), 10) ;
@@ -178,7 +188,8 @@ class UserViewer extends ResourceViewer
         })({...event},tag,close,index),10); //!close?650:10) // shorter delay if popover is supposed to be closing
 
     }
-     
+    
+
     togglePopover = (event:Event, tag:string, index:integer, clearMod:boolean=false, anchor:(Event)=>any, empty: boolean = false) => {
 
         if(this._timeOut) return ;
@@ -204,12 +215,25 @@ class UserViewer extends ResourceViewer
                 if(!anchor) anchor = event.currentTarget.parentNode        
                 else anchor = anchor(event)
         
-                if( (!state.updates[tag] && index >= state.resource[tag].length) || (state.updates[tag] && index >= state.updates[tag].length) ) this.valueChanged(null, tag, index)
+                if( (!state.updates[tag] && index >= state.resource[tag].length) || (state.updates[tag] && index >= state.updates[tag].length) ) this.valueChanged(null, tag, index, false, true)
             }
             update = true ;
-            state.collapse[itag] = val
-            state.anchorElPopover = anchor
-            if(empty) state.emptyPopover = true
+            let noErr = true ;
+            if(state.updates[tag] && state.updates[tag][index] && !state.updates[tag][index].value) {                
+                if(!val && !state.updates[tag][index].value ) {
+                    if(!state.updates[tag][index].newVal) {
+                        state.errors = { ...state.errors, [tag] : true }
+                        noErr = false
+                    }
+                    else 
+                        state = this.delUpdate(state, tag, index)
+                }
+            }
+            if(noErr) {
+                state.collapse[itag] = val
+                state.anchorElPopover = anchor
+                if(empty) state.emptyPopover = true
+            }
         }
         
         if(!val)  {
@@ -218,9 +242,7 @@ class UserViewer extends ResourceViewer
             if(clearMod) {
                 if(state.errors[tag]) delete state.errors[tag]
                 if(state.updates[tag] && state.updates[tag][index]) { 
-                    delete state.updates[tag][index]
-                    state.updates[tag] = state.updates[tag].filter(e=>e)
-                    if(!state.updates[tag].length) delete state.updates[tag]
+                    state = this.delUpdate(state, tag, index)
                 }
             }
         }
@@ -240,9 +262,13 @@ class UserViewer extends ResourceViewer
             else if(this.state.resource[tag]) value = this.state.resource[tag]
         }
 
-        if(Array.isArray(value) && value[index]) { 
+        let elem
+        if(Array.isArray(value) && value[index] ) { 
             value = value[index]
-            if(value && value.value !== undefined) value = value.value
+            if(value && value.value !== undefined) { 
+                elem = value
+                value = value.value
+            }
         }
 
         //if(!value) index = -1
@@ -259,7 +285,7 @@ class UserViewer extends ResourceViewer
             error = "Error"
         }        
 
-        console.log('popC',value,label,tag,index)
+        console.log('popC',elem,value,label,tag,index)
 
         return (
             <TextField
@@ -270,7 +296,7 @@ class UserViewer extends ResourceViewer
                 onKeyPress={(e) => this.valueChanged(e,tag,index,e.key === "Enter")  }
                 fullWidth
                 { ...(!value && { defaultValue:''} ) }
-                { ...this.state.errors[tag] && { error:true } }
+                { ...(this.state.errors[tag] /*|| ( !value && elem & !elem.newVal) */ ) && { error:true } }
             />
         )
     }                
@@ -291,7 +317,7 @@ class UserViewer extends ResourceViewer
                     { content }
                     { (this.state.updates[tag] || this.state.errors[tag]) && 
                         <div class="buttons bottom">
-                            { !this.state.errors[tag] && 
+                            { !this.state.errors[tag] && this.state.updates[tag][index] && this.state.updates[tag][index].value &&
                                 <a title="Update" onClick={(e) => this.togglePopover(e,tag,index) } ><CheckIcon /></a> }
                             <a title="Reset" onClick={(e) => this.togglePopover(e,tag,index,true) } ><CloseIcon /></a>
                         </div> 
