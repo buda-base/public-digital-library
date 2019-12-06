@@ -739,7 +739,7 @@ class ResourceViewer extends Component<Props,State>
 
          let sortByEventDate = (tagEnd:string) => {
             
-            const rank = { [bdo+"PersonBirth"]:1, [bdo+"PersonDeath"]:2, [bdo+"PlaceFounded"]:1 }                                 
+            const rank = { [bdo+"PersonBirth"]:1, [bdo+"PersonDeath"]:999, [bdo+"PlaceFounded"]:1 }                                 
 
             let valSort = prop[bdo+tagEnd] 
             if(this.props.dictionary && this.props.resources) {
@@ -1572,7 +1572,7 @@ class ResourceViewer extends Component<Props,State>
       })
       */
 
-      console.log("format",Tag, prop,JSON.stringify(elem,null,3),txt,bnode,div);
+      //console.log("format",Tag, prop,JSON.stringify(elem,null,3),txt,bnode,div);
 
       let ret = [],pre = []
 
