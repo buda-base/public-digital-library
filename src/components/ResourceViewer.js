@@ -1572,7 +1572,7 @@ class ResourceViewer extends Component<Props,State>
       })
       */
 
-      //console.log("format",Tag, prop,JSON.stringify(elem,null,3),txt,bnode,div);
+      console.log("format",Tag, prop,JSON.stringify(elem,null,3),txt,bnode,div);
 
       let ret = [],pre = []
 
@@ -1763,9 +1763,19 @@ class ResourceViewer extends Component<Props,State>
          }
          else {
 
-            elem = this.getResourceBNode(e.value)
-            
-            //console.log("bnode",e.value,elem)
+            elem = this.getResourceBNode(e.value)            
+
+            if(prop === bdo+"lineageHolder" && elem && elem[bdo+"lineageReceived"]) {
+               let received = elem[bdo+"lineageReceived"]
+               if(received.length) received = received[0].value
+               if(received) received = this.getResourceBNode(received)
+               if(received && received[bdo+"lineageFrom"]) { 
+                  delete elem[bdo+"lineageReceived"]
+                  elem[bdo+"lineageFrom"] = [ ...received[bdo+"lineageFrom"]  ]
+               }
+            }
+
+            console.log("bnode",prop,e.value,elem)
 
             if(!elem) continue ;
 
