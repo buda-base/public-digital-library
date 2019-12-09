@@ -463,7 +463,7 @@ h3 .expand svg { position:absolute; margin-top:-18px; }*/
 
 
 /* .resource h3 { position:relative; } */
-.resource .preprop .menu { position:absolute; text-align:right; right:calc(100% /*- 50px*/); /*top:0px;*/ margin-top:-18px; height:15px; padding:3px; display:none;  width:60px;}
+.resource .preprop .menu { position:absolute; text-align:right; right:calc(100% /*- 50px*/); /*top:0px;*/ margin-top:-18px; height:15px; padding:3px; display:none;  width:80px;}
 .resource h4 + .preprop .menu { right:calc(100% /*- 50px*/ - 20px); margin-top:-24px; }
 .resource .preprop .menu a svg { font-size:18px; vertical-align:middle; cursor:pointer; margin-right:2px; color:rgba(0,0,0,0.55); }
 .resource .preprop .menu a { border-bottom:none !important; }

@@ -641,6 +641,7 @@ class ResourceViewer extends Component<Props,State>
 
       let onto = this.props.ontology
       let prop = this.props.resources[this.props.IRI][this.expand(this.props.IRI)] ;
+      if(this.state.resource) prop = this.state.resource
       let w = prop[bdo+"workDimWidth"]
       let h = prop[bdo+"workDimHeight"]
 
@@ -2458,7 +2459,7 @@ class ResourceViewer extends Component<Props,State>
    proplink = (k,txt) => {
 
       let tooltip
-      if(this.props.ontology[k]) {
+      if(this.props.ontology && this.props.ontology[k]) {
          if(this.props.ontology[k][adm+"userTooltip"]) 
             tooltip = this.props.ontology[k][adm+"userTooltip"]
          else if(this.props.ontology[k][rdfs+"comment"]) 
@@ -3123,7 +3124,7 @@ class ResourceViewer extends Component<Props,State>
             //for(let e of elem) console.log(e.value,e.label1);
 
             //if(!k.match(new RegExp("Revision|Entry|prefLabel|"+rdf+"|toberemoved"))) {
-            if((!k.match(new RegExp(adm+"|adm:|isRoot$|SourcePath|"+rdf+"|toberemoved|workPartIndex|workPartTreeIndex|withSameAs"+(this._dontMatchProp?"|"+this._dontMatchProp:"")))
+            if((!k.match(new RegExp(adm+"|adm:|isRoot$|SourcePath|"+rdf+"|toberemoved|workPartIndex|workPartTreeIndex|legacyOutlineNodeRID|withSameAs"+(this._dontMatchProp?"|"+this._dontMatchProp:"")))
                ||k.match(/(originalRecord|metadataLegal|contentProvider|replaceWith)$/)
                ||k.match(/([/]see|[/]sameAs)[^/]*$/) // quickfix [TODO] test property ancestors
                || (this.props.IRI.match(/^bda:/) && (k.match(new RegExp(adm+"|adm:")))))
@@ -3203,6 +3204,7 @@ class ResourceViewer extends Component<Props,State>
             }
          } ) }
          { this.renderRoles() }
+         { this.renderPostData() }           
       </div>
    }
    
@@ -3465,7 +3467,6 @@ class ResourceViewer extends Component<Props,State>
                { this.renderPdfLink(pdfLink,monoVol,fairUse) }
                { this.renderMirador() }           
                { theData }
-               { this.renderPostData() }           
             </div>
          </div>,
          <LanguageSidePaneContainer />]
