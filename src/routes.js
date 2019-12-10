@@ -18,8 +18,9 @@ import * as ui from './state/ui/actions'
 
 import qs from 'query-string'
 
-import Auth,{Profile,TestToken} from './Auth.js';
+import Auth,{TestToken} from './Auth.js';
 import ProfileContainer from './containers/ProfileContainer';
+import Profile from './components/ProfileStatic';
 
 export const auth = new Auth();
 

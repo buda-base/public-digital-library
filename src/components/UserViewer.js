@@ -46,6 +46,60 @@ const ontoTypes = {
     [rdf+"PlainLiteral"]: "literal"
 }
 
+export function getPatchValue(tag:string, value:any, dict:{}) {
+    let prop, T, start='', end=''
+    prop = dict[tag]
+    if(prop) {
+        T = prop[rdfs+"range"]
+        //console.log("prop",prop,T)
+        if(T && T.length) {
+                    if(T[0].value === xsd+"anyURI")       { start = "<" ; end = ">" ; }
+            else if(T[0].value === rdf+"PlainLiteral") { start = '"' ; end = '"' ; }                
+        }
+    }
+    return start + (value.value?value.value:value) + end
+}
+
+export function getPatch(iri, updates, resource, tag:string, graph:string, dict) {
+    let str = '' 
+    for(let u in updates[tag]) {
+        if(str !== '') str += "\n"            
+        if( !resource[tag] || !resource[tag][u] || resource[tag][u].value !== updates[tag][u].value) { // TODO more generic test (lang etc.)
+            if( resource[tag] && resource[tag][u] )  str += `D  <${ iri }> <${ tag }> ${ getPatchValue(tag, resource[tag][u].value, dict) } <${ graph }> .\n`
+            str += `A  <${ iri }> <${ tag }> ${ getPatchValue(tag, updates[tag][u].value, dict) } <${ graph }> .`  
+        }
+    }
+    return str ;
+}
+
+export function renderPatch(that, mods, graph) {
+
+    if(mods && mods.length) {
+    
+        // TODO change uuid after patch sent or canceled
+        if(!that._uuid) that._uuid = uuid()
+
+        let res = that.state.resource
+        let upd = that.state.updates
+        let iri = that.props.IRI
+        let dict = that.props.dictionary
+
+        let patch = mods.map(k => getPatch(iri, upd, res, k, graph, dict)).join("\n")
+
+        if(patch) return (
+            <pre id="patch" contentEditable="true">
+            { `\
+H  id      "${ that._uuid }"
+H  graph   "${ graph }"
+H  mapping "${ graph }-user" .
+TX . 
+${ patch }
+TC . `          } 
+            </pre>
+        )
+    }
+}
+
 class UserViewer extends ResourceViewer
 {
     _dontMatchProp = "mbox|type|isActive|hasUserProfile|(ext[/]user[/]image)" ;
@@ -418,54 +472,6 @@ class UserViewer extends ResourceViewer
         return <h2>{pic}{email}</h2>
     }
 
-    getPatchValue = (tag:string, value:any) => {
-        let prop, T, start='', end=''
-        prop = this.props.dictionary[tag]
-        if(prop) {
-            T = prop[rdfs+"range"]
-            //console.log("prop",prop,T)
-            if(T && T.length) {
-                     if(T[0].value === xsd+"anyURI")       { start = "<" ; end = ">" ; }
-                else if(T[0].value === rdf+"PlainLiteral") { start = '"' ; end = '"' ; }                
-            }
-        }
-        return start + (value.value?value.value:value) + end
-    }
-
-    getPatch = (tag:string, graph:string) => {
-        let str = '' 
-        for(let u in this.state.updates[tag]) {
-            if(str !== '') str += "\n"            
-            if( !this.state.resource[tag] || !this.state.resource[tag][u] || this.state.resource[tag][u].value !== this.state.updates[tag][u].value) { // TODO more generic test (lang etc.)
-                if( this.state.resource[tag] && this.state.resource[tag][u] )  str += `D  <${ this.props.IRI }> <${ tag }> ${ this.getPatchValue(tag, this.state.resource[tag][u].value) } <${ graph }> .\n`
-                str += `A  <${ this.props.IRI }> <${ tag }> ${ this.getPatchValue(tag, this.state.updates[tag][u].value) } <${ graph }> .`  
-            }
-        }
-        return str ;
-    }
-
-    renderPatch = (mods, graph) => {
-
-        if(mods && mods.length) {
-        
-            // TODO change uuid after patch sent or canceled
-            if(!this._uuid) this._uuid = uuid()
-
-            let patch = mods.map(k => this.getPatch(k,graph)).join("\n")
-
-            if(patch) return (
-                <pre id="patch" contentEditable="true">
-                { `\
-H  id      "${ this._uuid }"
-H  graph   "${ graph }"
-H  mapping "${ graph }-user" .
-TX . 
-${ patch }
-TC . `          } 
-                </pre>
-            )
-        }
-    }
 
     renderPostData = () => {
         let mods = Object.keys(this.state.updates)
@@ -479,7 +485,7 @@ TC . `          }
                     {this.preprop("newProperty",0,0)}
                 </div>:null
             ,
-                this.renderPatch(mods,graph)
+                renderPatch(this,mods,graph)
             ]
 
         )

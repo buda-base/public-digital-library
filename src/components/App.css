@@ -694,7 +694,7 @@ h2 + .browse a { font-size:14px; text-transform:capitalize;}
 .profile-area h5 { font-size:14px; color:rgba(229, 74, 53,1); cursor:pointer; margin-top:50px;}
 .profile-area h5:hover { text-decoration: underline; }
 
-.profile-area .FC { min-width:200px; margin-right:20px;}
+.profile-area .FC { min-width:222px; margin-right:20px;}
 
 
 #TestToken { padding:5px;  }
