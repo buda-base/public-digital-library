@@ -42,7 +42,7 @@ const ontoTypes = {
 
 class UserViewer extends ResourceViewer
 {
-    _dontMatchProp = "mbox|type|isActive|hasUserProfile" ;
+    _dontMatchProp = "mbox|type|isActive|hasUserProfile|(ext[/]user[/]image)" ;
     _timeOut ;
     _validators ; 
     _uuid ;
@@ -82,24 +82,25 @@ class UserViewer extends ResourceViewer
 
         if(s) return s
         else return null ;
-    }   
-    
+    }
     
     getResourceElem = (prop:string, IRI?:string) => {
         if(!IRI) IRI = this.props.IRI
 
-        if(!IRI || !this.props.resources || !this.props.resources[IRI]
-            || !this.props.resources[IRI][this.expand(IRI)]
-            || !this.props.resources[IRI][this.expand(IRI)][prop]) return ;
+        if((!this.state.resource && !this.state.resource[prop]) && 
+            ( !IRI || !this.props.resources || !this.props.resources[IRI]
+            || !this.props.resources[IRI][this.expand(IRI)] || !this.props.resources[IRI][this.expand(IRI)][prop]) ) return ;
 
-        let elem ;
-        elem = [ ...this.props.resources[IRI][this.expand(IRI)][prop] ]
+        let elem ;        
+
+        if(this.state.resource[prop]) elem = this.state.resource[prop]
+        else elem = [ ...this.props.resources[IRI][this.expand(IRI)][prop] ]
 
         if(this.state.updates[prop]) elem = this.state.updates[prop]
 
+
         return elem
-    }
-    
+    }    
 
     validateURI = async (url) => {
         if(url && !url.match(/^https?:[/][/]/i)) return false
@@ -134,7 +135,10 @@ class UserViewer extends ResourceViewer
         if(state.updates[tag]) {
             if(state.updates[tag][index]) delete state.updates[tag][index]
             state.updates[tag] = state.updates[tag].filter(e=>e)
-            if(!state.updates[tag].length) delete state.updates[tag]
+            if(!state.updates[tag].length) { 
+                delete state.updates[tag]
+                if(!state.resource[tag].length) delete state.resource[tag] 
+            }
         }
         return state
     }
@@ -162,10 +166,13 @@ class UserViewer extends ResourceViewer
             else {            
                 if(this.state.errors[tag]) delete this.state.errors[tag]
                  
-                if(!state.resource[tag] || state.resource[tag][0].value !== value || (state.updates[tag] && state.updates[tag] !== value) ) {                     
-                    if(!state.updates[tag]) state.updates[tag] = []                    
-                    if(!state.updates[tag].length) state.updates[tag] = [ ...state.resource[tag] ]
-                    
+                if(!state.resource[tag] || !state.resource[tag].length || state.resource[tag][0].value !== value || (state.updates[tag] && state.updates[tag] !== value) ) {                     
+                    if(!state.updates[tag]) state.updates[tag] = []                  
+                    if(!state.updates[tag].length) { 
+                        if(state.resource[tag]) state.updates[tag] = [ ...state.resource[tag] ]
+                        else state.resource[tag] = []
+                    }
+
                     let type 
                     if(range && range.length && ontoTypes[range[0].value]) type = ontoTypes[range[0].value]
  
@@ -199,7 +206,8 @@ class UserViewer extends ResourceViewer
 
         if(index === -1) {
             if(state.updates[tag]) index = state.updates[tag].length
-            else index = state.resource[tag].length
+            else if(state.resource[tag]) index = state.resource[tag].length
+            else index = 0
         }
 
         let itag = tag 
@@ -215,7 +223,7 @@ class UserViewer extends ResourceViewer
                 if(!anchor) anchor = event.currentTarget.parentNode        
                 else anchor = anchor(event)
         
-                if( (!state.updates[tag] && index >= state.resource[tag].length) || (state.updates[tag] && index >= state.updates[tag].length) ) this.valueChanged(null, tag, index, false, true)
+                if( !state.resource[tag] || (!state.updates[tag] && index >= state.resource[tag].length) || (state.updates[tag] && index >= state.updates[tag].length) ) this.valueChanged(null, tag, index, false, true)
             }
             update = true ;
             let noErr = true ;
@@ -258,8 +266,8 @@ class UserViewer extends ResourceViewer
 
         if(!value) {
             if(this.state.emptyPopover) value = ""
-            else if(this.state.updates[tag]) value = this.state.updates[tag]
-            else if(this.state.resource[tag]) value = this.state.resource[tag]
+            else if(this.state.updates && this.state.updates[tag]) value = this.state.updates[tag]
+            else if(this.state.resource && this.state.resource[tag]) value = this.state.resource[tag]
         }
 
         let elem
@@ -329,6 +337,11 @@ class UserViewer extends ResourceViewer
     
     preprop = (k:string,i:integer=0,maxN:integer) => {
 
+        let newP = k === "newProperty"
+        if(newP) k = skos+"altLabel" ; //this.state.newProperty
+
+        if(!k || !this.state.publicProps) return ;
+
         let isPublic = this.state.publicProps.indexOf(k) !== -1
         let isBasePublic = basePublicProps.indexOf(k) === -1
         let isUnique = false
@@ -339,34 +352,35 @@ class UserViewer extends ResourceViewer
         return (
             <div class="preprop">
                 <div class="menu">
-                    { canDel && 
+                    { ( canDel && !newP ) &&
                         <a title={I18n.t("user.edit.del")}
                            onClick={(e) => this.delValue(e, k, i) }>
                             <DeleteIcon/>
                         </a> }
-                    { !isUnique && 
+                    { ( !isUnique || newP )  && 
                         <a title={I18n.t("user.edit.add")}
                            onClick={(e) => this.togglePopover(e, k, -1, false, (e) => e?e.currentTarget.parentNode.parentNode.parentNode:null, true ) }>
                             <LibraryAddIcon/>
                         </a> }
-                    { showSet && 
+                    { ( showSet && !newP ) && 
                         <a title={I18n.t("user.edit.set")}  
                            onClick={(e) => this.togglePopover(e, k, i, false, (e) => e.currentTarget.parentNode.parentNode.parentNode ) }>
                             <SettingsIcon/>
                         </a> }
-                    { ( isBasePublic && isPublic ) && 
+                    { ( false && isBasePublic && isPublic && !newP ) && 
                         <a title={I18n.t("user.edit.hide")}><VisibilityOffIcon/></a>  }
-                    { !isPublic && <a title={I18n.t("user.edit.show")}><VisibilityIcon/></a> }
+                    { ( false && !isPublic && !newP) && 
+                        <a title={I18n.t("user.edit.show")}><VisibilityIcon/></a> }
                 </div>
-                {this.renderPopover(k,null,null,i)}
+                { !newP && this.renderPopover(k,null,null,i)}
             </div>
         )
     }
 
-   insertPreprop = (tag,n,ret) => { 
-      if(n > 1) ret = ret.reduce( (acc,e,i) => [ ...acc, ...(e !== " " ? [ e, this.preprop(tag,i) ] : [e]) ], [] ).filter(e=>e)
-      return ret
-   }
+    insertPreprop = (tag,n,ret) => { 
+        if(n > 1) ret = ret.reduce( (acc,e,i) => [ ...acc, ...(e !== " " ? [ e, this.preprop(tag,i) ] : [e]) ], [] ).filter(e=>e)
+        return ret
+    }
 
     getH2 = () => {
         let email,picUrl,pic
@@ -409,18 +423,15 @@ class UserViewer extends ResourceViewer
         let str = '' 
         for(let u in this.state.updates[tag]) {
             if(str !== '') str += "\n"            
-            if( !this.state.resource[tag][u] || this.state.resource[tag][u].value !== this.state.updates[tag][u].value) { // TODO more generic test (lang etc.)
-                if( this.state.resource[tag][u] )  str += `D  <${ this.props.IRI }> <${ tag }> ${ this.getPatchValue(tag, this.state.resource[tag][u].value) } <${ graph }> .\n`
+            if( !this.state.resource[tag] || !this.state.resource[tag][u] || this.state.resource[tag][u].value !== this.state.updates[tag][u].value) { // TODO more generic test (lang etc.)
+                if( this.state.resource[tag] && this.state.resource[tag][u] )  str += `D  <${ this.props.IRI }> <${ tag }> ${ this.getPatchValue(tag, this.state.resource[tag][u].value) } <${ graph }> .\n`
                 str += `A  <${ this.props.IRI }> <${ tag }> ${ this.getPatchValue(tag, this.state.updates[tag][u].value) } <${ graph }> .`  
             }
         }
         return str ;
     }
 
-    renderPostData = () => {
-        let mods = Object.keys(this.state.updates)
-        let id = shortUri(this.props.IRI).split(':')[1]
-        let graph = bdg+id
+    renderPatch = (mods, graph) => {
 
         if(mods && mods.length) {
         
@@ -441,6 +452,24 @@ TC . `          }
                 </pre>
             )
         }
+    }
+
+    renderPostData = () => {
+        let mods = Object.keys(this.state.updates)
+        let id = shortUri(this.props.IRI).split(':')[1]
+        let graph = bdg+id
+
+        return ( 
+            [   this.state.resource?
+                <div>               
+                    <h3><span>{this.proplink("newProperty","add another property")}</span>...&nbsp;</h3>
+                    {this.preprop("newProperty",0,0)}
+                </div>:null
+            ,
+                this.renderPatch(mods,graph)
+            ]
+
+        )
     }
 }
 
