@@ -1265,24 +1265,25 @@ class ResourceViewer extends Component<Props,State>
          let dico = dic, ret = []
 
          let info,infoBase,lang ;
+         
          if(dico) {
             infoBase = dico[elem.value]
+         }
 
-            if(!infoBase)  {
-               infoBase = this.props.dictionary[elem.value]
-               //console.log("ib",infoBase,dico)
-               if(infoBase) infoBase = infoBase[skos+"prefLabel"]
-            }
+         if(!infoBase)  {
+            infoBase = this.props.dictionary[elem.value]
+            //console.log("ib",infoBase,dico)
+            if(infoBase) infoBase = infoBase[skos+"prefLabel"]
+         }
 
-            //console.log("base",JSON.stringify(infoBase,null,3))
+         //console.log("base",JSON.stringify(infoBase,null,3))
 
-            if(infoBase) {
-               let { _info, _lang } = this.getInfo(prop,infoBase,withProp) 
-               info = _info
-               lang = _lang
+         if(infoBase) {
+            let { _info, _lang } = this.getInfo(prop,infoBase,withProp) 
+            info = _info
+            lang = _lang
 
-               if(!info) info = shortUri(elem.value)
-            }
+            if(!info) info = shortUri(elem.value)
          }
 
          // we can return Link
@@ -3145,7 +3146,7 @@ class ResourceViewer extends Component<Props,State>
                if(!sup) // || sup.filter(e => e.value == bdo+"workRefs").length > 0) //
                {
                   let allLabels
-                  if(k === skos+"altLabel" && otherLabels && otherLabels.length) {
+                  if(k === skos+"altLabel" && otherLabels && otherLabels.length && !this.props.authUser) {
                      allLabels = this.getResourceElem(k)
                      if(!allLabels) allLabels = []
                      allLabels = [ ...otherLabels, ...allLabels ].map(l => {

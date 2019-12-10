@@ -18,7 +18,7 @@ import * as ui from './state/ui/actions'
 
 import qs from 'query-string'
 
-import Auth,{TestToken} from './Auth.js';
+import Auth,{Profile,TestToken} from './Auth.js';
 import ProfileContainer from './containers/ProfileContainer';
 
 export const auth = new Auth();
@@ -149,8 +149,16 @@ const makeMainRoutes = () => {
                            </div>
                         )
                      }}/>
-                     {
+                     { 
                         <Route exact path="/user" render={(props) => {
+
+                           store.dispatch(initiateApp());
+
+                           return (<Profile auth={auth} history={history} />)
+                        } } />
+                     }
+                     { 
+                        <Route exact path="/testUser" render={(props) => {
 
                            store.dispatch(initiateApp());
 

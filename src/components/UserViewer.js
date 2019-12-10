@@ -23,11 +23,17 @@ import {shortUri,fullUri} from './App'
 const uuid = require('uuid/v1')
 
 const bdg   = "http://purl.bdrc.io/graph/" ;
+const bdgu  = "http://purl.bdrc.io/graph-nc/user/" ;
+const bdgup = "http://purl.bdrc.io/graph-nc/user-private/" ;
+const bdo   = "http://purl.bdrc.io/ontology/core/" ;
 const bdou  = "http://purl.bdrc.io/ontology/ext/user/" ;
+const bdr   = "http://purl.bdrc.io/resource/";
+const bdu   = "http://purl.bdrc.io/resource-nc/user/" ;
 const foaf  = "http://xmlns.com/foaf/0.1/" ;
 const rdf   = "http://www.w3.org/1999/02/22-rdf-syntax-ns#" ;
 const rdfs  = "http://www.w3.org/2000/01/rdf-schema#" ;
 const skos  = "http://www.w3.org/2004/02/skos/core#";
+const tmp   = "http://purl.bdrc.io/ontology/tmp/" ;
 const xsd   = "http://www.w3.org/2001/XMLSchema#" ;
 
 const api = new bdrcApi({...process.env.NODE_ENV === 'test' ? {server:"http://localhost:5555/test"}:{}});
@@ -68,6 +74,8 @@ class UserViewer extends ResourceViewer
             let res = { ...props.resources[props.IRI][props.IRI] }
             
             if(res && !res[bdou+"image"] && props.authUser && props.authUser.picture) res[bdou+"image"] = [ { type: "uri", value:props.authUser.picture } ]
+
+            if(res && !res[bdo+"personGender"]) res[bdo+"personGender"] = [ { type:"uri", value:bdr+"GenderNotSpecified" } ]
 
             if(!s) s = { ...state }
             s = { ...s, IRI:props.IRI, resource:res, ready:true }
@@ -173,7 +181,7 @@ class UserViewer extends ResourceViewer
                         else state.resource[tag] = []
                     }
 
-                    let type 
+                    let type = "uri"
                     if(range && range.length && ontoTypes[range[0].value]) type = ontoTypes[range[0].value]
  
                     if(state.emptyPopover) state.updates[tag].push({ value, type, newVal:true })
@@ -349,6 +357,11 @@ class UserViewer extends ResourceViewer
         let showSet = !maxN || (maxN === 1)
         let canDel  = (k !== skos+"prefLabel" || !maxN ) 
 
+        if(k === bdo+"personGender") { 
+            isUnique = true
+            canDel = false
+        }
+
         return (
             <div class="preprop">
                 <div class="menu">
@@ -457,7 +470,7 @@ TC . `          }
     renderPostData = () => {
         let mods = Object.keys(this.state.updates)
         let id = shortUri(this.props.IRI).split(':')[1]
-        let graph = bdg+id
+        let graph = bdgu+id
 
         return ( 
             [   this.state.resource?
