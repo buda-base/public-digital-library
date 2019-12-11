@@ -528,7 +528,8 @@ body {overflow-x:hidden; }
 .App > :not(.visible):first-child { left:-500px; }
 .App > :not(.visible):first-child #resizableLeftPane { position:absolute;  } 
 .App > .visible:first-child { left:0; }
-.App > .visible:first-child #resizableLeftPane { position:relative; } 
+.App > .visible:first-child #resizableLeftPane { position:fixed; } 
+/* .App > .visible:first-child + .SearchPane { margin-left:0; } */
 
 #resizableLeftPane .SidePane { position:relative; overflow-x:hidden;} 
 
