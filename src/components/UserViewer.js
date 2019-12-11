@@ -19,7 +19,7 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import bdrcApi from '../lib/api';
 import {shortUri,fullUri} from './App'
-import renderPatch from "../lib/rdf-patch.js"
+import renderPatch, {basePublicProps} from "../lib/rdf-patch.js"
 
 const bdg   = "http://purl.bdrc.io/graph/" ;
 const bdgu  = "http://purl.bdrc.io/graph-nc/user/" ;
@@ -37,7 +37,6 @@ const xsd   = "http://www.w3.org/2001/XMLSchema#" ;
 
 const api = new bdrcApi({...process.env.NODE_ENV === 'test' ? {server:"http://localhost:5555/test"}:{}});
 
-const basePublicProps = [ skos+"prefLabel", bdou+"image" ] 
 let publicProps
 
 const ontoTypes = {
@@ -422,7 +421,6 @@ class UserViewer extends ResourceViewer
     renderPostData = () => {
         let mods = Object.keys(this.state.updates)
         let id = shortUri(this.props.IRI).split(':')[1]
-        let graph = bdgu+id
 
         return ( 
             [   this.state.resource?
@@ -431,7 +429,7 @@ class UserViewer extends ResourceViewer
                     {this.preprop("newProperty",0,0)}
                 </div>:null
             ,
-                renderPatch(this,mods,graph)
+                renderPatch(this,mods,id)
             ]
 
         )

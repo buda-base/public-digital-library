@@ -104,13 +104,12 @@ export class Profile extends Component<Props,State> {
 
           let mods = Object.keys(state).filter(k => k !== "patch" && state[k].type && state[k].value).reduce( (acc,k) => ({ ...acc, [propsMap[k]]: [ state[k] ] } ), {} )
           let id = shortUri(this.props.userID).split(':')[1]
-          let graph = bdgu+id
 
           let that = { state: { resource:this.props.profile, updates:mods}, props:{ dictionary:this.props.dictionary, IRI:this.props.userID } }
 
-          console.log("mods", mods, id, graph, that)
+          console.log("mods", mods, id, that)
 
-          state.patch = renderPatch(that, Object.keys(mods), graph)
+          state.patch = renderPatch(that, Object.keys(mods), id)
           
           this.setState(state)
         }
