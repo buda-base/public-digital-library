@@ -9,7 +9,7 @@ const xsd   = "http://www.w3.org/2001/XMLSchema#" ;
 
 function getPatchValue(tag:string, value:any, dict:{}) {
     
-    console.log("prop",prop,value)
+    //console.log("prop",prop,value)
 
     let prop, T, start='', end=''
     prop = dict[tag]
@@ -26,10 +26,16 @@ function getPatchValue(tag:string, value:any, dict:{}) {
 }
 
 function getPatch(iri, updates, resource, tag:string, graph:string, dict) {
+
+    //console.log("getP",iri,updates,resource,tag,graph,dict)
+
     let str = '' 
     for(let u in updates[tag]) {
+
+        //console.log("u",u,updates[tag][u])
+
         if(str !== '') str += "\n"            
-        if( !resource[tag] || !resource[tag][u] || resource[tag][u].value !== updates[tag][u].value) { // TODO more generic test (lang etc.)
+        if( !resource[tag] || !resource[tag][u] || ( resource[tag][u].value !== updates[tag][u].value ) ) { // TODO more generic test (lang etc.)
             if( resource[tag] && resource[tag][u] )  str += `D  <${ iri }> <${ tag }> ${ getPatchValue(tag, resource[tag][u].value, dict) } <${ graph }> .\n`
             str += `A  <${ iri }> <${ tag }> ${ getPatchValue(tag, updates[tag][u].value, dict) } <${ graph }> .`  
         }
@@ -49,7 +55,7 @@ function renderPatch(that, mods, graph) {
         let iri = that.props.IRI
         let dict = that.props.dictionary
 
-        console.log("patch",res,upd,iri,dict)
+        //console.log("patch",mods,res,upd,iri,dict)
 
         let patch = mods.map(k => getPatch(iri, upd, res, k, graph, dict)).join("\n")
 

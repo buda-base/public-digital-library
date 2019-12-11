@@ -102,7 +102,7 @@ export class Profile extends Component<Props,State> {
 
           let state = {...this.state, [e.target.name]:{ type, value } } 
 
-          let mods = Object.keys(state).filter(k => k !== "patch" && state[k].type).reduce( (acc,k) => ({ ...acc, [propsMap[k]]: [ state[k] ] } ), {} )
+          let mods = Object.keys(state).filter(k => k !== "patch" && state[k].type && state[k].value).reduce( (acc,k) => ({ ...acc, [propsMap[k]]: [ state[k] ] } ), {} )
           let id = shortUri(this.props.userID).split(':')[1]
           let graph = bdgu+id
 
@@ -127,9 +127,7 @@ export class Profile extends Component<Props,State> {
 
               <h2>
                 <div id="avatar">
-                    {/* <a class="hover" onClick={(e) => this.togglePopover(e, bdou+"image", 0)} title={I18n.t("user.photo.hover")}><SettingsIcon/></a> */}
                     <img src={profile.picture} width="80"/>
-                    {/* { this.renderPopover(bdou+"image", "user.photo", picUrl, 0) } */}
                 </div>
                 {this.props.profile?this.props.profile[foaf+"mbox"][0].value:null}
               </h2>
