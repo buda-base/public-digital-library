@@ -1574,7 +1574,7 @@ class ResourceViewer extends Component<Props,State>
       })
       */
 
-      console.log("format",Tag, prop,JSON.stringify(elem,null,3),txt,bnode,div);
+      //console.log("format",Tag, prop,JSON.stringify(elem,null,3),txt,bnode,div);
 
       let ret = [],pre = []
 
@@ -1777,7 +1777,7 @@ class ResourceViewer extends Component<Props,State>
                }
             }
 
-            console.log("bnode",prop,e.value,elem)
+            //console.log("bnode",prop,e.value,elem)
 
             if(!elem) continue ;
 

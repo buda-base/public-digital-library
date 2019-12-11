@@ -524,11 +524,11 @@ body {overflow-x:hidden; }
 .SidePane .loader { position:absolute !important;margin-right:32px;margin-top:24px;right:0;}
 .datatypesLoader, .facetLoader { left:0px !important;top:0 !important;}
 
-.App > :first-child { position:absolute; z-index:10; transition:left 400ms ease-in-out;}
+.App > :first-child { position:relative; z-index:10; transition:left 400ms ease-in-out;}
 .App > :not(.visible):first-child { left:-500px; }
 .App > :not(.visible):first-child #resizableLeftPane { position:absolute;  } 
 .App > .visible:first-child { left:0; }
-.App > .visible:first-child #resizableLeftPane { position:fixed; } 
+.App > .visible:first-child #resizableLeftPane { position:relative; } 
 
 #resizableLeftPane .SidePane { position:relative; overflow-x:hidden;} 
 
