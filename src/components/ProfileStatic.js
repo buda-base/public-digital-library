@@ -15,6 +15,9 @@ import Input from '@material-ui/core/Input';
 
 import bdrcApi from '../lib/api' ;
 import renderPatch from '../lib/rdf-patch.js' ; 
+import { top_right_menu } from './App'
+import { top_left_menu } from './ResourceViewer'
+import LanguageSidePaneContainer from '../containers/LanguageSidePaneContainer';
 
 const api = new bdrcApi();
 
@@ -35,8 +38,10 @@ const propsMap = {  name: skos+"prefLabel",
 
 type Props = {
     userID?:url,
-    profile:{}
-
+    profile:{},
+    rightPanel?:boolean,
+    onToggleLanguagePanel:() => void,
+    onUserProfile:() => void
 }
 
 type State = {
@@ -121,6 +126,8 @@ export class Profile extends Component<Props,State> {
         }
 
         return (
+          [top_left_menu(this),
+           top_right_menu(this),
           <div className="profile-container resource user">
             <div className="profile-area">
 
@@ -211,7 +218,8 @@ export class Profile extends Component<Props,State> {
                 history.push(url)
               }}>Back</h5>
             </div>
-          </div>
+          </div>,          
+          <LanguageSidePaneContainer />]
       );
     }
   }

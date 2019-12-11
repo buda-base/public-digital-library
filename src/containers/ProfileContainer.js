@@ -20,15 +20,28 @@ const mapStateToProps = (state,ownProps) => {
 
    let dictionary = state.data.dictionary ;
 
-   let props = { userID, profile, dictionary }
+   let rightPanel = state.ui.rightPanel
+
+   let props = { userID, profile, dictionary, rightPanel }
 
    return props
 
 };
 
+const mapDispatchToProps = (dispatch, ownProps) => {
+   return {
+      onToggleLanguagePanel:() => {
+         dispatch(ui.toggleLanguagePanel());
+      },
+      onUserProfile:(url:{}) => {
+         dispatch(ui.userProfile(url));
+      },
+   }
+}
 
 const ProfileContainer = connect(
-    mapStateToProps
+    mapStateToProps,
+    mapDispatchToProps
 )(Profile);
 
 export default ProfileContainer;

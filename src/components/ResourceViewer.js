@@ -354,7 +354,7 @@ export function getOntoLabel(dict,locale,lang,prop = skos+"prefLabel") {
    return lang;
 }
 
-function top_left_menu(that,pdfLink,monoVol,fairUse)
+export function top_left_menu(that,pdfLink,monoVol,fairUse)
 {
   return (
 
@@ -367,7 +367,7 @@ function top_left_menu(that,pdfLink,monoVol,fairUse)
           </IconButton>
        </Link>
        {
-          that.props.IRI.match(/^(bd[ra])|(dila):/) &&
+          that.props.IRI && that.props.IRI.match(/^(bd[ra])|(dila):/) &&
           [<a className="goBack" target="_blank" title="TTL version" rel="alternate" type="text/turtle" href={that.expand(that.props.IRI)+".ttl"}>
              <Button style={{marginLeft:"0px",paddingLeft:"10px",paddingRight:0}}>{I18n.t("resource.export")} ttl</Button>
           </a>,<span>&nbsp;/&nbsp;</span>,
@@ -381,7 +381,7 @@ function top_left_menu(that,pdfLink,monoVol,fairUse)
                 </IconButton>
                </a> }
        {
-          that.props.IRI.match(/^bda[nc]:/) &&
+          that.props.IRI && that.props.IRI.match(/^bda[nc]:/) &&
           [<a className="goBack" target="_blank" title="TTL version" rel="alternate" type="text/turtle"
              href={"http://purl.bdrc.io/"+(that.props.IRI.match(/^bdan:/)?"annotation/":"anncollection/")+that.props.IRI.replace(/bda[nc]:/,"")+".ttl"}>
                 <Button style={{marginLeft:"0px",paddingLeft:"10px",paddingRight:"0px"}}>{I18n.t("resource.export")} ttl</Button>
@@ -477,7 +477,7 @@ function top_left_menu(that,pdfLink,monoVol,fairUse)
        }
 
 
-       <CopyToClipboard text={"http://purl.bdrc.io/resource/"+that.props.IRI.replace(/^bdr:/,"")} onCopy={(e) =>
+       { that.props.IRI && <CopyToClipboard text={"http://purl.bdrc.io/resource/"+that.props.IRI.replace(/^bdr:/,"")} onCopy={(e) =>
                 //alert("Resource url copied to clipboard\nCTRL+V to paste")
                 prompt("Resource url has been copied to clipboard.\nCTRL+V to paste",fullUri(that.props.IRI))
           }>
@@ -485,7 +485,7 @@ function top_left_menu(that,pdfLink,monoVol,fairUse)
           <IconButton style={{marginLeft:"0px"}} title="Permalink">
              <ShareIcon />
           </IconButton>
-       </CopyToClipboard>
+       </CopyToClipboard> }
 
        {
 
@@ -508,7 +508,7 @@ function top_left_menu(that,pdfLink,monoVol,fairUse)
        </IconButton>
         */ }
        { 
-          //that.props.IRI.match(/^[^:]+:[RPGTW]/) &&
+          that.props.IRI && //that.props.IRI.match(/^[^:]+:[RPGTW]/) &&
           prefixes[that.props.IRI.replace(/^([^:]+):.*$/,"$1")] &&
           <Link className="goBack" to={"/search?r="+that.props.IRI+"&t=Any"}>
           <IconButton style={{paddingLeft:0}} title={I18n.t("resource.browse")}>
