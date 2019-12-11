@@ -10,23 +10,49 @@ import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import TextField from '@material-ui/core/TextField';
+import {shortUri,fullUri} from './App'
+import Input from '@material-ui/core/Input';
 
-import bdrcApi from '../lib/api';
+import bdrcApi from '../lib/api' ;
+import renderPatch from '../lib/rdf-patch.js' ; 
 
 const api = new bdrcApi();
 
+const bdg   = "http://purl.bdrc.io/graph/" ;
+const bdgu  = "http://purl.bdrc.io/graph-nc/user/" ;
+const bdgup = "http://purl.bdrc.io/graph-nc/user-private/" ;
+const bdo   = "http://purl.bdrc.io/ontology/core/" ;
+const bdou  = "http://purl.bdrc.io/ontology/ext/user/" ;
+const bdr   = "http://purl.bdrc.io/resource/";
+const foaf  = "http://xmlns.com/foaf/0.1/" ;
+const skos  = "http://www.w3.org/2004/02/skos/core#";
+const tmp   = "http://purl.bdrc.io/ontology/tmp/" ;
+
+const propsMap = {  name: skos+"prefLabel", 
+                    gender: bdo+"Gender", male: bdr+"GenderMale", female: bdr+"GenderFemale", "no-answer": bdr+"GenderNotSpecified",
+                    interest: bdou+"interest", buddhism: tmp+"buddhism",
+                    region: bdou+"mainResidenceArea", outside:tmp+"outside", kham:tmp+"kham", amdo:tmp+"amdo", "u-tsang":tmp+"u-tsang", other:tmp+"other" }
+
+type Props = {
+    userID?:url,
+    profile:{}
+
+}
+
 type State = {
+   name:string,
    gender:string,
    region:string,
-   affiliation:string,
-   interest:string
+   //affiliation:string,
+   interest:string,
+   patch?:{}
 }
-export class Profile extends Component<State> {  
-  _dict ;
+
+export class Profile extends Component<Props,State> {  
 
   constructor(props : Props) {
     super(props);
-    this.state = { gender:"", region:"",affiliation:"",interest:"" }
+    this.state = { name:{type:"literal"}, gender:{value:""}, region:{value:""}, interest:{value:""} }
   }
   
   componentWillMount() {
@@ -35,21 +61,22 @@ export class Profile extends Component<State> {
     if (!userProfile) {
       getProfile((err, profile) => {
         this.setState({ profile });
+        store.dispatch(data.getUser(profile))
       });
     } else {
-      this.setState({ profile: userProfile });
+      this.setState({ profile:userProfile });
+      store.dispatch(data.getUser(userProfile))
     }
   }
+
   render() {
 
-    let props = store.getState()
-    if( props && props.data && !this.state.dictionary ) { 
-      this._dict = props.data.dictionary 
-    }
-
     const { profile } = this.state;
-    console.log("profile",profile)
+    
+    console.log("profile",profile,this.state,this.props)
+    
     let message = "Getting user info..."
+
     if(!profile || !Object.keys(profile).length) {
       if(!auth.isAuthenticated()) { 
         //message = <span>Please <a onclick={this.props.auth.login(this.props.history.location)}>log in</a></span>
@@ -65,14 +92,49 @@ export class Profile extends Component<State> {
         if(this.tO) clearTimeout(this.tO)
 
         let handleChange = (e,val1,val2) => {
+
           //console.log("e",e,val1,val2)
-          this.setState({...this.state,[e.target.name]:e.target.value})
+
+          let type = this.state[e.target.name].type
+          if(!type) type = 'uri'
+          let value = propsMap[e.target.value]
+          if(!value) value = e.target.value
+
+          let state = {...this.state, [e.target.name]:{ type, value } } 
+
+          let mods = Object.keys(state).filter(k => k !== "patch" && state[k].type).reduce( (acc,k) => ({ ...acc, [propsMap[k]]: [ state[k] ] } ), {} )
+          let id = shortUri(this.props.userID).split(':')[1]
+          let graph = bdgu+id
+
+          let that = { state: { resource:this.props.profile, updates:mods}, props:{ dictionary:this.props.dictionary, IRI:this.props.userID } }
+
+          console.log("mods", mods, id, graph, that)
+
+          state.patch = renderPatch(that, Object.keys(mods), graph)
+          
+          this.setState(state)
+        }
+
+        let val = { name:"", gender:"", interest:"", region:"" }
+        for(let k of Object.keys(val)) {
+          if(this.state[k] && this.state[k].value !== undefined) val[k] = this.state[k].value
+          else if(this.props.profile && this.props.profile[propsMap[k]]) val.name = this.props.profile[propsMap[k]][0].value
         }
 
         return (
-          <div className="profile-container">
+          <div className="profile-container resource user">
             <div className="profile-area">
-              <h1><img src={profile.picture} alt="profile" />{profile.name}</h1>
+
+              <h2>
+                <div id="avatar">
+                    {/* <a class="hover" onClick={(e) => this.togglePopover(e, bdou+"image", 0)} title={I18n.t("user.photo.hover")}><SettingsIcon/></a> */}
+                    <img src={profile.picture} width="80"/>
+                    {/* { this.renderPopover(bdou+"image", "user.photo", picUrl, 0) } */}
+                </div>
+                {this.props.profile?this.props.profile[foaf+"mbox"][0].value:null}
+              </h2>
+
+              {/* <h1><img src={profile.picture} alt="profile" />{this.props.profile?this.props.profile[foaf+"mbox"][0].value:null}</h1> */}
               { /*}
               <Panel header="Profile picture: ">
                 <img src={profile.picture} alt="profile" /> 
@@ -85,41 +147,49 @@ export class Profile extends Component<State> {
               */}
               <form autoComplete="off">
                 <FormControl className="FC">
+                  <InputLabel htmlFor="name">Name</InputLabel>
+                  <Input
+                    value={val.name}
+                    onChange={handleChange}
+                    inputProps={{ name: 'name', id: 'name' }}
+                  />
+                </FormControl>
+                <FormControl className="FC">
                   <InputLabel htmlFor="gender">Gender</InputLabel>
                   <Select
-                    value={this.state.gender}
+                    value={val.gender}
                     onChange={handleChange}
                     inputProps={{ name: 'gender', id: 'gender'}}
                   >
-                    <MenuItem value={"male"}>Male</MenuItem>
-                    <MenuItem value={"female"}>Female</MenuItem>
-                    <MenuItem value={"no-answer"}>Prefer not to answer</MenuItem>
+                    <MenuItem value={propsMap["male"]}>Male</MenuItem>
+                    <MenuItem value={propsMap["female"]}>Female</MenuItem>
+                    <MenuItem value={propsMap["no-answer"]}>Prefer not to answer</MenuItem>
                   </Select>
                 </FormControl>
 
                 <FormControl className="FC">
                   <InputLabel htmlFor="region">Area of Interest</InputLabel>
                   <Select
-                    value={this.state.interest}
+                    value={val.interest}
                     onChange={handleChange}
                     inputProps={{ name:"interest", id: 'interest'}}
                   >
-                    <MenuItem value={"..."}>...</MenuItem>
+                    <MenuItem value={propsMap["buddhism"]}>Buddhism</MenuItem>
                   </Select>
                 </FormControl>
 
                 <FormControl className="FC">
                   <InputLabel htmlFor="region">Cultural Region (if in China)</InputLabel>
                   <Select
-                    value={this.state.region}
+                    value={this.state.region.value}
                     onChange={handleChange}
                     inputProps={{ name: 'region', id: 'region'}}
                   >
-                    <MenuItem value={"outside"}>Not applicable</MenuItem>
-                    <MenuItem value={"kham"}>Kham</MenuItem>
-                    <MenuItem value={"amdo"}>Amdo</MenuItem>
-                    <MenuItem value={"u-tsang"}>U-tsang</MenuItem>
-                    <MenuItem value={"other"}>Other</MenuItem>
+                    <MenuItem value={propsMap["outside"]}>Not applicable</MenuItem>
+                    <MenuItem value={propsMap["kham"]}>Kham</MenuItem>
+                    <MenuItem value={propsMap["amdo"]}>Amdo</MenuItem>
+                    <MenuItem value={propsMap["u-tsang"]}>U-tsang</MenuItem>
+                    <MenuItem value={propsMap["other"]}>Other</MenuItem>
                   </Select>
                 </FormControl>
                 {/* <br/> */}
@@ -137,6 +207,7 @@ export class Profile extends Component<State> {
                  */}
                  
               </form>
+              { this.state.patch }
               <h5 onClick={ (e) => { 
                 let url = store.getState().ui.profileFromUrl
                 if(!url) url = "/"

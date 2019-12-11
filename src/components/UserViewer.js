@@ -19,8 +19,7 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import bdrcApi from '../lib/api';
 import {shortUri,fullUri} from './App'
-
-const uuid = require('uuid/v1')
+import renderPatch from "../lib/rdf-patch.js"
 
 const bdg   = "http://purl.bdrc.io/graph/" ;
 const bdgu  = "http://purl.bdrc.io/graph-nc/user/" ;
@@ -46,59 +45,6 @@ const ontoTypes = {
     [rdf+"PlainLiteral"]: "literal"
 }
 
-export function getPatchValue(tag:string, value:any, dict:{}) {
-    let prop, T, start='', end=''
-    prop = dict[tag]
-    if(prop) {
-        T = prop[rdfs+"range"]
-        //console.log("prop",prop,T)
-        if(T && T.length) {
-                    if(T[0].value === xsd+"anyURI")       { start = "<" ; end = ">" ; }
-            else if(T[0].value === rdf+"PlainLiteral") { start = '"' ; end = '"' ; }                
-        }
-    }
-    return start + (value.value?value.value:value) + end
-}
-
-export function getPatch(iri, updates, resource, tag:string, graph:string, dict) {
-    let str = '' 
-    for(let u in updates[tag]) {
-        if(str !== '') str += "\n"            
-        if( !resource[tag] || !resource[tag][u] || resource[tag][u].value !== updates[tag][u].value) { // TODO more generic test (lang etc.)
-            if( resource[tag] && resource[tag][u] )  str += `D  <${ iri }> <${ tag }> ${ getPatchValue(tag, resource[tag][u].value, dict) } <${ graph }> .\n`
-            str += `A  <${ iri }> <${ tag }> ${ getPatchValue(tag, updates[tag][u].value, dict) } <${ graph }> .`  
-        }
-    }
-    return str ;
-}
-
-export function renderPatch(that, mods, graph) {
-
-    if(mods && mods.length) {
-    
-        // TODO change uuid after patch sent or canceled
-        if(!that._uuid) that._uuid = uuid()
-
-        let res = that.state.resource
-        let upd = that.state.updates
-        let iri = that.props.IRI
-        let dict = that.props.dictionary
-
-        let patch = mods.map(k => getPatch(iri, upd, res, k, graph, dict)).join("\n")
-
-        if(patch) return (
-            <pre id="patch" contentEditable="true">
-            { `\
-H  id      "${ that._uuid }"
-H  graph   "${ graph }"
-H  mapping "${ graph }-user" .
-TX . 
-${ patch }
-TC . `          } 
-            </pre>
-        )
-    }
-}
 
 class UserViewer extends ResourceViewer
 {

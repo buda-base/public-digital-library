@@ -688,9 +688,12 @@ h2 + .browse a { font-size:14px; text-transform:capitalize;}
 .pdfLoading,.zipLoading { color:white; }
 .pdfSpinner,.zipSpinner { left: 55% !important;  top: 45% !important; }
 
+
 .profile-container { padding:40px 100px; }
 .profile-area h1 { margin-top:0; }
-.profile-area img { height: 64px; vertical-align: middle;  border: 1px solid #ccc; display:inline-block; margin-right:16px;}
+/*
+.profile-area img { height: 64px; vertical-align: middle;  box-shadow:0 0 5px rgba(0,0,0,0.45); display:inline-block; margin-right:16px;}
+*/ /* border: 1px solid #ccc;*/
 .profile-area h5 { font-size:14px; color:rgba(229, 74, 53,1); cursor:pointer; margin-top:50px;}
 .profile-area h5:hover { text-decoration: underline; }
 

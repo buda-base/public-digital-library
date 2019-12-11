@@ -19,6 +19,7 @@ import * as ui from './state/ui/actions'
 import qs from 'query-string'
 
 import Auth,{TestToken} from './Auth.js';
+import UserViewerContainer from './containers/UserViewerContainer';
 import ProfileContainer from './containers/ProfileContainer';
 import Profile from './components/ProfileStatic';
 
@@ -155,7 +156,7 @@ const makeMainRoutes = () => {
 
                            store.dispatch(initiateApp());
 
-                           return (<Profile auth={auth} history={history} />)
+                           return (<ProfileContainer auth={auth} history={history} />)
                         } } />
                      }
                      { 
@@ -163,7 +164,7 @@ const makeMainRoutes = () => {
 
                            store.dispatch(initiateApp());
 
-                           return (<ProfileContainer auth={auth} history={history} />)
+                           return (<UserViewerContainer auth={auth} history={history} />)
                         } } />
                      }
                      {/*

@@ -7,28 +7,21 @@ import store from '../index';
 
 // import selectors from 'state/selectors';
 
-import Profile from '../components/ProfileStatic';
+import Profile from '../components/Profile';
 
 const mapStateToProps = (state,ownProps) => {
 
    let userID = state.ui.userID
-   
-   let profile = state.data.resources
-   if(profile && userID) profile = profile[userID]
-   if(profile) profile = profile[userID]
-   else profile = null
 
-   let dictionary = state.data.dictionary ;
-
-   let props = { userID, profile, dictionary }
+   let props = { userID }
 
    return props
 
 };
 
 
-const ProfileContainer = connect(
+const UserViewerContainer = connect(
     mapStateToProps
 )(Profile);
 
-export default ProfileContainer;
+export default UserViewerContainer;
