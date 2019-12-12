@@ -618,12 +618,13 @@ body > .ol-li-lang:last-child li::before { content:'-';}
 .widget > .subcollapse { padding-left:0 !important;}
 
 
-.active-filter { background:rgba(0,0,0,0.55); padding:5px 10px; border-radius: 15px; box-shadow:3px 3px 10px rgba(0,0,0,0.35)}
+.active-filter { background:rgba(0,0,0,0.55); padding:5px 5px 5px 15px; border-radius: 15px; box-shadow:3px 3px 10px rgba(0,0,0,0.35); white-space: nowrap; text-transform:capitalize;
+   margin:0 2px;}
 .active-filter,
 .active-filter svg { font-size: 14px; vertical-align:middle; color:rgba(255,255,255,1); }
-.active-filter svg { margin-left:5px; font-size:15px; vertical-align:-3px; cursor:pointer;}
+.active-filter svg { margin-left:5px; font-size:18px; vertical-align:-4px; cursor:pointer;}
 
-.active-filter + p { margin-top:40px; }
+#filters-UI { margin-bottom:40px; line-height:32px; }
 
 span.subcollapse { opacity:0; transition:opacity 50ms ease-in-out ; }
 span.subcollapse svg { vertical-align:-6px; cursor:pointer; font-size:18px; }

@@ -250,6 +250,25 @@ export function getLangLabel(that:{},prop:string="",labels:[],proplang:boolean=f
    }
 };
 
+function getPropLabel(that, i) {
+   let label = that.props.ontology[i]
+   if(!label) label = that.props.dictionary[i]
+   //console.log("label",label)
+   if(label) {
+      let labels = label["http://www.w3.org/2000/01/rdf-schema#label"]
+      if(!labels) labels = label[skos+"prefLabel"]
+      if(labels) {
+            for(let l of labels)
+            if(l.lang == that.props.locale) label = l.value
+      }
+      if(label["http://www.w3.org/2000/01/rdf-schema#label"]) label = label["http://www.w3.org/2000/01/rdf-schema#label"][0].value
+      if(label[skos+"prefLabel"]) label = label[skos+"prefLabel"][0].value
+   }
+   else label = that.pretty(i)
+
+   return label
+}
+
 export function top_right_menu(that)
 {
 
@@ -1208,9 +1227,11 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
    fullname(prop:string,preflabs:[],useUIlang:boolean=false)
    {
 
-      if(this.props.ontology && this.props.ontology[prop] && this.props.ontology[prop][rdfs+"label"])
+      if(this.props.dictionary && this.props.dictionary[prop] && this.props.dictionary[prop][rdfs+"label"])
       {
-         preflabs = this.props.ontology[prop][rdfs+"label"]
+         preflabs = []
+         if(this.props.dictionary[prop][rdfs+"label"]) preflabs = [ ...preflabs, ...this.props.dictionary[prop][rdfs+"label"] ]
+         if(this.props.dictionary[prop][skos+"prefLabel"]) preflabs = [ ...preflabs, ...this.props.dictionary[prop][skos+"prefLabel"] ]
       }
 
       if(preflabs)
@@ -2660,8 +2681,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          return ""
    }
 
-   renderFilterTag(k, f) {
-      return <a title={I18n.t("Lsidebar.activeF.remove")} class="active-filter">{k}<Close onClick={f.bind(this)}/></a>
+   renderFilterTag(t, k, f) {
+      return <a title={I18n.t("Lsidebar.activeF.remove")} class="active-filter">{t}: <b>{k}</b><Close onClick={f.bind(this)}/></a>
    }
 
 
@@ -3005,7 +3026,16 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                            <Translate value="Lsidebar.activeF.title" />
                         </Typography>
                            ,
-                           this.state.filters.datatype.filter(k => k !== "Any").map(k => this.renderFilterTag(k, (event, checked) => this.handleCheck(event, k, false) ) )
+                           <div id="filters-UI">
+                              { this.state.filters.datatype.filter(k => k !== "Any").map(k => this.renderFilterTag("Type", k, (event, checked) => this.handleCheck(event, k, false) ) )}                              
+                              { this.state.filters.facets?Object.keys(this.state.filters.facets).map(f => {
+                                 let vals = this.state.filters.facets[f]
+                                 if(vals.val) vals = vals.val
+                                 return vals.filter(k => k !== "Any").map(v => 
+                                    this.renderFilterTag(getPropLabel(this,f), getPropLabel(this,v), (event, checked) => this.handleCheckFacet(event, f, [ v ], false) ) 
+                                 ) }
+                              ):null }
+                           </div>
                         ]
                      }
                      <Typography style={{fontSize:"23px",marginBottom:"20px",textAlign:"center"}}>
@@ -3234,22 +3264,9 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                                     meta_sort.map(  (i) =>
                                     {
 
-                                       let label = this.props.ontology[i]
-                                       if(!label) label = this.props.dictionary[i]
-                                       //console.log("label",label)
-                                       if(label) {
-                                          let labels = label["http://www.w3.org/2000/01/rdf-schema#label"]
-                                          if(!labels) labels = label[skos+"prefLabel"]
-                                          if(labels) {
-                                              for(let l of labels)
-                                                if(l.lang == this.props.locale) label = l.value
-                                          }
-                                          if(label["http://www.w3.org/2000/01/rdf-schema#label"]) label = label["http://www.w3.org/2000/01/rdf-schema#label"][0].value
-                                          if(label[skos+"prefLabel"]) label = label[skos+"prefLabel"][0].value
-                                       }
-                                       else label = this.pretty(i)
+                                       let label = getPropLabel(this,i)
 
-                                       //console.log("label",i,j,jpre,label,meta)
+                                       console.log("label",i,j,jpre,label,meta)
 
                                        let checked = this.state.filters.facets && this.state.filters.facets[jpre]
                                        if(!checked) {
