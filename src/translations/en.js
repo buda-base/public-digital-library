@@ -105,6 +105,10 @@ const enTranslation = {
       }
    },
    Lsidebar:{
+      activeF:{
+         title:"Active Filters",
+         remove:"Remove filter"
+      },
       title:"Refine your Search",
       collection:{
          title:"Collection"

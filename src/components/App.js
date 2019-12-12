@@ -2660,6 +2660,10 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          return ""
    }
 
+   renderFilterTag(k, f) {
+      return <a title={I18n.t("Lsidebar.activeF.remove")} class="active-filter">{k}<Close onClick={f.bind(this)}/></a>
+   }
+
 
    render() {
 
@@ -2996,7 +3000,15 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   <IconButton className="close" onClick={e => this.setState({...this.state,leftPane:false,closeLeftPane:true})}><Close/></IconButton>
                { //this.props.datatypes && (results ? results.numResults > 0:true) &&
                   <div style={{ /*minWidth:"335px",*/ position:"relative"}}>
-                     <Typography style={{fontSize:"25px",marginBottom:"20px",textAlign:"center"}}>
+                     { ( this.state.filters.facets || this.state.filters.datatype.indexOf("Any") === -1 )&& 
+                        [ <Typography style={{fontSize:"23px",marginBottom:"20px",textAlign:"center"}}>
+                           <Translate value="Lsidebar.activeF.title" />
+                        </Typography>
+                           ,
+                           this.state.filters.datatype.filter(k => k !== "Any").map(k => this.renderFilterTag(k, (event, checked) => this.handleCheck(event, k, false) ) )
+                        ]
+                     }
+                     <Typography style={{fontSize:"23px",marginBottom:"20px",textAlign:"center"}}>
                         <Translate value="Lsidebar.title" />
                      </Typography>
                      {
