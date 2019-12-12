@@ -25,6 +25,7 @@ import Settings from '@material-ui/icons/SettingsSharp';
 import TranslateIcon from '@material-ui/icons/Translate';
 import Apps from '@material-ui/icons/Apps';
 import Close from '@material-ui/icons/Close';
+import Cancel from '@material-ui/icons/Cancel';
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
 import NavigateBefore from '@material-ui/icons/NavigateBefore';
@@ -378,7 +379,8 @@ type State = {
    closeLeftPane?:boolean,
    filters:{
       datatype:string[],
-      facets?:{[string]:string[]}
+      facets?:{[string]:string[]},
+      exclude:{[string]:boolean}
    },
    collapse:{ [string] : boolean },
    loader:{[string]:Component<*>},
@@ -434,7 +436,8 @@ class App extends Component<Props,State> {
          langOpen:false,
          UI:{language:"en"},
          filters: {
-            datatype:get.t?get.t.split(","):["Any"]
+            datatype:get.t?get.t.split(","):["Any"],
+            exclude:{}
          },
          searchTypes: get.t?get.t.split(","):types,
          dataSource: [],         
@@ -918,7 +921,7 @@ class App extends Component<Props,State> {
    }
 
 
-   handleCheckFacet = (ev:Event,prop:string,lab:string[],val:boolean) => {
+   handleCheckFacet = (ev:Event,prop:string,lab:string[],val:boolean,excl:boolean=false) => {
 
       let state =  this.state
 
@@ -927,8 +930,8 @@ class App extends Component<Props,State> {
       if(!propSet) propSet = [ "Any" ]
       else if(propSet.val) propSet = propSet.val
 
+      if(excl || !val) { propSet = propSet.filter(v => lab.indexOf(v) === -1) ; }
       if(val) propSet = propSet.concat(lab);
-      else { propSet = propSet.filter(v => lab.indexOf(v) === -1) ; }
 
       if(!propSet.length) propSet = [ "Any" ] ;
 
@@ -951,20 +954,41 @@ class App extends Component<Props,State> {
          facets = { ...facets, [prop] : propSet }
       }
 
-      state = { ...state, paginate:{index:0,pages:[0],n:[0]}, repage: true, filters:{ ...state.filters, facets }  }      
+      let exclude = state.filters.exclude ;
+      if(!excl) {
+         if(exclude[prop]) { 
+            exclude[prop] = exclude[prop].filter(v => lab.indexOf(v) === -1)
+         }
+         //if(!exclude[prop]) delete exclude[prop]
+      }
+      else if(propSet.indexOf("Any") === -1) { 
+         if(!exclude[prop]) exclude[prop] = []
+         exclude[prop] = [ ...exclude[prop], ...propSet ]
+      }
+      
 
-      if(this.state.filters.datatype && this.state.filters.datatype.indexOf("Any") === -1 && this.props.searches && this.props.searches[this.state.filters.datatype[0]])          
+      state = { ...state, paginate:{index:0,pages:[0],n:[0]}, repage: true, filters:{ ...state.filters, facets, exclude }  }      
+
+      if(this.state.filters.datatype && this.state.filters.datatype.indexOf("Any") === -1 && this.props.searches && this.props.searches[this.state.filters.datatype[0]]) {
+
+         console.log("facets",facets)
+
+         // TODO fix dynamic facet count
+         // let {pathname,search} = this.props.history.location
+         // this.props.history.push({pathname,search:search+"&f="})
+
          this.props.onUpdateFacets(this.props.keyword+"@"+this.props.language,this.state.filters.datatype[0],Object.keys(facets).reduce((acc,f) => {
             if(facets[f].indexOf && facets[f].indexOf("Any") !== -1) return acc ;
             else if(facets[f].val && facets[f].val.indexOf("Any") !== -1) return acc ;
             else return { ...acc, [f]:facets[f] }
          },{}),this.props.searches[this.state.filters.datatype[0]][this.props.keyword+"@"+this.props.language].metadata,this.props.config.facets[this.state.filters.datatype[0]]);
+      }
 
+      this.setState(state);
 
       console.log("checkF",prop,lab,val,facets,state);
 
 
-      this.setState(state);
 
    }
 
@@ -2681,8 +2705,13 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          return ""
    }
 
-   renderFilterTag(t, k, f) {
-      return <a title={I18n.t("Lsidebar.activeF.remove")} class="active-filter">{t}: <b>{k}</b><Close onClick={f.bind(this)}/></a>
+   renderFilterTag(isText:boolean=true,t, k, f) {      
+      let isExclu = this.state.filters.exclude[t] && this.state.filters.exclude[t].includes(k)
+      if(!isText) {
+         t = getPropLabel(this,t) 
+         k = getPropLabel(this,k)
+      }
+      return <a title={I18n.t("Lsidebar.activeF.remove")} class={ "active-filter " + (isExclu?"exclu":"") }>{t}: <b>{k}</b><Cancel onClick={f.bind(this)}/></a>
    }
 
 
@@ -2906,6 +2935,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      }
                      label={<span>{label}&nbsp;{"("}<span class="facet-count">{cpt_i+cpt}</span>{")"}</span>}
                   />
+                  <div class="exclude"><Close onClick={(event, checked) => this.handleCheckFacet(event,jpre,checkable,true,true)} /></div>
                   {
                      elem && elem["taxHasSubClass"] && elem["taxHasSubClass"].length > 0 &&
                      [
@@ -3027,12 +3057,12 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                         </Typography>
                            ,
                            <div id="filters-UI">
-                              { this.state.filters.datatype.filter(k => k !== "Any").map(k => this.renderFilterTag("Type", k, (event, checked) => this.handleCheck(event, k, false) ) )}                              
+                              { this.state.filters.datatype.filter(k => k !== "Any").map(k => this.renderFilterTag(true, "Type", k, (event, checked) => this.handleCheck(event, k, false) ) )}                              
                               { this.state.filters.facets?Object.keys(this.state.filters.facets).map(f => {
                                  let vals = this.state.filters.facets[f]
                                  if(vals.val) vals = vals.val
                                  return vals.filter(k => k !== "Any").map(v => 
-                                    this.renderFilterTag(getPropLabel(this,f), getPropLabel(this,v), (event, checked) => this.handleCheckFacet(event, f, [ v ], false) ) 
+                                    this.renderFilterTag(false, f, v, (event, checked) => this.handleCheckFacet(event, f, [ v ], false) ) 
                                  ) }
                               ):null }
                            </div>
@@ -3277,6 +3307,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
                                        // console.log("checked",checked)
 
+                                       let isExclu = this.state.filters.exclude[jpre] && this.state.filters.exclude[jpre].includes(i)
+
                                        return (
                                           <div key={i} style={{width:"280px",textAlign:"left"}} className="widget searchWidget">
                                              <FormControlLabel
@@ -3285,13 +3317,14 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                                                       checked={checked}
                                                       className="checkbox"
                                                       icon={<CheckBoxOutlineBlank/>}
-                                                      checkedIcon={<CheckBox/>}
+                                                      checkedIcon={isExclu ? <Close className="excl"/>:<CheckBox/>}
                                                       onChange={(event, checked) => this.handleCheckFacet(event,jpre,[i],checked)}
                                                    />
 
                                                 }
                                                 label={<span>{label+" ("}<span class="facet-count">{this.subcount(j,i)+meta[j][i].n}</span>{")"}</span>}
                                              />
+                                             { !isExclu && <div class="exclude"><Close onClick={(event, checked) => this.handleCheckFacet(event,jpre,[i],true,true)} /></div> }
                                           </div>
                                        )
                                     })
