@@ -2385,22 +2385,34 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      }
                      else if(e.type === k) {
                         hasProp = true ;
-                        if( v.indexOf("Any") !== -1 || e.value === v || v.indexOf(e.value) !== -1)  withProp = true ;                                                                       
+                        if(v.indexOf("Any") !== -1 || e.value === v || v.indexOf(e.value) !== -1)  withProp = true ;                                                                       
                         if(exclude.indexOf(e.value) !== -1) isExclu = true
                      }
                   }
 
-                 
-                  if((v.alt && v.val.indexOf("unspecified") !== -1) || (!v.alt && v.indexOf("unspecified") !== -1)) {
-                     if(hasProp && !withProp) { // && ((!v.alt && v.length === 1) || (v.alt && v.alt.length === 1) ) ) { 
-                        filtered = false 
+                  if(!exclude || !exclude.length) {
+                     if((v.alt && v.val.indexOf("unspecified") !== -1) || (!v.alt && v.indexOf("unspecified") !== -1)) {
+                        if( hasProp && !withProp ) filtered = false
                      }
-                     //else console.log("filt unspec",o)
+                     else if((v.alt && v.val.indexOf("Any") === -1) || (!v.alt && v.indexOf("Any") === -1)) {
+                        if( !withProp ) filtered = false
+                     } 
                   }
-                  else if((v.alt && v.val.indexOf("Any") === -1) || (!v.alt && v.indexOf("Any") === -1)) {
-                     if( !withProp ) filtered = false
+                  else {
+                     if((v.alt && v.val.indexOf("unspecified") !== -1) || (!v.alt && v.indexOf("unspecified") !== -1)) {
+                        if( exclude.indexOf("unspecified") !== -1 && !hasProp ) filtered = false
+                        if((v.alt && v.val.indexOf("Any") === -1) || (!v.alt && v.indexOf("Any") === -1)) {
+                           if( withProp && isExclu ) filtered = false
+                        } 
+                     }                     
+                     else if((v.alt && v.val.indexOf("Any") === -1) || (!v.alt && v.indexOf("Any") === -1)) {
+                        if( withProp && isExclu ) filtered = false
+                     } 
+                  }
 
-                  }
+
+
+                  //if(isExclu) filtered = false
 
                   console.log("hP",o, hasProp,withProp,isExclu,filtered) //,k,v) //,sublist[o])
                }
@@ -2722,7 +2734,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          t = getPropLabel(this,t) 
          k = getPropLabel(this,k)
       }
-      return <a title={(!isExclu?"Include":"Exclude")+" results with "+t+": "+ k} class={ "active-filter " + (isExclu?"exclu":"") }>{t}: <b>{k}</b><a title={I18n.t("Lsidebar.activeF.remove")} onClick={f.bind(this)}><Cancel/></a></a>
+      return <a title={(!isExclu?"Include":"Exclude")+" results with "+t+": "+ k} class={ "active-filter " + (isExclu?"exclu":"") }><span>{t}: <b>{k}</b></span><a title={I18n.t("Lsidebar.activeF.remove")} onClick={f.bind(this)}><Cancel/></a></a>
    }
 
 
