@@ -957,13 +957,14 @@ class App extends Component<Props,State> {
       let exclude = state.filters.exclude ;
       if(!excl) {
          if(exclude[prop]) { 
-            exclude[prop] = exclude[prop].filter(v => lab.indexOf(v) === -1)
+            if(lab.indexOf("Any") === -1) exclude[prop] = exclude[prop].filter(v => lab.indexOf(v) === -1)
+            else exclude[prop] = []
          }
          //if(!exclude[prop]) delete exclude[prop]
       }
       else if(propSet.indexOf("Any") === -1) { 
          if(!exclude[prop]) exclude[prop] = []
-         exclude[prop] = [ ...exclude[prop], ...propSet ]
+         exclude[prop] = [ ...exclude[prop], ...lab ]
       }
       
 
@@ -2920,6 +2921,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
             //console.log("checkedN",checked)
 
+            let isExclu = this.state.filters.exclude[jpre] && checkable && checkable.reduce( (acc,k) => (acc && this.state.filters.exclude[jpre].includes(k)), true )
+
             return (
                <div key={e} style={{width:"auto",textAlign:"left"}} className="widget searchWidget">
                   <FormControlLabel
@@ -2928,14 +2931,14 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                            checked={checked}
                            className={"checkbox"}
                            icon={<CheckBoxOutlineBlank/>}
-                           checkedIcon={<CheckBox />}
+                           checkedIcon={isExclu ? <Close className="excl"/>:<CheckBox />}
                            onChange={(event, checked) => this.handleCheckFacet(event,jpre,checkable,checked)}
                         />
 
                      }
                      label={<span>{label}&nbsp;{"("}<span class="facet-count">{cpt_i+cpt}</span>{")"}</span>}
                   />
-                  <div class="exclude"><Close onClick={(event, checked) => this.handleCheckFacet(event,jpre,checkable,true,true)} /></div>
+                  { !isExclu && <div class="exclude"><Close onClick={(event, checked) => this.handleCheckFacet(event,jpre,checkable,true,true)} /></div> }
                   {
                      elem && elem["taxHasSubClass"] && elem["taxHasSubClass"].length > 0 &&
                      [
