@@ -943,6 +943,25 @@ class App extends Component<Props,State> {
          if(!propSet.length) propSet = [ "Any" ] ;
       }
       
+      if(!state.filters.exclude) state.filters.exclude = {}
+      let exclude = state.filters.exclude ;
+      if(!excl) {
+         if(val) { 
+            if(exclude[prop]) propSet = propSet.filter(v => exclude[prop].indexOf(v) === -1)
+            exclude[prop] = [] // doesn't make sense both selecting a value and excluding another
+         }
+         else if(exclude[prop]) { 
+            if(lab.indexOf("Any") === -1) exclude[prop] = exclude[prop].filter(v => lab.indexOf(v) === -1)
+            else exclude[prop] = []
+         }
+         //if(!exclude[prop]) delete exclude[prop]
+      }
+      else if(propSet.indexOf("Any") === -1) { 
+         if(!exclude[prop]) exclude[prop] = []
+         exclude[prop] = [ ...exclude[prop], ...lab ]         
+         if(excl && exclude[prop]) propSet = propSet.filter(v => exclude[prop].indexOf(v) !== -1)
+      }
+
       let facets = state.filters.facets ;
       if(!facets) facets = {}
       if(prop == bdo+"workGenre") {
@@ -953,20 +972,6 @@ class App extends Component<Props,State> {
       {
          facets = { ...facets, [prop] : propSet }
       }
-
-      let exclude = state.filters.exclude ;
-      if(!excl) {
-         if(exclude[prop]) { 
-            if(lab.indexOf("Any") === -1) exclude[prop] = exclude[prop].filter(v => lab.indexOf(v) === -1)
-            else exclude[prop] = []
-         }
-         //if(!exclude[prop]) delete exclude[prop]
-      }
-      else if(propSet.indexOf("Any") === -1) { 
-         if(!exclude[prop]) exclude[prop] = []
-         exclude[prop] = [ ...exclude[prop], ...lab ]
-      }
-      
 
       state = { ...state, paginate:{index:0,pages:[0],n:[0]}, repage: true, filters:{ ...state.filters, facets, exclude }  }      
 
@@ -2350,7 +2355,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             //if(r.f && r.f.value) typ = r.f.value.replace(/^.*?([^/]+)$/,"$1")
 
 
-            //console.log("r",o,sublist[o],r,label,lit);
+            console.log("r",o,sublist[o],r,label,lit);
 
             let filtered = true ;
 
@@ -2360,25 +2365,29 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
                   let v = this.state.filters.facets[k]
 
-                  //console.log("k",k,v)
+                  let exclude = this.state.filters.exclude
+                  if(exclude) exclude = exclude[k]
 
-                  let withProp = false, hasProp = false                   
+                  console.log("k",k,v,exclude)
+
+                  let withProp = false, hasProp = false, isExclu = false                   
                   for(let e of sublist[o]) {
 
                      if(v.alt) { 
                         for(let a of v.alt) {
                            if(e.type === a) { 
-                              hasProp = hasProp || true ;
+                              hasProp = true ;
                               //console.log("e sub",e)
-                              if(e.value === v.val || v.val.indexOf(e.value) !== -1 || v.val.indexOf("Any") !== -1)  withProp = withProp || true ;                              
+                              if( v.val.indexOf("Any") !== -1 || e.value === v.val || v.val.indexOf(e.value) !== -1 )  withProp = true ;                              
+                              if(exclude.indexOf(e.value) !== -1) isExclu = true
                            }
                         }
                      }
                      else if(e.type === k) {
                         hasProp = true ;
-                        if(e.value === v || v.indexOf(e.value) !== -1 || v.indexOf("Any") !== -1 )  withProp = true ;                                                                        
+                        if( v.indexOf("Any") !== -1 || e.value === v || v.indexOf(e.value) !== -1)  withProp = true ;                                                                       
+                        if(exclude.indexOf(e.value) !== -1) isExclu = true
                      }
-
                   }
 
                  
@@ -2389,10 +2398,11 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      //else console.log("filt unspec",o)
                   }
                   else if((v.alt && v.val.indexOf("Any") === -1) || (!v.alt && v.indexOf("Any") === -1)) {
-                     if(!withProp) filtered = false
+                     if( !withProp ) filtered = false
+
                   }
 
-                  //console.log("hP",o, hasProp,withProp,filtered,k,v,sublist[o])
+                  console.log("hP",o, hasProp,withProp,isExclu,filtered) //,k,v) //,sublist[o])
                }
 
                //console.log("typ",typ,t,filtered)
@@ -2707,12 +2717,12 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
    }
 
    renderFilterTag(isText:boolean=true,t, k, f) {      
-      let isExclu = this.state.filters.exclude[t] && this.state.filters.exclude[t].includes(k)
+      let isExclu = this.state.filters.exclude && this.state.filters.exclude[t] && this.state.filters.exclude[t].includes(k)
       if(!isText) {
          t = getPropLabel(this,t) 
          k = getPropLabel(this,k)
       }
-      return <a title={I18n.t("Lsidebar.activeF.remove")} class={ "active-filter " + (isExclu?"exclu":"") }>{t}: <b>{k}</b><Cancel onClick={f.bind(this)}/></a>
+      return <a title={(!isExclu?"Include":"Exclude")+" results with "+t+": "+ k} class={ "active-filter " + (isExclu?"exclu":"") }>{t}: <b>{k}</b><a title={I18n.t("Lsidebar.activeF.remove")} onClick={f.bind(this)}><Cancel/></a></a>
    }
 
 
@@ -2921,7 +2931,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
             //console.log("checkedN",checked)
 
-            let isExclu = this.state.filters.exclude[jpre] && checkable && checkable.reduce( (acc,k) => (acc && this.state.filters.exclude[jpre].includes(k)), true )
+            let isExclu = this.state.filters.exclude && this.state.filters.exclude[jpre] && checkable && checkable.reduce( (acc,k) => (acc && this.state.filters.exclude[jpre].includes(k)), true )
 
             return (
                <div key={e} style={{width:"auto",textAlign:"left"}} className="widget searchWidget">
@@ -2938,7 +2948,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      }
                      label={<span>{label}&nbsp;{"("}<span class="facet-count">{cpt_i+cpt}</span>{")"}</span>}
                   />
-                  { !isExclu && <div class="exclude"><Close onClick={(event, checked) => this.handleCheckFacet(event,jpre,checkable,true,true)} /></div> }
+                  { !isExclu && label !== "Any" && <div class="exclude"><Close onClick={(event, checked) => this.handleCheckFacet(event,jpre,checkable,true,true)} /></div> }
                   {
                      elem && elem["taxHasSubClass"] && elem["taxHasSubClass"].length > 0 &&
                      [
@@ -3310,7 +3320,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
                                        // console.log("checked",checked)
 
-                                       let isExclu = this.state.filters.exclude[jpre] && this.state.filters.exclude[jpre].includes(i)
+                                       let isExclu = this.state.filters.exclude && this.state.filters.exclude[jpre] && this.state.filters.exclude[jpre].includes(i)
 
                                        return (
                                           <div key={i} style={{width:"280px",textAlign:"left"}} className="widget searchWidget">
@@ -3327,7 +3337,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                                                 }
                                                 label={<span>{label+" ("}<span class="facet-count">{this.subcount(j,i)+meta[j][i].n}</span>{")"}</span>}
                                              />
-                                             { !isExclu && <div class="exclude"><Close onClick={(event, checked) => this.handleCheckFacet(event,jpre,[i],true,true)} /></div> }
+                                             { !isExclu && label !== "Any" && <div class="exclude"><Close onClick={(event, checked) => this.handleCheckFacet(event,jpre,[i],true,true)} /></div> }
                                           </div>
                                        )
                                     })
