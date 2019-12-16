@@ -987,7 +987,7 @@ class App extends Component<Props,State> {
             if(facets[f].indexOf && facets[f].indexOf("Any") !== -1) return acc ;
             else if(facets[f].val && facets[f].val.indexOf("Any") !== -1) return acc ;
             else return { ...acc, [f]:facets[f] }
-         },{}),this.props.searches[this.state.filters.datatype[0]][this.props.keyword+"@"+this.props.language].metadata,this.props.config.facets[this.state.filters.datatype[0]]);
+         },{}),this.state.filters.exclude,this.props.searches[this.state.filters.datatype[0]][this.props.keyword+"@"+this.props.language].metadata,this.props.config.facets[this.state.filters.datatype[0]]);
       }
 
       this.setState(state);
@@ -2355,7 +2355,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             //if(r.f && r.f.value) typ = r.f.value.replace(/^.*?([^/]+)$/,"$1")
 
 
-            console.log("r",o,sublist[o],r,label,lit);
+            //console.log("r",o,sublist[o],r,label,lit);
 
             let filtered = true ;
 
@@ -2368,7 +2368,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   let exclude = this.state.filters.exclude
                   if(exclude) exclude = exclude[k]
 
-                  console.log("k",k,v,exclude)
+                  //console.log("k",k,v,exclude)
 
                   let withProp = false, hasProp = false, isExclu = false                   
                   for(let e of sublist[o]) {
@@ -2414,7 +2414,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
                   //if(isExclu) filtered = false
 
-                  console.log("hP",o, hasProp,withProp,isExclu,filtered) //,k,v) //,sublist[o])
+                  //console.log("hP",o, hasProp,withProp,isExclu,filtered) //,k,v) //,sublist[o])
                }
 
                //console.log("typ",typ,t,filtered)
@@ -3321,7 +3321,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
                                        let label = getPropLabel(this,i)
 
-                                       console.log("label",i,j,jpre,label,meta)
+                                       //console.log("label",i,j,jpre,label,meta)
 
                                        let checked = this.state.filters.facets && this.state.filters.facets[jpre]
                                        if(!checked) {

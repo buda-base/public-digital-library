@@ -833,12 +833,13 @@ function getStats(cat:string,data:{})
       //console.log("p",p);
       for(let f of keys)
       {
+         
          //console.log("f",f);
          let genre = [bdo+"workGenre", bdo + "workIsAbout", _tmp + "etextAbout" ] 
          let tmp ;
          if(f !== "tree") tmp = p.filter((e) => (e.type == config.facets[cat][f]))
          else tmp = p.filter((e) => (genre.indexOf(e.type) !== -1))
-         if(tmp.length > 0) for(let t of tmp)
+         if(tmp.length > 0) for(let t of tmp) 
          {
             if(!stat[f]) stat[f] = {}
             if(!stat[f][t.value]) stat[f][t.value] = { n:0, dict:{} }

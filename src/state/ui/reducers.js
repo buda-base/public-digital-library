@@ -129,10 +129,10 @@ export const updateFacets = (state: UIState, action: actions.LoadingAction) => {
     let update = {}
     let facets = Object.keys(action.meta.facets).map(k => {
         let prop = action.meta.config[k]
-        let keys = Object.keys(action.payload)
+        let keys = Object.keys(action.payload)        
         if(keys.length > 0 && (!action.payload[prop] || keys.length > 1)) {
             update[k] = {}
-            //console.log("k",k)
+            console.log("k",k,prop)
 
             let meta = action.meta.facets[k]
             let props = Object.keys(meta)
@@ -146,7 +146,7 @@ export const updateFacets = (state: UIState, action: actions.LoadingAction) => {
             for(let q of props) {
                 if(q !== "Any") {
                     update[k][q] = { i:0 } 
-                    //console.log("q",q,meta[q])
+                    console.log("q",q,meta[q])
 
                     if(meta[q] && meta[q].dict) for(let _e of Object.keys(meta[q].dict)) {
                         let e = meta[q].dict[_e]
@@ -157,24 +157,52 @@ export const updateFacets = (state: UIState, action: actions.LoadingAction) => {
                             val.push(f.value)
                             flat[f.type] = val 
                         }
-                        //console.log("f",flat)
+                        console.log("f",flat)
                         let hasAllProp = true
                         for(let p of Object.keys(action.payload)) {
+
+                            console.log("p",p)
+
                             let val = action.payload[p]
                             if(val.val) val = val.val 
                             val = _.orderBy(val, (elem) => elem === "unspecified"?1:0) 
                             if(prop !== p && val.indexOf("Any") === -1) {
+
+                                let exclude
+                                if(action.meta.exclude) exclude = action.meta.exclude[p]
+
+                                console.log("excl",exclude)
+
+                                // TODO explicit exclude case
+
                                 if(!action.payload[p].alt)  { 
-                                    let hasAnyVal = false ;
+                                    let hasAnyVal = false, isExcl ;
                                     for(let v of val) {
+
+                                        console.log("v",v)
+
                                         if(v === "unspecified") {
-                                            if(flat[p]) { hasAllProp = false ; break ; }
-                                            else { hasAnyVal = true ; break; }
+                                            /*
+                                            if(exclude && exclude.indexOf(v) !== -1 ) {
+                                                if(flat[p]) { hasAllProp = true ; break ; }
+                                                else { hasAnyVal = false ; break; }
+                                            }
+                                            else  */
+                                            { 
+                                                if(flat[p]) { hasAllProp = false ; break ; }
+                                                else { hasAnyVal = true ; break; }
+                                            }
                                         }
                                         else {
-                                            if(flat[p] && flat[p].indexOf(v) !== -1) {  hasAnyVal = true ; break ;  }
+
+                                            if(flat[p] && flat[p].indexOf(v) !== -1) {  
+                                                if( exclude && exclude.indexOf(v) !== -1 ) isExcl = true  ;
+                                                hasAnyVal = true
+                                                break ;  
+                                            }
                                         }
                                     }
+                                    console.log("isExcl",hasAnyVal,isExcl)  
                                     if(!hasAnyVal) { hasAllProp = false ; break ; }
                                 }
                                 else {
@@ -197,12 +225,17 @@ export const updateFacets = (state: UIState, action: actions.LoadingAction) => {
                                 }
                                 if(!hasAllProp) break ;
                             }
-                        }
+                        }                        
                         if(hasAllProp) { 
+                            console.log("hasAll")
                             update[k][q].i ++ ;
                             total_i[_e] = e
                         }
-                    }                    
+                        else {
+
+                            console.log("hasNot")
+                        }
+                    }    
                 }
             }
             
