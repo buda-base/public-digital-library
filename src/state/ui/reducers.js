@@ -146,7 +146,7 @@ export const updateFacets = (state: UIState, action: actions.LoadingAction) => {
             for(let q of props) {
                 if(q !== "Any") {
                     update[k][q] = { i:0 } 
-                    console.log("q",q,meta[q])
+                    //console.log("q",q,meta[q])
 
                     if(meta[q] && meta[q].dict) for(let _e of Object.keys(meta[q].dict)) {
                         let e = meta[q].dict[_e]
@@ -157,11 +157,11 @@ export const updateFacets = (state: UIState, action: actions.LoadingAction) => {
                             val.push(f.value)
                             flat[f.type] = val 
                         }
-                        console.log("f",flat)
+                        //console.log("f",flat)
                         let hasAllProp = true
                         for(let p of Object.keys(action.payload)) {
 
-                            console.log("p",p)
+                            //console.log("p",p)
 
                             let val = action.payload[p]
                             if(val.val) val = val.val 
@@ -171,38 +171,47 @@ export const updateFacets = (state: UIState, action: actions.LoadingAction) => {
                                 let exclude
                                 if(action.meta.exclude) exclude = action.meta.exclude[p]
 
-                                console.log("excl",exclude)
+                                //console.log("excl",p,exclude)
 
-                                // TODO explicit exclude case
-
-                                if(!action.payload[p].alt)  { 
-                                    let hasAnyVal = false, isExcl ;
+                                if(exclude && exclude.length)
+                                {
+                                     if(!action.payload[p].alt)  {
+                                        let hasAnyVal = true ;
+                                        for(let v of exclude) {
+                                            if(v === "unspecified") { 
+                                                if(!flat[p]) { hasAnyVal = false;  break ;  }
+                                            }
+                                            else if(flat[p] && flat[p].indexOf(v) !== -1) { hasAnyVal = false;  break ;  }
+                                        }
+                                        if(!hasAnyVal) { hasAllProp = false ; break ; }
+                                     }
+                                     else {
+                                        let alt = action.payload[p].alt
+                                        let hasAnyVal = true ;
+                                        for(let v of exclude) {
+                                            if(v === "unspecified") {
+                                                let hasAlt = false 
+                                                for(let a of alt) if(flat[a]) { hasAlt = true ; break ;  }
+                                                if(!hasAlt) { hasAllProp = false ;  break ; }
+                                            }
+                                            else {
+                                                let hasAlt = false 
+                                                for(let a of alt) if(flat[a] && flat[a].indexOf(v) !== -1) { hasAlt = true ; break }
+                                                if(hasAlt) { hasAnyVal = false; break; }
+                                            }
+                                        }
+                                        if(!hasAnyVal) { hasAllProp = false ; break ; }
+                                     }
+                                }
+                                else if(!action.payload[p].alt)  {
+                                    let hasAnyVal = false ;
                                     for(let v of val) {
-
-                                        console.log("v",v)
-
-                                        if(v === "unspecified") {
-                                            /*
-                                            if(exclude && exclude.indexOf(v) !== -1 ) {
-                                                if(flat[p]) { hasAllProp = true ; break ; }
-                                                else { hasAnyVal = false ; break; }
-                                            }
-                                            else  */
-                                            { 
-                                                if(flat[p]) { hasAllProp = false ; break ; }
-                                                else { hasAnyVal = true ; break; }
-                                            }
+                                        if(v === "unspecified")  { 
+                                            if(flat[p]) { hasAllProp = false ; break ; }
+                                            else { hasAnyVal = true ; break; }                                            
                                         }
-                                        else {
-
-                                            if(flat[p] && flat[p].indexOf(v) !== -1) {  
-                                                if( exclude && exclude.indexOf(v) !== -1 ) isExcl = true  ;
-                                                hasAnyVal = true
-                                                break ;  
-                                            }
-                                        }
+                                        else if(flat[p] && flat[p].indexOf(v) !== -1) { hasAnyVal = true;  break ;  }
                                     }
-                                    console.log("isExcl",hasAnyVal,isExcl)  
                                     if(!hasAnyVal) { hasAllProp = false ; break ; }
                                 }
                                 else {
@@ -227,13 +236,13 @@ export const updateFacets = (state: UIState, action: actions.LoadingAction) => {
                             }
                         }                        
                         if(hasAllProp) { 
-                            console.log("hasAll")
+                            //console.log("hasAll")
                             update[k][q].i ++ ;
                             total_i[_e] = e
                         }
                         else {
 
-                            console.log("hasNot")
+                            //console.log("hasNot")
                         }
                     }    
                 }
