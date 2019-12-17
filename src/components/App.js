@@ -270,6 +270,27 @@ function getPropLabel(that, i) {
    return label
 }
 
+export function prepareFacets(facets) {
+   if(facets) 
+      return Object.keys(facets).reduce((acc,f) => {
+         if(facets[f].indexOf && facets[f].indexOf("Any") !== -1) return acc ;
+         else if(facets[f].val && facets[f].val.indexOf("Any") !== -1) return acc ;
+         else return { ...acc, [f]:facets[f] }
+      },{})
+}
+
+export function getFacetUrl(filters,dic){
+   let str = "";
+   if(filters.facets) { 
+      if(dic) dic = Object.keys(dic).reduce ( (acc,f) => ({ ...acc, [dic[f]]:f}),{})
+      for(let k of Object.keys(filters.facets)) {
+         if(!filters.facets[k].val) if(!filters.facets[k].includes("Any")) str += filters.facets[k].map(v => "&f="+dic[k]+","+(filters.exclude[k] && filters.exclude[k].indexOf(v) !== -1?"exc":"inc")+","+shortUri(v)).join("")
+      }
+   }
+   console.log("gFu",str,filters,dic)
+   return str
+}
+
 export function top_right_menu(that)
 {
 
@@ -974,23 +995,31 @@ class App extends Component<Props,State> {
       }
 
       state = { ...state, paginate:{index:0,pages:[0],n:[0]}, repage: true, filters:{ ...state.filters, facets, exclude }  }      
+      this.setState(state);
 
       if(this.state.filters.datatype && this.state.filters.datatype.indexOf("Any") === -1 && this.props.searches && this.props.searches[this.state.filters.datatype[0]]) {
 
          console.log("facets",facets)
 
-         // TODO fix dynamic facet count
-         // let {pathname,search} = this.props.history.location
-         // this.props.history.push({pathname,search:search+"&f="})
+         /* // move to initiateApp
+         this.props.onUpdateFacets(
+            this.props.keyword+"@"+this.props.language,
+            this.state.filters.datatype[0],
+            prepareFacets(facets),
+            this.state.filters.exclude,
+            this.props.searches
+               [this.state.filters.datatype[0]]
+               [this.props.keyword+"@"+this.props.language]
+                  .metadata,
+            this.props.config.facets[this.state.filters.datatype[0]]
+         );
+         */
 
-         this.props.onUpdateFacets(this.props.keyword+"@"+this.props.language,this.state.filters.datatype[0],Object.keys(facets).reduce((acc,f) => {
-            if(facets[f].indexOf && facets[f].indexOf("Any") !== -1) return acc ;
-            else if(facets[f].val && facets[f].val.indexOf("Any") !== -1) return acc ;
-            else return { ...acc, [f]:facets[f] }
-         },{}),this.state.filters.exclude,this.props.searches[this.state.filters.datatype[0]][this.props.keyword+"@"+this.props.language].metadata,this.props.config.facets[this.state.filters.datatype[0]]);
+         // TODO fix dynamic facet count
+         let {pathname,search} = this.props.history.location
+         this.props.history.push({pathname,search:search.replace(/(&f=.*)$/,"")+getFacetUrl(state.filters,this.props.config.facets[state.filters.datatype[0]])})
       }
 
-      this.setState(state);
 
       console.log("checkF",prop,lab,val,facets,state);
 
