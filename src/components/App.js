@@ -272,15 +272,6 @@ function getPropLabel(that, i) {
    return label
 }
 
-export function prepareFacets(facets) {
-   if(facets) 
-      return Object.keys(facets).reduce((acc,f) => {
-         if(facets[f].indexOf && facets[f].indexOf("Any") !== -1) return acc ;
-         else if(facets[f].val && facets[f].val.indexOf("Any") !== -1) return acc ;
-         else return { ...acc, [f]:facets[f] }
-      },{})
-}
-
 export function getFacetUrl(filters,dic){
    let str = "";
    if(filters.facets) { 
@@ -459,16 +450,20 @@ class App extends Component<Props,State> {
       let exclude = {}
       let preload = {}
       let facets= {} 
-      if(get.f) for(let f of get.f) {
-         let val = f.split(",")
-         if(val.length === 3) {
-            let exc =  val[1] === "exc"
-            collapse[val[0]] = true
-            if(!preload[val[0]]) preload[val[0]] = []
-            preload[val[0]].push(fullUri(val[2]))
-            if(exc) {
-               if(!exclude[val[0]]) exclude[val[0]]= []
-               exclude[val[0]].push(fullUri(val[2]))
+      if(get.f) { 
+         let F = get.f
+         if(!Array.isArray(F)) F = [F]
+         for(let f of F) {
+            let val = f.split(",")
+            if(val.length === 3) {
+               let exc =  val[1] === "exc"
+               collapse[val[0]] = true
+               if(!preload[val[0]]) preload[val[0]] = []
+               preload[val[0]].push(fullUri(val[2]))
+               if(exc) {
+                  if(!exclude[val[0]]) exclude[val[0]]= []
+                  exclude[val[0]].push(fullUri(val[2]))
+               }
             }
          }
       }
@@ -589,21 +584,49 @@ class App extends Component<Props,State> {
          
       }
 
-      if(state.filters.preload && props.config && !state.filters.datatype.includes("Any")) {
+      if(state.filters.preload && props.keyword && props.config && !state.filters.datatype.includes("Any")) {
+         
          if(!s) s = { ...state }
-         let dic = props.config.facets[state.filters.datatype[0]]
-         if(dic) for(let k of Object.keys(s.filters.preload)) {
-            s.filters.facets[dic[k]] = s.filters.preload[k]
+
+         if(s.filters.preload && s.filters.preload !== true) {
+            let dic = props.config.facets[state.filters.datatype[0]]
+            if(dic) for(let k of Object.keys(s.filters.preload)) {
+               s.filters.facets[dic[k]] = s.filters.preload[k]
+            }
+            let exclude = {}
+            //console.log("exc1",JSON.stringify(s.filters.exclude,null,3))
+            if(dic) for(let k of Object.keys(s.filters.exclude)) {
+               exclude[dic[k]] = s.filters.exclude[k] 
+            }
+            s.filters.exclude = exclude
+            //console.log("exc2",JSON.stringify(exclude,null,3))
+
+            s.filters.preload = true
          }
-         let exclude = {}
-         console.log("exc1",JSON.stringify(s.filters.exclude,null,3))
-         if(dic) for(let k of Object.keys(s.filters.exclude)) {
-            exclude[dic[k]] = s.filters.exclude[k] 
+         
+         
+         if(props.searches && props.searches[s.filters.datatype[0]] && props.searches[s.filters.datatype[0]][props.keyword+"@"+props.language] && props.searches[s.filters.datatype[0]][props.keyword+"@"+props.language].metadata )
+         {
+            delete s.filters.preload
+
+            let facets = { ...s.filters.facets }
+            facets = Object.keys(facets).reduce((acc,f) => {
+                  if(facets[f].indexOf && facets[f].indexOf("Any") !== -1) return acc ;
+                  else if(facets[f].val && facets[f].val.indexOf("Any") !== -1) return acc ;
+                  else return { ...acc, [f]:facets[f] }
+               },{})
+
+            console.log("facets",facets)
+
+            props.onUpdateFacets(
+               props.keyword+"@"+props.language,
+               s.filters.datatype[0],
+               facets,
+               s.filters.exclude,
+               props.searches[s.filters.datatype[0]][props.keyword+"@"+props.language].metadata,
+               props.config.facets[s.filters.datatype[0]]
+            );
          }
-         s.filters.exclude = exclude
-         console.log("exc2",JSON.stringify(exclude,null,3))
-         delete s.filters.preload
-         //s.leftPane = true
       }
 
 
@@ -1037,31 +1060,19 @@ class App extends Component<Props,State> {
       }
 
       state = { ...state, paginate:{index:0,pages:[0],n:[0]}, repage: true, filters:{ ...state.filters, facets, exclude }  }      
-      this.setState(state);
 
       if(this.state.filters.datatype && this.state.filters.datatype.indexOf("Any") === -1 && this.props.searches && this.props.searches[this.state.filters.datatype[0]]) {
 
          console.log("facets",facets)
 
-         /* // move to initiateApp
-         this.props.onUpdateFacets(
-            this.props.keyword+"@"+this.props.language,
-            this.state.filters.datatype[0],
-            prepareFacets(facets),
-            this.state.filters.exclude,
-            this.props.searches
-               [this.state.filters.datatype[0]]
-               [this.props.keyword+"@"+this.props.language]
-                  .metadata,
-            this.props.config.facets[this.state.filters.datatype[0]]
-         );
-         */
+         state.filters.preload = true
 
          // TODO fix dynamic facet count
          let {pathname,search} = this.props.history.location
          this.props.history.push({pathname,search:search.replace(/(&f=.*)$/,"")+getFacetUrl(state.filters,this.props.config.facets[state.filters.datatype[0]])})
       }
 
+      this.setState(state);
 
       console.log("checkF",prop,lab,val,facets,state);
 
