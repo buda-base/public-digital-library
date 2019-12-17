@@ -252,6 +252,8 @@ export function getLangLabel(that:{},prop:string="",labels:[],proplang:boolean=f
 };
 
 function getPropLabel(that, i) {
+   if(!that.props.ontology || !that.props.dictionary) return 
+
    let label = that.props.ontology[i]
    if(!label) label = that.props.dictionary[i]
    //console.log("label",label)
@@ -401,7 +403,8 @@ type State = {
    filters:{
       datatype:string[],
       facets?:{[string]:string[]},
-      exclude:{[string]:boolean}
+      exclude:{[string]:boolean},
+      preload:{}
    },
    collapse:{ [string] : boolean },
    loader:{[string]:Component<*>},
@@ -452,17 +455,37 @@ class App extends Component<Props,State> {
          //console.log("types",types)
       }
 
+      let collapse = {}
+      let exclude = {}
+      let preload = {}
+      let facets= {} 
+      if(get.f) for(let f of get.f) {
+         let val = f.split(",")
+         if(val.length === 3) {
+            let exc =  val[1] === "exc"
+            collapse[val[0]] = true
+            if(!preload[val[0]]) preload[val[0]] = []
+            preload[val[0]].push(fullUri(val[2]))
+            if(exc) {
+               if(!exclude[val[0]]) exclude[val[0]]= []
+               exclude[val[0]].push(fullUri(val[2]))
+            }
+         }
+      }
+
       this.state = {
          language:lg,
          langOpen:false,
          UI:{language:"en"},
          filters: {
             datatype:get.t?get.t.split(","):["Any"],
-            exclude:{}
+            exclude,
+            facets,
+            preload
          },
          searchTypes: get.t?get.t.split(","):types,
          dataSource: [],         
-         collapse:{},
+         collapse,
          newKW,
          loader:{},
          paginate:{index:0,pages:[0],n:[0]},
@@ -566,6 +589,24 @@ class App extends Component<Props,State> {
          
       }
 
+      if(state.filters.preload && props.config && !state.filters.datatype.includes("Any")) {
+         if(!s) s = { ...state }
+         let dic = props.config.facets[state.filters.datatype[0]]
+         if(dic) for(let k of Object.keys(s.filters.preload)) {
+            s.filters.facets[dic[k]] = s.filters.preload[k]
+         }
+         let exclude = {}
+         console.log("exc1",JSON.stringify(s.filters.exclude,null,3))
+         if(dic) for(let k of Object.keys(s.filters.exclude)) {
+            exclude[dic[k]] = s.filters.exclude[k] 
+         }
+         s.filters.exclude = exclude
+         console.log("exc2",JSON.stringify(exclude,null,3))
+         delete s.filters.preload
+         //s.leftPane = true
+      }
+
+
       if(!state.newKW || state.newKW !== props.keyword || props.keyword === null) { 
          if(!s) s = { ...state }
          if(s.newKW !== props.keyword) {
@@ -608,9 +649,10 @@ class App extends Component<Props,State> {
          s.leftPane =  true 
       }
 
-      if(props.keyword && (!props.datatypes || !props.datatypes.hash || !props.datatypes.metadata || Object.keys(props.datatypes.metadata).length === 0)) {
+      if(props.keyword && props.datatypes && props.datatypes.hash && (!props.datatypes.metadata || Object.keys(props.datatypes.metadata).length === 0) ) {
          if(!s) s = { ...state }
          s.leftPane = false 
+
          //console.log("no leftPane")
       }
 
@@ -2408,14 +2450,14 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                               hasProp = true ;
                               //console.log("e sub",e)
                               if( v.val.indexOf("Any") !== -1 || e.value === v.val || v.val.indexOf(e.value) !== -1 )  withProp = true ;                              
-                              if(exclude.indexOf(e.value) !== -1) isExclu = true
+                              if(exclude && exclude.indexOf(e.value) !== -1) isExclu = true
                            }
                         }
                      }
                      else if(e.type === k) {
                         hasProp = true ;
                         if(v.indexOf("Any") !== -1 || e.value === v || v.indexOf(e.value) !== -1)  withProp = true ;                                                                       
-                        if(exclude.indexOf(e.value) !== -1) isExclu = true
+                        if(exclude && exclude.indexOf(e.value) !== -1) isExclu = true
                      }
                   }
 
