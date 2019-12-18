@@ -522,7 +522,7 @@ body {overflow-x:hidden; }
 .SidePane.right.visible { right:0; /*overflow-y:auto; */ }
 /* .SidePane > div { position:fixed } */
 .SidePane .loader { position:absolute !important;margin-right:32px;margin-top:24px;right:0;}
-.datatypesLoader, .facetLoader { left:0px !important;top:0 !important;}
+.datatypesLoader, .facetLoader { left:0px !important;top:-10px !important;}
 
 .App > :first-child { position:relative; z-index:10; transition:left 400ms ease-in-out;}
 .App > :not(.visible):first-child { left:-500px; }
@@ -622,7 +622,7 @@ body > .ol-li-lang:last-child li::before { content:'-';}
 .widget > label > span:last-child:nth-child(2) { margin-left:-18px;}
 .widget > .subcollapse { padding-left:18px !important;margin-left:-18px;}
 
-#clear-filters { vertical-align:-5px; margin-left: 5px; cursor:pointer; }
+#clear-filters { vertical-align:-5px; margin-left: 5px; cursor:pointer; color:rgba(0,0,0,0.55)}
 
 .active-filter span { display:inline-block; padding-left:5px;}
 .active-filter { background:rgba(0,0,0,0.55); padding:5px; border-radius: 15px; box-shadow:3px 3px 10px rgba(0,0,0,0.35);  text-transform:capitalize;

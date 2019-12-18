@@ -278,7 +278,9 @@ export function getFacetUrl(filters,dic){
    if(filters.facets) { 
       if(dic) dic = Object.keys(dic).reduce ( (acc,f) => ({ ...acc, [dic[f]]:f}),{})
       for(let k of Object.keys(filters.facets)) {
-         if(!filters.facets[k].val) if(!filters.facets[k].includes("Any")) str += filters.facets[k].map(v => "&f="+dic[k]+","+(filters.exclude[k] && filters.exclude[k].indexOf(v) !== -1?"exc":"inc")+","+shortUri(v)).join("")
+         let vals = filters.facets[k]
+         if(vals.val) vals = vals.val
+         if(!vals.includes("Any")) str += vals.map(v => "&f="+dic[k]+","+(filters.exclude[k] && filters.exclude[k].indexOf(v) !== -1?"exc":"inc")+","+shortUri(v)).join("")
       }
    }
    console.log("gFu",str,filters,dic)
@@ -1068,7 +1070,6 @@ class App extends Component<Props,State> {
 
          state.filters.preload = true
 
-         // TODO fix dynamic facet count
          let {pathname,search} = this.props.history.location
          this.props.history.push({pathname,search:search.replace(/(&f=.*)$/,"")+getFacetUrl(state.filters,this.props.config.facets[state.filters.datatype[0]])})
       }
@@ -2821,7 +2822,13 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
    }
 
    resetFilters(e) {
+      
+      let {pathname,search} = this.props.history.location
+      this.props.history.push({pathname,search:search.replace(/(&t=.*)$/,"")+"&t=Any"})
+
       this.setState({...this.state, filters:{ datatype: [ "Any" ] } }  )
+
+      // TODO fix back button behaviour (+ Work -> Any)
    }
 
 
