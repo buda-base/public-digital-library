@@ -19,6 +19,7 @@ import Typography from '@material-ui/core/Typography';
 import Loader from 'react-loader';
 import Collapse from '@material-ui/core/Collapse';
 import MenuIcon from '@material-ui/icons/Menu';
+import RefreshIcon from '@material-ui/icons/Refresh';
 import ErrorIcon from '@material-ui/icons/Error';
 import WarnIcon from '@material-ui/icons/Warning';
 import Settings from '@material-ui/icons/SettingsSharp';
@@ -260,7 +261,7 @@ function getPropLabel(that, i) {
       if(!labels) labels = label["http://www.w3.org/2000/01/rdf-schema#label"]
       label = getLangLabel(that,"",labels,true)
 
-      console.log("label",i,label)
+      //console.log("label",i,label)
 
       if(label) {
          if(label.value) label = label.value
@@ -2819,6 +2820,10 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
       return <a title={(!isExclu?"Include":"Exclude")+" results with "+t+": "+ k} class={ "active-filter " + (isExclu?"exclu":"") }><span>{t}: <b>{k}</b></span><a title={I18n.t("Lsidebar.activeF.remove")} onClick={f.bind(this)}><Cancel/></a></a>
    }
 
+   resetFilters(e) {
+      this.setState({...this.state, filters:{ datatype: [ "Any" ] } }  )
+   }
+
 
    render() {
 
@@ -3161,6 +3166,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      { ( this.state.filters.facets || this.state.filters.datatype.indexOf("Any") === -1 )&& 
                         [ <Typography style={{fontSize:"23px",marginBottom:"20px",textAlign:"center"}}>
                            <Translate value="Lsidebar.activeF.title" />
+                           <a title={I18n.t("Lsidebar.activeF.reset")} id="clear-filters" onClick={this.resetFilters.bind(this)}><RefreshIcon /></a>
                         </Typography>
                            ,
                            <div id="filters-UI">

@@ -107,7 +107,8 @@ const enTranslation = {
    Lsidebar:{
       activeF:{
          title:"Active Filters",
-         remove:"Remove filter"
+         remove:"Remove filter",
+         reset:"Clear all filters"
       },
       title:"Refine your Search",
       collection:{
