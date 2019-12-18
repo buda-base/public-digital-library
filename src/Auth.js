@@ -155,8 +155,8 @@ export default class Auth {
     localStorage.setItem('id_token', authResult.idToken);
     localStorage.setItem('expires_at', expiresAt);
 
+    console.log("session",authResult)
 
-    console.log("session")
     if(this.isAuthenticated() && this.iiif && this.api) {
       try {
          let cookie = await this.api.getURLContents(this.iiif.endpoints[this.iiif.index]+"/setcookie",false)
