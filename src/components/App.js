@@ -252,20 +252,20 @@ export function getLangLabel(that:{},prop:string="",labels:[],proplang:boolean=f
 };
 
 function getPropLabel(that, i) {
-   if(!that.props.ontology || !that.props.dictionary) return 
+   if(!that.props.dictionary) return 
 
-   let label = that.props.ontology[i]
-   if(!label) label = that.props.dictionary[i]
-   //console.log("label",label)
+   let label = that.props.dictionary[i]
    if(label) {
-      let labels = label["http://www.w3.org/2000/01/rdf-schema#label"]
-      if(!labels) labels = label[skos+"prefLabel"]
-      if(labels) {
-            for(let l of labels)
-            if(l.lang == that.props.locale) label = l.value
+      let labels = label[skos+"prefLabel"]
+      if(!labels) labels = label["http://www.w3.org/2000/01/rdf-schema#label"]
+      label = getLangLabel(that,"",labels,true)
+
+      console.log("label",i,label)
+
+      if(label) {
+         if(label.value) label = label.value
+         else if(label["@value"]) label = label["@value"]
       }
-      if(label["http://www.w3.org/2000/01/rdf-schema#label"]) label = label["http://www.w3.org/2000/01/rdf-schema#label"][0].value
-      if(label[skos+"prefLabel"]) label = label[skos+"prefLabel"][0].value
    }
    else label = that.pretty(i)
 

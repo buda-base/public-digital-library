@@ -85,9 +85,12 @@ export const loadedOntology = (state: DataState, action: Action) => {
 reducers[actions.TYPES.loadedOntology] = loadedOntology;
 
 export const loadedDictionary = (state: DataState, action: Action) => {
+   let dictionary = state.dictionary
+   if(dictionary) dictionary = { ...dictionary, ...action.payload }
+   else dictionary = action.payload
     return {
         ...state,
-        dictionary: action.payload
+        dictionary
     }
 }
 reducers[actions.TYPES.loadedDictionary] = loadedDictionary;
@@ -957,18 +960,40 @@ export const foundFacetInfo = (state: DataState, action: actions.FoundResultsAct
          [t] : {
             ...state.searches&&state.searches[t]?state.searches[t]:{},
             [key]: {
-               ...state.searches&&state.searches[t]?state.searches[t][key]:{},
+               ...state.   searches&&state.searches[t]?state.searches[t][key]:{},
                metadata : action.payload.results
             }
          }
    }
 
+   let dictionary = state.dictionary      
+   if(action.payload.results && action.payload.results.tree) {
+      const skos  = "http://www.w3.org/2004/02/skos/core#"; 
+      let topics = action.payload.results.tree["@graph"].reduce( (acc,v) => { 
+         let prefL = v["skos:prefLabel"]
+         //console.log("preFL",prefL)
+         if(prefL) { 
+            if(v["@id"]) {
+               if(!Array.isArray(prefL)) prefL = [ prefL ]
+               prefL = { [skos+"prefLabel"]: prefL }
+               return ({ ...acc, [fullUri(v["@id"])]: prefL }) 
+            }
+         }
+         return acc
+      },{})
+      dictionary = { ...state.dictionary, ...topics }
+      //console.log("dico",topics,dictionary)
+   }
+
    return {
       ...state,
+
+      dictionary,
 
       keyword:action.payload.keyword,
       language:action.payload.language,
       searches: searches
+
    }
 }
 reducers[actions.TYPES.foundFacetInfo] = foundFacetInfo;
