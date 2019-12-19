@@ -179,6 +179,15 @@ export const getUser = (profile: string): Action => {
 }
 
 
+TYPES.getResetLink = 'GET_RESET_LINK';
+export const getResetLink = (userID: string, user:{}, profile: {}): Action => {
+    return {
+        type: TYPES.getResetLink,
+        payload: userID,
+        meta: { profile, user }
+    }
+}
+
 TYPES.getResource = 'GET_RESOURCE';
 export const getResource = (iri: string): Action => {
     return {

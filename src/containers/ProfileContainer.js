@@ -22,7 +22,9 @@ const mapStateToProps = (state,ownProps) => {
 
    let rightPanel = state.ui.rightPanel
 
-   let props = { userID, profile, dictionary, rightPanel }
+   let resetLink = state.data.resetLink
+
+   let props = { userID, profile, dictionary, rightPanel, resetLink }
 
    return props
 

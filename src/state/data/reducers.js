@@ -42,6 +42,7 @@ export type DataState = {
    },
    nextChunk?:number,
    nextPage?:number,
+   resetLink?:boolean,
    userEditPolicies?:{}
 }
 
@@ -1113,6 +1114,14 @@ export const firstImage = (state: DataState, action: Action) => {
 }
 reducers[actions.TYPES.firstImage] = firstImage;
 
+
+export const getResetLink = (state: DataState, action: Action) => {
+    return {
+        ...state,
+        resetLink: true
+    }
+}
+reducers[actions.TYPES.getResetLink] = getResetLink;
 
 
 // Data Reducer

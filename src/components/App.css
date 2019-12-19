@@ -712,8 +712,8 @@ h2 + .browse a { font-size:14px; text-transform:capitalize;}
 /*
 .profile-area img { height: 64px; vertical-align: middle;  box-shadow:0 0 5px rgba(0,0,0,0.45); display:inline-block; margin-right:16px;}
 */ /* border: 1px solid #ccc;*/
-.profile-area h5 { font-size:14px; color:rgba(229, 74, 53,1); cursor:pointer; margin-top:50px;}
-.profile-area h5:hover { text-decoration: underline; }
+.profile-area h5,.profile-area a.ulink { font-size:14px; color:rgba(229, 74, 53,1); cursor:pointer; margin-top:50px; font-weight:700; text-decoration:none;}
+.profile-area h5:hover,.profile-area a.ulink:hover { text-decoration: underline; }
 
 .profile-area .FC { min-width:222px; margin-right:20px;}
 

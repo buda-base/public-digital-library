@@ -301,9 +301,35 @@ function* watchInitiateApp() {
    );
 }
 
+async function getResetLink(id,user,profile)
+{
+   let props = store.getState()
+
+   try {         
+      let passwordData = props.data.config["password-reset"]
+      let resetLink = await api.getPasswordResetLink(profile.sub, passwordData)
+      
+      user[tmp+"passwordResetLink"] =  [ { type:'uri', value: resetLink } ]
+      store.dispatch(dataActions.gotResource(id, { [id]: user }));
+   }
+   catch(e)
+   {
+      console.error("password link",e)
+   }
+
+}
+function* watchGetResetLink() {
+   yield takeLatest(
+      dataActions.TYPES.getResetLink,
+      (action) => getResetLink(action.payload,action.meta.user,action.meta.profile)
+   );
+}
+
 async function getUser(profile)
 {
-   let userEditPolicies = store.getState().data.userEditPolicies 
+   let props = store.getState()
+
+   let userEditPolicies = props.data.userEditPolicies 
    if(!userEditPolicies) {
       userEditPolicies = await api.loadUserEditPolicies()
       store.dispatch(dataActions.gotUserEditPolicies(userEditPolicies))
@@ -312,6 +338,7 @@ async function getUser(profile)
    let user = await api.loadUser()
 
    if(user) {
+      
       let id = user["@id"] ;
       user = { [id] : Object.keys(user).reduce( (acc,k) => {
 
@@ -340,7 +367,7 @@ async function getUser(profile)
          if(!k.match(/^@/)) return ({ ...acc, [fullUri(k)]:val})
          else return acc ;
       },{}) }
-      
+
       store.dispatch(uiActions.gotUserID(id));
       store.dispatch(dataActions.gotResource(id, user));
       console.log("user",id,profile,user)
@@ -1384,6 +1411,7 @@ export default function* rootSaga() {
    yield all([
       watchInitiateApp(),
       watchGetUser(),
+      watchGetResetLink(),
       //watchChoosingHost(),
       //watchGetDatatypes(),
       watchGetChunks(),

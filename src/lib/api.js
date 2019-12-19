@@ -608,6 +608,29 @@ export default class API {
       }
   }
 
+  async getPasswordResetLink(user_id, passwordData) {
+
+      let authData = await (await this._fetch( 'https://bdrc-io.auth0.com/oauth/token',  {
+         method: 'POST',
+         body: JSON.stringify(passwordData),
+         headers:new Headers({ 'content-type': 'application/json'})
+      })).json()
+
+      //console.log("aD", authData);
+
+      let resetLink = await (await this._fetch( passwordData.audience + "tickets/password-change",  {
+         method: 'POST',
+         body: JSON.stringify({ user_id, result_url: window.location.href }),
+         headers:new Headers({ 'authorization': "Bearer " + authData.access_token, 'content-type': 'application/json'})
+      })).json()
+
+      //console.log("rL", resetLink);
+
+      if(resetLink.statusCode === 400) throw new Error(resetLink.message)
+      else if(resetLink.ticket) return resetLink.ticket
+      else throw new Error("unknown error")
+  }
+
      async getResultsOneDatatype(datatype:string,key: string,lang: string): Promise<{} | null> {
         try {
              let config = store.getState().data.config.ldspdi

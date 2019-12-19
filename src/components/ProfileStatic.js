@@ -40,6 +40,7 @@ type Props = {
     userID?:url,
     profile:{},
     rightPanel?:boolean,
+    passwordReset?:url,
     onToggleLanguagePanel:() => void,
     onUserProfile:() => void
 }
@@ -50,7 +51,8 @@ type State = {
    region:string,
    //affiliation:string,
    interest:string,
-   patch?:{}
+   patch?:{},
+   profile?:{}
 }
 
 export class Profile extends Component<Props,State> {  
@@ -78,7 +80,7 @@ export class Profile extends Component<Props,State> {
 
     const { profile } = this.state;
     
-    console.log("profile",profile,this.state,this.props)
+    console.log("render",profile,this.state,this.props)
     
     let message = "Getting user info..."
 
@@ -125,6 +127,9 @@ export class Profile extends Component<Props,State> {
           else if(this.props.profile && this.props.profile[propsMap[k]]) val.name = this.props.profile[propsMap[k]][0].value
         }
 
+
+        if(this.props.profile && this.state.profile && !this.props.resetLink) store.dispatch(data.getResetLink(this.props.userID, this.props.profile, this.state.profile))
+
         return (
           [top_left_menu(this),
            top_right_menu(this),
@@ -137,6 +142,13 @@ export class Profile extends Component<Props,State> {
                 </div>
                 {this.props.profile?this.props.profile[foaf+"mbox"][0].value:null}
               </h2>
+              { 
+                this.props.profile && this.props.profile[tmp+"passwordResetLink"] && 
+                  <div>
+                    <a class="ulink" href={this.props.profile[tmp+"passwordResetLink"][0].value}>Change Password</a>
+                    <br/><br/>
+                  </div>
+              }
 
               {/* <h1><img src={profile.picture} alt="profile" />{this.props.profile?this.props.profile[foaf+"mbox"][0].value:null}</h1> */}
               { /*}
