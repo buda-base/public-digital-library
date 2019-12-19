@@ -32,7 +32,7 @@ const skos  = "http://www.w3.org/2004/02/skos/core#";
 const tmp   = "http://purl.bdrc.io/ontology/tmp/" ;
 
 const propsMap = {  name: skos+"prefLabel", 
-                    gender: bdo+"Gender", male: bdr+"GenderMale", female: bdr+"GenderFemale", "no-answer": bdr+"GenderNotSpecified",
+                    gender: bdo+"personGender", male: bdr+"GenderMale", female: bdr+"GenderFemale", "no-answer": bdr+"GenderNotSpecified",
                     interest: bdou+"interest", buddhism: tmp+"buddhism",
                     region: bdou+"mainResidenceArea", outside:tmp+"outside", kham:tmp+"kham", amdo:tmp+"amdo", "u-tsang":tmp+"u-tsang", other:tmp+"other" }
 
@@ -62,6 +62,7 @@ export class Profile extends Component<Props,State> {
     this.state = { name:{type:"literal"}, gender:{value:""}, region:{value:""}, interest:{value:""} }
   }
   
+  /*
   componentWillMount() {
     this.setState({ profile: {} });
     const { userProfile, getProfile } = this.props.auth;
@@ -74,6 +75,74 @@ export class Profile extends Component<Props,State> {
       this.setState({ profile:userProfile });
       store.dispatch(data.getUser(userProfile))
     }
+  }
+  */
+
+  static getDerivedStateFromProps(props,state) {
+    
+    console.log("gDsFp",props,state)
+
+    let s
+    if(!state.profile) {
+      s = { ...state, profile: {} }
+      const { userProfile, getProfile } = props.auth;
+      if (!userProfile) {
+        getProfile((err, profile) => {
+          //this.setState({ profile });
+          store.dispatch(data.getUser(profile))
+        });
+      } else {
+        s.profile = userProfile
+        store.dispatch(data.getUser(userProfile))
+      }
+    }
+
+    if((!state.profile || !state.profile.profile) && props.profile && props.profile.profile && props.userID) {
+      let userProfile = { ...props.profile }
+      s = { ...state, profile:{ ...userProfile.profile } }
+      delete userProfile.profile
+
+      // TODO clean profile from resource[userID]
+      //store.dispatch(data.gotResource(props.userID, { [props.userID] : userProfile }))
+
+      for(let k of Object.keys(s)) {
+        let p
+        if(p = propsMap[k]) {
+          if(props.profile[p] && s[k] && !s[k].value) { 
+            console.log("kp",k,p)
+            let type = s[k].type
+            if(!type) type = "uri"
+            s[k] = { type, value: fullUri(props.profile[p][0].value) }
+          }
+        }
+      }
+    }
+
+    if(s) return s
+    else return null
+  }
+
+
+  async handlePatch(e) {
+    let response = await api.submitPatch(this.props.userID, this.state.patch)             
+    if(response === "OK") { 
+      store.dispatch(data.getUser(this.state.profile))
+      let state = { ...this.state, patch:'' }
+      this.setState(state)
+    }
+  }
+
+  preparePatch = (state:{}) =>{
+
+      let mods = Object.keys(state).filter(k => k !== "patch" && state[k].type && state[k].value).reduce( (acc,k) => ({ ...acc, [propsMap[k]]: [ state[k] ] } ), {} )
+      let id = shortUri(this.props.userID).split(':')[1]
+      let that = { state: { resource:this.props.profile, updates:mods}, props:{ dictionary:this.props.dictionary, IRI:this.props.userID } }
+
+      console.log("mods", mods, id, that)
+
+      state.patch = renderPatch(that, Object.keys(mods), id)
+
+      return state
   }
 
   render() {
@@ -109,14 +178,7 @@ export class Profile extends Component<Props,State> {
 
           let state = {...this.state, [e.target.name]:{ type, value } } 
 
-          let mods = Object.keys(state).filter(k => k !== "patch" && state[k].type && state[k].value).reduce( (acc,k) => ({ ...acc, [propsMap[k]]: [ state[k] ] } ), {} )
-          let id = shortUri(this.props.userID).split(':')[1]
-
-          let that = { state: { resource:this.props.profile, updates:mods}, props:{ dictionary:this.props.dictionary, IRI:this.props.userID } }
-
-          console.log("mods", mods, id, that)
-
-          state.patch = renderPatch(that, Object.keys(mods), id)
+          state = this.preparePatch(state)
           
           this.setState(state)
         }
@@ -223,7 +285,13 @@ export class Profile extends Component<Props,State> {
                  */}
                  
               </form>
-              { this.state.patch }
+              { this.state.patch && [
+                  <pre id="patch" contentEditable="true">
+                    { this.state.patch }
+                  </pre>,
+                  <a class="ulink" onClick={this.handlePatch.bind(this)}>Update</a>
+                ]
+              }
               <h5 onClick={ (e) => { 
                 let url = store.getState().ui.profileFromUrl
                 if(!url) url = "/"

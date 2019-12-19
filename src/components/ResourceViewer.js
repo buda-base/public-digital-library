@@ -1271,7 +1271,7 @@ class ResourceViewer extends Component<Props,State>
          }
 
          if(!infoBase)  {
-            infoBase = this.props.dictionary[elem.value]
+            if(this.props.dictionary) infoBase = this.props.dictionary[elem.value]
             //console.log("ib",infoBase,dico)
             if(infoBase) infoBase = infoBase[skos+"prefLabel"]
          }

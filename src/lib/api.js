@@ -608,6 +608,23 @@ export default class API {
       }
   }
 
+   async submitPatch(id,patch) {
+      let response
+      try {
+         let token = localStorage.getItem('id_token')
+         response = await (await this._fetch( 'http://editserv.bdrc.io/resource-nc/user/patch/'+id.replace(/^.*[/]([^/]+)$/, "$1"),  {
+            method: 'PATCH',
+            body: patch,
+            headers:new Headers({ 'content-type': 'text/plain', 'authorization': "Bearer " + token})
+         })).text()
+
+      } catch(e) {
+         console.log("patch",e)
+      }
+
+      return response
+   }
+
   async getPasswordResetLink(user_id, passwordData) {
 
       let authData = await (await this._fetch( 'https://bdrc-io.auth0.com/oauth/token',  {

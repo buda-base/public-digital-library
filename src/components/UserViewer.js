@@ -421,6 +421,7 @@ class UserViewer extends ResourceViewer
     renderPostData = () => {
         let mods = Object.keys(this.state.updates)
         let id = shortUri(this.props.IRI).split(':')[1]
+        let patch = renderPatch(this,mods,id)
 
         return ( 
             [   this.state.resource?
@@ -429,7 +430,10 @@ class UserViewer extends ResourceViewer
                     {this.preprop("newProperty",0,0)}
                 </div>:null
             ,
-                renderPatch(this,mods,id)
+
+                patch?<pre id="patch" contentEditable="true">
+                    {patch}
+                </pre>:null
             ]
 
         )

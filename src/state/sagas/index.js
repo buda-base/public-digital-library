@@ -345,17 +345,26 @@ async function getUser(profile)
          let val = user[k]
          if(k === "type") k = "rdfs:type"
 
-         //console.log(acc,k,val)
+         //console.log("acc",k,val)
 
          let toJson = (o) => {
+
             //console.log("o",o)
+
             if(o.match) {
                if(o.match(/^https?:/)) 
-                  return { type:'uri', value:o}
+                  return { type:'uri', value:fullUri(o)}
                else              
-                  return { type:'literal', value:o}             
+                  return { type:'literal', value:fullUri(o)}             
+            }
+            else if(o["@id"]) {
+               o.value = fullUri(o["@id"])
+               delete o["@id"]
+               return o
             }
             else return o
+
+
          }
 
          if(!Array.isArray(val)) {
@@ -364,9 +373,11 @@ async function getUser(profile)
             val = val.map(e => toJson(e))
          }
             
-         if(!k.match(/^@/)) return ({ ...acc, [fullUri(k)]:val})
+         if(!k.match(/^@/)) return ({ ...acc, [fullUri(k,true)]:val})
          else return acc ;
       },{}) }
+
+      user[id].profile = profile
 
       store.dispatch(uiActions.gotUserID(id));
       store.dispatch(dataActions.gotResource(id, user));

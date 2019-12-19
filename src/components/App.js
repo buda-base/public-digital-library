@@ -98,8 +98,9 @@ export const prefixesMap = { adm, bda, bdac, bdan, bdo, bdou, bdr, bdu, cbcp, cb
 export const prefixes = Object.values(prefixesMap) ;
 export const sameAsMap = { wd:"WikiData", ol:"Open Library", ola:"Open Library", bdr:"BDRC", mbbt:"Marcus Bingenheimer", eftr:"84000" }
 
-export function fullUri(id:string) {
-   for(let k of Object.keys(prefixesMap)) {
+export function fullUri(id:string, force:boolean=false) {
+   if(force && id.indexOf(":") === -1) id = bdo + id
+   else for(let k of Object.keys(prefixesMap)) {
       id = id.replace(new RegExp(k+":"),prefixesMap[k])
    }
    return id ;

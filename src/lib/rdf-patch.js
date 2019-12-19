@@ -1,5 +1,6 @@
 
 import React, { Component } from 'react';
+import {shortUri,fullUri} from '../components/App'
 
 const uuid = require('uuid/v1')
 
@@ -21,14 +22,15 @@ function getPatchValue(tag:string, value:any, dict:{}) {
     prop = dict[tag]
     if(prop) {
         T = prop[rdfs+"range"]
-        
+
+        console.log("range",T)        
 
         if(T && T.length) {
-            if(T[0].value === xsd+"anyURI") { start = "<" ; end = ">" ; }
-            else if(T[0].value === rdf+"PlainLiteral") { start = '"' ; end = '"' ; }                
+            if(T[0].value === rdf+"PlainLiteral") { start = '"' ; end = '"' ; }                
+            else if(T[0].value === xsd+"anyURI" || T[0].type === "uri") { start = "<" ; end = ">" ; }
         }
     }
-    return start + (value.value?value.value:value) + end
+    return start + fullUri(value.value?value.value:value) + end
 }
 
 function getPatch(iri, updates, resource, tag:string, id:string, dict) {
@@ -80,18 +82,15 @@ function renderPatch(that, mods, id) {
 
         let patch = mods.map(k => getPatch(iri, upd, res, k, id, dict)).join("")
 
-        if(patch) return (
-            <pre id="patch" contentEditable="true">
-            { `\
-H  id      "${ that._uuid }"
-H  scope   "${ graph }-public,${ graphP }-private" . 
-H  graph   "${ graph },${ graphP }"
+// H  id      "${ that._uuid }"
+
+        if(patch) return (`\
+H  graph   "${ graph },${ graphP }" .
 H  mapping "${ graph }-user,${ graphP }-user" .
+H  scope   "${ graph }-public,${ graphP }-private" . 
 TX . 
 ${ patch }\
-TC . `          } 
-            </pre>
-        )
+TC . ` )
     }
 }
 
