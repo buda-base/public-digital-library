@@ -931,7 +931,7 @@ class ResourceViewer extends Component<Props,State>
                else return 1 ;
             })*/
 
-            sortProp = sortProp.reduce((acc,e) => {
+            sortProp = sortProp.filter(k => Array.isArray(prop[k.value])).reduce((acc,e) => {
 
                if(e.value === bdo+"eTextHasChunk") return { ...acc, [e.value]:prop[e.value]}
 
@@ -996,13 +996,16 @@ class ResourceViewer extends Component<Props,State>
 
       //console.log("full",prop)
 
+      /*
       if(this.props.ontology[prop] && this.props.ontology[prop][rdfs+"label"])
       {
          let ret = getLangLabel(this, prop, this.props.ontology[prop][rdfs+"label"])
          if(ret && ret.value && ret.value != "")
             return ret.value
       }
-      else if(this.props.dictionary && this.props.dictionary[prop] && this.props.dictionary[prop][rdfs+"label"])
+      else 
+      */
+      if(this.props.dictionary && this.props.dictionary[prop] && this.props.dictionary[prop][rdfs+"label"])
       {
          /*
          let ret = this.props.ontology[prop][rdfs+"label"].filter((e) => (e.lang == "en"))
