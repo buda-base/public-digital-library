@@ -352,7 +352,7 @@ async function getUser(profile)
             //console.log("o",o)
 
             if(o.match) {
-               if(o.match(/^https?:/)) 
+               if(o.match(/:/)) 
                   return { type:'uri', value:fullUri(o)}
                else              
                   return { type:'literal', value:fullUri(o)}             
