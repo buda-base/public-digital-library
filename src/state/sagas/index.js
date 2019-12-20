@@ -340,7 +340,8 @@ async function getUser(profile)
    if(user) {
       
       let id = user["@id"] ;
-      user = { [id] : Object.keys(user).reduce( (acc,k) => {
+      if(!id) id = Object.keys(user)[0]
+      else user = { [id] : Object.keys(user).reduce( (acc,k) => {
 
          let val = user[k]
          if(k === "type") k = "rdfs:type"
