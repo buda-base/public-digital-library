@@ -7,6 +7,7 @@ const uuid = require('uuid/v1')
 const bdgu  = "http://purl.bdrc.io/graph-nc/user/" ;
 const bdgup = "http://purl.bdrc.io/graph-nc/user-private/" ;
 const bdou  = "http://purl.bdrc.io/ontology/ext/user/" ;
+const foaf  = "http://xmlns.com/foaf/0.1/" ;
 const rdf   = "http://www.w3.org/1999/02/22-rdf-syntax-ns#" ;
 const rdfs  = "http://www.w3.org/2000/01/rdf-schema#" ;
 const skos  = "http://www.w3.org/2004/02/skos/core#";
@@ -30,6 +31,7 @@ function getPatchValue(tag:string, value:any, dict:{}) {
             else if(T[0].value === xsd+"anyURI" || T[0].type === "uri") { start = "<" ; end = ">" ; }
         }
     }
+    else if(tag === foaf+"mbox") { start = '"' ; end = '"' ; }
     return start + fullUri(value.value?value.value:value) + end
 }
 

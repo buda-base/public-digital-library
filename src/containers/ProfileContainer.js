@@ -9,6 +9,8 @@ import store from '../index';
 
 import Profile from '../components/ProfileStatic';
 
+const tmp   = "http://purl.bdrc.io/ontology/tmp/" ;
+
 const mapStateToProps = (state,ownProps) => {
 
    let userID = state.ui.userID
@@ -23,6 +25,8 @@ const mapStateToProps = (state,ownProps) => {
    let rightPanel = state.ui.rightPanel
 
    let resetLink = state.data.resetLink
+
+   if(profile && resetLink && !profile[tmp+"passwordResetLink"]) resetLink = false
 
    let props = { userID, profile, dictionary, rightPanel, resetLink }
 

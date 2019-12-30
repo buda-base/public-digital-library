@@ -31,7 +31,7 @@ const foaf  = "http://xmlns.com/foaf/0.1/" ;
 const skos  = "http://www.w3.org/2004/02/skos/core#";
 const tmp   = "http://purl.bdrc.io/ontology/tmp/" ;
 
-const propsMap = {  name: skos+"prefLabel", 
+const propsMap = {  name: skos+"prefLabel", email: foaf+"mbox",
                     gender: bdo+"personGender", male: bdr+"GenderMale", female: bdr+"GenderFemale", "no-answer": bdr+"GenderNotSpecified",
                     interest: bdou+"interest", buddhism: tmp+"buddhism",
                     region: bdou+"mainResidenceArea", outside:tmp+"outside", kham:tmp+"kham", amdo:tmp+"amdo", "u-tsang":tmp+"u-tsang", other:tmp+"other" }
@@ -46,13 +46,14 @@ type Props = {
 }
 
 type State = {
-   name:string,
-   gender:string,
-   region:string,
+   name:{},
+   gender:{},
+   region:{},
    //affiliation:string,
-   interest:string,
+   interest:{},
    patch?:{},
-   profile?:{}
+   profile?:{},
+   email?:{}
 }
 
 export class Profile extends Component<Props,State> {  
@@ -98,6 +99,7 @@ export class Profile extends Component<Props,State> {
     }
 
     if((!state.profile || !state.profile.profile) && props.profile && props.profile.profile && props.userID) {
+
       let userProfile = { ...props.profile }
       s = { ...state, profile:{ ...userProfile.profile } }
       delete userProfile.profile
@@ -116,20 +118,30 @@ export class Profile extends Component<Props,State> {
           }
         }
       }
+
+      if(s.profile.sub.match(/^auth0[|]/) && props.profile[foaf+"mbox"] && s.email === undefined)  s.email = { value: props.profile[foaf+"mbox"][0].value }
     }
 
     if(s) return s
     else return null
   }
 
-
   async handlePatch(e) {
-    let response = await api.submitPatch(this.props.userID, this.state.patch)             
+
+    let response
+
+    if(this.state.email.value && this.props.profile[foaf+"mbox"][0].value !== this.state.email.value) { 
+      response = await api.updateEmail(this.state.profile.sub, this.state.email.value)
+    }
+
+    response = await api.submitPatch(this.props.userID, this.state.patch)                 
+
     if(response === "OK") { 
       store.dispatch(data.getUser(this.state.profile))
       let state = { ...this.state, patch:'' }
       this.setState(state)
     }
+
   }
 
   preparePatch = (state:{}) =>{
@@ -183,12 +195,12 @@ export class Profile extends Component<Props,State> {
           this.setState(state)
         }
 
-        let val = { name:"", gender:"", interest:"", region:"" }
+        let val = { name:"", gender:"", interest:"", region:"", email:"" }
         for(let k of Object.keys(val)) {
           if(this.state[k] && this.state[k].value !== undefined) val[k] = this.state[k].value
-          else if(this.props.profile && this.props.profile[propsMap[k]]) val.name = this.props.profile[propsMap[k]][0].value
+          else if(k !== "email" && this.props.profile && this.props.profile[propsMap[k]]) val.name = this.props.profile[propsMap[k]][0].value
         }
-
+        //console.log("val",val)
 
         if(this.props.profile && this.state.profile && !this.props.resetLink) store.dispatch(data.getResetLink(this.props.userID, this.props.profile, this.state.profile))
 
@@ -202,12 +214,25 @@ export class Profile extends Component<Props,State> {
                 <div id="avatar">
                     <img src={profile.picture} width="80"/>
                 </div>
-                {this.props.profile?this.props.profile[foaf+"mbox"][0].value:null}
+                {this.props.profile?this.props.profile[skos+"prefLabel" /*foaf+"mbox"*/ ][0].value:null}
               </h2>
               { 
-                this.props.profile && this.props.profile[tmp+"passwordResetLink"] && 
+                this.props.profile && this.props.resetLink && //this.props.profile[tmp+"passwordResetLink"] && 
                   <div>
-                    <a class="ulink" href={this.props.profile[tmp+"passwordResetLink"][0].value}>Change Password</a>
+                    { 
+                      this.state.profile && this.state.profile.sub.match(/^auth0[|]/) && 
+                      <FormControl className="FC">
+                        <InputLabel htmlFor="email">Email</InputLabel>
+                        <Input
+                          value={val.email}
+                          onChange={handleChange}
+                          inputProps={{ name: 'email', id: 'email' }}
+                        />
+                      </FormControl>
+                    }
+                    <a class="ulink" {... this.props.profile[tmp+"passwordResetLink"]?{href:this.props.profile[tmp+"passwordResetLink"][0].value}:{} }>
+                      Change Password
+                    </a>
                     <br/><br/>
                   </div>
               }
@@ -223,7 +248,6 @@ export class Profile extends Component<Props,State> {
                 <pre>{JSON.stringify(profile, null, 2)}</pre>
               </Panel> 
               */}
-              <form autoComplete="off">
                 <FormControl className="FC">
                   <InputLabel htmlFor="name">Name</InputLabel>
                   <Input
@@ -284,19 +308,22 @@ export class Profile extends Component<Props,State> {
                 </FormControl>
                  */}
                  
-              </form>
               { this.state.patch && [
-                  <pre id="patch" contentEditable="true">
+                   <pre id="patch" contentEditable="true">
                     { this.state.patch }
                   </pre>,
-                  <a class="ulink" onClick={this.handlePatch.bind(this)}>Update</a>
+                  <a class="ulink" id="upd" onClick={this.handlePatch.bind(this)}>Update</a>
                 ]
               }
+
+              {/*               
               <h5 onClick={ (e) => { 
                 let url = store.getState().ui.profileFromUrl
                 if(!url) url = "/"
                 history.push(url)
-              }}>Back</h5>
+              }}>Back</h5> 
+              */}
+
             </div>
           </div>,          
           <LanguageSidePaneContainer />]

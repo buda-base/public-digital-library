@@ -457,7 +457,9 @@ h3 .expand svg { position:absolute; margin-top:-18px; }*/
 .userPopoverContent .buttons a:first-child svg { color:green; }
 .userPopoverContent .buttons a:last-child  svg { color:red; }
 
-.resource.user #patch { background:#eee; border:1px solid #999; padding:20px; position:relative; margin-top:30px; overflow-x:auto; overflow-y:visible;}
+.resource.user #patch { background:#eee; border:1px solid #999; padding:20px; position:relative; margin-top:30px; overflow-x:auto; overflow-y:visible;
+   /* display:none; */
+}
 /* .resource.user #patch::before { content:'RDF Patch:'; position:absolute;left:-1px; top:-20px;display:block; } */
 
 
@@ -717,6 +719,7 @@ h2 + .browse a { font-size:14px; text-transform:capitalize;}
 
 .profile-area .FC { min-width:222px; margin-right:20px;}
 
+.ulink#upd { display:block; }
 
 #TestToken { padding:5px;  }
 

@@ -624,6 +624,37 @@ export default class API {
 
       return response
    }
+  
+  async updateEmail(user_id, email) {
+
+      let props = store.getState()
+      let passwordData = props.data.config["password-reset"]
+
+      let authData = await (await this._fetch( 'https://bdrc-io.auth0.com/oauth/token',  {
+         method: 'POST',
+         body: JSON.stringify(passwordData),
+         headers:new Headers({ 'content-type': 'application/json'})
+      })).json()
+
+      //console.log("aD", authData);
+
+      try {
+         let response = await (await this._fetch( 'https://bdrc-io.auth0.com/api/v2/users/'+encodeURI(user_id),  {
+            method: 'PATCH',
+            body: JSON.stringify({"email":email}),
+            headers:new Headers({ 'authorization': "Bearer " + authData.access_token, 'content-type': 'application/json'})
+         })).json()
+         
+         if(response.statusCode === 400) throw new Error(response.message)
+      }
+      catch(e) {
+         console.error("auth0 email update failed",e)
+      }
+
+      //console.log("rL", resetLink);
+
+  }
+
 
   async getPasswordResetLink(user_id, passwordData) {
 
