@@ -875,6 +875,7 @@ class App extends Component<Props,State> {
          */
          if(results) {
 
+            /* deprecated - no more abstract works
             if(results && results.results && results.results.bindings && results.results.bindings.works) {
 
                let works = results.results.bindings.works
@@ -904,6 +905,7 @@ class App extends Component<Props,State> {
                results.results.bindings.works = tmp
                // results = ordered.reduce((acc,k) => { acc[k]=results[k]; },{})
             }
+            */
 
             if(!s) s = { ...state }
             if(!s.results) s.results = {}
@@ -2266,7 +2268,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
          let categ = "Other" ;
          let end = n
-         let max_cpt = 3
+         let max_cpt =  3
          let canCollapse = false 
 
          let findNext = false ;
@@ -2357,9 +2359,11 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             // || (e.type && e.type.match(/[Ee]xpression/) )
             // || ( )
 
-            let isAbs = sublist[o].filter((e) => e.value && e.value.match(/Abstract/))
-            let hasExpr = sublist[o].filter((e) => e.type && e.type.match(/HasExpression/))
-            let isExpr = sublist[o].filter((e) => e.type && e.type.match(/ExpressionOf/))
+            // deprecated
+            let isAbs = [] //= sublist[o].filter((e) => e.value && e.value.match(/Abstract/))
+            let hasExpr = [] //= sublist[o].filter((e) => e.type && e.type.match(/HasExpression/))
+            let isExpr = []//= sublist[o].filter((e) => e.type && e.type.match(/ExpressionOf/))
+
             let hasPart = sublist[o].filter((e) => e.type && e.type.match(/HasPart/))
             let hasRoot = sublist[o].filter((e) => e.type && e.type.match(/HasRoot/) && e.value && !e.value.match(o) )
             let workLab = sublist[o].filter((e) => e.type && e.type.match(/workLabel/))
@@ -2419,9 +2423,11 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
             }
 
+            // deprecated
+            //addTmpProp(hasExpr,"workHasExpression","prefLabelHasExpression");
+            //addTmpProp(isExpr,"workExpression","prefLabelExpression");
+
             addTmpProp(creator,"creatorRole","creatorLabel", true);
-            addTmpProp(hasExpr,"workHasExpression","prefLabelHasExpression");
-            addTmpProp(isExpr,"workExpression","prefLabelExpression");
             addTmpProp(hasRoot,"workHasRoot","rootPrefLabel");
             addTmpProp(workLab,"forWork","workLabel");
 
@@ -2557,6 +2563,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   else if(isExpr.length > 0)  { Tag = CenterFocusWeak;   tip = "Work Expression Of";   if(categ !== "ExprOf")   { if(categ !== "Other" && cpt >= max_cpt) { categChange = true ; }; categ = "ExprOf" ;   if(!dontShow) { showCateg = true }; if(cpt!=0) {n = 0; }; willBreak = false ; max_cpt = cpt + 3 ; canCollapse = true ; } }
                   else if(categ !== "Other")  { Tag = CropDin;           tip = "Work" ;                                           if(                     cpt >= max_cpt)  { categChange = true ; }; categ = "Other";     if(!dontShow) { showCateg = true }; if(cpt!=0) {n = 0; }; willBreak = false ; max_cpt = cpt + 3 ; canCollapse = true ; } 
                   else if(categ === "Other")  { Tag = CropDin;           tip = "Work" ; if(t == "Work" && !findFirst && m == 0) { showCateg = true ; } ; if(t == "Work") { canCollapse = true ; } }
+                  
 
                   if(Tag == CropDin && hasPart.length > 0) Tag = FilterNone;
                
@@ -2579,10 +2586,12 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
                         //console.log("categC",categChange,lastN,tmpN,categ)
 
-                        if(categChange && (cpt - lastN > 1 || tmpN > 3)) {// && (!pagin.bookmarks || (!pagin.bookmarks[categ] || !pagin.bookmarks[prevCateg] || pagin.bookmarks[categ] - pagin.bookmarks[prevCateg] > 3))) {
-                           //console.log("bookM...",pagin.bookmarks)
-                           message.push(<MenuItem className="menu-categ-collapse" onClick={this.setWorkCateg.bind(this,prevCateg,pagin)}><h5>{I18n.t(this.state.collapse[prevCateg]==false?"misc.hide":"misc.show" ) + " " + t + "s / " + prevH5.replace(/ \([0-9]+\)$/,"") + (pagin.bookmarks[prevCateg].nb ? " ("+pagin.bookmarks[prevCateg].nb +")":"") /*+" "+prevCateg*/}</h5></MenuItem>);                      
-                        }
+                        // // deprecated
+                        // if(categChange && (cpt - lastN > 1 || tmpN > 3)) {// && (!pagin.bookmarks || (!pagin.bookmarks[categ] || !pagin.bookmarks[prevCateg] || pagin.bookmarks[categ] - pagin.bookmarks[prevCateg] > 3))) {
+                        //    //console.log("bookM...",pagin.bookmarks)
+                        //    message.push(<MenuItem className="menu-categ-collapse" onClick={this.setWorkCateg.bind(this,prevCateg,pagin)}><h5>{I18n.t(this.state.collapse[prevCateg]==false?"misc.hide":"misc.show" ) + " " + t + "s" + /*" / " + prevH5.replace(/ \([0-9]+\)$/,"")*/ (pagin.bookmarks[prevCateg].nb ? " ("+pagin.bookmarks[prevCateg].nb +")":"") /*+" "+prevCateg*/}</h5></MenuItem>);                      
+                        // }
+                        
 
                         //console.log("bookM",pagin.bookmarks)
 
@@ -2590,11 +2599,14 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                         if(h5 === "Work") h5 = "Other"
                         else h5 = tip.replace(/ ?Work ?/,"")
                         //if(pagin && pagin.bookmarks && pagin.bookmarks[categ] && pagin.bookmarks[categ].nb) h5 += " ("+pagin.bookmarks[categ].nb+")"
+
+                        /* // deprecated
                         if(!dontShow) message.push(
                            <MenuItem className="menu-categ" onClick={this.setWorkCateg.bind(this,categ,pagin)}>
                               <h5>{h5}</h5>
                               { pagin.bookmarks && pagin.bookmarks[categ] && pagin.bookmarks[categ].nb > 3 && (this.state.collapse[categ]==false?<ExpandLess/>:<ExpandMore/>) }
                            </MenuItem>);
+                        */
 
                         //console.log("categIndex",categIndex,h5)
                      }  
@@ -2614,12 +2626,12 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      message.push(this.makeResult(id,n,t,lit,lang,tip,Tag,null,r.match,k,sublist[o]))
                   }
                   cpt ++;
-                  let isCollapsed = (canCollapse && (this.state.collapse[categ] || this.state.collapse[categ] == undefined))                  
-                  if(!isCollapsed || n <= 3) m++ ;
+                  let isCollapsed = ( canCollapse && !(this.state.collapse[categ] || this.state.collapse[categ] == undefined))                  
+                  if(!isCollapsed || n <= 3) m++ ;                  
                   
                   //console.log("cpt",cpt,categ,canCollapse,isCollapsed,m,this.state.collapse[categ],index,n,willBreak,lastN,absi)
 
-
+                  
                   if(displayTypes.length > 1 || t == "Work") {
                      if(cpt >= max_cpt&& (t != "Work" || isCollapsed)) {                      
                         if(categ == "Other") { break ; } 
@@ -2643,27 +2655,34 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          }
          if(pagin.index == pagin.pages.length - 1) {
 
-            if(cpt >= max_cpt && cpt - lastN >= 1 && Object.keys(sublist).length > 3 && (t != "Work" || pagin.bookmarks[categ].nb > 3) ) {
-               //if(displayTypes.length > 1 || displayTypes.indexOf("Any") !== -1) 
-               if((displayTypes.length > 1 || displayTypes.indexOf("Any") !== -1) && t !== "Work") 
-                  message.push(<MenuItem className="menu-categ-collapse" onClick={(e)=>this.handleCheck(e,t,true,{},true)}><h5>{I18n.t("misc.show") +" "+t+"s" +(counts["datatype"][t]?" ("+counts["datatype"][t]+")":"")/*+" "+categ*/}</h5></MenuItem>);                      
-               else { 
-                  if(t === "Work") 
-                     message.push(<MenuItem className="menu-categ-collapse" onClick={this.setWorkCateg.bind(this,categ,pagin)}><h5>{I18n.t(this.state.collapse[categ]==false?"misc.hide":"misc.show") + " " + t + "s / " + h5.replace(/ \([0-9]+\)$/,"") + (pagin.bookmarks[categ].nb ? " ("+pagin.bookmarks[categ].nb +")":"") /*+" "+categ*/}</h5></MenuItem>);                      
+            //  // deprecated
+            // if(cpt >= max_cpt && cpt - lastN >= 1 && Object.keys(sublist).length > 3 && (t != "Work" || pagin.bookmarks[categ].nb > 3) ) {
+            //    //if(displayTypes.length > 1 || displayTypes.indexOf("Any") !== -1) 
 
-                  if(/*t !== "Work" &&*/ displayTypes.length === 1 && displayTypes.indexOf("Any") === -1) 
-                     message.push(<MenuItem className="menu-categ-collapse datatype" onClick={(e)=> this.resetDT() }><h5>{I18n.t("misc.datatype")  /*+t+" "+categ*/}</h5></MenuItem>);                         
-               }
-            }
-            else if(/*t !== "Work" &&*/ displayTypes.length === 1 && displayTypes.indexOf("Any") === -1 && iniTitle) 
-               message.push(<MenuItem className="menu-categ-collapse datatype" onClick={(e)=>this.handleCheck(e,"Any",true,{},true)}><h5>{I18n.t("misc.datatype")  /*+" "+categ*/}</h5></MenuItem>);                      
+            //    if((displayTypes.length > 1 || displayTypes.indexOf("Any") !== -1) && t !== "Work") 
+            //        message.push(<MenuItem className="menu-categ-collapse" onClick={(e)=>this.handleCheck(e,t,true,{},true)}><h5>{I18n.t("misc.show") +" "+t+"s" +(counts["datatype"][t]?" ("+counts["datatype"][t]+")":"")/*+" "+categ*/}</h5></MenuItem>);                      
+            //    else 
+            //    { 
+            //       if(t === "Work") 
+            //          message.push(<MenuItem className="menu-categ-collapse" onClick={this.setWorkCateg.bind(this,categ,pagin)}><h5>{I18n.t(this.state.collapse[categ]==false?"misc.hide":"misc.show") + " " + t + "s" + /*" / " + h5.replace(/ \([0-9]+\)$/,"") +*/ (pagin.bookmarks[categ].nb ? " ("+pagin.bookmarks[categ].nb +")":"") /*+" "+categ*/}</h5></MenuItem>);                      
+
+            //       if(/*t !== "Work" &&*/ displayTypes.length === 1 && displayTypes.indexOf("Any") === -1) 
+            //          message.push(<MenuItem className="menu-categ-collapse datatype" onClick={(e)=> this.resetDT() }><h5>{I18n.t("misc.datatype")  /*+t+" "+categ*/}</h5></MenuItem>);                         
+            //    }
+            // }
+            // else if(/*t !== "Work" &&*/ displayTypes.length === 1 && displayTypes.indexOf("Any") === -1 && iniTitle) 
+            //    message.push(<MenuItem className="menu-categ-collapse datatype" onClick={(e)=>this.handleCheck(e,"Any",true,{},true)}><h5>{I18n.t("misc.datatype")  /*+" "+categ*/}</h5></MenuItem>);                      
          }
 
          if(!iniTitle && (displayTypes.length > 1 || displayTypes.indexOf("Any") !== -1) ) {
-            iniTitle = true
-            message.push(<MenuItem  onClick={(e)=>this.handleCheck(e,t,true,{},true)}><h4>{I18n.t("types."+t.toLowerCase())+"s"+(false && displayTypes.length>1 && counts["datatype"][t]?" ("+counts["datatype"][t]+")":"")}</h4></MenuItem>);
-            message.push(<MenuItem className="menu-categ-collapse" onClick={(e)=>this.handleCheck(e,t,true,{},true)}><h5>{I18n.t("misc.show") +" "+t+"s"+(counts["datatype"][t]?" ("+counts["datatype"][t]+")":"") /*" "+categ */ }</h5></MenuItem>);                      
-         }
+             iniTitle = true
+             
+             // // deprecated
+             // message.push(<MenuItem  onClick={(e)=>this.handleCheck(e,t,true,{},true)}><h4>{I18n.t("types."+t.toLowerCase())+"s"+(false && displayTypes.length>1 && counts["datatype"][t]?" ("+counts["datatype"][t]+")":"")}</h4></MenuItem>);
+             // message.push(<MenuItem className="menu-categ-collapse" onClick={(e)=>this.handleCheck(e,t,true,{},true)}><h5>{I18n.t("misc.show") +" "+t+"s"+(counts["datatype"][t]?" ("+counts["datatype"][t]+")":"") /*" "+categ */ }</h5></MenuItem>);                      
+          }
+         
+
          //console.log("end pagin",pagin,paginate)
          if(pagin) {
             
