@@ -820,7 +820,7 @@ class App extends Component<Props,State> {
                merge[dts] = { 
                   ...Object.keys(res.results.bindings[dts]).reduce( (acc,k) =>{
 
-                        let m = [ ...res.results.bindings[dts][k].filter(p => (!p.value || !p.value.match( /*/([Aa]bstract)*/ /([↦↤])/)) /*&& (!p.type || !p.type.match(/[Mm]atch|[Ee]xpression/))*/ ), 
+                        let m = [ ...res.results.bindings[dts][k].map(p => (p.type === tmp+"labelMatch"?{...p, type:tmp+"prefLabelMatch"}:p)), //.filter(p => (!p.value || !p.value.match( /*/([Aa]bstract)*/ /([↦↤])/)) /*&& (!p.type || !p.type.match(/[Mm]atch|[Ee]xpression/))*/ ), 
                                  ...(!results.results.bindings[dts]||!results.results.bindings[dts][k]||!props.language?[]:results.results.bindings[dts][k]) ]
 
                         //console.log("m?",dts,k,m.length) //,m)
