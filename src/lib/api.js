@@ -649,6 +649,7 @@ export default class API {
       }
       catch(e) {
          console.error("auth0 email update failed",e)
+         return { statusCode:-1, error:"auth0 email update failed", message:e  }
       }
 
       //console.log("rL", resetLink);

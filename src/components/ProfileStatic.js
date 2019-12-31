@@ -53,14 +53,15 @@ type State = {
    interest:{},
    patch?:{},
    profile?:{},
-   email?:{}
+   email?:{},
+   errors:{[string]:string}
 }
 
 export class Profile extends Component<Props,State> {  
 
   constructor(props : Props) {
     super(props);
-    this.state = { name:{type:"literal"}, gender:{}, region:{}, interest:{} }
+    this.state = { name:{type:"literal"}, gender:{}, region:{}, interest:{},errors:{} }
   }
   
   /*
@@ -133,6 +134,10 @@ export class Profile extends Component<Props,State> {
     if(this.state.email && this.state.email.value && this.props.profile && this.props.profile[foaf+"mbox"] && this.props.profile[foaf+"mbox"][0].value !== this.state.email.value) { 
       response = await api.updateEmail(this.state.profile.sub, this.state.email.value)
       if(response.statusCode === 200) response = null
+      else {
+        if(!s) s = { ...this.state }
+        s.errors.email = response.message.replace(/.*validation error.*/,"Wrong email format")
+      }
 
       // TODO display error message in email field
 
@@ -229,14 +234,14 @@ export class Profile extends Component<Props,State> {
                   <div>
                     { 
                       this.state.profile && this.state.profile.sub.match(/^auth0[|]/) && 
-                      <FormControl className="FC">
-                        <InputLabel htmlFor="email">Email</InputLabel>
-                        <Input
+                        <TextField
+                          className="FC"
+                          label="Email"
                           value={val.email}
                           onChange={handleChange}
                           inputProps={{ name: 'email', id: 'email' }}
+                          {... this.state.errors.email?{error:true,helperText:this.state.errors.email}:{} }
                         />
-                      </FormControl>
                     }
                     { this.props.profile && <a class={"ulink " + (this.props.resetLink && this.props.profile[tmp+"passwordResetLink"]?"on":this.props.profile[tmp+"passwordResetLink"])} {... this.props.profile[tmp+"passwordResetLink"]?{href:this.props.profile[tmp+"passwordResetLink"][0].value}:{} }>
                       Change Password
