@@ -1123,6 +1123,15 @@ export const getResetLink = (state: DataState, action: Action) => {
 }
 reducers[actions.TYPES.getResetLink] = getResetLink;
 
+/*
+export const getUser = (state: DataState, action: Action) => {
+    return {
+        ...state,
+        resetLink: false
+    }
+}
+reducers[actions.TYPES.getUser] = getUser;
+*/
 
 // Data Reducer
 const reducer = createReducer(DEFAULT_STATE, reducers);

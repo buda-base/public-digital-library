@@ -458,14 +458,14 @@ h3 .expand svg { position:absolute; margin-top:-18px; }*/
 .userPopoverContent .buttons a:last-child  svg { color:red; }
 
 .resource.user #patch { background:#eee; border:1px solid #999; padding:20px; position:relative; margin-top:30px; overflow-x:auto; overflow-y:visible;
-   /* display:none; */
+   display:none;
 }
 /* .resource.user #patch::before { content:'RDF Patch:'; position:absolute;left:-1px; top:-20px;display:block; } */
 
 
 
 /* .resource h3 { position:relative; } */
-.resource .preprop .menu { position:absolute; text-align:right; right:calc(100% /*- 50px*/); /*top:0px;*/ margin-top:-18px; height:15px; padding:3px; display:none;  width:80px;}
+.resource .preprop .menu {  position:absolute; text-align:right; right:calc(100% /*- 50px*/); /*top:0px;*/ margin-top:-18px; height:15px; padding:3px; display:none;  width:80px;}
 .resource h4 + .preprop .menu { right:calc(100% /*- 50px*/ - 20px); margin-top:-24px; }
 .resource .preprop .menu a svg { font-size:18px; vertical-align:middle; cursor:pointer; margin-right:2px; color:rgba(0,0,0,0.55); }
 .resource .preprop .menu a { border-bottom:none !important; }
@@ -715,11 +715,12 @@ h2 + .browse a { font-size:14px; text-transform:capitalize;}
 .profile-area img { height: 64px; vertical-align: middle;  box-shadow:0 0 5px rgba(0,0,0,0.45); display:inline-block; margin-right:16px;}
 */ /* border: 1px solid #ccc;*/
 .profile-area h5,.profile-area a.ulink { font-size:14px; color:rgba(229, 74, 53,1); cursor:pointer; margin-top:50px; font-weight:700; text-decoration:none;}
-.profile-area h5:hover,.profile-area a.ulink:hover { text-decoration: underline; }
+.profile-area h5:hover,.profile-area a.ulink.on:hover { text-decoration: underline; }
+.profile-area a.ulink:not(.on) { cursor:auto; opacity:0.5; }
 
 .profile-area .FC { min-width:222px; margin-right:20px;}
 
-.ulink#upd { display:block; }
+.ulink#upd { margin-top:30px; display:inline-block;}
 
 #TestToken { padding:5px;  }
 

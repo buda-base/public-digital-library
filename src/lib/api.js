@@ -645,7 +645,7 @@ export default class API {
             headers:new Headers({ 'authorization': "Bearer " + authData.access_token, 'content-type': 'application/json'})
          })).json()
          
-         if(response.statusCode === 400) throw new Error(response.message)
+         return response
       }
       catch(e) {
          console.error("auth0 email update failed",e)

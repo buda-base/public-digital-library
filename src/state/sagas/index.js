@@ -303,6 +303,8 @@ function* watchInitiateApp() {
 
 async function getResetLink(id,user,profile)
 {
+   if(profile && profile.sub && !profile.sub.match(/^auth0[|]/)) return
+
    let props = store.getState()
 
    try {         

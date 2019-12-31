@@ -60,7 +60,7 @@ export class Profile extends Component<Props,State> {
 
   constructor(props : Props) {
     super(props);
-    this.state = { name:{type:"literal"}, gender:{value:""}, region:{value:""}, interest:{value:""} }
+    this.state = { name:{type:"literal"}, gender:{}, region:{}, interest:{} }
   }
   
   /*
@@ -110,7 +110,7 @@ export class Profile extends Component<Props,State> {
       for(let k of Object.keys(s)) {
         let p
         if(p = propsMap[k]) {
-          if(props.profile[p] && s[k] && !s[k].value) { 
+          if(props.profile[p] && s[k] && s[k].value === undefined) { 
             console.log("kp",k,p)
             let type = s[k].type
             if(!type) type = "uri"
@@ -128,20 +128,27 @@ export class Profile extends Component<Props,State> {
 
   async handlePatch(e) {
 
-    let response
+    let response, s 
 
-    if(this.state.email.value && this.props.profile[foaf+"mbox"][0].value !== this.state.email.value) { 
+    if(this.state.email && this.state.email.value && this.props.profile && this.props.profile[foaf+"mbox"] && this.props.profile[foaf+"mbox"][0].value !== this.state.email.value) { 
       response = await api.updateEmail(this.state.profile.sub, this.state.email.value)
+      if(response.statusCode === 200) response = null
+
+      // TODO display error message in email field
+
+    }
+    
+    if(!response) { 
+      response = await api.submitPatch(this.props.userID, this.state.patch)                 
+
+      if(response === "OK") { 
+        store.dispatch(data.getUser(this.state.profile))
+        if(!s) s = { ...this.state }
+        s.patch = '' 
+      }
     }
 
-    response = await api.submitPatch(this.props.userID, this.state.patch)                 
-
-    if(response === "OK") { 
-      store.dispatch(data.getUser(this.state.profile))
-      let state = { ...this.state, patch:'' }
-      this.setState(state)
-    }
-
+    if(s) this.setState(s)
   }
 
   preparePatch = (state:{}) =>{
@@ -199,6 +206,7 @@ export class Profile extends Component<Props,State> {
         for(let k of Object.keys(val)) {
           if(this.state[k] && this.state[k].value !== undefined) val[k] = this.state[k].value
           else if(k !== "email" && this.props.profile && this.props.profile[propsMap[k]]) val.name = this.props.profile[propsMap[k]][0].value
+          if(!val[k]) val[k] = ""
         }
         //console.log("val",val)
 
@@ -217,7 +225,7 @@ export class Profile extends Component<Props,State> {
                 {this.props.profile?this.props.profile[skos+"prefLabel" /*foaf+"mbox"*/ ][0].value:null}
               </h2>
               { 
-                this.props.profile && this.props.resetLink && //this.props.profile[tmp+"passwordResetLink"] && 
+                this.state.profile && //this.props.profile[tmp+"passwordResetLink"] && 
                   <div>
                     { 
                       this.state.profile && this.state.profile.sub.match(/^auth0[|]/) && 
@@ -230,9 +238,9 @@ export class Profile extends Component<Props,State> {
                         />
                       </FormControl>
                     }
-                    <a class="ulink" {... this.props.profile[tmp+"passwordResetLink"]?{href:this.props.profile[tmp+"passwordResetLink"][0].value}:{} }>
+                    { this.props.profile && <a class={"ulink " + (this.props.resetLink && this.props.profile[tmp+"passwordResetLink"]?"on":this.props.profile[tmp+"passwordResetLink"])} {... this.props.profile[tmp+"passwordResetLink"]?{href:this.props.profile[tmp+"passwordResetLink"][0].value}:{} }>
                       Change Password
-                    </a>
+                    </a> }
                     <br/><br/>
                   </div>
               }
@@ -308,13 +316,13 @@ export class Profile extends Component<Props,State> {
                 </FormControl>
                  */}
                  
-              { this.state.patch && [
+              { this.state.patch && 
                    <pre id="patch" contentEditable="true">
                     { this.state.patch }
-                  </pre>,
-                  <a class="ulink" id="upd" onClick={this.handlePatch.bind(this)}>Update</a>
-                ]
+                   </pre> 
               }
+              <br/>
+              <a class={"ulink "+(this.state.patch?"on":"")} id="upd" {... this.state.patch?{onClick:this.handlePatch.bind(this)}:{}}>Update</a>
 
               {/*               
               <h5 onClick={ (e) => { 
