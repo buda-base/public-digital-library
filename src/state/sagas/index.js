@@ -1062,9 +1062,21 @@ async function startSearch(keyword,language,datatype,sourcetype,dontGetDT) {
       else
       result = await api.getAssocResults(keyword,sourcetype);
 
-      // adapt to new JSON format
-      if(result)
-         result = Object.keys(result).reduce((acc,e)=>({ ...acc, [e.replace(/^.*[/](Etext)?([^/]+)$/,"$2s").toLowerCase()] : result[e] }),{})
+      // adapt to new new JSON format
+      if(result) {
+         console.log("res",result)
+         if(result && (datatype && datatype.indexOf("Any") === -1) )
+            result = Object.keys(result).reduce((acc,e)=>{
+
+               if(e === "main") {
+                  let t = datatype[0].toLowerCase()+"s"
+                  return { ...acc, [t]: result[e] }
+               }
+               else return acc
+            }, {})
+         else 
+            result = Object.keys(result).reduce((acc,e)=>({ ...acc, [e.replace(/^.*[/](Etext)?([^/]+)$/,"$2s").toLowerCase()] : result[e] }),{})
+      }
          
       let rootRes
       if(datatype) rootRes = store.getState().data.searches[keyword+"@"+language]
@@ -1145,7 +1157,7 @@ else {
 
    let data = getData(result);
 
-   //console.log("kz1",JSON.stringify(Object.keys(data.results.bindings)))
+   console.log("kz1",JSON.stringify(Object.keys(data.results.bindings)))
 
    store.dispatch(dataActions.foundResults(keyword, language, data, datatype));
 

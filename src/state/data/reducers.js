@@ -968,7 +968,7 @@ export const foundFacetInfo = (state: DataState, action: actions.FoundResultsAct
    }
 
    let dictionary = state.dictionary      
-   if(action.payload.results && action.payload.results.tree) {
+   if(action.payload.results && action.payload.results.tree  && action.payload.results.tree["@graph"]) {
       const skos  = "http://www.w3.org/2004/02/skos/core#"; 
       let topics = action.payload.results.tree["@graph"].reduce( (acc,v) => { 
          let prefL = v["skos:prefLabel"]
