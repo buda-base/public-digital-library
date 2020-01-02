@@ -856,7 +856,7 @@ function getStats(cat:string,data:{})
 
    let keys = Object.keys(config.facets[cat])
 
-   console.log("keys",keys)
+   console.log("stat/keys",keys)
    
    if(auth && !auth.isAuthenticated()) {
       let hide = config["facets-hide-unlogged"][cat]
@@ -1073,10 +1073,18 @@ async function startSearch(keyword,language,datatype,sourcetype,dontGetDT) {
                   return { ...acc, [t]: result[e] }
                }
                else if(e === "facets") {
-                  return { ...acc, ["tree"]: { "@graph" : Object.keys(result[e].topics).reduce( (acc,k) =>  { 
+
+                  // TODO first node must be bdr:O9TAXTBRC201605
+
+                  let cat = "http://purl.bdrc.io/resource/O9TAXTBRC201605"
+                  let root = result[e].topics[cat]
+                  let tree = [ { "@id": cat, taxHasSubClass: root.subclasses }, ...Object.keys(result[e].topics).reduce( (acc,k) =>  { 
                      let elem = result[e].topics[k] 
                      return ([ ...acc, { "@id":k, taxHasSubClass: elem.subclasses, "skos:prefLabel": elem["skos:prefLabel"], "tmp:count":elem["count"] } ])
-                  }, [])  } }
+                  }, []) ]
+
+
+                  return { ...acc, ["tree"]: { "@graph" : tree  } }
                }
                else return acc
             }, {})
