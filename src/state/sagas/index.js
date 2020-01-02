@@ -1072,6 +1072,12 @@ async function startSearch(keyword,language,datatype,sourcetype,dontGetDT) {
                   let t = datatype[0].toLowerCase()+"s"
                   return { ...acc, [t]: result[e] }
                }
+               else if(e === "facets") {
+                  return { ...acc, ["tree"]: { "@graph" : Object.keys(result[e].topics).reduce( (acc,k) =>  { 
+                     let elem = result[e].topics[k] 
+                     return ([ ...acc, { "@id":k, taxHasSubClass: elem.subclasses, "skos:prefLabel": elem["skos:prefLabel"], "tmp:count":elem["count"] } ])
+                  }, [])  } }
+               }
                else return acc
             }, {})
          else 
