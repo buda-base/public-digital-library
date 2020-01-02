@@ -1586,9 +1586,43 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
       })
    }
 
+   getAuthor(allProps) {
+      if(allProps && this.props.assoRes) { 
+         let ret = []
+         let id = allProps.filter( e => e.type === tmp+"author")
+         //console.log("labels",id)
+         if(id && id.length) for (let i of id) {
+            i = fullUri(i.value)
+            let labels = this.props.assoRes[i]
+            //console.log("labels1",i,labels)
+            if(labels) { 
+               labels = getLangLabel(this,"",labels)
+               if(labels) {
+                  let lang = labels["xml:lang"]
+                  if(!lang) lang = labels["lang"]
+                  ret.push(<span><Link to={"/show/"+shortUri(i)}>{labels.value}</Link>{
+                     lang && <Tooltip placement="bottom-end" title={
+                                       <div style={{margin:"10px"}}>
+                                          <Translate value={languages[lang]?languages[lang].replace(/search/,"tip"):lang}/>
+                                       </div>
+                                    }><span className="lang">&nbsp;{lang}</span></Tooltip>
+                  }</span>)
+                  if(lang) ret.push()
+               }
+               //console.log("labels2",labels)
+                        
+            }
+         }
+         if(ret.length) return <div class="match">
+                  <span class="label">{this.fullname(tmp+"author")+(ret.length > 1 ?"s":"")}:&nbsp;</span>
+                  <div class="multi">{ret}</div>
+                </div>
+      }
+   }
+
    makeResult(id,n,t,lit,lang,tip,Tag,url,rmatch = [],facet,allProps)
    {
-      //console.log("res",id,n,t,lit,lang,tip,Tag,rmatch,sameAsRes)
+      //console.log("res",id,allProps,n,t,lit,lang,tip,Tag,rmatch,sameAsRes)
 
       let sameAsRes ;
       if(allProps) sameAsRes = [ ...allProps ]
@@ -1820,7 +1854,9 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             
          }
 
-         if(rmatch && rmatch.length) retList.push( <div id='matches'>
+         let author = this.getAuthor(allProps)
+         retList.push( <div id='matches'>
+            { author }
             {
                rmatch.map((m) => {
 
@@ -2846,7 +2882,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
       let {pathname,search} = this.props.history.location
       this.props.history.push({pathname,search:search.replace(/(&t=.*)$/,"")+"&t=Any"})
 
-      this.setState({...this.state, filters:{ datatype: [ "Any" ] } }  )
+      this.setState({...this.state, filters:{ datatype: this.state.filters.datatype } }  )
 
       // TODO fix back button behaviour (+ Work -> Any)
    }

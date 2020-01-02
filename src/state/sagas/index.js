@@ -1072,6 +1072,9 @@ async function startSearch(keyword,language,datatype,sourcetype,dontGetDT) {
                   let t = datatype[0].toLowerCase()+"s"
                   return { ...acc, [t]: result[e] }
                }
+               else if(e === "aux") {                  
+                  store.dispatch(dataActions.gotAssocResources(keyword,{ data: result[e] }))
+               }
                else if(e === "facets") {
 
                   // TODO first node must be bdr:O9TAXTBRC201605

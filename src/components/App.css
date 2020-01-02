@@ -1,5 +1,5 @@
 
-/* @import url('https://fonts.googleapis.com/css?family=Lato:400,600,700,800'); */
+@import url('https://fonts.googleapis.com/css?family=Roboto:300,400,500,600,700,800'); 
 @import url('https://fonts.googleapis.com/css?family=Noto+Sans:400,700&display=swap');
 
 /* CSS debug mode */
@@ -108,6 +108,8 @@ a.result .contenu ul > div:last-child {
    flex: 1 1 auto;
    min-width: 0;
 }
+
+/* a.result .contenu ul > div:last-child .author { color:rgba(0,0,0,1); font-weight:500; font-size:12px; font-style:italic;} */
 
 .resource h3.withdrawn { font-style:italic; opacity:1; margin-top:15px; display:block;}
 
