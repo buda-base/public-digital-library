@@ -1202,7 +1202,10 @@ else {
 
       
       if(!dontGetDT && !store.getState().data.searches[keyword+"@"+language]){
+
+         /* // deprecated
          store.dispatch(dataActions.getDatatypes(keyword,language));
+
          result = await api.getStartResults(keyword,language);
          result = Object.keys(result).reduce((acc,e)=>({ ...acc, [e.replace(/^.*[/](Etext)?([^/]+)$/,"$2s").toLowerCase()] : result[e] }),{})
          
@@ -1223,8 +1226,10 @@ else {
 
          metadata = result.metadata;
          data = getData(result);
-
+         */
          //console.log("kz2",JSON.stringify(Object.keys(data.results.bindings)))
+
+         metadata = await api.getDatatypesOnly(keyword, language);
 
          store.dispatch(dataActions.foundResults(keyword, language, { results: { bindings: { } } } ) ) //data));
          store.dispatch(dataActions.foundDatatypes(keyword,language,{ metadata, hash:true}));

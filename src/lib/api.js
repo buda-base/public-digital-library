@@ -683,6 +683,32 @@ export default class API {
       else throw new Error("unknown error")
   }
 
+   async getDatatypesOnly(key: string,lang: string) {
+
+      const bdo  = "http://purl.bdrc.io/ontology/core/";
+
+      try {
+           let config = store.getState().data.config.ldspdi
+           let url = config.endpoints[config.index]+"/query/table" ;
+           let data = await this.getQueryResults(url, key, {"LG_NAME":lang,"searchType":"countTypes"}, "GET", "application/json");
+
+            if(data && data.results && data.results.bindings) {
+               return data.results.bindings.reduce( (acc,t) => {
+                  if(t.type && t.count) return { ...acc, [t.type.value]:t.count.value}
+                  return acc
+               },{})
+            }
+
+           console.log("datatypes",data)
+
+           return data ;
+      } catch(e) {
+           throw e;
+      }
+
+      return { }
+   }
+
      async getResultsOneDatatype(datatype:string,key: string,lang: string): Promise<{} | null> {
         try {
              let config = store.getState().data.config.ldspdi
