@@ -231,19 +231,16 @@ export class Profile extends Component<Props,State> {
                 {this.props.profile?this.props.profile[skos+"prefLabel" /*foaf+"mbox"*/ ][0].value:null}
               </h2>
               { 
-                this.state.profile && //this.props.profile[tmp+"passwordResetLink"] && 
+                this.state.profile && this.state.profile.sub.match(/^auth0[|]/) && //this.props.profile[tmp+"passwordResetLink"] && 
                   <div>
-                    { 
-                      this.state.profile && this.state.profile.sub.match(/^auth0[|]/) && 
-                        <TextField
-                          className="FC"
-                          label="Email"
-                          value={val.email}
-                          onChange={handleChange}
-                          inputProps={{ name: 'email', id: 'email' }}
-                          {... this.state.errors.email?{error:true,helperText:this.state.errors.email}:{} }
-                        />
-                    }
+                      <TextField
+                        className="FC"
+                        label="Email"
+                        value={val.email}
+                        onChange={handleChange}
+                        inputProps={{ name: 'email', id: 'email' }}
+                        {... this.state.errors.email?{error:true,helperText:this.state.errors.email}:{} }
+                      />
                     { this.props.profile && <a class={"ulink " + (this.props.resetLink && this.props.profile[tmp+"passwordResetLink"]?"on":this.props.profile[tmp+"passwordResetLink"])} {... this.props.profile[tmp+"passwordResetLink"]?{href:this.props.profile[tmp+"passwordResetLink"][0].value}:{} }>
                       Change Password
                     </a> }
