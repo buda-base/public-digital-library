@@ -133,14 +133,14 @@ export class Profile extends Component<Props,State> {
 
     if(this.state.email && this.state.email.value && this.props.profile && this.props.profile[foaf+"mbox"] && this.props.profile[foaf+"mbox"][0].value !== this.state.email.value) { 
       response = await api.updateEmail(this.state.profile.sub, this.state.email.value)
-      if(response.statusCode === 200) response = null
-      else {
+      if(!response.statusCode || response.statusCode === 200) response = null
+      else if(response.message) {
+
+        console.log("response",response)
+
         if(!s) s = { ...this.state }
         s.errors.email = response.message.replace(/.*validation error.*/,"Wrong email format")
       }
-
-      // TODO display error message in email field
-
     }
     
     if(!response) { 
