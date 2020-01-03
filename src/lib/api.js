@@ -786,7 +786,7 @@ export default class API {
          path = url + USER_EDIT_POLICIES_PATH;
          
          // to use with ldspdi running locally
-         path = "//editserv.bdrc.io" + USER_EDIT_POLICIES_PATH;
+         path = "http://editserv.bdrc.io" + USER_EDIT_POLICIES_PATH;
 
          return path;
       }
@@ -800,7 +800,7 @@ export default class API {
          path = url +  USER_PATH;
 
          // to use with ldspdi running locally
-         path = "//editserv.bdrc.io" + USER_PATH
+         path = "http://editserv.bdrc.io" + USER_PATH
          
         return path;
     }
