@@ -208,12 +208,13 @@ export class Profile extends Component<Props,State> {
         }
 
         let val = { name:"", gender:"", interest:"", region:"", email:"" }
-        for(let k of Object.keys(val)) {
+        for(let k of Object.keys(val)) {          
           if(this.state[k] && this.state[k].value !== undefined) val[k] = this.state[k].value
           else if(k !== "email" && this.props.profile && this.props.profile[propsMap[k]]) val.name = this.props.profile[propsMap[k]][0].value
-          if(!val[k]) val[k] = ""
+          //if(!val[k]) val[k] = "?"
         }
-        //console.log("val",val)
+
+        console.log("val",val)
 
         if(this.props.profile && this.state.profile && !this.props.resetLink) store.dispatch(data.getResetLink(this.props.userID, this.props.profile, this.state.profile))
 
@@ -296,7 +297,7 @@ export class Profile extends Component<Props,State> {
                 <FormControl className="FC">
                   <InputLabel htmlFor="region">Cultural Region (if in China)</InputLabel>
                   <Select
-                    value={this.state.region.value}
+                    value={val.region}
                     onChange={handleChange}
                     inputProps={{ name: 'region', id: 'region'}}
                   >

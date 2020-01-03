@@ -665,7 +665,7 @@ export default class API {
          headers:new Headers({ 'content-type': 'application/json'})
       })).json()
 
-      //console.log("aD", authData);
+      console.log("aD", authData);
 
       let resetLink = await (await this._fetch( passwordData.audience + "tickets/password-change",  {
          method: 'POST',
@@ -673,7 +673,7 @@ export default class API {
          headers:new Headers({ 'authorization': "Bearer " + authData.access_token, 'content-type': 'application/json'})
       })).json()
 
-      //console.log("rL", resetLink);
+      console.log("rL", resetLink);
 
       if(resetLink.statusCode === 400) throw new Error(resetLink.message)
       else if(resetLink.ticket) return resetLink.ticket
@@ -786,7 +786,7 @@ export default class API {
          path = url + USER_EDIT_POLICIES_PATH;
          
          // to use with ldspdi running locally
-         path = "http://editserv.bdrc.io" + USER_EDIT_POLICIES_PATH;
+         path = "//editserv.bdrc.io" + USER_EDIT_POLICIES_PATH;
 
          return path;
       }
@@ -800,7 +800,7 @@ export default class API {
          path = url +  USER_PATH;
 
          // to use with ldspdi running locally
-         path = "http://editserv.bdrc.io" + USER_PATH
+         path = "//editserv.bdrc.io" + USER_PATH
          
         return path;
     }
