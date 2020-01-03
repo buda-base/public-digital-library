@@ -1586,10 +1586,10 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
       })
    }
 
-   getAuthor(allProps) {
+   getResultProp(prop:string,allProps:[],plural:boolean=true) {
       if(allProps && this.props.assoRes) { 
          let ret = []
-         let id = allProps.filter( e => e.type === tmp+"author")
+         let id = allProps.filter( e => e.type === prop)
          //console.log("labels",id)
          if(id && id.length) for (let i of id) {
             i = fullUri(i.value)
@@ -1614,7 +1614,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             }
          }
          if(ret.length) return <div class="match">
-                  <span class="label">{this.fullname(tmp+"author")+(ret.length > 1 ?"s":"")}:&nbsp;</span>
+                  <span class="label">{this.fullname(prop)+(plural && ret.length > 1 ?"s":"")}:&nbsp;</span>
                   <div class="multi">{ret}</div>
                 </div>
       }
@@ -1854,9 +1854,10 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             
          }
 
-         let author = this.getAuthor(allProps)
          retList.push( <div id='matches'>
-            { author }
+            { this.getResultProp(tmp+"author",allProps) }
+            { this.getResultProp(bdo+"workIsAbout",allProps,false) }
+            { this.getResultProp(bdo+"workGenre",allProps) }
             {
                rmatch.map((m) => {
 
