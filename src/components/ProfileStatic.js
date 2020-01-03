@@ -133,14 +133,14 @@ export class Profile extends Component<Props,State> {
 
     if(this.state.email && this.state.email.value && this.props.profile && this.props.profile[foaf+"mbox"] && this.props.profile[foaf+"mbox"][0].value !== this.state.email.value) { 
       response = await api.updateEmail(this.state.profile.sub, this.state.email.value)
-      if(response.statusCode === 200) response = null
-      else {
+      if(!response.statusCode || response.statusCode === 200) response = null
+      else if(response.message) {
+
+        console.log("response",response)
+
         if(!s) s = { ...this.state }
         s.errors.email = response.message.replace(/.*validation error.*/,"Wrong email format")
       }
-
-      // TODO display error message in email field
-
     }
     
     if(!response) { 
@@ -208,12 +208,13 @@ export class Profile extends Component<Props,State> {
         }
 
         let val = { name:"", gender:"", interest:"", region:"", email:"" }
-        for(let k of Object.keys(val)) {
+        for(let k of Object.keys(val)) {          
           if(this.state[k] && this.state[k].value !== undefined) val[k] = this.state[k].value
           else if(k !== "email" && this.props.profile && this.props.profile[propsMap[k]]) val.name = this.props.profile[propsMap[k]][0].value
-          if(!val[k]) val[k] = ""
+          //if(!val[k]) val[k] = "?"
         }
-        //console.log("val",val)
+
+        console.log("val",val)
 
         if(this.props.profile && this.state.profile && !this.props.resetLink) store.dispatch(data.getResetLink(this.props.userID, this.props.profile, this.state.profile))
 
@@ -230,19 +231,16 @@ export class Profile extends Component<Props,State> {
                 {this.props.profile?this.props.profile[skos+"prefLabel" /*foaf+"mbox"*/ ][0].value:null}
               </h2>
               { 
-                this.state.profile && //this.props.profile[tmp+"passwordResetLink"] && 
+                this.state.profile && this.state.profile.sub.match(/^auth0[|]/) && //this.props.profile[tmp+"passwordResetLink"] && 
                   <div>
-                    { 
-                      this.state.profile && this.state.profile.sub.match(/^auth0[|]/) && 
-                        <TextField
-                          className="FC"
-                          label="Email"
-                          value={val.email}
-                          onChange={handleChange}
-                          inputProps={{ name: 'email', id: 'email' }}
-                          {... this.state.errors.email?{error:true,helperText:this.state.errors.email}:{} }
-                        />
-                    }
+                      <TextField
+                        className="FC"
+                        label="Email"
+                        value={val.email}
+                        onChange={handleChange}
+                        inputProps={{ name: 'email', id: 'email' }}
+                        {... this.state.errors.email?{error:true,helperText:this.state.errors.email}:{} }
+                      />
                     { this.props.profile && <a class={"ulink " + (this.props.resetLink && this.props.profile[tmp+"passwordResetLink"]?"on":this.props.profile[tmp+"passwordResetLink"])} {... this.props.profile[tmp+"passwordResetLink"]?{href:this.props.profile[tmp+"passwordResetLink"][0].value}:{} }>
                       Change Password
                     </a> }
@@ -296,7 +294,7 @@ export class Profile extends Component<Props,State> {
                 <FormControl className="FC">
                   <InputLabel htmlFor="region">Cultural Region (if in China)</InputLabel>
                   <Select
-                    value={this.state.region.value}
+                    value={val.region}
                     onChange={handleChange}
                     inputProps={{ name: 'region', id: 'region'}}
                   >

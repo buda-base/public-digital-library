@@ -668,7 +668,7 @@ export default class API {
          headers:new Headers({ 'content-type': 'application/json'})
       })).json()
 
-      //console.log("aD", authData);
+      console.log("aD", authData);
 
       let resetLink = await (await this._fetch( passwordData.audience + "tickets/password-change",  {
          method: 'POST',
@@ -676,7 +676,7 @@ export default class API {
          headers:new Headers({ 'authorization': "Bearer " + authData.access_token, 'content-type': 'application/json'})
       })).json()
 
-      //console.log("rL", resetLink);
+      console.log("rL", resetLink);
 
       if(resetLink.statusCode === 400) throw new Error(resetLink.message)
       else if(resetLink.ticket) return resetLink.ticket
