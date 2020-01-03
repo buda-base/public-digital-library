@@ -1226,7 +1226,7 @@ else {
 
          //console.log("kz2",JSON.stringify(Object.keys(data.results.bindings)))
 
-         store.dispatch(dataActions.foundResults(keyword, language, data));
+         store.dispatch(dataActions.foundResults(keyword, language, { results: { bindings: { } } } ) ) //data));
          store.dispatch(dataActions.foundDatatypes(keyword,language,{ metadata, hash:true}));
       }
    }
