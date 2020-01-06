@@ -731,7 +731,7 @@ function getData(result,inMeta,outMeta)  {
       data.works = data.data
       delete data.data
    }
-   
+
    /* // deprecated
 
    if(data && data.publishedworks)
@@ -1076,7 +1076,30 @@ async function startSearch(keyword,language,datatype,sourcetype,dontGetDT) {
 
                if(e === "main") {
                   let t = datatype[0].toLowerCase()+"s"
-                  return { ...acc, [t]: result[e] }
+                  let sortRes = {}
+                  let keys = Object.keys(result[e])
+                  if(keys && keys.length) {
+                     keys = keys.map(k => {
+                        let n, score, p = result[e][k].length
+                        for(let v of result[e][k]) {
+                           if(v.type === tmp+"matchScore") {
+                              if(!n) n = Number(v.value)
+                              else { 
+                                 let m = Number(v.value)
+                                 if(m > n) n = m
+                              }
+                           }
+                        }
+                        // TODO 
+                        // - no need to keep all scores
+                        // - add size of known data
+                        return ({k, n, p})
+                     },{})
+                     keys = _.orderBy(keys,['n','p'],['desc', 'desc'])
+                     console.log("sortK",keys)
+                     for(let k of keys) sortRes[k.k] = result[e][k.k]
+                  }
+                  return { ...acc, [t]: sortRes }
                }
                else if(e === "aux") {                  
                   store.dispatch(dataActions.gotAssocResources(keyword,{ data: result[e] }))

@@ -3265,7 +3265,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                                  }
                                  label={i}
                               /></div> ))
-                     }
+                     }                     
                      {  this.props.datatypes && !this.props.datatypes.hash &&
                         <Loader loaded={false} className="datatypesLoader" style={{position:"relative"}}/>
                      }
@@ -3319,6 +3319,24 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                         )}
                         </div>
                      </Collapse>
+                     {
+                        widget(I18n.t("Lsidebar.sortBy.title"),"sortBy",
+                        ["Relevance", "Title", "Author" ].map((i) => <div key={i} style={{width:"150px",textAlign:"left"}} className="searchWidget">
+                              <FormControlLabel
+                                 control={
+                                    <Checkbox
+                                       checked={i === "Relevance"}
+                                       disabled={i !== "Relevance"}
+                                       className="checkbox"
+                                       icon={<PanoramaFishEye/>}
+                                       checkedIcon={<CheckCircle/>}
+                                       //onChange={(event, checked) => this.handleCheck(event,i,checked)}
+                                    />
+
+                                 }
+                                 label={i}
+                              /></div> ))
+                     }
                      {
 
                         meta && this.state.filters.datatype && this.state.filters.datatype.length === 1 && this.state.filters.datatype.indexOf("Any") === -1 && this.props.config && this.props.ontology && metaK.map((j) =>

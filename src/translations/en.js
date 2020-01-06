@@ -105,6 +105,9 @@ const enTranslation = {
       }
    },
    Lsidebar:{
+      sortBy:{
+         title:"Sort By"
+      },
       activeF:{
          title:"Active Filters",
          remove:"Remove filter",
