@@ -731,6 +731,9 @@ function getData(result,inMeta,outMeta)  {
       data.works = data.data
       delete data.data
    }
+   
+   /* // deprecated
+
    if(data && data.publishedworks)
    {
       data.works = { ...data.publishedworks, ...data.works }
@@ -748,6 +751,7 @@ function getData(result,inMeta,outMeta)  {
 
       //console.log("data?W",data,metadata)
    }
+
    if(data && data.abstractworks)
    {
       data.works = { ...Object.keys(data.abstractworks).reduce( (acc,k)=>{
@@ -765,7 +769,27 @@ function getData(result,inMeta,outMeta)  {
       delete metadata[bdo+"AbstractWork"]
       delete metadata["abstractwork"]
    }
-   
+
+   if(data && data.unicodeworks)
+   {
+      data.etexts = { ...Object.keys(data.unicodeworks).reduce( (acc,k)=>{
+         return { ...acc, [k]:[ ...data.unicodeworks[k] ] }
+      },{}), ...data.etexts }
+      delete data.unicodeworks
+      if(metadata[bdo+"Etext"] && metadata[bdo+"UnicodeWork"]) {
+         metadata[bdo+"Etext"] += metadata[bdo+"UnicodeWork"]
+      }
+      else if(metadata["etext"] && metadata["unicodework"]) {
+         metadata["etext"] += metadata["unicodework"]
+      }
+      else {
+         metadata["etext"] = metadata["unicodework"]
+      }
+      delete metadata[bdo+"UnicodeWork"]
+      delete metadata["unicodework"]
+   }  
+
+   */
 
    if(data && data.chunks) {
 
@@ -791,25 +815,7 @@ function getData(result,inMeta,outMeta)  {
      delete data.chunks
   }
 
-   if(data && data.unicodeworks)
-   {
-      data.etexts = { ...Object.keys(data.unicodeworks).reduce( (acc,k)=>{
-         return { ...acc, [k]:[ ...data.unicodeworks[k] ] }
-      },{}), ...data.etexts }
-      delete data.unicodeworks
-      if(metadata[bdo+"Etext"] && metadata[bdo+"UnicodeWork"]) {
-         metadata[bdo+"Etext"] += metadata[bdo+"UnicodeWork"]
-      }
-      else if(metadata["etext"] && metadata["unicodework"]) {
-         metadata["etext"] += metadata["unicodework"]
-      }
-      else {
-         metadata["etext"] = metadata["unicodework"]
-      }
-      delete metadata[bdo+"UnicodeWork"]
-      delete metadata["unicodework"]
-   }  
-
+   
    console.log("data?W",data,metadata)
 
 

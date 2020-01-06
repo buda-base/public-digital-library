@@ -700,7 +700,7 @@ export default class API {
 
             if(data && data.results && data.results.bindings) {
                return data.results.bindings.reduce( (acc,t) => {
-                  if(t.type && t.count) return { ...acc, [t.type.value]:t.count.value}
+                  if(t.type && t.count && [bdo+"Work",bdo+"Person",bdo+"Topic"].indexOf(t.type.value) !== -1) return { ...acc, [t.type.value]:t.count.value}
                   return acc
                },{})
             }
