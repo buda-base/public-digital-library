@@ -646,8 +646,14 @@ export default class API {
             method: 'PATCH',
             body: JSON.stringify({"email":email}),
             headers:new Headers({ 'authorization': "Bearer " + authData.access_token, 'content-type': 'application/json'})
-         })).json()
-         
+         })).json()         
+
+         await this._fetch( 'https://bdrc-io.auth0.com/api/v2/jobs/verification-email',  {
+            method: 'POST',
+            body: JSON.stringify({user_id, client_id: authData.client_id}),
+            headers:new Headers({ 'authorization': "Bearer " + authData.access_token, 'content-type': 'application/json'})
+         })
+
          return response
       }
       catch(e) {
