@@ -54,7 +54,8 @@ type State = {
    patch?:{},
    profile?:{},
    email?:{},
-   errors:{[string]:string}
+   errors:{[string]:string},
+   updating?:boolean
 }
 
 export class Profile extends Component<Props,State> {  
@@ -127,7 +128,12 @@ export class Profile extends Component<Props,State> {
     else return null
   }
 
-  async handlePatch(e) {
+  handlePatch(e) {
+    this.executePatch(e);
+    this.setState({...this.state, updating:true })
+  }
+
+  async executePatch(e) {
 
     let response, s 
 
@@ -138,7 +144,7 @@ export class Profile extends Component<Props,State> {
 
         console.log("response",response)
 
-        if(!s) s = { ...this.state }
+        if(!s) s = { ...this.state, updating:false }
         s.errors.email = response.message.replace(/.*validation error.*/,"Wrong email format")
       }
     }
@@ -148,12 +154,13 @@ export class Profile extends Component<Props,State> {
 
       if(response === "OK") { 
         store.dispatch(data.getUser(this.state.profile))
-        if(!s) s = { ...this.state }
+        if(!s) s = { ...this.state, updating:false }
         s.patch = '' 
       }
     }
 
     if(s) this.setState(s)
+    else this.setState({ ...this.state, updating:false })
   }
 
   preparePatch = (state:{}) =>{
@@ -241,7 +248,7 @@ export class Profile extends Component<Props,State> {
                         inputProps={{ name: 'email', id: 'email' }}
                         {... this.state.errors.email?{error:true,helperText:this.state.errors.email}:{} }
                       />
-                    { this.props.profile && <a class={"ulink " + (this.props.resetLink && this.props.profile[tmp+"passwordResetLink"]?"on":this.props.profile[tmp+"passwordResetLink"])} {... this.props.profile[tmp+"passwordResetLink"]?{href:this.props.profile[tmp+"passwordResetLink"][0].value}:{} }>
+                    { this.props.profile && <a class={"ulink " + (this.props.resetLink && this.props.profile[tmp+"passwordResetLink"]&&!this.state.updating?"on":this.props.profile[tmp+"passwordResetLink"])} {... this.props.profile[tmp+"passwordResetLink"]?{href:this.props.profile[tmp+"passwordResetLink"][0].value}:{} }>
                       Change Password
                     </a> }
                     <br/><br/>
@@ -325,7 +332,7 @@ export class Profile extends Component<Props,State> {
                    </pre> 
               }
               <br/>
-              <a class={"ulink "+(this.state.patch?"on":"")} id="upd" {... this.state.patch?{onClick:this.handlePatch.bind(this)}:{}}>Update</a>
+              <a class={"ulink "+(this.state.patch&&!this.state.updating?"on":"")} id="upd" {... this.state.patch?{onClick:this.handlePatch.bind(this)}:{}}>{this.state.updating?"Updating...":"Update"}</a>
 
               {/*               
               <h5 onClick={ (e) => { 
