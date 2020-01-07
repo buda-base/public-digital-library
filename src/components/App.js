@@ -256,22 +256,32 @@ export function getLangLabel(that:{},prop:string="",labels:[],proplang:boolean=f
 function getPropLabel(that, i) {
    if(!that.props.dictionary) return 
 
-   let label = that.props.dictionary[i]
+   let label = that.props.dictionary[i], labels
    if(label) {
-      let labels = label[skos+"prefLabel"]
+      labels = label[skos+"prefLabel"]
       if(!labels) labels = label["http://www.w3.org/2000/01/rdf-schema#label"]
+   }
+   else if(that.props.assoRes[i]) labels = that.props.assoRes[i]
+
+   let lang
+   if(labels) {
       label = getLangLabel(that,"",labels,true)
 
-      //console.log("label",i,label)
+      console.log("label",i,label)
 
       if(label) {
+         if(label.lang) lang = label.lang
+         else if(label["@language"]) lang = label["@language"]
+         else if(label["xml:lang"]) lang = label["xml:lang"]
+         
          if(label.value) label = label.value
          else if(label["@value"]) label = label["@value"]
+
       }
    }
    else label = that.pretty(i)
 
-   return label
+   return <span {...lang?{lang}:{}} >{label}</span>
 }
 
 export function getFacetUrl(filters,dic){
@@ -3509,7 +3519,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                                        let isExclu = this.state.filters.exclude && this.state.filters.exclude[jpre] && this.state.filters.exclude[jpre].includes(i)
 
                                        return (
-                                          <div key={i} style={{width:"280px",textAlign:"left"}} className="widget searchWidget">
+                                          <div key={i} style={{width:"auto",textAlign:"left"}} className="widget searchWidget">
                                              <FormControlLabel
                                                 control={
                                                    <Checkbox
@@ -3521,7 +3531,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                                                    />
 
                                                 }
-                                                label={<span>{label+" ("}<span class="facet-count">{this.subcount(j,i)+meta[j][i].n}</span>{")"}</span>}
+                                                label={<span>{label}&nbsp;{"("}<span class="facet-count">{this.subcount(j,i)+meta[j][i].n}</span>{")"}</span>}
                                              />
                                              { !isExclu && label !== "Any" && <div class="exclude"><Close onClick={(event, checked) => this.handleCheckFacet(event,jpre,[i],true,true)} /></div> }
                                           </div>
