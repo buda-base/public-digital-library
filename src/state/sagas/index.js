@@ -884,7 +884,7 @@ function getStats(cat:string,data:{})
          //console.log("f",f);
          let genre = [bdo+"workGenre", bdo + "workIsAbout", _tmp + "etextAbout" ] 
          let tmp ;
-         if(f !== "tree") tmp = p.filter((e) => (e.type == config.facets[cat][f]))
+         if(f !== "tree") tmp = p.filter((e) => (e.type == config.facets[cat][f] && (f !== "about" || !e.value.match(/resource[/]T/) )))
          else tmp = p.filter((e) => (genre.indexOf(e.type) !== -1))
          if(tmp.length > 0) for(let t of tmp) 
          {
@@ -1050,6 +1050,41 @@ function mergeSameAs(result,withSameAs,init = true,rootRes = result, force = fal
    return result
 }
 
+function sortResultsByTitle(results, userLangs) {
+   let keys = Object.keys(results)
+   if(keys && keys.length) {
+      keys = keys.map(k => {
+      },{})
+   }
+   return results
+}
+
+function sortResultsByRelevance(results) {
+   let keys = Object.keys(results)
+   if(keys && keys.length) {
+      keys = keys.map(k => {
+         let n, score, p = results[k].length
+         for(let v of results[k]) {
+            if(v.type === tmp+"matchScore") {
+               if(!n) n = Number(v.value)
+               else { 
+                  let m = Number(v.value)
+                  if(m > n) n = m
+               }
+            }
+         }
+         // TODO no need to keep all scores
+         return ({k, n, p})
+      },{})
+      keys = _.orderBy(keys,['n','p'],['desc', 'desc'])
+      console.log("sortK",keys)
+      let sortRes = {}
+      for(let k of keys) sortRes[k.k] = results[k.k]
+      return sortRes
+   }
+   return results
+}
+
 
 async function startSearch(keyword,language,datatype,sourcetype,dontGetDT) {
 
@@ -1073,41 +1108,15 @@ async function startSearch(keyword,language,datatype,sourcetype,dontGetDT) {
          console.log("res",result)
          if(result && (datatype && datatype.indexOf("Any") === -1) )
             result = Object.keys(result).reduce((acc,e)=>{
-
                if(e === "main") {
-                  let t = datatype[0].toLowerCase()+"s"
-                  let sortRes = {}
-                  let keys = Object.keys(result[e])
-                  if(keys && keys.length) {
-                     keys = keys.map(k => {
-                        let n, score, p = result[e][k].length
-                        for(let v of result[e][k]) {
-                           if(v.type === tmp+"matchScore") {
-                              if(!n) n = Number(v.value)
-                              else { 
-                                 let m = Number(v.value)
-                                 if(m > n) n = m
-                              }
-                           }
-                        }
-                        // TODO 
-                        // - no need to keep all scores
-                        // - add size of known data
-                        return ({k, n, p})
-                     },{})
-                     keys = _.orderBy(keys,['n','p'],['desc', 'desc'])
-                     console.log("sortK",keys)
-                     for(let k of keys) sortRes[k.k] = result[e][k.k]
-                  }
-                  return { ...acc, [t]: sortRes }
+                  let t = datatype[0].toLowerCase()+"s"                  
+                  return { ...acc, [t]: sortResultsByRelevance(result[e]) }
+                  //return { ...acc, [t]: result[e] } // sortResultsByTitle(result[e], ["bo-x-ewts", "sa-x-iast"]}) } //sortResultsByRelevance(result[e]) }
                }
                else if(e === "aux") {                  
                   store.dispatch(dataActions.gotAssocResources(keyword,{ data: result[e] }))
                }
                else if(e === "facets") {
-
-                  // TODO first node must be bdr:O9TAXTBRC201605
-
                   let cat = "http://purl.bdrc.io/resource/O9TAXTBRC201605"
                   let root = result[e].topics[cat]
                   let tree = [ { "@id": cat, taxHasSubClass: root.subclasses }, ...Object.keys(result[e].topics).reduce( (acc,k) =>  { 

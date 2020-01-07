@@ -573,7 +573,7 @@ body {overflow-x:hidden; }
 .menu-categ-collapse + .menu-categ-collapse.datatype { padding-left:0; } 
 .menu-categ-collapse + li:not(.menu-categ) + a.result { margin-top:10px; }
 
-.facet-count { font-style:italic; opacity:0.65; font-size:11px; font-weight:400; }
+.facet-count { font-style:italic; opacity:0.65; font-size:11px; font-weight:400; padding-right:3px;}
 .widget label { text-transform:capitalize;  }
 .searchWidget > label > span,
 .dataWidget label > span { font-size:13px; }

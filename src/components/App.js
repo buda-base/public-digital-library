@@ -114,7 +114,7 @@ export function shortUri(id:string) {
 }
 
 const facetLabel = {
-   "tree":"Genre / Is About"
+   "tree":"Genre / Topic"
 }
 
 export const languages = {
@@ -1590,28 +1590,32 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
       if(allProps && this.props.assoRes) { 
          let ret = []
          let id = allProps.filter( e => e.type === prop)
-         //console.log("labels",id)
+         console.log("labels",prop,id)
          if(id && id.length) for (let i of id) {
             i = fullUri(i.value)
             let labels = this.props.assoRes[i]
-            //console.log("labels1",i,labels)
+            
+            console.log("labels1",i,labels,this.props.assoRes)
+
+            let uri = shortUri(i), val = uri, lang
             if(labels) { 
                labels = getLangLabel(this,"",labels)
                if(labels) {
-                  let lang = labels["xml:lang"]
+                  lang = labels["xml:lang"]
                   if(!lang) lang = labels["lang"]
-                  ret.push(<span><Link to={"/show/"+shortUri(i)}>{labels.value}</Link>{
-                     lang && <Tooltip placement="bottom-end" title={
-                                       <div style={{margin:"10px"}}>
-                                          <Translate value={languages[lang]?languages[lang].replace(/search/,"tip"):lang}/>
-                                       </div>
-                                    }><span className="lang">&nbsp;{lang}</span></Tooltip>
-                  }</span>)
+                  val = labels.value
                   if(lang) ret.push()
                }
-               //console.log("labels2",labels)
-                        
+               //console.log("labels2",labels)                        
             }
+
+            ret.push(<span><Link to={"/show/"+uri}>{val}</Link>{
+               lang && <Tooltip placement="bottom-end" title={
+                                 <div style={{margin:"10px"}}>
+                                    <Translate value={languages[lang]?languages[lang].replace(/search/,"tip"):lang}/>
+                                 </div>
+                              }><span className="lang">&nbsp;{lang}</span></Tooltip>
+            }</span>)
          }
          if(ret.length) return <div class="match">
                   <span class="label">{this.fullname(prop)+(plural && ret.length > 1 ?"s":"")}:&nbsp;</span>
@@ -1622,7 +1626,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
    makeResult(id,n,t,lit,lang,tip,Tag,url,rmatch = [],facet,allProps)
    {
-      //console.log("res",id,allProps,n,t,lit,lang,tip,Tag,rmatch,sameAsRes)
+      console.log("res",id,allProps,n,t,lit,lang,tip,Tag,rmatch,sameAsRes)
 
       let sameAsRes ;
       if(allProps) sameAsRes = [ ...allProps ]
@@ -3290,7 +3294,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
                                  //console.log("counts",i,counts["datatype"][i],this.state.filters.datatype.indexOf(i))
 
-                              let disabled = false // (!this.props.keyword && ["Any","Etext","Person","Work"].indexOf(i)===-1 && this.props.language  != "")
+                              let disabled = (i !== "Work") // false // (!this.props.keyword && ["Any","Etext","Person","Work"].indexOf(i)===-1 && this.props.language  != "")
                            // || (this.props.language == "")
 
                               return (
@@ -3299,7 +3303,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                                        control={
                                           <Checkbox
                                              className={"checkbox "+(disabled?"disabled":"")}
-                                             //disabled={disabled}
+                                             disabled={disabled}
                                              //{...i=="Any"?{defaultChecked:true}:{}}
                                              color="black"
                                              checked={this.state.filters.datatype.indexOf(i) !== -1} 
@@ -3321,7 +3325,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      </Collapse>
                      {
                         widget(I18n.t("Lsidebar.sortBy.title"),"sortBy",
-                        ["Relevance", "Title", "Author" ].map((i) => <div key={i} style={{width:"150px",textAlign:"left"}} className="searchWidget">
+                        [ "Relevance", "Work Title" ].map((i) => <div key={i} style={{width:"150px",textAlign:"left"}} className="searchWidget">
                               <FormControlLabel
                                  control={
                                     <Checkbox
