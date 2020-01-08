@@ -82,8 +82,8 @@ describe('language settings tests', () => {
          try { makeLangScriptLabel("ab") } catch(e) { expect(e.toString()).toEqual("Error: Unknown lang code (ab)") }
          try { makeLangScriptLabel("bo-abc") } catch(e) { expect(e.toString()).toEqual("Error: Unknown script code (abc)") }
 
-         expect(makeLangScriptLabel("bo")).toEqual("Tibetan (Unicode)")
-         expect(makeLangScriptLabel("bo-x-ewts")).toEqual("Tibetan (EWTS)")
+         expect(makeLangScriptLabel("bo")).toEqual("Tibetan")
+         expect(makeLangScriptLabel("bo-x-ewts")).toEqual("Tibetan (Wylie)")
          expect(makeLangScriptLabel("zh-hant")).toEqual("Chinese (Traditional)")
 
          done();

@@ -12848,6 +12848,11 @@ thunky@^1.0.2:
   resolved "https://registry.yarnpkg.com/thunky/-/thunky-1.1.0.tgz#5abaf714a9405db0504732bbccd2cedd9ef9537d"
   integrity sha512-eHY7nBftgThBqOyHGVN+l8gF0BucP09fMo0oO/Lb0w1OF80dJv+lDVpXG60WMQvkcxAkNybKsrEIE3ZtKGmPrA==
 
+tibetan-sort-js@^2.0.1:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/tibetan-sort-js/-/tibetan-sort-js-2.0.1.tgz#d4d52e89d9896ff1e35644649a81faaa15e461cb"
+  integrity sha512-1u+iXrODOBQOKBg3nF1YB4L48+PHnGCLgAEsZNxSptV8N8dM8RDR9OjZig6DHTCUXQP03AWh8FkpehvPgHXjGw==
+
 timed-out@^4.0.0, timed-out@^4.0.1:
   version "4.0.1"
   resolved "https://registry.yarnpkg.com/timed-out/-/timed-out-4.0.1.tgz#f32eacac5a175bea25d7fab565ab3ed8741ef56f"

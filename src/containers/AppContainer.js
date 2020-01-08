@@ -92,7 +92,11 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       },
       onUpdateFacets:(key:string,t:string,f:{[string]:string[]},e:{[string]:string[]},m:{[string]:{}},cfg:{[string]:string})=> {
          dispatch(ui.updateFacets(key,t,f,e,m,cfg));
-      }
+      },
+      onUpdateSortBy:(i:string,t:string) => {
+         dispatch(ui.updateSortBy(i,t));
+      },
+
    }
 }
 

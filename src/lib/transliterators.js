@@ -1,6 +1,6 @@
 
 
-let hanziConv,jsEWTS,Sanscript,pinyin4js,__
+let tibetSort,hanziConv,jsEWTS,Sanscript,pinyin4js,__
 
 export const importModules = async () => {
 
@@ -11,6 +11,8 @@ export const importModules = async () => {
        pinyin4js = await require("pinyin4js")
        hanziConv = await require("hanzi-tsconv")
        hanziConv = window["hanzi-tsconv"].conv
+       tibetSort = await require("tibetan-sort-js")
+       tibetSort = window["tibetan-sort-js"].default
    }
    catch(f) { // in embed iframe
       //console.log("exception",f)
@@ -19,7 +21,8 @@ export const importModules = async () => {
        jsEWTS = window.moduleLoaded.JsEWTS = window.jsEWTS ;
        eval('require(["https://cdn.jsdelivr.net/npm/@sanskrit-coders/sanscript@1.0.2/sanscript.min.js"],(obj) => { Sanscript = obj; console.log("obj",obj); window.moduleLoaded.Sanscript = obj ; })')
        eval('require(["https://cdn.jsdelivr.net/npm/pinyin4js@1.3.18/dist/pinyin4js.js"],(obj) => { pinyin4js = PinyinHelper; window.moduleLoaded.pinyin4js = PinyinHelper ; })')       
-       eval('require(["https://cdn.jsdelivr.net/npm/hanzi-tsconv@0.1.2/dist/main.js"],(obj) => { hanziConv = window["hanzi-tsconv"].conv ; console.log("obj",hanziConv); window.moduleLoaded.hanziConv = hanziConv ; })')
+       eval('require(["https://cdn.jsdelivr.net/npm/hanzi-tsconv@0.1.2/dist/main.js"],(obj) => { hanziConv = window["hanzi-tsconv"].conv ; console.log("obj/hzCv",hanziConv); window.moduleLoaded.hanziConv = hanziConv ; })')
+       eval('require(["https://cdn.jsdelivr.net/npm/tibetan-sort-js@2.0.1"],(obj) => { tibetSort = window["tibetan-sort-js"].default ; console.log("obj/tS",obj,tibetSort); window.moduleLoaded.tibetSort = tibetSort ; })')
    }
 }
 importModules();
@@ -148,13 +151,46 @@ export function sortLangScriptLabels(data,preset,translit)
 
       //console.log("tLit",tLit,i)
 
-      return {e,tLit,i}
+      return {e,tLit,i,k}
    })
 
    //console.log("_",data_)
 
    data_ = __.orderBy(data_,['i'],["asc"]).map(e => e.tLit?e.tLit:e.e )
 
+   data = {}
+
+   for(let d of data_) {
+      let lang = d.lang
+      if(!lang) lang = d["xml:lang"]
+      if(!lang) lang = d["@language"]
+      if(!data[lang]) data[lang] = []
+      data[lang].push(d)
+
+      //console.log("d",d)
+   }
+
+   data_ = []
+
+   //console.log("data",data)
+
+   for(let k of Object.keys(data)) {
+
+      //console.log("k",k)
+
+      if(k === "bo" || k === "bo-Tibt") {
+         data_ = data_.concat(data[k].sort((a,b) => tibetSort.compare(a.value?a.value:a["@value"],b.value?b.value:b["@value"])))
+      }
+      else if(k.endsWith("ewts")) {
+         data_ = data_.concat(data[k].sort((a,b) => tibetSort.compareEwts(a.value?a.value:a["@value"],b.value?b.value:b["@value"])))
+      }
+      else {
+         let key = "value" 
+         if(!data[k][0][key]) key = "@value"
+         data_ = data_.concat(__.orderBy(data[k],[key],['asc']))
+      }
+   }
+   
    //console.log("data_",data_)
 
    return data_

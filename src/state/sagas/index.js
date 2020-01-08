@@ -9,6 +9,7 @@ import * as uiActions from '../ui/actions';
 import selectors from '../selectors';
 import store from '../../index';
 import bdrcApi, { getEntiType } from '../../lib/api';
+import {sortLangScriptLabels, extendedPresets} from '../../lib/transliterators';
 import {auth} from '../../routes';
 import {shortUri,fullUri} from '../../components/App'
 
@@ -1052,9 +1053,30 @@ function mergeSameAs(result,withSameAs,init = true,rootRes = result, force = fal
 
 function sortResultsByTitle(results, userLangs) {
    let keys = Object.keys(results)
+   let langs = extendedPresets(userLangs)
    if(keys && keys.length) {
       keys = keys.map(k => {
+         let lang,value,labels = results[k].filter(r => r.type && r.type === skos+"prefLabel") //r.value && r.value.match(/↦/))
+         if(labels.length) { 
+            labels = sortLangScriptLabels(labels,langs.flat,langs.translit)
+            labels = labels[0]
+            if(labels)  { 
+               lang = labels.lang
+               if(!lang) lang = labels["xml:lang"]
+               value  = labels.value
+            }
+         }
+         return { k, lang, value }
       },{})
+      console.log("keys1", keys)
+      let sortKeys = sortLangScriptLabels(keys,langs.flat,langs.translit)
+      console.log("keys2", sortKeys)
+      let sortRes = {}
+      for(let k of sortKeys) sortRes[k.k] = results[k.k]
+
+      console.log("sortRes",sortRes)
+
+      return sortRes
    }
    return results
 }
@@ -1077,9 +1099,12 @@ function sortResultsByRelevance(results) {
          return ({k, n, p})
       },{})
       keys = _.orderBy(keys,['n','p'],['desc', 'desc'])
-      console.log("sortK",keys)
+      //console.log("sortK",keys)
       let sortRes = {}
       for(let k of keys) sortRes[k.k] = results[k.k]
+
+      console.log("sortRes",sortRes)
+
       return sortRes
    }
    return results
@@ -1106,17 +1131,20 @@ async function startSearch(keyword,language,datatype,sourcetype,dontGetDT) {
       // adapt to new new JSON format
       if(result) {
          console.log("res",result)
-         if(result && (datatype && datatype.indexOf("Any") === -1) )
+         if(result && (datatype && datatype.indexOf("Any") === -1) ) {
+            let langPreset = store.getState().ui.langPreset
             result = Object.keys(result).reduce((acc,e)=>{
                if(e === "main") {
-                  store.dispatch(dataActions.gotAssocResources(keyword,{ data: result[e] }))
-
+                  let keys = Object.keys(result[e])
+                  if(keys) {
+                     store.dispatch(dataActions.gotAssocResources(keyword,{ data: keys.reduce( (acc,k) => ({...acc, [k]: result[e][k].filter(e => e.type === skos+"altLabel" || e.type === skos+"prefLabel") }),{})  }))
+                  }
                   let t = datatype[0].toLowerCase()+"s"                  
-                  return { ...acc, [t]: sortResultsByRelevance(result[e]) }
-                  //return { ...acc, [t]: result[e] } // sortResultsByTitle(result[e], ["bo-x-ewts", "sa-x-iast"]}) } //sortResultsByRelevance(result[e]) }
+                  //return { ...acc, [t]: sortResultsByRelevance(result[e]) }
+                  return { ...acc, [t]: sortResultsByTitle(result[e], langPreset) }  
                }
                else if(e === "aux") {                  
-                  store.dispatch(dataActions.gotAssocResources(keyword,{ data: result[e] }))
+                  store.dispatch(dataActions.gotAssocResources(keyword,{ data: result[e] } ) )
                }
                else if(e === "facets") {
                   let cat = "http://purl.bdrc.io/resource/O9TAXTBRC201605"
@@ -1131,6 +1159,7 @@ async function startSearch(keyword,language,datatype,sourcetype,dontGetDT) {
                }
                else return acc
             }, {})
+         }
          else 
             result = Object.keys(result).reduce((acc,e)=>({ ...acc, [e.replace(/^.*[/](Etext)?([^/]+)$/,"$2s").toLowerCase()] : result[e] }),{})
       }
@@ -1288,6 +1317,35 @@ else {
    store.dispatch(dataActions.searchFailed(keyword, e.message));
    store.dispatch(uiActions.loading(keyword, false));
 }
+}
+
+
+async function updateSortBy(i,t)
+{   
+
+   let state = store.getState()
+   
+   let data = state.data.searches[t][state.data.keyword+"@"+state.data.language]
+   
+   console.log("uSb",i,t,state,data)
+
+   // TODO clean a bit 
+   if(i === "Relevance") data.results.bindings[t.toLowerCase()+"s"] = sortResultsByRelevance(data.results.bindings[t.toLowerCase()+"s"]) 
+   else if(i === "Work Title") { 
+      let langPreset = state.ui.langPreset
+      data.results.bindings[t.toLowerCase()+"s"] = sortResultsByTitle(data.results.bindings[t.toLowerCase()+"s"], langPreset)
+   }
+   data.time = Date.now()
+
+   store.dispatch(dataActions.foundResults(state.data.keyword,state.data.language, data, t))     
+}
+
+export function* watchUpdateSortBy() {
+
+   yield takeLatest(
+      uiActions.TYPES.updateSortBy,
+      (action) => updateSortBy(action.payload, action.meta)
+   );
 }
 
 async function searchKeyword(keyword,language,datatype) {
@@ -1500,6 +1558,7 @@ export default function* rootSaga() {
       watchInitiateApp(),
       watchGetUser(),
       watchGetResetLink(),
+      watchUpdateSortBy(),
       //watchChoosingHost(),
       //watchGetDatatypes(),
       watchGetChunks(),

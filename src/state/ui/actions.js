@@ -99,6 +99,15 @@ export const gotUserID = (userID: url): Action => {
 }
 
 
+TYPES.updateSortBy = 'UPDATE_SORT_BY';
+export const updateSortBy = (i: string, t:string): Action => {
+   return {
+      type: TYPES.updateSortBy,
+      payload: i,
+      meta: t
+   }
+}
+
 export type LoadingAction = {
     type: string,
     payload: {

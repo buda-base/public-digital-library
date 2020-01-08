@@ -86,6 +86,7 @@
       "redux-devtools-extension": "^2.13.2",
       "redux-saga": "^0.16.0",
       "redux-thunk": "^2.2.0",
+      "tibetan-sort-js": "^2.0.1",
       "universalviewer": "^3.0.16"
    },
    "scripts": {

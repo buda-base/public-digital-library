@@ -401,7 +401,8 @@ type Props = {
    onGetResource:(iri:string)=>void,
    onSetPrefLang:(lg:string)=>void,
    onToggleLanguagePanel:()=>void,
-   onUserProfile:(url:{})=>void
+   onUserProfile:(url:{})=>void,
+   onUpdateSortBy:(i:string,t:string)=>void
 
 }
 
@@ -429,6 +430,7 @@ type State = {
       exclude:{[string]:boolean},
       preload:{}
    },
+   sortBy?:string,
    collapse:{ [string] : boolean },
    loader:{[string]:Component<*>},
    facets? : string[],
@@ -1040,6 +1042,12 @@ class App extends Component<Props,State> {
       }
    }
 
+   updateSortBy(ev,check,i) {
+      if(check && (!this.state.sortBy || i !== this.state.sortBy)) {
+         this.props.onUpdateSortBy(i,this.state.filters.datatype[0])
+         this.setState({...this.state, sortBy:i })
+      } 
+   }
 
    handleCheckFacet = (ev:Event,prop:string,lab:string[],val:boolean,excl:boolean=false) => {
 
@@ -1619,7 +1627,9 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          if(!fromProp) fromProp = [ prop ]
          let ret = []
          let id = allProps.filter( e => fromProp.includes(e.type) && (!exclude || exclude !== e.value) )
-         //console.log("labels",prop,id)         
+         
+         //console.log("labels/prop",prop,id)         
+
          if(!doLink) {
             let langs = extendedPresets(this.state.langPreset)
             let labels = sortLangScriptLabels(id,langs.flat,langs.translit)
@@ -1661,6 +1671,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   if(!lang) lang = labels["lang"]
                   if(!lang) lang = labels["@language"]
                   val = labels.value
+                  if(!val) val = labels["@value"]
                }
                //console.log("labels2",labels)                        
             }
@@ -3398,12 +3409,12 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                               <FormControlLabel
                                  control={
                                     <Checkbox
-                                       checked={i === "Relevance"}
-                                       disabled={i !== "Relevance"}
+                                       checked={this.state.sortBy === i || (!this.state.sortBy && i !== "Relevance") }
+                                       //disabled={i === "Relevance"}
                                        className="checkbox"
                                        icon={<PanoramaFishEye/>}
                                        checkedIcon={<CheckCircle/>}
-                                       //onChange={(event, checked) => this.handleCheck(event,i,checked)}
+                                       onChange={(event, checked) => this.updateSortBy(event, checked, i) }
                                     />
 
                                  }
