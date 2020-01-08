@@ -253,7 +253,7 @@ export function getLangLabel(that:{},prop:string="",labels:[],proplang:boolean=f
    }
 };
 
-function getPropLabel(that, i) {
+function getPropLabel(that, i, withSpan = true) {
    if(!that.props.dictionary) return 
 
    let label = that.props.dictionary[i], labels
@@ -261,19 +261,19 @@ function getPropLabel(that, i) {
       labels = label[skos+"prefLabel"]
       if(!labels) labels = label["http://www.w3.org/2000/01/rdf-schema#label"]
    }
-   else if(that.props.assoRes[i]) labels = that.props.assoRes[i]
+   else if(that.props.assoRes && that.props.assoRes[i]) labels = that.props.assoRes[i]
 
    let lang
    if(labels) {
       label = getLangLabel(that,"",labels,true)
 
-      console.log("label",i,label)
+      //console.log("label",i,label)
 
       if(label) {
          if(label.lang) lang = label.lang
          else if(label["@language"]) lang = label["@language"]
          else if(label["xml:lang"]) lang = label["xml:lang"]
-         
+
          if(label.value) label = label.value
          else if(label["@value"]) label = label["@value"]
 
@@ -281,7 +281,8 @@ function getPropLabel(that, i) {
    }
    else label = that.pretty(i)
 
-   return <span {...lang?{lang}:{}} >{label}</span>
+   if(withSpan) return <span {...lang?{lang}:{}} >{label}</span>
+   else return label
 }
 
 export function getFacetUrl(filters,dic){
@@ -326,6 +327,23 @@ export function top_right_menu(that)
         }
          </div>
   )
+}
+
+function getLang(label) 
+{
+   let lang
+   if(label["@language"]) lang = label["@language"]
+   else if(label["lang"]) lang = label["lang"]
+   else if(label["xml:lang"]) lang = label["xml:lang"]
+   return lang
+}
+
+function getVal(label) 
+{
+   let val
+   if(label["@value"]) val = label["@value"]
+   else if(label["value"]) val = label["value"]
+   return val
 }
 
 const TagTab = {
@@ -1515,7 +1533,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   if(i) root["tmp:subCount"] += Number(i.replace(/[^0-9]/g,""))
                }
                */
-               any_i += Number(root["tmp:subCount"].replace(/[^0-9]/g,""))
+               if(root["tmp:subCount"]) any_i += Number(root["tmp:subCount"].replace(/[^0-9]/g,""))
                root["tmp:subCount"] = root["tmp:subCount"] //+ " / "
             }
          }
@@ -1600,12 +1618,12 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
       if(allProps && this.props.assoRes) { 
          let ret = []
          let id = allProps.filter( e => e.type === prop)
-         console.log("labels",prop,id)
+         //console.log("labels",prop,id)
          if(id && id.length) for (let i of id) {
             i = fullUri(i.value)
             let labels = this.props.assoRes[i]
             
-            console.log("labels1",i,labels,this.props.assoRes)
+            //console.log("labels1",i,labels,this.props.assoRes)
 
             let uri = shortUri(i), val = uri, lang
             if(labels) { 
@@ -1614,18 +1632,18 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   lang = labels["xml:lang"]
                   if(!lang) lang = labels["lang"]
                   val = labels.value
-                  if(lang) ret.push()
                }
                //console.log("labels2",labels)                        
             }
 
-            ret.push(<span><Link to={"/show/"+uri}>{val}</Link>{
-               lang && <Tooltip placement="bottom-end" title={
-                                 <div style={{margin:"10px"}}>
-                                    <Translate value={languages[lang]?languages[lang].replace(/search/,"tip"):lang}/>
-                                 </div>
-                              }><span className="lang">&nbsp;{lang}</span></Tooltip>
-            }</span>)
+            if(val != "false") 
+               ret.push(<span><Link to={"/show/"+uri}>{val}</Link>{
+                  lang && <Tooltip placement="bottom-end" title={
+                                    <div style={{margin:"10px"}}>
+                                       <Translate value={languages[lang]?languages[lang].replace(/search/,"tip"):lang}/>
+                                    </div>
+                                 }><span className="lang">&nbsp;{lang}</span></Tooltip>
+                        }</span>)
          }
          if(ret.length) return <div class="match">
                   <span class="label">{this.fullname(prop)+(plural && ret.length > 1 ?"s":"")}:&nbsp;</span>
@@ -1636,7 +1654,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
    makeResult(id,n,t,lit,lang,tip,Tag,url,rmatch = [],facet,allProps)
    {
-      console.log("res",id,allProps,n,t,lit,lang,tip,Tag,rmatch,sameAsRes)
+      //console.log("res",id,allProps,n,t,lit,lang,tip,Tag,rmatch,sameAsRes)
 
       let sameAsRes ;
       if(allProps) sameAsRes = [ ...allProps ]
@@ -2884,12 +2902,14 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
    }
 
    renderFilterTag(isText:boolean=true,t, k, f) {      
-      let isExclu = this.state.filters.exclude && this.state.filters.exclude[t] && this.state.filters.exclude[t].includes(k)
+      let t_ = t,k_ = k,isExclu = this.state.filters.exclude && this.state.filters.exclude[t] && this.state.filters.exclude[t].includes(k)
       if(!isText) {
+         t_ = getPropLabel(this,t,false) 
+         k_ = getPropLabel(this,k,false)
          t = getPropLabel(this,t) 
          k = getPropLabel(this,k)
       }
-      return <a title={(!isExclu?"Include":"Exclude")+" results with "+t+": "+ k} class={ "active-filter " + (isExclu?"exclu":"") }><span>{t}: <b>{k}</b></span><a title={I18n.t("Lsidebar.activeF.remove")} onClick={f.bind(this)}><Cancel/></a></a>
+      return <a title={(!isExclu?"Include":"Exclude")+" results with "+t_+": "+ k_} class={ "active-filter " + (isExclu?"exclu":"") }><span>{t}: <b>{k}</b></span><a title={I18n.t("Lsidebar.activeF.remove")} onClick={f.bind(this)}><Cancel/></a></a>
    }
 
    resetFilters(e) {
@@ -3029,13 +3049,15 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
             let elem = tree.filter(f => f["@id"] == e)
 
-            //console.log("elem",elem,e)
+            console.log("elem",elem,e)
 
             if(elem.length > 0) elem = elem[0]
             else return
 
-
-            let label = this.fullname(e,elem["skos:prefLabel"],true)
+            let label = getLangLabel(this,"",elem["skos:prefLabel"],true) 
+            //if(label && label.value) label = label.value
+            //else if(label && label["@value"]) label = label["@value"]
+            if(!label) label = this.fullname(e,elem["skos:prefLabel"],true)
 
             //console.log("check",e,label,elem,disable);
 
@@ -3110,42 +3132,47 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
             let isExclu = this.state.filters.exclude && this.state.filters.exclude[jpre] && checkable && checkable.reduce( (acc,k) => (acc && this.state.filters.exclude[jpre].includes(k)), true )
 
-            return (
-               <div key={e} style={{width:"auto",textAlign:"left"}} className="widget searchWidget">
-                  <FormControlLabel
-                     control={
-                        <Checkbox
-                           checked={checked}
-                           className={"checkbox"}
-                           icon={<CheckBoxOutlineBlank/>}
-                           checkedIcon={isExclu ? <Close className="excl"/>:<CheckBox />}
-                           onChange={(event, checked) => this.handleCheckFacet(event,jpre,checkable,checked)}
-                        />
+            if(label !== "Any" && label !== "unspecified") { 
 
+               let val = getVal(label), lang = getLang(label)
+               if(!lang) label = val
+               else label = <span lang={lang}>{val}</span>
+
+               return (
+                  <div key={e} style={{width:"auto",textAlign:"left"}} className="widget searchWidget">
+                     <FormControlLabel
+                        control={
+                           <Checkbox
+                              checked={checked}
+                              className={"checkbox"}
+                              icon={<CheckBoxOutlineBlank/>}
+                              checkedIcon={isExclu ? <Close className="excl"/>:<CheckBox />}
+                              onChange={(event, checked) => this.handleCheckFacet(event,jpre,checkable,checked)}
+                           />
+
+                        }
+                        label={<span>{label}&nbsp;<span class='facet-count-block'>{"("}<span class="facet-count">{cpt_i+cpt}</span>{")"}</span></span>}
+                     />
+                     { !isExclu && label !== "Any" && <div class="exclude"><Close onClick={(event, checked) => this.handleCheckFacet(event,jpre,checkable,true,true)} /></div> }
+                     {
+                        elem && elem["taxHasSubClass"] && elem["taxHasSubClass"].length > 0 &&
+                        [
+                           <span className="subcollapse" /*style={{width:"335px"}}*/
+                                 onClick={(ev) => { this.setState({collapse:{ ...this.state.collapse, [e]:!this.state.collapse[e]} }); } }>
+                           { this.state.collapse[e] ? <ExpandLess /> : <ExpandMore />}
+                           </span>,
+                           <Collapse
+                              in={this.state.collapse[e]}
+                              className={["subcollapse",this.state.collapse[e]?"open":"close"].join(" ")}
+                              style={{paddingLeft:20+"px"}} // ,marginBottom:"30px"
+                              >
+                                 { subWidget(tree,jpre,elem["taxHasSubClass"],disable,tag) }
+                           </Collapse>
+                        ]
                      }
-                     label={<span>{label}&nbsp;{"("}<span class="facet-count">{cpt_i+cpt}</span>{")"}</span>}
-                  />
-                  { !isExclu && label !== "Any" && <div class="exclude"><Close onClick={(event, checked) => this.handleCheckFacet(event,jpre,checkable,true,true)} /></div> }
-                  {
-                     elem && elem["taxHasSubClass"] && elem["taxHasSubClass"].length > 0 &&
-                     [
-                        <span className="subcollapse" /*style={{width:"335px"}}*/
-                              onClick={(ev) => { this.setState({collapse:{ ...this.state.collapse, [e]:!this.state.collapse[e]} }); } }>
-                        { this.state.collapse[e] ? <ExpandLess /> : <ExpandMore />}
-                        </span>,
-                        <Collapse
-                           in={this.state.collapse[e]}
-                           className={["subcollapse",this.state.collapse[e]?"open":"close"].join(" ")}
-                           style={{paddingLeft:20+"px"}} // ,marginBottom:"30px"
-                           >
-                              { subWidget(tree,jpre,elem["taxHasSubClass"],disable,tag) }
-                        </Collapse>
-                     ]
-                  }
-               </div>
-            )
-
-
+                  </div>
+               )
+            }
          })
 
          return ( checkbox )
@@ -3376,7 +3403,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                                  let tree ;
                                  if(meta[j]) tree = meta[j]["@graph"]
 
-                                 //console.log("meta tree",tree,meta[j],counts)
+                                 console.log("meta tree",tree,meta[j],counts)
 
                                  if(tree && tree[0]
                                     && this.state.filters && this.state.filters.datatype
@@ -3518,7 +3545,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
                                        let isExclu = this.state.filters.exclude && this.state.filters.exclude[jpre] && this.state.filters.exclude[jpre].includes(i)
 
-                                       return (
+                                       if(i !== "Any" && i !== "unspecified") return (
                                           <div key={i} style={{width:"auto",textAlign:"left"}} className="widget searchWidget">
                                              <FormControlLabel
                                                 control={
@@ -3531,7 +3558,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                                                    />
 
                                                 }
-                                                label={<span>{label}&nbsp;{"("}<span class="facet-count">{this.subcount(j,i)+meta[j][i].n}</span>{")"}</span>}
+                                                label={<span>{label}&nbsp;<span class="facet-count-block">{"("}<span class="facet-count">{this.subcount(j,i)+meta[j][i].n}</span>{")"}</span></span>}
                                              />
                                              { !isExclu && label !== "Any" && <div class="exclude"><Close onClick={(event, checked) => this.handleCheckFacet(event,jpre,[i],true,true)} /></div> }
                                           </div>

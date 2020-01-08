@@ -1110,7 +1110,7 @@ async function startSearch(keyword,language,datatype,sourcetype,dontGetDT) {
             result = Object.keys(result).reduce((acc,e)=>{
                if(e === "main") {
                   store.dispatch(dataActions.gotAssocResources(keyword,{ data: result[e] }))
-                  
+
                   let t = datatype[0].toLowerCase()+"s"                  
                   return { ...acc, [t]: sortResultsByRelevance(result[e]) }
                   //return { ...acc, [t]: result[e] } // sortResultsByTitle(result[e], ["bo-x-ewts", "sa-x-iast"]}) } //sortResultsByRelevance(result[e]) }
