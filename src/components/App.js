@@ -1614,12 +1614,31 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
       })
    }
 
-   getResultProp(prop:string,allProps:[],plural:boolean=true) {
+   getResultProp(prop:string,allProps:[],plural:boolean=true, doLink:boolean = true, fromProp:[], exclude:string) {
       if(allProps && this.props.assoRes) { 
+         if(!fromProp) fromProp = [ prop ]
          let ret = []
-         let id = allProps.filter( e => e.type === prop)
-         //console.log("labels",prop,id)
-         if(id && id.length) for (let i of id) {
+         let id = allProps.filter( e => fromProp.includes(e.type) && (!exclude || exclude !== e.value) )
+         //console.log("labels",prop,id)         
+         if(!doLink) {
+            let langs = extendedPresets(this.state.langPreset)
+            let labels = sortLangScriptLabels(id,langs.flat,langs.translit)
+            for(let i of labels) {
+               let val = i["value"]
+               if(val === exclude) continue
+               let lang = i["xml:lang"]
+               if(!lang) lang = i["lang"]
+               ret.push(<span>{val}{
+                  lang && <Tooltip placement="bottom-end" title={
+                                    <div style={{margin:"10px"}}>
+                                       <Translate value={languages[lang]?languages[lang].replace(/search/,"tip"):lang}/>
+                                    </div>
+                                 }><span className="lang">&nbsp;{lang}</span></Tooltip>
+                        }</span>)
+            }
+         }
+         else if(id && id.length) for (let i of id) {
+
             let _i = i
             i = fullUri(i.value)
             let uri = shortUri(i), val = uri, lang
@@ -1640,6 +1659,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                if(labels) {
                   lang = labels["xml:lang"]
                   if(!lang) lang = labels["lang"]
+                  if(!lang) lang = labels["@language"]
                   val = labels.value
                }
                //console.log("labels2",labels)                        
@@ -1653,6 +1673,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                                     </div>
                                  }><span className="lang">&nbsp;{lang}</span></Tooltip>
                         }</span>)
+                        
          }
          if(ret.length) return <div class="match">
                   <span class="label">{this.fullname(prop)+(plural && ret.length > 1 ?"s":"")}:&nbsp;</span>
@@ -1661,7 +1682,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
       }
    }
 
-   makeResult(id,n,t,lit,lang,tip,Tag,url,rmatch = [],facet,allProps)
+   makeResult(id,n,t,lit,lang,tip,Tag,url,rmatch = [],facet,allProps,preLit)
    {
       //console.log("res",id,allProps,n,t,lit,lang,tip,Tag,rmatch,sameAsRes)
 
@@ -2085,6 +2106,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   }
                })
             }
+            { this.getResultProp(tmp+"otherLabel",allProps, true, false, [skos+"prefLabel", skos+"altLabel"], !preLit?preLit:preLit.replace(/[↦↤]/g,"") ) }
             </div> )
 
       retList.push(<hr/>);
@@ -2702,7 +2724,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   if(!willBreak && !dontShow) { 
                      lastN = cpt ;
                      //console.log("lastN",lastN)
-                     message.push(this.makeResult(id,n,t,lit,lang,tip,Tag,null,r.match,k,sublist[o]))
+                     message.push(this.makeResult(id,n,t,lit,lang,tip,Tag,null,r.match,k,sublist[o],r.lit.value))
                   }
                   cpt ++;
                   let isCollapsed = ( canCollapse && !(this.state.collapse[categ] || this.state.collapse[categ] == undefined))                  
@@ -3059,7 +3081,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
             let elem = tree.filter(f => f["@id"] == e)
 
-            console.log("elem",elem,e)
+            //console.log("elem",elem,e)
 
             if(elem.length > 0) elem = elem[0]
             else return
@@ -3413,7 +3435,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                                  let tree ;
                                  if(meta[j]) tree = meta[j]["@graph"]
 
-                                 console.log("meta tree",tree,meta[j],counts)
+                                 //console.log("meta tree",tree,meta[j],counts)
 
                                  if(tree && tree[0]
                                     && this.state.filters && this.state.filters.datatype
