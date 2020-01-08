@@ -1620,12 +1620,21 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          let id = allProps.filter( e => e.type === prop)
          //console.log("labels",prop,id)
          if(id && id.length) for (let i of id) {
+            let _i = i
             i = fullUri(i.value)
+            let uri = shortUri(i), val = uri, lang
+
             let labels = this.props.assoRes[i]
-            
+            if(!labels && this.props.dictionary) { 
+               labels = this.props.dictionary[_i.value]
+               if(labels) {
+                  if(labels[skos+"prefLabel"]) labels = labels[skos+"prefLabel"]
+                  else labels = labels["http://www.w3.org/2000/01/rdf-schema#label"]
+               }
+            }
+
             //console.log("labels1",i,labels,this.props.assoRes)
 
-            let uri = shortUri(i), val = uri, lang
             if(labels) { 
                labels = getLangLabel(this,"",labels)
                if(labels) {
@@ -1890,6 +1899,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             { this.getResultProp(tmp+"author",allProps) }
             { this.getResultProp(bdo+"workIsAbout",allProps,false) }
             { this.getResultProp(bdo+"workGenre",allProps) }
+            { this.getResultProp(bdo+"language",allProps) }
             {
                rmatch.map((m) => {
 
