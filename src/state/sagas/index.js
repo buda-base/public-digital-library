@@ -1141,8 +1141,8 @@ async function startSearch(keyword,language,datatype,sourcetype,dontGetDT) {
                      store.dispatch(dataActions.gotAssocResources(keyword,{ data: keys.reduce( (acc,k) => ({...acc, [k]: result[e][k].filter(e => e.type === skos+"altLabel" || e.type === skos+"prefLabel") }),{})  }))
                   }
                   let t = datatype[0].toLowerCase()+"s"                  
-                  //return { ...acc, [t]: sortResultsByRelevance(result[e]) }
-                  return { ...acc, [t]: sortResultsByTitle(result[e], langPreset) }  
+                  return { ...acc, [t]: sortResultsByRelevance(result[e]) }
+                  //return { ...acc, [t]: sortResultsByTitle(result[e], langPreset) }  
                }
                else if(e === "aux") {                  
                   store.dispatch(dataActions.gotAssocResources(keyword,{ data: result[e] } ) )

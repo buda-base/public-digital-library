@@ -773,7 +773,7 @@ class App extends Component<Props,State> {
          {
             needRefresh = true
             time = 1
-            //console.log("refreshA",time)
+            console.log("refreshA",time)
          }
          else {
             current = state.results[state.id].results.time
@@ -781,14 +781,14 @@ class App extends Component<Props,State> {
             if(props.searches && props.searches[k]) { // && props.searches[k].time > state.results[state.id].results.time) {
                needRefresh = true ;
                time = props.searches[k].time
-               //console.log("refreshB",time)
+               console.log("refreshB",time)
             }
             for(let d of ["Etext","Person","Work"]) {
                if(props.searches && props.searches[d] && props.searches[d][k]) {
                   if(!time || props.searches[d][k].time > time) { 
                      time = props.searches[d][k].time 
                      needRefresh = true 
-                     //console.log("refreshC",time,d)
+                     console.log("refreshC",time,d)
                   }
                }  
             }      
@@ -947,6 +947,11 @@ class App extends Component<Props,State> {
                //s.results[s.id].paginate = {index:0,pages:[0],n:[0]}
             }
             if(time && s.results[s.id].results) s.results[s.id].results.time = time    
+
+            if(needRefresh) { 
+               s.repage = true
+              // s.paginate = {index:0,pages:[0],n:[0]}   
+            }
 
             //console.log("s.id",s.id,s.results[s.id],time)        
          }
@@ -2895,6 +2900,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             if(sta.results && sta.results[id] && sta.results[id].bookmarks) bookmarks = sta.results[id].bookmarks                        
             else noBookM = true
             if(results) this.handleResults(types,counts,message,results,paginate,bookmarks);
+            
             //console.log("bookM:",JSON.stringify(paginate,null,3))
             
          }
@@ -3415,7 +3421,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                               <FormControlLabel
                                  control={
                                     <Checkbox
-                                       checked={this.state.sortBy === i || (!this.state.sortBy && i !== "Relevance") }
+                                       checked={this.state.sortBy === i || (!this.state.sortBy && i === "Relevance") }
                                        //disabled={i === "Relevance"}
                                        className="checkbox"
                                        icon={<PanoramaFishEye/>}
