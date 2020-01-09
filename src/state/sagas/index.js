@@ -1171,7 +1171,6 @@ async function startSearch(keyword,language,datatype,sourcetype,dontGetDT) {
 
       console.log("newRes1",result)
 
-      store.dispatch(uiActions.loading(keyword, false));
 
       if(result.metadata && result.metadata[bdo+"Etext"] == 0)
       {
@@ -1304,6 +1303,9 @@ else {
          store.dispatch(dataActions.foundDatatypes(keyword,language,{ metadata, hash:true}));
       }
    }
+   
+   store.dispatch(uiActions.loading(keyword, false));
+
 }
 
 // store.dispatch(dataActions.foundDatatypes(keyword, JSON.parse(result.metadata).results));
