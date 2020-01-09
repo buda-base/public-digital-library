@@ -3495,14 +3495,17 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                return (
 
                  this.widget(jlabel,j, 
-                  <div style={{textAlign:"right",marginRight:"25px"}}>
+                  <div style={{textAlign:"right"}}>
                      {checkboxes.slice(0,12)}                     
-                     <Collapse in={this.state.collapse[j+"_widget"]}>
-                        {checkboxes.slice(12)}
-                     </Collapse>
-                     <span style={{fontSize:"12px",cursor:"pointer", marginTop:"5px",display:"inline-block",fontWeight:700}} onClick={(e) => this.setState({...this.state, collapse:{...this.state.collapse, [j+"_widget"]:!this.state.collapse[j+"_widget"]}})}>
-                        {(!this.state.collapse[j+"_widget"]?"Show all":"Hide")}
-                     </span>
+                     {checkboxes.length > 12 && 
+                        [<Collapse in={this.state.collapse[j+"_widget"]}>
+                           {checkboxes.slice(12)}
+                        </Collapse>
+                        ,
+                        <span style={{fontSize:"12px",cursor:"pointer", marginTop:"5px",marginRight:"25px",display:"inline-block",fontWeight:700}} onClick={(e) => this.setState({...this.state, collapse:{...this.state.collapse, [j+"_widget"]:!this.state.collapse[j+"_widget"]}})}>
+                           {(!this.state.collapse[j+"_widget"]?"Show all":"Hide")}
+                        </span>]
+                     }
                   </div> )
                )
             }
