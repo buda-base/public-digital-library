@@ -1329,10 +1329,9 @@ else {
          store.dispatch(dataActions.foundDatatypes(keyword,language,{ metadata, hash:true}));
       }
    }
-
-   store.dispatch(uiActions.loading(keyword, false));
-
 }
+
+store.dispatch(uiActions.loading(keyword, false));
 
 // store.dispatch(dataActions.foundDatatypes(keyword, JSON.parse(result.metadata).results));
 //store.dispatch(dataActions.foundResults(keyword, language,result));

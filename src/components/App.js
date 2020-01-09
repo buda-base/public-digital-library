@@ -948,9 +948,11 @@ class App extends Component<Props,State> {
             }
             if(time && s.results[s.id].results) s.results[s.id].results.time = time    
 
-            if(needRefresh) { 
+            if(needRefresh &&  Object.keys(results.results.bindings).length) { 
                s.repage = true
-              // s.paginate = {index:0,pages:[0],n:[0]}   
+               
+               // > pagination bug
+               // s.paginate = {index:0,pages:[0],n:[0]}   
             }
 
             //console.log("s.id",s.id,s.results[s.id],time)        
@@ -2977,6 +2979,286 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
       // TODO fix back button behaviour (+ Work -> Any)
    }
 
+   treeWidget(j,meta,counts,jlabel,jpre) {
+      if(j == "tree") { // && meta[j]["@graph"]) { //
+         let tree ;
+         if(meta[j]) tree = meta[j]["@graph"]
+
+         //console.log("meta tree",tree,meta[j],counts)
+
+         if(tree && tree[0]
+            && this.state.filters && this.state.filters.datatype
+            && counts["datatype"][this.state.filters.datatype[0]])
+         {
+            if(tree[0]["taxHasSubClass"].indexOf("Any") === -1)
+            {
+               tree[0]['taxHasSubClass'] = ['Any'].concat(tree[0]['taxHasSubClass'])
+               tree.splice(1,0,{"@id":"Any",
+                  taxHasSubClass:[],"skos:prefLabel":[],
+                  ["tmp:count"]:counts["datatype"][this.state.filters.datatype[0]]})
+            }
+
+            return this.widget(jlabel,j,this.subWidget(tree,jpre,tree[0]['taxHasSubClass'],true,j));
+         }
+      }
+      else { //sort according to ontology properties hierarchy
+         let tree = {}, tmProps = Object.keys(meta[j]).map(e => e), change = false
+         //let rooTax = false
+         do // until every property has been put somewhere
+         {
+            //console.log("loop",JSON.stringify(tmProps,null,3))
+            change = false ;
+            for(let i in tmProps) { // try each one
+               let k = tmProps[i]
+               let p = this.props.dictionary[k]
+
+               //console.log("p",k,p)
+
+               /* // not really useful, better change bdr:BoTibt label to "Tibetan in Tibetan script" (see bdr:EnLatn)
+               let isSubClassOfASubClassOfLangScript ;
+               if(p && p[rdfs+"subClassOf"]) for(let q of p[rdfs+"subClassOf"]) {
+                  q = this.props.dictionary[q.value]
+                  if(q && q[rdfs+"subClassOf"] && q[rdfs+"subClassOf"].filter(e => e.value === bdo+"LangScript").length) {
+                     isSubClassOfASubClassOfLangScript = true ;
+                     break ;
+                  }
+               }
+               */
+
+               if(!p || (!p[rdfs+"subPropertyOf"]
+                  && (!p[rdfs+"subClassOf"] || p[rdfs+"subClassOf"].filter(e => e.value == bdo+"Event").length != 0  || p[rdfs+"subClassOf"].filter(e => e.value == bdo+"LangScript").length != 0 
+                                             //|| isSubClassOfASubClassOfLangScript 
+                  )
+                  && (!p[bdo+"taxSubClassOf"] || p[bdo+"taxSubClassOf"].filter(e => e.value == bdr+"LanguageTaxonomy").length != 0 ) ) ) // is it a root property ?
+               {
+                  //console.log("root",k,p)
+                  tree[k] = {} ;
+                  delete tmProps[i];
+                  change = true ;
+                  break ;
+               }
+               else // find its root property in tree
+               {
+                  change = this.inserTree(k,p,tree)
+                  //console.log("inT",change)
+                  if(change) {
+                     delete tmProps[i];
+                     break ;
+                  }
+               }
+            }
+            tmProps = tmProps.filter(String)
+
+            //console.log("ici?",tmProps,change)
+            //if(rooTax) break ;
+
+            if(!change) { //} && !rooTax) {
+               //console.log("!no change!")
+               for(let i in tmProps) {
+                  let k = tmProps[i]
+                  let p = this.props.dictionary[k]
+                  // is it a root property ?
+                  //console.log("k?",k,p)
+                  if(p && p[bdo+"taxSubClassOf"] && p[bdo+"taxSubClassOf"].filter(q => tmProps.filter(r => r == q.value).length != 0).length == 0)
+                  {
+                     tmProps = tmProps.concat(p[bdo+"taxSubClassOf"].map(e => e.value));
+                     //console.log(" k1",k,tmProps)
+                     change = true ;
+                     //rooTax = true ;
+                  }
+                  else if(p && p[rdfs+"subClassOf"] && p[rdfs+"subClassOf"].filter(q => tmProps.filter(r => r == q.value).length != 0).length == 0)
+                  {
+                     tmProps = tmProps.concat(p[rdfs+"subClassOf"].map(e => e.value));
+                     //console.log(" k2",k,tmProps)
+                     change = true ;
+                     //rooTax = true ;
+                  }
+               }
+               if(!change)break;
+            }
+
+         }
+         while(tmProps.length > 0);
+
+         //console.log("inserTree",tree)
+         tree = this.counTree(tree,meta[j],counts["datatype"][this.state.filters.datatype[0]],j)
+         //console.log("counTree",JSON.stringify(tree,null,3),j)
+
+         return this.widget(jlabel,j,this.subWidget(tree,jpre,tree[0]['taxHasSubClass'],false,j));
+      }
+
+      return ;
+   }
+
+
+   widget(title:string,txt:string,inCollapse:Component)  { 
+      return (
+         [<ListItem key={1}
+            style={{display:"flex",justifyContent:"space-between",padding:"0 20px",borderBottom:"1px solid #bbb",cursor:"pointer"}}
+            onClick={(e) => { this.setState({collapse:{ ...this.state.collapse, [txt]:!this.state.collapse[txt]} }); } }
+            >
+            <Typography style={{fontSize:"16px",lineHeight:"30px",textTransform:"capitalize"}}>{title}</Typography>
+            { this.state.collapse[txt] ? <ExpandLess /> : <ExpandMore />}
+         </ListItem>,
+         <Collapse key={2}
+            in={this.state.collapse[txt]}
+            className={["collapse",this.state.collapse[txt]?"open":"close"].join(" ")}
+            style={{padding:"5px 0 0 20px"}} // ,marginBottom:"30px"
+            >
+               {inCollapse}
+         </Collapse> ]
+      )
+  }
+
+   subWidget(tree:[],jpre:string,subs:[],disable:boolean=false,tag:string) {
+
+      if(!Array.isArray(subs)) subs = [ subs ]
+
+      subs = subs.map(str => {
+         let index
+         let a = tree.filter(e => e["@id"] == str)
+         if(a.length > 0 && a[0]["tmp:count"]) index = Number(a[0]["tmp:count"])
+
+         return ({str,index})
+      })
+      subs = _.orderBy(subs,'index','desc').map(e => e.str)
+
+      //console.log("subW",tree,subs,jpre,tag)
+
+      let checkbox = subs.map(e => {
+
+         if(e === bdr+"LanguageTaxonomy") return ;
+
+         let elem = tree.filter(f => f["@id"] == e)
+
+         //console.log("elem",elem,e)
+
+         if(elem.length > 0) elem = elem[0]
+         else return
+
+         let label = getLangLabel(this,"",elem["skos:prefLabel"],true) 
+         //if(label && label.value) label = label.value
+         //else if(label && label["@value"]) label = label["@value"]
+         if(!label) label = this.fullname(e,elem["skos:prefLabel"],true)
+
+         //console.log("check",e,label,elem,disable);
+
+         let cpt   = tree.filter(f => f["@id"] == e)[0]["tmp:count"]
+         let cpt_i                
+         let id = elem["@id"].replace(/bdr:/,bdr)
+         //console.log("@id",id)
+         if(this.props.metadata && this.props.metadata[tag] && this.props.metadata[tag][id]) { 
+            cpt_i = this.props.metadata[tag][id].i + " / "
+         }
+         else {
+            cpt_i = tree.filter(f => f["@id"] == e)[0]["tmp:subCount"]
+            if(!cpt_i) cpt_i = ""
+         }
+
+         let checkable = tree.filter(f => f["@id"] == e)
+         if(checkable.length > 0 && checkable[0].checkSub)
+            checkable = checkable[0]["taxHasSubClass"]
+         else
+            checkable = [e]
+
+         //let isdisabled = true
+         if( disable && elem && elem["taxHasSubClass"] && elem["taxHasSubClass"].length > 0)
+         {
+            if(!Array.isArray(elem["taxHasSubClass"])) elem["taxHasSubClass"] = [ elem["taxHasSubClass"] ]
+
+            checkable = []
+            let tmp = elem["taxHasSubClass"].map(e => e)
+            while(tmp.length > 0)
+            {
+               let t = tree.filter(f => f["@id"] == tmp[0])
+
+               //console.log("t",t);
+
+               if(t.length > 0) {
+                  t = t[0]
+                  if(t) {
+                     if(!t["taxHasSubClass"] || t["taxHasSubClass"].length == 0)  { checkable.push(tmp[0]); }
+                     else tmp = tmp.concat(t["taxHasSubClass"])
+                  }
+               }
+
+               delete tmp[0]
+               tmp = tmp.filter(String)
+               //console.log("tmp",tmp,checkable)
+            }
+         }
+
+         checkable = checkable.map(e => e.replace(/bdr:/,bdr))
+
+         let checked = this.state.filters.facets && this.state.filters.facets[jpre]
+
+         //console.log("checked1",jpre,e,checked)
+
+
+         if(!checked) {
+            if(label === "Any") checked = true ;
+            else checked = false
+         }
+         else {
+            let toCheck = this.state.filters.facets[jpre]
+            if(toCheck.val) toCheck = toCheck.val
+            if(checkable.indexOf(e) === -1) {
+               for(let c of checkable) {
+                  checked = checked && toCheck.indexOf(c) !== -1  ;
+               }
+            }
+            else checked = toCheck.indexOf(e) !== -1
+         }
+
+         //console.log("checkedN",checked)
+
+         let isExclu = this.state.filters.exclude && this.state.filters.exclude[jpre] && checkable && checkable.reduce( (acc,k) => (acc && this.state.filters.exclude[jpre].includes(k)), true )
+
+         if(label !== "Any" && label !== "unspecified") { 
+
+            let val = getVal(label), lang = getLang(label)
+            if(!lang) label = val
+            else label = <span lang={lang}>{val}</span>
+
+            return (
+               <div key={e} style={{width:"auto",textAlign:"left"}} className="widget searchWidget">
+                  <FormControlLabel
+                     control={
+                        <Checkbox
+                           checked={checked}
+                           className={"checkbox"}
+                           icon={<CheckBoxOutlineBlank/>}
+                           checkedIcon={isExclu ? <Close className="excl"/>:<CheckBox />}
+                           onChange={(event, checked) => this.handleCheckFacet(event,jpre,checkable,checked)}
+                        />
+
+                     }
+                     label={<span>{label}&nbsp;<span class='facet-count-block'>{"("}<span class="facet-count">{cpt_i+cpt}</span>{")"}</span></span>}
+                  />
+                  { !isExclu && label !== "Any" && <div class="exclude"><Close onClick={(event, checked) => this.handleCheckFacet(event,jpre,checkable,true,true)} /></div> }
+                  {
+                     elem && elem["taxHasSubClass"] && elem["taxHasSubClass"].length > 0 &&
+                     [
+                        <span className="subcollapse" /*style={{width:"335px"}}*/
+                              onClick={(ev) => { this.setState({collapse:{ ...this.state.collapse, [e]:!this.state.collapse[e]} }); } }>
+                        { this.state.collapse[e] ? <ExpandLess /> : <ExpandMore />}
+                        </span>,
+                        <Collapse
+                           in={this.state.collapse[e]}
+                           className={["subcollapse",this.state.collapse[e]?"open":"close"].join(" ")}
+                           style={{paddingLeft:20+"px"}} // ,marginBottom:"30px"
+                           >
+                              { this.subWidget(tree,jpre,elem["taxHasSubClass"],disable,tag) }
+                        </Collapse>
+                     ]
+                  }
+               </div>
+            )
+         }
+      })
+
+      return ( checkbox )
+   }
 
    render() {
 
@@ -3065,173 +3347,6 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
       }
 
-      let widget = (title:string,txt:string,inCollapse:Component) => (
-         [<ListItem key={1}
-            style={{display:"flex",justifyContent:"space-between",padding:"0 20px",borderBottom:"1px solid #bbb",cursor:"pointer"}}
-            onClick={(e) => { this.setState({collapse:{ ...this.state.collapse, [txt]:!this.state.collapse[txt]} }); } }
-            >
-            <Typography style={{fontSize:"16px",lineHeight:"30px",textTransform:"capitalize"}}>{title}</Typography>
-            { this.state.collapse[txt] ? <ExpandLess /> : <ExpandMore />}
-         </ListItem>,
-         <Collapse key={2}
-            in={this.state.collapse[txt]}
-            className={["collapse",this.state.collapse[txt]?"open":"close"].join(" ")}
-            style={{padding:"5px 0 0 20px"}} // ,marginBottom:"30px"
-            >
-               {inCollapse}
-         </Collapse> ]
-      )
-
-
-      let subWidget = (tree:[],jpre:string,subs:[],disable:boolean=false,tag:string) => {
-
-         if(!Array.isArray(subs)) subs = [ subs ]
-
-         subs = subs.map(str => {
-            let index
-            let a = tree.filter(e => e["@id"] == str)
-            if(a.length > 0 && a[0]["tmp:count"]) index = Number(a[0]["tmp:count"])
-
-            return ({str,index})
-         })
-         subs = _.orderBy(subs,'index','desc').map(e => e.str)
-
-         //console.log("subW",tree,subs,jpre,tag)
-
-         let checkbox = subs.map(e => {
-
-            if(e === bdr+"LanguageTaxonomy") return ;
-
-            let elem = tree.filter(f => f["@id"] == e)
-
-            //console.log("elem",elem,e)
-
-            if(elem.length > 0) elem = elem[0]
-            else return
-
-            let label = getLangLabel(this,"",elem["skos:prefLabel"],true) 
-            //if(label && label.value) label = label.value
-            //else if(label && label["@value"]) label = label["@value"]
-            if(!label) label = this.fullname(e,elem["skos:prefLabel"],true)
-
-            //console.log("check",e,label,elem,disable);
-
-            let cpt   = tree.filter(f => f["@id"] == e)[0]["tmp:count"]
-            let cpt_i                
-            let id = elem["@id"].replace(/bdr:/,bdr)
-            //console.log("@id",id)
-            if(this.props.metadata && this.props.metadata[tag] && this.props.metadata[tag][id]) { 
-               cpt_i = this.props.metadata[tag][id].i + " / "
-            }
-            else {
-               cpt_i = tree.filter(f => f["@id"] == e)[0]["tmp:subCount"]
-               if(!cpt_i) cpt_i = ""
-            }
-
-            let checkable = tree.filter(f => f["@id"] == e)
-            if(checkable.length > 0 && checkable[0].checkSub)
-               checkable = checkable[0]["taxHasSubClass"]
-            else
-               checkable = [e]
-
-            //let isdisabled = true
-            if( disable && elem && elem["taxHasSubClass"] && elem["taxHasSubClass"].length > 0)
-            {
-               if(!Array.isArray(elem["taxHasSubClass"])) elem["taxHasSubClass"] = [ elem["taxHasSubClass"] ]
-
-               checkable = []
-               let tmp = elem["taxHasSubClass"].map(e => e)
-               while(tmp.length > 0)
-               {
-                  let t = tree.filter(f => f["@id"] == tmp[0])
-
-                  //console.log("t",t);
-
-                  if(t.length > 0) {
-                     t = t[0]
-                     if(t) {
-                        if(!t["taxHasSubClass"] || t["taxHasSubClass"].length == 0)  { checkable.push(tmp[0]); }
-                        else tmp = tmp.concat(t["taxHasSubClass"])
-                     }
-                  }
-
-                  delete tmp[0]
-                  tmp = tmp.filter(String)
-                  //console.log("tmp",tmp,checkable)
-               }
-            }
-
-            checkable = checkable.map(e => e.replace(/bdr:/,bdr))
-
-            let checked = this.state.filters.facets && this.state.filters.facets[jpre]
-
-            //console.log("checked1",jpre,e,checked)
-
-
-            if(!checked) {
-               if(label === "Any") checked = true ;
-               else checked = false
-            }
-            else {
-               let toCheck = this.state.filters.facets[jpre]
-               if(toCheck.val) toCheck = toCheck.val
-               if(checkable.indexOf(e) === -1) {
-                 for(let c of checkable) {
-                    checked = checked && toCheck.indexOf(c) !== -1  ;
-                 }
-               }
-               else checked = toCheck.indexOf(e) !== -1
-            }
-
-            //console.log("checkedN",checked)
-
-            let isExclu = this.state.filters.exclude && this.state.filters.exclude[jpre] && checkable && checkable.reduce( (acc,k) => (acc && this.state.filters.exclude[jpre].includes(k)), true )
-
-            if(label !== "Any" && label !== "unspecified") { 
-
-               let val = getVal(label), lang = getLang(label)
-               if(!lang) label = val
-               else label = <span lang={lang}>{val}</span>
-
-               return (
-                  <div key={e} style={{width:"auto",textAlign:"left"}} className="widget searchWidget">
-                     <FormControlLabel
-                        control={
-                           <Checkbox
-                              checked={checked}
-                              className={"checkbox"}
-                              icon={<CheckBoxOutlineBlank/>}
-                              checkedIcon={isExclu ? <Close className="excl"/>:<CheckBox />}
-                              onChange={(event, checked) => this.handleCheckFacet(event,jpre,checkable,checked)}
-                           />
-
-                        }
-                        label={<span>{label}&nbsp;<span class='facet-count-block'>{"("}<span class="facet-count">{cpt_i+cpt}</span>{")"}</span></span>}
-                     />
-                     { !isExclu && label !== "Any" && <div class="exclude"><Close onClick={(event, checked) => this.handleCheckFacet(event,jpre,checkable,true,true)} /></div> }
-                     {
-                        elem && elem["taxHasSubClass"] && elem["taxHasSubClass"].length > 0 &&
-                        [
-                           <span className="subcollapse" /*style={{width:"335px"}}*/
-                                 onClick={(ev) => { this.setState({collapse:{ ...this.state.collapse, [e]:!this.state.collapse[e]} }); } }>
-                           { this.state.collapse[e] ? <ExpandLess /> : <ExpandMore />}
-                           </span>,
-                           <Collapse
-                              in={this.state.collapse[e]}
-                              className={["subcollapse",this.state.collapse[e]?"open":"close"].join(" ")}
-                              style={{paddingLeft:20+"px"}} // ,marginBottom:"30px"
-                              >
-                                 { subWidget(tree,jpre,elem["taxHasSubClass"],disable,tag) }
-                           </Collapse>
-                        ]
-                     }
-                  </div>
-               )
-            }
-         })
-
-         return ( checkbox )
-      }
 
       let meta,metaK = [] ;
       if(this.state.filters.datatype && this.state.filters.datatype.indexOf("Any") === -1) {
@@ -3295,6 +3410,105 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
       const textStyle = {marginLeft:"15px",marginBottom:"10px",marginRight:"15px"}
 
+
+      let facetWidgets 
+      if(meta && this.state.filters.datatype && this.state.filters.datatype.length === 1 && this.state.filters.datatype.indexOf("Any") === -1 && this.props.config && this.props.ontology) {
+         facetWidgets = metaK.map((j) =>
+         {
+
+            let jpre = this.props.config.facets[this.state.filters.datatype[0]][j]
+            if(!jpre) jpre = j
+            let jlabel ;
+            if(facetLabel[j]) jlabel = facetLabel[j];   
+            else {
+               jlabel = this.props.ontology[jpre]
+               if(jlabel) jlabel = jlabel["http://www.w3.org/2000/01/rdf-schema#label"]
+               //if(jlabel) for(let l of jlabel) { if(l.lang == "en") jlabel = l.value }
+               if(jlabel && jlabel.length) jlabel = jlabel[0].value
+               else jlabel = this.pretty(jpre)
+            }
+            // need to fix this after info is not in ontology anymore... make tree from relation/langScript 
+            if(["tree","relation","langScript"].indexOf(j) !== -1) {
+
+               //console.log("widgeTree",j,jpre,meta[j],counts["datatype"],this.state.filters.datatype[0])
+
+               return this.treeWidget(j,meta,counts,jlabel,jpre)
+            }
+            else
+            {
+
+               // TODO trigger foundFacetInfo when language preference changed (labels displayed/sorted depend on language)
+
+               let meta_sort = Object.keys(meta[j])
+
+               /* // deprecated 
+               .sort((a,b) => {
+                  if(Number(meta[j][a].n) < Number(meta[j][b].n)) return 1
+                  else if(Number(meta[j][a].n) > Number(meta[j][b].n)) return -1
+                  else return 0 ;
+               });
+               */
+
+               delete meta_sort[meta_sort.indexOf("Any")]
+               meta_sort.unshift("Any")
+
+
+               meta[j]["Any"] =  { n: counts["datatype"][this.state.filters.datatype[0]]}
+
+               let checkboxes = meta_sort.map(  (i) =>  {
+
+                  let label = getPropLabel(this,i)
+
+                  //console.log("label",i,j,jpre,label,meta)
+
+                  let checked = this.state.filters.facets && this.state.filters.facets[jpre]
+                  if(!checked) {
+                     if(label === "Any") checked = true ;
+                     else checked = false ;
+                  }
+                  else checked = this.state.filters.facets[jpre].indexOf(i) !== -1
+
+                  // console.log("checked",checked)
+
+                  let isExclu = this.state.filters.exclude && this.state.filters.exclude[jpre] && this.state.filters.exclude[jpre].includes(i)
+
+                  if(i !== "Any" && i !== "unspecified") return (
+                     <div key={i} style={{width:"auto",textAlign:"left"}} className="widget searchWidget">
+                        <FormControlLabel
+                           control={
+                              <Checkbox
+                                 checked={checked}
+                                 className="checkbox"
+                                 icon={<CheckBoxOutlineBlank/>}
+                                 checkedIcon={isExclu ? <Close className="excl"/>:<CheckBox/>}
+                                 onChange={(event, checked) => this.handleCheckFacet(event,jpre,[i],checked)}
+                              />
+
+                           }
+                           label={<span>{label}&nbsp;<span class="facet-count-block">{"("}<span class="facet-count">{this.subcount(j,i)+meta[j][i].n}</span>{")"}</span></span>}
+                        />
+                        { !isExclu && label !== "Any" && <div class="exclude"><Close onClick={(event, checked) => this.handleCheckFacet(event,jpre,[i],true,true)} /></div> }
+                     </div>
+                  )
+               })
+
+               return (
+
+                 this.widget(jlabel,j, 
+                  <div style={{textAlign:"right",marginRight:"25px"}}>
+                     {checkboxes.slice(0,12)}                     
+                     <Collapse in={this.state.collapse[j+"_widget"]}>
+                        {checkboxes.slice(12)}
+                     </Collapse>
+                     <span style={{fontSize:"12px",cursor:"pointer", marginTop:"5px",display:"inline-block",fontWeight:700}} onClick={(e) => this.setState({...this.state, collapse:{...this.state.collapse, [j+"_widget"]:!this.state.collapse[j+"_widget"]}})}>
+                        {(!this.state.collapse[j+"_widget"]?"Show all":"Hide")}
+                     </span>
+                  </div> )
+               )
+            }
+         })
+      }
+
       return (
 <div>
 
@@ -3345,7 +3559,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                         <Translate value="Lsidebar.title" />
                      </Typography>
                      {
-                        widget(I18n.t("Lsidebar.collection.title"),"collection",
+                        this.widget(I18n.t("Lsidebar.collection.title"),"collection",
                         ["BDRC" ,"rKTs" ].map((i) => <div key={i} style={{width:"150px",textAlign:"left"}} className="searchWidget">
                               <FormControlLabel
                                  control={
@@ -3416,7 +3630,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                         </div>
                      </Collapse>
                      {
-                        widget(I18n.t("Lsidebar.sortBy.title"),"sortBy",
+                        this.widget(I18n.t("Lsidebar.sortBy.title"),"sortBy",
                         [ "Relevance", "Work Title" ].map((i) => <div key={i} style={{width:"150px",textAlign:"left"}} className="searchWidget">
                               <FormControlLabel
                                  control={
@@ -3433,316 +3647,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                                  label={i}
                               /></div> ))
                      }
-                     {
-
-                        meta && this.state.filters.datatype && this.state.filters.datatype.length === 1 && this.state.filters.datatype.indexOf("Any") === -1 && this.props.config && this.props.ontology && metaK.map((j) =>
-                        {
-
-                           let jpre = this.props.config.facets[this.state.filters.datatype[0]][j]
-                           if(!jpre) jpre = j
-                           let jlabel ;
-                           if(facetLabel[j]) jlabel = facetLabel[j];   
-                           else {
-                              jlabel = this.props.ontology[jpre]
-                              if(jlabel) jlabel = jlabel["http://www.w3.org/2000/01/rdf-schema#label"]
-                              //if(jlabel) for(let l of jlabel) { if(l.lang == "en") jlabel = l.value }
-                              if(jlabel && jlabel.length) jlabel = jlabel[0].value
-                              else jlabel = this.pretty(jpre)
-                           }
-                           // need to fix this after info is not in ontology anymore... make tree from relation/langScript 
-                           if(["tree","relation","langScript"].indexOf(j) !== -1) {
-
-                              //console.log("widgeTree",j,jpre,meta[j],counts["datatype"],this.state.filters.datatype[0])
-
-                              if(j == "tree") { // && meta[j]["@graph"]) { //
-                                 let tree ;
-                                 if(meta[j]) tree = meta[j]["@graph"]
-
-                                 //console.log("meta tree",tree,meta[j],counts)
-
-                                 if(tree && tree[0]
-                                    && this.state.filters && this.state.filters.datatype
-                                    && counts["datatype"][this.state.filters.datatype[0]])
-                                 {
-                                    if(tree[0]["taxHasSubClass"].indexOf("Any") === -1)
-                                    {
-                                       tree[0]['taxHasSubClass'] = ['Any'].concat(tree[0]['taxHasSubClass'])
-                                       tree.splice(1,0,{"@id":"Any",
-                                          taxHasSubClass:[],"skos:prefLabel":[],
-                                          ["tmp:count"]:counts["datatype"][this.state.filters.datatype[0]]})
-                                    }
-
-                                    return widget(jlabel,j,subWidget(tree,jpre,tree[0]['taxHasSubClass'],true,j));
-                                 }
-                              }
-                              else { //sort according to ontology properties hierarchy
-                                 let tree = {}, tmProps = Object.keys(meta[j]).map(e => e), change = false
-                                 //let rooTax = false
-                                 do // until every property has been put somewhere
-                                 {
-                                    //console.log("loop",JSON.stringify(tmProps,null,3))
-                                    change = false ;
-                                    for(let i in tmProps) { // try each one
-                                       let k = tmProps[i]
-                                       let p = this.props.dictionary[k]
-
-                                       //console.log("p",k,p)
-
-                                       /* // not really useful, better change bdr:BoTibt label to "Tibetan in Tibetan script" (see bdr:EnLatn)
-                                       let isSubClassOfASubClassOfLangScript ;
-                                       if(p && p[rdfs+"subClassOf"]) for(let q of p[rdfs+"subClassOf"]) {
-                                          q = this.props.dictionary[q.value]
-                                          if(q && q[rdfs+"subClassOf"] && q[rdfs+"subClassOf"].filter(e => e.value === bdo+"LangScript").length) {
-                                             isSubClassOfASubClassOfLangScript = true ;
-                                             break ;
-                                          }
-                                       }
-                                       */
-
-                                       if(!p || (!p[rdfs+"subPropertyOf"]
-                                          && (!p[rdfs+"subClassOf"] || p[rdfs+"subClassOf"].filter(e => e.value == bdo+"Event").length != 0  || p[rdfs+"subClassOf"].filter(e => e.value == bdo+"LangScript").length != 0 
-                                                                    //|| isSubClassOfASubClassOfLangScript 
-                                          )
-                                          && (!p[bdo+"taxSubClassOf"] || p[bdo+"taxSubClassOf"].filter(e => e.value == bdr+"LanguageTaxonomy").length != 0 ) ) ) // is it a root property ?
-                                       {
-                                          //console.log("root",k,p)
-                                          tree[k] = {} ;
-                                          delete tmProps[i];
-                                          change = true ;
-                                          break ;
-                                       }
-                                       else // find its root property in tree
-                                       {
-                                          change = this.inserTree(k,p,tree)
-                                          //console.log("inT",change)
-                                          if(change) {
-                                             delete tmProps[i];
-                                             break ;
-                                          }
-                                       }
-                                    }
-                                    tmProps = tmProps.filter(String)
-
-                                    //console.log("ici?",tmProps,change)
-                                    //if(rooTax) break ;
-
-                                    if(!change) { //} && !rooTax) {
-                                       //console.log("!no change!")
-                                       for(let i in tmProps) {
-                                          let k = tmProps[i]
-                                          let p = this.props.dictionary[k]
-                                          // is it a root property ?
-                                          //console.log("k?",k,p)
-                                          if(p && p[bdo+"taxSubClassOf"] && p[bdo+"taxSubClassOf"].filter(q => tmProps.filter(r => r == q.value).length != 0).length == 0)
-                                          {
-                                             tmProps = tmProps.concat(p[bdo+"taxSubClassOf"].map(e => e.value));
-                                             //console.log(" k1",k,tmProps)
-                                             change = true ;
-                                             //rooTax = true ;
-                                          }
-                                          else if(p && p[rdfs+"subClassOf"] && p[rdfs+"subClassOf"].filter(q => tmProps.filter(r => r == q.value).length != 0).length == 0)
-                                          {
-                                             tmProps = tmProps.concat(p[rdfs+"subClassOf"].map(e => e.value));
-                                             //console.log(" k2",k,tmProps)
-                                             change = true ;
-                                             //rooTax = true ;
-                                          }
-                                       }
-                                       if(!change)break;
-                                    }
-
-                                 }
-                                 while(tmProps.length > 0);
-
-                                 //console.log("inserTree",tree)
-                                 tree = this.counTree(tree,meta[j],counts["datatype"][this.state.filters.datatype[0]],j)
-                                 //console.log("counTree",JSON.stringify(tree,null,3),j)
-
-                                 return widget(jlabel,j,subWidget(tree,jpre,tree[0]['taxHasSubClass'],false,j));
-                              }
-
-                              return ;
-                           }
-                           else
-                           {
-
-                              let meta_sort = Object.keys(meta[j])
-                              
-                              /* // deprecated 
-                              .sort((a,b) => {
-                                 if(Number(meta[j][a].n) < Number(meta[j][b].n)) return 1
-                                 else if(Number(meta[j][a].n) > Number(meta[j][b].n)) return -1
-                                 else return 0 ;
-                              });
-                              */
-
-                              delete meta_sort[meta_sort.indexOf("Any")]
-                              meta_sort.unshift("Any")
-
-
-                              meta[j]["Any"] =  { n: counts["datatype"][this.state.filters.datatype[0]]}
-
-                              return (
-
-                                 widget(jlabel,j,
-
-                                    meta_sort.map(  (i) =>
-                                    {
-
-                                       let label = getPropLabel(this,i)
-
-                                       //console.log("label",i,j,jpre,label,meta)
-
-                                       let checked = this.state.filters.facets && this.state.filters.facets[jpre]
-                                       if(!checked) {
-                                          if(label === "Any") checked = true ;
-                                          else checked = false ;
-                                       }
-                                       else checked = this.state.filters.facets[jpre].indexOf(i) !== -1
-
-                                       // console.log("checked",checked)
-
-                                       let isExclu = this.state.filters.exclude && this.state.filters.exclude[jpre] && this.state.filters.exclude[jpre].includes(i)
-
-                                       if(i !== "Any" && i !== "unspecified") return (
-                                          <div key={i} style={{width:"auto",textAlign:"left"}} className="widget searchWidget">
-                                             <FormControlLabel
-                                                control={
-                                                   <Checkbox
-                                                      checked={checked}
-                                                      className="checkbox"
-                                                      icon={<CheckBoxOutlineBlank/>}
-                                                      checkedIcon={isExclu ? <Close className="excl"/>:<CheckBox/>}
-                                                      onChange={(event, checked) => this.handleCheckFacet(event,jpre,[i],checked)}
-                                                   />
-
-                                                }
-                                                label={<span>{label}&nbsp;<span class="facet-count-block">{"("}<span class="facet-count">{this.subcount(j,i)+meta[j][i].n}</span>{")"}</span></span>}
-                                             />
-                                             { !isExclu && label !== "Any" && <div class="exclude"><Close onClick={(event, checked) => this.handleCheckFacet(event,jpre,[i],true,true)} /></div> }
-                                          </div>
-                                       )
-                                    })
-                                 )
-                              )
-                           }
-                        })
-                     }
-
-                     { /*false && this.state.facets && this.props.ontology && this.state.facets.map((i) => {
-
-                        let label = this.props.ontology[i
-                           .replace(/bdo:/,"http://purl.bdrc.io/ontology/core/")
-                           .replace(/adm:/,"http://purl.bdrc.io/ontology/admin/")
-                        ]["http://www.w3.org/2000/01/rdf-schema#label"][0].value
-
-                        //if(label) label = label["http://www.w3.org/2000/01/rdf-schema#label"]
-                        //if(label) label = label[0].value
-
-
-                        let show = false //(this.props.facets&&this.props.facets[i] && !this.props.facets[i].hash)
-                        if(!this.props.facets || !this.props.facets[i] || !this.props.facets[i].hash ) show = true
-
-                        //console.log("label",i,label,this.props.facets,counts["datatype"][i])
-
-                        let values = this.props.facets
-                        if(values) values = values[i]
-                        if(values) values = values.results
-                            //{...counts["datatype"][i]?{label:i + " ("+counts["datatype"][i]+")"}:{label:i}}
-                        if(values && values.bindings && values.bindings.unshift && values.bindings[0]) {
-                              if(values.bindings[0].val && values.bindings[0].val.value && values.bindings[0].val.value != "Any") {
-                                 values.bindings.sort(function(a,b){ return Number(a.cid.value) < Number(b.cid.value) } )
-                                 values.bindings.unshift({
-                                    cid:{datatype: "http://www.w3.org/2001/XMLSchema#integer", type: "literal", value:"?" },
-                                    val:{type: "uri", value: "Any"}
-                                 })
-                              }
-                              let n = counts["datatype"][this.state.filters.datatype[0]]
-                              if(n) {
-                                 values.bindings[0].cid.value = n
-                              }
-                        }
-
-
-                        return (
-                           <div key={label}>
-                              {  show &&
-                                 <Loader loaded={false} className="facetLoader" style={{position:"relative"}}/>
-                              }
-                              <ListItem
-                                 style={{display:"flex",justifyContent:"space-between",padding:"0 20px",borderBottom:"1px solid #bbb",cursor:"pointer"}}
-                                 onClick={(e) => {
-                                    if(!show)
-                                       this.setState({collapse:{ ...this.state.collapse, [i]:!this.state.collapse[i]} }); } }
-                                 >
-                                 <Typography style={{fontSize:"18px",lineHeight:"50px",textTransform:"capitalize"}}>{label}</Typography>
-                                 { !show && this.state.collapse[i] ? <ExpandLess /> : <ExpandMore />  }
-                              </ListItem>
-                              <Collapse
-                                 className={["collapse",!show && this.state.collapse[i]?"open":"close"].join(" ")}
-                                 in={!show && this.state.collapse[i]}
-                                  style={{padding:"10px 0 0 50px"}} >
-                                  <div>
-                                  {
-                                     this.props.facets && this.props.facets[i] &&
-                                     values && values.bindings.map((j,idx) => {
-
-                                           //console.log("counts",i,counts["datatype"][i])
-
-                                             if(!j.val || j.cid.value == 0) return  ;
-
-                                           let value = this.props.ontology[j.val.value]
-
-                                           //console.log("value",value)
-
-                                           if(value) value = value["http://www.w3.org/2000/01/rdf-schema#label"] ;
-                                           if(value) {
-                                              for(let l of value) {
-                                                 if(l.lang == "en") { value = l.value; break; }
-                                              }
-                                              //if(value.length) value = value[0].value;
-                                           }
-
-                                           let uri = j.val.value;
-                                           if(!value) value = uri.replace(/^.*\/([^/]+)$/,"$1")
-
-                                           //console.log("value",j,value)
-
-                                           let checked = this.state.filters.facets && this.state.filters.facets[i]
-
-                                           if(!checked) checked = false ;
-                                           else checked = this.state.filters.facets[i].indexOf(uri) !== -1
-
-
-                                           // console.log("checked",checked,i,uri)
-
-                                        return (
-                                           <div key={value} style={{textAlign:"left",textTransform:"capitalize"}}>
-                                              <FormControlLabel
-                                                 control={
-                                                    <Checkbox
-                                                       //{...i=="Any"?{defaultChecked:true}:{}}
-                                                       checked={checked}
-                                                       icon={<span className='checkB'/>}
-                                                       checkedIcon={<span className='checkedB'><CheckCircle style={{color:"#444",margin:"-3px 0 0 -3px",width:"26px",height:"26px"}}/></span>}
-                                                       //onChange={(event, checked) => this.handleFacetCheck(event,i,uri,checked)}
-                                                    />
-
-                                                 }
-                                                 //{...counts["datatype"][i]?{label:i + " ("+counts["datatype"][i]+")"}:{label:i}}
-                                                 label={value+ " ("+j.cid.value+")" }
-                                              />
-                                           </div>
-                                        )
-                                     }
-                                  )}
-                                  </div>
-                              </Collapse>
-                           </div>
-                        )
-                        }
-                     )
-                  */ }
+                     {  facetWidgets }
+                  
                   </div>
                }
                </div>
