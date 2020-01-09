@@ -1056,7 +1056,8 @@ function sortResultsByTitle(results, userLangs) {
    let langs = extendedPresets(userLangs)
    if(keys && keys.length) {
       keys = keys.map(k => {
-         let lang,value,labels = results[k].filter(r => r.type && r.type === skos+"prefLabel") //r.value && r.value.match(/↦/))
+         let lang,value,labels = results[k].filter(e => e.type && e.type.endsWith("abelMatch") ).map(e => ({ ...e, value:e.value.replace(/[↦]/g,"")})) //r => r.type && r.type === skos+"prefLabel") //r.value && r.value.match(/↦/))
+         // TODO case of search by ID
          if(labels.length) { 
             labels = sortLangScriptLabels(labels,langs.flat,langs.translit)
             labels = labels[0]
@@ -1303,7 +1304,7 @@ else {
          store.dispatch(dataActions.foundDatatypes(keyword,language,{ metadata, hash:true}));
       }
    }
-   
+
    store.dispatch(uiActions.loading(keyword, false));
 
 }

@@ -2414,18 +2414,24 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             //message.push(["cpt="+cpt+"="+absi,<br/>])
 
             let label ; // sublist[o].filter((e) => (e.type && e.type.match(/prefLabelMatch$/)))[0]
-            let sList = sublist[o].filter( (e) => (e.type && e.type.match(/(prefLabel(Match)?|eTextTitle)$/)))
+            let sList = sublist[o].filter(e => e.type && e.type.endsWith("abelMatch") )   //( (e) => (e.type && e.type.match(/(prefLabel(Match)?|eTextTitle)$/)))
+            // TODO case of search by ID
+
+            /* // deprecated 
             let listOrder = { "prefLabelMatch$" : 1, "prefLabel$":2,"eTextTitle$":3 }
             sList = _.sortBy(sList, (e) => {
                for(let k of Object.keys(listOrder)) { if(e.type && e.type.match(new RegExp(k))) return listOrder[k] }
             })
-            //console.log("sList",JSON.stringify(sList,null,3));
+            */
+
+            //console.log("sList",o,sublist[o],JSON.stringify(sList,null,3));
+
             label = getLangLabel(this,"",sList) // ,true)
             if(label && label.length > 0) label = label[0]
 
             let preProps = sublist[o].filter((e) => e.type && e.type.match(/relationType$/ )).map(e => this.props.ontology[e.value])
 
-            //console.log("label",label,sublist[o],preProps)
+            //console.log("label",label) //,sList,sublist[o]) //,preProps)
 
 
             let r = {
