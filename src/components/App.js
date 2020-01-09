@@ -265,7 +265,7 @@ function getPropLabel(that, i, withSpan = true) {
 
    let lang
    if(labels) {
-      label = getLangLabel(that,"",labels,true)
+      label = getLangLabel(that,"",labels) //,true)
 
       //console.log("label",i,label)
 
@@ -3566,11 +3566,15 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                            else
                            {
 
-                              let meta_sort = Object.keys(meta[j]).sort((a,b) => {
+                              let meta_sort = Object.keys(meta[j])
+                              
+                              /* // deprecated 
+                              .sort((a,b) => {
                                  if(Number(meta[j][a].n) < Number(meta[j][b].n)) return 1
                                  else if(Number(meta[j][a].n) > Number(meta[j][b].n)) return -1
                                  else return 0 ;
                               });
+                              */
 
                               delete meta_sort[meta_sort.indexOf("Any")]
                               meta_sort.unshift("Any")

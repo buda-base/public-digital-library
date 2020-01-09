@@ -914,9 +914,36 @@ function getStats(cat:string,data:{})
   
    //console.log("f unspec",stat["tree"][unspecTag]); 
 
+   let state = store.getState()
+   let langs = extendedPresets(state.ui.langPreset)
+   let assoRes = state.data.assocResources
+   if(assoRes) assoRes = assoRes[state.data.keyword]
+   let dic = state.data.dictionary
    for(let f of keys)
    {
       if(stat[f] && Object.keys(stat[f]).length === 1 && stat[f][unspecTag]) delete stat[f] ;
+      if(stat[f]) { 
+         let tmpStat = {}
+         for(let k of Object.keys(stat[f])) {
+            let kz = Object.keys(stat[f][k])       
+            let label,labels
+            if(assoRes && assoRes[k]) labels = assoRes[k]
+            if(!labels && dic && dic[k]) labels = dic[k][skos+"prefLabel"]
+            if(labels) label = sortLangScriptLabels(labels,langs.flat,langs.translit)
+            if(!label || !label.length) label = [{ type:"literal", value:"", lang:"" }]
+            let n = ""+stat[f][k].n
+            if(!tmpStat[n]) tmpStat[n] = []
+            tmpStat[n].push({...label[0], k })
+         }
+         let sortStat = []
+         //console.log("tmpStat",tmpStat,sortStat)         
+         let kz = _.orderBy(Object.keys(tmpStat).map(n => ({n:Number(n)})), [ "n" ], [ "desc" ]).map(k => k.n)
+         for(let n of kz) {
+            sortStat = sortStat.concat(sortLangScriptLabels(tmpStat[n],langs.flat,langs.translit))
+         }         
+         
+         stat[f] = sortStat.reduce( (acc,k) => ({...acc, [k.k]:stat[f][k.k]}),{})
+      }
    }
 
    return stat
@@ -1133,7 +1160,6 @@ async function startSearch(keyword,language,datatype,sourcetype,dontGetDT) {
       if(result) {
          console.log("res",result)
          if(result && (datatype && datatype.indexOf("Any") === -1) ) {
-            let langPreset = store.getState().ui.langPreset
             result = Object.keys(result).reduce((acc,e)=>{
                if(e === "main") {
                   let keys = Object.keys(result[e])
@@ -1142,7 +1168,6 @@ async function startSearch(keyword,language,datatype,sourcetype,dontGetDT) {
                   }
                   let t = datatype[0].toLowerCase()+"s"                  
                   return { ...acc, [t]: sortResultsByRelevance(result[e]) }
-                  //return { ...acc, [t]: sortResultsByTitle(result[e], langPreset) }  
                }
                else if(e === "aux") {                  
                   store.dispatch(dataActions.gotAssocResources(keyword,{ data: result[e] } ) )

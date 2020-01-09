@@ -178,7 +178,7 @@ export function sortLangScriptLabels(data,preset,translit)
 
       //console.log("k",k)
 
-      data[k] = data[k].map(e =>({...e, _val:(e.value?e.value:e["@value"]).replace(/[↦↤]/g,"")}))
+      data[k] = data[k].map(e =>({...e, _val:(e.value !== undefined?e.value:e["@value"]).replace(/[↦↤]/g,"")}))
 
       if(k === "bo" || k === "bo-Tibt") {
          data_ = data_.concat(data[k].sort((a,b) => tibetSort.compare(a._val,b._val)))
