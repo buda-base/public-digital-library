@@ -618,20 +618,24 @@ body > .ol-li-lang:last-child li::before { content:'-';}
 .searchWidget > label + .subcollapse { width:auto !important; }
 .searchWidget > label { margin-right:5px;}
 
-.searchWidget { position:relative; padding-right:30px;}
-.searchWidget > .exclude { position:absolute;margin-left:-20px;margin-top:3px; display:none; z-index:1;top:0;left:0;width:16px;padding-left:3px;}
+.SidePane > div > .collapse > div > div > .searchWidget { padding-right:30px;}
+
+.searchWidget { position:relative; }
+.searchWidget > .exclude { position:absolute;margin-left:-20px;margin-top:1px; display:none; z-index:1;top:0;left:0;width:16px;padding-left:3px; }
 .searchWidget > .exclude svg, svg.excl { font-size:12px; color:white;background-color:rgba(229, 74, 53,1);border-radius:2px; cursor:pointer;}
-.exclude:hover, .searchWidget > label:hover + .exclude { display:inline-block;}
+.exclude:hover, .searchWidget label:hover + .exclude { display:inline-block;}
 
 .widget > label { display:inline; padding-left:3px;padding-bottom:2px; z-index:0 }
 .widget > label > * { display:inline; vertical-align: middle; }
 .widget > label > .checkbox { display:inline-block; width:18px !important;height:18px !important; }
 .widget > label > .checkbox > span:first-child { display:inline;  }
-.widget > label > span:last-child:nth-child(2) { vertical-align:1px; line-height:21px;}
+.widget > label > span:last-child:nth-child(2) { vertical-align:1px; line-height:20px;}
 .widget { padding-left:18px;} 
 .widget > label > .checkbox { left:-18px;} 
 .widget > label > span:last-child:nth-child(2) { margin-left:-18px;}
 .widget > .subcollapse { padding-left:18px !important;margin-left:-18px;}
+
+.widget > * { vertical-align:text-bottom !important;}
 
 #clear-filters { vertical-align:-5px; margin-left: 5px; cursor:pointer; color:rgba(0,0,0,0.55)}
 

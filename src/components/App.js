@@ -663,15 +663,14 @@ class App extends Component<Props,State> {
                )
             else 
                setTimeout(() => {
-                     props.onUpdateFacets(
-                     props.keyword+"@"+props.language,
-                     s.filters.datatype[0],
-                     facets,
-                     s.filters.exclude,
-                     props.searches[s.filters.datatype[0]][props.keyword+"@"+props.language].metadata,
-                     props.config.facets[s.filters.datatype[0]]
-                  )
-               }, 1000);
+                  props.onUpdateFacets(
+                  props.keyword+"@"+props.language,
+                  s.filters.datatype[0],
+                  facets,
+                  s.filters.exclude,
+                  props.searches[s.filters.datatype[0]][props.keyword+"@"+props.language].metadata,
+                  props.config.facets[s.filters.datatype[0]]
+               )}, 1000);
             
          }
       }
