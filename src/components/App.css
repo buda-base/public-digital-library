@@ -642,7 +642,7 @@ body > .ol-li-lang:last-child li::before { content:'-';}
 .active-filter svg { font-size: 14px; vertical-align:middle; color:rgba(255,255,255,1); }
 .active-filter svg { margin-left:10px; font-size:18px; vertical-align:-4px; cursor:pointer;}
 .active-filter.exclu { background:rgba(229, 74, 53,0.65); text-decoration:line-through;text-decoration-color:rgba(229, 74, 53,1); }
-.active-filter.exclu > span { text-decoration:line-through;text-decoration-color:rgba(229, 74, 53,1); }
+.active-filter.exclu span b span { text-decoration:line-through;text-decoration-color:rgba(229, 74, 53,1); }
 
 #filters-UI { margin-bottom:40px; line-height:40px; }
 
@@ -651,6 +651,8 @@ span.subcollapse svg { vertical-align:-6px; cursor:pointer; font-size:18px; }
 .collapse.open > div > div > .widget > span.subcollapse, 
 .collapse.open .subcollapse.open > div > div > .widget > span.subcollapse
 { position:absolute;  opacity:1; transition:opacity 150ms ease-in-out 50ms; } 
+
+span.subcollapse.off { opacity:0.5 !important; }
 
 .checkbox.disabled { opacity:0.5; }
 

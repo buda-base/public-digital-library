@@ -3222,9 +3222,12 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             if(!lang) label = val
             else label = <span lang={lang}>{val}</span>
 
+            let disabled = cpt_i.startsWith("0")&&!checked
+
             return (
                <div key={e} style={{width:"auto",textAlign:"left"}} className="widget searchWidget">
                   <FormControlLabel
+                     {... disabled?{disabled:true}:{}}
                      control={
                         <Checkbox
                            checked={checked}
@@ -3241,7 +3244,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   {
                      elem && elem["taxHasSubClass"] && elem["taxHasSubClass"].length > 0 &&
                      [
-                        <span className="subcollapse" /*style={{width:"335px"}}*/
+                        <span className={"subcollapse " + (disabled?"off":"")} /*style={{width:"335px"}}*/
                               onClick={(ev) => { this.setState({collapse:{ ...this.state.collapse, [e]:!this.state.collapse[e]} }); } }>
                         { this.state.collapse[e] ? <ExpandLess /> : <ExpandMore />}
                         </span>,
@@ -3439,7 +3442,10 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             else
             {
 
-               // TODO trigger foundFacetInfo when language preference changed (labels displayed/sorted depend on language)
+               // TODO 
+               // - trigger foundFacetInfo when language preference changed (labels displayed/sorted depend on language)
+               // - fix updateFacet "0 / 123" when results loaded with facet checked 
+
 
                let meta_sort = Object.keys(meta[j])
 
@@ -3474,9 +3480,12 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
                   let isExclu = this.state.filters.exclude && this.state.filters.exclude[jpre] && this.state.filters.exclude[jpre].includes(i)
 
+                  let cpt_i = this.subcount(j,i)
+
                   if(i !== "Any" && i !== "unspecified") return (
                      <div key={i} style={{width:"auto",textAlign:"left"}} className="widget searchWidget">
                         <FormControlLabel
+                           {... cpt_i.startsWith("0")&&!checked?{disabled:true}:{}}
                            control={
                               <Checkbox
                                  checked={checked}
@@ -3487,7 +3496,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                               />
 
                            }
-                           label={<span>{label}&nbsp;<span class="facet-count-block">{"("}<span class="facet-count">{this.subcount(j,i)+meta[j][i].n}</span>{")"}</span></span>}
+                           label={<span>{label}&nbsp;<span class="facet-count-block">{"("}<span class="facet-count">{cpt_i+meta[j][i].n}</span>{")"}</span></span>}
                         />
                         { !isExclu && label !== "Any" && <div class="exclude"><Close onClick={(event, checked) => this.handleCheckFacet(event,jpre,[i],true,true)} /></div> }
                      </div>

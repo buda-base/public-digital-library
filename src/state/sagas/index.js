@@ -856,14 +856,14 @@ function getData(result,inMeta,outMeta)  {
 }
 
 
-function getStats(cat:string,data:{})
+function getStats(cat:string,data:{},tree:{})
 {
    let stat={}
    let config = store.getState().data.config
 
    let keys = Object.keys(config.facets[cat])
 
-   console.log("stat/keys",keys)
+   console.log("stat/keys",keys,tree)
    
    if(auth && !auth.isAuthenticated()) {
       let hide = config["facets-hide-unlogged"][cat]
@@ -871,6 +871,35 @@ function getStats(cat:string,data:{})
       if(hide && hide.length) {
          keys = keys.reduce( (acc,k) => (hide.indexOf(k)===-1?[...acc,k]:acc),[])
       }
+   }
+
+   let parents, treeParents = {}
+   if(tree && tree["@graph"] && tree["@graph"].length > 1) {
+      parents = {}
+      for(let node of tree["@graph"]) parents[node["@id"]] = node
+
+      for(let node of Object.keys(parents)) { 
+         if(parents[node]["taxHasSubClass"] && parents[node]["taxHasSubClass"].length) {
+            for(let sub of parents[node]["taxHasSubClass"]) { 
+               if(!parents[sub]) parents[sub] = {}
+               parents[sub].ancestor = node
+            }
+         }
+      }
+
+      for(let node of Object.keys(parents)) { 
+         if(!parents[node]["taxHasSubClass"] && parents[node].ancestor){
+            treeParents[node] = []
+            let root = parents[node].ancestor
+            do {
+               treeParents[node].push(root)
+               root = parents[root]
+               if(root) root = root.ancestor
+            } while(root)
+         }
+      }
+
+      console.log("parents",parents,treeParents)
    }
    
    let unspecTag = "unspecified"
@@ -883,12 +912,10 @@ function getStats(cat:string,data:{})
       {
          
          //console.log("f",f);
-         let genre = [bdo+"workGenre", bdo + "workIsAbout", _tmp + "etextAbout" ] 
-         //let asset = [_tmp+"hasOpen", _tmp+"hasEtext", _tmp+"hasImage"]
+         let genre = [bdo+"workGenre", bdo + "workIsAbout", _tmp + "etextAbout" ]
          let tmp ;
          
          if(f === "tree") tmp = p.filter((e) => (genre.indexOf(e.type) !== -1))
-         //else if(f === "asset") tmp = p.filter((e) => (asset.indexOf(e.type) !== -1))
          else tmp = p.filter((e) => (e.type == config.facets[cat][f] && (f !== "about" || !e.value.match(/resource[/]T/) )))
 
          if(tmp.length > 0) for(let t of tmp) 
@@ -900,6 +927,16 @@ function getStats(cat:string,data:{})
             else pre ++ ;
             stat[f][t.value].n = pre ;
             stat[f][t.value].dict[_p] = p
+                        
+            if(f === "tree" && treeParents && treeParents[t.value]) {
+               for(let node of treeParents[t.value]) { 
+                  if(!stat[f][node]) stat[f][node] = { n:0, dict:{} }
+                  stat[f][node].n ++
+                  if(!stat[f][node].dict[_p]) stat[f][node].dict[_p] = []
+                  stat[f][node].dict[_p] = stat[f][node].dict[_p].concat(p)
+               }
+            }
+
             //console.log("f+1",f,tmp,pre)
          }
          else {
@@ -957,7 +994,7 @@ function addMeta(keyword:string,language:string,data:{},t:string,tree:{},found:b
 {
    if(data["results"] &&  data["results"]["bindings"] && data["results"]["bindings"][t.toLowerCase()+"s"]){
       console.log("FOUND",data);
-      let stat = getStats(t,data);
+      let stat = getStats(t,data,tree);
 
       if(tree)
       {
