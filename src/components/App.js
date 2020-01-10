@@ -652,14 +652,14 @@ class App extends Component<Props,State> {
 
             console.log("facets",facets)
 
-            props.onUpdateFacets(
+            setTimeout(() => props.onUpdateFacets(
                props.keyword+"@"+props.language,
                s.filters.datatype[0],
                facets,
                s.filters.exclude,
                props.searches[s.filters.datatype[0]][props.keyword+"@"+props.language].metadata,
                props.config.facets[s.filters.datatype[0]]
-            );
+            ), 1000);
          }
       }
 
