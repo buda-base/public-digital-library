@@ -12,6 +12,7 @@ import bdrcApi, { getEntiType } from '../../lib/api';
 import {sortLangScriptLabels, extendedPresets} from '../../lib/transliterators';
 import {auth} from '../../routes';
 import {shortUri,fullUri} from '../../components/App'
+import qs from 'query-string'
 
 // to enable tests
 const api = new bdrcApi({...process.env.NODE_ENV === 'test' ? {server:"http://localhost:5555/test"}:{}});
@@ -1202,6 +1203,8 @@ async function startSearch(keyword,language,datatype,sourcetype,dontGetDT) {
          console.log("res",result)
          if(result && (datatype && datatype.indexOf("Any") === -1) ) {
             let asset = [_tmp+"hasOpen", _tmp+"hasEtext", _tmp+"hasImage"]
+            let state = store.getState()
+            let langPreset = state.ui.langPreset
             result = Object.keys(result).reduce((acc,e)=>{
                if(e === "main") {
                   let keys = Object.keys(result[e])
@@ -1210,8 +1213,9 @@ async function startSearch(keyword,language,datatype,sourcetype,dontGetDT) {
                   }
                   let t = datatype[0].toLowerCase()+"s"                 
                   let dataWithAsset = keys.reduce( (acc,k) => ({...acc, [k]:result[e][k].map(e => (!asset.includes(e.type)||e.value === "false"?e:{type:_tmp+"assetAvailability",value:e.type}))}),{})
-                  console.log("dWa",dataWithAsset)
-                  return { ...acc, [t]: sortResultsByRelevance(dataWithAsset) }
+                  //console.log("dWa",dataWithAsset)
+                  if(!state.ui.sortBy || state.ui.sortBy === "relevance") return { ...acc, [t]: sortResultsByRelevance(dataWithAsset) }
+                  else if(state.ui.sortBy === "work title") return { ...acc, [t]: sortResultsByTitle(dataWithAsset, langPreset) }
                }
                else if(e === "aux") {                  
                   store.dispatch(dataActions.gotAssocResources(keyword,{ data: result[e] } ) )
@@ -1401,8 +1405,8 @@ async function updateSortBy(i,t)
    console.log("uSb",i,t,state,data)
 
    // TODO clean a bit 
-   if(i === "Relevance") data.results.bindings[t.toLowerCase()+"s"] = sortResultsByRelevance(data.results.bindings[t.toLowerCase()+"s"]) 
-   else if(i === "Work Title") { 
+   if(i === "relevance") data.results.bindings[t.toLowerCase()+"s"] = sortResultsByRelevance(data.results.bindings[t.toLowerCase()+"s"]) 
+   else if(i === "work title") { 
       let langPreset = state.ui.langPreset
       data.results.bindings[t.toLowerCase()+"s"] = sortResultsByTitle(data.results.bindings[t.toLowerCase()+"s"], langPreset)
    }

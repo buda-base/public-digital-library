@@ -389,6 +389,7 @@ type Props = {
    rightPanel?:boolean,
    failures?:{},
    assoRes?:{},
+   sortBy?:string,
    onResetSearch:()=>void,
    onOntoSearch:(k:string)=>void,
    onStartSearch:(k:string,lg:string,t?:string)=>void,
@@ -430,7 +431,6 @@ type State = {
       exclude:{[string]:boolean},
       preload:{}
    },
-   sortBy?:string,
    collapse:{ [string] : boolean },
    loader:{[string]:Component<*>},
    facets? : string[],
@@ -502,6 +502,8 @@ class App extends Component<Props,State> {
          }
       }
 
+      let sortBy = get.s
+
       this.state = {
          language:lg,
          langOpen:false,
@@ -512,6 +514,7 @@ class App extends Component<Props,State> {
             facets,
             preload
          },
+         sortBy,
          searchTypes: get.t?get.t.split(","):types,
          dataSource: [],         
          collapse,
@@ -636,6 +639,11 @@ class App extends Component<Props,State> {
             //console.log("exc2",JSON.stringify(exclude,null,3))
 
             s.filters.preload = true
+
+            if(s.sortBy) { 
+               props.onUpdateSortBy(s.sortBy.toLowerCase(),s.filters.datatype[0])
+               delete s.sortBy
+            }
          }
          
          
@@ -1062,9 +1070,9 @@ class App extends Component<Props,State> {
    }
 
    updateSortBy(ev,check,i) {
-      if(check && (!this.state.sortBy || i !== this.state.sortBy)) {
-         this.props.onUpdateSortBy(i,this.state.filters.datatype[0])
-         this.setState({...this.state, sortBy:i })
+      if(check && (!this.props.sortBy || i !== this.props.sortBy)) {
+         this.props.onUpdateSortBy(i.toLowerCase(),this.state.filters.datatype[0])
+         //this.setState({...this.state, sortBy:i })
       } 
    }
 
@@ -3661,7 +3669,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                               <FormControlLabel
                                  control={
                                     <Checkbox
-                                       checked={this.state.sortBy === i || (!this.state.sortBy && i === "Relevance") }
+                                       checked={this.props.sortBy === i.toLowerCase() || (!this.props.sortBy && i === "Relevance") }
                                        //disabled={i === "Relevance"}
                                        className="checkbox"
                                        icon={<PanoramaFishEye/>}

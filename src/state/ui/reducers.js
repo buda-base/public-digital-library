@@ -19,7 +19,8 @@ export type UIState = {
    langIndex?:number,
    collapse:{[string]:boolean},
    metadata:{[string]:{}},
-   profileFromUrl?:{}
+   profileFromUrl?:{},
+   sortBy?:string
 }
 
 const DEFAULT_STATE: UIState = {
@@ -121,6 +122,17 @@ export const loading = (state: UIState, action: actions.LoadingAction) => {
     }
 }
 reducers[actions.TYPES.loading] = loading;
+
+
+export const updateSortBy = (state: UIState, action: Action) => {
+
+    return {
+        ...state,
+        sortBy:action.payload
+   }
+}
+reducers[actions.TYPES.updateSortBy] = updateSortBy;
+
 
 export const updateFacets = (state: UIState, action: actions.LoadingAction) => {
 

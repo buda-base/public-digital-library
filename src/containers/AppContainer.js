@@ -42,8 +42,10 @@ const mapStateToProps = (state) => {
 
    let metadata = state.ui.metadata
 
+   let sortBy = state.ui.sortBy
+
    let newState = { logged,config, hostFailure, searches, keyword, language,loading,datatypes,ontology,facets,
-      locale,prefLang,resources,ontoSearch,rightPanel,langPreset, langIndex, failures,dictionary,metadata, assoRes }
+      locale,prefLang,resources,ontoSearch,rightPanel,langPreset, langIndex, failures,dictionary,metadata, assoRes, sortBy }
 
    if(!global.inTest) console.log("mS2p",state,newState)
 
