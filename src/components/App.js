@@ -1643,6 +1643,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             for(let i of labels) {
                let val = i["value"]
                if(val === exclude) continue
+               if(val && val.startsWith("http")) val = this.fullname(val)
                let lang = i["xml:lang"]
                if(!lang) lang = i["lang"]
                ret.push(<span>{val}{
@@ -2125,6 +2126,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                })
             }
             { this.getResultProp(tmp+"otherLabel",allProps, true, false, [skos+"prefLabel", skos+"altLabel"], !preLit?preLit:preLit.replace(/[↦↤]/g,"") ) }
+            { this.getResultProp(tmp+"assetAvailability",allProps,false,false) }
             </div> )
 
       retList.push(<hr/>);
