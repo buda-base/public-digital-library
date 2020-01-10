@@ -650,16 +650,29 @@ class App extends Component<Props,State> {
                   else return { ...acc, [f]:facets[f] }
                },{})
 
-            console.log("facets",facets)
+            console.log("facets",facets,props.loading)
 
-            setTimeout(() => props.onUpdateFacets(
-               props.keyword+"@"+props.language,
-               s.filters.datatype[0],
-               facets,
-               s.filters.exclude,
-               props.searches[s.filters.datatype[0]][props.keyword+"@"+props.language].metadata,
-               props.config.facets[s.filters.datatype[0]]
-            ), 1000);
+            if(!props.loading) 
+               props.onUpdateFacets(
+                  props.keyword+"@"+props.language,
+                  s.filters.datatype[0],
+                  facets,
+                  s.filters.exclude,
+                  props.searches[s.filters.datatype[0]][props.keyword+"@"+props.language].metadata,
+                  props.config.facets[s.filters.datatype[0]]
+               )
+            else 
+               setTimeout(() => {
+                     props.onUpdateFacets(
+                     props.keyword+"@"+props.language,
+                     s.filters.datatype[0],
+                     facets,
+                     s.filters.exclude,
+                     props.searches[s.filters.datatype[0]][props.keyword+"@"+props.language].metadata,
+                     props.config.facets[s.filters.datatype[0]]
+                  )
+               }, 1000);
+            
          }
       }
 
