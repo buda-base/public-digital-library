@@ -884,9 +884,13 @@ function getStats(cat:string,data:{})
          
          //console.log("f",f);
          let genre = [bdo+"workGenre", bdo + "workIsAbout", _tmp + "etextAbout" ] 
+         //let asset = [_tmp+"hasOpen", _tmp+"hasEtext", _tmp+"hasImage"]
          let tmp ;
-         if(f !== "tree") tmp = p.filter((e) => (e.type == config.facets[cat][f] && (f !== "about" || !e.value.match(/resource[/]T/) )))
-         else tmp = p.filter((e) => (genre.indexOf(e.type) !== -1))
+         
+         if(f === "tree") tmp = p.filter((e) => (genre.indexOf(e.type) !== -1))
+         //else if(f === "asset") tmp = p.filter((e) => (asset.indexOf(e.type) !== -1))
+         else tmp = p.filter((e) => (e.type == config.facets[cat][f] && (f !== "about" || !e.value.match(/resource[/]T/) )))
+
          if(tmp.length > 0) for(let t of tmp) 
          {
             if(!stat[f]) stat[f] = {}
@@ -1160,14 +1164,17 @@ async function startSearch(keyword,language,datatype,sourcetype,dontGetDT) {
       if(result) {
          console.log("res",result)
          if(result && (datatype && datatype.indexOf("Any") === -1) ) {
+            let asset = [_tmp+"hasOpen", _tmp+"hasEtext", _tmp+"hasImage"]
             result = Object.keys(result).reduce((acc,e)=>{
                if(e === "main") {
                   let keys = Object.keys(result[e])
                   if(keys) {
                      store.dispatch(dataActions.gotAssocResources(keyword,{ data: keys.reduce( (acc,k) => ({...acc, [k]: result[e][k].filter(e => e.type === skos+"altLabel" || e.type === skos+"prefLabel") }),{})  }))
                   }
-                  let t = datatype[0].toLowerCase()+"s"                  
-                  return { ...acc, [t]: sortResultsByRelevance(result[e]) }
+                  let t = datatype[0].toLowerCase()+"s"                 
+                  let dataWithAsset = keys.reduce( (acc,k) => ({...acc, [k]:result[e][k].map(e => (!asset.includes(e.type)||e.value === "false"?e:{type:_tmp+"assetAvailability",value:e.type}))}),{})
+                  console.log("dWa",dataWithAsset)
+                  return { ...acc, [t]: sortResultsByRelevance(dataWithAsset) }
                }
                else if(e === "aux") {                  
                   store.dispatch(dataActions.gotAssocResources(keyword,{ data: result[e] } ) )

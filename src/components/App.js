@@ -2972,9 +2972,9 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
    resetFilters(e) {
       
       let {pathname,search} = this.props.history.location
-      this.props.history.push({pathname,search:search.replace(/(&t=.*)$/,"")+"&t=Any"})
+      this.props.history.push({pathname,search:search.replace(/(&t=.*)$/,"")+"&t="+this.state.filters.datatype[0]})
 
-      this.setState({...this.state, filters:{ datatype: this.state.filters.datatype } }  )
+      this.setState({...this.state, repage:true, filters:{ datatype: this.state.filters.datatype } }  )
 
       // TODO fix back button behaviour (+ Work -> Any)
    }
