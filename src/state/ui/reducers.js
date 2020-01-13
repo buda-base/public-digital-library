@@ -20,7 +20,8 @@ export type UIState = {
    collapse:{[string]:boolean},
    metadata:{[string]:{}},
    profileFromUrl?:{},
-   sortBy?:string
+   sortBy?:string,
+   topicParents?:{}
 }
 
 const DEFAULT_STATE: UIState = {
@@ -139,6 +140,7 @@ export const updateFacets = (state: UIState, action: actions.LoadingAction) => {
     let t = action.meta.datatype
     let key = action.meta.key
     let update = {}
+    let topicParents 
     let facets = Object.keys(action.meta.facets).map(k => {
         let prop = action.meta.config[k]
         let keys = Object.keys(action.payload)        
@@ -149,6 +151,7 @@ export const updateFacets = (state: UIState, action: actions.LoadingAction) => {
             let meta = action.meta.facets[k]
             let props = Object.keys(meta)
             if(k === "tree") { 
+                topicParents = meta["parents"]
                 props = meta["@graph"].map(i => i["@id"].replace(/bdr:/,"http://purl.bdrc.io/resource/"))
                 meta = meta["@metadata"]
             }
@@ -269,7 +272,8 @@ export const updateFacets = (state: UIState, action: actions.LoadingAction) => {
 
     return {
         ...state,
-        metadata:{ ... update }
+        metadata:{ ... update },
+        topicParents
     }
 }
 reducers[actions.TYPES.updateFacets] = updateFacets;

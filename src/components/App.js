@@ -574,6 +574,7 @@ class App extends Component<Props,State> {
       else {
          console.log("here")         
          this.props.history.push({pathname:"/search",search:"?q="+key+"&lg="+this.getLanguage()+"&t="+label})
+         // TODO add permanent filters (here ?)
       }
       /*
       else if(label === "Any") // || ( !label)) // && ( this.state.filters.datatype.length === 0 || this.state.filters.datatype.indexOf("Any") !== -1 ) ) )
@@ -621,6 +622,17 @@ class App extends Component<Props,State> {
          
       }
 
+      if(props.topicParents && state.filters.facets && state.filters.facets[bdo+"workGenre"]) {
+         if(!s) s = { ...state }
+         let genre = state.filters.facets[bdo+"workGenre"]
+         if(genre.val) genre = genre.val
+         for(let p of genre) 
+            if(props.topicParents[p]) 
+               for(let q of props.topicParents[p]) 
+                  if(s.collapse[q] === undefined) 
+                     s.collapse[q] = true
+      }
+            
       if(state.filters.preload && props.keyword && props.config && !state.filters.datatype.includes("Any")) {
          
          if(!s) s = { ...state }
@@ -1070,8 +1082,13 @@ class App extends Component<Props,State> {
    }
 
    updateSortBy(ev,check,i) {
-      if(check && (!this.props.sortBy || i !== this.props.sortBy)) {
+      if(check && (!this.props.sortBy || i !== this.props.sortBy)) {            
+
+         let {pathname,search} = this.props.history.location
+         this.props.history.push({pathname,search:search.replace(/(&[s]=[^&]+)/g,"")+"&s="+i.toLowerCase()})
+         
          this.props.onUpdateSortBy(i.toLowerCase(),this.state.filters.datatype[0])
+
          //this.setState({...this.state, sortBy:i })
       } 
    }
@@ -1137,7 +1154,7 @@ class App extends Component<Props,State> {
          state.filters.preload = true
 
          let {pathname,search} = this.props.history.location
-         this.props.history.push({pathname,search:search.replace(/(&f=.*)$/,"")+getFacetUrl(state.filters,this.props.config.facets[state.filters.datatype[0]])})
+         this.props.history.push({pathname,search:search.replace(/(&f=[^&]+)/g,"")+getFacetUrl(state.filters,this.props.config.facets[state.filters.datatype[0]])})
       }
 
       this.setState(state);
@@ -2995,7 +3012,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
    resetFilters(e) {
       
       let {pathname,search} = this.props.history.location
-      this.props.history.push({pathname,search:search.replace(/(&t=.*)$/,"")+"&t="+this.state.filters.datatype[0]})
+      this.props.history.push({pathname,search:search.replace(/(&[tf]=[^&]+)/g,"")+"&t="+this.state.filters.datatype[0]})
 
       this.setState({...this.state, repage:true, filters:{ datatype: this.state.filters.datatype } }  )
 

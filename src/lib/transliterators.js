@@ -31,7 +31,7 @@ export const transliterators = {
    "bo":{ "bo-x-ewts": (val) => jsEWTS.toWylie(val) },
    "bo-x-ewts":{ "bo": (val) => jsEWTS.fromWylie(val) },
    
-   "sa-deva":{ "sa-x-iast": (val) => Sanscript.t(val,"devanagari","iast") },
+   "sa-[Dd]eva":{ "sa-x-iast": (val) => Sanscript.t(val,"devanagari","iast") },
    "sa-x-iast":{ "sa-deva": (val) => Sanscript.t(val.toLowerCase(),"iast","devanagari") },
    
    "zh-[Hh]an[st]":{ "zh-latn-pinyin" : (val) => pinyin4js.convertToPinyinString(val, ' ', pinyin4js.WITH_TONE_MARK) },
