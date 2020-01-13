@@ -1172,15 +1172,6 @@ function sortResultsByRelevance(results) {
                   }
                }
                last = i
-<<<<<<< HEAD
-            }
-         }
-         // TODO no need to keep all scores (needs to be elsewhere more generic)
-         if(scoreDel.length) { 
-            for(let i of scoreDel) delete results[k][i]
-            results[k] = results[k].filter(e=>e)
-         }
-=======
             }
          }
          // TODO no need to keep all scores (needs to be elsewhere more generic)
@@ -1215,42 +1206,11 @@ function sortResultsByPopularity(results) {
                n = Number(v.value)
             }
          }
->>>>>>> 5e8f5591a0ce504324e726844bbbaeb6a7b03b45
          return ({k, n, p})
       },{})
       keys = _.orderBy(keys,['n','p'],['desc', 'desc'])
       //console.log("sortK",keys)
 
-<<<<<<< HEAD
-      let sortRes = {}
-      for(let k of keys) sortRes[k.k] = results[k.k]
-
-      console.log("sortRes",sortRes)
-
-      return sortRes
-   }
-   return results
-}
-
-
-function sortResultsByPopularity(results) {
-   let keys = Object.keys(results)
-   if(keys && keys.length) {
-      keys = keys.map(k => {
-         let n, score, p = results[k].length
-         for(let i in results[k]) {
-            let v = results[k][i]
-            if(v.type === tmp+"entityScore") {
-               n = Number(v.value)
-            }
-         }
-         return ({k, n, p})
-      },{})
-      keys = _.orderBy(keys,['n','p'],['desc', 'desc'])
-      //console.log("sortK",keys)
-
-=======
->>>>>>> 5e8f5591a0ce504324e726844bbbaeb6a7b03b45
       let sortRes = {}
       for(let k of keys) sortRes[k.k] = results[k.k]
 
