@@ -1300,7 +1300,7 @@ class ResourceViewer extends Component<Props,State>
          sameAsPrefix = this.setProvLab(elem,prefix,sameAsPrefix)   
          
          //console.log("s",prop,prefix,sameAsPrefix,pretty,elem,info,infoBase)
-
+         
          if((info && infoBase && infoBase.filter(e=>e["xml:lang"]||e["lang"]).length >= 0) || prop.match(/[/#]sameAs/)) {
 
 

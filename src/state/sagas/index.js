@@ -1155,21 +1155,60 @@ function sortResultsByRelevance(results) {
    let keys = Object.keys(results)
    if(keys && keys.length) {
       keys = keys.map(k => {
-         let n, score, p = results[k].length
-         for(let v of results[k]) {
+         let n, score, p = results[k].length, scoreDel = [],last
+         for(let i in results[k]) {
+            let v = results[k][i]
             if(v.type === tmp+"matchScore") {
                if(!n) n = Number(v.value)
                else { 
                   let m = Number(v.value)
-                  if(m > n) n = m
+                  if(m > n) { 
+                     console.log("push",v,i,last,n,m)
+                     n = m
+                     scoreDel.push(Number(last))
+                     p--
+                  }
                }
+               last = i
             }
          }
-         // TODO no need to keep all scores
+         // TODO no need to keep all scores (needs to be elsewhere more generic)
+         if(scoreDel.length) { 
+            for(let i of scoreDel) delete results[k][i]
+            results[k] = results[k].filter(e=>e)
+         }
          return ({k, n, p})
       },{})
       keys = _.orderBy(keys,['n','p'],['desc', 'desc'])
       //console.log("sortK",keys)
+
+      let sortRes = {}
+      for(let k of keys) sortRes[k.k] = results[k.k]
+
+      console.log("sortRes",sortRes)
+
+      return sortRes
+   }
+   return results
+}
+
+
+function sortResultsByPopularity(results) {
+   let keys = Object.keys(results)
+   if(keys && keys.length) {
+      keys = keys.map(k => {
+         let n, score, p = results[k].length
+         for(let i in results[k]) {
+            let v = results[k][i]
+            if(v.type === tmp+"entityScore") {
+               n = Number(v.value)
+            }
+         }
+         return ({k, n, p})
+      },{})
+      keys = _.orderBy(keys,['n','p'],['desc', 'desc'])
+      //console.log("sortK",keys)
+
       let sortRes = {}
       for(let k of keys) sortRes[k.k] = results[k.k]
 
@@ -1214,7 +1253,8 @@ async function startSearch(keyword,language,datatype,sourcetype,dontGetDT) {
                   let t = datatype[0].toLowerCase()+"s"                 
                   let dataWithAsset = keys.reduce( (acc,k) => ({...acc, [k]:result[e][k].map(e => (!asset.includes(e.type)||e.value === "false"?e:{type:_tmp+"assetAvailability",value:e.type}))}),{})
                   //console.log("dWa",dataWithAsset)
-                  if(!state.ui.sortBy || state.ui.sortBy === "relevance") return { ...acc, [t]: sortResultsByRelevance(dataWithAsset) }
+                  if(!state.ui.sortBy || state.ui.sortBy === "popularity") return { ...acc, [t]: sortResultsByPopularity(dataWithAsset) }
+                  if(state.ui.sortBy === "closest matches") return { ...acc, [t]: sortResultsByRelevance(dataWithAsset) }
                   else if(state.ui.sortBy === "work title") return { ...acc, [t]: sortResultsByTitle(dataWithAsset, langPreset) }
                }
                else if(e === "aux") {                  
@@ -1405,7 +1445,8 @@ async function updateSortBy(i,t)
    console.log("uSb",i,t,state,data)
 
    // TODO clean a bit 
-   if(i === "relevance") data.results.bindings[t.toLowerCase()+"s"] = sortResultsByRelevance(data.results.bindings[t.toLowerCase()+"s"]) 
+   if(i === "popularity") data.results.bindings[t.toLowerCase()+"s"] = sortResultsByPopularity(data.results.bindings[t.toLowerCase()+"s"]) 
+   else if(i === "closest matches") data.results.bindings[t.toLowerCase()+"s"] = sortResultsByRelevance(data.results.bindings[t.toLowerCase()+"s"]) 
    else if(i === "work title") { 
       let langPreset = state.ui.langPreset
       data.results.bindings[t.toLowerCase()+"s"] = sortResultsByTitle(data.results.bindings[t.toLowerCase()+"s"], langPreset)

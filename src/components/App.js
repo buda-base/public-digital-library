@@ -2147,6 +2147,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             }
             { this.getResultProp(tmp+"otherLabel",allProps, true, false, [skos+"prefLabel", skos+"altLabel"], !preLit?preLit:preLit.replace(/[↦↤]/g,"") ) }
             { this.getResultProp(tmp+"assetAvailability",allProps,false,false) }
+            { this.getResultProp(tmp+"popularityScore",allProps,false,false, [tmp+"entityScore"]) }
             </div> )
 
       retList.push(<hr/>);
@@ -3665,12 +3666,11 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      </Collapse>
                      {
                         this.widget(I18n.t("Lsidebar.sortBy.title"),"sortBy",
-                        [ "Relevance", "Work Title" ].map((i) => <div key={i} style={{width:"150px",textAlign:"left"}} className="searchWidget">
+                        [ "Popularity", "Closest Matches", "Work Title" ].map((i,n) => <div key={i} style={{width:"150px",textAlign:"left"}} className="searchWidget">
                               <FormControlLabel
                                  control={
                                     <Checkbox
-                                       checked={this.props.sortBy === i.toLowerCase() || (!this.props.sortBy && i === "Relevance") }
-                                       //disabled={i === "Relevance"}
+                                       checked={this.props.sortBy === i.toLowerCase() || (!this.props.sortBy && n === 0) }
                                        className="checkbox"
                                        icon={<PanoramaFishEye/>}
                                        checkedIcon={<CheckCircle/>}
