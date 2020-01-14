@@ -1475,6 +1475,9 @@ export function* watchUpdateSortBy() {
 
 async function getInstances(uri)
 {
+
+   store.dispatch(uiActions.loading(uri, true));
+
    let keyword = store.getState().data.keyword
 
    let results = await api.getInstances(uri);
@@ -1497,6 +1500,7 @@ async function getInstances(uri)
 
    //store.dispatch(dataActions.gotInstances(uri,data))
 
+   store.dispatch(uiActions.loading(uri, false));
 }
 
 export function* watchGetInstances() {
