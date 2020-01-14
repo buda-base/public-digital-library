@@ -390,11 +390,12 @@ type Props = {
    failures?:{},
    assoRes?:{},
    sortBy?:string,
+   instances?:{};
    onResetSearch:()=>void,
    onOntoSearch:(k:string)=>void,
    onStartSearch:(k:string,lg:string,t?:string)=>void,
    onSearchingKeyword:(k:string,lg:string,t?:string[])=>void,
-   onGetDatatypes:(k:string,lg:string)=>void,
+   onGetInstances:(uri:string)=>void,
    onCheckDatatype:(t:string,k:string,lg:string)=>void,
    onGetFacetInfo:(k:string,lg:string,f:string)=>void,
    onCheckFacet:(k:string,lg:string,f:{[string]:string})=> void,
@@ -403,7 +404,8 @@ type Props = {
    onSetPrefLang:(lg:string)=>void,
    onToggleLanguagePanel:()=>void,
    onUserProfile:(url:{})=>void,
-   onUpdateSortBy:(i:string,t:string)=>void
+   onUpdateSortBy:(i:string,t:string)=>void,
+   onGetDatatypes:(k:string,lg:string)=>void
 
 }
 
@@ -437,14 +439,14 @@ type State = {
    autocheck?:boolean,   
    paginate:{},   
    repage:boolean,
+   instances?:{},
    results:{
       [string]:{
          message:[],
          counts:{},
          types:[],      
          paginate:{index:number,pages:number[],n:number[],goto?:number}
-      }
-      
+      }      
    }
 }
 
@@ -656,8 +658,7 @@ class App extends Component<Props,State> {
                props.onUpdateSortBy(s.sortBy.toLowerCase(),s.filters.datatype[0])
                delete s.sortBy
             }
-         }
-         
+         }         
          
          if(props.searches && props.searches[s.filters.datatype[0]] && props.searches[s.filters.datatype[0]][props.keyword+"@"+props.language] && props.searches[s.filters.datatype[0]][props.keyword+"@"+props.language].metadata )
          {
@@ -991,6 +992,18 @@ class App extends Component<Props,State> {
          }
 
          //console.groupEnd()
+      }
+
+
+      if(props.instances && (!state.instances || !state.instances[state.id])) {
+
+         if(!s) s = { ...state }
+
+         if(!s.instances) s.instances = {}  
+         
+         s.instances[state.id] = props.instances
+         s.repage = true
+
       }
 
       if(s) { 
@@ -1666,6 +1679,49 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
       })
    }
 
+
+   getInstanceLink(id,allProps:[]=[]) {
+      let nb = allProps.filter(p => p.type === tmp+"nbInstance")
+      if(nb.length) {
+         nb = nb[0].value
+         if(nb) {
+            let instances = this.props.instances
+            if(instances) instances = instances[fullUri(id)]
+            console.log("inst",instances)
+            if(instances) { 
+               let instK = Object.keys(instances)
+               let n = 1
+               let ret = []
+               for(let k of instK) {
+                  let label = getLangLabel(this,"",instances[k])
+                  ret.push(<div>{this.makeResult(k,n,null,label.value,label["xml:lang"],null,null,null,[],null,instances[k],label.value,true)}</div>)
+                  n++
+               }
+               if(ret.length) { 
+
+                  ret = <Collapse in={!this.state.collapse[id]}>
+                     {ret}
+                  </Collapse>
+
+                  ret = [ 
+                     <span class="instance-collapse" onClick={(e) => { 
+                        this.setState({...this.state,collapse:{...this.state.collapse,[id]:!this.state.collapse[id] },repage:true })
+                      }}>{!this.state.collapse[id]?<ExpandMore/>:<ExpandLess/>}</span>,
+                     <span class="label">{"Has Instances"+(ret.length > 1 ?"s":"")}:&nbsp;</span>, 
+                     <div style={{clear:"both"}}></div>,
+                     ret
+                  ]
+                  return ret
+               }
+            }
+            else
+               return <div class="match">
+                  <span class="instance-link" onClick={(e) => this.props.onGetInstances(shortUri(id))}>&gt; View Instances ({nb})</span>
+                </div>
+         }
+      }
+   }
+
    getResultProp(prop:string,allProps:[],plural:boolean=true, doLink:boolean = true, fromProp:[], exclude:string) {
       if(allProps && this.props.assoRes) { 
          if(!fromProp) fromProp = [ prop ]
@@ -1738,7 +1794,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
       }
    }
 
-   makeResult(id,n,t,lit,lang,tip,Tag,url,rmatch = [],facet,allProps,preLit)
+   makeResult(id,n,t,lit,lang,tip,Tag,url,rmatch = [],facet,allProps,preLit,isInstance)
    {
       //console.log("res",id,allProps,n,t,lit,lang,tip,Tag,rmatch,sameAsRes)
 
@@ -2165,6 +2221,12 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             { this.getResultProp(tmp+"otherLabel",allProps, true, false, [skos+"prefLabel", skos+"altLabel"], !preLit?preLit:preLit.replace(/[↦↤]/g,"") ) }
             { this.getResultProp(tmp+"assetAvailability",allProps,false,false) }
             { this.getResultProp(tmp+"popularityScore",allProps,false,false, [tmp+"entityScore"]) }
+            { isInstance && [ 
+               this.getResultProp(rdf+"type",allProps),
+               this.getResultProp(tmp+"provider",allProps),
+               this.getResultProp(tmp+"originalRecord",allProps) 
+            ]}
+            { this.getInstanceLink(id,allProps) }
             </div> )
 
       retList.push(<hr/>);

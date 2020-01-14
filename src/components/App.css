@@ -272,6 +272,10 @@ h2 .before { height:16px; }
 .before:hover a { border:none !important; }
 
 
+.instance-link { color:rgba(229, 74, 53,1); cursor:pointer;  margin-right:25px;display:inline-block;font-weight:700;}
+
+.instance-collapse { display:inline-block !important; margin-top:-2px; cursor:pointer; }
+
 .ulink { position:relative; z-index:1;}
 .ulink+span { z-index:0;}
 

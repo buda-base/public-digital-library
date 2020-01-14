@@ -422,6 +422,8 @@ export default class API {
       if(param["L_NAME"] != "") param["L_NAME"] = key ;
       else { delete param["L_NAME"] ; delete param["LG_NAME"] ;  }
 
+      if(param["I_LIM"] === "") delete param["I_LIM"]
+
       if(param["searchType"] != "") url += "/"+param["searchType"];
       else delete param["I_LIM"] ;
       delete param["searchType"]
@@ -765,6 +767,25 @@ export default class API {
          throw e;
       }
   }
+
+
+     async getInstances(IRI: string): Promise<{} | null> {
+
+       let data = [];
+
+       try {
+             let config = store.getState().data.config.ldspdi
+             let url = config.endpoints[config.index]+"/lib" ;
+             let param = {"searchType":"workInstancesGraph","R_RES":IRI, "L_NAME":"", "I_LIM":""}
+
+             let data = this.getQueryResults(url, IRI, param,"GET");
+
+
+            return data ;
+        } catch(e) {
+           throw e;
+        }
+    }
 
      async getStartResults(key: string,lang:string,types:string[]): Promise<{} | null> {
        let data = [];

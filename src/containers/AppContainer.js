@@ -46,9 +46,11 @@ const mapStateToProps = (state) => {
    
    let topicParents = state.ui.topicParents
 
+   let instances = state.data.instances
+
    let newState = { logged,config, hostFailure, searches, keyword, language,loading,datatypes,ontology,facets,
       locale,prefLang,resources,ontoSearch,rightPanel,langPreset, langIndex, failures,dictionary,metadata, assoRes, 
-      sortBy, topicParents }
+      sortBy, topicParents, instances }
 
    if(!global.inTest) console.log("mS2p",state,newState)
 
@@ -100,6 +102,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       },
       onUpdateSortBy:(i:string,t:string) => {
          dispatch(ui.updateSortBy(i,t));
+      },
+      onGetInstances:(k:string) => {
+         dispatch(data.getInstances(k))
       },
 
    }

@@ -1221,6 +1221,44 @@ function sortResultsByPopularity(results) {
    return results
 }
 
+function rewriteAuxMain(result,keyword,datatype)
+{
+   let asset = [_tmp+"hasOpen", _tmp+"hasEtext", _tmp+"hasImage"]
+   let state = store.getState()
+   let langPreset = state.ui.langPreset
+   result = Object.keys(result).reduce((acc,e)=>{
+      if(e === "main") {
+         let keys = Object.keys(result[e])
+         if(keys) {
+            store.dispatch(dataActions.gotAssocResources(keyword,{ data: keys.reduce( (acc,k) => ({...acc, [k]: result[e][k].filter(e => e.type === skos+"altLabel" || e.type === skos+"prefLabel") }),{})  }))
+         }
+         let t = datatype[0].toLowerCase()+"s"                 
+         let dataWithAsset = keys.reduce( (acc,k) => ({...acc, [k]:result[e][k].map(e => (!asset.includes(e.type)||e.value === "false"?e:{type:_tmp+"assetAvailability",value:e.type}))}),{})
+         //console.log("dWa",dataWithAsset)
+         if(!state.ui.sortBy || state.ui.sortBy === "popularity") return { ...acc, [t]: sortResultsByPopularity(dataWithAsset) }
+         if(state.ui.sortBy === "closest matches") return { ...acc, [t]: sortResultsByRelevance(dataWithAsset) }
+         else if(state.ui.sortBy === "work title") return { ...acc, [t]: sortResultsByTitle(dataWithAsset, langPreset) }
+      }
+      else if(e === "aux") {                  
+         store.dispatch(dataActions.gotAssocResources(keyword,{ data: result[e] } ) )
+      }
+      else if(e === "facets") {
+         let cat = "http://purl.bdrc.io/resource/O9TAXTBRC201605"
+         let root = result[e].topics[cat]
+         let tree = [ { "@id": cat, taxHasSubClass: root.subclasses }, ...Object.keys(result[e].topics).reduce( (acc,k) =>  { 
+            let elem = result[e].topics[k] 
+            return ([ ...acc, { "@id":k, taxHasSubClass: elem.subclasses, "skos:prefLabel": elem["skos:prefLabel"], "tmp:count":elem["count"] } ])
+         }, []) ]
+
+
+         return { ...acc, ["tree"]: { "@graph" : tree  } }
+      }
+      else return acc
+   }, {})
+
+   return result
+}
+
 
 async function startSearch(keyword,language,datatype,sourcetype,dontGetDT) {
 
@@ -1242,40 +1280,8 @@ async function startSearch(keyword,language,datatype,sourcetype,dontGetDT) {
       // adapt to new new JSON format
       if(result) {
          console.log("res",result)
-         if(result && (datatype && datatype.indexOf("Any") === -1) ) {
-            let asset = [_tmp+"hasOpen", _tmp+"hasEtext", _tmp+"hasImage"]
-            let state = store.getState()
-            let langPreset = state.ui.langPreset
-            result = Object.keys(result).reduce((acc,e)=>{
-               if(e === "main") {
-                  let keys = Object.keys(result[e])
-                  if(keys) {
-                     store.dispatch(dataActions.gotAssocResources(keyword,{ data: keys.reduce( (acc,k) => ({...acc, [k]: result[e][k].filter(e => e.type === skos+"altLabel" || e.type === skos+"prefLabel") }),{})  }))
-                  }
-                  let t = datatype[0].toLowerCase()+"s"                 
-                  let dataWithAsset = keys.reduce( (acc,k) => ({...acc, [k]:result[e][k].map(e => (!asset.includes(e.type)||e.value === "false"?e:{type:_tmp+"assetAvailability",value:e.type}))}),{})
-                  //console.log("dWa",dataWithAsset)
-                  if(!state.ui.sortBy || state.ui.sortBy === "popularity") return { ...acc, [t]: sortResultsByPopularity(dataWithAsset) }
-                  if(state.ui.sortBy === "closest matches") return { ...acc, [t]: sortResultsByRelevance(dataWithAsset) }
-                  else if(state.ui.sortBy === "work title") return { ...acc, [t]: sortResultsByTitle(dataWithAsset, langPreset) }
-               }
-               else if(e === "aux") {                  
-                  store.dispatch(dataActions.gotAssocResources(keyword,{ data: result[e] } ) )
-               }
-               else if(e === "facets") {
-                  let cat = "http://purl.bdrc.io/resource/O9TAXTBRC201605"
-                  let root = result[e].topics[cat]
-                  let tree = [ { "@id": cat, taxHasSubClass: root.subclasses }, ...Object.keys(result[e].topics).reduce( (acc,k) =>  { 
-                     let elem = result[e].topics[k] 
-                     return ([ ...acc, { "@id":k, taxHasSubClass: elem.subclasses, "skos:prefLabel": elem["skos:prefLabel"], "tmp:count":elem["count"] } ])
-                  }, []) ]
-
-
-                  return { ...acc, ["tree"]: { "@graph" : tree  } }
-               }
-               else return acc
-            }, {})
-         }
+         if(result && (datatype && datatype.indexOf("Any") === -1) ) 
+            result = rewriteAuxMain(result,keyword,datatype)
          else 
             result = Object.keys(result).reduce((acc,e)=>({ ...acc, [e.replace(/^.*[/](Etext)?([^/]+)$/,"$2s").toLowerCase()] : result[e] }),{})
       }
@@ -1465,6 +1471,42 @@ export function* watchUpdateSortBy() {
       (action) => updateSortBy(action.payload, action.meta)
    );
 }
+
+
+async function getInstances(uri)
+{
+   let keyword = store.getState().data.keyword
+
+   let results = await api.getInstances(uri);
+
+   //results = rewriteAuxMain(results,keyword,["Work"])
+
+   let data = getData(results)
+   data = data.results.bindings
+
+   let fullU = fullUri(uri)
+
+   let assoR 
+   if(data.main) assoR = Object.keys(data.main).reduce( (acc,k) => ([...acc, { type:tmp+"hasInstance",value:k }]),[])
+
+   //console.log("gI",uri,data)
+
+   store.dispatch(dataActions.gotAssocResources(keyword,{ data: { ...results.aux } } ) )
+   
+   store.dispatch(dataActions.gotInstances(uri,results.main))
+
+   //store.dispatch(dataActions.gotInstances(uri,data))
+
+}
+
+export function* watchGetInstances() {
+
+   yield takeLatest(
+      dataActions.TYPES.getInstances,
+      (action) => getInstances(action.payload)
+   );
+}
+
 
 async function searchKeyword(keyword,language,datatype) {
 
@@ -1677,6 +1719,7 @@ export default function* rootSaga() {
       watchGetUser(),
       watchGetResetLink(),
       watchUpdateSortBy(),
+      watchGetInstances(),
       //watchChoosingHost(),
       //watchGetDatatypes(),
       watchGetChunks(),

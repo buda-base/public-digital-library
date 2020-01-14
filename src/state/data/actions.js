@@ -179,6 +179,23 @@ export const getUser = (profile: string): Action => {
 }
 
 
+TYPES.getInstances = 'GET_INSTANCES';
+export const getInstances = (uri: string): Action => {
+    return {
+        type: TYPES.getInstances,
+        payload: uri
+    }
+}
+
+TYPES.gotInstances = 'GOT_INSTANCES';
+export const gotInstances = (uri: string, data: {}): Action => {
+    return {
+        type: TYPES.gotInstances,
+        payload: uri,
+        meta: data
+    }
+}
+
 TYPES.getResetLink = 'GET_RESET_LINK';
 export const getResetLink = (userID: string, user:{}, profile: {}): Action => {
     return {

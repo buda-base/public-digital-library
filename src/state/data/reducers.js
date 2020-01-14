@@ -43,7 +43,8 @@ export type DataState = {
    nextChunk?:number,
    nextPage?:number,
    resetLink?:boolean,
-   userEditPolicies?:{}
+   userEditPolicies?:{},
+   instances?:{}
 }
 
 const DEFAULT_STATE: DataState = {
@@ -124,6 +125,21 @@ export const gotUserEditPolicies = (state: DataState, action: Action) => {
    }
 }
 reducers[actions.TYPES.gotUserEditPolicies] = gotUserEditPolicies;
+
+
+export const gotInstances = (state: DataState, action: Action) => {
+
+   let instances = state.instances
+   if(!instances) instances = {}
+   instances[fullUri(action.payload)] = action.meta
+
+   return {
+       ...state,
+       instances
+   }
+}
+reducers[actions.TYPES.gotInstances] = gotInstances;
+
 
 export const getResource = (state: DataState, action: Action) => {
     return {
