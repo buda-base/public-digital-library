@@ -553,7 +553,7 @@ export default class API {
         try {
              let config = store.getState().data.config.ldspdi
              let url = config.endpoints[config.index]+"/lib" ;
-             let param = {"searchType":"rootSearchGraph","LG_NAME":lang}
+             let param = {"searchType":"rootSearchGraph","LG_NAME":lang,"I_LIM":""}
 
              if(typ && typ.length >= 1 && typ[0] !== "Any") { param = { ...param, "searchType":(typ[0] === "Etext"?"Chunks":typ[0]).toLowerCase()+"FacetGraph" } }
              else url = url.replace(/-dev/,"") // fix while -dev/rootSearch returns nothing

@@ -1134,9 +1134,13 @@ function mergeSameAs(result,withSameAs,init = true,rootRes = result, force = fal
 function sortResultsByTitle(results, userLangs) {
    let keys = Object.keys(results)
    let langs = extendedPresets(userLangs)
+   let state = store.getState(), assoR
    if(keys && keys.length) {
       keys = keys.map(k => {
-         let lang,value,labels = results[k].filter(e => e.type && e.type.endsWith("abelMatch") ).map(e => ({ ...e, value:e.value.replace(/[↦]/g,"")})) //r => r.type && r.type === skos+"prefLabel") //r.value && r.value.match(/↦/))
+         let lang,value,labels = results[k].filter(e => e.type && e.type.endsWith("abelMatch") ).map(e => ({ ...e, value:e.value.replace(/[↦]/g,"")})) 
+         if(!labels.length) labels = results[k].filter(r => r.type && r.type === skos+"prefLabel") //r.value && r.value.match(/↦/))
+         if(!labels.length && (assoR = state.data.assocResources[state.data.keyword]) && assoR[k]) labels = assoR[k].filter(r => r.type && r.type === skos+"prefLabel") 
+         console.log("labels?",labels,assoR,k,assoR[k],results[k])
          // TODO case of search by ID
          if(labels.length) { 
             labels = sortLangScriptLabels(labels,langs.flat,langs.translit)
@@ -1230,11 +1234,12 @@ function sortResultsByPopularity(results) {
    return results
 }
 
-function rewriteAuxMain(result,keyword,datatype)
+function rewriteAuxMain(result,keyword,datatype,sortBy)
 {
    let asset = [_tmp+"hasOpen", _tmp+"hasEtext", _tmp+"hasImage"]
    let state = store.getState()
    let langPreset = state.ui.langPreset
+   if(!sortBy) sortBy = state.ui.sortBy
    result = Object.keys(result).reduce((acc,e)=>{
       if(e === "main") {
          let keys = Object.keys(result[e])
@@ -1244,9 +1249,9 @@ function rewriteAuxMain(result,keyword,datatype)
          let t = datatype[0].toLowerCase()+"s"                 
          let dataWithAsset = keys.reduce( (acc,k) => ({...acc, [k]:result[e][k].map(e => (!asset.includes(e.type)||e.value === "false"?e:{type:_tmp+"assetAvailability",value:e.type}))}),{})
          //console.log("dWa",dataWithAsset)
-         if(!state.ui.sortBy || state.ui.sortBy === "popularity") return { ...acc, [t]: sortResultsByPopularity(dataWithAsset) }
-         if(state.ui.sortBy === "closest matches") return { ...acc, [t]: sortResultsByRelevance(dataWithAsset) }
-         else if(state.ui.sortBy === "work title") return { ...acc, [t]: sortResultsByTitle(dataWithAsset, langPreset) }
+         if(!sortBy || sortBy === "popularity") return { ...acc, [t]: sortResultsByPopularity(dataWithAsset) }
+         if(sortBy === "closest matches") return { ...acc, [t]: sortResultsByRelevance(dataWithAsset) }
+         else if(sortBy === "work title") return { ...acc, [t]: sortResultsByTitle(dataWithAsset, langPreset) }
       }
       else if(e === "aux") {                  
          store.dispatch(dataActions.gotAssocResources(keyword,{ data: result[e] } ) )
@@ -1503,14 +1508,18 @@ async function getInstances(uri)
 
    store.dispatch(dataActions.gotAssocResources(keyword,{ data: { ...results.aux } } ) )
 
-   if(keyword) {
+   if(keyword) {      
 
-      store.dispatch(dataActions.gotInstances(uri,results.main))
+      let state = store.getState()
+      let langPreset = state.ui.langPreset
+
+      store.dispatch(dataActions.gotInstances(uri,results.main)) //sortResultsByTitle(results.main, langPreset)))
 
    }
    else {
 
       results = rewriteAuxMain(results,uri,["Work"])
+
       store.dispatch(dataActions.foundResults(uri,"",{results:results},["Work"]))
       
    }

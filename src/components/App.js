@@ -2238,6 +2238,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                this.getResultProp(bdo+"script",allProps),
                this.getResultProp(bdo+"partRoot",allProps),
                this.getResultProp(tmp+"year",allProps,false,false,[tmp+"yearStart"]),
+               this.getResultProp(bdo+"workPublisherName",allProps,false,false),
+               this.getResultProp(bdo+"workPublisherLocation",allProps,false,false),
             ]}
             { this.getResultProp(tmp+"provider",allProps) }
             { this.getInstanceLink(id,allProps) }

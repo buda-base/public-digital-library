@@ -8,6 +8,8 @@
 
 body { overflow:auto !important;padding-right:0 !important; font-family:"Roboto", "Helvetica", "Arial", sans-serif; }
 
+.resultPage > .loader { position:fixed;display:block; width: 100vw;height: 100vh; left: 0; top: 0; }
+
 #data-checkbox { display:flex;justify-content: flex-start;padding-left:90px; }
 .data-checkbox{ margin-left:4px !important; }
 .data-checkbox span svg { font-size:16px !important; }
