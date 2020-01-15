@@ -854,14 +854,14 @@ class App extends Component<Props,State> {
             else if(Ts.indexOf(dt) === -1) Ts.push(dt)
          }
          
-         //console.log("Ts",Ts)
+         //console.log("Ts",Ts) //,props.searches,props.keyword+"@"+props.language,props.searches[props.keyword+"@"+props.language])
 
          let merge 
-         if(props.searches[props.keyword+"@"+props.language]) for(let dt of Ts) { 
+         if(props.searches[props.keyword+"@"+props.language] !== undefined) for(let dt of Ts) { 
             
             let res ;
             if(props.searches[dt]) res = { ...props.searches[dt][props.keyword+"@"+props.language] }
-                        
+               
             if(!results) {
                results = { ...props.searches[props.keyword+"@"+props.language] }
                if(results) { results = { time:results.time, results: { bindings:{ ...results.results.bindings } } }; }
@@ -871,7 +871,7 @@ class App extends Component<Props,State> {
             let dts = dt.toLowerCase()+"s"
             if(!merge) merge = {}
 
-            //console.log("dts",dts,results,res)
+            console.log("dts",dts,results,res)
 
             if(!res || !res.results || !res.results.bindings || !res.results.bindings[dts]) { 
 
@@ -916,14 +916,15 @@ class App extends Component<Props,State> {
             }
             
 
-            //console.log("res!",dts,JSON.stringify(merge[dts],null,3))
+            console.log("res!",dts,JSON.stringify(merge[dts],null,3))
          }         
          if(merge) { 
             if(!results.results) results = { results: {} }
             else results = { ...results, results: { ...results.results } }
             results.results.bindings = { ...merge }
          }
-         //console.log("rootres",JSON.stringify(results,null,3))
+         
+         console.log("rootres",JSON.stringify(results,null,3))
 
          /*
          if(!results) {
@@ -1699,13 +1700,16 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             if(instances) instances = instances[fullUri(id)]
             //console.log("inst",instances)
             if(instances) { 
-               let instK = Object.keys(instances)
-               let n = 1
-               let ret = []
+               let instK = Object.keys(instances), n = 1, ret = [], seeAll 
+
                for(let k of instK) {
-                  let label = getLangLabel(this,"",instances[k])
+                  let label = getLangLabel(this,"",instances[k].filter(e => e.type === skos+"prefLabel"))
                   ret.push(<div>{this.makeResult(k,n,null,label.value,label["xml:lang"],null,null,null,[],null,instances[k],label.value,true)}</div>)
                   n++
+                  if(n>3) { 
+                     seeAll = true
+                     break ;
+                  }
                }
                if(ret.length) { 
 
@@ -1721,12 +1725,19 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      <div style={{clear:"both"}}></div>,
                      ret
                   ]
+
+                  if(seeAll) ret.push(<span class="instance-link">&gt;&nbsp;<Link class="urilink" target="_blank" to={"/search?i="+shortUri(id)+"&t=Work"}>Browse All Instances ({nb})</Link></span>)
+
                   return ret
                }
             }
             else
                return <div class="match">
-                  <span class="instance-link" onClick={(e) => this.props.onGetInstances(shortUri(id))}>&gt; View Instances ({nb})</span>
+                  <span class="instance-link">&gt;&nbsp;
+                     <span class="urilink" onClick={(e) => this.props.onGetInstances(shortUri(id))}>Preview Instances</span>
+                     <emph> or </emph>
+                     <Link class="urilink" target="_blank" to={"/search?i="+shortUri(id)+"&t=Work"}>Browse All ({nb})</Link>
+                  </span>
                 </div>
          }
       }
@@ -1804,7 +1815,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
       }
    }
 
-   makeResult(id,n,t,lit,lang,tip,Tag,url,rmatch = [],facet,allProps,preLit,isInstance)
+   makeResult(id,n,t,lit,lang,tip,Tag,url,rmatch = [],facet,allProps = [],preLit,isInstance)
    {
       //console.log("res",id,allProps,n,t,lit,lang,tip,Tag,rmatch,sameAsRes)
 
@@ -2231,11 +2242,13 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             { this.getResultProp(tmp+"otherLabel",allProps, true, false, [skos+"prefLabel", skos+"altLabel"], !preLit?preLit:preLit.replace(/[↦↤]/g,"") ) }
             { this.getResultProp(tmp+"assetAvailability",allProps,false,false) }
             { this.getResultProp(tmp+"popularityScore",allProps,false,false, [tmp+"entityScore"]) }
-            { isInstance && [ 
-               this.getResultProp(rdf+"type",allProps),
-               this.getResultProp(tmp+"originalRecord",allProps), 
-               this.getResultProp(bdo+"printMethod",allProps), 
+            { /*isInstance &&*/ [ 
+               this.getResultProp(rdf+"type",allProps.filter(e => e.type === rdf+"type" && ![bdo+"AbstractWork",bdo+"Work",bdo+"Instance"].includes(e.value))),
+               this.getResultProp(tmp+"originalRecord",allProps,false,false, [ tmp+"originalRecord", adm+"originalRecord"]), 
                this.getResultProp(bdo+"script",allProps),
+               this.getResultProp(bdo+"workIncipit",allProps,false,false),
+               this.getResultProp(bdo+"workMaterial",allProps), 
+               this.getResultProp(bdo+"printMethod",allProps), 
                this.getResultProp(bdo+"partRoot",allProps),
                this.getResultProp(tmp+"year",allProps,false,false,[tmp+"yearStart"]),
                this.getResultProp(bdo+"workPublisherName",allProps,false,false),
@@ -2540,7 +2553,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
             let label ; // sublist[o].filter((e) => (e.type && e.type.match(/prefLabelMatch$/)))[0]
             let sList = sublist[o].filter(e => e.type && e.type.endsWith("abelMatch") )   //( (e) => (e.type && e.type.match(/(prefLabel(Match)?|eTextTitle)$/)))
-            // TODO case of search by ID
+            if(!sList.length) sList = sublist[o].filter(e => (e.type && e.type === skos+"prefLabel")) //.match(/(prefLabel(Match)?|eTextTitle)$/)))
 
             /* // deprecated 
             let listOrder = { "prefLabelMatch$" : 1, "prefLabel$":2,"eTextTitle$":3 }

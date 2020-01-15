@@ -255,10 +255,12 @@ div[role="tooltip"] > div { font-weight:bold;font-size:16px; }
 
 .person #person, .place #place { display:none;}
 
+.instance-link .urilink,
 .match .urilink,  
 .match .multi a,
 .resource .data a, a.login { text-decoration: none; color:rgba(229, 74, 53,1);}
 a.login { text-decoration:underline; cursor:pointer; }
+.instance-link .urilink:hover,
 .match .urilink:hover, 
 .match .multi a:hover,
 .resource .data a:hover { border-bottom:1px solid rgba(229, 74, 53,1); }
@@ -274,7 +276,9 @@ h2 .before { height:16px; }
 .before:hover a { border:none !important; }
 
 
-.instance-link { color:rgba(229, 74, 53,1); cursor:pointer;  margin-right:25px;display:inline-block;font-weight:700;}
+.instance-link { color:rgba(229, 74, 53,1);   margin-right:25px;display:inline-block;font-weight:700;}
+.instance-link > span { cursor:pointer; }
+.instance-link > emph { color:black; }
 
 .instance-collapse { display:inline-block !important; margin-top:-2px; cursor:pointer; }
 
@@ -673,7 +677,7 @@ div.match span.highlight { border:1px solid rgba(229, 74, 53,1); padding:0px 4px
 
 /* div.match span.highlight { background-color: rgba(229, 74, 53,1.0); color:white ; padding:0px 2px ;}  */
 
-.urilink .highlight { color:rgba(179, 14, 0,1); } 
+.urilink .highlight { color:rgba(179, 14, 0,1) ; } 
 
 #UView { width:800px;height:480px;border:none; overflow:visible; }
 

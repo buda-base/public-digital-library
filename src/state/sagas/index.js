@@ -1508,19 +1508,27 @@ async function getInstances(uri)
 
    store.dispatch(dataActions.gotAssocResources(keyword,{ data: { ...results.aux } } ) )
 
+
    if(keyword) {      
 
       let state = store.getState()
       let langPreset = state.ui.langPreset
 
-      store.dispatch(dataActions.gotInstances(uri,results.main)) //sortResultsByTitle(results.main, langPreset)))
+      results = rewriteAuxMain(results,keyword,["Work"])
+
+      store.dispatch(dataActions.gotInstances(uri,results.works)) //sortResultsByTitle(results.main, langPreset)))
 
    }
    else {
 
+      let numResults = Object.keys(results.main)
+      if(numResults.length) numResults = numResults.length
+
       results = rewriteAuxMain(results,uri,["Work"])
 
-      store.dispatch(dataActions.foundResults(uri,"",{results:results},["Work"]))
+      store.dispatch(dataActions.foundResults(uri,"", { results: { bindings: { } } } ) ) //data));
+
+      store.dispatch(dataActions.foundResults(uri,"", { numResults, results:{bindings:results}},["Work"]))
       
    }
 

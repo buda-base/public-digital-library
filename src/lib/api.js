@@ -698,7 +698,7 @@ export default class API {
       try {
            let config = store.getState().data.config.ldspdi
            let url = config.endpoints[config.index]+"/query/table" ;
-           let data = await this.getQueryResults(url, key, {"LG_NAME":lang,"searchType":"countTypes","LI_NAME":1800}, "GET", "application/json");
+           let data = await this.getQueryResults(url, key, {"LG_NAME":lang,"searchType":"countTypes","LI_NAME":700}, "GET", "application/json");
 
             if(data && data.results && data.results.bindings) {
                return data.results.bindings.reduce( (acc,t) => {
