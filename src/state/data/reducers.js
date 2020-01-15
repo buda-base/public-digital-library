@@ -44,7 +44,8 @@ export type DataState = {
    nextPage?:number,
    resetLink?:boolean,
    userEditPolicies?:{},
-   instances?:{}
+   instances?:{},
+   isInstance?:boolean
 }
 
 const DEFAULT_STATE: DataState = {
@@ -806,7 +807,9 @@ reducers[actions.TYPES.notGettingDatatypes] = notGettingDatatypes;
 
 export const foundResults = (state: DataState, action: actions.FoundResultsAction) => {
 
-   let searches
+   let searches,isInstance 
+   
+   if(action.payload.results) isInstance = action.payload.results.isInstance
 
    if(Array.isArray(action.payload.datatype)) action.payload.datatype = action.payload.datatype[0]
 
@@ -842,6 +845,7 @@ export const foundResults = (state: DataState, action: actions.FoundResultsActio
       keyword:action.payload.keyword,
       language:action.payload.language,
       searches: searches,
+      isInstance
    }
 }
 reducers[actions.TYPES.foundResults] = foundResults;

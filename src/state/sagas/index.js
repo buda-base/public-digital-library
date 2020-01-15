@@ -275,7 +275,7 @@ else if(params && params.i) {
    if(["Work"].indexOf(t) !== -1
    && (!state.data.searches || !state.data.searches[params.r+"@"]))
    {
-      store.dispatch(dataActions.getInstances(params.i));
+      store.dispatch(dataActions.getInstances(params.i,true));
    }
 }
 else if(params && params.r) {
@@ -1002,8 +1002,10 @@ function getStats(cat:string,data:{},tree:{})
    return stat
 }
 
-function addMeta(keyword:string,language:string,data:{},t:string,tree:{},found:boolean=true)
+function addMeta(keyword:string,language:string,data:{},t:string,tree:{},found:boolean=true,facets:boolean=true)
 {
+   console.log("aM",data,data["results"])
+
    if(data["results"] &&  data["results"]["bindings"] && data["results"]["bindings"][t.toLowerCase()+"s"]){
       console.log("FOUND",data);
       let stat = getStats(t,data,tree);
@@ -1030,7 +1032,8 @@ function addMeta(keyword:string,language:string,data:{},t:string,tree:{},found:b
 
       console.log("stat",stat)
       if(found) store.dispatch(dataActions.foundResults(keyword, language, data, [t]));
-      store.dispatch(dataActions.foundFacetInfo(keyword,language,[t],stat))
+      if(facets) store.dispatch(dataActions.foundFacetInfo(keyword,language,[t],stat))
+      else return stat
    }
 }
 
@@ -1140,8 +1143,7 @@ function sortResultsByTitle(results, userLangs) {
          let lang,value,labels = results[k].filter(e => e.type && e.type.endsWith("abelMatch") ).map(e => ({ ...e, value:e.value.replace(/[↦]/g,"")})) 
          if(!labels.length) labels = results[k].filter(r => r.type && r.type === skos+"prefLabel") //r.value && r.value.match(/↦/))
          if(!labels.length && (assoR = state.data.assocResources[state.data.keyword]) && assoR[k]) labels = assoR[k].filter(r => r.type && r.type === skos+"prefLabel") 
-         console.log("labels?",labels,assoR,k,assoR[k],results[k])
-         // TODO case of search by ID
+         //console.log("labels?",labels,assoR,k,assoR[k],results[k])
          if(labels.length) { 
             labels = sortLangScriptLabels(labels,langs.flat,langs.translit)
             labels = labels[0]
@@ -1153,13 +1155,13 @@ function sortResultsByTitle(results, userLangs) {
          }
          return { k, lang, value }
       },{})
-      console.log("keys1", keys)
+      //console.log("keys1", keys)
       let sortKeys = sortLangScriptLabels(keys,langs.flat,langs.translit)
-      console.log("keys2", sortKeys)
+      //console.log("keys2", sortKeys)
       let sortRes = {}
       for(let k of sortKeys) sortRes[k.k] = results[k.k]
 
-      console.log("sortRes",sortRes)
+      console.log("sortResT",sortRes)
 
       return sortRes
    }
@@ -1200,7 +1202,7 @@ function sortResultsByRelevance(results) {
       let sortRes = {}
       for(let k of keys) sortRes[k.k] = results[k.k]
 
-      console.log("sortRes",sortRes)
+      console.log("sortResR",sortRes)
 
       return sortRes
    }
@@ -1227,7 +1229,35 @@ function sortResultsByPopularity(results) {
       let sortRes = {}
       for(let k of keys) sortRes[k.k] = results[k.k]
 
-      console.log("sortRes",sortRes)
+      console.log("sortResP",sortRes)
+
+      return sortRes
+   }
+   return results
+}
+
+
+function sortResultsByYear(results) {
+   let keys = Object.keys(results)
+   if(keys && keys.length) {
+      keys = keys.map(k => {
+         let n = 9999, score, p = results[k].length
+         for(let i in results[k]) {
+            let v = results[k][i]
+            if(v.type === tmp+"yearStart") {
+               n = Number(v.value)
+            }
+         }
+         return ({k, n, p})
+      },{})
+      keys = _.orderBy(keys,['n','p'],['asc', 'desc'])
+      
+      console.log("sortK",keys)
+
+      let sortRes = {}
+      for(let k of keys) sortRes[k.k] = results[k.k]
+
+      console.log("sortResY",sortRes)
 
       return sortRes
    }
@@ -1250,8 +1280,9 @@ function rewriteAuxMain(result,keyword,datatype,sortBy)
          let dataWithAsset = keys.reduce( (acc,k) => ({...acc, [k]:result[e][k].map(e => (!asset.includes(e.type)||e.value === "false"?e:{type:_tmp+"assetAvailability",value:e.type}))}),{})
          //console.log("dWa",dataWithAsset)
          if(!sortBy || sortBy === "popularity") return { ...acc, [t]: sortResultsByPopularity(dataWithAsset) }
-         if(sortBy === "closest matches") return { ...acc, [t]: sortResultsByRelevance(dataWithAsset) }
-         else if(sortBy === "work title") return { ...acc, [t]: sortResultsByTitle(dataWithAsset, langPreset) }
+         else if(sortBy === "closest matches") return { ...acc, [t]: sortResultsByRelevance(dataWithAsset) }
+         else if(sortBy === "work title" || sortBy === "instance title") return { ...acc, [t]: sortResultsByTitle(dataWithAsset, langPreset) }
+         else if(sortBy === "year of publication") return { ...acc, [t]: sortResultsByYear(dataWithAsset) }
       }
       else if(e === "aux") {                  
          store.dispatch(dataActions.gotAssocResources(keyword,{ data: result[e] } ) )
@@ -1462,14 +1493,17 @@ async function updateSortBy(i,t)
 
    let state = store.getState()
    
-   let data = state.data.searches[t][state.data.keyword+"@"+state.data.language]
+   let data ;
+   if(state.data.searches[t] && state.data.searches[t][state.data.keyword+"@"+state.data.language]) data = state.data.searches[t][state.data.keyword+"@"+state.data.language]
+   else if(state.data.searches[state.data.keyword+"@"+state.data.language]) data = state.data.searches[state.data.keyword+"@"+state.data.language]
    
-   console.log("uSb",i,t,state,data)
+   console.log("uSb",i,t,state.data.searches[t],state,data)
 
    // TODO clean a bit 
    if(i === "popularity") data.results.bindings[t.toLowerCase()+"s"] = sortResultsByPopularity(data.results.bindings[t.toLowerCase()+"s"]) 
    else if(i === "closest matches") data.results.bindings[t.toLowerCase()+"s"] = sortResultsByRelevance(data.results.bindings[t.toLowerCase()+"s"]) 
-   else if(i === "work title") { 
+   else if(i === "year of publication") data.results.bindings[t.toLowerCase()+"s"] = sortResultsByYear(data.results.bindings[t.toLowerCase()+"s"]) 
+   else if(i === "work title" || i === "instance title") { 
       let langPreset = state.ui.langPreset
       data.results.bindings[t.toLowerCase()+"s"] = sortResultsByTitle(data.results.bindings[t.toLowerCase()+"s"], langPreset)
    }
@@ -1487,16 +1521,17 @@ export function* watchUpdateSortBy() {
 }
 
 
-async function getInstances(uri)
+async function getInstances(uri,init=false)
 {
 
    store.dispatch(uiActions.loading(uri, true));
+   let state = store.getState()
 
    let keyword = store.getState().data.keyword
    
    let results = await api.getInstances(uri);
 
-   let data = getData(results)
+   let data = getData(results), dataSav = data
    data = data.results.bindings
 
    let fullU = fullUri(uri)
@@ -1504,34 +1539,42 @@ async function getInstances(uri)
    let assoR 
    if(data.main) assoR = Object.keys(data.main).reduce( (acc,k) => ([...acc, { type:tmp+"hasInstance",value:k }]),[])
 
-   console.log("gI",uri,data)
-
-   store.dispatch(dataActions.gotAssocResources(keyword,{ data: { ...results.aux } } ) )
+   console.log("gI",keyword,uri,init,data)
 
 
-   if(keyword) {      
+   if(init || keyword === uri+"@") {
+      
+      let numResults = Object.keys(results.main)
+      if(numResults.length) numResults = numResults.length
 
-      let state = store.getState()
+      let sortBy = state.ui.sortBy
+      if(!sortBy) sortBy = "year of publication" 
+
+      console.log("sortBy?2",sortBy,state.ui.sortBy)
+
+      results = rewriteAuxMain(results,uri,["Work"],sortBy)
+
+      let metadata = addMeta(uri,"",{results:{bindings:results} }, "Work", null, false, false )
+       
+      store.dispatch(dataActions.foundResults(uri,"", { metadata, numResults, isInstance:true, results:{bindings:results}},["Work"]))
+      
+      store.dispatch(dataActions.foundResults(uri,"", { isInstance:true, results: { bindings: { } } } ) ) //data));
+
+   }
+   else { 
+
       let langPreset = state.ui.langPreset
 
-      results = rewriteAuxMain(results,keyword,["Work"])
+      let sortBy = state.ui.sortBy
+      if(!sortBy) sortBy = "year of publication" 
+
+      console.log("sortBy?1",sortBy,state.ui.sortBy)
+
+      results = rewriteAuxMain(results,keyword,["Work"],sortBy)
 
       store.dispatch(dataActions.gotInstances(uri,results.works)) //sortResultsByTitle(results.main, langPreset)))
 
    }
-   else {
-
-      let numResults = Object.keys(results.main)
-      if(numResults.length) numResults = numResults.length
-
-      results = rewriteAuxMain(results,uri,["Work"])
-
-      store.dispatch(dataActions.foundResults(uri,"", { results: { bindings: { } } } ) ) //data));
-
-      store.dispatch(dataActions.foundResults(uri,"", { numResults, results:{bindings:results}},["Work"]))
-      
-   }
-
    //store.dispatch(dataActions.gotInstances(uri,data))
 
    store.dispatch(uiActions.loading(uri, false));
@@ -1541,7 +1584,7 @@ export function* watchGetInstances() {
 
    yield takeLatest(
       dataActions.TYPES.getInstances,
-      (action) => getInstances(action.payload)
+      (action) => getInstances(action.payload,action.meta)
    );
 }
 

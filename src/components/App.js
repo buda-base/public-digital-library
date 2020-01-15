@@ -262,6 +262,11 @@ function getPropLabel(that, i, withSpan = true) {
       if(!labels) labels = label["http://www.w3.org/2000/01/rdf-schema#label"]
    }
    else if(that.props.assoRes && that.props.assoRes[i]) labels = that.props.assoRes[i]
+   else if(that.props.resources && that.props.resources[i]) { 
+      labels = that.props.resources[i]
+      if(labels) labels = labels[fullUri(i)]
+      if(labels) labels = labels[skos+"prefLabel"]
+   }
 
    let lang
    if(labels) {
@@ -390,7 +395,8 @@ type Props = {
    failures?:{},
    assoRes?:{},
    sortBy?:string,
-   instances?:{};
+   instances?:{},
+   isInstance?:boolean,
    onResetSearch:()=>void,
    onOntoSearch:(k:string)=>void,
    onStartSearch:(k:string,lg:string,t?:string)=>void,
@@ -821,7 +827,7 @@ class App extends Component<Props,State> {
                   if(!time || props.searches[d][k].time > time) { 
                      time = props.searches[d][k].time 
                      needRefresh = true 
-                     console.log("refreshC",time,d)
+                     console.log("refreshC",time,d,state.id,current)
                   }
                }  
             }      
@@ -871,7 +877,7 @@ class App extends Component<Props,State> {
             let dts = dt.toLowerCase()+"s"
             if(!merge) merge = {}
 
-            console.log("dts",dts,results,res)
+            //console.log("dts",dts,results,res)
 
             if(!res || !res.results || !res.results.bindings || !res.results.bindings[dts]) { 
 
@@ -916,7 +922,7 @@ class App extends Component<Props,State> {
             }
             
 
-            console.log("res!",dts,JSON.stringify(merge[dts],null,3))
+            //console.log("res!",dts,JSON.stringify(merge[dts],null,3))
          }         
          if(merge) { 
             if(!results.results) results = { results: {} }
@@ -924,7 +930,8 @@ class App extends Component<Props,State> {
             results.results.bindings = { ...merge }
          }
          
-         console.log("rootres",JSON.stringify(results,null,3))
+
+         //console.log("rootres",JSON.stringify(results,null,3))
 
          /*
          if(!results) {
@@ -1015,6 +1022,14 @@ class App extends Component<Props,State> {
             s.instances = { ...props.instances }
             s.repage = true
          }
+      }
+
+      if(props.isInstance) {
+         
+         if(!s) s = { ...state }
+
+         s.filters = { ...s.filters, instance: props.keyword }
+
       }
 
       if(s) { 
@@ -2243,7 +2258,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             { this.getResultProp(tmp+"assetAvailability",allProps,false,false) }
             { this.getResultProp(tmp+"popularityScore",allProps,false,false, [tmp+"entityScore"]) }
             { /*isInstance &&*/ [ 
-               this.getResultProp(rdf+"type",allProps.filter(e => e.type === rdf+"type" && ![bdo+"AbstractWork",bdo+"Work",bdo+"Instance"].includes(e.value))),
+               this.getResultProp(rdf+"type",allProps.filter(e => e.type === rdf+"type" && ![bdo+"AbstractWork",bdo+"Work",bdo+"Instance",bdo+"SerialMember"].includes(e.value))),
                this.getResultProp(tmp+"originalRecord",allProps,false,false, [ tmp+"originalRecord", adm+"originalRecord"]), 
                this.getResultProp(bdo+"script",allProps),
                this.getResultProp(bdo+"workIncipit",allProps,false,false),
@@ -2253,6 +2268,11 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                this.getResultProp(tmp+"year",allProps,false,false,[tmp+"yearStart"]),
                this.getResultProp(bdo+"workPublisherName",allProps,false,false),
                this.getResultProp(bdo+"workPublisherLocation",allProps,false,false),
+               this.getResultProp(bdo+"workBiblioNote",allProps,false,false),
+               this.getResultProp(bdo+"workExtentStatement",allProps,false,false),
+               this.getResultProp(bdo+"workLocationStatement",allProps,false,false),
+               this.getResultProp(rdfs+"comment",allProps,false,false),
+
             ]}
             { this.getResultProp(tmp+"provider",allProps) }
             { this.getInstanceLink(id,allProps) }
@@ -2422,8 +2442,10 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      if(sameAs) sameAs = sameAs[fullURI]
                      if(sameAs) sameAs = Object.keys(sameAs).filter(k => k === adm+"canonicalHtml" || k === owl+"sameAs").reduce( (acc,k) => ([...acc, ...sameAs[k].map( s => ({ ...s, type:k }))]),[])
                      console.log("res sameAs", sameAs)
-                     message.push(<h4 key="keyResource" style={{marginLeft:"16px"}}>Resource Id Matching</h4>)
-                     message.push(this.makeResult(this.props.keyword,1,null,l.value,l.lang,null,null,null,[],null,sameAs)) //[{"type":owl+"sameAs","value":this.props.keyword}]))
+                     if(!this.props.isInstance) {
+                        message.push(<h4 key="keyResource" style={{marginLeft:"16px"}}>{"Resource Id Matching"}</h4>)
+                        message.push(this.makeResult(this.props.keyword,1,null,l.value,l.lang,null,null,null,[],null,sameAs)) //[{"type":owl+"sameAs","value":this.props.keyword}]))
+                     }
                   }
                }
             }
@@ -2533,8 +2555,10 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          {
             if(!iniTitle) {
                iniTitle = true
+               let _t = t.toLowerCase()
+               if(_t === "work" && this.props.isInstance) _t = "instance"
                if(displayTypes.length > 1 || displayTypes.indexOf("Any") !== -1) message.push(<MenuItem  onClick={(e)=>this.handleCheck(e,t,true,{},true)}><h4>{I18n.t("types."+t.toLowerCase())+"s"+(false && displayTypes.length>1&&counts["datatype"][t]?" ("+counts["datatype"][t]+")":"")}</h4></MenuItem>);
-               else message.push(<MenuItem><h4>{I18n.t("types."+t.toLowerCase())+"s"+(false && displayTypes.length>=1&&counts["datatype"][t]?" ("+counts["datatype"][t]+")":"")}</h4></MenuItem>);
+               else message.push(<MenuItem><h4>{I18n.t("types."+_t)+"s"+(false && displayTypes.length>=1&&counts["datatype"][t]?" ("+counts["datatype"][t]+")":"")}</h4></MenuItem>);
             }
             absi ++ ;
 
@@ -2603,7 +2627,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   return ( /*(this.state.filters.facets && e.type && this.state.filters.facets[e.type]) ||*/ use && (
                   ( this.props.language != "" ? e.value && ((e.value.match(/[↦↤]/) && e.type  && !e.type.match(/(creator)/) && (!e.type.match(/(prefLabelMatch$)/) || (!label.value.match(/[↦↤]/)))))
                                                             //|| e.type && e.type.match(/sameAs$/))
-                                              : !e.lang && (e.value.match(new RegExp(bdr+this.props.keyword.replace(/bdr:/,"")))
+                                              : !e.lang && false && e.value !== bdo + "instanceOf" && (e.value.match(new RegExp(bdr+this.props.keyword.replace(/bdr:/,"")))
                                                             || (e.type && e.type.match(/relationType$/) ) ) )
 
                      ) ) } ).map(e => e.type.match(/prefLabelMatch$/) ? { ...e, type:skos+"prefLabel" }:e)
@@ -3489,7 +3513,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
             meta = this.props.searches[this.state.filters.datatype[0]][this.props.keyword+"@"+this.props.language]
 
-            //console.log("ici",meta)
+            console.log("ici",meta)
 
             if(meta) meta = meta.metadata
             if(meta) {
@@ -3500,7 +3524,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
          }
       }
-      //console.log("metaK",metaK)
+      console.log("metaK",metaK)
 
       /*
 
@@ -3688,6 +3712,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                            ,
                            <div id="filters-UI">
                               { this.state.filters.datatype.filter(k => k !== "Any").map(k => this.renderFilterTag(true, "Type", k, (event, checked) => this.handleCheck(event, k, false) ) )}                              
+                              { this.state.filters.instance && this.renderFilterTag(false, "Instance Of", this.state.filters.instance, (event, checked) => true )  } 
                               { this.state.filters.facets?Object.keys(this.state.filters.facets).map(f => {
                                  let vals = this.state.filters.facets[f]
                                  if(vals.val) vals = vals.val
@@ -3773,8 +3798,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                         </div>
                      </Collapse>
                      {
-                        this.widget(I18n.t("Lsidebar.sortBy.title"),"sortBy",
-                        [ "Popularity", "Closest Matches", "Work Title" ].map((i,n) => <div key={i} style={{width:"150px",textAlign:"left"}} className="searchWidget">
+                        !this.props.isInstance && this.widget(I18n.t("Lsidebar.sortBy.title"),"sortBy",
+                        (!this.props.isInstance?[ "Popularity", "Closest Matches", "Work Title" ]:["Year of Publication","Instance Title"]).map((i,n) => <div key={i} style={{width:"150px",textAlign:"left"}} className="searchWidget">
                               <FormControlLabel
                                  control={
                                     <Checkbox

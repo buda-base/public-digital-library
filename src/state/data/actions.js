@@ -180,10 +180,11 @@ export const getUser = (profile: string): Action => {
 
 
 TYPES.getInstances = 'GET_INSTANCES';
-export const getInstances = (uri: string): Action => {
+export const getInstances = (uri: string,init?:boolean): Action => {
     return {
         type: TYPES.getInstances,
-        payload: uri
+        payload: uri,
+        meta:init
     }
 }
 

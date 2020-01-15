@@ -46,11 +46,13 @@ const mapStateToProps = (state) => {
    
    let topicParents = state.ui.topicParents
 
-   let instances = state.data.instances
+   let instances = state.data.instances   
+   let isInstance = state.data.isInstance
+
 
    let newState = { logged,config, hostFailure, searches, keyword, language,loading,datatypes,ontology,facets,
       locale,prefLang,resources,ontoSearch,rightPanel,langPreset, langIndex, failures,dictionary,metadata, assoRes, 
-      sortBy, topicParents, instances }
+      sortBy, topicParents, instances, isInstance }
 
    if(!global.inTest) console.log("mS2p",state,newState)
 

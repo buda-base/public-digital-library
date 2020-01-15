@@ -97,7 +97,8 @@ const enTranslation = {
       "place":"Place",
       "role":"Role",
       "topic":"Topic",
-      "work":"Work"
+      "work":"Work",
+      "instance":"Work Instance"
    },
    search:{
       filters:{
