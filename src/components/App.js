@@ -1719,6 +1719,10 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
                for(let k of instK) {
                   let label = getLangLabel(this,"",instances[k].filter(e => e.type === skos+"prefLabel"))
+                  
+                  if(!label) label = { value:"?","xml:lang":"?"}
+                  // TODO etext instance ?
+
                   ret.push(<div>{this.makeResult(k,n,null,label.value,label["xml:lang"],null,null,null,[],null,instances[k],label.value,true)}</div>)
                   n++
                   if(n>3) { 
@@ -2590,6 +2594,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
             label = getLangLabel(this,"",sList) // ,true)
             if(label && label.length > 0) label = label[0]
+
+            if(!label) label = { lang:"?", value:"?" }
 
             let preProps = sublist[o].filter((e) => e.type && e.type.match(/relationType$/ )).map(e => this.props.ontology[e.value])
 

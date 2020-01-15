@@ -1172,7 +1172,7 @@ function sortResultsByRelevance(results) {
    let keys = Object.keys(results)
    if(keys && keys.length) {
       keys = keys.map(k => {
-         let n, score, p = results[k].length, scoreDel = [],last
+         let n = 0, score, p = results[k].length, scoreDel = [],last
          for(let i in results[k]) {
             let v = results[k][i]
             if(v.type === tmp+"matchScore") {
@@ -1214,7 +1214,7 @@ function sortResultsByPopularity(results) {
    let keys = Object.keys(results)
    if(keys && keys.length) {
       keys = keys.map(k => {
-         let n, score, p = results[k].length
+         let n = 0, score, p = results[k].length
          for(let i in results[k]) {
             let v = results[k][i]
             if(v.type === tmp+"entityScore") {
@@ -1565,10 +1565,9 @@ async function getInstances(uri,init=false)
 
       let langPreset = state.ui.langPreset
 
-      let sortBy = state.ui.sortBy
-      if(!sortBy) sortBy = "year of publication" 
+      let sortBy = "year of publication" 
 
-      console.log("sortBy?1",sortBy,state.ui.sortBy)
+      console.log("sortBy?1",sortBy)
 
       results = rewriteAuxMain(results,keyword,["Work"],sortBy)
 
