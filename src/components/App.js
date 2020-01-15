@@ -995,15 +995,25 @@ class App extends Component<Props,State> {
       }
 
 
-      if(props.instances && (!state.instances || !state.instances[state.id])) {
+      if(props.instances) {
 
-         if(!s) s = { ...state }
+         let refresh = false
+         if( !state.instances || (Object.keys(props.instances).length !== Object.keys(state.instances).length) ) {
+            refresh = true
+         }
 
-         if(!s.instances) s.instances = {}  
+         /*
+         console.log("inst ref",refresh,JSON.stringify(Object.keys(props.instances)))
+         if(state.instances) console.log(JSON.stringify(Object.keys(state.instances)))
+         */
          
-         s.instances[state.id] = props.instances
-         s.repage = true
+         if(refresh)
+         {
+            if(!s) s = { ...state }
 
+            s.instances = { ...props.instances }
+            s.repage = true
+         }
       }
 
       if(s) { 
@@ -1687,7 +1697,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          if(nb) {
             let instances = this.props.instances
             if(instances) instances = instances[fullUri(id)]
-            console.log("inst",instances)
+            //console.log("inst",instances)
             if(instances) { 
                let instK = Object.keys(instances)
                let n = 1
@@ -2223,9 +2233,13 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             { this.getResultProp(tmp+"popularityScore",allProps,false,false, [tmp+"entityScore"]) }
             { isInstance && [ 
                this.getResultProp(rdf+"type",allProps),
-               this.getResultProp(tmp+"provider",allProps),
-               this.getResultProp(tmp+"originalRecord",allProps) 
+               this.getResultProp(tmp+"originalRecord",allProps), 
+               this.getResultProp(bdo+"printMethod",allProps), 
+               this.getResultProp(bdo+"script",allProps),
+               this.getResultProp(bdo+"partRoot",allProps),
+               this.getResultProp(tmp+"year",allProps,false,false,[tmp+"yearStart"]),
             ]}
+            { this.getResultProp(tmp+"provider",allProps) }
             { this.getInstanceLink(id,allProps) }
             </div> )
 
@@ -3672,7 +3686,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      <Typography style={{fontSize:"23px",marginBottom:"20px",textAlign:"center"}}>
                         <Translate value="Lsidebar.title" />
                      </Typography>
-                     {
+                     { /* // deprecated, now "Provider" facet
                         this.widget(I18n.t("Lsidebar.collection.title"),"collection",
                         ["BDRC" ,"rKTs" ].map((i) => <div key={i} style={{width:"150px",textAlign:"left"}} className="searchWidget">
                               <FormControlLabel
@@ -3689,7 +3703,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                                  }
                                  label={i}
                               /></div> ))
-                     }                     
+                     */}                     
                      {  this.props.datatypes && !this.props.datatypes.hash &&
                         <Loader loaded={false} className="datatypesLoader" style={{position:"relative"}}/>
                      }

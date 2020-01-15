@@ -269,14 +269,23 @@ else if(params && params.q) {
    }
    */
 }
+else if(params && params.i) {
+   let t = getEntiType(params.i)
+
+   if(["Work"].indexOf(t) !== -1
+   && (!state.data.searches || !state.data.searches[params.r+"@"]))
+   {
+      store.dispatch(dataActions.getInstances(params.i));
+   }
+}
 else if(params && params.r) {
    let t = getEntiType(params.r)
 
-   //console.log("state r",state.data.searches,params,iri)
+   console.log("state r",t,state.data.searches,params,iri)
 
    let s = ["Any"]
    //if(params.t && params.t != "Any") { s = [ params.t ] }
-
+   
    if(t && ["Person","Place","Topic","Work","Role"].indexOf(t) !== -1
    && (!state.data.searches || !state.data.searches[params.r+"@"]))
    {
@@ -1479,10 +1488,8 @@ async function getInstances(uri)
    store.dispatch(uiActions.loading(uri, true));
 
    let keyword = store.getState().data.keyword
-
+   
    let results = await api.getInstances(uri);
-
-   //results = rewriteAuxMain(results,keyword,["Work"])
 
    let data = getData(results)
    data = data.results.bindings
@@ -1492,11 +1499,21 @@ async function getInstances(uri)
    let assoR 
    if(data.main) assoR = Object.keys(data.main).reduce( (acc,k) => ([...acc, { type:tmp+"hasInstance",value:k }]),[])
 
-   //console.log("gI",uri,data)
+   console.log("gI",uri,data)
 
    store.dispatch(dataActions.gotAssocResources(keyword,{ data: { ...results.aux } } ) )
-   
-   store.dispatch(dataActions.gotInstances(uri,results.main))
+
+   if(keyword) {
+
+      store.dispatch(dataActions.gotInstances(uri,results.main))
+
+   }
+   else {
+
+      results = rewriteAuxMain(results,uri,["Work"])
+      store.dispatch(dataActions.foundResults(uri,"",{results:results},["Work"]))
+      
+   }
 
    //store.dispatch(dataActions.gotInstances(uri,data))
 
