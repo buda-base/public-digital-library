@@ -555,7 +555,7 @@ export default class API {
              let url = config.endpoints[config.index]+"/lib" ;
              let param = {"searchType":"rootSearchGraph","LG_NAME":lang,"I_LIM":""}
 
-             if(typ && typ.length >= 1 && typ[0] !== "Any") { param = { ...param, "searchType":(typ[0] === "Etext"?"Chunks":typ[0]).toLowerCase()+"FacetGraph" } }
+             if(typ && typ.length >= 1 && typ[0] !== "Any") { param = { ...param, "searchType":(typ[0] === "Etext"?"Chunks":typ[0]).toLowerCase()+(typ[0]==="Work"?"Facet":"")+"Graph" } }
              else url = url.replace(/-dev/,"") // fix while -dev/rootSearch returns nothing
 
              let data = this.getQueryResults(url, key, param,"GET");

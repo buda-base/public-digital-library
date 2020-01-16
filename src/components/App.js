@@ -3519,7 +3519,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
             meta = this.props.searches[this.state.filters.datatype[0]][this.props.keyword+"@"+this.props.language]
 
-            console.log("ici",meta)
+            //console.log("ici",meta)
 
             if(meta) meta = meta.metadata
             if(meta) {
@@ -3530,7 +3530,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
          }
       }
-      console.log("metaK",metaK)
+
+      //console.log("metaK",metaK)
 
       /*
 
@@ -3640,7 +3641,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   let isExclu = this.state.filters.exclude && this.state.filters.exclude[jpre] && this.state.filters.exclude[jpre].includes(i)
 
                   let cpt_i = this.subcount(j,i)
-
+                  
                   if(i !== "Any" && i !== "unspecified") return (
                      <div key={i} style={{width:"auto",textAlign:"left"}} className="widget searchWidget">
                         <FormControlLabel
@@ -3655,7 +3656,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                               />
 
                            }
-                           label={<span>{label}&nbsp;<span class="facet-count-block">{"("}<span class="facet-count">{cpt_i+meta[j][i].n}</span>{")"}</span></span>}
+                           label={<a title={shortUri(i)}><span>{label}&nbsp;<span class="facet-count-block">{"("}<span class="facet-count">{cpt_i+meta[j][i].n}</span>{")"}</span></span></a>}
                         />
                         { !isExclu && label !== "Any" && <div class="exclude"><Close onClick={(event, checked) => this.handleCheckFacet(event,jpre,[i],true,true)} /></div> }
                      </div>
