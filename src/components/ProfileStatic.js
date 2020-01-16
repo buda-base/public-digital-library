@@ -8,6 +8,10 @@ import {auth} from "../routes"
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Checkbox from '@material-ui/core/Checkbox';
+import CheckBoxOutlineBlank from '@material-ui/icons/CheckBoxOutlineBlank';
+import CheckBox from '@material-ui/icons/CheckBox';
 import Select from '@material-ui/core/Select';
 import TextField from '@material-ui/core/TextField';
 import {shortUri,fullUri} from './App'
@@ -34,7 +38,8 @@ const tmp   = "http://purl.bdrc.io/ontology/tmp/" ;
 const propsMap = {  name: skos+"prefLabel", email: foaf+"mbox",
                     gender: bdo+"personGender", male: bdr+"GenderMale", female: bdr+"GenderFemale", "no-answer": bdr+"GenderNotSpecified",
                     interest: bdou+"interest", buddhism: tmp+"buddhism",
-                    region: bdou+"mainResidenceArea", outside:tmp+"outside", kham:tmp+"kham", amdo:tmp+"amdo", "u-tsang":tmp+"u-tsang", other:tmp+"other" }
+                    region: bdou+"mainResidenceArea", outside:tmp+"outside", kham:tmp+"kham", amdo:tmp+"amdo", "u-tsang":tmp+"u-tsang", other:tmp+"other",
+                    agree: tmp+"agreeEmail" }
 
 type Props = {
     userID?:url,
@@ -62,7 +67,7 @@ export class Profile extends Component<Props,State> {
 
   constructor(props : Props) {
     super(props);
-    this.state = { name:{type:"literal"}, gender:{}, region:{}, interest:{},errors:{} }
+    this.state = { name:{type:"literal"}, gender:{}, region:{}, interest:{}, agree:{type:"literal"}, errors:{} }
   }
   
   /*
@@ -200,12 +205,15 @@ export class Profile extends Component<Props,State> {
 
         let handleChange = (e,val1,val2) => {
 
-          //console.log("e",e,val1,val2)
 
           let type = this.state[e.target.name].type
           if(!type) type = 'uri'
           let value = propsMap[e.target.value]
           if(!value) value = e.target.value
+
+          if(val1 === "agree") value = val2.toString()
+
+          console.log("e",e.target,val1,val2,type,value)
 
           let state = {...this.state, [e.target.name]:{ type, value } } 
 
@@ -214,7 +222,7 @@ export class Profile extends Component<Props,State> {
           this.setState(state)
         }
 
-        let val = { name:"", gender:"", interest:"", region:"", email:"" }
+        let val = { name:"", gender:"", interest:"", region:"", email:"", agree:"" }
         for(let k of Object.keys(val)) {          
           if(this.state[k] && this.state[k].value !== undefined) val[k] = this.state[k].value
           else if(k !== "email" && this.props.profile && this.props.profile[propsMap[k]]) val.name = this.props.profile[propsMap[k]][0].value
@@ -312,7 +320,21 @@ export class Profile extends Component<Props,State> {
                     <MenuItem value={propsMap["other"]}>Other</MenuItem>
                   </Select>
                 </FormControl>
-                {/* <br/> */}
+                <br/>
+                <FormControlLabel
+                     control={
+                        <Checkbox
+                           checked={val.agree === "true"}
+                           className={"checkbox"}
+                           icon={<CheckBoxOutlineBlank/>}
+                           checkedIcon={<CheckBox />}
+                           onChange={(e,val) => handleChange(e,"agree",val)}
+                           inputProps={{ name:"agree", id: 'agree'}}
+                        />
+
+                     }
+                     label={"I agree to receive emails from BDRC"}
+                  />
 
                 {/* <FormControl className="FC">
                   <InputLabel htmlFor="region">Affiliation</InputLabel>

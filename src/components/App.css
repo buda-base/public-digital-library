@@ -745,6 +745,11 @@ h2 + .browse a { font-size:14px; text-transform:capitalize;}
 
 .profile-area .FC { min-width:222px; margin-right:20px;}
 
+.profile-area .checkbox { width:42px; height:42px;}
+.profile-area .checkbox svg { color:rgba(0, 0, 0, 0.54); font-size:18px; }
+
+.profile-area .FC + br + label { margin-top:4px; }
+
 .ulink#upd { margin-top:30px; display:inline-block;}
 
 #TestToken { padding:5px;  }
