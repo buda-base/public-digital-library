@@ -640,7 +640,17 @@ class App extends Component<Props,State> {
                   if(s.collapse[q] === undefined) 
                      s.collapse[q] = true
       }
-            
+
+      if(state.filters.preload && state.sortBy && !props.sortBy) { 
+         
+         if(!s) s = { ...state }
+
+         props.onUpdateSortBy(s.sortBy.toLowerCase(),s.filters.datatype[0])
+         
+         delete s.sortBy
+
+      }
+
       if(state.filters.preload && props.keyword && props.config && !state.filters.datatype.includes("Any")) {
          
          if(!s) s = { ...state }
@@ -660,10 +670,6 @@ class App extends Component<Props,State> {
 
             s.filters.preload = true
 
-            if(s.sortBy) { 
-               props.onUpdateSortBy(s.sortBy.toLowerCase(),s.filters.datatype[0])
-               delete s.sortBy
-            }
          }         
          
          if(props.searches && props.searches[s.filters.datatype[0]] && props.searches[s.filters.datatype[0]][props.keyword+"@"+props.language] && props.searches[s.filters.datatype[0]][props.keyword+"@"+props.language].metadata )
@@ -3683,6 +3689,13 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          })
       }
 
+      let allSortByLists = { 
+         "Work"  : [ "Popularity", "Closest Matches", "Work Title" ],
+         "Person": [ "Popularity", "Closest Matches", "Year of Birth" ]
+      }
+
+      let sortByList = allSortByLists[this.state.filters.datatype[0]]
+
       return (
 <div>
 
@@ -3805,8 +3818,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                         </div>
                      </Collapse>
                      {
-                        !this.props.isInstance && this.widget(I18n.t("Lsidebar.sortBy.title"),"sortBy",
-                        (!this.props.isInstance?[ "Popularity", "Closest Matches", "Work Title" ]:["Year of Publication","Instance Title"]).map((i,n) => <div key={i} style={{width:"150px",textAlign:"left"}} className="searchWidget">
+                        !this.props.isInstance && sortByList && this.widget(I18n.t("Lsidebar.sortBy.title"),"sortBy",
+                        (sortByList /*:["Year of Publication","Instance Title"]*/).map((i,n) => <div key={i} style={{width:"150px",textAlign:"left"}} className="searchWidget">
                               <FormControlLabel
                                  control={
                                     <Checkbox

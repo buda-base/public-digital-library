@@ -1278,11 +1278,11 @@ function rewriteAuxMain(result,keyword,datatype,sortBy)
          }
          let t = datatype[0].toLowerCase()+"s"                 
          let dataWithAsset = keys.reduce( (acc,k) => ({...acc, [k]:result[e][k].map(e => (!asset.includes(e.type)||e.value === "false"?e:{type:_tmp+"assetAvailability",value:e.type}))}),{})
-         //console.log("dWa",dataWithAsset)
+         console.log("dWa",dataWithAsset,sortBy)
          if(!sortBy || sortBy === "popularity") return { ...acc, [t]: sortResultsByPopularity(dataWithAsset) }
          else if(sortBy === "closest matches") return { ...acc, [t]: sortResultsByRelevance(dataWithAsset) }
          else if(sortBy === "work title" || sortBy === "instance title") return { ...acc, [t]: sortResultsByTitle(dataWithAsset, langPreset) }
-         else if(sortBy === "year of publication") return { ...acc, [t]: sortResultsByYear(dataWithAsset) }
+         else if(sortBy.startsWith("year of")) return { ...acc, [t]: sortResultsByYear(dataWithAsset) }
       }
       else if(e === "aux") {                  
          store.dispatch(dataActions.gotAssocResources(keyword,{ data: result[e] } ) )
@@ -1496,13 +1496,15 @@ async function updateSortBy(i,t)
    let data ;
    if(state.data.searches[t] && state.data.searches[t][state.data.keyword+"@"+state.data.language]) data = state.data.searches[t][state.data.keyword+"@"+state.data.language]
    else if(state.data.searches[state.data.keyword+"@"+state.data.language]) data = state.data.searches[state.data.keyword+"@"+state.data.language]
-   
-   console.log("uSb",i,t,state.data.searches[t],state,data)
+
+   console.log("uSb",i,t,state.data.searches[t],state,data,state.ui.sortBy)
+
+   if(!data) return
 
    // TODO clean a bit 
    if(i === "popularity") data.results.bindings[t.toLowerCase()+"s"] = sortResultsByPopularity(data.results.bindings[t.toLowerCase()+"s"]) 
    else if(i === "closest matches") data.results.bindings[t.toLowerCase()+"s"] = sortResultsByRelevance(data.results.bindings[t.toLowerCase()+"s"]) 
-   else if(i === "year of publication") data.results.bindings[t.toLowerCase()+"s"] = sortResultsByYear(data.results.bindings[t.toLowerCase()+"s"]) 
+   else if(i.startsWith("year of")) data.results.bindings[t.toLowerCase()+"s"] = sortResultsByYear(data.results.bindings[t.toLowerCase()+"s"]) 
    else if(i === "work title" || i === "instance title") { 
       let langPreset = state.ui.langPreset
       data.results.bindings[t.toLowerCase()+"s"] = sortResultsByTitle(data.results.bindings[t.toLowerCase()+"s"], langPreset)
