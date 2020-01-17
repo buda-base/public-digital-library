@@ -51,7 +51,7 @@ a.result button { text-transform:none; padding-bottom:0;}
 /* #matches span:not(.label) {  } */
 .match { display:flex; margin-bottom:0px }
 .match a { /*word-break:  break-word;*/ overflow-wrap: break-word; }
-
+.match .label.invisible { opacity:0; }
 
 
 .result-content { position:relative; } 

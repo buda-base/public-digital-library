@@ -1768,15 +1768,44 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
       }
    }
 
-   getResultProp(prop:string,allProps:[],plural:boolean=true, doLink:boolean = true, fromProp:[], exclude:string) {
+   getResultProp(prop:string,allProps:[],plural:boolean=true, doLink:boolean = true, fromProp:[], exclude:string,useAux:[],findProp:[]) {
       if(allProps && this.props.assoRes) { 
          if(!fromProp) fromProp = [ prop ]
          let ret = []
-         let id = allProps.filter( e => fromProp.includes(e.type) && (!exclude || exclude !== e.value) )
+         let id ;
+         if(!useAux) id = allProps.filter( e => fromProp.includes(e.type) && (!exclude || exclude !== e.value) )
+         else id = allProps.filter(e => useAux.includes(e.type)).map(e => this.props.assoRes[e.value]).filter(e=>e).reduce( (acc,e) =>{
+            let t = e.filter(f => f.type === rdf+"type")
+            if(t.length) return { ...acc, [t[0].value]:e}
+            else return acc
+         },{}) 
          
-         //console.log("labels/prop",prop,id)         
+         //console.log("labels/prop",prop,id,useAux,fromProp,allProps) //,this.props.assoRes)         
 
-         if(!doLink) {
+         if(useAux && findProp) {
+            //console.log("uA",id,useAux,findProp)
+            for(let p of findProp) {
+               
+               if(id[p]) {
+ 
+                  let val = id[p].filter(e => e.type === bdo+"onYear")
+                  if(val.length) val = <span>{val[0].value}</span>
+                  else {
+                     let bef = id[p].filter(e => e.type === bdo+"notBefore")
+                     let aft = id[p].filter(e => e.type === bdo+"notAfter")
+                     if(bef.length && aft.length) val = <span>{bef[0].value+" ~ " +aft[0].value}</span>
+                  }
+
+                  ret.push(<div class="match">
+                     <span class="label">{this.fullname(p)}:&nbsp;</span>
+                     <div class="multi">{val}</div>
+                  </div>)
+
+               }
+            }
+            return ret
+         }
+         else if(!doLink) {
             let langs = extendedPresets(this.state.langPreset)
             let labels = sortLangScriptLabels(id,langs.flat,langs.translit)
             for(let i of labels) {
@@ -1833,7 +1862,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                         }</span>)
                         
          }
-         if(ret.length) return <div class="match">
+         if(ret.length && !useAux) return <div class="match">
                   <span class="label">{this.fullname(prop)+(plural && ret.length > 1 ?"s":"")}:&nbsp;</span>
                   <div class="multi">{ret}</div>
                 </div>
@@ -2074,6 +2103,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             
          }
 
+         let lastP,prop = ""
+
          retList.push( <div id='matches'>
             { this.getResultProp(tmp+"author",allProps) }
             { this.getResultProp(bdo+"workIsAbout",allProps,false) }
@@ -2084,8 +2115,9 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
                   //console.log("m",m,allProps)
 
-                  {
-                     let prop = this.fullname(m.type.replace(/.*altLabelMatch/,skos+"altLabel"))
+                  { 
+                     if(prop) lastP = prop 
+                     prop = this.fullname(m.type.replace(/.*altLabelMatch/,skos+"altLabel"))
                      let val,isArray = false ;
                      let lang = m["lang"]
                      if(!lang) lang = m["xml:lang"]
@@ -2110,6 +2142,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                         //val =  mLit["value"]
                         lang = mLit["lang"]
                         if(!lang) lang = mLit["xml:lang"]
+
+                        //val = ["youpi",val]
                      }
 
                      //console.log("val",val,val.length,lang)
@@ -2237,7 +2271,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      //console.log("prop",prop,val,m.value)
 
                      return (<div className="match">
-                        <span className="label">{(!from?prop:from)}:&nbsp;</span>
+                        <span className={"label " +(lastP === prop?"invisible":"")}>{(!from?prop:from)}:&nbsp;</span>
                         {!isArray && <span>{[!uri?val:<Link className="urilink" to={uri}>{val}</Link>,lang?<Tooltip placement="bottom-end" title={
                            <div style={{margin:"10px"}}>
                               <Translate value={languages[lang]?languages[lang].replace(/search/,"tip"):lang}/>
@@ -2266,25 +2300,26 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             }
             { this.getResultProp(tmp+"otherLabel",allProps, true, false, [skos+"prefLabel", skos+"altLabel"], !preLit?preLit:preLit.replace(/[↦↤]/g,"") ) }
             { this.getResultProp(tmp+"assetAvailability",allProps,false,false) }
-            { this.getResultProp(tmp+"popularityScore",allProps,false,false, [tmp+"entityScore"]) }
-            { /*isInstance &&*/ [ 
-               this.getResultProp(rdf+"type",allProps.filter(e => e.type === rdf+"type" && ![bdo+"AbstractWork",bdo+"Work",bdo+"Instance",bdo+"SerialMember"].includes(e.value))),
-               this.getResultProp(tmp+"originalRecord",allProps,false,false, [ tmp+"originalRecord", adm+"originalRecord"]), 
-               this.getResultProp(bdo+"script",allProps),
-               this.getResultProp(bdo+"workIncipit",allProps,false,false),
-               this.getResultProp(bdo+"workMaterial",allProps), 
-               this.getResultProp(bdo+"printMethod",allProps), 
-               this.getResultProp(bdo+"partRoot",allProps),
-               this.getResultProp(tmp+"year",allProps,false,false,[tmp+"yearStart"]),
-               this.getResultProp(bdo+"workPublisherName",allProps,false,false),
-               this.getResultProp(bdo+"workPublisherLocation",allProps,false,false),
-               this.getResultProp(bdo+"workBiblioNote",allProps,false,false),
-               this.getResultProp(bdo+"workExtentStatement",allProps,false,false),
-               this.getResultProp(bdo+"workLocationStatement",allProps,false,false),
-               this.getResultProp(rdfs+"comment",allProps,false,false),
-
-            ]}
+            { /*isInstance &&*/ } 
+            { this.getResultProp(rdf+"type",allProps.filter(e => e.type === rdf+"type" && ![bdo+"AbstractWork",bdo+"Work",bdo+"Instance",bdo+"SerialMember"].includes(e.value))) }
+            { this.getResultProp(tmp+"originalRecord",allProps,false,false, [ tmp+"originalRecord", adm+"originalRecord"]) }
+            { this.getResultProp(bdo+"script",allProps) }
+            { this.getResultProp(bdo+"workIncipit",allProps,false,false) }
+            { this.getResultProp(bdo+"workMaterial",allProps) }
+            { this.getResultProp(bdo+"printMethod",allProps) }
+            { this.getResultProp(bdo+"partRoot",allProps) }
+            { this.state.filters.datatype[0] !== "Person" && 
+               this.getResultProp(tmp+"year",allProps,false,false,[tmp+"yearStart"]) }
+            { this.state.filters.datatype[0] === "Person" && 
+               this.getResultProp(tmp+"year",allProps,false,false,[tmp+"onYear",bdo+"onYear",bdo+"notBefore",bdo+"notAfter"],null,[bdo+"personEvent"],[bdo+"PersonBirth",bdo+"PersonDeath"]) }
+            { this.getResultProp(bdo+"workPublisherName",allProps,false,false) }
+            { this.getResultProp(bdo+"workPublisherLocation",allProps,false,false) }
+            { this.getResultProp(bdo+"workBiblioNote",allProps,false,false) }
+            { this.getResultProp(bdo+"workExtentStatement",allProps,false,false) }
+            { this.getResultProp(bdo+"workLocationStatement",allProps,false,false) }
+            { this.getResultProp(rdfs+"comment",allProps,false,false) }
             { this.getResultProp(tmp+"provider",allProps) }
+            { this.getResultProp(tmp+"popularityScore",allProps,false,false, [tmp+"entityScore"]) }
             { this.getInstanceLink(id,allProps) }
             </div> )
 
@@ -3690,11 +3725,18 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
       }
 
       let allSortByLists = { 
-         "Work"  : [ "Popularity", "Closest Matches", "Work Title" ],
-         "Person": [ "Popularity", "Closest Matches", "Year of Birth" ]
+         "Work": [ "Popularity", "Closest Matches", "Work Title" ],
+         "Person": [ "Popularity", "Closest Matches", "Year of Birth" ],
+         "Instance": [ "Work Title", "Year of Publication" ],
       }
 
       let sortByList = allSortByLists[this.state.filters.datatype[0]]
+      
+      // TODO fix sortBy for instances
+      if(this.props.isInstance) { 
+         //sortByList = allSortByLists["Instance"]
+         sortByList = null
+      }
 
       return (
 <div>
@@ -3786,9 +3828,11 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                         { //facetList&&facetList.length > 0?facetList.sort((a,b) => { return a.props.label < b.props.label } ):
                               types.map((i) => {
 
+                                 if(i==="Any") return
+
                                  //console.log("counts",i,counts["datatype"][i],this.state.filters.datatype.indexOf(i))
 
-                              let disabled = (i !== "Work") // false // (!this.props.keyword && ["Any","Etext","Person","Work"].indexOf(i)===-1 && this.props.language  != "")
+                              let disabled = (!["Work","Person"].includes(i)) // false // (!this.props.keyword && ["Any","Etext","Person","Work"].indexOf(i)===-1 && this.props.language  != "")
                            // || (this.props.language == "")
 
                               return (
@@ -3818,7 +3862,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                         </div>
                      </Collapse>
                      {
-                        !this.props.isInstance && sortByList && this.widget(I18n.t("Lsidebar.sortBy.title"),"sortBy",
+                        sortByList && this.widget(I18n.t("Lsidebar.sortBy.title"),"sortBy",
                         (sortByList /*:["Year of Publication","Instance Title"]*/).map((i,n) => <div key={i} style={{width:"150px",textAlign:"left"}} className="searchWidget">
                               <FormControlLabel
                                  control={
