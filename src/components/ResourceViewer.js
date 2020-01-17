@@ -2462,6 +2462,8 @@ class ResourceViewer extends Component<Props,State>
 
    proplink = (k,txt) => {
 
+      // TODO use skos:definition instead of adm:userTooltip
+
       let tooltip
       if(this.props.ontology && this.props.ontology[k]) {
          if(this.props.ontology[k][adm+"userTooltip"]) 

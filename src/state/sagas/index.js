@@ -1134,7 +1134,7 @@ function mergeSameAs(result,withSameAs,init = true,rootRes = result, force = fal
    return result
 }
 
-function sortResultsByTitle(results, userLangs) {
+function sortResultsByTitle(results, userLangs, reverse) {
    let keys = Object.keys(results)
    let langs = extendedPresets(userLangs)
    let state = store.getState(), assoR
@@ -1157,18 +1157,19 @@ function sortResultsByTitle(results, userLangs) {
       },{})
       //console.log("keys1", keys)
       let sortKeys = sortLangScriptLabels(keys,langs.flat,langs.translit)
+      if(reverse) sortKeys = sortKeys.reverse()
       //console.log("keys2", sortKeys)
       let sortRes = {}
       for(let k of sortKeys) sortRes[k.k] = results[k.k]
 
-      console.log("sortResT",sortRes)
+      //console.log("sortResT",sortRes)
 
       return sortRes
    }
    return results
 }
 
-function sortResultsByRelevance(results) {
+function sortResultsByRelevance(results,reverse) {
    let keys = Object.keys(results)
    if(keys && keys.length) {
       keys = keys.map(k => {
@@ -1179,7 +1180,7 @@ function sortResultsByRelevance(results) {
                if(!n) n = Number(v.value)
                else { 
                   let m = Number(v.value)
-                  if(m > n) { 
+                  if(m > n || (reverse && n < m)) { 
                      console.log("push",v,i,last,n,m)
                      n = m
                      scoreDel.push(Number(last))
@@ -1196,13 +1197,13 @@ function sortResultsByRelevance(results) {
          }
          return ({k, n, p})
       },{})
-      keys = _.orderBy(keys,['n','p'],['desc', 'desc'])
+      keys = _.orderBy(keys,['n','p'],[(reverse?'asc':'desc'), (reverse?'asc':'desc')])
       //console.log("sortK",keys)
 
       let sortRes = {}
       for(let k of keys) sortRes[k.k] = results[k.k]
 
-      console.log("sortResR",sortRes)
+      //console.log("sortResR",sortRes)
 
       return sortRes
    }
@@ -1210,7 +1211,7 @@ function sortResultsByRelevance(results) {
 }
 
 
-function sortResultsByPopularity(results) {
+function sortResultsByPopularity(results,reverse) {
    let keys = Object.keys(results)
    if(keys && keys.length) {
       keys = keys.map(k => {
@@ -1223,13 +1224,13 @@ function sortResultsByPopularity(results) {
          }
          return ({k, n, p})
       },{})
-      keys = _.orderBy(keys,['n','p'],['desc', 'desc'])
+      keys = _.orderBy(keys,['n','p'],[(reverse?'asc':'desc'), (reverse?'asc':'desc')])
       //console.log("sortK",keys)
 
       let sortRes = {}
       for(let k of keys) sortRes[k.k] = results[k.k]
 
-      console.log("sortResP",sortRes)
+      //console.log("sortResP",reverse,sortRes)
 
       return sortRes
    }
@@ -1237,11 +1238,12 @@ function sortResultsByPopularity(results) {
 }
 
 
-function sortResultsByYear(results) {
+function sortResultsByYear(results,reverse) {
    let keys = Object.keys(results)
    if(keys && keys.length) {
       keys = keys.map(k => {
-         let n = 9999, score, p = results[k].length
+         let n = 1000000, score, p = results[k].length
+         if(reverse) n = -1000000
          for(let i in results[k]) {
             let v = results[k][i]
             if(v.type === tmp+"yearStart") {
@@ -1250,14 +1252,12 @@ function sortResultsByYear(results) {
          }
          return ({k, n, p})
       },{})
-      keys = _.orderBy(keys,['n','p'],['asc', 'desc'])
+      keys = _.orderBy(keys,['n','p'],[(reverse?'desc':'asc'), (reverse?'asc':'desc')])
       
-      console.log("sortK",keys)
-
       let sortRes = {}
       for(let k of keys) sortRes[k.k] = results[k.k]
 
-      console.log("sortResY",sortRes)
+      //console.log("sortResY",sortRes)
 
       return sortRes
    }
@@ -1270,6 +1270,7 @@ function rewriteAuxMain(result,keyword,datatype,sortBy)
    let state = store.getState()
    let langPreset = state.ui.langPreset
    if(!sortBy) sortBy = state.ui.sortBy
+   let reverse = sortBy && sortBy.endsWith("reverse")
    result = Object.keys(result).reduce((acc,e)=>{
       if(e === "main") {
          let keys = Object.keys(result[e])
@@ -1278,11 +1279,13 @@ function rewriteAuxMain(result,keyword,datatype,sortBy)
          }
          let t = datatype[0].toLowerCase()+"s"                 
          let dataWithAsset = keys.reduce( (acc,k) => ({...acc, [k]:result[e][k].map(e => (!asset.includes(e.type)||e.value === "false"?e:{type:_tmp+"assetAvailability",value:e.type}))}),{})
-         console.log("dWa",dataWithAsset,sortBy)
-         if(!sortBy || sortBy === "popularity") return { ...acc, [t]: sortResultsByPopularity(dataWithAsset) }
-         else if(sortBy === "closest matches") return { ...acc, [t]: sortResultsByRelevance(dataWithAsset) }
-         else if(sortBy === "work title" || sortBy === "instance title" ||  sortBy.indexOf("name") !== -1) return { ...acc, [t]: sortResultsByTitle(dataWithAsset, langPreset) }
-         else if(sortBy.startsWith("year of")) return { ...acc, [t]: sortResultsByYear(dataWithAsset) }
+        
+        // console.log("dWa",dataWithAsset,sortBy,reverse)
+
+         if(!sortBy || sortBy.startsWith("popularity")) return { ...acc, [t]: sortResultsByPopularity(dataWithAsset,reverse) }
+         else if(sortBy.startsWith("closest matches")) return { ...acc, [t]: sortResultsByRelevance(dataWithAsset,reverse) }
+         else if(sortBy.startsWith("work title") || sortBy.startsWith("instance title") ||  sortBy.indexOf("name") !== -1) return { ...acc, [t]: sortResultsByTitle(dataWithAsset, langPreset, reverse) }
+         else if(sortBy.startsWith("year of")) return { ...acc, [t]: sortResultsByYear(dataWithAsset,reverse) }
       }
       else if(e === "aux") {                  
          store.dispatch(dataActions.gotAssocResources(keyword,{ data: result[e] } ) )
@@ -1506,13 +1509,15 @@ async function updateSortBy(i,t)
 
    if(!data) return
 
+   let reverse = i && i.endsWith("reverse")
+
    // TODO clean a bit 
-   if(i === "popularity") data.results.bindings[t.toLowerCase()+"s"] = sortResultsByPopularity(data.results.bindings[t.toLowerCase()+"s"]) 
-   else if(i === "closest matches") data.results.bindings[t.toLowerCase()+"s"] = sortResultsByRelevance(data.results.bindings[t.toLowerCase()+"s"]) 
-   else if(i.startsWith("year of")) data.results.bindings[t.toLowerCase()+"s"] = sortResultsByYear(data.results.bindings[t.toLowerCase()+"s"]) 
-   else if(i === "work title" || i === "instance title" || i.indexOf("name") !== -1) { 
+   if(i.startsWith("popularity")) data.results.bindings[t.toLowerCase()+"s"] = sortResultsByPopularity(data.results.bindings[t.toLowerCase()+"s"], reverse) 
+   else if(i.startsWith("closest matches")) data.results.bindings[t.toLowerCase()+"s"] = sortResultsByRelevance(data.results.bindings[t.toLowerCase()+"s"], reverse) 
+   else if(i.startsWith("year of")) data.results.bindings[t.toLowerCase()+"s"] = sortResultsByYear(data.results.bindings[t.toLowerCase()+"s"], reverse) 
+   else if(i.startsWith("work title") || i.startsWith("instance title") || i.indexOf("name") !== -1) { 
       let langPreset = state.ui.langPreset
-      data.results.bindings[t.toLowerCase()+"s"] = sortResultsByTitle(data.results.bindings[t.toLowerCase()+"s"], langPreset)
+      data.results.bindings[t.toLowerCase()+"s"] = sortResultsByTitle(data.results.bindings[t.toLowerCase()+"s"], langPreset, reverse)
    }
    data.time = Date.now()
 

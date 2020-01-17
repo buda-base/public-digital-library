@@ -1121,13 +1121,34 @@ class App extends Component<Props,State> {
          
          if(dt.indexOf(lab) === -1 && dt.indexOf("Any") === -1) dt.push(lab);
 
-         if(searchTypes.slice(1).filter(i => !dt.includes(i)).length == 0 || lab === "Any" ) { dt = [ "Any" ] }
+         //if(searchTypes.slice(1).filter(i => !dt.includes(i)).length == 0 || lab === "Any" ) { dt = [ "Any" ] }
 
          this.setState( { ...this.state, searchTypes:dt }  );
       }
    }
 
-   updateSortBy(ev,check,i) {
+   reverseSortBy(ev,check) {
+
+      let sortBy = this.props.sortBy
+      if(!sortBy) sortBy = "popularity"
+
+      if(sortBy) {
+
+         if(sortBy.endsWith("reverse") && !check) sortBy = sortBy.replace(/ reverse$/,"")
+         else if(!sortBy.endsWith("reverse") && check) sortBy = sortBy+ " reverse"
+
+         if(sortBy !== this.props.sortBy) this.updateSortBy(ev,true,sortBy,true)
+      }
+
+   }
+
+   updateSortBy(ev,check,i,fromReverse = false) {
+
+      let sortBy = this.props.sortBy
+      if(!sortBy) sortBy = "popularity"
+
+      if(sortBy.endsWith("reverse") && !fromReverse) i = i + " reverse"
+
       if(check && (!this.props.sortBy || i !== this.props.sortBy)) {            
 
          let {pathname,search} = this.props.history.location
@@ -2363,7 +2384,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          }
 
 
-         console.log("counts",counts,types)
+         //console.log("counts",counts,types)
 
       }
       else if(this.state.searchTypes) for(let typ of this.state.searchTypes) {
@@ -3767,6 +3788,9 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          sortByList = null
       }
 
+      let reverseSort = false
+      if(this.props.sortBy && this.props.sortBy.endsWith("reverse")) reverseSort = true
+
       return (
 <div>
 
@@ -3896,7 +3920,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                               <FormControlLabel
                                  control={
                                     <Checkbox
-                                       checked={this.props.sortBy === i.toLowerCase() || (!this.props.sortBy && n === 0) }
+                                       checked={(this.props.sortBy && this.props.sortBy.startsWith(i.toLowerCase()) ) || (!this.props.sortBy && n === 0) }
                                        className="checkbox"
                                        icon={<PanoramaFishEye/>}
                                        checkedIcon={<CheckCircle/>}
@@ -3905,7 +3929,22 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
                                  }
                                  label={i}
-                              /></div> ))
+                              /></div> ).concat([
+                                 <div key={99} style={{width:"auto",textAlign:"left",marginTop:"5px",paddingTop:"5px"}} className="searchWidget">
+                                 <FormControlLabel
+                                    control={
+                                       <Checkbox
+                                          checked={reverseSort}
+                                          className="checkbox"
+                                          icon={<CheckBoxOutlineBlank/>}
+                                          checkedIcon={<CheckBox/>}
+                                          onChange={(event, checked) => this.reverseSortBy(event, checked) }
+                                       />
+
+                                    }
+                                    label={"Reverse Order"}
+                                 /></div>
+                        ])) 
                      }
                      {  facetWidgets }
                   
@@ -3999,20 +4038,21 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
            <div id="data-checkbox">
             <FormGroup row>
                { 
-                  this.state.searchTypes.indexOf("Any") === -1 && searchTypes.map(d => 
+                  // this.state.searchTypes.indexOf("Any") === -1 &&
+                   searchTypes.map(d => 
                      <FormControlLabel className="data-checkbox" control={
                         <Checkbox onChange={(event, checked) => this.handleSearchTypes(event,d,checked)} 
                            checked={ this.state.searchTypes.indexOf("Any") !== -1 || this.state.searchTypes.indexOf(d) !== -1} 
                            color="black" icon={<CheckBoxOutlineBlank/>} checkedIcon={<CheckBox/>} /> 
                      } label={d} /> ) 
                }
-               { 
+               { /*
                   this.state.searchTypes.indexOf("Any") !== -1 &&
                      <FormControlLabel className="data-checkbox" control={
                         <Checkbox onChange={(event, checked) => this.handleSearchTypes(event,"Any",checked)} checked={ true } 
                            color="black" icon={<CheckBoxOutlineBlank/>} checkedIcon={<CheckBox/>} /> 
                      } label={"All Data Types"} />  
-               }
+               */ }
             </FormGroup>
            </div>
                { false && this.state.keyword.length > 0 && this.state.dataSource.length > 0 &&
