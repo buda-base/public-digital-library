@@ -808,6 +808,8 @@ reducers[actions.TYPES.notGettingDatatypes] = notGettingDatatypes;
 export const foundResults = (state: DataState, action: actions.FoundResultsAction) => {
 
    let searches,isInstance 
+
+   // TODO merge datatype counts
    
    if(action.payload.results) isInstance = action.payload.results.isInstance
 
@@ -854,6 +856,8 @@ export const foundDatatypes = (state: DataState, action: actions.FoundResultsAct
 
    let DT = state.datatypes;
    if(DT) DT = DT[action.payload.keyword+"@"+action.payload.language]
+
+   // TODO keep if already present
 
    return {
       ...state,

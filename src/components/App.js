@@ -2384,6 +2384,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
       }
 
+      /* // TODO update datatype counts with actual results
       let searchT = Object.keys(this.props.searches)
       for(let k of searchT) {
          if(k.match(/^[A-Za-z]+$/) && !types.includes(k)) {
@@ -2397,6 +2398,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
          }
       }
+      */
 
       if(types.length) types = types.sort(function(a,b) { return Number(counts["datatype"][b]) - Number(counts["datatype"][a]) })
 
