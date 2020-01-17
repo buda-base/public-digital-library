@@ -1782,7 +1782,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             else return acc
          },{}) 
          
-         //console.log("labels/prop",prop,id,useAux,fromProp,allProps) //,this.props.assoRes)         
+         console.log("labels/prop",prop,id,useAux,fromProp,allProps) //,this.props.assoRes)         
 
          if(useAux && findProp) {
             //console.log("uA",id,useAux,findProp)
@@ -1840,7 +1840,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                }
             }
 
-            //console.log("labels1",i,labels,this.props.assoRes)
+            console.log("labels1",i,labels,this.props.assoRes)
 
             if(labels) { 
                labels = getLangLabel(this,"",labels)
@@ -1897,7 +1897,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
       if(this.props.auth.isAuthenticated())
       {
-         if(allProps) status = allProps.filter(k => k.type === adm+"status")
+         if(allProps) status = allProps.filter(k => k.type === adm+"status" || k.type === tmp+"status")
          if(status && status.length) status = status[0].value
          else status = null
          
@@ -2302,22 +2302,27 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             }
             { this.getResultProp(tmp+"otherLabel",allProps, true, false, [skos+"prefLabel", skos+"altLabel"], !preLit?preLit:preLit.replace(/[↦↤]/g,"") ) }
             { this.getResultProp(tmp+"assetAvailability",allProps,false,false) }
+            { this.getResultProp(bdo+"placeType",allProps) }
             { /*isInstance &&*/ } 
             { this.getResultProp(rdf+"type",allProps.filter(e => e.type === rdf+"type" && ![bdo+"AbstractWork",bdo+"Work",bdo+"Instance",bdo+"SerialMember"].includes(e.value))) }
             { this.getResultProp(tmp+"originalRecord",allProps,false,false, [ tmp+"originalRecord", adm+"originalRecord"]) }
             { this.getResultProp(bdo+"script",allProps) }
+            
             { this.getResultProp(bdo+"workIncipit",allProps,false,false) }
             { this.getResultProp(bdo+"workMaterial",allProps) }
             { this.getResultProp(bdo+"printMethod",allProps) }
             { this.getResultProp(bdo+"partRoot",allProps) }
+            
             { this.state.filters.datatype[0] !== "Person" && 
                this.getResultProp(tmp+"year",allProps,false,false,[tmp+"yearStart"]) }
             { this.state.filters.datatype[0] === "Person" && 
                this.getResultProp(tmp+"year",allProps,false,false,[tmp+"onYear",bdo+"onYear",bdo+"notBefore",bdo+"notAfter"],null,[bdo+"personEvent"],[bdo+"PersonBirth",bdo+"PersonDeath"]) }
+            
             { this.getResultProp(bdo+"workBiblioNote",allProps,false,false,[bdo+"workBiblioNote",rdfs+"comment"]) }
             { this.getResultProp(bdo+"workPublisherName",allProps,false,false) }
             { this.getResultProp(bdo+"workPublisherLocation",allProps,false,false) }
             { this.getResultProp(bdo+"workLocationStatement",allProps,false,false, [bdo+"workExtentStatement",bdo+"workLocationStatement"]) }
+
             { this.getResultProp(tmp+"provider",allProps) }
             { this.getResultProp(tmp+"popularityScore",allProps,false,false, [tmp+"entityScore"]) }
             { this.getInstanceLink(id,allProps) }
