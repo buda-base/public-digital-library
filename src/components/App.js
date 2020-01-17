@@ -159,7 +159,8 @@ const langSelect = [
    "pi-x-iast"
 ]
 
-const searchTypes = ["All","Work","Etext","Topic","Person","Place","Lineage","Corporation","Role"]
+//const searchTypes = ["All","Work","Etext","Topic","Person","Place","Lineage","Corporation","Role"]
+const searchTypes = [ "Work", "Person","Place" ]
 
 /*
 export const langProfile = [
@@ -2317,7 +2318,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             { this.state.filters.datatype[0] === "Person" && 
                this.getResultProp(tmp+"year",allProps,false,false,[tmp+"onYear",bdo+"onYear",bdo+"notBefore",bdo+"notAfter"],null,[bdo+"personEvent"],[bdo+"PersonBirth",bdo+"PersonDeath"]) }
             
-            { this.getResultProp(tmp+"isCreator",allProps,false,false) }
+            { this.getResultProp(tmp+"isCreator",allProps.filter(e => (e.type === tmp+"isCreator" && e.value !== "false")),false,false) }
 
             { this.getResultProp(bdo+"placeType",allProps) }
 
@@ -3667,9 +3668,10 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             else
             {
 
+               // + fix updateFacet "0 / 123" when results loaded with facet checked 
                // TODO 
                // - trigger foundFacetInfo when language preference changed (labels displayed/sorted depend on language)
-               // - fix updateFacet "0 / 123" when results loaded with facet checked 
+
 
 
                let meta_sort = Object.keys(meta[j])
@@ -3707,7 +3709,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
                   let cpt_i = this.subcount(j,i)
                   
-                  if(i !== "Any" && i !== "unspecified") return (
+                  if(i !== "Any" && i !== "unspecified" && i !== "false") return (
                      <div key={i} style={{width:"auto",textAlign:"left"}} className="widget searchWidget">
                         <FormControlLabel
                            {... cpt_i.startsWith("0")&&!checked?{disabled:true}:{}}
