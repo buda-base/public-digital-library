@@ -227,7 +227,7 @@ else if(params && params.q) {
 
    let dontGetDT = false
    let pt = params.t
-   if(pt && !pt.match(/,/) && ["Person","Work","Etext"].indexOf(pt) !== -1)  {
+   if(pt && !pt.match(/,/) && ["Place", "Person","Work","Etext"].indexOf(pt) !== -1)  {
 
       if(!state.data.searches || !state.data.searches[pt] || !state.data.searches[pt][params.q+"@"+params.lg]) {
          store.dispatch(dataActions.startSearch(params.q,params.lg,[pt],null,dontGetDT)); 
@@ -1281,7 +1281,7 @@ function rewriteAuxMain(result,keyword,datatype,sortBy)
          console.log("dWa",dataWithAsset,sortBy)
          if(!sortBy || sortBy === "popularity") return { ...acc, [t]: sortResultsByPopularity(dataWithAsset) }
          else if(sortBy === "closest matches") return { ...acc, [t]: sortResultsByRelevance(dataWithAsset) }
-         else if(sortBy === "work title" || sortBy === "instance title") return { ...acc, [t]: sortResultsByTitle(dataWithAsset, langPreset) }
+         else if(sortBy === "work title" || sortBy === "instance title" ||  sortBy.indexOf("name") !== -1) return { ...acc, [t]: sortResultsByTitle(dataWithAsset, langPreset) }
          else if(sortBy.startsWith("year of")) return { ...acc, [t]: sortResultsByYear(dataWithAsset) }
       }
       else if(e === "aux") {                  
@@ -1418,7 +1418,12 @@ else {
    }
    else {
 
-      if(datatype.indexOf("Person") !== -1) {
+      if(datatype.indexOf("Place") !== -1) {
+
+         addMeta(keyword,language,data,"Place",null,false);
+
+      }
+      else if(datatype.indexOf("Person") !== -1) {
 
          addMeta(keyword,language,data,"Person",null,false);
          //store.dispatch(dataActions.foundFacetInfo(keyword,language,datatype,{"gender":metadata }))
@@ -1505,7 +1510,7 @@ async function updateSortBy(i,t)
    if(i === "popularity") data.results.bindings[t.toLowerCase()+"s"] = sortResultsByPopularity(data.results.bindings[t.toLowerCase()+"s"]) 
    else if(i === "closest matches") data.results.bindings[t.toLowerCase()+"s"] = sortResultsByRelevance(data.results.bindings[t.toLowerCase()+"s"]) 
    else if(i.startsWith("year of")) data.results.bindings[t.toLowerCase()+"s"] = sortResultsByYear(data.results.bindings[t.toLowerCase()+"s"]) 
-   else if(i === "work title" || i === "instance title") { 
+   else if(i === "work title" || i === "instance title" || i.indexOf("name") !== -1) { 
       let langPreset = state.ui.langPreset
       data.results.bindings[t.toLowerCase()+"s"] = sortResultsByTitle(data.results.bindings[t.toLowerCase()+"s"], langPreset)
    }

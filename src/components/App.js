@@ -828,7 +828,7 @@ class App extends Component<Props,State> {
                time = props.searches[k].time
                console.log("refreshB",time)
             }
-            for(let d of ["Etext","Person","Work"]) {
+            for(let d of ["Etext","Person","Work","Place"]) {
                if(props.searches && props.searches[d] && props.searches[d][k]) {
                   if(!time || props.searches[d][k].time > time) { 
                      time = props.searches[d][k].time 
@@ -854,7 +854,7 @@ class App extends Component<Props,State> {
          console.log("K", props.keyword, time, current)
 
          let results
-         if(state.filters.datatype.indexOf("Any") !== -1 || state.filters.datatype.length > 1 || state.filters.datatype.filter(d => ["Work","Etext","Person"].indexOf(d) === -1).length ) {
+         if(state.filters.datatype.indexOf("Any") !== -1 || state.filters.datatype.length > 1 || state.filters.datatype.filter(d => ["Work","Etext","Person","Place"].indexOf(d) === -1).length ) {
             results = { ...props.searches[props.keyword+"@"+props.language] }
             //console.log("any")
          }
@@ -1311,8 +1311,10 @@ class App extends Component<Props,State> {
          prevDT = null
 
          state = { ...state, filters:{ ...state.filters, datatype:[ lab ], prevDT }}
+
+         if(state.sortBy) delete state.sortBy
          
-         if(["Any","Person","Work","Etext"].indexOf(lab) !== -1)
+         if(["Any","Person","Place","Work","Etext"].indexOf(lab) !== -1)
          {
             this.requestSearch(this.props.keyword,[ lab ]);
          }
@@ -2312,12 +2314,10 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                this.getResultProp(tmp+"year",allProps,false,false,[tmp+"yearStart"]) }
             { this.state.filters.datatype[0] === "Person" && 
                this.getResultProp(tmp+"year",allProps,false,false,[tmp+"onYear",bdo+"onYear",bdo+"notBefore",bdo+"notAfter"],null,[bdo+"personEvent"],[bdo+"PersonBirth",bdo+"PersonDeath"]) }
+            { this.getResultProp(bdo+"workBiblioNote",allProps,false,false,[bdo+"workBiblioNote",rdfs+"comment"]) }
             { this.getResultProp(bdo+"workPublisherName",allProps,false,false) }
             { this.getResultProp(bdo+"workPublisherLocation",allProps,false,false) }
-            { this.getResultProp(bdo+"workBiblioNote",allProps,false,false) }
-            { this.getResultProp(bdo+"workExtentStatement",allProps,false,false) }
-            { this.getResultProp(bdo+"workLocationStatement",allProps,false,false) }
-            { this.getResultProp(rdfs+"comment",allProps,false,false) }
+            { this.getResultProp(bdo+"workLocationStatement",allProps,false,false, [bdo+"workExtentStatement",bdo+"workLocationStatement"]) }
             { this.getResultProp(tmp+"provider",allProps) }
             { this.getResultProp(tmp+"popularityScore",allProps,false,false, [tmp+"entityScore"]) }
             { this.getInstanceLink(id,allProps) }
@@ -2353,8 +2353,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
          }
 
-;
-         //console.log("counts",counts,types)
+
+         console.log("counts",counts,types)
 
       }
       else if(this.state.searchTypes) for(let typ of this.state.searchTypes) {
@@ -2382,6 +2382,20 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
          
 
+      }
+
+      let searchT = Object.keys(this.props.searches)
+      for(let k of searchT) {
+         if(k.match(/^[A-Za-z]+$/) && !types.includes(k)) {
+            types.push(k)
+            let n = this.props.searches[k][this.props.keyword+"@"+this.props.language]
+            if(n && n.numResults) n = n.numResults
+            if(n) {
+               counts["datatype"][k]= n
+               counts["datatype"]["Any"]+=n
+            }
+
+         }
       }
 
       if(types.length) types = types.sort(function(a,b) { return Number(counts["datatype"][b]) - Number(counts["datatype"][a]) })
@@ -3726,13 +3740,16 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
       let allSortByLists = { 
          "Work": [ "Popularity", "Closest Matches", "Work Title" ],
-         "Person": [ "Popularity", "Closest Matches", "Year of Birth" ],
+         "Person": [ "Popularity", "Closest Matches", ,"Person Name", "Year of Birth" ],
+         "Place": [ "Popularity", "Closest Matches", ,"Place Name" ],
          "Instance": [ "Work Title", "Year of Publication" ],
       }
 
       let sortByList = allSortByLists[this.state.filters.datatype[0]]
       
-      // TODO fix sortBy for instances
+      // TODO 
+      // - fix sortBy for instances
+      // - reset sort when switching datatype
       if(this.props.isInstance) { 
          //sortByList = allSortByLists["Instance"]
          sortByList = null
@@ -3832,7 +3849,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
                                  //console.log("counts",i,counts["datatype"][i],this.state.filters.datatype.indexOf(i))
 
-                              let disabled = (!["Work","Person"].includes(i)) // false // (!this.props.keyword && ["Any","Etext","Person","Work"].indexOf(i)===-1 && this.props.language  != "")
+                              let disabled = (!["Work","Person", "Place"].includes(i)) // false // (!this.props.keyword && ["Any","Etext","Person","Work"].indexOf(i)===-1 && this.props.language  != "")
                            // || (this.props.language == "")
 
                               return (
