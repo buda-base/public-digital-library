@@ -1782,7 +1782,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             else return acc
          },{}) 
          
-         console.log("labels/prop",prop,id,useAux,fromProp,allProps) //,this.props.assoRes)         
+         //console.log("labels/prop",prop,id,useAux,fromProp,allProps) //,this.props.assoRes)         
 
          if(useAux && findProp) {
             //console.log("uA",id,useAux,findProp)
@@ -1840,7 +1840,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                }
             }
 
-            console.log("labels1",i,labels,this.props.assoRes)
+            //console.log("labels1",i,labels,this.props.assoRes)
 
             if(labels) { 
                labels = getLangLabel(this,"",labels)
@@ -2302,8 +2302,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             }
             { this.getResultProp(tmp+"otherLabel",allProps, true, false, [skos+"prefLabel", skos+"altLabel"], !preLit?preLit:preLit.replace(/[↦↤]/g,"") ) }
             { this.getResultProp(tmp+"assetAvailability",allProps,false,false) }
-            { this.getResultProp(bdo+"placeType",allProps) }
-            { /*isInstance &&*/ } 
+            
             { this.getResultProp(rdf+"type",allProps.filter(e => e.type === rdf+"type" && ![bdo+"AbstractWork",bdo+"Work",bdo+"Instance",bdo+"SerialMember"].includes(e.value))) }
             { this.getResultProp(tmp+"originalRecord",allProps,false,false, [ tmp+"originalRecord", adm+"originalRecord"]) }
             { this.getResultProp(bdo+"script",allProps) }
@@ -2318,6 +2317,10 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             { this.state.filters.datatype[0] === "Person" && 
                this.getResultProp(tmp+"year",allProps,false,false,[tmp+"onYear",bdo+"onYear",bdo+"notBefore",bdo+"notAfter"],null,[bdo+"personEvent"],[bdo+"PersonBirth",bdo+"PersonDeath"]) }
             
+            { this.getResultProp(tmp+"isCreator",allProps,false,false) }
+
+            { this.getResultProp(bdo+"placeType",allProps) }
+
             { this.getResultProp(bdo+"workBiblioNote",allProps,false,false,[bdo+"workBiblioNote",rdfs+"comment"]) }
             { this.getResultProp(bdo+"workPublisherName",allProps,false,false) }
             { this.getResultProp(bdo+"workPublisherLocation",allProps,false,false) }
