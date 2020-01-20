@@ -255,11 +255,13 @@ div[role="tooltip"] > div { font-weight:bold;font-size:16px; }
 
 .person #person, .place #place { display:none;}
 
+.uri-link,
 .instance-link .urilink,
 .match .urilink,  
 .match .multi a,
 .resource .data a, a.login { text-decoration: none; color:rgba(229, 74, 53,1);}
 a.login { text-decoration:underline; cursor:pointer; }
+.uri-link:hover,
 .instance-link .urilink:hover,
 .match .urilink:hover, 
 .match .multi a:hover,

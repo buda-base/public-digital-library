@@ -215,11 +215,20 @@ async function initiateApp(params,iri,myprops) {
    //}
 }
 
-if(params && params.t && !params.i) {
-   store.dispatch(uiActions.updateSortBy(params.s?params.s.toLowerCase():"popularity",params.t))
+if(params && params.t /*&& !params.i */) {
+   store.dispatch(uiActions.updateSortBy((params.i?(params.si?params.si.toLowerCase():"year of publication reverse"):(params.s?params.s.toLowerCase():"popularity")),params.t))
 }
 
-if(params && params.p) {
+if(params && params.i) {
+   let t = getEntiType(params.i)
+
+   if(["Work"].indexOf(t) !== -1
+   && (!state.data.searches || !state.data.searches[params.r+"@"]))
+   {
+      store.dispatch(dataActions.getInstances(params.i,true));
+   }
+}
+else if(params && params.p) {
 
    store.dispatch(dataActions.ontoSearch(params.p));
 }
@@ -272,15 +281,6 @@ else if(params && params.q) {
       store.dispatch(dataActions.startSearch(params.q,params.lg));
    }
    */
-}
-else if(params && params.i) {
-   let t = getEntiType(params.i)
-
-   if(["Work"].indexOf(t) !== -1
-   && (!state.data.searches || !state.data.searches[params.r+"@"]))
-   {
-      store.dispatch(dataActions.getInstances(params.i,true));
-   }
 }
 else if(params && params.r) {
    let t = getEntiType(params.r)
@@ -1176,6 +1176,8 @@ function sortResultsByTitle(results, userLangs, reverse) {
    return results
 }
 
+// TODO also sort by 'title' whene relevance/popularity/year is equal
+
 function sortResultsByRelevance(results,reverse) {
 
    if(!results) return 
@@ -1577,9 +1579,9 @@ async function getInstances(uri,init=false)
       if(numResults.length) numResults = numResults.length
 
       let sortBy = state.ui.sortBy
-      if(!sortBy) sortBy = "year of publication reverse" 
+      if(!sortBy || sortBy === "popularity") sortBy = "year of publication reverse" 
 
-      console.log("sortBy?2",sortBy,state.ui.sortBy)
+      console.log("sortBy?2",sortBy,state.ui.sortBy,init,keyword)
 
       results = rewriteAuxMain(results,uri,["Work"],sortBy)
 
@@ -1591,7 +1593,8 @@ async function getInstances(uri,init=false)
 
       store.dispatch(dataActions.foundDatatypes(uri,"",{ metadata:{[bdo+"Work"]:numResults}, hash:true}));
 
-      if(!state.ui.sortBy) store.dispatch(uiActions.updateSortBy(sortBy,"Work"))
+      //if(sortBy != state.ui.sortBy) 
+      //store.dispatch(uiActions.updateSortBy(sortBy,"Work"))
 
    }
    else { 

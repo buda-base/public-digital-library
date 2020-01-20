@@ -511,6 +511,11 @@ class App extends Component<Props,State> {
          }
       }
 
+      // TODO 
+      // - reset facets when switching to instances 
+      // - switching back when returning to Works ?
+      // - hide Works before instances are displayed 
+
       let sortBy = get.s
 
       this.state = {
@@ -1153,7 +1158,8 @@ class App extends Component<Props,State> {
 
          let {pathname,search} = this.props.history.location
          
-         this.props.history.push({pathname,search:search.replace(/(&[s]=[^&]+)/g,"")+"&s="+i.toLowerCase()})
+         if(!this.props.isInstance) this.props.history.push({pathname,search:search.replace(/(&[s]=[^&]+)/g,"")+"&s="+i.toLowerCase()})
+         else this.props.history.push({pathname,search:search.replace(/(&si=[^&]+)/g,"")+"&si="+i.toLowerCase()})
          
          
          // redundant (?)
@@ -1747,6 +1753,9 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          if(nb) {
             let instances = this.props.instances
             if(instances) instances = instances[fullUri(id)]
+
+            let iUrl = "/search?q="+this.props.keyword+"&lg="+this.props.language+"&t=Work&s="+this.props.sortBy+"&i="+shortUri(id)
+
             //console.log("inst",instances)
             if(instances) { 
                let instK = Object.keys(instances), n = 1, ret = [], seeAll 
@@ -1779,7 +1788,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      ret
                   ]
 
-                  if(seeAll) ret.push(<span class="instance-link">&gt;&nbsp;<Link class="urilink" to={"/search?i="+shortUri(id)+"&t=Work"}>Browse All Instances ({nb})</Link></span>)
+                  if(seeAll) ret.push(<span class="instance-link">&gt;&nbsp;<Link class="urilink" to={iUrl /*"/search?i="+shortUri(id)+"&t=Work"*/}>Browse All Instances ({nb})</Link></span>)
 
                   return ret
                }
@@ -1789,7 +1798,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   <span class="instance-link">&gt;&nbsp;
                      <span class="urilink" onClick={(e) => this.props.onGetInstances(shortUri(id))}>Preview Instances</span>
                      <emph> or </emph>
-                     <Link class="urilink" to={"/search?i="+shortUri(id)+"&t=Work"}>Browse All ({nb})</Link>
+                     <Link class="urilink" to={iUrl /*"/search?i="+shortUri(id)+"&t=Work"*/}>Browse All ({nb})</Link>
                   </span>
                 </div>
          }
@@ -3224,7 +3233,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
    resetFilters(e) {
       
       let {pathname,search} = this.props.history.location
-      this.props.history.push({pathname,search:search.replace(/(&[tf]=[^&]+)/g,"")+"&t="+this.state.filters.datatype[0]})
+      this.props.history.push({pathname,search:search.replace(/(&[tfi]=[^&]+)/g,"")+"&t="+this.state.filters.datatype[0]})
 
       this.setState({...this.state, repage:true, filters:{ datatype: this.state.filters.datatype } }  )
 
@@ -3797,6 +3806,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
       let reverseSort = false
       if(this.props.sortBy && this.props.sortBy.endsWith("reverse")) reverseSort = true
 
+      let {pathname,search} = this.props.history.location      
+
       return (
 <div>
 
@@ -3833,7 +3844,9 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                            ,
                            <div id="filters-UI">
                               { this.state.filters.datatype.filter(k => k !== "Any").map(k => this.renderFilterTag(true, "Type", k, (event, checked) => this.handleCheck(event, k, false) ) )}                              
-                              { this.state.filters.instance && this.renderFilterTag(false, "Instance Of", this.state.filters.instance, (event, checked) => true )  } 
+                              { this.props.isInstance && this.state.filters.instance && this.renderFilterTag(false, "Instance Of", this.state.filters.instance, (event, checked) => {
+                                 this.props.history.push({pathname,search:search.replace(/(&[f]=[^&]+)/g,"&f=").replace(/(&s?i=[^&]+)/g,"")})
+                              } )  } 
                               { this.state.filters.facets?Object.keys(this.state.filters.facets).map(f => {
                                  let vals = this.state.filters.facets[f]
                                  if(vals.val) vals = vals.val
@@ -4087,6 +4100,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   </List> }
                { message.length > 0 &&
                   <List key={2} id="results" style={{maxWidth:"800px",margin:"20px auto",textAlign:"left",zIndex:0}}>
+                     { this.props.isInstance && <Link to={ search.replace(/(&s?i=[^&]+)/g,"") } className="uri-link" style={{marginLeft:"16px"}}>&lt; Back to Works</Link> }
                      { message }
                      <div id="pagine">
                         <NavigateBefore
