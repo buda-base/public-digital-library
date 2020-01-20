@@ -1775,7 +1775,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      ret
                   ]
 
-                  if(seeAll) ret.push(<span class="instance-link">&gt;&nbsp;<Link class="urilink" target="_blank" to={"/search?i="+shortUri(id)+"&t=Work"}>Browse All Instances ({nb})</Link></span>)
+                  if(seeAll) ret.push(<span class="instance-link">&gt;&nbsp;<Link class="urilink" /*target="_blank"*/ to={"/search?i="+shortUri(id)+"&t=Work"}>Browse All Instances ({nb})</Link></span>)
 
                   return ret
                }
@@ -1785,7 +1785,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   <span class="instance-link">&gt;&nbsp;
                      <span class="urilink" onClick={(e) => this.props.onGetInstances(shortUri(id))}>Preview Instances</span>
                      <emph> or </emph>
-                     <Link class="urilink" target="_blank" to={"/search?i="+shortUri(id)+"&t=Work"}>Browse All ({nb})</Link>
+                     <Link class="urilink" /*target="_blank"*/ to={"/search?i="+shortUri(id)+"&t=Work"}>Browse All ({nb})</Link>
                   </span>
                 </div>
          }

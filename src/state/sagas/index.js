@@ -1572,6 +1572,8 @@ async function getInstances(uri,init=false)
       
       store.dispatch(dataActions.foundResults(uri,"", { isInstance:true, results: { bindings: { } } } ) ) //data));
 
+      store.dispatch(dataActions.foundDatatypes(uri,"",{ metadata:{[bdo+"Work"]:numResults}, hash:true}));
+
    }
    else { 
 
