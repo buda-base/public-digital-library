@@ -1152,9 +1152,13 @@ class App extends Component<Props,State> {
       if(check && (!this.props.sortBy || i !== this.props.sortBy)) {            
 
          let {pathname,search} = this.props.history.location
+         
          this.props.history.push({pathname,search:search.replace(/(&[s]=[^&]+)/g,"")+"&s="+i.toLowerCase()})
          
-         this.props.onUpdateSortBy(i.toLowerCase(),this.state.filters.datatype[0])
+         
+         // redundant (?)
+         // this.props.onUpdateSortBy(i.toLowerCase(),this.state.filters.datatype[0])
+
 
          //this.setState({...this.state, sortBy:i })
       } 
@@ -1775,7 +1779,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      ret
                   ]
 
-                  if(seeAll) ret.push(<span class="instance-link">&gt;&nbsp;<Link class="urilink" /*target="_blank"*/ to={"/search?i="+shortUri(id)+"&t=Work"}>Browse All Instances ({nb})</Link></span>)
+                  if(seeAll) ret.push(<span class="instance-link">&gt;&nbsp;<Link class="urilink" to={"/search?i="+shortUri(id)+"&t=Work"}>Browse All Instances ({nb})</Link></span>)
 
                   return ret
                }
@@ -1785,7 +1789,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   <span class="instance-link">&gt;&nbsp;
                      <span class="urilink" onClick={(e) => this.props.onGetInstances(shortUri(id))}>Preview Instances</span>
                      <emph> or </emph>
-                     <Link class="urilink" /*target="_blank"*/ to={"/search?i="+shortUri(id)+"&t=Work"}>Browse All ({nb})</Link>
+                     <Link class="urilink" to={"/search?i="+shortUri(id)+"&t=Work"}>Browse All ({nb})</Link>
                   </span>
                 </div>
          }
@@ -3089,7 +3093,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                         return searchTypes.indexOf(t) !== -1 
                      }).reduce((acc,e)=>acc+Object.keys(results.results.bindings[e]).length,0)
 
-      //console.log("res::",id,results,message,message.length,resLength,resMatch)
+      //console.log("res::",id,results,message,message.length,resLength,resMatch,this.props.loading)
 
       let sta = { ...this.state }
 
@@ -3584,7 +3588,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             }
             
             //console.log("prep",message,counts,types,paginate)
-            if(!message.length && ( (this.props.searches[this.props.keyword+"@"+this.props.language] && !this.props.searches[this.props.keyword+"@"+this.props.language].numResults ) 
+            if(!this.props.loading && !message.length && ( (this.props.searches[this.props.keyword+"@"+this.props.language] && !this.props.searches[this.props.keyword+"@"+this.props.language].numResults ) 
                   || (!this.props.loading && results && results.results && results.results.bindings && !results.results.bindings.numResults) ) )
                {
                   message.push(
@@ -3667,6 +3671,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
       if(meta && this.state.filters.datatype && this.state.filters.datatype.length === 1 && this.state.filters.datatype.indexOf("Any") === -1 && this.props.config && this.props.ontology) {
          facetWidgets = metaK.map((j) =>
          {
+            // no need for language on instances page
+            if(j === "language" && this.props.isInstance ) return
 
             let jpre = this.props.config.facets[this.state.filters.datatype[0]][j]
             if(!jpre) jpre = j
@@ -3784,8 +3790,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
       // - fix sortBy for instances
       // - reset sort when switching datatype
       if(this.props.isInstance) { 
-         //sortByList = allSortByLists["Instance"]
-         sortByList = null
+         sortByList = allSortByLists["Instance"]
+         //sortByList = null
       }
 
       let reverseSort = false

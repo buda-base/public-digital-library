@@ -150,8 +150,8 @@ export const updateFacets = (state: UIState, action: actions.LoadingAction) => {
 
             let meta = action.meta.facets[k]
             let props = Object.keys(meta)
-            if(k === "tree") { 
-                topicParents = meta["parents"]
+            if(k === "tree" && meta["@graph"]) { 
+                topicParents = meta["0parents"]
                 props = meta["@graph"].map(i => i["@id"].replace(/bdr:/,"http://purl.bdrc.io/resource/"))
                 meta = meta["@metadata"]
             }

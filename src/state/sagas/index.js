@@ -215,6 +215,10 @@ async function initiateApp(params,iri,myprops) {
    //}
 }
 
+if(params && params.t && !params.i) {
+   store.dispatch(uiActions.updateSortBy(params.s?params.s.toLowerCase():"popularity",params.t))
+}
+
 if(params && params.p) {
 
    store.dispatch(dataActions.ontoSearch(params.p));
@@ -1135,6 +1139,9 @@ function mergeSameAs(result,withSameAs,init = true,rootRes = result, force = fal
 }
 
 function sortResultsByTitle(results, userLangs, reverse) {
+
+   if(!results) return 
+
    let keys = Object.keys(results)
    let langs = extendedPresets(userLangs)
    let state = store.getState(), assoR
@@ -1170,6 +1177,9 @@ function sortResultsByTitle(results, userLangs, reverse) {
 }
 
 function sortResultsByRelevance(results,reverse) {
+
+   if(!results) return 
+
    let keys = Object.keys(results)
    if(keys && keys.length) {
       keys = keys.map(k => {
@@ -1212,6 +1222,9 @@ function sortResultsByRelevance(results,reverse) {
 
 
 function sortResultsByPopularity(results,reverse) {
+   
+   if(!results) return 
+
    let keys = Object.keys(results)
    if(keys && keys.length) {
       keys = keys.map(k => {
@@ -1239,6 +1252,9 @@ function sortResultsByPopularity(results,reverse) {
 
 
 function sortResultsByYear(results,reverse) {
+
+   if(!results) return 
+
    let keys = Object.keys(results)
    if(keys && keys.length) {
       keys = keys.map(k => {
@@ -1254,6 +1270,8 @@ function sortResultsByYear(results,reverse) {
       },{})
       keys = _.orderBy(keys,['n','p'],[(reverse?'desc':'asc'), (reverse?'asc':'desc')])
       
+      //console.log("keysY",keys)
+
       let sortRes = {}
       for(let k of keys) sortRes[k.k] = results[k.k]
 
@@ -1280,12 +1298,12 @@ function rewriteAuxMain(result,keyword,datatype,sortBy)
          let t = datatype[0].toLowerCase()+"s"                 
          let dataWithAsset = keys.reduce( (acc,k) => ({...acc, [k]:result[e][k].map(e => (!asset.includes(e.type)||e.value === "false"?e:{type:_tmp+"assetAvailability",value:e.type}))}),{})
         
-        // console.log("dWa",dataWithAsset,sortBy,reverse)
+         //console.log("dWa",dataWithAsset,sortBy,reverse)
 
          if(!sortBy || sortBy.startsWith("popularity")) return { ...acc, [t]: sortResultsByPopularity(dataWithAsset,reverse) }
-         else if(sortBy.startsWith("closest matches")) return { ...acc, [t]: sortResultsByRelevance(dataWithAsset,reverse) }
-         else if(sortBy.startsWith("work title") || sortBy.startsWith("instance title") ||  sortBy.indexOf("name") !== -1) return { ...acc, [t]: sortResultsByTitle(dataWithAsset, langPreset, reverse) }
          else if(sortBy.startsWith("year of")) return { ...acc, [t]: sortResultsByYear(dataWithAsset,reverse) }
+         else if(sortBy.startsWith("closest matches")) return { ...acc, [t]: sortResultsByRelevance(dataWithAsset,reverse) }
+         else if(sortBy.indexOf("title") ||  sortBy.indexOf("name") !== -1) return { ...acc, [t]: sortResultsByTitle(dataWithAsset, langPreset, reverse) }
       }
       else if(e === "aux") {                  
          store.dispatch(dataActions.gotAssocResources(keyword,{ data: result[e] } ) )
@@ -1511,11 +1529,10 @@ async function updateSortBy(i,t)
 
    let reverse = i && i.endsWith("reverse")
 
-   // TODO clean a bit 
    if(i.startsWith("popularity")) data.results.bindings[t.toLowerCase()+"s"] = sortResultsByPopularity(data.results.bindings[t.toLowerCase()+"s"], reverse) 
    else if(i.startsWith("closest matches")) data.results.bindings[t.toLowerCase()+"s"] = sortResultsByRelevance(data.results.bindings[t.toLowerCase()+"s"], reverse) 
    else if(i.startsWith("year of")) data.results.bindings[t.toLowerCase()+"s"] = sortResultsByYear(data.results.bindings[t.toLowerCase()+"s"], reverse) 
-   else if(i.startsWith("work title") || i.startsWith("instance title") || i.indexOf("name") !== -1) { 
+   else if(i.indexOf("title") || i.indexOf("name") !== -1) { 
       let langPreset = state.ui.langPreset
       data.results.bindings[t.toLowerCase()+"s"] = sortResultsByTitle(data.results.bindings[t.toLowerCase()+"s"], langPreset, reverse)
    }
@@ -1560,7 +1577,7 @@ async function getInstances(uri,init=false)
       if(numResults.length) numResults = numResults.length
 
       let sortBy = state.ui.sortBy
-      if(!sortBy) sortBy = "year of publication" 
+      if(!sortBy) sortBy = "year of publication reverse" 
 
       console.log("sortBy?2",sortBy,state.ui.sortBy)
 
@@ -1574,12 +1591,14 @@ async function getInstances(uri,init=false)
 
       store.dispatch(dataActions.foundDatatypes(uri,"",{ metadata:{[bdo+"Work"]:numResults}, hash:true}));
 
+      if(!state.ui.sortBy) store.dispatch(uiActions.updateSortBy(sortBy,"Work"))
+
    }
    else { 
 
       let langPreset = state.ui.langPreset
 
-      let sortBy = "year of publication" 
+      let sortBy = "year of publication reverse" 
 
       console.log("sortBy?1",sortBy)
 
