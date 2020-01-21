@@ -434,6 +434,7 @@ type State = {
    leftPane?:boolean,
    LpanelWidth:number,
    closeLeftPane?:boolean,
+   uriPage?:integer,
    filters:{
       datatype:string[],
       facets?:{[string]:string[]},
@@ -511,9 +512,13 @@ class App extends Component<Props,State> {
          }
       }
 
+      let pg = 0
+      if(get.pg) pg = Number(get.pg) - 1
+
+      // x reset facets when switching to instances (use w=)
+      // + use page number given in url
       // TODO 
-      // - reset facets when switching to instances 
-      // - switching back when returning to Works ?
+      // - switching back when returning to Works ? use "w="+encoded url
       // - hide Works before instances are displayed 
 
       let sortBy = get.s
@@ -535,6 +540,7 @@ class App extends Component<Props,State> {
          newKW,
          loader:{},
          paginate:{index:0,pages:[0],n:[0]},
+         uriPage:pg,
          anchor:{},
          LpanelWidth:375
          //leftPane:false //(window.innerWidth > 1400 && this.props.keyword),
@@ -1679,10 +1685,13 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
       let state = this.state.results[id] 
       if(state) state = state.paginate
       console.log("state",state)   
-      if(state && state.index > 0) { 
+      if(state && state.index > 0) {          
          this.setState({ 
-            ...this.state, results:{...this.state.results[id], message:[] }, paginate:{...state, index:state.index - 1}
+            ...this.state, uriPage:false, results:{...this.state.results[id], message:[] }, paginate:{...state, index:state.index - 1}
          }) 
+
+         let {pathname,search} = this.props.history.location
+         this.props.history.push({pathname,search:search.replace(/(&pg=[^&]+)/g,"")+"&pg="+(state.index - 1 + 1)})
       }
    }
 
@@ -1693,8 +1702,11 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
       console.log("state",state)   
       if(state && i > 0) { 
          this.setState({ 
-            ...this.state, results:{...this.state.results[id], message:[] }, paginate:{...state, index:i-1}
+            ...this.state, uriPage:false, results:{...this.state.results[id], message:[] }, paginate:{...state, index:i-1}
          }) 
+
+         let {pathname,search} = this.props.history.location
+         this.props.history.push({pathname,search:search.replace(/(&pg=[^&]+)/g,"")+"&pg="+(i - 1 + 1)})
       }
    }
 
@@ -1704,8 +1716,11 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
       if(state) state = state.paginate
       if(state && state.index < state.pages.length - 1) { 
          this.setState({ 
-            ...this.state, results:{...this.state.results[id], message:[] }, paginate:{...state, index:state.index + 1}
+            ...this.state, uriPage:false, results:{...this.state.results[id], message:[] }, paginate:{...state, index:state.index + 1}
          }) 
+
+         let {pathname,search} = this.props.history.location
+         this.props.history.push({pathname,search:search.replace(/(&pg=[^&]+)/g,"")+"&pg="+(state.index + 1 + 1)})
       }
    }
 
@@ -2566,6 +2581,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
       /*this.handleCheck(e,"Any",true,{},true)*/
    }
 
+   /* // deprecated
    setWorkCateg(categ,paginate) //,categIndex)
    {
       let show  ;
@@ -2592,6 +2608,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
       if(this.state.filters.datatype.indexOf("Work") === -1 || this.state.filters.datatype.length > 1) this.handleCheck(null, "Work", true, params, true )
       else this.setState({...this.state, ...params})
    }
+   */
 
    handleResults(types,counts,message,results,paginate,bookmarks) 
    {
@@ -2628,6 +2645,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             pagin.n = pagin.n.slice(0,pagin.gotoCateg+1)
             //console.log("pagin.goto Z",JSON.stringify(pagin,null,3))
          }
+
+         if(this.state.uriPage && pagin.pages && pagin.pages.length > this.state.uriPage) pagin.index = this.state.uriPage
          
          if(t === "Any") continue ;
 
@@ -3237,7 +3256,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
       this.setState({...this.state, repage:true, filters:{ datatype: this.state.filters.datatype } }  )
 
-      // TODO fix back button behaviour (+ Work -> Any)
+      // TODO 
+      // x fix back button behaviour (+ Work -> Any) < no more Any
    }
 
    treeWidget(j,meta,counts,jlabel,jpre) {
@@ -3795,9 +3815,10 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
       let sortByList = allSortByLists[this.state.filters.datatype[0]]
       
+      // + fix sortBy for instances
+      // + reset sort when switching datatype
       // TODO 
-      // - fix sortBy for instances
-      // - reset sort when switching datatype
+
       if(this.props.isInstance) { 
          sortByList = allSortByLists["Instance"]
          //sortByList = null
