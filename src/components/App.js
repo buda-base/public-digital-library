@@ -463,10 +463,12 @@ class App extends Component<Props,State> {
    _facetsRequested = false;
    _customLang = null ;
    _menus = {}
+   _refs = []
+
 
    constructor(props : Props) {
       super(props);
-
+      
       this.requestSearch.bind(this);
       this.handleCheck.bind(this);
       this.handleResults.bind(this);
@@ -528,10 +530,22 @@ class App extends Component<Props,State> {
    }
 
    componentDidUpdate() {
-   
+      
+      //console.log("didU",this.state)
 
       let get = qs.parse(this.props.history.location.search)
 
+      let n, scrolled
+      if(get.n) {
+         n = get.n
+         if(this._refs[n] && this._refs[n].current && this.state.scrolled !== n)  {
+            setTimeout(((that) => () => { 
+               if(that._refs[n] && that._refs[n].current) that._refs[n].current.scrollIntoView()
+            })(this),10)
+            scrolled = n
+         }
+      }
+      
       let pg 
       if(get.pg) pg = Number(get.pg) - 1
 
@@ -539,7 +553,7 @@ class App extends Component<Props,State> {
       if(get.w) backToWorks = decodeURIComponent(get.w)
 
       let filters 
-      let collapse = {}
+      let collapse = { ...this.state.collapse }
       let exclude = {}
       let preload = {}
       let facets= {} 
@@ -573,8 +587,10 @@ class App extends Component<Props,State> {
          }
       }
 
-      if(this.state.uriPage !== pg || this.state.backToWorks !== backToWorks || (encoded !== filters.encoded ) ) 
-         this.setState({...this.state, uriPage:pg, backToWorks, ...(filters?{filters}:{})})
+      //console.log("encoded",encoded)
+
+      if(this.state.uriPage !== pg || this.state.backToWorks !== backToWorks || (encoded !== this.state.filters.encoded ) || (scrolled && this.state.scrolled !== scrolled) )
+         this.setState({...this.state, uriPage:pg, backToWorks, scrolled, collapse, ...(filters?{filters}:{})})
 
    }
 
@@ -1253,7 +1269,7 @@ class App extends Component<Props,State> {
          state.filters.preload = true
 
          let {pathname,search} = this.props.history.location
-         this.props.history.push({pathname,search:search.replace(/(&f=[^&]+)/g,"")+getFacetUrl(state.filters,this.props.config.facets[state.filters.datatype[0]])})
+         this.props.history.push({pathname,search:search.replace(/(&([nf]|pg)=[^&]+)/g,"")+getFacetUrl(state.filters,this.props.config.facets[state.filters.datatype[0]])})
       }
 
       this.setState(state);
@@ -2399,8 +2415,12 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
       retList.push(<hr/>);
 
-      retList = <div {... (!isInstance?{id:"result-"+n}:{})}  className={"result-content " + status}>{retList}</div>
-      
+      this._refs[n] = React.createRef();
+
+      retList = <div {... (!isInstance?{id:"result-"+n}:{})} ref={this._refs[n]} className={"result-content " + status}>{retList}</div>
+
+
+
       return retList
    }
 
@@ -3268,9 +3288,9 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
    resetFilters(e) {
       
       let {pathname,search} = this.props.history.location
-      this.props.history.push({pathname,search:search.replace(/(&[tfi]=[^&]+)/g,"")+"&t="+this.state.filters.datatype[0]})
+      this.props.history.push({pathname,search:search.replace(/(&([tfin]|pg)=[^&]+)/g,"")+"&t="+this.state.filters.datatype[0]})
 
-      this.setState({...this.state, repage:true, filters:{ datatype: this.state.filters.datatype } }  )
+      this.setState({...this.state, repage:true, uriPage:0, scrolled:0, filters:{ datatype: this.state.filters.datatype } }  )
 
       // TODO 
       // x fix back button behaviour (+ Work -> Any) < no more Any

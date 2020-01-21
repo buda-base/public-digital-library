@@ -255,6 +255,8 @@ div[role="tooltip"] > div { font-weight:bold;font-size:16px; }
 
 .person #person, .place #place { display:none;}
 
+.uri-link { cursor:pointer; }
+
 .uri-link,
 .instance-link .urilink,
 .match .urilink,  
