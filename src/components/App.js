@@ -590,7 +590,7 @@ class App extends Component<Props,State> {
       //console.log("encoded",encoded)
 
       if(this.state.uriPage !== pg || this.state.backToWorks !== backToWorks || (encoded !== this.state.filters.encoded ) || (scrolled && this.state.scrolled !== scrolled) )
-         this.setState({...this.state, uriPage:pg, backToWorks, scrolled, collapse, ...(filters?{filters}:{})})
+         this.setState({...this.state, repage:true, uriPage:pg, backToWorks, scrolled, collapse, ...(filters?{filters}:{})})
 
    }
 
@@ -844,8 +844,15 @@ class App extends Component<Props,State> {
          let sameKW = state.id && state.id.match(new RegExp("#"+props.keyword+"@"+props.language+"$"))
          
 
-         if(!sameKW || (state.filters.datatype.length > 1 || state.filters.datatype.indexOf("Any") !== -1)) //((state.filters.datatype.indexOf("Work") !== -1 || state.filters.datatype.indexOf("Any") !== -1) && (!state.id || state.filters.datatype.length > 1 || (!state.id.match(/Work/)&&!state.id.match(/Any/)) ) ) )
+         if(!sameKW || (state.filters.datatype.length > 1 || state.filters.datatype.indexOf("Any") !== -1)) { //((state.filters.datatype.indexOf("Work") !== -1 || state.filters.datatype.indexOf("Any") !== -1) && (!state.id || state.filters.datatype.length > 1 || (!state.id.match(/Work/)&&!state.id.match(/Any/)) ) ) )
             for(let c of ["Other","ExprOf", "HasExpr", "Abstract"]) if(s.collapse[c] != undefined) delete s.collapse[c]         
+            
+            // + "purge cache" when changing keyword
+            // TODO
+            // ? investigate why pagination changes when back from instances ("191 -> 197")
+            
+            s.results = {}
+         }
          //s.id = newid
          s.paginate = {index:0,pages:[0],n:[0]}         
          s.repage = true 
@@ -1269,7 +1276,7 @@ class App extends Component<Props,State> {
          state.filters.preload = true
 
          let {pathname,search} = this.props.history.location
-         this.props.history.push({pathname,search:search.replace(/(&([nf]|pg)=[^&]+)/g,"")+getFacetUrl(state.filters,this.props.config.facets[state.filters.datatype[0]])})
+         this.props.history.push({pathname,search:search.replace(/(&([nf]|pg)=[^&]+)/g,"")+"&pg=1&n=1"+getFacetUrl(state.filters,this.props.config.facets[state.filters.datatype[0]])})
       }
 
       this.setState(state);
@@ -1723,7 +1730,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          }) 
 
          let {pathname,search} = this.props.history.location
-         this.props.history.push({pathname,search:search.replace(/(&(n|pg)=[^&]+)/g,"")+"&pg="+(state.index - 1 + 1)})
+         this.props.history.push({pathname,search:search.replace(/(&(n|pg)=[^&]+)/g,"")+"&pg="+(state.index - 1 + 1)+"&n="+(state.n[state.index - 1]+1)})
       }
    }
 
@@ -1738,7 +1745,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          }) 
 
          let {pathname,search} = this.props.history.location
-         this.props.history.push({pathname,search:search.replace(/(&(n|pg)=[^&]+)/g,"")+"&pg="+(i - 1 + 1)})
+         this.props.history.push({pathname,search:search.replace(/(&(n|pg)=[^&]+)/g,"")+"&pg="+(i)+"&n="+(state.n[i-1]+1)})
       }
    }
 
@@ -1752,7 +1759,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          }) 
 
          let {pathname,search} = this.props.history.location
-         this.props.history.push({pathname,search:search.replace(/(&(n|pg)=[^&]+)/g,"")+"&pg="+(state.index + 1 + 1)})
+         this.props.history.push({pathname,search:search.replace(/(&(n|pg)=[^&]+)/g,"")+"&pg="+(state.index + 1 + 1)+"&n="+(state.n[state.index + 1]+1)})
       }
    }
 
@@ -2674,6 +2681,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          else pagin = { index:0, n:[0], pages:[0] };
          if(bookmarks) pagin.bookmarks = bookmarks
          
+         /* // deprecated
          if(t === "Work" && pagin.gotoCateg !== undefined) { 
             //console.log("pagin.goto A",JSON.stringify(pagin,null,3))                  
             pagin.index = pagin.gotoCateg
@@ -2681,6 +2689,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             pagin.n = pagin.n.slice(0,pagin.gotoCateg+1)
             //console.log("pagin.goto Z",JSON.stringify(pagin,null,3))
          }
+         */
 
          if(this.state.uriPage && pagin.pages && pagin.pages.length > this.state.uriPage) pagin.index = this.state.uriPage
          
@@ -2964,7 +2973,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                                  n: pagin.n.concat([end])
                               };
 
-                     //console.log("good!",next,willBreak,pagin)
+                     //console.log("good!",next,willBreak,JSON.stringify(pagin))
 
                      /*
                      if(this.state.paginate.pages.indexOf(next) === -1)
@@ -3217,6 +3226,9 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             if(sta.id == id && this.state.paginate && this.state.paginate.pages && this.state.paginate.pages.length > 1) paginate = [ this.state.paginate ]
             if(sta.results && sta.results[id] && sta.results[id].bookmarks) bookmarks = sta.results[id].bookmarks                        
             else noBookM = true
+
+            //console.log("paginate?",JSON.stringify(paginate))
+
             if(results) this.handleResults(types,counts,message,results,paginate,bookmarks);
             
             //console.log("bookM:",JSON.stringify(paginate,null,3))
@@ -3290,7 +3302,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
       let {pathname,search} = this.props.history.location
       this.props.history.push({pathname,search:search.replace(/(&([tfin]|pg)=[^&]+)/g,"")+"&t="+this.state.filters.datatype[0]})
 
-      this.setState({...this.state, repage:true, uriPage:0, scrolled:0, filters:{ datatype: this.state.filters.datatype } }  )
+      //this.setState({...this.state, repage:true, uriPage:0, scrolled:1, filters:{ datatype: this.state.filters.datatype } }  )
 
       // TODO 
       // x fix back button behaviour (+ Work -> Any) < no more Any
