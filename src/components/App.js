@@ -435,6 +435,7 @@ type State = {
    LpanelWidth:number,
    closeLeftPane?:boolean,
    uriPage?:integer,
+   backToWorks?:string,
    filters:{
       datatype:string[],
       facets?:{[string]:string[]},
@@ -490,14 +491,67 @@ class App extends Component<Props,State> {
          //console.log("types",types)
       }
 
+      // x reset facets when switching to instances (use w=)
+      // + use page number given in url
+      // + switching back when returning to Works ? use "w="+encoded url
+      // TODO 
+      // - hide Works before instances are displayed 
+
+      let sortBy = get.s
+
+      this.state = {
+         language:lg,
+         langOpen:false,
+         UI:{language:"en"},
+         filters: {
+            datatype:get.t?get.t.split(","):["Any"],
+         },
+         collapse:{},
+         sortBy,
+         searchTypes: get.t?get.t.split(","):types,
+         dataSource: [],         
+         newKW,
+         loader:{},
+         paginate:{index:0,pages:[0],n:[0]},
+         anchor:{},
+         LpanelWidth:375
+         //leftPane:false //(window.innerWidth > 1400 && this.props.keyword),
+         
+      };
+
+
+      if(langSelect.indexOf(lg) === -1) this.state = { ...this.state, customLang:[lg]}
+
+      console.log('qs',get,this.state)
+
+
+   }
+
+   componentDidUpdate() {
+   
+
+      let get = qs.parse(this.props.history.location.search)
+
+      let pg 
+      if(get.pg) pg = Number(get.pg) - 1
+
+      let backToWorks
+      if(get.w) backToWorks = decodeURIComponent(get.w)
+
+      let filters 
       let collapse = {}
       let exclude = {}
       let preload = {}
       let facets= {} 
-      if(get.f) { 
+      let encoded = ""
+      if(!get.f) filters = { datatype: this.state.filters.datatype, encoded }            
+      else { 
+         encoded = ""
          let F = get.f
          if(!Array.isArray(F)) F = [F]
          for(let f of F) {
+            if(encoded) encoded += "&"
+            encoded += "f="+f
             let val = f.split(",")
             if(val.length === 3) {
                let exc =  val[1] === "exc"
@@ -510,48 +564,17 @@ class App extends Component<Props,State> {
                }
             }
          }
-      }
-
-      let pg = 0
-      if(get.pg) pg = Number(get.pg) - 1
-
-      // x reset facets when switching to instances (use w=)
-      // + use page number given in url
-      // TODO 
-      // - switching back when returning to Works ? use "w="+encoded url
-      // - hide Works before instances are displayed 
-
-      let sortBy = get.s
-
-      this.state = {
-         language:lg,
-         langOpen:false,
-         UI:{language:"en"},
-         filters: {
+         filters = {
             datatype:get.t?get.t.split(","):["Any"],
             exclude,
             facets,
-            preload
-         },
-         sortBy,
-         searchTypes: get.t?get.t.split(","):types,
-         dataSource: [],         
-         collapse,
-         newKW,
-         loader:{},
-         paginate:{index:0,pages:[0],n:[0]},
-         uriPage:pg,
-         anchor:{},
-         LpanelWidth:375
-         //leftPane:false //(window.innerWidth > 1400 && this.props.keyword),
-         
-      };
+            preload,
+            encoded
+         }
+      }
 
-
-      if(langSelect.indexOf(lg) === -1) this.state = { ...this.state, customLang:[lg]}
-
-      console.log('qs',get,this.state)
-
+      if(this.state.uriPage !== pg || this.state.backToWorks !== backToWorks || (encoded !== filters.encoded ) ) 
+         this.setState({...this.state, uriPage:pg, backToWorks, ...(filters?{filters}:{})})
 
    }
 
@@ -1164,15 +1187,8 @@ class App extends Component<Props,State> {
 
          let {pathname,search} = this.props.history.location
          
-         if(!this.props.isInstance) this.props.history.push({pathname,search:search.replace(/(&[s]=[^&]+)/g,"")+"&s="+i.toLowerCase()})
-         else this.props.history.push({pathname,search:search.replace(/(&si=[^&]+)/g,"")+"&si="+i.toLowerCase()})
+         this.props.history.push({pathname,search:search.replace(/(&s=[^&]+)/g,"")+"&s="+i.toLowerCase()})         
          
-         
-         // redundant (?)
-         // this.props.onUpdateSortBy(i.toLowerCase(),this.state.filters.datatype[0])
-
-
-         //this.setState({...this.state, sortBy:i })
       } 
    }
 
@@ -1691,7 +1707,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          }) 
 
          let {pathname,search} = this.props.history.location
-         this.props.history.push({pathname,search:search.replace(/(&pg=[^&]+)/g,"")+"&pg="+(state.index - 1 + 1)})
+         this.props.history.push({pathname,search:search.replace(/(&(n|pg)=[^&]+)/g,"")+"&pg="+(state.index - 1 + 1)})
       }
    }
 
@@ -1706,7 +1722,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          }) 
 
          let {pathname,search} = this.props.history.location
-         this.props.history.push({pathname,search:search.replace(/(&pg=[^&]+)/g,"")+"&pg="+(i - 1 + 1)})
+         this.props.history.push({pathname,search:search.replace(/(&(n|pg)=[^&]+)/g,"")+"&pg="+(i - 1 + 1)})
       }
    }
 
@@ -1720,7 +1736,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          }) 
 
          let {pathname,search} = this.props.history.location
-         this.props.history.push({pathname,search:search.replace(/(&pg=[^&]+)/g,"")+"&pg="+(state.index + 1 + 1)})
+         this.props.history.push({pathname,search:search.replace(/(&(n|pg)=[^&]+)/g,"")+"&pg="+(state.index + 1 + 1)})
       }
    }
 
@@ -1761,7 +1777,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
    }
 
 
-   getInstanceLink(id,allProps:[]=[]) {
+   getInstanceLink(id,n,allProps:[]=[]) {
       let nb = allProps.filter(p => p.type === tmp+"nbInstance")
       if(nb.length) {
          nb = nb[0].value
@@ -1769,7 +1785,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             let instances = this.props.instances
             if(instances) instances = instances[fullUri(id)]
 
-            let iUrl = "/search?q="+this.props.keyword+"&lg="+this.props.language+"&t=Work&s="+this.props.sortBy+"&i="+shortUri(id)
+            let iUrl = "/search?i="+shortUri(id)+"&t=Work&w="+ encodeURIComponent(window.location.href.replace(/^https?:[/][/][^?]+[?]?/gi,"").replace(/(&n=[^&]*)/g,"")+"&n="+n) //"/search?q="+this.props.keyword+"&lg="+this.props.language+"&t=Work&s="+this.props.sortBy+"&i="+shortUri(id)
 
             //console.log("inst",instances)
             if(instances) { 
@@ -1803,7 +1819,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      ret
                   ]
 
-                  if(seeAll) ret.push(<span class="instance-link">&gt;&nbsp;<Link class="urilink" to={iUrl /*"/search?i="+shortUri(id)+"&t=Work"*/}>Browse All Instances ({nb})</Link></span>)
+                  if(seeAll) ret.push(<span class="instance-link">&gt;&nbsp;<Link class="urilink" to={iUrl}>Browse All Instances ({nb})</Link></span>)
 
                   return ret
                }
@@ -1813,7 +1829,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   <span class="instance-link">&gt;&nbsp;
                      <span class="urilink" onClick={(e) => this.props.onGetInstances(shortUri(id))}>Preview Instances</span>
                      <emph> or </emph>
-                     <Link class="urilink" to={iUrl /*"/search?i="+shortUri(id)+"&t=Work"*/}>Browse All ({nb})</Link>
+                     <Link class="urilink" to={iUrl}>Browse All ({nb})</Link>
                   </span>
                 </div>
          }
@@ -2378,12 +2394,12 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
             { this.getResultProp(tmp+"provider",allProps) }
             { this.getResultProp(tmp+"popularityScore",allProps,false,false, [tmp+"entityScore"]) }
-            { this.getInstanceLink(id,allProps) }
+            { this.getInstanceLink(id,n,allProps) }
             </div> )
 
       retList.push(<hr/>);
 
-      retList = <div className={"result-content " + status}>{retList}</div>
+      retList = <div {... (!isInstance?{id:"result-"+n}:{})}  className={"result-content " + status}>{retList}</div>
       
       return retList
    }
@@ -3865,8 +3881,9 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                            ,
                            <div id="filters-UI">
                               { this.state.filters.datatype.filter(k => k !== "Any").map(k => this.renderFilterTag(true, "Type", k, (event, checked) => this.handleCheck(event, k, false) ) )}                              
-                              { this.props.isInstance && this.state.filters.instance && this.renderFilterTag(false, "Instance Of", this.state.filters.instance, (event, checked) => {
-                                 this.props.history.push({pathname,search:search.replace(/(&[f]=[^&]+)/g,"&f=").replace(/(&s?i=[^&]+)/g,"")})
+                              { this.props.isInstance && this.state.backToWorks && this.state.filters.instance && this.renderFilterTag(false, "Instance Of", this.state.filters.instance, (event, checked) => {
+                                 this.resetFilters(event)
+                                 this.props.history.push({pathname,search:this.state.backToWorks})
                               } )  } 
                               { this.state.filters.facets?Object.keys(this.state.filters.facets).map(f => {
                                  let vals = this.state.filters.facets[f]
@@ -4121,7 +4138,10 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   </List> }
                { message.length > 0 &&
                   <List key={2} id="results" style={{maxWidth:"800px",margin:"20px auto",textAlign:"left",zIndex:0}}>
-                     { this.props.isInstance && <Link to={ search.replace(/(&s?i=[^&]+)/g,"") } className="uri-link" style={{marginLeft:"16px"}}>&lt; Back to Works</Link> }
+                     { this.props.isInstance && this.state.backToWorks && <a className="uri-link" style={{marginLeft:"16px"}} onClick={(event) => {
+                           this.resetFilters(event)
+                           this.props.history.push({pathname,search:this.state.backToWorks})
+                        }}>&lt; Back to Works</a> }
                      { message }
                      <div id="pagine">
                         <NavigateBefore

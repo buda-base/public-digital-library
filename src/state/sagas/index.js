@@ -216,7 +216,7 @@ async function initiateApp(params,iri,myprops) {
 }
 
 if(params && params.t /*&& !params.i */) {
-   store.dispatch(uiActions.updateSortBy((params.i?(params.si?params.si.toLowerCase():"year of publication reverse"):(params.s?params.s.toLowerCase():"popularity")),params.t))
+   store.dispatch(uiActions.updateSortBy(params.s?params.s.toLowerCase():(params.i?"year of publication reverse":"popularity"),params.t))
 }
 
 if(params && params.i) {
