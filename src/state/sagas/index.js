@@ -240,7 +240,7 @@ else if(params && params.q) {
 
    let dontGetDT = false
    let pt = params.t
-   if(pt && !pt.match(/,/) && ["Place", "Person","Work","Etext"].indexOf(pt) !== -1)  {
+   if(pt && !pt.match(/,/) && ["Place", "Person","Work","Etext", "Topic","Role","Corporation"].indexOf(pt) !== -1)  {
 
       if(!state.data.searches || !state.data.searches[pt] || !state.data.searches[pt][params.q+"@"+params.lg]) {
          store.dispatch(dataActions.startSearch(params.q,params.lg,[pt],null,dontGetDT)); 
@@ -290,7 +290,7 @@ else if(params && params.r) {
    let s = ["Any"]
    //if(params.t && params.t != "Any") { s = [ params.t ] }
    
-   if(t && ["Person","Place","Topic","Work","Role"].indexOf(t) !== -1
+   if(t && ["Person","Place","Topic","Work","Role","Corporation"].indexOf(t) !== -1
    && (!state.data.searches || !state.data.searches[params.r+"@"]))
    {
       store.dispatch(dataActions.startSearch(params.r,"",s,t)); //,params.t.split(",")));
@@ -875,7 +875,9 @@ function getStats(cat:string,data:{},tree:{})
    let stat={}
    let config = store.getState().data.config
 
-   let keys = Object.keys(config.facets[cat])
+   let keys = []
+   if(config.facets[cat])
+      keys = Object.keys(config.facets[cat])
 
    console.log("stat/keys",keys,tree)
    
@@ -1441,7 +1443,13 @@ else {
    }
    else {
 
-      if(datatype.indexOf("Place") !== -1) {
+
+      if(["Role","Corporation","Topic"].indexOf(datatype[0]) !== -1) {
+
+         addMeta(keyword,language,data,datatype[0],null,false);
+
+      }
+      else if(datatype.indexOf("Place") !== -1) {
 
          addMeta(keyword,language,data,"Place",null,false);
 

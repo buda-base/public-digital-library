@@ -160,7 +160,7 @@ const langSelect = [
 ]
 
 //const searchTypes = ["All","Work","Etext","Topic","Person","Place","Lineage","Corporation","Role"]
-const searchTypes = [ "Work", "Person","Place" ]
+const searchTypes = [ "Work", "Person","Place","Topic","Role","Corporation" ]
 
 /*
 export const langProfile = [
@@ -886,7 +886,7 @@ class App extends Component<Props,State> {
                time = props.searches[k].time
                console.log("refreshB",time)
             }
-            for(let d of ["Etext","Person","Work","Place"]) {
+            for(let d of ["Etext","Person","Work","Place","Topic","Corporation","Role"]) {
                if(props.searches && props.searches[d] && props.searches[d][k]) {
                   if(!time || props.searches[d][k].time > time) { 
                      time = props.searches[d][k].time 
@@ -912,7 +912,7 @@ class App extends Component<Props,State> {
          console.log("K", props.keyword, time, current)
 
          let results
-         if(state.filters.datatype.indexOf("Any") !== -1 || state.filters.datatype.length > 1 || state.filters.datatype.filter(d => ["Work","Etext","Person","Place"].indexOf(d) === -1).length ) {
+         if(state.filters.datatype.indexOf("Any") !== -1 || state.filters.datatype.length > 1 || state.filters.datatype.filter(d => ["Work","Etext","Person","Place","Topic"].indexOf(d) === -1).length ) {
             results = { ...props.searches[props.keyword+"@"+props.language] }
             //console.log("any")
          }
@@ -924,7 +924,7 @@ class App extends Component<Props,State> {
             else if(Ts.indexOf(dt) === -1) Ts.push(dt)
          }
          
-         //console.log("Ts",Ts) //,props.searches,props.keyword+"@"+props.language,props.searches[props.keyword+"@"+props.language])
+         console.log("Ts",Ts) //,props.searches,props.keyword+"@"+props.language,props.searches[props.keyword+"@"+props.language])
 
          let merge 
          if(props.searches[props.keyword+"@"+props.language] !== undefined) for(let dt of Ts) { 
@@ -941,7 +941,7 @@ class App extends Component<Props,State> {
             let dts = dt.toLowerCase()+"s"
             if(!merge) merge = {}
 
-            //console.log("dts",dts,results,res)
+            console.log("dts",dts,results,res)
 
             if(!res || !res.results || !res.results.bindings || !res.results.bindings[dts]) { 
 
@@ -1053,7 +1053,7 @@ class App extends Component<Props,State> {
             }
             if(time && s.results[s.id].results) s.results[s.id].results.time = time    
 
-            if(needRefresh &&  Object.keys(results.results.bindings).length) { 
+            if(needRefresh && results.results && results.results.bindings && Object.keys(results.results.bindings).length) { 
                s.repage = true
                
                // > pagination bug
@@ -1372,7 +1372,7 @@ class App extends Component<Props,State> {
       // if(f.indexOf(lab) != -1 && !val) f.splice(f.indexOf(lab),1)
       // else if(f.indexOf(lab) == -1 && val) f.push(lab)
 
-      let types = searchTypes.slice(1) //[ "Person","Work","Corporation","Place","Etext", "Role","Topic","Lineage"]
+      let types = searchTypes //.slice(1) //[ "Person","Work","Corporation","Place","Etext", "Role","Topic","Lineage"]
       if(this.state.results && this.state.results[this.state.id] && this.state.results[this.state.id].types) types = this.state.results[this.state.id].types
 
       let f = [lab]
@@ -1391,7 +1391,7 @@ class App extends Component<Props,State> {
 
          if(state.sortBy) delete state.sortBy
          
-         if(["Any","Person","Place","Work","Etext"].indexOf(lab) !== -1)
+         if(["Any","Person","Place","Work","Etext","Role","Topic","Corporation"].indexOf(lab) !== -1)
          {
             this.requestSearch(this.props.keyword,[ lab ]);
          }
@@ -2392,7 +2392,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             { this.getResultProp(tmp+"otherLabel",allProps, true, false, [skos+"prefLabel", skos+"altLabel"], !preLit?preLit:preLit.replace(/[↦↤]/g,"") ) }
             { this.getResultProp(tmp+"assetAvailability",allProps,false,false) }
             
-            { this.getResultProp(rdf+"type",allProps.filter(e => e.type === rdf+"type" && ![bdo+"AbstractWork",bdo+"Work",bdo+"Instance",bdo+"SerialMember"].includes(e.value))) }
+            { this.getResultProp(rdf+"type",allProps.filter(e => e.type === rdf+"type" && ![bdo+"AbstractWork",bdo+"Work",bdo+"Instance",bdo+"SerialMember",bdo+"Topic"].includes(e.value))) }
             { this.getResultProp(tmp+"originalRecord",allProps,false,false, [ tmp+"originalRecord", adm+"originalRecord"]) }
             { this.getResultProp(bdo+"script",allProps) }
             
@@ -3974,7 +3974,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
                                  //console.log("counts",i,counts["datatype"][i],this.state.filters.datatype.indexOf(i))
 
-                              let disabled = (!["Work","Person", "Place"].includes(i)) // false // (!this.props.keyword && ["Any","Etext","Person","Work"].indexOf(i)===-1 && this.props.language  != "")
+                              let disabled = (!["Work","Person", "Place","Topic","Corporation","Role"].includes(i)) // false // (!this.props.keyword && ["Any","Etext","Person","Work"].indexOf(i)===-1 && this.props.language  != "")
                            // || (this.props.language == "")
 
                               return (

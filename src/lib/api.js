@@ -555,7 +555,14 @@ export default class API {
              let url = config.endpoints[config.index]+"/lib" ;
              let param = {"searchType":"rootSearchGraph","LG_NAME":lang,"I_LIM":""}
 
-             if(typ && typ.length >= 1 && typ[0] !== "Any") { param = { ...param, "searchType":(typ[0] === "Etext"?"Chunks":typ[0]).toLowerCase()+(typ[0]==="Work"?"Facet":"")+"Graph" } }
+             let searchType = "typeSimple" 
+             let R_TYPE 
+             if(typ[0] === "Etext") searchType = "Chunks"
+             else if(["Work","Person","Place"].includes(typ[0]))  searchType = typ[0].toLowerCase()+(typ[0]==="Work"?"Facet":"")              
+             else R_TYPE = "bdo:"+typ[0]
+             searchType+="Graph"
+
+             if(typ && typ.length >= 1 && typ[0] !== "Any") { param = { ...param, searchType, ...(R_TYPE?{R_TYPE}:{}) } }
              else url = url.replace(/-dev/,"") // fix while -dev/rootSearch returns nothing
 
              let data = this.getQueryResults(url, key, param,"GET");
@@ -702,7 +709,7 @@ export default class API {
 
             if(data && data.results && data.results.bindings) {
                return data.results.bindings.reduce( (acc,t) => {
-                  if(t.type && t.count && [bdo+"Work",bdo+"Person",bdo+"Topic",bdo+"Place"].indexOf(t.type.value) !== -1) return { ...acc, [t.type.value]:t.count.value}
+                  if(t.type && t.count && [bdo+"Work",bdo+"Person",bdo+"Topic",bdo+"Role",bdo+"Corporation",bdo+"Place"].indexOf(t.type.value) !== -1) return { ...acc, [t.type.value]:t.count.value}
                   return acc
                },{})
             }
