@@ -842,11 +842,11 @@ function getData(result,inMeta,outMeta)  {
   {
      numR = Object.keys(result).reduce((acc,e) => {
         //console.log("res",result[e])
-        if(result[e]!=null) return ( acc + (e=="metadata"?0:Object.keys(result[e]).length))
+        if(e !== "tree" && result[e]!=null) return ( acc + (e=="metadata"?0:Object.keys(result[e]).length))
         else return acc
      },0)
 
-     console.log("numRa",numR,metadata)
+     //console.log("numRa",numR,metadata)
 
      if(metadata)
      {
@@ -862,7 +862,7 @@ function getData(result,inMeta,outMeta)  {
      //console.log("numRb",numR)
   }
 
-  console.log("getData#result",result,numR)
+  //console.log("getData#result",result,numR)
 
   data = {  numResults:numR, results : { bindings: {...data } } }
 

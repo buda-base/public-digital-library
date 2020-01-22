@@ -807,10 +807,10 @@ reducers[actions.TYPES.notGettingDatatypes] = notGettingDatatypes;
 
 export const foundResults = (state: DataState, action: actions.FoundResultsAction) => {
 
+   const bdo   = "http://purl.bdrc.io/ontology/core/"
+
    let searches,isInstance 
 
-   // TODO merge datatype counts
-   
    if(action.payload.results) isInstance = action.payload.results.isInstance
 
    if(Array.isArray(action.payload.datatype)) action.payload.datatype = action.payload.datatype[0]
@@ -841,13 +841,41 @@ export const foundResults = (state: DataState, action: actions.FoundResultsActio
       }
    }
 
+   // + merge datatype counts
+   // DONE 
+
+   let datatypes ; 
+   if(!isInstance && action.payload.datatype && action.payload.results && action.payload.results.numResults) {
+      datatypes =  state.datatypes 
+      if(datatypes) datatypes = datatypes[action.payload.keyword+"@"+action.payload.language]
+
+      if(!datatypes) datatypes = {}
+
+      if(datatypes && !datatypes[bdo+action.payload.datatype.toLowerCase()]) {
+
+         if(!datatypes.metadata) datatypes = { metadata:{} }
+
+         datatypes.metadata[bdo+action.payload.datatype] = action.payload.results.numResults
+
+         datatypes = {
+            ...state.datatypes,
+            [action.payload.keyword+"@"+action.payload.language]: datatypes
+         }
+      }
+
+      //console.log("DT1",JSON.stringify(datatypes),JSON.stringify(state.datatypes))
+
+   }
+   
+
       return {
       ...state,
 
       keyword:action.payload.keyword,
       language:action.payload.language,
       searches: searches,
-      isInstance
+      isInstance,
+      ...(datatypes?{datatypes}:{})
    }
 }
 reducers[actions.TYPES.foundResults] = foundResults;
@@ -857,7 +885,11 @@ export const foundDatatypes = (state: DataState, action: actions.FoundResultsAct
    let DT = state.datatypes;
    if(DT) DT = DT[action.payload.keyword+"@"+action.payload.language]
 
-   // TODO keep if already present
+
+   //console.log("DT2",JSON.stringify(DT))
+
+   // + keep if already present
+   // DONE 
 
    return {
       ...state,
@@ -866,7 +898,7 @@ export const foundDatatypes = (state: DataState, action: actions.FoundResultsAct
          [action.payload.keyword+"@"+action.payload.language]: {
             ...DT,
             ...action.payload.results,
-            metadata:{ ...(DT && DT.metadata?DT.metadata:{}), ...action.payload.results.metadata }
+            metadata:{ ...action.payload.results.metadata, ...(DT && DT.metadata?DT.metadata:{})  }
          }
       }
    }

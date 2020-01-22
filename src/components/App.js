@@ -2392,7 +2392,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             { this.getResultProp(tmp+"otherLabel",allProps, true, false, [skos+"prefLabel", skos+"altLabel"], !preLit?preLit:preLit.replace(/[↦↤]/g,"") ) }
             { this.getResultProp(tmp+"assetAvailability",allProps,false,false) }
             
-            { this.getResultProp(rdf+"type",allProps.filter(e => e.type === rdf+"type" && ![bdo+"AbstractWork",bdo+"Work",bdo+"Instance",bdo+"SerialMember",bdo+"Topic"].includes(e.value))) }
+            { this.getResultProp(rdf+"type",allProps.filter(e => e.type === rdf+"type" && e.value === bdo+"EtextInstance")) } 
+            {/* //![bdo+"AbstractWork",bdo+"Work",bdo+"Instance",bdo+"SerialMember",bdo+"Topic"].includes(e.value))) } */}
             { this.getResultProp(tmp+"originalRecord",allProps,false,false, [ tmp+"originalRecord", adm+"originalRecord"]) }
             { this.getResultProp(bdo+"script",allProps) }
             
@@ -2449,7 +2450,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
             types.push(typ);
 
-            counts["datatype"][typ]=Number(this.props.datatypes.metadata[r])
+            counts["datatype"][typ]= /*Number(*/ this.props.datatypes.metadata[r] //)
             counts["datatype"]["Any"]+=Number(this.props.datatypes.metadata[r])
 
          }
@@ -3300,12 +3301,11 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
    resetFilters(e) {
       
       let {pathname,search} = this.props.history.location
-      this.props.history.push({pathname,search:search.replace(/(&([tfin]|pg)=[^&]+)/g,"")+"&t="+this.state.filters.datatype[0]})
+      
+      if(!this.props.isInstance) this.props.history.push({pathname,search:search.replace(/(&([tfin]|pg)=[^&]+)/g,"")+"&t="+this.state.filters.datatype[0]})
+      else this.props.history.push({pathname,search:this.state.backToWorks})
 
       //this.setState({...this.state, repage:true, uriPage:0, scrolled:1, filters:{ datatype: this.state.filters.datatype } }  )
-
-      // TODO 
-      // x fix back button behaviour (+ Work -> Any) < no more Any
    }
 
    treeWidget(j,meta,counts,jlabel,jpre) {
@@ -3915,7 +3915,6 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                               { this.state.filters.datatype.filter(k => k !== "Any").map(k => this.renderFilterTag(true, "Type", k, (event, checked) => this.handleCheck(event, k, false) ) )}                              
                               { this.props.isInstance && this.state.backToWorks && this.state.filters.instance && this.renderFilterTag(false, "Instance Of", this.state.filters.instance, (event, checked) => {
                                  this.resetFilters(event)
-                                 this.props.history.push({pathname,search:this.state.backToWorks})
                               } )  } 
                               { this.state.filters.facets?Object.keys(this.state.filters.facets).map(f => {
                                  let vals = this.state.filters.facets[f]
@@ -3972,10 +3971,13 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
                                  if(i==="Any") return
 
-                                 //console.log("counts",i,counts["datatype"][i],this.state.filters.datatype.indexOf(i))
+                                 //console.log("counts",i,counts,counts["datatype"][i],this.state.filters.datatype.indexOf(i))
 
                               let disabled = (!["Work","Person", "Place","Topic","Corporation","Role"].includes(i)) // false // (!this.props.keyword && ["Any","Etext","Person","Work"].indexOf(i)===-1 && this.props.language  != "")
                            // || (this.props.language == "")
+
+                              let count = counts["datatype"][i]
+                              if(typeof count === "string") count = "~"+count
 
                               return (
                                  <div key={i} style={{textAlign:"left"}}  className="searchWidget">
@@ -3994,7 +3996,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
                                        }
                                        {...counts["datatype"][i]
-                                       ?{label:<span>{I18n.t("types."+i.toLowerCase()) + " ("}<span class="facet-count">{counts["datatype"][i]}</span>{")"}</span>}
+                                       ?{label:<span>{I18n.t("types."+i.toLowerCase()) + " ("}<span class="facet-count">{count}</span>{")"}</span>}
                                        :{label:I18n.t("types."+i.toLowerCase())}}
                                     />
                                  </div>
@@ -4172,7 +4174,6 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   <List key={2} id="results" style={{maxWidth:"800px",margin:"20px auto",textAlign:"left",zIndex:0}}>
                      { this.props.isInstance && this.state.backToWorks && <a className="uri-link" style={{marginLeft:"16px"}} onClick={(event) => {
                            this.resetFilters(event)
-                           this.props.history.push({pathname,search:this.state.backToWorks})
                         }}>&lt; Back to Works</a> }
                      { message }
                      <div id="pagine">
