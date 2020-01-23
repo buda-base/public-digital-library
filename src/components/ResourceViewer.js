@@ -510,7 +510,7 @@ export function top_left_menu(that,pdfLink,monoVol,fairUse)
        { 
           that.props.IRI && //that.props.IRI.match(/^[^:]+:[RPGTW]/) &&
           prefixes[that.props.IRI.replace(/^([^:]+):.*$/,"$1")] &&
-          <Link className="goBack" to={"/search?r="+that.props.IRI+"&t=Any"}>
+          <Link className="goBack" to={"/search?r="+that.props.IRI+"&t=Work"}>
           <IconButton style={{paddingLeft:0}} title={I18n.t("resource.browse")}>
              <SearchIcon style={{fontSize:"30px"}}/>
           </IconButton>
@@ -3302,7 +3302,7 @@ class ResourceViewer extends Component<Props,State>
       if(this.props.resources && this.props.resources[this.props.IRI])
          return (
             <div class="browse">
-               <Link className="download login" to={"/search?r="+this.props.IRI+"&t=Any"}>
+               <Link className="download login" to={"/search?r="+this.props.IRI+"&t=Work"}>
                   &gt; {I18n.t("resource.browse")}
                </Link>
             </div>

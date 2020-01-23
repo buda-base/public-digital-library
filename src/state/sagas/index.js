@@ -74,7 +74,7 @@ async function initiateApp(params,iri,myprops) {
       }
 
       // [TODO] load only missing info when needed (see click on "got to annotation" for WCBC2237)
-      if(iri || (params && params.r)) // && (!state.data.resources || !state.data.resources[iri]))
+      if(iri) // || (params && params.r)) // && (!state.data.resources || !state.data.resources[iri]))
       {
          let res,Etext ;
          if(!iri) iri = params.r
@@ -112,8 +112,8 @@ async function initiateApp(params,iri,myprops) {
          {
             store.dispatch(dataActions.gotResource(iri,res));
             
-            let assocRes = await api.loadAssocResources(iri)
-            store.dispatch(dataActions.gotAssocResources(iri,assocRes))
+            let assocRes = {} //= await api.loadAssocResources(iri)
+            //store.dispatch(dataActions.gotAssocResources(iri,assocRes))
             sameAsR[iri] = true ;
 
             let url = fullUri(iri)
@@ -240,7 +240,7 @@ else if(params && params.q) {
 
    let dontGetDT = false
    let pt = params.t
-   if(pt && !pt.match(/,/) && ["Place", "Person","Work","Etext", "Topic","Role","Corporation"].indexOf(pt) !== -1)  {
+   if(pt && !pt.match(/,/) && ["Place", "Person","Work","Etext", "Topic","Role","Corporation","Lineage"].indexOf(pt) !== -1)  {
 
       if(!state.data.searches || !state.data.searches[pt] || !state.data.searches[pt][params.q+"@"+params.lg]) {
          store.dispatch(dataActions.startSearch(params.q,params.lg,[pt],null,dontGetDT)); 
@@ -288,18 +288,19 @@ else if(params && params.r) {
    console.log("state r",t,state.data.searches,params,iri)
 
    let s = ["Any"]
-   //if(params.t && params.t != "Any") { s = [ params.t ] }
+   if(params.t && params.t != "Any") { s = [ params.t ] }
    
-   if(t && ["Person","Place","Topic","Work","Role","Corporation"].indexOf(t) !== -1
-   && (!state.data.searches || !state.data.searches[params.r+"@"]))
+   if(t && ["Person","Place","Topic","Work","Role","Corporation","Lineage"].indexOf(t) !== -1
+   && (!state.data.searches[params.t] || !state.data.searches[params.t][params.r+"@"]))
    {
       store.dispatch(dataActions.startSearch(params.r,"",s,t)); //,params.t.split(",")));
    }
    else {
       store.dispatch(uiActions.loading(params.r, false));
-      store.dispatch(dataActions.foundResults(params.r,"", state.data.searches[params.r+"@"], params.t));
-      if(state.data.searches[params.t] && state.data.searches[params.t][params.r+"@"] && state.data.searches[params.t][params.r+"@"].metadata)
+      if(state.data.searches[params.t] && state.data.searches[params.t][params.r+"@"] && state.data.searches[params.t][params.r+"@"].metadata) {
+         store.dispatch(dataActions.foundResults(params.r,"", state.data.searches[params.t][params.r+"@"], params.t));
          store.dispatch(dataActions.foundFacetInfo(params.r,"", [params.t],state.data.searches[params.t][params.r+"@"].metadata ));
+      }
    }
 }
 
@@ -1010,7 +1011,7 @@ function getStats(cat:string,data:{},tree:{})
 
 function addMeta(keyword:string,language:string,data:{},t:string,tree:{},found:boolean=true,facets:boolean=true)
 {
-   console.log("aM",data,data["results"])
+   //console.log("aM",data,data["results"],t)
 
    if(data["results"] &&  data["results"]["bindings"] && data["results"]["bindings"][t.toLowerCase()+"s"]){
       console.log("FOUND",data);
@@ -1345,7 +1346,7 @@ async function startSearch(keyword,language,datatype,sourcetype,dontGetDT) {
       if(!sourcetype)
       result = await api.getStartResults(keyword,language,datatype);
       else
-      result = await api.getAssocResults(keyword,sourcetype);
+      result = await api.getAssocResults(keyword,sourcetype,datatype[0]);
 
       // adapt to new new JSON format
       if(result) {
@@ -1404,16 +1405,25 @@ async function startSearch(keyword,language,datatype,sourcetype,dontGetDT) {
       let metaD = {}
       data = getData(data,metadata,metaD);
       store.dispatch(dataActions.foundResults(keyword, language, data, datatype));
+
+      // TODO countTypes for a resource
+
       store.dispatch(dataActions.foundDatatypes(keyword,language,{ metadata:metaD, hash:true}));
 
       let newMeta = {}
 
-      addMeta(keyword,language,data,"Person");
+
+      if(datatype[0] !== "Work") addMeta(keyword,language,data,datatype[0]);      
+      else addMeta(keyword,language,data,"Work",result.tree);      
+
+      /* // deprecated
+      addMeta(keyword,language,data,"Person");      
       addMeta(keyword,language,data,"Work",result.tree);
       addMeta(keyword,language,data,"Lineage");
       addMeta(keyword,language,data,"Place");
+      */
 
-      console.log("sourcetype",data)
+      console.log("sourcetype",data,datatype)
 
       /*
       if(metaSav) {
@@ -1444,7 +1454,7 @@ else {
    else {
 
 
-      if(["Role","Corporation","Topic"].indexOf(datatype[0]) !== -1) {
+      if(["Role","Corporation","Topic","Lineage"].indexOf(datatype[0]) !== -1) {
 
          addMeta(keyword,language,data,datatype[0],null,false);
 

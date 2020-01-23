@@ -574,11 +574,12 @@ export default class API {
         }
     }
 
-      async _getAssocResultsData(key: string,typ:string): Promise<{} | null> {
+      async _getAssocResultsData(key: string,styp:string,dtyp:string): Promise<{} | null> {
          try {
               let config = store.getState().data.config.ldspdi
               let url = config.endpoints[config.index]+"/lib" ;
-              let param = {"searchType":typ.toLowerCase()+"AllAssociations","R_RES":key,"L_NAME":"","LG_NAME":"",LG_NAME:"" }
+              let simple = !["Work","Person","Place"].includes(dtyp)
+              let param = {"searchType":"associated"+(!simple?dtyp:"SimpleType")+"s",...(simple?{R_TYPE:"bdo:"+dtyp}:{}),"R_RES":key,"L_NAME":"","LG_NAME":"", "I_LIM":"" }
               let data = this.getQueryResults(url, key, param,"GET");
               // let data = this.getSearchContents(url, key);
 
@@ -709,7 +710,7 @@ export default class API {
 
             if(data && data.results && data.results.bindings) {
                return data.results.bindings.reduce( (acc,t) => {
-                  if(t.type && t.count && [bdo+"Work",bdo+"Person",bdo+"Topic",bdo+"Role",bdo+"Corporation",bdo+"Place"].indexOf(t.type.value) !== -1) return { ...acc, [t.type.value]:t.count.value}
+                  if(t.type && t.count && [bdo+"Work",bdo+"Person",bdo+"Topic",bdo+"Role",bdo+"Corporation",bdo+"Place",bdo+"Lineage"].indexOf(t.type.value) !== -1) return { ...acc, [t.type.value]:t.count.value}
                   return acc
                },{})
             }
@@ -806,11 +807,11 @@ export default class API {
         }
     }
 
-         async getAssocResults(key: string,types:string[]): Promise<{} | null> {
+         async getAssocResults(key: string,stypes:string[],dtypes:string[]): Promise<{} | null> {
            let data = [];
 
            try {
-               data = await this._getAssocResultsData(key,types)
+               data = await this._getAssocResultsData(key,stypes,dtypes)
 
                return data ;
             } catch(e) {

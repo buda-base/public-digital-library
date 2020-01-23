@@ -160,7 +160,7 @@ const langSelect = [
 ]
 
 //const searchTypes = ["All","Work","Etext","Topic","Person","Place","Lineage","Corporation","Role"]
-const searchTypes = [ "Work", "Person","Place","Topic","Role","Corporation" ]
+const searchTypes = [ "Work", "Person","Place","Topic","Role","Corporation","Lineage" ]
 
 /*
 export const langProfile = [
@@ -463,12 +463,12 @@ class App extends Component<Props,State> {
    _facetsRequested = false;
    _customLang = null ;
    _menus = {}
-   _refs = []
+   _refs = {}
 
 
    constructor(props : Props) {
-      super(props);
-      
+      super(props);      
+
       this.requestSearch.bind(this);
       this.handleCheck.bind(this);
       this.handleResults.bind(this);
@@ -529,9 +529,11 @@ class App extends Component<Props,State> {
 
    }
 
+
+
    componentDidUpdate() {
       
-      //console.log("didU",this.state)
+      console.log("didU",this.state) //,this._refs)
 
       let get = qs.parse(this.props.history.location.search)
 
@@ -541,7 +543,8 @@ class App extends Component<Props,State> {
          if(this._refs[n] && this._refs[n].current && this.state.scrolled !== n)  {
             setTimeout(((that) => () => { 
                if(that._refs[n] && that._refs[n].current) that._refs[n].current.scrollIntoView()
-            })(this),10)
+               //else if(n === 0 && that._refs["logo"].current) window).scrollTop(0)
+            })(this),150) // TODO ? use setInterval to synchronize with render 
             scrolled = n
          }
       }
@@ -598,6 +601,7 @@ class App extends Component<Props,State> {
    {
       console.log("key",key,label,this.state.searchTypes)
 
+      let _key = ""+key
       if(!key || key == "" || !key.match) return ;
       if(!key.match(/:/)) {
         if(key.indexOf("\"") === -1) key = "\""+key+"\""
@@ -616,11 +620,13 @@ class App extends Component<Props,State> {
       let state = { ...this.state, dataSource:[], leftPane:true, filters:{ datatype:[ ...searchDT ] } }
       this.setState(state)
 
-      console.log("search",key,label) //,this.state,!global.inTest ? this.props:null)
+      console.log("search::",key,_key,label) //,this.state,!global.inTest ? this.props:null)
 
-      if(prefixesMap[key.replace(/^([^:]+):.*$/,"$1")])
+      if(prefixesMap[key.replace(/^([^:]+):.*$/,"$1")] || _key.match(/^[WPG][A-Za-f0-9_]+/))
       {
          //if(!label) label = this.state.filters.datatype.filter((f)=>["Person","Work"].indexOf(f) !== -1)[0]
+
+         if(_key.indexOf(":") === -1) key = "bdr:"+_key
 
          this.props.history.push({pathname:"/search",search:"?r="+key+(label?"&t="+label:"")})
 
@@ -773,12 +779,16 @@ class App extends Component<Props,State> {
 
       //console.log("collap?",JSON.stringify(state.collapse,null,3))
 
+      
+      // TODO deprecate in favor of query modification
+      /*
       if(props.language == "" && (!props.resources || !props.resources[props.keyword]))
       {
          console.log("gRes?",props.resources,props.keyword);
          props.onGetResource(props.keyword);
       }
-
+      */
+     
 
       /*
       // update when datatype filter has changed 
@@ -886,7 +896,7 @@ class App extends Component<Props,State> {
                time = props.searches[k].time
                console.log("refreshB",time)
             }
-            for(let d of ["Etext","Person","Work","Place","Topic","Corporation","Role"]) {
+            for(let d of ["Etext","Person","Work","Place","Topic","Corporation","Role","Lineage"]) {
                if(props.searches && props.searches[d] && props.searches[d][k]) {
                   if(!time || props.searches[d][k].time > time) { 
                      time = props.searches[d][k].time 
@@ -912,7 +922,7 @@ class App extends Component<Props,State> {
          console.log("K", props.keyword, time, current)
 
          let results
-         if(state.filters.datatype.indexOf("Any") !== -1 || state.filters.datatype.length > 1 || state.filters.datatype.filter(d => ["Work","Etext","Person","Place","Topic"].indexOf(d) === -1).length ) {
+         if(state.filters.datatype.indexOf("Any") !== -1 || state.filters.datatype.length > 1 || state.filters.datatype.filter(d => ["Work","Etext","Person","Place","Topic","Role","Corporation","Lineage"].indexOf(d) === -1).length ) {
             results = { ...props.searches[props.keyword+"@"+props.language] }
             //console.log("any")
          }
@@ -927,12 +937,15 @@ class App extends Component<Props,State> {
          console.log("Ts",Ts) //,props.searches,props.keyword+"@"+props.language,props.searches[props.keyword+"@"+props.language])
 
          let merge 
-         if(props.searches[props.keyword+"@"+props.language] !== undefined) for(let dt of Ts) { 
+         if(props.searches[props.keyword+"@"+props.language] !== undefined || props.language === "") for(let dt of Ts) { 
             
             let res ;
             if(props.searches[dt]) res = { ...props.searches[dt][props.keyword+"@"+props.language] }
                
-            if(!results) {
+            if(!props.language) {
+               results = { results:{ bindings:{} } }
+            }
+            else if(!results) {
                results = { ...props.searches[props.keyword+"@"+props.language] }
                if(results) { results = { time:results.time, results: { bindings:{ ...results.results.bindings } } }; }
                else results = { results: { time, bindings:{ } } }
@@ -1276,7 +1289,7 @@ class App extends Component<Props,State> {
          state.filters.preload = true
 
          let {pathname,search} = this.props.history.location
-         this.props.history.push({pathname,search:search.replace(/(&([nf]|pg)=[^&]+)/g,"")+"&pg=1&n=1"+getFacetUrl(state.filters,this.props.config.facets[state.filters.datatype[0]])})
+         this.props.history.push({pathname,search:search.replace(/(&([nf]|pg)=[^&]+)/g,"")+"&pg=1&n=0"+getFacetUrl(state.filters,this.props.config.facets[state.filters.datatype[0]])})
       }
 
       this.setState(state);
@@ -1391,7 +1404,7 @@ class App extends Component<Props,State> {
 
          if(state.sortBy) delete state.sortBy
          
-         if(["Any","Person","Place","Work","Etext","Role","Topic","Corporation"].indexOf(lab) !== -1)
+         if(["Any","Person","Place","Work","Etext","Role","Topic","Corporation","Lineage"].indexOf(lab) !== -1)
          {
             this.requestSearch(this.props.keyword,[ lab ]);
          }
@@ -2197,6 +2210,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          let lastP,prop = ""
 
          retList.push( <div id='matches'>
+            { this.getResultProp(tmp+"relationType",allProps) } {/* //,true,false) } */}
+            { this.getResultProp(tmp+"relationTypeInv",allProps) }
             { this.getResultProp(tmp+"author",allProps) }
             { this.getResultProp(bdo+"workIsAbout",allProps,false) }
             { this.getResultProp(bdo+"workGenre",allProps) }
@@ -2409,6 +2424,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             
             { this.getResultProp(tmp+"isCreator",allProps.filter(e => (e.type === tmp+"isCreator" && e.value !== "false")),false,false) }
 
+            { this.getResultProp(bdo+"placeLocatedIn",allProps,false) }
             { this.getResultProp(bdo+"placeType",allProps) }
 
             { this.getResultProp(bdo+"workBiblioNote",allProps,false,false,[bdo+"workBiblioNote",rdfs+"comment"]) }
@@ -2587,7 +2603,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                */
             }
          }
-         // resource id matching ?
+         /*
+         // resource id matching ? deprecated
          else if(this.props.resources &&  this.props.resources[this.props.keyword] )
          {
             let l ; // sublist[o].filter((e) => (e.type && e.type.match(/prefLabelMatch$/)))[0]
@@ -2613,6 +2630,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                }
             }
          }
+         */
       }
       return results ;
    }
@@ -3468,7 +3486,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          let label = getLangLabel(this,"",elem["skos:prefLabel"],true) 
          //if(label && label.value) label = label.value
          //else if(label && label["@value"]) label = label["@value"]
-         if(!label) label = this.fullname(e,elem["skos:prefLabel"],true)
+         if(!label) label = { value: this.fullname(e,elem["skos:prefLabel"],true) }
 
          //console.log("check",e,label,elem,disable);
 
@@ -3877,6 +3895,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
       let {pathname,search} = this.props.history.location      
 
+      this._refs["logo"] = React.createRef();
+
       return (
 <div>
 
@@ -3973,7 +3993,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
                                  //console.log("counts",i,counts,counts["datatype"][i],this.state.filters.datatype.indexOf(i))
 
-                              let disabled = (!["Work","Person", "Place","Topic","Corporation","Role"].includes(i)) // false // (!this.props.keyword && ["Any","Etext","Person","Work"].indexOf(i)===-1 && this.props.language  != "")
+                              let disabled = (!["Work","Person", "Place","Topic","Corporation","Role","Lineage"].includes(i)) // false // (!this.props.keyword && ["Any","Etext","Person","Work"].indexOf(i)===-1 && this.props.language  != "")
                            // || (this.props.language == "")
 
                               let count = counts["datatype"][i]
@@ -4044,7 +4064,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                </div>
             </ResizableBox></div>
             { showMenus }
-            <div className={"SearchPane"+(this.props.keyword ?" resultPage":"")} >
+            <div className={"SearchPane"+(this.props.keyword ?" resultPage":"") }  ref={this._refs["logo"]}>
                <a target="_blank" href="https://www.tbrc.org/" style={{display:"inline-block",marginBottom:"25px"}}>
                   <img src="/logo.svg" style={{width:"200px"}} />
                </a>
