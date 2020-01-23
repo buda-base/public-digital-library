@@ -1315,14 +1315,15 @@ function rewriteAuxMain(result,keyword,datatype,sortBy)
       }
       else if(e === "facets") {
          let cat = "http://purl.bdrc.io/resource/O9TAXTBRC201605"
-         let root = result[e].topics[cat]
-         let tree = [ { "@id": cat, taxHasSubClass: root.subclasses }, ...Object.keys(result[e].topics).reduce( (acc,k) =>  { 
-            let elem = result[e].topics[k] 
-            return ([ ...acc, { "@id":k, taxHasSubClass: elem.subclasses, "skos:prefLabel": elem["skos:prefLabel"], "tmp:count":elem["count"] } ])
-         }, []) ]
-
-
-         return { ...acc, ["tree"]: { "@graph" : tree  } }
+         if(result[e].topics && result[e].topics[cat]) {
+            let root = result[e].topics[cat]
+            let tree = [ { "@id": cat, taxHasSubClass: root.subclasses }, ...Object.keys(result[e].topics).reduce( (acc,k) =>  { 
+               let elem = result[e].topics[k] 
+               return ([ ...acc, { "@id":k, taxHasSubClass: elem.subclasses, "skos:prefLabel": elem["skos:prefLabel"], "tmp:count":elem["count"] } ])
+            }, []) ]
+            return { ...acc, ["tree"]: { "@graph" : tree  } }
+         }
+         return acc
       }
       else return acc
    }, {})
@@ -1406,12 +1407,10 @@ async function startSearch(keyword,language,datatype,sourcetype,dontGetDT) {
       data = getData(data,metadata,metaD);
       store.dispatch(dataActions.foundResults(keyword, language, data, datatype));
 
-      // TODO countTypes for a resource
-
-      store.dispatch(dataActions.foundDatatypes(keyword,language,{ metadata:metaD, hash:true}));
+      metadata = await api.getDatatypesOnly(keyword, language);
+      store.dispatch(dataActions.foundDatatypes(keyword,language,{ metadata, hash:true}));
 
       let newMeta = {}
-
 
       if(datatype[0] !== "Work") addMeta(keyword,language,data,datatype[0]);      
       else addMeta(keyword,language,data,"Work",result.tree);      

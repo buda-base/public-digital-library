@@ -160,7 +160,7 @@ const langSelect = [
 ]
 
 //const searchTypes = ["All","Work","Etext","Topic","Person","Place","Lineage","Corporation","Role"]
-const searchTypes = [ "Work", "Person","Place","Topic","Role","Corporation","Lineage" ]
+const searchTypes = [ "Work", "Person","Place","Topic","Lineage","Role","Corporation" ]
 
 /*
 export const langProfile = [
@@ -1289,7 +1289,7 @@ class App extends Component<Props,State> {
          state.filters.preload = true
 
          let {pathname,search} = this.props.history.location
-         this.props.history.push({pathname,search:search.replace(/(&([nf]|pg)=[^&]+)/g,"")+"&pg=1&n=0"+getFacetUrl(state.filters,this.props.config.facets[state.filters.datatype[0]])})
+         this.props.history.push({pathname,search:search.replace(/(&([nf]|pg)=[^&]+)/g,"")+"&pg=1"+getFacetUrl(state.filters,this.props.config.facets[state.filters.datatype[0]])})
       }
 
       this.setState(state);
@@ -2211,7 +2211,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
          retList.push( <div id='matches'>
             { this.getResultProp(tmp+"relationType",allProps) } {/* //,true,false) } */}
-            { this.getResultProp(tmp+"relationTypeInv",allProps) }
+            { this.getResultProp(tmp+"InverseRelationType",allProps,true,true,[tmp+"relationTypeInv"]) }
             { this.getResultProp(tmp+"author",allProps) }
             { this.getResultProp(bdo+"workIsAbout",allProps,false) }
             { this.getResultProp(bdo+"workGenre",allProps) }
@@ -3185,7 +3185,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                         return searchTypes.indexOf(t) !== -1 
                      }).reduce((acc,e)=>acc+Object.keys(results.results.bindings[e]).length,0)
 
-      //console.log("res::",id,results,message,message.length,resLength,resMatch,this.props.loading)
+      console.log("res::",id,results,message,message.length,resLength,resMatch,this.props.loading)
 
       let sta = { ...this.state }
 
@@ -3658,7 +3658,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          
          id = this.prepareResults();
 
-         //console.log("id",id)
+         console.log("id",id)
 
          if(this.state.results && this.state.results[id])
          {
@@ -3682,15 +3682,18 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                if(max < paginate.pages.length) pageLinks.push([" ... ",<a onClick={this.goPage.bind(this,id,paginate.pages.length)}>{paginate.pages.length}</a>]) 
             }
             
-            //console.log("prep",message,counts,types,paginate)
+            console.log("prep",message,counts,types,paginate)
+
             if(!this.props.loading && !message.length && ( (this.props.searches[this.props.keyword+"@"+this.props.language] && !this.props.searches[this.props.keyword+"@"+this.props.language].numResults ) 
-                  || (!this.props.loading && results && results.results && results.results.bindings && !results.results.bindings.numResults) ) )
+                  || (!this.props.loading && results && results.results && results.results.bindings && !results.results.bindings.numResults) ) 
+                  || (!this.props.language && !this.props.loading && (counts["datatype"]["Any"] == 0 || !counts["datatype"][this.state.filters.datatype[0]]) ) )
                {
-                  message.push(
+                  message = [
                      <Typography style={{fontSize:"1.5em",maxWidth:'700px',margin:'50px auto',zIndex:0}}>
                            No result found.
                      </Typography>
-                  ) 
+                  ]
+                   
             }
          }
 

@@ -3209,7 +3209,9 @@ class ResourceViewer extends Component<Props,State>
                }
             }
          } ) }
-         { this.renderRoles() }
+         {/* // TODO not working anymore
+         { this.renderRoles() } 
+         */}
          { this.renderPostData() }           
       </div>
    }
