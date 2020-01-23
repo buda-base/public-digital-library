@@ -114,7 +114,8 @@ export function shortUri(id:string) {
 }
 
 const facetLabel = {
-   "tree":"Genre / Topic"
+   "tree": "Genre / Topic",
+   "relationInv": "Inverse Relation Type"
 }
 
 export const languages = {
@@ -780,14 +781,12 @@ class App extends Component<Props,State> {
       //console.log("collap?",JSON.stringify(state.collapse,null,3))
 
       
-      // TODO deprecate in favor of query modification
-      /*
+      // TODO deprecate in favor of query modification      
       if(props.language == "" && (!props.resources || !props.resources[props.keyword]))
       {
          console.log("gRes?",props.resources,props.keyword);
          props.onGetResource(props.keyword);
       }
-      */
      
 
       /*
@@ -2603,8 +2602,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                */
             }
          }
-         /*
-         // resource id matching ? deprecated
+         
+         // resource id matching ? deprecated ? WIP
          else if(this.props.resources &&  this.props.resources[this.props.keyword] )
          {
             let l ; // sublist[o].filter((e) => (e.type && e.type.match(/prefLabelMatch$/)))[0]
@@ -2630,7 +2629,6 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                }
             }
          }
-         */
       }
       return results ;
    }
@@ -3561,7 +3559,9 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
          let isExclu = this.state.filters.exclude && this.state.filters.exclude[jpre] && checkable && checkable.reduce( (acc,k) => (acc && this.state.filters.exclude[jpre].includes(k)), true )
 
-         if(label !== "Any" && label !== "unspecified") { 
+         if(label !== "Any" && (label.value !== "Any") && label !== "unspecified") { 
+
+            console.log("label??",label)
 
             let val = getVal(label), lang = getLang(label)
             if(!lang) label = val
