@@ -1909,6 +1909,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          if(useAux && !findProp) {
             id = allProps.filter(e => fromProp.includes(e.type)).map(e => this.props.assoRes[e.value]) //.reduce( (acc,e) => ([ ...acc, ...this.props.assoRes[e.value] ]),[]) 
 
+
+
             //console.log("uA1",id,allProps,fromProp,useAux,findProp)
 
             let val,lang
@@ -2458,8 +2460,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             
             {/* { this.getResultProp(bdo+"eTextHasChunk",allProps,true,false) }      */}
             {/* { this.getEtextChunks(id,n,allProps) }  */}
-
-            { this.getResultProp(bdo+"eTextHasChunk",allProps,false,false,[bdo+"eTextHasChunk"],null,[bdo+"chunkContents"]) }
+            {/* { this.getResultProp(bdo+"eTextHasChunk",allProps,false,false,[bdo+"eTextHasChunk"],null,[bdo+"chunkContents"]) } */}
+            
             { this.getResultProp(tmp+"forWork",allProps) }            
 
             { this.getResultProp(tmp+"author",allProps) }
