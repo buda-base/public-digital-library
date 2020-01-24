@@ -1826,6 +1826,13 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             </div>
    }
 
+   getEtextChunks(id,n,allProps:[]=[]) {
+      let chunks= allProps.filter(p => p.type === bdo+"eTextHasChunk")
+      if(chunks.length) {
+
+      }
+   }
+
    getInstanceLink(id,n,allProps:[]=[]) {
       let nb = allProps.filter(p => p.type === tmp+"nbInstance")
       if(nb.length) {
@@ -1891,7 +1898,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          let ret = []
          let id ;
          if(!useAux) id = allProps.filter( e => fromProp.includes(e.type) && (!exclude || exclude !== e.value) )
-         else id = allProps.filter(e => useAux.includes(e.type)).map(e => this.props.assoRes[e.value]).filter(e=>e).reduce( (acc,e) =>{
+         else if(findProp) id = allProps.filter(e => useAux.includes(e.type)).map(e => this.props.assoRes[e.value]).filter(e=>e).reduce( (acc,e) =>{
             let t = e.filter(f => f.type === rdf+"type")
             if(t.length) return { ...acc, [t[0].value]:e}
             else return acc
@@ -1899,8 +1906,41 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          
          //console.log("labels/prop",prop,id,useAux,fromProp,allProps) //,this.props.assoRes)         
 
-         if(useAux && findProp) {
-            //console.log("uA",id,useAux,findProp)
+         if(useAux && !findProp) {
+            id = allProps.filter(e => fromProp.includes(e.type)).map(e => this.props.assoRes[e.value]) //.reduce( (acc,e) => ([ ...acc, ...this.props.assoRes[e.value] ]),[]) 
+
+            //console.log("uA1",id,allProps,fromProp,useAux,findProp)
+
+            let val,lang
+
+            for(let i of id) {
+               let labels = getLangLabel(this,"",i.filter(e => useAux.includes(e.type)))
+
+               lang = labels["xml:lang"]
+               if(!lang) lang = labels["lang"]
+               if(!lang) lang = labels["@language"]
+               val = labels.value
+               if(!val) val = labels["@value"]
+               
+               ret.push(<span>{this.highlight(val)}{
+                  lang && <Tooltip placement="bottom-end" title={
+                                    <div style={{margin:"10px"}}>
+                                       <Translate value={languages[lang]?languages[lang].replace(/search/,"tip"):lang}/>
+                                    </div>
+                                 }><span className="lang">&nbsp;{lang}</span></Tooltip>
+                        }</span>)
+
+            }
+
+            return (<div class="match">
+                  <span class="label">{this.fullname(prop)+(plural && ret.length > 1 ?"s":"")}:&nbsp;</span>
+                  <div class="multi">{ret}</div>
+               </div>)
+         }
+         else if(useAux && findProp) {
+            
+            //console.log("uA2",id,useAux,findProp)
+            
             for(let p of findProp) {
                
                if(id[p]) {
@@ -2416,6 +2456,10 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             { this.getResultProp(tmp+"relationType",allProps) } {/* //,true,false) } */}
             { this.getResultProp(tmp+"InverseRelationType",allProps,true,true,[tmp+"relationTypeInv"]) }
             
+            {/* { this.getResultProp(bdo+"eTextHasChunk",allProps,true,false) }      */}
+            {/* { this.getEtextChunks(id,n,allProps) }  */}
+
+            { this.getResultProp(bdo+"eTextHasChunk",allProps,false,false,[bdo+"eTextHasChunk"],null,[bdo+"chunkContents"]) }
             { this.getResultProp(tmp+"forWork",allProps) }            
 
             { this.getResultProp(tmp+"author",allProps) }
