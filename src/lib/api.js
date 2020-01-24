@@ -557,7 +557,7 @@ export default class API {
 
              let searchType = "typeSimple" 
              let R_TYPE 
-             if(typ[0] === "Etext") searchType = "Chunks"
+             if(typ[0] === "Etext") searchType = "chunksFacet"
              else if(["Work","Person","Place"].includes(typ[0]))  searchType = typ[0].toLowerCase()+(typ[0]==="Work"?"Facet":"")              
              else R_TYPE = "bdo:"+typ[0]
              searchType+="Graph"
@@ -712,7 +712,8 @@ export default class API {
 
             if(data && data.results && data.results.bindings) {
                return data.results.bindings.reduce( (acc,t) => {
-                  if(t.type && t.count && [bdo+"Work",bdo+"Person",bdo+"Topic",bdo+"Role",bdo+"Corporation",bdo+"Place",bdo+"Lineage"].indexOf(t.type.value) !== -1) return { ...acc, [t.type.value]:t.count.value}
+                  if(t.type && t.count && [bdo+"Work",bdo+"Person",bdo+"Topic",bdo+"Role",bdo+"Corporation",bdo+"Place",bdo+"Lineage",bdo+"Chunk"].indexOf(t.type.value) !== -1) 
+                     return { ...acc, [t.type.value.endsWith("Chunk")?bdo+"Etext":t.type.value]:t.count.value}
                   return acc
                },{})
             }

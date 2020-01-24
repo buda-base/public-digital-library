@@ -290,7 +290,7 @@ else if(params && params.r) {
    let s = ["Any"]
    if(params.t && params.t != "Any") { s = [ params.t ] }
    
-   if(t && ["Person","Place","Topic","Work","Role","Corporation","Lineage"].indexOf(t) !== -1
+   if(t && ["Person","Place","Topic","Work","Role","Corporation","Lineage","Etext"].indexOf(t) !== -1
    && (!state.data.searches[params.t] || !state.data.searches[params.t][params.r+"@"]))
    {
       store.dispatch(dataActions.startSearch(params.r,"",s,t)); //,params.t.split(",")));
@@ -1453,21 +1453,9 @@ else {
    else {
 
 
-      if(["Role","Corporation","Topic","Lineage"].indexOf(datatype[0]) !== -1) {
+      if(["Person","Place","Role","Corporation","Topic","Lineage","Etext"].indexOf(datatype[0]) !== -1) {
 
          addMeta(keyword,language,data,datatype[0],null,false);
-
-      }
-      else if(datatype.indexOf("Place") !== -1) {
-
-         addMeta(keyword,language,data,"Place",null,false);
-
-      }
-      else if(datatype.indexOf("Person") !== -1) {
-
-         addMeta(keyword,language,data,"Person",null,false);
-         //store.dispatch(dataActions.foundFacetInfo(keyword,language,datatype,{"gender":metadata }))
-         //store.dispatch(dataActions.foundDatatypes(keyword,language,{ metadata:{ [bdo+"Person"]:data.numResults } } ));
       }
       else if(datatype.indexOf("Work") !== -1 || datatype.indexOf("Etext") !== -1) {
 

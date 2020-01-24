@@ -161,7 +161,7 @@ const langSelect = [
 ]
 
 //const searchTypes = ["All","Work","Etext","Topic","Person","Place","Lineage","Corporation","Role"]
-const searchTypes = [ "Work", "Person","Place","Topic","Lineage","Role","Corporation" ]
+const searchTypes = [ "Work", "Person","Place","Topic","Lineage","Role","Corporation","Etext" ]
 
 /*
 export const langProfile = [
@@ -1602,7 +1602,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
    {
       //console.log("hi:",val,k)
 
-      val = val.replace(/\[([↦↤])\]/g,"$1");
+      val = val.replace(/\[ *([↦↤]) *\]/g,"$1");
       val = val.replace(/↦↤/g,"");
 
       if(!val.match(/↤/) && k)
@@ -1812,6 +1812,20 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
    }
 
 
+   getEtextLink(id,n,allProps:[]=[]) {
+
+      // TODO activate links
+
+      if(allProps.filter(e => e.type === bdo+"chunkContents").length)
+         return <div class="match">
+            <span class="instance-link">&gt;&nbsp;
+               <span class="urilink" /*onClick={(e) => this.props.onGetInstances(shortUri(id))}*/ >See context</span>
+               <emph> or </emph>
+               <span class="urilink" >Open Etext</span>
+            </span>
+            </div>
+   }
+
    getInstanceLink(id,n,allProps:[]=[]) {
       let nb = allProps.filter(p => p.type === tmp+"nbInstance")
       if(nb.length) {
@@ -1927,6 +1941,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             }
          }
          else if(id && id.length) for (let i of id) {
+
+            // TODO presort values using language preferences
 
             let _i = i
             i = fullUri(i.value)
@@ -2209,12 +2225,6 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          let lastP,prop = ""
 
          retList.push( <div id='matches'>
-            { this.getResultProp(tmp+"relationType",allProps) } {/* //,true,false) } */}
-            { this.getResultProp(tmp+"InverseRelationType",allProps,true,true,[tmp+"relationTypeInv"]) }
-            { this.getResultProp(tmp+"author",allProps) }
-            { this.getResultProp(bdo+"workIsAbout",allProps,false) }
-            { this.getResultProp(bdo+"workGenre",allProps) }
-            { this.getResultProp(bdo+"language",allProps) }
             {
                rmatch.map((m) => {
 
@@ -2403,6 +2413,16 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   }
                })
             }
+            { this.getResultProp(tmp+"relationType",allProps) } {/* //,true,false) } */}
+            { this.getResultProp(tmp+"InverseRelationType",allProps,true,true,[tmp+"relationTypeInv"]) }
+            
+            { this.getResultProp(tmp+"forWork",allProps) }            
+
+            { this.getResultProp(tmp+"author",allProps) }
+            { this.getResultProp(bdo+"workIsAbout",allProps,false) }
+            { this.getResultProp(bdo+"workGenre",allProps) }
+            { this.getResultProp(bdo+"language",allProps) }
+
             { this.getResultProp(tmp+"otherLabel",allProps, true, false, [skos+"prefLabel", skos+"altLabel"], !preLit?preLit:preLit.replace(/[↦↤]/g,"") ) }
             { this.getResultProp(tmp+"assetAvailability",allProps,false,false) }
             
@@ -2411,6 +2431,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             { this.getResultProp(tmp+"originalRecord",allProps,false,false, [ tmp+"originalRecord", adm+"originalRecord"]) }
             { this.getResultProp(bdo+"script",allProps) }
             
+
             { this.getResultProp(bdo+"workIncipit",allProps,false,false) }
             { this.getResultProp(bdo+"workMaterial",allProps) }
             { this.getResultProp(bdo+"printMethod",allProps) }
@@ -2433,7 +2454,11 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
             { this.getResultProp(tmp+"provider",allProps) }
             { this.getResultProp(tmp+"popularityScore",allProps,false,false, [tmp+"entityScore"]) }
+            
             { this.getInstanceLink(id,n,allProps) }
+
+            { this.getEtextLink(id,n,allProps) }
+
             </div> )
 
       retList.push(<hr/>);
@@ -3561,8 +3586,6 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
          if(label !== "Any" && (label.value !== "Any") && label !== "unspecified") { 
 
-            console.log("label??",label)
-
             let val = getVal(label), lang = getLang(label)
             if(!lang) label = val
             else label = <span lang={lang}>{val}</span>
@@ -3658,7 +3681,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          
          id = this.prepareResults();
 
-         console.log("id",id)
+         //console.log("id",id)
 
          if(this.state.results && this.state.results[id])
          {
@@ -3682,7 +3705,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                if(max < paginate.pages.length) pageLinks.push([" ... ",<a onClick={this.goPage.bind(this,id,paginate.pages.length)}>{paginate.pages.length}</a>]) 
             }
             
-            console.log("prep",message,counts,types,paginate)
+            //console.log("prep",message,counts,types,paginate)
 
             if(!this.props.loading && !message.length && ( (this.props.searches[this.props.keyword+"@"+this.props.language] && !this.props.searches[this.props.keyword+"@"+this.props.language].numResults ) 
                   || (!this.props.loading && results && results.results && results.results.bindings && !results.results.bindings.numResults) ) 
@@ -3996,7 +4019,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
                                  //console.log("counts",i,counts,counts["datatype"][i],this.state.filters.datatype.indexOf(i))
 
-                              let disabled = (!["Work","Person", "Place","Topic","Corporation","Role","Lineage"].includes(i)) // false // (!this.props.keyword && ["Any","Etext","Person","Work"].indexOf(i)===-1 && this.props.language  != "")
+                              let disabled = (!["Work","Person", "Place","Topic","Corporation","Role","Lineage","Etext"].includes(i)) // false // (!this.props.keyword && ["Any","Etext","Person","Work"].indexOf(i)===-1 && this.props.language  != "")
                            // || (this.props.language == "")
 
                               let count = counts["datatype"][i]
