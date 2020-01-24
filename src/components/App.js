@@ -3903,6 +3903,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          "Person": [ "Popularity", "Closest Matches", ,"Person Name", "Year of Birth" ],
          "Place": [ "Popularity", "Closest Matches", ,"Place Name" ],
          "Instance": [ "Work Title", "Year of Publication" ],
+         "Etext": [ "Closest Matches" ],
       }
 
       let sortByList = allSortByLists[this.state.filters.datatype[0]]
