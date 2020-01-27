@@ -623,14 +623,17 @@ class App extends Component<Props,State> {
 
       console.log("search::",key,_key,label) //,this.state,!global.inTest ? this.props:null)
 
-      if(prefixesMap[key.replace(/^([^:]+):.*$/,"$1")] || _key.match(/^[WPG][A-Za-f0-9_]+/))
+      if(_key.match(/^[WPGRCTILE][A-Za-f0-9_]+/))
+      {
+         this.props.history.push({pathname:"/show/bdr:"+_key})
+      }
+      else if(prefixesMap[key.replace(/^([^:]+):.*$/,"$1")])
       {
          //if(!label) label = this.state.filters.datatype.filter((f)=>["Person","Work"].indexOf(f) !== -1)[0]
 
          if(_key.indexOf(":") === -1) key = "bdr:"+_key
 
          this.props.history.push({pathname:"/search",search:"?r="+key+(label?"&t="+label:"")})
-
       }
       else if(key.match(/^[^:]*:[^ ]+/))
       {
