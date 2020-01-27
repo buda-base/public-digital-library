@@ -506,6 +506,7 @@ class App extends Component<Props,State> {
    {
       console.log("key",key,label,this.state.searchTypes)
 
+      let _key = ""+key
       if(!key || key == "" || !key.match) return ;
       if(!key.match(/:/)) {
         if(key.indexOf("\"") === -1) key = "\""+key+"\""
@@ -524,14 +525,17 @@ class App extends Component<Props,State> {
       let state = { ...this.state, dataSource:[], leftPane:true, filters:{ datatype:[ ...searchDT ] } }
       this.setState(state)
 
-      console.log("search",key,label) //,this.state,!global.inTest ? this.props:null)
+      console.log("search::",key,_key,label) //,this.state,!global.inTest ? this.props:null)
 
-      if(prefixesMap[key.replace(/^([^:]+):.*$/,"$1")])
+      if(_key.match(/^[WPGRCTILE][A-Za-f0-9_]+/))
+      {
+         this.props.history.push({pathname:"/show/bdr:"+_key})
+      }
+      else if(prefixesMap[key.replace(/^([^:]+):.*$/,"$1")])
       {
          //if(!label) label = this.state.filters.datatype.filter((f)=>["Person","Work"].indexOf(f) !== -1)[0]
 
          this.props.history.push({pathname:"/search",search:"?r="+key+(label?"&t="+label:"")})
-
       }
       else if(key.match(/^[^:]*:[^ ]+/))
       {
