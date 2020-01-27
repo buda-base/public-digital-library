@@ -623,7 +623,7 @@ class App extends Component<Props,State> {
 
       console.log("search::",key,_key,label) //,this.state,!global.inTest ? this.props:null)
 
-      if(_key.match(/^[WPGRCTILE][A-Za-f0-9_]+/))
+      if(_key.match(/^[WPGRCTILE][A-Z0-9_]+/))
       {
          this.props.history.push({pathname:"/show/bdr:"+_key})
       }
@@ -1605,8 +1605,9 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
    {
       //console.log("hi:",val,k)
 
-      val = val.replace(/\[ *([↦↤]) *\]/g,"$1");
-      val = val.replace(/↦↤/g,"");
+      val = val.replace(/(\[[^\]]*?)([↦])([^\]]*?\])/g,"$1$3$2");
+      val = val.replace(/(\[[^\]]*?)([↤])([^\]]*?\])/g,"$2$1$3");
+      val = val.replace(/(↦↤)|(\[ *\])/g,"");
 
       if(!val.match(/↤/) && k)
          val = /*val.replace(/@.* /,"")*/ val.split(new RegExp(k.replace(/[ -'ʾ]/g,"[ -'ʾ]"))).map((l) => ([<span>{l}</span>,<span className="highlight">{k}</span>])) ;
@@ -1819,7 +1820,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
       // TODO activate links
 
-      if(allProps.filter(e => e.type === bdo+"chunkContents").length)
+      if(allProps.filter(e => e.type === bdo+"chunkContents" || e.type === tmp+"nbChunks").length)
          return <div class="match">
             <span class="instance-link">&gt;&nbsp;
                <span class="urilink" /*onClick={(e) => this.props.onGetInstances(shortUri(id))}*/ >See context</span>
@@ -1895,7 +1896,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
       }
    }
 
-   getResultProp(prop:string,allProps:[],plural:boolean=true, doLink:boolean = true, fromProp:[], exclude:string,useAux:[],findProp:[]) {
+   getResultProp(prop:string,allProps:[],plural:boolean=true, doLink:boolean = true, fromProp:[], exclude:string,useAux:[],findProp:[],altInfo:[],iri) {
       if(allProps && this.props.assoRes) { 
          if(!fromProp) fromProp = [ prop ]
          let ret = []
@@ -1909,14 +1910,13 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          
          //console.log("labels/prop",prop,id,useAux,fromProp,allProps) //,this.props.assoRes)         
 
-         if(useAux && !findProp) {
-            id = allProps.filter(e => fromProp.includes(e.type)).map(e => this.props.assoRes[e.value]) //.reduce( (acc,e) => ([ ...acc, ...this.props.assoRes[e.value] ]),[]) 
+         if(useAux && !findProp) { // etext
 
-
+            id = allProps.filter(e => fromProp.includes(e.type)).map(e => [{"@id":e.value}, ...this.props.assoRes[e.value]]) //.reduce( (acc,e) => ([ ...acc, ...this.props.assoRes[e.value] ]),[]) 
 
             //console.log("uA1",id,allProps,fromProp,useAux,findProp)
 
-            let val,lang
+            let val,lang,cpt = 1
 
             for(let i of id) {
                let labels = getLangLabel(this,"",i.filter(e => useAux.includes(e.type)))
@@ -1926,21 +1926,44 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                if(!lang) lang = labels["@language"]
                val = labels.value
                if(!val) val = labels["@value"]
-               
-               ret.push(<span>{this.highlight(val)}{
-                  lang && <Tooltip placement="bottom-end" title={
-                                    <div style={{margin:"10px"}}>
-                                       <Translate value={languages[lang]?languages[lang].replace(/search/,"tip"):lang}/>
-                                    </div>
-                                 }><span className="lang">&nbsp;{lang}</span></Tooltip>
-                        }</span>)
 
+               let info = ""
+               if(altInfo) {
+                  for(let f of altInfo) {
+                     f = i.filter(e => e.type === f)
+                     if(f[0] && f[0].value) info += " / " + f[0].value
+                  }
+               }
+               
+               /*
+               ret.push(<div class="match" style={{margin:"5px 0 5px 0"}}>
+                  <span>{this.highlight(val)}{
+                     lang && <Tooltip placement="bottom-end" title={
+                                       <div style={{margin:"10px"}}>
+                                          <Translate value={languages[lang]?languages[lang].replace(/search/,"tip"):lang}/>
+                                       </div>
+                                    }><span className="lang">&nbsp;{lang}</span></Tooltip>
+                           }{info}
+                  </span>
+               </div>)
+               */
+               
+   
+               ret.push(<div>{this.makeResult(i[0]["@id"],cpt,null,"?","?",null,null,null,[{lang,value:val,type:tmp+"textMatch"}, ...i.filter(e => [bdo+"sliceStartChar",tmp+"matchScore"].includes(e.type) )],null,[],null,true)}</div>)
+
+               cpt++
             }
 
-            return (<div class="match">
-                  <span class="label">{this.fullname(prop)+(plural && ret.length > 1 ?"s":"")}:&nbsp;</span>
-                  <div class="multi">{ret}</div>
-               </div>)
+            if(ret.length) return ([
+                        <span class="instance-collapse" onClick={(e) => { 
+                           this.setState({...this.state,collapse:{...this.state.collapse,[iri]:!this.state.collapse[iri] },repage:true })
+                        }}>{!this.state.collapse[iri]?<ExpandMore/>:<ExpandLess/>}</span>,
+                        <span class="label">{this.fullname(prop)+(plural && ret.length > 1 ?"s":"")}:&nbsp;</span>,
+                        <div style={{clear:"both"}}></div>,
+                        <Collapse in={this.state.collapse[iri]} >
+                           {ret}
+                        </Collapse>
+                     ])
          }
          else if(useAux && findProp) {
             
@@ -2269,6 +2292,10 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
          let lastP,prop = ""
 
+         let nbChunks = allProps.filter(e => e.type === tmp+"nbChunks")
+         if(nbChunks[0] && nbChunks[0].value) nbChunks = Number(nbChunks[0].value)
+         else nbChunks = "?"
+
          retList.push( <div id='matches'>
             {
                rmatch.map((m) => {
@@ -2461,9 +2488,9 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             { this.getResultProp(tmp+"relationType",allProps) } {/* //,true,false) } */}
             { this.getResultProp(tmp+"InverseRelationType",allProps,true,true,[tmp+"relationTypeInv"]) }
             
-            {/* { this.getResultProp(bdo+"eTextHasChunk",allProps,true,false) }      */}
-            {/* { this.getEtextChunks(id,n,allProps) }  */}
-            {/* { this.getResultProp(bdo+"eTextHasChunk",allProps,false,false,[bdo+"eTextHasChunk"],null,[bdo+"chunkContents"]) } */}
+            {/* { this.getResultProp(tmp+"numberOfMatchingChunks",allProps,true,false,[tmp+"nbChunks"]) } */}
+            {/* { this.getResultProp(tmp+"maxScore",allProps,true,false) } */}
+            { (nbChunks > 1) && this.getResultProp(tmp+"otherMatches ("+(nbChunks - 1)+")",allProps,false,false,[bdo+"eTextHasChunk"],null,[bdo+"chunkContents"],null,[tmp+"matchScore",bdo+"sliceStartChar"],id) }
             
             { this.getResultProp(tmp+"forWork",allProps) }            
 
@@ -2506,7 +2533,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             
             { this.getInstanceLink(id,n,allProps) }
 
-            { this.getEtextLink(id,n,allProps) }
+            {/* { this.getEtextLink(id,n,allProps) } */}
 
             </div> )
 
@@ -3952,7 +3979,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          "Person": [ "Popularity", "Closest Matches", ,"Person Name", "Year of Birth" ],
          "Place": [ "Popularity", "Closest Matches", ,"Place Name" ],
          "Instance": [ "Work Title", "Year of Publication" ],
-         "Etext": [ "Closest Matches" ],
+         "Etext": [ "Closest Matches", "Number of Matching Chunks" ],
       }
 
       let sortByList = allSortByLists[this.state.filters.datatype[0]]
@@ -4103,7 +4130,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      </Collapse>
                      {
                         sortByList && this.widget(I18n.t("Lsidebar.sortBy.title"),"sortBy",
-                        (sortByList /*:["Year of Publication","Instance Title"]*/).map((i,n) => <div key={i} style={{width:"150px",textAlign:"left"}} className="searchWidget">
+                        (sortByList /*:["Year of Publication","Instance Title"]*/).map((i,n) => <div key={i} style={{width:"200px",textAlign:"left"}} className="searchWidget">
                               <FormControlLabel
                                  control={
                                     <Checkbox

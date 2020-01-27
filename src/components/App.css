@@ -284,7 +284,7 @@ h2 .before { height:16px; }
 .instance-link > span { cursor:pointer; }
 .instance-link > emph { color:black; }
 
-.instance-collapse { display:inline-block !important; margin-top:-2px; cursor:pointer; }
+.instance-collapse { display:inline-block !important; margin-top:-2px; cursor:pointer; height:18px; overflow:hidden; }
 
 .ulink { position:relative; z-index:1;}
 .ulink+span { z-index:0;}
