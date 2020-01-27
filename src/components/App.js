@@ -527,7 +527,7 @@ class App extends Component<Props,State> {
 
       console.log("search::",key,_key,label) //,this.state,!global.inTest ? this.props:null)
 
-      if(_key.match(/^[WPGRCTILE][A-Za-f0-9_]+/))
+      if(_key.match(/^[WPGRCTILE][A-Z0-9_]+/))
       {
          this.props.history.push({pathname:"/show/bdr:"+_key})
       }
