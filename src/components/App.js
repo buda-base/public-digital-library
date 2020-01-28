@@ -1605,16 +1605,18 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
    {
       //console.log("hi:",val,k,expand)
 
+      if(expand && expand.value) val = expand.value
+
       val = val.replace(/(\[[^\]]*?)([↦])([^\]]*?\])/g,"$1$3$2");
       val = val.replace(/(\[[^\]]*?)([↤])([^\]]*?\])/g,"$2$1$3");
       val = val.replace(/(↦↤)|(\[ *\])/g,"");
+      val = val.replace(/\[( *\(…\) *)\]/g," $1 ");
 
       if(!val.match(/↤/) && k)
          val = /*val.replace(/@.* /,"")*/ val.split(new RegExp(k.replace(/[ -'ʾ]/g,"[ -'ʾ]"))).map((l) => ([<span>{l}</span>,<span className="highlight">{k}</span>])) ;
       else //if (val.match(/↤.*?[^-/_()\[\]: ]+.*?↦/))
       {      
 
-         //if(expand) val = val.expand 
 
          val = val.split(/↦/).map((e,i) => { 
             //console.log("e",i,e,e.length)
@@ -1915,7 +1917,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
          if(useAux && !findProp) { // etext
 
-            id = allProps.filter(e => fromProp.includes(e.type)).map(e => [{"@id":e.value}, ...this.props.assoRes[e.value]]) //.reduce( (acc,e) => ([ ...acc, ...this.props.assoRes[e.value] ]),[]) 
+            id = allProps.filter(e => fromProp.includes(e.type)).map(e => [{"@id":e.value}, ...this.props.assoRes[e.value].map(f => !e.expand||!e.expand.value||f.type !== bdo+"chunkContents"?f:{...f,expand:e.expand}) ]) //.reduce( (acc,e) => ([ ...acc, ...this.props.assoRes[e.value] ]),[]) 
 
             //console.log("uA1",id,allProps,fromProp,useAux,findProp)
 
@@ -1929,6 +1931,10 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                if(!lang) lang = labels["@language"]
                val = labels.value
                if(!val) val = labels["@value"]
+
+               let expand = labels.expand
+               if(expand && expand.value) expand = getLangLabel(this,"",[ expand ])
+               //console.log("expand",expand)
 
                let info = ""
                if(altInfo) {
@@ -1952,7 +1958,9 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                */
                
    
-               ret.push(<div>{this.makeResult(i[0]["@id"],cpt,null,"?","?",null,null,null,[{lang,value:val,type:tmp+"textMatch",expand:true}, ...i.filter(e => [bdo+"sliceStartChar",tmp+"matchScore"].includes(e.type) )],null,[],null,true)}</div>)
+               ret.push(<div>{this.makeResult(i[0]["@id"],cpt,null,"?","?",null,null,null,
+                  [{lang,value:val,type:tmp+"textMatch",expand} ], //...i.filter(e => [bdo+"sliceStartChar",tmp+"matchScore"].includes(e.type) )],
+                  null,[],null,true)}</div>)
 
                cpt++
             }
@@ -2306,6 +2314,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   //console.log("m",m,allProps)
 
                   { 
+                     let expand
                      if(prop) lastP = prop 
                      prop = this.fullname(m.type.replace(/.*altLabelMatch/,skos+"altLabel"))
                      let val,isArray = false ;
@@ -2328,7 +2337,12 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      else {
                         //val = this.highlight(this.pretty(m.value),k)
                         let mLit = getLangLabel(this,"",[m])
-                        val =  this.highlight(mLit["value"],facet,m.expand)
+                        expand = m.expand
+                        if(expand && expand.value) {
+                           if(!this.state.collapse[prettId+"-expand"]) expand = getLangLabel(this,"",[{...m, "value":expand.value}])
+                           else expand = true
+                        }
+                        val =  this.highlight(mLit["value"],facet,expand)
                         //val =  mLit["value"]
                         lang = mLit["lang"]
                         if(!lang) lang = mLit["xml:lang"]
@@ -2460,13 +2474,18 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
                      //console.log("prop",prop,val,m.value)
 
+                     let toggleExpand = (e,id) => {
+                        console.log("toggle",id)
+                        this.setState({...this.state,repage:true,collapse:{...this.state.collapse, [id+"-expand"]:!this.state.collapse[id+"-expand"]}})
+                     }
+
                      return (<div className="match">
                         <span className={"label " +(lastP === prop?"invisible":"")}>{(!from?prop:from)}:&nbsp;</span>
                         {!isArray && <span>{[!uri?val:<Link className="urilink" to={uri}>{val}</Link>,lang?<Tooltip placement="bottom-end" title={
                            <div style={{margin:"10px"}}>
                               <Translate value={languages[lang]?languages[lang].replace(/search/,"tip"):lang}/>
                            </div>
-                        }><span className="lang">&nbsp;{lang}</span></Tooltip>:null]}</span>}
+                        }><span className="lang">&nbsp;{lang}</span></Tooltip>:null]}{expand?<span class="etext-match">&nbsp;(<span class="uri-link" onClick={(e) => toggleExpand(e,prettId)}>{expand!==true?"Expand":"Shrink"}</span> or <span class="uri-link">Preview Context</span>)</span>:null}</span>}
                         {isArray && <div class="multi">
                            {val.map((e)=> {
                               let url = e, label = e, lang = m.lang

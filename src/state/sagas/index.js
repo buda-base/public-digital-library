@@ -1356,20 +1356,22 @@ function rewriteAuxMain(result,keyword,datatype,sortBy)
                   let n = getVal(e.value,tmp+"matchScore")
                   let m = getVal(e.value,bdo+"sliceStartChar")
                   let content = getVal(e.value,bdo+"chunkContents",false)
-                  return { e, n, m, content }
+                  let expand = { lang:content["xml:lang"], value: content.value
+                              .replace(/(↤([་ ]*[^་ ↦↤]+[་ ]){5})[^↦↤]*(([་ ][^་ ↦↤]+[་ ]*){5}↦)/g,"$1 (…) $3")
+                              .replace(/^[^↦↤]*(([་ ][^་ ↦↤]+[་ ]*){5}↦)/,"(…) $1")
+                              .replace(/(↤([་ ]*[^་ ↦↤]+[་ ]){5})[^↦↤]*$/g,"$1 (…)") }
+                  
+                  //console.log("full",content.value)
+                  //console.log("expand",expand.value)
+
+                  return { e, n, m, content, expand }
                })
                chunks = _.orderBy(chunks, ['n','m'], ['desc','asc'])
                //console.log("chunks",chunks)
-               res = [ ...res.filter(e => e.type !== bdo+"eTextHasChunk"), { 
-                  ...chunks[0].content, 
-                  type:tmp+"bestMatch", 
-                  
-                  // WIP show only "two lines" of context
 
-                  //value:chunks[0].content.value.replace(/[^↦]*(([ ][^ ]+[ ]*){5}↦)/g,"(...) $1") , 
-                  //expand:chunks[0].content.value 
-               } ]
-               if(chunks.length > 1) res = res.concat(chunks.slice(1).map(e => e.e))
+
+               res = [ ...res.filter(e => e.type !== bdo+"eTextHasChunk"), { ...chunks[0].content, type:tmp+"bestMatch", ...(chunks[0].expand?{expand:chunks[0].expand}:{})} ]
+               if(chunks.length > 1) res = res.concat(chunks.slice(1).map(e => ({...e.e, expand:e.expand})))
             }
 
             return ({...acc, [k]:res})
