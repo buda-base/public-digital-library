@@ -25,7 +25,7 @@ const skos = "http://www.w3.org/2004/02/skos/core#";
 const tmp = "http://purl.bdrc.io/ontology/tmp/" ;
 const _tmp = tmp ;
 
-let IIIFurl = "http://iiif.bdrc.io" ;
+let IIIFurl = "//iiif.bdrc.io" ;
 
 const handleAuthentication = (nextState, replace) => {
    if (/access_token|id_token|error/.test(nextState.location.hash)) {
@@ -541,10 +541,10 @@ async function createPdf(url,iri) {
 
       //window.open(IIIFurl+data.links,"pdf");
 
-      //let fic = await api.getURLContents("http://iiif.bdrc.io"+data.links);
+      //let fic = await api.getURLContents("//iiif.bdrc.io"+data.links);
       //console.log("pdf here")
-      //fileDownload("http://iiif.bdrc.io"+data.links,"name.pdf") ;
-      //download("http://iiif.bdrc.io"+data.links);
+      //fileDownload("//iiif.bdrc.io"+data.links,"name.pdf") ;
+      //download("//iiif.bdrc.io"+data.links);
 
    }
    catch(e){

@@ -50,8 +50,6 @@ const DEFAULT_STATE: DataState = {
    searches:{},
    failures:{},
    loading:{}
-   //firstImage:"http://iiif.bdrc.io/image/v2/bdr:V22084_I0886::08860003.tif/full/full/0/default.jpg"
-   //firstImage:"http://iiif.bdrc.io/image/v2/bdr:V1KG2788_I1KG3143::I1KG31430003.tif/full/full/0/default.jpg"
 }
 
 export const loadedConfig = (state: DataState, action: Action) => {
