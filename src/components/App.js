@@ -1601,9 +1601,9 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
       return this.pretty(prop)
    }
 
-   highlight(val,k):string
+   highlight(val,k,expand):string
    {
-      //console.log("hi:",val,k)
+      //console.log("hi:",val,k,expand)
 
       val = val.replace(/(\[[^\]]*?)([↦])([^\]]*?\])/g,"$1$3$2");
       val = val.replace(/(\[[^\]]*?)([↤])([^\]]*?\])/g,"$2$1$3");
@@ -1613,6 +1613,9 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          val = /*val.replace(/@.* /,"")*/ val.split(new RegExp(k.replace(/[ -'ʾ]/g,"[ -'ʾ]"))).map((l) => ([<span>{l}</span>,<span className="highlight">{k}</span>])) ;
       else //if (val.match(/↤.*?[^-/_()\[\]: ]+.*?↦/))
       {      
+
+         //if(expand) val = val.expand 
+
          val = val.split(/↦/).map((e,i) => { 
             //console.log("e",i,e,e.length)
             if(e.length) {
@@ -1949,7 +1952,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                */
                
    
-               ret.push(<div>{this.makeResult(i[0]["@id"],cpt,null,"?","?",null,null,null,[{lang,value:val,type:tmp+"textMatch"}, ...i.filter(e => [bdo+"sliceStartChar",tmp+"matchScore"].includes(e.type) )],null,[],null,true)}</div>)
+               ret.push(<div>{this.makeResult(i[0]["@id"],cpt,null,"?","?",null,null,null,[{lang,value:val,type:tmp+"textMatch",expand:true}, ...i.filter(e => [bdo+"sliceStartChar",tmp+"matchScore"].includes(e.type) )],null,[],null,true)}</div>)
 
                cpt++
             }
@@ -2325,7 +2328,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      else {
                         //val = this.highlight(this.pretty(m.value),k)
                         let mLit = getLangLabel(this,"",[m])
-                        val =  this.highlight(mLit["value"],facet)
+                        val =  this.highlight(mLit["value"],facet,m.expand)
                         //val =  mLit["value"]
                         lang = mLit["lang"]
                         if(!lang) lang = mLit["xml:lang"]

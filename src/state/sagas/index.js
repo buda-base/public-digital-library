@@ -1360,7 +1360,15 @@ function rewriteAuxMain(result,keyword,datatype,sortBy)
                })
                chunks = _.orderBy(chunks, ['n','m'], ['desc','asc'])
                //console.log("chunks",chunks)
-               res = [ ...res.filter(e => e.type !== bdo+"eTextHasChunk"), { ...chunks[0].content, type:tmp+"bestMatch" } ]
+               res = [ ...res.filter(e => e.type !== bdo+"eTextHasChunk"), { 
+                  ...chunks[0].content, 
+                  type:tmp+"bestMatch", 
+                  
+                  // WIP show only "two lines" of context
+
+                  //value:chunks[0].content.value.replace(/[^↦]*(([ ][^ ]+[ ]*){5}↦)/g,"(...) $1") , 
+                  //expand:chunks[0].content.value 
+               } ]
                if(chunks.length > 1) res = res.concat(chunks.slice(1).map(e => e.e))
             }
 
@@ -1372,7 +1380,7 @@ function rewriteAuxMain(result,keyword,datatype,sortBy)
          if(!sortBy || sortBy.startsWith("popularity")) return { ...acc, [t]: sortResultsByPopularity(dataWithAsset,reverse) }
          else if(sortBy.startsWith("year of")) return { ...acc, [t]: sortResultsByYear(dataWithAsset,reverse) }
          else if(sortBy.startsWith("closest matches")) return { ...acc, [t]: sortResultsByRelevance(dataWithAsset,reverse) }
-         else if(sortBy.startsWith("number of chunks")) return { ...acc, [t]: sortResultsByNbChunks(dataWithAsset,reverse) }
+         else if(sortBy.startsWith("number of matching chunks")) return { ...acc, [t]: sortResultsByNbChunks(dataWithAsset,reverse) }
          else if(sortBy.indexOf("title") ||  sortBy.indexOf("name") !== -1) return { ...acc, [t]: sortResultsByTitle(dataWithAsset, langPreset, reverse) }
       }
       else if(e === "aux") {                  
@@ -1604,7 +1612,7 @@ async function updateSortBy(i,t)
    if(i.startsWith("popularity")) data.results.bindings[t.toLowerCase()+"s"] = sortResultsByPopularity(data.results.bindings[t.toLowerCase()+"s"], reverse) 
    else if(i.startsWith("closest matches")) data.results.bindings[t.toLowerCase()+"s"] = sortResultsByRelevance(data.results.bindings[t.toLowerCase()+"s"], reverse) 
    else if(i.startsWith("year of")) data.results.bindings[t.toLowerCase()+"s"] = sortResultsByYear(data.results.bindings[t.toLowerCase()+"s"], reverse) 
-   else if(i.startsWith("number of chunks")) data.results.bindings[t.toLowerCase()+"s"] = sortResultsByNbChunks(data.results.bindings[t.toLowerCase()+"s"], reverse) 
+   else if(i.startsWith("number of matching chunks")) data.results.bindings[t.toLowerCase()+"s"] = sortResultsByNbChunks(data.results.bindings[t.toLowerCase()+"s"], reverse) 
    else if(i.indexOf("title") || i.indexOf("name") !== -1) { 
       let langPreset = state.ui.langPreset
       data.results.bindings[t.toLowerCase()+"s"] = sortResultsByTitle(data.results.bindings[t.toLowerCase()+"s"], langPreset, reverse)
