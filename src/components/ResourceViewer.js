@@ -1437,7 +1437,7 @@ class ResourceViewer extends Component<Props,State>
          }
          else if(pretty.toString().match(/^V[0-9A-Z]+_I[0-9A-Z]+$/)) { ret.push(<span>
             <Link className={"urilink "+prefix} to={"/"+show+"/"+prefix+":"+pretty}>{pretty}</Link>&nbsp;
-            {/* <Link className="goBack" target="_blank" to={"/gallery?manifest=http://iiifpres.bdrc.io/2.1.1/v:bdr:"+pretty+"/manifest"}>{"(view image gallery)"}</Link> */}
+            {/* <Link className="goBack" target="_blank" to={"/gallery?manifest=//iiifpres.bdrc.io/2.1.1/v:bdr:"+pretty+"/manifest"}>{"(view image gallery)"}</Link> */}
          </span> ) }
          else if(pretty.toString().match(/^([A-Z]+[_0-9-]*[A-Z]*)+$/)) ret.push(<Link className={"urilink "+ prefix} to={"/"+show+"/"+prefix+":"+pretty}>{pretty}</Link>)
          else ret.push(pretty)
@@ -2554,7 +2554,7 @@ class ResourceViewer extends Component<Props,State>
       {
          if(!this.props.imageAsset && !this.props.manifestError) {
             this.setState({...this.state, imageLoaded:false})
-            this.props.onHasImageAsset("http://presentation.bdrc.io/2.1.1/collection/wio:"+this.props.IRI,this.props.IRI)
+            this.props.onHasImageAsset("//presentation.bdrc.io/2.1.1/collection/wio:"+this.props.IRI,this.props.IRI)
          }
       }
       else if(kZprop.indexOf(bdo+"itemImageAssetForWork") !== -1)
@@ -2564,9 +2564,9 @@ class ResourceViewer extends Component<Props,State>
          let work = this.getResourceElem(bdo+"itemForWork")
          if(elem[0] && elem[0].value && !this.props.imageAsset && !this.props.manifestError) {
             this.setState({...this.state, imageLoaded:false})
-            let manif = "http://presentation.bdrc.io/2.1.1/wv:"+elem[0].value.replace(new RegExp(bdr),"bdr:")+"/manifest"
+            let manif = "//presentation.bdrc.io/2.1.1/wv:"+elem[0].value.replace(new RegExp(bdr),"bdr:")+"/manifest"
             if(nbVol && nbVol[0] && nbVol[0].value && nbVol[0].value > 1 && work && work[0] && work[0].value)
-              manif = "http://presentation.bdrc.io/2.1.1/collection/wio:"+work[0].value.replace(new RegExp(bdr),"bdr:")
+              manif = "//presentation.bdrc.io/2.1.1/collection/wio:"+work[0].value.replace(new RegExp(bdr),"bdr:")
             this.props.onHasImageAsset(manif,this.props.IRI)
          }
       }
@@ -2577,9 +2577,9 @@ class ResourceViewer extends Component<Props,State>
          let work = this.getResourceElem(bdo+"itemForWork")
          if(elem[0] && elem[0].value && !this.props.imageAsset && !this.props.manifestError) {
             this.setState({...this.state, imageLoaded:false})
-            let manif = "http://presentation.bdrc.io/2.1.1/v:"+elem[0].value.replace(new RegExp(bdr),"bdr:")+"/manifest"
+            let manif = "//presentation.bdrc.io/2.1.1/v:"+elem[0].value.replace(new RegExp(bdr),"bdr:")+"/manifest"
             if(nbVol && nbVol[0] && nbVol[0].value && nbVol[0].value > 1 && work && work[0] && work[0].value)
-              manif = "http://presentation.bdrc.io/2.1.1/collection/wio:"+work[0].value.replace(new RegExp(bdr),"bdr:")
+              manif = "//presentation.bdrc.io/2.1.1/collection/wio:"+work[0].value.replace(new RegExp(bdr),"bdr:")
             this.props.onHasImageAsset(manif,this.props.IRI)
          }
       }
@@ -2616,7 +2616,7 @@ class ResourceViewer extends Component<Props,State>
       let pdfLink,monoVol = -1 ;
       if(this.props.firstImage &&  !this.props.manifestError && this.props.firstImage.match(/[.]bdrc[.]io/))
       {
-         let iiif = "http://iiif.bdrc.io" ;
+         let iiif = "//iiif.bdrc.io" ;
          if(this.props.config && this.props.config.iiif) iiif = this.props.config.iiif.endpoints[this.props.config.iiif.index]
 
          console.log("iiif",this.props.imageAsset,iiif,this.props.config)
@@ -2675,7 +2675,7 @@ class ResourceViewer extends Component<Props,State>
                let end = elem[bdo+"workLocationEndPage"]
                if(end && end.length > 0 && end[0].value) end = Number(end[0].value)
                if(work && vol && begin && end)
-                  pdfLink = "http://iiif.bdrc.io/download/pdf/wv:bdr:"+work+"::bdr:V"+id+"::"+begin+"-"+end ;
+                  pdfLink = "//iiif.bdrc.io/download/pdf/wv:bdr:"+work+"::bdr:V"+id+"::"+begin+"-"+end ;
                console.log("loca",vol,begin,end,pdfLink)
                // ex: http://iiif.bdrc.io/pdfdownload/wv:bdr:W29329::bdr:V29329_I1KG15043::1-10
             }
@@ -3449,7 +3449,7 @@ class ResourceViewer extends Component<Props,State>
          //console.log("adm",elem,fairUse)
       }
 
-      let iiifpres = "http://iiifpres.bdrc.io" ;
+      let iiifpres = "//iiifpres.bdrc.io" ;
       if(this.props.config && this.props.config.iiifpres) iiifpres = this.props.config.iiifpres.endpoints[this.props.config.iiifpres.index]      
 
       this.setManifest(kZprop,iiifpres)    
