@@ -2525,7 +2525,7 @@ class ResourceViewer extends Component<Props,State>
    }
 
    setManifest = (kZprop,iiifpres) => {
-      
+
       if(kZprop.indexOf(bdo+"imageList") !== -1)
       {
          if(!this.props.imageAsset && !this.props.manifestError) {
@@ -2554,7 +2554,7 @@ class ResourceViewer extends Component<Props,State>
       {
          if(!this.props.imageAsset && !this.props.manifestError) {
             this.setState({...this.state, imageLoaded:false})
-            this.props.onHasImageAsset("//presentation.bdrc.io/2.1.1/collection/wio:"+this.props.IRI,this.props.IRI)
+            this.props.onHasImageAsset(iiifpres+"/collection/wio:"+this.props.IRI,this.props.IRI)
          }
       }
       else if(kZprop.indexOf(bdo+"itemImageAssetForWork") !== -1)
@@ -2564,9 +2564,9 @@ class ResourceViewer extends Component<Props,State>
          let work = this.getResourceElem(bdo+"itemForWork")
          if(elem[0] && elem[0].value && !this.props.imageAsset && !this.props.manifestError) {
             this.setState({...this.state, imageLoaded:false})
-            let manif = "//presentation.bdrc.io/2.1.1/wv:"+elem[0].value.replace(new RegExp(bdr),"bdr:")+"/manifest"
+            let manif = iiifpres + "/wv:"+elem[0].value.replace(new RegExp(bdr),"bdr:")+"/manifest"
             if(nbVol && nbVol[0] && nbVol[0].value && nbVol[0].value > 1 && work && work[0] && work[0].value)
-              manif = "//presentation.bdrc.io/2.1.1/collection/wio:"+work[0].value.replace(new RegExp(bdr),"bdr:")
+              manif = iiifpres + "/collection/wio:"+work[0].value.replace(new RegExp(bdr),"bdr:")
             this.props.onHasImageAsset(manif,this.props.IRI)
          }
       }
@@ -2577,9 +2577,9 @@ class ResourceViewer extends Component<Props,State>
          let work = this.getResourceElem(bdo+"itemForWork")
          if(elem[0] && elem[0].value && !this.props.imageAsset && !this.props.manifestError) {
             this.setState({...this.state, imageLoaded:false})
-            let manif = "//presentation.bdrc.io/2.1.1/v:"+elem[0].value.replace(new RegExp(bdr),"bdr:")+"/manifest"
+            let manif = iiifpres + "/v:"+elem[0].value.replace(new RegExp(bdr),"bdr:")+"/manifest"
             if(nbVol && nbVol[0] && nbVol[0].value && nbVol[0].value > 1 && work && work[0] && work[0].value)
-              manif = "//presentation.bdrc.io/2.1.1/collection/wio:"+work[0].value.replace(new RegExp(bdr),"bdr:")
+              manif = iiifpres + "/collection/wio:"+work[0].value.replace(new RegExp(bdr),"bdr:")
             this.props.onHasImageAsset(manif,this.props.IRI)
          }
       }
@@ -2600,8 +2600,8 @@ class ResourceViewer extends Component<Props,State>
 
                   this.setState({...this.state, imageLoaded:false})
 
-                  if(assoc.length == 1) { this.props.onHasImageAsset(iiifpres+"/2.1.1/v:bdr:"+this.pretty(imItem[0].value,true)+"/manifest",this.props.IRI); }
-                  else { this.props.onHasImageAsset(iiifpres+"/2.1.1/collection/wio:"+this.pretty(this.props.IRI,true),this.props.IRI);  }
+                  if(assoc.length == 1) { this.props.onHasImageAsset(iiifpres + "/v:bdr:"+this.pretty(imItem[0].value,true)+"/manifest",this.props.IRI); }
+                  else { this.props.onHasImageAsset(iiifpres + "/collection/wio:"+this.pretty(this.props.IRI,true),this.props.IRI);  }
 
                }
             }
@@ -3452,7 +3452,7 @@ class ResourceViewer extends Component<Props,State>
       let iiifpres = "//iiifpres.bdrc.io" ;
       if(this.props.config && this.props.config.iiifpres) iiifpres = this.props.config.iiifpres.endpoints[this.props.config.iiifpres.index]      
 
-      this.setManifest(kZprop,iiifpres)    
+      this.setManifest(kZprop,iiifpres+"/2.1.1")    
 
       let { title,titlElem,otherLabels } = this.setTitle(kZprop) ;
       //console.log("ttlm",titlElem)
