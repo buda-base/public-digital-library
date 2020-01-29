@@ -199,6 +199,7 @@ let propOrder = {
       "bdo:eTextTitle",
       "bdo:eTextIsVolume",
       "bdo:eTextInVolume",
+      "bdo:eTextInInstance",
       "tmp:imageVolumeId",
       "bdo:eTextVolumeIndex",
       "bdo:eTextInItem",
@@ -2865,8 +2866,12 @@ class ResourceViewer extends Component<Props,State>
       let next = 0;
       if(elem && elem.length) next = elem.filter(e => e.value && e.end)
       if(next && next.length) next = next[next.length - 1].end + 1
-      else next = 0      
+      else next = 0
       
+      console.log("etext",next,elem)
+
+      // TODO etext seems not be sorted
+
       return (
          
          <InfiniteScroll
@@ -2884,8 +2889,8 @@ class ResourceViewer extends Component<Props,State>
          }
          //loader={<Loader loaded={false} />}
          >
-            <h3 class="chunk"><span>{this.proplink(k)}</span>:&nbsp;</h3>
-               {this.hasSub(k)?this.subProps(k):tags.map((e)=> [e," "] )}
+            <h3 class="chunk"><span>{this.proplink(k)} (@{next})</span>:&nbsp;</h3>
+               {this.hasSub(k)?this.subProps(k):tags.map((e)=> [e,<br/>,<br/>," "] )}
             {/* // import make test fail...
                <div class="sub">
                <AnnotatedEtextContainer dontSelect={true} chunks={elem}/>

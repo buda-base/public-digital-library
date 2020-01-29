@@ -198,10 +198,14 @@ async function initiateApp(params,iri,myprops) {
 
 
       if(res[bdrIRI]) {
-         if(!res[bdrIRI][bdo+"eTextHasPage"]) store.dispatch(dataActions.getChunks(iri));
+         
+         let next = 0
+         if(params.startChar) next = Number(params.startChar)
+
+         if(!res[bdrIRI][bdo+"eTextHasPage"]) store.dispatch(dataActions.getChunks(iri,next));
          else {
             res[bdrIRI][bdo+"eTextHasPage"] = []
-            store.dispatch(dataActions.getPages(iri)); 
+            store.dispatch(dataActions.getPages(iri,next)); 
          }
       }         
    
@@ -1355,6 +1359,7 @@ function rewriteAuxMain(result,keyword,datatype,sortBy)
                chunks = chunks.map(e => {
                   let n = getVal(e.value,tmp+"matchScore")
                   let m = getVal(e.value,bdo+"sliceStartChar")
+                  let p = getVal(e.value,bdo+"sliceEndChar")
                   let content = getVal(e.value,bdo+"chunkContents",false)
                   let expand = { lang:content["xml:lang"], value: content.value
                               .replace(/(↤([་ ]*[^་ ↦↤]+[་ ]){5})[^↦↤]*(([་ ][^་ ↦↤]+[་ ]*){5}↦)/g,"$1 (…) $3")
@@ -1364,20 +1369,22 @@ function rewriteAuxMain(result,keyword,datatype,sortBy)
                   //console.log("full",content.value)
                   //console.log("expand",expand.value)
 
-                  return { e, n, m, content, expand }
+                  return { e, n, m, p, content, expand }
                })
                chunks = _.orderBy(chunks, ['n','m'], ['desc','asc'])
                //console.log("chunks",chunks)
 
 
-               res = [ ...res.filter(e => e.type !== bdo+"eTextHasChunk"), { ...chunks[0].content, type:tmp+"bestMatch", ...(chunks[0].expand?{expand:chunks[0].expand}:{})} ]
-               if(chunks.length > 1) res = res.concat(chunks.slice(1).map(e => ({...e.e, expand:e.expand})))
+               res = [ ...res.filter(e => e.type !== bdo+"eTextHasChunk"), { ...chunks[0].content, type:tmp+"bestMatch", startChar:chunks[0].m, endChar:chunks[0].p, 
+                        ...(chunks[0].expand?{expand:chunks[0].expand}:{})} ]
+
+               if(chunks.length > 1) res = res.concat(chunks.slice(1).map(e => ({...e.e, expand:e.expand, startChar:e.m, endChar:e.p})))
             }
 
             return ({...acc, [k]:res})
          },{})
         
-         //console.log("dWa",dataWithAsset,sortBy,reverse)
+         console.log("dWa",dataWithAsset,sortBy,reverse)
 
          if(!sortBy || sortBy.startsWith("popularity")) return { ...acc, [t]: sortResultsByPopularity(dataWithAsset,reverse) }
          else if(sortBy.startsWith("year of")) return { ...acc, [t]: sortResultsByYear(dataWithAsset,reverse) }

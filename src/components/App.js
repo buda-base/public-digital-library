@@ -1917,7 +1917,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
          if(useAux && !findProp) { // etext
 
-            id = allProps.filter(e => fromProp.includes(e.type)).map(e => [{"@id":e.value}, ...this.props.assoRes[e.value].map(f => !e.expand||!e.expand.value||f.type !== bdo+"chunkContents"?f:{...f,expand:e.expand}) ]) //.reduce( (acc,e) => ([ ...acc, ...this.props.assoRes[e.value] ]),[]) 
+            id = allProps.filter(e => fromProp.includes(e.type)).map(e => [{"@id":e.value}, ...this.props.assoRes[e.value].map(f => !e.expand||!e.expand.value||f.type !== bdo+"chunkContents"?f:{...e, ...f /*,expand:e.expand*/}) ]) //.reduce( (acc,e) => ([ ...acc, ...this.props.assoRes[e.value] ]),[]) 
 
             //console.log("uA1",id,allProps,fromProp,useAux,findProp)
 
@@ -1932,6 +1932,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                val = labels.value
                if(!val) val = labels["@value"]
 
+               let startChar = labels.startChar, endChar = labels.endChar
                let expand = labels.expand
                if(expand && expand.value) expand = getLangLabel(this,"",[ expand ])
                //console.log("expand",expand)
@@ -1957,9 +1958,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                </div>)
                */
                
-   
-               ret.push(<div>{this.makeResult(i[0]["@id"],cpt,null,"?","?",null,null,null,
-                  [{lang,value:val,type:tmp+"textMatch",expand} ], //...i.filter(e => [bdo+"sliceStartChar",tmp+"matchScore"].includes(e.type) )],
+               ret.push(<div>{this.makeResult(iri /*i[0]["@id"]*/,cpt,null,"?","?",null,null,null,
+                  [{lang,value:val,type:tmp+"textMatch",expand,startChar,endChar} ], //...i.filter(e => [bdo+"sliceStartChar",tmp+"matchScore"].includes(e.type) )],
                   null,[],null,true)}</div>)
 
                cpt++
@@ -2151,6 +2151,15 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
          let retList
          
+
+         let bestM = allProps.filter(e => e.type === tmp+"bestMatch")
+         if(!bestM.length) bestM = rmatch.filter(e => e.type === tmp+"textMatch")
+         //console.log("bestM",bestM)
+         if(bestM.length) bestM = "?startChar="+bestM[0].startChar /*+"-"+bestM[0].endChar*/ +"&keyword="+this.props.keyword+"@"+this.props.language
+         else bestM = ""
+
+
+         
          let directSameAs = false
          if(!prettId.match(/^bdr:/) && (fullId.match(new RegExp(cbcp+"|"+cbct+"|"+rkts)) || !sameAsRes || !sameAsRes.filter(s => s.value.match(/[#/]sameAs/) || (s.type.match(/[#/]sameAs/) && (s.value.indexOf(".bdrc.io") !== -1 || s.value.indexOf("bdr:") !== -1))).length))   {
             let u 
@@ -2164,7 +2173,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             directSameAs = true
          }
          else if(prettId.match(/^([^:])+:/))
-            retList = [ ( <Link key={n} to={"/show/"+prettId} className="result">{ret}</Link> ) ]
+            retList = [ ( <Link key={n} to={"/show/"+prettId+bestM} className="result">{ret}</Link> ) ]
          else
             retList = [ ( <Link key={n} to={url?url.replace(/^https?:/,""):id.replace(/^https?:/,"")} target="_blank" className="result">{ret}</Link> ) ]
          
@@ -2315,6 +2324,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
                   { 
                      let expand
+                     let uri,from
                      if(prop) lastP = prop 
                      prop = this.fullname(m.type.replace(/.*altLabelMatch/,skos+"altLabel"))
                      let val,isArray = false ;
@@ -2346,13 +2356,10 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                         //val =  mLit["value"]
                         lang = mLit["lang"]
                         if(!lang) lang = mLit["xml:lang"]
-
-                        //val = ["youpi",val]
                      }
 
                      //console.log("val",val,val.length,lang)
 
-                     let uri,from
                      if(m.type === tmp +"sameAsBDRC") {
                         if(m.value === fullId || m.value == prettId) return ;
                         prop = "Same As BDRC"
@@ -2422,7 +2429,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      }
                      else if(m.type.match(/relationType$/) || (m.value && m.value.match && m.value.match(new RegExp("^("+bdr+")?"+this.props.keyword.replace(/bdr:/,"(bdr:)?")+"$")))) {                       
                        
-                        uri = this.props.keyword.replace(/bdr:/,"")
+                        uri = this.props.keyword.replace(/bdr:/,"") 
                         val = uri ;
                         lang = null 
                         let label = this.props.resources[this.props.keyword]
