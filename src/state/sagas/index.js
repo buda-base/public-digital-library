@@ -455,7 +455,8 @@ async function getChunks(iri,next) {
 
       console.log("dataC",iri,next,data)
 
-      store.dispatch(dataActions.gotNextChunks(iri,data))
+      store.dispatch(dataActions.gotNextChunks(iri,data,next < 0))
+      
    }
    catch(e){
       console.error("ERRROR with chunks",iri,next,e)

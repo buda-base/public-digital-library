@@ -335,6 +335,8 @@ export default class API {
 
       if(!IRI.indexOf(':') === -1) IRI = "bdr:"+IRI
 
+      if(next < 0) next = (-next) - nb
+
       //console.log("etext",resource)
       try {
          let config = store.getState().data.config.ldspdi

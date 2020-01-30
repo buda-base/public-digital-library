@@ -280,14 +280,14 @@ export const getPages = (iri: string,next:number=0): Action => {
 
 
 TYPES.gotNextChunks = 'GOT_NEXT_CHUNKS';
-export const gotNextChunks = (iri: string,data:{}): Action => {
+export const gotNextChunks = (iri: string,data:{},prev:boolean=false): Action => {
 
    //console.log("nextC",iri,next,data)
 
     return {
         type: TYPES.gotNextChunks,
         payload: iri,
-        meta: data
+        meta: { data, prev }
     }
 }
 

@@ -1616,8 +1616,6 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          val = /*val.replace(/@.* /,"")*/ val.split(new RegExp(k.replace(/[ -'ʾ]/g,"[ -'ʾ]"))).map((l) => ([<span>{l}</span>,<span className="highlight">{k}</span>])) ;
       else //if (val.match(/↤.*?[^-/_()\[\]: ]+.*?↦/))
       {      
-
-
          val = val.split(/↦/).map((e,i) => { 
             //console.log("e",i,e,e.length)
             if(e.length) {
@@ -1630,7 +1628,6 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                }
             }
          })
-
       }    
       
       // else {

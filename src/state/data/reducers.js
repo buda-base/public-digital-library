@@ -152,10 +152,11 @@ export const getResource = (state: DataState, action: Action) => {
 reducers[actions.TYPES.getResource] = getResource;
 
 export const getChunks = (state: DataState, action: Action) => {
-   return {
+   if(action.meta > 0) return {
        ...state,
        "nextChunk": action.meta
    }
+   else return state
 }
 reducers[actions.TYPES.getChunks] = getChunks;
 
@@ -649,7 +650,8 @@ export const gotNextChunks = (state: DataState, action: Action) => {
          //console.log("av",JSON.stringify(res,null,3))
 
          if(!res["http://purl.bdrc.io/ontology/core/eTextHasChunk"]) res["http://purl.bdrc.io/ontology/core/eTextHasChunk"] = []
-         res["http://purl.bdrc.io/ontology/core/eTextHasChunk"] = res["http://purl.bdrc.io/ontology/core/eTextHasChunk"].filter(e => e.start !== undefined).concat(action.meta)
+         if(!action.meta.prev) res["http://purl.bdrc.io/ontology/core/eTextHasChunk"] = res["http://purl.bdrc.io/ontology/core/eTextHasChunk"].filter(e => e.start !== undefined).concat(action.meta.data)
+         else res["http://purl.bdrc.io/ontology/core/eTextHasChunk"] = action.meta.data.concat(res["http://purl.bdrc.io/ontology/core/eTextHasChunk"].filter(e => e.start !== undefined))
 
          //res["http://purl.bdrc.io/ontology/core/eTextHasChunk"] = [ { value:"machin",lang:"" } ]
       }

@@ -2870,12 +2870,19 @@ class ResourceViewer extends Component<Props,State>
 
    renderEtextHasChunk = (elem, k, tags) => {
 
-      let next = 0;
-      if(elem && elem.length) next = elem.filter(e => e.value && e.end)
+      let next, prev;
+      if(elem && elem.length) { 
+         prev = elem.filter(e => e.value && e.start !== undefined)
+         next = elem.filter(e => e.value && e.end)
+      }
       if(next && next.length) next = next[next.length - 1].end + 1
       else next = 0
 
-      console.log("etext",next,elem,this.props.nextChunk)
+      if(prev && prev.length) prev = -prev[0].start
+      if(!prev) prev = -1
+
+
+      console.log("etext",prev,next,elem,this.props.nextChunk)
 
       // + sort etext by sliceStartchar not seqNum
       // DONE 
@@ -2883,12 +2890,13 @@ class ResourceViewer extends Component<Props,State>
       return (
          
          <InfiniteScroll
-         id="etext-scroll"
-         hasMore={true}
-         pageStart={0}
-         loadMore={(e) => { 
+            //isReverse={true}
+            id="etext-scroll"
+            hasMore={true}
+            pageStart={0}
+            loadMore={(e) => { 
             
-               console.log("next?",this.props.nextChunk,next,JSON.stringify(elem,null,3))
+               //console.log("next?",this.props.nextChunk,next,JSON.stringify(elem,null,3))
 
                if(next && this.props.nextChunk !== next) {                               
                   this.props.onGetChunks(this.props.IRI,next); 
@@ -2897,7 +2905,7 @@ class ResourceViewer extends Component<Props,State>
          }
          //loader={<Loader loaded={false} />}
          >
-            <h3 class="chunk"><span>{this.proplink(k)}</span>:&nbsp;</h3>
+            <h3 class="chunk"><span>{this.proplink(k)}</span>:&nbsp;{prev!==-1 && <a onClick={(e) => this.props.onGetChunks(this.props.IRI,prev)} class="download" style={{float:"right",fontWeight:700,border:"none"}}>Load Previous Chunks &lt;</a>}</h3>
                {this.hasSub(k)?this.subProps(k):tags.map((e)=> [e," "] )}
             {/* // import make test fail...
                <div class="sub">
