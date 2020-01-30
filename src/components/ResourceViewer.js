@@ -63,7 +63,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faLanguage } from '@fortawesome/free-solid-svg-icons'
 //import {MapComponent} from './Map';
 import {getEntiType} from '../lib/api';
-import {languages,getLangLabel,top_right_menu,prefixesMap as prefixes,sameAsMap,shortUri,fullUri} from './App';
+import {languages,getLangLabel,top_right_menu,prefixesMap as prefixes,sameAsMap,shortUri,fullUri,highlight} from './App';
 import Popover from '@material-ui/core/Popover';
 import MenuItem from '@material-ui/core/MenuItem';
 import List from '@material-ui/core/List';
@@ -1630,12 +1630,13 @@ class ResourceViewer extends Component<Props,State>
 
                   if(tLab.start !== undefined) tmp = [ <span class="startChar"> [ @{tLab.start} ] </span> ]
                   else tmp = []
-
-                  tmp.push(this.fullname(tVal))
+                  
+                  if(tmp.length && this.props) tmp.push(highlight(tVal,null,null,true))
+                  else tmp.push(this.fullname(tVal))
 
                   if(lang) tmp = [ <span lang={lang}>{tmp}</span> ]
 
-                  tmp.push(<Tooltip placement="bottom-end" title={
+                  if(tLab.start === undefined) tmp.push(<Tooltip placement="bottom-end" title={
                         <div style={{margin:"10px"}}>
                            <Translate value={languages[lang]?languages[lang].replace(/search/,"tip"):lang}/>
                         </div>
@@ -2882,7 +2883,7 @@ class ResourceViewer extends Component<Props,State>
       if(!prev) prev = -1
 
 
-      console.log("etext",prev,next,elem,this.props.nextChunk)
+      //console.log("etext",prev,next,elem,this.props.nextChunk)
 
       // + sort etext by sliceStartchar not seqNum
       // DONE 

@@ -201,6 +201,58 @@ export const langProfile = [
 ]
 */
 
+
+export function highlight(val,k,expand,newline)
+{
+   //console.log("hi:",val,k,expand)
+
+   if(expand && expand.value) val = expand.value
+
+   val = val.replace(/(\[[^\]]*?)([↦])([^\]]*?\])/g,"$1$3$2");
+   val = val.replace(/(\[[^\]]*?)([↤])([^\]]*?\])/g,"$2$1$3");
+   val = val.replace(/(↦↤)|(\[ *\])/g,"");
+   val = val.replace(/\[( *\(…\) *)\]/g," $1 ");
+
+   if(!val.match(/↤/) && k)
+      val = /*val.replace(/@.* /,"")*/ val.split(new RegExp(k.replace(/[ -'ʾ]/g,"[ -'ʾ]"))).map((l) => ([<span>{l}</span>,<span className="highlight">{k}</span>])) ;
+   else //if (val.match(/↤.*?[^-/_()\[\]: ]+.*?↦/))
+   {      
+      val = val.split(/↦/).map((e,i) => { 
+         //console.log("e",i,e,e.length)
+         if(e.length) {
+            let f = e.split(/↤/)
+            if(f.length > 1) {
+               let tail 
+               if(newline && f[1].indexOf("\n\n") !== -1) tail = f[1].split("\n\n").map(i => [<span>{i}</span>,<br/>,<br/>])
+               else tail = [ <span>{f[1]}</span> ]
+               return [<span className="highlight">{f[0]}</span>,...tail,<span></span>]
+            }
+            else {
+               let tail 
+               if(newline && f[0].indexOf("\n\n") !== -1) tail = f[0].split("\n\n").map(i => [<span>{i}</span>,<br/>,<br/>])
+               else tail = [ <span>{f[0]}</span> ]
+               return [...tail,<span></span>]
+            }
+         }
+      })
+   }    
+   
+   // else {
+   //    let str = val.replace(/[\n\r]+/g," ").replace(/^.*?(↦([^↤]+)↤([-/_()\[\]: ]+↦([^↤]+)↤)*).*$/g,"$1").replace(/↤([-/_() ]+)↦/g,"$1").replace(/[↤↦]/g,"")
+   //                .replace(/[\[\]]+/g,"")
+   //    let ret = val.replace(/↦[^↤]+↤([-/_()\[\]: ]+↦[^↤]+↤)*/g,"↦↤")
+
+   //    //console.log("str:",str,"=",ret)
+
+   //    val = ret.split(/[\[\] ]*↦↤[\[\] ]*/).map((l) => ([<span>{l}</span>,<span className="highlight">{str}</span>])) ;
+   // }
+   
+
+   val = [].concat.apply([],val);
+   val.pop();
+   return val;
+}
+
 const preferUIlang = [ bdo+"placeType", bdo+"workIsAbout", bdo+"workGenre" ]
 
 export function getLangLabel(that:{},prop:string="",labels:[],proplang:boolean=false,uilang:boolean=false,otherLabels:[],dontUseUI:boolean=false)
@@ -1601,50 +1653,6 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
       return this.pretty(prop)
    }
 
-   highlight(val,k,expand):string
-   {
-      //console.log("hi:",val,k,expand)
-
-      if(expand && expand.value) val = expand.value
-
-      val = val.replace(/(\[[^\]]*?)([↦])([^\]]*?\])/g,"$1$3$2");
-      val = val.replace(/(\[[^\]]*?)([↤])([^\]]*?\])/g,"$2$1$3");
-      val = val.replace(/(↦↤)|(\[ *\])/g,"");
-      val = val.replace(/\[( *\(…\) *)\]/g," $1 ");
-
-      if(!val.match(/↤/) && k)
-         val = /*val.replace(/@.* /,"")*/ val.split(new RegExp(k.replace(/[ -'ʾ]/g,"[ -'ʾ]"))).map((l) => ([<span>{l}</span>,<span className="highlight">{k}</span>])) ;
-      else //if (val.match(/↤.*?[^-/_()\[\]: ]+.*?↦/))
-      {      
-         val = val.split(/↦/).map((e,i) => { 
-            //console.log("e",i,e,e.length)
-            if(e.length) {
-               let f = e.split(/↤/)
-               if(f.length > 1) {
-                  return [<span className="highlight">{f[0]}</span>,<span>{f[1]}</span>,<span></span>]
-               }
-               else {
-                  return [<span>{f[0]}</span>,<span></span>]
-               }
-            }
-         })
-      }    
-      
-      // else {
-      //    let str = val.replace(/[\n\r]+/g," ").replace(/^.*?(↦([^↤]+)↤([-/_()\[\]: ]+↦([^↤]+)↤)*).*$/g,"$1").replace(/↤([-/_() ]+)↦/g,"$1").replace(/[↤↦]/g,"")
-      //                .replace(/[\[\]]+/g,"")
-      //    let ret = val.replace(/↦[^↤]+↤([-/_()\[\]: ]+↦[^↤]+↤)*/g,"↦↤")
-
-      //    //console.log("str:",str,"=",ret)
-
-      //    val = ret.split(/[\[\] ]*↦↤[\[\] ]*/).map((l) => ([<span>{l}</span>,<span className="highlight">{str}</span>])) ;
-      // }
-      
-
-      val = [].concat.apply([],val);
-      val.pop();
-      return val;
-   }
 
    counTree(tree:{},meta:{},any:integer=0,tag:string):[]
    {
@@ -1944,7 +1952,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                
                /*
                ret.push(<div class="match" style={{margin:"5px 0 5px 0"}}>
-                  <span>{this.highlight(val)}{
+                  <span>{highlight(val)}{
                      lang && <Tooltip placement="bottom-end" title={
                                        <div style={{margin:"10px"}}>
                                           <Translate value={languages[lang]?languages[lang].replace(/search/,"tip"):lang}/>
@@ -2342,14 +2350,14 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                         isArray = true 
                      }
                      else {
-                        //val = this.highlight(this.pretty(m.value),k)
+                        //val = highlight(this.pretty(m.value),k)
                         let mLit = getLangLabel(this,"",[m])
                         expand = m.expand
                         if(expand && expand.value) {
                            if(!this.state.collapse[prettId+"-expand"]) expand = getLangLabel(this,"",[{...m, "value":expand.value}])
                            else expand = true
                         }
-                        val =  this.highlight(mLit["value"],facet,expand)
+                        val = highlight(mLit["value"],facet,expand)
                         //val =  mLit["value"]
                         lang = mLit["lang"]
                         if(!lang) lang = mLit["xml:lang"]
@@ -3032,7 +3040,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             if(id.match(/bdrc[.]io/)) id = id.replace(/^.*?([^/]+)$/,"$1")
 
             let lit ;
-            if(r.lit) { lit = this.highlight(r.lit.value,k) }
+            if(r.lit) { lit = highlight(r.lit.value,k) }
             let lang ;
             if(r.lit) lang= r.lit["lang"]
             if(r.lit && !lang) lang = r.lit["xml:lang"]

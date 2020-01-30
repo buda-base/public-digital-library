@@ -98,6 +98,14 @@ export const gotUserID = (userID: url): Action => {
    }
 }
 
+TYPES.gotHighlight = 'GOT_HIGHLIGHT';
+export const gotHighlight = (uri:uri,key:string,lang:string): Action => {
+   return {
+      type: TYPES.gotHighlight,
+      payload: uri,
+      meta: {key,lang}
+   }
+}
 
 TYPES.updateSortBy = 'UPDATE_SORT_BY';
 export const updateSortBy = (i: string, t:string): Action => {

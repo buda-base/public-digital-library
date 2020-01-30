@@ -21,7 +21,8 @@ export type UIState = {
    metadata:{[string]:{}},
    profileFromUrl?:{},
    sortBy?:string,
-   topicParents?:{}
+   topicParents?:{},
+   highlight?:{}
 }
 
 const DEFAULT_STATE: UIState = {
@@ -114,6 +115,17 @@ export const gotUserID = (state: UIState, action: Action) => {
    }
 }
 reducers[actions.TYPES.gotUserID] = gotUserID ;
+
+
+export const gotHighlight = (state: UIState, action: Action) => {
+
+    return {
+      ...state,
+      highlight:{uri:action.payload,key:action.meta.key,lang:action.meta.lang}
+   }
+}
+reducers[actions.TYPES.gotHighlight] = gotHighlight ;
+
 
 export const loading = (state: UIState, action: actions.LoadingAction) => {
     if(state.metadata) delete state.metadata 

@@ -202,11 +202,19 @@ async function initiateApp(params,iri,myprops) {
          let next = 0
          if(params.startChar) next = Number(params.startChar)
 
+         let key = params.keyword.split("@"), lang
+         if(key.length > 1) {
+            lang = key[1]
+            key = key[0].replace(/\"/g,"")            
+            store.dispatch(uiActions.gotHighlight(iri,key,lang));
+         }
+
          if(!res[bdrIRI][bdo+"eTextHasPage"]) store.dispatch(dataActions.getChunks(iri,next));
          else {
             res[bdrIRI][bdo+"eTextHasPage"] = []
             store.dispatch(dataActions.getPages(iri,next)); 
          }
+
       }         
    
       store.dispatch(dataActions.gotResource(iri,res));
@@ -439,21 +447,37 @@ export function* watchChoosingHost() {
 
 
 async function getChunks(iri,next) {
-   try {
+
+   let hilight //= { value:meta.key, lang:meta.lang }
+   let state = store.getState()
+   if(state.ui.highlight && state.ui.highlight.uri === iri) {
+      hilight = { value:state.ui.highlight.key, lang:state.ui.highlight.lang }
+   }
+
+   try {     
 
       let data = await api.loadEtextChunks(iri,next);
 
       data = _.sortBy(data["@graph"],'sliceStartChar')
       .filter(e => e.chunkContents)
-      .map(e => ({
-        value:e.chunkContents["@value"],
-        lang:e.chunkContents["@language"],
-        //seq:e.seqNum,
-        start:e.sliceStartChar,
-        end:e.sliceEndChar
-       })); //+ " ("+e.seqNum+")" }))
+      .map(e => { 
+         let cval = e.chunkContents["@value"]
+         let clang = e.chunkContents["@language"]
 
-      console.log("dataC",iri,next,data)
+         //console.log("hi?",cval,clang,hilight,e)
+
+         if(hilight && hilight.lang !== clang) { 
+            let langs = extendedPresets([clang])
+            hilight = sortLangScriptLabels([hilight],langs.flat,langs.translit)
+            if(hilight && hilight[0]) hilight = hilight[0]
+         }
+
+         if(hilight && hilight.lang === clang && cval) cval = cval.replace(new RegExp("("+hilight.value+")","g"),"↦$1↤")
+
+         return ({ value:cval, lang:clang, start:e.sliceStartChar, end:e.sliceEndChar}) 
+      }); //+ " ("+e.seqNum+")" }))
+
+      //console.log("dataC",iri,next,data)
 
       store.dispatch(dataActions.gotNextChunks(iri,data,next < 0))
       
