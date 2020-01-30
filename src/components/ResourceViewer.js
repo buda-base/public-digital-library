@@ -1627,14 +1627,21 @@ class ResourceViewer extends Component<Props,State>
                   if(!lang) lang = tLab["xml:lang"]
                   let tVal = tLab["value"]
                   if(!tVal) tVal = tLab["@value"]
-                  tmp = [ this.fullname(tVal) ]
+
+                  if(tLab.start !== undefined) tmp = [ <span class="startChar"> [ @{tLab.start} ] </span> ]
+                  else tmp = []
+
+                  tmp.push(this.fullname(tVal))
+
+                  if(lang) tmp = [ <span lang={lang}>{tmp}</span> ]
 
                   tmp.push(<Tooltip placement="bottom-end" title={
                         <div style={{margin:"10px"}}>
                            <Translate value={languages[lang]?languages[lang].replace(/search/,"tip"):lang}/>
                         </div>
                      }><span className="lang">{lang}</span></Tooltip>);
-                  }
+
+               }
             }
 
             let tmpAnno ;
@@ -2867,10 +2874,11 @@ class ResourceViewer extends Component<Props,State>
       if(elem && elem.length) next = elem.filter(e => e.value && e.end)
       if(next && next.length) next = next[next.length - 1].end + 1
       else next = 0
-      
-      console.log("etext",next,elem)
 
-      // TODO etext seems not be sorted
+      console.log("etext",next,elem,this.props.nextChunk)
+
+      // + sort etext by sliceStartchar not seqNum
+      // DONE 
 
       return (
          
@@ -2880,17 +2888,17 @@ class ResourceViewer extends Component<Props,State>
          pageStart={0}
          loadMore={(e) => { 
             
-               //console.log("next?",this.props.nextChunk,next,JSON.stringify(elem,null,3))
+               console.log("next?",this.props.nextChunk,next,JSON.stringify(elem,null,3))
 
-               if(this.props.nextChunk !== next) {                               
+               if(next && this.props.nextChunk !== next) {                               
                   this.props.onGetChunks(this.props.IRI,next); 
                } 
             }
          }
          //loader={<Loader loaded={false} />}
          >
-            <h3 class="chunk"><span>{this.proplink(k)} (@{next})</span>:&nbsp;</h3>
-               {this.hasSub(k)?this.subProps(k):tags.map((e)=> [e,<br/>,<br/>," "] )}
+            <h3 class="chunk"><span>{this.proplink(k)}</span>:&nbsp;</h3>
+               {this.hasSub(k)?this.subProps(k):tags.map((e)=> [e," "] )}
             {/* // import make test fail...
                <div class="sub">
                <AnnotatedEtextContainer dontSelect={true} chunks={elem}/>

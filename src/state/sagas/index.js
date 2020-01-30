@@ -443,11 +443,12 @@ async function getChunks(iri,next) {
 
       let data = await api.loadEtextChunks(iri,next);
 
-      data = _.sortBy(data["@graph"],'seqNum')
+      data = _.sortBy(data["@graph"],'sliceStartChar')
       .filter(e => e.chunkContents)
       .map(e => ({
         value:e.chunkContents["@value"],
-        seq:e.seqNum,
+        lang:e.chunkContents["@language"],
+        //seq:e.seqNum,
         start:e.sliceStartChar,
         end:e.sliceEndChar
        })); //+ " ("+e.seqNum+")" }))
