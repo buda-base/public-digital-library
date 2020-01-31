@@ -2528,7 +2528,7 @@ class ResourceViewer extends Component<Props,State>
       {
          if(!this.props.imageAsset && !this.props.manifestError) {
             this.setState({...this.state, imageLoaded:false})
-            this.props.onHasImageAsset(iiifpres+"/2.1.1/v:"+ this.props.IRI+ "/manifest",this.props.IRI);
+            this.props.onHasImageAsset(iiifpres+"/v:"+ this.props.IRI+ "/manifest",this.props.IRI);
          }
       }/*
       else if(kZprop.indexOf(tmp+"imageVolumeId") !== -1)
@@ -2536,7 +2536,7 @@ class ResourceViewer extends Component<Props,State>
          let elem = this.getResourceElem(tmp+"imageVolumeId")
          if(!this.props.imageAsset && !this.props.manifestError) {
             this.setState({...this.state, imageLoaded:false})
-            this.props.onHasImageAsset(iiifpres+"/2.1.1/v:"+ elem[0].value.replace(new RegExp(bdr), "bdr:") + "/manifest",this.props.IRI);
+            this.props.onHasImageAsset(iiifpres+"/v:"+ elem[0].value.replace(new RegExp(bdr), "bdr:") + "/manifest",this.props.IRI);
             this.props.onGetResource("bdr:"+this.pretty(elem[0].value));
          }
       }*/
@@ -2921,7 +2921,7 @@ class ResourceViewer extends Component<Props,State>
             let elem = this.getResourceElem(tmp+"imageVolumeId")
             //console.log("elem",elem)
             for(let e of elem) {
-               this.props.onImageVolumeManifest(iiifpres+"/2.1.1/v:"+ e.value.replace(new RegExp(bdr), "bdr:") + "/manifest",this.props.IRI);
+               this.props.onImageVolumeManifest(iiifpres+"/v:"+ e.value.replace(new RegExp(bdr), "bdr:") + "/manifest",this.props.IRI);
             }
          }
       }
@@ -3447,8 +3447,9 @@ class ResourceViewer extends Component<Props,State>
 
       let iiifpres = "//iiifpres.bdrc.io" ;
       if(this.props.config && this.props.config.iiifpres) iiifpres = this.props.config.iiifpres.endpoints[this.props.config.iiifpres.index]      
+      iiifpres += "/2.1.1"
 
-      this.setManifest(kZprop,iiifpres+"/2.1.1")    
+      this.setManifest(kZprop,iiifpres)    
 
       let { title,titlElem,otherLabels } = this.setTitle(kZprop) ;
       //console.log("ttlm",titlElem)

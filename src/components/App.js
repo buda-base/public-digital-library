@@ -526,16 +526,16 @@ class App extends Component<Props,State> {
       this.setState(state)
 
       console.log("search::",key,_key,label) //,this.state,!global.inTest ? this.props:null)
+      
+      if(_key.match(/^[UWPGRCTILE][A-Z0-9_]+/) || prefixesMap[key.replace(/^([^:]+):.*$/,"$1")])
+      {
+         if(_key.indexOf(":") === -1) _key = "bdr:"+_key
+         this.props.history.push({pathname:"/show/"+_key})
 
-      if(_key.match(/^[WPGRCTILE][A-Z0-9_]+/))
-      {
-         this.props.history.push({pathname:"/show/bdr:"+_key})
-      }
-      else if(prefixesMap[key.replace(/^([^:]+):.*$/,"$1")])
-      {
          //if(!label) label = this.state.filters.datatype.filter((f)=>["Person","Work"].indexOf(f) !== -1)[0]
 
-         this.props.history.push({pathname:"/search",search:"?r="+key+(label?"&t="+label:"")})
+         //this.props.history.push({pathname:"/search",search:"?r="+key+(label?"&t="+label:"")})
+
       }
       else if(key.match(/^[^:]*:[^ ]+/))
       {
