@@ -1578,7 +1578,7 @@ class ResourceViewer extends Component<Props,State>
       })
       */
 
-      //console.log("format",Tag, prop,JSON.stringify(elem,null,3),txt,bnode,div);
+      console.log("format",Tag, prop,JSON.stringify(elem,null,3),txt,bnode,div);
 
       let ret = [],pre = []
 
@@ -1631,7 +1631,7 @@ class ResourceViewer extends Component<Props,State>
                   if(tLab.start !== undefined) tmp = [ <span class="startChar"> [ @{tLab.start} ] </span> ]
                   else tmp = []
                   
-                  if(tmp.length && this.props) tmp.push(highlight(tVal,null,null,true))
+                  if(tmp.length) tmp.push(highlight(tVal,null,null,true))
                   else tmp.push(this.fullname(tVal))
 
                   if(lang) tmp = [ <span lang={lang}>{tmp}</span> ]
@@ -3012,7 +3012,7 @@ class ResourceViewer extends Component<Props,State>
          >
          {/* {this.hasSub(k)?this.subProps(k):tags.map((e)=> [e," "] )} */}
          { elem.map( e => (
-            <div class={"etextPage"+(this.props.manifestError&&!imageLinks?" manifest-error":"")+ (!e.value.match(/[\n\r]/)?" unformated":"")+(e.language === "bo"?" lang-bo":"")}>
+            <div class={"etextPage"+(this.props.manifestError&&!imageLinks?" manifest-error":"")+ (!e.value.match(/[\n\r]/)?" unformated":"") /*+(e.language === "bo"?" lang-bo":"")*/ }>
                {/*                                          
                   e.seq && this.state.collapse["image-"+this.props.IRI+"-"+e.seq] && imageLinks[e.seq] &&
                   <img title="Open image+text view in Mirador" onClick={eve => { openMiradorAtPage(imageLinks[e.seq].id) }} style={{maxWidth:"100%"}} src={imageLinks[e.seq].image} />
@@ -3045,10 +3045,12 @@ class ResourceViewer extends Component<Props,State>
                }
                <div class="overpage">
                   <h4 class="page">{e.value.split("\n").map(f => {
-                        //let label = getLangLabel(this,[{"@language":e.language,"@value":f}])
-                        //if(label) label = label["@value"]
-                        let label = f
-                        return ([label,<br/>])})}
+                        let label = getLangLabel(this,"",[{"@language":e.language,"@value":f}]), lang
+                        if(label) lang = label["@language"]
+                        if(label) label = label["@value"]
+                        if(label) label = highlight(label)
+                        //label = f
+                        return ([<span lang={lang}>{label}</span>,<br/>])})}
                   </h4>
                </div>
                { e.seq && <div> 

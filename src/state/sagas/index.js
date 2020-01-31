@@ -503,6 +503,12 @@ async function getPages(iri,next) {
       chunk = _.sortBy(data["@graph"].filter(e => e.chunkContents),'sliceStartChar')                  
       */
 
+      let hilight //= { value:meta.key, lang:meta.lang }
+      let state = store.getState()
+      if(state.ui.highlight && state.ui.highlight.uri === iri) {
+         hilight = { value:state.ui.highlight.key, lang:state.ui.highlight.lang }
+      }
+
 
       data = await api.loadEtextChunks(iri,next);
       chunk = _.sortBy(data["@graph"].filter(e => e.chunkContents),'sliceStartChar')                  
@@ -518,34 +524,53 @@ async function getPages(iri,next) {
       console.log("pages",pages)
 
       data = pages.map(e => {
+
+         let cval
+         let clang 
+         
+         let value = chunk.reduce( (acc,c) => { 
+            
+            if(!cval && c.chunkContents["@value"]) cval = c.chunkContents["@value"]
+            if(!clang && c.chunkContents["@language"]) clang = c.chunkContents["@language"]
+         
+            let content = c["chunkContents"], start = -1, end = -1
+                  
+            if( e.sliceStartChar >= c.sliceStartChar && e.sliceStartChar <= c.sliceEndChar 
+            || e.sliceEndChar >= c.sliceStartChar   && e.sliceEndChar <= c.sliceEndChar  ) {
+
+               if(e.sliceStartChar < c.sliceStartChar) start = 0
+               else start = e.sliceStartChar - c.sliceStartChar
+
+               if(e.sliceEndChar > c.sliceEndChar) end = c.sliceEndChar - c.sliceStartChar
+               else end = e.sliceEndChar - c.sliceStartChar
+            }
+            else if( e.sliceStartChar <= c.sliceStartChar && e.sliceEndChar >= c.sliceEndChar )
+            {
+               start = 0
+               end = c.sliceEndChar - c.sliceStartChar
+            }
+
+            if(start >= 0 && end >= 0) {
+               acc += content["@value"].substring(start,end) ;
+            }
+
+            return acc ; 
+
+         },"").replace(/[\n\r]+/,"\n").replace(/(^\n)|(\n$)/,"")
+
+         if(hilight && hilight.lang !== clang) { 
+            let langs = extendedPresets([clang])
+            hilight = sortLangScriptLabels([hilight],langs.flat,langs.translit)
+            if(hilight && hilight[0]) hilight = hilight[0]
+         }
+         
+         if(hilight && hilight.lang === clang && value) value = value.replace(new RegExp("("+hilight.value+")","g"),"↦$1↤")
+
          //console.log("page?",e,e.sliceStartChar,e.sliceEndChar,start)
          if(e.sliceEndChar <= chunk[chunk.length - 1].sliceEndChar) 
             return {
                //value:(chunk.substring(e.sliceStartChar - start,e.sliceEndChar - start - 1)).replace(/[\n\r]+/,"\n").replace(/(^\n)|(\n$)/,""),
-               value:chunk.reduce( (acc,c) => { 
-                  let content = c["chunkContents"], start = -1, end = -1
-                        
-                  if( e.sliceStartChar >= c.sliceStartChar && e.sliceStartChar <= c.sliceEndChar 
-                  || e.sliceEndChar >= c.sliceStartChar   && e.sliceEndChar <= c.sliceEndChar  ) {
-
-                     if(e.sliceStartChar < c.sliceStartChar) start = 0
-                     else start = e.sliceStartChar - c.sliceStartChar
-
-                     if(e.sliceEndChar > c.sliceEndChar) end = c.sliceEndChar - c.sliceStartChar
-                     else end = e.sliceEndChar - c.sliceStartChar
-                  }
-                  else if( e.sliceStartChar <= c.sliceStartChar && e.sliceEndChar >= c.sliceEndChar )
-                  {
-                     start = 0
-                     end = c.sliceEndChar - c.sliceStartChar
-                  }
-
-                  if(start >= 0 && end >= 0) {
-                     acc += content["@value"].substring(start,end) ;
-                  }
-
-                  return acc ; 
-               },"").replace(/[\n\r]+/,"\n").replace(/(^\n)|(\n$)/,""),
+               value,
                language:lang,
                seq:e.seqNum,
                start:e.sliceStartChar,
