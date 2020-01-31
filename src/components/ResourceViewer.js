@@ -1631,7 +1631,7 @@ class ResourceViewer extends Component<Props,State>
                   if(tLab.start !== undefined) tmp = [ <span class="startChar"> [ @{tLab.start} ] </span> ]
                   else tmp = []
                   
-                  if(tmp.length) tmp.push(highlight(tVal,null,null,true))
+                  if(tmp.length) tmp.push(highlight(tVal,null,null,false /*true*/))
                   else tmp.push(this.fullname(tVal))
 
                   if(lang) tmp = [ <span lang={lang}>{tmp}</span> ]
@@ -3043,13 +3043,13 @@ class ResourceViewer extends Component<Props,State>
                   })
                }
                <div class="overpage">
-                  <h4 class="page">{e.value.split("\n").map(f => {
+                  <h4 class="page">{!e.value.match(/[\n\r]/)?[<span class="sliceStart"> [ @{e.start} ] </span>,<br/>]:null}{e.value.split("\n").map(f => {
                         let label = getLangLabel(this,"",[{"@language":e.language,"@value":f}]), lang
                         if(label) lang = label["@language"]
                         if(label) label = label["@value"]
                         if(label) label = highlight(label)
                         //label = f
-                        return ([<span> [ @{e.start} ] </span>,<span lang={lang}>{label}</span>,<br/>])})}
+                        return ([<span lang={lang}>{label}</span>,<br/>])})}
                   </h4>
                </div>
                { e.seq && <div> 
