@@ -3474,8 +3474,9 @@ class ResourceViewer extends Component<Props,State>
 
       let iiifpres = "//iiifpres.bdrc.io" ;
       if(this.props.config && this.props.config.iiifpres) iiifpres = this.props.config.iiifpres.endpoints[this.props.config.iiifpres.index]      
+      iiifpres += "/2.1.1"
 
-      this.setManifest(kZprop,iiifpres+"/2.1.1")    
+      this.setManifest(kZprop,iiifpres)    
 
       let { title,titlElem,otherLabels } = this.setTitle(kZprop) ;
       //console.log("ttlm",titlElem)
