@@ -1578,7 +1578,7 @@ class ResourceViewer extends Component<Props,State>
       })
       */
 
-      console.log("format",Tag, prop,JSON.stringify(elem,null,3),txt,bnode,div);
+      //console.log("format",Tag, prop,JSON.stringify(elem,null,3),txt,bnode,div);
 
       let ret = [],pre = []
 
@@ -3008,6 +3008,7 @@ class ResourceViewer extends Component<Props,State>
          }
          //loader={<Loader loaded={false} />}
          >
+         { prev!==-1 && <h3 style={{marginBottom:"20px",width:"100%",textAlign:"right"}}><a onClick={(e) => this.props.onGetPages(this.props.IRI,prev)} class="download" style={{fontWeight:700,border:"none",textAlign:"right"}}>Load Previous Pages &lt;</a></h3>}
          {/* {this.hasSub(k)?this.subProps(k):tags.map((e)=> [e," "] )} */}
          { elem.map( e => (
             <div class={"etextPage"+(this.props.manifestError&&!imageLinks?" manifest-error":"")+ (!e.value.match(/[\n\r]/)?" unformated":"") /*+(e.language === "bo"?" lang-bo":"")*/ }>

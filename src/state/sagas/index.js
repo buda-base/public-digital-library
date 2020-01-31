@@ -581,7 +581,7 @@ async function getPages(iri,next) {
 
       console.log("dataP",iri,next,data)
 
-      store.dispatch(dataActions.gotNextPages(iri,data))
+      store.dispatch(dataActions.gotNextPages(iri,data,next < 0))
    }
    catch(e){
       console.error("ERRROR with pages",iri,next,e)

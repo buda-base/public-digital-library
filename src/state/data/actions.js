@@ -292,14 +292,14 @@ export const gotNextChunks = (iri: string,data:{},prev:boolean=false): Action =>
 }
 
 TYPES.gotNextPages = 'GOT_NEXT_PAGES';
-export const gotNextPages = (iri: string,data:{}): Action => {
+export const gotNextPages = (iri: string,data:{},prev:boolean=false): Action => {
 
    //console.log("nextP",iri,next,data)
 
     return {
         type: TYPES.gotNextPages,
         payload: iri,
-        meta: data
+        meta: { data, prev }
     }
 }
 
