@@ -3011,7 +3011,7 @@ class ResourceViewer extends Component<Props,State>
          { prev!==-1 && <h3 style={{marginBottom:"20px",width:"100%",textAlign:"right"}}><a onClick={(e) => this.props.onGetPages(this.props.IRI,prev)} class="download" style={{fontWeight:700,border:"none",textAlign:"right"}}>Load Previous Pages &lt;</a></h3>}
          {/* {this.hasSub(k)?this.subProps(k):tags.map((e)=> [e," "] )} */}
          { elem.map( e => (
-            <div class={"etextPage"+(this.props.manifestError&&!imageLinks?" manifest-error":"")+ (!e.value.match(/[\n\r]/)?" unformated":"") /*+(e.language === "bo"?" lang-bo":"")*/ }>
+            <div class={"etextPage"+(this.props.manifestError&&!imageLinks?" manifest-error":"")+ (!e.value.match(/[\n\r]/)?" unformated":"") + (e.seq?" hasSeq":"")/*+(e.language === "bo"?" lang-bo":"")*/ }>
                {/*                                          
                   e.seq && this.state.collapse["image-"+this.props.IRI+"-"+e.seq] && imageLinks[e.seq] &&
                   <img title="Open image+text view in Mirador" onClick={eve => { openMiradorAtPage(imageLinks[e.seq].id) }} style={{maxWidth:"100%"}} src={imageLinks[e.seq].image} />
@@ -3043,7 +3043,7 @@ class ResourceViewer extends Component<Props,State>
                   })
                }
                <div class="overpage">
-                  <h4 class="page">{!e.value.match(/[\n\r]/)?[<span class="sliceStart"> [ @{e.start} ] </span>,<br/>]:null}{e.value.split("\n").map(f => {
+                  <h4 class="page">{!e.value.match(/[\n\r]/) && !e.seq ?[<span class="sliceStart"> [ @{e.start} ] </span>,<br/>]:null}{e.value.split("\n").map(f => {
                         let label = getLangLabel(this,"",[{"@language":e.language,"@value":f}]), lang
                         if(label) lang = label["@language"]
                         if(label) label = label["@value"]

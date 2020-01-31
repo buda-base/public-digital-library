@@ -216,10 +216,9 @@ h4 { margin-top:0px;margin-bottom:0px;font-size:24px; }
 .etextPage h4.page  [lang=bo] { font-size:calc( 30 * 100vw / 2500) ;  line-height:calc( 60 * 100vw / 2500) ; }
 
 /* .etextPage h4.page:last-child { padding-bottom:25px; } */
-.etextPage.unformated  { padding-bottom:25px; }
 .etextPage .overpage { overflow-x: auto;}
 .etextPage:not(.unformated) .overpage { padding-bottom:25px}
-.etextPage.unformated  { padding-bottom:25px; }
+.etextPage.unformated:not(.hasSeq)  { padding-bottom:25px; }
 .etextPage.unformated h4.page { white-space: normal;  }
 .etextPage h5 { margin-top:0; color:#777; display:inline-block; }
 .etextPage h4 + h5 { margin-top:15px;margin-bottom:30px;}
