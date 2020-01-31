@@ -202,11 +202,13 @@ async function initiateApp(params,iri,myprops) {
          let next = 0
          if(params.startChar) next = Number(params.startChar)
 
-         let key = params.keyword.split("@"), lang
-         if(key.length > 1) {
-            lang = key[1]
-            key = key[0].replace(/\"/g,"")            
-            store.dispatch(uiActions.gotHighlight(iri,key,lang));
+         if(params.keyword) {
+            let key = params.keyword.split("@"), lang
+            if(key.length > 1) {
+               lang = key[1]
+               key = key[0].replace(/\"/g,"")            
+               store.dispatch(uiActions.gotHighlight(iri,key,lang));
+            }
          }
 
          if(!res[bdrIRI][bdo+"eTextHasPage"]) store.dispatch(dataActions.getChunks(iri,next));
