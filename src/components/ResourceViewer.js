@@ -2919,19 +2919,17 @@ class ResourceViewer extends Component<Props,State>
 
    renderEtextHasPage = (elem, kZprop, iiifpres) => {
 
-      let next = 0;
-      if(elem && elem.length) next = elem.filter(e => e.value && e.end)
+      let next, prev;
+      if(elem && elem.length) { 
+         prev = elem.filter(e => e.value && e.start !== undefined)
+         next = elem.filter(e => e.value && e.end)
+      }
       if(next && next.length) next = next[next.length - 1].end + 1
-      else next = 0                  
-
-      /*
-      let next = 0;
-      if(elem && elem.length) next = elem.filter(e => e.value && e.end)
-      if(next && next.length) next = next[next.length - 1].seq + 1
       else next = 0
-      
-      console.log("nextP?",next)     
-      */
+
+      if(prev && prev.length) prev = -prev[0].start
+      if(!prev) prev = -1
+
       
       let imageLinks ;
       if(this.state.imageLinks) imageLinks = this.state.imageLinks[this.props.IRI]
@@ -3003,7 +3001,7 @@ class ResourceViewer extends Component<Props,State>
             
                //console.log("next?",this.props.nextChunk,next,JSON.stringify(elem,null,3))
 
-               if(this.props.nextPage !== next) {                               
+               if(next && this.props.nextPage !== next) {                               
                   this.props.onGetPages(this.props.IRI,next); 
                } 
             }
@@ -3050,7 +3048,7 @@ class ResourceViewer extends Component<Props,State>
                         if(label) label = label["@value"]
                         if(label) label = highlight(label)
                         //label = f
-                        return ([<span lang={lang}>{label}</span>,<br/>])})}
+                        return ([<span> [ @{e.start} ] </span>,<span lang={lang}>{label}</span>,<br/>])})}
                   </h4>
                </div>
                { e.seq && <div> 
