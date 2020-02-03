@@ -1914,7 +1914,10 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
       }
    }
 
-   getResultProp(prop:string,allProps:[],plural:boolean=true, doLink:boolean = true, fromProp:[], exclude:string,useAux:[],findProp:[],altInfo:[],iri) {
+   getResultProp(prop:string,allProps:[],plural:string="s", doLink:boolean = true, fromProp:[], exclude:string,useAux:[],findProp:[],altInfo:[],iri) {
+
+      if(plural === true) plural = "s"
+
       if(allProps && this.props.assoRes) { 
          if(!fromProp) fromProp = [ prop ]
          let ret = []
@@ -1982,7 +1985,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                         <span class="instance-collapse" onClick={(e) => { 
                            this.setState({...this.state,collapse:{...this.state.collapse,[iri]:!this.state.collapse[iri] },repage:true })
                         }}>{!this.state.collapse[iri]?<ExpandMore/>:<ExpandLess/>}</span>,
-                        <span class="label">{this.fullname(prop)+(plural && ret.length > 1 ?"s":"")}:&nbsp;</span>,
+                        <span class="label">{this.fullname(prop)+(plural && ret.length > 1 ?plural:"")}:&nbsp;</span>,
                         <div style={{clear:"both"}}></div>,
                         <Collapse in={this.state.collapse[iri]} >
                            {ret}
@@ -2021,6 +2024,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                let val = i["value"]
                if(val === exclude) continue
                if(val && val.startsWith("http")) val = this.fullname(val)
+               else val = highlight(val)
                let lang = i["xml:lang"]
                if(!lang) lang = i["lang"]
                ret.push(<span>{val}{
@@ -2032,49 +2036,61 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                         }</span>)
             }
          }
-         else if(id && id.length) for (let i of id) {
+         else if(id && id.length) { 
 
-            // TODO presort values using language preferences
+            let sortId = []
 
-            let _i = i
-            i = fullUri(i.value)
-            let uri = shortUri(i), val = uri, lang
+            for (let i of id) {
 
-            let labels = this.props.assoRes[i]
-            if(!labels && this.props.dictionary) { 
-               labels = this.props.dictionary[_i.value]
-               if(labels) {
-                  if(labels[skos+"prefLabel"]) labels = labels[skos+"prefLabel"]
-                  else labels = labels["http://www.w3.org/2000/01/rdf-schema#label"]
+               // TODO presort values using language preferences
+
+               let _i = i
+               i = fullUri(i.value)
+               let uri = shortUri(i), val = uri, lang
+
+               let labels = this.props.assoRes[i]
+               if(!labels && this.props.dictionary) { 
+                  labels = this.props.dictionary[_i.value]
+                  if(labels) {
+                     if(labels[skos+"prefLabel"]) labels = labels[skos+"prefLabel"]
+                     else labels = labels["http://www.w3.org/2000/01/rdf-schema#label"]
+                  }
                }
+
+               //console.log("labels1",i,labels,this.props.assoRes)
+
+               if(labels) { 
+                  labels = getLangLabel(this,"",labels)
+                  if(labels) {
+                     lang = labels["xml:lang"]
+                     if(!lang) lang = labels["lang"]
+                     if(!lang) lang = labels["@language"]
+                     val = labels.value
+                     if(!val) val = labels["@value"]
+                  }
+                  //console.log("labels2",labels)                        
+               }
+
+               sortId.push({ value: val, lang, uri, _i})
             }
 
-            //console.log("labels1",i,labels,this.props.assoRes)
+            let langs = extendedPresets(this.state.langPreset)
+            sortId = sortLangScriptLabels(sortId,langs.flat,langs.translit)
 
-            if(labels) { 
-               labels = getLangLabel(this,"",labels)
-               if(labels) {
-                  lang = labels["xml:lang"]
-                  if(!lang) lang = labels["lang"]
-                  if(!lang) lang = labels["@language"]
-                  val = labels.value
-                  if(!val) val = labels["@value"]
-               }
-               //console.log("labels2",labels)                        
-            }
+            for (let i of sortId) {
 
-            if(val != "false") 
-               ret.push(<span><Link to={"/show/"+uri}>{val}</Link>{
-                  lang && <Tooltip placement="bottom-end" title={
-                                    <div style={{margin:"10px"}}>
-                                       <Translate value={languages[lang]?languages[lang].replace(/search/,"tip"):lang}/>
-                                    </div>
-                                 }><span className="lang">&nbsp;{lang}</span></Tooltip>
-                        }</span>)
-                        
+               if(i.value != "false") 
+                  ret.push(<span><Link to={"/show/"+i.uri}>{i.value}</Link>{
+                     i.lang && <Tooltip placement="bottom-end" title={
+                                       <div style={{margin:"10px"}}>
+                                          <Translate value={languages[i.lang]?languages[i.lang].replace(/search/,"tip"):i.lang}/>
+                                       </div>
+                                    }><span className="lang">&nbsp;{i.lang}</span></Tooltip>
+                           }</span>)
+            }            
          }
          if(ret.length && !useAux) return <div class="match">
-                  <span class="label">{this.fullname(prop)+(plural && ret.length > 1 ?"s":"")}:&nbsp;</span>
+                  <span class="label">{this.fullname(prop)+(plural && ret.length > 1 ?plural:"")}:&nbsp;</span>
                   <div class="multi">{ret}</div>
                 </div>
       }
@@ -2333,7 +2349,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
          retList.push( <div id='matches'>
             {
-               rmatch.map((m) => {
+               rmatch.filter(m => m.type !== tmp+"nameMatch").map((m) => {
 
                   //console.log("m",m,allProps)
 
@@ -2529,6 +2545,9 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   }
                })
             }
+
+            { this.getResultProp(tmp+"nameMatch",allProps,"es",false) } {/* //,true,false) } */}
+
             { this.getResultProp(tmp+"relationType",allProps) } {/* //,true,false) } */}
             { this.getResultProp(tmp+"InverseRelationType",allProps,true,true,[tmp+"relationTypeInv"]) }
             
