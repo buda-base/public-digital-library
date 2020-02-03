@@ -428,6 +428,9 @@ export default class API {
 
       if(param["searchType"] != "") url += "/"+param["searchType"];
       else delete param["I_LIM"] ;
+
+      if(param["I_LIM"] === "") delete param["I_LIM"]
+
       delete param["searchType"]
 
       if(accept === "application/json") param["format"] = "json"
@@ -567,7 +570,7 @@ export default class API {
              if(typ && typ.length >= 1 && typ[0] !== "Any") { param = { ...param, searchType, ...(R_TYPE?{R_TYPE}:{}) } }
              else url = url.replace(/-dev/,"") // fix while -dev/rootSearch returns nothing
 
-             let data = this.getQueryResults(url, key, param,"GET");
+             let data = this.getQueryResults(url, key, param,"GET","");
              // let data = this.getSearchContents(url, key);
 
              return data ;
