@@ -2157,8 +2157,10 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
          let bestM = allProps.filter(e => e.type === tmp+"bestMatch")
          if(!bestM.length) bestM = rmatch.filter(e => e.type === tmp+"textMatch")
+         let startC 
+
          //console.log("bestM",bestM)
-         if(bestM.length) bestM = "?startChar="+bestM[0].startChar /*+"-"+bestM[0].endChar*/ +"&keyword="+this.props.keyword+"@"+this.props.language
+         if(bestM.length) bestM = "?startChar="+(startC = bestM[0].startChar) /*+"-"+bestM[0].endChar*/ +"&keyword="+this.props.keyword+"@"+this.props.language
          else bestM = ""
 
 
@@ -2352,7 +2354,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                         let mLit = getLangLabel(this,"",[m])
                         expand = m.expand
                         if(expand && expand.value) {
-                           if(!this.state.collapse[prettId+"-expand"]) expand = getLangLabel(this,"",[{...m, "value":expand.value}])
+                           if(!this.state.collapse[prettId+"@"+startC]) expand = getLangLabel(this,"",[{...m, "value":expand.value}])
                            else expand = true
                         }
                         val = highlight(mLit["value"],facet,expand)
@@ -2486,7 +2488,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
                      let toggleExpand = (e,id) => {
                         console.log("toggle",id)
-                        this.setState({...this.state,repage:true,collapse:{...this.state.collapse, [id+"-expand"]:!this.state.collapse[id+"-expand"]}})
+                        this.setState({...this.state,repage:true,collapse:{...this.state.collapse, [id]:!this.state.collapse[id]}})
                      }
 
                      return (<div className="match">
@@ -2495,7 +2497,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                            <div style={{margin:"10px"}}>
                               <Translate value={languages[lang]?languages[lang].replace(/search/,"tip"):lang}/>
                            </div>
-                        }><span className="lang">&nbsp;{lang}</span></Tooltip>:null]}{expand?<span class="etext-match">&nbsp;(<span class="uri-link" onClick={(e) => toggleExpand(e,prettId)}>{expand!==true?"Expand":"Shrink"}</span> or <span class="uri-link">Preview Context</span>)</span>:null}</span>}
+                        }><span className="lang">&nbsp;{lang}</span></Tooltip>:null]}{expand?<span class="etext-match">&nbsp;(<span class="uri-link" onClick={(e) => toggleExpand(e,prettId+"@"+startC)}>{expand!==true?"Expand":"Shrink"}</span> or <span class="uri-link">Preview Context</span>)</span>:null}</span>}
                         {isArray && <div class="multi">
                            {val.map((e)=> {
                               let url = e, label = e, lang = m.lang
