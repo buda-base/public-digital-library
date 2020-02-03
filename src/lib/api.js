@@ -424,6 +424,9 @@ export default class API {
 
       if(param["searchType"] != "") url += "/"+param["searchType"];
       else delete param["I_LIM"] ;
+
+      if(param["I_LIM"] === "") delete param["I_LIM"]
+
       delete param["searchType"]
 
       if(accept === "application/json") param["format"] = "json"
@@ -551,9 +554,9 @@ export default class API {
         try {
              let config = store.getState().data.config.ldspdi
              let url = config.endpoints[config.index]+"/lib" ;
-             let param = {"searchType":"rootSearchGraph","LG_NAME":lang}
+             let param = {"searchType":"rootSearchGraph","LG_NAME":lang,"I_LIM":""}
              if(typ && typ.length >= 1 && typ[0] !== "Any") { param = { ...param, "searchType":(typ[0] === "Etext"?"Chunks":typ[0]).toLowerCase()+"FacetGraph" } }
-             let data = this.getQueryResults(url, key, param,"GET");
+             let data = this.getQueryResults(url, key, param,"GET","");
              // let data = this.getSearchContents(url, key);
 
              return data ;
