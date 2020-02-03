@@ -412,7 +412,6 @@ const TagTab = {
    "Work":CropDin
 }
 
-
 const styles = {
   checked: {
     color: "rgb(50,50,50)",
@@ -517,6 +516,7 @@ class App extends Component<Props,State> {
    _customLang = null ;
    _menus = {}
    _refs = {}
+   _scrollTimer = null
 
 
    constructor(props : Props) {
@@ -594,10 +594,15 @@ class App extends Component<Props,State> {
       if(get.n) {
          n = get.n
          if(this._refs[n] && this._refs[n].current && this.state.scrolled !== n)  {
-            setTimeout(((that) => () => { 
+            this._scrollTimer = setInterval(((that) => () => { 
                if(that._refs[n] && that._refs[n].current) that._refs[n].current.scrollIntoView()
-               //else if(n === 0 && that._refs["logo"].current) window).scrollTop(0)
-            })(this),150) // TODO ? use setInterval to synchronize with render 
+               //else if(n === 0 && that._refs["logo"].current) window.scrollTop(0) //TODO scroll to top of window when changing page
+
+               console.log("timer")
+            })(this),10) 
+
+            setTimeout(((that) => () => { clearInterval(this._scrollTimer)})(this),1000)
+
             scrolled = n
          }
       }
@@ -1852,14 +1857,15 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
    getInstanceLink(id,n,allProps:[]=[]) {
       let nb = allProps.filter(p => p.type === tmp+"nbInstance")
       if(nb.length) {
-         nb = nb[0].value
+         nb = Number(nb[0].value)
          if(nb) {
             let instances = this.props.instances
             if(instances) instances = instances[fullUri(id)]
 
             let iUrl = "/search?i="+shortUri(id)+"&t=Work&w="+ encodeURIComponent(window.location.href.replace(/^https?:[/][/][^?]+[?]?/gi,"").replace(/(&n=[^&]*)/g,"")+"&n="+n) //"/search?q="+this.props.keyword+"&lg="+this.props.language+"&t=Work&s="+this.props.sortBy+"&i="+shortUri(id)
 
-            //console.log("inst",instances)
+            console.log("inst",instances)
+
             if(instances) { 
                let instK = Object.keys(instances), n = 1, ret = [], seeAll 
 
