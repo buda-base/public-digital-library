@@ -650,7 +650,7 @@ class App extends Component<Props,State> {
 
    }
 
-   requestSearch(key:string,label?:string)
+   requestSearch(key:string,label?:string,lang?:string)
    {
       console.log("key",key,label,this.state.searchTypes)
 
@@ -691,10 +691,12 @@ class App extends Component<Props,State> {
 
       }
       else {
-         console.log("here")         
-         this.props.history.push({pathname:"/search",search:"?q="+key+"&lg="+this.getLanguage()+"&t="+label})
+
+         this.props.history.push({pathname:"/search",search:"?q="+key+"&lg="+(lang?lang:this.getLanguage())+"&t="+label})
+         
          // TODO add permanent filters (here ?)
       }
+
       /*
       else if(label === "Any") // || ( !label)) // && ( this.state.filters.datatype.length === 0 || this.state.filters.datatype.indexOf("Any") !== -1 ) ) )
       {
@@ -1456,12 +1458,13 @@ class App extends Component<Props,State> {
 
          if(state.sortBy) delete state.sortBy
          
-         if(["Any","Person","Place","Work","Etext","Role","Topic","Corporation","Lineage"].indexOf(lab) !== -1)
+         if([ /*"Any",*/ "Person","Place","Work","Etext","Role","Topic","Corporation","Lineage"].indexOf(lab) !== -1)
          {
-            this.requestSearch(this.props.keyword,[ lab ]);
+            this.requestSearch(this.props.keyword,[ lab ], this.props.language);
          }
          
       }
+      /*
       else if(!val)
       {            
          prevDT = null
@@ -1471,6 +1474,7 @@ class App extends Component<Props,State> {
          this.requestSearch(this.props.keyword,["Any"]);
          
       }
+      */
 
       this.setState(state)
       console.log("state::",JSON.stringify(state.collapse,null,3))
