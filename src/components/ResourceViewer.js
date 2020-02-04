@@ -640,7 +640,7 @@ class ResourceViewer extends Component<Props,State>
       if(!this.props.IRI || !this.props.resources || !this.props.resources[this.props.IRI]
          || !this.props.resources[this.props.IRI][this.expand(this.props.IRI)]) return {}
 
-      let onto = this.props.ontology
+      let onto = this.props.ontology, dic = this.props.dictionary
       let prop = this.props.resources[this.props.IRI][this.expand(this.props.IRI)] ;
       if(this.state.resource) prop = this.state.resource
       let w = prop[bdo+"workDimWidth"]
@@ -873,23 +873,27 @@ class ResourceViewer extends Component<Props,State>
                   }
                   else lang = false ;
                   if(lang && canoLang.filter(v => lang.match(new RegExp("/"+v+"[^/]*$"))).length) {
-                     let ontoProp = tmp+"workHasTranslationInCanonicalLanguage"+lang.replace(/^.*[/]([^/]+)$/,"$1")
-                     onto[ontoProp] = {
+                     let ontoProp = tmp+"workHasTranslationInCanonicalLanguage"+lang.replace(/^.*[/]([^/]+)$/,"$1")                     
+                     let newLang = {
                         [rdfs+"label"]: [{type: "literal", value: langLab, lang: "en"}],
                         [rdfs+"subPropertyOf"]: [{type: "uri", value: tmp+"workHasTranslationInCanonicalLanguage"}],
                         [tmp+"langKey"]: [{type:"literal", value:lang}]
                      }
+                     onto[ontoProp] = newLang
+                     dic[ontoProp] = newLang
                      if(!subLangDeriv[ontoProp]) subLangDeriv[ontoProp] = []
                      subLangDeriv[ontoProp].push(e)
                      cano.push(e);
                   }
                   else if(lang) {
                      let ontoProp = tmp+"workHasTranslationInNonCanonicalLanguage"+lang.replace(/.*[/]([^/]+)$/,"$1")
-                     onto[ontoProp] = {
+                     let newLang = {
                         [rdfs+"label"]: [{type: "literal", value: langLab, lang: "en"}],
                         [rdfs+"subPropertyOf"]: [{type: "uri", value: tmp+"workHasTranslationInNonCanonicalLanguage"}],
                         [tmp+"langKey"]: [{type:"literal", value:lang}]
                      }
+                     onto[ontoProp] = newLang
+                     dic[ontoProp] = newLang
                      if(!subLangDeriv[ontoProp]) subLangDeriv[ontoProp] = []
                      subLangDeriv[ontoProp].push(e)
                      nonCano.push(e);
