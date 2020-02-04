@@ -108,6 +108,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       onGetInstances:(k:string) => {
          dispatch(data.getInstances(k))
       },
+      onGetContext:(iri:string,start:integer,end:integer) => {
+         dispatch(data.getContext(iri,start,end));
+      }
 
    }
 }

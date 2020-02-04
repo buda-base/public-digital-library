@@ -330,7 +330,7 @@ export default class API {
 
    }
 
-   async loadEtextChunks(IRI:string,next:number=0,nb:number=10000): Promise<string>
+   async loadEtextChunks(IRI:string,next:number=0,nb:number=10000,useContext:boolean=true): Promise<string>
    {
       //let resource =  JSON.parse(await this.getURLContents(this._etextPath(IRI),false));
 
@@ -342,7 +342,7 @@ export default class API {
       try {
          let config = store.getState().data.config.ldspdi
          let url = config.endpoints[config.index]+"/query/graph" ;
-         let param = {"searchType":"Chunks","R_RES":IRI,"I_START":next,"I_END":next+nb,"L_NAME":"","LG_NAME":"" }
+         let param = {"searchType":useContext?"chunkContext":"Chunks",...(useContext?{"R_UT":IRI}:{"R_RES":IRI}),"I_START":next,"I_END":next+nb,"L_NAME":"","LG_NAME":"", "I_LIM":"" }
          let data = await this.getQueryResults(url, IRI, param,"GET","application/ld+json");
 
          //console.log("etextchunks",JSON.stringify(data,null,3))

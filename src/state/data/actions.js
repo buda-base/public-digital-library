@@ -254,6 +254,18 @@ export const gotAssocResources = (iri: string,res:{}): Action => {
 }
 
 
+TYPES.getContext = 'GET_CONTEXT';
+export const getContext = (iri: string,start:integer,end:integer): Action => {
+
+   console.log("getCtx",iri,start,end)
+
+    return {
+        type: TYPES.getContext,
+        payload: iri,
+        meta: { start, end }
+    }
+}
+
 TYPES.getChunks = 'GET_CHUNKS';
 export const getChunks = (iri: string,next:number=0): Action => {
 
