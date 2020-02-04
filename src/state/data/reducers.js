@@ -87,6 +87,19 @@ export const loadedDictionary = (state: DataState, action: Action) => {
    let dictionary = state.dictionary
    if(dictionary) dictionary = { ...dictionary, ...action.payload }
    else dictionary = action.payload
+
+   dictionary["http://purl.bdrc.io/ontology/core/workHasTranslation"]["http://purl.bdrc.io/ontology/core/inferSubTree"] = [{type: "literal", value: "true", datatype: "http://www.w3.org/2001/XMLSchema#boolean"}]
+  
+   dictionary["http://purl.bdrc.io/ontology/tmp/workHasTranslationInCanonicalLanguage"] = {
+      "http://www.w3.org/2000/01/rdf-schema#label": [{type: "literal", value: "canonical languages", lang: "en"}],
+      "http://www.w3.org/2000/01/rdf-schema#subPropertyOf": [{type: "uri", value: "http://purl.bdrc.io/ontology/core/workHasTranslation"}]
+   }
+   
+   dictionary["http://purl.bdrc.io/ontology/tmp/workHasTranslationInNonCanonicalLanguage"] = {
+      "http://www.w3.org/2000/01/rdf-schema#label": [{type: "literal", value: "other languages", lang: "en"}],
+      "http://www.w3.org/2000/01/rdf-schema#subPropertyOf": [{type: "uri", value: "http://purl.bdrc.io/ontology/core/workHasTranslation"}]
+   }
+
     return {
         ...state,
         dictionary
