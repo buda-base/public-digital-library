@@ -257,7 +257,7 @@ const makeMainRoutes = () => {
                         return ( <ResourceViewerContainer  auth={auth} history={history} IRI={props.match.params.IRI}/> ) } }/>
                      <Route render={(props) =>
                         <Redirect404  history={history}  auth={auth}/>}/>
-                     <Route path="/scripts/" onEnter={() => window.location.reload()} />
+                     <Route path="/scripts/" onEnter={() => window.location.reload(true)} />
                   </Switch>
                </Router>
             </MuiThemeProvider>
