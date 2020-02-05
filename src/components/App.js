@@ -217,19 +217,26 @@ export function highlight(val,k,expand,newline)
       val = /*val.replace(/@.* /,"")*/ val.split(new RegExp(k.replace(/[ -'ʾ]/g,"[ -'ʾ]"))).map((l) => ([<span>{l}</span>,<span className="highlight">{k}</span>])) ;
    else //if (val.match(/↤.*?[^-/_()\[\]: ]+.*?↦/))
    {      
-      val = val.split(/↦/).map((e,i) => { 
+      val = val.split(/↦/)
+      val = val.map((e,_idx) => { 
          //console.log("e",i,e,e.length)
          if(e.length) {
             let f = e.split(/↤/)
             if(f.length > 1) {
                let tail 
-               if(newline && f[1].indexOf("\n\n") !== -1) tail = f[1].split("\n\n").map(i => [<span>{i}</span>,<br/>,<br/>])
+               if(newline && f[1].indexOf("\n\n") !== -1) { 
+                  tail = f[1].split("\n\n")
+                  tail = tail.map((i,idx) => [<span>{i}</span>,<br data-last={_idx >= val.length - 1 && idx === tail.length - 1}/>,<br/>])
+               }
                else tail = [ <span>{f[1]}</span> ]
                return [<span className="highlight">{f[0]}</span>,...tail,<span></span>]
             }
             else {
                let tail 
-               if(newline && f[0].indexOf("\n\n") !== -1) tail = f[0].split("\n\n").map(i => [<span>{i}</span>,<br/>,<br/>])
+               if(newline && f[0].indexOf("\n\n") !== -1) { 
+                  tail = f[0].split("\n\n")
+                  tail = tail.map( (i,idx) => [<span>{i}</span>,<br data-last={_idx >= val.length - 1 && idx === tail.length - 1}/>,<br/>])
+               }
                else tail = [ <span>{f[0]}</span> ]
                return [...tail,<span></span>]
             }
