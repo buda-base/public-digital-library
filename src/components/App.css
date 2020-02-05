@@ -121,6 +121,7 @@ h3.withdrawn svg:first-child { margin-left:0; }
 h3.withdrawn ~ * { opacity:0.45;}
 
 
+.resource > h2,
 a.result .contenu ul > div:last-child h3 > span:first-child { word-break: break-word; overflow-wrap: break-word; }
 
 a.result .contenu ul > div:last-child h3 {
@@ -267,6 +268,8 @@ div[role="tooltip"] > div { font-weight:bold;font-size:16px; }
 
 .etext-match .uri-link { font-weight:700; }
 
+#matches span:empty + br,
+#matches span:empty + br + br,
 #matches br[data-last=true], 
 #matches br[data-last=true] ~ br { display:none; }
 

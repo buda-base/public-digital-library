@@ -2563,7 +2563,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                            </div>
                         }><span className="lang">&nbsp;{lang}</span></Tooltip>:null]}{expand?<span class="etext-match">&nbsp;(
                            <span class="uri-link" onClick={(e) => { 
-                              if(!this.state.collapse[prettId+"@"+startC]) this.props.onGetContext(prettId,startC,endC) ; 
+                              if(!this.state.collapse[prettId+"@"+startC] && !m.context) this.props.onGetContext(prettId,startC,endC) ; 
                               toggleExpand(e,prettId+"@"+startC); } 
                            }>{expand!==true?"Expand":"Hide"} Context</span>
                            <span> or </span>
