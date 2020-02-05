@@ -448,13 +448,17 @@ export function* watchChoosingHost() {
 }
 
 
-async function getContext(iri,start,end,nb:integer = 1000) {
+async function getContext(iri,start,end,nb:integer = 1000) {   
 
    let data = await getChunks(iri, start - nb, end - start + nb * 2, true)
 
-   console.log("ctx",data)
+   //console.log("ctx",data)
 
-   // TODO add context in corresponding chunk
+   let state = store.getState()
+
+   store.dispatch(dataActions.gotContext(state.data.keyword+"@"+state.data.language,iri,start,end,data))
+
+   store.dispatch(uiActions.loading(null, false));
 
 }
 
@@ -462,7 +466,10 @@ export function* watchGetContext() {
 
    yield takeLatest(
       dataActions.TYPES.getContext,
-      (action) => getContext(action.payload,action.meta.start,action.meta.end)
+      (action) => { 
+         store.dispatch(uiActions.loading(null, true));
+         getContext(action.payload,action.meta.start,action.meta.end)
+      }
    );
 }
 
@@ -481,7 +488,7 @@ async function getChunks(iri,next,nb = 10000,useContext = false) {
 
    try {     
 
-      let data = await api.loadEtextChunks(iri,next,useContext?1000:10000,useContext);
+      let data = await api.loadEtextChunks(iri,next,nb,useContext);
 
       data = _.sortBy(data["@graph"],'sliceStartChar')
       .filter(e => e.chunkContents)

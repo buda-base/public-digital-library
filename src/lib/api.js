@@ -330,7 +330,7 @@ export default class API {
 
    }
 
-   async loadEtextChunks(IRI:string,next:number=0,nb:number=10000,useContext:boolean=true): Promise<string>
+   async loadEtextChunks(IRI:string,next:number=0,nb:number=10000,useContext:boolean=false): Promise<string>
    {
       //let resource =  JSON.parse(await this.getURLContents(this._etextPath(IRI),false));
 
@@ -338,7 +338,8 @@ export default class API {
 
       if(next < 0) next = (-next) - nb
 
-      //console.log("etext",resource)
+      console.log("etext",IRI,next,nb)
+
       try {
          let config = store.getState().data.config.ldspdi
          let url = config.endpoints[config.index]+"/query/graph" ;

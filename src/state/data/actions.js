@@ -266,6 +266,16 @@ export const getContext = (iri: string,start:integer,end:integer): Action => {
     }
 }
 
+TYPES.gotContext = 'GOT_CONTEXT';
+export const gotContext = (search:string, iri: string,start:integer,end:integer,data:{}): Action => {
+
+    return {
+        type: TYPES.gotContext,
+        payload: search,
+        meta: { iri, start, end, data }
+    }
+}
+
 TYPES.getChunks = 'GET_CHUNKS';
 export const getChunks = (iri: string,next:number=0): Action => {
 

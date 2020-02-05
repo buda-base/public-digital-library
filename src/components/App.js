@@ -1950,8 +1950,12 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                if(!val) val = labels["@value"]
 
                let startChar = labels.startChar, endChar = labels.endChar
+               
                let expand = labels.expand
                if(expand && expand.value) expand = getLangLabel(this,"",[ expand ])
+               let context = labels.context
+               if(context && context.value) context = getLangLabel(this,"",[ context ])
+
                //console.log("expand",expand)
 
                let info = ""
@@ -1976,7 +1980,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                */
                
                ret.push(<div>{this.makeResult(iri /*i[0]["@id"]*/,cpt,null,"@"+startChar+"~"+endChar,"",null,null,null,
-                  [{lang,value:val,type:tmp+"textMatch",expand,startChar,endChar} ], //...i.filter(e => [bdo+"sliceStartChar",tmp+"matchScore"].includes(e.type) )],
+                  [{lang,value:val,type:tmp+"textMatch",expand,context,startChar,endChar} ], //...i.filter(e => [bdo+"sliceStartChar",tmp+"matchScore"].includes(e.type) )],
                   null,[],null,true)}</div>)
 
                cpt++
@@ -2359,7 +2363,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   //console.log("m",m,allProps)
 
                   { 
-                     let expand
+                     let expand,context
                      let uri,from
                      if(prop) lastP = prop 
                      prop = this.fullname(m.type.replace(/.*altLabelMatch/,skos+"altLabel"))
@@ -2383,12 +2387,34 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      else {
                         //val = highlight(this.pretty(m.value),k)
                         let mLit = getLangLabel(this,"",[m])
+
+                        // TODO use .context instead of .expand 
+
+                        /*
+                        if(this.state.collapse[prettId+"@"+startC]) { 
+                           if(m.context && m.context.value) expand = m.context
+                           else if(expand && expand.value) expand = m.expand
+                           
+                           if(expand) expand = getLangLabel(this,"",[{...m, "value":expand.value}])
+                        }
+                        else expand = true
+                        */
+
                         expand = m.expand
                         if(expand && expand.value) {
                            if(!this.state.collapse[prettId+"@"+startC]) expand = getLangLabel(this,"",[{...m, "value":expand.value}])
                            else expand = true
                         }
-                        val = highlight(mLit["value"],facet,expand)
+
+                        context = m.context
+                        if(context && context.value) {
+                           if(this.state.collapse[prettId+"@"+startC]) context = getLangLabel(this,"",[{...m, "value":context.value}])
+                           else context = false
+                        }
+                        else context = false
+                        
+
+                        val = highlight(mLit["value"], facet, context?context:expand, context)
                         //val =  mLit["value"]
                         lang = mLit["lang"]
                         if(!lang) lang = mLit["xml:lang"]
@@ -2515,10 +2541,10 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                         }                        
                      }
 
-                     //console.log("prop",prop,val,m.value)
+                     //console.log("prop",prop,val,m.value,uri)
 
                      let toggleExpand = (e,id) => {
-                        console.log("toggle",id)
+                        //console.log("toggle",id)
                         this.setState({...this.state,repage:true,collapse:{...this.state.collapse, [id]:!this.state.collapse[id]}})
                      }
 
@@ -2528,8 +2554,13 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                            <div style={{margin:"10px"}}>
                               <Translate value={languages[lang]?languages[lang].replace(/search/,"tip"):lang}/>
                            </div>
-                        }><span className="lang">&nbsp;{lang}</span></Tooltip>:null]}{expand?<span class="etext-match">&nbsp;(<span class="uri-link" onClick={
-                           (e) => toggleExpand(e,prettId+"@"+startC)}>{expand!==true?"Expand":"Shrink"}</span> or <span class="uri-link" onClick={(e) => this.props.onGetContext(prettId,startC,endC)}>Preview Context</span>)</span>:null}</span>
+                        }><span className="lang">&nbsp;{lang}</span></Tooltip>:null]}{expand?<span class="etext-match">&nbsp;(
+                           <span class="uri-link" onClick={(e) => { 
+                              if(!this.state.collapse[prettId+"@"+startC]) this.props.onGetContext(prettId,startC,endC) ; 
+                              toggleExpand(e,prettId+"@"+startC); } 
+                           }>{expand!==true?"Expand":"Hide"} Context</span>
+                           <span> or </span>
+                           <Link to={"/show/"+prettId+bestM} class="uri-link">Open Etext</Link>)</span>:null}</span>
                         }
                         {isArray && <div class="multi">
                            {val.map((e)=> {

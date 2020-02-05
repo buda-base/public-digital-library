@@ -894,6 +894,7 @@ export const foundResults = (state: DataState, action: actions.FoundResultsActio
 }
 reducers[actions.TYPES.foundResults] = foundResults;
 
+
 export const foundDatatypes = (state: DataState, action: actions.FoundResultsAction) => {
 
    let DT = state.datatypes;
@@ -1016,6 +1017,39 @@ export const pdfVolumes = (state: DataState, action: Action) => {
    }
 }
 reducers[actions.TYPES.pdfVolumes] = pdfVolumes;
+
+
+export const gotContext = (state: DataState, action: Action) => {
+
+   let time = Date.now()
+
+   let results = { ...state.searches["Etext"][action.payload] }, etexts
+   if(results.results && results.results.bindings && (etexts = results.results.bindings.etexts) )
+   {
+      let iri = fullUri(action.meta.iri)
+      results.results.bindings.etexts = Object.keys(etexts).reduce( (acc,k) => ({...acc, [k]:etexts[k].map(e => {
+         if(k !== iri || e.startChar != action.meta.start || e.endChar != action.meta.end ) return e
+         else return { ...e, context: { ...action.meta.data.reduce( (all,c) => ({...all,...c,value:all.value+c.value}),{value:""}) } }
+      } ) } ), {} ) 
+
+      let searches = {
+            ...state.searches,
+            ["Etext"] : {
+               ...state.searches["Etext"],
+               [action.payload]: { ...results, time }
+            }
+      }
+
+      console.log("searches",time,searches,results)
+
+      return {
+         ...state,
+         searches
+      }
+   }
+   return { ...state }
+}
+reducers[actions.TYPES.gotContext] = gotContext;
 
 
 export const foundFacetInfo = (state: DataState, action: actions.FoundResultsAction) => {
