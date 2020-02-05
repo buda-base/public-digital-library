@@ -68,6 +68,43 @@
 
 .mirador-container .mirador-viewer ul.scroll-listing-thumbs li img[data=''] { display:none; }
 
+
+
+
+/*  TODO move to mirador build when 100% done */
+
+.mirador-container .bottomPanel {
+    height: 100%;
+    width: 200px;
+}
+.mirador-container .panel-thumbnail-view {
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+
+.mirador-container .panel-thumbnail-view ul.panel-listing-thumbs {
+    white-space: normal;
+}
+
+.mirador-container .panel-thumbnail-view ul.panel-listing-thumbs li {
+    width: 100%;
+}
+
+.mirador-container .panel-thumbnail-view ul.panel-listing-thumbs li img {
+    width: 100% !important;
+    height: auto;
+
+    min-height:25px !important; 
+}
+
+
+
+
+
+
+
+
+
 @media (max-width:768px) {
     /* .mirador-container .mirador-main-menu.user-buttons li:nth-last-child(-n+5):not(:last-child) { display:none; } */
 
