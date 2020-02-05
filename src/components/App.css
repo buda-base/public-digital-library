@@ -121,7 +121,8 @@ h3.withdrawn svg:first-child { margin-left:0; }
 h3.withdrawn ~ * { opacity:0.45;}
 
 
-a.result .contenu ul > div:last-child h3 > span:first-child { /*word-break: break-all;*/ overflow-wrap: break-word; }
+.resource > h2,
+a.result .contenu ul > div:last-child h3 > span:first-child { word-break: break-word; overflow-wrap: break-word; }
 
 a.result .contenu ul > div:last-child h3 {
    color: rgba(0, 0, 0, 0.87); font-size: 0.875rem; font-weight: 400; 
@@ -266,6 +267,11 @@ div[role="tooltip"] > div { font-weight:bold;font-size:16px; }
 .person #person, .place #place { display:none;}
 
 .etext-match .uri-link { font-weight:700; }
+
+#matches span:empty + br,
+#matches span:empty + br + br,
+#matches br[data-last=true], 
+#matches br[data-last=true] ~ br { display:none; }
 
 .uri-link { cursor:pointer; }
 

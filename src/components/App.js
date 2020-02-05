@@ -217,19 +217,26 @@ export function highlight(val,k,expand,newline)
       val = /*val.replace(/@.* /,"")*/ val.split(new RegExp(k.replace(/[ -'ʾ]/g,"[ -'ʾ]"))).map((l) => ([<span>{l}</span>,<span className="highlight">{k}</span>])) ;
    else //if (val.match(/↤.*?[^-/_()\[\]: ]+.*?↦/))
    {      
-      val = val.split(/↦/).map((e,i) => { 
+      val = val.split(/↦/)
+      val = val.map((e,_idx) => { 
          //console.log("e",i,e,e.length)
          if(e.length) {
             let f = e.split(/↤/)
             if(f.length > 1) {
                let tail 
-               if(newline && f[1].indexOf("\n\n") !== -1) tail = f[1].split("\n\n").map(i => [<span>{i}</span>,<br/>,<br/>])
+               if(newline && f[1].indexOf("\n\n") !== -1) { 
+                  tail = f[1].split("\n\n")
+                  tail = tail.map((i,idx) => [<span>{i}</span>,<br data-last={_idx >= val.length - 1 && idx === tail.length - 1}/>,<br/>])
+               }
                else tail = [ <span>{f[1]}</span> ]
                return [<span className="highlight">{f[0]}</span>,...tail,<span></span>]
             }
             else {
                let tail 
-               if(newline && f[0].indexOf("\n\n") !== -1) tail = f[0].split("\n\n").map(i => [<span>{i}</span>,<br/>,<br/>])
+               if(newline && f[0].indexOf("\n\n") !== -1) { 
+                  tail = f[0].split("\n\n")
+                  tail = tail.map( (i,idx) => [<span>{i}</span>,<br data-last={_idx >= val.length - 1 && idx === tail.length - 1}/>,<br/>])
+               }
                else tail = [ <span>{f[0]}</span> ]
                return [...tail,<span></span>]
             }
@@ -464,6 +471,7 @@ type Props = {
    onToggleLanguagePanel:()=>void,
    onUserProfile:(url:{})=>void,
    onUpdateSortBy:(i:string,t:string)=>void,
+   onGetContext:(iri:string,start:integer,end:integer)=>void,
    onGetDatatypes:(k:string,lg:string)=>void
 
 }
@@ -1949,8 +1957,12 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                if(!val) val = labels["@value"]
 
                let startChar = labels.startChar, endChar = labels.endChar
+               
                let expand = labels.expand
                if(expand && expand.value) expand = getLangLabel(this,"",[ expand ])
+               let context = labels.context
+               if(context && context.value) context = getLangLabel(this,"",[ context ])
+
                //console.log("expand",expand)
 
                let info = ""
@@ -1974,8 +1986,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                </div>)
                */
                
-               ret.push(<div>{this.makeResult(iri /*i[0]["@id"]*/,cpt,null,"?","?",null,null,null,
-                  [{lang,value:val,type:tmp+"textMatch",expand,startChar,endChar} ], //...i.filter(e => [bdo+"sliceStartChar",tmp+"matchScore"].includes(e.type) )],
+               ret.push(<div>{this.makeResult(iri /*i[0]["@id"]*/,cpt,null,"@"+startChar+"~"+endChar,"",null,null,null,
+                  [{lang,value:val,type:tmp+"textMatch",expand,context,startChar,endChar} ], //...i.filter(e => [bdo+"sliceStartChar",tmp+"matchScore"].includes(e.type) )],
                   null,[],null,true)}</div>)
 
                cpt++
@@ -2183,10 +2195,14 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
          let bestM = allProps.filter(e => e.type === tmp+"bestMatch")
          if(!bestM.length) bestM = rmatch.filter(e => e.type === tmp+"textMatch")
-         let startC 
+         let startC, endC 
 
          //console.log("bestM",bestM)
-         if(bestM.length) bestM = "?startChar="+(startC = bestM[0].startChar) /*+"-"+bestM[0].endChar*/ +"&keyword="+this.props.keyword+"@"+this.props.language
+
+         if(bestM.length) { 
+            endC = bestM[0].endChar
+            bestM = "?startChar="+(startC = bestM[0].startChar) /*+"-"+bestM[0].endChar*/ +"&keyword="+this.props.keyword+"@"+this.props.language
+         }
          else bestM = ""
 
 
@@ -2354,7 +2370,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   //console.log("m",m,allProps)
 
                   { 
-                     let expand
+                     let expand,context
                      let uri,from
                      if(prop) lastP = prop 
                      prop = this.fullname(m.type.replace(/.*altLabelMatch/,skos+"altLabel"))
@@ -2378,12 +2394,34 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      else {
                         //val = highlight(this.pretty(m.value),k)
                         let mLit = getLangLabel(this,"",[m])
+
+                        // TODO use .context instead of .expand 
+
+                        /*
+                        if(this.state.collapse[prettId+"@"+startC]) { 
+                           if(m.context && m.context.value) expand = m.context
+                           else if(expand && expand.value) expand = m.expand
+                           
+                           if(expand) expand = getLangLabel(this,"",[{...m, "value":expand.value}])
+                        }
+                        else expand = true
+                        */
+
                         expand = m.expand
                         if(expand && expand.value) {
                            if(!this.state.collapse[prettId+"@"+startC]) expand = getLangLabel(this,"",[{...m, "value":expand.value}])
                            else expand = true
                         }
-                        val = highlight(mLit["value"],facet,expand)
+
+                        context = m.context
+                        if(context && context.value) {
+                           if(this.state.collapse[prettId+"@"+startC]) context = getLangLabel(this,"",[{...m, "value":context.value}])
+                           else context = false
+                        }
+                        else context = false
+                        
+
+                        val = highlight(mLit["value"], facet, context?context:expand, context)
                         //val =  mLit["value"]
                         lang = mLit["lang"]
                         if(!lang) lang = mLit["xml:lang"]
@@ -2510,10 +2548,10 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                         }                        
                      }
 
-                     //console.log("prop",prop,val,m.value)
+                     //console.log("prop",prop,val,m.value,uri)
 
                      let toggleExpand = (e,id) => {
-                        console.log("toggle",id)
+                        //console.log("toggle",id)
                         this.setState({...this.state,repage:true,collapse:{...this.state.collapse, [id]:!this.state.collapse[id]}})
                      }
 
@@ -2523,7 +2561,14 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                            <div style={{margin:"10px"}}>
                               <Translate value={languages[lang]?languages[lang].replace(/search/,"tip"):lang}/>
                            </div>
-                        }><span className="lang">&nbsp;{lang}</span></Tooltip>:null]}{expand?<span class="etext-match">&nbsp;(<span class="uri-link" onClick={(e) => toggleExpand(e,prettId+"@"+startC)}>{expand!==true?"Expand":"Shrink"}</span> or <span class="uri-link">Preview Context</span>)</span>:null}</span>}
+                        }><span className="lang">&nbsp;{lang}</span></Tooltip>:null]}{expand?<span class="etext-match">&nbsp;(
+                           <span class="uri-link" onClick={(e) => { 
+                              if(!this.state.collapse[prettId+"@"+startC] && !m.context) this.props.onGetContext(prettId,startC,endC) ; 
+                              toggleExpand(e,prettId+"@"+startC); } 
+                           }>{expand!==true?"Expand":"Hide"} Context</span>
+                           <span> or </span>
+                           <Link to={"/show/"+prettId+bestM} class="uri-link">Open Etext</Link>)</span>:null}</span>
+                        }
                         {isArray && <div class="multi">
                            {val.map((e)=> {
                               let url = e, label = e, lang = m.lang

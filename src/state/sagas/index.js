@@ -448,17 +448,47 @@ export function* watchChoosingHost() {
 }
 
 
-async function getChunks(iri,next) {
+async function getContext(iri,start,end,nb:integer = 1000) {   
+
+   let data = await getChunks(iri, start - nb, end - start + nb * 2, true)
+
+   //console.log("ctx",data)
+
+   let state = store.getState()
+
+   store.dispatch(dataActions.gotContext(state.data.keyword+"@"+state.data.language,iri,start,end,data))
+
+   store.dispatch(uiActions.loading(null, false));
+
+}
+
+export function* watchGetContext() {
+
+   yield takeLatest(
+      dataActions.TYPES.getContext,
+      (action) => { 
+         store.dispatch(uiActions.loading(null, true));
+         getContext(action.payload,action.meta.start,action.meta.end)
+      }
+   );
+}
+
+
+
+async function getChunks(iri,next,nb = 10000,useContext = false) {
 
    let hilight //= { value:meta.key, lang:meta.lang }
    let state = store.getState()
    if(state.ui.highlight && state.ui.highlight.uri === iri) {
       hilight = { value:state.ui.highlight.key, lang:state.ui.highlight.lang }
    }
+   else if(useContext && state.data.language) {
+      hilight = { value:state.data.keyword.replace(/\"/g,""), lang:state.data.language }
+   }
 
    try {     
 
-      let data = await api.loadEtextChunks(iri,next);
+      let data = await api.loadEtextChunks(iri,next,nb,useContext);
 
       data = _.sortBy(data["@graph"],'sliceStartChar')
       .filter(e => e.chunkContents)
@@ -481,7 +511,8 @@ async function getChunks(iri,next) {
 
       //console.log("dataC",iri,next,data)
 
-      store.dispatch(dataActions.gotNextChunks(iri,data,next < 0))
+      if(!useContext) store.dispatch(dataActions.gotNextChunks(iri,data,next < 0))
+      else return data
       
    }
    catch(e){
@@ -1977,6 +2008,7 @@ export default function* rootSaga() {
       watchGetResetLink(),
       watchUpdateSortBy(),
       watchGetInstances(),
+      watchGetContext(),
       //watchChoosingHost(),
       //watchGetDatatypes(),
       watchGetChunks(),
