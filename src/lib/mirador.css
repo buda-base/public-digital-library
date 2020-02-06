@@ -74,8 +74,9 @@
 /*  TODO move to mirador build when 100% done */
 
 .mirador-container .bottomPanel {
-    height: 100%;
+    height: calc(100% - 80px);
     width: 200px;
+    top:0;
 }
 .mirador-container .panel-thumbnail-view {
     overflow-y: scroll;
@@ -97,10 +98,46 @@
     min-height:25px !important; 
 }
 
+.mirador-container .mirador-osd-context-controls a {
+    float:none ;
+}
 
+.mirador-container .mirador-osd-context-controls a,
+.mirador-container .hud-control,
+.mirador-container .mirador-osd-previous,
+.mirador-container .mirador-osd-next,
+.mirador-container .mirador-manipulation-controls,
+.mirador-container .mirador-osd-context-controls,
+.mirador-container .mirador-pan-zoom-controls,
+.mirador-container .mirador-osd-zoom-in,
+.mirador-container .mirador-osd-zoom-out
+{
+    position:relative; 
+    opacity:1;
+    bottom:auto;
+    right:auto;
+    top:0;
+    left:0;
+    display:inline-block;
+    min-width:0;
+    margin:0;
+    vertical-align:middle;
+    height:auto;
+    width:auto;
+}
 
+.mirador-container .mirador-osd-context-controls > div { display:inline-block; }
 
+.mirador-hud { display:flex; align-items:center;justify-content:center;}
 
+.mirador-container .mirador-osd-context-controls > div > a:first-child { margin-bottom:0; }
+
+.mirador-container .mirador-osd-previous.bottom-panel-open,
+.mirador-container .mirador-osd-next.bottom-panel-open,
+.mirador-container .mirador-pan-zoom-controls.bottom-panel-open 
+{ 
+    transform:none ;
+}
 
 
 
