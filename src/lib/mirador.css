@@ -71,17 +71,77 @@
 
 
 
-/*  TODO move to mirador build when 100% done */
+/* -------------------------------------------------- TODO move to mirador build when 100% done */
+
+.mirador-container .workspace-container {
+    margin:0;
+}
+.mirador-container .layout-slot {
+    width: 100% !important;
+    left: 0 !important;
+    top: 0 !important;
+    height: 100% !important;
+}
+
+/*
+.mirador-container .view-container {
+}
+*/
+.mirador-container .view-container.thumbs-off .bottomPanel {
+    left:-240px;
+}
+
+
+.mirador-container .view-container.thumbs-off .thumbnails-open-close::after {
+    transform:rotate(180deg);
+}
+
+.mirador-container .view-container.thumbs-off .mirador-osd {   
+    width: calc(100% - 25px); 
+}
+
+/*
+.mirador-container .view-container {
+}
+
+.mirador-container .mirador-viewer .image-view {
+}
+*/
+
+.mirador-container .mirador-hud { 
+    display:flex; 
+    align-items:center;
+    justify-content:center;
+}
+
+.mirador-container .mirador-osd {    
+    width: calc(100% - 240px - 25px); 
+    height: calc(100% - 80px); 
+    right:0;
+    top:0;
+    position:absolute;
+    background-color:#1c1c1c;
+    transition:all 400ms ease-in-out;
+}
 
 .mirador-container .bottomPanel {
     height: calc(100% - 80px);
-    width: 200px;
+    width: 240px;
     top:0;
+    overflow:visible;
+    transition:all 400ms ease-in-out;
 }
+
 .mirador-container .panel-thumbnail-view {
+    padding-left:5px;
+    padding-right:10px;
     overflow-y: scroll;
     overflow-x: hidden;
+    position:relative;
+    background-color:#2b3a44;
 }
+
+/* ------------------------------------------------ thumbnails */
 
 .mirador-container .panel-thumbnail-view ul.panel-listing-thumbs {
     white-space: normal;
@@ -97,6 +157,30 @@
 
     min-height:25px !important; 
 }
+
+.mirador-container .thumbnails-open-close {
+    width:25px;
+    background-color:#d73449;
+    height:100%;
+    position:absolute;
+    right:-25px;
+    z-index:1;
+    cursor:pointer;
+}
+.mirador-container .thumbnails-open-close::after {
+    content:' ';
+    position:absolute;
+    top:calc(50% - 4px);
+    left:8px;
+    width: 0; 
+    height: 0; 
+    border-top: 6px solid transparent;
+    border-bottom: 6px solid transparent;    
+    border-right:6px solid white; 
+    transition:all 400ms ease-in-out;
+}
+
+/* ------------------------------------------------ footer */
 
 .mirador-container .mirador-osd-context-controls a {
     float:none ;
@@ -133,7 +217,6 @@
     width: 38px;
 }
 
-.mirador-hud { display:flex; align-items:center;justify-content:center;}
 
 .mirador-container .mirador-hud > * { 
     /*border-left:1px solid rgba(255,255,255,0.51);*/ 
