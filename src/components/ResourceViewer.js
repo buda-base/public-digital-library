@@ -103,6 +103,11 @@ type Props = {
    ontology:{},
    dictionary:{},
    authUser?:{},
+   highlight?:{
+       uri:string,
+       key:lang,
+       lang:string 
+    },
    onInitPdf: (u:string,s:string) => void,
    onRequestPdf: (u:string,s:string) => void,
    onCreatePdf: (s:string,u:string) => void,
@@ -1632,7 +1637,12 @@ class ResourceViewer extends Component<Props,State>
                   let tVal = tLab["value"]
                   if(!tVal) tVal = tLab["@value"]
 
-                  if(tLab.start !== undefined) tmp = [ <span class="startChar"> [ @{tLab.start} ] </span> ]
+
+
+                  if(tLab.start !== undefined) tmp = [ <span class="startChar">
+                     <span>[&nbsp;
+                        <Link to={"/show/"+this.props.IRI+"?startChar="+tLab.start+(this.props.highlight?'&keyword="'+this.props.highlight.key+'"@'+this.props.highlight.lang:"")}>@{tLab.start}</Link>
+                     </span>&nbsp;]</span> ]
                   else tmp = []
                   
                   if(tmp.length) tmp.push(highlight(tVal,null,null,false /*true*/))
@@ -3047,7 +3057,7 @@ class ResourceViewer extends Component<Props,State>
                   })
                }
                <div class="overpage">
-                  <h4 class="page">{!e.value.match(/[\n\r]/) && !e.seq ?[<span class="sliceStart"> [ @{e.start} ] </span>,<br/>]:null}{e.value.split("\n").map(f => {
+                  <h4 class="page">{!e.value.match(/[\n\r]/) && !e.seq ?[<span class="startChar"><span>[&nbsp;<Link to={"/show/"+this.props.IRI+"?startChar="+e.start}>@{e.start}</Link>&nbsp;]</span></span>]:null}{e.value.split("\n").map(f => {
                         let label = getLangLabel(this,"",[{"@language":e.language,"@value":f}]), lang
                         if(label) lang = label["@language"]
                         if(label) label = label["@value"]
