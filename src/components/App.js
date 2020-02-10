@@ -314,7 +314,7 @@ export function getLangLabel(that:{},prop:string="",labels:[],proplang:boolean=f
    }
 };
 
-function getPropLabel(that, i, withSpan = true) {
+function getPropLabel(that, i, withSpan = true, withLang = false) {
    if(!that.props.dictionary) return 
 
    let label = that.props.dictionary[i], labels
@@ -348,7 +348,8 @@ function getPropLabel(that, i, withSpan = true) {
    else label = that.pretty(i)
 
    if(withSpan) return <span {...lang?{lang}:{}} >{label}</span>
-   else return label
+   else if(!withLang) return label
+   else return {value:label,lang}
 }
 
 export function getFacetUrl(filters,dic){
@@ -1963,6 +1964,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                let context = labels.context
                if(context && context.value) context = getLangLabel(this,"",[ context ])
 
+               let inPart = labels.inPart
+
                //console.log("expand",expand)
 
                let info = ""
@@ -1987,7 +1990,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                */
                
                ret.push(<div>{this.makeResult(iri /*i[0]["@id"]*/,cpt,null,"@"+startChar+"~"+endChar,"",null,null,null,
-                  [{lang,value:val,type:tmp+"textMatch",expand,context,startChar,endChar} ], //...i.filter(e => [bdo+"sliceStartChar",tmp+"matchScore"].includes(e.type) )],
+                  [{lang,value:val,type:tmp+"textMatch",expand,context,startChar,endChar,inPart} ], //...i.filter(e => [bdo+"sliceStartChar",tmp+"matchScore"].includes(e.type) )],
                   null,[],null,true)}</div>)
 
                cpt++
@@ -2363,14 +2366,16 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          if(nbChunks[0] && nbChunks[0].value) nbChunks = Number(nbChunks[0].value)
          else nbChunks = "?"
 
-         retList.push( <div id='matches'>
+         retList.push( <div id='matches'>         
+            { this.getResultProp(tmp+"inInstance",allProps) }
+            { this.getResultProp(tmp+"inInstancePart",allProps) }
             {
                rmatch.filter(m => m.type !== tmp+"nameMatch").map((m) => {
 
                   //console.log("m",m,allProps)
 
                   { 
-                     let expand,context
+                     let expand,context,inPart
                      let uri,from
                      if(prop) lastP = prop 
                      prop = this.fullname(m.type.replace(/.*altLabelMatch/,skos+"altLabel"))
@@ -2420,6 +2425,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                         }
                         else context = false
                         
+                        inPart = m.inPart
 
                         val = highlight(mLit["value"], facet, context?context:expand, context)
                         //val =  mLit["value"]
@@ -2554,10 +2560,28 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                         //console.log("toggle",id)
                         this.setState({...this.state,repage:true,collapse:{...this.state.collapse, [id]:!this.state.collapse[id]}})
                      }
+                     
+                     let getUrilink = (uri,val,lang) => ([ <Link className="urilink" to={"/show/"+shortUri(uri)}>{val}</Link>,lang?<Tooltip placement="bottom-end" title={
+                           <div style={{margin:"10px"}}>
+                              <Translate value={languages[lang]?languages[lang].replace(/search/,"tip"):lang}/>
+                           </div>
+                        }><span className="lang">&nbsp;{lang}</span></Tooltip>:null])
+
+                     if(inPart && inPart.length) {
+
+                        console.log("inPart",inPart)
+
+                        inPart = <div class="inPart">{[ <span>[ from part </span>, inPart.map( (p,i) => { 
+                           let label = getPropLabel(this,p,false,true)
+                           let ret = [getUrilink(p,label.value,label.lang)]
+                           if(i > 0) ret = [ " / ", ret ]
+                           return ret 
+                        }), " ]" ]}</div>
+                     }
 
                      return (<div className="match">
                         <span className={"label " +(lastP === prop?"invisible":"")}>{(!from?prop:from)}:&nbsp;</span>
-                        {!isArray && <span>{[!uri?val:<Link className="urilink" to={uri}>{val}</Link>,lang?<Tooltip placement="bottom-end" title={
+                        {!isArray && <span>{expand!==true?null:inPart}{[!uri?val:<Link className="urilink" to={uri}>{val}</Link>,lang?<Tooltip placement="bottom-end" title={
                            <div style={{margin:"10px"}}>
                               <Translate value={languages[lang]?languages[lang].replace(/search/,"tip"):lang}/>
                            </div>
@@ -2567,7 +2591,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                               toggleExpand(e,prettId+"@"+startC); } 
                            }>{expand!==true?"Expand":"Hide"} Context</span>
                            <span> or </span>
-                           <Link to={"/show/"+prettId+bestM} class="uri-link">Open Etext</Link>)</span>:null}</span>
+                           <Link to={"/show/"+prettId+bestM} class="uri-link">Open Etext</Link>
+                           )</span>:null}</span>
                         }
                         {isArray && <div class="multi">
                            {val.map((e)=> {
@@ -2601,6 +2626,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             { (nbChunks > 1) && this.getResultProp(tmp+"otherMatches ("+(nbChunks - 1)+")",allProps,false,false,[bdo+"eTextHasChunk"],null,[bdo+"chunkContents"],null,[tmp+"matchScore",bdo+"sliceStartChar"],id) }
             
             { this.getResultProp(tmp+"forWork",allProps) }            
+            { this.getResultProp(bdo+"eTextIsVolume",allProps,false,false) }
 
             { this.getResultProp(tmp+"author",allProps) }
             { this.getResultProp(bdo+"workIsAbout",allProps,false) }
