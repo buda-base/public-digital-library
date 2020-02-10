@@ -94,9 +94,12 @@ const mapStateToProps = (state,ownProps) => {
    let locale = state.i18n.locale
    let langPreset = state.ui.langPreset
 
+   let highlight = state.ui.highlight
+   if(highlight && highlight.uri !== ownProps.IRI) highlight = null 
+
    let props = { logged,config,resources, ontology, dictionary, keyword, language, datatype, assocResources, prefLang, failures,
       imageAsset,firstImage,canvasID,collecManif,manifests,manifestError,pdfVolumes,createPdf,pdfUrl,
-      annoCollec,rightPanel,locale,langPreset,imgData, nextChunk, nextPage, resourceManifest, imageVolumeManifests, userEditPolicies }
+      annoCollec,rightPanel,locale,langPreset,imgData, nextChunk, nextPage, resourceManifest, imageVolumeManifests, userEditPolicies, highlight }
 
    console.log("mS2p",state,props)
 

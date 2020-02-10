@@ -204,6 +204,9 @@ h4 { margin-top:0px;margin-bottom:0px;font-size:24px; }
 .resource .data .chunk ~ h4, .etextPage h4.page { display:inline; }
 .resource .data .chunk ~ h4 [lang=bo], .etextPage h4.page [lang=bo] { font-size:24px;line-height:40px; /*margin-bottom:10px;*/  }
 
+.resource .data .chunk ~ h4 .startChar,
+.resource .data h4.page .startChar { display:block; }
+
 /* .resource .data .chunk ~ h4 [lang=bo-x-ewts], .etextPage h4.page [lang=bo-x-ewts] { text-align:justify; display:inline-block; } */
 
 .resource .data h3.chunk { margin-bottom:15px;}

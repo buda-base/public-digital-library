@@ -22,7 +22,11 @@ export type UIState = {
    profileFromUrl?:{},
    sortBy?:string,
    topicParents?:{},
-   highlight?:{}
+   highlight?:{
+       uri:string,
+       key:lang,
+       lang:string 
+    }
 }
 
 const DEFAULT_STATE: UIState = {
