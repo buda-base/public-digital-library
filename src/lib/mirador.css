@@ -194,10 +194,13 @@
 .mirador-container .mirador-osd-context-controls,
 .mirador-container .mirador-pan-zoom-controls,
 .mirador-container .mirador-osd-zoom-in,
-.mirador-container .mirador-osd-zoom-out
+.mirador-container .mirador-osd-zoom-out,
+.mirador-container .mirador-viewer .mirador-hud a.mirador-osd-fullscreen,
+.mirador-container .mirador-viewer .mirador-hud a.mirador-icon-metadata-view
 {
     position:relative; 
     opacity:1;
+    color:white;
     bottom:auto;
     right:auto;
     top:0;
@@ -208,6 +211,8 @@
     vertical-align:middle;
     height:auto;
     width:auto;
+    padding:0;
+    margin-right:0;
 }
 
 
@@ -223,8 +228,10 @@
     height:40px; 
     display:flex; 
     align-items: center;
-    padding:0 10px; 
+    padding:0 10px !important; 
 }
+
+.mirador-container .mirador-osd-context-controls,
 .mirador-container .mirador-osd-zoom-out { 
     border-left:1px solid rgba(255,255,255,0.51); 
     border-right:1px solid rgba(255,255,255,0.51);
