@@ -73,6 +73,13 @@
 
 /* -------------------------------------------------- TODO move to mirador build when 100% done */
 
+.mirador-container .mirador-main-menu-bar { display:none; }
+.mirador-container .mirador-viewer { top:0; }
+.mirador-container .content-container { margin-top:60px;}
+.mirador-container .manifest-info { height:60px; display: flex; align-items: center; background: white; justify-content: flex-end;}
+.mirador-container .window-manifest-navigation { display:none;}
+
+
 .mirador-container .workspace-container {
     margin:0;
 }
@@ -116,7 +123,7 @@
 
 .mirador-container .mirador-osd {    
     width: calc(100% - 240px - 25px); 
-    height: calc(100% - 80px); 
+    height: calc(100% - 60px); 
     right:0;
     top:0;
     position:absolute;
@@ -125,7 +132,7 @@
 }
 
 .mirador-container .bottomPanel {
-    height: calc(100% - 80px);
+    height: calc(100% - 60px);
     width: 240px;
     top:0;
     overflow:visible;
@@ -179,127 +186,6 @@
     border-right:6px solid white; 
     transition:all 400ms ease-in-out;
 }
-
-/* ------------------------------------------------ footer */
-
-.mirador-container .mirador-osd-context-controls a {
-    float:none ;
-}
-
-.mirador-container .mirador-osd-context-controls a,
-.mirador-container .hud-control,
-.mirador-container .mirador-osd-previous,
-.mirador-container .mirador-osd-next,
-.mirador-container .mirador-manipulation-controls,
-.mirador-container .mirador-osd-context-controls,
-.mirador-container .mirador-pan-zoom-controls,
-.mirador-container .mirador-osd-zoom-in,
-.mirador-container .mirador-osd-zoom-out,
-.mirador-container .mirador-viewer .mirador-hud a.mirador-osd-fullscreen,
-.mirador-container .mirador-viewer .mirador-hud a.mirador-icon-metadata-view
-{
-    position:relative; 
-    opacity:1;
-    color:white;
-    bottom:auto;
-    right:auto;
-    top:0;
-    left:0;
-    display:inline-block;
-    min-width:0;
-    margin:0;
-    vertical-align:middle;
-    height:auto;
-    width:auto;
-    padding:0;
-    margin-right:0;
-}
-
-
-.mirador-container .mirador-manipulation-controls > div {
-    position: absolute;
-    bottom: 34px;
-    width: 38px;
-}
-
-
-.mirador-container .mirador-hud > * { 
-    /*border-left:1px solid rgba(255,255,255,0.51);*/ 
-    height:40px; 
-    display:flex; 
-    align-items: center;
-    padding:0 10px !important; 
-}
-
-.mirador-container .mirador-osd-context-controls,
-.mirador-container .mirador-osd-zoom-out { 
-    border-left:1px solid rgba(255,255,255,0.51); 
-    border-right:1px solid rgba(255,255,255,0.51);
-    /* padding-left:10px;
-    margin-left:10px; 
-    height:100%; */
-}
-
-.mirador-container .mirador-osd-zoom-in { 
-    margin-left:10px;
-}
-
-.mirador-container .mirador-osd-previous,
-.mirador-container .mirador-osd-next
-{
-    border-radius: 20px;
-    border: 1.5px solid white;  /* rgba(255,255,255,0.51);*/
-    padding:0;
-    width:40px;
-    box-sizing: border-box;
-    justify-content:center;
-    margin:0 10px;
-}
-
-.mirador-container .mirador-osd-previous.first,
-.mirador-container .mirador-osd-next.last {
-    opacity: 0.51;
-    pointer-events: none;
-}
-
-.mirador-container .mirador-osd-context-controls > div { display:inline-block; }
-
-.mirador-container .mirador-osd-context-controls > div > a:first-child { margin-bottom:0; }
-
-.mirador-container .mirador-osd-previous.bottom-panel-open,
-.mirador-container .mirador-osd-next.bottom-panel-open,
-.mirador-container .mirador-pan-zoom-controls.bottom-panel-open 
-{ 
-    transform:none ;
-}
-
-/*
-.mirador-container .hud-control .ui-slider, .mirador-container .ui-slider-vertical {
-    margin-left: 48px;
-    position: absolute;
-    top: -38px;
-}
-*/
-.mirador-container .mirador-osd-context-controls .hud-control.mirador-osd-rotate-right {
-    margin-bottom:5px;
-}
-.mirador-container .hud-control .ui-slider, .mirador-container .ui-slider-horizontal {
-    margin-left: 34px;
-    position: absolute;
-    top: 10px; 
-    width:100px;
-    height:5px;
-}
-.mirador-container .hud-control .ui-slider-handle .percent {
-    left: 0;
-    top: 100%;
-}
-.mirador-container .ui-slider .ui-slider-handle {
-    width: 0.7em;
-    height: 0.7em;
-    border-radius: 0.35em;
-}
-
 
 
 @media (max-width:768px) {
