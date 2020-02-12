@@ -55,7 +55,7 @@
 .mirador-container .remaining { display:none; }
 .mirador-container .preview-images a:not(:first-child) { display:none; }
 
-.mirador-container .panel-thumbnail-view ul.panel-listing-thumbs li img { max-height:80px !important; width:auto !important;min-height:0 !important;}
+/* .mirador-container .panel-thumbnail-view ul.panel-listing-thumbs li img { max-height:80px !important; width:auto !important; min-height:0 !important;} */
 
 
 /* #viewer.demo .user-buttons.mirador-main-menu li:last-child { display:none; } */
@@ -123,7 +123,7 @@
 
 .mirador-container .mirador-osd {    
     width: calc(100% - 240px - 25px); 
-    height: calc(100% - 60px); 
+    height: calc(100% - 80px); 
     right:0;
     top:0;
     position:absolute;
@@ -132,7 +132,7 @@
 }
 
 .mirador-container .bottomPanel {
-    height: calc(100% - 60px);
+    height: calc(100% - 80px);
     width: 240px;
     top:0;
     overflow:visible;
@@ -140,15 +140,44 @@
 }
 
 .mirador-container .panel-thumbnail-view {
-    padding-left:5px;
+    box-sizing: border-box;
+    padding-top:15px;
+    padding-left:30px;
     padding-right:10px;
     overflow-y: scroll;
     overflow-x: hidden;
     position:relative;
     background-color:#2b3a44;
+    width:auto;
 }
 
 /* ------------------------------------------------ thumbnails */
+.mirador-container .panel-thumbnail-view .ps__rail-y{
+    /* TODO not full height scrollbar
+    top:30px !important;
+    height:calc(100% - 60px) !important;
+    */
+    left: 8px;
+    right: auto !important;
+    background:transparent;    
+}
+.mirador-container .panel-thumbnail-view .ps__rail-y::after {
+    content:' ';
+    width:2px;
+    height:100%;
+    background-color:rgba(255,255,255,0.5);
+    top:0;
+    left:4px;
+    display:block;
+    position:absolute;
+}
+.mirador-container .panel-thumbnail-view .ps__rail-y .ps__thumb-y {
+    width:16px;
+    border-radius:8px;
+    background-color: #d73449;
+    z-index:1;
+    opacity:1 !important; 
+}
 
 .mirador-container .panel-thumbnail-view ul.panel-listing-thumbs {
     white-space: normal;
@@ -159,10 +188,10 @@
 }
 
 .mirador-container .panel-thumbnail-view ul.panel-listing-thumbs li img {
-    width: 100% !important;
+    /* width: 100% !important; */
     height: auto;
 
-    min-height:25px !important; 
+    min-height:25px; /*!important*/
 }
 
 .mirador-container .thumbnails-open-close {
@@ -185,6 +214,26 @@
     border-bottom: 6px solid transparent;    
     border-right:6px solid white; 
     transition:all 400ms ease-in-out;
+}
+
+
+/* TODO does not work from mirador css */
+
+.mirador-container .hud-control .ui-slider, .mirador-container .ui-slider-horizontal {
+  margin-left: 34px;
+  position: absolute;
+  top: 0px; 
+  width:100px;
+  height:5px;
+}
+.mirador-container .hud-control .ui-slider-handle .percent {
+  left: 0;
+  top: 100%;
+}
+.mirador-container .ui-slider .ui-slider-handle {
+  width: 0.7em;
+  height: 0.7em;
+  border-radius: 0.35em;
 }
 
 
