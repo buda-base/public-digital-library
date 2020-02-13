@@ -94,10 +94,6 @@
 .mirador-container .view-container {
 }
 */
-.mirador-container .view-container.thumbs-off .bottomPanel {
-    left:-240px;
-}
-
 
 .mirador-container .view-container.thumbs-off .thumbnails-open-close::after {
     transform:rotate(180deg);
@@ -121,8 +117,12 @@
     justify-content:center;
 }
 
+.mirador-container .view-container.thumbs-off .bottomPanel {
+    left:-255px;
+}
+
 .mirador-container .mirador-osd {    
-    width: calc(100% - 240px - 25px); 
+    width: calc(100% - 255px - 25px); 
     height: calc(100% - 80px); 
     right:0;
     top:0;
@@ -133,7 +133,7 @@
 
 .mirador-container .bottomPanel {
     height: calc(100% - 80px);
-    width: 240px;
+    width: 255px;
     top:0;
     overflow:visible;
     transition:all 400ms ease-in-out;
@@ -142,7 +142,7 @@
 .mirador-container .panel-thumbnail-view {
     box-sizing: border-box;
     padding-top:15px;
-    padding-left:30px;
+    padding-left:40px;
     padding-right:10px;
     overflow-y: scroll;
     overflow-x: hidden;
@@ -152,15 +152,23 @@
 }
 
 /* ------------------------------------------------ thumbnails */
+
+/* /!\ custom scrollbar /!\ */
+.ps--active-x:hover > .ps__rail-x, .ps--active-y:hover > .ps__rail-y,
+.ps--scrolling-x > .ps__rail-x, .ps--scrolling-y > .ps__rail-y { 
+    opacity:1 !important;
+}
+
 .mirador-container .panel-thumbnail-view .ps__rail-y{
     /* TODO not full height scrollbar
     top:30px !important;
     height:calc(100% - 60px) !important;
     */
-    left: 8px;
+    left: 20px;
     right: auto !important;
     background:transparent;    
 }
+
 .mirador-container .panel-thumbnail-view .ps__rail-y::after {
     content:' ';
     width:2px;
@@ -176,7 +184,17 @@
     border-radius:8px;
     background-color: #d73449;
     z-index:1;
-    opacity:1 !important; 
+    /* opacity:1 !important;  */
+}
+.mirador-container .panel-thumbnail-view .ps__rail-y .ps__thumb-y::before {
+    content:' ';
+    width:2px;
+    height: 100vh;
+    background-color: #d73449;
+    bottom: 100%;
+    left: 7px;
+    display:block;
+    position:absolute;
 }
 
 .mirador-container .panel-thumbnail-view ul.panel-listing-thumbs {
