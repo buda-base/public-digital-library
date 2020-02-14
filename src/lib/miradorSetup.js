@@ -291,9 +291,9 @@ async function hasEtextPage(manifest) {
 const NB_PAGES = 10 ; 
 let etextPages = {};
 
-export async function miradorConfig(data, manifest, canvasID, useCredentials, langList, cornerButton)
+export async function miradorConfig(data, manifest, canvasID, useCredentials, langList, cornerButton, resID)
 {
-   console.log("cB",cornerButton)
+   console.log("cB",cornerButton,data,resID)
 
    if(cornerButton === undefined) cornerButton = 
    { 
@@ -343,8 +343,10 @@ export async function miradorConfig(data, manifest, canvasID, useCredentials, la
       id:"viewer",
       data: [],
       showAddFromURLBox:false,
+      resID,
 
       manifestsPanel: {
+         resID,
          name: "Collection Tree Manifests Panel",
          module: "CollectionTreeManifestsPanel",
          options: {
@@ -353,10 +355,12 @@ export async function miradorConfig(data, manifest, canvasID, useCredentials, la
       },
 
       windowSettings: {
+         resID,
          ajaxWithCredentials:useCredentials,
          sidePanelVisible: false,
          labelToString,         
          getEtextPage: await hasEtextPage(manifest),
+         
          userButtons: [
                { 
                   "custom":"<span>Show Etext <input style='vertical-align:text-bottom;cursor:pointer;' type='checkbox' id='showEtext' "+(window.MiradorUseEtext?"checked":"")+"/></span>",
@@ -369,6 +373,7 @@ export async function miradorConfig(data, manifest, canvasID, useCredentials, la
                   "attributes" : { style:"width:auto;" }             
                }
             ]
+            
       },
 
       mainMenuSettings : {
@@ -382,12 +387,15 @@ export async function miradorConfig(data, manifest, canvasID, useCredentials, la
              "iconClass": "fa fa-search",
              "attributes" : { "title":"Adjust zoom level" }
           },
+         /*
            { "label": "Page View",
              "iconClass": "fa fa-file-o",
              "attributes" : { style:"", onClick : "eval('window.setMiradorZoom()')",  "title":"Page view" }
           },
             cornerButton
+          */
          ]
+         
       }
    }
    if(!manifest) {
@@ -396,6 +404,7 @@ export async function miradorConfig(data, manifest, canvasID, useCredentials, la
       config["preserveManifestOrder"] = true
       config["windowObjects"] = []
 
+      
       config["mainMenuSettings"]["userButtons"] =
       [
          {
@@ -408,6 +417,7 @@ export async function miradorConfig(data, manifest, canvasID, useCredentials, la
          },
          ...config["mainMenuSettings"]["userButtons"]
       ]
+      
    }
    else {
       config["windowObjects"] = [ {
@@ -889,7 +899,7 @@ export async function miradorInitView(work,lang,callerURI) {
             onClick : "javascript:eval('if(window.Mirador.fullscreenElement()) { window.Mirador.exitFullscreen(); $(\".user-buttons .fs\").addClass(\"fs-expand\").removeClass(\"fa-compress\"); } else { window.Mirador.enterFullscreen($(\".mirador-container\")[0]) ; $(\".user-buttons .fs\").removeClass(\"fs-expand\").addClass(\"fa-compress\"); }')" }
       }
 
-   let config = await miradorConfig(data,manif,null,null,lang,corner);
+   let config = await miradorConfig(data,manif,null,null,lang,corner,work);
 
    let initTimer = setInterval( ((cfg) => () => {
       console.log("init?",cfg,window.Mirador)

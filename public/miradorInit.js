@@ -12,7 +12,7 @@ async function init() {
    ]
    let lg = urlParams.get('lang') || "bo,zh-hans";
    lg = lg.split(",")
-   let config = miradorConfig(data,null,null,null,lg);
+   let config = miradorConfig(data,null,null,null,lg,null,work);
    window.Mirador( config )
    miradorSetUI();
 }

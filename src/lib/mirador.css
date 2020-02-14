@@ -89,7 +89,20 @@
 .manifest-info .nav-bar-top div #bdrc::before { content:' ';display:inline-block;width:77px; height:55px; background:url(/icons-2a.png) 0 0; margin-right:16px; vertical-align: middle; }
 .manifest-info .nav-bar-top div #buda { content:' ';display:inline-block;width:41px; height:52px; background:url(/icons-2a.png) -187px -1px; margin-left:32px; }
 
-.manifest-info .nav-bar-top #breadcrumbs { display:none; }
+/* .manifest-info .nav-bar-top #breadcrumbs :not(#return) { display:none; } */
+
+.manifest-info .nav-bar-top #breadcrumbs { color:#152631;  font-size:14px; font-weight:700;}
+.manifest-info .nav-bar-top #breadcrumbs #return { text-transform: uppercase; }
+.manifest-info .nav-bar-top #breadcrumbs #return::before { content:'<'; padding-right:10px;  }
+
+.manifest-info .nav-bar-top #breadcrumbs a:hover, 
+.manifest-info .nav-bar-top #breadcrumbs a.on
+{ color:#d73449; }
+
+.manifest-info .nav-bar-top #breadcrumbs a:not(#return)::before {
+    content:"|";
+    padding:0 10px;
+}
 
 .mirador-container .workspace-container {
     margin:0;
