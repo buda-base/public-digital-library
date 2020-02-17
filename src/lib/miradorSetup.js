@@ -377,6 +377,7 @@ export async function miradorConfig(data, manifest, canvasID, useCredentials, la
       },
 
       mainMenuSettings : {
+         resID,
          "buttons":[{"layout":"false"}],
          "userButtons": [
            { "label": "Reading View",
@@ -829,7 +830,7 @@ export async function miradorInitView(work,lang,callerURI) {
             let assocData = await(await fetch(ldspdi+"/query/table/IIIFView-workInfo?R_RES="+work+"&format=json")).json()
             if(assocData && assocData.results && assocData.results.bindings)
               assocData = assocData.results.bindings
-            console.log(assocData)
+            console.log("aD",assocData)
 
             let hasParts = assocData.filter(e => e.hasParts)[0]
             if(hasParts && hasParts["hasParts"] && hasParts["hasParts"].value) hasParts = hasParts["hasParts"].value === "true"

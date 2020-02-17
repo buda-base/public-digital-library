@@ -75,34 +75,18 @@
 
 /* -------------------------------------------------- TODO move to mirador build when 100% done */
 
-.mirador-container .mirador-main-menu-bar { display:none; }
-.mirador-container .mirador-viewer { top:0; }
-.mirador-container .content-container { margin-top:80px;}
+.mirador-container .mirador-main-menu-bar > :not(.nav-bar-top) { display:none; }
+.mirador-container .mirador-viewer { top:80px; }
+/* .mirador-container .content-container { margin-top:80px;} */
 .mirador-container .window-manifest-navigation { display:none;}
-.mirador-container .manifest-info { height:80px; display: flex; align-items: center; background: white; justify-content: center;}
+/* .mirador-container .manifest-info { height:80px; display: flex; align-items: center; background: white; justify-content: center;} */
 
-.manifest-info .nav-bar-top { height:80px; width:1225px; display:flex;align-items: center; justify-content: space-between; font-family:"Noto Sans";}
-
-.manifest-info .nav-bar-top div { display:flex; align-items:center; }
-.manifest-info .nav-bar-top div > a, { display:inline-block;  }
-.manifest-info .nav-bar-top div #bdrc { font-size: 24px; font-weight:500; text-shadow: 0 1px 0 #111312; color:#111312;}
-.manifest-info .nav-bar-top div #bdrc::before { content:' ';display:inline-block;width:77px; height:55px; background:url(/icons-2a.png) 0 0; margin-right:16px; vertical-align: middle; }
-.manifest-info .nav-bar-top div #buda { content:' ';display:inline-block;width:41px; height:52px; background:url(/icons-2a.png) -187px -1px; margin-left:32px; }
-
-/* .manifest-info .nav-bar-top #breadcrumbs :not(#return) { display:none; } */
-
-.manifest-info .nav-bar-top #breadcrumbs { color:#152631;  font-size:14px; font-weight:700;}
-.manifest-info .nav-bar-top #breadcrumbs #return { text-transform: uppercase; }
-.manifest-info .nav-bar-top #breadcrumbs #return::before { content:'<'; padding-right:10px;  }
-
-.manifest-info .nav-bar-top #breadcrumbs a:hover, 
-.manifest-info .nav-bar-top #breadcrumbs a.on
-{ color:#d73449; }
-
+/*
 .manifest-info .nav-bar-top #breadcrumbs a:not(#return)::before {
     content:"|";
     padding:0 10px;
 }
+*/
 
 .mirador-container .workspace-container {
     margin:0;
