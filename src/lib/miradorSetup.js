@@ -620,7 +620,10 @@ function miradorAddScroll(toImage)
 
             //if(jQ("#showEtext").length) jQ("#showEtext").parent().parent().show()
 
-            jQ(".mirador-viewer li.scroll-option").click();
+
+            // /!\ WIP 
+            //jQ(".mirador-viewer li.scroll-option").click();
+
 
             let sT = jQ(".scroll-view").scrollTop()
             if(!sT) sT = 0
@@ -637,7 +640,7 @@ function miradorAddScroll(toImage)
 
             //console.log("y",sT,sTd,imgY,im)
 
-            jQ(".scroll-view").stop().animate({scrollTop:-sTd+sT+imgY-100}
+            jQ(".scroll-view").stop().animate({scrollTop:-sTd+sT+imgY-90}
                //,"scrollLeft": (jQ(".mirador-container ul.scroll-listing-thumbs ").width() - jQ(window).width()) / 2}
                ,0, () => { jQ("input#zoomer").trigger("input") })
 
