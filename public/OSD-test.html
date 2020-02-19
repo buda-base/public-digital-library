@@ -1,0 +1,16 @@
+<html>
+<head>
+    <link rel='stylesheet' type='text/css' media='screen' href='http://openseadragon.github.io/css/style.css'/>
+</head>
+<body>
+<div id="openseadragon1" style="width: 800px; height: 600px;"></div>
+<script src="https://cdn.jsdelivr.net/npm/openseadragon@2.4/build/openseadragon/openseadragon.min.js"></script>
+<script type="text/javascript">
+    var viewer = OpenSeadragon({
+        id: "openseadragon1",
+        prefixUrl: "https://openseadragon.github.io/openseadragon/images/",
+        tileSources: [ "https://iiif.bdrc.io/bdr:V4CZ5369_I1KG9127::I1KG91270004.jpg/info.json" ]
+    });
+</script>
+</body>
+</html>
