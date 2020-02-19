@@ -126,11 +126,11 @@
 }
 
 .mirador-container .view-container.thumbs-off .bottomPanel {
-    left:-255px;
+    left:-280px;
 }
 
 .mirador-container .mirador-osd {    
-    width: calc(100% - 255px - 25px); 
+    width: calc(100% - 280px - 25px); 
     height: calc(100% - 80px); 
     right:0;
     top:0;
@@ -141,7 +141,7 @@
 
 .mirador-container .bottomPanel {
     height: calc(100% - 80px);
-    width: 255px;
+    width: 280px;
     top:0;
     overflow:visible;
     transition:all 400ms ease-in-out;
@@ -151,7 +151,7 @@
     box-sizing: border-box;
     padding-top:15px;
     padding-left:40px;
-    padding-right:10px;
+    padding-right:40px;
     overflow-y: scroll;
     overflow-x: hidden;
     position:relative;
@@ -172,8 +172,11 @@
     top:30px !important;
     height:calc(100% - 60px) !important;
     */
+    /*
     left: 20px;
     right: auto !important;
+    */
+    right:15px !important;
     background:transparent;    
 }
 
