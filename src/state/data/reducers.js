@@ -1117,7 +1117,8 @@ export const firstImage = (state: DataState, action: Action) => {
              canvasID:action.meta.canvasID,
              collecManif:action.meta.collecManif,
              manifests:action.meta.manifests,
-             imgData:action.meta.imgData
+             imgData:action.meta.imgData,
+             manifestWpdf:action.meta.manifestWpdf
             }
          }
     }

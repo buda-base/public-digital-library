@@ -690,7 +690,7 @@ async function getManifest(url,iri) {
             let test = await api.getURLContents(image,null,null,null,true)
             //console.log("img",test)
             //let imgData = btoa(String.fromCharCode(...new Uint8Array(test)));
-            store.dispatch(dataActions.firstImage(image,iri,canvasID,collecManif,manifests)) //,imgData))
+            store.dispatch(dataActions.firstImage(image,iri,canvasID,collecManif,manifests,null,manif)) //,imgData))
          }
       }
    }

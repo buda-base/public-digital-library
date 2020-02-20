@@ -74,11 +74,11 @@ export const gotImageVolumeManifest = (manifest:{},IRI:string): Action => {
 }
 
 TYPES.firstImage = 'FIRST_IMAGE';
-export const firstImage = (url: string,iri:string,canvasID:string,collecManif:string,manifests:[],imgData:string): Action => {
+export const firstImage = (url: string,iri:string,canvasID:string,collecManif:string,manifests:[],imgData:string,manifestWpdf:{}): Action => {
     return {
         type: TYPES.firstImage,
         payload: url,
-        meta:{iri,canvasID,collecManif,manifests,imgData}
+        meta:{iri,canvasID,collecManif,manifests,imgData,manifestWpdf}
     }
 }
 

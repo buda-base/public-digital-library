@@ -67,6 +67,7 @@ const mapStateToProps = (state,ownProps) => {
    let resourceManifest
    let imageVolumeManifests
    let IIIFinfo = state.data.IIIFinfo
+   let manifestWpdf
 
    if(IIIFinfo) {
       IIIFinfo = IIIFinfo[ownProps.IRI]
@@ -81,6 +82,7 @@ const mapStateToProps = (state,ownProps) => {
          imgData = IIIFinfo.imgData
          resourceManifest = IIIFinfo.resourceManifest
          imageVolumeManifests = IIIFinfo.imageVolumeManifests
+         manifestWpdf = IIIFinfo.manifestWpdf
 
          //console.log("IIIF",pdfVolumes,IIIFinfo)
       }
@@ -95,7 +97,7 @@ const mapStateToProps = (state,ownProps) => {
    let langPreset = state.ui.langPreset
 
    let props = { logged,config,resources, ontology, dictionary, keyword, language, datatype, assocResources, prefLang, failures,
-      imageAsset,firstImage,canvasID,collecManif,manifests,manifestError,pdfVolumes,createPdf,pdfUrl,
+      imageAsset,firstImage,canvasID,collecManif,manifests,manifestError,pdfVolumes,createPdf,pdfUrl, manifestWpdf,
       annoCollec,rightPanel,locale,langPreset,imgData, nextChunk, nextPage, resourceManifest, imageVolumeManifests, userEditPolicies }
 
    console.log("mS2p",state,props)
@@ -110,7 +112,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
          dispatch(data.resetSearch())
       },
       onRequestPdf:(iri:string,url:string) => {
-         dispatch(data.requestPdf(iri,url));
+         dispatch(data.requestPdf(iri,url.replace(/zip/,"pdf")));
          dispatch(data.requestPdf(iri,url.replace(/pdf/,"zip")))
       },
       onInitPdf:(url:string,iri:string) => {
