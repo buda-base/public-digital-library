@@ -2736,7 +2736,7 @@ class ResourceViewer extends Component<Props,State>
          if(p) str += "p."+p ;
          let l = loca("Line")
          if(l) str += "|"+l ;
-         str += " - "
+         if(str && p) str += " - "
          let eV = loca("EndVolume")
          if(eV) str += "Vol."+eV+" " ;
          let eP = loca("EndPage")
@@ -2747,20 +2747,25 @@ class ResourceViewer extends Component<Props,State>
          let w = loca("Work")
          if(w) w = elem[bdo+"workLocationWork"][0]
 
-         if(withTag) return ( 
-            [<Tooltip placement="bottom-start" style={{marginLeft:"50px"}} title={
-                  <div style={{margin:"10px"}}>
-                     {vol && <div><span>Begin Volume:</span> {vol}</div>}
-                     {p && <div><span>Begin Page:</span> {p}</div>}
-                     {l && <div><span>Begin Line:</span> {l}</div>}
-                     {eV && <div><span>End Volume:</span> {eV}</div>}
-                     {eP && <div><span>End Page:</span> {eP}</div>}
-                     {eL && <div><span>End Line:</span> {eL}</div>}
-                  </div>
-               }>
-                  <h4>{str}{w && " of "}{w && this.uriformat(bdo+"workLocationWork",w)}</h4>
-            </Tooltip>] 
-         );
+         if(withTag) { 
+            if(vol) 
+               return ( 
+                  [<Tooltip placement="bottom-start" style={{marginLeft:"50px"}} title={
+                           <div style={{margin:"10px"}}>
+                              {vol && <div><span>Begin Volume:</span> {vol}</div>}
+                              {p && <div><span>Begin Page:</span> {p}</div>}
+                              {l && <div><span>Begin Line:</span> {l}</div>}
+                              {eV && <div><span>End Volume:</span> {eV}</div>}
+                              {eP && <div><span>End Page:</span> {eP}</div>}
+                              {eL && <div><span>End Line:</span> {eL}</div>}
+                           </div>
+                        }>
+                           <h4>{str}{str && w && " of "}{w && this.uriformat(bdo+"workLocationWork",w)}</h4>
+                     </Tooltip>]
+               );
+            else 
+               return [<h4>{this.uriformat(bdo+"workLocationWork",w)}</h4>]
+         }
          else return str.replace(/^Vol[.]/,"")
       }
    }
