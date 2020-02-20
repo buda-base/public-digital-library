@@ -414,7 +414,7 @@ export function top_left_menu(that,pdfLink,monoVol,fairUse)
                 <IconButton title={I18n.t("resource.download")+" PDF/ZIP"} onClick={ev =>
                       {
                          //if(that.props.createPdf) return ;
-                          if(monoVol > 0){
+                          if((monoVol.match && monoVol.match(/[^0-9]/)) || monoVol > 0){
                             that.props.onInitPdf({iri:that.props.IRI,vol:monoVol},pdfLink)
                           }
                           else if(!that.props.pdfVolumes) {
@@ -447,7 +447,7 @@ export function top_left_menu(that,pdfLink,monoVol,fairUse)
                                let Zloaded = e.zipFile && e.zipFile != true
 
                                return (<ListItem className="pdfMenu">
-                                     <b>{"Volume "+e.volume}:</b>
+                                     <b>{(e.volume?"Volume "+e.volume:monoVol)}:</b>
                                      &nbsp;&nbsp;
                                      <a onClick={ev => that.handlePdfClick(ev,e.link,e.pdfFile)}
                                         {...(Ploaded ?{href:e.pdfFile}:{})}
@@ -2634,7 +2634,7 @@ class ResourceViewer extends Component<Props,State>
    }
 
 
-   getPdfLink = () =>  {
+   getPdfLink = (data) =>  {
 
       let pdfLink,monoVol = -1 ;
       if(this.props.firstImage &&  !this.props.manifestError && this.props.firstImage.match(/[.]bdrc[.]io/))
@@ -2682,6 +2682,18 @@ class ResourceViewer extends Component<Props,State>
                }
             }
          }
+
+         if(!pdfLink && this.props.manifestWpdf && this.props.manifestWpdf.rendering) {
+            let link = this.props.manifestWpdf.rendering.filter(e => e.format === "application/zip")
+            if(link.length) link = link[0]["@id"]
+            if(link) { 
+               pdfLink = link
+               monoVol = this.getWorkLocation(this.getResourceElem(bdo+"workLocation"), false)
+               console.log("monoV",monoVol)
+            }
+         }
+
+
          /* // missing ImageItem
          else if(this.props.imageAsset.match(/[/]wio:/))
          {
@@ -2730,7 +2742,7 @@ class ResourceViewer extends Component<Props,State>
       return { doMap, doRegion, regBox }
    }
 
-   getWorkLocation = (elem, k) => {
+   getWorkLocation = (elem, withTag = true) => {
 
       if(elem && Array.isArray(elem) && elem[0]) {
          elem = this.getResourceBNode(elem[0].value)
@@ -2745,7 +2757,7 @@ class ResourceViewer extends Component<Props,State>
          if(p) str += "p."+p ;
          let l = loca("Line")
          if(l) str += "|"+l ;
-         str += " - "
+         if(str && p) str += " - "
          let eV = loca("EndVolume")
          if(eV) str += "Vol."+eV+" " ;
          let eP = loca("EndPage")
@@ -2756,20 +2768,26 @@ class ResourceViewer extends Component<Props,State>
          let w = loca("Work")
          if(w) w = elem[bdo+"workLocationWork"][0]
 
-         return ( 
-            [<Tooltip placement="bottom-start" style={{marginLeft:"50px"}} title={
-                  <div style={{margin:"10px"}}>
-                     {vol && <div><span>Begin Volume:</span> {vol}</div>}
-                     {p && <div><span>Begin Page:</span> {p}</div>}
-                     {l && <div><span>Begin Line:</span> {l}</div>}
-                     {eV && <div><span>End Volume:</span> {eV}</div>}
-                     {eP && <div><span>End Page:</span> {eP}</div>}
-                     {eL && <div><span>End Line:</span> {eL}</div>}
-                  </div>
-               }>
-                  <h4>{str}{w && " of "}{w && this.uriformat(bdo+"workLocationWork",w)}</h4>
-            </Tooltip>] 
-         );
+         if(withTag) { 
+            if(vol) 
+               return ( 
+                  [<Tooltip placement="bottom-start" style={{marginLeft:"50px"}} title={
+                           <div style={{margin:"10px"}}>
+                              {vol && <div><span>Begin Volume:</span> {vol}</div>}
+                              {p && <div><span>Begin Page:</span> {p}</div>}
+                              {l && <div><span>Begin Line:</span> {l}</div>}
+                              {eV && <div><span>End Volume:</span> {eV}</div>}
+                              {eP && <div><span>End Page:</span> {eP}</div>}
+                              {eL && <div><span>End Line:</span> {eL}</div>}
+                           </div>
+                        }>
+                           <h4>{str}{str && w && " of "}{w && this.uriformat(bdo+"workLocationWork",w)}</h4>
+                     </Tooltip>]
+               );
+            else 
+               return [<h4>{this.uriformat(bdo+"workLocationWork",w)}</h4>]
+         }
+         else return str.replace(/^Vol[.]/,"")
       }
    }
 
@@ -3228,7 +3246,7 @@ class ResourceViewer extends Component<Props,State>
                   }           
                   else if(k == bdo+"workLocation")
                   {
-                     tags = this.getWorkLocation(elem,k)
+                     tags = this.getWorkLocation(elem)
                   }             
                   
                   if(k == bdo+"placeRegionPoly" || (k == bdo+"placeLong" && !doRegion)) {
@@ -3408,7 +3426,7 @@ class ResourceViewer extends Component<Props,State>
          return [<br/>,<div style={{display:"inline-block",marginTop:"20px"}}>
                   <a onClick={ ev => {
                         //if(that.props.createPdf) return ;
-                        if(monoVol > 0){
+                        if((monoVol.match && monoVol.match(/[^0-9]/)) || monoVol > 0){
                            this.props.onInitPdf({iri:this.props.IRI,vol:monoVol},pdfLink)
                         }
                         else if(!this.props.pdfVolumes) {
