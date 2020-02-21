@@ -75,6 +75,7 @@ const bdo   = "http://purl.bdrc.io/ontology/core/"
 const bdou  = "http://purl.bdrc.io/ontology/ext/user/" ;
 const bdr   = "http://purl.bdrc.io/resource/";
 const bdu   = "http://purl.bdrc.io/resource-nc/user/" ;
+const bf    = "http://id.loc.gov/ontologies/bibframe/";
 const cbcp  = "https://dazangthings.nz/cbc/person/"
 const cbct  = "https://dazangthings.nz/cbc/text/"
 const dila  = "http://purl.dila.edu.tw/resource/";
@@ -94,7 +95,7 @@ const viaf  = "http://viaf.org/viaf/"
 const wd    = "http://www.wikidata.org/entity/"
 const xsd   = "http://www.w3.org/2001/XMLSchema#" ;
 
-export const prefixesMap = { adm, bda, bdac, bdan, bdo, bdou, bdr, bdu, cbcp, cbct, dila, eftr, foaf, oa, mbbt, owl, rdf, rdfs, rkts, skos, wd, ola, viaf, xsd, tmp }
+export const prefixesMap = { adm, bda, bdac, bdan, bdo, bdou, bdr, bdu, bf, cbcp, cbct, dila, eftr, foaf, oa, mbbt, owl, rdf, rdfs, rkts, skos, wd, ola, viaf, xsd, tmp }
 export const prefixes = Object.values(prefixesMap) ;
 export const sameAsMap = { wd:"WikiData", ol:"Open Library", ola:"Open Library", bdr:"BDRC", mbbt:"Marcus Bingenheimer", eftr:"84000" }
 
