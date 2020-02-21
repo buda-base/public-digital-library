@@ -648,21 +648,21 @@ class ResourceViewer extends Component<Props,State>
       let onto = this.props.ontology, dic = this.props.dictionary
       let prop = this.props.resources[this.props.IRI][this.expand(this.props.IRI)] ;
       if(this.state.resource) prop = this.state.resource
-      let w = prop[bdo+"workDimWidth"]
-      let h = prop[bdo+"workDimHeight"]
+      let w = prop[bdo+"dimWidth"]
+      let h = prop[bdo+"dimHeight"]
 
       //console.log("propZ",prop,sorted)
 
       if(w && h && w[0] && h[0] && !w[0].value.match(/cm/) && !h[0].value.match(/cm/)) {
          prop[tmp+"dimensions"] = [ {type: "literal", value: w[0].value+"×"+h[0].value+"cm" } ]
-         delete prop[bdo+"workDimWidth"]
-         delete prop[bdo+"workDimHeight"]
+         delete prop[bdo+"dimWidth"]
+         delete prop[bdo+"dimHeight"]
       }
       else if(w && w[0] && !w[0].value.match(/cm/)) {
-         prop[bdo+"workDimWidth"] = [ { ...w[0], value:w[0].value+"cm" } ]
+         prop[bdo+"dimWidth"] = [ { ...w[0], value:w[0].value+"cm" } ]
       }
       else if(h && h[0] && !h[0].value.match(/cm/)) {
-         prop[bdo+"workDimHeight"] = [ { ...h[0], value:h[0].value+"cm" } ]
+         prop[bdo+"dimHeight"] = [ { ...h[0], value:h[0].value+"cm" } ]
       }
 
       //console.log("w h",w,h,prop)
@@ -671,7 +671,7 @@ class ResourceViewer extends Component<Props,State>
       if(sorted)
       {
 
-         let customSort = [ bdo+"workHasPart", bdo+"itemHasVolume", bdo+"workHasExpression", tmp+"siblingExpressions", bdo+"workTitle", bdo+"personName", bdo+"volumeHasEtext",
+         let customSort = [ bdo+"hasPart", bdo+"itemHasVolume", bdo+"hasInstance", tmp+"siblingExpressions", bdo+"hasTitle", bdo+"personName", bdo+"volumeHasEtext",
                             bdo+"personEvent", bdo+"placeEvent", bdo+"workEvent" ]
 
          let sortBySubPropNumber = (tag:string,idx:string) => {
@@ -714,9 +714,9 @@ class ResourceViewer extends Component<Props,State>
 
          if(prop[bdo+"volumeHasEtext"]) prop[bdo+"volumeHasEtext"] = sortBySubPropNumber(bdo+"volumeHasEtext",bdo+"seqNum");
 
-         if(prop[bdo+"workHasPart"]) prop[bdo+"workHasPart"] = sortBySubPropNumber(bdo+"workHasPart",bdo+"workPartIndex");
+         if(prop[bdo+"hasPart"]) prop[bdo+"hasPart"] = sortBySubPropNumber(bdo+"hasPart",bdo+"partIndex");
 
-         if(prop[bdo+"itemHasVolume"]) prop[bdo+"itemHasVolume"] = sortBySubPropNumber(bdo+"itemHasVolume", bdo+"volumeNumber");
+         if(prop[bdo+"instanceHasVolume"]) prop[bdo+"instanceHasVolume"] = sortBySubPropNumber(bdo+"instanceHasVolume", bdo+"volumeNumber");
 
          let sortBySubPropURI = (tagEnd:string) => {
             let valSort = prop[bdo+tagEnd] 
@@ -739,7 +739,7 @@ class ResourceViewer extends Component<Props,State>
             return valSort ; //
          }
                   
-         if(prop[bdo+'workTitle']) prop[bdo+'workTitle'] = sortBySubPropURI("workTitle") ;
+         if(prop[bdo+'hasTitle']) prop[bdo+'hasTitle'] = sortBySubPropURI("hasTitle") ;
          
          if(prop[bdo+'personName']) prop[bdo+'personName'] = sortBySubPropURI("personName") ;
 
@@ -795,10 +795,11 @@ class ResourceViewer extends Component<Props,State>
          if(prop[bdo+'personEvent']) prop[bdo+'personEvent'] = sortByEventDate("personEvent") ;
          if(prop[bdo+'placeEvent']) prop[bdo+'placeEvent'] = sortByEventDate("placeEvent") ;
          if(prop[bdo+'workEvent']) prop[bdo+'workEvent'] = sortByEventDate("workEvent") ;
+         if(prop[bdo+'instanceEvent']) prop[bdo+'instanceEvent'] = sortByEventDate("instanceEvent") ;
 
 
          let expr 
-         for(let xp of [ bdo+"workHasExpression", tmp+"siblingExpressions" ]) 
+         for(let xp of [ bdo+"workHasInstance", tmp+"siblingExpressions" ]) 
          {
             expr = prop[xp]
 
@@ -824,9 +825,9 @@ class ResourceViewer extends Component<Props,State>
                            label1 = getLangLabel(this, "", assoR[e.value].filter(e => e.type === skos+"prefLabel"))
                            if(label1 && label1.value) label1 = label1.value
 
-                           if(assoR[e.value].filter(e => e.type === bdo+"workHasRoot").length > 0)
+                           if(assoR[e.value].filter(e => e.type === bdo+"inRootInstance").length > 0)
                            {
-                              label2 = getLangLabel(this, "", assoR[assoR[e.value].filter(e => e.type === bdo+"workHasRoot")[0].value].filter(e => e.type === skos+"prefLabel"))                        
+                              label2 = getLangLabel(this, "", assoR[assoR[e.value].filter(e => e.type === bdo+"inRootInstance")[0].value].filter(e => e.type === skos+"prefLabel"))                        
                               label2 = label2.value
                            }
                         }
@@ -1708,11 +1709,11 @@ class ResourceViewer extends Component<Props,State>
                }
             }
 
-            if(this.props.assocResources && (prop == bdo+"workHasExpression" || prop == _tmp+"siblingExpressions") ) {
+            if(this.props.assocResources && (prop == bdo+"workHasInstance" || prop == _tmp+"siblingExpressions") ) {
 
-               let root = this.props.assocResources[e.value] //this.uriformat(_tmp+"workRootWork",e)
-               if(root) root = root.filter(e => e.type == bdo+"workHasRoot")
-               if(root && root.length > 0) tmp = [tmp," in ",this.uriformat(bdo+"workHasRoot",root[0])]
+               let root = this.props.assocResources[e.value] //this.uriformat(_tmp+"inRootInstance",e)
+               if(root) root = root.filter(e => e.type == bdo+"inRootInstance")
+               if(root && root.length > 0) tmp = [tmp," in ",this.uriformat(bdo+"inRootInstance",root[0])]
 
                //console.log("root",root)
             }
@@ -1818,11 +1819,11 @@ class ResourceViewer extends Component<Props,State>
             let noVal = true ;
             
             let valSort ;
-            if(prop === bdo+'workTitle' && this.props.dictionary) {
+            if(prop === bdo+'hasTitle' && this.props.dictionary) {
                valSort = val.map(v => {
                   let p = this.props.dictionary[v.value]
                   if(p) p = p[rdfs+"subClassOf"]
-                  if(p) return {v,k:p.filter(f => f.value === bdo+"WorkTitle").length}
+                  if(p) return {v,k:p.filter(f => f.value === bdo+"Title").length}
                   else return {v,k:-1}
                })
                valSort = _.orderBy(valSort,['k'],['desc']).map(e => e.v)
@@ -1896,7 +1897,7 @@ class ResourceViewer extends Component<Props,State>
                {
                   keys.push(tmp+"noteFinal")
                   keys = _.orderBy(keys,function(elem) {
-                     const rank = { [bdo+"noteText"]:3, [bdo+"noteLocationStatement"]:2, [bdo+"noteWork"]:1 }
+                     const rank = { [bdo+"noteText"]:3, [bdo+"noteLocationStatement"]:2, [bdo+"noteSource"]:1 }
                      if(rank[elem]) return rank[elem]
                      else return 4 ;
                   })
@@ -1929,14 +1930,14 @@ class ResourceViewer extends Component<Props,State>
                      if(noteData[bdo+"noteText"])
                      {
                         let workuri ;
-                        if(noteData[bdo+"noteWork"])
+                        if(noteData[bdo+"noteSource"])
                         {
                            let loca ;
                            if(noteData[bdo+"noteLocationStatement"])
                            {
                               loca = [" @ ",noteData[bdo+"noteLocationStatement"].value]
                            }
-                           workuri = <div><Tag style={{fontSize:"14px"}}>(from {this.uriformat(bdo+"noteWork",noteData[bdo+"noteWork"])}{loca})</Tag></div>
+                           workuri = <div><Tag style={{fontSize:"14px"}}>(from {this.uriformat(bdo+"noteSource",noteData[bdo+"noteSource"])}{loca})</Tag></div>
                         }
 
                         note.push(
@@ -1956,36 +1957,36 @@ class ResourceViewer extends Component<Props,State>
                               </div>
                            </div>)
                      }
-                     else if(noteData[bdo+"noteWork"])
+                     else if(noteData[bdo+"noteSource"])
                      {
                         let loca
                         if(noteData[bdo+"noteLocationStatement"])
                         {
                            loca = [" @ ",noteData[bdo+"noteLocationStatement"].value]
                         }
-                        let workuri = <div><Tag style={{fontSize:"14px"}}>(from {this.uriformat(bdo+"noteWork",noteData[bdo+"noteWork"])}{loca})</Tag></div>
+                        let workuri = <div><Tag style={{fontSize:"14px"}}>(from {this.uriformat(bdo+"noteSource",noteData[bdo+"noteSource"])}{loca})</Tag></div>
                         note.push(
                            <div class="sub">
-                              <Tag className="first type">{this.proplink(bdo+"noteWork","Note")}:</Tag>
+                              <Tag className="first type">{this.proplink(bdo+"noteSource","Note")}:</Tag>
                                  {workuri}
                                  <ChatIcon className="annoticon"  onClick={
                                     (function(val,prop,v,ev){
                                        this.setState({...this.state,annoPane:true,newAnno:{prop:this.proplink(prop),val},viewAnno:prop+"@"+v})
-                                    }).bind(this,[workuri,loca],bdo+"noteWork",noteData[bdo+"noteWork"].value)
+                                    }).bind(this,[workuri,loca],bdo+"noteSource",noteData[bdo+"noteSource"].value)
                                  }/>
                            </div>
                         )
                         /*
-                        let workuri = this.uriformat(bdo+"noteWork",noteData[bdo+"noteWork"])
+                        let workuri = this.uriformat(bdo+"noteSource",noteData[bdo+"noteSource"])
                         note.push(
                            <div class="sub">
-                              { <Tag className="first type">{this.proplink(bdo+"noteWork","Note")}:</Tag>
+                              { <Tag className="first type">{this.proplink(bdo+"noteSource","Note")}:</Tag>
                               <div class="subsub">
                                  <Tag>{workuri}{loca}
                                     <ChatIcon className="annoticon"  onClick={
                                        (function(val,prop,v,ev){
                                           this.setState({...this.state,annoPane:true,newAnno:{prop:this.proplink(prop),val},viewAnno:prop+"@"+v})
-                                       }).bind(this,[workuri,loca],bdo+"noteWork",noteData[bdo+"noteWork"].value)
+                                       }).bind(this,[workuri,loca],bdo+"noteSource",noteData[bdo+"noteSource"].value)
                                     }/>
                                  </Tag>
                               </div> }
@@ -2020,7 +2021,7 @@ class ResourceViewer extends Component<Props,State>
                      {
                         //console.log("v",v);
 
-                        if(f == bdo+"noteLocationStatement" || f == bdo+"noteWork" || f == bdo+"noteText") {
+                        if(f == bdo+"noteLocationStatement" || f == bdo+"noteSource" || f == bdo+"noteText") {
                            noteData[f] = v
                         }
                         else if(f.match(/[Ll]ineage/) && elem[f][0] && elem[f][0].value && this.props.resources && this.props.resources[this.props.IRI] && this.props.resources[this.props.IRI][elem[f][0].value])
@@ -2115,7 +2116,7 @@ class ResourceViewer extends Component<Props,State>
                   else {
 
                      if(subsub.length > 0) sub.push(subsub) //<div className="sub">{subsub}</div>)
-                     if(f == bdo+"noteLocationStatement" || f == bdo+"noteWork" || f == bdo+"noteText") {
+                     if(f == bdo+"noteLocationStatement" || f == bdo+"noteSource" || f == bdo+"noteText") {
                         // wait noteFinal
                         /*
                         if(f == bdo+"noteText") {
@@ -2130,7 +2131,7 @@ class ResourceViewer extends Component<Props,State>
                         {
                            noteLoc = <div className={div+ first}>{sub}</div>
                         }
-                        else if(f == bdo+"noteWork")
+                        else if(f == bdo+"noteSource")
                         {
                            noteVol = <div className={div+ first}>{sub}</div>
                         }
@@ -2573,18 +2574,18 @@ class ResourceViewer extends Component<Props,State>
             this.props.onHasImageAsset(elem[0].value,this.props.IRI);
          }
       }
-      else if(kZprop.indexOf(bdo+"workLocation") !== -1)
+      else if(kZprop.indexOf(bdo+"contentLocation") !== -1)
       {
          if(!this.props.imageAsset && !this.props.manifestError) {
             this.setState({...this.state, imageLoaded:false})
             this.props.onHasImageAsset(iiifpres+"/collection/wio:"+this.props.IRI,this.props.IRI)
          }
       }
-      else if(kZprop.indexOf(bdo+"itemImageAssetForWork") !== -1)
+      else if(kZprop.indexOf(bdo+"instanceReproductionOf") !== -1)
       {
-         let elem = this.getResourceElem(bdo+"itemImageAssetForWork")
+         let elem = this.getResourceElem(bdo+"instanceReproductionOf")
          let nbVol = this.getResourceElem(bdo+"itemVolumes")
-         let work = this.getResourceElem(bdo+"itemForWork")
+         let work = this.getResourceElem(bdo+"instanceReproductionOf")
          if(elem[0] && elem[0].value && !this.props.imageAsset && !this.props.manifestError) {
             this.setState({...this.state, imageLoaded:false})
             let manif = iiifpres + "/wv:"+elem[0].value.replace(new RegExp(bdr),"bdr:")+"/manifest"
@@ -2595,9 +2596,9 @@ class ResourceViewer extends Component<Props,State>
       }
       else if(kZprop.indexOf(bdo+"itemHasVolume") !== -1)
       {
-         let elem = this.getResourceElem(bdo+"itemHasVolume")
-         let nbVol = this.getResourceElem(bdo+"itemVolumes")
-         let work = this.getResourceElem(bdo+"itemForWork")
+         let elem = this.getResourceElem(bdo+"instanceHasVolume")
+         let nbVol = this.getResourceElem(bdo+"instanceVolumes")
+         let work = this.getResourceElem(bdo+"instanceReproductionOf")
          if(elem[0] && elem[0].value && !this.props.imageAsset && !this.props.manifestError) {
             this.setState({...this.state, imageLoaded:false})
             let manif = iiifpres + "/v:"+elem[0].value.replace(new RegExp(bdr),"bdr:")+"/manifest"
@@ -2611,7 +2612,7 @@ class ResourceViewer extends Component<Props,State>
          if (this.props.assocResources) {
             let kZasso = Object.keys(this.props.assocResources) ;
 
-            let elem = this.getResourceElem(bdo+"workHasItem")
+            let elem = this.getResourceElem(bdo+"instanceHasReproduction")
             if(!this.props.manifestError && elem) for(let e of elem)
             {
                let assoc = this.props.assocResources[e.value]
@@ -2619,7 +2620,7 @@ class ResourceViewer extends Component<Props,State>
 
                //console.log("hImA",assoc,e.value)
 
-               if(assoc && assoc.length > 0 && !this.props.imageAsset && !this.props.manifestError && (imItem = assoc.filter(e => e.type === tmp+"itemType" && e.value === bdo+"ItemImageAsset")).length) {
+               if(assoc && assoc.length > 0 && !this.props.imageAsset && !this.props.manifestError && (imItem = assoc.filter(e => e.type === tmp+"itemType" && e.value === bdo+"ImageInstance")).length) {
 
                   this.setState({...this.state, imageLoaded:false})
 
@@ -2675,7 +2676,7 @@ class ResourceViewer extends Component<Props,State>
                if(elem && elem.length > 0 && elem[0].value)
                   pdfLink = iiif+"/download/zip/v:bdr:V"+id+"::1-"+elem[0].value ;
                else {
-                  elem = this.getResourceElem(bdo+"workHasItemImageAsset")
+                  elem = this.getResourceElem(bdo+"instanceHasReproduction")
                   if(elem && elem.length > 0 && elem[0].value)
                      pdfLink = iiif+"/download/zip/wi:bdr:W"+id+"::bdr:"+ this.pretty(elem[0].value,true) ;
                   
@@ -2688,7 +2689,7 @@ class ResourceViewer extends Component<Props,State>
             if(link.length) link = link[0]["@id"]
             if(link) { 
                pdfLink = link
-               monoVol = this.getWorkLocation(this.getResourceElem(bdo+"workLocation"), false)
+               monoVol = this.getWorkLocation(this.getResourceElem(bdo+"contentLocation"), false)
                console.log("monoV",monoVol)
             }
          }
@@ -2749,7 +2750,7 @@ class ResourceViewer extends Component<Props,State>
          let str = ""
          //console.log("loca",elem)
 
-         let loca = s => (elem && elem[bdo+"workLocation"+s] && elem[bdo+"workLocation"+s][0] && elem[bdo+"workLocation"+s][0]["value"] ? elem[bdo+"workLocation"+s][0]["value"]:null)
+         let loca = s => (elem && elem[bdo+"contentLocation"+s] && elem[bdo+"contentLocation"+s][0] && elem[bdo+"contentLocation"+s][0]["value"] ? elem[bdo+"contentLocation"+s][0]["value"]:null)
 
          let vol = loca("Volume")
          if(vol) str += "Vol."+vol+" " ;
@@ -2766,7 +2767,7 @@ class ResourceViewer extends Component<Props,State>
          if(eL) str += "|"+eL ;
 
          let w = loca("Work")
-         if(w) w = elem[bdo+"workLocationWork"][0]
+         if(w) w = elem[bdo+"contentLocationInstance"][0]
 
          if(withTag) { 
             if(vol) 
@@ -2781,11 +2782,11 @@ class ResourceViewer extends Component<Props,State>
                               {eL && <div><span>End Line:</span> {eL}</div>}
                            </div>
                         }>
-                           <h4>{str}{str && w && " of "}{w && this.uriformat(bdo+"workLocationWork",w)}</h4>
+                           <h4>{str}{str && w && " of "}{w && this.uriformat(bdo+"contentLocationInstance",w)}</h4>
                      </Tooltip>]
                );
             else 
-               return [<h4>{this.uriformat(bdo+"workLocationWork",w)}</h4>]
+               return [<h4>{this.uriformat(bdo+"contentLocationInstance",w)}</h4>]
          }
          else return str.replace(/^Vol[.]/,"")
       }
@@ -3185,7 +3186,7 @@ class ResourceViewer extends Component<Props,State>
             //for(let e of elem) console.log(e.value,e.label1);
 
             //if(!k.match(new RegExp("Revision|Entry|prefLabel|"+rdf+"|toberemoved"))) {
-            if((!k.match(new RegExp(adm+"|adm:|isRoot$|SourcePath|"+rdf+"|toberemoved|workPartIndex|workPartTreeIndex|legacyOutlineNodeRID|withSameAs"+(this._dontMatchProp?"|"+this._dontMatchProp:"")))
+            if((!k.match(new RegExp(adm+"|adm:|isRoot$|SourcePath|"+rdf+"|toberemoved|partIndex|partTreeIndex|legacyOutlineNodeRID|withSameAs"+(this._dontMatchProp?"|"+this._dontMatchProp:"")))
                ||k.match(/(originalRecord|metadataLegal|contentProvider|replaceWith)$/)
                ||k.match(/([/]see|[/]sameAs)[^/]*$/) // quickfix [TODO] test property ancestors
                || (this.props.IRI.match(/^bda:/) && (k.match(new RegExp(adm+"|adm:")))))
@@ -3244,7 +3245,7 @@ class ResourceViewer extends Component<Props,State>
                   {
                      //console.log("note",tags,k);//tags = [<h4>Note</h4>]
                   }           
-                  else if(k == bdo+"workLocation")
+                  else if(k == bdo+"contentLocation")
                   {
                      tags = this.getWorkLocation(elem)
                   }             

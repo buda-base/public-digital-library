@@ -2642,10 +2642,10 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             { this.getResultProp(bdo+"script",allProps) }
             
 
-            { this.getResultProp(bdo+"workIncipit",allProps,false,false) }
-            { this.getResultProp(bdo+"workMaterial",allProps) }
+            { this.getResultProp(bdo+"incipit",allProps,false,false) }
+            { this.getResultProp(bdo+"material",allProps) }
             { this.getResultProp(bdo+"printMethod",allProps) }
-            { this.getResultProp(bdo+"partRoot",allProps) }
+            { this.getResultProp(bdo+"inRootInstance",allProps) }
             
             { this.state.filters.datatype[0] !== "Person" && 
                this.getResultProp(tmp+"year",allProps,false,false,[tmp+"yearStart"]) }
@@ -2657,10 +2657,10 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             { this.getResultProp(bdo+"placeLocatedIn",allProps,false) }
             { this.getResultProp(bdo+"placeType",allProps) }
 
-            { this.getResultProp(bdo+"workBiblioNote",allProps,false,false,[bdo+"workBiblioNote",rdfs+"comment"]) }
-            { this.getResultProp(bdo+"workPublisherName",allProps,false,false) }
-            { this.getResultProp(bdo+"workPublisherLocation",allProps,false,false) }
-            { this.getResultProp(bdo+"workLocationStatement",allProps,false,false, [bdo+"workExtentStatement",bdo+"workLocationStatement"]) }
+            { this.getResultProp(bdo+"biblioNote",allProps,false,false,[bdo+"biblioNote",rdfs+"comment"]) }
+            { this.getResultProp(bdo+"publisherName",allProps,false,false) }
+            { this.getResultProp(bdo+"publisherLocation",allProps,false,false) }
+            { this.getResultProp(bdo+"contentLocationStatement",allProps,false,false, [bdo+"instanceExtentStatement",bdo+"contentLocationStatement"]) }
 
             { this.getResultProp(tmp+"provider",allProps) }
             { this.getResultProp(tmp+"popularityScore",allProps,false,false, [tmp+"entityScore"]) }
@@ -3130,7 +3130,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             //addTmpProp(isExpr,"workExpression","prefLabelExpression");
 
             addTmpProp(creator,"creatorRole","creatorLabel", true);
-            addTmpProp(hasRoot,"workHasRoot","rootPrefLabel");
+            addTmpProp(hasRoot,"inRootInstance","rootPrefLabel");
             addTmpProp(workLab,"forWork","workLabel");
 
             let k = this.props.keyword.replace(/"/g,"")
