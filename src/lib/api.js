@@ -26,10 +26,10 @@ const dPrefix = {
       "PR": "Product",
       "T" : "Topic",
       "W" : "Work",
-      "M" : "Work",
+      "MW": "Work",
       "O" : "Taxonomy",
       "V" : "Volume",
-      "VL" : "Volume",
+      "VL": "Volume",
       "UT": "Etext", // ?
    },
    "bdu": {
@@ -55,8 +55,8 @@ export function getEntiType(t:string):string {
    let p = uri.replace(/^([^:]+):.*$/,"$1")
    if(p === "ola") return "Person" ;
    else if(p == "mbbt" ) return "Work" ; // [TODO]
-   let v = uri.replace(/^([^:]+:)?([ACEILGPQMRTWOVU][RTL]?).*$/,"$2")
-   //console.log("v",v,p)
+   let v = uri.replace(/^([^:]+:)?([ACEILGPQMRTWOVU][RTLW]?).*$/,"$2")
+   console.log("gEt?",v,p)
    if(!dPrefix[p] || !dPrefix[p][v]) return "" ;
    else return dPrefix[p][v]; }
 
