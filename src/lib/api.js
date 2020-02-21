@@ -18,18 +18,17 @@ const dPrefix = {
    "bdr": {
       "C" : "Corporation",
       "E" : "Etext",
-      "I" : "Item",
+      "I" : "Volume", // = image group
       "L" : "Lineage",
       "G" : "Place",
       "P" : "Person",    
       "R" : "Role",
       "PR": "Product",
       "T" : "Topic",
-      "W" : "Work",
-      "MW": "Work",
+      "W" : "ImageInstance",
+      "WA" : "Work",
+      "MW": "Instance",
       "O" : "Taxonomy",
-      "V" : "Volume",
-      "VL": "Volume",
       "UT": "Etext", // ?
    },
    "bdu": {
