@@ -214,7 +214,7 @@ let propOrder = {
       "bdo:eTextHasPage",
       "bdo:eTextHasChunk",
    ],
-   "Item":[
+   "Volume":[
       "bdo:instanceOf",
       "bdo:instanceReproductionOf",
       "tmp:siblingInstances",
@@ -226,6 +226,9 @@ let propOrder = {
       "bdo:itemHasVolume",
       "bdo:itemVolumes",
       "bdo:instanceHasVolume",
+      "bdo:volumeOf",
+      "bdo:volumeNumber",
+      "bdo:volumeHasEtext"
    ],
    "Lineage":[
       "skos:prefLabel",
@@ -364,16 +367,14 @@ let propOrder = {
       "adm:metadataLegal",
    ],
    "Taxonomy":[],
-   "Volume":[
-      "bdo:volumeOf",
-      "bdo:volumeNumber",
-      "bdo:volumeHasEtext"
-   ],
    "User" : [
       "skos:prefLabel",
       "skos:altLabel",
    ]
 }
+
+propOrder["Instance"] = propOrder["Work"]
+propOrder["ImageInstance"] = propOrder["Work"]
 
 const canoLang = ["Bo","Pi","Sa","Zh"]
 
@@ -768,13 +769,14 @@ class ResourceViewer extends Component<Props,State>
 
          let sortBySubPropURI = (tagEnd:string) => {
             let valSort = prop[bdo+tagEnd] 
+
             if(this.props.dictionary && this.props.resources) {
                let assoR = this.props.resources[this.props.IRI]
                if(assoR) { 
                   let lang
                   valSort = valSort.map(v => ({...v,type:'bnode'})).map(w => w.type!=='bnode'||!assoR[w.value]?w:{...w,'bnode':w.value,'k':!assoR[w.value]||!assoR[w.value][rdf+"type"]?"":assoR[w.value][rdf+"type"].reduce( (acc,e) => {
                      let p = this.props.dictionary[e.value]
-                     //console.log(p)
+                     console.log("p?",p)
                      if(p) p = p[rdfs+"subClassOf"]
                      if(p) p = p.filter(f => f.value === bdo+tagEnd[0].toUpperCase()+tagEnd.substring(1)).length
                      if(p) return e.value + ";" + acc  
@@ -786,8 +788,9 @@ class ResourceViewer extends Component<Props,State>
             }
             return valSort ; //
          }
-                  
-         if(prop[bdo+'hasTitle']) prop[bdo+'hasTitle'] = sortBySubPropURI("hasTitle") ;
+
+         // TODO uncomment when title nodes are back       
+         //if(prop[bdo+'hasTitle']) prop[bdo+'hasTitle'] = sortBySubPropURI("hasTitle") ;
          
          if(prop[bdo+'personName']) prop[bdo+'personName'] = sortBySubPropURI("personName") ;
 
@@ -2792,14 +2795,15 @@ class ResourceViewer extends Component<Props,State>
    }
 
    getWorkLocation = (elem, withTag = true) => {
-
+      let _elem = elem
       if(elem && Array.isArray(elem) && elem[0]) {
          elem = this.getResourceBNode(elem[0].value)
          let str = ""
          //console.log("loca",elem)
 
-         let loca = s => (elem && elem[bdo+"contentLocation"+s] && elem[bdo+"contentLocation"+s][0] && elem[bdo+"contentLocation"+s][0]["value"] ? elem[bdo+"contentLocation"+s][0]["value"]:null)
+         if(!elem) return [<h4><Link to={"/show/"+shortUri(_elem[0].value)}>{shortUri(_elem[0].value)}</Link></h4>]
 
+         let loca = s => (elem && elem[bdo+"contentLocation"+s] && elem[bdo+"contentLocation"+s][0] && elem[bdo+"contentLocation"+s][0]["value"] ? elem[bdo+"contentLocation"+s][0]["value"]:null)
          let vol = loca("Volume")
          if(vol) str += "Vol."+vol+" " ;
          let p = loca("Page")

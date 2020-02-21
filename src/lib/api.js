@@ -18,6 +18,7 @@ const dPrefix = {
    "bdr": {
       "C" : "Corporation",
       "E" : "Etext",
+      "VL": "Volume",
       "I" : "Volume", // = image group
       "L" : "Lineage",
       "G" : "Place",
