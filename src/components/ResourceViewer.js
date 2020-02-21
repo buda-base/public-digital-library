@@ -720,7 +720,7 @@ class ResourceViewer extends Component<Props,State>
       {
 
          let customSort = [ bdo+"hasPart", bdo+"itemHasVolume", bdo+"hasInstance", tmp+"siblingExpressions", bdo+"hasTitle", bdo+"personName", bdo+"volumeHasEtext",
-                            bdo+"personEvent", bdo+"placeEvent", bdo+"workEvent" ]
+                            bdo+"personEvent", bdo+"placeEvent", bdo+"workEvent", bdo+"instanceEvent" ]
 
          let sortBySubPropNumber = (tag:string,idx:string) => {
             let parts = prop[tag]
@@ -1945,7 +1945,7 @@ class ResourceViewer extends Component<Props,State>
                {
                   keys.push(tmp+"noteFinal")
                   keys = _.orderBy(keys,function(elem) {
-                     const rank = { [bdo+"noteText"]:3, [bdo+"noteLocationStatement"]:2, [bdo+"noteSource"]:1 }
+                     const rank = { [bdo+"noteText"]:3, [bdo+"locationStatement"]:2, [bdo+"noteSource"]:1 }
                      if(rank[elem]) return rank[elem]
                      else return 4 ;
                   })
@@ -1981,9 +1981,9 @@ class ResourceViewer extends Component<Props,State>
                         if(noteData[bdo+"noteSource"])
                         {
                            let loca ;
-                           if(noteData[bdo+"noteLocationStatement"])
+                           if(noteData[bdo+"locationStatement"])
                            {
-                              loca = [" @ ",noteData[bdo+"noteLocationStatement"].value]
+                              loca = [" @ ",noteData[bdo+"locationStatement"].value]
                            }
                            workuri = <div><Tag style={{fontSize:"14px"}}>(from {this.uriformat(bdo+"noteSource",noteData[bdo+"noteSource"])}{loca})</Tag></div>
                         }
@@ -2008,9 +2008,9 @@ class ResourceViewer extends Component<Props,State>
                      else if(noteData[bdo+"noteSource"])
                      {
                         let loca
-                        if(noteData[bdo+"noteLocationStatement"])
+                        if(noteData[bdo+"locationStatement"])
                         {
-                           loca = [" @ ",noteData[bdo+"noteLocationStatement"].value]
+                           loca = [" @ ",noteData[bdo+"locationStatement"].value]
                         }
                         let workuri = <div><Tag style={{fontSize:"14px"}}>(from {this.uriformat(bdo+"noteSource",noteData[bdo+"noteSource"])}{loca})</Tag></div>
                         note.push(
@@ -2043,7 +2043,7 @@ class ResourceViewer extends Component<Props,State>
                         */
 
                      }
-                     else if(noteData[bdo+"noteLocationStatement"])
+                     else if(noteData[bdo+"locationStatement"])
                      {
                      }
                      ret.push(note)
@@ -2069,7 +2069,7 @@ class ResourceViewer extends Component<Props,State>
                      {
                         //console.log("v",v);
 
-                        if(f == bdo+"noteLocationStatement" || f == bdo+"noteSource" || f == bdo+"noteText") {
+                        if(f == bdo+"locationStatement" || f == bdo+"noteSource" || f == bdo+"noteText") {
                            noteData[f] = v
                         }
                         else if(f.match(/[Ll]ineage/) && elem[f][0] && elem[f][0].value && this.props.resources && this.props.resources[this.props.IRI] && this.props.resources[this.props.IRI][elem[f][0].value])
@@ -2164,7 +2164,7 @@ class ResourceViewer extends Component<Props,State>
                   else {
 
                      if(subsub.length > 0) sub.push(subsub) //<div className="sub">{subsub}</div>)
-                     if(f == bdo+"noteLocationStatement" || f == bdo+"noteSource" || f == bdo+"noteText") {
+                     if(f == bdo+"locationStatement" || f == bdo+"noteSource" || f == bdo+"noteText") {
                         // wait noteFinal
                         /*
                         if(f == bdo+"noteText") {
