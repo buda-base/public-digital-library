@@ -110,11 +110,12 @@ async function initiateApp(params,iri,myprops) {
 
          if(!Etext)
          {
+            let longIri = fullUri(iri);
             let extractAssoRes = (res) => {
                let assocRes = {}, _res = {}
 
                for(let k of Object.keys(res)) {                  
-                  if(Object.keys(res[k]).length === 1 && res[k][skos+"prefLabel"]) assocRes[k] = res[k][skos+"prefLabel"].map(e => ({...e,type:skos+"prefLabel"}))
+                  if(k !== longIri && res[k][skos+"prefLabel"]) assocRes[k] = Object.keys(res[k]).reduce( (acc,f) => ([ ...acc, ...res[k][f].map(e => ({...e,type:f}))]), [])
                   else _res[k] = res[k]
                }
 

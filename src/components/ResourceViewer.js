@@ -214,6 +214,7 @@ let propOrder = {
       "bdo:eTextHasPage",
       "bdo:eTextHasChunk",
    ],
+   /*
    "Volume":[
       "bdo:instanceOf",
       "bdo:instanceReproductionOf",
@@ -230,6 +231,7 @@ let propOrder = {
       "bdo:volumeNumber",
       "bdo:volumeHasEtext"
    ],
+   */
    "Lineage":[
       "skos:prefLabel",
       "skos:altLabel",
@@ -307,7 +309,6 @@ let propOrder = {
       "bdo:workLangScript",
       "bdo:workOtherLangScript",
       "bdo:workObjectType",
-      "bdo:workMaterial",
       "tmp:dimensions",
       "bdo:workDimWidth",
       "bdo:workDimHeight",
@@ -348,6 +349,7 @@ let propOrder = {
       "adm:sameAsWorldCat",   
       "adm:sameAsWikidata",
       "rdfs:seeAlso",
+      "bdo:incipit",
       "bdo:catalogInfo",
       "bdo:workCatalogInfo",
       "bdo:instanceEvent",
@@ -360,6 +362,8 @@ let propOrder = {
       "bdo:printType",
       "bdo:workPagination",
       "bdo:workExtentStatement",
+      "bdo:material",
+      "bdo:workMaterial",
       "adm:contentProvider",
       "bdo:note",
       "bdo:biblioNote", 
@@ -373,6 +377,7 @@ let propOrder = {
    ]
 }
 
+propOrder["Volume"] = propOrder["Work"]
 propOrder["Instance"] = propOrder["Work"]
 propOrder["ImageInstance"] = propOrder["Work"]
 
