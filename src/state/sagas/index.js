@@ -110,12 +110,23 @@ async function initiateApp(params,iri,myprops) {
 
          if(!Etext)
          {
-            store.dispatch(dataActions.gotResource(iri,res));
-            
-            let assocRes = {} //= await api.loadAssocResources(iri)
-            store.dispatch(dataActions.gotAssocResources(iri,assocRes))
+            let extractAssoRes = (res) => {
+               let assocRes = {}, _res = {}
+
+               for(let k of Object.keys(res)) {                  
+                  if(Object.keys(res[k]).length === 1 && res[k][skos+"prefLabel"]) assocRes[k] = res[k][skos+"prefLabel"].map(e => ({...e,type:skos+"prefLabel"}))
+                  else _res[k] = res[k]
+               }
+
+               return { assocRes, _res} ;
+            }
+
+            let {assocRes, _res } = extractAssoRes(res) //= await api.loadAssocResources(iri)
+            store.dispatch(dataActions.gotResource(iri,_res))
+            store.dispatch(dataActions.gotAssocResources(iri,{ data: assocRes }))
             sameAsR[iri] = true ;
 
+            /* //deprecated
             let url = fullUri(iri)
 
             if(res[url]) for(let k of Object.keys(res[url])) {
@@ -134,6 +145,7 @@ async function initiateApp(params,iri,myprops) {
                   }
                }
             }
+            */
 
             store.dispatch(dataActions.getAnnotations(iri))
          }

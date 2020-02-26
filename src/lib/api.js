@@ -55,7 +55,7 @@ export function getEntiType(t:string):string {
    let p = uri.replace(/^([^:]+):.*$/,"$1")
    if(p === "ola") return "Person" ;
    else if(p == "mbbt" ) return "Work" ; // [TODO]
-   let v = uri.replace(/^([^:]+:)?([ACEILGPQMRTWOVU][RTLW]?).*$/,"$2")
+   let v = uri.replace(/^([^:]+:)?([ACEILGPQMRTWOVU][ARTLW]?).*$/,"$2")
    console.log("gEt?",v,p)
    if(!dPrefix[p] || !dPrefix[p][v]) return "" ;
    else return dPrefix[p][v]; }
