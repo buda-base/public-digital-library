@@ -115,8 +115,12 @@ async function initiateApp(params,iri,myprops) {
                let assocRes = {}, _res = {}
 
                for(let k of Object.keys(res)) {                  
-                  if(k !== longIri && res[k][skos+"prefLabel"]) assocRes[k] = Object.keys(res[k]).reduce( (acc,f) => ([ ...acc, ...res[k][f].map(e => ({...e,type:f}))]), [])
-                  else _res[k] = res[k]
+                  _res[k] = { ...res[k] }
+                  if(k !== longIri && res[k][skos+"prefLabel"]) { 
+                     assocRes[k] = Object.keys(res[k]).reduce( (acc,f) => ([ ...acc, ...res[k][f].map(e => ({...e,type:f}))]), [])
+                     let resK = Object.keys(res[k])
+                     if(resK.length === 1 || (resK.length === 2 && res[k][tmp+"withSameAs"])) delete _res[k]
+                  }
                }
 
                return { assocRes, _res} ;
