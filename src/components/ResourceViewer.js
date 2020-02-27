@@ -1953,7 +1953,7 @@ class ResourceViewer extends Component<Props,State>
                {
                   keys.push(tmp+"noteFinal")
                   keys = _.orderBy(keys,function(elem) {
-                     const rank = { [bdo+"noteText"]:3, [bdo+"locationStatement"]:2, [bdo+"noteSource"]:1 }
+                     const rank = { [bdo+"noteText"]:3, [bdo+"contentLocationStatement"]:2, [bdo+"noteSource"]:1 }
                      if(rank[elem]) return rank[elem]
                      else return 4 ;
                   })
@@ -1989,9 +1989,9 @@ class ResourceViewer extends Component<Props,State>
                         if(noteData[bdo+"noteSource"])
                         {
                            let loca ;
-                           if(noteData[bdo+"locationStatement"])
+                           if(noteData[bdo+"contentLocationStatement"])
                            {
-                              loca = [" @ ",noteData[bdo+"locationStatement"].value]
+                              loca = [" @ ",noteData[bdo+"contentLocationStatement"].value]
                            }
                            workuri = <div><Tag style={{fontSize:"14px"}}>(from {this.uriformat(bdo+"noteSource",noteData[bdo+"noteSource"])}{loca})</Tag></div>
                         }
@@ -2016,9 +2016,9 @@ class ResourceViewer extends Component<Props,State>
                      else if(noteData[bdo+"noteSource"])
                      {
                         let loca
-                        if(noteData[bdo+"locationStatement"])
+                        if(noteData[bdo+"contentLocationStatement"])
                         {
-                           loca = [" @ ",noteData[bdo+"locationStatement"].value]
+                           loca = [" @ ",noteData[bdo+"contentLocationStatement"].value]
                         }
                         let workuri = <div><Tag style={{fontSize:"14px"}}>(from {this.uriformat(bdo+"noteSource",noteData[bdo+"noteSource"])}{loca})</Tag></div>
                         note.push(
@@ -2051,7 +2051,7 @@ class ResourceViewer extends Component<Props,State>
                         */
 
                      }
-                     else if(noteData[bdo+"locationStatement"])
+                     else if(noteData[bdo+"contentLocationStatement"])
                      {
                      }
                      ret.push(note)
@@ -2077,7 +2077,7 @@ class ResourceViewer extends Component<Props,State>
                      {
                         //console.log("v",v);
 
-                        if(f == bdo+"locationStatement" || f == bdo+"noteSource" || f == bdo+"noteText") {
+                        if(f == bdo+"contentLocationStatement" || f == bdo+"noteSource" || f == bdo+"noteText") {
                            noteData[f] = v
                         }
                         else if(f.match(/[Ll]ineage/) && elem[f][0] && elem[f][0].value && this.props.resources && this.props.resources[this.props.IRI] && this.props.resources[this.props.IRI][elem[f][0].value])
@@ -2168,11 +2168,11 @@ class ResourceViewer extends Component<Props,State>
                         }
                      }
                   }
-                  if(!noVal && !f.match(/[/]note[^F]/)) sub.push(<div className={div+"sub "+(hasBnode?"full":"")}>{subsub}</div>)
+                  if(!noVal && !f.match(/[/]note[^F]/) && f !== bdo+"contentLocationStatement") sub.push(<div className={div+"sub "+(hasBnode?"full":"")}>{subsub}</div>)
                   else {
 
                      if(subsub.length > 0) sub.push(subsub) //<div className="sub">{subsub}</div>)
-                     if(f == bdo+"locationStatement" || f == bdo+"noteSource" || f == bdo+"noteText") {
+                     if(f == bdo+"contentLocationStatement" || f == bdo+"noteSource" || f == bdo+"noteText") {
                         // wait noteFinal
                         /*
                         if(f == bdo+"noteText") {
