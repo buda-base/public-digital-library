@@ -725,7 +725,7 @@ class ResourceViewer extends Component<Props,State>
       if(sorted)
       {
 
-         let customSort = [ bdo+"hasPart", bdo+"itemHasVolume", bdo+"hasInstance", tmp+"siblingExpressions", bdo+"hasTitle", bdo+"personName", bdo+"volumeHasEtext",
+         let customSort = [ bdo+"hasPart", bdo+"itemHasVolume", bdo+"workHasInstance", tmp+"siblingExpressions", bdo+"hasTitle", bdo+"personName", bdo+"volumeHasEtext",
                             bdo+"personEvent", bdo+"placeEvent", bdo+"workEvent", bdo+"instanceEvent" ]
 
          let sortBySubPropNumber = (tag:string,idx:string) => {
@@ -859,7 +859,7 @@ class ResourceViewer extends Component<Props,State>
          {
             expr = prop[xp]
 
-            //console.log("xp",xp,expr)
+            console.log("xp",xp,expr)
 
             if(expr) {
 
@@ -869,29 +869,32 @@ class ResourceViewer extends Component<Props,State>
                   expr = expr.map((e) => {
 
                      //console.log("index",e) //,assoR[e.value])
-                     let label1,label2 ;
+                     
+                     // TODO use language dedicated sort ?
+                     let label1 = "zzz" + shortUri(e.value), label2 = "" ;
                      if(e && assoR[e.value])
                      {
                         label1 = getLangLabel(this, "", assoR[e.value].filter(e => e.type === skos+"prefLabel"))
                         if(label1 && label1.value) label1 = label1.value
+                        if(!label1) label1 = "z" + shortUri(e.value)
 
                         //console.log("index",e,assoR[e.value])
                         if(assoR[e.value])
                         {
-                           label1 = getLangLabel(this, "", assoR[e.value].filter(e => e.type === skos+"prefLabel"))
-                           if(label1 && label1.value) label1 = label1.value
-
-                           if(assoR[e.value].filter(e => e.type === bdo+"inRootInstance").length > 0)
+                           let root = assoR[e.value].filter(e => e.type === bdo+"inRootInstance")
+                           if(root.length > 0 && assoR[root[0].value])
                            {
-                              label2 = getLangLabel(this, "", assoR[assoR[e.value].filter(e => e.type === bdo+"inRootInstance")[0].value].filter(e => e.type === skos+"prefLabel"))                        
+                              label2 = getLangLabel(this, "", assoR[root[0].value].filter(e => e.type === skos+"prefLabel"))                        
                               label2 = label2.value
                            }
                         }
                      }  
                      return ({ ...e, label1, label2 })
                   })
-                  
+
                   prop[xp] = _.orderBy(expr,['label1','label2'])
+
+                  console.log("expr",expr,prop[xp]);
 
                   //for(let o of prop[bdo+"workHasExpression"]) console.log("xp",o.value,o.label1)
 
@@ -906,10 +909,8 @@ class ResourceViewer extends Component<Props,State>
                if(assoR[e.value])                  {
                   label1 = getLangLabel(this, "", assoR[e.value].filter(e => e.type === skos+"prefLabel"))
                   if(label1 && label1.value) label1 = label1.value
-                  if(assoR[e.value].filter(e => e.type === bdo+"workLangScript"|| e.type === tmp+"language").length > 0)
-                  {
-                     label2 = assoR[e.value].filter(e => e.type === bdo+"workLangScript"|| e.type === tmp+"language")[0].value
-                  }
+                  let lang = assoR[e.value].filter(e => e.type === bdo+"workLangScript"|| e.type === tmp+"language"|| e.type === bdo+"language")
+                  if(lang.length > 0) label2 = lang[0].value
                }
                return ({ ...e, label1, label2 })
             })
@@ -928,7 +929,7 @@ class ResourceViewer extends Component<Props,State>
                let cano = [], nonCano = [], subLangDeriv = {}
                expr.filter(e => {
                   let lang = assoR[e.value],langLab
-                  if(lang) lang = lang.filter(l => l.type === bdo+"workLangScript" || l.type === tmp+"language")                  
+                  if(lang) lang = lang.filter(l => l.type === bdo+"workLangScript" || l.type === tmp+"language"|| l.type === bdo+"language")                  
                   if(lang && lang.length) { 
                      lang = lang[0].value.replace(/[/]Lang/,"/")                  
                      langLab = getOntoLabel(this.props.dictionary,this.props.locale,lang)

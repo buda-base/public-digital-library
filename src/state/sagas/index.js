@@ -113,14 +113,16 @@ async function initiateApp(params,iri,myprops) {
             let longIri = fullUri(iri);
             let extractAssoRes = (res) => {
                let assocRes = {}, _res = {}
+               let allowK = [ skos+"prefLabel", tmp+"withSameAs", bdo+"inRootInstance", bdo+"language" ]
 
                for(let k of Object.keys(res)) {                  
                   _res[k] = { ...res[k] }
-                  if(k !== longIri && res[k][skos+"prefLabel"]) { 
-                     assocRes[k] = Object.keys(res[k]).reduce( (acc,f) => ([ ...acc, ...res[k][f].map(e => ({...e,type:f}))]), [])
+                  if(k !== longIri) {
                      let resK = Object.keys(res[k])
-                     if(resK.length === 1 || (resK.length === 2 && res[k][tmp+"withSameAs"])) delete _res[k]
+                     if(res[k][skos+"prefLabel"]) assocRes[k] = Object.keys(res[k]).reduce( (acc,f) => ([ ...acc, ...res[k][f].map(e => ({...e,type:f}))]), [])
+                     if(!resK.filter(k => !allowK.includes(k)).length) delete _res[k]
                   }
+
                }
 
                return { assocRes, _res} ;

@@ -46,7 +46,8 @@ const dPrefix = {
       "text": "Work"
    },
    "eftr" : {
-      "W": "Work"
+      "W": "Work",
+      "WA": "Work",
    }
 };
 
