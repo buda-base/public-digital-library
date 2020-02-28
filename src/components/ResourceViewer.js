@@ -725,7 +725,7 @@ class ResourceViewer extends Component<Props,State>
       if(sorted)
       {
 
-         let customSort = [ bdo+"hasPart", bdo+"itemHasVolume", bdo+"workHasInstance", tmp+"siblingExpressions", bdo+"hasTitle", bdo+"personName", bdo+"volumeHasEtext",
+         let customSort = [ bdo+"hasPart", bdo+"itemHasVolume", bdo+"workHasInstance", tmp+"siblingInstances", bdo+"hasTitle", bdo+"personName", bdo+"volumeHasEtext",
                             bdo+"personEvent", bdo+"placeEvent", bdo+"workEvent", bdo+"instanceEvent" ]
 
          let sortBySubPropNumber = (tag:string,idx:string) => {
@@ -855,7 +855,7 @@ class ResourceViewer extends Component<Props,State>
 
 
          let expr 
-         for(let xp of [ bdo+"workHasInstance", tmp+"siblingExpressions" ]) 
+         for(let xp of [ bdo+"workHasInstance", tmp+"siblingInstances" ]) 
          {
             expr = prop[xp]
 
@@ -1766,7 +1766,7 @@ class ResourceViewer extends Component<Props,State>
                }
             }
 
-            if(this.props.assocResources && (prop == bdo+"workHasInstance" || prop == _tmp+"siblingExpressions") ) {
+            if(this.props.assocResources && (prop == bdo+"workHasInstance" || prop == _tmp+"siblingInstances") ) {
 
                let root = this.props.assocResources[e.value] //this.uriformat(_tmp+"inRootInstance",e)
                if(root) root = root.filter(e => e.type == bdo+"inRootInstance")
