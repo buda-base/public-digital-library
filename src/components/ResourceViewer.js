@@ -859,7 +859,7 @@ class ResourceViewer extends Component<Props,State>
          {
             expr = prop[xp]
 
-            console.log("xp",xp,expr)
+            //console.log("xp",xp,expr)
 
             if(expr) {
 
@@ -894,7 +894,7 @@ class ResourceViewer extends Component<Props,State>
 
                   prop[xp] = _.orderBy(expr,['label1','label2'])
 
-                  console.log("expr",expr,prop[xp]);
+                  //console.log("expr",expr,prop[xp]);
 
                   //for(let o of prop[bdo+"workHasExpression"]) console.log("xp",o.value,o.label1)
 

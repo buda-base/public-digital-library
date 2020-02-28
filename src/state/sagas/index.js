@@ -121,6 +121,7 @@ async function initiateApp(params,iri,myprops) {
                      let resK = Object.keys(res[k])
                      if(res[k][skos+"prefLabel"]) assocRes[k] = Object.keys(res[k]).reduce( (acc,f) => ([ ...acc, ...res[k][f].map(e => ({...e,type:f}))]), [])
                      if(!resK.filter(k => !allowK.includes(k)).length) delete _res[k]
+                     if(res[k][tmp+"withSameAs"]) _res[k] = { [tmp+"withSameAs"]: [ ...res[k][tmp+"withSameAs"] ] }
                   }
 
                }
