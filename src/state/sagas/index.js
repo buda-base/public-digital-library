@@ -114,7 +114,7 @@ async function initiateApp(params,iri,myprops) {
 
             let extractAssoRes = (res) => {
                let assocRes = {}, _res = {}
-               let allowK = [ skos+"prefLabel", tmp+"withSameAs", bdo+"inRootInstance", bdo+"language" ]
+               let allowK = [ skos+"prefLabel", tmp+"withSameAs", bdo+"inRootInstance", bdo+"language", adm+"canonicalHtml" ]
 
                for(let k of Object.keys(res)) {                  
                   _res[k] = { ...res[k] }
