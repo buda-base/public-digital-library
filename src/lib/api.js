@@ -905,6 +905,9 @@ export default class API {
          // to use with ldspdi running locally
          path = "//purl.bdrc.io" +  DICTIONARY_PATH;
 
+         // to use with ldspdi-dev
+         path = "//ldspdi-dev.bdrc.io" +  DICTIONARY_PATH;
+
         return path;
     }
 
