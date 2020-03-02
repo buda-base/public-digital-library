@@ -948,8 +948,14 @@ class ResourceViewer extends Component<Props,State>
                      subLangDeriv[ontoProp].push(e)
                      cano.push(e);
                   }
-                  else if(lang) {
-                     let ontoProp = tmp+"workHasTranslationInNonCanonicalLanguage"+lang.replace(/.*[/]([^/]+)$/,"$1")
+                  else {
+                     let ontoProp
+                     if(!lang) {
+                        ontoProp = tmp+"workHasTranslationInNonCanonicalLanguageUnknown"
+                        langLab = "Unknown"
+                        lang = "tmp:LangUnknown"
+                     }
+                     else ontoProp = tmp+"workHasTranslationInNonCanonicalLanguage"+lang.replace(/.*[/]([^/]+)$/,"$1")
                      let newLang = {
                         [rdfs+"label"]: [{type: "literal", value: langLab, lang: "en"}],
                         [rdfs+"subPropertyOf"]: [{type: "uri", value: tmp+"workHasTranslationInNonCanonicalLanguage"}],

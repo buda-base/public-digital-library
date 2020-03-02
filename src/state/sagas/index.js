@@ -111,6 +111,7 @@ async function initiateApp(params,iri,myprops) {
          if(!Etext)
          {
             let longIri = fullUri(iri);
+
             let extractAssoRes = (res) => {
                let assocRes = {}, _res = {}
                let allowK = [ skos+"prefLabel", tmp+"withSameAs", bdo+"inRootInstance", bdo+"language" ]
@@ -121,9 +122,11 @@ async function initiateApp(params,iri,myprops) {
                      let resK = Object.keys(res[k])
                      if(res[k][skos+"prefLabel"]) assocRes[k] = Object.keys(res[k]).reduce( (acc,f) => ([ ...acc, ...res[k][f].map(e => ({...e,type:f}))]), [])
                      if(!resK.filter(k => !allowK.includes(k)).length) delete _res[k]
-                     if(res[k][tmp+"withSameAs"]) _res[k] = { [tmp+"withSameAs"]: [ ...res[k][tmp+"withSameAs"] ] }
+                     if(res[k][tmp+"withSameAs"]) { 
+                        if(!_res[k]) _res[k] = {}
+                        _res[k][tmp+"withSameAs"] = [ ...res[k][tmp+"withSameAs"] ] 
+                     }
                   }
-
                }
 
                return { assocRes, _res} ;
