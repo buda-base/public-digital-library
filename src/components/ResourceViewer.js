@@ -62,7 +62,7 @@ import Loader from "react-loader"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faLanguage } from '@fortawesome/free-solid-svg-icons'
 //import {MapComponent} from './Map';
-import {getEntiType} from '../lib/api';
+import {getEntiType,dPrefix} from '../lib/api';
 import {languages,getLangLabel,top_right_menu,prefixesMap as prefixes,sameAsMap,shortUri,fullUri,highlight} from './App';
 import Popover from '@material-ui/core/Popover';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -1337,7 +1337,12 @@ class ResourceViewer extends Component<Props,State>
          
          if(!elem.value.match(/^http:\/\/purl\.bdrc\.io/) /* && !hasExtPref */ && ((!dic || !dic[elem.value]) && !prop.match(/[/#]sameAs/))) {
             let link = elem.value
-            if(link.indexOf(dila) !== -1) link = "http://authority.dila.edu.tw/person/index.php?fromInner="+link.replace(/^.*?[/]([^/]+)$/,"$1")
+            if(link.indexOf(dila) !== -1) { 
+               link = link.replace(/^.*?[/]([^/]+)$/,"$1")
+               let dir = dPrefix["dila"][link.replace(/[0-9]+$/,"")]
+               if(dir) dir = dir.toLowerCase()
+               link = "http://authority.dila.edu.tw/"+dir+"/index.php?fromInner="+link
+            }
             return <a href={link} target="_blank">{shortUri(decodeURI(elem.value))}</a> ;
          }
 

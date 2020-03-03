@@ -14,7 +14,7 @@ const DICTIONARY_PATH = '/ontology/data/json'
 const USER_PATH = '/resource-nc/user/me'
 const USER_EDIT_POLICIES_PATH = '/userEditPolicies'
 
-const dPrefix = {
+export const dPrefix = {
    "bdr": {
       "C" : "Corporation",
       "E" : "Etext",
