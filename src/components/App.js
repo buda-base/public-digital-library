@@ -518,7 +518,8 @@ type State = {
          types:[],      
          paginate:{index:number,pages:number[],n:number[],goto?:number}
       }      
-   }
+   },
+   assoRes?:{}
 }
 
 class App extends Component<Props,State> {
@@ -756,6 +757,12 @@ class App extends Component<Props,State> {
       if(props.keyword) { 
          document.title = /*""+*/ props.keyword+" search results - Public Digital Library"
          
+      }
+
+      if(props.assoRes && (!state.assoRes || Object.keys(state.assoRes).length !== Object.keys(props.assoRes).length)) {
+
+         if(!s) s = { ...state, repage:true }
+         s.assoRes = { ...props.assoRes }
       }
 
       if(props.topicParents && state.filters.facets && state.filters.facets[bdo+"workGenre"]) {
@@ -2462,7 +2469,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                            if(!label.length) label = null
                         }
                         
-                        console.log("val",label,val,lit,lang,dico)
+                        //console.log("val",label,val,lit,lang,dico)
 
                         if(label && label.length) label = getLangLabel(this,"",label)
                         if(label) {
@@ -2483,7 +2490,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                            if(label["xml:lang"]) lang = label["xml:lang"]                              
                            
 
-                           console.log("lang",label,lang,uri,val);
+                           //console.log("lang",label,lang,uri,val);
                         }
                         else if(val.indexOf(rkts) !== -1) {                           
                            prop = "Same As RKTS"
