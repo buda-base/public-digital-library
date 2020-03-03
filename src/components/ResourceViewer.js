@@ -781,7 +781,7 @@ class ResourceViewer extends Component<Props,State>
                   let lang
                   valSort = valSort.map(v => ({...v,type:'bnode'})).map(w => w.type!=='bnode'||!assoR[w.value]?w:{...w,'bnode':w.value,'k':!assoR[w.value]||!assoR[w.value][rdf+"type"]?"":assoR[w.value][rdf+"type"].reduce( (acc,e) => {
                      let p = this.props.dictionary[e.value]
-                     console.log("p?",p)
+                     //console.log("p?",p)
                      if(p) p = p[rdfs+"subClassOf"]
                      if(p) p = p.filter(f => f.value === bdo+tagEnd[0].toUpperCase()+tagEnd.substring(1)).length
                      if(p) return e.value + ";" + acc  
@@ -1336,7 +1336,9 @@ class ResourceViewer extends Component<Props,State>
          //console.log("uriformat",prop,elem.value,elem,dic,withProp,show)
          
          if(!elem.value.match(/^http:\/\/purl\.bdrc\.io/) /* && !hasExtPref */ && ((!dic || !dic[elem.value]) && !prop.match(/[/#]sameAs/))) {
-            return <a href={elem.value} target="_blank">{shortUri(decodeURI(elem.value))}</a> ;
+            let link = elem.value
+            if(link.indexOf(dila) !== -1) link = "http://authority.dila.edu.tw/person/index.php?fromInner="+link.replace(/^.*?[/]([^/]+)$/,"$1")
+            return <a href={link} target="_blank">{shortUri(decodeURI(elem.value))}</a> ;
          }
 
          let dico = dic, ret = []
@@ -1394,10 +1396,21 @@ class ResourceViewer extends Component<Props,State>
             let bdrcData 
             bdrcData = <Link className={"hoverlink"} to={"/"+show+"/"+prefix+":"+pretty}></Link>
 
+            let sameBDRC ;
+            if(infoBase && infoBase.length) sameBDRC = infoBase.filter(e => e.type === tmp+"withSameAs" && e.value.indexOf("bdrc.io") !== -1)            
+            if(sameBDRC && sameBDRC.length && sameBDRC[0].value) sameBDRC = sameBDRC[0].value
+            else sameBDRC = null
+
+            //console.log("sameBDRC",sameBDRC)
+
             if(!elem.value.match(/[.]bdrc[.]/)) { 
                if(orec && orec.length) link = <a class="urilink prefLabel" href={orec[0].value} target="_blank">{info}</a>
-               else if(canUrl && canUrl.length) { 
+               else if(sameBDRC) {
                   if(!info) info = shortUri(elem.value)
+                  link = <a class="urilink prefLabel" href={"/show/"+shortUri(sameBDRC)} target="_blank">{info}</a>
+               }
+               else if(canUrl && canUrl.length) { 
+                  if(!info) info = shortUri(elem.value)                  
                   link = <a class="urilink prefLabel" href={canUrl[0].value} target="_blank">{info}</a>
                   if(srcProv.indexOf(" ") !== -1) srcProv = srcSame
                }
