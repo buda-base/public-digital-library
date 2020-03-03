@@ -110,29 +110,7 @@ async function initiateApp(params,iri,myprops) {
 
          if(!Etext)
          {
-            let longIri = fullUri(iri);
-
-            let extractAssoRes = (res) => {
-               let assocRes = {}, _res = {}
-               let allowK = [ skos+"prefLabel", tmp+"withSameAs", bdo+"inRootInstance", bdo+"language", adm+"canonicalHtml" ]
-
-               for(let k of Object.keys(res)) {                  
-                  _res[k] = { ...res[k] }
-                  if(k !== longIri) {
-                     let resK = Object.keys(res[k])
-                     if(res[k][skos+"prefLabel"]) assocRes[k] = Object.keys(res[k]).reduce( (acc,f) => ([ ...acc, ...res[k][f].map(e => ({...e,type:f}))]), [])
-                     if(!resK.filter(k => !allowK.includes(k)).length) delete _res[k]
-                     if(res[k][tmp+"withSameAs"]) { 
-                        if(!_res[k]) _res[k] = {}
-                        _res[k][tmp+"withSameAs"] = [ ...res[k][tmp+"withSameAs"] ] 
-                     }
-                  }
-               }
-
-               return { assocRes, _res} ;
-            }
-
-            let {assocRes, _res } = extractAssoRes(res) //= await api.loadAssocResources(iri)
+            let {assocRes, _res } = extractAssoRes(iri,res) //= await api.loadAssocResources(iri)
             store.dispatch(dataActions.gotResource(iri,_res))
             store.dispatch(dataActions.gotAssocResources(iri,{ data: assocRes }))
             sameAsR[iri] = true ;
@@ -352,6 +330,30 @@ function* watchInitiateApp() {
       INITIATE_APP,
       (action) => initiateApp(action.payload,action.meta.iri,action.meta.auth)
    );
+}
+
+
+function extractAssoRes(iri,res) {
+
+   let longIri = fullUri(iri);
+
+   let assocRes = {}, _res = {}
+   let allowK = [ skos+"prefLabel", tmp+"withSameAs", bdo+"inRootInstance", bdo+"language", adm+"canonicalHtml" ]
+
+   for(let k of Object.keys(res)) {                  
+      _res[k] = { ...res[k] }
+      if(k !== longIri) {
+         let resK = Object.keys(res[k])
+         if(res[k][skos+"prefLabel"]) assocRes[k] = Object.keys(res[k]).reduce( (acc,f) => ([ ...acc, ...res[k][f].map(e => ({...e,type:f}))]), [])
+         if(!resK.filter(k => !allowK.includes(k)).length) delete _res[k]
+         if(res[k][tmp+"withSameAs"]) { 
+            if(!_res[k]) _res[k] = {}
+            _res[k][tmp+"withSameAs"] = [ ...res[k][tmp+"withSameAs"] ] 
+         }
+      }
+   }
+
+   return { assocRes, _res} ;
 }
 
 async function getResetLink(id,user,profile)
@@ -1910,7 +1912,11 @@ async function getResource(iri:string) {
    try {
       let res = await api.loadResource(iri) //.replace(/bdr:/,""));
 
-      store.dispatch(dataActions.gotResource(iri, res));
+      let {assocRes, _res } = extractAssoRes(iri,res) //= await api.loadAssocResources(iri)
+      store.dispatch(dataActions.gotResource(iri,_res))
+      store.dispatch(dataActions.gotAssocResources(iri,{ data: assocRes }))
+
+      //store.dispatch(dataActions.gotResource(iri, res));
    }
    catch(e) {
       console.error("ERRROR with resource "+iri,e)

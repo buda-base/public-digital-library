@@ -2114,7 +2114,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
    makeResult(id,n,t,lit,lang,tip,Tag,url,rmatch = [],facet,allProps = [],preLit,isInstance)
    {
-      //console.log("res",id,allProps,n,t,lit,lang,tip,Tag,rmatch,sameAsRes)
+      console.log("res",id,allProps,n,t,lit,lang,tip,Tag,rmatch,sameAsRes)
 
       let sameAsRes ;
       if(allProps) sameAsRes = [ ...allProps ]
@@ -2209,7 +2209,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          }
          else bestM = ""
 
-
+         let prefix = prettId.replace(/:.*$/,"")
          
          let directSameAs = false
          if(!prettId.match(/^bdr:/) && (fullId.match(new RegExp(cbcp+"|"+cbct+"|"+rkts)) || !sameAsRes || !sameAsRes.filter(s => s.value.match(/[#/]sameAs/) || (s.type.match(/[#/]sameAs/) && (s.value.indexOf(".bdrc.io") !== -1 || s.value.indexOf("bdr:") !== -1))).length))   {
@@ -2249,7 +2249,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          }
 
          if(sameAsRes.length) {
-            //console.log("sameAs",prettId,id,dico,rmatch,sameAsRes)
+            console.log("sameAs",prettId,id,dico,rmatch,sameAsRes)
          
             let menus = {}
             let sources = []
@@ -2299,17 +2299,21 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   if(src === "rkts" || src == "cbct" || src == "cbcp") shortU = prettId
                   //let shortU = hasRes[src]
 
+                  let prefix = shortU.replace(/:.*$/,"");
+
                   let url = fullUri(hres)
 
                   if(url.match(new RegExp("^("+src+":)|("+prefixesMap[src]+")"))) {                     
                      let canonUrl = sameAsRes.filter(p => p.type === adm+"canonicalHtml")                     
-                     if(canonUrl.length) url = canonUrl[0].value
+                     if(canonUrl.length && canonUrl[0].value && canonUrl[0].value.indexOf(prefix) !== -1) url = canonUrl[0].value
+                     //console.log("cUrl1",url,prefix,hres)
                   }
 
                   if(this.props.assoRes && this.props.assoRes[url]) {
                      let canonUrl = this.props.assoRes[url]
                      if(canonUrl && canonUrl.filter) canonUrl = canonUrl.filter(p => p.type === adm+"canonicalHtml" || p.fromKey === adm+"canonicalHtml")
-                     if(canonUrl.length) url = canonUrl[0].value
+                     if(canonUrl.length && canonUrl[0].value && canonUrl[0].value.indexOf(prefix) !== -1) url = canonUrl[0].value
+                     //console.log("cUrl2",url,prefix,hres)
                   }
 
                   let prov = src.toUpperCase()
@@ -2458,7 +2462,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                            if(!label.length) label = null
                         }
                         
-                        //console.log("val",label,val,lit,lang,dico)
+                        console.log("val",label,val,lit,lang,dico)
 
                         if(label && label.length) label = getLangLabel(this,"",label)
                         if(label) {
@@ -2479,7 +2483,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                            if(label["xml:lang"]) lang = label["xml:lang"]                              
                            
 
-                           //console.log("lang",label,lang,uri,val);
+                           console.log("lang",label,lang,uri,val);
                         }
                         else if(val.indexOf(rkts) !== -1) {                           
                            prop = "Same As RKTS"
@@ -2856,7 +2860,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      let sameAs = this.props.resources[this.props.keyword]
                      if(sameAs) sameAs = sameAs[fullURI]
                      if(sameAs) sameAs = Object.keys(sameAs).filter(k => k === adm+"canonicalHtml" || k === owl+"sameAs").reduce( (acc,k) => ([...acc, ...sameAs[k].map( s => ({ ...s, type:k }))]),[])
-                     console.log("res sameAs", sameAs)
+                     //console.log("res sameAs", sameAs)
                      if(!this.props.isInstance) {
                         message.push(<h4 key="keyResource" style={{marginLeft:"16px"}}>{"Resource Id Matching"}</h4>)
                         message.push(this.makeResult(this.props.keyword,1,null,l.value,l.lang,null,null,null,[],null,sameAs)) //[{"type":owl+"sameAs","value":this.props.keyword}]))
@@ -3419,7 +3423,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                         return searchTypes.indexOf(t) !== -1 
                      }).reduce((acc,e)=>acc+Object.keys(results.results.bindings[e]).length,0)
 
-      console.log("res::",id,results,message,message.length,resLength,resMatch,this.props.loading)
+      //console.log("res::",id,results,message,message.length,resLength,resMatch,this.props.loading)
 
       let sta = { ...this.state }
 
