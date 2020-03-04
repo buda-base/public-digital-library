@@ -666,7 +666,7 @@ class App extends Component<Props,State> {
 
    }
 
-   requestSearch(key:string,label?:string,lang?:string)
+   requestSearch(key:string,label?:string,lang?:string,forceSearch:boolean=false)
    {
       console.log("key",key,label,this.state.searchTypes)
 
@@ -693,12 +693,16 @@ class App extends Component<Props,State> {
       
       if(_key.match(/^[UWPGRCTILE][A-Z0-9_]+/) || prefixesMap[key.replace(/^([^:]+):.*$/,"$1")])
       {
-         if(_key.indexOf(":") === -1) _key = "bdr:"+_key
-         this.props.history.push({pathname:"/show/"+_key})
+         if(!forceSearch) {
+            if(_key.indexOf(":") === -1) _key = "bdr:"+_key
+            this.props.history.push({pathname:"/show/"+_key})
+         }
+         else {
 
-         //if(!label) label = this.state.filters.datatype.filter((f)=>["Person","Work"].indexOf(f) !== -1)[0]
+            if(!label) label = this.state.filters.datatype.filter((f)=>["Person","Work"].indexOf(f) !== -1)[0]
+            this.props.history.push({pathname:"/search",search:"?r="+key+(label?"&t="+label:"")})
+         }
 
-         //this.props.history.push({pathname:"/search",search:"?r="+key+(label?"&t="+label:"")})
 
       }
       else if(key.match(/^[^:]*:[^ ]+/))
@@ -1482,7 +1486,7 @@ class App extends Component<Props,State> {
          
          if([ /*"Any",*/ "Person","Place","Work","Etext","Role","Topic","Corporation","Lineage"].indexOf(lab) !== -1)
          {
-            this.requestSearch(this.props.keyword,[ lab ], this.props.language);
+            this.requestSearch(this.props.keyword,[ lab ], this.props.language, true);
          }
          
       }
@@ -2121,7 +2125,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
    makeResult(id,n,t,lit,lang,tip,Tag,url,rmatch = [],facet,allProps = [],preLit,isInstance)
    {
-      console.log("res",id,allProps,n,t,lit,lang,tip,Tag,rmatch,sameAsRes)
+      //console.log("res",id,allProps,n,t,lit,lang,tip,Tag,rmatch,sameAsRes)
 
       let sameAsRes ;
       if(allProps) sameAsRes = [ ...allProps ]
@@ -2256,7 +2260,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          }
 
          if(sameAsRes.length) {
-            console.log("sameAs",prettId,id,dico,rmatch,sameAsRes)
+            //console.log("sameAs",prettId,id,dico,rmatch,sameAsRes)
          
             let menus = {}
             let sources = []
