@@ -1548,18 +1548,38 @@ class ResourceViewer extends Component<Props,State>
       }><span className="lang">{lang}</span></Tooltip>:null
    }
 
-   getResourceElem(prop:string, IRI?:string)
+   getResourceElem(prop:string, IRI?:string, useAssoc:boolean=false)
    {
-      if(!IRI) IRI = this.props.IRI
-
-      if(!IRI || !this.props.resources || !this.props.resources[IRI]
-         || !this.props.resources[IRI][this.expand(IRI)]
-         || !this.props.resources[IRI][this.expand(IRI)][prop]) return ;
-
-
       let elem ;
-      if(this._properties) elem = this._properties[prop]
-      elem = this.props.resources[IRI][this.expand(IRI)][prop]
+
+      if(!IRI) { 
+         IRI = this.props.IRI
+             
+         let longIRI = fullUri(IRI)
+
+         if(!IRI || !this.props.resources || !this.props.resources[IRI]
+            || !this.props.resources[IRI][longIRI]
+            || !this.props.resources[IRI][longIRI][prop]) 
+               return ;
+
+         if(this._properties) elem = this._properties[prop]
+
+         if(!elem && this.props.resources && this.props.resources[IRI] && this.props.resources[IRI][longIRI]) 
+            elem = this.props.resources[IRI][longIRI][prop]
+      }
+      else if(useAssoc) {
+
+         let longIRI = fullUri(IRI)
+
+         if(this.props.assocResources) { 
+            elem = this.props.assocResources[longIRI]
+            if(elem) elem = elem.filter(e => e.type === prop)
+            else elem = null
+         }
+
+      }
+
+      console.log("gR",prop,IRI,elem)
 
       return elem
    }
@@ -2589,39 +2609,42 @@ class ResourceViewer extends Component<Props,State>
    preprop = (k) => {} ;
    insertPreprop = (tag,n,ret) => ret ;
 
-   getH2 = (title,_befo) => {
-      return <h2>{_befo}{title.value}{this.tooltip(title.lang)}</h2>
+   getH2 = (title,_befo,_T,other) => {
+      return <h2 {...!other?{class:"on"}:{}} >{_T}{_befo}{title.value}{this.tooltip(title.lang)}</h2>
    }
 
-   setTitle = (kZprop) => {
+   setTitle = (kZprop,_T,other) => {
 
       let title,titlElem,otherLabels = [] ;
+      _T = <span class="T">{_T}</span>
 
       if(kZprop.indexOf(skos+"prefLabel") !== -1)       {
-         titlElem = this.getResourceElem(skos+"prefLabel");
+         titlElem = this.getResourceElem(skos+"prefLabel",other,true);
       }
       else if(kZprop.indexOf(bdo+"eTextTitle") !== -1)     {
-         titlElem = this.getResourceElem(bdo+"eTextTitle");
+         titlElem = this.getResourceElem(bdo+"eTextTitle",other,true);
       }
       else if(kZprop.indexOf(rdfs+"label") !== -1)   {
-         titlElem = this.getResourceElem(rdfs+"label");
+         titlElem = this.getResourceElem(rdfs+"label",other,true);
       }
       else {
-         title = <h2>{getEntiType(this.props.IRI) + " " +shortUri(this.props.IRI)}</h2>
+         title = <h2 {...!other?{class:"on"}:{}}>{_T}{shortUri(other?other:this.props.IRI)}</h2>
       }
       
+      console.log("sT",kZprop,_T,other,title,titlElem)
+
       if(!title && titlElem) {
          if(typeof titlElem !== 'object') titlElem =  { "value" : titlElem, "lang":""}
          title = getLangLabel(this,"", titlElem, false, false, otherLabels)
-         console.log("titl",title,otherLabels)
+         console.log("titl",title,otherLabels,other)
          if(title.value) {
-            document.title = title.value + " - Public Digital Library"
+            if(!other) document.title = title.value + " - Public Digital Library"
             let _befo
             if(title.fromSameAs && !title.fromSameAs.match(new RegExp(bdr))) {
                const {befo,bdrcData} = this.getSameLink(title,shortUri(title.fromSameAs).split(":")[0]+" sameAs hasIcon")            
                _befo = befo
             }
-            title = this.getH2(title,_befo)
+            title = this.getH2(title,_befo,_T,other)
          }
       }
 
@@ -3440,11 +3463,14 @@ class ResourceViewer extends Component<Props,State>
    renderBrowseAssoRes = () => {
       if(this.props.resources && this.props.resources[this.props.IRI])
          return (
+
+         <div class="data">
             <div class="browse">
                <Link className="download login" to={"/search?r="+this.props.IRI+"&t=Work"}>
                   &gt; {I18n.t("resource.browse")}
                </Link>
             </div>
+         </div>
          )
    }
 
@@ -3455,6 +3481,7 @@ class ResourceViewer extends Component<Props,State>
 
       if(!this.props.manifestError &&  this.props.imageAsset)
          return  ( 
+         <div class="data">
             <div className={"firstImage "+(this.state.imageLoaded?"loaded":"")} {...(this.props.config.hideViewers?{"onClick":this.showMirador.bind(this),"style":{cursor:"pointer"}}:{})} >
                <Loader className="uvLoader" loaded={this.state.imageLoaded} color="#fff"/>
                { this.props.firstImage && <img src={this.props.firstImage} /*src={`data:image/${this.props.firstImage.match(/png$/)?'png':'jpeg'};base64,${this.props.imgData}`}*/  onLoad={(e)=>this.setState({...this.state,imageLoaded:true})}/> }
@@ -3486,6 +3513,7 @@ class ResourceViewer extends Component<Props,State>
                   </div>
                }
             </div>
+         </div>
          )
    }
 
@@ -3592,7 +3620,55 @@ class ResourceViewer extends Component<Props,State>
 
       this.setManifest(kZprop,iiifpres)    
 
-      let { title,titlElem,otherLabels } = this.setTitle(kZprop) ;
+      let wTitle,iTitle,rTitle ;
+      let _T = getEntiType(this.props.IRI)
+      let { title,titlElem,otherLabels } = this.setTitle(kZprop,_T) ;
+      if(_T === "Work") { 
+         wTitle = title ; 
+      }
+      else if(_T === "Instance") { 
+         iTitle = title ; 
+         let baseW = this.getResourceElem(bdo+"instanceOf")
+         if(this.props.assocResources && baseW && baseW.length && baseW[0].value) {
+            let baseData = this.props.assocResources[baseW[0].value]
+            if(baseData && baseData.length) baseData = baseData.map(e => (e.fromKey?e.fromKey:(e.type?e.type:e)))         
+            else baseData = []
+            _T = getEntiType(shortUri(baseW[0].value))
+            let { title,titlElem,otherLabels } = this.setTitle(baseData,_T,baseW[0].value) ;
+            wTitle = title
+         }
+         baseW = this.getResourceElem(bdo+"instanceHasReproduction")
+         if(this.props.assocResources && baseW && baseW.length === 1 && baseW[0].value) {
+            let baseData = this.props.assocResources[baseW[0].value]
+            if(baseData && baseData.length) baseData = baseData.map(e => (e.fromKey?e.fromKey:(e.type?e.type:e)))         
+            else baseData = []
+            _T = getEntiType(shortUri(baseW[0].value))
+            let { title,titlElem,otherLabels } = this.setTitle(baseData,_T,baseW[0].value) ;
+            rTitle = title            
+         }
+      }
+      else if(_T === "Images") { 
+         rTitle = title ; 
+         let baseW = this.getResourceElem(bdo+"instanceOf")
+         if(this.props.assocResources && baseW && baseW.length && baseW[0].value) {
+            let baseData = this.props.assocResources[baseW[0].value]
+            if(baseData && baseData.length) baseData = baseData.map(e => (e.fromKey?e.fromKey:(e.type?e.type:e)))         
+            else baseData = []
+            _T = getEntiType(shortUri(baseW[0].value))
+            let { title,titlElem,otherLabels } = this.setTitle(baseData,_T,baseW[0].value) ;
+            wTitle = title
+         }
+         baseW = this.getResourceElem(bdo+"instanceReproductionOf")
+         if(this.props.assocResources && baseW && baseW.length === 1 && baseW[0].value) {
+            let baseData = this.props.assocResources[baseW[0].value]
+            if(baseData && baseData.length) baseData = baseData.map(e => (e.fromKey?e.fromKey:(e.type?e.type:e)))         
+            else baseData = []
+            _T = getEntiType(shortUri(baseW[0].value))
+            let { title,titlElem,otherLabels } = this.setTitle(baseData,_T,baseW[0].value) ;
+            iTitle = title            
+         }
+      }
+      
       //console.log("ttlm",titlElem)
       
       let theData = this.renderData(kZprop,iiifpres,title,otherLabels)      
@@ -3605,7 +3681,7 @@ class ResourceViewer extends Component<Props,State>
                { top_left_menu(this,pdfLink,monoVol,fairUse)  }
                { this.renderAnnoPanel() }
                { this.renderWithdrawn() }             
-               { title }
+               <div class="title">{ wTitle }{ iTitle }{ rTitle }</div>
                { this.renderBrowseAssoRes() }
                { this.renderNoAccess(fairUse) }
                { this.renderFirstImage() }

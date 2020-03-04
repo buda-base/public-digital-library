@@ -26,7 +26,7 @@ export const dPrefix = {
       "R" : "Role",
       "PR": "Product",
       "T" : "Topic",
-      "W" : "ImageInstance",
+      "W" : "Images",
       "WA" : "Work",
       "MW": "Instance",
       "O" : "Taxonomy",

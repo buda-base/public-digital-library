@@ -299,6 +299,7 @@ else if(params && params.q) {
 }
 else if(params && params.r) {
    let t = getEntiType(params.r)
+   if(t === "Instance" || t === "Images" || t === "Volume") t = "Work"
 
    console.log("state r",t,state.data.searches,params,iri)
 
