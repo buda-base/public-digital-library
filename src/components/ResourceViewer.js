@@ -794,8 +794,7 @@ class ResourceViewer extends Component<Props,State>
             return valSort ; //
          }
 
-         // TODO uncomment when title nodes are back       
-         //if(prop[bdo+'hasTitle']) prop[bdo+'hasTitle'] = sortBySubPropURI("hasTitle") ;
+         if(prop[bdo+'hasTitle']) prop[bdo+'hasTitle'] = sortBySubPropURI("hasTitle") ;
          
          if(prop[bdo+'personName']) prop[bdo+'personName'] = sortBySubPropURI("personName") ;
 
