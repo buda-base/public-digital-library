@@ -189,12 +189,12 @@ const providers = {
    "eftr":"Translating The Words Of The Buddha",
    "ia":"Internet Archive",                 
    "gretil":"Göttingen Register of Electronic Texts in Indian Languages",
-   "rkts":"Resources for Kanjur & Tanjur Studies",
    "mbbt":"Marcus Bingenheimer",
-   "wd":"Wikidata",
+   "rkts":"Resources for Kanjur & Tanjur Studies",
    "ola":"Open Library",
-   "SRC":"Sakya Research Center",
-   "viaf":"Virtual International Authority File"
+   "src":"Sakya Research Center",
+   "viaf":"Virtual International Authority File",
+   "wd":"Wikidata",
 }
    
 //const prefixes = { adm, bdac, bdan, bda, bdo, bdr, foaf, oa, owl, rdf, rdfs, skos, xsd, tmp, dila }
@@ -2614,7 +2614,8 @@ class ResourceViewer extends Component<Props,State>
    insertPreprop = (tag,n,ret) => ret ;
 
    getH2 = (title,_befo,_T,other) => {
-      return <h2 {...!other?{class:"on"}:{}} >{_T}{_befo}{title.value}{this.tooltip(title.lang)}</h2>
+      if(other) return <h2><Link to={"/show/"+shortUri(other)}>{_T}{_befo}{title.value}{this.tooltip(title.lang)}</Link></h2>
+      else return <h2 class="on">{_T}{_befo}{title.value}{this.tooltip(title.lang)}</h2>
    }
 
    setTitle = (kZprop,_T,other) => {
