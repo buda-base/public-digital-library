@@ -3658,6 +3658,8 @@ class ResourceViewer extends Component<Props,State>
          rTitle = title ; 
          let baseW = this.getResourceElem(bdo+"instanceOf")
          if(this.props.assocResources && baseW && baseW.length && baseW[0].value) {
+            let wUri = shortUri(baseW[0].value);
+            if(!this.props.resources[wUri]) this.props.onGetResource(wUri);
             let baseData = this.props.assocResources[baseW[0].value]
             if(baseData && baseData.length) baseData = baseData.map(e => (e.fromKey?e.fromKey:(e.type?e.type:e)))         
             else baseData = []
@@ -3667,6 +3669,8 @@ class ResourceViewer extends Component<Props,State>
          }
          baseW = this.getResourceElem(bdo+"instanceReproductionOf")
          if(this.props.assocResources && baseW && baseW.length === 1 && baseW[0].value) {
+            let wUri = shortUri(baseW[0].value);
+            if(!this.props.resources[wUri]) this.props.onGetResource(wUri);
             let baseData = this.props.assocResources[baseW[0].value]
             if(baseData && baseData.length) baseData = baseData.map(e => (e.fromKey?e.fromKey:(e.type?e.type:e)))         
             else baseData = []
