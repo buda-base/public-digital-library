@@ -2633,7 +2633,8 @@ class ResourceViewer extends Component<Props,State>
          titlElem = this.getResourceElem(rdfs+"label",other,true);
       }
       else {
-         title = <h2 {...!other?{class:"on"}:{}}>{_T}{shortUri(other?other:this.props.IRI)}</h2>
+          if(other) title = <h2><Link to={"/show/"+shortUri(other)}>{_T}{shortUri(other?other:this.props.IRI)}</Link></h2>
+          else  title = <h2 class="on">{_T}{shortUri(other?other:this.props.IRI)}</h2>
       }
       
       //console.log("sT",kZprop,_T,other,title,titlElem)
