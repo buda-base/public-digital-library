@@ -82,8 +82,11 @@ async function initiateApp(params,iri,myprops) {
          Etext = iri.match(/^([^:]+:)?UT/)
 
          try {
+
+            // TODO do not load resource again
+
             if(!Etext) res = await api.loadResource(iri)
-            else res = await api.loadEtextInfo(iri)
+            else res = await api.loadEtextInfo(iri)         
          }
          catch(e){
             store.dispatch(dataActions.noResource(iri,e));
@@ -136,7 +139,11 @@ async function initiateApp(params,iri,myprops) {
             }
             */
 
-            store.dispatch(dataActions.getAnnotations(iri))
+
+            // TODO enable annotations
+
+            //store.dispatch(dataActions.getAnnotations(iri))
+
          }
          else {
             /*
@@ -1161,7 +1168,7 @@ function addMeta(keyword:string,language:string,data:{},t:string,tree:{},found:b
 
       if(tree)
       {
-         if(stat["tree"]["unspecified"]) {
+         if(stat["tree"] && stat["tree"]["unspecified"]) {
 
             let elem = data["results"]["bindings"][t.toLowerCase()+"s"]
 

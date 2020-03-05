@@ -193,6 +193,7 @@ const providers = {
    "mbbt":"Marcus Bingenheimer",
    "wd":"Wikidata",
    "ola":"Open Library",
+   "SRC":"Sakya Research Center",
    "viaf":"Virtual International Authority File"
 }
    
@@ -1579,7 +1580,7 @@ class ResourceViewer extends Component<Props,State>
 
       }
 
-      console.log("gR",prop,IRI,elem)
+      //console.log("gR",prop,IRI,elem)
 
       return elem
    }
@@ -1617,7 +1618,8 @@ class ResourceViewer extends Component<Props,State>
          //console.log("e.f",e.fromSameAs)
 
          bdrcData = <Link className="hoverlink" to={"/show/"+shortUri(e.fromSameAs)}></Link>               
-         let src = sameAsPrefix.replace(/^([^ ]+) .*$/,"$1") 
+         let src ;
+         if(sameAsPrefix) src = sameAsPrefix.replace(/^([^ ]+) .*$/,"$1") 
          let link = <a href="urilink" target="_blank" href={getRealUrl(this,e.fromSameAs)}></a>
          if(src === "bdr") link =  <Link className="urilink" to={"/show/"+shortUri(e.fromSameAs)}></Link>               
 
@@ -2633,12 +2635,12 @@ class ResourceViewer extends Component<Props,State>
          title = <h2 {...!other?{class:"on"}:{}}>{_T}{shortUri(other?other:this.props.IRI)}</h2>
       }
       
-      console.log("sT",kZprop,_T,other,title,titlElem)
+      //console.log("sT",kZprop,_T,other,title,titlElem)
 
       if(!title && titlElem) {
          if(typeof titlElem !== 'object') titlElem =  { "value" : titlElem, "lang":""}
          title = getLangLabel(this,"", titlElem, false, false, otherLabels)
-         console.log("titl",title,otherLabels,other)
+         //console.log("titl",title,otherLabels,other)
          if(title && title.value) {
             if(!other) document.title = title.value + " - Public Digital Library"
             let _befo
@@ -3625,13 +3627,12 @@ class ResourceViewer extends Component<Props,State>
       let wTitle,iTitle,rTitle ;
       let _T = getEntiType(this.props.IRI)
       let { title,titlElem,otherLabels } = this.setTitle(kZprop,_T) ;
-      if(_T === "Work") { 
-         wTitle = title ; 
-      }
-      else if(_T === "Instance") { 
+      if(_T === "Instance") { 
          iTitle = title ; 
          let baseW = this.getResourceElem(bdo+"instanceOf")
          if(this.props.assocResources && baseW && baseW.length && baseW[0].value) {
+            let wUri = shortUri(baseW[0].value);
+            if(!this.props.resources[wUri]) this.props.onGetResource(wUri);
             let baseData = this.props.assocResources[baseW[0].value]
             if(baseData && baseData.length) baseData = baseData.map(e => (e.fromKey?e.fromKey:(e.type?e.type:e)))         
             else baseData = []
@@ -3641,6 +3642,8 @@ class ResourceViewer extends Component<Props,State>
          }
          baseW = this.getResourceElem(bdo+"instanceHasReproduction")
          if(this.props.assocResources && baseW && baseW.length === 1 && baseW[0].value) {
+            let wUri = shortUri(baseW[0].value);
+            if(!this.props.resources[wUri]) this.props.onGetResource(wUri);
             let baseData = this.props.assocResources[baseW[0].value]
             if(baseData && baseData.length) baseData = baseData.map(e => (e.fromKey?e.fromKey:(e.type?e.type:e)))         
             else baseData = []
@@ -3669,6 +3672,9 @@ class ResourceViewer extends Component<Props,State>
             let { title,titlElem,otherLabels } = this.setTitle(baseData,_T,baseW[0].value) ;
             iTitle = title            
          }
+      }
+      else { 
+         wTitle = title ; 
       }
       
       //console.log("ttlm",titlElem)
