@@ -519,7 +519,8 @@ type State = {
          paginate:{index:number,pages:number[],n:number[],goto?:number}
       }      
    },
-   assoRes?:{}
+   assoRes?:{},
+   locale:string
 }
 
 class App extends Component<Props,State> {
@@ -765,8 +766,9 @@ class App extends Component<Props,State> {
 
       if(props.assoRes && (!state.assoRes || Object.keys(state.assoRes).length !== Object.keys(props.assoRes).length)) {
 
-         if(!s) s = { ...state, repage:true }
+         if(!s) s = { ...state }
          s.assoRes = { ...props.assoRes }
+         s.repage = true
       }
 
       if(props.topicParents && state.filters.facets && state.filters.facets[bdo+"workGenre"]) {
@@ -916,6 +918,13 @@ class App extends Component<Props,State> {
          }
          s = { ...s, langPreset:props.langPreset, repage:true, langDetect }
          if(props.langIndex !== undefined ) s = { ...s, language:props.langPreset[0] }
+
+      }
+
+      if(props.locale !== state.locale)
+      {
+         if(!s) s = { ...state } 
+         s = { ...s, locale: props.locale, repage: true } 
 
       }
 
@@ -2012,7 +2021,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                         <span class="instance-collapse" onClick={(e) => { 
                            this.setState({...this.state,collapse:{...this.state.collapse,[iri]:!this.state.collapse[iri] },repage:true })
                         }}>{!this.state.collapse[iri]?<ExpandMore/>:<ExpandLess/>}</span>,
-                        <span class="label">{this.fullname(prop)+(plural && ret.length > 1 ?plural:"")}:&nbsp;</span>,
+                        <span class="label">{this.fullname(prop,[],true)+(plural && ret.length > 1 ?plural:"")}:&nbsp;</span>,
                         <div style={{clear:"both"}}></div>,
                         <Collapse in={this.state.collapse[iri]} >
                            {ret}
@@ -2036,7 +2045,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   }
 
                   ret.push(<div class="match">
-                     <span class="label">{this.fullname(p)}:&nbsp;</span>
+                     <span class="label">{this.fullname(p,[],true)}:&nbsp;</span>
                      <div class="multi">{val}</div>
                   </div>)
 
@@ -2117,7 +2126,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             }            
          }
          if(ret.length && !useAux) return <div class="match">
-                  <span class="label">{this.fullname(prop)+(plural && ret.length > 1 ?plural:"")}:&nbsp;</span>
+                  <span class="label">{this.fullname(prop,[],true)+(plural && ret.length > 1 ?plural:"")}:&nbsp;</span>
                   <div class="multi">{ret}</div>
                 </div>
       }
@@ -2394,7 +2403,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      let expand,context,inPart
                      let uri,from
                      if(prop) lastP = prop 
-                     prop = this.fullname(m.type.replace(/.*altLabelMatch/,skos+"altLabel"))
+                     prop = this.fullname(m.type.replace(/.*altLabelMatch/,skos+"altLabel"),[],true)
                      let val,isArray = false ;
                      let lang = m["lang"]
                      if(!lang) lang = m["xml:lang"]
@@ -2564,7 +2573,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                               */
                            } else {
 
-                              prop = this.fullname(m.value) 
+                              prop = this.fullname(m.value,[],true) 
                               uri = "/show/"+this.props.keyword                              
                            }
                         }                        

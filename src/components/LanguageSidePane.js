@@ -102,7 +102,7 @@ class LanguageSidePane extends Component<Props,State> {
                   ["zh", "en", "fr", "bo" ].map((i) => {
 
                   let label = I18n.t("lang."+i);
-                  let disab = ["fr","en"].indexOf(i) === -1
+                  let disab = ["fr","en","bo"].indexOf(i) === -1
 
                   return ( <div key={i} style={{width:"150px",textAlign:"left"}} class="dataWidget widget">
                      <FormControlLabel

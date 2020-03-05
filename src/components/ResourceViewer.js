@@ -290,6 +290,9 @@ let propOrder = {
       "skos:altLabel",
       "bdo:workType",
       "bdo:workExpressionOf",
+      "bdo:instanceOf",
+      "bdo:instanceReproductionOf",
+      "bdo:instanceHasReproduction",
       "tmp:siblingExpressions",
       "bdo:workDerivativeOf",
       "bdo:workTranslationOf",
@@ -313,9 +316,6 @@ let propOrder = {
       "bdo:workDimWidth",
       "bdo:workDimHeight",
       "tmp:hasEtext",
-      "bdo:instanceOf",
-      "bdo:instanceReproductionOf",
-      "bdo:instanceHasReproduction",
       "bdo:hasReproduction",
       "bdo:workHasInstance",
       "bdo:hasInstance",
@@ -379,7 +379,7 @@ let propOrder = {
 
 propOrder["Volume"] = propOrder["Work"]
 propOrder["Instance"] = propOrder["Work"]
-propOrder["ImageInstance"] = propOrder["Work"]
+propOrder["Images"] = propOrder["Work"]
 
 const canoLang = ["Bo","Pi","Sa","Zh"]
 
@@ -1063,7 +1063,7 @@ class ResourceViewer extends Component<Props,State>
 
 
 
-   fullname(prop:string,isUrl:boolean=false,noNewline:boolean=false)
+   fullname(prop:string,isUrl:boolean=false,noNewline:boolean=false,useUIlang:boolean=false)
    {
       for(let p of Object.keys(prefixes)) { prop = prop.replace(new RegExp(p+":","g"),prefixes[p]) }
 
@@ -1085,7 +1085,7 @@ class ResourceViewer extends Component<Props,State>
          if(ret.length == 0) ret = this.props.ontology[prop][rdfs+"label"].filter((e) => (e.lang == this.props.prefLang))
          if(ret.length == 0) ret = this.props.ontology[prop][rdfs+"label"]
          */
-         let ret = getLangLabel(this, prop, this.props.dictionary[prop][rdfs+"label"])
+         let ret = getLangLabel(this, prop, this.props.dictionary[prop][rdfs+"label"],useUIlang)
          if(ret && ret.value && ret.value != "")
             return ret.value
 
@@ -2588,6 +2588,8 @@ class ResourceViewer extends Component<Props,State>
 
       // TODO use skos:definition instead of adm:userTooltip
 
+      if(txt) console.warn("use of txt in proplink",k,txt)
+
       let tooltip
       if(this.props.ontology && this.props.ontology[k]) {
          if(this.props.ontology[k][adm+"userTooltip"]) 
@@ -2598,7 +2600,7 @@ class ResourceViewer extends Component<Props,State>
 
       if(k === bdo+'note') txt = "Notes" ;
 
-      let ret = (<a class="propref" {...(k.match(/purl[.]bdrc[.]io/) && !k.match(/[/]tmp[/]/) ? {"href":k}:{})} target="_blank">{txt?txt:this.fullname(k)}</a>)
+      let ret = (<a class="propref" {...(k.match(/purl[.]bdrc[.]io/) && !k.match(/[/]tmp[/]/) ? {"href":k}:{})} target="_blank">{txt?txt:this.fullname(k,false,false,true)}</a>)
 
       if(tooltip && tooltip.length > 0) ret = <Tooltip placement="bottom-start" classes={{tooltip:"commentT",popper:"commentP"}} style={{marginLeft:"50px"}} title={<div>{tooltip.map(tip => tip.value.split("\n").map(e => [e,<br/>]))}</div>}>{ret}</Tooltip>
 
@@ -2637,7 +2639,7 @@ class ResourceViewer extends Component<Props,State>
          if(typeof titlElem !== 'object') titlElem =  { "value" : titlElem, "lang":""}
          title = getLangLabel(this,"", titlElem, false, false, otherLabels)
          console.log("titl",title,otherLabels,other)
-         if(title.value) {
+         if(title && title.value) {
             if(!other) document.title = title.value + " - Public Digital Library"
             let _befo
             if(title.fromSameAs && !title.fromSameAs.match(new RegExp(bdr))) {
@@ -3533,7 +3535,7 @@ class ResourceViewer extends Component<Props,State>
       if( (pdfLink) &&
                  ( (!(this.props.manifestError && this.props.manifestError.error.message.match(/Restricted access/)) && !fairUse) ||
                   (this.props.auth && this.props.auth.isAuthenticated())) )
-         return [<br/>,<div style={{display:"inline-block",marginTop:"20px"}}>
+         return [<div class="data"><div class="browse">
                   <a onClick={ ev => {
                         //if(that.props.createPdf) return ;
                         if((monoVol.match && monoVol.match(/[^0-9]/)) || monoVol > 0){
@@ -3546,7 +3548,7 @@ class ResourceViewer extends Component<Props,State>
                      }
                   } class="download login">&gt; Download images as PDF/ZIP</a>
                   <Loader loaded={(!this.props.pdfVolumes || this.props.pdfVolumes.length > 0)} options={{position:"relative",left:"115%",top:"-11px"}} />
-               </div>]
+               </div></div>]
    } 
 
    renderMirador = () => {
