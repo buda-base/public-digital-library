@@ -154,11 +154,15 @@ reducers[actions.TYPES.gotInstances] = gotInstances;
 
 
 export const getResource = (state: DataState, action: Action) => {
+   
+   let res = state.resources[action.payload]
+   if(!res) res = true
+
     return {
         ...state,
         "resources": {
            ...state.resources,
-           [action.payload]:true
+           [action.payload]:res
        }
     }
 }

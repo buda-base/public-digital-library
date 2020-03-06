@@ -346,13 +346,14 @@ function extractAssoRes(iri,res) {
    let longIri = fullUri(iri);
 
    let assocRes = {}, _res = {}
-   let allowK = [ skos+"prefLabel", tmp+"withSameAs", bdo+"inRootInstance", bdo+"language", adm+"canonicalHtml" ]
+   let allowK = [ skos+"prefLabel", tmp+"withSameAs", bdo+"inRootInstance", bdo+"language", adm+"canonicalHtml", bdo+"partIndex", bdo+"volumeNumber" ]
+   let allowR = [ skos+"prefLabel", bdo+"partIndex", bdo+"volumeNumber" ]
 
    for(let k of Object.keys(res)) {                  
       _res[k] = { ...res[k] }
       if(k !== longIri) {
          let resK = Object.keys(res[k])
-         if(res[k][skos+"prefLabel"]) assocRes[k] = Object.keys(res[k]).reduce( (acc,f) => ([ ...acc, ...res[k][f].map(e => ({...e,type:f}))]), [])
+         if(allowR.filter(e => resK.includes(e)).length) assocRes[k] = Object.keys(res[k]).reduce( (acc,f) => ([ ...acc, ...res[k][f].map(e => ({...e,type:f}))]), [])
          if(!resK.filter(k => !allowK.includes(k)).length) delete _res[k]
          if(res[k][tmp+"withSameAs"]) { 
             if(!_res[k]) _res[k] = {}

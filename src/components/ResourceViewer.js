@@ -277,7 +277,12 @@ let propOrder = {
       "bdo:placeEvent",
       "bdo:placeContains",
    ],
-   "Role":[],
+   "Role":[
+      "skos:prefLabel",
+      "skos:altLabel",
+      "rdfs:comment",
+      "rdfs:seeAlso"
+   ],
    "Topic":[
       "skos:prefLabel",
       "skos:altLabel",
@@ -726,7 +731,7 @@ class ResourceViewer extends Component<Props,State>
       if(sorted)
       {
 
-         let customSort = [ bdo+"hasPart", bdo+"itemHasVolume", bdo+"workHasInstance", tmp+"siblingInstances", bdo+"hasTitle", bdo+"personName", bdo+"volumeHasEtext",
+         let customSort = [ bdo+"hasPart", bdo+"instanceHasVolume", bdo+"workHasInstance", tmp+"siblingInstances", bdo+"hasTitle", bdo+"personName", bdo+"volumeHasEtext",
                             bdo+"personEvent", bdo+"placeEvent", bdo+"workEvent", bdo+"instanceEvent" ]
 
          let sortBySubPropNumber = (tag:string,idx:string) => {
@@ -769,6 +774,7 @@ class ResourceViewer extends Component<Props,State>
 
          if(prop[bdo+"volumeHasEtext"]) prop[bdo+"volumeHasEtext"] = sortBySubPropNumber(bdo+"volumeHasEtext",bdo+"seqNum");
 
+         // TODO add partIndex in query
          if(prop[bdo+"hasPart"]) prop[bdo+"hasPart"] = sortBySubPropNumber(bdo+"hasPart",bdo+"partIndex");
 
          if(prop[bdo+"instanceHasVolume"]) prop[bdo+"instanceHasVolume"] = sortBySubPropNumber(bdo+"instanceHasVolume", bdo+"volumeNumber");
@@ -1258,10 +1264,15 @@ class ResourceViewer extends Component<Props,State>
 
    getInfo(prop,infoBase,withProp)
    {
-      let lang, info = [ getLangLabel(this, prop, infoBase.filter((e)=>((e["xml:lang"] || e["lang"] || e.fromKey && e.fromKey === foaf+"name")))) ]                        
+
+      let lang, info = [ getLangLabel(this, prop, infoBase.filter((e)=>(e.type === skos+"prefLabel" || e.type === skos+"altLabel" || e.type === foaf+"name" 
+                                                                       || e.fromKey === skos+"prefLabel" || e.fromKey === skos+"altLabel" || e.fromKey === foaf+"name" ) ) ) ]
+      
+      // TODO does this ever get called ??
+      if(!info) info = [ getLangLabel(this, prop, infoBase.filter((e)=>((e["xml:lang"] || e["lang"] || e.fromKey && e.fromKey === foaf+"name")))) ]                        
       if(!info) info = [ getLangLabel(this, prop, infoBase.filter((e)=>((e["xml:lang"] || e["lang"]) && e.type==prop))) ]
 
-      //console.log("info",info)
+      //console.log("info",prop,infoBase,info)
 
       //if(info.value) info = info.value
 
@@ -2857,13 +2868,15 @@ class ResourceViewer extends Component<Props,State>
       if(elem && Array.isArray(elem) && elem[0]) {
          elem = this.getResourceBNode(elem[0].value)
          let str = ""
+         
          //console.log("loca",elem)
 
          if(!elem) return [<h4><Link to={"/show/"+shortUri(_elem[0].value)}>{shortUri(_elem[0].value)}</Link></h4>]
 
          let loca = s => (elem && elem[bdo+"contentLocation"+s] && elem[bdo+"contentLocation"+s][0] && elem[bdo+"contentLocation"+s][0]["value"] ? elem[bdo+"contentLocation"+s][0]["value"]:null)
+                  
          let vol = loca("Volume")
-         if(vol) str += "Vol."+vol+" " ;
+         if(vol) str = "Vol."+vol+" " ;
          let p = loca("Page")
          if(p) str += "p."+p ;
          let l = loca("Line")
@@ -2876,8 +2889,7 @@ class ResourceViewer extends Component<Props,State>
          let eL = loca("EndLine")
          if(eL) str += "|"+eL ;
 
-         let w = loca("Work")
-         if(w) w = elem[bdo+"contentLocationInstance"][0]
+         let w = loca("Instance")
 
          if(withTag) { 
             if(vol) 
@@ -2892,11 +2904,11 @@ class ResourceViewer extends Component<Props,State>
                               {eL && <div><span>End Line:</span> {eL}</div>}
                            </div>
                         }>
-                           <h4>{str}{str && w && " of "}{w && this.uriformat(bdo+"contentLocationInstance",w)}</h4>
+                           <h4>{str}{str && w && " of "}{w && this.uriformat(bdo+"contentLocationInstance",{value:w})}</h4>
                      </Tooltip>]
                );
-            else 
-               return [<h4>{this.uriformat(bdo+"contentLocationInstance",w)}</h4>]
+            else if(w)
+               return [<h4>{this.uriformat(bdo+"contentLocationInstance",{value:w})}</h4>]
          }
          else return str.replace(/^Vol[.]/,"")
       }
@@ -3626,23 +3638,36 @@ class ResourceViewer extends Component<Props,State>
 
       this.setManifest(kZprop,iiifpres)    
 
+      let getWtitle = (baseW) => {
+         if(baseW && baseW.length && baseW[0].value) {
+            let wUri = shortUri(baseW[0].value);
+            if(!this.props.resources[wUri]) this.props.onGetResource(wUri);
+            console.log("is?",baseW[0].value,this.props.assocResources?this.props.assocResources[baseW[0].value]:null)
+            if(this.props.assocResources) {
+               let baseData = this.props.assocResources[baseW[0].value]
+               if(baseData && baseData.length) baseData = baseData.map(e => (e.fromKey?e.fromKey:(e.type?e.type:e)))         
+               else baseData = []
+               let _T = getEntiType(shortUri(baseW[0].value))
+               let { title,titlElem,otherLabels } = this.setTitle(baseData,_T,baseW[0].value) ;
+               return title
+            }
+         }
+         return null
+      }
+
       let wTitle,iTitle,rTitle ;
       let _T = getEntiType(this.props.IRI)
       let { title,titlElem,otherLabels } = this.setTitle(kZprop,_T) ;
       if(_T === "Instance") { 
          iTitle = title ; 
+
          let baseW = this.getResourceElem(bdo+"instanceOf")
-         if(this.props.assocResources && baseW && baseW.length && baseW[0].value) {
-            let wUri = shortUri(baseW[0].value);
-            if(!this.props.resources[wUri]) this.props.onGetResource(wUri);
-            let baseData = this.props.assocResources[baseW[0].value]
-            if(baseData && baseData.length) baseData = baseData.map(e => (e.fromKey?e.fromKey:(e.type?e.type:e)))         
-            else baseData = []
-            _T = getEntiType(shortUri(baseW[0].value))
-            let { title,titlElem,otherLabels } = this.setTitle(baseData,_T,baseW[0].value) ;
-            wTitle = title
-         }
+         wTitle = getWtitle(baseW);
+
          baseW = this.getResourceElem(bdo+"instanceHasReproduction")
+         rTitle = getWtitle(baseW)
+
+         /*
          if(this.props.assocResources && baseW && baseW.length === 1 && baseW[0].value) {
             let wUri = shortUri(baseW[0].value);
             if(!this.props.resources[wUri]) this.props.onGetResource(wUri);
@@ -3653,10 +3678,15 @@ class ResourceViewer extends Component<Props,State>
             let { title,titlElem,otherLabels } = this.setTitle(baseData,_T,baseW[0].value) ;
             rTitle = title            
          }
+         */
       }
       else if(_T === "Images") { 
          rTitle = title ; 
+
          let baseW = this.getResourceElem(bdo+"instanceOf")
+         wTitle = getWtitle(baseW)
+
+         /*
          if(this.props.assocResources && baseW && baseW.length && baseW[0].value) {
             let wUri = shortUri(baseW[0].value);
             if(!this.props.resources[wUri]) this.props.onGetResource(wUri);
@@ -3667,7 +3697,12 @@ class ResourceViewer extends Component<Props,State>
             let { title,titlElem,otherLabels } = this.setTitle(baseData,_T,baseW[0].value) ;
             wTitle = title
          }
+         */
+         
          baseW = this.getResourceElem(bdo+"instanceReproductionOf")
+         iTitle = getWtitle(baseW)
+
+         /*
          if(this.props.assocResources && baseW && baseW.length === 1 && baseW[0].value) {
             let wUri = shortUri(baseW[0].value);
             if(!this.props.resources[wUri]) this.props.onGetResource(wUri);
@@ -3678,6 +3713,7 @@ class ResourceViewer extends Component<Props,State>
             let { title,titlElem,otherLabels } = this.setTitle(baseData,_T,baseW[0].value) ;
             iTitle = title            
          }
+         */
       }
       else { 
          wTitle = title ; 
