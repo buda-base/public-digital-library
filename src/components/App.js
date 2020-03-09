@@ -371,7 +371,13 @@ export function top_right_menu(that)
 {
 
   return (
-     <div id="login">
+     <div class="nav">
+       <div>
+         <div>
+            <a href="https://bdrc.io/" target="_blank"><img src="/BDRC.svg"/></a>
+            <Link to="/"><img src="/LIBRARY.svg"/></Link>
+         </div>
+         <div id="login">
         <IconButton style={{marginLeft:"15px"}}  onClick={e => that.props.onToggleLanguagePanel()}>
           <FontAwesomeIcon style={{fontSize:"28px"}} icon={faLanguage} title="Display Preferences"/>
         </IconButton> 
@@ -394,6 +400,8 @@ export function top_right_menu(that)
             )
         }
          </div>
+       </div>
+     </div>
   )
 }
 

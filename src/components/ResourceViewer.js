@@ -425,13 +425,13 @@ export function top_left_menu(that,pdfLink,monoVol,fairUse)
   return (
 
     <div id="top-left">
-       <Link style={{fontSize:"20px"}} className="goBack" to="/" onClick={(e) => that.props.onResetSearch()} //that.props.keyword&&!that.props.keyword.match(/^bdr:/)?"/search?q="+that.props.keyword+"&lg="+that.props.language+(that.props.datatype?"&t="+that.props.datatype:""):"/"
+       {/* <Link style={{fontSize:"20px"}} className="goBack" to="/" onClick={(e) => that.props.onResetSearch()} //that.props.keyword&&!that.props.keyword.match(/^bdr:/)?"/search?q="+that.props.keyword+"&lg="+that.props.language+(that.props.datatype?"&t="+that.props.datatype:""):"/"
        >
-          {/* <Button style={{paddingLeft:"0"}}>&lt; Go back to search page</Button> */}
+          
           <IconButton style={{paddingLeft:0}} title={I18n.t("resource.back")}>
              <HomeIcon style={{fontSize:"30px"}}/>
           </IconButton>
-       </Link>
+       </Link> */}
        {
           that.props.IRI && that.props.IRI.match(/^(bd[ra])|(dila):/) &&
           [<a className="goBack" target="_blank" title="TTL version" rel="alternate" type="text/turtle" href={that.expand(that.props.IRI)+".ttl"}>
@@ -568,12 +568,14 @@ export function top_left_menu(that,pdfLink,monoVol,fairUse)
              </CopyToClipboard>]
 
        }
+
        { /*  // annotations not in release 1.0 
        <IconButton style={{marginLeft:"0px"}} title={I18n.t("resource.toggle")} onClick={e => that.setState({...that.state,annoPane:!that.state.annoPane})}>
           <ChatIcon />
        </IconButton>
         */ }
-       { 
+
+       { /*
           that.props.IRI && //that.props.IRI.match(/^[^:]+:[RPGTW]/) &&
           prefixes[that.props.IRI.replace(/^([^:]+):.*$/,"$1")] &&
           <Link className="goBack" to={"/search?r="+that.props.IRI+"&t=Work"}>
@@ -582,8 +584,7 @@ export function top_left_menu(that,pdfLink,monoVol,fairUse)
           </IconButton>
           
           </Link>
-
-       }
+       */}
      </div>
    )
 }
@@ -2599,13 +2600,14 @@ class ResourceViewer extends Component<Props,State>
 
    proplink = (k,txt) => {
 
-      // TODO use skos:definition instead of adm:userTooltip
 
       if(txt) console.warn("use of txt in proplink",k,txt)
 
       let tooltip
       if(this.props.ontology && this.props.ontology[k]) {
-         if(this.props.ontology[k][adm+"userTooltip"]) 
+         if(this.props.ontology[k][skos+"definition"]) 
+            tooltip = this.props.ontology[k][skos+"definition"]
+         else if(this.props.ontology[k][adm+"userTooltip"]) 
             tooltip = this.props.ontology[k][adm+"userTooltip"]
          else if(this.props.ontology[k][rdfs+"comment"]) 
             tooltip = this.props.ontology[k][rdfs+"comment"].filter(comm => !comm.value.match(/^([Mm]igration|[Dd]eprecated)/))
@@ -2625,8 +2627,8 @@ class ResourceViewer extends Component<Props,State>
    insertPreprop = (tag,n,ret) => ret ;
 
    getH2 = (title,_befo,_T,other) => {
-      if(other) return <h2><Link to={"/show/"+shortUri(other)}>{_T}{_befo}{title.value}{this.tooltip(title.lang)}</Link></h2>
-      else return <h2 class="on">{_T}{_befo}{title.value}{this.tooltip(title.lang)}</h2>
+      if(other) return <h2><Link to={"/show/"+shortUri(other)}>{_T}<span>{_befo}{title.value}</span>{this.tooltip(title.lang)}</Link></h2>
+      else return <h2 class="on">{_T}<span>{_befo}{title.value}</span>{this.tooltip(title.lang)}</h2>
    }
 
    setTitle = (kZprop,_T,other) => {
@@ -2644,8 +2646,8 @@ class ResourceViewer extends Component<Props,State>
          titlElem = this.getResourceElem(rdfs+"label",other,true);
       }
       else {
-          if(other) title = <h2><Link to={"/show/"+shortUri(other)}>{_T}{shortUri(other?other:this.props.IRI)}</Link></h2>
-          else  title = <h2 class="on">{_T}{shortUri(other?other:this.props.IRI)}</h2>
+          if(other) title = <h2><Link to={"/show/"+shortUri(other)}>{_T}<span>{shortUri(other?other:this.props.IRI)}</span></Link></h2>
+          else  title = <h2 class="on">{_T}<span>{shortUri(other?other:this.props.IRI)}</span></h2>
       }
       
       //console.log("sT",kZprop,_T,other,title,titlElem)
@@ -3537,14 +3539,14 @@ class ResourceViewer extends Component<Props,State>
 
    renderNoAccess = (fairUse) => {
       if(fairUse && (!this.props.auth || !this.props.auth.isAuthenticated()) )
-         return <h3 style={{display:"block",marginBottom:"15px"}}><span style={{textTransform:"none"}}>Access limited to first &amp; last 20 pages.<br/>
-                  Please <a class="login" onClick={this.props.auth.login.bind(this,this.props.history.location)}>login</a> if you have sufficient credentials to get access to all images from this work.</span></h3>
+         return <div class="data"><h3 style={{display:"block",marginBottom:"15px"}}><span style={{textTransform:"none"}}>Access limited to first &amp; last 20 pages.<br/>
+                  Please <a class="login" onClick={this.props.auth.login.bind(this,this.props.history.location)}>login</a> if you have sufficient credentials to get access to all images from this work.</span></h3></div>
    }
 
    // TODO check if this is actually used ??
    renderAccess = () => {
       if ( this.props.manifestError && this.props.manifestError.error.message.match(/Restricted access/) )
-         return  <h3><span style={{textTransform:"none"}}>Please <a class="login" onClick={this.props.auth.login.bind(this,this.props.history.location)}>login</a> if you have sufficient credentials to get access to images from this work.</span></h3>
+         return  <div class="data"><h3><span style={{textTransform:"none"}}>Please <a class="login" onClick={this.props.auth.login.bind(this,this.props.history.location)}>login</a> if you have sufficient credentials to get access to images from this work.</span></h3></div>
    }
 
    renderPdfLink = (pdfLink, monoVol, fairUse) => {
@@ -3727,11 +3729,11 @@ class ResourceViewer extends Component<Props,State>
          [<div style={{overflow:"hidden",textAlign:"center"}}>
             { !this.state.ready && <Loader loaded={false} /> }
             <div className={"resource "+getEntiType(this.props.IRI).toLowerCase()}>
-               { top_right_menu(this) }
-               { top_left_menu(this,pdfLink,monoVol,fairUse)  }
+               { top_right_menu(this) }               
                { this.renderAnnoPanel() }
                { this.renderWithdrawn() }             
-               <div class="title">{ wTitle }{ iTitle }{ rTitle }</div>
+               <div class="title">{ wTitle }{ iTitle }{ rTitle }{ top_left_menu(this,pdfLink,monoVol,fairUse)  }</div>
+               <div class="data">{title}</div>
                { this.renderBrowseAssoRes() }
                { this.renderNoAccess(fairUse) }
                { this.renderFirstImage() }
