@@ -626,7 +626,7 @@ class ResourceViewer extends Component<Props,State>
             else elem = null
             return elem
          }
-         else if(props.resources && props.resources[IRI] && props.resources[longIRI]){
+         else if(props.resources && props.resources[IRI] && props.resources[IRI][longIRI]){
             let elem = props.resources[IRI][longIRI][prop]
             return elem
          }
@@ -655,7 +655,7 @@ class ResourceViewer extends Component<Props,State>
             instance = [ { type:"uri", value:fullUri(props.IRI) } ]
             s.title = { work, instance, images }
          } 
-         else {
+         else {            
             if(state.title.work && state.title.work.length && state.title.work[0].value === fullUri(props.IRI) ) {
                if(!s) s = { ...state }
                instance = state.title.instance
@@ -664,7 +664,7 @@ class ResourceViewer extends Component<Props,State>
             }
          }
 
-         console.log("gDsFp",JSON.stringify(state.title,null,3),props.IRI,_T,work,instance,images)
+         console.log("gDsFp",JSON.stringify(s?s.title:state.title,null,3),props.IRI,_T,work,instance,images)
       }
 
       if(props.IRI && props.resources && props.resources[props.IRI]) {
