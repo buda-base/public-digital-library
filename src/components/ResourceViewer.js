@@ -655,13 +655,17 @@ class ResourceViewer extends Component<Props,State>
             instance = [ { type:"uri", value:fullUri(props.IRI) } ]
             s.title = { work, instance, images }
          } 
-         else {            
+         else if(_T === "Work") {            
             if(state.title.work && state.title.work.length && state.title.work[0].value === fullUri(props.IRI) ) {
                if(!s) s = { ...state }
                instance = state.title.instance
                images = state.title.images
                s.title = { instance, images }
             }
+         }
+         else {
+            if(!s) s = { ...state }
+            s.title = { work:[ { type:"uri", value:fullUri(props.IRI) } ] }
          }
 
          console.log("gDsFp",JSON.stringify(s?s.title:state.title,null,3),props.IRI,_T,work,instance,images)
