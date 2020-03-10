@@ -149,7 +149,8 @@ type State = {
    resource?:{},
    IRI?:url,
    publicProps?:{},
-   emptyPopover?:boolean
+   emptyPopover?:boolean,
+   title:{work:{},instance:{},images:{}}
  }
 
 
@@ -600,9 +601,9 @@ class ResourceViewer extends Component<Props,State>
    {
       super(props);
 
-      this.state = { uviewer:false, imageLoaded:false, collapse:{}, pdfOpen:false, showAnno:true, errors:{},updates:{} }
+      this.state = { uviewer:false, imageLoaded:false, collapse:{}, pdfOpen:false, showAnno:true, errors:{},updates:{},title:{} }
 
-      //console.log("props",props)
+      console.log("props",props)
 
       let tmp = {}
       for(let k of Object.keys(propOrder)){ tmp[k] = propOrder[k].map((e) => this.expand(e)) }
@@ -615,6 +616,67 @@ class ResourceViewer extends Component<Props,State>
       }
    }
 
+   static getDerivedStateFromProps(props:Props,state:State)
+   {
+      let getElem = (prop,IRI,useAssoc) => {
+         let longIRI = fullUri(IRI)
+         if(useAssoc) {
+            let elem = useAssoc[longIRI]
+            if(elem) elem = elem.filter(e => e.type === prop)
+            else elem = null
+            return elem
+         }
+         else if(props.resources && props.resources[IRI] && props.resources[longIRI]){
+            let elem = props.resources[IRI][longIRI][prop]
+            return elem
+         }
+      }
+
+      let s ;
+
+      if(props.resources) {
+
+         let 
+            work = getElem(bdo+"instanceOf",props.IRI),
+            instance = getElem(bdo+"instanceReproductionOf",props.IRI),
+            images = getElem(bdo+"instanceHasReproduction",props.IRI)
+
+         if(images) images = images.filter(e => getEntiType(e.value) === "Images")
+
+         let _T = getEntiType(props.IRI)
+
+         if(_T === "Images") {            
+            if(!s) s = { ...state }
+            images = [ { type:"uri", value:fullUri(props.IRI) } ]
+            s.title = { work, images, instance }
+         } 
+         else if(_T === "Instance") {            
+            if(!s) s = { ...state }
+            instance = [ { type:"uri", value:fullUri(props.IRI) } ]
+            s.title = { work, instance, images }
+         } 
+         else {
+            if(state.title.work && state.title.work.length && state.title.work[0].value === fullUri(props.IRI) ) {
+               if(!s) s = { ...state }
+               instance = state.title.instance
+               images = state.title.images
+               s.title = { instance, images }
+            }
+         }
+
+         console.log("gDsFp",JSON.stringify(state.title,null,3),props.IRI,_T,work,instance,images)
+      }
+
+      if(props.IRI && props.resources && props.resources[props.IRI]) {
+         if(!s) s = { ...state }
+         s.ready = true
+      }
+
+      if(s) return s
+      else return null
+   }
+
+/*
    componentWillMount()
    {
       console.log("mount")
@@ -634,7 +696,7 @@ class ResourceViewer extends Component<Props,State>
       };
 
    }
-
+*/
    componentWillUpdate(newProps,newState)
    {
       console.log("stateU",this.state,newState,newProps)
@@ -1561,7 +1623,7 @@ class ResourceViewer extends Component<Props,State>
       }><span className="lang">{lang}</span></Tooltip>:null
    }
 
-   getResourceElem(prop:string, IRI?:string, useAssoc:boolean=false)
+   getResourceElem(prop:string, IRI?:string, useAssoc?:{})
    {
       let elem ;
 
@@ -1584,8 +1646,8 @@ class ResourceViewer extends Component<Props,State>
 
          let longIRI = fullUri(IRI)
 
-         if(this.props.assocResources) { 
-            elem = this.props.assocResources[longIRI]
+         if(useAssoc) { 
+            elem = useAssoc[longIRI]
             if(elem) elem = elem.filter(e => e.type === prop)
             else elem = null
          }
@@ -2634,16 +2696,16 @@ class ResourceViewer extends Component<Props,State>
    setTitle = (kZprop,_T,other) => {
 
       let title,titlElem,otherLabels = [] ;
-      _T = <span class="T">{_T}</span>
+      _T = [<span class={"T "+_T.toLowerCase()}><span class="RID">{shortUri(other?other:this.props.IRI)}</span>{_T}</span>]
 
       if(kZprop.indexOf(skos+"prefLabel") !== -1)       {
-         titlElem = this.getResourceElem(skos+"prefLabel",other,true);
+         titlElem = this.getResourceElem(skos+"prefLabel",other,this.props.assocResources);
       }
       else if(kZprop.indexOf(bdo+"eTextTitle") !== -1)     {
-         titlElem = this.getResourceElem(bdo+"eTextTitle",other,true);
+         titlElem = this.getResourceElem(bdo+"eTextTitle",other,this.props.assocResources);
       }
       else if(kZprop.indexOf(rdfs+"label") !== -1)   {
-         titlElem = this.getResourceElem(rdfs+"label",other,true);
+         titlElem = this.getResourceElem(rdfs+"label",other,this.props.assocResources);
       }
       else {
           if(other) title = <h2><Link to={"/show/"+shortUri(other)}>{_T}<span>{shortUri(other?other:this.props.IRI)}</span></Link></h2>
@@ -3663,62 +3725,31 @@ class ResourceViewer extends Component<Props,State>
       if(_T === "Instance") { 
          iTitle = title ; 
 
-         let baseW = this.getResourceElem(bdo+"instanceOf")
+         let baseW = this.state.title.work 
          wTitle = getWtitle(baseW);
 
-         baseW = this.getResourceElem(bdo+"instanceHasReproduction")
+         baseW = this.state.title.images 
          rTitle = getWtitle(baseW)
 
-         /*
-         if(this.props.assocResources && baseW && baseW.length === 1 && baseW[0].value) {
-            let wUri = shortUri(baseW[0].value);
-            if(!this.props.resources[wUri]) this.props.onGetResource(wUri);
-            let baseData = this.props.assocResources[baseW[0].value]
-            if(baseData && baseData.length) baseData = baseData.map(e => (e.fromKey?e.fromKey:(e.type?e.type:e)))         
-            else baseData = []
-            _T = getEntiType(shortUri(baseW[0].value))
-            let { title,titlElem,otherLabels } = this.setTitle(baseData,_T,baseW[0].value) ;
-            rTitle = title            
-         }
-         */
       }
       else if(_T === "Images") { 
          rTitle = title ; 
 
-         let baseW = this.getResourceElem(bdo+"instanceOf")
+         let baseW = this.state.title.work 
          wTitle = getWtitle(baseW)
 
-         /*
-         if(this.props.assocResources && baseW && baseW.length && baseW[0].value) {
-            let wUri = shortUri(baseW[0].value);
-            if(!this.props.resources[wUri]) this.props.onGetResource(wUri);
-            let baseData = this.props.assocResources[baseW[0].value]
-            if(baseData && baseData.length) baseData = baseData.map(e => (e.fromKey?e.fromKey:(e.type?e.type:e)))         
-            else baseData = []
-            _T = getEntiType(shortUri(baseW[0].value))
-            let { title,titlElem,otherLabels } = this.setTitle(baseData,_T,baseW[0].value) ;
-            wTitle = title
-         }
-         */
-         
-         baseW = this.getResourceElem(bdo+"instanceReproductionOf")
+         baseW = this.state.title.instance 
          iTitle = getWtitle(baseW)
 
-         /*
-         if(this.props.assocResources && baseW && baseW.length === 1 && baseW[0].value) {
-            let wUri = shortUri(baseW[0].value);
-            if(!this.props.resources[wUri]) this.props.onGetResource(wUri);
-            let baseData = this.props.assocResources[baseW[0].value]
-            if(baseData && baseData.length) baseData = baseData.map(e => (e.fromKey?e.fromKey:(e.type?e.type:e)))         
-            else baseData = []
-            _T = getEntiType(shortUri(baseW[0].value))
-            let { title,titlElem,otherLabels } = this.setTitle(baseData,_T,baseW[0].value) ;
-            iTitle = title            
-         }
-         */
       }
       else { 
          wTitle = title ; 
+
+         let baseW = this.state.title.instance
+         iTitle = getWtitle(baseW)
+
+         baseW = this.state.title.images
+         rTitle = getWtitle(baseW)
       }
       
       //console.log("ttlm",titlElem)
