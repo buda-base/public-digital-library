@@ -3073,7 +3073,7 @@ class ResourceViewer extends Component<Props,State>
       if(!isSub && n > maxDisplay) {      
          
          return (
-            <div>
+            <div data-prop={shortUri(k)}>
                <h3><span>{this.proplink(k)}</span>:&nbsp;<span
                onClick={(e) => this.setState({...this.state,collapse:{...this.state.collapse,[k]:!this.state.collapse[k]}})}
                className="toggle-expand">
@@ -3094,7 +3094,7 @@ class ResourceViewer extends Component<Props,State>
       }
       else {
          return (
-            <div>               
+            <div  data-prop={shortUri(k)}>               
                <h3><span>{this.proplink(k)}</span>:&nbsp;</h3>
                {this.preprop(k,0,n)}
                {ret}

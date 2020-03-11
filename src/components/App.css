@@ -137,7 +137,7 @@ a.result .lang, .match .lang,.data .lang,h2 .lang, .imageVolumePopup .lang
    position: relative;
    top: 0.5em;
 }
-h2 .lang,.data .lang { position:relative;margin:0;vertical-align:-2px;padding:5px;line-height:0;z-index:1;}
+h2 .lang,.data .lang { position:relative;margin:0;vertical-align:-2px;padding:5px;line-height:0;z-index:1;letter-spacing:0;}
 h2 .lang { margin-top:22px;font-weight:normal; }
 .imageVolumePopup .lang { position:relative;padding:0px;margin-top:12px; }
 /* a.result .lang, .match .lang { min-width:50px;} */
@@ -196,10 +196,12 @@ h2:hover svg.annoticon:hover,h4:hover svg.annoticon:hover { color:rgba(0,0,0,0.6
 h4 { margin-top:0px;margin-bottom:0px;font-size:24px; }
 /* h4 + h4 { margin-top:5px;}  */
 
+.resource .data h4.label,.resource .data .ulink, .resource .data .urilink,.resource .data h4 span[lang] { letter-spacing:0.25px; }
 
 [lang$="ewts"] { text-transform:none !important; }
 
-.resource { padding:120px 100px; text-align:left; box-sizing: border-box; background-color:#efefef; width:1434px; margin-left:auto;margin-right:auto;}
+.resource { padding:120px 0px; text-align:left; box-sizing: border-box; background-color:#efefef; width:1234px; margin-left:auto;margin-right:auto;
+   max-width:97%;}
 
 .resource .title { display:flex; position:relative; }
 
@@ -223,9 +225,9 @@ h4 { margin-top:0px;margin-bottom:0px;font-size:24px; }
 .resource .data h2,
 .resource .title h2 { font-family: "Noto Sans", "Roboto", "Helvetica", "Arial", sans-serif; margin:0; color:#343434;}
 
-.resource .data h2 { font-size:34px;}
+.resource .data h2 { font-size:34px; letter-spacing: 0.7px;}
 
-.resource .title h2 .T { position:relative; }
+.resource .title h2 .T { position:relative; letter-spacing:0.5px;}
 
 .resource .title h2 .T::before { width:50px;height:50px; content:'' ; display:inline-block; vertical-align:-22px; margin-right:35px; 
    background-size:contain;background-repeat:no-repeat;background-position:center right;
@@ -253,7 +255,9 @@ h4 { margin-top:0px;margin-bottom:0px;font-size:24px; }
 .resource .title h2:not(.on) > a > :not(.T),
 .resource .title h2.on > :not(.T) { display:none; }
 
-.resource .title h2 .RID { display:block !important;position:absolute;top:32px;left:85px;color:#4a4a4a;font-size:11px;font-weight:400; }
+.resource .title h2 .RID { display:block !important;position:absolute;top:32px;left:85px;color:#4a4a4a;font-size:11px;font-weight:400; letter-spacing:0; 
+   white-space: nowrap;
+}
 
 .resource .data { text-align:left ; background-color:#ffffff; padding:20px 50px;}
 .resource .title + .data { padding-top:40px; }
@@ -265,20 +269,20 @@ h4 { margin-top:0px;margin-bottom:0px;font-size:24px; }
 .resource .data > div:not(.firstImage):not(.browse)::after { content:''; width:78%; height:1px;margin:25px 0 20px 22%;display:block;}
 .resource .data > div:not(.firstImage):not(.browse):not(:last-child)::after { background:rgba(0,0,0,0.25);}
 
-.resource .data > div > h3 { width:22%; }
+.resource .data > div > h3 { width:calc(22% - 15px); padding-right:15px; /*line-height:24px; */ vertical-align: top; }
 .resource .data > div.parent { flex-wrap:wrap; }
 .resource .data > div.parent > h3 { flex-shrink:0 }
 .resource h3,.resource h4 { display:inline-block; margin-bottom:0px; font-size:14px; font-weight:normal; /*margin-right:5px; line-height:30px;*/ }
 .resource h3 span { /*text-decoration: underline;*/ font-weight:600;  text-transform:capitalize; }
-.resource h3 { font-size:14px;margin-top:6px; }
-.resource .sub { /*width:100%; padding-left:20px;*/ display:inline-flex;flex-wrap:wrap; box-sizing: border-box; position:relative;}
-.resource .sub h4.first { font-size:0.85em; /*font-style:italic;*/ text-transform:capitalize; flex-shrink:0; /*line-height:1.6em;*/}
+.resource h3 { font-size:14px;margin-top:-1px; }
+.resource .sub { width:78%; /*padding-left:20px;*/ display:inline-flex;flex-wrap:wrap; box-sizing: border-box; position:relative;}
+.resource .sub h4.first { /*font-size:0.85em; font-style:italic;*/ text-transform:capitalize; flex-shrink:0; /*line-height:1.6em;*/  margin-right:5px;}
  .resource .sub .sub h4.first.type,
-.resource .sub h4.first.prop { font-style:normal;font-size:0.8em; line-height:20px }
+.resource .sub h4.first.prop { font-style:normal;/*font-size:0.8em; line-height:20px;*/ }
 
-.resource .sub h4.first + h4 { margin-left:5px;}
+/* .resource .sub h4.first + h4:not(.multiple) { margin-left:5px;} */
 
-.resource .subsub { /*width:100%;*/ padding-left:5px; display: flex;align-items: baseline;flex-wrap:wrap;position:relative; box-sizing: border-box;}
+.resource .subsub { /*width:100%; padding-left:5px;*/ display: flex;align-items: baseline;flex-wrap:wrap;position:relative; box-sizing: border-box;}
 
 /* .resource .subsub h4 { flex-shrink:0 ; } */
 /* .resource .subsub:first-child:before, */
@@ -300,9 +304,17 @@ h4 { margin-top:0px;margin-bottom:0px;font-size:24px; }
 .resource .sub .sub { padding-left:60px;}
 .resource .subsub.full .subsub .subsubsub h4.first.prop { font-style:normal; }
 
-.resource .data > div > .sub { line-height:24px; }
+.resource .data > div > .sub { line-height:28px; }
 .resource .data > div > .sub + .sub { width:78%; margin-left:22%; } 
 .resource .data > div > .sub:empty { display:none; }
+
+.resource .data > [data-prop="bdo:workIsAbout"] h4.multiple { width:auto;margin-left:0;}
+
+/* .resource .data > div > .sub > .subsub + .subsub::before,  */           /* too generic */
+/*.resource .data > div > .sub > .subsub:not(:last-of-type)::after,*/      /* better not perfect */
+.resource .data > [data-prop="bdo:workIsAbout"] h4.multiple + h4::before
+{ content:" ";padding:0 5px 0 10px; font-size:15px; }
+
 
 #etext-scroll > .etextPage:first-child { margin-top:20px; }
 
@@ -367,7 +379,7 @@ h4 { margin-top:0px;margin-bottom:0px;font-size:24px; }
 /* .imageVolumePopup .lang { display:none; } */
 .imageVolumePopup a { color:rgba(229, 74, 53,1); text-decoration: none; pointer-events: none;}
 
-.resource .data h3 a.propref,.resource .data h4 a.propref { color:#343434; font-size:17px; letter-spacing: 0.68px; }
+.resource .data h3 a.propref,.resource .data h4 a.propref { color:#343434; font-size:17px; letter-spacing: 0.68px;line-height:24px;word-break: break-all; }
 .resource .data .sub a.propref { font-size:15px; font-weight:700; letter-spacing: 0px;font-style:normal;letter-spacing:0.63px; }
 .resource .data .sub .subsub a.propref { font-weight:400;}
 .resource .data h3 a.propref:hover,.resource .data h4 a.propref:hover { border-bottom:1px solid black;}
@@ -391,7 +403,7 @@ div[role="tooltip"] > div { font-weight:bold;font-size:16px; }
 .instance-link .urilink,
 .match .urilink,  
 .match .multi a,
-.resource .data a, a.login { text-decoration: none; color:rgba(229, 74, 53,1);}
+.resource .data a, a.login { text-decoration: none; color: #d73449; /*color:rgba(229, 74, 53,1);*/}
 a.login { text-decoration:underline; cursor:pointer; }
 .uri-link:hover,
 .instance-link .urilink:hover,
@@ -508,17 +520,18 @@ a.download:hover { text-decoration:underline; }
 
 .firstImage + br + div > .download { font-size:14px; text-transform: capitalize; } 
 
-.propCollapseHeader { width:78%; display:inline-block;vertical-align:top;padding-top:4px;line-height:24px;}
+.propCollapseHeader { width:78%; display:inline-block;vertical-align:top;padding-top:0px;line-height:24px;}
 
 h3 + h4.multiple,
 h3 + .propCollapseHeader,
 h3 + .sub 
-{ margin-top:2px; }
+{ margin-top:0px; }
 
 
-.resource .data > div > h3 + h4:not(.multiple) { width:78%; vertical-align:text-top; padding-top:0px; line-height:24px; }
-.resource .data > div > h3 ~ h4.multiple { width:78%; line-height:21px;}
+.resource .data > div > h3 + h4:not(.multiple) { width:78%; vertical-align:top; padding-top:0px; line-height:24px; }
+.resource .data > div > h3 ~ h4.multiple { width:78%; line-height:24px; vertical-align:top;}
 .resource .data > div > h3 ~ h4.multiple + h4 { margin-left:22%;  }
+/* .resource .data > div > h3 + h4.multiple { margin-top:0px;} */
 
 .resource .data > div .sub .subsub > h4.multiple,
 .resource .data > div .sub > h4.multiple,
@@ -550,6 +563,9 @@ h3 .expand svg { position:absolute; margin-top:-18px; }*/
 .expand:hover { border-bottom:1px solid black;  }
 /* .propCollapse.in-false + .expand { margin-top:0px;transition:all 300ms ease-in-out;}  */
 /* .propCollapse.in-true + .expand  { margin-top:15px; margin-bottom:-5px; }  */
+
+
+.resource .data > div .sub .subsub > h4.multiple { padding-left:25px; line-height:24px; }
 
 
 .toggle-expand { position:absolute; margin-top: -2px; cursor:pointer; }
