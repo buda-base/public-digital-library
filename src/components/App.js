@@ -261,7 +261,7 @@ export function highlight(val,k,expand,newline)
    return val;
 }
 
-const preferUIlang = [ bdo+"placeType", bdo+"workIsAbout", bdo+"workGenre" ]
+const preferUIlang = [ bdo+"placeType", bdo+"workIsAbout", bdo+"workGenre", bdo+"role", bdo+"language", bdo+"script", adm+"metadataLegal", bdo+"personGender" ]
 
 export function getLangLabel(that:{},prop:string="",labels:[],proplang:boolean=false,uilang:boolean=false,otherLabels:[],dontUseUI:boolean=false)
 {

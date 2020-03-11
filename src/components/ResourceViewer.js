@@ -3080,7 +3080,7 @@ class ResourceViewer extends Component<Props,State>
                   { this.state.collapse[k] && <ExpandLess/>}
                   { !this.state.collapse[k] && <ExpandMore/>}
                </span></h3>
-               <div style={{width:"100%"}} className="propCollapseHeader">{ret.splice(0,maxDisplay)}</div>
+               <div className="propCollapseHeader">{ret.splice(0,maxDisplay)}</div>
                <Collapse className={"propCollapse in-"+(this.state.collapse[k]===true)} in={this.state.collapse[k]}>
                   {ret}
                </Collapse>
