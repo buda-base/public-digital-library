@@ -647,20 +647,28 @@ class ResourceViewer extends Component<Props,State>
 
          if(_T === "Images") {            
             if(!s) s = { ...state }
+            if(!work && s.title.work) work = s.title.work
+            if(!instance && s.title.instance) instance = s.title.instance
             images = [ { type:"uri", value:fullUri(props.IRI) } ]
             s.title = { work, images, instance }
          } 
          else if(_T === "Instance") {            
             if(!s) s = { ...state }
+            if(!work && s.title.work) work = s.title.work
             instance = [ { type:"uri", value:fullUri(props.IRI) } ]
             s.title = { work, instance, images }
          } 
          else if(_T === "Work") {            
             if(state.title.work && state.title.work.length && state.title.work[0].value === fullUri(props.IRI) ) {
                if(!s) s = { ...state }
+               work = [ { type:"uri", value:fullUri(props.IRI) } ] 
                instance = state.title.instance
                images = state.title.images
-               s.title = { instance, images }
+               s.title = { work, instance, images }
+            }
+            else {
+               if(!s) s = { ...state }
+               s.title = { work:[ { type:"uri", value:fullUri(props.IRI) } ] }   
             }
          }
          else {
@@ -668,7 +676,7 @@ class ResourceViewer extends Component<Props,State>
             s.title = { work:[ { type:"uri", value:fullUri(props.IRI) } ] }
          }
 
-         console.log("gDsFp",JSON.stringify(s?s.title:state.title,null,3),props.IRI,_T,work,instance,images)
+         console.log("title?",JSON.stringify(state.title,null,3),JSON.stringify(s?s.title:state.title,null,3),props.IRI,_T)
       }
 
       if(props.IRI && props.resources && props.resources[props.IRI]) {
@@ -2716,22 +2724,25 @@ class ResourceViewer extends Component<Props,State>
           else  title = <h2 class="on">{_T}<span>{shortUri(other?other:this.props.IRI)}</span></h2>
       }
       
-      //console.log("sT",kZprop,_T,other,title,titlElem)
-
-      if(!title && titlElem) {
-         if(typeof titlElem !== 'object') titlElem =  { "value" : titlElem, "lang":""}
-         title = getLangLabel(this,"", titlElem, false, false, otherLabels)
+      if(!title) {
+         if(titlElem) {
+            if(typeof titlElem !== 'object') titlElem =  { "value" : titlElem, "lang":""}
+            title = getLangLabel(this,"", titlElem, false, false, otherLabels)
+         }
          //console.log("titl",title,otherLabels,other)
+         let _befo
          if(title && title.value) {
             if(!other) document.title = title.value + " - Public Digital Library"
-            let _befo
             if(title.fromSameAs && !title.fromSameAs.match(new RegExp(bdr))) {
                const {befo,bdrcData} = this.getSameLink(title,shortUri(title.fromSameAs).split(":")[0]+" sameAs hasIcon")            
                _befo = befo
             }
-            title = this.getH2(title,_befo,_T,other)
          }
+         if(!title) title = { value:"", lang:"" }
+         title = this.getH2(title,_befo,_T,other)         
       }
+
+      console.log("sT",other,title,titlElem)
 
       return { title, titlElem, otherLabels }
    }
@@ -3710,15 +3721,16 @@ class ResourceViewer extends Component<Props,State>
          if(baseW && baseW.length && baseW[0].value) {
             let wUri = shortUri(baseW[0].value);
             if(!this.props.resources[wUri]) this.props.onGetResource(wUri);
-            console.log("is?",baseW[0].value,this.props.assocResources?this.props.assocResources[baseW[0].value]:null)
+            //console.log("is?",baseW[0].value,this.props.assocResources?this.props.assocResources[baseW[0].value]:null)
+            let baseData = []
             if(this.props.assocResources) {
-               let baseData = this.props.assocResources[baseW[0].value]
+               baseData = this.props.assocResources[baseW[0].value]
                if(baseData && baseData.length) baseData = baseData.map(e => (e.fromKey?e.fromKey:(e.type?e.type:e)))         
                else baseData = []
-               let _T = getEntiType(shortUri(baseW[0].value))
-               let { title,titlElem,otherLabels } = this.setTitle(baseData,_T,baseW[0].value) ;
-               return title
             }
+            let _T = getEntiType(shortUri(baseW[0].value))
+            let { title,titlElem,otherLabels } = this.setTitle(baseData,_T,baseW[0].value) ;
+            return title
          }
          return null
       }
