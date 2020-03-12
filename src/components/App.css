@@ -282,7 +282,7 @@ h4 { margin-top:0px;margin-bottom:0px;font-size:24px; }
 
 /* .resource .sub h4.first + h4:not(.multiple) { margin-left:5px;} */
 
-.resource .subsub { /*width:100%; padding-left:5px;*/ display: flex;align-items: baseline;flex-wrap:wrap;position:relative; box-sizing: border-box;}
+.resource .subsub { /*width:100%; padding-left:5px; display: flex;*/align-items: baseline;flex-wrap:wrap;position:relative; box-sizing: border-box;}
 
 /* .resource .subsub h4 { flex-shrink:0 ; } */
 /* .resource .subsub:first-child:before, */
@@ -315,6 +315,26 @@ h4 { margin-top:0px;margin-bottom:0px;font-size:24px; }
 .resource .data > [data-prop="bdo:workIsAbout"] h4.multiple + h4::before
 { content:" ";padding:0 5px 0 10px; font-size:15px; }
 
+.resource .data > [data-prop="bdo:creator"] h4[data-prop="bdo:role"] + h4 .lang,
+.resource .data > [data-prop="bdo:creator"] h4[data-prop^="bdo:"],
+.resource .data > [data-prop="bdo:lineageHolder"] h4[data-prop^="bdo:lineageHolder"] 
+{ display:none; }
+
+.resource .data > [data-prop="bdo:creator"] h4[data-prop="bdo:role"] + h4::after { content:':';padding-right:5px;}
+
+.resource .data > [data-prop="bdo:note"] > .sub > h4.first,
+.resource .data > [data-prop="bdo:lineageHolder"] .sub .subsub h4[data-prop^="bdo:lineageWho"] a,
+.resource .data > [data-prop="bdo:creator"] h4[data-prop="bdo:role"] + h4 a { text-transform:capitalize;color:#343434;font-size:15px;font-weight:700;
+   letter-spacing:0.63; border-color:#343434;}
+
+.resource .data > [data-prop="bdo:note"] > .sub { display:inline-block; margin-bottom:30px; line-height:24px; }
+.resource .data > [data-prop="bdo:note"] > .sub > h4 + div:not(.subsub) { display:inline-block; letter-spacing:0.25px;color:#777;font-size:13px; }
+.resource .data > [data-prop="bdo:note"] > .sub > h4 + div + .subsub h4 { font-size:14px; letter-spacing:0.5px;}
+.resource .data > [data-prop="bdo:note"] > .sub > h4.first { font-size:13px; padding-right:5px;}
+.resource .data > [data-prop="bdo:note"] > .sub > h4 + div.subsub,
+.resource .data > [data-prop="bdo:note"] > .sub > h4 + div.subsub h4 { display:inline;}
+
+.resource.etext #etext-scroll [lang=bo] > span:not(.startChar) { font-family:'Tibetan Machine Uni'; }
 
 #etext-scroll > .etextPage:first-child { margin-top:20px; }
 
@@ -330,6 +350,9 @@ h4 { margin-top:0px;margin-bottom:0px;font-size:24px; }
 
 .resource .data h3.chunk { margin-bottom:15px;}
 .resource .data h3.chunk ~ .multiple { padding-left:0; }
+
+
+
 
 .etextPage { border-top:1px solid #999; padding-top:25px;  }
 .etextPage h4.page  { display:inline-block; padding-left:0; margin-bottom:0;  
@@ -381,7 +404,7 @@ h4 { margin-top:0px;margin-bottom:0px;font-size:24px; }
 
 .resource .data h3 a.propref,.resource .data h4 a.propref { color:#343434; font-size:17px; letter-spacing: 0.68px;line-height:24px;word-break: break-all; }
 .resource .data .sub a.propref { font-size:15px; font-weight:700; letter-spacing: 0px;font-style:normal;letter-spacing:0.63px; }
-.resource .data .sub .subsub a.propref { font-weight:400;}
+.resource .data .sub .subsub a.propref { font-weight:400;letter-spacing:0.35px;}
 .resource .data h3 a.propref:hover,.resource .data h4 a.propref:hover { border-bottom:1px solid black;}
 div[role="tooltip"] { margin:30px; max-width:400px;  }
 div[role="tooltip"] > div { font-weight:bold;font-size:16px; }

@@ -261,13 +261,14 @@ export function highlight(val,k,expand,newline)
    return val;
 }
 
-const preferUIlang = [ bdo+"placeType", bdo+"workIsAbout", bdo+"workGenre", bdo+"role", bdo+"language", bdo+"script", adm+"metadataLegal", bdo+"personGender", bdo+"printMethod" ]
+const preferUIlang = [ bdo+"placeType", bdo+"workIsAbout", bdo+"workGenre", bdo+"role", bdo+"language", bdo+"script", adm+"metadataLegal", bdo+"personGender", bdo+"printMethod", bdo+"workGenre",
+   tmp+"relationType" ]
 
 export function getLangLabel(that:{},prop:string="",labels:[],proplang:boolean=false,uilang:boolean=false,otherLabels:[],dontUseUI:boolean=false)
 {
    if(labels && labels.length)
    {
-      //console.log("getL",labels,proplang);
+      //console.log("getL",prop,labels,proplang);
 
       let langs = []
       if(that.state.langPreset) langs = that.state.langPreset
@@ -1967,7 +1968,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             else return acc
          },{}) 
          
-         //console.log("labels/prop",prop,id,useAux,fromProp,allProps) //,this.props.assoRes)         
+         console.log("labels/prop",prop,id) //,useAux,fromProp,allProps) //,this.props.assoRes)         
 
          if(useAux && !findProp) { // etext
 
@@ -1978,7 +1979,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             let val,lang,cpt = 1
 
             for(let i of id) {
-               let labels = getLangLabel(this,"",i.filter(e => useAux.includes(e.type)))
+               let labels = getLangLabel(this,prop,i.filter(e => useAux.includes(e.type)))
 
                lang = labels["xml:lang"]
                if(!lang) lang = labels["lang"]
@@ -1989,9 +1990,9 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                let startChar = labels.startChar, endChar = labels.endChar
                
                let expand = labels.expand
-               if(expand && expand.value) expand = getLangLabel(this,"",[ expand ])
+               if(expand && expand.value) expand = getLangLabel(this,prop,[ expand ])
                let context = labels.context
-               if(context && context.value) context = getLangLabel(this,"",[ context ])
+               if(context && context.value) context = getLangLabel(this,prop,[ context ])
 
                let inPart = labels.inPart
 
@@ -2101,10 +2102,10 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   }
                }
 
-               //console.log("labels1",i,labels,this.props.assoRes)
+               //console.log("labels1",i,prop) //,labels,this.props.assoRes)
 
                if(labels) { 
-                  labels = getLangLabel(this,"",labels)
+                  labels = getLangLabel(this,prop,labels)
                   if(labels) {
                      lang = labels["xml:lang"]
                      if(!lang) lang = labels["lang"]
@@ -2418,7 +2419,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      if(Array.isArray(m.value)) 
                      { 
                         val = m.value.map((e)=> {
-                           let lab =  getLangLabel(this,"",allProps.filter(l => l.type === e))
+                           let lab =  getLangLabel(this,m.type,allProps.filter(l => l.type === e))
                            if(!lab) return this.pretty(e)
                            else {
                               let lang = lab.lang
@@ -2447,13 +2448,13 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
                         expand = m.expand
                         if(expand && expand.value) {
-                           if(!this.state.collapse[prettId+"@"+startC]) expand = getLangLabel(this,"",[{...m, "value":expand.value}])
+                           if(!this.state.collapse[prettId+"@"+startC]) expand = getLangLabel(this,m.type,[{...m, "value":expand.value}])
                            else expand = true
                         }
 
                         context = m.context
                         if(context && context.value) {
-                           if(this.state.collapse[prettId+"@"+startC]) context = getLangLabel(this,"",[{...m, "value":context.value}])
+                           if(this.state.collapse[prettId+"@"+startC]) context = getLangLabel(this,m.type,[{...m, "value":context.value}])
                            else context = false
                         }
                         else context = false
@@ -2492,7 +2493,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                         
                         //console.log("val",label,val,lit,lang,dico)
 
-                        if(label && label.length) label = getLangLabel(this,"",label)
+                        if(label && label.length) label = getLangLabel(this,m.type,label)
                         if(label) {
                            uri = val
                            for(let k of Object.keys(prefixesMap)) { 
@@ -2552,7 +2553,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                            if(label && label[skos+"prefLabel"]) label = label[skos+"prefLabel"]
                            else if(label) label = label[foaf+"name"]
                         }
-                        if(label) label = getLangLabel(this,"",label)
+                        if(label) label = getLangLabel(this,m.type,label)
                         if(label) {
                            if(label.value) {
                               val = label.value

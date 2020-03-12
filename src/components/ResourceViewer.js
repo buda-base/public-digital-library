@@ -870,7 +870,7 @@ class ResourceViewer extends Component<Props,State>
                      else return acc+e.value+";"
                   },"") + ((lang = getLangLabel(this, "", assoR[w.value][rdfs+"label"]))&&lang.lang?lang.lang+";"+lang.value:"") })
                   //console.log("valsort",assoR,valSort)
-                  valSort = _.orderBy(valSort,['k'],['asc']).map(e => ({'type':'bnode','k':e.k,'value':e.bnode,'sorted':true, ...e.fromSameAs?{fromSameAs:e.fromSameAs}:{}}))               
+                  valSort = _.orderBy(valSort,['k'],['asc']).map(e => ({'type':'bnode','k':e.k,'value':e.bnode,'sorted':true, ...e.fromEvent?{fromEvent:e.fromEvent}:{}, ...e.fromSameAs?{fromSameAs:e.fromSameAs}:{}}))               
                }
             }
             return valSort ; //
@@ -923,7 +923,7 @@ class ResourceViewer extends Component<Props,State>
                      else return { ...w, d, n, k, bnode:w.value }
                   })
                   //console.log("valsort",assoR,valSort)
-                  valSort = _.orderBy(valSort,['n', 'd', 'k'],['asc']).map(e => ({'type':'bnode','n':e.n,'k':e.k,'d':e.d,'value':e.bnode,'sorted':true, ...e.fromSameAs?{fromSameAs:e.fromSameAs}:{}}))               
+                  valSort = _.orderBy(valSort,['fromEvent','n', 'd', 'k'],['asc']).map(e => ({'type':'bnode','n':e.n,'k':e.k,'d':e.d,'value':e.bnode,'sorted':true, ...e.fromEvent?{fromEvent:e.fromEvent}:{}, ...e.fromSameAs?{fromSameAs:e.fromSameAs}:{}}))               
                }
             }
             return valSort ; //
@@ -1358,7 +1358,9 @@ class ResourceViewer extends Component<Props,State>
       }
       else if(!withProp){
          //info = infoBase.filter((e) => e["xml:lang"]==this.props.prefLang)
-         info = getLangLabel(this, prop, infoBase)
+         info = [ getLangLabel(this, prop, infoBase) ]
+
+         //console.log("info?",info)
 
          if(info && info[0]) {
             lang = info[0]["xml:lang"]
@@ -1367,7 +1369,7 @@ class ResourceViewer extends Component<Props,State>
          }
          else {
             //info = infoBase.filter((e) => e["xml:lang"]=="bo-x-ewts")
-            info = getLangLabel(this, prop, infoBase)
+            //info = getLangLabel(this, prop, infoBase)
 
             if(info && info[0]) {
                lang = info[0]["xml:lang"]
@@ -1452,6 +1454,8 @@ class ResourceViewer extends Component<Props,State>
             let { _info, _lang } = this.getInfo(prop,infoBase,withProp) 
             info = _info
             lang = _lang
+
+            //console.log("info!",info)
 
             if(!info) info = shortUri(elem.value)
          }
@@ -1784,6 +1788,8 @@ class ResourceViewer extends Component<Props,State>
 
       //console.log("elem", elem)
 
+      let nbN = 1
+
       let viewAnno = false ;
       if(elem) for(const _e of elem) 
       {
@@ -1820,7 +1826,7 @@ class ResourceViewer extends Component<Props,State>
 
                if(lang) {
 
-                  let tLab = getLangLabel(this,"",[e])
+                  let tLab = getLangLabel(this,prop,[e])
                   let lang = tLab["lang"]
                   if(!lang) lang = tLab["xml:lang"]
                   let tVal = tLab["value"]
@@ -1992,7 +1998,7 @@ class ResourceViewer extends Component<Props,State>
                }
             }
 
-            //console.log("bnode",prop,e.value,elem)
+            console.log("bnode",prop,e.value,elem)
 
             if(!elem) continue ;
 
@@ -2000,6 +2006,13 @@ class ResourceViewer extends Component<Props,State>
 
             let val = elem[rdf+"type"]
             let lab = elem[rdfs+"label"]
+
+            if(prop === bdo+"instanceEvent")  {
+               let from = e.fromEvent
+               console.log("from",from,this.getResourceBNode(from)        )
+               if(from) from = this.getResourceBNode(from)        
+               if(from && from[rdf+"type"]) val = from[rdf+"type"]
+            }
 
             //console.log("val",val);
             //console.log("lab",lab);
@@ -2024,26 +2037,28 @@ class ResourceViewer extends Component<Props,State>
             const {befo,bdrcData} = this.getSameLink(e,sameAsPrefix)
 
             // property name ?            
+            let subProp = ""
             if(valSort) {
                //console.log("valSort?",valSort)               
                noVal = false ;
-               sub.push(<Tag className={'first '+(div == "sub"?'type':'prop') +" "+ (sameAsPrefix?sameAsPrefix+" sameAs hasIcon":"")}>{befo}{[valSort.map((v,i) => i==0?[this.proplink(v.value)]:[" / ",this.proplink(v.value)]),": "]}{bdrcData}</Tag>)
+               sub.push(<Tag  data-prop={shortUri(prop)}  className={'first '+(div == "sub"?'type':'prop') +" "+ (sameAsPrefix?sameAsPrefix+" sameAs hasIcon":"")}>{befo}{[valSort.map((v,i) => i==0?[this.proplink(v.value)]:[" / ",this.proplink(v.value)]),": "]}{bdrcData}</Tag>)
             }
             else if(val && val[0] && val[0].value)
             {
+               subProp = val[0].value
                noVal = false ;
-               sub.push(<Tag className={'first '+(div == "sub"?'type':'prop') +" "+ (sameAsPrefix?sameAsPrefix+" sameAs hasIcon":"")}>{befo}{[this.proplink(val[0].value),": "]}{bdrcData}</Tag>)
+               sub.push(<Tag  data-prop={shortUri(prop)}  className={'first '+(div == "sub"?'type':'prop') +" "+ (sameAsPrefix?sameAsPrefix+" sameAs hasIcon":"")}>{befo}{[this.proplink(val[0].value),": "]}{bdrcData}</Tag>)
             }
 
             //console.log("lab",lab)
 
             // direct property value/label ?
-            if(lab && lab[0] && lab[0].value)
+            if(prop !== bdo+"instanceEvent" && lab && lab[0] && lab[0].value)
             {
 
                for(let l of lab) {
 
-                  let tLab = getLangLabel(this, "", [ l ])
+                  let tLab = getLangLabel(this, subProp, [ l ])
                   let lang = tLab["lang"]
                   if(!lang) lang = tLab["xml:lang"]
                   let tVal = tLab.value
@@ -2103,6 +2118,7 @@ class ResourceViewer extends Component<Props,State>
                   //console.log("key5",keys)
                }
 
+
                for(let f of keys)
                {
                   let subsub = []
@@ -2130,7 +2146,7 @@ class ResourceViewer extends Component<Props,State>
 
                         note.push(
                            <div class="sub">
-                              <Tag className="first type">{this.proplink(bdo+"noteText","Note")}:</Tag>
+                              <Tag className="first type">{nbN++ /*this.proplink(bdo+"noteText","Note")*/}</Tag>
                               {workuri}
                               <div class="subsub">
                                  <Tag>
@@ -2153,9 +2169,10 @@ class ResourceViewer extends Component<Props,State>
                            loca = [" @ ",noteData[bdo+"contentLocationStatement"].value]
                         }
                         let workuri = <div><Tag style={{fontSize:"14px"}}>(from {this.uriformat(bdo+"noteSource",noteData[bdo+"noteSource"])}{loca})</Tag></div>
+
                         note.push(
                            <div class="sub">
-                              <Tag className="first type">{this.proplink(bdo+"noteSource","Note")}:</Tag>
+                              <Tag className="first type">{nbN++ /*this.proplink(bdo+"noteSource","Note")*/}</Tag>
                                  {workuri}
                                  <ChatIcon className="annoticon"  onClick={
                                     (function(val,prop,v,ev){
@@ -2196,23 +2213,23 @@ class ResourceViewer extends Component<Props,State>
                   else
                   {
                      let what = this.props.resources[this.props.IRI][elem[f][0].value]
-                     //console.log("what",what)
+                     //console.log("what",what,elem[f])
 
                      if(!noVal)
-                        subsub.push(<Tag className={'first '+(div == ""?'type':'prop')}>{[this.proplink(f),": "]}</Tag>)
+                        subsub.push(<Tag data-prop={shortUri(f)} className={'first '+(div == ""?'type':'prop')}>{[this.proplink(f),": "]}</Tag>)
                      //{...(val ? {className:'first prop'}:{className:'first type'}) }
                      else
-                        sub.push(<Tag className={'first '+(!bnode?"type":"prop")}>{[this.proplink(f),": "]}</Tag>)
+                        sub.push(<Tag data-prop={shortUri(f)} className={'first '+(!bnode?"type":"prop")}>{[this.proplink(f),": "]}</Tag>)
 
                      val = elem[f]
                      for(let v of val)
                      {
-                        //console.log("v",v);
+                        //console.log("v",v,f,subProp);
 
                         if(f == bdo+"contentLocationStatement" || f == bdo+"noteSource" || f == bdo+"noteText") {
                            noteData[f] = v
                         }
-                        else if(f.match(/[Ll]ineage/) && elem[f][0] && elem[f][0].value && this.props.resources && this.props.resources[this.props.IRI] && this.props.resources[this.props.IRI][elem[f][0].value])
+                        else if(f.match(/([Ll]ineage)/) && elem[f][0] && elem[f][0].value && this.props.resources && this.props.resources[this.props.IRI] && this.props.resources[this.props.IRI][elem[f][0].value])
                         {
                            v.type = "bnode"
                         }

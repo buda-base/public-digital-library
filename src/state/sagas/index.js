@@ -350,7 +350,25 @@ function extractAssoRes(iri,res) {
    let allowR = [ skos+"prefLabel", bdo+"partIndex", bdo+"volumeNumber" ]
 
    for(let k of Object.keys(res)) {                  
-      _res[k] = { ...res[k] }
+      _res[k] = { ...res[k], ..._res[k] }
+      if(_res[k][bdo+"instanceEvent"]) {
+         _res[k][bdo+"instanceEvent"] = _res[k][bdo+"instanceEvent"].reduce( (acc,e) => { 
+            if(res[e.value] && res[e.value][bdo+"eventWho"]) {
+               return ([...acc,...res[e.value][bdo+"eventWho"].map(f => ({fromEvent:e.value,type:'uri',value:f.value}) ) ])
+            }
+            else return acc
+         },[])
+         /*
+         _res[k][bdo+"instanceEvent"] = _res[k][bdo+"instanceEvent"].map(e => {
+            if(res[e.value] && res[e.value][bdo+"eventWho"]) {
+               if(!_res[e.value]) _res[e.value] = {}
+               _res[e.value][bdo+"eventWho"] = res[e.value][bdo+"eventWho"].map(f => ({...f,type:"literal"}))
+            }
+            console.log("preformat",e,JSON.stringify(_res[e.value],null,3))
+         })
+         */
+         console.log("preformat",_res[k][bdo+"instanceEvent"])
+      }
       if(k !== longIri) {
          let resK = Object.keys(res[k])
          if(allowR.filter(e => resK.includes(e)).length) assocRes[k] = Object.keys(res[k]).reduce( (acc,f) => ([ ...acc, ...res[k][f].map(e => ({...e,type:f}))]), [])
