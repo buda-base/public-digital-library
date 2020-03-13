@@ -356,7 +356,7 @@ function extractAssoRes(iri,res) {
             if(res[e.value] && res[e.value][bdo+"eventWho"]) {
                return ([...acc,...res[e.value][bdo+"eventWho"].map(f => ({fromEvent:e.value,type:'uri',value:f.value}) ) ])
             }
-            else return acc
+            else return ([...acc, e])
          },[])
          /*
          _res[k][bdo+"instanceEvent"] = _res[k][bdo+"instanceEvent"].map(e => {

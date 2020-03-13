@@ -1358,18 +1358,19 @@ class ResourceViewer extends Component<Props,State>
       }
       else if(!withProp){
          //info = infoBase.filter((e) => e["xml:lang"]==this.props.prefLang)
+         
          info = [ getLangLabel(this, prop, infoBase) ]
 
          //console.log("info?",info)
 
-         if(info && info[0]) {
+         if(info && info[0] &&  !info[0].datatype) {
             lang = info[0]["xml:lang"]
             if(!lang) lang = info[0]["lang"]
             info = info[0].value 
          }
          else {
             //info = infoBase.filter((e) => e["xml:lang"]=="bo-x-ewts")
-            //info = getLangLabel(this, prop, infoBase)
+            info = getLangLabel(this, prop, infoBase)
 
             if(info && info[0]) {
                lang = info[0]["xml:lang"]
@@ -1998,7 +1999,7 @@ class ResourceViewer extends Component<Props,State>
                }
             }
 
-            console.log("bnode",prop,e.value,elem)
+            //console.log("bnode",prop,e.value,elem)
 
             if(!elem) continue ;
 
