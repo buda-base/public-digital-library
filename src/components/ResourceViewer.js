@@ -426,6 +426,18 @@ export function top_left_menu(that,pdfLink,monoVol,fairUse)
   return (
 
     <div id="top-left">
+
+       { that.props.IRI && <CopyToClipboard text={"http://purl.bdrc.io/resource/"+that.props.IRI.replace(/^bdr:/,"")} onCopy={(e) =>
+                //alert("Resource url copied to clipboard\nCTRL+V to paste")
+                prompt("Resource url has been copied to clipboard.\nCTRL+V to paste",fullUri(that.props.IRI))
+          }>
+
+          <a id="permalink" style={{marginLeft:"0px"}} title="Permalink">
+             <img src="/icons/PLINK.png"/>{/* <ShareIcon /> */}
+             <span>Permalink</span>
+          </a>
+       </CopyToClipboard> }
+
        {/* <Link style={{fontSize:"20px"}} className="goBack" to="/" onClick={(e) => that.props.onResetSearch()} //that.props.keyword&&!that.props.keyword.match(/^bdr:/)?"/search?q="+that.props.keyword+"&lg="+that.props.language+(that.props.datatype?"&t="+that.props.datatype:""):"/"
        >
           
@@ -435,12 +447,12 @@ export function top_left_menu(that,pdfLink,monoVol,fairUse)
        </Link> */}
        {
           that.props.IRI && that.props.IRI.match(/^(bd[ra])|(dila):/) &&
-          [<a className="goBack" target="_blank" title="TTL version" rel="alternate" type="text/turtle" href={that.expand(that.props.IRI)+".ttl"}>
+          <div>{[<a className="goBack" target="_blank" title="TTL version" rel="alternate" type="text/turtle" href={that.expand(that.props.IRI)+".ttl"}>
              <Button style={{marginLeft:"0px",paddingLeft:"10px",paddingRight:0}}>{I18n.t("resource.export")} ttl</Button>
           </a>,<span>&nbsp;/&nbsp;</span>,
           <a className="goBack noML" target="_blank" title="JSON-LD version" rel="alternate" type="application/ld+json" href={that.expand(that.props.IRI)+".jsonld"}>
              <Button style={{paddingLeft:0,paddingRight:"10px"}}>json-ld</Button>
-          </a>]
+          </a>]}</div>
        }
        { that.props.IRI && getEntiType(that.props.IRI) === "Etext" && <a target="_blank" style={{fontSize:"26px"}} download className="goBack pdfLoader" href={that.props.IRI?that.props.IRI.replace(/bdr:/,bdr)+".txt":""}>
                 <IconButton title={I18n.t("resource.download")+" TXT"}>
@@ -449,14 +461,14 @@ export function top_left_menu(that,pdfLink,monoVol,fairUse)
                </a> }
        {
           that.props.IRI && that.props.IRI.match(/^bda[nc]:/) &&
-          [<a className="goBack" target="_blank" title="TTL version" rel="alternate" type="text/turtle"
+          <div>{[<a className="goBack" target="_blank" title="TTL version" rel="alternate" type="text/turtle"
              href={"http://purl.bdrc.io/"+(that.props.IRI.match(/^bdan:/)?"annotation/":"anncollection/")+that.props.IRI.replace(/bda[nc]:/,"")+".ttl"}>
                 <Button style={{marginLeft:"0px",paddingLeft:"10px",paddingRight:"0px"}}>{I18n.t("resource.export")} ttl</Button>
           </a>,<span>&nbsp;/&nbsp;</span>,
           <a className="goBack noML" target="_blank" title="JSON-LD version" rel="alternate" type="application/ld+json"
              href={"http://purl.bdrc.io/"+(that.props.IRI.match(/^bdan:/)?"annotation/":"anncollection/")+that.props.IRI.replace(/bda[nc]:/,"")+".jsonld"}>
                 <Button style={{paddingLeft:0,paddingRight:"10px"}}>json-ld</Button>
-          </a>]
+          </a>]}</div>
        }
        { /*  TODO // external resources ==> /query/graph/ResInfo?R_RES=
           that.props.IRI.match(/^bda[cn]:/) &&
@@ -544,15 +556,6 @@ export function top_left_menu(that,pdfLink,monoVol,fairUse)
        }
 
 
-       { that.props.IRI && <CopyToClipboard text={"http://purl.bdrc.io/resource/"+that.props.IRI.replace(/^bdr:/,"")} onCopy={(e) =>
-                //alert("Resource url copied to clipboard\nCTRL+V to paste")
-                prompt("Resource url has been copied to clipboard.\nCTRL+V to paste",fullUri(that.props.IRI))
-          }>
-
-          <IconButton style={{marginLeft:"0px"}} title="Permalink">
-             <ShareIcon />
-          </IconButton>
-       </CopyToClipboard> }
 
        {
 
@@ -3630,6 +3633,8 @@ class ResourceViewer extends Component<Props,State>
             </div>
          </div>
          )
+      else 
+         return <div class="data"><div class="header"></div></div>
    }
 
    renderNoAccess = (fairUse) => {
@@ -3791,21 +3796,25 @@ class ResourceViewer extends Component<Props,State>
       let theData = this.renderData(kZprop,iiifpres,title,otherLabels)      
 
       return (
-         [<div style={{overflow:"hidden",textAlign:"center"}}>
+         [<div>
             { !this.state.ready && <Loader loaded={false} /> }
             <div className={"resource "+getEntiType(this.props.IRI).toLowerCase()}>
-               { top_right_menu(this) }               
-               { this.renderAnnoPanel() }
-               { this.renderWithdrawn() }             
-               <div class="title">{ wTitle }{ iTitle }{ rTitle }{ top_left_menu(this,pdfLink,monoVol,fairUse)  }</div>
-               <div class="data">{title}</div>
-               { this.renderBrowseAssoRes() }
-               { this.renderNoAccess(fairUse) }
-               { this.renderFirstImage() }
-               { this.renderAccess() }
-               { this.renderPdfLink(pdfLink,monoVol,fairUse) }
-               { this.renderMirador() }           
-               { theData }
+               <div class="index"></div>
+               <div>
+                  { top_right_menu(this) }               
+                  { this.renderAnnoPanel() }
+                  { this.renderWithdrawn() }             
+                  <div class="title">{ wTitle }{ iTitle }{ rTitle }</div>
+                  <div class="data">{title}</div>
+                  { this.renderBrowseAssoRes() }
+                  { this.renderNoAccess(fairUse) }
+                  { this.renderFirstImage() }
+                  <div class="data">{ top_left_menu(this,pdfLink,monoVol,fairUse)  }</div>
+                  { this.renderAccess() }
+                  { this.renderPdfLink(pdfLink,monoVol,fairUse) }
+                  { this.renderMirador() }           
+                  { theData }
+               </div>
             </div>
          </div>,
          <LanguageSidePaneContainer />]
