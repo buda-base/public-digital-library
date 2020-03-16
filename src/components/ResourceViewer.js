@@ -648,6 +648,8 @@ class ResourceViewer extends Component<Props,State>
 
          let _T = getEntiType(props.IRI)
 
+         //console.log("title!",_T,work,instance,images)
+
          if(_T === "Images") {            
             if(!s) s = { ...state }
             if(!work && s.title.work) work = s.title.work
@@ -672,6 +674,17 @@ class ResourceViewer extends Component<Props,State>
             else {
                if(!s) s = { ...state }
                s.title = { work:[ { type:"uri", value:fullUri(props.IRI) } ] }   
+               let has = getElem(bdo+"workHasInstance",props.IRI)
+               //console.log("has!",has)
+               
+               // TODO fix undeterminism when more than one instance already loaded...
+
+               if(!instance && (instance=has.filter(e => props.resources[shortUri(e.value)])).length) { 
+                  s.title.instance = instance                            
+                  images = getElem(bdo+"instanceHasReproduction",shortUri(instance[0].value))
+                  //console.log("has!i",instance[0].value,images)
+                  if(images) s.title.images = images.filter(e => getEntiType(e.value) === "Images")
+               }
             }
          }
          else {
@@ -679,7 +692,7 @@ class ResourceViewer extends Component<Props,State>
             s.title = { work:[ { type:"uri", value:fullUri(props.IRI) } ] }
          }
 
-         console.log("title?",JSON.stringify(state.title,null,3),JSON.stringify(s?s.title:state.title,null,3),props.IRI,_T)
+         //console.log("title?",JSON.stringify(state.title,null,3),JSON.stringify(s?s.title:state.title,null,3),props.IRI,_T)
       }
 
       if(props.IRI && props.resources && props.resources[props.IRI]) {
