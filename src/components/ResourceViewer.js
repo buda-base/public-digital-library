@@ -607,9 +607,6 @@ class ResourceViewer extends Component<Props,State>
 
       this.state = { uviewer:false, imageLoaded:false, collapse:{}, pdfOpen:false, showAnno:true, errors:{},updates:{},title:{} }
 
-      let get = qs.parse(this.props.history.location.search)
-      if(get.tabs) this.state.tabs = get.tabs.split(",")
-
       console.log("props",props)
 
       let tmp = {}
@@ -621,6 +618,33 @@ class ResourceViewer extends Component<Props,State>
          this.setState({...this.state, openUV:false, openMirador:false, openDiva:false}); 
          if(window.MiradorUseEtext) delete window.MiradorUseEtext ;
       }
+   }
+
+   static setTitleFromTabs(props,state) {
+
+      let s, tabs = [ ...state.tabs ]
+
+      delete state.tabs
+      if(!s) s = { ...state }
+
+      let _T = getEntiType(props.IRI), work, instance, images
+
+      if(_T === "Work") {
+         work = [ { type:"uri", value:fullUri(props.IRI) } ]
+         instance = [ { type:"uri", value:fullUri(tabs[0]) } ]
+         if(tabs.length > 1) images = [ { type:"uri", value:fullUri(tabs[1]) } ]
+         s.title = { work, instance, images }
+      }
+      else if(_T === "Instance") {
+         instance = [ { type:"uri", value:fullUri(props.IRI) } ]
+         images = [ { type:"uri", value:fullUri(tabs[0]) } ]
+         s.title = { instance, images }
+      }
+      
+      //console.log("title:",_T,work,instance,images)
+      return s
+   
+      
    }
 
    static getDerivedStateFromProps(props:Props,state:State)
@@ -639,32 +663,9 @@ class ResourceViewer extends Component<Props,State>
          }
       }
 
-      let s ;
-
-      if(state.tabs && state.tabs.length) {
-
-         let tabs = [ ...state.tabs ]
-
-         delete state.tabs
-         if(!s) s = { ...state }
-
-         let _T = getEntiType(props.IRI), work, instance, images
-
-         if(_T === "Work") {
-            work = [ { type:"uri", value:fullUri(props.IRI) } ]
-            instance = [ { type:"uri", value:fullUri(tabs[0]) } ]
-            if(tabs.length > 1) images = [ { type:"uri", value:fullUri(tabs[1]) } ]
-            s.title = { work, instance, images }
-         }
-         else if(_T === "Instance") {
-            instance = [ { type:"uri", value:fullUri(props.IRI) } ]
-            images = [ { type:"uri", value:fullUri(tabs[0]) } ]
-            s.title = { instance, images }
-         }
-       
-         //console.log("title:",_T,work,instance,images)
-
-      }
+      let s 
+      
+      if(state.tabs && state.tabs.length) s = ResourceViewer.setTitleFromTabs(props,state) ;
 
       if(props.resources) {
 
@@ -776,6 +777,12 @@ class ResourceViewer extends Component<Props,State>
 
    componentDidMount()
    {
+      console.log("mount!!")
+
+      let get = qs.parse(this.props.history.location.search)
+      if(get.tabs && get.tabs.length) this.setState(ResourceViewer.setTitleFromTabs(this.props,{...this.state, tabs:get.tabs.split(",")}))
+
+
       if(window.location.hash === "#mirador" || window.location.hash === "#diva") {
          let timerViewer = setInterval(() => {
             if(this.props.imageAsset && this.props.firstImage) {
