@@ -150,7 +150,8 @@ type State = {
    IRI?:url,
    publicProps?:{},
    emptyPopover?:boolean,
-   title:{work:{},instance:{},images:{}}
+   title:{work:{},instance:{},images:{}},
+   tabs:[]
  }
 
 
@@ -606,6 +607,9 @@ class ResourceViewer extends Component<Props,State>
 
       this.state = { uviewer:false, imageLoaded:false, collapse:{}, pdfOpen:false, showAnno:true, errors:{},updates:{},title:{} }
 
+      let get = qs.parse(this.props.history.location.search)
+      if(get.tabs) this.state.tabs = get.tabs.split(",")
+
       console.log("props",props)
 
       let tmp = {}
@@ -636,6 +640,31 @@ class ResourceViewer extends Component<Props,State>
       }
 
       let s ;
+
+      if(state.tabs && state.tabs.length) {
+
+         let tabs = [ ...state.tabs ]
+
+         delete state.tabs
+         if(!s) s = { ...state }
+
+         let _T = getEntiType(props.IRI), work, instance, images
+
+         if(_T === "Work") {
+            work = [ { type:"uri", value:fullUri(props.IRI) } ]
+            instance = [ { type:"uri", value:fullUri(tabs[0]) } ]
+            if(tabs.length > 1) images = [ { type:"uri", value:fullUri(tabs[1]) } ]
+            s.title = { work, instance, images }
+         }
+         else if(_T === "Instance") {
+            instance = [ { type:"uri", value:fullUri(props.IRI) } ]
+            images = [ { type:"uri", value:fullUri(tabs[0]) } ]
+            s.title = { instance, images }
+         }
+       
+         //console.log("title:",_T,work,instance,images)
+
+      }
 
       if(props.resources) {
 
@@ -677,8 +706,6 @@ class ResourceViewer extends Component<Props,State>
                let has = getElem(bdo+"workHasInstance",props.IRI)
                //console.log("has!",has)
                
-               // TODO fix undeterminism when more than one instance already loaded...
-
                if(!instance && (instance=has.filter(e => props.resources[shortUri(e.value)])).length) { 
                   s.title.instance = instance                            
                   images = getElem(bdo+"instanceHasReproduction",shortUri(instance[0].value))
@@ -2734,14 +2761,30 @@ class ResourceViewer extends Component<Props,State>
    preprop = (k) => {} ;
    insertPreprop = (tag,n,ret) => ret ;
 
-   getH2 = (title,_befo,_T,other) => {
-      if(other) return <h2><Link to={"/show/"+shortUri(other)}>{_T}<span>{_befo}{title.value}</span>{this.tooltip(title.lang)}</Link></h2>
+   getTabs(_T,other) {
+      let tabs = []
+      if(_T === "Work") {
+         if(this.state.title && this.state.title.instance && this.state.title.instance.length) tabs.push(shortUri(this.state.title.instance[0].value))
+         if(this.state.title && this.state.title.images && this.state.title.images.length) tabs.push(shortUri(this.state.title.images[0].value))
+      }
+      else if(_T === "Instance") {
+         if(this.state.title && this.state.title.images && this.state.title.images.length) tabs.push(shortUri(this.state.title.images[0].value))
+      }
+
+      console.log("tabs?",_T,other,tabs)
+
+      if(tabs.length) return "?tabs="+tabs.join(",")
+      else return ""
+   }
+
+   getH2 = (title,_befo,_T,other,T_) => {
+      if(other) return <h2><Link to={"/show/"+shortUri(other)+this.getTabs(T_,other)}>{_T}<span>{_befo}{title.value}</span>{this.tooltip(title.lang)}</Link></h2>
       else return <h2 class="on">{_T}<span>{_befo}{title.value}</span>{this.tooltip(title.lang)}</h2>
    }
 
    setTitle = (kZprop,_T,other) => {
 
-      let title,titlElem,otherLabels = [] ;
+      let title,titlElem,otherLabels = [], T_ = _T ;
       _T = [<span class={"T "+_T.toLowerCase()}><span class="RID">{shortUri(other?other:this.props.IRI)}</span>{_T}</span>]
 
       if(kZprop.indexOf(skos+"prefLabel") !== -1)       {
@@ -2754,7 +2797,7 @@ class ResourceViewer extends Component<Props,State>
          titlElem = this.getResourceElem(rdfs+"label",other,this.props.assocResources);
       }
       else {
-          if(other) title = <h2><Link to={"/show/"+shortUri(other)}>{_T}<span>{shortUri(other?other:this.props.IRI)}</span></Link></h2>
+          if(other) title = <h2><Link to={"/show/"+shortUri(other)+this.getTabs(T_,other)}>{_T}<span>{shortUri(other?other:this.props.IRI)}</span></Link></h2>
           else  title = <h2 class="on">{_T}<span>{shortUri(other?other:this.props.IRI)}</span></h2>
       }
       
@@ -2773,7 +2816,7 @@ class ResourceViewer extends Component<Props,State>
             }
          }
          if(!title) title = { value:"", lang:"" }
-         title = this.getH2(title,_befo,_T,other)         
+         title = this.getH2(title,_befo,_T,other,T_)         
       }
 
       console.log("sT",other,title,titlElem)
@@ -3756,7 +3799,7 @@ class ResourceViewer extends Component<Props,State>
       let getWtitle = (baseW) => {
          if(baseW && baseW.length && baseW[0].value) {
             let wUri = shortUri(baseW[0].value);
-            if(!this.props.resources[wUri]) this.props.onGetResource(wUri);
+            if(this.props.resources && !this.props.resources[wUri]) this.props.onGetResource(wUri);
             //console.log("is?",baseW[0].value,this.props.assocResources?this.props.assocResources[baseW[0].value]:null)
             let baseData = []
             if(this.props.assocResources) {
