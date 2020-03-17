@@ -247,8 +247,8 @@ let propOrder = {
       "skos:prefLabel",
       "skos:altLabel",
       "bdo:personGender",
-      "bdo:kinWith",
       "bdo:personEvent",
+      "bdo:kinWith",
       // "bdo:incarnationActivities",
       "bdo:isIncarnation",
       "bdo:hasIncarnation",
@@ -298,9 +298,12 @@ let propOrder = {
       "skos:altLabel",
       "bdo:workType",
       "bdo:workExpressionOf",
+      "bdo:numberOfVolumes",
+      "bdo:itemVolumes",
+      "bdo:instanceHasVolume",
+      "bdo:instanceHasReproduction",
       "bdo:instanceOf",
       "bdo:instanceReproductionOf",
-      "bdo:instanceHasReproduction",
       "tmp:siblingExpressions",
       "bdo:workDerivativeOf",
       "bdo:workTranslationOf",
@@ -327,19 +330,16 @@ let propOrder = {
       "bdo:hasReproduction",
       "bdo:workHasInstance",
       "bdo:hasInstance",
+      "bdo:contentLocation",
       "bdo:inRootInstance",
       "tmp:siblingInstances",
       // "bdo:workHasItemImageAsset",
       "bdo:workLocation",
       "bdo:partOf",
       "bdo:workPartOf",
-      "bdo:contentLocation",
       "bdo:partType",
       "bdo:partIndex",
       "bdo:partTreeIndex",
-      "bdo:numberOfVolumes",
-      "bdo:itemVolumes",
-      "bdo:instanceHasVolume",
       "bdo:hasPart",
       "bdo:workHasPart",
       "bdo:instanceHasItem",
@@ -388,6 +388,47 @@ let propOrder = {
 propOrder["Volume"] = propOrder["Work"]
 propOrder["Instance"] = propOrder["Work"]
 propOrder["Images"] = propOrder["Work"]
+
+
+const topProperties = {
+   "Person": [ 
+      bdo+"personName", 
+      skos+"prefLabel", 
+      skos+"altLabel",
+      bdo+"personGender"
+   ],
+   "Work": [ 
+      bdo+"hasTitle", 
+      skos+"prefLabel", 
+      skos+"altLabel", 
+      bdo+"creator",
+      bdo+"workTranslationOf",
+      bdo+"workHasInstance"
+   ],
+   "Instance": [ 
+      bdo+"hasTitle", 
+      skos+"prefLabel", 
+      skos+"altLabel", 
+      bdo+"creator",
+      bdo+"contentLocation",
+      bdo+"instanceEvent",
+      bdo+"instanceOf",
+      bdo+"instanceHasReproduction",
+   ],
+   "Images": [ 
+      bdo+"hasTitle", 
+      skos+"prefLabel", 
+      skos+"altLabel",
+      bdo+"instanceReproductionOf",
+      bdo+"itemVolumes",
+      bdo+"instanceHasVolume"
+   ],
+   "Volume": [ 
+      bdo+"volumeNumber", 
+      bdo+"volumeOf"
+   ]
+}
+                       
 
 const canoLang = ["Bo","Pi","Sa","Zh"]
 
@@ -3157,7 +3198,7 @@ class ResourceViewer extends Component<Props,State>
       if(!isSub && n > maxDisplay) {      
          
          return (
-            <div data-prop={shortUri(k)}>
+            <div data-prop={shortUri(k)} class="has-collapse">
                <h3><span>{this.proplink(k)}</span>:&nbsp;<span
                onClick={(e) => this.setState({...this.state,collapse:{...this.state.collapse,[k]:!this.state.collapse[k]}})}
                className="toggle-expand">
@@ -3457,11 +3498,11 @@ class ResourceViewer extends Component<Props,State>
          )
    }
 
-   renderData = (kZprop, iiifpres, title, otherLabels) => {
+   renderData = (kZprop, iiifpres, title, otherLabels, div = "") => {
 
       let { doMap, doRegion, regBox } = this.getMapInfo(kZprop);
 
-      return <div className="data">
+      return <div className={"data "+div}>
          { kZprop.map((k) => {
 
             let elem = this.getResourceElem(k);
@@ -3471,7 +3512,8 @@ class ResourceViewer extends Component<Props,State>
             //for(let e of elem) console.log(e.value,e.label1);
 
             //if(!k.match(new RegExp("Revision|Entry|prefLabel|"+rdf+"|toberemoved"))) {
-            if((!k.match(new RegExp(adm+"|adm:|isRoot$|SourcePath|"+rdf+"|toberemoved|partIndex|partTreeIndex|legacyOutlineNodeRID|withSameAs"+(this._dontMatchProp?"|"+this._dontMatchProp:"")))
+            if(elem && 
+               (!k.match(new RegExp(adm+"|adm:|isRoot$|SourcePath|"+rdf+"|toberemoved|partIndex|partTreeIndex|legacyOutlineNodeRID|withSameAs"+(this._dontMatchProp?"|"+this._dontMatchProp:"")))
                ||k.match(/(originalRecord|metadataLegal|contentProvider|replaceWith)$/)
                ||k.match(/([/]see|[/]sameAs)[^/]*$/) // quickfix [TODO] test property ancestors
                || (this.props.IRI.match(/^bda:/) && (k.match(new RegExp(adm+"|adm:")))))
@@ -3697,19 +3739,19 @@ class ResourceViewer extends Component<Props,State>
          </div>
          )
       else 
-         return <div class="data"><div class="header"></div></div>
+         return <div class="data"><div class={"header "+(!this.state.ready?"loading":"")}>{ !this.state.ready && <Loader loaded={false} /> }</div></div>
    }
 
    renderNoAccess = (fairUse) => {
       if(fairUse && (!this.props.auth || !this.props.auth.isAuthenticated()) )
-         return <div class="data"><h3 style={{display:"block",marginBottom:"15px"}}><span style={{textTransform:"none"}}>Access limited to first &amp; last 20 pages.<br/>
+         return <div class="data access"><h3 style={{display:"block",marginBottom:"15px"}}><span style={{textTransform:"none"}}>Access limited to first &amp; last 20 pages.<br/>
                   Please <a class="login" onClick={this.props.auth.login.bind(this,this.props.history.location)}>login</a> if you have sufficient credentials to get access to all images from this work.</span></h3></div>
    }
 
    // TODO check if this is actually used ??
    renderAccess = () => {
       if ( this.props.manifestError && this.props.manifestError.error.message.match(/Restricted access/) )
-         return  <div class="data"><h3><span style={{textTransform:"none"}}>Please <a class="login" onClick={this.props.auth.login.bind(this,this.props.history.location)}>login</a> if you have sufficient credentials to get access to images from this work.</span></h3></div>
+         return  <div class="data access"><h3><span style={{textTransform:"none"}}>Please <a class="login" onClick={this.props.auth.login.bind(this,this.props.history.location)}>login</a> if you have sufficient credentials to get access to images from this work.</span></h3></div>
    }
 
    renderPdfLink = (pdfLink, monoVol, fairUse) => {
@@ -3856,27 +3898,41 @@ class ResourceViewer extends Component<Props,State>
       
       //console.log("ttlm",titlElem)
       
-      let theData = this.renderData(kZprop,iiifpres,title,otherLabels)      
+                           
+      let topProps = topProperties[_T]
+      if(!topProps) topProps = []
+
+      let theDataTop = this.renderData(topProps,iiifpres,title,otherLabels,"top-props")      
+      let theDataBot = this.renderData(kZprop.filter(k => !topProps.includes(k)),iiifpres,title,otherLabels,"bot-props")      
 
       return (
          [<div>
-            { !this.state.ready && <Loader loaded={false} /> }
-            <div className={"resource "+getEntiType(this.props.IRI).toLowerCase()}>
-               <div class="index"></div>
+            <div className={"resource "+getEntiType(this.props.IRI).toLowerCase()}>               
+               <div class="index">                  
+                  {/* { this.renderBrowseAssoRes() } */}
+                  {/* { this.renderPdfLink(pdfLink,monoVol,fairUse) } */}
+                  <div class="title">
+                  { wTitle }
+                  { wTitle && this.state.title.work && <h3><Link to={"/show/"+shortUri(this.state.title.work[0].value)+this.getTabs("Work")+"#main-info"} >Main Information</Link></h3> }
+                  { iTitle }
+                  { iTitle && this.state.title.instance && <h3><Link to={"/show/"+shortUri(this.state.title.instance[0].value)+this.getTabs("Instance")+"#main-info"} >Main Information</Link></h3> }
+                  { rTitle }
+                  { rTitle && this.state.title.images && <h3><Link to={"/show/"+shortUri(this.state.title.images[0].value)+this.getTabs("Images")+"#main-info"} >Main Information</Link></h3> }
+                  </div>
+               </div>
                <div>
                   { top_right_menu(this) }               
                   { this.renderAnnoPanel() }
                   { this.renderWithdrawn() }             
                   <div class="title">{ wTitle }{ iTitle }{ rTitle }</div>
-                  <div class="data">{title}</div>
-                  { this.renderBrowseAssoRes() }
+                  <div class="data" id="main-info">{title}</div>
                   { this.renderNoAccess(fairUse) }
-                  { this.renderFirstImage() }
-                  <div class="data">{ top_left_menu(this,pdfLink,monoVol,fairUse)  }</div>
                   { this.renderAccess() }
-                  { this.renderPdfLink(pdfLink,monoVol,fairUse) }
+                  { this.renderFirstImage() }
                   { this.renderMirador() }           
-                  { theData }
+                  { theDataTop }
+                  <div class="data">{ top_left_menu(this,pdfLink,monoVol,fairUse)  }</div>
+                  { theDataBot }
                </div>
             </div>
          </div>,
