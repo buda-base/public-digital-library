@@ -2213,6 +2213,8 @@ class ResourceViewer extends Component<Props,State>
                }
 
 
+               let group = []
+
                for(let f of keys)
                {
                   let subsub = []
@@ -2413,7 +2415,7 @@ class ResourceViewer extends Component<Props,State>
                   }
                   if(!noVal && !f.match(/[/]note[^F]/) && f !== bdo+"contentLocationStatement") {
                      //console.log("push?sub+",subsub)
-                     sub.push(<div className={div+"sub "+(hasBnode?"full":"")}>{subsub}</div>)
+                     group.push(<div className={div+"sub "+(hasBnode?"full":"")}>{subsub}</div>)
                   }
                   else {
 
@@ -2452,8 +2454,12 @@ class ResourceViewer extends Component<Props,State>
                      first = ""
                   }
                }
-               if(!noVal && sub.length)ret.push(<div className={div+" "+(bnode?"full":"")}>{sub}</div>)
+
+               if(group.length) sub.push(<div class="subgroup">{group}</div>)
+
+               if(!noVal && sub.length) ret.push(<div className={div+" "+(bnode?"full":"")}>{sub}</div>)
                //console.log("ret",ret,ret.length)
+
 
 
                //ret = [ ret ]
@@ -2478,7 +2484,7 @@ class ResourceViewer extends Component<Props,State>
          // TODO collapse not if more than 3
          console.log("note",note);
 
-         if(note.length <= 3) pre.push(<div>{note}</div>)
+         if(note.length <= 3) pre.push(<div class="no-collapse">{note}</div>)
          else pre.push([<div>         
                {note.slice(0,3)}
                <Collapse timeout={{enter:0,exit:0}} className={"noteCollapse in-"+(this.state.collapse[prop]===true)} in={this.state.collapse[prop]}>
@@ -3239,7 +3245,7 @@ class ResourceViewer extends Component<Props,State>
          */
 
          return (
-            <div data-prop={shortUri(k)} class={"has-collapse custom max-"+(maxDisplay)}>
+            <div data-prop={shortUri(k)} class={"has-collapse custom max-"+(maxDisplay)+" "+(n%2===0?"even":"odd") }>
                <h3><span>{this.proplink(k)}</span>:</h3>
                <div className={"propCollapseHeader in-"+(this.state.collapse[k]===true)}>
                   {ret.slice(0,maxDisplay)}

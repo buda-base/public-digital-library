@@ -337,7 +337,9 @@ h4:not(:hover) > .lang
 .resource h3,.resource h4 { display:inline-block; margin-bottom:0px; font-size:14px; font-weight:normal; overflow-wrap: break-word; /*margin-right:5px; line-height:30px;*/ }
 .resource h3 span { /*text-decoration: underline;*/ font-weight:600;  text-transform:capitalize; }
 .resource h3 { font-size:14px;margin-top:-1px; }
-.resource .sub { width:calc(100% - 190px); /*padding-left:20px;*/ display:inline-flex;flex-wrap:wrap; box-sizing: border-box; position:relative;}
+.resource .sub { width:calc(100% - 190px); /*padding-left:20px;*/ display:inline-flex;flex-wrap:wrap; box-sizing: border-box; position:relative;
+   align-items:baseline;
+}
 .resource .sub h4.first { /*font-size:0.85em; font-style:italic;*/ text-transform:capitalize; flex-shrink:0; /*line-height:1.6em;*/  margin-right:5px;}
  .resource .sub .sub h4.first.type,
 .resource .sub h4.first.prop { font-style:normal;/*font-size:0.8em; line-height:20px;*/ }
@@ -350,7 +352,7 @@ h4:not(:hover) > .lang
 /* .resource .subsub h4 { flex-shrink:0 ; } */
 /* .resource .subsub:first-child:before, */
 .resource div .sub.here:before { content:"•";position:absolute; width:10px;margin-left:-10px;top:11px; }
-.resource .subsub:first-child { margin-top:10px; }
+/* .resource .subsub:first-child { margin-top:10px; } */
 .resource .subsubsub.full,
 .resource .subsub.full { flex-wrap:wrap; }
 .resource .subsubsub.full > h4.first,
@@ -366,6 +368,8 @@ h4:not(:hover) > .lang
 .resource  .sub .sub .subsub h4.first.prop { font-style:normal;}
 .resource .sub .sub { padding-left:60px;}
 .resource .subsub.full .subsub .subsubsub h4.first.prop { font-style:normal; }
+
+.resource .data > div:not([data-prop="bdo:note"]) { display:flex !important; align-items: baseline; flex-wrap:wrap;}
 
 .resource .data > div > .sub { line-height:28px; }
 .resource .data > div > .sub + .sub { width:calc(100% - 190px); margin-left:190px; } 
@@ -390,7 +394,9 @@ h4:not(:hover) > .lang
 .resource .data > [data-prop="bdo:creator"] h4[data-prop="bdo:role"] + h4 a { text-transform:capitalize;color:#343434;font-size:15px;font-weight:700;
    letter-spacing:0.63; border-color:#343434;}
 
-   .resource .data > [data-prop="bdo:note"] > div {  width:calc(100% - 190px); display:inline-block; }
+.resource .data > [data-prop="bdo:creator"] .subgroup { display:flex;}
+
+.resource .data > [data-prop="bdo:note"] > div {  width:calc(100% - 190px); display:inline-block; }
 
 .resource .data > [data-prop="bdo:note"]  .sub { display:inline-block; line-height:24px; width:100%;}
 .resource .data > [data-prop="bdo:note"]  .sub > h4 + div:not(.subsub) { display:inline-block; letter-spacing:0.25px;color:#777;font-size:13px; }
@@ -398,9 +404,12 @@ h4:not(:hover) > .lang
 .resource .data > [data-prop="bdo:note"]  .sub > h4.first { font-size:13px; padding-right:5px;}
 .resource .data > [data-prop="bdo:note"]  .sub > h4 + div.subsub,
 .resource .data > [data-prop="bdo:note"]  .sub > h4 + div.subsub h4 { display:inline;}
-.resource .data > [data-prop="bdo:note"] > div .sub:last-child,
+.resource .data > [data-prop="bdo:note"] > div:not(.no-collapse) .sub:last-child,
 .resource .data > [data-prop="bdo:note"]  .sub:not(:last-child) { margin-bottom:30px; }
 .resource .data > [data-prop="bdo:note"] .expand { top:-3px; display:inline-block;} 
+
+.resource .data .sub .subgroup { line-height:24px;margin-bottom:4px; }
+.resource .data .sub .subgroup a.propref { line-height:14px; }
 
 .resource.etext #etext-scroll [lang=bo] > span:not(.startChar) { font-family:'Tibetan Machine Uni'; }
 
@@ -655,7 +664,7 @@ h3 .expand svg { position:absolute; margin-top:-18px; }*/
 .propCollapse.in-false h4 { opacity:0 ; transition:none !important;}
 /* .propCollapseHeader { width:100%; } */
 
-.propCollapseHeader.in-true { opacity: 0; height: 0; width: 0; transition-delay: 0ms;}
+.propCollapseHeader.in-true { opacity: 0; height: 0; width: 0; transition-delay: 0ms;display:none;}
 .propCollapseHeader.in-false { transition-delay: 0ms;}
 
 .expand { margin-bottom:0px; cursor:pointer; margin-left:190px; border-bottom:1px solid transparent; font-size:13px; position:absolute;bottom:24px; margin-bottom:3px; 
