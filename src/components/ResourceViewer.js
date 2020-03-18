@@ -748,7 +748,7 @@ class ResourceViewer extends Component<Props,State>
                let has = getElem(bdo+"workHasInstance",props.IRI)
                //console.log("has!",has)
                
-               if(!instance && (instance=has.filter(e => props.resources[shortUri(e.value)])).length) { 
+               if(has && !instance && (instance=has.filter(e => props.resources[shortUri(e.value)])).length) { 
                   s.title.instance = instance                            
                   images = getElem(bdo+"instanceHasReproduction",shortUri(instance[0].value))
                   //console.log("has!i",instance[0].value,images)
@@ -1875,12 +1875,14 @@ class ResourceViewer extends Component<Props,State>
       //console.log("format",Tag, prop,JSON.stringify(elem,null,3),txt,bnode,div);
 
       let ret = [],pre = []
+      let note = []
 
       if(elem && !Array.isArray(elem)) elem = [ elem ]
 
       //console.log("elem", elem)
 
       let nbN = 1
+
 
       let viewAnno = false ;
       if(elem) for(const _e of elem) 
@@ -2221,7 +2223,6 @@ class ResourceViewer extends Component<Props,State>
 
                   if(f === tmp+"noteFinal")
                   {
-                     let note = []
                      //console.log("noteData",noteData)
                      if(noteData[bdo+"noteText"])
                      {
@@ -2295,7 +2296,8 @@ class ResourceViewer extends Component<Props,State>
                      else if(noteData[bdo+"contentLocationStatement"])
                      {
                      }
-                     ret.push(note)
+
+                     //ret.push(note)
                      continue;
                   }
 
@@ -2409,10 +2411,17 @@ class ResourceViewer extends Component<Props,State>
                         }
                      }
                   }
-                  if(!noVal && !f.match(/[/]note[^F]/) && f !== bdo+"contentLocationStatement") sub.push(<div className={div+"sub "+(hasBnode?"full":"")}>{subsub}</div>)
+                  if(!noVal && !f.match(/[/]note[^F]/) && f !== bdo+"contentLocationStatement") {
+                     //console.log("push?sub+",subsub)
+                     sub.push(<div className={div+"sub "+(hasBnode?"full":"")}>{subsub}</div>)
+                  }
                   else {
 
-                     if(subsub.length > 0) sub.push(subsub) //<div className="sub">{subsub}</div>)
+                     if(subsub.length > 0) { 
+                        //console.log("push?subsub",subsub)
+                        sub.push(subsub) //<div className="sub">{subsub}</div>)
+                     }
+
                      if(f == bdo+"contentLocationStatement" || f == bdo+"noteSource" || f == bdo+"noteText") {
                         // wait noteFinal
                         /*
@@ -2434,7 +2443,8 @@ class ResourceViewer extends Component<Props,State>
                         }
                         */
                      }
-                     else {
+                     else if(sub.length) {
+                        //console.log("push?sub",sub)
                         ret.push(<div className={div+ first}>{sub}</div>)
                      }
 
@@ -2442,14 +2452,15 @@ class ResourceViewer extends Component<Props,State>
                      first = ""
                   }
                }
-               if(!noVal)ret.push(<div className={div+" "+(bnode?"full":"")}>{sub}</div>)
+               if(!noVal && sub.length)ret.push(<div className={div+" "+(bnode?"full":"")}>{sub}</div>)
+               //console.log("ret",ret,ret.length)
 
-               //console.log("ret",ret)
 
                //ret = [ ret ]
             }
-
          }
+
+
          //ret.push(<div class="mark">xx{bnode?"bnode":""}{e.inCollapse?"collap":""}</div>)
          if(e.inCollapse && !bnode)
          {
@@ -2459,6 +2470,30 @@ class ResourceViewer extends Component<Props,State>
          else pre.push(ret)
          ret = []
 
+
+      }
+
+      if(note.length) {
+
+         // TODO collapse not if more than 3
+         console.log("note",note);
+
+         if(note.length <= 3) pre.push(<div>{note}</div>)
+         else pre.push([<div>         
+               {note.slice(0,3)}
+               <Collapse timeout={{enter:0,exit:0}} className={"noteCollapse in-"+(this.state.collapse[prop]===true)} in={this.state.collapse[prop]}>
+                  {note.slice(3)}
+               </Collapse>          
+               </div>,     
+               <span
+                  onClick={(e) => this.setState({...this.state,collapse:{...this.state.collapse,[prop]:!this.state.collapse[prop]}})}
+                  className="expand">
+                     {(this.state.collapse[prop]?"hide":"see more")}&nbsp;<span
+                     className="toggle-expand">
+                        { this.state.collapse[prop] && <ExpandLess/>}
+                        { !this.state.collapse[prop] && <ExpandMore/>}
+                  </span>
+               </span> ]);
 
       }
 
@@ -3204,7 +3239,7 @@ class ResourceViewer extends Component<Props,State>
          */
 
          return (
-            <div data-prop={shortUri(k)} class="has-collapse custom">
+            <div data-prop={shortUri(k)} class={"has-collapse custom max-"+(maxDisplay)}>
                <h3><span>{this.proplink(k)}</span>:</h3>
                <div className={"propCollapseHeader in-"+(this.state.collapse[k]===true)}>
                   {ret.slice(0,maxDisplay)}
@@ -3235,7 +3270,7 @@ class ResourceViewer extends Component<Props,State>
       }
       else {
          return (
-            <div  data-prop={shortUri(k)}>               
+            <div  data-prop={shortUri(k)} {...(k===bdo+"note"?{class:"has-collapse custom"}:{})}>               
                <h3><span>{this.proplink(k)}</span>:&nbsp;</h3>
                {this.preprop(k,0,n)}
                {ret}
