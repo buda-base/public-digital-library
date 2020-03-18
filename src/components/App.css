@@ -369,7 +369,8 @@ h4:not(:hover) > .lang
 .resource .sub .sub { padding-left:60px;}
 .resource .subsub.full .subsub .subsubsub h4.first.prop { font-style:normal; }
 
-.resource .data > div:not([data-prop="bdo:note"]) { display:flex !important; align-items: baseline; flex-wrap:wrap;}
+.resource .data > div:not([data-prop="bdo:note"]):not(.header):not(.firstImage):not(#top-left) 
+{ display:flex !important; align-items: baseline; flex-wrap:wrap;}
 
 .resource .data > div > .sub { line-height:28px; }
 .resource .data > div > .sub + .sub { width:calc(100% - 190px); margin-left:190px; } 
