@@ -3196,23 +3196,39 @@ class ResourceViewer extends Component<Props,State>
       ret = this.insertPreprop(k, n, ret)
 
       if(!isSub && n > maxDisplay) {      
-         
+         /* CSS columns won't balance evenly
+         let nb = Math.ceil(maxDisplay / 2)
+         let i0 = nb ;
+         if(this.state.collapse[k]) i0 = Math.ceil(n / 2)
+         let i1 = nb, nb1 = i0 - nb, i2 = i0 + nb
+         */
+
          return (
-            <div data-prop={shortUri(k)} class="has-collapse">
-               <h3><span>{this.proplink(k)}</span>:&nbsp;<span
-               onClick={(e) => this.setState({...this.state,collapse:{...this.state.collapse,[k]:!this.state.collapse[k]}})}
-               className="toggle-expand">
-                  { this.state.collapse[k] && <ExpandLess/>}
-                  { !this.state.collapse[k] && <ExpandMore/>}
-               </span></h3>
-               <div className="propCollapseHeader">{ret.splice(0,maxDisplay)}</div>
-               <Collapse className={"propCollapse in-"+(this.state.collapse[k]===true)} in={this.state.collapse[k]}>
+            <div data-prop={shortUri(k)} class="has-collapse custom">
+               <h3><span>{this.proplink(k)}</span>:</h3>
+               <div className={"propCollapseHeader in-"+(this.state.collapse[k]===true)}>
+                  {ret.slice(0,maxDisplay)}
+               </div> 
+               <Collapse timeout={{enter:0,exit:0}} className={"propCollapse in-"+(this.state.collapse[k]===true)} in={this.state.collapse[k]}>
                   {ret}
                </Collapse>
+               {/* // failure with CSS columns
+               <div className={"propCollapseHeader in-"+(this.state.collapse[k]===true)}>
+                  {ret.slice(0,nb)}
+                  {ret.slice(i0,i0+nb)}
+               </div> 
+               <Collapse className={"propCollapse in-"+(this.state.collapse[k]===true)} in={this.state.collapse[k]}>
+                  {ret.slice(i1,i1+nb1)}
+                  {ret.slice(i2,n)}
+               </Collapse> */}
                { <span
                onClick={(e) => this.setState({...this.state,collapse:{...this.state.collapse,[k]:!this.state.collapse[k]}})}
                className="expand">
-                  {"("+(this.state.collapse[k]?"hide":"see more")+")"}
+                  {(this.state.collapse[k]?"hide":"see more")}&nbsp;<span
+                  className="toggle-expand">
+                     { this.state.collapse[k] && <ExpandLess/>}
+                     { !this.state.collapse[k] && <ExpandMore/>}
+                  </span>
                </span> }
             </div>
          )

@@ -318,7 +318,7 @@ h4:not(:hover) > .lang
 
 .resource .data.access { text-align:center; }
 
-.resource .data.top-props .has-collapse:last-child { margin-bottom:-25px; }
+.resource .data.top-props .has-collapse:not(.custom):last-child { margin-bottom:-25px; }
 
 .resource .data { text-align:left ; background-color:#ffffff; padding:20px 50px;}
 .resource .title + .data { padding-top:40px;padding-bottom:40px; }
@@ -606,7 +606,7 @@ a.download:hover { text-decoration:underline; }
 
 .firstImage + br + div > .download { font-size:14px; text-transform: capitalize; } 
 
-.propCollapseHeader { width:calc(100% - 190px); display:inline-block;vertical-align:top;padding-top:0px;line-height:24px; /*column-count:2;*/ }
+.propCollapseHeader { width:calc(100% - 190px); display:inline-block;vertical-align:top;padding-top:0px;line-height:24px; column-count:2;  column-gap: 30px;}
 
 h3 + h4.multiple,
 h3 + .propCollapseHeader,
@@ -639,23 +639,42 @@ h4.multiple { margin-bottom:6px; }
 h3 .expand svg { position:absolute; margin-top:-18px; }*/
 .propCollapse.in-false h4:first-child { margin-top:0;transition:all 200ms ease-in-out; }
 /* .propCollapse.in-true + .expand { margin-bottom:10px; } */
-.propCollapse { width:calc(100% - 190px);; margin-left:190px;margin-bottom:50px; line-height:24px; /*column-count:2; */ }
+.propCollapse { width:calc(100% - 190px); /*margin-left:190px; margin-bottom:50px;*/ line-height:24px; column-count:2; column-gap: 30px; display:inline-block;}
+
+/* .propCollapseHeader+.propCollapse { margin-left:190px; margin-top:-27px; }  */
 
 /* .propCollapse.in-true { padding-bottom:10px; margin-bottom:15px; } */
 
-.propCollapse.in-false { height:0; } 
+/* .propCollapse.in-false { height:0;}  */
+
+.propCollapse.in-false h4 { opacity:0 ; transition:none !important;}
 /* .propCollapseHeader { width:100%; } */
 
-.expand { margin-bottom:0px; cursor:pointer; margin-left:190px; border-bottom:1px solid transparent; font-size:13px; position:absolute;bottom:24px; margin-bottom:3px; }
+.propCollapseHeader.in-true { opacity: 0; height: 0; width: 0; transition-delay: 0ms;}
+.propCollapseHeader.in-false { transition-delay: 0ms;}
+
+.expand { margin-bottom:0px; cursor:pointer; margin-left:190px; border-bottom:1px solid transparent; font-size:13px; position:absolute;bottom:24px; margin-bottom:3px; 
+   display:inline-block; margin-top:5px;}
 .expand:hover { border-bottom:1px solid black;  }
 /* .propCollapse.in-false + .expand { margin-top:0px;transition:all 300ms ease-in-out;}  */
 /* .propCollapse.in-true + .expand  { margin-top:15px; margin-bottom:-5px; }  */
+
+.has-collapse.custom { min-height:150px; }
+.has-collapse.custom .propCollapseHeader { column-count:2; }
+.has-collapse.custom .expand { position:relative; bottom:auto; color:#d73449; font-weight:700;font-size:13px;margin-top:0px; }
+.has-collapse.custom .expand:hover { border-color:#d73449; }
+
+.propCollapseHeader.in-true ~ .expand { margin-top:20px; }
+
+.propCollapseHeader h4, .propCollapse h4 { position:relative;}
+.propCollapseHeader .lang, .propCollapse .lang { position:absolute; top:16px;}
 
 
 .resource .data > div .sub .subsub > h4.multiple { padding-left:25px; line-height:24px; }
 
 
 .toggle-expand { position:absolute; margin-top: -2px; cursor:pointer; }
+.toggle-expand svg { font-size:20px; }
 
 .resource .SidePane .viewAll { color:black; cursor:pointer; margin-bottom:10px;display:inline-block;border-bottom:1px solid transparent;}
 .resource .SidePane .viewAll:hover { border-color:black !important; }
