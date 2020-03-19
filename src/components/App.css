@@ -395,19 +395,33 @@ h4:not(:hover) > .lang
 .resource .data > [data-prop="bdo:creator"] h4[data-prop="bdo:role"] + h4 a { text-transform:capitalize;color:#343434;font-size:15px;font-weight:700;
    letter-spacing:0.63; border-color:#343434;}
 
-.resource .data > [data-prop="bdo:lineageHolder"] .subgroup,
 .resource .data > [data-prop="bdo:creator"] .subgroup { display:flex;}
+
+/* Lineage option 1
+.resource .data > [data-prop="bdo:lineageHolder"] .subgroup { display:flex;}
+.resource .data > [data-prop="bdo:lineageHolder"] .subgroup { flex-wrap:nowrap; }
+.resource .data > [data-prop="bdo:lineageHolder"] .subgroup .subsub { display:inline-flex; flex-wrap:nowrap;}
+*/
+
+/* Lineage option 2 */
+.resource .data > [data-prop="bdo:lineageHolder"] .subgroup .subsub + .subsub { margin-left:72px; }
+
+
+
+
+[data-prop="bdo:lineageHolder"].has-collapse.custom .propCollapse,
+[data-prop="bdo:lineageHolder"].has-collapse.custom .propCollapseHeader { column-count:1; column-gap:0; }
 
 .resource .data > [data-prop="bdo:note"] > div {  width:calc(100% - 190px); display:inline-block; }
 
-.resource .data > [data-prop="bdo:note"]  .sub { display:inline-block; line-height:22px; width:100%;}
+.resource .data > [data-prop="bdo:note"]  .sub { display:inline-block; line-height:20px; width:100%;}
 .resource .data > [data-prop="bdo:note"]  .sub > h4 + div:not(.subsub) { display:inline; letter-spacing:0.25px;color:#777;font-size:13px; }
 .resource .data > [data-prop="bdo:note"]  .sub > h4 + div + .subsub h4 { font-size:14px; letter-spacing:0.5px;}
 .resource .data > [data-prop="bdo:note"]  .sub > h4.first { font-size:13px; padding-right:5px;}
 .resource .data > [data-prop="bdo:note"]  .sub > h4 + div.subsub,
 .resource .data > [data-prop="bdo:note"]  .sub > h4 + div.subsub h4 { display:inline;}
 .resource .data > [data-prop="bdo:note"] > div:not(.no-collapse) .sub:last-child,
-.resource .data > [data-prop="bdo:note"]  .sub:not(:last-child) { margin-bottom:20px; }
+.resource .data > [data-prop="bdo:note"]  .sub:not(:last-child) { margin-bottom:25px; }
 .resource .data > [data-prop="bdo:note"] .expand { top:-3px; display:inline-block;} 
 .resource .data > [data-prop="bdo:note"]  .sub  h4 { display:inline; }
 
@@ -418,7 +432,7 @@ h4:not(:hover) > .lang
 .resource .data .sub .subsub:last-child { margin-bottom:6px; }
 .resource .data .subsub.hoyoh { flex-wrap: nowrap; display:flex; align-items: end; margin-bottom:0px; }
 
-.resource .data > :not([data-prop="bdo:lineageHolder"]) .sub .subgroup,
+.resource .data .sub .subgroup,
 .resource .data > :not([data-prop="bdo:lineageHolder"]) .sub .subgroup a.propref { line-height:20px; }
 
 /*
@@ -432,6 +446,9 @@ h4:not(:hover) > .lang
 .resource .data .subsub .subsubgroup h4.multiple::after { content:none; }
 /* .resource .data .subsub .subsubgroup h4 { line-height:22px; } */
 
+.resource .subsubgroup .subsubsub { padding-left:0; }
+.resource .subgroup .subsub > h4.first { width:auto;}
+.resource .subsubgroup .subsubsub > h4.first a.propref { font-weight:100; font-size:14px;  }
 
 .resource.etext #etext-scroll [lang=bo] > span:not(.startChar) { font-family:'Tibetan Machine Uni'; }
 
@@ -702,10 +719,10 @@ h3 .expand svg { position:absolute; margin-top:-18px; }*/
 .has-collapse.custom .expand:hover { border-color:#d73449; }
 
 .has-collapse.custom:not(.max-10) .propCollapseHeader.in-true ~ .expand,
-.has-collapse.custom.odd .propCollapseHeader.in-true ~ .expand { margin-top:20px; }
+.has-collapse.custom .propCollapseHeader.in-true ~ .expand { margin-top:20px; }
 
 .propCollapseHeader h4, .propCollapse h4 { position:relative;}
-.propCollapseHeader .lang, .propCollapse .lang { position:absolute; top:16px;}
+.propCollapseHeader .lang, .propCollapse .lang { position:absolute; top:calc(100% - 7px);}
 
 
 .resource .data > div .sub .subsub > h4.multiple { padding-left:25px; line-height:24px; }
