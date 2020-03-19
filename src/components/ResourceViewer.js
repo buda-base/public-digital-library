@@ -1416,11 +1416,11 @@ class ResourceViewer extends Component<Props,State>
                else vals = tmp
 
                if(div == "sub")
-                  ret.push(<div className='sub'><h4 className="first type">{this.proplink(p)}:</h4>{vals}</div>)
+                  ret.push(<div className='sub hoy'><h4 className="first type">{this.proplink(p)}:</h4><div class="subgroup">{vals}</div></div>)
                else if(div == "subsub")
-                  ret.push(<div className={'subsub'+(tmp.length>0?" full":"")}><h4 className="first prop">{this.proplink(p)}:</h4>{vals}</div>)
+                  ret.push(<div className={'subsub hoyoh'+(tmp.length>0?" full":"")}><h4 className="first prop">{this.proplink(p)}:</h4><div class="subsubgroup">{vals}</div></div>)
                else if(div == "subsubsub")
-                  ret.push(<div className='subsubsub'><h4 className="first prop">{this.proplink(p)}:</h4>{vals}</div>)
+                  ret.push(<div className='subsubsub hoyhoy'><h4 className="first prop">{this.proplink(p)}:</h4>{vals}</div>)
 
             }
          }

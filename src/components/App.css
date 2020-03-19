@@ -395,22 +395,43 @@ h4:not(:hover) > .lang
 .resource .data > [data-prop="bdo:creator"] h4[data-prop="bdo:role"] + h4 a { text-transform:capitalize;color:#343434;font-size:15px;font-weight:700;
    letter-spacing:0.63; border-color:#343434;}
 
+.resource .data > [data-prop="bdo:lineageHolder"] .subgroup,
 .resource .data > [data-prop="bdo:creator"] .subgroup { display:flex;}
 
 .resource .data > [data-prop="bdo:note"] > div {  width:calc(100% - 190px); display:inline-block; }
 
-.resource .data > [data-prop="bdo:note"]  .sub { display:inline-block; line-height:24px; width:100%;}
-.resource .data > [data-prop="bdo:note"]  .sub > h4 + div:not(.subsub) { display:inline-block; letter-spacing:0.25px;color:#777;font-size:13px; }
+.resource .data > [data-prop="bdo:note"]  .sub { display:inline-block; line-height:22px; width:100%;}
+.resource .data > [data-prop="bdo:note"]  .sub > h4 + div:not(.subsub) { display:inline; letter-spacing:0.25px;color:#777;font-size:13px; }
 .resource .data > [data-prop="bdo:note"]  .sub > h4 + div + .subsub h4 { font-size:14px; letter-spacing:0.5px;}
 .resource .data > [data-prop="bdo:note"]  .sub > h4.first { font-size:13px; padding-right:5px;}
 .resource .data > [data-prop="bdo:note"]  .sub > h4 + div.subsub,
 .resource .data > [data-prop="bdo:note"]  .sub > h4 + div.subsub h4 { display:inline;}
 .resource .data > [data-prop="bdo:note"] > div:not(.no-collapse) .sub:last-child,
-.resource .data > [data-prop="bdo:note"]  .sub:not(:last-child) { margin-bottom:30px; }
+.resource .data > [data-prop="bdo:note"]  .sub:not(:last-child) { margin-bottom:20px; }
 .resource .data > [data-prop="bdo:note"] .expand { top:-3px; display:inline-block;} 
+.resource .data > [data-prop="bdo:note"]  .sub  h4 { display:inline; }
 
-.resource .data .sub .subgroup { line-height:24px;margin-bottom:4px; }
-.resource .data .sub .subgroup a.propref { line-height:14px; }
+.resource .data > [data-prop="bdo:workHasTranslation"] .subsubgroup h4.multiple:not(:last-child),
+.resource .data > [data-prop="bdo:workHasTranslation"] .subgroup .subsub:not(:last-child) { margin-bottom:6px;} 
+
+.resource .data .sub.hoy { flex-wrap: nowrap;  }
+.resource .data .sub .subsub:last-child { margin-bottom:6px; }
+.resource .data .subsub.hoyoh { flex-wrap: nowrap; display:flex; align-items: end; margin-bottom:0px; }
+
+.resource .data > :not([data-prop="bdo:lineageHolder"]) .sub .subgroup,
+.resource .data > :not([data-prop="bdo:lineageHolder"]) .sub .subgroup a.propref { line-height:20px; }
+
+/*
+.resource .data .sub .subgroup { line-height:22px;margin-bottom:0px; }
+.resource .data .subsub.hoyoh:not(:last-child) { margin-bottom:0px; }
+.resource .data .subsub .subsubgroup h4.multiple:not(:last-child) { margin-bottom:0px; }
+*/
+
+.resource .data .subsub .subsubgroup { display:inline-block; vertical-align: top; /*line-height:20px;  line-height:20px; margin-bottom:6px;*/ }
+.resource .data .subsub .subsubgroup h4.multiple { margin-bottom:0px; display:block; }
+.resource .data .subsub .subsubgroup h4.multiple::after { content:none; }
+/* .resource .data .subsub .subsubgroup h4 { line-height:22px; } */
+
 
 .resource.etext #etext-scroll [lang=bo] > span:not(.startChar) { font-family:'Tibetan Machine Uni'; }
 
