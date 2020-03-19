@@ -270,14 +270,14 @@ let propOrder = {
    "Place":[
       "skos:prefLabel",
       "skos:altLabel",
+      "bdo:placeContains",
+      "bdo:placeEvent",
       "bdo:placeLat",
       "bdo:placeLong",
       "bdo:placeRegionPoly",
       "bdo:placeType",
       "bdo:placeLocatedIn",
       "bdo:placeIsNear",
-      "bdo:placeEvent",
-      "bdo:placeContains",
    ],
    "Role":[
       "skos:prefLabel",
@@ -396,6 +396,12 @@ const topProperties = {
       skos+"prefLabel", 
       skos+"altLabel",
       bdo+"personGender"
+   ],
+   "Place": [ 
+      skos+"prefLabel", 
+      skos+"altLabel",
+      bdo+"placeType",
+      bdo+"placeLocatedIn",
    ],
    "Work": [ 
       bdo+"hasTitle", 
@@ -3159,18 +3165,20 @@ class ResourceViewer extends Component<Props,State>
       }
    }
 
-   renderMap = (elem, k, tags, kZprop, doMap, doRegion, regBox, title ) => {
+   renderMap = (elem, k, tags, kZprop, doMap, doRegion, regBox, title) => {
 
       const { BaseLayer} = LayersControl;
 
+      console.log("map",elem, k, tags, kZprop, doMap, doRegion, regBox, title)
+
       return ( 
-         <div>
+         <div data-prop={shortUri(k)}>
             <h3><span>{this.proplink(k)}</span>:&nbsp;</h3>
             { k == bdo+"placeLong" && tags }
-            <div style={ {width:"100%",marginTop:"10px"} }>
+            <div class="map"> {/* style={ {width:"100%",marginTop:"10px"} }> */}
                <Map ref={m => { this._leafletMap = m; }}
-                  className={"placeMap" + (this.state.largeMap?" large":"")}
-                  style={{boxShadow: "0 0 5px 0px rgba(0,0,0,0.5)"}}
+                  className={"placeMap"} // + (this.state.largeMap?" large":"")}
+                  // style={{boxShadow: "0 0 5px 0px rgba(0,0,0,0.5)"}}
                   center={doMap} zoom={17} bounds={doRegion?regBox:null}
                   //attributionControl={false}
                   >
@@ -3559,7 +3567,7 @@ class ResourceViewer extends Component<Props,State>
 
       let { doMap, doRegion, regBox } = this.getMapInfo(kZprop);
 
-      return <div className={"data "+div}>
+      return <div className={div!=="header"?"data "+div:div}>
          { kZprop.map((k) => {
 
             let elem = this.getResourceElem(k);
@@ -3754,7 +3762,7 @@ class ResourceViewer extends Component<Props,State>
          )
    }
 
-   renderFirstImage = () => {
+   renderHeader = (kZprop) => {
 
       let imageLabel = "images"
       if(!this.props.collecManif && this.props.imageAsset && this.props.imageAsset.match(/[/]collection[/]/)) imageLabel = "collection"
@@ -3795,6 +3803,8 @@ class ResourceViewer extends Component<Props,State>
             </div>
          </div>
          )
+      else if(kZprop.length)
+         return <div class="data" id="map">{this.renderData(kZprop,null,null,null,"header")}</div>
       else 
          return <div class="data"><div class={"header "+(!this.state.ready?"loading":"")}>{ !this.state.ready && <Loader loaded={false} /> }</div></div>
    }
@@ -3955,6 +3965,7 @@ class ResourceViewer extends Component<Props,State>
       
       //console.log("ttlm",titlElem)
       
+      let mapProps = [bdo+"placeRegionPoly", bdo+"placeLong", bdo+"placeLat" ]
                            
       let topProps = topProperties[_T]
       if(!topProps) topProps = []
@@ -3985,7 +3996,7 @@ class ResourceViewer extends Component<Props,State>
                   <div class="data" id="main-info">{title}</div>
                   { this.renderNoAccess(fairUse) }
                   { this.renderAccess() }
-                  { this.renderFirstImage() }
+                  { this.renderHeader(kZprop.filter(k => mapProps.includes(k))) }
                   { this.renderMirador() }           
                   { theDataTop }
                   <div class="data">{ top_left_menu(this,pdfLink,monoVol,fairUse)  }</div>

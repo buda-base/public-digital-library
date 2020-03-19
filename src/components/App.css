@@ -258,6 +258,7 @@ h4:not(:hover) > .lang
 
 .resource .data .header.loading::before { background-image:none !important; }
 
+
 .resource .title h2:first-of-type:last-of-type { display:none; }
 
 .resource .title { display:flex; position:relative; }
@@ -449,6 +450,22 @@ h4:not(:hover) > .lang
 .resource .subsubgroup .subsubsub { padding-left:0; }
 .resource .subgroup .subsub > h4.first { width:auto;}
 .resource .subsubgroup .subsubsub > h4.first a.propref { font-weight:100; font-size:14px;  }
+
+.resource .data.bot-props > div[data-prop="bdo:placeLong"] .map,
+.resource .data.bot-props > div[data-prop="bdo:placeRegionPoly"]:not(.youpi):not(#youpi) {display:none !important;}
+
+.resource .data#map .header > div:not(:last-child),
+.resource .data#map .header h3,
+.resource .data#map .header h4,
+.resource .data#map .header::before { display:none; }
+
+.resource .data#map .header { position:relative; padding:40px; height:auto; width:calc(100% - 80px); }
+
+.resource .data#map .header > div,
+.resource .data#map .header .map,
+.resource .data#map .header .map .placeMap  { width:100%;height:auto;}
+
+.resource .data#map .header .map .placeMap  { width:100%; height:500px;}
 
 .resource.etext #etext-scroll [lang=bo] > span:not(.startChar) { font-family:'Tibetan Machine Uni'; }
 
