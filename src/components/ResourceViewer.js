@@ -332,7 +332,7 @@ let propOrder = {
       "bdo:hasInstance",
       "bdo:contentLocation",
       "bdo:inRootInstance",
-      "tmp:siblingInstances",
+      "tmp:siblingInstances",      
       // "bdo:workHasItemImageAsset",
       "bdo:workLocation",
       "bdo:partOf",
@@ -3184,14 +3184,14 @@ class ResourceViewer extends Component<Props,State>
                   >
                   <LayersControl position="topright">
                      { this.props.config.googleAPIkey && [
-                        <BaseLayer checked name='Satellite+Roadmap'>
+                        <BaseLayer name='Satellite+Roadmap'>
 
                            <GoogleLayer googlekey={this.props.config.googleAPIkey} maptype='HYBRID'
                                  //attribution="&amp;copy <a href=&quot;http://osm.org/copyright&quot;></a> contributors"
                                  attribution="&amp;copy 2018 Google"
                            />
                         </BaseLayer>,
-                        <BaseLayer name='Terrain'>
+                        <BaseLayer checked name='Terrain'>
                            <GoogleLayer googlekey={this.props.config.googleAPIkey} maptype='TERRAIN'/>
                         </BaseLayer>,
                         <BaseLayer name='Satellite'>
@@ -3287,7 +3287,9 @@ class ResourceViewer extends Component<Props,State>
             <div  data-prop={shortUri(k)} {...(k===bdo+"note"?{class:"has-collapse custom"}:{})}>               
                <h3><span>{this.proplink(k)}</span>:&nbsp;</h3>
                {this.preprop(k,0,n)}
+               {/* <div class="group"> */}
                {ret}
+               {/* </div> */}
             </div>
          )
       }

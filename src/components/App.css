@@ -248,9 +248,9 @@ h4:not(:hover) > .lang
 .resource > :not(.index) > .title h2 .T::before { display:none; }
 .resource  > :not(.index) > .title h2 .RID { left:0; }
 
-.resource .data .header { width:100%; height:245px; background:#fce08d; display:flex;align-items:center;justify-content: center; margin-bottom:20px; }
-.resource .data .header::before { content:' '; width:130px; height:130px; background:white;border-radius:50%; 
-   background-size:70px auto;background-repeat:no-repeat; background-position: center;}
+.resource .data .header { width:100%; height:180px; background:#fce08d; display:flex;align-items:center;justify-content: center; margin-bottom:20px; }
+.resource .data .header::before { content:' '; width:110px; height:110px; background:white;border-radius:50%; 
+   background-size:65px auto;background-repeat:no-repeat; background-position: center;}
 
 .resource.work .data .header::before { background-image:url("/icons/work_50g.png");  }
 .resource.instance .data .header::before { background-image:url("/icons/instance_50g.png"); }
@@ -332,13 +332,13 @@ h4:not(:hover) > .lang
 .resource .data > div:not(.firstImage):not(.browse):not(.header):not(:last-child)::after { background:rgba(0,0,0,0.25);}
 .resource .data.top-props > div:last-child::after { margin-bottom:20px !important; margin-top:0 !important; }
 
-.resource .data > div > h3 { width:calc(190px - 15px); padding-right:15px; line-height:28px;  vertical-align: top; }
+.resource .data > div > h3 { width:calc(190px - 15px); padding-right:15px; line-height:24px;  vertical-align: top; }
 .resource .data > div.parent { flex-wrap:wrap; }
 .resource .data > div.parent > h3 { flex-shrink:0 }
 .resource h3,.resource h4 { display:inline-block; margin-bottom:0px; font-size:14px; font-weight:normal; overflow-wrap: break-word; /*margin-right:5px; line-height:30px;*/ }
 .resource h3 span { /*text-decoration: underline;*/ font-weight:600;  text-transform:capitalize; }
 .resource h3 { font-size:14px;margin-top:-1px; }
-.resource .sub { width:calc(100% - 190px); /*padding-left:20px;*/ display:inline-flex;flex-wrap:wrap; box-sizing: border-box; position:relative;
+.resource .sub { width:calc(100% - 190px); /*padding-left:20px;*/ display:inline-flex; /*flex-wrap:wrap;*/ box-sizing: border-box; position:relative;
    align-items:baseline;
 }
 .resource .sub h4.first { /*font-size:0.85em; font-style:italic;*/ text-transform:capitalize; flex-shrink:0; /*line-height:1.6em;*/  margin-right:5px;}
@@ -373,9 +373,30 @@ h4:not(:hover) > .lang
 .resource .data > div:not([data-prop="bdo:note"]):not(.header):not(.firstImage):not(#top-left) 
 { display:flex !important; align-items: baseline; flex-wrap:wrap;}
 
+
+.resource .sub > h4 { line-height:22px;}
+.resource .sub:not(:last-child) { margin-bottom:6px;}
+
+/* // TODO align values in subproperties
+
+.resource .sub { width:calc(100% - 190px); }
+
+.resource .data .group .sub {  line-height:24px; display:table-row;}
+
+.resource .data .group .sub:not(:last-child) {  margin-bottom:6px; }
+.resource .group .sub > h4 { display:table-cell; }
+
+*/
+
+
 .resource .data > div > .sub { line-height:28px; }
 .resource .data > div > .sub + .sub { width:calc(100% - 190px); margin-left:190px; } 
 .resource .data > div > .sub:empty { display:none; }
+
+
+
+.resource .data .group { display:inline-table; width:calc(100% - 190px);}
+
 
 .resource .data > [data-prop="bdo:workIsAbout"] h4.multiple { width:auto;margin-left:0;}
 
@@ -407,11 +428,12 @@ h4:not(:hover) > .lang
 /* Lineage option 2 */
 .resource .data > [data-prop="bdo:lineageHolder"] .subgroup .subsub + .subsub { margin-left:72px; }
 
-
-
-
+[data-prop="bf:identifiedBy"].has-collapse.custom .propCollapse,
+[data-prop="bf:identifiedBy"].has-collapse.custom .propCollapseHeader,
 [data-prop="bdo:lineageHolder"].has-collapse.custom .propCollapse,
 [data-prop="bdo:lineageHolder"].has-collapse.custom .propCollapseHeader { column-count:1; column-gap:0; }
+
+.resource .data > [data-prop="bf:identifiedBy"] .sub [data-prop="rdf:value"] { display:none; }
 
 .resource .data > [data-prop="bdo:note"] > div {  width:calc(100% - 190px); display:inline-block; }
 
@@ -430,11 +452,13 @@ h4:not(:hover) > .lang
 .resource .data > [data-prop="bdo:workHasTranslation"] .subgroup .subsub:not(:last-child) { margin-bottom:6px;} 
 
 .resource .data .sub.hoy { flex-wrap: nowrap;  }
-.resource .data .sub .subsub:last-child { margin-bottom:6px; }
+/* .resource .data .sub .subsub:last-child { margin-bottom:6px; } */
 .resource .data .subsub.hoyoh { flex-wrap: nowrap; display:flex; align-items: end; margin-bottom:0px; }
 
 .resource .data .sub .subgroup,
-.resource .data > :not([data-prop="bdo:lineageHolder"]) .sub .subgroup a.propref { line-height:20px; }
+.resource .data > :not([data-prop="bdo:lineageHolder"]) .sub .subgroup a.propref { line-height:22px; }
+
+
 
 /*
 .resource .data .sub .subgroup { line-height:22px;margin-bottom:0px; }
