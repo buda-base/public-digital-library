@@ -208,6 +208,8 @@ h2:hover svg.annoticon:hover,h4:hover svg.annoticon:hover { color:rgba(0,0,0,0.6
 .data .faded.score0 { background-color:rgba(255, 205, 3, 0.4);border:1px dashed rgba(167, 134, 1, 0.4);}
 .data .faded.score1 { background-color:rgba(17, 173, 17, 0.3);border:1px solid rgba(36, 106, 36, 0.4);}
 
+/* ------------------------------------------------------------------------------------------------------------------------ resource */
+
 h4 { margin-top:0px;margin-bottom:0px;font-size:24px; }
 /* h4 + h4 { margin-top:5px;}  */
 
@@ -224,6 +226,9 @@ h4:not(:hover) > .lang
    max-width:97%; display:flex; background-color:#efefef; padding-bottom:200px; }
 
 .resource .loader { position:absolute; }
+
+
+/* -+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ resource */
 
 .resource > .index { min-width:20%; padding-top:10px; }
 .resource > :not(.index) { min-width:80%; }
@@ -248,6 +253,8 @@ h4:not(:hover) > .lang
 .resource > :not(.index) > .title h2 .T::before { display:none; }
 .resource  > :not(.index) > .title h2 .RID { left:0; }
 
+/* ------------------------------------------------------------------------------------------------------------------------ header */
+
 .resource .data .header { width:100%; height:180px; background:#fce08d; display:flex;align-items:center;justify-content: center; margin-bottom:20px; }
 .resource .data .header::before { content:' '; width:110px; height:110px; background:white;border-radius:50%; 
    background-size:65px auto;background-repeat:no-repeat; background-position: center;}
@@ -258,6 +265,7 @@ h4:not(:hover) > .lang
 
 .resource .data .header.loading::before { background-image:none !important; }
 
+/* ------------------------------------------------------------------------------------------------------------------------ title/tabs */
 
 .resource .title h2:first-of-type:last-of-type { display:none; }
 
@@ -317,6 +325,8 @@ h4:not(:hover) > .lang
    white-space: nowrap;
 }
 
+/* ------------------------------------------------------------------------------------------------------------------------ properties/misc */
+
 .resource .data.access { text-align:center; }
 
 .resource .data.top-props .has-collapse:not(.custom):last-child { margin-bottom:-25px; }
@@ -328,7 +338,7 @@ h4:not(:hover) > .lang
 
 /* .resource .data > div:not(.firstImage) { display:flex;align-items:baseline;flex-wrap:nowrap;box-sizing: border-box;width:100%;position:relative;} */
 .resource .data > div:not(.firstImage):not(.browse):not(.header) { display:block; position:relative; }
-.resource .data > div:not(.firstImage):not(.browse):not(.header):not(#top-left)::after { content:''; width:calc(100% - 190px);; height:1px;margin:25px 0 25px 190px;display:block;}
+.resource .data:not(.ext-props) > div:not(.firstImage):not(.browse):not(.header):not(#top-left)::after { content:''; width:calc(100% - 190px);; height:1px;margin:25px 0 25px 190px;display:block;}
 .resource .data > div:not(.firstImage):not(.browse):not(.header):not(:last-child)::after { background:rgba(0,0,0,0.25);}
 .resource .data.top-props > div:last-child::after { margin-bottom:20px !important; margin-top:0 !important; }
 
@@ -373,6 +383,10 @@ h4:not(:hover) > .lang
 .resource .data > div:not([data-prop="bdo:note"]):not(.header):not(.firstImage):not(#top-left) 
 { display:flex !important; /*align-items: baseline;*/ flex-wrap:wrap;}
 
+/* ------------------------------------------------------------------------------------------------------------------------ properties */
+
+.resource .data.bot-props > div[data-prop="bdo:placeLong"] .map,
+.resource .data.bot-props > div[data-prop="bdo:placeRegionPoly"]:not(.youpi):not(#youpi) {display:none !important;}
 
 .resource .sub {  width:100% ;}
 .resource .data > :not([data-prop="bdo:note"]) .sub:not(:first-of-type) {border-top:1px solid rgba(0,0,0,0.25); padding-top:20px;}
@@ -488,7 +502,6 @@ h4:not(:hover) > .lang
 .resource .data > :not([data-prop="bdo:lineageHolder"]) .sub .subgroup a.propref { line-height:22px; }
 
 
-
 /*
 .resource .data .sub .subgroup { line-height:22px;margin-bottom:0px; }
 .resource .data .subsub.hoyoh:not(:last-child) { margin-bottom:0px; }
@@ -504,8 +517,35 @@ h4:not(:hover) > .lang
 .resource .subgroup .subsub > h4.first { width:auto;}
 .resource .subsubgroup .subsubsub > h4.first a.propref { font-weight:100; font-size:14px;  }
 
+/* ------------------------------------------------------------------------------------------------------------------------ "normal" properties */
+
 .resource .data.bot-props > div[data-prop="bdo:placeLong"] .map,
 .resource .data.bot-props > div[data-prop="bdo:placeRegionPoly"]:not(.youpi):not(#youpi) {display:none !important;}
+
+/* ------------------------------------------------------------------------------------------------------------------------ extended properties */
+
+.resource .data.ext-props { background-color:#ffffff; padding:30px; padding-bottom:0;}
+.resource .data.ext-props:last-child { padding-bottom:45px; }
+.resource .data.ext-props > div { background-color:#efefef;padding:5px 40px; }
+.resource .data.ext-props:last-child > div:last-child { padding-bottom:80px; }
+.resource .data.ext-props + .data.ext-props { padding-top:0; }
+.resource .data.ext-props h2 { line-height:44px;margin:45px 0;}
+.resource .data.bot-props + .data.ext-props > div::after { content:none !important;}
+
+.resource .data.ext-props  > div { align-items: center; }
+
+.resource .data.ext-props .has-collapse.custom h3 { order:-2; display:flex; align-items: center; height:42px; line-height:20px;  }
+.resource .data.ext-props .has-collapse.custom h3 span a.propref { line-height:20px; }
+.resource .data.ext-props .has-collapse.custom .expand { order:-1; color:transparent;width:calc(100% - 190px);top:-5px;
+   margin-top:0 !important; border-color:#c2c2c2;margin-left:0;}
+.resource .data.ext-props .has-collapse.custom .expand .toggle-expand { color:black; right:0;top:-5px; }
+
+.resource .data.ext-props .propCollapse { padding-left:190px; }
+.resource .data.ext-props .propCollapse.in-true { margin:10px 0 20px 0 ; }
+.resource .data.ext-props > div:last-child .propCollapse.in-true { margin-bottom:0px; }
+
+
+/* ------------------------------------------------------------------------------------------------------------------------ map */
 
 .resource .data#map .header > div:not(:last-child),
 .resource .data#map .header h3,
@@ -519,6 +559,9 @@ h4:not(:hover) > .lang
 .resource .data#map .header .map .placeMap  { width:100%;height:auto;}
 
 .resource .data#map .header .map .placeMap  { width:100%; height:500px;}
+
+
+/* ------------------------------------------------------------------------------------------------------------------------ etext view */
 
 .resource.etext #etext-scroll [lang=bo] > span:not(.startChar) { font-family:'Tibetan Machine Uni'; }
 
@@ -536,8 +579,6 @@ h4:not(:hover) > .lang
 
 .resource .data h3.chunk { margin-bottom:15px;}
 .resource .data h3.chunk ~ .multiple { padding-left:0; }
-
-
 
 
 .etextPage { border-top:1px solid #999; padding-top:25px;  }
@@ -637,6 +678,9 @@ h2 .before { height:16px; }
 
 .instance-collapse { display:inline-block !important; margin-top:-2px; cursor:pointer; height:18px; overflow:hidden; }
 
+
+/* ------------------------------------------------------------------------------------------------------------------------ sameAs etc. */
+
 .ulink { position:relative; z-index:1;}
 .ulink+span { z-index:0;}
 
@@ -729,6 +773,8 @@ a.download:hover { text-decoration:underline; }
 
 .firstImage + br + div > .download { font-size:14px; text-transform: capitalize; } 
 
+/* ------------------------------------------------------------------------------------------------------------------------ properties/collapse */
+
 .propCollapseHeader { width:calc(100% - 190px); display:inline-block;vertical-align:top;padding-top:0px;line-height:24px; column-count:2;  column-gap: 30px;}
 
 h3 + .group h4.multiple,
@@ -807,9 +853,12 @@ h2.on .lang, .propCollapseHeader .lang, .propCollapse .lang { position:absolute 
 
 .resource .data > div .sub .subsub > h4.multiple { padding-left:25px; line-height:24px; }
 
-
 .toggle-expand { position:absolute; margin-top: -2px; cursor:pointer; }
 .toggle-expand svg { font-size:20px; }
+
+
+/* ------------------------------------------------------------------------------------------------------------------------ SidePane */
+
 
 .resource .SidePane .viewAll { color:black; cursor:pointer; margin-bottom:10px;display:inline-block;border-bottom:1px solid transparent;}
 .resource .SidePane .viewAll:hover { border-color:black !important; }

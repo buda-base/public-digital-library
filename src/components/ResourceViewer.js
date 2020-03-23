@@ -370,6 +370,9 @@ let propOrder = {
       "bdo:printType",
       "bdo:workPagination",
       "bdo:workExtentStatement",
+      "bdo:authorshipStatement",
+      "bdo:editionStatement",
+      "bdo:itemBDRCHoldingStatement",
       "bdo:material",
       "bdo:workMaterial",
       "adm:contentProvider",
@@ -389,6 +392,22 @@ propOrder["Volume"] = propOrder["Work"]
 propOrder["Instance"] = propOrder["Work"]
 propOrder["Images"] = propOrder["Work"]
 
+let extProperties = {
+   "Work": [
+      bdo+"contentMethod",
+      bdo+"material",
+      bdo+"workMaterial",
+      bdo+"workPagination",
+      bdo+"workExtentStatement",
+      tmp+"entityScore",
+      bdo+"authorshipStatement",
+      bdo+"editionStatement",
+      bdo+"itemBDRCHoldingStatement",
+   ]
+}
+extProperties["Volume"] = extProperties["Work"]
+extProperties["Instance"] = extProperties["Work"]
+extProperties["Images"] = extProperties["Work"]
 
 const topProperties = {
    "Person": [ 
@@ -853,6 +872,7 @@ class ResourceViewer extends Component<Props,State>
    {
 
       for(let p of Object.values(prefixes)) { str = str.replace(new RegExp(p,"g"),"") }
+      //str = shortUri(str);
 
       //console.log("pretty",str)
 
@@ -3569,8 +3589,8 @@ class ResourceViewer extends Component<Props,State>
 
       let { doMap, doRegion, regBox } = this.getMapInfo(kZprop);
 
-      return <div className={div!=="header"?"data "+div:div}>
-         { kZprop.map((k) => {
+
+      let data = kZprop.map((k) => {
 
             let elem = this.getResourceElem(k);
             let hasMaxDisplay ;
@@ -3654,16 +3674,24 @@ class ResourceViewer extends Component<Props,State>
                      return this.renderEtextHasChunk(elem, k, tags)                     
                   }
                   else if(k !== bdo+"eTextHasChunk") {
-                     return this.renderGenericProp(elem, k, tags, hasMaxDisplay)
+                     return this.renderGenericProp(elem, k, tags, div!=="ext-props"?hasMaxDisplay:-1)
                   }
                }
             }
-         } ) }
+         } ) 
+
+      data = data.filter(e => e)
+
+      console.log("data?",data)
+
+      if(data && data.length) return <div className={div!=="header"?"data "+div:div}>
+         {data}
          {/* // TODO not working anymore
          { this.renderRoles() } 
          */}
          { this.renderPostData() }           
       </div>
+      
    }
    
    renderAnnoPanel = () => {
@@ -3972,8 +4000,12 @@ class ResourceViewer extends Component<Props,State>
       let topProps = topProperties[_T]
       if(!topProps) topProps = []
 
+      let extProps = extProperties[_T]
+      if(!extProps) extProps = []
+
       let theDataTop = this.renderData(topProps,iiifpres,title,otherLabels,"top-props")      
-      let theDataBot = this.renderData(kZprop.filter(k => !topProps.includes(k)),iiifpres,title,otherLabels,"bot-props")      
+      let theDataBot = this.renderData(kZprop.filter(k => !topProps.includes(k) && !extProps.includes(k)),iiifpres,title,otherLabels,"bot-props")      
+      let theDataExt = this.renderData(extProps,iiifpres,title,otherLabels,"ext-props")      
 
       return (
          [<div>
@@ -4003,6 +4035,11 @@ class ResourceViewer extends Component<Props,State>
                   { theDataTop }
                   <div class="data">{ top_left_menu(this,pdfLink,monoVol,fairUse)  }</div>
                   { theDataBot }
+                  { theDataExt && 
+                     <div class="data ext-props">
+                        <div><h2>Extended Properties</h2></div>
+                     </div> }
+                  { theDataExt }
                </div>
             </div>
          </div>,
