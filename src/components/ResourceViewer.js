@@ -3173,7 +3173,7 @@ class ResourceViewer extends Component<Props,State>
 
       return ( 
          <div data-prop={shortUri(k)}>
-            <h3><span>{this.proplink(k)}</span>:&nbsp;</h3>
+            <h3><span>{this.proplink(k)}:</span>&nbsp;</h3>
             { k == bdo+"placeLong" && tags }
             <div class="map"> {/* style={ {width:"100%",marginTop:"10px"} }> */}
                <Map ref={m => { this._leafletMap = m; }}
@@ -3254,7 +3254,7 @@ class ResourceViewer extends Component<Props,State>
 
          return (
             <div data-prop={shortUri(k)} class={"has-collapse custom max-"+(maxDisplay)+" "+(n%2===0?"even":"odd") }>
-               <h3><span>{this.proplink(k)}</span>:</h3>
+               <h3><span>{this.proplink(k)}:</span></h3>
                <div className={"propCollapseHeader in-"+(this.state.collapse[k]===true)}>
                   {ret.slice(0,maxDisplay)}
                </div> 
@@ -3285,11 +3285,11 @@ class ResourceViewer extends Component<Props,State>
       else {
          return (
             <div  data-prop={shortUri(k)} {...(k===bdo+"note"?{class:"has-collapse custom"}:{})}>               
-               <h3><span>{this.proplink(k)}</span>:&nbsp;</h3>
+               <h3><span>{this.proplink(k)}:</span>&nbsp;</h3>
                {this.preprop(k,0,n)}
-               {/* <div class="group"> */}
+               <div class="group">
                {ret}
-               {/* </div> */}
+               </div>
             </div>
          )
       }
@@ -3332,7 +3332,7 @@ class ResourceViewer extends Component<Props,State>
          }
          //loader={<Loader loaded={false} />}
          >
-            <h3 class="chunk"><span>{this.proplink(k)}</span>:&nbsp;{prev!==-1 && <a onClick={(e) => this.props.onGetChunks(this.props.IRI,prev)} class="download" style={{float:"right",fontWeight:700,border:"none"}}>Load Previous Chunks &lt;</a>}</h3>
+            <h3 class="chunk"><span>{this.proplink(k)}:</span>&nbsp;{prev!==-1 && <a onClick={(e) => this.props.onGetChunks(this.props.IRI,prev)} class="download" style={{float:"right",fontWeight:700,border:"none"}}>Load Previous Chunks &lt;</a>}</h3>
                {this.hasSub(k)?this.subProps(k):tags.map((e)=> [e," "] )}
             {/* // import make test fail...
                <div class="sub">
@@ -3553,7 +3553,7 @@ class ResourceViewer extends Component<Props,State>
       if(["Role"].indexOf(getEntiType(this.props.IRI)) !== -1 && this.props.assocResources && Object.keys(this.props.assocResources).length > 0 )
          return (
             <div>
-               <h3><span>Associated Persons</span>:&nbsp;</h3>
+               <h3><span>Associated Persons:</span>&nbsp;</h3>
             {   this.props.assocResources &&
                   (assoP = Object.keys(this.props.assocResources).filter(e => !this.props.assocResources[e].filter(f => f.fromKey).length)).map((e,i) =>
                         i<20?
