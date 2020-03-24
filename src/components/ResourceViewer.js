@@ -2971,7 +2971,7 @@ class ResourceViewer extends Component<Props,State>
             this.setState({...this.state, imageLoaded:false})
             this.props.onHasImageAsset(iiifpres+"/collection/wio:"+this.props.IRI,this.props.IRI)
          }
-      }
+      }      
       else if(kZprop.indexOf(bdo+"instanceReproductionOf") !== -1)
       {
          let elem = this.getResourceElem(bdo+"instanceReproductionOf")
@@ -3682,7 +3682,7 @@ class ResourceViewer extends Component<Props,State>
 
       data = data.filter(e => e)
 
-      console.log("data?",data)
+      //console.log("data?",data)
 
       if(data && data.length) return <div className={div!=="header"?"data "+div:div}>
          {data}
@@ -4007,6 +4007,41 @@ class ResourceViewer extends Component<Props,State>
       let theDataBot = this.renderData(kZprop.filter(k => !topProps.includes(k) && !extProps.includes(k)),iiifpres,title,otherLabels,"bot-props")      
       let theDataExt = this.renderData(extProps,iiifpres,title,otherLabels,"ext-props")      
 
+   /*
+      let related = [<div>
+                        <div class="header"></div>
+                        <div>Work1</div>
+                     </div>,
+                     <div>
+                        <div class="header"></div>
+                        <div>Work2</div>
+                     </div>
+                     ]
+   */
+      let related 
+      if(this.props.assocResources) {
+         let res = fullUri(this.props.IRI)
+         related = Object.keys(this.props.assocResources).map(k => {
+            let v = this.props.assocResources[k]
+            let s = shortUri(k)
+            let isA = v.filter(k => k.fromKey === bdo+"workIsAbout" && k.value === res)
+            console.log("isA",v,s,isA)
+            if(isA.length) {
+               let label, pLab = v.filter(k => k.fromKey === skos+"prefLabel" || k.type === skos+"prefLabel")
+               if(pLab.length) label = getLangLabel(this,"",pLab)
+               if(!label) label = { value:s }
+               return ( 
+                  <div>
+                     <Link to={"/show/"+s}><div class="header"></div></Link>
+                     <div><span>{ label.value }</span>{ label.lang && this.tooltip(label.lang) }</div>
+                     <Link to={"/show/"+s}>Read more</Link>
+                  </div>
+               )
+            }
+         } ).filter(k => k)
+      }
+
+
       let toggleExtProps = (e) => {
          let state = { ...this.state, collapse:{ ...this.state.collapse, extProps:!this.state.collapse.extProps, ...extProps.reduce( (acc,p) => ({...acc, [p]:!this.state.collapse.extProps}),{} ) } }
          this.setState(state)
@@ -4040,6 +4075,14 @@ class ResourceViewer extends Component<Props,State>
                   { theDataTop }
                   <div class="data">{ top_left_menu(this,pdfLink,monoVol,fairUse)  }</div>
                   { theDataBot }
+                  { related && related.length > 0 &&  
+                     <div class="data related">
+                        <div>
+                           <div><h2>Related Resources</h2><Link to={"/search?t=Work&r="+this.props.IRI}>{"see all"}</Link></div>
+                           <div>{ related }</div>
+                        </div>
+                     </div> 
+                  }
                   { theDataExt && 
                      <div class="data ext-props">
                         <div><h2>Extended Properties</h2><span onClick={toggleExtProps}>{!this.state.collapse.extProps?"see all":"hide"}</span></div>

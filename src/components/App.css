@@ -47,7 +47,8 @@
 }
 
 
-body { overflow:auto !important;padding-right:0 !important; font-family:"Roboto", "Helvetica", "Arial", sans-serif; background-color:#dddddd;    }
+body { overflow:auto !important;padding-right:0 !important; font-family:"Roboto", "Helvetica", "Arial", sans-serif; 
+   background-color:#dddddd;   }
 
 .resultPage > .loader { position:fixed;display:block; width: 100vw;height: 100vh; left: 0; top: 0; }
 
@@ -222,8 +223,14 @@ h2:not(:hover) .lang,
 h4:not(:hover) > .lang
 { display:none; }
 
-.resource { padding:155px 140px 120px 140px; text-align:left; box-sizing: border-box; background-color:#efefef; width:1440px; margin-left:auto;margin-right:auto;
+.resource { 
+   padding:155px 140px; padding-bottom: 140px; text-align:left; box-sizing: content-box; background-color:#efefef; width:1160px; margin-left:auto;margin-right:auto;
    max-width:97%; display:flex; background-color:#efefef; padding-bottom:200px; }
+
+@media(max-width:1440px) { 
+   #root > div { overflow:hidden ; }
+   .resource { padding:155px calc((100vw - (1440px - (140px * 2))) / 2); } 
+}
 
 .resource .loader { position:absolute; }
 
@@ -245,7 +252,7 @@ h4:not(:hover) > .lang
 .resource > .index .title h2 .T::before { width:40px; background-size:80% auto; background-position:center; margin-right:16px;}
 .resource > .index .title h2 .RID { display:none !important; }
 
-.resource > .index h3 { margin-left:72px; margin-top:8px; font-size:12px; letter-spacing:0.47px;}
+.resource > .index h3 { margin-left:56px; margin-top:8px; font-size:12px; letter-spacing:0.47px;}
 
 .resource > .index h3 a { color:#343434; text-decoration: none; }
 
@@ -321,7 +328,7 @@ h4:not(:hover) > .lang
 .resource .title h2:not(.on) > a > :not(.T),
 .resource .title h2.on > :not(.T) { display:none; }
 
-.resource .title h2 .RID { display:block !important;position:absolute;top:32px;left:85px;color:#4a4a4a;font-size:11px;font-weight:400; letter-spacing:0; 
+.resource .title h2 .RID { display:block !important;position:absolute;top:32px;left:85px;color:rgba(0,0,0,0.5);font-size:11px;font-weight:400; letter-spacing:0; 
    white-space: nowrap;
 }
 
@@ -393,6 +400,7 @@ h4:not(:hover) > .lang
 .resource .data > :not([data-prop="bdo:note"]) .sub:not(:last-child) {  margin-bottom:20px; }
 
 .resource .sub > h4 { line-height:22px;}
+.resource .sub > h4.label { max-width:calc(100% - 135px); vertical-align: text-top; }
 
 .resource .data .group { display:inline-block; width:calc(100% - 190px); line-height:24px; }
 
@@ -438,12 +446,14 @@ h4:not(:hover) > .lang
 .resource .data > div > .sub + .sub { width:calc(100% - 190px); margin-left:190px; } 
 .resource .data > div > .sub:empty { display:none; }
 
-.resource .data > [data-prop="bdo:workIsAbout"] h4.multiple { width:auto;margin-left:0;}
+/* .resource .data > [data-prop="bdo:workIsAbout"] h4.multiple { width:auto;margin-left:0;} */
 
 /* .resource .data > div > .sub > .subsub + .subsub::before,  */           /* too generic */
 /*.resource .data > div > .sub > .subsub:not(:last-of-type)::after,*/      /* better not perfect */
+/*
 .resource .data > [data-prop="bdo:workIsAbout"] h4.multiple + h4::before
 { content:" ";padding:0 5px 0 10px; font-size:15px; }
+*/
 
 .resource .data > [data-prop="bdo:creator"] h4[data-prop="bdo:role"] + h4 .lang,
 .resource .data > [data-prop="bdo:creator"] h4[data-prop^="bdo:"],
@@ -522,17 +532,36 @@ h4:not(:hover) > .lang
 .resource .data.bot-props > div[data-prop="bdo:placeLong"] .map,
 .resource .data.bot-props > div[data-prop="bdo:placeRegionPoly"]:not(.youpi):not(#youpi) {display:none !important;}
 
+/* ------------------------------------------------------------------------------------------------------------------------ related */
+
+.resource .data.related { background-color:#ffffff; padding:30px; padding-bottom:0;}
+.resource .data.related > div:not(.a):not(#b):not(.c) { background-color:#f5f5f5;padding:5px 40px 45px 40px; position:relative; display:block !important;}
+.resource .data.related h2 { line-height:44px;margin:45px 0; }
+.resource .data.related > div::after { content:none !important; }
+.resource .data.related h2 + a { position:absolute;text-transform:uppercase;font-weight:500;border-bottom:2px solid black; 
+   height:24px; right:55px; cursor:pointer; padding-top:14px; color:#343434;}
+.resource .data.related > div > div:first-child {display:flex;align-items: center;}
+.resource .data.related > div > div:last-child { display:flex; overflow:hidden; }
+.resource .data.related > div > div:last-child > div {display:inline-block; width:175px;margin-right:25px; flex-shrink:0;}
+.resource .data.related > div > div:last-child > div .header { height:175px; }
+.resource .data.related > div > div:last-child > :nth-child(n+5) { display:none; }
+.resource .data.related > div > div:last-child > :nth-child(4n+4) { margin-right:0; }
+.resource .data.related > div > div:last-child > div a { color:#343434; font-weight:500; font-size:14px; border-color:#343434;}
+.resource .data.related > div > div:last-child > div > div { color:#343434; font-weight:400; font-size:16px; margin:30px 0 20px 0; 
+   position:relative; }
+.resource .data.related > div > div:last-child > div > div .lang { display:none; position:absolute !important; top:calc(100% - 7px); }
+.resource .data.related > div > div:last-child > div > div:hover .lang { display:inline-block; }
 /* ------------------------------------------------------------------------------------------------------------------------ extended properties */
 
 .resource .data.ext-props { background-color:#ffffff; padding:30px; padding-bottom:0;}
 .resource .data.ext-props:last-child { padding-bottom:45px; }
-.resource .data.ext-props > div { background-color:#efefef;padding:5px 40px; position:relative;}
+.resource .data.ext-props > div { background-color:#f0f0f0;padding:5px 40px; position:relative;}
 .resource .data.ext-props:last-child > div:last-child { padding-bottom:80px; }
 .resource .data.ext-props + .data.ext-props { padding-top:0; }
 .resource .data.bot-props + .data.ext-props > div::after { content:none !important;}
 .resource .data.ext-props h2 { line-height:44px;margin:45px 0; }
 .resource .data.ext-props h2 + span { position:absolute;text-transform:uppercase;font-weight:500;border-bottom:2px solid black; 
-   height:24px; right:55px; cursor:pointer; padding-top:14px;}
+   height:24px; right:55px; cursor:pointer; padding-top:14px; color:#343434;}
 
 .resource .data.ext-props  > div { align-items: center; }
 
@@ -792,6 +821,9 @@ h4.multiple { margin-bottom:6px; }
 
 .resource .data > div > h3 ~ .group > h4.multiple,
 .resource .data > div > h3 ~ h4.multiple { width:calc(100% - 190px);; line-height:24px; vertical-align:top; }
+
+.resource .data > div > h3 ~ .group > h4.multiple { display:block;width:100%;}
+
 /*
 .resource .data > div > h3 ~ .group h4.multiple + h4,
 */
