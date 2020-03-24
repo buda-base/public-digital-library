@@ -4007,6 +4007,11 @@ class ResourceViewer extends Component<Props,State>
       let theDataBot = this.renderData(kZprop.filter(k => !topProps.includes(k) && !extProps.includes(k)),iiifpres,title,otherLabels,"bot-props")      
       let theDataExt = this.renderData(extProps,iiifpres,title,otherLabels,"ext-props")      
 
+      let toggleExtProps = (e) => {
+         let state = { ...this.state, collapse:{ ...this.state.collapse, extProps:!this.state.collapse.extProps, ...extProps.reduce( (acc,p) => ({...acc, [p]:!this.state.collapse.extProps}),{} ) } }
+         this.setState(state)
+      }
+
       return (
          [<div>
             <div className={"resource "+getEntiType(this.props.IRI).toLowerCase()}>               
@@ -4037,7 +4042,7 @@ class ResourceViewer extends Component<Props,State>
                   { theDataBot }
                   { theDataExt && 
                      <div class="data ext-props">
-                        <div><h2>Extended Properties</h2><span onClick={e => {}}>{"see all"}</span></div>
+                        <div><h2>Extended Properties</h2><span onClick={toggleExtProps}>{!this.state.collapse.extProps?"see all":"hide"}</span></div>
                      </div> }
                   { theDataExt }
                </div>
