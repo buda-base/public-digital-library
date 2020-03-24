@@ -526,11 +526,13 @@ h4:not(:hover) > .lang
 
 .resource .data.ext-props { background-color:#ffffff; padding:30px; padding-bottom:0;}
 .resource .data.ext-props:last-child { padding-bottom:45px; }
-.resource .data.ext-props > div { background-color:#efefef;padding:5px 40px; }
+.resource .data.ext-props > div { background-color:#efefef;padding:5px 40px; position:relative;}
 .resource .data.ext-props:last-child > div:last-child { padding-bottom:80px; }
 .resource .data.ext-props + .data.ext-props { padding-top:0; }
-.resource .data.ext-props h2 { line-height:44px;margin:45px 0;}
 .resource .data.bot-props + .data.ext-props > div::after { content:none !important;}
+.resource .data.ext-props h2 { line-height:44px;margin:45px 0; }
+.resource .data.ext-props h2 + span { position:absolute;text-transform:uppercase;font-weight:500;border-bottom:2px solid black; 
+   height:24px; right:55px; cursor:pointer; padding-top:14px;}
 
 .resource .data.ext-props  > div { align-items: center; }
 
@@ -541,7 +543,7 @@ h4:not(:hover) > .lang
 .resource .data.ext-props .has-collapse.custom .expand .toggle-expand { color:black; right:0;top:-5px; }
 
 .resource .data.ext-props .propCollapse { padding-left:190px; }
-.resource .data.ext-props .propCollapse.in-true { margin:10px 0 20px 0 ; }
+.resource .data.ext-props .propCollapse.in-true { margin:25px 0 20px 0 ; }
 .resource .data.ext-props > div:last-child .propCollapse.in-true { margin-bottom:0px; }
 
 

@@ -1,6 +1,8 @@
 
 const bdr = "http://purl.bdrc.io/resource/"
 
+const iiifpres = "//iiifpres-dev.bdrc.io"
+
 let miradorConfig, miradorSetUI
 
 async function init() {
@@ -8,7 +10,7 @@ async function init() {
    const urlParams = new URLSearchParams(window.location.search);
    const work = urlParams.get('work') || "bdr:W22084";
    let data = [
-      { "collectionUri" : "//iiifpres.bdrc.io"+"/2.1.1/collection/wio:"+work, location:"" }
+      { "collectionUri" :iiifpres+"/2.1.1/collection/wio:"+work, location:"" }
    ]
    let lg = urlParams.get('lang') || "bo,zh-hans";
    lg = lg.split(",")

@@ -431,10 +431,10 @@ const topProperties = {
       bdo+"workHasInstance"
    ],
    "Instance": [ 
+      bdo+"creator",
       bdo+"hasTitle", 
       skos+"prefLabel", 
       skos+"altLabel", 
-      bdo+"creator",
       bdo+"contentLocation",
       bdo+"instanceEvent",
       bdo+"instanceOf",
@@ -4037,7 +4037,7 @@ class ResourceViewer extends Component<Props,State>
                   { theDataBot }
                   { theDataExt && 
                      <div class="data ext-props">
-                        <div><h2>Extended Properties</h2></div>
+                        <div><h2>Extended Properties</h2><span onClick={e => {}}>{"see all"}</span></div>
                      </div> }
                   { theDataExt }
                </div>
