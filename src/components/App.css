@@ -237,8 +237,8 @@ h4:not(:hover) > .lang
 
 /* -+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ resource */
 
-.resource > .index { min-width:20%; padding-top:10px; }
-.resource > :not(.index) { min-width:80%; }
+.resource > .index { min-width:15%; padding-top:10px; }
+.resource > :not(.index) { min-width:85%; }
 
 .resource > .index .title { display:block; }
 
@@ -249,16 +249,16 @@ h4:not(:hover) > .lang
 .resource > .index .title h2:not(:first-child) { margin-top:20px; }
 
 .resource > .index .title h2 a { display:block; }
-.resource > .index .title h2 .T::before { width:40px; background-size:80% auto; background-position:center; margin-right:16px;}
+.resource > .index .title h2 .T::before { content:none !important; width:40px; background-size:80% auto; background-position:center; margin-right:16px;}
 .resource > .index .title h2 .RID { display:none !important; }
 
-.resource > .index h3 { margin-left:56px; margin-top:8px; font-size:12px; letter-spacing:0.47px;}
+.resource > .index h3 { /*margin-left:56px;*/ margin-top:8px; font-size:12px; letter-spacing:0.47px;}
 
 .resource > .index h3 a { color:#343434; text-decoration: none; }
 
 .resource > :not(.index) > .title h2 .T { margin-bottom:15px; }
-.resource > :not(.index) > .title h2 .T::before { display:none; }
-.resource  > :not(.index) > .title h2 .RID { left:0; }
+/* .resource > :not(.index) > .title h2 .T::before { display:none; } */
+/* .resource  > :not(.index) > .title h2 .RID { left:0; } */
 
 /* ------------------------------------------------------------------------------------------------------------------------ header */
 
@@ -297,6 +297,9 @@ h4:not(:hover) > .lang
 
 .resource .data h2,
 .resource .title h2 { font-family: "Noto Sans", "Roboto", "Helvetica", "Arial", sans-serif; margin:0; color:#343434;}
+
+.resource .data *,
+.resource .related div { font-family: "Noto Sans", "Roboto", "Helvetica", "Arial", sans-serif; }
 
 .resource .data h2 { font-size:34px; letter-spacing: 0.7px; position:relative;}
 
@@ -418,6 +421,27 @@ h4:not(:hover) > .lang
 .resource .data > [data-prop="bdo:creator"] .subgroup > .subsub { display:inline-block; }
 
 
+.resource .data:not(.top-props) > [data-prop]:last-child::after { content:none !important;display:none; } 
+
+
+.resource .data > [data-prop="bdo:workHasTranslation"] > h3 { display:none; }
+.resource .data > [data-prop="bdo:workHasTranslation"] > .group { width:100%; }
+.resource .data > [data-prop="bdo:workHasTranslation"] > .group > .sub > h4.first {  width: calc(190px - 15px);  padding-right: 15px; margin-right:0; }
+.resource .data > [data-prop="bdo:workHasTranslation"] > .group > .sub > h4.first a.propref { color: #343434;  font-size: 17px; letter-spacing: 0.68px;
+   line-height: 24px; width: calc(190px - 15px);  padding-right: 0px; margin-right:0px; word-spacing:20px;
+}
+.resource .data > [data-prop="bdo:workHasTranslation"] > .group > .sub > .subgroup { width:calc(100% - 190px);}
+.resource .data  > [data-prop="bdo:workHasTranslation"] .sub .subsub a.propref { font-size: 15px;  font-weight: 600; letter-spacing: 0px;
+    font-style: normal;  letter-spacing: 0.63px; 
+}
+.resource .data >  [data-prop="bdo:workHasTranslation"] .sub:not(:first-of-type) { border:none; }
+.resource .data > [data-prop="bdo:workHasTranslation"] > .group > .sub:not(:last-child) > .subgroup { padding-bottom:20px; 
+   border-bottom:1px solid rgba(0,0,0,0.25);}
+.resource .data > [data-prop="bdo:workHasTranslation"] > .group > .sub:not(:last-child) { margin-bottom:0; }
+.resource .data > [data-prop="bdo:workHasTranslation"] > .group > .sub > .subgroup > .subsub:not(:last-child) { margin-bottom:20px;
+   padding-bottom:20px;  border-bottom:1px solid rgba(0,0,0,0.25);
+} 
+.resource .data > [data-prop="bdo:workHasTranslation"] > .group > .sub > .subgroup > .subsub > h4.first { width:120px; margin-right:15px; }
 /* // deprecated "inline-table" etc
 
 
@@ -440,6 +464,8 @@ h4:not(:hover) > .lang
 .resource .data > div > .group > .sub > .subgroup > .subsub > h4.first { display:table-cell; width:100px;}
 
 */
+
+
 
 
 .resource .data > div > .sub { line-height:28px; }
@@ -540,17 +566,40 @@ h4:not(:hover) > .lang
 .resource .data.related > div::after { content:none !important; }
 .resource .data.related h2 + a { position:absolute;text-transform:uppercase;font-weight:500;border-bottom:2px solid black; 
    height:24px; right:55px; cursor:pointer; padding-top:14px; color:#343434;}
+.resource .data.related h2 + a:hover { color:#d73449;border-color:#d73449; }
 .resource .data.related > div > div:first-child {display:flex;align-items: center;}
 .resource .data.related > div > div:last-child { display:flex; overflow:hidden; }
-.resource .data.related > div > div:last-child > div {display:inline-block; width:175px;margin-right:25px; flex-shrink:0;}
-.resource .data.related > div > div:last-child > div .header { height:175px; }
+.resource .data.related > div > div:last-child > div {display:inline-block; width:189px;margin-right:25px; flex-shrink:0;}
+.resource .data.related > div > div:last-child > div .header { height:189px; }
 .resource .data.related > div > div:last-child > :nth-child(n+5) { display:none; }
 .resource .data.related > div > div:last-child > :nth-child(4n+4) { margin-right:0; }
-.resource .data.related > div > div:last-child > div a { color:#343434; font-weight:500; font-size:14px; border-color:#343434;}
-.resource .data.related > div > div:last-child > div > div { color:#343434; font-weight:400; font-size:16px; margin:30px 0 20px 0; 
+.resource .data.related > div > div:last-child > div a { color:#343434; font-weight:700; font-size:13px; border-color:#343434;}
+.resource .data.related > div > div:last-child > div > div { color:#343434; font-weight:500; font-size:15px; margin:30px 0 20px 0; 
    position:relative; }
 .resource .data.related > div > div:last-child > div > div .lang { display:none; position:absolute !important; top:calc(100% - 7px); }
 .resource .data.related > div > div:last-child > div > div:hover .lang { display:inline-block; }
+
+/* ------------------------------------------------------------------------------------------------------------------------ extended properties */
+
+.resource .data:not(.legal-props):not(.ext-props):not(#a):not(.b) > [data-prop="adm:metadataLegal"]:not(#a):not(.b) { display:none !important; } 
+
+.resource .data.legal-props { background-color:#ffffff; padding:30px; padding-bottom:0;}
+.resource .data.legal-props:last-child { padding-bottom:45px; }
+.resource .data.legal-props > div { background-color:#172832;padding:25px 45px; position:relative; display:flex;align-items: center;}
+.resource .data.legal-props > div h3 { width:100px; padding-right:90px; }
+.resource .data.legal-props > div h3,
+.resource .data.legal-props > div h3 span a { color:white; } 
+.resource .data.legal-props > div::after { content:none !important; }
+.resource .data.legal-props > div h4 { pointer-events:none; line-height:20px !important;margin-bottom:10px; font-size:13px; }
+.resource .data.legal-props > div h4:last-child { margin-bottom:0px; }
+.resource .data.legal-props > div h4 span a { color:white; }
+.resource .data.legal-props > div h4 > span:not(.ulink) { display:none; }
+.resource .data.legal-props > div h4 > .ulink { display:flex; align-items: center; }
+.resource .data.legal-props > div h4 > .ulink > span { margin-right:20px; }
+.resource .data.legal-props > div h4 > .ulink > a:first-child { padding-left:25px; }
+.resource .data.legal-props > div h4 > .ulink > span .before { padding:0;background-position:center;width:25px;height:25px; border-radius:13px;
+ }
+
 /* ------------------------------------------------------------------------------------------------------------------------ extended properties */
 
 .resource .data.ext-props { background-color:#ffffff; padding:30px; padding-bottom:0;}
@@ -562,6 +611,7 @@ h4:not(:hover) > .lang
 .resource .data.ext-props h2 { line-height:44px;margin:45px 0; }
 .resource .data.ext-props h2 + span { position:absolute;text-transform:uppercase;font-weight:500;border-bottom:2px solid black; 
    height:24px; right:55px; cursor:pointer; padding-top:14px; color:#343434;}
+.resource .data.ext-props h2 + span:hover { color:#d73449;border-color:#d73449; }
 
 .resource .data.ext-props  > div { align-items: center; }
 

@@ -69,12 +69,12 @@ export const loadedOntology = (state: DataState, action: Action) => {
    ontology["http://purl.bdrc.io/ontology/core/workHasTranslation"]["http://purl.bdrc.io/ontology/core/inferSubTree"] = [{type: "literal", value: "true", datatype: "http://www.w3.org/2001/XMLSchema#boolean"}]
   
    ontology["http://purl.bdrc.io/ontology/tmp/workHasTranslationInCanonicalLanguage"] = {
-      "http://www.w3.org/2000/01/rdf-schema#label": [{type: "literal", value: "canonical languages", lang: "en"}],
+      "http://www.w3.org/2000/01/rdf-schema#label": [{type: "literal", value: "canonical translation", lang: "en"}],
       "http://www.w3.org/2000/01/rdf-schema#subPropertyOf": [{type: "uri", value: "http://purl.bdrc.io/ontology/core/workHasTranslation"}]
    }
    
    ontology["http://purl.bdrc.io/ontology/tmp/workHasTranslationInNonCanonicalLanguage"] = {
-      "http://www.w3.org/2000/01/rdf-schema#label": [{type: "literal", value: "other languages", lang: "en"}],
+      "http://www.w3.org/2000/01/rdf-schema#label": [{type: "literal", value: "other translation", lang: "en"}],
       "http://www.w3.org/2000/01/rdf-schema#subPropertyOf": [{type: "uri", value: "http://purl.bdrc.io/ontology/core/workHasTranslation"}]
    }
 
@@ -93,12 +93,12 @@ export const loadedDictionary = (state: DataState, action: Action) => {
    dictionary["http://purl.bdrc.io/ontology/core/workHasTranslation"]["http://purl.bdrc.io/ontology/core/inferSubTree"] = [{type: "literal", value: "true", datatype: "http://www.w3.org/2001/XMLSchema#boolean"}]
   
    dictionary["http://purl.bdrc.io/ontology/tmp/workHasTranslationInCanonicalLanguage"] = {
-      "http://www.w3.org/2000/01/rdf-schema#label": [{type: "literal", value: "canonical languages", lang: "en"}],
+      "http://www.w3.org/2000/01/rdf-schema#label": [{type: "literal", value: "canonical translation", lang: "en"}],
       "http://www.w3.org/2000/01/rdf-schema#subPropertyOf": [{type: "uri", value: "http://purl.bdrc.io/ontology/core/workHasTranslation"}]
    }
    
    dictionary["http://purl.bdrc.io/ontology/tmp/workHasTranslationInNonCanonicalLanguage"] = {
-      "http://www.w3.org/2000/01/rdf-schema#label": [{type: "literal", value: "other languages", lang: "en"}],
+      "http://www.w3.org/2000/01/rdf-schema#label": [{type: "literal", value: "other translation", lang: "en"}],
       "http://www.w3.org/2000/01/rdf-schema#subPropertyOf": [{type: "uri", value: "http://purl.bdrc.io/ontology/core/workHasTranslation"}]
    }
 

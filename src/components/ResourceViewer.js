@@ -203,8 +203,11 @@ const providers = {
 
 
 let propOrder = {
-   "Corporation":[],
+   "Corporation":[
+      "adm:metadataLegal"
+   ],
    "Etext":[
+      "adm:metadataLegal",
       "bdo:eTextTitle",
       "bdo:eTextIsVolume",
       "bdo:eTextInVolume",
@@ -236,6 +239,7 @@ let propOrder = {
    ],
    */
    "Lineage":[
+      "adm:metadataLegal",
       "skos:prefLabel",
       "skos:altLabel",
       "bdo:lineageObject",
@@ -243,6 +247,7 @@ let propOrder = {
       "bdo:workLocation",
    ],
    "Person" : [
+      "adm:metadataLegal",
       "bdo:personName",
       "skos:prefLabel",
       "skos:altLabel",
@@ -268,6 +273,7 @@ let propOrder = {
       "rdfs:seeAlso",
     ],
    "Place":[
+      "adm:metadataLegal",
       "skos:prefLabel",
       "skos:altLabel",
       "bdo:placeContains",
@@ -280,18 +286,21 @@ let propOrder = {
       "bdo:placeIsNear",
    ],
    "Role":[
+      "adm:metadataLegal",
       "skos:prefLabel",
       "skos:altLabel",
       "rdfs:comment",
       "rdfs:seeAlso"
    ],
    "Topic":[
+      "adm:metadataLegal",
       "skos:prefLabel",
       "skos:altLabel",
       "rdfs:comment",
       "rdfs:seeAlso"
    ],
    "Work":[
+      "adm:metadataLegal",
       "bdo:hasTitle",
       "bdo:workTitle",
       "skos:prefLabel",
@@ -379,7 +388,6 @@ let propOrder = {
       "bdo:note",
       "bdo:biblioNote", 
       "bdo:scanInfo",
-      "adm:metadataLegal",
    ],
    "Taxonomy":[],
    "User" : [
@@ -403,6 +411,12 @@ let extProperties = {
       bdo+"authorshipStatement",
       bdo+"editionStatement",
       bdo+"itemBDRCHoldingStatement",
+   ],
+   "Person": [
+      tmp+"entityScore"
+   ],
+   "Place": [
+      tmp+"entityScore"
    ]
 }
 extProperties["Volume"] = extProperties["Work"]
@@ -449,6 +463,9 @@ const topProperties = {
       bdo+"instanceHasVolume"
    ],
    "Volume": [ 
+      bdo+"hasTitle", 
+      skos+"prefLabel", 
+      skos+"altLabel",
       bdo+"volumeNumber", 
       bdo+"volumeOf"
    ]
@@ -4006,6 +4023,7 @@ class ResourceViewer extends Component<Props,State>
       let theDataTop = this.renderData(topProps,iiifpres,title,otherLabels,"top-props")      
       let theDataBot = this.renderData(kZprop.filter(k => !topProps.includes(k) && !extProps.includes(k)),iiifpres,title,otherLabels,"bot-props")      
       let theDataExt = this.renderData(extProps,iiifpres,title,otherLabels,"ext-props")      
+      let theDataLegal = this.renderData([adm+"metadataLegal"],iiifpres,title,otherLabels,"legal-props")      
 
    /*
       let related = [<div>
@@ -4082,7 +4100,8 @@ class ResourceViewer extends Component<Props,State>
                            <div>{ related }</div>
                         </div>
                      </div> 
-                  }
+                  }         
+                  { theDataLegal }
                   { theDataExt && 
                      <div class="data ext-props">
                         <div><h2>Extended Properties</h2><span onClick={toggleExtProps}>{!this.state.collapse.extProps?"see all":"hide"}</span></div>
