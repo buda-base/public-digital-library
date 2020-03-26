@@ -858,6 +858,34 @@ class ResourceViewer extends Component<Props,State>
       }
    }
 
+   scrollToHashID(history) {
+
+      if(!history) return
+
+      let loca = { ...history.location }
+      const hash = loca.hash.substring(1)
+      
+      if (hash && hash.length) {
+         setTimeout( 
+            window.requestAnimationFrame(function () {
+               const el = document.getElementById(hash)
+               el.scrollIntoView()      
+               delete loca.hash      
+               history.replace(loca)
+            }), 
+            10 
+         )
+      }
+   }
+
+
+
+   componentDidUpdate()
+   {
+      console.log("update!!")
+      this.scrollToHashID(this.props.history)
+   }
+
    componentDidMount()
    {
       console.log("mount!!")
@@ -865,7 +893,8 @@ class ResourceViewer extends Component<Props,State>
       let get = qs.parse(this.props.history.location.search)
       if(get.tabs && get.tabs.length) this.setState(ResourceViewer.setTitleFromTabs(this.props,{...this.state, tabs:get.tabs.split(",")}))
 
-
+      this.scrollToHashID(this.props.history)
+      /*
       if(window.location.hash === "#mirador" || window.location.hash === "#diva") {
          let timerViewer = setInterval(() => {
             if(this.props.imageAsset && this.props.firstImage) {
@@ -876,6 +905,7 @@ class ResourceViewer extends Component<Props,State>
             }
          }, 10)
       }
+      */
    }
 
    expand(str:string) //,stripuri:boolean=true)
@@ -4043,7 +4073,7 @@ class ResourceViewer extends Component<Props,State>
             let v = this.props.assocResources[k]
             let s = shortUri(k)
             let isA = v.filter(k => k.fromKey === bdo+"workIsAbout" && k.value === res)
-            console.log("isA",v,s,isA)
+            //console.log("isA",v,s,isA)
             if(isA.length) {
                let label, pLab = v.filter(k => k.fromKey === skos+"prefLabel" || k.type === skos+"prefLabel")
                if(pLab.length) label = getLangLabel(this,"",pLab)

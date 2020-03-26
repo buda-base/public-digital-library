@@ -25,6 +25,7 @@ import Profile from './components/ProfileStatic';
 
 export const auth = new Auth();
 
+
 // ignore hash changes made by UV
 // (see https://stackoverflow.com/questions/45799823/react-router-ignore-hashchange)
 let previousLocation;
@@ -35,16 +36,15 @@ Router.prototype.setState = function(...args) {
 
     //console.log("hash",JSON.stringify(previousLocation,null,3),JSON.stringify(loc,null,3),JSON.stringify(args,null,3))
 
+    /* 
     if (loc.pathname === previousLocation.pathname &&
         loc.search   === previousLocation.search   &&
         loc.hash    !== previousLocation.hash // || loc.hash === previousLocation.hash )
     ) {
         previousLocation = {...loc};
-        //console.log("ici")
         return;
     }
-
-    //console.log("la")
+    */
 
     previousLocation = {...loc};
     return routerSetState.apply(this, args);
@@ -58,6 +58,7 @@ Router.prototype.componentDidMount = function(...args) {
         return routerDidMount.apply(this, args);
     }
 };
+
 
 
 // Auth test: ok

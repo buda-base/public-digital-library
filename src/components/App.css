@@ -557,6 +557,7 @@ h4:not(:hover) > .lang
 
 .resource .data.bot-props > div[data-prop="bdo:placeLong"] .map,
 .resource .data.bot-props > div[data-prop="bdo:placeRegionPoly"]:not(.youpi):not(#youpi) {display:none !important;}
+.resource .data.bot-props:last-child { padding-bottom:60px; }
 
 /* ------------------------------------------------------------------------------------------------------------------------ related */
 
