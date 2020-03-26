@@ -225,7 +225,7 @@ h4:not(:hover) > .lang
 
 .resource { 
    padding:155px 140px; padding-bottom: 140px; text-align:left; box-sizing: content-box; background-color:#efefef; width:1160px; margin-left:auto;margin-right:auto;
-   max-width:97%; display:flex; background-color:#efefef; padding-bottom:200px; }
+   max-width:97%; display:flex; background-color:#efefef; padding-bottom:200px; position:relative;}
 
 @media(max-width:1440px) { 
    #root > div { overflow:hidden ; }
@@ -237,8 +237,8 @@ h4:not(:hover) > .lang
 
 /* -+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ resource */
 
-.resource > .index { min-width:15%; padding-top:10px; }
-.resource > :not(.index) { min-width:85%; }
+.resource > .index { width:15%; padding-top:10px; position:fixed; }
+.resource > :not(.index) { width:85%; padding-left:15%;  }
 
 .resource > .index .title { display:block; }
 
@@ -252,13 +252,17 @@ h4:not(:hover) > .lang
 .resource > .index .title h2 .T::before { content:none !important; width:40px; background-size:80% auto; background-position:center; margin-right:16px;}
 .resource > .index .title h2 .RID { display:none !important; }
 
-.resource > .index h3 { /*margin-left:56px;*/ margin-top:8px; font-size:12px; letter-spacing:0.47px;}
+.resource > .index h3 { /*margin-left:56px;*/ margin-top:8px; font-size:12px; letter-spacing:0.47px; display:block;}
 
 .resource > .index h3 a { color:#343434; text-decoration: none; }
 
-.resource > :not(.index) > .title h2 .T { margin-bottom:15px; }
+/* .resource > :not(.index) > .title h2 .T { margin-bottom:15px; } */
 /* .resource > :not(.index) > .title h2 .T::before { display:none; } */
 /* .resource  > :not(.index) > .title h2 .RID { left:0; } */
+
+#main-info, #resources, #ext-info {
+   scroll-margin: 100px;
+}
 
 /* ------------------------------------------------------------------------------------------------------------------------ header */
 

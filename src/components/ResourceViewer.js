@@ -869,9 +869,11 @@ class ResourceViewer extends Component<Props,State>
          setTimeout( 
             window.requestAnimationFrame(function () {
                const el = document.getElementById(hash)
-               el.scrollIntoView()      
-               delete loca.hash      
-               history.replace(loca)
+               if(el) { 
+                  el.scrollIntoView()      
+                  delete loca.hash      
+                  history.replace(loca)
+               }
             }), 
             10 
          )
@@ -3632,7 +3634,7 @@ class ResourceViewer extends Component<Props,State>
          )
    }
 
-   renderData = (kZprop, iiifpres, title, otherLabels, div = "") => {
+   renderData = (kZprop, iiifpres, title, otherLabels, div = "", hash = "") => {
 
       let { doMap, doRegion, regBox } = this.getMapInfo(kZprop);
 
@@ -3731,7 +3733,7 @@ class ResourceViewer extends Component<Props,State>
 
       //console.log("data?",data)
 
-      if(data && data.length) return <div className={div!=="header"?"data "+div:div}>
+      if(data && data.length) return <div className={div!=="header"?"data "+div:div} {...hash?{id:hash}:{}}>
          {data}
          {/* // TODO not working anymore
          { this.renderRoles() } 
@@ -4050,7 +4052,7 @@ class ResourceViewer extends Component<Props,State>
       let extProps = extProperties[_T]
       if(!extProps) extProps = []
 
-      let theDataTop = this.renderData(topProps,iiifpres,title,otherLabels,"top-props")      
+      let theDataTop = this.renderData(topProps,iiifpres,title,otherLabels,"top-props","main-info")      
       let theDataBot = this.renderData(kZprop.filter(k => !topProps.includes(k) && !extProps.includes(k)),iiifpres,title,otherLabels,"bot-props")      
       let theDataExt = this.renderData(extProps,iiifpres,title,otherLabels,"ext-props")      
       let theDataLegal = this.renderData([adm+"metadataLegal"],iiifpres,title,otherLabels,"legal-props")      
@@ -4095,6 +4097,17 @@ class ResourceViewer extends Component<Props,State>
          this.setState(state)
       }
 
+      let sideMenu = (rid,tag) => {
+         let url = "/show/"+shortUri(rid)+this.getTabs(tag)
+         let view = "/view/"+shortUri(rid)
+         return (<div>
+            { tag === "Images" && <h3><Link to={view} >Open in Viewer</Link></h3> }
+            <h3><Link to={url+"#main-info"} >Main Information</Link></h3>
+            { tag === "Work" && <h3><Link to={url+"#resources"} >Related Resources</Link></h3> }
+             <h3><Link to={url+"#ext-info"} >Extended Information</Link></h3> 
+         </div>)
+      }
+
       return (
          [<div>
             <div className={"resource "+getEntiType(this.props.IRI).toLowerCase()}>               
@@ -4103,11 +4116,11 @@ class ResourceViewer extends Component<Props,State>
                   {/* { this.renderPdfLink(pdfLink,monoVol,fairUse) } */}
                   <div class="title">
                   { wTitle }
-                  { wTitle && this.state.title.work && <h3><Link to={"/show/"+shortUri(this.state.title.work[0].value)+this.getTabs("Work")+"#main-info"} >Main Information</Link></h3> }
+                  { wTitle && this.state.title.work && sideMenu(this.state.title.work[0].value, "Work") }
                   { iTitle }
-                  { iTitle && this.state.title.instance && <h3><Link to={"/show/"+shortUri(this.state.title.instance[0].value)+this.getTabs("Instance")+"#main-info"} >Main Information</Link></h3> }
+                  { iTitle && this.state.title.instance && sideMenu(this.state.title.instance[0].value,"Instance") }
                   { rTitle }
-                  { rTitle && this.state.title.images && <h3><Link to={"/show/"+shortUri(this.state.title.images[0].value)+this.getTabs("Images")+"#main-info"} >Main Information</Link></h3> }
+                  { rTitle && this.state.title.images && sideMenu(this.state.title.images[0].value,"Images") }
                   </div>
                </div>
                <div>
@@ -4115,7 +4128,7 @@ class ResourceViewer extends Component<Props,State>
                   { this.renderAnnoPanel() }
                   { this.renderWithdrawn() }             
                   <div class="title">{ wTitle }{ iTitle }{ rTitle }</div>
-                  <div class="data" id="main-info">{title}</div>
+                  <div class="data">{title}</div>
                   { this.renderNoAccess(fairUse) }
                   { this.renderAccess() }
                   { this.renderHeader(kZprop.filter(k => mapProps.includes(k))) }
@@ -4124,7 +4137,7 @@ class ResourceViewer extends Component<Props,State>
                   <div class="data">{ top_left_menu(this,pdfLink,monoVol,fairUse)  }</div>
                   { theDataBot }
                   { related && related.length > 0 &&  
-                     <div class="data related">
+                     <div class="data related" id="resources">
                         <div>
                            <div><h2>Related Resources</h2><Link to={"/search?t=Work&r="+this.props.IRI}>{"see all"}</Link></div>
                            <div>{ related }</div>
@@ -4133,7 +4146,7 @@ class ResourceViewer extends Component<Props,State>
                   }         
                   { theDataLegal }
                   { theDataExt && 
-                     <div class="data ext-props">
+                     <div class="data ext-props" id="ext-info">
                         <div><h2>Extended Properties</h2><span onClick={toggleExtProps}>{!this.state.collapse.extProps?"see all":"hide"}</span></div>
                      </div> }
                   { theDataExt }
