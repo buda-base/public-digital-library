@@ -415,13 +415,13 @@ h4:not(:hover) > .lang
 .resource .data > div > .group > .sub { display:inline-block; }
 
 .resource .data > [data-prop="bdo:creator"] .subgroup .subsub:first-child,
-.resource .data > div > .group > .sub > h4.first { width: 120px;  }
+.resource .data > div > .group > .sub > h4.first { width: 130px;  }
 .resource .data > [data-prop="bdo:creator"] .subgroup .subsub:first-child { padding-right:0; margin-right:15px;}
 
-.resource .data > div > .group > .sub > .subgroup { display:inline-block; vertical-align: text-top; width: calc(100% - 120px - 15px); }
+.resource .data > div > .group > .sub > .subgroup { display:inline-block; vertical-align: text-top; width: calc(100% - 130px - 15px); }
 
 
-.resource .data > div .sub > .subgroup > .subsub > h4.first { width:100px; }
+.resource .data > div .sub > .subgroup > .subsub > h4.first { width:130px; }
 
 .resource .data > [data-prop="bdo:creator"] .subgroup > .subsub { display:inline-block; }
 
@@ -446,7 +446,7 @@ h4:not(:hover) > .lang
 .resource .data > [data-prop="bdo:workHasTranslation"] > .group > .sub > .subgroup > .subsub:not(:last-child) { margin-bottom:20px;
    padding-bottom:20px;  border-bottom:1px solid rgba(0,0,0,0.25);
 } 
-.resource .data > [data-prop="bdo:workHasTranslation"] > .group > .sub > .subgroup > .subsub > h4.first { width:120px; margin-right:15px; }
+.resource .data > [data-prop="bdo:workHasTranslation"] > .group > .sub > .subgroup > .subsub > h4.first { width:130px; margin-right:15px; }
 /* // deprecated "inline-table" etc
 
 
@@ -508,8 +508,8 @@ h4:not(:hover) > .lang
 
 /* Lineage option 2 */
 /* .resource .data > [data-prop="bdo:lineageHolder"] .subgroup .subsub > h4.first, */
-.resource .data > [data-prop="bdo:lineageHolder"] .subgroup .subsub + .subsub { margin-left:115px; }
-.resource .data > [data-prop="bdo:lineageHolder"] .subgroup .subsub + .subsub > h4.first { width:120px !important;} 
+.resource .data > [data-prop="bdo:lineageHolder"] .subgroup .subsub + .subsub { margin-left:145px; }
+.resource .data > [data-prop="bdo:lineageHolder"] .subgroup .subsub + .subsub > h4.first { width:130px !important;} 
 
 [data-prop="bf:identifiedBy"].has-collapse.custom .propCollapse,
 [data-prop="bf:identifiedBy"].has-collapse.custom .propCollapseHeader,
