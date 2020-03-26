@@ -5,6 +5,13 @@
 /* CSS debug mode */
 /* * {background-color:rgba(255,0,128,0.05);}   */
 
+@font-face {
+   font-family: 'Noto Sans';
+   src: url('/fonts/NotoSans-Light.woff2') format('woff2'),
+       url('/fonts/NotoSans-Light.woff') format('woff');
+   font-weight: 300;
+   font-style: normal;
+}
 
 @font-face {
    font-family: 'Noto Sans';
@@ -470,6 +477,8 @@ h4:not(:hover) > .lang
 
 */
 
+.resource .data .sub.keep { border-top:none !important; padding-top:0 !important; margin-top:-15px; display:block !important;  }
+.resource .data .sub.keep > h4.first { height:0; overflow:hidden; }
 
 
 
@@ -556,7 +565,7 @@ h4:not(:hover) > .lang
 
 .resource .subsubgroup .subsubsub { padding-left:0; }
 .resource .subgroup .subsub > h4.first { width:auto;}
-.resource .subsubgroup .subsubsub > h4.first a.propref { font-weight:100; font-size:14px;  }
+.resource .subsubgroup .subsubsub > h4.first a.propref { font-weight:300; font-size:14px;  }
 
 /* ------------------------------------------------------------------------------------------------------------------------ "normal" properties */
 
@@ -602,7 +611,7 @@ h4:not(:hover) > .lang
 .resource .data.legal-props > div h4 > span:not(.ulink) { display:none; }
 .resource .data.legal-props > div h4 > .ulink { display:flex; align-items: center; }
 .resource .data.legal-props > div h4 > .ulink > span { margin-right:20px; }
-.resource .data.legal-props > div h4 > .ulink > a:first-child { padding-left:25px; }
+.resource .data.legal-props > div h4 > .ulink > a:first-child { padding-left:24px; }
 .resource .data.legal-props > div h4 > .ulink > span .before { padding:0;background-position:center;width:25px;height:25px; border-radius:13px;
  }
 

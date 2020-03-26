@@ -866,7 +866,17 @@ class ResourceViewer extends Component<Props,State>
       const hash = loca.hash.substring(1)
       
       if (hash && hash.length) {
-         setTimeout( 
+         if(hash === "open-viewer") {
+            let timerViewer = setInterval(() => {
+               if(this.props.imageAsset && this.props.firstImage) {
+                  clearInterval(timerViewer)
+                  this.showMirador()   
+                  delete loca.hash      
+                  history.replace(loca)
+               }
+            }, 10)
+         }
+         else setTimeout( 
             window.requestAnimationFrame(function () {
                const el = document.getElementById(hash)
                if(el) { 
@@ -875,7 +885,7 @@ class ResourceViewer extends Component<Props,State>
                   history.replace(loca)
                }
             }), 
-            10 
+            0 
          )
       }
    }
@@ -896,18 +906,6 @@ class ResourceViewer extends Component<Props,State>
       if(get.tabs && get.tabs.length) this.setState(ResourceViewer.setTitleFromTabs(this.props,{...this.state, tabs:get.tabs.split(",")}))
 
       this.scrollToHashID(this.props.history)
-      /*
-      if(window.location.hash === "#mirador" || window.location.hash === "#diva") {
-         let timerViewer = setInterval(() => {
-            if(this.props.imageAsset && this.props.firstImage) {
-               clearInterval(timerViewer)
-               if(window.location.hash === "#mirador") this.showMirador()
-               else if(window.location.hash === "#diva") this.showDiva()
-               window.location.hash = "";
-            }
-         }, 10)
-      }
-      */
    }
 
    expand(str:string) //,stripuri:boolean=true)
@@ -1956,7 +1954,7 @@ class ResourceViewer extends Component<Props,State>
 
       //console.log("elem", elem)
 
-      let nbN = 1
+      let nbN = 1, T, lastT
 
 
       let viewAnno = false ;
@@ -2155,6 +2153,15 @@ class ResourceViewer extends Component<Props,State>
          }
          else {
 
+            let keepT = false
+
+            if(e.k) {
+               if(T) lastT = T ;
+               T = e.k.split(";")
+               if(T.length) T = T[0]
+               if(T === lastT) keepT = true
+            }
+
             elem = this.getResourceBNode(e.value)            
 
             if(prop === bdo+"lineageHolder" && elem && elem[bdo+"lineageReceived"]) {
@@ -2251,7 +2258,7 @@ class ResourceViewer extends Component<Props,State>
                   )
                }
 
-               ret.push(<div className={div}>{sub}</div>)
+               ret.push(<div className={div + (keepT?" keep":"")}>{sub}</div>)
 
             }
             else
@@ -3023,9 +3030,9 @@ class ResourceViewer extends Component<Props,State>
       }      
       else if(kZprop.indexOf(bdo+"instanceReproductionOf") !== -1)
       {
-         let elem = this.getResourceElem(bdo+"instanceReproductionOf")
+         let elem = [{value:this.props.IRI}] 
          let nbVol = this.getResourceElem(bdo+"itemVolumes")
-         let work = [{value:this.props.IRI}] // this.getResourceElem(bdo+"instanceReproductionOf")
+         let work = this.getResourceElem(bdo+"instanceReproductionOf")
          if(elem[0] && elem[0].value && !this.props.imageAsset && !this.props.manifestError) {
             this.setState({...this.state, imageLoaded:false})
             let manif = iiifpres + "/wv:"+elem[0].value.replace(new RegExp(bdr),"bdr:")+"/manifest"
@@ -4099,7 +4106,7 @@ class ResourceViewer extends Component<Props,State>
 
       let sideMenu = (rid,tag) => {
          let url = "/show/"+shortUri(rid)+this.getTabs(tag)
-         let view = "/view/"+shortUri(rid)
+         let view = "/show/"+shortUri(rid)+"#open-viewer"
          return (<div>
             { tag === "Images" && <h3><Link to={view} >Open in Viewer</Link></h3> }
             <h3><Link to={url+"#main-info"} >Main Information</Link></h3>
