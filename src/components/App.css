@@ -276,7 +276,7 @@ h4:not(:hover) > .lang
 .resource.work .data .header::before { background-image:url("/icons/work.png");  }
 .resource.instance .data .header::before { background-image:url("/icons/instance_50g.png"); }
 .resource.images .data .header::before { background-image:url("/icons/image.svg"); }
-.resource.person .data .header::before { background-image:url("/icons/person.png");  }
+.resource.person .data > .header::before { background-image:url("/icons/person.png");  }
 
 .resource .data .header.loading::before { background-image:none !important; }
 
@@ -536,6 +536,9 @@ TODO
 .resource .data .sub.keep { border-top:none !important; padding-top:0 !important; margin-top:-15px; display:block !important;  }
 .resource .data .sub.keep > h4.first { height:0; overflow:hidden; }
 
+.resource .data .sub.willK:not(.keep) > h4.first { position:absolute; }
+.resource .data .sub.willK:not(.keep) > h4.first + h4.label { margin-left:calc(170px + 15px); }
+
 
 
 .resource .data > div > .sub { line-height:28px; }
@@ -572,9 +575,9 @@ TODO
 */
 
 /* Lineage option 2 */
-/* .resource .data > [data-prop="bdo:lineageHolder"] .subgroup .subsub > h4.first, */
-.resource .data > [data-prop="bdo:lineageHolder"] .subgroup .subsub + .subsub { margin-left:145px; }
-.resource .data > [data-prop="bdo:lineageHolder"] .subgroup .subsub + .subsub > h4.first { width:130px !important;} 
+.resource .data > [data-prop="bdo:lineageHolder"] .subgroup .subsub + .subsub { margin-left:calc(170px + 15px); }
+.resource .data > [data-prop="bdo:lineageHolder"] .subgroup .subsub > h4.first { width:170px !important;} 
+.resource .data > [data-prop="bdo:lineageHolder"] .subgroup .subsub + .subsub > h4.first { width:150px !important;} 
 
 [data-prop="bf:identifiedBy"].has-collapse.custom .propCollapse,
 [data-prop="bf:identifiedBy"].has-collapse.custom .propCollapseHeader,
@@ -1350,6 +1353,7 @@ svg.hide { opacity:0;pointer-events:none; }
 .diva-tools-right { width:400px; }
 .diva-tools-left { padding-right:100px; width:300px;}
 
+.pdfLoader .loader { margin-top:30px; }
 .pdfLoader { vertical-align:-3px; }
 .pdfLoader img { opacity:0.55; }
 /* .pdfLoader > button { width:auto !important; } */

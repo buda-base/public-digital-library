@@ -1977,10 +1977,13 @@ class ResourceViewer extends Component<Props,State>
       let nbN = 1, T, lastT
 
 
-      let viewAnno = false ;
+      let viewAnno = false, iKeep = -1, _elem = elem ;
       if(elem) for(const _e of elem) 
       {
-         let e = { ..._e }
+         iKeep++   
+         let e = { ..._e } ;
+
+         //console.log("iK",iKeep,e,elem,elem.length)
 
          let value = ""+e
          if(e.value || e.value === "") value = e.value
@@ -2173,13 +2176,23 @@ class ResourceViewer extends Component<Props,State>
          }
          else {
 
-            let keepT = false
+            let keepT = false, willK = false
 
             if(e.k) {
                if(T) lastT = T ;
                T = e.k.split(";")
                if(T.length) T = T[0]
                if(T === lastT) keepT = true
+
+               if(iKeep < _elem.length - 1) {
+                  let nxT = _elem[iKeep+1]
+                  //console.log("willK?",nxT)
+                  if(nxT && nxT.k) {
+                     nxT = nxT.k.split(";")
+                     if(nxT.length) nxT = nxT[0]
+                     if(T === nxT) willK = true
+                  }
+               }
             }
 
             elem = this.getResourceBNode(e.value)            
@@ -2278,7 +2291,7 @@ class ResourceViewer extends Component<Props,State>
                   )
                }
 
-               ret.push(<div className={div + (keepT?" keep":"")}>{sub}</div>)
+               ret.push(<div className={div + (keepT?" keep":"") +  (willK?" willK":"")}>{sub}</div>)
 
             }
             else
