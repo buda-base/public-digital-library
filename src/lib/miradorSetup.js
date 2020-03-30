@@ -845,17 +845,17 @@ export async function miradorInitView(work,lang,callerURI) {
 
             if( hasParts == true || nbVol > 1 ) {
                data = [
-                  { "collectionUri" : iiifpres+"/2.1.1/collection/wio:"+work, location:"" }
+                  { "collectionUri" : iiifpres+"/collection/wio:"+work, location:"" }
                ]
             }
             else {
                data = [
-                  { "manifestUri" : iiifpres+"/2.1.1/wv:"+work+"/manifest", location:"" }
+                  { "manifestUri" : iiifpres+"/wv:"+work+"/manifest", location:"" }
                ]
             }
          } else if(propK["imageList"] || propK[""]) {
             data = [
-               { "manifestUri" : iiifpres+"/2.1.1/v:"+work+"/manifest", location:"" }
+               { "manifestUri" : iiifpres+"/v:"+work+"/manifest", location:"" }
             ]
          } else if(propK["hasIIIFManifest"]) {
             data = [
@@ -867,7 +867,7 @@ export async function miradorInitView(work,lang,callerURI) {
             let res = checkV.filter(e => e["@id"] === work)
             if(res.length && res[0]["tmp:imageVolumeId"]) {
                data = [
-                   { "manifestUri" : iiifpres+"/2.1.1/v:"+res[0]["tmp:imageVolumeId"]["@id"]+"/manifest", location:"" }
+                   { "manifestUri" : iiifpres+"/v:"+res[0]["tmp:imageVolumeId"]["@id"]+"/manifest", location:"" }
                ]
             }
 
@@ -876,7 +876,7 @@ export async function miradorInitView(work,lang,callerURI) {
          }         
          else {
             data = [
-               { "collectionUri" : iiifpres+"/2.1.1/collection/wio:"+work, location:"" }
+               { "collectionUri" : iiifpres+"/collection/wio:"+work, location:"" }
             ]
          }
       }

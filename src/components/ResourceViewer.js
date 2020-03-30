@@ -1784,7 +1784,7 @@ class ResourceViewer extends Component<Props,State>
          }
          else if(pretty.toString().match(/^V[0-9A-Z]+_I[0-9A-Z]+$/)) { ret.push(<span>
             <Link className={"urilink "+prefix} to={"/"+show+"/"+prefix+":"+pretty}>{pretty}</Link>&nbsp;
-            {/* <Link className="goBack" target="_blank" to={"/gallery?manifest=//iiifpres.bdrc.io/2.1.1/v:bdr:"+pretty+"/manifest"}>{"(view image gallery)"}</Link> */}
+            {/* <Link className="goBack" target="_blank" to={"/gallery?manifest=//iiifpres.bdrc.io/v:bdr:"+pretty+"/manifest"}>{"(view image gallery)"}</Link> */}
          </span> ) }
          else if(pretty.toString().match(/^([A-Z]+[_0-9-]*[A-Z]*)+$/)) ret.push(<Link className={"urilink "+ prefix} to={"/"+show+"/"+prefix+":"+pretty}>{pretty}</Link>)
          else ret.push(pretty)
@@ -3724,7 +3724,7 @@ class ResourceViewer extends Component<Props,State>
                      return this.renderMap(elem, k, tags, kZprop, doMap, doRegion, regBox, title)
                   }
                   else if(k == bdo+"eTextHasPage") {
-                     return this.renderEtextHasPage(elem, kZprop, iiifpres+"/2.1.1")
+                     return this.renderEtextHasPage(elem, kZprop, iiifpres /*+"/2.1.1"*/)
                   }
                   else if(k == bdo+"eTextHasChunk" && kZprop.indexOf(bdo+"eTextHasPage") === -1) {
                      return this.renderEtextHasChunk(elem, k, tags)                     
@@ -3994,7 +3994,7 @@ class ResourceViewer extends Component<Props,State>
 
       let iiifpres = "//iiifpres.bdrc.io" ;
       if(this.props.config && this.props.config.iiifpres) iiifpres = this.props.config.iiifpres.endpoints[this.props.config.iiifpres.index]      
-      iiifpres += "/2.1.1"
+      //iiifpres += "/2.1.1"
 
       this.setManifest(kZprop,iiifpres)    
 
