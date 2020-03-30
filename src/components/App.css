@@ -259,7 +259,7 @@ h4:not(:hover) > .lang
 .resource > .index .title h2 .T::before { content:none !important; width:40px; background-size:80% auto; background-position:center; margin-right:16px;}
 .resource > .index .title h2 .RID { display:none !important; }
 
-.resource > .index h3 { /*margin-left:56px;*/ margin-top:8px; font-size:12px; letter-spacing:0.47px; display:block;}
+.resource > .index h3 { /*margin-left:56px;*/ margin-top:8px; font-size:12px; letter-spacing:0px; display:block;}
 
 .resource > .index h3 a { color:#343434; text-decoration: none; }
 
@@ -313,9 +313,9 @@ h4:not(:hover) > .lang
 .resource .data *,
 .resource .related div { font-family: "Noto Sans", "Roboto", "Helvetica", "Arial", sans-serif; }
 
-.resource .data h2 { font-size:34px; letter-spacing: 0.7px; position:relative;}
+.resource .data h2 { font-size:34px; letter-spacing: 0px; position:relative;}
 
-.resource .title h2 .T { position:relative; letter-spacing:0.5px;}
+.resource .title h2 .T { position:relative; letter-spacing:0px;}
 
 .resource .title h2 .T::before { width:50px;height:50px; content:'' ; display:inline-block; vertical-align:-22px; margin-right:35px; 
    background-size:contain;background-repeat:no-repeat;background-position:center right;
@@ -377,9 +377,8 @@ h4:not(:hover) > .lang
    vertical-align: top; font-size:15px; ;
 }
 
-/*
-.resource .data > div > h3,
-*/
+.resource .data > div > h3 { line-height:24px; }
+
 .resource .group > h4.multiple > span,
 .resource .group > h4.multiple > span .urilink, 
 .resource .group > h4:first-child:not(.first),
@@ -387,6 +386,7 @@ h4:not(:hover) > .lang
 
 /* .resource .group > h4.multiple, */
 /* .resource .group > h4.multiple > span, */
+.resource .group > h4:first-child:not(.first),
 .resource .group > h4.multiple .urilink, 
 .resource .sub > h4.label,
 .resource .sub h4.first,
@@ -435,18 +435,21 @@ h4:not(:hover) > .lang
 /* .resource .sub > h4 { line-height:22px;} */
 .resource .sub > h4.label { max-width:calc(100% - 135px); vertical-align: top; }
 
+
 .resource .data .group { display:inline-block; width:calc(100% - 190px); /*line-height:24px;*/ }
 
 .resource .data > div > .group > .sub { display:inline-block; }
 
 .resource .data > [data-prop="bdo:creator"] .subgroup .subsub:first-child,
-.resource .data > div > .group > .sub > h4.first { width: 130px;  }
+.resource .data > div > .group > .sub > h4.first { width: 170px;  }
 .resource .data > [data-prop="bdo:creator"] .subgroup .subsub:first-child { padding-right:0; margin-right:15px;}
 
-.resource .data > div > .group > .sub > .subgroup { display:inline-block; vertical-align: top; width: calc(100% - 130px - 15px); }
+.resource .data > div > .group > .sub > .subgroup { display:inline-block; vertical-align: top; width: calc(100% - 170px - 15px); }
+
+.resource .sub > h4.label:not(:first-of-type) { max-width:calc(100% - 170px - 15px); }
 
 
-.resource .data > div .sub > .subgroup > .subsub > h4.first { width:130px; }
+.resource .data > div .sub > .subgroup > .subsub > h4.first { width:150px; }
 
 .resource .data > [data-prop="bdo:creator"] .subgroup > .subsub { display:inline-block; }
 
@@ -478,16 +481,17 @@ h4:not(:hover) > .lang
 
 
 /*
-
 TODO 
-- props/sous-props cf WorkW-01 (sous-props/titre en 14 et letterspacing à (-)0.3)
++ props/sous-props cf WorkW-01 (sous-props/titre en 14 et letterspacing à (-)0.3)
++ alignements vers le haut des titre (WA4CZ15645/canonical+P1583/initiatory)
++ see more en 2 colonne à droite à la place dernier element
++ related <Works>
++ aligner "see more" 2è colonnes sur val au dessus
 - meme taille bloc meta/extended/related/header
 - icones
-- related <Works>
 - author/creator > main info
 - ouvrir onglets work quand pas ambiguité 
-- alignements vers le haut des titre (WA4CZ15645/canonical+P1583/initiatory)
-- see more en 2 colonne à droite à la place dernier element
+- fix manifest bdr:W2CZ8081
 */
 
 
@@ -916,11 +920,16 @@ a.download:hover { text-decoration:underline; }
 
 .propCollapseHeader { width:calc(100% - 190px); display:inline-block;vertical-align:top;padding-top:0px;/*line-height:24px;*/ column-count:2;  column-gap: 30px;}
 
+.propCollapseHeader .expand { margin:0 0 0 0  !important; top:-2px;bottom:initial;}
+
 h3 + .group h4.multiple,
 h3 + h4.multiple,
-h3 + .propCollapseHeader,
 h3 + .sub 
 { margin-top:0px; }
+
+
+h3 + .propCollapseHeader 
+{ margin-top:2px; padding-right:28px; box-sizing: border-box; }
 
 h4.multiple { margin-bottom:10px; vertical-align: top;}
 

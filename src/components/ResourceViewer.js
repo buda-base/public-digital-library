@@ -3313,12 +3313,14 @@ class ResourceViewer extends Component<Props,State>
       if(!ret || ret.length === 0) ret = tags.reduce((acc,e)=> [...acc, e /*," "*/], [] )
 
       let expand
-      let maxDisplay = 10
+      let maxDisplay = 9
       if(hasMaxDisplay) maxDisplay = hasMaxDisplay ;
 
       let n = 0
       if(elem && elem.filter) n = elem.filter(t=>t && (t.type === "uri" || t.type === "literal")).length
       ret = this.insertPreprop(k, n, ret)
+
+      //console.log("genP",elem,k,maxDisplay,n)
 
       if(!isSub && n > maxDisplay) {      
          /* CSS columns won't balance evenly
@@ -3333,6 +3335,15 @@ class ResourceViewer extends Component<Props,State>
                <h3><span>{this.proplink(k)}:</span></h3>
                <div className={"propCollapseHeader in-"+(this.state.collapse[k]===true)}>
                   {ret.slice(0,maxDisplay)}
+                  { (false || (!this.state.collapse[k] && hasMaxDisplay !== -1) ) && <span
+                     onClick={(e) => this.setState({...this.state,collapse:{...this.state.collapse,[k]:!this.state.collapse[k]}})}
+                     className="expand">
+                        {(this.state.collapse[k]?"hide":"see more")}&nbsp;<span
+                        className="toggle-expand">
+                           { this.state.collapse[k] && <ExpandLess/>}
+                           { !this.state.collapse[k] && <ExpandMore/>}
+                     </span>
+                  </span> }
                </div> 
                <Collapse timeout={{enter:0,exit:0}} className={"propCollapse in-"+(this.state.collapse[k]===true)} in={this.state.collapse[k]}>
                   {ret}
@@ -3346,7 +3357,7 @@ class ResourceViewer extends Component<Props,State>
                   {ret.slice(i1,i1+nb1)}
                   {ret.slice(i2,n)}
                </Collapse> */}
-               { <span
+               { (this.state.collapse[k] || hasMaxDisplay === -1) && <span
                onClick={(e) => this.setState({...this.state,collapse:{...this.state.collapse,[k]:!this.state.collapse[k]}})}
                className="expand">
                   {(this.state.collapse[k]?"hide":"see more")}&nbsp;<span
@@ -3363,8 +3374,8 @@ class ResourceViewer extends Component<Props,State>
             <div  data-prop={shortUri(k)} {...(k===bdo+"note"?{class:"has-collapse custom"}:{})}>               
                <h3><span>{this.proplink(k)}:</span>&nbsp;</h3>
                {this.preprop(k,0,n)}
-               <div class="group">
-               {ret}
+               <div className={k === bdo+"personTeacherOf" || k === bdo + "personStudentOf" ? "propCollapseHeader in-false":"group"}>
+               {ret}               
                </div>
             </div>
          )
@@ -4110,7 +4121,7 @@ class ResourceViewer extends Component<Props,State>
          return (<div>
             { tag === "Images" && <h3><Link to={view} >Open in Viewer</Link></h3> }
             <h3><Link to={url+"#main-info"} >Main Information</Link></h3>
-            { tag === "Work" && <h3><Link to={url+"#resources"} >Related Resources</Link></h3> }
+            { tag === "Work" && <h3><Link to={url+"#resources"} >Related Works</Link></h3> }
              <h3><Link to={url+"#ext-info"} >Extended Information</Link></h3> 
          </div>)
       }
@@ -4146,7 +4157,7 @@ class ResourceViewer extends Component<Props,State>
                   { related && related.length > 0 &&  
                      <div class="data related" id="resources">
                         <div>
-                           <div><h2>Related Resources</h2><Link to={"/search?t=Work&r="+this.props.IRI}>{"see all"}</Link></div>
+                           <div><h2>Related Works</h2><Link to={"/search?t=Work&r="+this.props.IRI}>{"see all"}</Link></div>
                            <div>{ related }</div>
                         </div>
                      </div> 
