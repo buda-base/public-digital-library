@@ -576,7 +576,7 @@ export function top_left_menu(that,pdfLink,monoVol,fairUse)
                 <IconButton title={I18n.t("resource.download")+" PDF/ZIP"} onClick={ev =>
                       {
                          //if(that.props.createPdf) return ;
-                          if((monoVol.match && monoVol.match(/[^0-9]/)) || monoVol > 0){
+                          if((monoVol && monoVol.match && monoVol.match(/[^0-9]/)) || monoVol > 0){
                             that.props.onInitPdf({iri:that.props.IRI,vol:monoVol},pdfLink)
                           }
                           else if(!that.props.pdfVolumes) {
