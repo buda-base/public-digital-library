@@ -400,28 +400,6 @@ propOrder["Volume"] = propOrder["Work"]
 propOrder["Instance"] = propOrder["Work"]
 propOrder["Images"] = propOrder["Work"]
 
-let extProperties = {
-   "Work": [
-      bdo+"contentMethod",
-      bdo+"material",
-      bdo+"workMaterial",
-      bdo+"workPagination",
-      bdo+"workExtentStatement",
-      tmp+"entityScore",
-      bdo+"authorshipStatement",
-      bdo+"editionStatement",
-      bdo+"itemBDRCHoldingStatement",
-   ],
-   "Person": [
-      tmp+"entityScore"
-   ],
-   "Place": [
-      tmp+"entityScore"
-   ]
-}
-extProperties["Volume"] = extProperties["Work"]
-extProperties["Instance"] = extProperties["Work"]
-extProperties["Images"] = extProperties["Work"]
 
 const topProperties = {
    "Person": [ 
@@ -451,6 +429,8 @@ const topProperties = {
       skos+"altLabel", 
       bdo+"contentLocation",
       bdo+"instanceEvent",
+      bdo+"publisherName",
+      bdo+"publisherLocation",
       bdo+"instanceOf",
       bdo+"instanceHasReproduction",
    ],
@@ -471,6 +451,29 @@ const topProperties = {
    ]
 }
                        
+let extProperties = {
+   "Work": [
+      bdo+"contentMethod",
+      bdo+"material",
+      bdo+"workMaterial",
+      bdo+"workPagination",
+      bdo+"workExtentStatement",
+      tmp+"entityScore",
+      bdo+"authorshipStatement",
+      bdo+"editionStatement",
+      bdo+"itemBDRCHoldingStatement",
+   ],
+   "Person": [
+      tmp+"entityScore"
+   ],
+   "Place": [
+      tmp+"entityScore"
+   ]
+}
+extProperties["Volume"] = extProperties["Work"]
+extProperties["Instance"] = extProperties["Work"]
+extProperties["Images"] = extProperties["Work"]
+
 
 const canoLang = ["Bo","Pi","Sa","Zh"]
 
@@ -521,6 +524,8 @@ export function top_left_menu(that,pdfLink,monoVol,fairUse)
              <span>Permalink</span>
           </a>
        </CopyToClipboard> }
+
+      <span id="rid">{shortUri(that.props.IRI)}</span>
 
        {/* <Link style={{fontSize:"20px"}} className="goBack" to="/" onClick={(e) => that.props.onResetSearch()} //that.props.keyword&&!that.props.keyword.match(/^bdr:/)?"/search?q="+that.props.keyword+"&lg="+that.props.language+(that.props.datatype?"&t="+that.props.datatype:""):"/"
        >
@@ -761,7 +766,7 @@ class ResourceViewer extends Component<Props,State>
 
          let _T = getEntiType(props.IRI)
 
-         //console.log("title!",_T,work,instance,images)
+         console.log("title!",_T,work,instance,images)
 
          if(_T === "Images") {            
             if(!s) s = { ...state }
@@ -788,14 +793,29 @@ class ResourceViewer extends Component<Props,State>
                if(!s) s = { ...state }
                s.title = { work:[ { type:"uri", value:fullUri(props.IRI) } ] }   
                let has = getElem(bdo+"workHasInstance",props.IRI)
-               //console.log("has!",has)
                
+               console.log("has!",has)
+
+
+               // take a guess using ids [TODO add instance type to query]
+               if(has.length == 2) {
+                  let inst = has.filter(h => h.value.match(new RegExp("^"+bdr+"MW[^/]+$")))
+                  let ima = has.filter(h => h.value.match(new RegExp("^"+bdr+"W[^/]+$")))
+                  if(inst.length === 1 && ima.length === 1) {
+                     s.title.instance = [ { type: "uri", value: inst[0].value } ] 
+                     s.title.images = [ { type: "uri", value: ima[0].value } ]
+                  }
+               }
+               
+
+               /* //doesn't work because instances not loaded yet...
                if(has && !instance && (instance=has.filter(e => props.resources[shortUri(e.value)])).length) { 
                   s.title.instance = instance                            
                   images = getElem(bdo+"instanceHasReproduction",shortUri(instance[0].value))
-                  //console.log("has!i",instance[0].value,images)
+                  console.log("has!i",instance[0].value,images)
                   if(images) s.title.images = images.filter(e => getEntiType(e.value) === "Images")
                }
+               */
             }
          }
          else {
@@ -3866,7 +3886,7 @@ class ResourceViewer extends Component<Props,State>
 
       if(!this.props.manifestError &&  this.props.imageAsset)
          return  ( 
-         <div class="data">
+         <div class="data" id="first-image">
             <div className={"firstImage "+(this.state.imageLoaded?"loaded":"")} {...(this.props.config.hideViewers?{"onClick":this.showMirador.bind(this),"style":{cursor:"pointer"}}:{})} >
                <Loader className="uvLoader" loaded={this.state.imageLoaded} color="#fff"/>
                { this.props.firstImage && <img src={this.props.firstImage} /*src={`data:image/${this.props.firstImage.match(/png$/)?'png':'jpeg'};base64,${this.props.imgData}`}*/  onLoad={(e)=>this.setState({...this.state,imageLoaded:true})}/> }
@@ -3903,7 +3923,7 @@ class ResourceViewer extends Component<Props,State>
       else if(kZprop.length)
          return <div class="data" id="map">{this.renderData(kZprop,null,null,null,"header")}</div>
       else 
-         return <div class="data"><div class={"header "+(!this.state.ready?"loading":"")}>{ !this.state.ready && <Loader loaded={false} /> }</div></div>
+         return <div class="data" id="head"><div class={"header "+(!this.state.ready?"loading":"")}>{ !this.state.ready && <Loader loaded={false} /> }</div></div>
    }
 
    renderNoAccess = (fairUse) => {
@@ -4152,7 +4172,7 @@ class ResourceViewer extends Component<Props,State>
                   { this.renderHeader(kZprop.filter(k => mapProps.includes(k))) }
                   { this.renderMirador() }           
                   { theDataTop }
-                  <div class="data">{ top_left_menu(this,pdfLink,monoVol,fairUse)  }</div>
+                  <div class="data" id="perma">{ top_left_menu(this,pdfLink,monoVol,fairUse)  }</div>
                   { theDataBot }
                   { related && related.length > 0 &&  
                      <div class="data related" id="resources">

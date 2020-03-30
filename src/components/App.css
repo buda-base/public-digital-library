@@ -77,14 +77,6 @@ body { overflow:auto !important;padding-right:0 !important; font-family:"Roboto"
 #login { top:0;right:0;z-index:1; display:inline-block; }
 #login button {color:rgba(0,0,0,0.54); }
 
-/* #top-left { position:absolute; top:calc(100% + 40px);right:40px; } */
-#top-left { position:relative; background:#efefef; display:flex;align-items: center; justify-content:space-between; margin-bottom:20px;height:85px;
-   padding:23px 31px; box-sizing: border-box;}
-#top-left button {color:rgba(0,0,0,0.54); }
-#top-left #permalink { color:white; background-color: #d73449; border-radius:5px;display:flex;align-items: center;justify-content: center; height:40px;
-   padding: 0 15px; border:none !important; font-weight:600; font-size:13px;}
-#top-left #permalink img { display:inline-block; margin-right:10px; }
-
 /* .resource .title + .data + .data .browse { display:none; } */
 
 #pagine { width:100%;display:flex;padding:20px;justify-content: space-between; box-sizing:border-box}
@@ -273,14 +265,18 @@ h4:not(:hover) > .lang
 
 /* ------------------------------------------------------------------------------------------------------------------------ header */
 
-.resource .data .header { width:100%; height:180px; background:#fce08d; display:flex;align-items:center;justify-content: center; margin-bottom:20px; }
+.resource .data#head { background-color:#ffffff; padding:30px; padding-bottom:45px;}
+
+
+.resource .data .header { width:100%; height:180px; background:#fce08d; display:flex;align-items:center;justify-content: center;  }
 .resource .data .header::before { content:' '; width:110px; height:110px; background:white;border-radius:50%; 
    background-size:65px auto;background-repeat:no-repeat; background-position: center;}
    
 .resource .data.related .header::before,
-.resource.work .data .header::before { background-image:url("/icons/work_50g.png");  }
+.resource.work .data .header::before { background-image:url("/icons/work.png");  }
 .resource.instance .data .header::before { background-image:url("/icons/instance_50g.png"); }
-.resource.images .data .header::before { background-image:url("/icons/images_50g.png"); }
+.resource.images .data .header::before { background-image:url("/icons/image.svg"); }
+.resource.person .data .header::before { background-image:url("/icons/person.png");  }
 
 .resource .data .header.loading::before { background-image:none !important; }
 
@@ -347,6 +343,24 @@ h4:not(:hover) > .lang
    white-space: nowrap;
 }
 
+/* ------------------------------------------------------------------------------------------------------------------------ permalink */
+
+.resource .data#perma { background-color:#ffffff; padding:30px; padding-top:0;}
+
+
+/* #top-left { position:absolute; top:calc(100% + 40px);right:40px; } */
+#top-left { position:relative; background:#efefef; display:flex;align-items: center; justify-content:flex-start; margin-bottom:20px;height:85px;
+   padding:25px 45px; box-sizing: border-box;}
+#top-left button {color:rgba(0,0,0,0.54); }
+#top-left #permalink { color:white; background-color: #d73449; border-radius:5px;display:flex;align-items: center;justify-content: center; height:40px;
+   padding: 0 15px; border:none !important; font-weight:600; font-size:13px; cursor:pointer;}
+#top-left #permalink img { display:inline-block; margin-right:10px; }
+
+#perma #rid { font-size:13px;font-weight:600;display:inline-block;color:#343434; margin-left:32px; padding-right:8px; 
+   border-right:1px solid rgba(0,0,0,0.35);}
+
+/* #perma #rid + * { display:none;} */
+
 /* ------------------------------------------------------------------------------------------------------------------------ properties/misc */
 
 .resource .data.access { text-align:center; }
@@ -379,7 +393,7 @@ h4:not(:hover) > .lang
 
 .resource .data > div > h3 { line-height:24px; }
 
-.resource .group > h4.multiple > span,
+.resource .group > h4.multiple > span:not(.lang),
 .resource .group > h4.multiple > span .urilink, 
 .resource .group > h4:first-child:not(.first),
 .resource .group > h4:first-child:not(.first) .ulink { vertical-align: top;}
@@ -487,11 +501,11 @@ TODO
 + see more en 2 colonne à droite à la place dernier element
 + related <Works>
 + aligner "see more" 2è colonnes sur val au dessus
-- meme taille bloc meta/extended/related/header
-- icones
-- author/creator > main info
++ fix manifest bdr:W2CZ8081
++ meme taille bloc meta/extended/related/header
+= icones (instance ?)
 - ouvrir onglets work quand pas ambiguité 
-- fix manifest bdr:W2CZ8081
+- author/creator > main info
 */
 
 
@@ -661,8 +675,9 @@ TODO
 /* ------------------------------------------------------------------------------------------------------------------------ extended properties */
 
 .resource .data.ext-props { background-color:#ffffff; padding:30px; padding-bottom:0;}
+
 .resource .data.ext-props:last-child { padding-bottom:45px; }
-.resource .data.ext-props > div { background-color:#f0f0f0;padding:5px 40px; position:relative;}
+.resource .data.ext-props > div { background-color:#f0f0f0;padding:5px 45px; position:relative;}
 .resource .data.ext-props:last-child > div:last-child { padding-bottom:80px; }
 .resource .data.ext-props + .data.ext-props { padding-top:0; }
 .resource .data.bot-props + .data.ext-props > div::after { content:none !important;}
@@ -690,6 +705,7 @@ TODO
 .resource .data#map .header h3,
 .resource .data#map .header h4,
 .resource .data#map .header::before { display:none; }
+
 
 .resource .data#map .header { position:relative; padding:40px; height:auto; width:calc(100% - 80px); }
 
@@ -1140,7 +1156,7 @@ body {overflow-x:hidden; }
 .SidePane > #annoCollec svg.score1 { border-radius:50%; background-color:rgba(17, 173, 17, 0.3);border:1px solid rgba(36, 106, 36, 0.4);}
 
 .SidePane { position:absolute;transition:left 400ms ease-in-out,right 400ms ease-in-out; background:white;height:calc(100vh - 40px); position:fixed;padding:20px;
-   background:rgba(246,246,246,0.935); z-index:1001; top:0; }
+   background:rgba(246,246,246,0.935); z-index:10001; top:0; }
 .SidePane.left {  box-shadow:2px 0 2px 0px rgba(0,0,0,0.35); } 
 .visible .SidePane.left { overflow-y:auto;}
 .SidePane.right { right:-500px; box-shadow:-2px 0 2px 0px rgba(0,0,0,0.35);}
@@ -1298,6 +1314,8 @@ svg.hide { opacity:0;pointer-events:none; }
    z-index:11;
 }
 .uv.hidden,.uv.hide { display:none !important;}
+
+.data#first-image { padding-left:30px;padding-right:30px;}
 
 .firstImage { /*box-shadow: 0 0 10px black;display:inline-block;*/padding:5px;background:rgba(0,0,0,1.0);position:relative; min-width:360px;min-height:100px;text-align:center; 
    margin-top:5px; width:100%;height:500px; display: flex; justify-content: center; align-items: center; box-sizing: border-box; margin-bottom:20px;}
