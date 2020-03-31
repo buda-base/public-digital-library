@@ -704,6 +704,8 @@ TODO
 
 /* ------------------------------------------------------------------------------------------------------------------------ map */
 
+.resource .data#map { padding-left:30px;padding-right:30px;padding-bottom:45px;}
+
 .resource .data#map .header > div:not(:last-child),
 .resource .data#map .header h3,
 .resource .data#map .header h4,

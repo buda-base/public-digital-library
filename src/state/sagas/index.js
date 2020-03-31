@@ -746,11 +746,15 @@ async function requestPdf(url,iri) {
 
       let data = JSON.parse(await api.getURLContents(url,false,"application/json"))
 
-      data = _.sortBy(Object.keys(data).map(e => ({...data[e],volume:Number(data[e].volume),id:e})),["volume"])
+      if(data.links && typeof data.links === "string") {
+         data = {[iri]:{volume:1,link:data.links}}
+      }
 
-      //console.log("pdf",url,iri,data,data[0])
+      let _data = _.sortBy(Object.keys(data).map(e => ({...data[e],volume:Number(data[e].volume),id:e})),["volume"])
 
-      store.dispatch(dataActions.pdfVolumes(iri,data))
+      console.log("pdf",url,iri,data,_data)
+
+      store.dispatch(dataActions.pdfVolumes(iri,_data))
 
 
 

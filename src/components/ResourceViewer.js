@@ -796,9 +796,8 @@ class ResourceViewer extends Component<Props,State>
                
                console.log("has!",has)
 
-
                // take a guess using ids [TODO add instance type to query]
-               if(has.length == 2) {
+               if(has && has.length == 2) {
                   let inst = has.filter(h => h.value.match(new RegExp("^"+bdr+"MW[^/]+$")))
                   let ima = has.filter(h => h.value.match(new RegExp("^"+bdr+"W[^/]+$")))
                   if(inst.length === 1 && ima.length === 1) {
