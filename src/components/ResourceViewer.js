@@ -3067,7 +3067,14 @@ class ResourceViewer extends Component<Props,State>
       {
          let elem = [{value:this.props.IRI}] 
          let nbVol = this.getResourceElem(bdo+"itemVolumes")
+         if(!nbVol) { 
+            nbVol = this.getResourceElem(bdo+"instanceHasVolume")
+            if(nbVol && nbVol.length) nbVol = [{value:nbVol.length}]
+         }
          let work = this.getResourceElem(bdo+"instanceReproductionOf")
+
+         console.log("isReprOf?",elem,nbVol,work)
+
          if(elem[0] && elem[0].value && !this.props.imageAsset && !this.props.manifestError) {
             this.setState({...this.state, imageLoaded:false})
             let manif = iiifpres + "/wv:"+elem[0].value.replace(new RegExp(bdr),"bdr:")+"/manifest"
