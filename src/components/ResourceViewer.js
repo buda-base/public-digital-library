@@ -609,7 +609,7 @@ export function top_left_menu(that,pdfLink,monoVol,fairUse)
                                let Zloaded = e.zipFile && e.zipFile != true
 
                                return (<ListItem className="pdfMenu">
-                                     <b>{(e.volume !== undefined?(e.volume.match(/^[0-9]+$/)?"Volume ":"")+(e.volume):monoVol)}:</b>
+                                     <b>{(e.volume !== undefined?(e.volume.match && e.volume.match(/^[0-9]+$/)?"Volume ":"")+(e.volume):monoVol)}:</b>
                                      &nbsp;&nbsp;
                                      <a onClick={ev => that.handlePdfClick(ev,e.link,e.pdfFile)}
                                         {...(Ploaded ?{href:e.pdfFile}:{})}
