@@ -755,7 +755,7 @@ class ResourceViewer extends Component<Props,State>
       
       if(state.tabs && state.tabs.length) s = ResourceViewer.setTitleFromTabs(props,state) ;
 
-      if(props.resources) {
+      if(props.resources && props.resources[props.IRI]) {
 
          let 
             work = getElem(bdo+"instanceOf",props.IRI),
@@ -797,12 +797,15 @@ class ResourceViewer extends Component<Props,State>
                console.log("has!",has)
 
                // take a guess using ids [TODO add instance type to query]
-               if(has && has.length == 2) {
+               if(has && has.length <= 2) {
                   let inst = has.filter(h => h.value.match(new RegExp("^"+bdr+"MW[^/]+$")))
                   let ima = has.filter(h => h.value.match(new RegExp("^"+bdr+"W[^/]+$")))
-                  if(inst.length === 1 && ima.length === 1) {
+                  if(has.length == 2 && inst.length === 1 && ima.length === 1) {
                      s.title.instance = [ { type: "uri", value: inst[0].value } ] 
                      s.title.images = [ { type: "uri", value: ima[0].value } ]
+                  }
+                  else if(has.length == 1 && inst.length === 1) {
+                     s.title.instance = [ { type: "uri", value: inst[0].value } ] 
                   }
                }
                
@@ -822,7 +825,7 @@ class ResourceViewer extends Component<Props,State>
             s.title = { work:[ { type:"uri", value:fullUri(props.IRI) } ] }
          }
 
-         //console.log("title?",JSON.stringify(state.title,null,3),JSON.stringify(s?s.title:state.title,null,3),props.IRI,_T)
+         console.log("title?",JSON.stringify(state.title,null,3),JSON.stringify(s?s.title:state.title,null,3),props.IRI,_T)
       }
 
       if(props.IRI && props.resources && props.resources[props.IRI]) {
@@ -4192,10 +4195,10 @@ class ResourceViewer extends Component<Props,State>
                   { this.renderAnnoPanel() }
                   { this.renderWithdrawn() }             
                   <div class="title">{ wTitle }{ iTitle }{ rTitle }</div>
+                  { this.renderHeader(kZprop.filter(k => mapProps.includes(k))) }
                   <div class="data">{title}</div>
                   { this.renderNoAccess(fairUse) }
                   { this.renderAccess() }
-                  { this.renderHeader(kZprop.filter(k => mapProps.includes(k))) }
                   { this.renderMirador() }           
                   { theDataTop }
                   <div class="data" id="perma">{ top_left_menu(this,pdfLink,monoVol,fairUse)  }</div>
