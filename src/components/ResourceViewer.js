@@ -609,7 +609,7 @@ export function top_left_menu(that,pdfLink,monoVol,fairUse)
                                let Zloaded = e.zipFile && e.zipFile != true
 
                                return (<ListItem className="pdfMenu">
-                                     <b>{(e.volume?"Volume "+e.volume:monoVol)}:</b>
+                                     <b>{(e.volume !== undefined?"Volume "+(e.volume):monoVol)}:</b>
                                      &nbsp;&nbsp;
                                      <a onClick={ev => that.handlePdfClick(ev,e.link,e.pdfFile)}
                                         {...(Ploaded ?{href:e.pdfFile}:{})}
@@ -3162,16 +3162,29 @@ class ResourceViewer extends Component<Props,State>
                }
             }
          }
+         else if(this.props.imageAsset.match(/[/]wio:/)) {
+
+            let elem = this.getResourceElem(bdo+"itemVolumes")
+
+            console.log("itVol?",elem)
+
+            if(elem && elem.length > 0 && elem[0].value && elem[0].value == "1") {               
+                  monoVol = Number(elem[0].value)
+            }
+         }
 
          if(!pdfLink && this.props.manifestWpdf && this.props.manifestWpdf.rendering) {
             let link = this.props.manifestWpdf.rendering.filter(e => e.format === "application/zip")
             if(link.length) link = link[0]["@id"]
             if(link) { 
                pdfLink = link
-               monoVol = this.getWorkLocation(this.getResourceElem(bdo+"contentLocation"), false)
-               console.log("monoV",monoVol)
+               let mono  = this.getWorkLocation(this.getResourceElem(bdo+"contentLocation"), false)
+               if(mono && !monoVol) monoVol = mono
             }
          }
+
+
+         console.log("monoV",monoVol)
 
 
          /* // missing ImageItem

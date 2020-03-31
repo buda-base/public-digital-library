@@ -716,12 +716,16 @@ async function createPdf(url,iri) {
       if(config) config = config.config
       if(config) config = config.iiif
       if(config) IIIFurl = config.endpoints[config.index]
-      //console.log("IIIF",IIIFurl)
-      let data = JSON.parse(await api.getURLContents(IIIFurl+url,false,"application/json"))
+      console.log("IIIFu",IIIFurl,config)
+      let links = iri.links
+      if(!links) {
+         let data = JSON.parse(await api.getURLContents(IIIFurl+url,false,"application/json"))
+         console.log("pdf",data)
+         links = data.links
+      }
+      store.dispatch(dataActions.pdfReady(IIIFurl+links,{url,iri:iri.iri}))
 
-      console.log("pdf",data)
 
-      store.dispatch(dataActions.pdfReady(IIIFurl+data.links,{url,iri:iri.iri}))
 
       //window.open(IIIFurl+data.links,"pdf");
 
@@ -746,15 +750,27 @@ async function requestPdf(url,iri) {
 
       let data = JSON.parse(await api.getURLContents(url,false,"application/json"))
 
-      if(data.links && typeof data.links === "string") {
-         data = {[iri]:{volume:1,link:data.links}}
+      console.log("pdf",url,iri,data) //,_data)
+
+      /* // deprecated - better use original "monoVol" code
+
+      if(data.links && typeof data.links === "string") { // download is ready
+               
+         let file = url.replace(/^.*?[/](zip|pdf)[/].*$/g,"$1")
+         store.dispatch(dataActions.pdfVolumes(iri,[{iri,volume:0,link:url}]))
+         setTimeout(() => store.dispatch(dataActions.createPdf(url.replace(/^(https?:)?[/]+[^/]+/,""),{iri,file,links:data.links})), 150)
       }
+      else {
+         */
+         
+         data = _.sortBy(Object.keys(data).map(e => ({...data[e],volume:Number(data[e].volume)+1,id:e})),["volume"])
+         store.dispatch(dataActions.pdfVolumes(iri,data))
 
-      let _data = _.sortBy(Object.keys(data).map(e => ({...data[e],volume:Number(data[e].volume),id:e})),["volume"])
+         /*
+      }
+         */
 
-      console.log("pdf",url,iri,data,_data)
 
-      store.dispatch(dataActions.pdfVolumes(iri,_data))
 
 
 

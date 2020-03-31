@@ -981,6 +981,7 @@ export const createPdf = (state: DataState, action: Action) => {
 reducers[actions.TYPES.createPdf] = createPdf;
 
 export const initPdf = (state: DataState, action: Action) => {
+
    return {
          ...state,
          IIIFinfo : {
