@@ -609,7 +609,7 @@ export function top_left_menu(that,pdfLink,monoVol,fairUse)
                                let Zloaded = e.zipFile && e.zipFile != true
 
                                return (<ListItem className="pdfMenu">
-                                     <b>{(e.volume !== undefined?"Volume "+(e.volume):monoVol)}:</b>
+                                     <b>{(e.volume !== undefined?(e.volume.match(/^[0-9]+$/)?"Volume ":"")+(e.volume):monoVol)}:</b>
                                      &nbsp;&nbsp;
                                      <a onClick={ev => that.handlePdfClick(ev,e.link,e.pdfFile)}
                                         {...(Ploaded ?{href:e.pdfFile}:{})}
@@ -3166,7 +3166,7 @@ class ResourceViewer extends Component<Props,State>
 
             let elem = this.getResourceElem(bdo+"itemVolumes")
 
-            console.log("itVol?",elem)
+            //console.log("itVol?",elem)
 
             if(elem && elem.length > 0 && elem[0].value && elem[0].value == "1") {               
                   monoVol = Number(elem[0].value)
@@ -3179,12 +3179,13 @@ class ResourceViewer extends Component<Props,State>
             if(link) { 
                pdfLink = link
                let mono  = this.getWorkLocation(this.getResourceElem(bdo+"contentLocation"), false)
-               if(mono && !monoVol) monoVol = mono
+               //console.log("mono?",mono)
+               if(mono && monoVol === -1) monoVol = mono
             }
          }
 
 
-         console.log("monoV",monoVol)
+         //console.log("monoV",monoVol)
 
 
          /* // missing ImageItem
@@ -3241,7 +3242,7 @@ class ResourceViewer extends Component<Props,State>
          elem = this.getResourceBNode(elem[0].value)
          let str = ""
          
-         //console.log("loca",elem)
+         console.log("loca",elem)
 
          if(!elem) return [<h4><Link to={"/show/"+shortUri(_elem[0].value)}>{shortUri(_elem[0].value)}</Link></h4>]
 
