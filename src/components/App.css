@@ -382,7 +382,7 @@ h4:not(:hover) > .lang
 
 /* ------------------------------------------------------------------------------------------------------------------------ properties/misc */
 
-.resource .data.access { text-align:center; }
+.resource .data.access { text-align:center; padding-bottom:80px;}
 
 .resource .data.top-props .has-collapse:not(.custom):last-child { margin-bottom:-25px; }
 
@@ -414,7 +414,10 @@ h4:not(:hover) > .lang
 
 .resource .data > div > h3 { line-height:24px; }
 
-.resource .group > h4.multiple > span:not(.lang),
+
+.resource .group > h4.multiple > .in { vertical-align: middle; }
+
+.resource .group > h4.multiple > span:not(.lang):not(.in),
 .resource .group > h4.multiple > span .urilink, 
 .resource .group > h4:first-child:not(.first),
 .resource .group > h4:first-child:not(.first) .ulink { vertical-align: top;}

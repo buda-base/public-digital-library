@@ -1627,9 +1627,10 @@ class ResourceViewer extends Component<Props,State>
          
          if(dico) {
             infoBase = dico[elem.value]
+            if(infoBase) infoBase = infoBase.filter(e => [bdo+"volumeNumber",skos+"prefLabel",skos+"altLabel",foaf+"name","literal"].reduce( (acc,f) => (acc || f === e.type || f === e.fromKey), false))
          }
 
-         if(!infoBase)  {
+         if(!infoBase || !infoBase.length)  {
             if(this.props.dictionary) infoBase = this.props.dictionary[elem.value]
             //console.log("ib",infoBase,dico)
             if(infoBase) infoBase = infoBase[skos+"prefLabel"]
@@ -1659,7 +1660,7 @@ class ResourceViewer extends Component<Props,State>
          
          //console.log("s",prop,prefix,sameAsPrefix,pretty,elem,info,infoBase)
          
-         if((info && infoBase && infoBase.filter(e=>e["xml:lang"]||e["lang"]).length >= 0) || prop.match(/[/#]sameAs/)) {
+         if((info && infoBase && infoBase.filter(e=>e["xml:lang"]||e["lang"]).length >= 0) || (prop && prop.match && prop.match(/[/#]sameAs/))) {
 
 
             let link,orec,canUrl;
@@ -1808,7 +1809,7 @@ class ResourceViewer extends Component<Props,State>
             <Link className={"urilink "+prefix} to={"/"+show+"/"+prefix+":"+pretty}>{pretty}</Link>&nbsp;
             {/* <Link className="goBack" target="_blank" to={"/gallery?manifest=//iiifpres.bdrc.io/v:bdr:"+pretty+"/manifest"}>{"(view image gallery)"}</Link> */}
          </span> ) }
-         else if(pretty.toString().match(/^([A-Z]+[_0-9-]*[A-Z]*)+$/)) ret.push(<Link className={"urilink "+ prefix} to={"/"+show+"/"+prefix+":"+pretty}>{pretty}</Link>)
+         else if(pretty.toString().match(/^([A-Z]+[_0-9-]*[A-Z]*)+$/)) ret.push(<Link className={"urilink "+ prefix} to={"/"+show+"/"+prefix+":"+pretty}>{prefix+":"+pretty}</Link>)
          else ret.push(pretty)
 
          return ret
@@ -2099,7 +2100,7 @@ class ResourceViewer extends Component<Props,State>
 
                let root = this.props.assocResources[e.value] //this.uriformat(_tmp+"inRootInstance",e)
                if(root) root = root.filter(e => e.type == bdo+"inRootInstance")
-               if(root && root.length > 0) tmp = [tmp," in ",this.uriformat(bdo+"inRootInstance",root[0])]
+               if(root && root.length > 0) tmp = [tmp,<span class="in"> in </span>,this.uriformat(bdo+"inRootInstance",root[0])]
 
                //console.log("root",root)
             }
@@ -4199,7 +4200,7 @@ class ResourceViewer extends Component<Props,State>
                </div>
                <div>
                   { top_right_menu(this) }               
-                  { this.renderAnnoPanel() }
+                  {/* { this.renderAnnoPanel() } */}
                   { this.renderWithdrawn() }             
                   <div class="title">{ wTitle }{ iTitle }{ rTitle }</div>
                   { this.renderHeader(kZprop.filter(k => mapProps.includes(k))) }
