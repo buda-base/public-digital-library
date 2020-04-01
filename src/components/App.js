@@ -2654,10 +2654,12 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                })
             }
 
+            { this.getResultProp(tmp+"by",allProps,false,true,[tmp+"author"]) }
+
             { this.getResultProp(tmp+"nameMatch",allProps,"es",false) } {/* //,true,false) } */}
 
-            { this.getResultProp(tmp+"relationType",allProps) } {/* //,true,false) } */}
-            { this.getResultProp(tmp+"InverseRelationType",allProps,true,true,[tmp+"relationTypeInv"]) }
+            {/* { this.getResultProp(tmp+"relationType",allProps) }  */}
+            {/* { this.getResultProp(tmp+"InverseRelationType",allProps,true,true,[tmp+"relationTypeInv"]) } */}
             
             {/* { this.getResultProp(tmp+"numberOfMatchingChunks",allProps,true,false,[tmp+"nbChunks"]) } */}
             {/* { this.getResultProp(tmp+"maxScore",allProps,true,false) } */}
@@ -2666,7 +2668,6 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             { this.getResultProp(tmp+"forWork",allProps) }            
             { this.getResultProp(bdo+"eTextIsVolume",allProps,false,false) }
 
-            { this.getResultProp(tmp+"by",allProps,false,true,[tmp+"author"]) }
             {/* { this.getResultProp(bdo+"workIsAbout",allProps,false) } */}
             {/* { this.getResultProp(bdo+"workGenre",allProps) } */}
             { this.getResultProp(bdo+"language",allProps) }
@@ -2895,7 +2896,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      if(sameAs) sameAs = Object.keys(sameAs).filter(k => k === adm+"canonicalHtml" || k === owl+"sameAs").reduce( (acc,k) => ([...acc, ...sameAs[k].map( s => ({ ...s, type:k }))]),[])
                      //console.log("res sameAs", sameAs)
                      if(!this.props.isInstance) {
-                        message.push(<h4 key="keyResource" style={{marginLeft:"16px"}}>{"Resource Id Matching"}</h4>)
+                        message.push(<h4 key="keyResource">{"Resource Id Matching"}</h4>)
                         message.push(this.makeResult(this.props.keyword,1,null,l.value,l.lang,null,null,null,[],null,sameAs)) //[{"type":owl+"sameAs","value":this.props.keyword}]))
                      }
                   }
@@ -4452,7 +4453,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
                   <div id="pagine">
                      <div>
-                           page { pageLinks } <span id="nb">{this.state.results[this.state.id].resLength} Results</span>
+                           page { pageLinks } <span id="nb">{this.state.results[this.state.id]?this.state.results[this.state.id].resLength:"--"} Results</span>
                      </div>
                   </div>
                </div>

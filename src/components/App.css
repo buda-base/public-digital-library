@@ -239,7 +239,7 @@ body { overflow:auto !important;padding-right:0 !important; font-family:"Roboto"
 /* ----------------------------------------------------------------------------------------------------------------------- samples/results */
 
 #results,
-#samples { width: 1100px; /*margin: auto;*/ text-align: left; z-index: 0; padding:30px;background:white; display:block;
+#samples { width: 1000px; margin-right:100px; /*margin: auto;*/ text-align: left; z-index: 0; padding:30px;background:white; display:block;
    padding-left:40px; padding-bottom:140px; max-width:100%;box-shadow: 0 2px 10px #e2e2e2; box-sizing:border-box;
 }
 #samples { padding-bottom: 40px ; width:910px;}
