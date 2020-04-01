@@ -548,6 +548,7 @@ class App extends Component<Props,State> {
       this.handleResults.bind(this);
       this.handleResOrOnto.bind(this);
       this.makeResult.bind(this);
+      this.render_filters.bind(this);
 
       let get = qs.parse(this.props.history.location.search)
 
@@ -1968,7 +1969,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             else return acc
          },{}) 
          
-         console.log("labels/prop",prop,id) //,useAux,fromProp,allProps) //,this.props.assoRes)         
+         //console.log("labels/prop",prop,id) //,useAux,fromProp,allProps) //,this.props.assoRes)         
 
          if(useAux && !findProp) { // etext
 
@@ -3707,17 +3708,15 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
    widget(title:string,txt:string,inCollapse:Component)  { 
       return (
-         [<ListItem key={1}
-            style={{display:"flex",justifyContent:"space-between",padding:"0 20px",borderBottom:"1px solid #bbb",cursor:"pointer"}}
+         [<ListItem key={1} className="widget-header"
             onClick={(e) => { this.setState({collapse:{ ...this.state.collapse, [txt]:!this.state.collapse[txt]} }); } }
             >
-            <Typography style={{fontSize:"16px",lineHeight:"30px",textTransform:"capitalize"}}>{title}</Typography>
+            <Typography  className="widget-title" >{title}</Typography>
             { this.state.collapse[txt] ? <ExpandLess /> : <ExpandMore />}
          </ListItem>,
          <Collapse key={2}
             in={this.state.collapse[txt]}
-            className={["collapse",this.state.collapse[txt]?"open":"close"].join(" ")}
-            style={{padding:"5px 0 0 20px"}} // ,marginBottom:"30px"
+            className={["collapse ",this.state.collapse[txt]?"open":"close"].join(" ")}
             >
                {inCollapse}
          </Collapse> ]
@@ -3875,6 +3874,129 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
       })
 
       return ( checkbox )
+   }
+
+   render_filters(types,counts,sortByList,reverseSort,facetWidgets) {
+      return ( <div className={"SidePane left"}>
+                  {/* <IconButton className="close" onClick={e => this.setState({...this.state,leftPane:false,closeLeftPane:true})}><Close/></IconButton> */}
+               { //this.props.datatypes && (results ? results.numResults > 0:true) &&
+                  <div style={{ /*minWidth:"335px",*/ position:"relative"}}>                     
+                     <Typography className="sidebar-title">
+                        <Translate value="Lsidebar.title" />
+                     </Typography>
+                     { /* // deprecated, now "Provider" facet
+                        this.widget(I18n.t("Lsidebar.collection.title"),"collection",
+                        ["BDRC" ,"rKTs" ].map((i) => <div key={i} style={{width:"150px",textAlign:"left"}} className="searchWidget">
+                              <FormControlLabel
+                                 control={
+                                    <Checkbox
+                                       {... i=="rKTs" ?{}:{defaultChecked:true}}
+                                       disabled={true}
+                                       className="checkbox disabled"
+                                       icon={<PanoramaFishEye/>}
+                                       checkedIcon={<CheckCircle/>}
+                                       //onChange={(event, checked) => this.handleCheck(event,i,checked)}
+                                    />
+
+                                 }
+                                 label={i}
+                              /></div> ))
+                     */}                     
+                     {  this.props.datatypes && !this.props.datatypes.hash &&
+                        <Loader loaded={false} className="datatypesLoader" style={{position:"relative"}}/>
+                     }
+                     <ListItem className="widget-header"                        
+                        onClick={(e) => {
+                           //if(!(this.props.datatypes && !this.props.datatypes.hash))
+                              this.setState({collapse:{ ...this.state.collapse, "datatype":!this.state.collapse["datatype"]} }); } }
+                        >
+                        <Typography className="widget-title">
+                           <Translate value="Lsidebar.datatypes.title"/>
+                        </Typography>
+                        { /*this.props.datatypes && this.props.datatypes.hash &&*/ !this.state.collapse["datatype"] ? <ExpandLess /> : <ExpandMore />  }
+                     </ListItem>
+                     <Collapse
+                        in={/*this.props.datatypes && this.props.datatypes.hash &&*/ !this.state.collapse["datatype"]}
+                        className={["collapse ",  !(this.props.datatypes && !this.props.datatypes.hash)&&!this.state.collapse["datatype"]?"open":"close"].join(" ")}
+                        >
+                        <div>
+                        { //facetList&&facetList.length > 0?facetList.sort((a,b) => { return a.props.label < b.props.label } ):
+                              types.map((i) => {
+
+                                 if(i==="Any") return
+
+                                 //console.log("counts",i,counts,counts["datatype"][i],this.state.filters.datatype.indexOf(i))
+
+                              let disabled = (!["Work","Person", "Place","Topic","Corporation","Role","Lineage","Etext"].includes(i)) // false // (!this.props.keyword && ["Any","Etext","Person","Work"].indexOf(i)===-1 && this.props.language  != "")
+                           // || (this.props.language == "")
+
+                              let count = counts["datatype"][i]
+                              if(typeof count === "string") count = "~"+count
+
+                              return (
+                                 <div key={i} style={{textAlign:"left"}}  className="searchWidget">
+                                    <FormControlLabel
+                                       control={
+                                          <Checkbox
+                                             className={"checkbox "+(disabled?"disabled":"")}
+                                             disabled={disabled}
+                                             //{...i=="Any"?{defaultChecked:true}:{}}
+                                             color="black"
+                                             checked={this.state.filters.datatype.indexOf(i) !== -1} 
+                                             icon={<PanoramaFishEye/>}
+                                             checkedIcon={<CheckCircle/>}
+                                             onChange={(event, checked) => this.handleCheck(event,i,checked)}
+                                          />
+
+                                       }
+                                       {...counts["datatype"][i]
+                                       ?{label:<span>{I18n.t("types."+i.toLowerCase()) + " ("}<span class="facet-count">{count}</span>{")"}</span>}
+                                       :{label:I18n.t("types."+i.toLowerCase())}}
+                                    />
+                                 </div>
+                              )
+                           }
+                        )}
+                        </div>
+                     </Collapse>
+                     {
+                        sortByList && this.widget(I18n.t("Lsidebar.sortBy.title"),"sortBy",
+                        (sortByList /*:["Year of Publication","Instance Title"]*/).map((i,n) => <div key={i} style={{width:"200px",textAlign:"left"}} className="searchWidget">
+                              <FormControlLabel
+                                 control={
+                                    <Checkbox
+                                       checked={(this.props.sortBy && this.props.sortBy.startsWith(i.toLowerCase()) ) || (!this.props.sortBy && n === 0) }
+                                       className="checkbox"
+                                       icon={<PanoramaFishEye/>}
+                                       checkedIcon={<CheckCircle/>}
+                                       onChange={(event, checked) => this.updateSortBy(event, checked, i) }
+                                    />
+
+                                 }
+                                 label={i}
+                              /></div> ).concat([
+                                 <div key={99} style={{width:"auto",textAlign:"left",marginTop:"5px",paddingTop:"5px"}} className="searchWidget">
+                                 <FormControlLabel
+                                    control={
+                                       <Checkbox
+                                          checked={reverseSort}
+                                          className="checkbox"
+                                          icon={<CheckBoxOutlineBlank/>}
+                                          checkedIcon={<CheckBox/>}
+                                          onChange={(event, checked) => this.reverseSortBy(event, checked) }
+                                       />
+
+                                    }
+                                    label={"Reverse Order"}
+                                 /></div>
+                        ])) 
+                     }
+                     {  facetWidgets }
+                  
+                  </div>
+               }
+               </div>
+            )
    }
 
    render() {
@@ -4190,161 +4312,19 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
           { top_right_menu(this) }
 
          <div className="App" style={{display:"flex"}}>
-            <div className={(this.state.leftPane?"visible":"")}><ResizableBox id="resizableLeftPane" width={this.state.LpanelWidth} axis="x" minConstraints={[250,Infinity]} maxConstraints={[500,Infinity]} 
-               onResizeStop={ (event, {element, size, handle}) => { console.log("rsize",size); this.setState({ ...this.state,  LpanelWidth: size.width })}} >
-            <div className={"SidePane left"}>
-                  <IconButton className="close" onClick={e => this.setState({...this.state,leftPane:false,closeLeftPane:true})}><Close/></IconButton>
-               { //this.props.datatypes && (results ? results.numResults > 0:true) &&
-                  <div style={{ /*minWidth:"335px",*/ position:"relative"}}>
-                     { ( this.state.filters.facets || this.state.filters.datatype.indexOf("Any") === -1 )&& 
-                        [ <Typography style={{fontSize:"23px",marginBottom:"20px",textAlign:"center"}}>
-                           <Translate value="Lsidebar.activeF.title" />
-                           <a title={I18n.t("Lsidebar.activeF.reset")} id="clear-filters" onClick={this.resetFilters.bind(this)}><RefreshIcon /></a>
-                        </Typography>
-                           ,
-                           <div id="filters-UI">
-                              { this.state.filters.datatype.filter(k => k !== "Any").map(k => this.renderFilterTag(true, "Type", k, (event, checked) => this.handleCheck(event, k, false) ) )}                              
-                              { this.props.isInstance && this.state.backToWorks && this.state.filters.instance && this.renderFilterTag(false, "Instance Of", this.state.filters.instance, (event, checked) => {
-                                 this.resetFilters(event)
-                              } )  } 
-                              { this.state.filters.facets?Object.keys(this.state.filters.facets).map(f => {
-                                 let vals = this.state.filters.facets[f]
-                                 if(vals.val) vals = vals.val
-                                 return vals.filter(k => k !== "Any").map(v => 
-                                    this.renderFilterTag(false, f, v, (event, checked) => this.handleCheckFacet(event, f, [ v ], false) ) 
-                                 ) }
-                              ):null }
-                           </div>
-                        ]
-                     }
-                     <Typography style={{fontSize:"23px",marginBottom:"20px",textAlign:"center"}}>
-                        <Translate value="Lsidebar.title" />
-                     </Typography>
-                     { /* // deprecated, now "Provider" facet
-                        this.widget(I18n.t("Lsidebar.collection.title"),"collection",
-                        ["BDRC" ,"rKTs" ].map((i) => <div key={i} style={{width:"150px",textAlign:"left"}} className="searchWidget">
-                              <FormControlLabel
-                                 control={
-                                    <Checkbox
-                                       {... i=="rKTs" ?{}:{defaultChecked:true}}
-                                       disabled={true}
-                                       className="checkbox disabled"
-                                       icon={<PanoramaFishEye/>}
-                                       checkedIcon={<CheckCircle/>}
-                                       //onChange={(event, checked) => this.handleCheck(event,i,checked)}
-                                    />
-
-                                 }
-                                 label={i}
-                              /></div> ))
-                     */}                     
-                     {  this.props.datatypes && !this.props.datatypes.hash &&
-                        <Loader loaded={false} className="datatypesLoader" style={{position:"relative"}}/>
-                     }
-                     <ListItem
-                        style={{display:"flex",justifyContent:"space-between",padding:"0 20px",borderBottom:"1px solid #bbb",cursor:"pointer"}}
-                        onClick={(e) => {
-                           //if(!(this.props.datatypes && !this.props.datatypes.hash))
-                              this.setState({collapse:{ ...this.state.collapse, "datatype":!this.state.collapse["datatype"]} }); } }
-                        >
-                        <Typography style={{fontSize:"16px",lineHeight:"30px",}}>
-                           <Translate value="Lsidebar.datatypes.title"/>
-                        </Typography>
-                        { /*this.props.datatypes && this.props.datatypes.hash &&*/ !this.state.collapse["datatype"] ? <ExpandLess /> : <ExpandMore />  }
-                     </ListItem>
-                     <Collapse
-                        in={/*this.props.datatypes && this.props.datatypes.hash &&*/ !this.state.collapse["datatype"]}
-                        className={["collapse",  !(this.props.datatypes && !this.props.datatypes.hash)&&!this.state.collapse["datatype"]?"open":"close"].join(" ")}
-                         style={{padding:"5px 0 0 20px"}} >
-                        <div>
-                        { //facetList&&facetList.length > 0?facetList.sort((a,b) => { return a.props.label < b.props.label } ):
-                              types.map((i) => {
-
-                                 if(i==="Any") return
-
-                                 //console.log("counts",i,counts,counts["datatype"][i],this.state.filters.datatype.indexOf(i))
-
-                              let disabled = (!["Work","Person", "Place","Topic","Corporation","Role","Lineage","Etext"].includes(i)) // false // (!this.props.keyword && ["Any","Etext","Person","Work"].indexOf(i)===-1 && this.props.language  != "")
-                           // || (this.props.language == "")
-
-                              let count = counts["datatype"][i]
-                              if(typeof count === "string") count = "~"+count
-
-                              return (
-                                 <div key={i} style={{textAlign:"left"}}  className="searchWidget">
-                                    <FormControlLabel
-                                       control={
-                                          <Checkbox
-                                             className={"checkbox "+(disabled?"disabled":"")}
-                                             disabled={disabled}
-                                             //{...i=="Any"?{defaultChecked:true}:{}}
-                                             color="black"
-                                             checked={this.state.filters.datatype.indexOf(i) !== -1} 
-                                             icon={<PanoramaFishEye/>}
-                                             checkedIcon={<CheckCircle/>}
-                                             onChange={(event, checked) => this.handleCheck(event,i,checked)}
-                                          />
-
-                                       }
-                                       {...counts["datatype"][i]
-                                       ?{label:<span>{I18n.t("types."+i.toLowerCase()) + " ("}<span class="facet-count">{count}</span>{")"}</span>}
-                                       :{label:I18n.t("types."+i.toLowerCase())}}
-                                    />
-                                 </div>
-                              )
-                           }
-                        )}
-                        </div>
-                     </Collapse>
-                     {
-                        sortByList && this.widget(I18n.t("Lsidebar.sortBy.title"),"sortBy",
-                        (sortByList /*:["Year of Publication","Instance Title"]*/).map((i,n) => <div key={i} style={{width:"200px",textAlign:"left"}} className="searchWidget">
-                              <FormControlLabel
-                                 control={
-                                    <Checkbox
-                                       checked={(this.props.sortBy && this.props.sortBy.startsWith(i.toLowerCase()) ) || (!this.props.sortBy && n === 0) }
-                                       className="checkbox"
-                                       icon={<PanoramaFishEye/>}
-                                       checkedIcon={<CheckCircle/>}
-                                       onChange={(event, checked) => this.updateSortBy(event, checked, i) }
-                                    />
-
-                                 }
-                                 label={i}
-                              /></div> ).concat([
-                                 <div key={99} style={{width:"auto",textAlign:"left",marginTop:"5px",paddingTop:"5px"}} className="searchWidget">
-                                 <FormControlLabel
-                                    control={
-                                       <Checkbox
-                                          checked={reverseSort}
-                                          className="checkbox"
-                                          icon={<CheckBoxOutlineBlank/>}
-                                          checkedIcon={<CheckBox/>}
-                                          onChange={(event, checked) => this.reverseSortBy(event, checked) }
-                                       />
-
-                                    }
-                                    label={"Reverse Order"}
-                                 /></div>
-                        ])) 
-                     }
-                     {  facetWidgets }
-                  
-                  </div>
-               }
-               </div>
-            </ResizableBox></div>
+            <div className={"SearchPane"+(this.props.keyword ?" resultPage":"") }  ref={this._refs["logo"]}>            
             { showMenus }
-            <div className={"SearchPane"+(this.props.keyword ?" resultPage":"") }  ref={this._refs["logo"]}>
-               <a target="_blank" href="https://www.tbrc.org/" style={{display:"inline-block",marginBottom:"25px"}}>
-                  <img src="/logo.svg" style={{width:"200px"}} />
-               </a>
+               <div class="fond-logo">
+                  <a id="logo" target="_blank" href="https://www.tbrc.org/">
+                     <img src="/logo.svg" style={{width:"200px"}} />
+                  </a>
+               </div>
                {/* <h2>BUDA Platform</h2> */}
                {/* <h3>Buddhist Digital Resource Center</h3> */}
-               <div>
-               <IconButton style={{marginRight:"15px"}} className={this.state.leftPane?"hidden":""} onClick={e => this.setState({...this.state,leftPane:!this.state.leftPane,closeLeftPane:!this.state.closeLeftPane})}>                  
+               <div id="search-bar">
+               {/* <IconButton style={{marginRight:"15px"}} className={this.state.leftPane?"hidden":""} onClick={e => this.setState({...this.state,leftPane:!this.state.leftPane,closeLeftPane:!this.state.closeLeftPane})}>                  
                   <FontAwesomeIcon style={{fontSize:"21px"}} icon={faSlidersH} title="Refine Your Search"/>
-               </IconButton>
+               </IconButton> */}
                <SearchBar
                   closeIcon={<Close className="searchClose" style={ {color:"rgba(0,0,0,1.0)",opacity:1} } onClick={() => { this.props.history.push({pathname:"/",search:""}); this.props.onResetSearch();} }/>}
                   disabled={this.props.hostFailure}
@@ -4364,7 +4344,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   value={this.props.hostFailure?"Endpoint error: "+this.props.hostFailure+" ("+this.getEndpoint()+")":this.state.keyword !== undefined && this.state.keyword!==this.state.newKW?this.state.keyword:this.props.keyword&&this.state.newKW?this.state.newKW.replace(/\"/g,""):""}
                   style={{
                      marginTop: '0px',
-                     width: "700px"
+                     width: "800px",
+                     height:"60px"
                   }}
                />
                {/* work in progress
@@ -4416,7 +4397,30 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   onKeyPress={(e) => this.handleCustomLanguage(e)}
                /> */ }
               </FormControl>
-           </div>
+               </div>
+              { ( this.state.filters.facets || this.state.filters.datatype.indexOf("Any") === -1 )&& 
+                        [ /*<Typography style={{fontSize:"23px",marginBottom:"20px",textAlign:"center"}}>
+                           <Translate value="Lsidebar.activeF.title" />
+                           <a title={I18n.t("Lsidebar.activeF.reset")} id="clear-filters" onClick={this.resetFilters.bind(this)}><RefreshIcon /></a>
+                        </Typography>
+                           ,*/
+                           <div id="filters-UI">
+                              <div>
+                              { this.state.filters.datatype.filter(k => k !== "Any").map(k => this.renderFilterTag(true, "Type", k, (event, checked) => this.handleCheck(event, k, false) ) )}                              
+                              { this.props.isInstance && this.state.backToWorks && this.state.filters.instance && this.renderFilterTag(false, "Instance Of", this.state.filters.instance, (event, checked) => {
+                                 this.resetFilters(event)
+                              } )  } 
+                              { this.state.filters.facets?Object.keys(this.state.filters.facets).map(f => {
+                                 let vals = this.state.filters.facets[f]
+                                 if(vals.val) vals = vals.val
+                                 return vals.filter(k => k !== "Any").map(v => 
+                                    this.renderFilterTag(false, f, v, (event, checked) => this.handleCheckFacet(event, f, [ v ], false) ) 
+                                 ) }
+                              ):null }
+                              </div>
+                           </div>
+                        ]
+                  }
            <div id="data-checkbox">
             <FormGroup row>
                { 
@@ -4437,7 +4441,9 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                */ }
             </FormGroup>
            </div>
-               { false && this.state.keyword.length > 0 && this.state.dataSource.length > 0 &&
+           <div id="res-container">
+           {  message.length > 0 && this.render_filters(types,counts,sortByList,reverseSort,facetWidgets) }
+               { /*false && this.state.keyword.length > 0 && this.state.dataSource.length > 0 &&
                   <div style={{
                      maxWidth: "700px",
                      margin: '0 auto',
@@ -4454,15 +4460,15 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                            { this.state.dataSource.map( (v) =>  <MenuItem key={v} style={{lineHeight:"1em"}} onClick={(e)=>this.setState({keyword:v,dataSource:[]})}>{v}</MenuItem> ) }
                         </List>
                      </Paper>
-                  </div>
+                  </div> */
                }
                { (this.props.loading || (this.props.datatypes && !this.props.datatypes.hash)) && <Loader className="mainloader"/> }
                { message.length == 0 && !this.props.loading &&
-                  <List id="samples" style={{maxWidth:"800px",margin:"20px auto",textAlign:"left",zIndex:0}}>
+                  <List id="samples">
                      { messageD }
                   </List> }
                { message.length > 0 &&
-                  <List key={2} id="results" style={{maxWidth:"800px",margin:"20px auto",textAlign:"left",zIndex:0}}>
+                  <List key={2} id="results">
                      { this.props.isInstance && this.state.backToWorks && <a className="uri-link" style={{marginLeft:"16px"}} onClick={(event) => {
                            this.resetFilters(event)
                         }}>&lt; Back to Works</a> }
@@ -4482,6 +4488,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      </div>
                   </List>
                }
+               </div>
             </div>
             <LanguageSidePaneContainer />
          </div>
