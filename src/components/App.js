@@ -617,7 +617,10 @@ class App extends Component<Props,State> {
          n = get.n
          if(this._refs[n] && this._refs[n].current && this.state.scrolled !== n)  {
             this._scrollTimer = setInterval(((that) => () => { 
+               
                if(that._refs[n] && that._refs[n].current) that._refs[n].current.scrollIntoView()
+
+
                //else if(n === 0 && that._refs["logo"].current) window.scrollTop(0) //TODO scroll to top of window when changing page
 
                console.log("timer")
@@ -2207,7 +2210,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                         //secondary={id}
                         secondary={
                            <div> */}
-                              <p key="id">
+                              {/* <p key="id">
                                  {prettId}
                                  { Tag && <Tooltip key={"tip"} placement="bottom-start" title={
                                           <div style={{margin:"10px"}}>
@@ -2216,7 +2219,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                                        }>
                                           <Tag style={{height:"18px",verticalAlign:"-4px",marginLeft:"5px"}}/>
                                        </Tooltip>}
-                              </p>
+                              </p> */}
                            </div>
                         {/* }
                      ></ListItemText> */}
@@ -2663,13 +2666,13 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             { this.getResultProp(tmp+"forWork",allProps) }            
             { this.getResultProp(bdo+"eTextIsVolume",allProps,false,false) }
 
-            { this.getResultProp(tmp+"author",allProps) }
-            { this.getResultProp(bdo+"workIsAbout",allProps,false) }
-            { this.getResultProp(bdo+"workGenre",allProps) }
+            { this.getResultProp(tmp+"by",allProps,false,true,[tmp+"author"]) }
+            {/* { this.getResultProp(bdo+"workIsAbout",allProps,false) } */}
+            {/* { this.getResultProp(bdo+"workGenre",allProps) } */}
             { this.getResultProp(bdo+"language",allProps) }
 
             { this.getResultProp(tmp+"otherLabel",allProps, true, false, [skos+"prefLabel", skos+"altLabel"], !preLit?preLit:preLit.replace(/[↦↤]/g,"") ) }
-            { this.getResultProp(tmp+"assetAvailability",allProps,false,false) }
+            {/* { this.getResultProp(tmp+"assetAvailability",allProps,false,false) } */}
             
             { this.getResultProp(rdf+"type",allProps.filter(e => e.type === rdf+"type" && e.value === bdo+"EtextInstance")) } 
             {/* //![bdo+"AbstractWork",bdo+"Work",bdo+"Instance",bdo+"SerialMember",bdo+"Topic"].includes(e.value))) } */}
@@ -2697,8 +2700,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             { this.getResultProp(bdo+"publisherLocation",allProps,false,false) }
             { this.getResultProp(bdo+"contentLocationStatement",allProps,false,false, [bdo+"instanceExtentStatement",bdo+"contentLocationStatement"]) }
 
-            { this.getResultProp(tmp+"provider",allProps) }
-            { this.getResultProp(tmp+"popularityScore",allProps,false,false, [tmp+"entityScore"]) }
+            {/* { this.getResultProp(tmp+"provider",allProps) } */}
+            {/* { this.getResultProp(tmp+"popularityScore",allProps,false,false, [tmp+"entityScore"]) } */}
             
             { this.getInstanceLink(id,n,allProps) }
 
@@ -3581,7 +3584,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          t = getPropLabel(this,t) 
          k = getPropLabel(this,k)
       }
-      return <a title={(!isExclu?"Include":"Exclude")+" results with "+t_+": "+ k_} class={ "active-filter " + (isExclu?"exclu":"") }><span>{t}: <b>{k}</b></span><a title={I18n.t("Lsidebar.activeF.remove")} onClick={f.bind(this)}><Cancel/></a></a>
+      else { t = <span>{t}</span>; k = <span>{k}</span> }
+      return <a title={(!isExclu?"Include":"Exclude")+" results with "+t_+": "+ k_} class={ "active-filter " + (isExclu?"exclu":"") }><span>{t}: <b>{k}</b></span><a title={I18n.t("Lsidebar.activeF.remove")} onClick={f.bind(this)}><Close/></a></a>
    }
 
    resetFilters(e) {
@@ -3959,38 +3963,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                         )}
                         </div>
                      </Collapse>
-                     {
-                        sortByList && this.widget(I18n.t("Lsidebar.sortBy.title"),"sortBy",
-                        (sortByList /*:["Year of Publication","Instance Title"]*/).map((i,n) => <div key={i} style={{width:"200px",textAlign:"left"}} className="searchWidget">
-                              <FormControlLabel
-                                 control={
-                                    <Checkbox
-                                       checked={(this.props.sortBy && this.props.sortBy.startsWith(i.toLowerCase()) ) || (!this.props.sortBy && n === 0) }
-                                       className="checkbox"
-                                       icon={<PanoramaFishEye/>}
-                                       checkedIcon={<CheckCircle/>}
-                                       onChange={(event, checked) => this.updateSortBy(event, checked, i) }
-                                    />
-
-                                 }
-                                 label={i}
-                              /></div> ).concat([
-                                 <div key={99} style={{width:"auto",textAlign:"left",marginTop:"5px",paddingTop:"5px"}} className="searchWidget">
-                                 <FormControlLabel
-                                    control={
-                                       <Checkbox
-                                          checked={reverseSort}
-                                          className="checkbox"
-                                          icon={<CheckBoxOutlineBlank/>}
-                                          checkedIcon={<CheckBox/>}
-                                          onChange={(event, checked) => this.reverseSortBy(event, checked) }
-                                       />
-
-                                    }
-                                    label={"Reverse Order"}
-                                 /></div>
-                        ])) 
-                     }
+                     
                      {  facetWidgets }
                   
                   </div>
@@ -4366,7 +4339,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   value={this.getLanguage()}
                   onChange={this.handleLanguage}
                   open={this.state.langOpen}
-                  onOpen={(e) => this.setState({...this.state,langOpen:true})}
+                  onOpen={(e) => { console.log("open"); this.setState({...this.state,langOpen:true}) } }
                   onClose={this.handleLanguage} //(e) => this.setState({...this.state,langOpen:false})}
                   inputProps={{
                     name: 'language',
@@ -4417,6 +4390,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                                     this.renderFilterTag(false, f, v, (event, checked) => this.handleCheckFacet(event, f, [ v ], false) ) 
                                  ) }
                               ):null }
+                              <a title={I18n.t("Lsidebar.activeF.reset")} id="clear-filters" onClick={this.resetFilters.bind(this)}><span>Reset filters</span><RefreshIcon /></a>
                               </div>
                            </div>
                         ]
@@ -4441,6 +4415,49 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                */ }
             </FormGroup>
            </div>
+           {  message.length > 0 && <div id="res-header">
+               <div>
+               {
+                     sortByList && this.widget(I18n.t("Lsidebar.sortBy.title"),"sortBy",
+                     (sortByList /*:["Year of Publication","Instance Title"]*/).map((i,n) => <div key={i} style={{width:"200px",textAlign:"left"}} className="searchWidget">
+                           <FormControlLabel
+                              control={
+                                 <Checkbox
+                                    checked={(this.props.sortBy && this.props.sortBy.startsWith(i.toLowerCase()) ) || (!this.props.sortBy && n === 0) }
+                                    className="checkbox"
+                                    icon={<PanoramaFishEye/>}
+                                    checkedIcon={<CheckCircle/>}
+                                    onChange={(event, checked) => this.updateSortBy(event, checked, i) }
+                                 />
+
+                              }
+                              label={i}
+                           /></div> ).concat([
+                              <div key={99} style={{width:"auto",textAlign:"left",marginTop:"5px",paddingTop:"5px"}} className="searchWidget">
+                              <FormControlLabel
+                                 control={
+                                    <Checkbox
+                                       checked={reverseSort}
+                                       className="checkbox"
+                                       icon={<CheckBoxOutlineBlank/>}
+                                       checkedIcon={<CheckBox/>}
+                                       onChange={(event, checked) => this.reverseSortBy(event, checked) }
+                                    />
+
+                                 }
+                                 label={"Reverse Order"}
+                              /></div>
+                     ])) 
+                  }
+
+                  <div id="pagine">
+                     <div>
+                           page { pageLinks } <span id="nb">{this.state.results[this.state.id].resLength} Results</span>
+                     </div>
+                  </div>
+               </div>
+            </div>
+           }
            <div id="res-container">
            {  message.length > 0 && this.render_filters(types,counts,sortByList,reverseSort,facetWidgets) }
                { /*false && this.state.keyword.length > 0 && this.state.dataSource.length > 0 &&
