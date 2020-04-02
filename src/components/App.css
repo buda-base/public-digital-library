@@ -870,7 +870,7 @@ TODO
 
 .resource .data .sub.hoy { flex-wrap: nowrap;  }
 /* .resource .data .sub .subsub:last-child { margin-bottom:6px; } */
-.resource .data .subsub.hoyoh { flex-wrap: nowrap; display:flex; align-items: end; margin-bottom:0px; }
+.resource .data .subsub.hoyoh { flex-wrap: nowrap; display:flex; align-items: flex-start; margin-bottom:0px; }
 
 /*
 .resource .data .sub .subgroup,
