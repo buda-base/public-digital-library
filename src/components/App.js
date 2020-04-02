@@ -1927,7 +1927,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                }
                if(ret.length) { 
 
-                  ret = <Collapse in={!this.state.collapse[id]}>
+                  ret = <Collapse className="res-collapse" in={!this.state.collapse[id]}>
                      {ret}
                   </Collapse>
 

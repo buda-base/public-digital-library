@@ -350,10 +350,16 @@ a.result + #matches .result-content { padding-left:0; }
 .result-box { display:flex; }
 
 
+#matches > .match ~ .instance-collapse,
+#matches > .match ~ .instance-collapse + .label,
+#matches > .match ~ .instance-link { margin-top:0px;  }
 
 #matches > .instance-collapse,
 #matches > .instance-collapse + .label,
 #matches > .instance-link { margin-top:10px;  }
+
+#matches .res-collapse { transition:none; }
+
 .instance-link { color:rgba(229, 74, 53,1);   margin-right:25px;display:inline-block;font-weight:700; /* margin-top:10px; */}
 .instance-link > span { cursor:pointer; }
 .instance-link > emph { color:black; }
