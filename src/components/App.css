@@ -1007,8 +1007,10 @@ TODO
 .resource .data h3.chunk { margin-bottom:15px;}
 .resource .data h3.chunk ~ .multiple { padding-left:0; }
 
+.etextPage:not(.unformatted).hasSeq { overflow: hidden ;}
 
-.etextPage { border-top:1px solid #999; padding-top:25px;  }
+
+.etextPage { border-top:1px solid #999; padding-top:25px; line-height:24px;  }
 .etextPage h4.page  { display:inline-block; padding-left:0; margin-bottom:0;  
    white-space: nowrap;margin-right:0;
 }
