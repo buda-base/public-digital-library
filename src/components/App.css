@@ -79,7 +79,7 @@
 .App * { font-family:"Noto Sans", "Roboto", "Helvetica", "Arial", sans-serif !important;}
 
 .SearchPane { width:1000px; margin:auto;margin-top:80px;max-width:90%; z-index:0;background:white;padding:50px; 
-   min-height:calc(100vh - 80px - 50px * 1); padding-top:0 !important; }
+   min-height:calc(100vh - 80px - 50px * 1); padding-top:0 !important;  padding-bottom:0;}
 
 #root .App .SearchPane,
 .resource {   box-sizing: content-box; background-color:#efefef; width:1160px; margin-left:auto;margin-right:auto;
@@ -185,8 +185,8 @@ body { overflow:auto !important;padding-right:0 !important; font-family:"Roboto"
 .SidePane > #annoCollec svg.score0 { border-radius:50%; background-color:rgba(255, 205, 3, 0.4);border:1px dashed rgba(167, 134, 1, 0.4);}
 .SidePane > #annoCollec svg.score1 { border-radius:50%; background-color:rgba(17, 173, 17, 0.3);border:1px solid rgba(36, 106, 36, 0.4);}
 
-.SidePane { position:absolute;transition:left 400ms ease-in-out,right 400ms ease-in-out; background:white;height:calc(100vh - 40px); position:fixed;padding:20px;
-   background:rgba(246,246,246,0.935); z-index:100000; top:0; }
+.SidePane { position:absolute;transition:left 400ms ease-in-out,right 400ms ease-in-out; background:white;min-height:calc(100vh - 40px); position:fixed;padding:20px;
+   background:rgba(246,246,246,0.935); z-index:100000; top:0;  }
 /* .SidePane.left {  box-shadow:2px 0 2px 0px rgba(0,0,0,0.35); }  */
 .visible .SidePane.left { overflow-y:auto;}
 .SidePane.right { right:-500px; box-shadow:-2px 0 2px 0px rgba(0,0,0,0.35);}
@@ -244,7 +244,7 @@ body { overflow:auto !important;padding-right:0 !important; font-family:"Roboto"
 }
 #samples { padding-bottom: 40px ; width:910px;margin-right:0px;padding-left:37px;}
 
-#res-container > ul >  li { padding-left:22px;; pointer-events:none;}
+#res-container > ul h4 { padding-left:22px;; pointer-events:none;}
 #res-container > ul h4 { color:#343434; font-size:24px; /*font-family:"Noto Sans";*/ font-weight:900; text-transform:uppercase;}
 
 /* .SearchPane.resultPage #res-container { padding-top:70px;} */
@@ -309,14 +309,17 @@ a.result + #matches .result-content { padding-left:0; }
 #matches span:not(.lang):not(.instance-link) { display:inline ; line-height:1.2rem; position:relative; font-size:13px;}
 .result .contenu h3 .lang,
 #matches span .lang { /*position:absolute;top:auto;bottom:-5px;*/display:none;line-height:0;}
+/*
 .result .contenu h3:hover .lang,
 #matches span:hover > .lang { display:inline;}
+*/
 #matches span.label { text-transform:capitalize; font-weight:700; float:left;clear:both; flex-shrink:0; font-size:12px; }
 /* #matches span:not(.label) {  } */
 .match { display:flex; margin-bottom:0px }
 .match a { /*word-break:  break-word;*/ overflow-wrap: break-word; }
 .match .label.invisible { opacity:0; }
 
+#matches .match.same.as,
 #matches .match.Same.As { display:none;}
 
 .result-content #num-box:empty::before { content:'1'; }
@@ -634,7 +637,8 @@ h4:not(:hover) > .lang
 .resource .data > div > h3 { width:calc(190px - 15px); padding-right:15px; /*line-height:24px;*/  vertical-align: top; }
 .resource .data > div.parent { flex-wrap:wrap; }
 .resource .data > div.parent > h3 { flex-shrink:0 }
-.resource h3,.resource h4 { display:inline-block; margin-bottom:0px; font-size:14px; font-weight:normal; overflow-wrap: break-word; /*margin-right:5px; line-height:30px;*/ }
+.resource h3,.resource h4 { display:inline-block; margin-bottom:0px; font-size:14px; font-weight:normal; 
+   overflow-wrap: break-word;  word-break: break-word; /*margin-right:5px; line-height:30px;*/ }
 .resource h3 span { /*text-decoration: underline;*/ font-weight:600;  text-transform:capitalize; }
 .resource h3 { font-size:14px;margin-top:-1px; }
 .resource .sub { width:calc(100% - 190px); /*padding-left:20px;*/ display:inline-flex; /*flex-wrap:wrap;*/ box-sizing: border-box; position:relative;
@@ -731,7 +735,7 @@ h4:not(:hover) > .lang
 .resource .data > [data-prop="bdo:workHasTranslation"] > .group { width:100%; }
 .resource .data > [data-prop="bdo:workHasTranslation"] > .group > .sub > h4.first {  width: calc(190px - 15px);  padding-right: 15px; margin-right:0; font-size:16px;  }
 .resource .data > [data-prop="bdo:workHasTranslation"] > .group > .sub > h4.first a.propref { color: #343434;  font-size: 16px; letter-spacing: 0px;
-   /*line-height: 23px;*/ width: calc(190px - 15px);  padding-right: 0px; margin-right:0px; word-spacing:30px; font-weight:700;
+   /*line-height: 23px;*/ width: calc(190px - 15px);  padding-right: 0px; margin-right:0px; word-spacing:50px; font-weight:700;
 }
 .resource .data > [data-prop="bdo:workHasTranslation"] > .group > .sub > .subgroup { width:calc(100% - 190px);}
 .resource .data  > [data-prop="bdo:workHasTranslation"] .sub .subsub a.propref { font-size: 15px;  font-weight: 600; letter-spacing: 0px;
