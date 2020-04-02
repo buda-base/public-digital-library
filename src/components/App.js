@@ -2188,10 +2188,15 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
       }
 
 
-      let ret = (
-            <div key={t+"_"+n+"_"}  className={"contenu" }>
-                  <ListItem style={{paddingLeft:"0",display:"flex",alignItems:"center"}}>
-                     <div style={{width:"30px",textAlign:"right",color:"black",fontSize:"0.9rem",marginLeft:"16px",flexShrink:0}}>{warnStatus}{n}</div>
+      let ret = ([
+            
+            <div id="num-box" style={{flexShrink:0}}>{warnStatus}{n}</div>, 
+            <div id="icon">
+               <div><img src={"/icons/"+getEntiType(id).toLowerCase()+".png"}/></div>
+               <div>{prettId}</div>
+            </div>, 
+            <div key={t+"_"+n+"__"}  className={"contenu" }>
+                  <ListItem style={{paddingLeft:"0"}}>
                      {/* <ListItemText style={{height:"auto",flexGrow:10,flexShrink:10}}
                         primary={ */}
                            <div>
@@ -2225,7 +2230,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      ></ListItemText> */}
                      {/* { Tag && <ListItemIcon><Tag/></ListItemIcon> } */}
                   </ListItem>
-            </div> )
+            </div>
+         ])
 
          let retList
          
@@ -2391,8 +2397,11 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      */
                
             if(sources.length > 1 || sources.length == 1 && !hasRes["bdr"] ) { 
-               retList.push(<div class="source">{sources}</div>)
-               retList = [ <div class="result-box">{retList}</div> ]
+               
+               // TODO move this to bottom of result block
+
+               //retList.push(<div class="source">{sources}</div>)
+               //retList = [ <div class="result-box">{retList}</div> ]
                this._menus = { ...this._menus, ...menus } 
             }
             
@@ -2405,8 +2414,12 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          else nbChunks = "?"
 
          retList.push( <div id='matches'>         
+            { this.getResultProp(tmp+"by",allProps,false,true,[tmp+"author"]) }
+            { this.getResultProp(tmp+"forWork",allProps) }            
+            { this.getResultProp(bdo+"eTextIsVolume",allProps,false,false) }
             { this.getResultProp(tmp+"inInstance",allProps) }
             { this.getResultProp(tmp+"inInstancePart",allProps) }
+
             {
                rmatch.filter(m => m.type !== tmp+"nameMatch").map((m) => {
 
@@ -2617,7 +2630,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                         }), " ]" ]}</div>
                      }
 
-                     return (<div className="match">
+                     return (<div className={"match "+prop}>
                         <span className={"label " +(lastP === prop?"invisible":"")}>{(!from?prop:from)}:&nbsp;</span>
                         {!isArray && <span>{expand!==true?null:inPart}{[!uri?val:<Link className="urilink" to={uri}>{val}</Link>,lang?<Tooltip placement="bottom-end" title={
                            <div style={{margin:"10px"}}>
@@ -2654,7 +2667,6 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                })
             }
 
-            { this.getResultProp(tmp+"by",allProps,false,true,[tmp+"author"]) }
 
             { this.getResultProp(tmp+"nameMatch",allProps,"es",false) } {/* //,true,false) } */}
 
@@ -2665,14 +2677,11 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             {/* { this.getResultProp(tmp+"maxScore",allProps,true,false) } */}
             { (nbChunks > 1) && this.getResultProp(tmp+"otherMatches ("+(nbChunks - 1)+")",allProps,false,false,[bdo+"eTextHasChunk"],null,[bdo+"chunkContents"],null,[tmp+"matchScore",bdo+"sliceStartChar"],id) }
             
-            { this.getResultProp(tmp+"forWork",allProps) }            
-            { this.getResultProp(bdo+"eTextIsVolume",allProps,false,false) }
-
             {/* { this.getResultProp(bdo+"workIsAbout",allProps,false) } */}
             {/* { this.getResultProp(bdo+"workGenre",allProps) } */}
-            { this.getResultProp(bdo+"language",allProps) }
+            {/* { this.getResultProp(bdo+"language",allProps) } */}
 
-            { this.getResultProp(tmp+"otherLabel",allProps, true, false, [skos+"prefLabel", skos+"altLabel"], !preLit?preLit:preLit.replace(/[↦↤]/g,"") ) }
+            { this.getResultProp(this.state.filters.datatype[0] === "Work"?tmp+"otherTitle":tmp+"otherName",allProps, true, false, [skos+"prefLabel", skos+"altLabel"], !preLit?preLit:preLit.replace(/[↦↤]/g,"") ) }
             {/* { this.getResultProp(tmp+"assetAvailability",allProps,false,false) } */}
             
             { this.getResultProp(rdf+"type",allProps.filter(e => e.type === rdf+"type" && e.value === bdo+"EtextInstance")) } 
@@ -2682,24 +2691,26 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             
 
             { this.getResultProp(bdo+"incipit",allProps,false,false) }
-            { this.getResultProp(bdo+"material",allProps) }
+            
+            {/* { this.getResultProp(bdo+"material",allProps) }
             { this.getResultProp(bdo+"printMethod",allProps) }
-            { this.getResultProp(bdo+"inRootInstance",allProps) }
+            { this.getResultProp(bdo+"inRootInstance",allProps) } */}
             
             { this.state.filters.datatype[0] !== "Person" && 
                this.getResultProp(tmp+"year",allProps,false,false,[tmp+"yearStart"]) }
             { this.state.filters.datatype[0] === "Person" && 
                this.getResultProp(tmp+"year",allProps,false,false,[tmp+"onYear",bdo+"onYear",bdo+"notBefore",bdo+"notAfter"],null,[bdo+"personEvent"],[bdo+"PersonBirth",bdo+"PersonDeath"]) }
             
-            { this.getResultProp(tmp+"isCreator",allProps.filter(e => (e.type === tmp+"isCreator" && e.value !== "false")),false,false) }
+            {/* { this.getResultProp(tmp+"isCreator",allProps.filter(e => (e.type === tmp+"isCreator" && e.value !== "false")),false,false) } */}
 
             { this.getResultProp(bdo+"placeLocatedIn",allProps,false) }
-            { this.getResultProp(bdo+"placeType",allProps) }
+            {/* { this.getResultProp(bdo+"placeType",allProps) } */}
 
-            { this.getResultProp(bdo+"biblioNote",allProps,false,false,[bdo+"biblioNote",rdfs+"comment"]) }
             { this.getResultProp(bdo+"publisherName",allProps,false,false) }
             { this.getResultProp(bdo+"publisherLocation",allProps,false,false) }
             { this.getResultProp(bdo+"contentLocationStatement",allProps,false,false, [bdo+"instanceExtentStatement",bdo+"contentLocationStatement"]) }
+
+            { this.getResultProp(bdo+"biblioNote",allProps,false,false,[bdo+"biblioNote",rdfs+"comment"]) }
 
             {/* { this.getResultProp(tmp+"provider",allProps) } */}
             {/* { this.getResultProp(tmp+"popularityScore",allProps,false,false, [tmp+"entityScore"]) } */}
@@ -4102,6 +4113,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
       let showMenus = Object.keys(this._menus).map(id => 
             <Popover 
+               className="samePop"
                transformOrigin={{ vertical: 'bottom', horizontal: 'left'}} 
                anchorOrigin={{vertical: 'bottom', horizontal: 'left'}} 
                anchorEl={this.state.anchor[id]} 
@@ -4453,7 +4465,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
                   <div id="pagine">
                      <div>
-                           page { pageLinks } <span id="nb">{this.state.results[this.state.id]?this.state.results[this.state.id].resLength:"--"} Results</span>
+                           { pageLinks && <span>page { pageLinks }</span>}
+                           <span id="nb">{this.state.results[this.state.id]?this.state.results[this.state.id].resLength:"--"} Results</span>
                      </div>
                   </div>
                </div>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="38px" height="45px" viewBox="0 0 38 45" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->
+    <title>LANGUE</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="LANGUE" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Group-19">
+            <path d="M27,23.9983468 L24.9053887,23.9983468 C24.6980666,24.0109489 24.49239,23.951089 24.3245578,23.8329444 C24.178116,23.7147999 24.0629371,23.5683007 23.9888935,23.3997478 L22.6363636,19.8223309 L15.3636364,19.8223309 L13.9090909,23.358791 C13.8399835,23.5194676 13.7313863,23.6643916 13.5898807,23.7762351 C13.4269848,23.9069817 13.2196627,23.9762932 13.0074044,23.9699921 L11,23.9699921 L17.6178527,8 L20.3673385,8 L27,23.9983468 Z" id="Fill-1" fill="#152631"></path>
+            <path d="M22,17.9850281 L19.5872193,11.8232481 C19.3540587,11.2276981 19.1554404,10.6171761 18.9913644,10 C18.9015544,10.3626534 18.8031088,10.7003535 18.701209,11.014764 L18.4110535,11.83822 L16,18 L22,17.9850281 Z" id="Fill-3" fill="#FEFEFE"></path>
+            <text id="अ" font-family="Sura-Bold, Sura" font-size="16" font-weight="bold" fill="#152631">
+                <tspan x="0" y="18">अ</tspan>
+            </text>
+        </g>
+    </g>
+</svg>
