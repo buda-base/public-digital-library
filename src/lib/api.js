@@ -27,6 +27,7 @@ export const dPrefix = {
       "R" : "Role",
       "PR": "Product",
       "T" : "Topic",
+      "WE" : "Images", // EAP bug
       "W" : "Images",
       "WA" : "Work",
       "MW": "Instance",
