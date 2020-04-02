@@ -396,6 +396,7 @@ let propOrder = {
    ]
 }
 
+propOrder["Etext"] = propOrder["Work"]
 propOrder["Volume"] = propOrder["Work"]
 propOrder["Instance"] = propOrder["Work"]
 propOrder["Images"] = propOrder["Work"]
@@ -448,6 +449,13 @@ const topProperties = {
       skos+"altLabel",
       bdo+"volumeNumber", 
       bdo+"volumeOf"
+   ],
+   "Etext": [
+      bdo+"hasTitle", 
+      skos+"prefLabel", 
+      skos+"altLabel",
+      bdo+"instanceOf",
+      adm+"originalRecord"     
    ]
 }
                        
@@ -470,6 +478,7 @@ let extProperties = {
       tmp+"entityScore"
    ]
 }
+extProperties["Etext"] = extProperties["Work"]
 extProperties["Volume"] = extProperties["Work"]
 extProperties["Instance"] = extProperties["Work"]
 extProperties["Images"] = extProperties["Work"]
@@ -525,7 +534,7 @@ export function top_left_menu(that,pdfLink,monoVol,fairUse)
           </a>
        </CopyToClipboard> }
 
-      <span id="rid">{shortUri(that.props.IRI)}</span>
+      { that.props.IRI && <span id="rid">{shortUri(that.props.IRI)}</span> }
 
        {/* <Link style={{fontSize:"20px"}} className="goBack" to="/" onClick={(e) => that.props.onResetSearch()} //that.props.keyword&&!that.props.keyword.match(/^bdr:/)?"/search?q="+that.props.keyword+"&lg="+that.props.language+(that.props.datatype?"&t="+that.props.datatype:""):"/"
        >
@@ -3528,7 +3537,7 @@ class ResourceViewer extends Component<Props,State>
                   if(e.label) { 
                      //console.log("label",e.label)
                      return ({
-                        ...acc, [Number(e.label[0]["@value"].replace(/[^0-9]/g,""))]:{id:e["@id"],image:e.images[0].resource["@id"]}
+                        ...acc, [Number((""+(Array.isArray(e.label)?e.label[0]["@value"]:e.label["@value"])).replace(/[^0-9]/g,""))]:{id:e["@id"],image:(e.images?e.images[0].resource["@id"]:null) }
                      })
                   }
                   else {

@@ -4497,6 +4497,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                { message.length == 0 && !this.props.loading &&
                   <List id="samples">
                      { messageD }
+                     {/* <h3>Welcome to the beta version of BUDA!</h3> */}
                   </List> }
                { message.length > 0 &&
                   <List key={2} id="results">
