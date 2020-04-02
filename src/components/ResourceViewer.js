@@ -1977,7 +1977,7 @@ class ResourceViewer extends Component<Props,State>
       })
       */
 
-      console.log("format",Tag, prop,JSON.stringify(elem,null,3),txt,bnode,div);
+      //console.log("format",Tag, prop,JSON.stringify(elem,null,3),txt,bnode,div);
 
       let ret = [],pre = []
       let note = []
