@@ -1977,7 +1977,7 @@ class ResourceViewer extends Component<Props,State>
       })
       */
 
-      //console.log("format",Tag, prop,JSON.stringify(elem,null,3),txt,bnode,div);
+      console.log("format",Tag, prop,JSON.stringify(elem,null,3),txt,bnode,div);
 
       let ret = [],pre = []
       let note = []
@@ -1994,6 +1994,9 @@ class ResourceViewer extends Component<Props,State>
       {
          iKeep++   
          let e = { ..._e } ;
+
+
+         if(prop === bdo+"workHasInstance" && e.value && e.value.match(new RegExp(bdr+"W"))) continue ;
 
          //console.log("iK",iKeep,e,elem,elem.length)
 
