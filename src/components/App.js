@@ -2679,7 +2679,6 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             
             {/* { this.getResultProp(bdo+"workIsAbout",allProps,false) } */}
             {/* { this.getResultProp(bdo+"workGenre",allProps) } */}
-            {/* { this.getResultProp(bdo+"language",allProps) } */}
 
             { this.getResultProp(this.state.filters.datatype[0] === "Work"?tmp+"otherTitle":tmp+"otherName",allProps, true, false, [skos+"prefLabel", skos+"altLabel"], !preLit?preLit:preLit.replace(/[↦↤]/g,"") ) }
             {/* { this.getResultProp(tmp+"assetAvailability",allProps,false,false) } */}
@@ -2687,6 +2686,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             { this.getResultProp(rdf+"type",allProps.filter(e => e.type === rdf+"type" && e.value === bdo+"EtextInstance")) } 
             {/* //![bdo+"AbstractWork",bdo+"Work",bdo+"Instance",bdo+"SerialMember",bdo+"Topic"].includes(e.value))) } */}
             { this.getResultProp(tmp+"originalRecord",allProps,false,false, [ tmp+"originalRecord", adm+"originalRecord"]) }
+            { this.getResultProp(bdo+"language",allProps) }
             { this.getResultProp(bdo+"script",allProps) }
             
 

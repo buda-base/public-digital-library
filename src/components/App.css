@@ -487,6 +487,7 @@ h4:not(:hover) > .lang
 { display:none; }
 
 .resource .loader { position:absolute; }
+.resource #fond .loader { position:static; }
 
 
 /* -+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ resource */
@@ -894,6 +895,8 @@ TODO
 .resource .data .sub .subsubgroup .subsubsub > h4.first,
 .resource .subsubgroup .subsubsub > h4.first a.propref { font-weight:300; font-size:14px;  }
 
+.resource .data h2 .lang, .resource .data h4 .lang { display:none;}
+
 /* ------------------------------------------------------------------------------------------------------------------------ "normal" properties */
 
 .resource .data.bot-props > div[data-prop="bdo:placeLong"] .map,
@@ -1277,6 +1280,11 @@ h3 .expand svg { position:absolute; margin-top:-18px; }*/
 
 .has-collapse.custom.max-10 { min-height:150px; }
 .has-collapse.custom .propCollapseHeader { column-count:2; }
+
+.has-collapse.custom[data-prop="bdo:workHasInstance"] .propCollapse,
+.has-collapse.custom[data-prop="bdo:workHasInstance"] .propCollapseHeader { column-count:1; }
+
+span.in { font-weight:500;padding-left:5px; padding-right:5px;  }
 
 .has-collapse.custom .expand { position:relative; bottom:auto; color:#d73449; font-weight:700;font-size:13px;margin-top:10px; }
 .has-collapse.custom .expand:hover { border-color:#d73449; }
