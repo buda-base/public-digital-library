@@ -376,7 +376,7 @@ export function top_right_menu(that)
        <div>
          <div>
             <a href="https://bdrc.io/" target="_blank"><img src="/BDRC.svg"/></a>
-            <Link to="/"><img src="/LIBRARY.svg"/></Link>
+            <Link to="/"  onClick={() => { that.props.history.push({pathname:"/",search:""}); that.props.onResetSearch();} }><img src="/LIBRARY.svg"/></Link>
          </div>
          <div id="login">
         <IconButton style={{marginLeft:"15px"}}  onClick={e => that.props.onToggleLanguagePanel()}>
@@ -4308,7 +4308,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                         <div>
                            BUDA
                            <h1>The Buddhist<br/>Universal Digital<br/>Archive</h1>
-                           <span>Explore etexts, catalogs, and millions of pages of scanned ….</span>
+                           <span>Explore etexts, catalogs, and millions of scanned pages</span>
                         </div>
                      </div>
                   </a>

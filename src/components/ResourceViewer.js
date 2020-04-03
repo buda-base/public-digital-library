@@ -4219,6 +4219,16 @@ class ResourceViewer extends Component<Props,State>
          </div>)
       }
 
+      
+
+
+      let inTitle 
+      let root = this.getResourceElem(bdo+"inRootInstance");
+      console.log("root?",root)
+      if(root && root.length) {
+         inTitle  = <h3><span>In: </span> {this.uriformat(tmp+"in",root[0])}</h3> 
+      }
+
       return (
          [<div>
             <div className={"resource "+getEntiType(this.props.IRI).toLowerCase()}>               
@@ -4240,7 +4250,7 @@ class ResourceViewer extends Component<Props,State>
                   { this.renderWithdrawn() }             
                   <div class="title">{ wTitle }{ iTitle }{ rTitle }</div>
                   { this.renderHeader(kZprop.filter(k => mapProps.includes(k))) }
-                  <div class="data">{title}</div>
+                  <div class="data">{title}{inTitle}</div>
                   { this.renderNoAccess(fairUse) }
                   { this.renderAccess() }
                   { this.renderMirador() }           

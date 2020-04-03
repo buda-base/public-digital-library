@@ -78,8 +78,8 @@
 
 .App * { font-family:"Noto Sans", "Roboto", "Helvetica", "Arial", sans-serif !important;}
 
-.SearchPane { width:1000px; margin:auto;margin-top:80px;max-width:90%; z-index:0;background:white;padding:50px; 
-   min-height:calc(100vh - 80px - 50px * 1); padding-top:0 !important;  padding-bottom:0;}
+.SearchPane { width:1000px; margin:auto;margin-top:80px;max-width:90%; z-index:0;background:white;padding:50px; padding-bottom:0;
+   min-height:calc(100vh - 80px - 50px * 0); padding-top:0 !important;  padding-bottom:0; }
 
 #root .App .SearchPane,
 .resource {   box-sizing: content-box; background-color:#efefef; width:1160px; margin-left:auto;margin-right:auto;
@@ -91,7 +91,7 @@
 @media(max-width:1440px) { 
    #root > div { overflow:hidden ; }
    #root .App .SearchPane,
-   .resource { padding:155px calc((100vw - (1440px - (140px * 2))) / 2); } 
+   .resource { padding:155px calc((100vw - (1440px - (140px * 2))) / 2); padding-bottom:0; } 
    #root .App .SearchPane { padding-top:50px;}
 }
 
@@ -139,7 +139,7 @@ body { overflow:auto !important;padding-right:0 !important; font-family:"Roboto"
 
 /* -------------------------------------------------------------------------------------------------------------------- searchbar */
 
-#data-checkbox { display:flex;justify-content: center; margin:10px; margin-left:-105px;}
+#data-checkbox { display:flex;justify-content: center; margin:10px; margin-left:-105px; visibility:hidden;}
 .data-checkbox{ margin-left:4px !important; }
 .data-checkbox span svg { font-size:16px !important; }
 .data-checkbox > span:last-child { font-size:13px !important; }
@@ -621,8 +621,11 @@ h4:not(:hover) > .lang
 .resource .title h2:not(.on) { /*max-width: 30%;*/ text-overflow: ellipsis; white-space: nowrap; overflow: hidden; background-color:#e3e3e3; } 
 /* .resource .title h2:not(.on) + h2:not(.on) { background-color:#fafafa; } */
 
+.resource .data h2.on + h3 .lang,
 .resource .data h2 .RID,
 .resource .data h2.on .T { display:none; }
+.resource .data h2.on + h3 { font-size:18px; margin-top:10px; }
+.resource .data h2.on + h3 span { text-transform: none; }
 
 .resource .title h2 a { color: #343434; text-decoration: none; width:100%;height:100%;display:flex;justify-content: center;align-items: center;}
 
