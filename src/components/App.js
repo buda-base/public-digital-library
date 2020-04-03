@@ -2400,8 +2400,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                
                // TODO move this to bottom of result block
 
-               //retList.push(<div class="source">{sources}</div>)
-               //retList = [ <div class="result-box">{retList}</div> ]
+               retList.push(<div class="source">{sources}</div>)
+               retList = [ <div class="result-box">{retList}</div> ]
                this._menus = { ...this._menus, ...menus } 
             }
             

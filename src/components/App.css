@@ -762,6 +762,10 @@ h4:not(:hover) > .lang
 .resource .data > [data-prop="bdo:workHasTranslation"] .subsubgroup h4.multiple:not(:last-child),
 .resource .data > [data-prop="bdo:workHasTranslation"] .subgroup .subsub:not(:last-child) { margin-bottom:10px;} 
 
+.urilink svg { vertical-align: middle; display:inline-block; padding-right:5px; background-color:white;}
+.urilink:hover svg path { color:#d73449; stroke:#d73449; }
+.urilink svg { width:24px;}
+.urilink:hover svg.etext path { fill: #d73449; }
 
 /*
 TODO 

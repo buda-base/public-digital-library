@@ -70,6 +70,8 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import L from 'leaflet';
 
+import {svgEtextS,svgInstanceS,svgImageS} from "./icons"
+
 
 delete L.Icon.Default.prototype._getIconUrl;
 
@@ -1678,6 +1680,14 @@ class ResourceViewer extends Component<Props,State>
          if((info && infoBase && infoBase.filter(e=>e["xml:lang"]||e["lang"]).length >= 0) || (prop && prop.match && prop.match(/[/#]sameAs/))) {
 
 
+            // console.log("svg?",svgImageS)
+
+            if(info && info.length && prop === bdo+"workHasInstance") {
+               if(elem.value.match(new RegExp(bdr+"IE"))) info = [svgEtextS].concat(info)
+               else if(elem.value.match(new RegExp(bdr+"MW"))) info = [svgInstanceS].concat(info)
+               else if(elem.value.match(new RegExp(bdr+"W"))) info = [svgImageS].concat(info)
+            }
+
             let link,orec,canUrl;
             if(this.props.assocResources && this.props.assocResources[elem.value]) {
                orec = this.props.assocResources[elem.value].filter(r => r.type === adm+"originalRecord" || r.fromKey === adm+"originalRecord")
@@ -2029,7 +2039,9 @@ class ResourceViewer extends Component<Props,State>
          {
 
             let tmp
-            if(e.type == "uri" || (e.type === 'literal' && e.datatype === xsd+'anyURI' )) tmp = this.uriformat(prop,e)
+            if(e.type == "uri" || (e.type === 'literal' && e.datatype === xsd+'anyURI' )) { 
+               tmp = this.uriformat(prop,e)
+            }
             else {
                let lang = e["lang"]
                if(!lang) lang = e["xml:lang"]
