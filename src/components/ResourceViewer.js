@@ -899,6 +899,9 @@ class ResourceViewer extends Component<Props,State>
 
    scrollToHashID(history) {
 
+      // TODO scroll to top when IRI changed (and not on collapse open/close)
+      // window.scrollTo(0, 0)
+
       if(!history) return
 
       let loca = { ...history.location }
@@ -926,6 +929,8 @@ class ResourceViewer extends Component<Props,State>
             }), 
             0 
          )
+      }
+      else {         
       }
    }
 
@@ -1686,10 +1691,12 @@ class ResourceViewer extends Component<Props,State>
 
             // console.log("svg?",svgImageS)
 
-            if(info && info.length && prop === bdo+"workHasInstance") {
-               if(elem.value.match(new RegExp(bdr+"IE"))) info = [<span class="svg">{svgEtextS}</span>].concat(info)
-               else if(elem.value.match(new RegExp(bdr+"MW"))) info = [<span class="svg">{svgInstanceS}</span>].concat(info)
-               else if(elem.value.match(new RegExp(bdr+"W"))) info = [<span class="svg">{svgImageS}</span>].concat(info)
+            if(prop === bdo+"workHasInstance") {
+               if(!info) info = [] 
+               let enti = getEntiType(elem.value)
+               if(enti === "Etext") info = [<span class="svg">{svgEtextS}</span>].concat(info)
+               else if(enti === "Instance") info = [<span class="svg">{svgInstanceS}</span>].concat(info)
+               else if(enti === "Images") info = [<span class="svg">{svgImageS}</span>].concat(info)
             }
 
             let link,orec,canUrl;

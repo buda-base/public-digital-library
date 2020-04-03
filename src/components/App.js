@@ -2149,7 +2149,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
    {
       //console.log("res",id,allProps,n,t,lit,lang,tip,Tag,rmatch,sameAsRes)
 
-      let sameAsRes ;
+      let sameAsRes,otherSrc= [] ;
       if(allProps) sameAsRes = [ ...allProps ]
       if(!id.match(/[:/]/)) id = "bdr:" + id
 
@@ -2288,7 +2288,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          }
 
          if(sameAsRes.length) {
-            //console.log("sameAs",prettId,id,dico,rmatch,sameAsRes)
+            
+            console.log("sameAs",prettId,id,dico,rmatch,sameAsRes)
          
             let menus = {}
             let sources = []
@@ -2338,21 +2339,23 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   if(src === "rkts" || src == "cbct" || src == "cbcp") shortU = prettId
                   //let shortU = hasRes[src]
 
-                  let prefix = shortU.replace(/:.*$/,"");
+                  let prefix = shortU.replace(/:.*$/,""), _prefix = prefix;
+                  const fromProv = { eftr:"84000", mbbt:"mbingenheimer" }
+                  if(fromProv[prefix]) _prefix = fromProv[prefix]
 
                   let url = fullUri(hres)
 
                   if(url.match(new RegExp("^("+src+":)|("+prefixesMap[src]+")"))) {                     
                      let canonUrl = sameAsRes.filter(p => p.type === adm+"canonicalHtml")                     
-                     if(canonUrl.length && canonUrl[0].value && canonUrl[0].value.indexOf(prefix) !== -1) url = canonUrl[0].value
-                     //console.log("cUrl1",url,prefix,hres)
+                     if(canonUrl.length) for(let ican in canonUrl) if(canonUrl[ican].value && canonUrl[ican].value.indexOf(_prefix) !== -1) { url = canonUrl[ican].value; break ; }
+                     //console.log("cUrl1",canonUrl,url,prefix,hres)
                   }
 
                   if(this.props.assoRes && this.props.assoRes[url]) {
                      let canonUrl = this.props.assoRes[url]
                      if(canonUrl && canonUrl.filter) canonUrl = canonUrl.filter(p => p.type === adm+"canonicalHtml" || p.fromKey === adm+"canonicalHtml")
-                     if(canonUrl.length && canonUrl[0].value && canonUrl[0].value.indexOf(prefix) !== -1) url = canonUrl[0].value
-                     //console.log("cUrl2",url,prefix,hres)
+                     if(canonUrl.length) for(let ican in canonUrl) if(canonUrl[ican].value && canonUrl[ican].value.indexOf(_prefix) !== -1) { url = canonUrl[ican].value; break ; }
+                     //console.log("cUrl2",canonUrl,url,prefix,hres)
                   }
 
                   let prov = src.toUpperCase()
@@ -2400,8 +2403,9 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                
                // TODO move this to bottom of result block
 
-               //retList.push(<div class="source">{sources}</div>)
-               //retList = [ <div class="result-box">{retList}</div> ]
+               otherSrc.push(<div class="source">{sources}</div>)
+               otherSrc = [ <div class="result-box">{otherSrc}</div> ]
+
                this._menus = { ...this._menus, ...menus } 
             }
             
@@ -2692,6 +2696,9 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
             { this.getResultProp(bdo+"incipit",allProps,false,false) }
             
+
+            { this.getResultProp(bdo+"workTranslationOf",allProps) }
+
             {/* { this.getResultProp(bdo+"material",allProps) }
             { this.getResultProp(bdo+"printMethod",allProps) }
             { this.getResultProp(bdo+"inRootInstance",allProps) } */}
@@ -2721,7 +2728,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
             </div> )
 
-      retList.push(<hr/>);
+      if(otherSrc.length) retList.push(otherSrc);
 
       this._refs[n] = React.createRef();
 

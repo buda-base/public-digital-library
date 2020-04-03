@@ -273,8 +273,8 @@ body { overflow:auto !important;padding-right:0 !important; font-family:"Roboto"
 #samples { padding-bottom: 40px ; width:910px;margin-right:0px;padding-left:37px;}
 #samples h3 { text-transform: uppercase; text-align: center;}
 
-#res-container > ul li { padding-left:0; }
-#res-container > ul h4 { padding-left:22px;; pointer-events:none;}
+#res-container > ul li { padding-left:0; pointer-events:none; }
+#res-container > ul h4 { padding-left:22px;; }
 #res-container > ul h4 { color:#343434; font-size:24px; /*font-family:"Noto Sans";*/ font-weight:900; text-transform:uppercase;}
 
 #res-container #samples > h4 { padding-left:0; }
@@ -331,7 +331,6 @@ a.result button { text-transform:none; padding-bottom:0;}
    margin-bottom:5px; /*border-left: 1px solid rgba(0,0,0,0.25) ;*/ }
 .result-box ~ #matches:empty, a.result ~ #matches:empty { margin-bottom:8px; margin-top:-20px !important;padding-top:0 !important;}
 
-
 /* box-shadow:-5px 0 5px -4px rgba(0,0,0,0.2);  } */
 #matches .match { margin:10px 0; max-width:calc(100% - 100px); }
 a.result + #matches a.result + #matches .match { max-width:100%; }
@@ -382,7 +381,9 @@ a.result + #matches .result-content { padding-left:0; }
 
 .result-content.StatusEditing,.result-content.StatusWithdrawn,.result-content.StatusProvisional { opacity:0.45;} 
 
-.result-box { display:flex; }
+
+.result-box { width:calc(100% - 75px);display:flex; justify-content: flex-end; position:absolute; bottom:10px;}
+
 
 
 #matches > .match ~ .instance-collapse,
@@ -407,6 +408,8 @@ a.result + #matches .result-content { padding-left:0; }
 .sameAsLogo,
 .source a img { height:18px; margin:0 5px; padding-top:2px; display:inline-block;}
 /* .source a:last-child img { height:35px; vertical-align:top;  } */
+
+.source a img { margin:0; height:12px;margin-left:5px;;}
 
 .sameAsLogo { color:black; font-weight:bold; background-color:#eee;border:1px solid #aaa;font-size:10px;align-items: center; padding-top:0px;padding:0px 2px;  line-height:20px; }
 
@@ -649,7 +652,7 @@ h4:not(:hover) > .lang
    padding: 0 15px; border:none !important; font-weight:600; font-size:13px; cursor:pointer;}
 #top-left #permalink img { display:inline-block; margin-right:10px; }
 
-#perma #rid { font-size:13px;font-weight:600;display:inline-block;color:#343434; margin-left:57px; padding-right:8px; 
+#perma #rid { font-size:13px;font-weight:600;display:inline-block;color:#343434; margin-left:63px; padding-right:8px; 
    border-right:1px solid rgba(0,0,0,0.35);}
 
 /* #perma #rid + * { display:none;} */
@@ -763,6 +766,7 @@ h4:not(:hover) > .lang
 
 
 .resource .data > div .sub > .subgroup > .subsub > h4.first { width:150px; }
+.resource .data > div:not([data-prop="bdo:creator"]) .sub > .subgroup > .subsub > h4.first + * { max-width: calc(100% - 150px - 15px); }
 
 .resource .data > [data-prop="bdo:creator"] .subgroup > .subsub { display:inline-block; }
 
