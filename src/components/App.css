@@ -530,7 +530,7 @@ h4:not(:hover) > .lang
    
 .resource .data.related .header::before,
 .resource.work .data .header::before { background-image:url("/icons/work.png");  }
-.resource.instance .data .header::before { background-image:url("/icons/instance_50g.png"); }
+.resource.instance .data .header::before { background-image:url("/icons/instance_50b.png"); background-size:50px auto; }
 .resource.images .data .header::before { background-image:url("/icons/image.svg"); }
 .resource.person .data > .header::before { background-image:url("/icons/person.png");  }
 .resource.topic .data > .header::before { background-image:url("/icons/topic.png");  }
@@ -583,6 +583,9 @@ h4:not(:hover) > .lang
 .resource .title h2.on .T.work::before { background-image:url("/icons/work_50b.png"); }
 .resource .title h2.on .T.instance::before { background-image:url("/icons/instance_50b.png"); }
 .resource .title h2.on .T.images::before { background-image:url("/icons/images_50b.png"); }
+
+
+.resource .title h2 .T.etext::before { background-image:url("/icons/etext.png"); background-size: contain;}
 
 /* .resource .title h2 .T { position:absolute;font-size:12px;text-transform:uppercase;top:8px;opacity:0.65;font-weight:100;} */
 
@@ -735,6 +738,7 @@ h4:not(:hover) > .lang
 
 .resource .data:not(.top-props) > [data-prop]:last-child::after { content:none !important;display:none; } 
 
+.resource .data > [data-prop="bdo:instanceReproductionOf"] > h3 { margin-right:20px; box-sizing: border-box; width:170px;}
 
 .resource .data > [data-prop="bdo:workHasTranslation"] > h3 { display:none; }
 .resource .data > [data-prop="bdo:workHasTranslation"] > .group { width:100%; }

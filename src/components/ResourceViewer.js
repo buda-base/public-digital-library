@@ -777,7 +777,13 @@ class ResourceViewer extends Component<Props,State>
 
          console.log("title!",_T,work,instance,images)
 
-         if(_T === "Images") {            
+         if(_T === "Etext") {            
+            if(!s) s = { ...state }
+            if(!work && s.title.work) work = s.title.work
+            images = [ { type:"uri", value:fullUri(props.IRI) } ]
+            s.title = { work, images }
+         } 
+         else if(_T === "Images") {            
             if(!s) s = { ...state }
             if(!work && s.title.work) work = s.title.work
             if(!instance && s.title.instance) instance = s.title.instance
@@ -4118,6 +4124,12 @@ class ResourceViewer extends Component<Props,State>
          baseW = this.state.title.instance 
          iTitle = getWtitle(baseW)
 
+      }
+      else if(_T === "Etext") { 
+         rTitle = title ; 
+
+         let baseW = this.state.title.work 
+         wTitle = getWtitle(baseW)
       }
       else { 
          wTitle = title ; 
