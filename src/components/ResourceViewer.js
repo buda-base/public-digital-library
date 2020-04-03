@@ -1675,8 +1675,12 @@ class ResourceViewer extends Component<Props,State>
          
          sameAsPrefix = this.setProvLab(elem,prefix,sameAsPrefix)   
          
-         //console.log("s",prop,prefix,sameAsPrefix,pretty,elem,info,infoBase)
-         
+         //TODO lien legaldata / provider dans l'ontologie
+
+         if(elem && elem.value && elem.value === bda+"LD_EAP_metadata") { prefix = "eap"; sameAsPrefix = "eap hasIcon provider" ; }
+
+         console.log("s",prop,prefix,sameAsPrefix,pretty,elem,info,infoBase)         
+
          if((info && infoBase && infoBase.filter(e=>e["xml:lang"]||e["lang"]).length >= 0) || (prop && prop.match && prop.match(/[/#]sameAs/))) {
 
 
@@ -1752,7 +1756,7 @@ class ResourceViewer extends Component<Props,State>
             }            
             else if(providers[src = srcSame] && !prop.match(/[/#]sameAs/)) { 
 
-               let locaLink = link,srcPrefix,srcUri,srcList 
+               let locaLink = link,srcPrefix,srcUri,srcList = []
 
                if(elem.fromSameAs) srcList = [ elem.fromSameAs ]
                if(elem.allSameAs)  srcList = elem.allSameAs 
