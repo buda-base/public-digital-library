@@ -793,11 +793,12 @@ h4:not(:hover) > .lang
 .resource .data > [data-prop="bdo:workHasTranslation"] .subsubgroup h4.multiple:not(:last-child),
 .resource .data > [data-prop="bdo:workHasTranslation"] .subgroup .subsub:not(:last-child) { margin-bottom:10px;} 
 
-.urilink svg { vertical-align: sub; display:inline-block; padding-right:10px; background-color:white;}
-.urilink svg { width:24px; opacity:0.9;}
-.urilink svg path { color:#d73449; stroke:#d73449; }
-.urilink svg.etext path { fill: #d73449; }
-.urilink:hover svg { opacity:1 }
+.urilink .svg { background-color:white; padding-right:15px;  display:inline-block;}
+.urilink svg {  display:inline-block; width:21px; opacity:1; vertical-align: -5px;}
+.urilink:hover svg path { color:#d73449; stroke:#d73449; }
+.urilink:hover svg.etext path { fill: #d73449; }
+/* .urilink:hover svg { opacity:1 } */
+
 /*
 TODO 
 + props/sous-props cf WorkW-01 (sous-props/titre en 14 et letterspacing à (-)0.3)

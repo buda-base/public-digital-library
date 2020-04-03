@@ -1683,9 +1683,9 @@ class ResourceViewer extends Component<Props,State>
             // console.log("svg?",svgImageS)
 
             if(info && info.length && prop === bdo+"workHasInstance") {
-               if(elem.value.match(new RegExp(bdr+"IE"))) info = [svgEtextS].concat(info)
-               else if(elem.value.match(new RegExp(bdr+"MW"))) info = [svgInstanceS].concat(info)
-               else if(elem.value.match(new RegExp(bdr+"W"))) info = [svgImageS].concat(info)
+               if(elem.value.match(new RegExp(bdr+"IE"))) info = [<span class="svg">{svgEtextS}</span>].concat(info)
+               else if(elem.value.match(new RegExp(bdr+"MW"))) info = [<span class="svg">{svgInstanceS}</span>].concat(info)
+               else if(elem.value.match(new RegExp(bdr+"W"))) info = [<span class="svg">{svgImageS}</span>].concat(info)
             }
 
             let link,orec,canUrl;
