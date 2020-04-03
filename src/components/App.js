@@ -2400,8 +2400,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                
                // TODO move this to bottom of result block
 
-               retList.push(<div class="source">{sources}</div>)
-               retList = [ <div class="result-box">{retList}</div> ]
+               //retList.push(<div class="source">{sources}</div>)
+               //retList = [ <div class="result-box">{retList}</div> ]
                this._menus = { ...this._menus, ...menus } 
             }
             
@@ -4301,8 +4301,16 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             <div className={"SearchPane"+(this.props.keyword ?" resultPage":"") }  ref={this._refs["logo"]}>            
             { showMenus }
                <div class="fond-logo">
-                  <a id="logo" target="_blank" href="https://www.tbrc.org/">
-                     <img src="/logo.svg" style={{width:"200px"}} />
+                  <a id="logo" target="_blank" old-href="https://www.tbrc.org/">
+                     {/* <img src="/logo.svg" style={{width:"200px"}} /> */}
+                     <img src="/pichome.jpg" />
+                     <div>
+                        <div>
+                           BUDA
+                           <h1>The Buddhist<br/>Universal Digital<br/>Archive</h1>
+                           <span>Explore etexts, catalogs, and millions of pages of scanned ….</span>
+                        </div>
+                     </div>
                   </a>
                </div>
                {/* <h2>BUDA Platform</h2> */}
@@ -4496,8 +4504,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                { (this.props.loading || (this.props.datatypes && !this.props.datatypes.hash)) && <Loader className="mainloader"/> }
                { message.length == 0 && !this.props.loading &&
                   <List id="samples">
-                     { messageD }
-                     {/* <h3>Welcome to the beta version of BUDA!</h3> */}
+                     {/* { messageD } */}
+                     <h3>Welcome to the beta version of BUDA!</h3>
                   </List> }
                { message.length > 0 &&
                   <List key={2} id="results">
