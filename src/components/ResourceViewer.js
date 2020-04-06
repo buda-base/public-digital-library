@@ -217,6 +217,7 @@ let propOrder = {
       "tmp:imageVolumeId",
       "bdo:eTextVolumeIndex",
       "bdo:eTextInItem",
+      "tmp:workLabel",
       "bdo:itemForWork",
       "bdo:isRoot",
       "bdo:eTextHasPage",
@@ -457,7 +458,18 @@ const topProperties = {
       skos+"prefLabel", 
       skos+"altLabel",
       bdo+"instanceOf",
-      adm+"originalRecord"     
+      adm+"originalRecord",
+      bdo+"eTextTitle",
+      bdo+"eTextIsVolume",
+      bdo+"eTextInVolume",
+      bdo+"eTextInInstance",
+      //tmp+"imageVolumeId", // TODO fix breaks image display 
+      bdo+"eTextVolumeIndex",
+      bdo+"eTextInItem",
+      tmp+"workLabel",
+      bdo+"itemForWork",
+      bdo+"isRoot",
+      
    ]
 }
                        
@@ -3774,13 +3786,15 @@ class ResourceViewer extends Component<Props,State>
 
                let sup = this.hasSuper(k)
                
-               if(k === skos+"prefLabel" && !this.props.authUser) {
+               if(k === skos+"prefLabel") { //} && !this.props.authUser) {
                   if(!otherLabels || !otherLabels.length)
                      return ;               
-                  else if(kZprop.indexOf(skos+"altLabel") === -1)
+                  else //if(kZprop.indexOf(skos+"altLabel") === -1)
                      k = skos+"altLabel"                  
+                  /*
                   else 
                      return
+                  */
                }
                
                if(!sup) // || sup.filter(e => e.value == bdo+"workRefs").length > 0) //
@@ -4164,7 +4178,7 @@ class ResourceViewer extends Component<Props,State>
          rTitle = getWtitle(baseW)
       }
       
-      //console.log("ttlm",titlElem)
+      console.log("ttlm",titlElem,otherLabels)
       
       let mapProps = [bdo+"placeRegionPoly", bdo+"placeLong", bdo+"placeLat" ]
                            

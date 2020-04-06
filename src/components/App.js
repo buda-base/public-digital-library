@@ -67,6 +67,8 @@ import {narrowWithString} from "../lib/langdetect"
 import {sortLangScriptLabels, extendedPresets} from '../lib/transliterators';
 import './App.css';
 
+import {svgEtextS,svgImageS} from "./icons"
+
 const adm   = "http://purl.bdrc.io/ontology/admin/" ;
 const bda   = "http://purl.bdrc.io/admindata/";
 const bdac  = "http://purl.bdrc.io/anncollection/" ;
@@ -1898,7 +1900,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
    }
 
    getInstanceLink(id,n,allProps:[]=[]) {
-      let nb = allProps.filter(p => p.type === tmp+"nbInstance")
+      let nb = allProps.filter(p => p.type === tmp+"nbInstance"), ret = []
       if(nb.length) {
          nb = Number(nb[0].value)
          if(nb) {
@@ -1910,7 +1912,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             console.log("inst",instances)
 
             if(instances) { 
-               let instK = Object.keys(instances), n = 1, ret = [], seeAll 
+               let instK = Object.keys(instances), n = 1,  seeAll 
 
                for(let k of instK) {
                   let label = getLangLabel(this,"",instances[k].filter(e => e.type === skos+"prefLabel"))
@@ -1918,7 +1920,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   if(!label) label = { value:"?","xml:lang":"?"}
                   // TODO etext instance ?
 
-                  ret.push(<div>{this.makeResult(k,n,null,label.value,label["xml:lang"],null,null,null,[],null,instances[k],label.value,true)}</div>)
+                  ret.push(this.makeResult(k,n,null,label.value,label["xml:lang"],null,null,null,[],null,instances[k],label.value,true))
                   n++
                   if(n>3) { 
                      seeAll = true
@@ -1927,35 +1929,64 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                }
                if(ret.length) { 
 
-                  ret = <Collapse className="res-collapse" in={!this.state.collapse[id]}>
+                  ret = <Collapse className="res-collapse" in={this.state.collapse[id]}>
                      {ret}
                   </Collapse>
-
-                  ret = [ 
-                     <span class="instance-collapse" onClick={(e) => { 
-                        this.setState({...this.state,collapse:{...this.state.collapse,[id]:!this.state.collapse[id] },repage:true })
-                      }}>{!this.state.collapse[id]?<ExpandMore/>:<ExpandLess/>}</span>,
-                     <span class="label">{"Has Instances"+(ret.length > 1 ?"s":"")}:&nbsp;</span>, 
-                     <div style={{clear:"both"}}></div>,
-                     ret
-                  ]
-
-                  if(seeAll) ret.push(<span class="instance-link">&gt;&nbsp;<Link class="urilink" to={iUrl}>Browse All Instances ({nb})</Link></span>)
-
-                  return ret
                }
+            }
+
+            let hasOpen = allProps.filter(p => p.type === tmp+"assetAvailability" && p.value === tmp+"hasOpen") 
+            let hasImage = allProps.filter(p => p.type === tmp+"assetAvailability" && p.value === tmp+"hasImage") 
+            let hasEtext = allProps.filter(p => p.type === tmp+"assetAvailability" && p.value === tmp+"hasEtext") 
+
+            ret = 
+               <div style={{display:"block"}}>
+                  <div class="match" style={{marginBottom:0}}>
+                     <span class="label">{"Has "+nb+" Instance"+(nb > 1 ?"s":"")}</span>
+                     <span class="assets">
+                     { (hasOpen.length > 0) && <span title={getPropLabel(this,tmp+"assetAvailability",false)+": "+getPropLabel(this,tmp+"hasOpen",false)}><img src="/icons/open.png"/></span>}
+                     { (hasImage.length > 0) && <span title={getPropLabel(this,tmp+"assetAvailability",false)+": "+getPropLabel(this,tmp+"hasImage",false)}>{svgImageS}</span>}
+                     { (hasEtext.length > 0) && <span title={getPropLabel(this,tmp+"assetAvailability",false)+": "+getPropLabel(this,tmp+"hasEtext",false)}>{svgEtextS}</span>}
+                     </span>
+                     <span class="instance-link">
+                        <Link class="urilink" to={iUrl}>browse all</Link>                     
+                        <emph style={{margin:"0 5px"}}> or </emph>
+                        <span class="instance-collapse" onClick={(e) => { 
+                           if(!instances) this.props.onGetInstances(shortUri(id)) ; 
+                           this.setState({...this.state,collapse:{...this.state.collapse,[id]:!this.state.collapse[id] },repage:true })
+                        } } >{!this.state.collapse[id]?<span>preview</span>:<span>hide</span>}{!this.state.collapse[id]?<ExpandMore/>:<ExpandLess/>}</span>
+                     </span>
+                  </div>
+                  {ret}
+               </div>
+                  
+                     
+                  
+
+
+            return ret
+         }
+      }
+   }
+
+            /*
+                  //if(seeAll) ret.push(<span class="instance-link">&gt;&nbsp;<Link class="urilink" to={iUrl}>Browse All Instances ({nb})</Link></span>)
             }
             else
                return <div class="match">
-                  <span class="instance-link">&gt;&nbsp;
-                     <span class="urilink" onClick={(e) => this.props.onGetInstances(shortUri(id))}>Preview Instances</span>
+                  <span class="label">{"Has Instance"+(
+                     //ret.length > 1 ?"s":""
+                     "")}:&nbsp;</span> 
+                  <span class="instance-link">
+                     <span class="urilink" onClick={(e) => this.props.onGetInstances(shortUri(id))}>Preview</span>
                      <emph> or </emph>
                      <Link class="urilink" to={iUrl}>Browse All ({nb})</Link>
                   </span>
                 </div>
          }
-      }
-   }
+                */
+      
+   
 
    getResultProp(prop:string,allProps:[],plural:string="s", doLink:boolean = true, fromProp:[], exclude:string,useAux:[],findProp:[],altInfo:[],iri) {
 
@@ -2187,7 +2218,15 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          else status = ""
       }
 
-      let T = getEntiType(id);
+      let T = getEntiType(id), langT, langs = [];
+      if(T === "Work") langT = allProps.filter(p => p.type === bdo+"language")      
+      else if(T === "Instance") langT = allProps.filter(p => p.type === bdo+"script")
+
+      if(langT && langT.length) for(let l of langT) { 
+         langs.push(<span title={getPropLabel(this,bdo+(T==='Work'?'language':'script'),false)+": "+getPropLabel(this,l.value,false)} data-lang={l.value}>
+            {T==='Instance'?<span>{l.value.replace(/^.*[/]Script([^/]+)$/,"$1")}</span>:null}
+         </span>)
+      }
 
       let ret = ([
             
@@ -2201,7 +2240,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      {/* <ListItemText style={{height:"auto",flexGrow:10,flexShrink:10}}
                         primary={ */}
                            <div>
-                              <span class="T">{T}</span>
+                              <span class="T">{T}{langs}</span>
                               <h3 key="lit">
                                  {lit}
                                  { lang && <Tooltip key={"tip"} placement="bottom-end" title={
@@ -2689,11 +2728,12 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             { this.getResultProp(this.state.filters.datatype[0] === "Work"?tmp+"otherTitle":tmp+"otherName",allProps, true, false, [skos+"prefLabel", skos+"altLabel"], !preLit?preLit:preLit.replace(/[↦↤]/g,"") ) }
             {/* { this.getResultProp(tmp+"assetAvailability",allProps,false,false) } */}
             
-            { this.getResultProp(rdf+"type",allProps.filter(e => e.type === rdf+"type" && e.value === bdo+"EtextInstance")) } 
+            {/* { this.getResultProp(rdf+"type",allProps.filter(e => e.type === rdf+"type" && e.value === bdo+"EtextInstance")) }  */}
+            
             {/* //![bdo+"AbstractWork",bdo+"Work",bdo+"Instance",bdo+"SerialMember",bdo+"Topic"].includes(e.value))) } */}
             { this.getResultProp(tmp+"originalRecord",allProps,false,false, [ tmp+"originalRecord", adm+"originalRecord"]) }
-            { this.getResultProp(bdo+"language",allProps) }
-            { this.getResultProp(bdo+"script",allProps) }
+            {/* { this.getResultProp(bdo+"language",allProps) } */}
+            {/* { this.getResultProp(bdo+"script",allProps) } */}
             
 
             { this.getResultProp(bdo+"incipit",allProps,false,false) }
@@ -2903,7 +2943,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          }
          
          // resource id matching ? deprecated ? WIP
-         else if(this.props.resources &&  this.props.resources[this.props.keyword] )
+         else if(false && this.props.resources &&  this.props.resources[this.props.keyword] )
          {
             let l ; // sublist[o].filter((e) => (e.type && e.type.match(/prefLabelMatch$/)))[0]
             let labels = this.props.resources[this.props.keyword]
@@ -4533,9 +4573,9 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   </List> }
                { message.length > 0 &&
                   <List key={2} id="results">
-                     { this.props.isInstance && this.state.backToWorks && <a className="uri-link" style={{marginLeft:"16px"}} onClick={(event) => {
+                     { this.props.isInstance && this.state.backToWorks && <a className="uri-link"  onClick={(event) => {
                            this.resetFilters(event)
-                        }}>&lt; Back to Works</a> }
+                        }}><img src="/icons/back.png"/><span>Back to Works</span></a> }
                      { message }
                      <div id="pagine">
                         <NavigateBefore
