@@ -333,7 +333,7 @@ function getPropLabel(that, i, withSpan = true, withLang = false) {
 
    let lang
    if(labels) {
-      label = getLangLabel(that,"",labels) //,true)
+      label = getLangLabel(that,"",labels,true)
 
       //console.log("label",i,label)
 
@@ -2187,6 +2187,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          else status = ""
       }
 
+      let T = getEntiType(id);
 
       let ret = ([
             
@@ -2200,6 +2201,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      {/* <ListItemText style={{height:"auto",flexGrow:10,flexShrink:10}}
                         primary={ */}
                            <div>
+                              <span class="T">{T}</span>
                               <h3 key="lit">
                                  {lit}
                                  { lang && <Tooltip key={"tip"} placement="bottom-end" title={
@@ -2715,7 +2717,12 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
             { this.getResultProp(bdo+"publisherName",allProps,false,false) }
             { this.getResultProp(bdo+"publisherLocation",allProps,false,false) }
-            { this.getResultProp(bdo+"contentLocationStatement",allProps,false,false, [bdo+"instanceExtentStatement",bdo+"contentLocationStatement"]) }
+
+
+            {/* TODO fix facet count after preview instance */}
+
+
+            {/* { this.getResultProp(bdo+"contentLocationStatement",allProps,false,false, [bdo+"instanceExtentStatement",bdo+"contentLocationStatement"]) } */}
 
             { this.getResultProp(bdo+"biblioNote",allProps,false,false,[bdo+"biblioNote",rdfs+"comment"]) }
 
@@ -4283,6 +4290,27 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
       this._refs["logo"] = React.createRef();
 
+      let changeKWtimer, changeKW = (value) => {
+
+         /* // TODO find a way to speed up rendering when changing keyword with some previous results already displayed
+
+         if(!changeKWtimer) {
+            changeKWtimer = setTimeout( () => { changeKW() }, 1000) ;
+         }
+         */
+
+         let language = this.state.language
+         let detec = narrowWithString(value, this.state.langDetect)
+         let possible = [ ...this.state.langPreset, ...langSelect ]
+         if(detec.length < 3) { 
+            if(detec[0] === "tibt") for(let p of possible) { if(p === "bo" || p.match(/-[Tt]ibt$/)) { language = p ; break ; } }
+            else if(detec[0] === "hani") for(let p of possible) { if(p.match(/^zh((-[Hh])|$)/)) { language = p ; break ; } }
+            else if(["ewts","iast","deva","pinyin"].indexOf(detec[0]) !== -1) for(let p of possible) { if(p.match(new RegExp(detec[0]+"$"))) { language = p ; break ; } }
+         }
+         console.log("detec",possible,detec,this.state.langPreset,this.state.langDetect)
+         this.setState({keyword:value, dataSource: [ value, "possible suggestion","another possible suggestion"], language}); 
+      }
+
       return (
 <div>
 
@@ -4329,18 +4357,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                <SearchBar
                   closeIcon={<Close className="searchClose" style={ {color:"rgba(0,0,0,1.0)",opacity:1} } onClick={() => { this.props.history.push({pathname:"/",search:""}); this.props.onResetSearch();} }/>}
                   disabled={this.props.hostFailure}
-                  onChange={(value:string) => { 
-                     let language = this.state.language
-                     let detec = narrowWithString(value, this.state.langDetect)
-                     let possible = [ ...this.state.langPreset, ...langSelect ]
-                     if(detec.length < 3) { 
-                        if(detec[0] === "tibt") for(let p of possible) { if(p === "bo" || p.match(/-[Tt]ibt$/)) { language = p ; break ; } }
-                        else if(detec[0] === "hani") for(let p of possible) { if(p.match(/^zh((-[Hh])|$)/)) { language = p ; break ; } }
-                        else if(["ewts","iast","deva","pinyin"].indexOf(detec[0]) !== -1) for(let p of possible) { if(p.match(new RegExp(detec[0]+"$"))) { language = p ; break ; } }
-                     }
-                     console.log("detec",possible,detec,this.state.langPreset,this.state.langDetect)
-                     this.setState({keyword:value, dataSource: [ value, "possible suggestion","another possible suggestion"], language}); 
-                  }}
+                  onChange={(value:string) => changeKW(value)}
                   onRequestSearch={this.requestSearch.bind(this)}
                   value={this.props.hostFailure?"Endpoint error: "+this.props.hostFailure+" ("+this.getEndpoint()+")":this.state.keyword !== undefined && this.state.keyword!==this.state.newKW?this.state.keyword:this.props.keyword&&this.state.newKW?this.state.newKW.replace(/\"/g,""):""}
                   style={{
