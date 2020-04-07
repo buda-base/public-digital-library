@@ -475,6 +475,7 @@ const topProperties = {
                        
 let extProperties = {
    "Work": [
+      bf+"identifiedBy",
       bdo+"contentMethod",
       bdo+"material",
       bdo+"workMaterial",
@@ -485,10 +486,12 @@ let extProperties = {
       bdo+"editionStatement",
       bdo+"itemBDRCHoldingStatement",
    ],
-   "Person": [
+   "Person": [,
+      bf+"identifiedBy",
       tmp+"entityScore"
    ],
-   "Place": [
+   "Place": [,
+      bf+"identifiedBy",
       tmp+"entityScore"
    ]
 }
@@ -1027,7 +1030,37 @@ class ResourceViewer extends Component<Props,State>
       {
 
          let customSort = [ bdo+"hasPart", bdo+"instanceHasVolume", bdo+"workHasInstance", tmp+"siblingInstances", bdo+"hasTitle", bdo+"personName", bdo+"volumeHasEtext",
-                            bdo+"personEvent", bdo+"placeEvent", bdo+"workEvent", bdo+"instanceEvent" ]
+                            bdo+"personEvent", bdo+"placeEvent", bdo+"workEvent", bdo+"instanceEvent", bf+"identifiedBy" ]
+
+         let sortByPropSubType = (tag:string) => {
+            let parts = prop[tag]
+            if(parts) {
+
+               let assoR = this.props.assocResources
+               if (assoR) {
+                  parts = parts.map((e) => {
+
+                     let index = assoR[e.value],value
+
+                     if(index) value = index.filter(e => e.fromKey === rdf+"value")
+                     if(index) index = index.filter(e => e.fromKey === rdf+"type")
+                     
+                     if(index && index[0] && index[0].value) index = index[0].value+";"
+                     else index = ""
+
+                     if(value && value[0] && value[0].value) index += value[0].value
+
+                     return ({ ...e, k:index })
+                  })
+                  parts = _.orderBy(parts,['k'],['asc'])
+               }
+               return parts ;
+            }
+         }
+
+
+         if(prop[bf+"identifiedBy"]) prop[bf+"identifiedBy"] = sortByPropSubType(bf+"identifiedBy");
+
 
          let sortBySubPropNumber = (tag:string,idx:string) => {
             let parts = prop[tag]
@@ -1389,7 +1422,7 @@ class ResourceViewer extends Component<Props,State>
          */
          let ret = getLangLabel(this, prop, this.props.dictionary[prop][rdfs+"label"],useUIlang)
          if(ret && ret.value && ret.value != "")
-            return ret.value
+            return <span lang={ret.lang}>{ret.value}</span>
 
        //&& this.props.ontology[prop][rdfs+"label"][0] && this.props.ontology[prop][rdfs+"label"][0].value) {
          //let comment = this.props.ontology[prop][rdfs+"comment"]
@@ -1696,7 +1729,7 @@ class ResourceViewer extends Component<Props,State>
 
          if(elem && elem.value && elem.value === bda+"LD_EAP_metadata") { prefix = "eap"; sameAsPrefix = "eap hasIcon provider" ; }
 
-         console.log("s",prop,prefix,sameAsPrefix,pretty,elem,info,infoBase)         
+         //console.log("s",prop,prefix,sameAsPrefix,pretty,elem,info,infoBase)         
 
          if((info && infoBase && infoBase.filter(e=>e["xml:lang"]||e["lang"]).length >= 0) || (prop && prop.match && prop.match(/[/#]sameAs/))) {
 
@@ -2240,14 +2273,17 @@ class ResourceViewer extends Component<Props,State>
                if(T.length) T = T[0]
                if(T === lastT) keepT = true
 
+               console.log("keep?",T,lastT,e,keepT)
+
                if(iKeep < _elem.length - 1) {
                   let nxT = _elem[iKeep+1]
-                  //console.log("willK?",nxT)
+                                    
                   if(nxT && nxT.k) {
                      nxT = nxT.k.split(";")
                      if(nxT.length) nxT = nxT[0]
                      if(T === nxT) willK = true
                   }
+                  console.log("willK?",nxT,willK)
                }
             }
 
@@ -2628,7 +2664,7 @@ class ResourceViewer extends Component<Props,State>
 
                if(group.length) sub.push(<div class="subgroup">{group}</div>)
 
-               if(!noVal && sub.length) ret.push(<div className={div+" "+(bnode?"full":"")}>{sub}</div>)
+               if(!noVal && sub.length) ret.push(<div className={div+" "+(bnode?"full":"") + (keepT?" keep":"") +  (willK?" willK":"") }>{sub}</div>)
                //console.log("ret",ret,ret.length)
 
 
@@ -3427,7 +3463,7 @@ class ResourceViewer extends Component<Props,State>
       if(hasMaxDisplay) maxDisplay = hasMaxDisplay ;
 
       let n = 0
-      if(elem && elem.filter) n = elem.filter(t=>t && (t.type === "uri" || t.type === "literal")).length
+      if(elem && elem.filter) n = elem.filter(t=>t && ( (t.type === "uri" && (k !== bdo+"workHasInstance" || t.value.match(/[/]MW[^/]+$/))) || t.type === "literal")).length
       ret = this.insertPreprop(k, n, ret)
 
       //console.log("genP",elem,k,maxDisplay,n)
@@ -3491,6 +3527,52 @@ class ResourceViewer extends Component<Props,State>
          )
       }
    }
+
+
+
+
+perma_menu(pdfLink,monoVol,fairUse)
+{
+   let that = this
+
+
+   let legal = this.getResourceElem(adm+"metadataLegal"), legalD
+   if(legal && legal.length && legal[0].value && this.props.dictionary) { 
+      legalD = this.props.dictionary[legal[0].value]
+      if(legalD) legalD = legalD[adm+"license"]
+      if(legalD && legalD.length && legalD[0].value) legalD = legalD[0].value
+   }
+
+   let cLegal = this.getResourceElem(adm+"contentLegal"), cLegalD
+   if(cLegal && cLegal.length && cLegal[0].value && this.props.dictionary) { 
+      cLegalD = this.props.dictionary[cLegal[0].value]
+      if(cLegalD) cLegalD = cLegalD[adm+"license"]
+      if(cLegalD && cLegalD.length && cLegalD[0].value) cLegalD = cLegalD[0].value
+   }
+
+   console.log("legal",cLegal,cLegalD,legal,legalD)
+
+   return (
+
+    <div>
+
+       { that.props.IRI && <CopyToClipboard text={"http://purl.bdrc.io/resource/"+that.props.IRI.replace(/^bdr:/,"")} onCopy={(e) =>
+                //alert("Resource url copied to clipboard\nCTRL+V to paste")
+                prompt("Resource url has been copied to clipboard.\nCTRL+V to paste",fullUri(that.props.IRI))
+          }>
+
+          <a id="permalink" style={{marginLeft:"0px"}} title="Permalink">
+             <img src="/icons/PLINK.png"/>{/* <ShareIcon /> */}
+             <span>Permalink</span>
+          </a>
+       </CopyToClipboard> }
+
+      { that.props.IRI && <span id="rid">{shortUri(that.props.IRI)}</span> }
+
+   </div>
+  )
+}
+
 
    renderEtextHasChunk = (elem, k, tags) => {
 
@@ -3789,12 +3871,11 @@ class ResourceViewer extends Component<Props,State>
                if(k === skos+"prefLabel") { //} && !this.props.authUser) {
                   if(!otherLabels || !otherLabels.length)
                      return ;               
-                  else //if(kZprop.indexOf(skos+"altLabel") === -1)
-                     k = skos+"altLabel"                  
-                  /*
+                  else if(!this.getResourceElem(skos+"altLabel")) //if(kZprop.indexOf(skos+"altLabel") === -1)
+                     k = skos+"altLabel"                                    
                   else 
                      return
-                  */
+                  
                }
                
                if(!sup) // || sup.filter(e => e.value == bdo+"workRefs").length > 0) //
@@ -4280,7 +4361,7 @@ class ResourceViewer extends Component<Props,State>
                   { this.renderAccess() }
                   { this.renderMirador() }           
                   { theDataTop }
-                  <div class="data" id="perma">{ top_left_menu(this,pdfLink,monoVol,fairUse)  }</div>
+                  <div class="data" id="perma">{ this.perma_menu(pdfLink,monoVol,fairUse)  }</div>
                   { theDataBot }
                   { related && related.length > 0 &&  
                      <div class="data related" id="resources">

@@ -719,12 +719,13 @@ h4:not(:hover) > .lang
 
 
 /* #top-left { position:absolute; top:calc(100% + 40px);right:40px; } */
-#top-left { position:relative; background:#efefef; display:flex;align-items: center; justify-content:flex-start; margin-bottom:0px;
+#perma > div { position:relative; background:#efefef; display:flex;align-items: center; justify-content:flex-start; margin-bottom:0px;
    padding:20px 35px; }
-#top-left button {color:rgba(0,0,0,0.54); }
-#top-left #permalink { color:white; background-color: #d73449; border-radius:5px;display:flex;align-items: center;justify-content: center; height:40px;
+#perma > div button {color:rgba(0,0,0,0.54); }
+
+#perma #permalink { color:white; background-color: #d73449; border-radius:5px;display:flex;align-items: center;justify-content: center; height:40px;
    padding: 0 15px; border:none !important; font-weight:600; font-size:13px; cursor:pointer;}
-#top-left #permalink img { display:inline-block; margin-right:10px; }
+#perma #permalink img { display:inline-block; margin-right:10px; }
 
 #perma #rid { font-size:13px;font-weight:600;display:inline-block;color:#343434; margin-left:63px; padding-right:8px; 
    border-right:1px solid rgba(0,0,0,0.35);}
@@ -746,7 +747,7 @@ h4:not(:hover) > .lang
 
 /* .resource .data > div:not(.firstImage) { display:flex;align-items:baseline;flex-wrap:nowrap;box-sizing: border-box;width:100%;position:relative;} */
 .resource .data > div:not(.firstImage):not(.browse):not(.header) { display:block; position:relative; }
-.resource .data:not(.ext-props) > div:not(.firstImage):not(.browse):not(.header):not(#top-left)::after { content:''; width:calc(100% - 190px);; height:1px;margin:25px 0 25px 190px;display:block;}
+.resource .data:not(.ext-props):not(#perma) > div:not(.firstImage):not(.browse):not(.header)::after { content:''; width:calc(100% - 190px);; height:1px;margin:25px 0 25px 190px;display:block;}
 .resource .data > div:not(.firstImage):not(.browse):not(.header):not(:last-child)::after { background:rgba(0,0,0,0.25);}
 .resource .data.top-props > div:last-child::after { margin-bottom:20px !important; margin-top:0 !important; }
 
@@ -782,6 +783,8 @@ h4:not(:hover) > .lang
 .resource .sub h4.first,
 .resource .subsub { line-height:23px;  }
 
+.resource [data-prop="skos:altLabel"] .group > h4:first-child:not(.first) + h4.multiple { margin-top:-4px; }
+
  .resource .sub .sub h4.first.type,
 .resource .sub h4.first.prop { font-style:normal;/*font-size:0.8em; line-height:20px;*/ }
 
@@ -810,7 +813,7 @@ h4:not(:hover) > .lang
 .resource .sub .sub { padding-left:60px;}
 .resource .subsub.full .subsub .subsubsub h4.first.prop { font-style:normal; }
 
-.resource .data > div:not([data-prop="bdo:note"]):not(.header):not(.firstImage):not(#top-left) 
+.resource .data > div:not([data-prop="bdo:note"]):not(.header):not(.firstImage):not(#perma) 
 { display:flex !important; /*align-items: baseline;*/ flex-wrap:wrap;}
 
 /* ------------------------------------------------------------------------------------------------------------------------ properties */
@@ -830,6 +833,8 @@ h4:not(:hover) > .lang
 
 .resource .data > div > .group > .sub { display:inline-block; }
 
+.resource .data .propCollapseHeader > .sub > h4.first,
+.resource .data .propCollapse > div > div > .sub > h4.first, 
 .resource .data > [data-prop="bdo:creator"] .subgroup .subsub:first-child,
 .resource .data > div > .group > .sub > h4.first { width: 160px;  }
 .resource .data > [data-prop="bdo:creator"] .subgroup .subsub:first-child { padding-right:0; margin-right:15px;}
@@ -840,7 +845,7 @@ h4:not(:hover) > .lang
 
 
 .resource .data > div .sub > .subgroup > .subsub > h4.first { width:150px; }
-.resource .data > div:not([data-prop="bdo:creator"]) .sub > .subgroup > .subsub > h4.first + * { max-width: calc(100% - 150px - 15px); }
+.resource .data > div:not([data-prop="bdo:creator"]):not([data-prop="bf:identifiedBy"]) .sub > .subgroup > .subsub > h4.first + * { max-width: calc(100% - 150px - 15px); }
 
 .resource .data > [data-prop="bdo:creator"] .subgroup > .subsub { display:inline-block; }
 
@@ -918,8 +923,12 @@ TODO
 
 .resource .data .sub.keep { border-top:none !important; padding-top:0 !important; margin-top:-15px; display:block !important;  }
 .resource .data .sub.keep > h4.first { height:0; overflow:hidden; }
+.resource .data [data-prop="bf:identifiedBy"] .sub.keep > h4.first { display:none;}
 
 .resource .data .sub.willK:not(.keep) > h4.first { position:absolute; }
+
+.resource .data [data-prop="bf:identifiedBy"] .sub.keep > h4.first + .subgroup,
+.resource .data .sub.willK:not(.keep) > h4.first + .subgroup,
 .resource .data .sub.willK:not(.keep) > h4.first + h4.label { margin-left:calc(160px + 15px); }
 
 
@@ -980,7 +989,7 @@ TODO
 .resource .data > [data-prop="bdo:note"]  .sub > h4.first { font-size:13px; padding-right:5px;}
 .resource .data > [data-prop="bdo:note"]  .sub > h4 + div.subsub,
 .resource .data > [data-prop="bdo:note"]  .sub > h4 + div.subsub h4 { display:inline;}
-.resource .data > [data-prop="bdo:note"] > div:not(.no-collapse) .sub:last-child,
+.resource .data > [data-prop="bdo:note"] > .group > div:not(.no-collapse) .sub:last-child,
 .resource .data > [data-prop="bdo:note"]  .sub:not(:last-child) { margin-bottom:25px; }
 .resource .data > [data-prop="bdo:note"] .expand { top:-10px; display:inline-block; margin-left:0; line-height:15px;} 
 .resource .data > [data-prop="bdo:note"] .expand .toggle-expand { margin-top:-2px;  } 
@@ -1062,6 +1071,7 @@ TODO
 .resource .data.legal-props > div h4 > .ulink > a:first-child { padding-left:24px; }
 .resource .data.legal-props > div h4 > .ulink > span .before { padding:0;background-position:center;width:25px;height:25px; border-radius:13px;
  }
+ .resource .data.legal-props > div h4 > .ulink:not(.bdr) { margin-left:-21px; }
 
 /* ------------------------------------------------------------------------------------------------------------------------ extended properties */
 
@@ -1084,6 +1094,9 @@ TODO
 .resource .data.ext-props .has-collapse.custom .expand { order:-1; color:transparent;width:calc(100% - 190px);top:-5px;
    margin-top:0 !important; border-color:#c2c2c2;margin-left:0;}
 .resource .data.ext-props .has-collapse.custom .expand .toggle-expand { color:black; right:0;top:-5px; }
+
+.resource .data.ext-props .propCollapseHeader { display:none !important; }
+.resource .data.ext-props .propCollapse { margin:5px 0 0px 0 !important; }
 
 .resource .data.ext-props .propCollapse { padding-left:190px; }
 .resource .data.ext-props .propCollapse.in-true { margin:25px 0 20px 0 ; }
@@ -1346,6 +1359,7 @@ h3 ~ .propCollapse.in-true
 
 h4.multiple { margin-bottom:10px; vertical-align: top;}
 
+h4.multiple:last-child { margin-bottom:0; }
 
 .resource .data > div > h3 + h4:not(.multiple) { width:calc(100% - 190px);; vertical-align:top; padding-top:0px; /*line-height:24px;*/ }
 
@@ -1408,6 +1422,8 @@ h3 .expand svg { position:absolute; margin-top:-18px; }*/
 .has-collapse.custom[data-prop="bdo:workHasInstance"] .propCollapse,
 .has-collapse.custom[data-prop="bdo:workHasInstance"] .propCollapseHeader { column-count:1; }
 
+[data-prop="bdo:workHasInstance"] h4.multiple { line-height:20px; }
+
 span.in { font-weight:500;padding-left:5px; padding-right:5px;  }
 
 .has-collapse.custom .expand { position:relative; bottom:auto; color:#d73449; font-weight:700;font-size:13px;margin-top:10px; }
@@ -1425,7 +1441,7 @@ h2.on .lang, .propCollapseHeader .lang, .propCollapse .lang { position:absolute 
 */
 
 
-.resource .data > div .sub .subsub > h4 { vertical-align:top; }
+.resource .data > div:not([data-prop="bf:identifiedBy"]) .sub .subsub > h4 { vertical-align:top; }
 
 .resource .data > div .sub .subsub > h4.multiple { padding-left:25px; /*line-height:24px;*/ }
 
