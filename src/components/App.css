@@ -1071,7 +1071,7 @@ TODO
 .resource .data.legal-props > div h4 > .ulink > a:first-child { padding-left:24px; }
 .resource .data.legal-props > div h4 > .ulink > span .before { padding:0;background-position:center;width:25px;height:25px; border-radius:13px;
  }
- .resource .data.legal-props > div h4 > .ulink:not(.bdr) { margin-left:-21px; }
+ .resource .data.legal-props > div h4 > .ulink:not(.bdr):not(.bda) { margin-left:-21px; }
 
 /* ------------------------------------------------------------------------------------------------------------------------ extended properties */
 
