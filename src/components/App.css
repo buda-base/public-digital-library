@@ -727,8 +727,19 @@ h4:not(:hover) > .lang
    padding: 0 15px; border:none !important; font-weight:600; font-size:13px; cursor:pointer;}
 #perma #permalink img { display:inline-block; margin-right:10px; }
 
-#perma #rid { font-size:13px;font-weight:600;display:inline-block;color:#343434; margin-left:63px; padding-right:8px; 
-   border-right:1px solid rgba(0,0,0,0.35);}
+#perma #DL,
+#perma #rid { font-size:13px;font-weight:600;display:inline-block;color:#343434; padding-right:12px;  }
+   
+
+#perma #rid { margin-left:63px;  border-right:1px solid rgba(0,0,0,0.35); }
+
+
+#perma #DL { cursor:pointer; padding-left:12px;}
+#perma #DL svg { vertical-align:-4px; font-size:18px; padding-left:12px;}
+
+#popDL { margin-top:30px;}
+#popDL a { text-decoration: none; }
+#popDL a li { font-family:"Noto Sans";color:#4a4a4a;font-weight:600;font-size:12px;  }
 
 /* #perma #rid + * { display:none;} */
 
@@ -770,7 +781,7 @@ h4:not(:hover) > .lang
 
 .resource .group > h4.multiple > .in { vertical-align: middle; }
 
-.resource .group > h4.multiple > span:not(.lang):not(.in),
+.resource .group > h4.multiple > span:not(.lang):not(.in):not(.hover-anchor):not(.ulink.provider),
 .resource .group > h4.multiple > span .urilink, 
 .resource .group > h4:first-child:not(.first),
 .resource .group > h4:first-child:not(.first) .ulink { vertical-align: top;}
@@ -1610,7 +1621,7 @@ body {overflow-x:hidden; }
 body > .ol-li-lang:last-child li::before,
 .dataWidget ol li::before {content: counter(li);  display: inline-block; width: 1.1em; margin-left: -1.1em ; font-weight:800; }
 /* .collapse { width:390px;}*/
-.ol-li-lang svg { color:rgba(0,0,0,0.65); font-size:17px; opacity:0;vertical-align:middle;margin-left:5px;cursor:pointer;display:inline-block;}
+.ol-li-lang svg { color:rgba(230, 161, 161, 0.65); font-size:17px; opacity:0;vertical-align:middle;margin-left:5px;cursor:pointer;display:inline-block;}
 .ol-li-lang svg.drag { position:absolute; margin-left:-36px;font-size:17px;margin-top:-1px;  padding-right: 5px;}
 .subcollapse.custom-lang:not(.sorting) .ol-li-lang:hover svg { opacity:1; }
 .subcollapse.custom-lang:not(.sorting) .ol-li-lang:hover svg.drag { opacity:1; cursor: row-resize; }
@@ -1635,7 +1646,7 @@ body > .ol-li-lang:last-child li::before { content:'-';}
 .SidePane > div > .collapse > div > div > .searchWidget { padding-right:30px;}
 
 .searchWidget { position:relative; }
-.searchWidget > .exclude { position:absolute;margin-left:-17px;margin-top:0px; display:none; z-index:1;top:0;left:0;width:16px;padding-left:3px; }
+.searchWidget > .exclude { position:absolute;margin-left:-17px;margin-top:1px; display:none; z-index:1;top:0;left:0;width:16px;padding-left:3px; }
 .searchWidget > .exclude svg, svg.excl { font-size:12px; color:white;background-color:rgba(229, 74, 53,1);border-radius:2px; cursor:pointer;}
 .exclude:hover, .searchWidget label:hover + .exclude { display:inline-block;}
 
@@ -1730,6 +1741,11 @@ svg.hide { opacity:0;pointer-events:none; }
 .pdfLoader .loader, .loadedContent { display:inline-block;pointer-events:none; }
 
 .poPdf a { cursor:pointer;}
+
+.poPdf > div:last-child { max-height:60vh; padding:;  }
+.poPdf > div b,
+.poPdf > div a { font-size:12px; font-family: "Noto Sans"; }
+.poPdf > div li { padding-top:12px; padding-bottom:0; }
 
 .pdfMenu a { position:relative;}
 .pdfMenu b { display:inline-block; white-space: nowrap;}

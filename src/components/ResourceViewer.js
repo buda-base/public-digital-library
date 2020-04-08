@@ -12,6 +12,7 @@ import { GoogleLayer } from "react-leaflet-google" ;
 // const { BaseLayer} = LayersControl;
 import Settings from '@material-ui/icons/SettingsSharp';
 import SettingsApp from '@material-ui/icons/SettingsApplications';
+import Menu from '@material-ui/core/Menu';
 import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
 import FormHelperText from '@material-ui/core/FormHelperText';
@@ -3569,6 +3570,97 @@ perma_menu(pdfLink,monoVol,fairUse)
 
       { that.props.IRI && <span id="rid">{shortUri(that.props.IRI)}</span> }
 
+      <span id="DL" onClick={(e) => this.setState({...this.state,anchorPermaDL:e.currentTarget, collapse: {...this.state.collapse, permaDL:!this.state.collapse.permaDL } } ) }>
+      Download { this.state.collapse.permaDL ? <ExpandLess/>:<ExpandMore/>}
+      </span>
+
+         <Popover
+            id="popDL"
+            open={this.state.collapse.permaDL}
+            anchorEl={this.state.anchorPermaDL}
+            onClose={e => { this.setState({...this.state,anchorPermaDL:null,collapse: {...this.state.collapse, permaDL:false } } ) }}
+            >
+               <a target="_blank" title="TTL version" rel="alternate" type="text/turtle" href={that.expand(that.props.IRI)+".ttl"}>
+                  <MenuItem>Export as TTL</MenuItem>
+               </a>
+               <a target="_blank" title="JSON-LD version" rel="alternate" type="application/ld+json" href={that.expand(that.props.IRI)+".jsonld"}>
+                  <MenuItem>Export as JSON-LD</MenuItem>           
+               </a>
+               { pdfLink && 
+         ( (!(that.props.manifestError && that.props.manifestError.error.message.match(/Restricted access/)) && !fairUse) || (that.props.auth && that.props.auth.isAuthenticated()))
+         &&
+               <a> <MenuItem title={I18n.t("resource.download")+" PDF/ZIP"} onClick={ev =>
+                      {
+                         //if(that.props.createPdf) return ;
+                          if((monoVol && monoVol.match && monoVol.match(/[^0-9]/)) || monoVol > 0){
+                            that.props.onInitPdf({iri:that.props.IRI,vol:monoVol},pdfLink)
+                          }
+                          else if(!that.props.pdfVolumes) {
+                            that.props.onRequestPdf(that.props.IRI,pdfLink)
+                         }
+                         that.setState({...that.state, collapse:{...this.state.collapse,permaDL:false}, pdfOpen:true,anchorElPdf:ev.currentTarget})
+                      }
+                   }>
+                   Export as PDF/ZIP
+                </MenuItem></a>  }
+
+              
+         </Popover>
+
+           { (that.props.pdfVolumes && that.props.pdfVolumes.length > 0) &&
+                   <Popover
+                      className="poPdf"
+                      open={that.state.pdfOpen == true || that.props.pdfReady == true}
+                      anchorEl={that.state.anchorElPdf}
+                      onClose={that.handleRequestClosePdf.bind(this)}
+                   >
+                      <List>
+                         {/*
+                           that.props.pdfUrl &&
+                          [<MenuItem onClick={e => that.setState({...that.state,pdfOpen:false})}><a href={that.props.pdfUrl} target="_blank">Download</a></MenuItem>
+                          ,<hr/>]
+                         */}
+                         {
+                            that.props.pdfVolumes.map(e => {
+
+                               let Ploading = e.pdfFile && e.pdfFile == true
+                               let Ploaded = e.pdfFile && e.pdfFile != true
+                               let Zloading = e.zipFile && e.zipFile == true
+                               let Zloaded = e.zipFile && e.zipFile != true
+
+                               return (<ListItem className="pdfMenu">
+                                     <b>{(e.volume !== undefined?(!e.volume.match || e.volume.match(/^[0-9]+$/)?"Volume ":"")+(e.volume):monoVol)}:</b>
+                                     &nbsp;&nbsp;
+                                     <a onClick={ev => that.handlePdfClick(ev,e.link,e.pdfFile)}
+                                        {...(Ploaded ?{href:e.pdfFile}:{})}
+                                     >
+                                        { Ploading && <Loader className="pdfSpinner" loaded={Ploaded} scale={0.35}/> }
+                                        <span {... (Ploading?{className:"pdfLoading"}:{})}>PDF</span>
+                                     </a>
+                                     &nbsp;&nbsp;|&nbsp;&nbsp;
+                                     <a onClick={ev => that.handlePdfClick(ev,e.link,e.zipFile,"zip")}
+                                        {...(Zloaded ?{href:e.zipFile}:{})}
+                                     >
+                                        { Zloading && <Loader className="zipSpinner" loaded={Zloaded} scale={0.35}/> }
+                                        <span {... (Zloading?{className:"zipLoading"}:{})}>ZIP</span>
+                                       </a>
+                                       { that.props.IRI && getEntiType(that.props.IRI) === "Etext" && <div>
+
+                                             &nbsp;&nbsp;|&nbsp;&nbsp;
+
+                                             <a target="_blank" download={that.props.IRI?that.props.IRI.replace(/bdr:/,"")+".txt":""} 
+                                                   href={that.props.IRI?that.props.IRI.replace(/bdr:/,bdr)+".txt":""} >
+                                                <span>TXT</span>
+                                             </a>
+                                          </div>
+                                       }
+                                  </ListItem>)
+                            })
+                         }
+                      </List>
+                   </Popover>
+                }
+         
    </div>
   )
 }

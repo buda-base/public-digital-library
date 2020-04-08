@@ -3784,6 +3784,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             <Typography  className="widget-title" >{title}</Typography>
             { this.state.collapse[txt] ? <ExpandLess /> : <ExpandMore />}
          </ListItem>,
+         // TODO replace Collapse by Popover
          <Collapse key={2}
             in={this.state.collapse[txt]}
             className={["collapse ",this.state.collapse[txt]?"open":"close"].join(" ")}
