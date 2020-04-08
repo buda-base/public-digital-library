@@ -1742,7 +1742,7 @@ svg.hide { opacity:0;pointer-events:none; }
 
 .poPdf a { cursor:pointer;}
 
-.poPdf > div:last-child { max-height:60vh; padding:;  }
+.poPdf > div:last-child { max-height:60vh; padding:12px;  }
 .poPdf > div b,
 .poPdf > div a { font-size:12px; font-family: "Noto Sans"; }
 .poPdf > div li { padding-top:12px; padding-bottom:0; }
