@@ -4295,7 +4295,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                            {checkboxes.slice(12)}
                         </Collapse>
                         ,
-                        <span style={{fontSize:"12px",cursor:"pointer", marginTop:"5px",marginRight:"25px",display:"inline-block",fontWeight:700}} onClick={(e) => this.setState({...this.state, collapse:{...this.state.collapse, [j+"_widget"]:!this.state.collapse[j+"_widget"]}})}>
+                        <span style={{fontSize:"10px",cursor:"pointer", marginTop:"5px",marginRight:"25px",display:"inline-block",fontWeight:600}} onClick={(e) => this.setState({...this.state, collapse:{...this.state.collapse, [j+"_widget"]:!this.state.collapse[j+"_widget"]}})}>
                            {(!this.state.collapse[j+"_widget"]?"Show all":"Hide")}
                         </span>]
                      }

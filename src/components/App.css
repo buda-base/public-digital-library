@@ -728,20 +728,56 @@ h4:not(:hover) > .lang
 #perma #permalink img { display:inline-block; margin-right:10px; }
 
 #perma #DL,
-#perma #rid { font-size:13px;font-weight:600;display:inline-block;color:#343434; padding-right:12px;  }
+#perma #rid { font-size:13px;font-weight:600;display:inline-block;color:#343434; padding-right:16px;  }
    
 
 #perma #rid { margin-left:63px;  border-right:1px solid rgba(0,0,0,0.35); }
 
 
-#perma #DL { cursor:pointer; padding-left:12px;}
-#perma #DL svg { vertical-align:-4px; font-size:18px; padding-left:12px;}
+#perma #DL { cursor:pointer; padding-left:16px;}
+#perma #DL svg { vertical-align:-4px; font-size:18px; padding-left:0px;}
 
-#popDL { margin-top:30px;}
+#popDL { margin-top:30px; }
+#popDL > div:last-child { box-shadow:0 1px 4px #cecece;  }
 #popDL a { text-decoration: none; }
 #popDL a li { font-family:"Noto Sans";color:#4a4a4a;font-weight:600;font-size:12px;  }
 
+#perma #copyright { margin-left:auto; border-right:1px solid rgba(0,0,0,0.35);padding:2px 16px;  }
+#perma #copyright img { height:20px; vertical-align: middle;}
+#perma #copyright img[src$="/.png"] { visibility:hidden;}
+
+#perma #same { display:flex; align-items: center; padding-left:16px; }
+#perma #same .provider { display:inline-block; vertical-align: middle; line-height:0; }
+#perma #same .provider img { height:22px; display:inline-block;} 
+#perma #same .provider:not(:first-child) { margin-left:8px;}
+#perma #same .provider.bdr { margin-bottom:2px;}
+#perma #same .provider.bdr img { height:28px;}
+
 /* #perma #rid + * { display:none;} */
+
+.pdfLoader .loader { margin-top:30px; }
+.pdfLoader { vertical-align:-3px; }
+.pdfLoader img { opacity:0.55; }
+/* .pdfLoader > button { width:auto !important; } */
+.pdfLoader .loader, .loadedContent { display:inline-block;pointer-events:none; }
+
+.poPdf a { cursor:pointer;}
+
+.poPdf > div:last-child { max-height:60vh; box-shadow:0 1px 4px #cecece; }
+.poPdf > div b,
+.poPdf > div a { font-size:12px; font-family: "Noto Sans"; color:#4d4d4d;}
+.poPdf > div li { padding-top:6px; padding-bottom:6px; }
+.poPdf > div a { padding:0 6px;}
+.poPdf > div a + a { border-left:1px solid rgba(0,0,0,0.35); }
+.poPdf > div a[href] { color:#d73449;}
+
+.pdfMenu a { position:relative;}
+.pdfMenu b { display:inline-block; white-space: nowrap;}
+.pdfLoading,.zipLoading { color:white; }
+.pdfSpinner,.zipSpinner { left: 55% !important;  top: 45% !important; }
+
+.poPdf > div a li:hover,
+#popDL a li:hover { background-color:#f5f5f5;}
 
 /* ------------------------------------------------------------------------------------------------------------------------ properties/misc */
 
@@ -1610,7 +1646,7 @@ body {overflow-x:hidden; }
 .searchWidget > label > span,
 .dataWidget label > span { font-size:12px; }
 .searchWidget > label > span svg { width:16px; height:16px; } 
-.searchWidget > label > span svg.excl { width:12px;height:12px;/*vertical-align:-2px; */}
+.searchWidget > label > span svg.excl { width:12px;height:12px; vertical-align:-4px; }
 .dataWidget > label > span svg { width:17px; height:17px; }
 .searchWidget > label > span:first-child,
 .dataWidget > label > span:first-child { width:22px;height:22px; color:rgba(0,0,0,0.7); margin-left:9px;margin-right:2px; }
@@ -1733,24 +1769,6 @@ svg.hide { opacity:0;pointer-events:none; }
    padding:0 10px;margin-left:15px;}
 .diva-tools-right { width:400px; }
 .diva-tools-left { padding-right:100px; width:300px;}
-
-.pdfLoader .loader { margin-top:30px; }
-.pdfLoader { vertical-align:-3px; }
-.pdfLoader img { opacity:0.55; }
-/* .pdfLoader > button { width:auto !important; } */
-.pdfLoader .loader, .loadedContent { display:inline-block;pointer-events:none; }
-
-.poPdf a { cursor:pointer;}
-
-.poPdf > div:last-child { max-height:60vh; padding:12px;  }
-.poPdf > div b,
-.poPdf > div a { font-size:12px; font-family: "Noto Sans"; }
-.poPdf > div li { padding-top:12px; padding-bottom:0; }
-
-.pdfMenu a { position:relative;}
-.pdfMenu b { display:inline-block; white-space: nowrap;}
-.pdfLoading,.zipLoading { color:white; }
-.pdfSpinner,.zipSpinner { left: 55% !important;  top: 45% !important; }
 
 
 .profile-container { padding:40px 100px; }

@@ -3538,6 +3538,7 @@ perma_menu(pdfLink,monoVol,fairUse)
 
 
    let legal = this.getResourceElem(adm+"metadataLegal"), legalD
+   if(legal && legal.length) legal = legal.filter(p => !p.fromSameAs)
    if(legal && legal.length && legal[0].value && this.props.dictionary) { 
       legalD = this.props.dictionary[legal[0].value]
       if(legalD) legalD = legalD[adm+"license"]
@@ -3545,13 +3546,44 @@ perma_menu(pdfLink,monoVol,fairUse)
    }
 
    let cLegal = this.getResourceElem(adm+"contentLegal"), cLegalD
+   if(cLegal && cLegal.length) cLegal = cLegal.filter(p => !p.fromSameAs)
    if(cLegal && cLegal.length && cLegal[0].value && this.props.dictionary) { 
       cLegalD = this.props.dictionary[cLegal[0].value]
       if(cLegalD) cLegalD = cLegalD[adm+"license"]
       if(cLegalD && cLegalD.length && cLegalD[0].value) cLegalD = cLegalD[0].value
    }
 
+   let copyR = ""  //"open_unknown" ;
+   if((cLegalD && cLegalD.endsWith("CC0"))||(!cLegalD && legalD && legalD.endsWith("CC0"))) copyR = "open" ;
+   else if((cLegalD && cLegalD.endsWith("PublicDomain"))||(!cLegalD && legalD && legalD.endsWith("PublicDomain"))) copyR = "open" ;
+   else if((cLegalD && cLegalD.endsWith("AllRightsReserved"))||(!cLegalD && legalD && legalD.endsWith("AllRightsReserved"))) copyR = "not_open" ;
+   else if((cLegalD && cLegalD.endsWith("Undetermined"))||(!cLegalD && legalD && legalD.endsWith("Undetermined"))) copyR = "open_unknown" ;
+   // TODO other kind of licenses ?
+
    console.log("legal",cLegal,cLegalD,legal,legalD)
+
+   let same = this.getResourceElem(owl+"sameAs")
+   if(!same || !same.length) same = [] 
+   same = same.concat([{ type:"uri", value:fullUri(this.props.IRI)}])
+   
+   console.log("same",same)
+
+   const provImg = {
+      "bdr":  "/logo.svg", 
+      "bnf":  "/BNF.svg",
+      "cbct": false,
+      "cbcp": false,
+      "dila": "/DILA-favicon.ico", 
+      "eap":  "/BL.gif",
+      "eftr": "/84000.svg",
+      "gretil": "/GRETIL.png",
+      "ia": "/IA.png",
+      "mbbt": "/MB-icon.jpg",
+      "ola":  "/OL.png",  //"https://openlibrary.org/static/images/openlibrary-logo-tighter.svg" //"https://seeklogo.com/images/O/open-library-logo-0AB99DA900-seeklogo.com.png", 
+      "rkts": "/RKTS.png",
+      "viaf": "/VIAF.png",
+      "wd":   "/WD.svg",
+   }
 
    return (
 
@@ -3574,21 +3606,22 @@ perma_menu(pdfLink,monoVol,fairUse)
       Download { this.state.collapse.permaDL ? <ExpandLess/>:<ExpandMore/>}
       </span>
 
+      <span id="copyright" title={cLegalD?this.fullname(cLegalD):(legalD?this.fullname(legalD):"")}><img src={"/icons/"+copyR+".png"}/></span>
+
+      <span id="same">{same.map(s => {
+         let prefix = shortUri(s.value).split(":")[0]
+         return <span class={"provider "+prefix}>{provImg[prefix]?<img src={provImg[prefix]}/>:prefix}</span>
+      })}</span>
+
          <Popover
             id="popDL"
             open={this.state.collapse.permaDL}
             anchorEl={this.state.anchorPermaDL}
             onClose={e => { this.setState({...this.state,anchorPermaDL:null,collapse: {...this.state.collapse, permaDL:false } } ) }}
             >
-               <a target="_blank" title="TTL version" rel="alternate" type="text/turtle" href={that.expand(that.props.IRI)+".ttl"}>
-                  <MenuItem>Export as TTL</MenuItem>
-               </a>
-               <a target="_blank" title="JSON-LD version" rel="alternate" type="application/ld+json" href={that.expand(that.props.IRI)+".jsonld"}>
-                  <MenuItem>Export as JSON-LD</MenuItem>           
-               </a>
                { pdfLink && 
-         ( (!(that.props.manifestError && that.props.manifestError.error.message.match(/Restricted access/)) && !fairUse) || (that.props.auth && that.props.auth.isAuthenticated()))
-         &&
+                  ( (!(that.props.manifestError && that.props.manifestError.error.message.match(/Restricted access/)) && !fairUse) || (that.props.auth && that.props.auth.isAuthenticated()))
+                  &&
                <a> <MenuItem title={I18n.t("resource.download")+" PDF/ZIP"} onClick={ev =>
                       {
                          //if(that.props.createPdf) return ;
@@ -3601,9 +3634,27 @@ perma_menu(pdfLink,monoVol,fairUse)
                          that.setState({...that.state, collapse:{...this.state.collapse,permaDL:false}, pdfOpen:true,anchorElPdf:ev.currentTarget})
                       }
                    }>
-                   Export as PDF/ZIP
+                   Export images as PDF/ZIP
                 </MenuItem></a>  }
 
+               { !that.props.manifestError && that.props.imageAsset &&
+
+                       <CopyToClipboard text={that.props.imageAsset} onCopy={(e) =>
+                                 //alert("Resource url copied to clipboard\nCTRL+V to paste")
+                                 prompt("IIIF Manifest url has been copied to clipboard.\nCTRL+V to paste",that.props.imageAsset)
+                           }>
+                           <a><MenuItem>Export IIIF manifest</MenuItem></a>
+                        </CopyToClipboard>
+
+                   }
+
+               <a target="_blank" title="TTL version" rel="alternate" type="text/turtle" href={that.expand(that.props.IRI)+".ttl"} download>
+                  <MenuItem>Export metadata as TTL</MenuItem>
+               </a>
+               
+               <a target="_blank" title="JSON-LD version" rel="alternate" type="application/ld+json" href={that.expand(that.props.IRI)+".jsonld"} download>
+                  <MenuItem>Export metadata as JSON-LD</MenuItem>           
+               </a>
               
          </Popover>
 
@@ -3630,21 +3681,20 @@ perma_menu(pdfLink,monoVol,fairUse)
 
                                return (<ListItem className="pdfMenu">
                                      <b>{(e.volume !== undefined?(!e.volume.match || e.volume.match(/^[0-9]+$/)?"Volume ":"")+(e.volume):monoVol)}:</b>
-                                     &nbsp;&nbsp;
                                      <a onClick={ev => that.handlePdfClick(ev,e.link,e.pdfFile)}
                                         {...(Ploaded ?{href:e.pdfFile}:{})}
                                      >
                                         { Ploading && <Loader className="pdfSpinner" loaded={Ploaded} scale={0.35}/> }
                                         <span {... (Ploading?{className:"pdfLoading"}:{})}>PDF</span>
                                      </a>
-                                     &nbsp;&nbsp;|&nbsp;&nbsp;
                                      <a onClick={ev => that.handlePdfClick(ev,e.link,e.zipFile,"zip")}
                                         {...(Zloaded ?{href:e.zipFile}:{})}
                                      >
                                         { Zloading && <Loader className="zipSpinner" loaded={Zloaded} scale={0.35}/> }
                                         <span {... (Zloading?{className:"zipLoading"}:{})}>ZIP</span>
                                        </a>
-                                       { that.props.IRI && getEntiType(that.props.IRI) === "Etext" && <div>
+                                       { that.props.IRI && getEntiType(that.props.IRI) === "Etext" && // TODO fix download etext
+                                          <div> 
 
                                              &nbsp;&nbsp;|&nbsp;&nbsp;
 
