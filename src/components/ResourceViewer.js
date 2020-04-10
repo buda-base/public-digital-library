@@ -3606,7 +3606,7 @@ perma_menu(pdfLink,monoVol,fairUse)
       Download { this.state.collapse.permaDL ? <ExpandLess/>:<ExpandMore/>}
       </span>
 
-      <span id="copyright" title={cLegalD?this.fullname(cLegalD):(legalD?this.fullname(legalD):"")}><img src={"/icons/"+copyR+".png"}/></span>
+      { cLegalD && <span id="copyright" title={this.fullname(cLegalD)}><img src={"/icons/"+copyR+".png"}/></span> }
 
       <span id="same">{same.map(s => {
          let prefix = shortUri(s.value).split(":")[0]

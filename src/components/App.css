@@ -742,6 +742,8 @@ h4:not(:hover) > .lang
 #popDL a { text-decoration: none; }
 #popDL a li { font-family:"Noto Sans";color:#4a4a4a;font-weight:600;font-size:12px;  }
 
+#perma #DL + #same { margin-left:auto; }
+
 #perma #copyright { margin-left:auto; border-right:1px solid rgba(0,0,0,0.35);padding:2px 16px;  }
 #perma #copyright img { height:20px; vertical-align: middle;}
 #perma #copyright img[src$="/.png"] { visibility:hidden;}
@@ -749,9 +751,10 @@ h4:not(:hover) > .lang
 #perma #same { display:flex; align-items: center; padding-left:16px; }
 #perma #same .provider { display:inline-block; vertical-align: middle; line-height:0; }
 #perma #same .provider img { height:22px; display:inline-block;} 
-#perma #same .provider:not(:first-child) { margin-left:8px;}
-#perma #same .provider.bdr { margin-bottom:2px;}
+#perma #same .provider:not(:first-child) { margin-left:10px;}
+#perma #same .provider.bdr { margin-bottom:2px; margin-left:8px;}
 #perma #same .provider.bdr img { height:28px;}
+
 
 /* #perma #rid + * { display:none;} */
 
@@ -1113,12 +1116,28 @@ TODO
 .resource .data.legal-props > div h4:last-child { margin-bottom:0px; }
 .resource .data.legal-props > div h4 span a { color:white; }
 .resource .data.legal-props > div h4 > span:not(.ulink) { display:none; }
+
 .resource .data.legal-props > div h4 > .ulink { display:flex; align-items: center; }
-.resource .data.legal-props > div h4 > .ulink > span { margin-right:20px; }
+
+.resource .data.legal-props > div h4 > .ulink > span { margin-right:20px; vertical-align: middle; }
 .resource .data.legal-props > div h4 > .ulink > a:first-child { padding-left:24px; }
 .resource .data.legal-props > div h4 > .ulink > span .before { padding:0;background-position:center;width:25px;height:25px; border-radius:13px;
  }
- .resource .data.legal-props > div h4 > .ulink:not(.bdr):not(.bda) { margin-left:-21px; }
+.resource .data.legal-props > div h4 > .ulink:not(.bdr):not(.bda) { margin-left:-21px; }
+
+.resource .data.legal-props > div h4 { min-height:27px; }
+.resource .data.legal-props > div h4 a { vertical-align:top; }
+
+.resource .data.legal-props > div h4 > .ulink [href*="LD_rKTs"]::before ,
+.resource .data.legal-props > div h4 > .ulink [href*="LD_BDRC"]::before { background-image:url("/logo.svg"); background-position:center;
+   background-size:18px auto; content:' ';display:inline-block;width:25px;height:25px;  background-color:white;border-radius:13px; 
+   background-repeat:no-repeat; vertical-align:middle; position:absolute; margin-left:-45px;
+}
+
+.resource .data.legal-props > div h4 > .ulink [href*="LD_rKTs"]::before {
+   background-image:url("/RKTS.png"); background-size:14px auto;
+}
+
 
 /* ------------------------------------------------------------------------------------------------------------------------ extended properties */
 
