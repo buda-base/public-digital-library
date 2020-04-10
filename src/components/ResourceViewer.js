@@ -464,7 +464,7 @@ const topProperties = {
       bdo+"eTextIsVolume",
       bdo+"eTextInVolume",
       bdo+"eTextInInstance",
-      //tmp+"imageVolumeId", // TODO fix breaks image display 
+      //tmp+"imageVolumeId", // TODO uncommenting this breaks image display 
       bdo+"eTextVolumeIndex",
       bdo+"eTextInItem",
       tmp+"workLabel",
@@ -1305,7 +1305,7 @@ class ResourceViewer extends Component<Props,State>
                   return true
                })
                let keys = Object.keys(subLangDeriv)
-               if(keys.length >= 2) {
+               if(keys.length >= 1) {
                   for(let k of keys) {
                      prop[k] = sortByLang(subLangDeriv[k])
                   }

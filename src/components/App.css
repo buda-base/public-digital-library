@@ -783,6 +783,12 @@ h4:not(:hover) > .lang
 .poPdf > div a li:hover,
 #popDL a li:hover { background-color:#f5f5f5;}
 
+/* ------------------------------------------------------------------------------------------------------------------------ hover panel */
+.resource .data:not(.legal-props) span > .before,
+.resource .data:not(.legal-props) span > .sameAs { display:none; }
+
+.resource .data:not(.legal-props) h4.sameAs .ulink.sameAs { margin-left:0 !important; }
+
 /* ------------------------------------------------------------------------------------------------------------------------ properties/misc */
 
 .resource .data.access { text-align:center; padding-bottom:80px;}
