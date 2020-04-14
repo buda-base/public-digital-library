@@ -3331,15 +3331,15 @@ class ResourceViewer extends Component<Props,State>
       let doMap = false, doRegion = false,regBox ;
       if(kZprop.indexOf(bdo+"placeLong") !== -1 && kZprop.indexOf(bdo+"placeLat") !== -1)
       {
-         doMap = [].concat(this.fullname(this.getResourceElem(bdo+"placeLat")[0].value)).concat(this.fullname(this.getResourceElem(bdo+"placeLong")[0].value))
-         console.log("map",doMap)
+         doMap = [].concat(this.fullname(this.getResourceElem(bdo+"placeLat")[0].value,false,false,false,false)).concat(this.fullname(this.getResourceElem(bdo+"placeLong")[0].value,false,false,false,false))
+         console.log("doMap",doMap)
       }
       if(kZprop.indexOf(bdo+"placeRegionPoly") !== -1)
       {
          doRegion = JSON.parse(this.getResourceElem(bdo+"placeRegionPoly")[0].value)
          regBox = bbox(doRegion)
          regBox = [ [regBox[1],regBox[0]], [regBox[3],regBox[2]] ]
-         console.log("reg",doRegion,regBox)
+         //console.log("reg",doRegion,regBox)
       }
 
       return { doMap, doRegion, regBox }
@@ -3400,14 +3400,14 @@ class ResourceViewer extends Component<Props,State>
 
       const { BaseLayer} = LayersControl;
 
-      console.log("map",elem, k, tags, kZprop, doMap, doRegion, regBox, title)
+      //console.log("map",elem, k, tags, kZprop, doMap, doRegion, regBox, title)
 
       return ( 
          <div data-prop={shortUri(k)}>
             <h3><span>{this.proplink(k)}:</span>&nbsp;</h3>
             { k == bdo+"placeLong" && tags }
             <div class="map"> {/* style={ {width:"100%",marginTop:"10px"} }> */}
-               { !window.location.href.match(/localhost/) && <Map ref={m => { this._leafletMap = m; }}
+               {  <Map ref={m => { this._leafletMap = m; }}
                   className={"placeMap"} // + (this.state.largeMap?" large":"")}
                   // style={{boxShadow: "0 0 5px 0px rgba(0,0,0,0.5)"}}
                   center={doMap} zoom={17} bounds={doRegion?regBox:null}
@@ -3592,6 +3592,8 @@ perma_menu(pdfLink,monoVol,fairUse)
       "viaf": "/VIAF.png",
       "wd":   "/WD.svg",
    }
+
+   // TODO fix bdr:G3176 (sameAs Shakya Research Center)
 
    return (
 

@@ -190,6 +190,8 @@ body { overflow:auto !important;padding-right:0 !important; font-family:"Roboto"
 
 .SearchPane:not(.resultPage) #filters-UI { display:none; }
 
+#suggestions { z-index:10000; } 
+#suggestions > div:last-child { width:800px; box-shadow: 0 2px 4px rgba(187, 187, 187, 0.5),0 -2px 4px rgba(187, 187, 187, 0.5); margin-top:1px;}
 
 /* --------------------------------------------------------------------------------------------------------------------- topbar */
 

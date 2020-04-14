@@ -1,4 +1,5 @@
 // @flow
+import ReactDOM from 'react-dom';
 import { ResizableBox } from 'react-resizable';
 import TextField from '@material-ui/core/TextField';
 import type Auth from '../Auth';
@@ -56,6 +57,7 @@ import qs from 'query-string'
 import store from "../index"
 import FormGroup from '@material-ui/core/FormGroup';
 import Popover from '@material-ui/core/Popover';
+import $ from 'jquery' ;
 
 import {I18n, Translate, Localize } from "react-redux-i18n" ;
 
@@ -4331,7 +4333,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
       this._refs["logo"] = React.createRef();
 
-      let changeKWtimer, changeKW = (value) => {
+      let changeKWtimer, changeKW = (value,keyEv) => {
+
 
          /* // TODO find a way to speed up rendering when changing keyword with some previous results already displayed
 
@@ -4349,8 +4352,10 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             else if(["ewts","iast","deva","pinyin"].indexOf(detec[0]) !== -1) for(let p of possible) { if(p.match(new RegExp(detec[0]+"$"))) { language = p ; break ; } }
          }
          console.log("detec",possible,detec,this.state.langPreset,this.state.langDetect)
-         this.setState({keyword:value, dataSource: [ value, "possible suggestion","another possible suggestion"], language}); 
+         this.setState({...this.state,keyword:value, dataSource: [ value, "possible suggestion","another possible suggestion"], language}); 
       }
+
+      this._refs["searchBar"] = React.createRef();
 
       return (
 <div>
@@ -4395,18 +4400,33 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                {/* <IconButton style={{marginRight:"15px"}} className={this.state.leftPane?"hidden":""} onClick={e => this.setState({...this.state,leftPane:!this.state.leftPane,closeLeftPane:!this.state.closeLeftPane})}>                  
                   <FontAwesomeIcon style={{fontSize:"21px"}} icon={faSlidersH} title="Refine Your Search"/>
                </IconButton> */}
-               <SearchBar
-                  closeIcon={<Close className="searchClose" style={ {color:"rgba(0,0,0,1.0)",opacity:1} } onClick={() => { this.props.history.push({pathname:"/",search:""}); this.props.onResetSearch();} }/>}
-                  disabled={this.props.hostFailure}
-                  onChange={(value:string) => changeKW(value)}
-                  onRequestSearch={this.requestSearch.bind(this)}
-                  value={this.props.hostFailure?"Endpoint error: "+this.props.hostFailure+" ("+this.getEndpoint()+")":this.state.keyword !== undefined && this.state.keyword!==this.state.newKW?this.state.keyword:this.props.keyword&&this.state.newKW?this.state.newKW.replace(/\"/g,""):""}
-                  style={{
-                     marginTop: '0px',
-                     width: "800px",
-                     height:"60px"
-                  }}
-               />
+               <div ref={this._refs["searchBar"]}>
+                  <SearchBar                                          
+                     closeIcon={<Close className="searchClose" style={ {color:"rgba(0,0,0,1.0)",opacity:1} } onClick={() => { this.props.history.push({pathname:"/",search:""}); this.props.onResetSearch();} }/>}
+                     disabled={this.props.hostFailure}
+                     onChange={(value:string) => changeKW(value)}
+                     onRequestSearch={this.requestSearch.bind(this)}
+                     value={this.props.hostFailure?"Endpoint error: "+this.props.hostFailure+" ("+this.getEndpoint()+")":this.state.keyword !== undefined && this.state.keyword!==this.state.newKW?this.state.keyword:this.props.keyword&&this.state.newKW?this.state.newKW.replace(/\"/g,""):""}
+                     style={{
+                        marginTop: '0px',
+                        width: "800px",
+                        height:"60px",
+                        boxShadow: "0 2px 4px rgba(187, 187, 187, 0.5)"
+                     }}
+                  />
+                  {
+                     (this.state.keyword && this.state.keyword.length > 0 && this.state.dataSource.length > 0) &&                     
+                        <Popover
+                           onKeyDown={() => this.setState({...this.state,dataSource:[]})}
+                           open={this.state.dataSource.length} 
+                           id="suggestions" 
+                           anchorOrigin={{vertical:"bottom",horizontal:"left"}}
+                           anchorEl={() => this._refs["searchBar"].current} 
+                           onClose={()=>this.setState({...this.state,dataSource:[]})}>
+                              { this.state.dataSource.map( (v) =>  <MenuItem key={v} style={{lineHeight:"1em"}} onClick={(e)=>this.setState({keyword:v,dataSource:[]})}>{v}</MenuItem> ) }
+                        </Popover>
+                  }
+               </div>
                {/* work in progress
                <TextField
                   className="formControl"
