@@ -789,6 +789,79 @@ h4:not(:hover) > .lang
 
 .resource .data:not(.legal-props) h4.sameAs .ulink.sameAs { margin-left:0 !important; }
 
+.resource .data [data-prop="bdo:note"] .noteCollapse.in-true { overflow: visible;}
+
+.resource .data [data-prop="bdo:note"] .sub,
+.resource .data:not(.legal-props) .group > h4.multiple,
+.resource .data:not(.legal-props) > :not([data-prop="bdo:note"]) h4:hover .urilink > [lang=""],
+.resource .data.ext-props h4:not(.first):hover > [lang],
+.resource .data .group > h4:not(.first):not(.multiple),
+.resource .data .group > h4:not(.first) > [lang],
+.resource .data .subsub h4.first + h4,
+.resource .data h4 .ulink,
+.resource .data h4.label,
+.resource .data h4.multiple > [lang]  { position:relative; display:inline-block;z-index:1; }
+
+.resource .data > [data-prop="bdo:workHasInstance"] h4:hover .urilink .svg { background-color:rgba(240,240,240,1); }
+
+
+.resource .data [data-prop="bdo:note"] .sub:hover::before,
+.resource .data:not(.legal-props) .propCollapse > div > div > h4:not(.first):hover::before,
+.resource .data:not(.legal-props) .propCollapseHeader > h4:not(.first):hover::before,
+.resource .data.ext-props h4:not(.first):hover > [lang]::before,
+.resource .data .subsub:hover h4.first + h4::before,
+.resource .data:not(.legal-props) .group:hover > h4:not(.first):not(.multiple)::before,
+.resource .data:not(.legal-props) > :not([data-prop="bdo:note"]) h4:hover .urilink > [lang=""]::before,
+.resource .data:not(.legal-props) > :not([data-prop="bdo:note"]) h4:hover > .ulink >.urilink::before,
+.resource .data .sub:hover h4.label::before,
+.resource .data h4.multiple:hover > [lang]::before,
+/* .resource .data:not(.legal-props) > :not([data-prop="bdo:note"]) h4:hover .ulink::before, */
+.resource .data:not(.legal-props) > :not([data-prop="bdo:creator"]):not([data-prop="bdo:kinWith"]) .group:hover > h4:not(.multiple):not(.first) ::before,
+.resource .data.ext-props [data-prop="bf:identifiedBy"] .sub:hover ::before,
+.resource .data > [data-prop="bdo:creator"] .subgroup:hover .subsub:last-child ::before,
+.resource .data > [data-prop="bdo:kinWith"] .subsub:hover h4.first + .subsubgroup ::before
+{ 
+   opacity:1 !important; 
+}
+
+
+.resource .data [data-prop="bdo:note"] .sub::before,
+.resource .data:not(.legal-props) .propCollapse > div > div > h4:not(.first)::before,
+.resource .data:not(.legal-props) .propCollapseHeader > h4:not(.first)::before,
+.resource .data.ext-props h4:not(.first) > [lang]::before,
+.resource .data .subsub h4.first + h4::before,
+.resource .data:not(.legal-props) .group > h4:not(.first):not(.multiple)::before,
+.resource .data:not(.legal-props) > :not([data-prop="bdo:note"]) h4 .urilink > [lang=""]::before,
+.resource .data:not(.legal-props) > :not([data-prop="bdo:note"]) h4 > .ulink >.urilink::before,
+.resource .data h4.label::before,
+.resource .data h4.multiple > [lang]::before  
+{  
+   content:' ';position:absolute;background-color:rgba(240,240,240,1); z-index:-1;
+   width:100%; height:100%;top:0px;left:-10px; opacity:0; padding:0 10px;
+}
+/* .resource .data:not(.legal-props) > :not([data-prop="bdo:note"]) h4 .ulink::before, */
+
+
+.resource .data .group > h4 { max-width:calc(100% - 50px); }
+
+.resource .data.ext-props .propCollapse ::before { background-color:white !important;}
+
+
+.resource .data:not(.legal-props) > :not([data-prop="bdo:note"]) h4 > .ulink > .urilink::before,
+.resource .data .propCollapse > div > div > h4:not(.first) > [lang]::before,
+.resource .data .propCollapseHeader > h4:not(.first) > [lang]::before,
+.resource .data.ext-props .propCollapse > div > div > h4:not(.first) > [lang]::before,
+.resource .data:not(.legal-props) .has-collapse h4 .ulink::before { padding:5px 10px; top:-5px; }
+
+.resource .data .propCollapseHeader,
+.resource .data .propCollapse.in-true { overflow:visible; position:relative; }
+
+
+.hover-menu { position:absolute; right:0; top:0; display:none; z-index:10;}
+
+/* .resource .data:not(.legal-props) .group:hover > h4:not(.first):not(.multiple) + .hover-menu { display:block; } */
+
+
 /* ------------------------------------------------------------------------------------------------------------------------ properties/misc */
 
 .resource .data.access { text-align:center; padding-bottom:80px;}
@@ -825,7 +898,9 @@ h4:not(:hover) > .lang
 .resource .data > div > h3 { line-height:24px; }
 
 
-.resource .group > h4.multiple > .in { vertical-align: middle; }
+span.in { font-weight:500;padding-left:0px; padding-right:10px;  }
+.resource h4 .over-in { white-space:pre;}
+/* .resource h4 .in { vertical-align: middle; } */
 
 .resource .group > h4.multiple > span:not(.lang):not(.in):not(.hover-anchor):not(.ulink.provider),
 .resource .group > h4.multiple > span .urilink, 
@@ -883,7 +958,7 @@ h4:not(:hover) > .lang
 .resource .data > :not([data-prop="bdo:note"]) .sub:not(:last-child) {  margin-bottom:20px; }
 
 /* .resource .sub > h4 { line-height:22px;} */
-.resource .sub > h4.label { max-width:calc(100% - 135px); vertical-align: top; }
+.resource .sub > h4.label { max-width:calc(100% - 135px); vertical-align: top;  }
 
 
 .resource .data .group { display:inline-block; width:calc(100% - 190px); /*line-height:24px;*/ }
@@ -1120,7 +1195,7 @@ TODO
 .resource .data.legal-props > div h3 span a { color:white; } 
 .resource .data.legal-props > div::after { content:none !important; }
 .resource .data.legal-props > div h4 { pointer-events:none; line-height:20px !important;margin-bottom:10px; font-size:13px; }
-.resource .data.legal-props > div h4:last-child { margin-bottom:0px; }
+.resource .data.legal-props > div h4:last-of-type { margin-bottom:0px; }
 .resource .data.legal-props > div h4 span a { color:white; }
 .resource .data.legal-props > div h4 > span:not(.ulink) { display:none; }
 
@@ -1152,7 +1227,7 @@ TODO
 .resource .data.ext-props { background-color:#ffffff; padding:35px; padding-bottom:0;}
 
 .resource .data.ext-props:last-child { padding-bottom:45px; }
-.resource .data.ext-props > div { background-color:#f0f0f0;padding:5px 35px; position:relative;}
+.resource .data.ext-props > div { background-color:#f0f0f0;padding:0px 35px 5px 35px; position:relative;}
 .resource .data.ext-props:last-child > div:last-child { padding-bottom:80px; }
 .resource .data.ext-props + .data.ext-props { padding-top:0; }
 .resource .data.bot-props + .data.ext-props > div::after { content:none !important;}
@@ -1176,6 +1251,7 @@ TODO
 .resource .data.ext-props .propCollapse.in-true { margin:25px 0 20px 0 ; }
 .resource .data.ext-props > div:last-child .propCollapse.in-true { margin-bottom:0px; }
 
+.resource .data.ext-props .propCollapse { column-count: 1; }
 
 /* ------------------------------------------------------------------------------------------------------------------------ map */
 
@@ -1321,7 +1397,7 @@ h2 .before { height:16px; }
 .hoverlink { 
    position:absolute;display:inline-block;width:15px;height:15px; background-color:white;  vertical-align: 0px; padding:3px ; margin-top:-16px; 
    background-position:center;background-size:15px auto;background-repeat:no-repeat; 
-   background-image:url("/logo.svg"); background-size:20px auto; opacity:0;pointer-events:none;
+   background-image:url("/logo.svg"); background-size:20px auto; opacity:0;pointer-events:none; margin-left:15px;
 }
 
 .hoverlink:hover { border:none !important; }
@@ -1498,7 +1574,6 @@ h3 .expand svg { position:absolute; margin-top:-18px; }*/
 
 [data-prop="bdo:workHasInstance"] h4.multiple { line-height:20px; }
 
-span.in { font-weight:500;padding-left:5px; padding-right:5px;  }
 
 .has-collapse.custom .expand { position:relative; bottom:auto; color:#d73449; font-weight:700;font-size:13px;margin-top:10px; }
 .has-collapse.custom .expand:hover { border-color:#d73449; }

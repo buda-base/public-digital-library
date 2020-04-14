@@ -1399,7 +1399,7 @@ class ResourceViewer extends Component<Props,State>
 
 
 
-   fullname(prop:string,isUrl:boolean=false,noNewline:boolean=false,useUIlang:boolean=false)
+   fullname(prop:string,isUrl:boolean=false,noNewline:boolean=false,useUIlang:boolean=false,canSpan = true)
    {
       for(let p of Object.keys(prefixes)) { prop = prop.replace(new RegExp(p+":","g"),prefixes[p]) }
 
@@ -1432,7 +1432,8 @@ class ResourceViewer extends Component<Props,State>
          //return this.props.ontology[prop][rdfs+"label"][0].value
       }
 
-      return this.pretty(prop,isUrl,noNewline)
+      if(canSpan) return <span lang="">{this.pretty(prop,isUrl,noNewline)}</span>
+      else return this.pretty(prop,isUrl,noNewline)
    }
 
    hasValue(val:[],k:string)
@@ -1717,7 +1718,7 @@ class ResourceViewer extends Component<Props,State>
          }
 
          // we can return Link
-         let pretty = this.fullname(elem.value,true);
+         let pretty = this.fullname(elem.value,true,false,false,false);
          let prefix = "bdr", sameAsPrefix = "";
          for(let p of Object.keys(prefixes)) { 
             if(elem.value.match(new RegExp(prefixes[p]))) { prefix = p; if(!p.match(/^bd[ar]$/) && !this.props.IRI.match(new RegExp("^"+p+":"))) { sameAsPrefix = p + " sameAs hasIcon "; } }
@@ -1891,7 +1892,7 @@ class ResourceViewer extends Component<Props,State>
             <Link className={"urilink "+prefix} to={"/"+show+"/"+prefix+":"+pretty}>{pretty}</Link>&nbsp;
             {/* <Link className="goBack" target="_blank" to={"/gallery?manifest=//iiifpres.bdrc.io/v:bdr:"+pretty+"/manifest"}>{"(view image gallery)"}</Link> */}
          </span> ) }
-         else if(pretty.toString().match(/^([A-Z]+[_0-9-]*[A-Z]*)+$/)) ret.push(<Link className={"urilink "+ prefix} to={"/"+show+"/"+prefix+":"+pretty}>{prefix+":"+pretty}</Link>)
+         else if(pretty.toString().match(/^([A-Z]+[_0-9-]*[A-Z]*)+$/)) ret.push(<Link className={"urilink "+ prefix} to={"/"+show+"/"+prefix+":"+pretty}><span lang="">{prefix+":"+pretty}</span></Link>)
          else ret.push(pretty)
 
          return ret
@@ -2006,6 +2007,11 @@ class ResourceViewer extends Component<Props,State>
          bdrcData = null
       }
       return { befo,bdrcData }
+   }
+
+   hoverMenu()
+   {
+      return <div class="hover-menu"><span>AB</span> <span>CD</span></div>
    }
 
    format(Tag,prop:string,txt:string="",bnode:boolean=false,div:string="sub",otherElem:[])
@@ -2187,7 +2193,7 @@ class ResourceViewer extends Component<Props,State>
 
                let root = this.props.assocResources[e.value] //this.uriformat(_tmp+"inRootInstance",e)
                if(root) root = root.filter(e => e.type == bdo+"inRootInstance")
-               if(root && root.length > 0) tmp = [tmp,<span class="in"> in </span>,this.uriformat(bdo+"inRootInstance",root[0])]
+               if(root && root.length > 0) tmp = [<span style={{marginRight:"10px"}}>{tmp}</span>,<span class="over-in"><span class="in">in</span>{this.uriformat(bdo+"inRootInstance",root[0])}</span>]
 
                //console.log("root",root)
             }
@@ -2246,6 +2252,7 @@ class ResourceViewer extends Component<Props,State>
             else tmp.push(annoB);
 
 
+
                //(function(ev,prop,val){return function(){ console.log("new",ev,prop,val) }})(event,this._plink,tmp)
                /*
                (ev,prop,val) => {
@@ -2261,6 +2268,7 @@ class ResourceViewer extends Component<Props,State>
             if(!txt) ret.push(<Tag className={(elem && elem.length > 1?"multiple ":"") + (sameAsPrefix?sameAsPrefix+" sameAs hasIcon":"") }>{befo}{tmp}{bdrcData}</Tag>)
             else ret.push(<Tag className={(elem && elem.length > 1?"multiple ":"") +  (sameAsPrefix?sameAsPrefix+" sameAs hasIcon":"") }>{befo}{tmp+" "+txt}{bdrcData}</Tag>)
 
+            ret.push(this.hoverMenu())
 
             //console.log("ret",ret)
          }
@@ -3399,7 +3407,7 @@ class ResourceViewer extends Component<Props,State>
             <h3><span>{this.proplink(k)}:</span>&nbsp;</h3>
             { k == bdo+"placeLong" && tags }
             <div class="map"> {/* style={ {width:"100%",marginTop:"10px"} }> */}
-               <Map ref={m => { this._leafletMap = m; }}
+               { !window.location.href.match(/localhost/) && <Map ref={m => { this._leafletMap = m; }}
                   className={"placeMap"} // + (this.state.largeMap?" large":"")}
                   // style={{boxShadow: "0 0 5px 0px rgba(0,0,0,0.5)"}}
                   center={doMap} zoom={17} bounds={doRegion?regBox:null}
@@ -3443,7 +3451,7 @@ class ResourceViewer extends Component<Props,State>
                         </a>
                      </div>
                   </Portal>
-               </Map>
+               </Map> }
             </div>
          </div> 
       )
