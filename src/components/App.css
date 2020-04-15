@@ -826,6 +826,7 @@ h4:not(:hover) > .lang
 
 .resource .data [data-prop="bdo:note"] .noteCollapse.in-true { overflow: visible;}
 
+.resource .data .urilink,
 .resource .data [data-prop="bdo:note"] .sub,
 .resource .data:not(.legal-props) .group > h4.multiple,
 .resource .data:not(.legal-props) > :not([data-prop="bdo:note"]) h4:hover .urilink > [lang=""],
@@ -839,6 +840,8 @@ h4:not(:hover) > .lang
 
 .resource .data > [data-prop="bdo:workHasInstance"] h4:hover .urilink .svg { background-color:rgba(240,240,240,1); }
 
+
+.resource .data .urilink:hover { text-decoration: underline;}
 
 .resource .data [data-prop="bdo:note"] .sub:hover::before,
 .resource .data:not(.legal-props) .propCollapse > div > div > h4:not(.first):hover::before,
