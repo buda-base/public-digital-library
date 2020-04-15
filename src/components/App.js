@@ -23,6 +23,7 @@ import MenuIcon from '@material-ui/icons/Menu';
 import RefreshIcon from '@material-ui/icons/Refresh';
 import ErrorIcon from '@material-ui/icons/Error';
 import WarnIcon from '@material-ui/icons/Warning';
+import SearchIcon from '@material-ui/icons/Search';
 import Settings from '@material-ui/icons/SettingsSharp';
 import TranslateIcon from '@material-ui/icons/Translate';
 import Apps from '@material-ui/icons/Apps';
@@ -1271,11 +1272,15 @@ class App extends Component<Props,State> {
    }
    */
 
-   handleSearchTypes = (ev:Event,lab:string,val:boolean) => {
+   handleSearchTypes = (event:Event) => { //},lab:string,val:boolean) => {
 
-      if(lab === "All" ) lab = "Any"
 
-      console.log("checkST::",this,lab,val)
+      console.log("checkST::",event.target,event.key,event.target.value)
+
+
+      this.setState( { ...this.state, searchTypes:[ event.target.value ], langOpen:false }  );
+
+      /*
 
       if(!val) {
 
@@ -1295,12 +1300,13 @@ class App extends Component<Props,State> {
       else {
          let dt = [ ...this.state.searchTypes ]         
          
-         if(dt.indexOf(lab) === -1 && dt.indexOf("Any") === -1) dt.push(lab);
+         if(dt.indexOf(lab) === -1 && dt.indexOf("Any") === -1) 
 
          //if(searchTypes.slice(1).filter(i => !dt.includes(i)).length == 0 || lab === "Any" ) { dt = [ "Any" ] }
 
-         this.setState( { ...this.state, searchTypes:dt }  );
+         this.setState( { ...this.state, searchTypes:dt, langOpen:false }  );
       }
+      */
    }
 
    reverseSortBy(ev,check) {
@@ -4335,7 +4341,6 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
       let changeKWtimer, changeKW = (value,keyEv) => {
 
-
          /* // TODO find a way to speed up rendering when changing keyword with some previous results already displayed
 
          if(!changeKWtimer) {
@@ -4351,8 +4356,27 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             else if(detec[0] === "hani") for(let p of possible) { if(p.match(/^zh((-[Hh])|$)/)) { language = p ; break ; } }
             else if(["ewts","iast","deva","pinyin"].indexOf(detec[0]) !== -1) for(let p of possible) { if(p.match(new RegExp(detec[0]+"$"))) { language = p ; break ; } }
          }
+         
+         possible = [ ...this.state.langPreset, ...langSelect.filter(l => !this.state.langPreset || !this.state.langPreset.includes(l))]
          console.log("detec",possible,detec,this.state.langPreset,this.state.langDetect)
-         this.setState({...this.state,keyword:value, dataSource: [ value, "possible suggestion","another possible suggestion"], language}); 
+         
+         this.setState({...this.state,keyword:value, language, dataSource: detec.reduce( (acc,d) => {
+            
+            let presets = []
+            if(d === "tibt") for(let p of possible) { if(p === "bo" || p.match(/-[Tt]ibt$/)) { presets.push(p); } }
+            else if(d === "hani") for(let p of possible) { if(p.match(/^zh((-[Hh])|$)/)) { presets.push(p); } }
+            else if(["ewts","iast","deva","pinyin"].indexOf(d) !== -1) for(let p of possible) { if(p.match(new RegExp(d+"$"))) { presets.push(p); } }
+            
+            return [...acc, ...presets]
+         }, [] ).map(p => '"'+value+'"@'+p) } ) 
+         
+         /*
+         if(changeKWtimer) clearTimeout(changeKWtimer)
+         changeKWtimer = setTimeout(() => {
+            this.setState({...this.state, dataSource: [ value, "possible suggestion","another possible suggestion"]})
+            changeKWtimer = null
+         }, 1000) 
+         */
       }
 
       this._refs["searchBar"] = React.createRef();
@@ -4400,7 +4424,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                {/* <IconButton style={{marginRight:"15px"}} className={this.state.leftPane?"hidden":""} onClick={e => this.setState({...this.state,leftPane:!this.state.leftPane,closeLeftPane:!this.state.closeLeftPane})}>                  
                   <FontAwesomeIcon style={{fontSize:"21px"}} icon={faSlidersH} title="Refine Your Search"/>
                </IconButton> */}
-               <div ref={this._refs["searchBar"]}>
+               <div ref={this._refs["searchBar"]} style={{display:"inline-block",position:"relative"}}>
                   <SearchBar                                          
                      closeIcon={<Close className="searchClose" style={ {color:"rgba(0,0,0,1.0)",opacity:1} } onClick={() => { this.props.history.push({pathname:"/",search:""}); this.props.onResetSearch();} }/>}
                      disabled={this.props.hostFailure}
@@ -4416,15 +4440,24 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   />
                   {
                      (this.state.keyword && this.state.keyword.length > 0 && this.state.dataSource.length > 0) &&                     
-                        <Popover
-                           onKeyDown={() => this.setState({...this.state,dataSource:[]})}
-                           open={this.state.dataSource.length} 
+                        <Paper
+                           //onKeyDown={(e) => changeKW(this.state.keyword,e)} 
+                           // this.setState({...this.state,dataSource:[]})}
+                           //open={this.state.dataSource.length} 
                            id="suggestions" 
-                           anchorOrigin={{vertical:"bottom",horizontal:"left"}}
-                           anchorEl={() => this._refs["searchBar"].current} 
-                           onClose={()=>this.setState({...this.state,dataSource:[]})}>
-                              { this.state.dataSource.map( (v) =>  <MenuItem key={v} style={{lineHeight:"1em"}} onClick={(e)=>this.setState({keyword:v,dataSource:[]})}>{v}</MenuItem> ) }
-                        </Popover>
+                           //anchorOrigin={{vertical:"bottom",horizontal:"left"}}
+                           //anchorEl={() => this._refs["searchBar"].current} 
+                           //onClose={()=>this.setState({...this.state,dataSource:[]})}
+                           >
+                              { this.state.dataSource.map( (v) =>  {
+                                 let tab = v.split("@")
+                                 return (
+                                    <MenuItem key={v} style={{lineHeight:"1em"}} onClick={(e)=>{ 
+                                       this.setState({...this.state,dataSource:[]});
+                                       this.requestSearch(tab[0],null,tab[1])
+                                    }}>{ tab[0].replace(/["]/g,"")} <SearchIcon style={{padding:"0 10px"}}/><span class="lang">{(I18n.t(""+(searchLangSelec[tab[1]]?searchLangSelec[tab[1]]:languages[tab[1]]))) }</span></MenuItem> ) 
+                                 } ) }
+                        </Paper>
                   }
                </div>
                {/* work in progress
@@ -4438,6 +4471,27 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   margin="normal"
                /> */}
 
+              <FormControl className="formControl" style={{textAlign:"right"}}>
+                {/* <InputLabel htmlFor="datatype">In</InputLabel> */}
+
+                <Select
+                  value={this.state.searchTypes[0]}
+                  //onChange={this.handleLanguage}
+                  onChange={this.handleSearchTypes}
+                  open={this.state.langOpen}
+                  onOpen={(e) => { console.log("open"); this.setState({...this.state,langOpen:true}) } }
+                  onClose={(e) => this.setState({...this.state,langOpen:false})}
+                  inputProps={{
+                    name: 'datatype',
+                    id: 'datatype',
+                  }}
+                >
+                  {searchTypes.map(d => <MenuItem key={d} value={d}>{I18n.t("types."+d.toLowerCase())}</MenuItem>)}
+               </Select>
+              </FormControl> 
+
+
+            {/*  //deprecated
               <FormControl className="formControl" style={{textAlign:"left"}}>
                 <InputLabel htmlFor="language"><Translate value="lang.lg"/></InputLabel>
 
@@ -4464,6 +4518,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                         inputRef={(str) => { this._customLang = str;}} />
                    </MenuItem>
                </Select>
+              </FormControl>  */}
 
                { /* // proof of concept
                   this.state.language == "other" && <TextField
@@ -4475,7 +4530,6 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   inputRef={(str) => { this._customLang = str }}
                   onKeyPress={(e) => this.handleCustomLanguage(e)}
                /> */ }
-              </FormControl>
                </div>
               { ( this.state.filters.facets || this.state.filters.datatype.indexOf("Any") === -1 )&& 
                         [ /*<Typography style={{fontSize:"23px",marginBottom:"20px",textAlign:"center"}}>

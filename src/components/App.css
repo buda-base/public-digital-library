@@ -147,19 +147,24 @@ body { overflow:auto !important;padding-right:0 !important; font-family:"Roboto"
 .data-checkbox > span > span { width:24px;height:24px;}
 .data-checkbox > span > span:last-child { margin-top:12px; }
 
+#root ~ #menu-datatype,
 #root ~ #menu-language { z-index:10000;}
 
 #search-bar { width:100%; }
 #search-bar button { margin-top:6px; }
-#search-bar > div:first-child { box-shadow: 0 2px 4px rgba(187, 187, 187, 0.5); border-radius:2px; }
+#search-bar > div:first-child { box-shadow: 0 2px 4px rgba(187, 187, 187, 0.5); border-radius:2px; font-weight:600;  }
 #search-bar > div:first-child  > div:first-child  > div:first-child { width:calc(100% - 160px); margin-right:160px; }
 
 #search-bar { background-color: #fce08e; padding-top:30px;padding-bottom:30px; display:block;}
 #search-bar > div { display:inline-flex;}
 .SearchPane > div {display:flex;justify-content: center;}
-.SearchPane .formControl { margin-top:6px; margin-left:-200px; /*margin-left:calc(800px - 150px - 100px);*/ width:150px; position:absolute;}
+.SearchPane .formControl { margin-top:15px; margin-left:-180px; /*margin-left:calc(800px - 150px - 100px);*/ width:130px; position:absolute;}
 .SearchPane .formControl:before {  left: 0; right: 0; bottom: 0; content: "\00a0";  position: absolute;  }
 .SearchPane a {text-decoration:none}
+
+.SearchPane .formControl > div::before,
+.SearchPane .formControl > div::after  { content:none;}
+
 
 .SearchPane.resultPage #data-checkbox { display:none; }
 
@@ -190,9 +195,25 @@ body { overflow:auto !important;padding-right:0 !important; font-family:"Roboto"
 
 .SearchPane:not(.resultPage) #filters-UI { display:none; }
 
-#suggestions { z-index:10000; } 
-#suggestions > div:last-child { width:800px; box-shadow: 0 2px 4px rgba(187, 187, 187, 0.5),0 -2px 4px rgba(187, 187, 187, 0.5); margin-top:1px;}
+#suggestions { position:absolute; z-index:100001; width:100%;box-shadow: 0 -2px 4px rgba(187, 187, 187, 0.5),0 2px 4px rgba(187, 187, 187, 0.5);}
 
+#menu-datatype > div:last-child { box-shadow: 0 -2px 4px rgba(187, 187, 187, 0.5);}
+
+.SearchPane .formControl { font-size:14px; font-weight:500; }
+
+#menu-datatype > div:last-child ul li,
+#suggestions li { padding:12px 16px; font-size:14px; color: #4c4c4c; font-weight:600; }
+
+#menu-datatype > div:last-child ul li:hover,
+#suggestions li:hover {  background-color:#f5f5f5; }
+
+#suggestions .lang { text-transform: uppercase; color:#d73449; font-weight:700; font-size:10px; align-items:baseline;}
+
+#search-bar button { opacity:1;}
+
+/*
+#suggestions { z-index:10000; } 
+*/
 /* --------------------------------------------------------------------------------------------------------------------- topbar */
 
 .nav { width:100%; height:80px; position:fixed;top:0;left:0;background:white; display:flex;align-items: center; justify-content: center;
