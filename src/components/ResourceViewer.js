@@ -2193,7 +2193,7 @@ class ResourceViewer extends Component<Props,State>
 
                let root = this.props.assocResources[e.value] //this.uriformat(_tmp+"inRootInstance",e)
                if(root) root = root.filter(e => e.type == bdo+"inRootInstance")
-               if(root && root.length > 0) tmp = [<span style={{marginRight:"10px"}}>{tmp}</span>,<span class="over-in"><span class="in">in</span>{this.uriformat(bdo+"inRootInstance",root[0])}</span>]
+               if(root && root.length > 0) tmp = [<span style={{marginRight:"10px",display:"inline"}}>{tmp}</span>, " ", <span class="over-in"><span class="in">in</span>{this.uriformat(bdo+"inRootInstance",root[0])}</span>]
 
                //console.log("root",root)
             }

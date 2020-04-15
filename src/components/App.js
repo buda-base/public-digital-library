@@ -2747,7 +2747,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             { this.getResultProp(bdo+"incipit",allProps,false,false) }
             
 
-            { this.getResultProp(bdo+"workTranslationOf",allProps) }
+            { this.getResultProp(bdo+"workTranslationOf",allProps,false) }
 
             {/* { this.getResultProp(bdo+"material",allProps) }
             { this.getResultProp(bdo+"printMethod",allProps) }

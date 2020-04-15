@@ -821,7 +821,7 @@ h4:not(:hover) > .lang
 /* ------------------------------------------------------------------------------------------------------------------------ hover panel */
 
 .resource .data:not(.legal-props) span > .before,
-.resource .data:not(.legal-props) span > .sameAs { display:none; }
+.resource .data:not(.legal-props) span > .sameAs > .sameAs { display:none; }
 
 .resource .data:not(.legal-props) h4.sameAs .ulink.sameAs { margin-left:0 !important; }
 
