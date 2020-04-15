@@ -3394,7 +3394,7 @@ class ResourceViewer extends Component<Props,State>
                               {eL && <div><span>End Line:</span> {eL}</div>}
                            </div>
                         }>
-                           <h4>{str}{str && w && " of "}{w && this.uriformat(bdo+"contentLocationInstance",{value:w})}</h4>
+                           <h4>{str}{str && w && " of "}{w && this.uriformat(bdo+"contentLocationInstance",{value:w})}{this.hoverMenu()}</h4>
                      </Tooltip>]
                );
             else if(w)
