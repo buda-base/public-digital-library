@@ -765,10 +765,17 @@ h4:not(:hover) > .lang
 #perma #DL { cursor:pointer; padding-left:16px;}
 #perma #DL svg { vertical-align:-4px; font-size:18px; padding-left:0px;}
 
+#popSame { margin-top:-10px; }
 #popDL { margin-top:30px; }
+#popSame  > div:last-child,
 #popDL > div:last-child { box-shadow:0 1px 4px #cecece;  }
+#popSame a,
 #popDL a { text-decoration: none; }
+#popSame a li,
 #popDL a li { font-family:"Noto Sans";color:#4a4a4a;font-weight:600;font-size:12px;  }
+
+#popSame a b { font-weight:900; }
+#popSame a img { display: inline-block; margin-bottom:2px;margin-left:2px;}
 
 #perma #DL + #same { margin-left:auto; }
 
@@ -776,8 +783,8 @@ h4:not(:hover) > .lang
 #perma #copyright img { height:20px; vertical-align: middle;}
 #perma #copyright img[src$="/.png"] { visibility:hidden;}
 
-#perma #same { display:flex; align-items: center; padding-left:16px; }
-#perma #same .provider { display:inline-block; vertical-align: middle; line-height:0; }
+#perma #same { display:flex; align-items: center; padding-left:16px; cursor:pointer;}
+#perma #same .provider { display:inline-block; vertical-align: middle; line-height:0; pointer-events:none; }
 #perma #same .provider img { height:22px; display:inline-block;} 
 #perma #same .provider:not(:first-child) { margin-left:10px;}
 #perma #same .provider.bdr { margin-bottom:2px; }
@@ -1209,7 +1216,7 @@ TODO
 .resource .data.related > div > div:last-child > div > div { color:#343434; font-weight:500; font-size:15px; margin:30px 0 20px 0; 
    position:relative; }
 .resource .data.related > div > div:last-child > div > div .lang { display:none; position:absolute !important; top:calc(100% - 7px); }
-.resource .data.related > div > div:last-child > div > div:hover .lang { display:inline-block; }
+/* .resource .data.related > div > div:last-child > div > div:hover .lang { display:inline-block; } */
 
 /* ------------------------------------------------------------------------------------------------------------------------ extended properties */
 

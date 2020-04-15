@@ -3572,7 +3572,7 @@ perma_menu(pdfLink,monoVol,fairUse)
 
    let same = this.getResourceElem(owl+"sameAs")
    if(!same || !same.length) same = [] 
-   same = same.concat([{ type:"uri", value:fullUri(this.props.IRI)}])
+   if(!same.length) same = same.concat([{ type:"uri", value:fullUri(this.props.IRI)}])
    
    console.log("same",same)
 
@@ -3618,10 +3618,31 @@ perma_menu(pdfLink,monoVol,fairUse)
 
       { cLegalD && <span id="copyright" title={this.fullname(cLegalD)}><img src={"/icons/"+copyR+".png"}/></span> }
 
-      <span id="same">{same.map(s => {
-         let prefix = shortUri(s.value).split(":")[0]
-         return <span class={"provider "+prefix}>{provImg[prefix]?<img src={provImg[prefix]}/>:prefix}</span>
-      })}</span>
+      <span id="same" onClick={(e) => this.setState({...this.state,anchorPermaSame:e.currentTarget, collapse: {...this.state.collapse, permaSame:!this.state.collapse.permaSame } } ) }>
+         {same.map(s => {
+            let prefix = shortUri(s.value).split(":")[0]
+            return <span class={"provider "+prefix}>{provImg[prefix]?<img src={provImg[prefix]}/>:prefix}</span>
+         })}
+      </span>
+
+         <Popover
+            id="popSame"
+            open={this.state.collapse.permaSame?true:false}
+            transformOrigin={{vertical:'bottom',horizontal:'right'}}
+            anchorOrigin={{vertical:'top',horizontal:'right'}}
+            anchorEl={this.state.anchorPermaSame}
+            onClose={e => { this.setState({...this.state,anchorPermaSame:null,collapse: {...this.state.collapse, permaSame:false } } ) }}
+            >
+            { same.map(s => { 
+                  let link = s.value, prov = shortUri(s.value).split(":")[0], name = "resource"
+                  let data,tab ;
+                  if(this.props.assocResources) data = this.props.assocResources[s.value]                  
+                  if(data && (tab=data.filter(t => t.fromKey === adm+"canonicalHtml")).length) link = tab[0].value  
+                  console.log("permaSame",s,data,tab,link,name,prov) 
+                  // TODO case when more than on resource from a given provider (cf RKTS)
+                  if(prov != "bdr") return (<a target="_blank" href={link}><MenuItem>Open {name} in&nbsp;<b>{providers[prov]}</b><img src="/icons/link-out.svg"/></MenuItem></a>) 
+            } ) }
+         </Popover>
 
          <Popover
             id="popDL"
