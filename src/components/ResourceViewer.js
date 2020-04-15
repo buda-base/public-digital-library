@@ -2011,7 +2011,7 @@ class ResourceViewer extends Component<Props,State>
 
    hoverMenu()
    {
-      return <div class="hover-menu"><span>AB</span> <span>CD</span></div>
+      return <div class="hover-menu"><img src="/icons/help.svg"/></div>
    }
 
    format(Tag,prop:string,txt:string="",bnode:boolean=false,div:string="sub",otherElem:[])
@@ -2252,6 +2252,8 @@ class ResourceViewer extends Component<Props,State>
             else tmp.push(annoB);
 
 
+            tmp.push(this.hoverMenu())
+
 
                //(function(ev,prop,val){return function(){ console.log("new",ev,prop,val) }})(event,this._plink,tmp)
                /*
@@ -2268,7 +2270,6 @@ class ResourceViewer extends Component<Props,State>
             if(!txt) ret.push(<Tag className={(elem && elem.length > 1?"multiple ":"") + (sameAsPrefix?sameAsPrefix+" sameAs hasIcon":"") }>{befo}{tmp}{bdrcData}</Tag>)
             else ret.push(<Tag className={(elem && elem.length > 1?"multiple ":"") +  (sameAsPrefix?sameAsPrefix+" sameAs hasIcon":"") }>{befo}{tmp+" "+txt}{bdrcData}</Tag>)
 
-            ret.push(this.hoverMenu())
 
             //console.log("ret",ret)
          }
@@ -2388,8 +2389,11 @@ class ResourceViewer extends Component<Props,State>
                               this.setState({...this.state,annoPane:true,newAnno:{prop:this.proplink(prop),val},viewAnno:prop+"@"+v})
                            }).bind(this,tip,val[0].value,val[0].value)
                         }/>
+                        {this.hoverMenu()}
                      </Tag>
                   )
+
+                  
                }
 
                ret.push(<div className={div + (keepT?" keep":"") +  (willK?" willK":"")}>{sub}</div>)
@@ -2470,6 +2474,7 @@ class ResourceViewer extends Component<Props,State>
                                     }/>
                                  </Tag>
                               </div>
+                              {this.hoverMenu()}
                            </div>)
                      }
                      else if(noteData[bdo+"noteSource"])
@@ -2490,6 +2495,7 @@ class ResourceViewer extends Component<Props,State>
                                        this.setState({...this.state,annoPane:true,newAnno:{prop:this.proplink(prop),val},viewAnno:prop+"@"+v})
                                     }).bind(this,[workuri,loca],bdo+"noteSource",noteData[bdo+"noteSource"].value)
                                  }/>
+                              {this.hoverMenu()}
                            </div>
                         )
                         /*
@@ -2622,6 +2628,8 @@ class ResourceViewer extends Component<Props,State>
                                  }).bind(this,txt,f,value)
                               }/>
                            )
+                           txt.push(this.hoverMenu());
+
                            //<ChatIcon className="annoticon" onClick={e => this.setState({...this.state,annoPane:true,newAnno:true})}/>
 
                            if(!noVal) subsub.push(<Tag>{txt}</Tag>)

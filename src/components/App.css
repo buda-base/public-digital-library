@@ -819,12 +819,52 @@ h4:not(:hover) > .lang
 #popDL a li:hover { background-color:#f5f5f5;}
 
 /* ------------------------------------------------------------------------------------------------------------------------ hover panel */
+
 .resource .data:not(.legal-props) span > .before,
 .resource .data:not(.legal-props) span > .sameAs { display:none; }
 
 .resource .data:not(.legal-props) h4.sameAs .ulink.sameAs { margin-left:0 !important; }
 
 .resource .data [data-prop="bdo:note"] .noteCollapse.in-true { overflow: visible;}
+
+.resource .data > [data-prop="bdo:workHasInstance"] h4:hover .urilink .svg { background-color:rgba(240,240,240,1); }
+
+
+/* full width when hovering... */
+
+.resource .data .urilink { text-decoration: underline; text-decoration-color:transparent; border:none; }
+.resource .data .urilink:hover {  text-decoration-color:#d73449; border:none;}
+
+.resource .data.ext-props .subgroup { width:calc(100% - 215px ); }
+
+.ulink { width:100%;}
+
+.data:not(.legal-props) > [data-prop='bdo:creator'] .subsub:not(:first-child) { width:calc(100% - 180px); }
+
+.resource .data [data-prop="bdo:note"] .sub,
+h4:not(.first) 
+{ position:relative; display:inline-block;z-index:1; width:calc(100%);}
+
+
+.data:not(.legal-props) > [data-prop='bdo:creator'] .subsub:not(:first-child) h4.first + h4::before,
+.resource .data [data-prop="bdo:note"] .sub::before,
+.data:not(.legal-props) > :not([data-prop='bdo:note']):not([data-prop='bdo:creator']) h4:not(.first)::before
+{     
+   content:' ' !important;position:absolute;background-color:rgba(240,240,240,1); z-index:-1;
+   width:100%; height:100%;top:0px;left:-10px;  padding:0 10px;
+   opacity:0  ;
+}
+
+
+.resource .data [data-prop="bdo:note"] .sub:hover::before,
+.data:not(.legal-props)  h4:not(.first):hover::before 
+{
+   opacity:1 !important;
+}
+
+
+/* perfect narrow highlighting of property values */
+/*
 
 .resource .data .urilink,
 .resource .data [data-prop="bdo:note"] .sub,
@@ -838,10 +878,7 @@ h4:not(:hover) > .lang
 .resource .data h4.label,
 .resource .data h4.multiple > [lang]  { position:relative; display:inline-block;z-index:1; }
 
-.resource .data > [data-prop="bdo:workHasInstance"] h4:hover .urilink .svg { background-color:rgba(240,240,240,1); }
 
-
-.resource .data .urilink:hover { text-decoration: underline;}
 
 .resource .data [data-prop="bdo:note"] .sub:hover::before,
 .resource .data:not(.legal-props) .propCollapse > div > div > h4:not(.first):hover::before,
@@ -853,7 +890,6 @@ h4:not(:hover) > .lang
 .resource .data:not(.legal-props) > :not([data-prop="bdo:note"]) h4:hover > .ulink >.urilink::before,
 .resource .data .sub:hover h4.label::before,
 .resource .data h4.multiple:hover > [lang]::before,
-/* .resource .data:not(.legal-props) > :not([data-prop="bdo:note"]) h4:hover .ulink::before, */
 .resource .data:not(.legal-props) > :not([data-prop="bdo:creator"]):not([data-prop="bdo:kinWith"]) .group:hover > h4:not(.multiple):not(.first) ::before,
 .resource .data.ext-props [data-prop="bf:identifiedBy"] .sub:hover ::before,
 .resource .data > [data-prop="bdo:creator"] .subgroup:hover .subsub:last-child ::before,
@@ -877,13 +913,6 @@ h4:not(:hover) > .lang
    content:' ';position:absolute;background-color:rgba(240,240,240,1); z-index:-1;
    width:100%; height:100%;top:0px;left:-10px; opacity:0; padding:0 10px;
 }
-/* .resource .data:not(.legal-props) > :not([data-prop="bdo:note"]) h4 .ulink::before, */
-
-
-.resource .data .group > h4 { max-width:calc(100% - 50px); }
-
-.resource .data.ext-props .propCollapse ::before { background-color:white !important;}
-
 
 .resource .data:not(.legal-props) > :not([data-prop="bdo:note"]) h4 > .ulink > .urilink::before,
 .resource .data .propCollapse > div > div > h4:not(.first) > [lang]::before,
@@ -891,14 +920,39 @@ h4:not(:hover) > .lang
 .resource .data.ext-props .propCollapse > div > div > h4:not(.first) > [lang]::before,
 .resource .data:not(.legal-props) .has-collapse h4 .ulink::before { padding:5px 10px; top:-5px; }
 
+*/
+
+.resource .data .propCollapseHeader h4:not(.first)::before,
+.resource .data .propCollapse h4:not(.first)::before,
+.resource .data.ext-props .propCollapse > div > div > h4:not(.first)::before { padding:5px 10px !important; top:-5px !important; }
+
+
+.resource .data .propCollapseHeader h4:not(.first) .hover-menu,
+.resource .data .propCollapse h4:not(.first) .hover-menu,
+.resource .data.ext-props .propCollapse > div > div > h4:not(.first) .hover-menu { margin-top:-5px;  }
+
+.resource .data.ext-props > [data-prop="bf:identifiedBy"] h4 .hover-menu { margin-top:0px;  }
+
+.resource .data .group > h4 { max-width:calc(100% - 10px - 20px); padding-right:20px;}
+
+.resource .data.ext-props .propCollapse ::before { background-color:white !important;}
+
 .resource .data .propCollapseHeader,
 .resource .data .propCollapse.in-true { overflow:visible; position:relative; }
 
 
-.hover-menu { position:absolute; right:0; top:0; display:none; z-index:10;}
 
-/* .resource .data:not(.legal-props) .group:hover > h4:not(.first):not(.multiple) + .hover-menu { display:block; } */
+.hover-menu { position:absolute; width:50px;right:-10px; top:0; display:block; z-index:10; text-align:right; pointer-events: none;opacity:0;}
+.hover-menu img { height:22px; vertical-align: super;  pointer-events: none;}
 
+
+.resource .data [data-prop="bdo:note"] .sub:hover .hover-menu,
+h4:hover .hover-menu {  opacity:1 !important; pointer-events: auto !important; }
+
+.resource .data:not(.legal-props) .group:hover > h4:not(.first):not(.multiple) + .hover-menu { opacity:1; }
+
+.resource .data.data.legal-props > [data-prop="bdo:creator"] .subgroup .subsub:first-child .hover-menu,
+.resource .data > [data-prop="bdo:creator"] .subgroup .subsub:first-child .hover-menu { display:none !important; }
 
 /* ------------------------------------------------------------------------------------------------------------------------ properties/misc */
 
@@ -1011,11 +1065,15 @@ span.in { font-weight:500;padding-left:0px; padding-right:10px;  }
 
 .resource .data > div > .group > .sub > .subgroup { display:inline-block; vertical-align: top; width: calc(100% - 160px - 15px); }
 
-.resource .sub > h4.label:not(:first-of-type) { max-width:calc(100% - 160px - 15px); }
+.resource .sub > h4.label:not(:first-of-type) { max-width:calc(100% - 160px - 15px - 10px - 20px); padding-right:20px;}
 
 
 .resource .data > div .sub > .subgroup > .subsub > h4.first { width:150px; }
-.resource .data > div:not([data-prop="bdo:creator"]):not([data-prop="bf:identifiedBy"]) .sub > .subgroup > .subsub > h4.first + * { max-width: calc(100% - 150px - 15px); }
+.resource .data > div:not([data-prop="bdo:creator"]):not([data-prop="bf:identifiedBy"]) .sub > .subgroup > .subsub > h4.first + * { 
+   /*max-*/ width: calc(100% - 150px - 15px - 5px ); 
+}
+.resource .data > div:not([data-prop="bdo:creator"]):not([data-prop="bf:identifiedBy"]) .sub > .subgroup > .subsub > h4.first + * h4 { padding-right:20px;}
+
 
 .resource .data > [data-prop="bdo:creator"] .subgroup > .subsub { display:inline-block; }
 
@@ -1153,7 +1211,7 @@ TODO
 
 .resource .data > [data-prop="bdo:note"] > div {  width:calc(100% - 190px); display:inline-block; }
 
-.resource .data > [data-prop="bdo:note"]  .sub { display:inline-block; line-height:22px; width:100%;}
+.resource .data > [data-prop="bdo:note"]  .sub { display:inline-block; line-height:22px; width:calc(100% - 10px); padding-right:20px;}
 .resource .data > [data-prop="bdo:note"]  .sub > h4 + div:not(.subsub) { display:inline; /*letter-spacing:0.25px;*/color:#777;font-size:13px; }
 .resource .data > [data-prop="bdo:note"]  .sub > h4 + div + .subsub h4 { font-size:14px; /*letter-spacing:0.5px;*/}
 .resource .data > [data-prop="bdo:note"]  .sub > h4.first { font-size:13px; padding-right:5px;}
@@ -1443,7 +1501,7 @@ div:hover > h4:not(.multiple) > .hoverlink,
 div:hover > h4:not(.multiple) > span .hoverlink,
 h4:hover .hoverlink { opacity:1;pointer-events: auto;}
 
-.hover-anchor { display:inline-block; }
+.hover-anchor { display:none } /* inline-block; }*/
 .hover-anchor ~ .hover-anchor { display:none; }
 :not(.lang) + .hover-anchor .hoverlink { margin-left:5px;}
 
@@ -1549,7 +1607,7 @@ h4.multiple { margin-bottom:10px; vertical-align: top;}
 
 h4.multiple:last-child { margin-bottom:0; }
 
-.resource .data > div > h3 + h4:not(.multiple) { width:calc(100% - 190px);; vertical-align:top; padding-top:0px; /*line-height:24px;*/ }
+.resource .data > div > h3 + h4:not(.multiple) { width:calc(100% - 190px - 10px - 20px); vertical-align:top; padding-top:0px; /*line-height:24px;*/ padding-right:20px; }
 
 .resource .data > div > h3 ~ .group > h4.multiple,
 .resource .data > div > h3 ~ h4.multiple { width:calc(100% - 190px);; /*line-height:24px;*/ vertical-align:top; }
@@ -1572,7 +1630,7 @@ h4.multiple:last-child { margin-bottom:0; }
 /* .resource .data > div > .sub > .subsub > h4:not(.first),  */
 /* :not(:nth-child(2):last-child), */
 .propCollapse > div > div > h4,
-.propCollapseHeader > h4 { width:100%; padding-left:0px; }
+.propCollapseHeader > h4 { width:calc(100% - 45px + 20px); padding-left:0px; padding-right:20px; }
 .resource .data > div .sub .subsub > h4.multiple::after,
 .resource .data > div .sub > h4.multiple::after,
 .resource .data > div > h4::after,
