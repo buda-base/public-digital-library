@@ -445,7 +445,7 @@ a.result + #matches .result-content::before { left:110px; width:calc(100% - 110p
 
 #matches .res-collapse { transition:none; }
 
-.instance-link { color:rgba(229, 74, 53,1);   margin-right:25px;display:inline-flex;align-items:baseline;font-weight:700; /* margin-top:10px; */}
+.instance-link { color:#d73449; /* rgba(229, 74, 53,1);*/   margin-right:25px;display:inline-flex;align-items:baseline;font-weight:700; /* margin-top:10px; */}
 .instance-link > span { cursor:pointer; }
 .instance-link > emph { color:black; }
 
@@ -534,16 +534,23 @@ a.result .T > span::before { content:' '; font-size:10px; font-weight:700;  text
 
 a.result .T span[data-lang] + [data-lang] { margin-left:5px; }
 
-a.result .T span[data-lang$='En'] { border-color:rgba(0,0,255,0.45); }
+a.result .T span[data-lang$='En'] { border-color:rgba(0,150,255,0.5); }
 a.result .T span[data-lang$='En']::before { content:'EN'; font-weight:800; }
 
-a.result .T span[data-lang$='Bo'] { border-color:rgba(255,0,0,0.45); }
+a.result .T span[data-lang$='Bo'] { border-color:#d73449; }
 a.result .T span[data-lang$='Bo']::before { content:'ཨ'; font-size:22px; font-weight:400; padding-top:3px; }
 
-a.result .T span[data-lang$='Inc'] { border-color:rgba(0,255,0,0.45); }
+a.result .T span[data-lang$='Pi'] { border-color:rgba(250,150,0,1); }
+a.result .T span[data-lang$='Pi']::before { content:'Pi'; }
+
+a.result .T span[data-lang$='Pgd'],
+a.result .T span[data-lang$='Sa'],
+a.result .T span[data-lang$='Inc'] { border-color:#fce08d; }
+a.result .T span[data-lang$='Pgd']::before,
+a.result .T span[data-lang$='Sa']::before,
 a.result .T span[data-lang$='Inc']::before { content:'अ'; font-size:16px; font-weight:400; padding-bottom:2px; }
 
-a.result .T span[data-lang$='Zh'] { border-color:rgba(0,255,255,0.45); }
+a.result .T span[data-lang$='Zh'] { border-color:rgba(0,50,255,1); }
 a.result .T span[data-lang$='Zh']::before { content:'中'; font-size:13px; font-weight:700; padding-bottom:2px; padding-right:2px; }
 
 a.result .T span[data-lang$='Es']::before { content:'ES'; }
@@ -558,8 +565,6 @@ a.result .T span[data-lang$='Hi']::before { content:'Hi'; }
 a.result .T span[data-lang$='Km']::before { content:'Km'; }
 a.result .T span[data-lang$='Mn']::before { content:'Mn'; }
 a.result .T span[data-lang$='Ne']::before { content:'Ne'; }
-a.result .T span[data-lang$='Pi']::before { content:'Pi'; }
-a.result .T span[data-lang$='Sa']::before { content:'Sa'; }
 a.result .T span[data-lang$='Ur']::before { content:'Ur'; }
 
 /* TODO exhaustive support of languages/script */
@@ -1399,7 +1404,7 @@ a.login { text-decoration:underline; cursor:pointer; }
 .instance-link .urilink:hover,
 .match .urilink:hover, 
 .match .multi a:hover,
-.resource .data a:hover { border-bottom:1px solid rgba(229, 74, 53,1); }
+.resource .data a:hover { border-bottom:1px solid #d73449; }
 
 .urilink { position:relative; }
 /*h4:not(.sameAs)*/ .urilink.hasIcon, h4.hasIcon { padding-left:0px; }
