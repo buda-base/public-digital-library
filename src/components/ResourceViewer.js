@@ -3667,7 +3667,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
       console.log("prov,orig",prov,orig)
 
-      if(prov && orig) same = [ { fromSeeOther:prov.toLowerCase(), value:orig } ]
+      if(prov && orig) same = [ { fromSeeOther:prov.toLowerCase(), value:orig, isOrig:true } ]
    }
    if(!same.length) same = same.concat([{ type:"uri", value:fullUri(this.props.IRI)}])
    
@@ -3699,7 +3699,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
       </span>
 
 
-      { cLegalD && <span id="copyright" title={this.fullname(cLegalD,false,false,false)}><img src={"/icons/"+copyR+".png"}/></span> }
+      { cLegalD && <span id="copyright" title={this.fullname(cLegalD,false,false,false,false)}><img src={"/icons/"+copyR+".png"}/></span> }
 
       <span id="same" onClick={(e) => this.setState({...this.state,anchorPermaSame:e.currentTarget, collapse: {...this.state.collapse, permaSame:!this.state.collapse.permaSame } } ) }>
          {same.map(s => {
@@ -3724,9 +3724,13 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                   let data,tab ;
                   if(this.props.assocResources) data = this.props.assocResources[s.value]                  
                   if(data && (tab=data.filter(t => t.fromKey === adm+"canonicalHtml")).length) link = tab[0].value  
+                  
+                  let open = <MenuItem>Open {name} in &nbsp;<b>{providers[prov]}</b><img src="/icons/link-out.svg"/></MenuItem>
+                  if(s.isOrig) open = <MenuItem style={{display:"block",height:"32px",lineHeight:"12px"}}>This record was imported from <b>{providers[prov]}</b><br/>See original<img style={{verticalAlign:"middle"}} src="/icons/link-out.svg"/></MenuItem>
+
                   console.log("permaSame",s,data,tab,link,name,prov) 
                   // TODO case when more than on resource from a given provider (cf RKTS)
-                  if(prov != "bdr") return (<a target="_blank" href={link}><MenuItem>Open {name} in&nbsp;<b>{providers[prov]}</b><img src="/icons/link-out.svg"/></MenuItem></a>) 
+                  if(prov != "bdr") return (<a target="_blank" href={link}>{open}</a>) 
             } ) }
          </Popover>
 
@@ -4316,6 +4320,34 @@ perma_menu(pdfLink,monoVol,fairUse,other)
       let imageLabel = "images"
       if(!this.props.collecManif && this.props.imageAsset && this.props.imageAsset.match(/[/]collection[/]/)) imageLabel = "collection"
 
+
+      let src //= <div class="src"><img src="/logo.svg"/></div> 
+      let legal = this.getResourceElem(adm+"metadataLegal"), legalD, sameLegalD
+      if(legal && legal.length) legal = legal.filter(p => !p.fromSameAs)
+      if(legal && legal.length && legal[0].value && this.props.dictionary) { 
+         legalD = this.props.dictionary[legal[0].value]
+         sameLegalD = legalD
+      }
+      if(sameLegalD) { 
+         let prov = sameLegalD[adm+"provider"]
+         if(prov && prov.length) prov = prov[0].value
+         if(prov && this.props.dictionary) prov = this.props.dictionary[prov]
+         if(prov) prov = prov[skos+"prefLabel"]
+         if(prov && prov.length) prov = prov[0].value
+         //else prov = ""
+
+         let orig = this.getResourceElem(adm+"originalRecord")
+         if(orig && orig.length) orig = orig[0].value
+         //else orig = ""
+
+         console.log("prov x orig",prov,orig)
+
+         if(prov !== "BDRC" && prov) 
+            src = <div class="src" onClick={(e) => this.setState({...this.state,anchorPermaSame:e.currentTarget, collapse: {...this.state.collapse, permaSame:!this.state.collapse.permaSame } } ) }>
+               <img src={provImg[prov.toLowerCase()]}/>
+            </div> //value:orig } ]
+      }
+
       if(!this.props.manifestError &&  this.props.imageAsset)
          return  ( 
          <div class="data" id="first-image">
@@ -4355,7 +4387,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
       else if(kZprop.length)
          return <div class="data" id="map">{this.renderData(kZprop,null,null,null,"header")}</div>
       else 
-         return <div class="data" id="head"><div class={"header "+(!this.state.ready?"loading":"")}>{ !this.state.ready && <Loader loaded={false} /> }</div></div>
+         return <div class="data" id="head"><div class={"header "+(!this.state.ready?"loading":"")}>{ !this.state.ready && <Loader loaded={false} /> }{src}</div></div>
    }
 
    renderNoAccess = (fairUse) => {
