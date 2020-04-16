@@ -851,7 +851,7 @@ h4:not(.first)
 .data:not(.legal-props) > :not([data-prop='bdo:note']):not([data-prop='bdo:creator']) h4:not(.first)::before
 {     
    content:' ' !important;position:absolute;background-color:rgba(240,240,240,1); z-index:-1;
-   width:100%; height:100%;top:0px;left:-10px;  padding:0 10px;
+   width:100%; height:100%;top:-4px;left:-10px;  padding:4px 10px;
    opacity:0  ;
 }
 
@@ -924,7 +924,7 @@ h4:not(.first)
 
 .resource .data .propCollapseHeader h4:not(.first)::before,
 .resource .data .propCollapse h4:not(.first)::before,
-.resource .data.ext-props .propCollapse > div > div > h4:not(.first)::before { padding:5px 10px !important; top:-5px !important; }
+.resource .data.ext-props .propCollapse > div > div > h4:not(.first)::before { padding:8px 14px !important; top:-8px !important; }
 
 
 .resource .data .propCollapseHeader h4:not(.first) .hover-menu,
@@ -945,7 +945,7 @@ h4:not(.first)
 .hover-menu { position:absolute; width:50px;right:-10px; top:0; display:block; z-index:10; text-align:right; pointer-events: none;opacity:0; height:28px;
 line-height:12px; } 
 .hover-menu img { height:26px; vertical-align: super;  flex-shrink:0; cursor:pointer; }
-.hover-menu span { position:absolute;color:#d73449;font-weight:900;font-size:10px; right:0; bottom:-2px;cursor:pointer;}
+.hover-menu div span { position:absolute;color:#d73449;font-weight:900;font-size:10px; right:0; bottom:-2px;cursor:pointer;}
 
 .resource .data [data-prop="bdo:note"] .sub:hover .hover-menu,
 h4:hover .hover-menu {  opacity:1 !important; pointer-events: auto !important; }

@@ -187,7 +187,7 @@ const xsd   = "http://www.w3.org/2001/XMLSchema#" ;
 //const prefixes = { adm, bdac, bdan, bda, bdo, bdr, foaf, oa, owl, rdf, rdfs, skos, xsd, tmp, dila }
 
 const providers = { 
-   "bdr":"Buddhist Digital Resource Center",
+   "bdr":"BDRC", //"Buddhist Digital Resource Center",
    "bnf":"BNF (French National Library)",
    "cbcp":"CBC@",
    "cbct":"CBC@",
@@ -2036,13 +2036,14 @@ class ResourceViewer extends Component<Props,State>
 
       let hasTT = e && e.allSameAs && e.allSameAs.length
 
-      let info = [];
+      let info = [], nb = 0;
       if(hasTT) 
          info = e.allSameAs.map(f => { 
             let pref = shortUri(f).split(":")[0]
             let logo = provImg[pref]
             let prov = providers[pref]
-            return (<span>Data loaded from: <img src={logo}/><b>{prov}</b></span>) 
+            if(pref != "bdr") nb ++
+            return (<span>Source: <img src={logo}/><b>{prov}</b></span>) 
          } ).filter(e => e)
 
       return (
@@ -2060,10 +2061,10 @@ class ResourceViewer extends Component<Props,State>
             </Popover> */ }
 
             { hasTT && <Tooltip placement="top-end" title={info}>
-               <span>
+               <div style={{display:"inline-block"}}>
                   <img src="/icons/info.svg"/>
-                  <span>{info.length}</span>
-               </span>
+                  <span>{nb}</span>
+               </div>
             </Tooltip> }
 
             {! hasTT && <img src="/icons/info.svg"/> }
