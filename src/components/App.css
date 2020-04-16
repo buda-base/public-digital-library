@@ -661,7 +661,7 @@ h4:not(:hover) > .lang
 .resource .data .header::before { content:' '; width:130px; height:130px; background:white;border-radius:50%; 
    background-size:auto;background-repeat:no-repeat; background-position: center;}
 
-.resource .data .header .src { position: absolute; right: 0; bottom: 20px; width: 40px;  height: 70px; background-color: #172832; line-height:68px; cursor:pointer;}
+.resource .data .header .src { position: absolute; right: 0; bottom: 20px; width: 34px;  height: 60px; background-color: #172832; line-height:58px; cursor:pointer;}
 .resource .data .header .src img { background-color: white; width:calc(100% - 3px * 2 - 2px * 2);padding:2px; margin-left:3px; display:inline-block; 
 vertical-align:middle;}
 .resource .data .header .src img[src^="/BL."] { padding:0;margin:0;width:100%;}
