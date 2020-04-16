@@ -1706,7 +1706,11 @@ class ResourceViewer extends Component<Props,State>
                if(dir) dir = dir.toLowerCase()
                link = "http://authority.dila.edu.tw/"+dir+"/index.php?fromInner="+link
             }
-            return <a href={link} target="_blank">{shortUri(decodeURI(elem.value))}</a> ;
+            let prefix = shortUri(elem.value).split(":")[0]
+            return <a href={link} target="_blank" class="no-bdrc">{shortUri(decodeURI(elem.value))}
+               {providers[prefix] && <Tooltip title={<span>See on <b>{providers[prefix]}</b></span>}><img src="/icons/link-out.svg"/></Tooltip>}
+               {!providers[prefix] && <img src="/icons/link-out.svg"/>}
+            </a> ;
          }
 
          let dico = dic, ret = []
@@ -1789,19 +1793,19 @@ class ResourceViewer extends Component<Props,State>
             //console.log("sameBDRC",sameBDRC)
 
             if(!elem.value.match(/[.]bdrc[.]/)) { 
-               if(orec && orec.length) link = <a class="urilink prefLabel" href={orec[0].value} target="_blank">{info}</a>
+               if(orec && orec.length) link = <a class="urilink prefLabel no-bdrc" href={orec[0].value} target="_blank">{info}<Tooltip title={<span>See on <b>{providers[prefix]}</b></span>}><img src="/icons/link-out.svg"/></Tooltip></a>
                else if(sameBDRC) {
                   if(!info) info = shortUri(elem.value)
                   link = <a class="urilink prefLabel" href={"/show/"+shortUri(sameBDRC)} target="_blank">{info}</a>
                }
                else if(canUrl && canUrl.length) { 
                   if(!info) info = shortUri(elem.value)                  
-                  link = <a class="urilink prefLabel" href={canUrl[0].value} target="_blank">{info}</a>
+                  link = <a class="urilink prefLabel no-bdrc" href={canUrl[0].value} target="_blank">{info}<Tooltip title={<span>See on <b>{providers[prefix]}</b></span>}><img src="/icons/link-out.svg"/></Tooltip></a>
                   if(srcProv.indexOf(" ") !== -1) srcProv = srcSame
                }
                else {
                   if(!info) info = shortUri(elem.value)
-                  link = <a class="urilink prefLabel" href={elem.value} target="_blank">{info}</a>
+                  link = <a class="urilink prefLabel no-bdrc" href={elem.value} target="_blank">{info}<Tooltip title={<span>See on <b>{providers[prefix]}</b></span>}><img src="/icons/link-out.svg"/></Tooltip></a>
                } 
             }
             else { 
@@ -3644,7 +3648,9 @@ perma_menu(pdfLink,monoVol,fairUse)
    
    console.log("same",same)
 
-   // TODO fix bdr:G3176 (sameAs Shakya Research Center)
+   // TODO 
+   // + fix bdr:G3176 (sameAs Shakya Research Center)
+   // + use <Tooltip/> instead of title="""
 
    return (
 
@@ -3667,7 +3673,8 @@ perma_menu(pdfLink,monoVol,fairUse)
       Download { this.state.collapse.permaDL ? <ExpandLess/>:<ExpandMore/>}
       </span>
 
-      { cLegalD && <span id="copyright" title={this.fullname(cLegalD)}><img src={"/icons/"+copyR+".png"}/></span> }
+
+      { cLegalD && <span id="copyright" title={this.fullname(cLegalD,false,false,false)}><img src={"/icons/"+copyR+".png"}/></span> }
 
       <span id="same" onClick={(e) => this.setState({...this.state,anchorPermaSame:e.currentTarget, collapse: {...this.state.collapse, permaSame:!this.state.collapse.permaSame } } ) }>
          {same.map(s => {
