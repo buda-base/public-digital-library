@@ -199,7 +199,9 @@ const providers = {
    "mbbt":"Marcus Bingenheimer's website",
    "rkts":"rKTs",
    "ola":"Open Library",
+   "sat":"SAT Daizōkyō Text Database",
    "src":"Sakya Research Center",
+   "tol":"Treasury of Lives",
    "viaf":"VIAF",
    "wd":"Wikidata",
 }
@@ -208,8 +210,8 @@ const providers = {
 const provImg = {
    "bdr":  "/logo.svg", 
    "bnf":  "/BNF.svg",
-   "cbct": false,
-   "cbcp": false,
+   //"cbct": false,
+   //"cbcp": false,
    "dila": "/DILA-favicon.ico", 
    "eap":  "/BL.gif",
    "eftr": "/84000.svg",
@@ -218,6 +220,7 @@ const provImg = {
    "mbbt": "/MB-icon.jpg",
    "ola":  "/OL.png",  //"https://openlibrary.org/static/images/openlibrary-logo-tighter.svg" //"https://seeklogo.com/images/O/open-library-logo-0AB99DA900-seeklogo.com.png", 
    "rkts": "/RKTS.png",
+   "tol": "/ToL.png",
    "viaf": "/VIAF.png",
    "wd":   "/WD.svg",
 }
@@ -1006,7 +1009,7 @@ class ResourceViewer extends Component<Props,State>
 
       if(!str.match(/ /) && !str.match(/^http[s]?:/)) str = str.replace(/([a-z])([A-Z])/g,"$1"+(isUrl?"":' ')+"$2")
 
-      if(str.match(/^https?:\/\/[^ ]+$/)) { str = <a href={str} target="_blank">{str}</a> }
+      if(str.match(/^https?:\/\/[^ ]+$/)) { str = <a href={str} target="_blank" class="no-bdrc">{str}<img src="/icons/link-out.svg"/></a> }
       else if(!noNewline) {
          str = str.split("\n").map((i) => ([i,<br/>]))
          str = [].concat.apply([],str);
@@ -1708,7 +1711,7 @@ class ResourceViewer extends Component<Props,State>
             }
             let prefix = shortUri(elem.value).split(":")[0]
             return <a href={link} target="_blank" class="no-bdrc">{shortUri(decodeURI(elem.value))}
-               {providers[prefix] && <Tooltip title={<span>See on <b>{providers[prefix]}</b></span>}><img src="/icons/link-out.svg"/></Tooltip>}
+               {providers[prefix] && <Tooltip placement="bottom-end" title={<span>See on <b>{providers[prefix]}</b></span>}><img src="/icons/link-out.svg"/></Tooltip>}
                {!providers[prefix] && <img src="/icons/link-out.svg"/>}
             </a> ;
          }
@@ -1793,19 +1796,19 @@ class ResourceViewer extends Component<Props,State>
             //console.log("sameBDRC",sameBDRC)
 
             if(!elem.value.match(/[.]bdrc[.]/)) { 
-               if(orec && orec.length) link = <a class="urilink prefLabel no-bdrc" href={orec[0].value} target="_blank">{info}<Tooltip title={<span>See on <b>{providers[prefix]}</b></span>}><img src="/icons/link-out.svg"/></Tooltip></a>
+               if(orec && orec.length) link = <a class="urilink prefLabel no-bdrc" href={orec[0].value} target="_blank">{info}<Tooltip placement="bottom-end" title={<span>See on <b>{providers[prefix]}</b></span>}><img src="/icons/link-out.svg"/></Tooltip></a>
                else if(sameBDRC) {
                   if(!info) info = shortUri(elem.value)
                   link = <a class="urilink prefLabel" href={"/show/"+shortUri(sameBDRC)} target="_blank">{info}</a>
                }
                else if(canUrl && canUrl.length) { 
                   if(!info) info = shortUri(elem.value)                  
-                  link = <a class="urilink prefLabel no-bdrc" href={canUrl[0].value} target="_blank">{info}<Tooltip title={<span>See on <b>{providers[prefix]}</b></span>}><img src="/icons/link-out.svg"/></Tooltip></a>
+                  link = <a class="urilink prefLabel no-bdrc" href={canUrl[0].value} target="_blank">{info}<Tooltip placement="bottom-end" title={<span>See on <b>{providers[prefix]}</b></span>}><img src="/icons/link-out.svg"/></Tooltip></a>
                   if(srcProv.indexOf(" ") !== -1) srcProv = srcSame
                }
                else {
                   if(!info) info = shortUri(elem.value)
-                  link = <a class="urilink prefLabel no-bdrc" href={elem.value} target="_blank">{info}<Tooltip title={<span>See on <b>{providers[prefix]}</b></span>}><img src="/icons/link-out.svg"/></Tooltip></a>
+                  link = <a class="urilink prefLabel no-bdrc" href={elem.value} target="_blank">{info}<Tooltip placement="bottom-end" title={<span>See on <b>{providers[prefix]}</b></span>}><img src="/icons/link-out.svg"/></Tooltip></a>
                } 
             }
             else { 
@@ -3612,7 +3615,7 @@ class ResourceViewer extends Component<Props,State>
 
 
 
-perma_menu(pdfLink,monoVol,fairUse)
+perma_menu(pdfLink,monoVol,fairUse,other)
 {
    let that = this
 
@@ -3644,6 +3647,10 @@ perma_menu(pdfLink,monoVol,fairUse)
 
    let same = this.getResourceElem(owl+"sameAs")
    if(!same || !same.length) same = [] 
+   for(let o of other) { 
+      let osame = this.getResourceElem(o)
+      if(osame) same = same.concat(osame.map(p => ({...p,fromSeeOther:o.replace(/.*seeOther/,"").toLowerCase()})))
+   }
    if(!same.length) same = same.concat([{ type:"uri", value:fullUri(this.props.IRI)}])
    
    console.log("same",same)
@@ -3679,7 +3686,8 @@ perma_menu(pdfLink,monoVol,fairUse)
       <span id="same" onClick={(e) => this.setState({...this.state,anchorPermaSame:e.currentTarget, collapse: {...this.state.collapse, permaSame:!this.state.collapse.permaSame } } ) }>
          {same.map(s => {
             let prefix = shortUri(s.value).split(":")[0]
-            return <span class={"provider "+prefix}>{provImg[prefix]?<img src={provImg[prefix]}/>:prefix}</span>
+            if(prefix.startsWith("http") && s.fromSeeOther) prefix = s.fromSeeOther
+            return <span class={"provider "+prefix}>{provImg[prefix]?<img src={provImg[prefix]}/>:<span class="img">{prefix.replace(/^cbc.$/,"cbc@").toUpperCase()}</span>}</span>
          })}
       </span>
 
@@ -3693,6 +3701,7 @@ perma_menu(pdfLink,monoVol,fairUse)
             >
             { same.map(s => { 
                   let link = s.value, prov = shortUri(s.value).split(":")[0], name = "resource"
+                  if(prov.startsWith("http") && s.fromSeeOther) prov = s.fromSeeOther
                   let data,tab ;
                   if(this.props.assocResources) data = this.props.assocResources[s.value]                  
                   if(data && (tab=data.filter(t => t.fromKey === adm+"canonicalHtml")).length) link = tab[0].value  
@@ -4592,7 +4601,7 @@ perma_menu(pdfLink,monoVol,fairUse)
                   { this.renderAccess() }
                   { this.renderMirador() }           
                   { theDataTop }
-                  <div class="data" id="perma">{ this.perma_menu(pdfLink,monoVol,fairUse)  }</div>
+                  <div class="data" id="perma">{ this.perma_menu(pdfLink,monoVol,fairUse,kZprop.filter(k => k.startsWith(adm+"seeOther")))  }</div>
                   { theDataBot }
                   { related && related.length > 0 &&  
                      <div class="data related" id="resources">
