@@ -184,6 +184,7 @@ const viaf  = "http://viaf.org/viaf/"
 const wd    = "http://www.wikidata.org/entity/"
 const xsd   = "http://www.w3.org/2001/XMLSchema#" ;
 
+
 //const prefixes = { adm, bdac, bdan, bda, bdo, bdr, foaf, oa, owl, rdf, rdfs, skos, xsd, tmp, dila }
 
 const providers = { 
@@ -3687,6 +3688,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          {same.map(s => {
             let prefix = shortUri(s.value).split(":")[0]
             if(prefix.startsWith("http") && s.fromSeeOther) prefix = s.fromSeeOther
+            // TODO fix Sakya Research Center
             return <span class={"provider "+prefix}>{provImg[prefix]?<img src={provImg[prefix]}/>:<span class="img">{prefix.replace(/^cbc.$/,"cbc@").toUpperCase()}</span>}</span>
          })}
       </span>

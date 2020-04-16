@@ -100,7 +100,10 @@ const viaf  = "http://viaf.org/viaf/"
 const wd    = "http://www.wikidata.org/entity/"
 const xsd   = "http://www.w3.org/2001/XMLSchema#" ;
 
-export const prefixesMap = { adm, bda, bdac, bdan, bdo, bdou, bdr, bdu, bf, cbcp, cbct, dila, eftr, foaf, oa, mbbt, owl, rdf, rdfs, rkts, skos, wd, ola, viaf, xsd, tmp }
+// experimental
+const src = "https://sakyaresearch.org"
+
+export const prefixesMap = { adm, bda, bdac, bdan, bdo, bdou, bdr, bdu, bf, cbcp, cbct, dila, eftr, foaf, oa, mbbt, owl, rdf, rdfs, rkts, skos, wd, ola, viaf, xsd, tmp, src }
 export const prefixes = Object.values(prefixesMap) ;
 export const sameAsMap = { wd:"WikiData", ol:"Open Library", ola:"Open Library", bdr:"BDRC", mbbt:"Marcus Bingenheimer", eftr:"84000" }
 
