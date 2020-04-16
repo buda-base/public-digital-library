@@ -3621,10 +3621,11 @@ perma_menu(pdfLink,monoVol,fairUse,other)
    let that = this
 
 
-   let legal = this.getResourceElem(adm+"metadataLegal"), legalD
+   let legal = this.getResourceElem(adm+"metadataLegal"), legalD, sameLegalD
    if(legal && legal.length) legal = legal.filter(p => !p.fromSameAs)
    if(legal && legal.length && legal[0].value && this.props.dictionary) { 
       legalD = this.props.dictionary[legal[0].value]
+      sameLegalD = legalD
       if(legalD) legalD = legalD[adm+"license"]
       if(legalD && legalD.length && legalD[0].value) legalD = legalD[0].value
    }
@@ -3651,6 +3652,22 @@ perma_menu(pdfLink,monoVol,fairUse,other)
    for(let o of other) { 
       let osame = this.getResourceElem(o)
       if(osame) same = same.concat(osame.map(p => ({...p,fromSeeOther:o.replace(/.*seeOther/,"").toLowerCase()})))
+   }
+   if(!same.length && sameLegalD) { 
+      let prov = sameLegalD[adm+"provider"]
+      if(prov && prov.length) prov = prov[0].value
+      if(prov && this.props.dictionary) prov = this.props.dictionary[prov]
+      if(prov) prov = prov[skos+"prefLabel"]
+      if(prov && prov.length) prov = prov[0].value
+      //else prov = ""
+
+      let orig = this.getResourceElem(adm+"originalRecord")
+      if(orig && orig.length) orig = orig[0].value
+      //else orig = ""
+
+      console.log("prov,orig",prov,orig)
+
+      if(prov && orig) same = [ { fromSeeOther:prov.toLowerCase(), value:orig } ]
    }
    if(!same.length) same = same.concat([{ type:"uri", value:fullUri(this.props.IRI)}])
    

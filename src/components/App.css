@@ -798,6 +798,9 @@ h4:not(:hover) > .lang
 #perma #same .provider.bdr:not(:first-child) { margin-left:8px;}
 #perma #same .provider.bdr img { height:28px;}
 
+#perma #same .provider::before {  content:none; display:none; }
+#perma #same .provider.eap img { height:36px;}
+
 
 /* #perma #rid + * { display:none;} */
 
