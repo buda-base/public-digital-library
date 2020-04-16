@@ -154,7 +154,8 @@ type State = {
    publicProps?:{},
    emptyPopover?:boolean,
    title:{work:{},instance:{},images:{}},
-   tabs:[]
+   tabs:[],
+   anchorEl:{}
  }
 
 
@@ -183,6 +184,7 @@ const viaf  = "http://viaf.org/viaf/"
 const wd    = "http://www.wikidata.org/entity/"
 const xsd   = "http://www.w3.org/2001/XMLSchema#" ;
 
+//const prefixes = { adm, bdac, bdan, bda, bdo, bdr, foaf, oa, owl, rdf, rdfs, skos, xsd, tmp, dila }
 
 const providers = { 
    "bdr":"Buddhist Digital Resource Center",
@@ -202,7 +204,24 @@ const providers = {
    "wd":"Wikidata",
 }
    
-//const prefixes = { adm, bdac, bdan, bda, bdo, bdr, foaf, oa, owl, rdf, rdfs, skos, xsd, tmp, dila }
+
+const provImg = {
+   "bdr":  "/logo.svg", 
+   "bnf":  "/BNF.svg",
+   "cbct": false,
+   "cbcp": false,
+   "dila": "/DILA-favicon.ico", 
+   "eap":  "/BL.gif",
+   "eftr": "/84000.svg",
+   "gretil": "/GRETIL.png",
+   "ia": "/IA.png",
+   "mbbt": "/MB-icon.jpg",
+   "ola":  "/OL.png",  //"https://openlibrary.org/static/images/openlibrary-logo-tighter.svg" //"https://seeklogo.com/images/O/open-library-logo-0AB99DA900-seeklogo.com.png", 
+   "rkts": "/RKTS.png",
+   "viaf": "/VIAF.png",
+   "wd":   "/WD.svg",
+}
+
 
 
 let propOrder = {
@@ -720,7 +739,7 @@ class ResourceViewer extends Component<Props,State>
    {
       super(props);
 
-      this.state = { uviewer:false, imageLoaded:false, collapse:{}, pdfOpen:false, showAnno:true, errors:{},updates:{},title:{} }
+      this.state = { uviewer:false, imageLoaded:false, collapse:{}, pdfOpen:false, showAnno:true, errors:{},updates:{},title:{}, anchorEl:{} }
 
       console.log("props",props)
 
@@ -2009,9 +2028,49 @@ class ResourceViewer extends Component<Props,State>
       return { befo,bdrcData }
    }
 
-   hoverMenu()
+   hoverMenu(prop,e)
    {
-      return <div class="hover-menu"><img src="/icons/help.svg"/></div>
+      let ID = "ID"+prop
+      
+      console.log("hover?",prop,e)
+
+      let hasTT = e && e.allSameAs && e.allSameAs.length
+
+      let info = [];
+      if(hasTT) 
+         info = e.allSameAs.map(f => { 
+            let pref = shortUri(f).split(":")[0]
+            let logo = provImg[pref]
+            let prov = providers[pref]
+            return (<span>Data loaded from: <img src={logo}/><b>{prov}</b></span>) 
+         } ).filter(e => e)
+
+      return (
+         <div class="hover-menu">
+            { /*
+            <img src="/icons/info.svg" onMouseEnter={(e) => { 
+               this.setState({...this.state,collapse:{...this.state.collapse,["hover"+ID]:!this.state.collapse["hover"+ID]}, anchorEl:{...this.state.anchorEl,["hover"+ID]:e.currentTarget} } ) 
+            } } />
+            <Popover 
+               open={this.state.collapse["hover"+ID]}
+               anchorEl={this.state.anchorEl["hover"+ID]}
+               onClose={() => this.setState({...this.state,collapse:{...this.state.collapse,["hover"+ID]:false} } ) }
+               >
+               <ListItem>youpi</ListItem>
+            </Popover> */ }
+
+            { hasTT && <Tooltip placement="top-end" title={info}>
+               <span>
+                  <img src="/icons/info.svg"/>
+                  <span>{info.length}</span>
+               </span>
+            </Tooltip> }
+
+            {! hasTT && <img src="/icons/info.svg"/> }
+         
+         </div>
+
+      )
    }
 
    format(Tag,prop:string,txt:string="",bnode:boolean=false,div:string="sub",otherElem:[])
@@ -2252,7 +2311,7 @@ class ResourceViewer extends Component<Props,State>
             else tmp.push(annoB);
 
 
-            tmp.push(this.hoverMenu())
+            tmp.push(this.hoverMenu(prop,e))
 
 
                //(function(ev,prop,val){return function(){ console.log("new",ev,prop,val) }})(event,this._plink,tmp)
@@ -3583,23 +3642,6 @@ perma_menu(pdfLink,monoVol,fairUse)
    if(!same.length) same = same.concat([{ type:"uri", value:fullUri(this.props.IRI)}])
    
    console.log("same",same)
-
-   const provImg = {
-      "bdr":  "/logo.svg", 
-      "bnf":  "/BNF.svg",
-      "cbct": false,
-      "cbcp": false,
-      "dila": "/DILA-favicon.ico", 
-      "eap":  "/BL.gif",
-      "eftr": "/84000.svg",
-      "gretil": "/GRETIL.png",
-      "ia": "/IA.png",
-      "mbbt": "/MB-icon.jpg",
-      "ola":  "/OL.png",  //"https://openlibrary.org/static/images/openlibrary-logo-tighter.svg" //"https://seeklogo.com/images/O/open-library-logo-0AB99DA900-seeklogo.com.png", 
-      "rkts": "/RKTS.png",
-      "viaf": "/VIAF.png",
-      "wd":   "/WD.svg",
-   }
 
    // TODO fix bdr:G3176 (sameAs Shakya Research Center)
 

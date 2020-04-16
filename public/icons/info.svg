@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="27px" viewBox="0 0 24 27" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->
+    <title>help</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="help" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Group-22" transform="translate(4.000000, 4.000000)">
+            <path d="M0,9 C0,4.581722 3.581722,1 8,1 C12.418278,1 16,4.581722 16,9 C16,13.418278 12.418278,17 8,17 C3.581722,17 0,13.418278 0,9 Z" id="Path" fill="#D73449"></path>
+            <text id="i" font-family="NotoSans-Bold, Noto Sans" font-size="13" font-weight="bold">
+                <tspan x="6" y="14" fill="#FFFFFF">i</tspan>
+                <tspan x="9.96728516" y="14" fill="#4A4A4A"></tspan>
+                <tspan x="6" y="32" font-family="NotoSans-BoldItalic, Noto Sans" font-size="11" font-style="italic" fill="#4A4A4A"></tspan>
+                <tspan x="6" y="47" font-family="NotoSans-BoldItalic, Noto Sans" font-size="11" font-style="italic" fill="#4A4A4A"></tspan>
+            </text>
+        </g>
+    </g>
+</svg>
