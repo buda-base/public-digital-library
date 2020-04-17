@@ -112,7 +112,7 @@ reducers[actions.TYPES.loadedDictionary] = loadedDictionary;
 export const resetSearch = (state: DataState, action: Action) => {
     return {
         ...state,
-        datatypes:null,
+        //datatypes:null,
         keyword: null,
         language:"bo-x-ewts"
     }

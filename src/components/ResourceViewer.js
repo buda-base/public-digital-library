@@ -4658,7 +4658,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                   { related && related.length > 0 &&  
                      <div class="data related" id="resources">
                         <div>
-                           <div><h2>Related Works</h2><Link to={"/search?t=Work&r="+this.props.IRI}>{"see all"}</Link></div>
+                           <div><h2>Related Works</h2>{ related.length > 4 && <Link to={"/search?t=Work&r="+this.props.IRI}>{"see all"}</Link> }</div>
                            <div>{ related }</div>
                         </div>
                      </div> 

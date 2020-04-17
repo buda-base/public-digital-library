@@ -1920,7 +1920,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
             let iUrl = "/search?i="+shortUri(id)+"&t=Work&w="+ encodeURIComponent(window.location.href.replace(/^https?:[/][/][^?]+[?]?/gi,"").replace(/(&n=[^&]*)/g,"")+"&n="+n) //"/search?q="+this.props.keyword+"&lg="+this.props.language+"&t=Work&s="+this.props.sortBy+"&i="+shortUri(id)
 
-            console.log("inst",instances)
+            //console.log("inst",instances)
 
             if(instances) { 
                let instK = Object.keys(instances), n = 1,  seeAll 
@@ -2341,7 +2341,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
          if(sameAsRes.length) {
             
-            console.log("sameAs",prettId,id,dico,rmatch,sameAsRes)
+            //console.log("sameAs",prettId,id,dico,rmatch,sameAsRes)
          
             let menus = {}
             let sources = []
@@ -4644,7 +4644,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   </div> */
                }
                { /* TODO searching then back and search again makes loader never disappear */ }
-               { (this.props.loading || (this.props.datatypes && !this.props.datatypes.hash)) && <Loader className="mainloader"/> }
+               { (this.props.keyword && (this.props.loading || (this.props.datatypes && !this.props.datatypes.hash))) && <Loader className="mainloader"/> }
                { message.length == 0 && !this.props.loading &&
                   <List id="samples">
                      {/* { messageD } */}
