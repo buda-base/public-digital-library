@@ -4643,7 +4643,6 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      </Paper>
                   </div> */
                }
-               { /* TODO searching then back and search again makes loader never disappear */ }
                { (this.props.keyword && (this.props.loading || (this.props.datatypes && !this.props.datatypes.hash))) && <Loader className="mainloader"/> }
                { message.length == 0 && !this.props.loading &&
                   <List id="samples">

@@ -265,12 +265,10 @@ else if(params && params.q) {
    if(pt && !pt.match(/,/) && ["Place", "Person","Work","Etext", "Topic","Role","Corporation","Lineage"].indexOf(pt) !== -1)  {
 
       if(!state.data.searches || !state.data.searches[pt] || !state.data.searches[pt][params.q+"@"+params.lg]) {
-         console.log("ifA")
          store.dispatch(dataActions.startSearch(params.q,params.lg,[pt],null,dontGetDT)); 
          dontGetDT = true
       }
       else {
-         console.log("elseA",state.data.datatypes[params.q+"@"+params.lg])
          store.dispatch(uiActions.loading(params.q, false));         
          store.dispatch(dataActions.foundResults(params.q,params.lg,state.data.searches[pt][params.q+"@"+params.lg],pt))  
 

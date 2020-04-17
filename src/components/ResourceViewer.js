@@ -216,6 +216,7 @@ const provImg = {
    "dila": "/DILA-favicon.ico", 
    "eap":  "/BL.gif",
    "eftr": "/84000.svg",
+   "84000": "/84000.svg",
    "gretil": "/GRETIL.png",
    "ia": "/IA.png",
    "mbbt": "/MB-icon.jpg",
@@ -1276,6 +1277,9 @@ class ResourceViewer extends Component<Props,State>
            
             return _.orderBy(deriv,['label2','label1'])
          }
+
+
+         // TODO fix double display as "unknown" when opening eftr:WAITOH113 from results "white lotus"
          
          expr = prop[bdo+"workHasTranslation"]
          if(expr !== undefined) {
@@ -1289,6 +1293,9 @@ class ResourceViewer extends Component<Props,State>
                expr.filter(e => {
                   let lang = assoR[e.value],langLab
                   if(lang) lang = lang.filter(l => l.type === bdo+"workLangScript" || l.type === tmp+"language"|| l.type === bdo+"language")                  
+
+                  console.log("cano",lang,assoR[e.value],e.value)
+
                   if(lang && lang.length) { 
                      lang = lang[0].value.replace(/[/]Lang/,"/")                  
                      langLab = getOntoLabel(this.props.dictionary,this.props.locale,lang)
@@ -2041,7 +2048,7 @@ class ResourceViewer extends Component<Props,State>
    {
       let ID = "ID"+prop
       
-      console.log("hover?",prop,e)
+      //console.log("hover?",prop,e)
 
       let hasTT = e && e.allSameAs && e.allSameAs.length
 
@@ -3672,7 +3679,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
    }
    if(!same.length) same = same.concat([{ type:"uri", value:fullUri(this.props.IRI)}])
    
-   console.log("same",same)
+   //console.log("same",same)
 
    // TODO 
    // + fix bdr:G3176 (sameAs Shakya Research Center)
@@ -3729,7 +3736,8 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                   let open = <MenuItem>Open {name} in &nbsp;<b>{providers[prov]}</b><img src="/icons/link-out.svg"/></MenuItem>
                   if(s.isOrig) open = <MenuItem style={{display:"block",height:"32px",lineHeight:"12px"}}>This record was imported from <b>{providers[prov]}</b><br/>See original<img style={{verticalAlign:"middle"}} src="/icons/link-out.svg"/></MenuItem>
 
-                  console.log("permaSame",s,data,tab,link,name,prov) 
+                  //console.log("permaSame",s,data,tab,link,name,prov) 
+
                   // TODO case when more than on resource from a given provider (cf RKTS)
                   if(prov != "bdr") return (<a target="_blank" href={link}>{open}</a>) 
             } ) }
@@ -4333,20 +4341,29 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          let prov = sameLegalD[adm+"provider"]
          if(prov && prov.length) prov = prov[0].value
          if(prov && this.props.dictionary) prov = this.props.dictionary[prov]
-         if(prov) prov = prov[skos+"prefLabel"]
+         if(prov && prov[skos+"prefLabel"]) prov = prov[skos+"prefLabel"]
+         else if(prov && prov[rdfs+"label"]) prov = prov[rdfs+"label"]
          if(prov && prov.length) prov = prov[0].value
          //else prov = ""
 
          let orig = this.getResourceElem(adm+"originalRecord")
          if(orig && orig.length) orig = orig[0].value
-         //else orig = ""
+         else orig = ""
 
          console.log("prov x orig",prov,orig)
 
-         if(prov !== "BDRC" && prov) 
-            src = <div class="src" onClick={(e) => this.setState({...this.state,anchorPermaSame:e.currentTarget, collapse: {...this.state.collapse, permaSame:!this.state.collapse.permaSame } } ) }>
-               <img src={provImg[prov.toLowerCase()]}/>
-            </div> //value:orig } ]
+         if(prov !== "BDRC" && prov) {
+
+            if(orig) 
+               src = <div class="src orig" onClick={(e) => this.setState({...this.state,anchorPermaSame:e.currentTarget, collapse: {...this.state.collapse, permaSame:!this.state.collapse.permaSame } } ) }>
+                  <img src={provImg[prov.toLowerCase()]}/>
+               </div> 
+            else  
+               src = <div class="src">
+                  <img src={provImg[prov.toLowerCase()]}/>
+               </div> 
+
+         }
       }
 
       if(!this.props.manifestError &&  this.props.imageAsset)
