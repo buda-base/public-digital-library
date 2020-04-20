@@ -818,7 +818,7 @@ class ResourceViewer extends Component<Props,State>
 
          let _T = getEntiType(props.IRI)
 
-         console.log("title!",_T,work,instance,images)
+         //console.log("title!",_T,work,instance,images)
 
          if(_T === "Etext") {            
             if(!s) s = { ...state }
@@ -852,7 +852,7 @@ class ResourceViewer extends Component<Props,State>
                s.title = { work:[ { type:"uri", value:fullUri(props.IRI) } ] }   
                let has = getElem(bdo+"workHasInstance",props.IRI)
                
-               console.log("has!",has)
+               //console.log("has!",has)
 
                // take a guess using ids [TODO add instance type to query]
                if(has && has.length <= 2) {
@@ -883,7 +883,7 @@ class ResourceViewer extends Component<Props,State>
             s.title = { work:[ { type:"uri", value:fullUri(props.IRI) } ] }
          }
 
-         console.log("title?",JSON.stringify(state.title,null,3),JSON.stringify(s?s.title:state.title,null,3),props.IRI,_T)
+         //console.log("title?",JSON.stringify(state.title,null,3),JSON.stringify(s?s.title:state.title,null,3),props.IRI,_T)
       }
 
       if(props.IRI && props.resources && props.resources[props.IRI]) {
@@ -1279,7 +1279,7 @@ class ResourceViewer extends Component<Props,State>
          }
 
 
-         // TODO fix double display as "unknown" when opening eftr:WAITOH113 from results "white lotus"
+         
          
          expr = prop[bdo+"workHasTranslation"]
          if(expr !== undefined) {
@@ -1294,7 +1294,7 @@ class ResourceViewer extends Component<Props,State>
                   let lang = assoR[e.value],langLab
                   if(lang) lang = lang.filter(l => l.type === bdo+"workLangScript" || l.type === tmp+"language"|| l.type === bdo+"language")                  
 
-                  console.log("cano",lang,assoR[e.value],e.value)
+                  //console.log("cano",lang,assoR[e.value],e.value)
 
                   if(lang && lang.length) { 
                      lang = lang[0].value.replace(/[/]Lang/,"/")                  
@@ -1314,9 +1314,10 @@ class ResourceViewer extends Component<Props,State>
                      subLangDeriv[ontoProp].push(e)
                      cano.push(e);
                   }
-                  else {
+                  else if(assoR[e.value]) { // DONE fix double display as "unknown" when opening eftr:WAITOH113 from results "white lotus"
                      let ontoProp
                      if(!lang) {
+                        //console.error("U N K N O W N",e.value,JSON.stringify(assoR[e.value],null,3))
                         ontoProp = tmp+"workHasTranslationInNonCanonicalLanguageUnknown"
                         langLab = "Unknown"
                         lang = "tmp:LangUnknown"
@@ -2058,7 +2059,7 @@ class ResourceViewer extends Component<Props,State>
             let pref = shortUri(f).split(":")[0]
             let logo = provImg[pref]
             let prov = providers[pref]
-            if(pref != "bdr") nb ++
+            if(!this.props.IRI.startsWith(pref+":") && pref !== "bdr") nb ++
             return (<span>Source: <img src={logo}/><b>{prov}</b></span>) 
          } ).filter(e => e)
 
@@ -2079,7 +2080,7 @@ class ResourceViewer extends Component<Props,State>
             { hasTT && <Tooltip placement="top-end" title={info}>
                <div style={{display:"inline-block"}}>
                   <img src="/icons/info.svg"/>
-                  <span>{nb}</span>
+                  {nb>0 && <span>{nb}</span> }
                </div>
             </Tooltip> }
 
@@ -2269,7 +2270,7 @@ class ResourceViewer extends Component<Props,State>
 
                let root = this.props.assocResources[e.value] //this.uriformat(_tmp+"inRootInstance",e)
                if(root) root = root.filter(e => e.type == bdo+"inRootInstance")
-               if(root && root.length > 0) tmp = [<span style={{marginRight:"10px",display:"inline"}}>{tmp}</span>, " ", <span class="over-in"><span class="in">in</span>{this.uriformat(bdo+"inRootInstance",root[0])}</span>]
+               if(root && root.length > 0) tmp = [<span style={{marginRight:"-30px",display:"inline"}}>{tmp}</span>, " ", <span class="over-in"><span class="in">in</span>{this.uriformat(bdo+"inRootInstance",root[0])}</span>]
 
                //console.log("root",root)
             }
@@ -3677,7 +3678,11 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
       if(prov && orig) same = [ { fromSeeOther:prov.toLowerCase(), value:orig, isOrig:true } ]
    }
-   if(!same.length) same = same.concat([{ type:"uri", value:fullUri(this.props.IRI)}])
+   let noS = false
+   if(!same.length) { 
+      same = same.concat([{ type:"uri", value:fullUri(this.props.IRI)}])
+      if(this.props.IRI.startsWith("bdr:")) noS = true
+   }
    
    //console.log("same",same)
 
@@ -3709,7 +3714,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
       { cLegalD && <span id="copyright" title={this.fullname(cLegalD,false,false,false,false)}><img src={"/icons/"+copyR+".png"}/></span> }
 
-      <span id="same" onClick={(e) => this.setState({...this.state,anchorPermaSame:e.currentTarget, collapse: {...this.state.collapse, permaSame:!this.state.collapse.permaSame } } ) }>
+      <span id="same" class={noS?"PE0":""} onClick={(e) => this.setState({...this.state,anchorPermaSame:e.currentTarget, collapse: {...this.state.collapse, permaSame:!this.state.collapse.permaSame } } ) }>
          {same.map(s => {
             let prefix = shortUri(s.value).split(":")[0]
             if(prefix.startsWith("http") && s.fromSeeOther) prefix = s.fromSeeOther
@@ -4440,9 +4445,9 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                </div></div>]
    } 
 
-   renderMirador = () => {
+   renderMirador = (isMirador) => {
       
-      if((!this.props.manifestError || (this.props.imageVolumeManifests && Object.keys(this.props.imageVolumeManifests).length)) && (this.props.imageAsset || this.props.imageVolumeManifests) && this.state.openMirador)
+      if(isMirador)
          return [<div id="fond" >
                   <Loader loaded={false} color="#fff"/>
                </div>,
@@ -4568,7 +4573,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          rTitle = getWtitle(baseW)
       }
       
-      console.log("ttlm",titlElem,otherLabels)
+      //console.log("ttlm",titlElem,otherLabels)
       
       let mapProps = [bdo+"placeRegionPoly", bdo+"placeLong", bdo+"placeLat" ]
                            
@@ -4639,13 +4644,15 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
       let inTitle 
       let root = this.getResourceElem(bdo+"inRootInstance");
-      console.log("root?",root)
+      //console.log("root?",root)
       if(root && root.length) {
          inTitle  = <h3><span>In: </span> {this.uriformat(tmp+"in",root[0])}</h3> 
       }
 
+      let isMirador = (!this.props.manifestError || (this.props.imageVolumeManifests && Object.keys(this.props.imageVolumeManifests).length)) && (this.props.imageAsset || this.props.imageVolumeManifests) && this.state.openMirador
+
       return (
-         [<div>
+         [<div class={isMirador?"H100vh OF0":""}>
             <div className={"resource "+getEntiType(this.props.IRI).toLowerCase()}>               
                <div class="index">                  
                   {/* { this.renderBrowseAssoRes() } */}
@@ -4668,7 +4675,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                   <div class="data">{title}{inTitle}</div>
                   { this.renderNoAccess(fairUse) }
                   { this.renderAccess() }
-                  { this.renderMirador() }           
+                  { this.renderMirador(isMirador) }           
                   { theDataTop }
                   <div class="data" id="perma">{ this.perma_menu(pdfLink,monoVol,fairUse,kZprop.filter(k => k.startsWith(adm+"seeOther")))  }</div>
                   { theDataBot }

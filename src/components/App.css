@@ -622,6 +622,9 @@ h4:not(:hover) > .lang
 .resource .loader { position:absolute; }
 .resource #fond .loader { position:static; }
 
+.H100vh { height:100vh;}
+.OF0 { overflow:hidden; }
+.PE0 { pointer-events:none; cursor:auto; }
 
 /* -+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ resource */
 
@@ -1023,7 +1026,7 @@ h4:hover a.no-bdrc img { opacity:1; }
 .resource .data > div > h3 { line-height:24px; }
 
 
-span.in { font-weight:500;padding-left:0px; padding-right:10px;  }
+span.in { font-weight:500;padding-left:0px; padding-right:10px; margin-left:36px; }
 .resource h4 .over-in { white-space:pre;}
 /* .resource h4 .in { vertical-align: middle; } */
 

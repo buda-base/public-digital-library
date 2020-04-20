@@ -34,9 +34,12 @@ const mapStateToProps = (state,ownProps) => {
    if(assocResources) { 
       let flatAssocResources = {}
       for(let id of Object.keys(assocResources)) {
-         for(let k of Object.keys(assocResources[id])) {
-            let val = flatAssocResources[k]
-            flatAssocResources[k] = [ ...(val?val:[]), ...assocResources[id][k] ]
+         if(!id.startsWith('"')) { 
+            console.log("id?",id)
+            for(let k of Object.keys(assocResources[id])) {
+               let val = flatAssocResources[k]
+               flatAssocResources[k] = [ ...(val?val:[]), ...assocResources[id][k] ]
+            }
          }
       }
       assocResources = flatAssocResources
