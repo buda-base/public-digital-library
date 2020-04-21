@@ -1723,12 +1723,13 @@ else {
 
          addMeta(keyword,language,data,datatype[0],null,false);
       }
-      else if(datatype.indexOf("Work") !== -1 || datatype.indexOf("Etext") !== -1) {
+      else if(["Instance","Work","Etext"].indexOf(datatype[0]) !== -1) {
 
          metadata = { ...metadata, tree:result.tree}
 
          let dt = "Etext" ;
          if(datatype.indexOf("Work") !== -1 ) { dt="Work" ; addMeta(keyword,language,data,"Work",result.tree,false); }
+         if(datatype.indexOf("Instance") !== -1 ) { dt="Instance" ; addMeta(keyword,language,data,"Instance",result.tree,false); }
          else store.dispatch(dataActions.foundFacetInfo(keyword,language,datatype,metadata))
 
          //store.dispatch(dataActions.foundDatatypes(keyword,language,{ metadata:{ [bdo+dt]:data.numResults } } ));
