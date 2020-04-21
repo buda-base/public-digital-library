@@ -722,7 +722,7 @@ export default class API {
 
             if(data && data.results && data.results.bindings) {
                return data.results.bindings.reduce( (acc,t) => {
-                  if(t.type && t.count && [bdo+"Work",bdo+"Person",bdo+"Topic",bdo+"Role",bdo+"Corporation",bdo+"Place",bdo+"Lineage",bdo+"Chunk"].indexOf(t.type.value) !== -1) 
+                  if(t.type && t.count && [bdo+"Work",bdo+"Instance",bdo+"Person",bdo+"Topic",bdo+"Role",bdo+"Corporation",bdo+"Place",bdo+"Lineage",bdo+"Chunk"].indexOf(t.type.value) !== -1) 
                      return { ...acc, [t.type.value.endsWith("Chunk")?bdo+"Etext":t.type.value]:t.count.value}
                   return acc
                },{})

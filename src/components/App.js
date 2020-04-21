@@ -170,7 +170,7 @@ const langSelect = [
 ]
 
 //const searchTypes = ["All","Work","Etext","Topic","Person","Place","Lineage","Corporation","Role"]
-const searchTypes = [ "Work", "Person","Place","Topic","Lineage","Role","Corporation","Etext" ]
+const searchTypes = [ "Work", "Instance", "Person","Place","Topic","Lineage","Role","Corporation","Etext" ]
 
 /*
 export const langProfile = [
@@ -4009,7 +4009,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
                                  //console.log("counts",i,counts,counts["datatype"][i],this.state.filters.datatype.indexOf(i))
 
-                              let disabled = (!["Work","Person", "Place","Topic","Corporation","Role","Lineage","Etext"].includes(i)) // false // (!this.props.keyword && ["Any","Etext","Person","Work"].indexOf(i)===-1 && this.props.language  != "")
+                              let disabled = (!["Work","Instance","Person", "Place","Topic","Corporation","Role","Lineage","Etext"].includes(i)) // false // (!this.props.keyword && ["Any","Etext","Person","Work"].indexOf(i)===-1 && this.props.language  != "")
                            // || (this.props.language == "")
 
                               let count = counts["datatype"][i]
@@ -4580,7 +4580,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
            </div>
            {  message.length > 0 && <div id="res-header">
                <div>
-               {
+               { // TODO change to popover style open/close
                      sortByList && this.widget(I18n.t("Lsidebar.sortBy.title"),"sortBy",
                      (sortByList /*:["Year of Publication","Instance Title"]*/).map((i,n) => <div key={i} style={{width:"200px",textAlign:"left"}} className="searchWidget">
                            <FormControlLabel

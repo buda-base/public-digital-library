@@ -262,7 +262,7 @@ else if(params && params.q) {
 
    let dontGetDT = false
    let pt = params.t
-   if(pt && !pt.match(/,/) && ["Place", "Person","Work","Etext", "Topic","Role","Corporation","Lineage"].indexOf(pt) !== -1)  {
+   if(pt && !pt.match(/,/) && ["Place", "Person","Work","Etext", "Topic","Role","Corporation","Lineage","Instance"].indexOf(pt) !== -1)  {
 
       if(!state.data.searches || !state.data.searches[pt] || !state.data.searches[pt][params.q+"@"+params.lg]) {
          store.dispatch(dataActions.startSearch(params.q,params.lg,[pt],null,dontGetDT)); 
@@ -1273,7 +1273,7 @@ function mergeSameAs(result,withSameAs,init = true,rootRes = result, force = fal
       let k = keys[i]
       let r = withSameAs[k]
       //console.log("k r",k,r)
-      if(force && !rootRes[r.t][k]) {
+      if(force && rootRes[r.t] && !rootRes[r.t][k]) {
          delete result[r.t][k]
       }
       else for(let s of r.same) {
