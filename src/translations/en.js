@@ -90,7 +90,7 @@ const enTranslation = {
    types:{
       "any":"Any",
       "corporation":"Corporation",
-      "etext":"Etext",
+      "etext":"in Etext content",
       "item":"Item",
       "lineage":"Lineage",
       "person":"Person",

@@ -170,7 +170,7 @@ const langSelect = [
 ]
 
 //const searchTypes = ["All","Work","Etext","Topic","Person","Place","Lineage","Corporation","Role"]
-const searchTypes = [ "Work", "Instance", "Person","Place","Topic","Lineage","Role","Corporation","Etext" ]
+const searchTypes = [ "Work", "Instance","Etext", "Person","Place","Topic","Lineage","Role","Corporation" ]
 
 /*
 export const langProfile = [
@@ -1006,7 +1006,7 @@ class App extends Component<Props,State> {
                time = props.searches[k].time
                console.log("refreshB",time)
             }
-            for(let d of ["Etext","Person","Work","Place","Topic","Corporation","Role","Lineage"]) {
+            for(let d of ["Etext","Person","Instance","Work","Place","Topic","Corporation","Role","Lineage"]) {
                if(props.searches && props.searches[d] && props.searches[d][k]) {
                   if(!time || props.searches[d][k].time > time) { 
                      time = props.searches[d][k].time 
@@ -1061,7 +1061,7 @@ class App extends Component<Props,State> {
                else results = { results: { time, bindings:{ } } }
             }
             
-            let dts = dt.toLowerCase()+"s"
+            let dts = dt.toLowerCase()+"s" 
             if(!merge) merge = {}
 
             console.log("dts",dts,results,res)
@@ -2778,7 +2778,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             { this.getResultProp(bdo+"biblioNote",allProps,false,false,[bdo+"biblioNote",rdfs+"comment"]) }
 
             {/* { this.getResultProp(tmp+"provider",allProps) } */}
-            {/* { this.getResultProp(tmp+"popularityScore",allProps,false,false, [tmp+"entityScore"]) } */}
+            { this.getResultProp(tmp+"popularityScore",allProps,false,false, [tmp+"entityScore"]) }
             
             { this.getInstanceLink(id,n,allProps) }
 
@@ -3093,7 +3093,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                let _t = t.toLowerCase()
                if(_t === "work" && this.props.isInstance) _t = "instance"
                if(displayTypes.length > 1 || displayTypes.indexOf("Any") !== -1) message.push(<MenuItem  onClick={(e)=>this.handleCheck(e,t,true,{},true)}><h4>{I18n.t("types."+t.toLowerCase())+"s"+(false && displayTypes.length>1&&counts["datatype"][t]?" ("+counts["datatype"][t]+")":"")}</h4></MenuItem>);
-               else message.push(<MenuItem><h4>{I18n.t("types."+_t)+"s"+(false && displayTypes.length>=1&&counts["datatype"][t]?" ("+counts["datatype"][t]+")":"")}</h4></MenuItem>);
+               else message.push(<MenuItem><h4>{I18n.t("types."+_t)+(_t === "etext"?"":"s")+(false && displayTypes.length>=1&&counts["datatype"][t]?" ("+counts["datatype"][t]+")":"")}</h4></MenuItem>);
+               // TODO better handling of plural in translations
             }
             absi ++ ;
 
@@ -4320,7 +4321,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          "Work": [ "Popularity", "Closest Matches", "Work Title" ],
          "Person": [ "Popularity", "Closest Matches", ,"Person Name", "Year of Birth" ],
          "Place": [ "Popularity", "Closest Matches", ,"Place Name" ],
-         "Instance": [ "Work Title", "Year of Publication" ],
+         "WorkInstance": [ "Work Title", "Year of Publication" ],
+         "Instance": [ "Popularity", "Title", "Year of Publication" ],
          "Etext": [ "Closest Matches", "Number of Matching Chunks" ],
       }
 
@@ -4331,7 +4333,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
       // TODO 
 
       if(this.props.isInstance) { 
-         sortByList = allSortByLists["Instance"]
+         sortByList = allSortByLists["WorkInstance"]
          //sortByList = null
       }
 

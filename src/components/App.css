@@ -148,7 +148,10 @@ body { overflow:auto !important;padding-right:0 !important; font-family:"Roboto"
 .data-checkbox > span > span:last-child { margin-top:12px; }
 
 #root ~ #menu-datatype,
-#root ~ #menu-language { z-index:10000;}
+#root ~ #menu-language { z-index:100000;}
+
+#root ~ #menu-datatype ul,
+#root ~ #menu-language ul { padding:0 !important;}
 
 #search-bar { width:100%; }
 #search-bar button { margin-top:6px; }
