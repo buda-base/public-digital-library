@@ -1519,7 +1519,7 @@ class App extends Component<Props,State> {
 
          if(state.sortBy) delete state.sortBy
          
-         if([ /*"Any",*/ "Person","Place","Work","Etext","Role","Topic","Corporation","Lineage"].indexOf(lab) !== -1)
+         if([ /*"Any",*/ "Person","Place","Work","Etext","Role","Topic","Corporation","Lineage","Instance"].indexOf(lab) !== -1)
          {
             this.requestSearch(this.props.keyword,[ lab ], this.props.language, true);
          }
@@ -2239,11 +2239,14 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          </span>)
       }
 
+      let enType = getEntiType(id).toLowerCase()
+
       let ret = ([
             
             <div id="num-box" style={{flexShrink:0}}>{warnStatus}{n}</div>, 
-            <div id="icon">
-               <div><img src={"/icons/"+getEntiType(id).toLowerCase()+".png"}/></div>
+            <div id="icon" class={enType}>
+               <div><img src={"/icons/search/"+enType+".svg"}/></div>
+               <div><img src={"/icons/search/"+enType+"_.svg"}/></div>
                <div>{prettId}</div>
             </div>, 
             <div key={t+"_"+n+"__"}  className={"contenu" }>
@@ -2778,7 +2781,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             { this.getResultProp(bdo+"biblioNote",allProps,false,false,[bdo+"biblioNote",rdfs+"comment"]) }
 
             {/* { this.getResultProp(tmp+"provider",allProps) } */}
-            { this.getResultProp(tmp+"popularityScore",allProps,false,false, [tmp+"entityScore"]) }
+            {/* { this.getResultProp(tmp+"popularityScore",allProps,false,false, [tmp+"entityScore"]) } */}
             
             { this.getInstanceLink(id,n,allProps) }
 
@@ -3927,7 +3930,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                            checked={checked}
                            className={"checkbox"}
                            icon={<CheckBoxOutlineBlank/>}
-                           checkedIcon={isExclu ? <Close className="excl"/>:<CheckBox />}
+                           checkedIcon={isExclu ? <Close className="excl"/>:<CheckBox  style={{color:"#d73449"}}/>}
                            onChange={(event, checked) => this.handleCheckFacet(event,jpre,checkable,checked)}
                         />
 
@@ -4017,7 +4020,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                               if(typeof count === "string") count = "~"+count
 
                               return (
-                                 <div key={i} style={{textAlign:"left"}}  className="searchWidget">
+                                 <div key={i} style={{textAlign:"left"}}  className={"searchWidget datatype "+i.toLowerCase()}>
+                                    <span class="img" style={{backgroundImage:"url('/icons/sidebar/"+i.toLowerCase()+".svg')"}} onClick={(event) => this.handleCheck(event,i,this.state.filters.datatype.indexOf(i) === -1)}></span>
                                     <FormControlLabel
                                        control={
                                           <Checkbox
@@ -4027,7 +4031,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                                              color="black"
                                              checked={this.state.filters.datatype.indexOf(i) !== -1} 
                                              icon={<PanoramaFishEye/>}
-                                             checkedIcon={<CheckCircle/>}
+                                             checkedIcon={<CheckCircle style={{color:"#d73449"}}/>}
                                              onChange={(event, checked) => this.handleCheck(event,i,checked)}
                                           />
 
@@ -4285,7 +4289,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                                  checked={checked}
                                  className="checkbox"
                                  icon={<CheckBoxOutlineBlank/>}
-                                 checkedIcon={isExclu ? <Close className="excl"/>:<CheckBox/>}
+                                 checkedIcon={isExclu ? <Close className="excl"/>:<CheckBox  style={{color:"#d73449"}}/>}
                                  onChange={(event, checked) => this.handleCheckFacet(event,jpre,[i],checked)}
                               />
 
@@ -4591,7 +4595,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                                     checked={(this.props.sortBy && this.props.sortBy.startsWith(i.toLowerCase()) ) || (!this.props.sortBy && n === 0) }
                                     className="checkbox"
                                     icon={<PanoramaFishEye/>}
-                                    checkedIcon={<CheckCircle/>}
+                                    checkedIcon={<CheckCircle  style={{color:"#d73449"}}/>}
                                     onChange={(event, checked) => this.updateSortBy(event, checked, i) }
                                  />
 
@@ -4605,7 +4609,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                                        checked={reverseSort}
                                        className="checkbox"
                                        icon={<CheckBoxOutlineBlank/>}
-                                       checkedIcon={<CheckBox/>}
+                                       checkedIcon={<CheckBox  style={{color:"#d73449"}}/>}
                                        onChange={(event, checked) => this.reverseSortBy(event, checked) }
                                     />
 

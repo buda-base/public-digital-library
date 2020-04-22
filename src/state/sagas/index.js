@@ -1729,7 +1729,7 @@ else {
 
          let dt = "Etext" ;
          if(datatype.indexOf("Work") !== -1 ) { dt="Work" ; addMeta(keyword,language,data,"Work",result.tree,false); }
-         if(datatype.indexOf("Instance") !== -1 ) { dt="Instance" ; addMeta(keyword,language,data,"Instance",result.tree,false); }
+         else if(datatype.indexOf("Instance") !== -1 ) { dt="Instance" ; addMeta(keyword,language,data,"Instance",result.tree,false); }
          else store.dispatch(dataActions.foundFacetInfo(keyword,language,datatype,metadata))
 
          //store.dispatch(dataActions.foundDatatypes(keyword,language,{ metadata:{ [bdo+dt]:data.numResults } } ));

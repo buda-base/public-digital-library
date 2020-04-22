@@ -367,14 +367,11 @@ a.result button { text-transform:none; padding-bottom:0;}
 a.result + #matches a.result + #matches .match { max-width:calc(100% - 75px); }
 a.result + #matches .result-content { padding-left:0; min-height:70px; }
 
-a.result + #matches .result-content #num-box { border-width:1px; border-color:rgba(0,0,0,0.35); margin-top:3px;}
+a.result + #matches .result-content #num-box { border-width:1px; border-color:rgba(0,0,0,0.35); margin-top:0px;}
 a.result + #matches .result-content h3 { font-size:12px; line-height:20px; }
 a.result + #matches .result-content #matches { font-size:12px; line-height:18px; }
-a.result + #matches .result-content #icon { width:90px; }
-a.result + #matches .result-content #icon img { min-width:40px; width:40px; }
-a.result + #matches .result-content #icon div:last-child { max-width:70px; }
-a.result + #matches .result-content .contenu { margin-left:90px; max-width:calc(100% - 160px - 24px);}
-a.result + #matches .result-content #matches { margin-left:110px; margin-bottom:0;}
+a.result + #matches .result-content .contenu { margin-left:100px; max-width:calc(100% - 160px - 24px);}
+a.result + #matches .result-content #matches { margin-left:120px; margin-bottom:0;}
 
 a.result + #matches .result-content::before { left:110px; width:calc(100% - 110px - 50px); }
 
@@ -402,12 +399,41 @@ a.result + #matches .result-content::before { left:110px; width:calc(100% - 110p
 
 .result-content #icon { display: inline-block;width:calc(80px + 25px + 25px);height:90px; vertical-align: top; text-align: center;
    position:absolute; }
-.result-content #icon img { min-width:50px; }
-.result-content #icon div:last-child { color: rgba(118, 118, 118, 0.9); font-size:9px;font-weight:600; 
-   max-width: 100px;  overflow: hidden; position: relative; text-overflow: ellipsis; text-align: center; margin: 5px auto; }
-
+   .result-content #icon div:last-child { color: rgba(118, 118, 118, 0.9); font-size:9px;font-weight:600; 
+      max-width: 100px;  overflow: hidden; position: relative; text-overflow: ellipsis; text-align: center; margin: 5px auto; }
+      
 .result-content .contenu { display:inline-block; margin-left:160px; max-width: calc(100% - 160px - 20px); vertical-align: top; }
 
+
+.result-content #icon img { width:70px; max-height:90px;}
+
+.result-content #icon.person img{ width:75px; }
+
+.result-content #icon.lineage img,
+.result-content #icon.work img { width:80px; }
+
+.result-content #icon.images img,
+.result-content #icon.instance img,
+.result-content #icon.topic img{ width:60px; }
+
+/*
+.result-content #icon.lineage img { width:80px;}
+
+.result-content #icon.person img,
+*/
+
+.result-content #icon > div:nth-child(2) { position:absolute; visibility:hidden;top:0;left:0; width:100%;}
+.result-content:hover #icon > div:nth-child(1) { visibility:hidden; }
+.result-content:hover #icon > div:nth-child(2) { visibility:visible; }
+
+a.result + #matches .result-content #icon { width:90px; }
+/*
+a.result + #matches .result-content #icon img { min-width:40px; width:40px; }
+a.result + #matches .result-content #icon img { min-width:40px; width:40px; }
+*/
+a.result + #matches .result-content #icon div:last-child { max-width:70px; }
+
+a.result + #matches .result-content #icon img { width:40px; }
 
 /*
 .result-content .contenu h3 > span.highlight:first-child,
@@ -1220,6 +1246,8 @@ TODO
 
 .resource .data > [data-prop="bdo:creator"] h4[data-prop="bdo:role"] + h4::after { content:':'; /*padding-right:5px;*/ }
 
+
+
 .resource .data > [data-prop="bdo:note"]  .sub > h4.first,
 .resource .data > [data-prop="bdo:lineageHolder"] .sub .subsub h4[data-prop^="bdo:lineageWho"] a,
 .resource .data > [data-prop="bdo:creator"] h4[data-prop="bdo:role"] + h4 a { text-transform:capitalize;color:#343434;font-size:15px;font-weight:700;
@@ -1237,9 +1265,19 @@ TODO
 */
 
 /* Lineage option 2 */
-.resource .data > [data-prop="bdo:lineageHolder"] .subgroup .subsub + .subsub { margin-left:calc(170px + 15px); }
+.resource .data > [data-prop="bdo:lineageHolder"] .sub .subgroup { width:calc(100%);}
+.resource .data > [data-prop="bdo:lineageHolder"] .sub .subsub { width:calc(100% - 5px);}
+.resource .data > [data-prop="bdo:lineageHolder"] .subgroup .subsub + .subsub { margin-left:calc(170px + 15px); width:calc(100% - 170px); }
 .resource .data > [data-prop="bdo:lineageHolder"] .subgroup .subsub > h4.first { width:170px !important;} 
 .resource .data > [data-prop="bdo:lineageHolder"] .subgroup .subsub + .subsub > h4.first { width:150px !important;} 
+.resource .data > [data-prop="bdo:lineageHolder"]:not(#a) .sub > .subgroup > .subsub > h4.first + * {  width: calc(100% - 150px - 15px - 20px ); }
+.resource .data > [data-prop="bdo:lineageHolder"] .propCollapseHeader h4:not(.first)::before,
+.resource .data > [data-prop="bdo:lineageHolder"] .propCollapse h4:not(.first)::before {  top: -4px !important;   padding: 4px 10px !important; }
+.resource .data > [data-prop="bdo:lineageHolder"] .propCollapseHeader h4:not(.first) .hover-menu,
+.resource .data > [data-prop="bdo:lineageHolder"] .propCollapse h4:not(.first) .hover-menu { top:-2px;}
+
+.resource .data > [data-prop="bdo:lineageHolder"] .propCollapseHeader,
+.resource .data > [data-prop="bdo:lineageHolder"] .propCollapse { padding-right:0; width:calc(100% - 190px); }
 
 [data-prop="bf:identifiedBy"].has-collapse.custom .propCollapse,
 [data-prop="bf:identifiedBy"].has-collapse.custom .propCollapseHeader,
@@ -1886,10 +1924,17 @@ body {overflow-x:hidden; }
 .facet-count { font-style:italic; opacity:0.65; font-size:11px; font-weight:400; padding-right:3px;}
 .facet-count-block { white-space:nowrap; }
 
+.searchWidget.datatype { margin:5px 0;}
+.searchWidget.datatype .img {  display:inline-block;width:30px;height:40px;background-size:contain;background-position:center;vertical-align: middle;
+   background-repeat:no-repeat; margin-right:15px;margin-left:-10px; cursor:pointer;
+}
+
+
 .widget label { text-transform:capitalize;  }
 .searchWidget > label > span,
 .dataWidget label > span { font-size:12px; }
 .searchWidget > label > span svg { width:16px; height:16px; } 
+.searchWidget.datatype > label > span svg { width:18px; height:18px; } 
 .searchWidget > label > span svg.excl { width:12px;height:12px; vertical-align:-4px; }
 .dataWidget > label > span svg { width:17px; height:17px; }
 .searchWidget > label > span:first-child,
@@ -1926,12 +1971,12 @@ body > .ol-li-lang:last-child li::before { content:'-';}
 .SidePane > div > .collapse > div > div > .searchWidget { padding-right:30px;}
 
 .searchWidget { position:relative; }
-.searchWidget > .exclude { position:absolute;margin-left:-17px;margin-top:1px; display:none; z-index:1;top:0;left:0;width:16px;padding-left:3px; }
-.searchWidget > .exclude svg, svg.excl { font-size:12px; color:white;background-color:rgba(229, 74, 53,1);border-radius:2px; cursor:pointer;}
+.searchWidget > .exclude { position:absolute;margin-left:-17px;margin-top:2px; display:none; z-index:1;top:0;left:0;width:16px;padding-left:3px; }
+.searchWidget > .exclude svg, svg.excl { font-size:12px; color:white;background-color:#d73449;border-radius:2px; cursor:pointer;}
 .exclude:hover, .searchWidget label:hover + .exclude { display:inline-block;}
 
 .widget > label { display:inline; padding-left:3px;padding-bottom:2px; z-index:0 }
-.widget > label > * { display:inline; vertical-align: middle; }
+.widget > label > * { display:inline; vertical-align: text-top; }
 .widget > label > .checkbox { display:inline-block; width:18px !important;height:18px !important; }
 .widget > label > .checkbox > span:first-child { display:inline;  }
 /* .widget > label > span:last-child:nth-child(2) { vertical-align:1px; line-height:20px;} */
