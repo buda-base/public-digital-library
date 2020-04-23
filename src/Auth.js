@@ -116,12 +116,13 @@ export default class Auth {
      }
   }
 
-  login(redirect) {
+  login(redirect,signup = false) {
      // console.log("auth1",this.auth1,auth0)
     console.log("redirect",redirect)
     if(redirect) localStorage.setItem('auth0_redirect', JSON.stringify(redirect));
     else localStorage.setItem('auth0_redirect', '/');
-    this.auth1.authorize();
+    if(signup === true) this.auth1.authorize({'bdrc_showsignup':1});
+    else this.auth1.authorize();
   }
 
   constructor() {

@@ -110,8 +110,10 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       },
       onGetContext:(iri:string,start:integer,end:integer) => {
          dispatch(data.getContext(iri,start,end));
+      },
+      onSetLocale:(lg:string) => {
+         dispatch(setLocale(lg));
       }
-
    }
 }
 

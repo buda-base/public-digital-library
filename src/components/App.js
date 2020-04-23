@@ -382,22 +382,32 @@ export function top_right_menu(that)
   return (
      <div class="nav">
        <div>
-         <div>
-            <a href="https://bdrc.io/" target="_blank"><img src="/BDRC.svg"/></a>
+         <div id="logo">
+            <a href="https://bdrc.io/" target="_blank"><img src="/BDRC-Logo.png"/></a>
             <Link to="/"  onClick={() => { that.props.history.push({pathname:"/",search:""}); that.props.onResetSearch();} }><img src="/LIBRARY.svg"/></Link>
          </div>
+
+         <Link to="/"  onClick={() => { that.props.history.push({pathname:"/",search:""}); that.props.onResetSearch();} }><span>new search</span></Link>
+
          <div id="login">
-        <IconButton style={{marginLeft:"15px"}}  onClick={e => that.props.onToggleLanguagePanel()}>
+        {/* <IconButton style={{marginLeft:"15px"}}  onClick={e => that.props.onToggleLanguagePanel()}>
           <FontAwesomeIcon style={{fontSize:"28px"}} icon={faLanguage} title="Display Preferences"/>
-        </IconButton> 
+        </IconButton>  */}
         {
-          !that.props.auth.isAuthenticated() && (
-              <IconButton onClick={that.props.auth.login.bind(that,that.props.history.location)} title="Log in">
-                <FontAwesomeIcon style={{fontSize:"28px"}} icon={faUserCircle} />
-              </IconButton>
-            )
+          !that.props.auth.isAuthenticated() && 
+             <div>
+              <span onClick={() => that.props.auth.login(that.props.history.location,true)} title="Register">Register</span>
+              <span onClick={() => that.props.auth.login(that.props.history.location)} title="Log in">Log in</span>
+            </div>
         }
         {
+          that.props.auth.isAuthenticated() && 
+             <div>
+              <span title="User Profile" onClick={(e) => { that.props.onUserProfile(that.props.history.location); that.props.history.push("/user");    }}>PROFILE</span>
+              <span onClick={that.props.auth.logout.bind(that,that.props.history.location.pathname!=="/user"?that.props.history.location:"/")} title="Log out">Log out</span>
+            </div>
+        }
+        { /*
           that.props.auth.isAuthenticated() && (
               [<IconButton title="User Profile" onClick={(e) => { that.props.onUserProfile(that.props.history.location); that.props.history.push("/user");    }}>
                   <FontAwesomeIcon style={{fontSize:"28px"}} icon={faUserCircle} />
@@ -407,8 +417,42 @@ export function top_right_menu(that)
                 <FontAwesomeIcon style={{fontSize:"28px"}} icon={faSignOutAlt} />
               </IconButton> ]
             )
-        }
+        */}
          </div>
+         
+         <span id="lang" onClick={(e) => that.setState({...that.state,anchorLang:e.currentTarget, collapse: {...that.state.collapse, lang:!that.state.collapse.lang } } ) }><img src="/icons/LANGUE.svg"/></span>
+         
+         <Popover
+            id="popLang"
+            open={that.state.collapse.lang?true:false}
+            transformOrigin={{vertical:'top',horizontal:'right'}}
+            anchorOrigin={{vertical:'bottom',horizontal:'right'}}
+            anchorEl={that.state.anchorLang}
+            onClose={e => { that.setState({...that.state,anchorLang:null,collapse: {...that.state.collapse, lang:false } } ) }}
+            >
+
+              <FormControl className="formControl">
+                {/* <InputLabel htmlFor="datatype">In</InputLabel> */}
+                  
+                  { ["zh", "en", "bo" ].map((i) => {
+
+                        let label = I18n.t("lang."+i);
+                        let disab = ["en","bo"].indexOf(i) === -1
+
+                        // TODO add link to user profile / language preferences
+
+                        return ( <MenuItem
+                                    className={that.props.locale===i?"is-locale":""}     
+                                    value={i}
+                                    disabled={disab}
+                                    onClick={(event) => { that.setState({...that.state,anchorLang:null,collapse: {...that.state.collapse, lang:false } }); that.props.onSetLocale(i)} }
+                                       >{label}</MenuItem> ) 
+                  } ) } 
+                  
+            </FormControl>
+         </Popover>
+
+         <a target="_blank" href="https://bdrc.io/donation/" id="donate"><img src="/donate.svg"/>Donate</a>
        </div>
      </div>
   )
@@ -4442,7 +4486,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      value={this.props.hostFailure?"Endpoint error: "+this.props.hostFailure+" ("+this.getEndpoint()+")":this.state.keyword !== undefined && this.state.keyword!==this.state.newKW?this.state.keyword:this.props.keyword&&this.state.newKW?this.state.newKW.replace(/\"/g,""):""}
                      style={{
                         marginTop: '0px',
-                        width: "800px",
+                        width: "700px",
                         height:"60px",
                         boxShadow: "0 2px 4px rgba(187, 187, 187, 0.5)"
                      }}
