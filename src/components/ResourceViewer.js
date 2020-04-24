@@ -71,6 +71,9 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import L from 'leaflet';
 
+import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
+import 'react-tabs/style/react-tabs.css';
+
 import {svgEtextS,svgInstanceS,svgImageS} from "./icons"
 
 
@@ -2045,11 +2048,11 @@ class ResourceViewer extends Component<Props,State>
       return { befo,bdrcData }
    }
 
-   hoverMenu(prop,e)
+   hoverMenu(prop,e,current)
    {
-      let ID = "ID"+prop
+      let ID = "ID-"+prop+"-"+(e?e.value:"")
       
-      //console.log("hover?",prop,e)
+      console.log("hover?",ID,prop,e)
 
       let hasTT = e && e.allSameAs && e.allSameAs.length
 
@@ -2063,29 +2066,73 @@ class ResourceViewer extends Component<Props,State>
             return (<span>Source: <img src={logo}/><b>{prov}</b></span>) 
          } ).filter(e => e)
 
+
+      let toggleHoverM = (e) => this.setState({...this.state,collapse:{...this.state.collapse,["hover"+ID]:!this.state.collapse["hover"+ID]}, anchorEl:{...this.state.anchorEl,["hover"+ID]:e.currentTarget} } ) 
+
       return (
          <div class="hover-menu">
             { /*
             <img src="/icons/info.svg" onMouseEnter={(e) => { 
                this.setState({...this.state,collapse:{...this.state.collapse,["hover"+ID]:!this.state.collapse["hover"+ID]}, anchorEl:{...this.state.anchorEl,["hover"+ID]:e.currentTarget} } ) 
             } } />
-            <Popover 
-               open={this.state.collapse["hover"+ID]}
-               anchorEl={this.state.anchorEl["hover"+ID]}
-               onClose={() => this.setState({...this.state,collapse:{...this.state.collapse,["hover"+ID]:false} } ) }
-               >
-               <ListItem>youpi</ListItem>
-            </Popover> */ }
+            */}
 
             { hasTT && <Tooltip placement="top-end" title={info}>
                <div style={{display:"inline-block"}}>
-                  <img src="/icons/info.svg"/>
-                  {nb>0 && <span>{nb}</span> }
+                  <span id="anchor" onClick={toggleHoverM}>
+                     <img src="/icons/info.svg"/>
+                     {nb>0 && <span id="nb">{nb}</span> }
+                  </span>
                </div>
             </Tooltip> }
 
-            {! hasTT && <img src="/icons/info.svg"/> }
+            {! hasTT && 
+               <span id="anchor" onClick={toggleHoverM}>
+                  <img src="/icons/info.svg"/>
+               </span> 
+            }
+
+            <Popover 
+               data-ID={ID}
+               id="popHoverM"
+               marginThreshold={-10000}
+               open={this.state.collapse["hover"+ID]}
+               anchorOrigin={{horizontal:"right",vertical:"top"}}
+               transformOrigin={{horizontal:"right",vertical:"top"}}
+               anchorEl={this.state.anchorEl["hover"+ID]}
+               onClose={() => this.setState({...this.state,collapse:{...this.state.collapse,["hover"+ID]:false} } ) }
+               >
+               { prop && 
+                  <div class="resource">
+                     <div class="data">
+                        <div data-prop={shortUri(prop)}>
+                           <h3>{this.proplink(prop)}:</h3>
+                           <div class="group"><h4>{current}</h4></div>
+                           <Tabs>
+                              <TabList>
+                                 <Tab>More information</Tab>
+                                 <Tab>Sources</Tab>
+                                 <Tab disabled>Notes</Tab>
+                                 <Tab disabled>Discussion</Tab>
+                              </TabList>
+
+                              <TabPanel>
+                                 test
+                              </TabPanel>
+                              <TabPanel>
+                              </TabPanel>
+                              <TabPanel>
+                              </TabPanel>
+                              <TabPanel>
+                              </TabPanel>
+                           </Tabs>
+                        </div>
+                     </div>
+                  </div>
+               }
+            </Popover>
          
+            
          </div>
 
       )
@@ -2328,8 +2375,8 @@ class ResourceViewer extends Component<Props,State>
             if(tmpAnno) { tmpAnno.push(annoB); tmp = tmpAnno ;}
             else tmp.push(annoB);
 
-
-            tmp.push(this.hoverMenu(prop,e))
+            // TODO fix double
+            tmp.push(this.hoverMenu(prop,e,[...tmp]))
 
 
                //(function(ev,prop,val){return function(){ console.log("new",ev,prop,val) }})(event,this._plink,tmp)
