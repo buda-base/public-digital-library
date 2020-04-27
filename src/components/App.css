@@ -2181,9 +2181,10 @@ body {
    .SidePane.visible + .SearchPane .mainloader { padding-left:200px; }
 }
 
-
-@media (max-width:1400px)
+@media (max-width:1440px)
 {
+   #root > div > .resource {   padding: 155px 30px; }
+
    /* body { min-width:calc(100% - 500px);} */
    .SearchPane { width: calc(100% - 500px); }
    .SidePane:not(.visible) + .SearchPane { width:100%; }
