@@ -52,6 +52,7 @@ import Script from 'react-load-script'
 import React, { Component } from 'react';
 import qs from 'query-string'
 import Button from '@material-ui/core/Button';
+import Fade from '@material-ui/core/Fade';
 import {Translate, I18n} from 'react-redux-i18n';
 import { Link } from 'react-router-dom';
 //import AnnotatedEtextContainer from 'annotated-etext-react';
@@ -2101,10 +2102,14 @@ class ResourceViewer extends Component<Props,State>
                transformOrigin={{horizontal:"right",vertical:"top"}}
                anchorEl={this.state.anchorEl["hover"+ID]}
                onClose={() => this.setState({...this.state,collapse:{...this.state.collapse,["hover"+ID]:false} } ) }
+               TransitionComponent={Fade}
                >
                { prop && 
                   <div class="resource">
                      <div class="data">
+                        <span id="anchor">                         
+                           <img src="/icons/info.svg"/>
+                        </span>
                         <div data-prop={shortUri(prop)}>
                            <h3>{this.proplink(prop)}:</h3>
                            <div class="group"><h4>{current}</h4></div>
