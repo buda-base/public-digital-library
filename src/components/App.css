@@ -90,12 +90,6 @@
 #root > div > .resource {  padding:155px 140px; padding-bottom:200px; display:flex; text-align:left; }
 
 
-@media(max-width:1440px) { 
-   #root > div { overflow:hidden ; }
-   #root .App .SearchPane,
-   .resource { padding:155px calc((100vw - (1440px - (140px * 2))) / 2); padding-bottom:0; } 
-   #root .App .SearchPane { padding-top:50px;}
-}
 
 
 body { overflow:auto !important;padding-right:0 !important; /*font-family:"Roboto", "Helvetica", "Arial", sans-serif; */
@@ -2183,6 +2177,11 @@ body {
 
 @media (max-width:1440px)
 {
+   #root > div { overflow:hidden ; }
+   #root .App .SearchPane,
+   #root > div > .resource { padding:155px calc((100vw - (1440px - (140px * 2))) / 2); padding-bottom:0; } 
+   #root .App .SearchPane { padding-top:50px;}
+
    #root > div > .resource {   padding: 155px 30px; }
 
    /* body { min-width:calc(100% - 500px);} */
