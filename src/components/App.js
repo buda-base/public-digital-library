@@ -389,6 +389,11 @@ export function top_right_menu(that)
 
          <Link to="/"  onClick={() => { that.props.history.push({pathname:"/",search:""}); that.props.onResetSearch();} }><span>new search</span></Link>
 
+         <div class="history">
+            <span><img src="/icons/histo.svg"/></span>
+            <span><img src="/icons/fav.svg"/></span>
+         </div>
+
          <div id="login">
         {/* <IconButton style={{marginLeft:"15px"}}  onClick={e => that.props.onToggleLanguagePanel()}>
           <FontAwesomeIcon style={{fontSize:"28px"}} icon={faLanguage} title="Display Preferences"/>

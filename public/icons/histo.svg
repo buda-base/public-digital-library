@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="22.9"
+   height="22.799999"
+   viewBox="0 0 22.899999 22.799999"
+   version="1.1"
+   id="svg14"
+   sodipodi:docname="histo.svg"
+   inkscape:version="0.92.4 (5da689c313, 2019-01-14)">
+  <metadata
+     id="metadata18">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title>History</dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="640"
+     inkscape:window-height="480"
+     id="namedview16"
+     showgrid="false"
+     inkscape:zoom="7.4167645"
+     inkscape:cx="11.45"
+     inkscape:cy="10.850001"
+     inkscape:window-x="1"
+     inkscape:window-y="1"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="svg14"
+     fit-margin-top="0.2"
+     fit-margin-left="0.2"
+     fit-margin-right="0.2"
+     fit-margin-bottom="0.1" />
+  <!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->
+  <title
+     id="title2">History</title>
+  <desc
+     id="desc4">Created with Sketch.</desc>
+  <defs
+     id="defs6" />
+  <g
+     id="History"
+     style="fill:none;fill-rule:evenodd;stroke:none;stroke-width:1"
+     transform="translate(-7.55,-10.55)">
+    <g
+       id="noun_Time_2996340"
+       transform="translate(7,10)"
+       style="fill:#000000;fill-rule:nonzero">
+      <g
+         id="Group">
+        <path
+           d="M 3.1216216,5.0675676 C 5.25,2.3918919 8.5337838,0.75 12,0.75 18.202703,0.75 23.25,5.7972973 23.25,12 23.25,18.202703 18.202703,23.25 12,23.25 5.7972973,23.25 0.75,18.202703 0.75,12 c 0,-0.425676 0.3648649,-0.790541 0.7905405,-0.790541 0.4256757,0 0.7297298,0.364865 0.7297298,0.790541 0,5.351351 4.3783783,9.72973 9.7297297,9.72973 5.351351,0 9.72973,-4.378379 9.72973,-9.72973 0,-5.3513514 -4.378379,-9.7297297 -9.72973,-9.7297297 -2.9797297,0 -5.7162162,1.3378378 -7.5405405,3.6486486 L 6.1621622,5.6756757 C 6.5878378,5.6148649 7.0135135,5.9189189 7.0135135,6.3445946 7.0743243,6.7702703 6.7702703,7.1351351 6.3445946,7.1959459 L 2.695946,7.6824324 C 2.2702703,7.7432432 1.9054054,7.4391892 1.8445946,7.0135135 L 1.3581081,3.3040541 C 1.2972973,2.8783784 1.6013513,2.5135135 2.027027,2.4527027 2.4527027,2.3918919 2.8783784,2.695946 2.8783784,3.1216216 Z"
+           id="Shape"
+           inkscape:connector-curvature="0" />
+        <path
+           d="m 11.209459,6.7702703 c 0,-0.4256757 0.364865,-0.7905406 0.790541,-0.7905406 0.425676,0 0.790541,0.3648649 0.790541,0.7905406 v 4.9256757 l 2.371621,2.371622 c 0.304054,0.304054 0.304054,0.79054 0,1.094594 -0.304054,0.304054 -0.79054,0.304054 -1.094594,0 L 11.452703,12.547297 C 11.331081,12.425676 11.209459,12.243243 11.209459,12 Z"
+           id="path9"
+           inkscape:connector-curvature="0" />
+      </g>
+    </g>
+  </g>
+</svg>

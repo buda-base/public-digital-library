@@ -76,7 +76,9 @@
 
 .App { min-height:100vh;}
 
-[role='tooltip'] *, .App *,.nav *,.App *::before,.App *::after, .react-tabs * { font-family:"Noto Sans", "Roboto", "Helvetica", "Arial", sans-serif !important;}
+[role='tooltip'] *, .App *,.nav *,.App *::before,.App *::after, .react-tabs *, .resource * { 
+   font-family:"Noto Sans", "Roboto", "Helvetica", "Arial", sans-serif !important;
+}
 
 .SearchPane { width:1000px; margin:auto;margin-top:80px;max-width:90%; z-index:0;background:white;padding:50px; padding-bottom:0;
    min-height:calc(100vh - 80px - 50px * 0); padding-top:0 !important;  padding-bottom:0; }
@@ -96,7 +98,7 @@
 }
 
 
-body { overflow:auto !important;padding-right:0 !important; font-family:"Roboto", "Helvetica", "Arial", sans-serif; 
+body { overflow:auto !important;padding-right:0 !important; /*font-family:"Roboto", "Helvetica", "Arial", sans-serif; */
    background-color:#dddddd;   }
 
 /* .resultPage > .loader { position:fixed;display:block; width: 100vw;height: 100vh; left: 0; top: 0; } */
@@ -251,6 +253,11 @@ body { overflow:auto !important;padding-right:0 !important; font-family:"Roboto"
 .nav #lang img { display: inline-block; margin-top:7px; margin-left:50px; } 
 
 /* .resource .title + .data + .data .browse { display:none; } */
+.nav .history { margin-left:35px; display:flex;}
+.nav .history span { background-color:#efedee; width:40px;height:40px;border-radius:20px; display:inline-flex;justify-content: center;margin-left:15px;
+   padding-left:2px; box-sizing: border-box; 
+}
+.nav .history span img { opacity:0.5; }
 
 
 /* ---------------------------------------------------------------------------------------------------------------------- "sidepanes" */
@@ -843,7 +850,7 @@ vertical-align:middle;}
 #popHoverM > div:last-child { width:953px; box-shadow:0 3px 4px #cecece,0 -1px 4px #cecece; 
    left:calc((100vw - 1440px)/2 + 324px) !important; /* TODO fix when width under ~1450px */
 }
-#popHoverM > div:last-child .resource .data { padding-left:53px; padding-bottom:35px; }
+#popHoverM > div:last-child .resource .data { padding-left:53px; padding-bottom:35px; padding-top:27px; }
 #popHoverM > div:last-child .resource .data .react-tabs { background-color:#fcf5e2; min-width:898px; margin-left:-25px;margin-top:15px; min-height:150px; font-size:0;}
 .react-tabs__tab { border:none;border-radius:0; width:calc(25% - 1px); font-size:10px; padding:0; text-align:center; line-height:40px; bottom:-1px !important; 
    background-color:#fce08d; border-right:1px solid white; }
@@ -852,7 +859,7 @@ vertical-align:middle;}
 
 #popHoverM + #popHoverM {display:none !important; }
 
-#popHoverM { margin-top:-18px; }
+#popHoverM { margin-top:-25px; }
 #popSame { margin-top:-10px; }
 #popDL { margin-top:30px; }
 
@@ -931,7 +938,7 @@ vertical-align:middle;}
 
 .resource .data [data-prop="bdo:note"] .noteCollapse.in-true { overflow: visible;}
 
-.resource .data > [data-prop="bdo:workHasInstance"] h4:hover .urilink .svg { background-color:rgba(240,240,240,1); }
+.resource .data > [data-prop="bdo:workHasInstance"] h4:hover .urilink .svg { background-color:rgba(220,220,220,0.5); }
 
 
 /* full width when hovering... */
@@ -954,7 +961,7 @@ h4:not(.first)
 .resource .data [data-prop="bdo:note"] .sub::before,
 .data:not(.legal-props) > :not([data-prop='bdo:note']):not([data-prop='bdo:creator']) h4:not(.first)::before
 {     
-   content:' ' !important;position:absolute;background-color:rgba(240,240,240,1); z-index:-1;
+   content:' ' !important;position:absolute;background-color:rgba(220,220,220,0.5); z-index:-1;
    width:100%; height:100%;top:-4px;left:-10px;  padding:4px 10px;
    opacity:0  ;
 }
@@ -1014,7 +1021,7 @@ h4:not(.first)
 .resource .data h4.label::before,
 .resource .data h4.multiple > [lang]::before  
 {  
-   content:' ';position:absolute;background-color:rgba(240,240,240,1); z-index:-1;
+   content:' ';position:absolute;background-color:rgba(220,220,220,0.5); z-index:-1;
    width:100%; height:100%;top:0px;left:-10px; opacity:0; padding:0 10px;
 }
 
@@ -1821,7 +1828,7 @@ h2.on .lang, .propCollapseHeader .lang, .propCollapse .lang { position:absolute 
 
 .resource .data > div .sub .subsub > h4.multiple { padding-left:25px; /*line-height:24px;*/ }
 
-.toggle-expand { position:absolute; margin-top: -2px; cursor:pointer; }
+.toggle-expand { position:absolute; margin-top: 0px; cursor:pointer; }
 .toggle-expand svg { font-size:20px; }
 
 
