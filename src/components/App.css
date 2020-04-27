@@ -2183,6 +2183,8 @@ body {
    #root .App .SearchPane { padding-top:50px;}
 
    #root > div > .resource {   padding: 155px 30px; }
+   #root > div > .resource > .index { z-index:0; }
+   #root > div > .resource > .index + div { z-index:1; position:relative; }
 
    /* body { min-width:calc(100% - 500px);} */
    .SearchPane { width: calc(100% - 500px); }
