@@ -1610,9 +1610,9 @@ class ResourceViewer extends Component<Props,State>
                //console.log("p",p)
 
                let tmp = this.subProps(p,div+"sub")
-               let vals
+               let vals, grandPa = []
 
-               if(tmp.length == 0) vals = this.format("h4",p).map((e)=>[e," "])
+               if(tmp.length == 0) vals = this.format("h4",p /*,"",false,"sub",[],true,grandPa*/).map((e)=>[e," "])
                else vals = tmp
 
                if(div == "sub")
@@ -1622,6 +1622,7 @@ class ResourceViewer extends Component<Props,State>
                else if(div == "subsubsub")
                   ret.push(<div className='subsubsub hoyhoy'><h4 className="first prop">{this.proplink(p)}:</h4>{vals}</div>)
 
+               //if(grandPa.length) grandPa[0].push(ret);
             }
          }
       }
@@ -2153,7 +2154,7 @@ class ResourceViewer extends Component<Props,State>
       )
    }
 
-   format(Tag,prop:string,txt:string="",bnode:boolean=false,div:string="sub",otherElem:[])
+   format(Tag,prop:string,txt:string="",bnode:boolean=false,div:string="sub",otherElem:[],grandPa)
    {
       //console.group("FORMAT")
 
@@ -2391,7 +2392,9 @@ class ResourceViewer extends Component<Props,State>
             else tmp.push(annoB);
 
             // TODO fix double
-            tmp.push(this.hoverMenu(prop,e,[...tmp]))
+            let sav = this.hoverMenu(prop,e,[...tmp])
+            tmp.push(sav)
+            //if(grandPa !== undefined) grandPa.push(sav)
 
 
                //(function(ev,prop,val){return function(){ console.log("new",ev,prop,val) }})(event,this._plink,tmp)

@@ -1097,7 +1097,7 @@ h4:hover .hover-menu {  opacity:1 !important; pointer-events: auto !important; }
 .resource .data > [data-prop="bdo:creator"] .subgroup .subsub:first-child .hover-menu { display:none !important; }
 
 
-a.no-bdrc img { position:absolute; margin-top:-3px; opacity:0; } 
+a.no-bdrc img { position:absolute; margin-top:-2px; opacity:0; } 
 h4:hover a.no-bdrc img { opacity:1; }
 
 /* ------------------------------------------------------------------------------------------------------------------------ properties/misc */
@@ -1216,12 +1216,14 @@ span.in { font-weight:500;padding-left:0px; padding-right:10px; margin-left:36px
 
 .resource .data > div .sub > .subgroup > .subsub > h4.first { width:150px; }
 .resource .data > div:not([data-prop="bdo:creator"]):not([data-prop="bf:identifiedBy"]) .sub > .subgroup > .subsub > h4.first + * { 
-   /*max-*/ width: calc(100% - 160px - 15px - 5px ); 
+   /*max-*/ width: calc(100% - 150px - 15px - 5px ); 
 }
 .resource .data > div:not([data-prop="bdo:creator"]):not([data-prop="bf:identifiedBy"]) .sub > .subgroup > .subsub > h4.first + * h4 { 
    padding-right:20px; box-sizing: border-box;
 }
-
+.resource .data > div[data-prop="bdo:workHasTranslation"] .sub > .subgroup > .subsub > h4.first + * { 
+   width: calc(100% - 160px - 15px - 5px ) !important; 
+}
 
 .resource .data > [data-prop="bdo:creator"] .subgroup > .subsub { display:inline-block; }
 
