@@ -2049,7 +2049,7 @@ class ResourceViewer extends Component<Props,State>
       return { befo,bdrcData }
    }
 
-   hoverMenu(prop,e,current)
+   hoverMenu(prop,e,current,parent,grandPa)
    {
       let ID = "ID-"+prop+"-"+(e?e.value:"")
       
@@ -2111,8 +2111,18 @@ class ResourceViewer extends Component<Props,State>
                            <img src="/icons/info.svg"/>
                         </span>
                         <div data-prop={shortUri(prop)}>
-                           <h3>{this.proplink(prop)}:</h3>
-                           <div class="group"><h4>{current}</h4></div>
+                           {!parent && [
+                              <h3>{this.proplink(prop)}:</h3>,
+                              <div class="group"><h4>{current}</h4></div>
+                           ]}
+                           { grandPa && <h3>{this.proplink(grandPa)}:</h3>}
+                           { parent && <div class="sub">
+                              {parent}
+                              <div class="subgroup">
+                                 <h4 class="first">{this.proplink(prop)}:</h4>
+                                 <div class="subsub"><h4>{current}</h4></div>
+                              </div>
+                           </div>}
                            <Tabs>
                               <TabList>
                                  <Tab>More information</Tab>
@@ -2454,7 +2464,7 @@ class ResourceViewer extends Component<Props,State>
                if(from && from[rdf+"type"]) val = from[rdf+"type"]
             }
 
-            //console.log("val",val);
+            console.log("val",val);
             //console.log("lab",lab);
 
             let noVal = true ;
@@ -2490,7 +2500,7 @@ class ResourceViewer extends Component<Props,State>
                sub.push(<Tag  data-prop={shortUri(prop)}  className={'first '+(div == "sub"?'type':'prop') +" "+ (sameAsPrefix?sameAsPrefix+" sameAs hasIcon":"")}>{befo}{[this.proplink(val[0].value),": "]}{bdrcData}</Tag>)
             }
 
-            //console.log("lab",lab)
+            console.log("lab",lab)
 
             // direct property value/label ?
             if(prop !== bdo+"instanceEvent" && lab && lab[0] && lab[0].value)
@@ -2509,19 +2519,28 @@ class ResourceViewer extends Component<Props,State>
                      </div>
                   }><span className="lang">{lang}</span></Tooltip>:null]
 
+
+                  tip.push(this.hoverMenu(subProp,l,[...tip],[<h4 class="first">{this.proplink(prop)}:</h4>]))
+
+                  let sav = <Tag className={'label '}>
+                        {tip}
+                     </Tag>
+                  sub.push(sav)
+
+
+                  /*
                   sub.push(
                      <Tag className={'label '}>
                         {tip}
-                        {/* <ChatIcon className="annoticon" onClick={e => this.setState({...this.state,annoPane:true,newAnno:true})}/> */}
                         <ChatIcon className="annoticon"  onClick={
                            (function(val,prop,v,ev){
                               this.setState({...this.state,annoPane:true,newAnno:{prop:this.proplink(prop),val},viewAnno:prop+"@"+v})
                            }).bind(this,tip,val[0].value,val[0].value)
                         }/>
-                        {this.hoverMenu()}
+                        {this.hoverMenu(prop,tip,[...sub])}
                      </Tag>
                   )
-
+                  */
                   
                }
 
@@ -2757,7 +2776,7 @@ class ResourceViewer extends Component<Props,State>
                                  }).bind(this,txt,f,value)
                               }/>
                            )
-                           txt.push(this.hoverMenu());
+                           txt.push(this.hoverMenu(f,v,[...txt],[...sub],prop));
 
                            //<ChatIcon className="annoticon" onClick={e => this.setState({...this.state,annoPane:true,newAnno:true})}/>
 
