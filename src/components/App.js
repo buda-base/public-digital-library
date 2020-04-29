@@ -1732,11 +1732,17 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          preflabs = []
          if(this.props.dictionary[prop][rdfs+"label"]) preflabs = [ ...preflabs, ...this.props.dictionary[prop][rdfs+"label"] ]
          if(this.props.dictionary[prop][skos+"prefLabel"]) preflabs = [ ...preflabs, ...this.props.dictionary[prop][skos+"prefLabel"] ]
+      }      
+      else if(this.props.dictionary && this.props.dictionary[prop] && !this.props.dictionary[prop][rdfs+"label"])
+      {
+         preflabs = []
       }
 
       if(preflabs)
       {
          if(!Array.isArray(preflabs)) preflabs = [ preflabs ]
+
+
 
          //console.log("fullN",prop,preflabs,this.props.locale,this.props.prefLang,typeof preflabs[0])
 
@@ -2238,7 +2244,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
    makeResult(id,n,t,lit,lang,tip,Tag,url,rmatch = [],facet,allProps = [],preLit,isInstance)
    {
-      //console.log("res",id,allProps,n,t,lit,lang,tip,Tag,rmatch,sameAsRes)
+      console.log("res",id,allProps,n,t,lit,lang,tip,Tag,rmatch,sameAsRes)
 
       let sameAsRes,otherSrc= [] ;
       if(allProps) sameAsRes = [ ...allProps ]
@@ -4281,7 +4287,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             // need to fix this after info is not in ontology anymore... make tree from relation/langScript 
             if(["tree","relation","langScript"].indexOf(j) !== -1) {
 
-               //console.log("widgeTree",j,jpre,meta[j],counts["datatype"],this.state.filters.datatype[0])
+               console.log("widgeTree",j,jpre,meta[j],counts["datatype"],this.state.filters.datatype[0])
 
                return this.treeWidget(j,meta,counts,jlabel,jpre)
             }
@@ -4323,7 +4329,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   }
                   else checked = this.state.filters.facets[jpre].indexOf(i) !== -1
 
-                  // console.log("checked",checked)
+                  //console.log("checked",i,checked)
 
                   let isExclu = this.state.filters.exclude && this.state.filters.exclude[jpre] && this.state.filters.exclude[jpre].includes(i)
 
@@ -4633,7 +4639,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                */ }
             </FormGroup>
            </div>
-           {  message.length > 0 && <div id="res-header">
+           {  message.length >= 0 && <div id="res-header">
                <div>
                { // TODO change to popover style open/close
                      sortByList && this.widget(I18n.t("Lsidebar.sortBy.title"),"sortBy",
@@ -4671,14 +4677,14 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   <div id="pagine">
                      <div>
                            { pageLinks && <span>page { pageLinks }</span>}
-                           <span id="nb">{this.state.results[this.state.id]?this.state.results[this.state.id].resLength:"--"} Results</span>
+                           <span id="nb">{this.state.results&&this.state.results[this.state.id]?this.state.results[this.state.id].resLength:"--"} Results</span>
                      </div>
                   </div>
                </div>
             </div>
            }
            <div id="res-container">
-           {  message.length > 0 && this.render_filters(types,counts,sortByList,reverseSort,facetWidgets) }
+           {  message.length >= 0 && this.render_filters(types,counts,sortByList,reverseSort,facetWidgets) }
                { /*false && this.state.keyword.length > 0 && this.state.dataSource.length > 0 &&
                   <div style={{
                      maxWidth: "700px",
@@ -4699,11 +4705,16 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   </div> */
                }
                { (this.props.keyword && (this.props.loading || (this.props.datatypes && !this.props.datatypes.hash))) && <Loader className="mainloader"/> }
-               { message.length == 0 && !this.props.loading &&
+               { message.length == 0 && !this.props.loading && !this.props.keyword && 
                   <List id="samples">
                      {/* { messageD } */}
                      <h3>Welcome to the beta version of BUDA!</h3>
                   </List> }
+               { (this.props.datatypes && this.props.datatypes.hash && this.props.datatypes.metadata[bdo+this.state.filters.datatype[0]] && message.length === 0) && 
+                  <List id="results">
+                     <h3 style={{marginLeft:"21px"}}>No result found.</h3>             
+                  </List>     
+                }
                { message.length > 0 &&
                   <List key={2} id="results">
                      { this.props.isInstance && this.state.backToWorks && <a className="uri-link"  onClick={(event) => {
