@@ -2015,6 +2015,7 @@ body {overflow-x:hidden; }
 .searchWidget.datatype .img {  display:inline-block;width:30px;height:40px;background-size:contain;background-position:center;vertical-align: middle;
    background-repeat:no-repeat; margin-right:15px;margin-left:-10px; cursor:pointer;
 }
+.searchWidget.datatype.corporation .img { width:45px; margin-left:-17px; margin-right:7px;}
 
 
 .widget label { text-transform:capitalize;  }

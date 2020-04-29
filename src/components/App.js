@@ -2413,6 +2413,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                "wd":   "/WD.svg",
                "rkts": "/RKTS.png",
                "eftr": "/84000.svg",
+               "cbeta": "/CBETALogo.png", 
                "cbct": false,
                "cbcp": false,
             } 
@@ -4639,7 +4640,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                */ }
             </FormGroup>
            </div>
-           {  message.length >= 0 && <div id="res-header">
+           {  (message.length > 0 || message.length == 0 && !this.props.loading ) && <div id="res-header">
                <div>
                { // TODO change to popover style open/close
                      sortByList && this.widget(I18n.t("Lsidebar.sortBy.title"),"sortBy",
@@ -4684,7 +4685,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             </div>
            }
            <div id="res-container">
-           {  message.length >= 0 && this.render_filters(types,counts,sortByList,reverseSort,facetWidgets) }
+           {  (message.length > 0 || message.length == 0 && !this.props.loading) && this.render_filters(types,counts,sortByList,reverseSort,facetWidgets) }
                { /*false && this.state.keyword.length > 0 && this.state.dataSource.length > 0 &&
                   <div style={{
                      maxWidth: "700px",
