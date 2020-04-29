@@ -4711,7 +4711,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      {/* { messageD } */}
                      <h3>Welcome to the beta version of BUDA!</h3>
                   </List> }
-               { (this.props.datatypes && this.props.datatypes.hash && this.props.datatypes.metadata[bdo+this.state.filters.datatype[0]] && message.length === 0) && 
+               { (this.props.datatypes && this.props.datatypes.hash && this.props.datatypes.metadata[bdo+this.state.filters.datatype[0]] && message.length === 0 && !this.props.loading) && 
                   <List id="results">
                      <h3 style={{marginLeft:"21px"}}>No result found.</h3>             
                   </List>     
