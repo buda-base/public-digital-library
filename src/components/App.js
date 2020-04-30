@@ -2751,14 +2751,14 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                            <div style={{margin:"10px"}}>
                               <Translate value={languages[lang]?languages[lang].replace(/search/,"tip"):lang}/>
                            </div>
-                        }><span className="lang">&nbsp;{lang}</span></Tooltip>:null]}{expand?<span class="etext-match">&nbsp;(
+                        }><span className="lang">&nbsp;{lang}</span></Tooltip>:null]}{expand?<span class="etext-match"><br/>&gt;&nbsp;
                            <span class="uri-link" onClick={(e) => { 
                               if(!this.state.collapse[prettId+"@"+startC] && !m.context) this.props.onGetContext(prettId,startC,endC) ; 
                               toggleExpand(e,prettId+"@"+startC); } 
                            }>{expand!==true?"Expand":"Hide"} Context</span>
                            <span> or </span>
                            <Link to={"/show/"+prettId+bestM} class="uri-link">Open Etext</Link>
-                           )</span>:null}</span>
+                           </span>:null}</span>
                         }
                         {isArray && <div class="multi">
                            {val.map((e)=> {

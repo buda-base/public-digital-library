@@ -3773,6 +3773,17 @@ perma_menu(pdfLink,monoVol,fairUse,other)
       if(this.props.IRI.startsWith("bdr:")) noS = true
    }
    
+
+   let isEtextVol = false 
+   if(this.props.IRI && getEntiType(this.props.IRI) === "Etext") {
+      let isVol = this.getResourceElem(bdo+"eTextIsVolume")
+      if(isVol && isVol.length) isEtextVol = true
+      else {
+         isVol = this.getResourceElem(bdo+"eTextInVolume")
+         if(isVol && isVol.length) isEtextVol = true
+      }
+   }
+
    //console.log("same",same)
 
    // TODO 
@@ -3843,6 +3854,12 @@ perma_menu(pdfLink,monoVol,fairUse,other)
             anchorEl={this.state.anchorPermaDL}
             onClose={e => { this.setState({...this.state,anchorPermaDL:null,collapse: {...this.state.collapse, permaDL:false } } ) }}
             >
+
+               { isEtextVol && 
+                     <a target="_blank" title="Etext as TXT" rel="alternate" type="text/turtle"  download href={this.props.IRI?this.props.IRI.replace(/bdr:/,bdr)+".txt":""}>
+                        <MenuItem>Export Etext as TXT</MenuItem>
+                     </a> }
+
                { pdfLink && 
                   ( (!(that.props.manifestError && that.props.manifestError.error.message.match(/Restricted access/)) && !fairUse) || (that.props.auth && that.props.auth.isAuthenticated()))
                   &&
