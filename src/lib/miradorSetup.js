@@ -154,8 +154,12 @@ async function hasEtextPage(manifest) {
       */
 
       let IRI = manifest.replace(/^.*bdr:([^/]+).*$/,"bdr:$1")
+      
       const bdr = "http://purl.bdrc.io/resource/"
-      //let utR = ut.replace(/bdr:/,bdr)
+      const tmp = "http://purl.bdrc.io/ontology/tmp/"
+
+      /* // deprecated
+      //let utR = ut.replace(/bdr:/,bdr)      
       let check = await window.fetch(ldspdi+"/lib/allAssocResource?R_RES="+IRI+"") ;
       
 
@@ -170,9 +174,16 @@ async function hasEtextPage(manifest) {
          if(ut) ut = ut.replace(new RegExp(bdr),"bdr:")
       }
       else ut = false ;
-
+      */
+      let check = await window.fetch(ldspdi+"/query/graph/Etext_base?R_RES="+IRI+"&format=json") ;
+      let ut  = await check.json()
+      if(ut) ut = ut[IRI.replace(/bdr:/,bdr)]
+      if(ut) ut = ut[tmp+"hasEtextRes"]
+      if(ut && ut.length) ut = ut[0].value
+      if(ut) ut = ut.replace(new RegExp(bdr),"bdr:")
       
-      //console.log("ut3",ut)
+      console.log("ut3",ut)
+
       if(!ut) { 
          window.MiradorHasNoEtext = true
          return 
