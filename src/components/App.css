@@ -731,6 +731,8 @@ vertical-align:middle;}
 .resource.topic .data > .header::before { background-image:url("/icons/topic.png");  }
 .resource.etext .data > .header::before { background-image:url("/icons/etext.png");  }
 .resource.lineage .data > .header::before { background-image:url("/icons/lineage.png");  }
+.resource.place .data > .header::before { background-image:url("/icons/search/place.svg");  }
+.resource.corporation .data > .header::before { background-image:url("/icons/search/corporation.svg");  }
 
 .resource .data .header.loading::before { background-image:none !important; }
 
@@ -846,6 +848,10 @@ vertical-align:middle;}
 /* #popHoverM .resource .data > div[data-prop] > h3 { margin-top:-4px;} */
 /* #popHoverM .resource .data > div[data-prop] > .sub:first-child { margin-top:-4px;} */
 
+#popHoverM .resource .data > div[data-prop='bdo:note'] h4.first { display:none; }
+#popHoverM .resource .data > div[data-prop='bdo:note'] h4.first + div:not(.subsub) h4 { color:#777777; }
+#popHoverM .resource .data > div[data-prop='bdo:note'] .sub { display:block; }
+
 #popHoverM .resource .data > div[data-prop] > .sub:not(:first-child) > h4.first { width:160px; font-size:15px; }
 #popHoverM .resource .data > div[data-prop] > .sub:not(:first-child) > h4.first a { font-size:15px; }
 
@@ -870,6 +876,8 @@ vertical-align:middle;}
 
 #popHoverM .resource .data .sub > .subgroup > .subsub > h4,
 #popHoverM .resource .data .group h4 { width:auto !important; padding-right:0 !important;}
+
+#popHoverM .resource .data > div[data-prop='bdo:note'] .sub::before,
 #popHoverM .resource .data .sub > .subgroup > .subsub > h4::before,
 #popHoverM .resource .data .group h4::before { opacity:1 !important; }
 

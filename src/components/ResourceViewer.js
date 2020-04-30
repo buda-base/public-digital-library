@@ -2054,7 +2054,7 @@ class ResourceViewer extends Component<Props,State>
 
    hoverMenu(prop,e,current,parent,grandPa)
    {
-      let ID = "ID-"+prop+"-"+(e?e.value:"")
+      let ID = "ID-"+prop+"-"+(e&&e.value?e.value:e)
       
       console.log("hover?",ID,prop,e)
 
@@ -2612,10 +2612,9 @@ class ResourceViewer extends Component<Props,State>
                            workuri = <div><Tag style={{fontSize:"14px"}}>(from {this.uriformat(bdo+"noteSource",noteData[bdo+"noteSource"])}{loca})</Tag></div>
                         }
 
-                        note.push(
-                           <div class="sub">
-                              <Tag className="first type">{nbN++ /*this.proplink(bdo+"noteText","Note")*/}</Tag>
-                              {workuri}
+                        let sav = [
+                              <Tag className="first type">{nbN++ /*this.proplink(bdo+"noteText","Note")*/}</Tag>,
+                              workuri,
                               <div class="subsub">
                                  <Tag>
                                     {this.pretty(noteData[bdo+"noteText"].value)}
@@ -2627,7 +2626,13 @@ class ResourceViewer extends Component<Props,State>
                                     }/>
                                  </Tag>
                               </div>
-                              {this.hoverMenu()}
+                        ]
+
+                        sav.push(this.hoverMenu(prop,{value:"note-i-"+nbN},<div class="sub">{[...sav]}</div>))
+
+                        note.push(
+                           <div class="sub">
+                            {sav}
                            </div>)
                      }
                      else if(noteData[bdo+"noteSource"])
@@ -2639,18 +2644,26 @@ class ResourceViewer extends Component<Props,State>
                         }
                         let workuri = <div><Tag style={{fontSize:"14px"}}>(from {this.uriformat(bdo+"noteSource",noteData[bdo+"noteSource"])}{loca})</Tag></div>
 
+                        let sav = [
+                           <Tag className="first type">{nbN++ /*this.proplink(bdo+"noteSource","Note")*/}</Tag>,
+                           workuri,
+                           <ChatIcon className="annoticon"  onClick={
+                              (function(val,prop,v,ev){
+                                 this.setState({...this.state,annoPane:true,newAnno:{prop:this.proplink(prop),val},viewAnno:prop+"@"+v})
+                              }).bind(this,[workuri,loca],bdo+"noteSource",noteData[bdo+"noteSource"].value)
+                           }/>
+                        ]
+                        
+                        sav.push(this.hoverMenu(prop,{value:"note-i-"+nbN},<div class="sub">{[...sav]}</div>))
+
                         note.push(
                            <div class="sub">
-                              <Tag className="first type">{nbN++ /*this.proplink(bdo+"noteSource","Note")*/}</Tag>
-                                 {workuri}
-                                 <ChatIcon className="annoticon"  onClick={
-                                    (function(val,prop,v,ev){
-                                       this.setState({...this.state,annoPane:true,newAnno:{prop:this.proplink(prop),val},viewAnno:prop+"@"+v})
-                                    }).bind(this,[workuri,loca],bdo+"noteSource",noteData[bdo+"noteSource"].value)
-                                 }/>
-                              {this.hoverMenu()}
+                              {sav}
                            </div>
                         )
+
+
+
                         /*
                         let workuri = this.uriformat(bdo+"noteSource",noteData[bdo+"noteSource"])
                         note.push(
