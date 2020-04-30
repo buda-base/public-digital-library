@@ -155,6 +155,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       onSetLocale:(lg:string) => {
          dispatch(setLocale(lg));
       },
+      onSetLangPreset:(langs:string[],i?:number) => {
+         dispatch(ui.langPreset(langs,i))
+      },
    }
 }
 

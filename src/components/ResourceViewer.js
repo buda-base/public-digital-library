@@ -4117,12 +4117,12 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                                  let manif = this.props.imageVolumeManifests[id]
                                  openMiradorAtPage(imageLinks[id][e.seq].id,manif["@id"])
                               }}>p.{e.seq}</a> from {this.uriformat(null,{value:id.replace(/bdr:/,bdr).replace(/[/]V([^_]+)_I.+$/,"/W$1")})}                                                      
-                              <IconButton className="hide" title={"Hide this image volume"} 
+                              { imageLinks && Object.keys(imageLinks).length > 1 && <span class="button hide" title={"Hide this image volume"} 
                                  onClick={(eve) => {
                                     this.setState({...this.state, collapse:{...this.state.collapse, ["imageVolume-"+id]:true}}) 
                                  }}> 
                                  <VisibilityOff/>
-                              </IconButton> 
+                              </span>  }
                               <br/>
                               {/* [<a class="toggle-volume">hide</a>]*/}
                               </div>        
@@ -4141,30 +4141,30 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                   </h4>
                </div>
                { e.seq && <div> 
-                  <IconButton  title={(!this.state.collapse["image-"+this.props.IRI+"-"+e.seq]?"Show":"Hide")+" available scans for this page"} style={{marginLeft:"8px"}}
+                  <span class="button" title={(!this.state.collapse["image-"+this.props.IRI+"-"+e.seq]?"Show":"Hide")+" available scans for this page"} 
                   onClick={(eve) => {
                         let id = "image-"+this.props.IRI+"-"+e.seq
                         this.setState({...this.state, collapse:{...this.state.collapse, [id]:!this.state.collapse[id]}}) 
                      }}> 
-                     <img src="/scan_icon.svg"/>
-                  </IconButton> 
+                     <img src="/icons/image.svg"/>
+                  </span> 
                   {/* { <h5><a title="Open image+text view in Mirador" onClick={eve => { openMiradorAtPage(imageLinks[e.seq].id) }}>p.{e.seq}</a></h5> } */}
-                  {   [ <h5><a title={(!this.state.collapse["image-"+this.props.IRI+"-"+e.seq]?"Show":"Hide")+" available scans for this page"} onClick={(eve) => {
+                  {   <h5><a title={(!this.state.collapse["image-"+this.props.IRI+"-"+e.seq]?"Show":"Hide")+" available scans for this page"} onClick={(eve) => {
                         let id = "image-"+this.props.IRI+"-"+e.seq
                         this.setState({...this.state, collapse:{...this.state.collapse, [id]:!this.state.collapse[id]}}) 
                      }}>p.{e.seq}</a>                                             
-                     </h5> ,
-                     <IconButton className="close" data-seq={"image-"+this.props.IRI+"-"+e.seq} title="Configure which image volumes to display" 
+                     </h5> }
+
+                     { imageLinks && Object.keys(imageLinks).length > 1 && <span class="button close" data-seq={"image-"+this.props.IRI+"-"+e.seq} title="Configure which image volumes to display" 
                         onClick={e => { 
-                           $(e.target).closest("button").addClass("show");
+                           $(e.target).closest(".button").addClass("show");
                            this.setState({...this.state,
                               collapse:{...this.state.collapse, imageVolumeDisplay:!this.state.collapse.imageVolumeDisplay},
                               anchorElemImaVol:e.target
                            })} }
                         >
                         <SettingsApp/>
-                     </IconButton>]
-                     }                  
+                     </span> }
                   {/* -- available from { Object.keys(imageLinks).sort().map(id => <span>{this.uriformat(null,{value:id.replace(/bdr:/,bdr)})}</span>)} </h4> } */}
                </div> }
             </div>))  }

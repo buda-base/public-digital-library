@@ -993,7 +993,7 @@ h4:not(.first)
 
 .data:not(.legal-props) > [data-prop='bdo:creator'] .subsub:not(:first-child) h4.first + h4::before,
 .resource .data [data-prop="bdo:note"] .sub::before,
-.data:not(.legal-props) > :not([data-prop='bdo:note']):not([data-prop='bdo:creator']) h4:not(.first)::before
+.data:not(.legal-props) > :not(#etext-scroll):not([data-prop='bdo:note']):not([data-prop='bdo:creator']) h4:not(.first)::before
 {     
    content:' ' !important;position:absolute;background-color:rgba(220,220,220,0.5); z-index:-1;
    width:100%; height:100%;top:-4px;left:-10px;  padding:4px 10px;
@@ -1002,7 +1002,7 @@ h4:not(.first)
 
 
 .resource .data [data-prop="bdo:note"] .sub:hover::before,
-.data:not(.legal-props):not(#etext-scroll)  h4:not(.first):hover::before 
+.data:not(.legal-props) h4:not(.first):not(.page):hover::before 
 {
    opacity:1 !important;
 }
@@ -1097,7 +1097,7 @@ line-height:12px; }
 
 .hover-menu.on,
 .resource .data [data-prop="bdo:note"] .sub:hover .hover-menu,
-h4:hover .hover-menu {  opacity:1 !important; pointer-events: auto !important; }
+:not(#etext-scroll) > h4:hover .hover-menu {  opacity:1 !important; pointer-events: auto !important; }
 
 .resource .data:not(.legal-props) .group:hover > h4:not(.first):not(.multiple) + .hover-menu { opacity:1; }
 
@@ -1400,16 +1400,18 @@ TODO
 .resource .data .subsub.hoyoh { flex-wrap: nowrap; display:flex; align-items: flex-start; margin-bottom:0px; }
 
 
-
+.resource .data > [data-prop="bdo:volumeHasEtext"]:not(.has-collapse) > .group  > .sub > .subgroup,
 [data-prop="bdo:volumeHasEtext"].has-collapse.custom .propCollapse .subgroup,
 [data-prop="bdo:volumeHasEtext"].has-collapse.custom .propCollapseHeader .subgroup { width:100%; }
 
 #popHoverM .sub > h4.first,
+[data-prop="bdo:volumeHasEtext"]:not(.has-collapse) .sub > h4.first,
 [data-prop="bdo:volumeHasEtext"].has-collapse.custom .propCollapse .sub > h4.first,
 [data-prop="bdo:volumeHasEtext"].has-collapse.custom .propCollapseHeader  .sub > h4.first { display:none; }
 
 
 #popHoverM .resource .data .sub:not(#a):not(.b) > .subgroup > h4.first a,
+[data-prop="bdo:volumeHasEtext"]:not(.has-collapse) > .group  > .sub > .subgroup > .subsub > h4.first a,
 [data-prop="bdo:volumeHasEtext"].has-collapse.custom .propCollapse .subsub > h4.first a,
 [data-prop="bdo:volumeHasEtext"].has-collapse.custom .propCollapseHeader .subsub > h4.first a { font-weight:600; font-size:15px;}
 
@@ -1595,22 +1597,29 @@ TODO
    margin-left: auto; margin-right: auto; max-height:80vh;}
 .etextPage button { margin-left:-8px !important; }
 .etextPage button img { height:28px;transform:rotate(-90deg); opacity:0.75;}
+.etextPage span.button { margin-right:8px; display:inline-block; vertical-align: middle; cursor:pointer; }
+.etextPage span.button img { height:24px;opacity:0.75; }
+.etextPage .button:hover img,
 .etextPage button:hover img { opacity:1;}
 .etextPage.manifest-error h5, .etextPage.manifest-error button { opacity:0.5;pointer-events:none; }
 .etextPage .small { padding:0 50px; text-align:center;  margin-bottom:25px;margin-top:10px; position:relative;display:inline-block;}
 .etextPage > div { position:relative; }
 .etextPage > .imagePage { position:relative; text-align:center; }
-.etextPage > div .lang { position:absolute;line-height:24px;  }
+.etextPage > div .lang { position:absolute;line-height:24px; display:none; }
 /* .etextPage .toggle-volume { font-size:12px; } */
 /* .etextPage button.hide { position:absolute; bottom:6px;left:80px;opacity:0}  */
-.etextPage .close {  margin-top:0px; left:6px;}
+.etextPage .close {  margin-top:0px; margin-left:10px; opacity:0.54;}
 .etextPage > div .close svg { font-size:30px; }
-.etextPage:hover > div .close,.etextPage > div .close.show { opacity:1;  }
+.etextPage:hover > div .hide,.etextPage > div .hide.show, 
+.etextPage:hover > div .close,.etextPage > div .close.show { opacity:0.54; cursor:pointer;  }
 .etextPage:not(:hover) .close:not(.show) { opacity:0; }
-.etextPage button.hide { position:absolute; left:10px;top:-15px;opacity:0; }
-.etextPage > .imagePage:hover button.hide { opacity:1; }
+.etextPage .button.hide { position:absolute; left:10px;top:0px;opacity:0; }
+.etextPage > .imagePage:hover .button.hide { opacity:0.54; }
 .etextPage.lang-bo h4.page { font-family:"Tibetan Machine Uni";}
 
+
+
+.etextPage .overpage + div { margin:20px 0 5px 0; }
 
 @font-face {
    font-family: 'Tibetan Machine Uni';

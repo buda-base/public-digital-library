@@ -450,8 +450,12 @@ export function top_right_menu(that)
                                     className={that.props.locale===i?"is-locale":""}     
                                     value={i}
                                     disabled={disab}
-                                    onClick={(event) => { that.setState({...that.state,anchorLang:null,collapse: {...that.state.collapse, lang:false } }); that.props.onSetLocale(i)} }
-                                       >{label}</MenuItem> ) 
+                                    onClick={(event) => { 
+                                       that.setState({...that.state,anchorLang:null,collapse: {...that.state.collapse, lang:false } }); 
+                                       that.props.onSetLocale(i);
+                                       if(i === "bo") that.props.onSetLangPreset(["bo","zh-hans"])
+                                       else if(i === "en") that.props.onSetLangPreset(["bo-x-ewts","sa-x-iast"])
+                                    }} >{label}</MenuItem> ) 
                   } ) } 
                   
             </FormControl>
