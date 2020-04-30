@@ -2265,7 +2265,7 @@ class ResourceViewer extends Component<Props,State>
                   if(tLab.start !== undefined) tmp = [ <span class="startChar">
                      <span>[&nbsp;
                         <Link to={"/show/"+this.props.IRI+"?startChar="+tLab.start+(this.props.highlight?'&keyword="'+this.props.highlight.key+'"@'+this.props.highlight.lang:"")}>@{tLab.start}</Link>
-                     </span>&nbsp;]</span> ]
+                     </span>&nbsp;]</span>,<br/> ]
                   else tmp = []
                   
                   if(tmp.length) tmp.push(highlight(tVal,null,null,false /*true*/))
@@ -3977,7 +3977,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          }
          //loader={<Loader loaded={false} />}
          >
-            <h3 class="chunk"><span>{this.proplink(k)}:</span>&nbsp;{prev!==-1 && <a onClick={(e) => this.props.onGetChunks(this.props.IRI,prev)} class="download" style={{float:"right",fontWeight:700,border:"none"}}>Load Previous Chunks &lt;</a>}</h3>
+            {/* <h3 class="chunk"><span>{this.proplink(k)}:</span>&nbsp;{prev!==-1 && <a onClick={(e) => this.props.onGetChunks(this.props.IRI,prev)} class="download" style={{float:"right",fontWeight:700,border:"none"}}>Load Previous Chunks &lt;</a>}</h3> */}
                {this.hasSub(k)?this.subProps(k):tags.map((e)=> [e," "] )}
             {/* // import make test fail...
                <div class="sub">
