@@ -376,11 +376,72 @@ export function getFacetUrl(filters,dic){
    return str
 }
 
-export function top_right_menu(that)
+export function top_right_menu(that,etextTitle)
 {
+   let lang_selec = [
+         <span id="lang" onClick={(e) => that.setState({...that.state,anchorLang:e.currentTarget, collapse: {...that.state.collapse, lang:!that.state.collapse.lang } } ) }><img src="/icons/LANGUE.svg"/></span>
+         ,
+         <Popover
+            id="popLang"
+            open={that.state.collapse.lang?true:false}
+            transformOrigin={{vertical:'top',horizontal:'right'}}
+            anchorOrigin={{vertical:'bottom',horizontal:'right'}}
+            anchorEl={that.state.anchorLang}
+            onClose={e => { that.setState({...that.state,anchorLang:null,collapse: {...that.state.collapse, lang:false } } ) }}
+            >
 
-  return (
-     <div class="nav">
+              <FormControl className="formControl">
+                {/* <InputLabel htmlFor="datatype">In</InputLabel> */}
+                  
+                  { ["zh", "en", "bo" ].map((i) => {
+
+                        let label = I18n.t("lang."+i);
+                        let disab = ["en","bo"].indexOf(i) === -1
+
+                        // TODO add link to user profile / language preferences
+
+                        return ( <MenuItem
+                                    className={that.props.locale===i?"is-locale":""}     
+                                    value={i}
+                                    disabled={disab}
+                                    onClick={(event) => { 
+                                       that.setState({...that.state,anchorLang:null,collapse: {...that.state.collapse, lang:false } }); 
+                                       that.props.onSetLocale(i);
+                                       if(i === "bo") that.props.onSetLangPreset(["bo","zh-hans"])
+                                       else if(i === "en") that.props.onSetLangPreset(["bo-x-ewts","sa-x-iast"])
+                                    }} >{label}</MenuItem> ) 
+                  } ) } 
+                  
+            </FormControl>
+         </Popover>
+   ]
+
+   if(etextTitle)
+      return (
+      <div class="nav">
+         <div>
+            <div id="logo">
+               <a href="https://bdrc.io/" target="_blank"><img src="/BDRC-Logo.png"/></a>
+               <Link to="/"  onClick={() => { that.props.history.push({pathname:"/",search:""}); that.props.onResetSearch();} }><img src="/LIBRARY.svg"/></Link>
+            </div>
+
+            { lang_selec }
+
+            <span id="back"><span>&lt;</span><a onClick={() => { 
+                  that.setState({...that.state, openEtext: false, closeEtext:true });
+                  /*
+                  let loca = { ...that.props.history.location };                  
+                  delete loca.hash
+                  that.props.history.push(loca) ; 
+                  */
+               }}><span>Close etext</span></a>
+               <span>{etextTitle}</span>
+            </span>
+         </div>
+      </div>)
+   else 
+      return (
+      <div class="nav">
        <div>
          <div id="logo">
             <a href="https://bdrc.io/" target="_blank"><img src="/BDRC-Logo.png"/></a>
@@ -424,42 +485,8 @@ export function top_right_menu(that)
             )
         */}
          </div>
-         
-         <span id="lang" onClick={(e) => that.setState({...that.state,anchorLang:e.currentTarget, collapse: {...that.state.collapse, lang:!that.state.collapse.lang } } ) }><img src="/icons/LANGUE.svg"/></span>
-         
-         <Popover
-            id="popLang"
-            open={that.state.collapse.lang?true:false}
-            transformOrigin={{vertical:'top',horizontal:'right'}}
-            anchorOrigin={{vertical:'bottom',horizontal:'right'}}
-            anchorEl={that.state.anchorLang}
-            onClose={e => { that.setState({...that.state,anchorLang:null,collapse: {...that.state.collapse, lang:false } } ) }}
-            >
 
-              <FormControl className="formControl">
-                {/* <InputLabel htmlFor="datatype">In</InputLabel> */}
-                  
-                  { ["zh", "en", "bo" ].map((i) => {
-
-                        let label = I18n.t("lang."+i);
-                        let disab = ["en","bo"].indexOf(i) === -1
-
-                        // TODO add link to user profile / language preferences
-
-                        return ( <MenuItem
-                                    className={that.props.locale===i?"is-locale":""}     
-                                    value={i}
-                                    disabled={disab}
-                                    onClick={(event) => { 
-                                       that.setState({...that.state,anchorLang:null,collapse: {...that.state.collapse, lang:false } }); 
-                                       that.props.onSetLocale(i);
-                                       if(i === "bo") that.props.onSetLangPreset(["bo","zh-hans"])
-                                       else if(i === "en") that.props.onSetLangPreset(["bo-x-ewts","sa-x-iast"])
-                                    }} >{label}</MenuItem> ) 
-                  } ) } 
-                  
-            </FormControl>
-         </Popover>
+         { lang_selec }
 
          <a target="_blank" href="https://bdrc.io/donation/" id="donate"><img src="/donate.svg"/>Donate</a>
        </div>

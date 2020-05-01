@@ -159,7 +159,8 @@ type State = {
    emptyPopover?:boolean,
    title:{work:{},instance:{},images:{}},
    tabs:[],
-   anchorEl:{}
+   anchorEl:{},
+   openEtext?:boolean
  }
 
 
@@ -795,6 +796,7 @@ class ResourceViewer extends Component<Props,State>
 
    static getDerivedStateFromProps(props:Props,state:State)
    {
+
       let getElem = (prop,IRI,useAssoc) => {
          let longIRI = fullUri(IRI)
          if(useAssoc) {
@@ -810,7 +812,10 @@ class ResourceViewer extends Component<Props,State>
       }
 
       let s 
-      
+
+      // TODO fix reopening etext after being closed
+      if(state.openEtext && state.closeEtext) s = { ...state, openEtext:false, closeEtext: false } 
+
       if(state.tabs && state.tabs.length) s = ResourceViewer.setTitleFromTabs(props,state) ;
 
       if(props.resources && props.resources[props.IRI]) {
@@ -963,6 +968,14 @@ class ResourceViewer extends Component<Props,State>
                   delete loca.hash      
                   history.replace(loca)
                }
+               else if(!this.state.openEtext && !this.state.closeEtext) {
+                  /*
+                  let loca = { ...this.props.history.location };                  
+                  delete loca.hash
+                  this.props.history.push(loca) ; 
+                  */
+                  this.setState({...this.state,openEtext:true,closeEtext:false})
+               }               
             }, 10)
          }
          else setTimeout( 
@@ -2056,7 +2069,7 @@ class ResourceViewer extends Component<Props,State>
    {
       let ID = "ID-"+prop+"-"+(e&&e.value?e.value:e)
       
-      console.log("hover?",ID,prop,e)
+      //console.log("hover?",ID,prop,e)
 
       let hasTT = e && e.allSameAs && e.allSameAs.length
 
@@ -4109,11 +4122,11 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                      if(!this.state.collapse["imageVolume-"+id] && imageLinks[id][e.seq]) 
                         return (
                            <div class="imagePage">
-                              <img class="page" title="Open image+text view in Mirador" src={imageLinks[id][e.seq].image} onClick={eve => { 
+                              <img class="page" title="Open image+text reading view" src={imageLinks[id][e.seq].image} onClick={eve => { 
                                  let manif = this.props.imageVolumeManifests[id]
                                  openMiradorAtPage(imageLinks[id][e.seq].id,manif["@id"])
                               }}/>          
-                              <div class="small"><a title="Open image+text view in Mirador" onClick={eve => { 
+                              <div class="small"><a title="Open image+text reading view" onClick={eve => { 
                                  let manif = this.props.imageVolumeManifests[id]
                                  openMiradorAtPage(imageLinks[id][e.seq].id,manif["@id"])
                               }}>p.{e.seq}</a> from {this.uriformat(null,{value:id.replace(/bdr:/,bdr).replace(/[/]V([^_]+)_I.+$/,"/W$1")})}                                                      
@@ -4310,13 +4323,13 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                   if(k == bdo+"placeRegionPoly" || (k == bdo+"placeLong" && !doRegion)) {
                      return this.renderMap(elem, k, tags, kZprop, doMap, doRegion, regBox, title)
                   }
-                  else if(k == bdo+"eTextHasPage") {
+                  else if(this.state.openEtext && k == bdo+"eTextHasPage") {
                      return this.renderEtextHasPage(elem, kZprop, iiifpres /*+"/2.1.1"*/)
                   }
-                  else if(k == bdo+"eTextHasChunk" && kZprop.indexOf(bdo+"eTextHasPage") === -1) {
+                  else if(this.state.openEtext && k == bdo+"eTextHasChunk" && kZprop.indexOf(bdo+"eTextHasPage") === -1) {
                      return this.renderEtextHasChunk(elem, k, tags)                     
                   }
-                  else if(k !== bdo+"eTextHasChunk") {
+                  else if(k !== bdo+"eTextHasChunk" && k !== bdo+"eTextHasPage" ) {
                      return this.renderGenericProp(elem, k, tags, div!=="ext-props"?hasMaxDisplay:-1)
                   }
                }
@@ -4757,7 +4770,20 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
       let isMirador = (!this.props.manifestError || (this.props.imageVolumeManifests && Object.keys(this.props.imageVolumeManifests).length)) && (this.props.imageAsset || this.props.imageVolumeManifests) && this.state.openMirador
 
-      return (
+      let hasChunks = this.getResourceElem(bdo+"eTextHasChunk")
+      if(hasChunks && hasChunks.length && this.state.openEtext) 
+         return ( 
+         <div>
+            { top_right_menu(this,title) }               
+            { this.renderMirador(isMirador) }           
+            <div class="resource etext-view">
+               <div class="">
+                  { this.renderData([bdo+"eTextHasChunk",bdo+"eTextHasPage"],iiifpres,title,otherLabels,"etext-data") }
+               </div>
+            </div>
+         </div>)
+      else 
+         return (
          [<div class={isMirador?"H100vh OF0":""}>
             <div className={"resource "+getEntiType(this.props.IRI).toLowerCase()}>               
                <div class="index">                  

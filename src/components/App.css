@@ -219,6 +219,20 @@ body { overflow:auto !important;padding-right:0 !important; /*font-family:"Robot
    box-shadow: 0 2px 4px rgba(187, 187, 187, 0.5); z-index:10010;
 }
 
+.nav #back,.nav #back h2 span { 
+   font-size: 14px;
+   font-weight: 700;
+   line-height: 20px;
+   color: #152631;
+}
+.nav #back span { margin-left:auto; }
+.nav #back > span:first-child { padding-right:10px; } 
+.nav #back a { cursor: pointer; }
+.nav #back h2 { display:inline-block; }
+.nav #back h2::before { content:' '; border-left:2px solid  #152631; margin:0 10px; height:12px;width:2px; display:inline-block; vertical-align:-1px; }
+.nav #back h2 .T { display:none; }
+.nav #back h2 span { color:#d73449; }
+
 .nav > div { width:1222px; display:flex;justify-content: space-between;align-items:center; }
 /* .nav > div > a > img { height:50px; } */
 
@@ -1558,6 +1572,14 @@ TODO
 
 /* ------------------------------------------------------------------------------------------------------------------------ etext view */
 
+
+#root > div > .resource.etext-view { padding:155px 30px; width:90%; margin:0 auto; position:relative; }
+#root > div > .resource.etext-view .data { width:100%; padding:30px; box-sizing: border-box; position:relative; }
+.resource.etext-view > :not(.index) { width:100%; padding:0; }
+
+#root > div > .resource.etext-view .data .etextPage { display:block; width:100%; }
+#root > div > .resource.etext-view .data .etextPage:first-child { border:none; margin-top:0; padding-top:0;}
+
 .resource.etext #etext-scroll [lang=bo] > span:not(.startChar) { font-family:'Tibetan Machine Uni'; }
 
 #etext-scroll > .etextPage:first-child { margin-top:20px; }
@@ -1582,7 +1604,7 @@ TODO
 .etextPage h4.page  { display:inline-block; padding-left:0; margin-bottom:0;  
    white-space: nowrap;margin-right:0;
 }
-
+.etextPage h4.page [lang=bo-x-ewts] { font-size:calc( 22 * 100vw / 2500) ;  line-height:calc( 50 * 100vw / 2500) ;  }
 .etextPage h4.page  [lang=bo] { font-size:calc( 30 * 100vw / 2500) ;  line-height:calc( 60 * 100vw / 2500) ; }
 
 /* .etextPage h4.page:last-child { padding-bottom:25px; } */
