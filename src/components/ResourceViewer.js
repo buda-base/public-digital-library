@@ -4125,6 +4125,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                                  let manif = this.props.imageVolumeManifests[id]
                                  openMiradorAtPage(imageLinks[id][e.seq].id,manif["@id"])
                               }}/>          
+                              {/*}
                               <div class="small"><a title="Open image+text reading view" onClick={eve => { 
                                  let manif = this.props.imageVolumeManifests[id]
                                  openMiradorAtPage(imageLinks[id][e.seq].id,manif["@id"])
@@ -4136,22 +4137,12 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                                  <VisibilityOff/>
                               </span>  }
                               <br/>
-                              {/* [<a class="toggle-volume">hide</a>]*/}
-                              </div>        
+                              </div>
+                              */}        
                            </div>
                         )
                   })
                }
-               <div class="overpage">
-                  <h4 class="page">{!e.value.match(/[\n\r]/) && !e.seq ?[<span class="startChar"><span>[&nbsp;<Link to={"/show/"+this.props.IRI+"?startChar="+e.start}>@{e.start}</Link>&nbsp;]</span></span>]:null}{e.value.split("\n").map(f => {
-                        let label = getLangLabel(this,"",[{"@language":e.language,"@value":f}]), lang
-                        if(label) lang = label["@language"]
-                        if(label) label = label["@value"]
-                        if(label) label = highlight(label)
-                        //label = f
-                        return ([<span lang={lang}>{label}</span>,<br/>])})}
-                  </h4>
-               </div>
                { e.seq && <div> 
                   <span class="button" title={(!this.state.collapse["image-"+this.props.IRI+"-"+e.seq]?"Show":"Hide")+" available scans for this page"} 
                   onClick={(eve) => {
@@ -4166,6 +4157,13 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                         this.setState({...this.state, collapse:{...this.state.collapse, [id]:!this.state.collapse[id]}}) 
                      }}>p.{e.seq}</a>                                             
                      </h5> }
+                     &nbsp;
+                     { Object.keys(imageLinks).sort().map(id => {
+                        if( /* !this.state.collapse["imageVolume-"+id] &&*/ imageLinks[id][e.seq]) 
+                           return (
+                                 <h5>from {this.uriformat(null,{value:id.replace(/bdr:/,bdr).replace(/[/]V([^_]+)_I.+$/,"/W$1")})}</h5>
+                           )
+                     })}
 
                      { imageLinks && Object.keys(imageLinks).length > 1 && <span class="button close" data-seq={"image-"+this.props.IRI+"-"+e.seq} title="Configure which image volumes to display" 
                         onClick={e => { 
@@ -4177,8 +4175,18 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                         >
                         <SettingsApp/>
                      </span> }
-                  {/* -- available from { Object.keys(imageLinks).sort().map(id => <span>{this.uriformat(null,{value:id.replace(/bdr:/,bdr)})}</span>)} </h4> } */}
+
                </div> }
+               <div class="overpage">
+                  <h4 class="page">{!e.value.match(/[\n\r]/) && !e.seq ?[<span class="startChar"><span>[&nbsp;<Link to={"/show/"+this.props.IRI+"?startChar="+e.start}>@{e.start}</Link>&nbsp;]</span></span>]:null}{e.value.split("\n").map(f => {
+                        let label = getLangLabel(this,"",[{"@language":e.language,"@value":f}]), lang
+                        if(label) lang = label["@language"]
+                        if(label) label = label["@value"]
+                        if(label) label = highlight(label)
+                        //label = f
+                        return ([<span lang={lang}>{label}</span>,<br/>])})}
+                  </h4>
+               </div>
             </div>))  }
             {/* // import make test fail...
                <div class="sub">
