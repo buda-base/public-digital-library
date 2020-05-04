@@ -4529,8 +4529,9 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          return <div class="data" id="map">{this.renderData(kZprop,null,null,null,"header")}</div>
       else {
          let hasChunks = this.getResourceElem(bdo+"eTextHasChunk")
+         let loca = this.props.history.location
          if(hasChunks && hasChunks.length)
-            return <div class="data" id="head"><Link title='View Etext' to="#open-viewer"><div class={"header "+(!this.state.ready?"loading":"")}>{ !this.state.ready && <Loader loaded={false} /> }{src}</div></Link></div>
+            return <div class="data" id="head"><Link title='View Etext' to={loca.pathname+loca.search+"#open-viewer"}><div class={"header "+(!this.state.ready?"loading":"")}>{ !this.state.ready && <Loader loaded={false} /> }{src}</div></Link></div>
          else  
             return <div class="data" id="head"><div class={"header "+(!this.state.ready?"loading":"")}>{ !this.state.ready && <Loader loaded={false} /> }{src}</div></div>
       }
@@ -4752,8 +4753,9 @@ perma_menu(pdfLink,monoVol,fairUse,other)
       }
 
       let sideMenu = (rid,tag) => {
+         let loca = this.props.history.location
          let url = "/show/"+shortUri(rid)+this.getTabs(tag)
-         let view = "/show/"+shortUri(rid)+"#open-viewer"
+         let view = "/show/"+shortUri(rid)+loca.search+"#open-viewer"
          return (<div>
             { tag === "Images" && <h3><Link to={view} >Open in Viewer</Link></h3> }
             <h3><Link to={url+"#main-info"} >Main Information</Link></h3>
