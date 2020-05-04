@@ -427,13 +427,11 @@ export function top_right_menu(that,etextTitle)
 
             { lang_selec }
 
-            <span id="back"><span>&lt;</span><a onClick={() => { 
-                  that.setState({...that.state, openEtext: false, closeEtext:true });
-                  /*
+            <span id="back"><span>&lt;</span><a onClick={() => {
                   let loca = { ...that.props.history.location };                  
                   delete loca.hash
                   that.props.history.push(loca) ; 
-                  */
+                  // that.setState({...that.state, openEtext: false });
                }}><span>Close etext</span></a>
                <span>{etextTitle}</span>
             </span>
@@ -2385,7 +2383,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
          if(bestM.length) { 
             endC = bestM[0].endChar
-            bestM = "?startChar="+(startC = bestM[0].startChar) /*+"-"+bestM[0].endChar*/ +"&keyword="+this.props.keyword+"@"+this.props.language
+            bestM = "?startChar="+(startC = bestM[0].startChar) /*+"-"+bestM[0].endChar*/ +"&keyword="+this.props.keyword+"@"+this.props.language+"#open-viewer"
          }
          else bestM = ""
 

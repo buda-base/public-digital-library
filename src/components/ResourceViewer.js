@@ -954,6 +954,8 @@ class ResourceViewer extends Component<Props,State>
       // TODO scroll to top when IRI changed (and not on collapse open/close)
       // window.scrollTo(0, 0)
 
+      console.log("histo?",JSON.stringify(history.location),this.state.openEtext)
+
       if(!history) return
 
       let loca = { ...history.location }
@@ -968,13 +970,9 @@ class ResourceViewer extends Component<Props,State>
                   delete loca.hash      
                   history.replace(loca)
                }
-               else if(!this.state.openEtext && !this.state.closeEtext) {
-                  /*
-                  let loca = { ...this.props.history.location };                  
-                  delete loca.hash
-                  this.props.history.push(loca) ; 
-                  */
-                  this.setState({...this.state,openEtext:true,closeEtext:false})
+               else if( !this.state.openEtext ) {
+                  clearInterval(timerViewer)
+                  this.setState({...this.state,openEtext:true  })
                }               
             }, 10)
          }
@@ -990,7 +988,8 @@ class ResourceViewer extends Component<Props,State>
             0 
          )
       }
-      else {         
+      else if(this.state.openEtext) {         
+         this.setState({...this.state,openEtext:false })
       }
    }
 
@@ -4528,8 +4527,13 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          )
       else if(kZprop.length)
          return <div class="data" id="map">{this.renderData(kZprop,null,null,null,"header")}</div>
-      else 
-         return <div class="data" id="head"><div class={"header "+(!this.state.ready?"loading":"")}>{ !this.state.ready && <Loader loaded={false} /> }{src}</div></div>
+      else {
+         let hasChunks = this.getResourceElem(bdo+"eTextHasChunk")
+         if(hasChunks && hasChunks.length)
+            return <div class="data" id="head"><Link title='View Etext' to="#open-viewer"><div class={"header "+(!this.state.ready?"loading":"")}>{ !this.state.ready && <Loader loaded={false} /> }{src}</div></Link></div>
+         else  
+            return <div class="data" id="head"><div class={"header "+(!this.state.ready?"loading":"")}>{ !this.state.ready && <Loader loaded={false} /> }{src}</div></div>
+      }
    }
 
    renderNoAccess = (fairUse) => {

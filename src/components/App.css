@@ -744,6 +744,7 @@ vertical-align:middle;}
 .resource.person .data > .header::before { background-image:url("/icons/person.png");  }
 .resource.topic .data > .header::before { background-image:url("/icons/topic.png");  }
 .resource.etext .data > .header::before { background-image:url("/icons/etext.png");  }
+.resource.etext .data > a > .header::before { background-image:url("/icons/etext.png");  }
 .resource.lineage .data > .header::before { background-image:url("/icons/lineage.png");  }
 .resource.place .data > .header::before { background-image:url("/icons/search/place.svg");  }
 .resource.corporation .data > .header::before { background-image:url("/icons/search/corporation.svg");  }
@@ -1604,7 +1605,7 @@ TODO
 .etextPage h4.page  { display:inline-block; padding-left:0; margin-bottom:0;  
    white-space: nowrap;margin-right:0;
 }
-.etextPage h4.page [lang=bo-x-ewts] { font-size:calc( 22 * 100vw / 2500) ;  line-height:calc( 50 * 100vw / 2500) ;  }
+/* .etextPage h4.page [lang=bo-x-ewts] { font-size:calc( 22 * 100vw / 2500) ;  line-height:calc( 50 * 100vw / 2500) ;  } */
 .etextPage h4.page  [lang=bo] { font-size:calc( 30 * 100vw / 2500) ;  line-height:calc( 60 * 100vw / 2500) ; }
 
 /* .etextPage h4.page:last-child { padding-bottom:25px; } */
