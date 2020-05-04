@@ -2260,8 +2260,9 @@ svg.hide { opacity:0;pointer-events:none; }
   to { transform: rotate(360deg); }
 }
 
+.nav,
 body {
-   min-width:1225px;
+   min-width:960px;
 }
 
 @media (max-width:1600px)
@@ -2275,8 +2276,11 @@ body {
 @media (max-width:1440px)
 {
    #root > div { overflow:hidden ; }
+   
+   /*
    #root .App .SearchPane,
    #root > div > .resource { padding:155px calc((100vw - (1440px - (140px * 2))) / 2); padding-bottom:0; } 
+   */
    #root .App .SearchPane { padding-top:50px;}
 
    #root > div > .resource {   padding: 155px 30px; }
@@ -2284,8 +2288,19 @@ body {
    #root > div > .resource > .index + div { z-index:1; position:relative; }
 
    /* body { min-width:calc(100% - 500px);} */
+
    .SearchPane { width: calc(100% - 500px); }
+
    .SidePane:not(.visible) + .SearchPane { width:100%; }
-  
+
+}
+
+@media (max-width:1320px)
+{
+   #res-header > div, #results, #samples { margin-left:calc((100% - 700px)/2);}
+   .SidePane.left { position:absolute; left:0;top:0; z-index:0 ;}
+   #res-container { position:relative; }
+
+   .nav a > span {margin-left:50px;}
 }
 
