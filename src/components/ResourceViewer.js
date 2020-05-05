@@ -65,7 +65,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faLanguage } from '@fortawesome/free-solid-svg-icons'
 //import {MapComponent} from './Map';
 import {getEntiType,dPrefix} from '../lib/api';
-import {languages,getLangLabel,top_right_menu,prefixesMap as prefixes,sameAsMap,shortUri,fullUri,highlight} from './App';
+import {languages,getLangLabel,top_right_menu,prefixesMap as prefixes,sameAsMap,shortUri,fullUri,highlight,lang_selec} from './App';
 import Popover from '@material-ui/core/Popover';
 import MenuItem from '@material-ui/core/MenuItem';
 import List from '@material-ui/core/List';
@@ -764,6 +764,7 @@ class ResourceViewer extends Component<Props,State>
       window.closeViewer = () => { 
          this.setState({...this.state, openUV:false, openMirador:false, openDiva:false}); 
          if(window.MiradorUseEtext) delete window.MiradorUseEtext ;
+         delete window.mirador
       }
    }
 
@@ -2276,7 +2277,7 @@ class ResourceViewer extends Component<Props,State>
 
                   if(tLab.start !== undefined) tmp = [ <span class="startChar">
                      <span>[&nbsp;
-                        <Link to={"/show/"+this.props.IRI+"?startChar="+tLab.start+(this.props.highlight?'&keyword="'+this.props.highlight.key+'"@'+this.props.highlight.lang:"")}>@{tLab.start}</Link>
+                        <Link to={"/show/"+this.props.IRI+"?startChar="+tLab.start+(this.props.highlight?'&keyword="'+this.props.highlight.key+'"@'+this.props.highlight.lang:"")+"#open-viewer"}>@{tLab.start}</Link>
                      </span>&nbsp;]</span>,<br/> ]
                   else tmp = []
                   
@@ -3143,6 +3144,7 @@ class ResourceViewer extends Component<Props,State>
                let config = await miradorConfig(data,manif,canvasID,withCredentials,this.props.langPreset,null,this.props.IRI);
 
                //console.log("mir ador",num,config,this.props)
+               if(window.mirador) delete window.mirador
                window.mirador = window.Mirador( config )
 
                miradorSetUI(true, num);
@@ -3868,7 +3870,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
             >
 
                { isEtextVol && 
-                     <a target="_blank" title="Etext as TXT" rel="alternate" type="text/turtle"  download href={this.props.IRI?this.props.IRI.replace(/bdr:/,bdr)+".txt":""}>
+                     <a target="_blank" title="Etext as TXT" rel="alternate" type="text"  download href={this.props.IRI?this.props.IRI.replace(/bdr:/,bdr)+".txt":""}>
                         <MenuItem>Export Etext as TXT</MenuItem>
                      </a> }
 
@@ -4178,7 +4180,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
                </div> }
                <div class="overpage">
-                  <h4 class="page">{!e.value.match(/[\n\r]/) && !e.seq ?[<span class="startChar"><span>[&nbsp;<Link to={"/show/"+this.props.IRI+"?startChar="+e.start}>@{e.start}</Link>&nbsp;]</span></span>]:null}{e.value.split("\n").map(f => {
+                  <h4 class="page">{!e.value.match(/[\n\r]/) && !e.seq ?[<span class="startChar"><span>[&nbsp;<Link to={"/show/"+this.props.IRI+"?startChar="+e.start+"#open-viewer"}>@{e.start}</Link>&nbsp;]</span></span>]:null}{e.value.split("\n").map(f => {
                         let label = getLangLabel(this,"",[{"@language":e.language,"@value":f}]), lang
                         if(label) lang = label["@language"]
                         if(label) label = label["@value"]
@@ -4538,8 +4540,9 @@ perma_menu(pdfLink,monoVol,fairUse,other)
       else {
          let hasChunks = this.getResourceElem(bdo+"eTextHasChunk")
          let loca = this.props.history.location
-         if(hasChunks && hasChunks.length)
+         if(hasChunks && hasChunks.length) {
             return <div class="data" id="head"><Link title='View Etext' to={loca.pathname+loca.search+"#open-viewer"}><div class={"header "+(!this.state.ready?"loading":"")}>{ !this.state.ready && <Loader loaded={false} /> }{src}</div></Link></div>
+         }
          else  
             return <div class="data" id="head"><div class={"header "+(!this.state.ready?"loading":"")}>{ !this.state.ready && <Loader loaded={false} /> }{src}</div></div>
       }
@@ -4594,6 +4597,19 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
    // to be redefined in subclass
    renderPostData = () => {}
+
+   renderEtextNav = () => {
+    
+
+      return (
+         <div id="etext-nav">
+            <div>
+               <a id="DL" target="_blank" rel="alternate" type="text" download href={this.props.IRI?this.props.IRI.replace(/bdr:/,bdr)+".txt":""}>Download Etext<img src="/icons/DLw.png"/></a>
+               {lang_selec(this,true)}
+            </div>
+         </div>
+      )
+   }
 
    render()
    {
@@ -4773,7 +4789,8 @@ perma_menu(pdfLink,monoVol,fairUse,other)
       }
 
       
-
+      if(_T === "Etext") window.MiradorUseEtext = true ; 
+      
 
       let inTitle 
       let root = this.getResourceElem(bdo+"inRootInstance");
@@ -4795,6 +4812,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                   { this.renderData([bdo+"eTextHasChunk",bdo+"eTextHasPage"],iiifpres,title,otherLabels,"etext-data") }
                </div>
             </div>
+            { this.renderEtextNav() }
          </div>)
       else 
          return (

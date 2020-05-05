@@ -76,7 +76,7 @@
 
 .App { min-height:100vh;}
 
-[role='tooltip'] *, .App *,.nav *,.App *::before,.App *::after, .react-tabs *, .resource * { 
+[role='tooltip'] *, .App *,.nav *,.App *::before,.App *::after, .react-tabs *, .resource *, .resource + * *  { 
    font-family:"Noto Sans", "Roboto", "Helvetica", "Arial", sans-serif !important;
 }
 
@@ -233,6 +233,7 @@ body { overflow:auto !important;padding-right:0 !important; /*font-family:"Robot
 .nav #back h2 .T { display:none; }
 .nav #back h2 span { color:#d73449; }
 
+#etext-nav > div,
 .nav > div { width:1222px; display:flex;justify-content: space-between;align-items:center; }
 /* .nav > div > a > img { height:50px; } */
 
@@ -854,7 +855,7 @@ vertical-align:middle;}
 #perma #DL svg { vertical-align:-4px; font-size:18px; padding-left:0px;}
 
 #popLang { z-index:100100; }
-
+#popLang.black > div:last-child { margin-top:-10px; }
 #popLang > div:last-child li { min-width:150px; display:block; height:16px;}
 #popLang > div:last-child li.is-locale { font-weight:900; }
 
@@ -1644,6 +1645,26 @@ TODO
 
 
 .etextPage .overpage + div { margin:20px 0 5px 0; }
+
+
+#etext-nav { 
+   position: fixed;
+   left: 0;
+   bottom: 0;
+   width: 100%;
+   height: 80px;
+   background: #172832;
+   z-index: 100;
+   box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.5);
+   display: flex;
+   align-items: center;
+   justify-content: center;
+}
+
+#etext-nav #lang { cursor:pointer; }
+#etext-nav a#DL { color:white; font-size:15px; text-decoration: none; }
+#etext-nav a#DL img { vertical-align:middle; display:inline-block;margin-left:20px;}
+#etext-nav a#DL:hover { text-decoration:underline; } 
 
 @font-face {
    font-family: 'Tibetan Machine Uni';

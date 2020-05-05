@@ -375,19 +375,19 @@ export function getFacetUrl(filters,dic){
    console.log("gFu",str,filters,dic)
    return str
 }
-
-export function top_right_menu(that,etextTitle)
+export function lang_selec(that,black:boolean = false)
 {
-   let lang_selec = [
-         <span id="lang" onClick={(e) => that.setState({...that.state,anchorLang:e.currentTarget, collapse: {...that.state.collapse, lang:!that.state.collapse.lang } } ) }><img src="/icons/LANGUE.svg"/></span>
+   return [
+         <span id="lang" title='Choose language' onClick={(e) => that.setState({...that.state,anchorLang:e.currentTarget, collapse: {...that.state.collapse, lang:!that.state.collapse.lang } } ) }><img src={"/icons/LANGUE"+(black?"b":"")+".svg"}/></span>
          ,
          <Popover
             id="popLang"
             open={that.state.collapse.lang?true:false}
-            transformOrigin={{vertical:'top',horizontal:'right'}}
-            anchorOrigin={{vertical:'bottom',horizontal:'right'}}
+            transformOrigin={{vertical:(!black?'top':'bottom'),horizontal:'right'}}
+            anchorOrigin={{vertical:(!black?'bottom':'top'),horizontal:'right'}}
             anchorEl={that.state.anchorLang}
             onClose={e => { that.setState({...that.state,anchorLang:null,collapse: {...that.state.collapse, lang:false } } ) }}
+            className={black?"black":""}
             >
 
               <FormControl className="formControl">
@@ -415,6 +415,10 @@ export function top_right_menu(that,etextTitle)
             </FormControl>
          </Popover>
    ]
+}
+
+export function top_right_menu(that,etextTitle)
+{
 
    if(etextTitle)
       return (
@@ -424,8 +428,6 @@ export function top_right_menu(that,etextTitle)
                <a href="https://bdrc.io/" target="_blank"><img src="/BDRC-Logo.png"/></a>
                <Link to="/"  onClick={() => { that.props.history.push({pathname:"/",search:""}); that.props.onResetSearch();} }><img src="/LIBRARY.svg"/></Link>
             </div>
-
-            { lang_selec }
 
             <span id="back"><span>&lt;</span><a onClick={() => {
                   let loca = { ...that.props.history.location };                  
@@ -484,7 +486,7 @@ export function top_right_menu(that,etextTitle)
         */}
          </div>
 
-         { lang_selec }
+         { lang_selec(that) }
 
          <a target="_blank" href="https://bdrc.io/donation/" id="donate"><img src="/donate.svg"/>Donate</a>
        </div>

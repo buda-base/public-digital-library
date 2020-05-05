@@ -185,11 +185,10 @@ async function hasEtextPage(manifest) {
       console.log("ut3",ut)
 
       if(!ut) { 
-         window.MiradorHasNoEtext = true
+         delete window.MiradorUseEtext
          return 
       }
       
-      if(window.MiradorHasNoEtext) delete window.MiradorHasNoEtext ;
 
 
       if(!window.setEtext) { 
@@ -744,23 +743,26 @@ function miradorAddZoomer() {
          //console.log("coef1",coef,val)
          //console.log("nuW",nuW,scrollV.innerWidth(),trX);
 
-         let oldH = scrollT[0].getBoundingClientRect().height;
+         if(scrollT.length)  {
 
-         scrollT.css({
-            "transform":"scale("+coef+") translateY("+10/coef+"px) translateX("+trX/coef+"px)",
-            "margin-bottom":"-500000px" // no more empty space at bottom 
-         })            
-         
-         scrollT.find(".thumb-label").css({
-            "margin":10/coef,
-            "margin-bottom":20/coef,
-            "transform":"scale("+1/coef+")"
-         })
-         
-         let nuH = scrollT[0].getBoundingClientRect().height;
-         let sT = scrollV.scrollTop() + (nuH - oldH)*(scrollV.scrollTop()/oldH)
-         scrollV.scrollTop(sT)            
-         scrollV.scrollLeft((nuW - scrollV.innerWidth() ) / 2)
+            let oldH = scrollT[0].getBoundingClientRect().height;
+
+            scrollT.css({
+               "transform":"scale("+coef+") translateY("+10/coef+"px) translateX("+trX/coef+"px)",
+               "margin-bottom":"-500000px" // no more empty space at bottom 
+            })            
+            
+            scrollT.find(".thumb-label").css({
+               "margin":10/coef,
+               "margin-bottom":20/coef,
+               "transform":"scale("+1/coef+")"
+            })
+            
+            let nuH = scrollT[0].getBoundingClientRect().height;
+            let sT = scrollV.scrollTop() + (nuH - oldH)*(scrollV.scrollTop()/oldH)
+            scrollV.scrollTop(sT)            
+            scrollV.scrollLeft((nuW - scrollV.innerWidth() ) / 2)
+         }
 
          
       }

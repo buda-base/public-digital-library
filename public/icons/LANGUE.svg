@@ -34,7 +34,7 @@
      guidetolerance="10"
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
-     inkscape:window-width="640"
+     inkscape:window-width="836"
      inkscape:window-height="480"
      id="namedview15"
      showgrid="false"
@@ -44,7 +44,7 @@
      inkscape:window-x="1"
      inkscape:window-y="1"
      inkscape:window-maximized="0"
-     inkscape:current-layer="svg13" />
+     inkscape:current-layer="LANGUE" />
   <!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->
   <title
      id="title2">LANGUE</title>
@@ -55,7 +55,9 @@
   <g
      id="LANGUE"
      style="fill:none;fill-rule:evenodd;stroke:none;stroke-width:1"
-     transform="translate(-0.3984375,-7.6640625)">
+     transform="translate(-0.3984375,-7.6640625)"
+     inkscape:export-xdpi="96"
+     inkscape:export-ydpi="96">
     <g
        id="Group-19"
        transform="translate(0,7)">
