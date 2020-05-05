@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="19"
+   height="19"
+   viewBox="0 0 19 19"
+   version="1.1"
+   id="svg11"
+   sodipodi:docname="check.svg"
+   inkscape:version="0.92.4 (5da689c313, 2019-01-14)">
+  <metadata
+     id="metadata15">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="838"
+     inkscape:window-height="480"
+     id="namedview13"
+     showgrid="false"
+     inkscape:zoom="4.1403509"
+     inkscape:cx="12.5"
+     inkscape:cy="3.5"
+     inkscape:window-x="1"
+     inkscape:window-y="1"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="svg11" />
+  <!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->
+  <title
+     id="title2">bouton rouge</title>
+  <desc
+     id="desc4">Created with Sketch.</desc>
+  <defs
+     id="defs6" />
+  <g
+     id="bouton-rouge"
+     style="fill:none;fill-rule:evenodd;stroke:none;stroke-width:1"
+     transform="translate(-6,-13)">
+    <path
+       d="M 15.5,32 C 20.746705,32 25,27.746705 25,22.5 25,17.253295 20.746705,13 15.5,13 10.253295,13 6,17.253295 6,22.5 6,27.746705 10.253295,32 15.5,32 Z M 15.000051,13 C 10.037493,13 6,17.037439 6,21.999987 6,26.96256 10.037492,31 15.000051,31 19.962661,31 24,26.96256 24,21.999987 24,17.037439 19.962661,13 15.000051,13 Z"
+       id="Shape"
+       inkscape:connector-curvature="0"
+       style="fill:#d73449;fill-rule:nonzero" />
+    <path
+       d="m 19.829332,20.168146 c -1.611116,1.879136 -3.222258,3.758246 -4.8334,5.637382 -0.231076,0.269551 -0.711483,0.248834 -0.946117,0 -0.954173,-1.01182 -1.908346,-2.023666 -2.862491,-3.035513 -0.591274,-0.627004 0.353666,-1.575765 0.946117,-0.947501 0.78898,0.836657 1.577959,1.673342 2.366939,2.509999 1.460963,-1.703947 2.921872,-3.407921 4.382835,-5.111868 0.562104,-0.655599 1.504341,0.296404 0.946117,0.947501 z"
+       id="Path"
+       inkscape:connector-curvature="0"
+       style="fill:#ffffff" />
+  </g>
+</svg>

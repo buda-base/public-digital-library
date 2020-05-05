@@ -4119,7 +4119,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                   <img title="Open image+text view in Mirador" onClick={eve => { openMiradorAtPage(imageLinks[e.seq].id) }} style={{maxWidth:"100%"}} src={imageLinks[e.seq].image} />
                */}
                {
-                  e.seq && this.state.collapse["image-"+this.props.IRI+"-"+e.seq] && Object.keys(imageLinks).sort().map(id => {
+                  e.seq && ((this.state.showEtextImages && !(this.state.collapse["image-"+this.props.IRI+"-"+e.seq] === false)) || this.state.collapse["image-"+this.props.IRI+"-"+e.seq]) && Object.keys(imageLinks).sort().map(id => {
                      if(!this.state.collapse["imageVolume-"+id] && imageLinks[id][e.seq]) 
                         return (
                            <div class="imagePage">
@@ -4606,6 +4606,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
             <div>
                <a id="DL" target="_blank" rel="alternate" type="text" download href={this.props.IRI?this.props.IRI.replace(/bdr:/,bdr)+".txt":""}>Download Etext<img src="/icons/DLw.png"/></a>
                {lang_selec(this,true)}
+               <a onClick={(e) => this.setState({showEtextImages:!this.state.showEtextImages})}>{this.state.showEtextImages?<img id="check" src="/icons/check.svg"/>:<span id="check"></span>}Show images<img width="42" src="/icons/search/images_b.svg"/></a>
             </div>
          </div>
       )

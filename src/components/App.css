@@ -1660,11 +1660,14 @@ TODO
    align-items: center;
    justify-content: center;
 }
-
-#etext-nav #lang { cursor:pointer; }
-#etext-nav a#DL { color:white; font-size:15px; text-decoration: none; }
-#etext-nav a#DL img { vertical-align:middle; display:inline-block;margin-left:20px;}
-#etext-nav a#DL:hover { text-decoration:underline; } 
+#etext-nav > div { justify-content: flex-start; }
+#etext-nav #lang { cursor:pointer; margin-left:auto; margin-right:65px; margin-top:5px; }
+#etext-nav a { color:white; font-size:14px; text-decoration: none; font-weight:500; cursor:pointer;}
+#etext-nav a img { vertical-align:middle; display:inline-block;margin-left:20px; }
+#etext-nav a#DL img { width:42px;}
+#etext-nav a:hover { text-decoration:underline; } 
+#etext-nav a #check { margin-left:10px;margin-right:20px; display:inline-block;vertical-align: middle; min-width:19px;}
+#etext-nav a span#check { width:19px;height:19px;background:white;border-radius:10px;}
 
 @font-face {
    font-family: 'Tibetan Machine Uni';
