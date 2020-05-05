@@ -1359,7 +1359,7 @@ TODO
 
 .resource .data > [data-prop="bdo:note"]  .sub > h4.first,
 .resource .data > [data-prop="bdo:lineageHolder"] .sub .subsub h4[data-prop^="bdo:lineageWho"] a,
-.resource .data > [data-prop="bdo:creator"] h4[data-prop="bdo:role"] + h4 a { text-transform:capitalize;color:#343434;font-size:15px;font-weight:700;
+.resource .data > [data-prop="bdo:creator"] h4[data-prop="bdo:role"] + h4 a { text-transform:capitalize;color:#343434;font-size:15px;font-weight:600;
    letter-spacing:0.63; border-color:#343434;}
 
 
@@ -1420,13 +1420,13 @@ TODO
 [data-prop="bdo:volumeHasEtext"].has-collapse.custom .propCollapse .subgroup,
 [data-prop="bdo:volumeHasEtext"].has-collapse.custom .propCollapseHeader .subgroup { width:100%; }
 
-#popHoverM .sub > h4.first,
+/* #popHoverM .sub > h4.first, */
 [data-prop="bdo:volumeHasEtext"]:not(.has-collapse) .sub > h4.first,
 [data-prop="bdo:volumeHasEtext"].has-collapse.custom .propCollapse .sub > h4.first,
 [data-prop="bdo:volumeHasEtext"].has-collapse.custom .propCollapseHeader  .sub > h4.first { display:none; }
 
 
-#popHoverM .resource .data .sub:not(#a):not(.b) > .subgroup > h4.first a,
+/* #popHoverM .resource .data .sub:not(#a):not(.b) > .subgroup > h4.first a, */
 [data-prop="bdo:volumeHasEtext"]:not(.has-collapse) > .group  > .sub > .subgroup > .subsub > h4.first a,
 [data-prop="bdo:volumeHasEtext"].has-collapse.custom .propCollapse .subsub > h4.first a,
 [data-prop="bdo:volumeHasEtext"].has-collapse.custom .propCollapseHeader .subsub > h4.first a { font-weight:600; font-size:15px;}
