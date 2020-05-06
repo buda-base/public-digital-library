@@ -4204,7 +4204,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                         //label = f
                         let size = this.state.etextSize
                         if(lang === "bo") { size += 0.4 ; }
-                        return ([<span lang={lang} {...this.state.etextSize?{style:{ fontSize:size+"em", lineHeight:(size * 0.9)+"em" }}:{}}>{label}</span>,<br/>])})}
+                        return ([<span lang={lang} {...this.state.etextSize?{style:{ fontSize:size+"em", lineHeight:(size * 1.0)+"em" }}:{}}>{label}</span>,<br/>])})}
                   </h4>
                </div>
             </div>))  }

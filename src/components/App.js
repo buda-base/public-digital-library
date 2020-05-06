@@ -2526,10 +2526,12 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                         <a onTouchEnd={(ev) => { if(src !== "bdr") { ev.stopPropagation(); ev.preventDefault(); this.handleOpenSourceMenu(ev,"menu-"+src+"-"+prettId); return false ; }}} href={url} target="_blank">
                            {image}
                         </a> */}                        
-                        <a onTouchEnd={(ev) => { if(src !== "bdr") { ev.stopPropagation(); ev.preventDefault(); this.handleOpenSourceMenu(ev,"menu-"+src+"-"+prettId); return false ; }}} href={url} target="_blank">
+                        <a 
+                           /*onTouchEnd={(ev) => { if(src !== "bdr") { ev.stopPropagation(); ev.preventDefault(); this.handleOpenSourceMenu(ev,"menu-"+src+"-"+prettId); return false ; }}} href={url} target="_blank"*/
+                           >
                            {image}
                         </a>
-                        {src !== "bdr" && <span onMouseEnter={(ev) => this.handleOpenSourceMenu(ev,"menu-"+src+"-"+prettId)}></span> }
+                        {/* {src !== "bdr" && <span onMouseEnter={(ev) => this.handleOpenSourceMenu(ev,"menu-"+src+"-"+prettId)}></span> } */}
                      </div>
                   )
 
@@ -2555,7 +2557,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                
                // TODO move this to bottom of result block
 
-               otherSrc.push(<div class="source">{sources}</div>)
+               otherSrc.push(<div class="source" onClick={(ev) => this.handleOpenSourceMenu(ev,"menu-.*-"+prettId)}>{sources}</div>)
                otherSrc = [ <div class="result-box">{otherSrc}</div> ]
 
                this._menus = { ...this._menus, ...menus } 
@@ -4282,27 +4284,41 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
       */ 
 
-      let showMenus = Object.keys(this._menus).map(id => 
+
+      let menuK = {}
+      Object.keys(this._menus).map(k => { 
+         let mK = k.replace(/^([^-]+-).*(-[^-]+$)/,"$1.*$2")
+         if(!menuK[mK]) menuK[mK] = []
+         menuK[mK].push(this._menus[k])
+      })
+
+      console.log("_menus",this._menus, menuK)
+
+      let showMenus = Object.keys(menuK).map(id => 
             <Popover 
-               className="samePop"
-               transformOrigin={{ vertical: 'bottom', horizontal: 'left'}} 
-               anchorOrigin={{vertical: 'bottom', horizontal: 'left'}} 
+               id="popSame"
+               transformOrigin={{ vertical: 'bottom', horizontal: 'right'}} 
+               anchorOrigin={{vertical: 'top', horizontal: 'right'}} 
                anchorEl={this.state.anchor[id]} 
                open={this.state.collapse[id]} 
                onClose={(ev) => this.handleCloseSourceMenu(ev,id)}>
+                  {/*
                   <MenuItem onClick={(ev) => this.handleCloseSourceMenu(ev,id)}>
                      <span className="void">View data in Public Digital Library</span>
                      <Link className="menu-item-source" to={"/show/"+this._menus[id].short}>View data in Public Digital Library</Link>
                   </MenuItem>
-                  { this._menus[id].full.map( u =>  {
+                   */}
+                  { menuK[id].map(m => m.full.map( u =>  {
                      let short = shortUri(u)
                      return (
-                        <MenuItem onClick={(ev) => this.handleCloseSourceMenu(ev,id)}>
-                           <span className="void">Open {this._menus[id].full.length > 1 ?<b>&nbsp;{short}&nbsp;</b>:"resource"} in {this._menus[id].src} website</span>
-                           <a href={u} class="menu-item-source" target="_blank">Open {this._menus[id].full.length > 1 ?<b>&nbsp;{short}&nbsp;</b>:"resource"} in {this._menus[id].src} website</a>
-                        </MenuItem>)
-                     })
-                  }
+                           /* <span className="void">Open {this._menus[id].full.length > 1 ?<b>&nbsp;{short}&nbsp;</b>:"resource"} in {this._menus[id].src} website</span> */
+                           <a href={u} class="menu-item-source" target="_blank">
+                              <MenuItem onClick={(ev) => this.handleCloseSourceMenu(ev,id)}>
+                                 Open {m.full.length > 1 ?<b>&nbsp;{short}&nbsp;</b>:"resource"} in &nbsp;<b>{m.src}</b><img src="/icons/link-out.svg"/>
+                              </MenuItem>
+                           </a>
+                     )
+                  }))}
             </Popover> 
       );
 
