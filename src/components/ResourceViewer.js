@@ -1012,8 +1012,14 @@ class ResourceViewer extends Component<Props,State>
       this.scrollToHashID(this.props.history)
    }
 
-   expand(str:string) //,stripuri:boolean=true)
+   expand(str:string, useCfg:boolean = false) //,stripuri:boolean=true)
    {
+      if(useCfg && this.props.config) {
+         let ldspdi = this.props.config.ldspdi, base 
+         if(ldspdi) base = ldspdi.endpoints[ldspdi.index]
+         if(base) str = str.replace(/bdr:/, base+"/resource/")
+      }
+
       for(let k of Object.keys(prefixes)) { str = str.replace(new RegExp(k+":"),prefixes[k]); }
 
       return str ;
@@ -3903,13 +3909,23 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
                    }
 
-               <a target="_blank" title="TTL version" rel="alternate" type="text/turtle" href={that.expand(that.props.IRI)+".ttl"} download>
+               <a target="_blank" title="TTL version" rel="alternate" type="text/turtle" href={that.expand(that.props.IRI, true)+".ttl"} download>
                   <MenuItem>Export metadata as TTL</MenuItem>
                </a>
                
-               <a target="_blank" title="JSON-LD version" rel="alternate" type="application/ld+json" href={that.expand(that.props.IRI)+".jsonld"} download>
+               <a target="_blank" title="JSON-LD version" rel="alternate" type="application/ld+json" href={that.expand(that.props.IRI, true)+".jsonld"} download>
                   <MenuItem>Export metadata as JSON-LD</MenuItem>           
                </a>
+
+               { that.props.IRI && that.props.IRI.match(/bdr:MW/) && [
+                     <a target="_blank" title="MARC version" rel="alternate" type="application/marc" href={that.expand(that.props.IRI, true)+".mrc"} download>
+                        <MenuItem>Export metadata as MARC</MenuItem>           
+                     </a>,
+                     <a target="_blank" title="MARCXML version" rel="alternate" type="application/marcxml+xml" href={that.expand(that.props.IRI, true)+".mrcx"} download>
+                        <MenuItem>Export metadata as MARCXML</MenuItem>           
+                     </a> 
+                  ]
+                }
               
          </Popover>
 
