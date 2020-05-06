@@ -4202,7 +4202,9 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                         if(label) label = label["@value"]
                         if(label) label = highlight(label)
                         //label = f
-                        return ([<span lang={lang}>{label}</span>,<br/>])})}
+                        let size = this.state.etextSize
+                        if(lang === "bo") { size += 0.4 ; }
+                        return ([<span lang={lang} {...this.state.etextSize?{style:{ fontSize:size+"em", lineHeight:(size * 0.9)+"em" }}:{}}>{label}</span>,<br/>])})}
                   </h4>
                </div>
             </div>))  }
@@ -4616,12 +4618,25 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
    renderEtextNav = () => {
     
+      let etextSize = (inc:boolean=true) => {
+         let size = this.state.etextSize ;
+         if(!size) size = 1.0
+         if(inc) size += 0.1
+         else size -= 0.1
+         this.setState({ etextSize: size })
+      }
+
+      let size = this.state.etextSize
 
       return (
          <div id="etext-nav">
             <div>
                <a id="DL" target="_blank" rel="alternate" type="text" download href={this.props.IRI?this.props.IRI.replace(/bdr:/,bdr)+".txt":""}>Download Etext<img src="/icons/DLw.png"/></a>
-               {lang_selec(this,true)}
+               <div id="control">
+                  <span title="Increase Etext font size" class={!size||size < 2.4?"on":""} onClick={(e)=>etextSize(true)}><img src="/icons/Zp.svg"/></span>
+                  <span title="Decrease Etext font size" class={!size||size > 0.6?"on":""} onClick={(e)=>etextSize(false)}><img src="/icons/Zm.svg"/></span>
+                  {lang_selec(this,true)}
+               </div>
                <a onClick={(e) => this.setState({showEtextImages:!this.state.showEtextImages})}>{this.state.showEtextImages?<img id="check" src="/icons/check.svg"/>:<span id="check"></span>}Show images<img width="42" src="/icons/search/images_b.svg"/></a>
             </div>
          </div>

@@ -383,8 +383,8 @@ export function lang_selec(that,black:boolean = false)
          <Popover
             id="popLang"
             open={that.state.collapse.lang?true:false}
-            transformOrigin={{vertical:(!black?'top':'bottom'),horizontal:'right'}}
-            anchorOrigin={{vertical:(!black?'bottom':'top'),horizontal:'right'}}
+            transformOrigin={{vertical:(!black?'top':'bottom'),horizontal:(!black?'right':'left')}}
+            anchorOrigin={{vertical:(!black?'bottom':'top'),horizontal:(!black?'right':'left')}}
             anchorEl={that.state.anchorLang}
             onClose={e => { that.setState({...that.state,anchorLang:null,collapse: {...that.state.collapse, lang:false } } ) }}
             className={black?"black":""}
