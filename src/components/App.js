@@ -2384,7 +2384,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             </div>
          ])
 
-         let retList = [ <div id="num-box" class={(this.state.checked["n"+n] === true?"checked":"")} style={{flexShrink:0}} onClick={(e) => this.setState({repage:true,checked:{...this.state.checked,["n"+n]:!this.state.checked["n"+n]}})}>{warnStatus}{n}</div> ]
+         let retList = [ <div id="num-box" class={(this.state.checked[prettId] === true?"checked":"")} style={{flexShrink:0}} onClick={(e) => this.setState({repage:true,checked:{...this.state.checked,[prettId]:!this.state.checked[prettId]}})}>{warnStatus}{n}</div> ]
          
 
          let bestM = allProps.filter(e => e.type === tmp+"bestMatch")
