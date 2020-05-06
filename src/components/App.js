@@ -617,7 +617,8 @@ type State = {
       }      
    },
    assoRes?:{},
-   locale:string
+   locale:string,
+   checked:{}
 }
 
 class App extends Component<Props,State> {
@@ -679,9 +680,9 @@ class App extends Component<Props,State> {
          loader:{},
          paginate:{index:0,pages:[0],n:[0]},
          anchor:{},
-         LpanelWidth:375
+         LpanelWidth:375,
          //leftPane:false //(window.innerWidth > 1400 && this.props.keyword),
-         
+         checked:{}
       };
 
 
@@ -2187,9 +2188,9 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      if(bef.length && aft.length) val = <span>{bef[0].value+"~" +aft[0].value}</span>
                   }
 
-                  if(p.includes("Death") && !vals.length) { /*vals.push(<span>?</span>);*/ vals.push(<span>&nbsp;&mdash;&nbsp;</span>) }
+                  if(p.includes("Death") && !vals.length) { /*vals.push(<span>?</span>);*/ vals.push(<span>&nbsp;&ndash;&nbsp;</span>) }
                   vals.push(val)
-                  if(p.includes("Birth")) vals.push(<span>&nbsp;&mdash;&nbsp;</span>)
+                  if(p.includes("Birth")) vals.push(<span>&nbsp;&ndash;&nbsp;</span>)
 
                   /*
                   ret.push(<div class="match">
@@ -2338,9 +2339,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
       let enType = getEntiType(id).toLowerCase()
 
-      let ret = ([
-            
-            <div id="num-box" style={{flexShrink:0}}>{warnStatus}{n}</div>, 
+      let ret = ([            
             <div id="icon" class={enType}>
                <div><img src={"/icons/search/"+enType+".svg"}/></div>
                <div><img src={"/icons/search/"+enType+"_.svg"}/></div>
@@ -2385,7 +2384,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             </div>
          ])
 
-         let retList
+         let retList = [ <div id="num-box" class={(this.state.checked["n"+n] === true?"checked":"")} style={{flexShrink:0}} onClick={(e) => this.setState({repage:true,checked:{...this.state.checked,["n"+n]:!this.state.checked["n"+n]}})}>{warnStatus}{n}</div> ]
          
 
          let bestM = allProps.filter(e => e.type === tmp+"bestMatch")
@@ -2408,16 +2407,16 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             if((u = sameAsRes.filter(s => s.type === adm+"canonicalHtml")).length) u = u[0].value
             else u = fullId
 
-            retList = [ ( <a target="_blank" href={u} className="result">{ret}</a> ) ]                  
+            retList.push( <a target="_blank" href={u} className="result">{ret}</a> )
 
             if(!this.props.language && !fullId.match(new RegExp(cbcp+"|"+cbct+"|"+rkts)) && fullId.match(new RegExp(bdr))) rmatch = [ { type:tmp+"sameAsBDRC", value:prettId,  lit } ]
 
             directSameAs = true
          }
          else if(prettId.match(/^([^:])+:/))
-            retList = [ ( <Link key={n} to={"/show/"+prettId+bestM} className="result">{ret}</Link> ) ]
+            retList.push( <Link key={n} to={"/show/"+prettId+bestM} className="result">{ret}</Link> )
          else
-            retList = [ ( <Link key={n} to={url?url.replace(/^https?:/,""):id.replace(/^https?:/,"")} target="_blank" className="result">{ret}</Link> ) ]
+            retList.push( <Link key={n} to={url?url.replace(/^https?:/,""):id.replace(/^https?:/,"")} target="_blank" className="result">{ret}</Link> )
          
 
          let dico
