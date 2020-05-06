@@ -2171,8 +2171,10 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          }
          else if(useAux && findProp) {
             
-            //console.log("uA2",id,useAux,findProp)
+            console.log("uA2",id,useAux,findProp)
             
+            let vals = []
+
             for(let p of findProp) {
                
                if(id[p]) {
@@ -2182,25 +2184,34 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   else {
                      let bef = id[p].filter(e => e.type === bdo+"notBefore")
                      let aft = id[p].filter(e => e.type === bdo+"notAfter")
-                     if(bef.length && aft.length) val = <span>{bef[0].value+" ~ " +aft[0].value}</span>
+                     if(bef.length && aft.length) val = <span>{bef[0].value+"~" +aft[0].value}</span>
                   }
 
+                  if(p.includes("Death") && !vals.length) { /*vals.push(<span>?</span>);*/ vals.push(<span>&nbsp;&mdash;&nbsp;</span>) }
+                  vals.push(val)
+                  if(p.includes("Birth")) vals.push(<span>&nbsp;&mdash;&nbsp;</span>)
+
+                  /*
                   ret.push(<div class="match">
                      <span class="label">{this.fullname(p,[],true)}:&nbsp;</span>
                      <div class="multi">{val}</div>
                   </div>)
+                  */
 
                }
             }
+
+            ret.push(<div class="match">{vals}</div>)
+            
             return ret
          }
          else if(!doLink) {
-            let langs = extendedPresets(this.state.langPreset)
+            let langs = extendedPresets(...this.state.langPreset)
             let labels = sortLangScriptLabels(id,langs.flat,langs.translit)
             for(let i of labels) {
-               let val = i["value"]
+               let val = i["value"] 
                if(val === exclude) continue
-               if(val && val.startsWith("http")) val = this.fullname(val)
+               if(val && val.startsWith("http")) val = this.fullname(val,[],true)
                else val = highlight(val)
                let lang = i["xml:lang"]
                if(!lang) lang = i["lang"]
@@ -2561,6 +2572,12 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
          retList.push( <div id='matches'>         
             { this.getResultProp(tmp+"by",allProps,false,true,[tmp+"author"]) }
+
+            { this.state.filters.datatype[0] !== "Person" && 
+               this.getResultProp(tmp+"year",allProps,false,false,[tmp+"yearStart"]) }
+            { this.state.filters.datatype[0] === "Person" && 
+               this.getResultProp(tmp+"year",allProps,false,false,[tmp+"onYear",bdo+"onYear",bdo+"notBefore",bdo+"notAfter"],null,[bdo+"personEvent"],[bdo+"PersonBirth",bdo+"PersonDeath"]) }
+
             { this.getResultProp(tmp+"forWork",allProps) }            
             { this.getResultProp(bdo+"eTextIsVolume",allProps,false,false) }
             { this.getResultProp(tmp+"inInstance",allProps) }
@@ -2814,9 +2831,10 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             }
 
 
+
             { this.getResultProp(tmp+"nameMatch",allProps,"es",false) } {/* //,true,false) } */}
 
-            {/* { this.getResultProp(tmp+"relationType",allProps) }  */}
+            { this.getResultProp(tmp+"relationType",allProps,true,false) } 
             {/* { this.getResultProp(tmp+"InverseRelationType",allProps,true,true,[tmp+"relationTypeInv"]) } */}
             
             {/* { this.getResultProp(tmp+"numberOfMatchingChunks",allProps,true,false,[tmp+"nbChunks"]) } */}
@@ -2846,10 +2864,6 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             { this.getResultProp(bdo+"printMethod",allProps) }
             { this.getResultProp(bdo+"inRootInstance",allProps) } */}
             
-            { this.state.filters.datatype[0] !== "Person" && 
-               this.getResultProp(tmp+"year",allProps,false,false,[tmp+"yearStart"]) }
-            { this.state.filters.datatype[0] === "Person" && 
-               this.getResultProp(tmp+"year",allProps,false,false,[tmp+"onYear",bdo+"onYear",bdo+"notBefore",bdo+"notAfter"],null,[bdo+"personEvent"],[bdo+"PersonBirth",bdo+"PersonDeath"]) }
             
             {/* { this.getResultProp(tmp+"isCreator",allProps.filter(e => (e.type === tmp+"isCreator" && e.value !== "false")),false,false) } */}
 
