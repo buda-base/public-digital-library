@@ -2513,7 +2513,8 @@ class ResourceViewer extends Component<Props,State>
             // property name ?            
             let subProp = ""
             if(valSort) {
-               //console.log("valSort?",valSort)               
+               console.log("valSort?",valSort)               
+               if(valSort.length) subProp = valSort[0].value
                noVal = false ;
                sub.push(<Tag  data-prop={shortUri(prop)}  className={'first '+(div == "sub"?'type':'prop') +" "+ (sameAsPrefix?sameAsPrefix+" sameAs hasIcon":"")}>{befo}{[valSort.map((v,i) => i==0?[this.proplink(v.value)]:[" / ",this.proplink(v.value)]),": "]}{bdrcData}</Tag>)
             }
@@ -2524,13 +2525,14 @@ class ResourceViewer extends Component<Props,State>
                sub.push(<Tag  data-prop={shortUri(prop)}  className={'first '+(div == "sub"?'type':'prop') +" "+ (sameAsPrefix?sameAsPrefix+" sameAs hasIcon":"")}>{befo}{[this.proplink(val[0].value),": "]}{bdrcData}</Tag>)
             }
 
-            console.log("lab",lab)
+            console.log("lab",lab,subProp,prop)
 
             // direct property value/label ?
             if(prop !== bdo+"instanceEvent" && lab && lab[0] && lab[0].value)
             {
-
+               let i_lab = 0
                for(let l of lab) {
+
 
                   let tLab = getLangLabel(this, subProp, [ l ])
                   let lang = tLab["lang"]
@@ -2544,7 +2546,7 @@ class ResourceViewer extends Component<Props,State>
                   }><span className="lang">{lang}</span></Tooltip>:null]
 
 
-                  tip.push(this.hoverMenu(subProp,l,[...tip],[<h4 class="first">{this.proplink(prop)}:</h4>]))
+                  tip.push(this.hoverMenu(subProp,tVal,[...tip],[<h4 class="first">{this.proplink(prop)}:</h4>]))
 
                   let sav = <Tag className={'label '}>
                         {tip}
@@ -2813,7 +2815,7 @@ class ResourceViewer extends Component<Props,State>
                                  }).bind(this,txt,f,value)
                               }/>
                            )
-                           txt.push(this.hoverMenu(f,v,[...txt],[...sub],prop));
+                           txt.push(this.hoverMenu(f,v,[...txt],[...(prop===bdo+"creator"?group:[]),...sub],prop));
 
                            //<ChatIcon className="annoticon" onClick={e => this.setState({...this.state,annoPane:true,newAnno:true})}/>
 

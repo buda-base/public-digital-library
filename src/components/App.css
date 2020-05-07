@@ -890,12 +890,16 @@ vertical-align:middle;}
 #popHoverM .resource .data .sub { width:calc(100%); display:flex;align-items: baseline; }
 #popHoverM .resource .data h3 + .sub { width:calc(100% - 190px); }
 
+
 #popHoverM .resource .data .sub > h4.first { font-size:16px; width:175px; font-weight:600;}
 #popHoverM .resource .data .sub > h4.first a { font-size:16px; }
 
 #popHoverM .resource .data .sub > .subgroup { width:calc(100% - 190px); display:flex;align-items: baseline; }
+
 #popHoverM .resource .data .sub > .subgroup > h4 { width:160px; text-transform:capitalize; font-size:15px; } 
 #popHoverM .resource .data .sub > .subgroup > .subsub { width:calc(100% - 175px); display:inline-block; }
+
+#popHoverM .resource .data h4[data-prop="bdo:role"] + h4 { width:170px;}
 
 #popHoverM .resource .data .sub:not(:first-child) > .subgroup > h4.first { width:150px; font-weight:400; font-size:14px;}
 #popHoverM .resource .data .sub:not(:first-child) > .subgroup > h4.first a { font-weight:400; font-size:14px;}
@@ -1129,6 +1133,10 @@ line-height:12px; }
 
 .resource .data:not(.legal-props) .group:hover > h4:not(.first):not(.multiple) + .hover-menu { opacity:1; }
 
+#popHoverM .resource .data h4[data-prop="bdo:role"] + h4 .hover-menu,
+#popHoverM .resource .data h4[data-prop="bdo:creator"] + .subgroup > h4.first,
+#popHoverM .resource .data h4[data-prop="bdo:creator"],
+#popHoverM .resource .data h4[data-prop="bdo:role"],
 .resource .data.data.legal-props > [data-prop="bdo:creator"] .subgroup .subsub:first-child .hover-menu,
 .resource .data > [data-prop="bdo:creator"] .subgroup .subsub:first-child .hover-menu { display:none !important; }
 
@@ -1359,16 +1367,17 @@ TODO
 .resource .data > [data-prop="bdo:workIsAbout"] h4.multiple + h4::before
 { content:" ";padding:0 5px 0 10px; font-size:15px; }
 */
-
+#popHoverM .resource .data h4[data-prop="bdo:role"] + h4 .lang,
 .resource .data > [data-prop="bdo:creator"] h4[data-prop="bdo:role"] + h4 .lang,
 .resource .data > [data-prop="bdo:creator"] h4[data-prop^="bdo:"],
 .resource .data > [data-prop="bdo:lineageHolder"] h4[data-prop^="bdo:lineageHolder"] 
 { display:none; }
 
+#popHoverM .resource .data h4[data-prop="bdo:role"] + h4 a::after,
 .resource .data > [data-prop="bdo:creator"] h4[data-prop="bdo:role"] + h4::after { content:':'; /*padding-right:5px;*/ }
 
 
-
+#popHoverM .resource .data h4[data-prop="bdo:role"] + h4 a,
 .resource .data > [data-prop="bdo:note"]  .sub > h4.first,
 .resource .data > [data-prop="bdo:lineageHolder"] .sub .subsub h4[data-prop^="bdo:lineageWho"] a,
 .resource .data > [data-prop="bdo:creator"] h4[data-prop="bdo:role"] + h4 a { text-transform:capitalize;color:#343434;font-size:15px;font-weight:600;
