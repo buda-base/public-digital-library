@@ -1965,6 +1965,7 @@ class ResourceViewer extends Component<Props,State>
 
    tooltip(lang:string)
    {
+      //console.log("transL/",lang,languages[lang],languages)
       return lang?<Tooltip placement="bottom-end" title={
          <div style={{margin:"10px"}}>
             <Translate value={languages[lang]?languages[lang].replace(/search/,"tip"):lang}/>
@@ -2075,7 +2076,7 @@ class ResourceViewer extends Component<Props,State>
    {
       let ID = "ID-"+prop+"-"+(e&&e.value?e.value:e)
       
-      console.log("hover?",ID,prop,e)
+      //console.log("hover?",e,ID,prop)
 
       let hasTT = e && e.allSameAs && e.allSameAs.length
 
@@ -2093,6 +2094,23 @@ class ResourceViewer extends Component<Props,State>
       let toggleHoverM = (e) => this.setState({...this.state,collapse:{...this.state.collapse,["hover"+ID]:!this.state.collapse["hover"+ID]}, anchorEl:{...this.state.anchorEl,["hover"+ID]:e.currentTarget} } ) 
 
       let fromSame = (e.allSameAs && e.allSameAs.length > 0)
+
+      let lang, data, other = [] ;
+      if(e.type === "literal") { 
+         lang = e.lang
+         if(!lang) lang = e["xml:lang"]
+         if(!lang) lang = e["@language"]
+      }
+      else if(e.type === "uri") {
+         if(this.props.assocResources) data = this.props.assocResources[e.value]
+         if(data && data.length) data = getLangLabel(this,prop,data.filter(d => [skos+"prefLabel",skos+"altLabel"].includes(d.type) || [skos+"prefLabel",skos+"altLabel"].includes(d.fromKey)),false,false,other)
+         if(data) {
+            lang = data.lang
+            if(!lang) lang = data["xml:lang"]
+            if(!lang) lang = data["@language"]
+         }
+         //console.log("data",lang,data,other)                  
+      }
 
       return (
          <div class="hover-menu">
@@ -2147,26 +2165,28 @@ class ResourceViewer extends Component<Props,State>
                                  <div class="subsub"><h4>{current}</h4></div>
                               </div>
                            </div>}
-                           <Tabs>
+                           <Tabs defaultIndex={fromSame?1:0}>
                               <TabList>
-                                 <Tab>More information</Tab>
-                                 <Tab>Source{(fromSame &&e.allSameAs.length > 1) && <span>s</span>}{fromSame && <b>&nbsp;({e.allSameAs.length})</b>}</Tab>
+                                 <Tab>More Information</Tab>
+                                 <Tab {... !fromSame?{disabled:"disabled"}:{}}>Source{(fromSame &&e.allSameAs.length > 1) && <span>s</span>}{fromSame && <b>&nbsp;({e.allSameAs.length})</b>}</Tab>
                                  <Tab disabled>Notes</Tab>
                                  <Tab disabled>Discussion</Tab>
                               </TabList>
 
                               <TabPanel>
+                              { lang && <div><span class='first'>Language/Script</span><span>:&nbsp;</span><span><Translate value={languages[lang]?languages[lang].replace(/search/,"tip"):lang}/></span></div> }
+                              { other.length && <div><span class='first'>Other Labels</span><span>:&nbsp;</span>{other.map(o => <span class="label">{o.value}{this.tooltip(o.lang)}</span>)}</div> }
                               </TabPanel>
-                              <TabPanel>
+                              <TabPanel selected>
                               {fromSame && e.allSameAs.map(f => { 
                                  let a = shortUri(f)
                                  let pref = a.split(":")[0]
                                  let logo = provImg[pref]
                                  let prov = providers[pref]
                                  let link = f
-                                 let data,tab ;
-                                 if(this.props.assocResources) data = this.props.assocResources[f]                  
-                                 if(data && (tab=data.filter(t => t.fromKey === adm+"canonicalHtml")).length) link = tab[0].value  
+                                 let asso,tab ;
+                                 if(this.props.assocResources) asso = this.props.assocResources[f]                  
+                                 if(asso && (tab=asso.filter(t => t.fromKey === adm+"canonicalHtml")).length) link = tab[0].value  
                                  return (<div><a class="urilink" href={link} target="_blank">{a}{pref!=="bdr"&&<img src="/icons/link-out.svg"/>}</a><span>from</span><img src={logo}/><b>{prov}</b></div>)
                               })}
                               </TabPanel>
@@ -2500,7 +2520,7 @@ class ResourceViewer extends Component<Props,State>
                if(from && from[rdf+"type"]) val = from[rdf+"type"]
             }
 
-            console.log("val",val);
+            //console.log("val",val);
             //console.log("lab",lab);
 
             let noVal = true ;
@@ -2525,7 +2545,7 @@ class ResourceViewer extends Component<Props,State>
             // property name ?            
             let subProp = ""
             if(valSort) {
-               console.log("valSort?",valSort)               
+               //console.log("valSort?",valSort)               
                if(valSort.length) subProp = valSort[0].value
                noVal = false ;
                sub.push(<Tag  data-prop={shortUri(prop)}  className={'first '+(div == "sub"?'type':'prop') +" "+ (sameAsPrefix?sameAsPrefix+" sameAs hasIcon":"")}>{befo}{[valSort.map((v,i) => i==0?[this.proplink(v.value)]:[" / ",this.proplink(v.value)]),": "]}{bdrcData}</Tag>)
@@ -2537,7 +2557,7 @@ class ResourceViewer extends Component<Props,State>
                sub.push(<Tag  data-prop={shortUri(prop)}  className={'first '+(div == "sub"?'type':'prop') +" "+ (sameAsPrefix?sameAsPrefix+" sameAs hasIcon":"")}>{befo}{[this.proplink(val[0].value),": "]}{bdrcData}</Tag>)
             }
 
-            console.log("lab",lab,subProp,prop)
+            //console.log("lab",lab,subProp,prop)
 
             // direct property value/label ?
             if(prop !== bdo+"instanceEvent" && lab && lab[0] && lab[0].value)
@@ -2558,7 +2578,7 @@ class ResourceViewer extends Component<Props,State>
                   }><span className="lang">{lang}</span></Tooltip>:null]
 
 
-                  tip.push(this.hoverMenu(subProp,tVal,[...tip],[<h4 class="first">{this.proplink(prop)}:</h4>]))
+                  tip.push(this.hoverMenu(subProp,{type:"literal",value:tVal,lang},[...tip],[<h4 class="first">{this.proplink(prop)}:</h4>]))
 
                   let sav = <Tag className={'label '}>
                         {tip}

@@ -60,6 +60,8 @@ const enTranslation = {
          zh:"Chinese",
          zhHant:"Chinese (Hanzi)",
          //zhHans:"Chinese (Simplified)",
+         zhHant:"Chinese in traditional characters",
+         zhHans:"Chinese in simplified characters",
          zhLatnPinyin:"Chinese in Pinyin",
          en:"English",
          saXIast:"Sanskrit transliterated in IAST",

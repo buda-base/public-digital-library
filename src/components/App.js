@@ -129,6 +129,10 @@ const facetLabel = {
 
 export const languages = {
    "zh":"lang.search.zh",
+   "zhHani":"lang.search.zh",
+   "zhHant":"lang.search.zhHant",
+   "zhHans":"lang.search.zhHans",
+   "zh-hani":"lang.search.zh",
    "zh-hant":"lang.search.zhHant",
    "zh-hans":"lang.search.zhHans",
    "zh-latn-pinyin":"lang.search.zhLatnPinyin",
