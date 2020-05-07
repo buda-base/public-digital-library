@@ -2075,7 +2075,7 @@ class ResourceViewer extends Component<Props,State>
    {
       let ID = "ID-"+prop+"-"+(e&&e.value?e.value:e)
       
-      //console.log("hover?",ID,prop,e)
+      console.log("hover?",ID,prop,e)
 
       let hasTT = e && e.allSameAs && e.allSameAs.length
 
@@ -2091,6 +2091,8 @@ class ResourceViewer extends Component<Props,State>
 
 
       let toggleHoverM = (e) => this.setState({...this.state,collapse:{...this.state.collapse,["hover"+ID]:!this.state.collapse["hover"+ID]}, anchorEl:{...this.state.anchorEl,["hover"+ID]:e.currentTarget} } ) 
+
+      let fromSame = (e.allSameAs && e.allSameAs.length > 0)
 
       return (
          <div class="hover-menu">
@@ -2148,15 +2150,25 @@ class ResourceViewer extends Component<Props,State>
                            <Tabs>
                               <TabList>
                                  <Tab>More information</Tab>
-                                 <Tab>Sources</Tab>
+                                 <Tab>Source{(fromSame &&e.allSameAs.length > 1) && <span>s</span>}{fromSame && <b>&nbsp;({e.allSameAs.length})</b>}</Tab>
                                  <Tab disabled>Notes</Tab>
                                  <Tab disabled>Discussion</Tab>
                               </TabList>
 
                               <TabPanel>
-                                 test
                               </TabPanel>
                               <TabPanel>
+                              {fromSame && e.allSameAs.map(f => { 
+                                 let a = shortUri(f)
+                                 let pref = a.split(":")[0]
+                                 let logo = provImg[pref]
+                                 let prov = providers[pref]
+                                 let link = f
+                                 let data,tab ;
+                                 if(this.props.assocResources) data = this.props.assocResources[f]                  
+                                 if(data && (tab=data.filter(t => t.fromKey === adm+"canonicalHtml")).length) link = tab[0].value  
+                                 return (<div><a class="urilink" href={link} target="_blank">{a}</a><span>from</span><img src={logo}/><b>{prov}</b></div>)
+                              })}
                               </TabPanel>
                               <TabPanel>
                               </TabPanel>
