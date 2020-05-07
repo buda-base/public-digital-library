@@ -2167,7 +2167,7 @@ class ResourceViewer extends Component<Props,State>
                                  let data,tab ;
                                  if(this.props.assocResources) data = this.props.assocResources[f]                  
                                  if(data && (tab=data.filter(t => t.fromKey === adm+"canonicalHtml")).length) link = tab[0].value  
-                                 return (<div><a class="urilink" href={link} target="_blank">{a}</a><span>from</span><img src={logo}/><b>{prov}</b></div>)
+                                 return (<div><a class="urilink" href={link} target="_blank">{a}{pref!=="bdr"&&<img src="/icons/link-out.svg"/>}</a><span>from</span><img src={logo}/><b>{prov}</b></div>)
                               })}
                               </TabPanel>
                               <TabPanel>
