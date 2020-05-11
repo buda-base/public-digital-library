@@ -442,7 +442,7 @@ a.result + #matches .result-content::before { left:110px; width:calc(100% - 110p
 .result-content #icon { display: inline-block;width:calc(80px + 25px + 25px + 25px);height:90px; vertical-align: top; text-align: center;
    position:absolute;  margin-left:0px;
 }
-.result-content #icon div:last-child { color: rgba(118, 118, 118, 0.9); font-size:9px;font-weight:600; 
+.result-content #icon div:last-of-type { color: rgba(118, 118, 118, 0.9); font-size:9px;font-weight:600; 
       max-width: 100px;  overflow: hidden; position: relative; text-overflow: ellipsis; text-align: center; margin: 5px auto; white-space: nowrap;
 }
       
@@ -460,6 +460,8 @@ a.result + #matches .result-content::before { left:110px; width:calc(100% - 110p
 .result-content #icon.instance img,
 .result-content #icon.topic img{ width:60px; }
 
+.result-content #icon.copyright > img:last-child { width:16px; display: inline-block; margin-top:2px; }
+
 /*
 .result-content #icon.lineage img { width:80px;}
 
@@ -469,20 +471,22 @@ a.result + #matches .result-content::before { left:110px; width:calc(100% - 110p
 .result-content #icon > .thumb { background:black; width:140px; height:140px; margin:auto; overflow:hidden; box-shadow:0 1px 4px #cecece; display:flex;
    justify-content: center;
 }
-.result-content #icon > .thumb img { height:145px; width:auto; max-width:1000px; max-height:1000px; }
+.result-content #icon > .thumb img { height:100%; width:auto; max-width:1000px; max-height:1000px; }
 
 .result-content #icon > div:nth-child(2):not(:last-child) { position:absolute; visibility:hidden;top:0;left:0; width:100%;}
 .result-content:hover #icon > div:nth-child(1):not(.thumb) { visibility:hidden; }
 .result-content:hover #icon > div:nth-child(2) { visibility:visible; }
 
-a.result + #matches .result-content #icon { width:90px; }
+a.result + #matches .result-content #icon { width:95px;  }
+a.result + #matches .result-content #icon > .thumb { width:85px; height:85px;  }
+
 /*
 a.result + #matches .result-content #icon img { min-width:40px; width:40px; }
 a.result + #matches .result-content #icon img { min-width:40px; width:40px; }
 */
-a.result + #matches .result-content #icon div:last-child { max-width:70px;   }
+a.result + #matches .result-content #icon div:last-of-type { max-width:80px;   }
 
-a.result + #matches .result-content #icon img { width:40px; }
+a.result + #matches .result-content #icon > :not(.thumb) img { width:40px; }
 
 /*
 .result-content .contenu h3 > span.highlight:first-child,

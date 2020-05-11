@@ -2292,7 +2292,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
    makeResult(id,n,t,lit,lang,tip,Tag,url,rmatch = [],facet,allProps = [],preLit,isInstance)
    {
-      console.log("res",id,allProps,n,t,lit,lang,tip,Tag,rmatch,sameAsRes)
+      //console.log("res",id,allProps,n,t,lit,lang,tip,Tag,rmatch,sameAsRes)
 
       let sameAsRes,otherSrc= [] ;
       if(allProps) sameAsRes = [ ...allProps ]
@@ -2344,25 +2344,34 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
       let enType = getEntiType(id).toLowerCase()
 
-      let hasThumb = allProps.filter(a => a.type === tmp+"thumbnailIIIFService")
-      console.log("hasThumb",hasThumb)
+      let hasThumb = allProps.filter(a => a.type === tmp+"thumbnailIIIFService"), hasCopyR
+      //console.log("hasThumb",hasThumb)
       if(hasThumb.length) { 
          hasThumb = hasThumb[0].value 
-         if(hasThumb) { 
-            if(this.props.config && this.props.config.iiif && this.props.config.iiif.endpoints[this.props.config.iiif.index].match(/iiif-dev/)) hasThumb = hasThumb.replace(/iiif/, "iiif-dev")
-            hasThumb += "/full/,145/0/default.jpg" 
+         if(hasThumb) {             
+            hasCopyR = allProps.filter(a => a.type === tmp+"hasOpen")
+            if(hasCopyR.length && hasCopyR[0].value == "false") {
+               hasCopyR = true
+               hasThumb = []
+            }
+            else {
+               hasCopyR = false
+               if(this.props.config && this.props.config.iiif && this.props.config.iiif.endpoints[this.props.config.iiif.index].match(/iiif-dev/)) hasThumb = hasThumb.replace(/iiif/, "iiif-dev")
+               hasThumb += "/full/,145/0/default.jpg" 
+            }
          }
       }
 
 
       let ret = ([            
-            <div id="icon" class={enType}>
+            <div id="icon" class={enType + " " + (hasCopyR?"copyright":"")}>
                { hasThumb.length > 0  && <div class="thumb"><img src={hasThumb}/></div>}
                { hasThumb.length === 0 && [
                   <div><img src={"/icons/search/"+enType+".svg"}/></div>,
                   <div><img src={"/icons/search/"+enType+"_.svg"}/></div>
                ]}
                <div>{prettId}</div>
+               {hasCopyR && <img title="Copyrighted material" src="/icons/not_open.png"/>}
             </div>, 
             <div key={t+"_"+n+"__"}  className={"contenu" }>
                   <ListItem style={{paddingLeft:"0"}}>
