@@ -101,7 +101,7 @@ const wd    = "http://www.wikidata.org/entity/"
 const xsd   = "http://www.w3.org/2001/XMLSchema#" ;
 
 // experimental
-const src = "https://sakyaresearch.org"
+const src = "https://sakyaresearch.org/"
 
 export const prefixesMap = { adm, bda, bdac, bdan, bdo, bdou, bdr, bdu, bf, cbcp, cbct, dila, eftr, foaf, oa, mbbt, owl, rdf, rdfs, rkts, skos, wd, ola, viaf, xsd, tmp, src }
 export const prefixes = Object.values(prefixesMap) ;
@@ -2349,29 +2349,37 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
       if(hasThumb.length) { 
          hasThumb = hasThumb[0].value 
          if(hasThumb) {             
-            hasCopyR = allProps.filter(a => a.type === tmp+"hasOpen")
-            if(hasCopyR.length && hasCopyR[0].value == "false") {
-               hasCopyR = true
-               hasThumb = []
-            }
-            else {
-               hasCopyR = false
-               if(this.props.config && this.props.config.iiif && this.props.config.iiif.endpoints[this.props.config.iiif.index].match(/iiif-dev/)) hasThumb = hasThumb.replace(/iiif/, "iiif-dev")
-               hasThumb += "/full/,145/0/default.jpg" 
+            //hasCopyR = allProps.filter(a => a.type === tmp+"hasOpen")
+            //if(hasCopyR.length && hasCopyR[0].value == "false") {
+
+            let access = allProps.filter(a => a.type === tmp+"hasReproAccess")
+            if(access.length) access = access[0].value            
+            
+            if(this.props.config && this.props.config.iiif && this.props.config.iiif.endpoints[this.props.config.iiif.index].match(/iiif-dev/)) hasThumb = hasThumb.replace(/iiif/, "iiif-dev")
+            hasThumb += "/full/,145/0/default.jpg" 
+
+            if(access) {
+               hasCopyR = "unknown"            
+               if(access.includes("Restricted")) { hasCopyR = "restricted"; hasThumb = []; }
+               else if(access.includes("FairUse")) hasCopyR = "copyright"
+               else if(access.includes("Open")) hasCopyR = "copyleft"
             }
          }
       }
 
 
       let ret = ([            
-            <div id="icon" class={enType + " " + (hasCopyR?"copyright":"")}>
+            <div id="icon" class={enType + (hasCopyR?" wCopyR":"")}>
                { hasThumb.length > 0  && <div class="thumb"><img src={hasThumb}/></div>}
                { hasThumb.length === 0 && [
                   <div><img src={"/icons/search/"+enType+".svg"}/></div>,
                   <div><img src={"/icons/search/"+enType+"_.svg"}/></div>
                ]}
-               <div>{prettId}</div>
-               {hasCopyR && <img title="Copyrighted material" src="/icons/not_open.png"/>}
+               <div class="RID">{prettId}</div>
+               {hasCopyR === "copyleft" && <img title="Open Access" src="/icons/open.png"/>}
+               {hasCopyR === "copyright" && <img title="Copyrighted Access" src="/icons/not_open.png"/>}
+               {hasCopyR === "restricted" && <img title="Restricted Access" src="/icons/forbidden.svg"/>}
+               {hasCopyR === "unknown" && <img title="Unkown Access" src="/icons/open_unknown.png"/>}
             </div>, 
             <div key={t+"_"+n+"__"}  className={"contenu" }>
                   <ListItem style={{paddingLeft:"0"}}>
@@ -2923,7 +2931,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
       this._refs[n] = React.createRef();
 
-      retList = <div {... (!isInstance?{id:"result-"+n}:{})} ref={this._refs[n]} className={"result-content " + status}>{retList}</div>
+      retList = <div {... (!isInstance?{id:"result-"+n}:{})} ref={this._refs[n]} className={"result-content " + status + " " + enType + (hasThumb.length?" wThumb":"")}>{retList}</div>
 
 
 
