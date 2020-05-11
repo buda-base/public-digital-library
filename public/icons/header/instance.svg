@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="72px" height="57px" viewBox="0 0 72 57" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->
+    <title>WORK_instance_grand</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <polygon id="path-1" points="0.0881504702 0.833165266 36.3684483 0.833165266 36.3684483 25.8906106 0.0881504702 25.8906106"></polygon>
+        <polygon id="path-3" points="0.417155556 0.390787879 18.0272 0.390787879 18.0272 12.7132121 0.417155556 12.7132121"></polygon>
+        <path d="M1.89561243,3.74666667 C-0.822754438,4.44833333 1.89561243,9.91833333 1.89561243,9.91833333 L64.4025266,9.91833333 C64.4025266,9.91833333 67.0639734,4.50166667 64.4025266,3.74666667 C56.8390503,1.6 45.4584763,0.6 33.9933846,0.6 C21.9401183,0.601666667 9.79198521,1.705 1.89561243,3.74666667" id="path-5"></path>
+        <path d="M1.89561243,3.74666667 C-0.822754438,4.44833333 1.89561243,9.91833333 1.89561243,9.91833333 L64.4025266,9.91833333 C64.4025266,9.91833333 67.0639734,4.50166667 64.4025266,3.74666667 C56.8390503,1.6 45.4584763,0.6 33.9916598,0.6 C21.9401183,0.6 9.79198521,1.705 1.89561243,3.74666667 Z" id="path-7"></path>
+        <path d="M1.51452632,0.362019512 C1.51452632,0.362019512 -1.16542105,5.01321951 1.51452632,5.66051707 C17.1356842,9.4392 48.939,9.07884878 64.4576842,5.66051707 C67.1932105,5.05826341 64.4576842,0.362019512 64.4576842,0.362019512" id="path-9"></path>
+        <path d="M1.51452632,0.362019512 C1.51452632,0.362019512 -1.16542105,5.01321951 1.51452632,5.66051707 C17.1356842,9.4392 48.939,9.07884878 64.4576842,5.66051707 C67.1932105,5.05826341 64.4576842,0.362019512 64.4576842,0.362019512 L1.51452632,0.362019512 Z" id="path-11"></path>
+    </defs>
+    <g id="WORK_instance_grand" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" opacity="0.800055804">
+        <g id="Group-8" transform="translate(3.000000, 3.000000)">
+            <polygon id="Stroke-5" stroke="#152631" stroke-width="2.29999995" fill="#FFFFFF" points="3 42 61 42 61 10 3 10"></polygon>
+            <g id="Group-9" transform="translate(16.000000, 7.000000)">
+                <mask id="mask-2" fill="white">
+                    <use xlink:href="#path-1"></use>
+                </mask>
+                <g id="Clip-7"></g>
+                <polygon id="Stroke-6" stroke="#B6B5B6" stroke-width="1.2" mask="url(#mask-2)" points="0.0881504702 25.8906106 36.3684483 25.8906106 36.3684483 0.831563025 0.0881504702 0.831563025"></polygon>
+                <polygon id="Stroke-8" stroke="#B6B5B6" stroke-width="1.2" mask="url(#mask-2)" points="-1623.47649 848.658936 290.332273 848.658936 290.332273 -730.056258 -1623.47649 -730.056258"></polygon>
+            </g>
+            <polygon id="Stroke-10" stroke="#152631" stroke-width="2.4000001" fill="#FFFFFF" points="16 35 52 35 52 10 16 10"></polygon>
+            <g id="Group-14" transform="translate(25.000000, 10.000000)">
+                <mask id="mask-4" fill="white">
+                    <use xlink:href="#path-3"></use>
+                </mask>
+                <g id="Clip-12"></g>
+                <polygon id="Stroke-11" stroke="#B6B5B6" stroke-width="1.2" mask="url(#mask-4)" points="0.417155556 12.7132121 18.0272 12.7132121 18.0272 0.390787879 0.417155556 0.390787879"></polygon>
+                <polygon id="Stroke-13" stroke="#B6B5B6" stroke-width="1.2" mask="url(#mask-4)" points="-1584.43111 834.206061 273.361867 834.206061 273.361867 -718.414667 -1584.43111 -718.414667"></polygon>
+            </g>
+            <polygon id="Stroke-15" stroke="#152631" stroke-width="2.20000005" points="25 22 43 22 43 10 25 10"></polygon>
+            <g id="Group-18">
+                <mask id="mask-6" fill="white">
+                    <use xlink:href="#path-5"></use>
+                </mask>
+                <g id="Clip-17"></g>
+                <polyline id="Stroke-16" stroke="#B6B5B6" stroke-width="1.2" mask="url(#mask-6)" points="64.4025266 3.74583333 64.4025266 9.91916667 1.89561243 9.91916667 1.89561243 3.74583333"></polyline>
+            </g>
+            <g id="Group-21">
+                <mask id="mask-8" fill="white">
+                    <use xlink:href="#path-7"></use>
+                </mask>
+                <g id="Clip-20"></g>
+                <polygon id="Stroke-19" stroke="#B6B5B6" stroke-width="1.2" mask="url(#mask-8)" points="-1297.86149 117.678333 253.758512 117.678333 253.758512 -94.4716667 -1297.86149 -94.4716667"></polygon>
+            </g>
+            <path d="M1.21006299,4.03802115 C16.6441247,0.192673567 48.2775591,-0.212947024 63.8152746,4.03802115 C66.4809067,4.76717245 63.8152746,10 63.8152746,10 L1.21006299,10 C1.21006299,10 -1.51257874,4.71566508 1.21006299,4.03802115 Z" id="Stroke-22" stroke="#152631" stroke-width="2.4000001"></path>
+            <g id="Group-29" transform="translate(0.000000, 40.000000)">
+                <g id="Group-26">
+                    <mask id="mask-10" fill="white">
+                        <use xlink:href="#path-9"></use>
+                    </mask>
+                    <g id="Clip-25"></g>
+                    <polyline id="Stroke-24" stroke="#B6B5B6" stroke-width="1.2" mask="url(#mask-10)" points="1.51574211 5.66051707 1.51574211 0.362019512 64.4571632 0.362019512 64.4571632 5.66051707"></polyline>
+                </g>
+                <mask id="mask-12" fill="white">
+                    <use xlink:href="#path-11"></use>
+                </mask>
+                <g id="Clip-28"></g>
+                <polygon id="Stroke-27" stroke="#B6B5B6" stroke-width="1.2" mask="url(#mask-12)" points="-189.157737 89.9510049 1373.24811 89.9510049 1373.24811 -92.1164488 -189.157737 -92.1164488"></polygon>
+            </g>
+            <path d="M63.7906905,46.6367259 C48.354719,49.6281148 16.7226385,49.9434589 1.18473937,46.6367259 C-1.48092421,46.0688146 1.18473937,42 1.18473937,42 L63.7906905,42 C63.7906905,42 66.5116368,46.1096925 63.7906905,46.6367259 Z" id="Stroke-30" stroke="#0F0F0F" stroke-width="2.4000001"></path>
+        </g>
+    </g>
+</svg>

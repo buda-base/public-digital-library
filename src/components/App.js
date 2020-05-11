@@ -128,6 +128,7 @@ const facetLabel = {
 }
 
 export const languages = {
+   "km":"lang.search.km",
    "zh":"lang.search.zh",
    "zhHani":"lang.search.zh",
    "zhHant":"lang.search.zhHant",
@@ -2343,10 +2344,24 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
       let enType = getEntiType(id).toLowerCase()
 
+      let hasThumb = allProps.filter(a => a.type === tmp+"thumbnailIIIFService")
+      console.log("hasThumb",hasThumb)
+      if(hasThumb.length) { 
+         hasThumb = hasThumb[0].value 
+         if(hasThumb) { 
+            if(this.props.config && this.props.config.iiif && this.props.config.iiif.endpoints[this.props.config.iiif.index].match(/iiif-dev/)) hasThumb = hasThumb.replace(/iiif/, "iiif-dev")
+            hasThumb += "/full/,145/0/default.jpg" 
+         }
+      }
+
+
       let ret = ([            
             <div id="icon" class={enType}>
-               <div><img src={"/icons/search/"+enType+".svg"}/></div>
-               <div><img src={"/icons/search/"+enType+"_.svg"}/></div>
+               { hasThumb.length > 0  && <div class="thumb"><img src={hasThumb}/></div>}
+               { hasThumb.length === 0 && [
+                  <div><img src={"/icons/search/"+enType+".svg"}/></div>,
+                  <div><img src={"/icons/search/"+enType+"_.svg"}/></div>
+               ]}
                <div>{prettId}</div>
             </div>, 
             <div key={t+"_"+n+"__"}  className={"contenu" }>

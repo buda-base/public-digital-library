@@ -2076,7 +2076,7 @@ class ResourceViewer extends Component<Props,State>
    {
       let ID = "ID-"+prop+"-"+(e&&e.value?e.value:e)
       
-      //console.log("hover?",e,ID,prop)
+      console.log("hover?",e,ID,prop)
 
       let hasTT = e && e.allSameAs && e.allSameAs.length
 
@@ -2103,13 +2103,16 @@ class ResourceViewer extends Component<Props,State>
       }
       else if(e.type === "uri") {
          if(this.props.assocResources) data = this.props.assocResources[e.value]
-         if(data && data.length) data = getLangLabel(this,prop,data.filter(d => [skos+"prefLabel",skos+"altLabel"].includes(d.type) || [skos+"prefLabel",skos+"altLabel"].includes(d.fromKey)),false,false,other)
+         if(data && data.length) data = getLangLabel(this,prop,data.filter(d => [skos+"prefLabel",skos+"altLabel",rdfs+"label"].includes(d.type) || [skos+"prefLabel",skos+"altLabel",rdfs+"label"].includes(d.fromKey)),false,false,other)
          if(data) {
             lang = data.lang
             if(!lang) lang = data["xml:lang"]
             if(!lang) lang = data["@language"]
          }
-         //console.log("data",lang,data,other)                  
+         else {
+            //if(this.props.assocResources) data = this.props.assocResources[e.value]
+         }
+         console.log("data",lang,data,other)                  
       }
 
       return (
@@ -2175,7 +2178,7 @@ class ResourceViewer extends Component<Props,State>
 
                               <TabPanel>
                               { lang && <div><span class='first'>Language/Script</span><span>:&nbsp;</span><span><Translate value={languages[lang]?languages[lang].replace(/search/,"tip"):lang}/></span></div> }
-                              { other.length && <div><span class='first'>Other Labels</span><span>:&nbsp;</span>{other.map(o => <span class="label">{o.value}{this.tooltip(o.lang)}</span>)}</div> }
+                              { other.length && <div><span class='first'>In Other Languages</span><span>:&nbsp;</span><div>{other.map(o => <span class="label">{o.value}{this.tooltip(o.lang)}</span>)}</div></div> }
                               </TabPanel>
                               <TabPanel selected>
                               {fromSame && e.allSameAs.map(f => { 
@@ -2478,7 +2481,7 @@ class ResourceViewer extends Component<Props,State>
                if(T.length) T = T[0]
                if(T === lastT) keepT = true
 
-               console.log("keep?",T,lastT,e,keepT)
+               //console.log("keep?",T,lastT,e,keepT)
 
                if(iKeep < _elem.length - 1) {
                   let nxT = _elem[iKeep+1]
@@ -2488,7 +2491,7 @@ class ResourceViewer extends Component<Props,State>
                      if(nxT.length) nxT = nxT[0]
                      if(T === nxT) willK = true
                   }
-                  console.log("willK?",nxT,willK)
+                  //console.log("willK?",nxT,willK)
                }
             }
 
