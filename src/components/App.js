@@ -2118,15 +2118,22 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
    getPublisher(allProps)  {
 
+      let hasName, hasLoc
+      hasName = allProps.filter(a => a.type === bdo+"publisherName").length > 0
+      hasLoc = allProps.filter(a => a.type === bdo+"publisherLocation").length > 0
+
       let ret = []
       //if(ret.length) 
-      return [ <div class="match publisher">
+      if(hasName) ret.push(<div class="match publisher">
                <span class="label">{this.fullname(bdo+"publisherName",[],true).split(" ").map(e => <span>{e}</span>)}</span>
                <div class="multi">{this.getVal(bdo+"publisherName",allProps)}</div>
-            </div>,<div class="match">
+            </div>)
+      if(hasLoc) ret.push(<div class="match">
                <span class="label">{this.fullname(bdo+"publisherLoc.",[],true).split(" ").map(e => <span>{e}</span>)}</span>
                <div class="multi">{this.getVal(bdo+"publisherLocation",allProps)}</div>
-            </div> ]
+            </div>)
+
+      return ret;
    }
 
    getResultProp(prop:string,allProps:[],plural:string="s", doLink:boolean = true, fromProp:[], exclude:string,useAux:[],findProp:[],altInfo:[],iri) {
@@ -2382,13 +2389,19 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
       let enType = getEntiType(id).toLowerCase()
 
-      let hasThumb = allProps.filter(a => a.type === tmp+"thumbnailIIIFService"), hasCopyR
+      let hasThumb = allProps.filter(a => a.type === tmp+"thumbnailIIIFService"), hasCopyR, viewUrl
       //console.log("hasThumb",hasThumb)
       if(hasThumb.length) { 
          hasThumb = hasThumb[0].value 
          if(hasThumb) {             
             //hasCopyR = allProps.filter(a => a.type === tmp+"hasOpen")
             //if(hasCopyR.length && hasCopyR[0].value == "false") {
+
+            viewUrl = allProps.filter(a => a.type === bdo+"instanceHasReproduction")
+            if(viewUrl.length) viewUrl = shortUri(viewUrl[0].value)
+            else viewUrl = null
+            if(viewUrl && viewUrl.startsWith("bdr:")) viewUrl = "/show/" + viewUrl + "#open-viewer"
+            else if(viewUrl) viewUrl = fullUri(viewUrl)
 
             let access = allProps.filter(a => a.type === tmp+"hasReproAccess")
             if(access.length) access = access[0].value            
@@ -2407,18 +2420,6 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
 
       let ret = ([            
-            <div id="icon" class={enType + (hasCopyR?" wCopyR":"")}>
-               { hasThumb.length > 0  && <div class="thumb"><img src={hasThumb}/></div>}
-               { hasThumb.length === 0 && [
-                  <div><img src={"/icons/search/"+enType+".svg"}/></div>,
-                  <div><img src={"/icons/search/"+enType+"_.svg"}/></div>
-               ]}
-               <div class="RID">{prettId}</div>
-               {hasCopyR === "copyleft" && <img title="Open Access" src="/icons/open.png"/>}
-               {hasCopyR === "copyright" && <img title="Copyrighted Access" src="/icons/not_open.png"/>}
-               {hasCopyR === "restricted" && <img title="Restricted Access" src="/icons/forbidden.svg"/>}
-               {hasCopyR === "unknown" && <img title="Unkown Access" src="/icons/open_unknown.png"/>}
-            </div>, 
             <div key={t+"_"+n+"__"}  className={"contenu" }>
                   <ListItem style={{paddingLeft:"0"}}>
                      {/* <ListItemText style={{height:"auto",flexGrow:10,flexShrink:10}}
@@ -2458,8 +2459,6 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             </div>
          ])
 
-         let retList = [ <div id="num-box" class={(this.state.checked[prettId] === true?"checked":"")} style={{flexShrink:0}} onClick={(e) => this.setState({repage:true,checked:{...this.state.checked,[prettId]:!this.state.checked[prettId]}})}>{warnStatus}{n}</div> ]
-         
 
          let bestM = allProps.filter(e => e.type === tmp+"bestMatch")
          if(!bestM.length) bestM = rmatch.filter(e => e.type === tmp+"textMatch")
@@ -2473,7 +2472,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          }
          else bestM = ""
 
-         let prefix = prettId.replace(/:.*$/,"")
+         let prefix = prettId.replace(/:.*$/,""), resUrl
          
          let directSameAs = false
          if(!prettId.match(/^bdr:/) && (fullId.match(new RegExp(cbcp+"|"+cbct+"|"+rkts)) || !sameAsRes || !sameAsRes.filter(s => s.value.match(/[#/]sameAs/) || (s.type.match(/[#/]sameAs/) && (s.value.indexOf(".bdrc.io") !== -1 || s.value.indexOf("bdr:") !== -1))).length))   {
@@ -2481,17 +2480,52 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             if((u = sameAsRes.filter(s => s.type === adm+"canonicalHtml")).length) u = u[0].value
             else u = fullId
 
-            retList.push( <a target="_blank" href={u} className="result">{ret}</a> )
+            resUrl = u
+            //retList.push( <a target="_blank" href={u} className="result">{ret}</a> )
 
             if(!this.props.language && !fullId.match(new RegExp(cbcp+"|"+cbct+"|"+rkts)) && fullId.match(new RegExp(bdr))) rmatch = [ { type:tmp+"sameAsBDRC", value:prettId,  lit } ]
 
             directSameAs = true
          }
          else if(prettId.match(/^([^:])+:/))
-            retList.push( <Link key={n} to={"/show/"+prettId+bestM} className="result">{ret}</Link> )
+            resUrl = "/show/"+prettId+bestM
+            //retList.push( <Link key={n} to={"/show/"+prettId+bestM} className="result">{ret}</Link> )
          else
-            retList.push( <Link key={n} to={url?url.replace(/^https?:/,""):id.replace(/^https?:/,"")} target="_blank" className="result">{ret}</Link> )
-         
+            resUrl = (url?url.replace(/^https?:/,""):id.replace(/^https?:/,""))
+            //retList.push( <Link key={n} to={url?url.replace(/^https?:/,""):id.replace(/^https?:/,"")} target="_blank" className="result">{ret}</Link> )
+
+         let getIconLink = (resUrl,div) => {
+
+            if(!resUrl.startsWith("http")) return <Link to={resUrl}>{div}</Link>
+            else return <a href={resUrl} target="_blank">{div}</a>
+
+         }
+
+
+         let retList = [ 
+            <div id="num-box" class={(this.state.checked[prettId] === true?"checked":"")} style={{flexShrink:0}} onClick={(e) => this.setState({repage:true,checked:{...this.state.checked,[prettId]:!this.state.checked[prettId]}})}>{warnStatus}{n}</div>,         
+            <div id="icon" class={enType + (hasCopyR?" wCopyR":"")}>
+               { hasThumb.length > 0  && <div class="thumb" title="View Images">{
+                   getIconLink(viewUrl?viewUrl:resUrl+"#open-viewer", <img src={hasThumb}/>)
+                  }</div> }
+               { hasThumb.length === 0 && [
+                  <div>{
+                     getIconLink(resUrl,<img src={"/icons/search/"+enType+".svg"}/>)
+                  }</div>, 
+                  <div>{
+                     getIconLink(resUrl,<img src={"/icons/search/"+enType+"_.svg"}/>)
+                  }</div>] }
+               <div class="RID">{prettId}</div>
+               {hasCopyR === "copyleft" && <img title="Open Access" src="/icons/open.png"/>}
+               {hasCopyR === "copyright" && <img title="Copyrighted Access" src="/icons/not_open.png"/>}
+               {hasCopyR === "restricted" && <img title="Restricted Access" src="/icons/forbidden.svg"/>}
+               {hasCopyR === "unknown" && <img title="Unknown Access" src="/icons/open_unknown.png"/>}
+               { hasThumb.length > 0 && getIconLink(viewUrl?viewUrl:resUrl+"#open-viewer", <img title="Scans Available" style={{width:"20px"}} src="/icons/search/images.svg"/>) }
+            </div>
+         ]
+
+         if(!resUrl.startsWith("http")) retList.push(<Link to={resUrl} className="result">{ret}</Link>)         
+         else retList.push(<a href={resUrl} target="_blank" className="result">{ret}</a>)         
 
          let dico
          if(!sameAsRes) sameAsRes = []        
@@ -2960,6 +2994,9 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             {/* { this.getResultProp(tmp+"provider",allProps) } */}
             {/* { this.getResultProp(tmp+"popularityScore",allProps,false,false, [tmp+"entityScore"]) } */}
             
+            
+            {/* { hasThumb.length > 0 && <div class="match">{getIconLink(viewUrl?viewUrl:resUrl+"#open-viewer",<span class="urilink"><b>View Images</b></span>)}</div>} // maybe a bit overkill...? */ }
+
             { this.getInstanceLink(id,n,allProps) }
 
             {/* { this.getEtextLink(id,n,allProps) } */}
