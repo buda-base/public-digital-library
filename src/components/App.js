@@ -124,7 +124,7 @@ export function shortUri(id:string) {
 }
 
 const facetLabel = {
-   "root": "In Work",
+   "root": "In Instance",
    "tree": "Genre / Topic",
    "relationInv": "Inverse Relation Type"
 }
