@@ -764,7 +764,8 @@ class ResourceViewer extends Component<Props,State>
       window.closeViewer = () => { 
          this.setState({...this.state, openUV:false, openMirador:false, openDiva:false}); 
          if(window.MiradorUseEtext) delete window.MiradorUseEtext ;
-         delete window.mirador
+         delete window.mirador         
+         if(this.state.fromSearch) this.props.history.push({pathname:"/search",search:decodeURIComponent(this.state.fromSearch)})
       }
    }
 
