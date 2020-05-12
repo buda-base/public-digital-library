@@ -2408,7 +2408,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             let access = allProps.filter(a => a.type === tmp+"hasReproAccess")
             if(access.length) access = access[0].value            
             
-            if(this.props.config && this.props.config.iiif && this.props.config.iiif.endpoints[this.props.config.iiif.index].match(/iiif-dev/)) hasThumb = hasThumb.replace(/iiif/, "iiif-dev")
+            if(this.props.config && this.props.config.iiif && this.props.config.iiif.endpoints[this.props.config.iiif.index].match(/iiif-dev/)) hasThumb = hasThumb.replace(/iiif([.]bdrc[.]io)/, "iiif-dev$1")
             hasThumb += "/full/,145/0/default.jpg" 
 
             if(access) {
