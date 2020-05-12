@@ -2091,6 +2091,43 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                 */
       
    
+   getVal(prop,allProps) {
+
+      if(!this.state.langPreset) return ;
+
+      let ret = []
+      let langs = extendedPresets(...this.state.langPreset)
+      let labels = sortLangScriptLabels(allProps.filter(a => a.type === prop || a.fromKey === prop),langs.flat,langs.translit)
+      for(let i of labels) {
+         let val = i["value"] 
+         //if(val === exclude) continue
+         if(val && val.startsWith("http")) val = this.fullname(val,[],true)
+         else val = highlight(val)
+         let lang = i["xml:lang"]
+         if(!lang) lang = i["lang"]
+         ret.push(<span>{val}{
+            lang && <Tooltip placement="bottom-end" title={
+                              <div style={{margin:"10px"}}>
+                                 <Translate value={languages[lang]?languages[lang].replace(/search/,"tip"):lang}/>
+                              </div>
+                           }><span className="lang">&nbsp;{lang}</span></Tooltip>
+                  }</span>)
+      }
+      return ret
+   }
+
+   getPublisher(allProps)  {
+
+      let ret = []
+      //if(ret.length) 
+      return [ <div class="match publisher">
+               <span class="label">{this.fullname(bdo+"publisherName",[],true).split(" ").map(e => <span>{e}</span>)}</span>
+               <div class="multi">{this.getVal(bdo+"publisherName",allProps)}</div>
+            </div>,<div class="match">
+               <span class="label">{this.fullname(bdo+"publisherLoc.",[],true).split(" ").map(e => <span>{e}</span>)}</span>
+               <div class="multi">{this.getVal(bdo+"publisherLocation",allProps)}</div>
+            </div> ]
+   }
 
    getResultProp(prop:string,allProps:[],plural:string="s", doLink:boolean = true, fromProp:[], exclude:string,useAux:[],findProp:[],altInfo:[],iri) {
 
@@ -2610,6 +2647,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
          retList.push( <div id='matches'>         
             { this.getResultProp(tmp+"by",allProps,false,true,[tmp+"author"]) }
+            { this.getResultProp(tmp+"in",allProps,false,true,[bdo+"inRootInstance"]) } 
 
             { this.state.filters.datatype[0] !== "Person" && 
                this.getResultProp(tmp+"year",allProps,false,false,[tmp+"yearStart"]) }
@@ -2900,7 +2938,6 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
             {/* { this.getResultProp(bdo+"material",allProps) }
             { this.getResultProp(bdo+"printMethod",allProps) }
-            { this.getResultProp(bdo+"inRootInstance",allProps) } */}
             
             
             {/* { this.getResultProp(tmp+"isCreator",allProps.filter(e => (e.type === tmp+"isCreator" && e.value !== "false")),false,false) } */}
@@ -2908,8 +2945,9 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             { this.getResultProp(bdo+"placeLocatedIn",allProps,false) }
             {/* { this.getResultProp(bdo+"placeType",allProps) } */}
 
-            { this.getResultProp(bdo+"publisherName",allProps,false,false) }
-            { this.getResultProp(bdo+"publisherLocation",allProps,false,false) }
+            {/* { this.getResultProp(bdo+"publisherName",allProps,false,false) }
+            { this.getResultProp(bdo+"publisherLocation",allProps,false,false) } */}
+            { this.getPublisher(allProps) }
 
 
             {/* TODO fix facet count after preview instance */}

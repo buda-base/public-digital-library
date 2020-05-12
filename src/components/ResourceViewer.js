@@ -2078,6 +2078,8 @@ class ResourceViewer extends Component<Props,State>
       
       console.log("hover?",e,ID,prop)
 
+      if(!e) return;
+
       let hasTT = e && e.allSameAs && e.allSameAs.length
 
       let info = [], nb = 0;

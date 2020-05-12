@@ -519,6 +519,24 @@ a.result + #matches .result-content #icon > :not(.thumb) img { width:40px; }
 
 .result-box { width:calc(100% - 75px);display:flex; justify-content: flex-end; position:absolute; bottom:10px;}
 
+
+#matches .match.publisher > span > span,
+#matches .match.publisher + .match > span > span { text-transform: capitalize; display: inline-block;}
+
+#matches .match.publisher { margin-bottom:0; }
+#matches .match.publisher + .match { margin-top:-1px; }
+#matches .match.publisher + .match > span > span:first-child { visibility:hidden;}
+
+#matches .match.publisher > span > span:first-child,
+#matches .match.publisher + .match > span > span:first-child { padding-right:3px;}
+
+#matches .match.publisher > span > span:last-child,
+#matches .match.publisher + .match > span > span:last-child { width:45px;}
+
+
+#matches .match.publisher > span > span:last-child::after,
+#matches .match.publisher + .match > span > span:last-child::after {  content:':';}
+
 #matches .match .assets { margin:0 4px; }
 #matches .match .assets img,
 #matches .match .assets svg { height:16px; vertical-align:-4px; width:auto !important; display:inline-block;margin:0 4px; }
