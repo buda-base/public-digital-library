@@ -436,6 +436,8 @@ a.result + #matches .result-content::before { left:110px; width:calc(100% - 110p
 
 .result-content #num-box:empty::before { content:'1'; }
 
+.result-content #num-box svg { position:absolute; top:60px;}
+
 .result-content #num-box { width:20px;height:20px;border: 2px solid #152631; font-size:9px;color:black;font-weight:700;line-height:normal;
    display:inline-flex;align-items: center;justify-content: center; box-sizing: border-box; vertical-align: top; line-height:10px; cursor:pointer;
    margin-right:5px;
@@ -501,6 +503,8 @@ a.result + #matches .result-content #icon > :not(.thumb) img { width:40px; }
 .samePop, [role=tooltip] { z-index:10000 !important;}
 
 #results > li + .result-content { scroll-margin:430px; }
+
+.result-content #permalink { position: absolute;  right: 15px;  top: calc(50% - 16px); cursor:pointer; }
 
 .result-content { position:relative;  scroll-margin:80px; margin:0 0px; padding: 35px 25px; min-height:70px;} 
 .result-content+.result-content::before { content:" ";width:calc(100% - 80px - 50px);display:block;position:absolute;

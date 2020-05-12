@@ -59,6 +59,7 @@ import store from "../index"
 import FormGroup from '@material-ui/core/FormGroup';
 import Popover from '@material-ui/core/Popover';
 import $ from 'jquery' ;
+import {CopyToClipboard} from 'react-copy-to-clipboard' ;
 
 import {I18n, Translate, Localize } from "react-redux-i18n" ;
 
@@ -2931,6 +2932,16 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
       this._refs[n] = React.createRef();
 
+      if(prettId.includes("bdr:")) retList.push( <CopyToClipboard text={"http://purl.bdrc.io/resource/"+prettId.replace(/^bdr:/,"")} onCopy={(e) =>
+                //alert("Resource url copied to clipboard\nCTRL+V to paste")
+                prompt("Resource url has been copied to clipboard.\nCTRL+V to paste",fullUri(prettId))
+          }>
+
+          <a id="permalink" style={{marginLeft:"0px"}} title="Permalink">
+             <img src="/icons/PLINK.svg"/>
+          </a>
+       </CopyToClipboard> )
+
       retList = <div {... (!isInstance?{id:"result-"+n}:{})} ref={this._refs[n]} className={"result-content " + status + " " + enType + (hasThumb.length?" wThumb":"")}>{retList}</div>
 
 
@@ -3223,7 +3234,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          let findFirst = true ;
 
          let absi = -1
-         let lastN
+         let lastN, nMax
          
          let h5
 
@@ -3577,13 +3588,29 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   //if(n != 0 && willBreak) break;
                   //else willBreak = false ;
 
+                  if(!this.props.auth.isAuthenticated())
+                  {
+                     let allProps = sublist[o], status = allProps.filter(k => k.type === adm+"status" || k.type === tmp+"status")
+                     if(status && status.length) status = status[0].value
+                     else status = null
+
+                     if(status && !status.match(/Released/)) dontShow = true
+                     else dontShow = false
+                  }
+
+
                   n ++;
                   end = n ;
                   if(!willBreak && !dontShow) { 
                      lastN = cpt ;
+                     nMax = n
                      //console.log("lastN",lastN)
                      message.push(this.makeResult(id,n,t,lit,lang,tip,Tag,null,r.match,k,sublist[o],r.lit.value))
                   }
+                  else {
+                     n --
+                  }
+
                   cpt ++;
                   let isCollapsed = ( canCollapse && !(this.state.collapse[categ] || this.state.collapse[categ] == undefined))                  
                   if(!isCollapsed || n <= 3) m++ ;                  
@@ -3645,6 +3672,9 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          //console.log("end pagin",pagin,paginate)
          if(pagin) {
             
+            // TODO also use status in counts
+
+            pagin.nMax = nMax
 
             if(pagin && pagin.bookmarks && pagin.bookmarks[categ] && pagin.bookmarks[categ].nb === undefined) { 
                pagin.bookmarks[categ] = { ...pagin.bookmarks[categ], nb:Object.keys(sublist).length - pagin.bookmarks[categ].i }
@@ -4774,7 +4804,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   <div id="pagine">
                      <div>
                            { pageLinks && <span>page { pageLinks }</span>}
-                           <span id="nb">{this.state.results&&this.state.results[this.state.id]?this.state.results[this.state.id].resLength:"--"} Results</span>
+                           <span id="nb">{this.state.paginate && this.state.paginate.nMax ? this.state.paginate.nMax:(this.state.results&&this.state.results[this.state.id]?this.state.results[this.state.id].resLength:"--")} Results</span>
                      </div>
                   </div>
                </div>
