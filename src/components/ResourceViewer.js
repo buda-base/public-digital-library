@@ -1006,8 +1006,17 @@ class ResourceViewer extends Component<Props,State>
    {
       console.log("mount!!")
 
+      let s
       let get = qs.parse(this.props.history.location.search)
-      if(get.tabs && get.tabs.length) this.setState(ResourceViewer.setTitleFromTabs(this.props,{...this.state, tabs:get.tabs.split(",")}))
+      if(get.tabs && get.tabs.length) {         
+         s = ResourceViewer.setTitleFromTabs(this.props,{...this.state, tabs:get.tabs.split(",")})
+      }
+      if(get.s) {
+         if(!s) s = { ...this.state } 
+         s.fromSearch = get.s
+      }
+
+      if(s) this.setState(s);
 
       this.scrollToHashID(this.props.history)
    }
@@ -2076,7 +2085,7 @@ class ResourceViewer extends Component<Props,State>
    {
       let ID = "ID-"+prop+"-"+(e&&e.value?e.value:e)
       
-      console.log("hover?",e,ID,prop)
+      //console.log("hover?",e,ID,prop)
 
       if(!e) return;
 
@@ -2114,7 +2123,7 @@ class ResourceViewer extends Component<Props,State>
          else {
             //if(this.props.assocResources) data = this.props.assocResources[e.value]
          }
-         console.log("data",lang,data,other)                  
+         //console.log("data",lang,data,other)                  
       }
 
       return (
@@ -4889,6 +4898,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          return (
          [<div class={isMirador?"H100vh OF0":""}>
             <div className={"resource "+getEntiType(this.props.IRI).toLowerCase()}>               
+               {this.state.fromSearch && <div class="ariane"><Link to={"/search?"+decodeURIComponent(this.state.fromSearch)}><img src="/icons/FILARIANE.svg" />Back To Search</Link></div> }
                <div class="index">                  
                   {/* { this.renderBrowseAssoRes() } */}
                   {/* { this.renderPdfLink(pdfLink,monoVol,fairUse) } */}

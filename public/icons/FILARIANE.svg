@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="15.099449"
+   height="10.923263"
+   viewBox="0 0 15.099449 10.923263"
+   version="1.1"
+   id="svg10"
+   sodipodi:docname="FILARIANE.svg"
+   inkscape:version="0.92.4 (5da689c313, 2019-01-14)">
+  <metadata
+     id="metadata14">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="818"
+     inkscape:window-height="480"
+     id="namedview12"
+     showgrid="false"
+     inkscape:zoom="4.72"
+     inkscape:cx="9.2494488"
+     inkscape:cy="5.6750958"
+     inkscape:window-x="1"
+     inkscape:window-y="1"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="svg10" />
+  <!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->
+  <title
+     id="title2">FILARIANE</title>
+  <desc
+     id="desc4">Created with Sketch.</desc>
+  <defs
+     id="defs6" />
+  <g
+     id="FILARIANE"
+     style="fill:none;fill-rule:evenodd;stroke:none;stroke-width:1"
+     transform="translate(-17.750551,-19.751833)">
+    <path
+       d="m 28.776509,22.082934 h 3.475901 c 0.191175,0 0.34759,-0.156416 0.34759,-0.347591 0,-0.191174 -0.156415,-0.34759 -0.34759,-0.34759 h -3.475901 c -1.515492,0 -2.860666,0.879403 -3.475901,2.231529 -0.61871,-1.352126 -1.963884,-2.231529 -3.4759,-2.231529 h -2.638209 l 0.795981,-0.795981 c 0.13556,-0.13556 0.13556,-0.354542 0,-0.490102 -0.13556,-0.13556 -0.354542,-0.13556 -0.490102,0 l -1.39036,1.39036 c -0.03128,0.03128 -0.05909,0.06952 -0.07647,0.114705 -0.01043,0.02433 -0.0139,0.04171 -0.0139,0.04866 l -0.007,0.03823 c -0.01043,0.06604 -0.0035,0.125132 0.02086,0.180747 0.01738,0.04171 0.04171,0.07995 0.07647,0.111228 l 1.39036,1.390361 c 0.132084,0.132084 0.361494,0.132084 0.490102,0 0.06604,-0.06952 0.104277,-0.156416 0.104277,-0.250265 0,-0.09385 -0.03476,-0.180747 -0.100801,-0.246789 l -0.799457,-0.795981 h 2.638209 c 1.724046,0 3.12831,1.404264 3.12831,3.12831 0,1.724047 -1.404264,3.128311 -3.12831,3.128311 h -2.638209 l 0.795981,-0.795981 c 0.06604,-0.06604 0.104277,-0.15294 0.104277,-0.246789 0,-0.09385 -0.03476,-0.180747 -0.100801,-0.246789 -0.132084,-0.132084 -0.361494,-0.132084 -0.490102,0 l -1.39036,1.390708 c -0.04171,0.04136 -0.06952,0.0935 -0.0869,0.159544 l -0.007,0.03824 c -0.01043,0.05214 -0.01043,0.100801 0.0035,0.142512 v 0.04519 l 0.03128,0.03128 c 0.0139,0.02781 0.03476,0.05214 0.05561,0.07647 l 1.39036,1.390361 c 0.06604,0.06604 0.15294,0.100801 0.246789,0.100801 0.09385,0 0.180747,-0.03476 0.246789,-0.100801 0.13556,-0.135561 0.13556,-0.354542 0,-0.490102 l -0.799457,-0.799458 h 2.638209 c 1.515492,0 2.85719,-0.879403 3.4759,-2.231528 0.615235,1.352125 1.960409,2.231528 3.475901,2.231528 h 3.475901 c 0.191175,0 0.34759,-0.156415 0.34759,-0.34759 0,-0.191174 -0.156415,-0.34759 -0.34759,-0.34759 h -3.475901 c -1.724047,0 -3.12831,-1.404264 -3.12831,-3.128311 0,-1.724046 1.400788,-3.12831 3.12831,-3.12831"
+       id="Fill-1"
+       inkscape:connector-curvature="0"
+       style="fill:#000000;stroke:#152631;stroke-width:0.5" />
+  </g>
+</svg>

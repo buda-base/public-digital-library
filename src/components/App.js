@@ -2401,8 +2401,9 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             viewUrl = allProps.filter(a => a.type === bdo+"instanceHasReproduction")
             if(viewUrl.length) viewUrl = shortUri(viewUrl[0].value)
             else viewUrl = null
-            if(viewUrl && viewUrl.startsWith("bdr:")) viewUrl = "/show/" + viewUrl + "#open-viewer"
+            if(viewUrl && viewUrl.startsWith("bdr:")) viewUrl = "/show/" + viewUrl + "?s="+ encodeURIComponent(window.location.href.replace(/^https?:[/][/][^?]+[?]?/gi,"").replace(/(&n=[^&]*)/g,"")+"&n="+n)+"#open-viewer"
             else if(viewUrl) viewUrl = fullUri(viewUrl)
+
 
             let access = allProps.filter(a => a.type === tmp+"hasReproAccess")
             if(access.length) access = access[0].value            
@@ -2489,7 +2490,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             directSameAs = true
          }
          else if(prettId.match(/^([^:])+:/))
-            resUrl = "/show/"+prettId+bestM
+            resUrl = "/show/"+prettId+bestM+(!bestM?"?":"&")+"s="+ encodeURIComponent(window.location.href.replace(/^https?:[/][/][^?]+[?]?/gi,"").replace(/(&n=[^&]*)/g,"")+"&n="+n)
             //retList.push( <Link key={n} to={"/show/"+prettId+bestM} className="result">{ret}</Link> )
          else
             resUrl = (url?url.replace(/^https?:/,""):id.replace(/^https?:/,""))

@@ -741,8 +741,13 @@ h4:not(:hover) > .lang
 
 /* -+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ resource */
 
+
 .resource > .index { width:15%; padding-top:10px; position:fixed; }
 .resource > :not(.index) { width:85%; padding-left:15%;  }
+
+.resource > .ariane { position:absolute; top:105px; color: #343434; left:0; margin-left:140px;padding-left:12.125%; }
+.resource > .ariane img { display:inline-block; margin-right:5px; vertical-align: -1px;}
+.resource > .ariane a { text-decoration: none; color: #343434; font-weight:700; font-size:13px;}
 
 .resource > .index .title { display:block; }
 
@@ -2191,10 +2196,11 @@ body {overflow-x:hidden; }
 }
 .searchWidget.datatype.corporation .img { width:45px; margin-left:-17px; margin-right:7px;}
 
+.searchWidget [lang="sa-x-iast"] { word-break: break-all; }
 
-.widget label { text-transform:capitalize;  }
+.widget label { text-transform:capitalize; /*word-break: break-all;*/ }
 .searchWidget > label > span,
-.dataWidget label > span { font-size:12px; /*word-break: break-all;*/ }
+.dataWidget label > span { font-size:12px;  }
 .searchWidget > label > span svg { width:16px; height:16px; } 
 .searchWidget.datatype > label > span svg { width:18px; height:18px; } 
 .searchWidget > label > span svg.excl { width:12px;height:12px; vertical-align:-4px; }
@@ -2392,6 +2398,8 @@ body {
 
 @media (max-width:1440px)
 {
+   .resource > .ariane { margin-left:0; padding-left:16.7%; }
+
    #root > div { overflow:hidden ; }
    
    /*
