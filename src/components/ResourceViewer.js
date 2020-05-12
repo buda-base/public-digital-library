@@ -198,6 +198,7 @@ const providers = {
    "cbcp":"CBC@",
    "cbct":"CBC@",
    "cbeta":"CBETA",
+   "cudl":"CUDL",
    "dila":"DILA Authority Database",
    "eap":"British Library (EAP)",
    "eftr":"84000",
@@ -220,6 +221,7 @@ const provImg = {
    //"cbct": false,
    //"cbcp": false,
    "cbeta": "/CBETALogo.png", 
+   "cudl": "/CUDL.svg", 
    "dila": "/DILA-favicon.ico", 
    "eap":  "/BL.gif",
    "eftr": "/84000.svg",
@@ -1731,6 +1733,7 @@ class ResourceViewer extends Component<Props,State>
          else if(provLab === "BnF") sameAsPrefix += "bnf provider hasIcon "
          else if(provLab === "Internet Archives") sameAsPrefix += "ia provider hasIcon "
          else if(provLab === "EFT") sameAsPrefix += "eftr provider hasIcon "
+         else if(provLab === "CUDL") sameAsPrefix += "cudl provider hasIcon "
          //else if(provLab === "rKTs") sameAsPrefix += "rkts provider hasIcon "
       }      
 
@@ -3826,10 +3829,12 @@ perma_menu(pdfLink,monoVol,fairUse,other)
       if(prov && this.props.dictionary) prov = this.props.dictionary[prov]
       if(prov) prov = prov[skos+"prefLabel"]
       if(prov && prov.length) prov = prov[0].value
+      if(prov) prov = prov.replace(/(^\[ *)|( *\]$)/g,"") // CUDL
       //else prov = ""
 
       let orig = this.getResourceElem(adm+"originalRecord")
       if(orig && orig.length) orig = orig[0].value
+   
       //else orig = ""
 
       console.log("prov,orig",prov,orig)
@@ -4544,6 +4549,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          if(prov && prov[skos+"prefLabel"]) prov = prov[skos+"prefLabel"]
          else if(prov && prov[rdfs+"label"]) prov = prov[rdfs+"label"]
          if(prov && prov.length) prov = prov[0].value
+         if(prov) prov = prov.replace(/(^\[ *)|( *\]$)/g,"") // CUDL
          //else prov = ""
 
          let orig = this.getResourceElem(adm+"originalRecord")
