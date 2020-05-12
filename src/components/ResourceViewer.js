@@ -4895,11 +4895,14 @@ perma_menu(pdfLink,monoVol,fairUse,other)
             </div>
             { this.renderEtextNav() }
          </div>)
-      else 
+      else {
+
+         let searchUrl = decodeURIComponent(this.state.fromSearch)
+
          return (
          [<div class={isMirador?"H100vh OF0":""}>
             <div className={"resource "+getEntiType(this.props.IRI).toLowerCase()}>               
-               {this.state.fromSearch && <div class="ariane"><Link to={"/search?"+decodeURIComponent(this.state.fromSearch)}><img src="/icons/FILARIANE.svg" />Back To Search</Link></div> }
+               {this.state.fromSearch && <div class="ariane"><Link to={"/search?"+searchUrl}><img src="/icons/FILARIANE.svg" /><span>Search results for {searchUrl.replace(/.*q=([^&]+).*/,"$1")}</span></Link></div> }
                <div class="index">                  
                   {/* { this.renderBrowseAssoRes() } */}
                   {/* { this.renderPdfLink(pdfLink,monoVol,fairUse) } */}
@@ -4945,6 +4948,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          <LanguageSidePaneContainer />]
 
       ) ;
+   }
 
 
    }
