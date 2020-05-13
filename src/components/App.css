@@ -421,6 +421,9 @@ a.result + #matches .result-content::before { left:110px; width:calc(100% - 110p
 #matches > .match > span:not(.lang):not(.instance-link) { display:inline ; line-height:20px; position:relative; font-size:12px;}
 .result .contenu h3 .lang,
 #matches span .lang { /*position:absolute;top:auto;bottom:-5px;*/display:none;line-height:0;}
+
+.result .contenu h3 .link-out { display:inline-block; margin-left:5px; vertical-align: -1px;}
+
 /*
 .result .contenu h3:hover .lang,
 #matches span:hover > .lang { display:inline;}

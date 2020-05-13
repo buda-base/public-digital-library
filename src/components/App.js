@@ -2421,45 +2421,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
       }
 
 
-      let ret = ([            
-            <div key={t+"_"+n+"__"}  className={"contenu" }>
-                  <ListItem style={{paddingLeft:"0"}}>
-                     {/* <ListItemText style={{height:"auto",flexGrow:10,flexShrink:10}}
-                        primary={ */}
-                           <div>
-                              <span class="T">{T}{langs}</span>
-                              <h3 key="lit">
-                                 {lit}
-                                 { lang && <Tooltip key={"tip"} placement="bottom-end" title={
-                                          <div style={{margin:"10px"}}>
-                                             <Translate value={languages[lang]?languages[lang].replace(/search/,"tip"):lang}/>
-                                          </div>
-                                       }>
-                                          <span className="lang">&nbsp;{lang}</span>
-                                       </Tooltip> }
-                              </h3>
-                        {/*   </div>
-                         }
-                        //secondary={id}
-                        secondary={
-                           <div> */}
-                              {/* <p key="id">
-                                 {prettId}
-                                 { Tag && <Tooltip key={"tip"} placement="bottom-start" title={
-                                          <div style={{margin:"10px"}}>
-                                             {tip}
-                                          </div>
-                                       }>
-                                          <Tag style={{height:"18px",verticalAlign:"-4px",marginLeft:"5px"}}/>
-                                       </Tooltip>}
-                              </p> */}
-                           </div>
-                        {/* }
-                     ></ListItemText> */}
-                     {/* { Tag && <ListItemIcon><Tag/></ListItemIcon> } */}
-                  </ListItem>
-            </div>
-         ])
+    
 
 
          let bestM = allProps.filter(e => e.type === tmp+"bestMatch")
@@ -2502,6 +2464,47 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             else return <a href={resUrl} target="_blank">{div}</a>
 
          }
+
+           let ret = ([            
+            <div key={t+"_"+n+"__"}  className={"contenu" }>
+                  <ListItem style={{paddingLeft:"0"}}>
+                     {/* <ListItemText style={{height:"auto",flexGrow:10,flexShrink:10}}
+                        primary={ */}
+                           <div>
+                              <span class="T">{T}{langs}</span>
+                              <h3 key="lit">
+                                 {lit}
+                                 { (resUrl && !resUrl.includes("/show/bdr:")) && <img class="link-out" src="/icons/link-out_fit.svg"/>}
+                                 { lang && <Tooltip key={"tip"} placement="bottom-end" title={
+                                          <div style={{margin:"10px"}}>
+                                             <Translate value={languages[lang]?languages[lang].replace(/search/,"tip"):lang}/>
+                                          </div>
+                                       }>
+                                          <span className="lang">&nbsp;{lang}</span>
+                                       </Tooltip> }
+                              </h3>
+                        {/*   </div>
+                         }
+                        //secondary={id}
+                        secondary={
+                           <div> */}
+                              {/* <p key="id">
+                                 {prettId}
+                                 { Tag && <Tooltip key={"tip"} placement="bottom-start" title={
+                                          <div style={{margin:"10px"}}>
+                                             {tip}
+                                          </div>
+                                       }>
+                                          <Tag style={{height:"18px",verticalAlign:"-4px",marginLeft:"5px"}}/>
+                                       </Tooltip>}
+                              </p> */}
+                           </div>
+                        {/* }
+                     ></ListItemText> */}
+                     {/* { Tag && <ListItemIcon><Tag/></ListItemIcon> } */}
+                  </ListItem>
+            </div>
+         ])
 
 
          let retList = [ 
