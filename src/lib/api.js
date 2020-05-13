@@ -60,6 +60,7 @@ export function getEntiType(t:string):string {
    let uri = shortUri(t)
    let p = uri.replace(/^([^:]+):.*$/,"$1")
    if(p === "src" && t.includes("sources")) return "Instance" ;
+   else if(p === "src" && t.includes("persons")) return "Person" ;
    else if(p === "ola") return "Person" ;
    else if(p == "mbbt" ) return "Work" ; // [TODO]
    let v = uri.replace(/^([^:]+:)?([ACEILGPQMRTWOVU][AERTLW]?).*$/,"$2")
