@@ -2237,10 +2237,11 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      let bef = id[p].filter(e => e.type === bdo+"notBefore")
                      let aft = id[p].filter(e => e.type === bdo+"notAfter")
                      if(bef.length && aft.length) val = <span>{bef[0].value+"~" +aft[0].value}</span>
+                     else val = null
                   }
 
                   if(p.includes("Death") && !vals.length) { /*vals.push(<span>?</span>);*/ vals.push(<span>&nbsp;&ndash;&nbsp;</span>) }
-                  vals.push(val)
+                  if(val) vals.push(val)
                   if(p.includes("Birth")) vals.push(<span>&nbsp;&ndash;&nbsp;</span>)
 
                   /*
@@ -2253,7 +2254,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                }
             }
 
-            ret.push(<div class="match">{vals}</div>)
+            if(vals.length > 1) ret.push(<div class="match">{vals}</div>)
             
             return ret
          }
