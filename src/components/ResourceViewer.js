@@ -767,7 +767,16 @@ class ResourceViewer extends Component<Props,State>
          this.setState({...this.state, openUV:false, openMirador:false, openDiva:false}); 
          if(window.MiradorUseEtext) delete window.MiradorUseEtext ;
          delete window.mirador         
-         if(this.state.fromSearch) this.props.history.push({pathname:"/search",search:decodeURIComponent(this.state.fromSearch)})
+
+
+         if(this.state.fromSearch) {
+            let backTo = this.state.fromSearch
+            let withW = backTo.replace(/^.*[?&](w=[^&]+)&?.*$/,"$1")
+            console.log("fromS",this.state.fromSearch,backTo,withW)
+            if(backTo === withW) backTo = decodeURIComponent(backTo)
+            else backTo = decodeURIComponent(backTo.replace(new RegExp("(([?])|&)"+withW),"$2"))+"&"+withW
+            this.props.history.push({pathname:"/search",search:backTo})
+         }
       }
    }
 
@@ -4911,6 +4920,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          </div>)
       else {
 
+         // TODO fix case when back to instances of work
          let searchUrl = decodeURIComponent(this.state.fromSearch)
 
          return (
