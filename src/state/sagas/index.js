@@ -1272,7 +1272,9 @@ function mergeSameAs(result,withSameAs,init = true,rootRes = result, force = fal
    if(keys) for(let i in keys) {
       let k = keys[i]
       let r = withSameAs[k]
+      
       //console.log("k r",k,r)
+
       if(force && rootRes[r.t] && !rootRes[r.t][k]) {
          delete result[r.t][k]
       }
@@ -1285,7 +1287,9 @@ function mergeSameAs(result,withSameAs,init = true,rootRes = result, force = fal
          }
          let hasSameK 
          if(result[r.t] && result[r.t][k] && (result[r.t][s] || isRid)) {
+            
             //console.log("same?",isRid,k,r.t,s,result[r.t][k],result[r.t][s])
+
             if(!isRid) { 
                hasSameK = false
                
@@ -1303,8 +1307,13 @@ function mergeSameAs(result,withSameAs,init = true,rootRes = result, force = fal
                      }
                   }
                   let v_ = { ...v }
-                  if(v.type && v.type === skos+"prefLabel") v_.type = k
-                  if(v.type && v.type === s) v_.type = skos+"prefLabel"
+
+                  //console.log("v.type",v)
+
+                  /* // deprecated
+                  //if(v.type && v.type === skos+"prefLabel") v_.type = k 
+                  //if(v.type && v.type === s) v_.type = skos+"prefLabel"
+                  */
                   if(!found) result[r.t][s].push(v_)
                }
                if(noK && !hasSameK && init) result[r.t][s].push({type:owl+"sameAs",value:k})
