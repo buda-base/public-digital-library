@@ -1410,7 +1410,8 @@ function sortResultsByRelevance(results,reverse) {
          return ({k, n, p})
       },{})
       keys = _.orderBy(keys,['n','p'],[(reverse?'asc':'desc'), (reverse?'asc':'desc')])
-      //console.log("sortK",keys)
+      
+      //console.log("sortK",JSON.stringify(keys,null,3))
 
       let sortRes = {}
       for(let k of keys) sortRes[k.k] = results[k.k]
@@ -1419,6 +1420,7 @@ function sortResultsByRelevance(results,reverse) {
 
       return sortRes
    }
+
    return results
 }
 
@@ -1520,7 +1522,7 @@ function sortResultsByNbChunks(results,reverse) {
 
 
 
-function rewriteAuxMain(result,keyword,datatype,sortBy)
+function rewriteAuxMain(result,keyword,datatype,sortBy,language)
 {
    let asset = [_tmp+"hasOpen", _tmp+"hasEtext", _tmp+"hasImage"]
    let state = store.getState()
@@ -1579,6 +1581,11 @@ function rewriteAuxMain(result,keyword,datatype,sortBy)
         
          console.log("dWa",dataWithAsset,sortBy,reverse)
 
+         if(language !== undefined) { 
+            dataWithAsset = mergeSameAs({[t]:dataWithAsset},{},true,{},true,!language?keyword:null)
+            dataWithAsset = dataWithAsset[t]
+         }
+
          if(!sortBy || sortBy.startsWith("popularity")) return { ...acc, [t]: sortResultsByPopularity(dataWithAsset,reverse) }
          else if(sortBy.startsWith("year of")) return { ...acc, [t]: sortResultsByYear(dataWithAsset,reverse) }
          else if(sortBy.startsWith("closest matches")) return { ...acc, [t]: sortResultsByRelevance(dataWithAsset,reverse) }
@@ -1628,17 +1635,21 @@ async function startSearch(keyword,language,datatype,sourcetype,dontGetDT) {
       if(result) {
          console.log("res",result)
          if(result && (datatype && datatype.indexOf("Any") === -1) ) 
-            result = rewriteAuxMain(result,keyword,datatype)
+            result = rewriteAuxMain(result,keyword,datatype,null,language)
          else 
             result = Object.keys(result).reduce((acc,e)=>({ ...acc, [e.replace(/^.*[/](Etext)?([^/]+)$/,"$2s").toLowerCase()] : result[e] }),{})
       }
-         
+
+      /*  //deprecated
       let rootRes
       if(datatype) rootRes = store.getState().data.searches[keyword+"@"+language]
       if(rootRes) rootRes = rootRes.results.bindings  
       result = mergeSameAs(result,{},true,rootRes,true,!language?keyword:null)
 
-      console.log("newRes1",result)
+      console.log("newRes1",Object.keys(result[datatype[0].toLowerCase()+"s"],null,3))
+      */
+
+
 
 
       if(result.metadata && result.metadata[bdo+"Etext"] == 0)

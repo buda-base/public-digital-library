@@ -2223,7 +2223,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          }
          else if(useAux && findProp) {
             
-            console.log("uA2",id,useAux,findProp)
+            //console.log("uA2",id,useAux,findProp)
             
             let vals = []
 
@@ -3303,7 +3303,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          n = 0
          let begin = pagin.pages[pagin.index]
 
-         //console.log("begin",begin,JSON.stringify(counts,null,3))
+         //console.log("begin",begin,JSON.stringify(Object.keys(sublist),null,3))
 
          let categ = "Other" ;
          let end = n
