@@ -1483,14 +1483,16 @@ class ResourceViewer extends Component<Props,State>
       }
       else 
       */
-      if(this.props.dictionary && this.props.dictionary[prop] && this.props.dictionary[prop][rdfs+"label"])
+      if(this.props.dictionary && this.props.dictionary[prop])
       {
          /*
          let ret = this.props.ontology[prop][rdfs+"label"].filter((e) => (e.lang == "en"))
          if(ret.length == 0) ret = this.props.ontology[prop][rdfs+"label"].filter((e) => (e.lang == this.props.prefLang))
          if(ret.length == 0) ret = this.props.ontology[prop][rdfs+"label"]
          */
-         let ret = getLangLabel(this, prop, this.props.dictionary[prop][rdfs+"label"],useUIlang)
+         let lab = this.props.dictionary[prop][rdfs+"label"]
+         if(!lab) lab = this.props.dictionary[prop][skos+"prefLabel"]
+         let ret = getLangLabel(this, prop, lab, useUIlang)
          if(ret && ret.value && ret.value != "")
             return <span lang={ret.lang}>{ret.value}</span>
 
@@ -2093,6 +2095,8 @@ class ResourceViewer extends Component<Props,State>
 
       if(!e) return;
 
+      if(e.noteData && e.noteData[bdo+"noteText"]) e = e.noteData[bdo+"noteText"]
+
       let hasTT = e && e.allSameAs && e.allSameAs.length
 
       let info = [], nb = 0;
@@ -2110,7 +2114,7 @@ class ResourceViewer extends Component<Props,State>
 
       let fromSame = (e.allSameAs && e.allSameAs.length > 0)
 
-      let lang, data, other = [] ;
+      let lang, data, other = [], era ;
       if(e.type === "literal") { 
          lang = e.lang
          if(!lang) lang = e["xml:lang"]
@@ -2125,10 +2129,12 @@ class ResourceViewer extends Component<Props,State>
             if(!lang) lang = data["@language"]
          }
          else {
-            //if(this.props.assocResources) data = this.props.assocResources[e.value]
+            if(this.props.assocResources) data = this.props.assocResources[e.value]
+            if(data && data.filter(d => d.fromKey === bdo+"yearInEra")) era = data.filter(d => d.fromKey === bdo+"era")
          }
-         //console.log("data",lang,data,other)                  
       }
+
+      //console.log("data",lang,data,other)                  
 
       return (
          <div class="hover-menu">
@@ -2193,7 +2199,9 @@ class ResourceViewer extends Component<Props,State>
 
                               <TabPanel>
                               { lang && <div><span class='first'>Language/Script</span><span>:&nbsp;</span><span><Translate value={languages[lang]?languages[lang].replace(/search/,"tip"):lang}/></span></div> }
-                              { other.length && <div><span class='first'>In Other Languages</span><span>:&nbsp;</span><div>{other.map(o => <span class="label">{o.value}{this.tooltip(o.lang)}</span>)}</div></div> }
+                              { (other.length > 0) && <div><span class='first'>In Other Languages</span><span>:&nbsp;</span><div>{other.map(o => <span class="label">{o.value}{this.tooltip(o.lang)}</span>)}</div></div> }
+                              { (e.datatype && e.datatype.endsWith("#gYear")) && <div><span class='first'>In Calendar</span><span>:&nbsp;</span><span>Gregorian Calendar</span></div>}
+                              { (era && era.length > 0) &&  <div><span class='first'>{this.proplink(bdo+"yearInEra")}</span><span>:&nbsp;</span><span>{this.proplink(era[0].value)}</span></div>  }
                               </TabPanel>
                               <TabPanel selected>
                               {fromSame && e.allSameAs.map(f => { 
@@ -2699,7 +2707,7 @@ class ResourceViewer extends Component<Props,State>
                               </div>
                         ]
 
-                        sav.push(this.hoverMenu(prop,{value:"note-i-"+nbN},<div class="sub">{[...sav]}</div>))
+                        sav.push(this.hoverMenu(prop,{value:"note-i-"+nbN,noteData},<div class="sub">{[...sav]}</div>))
 
                         note.push(
                            <div class="sub">
@@ -2725,7 +2733,7 @@ class ResourceViewer extends Component<Props,State>
                            }/>
                         ]
                         
-                        sav.push(this.hoverMenu(prop,{value:"note-i-"+nbN},<div class="sub">{[...sav]}</div>))
+                        sav.push(this.hoverMenu(prop,{value:"note-i-"+nbN,noteData},<div class="sub">{[...sav]}</div>))
 
                         note.push(
                            <div class="sub">
@@ -3290,13 +3298,13 @@ class ResourceViewer extends Component<Props,State>
       if(txt) console.warn("use of txt in proplink",k,txt)
 
       let tooltip
-      if(this.props.ontology && this.props.ontology[k]) {
-         if(this.props.ontology[k][skos+"definition"]) 
-            tooltip = this.props.ontology[k][skos+"definition"]
-         else if(this.props.ontology[k][adm+"userTooltip"]) 
-            tooltip = this.props.ontology[k][adm+"userTooltip"]
-         else if(this.props.ontology[k][rdfs+"comment"]) 
-            tooltip = this.props.ontology[k][rdfs+"comment"].filter(comm => !comm.value.match(/^([Mm]igration|[Dd]eprecated)/))
+      if(this.props.dictionary && this.props.dictionary[k]) {
+         if(this.props.dictionary[k][skos+"definition"]) 
+            tooltip = this.props.dictionary[k][skos+"definition"]
+         else if(this.props.dictionary[k][adm+"userTooltip"]) 
+            tooltip = this.props.dictionary[k][adm+"userTooltip"]
+         else if(this.props.dictionary[k][rdfs+"comment"]) 
+            tooltip = this.props.dictionary[k][rdfs+"comment"].filter(comm => !comm.value.match(/^([Mm]igration|[Dd]eprecated)/))
       }
 
       if(k === bdo+'note') txt = "Notes" ;

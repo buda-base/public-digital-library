@@ -981,8 +981,14 @@ vertical-align:middle;}
 #popHoverM .react-tabs__tab-panel b { font-weight:700;}
 #popHoverM .react-tabs__tab-panel a img { margin-right:0;}
 
+#popHoverM .react-tabs__tab-panel span.first .propref span,
 #popHoverM .react-tabs__tab-panel span.first + span,
-#popHoverM .react-tabs__tab-panel span.first { font-weight:700; }
+#popHoverM .react-tabs__tab-panel span.first { font-weight:700; color:black;}
+
+#popHoverM .react-tabs__tab-panel span .propref,
+#popHoverM .react-tabs__tab-panel span .propref span { margin-right:0; text-transform: capitalize;  }
+#popHoverM .react-tabs__tab-panel span .propref:hover { border:none; }
+#popHoverM .react-tabs__tab-panel span .propref:hover span { text-decoration: underline;}
 
 #popHoverM .react-tabs__tab-panel span.first ~ div { display:inline-block; width:calc(100% - 120px - 30px); vertical-align: top; line-height:22px;
    padding-top:5px; 
