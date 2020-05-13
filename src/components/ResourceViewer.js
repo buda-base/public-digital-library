@@ -4921,12 +4921,27 @@ perma_menu(pdfLink,monoVol,fairUse,other)
       else {
 
          // TODO fix case when back to instances of work
-         let searchUrl = decodeURIComponent(this.state.fromSearch)
+         let searchUrl, searchTerm ;
+         if(this.state.fromSearch) {
+            let backTo = this.state.fromSearch
+            let withW = backTo.replace(/^.*[?&](w=[^&]+)&?.*$/,"$1")
+            console.log("fromS",this.state.fromSearch,backTo,withW)
+            if(backTo === withW) { 
+               backTo = decodeURIComponent(backTo)
+               searchUrl = backTo
+               searchTerm = searchUrl.replace(/.*q=([^&]+).*/,"$1")
+            }
+            else { 
+               backTo = decodeURIComponent(backTo.replace(new RegExp("(([?])|&)"+withW),"$2"))+"&"+withW
+               searchUrl = backTo
+               searchTerm = "instances of "+searchUrl.replace(/.*i=([^&]+).*/,"$1")
+            }
+         }
 
          return (
          [<div class={isMirador?"H100vh OF0":""}>
             <div className={"resource "+getEntiType(this.props.IRI).toLowerCase()}>               
-               {this.state.fromSearch && <div class="ariane"><Link to={"/search?"+searchUrl}><img src="/icons/FILARIANE.svg" /><span>Search results for {searchUrl.replace(/.*q=([^&]+).*/,"$1")}</span></Link></div> }
+               {searchUrl && <div class="ariane"><Link to={"/search?"+searchUrl}><img src="/icons/FILARIANE.svg" /><span>Search results for {searchTerm}</span></Link></div> }
                <div class="index">                  
                   {/* { this.renderBrowseAssoRes() } */}
                   {/* { this.renderPdfLink(pdfLink,monoVol,fairUse) } */}
