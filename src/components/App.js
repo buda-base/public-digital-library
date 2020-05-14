@@ -102,9 +102,12 @@ const wd    = "http://www.wikidata.org/entity/"
 const xsd   = "http://www.w3.org/2001/XMLSchema#" ;
 
 // experimental
-const src = "https://sakyaresearch.org/"
+const src   = "https://sakyaresearch.org/"
+const cbeta = "http://cbetaonline.dila.edu.tw/"
+const sat   = "http://21dzk.l.u-tokyo.ac.jp/SAT2018/"
 
-export const prefixesMap = { adm, bda, bdac, bdan, bdo, bdou, bdr, bdu, bf, cbcp, cbct, dila, eftr, foaf, oa, mbbt, owl, rdf, rdfs, rkts, skos, wd, ola, viaf, xsd, tmp, src }
+export const prefixesMap = { adm, bda, bdac, bdan, bdo, bdou, bdr, bdu, bf, cbcp, cbct, dila, eftr, foaf, oa, mbbt, owl, rdf, rdfs, rkts, skos, wd, ola, viaf, xsd, tmp, 
+   src, cbeta, sat }
 export const prefixes = Object.values(prefixesMap) ;
 export const sameAsMap = { wd:"WikiData", ol:"Open Library", ola:"Open Library", bdr:"BDRC", mbbt:"Marcus Bingenheimer", eftr:"84000" }
 
@@ -2548,13 +2551,13 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             },{}) 
             
             rmatch = rmatch.concat(sameAsRes.filter(p => p.type === owl+"sameAs")) // || p.type.match(/sameAsMBBT$/)))
-            sameAsRes = sameAsRes.filter(p => (p.type === owl+"sameAs" || p.type === adm+"canonicalHtml")) // || p.type.match(/sameAsMBBT$/))
+            sameAsRes = sameAsRes.filter(p => (p.type === owl+"sameAs" || p.type === rdfs+"seeAlso" || p.type === adm+"canonicalHtml")) // || p.type.match(/sameAsMBBT$/))
             //console.log("dico",dico)
          }
 
          if(sameAsRes.length) {
             
-            //console.log("sameAs",prettId,id,dico,rmatch,sameAsRes)
+            console.log("sameAs",prettId,id,dico,rmatch,sameAsRes)
          
             let menus = {}
             let sources = []
@@ -2585,7 +2588,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             }
             */
 
-            for(let res of sameAsRes.filter(r => r.type.match(/[#/]sameAs[^/]*$/))) {
+            for(let res of sameAsRes.filter(r => r.type === rdfs+"seeAlso" || r.type.match(/[#/]sameAs[^/]*$/))) {
                for(let src of Object.keys(providers)) {
                   if(src == "bdr") continue
                   if(res.value.match(new RegExp("(^"+src+":)|(^"+prefixesMap[src]+")"))) { 
@@ -2601,6 +2604,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   if(!hasRes[src]) hasRes[src] = [ prettId ]
                   else  hasRes[src].push(prettId)
             }
+
+            console.log("hasR",hasRes)
 
             for(let src of Object.keys(providers)) {
                if(src == "bdr") continue
