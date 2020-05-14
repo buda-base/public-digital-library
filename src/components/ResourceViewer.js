@@ -192,7 +192,7 @@ const xsd   = "http://www.w3.org/2001/XMLSchema#" ;
 
 //const prefixes = { adm, bdac, bdan, bda, bdo, bdr, foaf, oa, owl, rdf, rdfs, skos, xsd, tmp, dila }
 
-const providers = { 
+export const providers = { 
    "bdr":"BDRC", //"Buddhist Digital Resource Center",
    "bnf":"BNF (French National Library)",
    "cbcp":"CBC@",
@@ -215,7 +215,7 @@ const providers = {
 }
    
 
-const provImg = {
+export const provImg = {
    "bdr":  "/logo.svg", 
    "bnf":  "/BNF.svg",
    //"cbct": false,

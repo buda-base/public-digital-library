@@ -391,8 +391,12 @@ li + a.result { margin-top:-5px; }
 
 /* --------------------------------------------------------------------------------------------------------------------- results/matches */
 
-.external .result-box  { display:block; position:absolute;top:calc(35px + 20px + 0px);left:20px;width:20px;text-align:center;}
-.external .result-box img { width:100%;height:auto;}
+.external .result-box  { position:absolute;top:calc(35px + 20px + 0px); display: flex; flex-direction: column; justify-content: flex-start;
+   top: calc(35px + 20px + 0px); left: 15px; width: 40px; text-align: center; ;}
+.external .result-box img { width:20px;height:auto;margin-left:0}
+.result-box .sameAsLogo { line-height:18px;border-radius:4px; border-width:1px; }
+.external .result-box .sameAsLogo { border-radius:6px;border-width:2px;}
+.external .result-box .source-data { display:block; }
 
 .external ~ .result-box { display:none; }
 
@@ -513,6 +517,7 @@ a.result + #matches .result-content #icon > :not(.thumb) img { width:40px; }
 #results > li + .result-content { scroll-margin:430px; }
 
 .result-content #permalink { position: absolute;  right: 15px;  top: calc(50% - 16px); cursor:pointer; }
+.result-content #permalink.wInstance { top:100px; }
 
 .result-content { position:relative;  scroll-margin:80px; margin:0 0px; padding: 35px 25px; min-height:70px;} 
 .result-content+.result-content::before { content:" ";width:calc(100% - 80px - 50px);display:block;position:absolute;
@@ -1038,8 +1043,12 @@ vertical-align:middle;}
 #perma #same .provider .img { height:22px; display:inline-flex;align-items: center; padding:5px 5px;background-color:rgba(255,255,255,0.75); border-radius:4px;
    border:2px solid #4d4d4d; font-size:12px; font-weight:700; color:#4a4a4a;
 } 
+
+.result-box #cbct .sameAsLogo,
 #perma #same .provider.cbct .img { border-color:rgba(0,0,238,1); }
+.result-box #sat .sameAsLogo,
 #perma #same .provider.sat .img { border-color:green;}
+.result-box #src .sameAsLogo,
 #perma #same .provider.src .img { border-color:#be1e23; }
 
 #perma #same .provider:not(:first-child) { margin-left:10px;}

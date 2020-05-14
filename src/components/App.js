@@ -65,7 +65,7 @@ import {I18n, Translate, Localize } from "react-redux-i18n" ;
 
 import LanguageSidePaneContainer from '../containers/LanguageSidePaneContainer';
 import ResourceViewerContainer from '../containers/ResourceViewerContainer';
-import {getOntoLabel} from './ResourceViewer';
+import {getOntoLabel,provImg as img,providers} from './ResourceViewer';
 import {getEntiType} from '../lib/api';
 import {narrowWithString} from "../lib/langdetect"
 import {sortLangScriptLabels, extendedPresets} from '../lib/transliterators';
@@ -2559,6 +2559,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             let menus = {}
             let sources = []
             let hasRes = {}
+            /*
             let img = { 
                //"bdr":  "/logo.svg", 
                "dila": "/DILA-favicon.ico", 
@@ -2582,21 +2583,27 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                "cbcp": "CBC@",
                "cbct": "CBC@"
             }
+            */
 
-            for(let res of sameAsRes.filter(r => r.type.match(/[#/]sameAs[^/]*$/))) 
-               for(let src of Object.keys(img)) {
+            for(let res of sameAsRes.filter(r => r.type.match(/[#/]sameAs[^/]*$/))) {
+               for(let src of Object.keys(providers)) {
+                  if(src == "bdr") continue
                   if(res.value.match(new RegExp("(^"+src+":)|(^"+prefixesMap[src]+")"))) { 
                      if(!hasRes[src]) hasRes[src] = [ res.value ] //.replace(new RegExp(prefixesMap[src]),src+":")                  
                      else hasRes[src].push(res.value)
                   }  
                }
-
-            for(let src of Object.keys(img)) 
+            }
+            
+            for(let src of Object.keys(providers)) {
+               if(src == "bdr") continue
                if(!hasRes[src] && prettId.match(new RegExp("(^"+src+":)|(^"+prefixesMap[src]+")"))) 
                   if(!hasRes[src]) hasRes[src] = [ prettId ]
                   else  hasRes[src].push(prettId)
+            }
 
-            for(let src of Object.keys(img)) 
+            for(let src of Object.keys(providers)) {
+               if(src == "bdr") continue
                if(hasRes[src]) for(let h in hasRes[src]) {             
                   
                   let hres = hasRes[src][h]
@@ -2627,7 +2634,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   let prov = src.toUpperCase()
                   if(providers[src]) prov = providers[src]
 
-                  let image = <div class="sameAsLogo"><div>{prov}</div></div>
+                  let image = <div class="sameAsLogo"><div>{(!providers[src] || providers[src].indexOf(" ")!==-1?src:providers[src]).toUpperCase()}</div></div>
                   if(img[src]) image = <img src={img[src]}/>
 
                   if(h == 0) sources.push(
@@ -2661,6 +2668,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   }
 
                }
+            }
                      /*
                      <Tooltip placement="bottom-end" title={<div style={{margin:"10px"}}>Show data from {sameAsMap[src]?sameAsMap[src]:src.toUpperCase()}</div>}>
                         <Link to={"/show/"+hasRes[src]}><img src={img[src]}/>
@@ -2679,7 +2687,6 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             
          }
 
-         if(!resUrl.includes("/show/bdr:")) retList.push(<div class="external">{otherSrc}</div>)
 
          let lastP,prop = ""
 
@@ -3011,7 +3018,10 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
             </div> )
 
-      if(otherSrc.length) retList.push(otherSrc);
+      if(otherSrc.length) {
+         if(!resUrl.includes("/show/bdr:")) retList.push(<div class="external">{otherSrc}</div>)
+         else retList.push(otherSrc);
+      }
 
       this._refs[n] = React.createRef();
 
@@ -3020,7 +3030,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                 prompt("Resource url has been copied to clipboard.\nCTRL+V to paste",fullUri(prettId))
           }>
 
-          <a id="permalink" style={{marginLeft:"0px"}} title="Permalink">
+          <a id="permalink" {...this.state.collapse[id]?{class:"wInstance"}:{}} style={{marginLeft:"0px"}} title="Permalink">
              <img src="/icons/PLINK.svg"/>
           </a>
        </CopyToClipboard> )
