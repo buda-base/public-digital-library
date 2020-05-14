@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="209.39882mm"
+   height="195.03572mm"
+   viewBox="0 0 209.39882 195.03572"
+   version="1.1"
+   id="svg821"
+   inkscape:version="0.92.4 (5da689c313, 2019-01-14)"
+   sodipodi:docname="icon2.svg">
+  <defs
+     id="defs815" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.35"
+     inkscape:cx="17.997624"
+     inkscape:cy="509.45912"
+     inkscape:document-units="mm"
+     inkscape:current-layer="text1370"
+     showgrid="false"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0"
+     inkscape:window-width="1920"
+     inkscape:window-height="983"
+     inkscape:window-x="0"
+     inkscape:window-y="27"
+     inkscape:window-maximized="1" />
+  <metadata
+     id="metadata818">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Calque 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-0.75595242,0.08928571)">
+    <rect
+       style="opacity:1;fill:#be1e23;fill-opacity:1;fill-rule:evenodd;stroke-width:0.26458332"
+       id="rect1366"
+       width="209.39882"
+       height="195.03572"
+       x="0.75595242"
+       y="-0.089285709" />
+    <g
+       aria-label="ས"
+       transform="scale(1.0253386,0.97528759)"
+       style="font-style:normal;font-weight:normal;font-size:13.09580708px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;opacity:0.98000004;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.32739517"
+       id="text1370">
+      <path
+         d="M 198.2935,8.5134929 192.00138,35.677062 V 194.05448 l -14.42585,-3.22279 Q 152.86742,148.6284 124.32266,111.79644 95.931354,74.811018 65.698455,45.959317 44.05968,66.523827 30.094229,88.469536 q 21.792242,9.975322 39.901288,26.856634 18.262513,16.72785 33.455693,41.28249 l -12.58425,3.83666 Q 74.446045,143.25707 55.4162,131.44015 36.539821,119.46977 15.668378,114.25191 l -5.21786,-13.19812 Q 16.89611,84.019007 25.797167,67.137693 34.698224,50.256379 44.827012,35.677062 H 17.049577 L 23.341703,8.5134929 H 124.16919 L 117.87706,35.677062 H 93.782823 q 26.242767,31.767564 48.648877,66.450988 22.55958,34.52996 37.13889,67.06486 -1.53466,-37.59929 -5.37132,-72.129251 -3.6832,-34.683427 -9.20799,-61.386597 h -12.58426 l 6.29213,-27.1635691 z"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:314.29937744px;font-family:'Noto Sans Tibetan';-inkscape-font-specification:'Noto Sans Tibetan';opacity:0.98000004;fill:#e6e6e6;stroke-width:0.32739517"
+         id="path815" />
+    </g>
+  </g>
+</svg>

@@ -231,6 +231,7 @@ export const provImg = {
    "mbbt": "/MB-icon.jpg",
    "ola":  "/OL.png",  //"https://openlibrary.org/static/images/openlibrary-logo-tighter.svg" //"https://seeklogo.com/images/O/open-library-logo-0AB99DA900-seeklogo.com.png", 
    "rkts": "/RKTS.png",
+   "src": "/SRC.svg",
    "tol": "/ToL.png",
    "viaf": "/VIAF.png",
    "wd":   "/WD.svg",
