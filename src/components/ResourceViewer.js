@@ -1504,7 +1504,8 @@ class ResourceViewer extends Component<Props,State>
          if(!lab) lab = this.props.dictionary[prop][skos+"prefLabel"]
          let ret = getLangLabel(this, prop, lab, useUIlang)
          if(ret && ret.value && ret.value != "")
-            return <span lang={ret.lang}>{ret.value}</span>
+            if(canSpan) return <span lang={ret.lang}>{ret.value}</span>
+            else return ret.value
 
        //&& this.props.ontology[prop][rdfs+"label"][0] && this.props.ontology[prop][rdfs+"label"][0].value) {
          //let comment = this.props.ontology[prop][rdfs+"comment"]
@@ -1760,7 +1761,7 @@ class ResourceViewer extends Component<Props,State>
    {
       if(elem) {
 
-         console.log("uriformat",prop,elem.value,elem,dic,withProp,show)
+         //console.log("uriformat",prop,elem.value,elem,dic,withProp,show)
          
          if(!elem.value.match(/^http:\/\/purl\.bdrc\.io/) /* && !hasExtPref */ && ((!dic || !dic[elem.value]) && !prop.match(/[/#]sameAs/))) {
             let link = elem.value
@@ -1872,9 +1873,10 @@ class ResourceViewer extends Component<Props,State>
                   link = <a class="urilink prefLabel no-bdrc" href={elem.value} target="_blank">{info}<Tooltip placement="bottom-end" title={<span>See on <b>{providers[prefix]}</b></span>}><img src="/icons/link-out.svg"/></Tooltip></a>
                } 
             }
-            else { 
+            else {                
                if(!info) info = shortUri(elem.value)
-               link = <Link className={"urilink prefLabel " } to={"/"+show+"/"+prefix+":"+pretty}>{info}</Link>
+               //console.log("pretty?",pretty,elem.value)
+               link = <Link className={"urilink prefLabel " } to={"/"+show+"/"+shortUri(elem.value)}>{info}</Link>
                bdrcData = null
             }
             

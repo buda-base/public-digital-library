@@ -2655,7 +2655,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                         <a 
                            /*onTouchEnd={(ev) => { if(src !== "bdr") { ev.stopPropagation(); ev.preventDefault(); this.handleOpenSourceMenu(ev,"menu-"+src+"-"+prettId); return false ; }}} href={url} target="_blank"*/
                            >
-                           {image}
+                           <Tooltip placement="bottom-start" title={<span>Resource available at <b>{providers[src]}</b></span>}>{image}</Tooltip>
                         </a>
                         {/* {src !== "bdr" && <span onMouseEnter={(ev) => this.handleOpenSourceMenu(ev,"menu-"+src+"-"+prettId)}></span> } */}
                      </div>

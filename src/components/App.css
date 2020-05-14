@@ -904,8 +904,9 @@ vertical-align:middle;}
 
 .resource .data#perma { background-color:#ffffff; padding:0 35px 50px 35px;}
 
-#perma #same .provider.tol { background:white;border-radius:21px;}
-#perma #same .provider.tol img { width:42px;height:42px;}
+#perma #same .provider.tol { background:white;border-radius:50%;}
+#perma #same .provider.tol img { width:28px;height:28px;}
+#perma #same .provider.tol:first-child:last-child img { width:42px;height:42px;}
 
 /* #top-left { position:absolute; top:calc(100% + 40px);right:40px; } */
 #perma > div { position:relative; background:#efefef; display:flex;align-items: center; justify-content:flex-start; margin-bottom:0px;
@@ -975,7 +976,7 @@ vertical-align:middle;}
 #popHoverM .resource .data .sub > .subgroup > .subsub > h4::before,
 #popHoverM .resource .data .group h4::before { opacity:1 !important; }
 
-#popHoverM > div:last-child { width:953px; box-shadow:0 3px 4px #353232,0 -1px 4px #cecece; 
+#popHoverM > div:last-child { width:953px; box-shadow:0 3px 4px #cecece,0 -1px 4px #cecece; 
    left:calc((100vw - 1440px)/2 + 324px) !important; /* TODO fix when width under ~1250px */
 }
 #popHoverM > div:last-child .resource .data { padding-left:53px; padding-bottom:35px; padding-top:27px; }
@@ -1944,6 +1945,7 @@ h2 .wd .before { background-image:url("/WD.svg");  background-size:18px auto; ba
 .provider.eftr .before { background-image:url("/84000.svg");  background-size:16px auto; background-position:top 4px left 0px;}
 .provider.wd .before { background-image:url("/WD.svg");  background-size:18px auto; background-position:top 2px left 2px;}
 .provider.rkts .before { background-image:url("/RKTS.png"); background-size: 15px auto; }
+.sameAs.src .before { background-image:url("/SRC.svg"); background-size: 15px auto; }
 
 h4.sameAs .ulink.sameAs { margin-left:-21px; } 
 
@@ -2056,8 +2058,14 @@ h3 .expand svg { position:absolute; margin-top:-18px; }*/
 .has-collapse.custom.max-10 { min-height:150px; }
 .has-collapse.custom .propCollapseHeader { column-count:2; }
 
+.has-collapse.custom[data-prop="bdo:creator"] .propCollapse,
+.has-collapse.custom[data-prop="bdo:creator"] .propCollapseHeader,
 .has-collapse.custom[data-prop="bdo:workHasInstance"] .propCollapse,
 .has-collapse.custom[data-prop="bdo:workHasInstance"] .propCollapseHeader { column-count:1; }
+
+
+.has-collapse.custom[data-prop="bdo:creator"] .propCollapse .subgroup,
+.has-collapse.custom[data-prop="bdo:creator"] .propCollapseHeader .subgroup { width:100%; }
 
 [data-prop="bdo:workHasInstance"] h4.multiple { line-height:20px; }
 
