@@ -2679,6 +2679,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             
          }
 
+         if(!resUrl.includes("/show/bdr:")) retList.push(<div class="external">{otherSrc}</div>)
+
          let lastP,prop = ""
 
          let nbChunks = allProps.filter(e => e.type === tmp+"nbChunks")

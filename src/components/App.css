@@ -391,6 +391,11 @@ li + a.result { margin-top:-5px; }
 
 /* --------------------------------------------------------------------------------------------------------------------- results/matches */
 
+.external .result-box  { display:block; position:absolute;top:calc(35px + 20px + 0px);left:20px;width:20px;text-align:center;}
+.external .result-box img { width:100%;height:auto;}
+
+.external ~ .result-box { display:none; }
+
 a.result { padding:0;/*margin-bottom:10px;*/width:100%;display: inline-block; /*margin-top:3px;*/ max-width:calc(100% - 100px);}
 a.result + #matches a.result { max-width:calc(100% - 25px);}
 a.result button { text-transform:none; padding-bottom:0;}
