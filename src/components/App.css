@@ -393,10 +393,10 @@ li + a.result { margin-top:-5px; }
 
 .external .result-box  { position:absolute;top:calc(35px + 20px + 0px); display: flex; flex-direction: column; justify-content: flex-start;
    top: calc(35px + 20px + 0px); left: 15px; width: 40px; text-align: center; ;}
-.external .result-box img { width:20px;height:auto;margin-left:0}
+.external .result-box img { width:20px;height:auto;margin-left:0; }
 .result-box .sameAsLogo { line-height:18px;border-radius:4px; border-width:1px; }
 .external .result-box .sameAsLogo { border-radius:6px;border-width:2px;}
-.external .result-box .source-data { display:block; }
+.external .result-box .source-data { display:block; margin-left:0px; }
 
 .result-box .source-data { margin-left:10px;}
 .result-box .source a img { margin-left:0; }
