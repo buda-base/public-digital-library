@@ -1760,7 +1760,7 @@ class ResourceViewer extends Component<Props,State>
    {
       if(elem) {
 
-         //console.log("uriformat",prop,elem.value,elem,dic,withProp,show)
+         console.log("uriformat",prop,elem.value,elem,dic,withProp,show)
          
          if(!elem.value.match(/^http:\/\/purl\.bdrc\.io/) /* && !hasExtPref */ && ((!dic || !dic[elem.value]) && !prop.match(/[/#]sameAs/))) {
             let link = elem.value
@@ -4852,7 +4852,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                      </div>
                      ]
    */
-      let related 
+      let related, createdBy
       if(this.props.assocResources) {
          let res = fullUri(this.props.IRI)
          related = Object.keys(this.props.assocResources).map(k => {
@@ -4867,7 +4867,26 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                return ( 
                   <div>
                      <Link to={"/show/"+s}><div class="header"></div></Link>
-                     <div><span>{ label.value }</span>{ label.lang && this.tooltip(label.lang) }</div>
+                     <div><span {...label.lang?{lang:label.lang}:{}}>{ label.value }</span>{ label.lang && this.tooltip(label.lang) }</div>
+                     <Link to={"/show/"+s}>Read more</Link>
+                  </div>
+               )
+            }
+         } ).filter(k => k)
+
+         createdBy = Object.keys(this.props.assocResources).map(k => {
+            let v = this.props.assocResources[k]
+            let s = shortUri(k)
+            let crea = v.filter(k => k.fromKey === tmp+"createdBy" && k.value === res)
+            //console.log("isA",v,s,isA)
+            if(crea.length) {
+               let label, pLab = v.filter(k => k.fromKey === skos+"prefLabel" || k.type === skos+"prefLabel")
+               if(pLab.length) label = getLangLabel(this,"",pLab)
+               if(!label) label = { value:s }
+               return ( 
+                  <div>
+                     <Link to={"/show/"+s}><div class="header"></div></Link>
+                     <div><span {...label.lang?{lang:label.lang}:{}}>{ label.value }</span>{ label.lang && this.tooltip(label.lang) }</div>
                      <Link to={"/show/"+s}>Read more</Link>
                   </div>
                )
@@ -4968,11 +4987,22 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                   { theDataTop }
                   <div class="data" id="perma">{ this.perma_menu(pdfLink,monoVol,fairUse,kZprop.filter(k => k.startsWith(adm+"seeOther")))  }</div>
                   { theDataBot }
-                  { related && related.length > 0 &&  
+                  { ((related && related.length > 0)||(createdBy && createdBy.length > 0)) &&  
                      <div class="data related" id="resources">
                         <div>
-                           <div><h2>Related Works</h2>{ related.length > 4 && <Link to={"/search?t=Work&r="+this.props.IRI}>{"see all"}</Link> }</div>
-                           <div>{ related }</div>
+                           <div><h2>Related Works</h2>{ (related && related.length > 4 || createdBy && createdBy.length > 4) && <Link to={"/search?t=Work&r="+this.props.IRI}>{"see all"}</Link> }</div>
+                           { (related && related.length > 0 && (!createdBy  || !createdBy.length)) && <div class="rel-or-crea">{related}</div>}
+                           { (createdBy && createdBy.length > 0 && (!related  || !related.length)) && <div class="rel-or-crea">{createdBy}</div>}
+                           { (related.length > 0 && createdBy.length > 0) && <div>
+                              <Tabs>
+                                 <TabList>
+                                    <Tab>About</Tab>
+                                    <Tab>Created By</Tab>
+                                 </TabList>
+                                 <TabPanel><div class="rel-or-crea">{related}</div></TabPanel>
+                                 <TabPanel><div class="rel-or-crea">{createdBy}</div></TabPanel>
+                              </Tabs>
+                           </div> }
                         </div>
                      </div> 
                   }         
