@@ -13,6 +13,7 @@ import {sortLangScriptLabels, extendedPresets} from '../../lib/transliterators';
 import {auth} from '../../routes';
 import {shortUri,fullUri} from '../../components/App'
 import qs from 'query-string'
+import history from '../../history.js'
 
 // to enable tests
 const api = new bdrcApi({...process.env.NODE_ENV === 'test' ? {server:"http://localhost:5555/test"}:{}});
@@ -1529,15 +1530,18 @@ function rewriteAuxMain(result,keyword,datatype,sortBy,language)
    let langPreset = state.ui.langPreset
    if(!sortBy) sortBy = state.ui.sortBy
    let reverse = sortBy && sortBy.endsWith("reverse")
+   let canPopuSort = false        
    result = Object.keys(result).reduce((acc,e)=>{
       if(e === "main") {
          let keys = Object.keys(result[e])
          if(keys) {
             store.dispatch(dataActions.gotAssocResources(keyword,{ data: keys.reduce( (acc,k) => ({...acc, [k]: result[e][k].filter(e => e.type === skos+"altLabel" || e.type === skos+"prefLabel") }),{})  }))
          }
-         let t = datatype[0].toLowerCase()+"s"                 
+         let t = datatype[0].toLowerCase()+"s"         
+         canPopuSort = false        
          let dataWithAsset = keys.reduce( (acc,k) => { 
             let res = result[e][k].map(e => (!asset.includes(e.type)||e.value === "false"?e:{type:_tmp+"assetAvailability",value:e.type}))
+            canPopuSort = canPopuSort || (res.filter(e => e.type === tmp+"entityScore").length > 0)            
             let chunks = res.filter(e => e.type === bdo+"eTextHasChunk")
             if(chunks.length) {
                let getVal = (id,prop,onlyValue = true) => {
@@ -1579,7 +1583,12 @@ function rewriteAuxMain(result,keyword,datatype,sortBy,language)
             return ({...acc, [k]:res})
          },{})
         
-         console.log("dWa",dataWithAsset,sortBy,reverse)
+         console.log("dWa",t,dataWithAsset,sortBy,reverse,canPopuSort)
+
+         if(!canPopuSort && sortBy.startsWith("popularity")) {            
+            let {pathname,search} = history.location         
+            history.push({pathname,search:search.replace(/(&s=[^&]+)/g,"")+"&s=closest matches forced"})         
+         }
 
          if(language !== undefined) { 
             dataWithAsset = mergeSameAs({[t]:dataWithAsset},{},true,{},true,!language?keyword:null)

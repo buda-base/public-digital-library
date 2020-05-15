@@ -637,6 +637,7 @@ class App extends Component<Props,State> {
    _menus = {}
    _refs = {}
    _scrollTimer = null
+   _get = null
 
 
    constructor(props : Props) {
@@ -649,7 +650,8 @@ class App extends Component<Props,State> {
       this.makeResult.bind(this);
       this.render_filters.bind(this);
 
-      let get = qs.parse(this.props.history.location.search)
+      if(!this._get) this._get = qs.parse(this.props.history.location.search)
+      let get = this._get 
 
       let lg = "bo-x-ewts"
       if(get.p) lg = ""
@@ -709,7 +711,8 @@ class App extends Component<Props,State> {
       
       console.log("didU",this.state) //,this._refs)
 
-      let get = qs.parse(this.props.history.location.search)
+      if(!this._get) this._get = qs.parse(this.props.history.location.search)
+      let get = this._get 
 
       let n, scrolled
       if(get.n) {
@@ -3012,7 +3015,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             { this.getResultProp(bdo+"biblioNote",allProps,false,false,[bdo+"biblioNote",rdfs+"comment"]) }
 
             {/* { this.getResultProp(tmp+"provider",allProps) } */}
-            {/* { this.getResultProp(tmp+"popularityScore",allProps,false,false, [tmp+"entityScore"]) } */}
+            { this.getResultProp(tmp+"popularity",allProps,false,false, [tmp+"entityScore"]) }
             
             
             {/* { hasThumb.length > 0 && <div class="match">{getIconLink(viewUrl?viewUrl:resUrl+"#open-viewer",<span class="urilink"><b>View Images</b></span>)}</div>} // maybe a bit overkill...? */ }
@@ -4610,7 +4613,17 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          "Etext": [ "Closest Matches", "Number of Matching Chunks" ],
       }
 
-      let sortByList = allSortByLists[this.state.filters.datatype[0]]
+      let sortByList = allSortByLists[this.state.filters.datatype[0]] 
+      
+      if(!this._get) this._get = qs.parse(this.props.history.location.search)
+      let get = this._get 
+      if(sortByList && get.s && get.s.includes("forced"))  {
+         let i = sortByList.indexOf("Popularity")
+         if(i !== -1) { 
+            delete sortByList[i]
+            sortByList = sortByList.filter(s => s)
+         }
+      }
       
       // + fix sortBy for instances
       // + reset sort when switching datatype
