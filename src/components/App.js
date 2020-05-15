@@ -4613,15 +4613,20 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          "Etext": [ "Closest Matches", "Number of Matching Chunks" ],
       }
 
-      let sortByList = allSortByLists[this.state.filters.datatype[0]] 
+      let sortByList 
       
-      if(!this._get) this._get = qs.parse(this.props.history.location.search)
-      let get = this._get 
-      if(sortByList && get.s && get.s.includes("forced"))  {
-         let i = sortByList.indexOf("Popularity")
-         if(i !== -1) { 
-            delete sortByList[i]
-            sortByList = sortByList.filter(s => s)
+      if(allSortByLists[this.state.filters.datatype[0]]) {
+
+         sortByList = [ ...allSortByLists[this.state.filters.datatype[0]] ]
+         
+         if(!this._get) this._get = qs.parse(this.props.history.location.search)
+         let get = this._get 
+         if(sortByList && get.s && get.s.includes("forced"))  {
+            let i = sortByList.indexOf("Popularity")
+            if(i !== -1) { 
+               delete sortByList[i]
+               sortByList = sortByList.filter(s => s)
+            }
          }
       }
       
