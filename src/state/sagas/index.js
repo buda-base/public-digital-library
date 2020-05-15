@@ -270,6 +270,9 @@ else if(params && params.q) {
          dontGetDT = true
       }
       else {
+
+         // TODO check if popularity is available if already searched terms
+
          store.dispatch(uiActions.loading(params.q, false));         
          store.dispatch(dataActions.foundResults(params.q,params.lg,state.data.searches[pt][params.q+"@"+params.lg],pt))  
 
