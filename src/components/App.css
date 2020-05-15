@@ -906,7 +906,7 @@ vertical-align:middle;}
 
 #perma #same .provider.tol { background:white;border-radius:50%;}
 #perma #same .provider.tol img { width:28px;height:28px;}
-#perma #same .provider.tol:first-child:last-child img { width:42px;height:42px;}
+/* #perma #same .provider.tol:first-child:last-child img { width:42px;height:42px;} */
 
 /* #top-left { position:absolute; top:calc(100% + 40px);right:40px; } */
 #perma > div { position:relative; background:#efefef; display:flex;align-items: center; justify-content:flex-start; margin-bottom:0px;
