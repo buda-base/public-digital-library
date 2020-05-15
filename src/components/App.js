@@ -659,7 +659,7 @@ class App extends Component<Props,State> {
       if(get.q) kw = get.q.replace(/"/g,"")
       if(kw) newKW = kw
 
-      let types = [ "Work" ] //[ ...searchTypes.slice(1) ]
+      let types = [ "Instance" ] //[ ...searchTypes.slice(1) ]
       let e = types.indexOf("Etext")
       if(e !== -1) { 
          delete types[e]
