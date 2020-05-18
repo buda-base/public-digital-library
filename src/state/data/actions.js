@@ -179,6 +179,22 @@ export const getUser = (profile: string): Action => {
 }
 
 
+TYPES.getOutline = 'GET_OUTLINE';
+export const getOutline = (iri: string): Action => {
+    return {
+        type: TYPES.getOutline,
+        payload: iri
+    }
+}
+
+TYPES.gotOutline = 'GOT_OUTLINE';
+export const gotOutline = (obj: {}): Action => {
+    return {
+        type: TYPES.gotOutline,
+        payload: obj
+    }
+}
+
 TYPES.getInstances = 'GET_INSTANCES';
 export const getInstances = (uri: string,init?:boolean): Action => {
     return {

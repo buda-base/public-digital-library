@@ -3022,7 +3022,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             { this.getResultProp(bdo+"biblioNote",allProps,false,false,[bdo+"biblioNote",rdfs+"comment"]) }
 
             {/* { this.getResultProp(tmp+"provider",allProps) } */}
-            { this.getResultProp(tmp+"popularity",allProps,false,false, [tmp+"entityScore"]) }
+            {/* { this.getResultProp(tmp+"popularity",allProps,false,false, [tmp+"entityScore"]) } */}
             
             
             {/* { hasThumb.length > 0 && <div class="match">{getIconLink(viewUrl?viewUrl:resUrl+"#open-viewer",<span class="urilink"><b>View Images</b></span>)}</div>} // maybe a bit overkill...? */ }
@@ -4611,10 +4611,10 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          })
       }
 
-      let allSortByLists = { 
+      const allSortByLists = { 
          "Work": [ "Popularity", "Closest Matches", "Work Title" ],
-         "Person": [ "Popularity", "Closest Matches", ,"Person Name", "Year of Birth" ],
-         "Place": [ "Popularity", "Closest Matches", ,"Place Name" ],
+         "Person": [ "Popularity", "Closest Matches", "Person Name", "Year of Birth" ],
+         "Place": [ "Popularity", "Closest Matches", "Place Name" ],
          "WorkInstance": [ "Work Title", "Year of Publication" ],
          "Instance": [ "Popularity", "Title", "Year of Publication" ],
          "Etext": [ "Closest Matches", "Number of Matching Chunks" ],
@@ -4622,24 +4622,33 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
       let sortByList = allSortByLists[this.state.filters.datatype[0]]
 
-   /* // TODO 
-      // - fix bug when removing popularity from menu
+      // TODO 
+      // - fix bug when removing popularity from menu --> find a better solution than s=...forced (popularity is back after another sort is selected)
       // - fix bug when search "無著" then "thogs med" validated by RETURN (lang still zh)
 
-      let sortByList = [ ...allSortByLists[this.state.filters.datatype[0]]?allSortByLists[this.state.filters.datatype[0]]:[] ]      
-         
-      if(!this._get) this._get = qs.parse(this.props.history.location.search)
-      let get = this._get 
-      if(sortByList && get.s && get.s.includes("forced"))  {
+      /*
+      
+      console.log(JSON.stringify(allSortByLists,null,3))
 
-         let i = sortByList.indexOf("Popularity")
+      let tmpSort
+      if(this.state.filters.datatype[0] && allSortByLists[this.state.filters.datatype[0]]) tmpSort = allSortByLists[this.state.filters.datatype[0]].map(e => ""+e)
+
+      //console.log(JSON.stringify(allSortByLists,null,3),JSON.stringify(tmpSort,null,3))
+         
+      this._get = qs.parse(this.props.history.location.search)
+      let get = this._get 
+      if(sortByList && tmpSort && get.s && get.s.includes("forced"))  {
+
+         let i = tmpSort.indexOf("Popularity")
          if(i !== -1) { 
-            delete sortByList[i]
-            sortByList = sortByList.filter(s => s)
+            delete tmpSort[i]
+            sortByList = [ ...tmpSort.filter(s => s) ]
          }
       }
-   */
-      
+   
+      console.log(JSON.stringify(allSortByLists,null,3),JSON.stringify(sortByList,null,3))
+      */
+
       // + fix sortBy for instances
       // + reset sort when switching datatype
       // TODO 

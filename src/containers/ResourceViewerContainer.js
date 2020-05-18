@@ -103,9 +103,12 @@ const mapStateToProps = (state,ownProps) => {
    let highlight = state.ui.highlight
    if(highlight && highlight.uri !== ownProps.IRI) highlight = null 
 
+   let outline = state.data.outline
+
    let props = { logged,config,resources, ontology, dictionary, keyword, language, datatype, assocResources, prefLang, failures,
       imageAsset,firstImage,canvasID,collecManif,manifests,manifestError,pdfVolumes,createPdf,pdfUrl, manifestWpdf,
-      annoCollec,rightPanel,locale,langPreset,imgData, nextChunk, nextPage, resourceManifest, imageVolumeManifests, userEditPolicies, highlight }
+      annoCollec,rightPanel,locale,langPreset,imgData, nextChunk, nextPage, resourceManifest, imageVolumeManifests, userEditPolicies, highlight,
+      outline }
 
    console.log("mS2p",state,props)
 
@@ -142,6 +145,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       },
       onGetPages:(IRI:string,next:number=0) => {
          dispatch(data.getPages(IRI,next));
+      },
+      onGetOutline:(IRI:string) => {
+         dispatch(data.getOutline(IRI));
       },
       onGetResource:(IRI:string) => {
          dispatch(data.getResource(IRI));

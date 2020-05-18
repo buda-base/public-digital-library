@@ -1929,6 +1929,27 @@ export function* watchGetInstances() {
 }
 
 
+
+async function getOutline(iri) {
+
+   let res = await api.loadOutline(iri) 
+
+   console.log("outline",res)
+
+   store.dispatch(dataActions.gotOutline(res))
+
+}
+
+
+export function* watchGetOutline() {
+
+   yield takeLatest(
+      dataActions.TYPES.getOutline,
+      (action) => getOutline(action.payload)
+   );
+}
+
+
 async function searchKeyword(keyword,language,datatype) {
 
    console.log("searchK",keyword,language,datatype);
@@ -2142,6 +2163,7 @@ export default function* rootSaga() {
    yield all([
       watchInitiateApp(),
       watchGetUser(),
+      watchGetOutline(),
       watchGetResetLink(),
       watchUpdateSortBy(),
       watchGetInstances(),

@@ -256,6 +256,26 @@ export default class API {
    }
 
 
+    async loadOutline(IRI:string): Promise<string>
+    {
+         try {
+            
+            if(!IRI.indexOf(':') === -1 ) IRI = "bdr:"+IRI
+            let config = store.getState().data.config.ldspdi
+            let url = config.endpoints[config.index]+"/query/graph" ;            
+            let param = {"searchType":"Outline_root","R_RES":IRI,"L_NAME":"","LG_NAME":"", "I_LIM":"" }
+            let data = await this.getQueryResults(url, IRI, param,"GET","application/jsonld");         
+
+            return data ;
+         }
+         catch(e)
+         {
+            throw(e)
+         }
+
+   }
+
+
     async loadResource(IRI:string): Promise<string>
     {
 
@@ -713,6 +733,9 @@ export default class API {
       else if(resetLink.ticket) return resetLink.ticket
       else throw new Error("unknown error")
   }
+
+
+   // TODO prevent UI from freezing 
 
    async getDatatypesOnly(key: string,lang: string) {
 

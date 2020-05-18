@@ -115,10 +115,12 @@ type Props = {
        key:lang,
        lang:string 
     },
+   outline?:{},
    onInitPdf: (u:string,s:string) => void,
    onRequestPdf: (u:string,s:string) => void,
    onCreatePdf: (s:string,u:string) => void,
    onGetResource: (s:string) => void,
+   onGetOutline: (s:string) => void,
    onGetAnnotations: (s:string) => void,
    onHasImageAsset:(u:string,s:string) => void,
    onGetChunks: (s:string,b:number) => void,
@@ -810,6 +812,7 @@ class ResourceViewer extends Component<Props,State>
 
    static getDerivedStateFromProps(props:Props,state:State)
    {
+      if(props.IRI && props.outline === undefined && getEntiType(props.IRI) === "Instance" && props.config) props.onGetOutline(props.IRI)
 
       let getElem = (prop,IRI,useAssoc) => {
          let longIRI = fullUri(IRI)

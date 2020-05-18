@@ -45,7 +45,8 @@ export type DataState = {
    resetLink?:boolean,
    userEditPolicies?:{},
    instances?:{},
-   isInstance?:boolean
+   isInstance?:boolean,
+   outline?:{},
 }
 
 const DEFAULT_STATE: DataState = {
@@ -779,6 +780,27 @@ export const searchingKeyword = (state: DataState, action: SearchAction) => {
     }
 }
 reducers[actions.TYPES.searchingKeyword] = searchingKeyword;
+
+
+export const getOutline = (state: DataState, action: Action) => {
+
+    return {
+         outline:false,
+         ...state,
+    }
+}
+reducers[actions.TYPES.getOutline] = getOutline;
+
+
+export const gotOutline = (state: DataState, action: Action) => {
+
+    return {
+         ...state,
+         outline:action.payload,
+    }
+}
+reducers[actions.TYPES.gotOutline] = gotOutline;
+
 
 
 export const getOneDatatype = (state: DataState, action: Action) => {
