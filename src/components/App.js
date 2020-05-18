@@ -2397,7 +2397,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
       let enType = getEntiType(id).toLowerCase()
 
-      let hasThumb = allProps.filter(a => a.type === tmp+"thumbnailIIIFService"), hasCopyR, viewUrl
+      let hasThumb = allProps.filter(a => a.type === tmp+"thumbnailIIIFService"), hasCopyR, viewUrl,access
       //console.log("hasThumb",hasThumb)
       if(hasThumb.length) { 
          hasThumb = hasThumb[0].value 
@@ -2412,17 +2412,21 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             else if(viewUrl) viewUrl = fullUri(viewUrl)
 
 
-            let access = allProps.filter(a => a.type === tmp+"hasReproAccess")
+            access = allProps.filter(a => a.type === tmp+"hasReproAccess")
             if(access.length) access = access[0].value            
             
             if(this.props.config && this.props.config.iiif && this.props.config.iiif.endpoints[this.props.config.iiif.index].match(/iiif-dev/)) hasThumb = hasThumb.replace(/iiif([.]bdrc[.]io)/, "iiif-dev$1")
             hasThumb += "/full/,145/0/default.jpg" 
 
+            console.log("access",access)
+
             if(access) {
                hasCopyR = "unknown"            
-               if(access.includes("Restricted")) { hasCopyR = "restricted"; hasThumb = []; }
-               else if(access.includes("FairUse")) hasCopyR = "copyright"
+               if(access.includes("FairUse")) hasCopyR = "fair_use"
+               else if(access.includes("Temporarily")) { hasCopyR = "temporarily";  hasThumb = []; }
+               else if(access.includes("Sealed")) { hasCopyR = "sealed";  hasThumb = []; }
                else if(access.includes("Open")) hasCopyR = "copyleft"
+               //if(access.includes("Restricted")) { hasCopyR = "restricted"; hasThumb = []; }
             }
          }
       }
@@ -2528,10 +2532,12 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      getIconLink(resUrl,<img src={"/icons/search/"+enType+"_.svg"}/>)
                   }</div>] }
                <div class="RID">{prettId}</div>
-               {hasCopyR === "copyleft" && <img title="Open Access" src="/icons/open.png"/>}
-               {hasCopyR === "copyright" && <img title="Copyrighted Access" src="/icons/not_open.png"/>}
-               {hasCopyR === "restricted" && <img title="Restricted Access" src="/icons/forbidden.svg"/>}
-               {hasCopyR === "unknown" && <img title="Unknown Access" src="/icons/open_unknown.png"/>}
+               {/* <span>{hasCopyR}</span> */}
+               {hasCopyR === "copyleft" && <img title="Open Access" src="/icons/open.svg"/>}
+               {hasCopyR === "fair_use" && <img title="Fair Use - Access to 20 first/last pages" src="/icons/fair_use.svg"/>}
+               {hasCopyR === "temporarily" && <img title="Temporarily Restricted" src="/icons/temporarily.svg"/>}
+               {hasCopyR === "sealed" && <img title="Sealed" src="/icons/sealed.svg"/>}
+               {hasCopyR === "unknown" && <img title={this.fullname(access)} src="/icons/unknown.svg"/>}
                { hasThumb.length > 0 && getIconLink(viewUrl?viewUrl:resUrl+"#open-viewer", <img title="Scans Available" style={{width:"20px"}} src="/icons/search/images.svg"/>) }
             </div>
          ]
@@ -4615,7 +4621,9 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
       let sortByList = allSortByLists[this.state.filters.datatype[0]]
 
-   /* //TODO fix bug when removing popularity from menu
+   /* // TODO 
+      // - fix bug when removing popularity from menu
+      // - fix bug when search "無著" then "thogs med" validated by RETURN (lang still zh)
 
       let sortByList = [ ...allSortByLists[this.state.filters.datatype[0]]?allSortByLists[this.state.filters.datatype[0]]:[] ]      
          

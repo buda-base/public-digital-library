@@ -483,9 +483,10 @@ a.result + #matches .result-content::before { left:110px; width:calc(100% - 110p
 .result-content #icon.instance img,
 .result-content #icon.topic img{ width:60px; }
 
-.result-content #icon.wCopyR > img { width:16px; display: inline-block; margin:4px 6px 0 6px; }
+.result-content #icon.wCopyR > img { width:20px; display: inline-block; margin:4px 6px 0 6px; opacity:0.75; }
 .result-content #icon.wCopyR { margin-bottom:50px; }
 
+.result-content #icon.wCopyR > a img { width:24px !important; margin-bottom:4px; }
 /*
 .result-content #icon.lineage img { width:80px;}
 
