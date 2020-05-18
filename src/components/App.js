@@ -2425,6 +2425,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                if(access.includes("FairUse")) hasCopyR = "fair_use"
                else if(access.includes("Temporarily")) { hasCopyR = "temporarily";  hasThumb = []; }
                else if(access.includes("Sealed")) { hasCopyR = "sealed";  hasThumb = []; }
+               else if(access.includes("Quality")) { if(!this.props.auth.isAuthenticated()) hasThumb = []; }
                else if(access.includes("Open")) hasCopyR = "copyleft"
                //if(access.includes("Restricted")) { hasCopyR = "restricted"; hasThumb = []; }
             }
