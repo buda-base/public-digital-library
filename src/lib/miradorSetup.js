@@ -1,7 +1,7 @@
 
 
-const ldspdi = "//ldspdi-dev.bdrc.io"
-const iiifpres = "//iiifpres-dev.bdrc.io"
+const ldspdi = "//ldspdi.bdrc.io"
+const iiifpres = "//iiifpres.bdrc.io"
 
 let jQ,extendedPresets,sortLangScriptLabels,__
 

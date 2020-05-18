@@ -188,10 +188,11 @@ export const getOutline = (iri: string): Action => {
 }
 
 TYPES.gotOutline = 'GOT_OUTLINE';
-export const gotOutline = (obj: {}): Action => {
+export const gotOutline = (iri:string, obj: {}): Action => {
     return {
         type: TYPES.gotOutline,
-        payload: obj
+        payload: iri,
+        meta:obj
     }
 }
 

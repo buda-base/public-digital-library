@@ -103,7 +103,9 @@ const mapStateToProps = (state,ownProps) => {
    let highlight = state.ui.highlight
    if(highlight && highlight.uri !== ownProps.IRI) highlight = null 
 
-   let outline = state.data.outline
+   let outline = state.data.outlines
+   if(outline && outline[ownProps.IRI] !== undefined) outline = outline[ownProps.IRI]
+   else outline = false
 
    let props = { logged,config,resources, ontology, dictionary, keyword, language, datatype, assocResources, prefLang, failures,
       imageAsset,firstImage,canvasID,collecManif,manifests,manifestError,pdfVolumes,createPdf,pdfUrl, manifestWpdf,

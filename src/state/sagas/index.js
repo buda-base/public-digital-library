@@ -1936,7 +1936,7 @@ async function getOutline(iri) {
 
    console.log("outline",res)
 
-   store.dispatch(dataActions.gotOutline(res))
+   store.dispatch(dataActions.gotOutline(iri,res))
 
 }
 

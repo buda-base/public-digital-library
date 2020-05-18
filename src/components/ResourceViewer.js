@@ -812,7 +812,7 @@ class ResourceViewer extends Component<Props,State>
 
    static getDerivedStateFromProps(props:Props,state:State)
    {
-      if(props.IRI && props.outline === undefined && getEntiType(props.IRI) === "Instance" && props.config) props.onGetOutline(props.IRI)
+      if(props.IRI && !props.outline && getEntiType(props.IRI) === "Instance" && props.config) props.onGetOutline(props.IRI)
 
       let getElem = (prop,IRI,useAssoc) => {
          let longIRI = fullUri(IRI)

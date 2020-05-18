@@ -46,7 +46,7 @@ export type DataState = {
    userEditPolicies?:{},
    instances?:{},
    isInstance?:boolean,
-   outline?:{},
+   outlines?:{},
 }
 
 const DEFAULT_STATE: DataState = {
@@ -784,19 +784,29 @@ reducers[actions.TYPES.searchingKeyword] = searchingKeyword;
 
 export const getOutline = (state: DataState, action: Action) => {
 
-    return {
-         outline:false,
-         ...state,
-    }
+   let outlines = {}
+   if(state.outlines) outlines = state.outlines
+   return {
+      ...state,
+      outlines:{
+         ...outlines,
+         [action.payload]:true,
+      }
+   }
 }
 reducers[actions.TYPES.getOutline] = getOutline;
 
 
 export const gotOutline = (state: DataState, action: Action) => {
 
-    return {
+   let outlines = {}
+   if(state.outlines) outlines = state.outlines
+   return {
          ...state,
-         outline:action.payload,
+         outlines:{
+            ...outlines,
+            [action.payload]:action.meta,
+         }
     }
 }
 reducers[actions.TYPES.gotOutline] = gotOutline;

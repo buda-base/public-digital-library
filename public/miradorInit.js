@@ -1,7 +1,7 @@
 
 const bdr = "http://purl.bdrc.io/resource/"
 
-const iiifpres = "//iiifpres-dev.bdrc.io"
+const iiifpres = "//iiifpres.bdrc.io"
 
 let miradorConfig, miradorSetUI
 
