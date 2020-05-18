@@ -4721,6 +4721,19 @@ perma_menu(pdfLink,monoVol,fairUse,other)
       )
    }
 
+   renderOutline(){
+      if(this.props.outline) {
+         return ( <div class="data" id="outline">
+                        <h2>Outline</h2>
+                        <div class="search">
+                           <input type="text" placeholder="Search in outline"/>
+                        </div>
+                        <div>
+                        </div>
+                  </div> )
+      }
+   }
+
    render()
    {
       console.log("render",this.props,this.state)
@@ -4845,6 +4858,9 @@ perma_menu(pdfLink,monoVol,fairUse,other)
       let theDataBot = this.renderData(kZprop.filter(k => !topProps.includes(k) && !extProps.includes(k)),iiifpres,title,otherLabels,"bot-props")      
       let theDataExt = this.renderData(extProps,iiifpres,title,otherLabels,"ext-props")      
       let theDataLegal = this.renderData([adm+"metadataLegal"],iiifpres,title,otherLabels,"legal-props")      
+      
+      let theOutline = this.renderOutline()      
+
 
    /*
       let related = [<div>
@@ -5011,6 +5027,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                         </div>
                      </div> 
                   }         
+                  { theOutline }
                   { theDataLegal }
                   { theDataExt && 
                      <div class="data ext-props" id="ext-info">

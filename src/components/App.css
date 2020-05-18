@@ -793,6 +793,18 @@ h4:not(:hover) > .lang
    scroll-margin: 100px;
 }
 
+/* ------------------------------------------------------------------------------------------------------------------------ outline */
+
+.resource .data#outline { background-color: #ffffff; padding: 35px; padding-bottom: 0; padding-top:45px; }
+.resource .data#outline > h2 { margin-left:35px; margin-bottom:35px; }
+.resource .data#outline > div { background-color: #fcf5e2; padding: 25px 35px; }
+.resource .data#outline > .search { background-color: #fce08d; justify-content:center; padding:20px; }
+.resource .data#outline > .search::after { content:none !important; }
+.resource .data#outline > .search input { display:inline-block;width:375px;height:40px;line-height:40px;font-weight:600;border:none;outline:none; 
+   padding-left:20px; color:black; box-shadow: 0 2px 4px rgba(187, 187, 187, 0.5); padding-right:35px; position:relative;
+   background-image:url(/icons/loupe.png); background-position:center right 10px; background-repeat:no-repeat;
+}
+
 /* ------------------------------------------------------------------------------------------------------------------------ header */
 
 .resource .data#head { background-color:#ffffff; padding:35px; padding-bottom:45px;}
