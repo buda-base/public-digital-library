@@ -4979,6 +4979,8 @@ perma_menu(pdfLink,monoVol,fairUse,other)
             }
          }
 
+         // TODO update index links (add outline)
+
          return (
          [<div class={isMirador?"H100vh OF0":""}>
             <div className={"resource "+getEntiType(this.props.IRI).toLowerCase()}>               

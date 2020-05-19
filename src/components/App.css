@@ -762,7 +762,7 @@ h4:not(:hover) > .lang
 
 
 .resource > .index { width:15%; padding-top:10px; position:fixed; }
-.resource > :not(.index) { width:85%; padding-left:15%;  }
+.resource > :not(.index) { width:85%; margin-left:15%;  }
 
 .resource > .ariane { position:absolute; top:105px; color: #343434; left:0; margin-left:140px;padding-left:12.125%; }
 .resource > .ariane img { display:inline-block; margin-right:5px; vertical-align: -1px;}

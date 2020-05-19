@@ -1762,15 +1762,19 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
    pretty(str:string)
    {
-     for(let p of prefixes) { str = str.replace(new RegExp(p,"g"),"") }
+      //console.log("str",str)
+      if(!str || !str.length) return 
 
-     str = str.replace(/([a-z])([A-Z])/g,"$1 $2")
+      for(let p of prefixes) { str = str.replace(new RegExp(p,"g"),"") }
 
-     return str ;
+      str = str.replace(/([a-z])([A-Z])/g,"$1 $2")
+
+      return str ;
    }
 
    fullname(prop:string,preflabs:[],useUIlang:boolean=false)
    {
+      if(!prop) return 
 
       if(this.props.dictionary && this.props.dictionary[prop] && this.props.dictionary[prop][rdfs+"label"])
       {
