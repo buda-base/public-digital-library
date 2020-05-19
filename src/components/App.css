@@ -992,7 +992,7 @@ vertical-align:middle;}
 #popHoverM > div:last-child { width:953px; box-shadow:0 3px 4px #cecece,0 -1px 4px #cecece; 
    left:calc((100vw - 1440px)/2 + 324px) !important; /* TODO fix when width under ~1250px */
 }
-#popHoverM > div:last-child .resource .data { padding-left:53px; padding-bottom:35px; padding-top:27px; }
+#popHoverM > div:last-child .resource .data { padding-left:53px; padding-bottom:35px; padding-top:27px; margin-left:0; }
 #popHoverM > div:last-child .resource .data .react-tabs { background-color:#fcf5e2; min-width:898px; margin-left:-25px;margin-top:20px; min-height:150px; font-size:0;}
 #popHoverM .react-tabs__tab { border:none;border-radius:0; width:calc(25% - 1px); font-size:10px; padding:0; text-align:center; line-height:40px; bottom:-1px !important; 
    background-color:#fce08d; border-right:1px solid white; 

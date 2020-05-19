@@ -470,7 +470,7 @@ export function top_right_menu(that,etextTitle)
           <FontAwesomeIcon style={{fontSize:"28px"}} icon={faLanguage} title="Display Preferences"/>
         </IconButton>  */}
         {
-          !that.props.auth.isAuthenticated() && 
+          !that.props.auth.isAuthenticated() && // TODO check redirection
              <div>
               <span onClick={() => that.props.auth.login(that.props.history.location,true)} title="Register">Register</span>
               <span onClick={() => that.props.auth.login(that.props.history.location)} title="Log in">Log in</span>
