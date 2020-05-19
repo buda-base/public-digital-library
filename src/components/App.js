@@ -2402,10 +2402,11 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
       let enType = getEntiType(id).toLowerCase()
 
       let hasThumb = allProps.filter(a => a.type === tmp+"thumbnailIIIFService"), hasCopyR, viewUrl,access
-      //console.log("hasThumb",hasThumb)
       if(hasThumb.length) { 
          hasThumb = hasThumb[0].value 
          if(hasThumb) {             
+            console.log("hasThumb",hasThumb)
+            
             //hasCopyR = allProps.filter(a => a.type === tmp+"hasOpen")
             //if(hasCopyR.length && hasCopyR[0].value == "false") {
 
@@ -3375,6 +3376,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
             //message.push(["cpt="+cpt+"="+absi,<br/>])
 
+            let unreleased = false
             let label ; // sublist[o].filter((e) => (e.type && e.type.match(/prefLabelMatch$/)))[0]
             let sList = sublist[o].filter(e => e.type && e.type.endsWith("abelMatch") )   //( (e) => (e.type && e.type.match(/(prefLabel(Match)?|eTextTitle)$/)))
             if(!sList.length) sList = sublist[o].filter(e => (e.type && e.type === skos+"prefLabel")) //.match(/(prefLabel(Match)?|eTextTitle)$/)))
@@ -3706,21 +3708,20 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      if(status && status.length) status = status[0].value
                      else status = null
 
-                     if(status && !status.match(/Released/)) dontShow = true
-                     else dontShow = false
+                     if(status && !status.match(/Released/)) unreleased = true
                   }
 
 
                   n ++;
                   end = n ;
-                  if(!willBreak && !dontShow) { 
+                  if(!willBreak && !dontShow && !unreleased) { 
                      lastN = cpt ;
                      nMax = n
                      //console.log("lastN",lastN)
                      message.push(this.makeResult(id,n,t,lit,lang,tip,Tag,null,r.match,k,sublist[o],r.lit.value))
                   }
                   else {
-                     n --
+                     if(unreleased) n --
                   }
 
                   cpt ++;
@@ -3785,8 +3786,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          if(pagin) {
             
             // TODO also use status in counts
-
-            pagin.nMax = nMax
+            pagin.nMax = n // see facets
 
             if(pagin && pagin.bookmarks && pagin.bookmarks[categ] && pagin.bookmarks[categ].nb === undefined) { 
                pagin.bookmarks[categ] = { ...pagin.bookmarks[categ], nb:Object.keys(sublist).length - pagin.bookmarks[categ].i }

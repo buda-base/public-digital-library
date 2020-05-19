@@ -5029,7 +5029,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                         </div>
                      </div> 
                   }         
-                  { theOutline }
+                  {/* theOutline */}
                   { theDataLegal }
                   { theDataExt && 
                      <div class="data ext-props" id="ext-info">
