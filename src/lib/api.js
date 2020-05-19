@@ -270,7 +270,9 @@ export default class API {
          }
          catch(e)
          {
-            throw(e)
+            //throw(e)
+            console.error(e)
+            return true
          }
 
    }
@@ -936,7 +938,7 @@ export default class API {
          path = "//purl.bdrc.io" +  DICTIONARY_PATH;
 
          // to use with ldspdi-dev
-         path = "//ldspdi-dev.bdrc.io" +  DICTIONARY_PATH;
+         //path = "//ldspdi-dev.bdrc.io" +  DICTIONARY_PATH;
 
         return path;
     }
