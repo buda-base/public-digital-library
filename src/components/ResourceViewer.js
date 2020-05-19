@@ -814,7 +814,7 @@ class ResourceViewer extends Component<Props,State>
    {
       if(props.IRI && !props.outline && getEntiType(props.IRI) === "Instance" && props.config) props.onGetOutline(props.IRI)
 
-      let getElem = (prop,IRI,useAssoc) => {
+      let getElem = (prop,IRI,useAssoc) => {         
          let longIRI = fullUri(IRI)
          if(useAssoc) {
             let elem = useAssoc[longIRI]
@@ -826,6 +826,12 @@ class ResourceViewer extends Component<Props,State>
             let elem = props.resources[IRI][longIRI][prop]
             return elem
          }
+      }
+
+      let root = getElem(bdo+"inRootInstance",props.IRI)
+      if(root && root.length) {
+         let shR = shortUri(root[0].value)
+         if(!props.outlines[shR] && props.config) props.onGetOutline(shR)
       }
 
       let s 
@@ -946,7 +952,7 @@ class ResourceViewer extends Component<Props,State>
 */
    componentWillUpdate(newProps,newState)
    {
-      console.log("stateU",this.state,newState,newProps)
+      //console.log("stateU",this.state,newState,newProps)
 
 
       if(newState.annoPane && !newProps.annoCollec)
@@ -3393,7 +3399,7 @@ class ResourceViewer extends Component<Props,State>
          title = this.getH2(title,_befo,_T,other,T_)         
       }
 
-      console.log("sT",other,title,titlElem)
+      //console.log("sT",other,title,titlElem)
 
       return { title, titlElem, otherLabels }
    }
@@ -3838,7 +3844,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
    else if((cLegalD && cLegalD.endsWith("Undetermined"))||(!cLegalD && legalD && legalD.endsWith("Undetermined"))) copyR = "open_unknown" ;
    // TODO other kind of licenses ?
 
-   console.log("legal",cLegal,cLegalD,legal,legalD)
+   //console.log("legal",cLegal,cLegalD,legal,legalD)
 
    let same = this.getResourceElem(owl+"sameAs")
    if(!same || !same.length) same = [] 
@@ -4363,7 +4369,8 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                ||k.match(/(metadataLegal|contentProvider|replaceWith)$/)
                //||k.match(/([/]see|[/]sameAs)[^/]*$/) // quickfix [TODO] test property ancestors
                || (this.props.IRI.match(/^bda:/) && (k.match(new RegExp(adm+"|adm:")))))
-            && (k !== bdo+"eTextHasChunk" || kZprop.indexOf(bdo+"eTextHasPage") === -1) )
+            && (k !== bdo+"eTextHasChunk" || kZprop.indexOf(bdo+"eTextHasPage") === -1) 
+            && (k !== bdo+"hasPart" || !this.props.outline) )
             {
 
                let sup = this.hasSuper(k)
@@ -4579,7 +4586,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          if(orig && orig.length) orig = orig[0].value
          else orig = ""
 
-         console.log("prov x orig",prov,orig)
+         //console.log("prov x orig",prov,orig)
 
          if(prov !== "BDRC" && prov) {
 
@@ -4643,6 +4650,8 @@ perma_menu(pdfLink,monoVol,fairUse,other)
             return <div class="data" id="head"><div class={"header "+(!this.state.ready?"loading":"")}>{ !this.state.ready && <Loader loaded={false} /> }{src}</div></div>
       }
    }
+
+   // TODO case of part of instance after p.20 (see bdr:MW1KG2733_65CFB8)
 
    renderNoAccess = (fairUse) => {
       if(fairUse && (!this.props.auth || !this.props.auth.isAuthenticated()) )
@@ -4721,17 +4730,78 @@ perma_menu(pdfLink,monoVol,fairUse,other)
       )
    }
 
-   renderOutline(){
+   renderOutline() {
+
       if(this.props.outline) {
-         return ( <div class="data" id="outline">
-                        <h2>Outline</h2>
-                        <div class="search">
-                           <input type="text" placeholder="Search in outline"/>
-                        </div>
-                        <div>
-                        </div>
-                  </div> )
+         let outline = [], title
+
+         let toggle = (e,i) => {
+            i = "outline_"+i
+            this.setState( { collapse:{...this.state.collapse, [i]:!this.state.collapse[i] } })
+         }
+
+         let root = this.props.IRI
+         let elem = this.getResourceElem(bdo+"inRootInstance")
+         if(elem && elem.length) { 
+            root = shortUri(elem[0].value)
+            title = this.getWtitle(elem)
+         }
+         else {
+            title = this.getWtitle([{value:fullUri(this.props.IRI)}])
+         }
+
+         if(this.state.collapse["outline_root"] && this.props.outlines) {
+            elem = this.props.outlines[root]
+            if(elem && elem["@graph"]) { 
+               elem = elem["@graph"]
+               let node = elem.filter(e => e["@id"] === root)
+               console.log("elem?",elem)
+               if(node.length && node[0].hasPart) { 
+                  for(let e of node[0].hasPart) {
+                     console.log("e",e)
+                     let w_idx = elem.filter(f => f["@id"] === e)
+                     if(w_idx.length) outline.push(w_idx[0])
+                  }
+                  console.log("outline?",outline)
+                  outline = _.orderBy(outline,["partIndex"],["asc"]).map(e => <span {...this.props.IRI===e['@id']?{class:"is-root"}:{}}>{this.uriformat(null,{type:'uri',value:fullUri(e['@id'])})}</span>)
+               }
+            }
+         }
+
+         return ( 
+         <div class="data" id="outline">
+            <h2>Outline</h2>
+               <div class="search">
+                  <input type="text" placeholder="Search in outline"/>
+               </div>
+               <div>
+                  <div class={"root "+(this.props.IRI===root?"is-root":"")} >
+                     { !this.state.collapse["outline_root"] && [<ExpandMore className="xpd" onClick={(e) => toggle(e,"root")} />,<span>{title}</span>]}
+                     {  this.state.collapse["outline_root"] && [<ExpandLess className="xpd" onClick={(e) => toggle(e,"root")} />,<span class='on'>{title}</span>]}
+                  </div>
+                  { this.state.collapse["outline_root"] && <div style={{paddingLeft:"25px"}}>{outline}</div> }
+               </div>
+         </div> )
       }
+   }
+
+
+   getWtitle(baseW) {
+      if(baseW && baseW.length && baseW[0].value) {
+         let wUri = shortUri(baseW[0].value);
+         if(this.props.resources && !this.props.resources[wUri]) this.props.onGetResource(wUri);
+         //console.log("is?",baseW[0].value,this.props.assocResources?this.props.assocResources[baseW[0].value]:null)
+         let baseData = []
+         if(this.props.assocResources) {
+            baseData = this.props.assocResources[baseW[0].value]
+            if(baseData && baseData.length) baseData = baseData.map(e => (e.fromKey?e.fromKey:(e.type?e.type:e)))         
+            else baseData = []
+         }
+         let _T = getEntiType(shortUri(baseW[0].value))
+         let { title,titlElem,otherLabels } = this.setTitle(baseData,_T,baseW[0].value) ;
+         return title
+      }
+      return null
    }
 
    render()
@@ -4787,24 +4857,8 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
       this.setManifest(kZprop,iiifpres)    
 
-      let getWtitle = (baseW) => {
-         if(baseW && baseW.length && baseW[0].value) {
-            let wUri = shortUri(baseW[0].value);
-            if(this.props.resources && !this.props.resources[wUri]) this.props.onGetResource(wUri);
-            //console.log("is?",baseW[0].value,this.props.assocResources?this.props.assocResources[baseW[0].value]:null)
-            let baseData = []
-            if(this.props.assocResources) {
-               baseData = this.props.assocResources[baseW[0].value]
-               if(baseData && baseData.length) baseData = baseData.map(e => (e.fromKey?e.fromKey:(e.type?e.type:e)))         
-               else baseData = []
-            }
-            let _T = getEntiType(shortUri(baseW[0].value))
-            let { title,titlElem,otherLabels } = this.setTitle(baseData,_T,baseW[0].value) ;
-            return title
-         }
-         return null
-      }
 
+      let getWtitle = this.getWtitle.bind(this)
       let wTitle,iTitle,rTitle ;
       let _T = getEntiType(this.props.IRI)
       let { title,titlElem,otherLabels } = this.setTitle(kZprop,_T) ;
@@ -4873,6 +4927,12 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                      </div>
                      ]
    */
+
+      // TODO Related Works
+      // - move towards top of page 
+      // - use '...' to tell it's just an overview
+      // - use prefLabel in tabs title 
+
       let related, createdBy
       if(this.props.assocResources) {
          let res = fullUri(this.props.IRI)
@@ -5029,7 +5089,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                         </div>
                      </div> 
                   }         
-                  {/* theOutline */}
+                  { theOutline }
                   { theDataLegal }
                   { theDataExt && 
                      <div class="data ext-props" id="ext-info">

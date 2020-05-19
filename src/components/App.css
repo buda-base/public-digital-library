@@ -805,6 +805,25 @@ h4:not(:hover) > .lang
    background-image:url(/icons/loupe.png); background-position:center right 10px; background-repeat:no-repeat;
 }
 
+.resource .data#outline:last-child { padding-bottom:45px; }
+.resource .data#outline div { flex-wrap:wrap; }
+.resource .data#outline div h2,
+.resource .data#outline div span { font-size:14px; font-weight:400; color:#343434; }
+.resource .data#outline .root >  span { width:calc(100% - 25px); display:block; }
+.resource .data#outline .on span { font-weight:600 !important;  }
+.resource .data#outline span a { color: #343434; display:flex; line-height:24px; }
+.resource .data#outline span a:hover { border:none; text-decoration: underline; text-decoration-color: #343434; }
+.resource .data#outline span .lang { display:none; }
+.resource .data#outline div svg.xpd { width:20px; margin-right:5px;  cursor:pointer; opacity:0.75;}
+.resource .data#outline div::after { content:none !important;}
+.resource .data#outline div h2:not(.on) .T { display:none; }
+.resource .data#outline div .root { width:100%; display:flex; }
+
+.resource .data#outline .is-root h2 a span,
+.resource .data#outline span.is-root a  { color:#d73449;  }
+.resource .data#outline .is-root a:hover { text-decoration-color: #d73449;}
+.resource .data#outline .is-root svg.xpd { color:#d73449; }
+
 /* ------------------------------------------------------------------------------------------------------------------------ header */
 
 .resource .data#head { background-color:#ffffff; padding:35px; padding-bottom:45px;}

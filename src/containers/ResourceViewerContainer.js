@@ -107,10 +107,13 @@ const mapStateToProps = (state,ownProps) => {
    if(outline && outline[ownProps.IRI] !== undefined) outline = outline[ownProps.IRI]
    else outline = false
 
+
+   let outlines = state.data.outlines
+
    let props = { logged,config,resources, ontology, dictionary, keyword, language, datatype, assocResources, prefLang, failures,
       imageAsset,firstImage,canvasID,collecManif,manifests,manifestError,pdfVolumes,createPdf,pdfUrl, manifestWpdf,
       annoCollec,rightPanel,locale,langPreset,imgData, nextChunk, nextPage, resourceManifest, imageVolumeManifests, userEditPolicies, highlight,
-      outline }
+      outline,outlines }
 
    console.log("mS2p",state,props)
 
