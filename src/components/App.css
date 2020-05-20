@@ -868,6 +868,8 @@ h4:not(:hover) > .lang
 .resource .data#outline .root + div .top + .details .sub.view a { border:none;font-weight:700; }
 .resource .data#outline .root + div .top + .details .sub.view a:hover { text-decoration:underline; }
 
+.resource .data#outline .root + div .top + .details .sub.loca .urilink { display:inline; }
+
 /* ------------------------------------------------------------------------------------------------------------------------ header */
 
 .resource .data#head { background-color:#ffffff; padding:35px; padding-bottom:45px;}

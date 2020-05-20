@@ -3620,10 +3620,13 @@ class ResourceViewer extends Component<Props,State>
       return { doMap, doRegion, regBox }
    }
 
-   getWorkLocation = (elem, withTag = true) => {
+   getWorkLocation = (elem, withTag = true, node) => {
       let _elem = elem
       if(elem && Array.isArray(elem) && elem[0]) {
-         elem = this.getResourceBNode(elem[0].value)
+         
+         if(!node) elem = this.getResourceBNode(elem[0].value)
+         else elem = node
+
          let str = ""
          
          console.log("loca",elem)
@@ -4774,6 +4777,10 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                                  if(!g.details) g.details = []
                                  g.details.push(<div class="sub view"><Link to={"/show/"+g["@id"]+"#open-viewer"} class="ulink">&gt; View Images</Link></div>)
                               }
+                              if(g.instanceOf) {
+                                 if(!g.details) g.details = []
+                                 g.details.push(<div class="sub"><h4 class="first type">{this.proplink(bdo+"instanceOf")}: </h4>{this.format("h4","instacO","",false, "sub", [{type:"uri",value:fullUri(g.instanceOf)}])}</div>)
+                              }
                               if(g.hasTitle) {
                                  if(!g.details) g.details = []
                                  if(!Array.isArray(g.hasTitle)) g.hasTitle = [ g.hasTitle ]
@@ -4790,9 +4797,15 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                                     }
                                  }
                               }
-                              if(g.instanceOf) {
+                              if(g.contentLocation) {
                                  if(!g.details) g.details = []
-                                 g.details.push(<div class="sub"><h4 class="first type">{this.proplink(bdo+"instanceOf")}: </h4>{this.format("h4","instacO","",false, "sub", [{type:"uri",value:fullUri(g.instanceOf)}])}</div>)
+                                 let loca = elem.filter(f => f["@id"] === g.contentLocation), jLoca = {}
+                                 if(loca && loca.length) loca = loca[0]
+                                 for(let k of Object.keys(loca)) {
+                                    let val = "" + loca[k]
+                                    if(k.includes("content")) jLoca[bdo+k] = [ { value:(val.includes(":")?fullUri(loca[k]):loca[k]), type:"literal" } ]
+                                 }                                 
+                                 g.details.push(<div class="sub loca"><h4 class="first type">{this.proplink(bdo+"contentLocation")}: </h4>{this.getWorkLocation([{value:loca["@id"]}],true, jLoca)}</div>)
                               }
                            }
                            outline.push(g);
