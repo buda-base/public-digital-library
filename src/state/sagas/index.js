@@ -1932,8 +1932,10 @@ export function* watchGetInstances() {
 
 async function getOutline(iri) {
 
+   store.dispatch(uiActions.loading(iri, "outline"));
    let res = await api.loadOutline(iri) 
-
+   store.dispatch(uiActions.loading(iri, false));
+   
    console.log("outline",res)
 
    store.dispatch(dataActions.gotOutline(iri,res))

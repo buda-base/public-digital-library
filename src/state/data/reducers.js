@@ -799,14 +799,32 @@ reducers[actions.TYPES.getOutline] = getOutline;
 
 export const gotOutline = (state: DataState, action: Action) => {
 
+   const skos  = "http://www.w3.org/2004/02/skos/core#";
+
    let outlines = {}
    if(state.outlines) outlines = state.outlines
+
+   let assoR = {}
+   if(state.assocResources) assoR = { ...state.assocResources }
+
+   let elem = action.meta
+   if(elem && elem["@graph"]) elem = elem["@graph"]
+   if(elem && elem.length) for(let e of elem) {
+      let uri = fullUri(e["@id"])
+      if(e["skos:prefLabel"]) {
+         if(!assoR[e["@id"]]) assoR[e["@id"]] = { [uri]:[] }
+         if(!Array.isArray(e["skos:prefLabel"])) e["skos:prefLabel"] = [ e["skos:prefLabel"] ]
+         assoR[e["@id"]][uri] = assoR[e["@id"]][uri].concat( e["skos:prefLabel"].map(p => ({ value:p["@value"], lang:p["@language"], type:skos+"prefLabel" })))
+      }
+   }
+
    return {
          ...state,
          outlines:{
             ...outlines,
             [action.payload]:action.meta,
-         }
+         },
+         assocResources:assoR
     }
 }
 reducers[actions.TYPES.gotOutline] = gotOutline;

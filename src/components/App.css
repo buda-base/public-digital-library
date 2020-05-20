@@ -823,6 +823,22 @@ h4:not(:hover) > .lang
 .resource .data#outline span.is-root a  { color:#d73449;  }
 .resource .data#outline .is-root a:hover { text-decoration-color: #d73449;}
 .resource .data#outline .is-root svg.xpd { color:#d73449; }
+.resource .data#outline .root + div > span { display:flex; position:relative; }
+.resource .data#outline .root + div .xpd { position:absolute; left:-25px; }
+.resource .data#outline .root + div span{ position:relative; }
+
+.resource .data#outline .loader { width: 100%; top: 50%; }
+
+
+.resource .data#outline .root + div .ulink { width:auto; }
+.resource .data#outline .root + div .pType a { pointer-events: none; }
+.resource .data#outline .root + div .pType span { font-size:10px; font-weight:700; opacity:0.65; flex-shrink:0; }
+.resource .data#outline .root + div .pType span:before { content:'';width:1px;border-left:2px solid #343434;display: inline-block;height:14px;vertical-align:middle;
+   padding-left:5px;margin-left:5px;
+}
+
+.resource .data#outline .root + div span.top { display: block; }
+.resource .data#outline .root + div span.top :not(.lang) { display:inline; vertical-align:top; }
 
 /* ------------------------------------------------------------------------------------------------------------------------ header */
 

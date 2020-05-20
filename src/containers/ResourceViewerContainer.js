@@ -108,9 +108,11 @@ const mapStateToProps = (state,ownProps) => {
    else outline = false
 
 
+   let loading = state.ui.loading  ;
+
    let outlines = state.data.outlines
 
-   let props = { logged,config,resources, ontology, dictionary, keyword, language, datatype, assocResources, prefLang, failures,
+   let props = { logged,config,resources, ontology, dictionary, keyword, language, datatype, assocResources, prefLang, failures, loading,
       imageAsset,firstImage,canvasID,collecManif,manifests,manifestError,pdfVolumes,createPdf,pdfUrl, manifestWpdf,
       annoCollec,rightPanel,locale,langPreset,imgData, nextChunk, nextPage, resourceManifest, imageVolumeManifests, userEditPolicies, highlight,
       outline,outlines }
