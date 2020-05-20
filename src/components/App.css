@@ -810,8 +810,8 @@ h4:not(:hover) > .lang
 .resource .data#outline div h2,
 .resource .data#outline div span { font-size:14px; font-weight:400; color:#343434; }
 .resource .data#outline .root >  span { width:calc(100% - 25px); display:block; }
-.resource .data#outline .on span { font-weight:600 !important;  }
-.resource .data#outline span a { color: #343434; display:flex; line-height:24px; }
+.resource .data#outline .on > span:not(.pType) span { font-weight:600 !important;  }
+.resource .data#outline span a { color: #343434; display:flex; line-height:20px; }
 .resource .data#outline span a:hover { border:none; text-decoration: underline; text-decoration-color: #343434; }
 .resource .data#outline span .lang { display:none; }
 .resource .data#outline div svg.xpd { width:20px; margin-right:5px;  cursor:pointer; opacity:0.75;}
@@ -837,8 +837,36 @@ h4:not(:hover) > .lang
    padding-left:5px;margin-left:5px;
 }
 
-.resource .data#outline .root + div span.top { display: block; }
+.resource .data#outline .root + div span.top { display: block;  margin-top:5px; }
+.resource .data#outline .root + div > .top:first-child { margin-top:0px; }
 .resource .data#outline .root + div span.top :not(.lang) { display:inline; vertical-align:top; }
+
+.resource .data#outline .root + div .pType.on { cursor:pointer; }
+.resource .data#outline .root + div .pType.on a { text-decoration:underline; text-decoration-color:rgba(0,0,0,0.65);}
+
+.resource .data#outline .root + div .pType svg.details { width:14px; opacity:0.65; display:none; vertical-align:bottom;height:18px; }
+.resource .data#outline .root + div .top:hover .pType.on svg.details { display:inline; }
+
+.resource .data#outline .root + div { width:calc(100% - 25px - 50px - 35px); }
+.resource .data#outline .root + div .top + .details { width:100%; background-color:#ffffff80; margin:5px 25px 5px 0; padding:10px 15px;}
+
+.resource .data#outline .root + div .top + .details .sub { margin:0;border:none;padding:0; display:flex; flex-wrap:nowrap; }
+.resource .data#outline .root + div .top + .details .sub + .sub { padding-top:10px; }
+.resource .data#outline .root + div .top + .details .sub h4,
+.resource .data#outline .root + div .top + .details .sub a,
+.resource .data#outline .root + div .top + .details .sub h4 span { font-size:12px;line-height:16px; }
+.resource .data#outline .root + div .top + .details .sub h4.first { width:100px; }
+.resource .data#outline .root + div .top + .details .sub h4.first span { font-weight:700;}
+.resource .data#outline .root + div .top + .details .sub h4.first + h4 { width:calc(100% - 100px); }
+.resource .data#outline .root + div .top + .details .sub h4 { padding-right:20px; }
+.resource .data#outline .root + div .top + .details .sub .lang { display:none; } 
+.resource .data#outline .root + div .top + .details .sub h4:not(.first) a { color:#d73449;} 
+.resource .data#outline .root + div .top + .details .sub h4:not(.first) a:hover { text-decoration-color: #d73449;} 
+
+.resource .data#outline .root + div .top + .details .hover-menu { top:-4px; }
+
+.resource .data#outline .root + div .top + .details .sub.view a { border:none;font-weight:700; }
+.resource .data#outline .root + div .top + .details .sub.view a:hover { text-decoration:underline; }
 
 /* ------------------------------------------------------------------------------------------------------------------------ header */
 

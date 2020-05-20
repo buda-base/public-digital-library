@@ -1770,7 +1770,7 @@ class ResourceViewer extends Component<Props,State>
    {
       if(elem) {
 
-         //console.log("uriformat",prop,elem.value,elem,dic,withProp,show)
+         console.log("uriformat",prop,elem.value,elem,dic,withProp,show)
          
          if(!elem.value.match(/^http:\/\/purl\.bdrc\.io/) /* && !hasExtPref */ && ((!dic || !dic[elem.value]) && !prop.match(/[/#]sameAs/))) {
             let link = elem.value
@@ -2296,14 +2296,14 @@ class ResourceViewer extends Component<Props,State>
       })
       */
 
-      //console.log("format",Tag, prop,JSON.stringify(elem,null,3),txt,bnode,div);
+      console.log("format",Tag, prop,JSON.stringify(elem,null,3),txt,bnode,div);
 
       let ret = [],pre = []
       let note = []
 
       if(elem && !Array.isArray(elem)) elem = [ elem ]
 
-      //console.log("elem", elem)
+      console.log("elem", elem)
 
       let nbN = 1, T, lastT
 
@@ -4370,7 +4370,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                //||k.match(/([/]see|[/]sameAs)[^/]*$/) // quickfix [TODO] test property ancestors
                || (this.props.IRI.match(/^bda:/) && (k.match(new RegExp(adm+"|adm:")))))
             && (k !== bdo+"eTextHasChunk" || kZprop.indexOf(bdo+"eTextHasPage") === -1) 
-            //&& (k !== bdo+"hasPart" || !this.props.outline) 
+            && (k !== bdo+"hasPart" || !this.props.outline) 
             )
             {
 
@@ -4736,10 +4736,11 @@ perma_menu(pdfLink,monoVol,fairUse,other)
       if(this.props.outline) {
          let outline = [], title
 
-         let toggle = (e,r,i) => {
-            let tag = "outline-"+r+"-"+i
+         let toggle = (e,r,i,x = "") => {
+            let tag = "outline-"+r+"-"+i+(x?"-"+x:"")
+            console.log("toggle?",tag)
             this.setState( { collapse:{...this.state.collapse, [tag]:!this.state.collapse[tag] } })
-            if(i !== "root" && this.props.outlines && !this.props.outlines[i]) this.props.onGetOutline(i);
+            if(!x && this.props.outlines && !this.props.outlines[i]) this.props.onGetOutline(i);
          }
 
          let root = this.props.IRI
@@ -4752,35 +4753,73 @@ perma_menu(pdfLink,monoVol,fairUse,other)
             title = this.getWtitle([{value:fullUri(this.props.IRI)}])
          }
 
-         if(this.state.collapse["outline-"+root+"-root"] && this.props.outlines) {
+         if(this.state.collapse["outline-"+root+"-"+root] && this.props.outlines) {
 
             let makeNodes = (top,parent) => {               
                let elem = this.props.outlines[top]
-               console.log("elem?",elem,top,parent)
+               //console.log("elem?",elem,top,parent)
                let outline = []
                if(elem && elem["@graph"]) { 
                   elem = elem["@graph"]
                   let node = elem.filter(e => e["@id"] === top)                  
                   if(node.length && node[0].hasPart) { 
+                     if(!Array.isArray(node[0].hasPart)) node[0].hasPart = [ node[0].hasPart ]
                      for(let e of node[0].hasPart) {
-                        console.log("e",e)  
+                        //console.log("e",e)  
                         let w_idx = elem.filter(f => f["@id"] === e) 
-                        if(w_idx.length) outline.push(w_idx[0])
-                        // TODO use boolean in node to tell if has children
-                        if(this.state.collapse["outline-"+root+"-"+top] && !this.props.outlines[e]) this.props.onGetOutline(e);
+                        if(w_idx.length) {
+                           let g = w_idx[0]
+                           if(!g.details) {
+                              if(! (["bdr:PartTypeSection", "bdr:PartTypeVolume"].includes(g.partType)) ) {
+                                 if(!g.details) g.details = []
+                                 g.details.push(<div class="sub view"><Link to={"/show/"+g["@id"]+"#open-viewer"} class="ulink">&gt; View Images</Link></div>)
+                              }
+                              if(g.hasTitle) {
+                                 if(!g.details) g.details = []
+                                 if(!Array.isArray(g.hasTitle)) g.hasTitle = [ g.hasTitle ]
+                                 for(let t of g.hasTitle) { 
+                                    let title = elem.filter(f => f["@id"] === t)
+                                    if(title.length) {                                        
+                                       title = { ...title[0] }
+                                       let titleT = bdo + title.type
+                                       if(title && title["rdfs:label"]) title = title["rdfs:label"]
+                                       if(!Array.isArray(title)) title = [ title ]
+                                       title = title.map(f => ({value:f["@value"],lang:f["@language"], type:"literal"}))
+                                       console.log("title?",JSON.stringify(title,null,3))
+                                       g.details.push(<div class="sub"><h4 class="first type">{this.proplink(titleT)}: </h4>{this.format("h4", "", "", false, "sub", title)}</div>)
+                                    }
+                                 }
+                              }
+                              if(g.instanceOf) {
+                                 if(!g.details) g.details = []
+                                 g.details.push(<div class="sub"><h4 class="first type">{this.proplink(bdo+"instanceOf")}: </h4>{this.format("h4","instacO","",false, "sub", [{type:"uri",value:fullUri(g.instanceOf)}])}</div>)
+                              }
+                           }
+                           outline.push(g);
+                        }
+                        // DONE use boolean in node to tell if has children
+                        //if(this.state.collapse["outline-"+root+"-"+top] && !this.props.outlines[e]) this.props.onGetOutline(e);
                      }
+                     
                      console.log("outline?",elem,outline)
+
                      outline = _.orderBy(outline,["partIndex"],["asc"]).map(e => {
                         let tag = "outline-"+root+"-"+e['@id']
                         let ret = []
                         let pType = e["partType"]
                         if(pType && pType["@id"]) pType = pType["@id"]
                         ret.push(<span class={'top'+ (this.props.IRI===e['@id']?" is-root":"")+(this.state.collapse[tag]?" on":"") }>
-                              {(!this.state.collapse[tag] && this.props.outlines[e['@id']] !== true) && <ExpandMore onClick={(ev) => toggle(ev,root,e["@id"])} className="xpd"/>}
-                              {( this.state.collapse[tag] && this.props.outlines[e['@id']] !== true) && <ExpandLess onClick={(ev) => toggle(ev,root,e["@id"])} className="xpd"/>}
-                              {this.uriformat(null,{type:'uri',value:fullUri(e['@id'])})}
-                              {pType && <span class="pType">{this.proplink(pType)}</span> }
+                              {(e.hasPart && !this.state.collapse[tag] && this.props.outlines[e['@id']] !== true) && <ExpandMore onClick={(ev) => toggle(ev,root,e["@id"])} className="xpd"/>}
+                              {(e.hasPart &&  this.state.collapse[tag] && this.props.outlines[e['@id']] !== true) && <ExpandLess onClick={(ev) => toggle(ev,root,e["@id"])} className="xpd"/>}
+                              <span title="Open">{this.uriformat(null,{type:'uri',value:fullUri(e['@id'])})}</span>
+                              {pType && 
+                                 <span class={"pType "+(e.details?"on":"")} {...e.details?{title:"View Details", onClick:(ev) => toggle(ev,root,e["@id"],"details")}:{}} >
+                                    {this.proplink(pType)}
+                                    { !this.state.collapse[tag+"-details"] && <ExpandMore className="details"/>}
+                                    {  this.state.collapse[tag+"-details"] && <ExpandLess className="details"/>}
+                                 </span> }
                            </span>)
+                        if(this.state.collapse[tag+"-details"] && e.details) ret.push(<div class="details">{e.details}</div>)
                         if(this.props.outlines[e["@id"]] && this.props.outlines[e["@id"]] !== true && this.state.collapse[tag] ) ret.push(<div style={{paddingLeft:"25px"}}>{makeNodes(e["@id"],top)}</div>)                        
                         return ( ret )
                      })
@@ -4792,7 +4831,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
             outline = makeNodes(root,root)
          }
 
-         let tag = "outline-"+root+"-root"
+         let tag = "outline-"+root+"-"+root
 
          return ( 
          <div class="data" id="outline">
@@ -4803,8 +4842,8 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                <div>
                   <Loader loaded={this.props.loading !== "outline"}/>
                   <div class={"root "+(this.props.IRI===root?"is-root":"")} >
-                     { !this.state.collapse[tag] && [<ExpandMore className="xpd" onClick={(e) => toggle(e,root,"root")} />,<span>{title}</span>]}
-                     {  this.state.collapse[tag] && [<ExpandLess className="xpd" onClick={(e) => toggle(e,root,"root")} />,<span class='on'>{title}</span>]}
+                     { !this.state.collapse[tag] && [<ExpandMore className="xpd" onClick={(e) => toggle(e,root,root)} />,<span>{title}</span>]}
+                     {  this.state.collapse[tag] && [<ExpandLess className="xpd" onClick={(e) => toggle(e,root,root)} />,<span class='on'>{title}</span>]}
                   </div>
                   { this.state.collapse[tag] && <div style={{paddingLeft:"50px"}}>{outline}</div> }
                </div>
