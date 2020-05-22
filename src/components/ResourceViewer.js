@@ -4773,9 +4773,12 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                         if(w_idx.length) {
                            let g = w_idx[0]
                            if(!g.details) {
-                              if(! (["bdr:PartTypeSection", "bdr:PartTypeVolume"].includes(g.partType)) ) {
+                              // deprecated
+                              // if(! (["bdr:PartTypeSection", "bdr:PartTypeVolume"].includes(g.partType)) ) {
+                              if(g.contentLocation) {
                                  if(!g.details) g.details = []
-                                 g.details.push(<div class="sub view"><Link to={"/show/"+g["@id"]+"#open-viewer"} class="ulink">&gt; View Images</Link></div>)
+                                 g.hasImg = "/show/"+g["@id"]+"#open-viewer"
+                                 g.details.push(<div class="sub view"><Link to={g.hasImg} class="ulink">&gt; View Images</Link></div>)
                               }
                               if(g.instanceOf) {
                                  if(!g.details) g.details = []
@@ -4819,18 +4822,24 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                      outline = _.orderBy(outline,["partIndex"],["asc"]).map(e => {
                         let tag = "outline-"+root+"-"+e['@id']
                         let ret = []
-                        let pType = e["partType"]
+                        let pType = e["partType"], fUri = fullUri(e["@id"])
                         if(pType && pType["@id"]) pType = pType["@id"]
                         ret.push(<span class={'top'+ (this.props.IRI===e['@id']?" is-root":"")+(this.state.collapse[tag]?" on":"") }>
                               {(e.hasPart && !this.state.collapse[tag] && this.props.outlines[e['@id']] !== true) && <ExpandMore onClick={(ev) => toggle(ev,root,e["@id"])} className="xpd"/>}
                               {(e.hasPart &&  this.state.collapse[tag] && this.props.outlines[e['@id']] !== true) && <ExpandLess onClick={(ev) => toggle(ev,root,e["@id"])} className="xpd"/>}
-                              <span title="Open">{this.uriformat(null,{type:'uri',value:fullUri(e['@id'])})}</span>
+                              <span title="Open">{this.uriformat(null,{type:'uri',value:fUri})}</span>                              
+                              { e.hasImg && <Link className="hasImg" title="View Images"  to={e.hasImg}><img src="/icons/search/images.svg"/></Link> }
                               {pType && 
-                                 <span class={"pType "+(e.details?"on":"")} {...e.details?{title:"View Details", onClick:(ev) => toggle(ev,root,e["@id"],"details")}:{}} >
+                                 <span class={"pType "+(e.details?"on":"")} {...e.details?{title:(this.state.collapse[tag+"-details"]?"Hide":"Show")+" Details", onClick:(ev) => toggle(ev,root,e["@id"],"details")}:{}} >
                                     {this.proplink(pType)}
                                     { !this.state.collapse[tag+"-details"] && <ExpandMore className="details"/>}
                                     {  this.state.collapse[tag+"-details"] && <ExpandLess className="details"/>}
                                  </span> }
+                              <CopyToClipboard text={fUri} onCopy={(e) => prompt("Resource url has been copied to clipboard.\nCTRL+V to paste",fUri)}>
+                                 <a class="permalink" title="Permalink">
+                                    <img src="/icons/PLINK_small.svg"/>
+                                 </a>
+                              </CopyToClipboard>
                            </span>)
                         if(this.state.collapse[tag+"-details"] && e.details) ret.push(<div class="details">{e.details}</div>)
                         if(this.props.outlines[e["@id"]] && this.props.outlines[e["@id"]] !== true && this.state.collapse[tag] ) ret.push(<div style={{paddingLeft:"25px"}}>{makeNodes(e["@id"],top)}</div>)                        
