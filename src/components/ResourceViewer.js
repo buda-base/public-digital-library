@@ -1770,7 +1770,7 @@ class ResourceViewer extends Component<Props,State>
    {
       if(elem) {
 
-         console.log("uriformat",prop,elem.value,elem,dic,withProp,show)
+         //console.log("uriformat",prop,elem.value,elem,dic,withProp,show)
          
          if(!elem.value.match(/^http:\/\/purl\.bdrc\.io/) /* && !hasExtPref */ && ((!dic || !dic[elem.value]) && !prop.match(/[/#]sameAs/))) {
             let link = elem.value
@@ -2296,14 +2296,14 @@ class ResourceViewer extends Component<Props,State>
       })
       */
 
-      console.log("format",Tag, prop,JSON.stringify(elem,null,3),txt,bnode,div);
+      //console.log("format",Tag, prop,JSON.stringify(elem,null,3),txt,bnode,div);
 
       let ret = [],pre = []
       let note = []
 
       if(elem && !Array.isArray(elem)) elem = [ elem ]
 
-      console.log("elem", elem)
+      //console.log("elem", elem)
 
       let nbN = 1, T, lastT
 
@@ -4758,6 +4758,14 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
          if(this.state.collapse["outline-"+root+"-"+root] && this.props.outlines) {
 
+            const parts = {
+               "bdr:PartTypeSection":"sec",
+               "bdr:PartTypeVolume":"vol",
+               "bdr:PartTypeChapter":"cha",
+               "bdr:PartTypeTableOfContent":"toc",
+               "bdr:PartTypeText":"txt",
+            }
+            
             let makeNodes = (top,parent) => {               
                let elem = this.props.outlines[top]
                //console.log("elem?",elem,top,parent)
@@ -4823,18 +4831,24 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                         let tag = "outline-"+root+"-"+e['@id']
                         let ret = []
                         let pType = e["partType"], fUri = fullUri(e["@id"])
+                        let tLabel = getOntoLabel(this.props.dictionary,this.props.locale,fullUri(pType))
+                        tLabel = tLabel[0].toUpperCase() + tLabel.slice(1)
                         if(pType && pType["@id"]) pType = pType["@id"]
                         ret.push(<span class={'top'+ (this.props.IRI===e['@id']?" is-root":"")+(this.state.collapse[tag]?" on":"") }>
                               {(e.hasPart && !this.state.collapse[tag] && this.props.outlines[e['@id']] !== true) && <ExpandMore onClick={(ev) => toggle(ev,root,e["@id"])} className="xpd"/>}
                               {(e.hasPart &&  this.state.collapse[tag] && this.props.outlines[e['@id']] !== true) && <ExpandLess onClick={(ev) => toggle(ev,root,e["@id"])} className="xpd"/>}
+                              <span class={"parTy "+(e.details?"on":"")} {...e.details?{title:tLabel+" - "+(this.state.collapse[tag+"-details"]?"Hide":"Show")+" Details", onClick:(ev) => toggle(ev,root,e["@id"],"details")}:{title:tLabel}} >
+                                 {pType && parts[pType] ? <div>{parts[pType]}</div> : null}
+                              </span>
                               <span title="Open">{this.uriformat(null,{type:'uri',value:fUri})}</span>                              
                               { e.hasImg && <Link className="hasImg" title="View Images"  to={e.hasImg}><img src="/icons/search/images.svg"/></Link> }
-                              {pType && 
+                              { /* pType && 
                                  <span class={"pType "+(e.details?"on":"")} {...e.details?{title:(this.state.collapse[tag+"-details"]?"Hide":"Show")+" Details", onClick:(ev) => toggle(ev,root,e["@id"],"details")}:{}} >
                                     {this.proplink(pType)}
                                     { !this.state.collapse[tag+"-details"] && <ExpandMore className="details"/>}
                                     {  this.state.collapse[tag+"-details"] && <ExpandLess className="details"/>}
-                                 </span> }
+                                 </span> */ }
+                              { e.details && <span id="anchor" title={tLabel+" - "+(this.state.collapse[tag+"-details"]?"Hide":"Show")+" Details"} onClick={(ev) => toggle(ev,root,e["@id"],"details")}><img src="/icons/info.svg"/></span> }
                               <CopyToClipboard text={fUri} onCopy={(e) => prompt("Resource url has been copied to clipboard.\nCTRL+V to paste",fUri)}>
                                  <a class="permalink" title="Permalink">
                                     <img src="/icons/PLINK_small.svg"/>

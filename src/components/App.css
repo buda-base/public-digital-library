@@ -2,6 +2,8 @@
 @import url('https://fonts.googleapis.com/css?family=Roboto:300,400,500,600,700,800'); 
 /* @import url('https://fonts.googleapis.com/css?family=Noto+Sans:400,500,700&display=swap'); */
 
+@import url('https://fonts.googleapis.com/css2?family=Overpass+Mono:wght@300&display=swap');
+
 /* CSS debug mode */
 /* * {background-color:rgba(255,0,128,0.05);}   */
 
@@ -822,9 +824,9 @@ h4:not(:hover) > .lang
 .resource .data#outline .is-root h2 a span,
 .resource .data#outline span.is-root a  { color:#d73449;  }
 .resource .data#outline .is-root a:hover { text-decoration-color: #d73449;}
-.resource .data#outline .is-root svg.xpd { color:#d73449; }
+.resource .data#outline .is-root svg.xpd { color:#d73449; margin-top:-2px; }
 .resource .data#outline .root + div > span { display:flex; position:relative; }
-.resource .data#outline .root + div .xpd { position:absolute; left:-25px; }
+.resource .data#outline .root + div .xpd { position:absolute; left:-23px; top:-2px; }
 .resource .data#outline .root + div span{ position:relative; }
 
 .resource .data#outline .loader { width: 100%; top: 50%; }
@@ -833,24 +835,45 @@ h4:not(:hover) > .lang
 .resource .data#outline .root + div .ulink { width:auto; }
 .resource .data#outline .root + div .pType a { pointer-events: none; }
 .resource .data#outline .root + div .pType span { font-size:10px; font-weight:700; opacity:0.65; flex-shrink:0; }
+
 .resource .data#outline .root + div .permalink::before,
 .resource .data#outline .root + div .hasImg::before,
-.resource .data#outline .root + div .pType span:before { content:'';width:1px;border-left:1px solid #343434;display: inline-block;height:16px;
-   vertical-align:middle; padding-left:6px;margin-left:7px; margin-bottom:1px; 
+.resource .data#outline .root + div .pType span:before { content:'';width:1px;/*border-left:1px solid #343434;*/display: inline-block;height:16px;
+   vertical-align:middle; /*padding-left:6px;*/margin-left:0px; margin-bottom:1px; 
 }
 
+
 .resource .data#outline .root + div .permalink {  opacity:0; margin-left:0px; cursor:pointer; }
-.resource .data#outline .root + div .top:hover .permalink  {  opacity:1; }
+.resource .data#outline .root + div .top:hover .permalink  {  opacity:0.8; }
 .resource .data#outline .root + div .permalink img { width:16px; vertical-align: middle !important; }
+.resource .data#outline .root + div .top:hover .permalink:hover { opacity:1; }
 
 .resource .data#outline .root + div .permalink::before,
 .resource .data#outline .root + div .hasImg::before { opacity:0.65;}
 .resource .data#outline .root + div .hasImg img { width:18px; opacity:0.8; vertical-align: middle !important; }
 .resource .data#outline .root + div .hasImg:hover img { opacity:1; }
 
+.resource .data#outline .root + div .parTy + span { margin-right:5px;}
+
 .resource .data#outline .root + div span.top { display: block;  margin-top:5px; }
 .resource .data#outline .root + div > .top:first-child { margin-top:0px; }
 .resource .data#outline .root + div span.top :not(.lang) { display:inline; vertical-align:top; }
+
+
+.resource .data#outline .root + div .parTy div { text-transform: uppercase; font-size:9px; font-family:"Noto Sans SemCond" !important;  opacity:0.65;
+   /*padding:4px 1px 0 1px; text-align: center;  margin-top:-2px; */
+}
+.resource .data#outline .root + div .parTy:not(#a) { font-size:0;padding-bottom:3px; box-sizing: border-box; vertical-align: 2px;
+   display:inline-flex; align-items: flex-end; justify-content: center; margin-right:7px; width:21px;height:20px; border:1px solid rgba(0,0,0,0.35); 
+}
+.resource .data#outline .root + div .parTy:not(#a).on { cursor:pointer; font-weight:700; border:1px solid rgba(0,0,0,0.65);}
+.resource .data#outline .root + div .parTy.on:hover { text-decoration: underline; }
+.resource .data#outline .root + div .parTy.on div { opacity:1.0;}
+
+.resource .data#outline .root + div #anchor { margin-left:0px; opacity:0; cursor: pointer; }
+.resource .data#outline .root + div #anchor img { filter: grayscale(); opacity:0.75; width:24px;  display:inline-block;margin-top:-2px;}
+.resource .data#outline .root + div .top:hover #anchor { opacity:1; }
+.resource .data#outline .root + div #anchor:hover img { opacity:0.9; }
 
 .resource .data#outline .root + div .pType.on { cursor:pointer; }
 .resource .data#outline .root + div .pType.on a { text-decoration:underline; text-decoration-color:rgba(0,0,0,0.65);}
