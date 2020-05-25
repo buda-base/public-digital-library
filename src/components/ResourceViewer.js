@@ -814,6 +814,8 @@ class ResourceViewer extends Component<Props,State>
    {
       if(props.IRI && !props.outline && getEntiType(props.IRI) === "Instance" && props.config) props.onGetOutline(props.IRI)
 
+      if(state.outlinePart && props.outlines && !props.outlines[state.outlinePart] && props.config) props.onGetOutline(state.outlinePart)
+
       let getElem = (prop,IRI,useAssoc) => {         
          let longIRI = fullUri(IRI)
          if(useAssoc) {
@@ -1008,7 +1010,7 @@ class ResourceViewer extends Component<Props,State>
                   history.replace(loca)
                }
             }), 
-            0 
+            3000 
          )
       }
       else if(this.state.openEtext) {         
@@ -1036,6 +1038,12 @@ class ResourceViewer extends Component<Props,State>
       if(get.s) {
          if(!s) s = { ...this.state } 
          s.fromSearch = get.s
+      }
+      if(get.part) {
+         if(!s) s = { ...this.state } 
+         s.outlinePart = get.part
+         // TODO scroll to outline 
+         //this.props.history.push({...this.props.history.location, hash:"#outline"})
       }
 
       if(s) this.setState(s);
@@ -3763,6 +3771,9 @@ class ResourceViewer extends Component<Props,State>
          let i1 = nb, nb1 = i0 - nb, i2 = i0 + nb
          */
 
+         let show = this.state.collapse[k]
+         if(hasMaxDisplay === -1 && k !== bf+"identifiedBy") show = true ; 
+
          return (
             <div data-prop={shortUri(k)} class={"has-collapse custom max-"+(maxDisplay)+" "+(n%2===0?"even":"odd") }>
                <h3><span>{this.proplink(k)}:</span></h3>
@@ -3778,7 +3789,7 @@ class ResourceViewer extends Component<Props,State>
                      </span>
                   </span> }
                </div> 
-               <Collapse timeout={{enter:0,exit:0}} className={"propCollapse in-"+(this.state.collapse[k]===true)} in={this.state.collapse[k]}>
+               <Collapse timeout={{enter:0,exit:0}} className={"propCollapse in-"+(show===true)} in={show}>
                   {ret}
                </Collapse>
                {/* // failure with CSS columns
@@ -4755,8 +4766,52 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          else {
             title = this.getWtitle([{value:fullUri(this.props.IRI)}])
          }
+         let opart 
+         if(this.state.outlinePart) opart = this.state.outlinePart         
+         else if(root !== this.props.IRI) opart = this.props.IRI
 
-         if(this.state.collapse["outline-"+root+"-"+root] && this.props.outlines) {
+         if(opart && this.state.collapse["outline-"+root+"-"+root] == undefined) toggle(null,root,root)         
+
+         console.log("renderO?")
+
+         if(this.state.collapse["outline-"+root+"-"+root] && this.props.outlines  && this.props.dictionary) {
+
+            if(opart) {               
+
+               let collapse = {...this.state.collapse }
+
+               console.log("collapse!",root,opart,JSON.stringify(collapse,null,3),this.props.outlines[opart])
+
+               if(!this.props.outlines[opart]) this.props.onGetOutline(opart);
+
+               if( this.props.outlines[opart] && this.props.outlines[opart] !== true && this.state.collapse["outline-"+root+"-"+opart+"-details"] === undefined) {
+
+                  Object.keys(collapse).filter(k => k.startsWith("outline-"+root)).map(k => { delete collapse[k]; })
+                  collapse["outline-"+root+"-"+opart+"-details"] = true          
+
+                  let nodes = this.props.outlines[opart]
+                  if(nodes && nodes["@graph"]) nodes = nodes["@graph"]
+                  if(nodes && nodes.length) {
+                     let head = opart
+                     do {
+                        head = nodes.filter(n => n.hasPart && (n.hasPart === head || n.hasPart.includes(head)))
+                        console.log("head?",head)
+                        if(head && head.length) { 
+                           head = head[0]["@id"]
+                           if(collapse["outline-"+root+"-"+head] === undefined) {
+                              collapse["outline-"+root+"-"+head] = true ;
+                              if(!this.props.outlines[head]) this.props.onGetOutline(head);
+                           }
+                        }
+                     } while(head !== root); 
+                  }
+
+                  this.setState( { collapse } )               
+                  console.log("collapse?",JSON.stringify(collapse,null,3))
+               }
+
+
+            }
 
             const parts = {
                "bdr:PartTypeSection":"sec",
@@ -4841,19 +4896,21 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                                  {pType && parts[pType] ? <div>{parts[pType]}</div> : null}
                               </span>
                               <span title="Open">{this.uriformat(null,{type:'uri',value:fUri})}</span>                              
-                              { e.hasImg && <Link className="hasImg" title="View Images"  to={e.hasImg}><img src="/icons/search/images.svg"/></Link> }
-                              { /* pType && 
-                                 <span class={"pType "+(e.details?"on":"")} {...e.details?{title:(this.state.collapse[tag+"-details"]?"Hide":"Show")+" Details", onClick:(ev) => toggle(ev,root,e["@id"],"details")}:{}} >
-                                    {this.proplink(pType)}
-                                    { !this.state.collapse[tag+"-details"] && <ExpandMore className="details"/>}
-                                    {  this.state.collapse[tag+"-details"] && <ExpandLess className="details"/>}
-                                 </span> */ }
-                              { e.details && <span id="anchor" title={tLabel+" - "+(this.state.collapse[tag+"-details"]?"Hide":"Show")+" Details"} onClick={(ev) => toggle(ev,root,e["@id"],"details")}><img src="/icons/info.svg"/></span> }
-                              <CopyToClipboard text={fUri} onCopy={(e) => prompt("Resource url has been copied to clipboard.\nCTRL+V to paste",fUri)}>
-                                 <a class="permalink" title="Permalink">
-                                    <img src="/icons/PLINK_small.svg"/>
-                                 </a>
-                              </CopyToClipboard>
+                              <div class="abs">
+                                 { e.hasImg && <Link className="hasImg" title="View Images"  to={e.hasImg}><img src="/icons/search/images.svg"/></Link> }
+                                 { /* pType && 
+                                    <span class={"pType "+(e.details?"on":"")} {...e.details?{title:(this.state.collapse[tag+"-details"]?"Hide":"Show")+" Details", onClick:(ev) => toggle(ev,root,e["@id"],"details")}:{}} >
+                                       {this.proplink(pType)}
+                                       { !this.state.collapse[tag+"-details"] && <ExpandMore className="details"/>}
+                                       {  this.state.collapse[tag+"-details"] && <ExpandLess className="details"/>}
+                                    </span> */ }
+                                 { e.details && <span id="anchor" title={tLabel+" - "+(this.state.collapse[tag+"-details"]?"Hide":"Show")+" Details"} onClick={(ev) => toggle(ev,root,e["@id"],"details")}><img src="/icons/info.svg"/></span> }
+                                 <CopyToClipboard text={fUri} onCopy={(e) => prompt("Resource url has been copied to clipboard.\nCTRL+V to paste",fUri)}>
+                                    <a class="permalink" title="Permalink">
+                                       <img src="/icons/PLINK_small.svg"/>
+                                    </a>
+                                 </CopyToClipboard>
+                              </div>
                            </span>)
                         if(this.state.collapse[tag+"-details"] && e.details) ret.push(<div class="details">{e.details}</div>)
                         if(this.props.outlines[e["@id"]] && this.props.outlines[e["@id"]] !== true && this.state.collapse[tag] ) ret.push(<div style={{paddingLeft:"25px"}}>{makeNodes(e["@id"],top)}</div>)                        
