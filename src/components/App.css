@@ -796,6 +796,8 @@ h4:not(:hover) > .lang
 }
 
 /* ------------------------------------------------------------------------------------------------------------------------ outline */
+.resource .data#main-info,
+.resource .data#outline { scroll-margin:80px; }
 
 .resource .data#outline { background-color: #ffffff; padding: 35px; padding-bottom: 0; padding-top:45px; }
 .resource .data#outline > h2 { margin-left:35px; margin-bottom:35px; }

@@ -812,9 +812,6 @@ class ResourceViewer extends Component<Props,State>
 
    static getDerivedStateFromProps(props:Props,state:State)
    {
-      if(props.IRI && !props.outline && getEntiType(props.IRI) === "Instance" && props.config) props.onGetOutline(props.IRI)
-
-      if(state.outlinePart && props.outlines && !props.outlines[state.outlinePart] && props.config) props.onGetOutline(state.outlinePart)
 
       let getElem = (prop,IRI,useAssoc) => {         
          let longIRI = fullUri(IRI)
@@ -830,12 +827,6 @@ class ResourceViewer extends Component<Props,State>
          }
       }
 
-      let root = getElem(bdo+"inRootInstance",props.IRI)
-      if(root && root.length) {
-         let shR = shortUri(root[0].value)
-         if(!props.outlines[shR] && props.config) props.onGetOutline(shR)
-      }
-
       let s 
 
       // TODO fix reopening etext after being closed
@@ -844,6 +835,15 @@ class ResourceViewer extends Component<Props,State>
       if(state.tabs && state.tabs.length) s = ResourceViewer.setTitleFromTabs(props,state) ;
 
       if(props.resources && props.resources[props.IRI]) {
+
+         if(props.IRI && !props.outline && getEntiType(props.IRI) === "Instance" && props.config) props.onGetOutline(props.IRI)
+         if(state.outlinePart && props.outlines && !props.outlines[state.outlinePart] && props.config) props.onGetOutline(state.outlinePart)
+
+         let root = getElem(bdo+"inRootInstance",props.IRI)
+         if(root && root.length) {
+            let shR = shortUri(root[0].value)
+            if(props.outlines && !props.outlines[shR] && props.config) props.onGetOutline(shR)
+         }
 
          let 
             work = getElem(bdo+"instanceOf",props.IRI),
@@ -4772,7 +4772,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
          if(opart && this.state.collapse["outline-"+root+"-"+root] == undefined) toggle(null,root,root)         
 
-         console.log("renderO?")
+         //console.log("renderO?")
 
          if(this.state.collapse["outline-"+root+"-"+root] && this.props.outlines  && this.props.dictionary) {
 
@@ -4780,7 +4780,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
                let collapse = {...this.state.collapse }
 
-               console.log("collapse!",root,opart,JSON.stringify(collapse,null,3),this.props.outlines[opart])
+               //console.log("collapse!",root,opart,JSON.stringify(collapse,null,3),this.props.outlines[opart])
 
                if(!this.props.outlines[opart]) this.props.onGetOutline(opart);
 
@@ -4795,7 +4795,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                      let head = opart
                      do {
                         head = nodes.filter(n => n.hasPart && (n.hasPart === head || n.hasPart.includes(head)))
-                        console.log("head?",head)
+                        //console.log("head?",head)
                         if(head && head.length) { 
                            head = head[0]["@id"]
                            if(collapse["outline-"+root+"-"+head] === undefined) {
@@ -4807,9 +4807,14 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                   }
 
                   this.setState( { collapse } )               
-                  console.log("collapse?",JSON.stringify(collapse,null,3))
-               }
+                  //console.log("collapse?",JSON.stringify(collapse,null,3))
 
+                  if(opart) {
+                     const el = document.querySelector("#outline")
+                     //console.log("scroll?",el)
+                     if(el) el.scrollIntoView()      
+                  }
+               }
 
             }
 
@@ -4880,7 +4885,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                         //if(this.state.collapse["outline-"+root+"-"+top] && !this.props.outlines[e]) this.props.onGetOutline(e);
                      }
                      
-                     console.log("outline?",elem,outline)
+                     //console.log("outline?",elem,outline)
 
                      outline = _.orderBy(outline,["partIndex"],["asc"]).map(e => {
                         let tag = "outline-"+root+"-"+e['@id']
@@ -5147,6 +5152,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          return (<div>
             { tag === "Images" && <h3><Link to={view} >Open in Viewer</Link></h3> }
             <h3><Link to={url+"#main-info"} >Main Information</Link></h3>
+            { tag === "Instance" && <h3><Link to={url+"#outline"} >Outline</Link></h3> }
             { tag === "Work" && <h3><Link to={url+"#resources"} >Related Works</Link></h3> }
              <h3><Link to={url+"#ext-info"} >Extended Information</Link></h3> 
          </div>)
