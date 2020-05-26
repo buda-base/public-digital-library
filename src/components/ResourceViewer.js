@@ -1926,6 +1926,7 @@ class ResourceViewer extends Component<Props,State>
                         let loca = {...this.props.history}
                         if(!loca.search) loca.search = "?part="+part
                         else loca.search = loca.search.replace(/part=[^&]+/,"part="+part)
+                        loca.pathname = "/show/"+uri.replace(/[?].*/,"")
                         this.props.history.push(loca)                        
                         
                         e.preventDefault();
@@ -4835,7 +4836,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                      let head = opart
                      do {
                         head = nodes.filter(n => n.hasPart && (n.hasPart === head || n.hasPart.includes(head)))
-                        //console.log("head?",head)
+                        console.log("head?",head)
                         if(head && head.length) { 
                            head = head[0]["@id"]
                            if(collapse["outline-"+root+"-"+head] === undefined) {
@@ -4843,7 +4844,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                               if(!this.props.outlines[head]) this.props.onGetOutline(head);
                            }
                         }
-                     } while(head !== root); 
+                     } while(head !== root && head.length); 
                   }
 
                   this.setState( { collapse } )               
