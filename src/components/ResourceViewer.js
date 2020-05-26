@@ -1068,6 +1068,7 @@ class ResourceViewer extends Component<Props,State>
          s.outlinePart = get.part
       }
 
+
       if(s) this.setState(s);
 
       this.scrollToHashID(this.props.history)
@@ -3406,12 +3407,15 @@ class ResourceViewer extends Component<Props,State>
       else return ""
    }
 
-   getH2 = (title,_befo,_T,other,T_) => {
-      if(other) return <h2><Link to={"/show/"+shortUri(other)+this.getTabs(T_,other)}>{_T}<span>{_befo}{title.value}</span>{this.tooltip(title.lang)}</Link></h2>
+   getH2 = (title,_befo,_T,other,T_,rootC) => {
+
+      console.log("H2?",rootC)
+
+      if(other) return <h2><Link  {... rootC?{onClick:rootC}:{}}  to={"/show/"+shortUri(other)+this.getTabs(T_,other)}>{_T}<span>{_befo}{title.value}</span>{this.tooltip(title.lang)}</Link></h2>
       else return <h2 class="on">{_T}<span>{_befo}{title.value}</span>{this.tooltip(title.lang)}</h2>
    }
 
-   setTitle = (kZprop,_T,other) => {
+   setTitle = (kZprop,_T,other,rootC) => {
 
       let title,titlElem,otherLabels = [], T_ = _T ;
       _T = [<span class={"T "+_T.toLowerCase()}><span class="RID">{shortUri(other?other:this.props.IRI)}</span>{_T}</span>]
@@ -3445,7 +3449,7 @@ class ResourceViewer extends Component<Props,State>
             }
          }
          if(!title) title = { value:"", lang:"" }
-         title = this.getH2(title,_befo,_T,other,T_)         
+         title = this.getH2(title,_befo,_T,other,T_,rootC)         
       }
 
       //console.log("sT",other,title,titlElem)
@@ -4798,6 +4802,16 @@ perma_menu(pdfLink,monoVol,fairUse,other)
             if(!x && this.props.outlines && !this.props.outlines[i]) this.props.onGetOutline(i);
          }
 
+         let rootClick = (e) => {
+            console.log("rootC?")
+            let s
+            if(this.state.outlinePart) {
+               if(!s) s = { ...this.state } 
+               s.outlinePart = null;
+               this.setState(s)
+            }
+         }
+
          let root = this.props.IRI
          let elem = this.getResourceElem(bdo+"inRootInstance")
          if(elem && elem.length) { 
@@ -4805,21 +4819,22 @@ perma_menu(pdfLink,monoVol,fairUse,other)
             title = this.getWtitle(elem)
          }
          else {
-            title = this.getWtitle([{value:fullUri(this.props.IRI)}])
+            title = this.getWtitle([{value:fullUri(this.props.IRI)}], rootClick)
          }
          let opart 
          if(this.state.outlinePart) opart = this.state.outlinePart         
          else if(root !== this.props.IRI) opart = this.props.IRI
+         else opart = root
 
-         if(opart && this.state.collapse["outline-"+root+"-"+root] == undefined) toggle(null,root,root)         
+         if(opart && opart !== root && this.state.collapse["outline-"+root+"-"+root] == undefined) toggle(null,root,root)         
 
          //console.log("renderO?")
 
-         if(this.state.collapse["outline-"+root+"-"+root] && this.props.outlines  && this.props.dictionary) {
+         if((this.state.collapse["outline-"+root+"-"+root] || opart === root) && this.props.outlines  && this.props.dictionary) {
+
+            let collapse = {...this.state.collapse }
 
             if(opart) {               
-
-               let collapse = {...this.state.collapse }
 
                //console.log("collapse!",root,opart,JSON.stringify(collapse,null,3),this.props.outlines[opart])
 
@@ -4836,10 +4851,10 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                      let head = opart
                      do {
                         head = nodes.filter(n => n.hasPart && (n.hasPart === head || n.hasPart.includes(head)))
-                        console.log("head?",head)
+                        //console.log("head?",head)
                         if(head && head.length) { 
                            head = head[0]["@id"]
-                           if(collapse["outline-"+root+"-"+head] === undefined) {
+                           if(collapse["outline-"+root+"-"+head] === undefined) { //} && (opart !== root || head !== root)) {
                               collapse["outline-"+root+"-"+head] = true ;
                               if(!this.props.outlines[head]) this.props.onGetOutline(head);
                            }
@@ -4866,6 +4881,12 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                }
 
             }
+            /*
+            else { 
+               Object.keys(collapse).filter(k => k.startsWith("outline-"+root)).map(k => { delete collapse[k]; })
+               this.setState( { collapse } )              
+            }
+            */
 
             const parts = {
                "bdr:PartTypeSection":"sec",
@@ -4983,6 +5004,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
          let tag = "outline-"+root+"-"+root
 
+
          return ( 
          <div class="data" id="outline">
             <h2>Outline</h2>
@@ -4992,8 +5014,8 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                <div>
                   <Loader loaded={this.props.loading !== "outline"}/>
                   <div class={"root " +(this.state.outlinePart === root || (!this.state.outlinePart && this.props.IRI===root)?"is-root":"")} >
-                     { !this.state.collapse[tag] && [<ExpandMore className="xpd" onClick={(e) => toggle(e,root,root)} />,<span>{title}</span>]}
-                     {  this.state.collapse[tag] && [<ExpandLess className="xpd" onClick={(e) => toggle(e,root,root)} />,<span class='on'>{title}</span>]}
+                     { !this.state.collapse[tag] && [<ExpandMore className="xpd" onClick={(e) => toggle(e,root,root)} />,<span onClick={rootClick}>{title}</span>]}
+                     {  this.state.collapse[tag] && [<ExpandLess className="xpd" onClick={(e) => toggle(e,root,root)} />,<span onClick={rootClick} class='on'>{title}</span>]}
                   </div>
                   { this.state.collapse[tag] && <div style={{paddingLeft:"50px"}}>{outline}</div> }
                </div>
@@ -5002,7 +5024,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
    }
 
 
-   getWtitle(baseW) {
+   getWtitle(baseW,rootC) {
       if(baseW && baseW.length && baseW[0].value) {
          let wUri = shortUri(baseW[0].value);
          if(this.props.resources && !this.props.resources[wUri]) this.props.onGetResource(wUri);
@@ -5014,7 +5036,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
             else baseData = []
          }
          let _T = getEntiType(shortUri(baseW[0].value))
-         let { title,titlElem,otherLabels } = this.setTitle(baseData,_T,baseW[0].value) ;
+         let { title,titlElem,otherLabels } = this.setTitle(baseData,_T,baseW[0].value,rootC) ;
          return title
       }
       return null
