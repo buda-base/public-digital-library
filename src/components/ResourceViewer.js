@@ -813,11 +813,12 @@ class ResourceViewer extends Component<Props,State>
    static getDerivedStateFromProps(props:Props,state:State)
    {
 
-      let getElem = (prop,IRI,useAssoc) => {         
+      let getElem = (prop,IRI,useAssoc,subIRI) => {         
          let longIRI = fullUri(IRI)
+         if(subIRI) longIRI = subIRI
          if(useAssoc) {
             let elem = useAssoc[longIRI]
-            if(elem) elem = elem.filter(e => e.type === prop)
+            if(elem) elem = elem.filter(e => e.type === prop || e.fromKey === prop)
             else elem = null
             return elem
          }
@@ -850,11 +851,33 @@ class ResourceViewer extends Component<Props,State>
             instance = getElem(bdo+"instanceReproductionOf",props.IRI),
             images = getElem(bdo+"instanceHasReproduction",props.IRI)
 
+
+         if(state.outlinePart) { 
+            work = getElem(bdo+"contentLocation",props.IRI)
+            if(work && work.length) { 
+               work = work[0].value
+               work = getElem(bdo+"contentLocationInstance",props.IRI,null,work)
+               if(work && work.length) { 
+                  work = work[0].value
+                  if(props.assocResources && props.assocResources[work])  work = getElem(bdo+"instanceOf",work,props.assocResources)
+                  else work = null
+               }
+            }
+            else { 
+               work = getElem(bdo+"inRootInstance",props.IRI)  
+               if(work && work.length) { 
+                  work = work[0].value
+                  if(props.assocResources && props.assocResources[work])  work = getElem(bdo+"instanceOf",work,props.assocResources)
+                  else work = null
+               }
+            }
+         }
+
          if(images) images = images.filter(e => getEntiType(e.value) === "Images")
 
          let _T = getEntiType(props.IRI)
 
-         //console.log("title!",_T,work,instance,images)
+         console.log("title!",_T,work,instance,images)
 
          if(_T === "Etext") {            
             if(!s) s = { ...state }
@@ -919,7 +942,7 @@ class ResourceViewer extends Component<Props,State>
             s.title = { work:[ { type:"uri", value:fullUri(props.IRI) } ] }
          }
 
-         //console.log("title?",JSON.stringify(state.title,null,3),JSON.stringify(s?s.title:state.title,null,3),props.IRI,_T)
+         console.log("title?",JSON.stringify(state.title,null,3),JSON.stringify(s?s.title:state.title,null,3),props.IRI,_T)
       }
 
       if(props.IRI && props.resources && props.resources[props.IRI]) {
@@ -1039,11 +1062,10 @@ class ResourceViewer extends Component<Props,State>
          if(!s) s = { ...this.state } 
          s.fromSearch = get.s
       }
-      if(get.part) {
+      if(get.part) { 
          if(!s) s = { ...this.state } 
+         if(!s.title) s.title = {}
          s.outlinePart = get.part
-         // TODO scroll to outline 
-         //this.props.history.push({...this.props.history.location, hash:"#outline"})
       }
 
       if(s) this.setState(s);
@@ -1893,7 +1915,25 @@ class ResourceViewer extends Component<Props,State>
             else {                
                if(!info) info = shortUri(elem.value)
                //console.log("pretty?",pretty,elem.value)
-               link = <Link className={"urilink prefLabel " } to={"/"+show+"/"+shortUri(elem.value)}>{info}</Link>
+               let uri = shortUri(elem.value)
+               if(uri.match(/^bdr:MW[^_]+_[^_]+$/)) { 
+                  let part = uri
+                  uri = uri.replace(/^((bdr:MW[^_]+)_[^_]+)/,"$2?part=$1")
+                  link = <a class={"urilink prefLabel " } href={"/"+show+"/"+uri} onClick={(e) => { 
+
+                        this.setState({outlinePart:part})
+
+                        let loca = {...this.props.history}
+                        if(!loca.search) loca.search = "?part="+part
+                        else loca.search = loca.search.replace(/part=[^&]+/,"part="+part)
+                        this.props.history.push(loca)                        
+                        
+                        e.preventDefault();
+                        e.stopPropagation();
+                        return false; }
+                  }>{info}</a>
+               }
+               else link = <Link className={"urilink prefLabel " } to={"/"+show+"/"+uri}>{info}</Link>
                bdrcData = null
             }
             
@@ -3637,7 +3677,7 @@ class ResourceViewer extends Component<Props,State>
 
          let str = ""
          
-         console.log("loca",elem)
+         //console.log("loca",elem)
 
          if(!elem) return [<h4><Link to={"/show/"+shortUri(_elem[0].value)}>{shortUri(_elem[0].value)}</Link></h4>]
 
@@ -3672,7 +3712,7 @@ class ResourceViewer extends Component<Props,State>
                               {eL && <div><span>End Line:</span> {eL}</div>}
                            </div>
                         }>
-                           <h4>{str}{str && w && " of "}{w && this.uriformat(bdo+"contentLocationInstance",{value:w})}{this.hoverMenu()}</h4>
+                           <h4>{str}{str && w && <span class="of">{" of "}</span>}{w && this.uriformat(bdo+"contentLocationInstance",{value:w})}{this.hoverMenu()}</h4>
                      </Tooltip>]
                );
             else if(w)
@@ -4809,11 +4849,19 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                   this.setState( { collapse } )               
                   //console.log("collapse?",JSON.stringify(collapse,null,3))
 
+                  
                   if(opart) {
                      const el = document.querySelector("#outline")
-                     //console.log("scroll?",el)
                      if(el) el.scrollIntoView()      
                   }
+                  
+                  /*
+                  // TODO more precise scroll (no scroll?)
+                  if(opart) setTimeout(()=>{
+                     const el = document.querySelector("#outline")
+                     if(el) el.scrollIntoView()      
+                  }, 1000);                  
+                  */
                }
 
             }
@@ -4846,7 +4894,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                               if(g.contentLocation) {
                                  if(!g.details) g.details = []
                                  g.hasImg = "/show/"+g["@id"]+"#open-viewer"
-                                 g.details.push(<div class="sub view"><Link to={g.hasImg} class="ulink">&gt; View Images</Link></div>)
+                                 //g.details.push(<div class="sub view"><Link to={g.hasImg} class="ulink">&gt; View Images</Link></div>)
                               }
                               if(g.instanceOf) {
                                  if(!g.details) g.details = []
@@ -4863,7 +4911,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                                        if(title && title["rdfs:label"]) title = title["rdfs:label"]
                                        if(!Array.isArray(title)) title = [ title ]
                                        title = title.map(f => ({value:f["@value"],lang:f["@language"], type:"literal"}))
-                                       console.log("title?",JSON.stringify(title,null,3))
+                                       //console.log("title?",JSON.stringify(title,null,3))
                                        g.details.push(<div class="sub"><h4 class="first type">{this.proplink(titleT)}: </h4>{this.format("h4", "", "", false, "sub", title)}</div>)
                                     }
                                  }
@@ -4894,7 +4942,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                         let tLabel = getOntoLabel(this.props.dictionary,this.props.locale,fullUri(pType))
                         tLabel = tLabel[0].toUpperCase() + tLabel.slice(1)
                         if(pType && pType["@id"]) pType = pType["@id"]
-                        ret.push(<span class={'top'+ (this.props.IRI===e['@id']?" is-root":"")+(this.state.collapse[tag]?" on":"") }>
+                        ret.push(<span class={'top'+ (this.state.outlinePart === e['@id'] || (!this.state.outlinePart && this.props.IRI===e['@id']) ?" is-root":"")+(this.state.collapse[tag]?" on":"") }>
                               {(e.hasPart && !this.state.collapse[tag] && this.props.outlines[e['@id']] !== true) && <ExpandMore onClick={(ev) => toggle(ev,root,e["@id"])} className="xpd"/>}
                               {(e.hasPart &&  this.state.collapse[tag] && this.props.outlines[e['@id']] !== true) && <ExpandLess onClick={(ev) => toggle(ev,root,e["@id"])} className="xpd"/>}
                               <span class={"parTy "+(e.details?"on":"")} {...e.details?{title:tLabel+" - "+(this.state.collapse[tag+"-details"]?"Hide":"Show")+" Details", onClick:(ev) => toggle(ev,root,e["@id"],"details")}:{title:tLabel}} >
@@ -4902,17 +4950,20 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                               </span>
                               <span title="Open">{this.uriformat(null,{type:'uri',value:fUri})}</span>                              
                               <div class="abs">
-                                 { e.hasImg && <Link className="hasImg" title="View Images"  to={e.hasImg}><img src="/icons/search/images.svg"/></Link> }
+                                 { e.hasImg && <Link className="hasImg" title="View Images"  to={e.hasImg}><img src="/icons/search/images.svg"/><img src="/icons/search/images_r.svg"/></Link> }
                                  { /* pType && 
                                     <span class={"pType "+(e.details?"on":"")} {...e.details?{title:(this.state.collapse[tag+"-details"]?"Hide":"Show")+" Details", onClick:(ev) => toggle(ev,root,e["@id"],"details")}:{}} >
                                        {this.proplink(pType)}
                                        { !this.state.collapse[tag+"-details"] && <ExpandMore className="details"/>}
                                        {  this.state.collapse[tag+"-details"] && <ExpandLess className="details"/>}
                                     </span> */ }
-                                 { e.details && <span id="anchor" title={tLabel+" - "+(this.state.collapse[tag+"-details"]?"Hide":"Show")+" Details"} onClick={(ev) => toggle(ev,root,e["@id"],"details")}><img src="/icons/info.svg"/></span> }
+                                 { e.details && <span id="anchor" title={tLabel+" - "+(this.state.collapse[tag+"-details"]?"Hide":"Show")+" Details"} onClick={(ev) => toggle(ev,root,e["@id"],"details")}>
+                                    <img src="/icons/info.svg"/>
+                                 </span> }
                                  <CopyToClipboard text={fUri} onCopy={(e) => prompt("Resource url has been copied to clipboard.\nCTRL+V to paste",fUri)}>
                                     <a class="permalink" title="Permalink">
                                        <img src="/icons/PLINK_small.svg"/>
+                                       <img src="/icons/PLINK_small_r.svg"/>
                                     </a>
                                  </CopyToClipboard>
                               </div>
@@ -4939,7 +4990,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                </div>
                <div>
                   <Loader loaded={this.props.loading !== "outline"}/>
-                  <div class={"root "+(this.props.IRI===root?"is-root":"")} >
+                  <div class={"root " +(this.state.outlinePart === root || (!this.state.outlinePart && this.props.IRI===root)?"is-root":"")} >
                      { !this.state.collapse[tag] && [<ExpandMore className="xpd" onClick={(e) => toggle(e,root,root)} />,<span>{title}</span>]}
                      {  this.state.collapse[tag] && [<ExpandLess className="xpd" onClick={(e) => toggle(e,root,root)} />,<span class='on'>{title}</span>]}
                   </div>

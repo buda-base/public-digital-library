@@ -814,6 +814,8 @@ h4:not(:hover) > .lang
 .resource .data#outline div h2,
 .resource .data#outline div span { font-size:14px; font-weight:400; color:#343434; }
 .resource .data#outline .root >  span { width:calc(100% - 25px); display:block; }
+.resource .data#outline .top.is-root .ulink a,
+.resource .data#outline .on h2 span,
 .resource .data#outline .on > span:not(.pType) span { font-weight:600 !important;  }
 .resource .data#outline span a { color: #343434; display:flex; line-height:20px; }
 .resource .data#outline span a:hover { border:none; text-decoration: underline; text-decoration-color: #343434; }
@@ -844,7 +846,6 @@ h4:not(:hover) > .lang
    vertical-align:middle; /*padding-left:6px;*/margin-left:0px; margin-bottom:1px; 
 }
 
-
 .resource .data#outline .root + div .permalink {  opacity:0; margin-left:0px; cursor:pointer; }
 .resource .data#outline .root + div .top:hover .permalink  {  opacity:0.8; }
 .resource .data#outline .root + div .permalink img { width:16px; vertical-align: middle !important; }
@@ -855,9 +856,29 @@ h4:not(:hover) > .lang
 .resource .data#outline .root + div .top:hover .hasImg { opacity:1; }
 */
 
+.resource .data#outline h4:hover::before { content:none !important;display:none;}
+.resource .data#outline h4 .of + *,
+.resource .data#outline h4 .of { display:none ; }
+
 .resource .data#outline .root + div .permalink::before,
 .resource .data#outline .root + div .hasImg::before { opacity:0.65;}
 .resource .data#outline .root + div .hasImg img { width:18px; opacity:0.8; vertical-align: middle !important; }
+
+.resource .data#outline .root + div .top.is-root .permalink img:first-child,
+.resource .data#outline .root + div .top:not(.is-root) .permalink img:last-child,
+.resource .data#outline .root + div .top.is-root .hasImg img:first-child,
+.resource .data#outline .root + div .top:not(.is-root) .hasImg img:last-child { display:none;}
+
+.resource .data#outline .root + div .top.is-root .permalink,
+.resource .data#outline .root + div .top.is-root #anchor,
+.resource .data#outline .root + div .top.is-root #anchor img,
+.resource .data#outline .root + div .top.is-root .hasImg img { opacity:1; }
+
+.resource .data#outline .root + div .top.is-root .permalink img:last-child,
+.resource .data#outline .root + div .top.is-root .hasImg img:last-child { display:inline;}
+
+.resource .data#outline .root + div .top:not(.is-root) #anchor img { filter: grayscale(); }
+
 .resource .data#outline .root + div .hasImg:hover img { opacity:1; }
 
 .resource .data#outline .root + div .parTy + span { margin-right:5px;}
@@ -872,6 +893,10 @@ h4:not(:hover) > .lang
 .resource .data#outline .root + div .parTy div { text-transform: uppercase; font-size:9px; font-family:"Noto Sans SemCond" !important;  opacity:0.65;
    /*padding:4px 1px 0 1px; text-align: center;  margin-top:-2px; */
 }
+.resource .data#outline .root + div .is-root .parTy:not(#a).on { border-color:rgba(215, 52, 73,1); }
+.resource .data#outline .root + div .is-root .parTy:not(#a):not(.on) { border-color:rgba(215, 52, 73,0.5); }
+.resource .data#outline .is-root .parTy div { color:#d73449; }
+
 .resource .data#outline .root + div .parTy:not(#a) { font-size:0;padding-bottom:3px; box-sizing: border-box; vertical-align: 2px;
    display:inline-flex; align-items: flex-end; justify-content: center; margin-right:7px; width:21px;height:20px; border:1px solid rgba(0,0,0,0.35); 
 }
@@ -880,7 +905,7 @@ h4:not(:hover) > .lang
 .resource .data#outline .root + div .parTy.on div { opacity:1.0;}
 
 .resource .data#outline .root + div #anchor { margin-left:0px; opacity:0; cursor: pointer; }
-.resource .data#outline .root + div #anchor img { filter: grayscale(); opacity:0.75; width:24px;  display:inline-block;margin-top:-2px;}
+.resource .data#outline .root + div #anchor img {  opacity:0.75; width:24px;  display:inline-block;margin-top:-2px;}
 .resource .data#outline .root + div .top:hover #anchor { opacity:1; }
 .resource .data#outline .root + div #anchor:hover img { opacity:0.9; }
 
@@ -891,7 +916,7 @@ h4:not(:hover) > .lang
 .resource .data#outline .root + div .top:hover .pType.on svg.details { display:inline; }
 
 .resource .data#outline .root + div { width:calc(100% - 25px - 50px - 35px); }
-.resource .data#outline .root + div .top + .details { width:100%; background-color:#ffffff80; margin:5px 25px 5px 0; padding:10px 15px;}
+.resource .data#outline .root + div .top + .details { width:100%; background-color:#ffffff80; margin:5px 25px 7px 25px; padding:10px 15px 15px 28px;}
 
 .resource .data#outline .root + div .top + .details .sub { margin:0;border:none;padding:0; display:flex; flex-wrap:nowrap; }
 .resource .data#outline .root + div .top + .details .sub + .sub { padding-top:10px; }

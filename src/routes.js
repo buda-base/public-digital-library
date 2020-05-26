@@ -252,10 +252,13 @@ const makeMainRoutes = () => {
                      <Route path="/show/:IRI" render={(props) => {
                         //if(!store.getState().data.resources || !store.getState().data.resources[props.match.params.IRI]
                         //   || !store.getState().data.assocResources || !store.getState().data.assocResources[props.match.params.IRI])
-                        {
-                           store.dispatch(initiateApp(qs.parse(history.location.search),props.match.params.IRI));
-                        }
-                        return ( <ResourceViewerContainer  auth={auth} history={history} IRI={props.match.params.IRI}/> ) } }/>
+                        
+                        let IRI = props.match.params.IRI
+                        let get = qs.parse(history.location.search)
+                        if(get.part && get.part !== IRI) IRI = get.part
+                        store.dispatch(initiateApp(get,IRI));
+                     
+                        return ( <ResourceViewerContainer  auth={auth} history={history} IRI={IRI}/> ) } }/>
                      <Route render={(props) =>
                         <Redirect404  history={history}  auth={auth}/>}/>
                      <Route path="/scripts/" onEnter={() => window.location.reload(true)} />
