@@ -837,7 +837,7 @@ class ResourceViewer extends Component<Props,State>
 
       if(props.resources && props.resources[props.IRI]) {
 
-         if(props.IRI && props.outline === undefined && getEntiType(props.IRI) === "Instance" && props.config) props.onGetOutline(props.IRI)
+         if(props.IRI && !props.outline && getEntiType(props.IRI) === "Instance" && props.config) props.onGetOutline(props.IRI)
          if(state.outlinePart && props.outlines && !props.outlines[state.outlinePart] && props.config) props.onGetOutline(state.outlinePart)
 
          let root = getElem(bdo+"inRootInstance",props.IRI)
@@ -4443,7 +4443,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                //||k.match(/([/]see|[/]sameAs)[^/]*$/) // quickfix [TODO] test property ancestors
                || (this.props.IRI.match(/^bda:/) && (k.match(new RegExp(adm+"|adm:")))))
             && (k !== bdo+"eTextHasChunk" || kZprop.indexOf(bdo+"eTextHasPage") === -1) 
-            && (k !== bdo+"hasPart" || !this.props.outline) 
+            && (k !== bdo+"hasPart" || !this.props.outline || this.props.outline != true) 
             )
             {
 
@@ -4806,7 +4806,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
    renderOutline() {
 
-      if(this.props.outline) {
+      if(this.props.outline && this.props.outline !== true) {
          let outline = [], title
 
          let toggle = (e,r,i,x = "") => {

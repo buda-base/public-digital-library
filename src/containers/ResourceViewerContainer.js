@@ -106,7 +106,7 @@ const mapStateToProps = (state,ownProps) => {
    let outline = state.data.outlines
    if(outline && outline[ownProps.IRI] !== undefined) { 
       outline = outline[ownProps.IRI]
-      if(outline && outline["@graph"] && ! outline["@graph"].filter(o => o["@id"] === ownProps.IRI && o.hasPart).length) outline = false
+      if(outline && outline["@graph"] && ! outline["@graph"].filter(o => o["@id"] === ownProps.IRI && o.hasPart).length) outline = true
    }
    else outline = false
 
