@@ -36,7 +36,7 @@ const mapStateToProps = (state,ownProps) => {
       let flatAssocResources = {}
       for(let id of Object.keys(assocResources)) {
          if(!id.startsWith('"')) { 
-            console.log("id?",id)
+            //console.log("id?",id)
             for(let k of Object.keys(assocResources[id])) {
                let val = flatAssocResources[k]
                flatAssocResources[k] = [ ...(val?val:[]), ...assocResources[id][k] ]
@@ -106,7 +106,12 @@ const mapStateToProps = (state,ownProps) => {
    let outline = state.data.outlines
    if(outline && outline[ownProps.IRI] !== undefined) { 
       outline = outline[ownProps.IRI]
-      if(outline && outline["@graph"] && ! outline["@graph"].filter(o => o["@id"] === ownProps.IRI && o.hasPart).length) outline = true
+      if(ownProps.IRI.match(/^bdr:MW[^_]+(_[^_]+)?$/)) {
+         let root = ownProps.IRI.replace(/^((bdr:MW[^_]+)(_[^_]+)?)$/,"$2")
+         let outL = state.data.outlines[root]
+         if(outL && outL["@graph"] && ! outL["@graph"].filter(o => o["@id"] === root && o.hasPart).length ) outline = true
+         //else outline = outline[ownProps.IRI]
+      }
    }
    else outline = false
 

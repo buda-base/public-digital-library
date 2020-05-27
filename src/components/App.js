@@ -4242,6 +4242,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
       return ( checkbox )
    }
 
+   // TODO add providers icons
+
    render_filters(types,counts,sortByList,reverseSort,facetWidgets) {
       return ( <div className={"SidePane left"}>
                   {/* <IconButton className="close" onClick={e => this.setState({...this.state,leftPane:false,closeLeftPane:true})}><Close/></IconButton> */}

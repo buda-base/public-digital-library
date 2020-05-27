@@ -877,7 +877,7 @@ class ResourceViewer extends Component<Props,State>
 
          let _T = getEntiType(props.IRI)
 
-         console.log("title!",_T,work,instance,images)
+         //console.log("title!",_T,work,instance,images)
 
          if(_T === "Etext") {            
             if(!s) s = { ...state }
@@ -942,7 +942,7 @@ class ResourceViewer extends Component<Props,State>
             s.title = { work:[ { type:"uri", value:fullUri(props.IRI) } ] }
          }
 
-         console.log("title?",JSON.stringify(state.title,null,3),JSON.stringify(s?s.title:state.title,null,3),props.IRI,_T)
+         //console.log("title?",JSON.stringify(state.title,null,3),JSON.stringify(s?s.title:state.title,null,3),props.IRI,_T)
       }
 
       if(props.IRI && props.resources && props.resources[props.IRI]) {
@@ -4443,7 +4443,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                //||k.match(/([/]see|[/]sameAs)[^/]*$/) // quickfix [TODO] test property ancestors
                || (this.props.IRI.match(/^bda:/) && (k.match(new RegExp(adm+"|adm:")))))
             && (k !== bdo+"eTextHasChunk" || kZprop.indexOf(bdo+"eTextHasPage") === -1) 
-            && (k !== bdo+"hasPart" || !this.props.outline || this.props.outline != true) 
+            && (k !== bdo+"hasPart" || !this.props.outline || this.props.outline === true) 
             )
             {
 
@@ -4854,18 +4854,19 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
                if(!this.props.outlines[opart]) this.props.onGetOutline(opart);
 
-               if( this.props.outlines[opart] && this.props.outlines[opart] !== true && this.state.collapse["outline-"+root+"-"+opart+"-details"] === undefined) {
+               if(this.props.outlines[opart] && this.props.outlines[opart] !== true && this.state.collapse["outline-"+root+"-"+opart+"-details"] === undefined) {
 
                   Object.keys(collapse).filter(k => k.startsWith("outline-"+root)).map(k => { delete collapse[k]; })
                   collapse["outline-"+root+"-"+opart+"-details"] = true          
 
+
                   let nodes = this.props.outlines[opart]
                   if(nodes && nodes["@graph"]) nodes = nodes["@graph"]
-                  if(nodes && nodes.length) {
+                  if(root !== opart && nodes && nodes.length) {
                      let head = opart
                      do {
                         head = nodes.filter(n => n.hasPart && (n.hasPart === head || n.hasPart.includes(head)))
-                        //console.log("head?",head)
+                        console.log("head?",head)
                         if(head && head.length) { 
                            head = head[0]["@id"]
                            if(collapse["outline-"+root+"-"+head] === undefined) { //} && (opart !== root || head !== root)) {

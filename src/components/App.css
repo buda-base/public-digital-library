@@ -901,7 +901,7 @@ h4:not(:hover) > .lang
    display:inline-flex; align-items: flex-end; justify-content: center; margin-right:7px; width:21px;height:20px; border:1px solid rgba(0,0,0,0.35); 
 }
 .resource .data#outline .root + div .parTy:not(#a).on { cursor:pointer; font-weight:700; border:1px solid rgba(0,0,0,0.65);}
-.resource .data#outline .root + div .parTy.on:hover { text-decoration: underline; }
+.resource .data#outline .root + div .parTy.on:hover { text-decoration: underline; text-decoration-color: #d73449; }
 .resource .data#outline .root + div .parTy.on div { opacity:1.0;}
 
 .resource .data#outline .root + div #anchor { margin-left:0px; opacity:0; cursor: pointer; }
