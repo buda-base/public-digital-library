@@ -769,7 +769,7 @@ class ResourceViewer extends Component<Props,State>
       window.closeViewer = () => { 
          this.setState({...this.state, openUV:false, openMirador:false, openDiva:false}); 
          if(window.MiradorUseEtext) delete window.MiradorUseEtext ;
-         delete window.mirador         
+         //delete window.mirador         
 
 
          if(this.state.fromSearch) {
@@ -837,7 +837,7 @@ class ResourceViewer extends Component<Props,State>
 
       if(props.resources && props.resources[props.IRI]) {
 
-         if(props.IRI && !props.outline && getEntiType(props.IRI) === "Instance" && props.config) props.onGetOutline(props.IRI)
+         if(props.IRI && props.outline === undefined && getEntiType(props.IRI) === "Instance" && props.config) props.onGetOutline(props.IRI)
          if(state.outlinePart && props.outlines && !props.outlines[state.outlinePart] && props.config) props.onGetOutline(state.outlinePart)
 
          let root = getElem(bdo+"inRootInstance",props.IRI)
@@ -1043,15 +1043,26 @@ class ResourceViewer extends Component<Props,State>
 
 
 
-   componentDidUpdate()
-   {
+   componentDidUpdate()  {
       console.log("update!!")
+
+      if(window.closeMirador && this.state.openMirador && window.closeViewer) {
+         delete window.closeMirador
+         window.closeViewer()
+      }
+
       this.scrollToHashID(this.props.history)
    }
 
+   componentWillUnmount() {
+      window.removeEventListener('popstate', this.onBackButtonEvent);
+   }
+   
    componentDidMount()
    {
       console.log("mount!!")
+      
+      window.addEventListener('popstate', this.onBackButtonEvent);  
 
       let s
       let get = qs.parse(this.props.history.location.search)
@@ -1068,10 +1079,13 @@ class ResourceViewer extends Component<Props,State>
          s.outlinePart = get.part
       }
 
-
       if(s) this.setState(s);
 
       this.scrollToHashID(this.props.history)
+   }
+
+   onBackButtonEvent(event) {
+      window.closeMirador = true      
    }
 
    expand(str:string, useCfg:boolean = false) //,stripuri:boolean=true)
@@ -4915,7 +4929,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                               // if(! (["bdr:PartTypeSection", "bdr:PartTypeVolume"].includes(g.partType)) ) {
                               if(g.contentLocation) {
                                  if(!g.details) g.details = []
-                                 g.hasImg = "/show/"+g["@id"]+"#open-viewer"
+                                 g.hasImg = "/show/"+g["@id"].replace(/^((bdr:MW[^_]+)_[^_]+)$/,"$2?part=$1")+"#open-viewer"
                                  //g.details.push(<div class="sub view"><Link to={g.hasImg} class="ulink">&gt; View Images</Link></div>)
                               }
                               if(g.instanceOf) {
