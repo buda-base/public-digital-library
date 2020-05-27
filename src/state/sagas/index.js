@@ -1952,6 +1952,30 @@ export function* watchGetOutline() {
 }
 
 
+
+async function outlineSearch(iri,kw,lg) {
+
+   store.dispatch(uiActions.loading(iri, "outline"));
+   
+   let res = await api.outlineSearch(iri,kw,lg) 
+
+   store.dispatch(uiActions.loading(iri, false));
+   
+   console.log("outlineSearch",iri,kw,lg,res)
+
+   store.dispatch(dataActions.gotOutline(iri+"/"+kw+"@"+lg,res))
+
+}
+
+
+export function* watchOutlineSearch() {
+
+   yield takeLatest(
+      dataActions.TYPES.outlineSearch,
+      (action) => outlineSearch(action.meta.iri, action.payload, action.meta.lang)
+   );
+}
+
 async function searchKeyword(keyword,language,datatype) {
 
    console.log("searchK",keyword,language,datatype);
@@ -2166,6 +2190,7 @@ export default function* rootSaga() {
       watchInitiateApp(),
       watchGetUser(),
       watchGetOutline(),
+      watchOutlineSearch(),
       watchGetResetLink(),
       watchUpdateSortBy(),
       watchGetInstances(),

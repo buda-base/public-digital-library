@@ -802,12 +802,17 @@ h4:not(:hover) > .lang
 .resource .data#outline { background-color: #ffffff; padding: 35px; padding-bottom: 0; padding-top:45px; }
 .resource .data#outline > h2 { margin-left:35px; margin-bottom:35px; }
 .resource .data#outline > div { background-color: #fcf5e2; padding: 25px 35px; }
-.resource .data#outline > .search { background-color: #fce08d; justify-content:center; padding:20px; }
+.resource .data#outline > .search { background-color: #fce08d; justify-content:center; padding:20px; position:relative; }
+.resource .data#outline > .search > div { display:inline-block; position: relative;}
 .resource .data#outline > .search::after { content:none !important; }
 .resource .data#outline > .search input { display:inline-block;width:375px;height:40px;line-height:40px;font-weight:600;border:none;outline:none; 
-   padding-left:20px; color:black; box-shadow: 0 2px 4px rgba(187, 187, 187, 0.5); padding-right:35px; position:relative;
-   background-image:url(/icons/loupe.png); background-position:center right 10px; background-repeat:no-repeat;
+   padding-left:20px; color:black; box-shadow: 0 2px 4px rgba(187, 187, 187, 0.5); padding-right:35px; position:relative;   
 }
+.resource .data#outline > .search input ~ span { display: inline-block; position:absolute; height:40px;width:40px; cursor:pointer; border-radius:50%; }
+.resource .data#outline > .search input + span { background-image:url(/icons/loupe.png); background-position:center; background-repeat:no-repeat; 
+   right:0; 
+}
+.resource .data#outline > .search input + span + span { right:30px; display:inline-flex; align-items: center;justify-content: center; width:30px;}
 
 .resource .data#outline:last-child { padding-bottom:45px; }
 .resource .data#outline div { flex-wrap:wrap; }
@@ -918,7 +923,8 @@ h4:not(:hover) > .lang
 .resource .data#outline .root + div { width:calc(100% - 25px - 50px - 35px); }
 .resource .data#outline .root + div .top + .details { width:100%; background-color:#ffffff80; margin:5px 25px 7px 25px; padding:10px 15px 15px 28px;}
 
-.resource .data#outline .root + div .top + .details .sub { margin:0;border:none;padding:0; display:flex; flex-wrap:nowrap; }
+
+.resource .data#outline .root + div .top + .details .sub { margin:0;border:none;padding:0; display:flex; flex-wrap:nowrap; /*align-items:baseline;*/}
 .resource .data#outline .root + div .top + .details .sub + .sub { padding-top:10px; }
 .resource .data#outline .root + div .top + .details .sub h4,
 .resource .data#outline .root + div .top + .details .sub a,
@@ -926,7 +932,7 @@ h4:not(:hover) > .lang
 .resource .data#outline .root + div .top + .details .sub h4.first { width:100px; }
 .resource .data#outline .root + div .top + .details .sub h4.first span { font-weight:700;}
 .resource .data#outline .root + div .top + .details .sub h4.first + h4 { width:calc(100% - 100px); }
-.resource .data#outline .root + div .top + .details .sub h4 { padding-right:20px; }
+.resource .data#outline .root + div .top + .details .sub h4 { padding-right:20px; /* vertical-align: -100%; */ }
 .resource .data#outline .root + div .top + .details .sub .lang { display:none; } 
 .resource .data#outline .root + div .top + .details .sub h4:not(.first) a { color:#d73449;} 
 .resource .data#outline .root + div .top + .details .sub h4:not(.first) a:hover { text-decoration-color: #d73449;} 

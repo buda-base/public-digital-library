@@ -4813,7 +4813,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
             let tag = "outline-"+r+"-"+i+(x?"-"+x:"")
             console.log("toggle?",tag)
             this.setState( { collapse:{...this.state.collapse, [tag]:!this.state.collapse[tag] } })
-            if(!x && this.props.outlines && !this.props.outlines[i]) this.props.onGetOutline(i);
+            if(!this.props.outlineKW && !x && this.props.outlines && !this.props.outlines[i]) this.props.onGetOutline(i);
          }
 
          let rootClick = (e) => {
@@ -4840,52 +4840,52 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          else if(root !== this.props.IRI) opart = this.props.IRI
          else opart = root
 
+         let osearch 
+         if(this.props.outlineKW) osearch = this.props.outlineKW
+
          if(opart && opart !== root && this.state.collapse["outline-"+root+"-"+root] == undefined) toggle(null,root,root)         
 
-         //console.log("renderO?")
+         console.log("renderO?",osearch)
 
          if((this.state.collapse["outline-"+root+"-"+root] || opart === root) && this.props.outlines  && this.props.dictionary) {
 
             let collapse = {...this.state.collapse }
 
-            if(opart) {               
-
                //console.log("collapse!",root,opart,JSON.stringify(collapse,null,3),this.props.outlines[opart])
 
-               if(!this.props.outlines[opart]) this.props.onGetOutline(opart);
+            if(!this.props.outlines[opart]) this.props.onGetOutline(opart);
 
-               if(this.props.outlines[opart] && this.props.outlines[opart] !== true && this.state.collapse["outline-"+root+"-"+opart+"-details"] === undefined) {
+            if(this.props.outlines[opart] && this.props.outlines[opart] !== true && this.state.collapse["outline-"+root+"-"+opart+"-details"] === undefined) {
 
-                  Object.keys(collapse).filter(k => k.startsWith("outline-"+root)).map(k => { delete collapse[k]; })
-                  collapse["outline-"+root+"-"+opart+"-details"] = true          
+               Object.keys(collapse).filter(k => k.startsWith("outline-"+root)).map(k => { delete collapse[k]; })
+               collapse["outline-"+root+"-"+opart+"-details"] = true          
 
-
-                  let nodes = this.props.outlines[opart]
-                  if(nodes && nodes["@graph"]) nodes = nodes["@graph"]
-                  if(root !== opart && nodes && nodes.length) {
-                     let head = opart
-                     do {
-                        head = nodes.filter(n => n.hasPart && (n.hasPart === head || n.hasPart.includes(head)))
-                        console.log("head?",head)
-                        if(head && head.length) { 
-                           head = head[0]["@id"]
-                           if(collapse["outline-"+root+"-"+head] === undefined) { //} && (opart !== root || head !== root)) {
-                              collapse["outline-"+root+"-"+head] = true ;
-                              if(!this.props.outlines[head]) this.props.onGetOutline(head);
-                           }
+               let nodes = this.props.outlines[opart]
+               if(nodes && nodes["@graph"]) nodes = nodes["@graph"]
+               if(root !== opart && nodes && nodes.length) {
+                  let head = opart
+                  do {
+                     head = nodes.filter(n => n.hasPart && (n.hasPart === head || n.hasPart.includes(head)))
+                     console.log("head?",head)
+                     if(head && head.length) { 
+                        head = head[0]["@id"]
+                        if(collapse["outline-"+root+"-"+head] === undefined) { //} && (opart !== root || head !== root)) {
+                           collapse["outline-"+root+"-"+head] = true ;
+                           if(!this.props.outlines[head]) this.props.onGetOutline(head);
                         }
-                     } while(head !== root && head.length); 
-                  }
+                     }
+                  } while(head !== root && head.length); 
+               }
 
-                  this.setState( { collapse } )               
-                  //console.log("collapse?",JSON.stringify(collapse,null,3))
+               this.setState( { collapse } )               
+               //console.log("collapse?",JSON.stringify(collapse,null,3))
 
-                  
-                  if(opart) {
-                     const el = document.querySelector("#outline")
-                     if(el) el.scrollIntoView()      
-                  }
-                  
+               
+               if(opart) {
+                  const el = document.querySelector("#outline")
+                  if(el) el.scrollIntoView()      
+               }
+               
                   /*
                   // TODO more precise scroll (no scroll?)
                   if(opart) setTimeout(()=>{
@@ -4893,7 +4893,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                      if(el) el.scrollIntoView()      
                   }, 1000);                  
                   */
-               }
+               
 
             }
             /*
@@ -4912,7 +4912,9 @@ perma_menu(pdfLink,monoVol,fairUse,other)
             }
             
             let makeNodes = (top,parent) => {               
-               let elem = this.props.outlines[top]
+               let elem 
+               if(!osearch) elem = this.props.outlines[top]
+               else elem = this.props.outlines[osearch]
                //console.log("elem?",elem,top,parent)
                let outline = []
                if(elem && elem["@graph"]) { 
@@ -4937,7 +4939,12 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                                  if(!g.details) g.details = []
                                  g.details.push(<div class="sub"><h4 class="first type">{this.proplink(bdo+"instanceOf")}: </h4>{this.format("h4","instacO","",false, "sub", [{type:"uri",value:fullUri(g.instanceOf)}])}</div>)
                               }
-                              if(g.hasTitle) {
+                              if(osearch && g["tmp:titleMatch"]) {
+                                 if(!g.details) g.details = []
+                                 if(!Array.isArray(g["tmp:titleMatch"])) g["tmp:titleMatch"] = [ g["tmp:titleMatch"] ]
+                                 g.details.push(<div class="sub"><h4 class="first type">{this.proplink(tmp+"titleMatch")}: </h4><div>{g["tmp:titleMatch"].map(t => <h4>{highlight(t["@value"])}</h4>)}</div></div>)
+                              }
+                              else if(g.hasTitle) {
                                  if(!g.details) g.details = []
                                  if(!Array.isArray(g.hasTitle)) g.hasTitle = [ g.hasTitle ]
                                  for(let t of g.hasTitle) { 
@@ -4970,7 +4977,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                         //if(this.state.collapse["outline-"+root+"-"+top] && !this.props.outlines[e]) this.props.onGetOutline(e);
                      }
                      
-                     //console.log("outline?",elem,outline)
+                     console.log("outline?",elem,outline)
 
                      outline = _.orderBy(outline,["partIndex"],["asc"]).map(e => {
                         let tag = "outline-"+root+"-"+e['@id']
@@ -4979,7 +4986,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                         let tLabel = getOntoLabel(this.props.dictionary,this.props.locale,fullUri(pType))
                         tLabel = tLabel[0].toUpperCase() + tLabel.slice(1)
                         if(pType && pType["@id"]) pType = pType["@id"]
-                        ret.push(<span class={'top'+ (this.state.outlinePart === e['@id'] || (!this.state.outlinePart && this.props.IRI===e['@id']) ?" is-root":"")+(this.state.collapse[tag]?" on":"") }>
+                        ret.push(<span class={'top'+ (this.state.outlinePart === e['@id'] || (!this.state.outlinePart && this.props.IRI===e['@id']) ?" is-root":"")+(this.state.collapse[tag]||osearch?" on":"") }>
                               {(e.hasPart && !this.state.collapse[tag] && this.props.outlines[e['@id']] !== true) && <ExpandMore onClick={(ev) => toggle(ev,root,e["@id"])} className="xpd"/>}
                               {(e.hasPart &&  this.state.collapse[tag] && this.props.outlines[e['@id']] !== true) && <ExpandLess onClick={(ev) => toggle(ev,root,e["@id"])} className="xpd"/>}
                               <span class={"parTy "+(e.details?"on":"")} {...e.details?{title:tLabel+" - "+(this.state.collapse[tag+"-details"]?"Hide":"Show")+" Details", onClick:(ev) => toggle(ev,root,e["@id"],"details")}:{title:tLabel}} >
@@ -5005,8 +5012,8 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                                  </CopyToClipboard>
                               </div>
                            </span>)
-                        if(this.state.collapse[tag+"-details"] && e.details) ret.push(<div class="details">{e.details}</div>)
-                        if(this.props.outlines[e["@id"]] && this.props.outlines[e["@id"]] !== true && this.state.collapse[tag] ) ret.push(<div style={{paddingLeft:"25px"}}>{makeNodes(e["@id"],top)}</div>)                        
+                        if((osearch || this.state.collapse[tag+"-details"]) && e.details) ret.push(<div class="details">{e.details}</div>)
+                        if(osearch || (this.props.outlines[e["@id"]] && this.props.outlines[e["@id"]] !== true && this.state.collapse[tag]) ) ret.push(<div style={{paddingLeft:"25px"}}>{makeNodes(e["@id"],top)}</div>)                        
                         return ( ret )
                      })
                   }
@@ -5015,16 +5022,29 @@ perma_menu(pdfLink,monoVol,fairUse,other)
             }
 
             outline = makeNodes(root,root)
+            
          }
 
          let tag = "outline-"+root+"-"+root
 
+         let outlineSearch = (e) => {
+            console.log("outlineS",this.state.outlineKW)
+
+            // TODO 
+            // - add language alternatives using autodetection
+            // - search either from root or current node
+            if(this.state.outlineKW) this.props.onOutlineSearch(root, this.state.outlineKW, "bo-x-ewts")
+         }
 
          return ( 
          <div class="data" id="outline">
             <h2>Outline</h2>
                <div class="search">
-                  <input type="text" placeholder="Search in outline"/>
+                  <div>
+                     <input type="text" placeholder="Search in outline" onChange={(e) => this.setState({outlineKW:e.target.value})} onKeyPress={ (e) => { if(e.key === 'Enter') outlineSearch(e); }}/>
+                     <span class="button" onClick={outlineSearch}  title="Start search"></span>
+                     { this.props.outlineKW && <span class="button" title="Reset search" onClick={(e) => this.props.onResetOutlineKW()}><Close/></span> }
+                  </div>
                </div>
                <div>
                   <Loader loaded={this.props.loading !== "outline"}/>
@@ -5032,7 +5052,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                      { !this.state.collapse[tag] && [<ExpandMore className="xpd" onClick={(e) => toggle(e,root,root)} />,<span onClick={rootClick}>{title}</span>]}
                      {  this.state.collapse[tag] && [<ExpandLess className="xpd" onClick={(e) => toggle(e,root,root)} />,<span onClick={rootClick} class='on'>{title}</span>]}
                   </div>
-                  { this.state.collapse[tag] && <div style={{paddingLeft:"50px"}}>{outline}</div> }
+                  { (this.state.collapse[tag]||osearch) && <div style={{paddingLeft:"50px"}}>{outline}</div> }
                </div>
          </div> )
       }

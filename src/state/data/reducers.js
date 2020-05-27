@@ -796,7 +796,6 @@ export const getOutline = (state: DataState, action: Action) => {
 }
 reducers[actions.TYPES.getOutline] = getOutline;
 
-
 export const gotOutline = (state: DataState, action: Action) => {
 
    const skos  = "http://www.w3.org/2004/02/skos/core#";
@@ -818,17 +817,30 @@ export const gotOutline = (state: DataState, action: Action) => {
       }
    }
 
+   let outlineKW 
+   if(action.payload.includes("@")) outlineKW = action.payload
+
    return {
          ...state,
          outlines:{
             ...outlines,
             [action.payload]:action.meta,
          },
+         outlineKW,
          assocResources:assoR
     }
 }
 reducers[actions.TYPES.gotOutline] = gotOutline;
 
+
+export const resetOutlineSearch = (state: DataState, action: Action) => {
+
+   return {
+      ...state,
+      outlineKW:false
+   }
+}
+reducers[actions.TYPES.resetOutlineSearch] = resetOutlineSearch;
 
 
 export const getOneDatatype = (state: DataState, action: Action) => {

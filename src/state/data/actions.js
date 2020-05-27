@@ -196,6 +196,25 @@ export const gotOutline = (iri:string, obj: {}): Action => {
     }
 }
 
+
+TYPES.outlineSearch = 'OUTLINE_SEARCH';
+export const outlineSearch = (iri:string, kw:string, lg: string): Action => {
+    return {
+        type: TYPES.outlineSearch,
+        payload: kw,
+        meta:{lang:lg, iri}
+    }
+}
+
+
+TYPES.resetOutlineSearch = 'RESET_OUTLINE_SEARCH';
+export const resetOutlineSearch = (): Action => {
+    return {
+        type: TYPES.resetOutlineSearch
+    }
+}
+
+
 TYPES.getInstances = 'GET_INSTANCES';
 export const getInstances = (uri: string,init?:boolean): Action => {
     return {

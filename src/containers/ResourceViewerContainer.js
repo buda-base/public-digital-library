@@ -119,11 +119,12 @@ const mapStateToProps = (state,ownProps) => {
    let loading = state.ui.loading  ;
 
    let outlines = state.data.outlines
+   let outlineKW = state.data.outlineKW
 
    let props = { logged,config,resources, ontology, dictionary, keyword, language, datatype, assocResources, prefLang, failures, loading,
       imageAsset,firstImage,canvasID,collecManif,manifests,manifestError,pdfVolumes,createPdf,pdfUrl, manifestWpdf,
       annoCollec,rightPanel,locale,langPreset,imgData, nextChunk, nextPage, resourceManifest, imageVolumeManifests, userEditPolicies, highlight,
-      outline,outlines }
+      outline,outlines,outlineKW }
 
    console.log("mS2p",state,props)
 
@@ -178,6 +179,12 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       },
       onSetLangPreset:(langs:string[],i?:number) => {
          dispatch(ui.langPreset(langs,i))
+      },
+      onOutlineSearch:(iri:string,keyword:string,language:string) => {
+         dispatch(data.outlineSearch(iri,keyword,language));
+      },
+      onResetOutlineKW:() => {
+         dispatch(data.resetOutlineSearch());
       },
    }
 }

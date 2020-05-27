@@ -277,6 +277,25 @@ export default class API {
 
    }
 
+    async outlineSearch(IRI:string,kw:string,lg:string): Promise<string>
+    {
+         try {
+            
+            let config = store.getState().data.config.ldspdi
+            let url = config.endpoints[config.index]+"/query/graph" ;            
+            let param = {"searchType":"Outline_search","R_RES":IRI, "LG_NAME":lg, "I_LIM":"" }
+            let data = await this.getQueryResults(url, kw, param,"GET","application/jsonld");         
+
+            return data ;
+         }
+         catch(e)
+         {
+            //throw(e)
+            console.error(e)
+            return true
+         }
+
+   }
 
     async loadResource(IRI:string): Promise<string>
     {
