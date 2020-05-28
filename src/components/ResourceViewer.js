@@ -1957,7 +1957,7 @@ class ResourceViewer extends Component<Props,State>
 
                         let loca = {...this.props.history.location}
 
-                        loca.search = loca.search.replace(/((&*part=[^&]+))/,"") //|(&?osearch=[^&]+))/g,"")  ;
+                        loca.search = loca.search.replace(/((&part|part)=[^&]+)/,"") //|(&*osearch=[^&]+))/g,"")  ;
 
                         if(!loca.search) loca.search = "?"
                         else if(loca.search !== "?") loca.search += "&"
@@ -2445,15 +2445,13 @@ class ResourceViewer extends Component<Props,State>
                   let tVal = tLab["value"]
                   if(!tVal) tVal = tLab["@value"]
 
-
-
                   if(tLab.start !== undefined) tmp = [ <span class="startChar">
                      <span>[&nbsp;
                         <Link to={"/show/"+this.props.IRI+"?startChar="+tLab.start+(this.props.highlight?'&keyword="'+this.props.highlight.key+'"@'+this.props.highlight.lang:"")+"#open-viewer"}>@{tLab.start}</Link>
                      </span>&nbsp;]</span>,<br/> ]
                   else tmp = []
                   
-                  if(tmp.length) tmp.push(highlight(tVal,null,null,false /*true*/))
+                  if(tmp.length || tVal.match(/[↦↤]/)) tmp.push(highlight(tVal,null,null,false /*true*/))
                   else tmp.push(this.fullname(tVal))
 
                   if(lang) tmp = [ <span lang={lang}>{tmp}</span> ]
@@ -4844,7 +4842,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
             //this.props.onResetOutlineKW()
 
             let loca = { ...this.props.history.location }
-            loca.search = loca.search.replace(/&?(osearch|part)=[^&]+/g, "") 
+            loca.search = loca.search.replace(/(&part|part)=[^&]+/g, "") 
             this.props.history.push(loca)
 
             e.preventDefault();
@@ -4852,11 +4850,16 @@ perma_menu(pdfLink,monoVol,fairUse,other)
             return false
          }
 
+         let osearch 
+         if(this.props.outlineKW) osearch = this.props.outlineKW
+
+         console.log("renderO?",osearch)
+
          let root = this.props.IRI
          let elem = this.getResourceElem(bdo+"inRootInstance")
          if(elem && elem.length) { 
             root = shortUri(elem[0].value)
-            title = this.getWtitle(elem)
+            title = this.getWtitle(elem, rootClick)
          }
          else {
             title = this.getWtitle([{value:fullUri(this.props.IRI)}], rootClick)
@@ -4865,9 +4868,6 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          if(this.state.outlinePart) opart = this.state.outlinePart         
          else if(root !== this.props.IRI) opart = this.props.IRI
          else opart = root
-
-         let osearch 
-         if(this.props.outlineKW) osearch = this.props.outlineKW
 
          let toggle = (e,r,i,x = "") => {
             let tag = "outline-"+r+"-"+i+(x?"-"+x:"")
@@ -4881,9 +4881,10 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
          if(opart && opart !== root && this.state.collapse["outline-"+root+"-"+root] == undefined) toggle(null,root,root)         
 
-         console.log("renderO?",osearch)
 
-         if((this.state.collapse["outline-"+root+"-"+root] || opart === root) && this.props.outlines  && this.props.dictionary) {
+         // TODO fix tree not opening when changing node after loading results on root node
+
+         if((this.state.collapse["outline-"+root+"-"+root] || opart === root || osearch) && this.props.outlines  && this.props.dictionary) {
 
             let collapse = {...this.state.collapse }
 
@@ -4978,12 +4979,14 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                                  if(!g.details) g.details = []
                                  g.details.push(<div class="sub"><h4 class="first type">{this.proplink(bdo+"instanceOf")}: </h4>{this.format("h4","instacO","",false, "sub", [{type:"uri",value:fullUri(g.instanceOf)}])}</div>)
                               }
+                              /*
                               if(osearch && g["tmp:titleMatch"]) {
                                  if(!g.details) g.details = []
                                  if(!Array.isArray(g["tmp:titleMatch"])) g["tmp:titleMatch"] = [ g["tmp:titleMatch"] ]
-                                 g.details.push(<div class="sub"><h4 class="first type">{this.proplink(tmp+"titleMatch")}: </h4><div /*style={{alignSelf:"baseline"}}*/>{g["tmp:titleMatch"].map(t => <h4>{highlight(t["@value"])}</h4>)}</div></div>)
+                                 g.details.push(<div class="sub"><h4 class="first type">{this.proplink(tmp+"titleMatch")}: </h4><div>{g["tmp:titleMatch"].map(t => <h4>{highlight(t["@value"])}</h4>)}</div></div>)
                               }
-                              else if(g.hasTitle) {
+                              else */
+                              if(g.hasTitle) {
                                  if(!g.details) g.details = []
                                  if(!Array.isArray(g.hasTitle)) g.hasTitle = [ g.hasTitle ]
                                  for(let t of g.hasTitle) { 
@@ -4992,7 +4995,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                                        title = { ...title[0] }
                                        let titleT = bdo + title.type
                                        if(title && title["rdfs:label"]) title = title["rdfs:label"]
-                                       if(!Array.isArray(title)) title = [ title ]
+                                       if(!Array.isArray(title)) title = [ title ]                                      
                                        title = title.map(f => ({value:f["@value"],lang:f["@language"], type:"literal"}))
                                        //console.log("title?",JSON.stringify(title,null,3))
                                        g.details.push(<div class="sub"><h4 class="first type">{this.proplink(titleT)}: </h4>{this.format("h4", "", "", false, "sub", title)}</div>)
@@ -5024,10 +5027,11 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                         let pType = e["partType"], fUri = fullUri(e["@id"])
                         let tLabel = getOntoLabel(this.props.dictionary,this.props.locale,fullUri(pType))
                         tLabel = tLabel[0].toUpperCase() + tLabel.slice(1)
+                        let open = this.state.collapse[tag] || (osearch &&  this.state.collapse[tag] === undefined )
                         if(pType && pType["@id"]) pType = pType["@id"]
                         ret.push(<span class={'top'+ (this.state.outlinePart === e['@id'] || (!this.state.outlinePart && this.props.IRI===e['@id']) ?" is-root":"")+(this.state.collapse[tag]||osearch?" on":"") }>
-                              {(e.hasPart && !this.state.collapse[tag] && this.props.outlines[e['@id']] !== true) && <ExpandMore onClick={(ev) => toggle(ev,root,e["@id"])} className="xpd"/>}
-                              {(e.hasPart &&  this.state.collapse[tag] && this.props.outlines[e['@id']] !== true) && <ExpandLess onClick={(ev) => toggle(ev,root,e["@id"])} className="xpd"/>}
+                              {(e.hasPart && !open && this.props.outlines[e['@id']] !== true) && <ExpandMore onClick={(ev) => toggle(ev,root,e["@id"])} className="xpd"/>}
+                              {(e.hasPart && open && this.props.outlines[e['@id']] !== true) && <ExpandLess onClick={(ev) => toggle(ev,root,e["@id"])} className="xpd"/>}
                               <span class={"parTy "+(e.details?"on":"")} {...e.details?{title:tLabel+" - "+(this.state.collapse[tag+"-details"]?"Hide":"Show")+" Details", onClick:(ev) => toggle(ev,root,e["@id"],"details")}:{title:tLabel}} >
                                  {pType && parts[pType] ? <div>{parts[pType]}</div> : null}
                               </span>
@@ -5080,7 +5084,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
                let loca = { ...this.props.history.location }
 
-               loca.search = loca.search.replace(/&?osearch=[^&]+/, "") 
+               loca.search = loca.search.replace(/&*osearch=[^&]+/, "") 
 
                if(!loca.search) loca.search = "?"
                else if(loca.search !== "?") loca.search += "&"
@@ -5095,6 +5099,8 @@ perma_menu(pdfLink,monoVol,fairUse,other)
             }
          }
 
+         let open = this.state.collapse[tag] || (osearch && this.state.collapse[tag] === undefined)
+
          return ( 
          <div class="data" id="outline">
             <h2>Outline</h2>
@@ -5106,7 +5112,8 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                         this.setState({outlineKW:""})
                         this.props.onResetOutlineKW()
                         let loca = { ...this.props.history.location }
-                        loca.search = loca.search.replace(/&?osearch=[^&]+/, "") 
+                        if(!loca.search) loca.search = ""
+                        loca.search = loca.search.replace(/(&osearch|osearch)=[^&]+/, "").replace(/[?]&/,"?")
                         this.props.history.push(loca)
                      }}><Close/></span> }
                   </div>
@@ -5114,10 +5121,10 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                <div>
                   <Loader loaded={this.props.loading !== "outline"}/>
                   <div class={"root " +(this.state.outlinePart === root || (!this.state.outlinePart && this.props.IRI===root)?"is-root":"")} >
-                     { !this.state.collapse[tag] && [<ExpandMore className="xpd" onClick={(e) => toggle(e,root,root)} />,<span onClick={rootClick}>{title}</span>]}
-                     {  this.state.collapse[tag] && [<ExpandLess className="xpd" onClick={(e) => toggle(e,root,root)} />,<span onClick={rootClick} class='on'>{title}</span>]}
+                     { !open && [<ExpandMore className="xpd" onClick={(e) => toggle(e,root,root)} />,<span onClick={rootClick}>{title}</span>]}
+                     {  open && [<ExpandLess className="xpd" onClick={(e) => toggle(e,root,root)} />,<span onClick={rootClick} class='on'>{title}</span>]}
                   </div>
-                  { (this.state.collapse[tag]||osearch) && <div style={{paddingLeft:"50px"}}>{outline}</div> }
+                  { open && <div style={{paddingLeft:"50px"}}>{outline}</div> }
                </div>
          </div> )
       }

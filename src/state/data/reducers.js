@@ -815,6 +815,26 @@ export const gotOutline = (state: DataState, action: Action) => {
          if(!Array.isArray(e["skos:prefLabel"])) e["skos:prefLabel"] = [ e["skos:prefLabel"] ]
          assoR[e["@id"]][uri] = assoR[e["@id"]][uri].concat( e["skos:prefLabel"].map(p => ({ value:p["@value"], lang:p["@language"], type:skos+"prefLabel" })))
       }
+      
+      if(e.hasTitle && e["tmp:titleMatch"] ) {
+         if(!Array.isArray(e["tmp:titleMatch"])) e["tmp:titleMatch"] = [ e["tmp:titleMatch"] ]
+         if(!Array.isArray(e["hasTitle"])) e["hasTitle"] = [ e["hasTitle"] ]
+         for(let t of e["hasTitle"]) {
+            let bnode = elem.filter(f => f["@id"] === t)
+            if(bnode.length) {
+               bnode = bnode[0]
+               if(bnode["rdfs:label"]) {
+                  if(!Array.isArray(bnode["rdfs:label"])) bnode["rdfs:label"] = [ bnode["rdfs:label"] ]
+                  for(let tm of e["tmp:titleMatch"]) {
+                     if(!tm.comp) tm.comp = tm["@value"].replace(/[↦↤]/g,"")
+                     for(let b of bnode["rdfs:label"]) {
+                        if(b["@value"] === tm.comp) { b["@value"] = tm["@value"] }
+                     }
+                  }
+               }
+            }
+         }
+      }
    }
 
    let outlineKW = state.outlineKW
