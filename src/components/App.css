@@ -921,7 +921,7 @@ h4:not(:hover) > .lang
 .resource .data#outline .root + div .top:hover .pType.on svg.details { display:inline; }
 
 .resource .data#outline .root + div { width:calc(100% - 25px - 50px - 35px); }
-.resource .data#outline .root + div .top + .details { width:100%; background-color:#ffffff80; margin:5px 25px 7px 25px; padding:10px 15px 15px 28px;}
+.resource .data#outline .root + div .top + .details { width:100%; background-color:#ffffff80; margin:5px 25px 7px 25px; padding:15px 15px 15px 28px;}
 
 
 .resource .data#outline .root + div .top + .details .sub { margin:0;border:none;padding:0; display:flex; flex-wrap:nowrap; /*align-items:baseline;*/}
@@ -929,7 +929,7 @@ h4:not(:hover) > .lang
 .resource .data#outline .root + div .top + .details .sub h4,
 .resource .data#outline .root + div .top + .details .sub a,
 .resource .data#outline .root + div .top + .details .sub h4 span { font-size:12px;line-height:16px; }
-.resource .data#outline .root + div .top + .details .sub h4.first { width:100px; }
+.resource .data#outline .root + div .top + .details .sub h4.first { width:100px; align-self: end; }
 .resource .data#outline .root + div .top + .details .sub h4.first span { font-weight:700;}
 .resource .data#outline .root + div .top + .details .sub h4.first + h4 { width:calc(100% - 100px); }
 .resource .data#outline .root + div .top + .details .sub h4 { padding-right:20px; /* vertical-align: -100%; */ }
@@ -943,6 +943,17 @@ h4:not(:hover) > .lang
 .resource .data#outline .root + div .top + .details .sub.view a:hover { text-decoration:underline; }
 
 .resource .data#outline .root + div .top + .details .sub.loca .urilink { display:inline; }
+
+.resource .data#outline .root + div .top + .details .sub h4.first + div { display:flex;}
+
+.resource .data#outline .root + div .top + .details .sub h4.first + div h4:not(:first-child) { margin-top:5px;}
+
+.resource .data#outline .root + div .top + .details .sub h4 .highlight { padding:0; background:none; margin:0 3px;}
+.resource .data#outline .root + div .top + .details .sub h4 .highlight::before { background-color: #fce08e;font-weight:700; height:100%;
+   border-radius:2px;padding:3px 3px; position:relative;z-index:-1; position:absolute; content:' ';display:inline-block; width:100%; left:-5px; top:-3px;
+   margin:0 3px;
+}
+
 
 /* ------------------------------------------------------------------------------------------------------------------------ header */
 

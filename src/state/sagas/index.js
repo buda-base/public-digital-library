@@ -238,6 +238,17 @@ async function initiateApp(params,iri,myprops) {
    //}
 }
 
+if(params && params.osearch) {
+   let p = params.osearch.split("@")
+   let r = iri
+
+   // TODO add search in part of outline
+   //if(params.part) r = params.part
+   
+   store.dispatch(dataActions.outlineSearch(r,p[0],p[1]))
+}
+
+
 if(params && params.t /*&& !params.i */) {
    store.dispatch(uiActions.updateSortBy(params.s?params.s.toLowerCase():(params.i?"year of publication reverse":(params.t==="Etext"?"closest matches":"popularity")),params.t))
 }

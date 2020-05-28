@@ -817,7 +817,7 @@ export const gotOutline = (state: DataState, action: Action) => {
       }
    }
 
-   let outlineKW 
+   let outlineKW = state.outlineKW
    if(action.payload.includes("@")) outlineKW = action.payload
 
    return {

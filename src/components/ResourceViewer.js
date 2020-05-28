@@ -1064,7 +1064,7 @@ class ResourceViewer extends Component<Props,State>
       
       window.addEventListener('popstate', this.onBackButtonEvent);  
 
-      let s
+      let s, timerScr
       let get = qs.parse(this.props.history.location.search)
       if(get.tabs && get.tabs.length) {         
          s = ResourceViewer.setTitleFromTabs(this.props,{...this.state, tabs:get.tabs.split(",")})
@@ -1077,6 +1077,23 @@ class ResourceViewer extends Component<Props,State>
          if(!s) s = { ...this.state } 
          if(!s.title) s.title = {}
          s.outlinePart = get.part
+      }
+      if(get.osearch && !this.state.outlineKW) { 
+         if(!s) s = { ...this.state } 
+         s.outlineKW = get.osearch
+         if(s.outlineKW.includes("@")) s.outlineKW = s.outlineKW.replace(/\"([^"]+)\"@.*/,"$1")
+
+         
+         if(!timerScr) timerScr = setInterval( () => {
+            const el = document.querySelector("#outline")
+            console.log("seTi?",el)
+            if(el) { 
+               el.scrollIntoView()      
+               clearInterval(timerScr)
+               timerScr = 0
+            }
+         }, 300)
+         
       }
 
       if(s) this.setState(s);
@@ -1936,11 +1953,17 @@ class ResourceViewer extends Component<Props,State>
                   uri = uri.replace(/^((bdr:MW[^_]+)_[^_]+)/,"$2?part=$1")
                   link = <a class={"urilink prefLabel " } href={"/"+show+"/"+uri} onClick={(e) => { 
 
-                        this.setState({outlinePart:part})
+                        this.setState({outlinePart:part /*,outlineKW:""*/ })
 
-                        let loca = {...this.props.history}
-                        if(!loca.search) loca.search = "?part="+part
-                        else loca.search = loca.search.replace(/part=[^&]+/,"part="+part)
+                        let loca = {...this.props.history.location}
+
+                        loca.search = loca.search.replace(/((&*part=[^&]+))/,"") //|(&?osearch=[^&]+))/g,"")  ;
+
+                        if(!loca.search) loca.search = "?"
+                        else if(loca.search !== "?") loca.search += "&"
+
+                        loca.search += "part="+part
+                        
                         loca.pathname = "/show/"+uri.replace(/[?].*/,"")
                         this.props.history.push(loca)                        
                         
@@ -4807,23 +4830,26 @@ perma_menu(pdfLink,monoVol,fairUse,other)
    renderOutline() {
 
       if(this.props.outline && this.props.outline !== true) {
-         let outline = [], title
 
-         let toggle = (e,r,i,x = "") => {
-            let tag = "outline-"+r+"-"+i+(x?"-"+x:"")
-            console.log("toggle?",tag)
-            this.setState( { collapse:{...this.state.collapse, [tag]:!this.state.collapse[tag] } })
-            if(!this.props.outlineKW && !x && this.props.outlines && !this.props.outlines[i]) this.props.onGetOutline(i);
-         }
+         let outline = [], title
 
          let rootClick = (e) => {
             console.log("rootC?")
             let s
-            if(this.state.outlinePart) {
-               if(!s) s = { ...this.state } 
-               s.outlinePart = null;
-               this.setState(s)
-            }
+            if(!s) s = { ...this.state } 
+            s.outlinePart = null;
+            //s.outlineKW = ""
+            this.setState(s)
+            
+            //this.props.onResetOutlineKW()
+
+            let loca = { ...this.props.history.location }
+            loca.search = loca.search.replace(/&?(osearch|part)=[^&]+/g, "") 
+            this.props.history.push(loca)
+
+            e.preventDefault();
+            e.stopPropagation();
+            return false
          }
 
          let root = this.props.IRI
@@ -4843,6 +4869,16 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          let osearch 
          if(this.props.outlineKW) osearch = this.props.outlineKW
 
+         let toggle = (e,r,i,x = "") => {
+            let tag = "outline-"+r+"-"+i+(x?"-"+x:"")
+            let val = this.state.collapse[tag]
+            if(osearch && val === undefined) val = true
+            console.log("toggle?",tag)
+            this.setState( { collapse:{...this.state.collapse, [tag]:!val } })
+            if(!this.props.outlineKW && !this.state.outlineKW && !x && this.props.outlines && !this.props.outlines[i]) this.props.onGetOutline(i);
+         }
+
+
          if(opart && opart !== root && this.state.collapse["outline-"+root+"-"+root] == undefined) toggle(null,root,root)         
 
          console.log("renderO?",osearch)
@@ -4851,7 +4887,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
             let collapse = {...this.state.collapse }
 
-               //console.log("collapse!",root,opart,JSON.stringify(collapse,null,3),this.props.outlines[opart])
+            console.log("collapse!",root,opart,JSON.stringify(collapse,null,3),this.props.outlines[opart])
 
             if(!this.props.outlines[opart]) this.props.onGetOutline(opart);
 
@@ -4886,6 +4922,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                   if(el) el.scrollIntoView()      
                }
                
+               
                   /*
                   // TODO more precise scroll (no scroll?)
                   if(opart) setTimeout(()=>{
@@ -4915,7 +4952,9 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                let elem 
                if(!osearch) elem = this.props.outlines[top]
                else elem = this.props.outlines[osearch]
+               
                //console.log("elem?",elem,top,parent)
+
                let outline = []
                if(elem && elem["@graph"]) { 
                   elem = elem["@graph"]
@@ -4942,7 +4981,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                               if(osearch && g["tmp:titleMatch"]) {
                                  if(!g.details) g.details = []
                                  if(!Array.isArray(g["tmp:titleMatch"])) g["tmp:titleMatch"] = [ g["tmp:titleMatch"] ]
-                                 g.details.push(<div class="sub"><h4 class="first type">{this.proplink(tmp+"titleMatch")}: </h4><div>{g["tmp:titleMatch"].map(t => <h4>{highlight(t["@value"])}</h4>)}</div></div>)
+                                 g.details.push(<div class="sub"><h4 class="first type">{this.proplink(tmp+"titleMatch")}: </h4><div /*style={{alignSelf:"baseline"}}*/>{g["tmp:titleMatch"].map(t => <h4>{highlight(t["@value"])}</h4>)}</div></div>)
                               }
                               else if(g.hasTitle) {
                                  if(!g.details) g.details = []
@@ -5012,8 +5051,8 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                                  </CopyToClipboard>
                               </div>
                            </span>)
-                        if((osearch || this.state.collapse[tag+"-details"]) && e.details) ret.push(<div class="details">{e.details}</div>)
-                        if(osearch || (this.props.outlines[e["@id"]] && this.props.outlines[e["@id"]] !== true && this.state.collapse[tag]) ) ret.push(<div style={{paddingLeft:"25px"}}>{makeNodes(e["@id"],top)}</div>)                        
+                        if(((osearch && this.state.collapse[tag+"-details"] !== false) || this.state.collapse[tag+"-details"]) && e.details) ret.push(<div class="details">{e.details}</div>)
+                        if((osearch && this.state.collapse[tag] !== false) || (this.props.outlines[e["@id"]] && this.props.outlines[e["@id"]] !== true && this.state.collapse[tag]) ) ret.push(<div style={{paddingLeft:"25px"}}>{makeNodes(e["@id"],top)}</div>)                        
                         return ( ret )
                      })
                   }
@@ -5033,7 +5072,27 @@ perma_menu(pdfLink,monoVol,fairUse,other)
             // TODO 
             // - add language alternatives using autodetection
             // - search either from root or current node
-            if(this.state.outlineKW) this.props.onOutlineSearch(root, this.state.outlineKW, "bo-x-ewts")
+            // - add to url (=>back button)
+
+            if(this.state.outlineKW) { 
+
+               let lg =  "bo-x-ewts"
+
+               let loca = { ...this.props.history.location }
+
+               loca.search = loca.search.replace(/&?osearch=[^&]+/, "") 
+
+               if(!loca.search) loca.search = "?"
+               else if(loca.search !== "?") loca.search += "&"
+
+               loca.search += "osearch=\""+this.state.outlineKW+"\"@"+lg
+
+               console.log("loca!",loca)
+
+               this.props.history.push(loca)
+               
+               //this.props.onOutlineSearch(root, this.state.outlineKW,lg)
+            }
          }
 
          return ( 
@@ -5041,9 +5100,15 @@ perma_menu(pdfLink,monoVol,fairUse,other)
             <h2>Outline</h2>
                <div class="search">
                   <div>
-                     <input type="text" placeholder="Search in outline" onChange={(e) => this.setState({outlineKW:e.target.value})} onKeyPress={ (e) => { if(e.key === 'Enter') outlineSearch(e); }}/>
+                     <input type="text" placeholder="Search in outline" value={this.state.outlineKW} onChange={(e) => this.setState({outlineKW:e.target.value})} onKeyPress={ (e) => { if(e.key === 'Enter') outlineSearch(e); }}/>
                      <span class="button" onClick={outlineSearch}  title="Start search"></span>
-                     { this.props.outlineKW && <span class="button" title="Reset search" onClick={(e) => this.props.onResetOutlineKW()}><Close/></span> }
+                     { this.props.outlineKW && <span class="button" title="Reset search" onClick={(e) => { 
+                        this.setState({outlineKW:""})
+                        this.props.onResetOutlineKW()
+                        let loca = { ...this.props.history.location }
+                        loca.search = loca.search.replace(/&?osearch=[^&]+/, "") 
+                        this.props.history.push(loca)
+                     }}><Close/></span> }
                   </div>
                </div>
                <div>
