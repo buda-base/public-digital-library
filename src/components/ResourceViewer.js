@@ -5017,6 +5017,13 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                               if(g.instanceOf) {
                                  if(!g.details) g.details = []
                                  g.details.push(<div class="sub"><h4 class="first type">{this.proplink(bdo+"instanceOf")}: </h4>{this.format("h4","instacO","",false, "sub", [{type:"uri",value:fullUri(g.instanceOf)}])}</div>)
+                                 let instOf = elem.filter(f => f["@id"] === g.instanceOf)
+                                 if(instOf.length && instOf[0]["tmp:labelMatch"]) {
+                                    let node = instOf[0]["tmp:labelMatch"]
+                                    node = [{ value:node["@value"], lang:node["@language"], type:"literal"}]
+                                    //console.log("instOf",instOf,node)
+                                    g.details.push(<div class="sub"><h4 class="first type">{this.proplink(tmp+"instanceLabel")}: </h4>{this.format("h4","","",false, "sub", node)}</div>)
+                                 }
                               }
                               /*
                               if(osearch && g["tmp:titleMatch"]) {

@@ -955,6 +955,8 @@ h4:not(:hover) > .lang
    border-radius:2px;padding:3px 3px; position:relative;z-index:-1; position:absolute; content:' ';display:inline-block; width:100%; left:-5px; top:-3px;
    margin:0 3px;
 }
+.resource .data#outline .root + div .top + .details .sub h4 .highlight:first-child { margin-left:0; }
+.resource .data#outline .root + div .top + .details .sub h4 .highlight:first-child::before  { margin-left:0; }
 
 
 /* ------------------------------------------------------------------------------------------------------------------------ header */
