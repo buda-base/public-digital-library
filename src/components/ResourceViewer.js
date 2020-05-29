@@ -35,6 +35,7 @@ import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
 import CheckCircle from '@material-ui/icons/CheckCircle';
 import PanoramaFishEye from '@material-ui/icons/PanoramaFishEye';
+import Paper from '@material-ui/core/Paper';
 import InfiniteScroll from 'react-infinite-scroller';
 import _ from "lodash";
 import Tooltip from '@material-ui/core/Tooltip';
@@ -65,7 +66,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faLanguage } from '@fortawesome/free-solid-svg-icons'
 //import {MapComponent} from './Map';
 import {getEntiType,dPrefix} from '../lib/api';
-import {languages,getLangLabel,top_right_menu,prefixesMap as prefixes,sameAsMap,shortUri,fullUri,highlight,lang_selec} from './App';
+import {languages,getLangLabel,top_right_menu,prefixesMap as prefixes,sameAsMap,shortUri,fullUri,highlight,lang_selec,langSelect,searchLangSelec} from './App';
+import {narrowWithString} from "../lib/langdetect"
 import Popover from '@material-ui/core/Popover';
 import MenuItem from '@material-ui/core/MenuItem';
 import List from '@material-ui/core/List';
@@ -832,10 +834,32 @@ class ResourceViewer extends Component<Props,State>
 
       let s 
 
+
       // TODO fix reopening etext after being closed
       if(state.openEtext && state.closeEtext) s = { ...state, openEtext:false, closeEtext: false } 
 
       if(state.tabs && state.tabs.length) s = ResourceViewer.setTitleFromTabs(props,state) ;
+
+
+
+      // update when language has changed
+      let eq = true
+      if(props.langPreset && state.langPreset) for(let i = 0 ; i < props.langPreset.length && eq; i ++ ) { eq = eq && props.langPreset[i] === state.langPreset[i] ; }
+      else eq = false ;
+      if(!eq) {
+         if(!s) s = { ...state }
+         let langDetect = [ "ewts", "iast", "pinyin" ]
+         let langP = [], i
+         if(props.langPreset) { 
+            langP = props.langPreset.map(p => p.replace(/^.*?(ewts|iast|pinyin)?$/,"$1")).filter(e => e)
+            langDetect = langDetect.map(d => ({d,i:(i=langP.indexOf(d))!==-1?i:99}))
+            console.log("langP",langDetect,langP,props.langPreset)         
+            langDetect = _.orderBy(langDetect, ["i","d"],["asc","asc"]).map(v => v.d)
+         }
+         s = { ...s, langPreset:props.langPreset, repage:true, langDetect }
+         if(props.langIndex !== undefined ) s = { ...s, language:props.langPreset[0] }
+
+      }
 
       if(props.resources && props.resources[props.IRI]) {
 
@@ -3439,7 +3463,7 @@ class ResourceViewer extends Component<Props,State>
          if(this.state.title && this.state.title.images && this.state.title.images.length) tabs.push(shortUri(this.state.title.images[0].value))
       }
 
-      console.log("tabs?",_T,other,tabs)
+      //console.log("tabs?",_T,other,tabs)
 
       if(tabs.length) return "?tabs="+tabs.join(",")
       else return ""
@@ -3447,7 +3471,7 @@ class ResourceViewer extends Component<Props,State>
 
    getH2 = (title,_befo,_T,other,T_,rootC) => {
 
-      console.log("H2?",rootC)
+      //console.log("H2?",rootC)
 
       if(other) return <h2><Link  {... rootC?{onClick:rootC}:{}}  to={"/show/"+shortUri(other)+this.getTabs(T_,other)}>{_T}<span>{_befo}{title.value}</span>{this.tooltip(title.lang)}</Link></h2>
       else return <h2 class="on">{_T}<span>{_befo}{title.value}</span>{this.tooltip(title.lang)}</h2>
@@ -4880,7 +4904,9 @@ perma_menu(pdfLink,monoVol,fairUse,other)
             let tag = "outline-"+r+"-"+i+(x?"-"+x:"")
             let val = this.state.collapse[tag]
             if(osearch && val === undefined) val = true
-            console.log("toggle?",tag)
+
+            //console.log("toggle?",tag)
+
             this.setState( { collapse:{...this.state.collapse, [tag]:!val } })
             if(!this.props.outlineKW && !this.state.outlineKW && !x && this.props.outlines && !this.props.outlines[i]) this.props.onGetOutline(i);
          }
@@ -4958,7 +4984,14 @@ perma_menu(pdfLink,monoVol,fairUse,other)
             let makeNodes = (top,parent) => {               
                let elem 
                if(!osearch) elem = this.props.outlines[top]
-               else elem = this.props.outlines[osearch]
+               else { 
+                  elem = this.props.outlines[osearch]
+                  if(elem === true) {
+                     let tmp = this.props.outlineKW.split("/")
+                     if(tmp && tmp.length >= 2) tmp = tmp[1].split("@")
+                     return <span class="top is-root"><span>No result found for {tmp[0]}.{ /* in {(I18n.t(""+(searchLangSelec[tmp[1]]?searchLangSelec[tmp[1]]:languages[tmp[1]])))}. */ }</span></span>
+                  }
+               }
                
                //console.log("elem?",elem,top,parent)
 
@@ -5026,7 +5059,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                         }
                      }
                      
-                     console.log("outline?",elem,outline)
+                     //console.log("outline?",elem,outline)
 
                      outline = _.orderBy(outline,["partIndex"],["asc"]).map(e => {
                         let tag = "outline-"+root+"-"+e['@id']
@@ -5080,19 +5113,17 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
          let tag = "outline-"+root+"-"+root
 
-         let outlineSearch = (e) => {
+         let outlineSearch = (e, lg = "bo-x-ewts") => {
             console.log("outlineS",this.state.outlineKW)
 
-            // NOT
+            // NOTO
             // x search either from root or current node
             // DONE
             // + add to url (=>back button)
-            // TODO 
-            // - add language alternatives using autodetection
+            // + add language alternatives using autodetection
 
             if(this.state.outlineKW) { 
 
-               let lg =  "bo-x-ewts"
 
                let loca = { ...this.props.history.location }
 
@@ -5105,6 +5136,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
                console.log("loca!",loca)
 
+               this.setState({dataSource:[]});
                this.props.history.push(loca)
                
                //this.props.onOutlineSearch(root, this.state.outlineKW,lg)
@@ -5113,21 +5145,63 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
          let open = this.state.collapse[tag] || (osearch && this.state.collapse[tag] === undefined)
 
+         let changeOutlineKW = (e) => {
+
+            let value = e.target.value
+
+            let language = this.state.language
+            let detec = narrowWithString(value, this.state.langDetect)
+            let possible = [ ...this.state.langPreset, ...langSelect ]
+            if(detec.length < 3) { 
+               if(detec[0] === "tibt") for(let p of possible) { if(p === "bo" || p.match(/-[Tt]ibt$/)) { language = p ; break ; } }
+               else if(detec[0] === "hani") for(let p of possible) { if(p.match(/^zh((-[Hh])|$)/)) { language = p ; break ; } }
+               else if(["ewts","iast","deva","pinyin"].indexOf(detec[0]) !== -1) for(let p of possible) { if(p.match(new RegExp(detec[0]+"$"))) { language = p ; break ; } }
+            }
+            
+            possible = [ ...this.state.langPreset, ...langSelect.filter(l => !this.state.langPreset || !this.state.langPreset.includes(l))]
+            console.log("detec",possible,detec,this.state.langPreset,this.state.langDetect)
+            
+            this.setState({ outlineKW:value, outlineKWlang: language, dataSource: detec.reduce( (acc,d) => {
+               
+               let presets = []
+               if(d === "tibt") for(let p of possible) { if(p === "bo" || p.match(/-[Tt]ibt$/)) { presets.push(p); } }
+               else if(d === "hani") for(let p of possible) { if(p.match(/^zh((-[Hh])|$)/)) { presets.push(p); } }
+               else if(["ewts","iast","deva","pinyin"].indexOf(d) !== -1) for(let p of possible) { if(p.match(new RegExp(d+"$"))) { presets.push(p); } }
+               
+               return [...acc, ...presets]
+            }, [] ).concat(value.match(/[a-zA-Z]/)?["en"]:[]).map(p => '"'+value+'"@'+(p == "sa-x-iast"?"sa-x-ndia":p)) } ) 
+
+         }
+
          return ( 
          <div class="data" id="outline">
             <h2>Outline</h2>
                <div class="search">
                   <div>
-                     <input type="text" placeholder="Search in outline" value={this.state.outlineKW} onChange={(e) => this.setState({outlineKW:e.target.value})} onKeyPress={ (e) => { if(e.key === 'Enter') outlineSearch(e); }}/>
+                     <input type="text" placeholder="Search in outline" value={this.state.outlineKW} onChange={changeOutlineKW} onKeyPress={ (e) => { 
+                        if(e.key === 'Enter') outlineSearch(e,(this.state.dataSource&&this.state.dataSource.length?this.state.dataSource[0].split("@")[1]:null)); 
+                     }}/>
                      <span class="button" onClick={outlineSearch}  title="Start search"></span>
                      { this.props.outlineKW && <span class="button" title="Reset search" onClick={(e) => { 
-                        this.setState({outlineKW:""})
+                        this.setState({outlineKW:"",dataSource:[]})
                         this.props.onResetOutlineKW()
                         let loca = { ...this.props.history.location }
                         if(!loca.search) loca.search = ""
                         loca.search = loca.search.replace(/(&osearch|osearch)=[^&]+/, "").replace(/[?]&/,"?")
                         this.props.history.push(loca)
-                     }}><Close/></span> }
+                     }}><Close/></span> }                  
+                     { (this.state.outlineKW && this.state.dataSource && this.state.dataSource.length > 0) &&   
+                        <div><Paper id="suggestions">
+                        { this.state.dataSource.map( (v) =>  {
+                              let tab = v.split("@")
+                              return (
+                                 <MenuItem key={v} style={{lineHeight:"1em"}} onClick={(e)=>{ 
+                                    this.setState({dataSource:[]});
+                                    outlineSearch(e,tab[1]);
+                                    //this.requestSearch(tab[0],null,tab[1])
+                                 }}>{ tab[0].replace(/["]/g,"")} <SearchIcon style={{padding:"0 10px"}}/><span class="lang">{(I18n.t(""+(searchLangSelec[tab[1]]?searchLangSelec[tab[1]]:languages[tab[1]]))) }</span></MenuItem> ) 
+                              } ) }
+                        </Paper></div> }
                   </div>
                </div>
                <div>

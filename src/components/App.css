@@ -208,7 +208,7 @@ body { overflow:auto !important;padding-right:0 !important; /*font-family:"Robot
 #menu-datatype > div:last-child ul li:hover,
 #suggestions li:hover {  background-color:#f5f5f5; }
 
-#suggestions .lang { text-transform: uppercase; color:#d73449; font-weight:700; font-size:10px; align-items:baseline;}
+#suggestions .lang { text-transform: uppercase; color:#d73449; font-weight:700; font-size:10px; align-items:baseline; top:0px;}
 
 #search-bar button { opacity:1;}
 
@@ -817,7 +817,7 @@ h4:not(:hover) > .lang
 .resource .data#outline:last-child { padding-bottom:45px; }
 .resource .data#outline div { flex-wrap:wrap; }
 .resource .data#outline div h2,
-.resource .data#outline div span { font-size:14px; font-weight:400; color:#343434; }
+.resource .data#outline div span:not(.lang) { font-size:14px; font-weight:400; color:#343434; }
 .resource .data#outline .root >  span { width:calc(100% - 25px); display:block; }
 .resource .data#outline .top.is-root .ulink a,
 .resource .data#outline .on h2 span,

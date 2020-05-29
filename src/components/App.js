@@ -161,11 +161,11 @@ export const languages = {
    "x-ewts":"lang.search.xEwts","x-dts":"lang.search.sDts","alalc97":"lang.search.alalc97","latn-pinyin":"lang.search.latnPinyin"
 }
 
-const searchLangSelec = {
+export const searchLangSelec = {
    "zh-hant":"lang.search.zh"
 }
 
-const langSelect = [
+export const langSelect = [
    "zh-hant",
    "zh-latn-pinyin",
    "bo",
