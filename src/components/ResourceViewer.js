@@ -1063,7 +1063,7 @@ class ResourceViewer extends Component<Props,State>
          )
       }
       else if(this.state.openEtext) {         
-         this.setState({...this.state,openEtext:false })
+         this.setState({openEtext:false })
       }
    }
 
@@ -1077,10 +1077,38 @@ class ResourceViewer extends Component<Props,State>
          window.closeViewer()
       }
 
+      let get = qs.parse(this.props.history.location.search)
+      if(!get.osearch && this.props.outlineKW) {          
+         //this.setState({outlineKW:"",dataSource:[]})
+         this.props.onResetOutlineKW()
+      }
+
+      // TODO clean collapsed nodes when changing node/part
+
+      this.scrollToHashID(this.props.history)
+   }
+
+   componentWillUnmount() {
+      window.removeEventListener('popstate', this.onBackButtonEvent);
+   }
+   
+   componentDidMount()
+   {
+      console.log("mount!!")
+      
+      window.addEventListener('popstate', this.onBackButtonEvent);  
+
       let s, timerScr
       let get = qs.parse(this.props.history.location.search)
+      if(get.tabs && get.tabs.length) {         
+         s = ResourceViewer.setTitleFromTabs(this.props,{...this.state, tabs:get.tabs.split(",")})
+      }
+      if(get.s) {
+         if(!s) s = { ...this.state } 
+         s.fromSearch = get.s
+      }
 
-      if(get.part) { 
+      if(get.part && this.state.outlinePart !== get.part) { 
          if(!s) s = { ...this.state } 
          if(!s.title) s.title = {}
          s.outlinePart = get.part
@@ -1108,31 +1136,6 @@ class ResourceViewer extends Component<Props,State>
       else if(!get.osearch && this.props.outlineKW) {          
          //this.setState({outlineKW:"",dataSource:[]})
          this.props.onResetOutlineKW()
-      }
-
-      if(s) this.setState(s);
-
-      this.scrollToHashID(this.props.history)
-   }
-
-   componentWillUnmount() {
-      window.removeEventListener('popstate', this.onBackButtonEvent);
-   }
-   
-   componentDidMount()
-   {
-      console.log("mount!!")
-      
-      window.addEventListener('popstate', this.onBackButtonEvent);  
-
-      let s, timerScr
-      let get = qs.parse(this.props.history.location.search)
-      if(get.tabs && get.tabs.length) {         
-         s = ResourceViewer.setTitleFromTabs(this.props,{...this.state, tabs:get.tabs.split(",")})
-      }
-      if(get.s) {
-         if(!s) s = { ...this.state } 
-         s.fromSearch = get.s
       }
 
       if(s) this.setState(s);
@@ -5175,6 +5178,8 @@ perma_menu(pdfLink,monoVol,fairUse,other)
             // DONE
             // + add to url (=>back button)
             // + add language alternatives using autodetection
+            // TODO 
+            // - clean collapsed nodes before displaying results
 
             if(this.state.outlineKW) { 
 
