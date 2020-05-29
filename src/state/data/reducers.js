@@ -835,6 +835,17 @@ export const gotOutline = (state: DataState, action: Action) => {
             }
          }
       }
+      if(e.hasTitle) {
+         if(!Array.isArray(e.hasTitle)) e.hasTitle = [ e.hasTitle ]
+         let hT = e.hasTitle.map(t => { 
+            let k = "z"
+            let bnode = elem.filter(f => f["@id"] === t) ;
+            if(bnode.length) k = bnode[0].type
+            return ({id:t,k})
+         })
+         e.hasTitle = _.orderBy(hT, ["k"], ["asc"]).map(t => t.id);
+      }
+
    }
 
    let outlineKW = state.outlineKW

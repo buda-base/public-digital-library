@@ -207,6 +207,7 @@ export const providers = {
    "ia":"Internet Archive",                 
    "gretil":"GRETIL",
    "mbbt":"Marcus Bingenheimer's website",
+   "ngmpp":"NGMPP",
    "rkts":"rKTs",
    "ola":"Open Library",
    "sat":"SAT Daizōkyō Text Database",
@@ -231,6 +232,7 @@ export const provImg = {
    "gretil": "/GRETIL.png",
    "ia": "/IA.png",
    "mbbt": "/MB-icon.jpg",
+   "ngmpp":"/NGMPP.svg",
    "ola":  "/OL.png",  //"https://openlibrary.org/static/images/openlibrary-logo-tighter.svg" //"https://seeklogo.com/images/O/open-library-logo-0AB99DA900-seeklogo.com.png", 
    "rkts": "/RKTS.png",
    "src": "/SRC.svg",
@@ -1889,8 +1891,9 @@ class ResourceViewer extends Component<Props,State>
          //TODO lien legaldata / provider dans l'ontologie
 
          if(elem && elem.value && elem.value === bda+"LD_EAP_metadata") { prefix = "eap"; sameAsPrefix = "eap hasIcon provider" ; }
+         else if(elem && elem.value && elem.value === bda+"LD_NGMPP_Metadata") { prefix = "ngmpp"; sameAsPrefix = "ngmpp hasIcon provider" ; }
 
-         //console.log("s",prop,prefix,sameAsPrefix,pretty,elem,info,infoBase)         
+         //console.log("s?",prop,prefix,sameAsPrefix,pretty,elem,info,infoBase)         
 
          if((info && infoBase && infoBase.filter(e=>e["xml:lang"]||e["lang"]).length >= 0) || (prop && prop.match && prop.match(/[/#]sameAs/))) {
 
@@ -1946,11 +1949,14 @@ class ResourceViewer extends Component<Props,State>
             }
             else {                
                if(!info) info = shortUri(elem.value)
-               //console.log("pretty?",pretty,elem.value)
                let uri = shortUri(elem.value)
-               if(uri.match(/^bdr:MW[^_]+_[^_]+$/)) { 
+               let pI 
+               if(dic && dic[elem.value]) pI = dic[elem.value] 
+               //console.log("pretty?",pretty,elem.value,infoBase,pI)
+               if(uri.match(/^bdr:MW[^_]+_[^_]+$/) || pI && pI[bdo+"partIndex"] && pI[bdo+"partIndex"].length || pI && pI.filter && pI.filter(i => i.type === bdo+"partIndex").length) { 
                   let part = uri
-                  uri = uri.replace(/^((bdr:MW[^_]+)_[^_]+)/,"$2?part=$1")
+                  if(pI) uri = this.props.IRI+"?part="+uri
+                  else uri = uri.replace(/^((bdr:MW[^_]+)_[^_]+)/,"$2?part=$1")
                   link = <a class={"urilink prefLabel " } href={"/"+show+"/"+uri} onClick={(e) => { 
 
                         this.setState({outlinePart:part /*,outlineKW:""*/ })
@@ -1958,11 +1964,8 @@ class ResourceViewer extends Component<Props,State>
                         let loca = {...this.props.history.location}
 
                         loca.search = loca.search.replace(/((&part|part)=[^&]+)/,"") //|(&*osearch=[^&]+))/g,"")  ;
-
-                        if(!loca.search) loca.search = "?"
-                        else if(loca.search !== "?") loca.search += "&"
-
-                        loca.search += "part="+part
+                        loca.search += "&part="+part
+                        loca.search = loca.search.replace(/[?]&/,"?")
                         
                         loca.pathname = "/show/"+uri.replace(/[?].*/,"")
                         this.props.history.push(loca)                        
@@ -2121,7 +2124,7 @@ class ResourceViewer extends Component<Props,State>
 
          if(useAssoc) { 
             elem = useAssoc[longIRI]
-            if(elem) elem = elem.filter(e => e.type === prop)
+            if(elem) elem = elem.filter(e => e.type === prop || e.fromKey === prop)
             else elem = null
          }
 
@@ -3474,7 +3477,9 @@ class ResourceViewer extends Component<Props,State>
             if(typeof titlElem !== 'object') titlElem =  { "value" : titlElem, "lang":""}
             title = getLangLabel(this,"", titlElem, false, false, otherLabels)
          }
-         //console.log("titl",title,otherLabels,other)
+         
+         //console.log("titl",kZprop,titlElem,title,otherLabels,other)
+
          let _befo
          if(title && title.value) {
             if(!other) document.title = title.value + " - Public Digital Library"
@@ -4843,6 +4848,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
             let loca = { ...this.props.history.location }
             loca.search = loca.search.replace(/(&part|part)=[^&]+/g, "") 
+            loca.search = loca.search.replace(/[?]&/,"?")
             this.props.history.push(loca)
 
             e.preventDefault();
@@ -4853,7 +4859,6 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          let osearch 
          if(this.props.outlineKW) osearch = this.props.outlineKW
 
-         console.log("renderO?",osearch)
 
          let root = this.props.IRI
          let elem = this.getResourceElem(bdo+"inRootInstance")
@@ -4869,6 +4874,8 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          else if(root !== this.props.IRI) opart = this.props.IRI
          else opart = root
 
+         console.log("renderO?",osearch,opart,title)
+
          let toggle = (e,r,i,x = "") => {
             let tag = "outline-"+r+"-"+i+(x?"-"+x:"")
             let val = this.state.collapse[tag]
@@ -4882,13 +4889,11 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          if(opart && opart !== root && this.state.collapse["outline-"+root+"-"+root] == undefined) toggle(null,root,root)         
 
 
-         // TODO fix tree not opening when changing node after loading results on root node
-
          if((this.state.collapse["outline-"+root+"-"+root] || opart === root || osearch) && this.props.outlines  && this.props.dictionary) {
 
             let collapse = {...this.state.collapse }
 
-            console.log("collapse!",root,opart,JSON.stringify(collapse,null,3),this.props.outlines[opart])
+            //console.log("collapse!",root,opart,JSON.stringify(collapse,null,3),this.props.outlines[opart])
 
             if(!this.props.outlines[opart]) this.props.onGetOutline(opart);
 
@@ -4947,6 +4952,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                "bdr:PartTypeChapter":"cha",
                "bdr:PartTypeTableOfContent":"toc",
                "bdr:PartTypeText":"txt",
+               "?":"unk",
             }
             
             let makeNodes = (top,parent) => {               
@@ -4989,16 +4995,19 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                               if(g.hasTitle) {
                                  if(!g.details) g.details = []
                                  if(!Array.isArray(g.hasTitle)) g.hasTitle = [ g.hasTitle ]
+                                 let lasTy
                                  for(let t of g.hasTitle) { 
                                     let title = elem.filter(f => f["@id"] === t)
                                     if(title.length) {                                        
                                        title = { ...title[0] }
                                        let titleT = bdo + title.type
+                                       let hideT = (lasTy === title.type)
+                                       lasTy = title.type
                                        if(title && title["rdfs:label"]) title = title["rdfs:label"]
                                        if(!Array.isArray(title)) title = [ title ]                                      
                                        title = title.map(f => ({value:f["@value"],lang:f["@language"], type:"literal"}))
                                        //console.log("title?",JSON.stringify(title,null,3))
-                                       g.details.push(<div class="sub"><h4 class="first type">{this.proplink(titleT)}: </h4>{this.format("h4", "", "", false, "sub", title)}</div>)
+                                       g.details.push(<div class={"sub " + (hideT?"hideT":"")}><h4 class="first type">{this.proplink(titleT)}: </h4>{this.format("h4", "", "", false, "sub", title)}</div>)
                                     }
                                  }
                               }
@@ -5015,8 +5024,6 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                            }
                            outline.push(g);
                         }
-                        // DONE use boolean in node to tell if has children
-                        //if(this.state.collapse["outline-"+root+"-"+top] && !this.props.outlines[e]) this.props.onGetOutline(e);
                      }
                      
                      console.log("outline?",elem,outline)
@@ -5025,15 +5032,18 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                         let tag = "outline-"+root+"-"+e['@id']
                         let ret = []
                         let pType = e["partType"], fUri = fullUri(e["@id"])
-                        let tLabel = getOntoLabel(this.props.dictionary,this.props.locale,fullUri(pType))
-                        tLabel = tLabel[0].toUpperCase() + tLabel.slice(1)
+                        let tLabel 
+                        if(pType) { 
+                           tLabel = getOntoLabel(this.props.dictionary,this.props.locale,fullUri(pType))
+                           tLabel = tLabel[0].toUpperCase() + tLabel.slice(1)
+                        }
                         let open = this.state.collapse[tag] || (osearch &&  this.state.collapse[tag] === undefined )
                         if(pType && pType["@id"]) pType = pType["@id"]
                         ret.push(<span class={'top'+ (this.state.outlinePart === e['@id'] || (!this.state.outlinePart && this.props.IRI===e['@id']) ?" is-root":"")+(this.state.collapse[tag]||osearch?" on":"") }>
                               {(e.hasPart && !open && this.props.outlines[e['@id']] !== true) && <ExpandMore onClick={(ev) => toggle(ev,root,e["@id"])} className="xpd"/>}
                               {(e.hasPart && open && this.props.outlines[e['@id']] !== true) && <ExpandLess onClick={(ev) => toggle(ev,root,e["@id"])} className="xpd"/>}
                               <span class={"parTy "+(e.details?"on":"")} {...e.details?{title:tLabel+" - "+(this.state.collapse[tag+"-details"]?"Hide":"Show")+" Details", onClick:(ev) => toggle(ev,root,e["@id"],"details")}:{title:tLabel}} >
-                                 {pType && parts[pType] ? <div>{parts[pType]}</div> : null}
+                                 {pType && parts[pType] ? <div>{parts[pType]}</div> : <div>{parts["?"]}</div> }
                               </span>
                               <span title="Open">{this.uriformat(null,{type:'uri',value:fUri})}</span>                              
                               <div class="abs">
@@ -5073,10 +5083,12 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          let outlineSearch = (e) => {
             console.log("outlineS",this.state.outlineKW)
 
+            // NOT
+            // x search either from root or current node
+            // DONE
+            // + add to url (=>back button)
             // TODO 
             // - add language alternatives using autodetection
-            // - search either from root or current node
-            // - add to url (=>back button)
 
             if(this.state.outlineKW) { 
 
@@ -5135,7 +5147,9 @@ perma_menu(pdfLink,monoVol,fairUse,other)
       if(baseW && baseW.length && baseW[0].value) {
          let wUri = shortUri(baseW[0].value);
          if(this.props.resources && !this.props.resources[wUri]) this.props.onGetResource(wUri);
+         
          //console.log("is?",baseW[0].value,this.props.assocResources?this.props.assocResources[baseW[0].value]:null)
+
          let baseData = []
          if(this.props.assocResources) {
             baseData = this.props.assocResources[baseW[0].value]

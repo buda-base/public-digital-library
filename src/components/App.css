@@ -926,6 +926,8 @@ h4:not(:hover) > .lang
 
 .resource .data#outline .root + div .top + .details .sub { margin:0;border:none;padding:0; display:flex; flex-wrap:nowrap; /*align-items:baseline;*/}
 .resource .data#outline .root + div .top + .details .sub + .sub { padding-top:10px; }
+.resource .data#outline .root + div .top + .details .sub.hideT { padding-top:5px;}
+.resource .data#outline .root + div .top + .details .sub.hideT h4.first { visibility: hidden; }
 .resource .data#outline .root + div .top + .details .sub h4,
 .resource .data#outline .root + div .top + .details .sub a,
 .resource .data#outline .root + div .top + .details .sub h4 span { font-size:12px;line-height:16px; }
@@ -957,11 +959,12 @@ h4:not(:hover) > .lang
 
 /* ------------------------------------------------------------------------------------------------------------------------ header */
 
-.resource .data#head { background-color:#ffffff; padding:35px; padding-bottom:45px;}
+.resource .data#head { background-color:#ffffff; padding:35px; padding-bottom:45px; padding-top:35px;}
+/* .resource .data .header:not(.firstImage):not(#map) { display:none;} */
 
 
-.resource .data .header { width:100%; height:245px; background:#fce08d; display:flex;align-items:center;justify-content: center; position:relative; }
-.resource .data .header::before { content:' '; width:130px; height:130px; background:white;border-radius:50%; 
+.resource .data .header { width:100%; height:160px; background:#fce08d; display:flex;align-items:center;justify-content: center; position:relative; }
+.resource .data .header::before { content:' '; width:120px; height:120px; background:white;border-radius:50%; 
    background-size:auto;background-repeat:no-repeat; background-position: center;}
 
 .resource .data .header .src { position: absolute; right: 0; bottom: 20px; width: 34px;  height: 60px; background-color: #172832; line-height:58px; }
@@ -984,6 +987,8 @@ vertical-align:middle;}
 .resource.corporation .data > .header::before { background-image:url("/icons/search/corporation.svg");  }
 
 .resource .data .header.loading::before { background-image:none !important; }
+
+
 
 /*
 .resource .data [data-prop^="adm:seeOther"]:not(#a):not(.a):not(#b),
@@ -2097,11 +2102,14 @@ h2 .wd .before { background-image:url("/WD.svg");  background-size:18px auto; ba
 .provider.bnf .before { background-image:url("/BNF.svg"); background-size:19px auto;background-position:top 4px left;}
 .provider.dila .before { background-image:url("/DILA-favicon.ico"); background-position:top 1px right 5px;}
 
+.provider.ngmpp::before,
 .provider.eap::before { content: ' '; width: 25px;  height: 25px; border-radius: 13px;  background:white;position:absolute;
    background-repeat:no-repeat; left:-20px;}
 .provider.eap::before { background-image:url("/BL.gif"); background-size:auto 21px; background-position:center; }
 
 .provider.eap .before { background-image:url("/BL.gif"); background-size:auto 13px; background-position:left 4px top; }
+
+.provider.ngmpp::before { background-image:url("/NGMPP.svg"); background-size:auto 15px; background-position:center; }
 
 .provider.gretil .before { background-image:url("/GRETIL.png"); background-size:auto 13px; background-position:top 1px right 6px;}
 .provider.ia .before { background-image:url("/IA.png"); background-size:auto 13px;background-position:top 0px left 2px;}
