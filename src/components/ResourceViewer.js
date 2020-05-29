@@ -1974,31 +1974,50 @@ class ResourceViewer extends Component<Props,State>
             else {                
                if(!info) info = shortUri(elem.value)
                let uri = shortUri(elem.value)
+
+               /* // deprecated
                let pI 
                if(dic && dic[elem.value]) pI = dic[elem.value] 
                //console.log("pretty?",pretty,elem.value,infoBase,pI)
                if(uri.match(/^bdr:MW[^_]+_[^_]+$/) || pI && pI[bdo+"partIndex"] && pI[bdo+"partIndex"].length || pI && pI.filter && pI.filter(i => i.type === bdo+"partIndex").length) { 
+               */
+
+               if(elem.inOutline) {
+                  
+                  //if(pI) uri = this.props.IRI+"?part="+uri
+                  //else uri = uri.replace(/^((bdr:MW[^_]+)_[^_]+)/,"$2?part=$1")
+
                   let part = uri
-                  if(pI) uri = this.props.IRI+"?part="+uri
-                  else uri = uri.replace(/^((bdr:MW[^_]+)_[^_]+)/,"$2?part=$1")
                   link = <a class={"urilink prefLabel " } href={"/"+show+"/"+uri} onClick={(e) => { 
 
-                        this.setState({outlinePart:part /*,outlineKW:""*/ })
+                        elem.toggle()
 
+                        /* //deprecated
+
+                        let collapse = { ...this.state.collapse }
+                        if(this.props.outlineKW) collapse[elem.inOutline] = (collapse[elem.inOutline] === undefined ? false : !collapse[elem.inOutline])
+                        else collapse[elem.inOutline] = !collapse[elem.inOutline]
+                        this.setState({ collapse }) // ,outlineKW:"" })
+                           */                        
+
+                        /* //deprecated
+                        
                         let loca = {...this.props.history.location}
 
                         loca.search = loca.search.replace(/((&part|part)=[^&]+)/,"") //|(&*osearch=[^&]+))/g,"")  ;
                         loca.search += "&part="+part
                         loca.search = loca.search.replace(/[?]&/,"?")
                         
-                        loca.pathname = "/show/"+uri.replace(/[?].*/,"")
-                        this.props.history.push(loca)                        
+                        loca.pathname = "/show/"+uri.replace(/[?].+/,"")
+                        this.props.history.push(loca)
+                        */                        
                         
                         e.preventDefault();
                         e.stopPropagation();
                         return false; }
                   }>{info}</a>
                }
+
                else link = <Link className={"urilink prefLabel " } to={"/"+show+"/"+uri}>{info}</Link>
                bdrcData = null
             }
@@ -4038,7 +4057,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
       </span>
 
 
-      { cLegalD && <span id="copyright" title={this.fullname(cLegalD,false,false,false,false)}><img src={"/icons/"+copyR+".png"}/></span> }
+      { cLegalD && <span id="copyright" title={this.fullname(cLegalD,false,false,true,false)}><img src={"/icons/"+copyR+".png"}/></span> }
 
       <span id="same" class={noS?"PE0":""} onClick={(e) => this.setState({...this.state,anchorPermaSame:e.currentTarget, collapse: {...this.state.collapse, permaSame:!this.state.collapse.permaSame } } ) }>
          {same.map(s => {
@@ -4861,6 +4880,14 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          let outline = [], title
 
          let rootClick = (e) => {
+
+            let tag = "outline-" + this.props.IRI + "-" + this.props.IRI
+            let collapse = { ...this.state.collapse }
+            if(this.props.outlineKW) collapse[tag] = (collapse[tag] === undefined ? false : !collapse[tag])
+            else collapse[tag] = !collapse[tag]
+            this.setState({ collapse })
+            
+            /* //deprecated
             console.log("rootC?")
             let s
             if(!s) s = { ...this.state } 
@@ -4874,6 +4901,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
             loca.search = loca.search.replace(/(&part|part)=[^&]+/g, "") 
             loca.search = loca.search.replace(/[?]&/,"?")
             this.props.history.push(loca)
+            */
 
             e.preventDefault();
             e.stopPropagation();
@@ -5085,7 +5113,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                               <span class={"parTy "+(e.details?"on":"")} {...e.details?{title:tLabel+" - "+(this.state.collapse[tag+"-details"]?"Hide":"Show")+" Details", onClick:(ev) => toggle(ev,root,e["@id"],"details")}:{title:tLabel}} >
                                  {pType && parts[pType] ? <div>{parts[pType]}</div> : <div>{parts["?"]}</div> }
                               </span>
-                              <span title="Open">{this.uriformat(null,{type:'uri',value:fUri})}</span>                              
+                              <span>{this.uriformat(null,{type:'uri', value:fUri, inOutline: (!e.hasPart?tag+"-details":tag), toggle:() => toggle(null,root,e["@id"],!e.hasPart?"details":"")})}</span>                              
                               <div class="abs">
                                  { e.hasImg && <Link className="hasImg" title="View Images"  to={e.hasImg}><img src="/icons/search/images.svg"/><img src="/icons/search/images_r.svg"/></Link> }
                                  { /* pType && 

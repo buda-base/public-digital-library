@@ -908,6 +908,7 @@ h4:not(:hover) > .lang
 .resource .data#outline .root + div .parTy:not(#a).on { cursor:pointer; font-weight:700; border:1px solid rgba(0,0,0,0.65);}
 .resource .data#outline .root + div .parTy.on:hover { text-decoration: underline; text-decoration-color: #d73449; }
 .resource .data#outline .root + div .parTy.on div { opacity:1.0;}
+.resource .data#outline .root + div .top:not(.is-root) .parTy div { text-decoration-color:rgba(0,0,0,0.65) !important; }
 
 .resource .data#outline .root + div #anchor { margin-left:0px; opacity:0; cursor: pointer; }
 .resource .data#outline .root + div #anchor img {  opacity:0.75; width:24px;  display:inline-block;margin-top:-2px;}
