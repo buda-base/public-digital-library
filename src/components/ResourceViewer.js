@@ -5020,9 +5020,9 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                                  let instOf = elem.filter(f => f["@id"] === g.instanceOf)
                                  if(instOf.length && instOf[0]["tmp:labelMatch"]) {
                                     let node = instOf[0]["tmp:labelMatch"]
-                                    node = [{ value:node["@value"], lang:node["@language"], type:"literal"}]
+                                    if(!Array.isArray(node)) node = [node]                                    
                                     //console.log("instOf",instOf,node)
-                                    g.details.push(<div class="sub"><h4 class="first type">{this.proplink(tmp+"instanceLabel")}: </h4>{this.format("h4","","",false, "sub", node)}</div>)
+                                    g.details.push(<div class="sub"><h4 class="first type">{this.proplink(tmp+"instanceLabel")}: </h4><div>{node.map(n => this.format("h4","","",false, "sub",[{ value:n["@value"], lang:n["@language"], type:"literal"}]))}</div></div>)
                                  }
                               }
                               /*
