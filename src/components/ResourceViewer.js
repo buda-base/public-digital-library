@@ -5543,7 +5543,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          // TODO update index links (add outline)
 
          return (
-         [getGDPRconsent(),
+         [getGDPRconsent(this),
          <div class={isMirador?"H100vh OF0":""}>
             <div className={"resource "+getEntiType(this.props.IRI).toLowerCase()}>               
                {searchUrl && <div class="ariane"><Link to={"/search?"+searchUrl}><img src="/icons/FILARIANE.svg" /><span>Search results for {searchTerm}</span></Link></div> }

@@ -244,7 +244,7 @@ export class Profile extends Component<Props,State> {
         return (
           [top_left_menu(this),
            top_right_menu(this),
-           getGDPRconsent(),
+           getGDPRconsent(this),
           <div className="profile-container resource user">
             <div className="profile-area">
 

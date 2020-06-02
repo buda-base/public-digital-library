@@ -234,14 +234,15 @@ export function report_GA(config,location) {
       return ({...acc,[k[0]]:k[1]})
    },{})
    
-   console.log("ck?",ck,config,location)
+   console.log("ck?",ck,config,location,_GA)
 
    if(!config || !location) return
 
    if(config.GA && ck["BDRC-GDPR-consent"] == "true") {            
+      
       if(!_GA) { 
          _GA  = true ;  
-         ReactGA.initialize(config.GA); 
+         ReactGA.initialize(config.GA,{debug:true}); 
       }
 
       let GAtxt = location.pathname+location.search+location.hash
@@ -460,7 +461,7 @@ export function lang_selec(that,black:boolean = false)
    ]
 }
 
-export function getGDPRconsent() {
+export function getGDPRconsent(that) {
 
    //ReactGA.pageview('/homepage');
    console.log("cookie?",document.cookie)
@@ -468,6 +469,7 @@ export function getGDPRconsent() {
    return (
       <CookieConsent
          location="bottom"
+         onAccept={() => { console.log("accept!"); if(that) { report_GA(that.props.config,that.props.history.location); that.forceUpdate(); } } }
          cookieName="BDRC-GDPR-consent"
          style={{ background: "#2B373B",zIndex:100000,  }}
          buttonText="I agree"
@@ -4775,7 +4777,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
       return (
 <div>
-   {getGDPRconsent()}
+   {getGDPRconsent(this)}
    {/* <Link to="/about">About</Link> */}
 
          {/* // embed UniversalViewer
