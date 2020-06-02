@@ -13,6 +13,8 @@ const tmp   = "http://purl.bdrc.io/ontology/tmp/" ;
 
 const mapStateToProps = (state,ownProps) => {
 
+   let config = state.data.config
+
    let userID = state.ui.userID
    
    let profile = state.data.resources
@@ -28,7 +30,7 @@ const mapStateToProps = (state,ownProps) => {
 
    if(profile && resetLink && !profile[tmp+"passwordResetLink"]) resetLink = false
 
-   let props = { userID, profile, dictionary, rightPanel, resetLink }
+   let props = { userID, profile, dictionary, rightPanel, resetLink, config }
 
    return props
 

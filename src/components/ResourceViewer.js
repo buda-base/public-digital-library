@@ -66,7 +66,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faLanguage } from '@fortawesome/free-solid-svg-icons'
 //import {MapComponent} from './Map';
 import {getEntiType,dPrefix} from '../lib/api';
-import {languages,getLangLabel,top_right_menu,prefixesMap as prefixes,sameAsMap,shortUri,fullUri,highlight,lang_selec,langSelect,searchLangSelec} from './App';
+import {languages,getLangLabel,top_right_menu,prefixesMap as prefixes,sameAsMap,shortUri,fullUri,highlight,lang_selec,langSelect,searchLangSelec,report_GA,getGDPRconsent} from './App';
 import {narrowWithString} from "../lib/langdetect"
 import Popover from '@material-ui/core/Popover';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -1072,6 +1072,8 @@ class ResourceViewer extends Component<Props,State>
    componentDidUpdate()  {
       console.log("update!!")
 
+      report_GA(this.props.config,this.props.history.location);
+
       if(window.closeMirador && this.state.openMirador && window.closeViewer) {
          delete window.closeMirador
          window.closeViewer()
@@ -1083,7 +1085,10 @@ class ResourceViewer extends Component<Props,State>
          this.props.onResetOutlineKW()
       }
 
-      // TODO clean collapsed nodes when changing node/part
+      // TODO 
+      // - clean collapsed nodes when changing node/part
+      // - change hilighted node
+      // - expand '...' node already open by search
 
       this.scrollToHashID(this.props.history)
    }
@@ -5538,7 +5543,8 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          // TODO update index links (add outline)
 
          return (
-         [<div class={isMirador?"H100vh OF0":""}>
+         [getGDPRconsent(),
+         <div class={isMirador?"H100vh OF0":""}>
             <div className={"resource "+getEntiType(this.props.IRI).toLowerCase()}>               
                {searchUrl && <div class="ariane"><Link to={"/search?"+searchUrl}><img src="/icons/FILARIANE.svg" /><span>Search results for {searchTerm}</span></Link></div> }
                <div class="index">                  

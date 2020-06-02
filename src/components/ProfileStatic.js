@@ -19,7 +19,7 @@ import Input from '@material-ui/core/Input';
 
 import bdrcApi from '../lib/api' ;
 import renderPatch from '../lib/rdf-patch.js' ; 
-import { top_right_menu } from './App'
+import { top_right_menu, report_GA, getGDPRconsent } from './App'
 import { top_left_menu } from './ResourceViewer'
 import LanguageSidePaneContainer from '../containers/LanguageSidePaneContainer';
 
@@ -44,6 +44,7 @@ const propsMap = {  name: skos+"prefLabel", email: foaf+"mbox",
 type Props = {
     userID?:url,
     profile:{},
+    config:{},
     rightPanel?:boolean,
     passwordReset?:url,
     onToggleLanguagePanel:() => void,
@@ -68,6 +69,7 @@ export class Profile extends Component<Props,State> {
   constructor(props : Props) {
     super(props);
     this.state = { name:{type:"literal"}, gender:{}, region:{}, interest:{}, agree:{type:"literal"}, errors:{} }
+
   }
   
   /*
@@ -85,6 +87,12 @@ export class Profile extends Component<Props,State> {
     }
   }
   */
+
+  componentDidUpdate() {
+
+      console.log("didU",this.props)
+      report_GA(this.props.config,this.props.history.location);
+  }
 
   static getDerivedStateFromProps(props,state) {
     
@@ -236,6 +244,7 @@ export class Profile extends Component<Props,State> {
         return (
           [top_left_menu(this),
            top_right_menu(this),
+           getGDPRconsent(),
           <div className="profile-container resource user">
             <div className="profile-area">
 

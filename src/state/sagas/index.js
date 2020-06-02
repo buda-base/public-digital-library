@@ -15,6 +15,7 @@ import {shortUri,fullUri} from '../../components/App'
 import qs from 'query-string'
 import history from '../../history.js'
 
+
 // to enable tests
 const api = new bdrcApi({...process.env.NODE_ENV === 'test' ? {server:"http://localhost:5555/test"}:{}});
 

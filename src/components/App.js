@@ -61,6 +61,9 @@ import Popover from '@material-ui/core/Popover';
 import $ from 'jquery' ;
 import {CopyToClipboard} from 'react-copy-to-clipboard' ;
 
+import CookieConsent from "react-cookie-consent";
+import ReactGA from 'react-ga';
+
 import {I18n, Translate, Localize } from "react-redux-i18n" ;
 
 import LanguageSidePaneContainer from '../containers/LanguageSidePaneContainer';
@@ -72,6 +75,7 @@ import {sortLangScriptLabels, extendedPresets} from '../lib/transliterators';
 import './App.css';
 
 import {svgEtextS,svgImageS} from "./icons"
+
 
 const adm   = "http://purl.bdrc.io/ontology/admin/" ;
 const bda   = "http://purl.bdrc.io/admindata/";
@@ -219,6 +223,35 @@ export const langProfile = [
    "bo-alalc97"
 ]
 */
+
+let _GA = false ;
+export function report_GA(config,location) {
+
+
+   let ck = document.cookie
+   if(ck) ck = ck.split(/ *; */).reduce((acc,e)=>{ 
+      let k = e.split(/=/)
+      return ({...acc,[k[0]]:k[1]})
+   },{})
+   
+   console.log("ck?",ck,config,location)
+
+   if(!config || !location) return
+
+   if(config.GA && ck["BDRC-GDPR-consent"] == "true") {            
+      if(!_GA) { 
+         _GA  = true ;  
+         ReactGA.initialize(config.GA); 
+      }
+
+      let GAtxt = location.pathname+location.search+location.hash
+
+      console.log("GA?",GAtxt);
+
+      ReactGA.pageview(GAtxt);
+   }        
+}
+
 
 
 export function highlight(val,k,expand,newline)
@@ -392,7 +425,7 @@ export function lang_selec(that,black:boolean = false)
          ,
          <Popover
             id="popLang"
-            open={that.state.collapse.lang?true:false}
+            open={that.state.collapse&&that.state.collapse.lang?true:false}
             transformOrigin={{vertical:(!black?'top':'bottom'),horizontal:(!black?'right':'left')}}
             anchorOrigin={{vertical:(!black?'bottom':'top'),horizontal:(!black?'right':'left')}}
             anchorEl={that.state.anchorLang}
@@ -425,6 +458,29 @@ export function lang_selec(that,black:boolean = false)
             </FormControl>
          </Popover>
    ]
+}
+
+export function getGDPRconsent() {
+
+   //ReactGA.pageview('/homepage');
+   console.log("cookie?",document.cookie)
+
+   return (
+      <CookieConsent
+         location="bottom"
+         cookieName="BDRC-GDPR-consent"
+         style={{ background: "#2B373B",zIndex:100000,  }}
+         buttonText="I agree"
+         buttonStyle={{ background:"#fce08e", color: "#4a4a4a", fontSize: "13px", marginLeft:0, marginRight:"30px" }}
+         enableDeclineButton={true}
+         declineButtonText="I decline"
+         declineButtonStyle={{ background:"#d73449", color: "white", fontSize: "13px" }}
+         expires={150}
+         debug={true}
+      >
+         This website uses cookies to enhance the user experience.
+      </CookieConsent>
+   )
 }
 
 export function top_right_menu(that,etextTitle)
@@ -710,6 +766,10 @@ class App extends Component<Props,State> {
    componentDidUpdate() {
       
       console.log("didU",this.state) //,this._refs)
+
+
+      report_GA(this.props.config,this.props.history.location);
+
 
       if(!this._get) this._get = qs.parse(this.props.history.location.search)
       let get = this._get 
@@ -4715,7 +4775,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
       return (
 <div>
-
+   {getGDPRconsent()}
    {/* <Link to="/about">About</Link> */}
 
          {/* // embed UniversalViewer
