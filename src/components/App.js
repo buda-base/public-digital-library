@@ -242,7 +242,7 @@ export function report_GA(config,location) {
       
       if(!_GA) { 
          _GA  = true ;  
-         ReactGA.initialize(config.GA,{debug:true}); 
+         ReactGA.initialize(config.GA) //,{debug:true}); 
       }
 
       let GAtxt = location.pathname+location.search+location.hash

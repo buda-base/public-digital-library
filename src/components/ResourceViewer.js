@@ -1113,6 +1113,7 @@ class ResourceViewer extends Component<Props,State>
          s.fromSearch = get.s
       }
 
+
       if(get.part && this.state.outlinePart !== get.part) { 
          if(!s) s = { ...this.state } 
          if(!s.title) s.title = {}
@@ -1122,6 +1123,14 @@ class ResourceViewer extends Component<Props,State>
          if(!s) s = { ...this.state } 
          s.outlinePart = false
       }
+
+      if(!this.state.outlinePart || (get.part && this.state.outlinePart !== get.part)) { 
+         if(!s) s = { ...this.state } 
+         let collapse = { ...s.collapse }
+         Object.keys(collapse).filter(k => k.startsWith("outline-")).map(k => { delete collapse[k]; })
+         s.collapse = collapse
+      }
+
       if(get.osearch && !this.state.outlineKW) { 
          if(!s) s = { ...this.state } 
          s.outlineKW = get.osearch
@@ -4127,7 +4136,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                      </a> }
 
                { pdfLink && 
-                  ( (!(that.props.manifestError && that.props.manifestError.error.message.match(/Restricted access/)) && !fairUse) || (that.props.auth && that.props.auth.isAuthenticated()))
+                  ( (!(that.props.manifestError && that.props.manifestError.error.message.match(/Restricted access/)) /*&& !fairUse*/) || (that.props.auth && that.props.auth.isAuthenticated()))
                   &&
                <a> <MenuItem title={I18n.t("resource.download")+" PDF/ZIP"} onClick={ev =>
                       {
@@ -5067,7 +5076,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                               if(g.contentLocation) {
                                  if(!g.details) g.details = []
                                  g.hasImg = "/show/"+g["@id"].replace(/^((bdr:MW[^_]+)_[^_]+)$/,"$2?part=$1")+"#open-viewer"
-                                 //g.details.push(<div class="sub view"><Link to={g.hasImg} class="ulink">&gt; View Images</Link></div>)
+                                 g.details.push(<div class="sub view"><Link to={g.hasImg} class="ulink">&gt; View Images</Link></div>)
                               }
                               if(g.instanceOf) {
                                  if(!g.details) g.details = []
@@ -5184,7 +5193,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
             // + add to url (=>back button)
             // + add language alternatives using autodetection
             // TODO 
-            // - clean collapsed nodes before displaying results
+            // ? clean collapsed nodes before displaying results
 
             if(this.state.outlineKW) { 
 
