@@ -1070,7 +1070,6 @@ class ResourceViewer extends Component<Props,State>
 
 
    componentDidUpdate()  {
-      console.log("update!!")
 
       report_GA(this.props.config,this.props.history.location);
 
@@ -1083,6 +1082,30 @@ class ResourceViewer extends Component<Props,State>
       if(!get.osearch && this.props.outlineKW) {          
          //this.setState({outlineKW:"",dataSource:[]})
          this.props.onResetOutlineKW()
+         
+         if(!s) s = { ...this.state } 
+         clear = true
+      }
+
+      let s, clear
+      
+      if(get.part && this.state.outlinePart !== get.part) { 
+         if(!s) s = { ...this.state } 
+         if(!s.title) s.title = {}
+         s.outlinePart = get.part
+         clear = true
+      }
+      
+      if(!get.part && (!s && this.state.outlinePart || s && s.outlinePart) ) {
+         if(!s) s = { ...this.state } 
+         s.outlinePart = false
+         clear = true
+      }
+      
+      if(clear) {
+         let collapse = { ...s.collapse }
+         Object.keys(collapse).filter(k => k.startsWith("outline-")).map(k => { delete collapse[k]; })
+         s.collapse = collapse
       }
 
       // TODO 
@@ -1090,6 +1113,10 @@ class ResourceViewer extends Component<Props,State>
       // - change hilighted node
       // - expand '...' node already open by search
 
+      console.log("update!!",s)
+
+      if(s) this.setState(s);
+      
       this.scrollToHashID(this.props.history)
    }
 
@@ -1113,23 +1140,6 @@ class ResourceViewer extends Component<Props,State>
          s.fromSearch = get.s
       }
 
-
-      if(get.part && this.state.outlinePart !== get.part) { 
-         if(!s) s = { ...this.state } 
-         if(!s.title) s.title = {}
-         s.outlinePart = get.part
-      }
-      else if(this.state.outlinePart) {
-         if(!s) s = { ...this.state } 
-         s.outlinePart = false
-      }
-
-      if(!this.state.outlinePart || (get.part && this.state.outlinePart !== get.part)) { 
-         if(!s) s = { ...this.state } 
-         let collapse = { ...s.collapse }
-         Object.keys(collapse).filter(k => k.startsWith("outline-")).map(k => { delete collapse[k]; })
-         s.collapse = collapse
-      }
 
       if(get.osearch && !this.state.outlineKW) { 
          if(!s) s = { ...this.state } 
@@ -2017,30 +2027,36 @@ class ResourceViewer extends Component<Props,State>
                   //if(pI) uri = this.props.IRI+"?part="+uri
                   //else uri = uri.replace(/^((bdr:MW[^_]+)_[^_]+)/,"$2?part=$1")
 
-                  let part = uri
-                  link = <a class={"urilink prefLabel " } href={"/"+show+"/"+uri} onClick={(e) => { 
+                  link = <a class={"urilink prefLabel " } href={elem.url} onClick={(e) => { 
 
-                        elem.toggle()
+                        if(!elem.debug) {
 
-                        /* //deprecated
+                           elem.toggle()
 
-                        let collapse = { ...this.state.collapse }
-                        if(this.props.outlineKW) collapse[elem.inOutline] = (collapse[elem.inOutline] === undefined ? false : !collapse[elem.inOutline])
-                        else collapse[elem.inOutline] = !collapse[elem.inOutline]
-                        this.setState({ collapse }) // ,outlineKW:"" })
-                           */                        
+                        }
+                        else {
+                           // "debug mode" if elem.url not set
 
-                        /* //deprecated
-                        
-                        let loca = {...this.props.history.location}
+                           let part = elem.url.replace(/.*\?part=/,"")
+                           let root = elem.url.replace(/\?part=.*/,"")
 
-                        loca.search = loca.search.replace(/((&part|part)=[^&]+)/,"") //|(&*osearch=[^&]+))/g,"")  ;
-                        loca.search += "&part="+part
-                        loca.search = loca.search.replace(/[?]&/,"?")
-                        
-                        loca.pathname = "/show/"+uri.replace(/[?].+/,"")
-                        this.props.history.push(loca)
-                        */                        
+                           console.log("furi?",root,part)
+
+                           let collapse = { ...this.state.collapse }
+                           if(this.props.outlineKW) collapse[elem.inOutline] = (collapse[elem.inOutline] === undefined ? false : !collapse[elem.inOutline])
+                           else collapse[elem.inOutline] = !collapse[elem.inOutline]
+                           this.setState({ collapse }) // ,outlineKW:"" })
+                           
+                           let loca = {...this.props.history.location}
+
+                           loca.search = loca.search.replace(/((&part|part)=[^&]+)/,"") //|(&*osearch=[^&]+))/g,"")  ;
+                           loca.search += "&part="+part
+                           loca.search = loca.search.replace(/[?]&/,"?")
+                           
+                           loca.pathname = root
+                           this.props.history.push(loca)
+                        }
+                                                
                         
                         e.preventDefault();
                         e.stopPropagation();
@@ -4542,7 +4558,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                //||k.match(/([/]see|[/]sameAs)[^/]*$/) // quickfix [TODO] test property ancestors
                || (this.props.IRI.match(/^bda:/) && (k.match(new RegExp(adm+"|adm:")))))
             && (k !== bdo+"eTextHasChunk" || kZprop.indexOf(bdo+"eTextHasPage") === -1) 
-            && (k !== bdo+"hasPart" || !this.props.outline || this.props.outline === true) 
+            && ( (k !== bdo+"hasPart" && k !== bdo+"partOf") || !this.props.outline || this.props.outline === true) 
             )
             {
 
@@ -4921,7 +4937,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
             console.log("toggle?",tag)
 
             this.setState( { collapse:{...this.state.collapse, [tag]:!val } })
-            if(!this.props.outlineKW && !this.state.outlineKW && !x && this.props.outlines && !this.props.outlines[i]) this.props.onGetOutline(i);
+            if(!this.props.outlineKW /*&& !this.state.outlineKW*/ && !x && this.props.outlines && !this.props.outlines[i]) this.props.onGetOutline(i);
          }
 
 
@@ -5149,7 +5165,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                               <span class={"parTy "+(e.details?"on":"")} {...e.details?{title:tLabel+" - "+(this.state.collapse[tag+"-details"]?"Hide":"Show")+" Details", onClick:(ev) => toggle(ev,root,e["@id"],"details")}:{title:tLabel}} >
                                  {pType && parts[pType] ? <div>{parts[pType]}</div> : <div>{parts["?"]}</div> }
                               </span>
-                              <span>{this.uriformat(null,{type:'uri', value:fUri, inOutline: (!e.hasPart?tag+"-details":tag), toggle:() => toggle(null,root,e["@id"],!e.hasPart?"details":"")})}</span>                              
+                              <span>{this.uriformat(null,{type:'uri', value:fUri, inOutline: (!e.hasPart?tag+"-details":tag), url:"/show/"+root+"?part="+e["@id"], debug:false, toggle:() => toggle(null,root,e["@id"],!e.hasPart?"details":"")})}</span>                              
                               <div class="abs">
                                  { e.hasImg && <Link className="hasImg" title="View Images"  to={e.hasImg}><img src="/icons/search/images.svg"/><img src="/icons/search/images_r.svg"/></Link> }
                                  { /* pType && 
