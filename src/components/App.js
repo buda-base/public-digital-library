@@ -478,7 +478,7 @@ export function getGDPRconsent(that) {
          declineButtonText="I decline"
          declineButtonStyle={{ background:"#d73449", color: "white", fontSize: "13px" }}
          expires={150}
-         debug={false}
+         debug={true}
       >
          This website uses cookies to enhance the user experience.
       </CookieConsent>

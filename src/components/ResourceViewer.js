@@ -1715,7 +1715,7 @@ class ResourceViewer extends Component<Props,State>
    {
       //console.log("sup",k)
 
-      if(!this.props.ontology[k] || (!this.props.ontology[k][rdfs+"subPropertyOf"] && !this.props.ontology[k][rdfs+"subClassOf"]))
+      if(!this.props.ontology || !this.props.ontology[k] || (!this.props.ontology[k][rdfs+"subPropertyOf"] && !this.props.ontology[k][rdfs+"subClassOf"]))
       {
          return false
       }
@@ -2169,7 +2169,7 @@ class ResourceViewer extends Component<Props,State>
             <Link className={"urilink "+prefix} to={"/"+show+"/"+prefix+":"+pretty}>{pretty}</Link>&nbsp;
             {/* <Link className="goBack" target="_blank" to={"/gallery?manifest=//iiifpres.bdrc.io/v:bdr:"+pretty+"/manifest"}>{"(view image gallery)"}</Link> */}
          </span> ) }
-         else if(pretty.toString().match(/^([A-Z]+[_0-9-]*[A-Z]*)+$/)) ret.push(<Link className={"urilink "+ prefix} to={"/"+show+"/"+prefix+":"+pretty}><span lang="">{prefix+":"+pretty}</span></Link>)
+         else if(pretty.toString().match(/^([A-Z]+[v_0-9-]*[A-Z]*)+$/)) ret.push(<Link className={"urilink "+ prefix} to={"/"+show+"/"+prefix+":"+pretty}><span lang="">{prefix+":"+pretty}</span></Link>)
          else ret.push(pretty)
 
          return ret
@@ -4272,10 +4272,12 @@ perma_menu(pdfLink,monoVol,fairUse,other)
       if(!prev) prev = -1
 
 
-      //console.log("etext",prev,next,elem,this.props.nextChunk)
+      //console.log("etext",prev,next,elem,this.props.nextChunk,tags,this.hasSub(k))
 
       // + sort etext by sliceStartchar not seqNum
       // DONE 
+
+      return tags ;
 
       return (
          
@@ -4294,9 +4296,9 @@ perma_menu(pdfLink,monoVol,fairUse,other)
             }
          }
          //loader={<Loader loaded={false} />}
-         >
+         > {tags}
             {/* <h3 class="chunk"><span>{this.proplink(k)}:</span>&nbsp;{prev!==-1 && <a onClick={(e) => this.props.onGetChunks(this.props.IRI,prev)} class="download" style={{float:"right",fontWeight:700,border:"none"}}>Load Previous Chunks &lt;</a>}</h3> */}
-               {this.hasSub(k)?this.subProps(k):tags.map((e)=> [e," "] )}
+               {/* {this.hasSub(k)?this.subProps(k):tags.map((e)=> [e," "] )} */}
             {/* // import make test fail...
                <div class="sub">
                <AnnotatedEtextContainer dontSelect={true} chunks={elem}/>
@@ -4542,13 +4544,14 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
       let { doMap, doRegion, regBox } = this.getMapInfo(kZprop);
 
+      //console.log("data!",kZprop)
 
       let data = kZprop.map((k) => {
 
             let elem = this.getResourceElem(k);
             let hasMaxDisplay ;
 
-            //console.log("prop",k,elem)
+            //console.log("prop",k,elem,this.hasSuper(k))
             //for(let e of elem) console.log(e.value,e.label1);
 
             //if(!k.match(new RegExp("Revision|Entry|prefLabel|"+rdf+"|toberemoved"))) {
@@ -4638,7 +4641,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
       data = data.filter(e => e)
 
-      //console.log("data?",data)
+      //console.log("data?",kZprop,data)
 
       if(data && data.length) return <div className={div!=="header"?"data "+div:div} {...hash?{id:hash}:{}}>
          {data}
@@ -5433,13 +5436,6 @@ perma_menu(pdfLink,monoVol,fairUse,other)
       let extProps = extProperties[_T]
       if(!extProps) extProps = []
 
-      let theDataTop = this.renderData(topProps,iiifpres,title,otherLabels,"top-props","main-info")      
-      let theDataBot = this.renderData(kZprop.filter(k => !topProps.includes(k) && !extProps.includes(k)),iiifpres,title,otherLabels,"bot-props")      
-      let theDataExt = this.renderData(extProps,iiifpres,title,otherLabels,"ext-props")      
-      let theDataLegal = this.renderData([adm+"metadataLegal"],iiifpres,title,otherLabels,"legal-props")      
-      
-      let theOutline = this.renderOutline()      
-
 
    /*
       let related = [<div>
@@ -5533,19 +5529,35 @@ perma_menu(pdfLink,monoVol,fairUse,other)
       let isMirador = (!this.props.manifestError || (this.props.imageVolumeManifests && Object.keys(this.props.imageVolumeManifests).length)) && (this.props.imageAsset || this.props.imageVolumeManifests) && this.state.openMirador
 
       let hasChunks = this.getResourceElem(bdo+"eTextHasChunk")
-      if(hasChunks && hasChunks.length && this.state.openEtext) 
-         return ( 
-         <div>
-            { top_right_menu(this,title) }               
-            { this.renderMirador(isMirador) }           
-            <div class="resource etext-view">
-               <div class="">
-                  { this.renderData([bdo+"eTextHasChunk",bdo+"eTextHasPage"],iiifpres,title,otherLabels,"etext-data") }
+      if(hasChunks && hasChunks.length && this.state.openEtext) {
+         
+         let hasPages = this.getResourceElem(bdo+"eTextHasPage")
+         let etext_data = this.renderData([!hasPages?bdo+"eTextHasChunk":bdo+"eTextHasPage"],iiifpres,title,otherLabels,"etext-data")
+
+         return ([
+            getGDPRconsent(this),
+            <div>
+               { top_right_menu(this,title) }               
+               { this.renderMirador(isMirador) }           
+               <div class="resource etext-view">
+                  <div class="">
+                     { etext_data }
+                  </div>
                </div>
+               { this.renderEtextNav() }
             </div>
-            { this.renderEtextNav() }
-         </div>)
+         ])
+      }
       else {
+
+
+         let theDataTop = this.renderData(topProps,iiifpres,title,otherLabels,"top-props","main-info")      
+         let theDataBot = this.renderData(kZprop.filter(k => !topProps.includes(k) && !extProps.includes(k)),iiifpres,title,otherLabels,"bot-props")      
+         let theDataExt = this.renderData(extProps,iiifpres,title,otherLabels,"ext-props")      
+         let theDataLegal = this.renderData([adm+"metadataLegal"],iiifpres,title,otherLabels,"legal-props")      
+         
+         let theOutline = this.renderOutline()      
+
 
          // TODO fix case when back to instances of work
          let searchUrl, searchTerm ;
