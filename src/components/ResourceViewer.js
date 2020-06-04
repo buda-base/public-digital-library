@@ -2416,6 +2416,7 @@ class ResourceViewer extends Component<Props,State>
             <Popover 
                data-ID={ID}
                id="popHoverM"
+               data-class={(e.start !== undefined?"in-etext":"")}
                marginThreshold={-10000}
                open={this.state.collapse["hover"+ID]}
                anchorOrigin={{horizontal:"right",vertical:"top"}}
@@ -2425,7 +2426,7 @@ class ResourceViewer extends Component<Props,State>
                TransitionComponent={Fade}
                >
                { prop && 
-                  <div class="resource">
+                  <div class={"resource"}>
                      <div class="data">
                         <span id="anchor">                         
                            <img src="/icons/info.svg"/>
@@ -2456,6 +2457,8 @@ class ResourceViewer extends Component<Props,State>
                               { (other.length > 0) && <div><span class='first'>In Other Languages</span><span>:&nbsp;</span><div>{other.map(o => <span class="label">{o.value}{this.tooltip(o.lang)}</span>)}</div></div> }
                               { (e.datatype && e.datatype.endsWith("#gYear")) && <div><span class='first'>In Calendar</span><span>:&nbsp;</span><span>Gregorian Calendar</span></div>}
                               { (era && era.length > 0) &&  <div><span class='first'>{this.proplink(bdo+"yearInEra")}</span><span>:&nbsp;</span><span>{this.proplink(era[0].value)}</span></div>  }
+                              { (e.start !== undefined) &&  <div><span class='first'>{this.proplink(bdo+"startChar")}</span><span>:&nbsp;</span><span>{e.start}</span></div>  }
+                              { (e.end !== undefined) &&  <div><span class='first'>{this.proplink(bdo+"endChar")}</span><span>:&nbsp;</span><span>{e.end}</span></div>  }
                               </TabPanel>
                               <TabPanel selected>
                               {fromSame && e.allSameAs.map(f => { 
@@ -4458,7 +4461,11 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          >
          { prev!==-1 && <h3 style={{marginBottom:"20px",width:"100%",textAlign:"right"}}><a onClick={(e) => this.props.onGetPages(this.props.IRI,prev)} class="download" style={{fontWeight:700,border:"none",textAlign:"right"}}>Load Previous Pages &lt;</a></h3>}
          {/* {this.hasSub(k)?this.subProps(k):tags.map((e)=> [e," "] )} */}
-         { elem.map( e => (
+         { elem.map( e => { 
+
+               let pageVal ="", pageLang = "", current = []
+
+            return (
             <div class={"etextPage"+(this.props.manifestError&&!imageLinks?" manifest-error":"")+ (!e.value.match(/[\n\r]/)?" unformated":"") + (e.seq?" hasSeq":"")/*+(e.language === "bo"?" lang-bo":"")*/ }>
                {/*                                          
                   e.seq && this.state.collapse["image-"+this.props.IRI+"-"+e.seq] && imageLinks[e.seq] &&
@@ -4527,18 +4534,18 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                </div> }
                <div class="overpage">
                   <h4 class="page">{!e.value.match(/[\n\r]/) && !e.seq ?[<span class="startChar"><span>[&nbsp;<Link to={"/show/"+this.props.IRI+"?startChar="+e.start+"#open-viewer"}>@{e.start}</Link>&nbsp;]</span></span>]:null}{e.value.split("\n").map(f => {
-                        let label = getLangLabel(this,"",[{"@language":e.language,"@value":f}]), lang, label_
-                        if(label) lang = label["@language"]
-                        if(label) label = label["@value"]
-                        if(label) label_ = ""+label
-                        if(label) label = highlight(label)
+                        let label = getLangLabel(this,"",[{"@language":e.language,"@value":f}]), lang
+                        if(label) { lang = label["@language"] ; if(!pageLang) pageLang = lang }
+                        if(label) { label = label["@value"]; pageVal += " "+label ; }
+                        if(label) { label = highlight(label); current.push(label); }
                         //label = f
                         let size = this.state.etextSize
                         if(lang === "bo") { size += 0.4 ; }
-                        return ([<span lang={lang} {...this.state.etextSize?{style:{ fontSize:size+"em", lineHeight:(size * 1.0)+"em" }}:{}}>{label}{this.hoverMenu(bdo+"EtextHasPage",{value:label_,lang,start:e.start})}</span>,<br/>])})}
+                        return ([<span lang={lang} {...this.state.etextSize?{style:{ fontSize:size+"em", lineHeight:(size * 1.0)+"em" }}:{}}>{label}</span>,<br/>])})}
+                        {this.hoverMenu(bdo+"EtextHasPage",{value:pageVal,lang:pageLang,start:e.start,end:e.end},current)}
                   </h4>
                </div>
-            </div>))  }
+            </div>)})  }
             {/* // import make test fail...
                <div class="sub">
                <AnnotatedEtextContainer dontSelect={true} chunks={elem}/>

@@ -1167,6 +1167,11 @@ vertical-align:middle;}
 #popHoverM > div:last-child { width:953px; box-shadow:0 3px 4px #cecece,0 -1px 4px #cecece; 
    left:calc((100vw - 1440px)/2 + 324px) !important; /* TODO fix when width under ~1250px */
 }
+
+#popHoverM[data-class="in-etext"] > div:last-child { width:calc(90% - 60px); left:calc((100vw - 90% + 60px)/2 - 7px) !important; }
+#popHoverM[data-class="in-etext"] > div:last-child .data { padding-right:30px; }
+#popHoverM[data-class="in-etext"] > div:last-child .data .react-tabs { flex-grow: 10; flex-shrink: 0; max-width: 1000%; width: 100%; }
+
 #popHoverM > div:last-child .resource .data { padding-left:53px; padding-bottom:35px; padding-top:27px; margin-left:0; }
 #popHoverM > div:last-child .resource .data .react-tabs { background-color:#fcf5e2; min-width:898px; margin-left:-25px;margin-top:20px; min-height:150px; font-size:0;}
 #popHoverM .react-tabs__tab { border:none;border-radius:0; width:calc(25% - 1px); font-size:10px; padding:0; text-align:center; line-height:40px; bottom:-1px !important; 
@@ -1927,6 +1932,7 @@ TODO
 .etextPage:not(.unformatted).hasSeq { overflow: hidden ;}
 
 .etextPage.unformated h4 .hover-menu { top:-24px; right:0px; }
+.etextPage:not(.unformated) h4 .hover-menu { top:-5px; right:0px; }
 
 .etextPage { border-top:1px solid #999; padding-top:25px; line-height:24px;  }
 .etextPage h4.page  { display:inline-block; padding-left:0; margin-bottom:0;  
