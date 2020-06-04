@@ -899,19 +899,26 @@ class ResourceViewer extends Component<Props,State>
             }
          }
 
-         if(images) images = images.filter(e => getEntiType(e.value) === "Images")
+         // TODO find a way to keep an existing Etext/Images tab
+         //if(images) images = images.filter(e => getEntiType(e.value) === "Images")
 
          let _T = getEntiType(props.IRI)
 
-         //console.log("title!",_T,work,instance,images)
+         //console.log("title!",_T,JSON.stringify(state.title,null,3),JSON.stringify(work,null,3),JSON.stringify(instance,null,3),JSON.stringify(images,null,3))
 
+         
          if(_T === "Etext") {            
             if(!s) s = { ...state }
+            if(instance) instance = instance.filter(e => getEntiType(e.value) !== "Images")
+            if(!work && s.title.work && s.title.work.filter(e => getEntiType(e.value) === "Volume").length) delete s.title.work
+            /*
             if(!work && s.title.work) work = s.title.work
             images = [ { type:"uri", value:fullUri(props.IRI) } ]
             s.title = { work, images }
+            */
          } 
-         else if(_T === "Images") {            
+         
+         if(_T === "Images" || _T === "Etext") {            
             if(!s) s = { ...state }
             if(!work && s.title.work) work = s.title.work
             if(!instance && s.title.instance) instance = s.title.instance
@@ -921,6 +928,10 @@ class ResourceViewer extends Component<Props,State>
          else if(_T === "Instance") {            
             if(!s) s = { ...state }
             if(!work && s.title.work) work = s.title.work
+
+            // TODO find a way to keep an existing Etext/Images tab
+            //if(!s.title.images) images = images.filter(e => getEntiType(e.value) === "Images")
+
             instance = [ { type:"uri", value:fullUri(props.IRI) } ]
             s.title = { work, instance, images }
          } 
@@ -943,9 +954,10 @@ class ResourceViewer extends Component<Props,State>
                if(has && has.length <= 2) {
                   let inst = has.filter(h => h.value.match(new RegExp("^"+bdr+"MW[^/]+$")))
                   let ima = has.filter(h => h.value.match(new RegExp("^"+bdr+"W[^/]+$")))
+                  let etx = has.filter(h => h.value.match(new RegExp("^"+bdr+"IE[^/]+$")))
                   if(has.length == 2 && inst.length === 1 && ima.length === 1) {
                      s.title.instance = [ { type: "uri", value: inst[0].value } ] 
-                     s.title.images = [ { type: "uri", value: ima[0].value } ]
+                     if(!etx.length) s.title.images = [ { type: "uri", value: ima[0].value } ]
                   }
                   else if(has.length == 1 && inst.length === 1) {
                      s.title.instance = [ { type: "uri", value: inst[0].value } ] 
@@ -1023,6 +1035,14 @@ class ResourceViewer extends Component<Props,State>
       }
    }
 
+   isEtext() {
+      let etext = this.getResourceElem(rdf+"type")
+      if(etext && etext.filter(e=> e.value.startsWith(bdo+"Etext")).length) etext = true
+      else etext = false
+
+      return etext
+   }
+
    scrollToHashID(history) {
 
       // TODO scroll to top when IRI changed (and not on collapse open/close)
@@ -1037,18 +1057,24 @@ class ResourceViewer extends Component<Props,State>
       
       if (hash && hash.length) {
          if(hash === "open-viewer") {
+            /*
             let timerViewer = setInterval(() => {
-               if(this.props.imageAsset && this.props.firstImage) {
+               
+               let etext = this.isEtext()
+               console.log("etxt?",etext)
+
+               if(!etext && this.props.imageAsset && this.props.firstImage && !this.state.openMirador) {
                   clearInterval(timerViewer)
                   this.showMirador()   
-                  delete loca.hash      
-                  history.replace(loca)
+                  //delete loca.hash      
+                  //history.replace(loca)
                }
-               else if( !this.state.openEtext ) {
+               else if( etext && !this.state.openEtext ) {
                   clearInterval(timerViewer)
                   this.setState({...this.state,openEtext:true  })
                }               
-            }, 10)
+            }, 100)
+            */
          }
          else setTimeout( 
             window.requestAnimationFrame(function () {
@@ -1108,12 +1134,33 @@ class ResourceViewer extends Component<Props,State>
          s.collapse = collapse
       }
 
-      // TODO 
-      // - clean collapsed nodes when changing node/part
-      // - change hilighted node
+      // DONE
+      // + clean collapsed nodes when changing node/part
+      // + change hilighted node
+      // TODO
       // - expand '...' node already open by search
 
       console.log("update!!",s)
+
+
+      let loca = { ...this.props.history.location }
+      const hash = loca.hash.substring(1)
+      
+      if (hash && hash.length && hash === "open-viewer") {
+
+         let etext = this.isEtext()
+         console.log("etxt?",etext)
+
+         if(!etext && this.props.imageAsset && this.props.firstImage && !this.state.openMirador) {
+            this.showMirador()   
+            //delete loca.hash      
+            //history.replace(loca)
+         }
+         else if( etext && (!s && !this.state.openEtext || s && !s.openEtext ) ) {
+            if(!s) s = { ...this.state } 
+            s.openEtext = true 
+         }         
+      }      
 
       if(s) this.setState(s);
       
@@ -2336,6 +2383,12 @@ class ResourceViewer extends Component<Props,State>
 
       //console.log("data",lang,data,other)                  
 
+      let loca = { ...this.props.history.location }
+      if(e.start !== undefined) { 
+         loca.search = loca.search.replace(/(^[?])|(&*startChar=[^&]+)/g,"")
+         loca.search = "?startChar="+e.start+(loca.search?"&"+loca.search:"")
+      }
+
       return (
          <div class="hover-menu">
             { /*
@@ -2354,8 +2407,9 @@ class ResourceViewer extends Component<Props,State>
             </Tooltip> }
 
             {! hasTT && 
-               <span id="anchor" onClick={toggleHoverM}>
-                  <img src="/icons/info.svg"/>
+               <span id="anchor" >
+                  { (e.start !== undefined) && <Link to={loca.pathname+loca.search+"#open-viewer"}><img style={{width:"16px"}} src="/icons/PLINK_small.svg"/></Link> }
+                  <img src="/icons/info.svg" onClick={toggleHoverM} />
                </span> 
             }
 
@@ -4329,9 +4383,9 @@ perma_menu(pdfLink,monoVol,fairUse,other)
       if(!this.props.imageVolumeManifests) // && !this.props.manifestError)
       {
 
-         if(kZprop.indexOf(tmp+"imageVolumeId") !== -1)
+         let elem = this.getResourceElem(tmp+"imageVolumeId")
+         if(elem && elem.length)
          {
-            let elem = this.getResourceElem(tmp+"imageVolumeId")
             //console.log("elem",elem)
             for(let e of elem) {
                this.props.onImageVolumeManifest(iiifpres+"/v:"+ e.value.replace(new RegExp(bdr), "bdr:") + "/manifest",this.props.IRI);
@@ -4339,10 +4393,13 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          }
       }
       else if(this.props.imageVolumeManifests !== true) for(let id of Object.keys(this.props.imageVolumeManifests)) {
+
          if(!imageLinks[id])
          {
             let manif = this.props.imageVolumeManifests[id]
-            //console.log("k",id,manif)
+            
+            console.log("k",id,manif)
+
             if(manif && manif.sequences && manif.sequences[0] && manif.sequences[0].canvases) {
                let nc = 0, np = 0                           
                imageLinks[id] = manif.sequences[0].canvases.reduce( (acc,e) => {
@@ -4380,7 +4437,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          this.showMirador(num,manif);
       }
 
-      //console.log("imL",imageLinks)
+      console.log("imL",imageLinks)
 
       return (
          
@@ -4470,14 +4527,15 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                </div> }
                <div class="overpage">
                   <h4 class="page">{!e.value.match(/[\n\r]/) && !e.seq ?[<span class="startChar"><span>[&nbsp;<Link to={"/show/"+this.props.IRI+"?startChar="+e.start+"#open-viewer"}>@{e.start}</Link>&nbsp;]</span></span>]:null}{e.value.split("\n").map(f => {
-                        let label = getLangLabel(this,"",[{"@language":e.language,"@value":f}]), lang
+                        let label = getLangLabel(this,"",[{"@language":e.language,"@value":f}]), lang, label_
                         if(label) lang = label["@language"]
                         if(label) label = label["@value"]
+                        if(label) label_ = ""+label
                         if(label) label = highlight(label)
                         //label = f
                         let size = this.state.etextSize
                         if(lang === "bo") { size += 0.4 ; }
-                        return ([<span lang={lang} {...this.state.etextSize?{style:{ fontSize:size+"em", lineHeight:(size * 1.0)+"em" }}:{}}>{label}</span>,<br/>])})}
+                        return ([<span lang={lang} {...this.state.etextSize?{style:{ fontSize:size+"em", lineHeight:(size * 1.0)+"em" }}:{}}>{label}{this.hoverMenu(bdo+"EtextHasPage",{value:label_,lang,start:e.start})}</span>,<br/>])})}
                   </h4>
                </div>
             </div>))  }
@@ -4793,8 +4851,9 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
          }
       }
+      let etext = this.isEtext()
 
-      if(!this.props.manifestError &&  this.props.imageAsset)
+      if(!this.props.manifestError &&  this.props.imageAsset && !etext)
          return  ( 
          <div class="data" id="first-image">
             <div className={"firstImage "+(this.state.imageLoaded?"loaded":"")} {...(this.props.config.hideViewers?{"onClick":this.showMirador.bind(this),"style":{cursor:"pointer"}}:{})} >
@@ -4832,15 +4891,13 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          )
       else if(kZprop.length)
          return <div class="data" id="map">{this.renderData(kZprop,null,null,null,"header")}</div>
-      else {
-         let hasChunks = this.getResourceElem(bdo+"eTextHasChunk")
+      else if(etext) {
          let loca = this.props.history.location
-         if(hasChunks && hasChunks.length) {
-            return <div class="data" id="head"><Link title='View Etext' to={loca.pathname+loca.search+"#open-viewer"}><div class={"header "+(!this.state.ready?"loading":"")}>{ !this.state.ready && <Loader loaded={false} /> }{src}</div></Link></div>
-         }
-         else  
-            return <div class="data" id="head"><div class={"header "+(!this.state.ready?"loading":"")}>{ !this.state.ready && <Loader loaded={false} /> }{src}</div></div>
+         return <div class="data" id="head"><Link title='View Etext' to={loca.pathname+loca.search+"#open-viewer"}><div class={"header "+(!this.state.ready?"loading":"")}>{ !this.state.ready && <Loader loaded={false} /> }{src}</div></Link></div>
       }
+      else  
+         return <div class="data" id="head"><div class={"header "+(!this.state.ready?"loading":"")}>{ !this.state.ready && <Loader loaded={false} /> }{src}</div></div>
+   
    }
 
    // TODO case of part of instance after p.20 (see bdr:MW1KG2733_65CFB8)
@@ -5415,6 +5472,9 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
          let baseW = this.state.title.work 
          wTitle = getWtitle(baseW)
+
+         baseW = this.state.title.instance 
+         iTitle = getWtitle(baseW)
       }
       else { 
          wTitle = title ; 
@@ -5528,7 +5588,30 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
       let isMirador = (!this.props.manifestError || (this.props.imageVolumeManifests && Object.keys(this.props.imageVolumeManifests).length)) && (this.props.imageAsset || this.props.imageVolumeManifests) && this.state.openMirador
 
+      let searchUrl, searchTerm
+      
+      if(this.state.fromSearch) {
+         let backTo = this.state.fromSearch
+         let withW = backTo.replace(/^.*[?&](w=[^&]+)&?.*$/,"$1")
+         console.log("fromS",this.state.fromSearch,backTo,withW)
+         if(backTo === withW) { 
+            backTo = decodeURIComponent(backTo)
+            searchUrl = backTo
+            searchTerm = searchUrl.replace(/.*q=([^&]+).*/,"$1")
+         }
+         else { 
+            backTo = decodeURIComponent(backTo.replace(new RegExp("(([?])|&)"+withW),"$2"))+"&"+withW
+            searchUrl = backTo
+            searchTerm = "instances of "+searchUrl.replace(/.*i=([^&]+).*/,"$1")
+         }
+      }
+
+
+      
       let hasChunks = this.getResourceElem(bdo+"eTextHasChunk")
+
+      console.log("chunks?",hasChunks)
+
       if(hasChunks && hasChunks.length && this.state.openEtext) {
          
          let hasPages = this.getResourceElem(bdo+"eTextHasPage")
@@ -5537,7 +5620,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          return ([
             getGDPRconsent(this),
             <div>
-               { top_right_menu(this,title) }               
+               { top_right_menu(this,title,searchUrl) }               
                { this.renderMirador(isMirador) }           
                <div class="resource etext-view">
                   <div class="">
@@ -5558,26 +5641,14 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          
          let theOutline = this.renderOutline()      
 
+         let etext = this.isEtext()
 
-         // TODO fix case when back to instances of work
-         let searchUrl, searchTerm ;
-         if(this.state.fromSearch) {
-            let backTo = this.state.fromSearch
-            let withW = backTo.replace(/^.*[?&](w=[^&]+)&?.*$/,"$1")
-            console.log("fromS",this.state.fromSearch,backTo,withW)
-            if(backTo === withW) { 
-               backTo = decodeURIComponent(backTo)
-               searchUrl = backTo
-               searchTerm = searchUrl.replace(/.*q=([^&]+).*/,"$1")
-            }
-            else { 
-               backTo = decodeURIComponent(backTo.replace(new RegExp("(([?])|&)"+withW),"$2"))+"&"+withW
-               searchUrl = backTo
-               searchTerm = "instances of "+searchUrl.replace(/.*i=([^&]+).*/,"$1")
-            }
-         }
+         let loca = this.props.history.location            
 
-         // TODO update index links (add outline)
+         // DONE
+         // + update index links (add outline)
+         // TODO
+         // - fix open etext OR images
 
          return (
          [getGDPRconsent(this),
@@ -5602,6 +5673,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                   { this.renderWithdrawn() }             
                   <div class="title">{ wTitle }{ iTitle }{ rTitle }</div>
                   { this.renderHeader(kZprop.filter(k => mapProps.includes(k))) }
+                  <div class="data" id="open-etext"><div><Link to={loca.pathname+loca.search+"#open-viewer"}>Open Etext</Link></div></div>
                   <div class="data">{title}{inTitle}</div>
                   { this.renderNoAccess(fairUse) }
                   { this.renderAccess() }

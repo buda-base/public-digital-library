@@ -227,13 +227,23 @@ body { overflow:auto !important;padding-right:0 !important; /*font-family:"Robot
    line-height: 20px;
    color: #152631;
 }
+.nav #back > * { vertical-align:middle;}
+.nav #back { text-align:right; max-width:calc(100% - 300px); }
 .nav #back span { margin-left:auto; }
 .nav #back > span:first-child { padding-right:10px; } 
 .nav #back a { cursor: pointer; }
-.nav #back h2 { display:inline-block; }
+.nav #back h2 { display:inline-block; 
+      text-overflow: ellipsis;
+      overflow: hidden;
+      white-space: pre;
+      max-width: 80%;
+}
 .nav #back h2::before { content:' '; border-left:2px solid  #152631; margin:0 10px; height:12px;width:2px; display:inline-block; vertical-align:-1px; }
 .nav #back h2 .T { display:none; }
-.nav #back h2 span { color:#d73449; }
+.nav #back h2.on { font-size:18px;}
+.nav #back h2.on, .nav #back h2 span { color:#d73449; }
+.nav #back h2.on > *,.nav #back h2.on::before { vertical-align: middle;}
+.nav #back h2 .lang { display:none; }
 
 #etext-nav > div,
 .nav > div { width:1222px; display:flex;justify-content: space-between;align-items:center; }
@@ -763,8 +773,15 @@ h4:not(:hover) > .lang
 /* -+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ resource */
 
 
+#open-etext { position:absolute; right:140px; }
+#open-etext > div { }
+#open-etext > div::after { content:none !important; }
+#open-etext + .data h2 { max-width:calc(100% - 100px - 30px); }
+#open-etext > div a { color:white; background-color: #d73449; border-radius:5px;display:flex;align-items: center;justify-content: center; height:40px;
+   padding: 0 15px; border:none !important; font-weight:600; font-size:13px; cursor:pointer;}
+
 .resource > .index { width:15%; padding-top:10px; position:fixed; }
-.resource:not(.etext-view) > :not(.index) { width:85%; margin-left:15%;  }
+.resource:not(.etext-view) > :not(.index) { width:85%; margin-left:15%; /*position:relative;*/ }
 
 .resource > .ariane { position:absolute; top:105px; color: #343434; left:0; margin-left:140px;padding-left:12.125%; }
 .resource > .ariane img { display:inline-block; margin-right:5px; vertical-align: -1px;}
@@ -1400,6 +1417,8 @@ line-height:12px; }
 .hover-menu div span#nb { position:absolute;color:#d73449;font-weight:900;font-size:10px; right:0; bottom:2px;cursor:pointer;}
 .hover-menu span#anchor { display:inline-block; position:relative;}
 
+.hover-menu span#anchor a:hover { border:none;}
+
 .hover-menu.on,
 .resource .data [data-prop="bdo:note"] .sub:hover .hover-menu,
 :not(#etext-scroll) > h4:hover .hover-menu {  opacity:1 !important; pointer-events: auto !important; }
@@ -1898,6 +1917,8 @@ TODO
 .resource .data .chunk ~ h4 .startChar,
 .resource .data h4.page .startChar { display:block; }
 
+.resource .etext-data .startChar { display:none !important;}
+
 /* .resource .data .chunk ~ h4 [lang=bo-x-ewts], .etextPage h4.page [lang=bo-x-ewts] { text-align:justify; display:inline-block; } */
 
 .resource .data h3.chunk { margin-bottom:15px;}
@@ -1905,6 +1926,7 @@ TODO
 
 .etextPage:not(.unformatted).hasSeq { overflow: hidden ;}
 
+.etextPage.unformated h4 .hover-menu { top:-24px; right:0px; }
 
 .etextPage { border-top:1px solid #999; padding-top:25px; line-height:24px;  }
 .etextPage h4.page  { display:inline-block; padding-left:0; margin-bottom:0;  
@@ -2624,6 +2646,10 @@ body {
 
 @media (max-width:1440px)
 {
+
+
+   #open-etext { right:0px; }
+
    .resource > .ariane { margin-left:0; padding-left:16.7%; }
 
    #root > div { overflow:hidden ; }

@@ -478,14 +478,14 @@ export function getGDPRconsent(that) {
          declineButtonText="I decline"
          declineButtonStyle={{ background:"#d73449", color: "white", fontSize: "13px" }}
          expires={150}
-         debug={true}
+         debug={false /**/ } 
       >
          This website uses cookies to enhance the user experience.
       </CookieConsent>
    )
 }
 
-export function top_right_menu(that,etextTitle)
+export function top_right_menu(that,etextTitle,backUrl)
 {
 
    if(etextTitle)
@@ -498,11 +498,15 @@ export function top_right_menu(that,etextTitle)
             </div>
 
             <span id="back"><span>&lt;</span><a onClick={() => {
-                  let loca = { ...that.props.history.location };                  
-                  delete loca.hash
-                  that.props.history.push(loca) ; 
-                  // that.setState({...that.state, openEtext: false });
-               }}><span>Close etext</span></a>
+                  if(!backUrl) {
+                     let loca = { ...that.props.history.location };                  
+                     delete loca.hash
+                     that.props.history.push(loca) ; 
+                     // that.setState({...that.state, openEtext: false });
+                  } else {
+                     that.props.history.push({pathname:"/search",search:"?"+backUrl}) ; 
+                  }
+               }}><span style={{verticalAlign:"-3px"}}>Close etext</span></a>
                <span>{etextTitle}</span>
             </span>
          </div>
@@ -1494,7 +1498,7 @@ class App extends Component<Props,State> {
 
          let {pathname,search} = this.props.history.location
          
-         this.props.history.push({pathname,search:search.replace(/(&s=[^&]+)/g,"")+"&s="+i.toLowerCase()})         
+         this.props.history.push({pathname,search:search.replace(/(&s=[^&#]+)/g,"")+"&s="+i.toLowerCase()})         
          
       } 
    }
@@ -2530,9 +2534,11 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
             directSameAs = true
          }
-         else if(prettId.match(/^([^:])+:/))
-            resUrl = "/show/"+prettId+bestM+(!bestM?"?":"&")+"s="+ encodeURIComponent(window.location.href.replace(/^https?:[/][/][^?]+[?]?/gi,"").replace(/(&n=[^&]*)/g,"")+"&n="+n)
+         else if(prettId.match(/^([^:])+:/)) {
+
+            resUrl = "/show/"+prettId+"?s="+ encodeURIComponent(window.location.href.replace(/^https?:[/][/][^?]+[?]?/gi,"").replace(/(&n=[^&]*)/g,"")+"&n="+n)+(!bestM?"":"&"+bestM)
             //retList.push( <Link key={n} to={"/show/"+prettId+bestM} className="result">{ret}</Link> )
+         }
          else
             resUrl = (url?url.replace(/^https?:/,""):id.replace(/^https?:/,""))
             //retList.push( <Link key={n} to={url?url.replace(/^https?:/,""):id.replace(/^https?:/,"")} target="_blank" className="result">{ret}</Link> )
