@@ -1,5 +1,20 @@
 
 const enTranslation = {
+   home:{
+      BUDA:"BUDA",
+      title:"The Buddhist Universal Digital Archive",
+      subtitle:"Explore etexts, catalogs, and millions of scanned pages",
+      message:"WELCOME TO THE BETA VERSION OF BUDA!",
+   },
+   topbar:{
+      search:"new search",
+      login:"log in",
+      register:"register",
+      logout:"log out",
+      profile:"profile",
+      donate:"donate",
+      closeEtext:"Close Etext"
+   },
    user:{
       photo:{ 
          hover:"Update profile picture",

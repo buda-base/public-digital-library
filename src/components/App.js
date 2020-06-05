@@ -500,6 +500,8 @@ export function top_right_menu(that,etextTitle,backUrl)
             <span id="back"><span>&lt;</span><a onClick={() => {
 
                   // DONE add loader to wait when back to search 
+                  // TODO dont go back to search when opened from button
+
                   that.props.onLoading("search",true)
 
                   setTimeout(() => { 
@@ -511,9 +513,12 @@ export function top_right_menu(that,etextTitle,backUrl)
                      } else {
                         that.props.history.push({pathname:"/search",search:"?"+backUrl}) ; 
                      }
+
+                     that.props.onLoading("search",false)                     
+
                   }, 100)
 
-               }}><span style={{verticalAlign:"-3px"}}>Close etext</span></a>
+               }}><span style={{verticalAlign:"-3px"}}>{I18n.t("topbar.closeEtext")}</span></a>
                <span>{etextTitle}</span>
             </span>
          </div>
@@ -527,7 +532,7 @@ export function top_right_menu(that,etextTitle,backUrl)
             <Link to="/"  onClick={() => { that.props.history.push({pathname:"/",search:""}); that.props.onResetSearch();} }><img src="/LIBRARY.svg"/></Link>
          </div>
 
-         <Link to="/"  onClick={() => { that.props.history.push({pathname:"/",search:""}); that.props.onResetSearch();} }><span>new search</span></Link>
+         <Link to="/"  onClick={() => { that.props.history.push({pathname:"/",search:""}); that.props.onResetSearch();} }><span>{I18n.t("topbar.search")}</span></Link>
 
          <div class="history">
             <span><img src="/icons/histo.svg"/></span>
@@ -541,15 +546,15 @@ export function top_right_menu(that,etextTitle,backUrl)
         {
           !that.props.auth.isAuthenticated() && // TODO check redirection
              <div>
-              <span onClick={() => that.props.auth.login(that.props.history.location,true)} title="Register">Register</span>
-              <span onClick={() => that.props.auth.login(that.props.history.location)} title="Log in">Log in</span>
+              <span onClick={() => that.props.auth.login(that.props.history.location,true)} >{I18n.t("topbar.register")}</span>
+              <span onClick={() => that.props.auth.login(that.props.history.location)} >{I18n.t("topbar.login")}</span>
             </div>
         }
         {
           that.props.auth.isAuthenticated() && 
              <div>
-              <span title="User Profile" onClick={(e) => { that.props.onUserProfile(that.props.history.location); that.props.history.push("/user");    }}>PROFILE</span>
-              <span onClick={that.props.auth.logout.bind(that,that.props.history.location.pathname!=="/user"?that.props.history.location:"/")} title="Log out">Log out</span>
+              <span onClick={(e) => { that.props.onUserProfile(that.props.history.location); that.props.history.push("/user");    }}>{I18n.t("topbar.profile")}</span>
+              <span onClick={that.props.auth.logout.bind(that,that.props.history.location.pathname!=="/user"?that.props.history.location:"/")} >{I18n.t("topbar.logout")}</span>
             </div>
         }
         { /*
@@ -567,7 +572,7 @@ export function top_right_menu(that,etextTitle,backUrl)
 
          { lang_selec(that) }
 
-         <a target="_blank" href="https://bdrc.io/donation/" id="donate"><img src="/donate.svg"/>Donate</a>
+         <a target="_blank" href="https://bdrc.io/donation/" id="donate"><img src="/donate.svg"/>{I18n.t("topbar.donate")}</a>
        </div>
      </div>
   )
@@ -2478,7 +2483,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
       if(hasThumb.length) { 
          hasThumb = hasThumb[0].value 
          if(hasThumb) {             
-            console.log("hasThumb",hasThumb)
+            //console.log("hasThumb",hasThumb)
             
             //hasCopyR = allProps.filter(a => a.type === tmp+"hasOpen")
             //if(hasCopyR.length && hasCopyR[0].value == "false") {
@@ -2496,7 +2501,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             if(this.props.config && this.props.config.iiif && this.props.config.iiif.endpoints[this.props.config.iiif.index].match(/iiif-dev/)) hasThumb = hasThumb.replace(/iiif([.]bdrc[.]io)/, "iiif-dev$1")
             hasThumb += "/full/,145/0/default.jpg" 
 
-            console.log("access",access)
+            //console.log("access",access)
 
             if(access) {
                hasCopyR = "unknown"            
@@ -4818,9 +4823,9 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      <img src="/pichome.jpg" />
                      <div>
                         <div>
-                           BUDA
-                           <h1>The Buddhist<br/>Universal Digital<br/>Archive</h1>
-                           <span>Explore etexts, catalogs, and millions of scanned pages</span>
+                           { I18n.t("home.BUDA") }
+                           <h1>{ I18n.t("home.title") }</h1>
+                           <span>{ I18n.t("home.subtitle") }</span>
                         </div>
                      </div>
                   </a>
@@ -5051,7 +5056,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                { message.length == 0 && !this.props.loading && !this.props.keyword && 
                   <List id="samples">
                      {/* { messageD } */}
-                     <h3>Welcome to the beta version of BUDA!</h3>
+                     <h3>{ I18n.t("home.message") }</h3>
                   </List> }
                { (this.props.datatypes && this.props.datatypes.hash && this.props.datatypes.metadata[bdo+this.state.filters.datatype[0]] && message.length === 0 && !this.props.loading) && 
                   <List id="results">

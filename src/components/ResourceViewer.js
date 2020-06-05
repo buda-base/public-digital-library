@@ -5629,6 +5629,8 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          let hasPages = this.getResourceElem(bdo+"eTextHasPage")
          let etext_data = this.renderData([!hasPages?bdo+"eTextHasChunk":bdo+"eTextHasPage"],iiifpres,title,otherLabels,"etext-data")
 
+         // TODO fix loader not hiding when closing then opening again
+
          return ([
             getGDPRconsent(this),
             <div>
