@@ -2616,7 +2616,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             </div>
          ]
 
-         if(!resUrl.startsWith("http")) retList.push(<Link to={resUrl} className="result">{ret}</Link>)         
+         if(!resUrl.startsWith("http")) retList.push(<Link to={resUrl.replace(/#open-viewer$/,"")} className="result">{ret}</Link>)         
          else retList.push(<a href={resUrl} target="_blank" className="result">{ret}</a>)         
 
          let dico

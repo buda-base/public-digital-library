@@ -1045,7 +1045,7 @@ vertical-align:middle;}
 .resource .data h2,
 .resource .title h2 { /*font-family: "Noto Sans", "Roboto", "Helvetica", "Arial", sans-serif; */ margin:0; color:#343434; }
 
-.resource .data#head  ~ .data h2 { margin-bottom:30px; }
+.resource .data#open-etext + .data { padding-bottom:60px; } 
 
 .resource .data *,
 .resource .related div { /*font-family: "Noto Sans", "Roboto", "Helvetica", "Arial", sans-serif;*/ }

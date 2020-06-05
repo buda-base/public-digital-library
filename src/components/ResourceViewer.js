@@ -1040,6 +1040,8 @@ class ResourceViewer extends Component<Props,State>
       if(etext && etext.filter(e=> e.value.startsWith(bdo+"Etext")).length) etext = true
       else etext = false
 
+      console.log("isEt?",etext)
+
       return etext
    }
 
@@ -4971,6 +4973,9 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
       let size = this.state.etextSize
 
+
+      // TODO remove "show images" when not needed
+
       return (
          <div id="etext-nav">
             <div>
@@ -5680,7 +5685,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                   { this.renderWithdrawn() }             
                   <div class="title">{ wTitle }{ iTitle }{ rTitle }</div>
                   { this.renderHeader(kZprop.filter(k => mapProps.includes(k))) }
-                  <div class="data" id="open-etext"><div><Link to={loca.pathname+loca.search+"#open-viewer"}>Open in Etext Viewer</Link></div></div>
+                  { etext && <div class="data" id="open-etext"><div><Link to={loca.pathname+loca.search+"#open-viewer"}>Open in Etext Viewer</Link></div></div> }
                   <div class="data">{title}{inTitle}</div>
                   { this.renderNoAccess(fairUse) }
                   { this.renderAccess() }
