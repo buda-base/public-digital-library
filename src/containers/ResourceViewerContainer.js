@@ -186,6 +186,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       onResetOutlineKW:() => {
          dispatch(data.resetOutlineSearch());
       },
+      onLoading:(kw:string,load:boolean) => {
+         dispatch(ui.loading(kw,load))
+      },
    }
 }
 

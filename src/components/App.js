@@ -498,14 +498,21 @@ export function top_right_menu(that,etextTitle,backUrl)
             </div>
 
             <span id="back"><span>&lt;</span><a onClick={() => {
-                  if(!backUrl) {
-                     let loca = { ...that.props.history.location };                  
-                     delete loca.hash
-                     that.props.history.push(loca) ; 
-                     // that.setState({...that.state, openEtext: false });
-                  } else {
-                     that.props.history.push({pathname:"/search",search:"?"+backUrl}) ; 
-                  }
+
+                  // DONE add loader to wait when back to search 
+                  that.props.onLoading("search",true)
+
+                  setTimeout(() => { 
+                     if(!backUrl) {
+                        let loca = { ...that.props.history.location };                  
+                        delete loca.hash
+                        that.props.history.push(loca) ; 
+                        // that.setState({...that.state, openEtext: false });
+                     } else {
+                        that.props.history.push({pathname:"/search",search:"?"+backUrl}) ; 
+                     }
+                  }, 100)
+
                }}><span style={{verticalAlign:"-3px"}}>Close etext</span></a>
                <span>{etextTitle}</span>
             </span>
@@ -2640,7 +2647,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
          if(sameAsRes.length) {
             
-            console.log("sameAs",prettId,id,dico,rmatch,sameAsRes)
+            //console.log("sameAs",prettId,id,dico,rmatch,sameAsRes)
          
             let menus = {}
             let sources = []
@@ -2688,7 +2695,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   else  hasRes[src].push(prettId)
             }
 
-            console.log("hasR",hasRes)
+            //console.log("hasR",hasRes)
 
             for(let src of Object.keys(providers)) {
                if(src == "bdr") continue
@@ -4540,7 +4547,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          menuK[mK].push(this._menus[k])
       })
 
-      console.log("_menus",this._menus, menuK)
+      //console.log("_menus",this._menus, menuK)
 
       let showMenus = Object.keys(menuK).map(id => 
             <Popover 

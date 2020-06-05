@@ -5635,9 +5635,10 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                { top_right_menu(this,title,searchUrl) }               
                { this.renderMirador(isMirador) }           
                <div class="resource etext-view">
+                  <Loader loaded={!this.props.loading}  options={{position:"fixed",left:"50%",top:"50%"}} />
                   <div class="">
                      { etext_data }
-                  </div>
+                  </div>                  
                </div>
                { this.renderEtextNav() }
             </div>
@@ -5659,14 +5660,29 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
          // DONE
          // + update index links (add outline)
+         // + fix open etext OR images
          // TODO
-         // - fix open etext OR images
+         // - add loader to show when back to seach
 
          return (
          [getGDPRconsent(this),
          <div class={isMirador?"H100vh OF0":""}>
             <div className={"resource "+getEntiType(this.props.IRI).toLowerCase()}>               
-               {searchUrl && <div class="ariane"><Link to={"/search?"+searchUrl}><img src="/icons/FILARIANE.svg" /><span>Search results for {searchTerm}</span></Link></div> }
+               {searchUrl && <div class="ariane">
+                  <Link to={"/search?"+searchUrl} onClick={(ev) => {
+                     this.props.onLoading("search",true)                     
+
+                     setTimeout(() => { 
+                           this.props.history.push({pathname:"/search",search:"?"+searchUrl}) ; 
+                     }, 100)
+
+                     ev.preventDefault()
+                     ev.stopPropagation();
+                     return false
+                  }}
+                  ><img src="/icons/FILARIANE.svg" /><span>Search results for {searchTerm}</span></Link>
+                  {this.state.ready && <Loader loaded={!this.props.loading} options={{position:"fixed",left:"50%",top:"50%"}} /> }
+               </div> }
                <div class="index">                  
                   {/* { this.renderBrowseAssoRes() } */}
                   {/* { this.renderPdfLink(pdfLink,monoVol,fairUse) } */}

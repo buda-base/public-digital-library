@@ -117,6 +117,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       onSetLangPreset:(langs:string[],i?:number) => {
          dispatch(ui.langPreset(langs,i))
       },
+      onLoading:(kw:string,load:boolean) => {
+         dispatch(ui.loading(kw,load))
+      },
    }
 }
 
