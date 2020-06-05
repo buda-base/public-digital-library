@@ -773,10 +773,10 @@ h4:not(:hover) > .lang
 /* -+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ resource */
 
 
-#open-etext { position:absolute; right:140px; }
+#open-etext { position:absolute; right:140px; margin-top:5px; }
 #open-etext > div { }
 #open-etext > div::after { content:none !important; }
-#open-etext + .data h2 { max-width:calc(100% - 100px - 30px); }
+#open-etext + .data h2 { max-width:calc(100% - 150px - 30px); }
 #open-etext > div a { color:white; background-color: #d73449; border-radius:5px;display:flex;align-items: center;justify-content: center; height:40px;
    padding: 0 15px; border:none !important; font-weight:600; font-size:13px; cursor:pointer;}
 
@@ -1043,7 +1043,9 @@ vertical-align:middle;}
    font-weight:900; font-size:24px; }
 
 .resource .data h2,
-.resource .title h2 { /*font-family: "Noto Sans", "Roboto", "Helvetica", "Arial", sans-serif; */ margin:0; color:#343434;}
+.resource .title h2 { /*font-family: "Noto Sans", "Roboto", "Helvetica", "Arial", sans-serif; */ margin:0; color:#343434; }
+
+.resource .data#head  ~ .data h2 { margin-bottom:30px; }
 
 .resource .data *,
 .resource .related div { /*font-family: "Noto Sans", "Roboto", "Helvetica", "Arial", sans-serif;*/ }
@@ -1862,7 +1864,7 @@ TODO
 .resource .data.bot-props + .data.ext-props > div::after { content:none !important;}
 .resource .data.ext-props h2 { line-height:44px;margin:45px 0; }
 .resource .data.ext-props h2 + span { position:absolute;text-transform:uppercase;font-weight:500;border-bottom:2px solid black; 
-   height:24px; right:35px; cursor:pointer; padding-top:14px; color:#343434;}
+   height:24px; right:35px; cursor:pointer; padding-top:58px; color:#343434;}
 .resource .data.ext-props h2 + span:hover { color:#d73449;border-color:#d73449; }
 
 .resource .data.ext-props  > div { align-items: center; }

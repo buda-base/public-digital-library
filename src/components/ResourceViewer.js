@@ -2417,7 +2417,7 @@ class ResourceViewer extends Component<Props,State>
                data-ID={ID}
                id="popHoverM"
                data-class={(e.start !== undefined?"in-etext":"")}
-               marginThreshold={-10000}
+               marginThreshold={0}
                open={this.state.collapse["hover"+ID]}
                anchorOrigin={{horizontal:"right",vertical:"top"}}
                transformOrigin={{horizontal:"right",vertical:"top"}}
@@ -5680,7 +5680,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                   { this.renderWithdrawn() }             
                   <div class="title">{ wTitle }{ iTitle }{ rTitle }</div>
                   { this.renderHeader(kZprop.filter(k => mapProps.includes(k))) }
-                  <div class="data" id="open-etext"><div><Link to={loca.pathname+loca.search+"#open-viewer"}>Open Etext</Link></div></div>
+                  <div class="data" id="open-etext"><div><Link to={loca.pathname+loca.search+"#open-viewer"}>Open in Etext Viewer</Link></div></div>
                   <div class="data">{title}{inTitle}</div>
                   { this.renderNoAccess(fairUse) }
                   { this.renderAccess() }
