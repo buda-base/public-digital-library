@@ -131,9 +131,9 @@ export function shortUri(id:string) {
 }
 
 const facetLabel = {
-   "root": "In Instance",
-   "tree": "Genre / Topic",
-   "relationInv": "Inverse Relation Type"
+   "root": "Lsidebar.widgets.root",
+   "tree": "Lsidebar.widgets.tree",
+   "relationInv": "Lsidebar.widgets.relationInv"
 }
 
 export const languages = {
@@ -487,15 +487,19 @@ export function getGDPRconsent(that) {
 
 export function top_right_menu(that,etextTitle,backUrl)
 {
+   let logo = [
+            <div id="logo">
+               {/* <a href="https://bdrc.io/" target="_blank"><img src="/BDRC-Logo.png"/></a> */}
+               <Link to="/"  onClick={() => { that.props.history.push({pathname:"/",search:""}); that.props.onResetSearch();} }><img src="/BDRC-Logo.png"/></Link>
+            </div>,
+
+   ]
 
    if(etextTitle)
       return (
       <div class="nav">
          <div>
-            <div id="logo">
-               <a href="https://bdrc.io/" target="_blank"><img src="/BDRC-Logo.png"/></a>
-               <Link to="/"  onClick={() => { that.props.history.push({pathname:"/",search:""}); that.props.onResetSearch();} }><img src="/LIBRARY.svg"/></Link>
-            </div>
+            {logo}
 
             <span id="back"><span>&lt;</span><a onClick={() => {
 
@@ -527,10 +531,9 @@ export function top_right_menu(that,etextTitle,backUrl)
       return (
       <div class="nav">
        <div>
-         <div id="logo">
-            <a href="https://bdrc.io/" target="_blank"><img src="/BDRC-Logo.png"/></a>
-            <Link to="/"  onClick={() => { that.props.history.push({pathname:"/",search:""}); that.props.onResetSearch();} }><img src="/LIBRARY.svg"/></Link>
-         </div>
+         {logo}
+
+         <a id="about" href="https://bdrc.io" target="_blank">{I18n.t("topbar.about")}</a>
 
          <Link to="/"  onClick={() => { that.props.history.push({pathname:"/",search:""}); that.props.onResetSearch();} }><span>{I18n.t("topbar.search")}</span></Link>
 
@@ -4026,7 +4029,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          k = getPropLabel(this,k)
       }
       else { t = <span>{t}</span>; k = <span>{k}</span> }
-      return <a title={(!isExclu?"Include":"Exclude")+" results with "+t_+": "+ k_} class={ "active-filter " + (isExclu?"exclu":"") }><span>{t}: <b>{k}</b></span><a title={I18n.t("Lsidebar.activeF.remove")} onClick={f.bind(this)}><Close/></a></a>
+      return <a title={I18n.t(!isExclu?"include":"exclude")+" "+t_+I18n.t("punc.colon")+" "+ k_} class={ "active-filter " + (isExclu?"exclu":"") }><span>{t}{I18n.t("punc.colon")} <b>{k}</b></span><a title={I18n.t("Lsidebar.activeF.remove")} onClick={f.bind(this)}><Close/></a></a>
    }
 
    resetFilters(e) {
@@ -4035,8 +4038,10 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
       
       if(!this.props.isInstance) this.props.history.push({pathname,search:search.replace(/(&([tfin]|pg)=[^&]+)/g,"")+"&t="+this.state.filters.datatype[0]})
       else this.props.history.push({pathname,search:this.state.backToWorks})
+      
+      // TODO fix reset filters 
+      //setTimeout(() => this.setState({...this.state, repage:true, uriPage:0, scrolled:1, filters:{ datatype: this.state.filters.datatype } }), 100 )
 
-      //this.setState({...this.state, repage:true, uriPage:0, scrolled:1, filters:{ datatype: this.state.filters.datatype } }  )
    }
 
    treeWidget(j,meta,counts,jlabel,jpre) {
@@ -4430,7 +4435,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
       const { isAuthenticated } = this.props.auth;
       let id ;
 
-      if(!global.inTest) console.log("render",this.props.keyword,this.props,this.state,isAuthenticated(),this._customLang)
+      if(!global.inTest) console.log("render",this.props.keyword,this.props,this.state,isAuthenticated(),this._customLang,JSON.stringify(this.state.filters,null,3))
       // no search yet --> sample data
       if(!this.props.keyword || this.props.keyword == "")
       {
@@ -4597,13 +4602,19 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             let jpre = this.props.config.facets[this.state.filters.datatype[0]][j]
             if(!jpre) jpre = j
             let jlabel ;
-            if(facetLabel[j]) jlabel = facetLabel[j];   
+            if(facetLabel[j]) jlabel = I18n.t(facetLabel[j]);   
             else {
-               jlabel = this.props.ontology[jpre]
+               jlabel = this.props.dictionary[jpre]
                if(jlabel) jlabel = jlabel["http://www.w3.org/2000/01/rdf-schema#label"]
+               /*
                //if(jlabel) for(let l of jlabel) { if(l.lang == "en") jlabel = l.value }
                if(jlabel && jlabel.length) jlabel = jlabel[0].value
                else jlabel = this.pretty(jpre)
+               */
+
+               jlabel = getLangLabel(this,jpre,jlabel)
+               if(!jlabel) jlabel = this.pretty(jpre)
+               else jlabel = jlabel.value
             }
             // need to fix this after info is not in ontology anymore... make tree from relation/langScript 
             if(["tree","relation","langScript"].indexOf(j) !== -1) {
@@ -4698,12 +4709,12 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
       }
 
       const allSortByLists = { 
-         "Work": [ "Popularity", "Closest Matches", "Work Title" ],
-         "Person": [ "Popularity", "Closest Matches", "Person Name", "Year of Birth" ],
-         "Place": [ "Popularity", "Closest Matches", "Place Name" ],
-         "WorkInstance": [ "Work Title", "Year of Publication" ],
-         "Instance": [ "Popularity", "Title", "Year of Publication" ],
-         "Etext": [ "Closest Matches", "Number of Matching Chunks" ],
+         "Work": [ "popu", "closestM", "workT" ].map(m => I18n.t("sort."+m)),
+         "Person": [ "popu", "closestM", "personN", "yearB" ].map(m => I18n.t("sort."+m)),
+         "Place": [ "popu", "closestM", "placeN" ].map(m => I18n.t("sort."+m)),
+         "WorkInstance": [ "workT", "yearP" ].map(m => I18n.t("sort."+m)),
+         "Instance": [ "popu", "title", "yearP" ].map(m => I18n.t("sort."+m)),
+         "Etext": [ "closestM", "numberMC" ].map(m => I18n.t("sort."+m)),
       }
 
       let sortByList = allSortByLists[this.state.filters.datatype[0]]
@@ -4735,9 +4746,13 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
       console.log(JSON.stringify(allSortByLists,null,3),JSON.stringify(sortByList,null,3))
       */
 
+      // DONE
       // + fix sortBy for instances
       // + reset sort when switching datatype
       // TODO 
+      // - fix reset filters (work instance)
+      // - fix BackTo when opening route to work instance results
+
 
       if(this.props.isInstance) { 
          sortByList = allSortByLists["WorkInstance"]
@@ -4793,6 +4808,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
       this._refs["searchBar"] = React.createRef();
 
+      let nbResu = this.state.paginate && this.state.paginate.nMax ? this.state.paginate.nMax:(this.state.results&&this.state.results[this.state.id]?this.state.results[this.state.id].resLength:"--")
+
       return (
 <div>
    {getGDPRconsent(this)}
@@ -4823,8 +4840,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      <img src="/pichome.jpg" />
                      <div>
                         <div>
-                           { I18n.t("home.BUDA") }
-                           <h1>{ I18n.t("home.title") }</h1>
+                           {/* { I18n.t("home.BUDA") } */}
+                           <h1>{ I18n.t("home.titleBDRC1") }<br/>{ I18n.t("home.titleBDRC2") }<br/>{ I18n.t("home.titleBDRC3") }</h1>
                            <span>{ I18n.t("home.subtitle") }</span>
                         </div>
                      </div>
@@ -4837,7 +4854,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   <FontAwesomeIcon style={{fontSize:"21px"}} icon={faSlidersH} title="Refine Your Search"/>
                </IconButton> */}
                <div ref={this._refs["searchBar"]} style={{display:"inline-block",position:"relative"}}>
-                  <SearchBar                                          
+                  <SearchBar                  
+                     placeholder={I18n.t("home.search")}                        
                      closeIcon={<Close className="searchClose" style={ {color:"rgba(0,0,0,1.0)",opacity:1} } onClick={() => { this.props.history.push({pathname:"/",search:""}); this.props.onResetSearch();} }/>}
                      disabled={this.props.hostFailure}
                      onChange={(value:string) => changeKW(value)}
@@ -4951,8 +4969,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                            ,*/
                            <div id="filters-UI">
                               <div>
-                              { this.state.filters.datatype.filter(k => k !== "Any").map(k => this.renderFilterTag(true, "Type", k, (event, checked) => this.handleCheck(event, k, false) ) )}                              
-                              { this.props.isInstance && this.state.backToWorks && this.state.filters.instance && this.renderFilterTag(false, "Instance Of", this.state.filters.instance, (event, checked) => {
+                              { this.state.filters.datatype.filter(k => k !== "Any").map(k => this.renderFilterTag(true, I18n.t("Lsidebar.tags.type"), k, (event, checked) => this.handleCheck(event, k, false) ) )}                              
+                              { this.props.isInstance && this.state.backToWorks && this.state.filters.instance && this.renderFilterTag(false, I18n.t("Lsidebar.tags.instanceOf"), this.state.filters.instance, (event, checked) => {
                                  this.resetFilters(event)
                               } )  } 
                               { this.state.filters.facets?Object.keys(this.state.filters.facets).map(f => {
@@ -4962,7 +4980,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                                     this.renderFilterTag(false, f, v, (event, checked) => this.handleCheckFacet(event, f, [ v ], false) ) 
                                  ) }
                               ):null }
-                              <a title={I18n.t("Lsidebar.activeF.reset")} id="clear-filters" onClick={this.resetFilters.bind(this)}><span>Reset filters</span><RefreshIcon /></a>
+                              <a title={I18n.t("Lsidebar.activeF.reset")} id="clear-filters" onClick={this.resetFilters.bind(this)}><span>{I18n.t("Lsidebar.tags.reset")}</span><RefreshIcon /></a>
                               </div>
                            </div>
                         ]
@@ -5017,15 +5035,15 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                                     />
 
                                  }
-                                 label={"Reverse Order"}
+                                 label={I18n.t("sort.reverse")}
                               /></div>
                      ])) 
                   }
 
                   <div id="pagine">
                      <div>
-                           { pageLinks && <span>page { pageLinks }</span>}
-                           <span id="nb">{this.state.paginate && this.state.paginate.nMax ? this.state.paginate.nMax:(this.state.results&&this.state.results[this.state.id]?this.state.results[this.state.id].resLength:"--")} Results</span>
+                           { pageLinks && <span>{I18n.t("search.page")} { pageLinks }</span>}
+                           <span id="nb">{nbResu} {I18n.t("search.result"+(nbResu>1?"_pl":""))}</span>
                      </div>
                   </div>
                </div>

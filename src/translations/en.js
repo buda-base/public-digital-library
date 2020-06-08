@@ -1,12 +1,32 @@
 
 const enTranslation = {
+   punc: {
+      colon:":"
+   },
    home:{
       BUDA:"BUDA",
-      title:"The Buddhist Universal Digital Archive",
-      subtitle:"Explore etexts, catalogs, and millions of scanned pages",
+      titleBDRC1:"Buddhist",
+      titleBDRC2:"Digital Resource",
+      titleBDRC3:"Center",
+      subtitle:"Welcome to our new platform and library",
       message:"WELCOME TO THE BETA VERSION OF BUDA!",
+      search:"Search"
+   },
+   types:{
+      any:"Any",
+      corporation:"Corporation",
+      etext:"in Etext content",
+      item:"Item",
+      lineage:"Lineage",
+      person:"Person",
+      place:"Place",
+      role:"Role",
+      topic:"Topic",
+      work:"Work",
+      instance:"Instance"
    },
    topbar:{
+      about:"about us",
       search:"new search",
       login:"log in",
       register:"register",
@@ -14,6 +34,48 @@ const enTranslation = {
       profile:"profile",
       donate:"donate",
       closeEtext:"Close Etext"
+   },
+   sort:{
+      reverse:"Reverse Order0",
+      popu:"Popularity1",
+      closestM:"Closest Matches2", 
+      workT:"Work Title3",
+      personN:"Person Name4", 
+      yearB:"Year of Birth5",
+      placeN:"Place Name6",
+      yearP:"Year of Publication7",
+      title:"Title8",
+      numberMC:"Number of Matching Chunks9"
+   },
+   Lsidebar:{
+      sortBy:{
+         title:"Sort By"
+      },
+      title:"Refine your Search",
+      collection:{
+         title:"Collection"
+      },
+      datatypes:{
+         title:"Data Types"
+      },
+      widgets:{
+         root: "In Instance",
+         tree: "Genre / Topic",
+         relationInv: "Inverse Relation Type"
+      },
+      tags:{
+         type: "Type",
+         instanceOf: "Instance Of",
+         reset:"Reset filters",
+         include:"Include results with",
+         exclude:"Exclude results with"
+
+      },
+      activeF:{
+         title:"Active Filters",
+         remove:"Remove filter",
+         reset:"Clear all filters"
+      }
    },
    user:{
       photo:{ 
@@ -31,6 +93,7 @@ const enTranslation = {
       }
    },
    misc:{
+      colon:":",
       datatype:"Back to datatypes",
       show:"Show all",
       hide:"Hide"
@@ -108,39 +171,12 @@ const enTranslation = {
          latnPinyin:"Pinyin"
       }
    },
-   types:{
-      "any":"Any",
-      "corporation":"Corporation",
-      "etext":"in Etext content",
-      "item":"Item",
-      "lineage":"Lineage",
-      "person":"Person",
-      "place":"Place",
-      "role":"Role",
-      "topic":"Topic",
-      "work":"Work",
-      "instance":"Instance"
-   },
    search:{
+      page:"page",
+      result:"Result",
+      result_pl:"Results",
       filters:{
          noresults:"No results matching your filters."
-      }
-   },
-   Lsidebar:{
-      sortBy:{
-         title:"Sort By"
-      },
-      activeF:{
-         title:"Active Filters",
-         remove:"Remove filter",
-         reset:"Clear all filters"
-      },
-      title:"Refine your Search",
-      collection:{
-         title:"Collection"
-      },
-      datatypes:{
-         title:"Data Types"
       }
    },
    Rsidebar:{

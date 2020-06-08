@@ -1,5 +1,8 @@
 
 const boTranslation = {
+   punc: {
+      colon:" "
+   },
    user:{
       photo:{ 
          hover:"Update profile picture",
