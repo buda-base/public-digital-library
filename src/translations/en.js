@@ -36,16 +36,16 @@ const enTranslation = {
       closeEtext:"Close Etext"
    },
    sort:{
-      reverse:"Reverse Order0",
-      popu:"Popularity1",
-      closestM:"Closest Matches2", 
-      workT:"Work Title3",
-      personN:"Person Name4", 
-      yearB:"Year of Birth5",
-      placeN:"Place Name6",
-      yearP:"Year of Publication7",
-      title:"Title8",
-      numberMC:"Number of Matching Chunks9"
+      reverse:"Reverse Order",
+      popu:"Popularity",
+      closestM:"Closest Matches", 
+      workT:"Work Title",
+      personN:"Person Name", 
+      yearB:"Year of Birth",
+      placeN:"Place Name",
+      yearP:"Year of Publication",
+      title:"Title",
+      numberMC:"Number of Matching Chunks"
    },
    Lsidebar:{
       sortBy:{
