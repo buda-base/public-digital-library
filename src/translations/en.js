@@ -19,15 +19,25 @@ const enTranslation = {
    types:{
       any:"Any",
       corporation:"Corporation",
+      corporations:"Corporations",
       etext:"in Etext content",
+      etexts:"in Etext content",
       item:"Item",
+      items:"Items",
       lineage:"Lineage",
+      lineages:"Lineages",
       person:"Person",
+      persons:"Persons",
       place:"Place",
+      places:"Places",
       role:"Role",
+      roles:"Roles",
       topic:"Topic",
+      topics:"Topics",
       work:"Work",
-      instance:"Instance"
+      works:"Works",
+      instance:"Instance",
+      instances:"Instances"
    },
    topbar:{
       about:"about us",
@@ -91,17 +101,33 @@ const enTranslation = {
       view:"View Images",
       scans:"Scans Available"
    },
+   prop:{
+      "tmp:bestMatch":"Best Match",
+      "tmp:relationType":"Relation Type",
+      "tmp:nameMatch":"Name Match",
+      "tmp:nameMatches":"Name Matches",
+      "tmp:otherTitle":"Other Title",
+      "tmp:otherTitles":"Other Titles",
+      "tmp:otherName":"Other Name",
+      "tmp:otherNames":"Other Names",
+      "tmp:otherMatch":"Other Match",
+      "tmp:otherMatches":"Other Matches",
+      "tmp:originalRecord":"Original Record"
+   },
    result:{
       open:"Open",
       resource:"resource",
       in:"in",
       available:"Resource available at",
-      inRootInstance:"In",
+      inRootInstance:"In",      
       workBy:"By",
       eTextIsForWork:"For Work",
       year:"Year",
       inInstance:"In Instance",
       inInstancePart:"In Instance Part",
+      expandC:"Expand Context",
+      hideC:"Hide Context",
+      openE:"Open Etext"
    },
    user:{
       photo:{ 
@@ -121,8 +147,12 @@ const enTranslation = {
    misc:{
       colon:":",
       datatype:"Back to datatypes",
+      has:"Has",
+      or:"or",
+      browse:"browse all",
       show:"Show all",
       hide:"Hide",
+      preview:"preview",
       permalink:"Permalink",
       clipboard:"Url has been copied to clipboard.\nCTRL+V to paste"
    },

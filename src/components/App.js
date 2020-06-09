@@ -76,7 +76,6 @@ import './App.css';
 
 import {svgEtextS,svgImageS} from "./icons"
 
-
 const adm   = "http://purl.bdrc.io/ontology/admin/" ;
 const bda   = "http://purl.bdrc.io/admindata/";
 const bdac  = "http://purl.bdrc.io/anncollection/" ;
@@ -1900,7 +1899,9 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          //return preflabs[0][value]
       }
 
-      return this.pretty(prop)
+      let trad = I18n.t(prop);
+      if(prop !== trad) return trad
+      else return this.pretty(prop)
    }
 
 
@@ -2140,19 +2141,19 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             ret = 
                <div style={{display:"block"}}>
                   <div class="match" style={{marginBottom:0}}>
-                     <span class="label">{"Has "+nb+" Instance"+(nb > 1 ?"s":"")}</span>
+                     <span class="label">{I18n.t("misc.has")+" "+nb+" "+I18n.t("types.instance"+(nb > 1 ?"s":""))}</span>
                      <span class="assets">
                      { (hasOpen.length > 0) && <span title={getPropLabel(this,tmp+"assetAvailability",false)+": "+getPropLabel(this,tmp+"hasOpen",false)}><img src="/icons/open.png"/></span>}
                      { (hasImage.length > 0) && <span title={getPropLabel(this,tmp+"assetAvailability",false)+": "+getPropLabel(this,tmp+"hasImage",false)}>{svgImageS}</span>}
                      { (hasEtext.length > 0) && <span title={getPropLabel(this,tmp+"assetAvailability",false)+": "+getPropLabel(this,tmp+"hasEtext",false)}>{svgEtextS}</span>}
                      </span>
                      <span class="instance-link">
-                        <Link class="urilink" to={iUrl}>browse all</Link>                     
-                        <emph style={{margin:"0 5px"}}> or </emph>
+                        <Link class="urilink" to={iUrl}>{I18n.t("misc.browse")}</Link>                     
+                        <emph style={{margin:"0 5px"}}> {I18n.t("misc.or")} </emph>
                         <span class="instance-collapse" onClick={(e) => { 
                            if(!instances) this.props.onGetInstances(shortUri(id)) ; 
                            this.setState({...this.state,collapse:{...this.state.collapse,[id]:!this.state.collapse[id] },repage:true })
-                        } } >{!this.state.collapse[id]?<span>preview</span>:<span>hide</span>}{!this.state.collapse[id]?<ExpandMore/>:<ExpandLess/>}</span>
+                        } } >{!this.state.collapse[id]?<span>{I18n.t("misc.preview")}</span>:<span>{I18n.t("misc.hide").toLowerCase()}</span>}{!this.state.collapse[id]?<ExpandMore/>:<ExpandLess/>}</span>
                      </span>
                   </div>
                   {ret}
@@ -2307,7 +2308,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                         <span class="instance-collapse" onClick={(e) => { 
                            this.setState({...this.state,collapse:{...this.state.collapse,[iri]:!this.state.collapse[iri] },repage:true })
                         }}>{!this.state.collapse[iri]?<ExpandMore/>:<ExpandLess/>}</span>,
-                        <span class="label">{this.fullname(prop,[],true)+(plural && ret.length > 1 ?plural:"")}:&nbsp;</span>,
+                        <span class="label">{this.fullname(prop+(plural && ret.length > 1 ?plural:""),[],true)}:&nbsp;</span>,
                         <div style={{clear:"both"}}></div>,
                         <Collapse in={this.state.collapse[iri]} >
                            {ret}
@@ -2424,7 +2425,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             }            
          }
          if(ret.length && !useAux) return <div class="match">
-                  <span class="label">{this.fullname(prop,[],true)+(plural && ret.length > 1 ?plural:"")}:&nbsp;</span>
+                  <span class="label">{this.fullname(prop+(plural && ret.length > 1 ?plural:""),[],true)}:&nbsp;</span>
                   <div class="multi">{ret}</div>
                 </div>
       }
@@ -2816,13 +2817,17 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             {
                rmatch.filter(m => m.type !== tmp+"nameMatch").map((m) => {
 
-                  //console.log("m",m,allProps)
+                  //console.log("m",JSON.stringify(m)) //,allProps)
 
                   { 
                      let expand,context,inPart
                      let uri,from
                      if(prop) lastP = prop 
-                     prop = this.fullname(m.type.replace(/.*altLabelMatch/,skos+"altLabel"),[],true)
+                     prop = this.fullname(m.type.replace(/.*altLabelMatch/,skos+"altLabel"),[],true)                     
+                     
+                     let sTmp = shortUri(m.type), trad = I18n.t("prop."+sTmp)
+                     if(trad !== sTmp) from = trad
+
                      let val,isArray = false ;
                      let lang = m["lang"]
                      if(!lang) lang = m["xml:lang"]
@@ -2981,6 +2986,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
                         if(m.type.match(/relationType$/))  {
                            
+                           from = I18n.t("prop.tmp:relationType")
+
                            if(m.value.match(/sameAs[^/]*$/)) {
                               return ;
                               /* // not needed anymore - already returned by query 
@@ -2993,7 +3000,11 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                            } else {
 
                               prop = this.fullname(m.value,[],true) 
-                              uri = "/show/"+this.props.keyword                              
+
+                              let sTmp = shortUri(m.value), trad = I18n.t("prop."+sTmp)
+                              if(trad !== sTmp) from = trad
+
+                              uri = "/show/"+this.props.keyword                           
                            }
                         }                        
                      }
@@ -3033,9 +3044,9 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                            <span class="uri-link" onClick={(e) => { 
                               if(!this.state.collapse[prettId+"@"+startC] && !m.context) this.props.onGetContext(prettId,startC,endC) ; 
                               toggleExpand(e,prettId+"@"+startC); } 
-                           }>{expand!==true?"Expand":"Hide"} Context</span>
-                           <span> or </span>
-                           <Link to={"/show/"+prettId+bestM} class="uri-link">Open Etext</Link>
+                           }>{expand!==true?I18n.t("result.expandC"):I18n.t("result.hideC")}</span>
+                           <span> {I18n.t("misc.or")} </span>
+                           <Link to={"/show/"+prettId+bestM} class="uri-link">{I18n.t("result.openE")}</Link>
                            </span>:null}</span>
                         }
                         {isArray && <div class="multi">
@@ -3062,25 +3073,25 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
 
 
-            { this.getResultProp(tmp+"nameMatch",allProps,"es",false) } {/* //,true,false) } */}
+            { this.getResultProp("prop.tmp:nameMatch",allProps,"es",false,[ tmp+"nameMatch" ]) } {/* //,true,false) } */}
 
-            { this.getResultProp(tmp+"relationType",allProps,true,false) } 
+            { this.getResultProp(I18n.t("prop.tmp:relationType"),allProps,true,false,[ tmp+"relationType" ]) } 
             {/* { this.getResultProp(tmp+"InverseRelationType",allProps,true,true,[tmp+"relationTypeInv"]) } */}
             
             {/* { this.getResultProp(tmp+"numberOfMatchingChunks",allProps,true,false,[tmp+"nbChunks"]) } */}
             {/* { this.getResultProp(tmp+"maxScore",allProps,true,false) } */}
-            { (nbChunks > 1) && this.getResultProp(tmp+"otherMatches ("+(nbChunks - 1)+")",allProps,false,false,[bdo+"eTextHasChunk"],null,[bdo+"chunkContents"],null,[tmp+"matchScore",bdo+"sliceStartChar"],id) }
+            { (nbChunks > 1) && this.getResultProp(I18n.t("prop.tmp:otherMatches")+" ("+(nbChunks - 1)+")",allProps,false,false,[bdo+"eTextHasChunk"],null,[bdo+"chunkContents"],null,[tmp+"matchScore",bdo+"sliceStartChar"],id) }
             
             {/* { this.getResultProp(bdo+"workIsAbout",allProps,false) } */}
             {/* { this.getResultProp(bdo+"workGenre",allProps) } */}
 
-            { this.getResultProp(this.state.filters.datatype[0] === "Work"?tmp+"otherTitle":tmp+"otherName",allProps, true, false, [skos+"prefLabel", skos+"altLabel"], !preLit?preLit:preLit.replace(/[↦↤]/g,"") ) }
+            { this.getResultProp(this.state.filters.datatype[0] === "Work"?"prop.tmp:otherTitle":"prop.tmp:otherName",allProps, true, false, [skos+"prefLabel", skos+"altLabel"], !preLit?preLit:preLit.replace(/[↦↤]/g,"") ) }
             {/* { this.getResultProp(tmp+"assetAvailability",allProps,false,false) } */}
             
             {/* { this.getResultProp(rdf+"type",allProps.filter(e => e.type === rdf+"type" && e.value === bdo+"EtextInstance")) }  */}
             
             {/* //![bdo+"AbstractWork",bdo+"Work",bdo+"Instance",bdo+"SerialMember",bdo+"Topic"].includes(e.value))) } */}
-            { this.getResultProp(tmp+"originalRecord",allProps,false,false, [ tmp+"originalRecord", adm+"originalRecord"]) }
+            { this.getResultProp("prop.tmp:originalRecord",allProps,false,false, [ tmp+"originalRecord", adm+"originalRecord"]) }
             {/* { this.getResultProp(bdo+"language",allProps) } */}
             {/* { this.getResultProp(bdo+"script",allProps) } */}
             
@@ -3442,8 +3453,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                iniTitle = true
                let _t = t.toLowerCase()
                if(_t === "work" && this.props.isInstance) _t = "instance"
-               if(displayTypes.length > 1 || displayTypes.indexOf("Any") !== -1) message.push(<MenuItem  onClick={(e)=>this.handleCheck(e,t,true,{},true)}><h4>{I18n.t("types."+t.toLowerCase())+"s"+(false && displayTypes.length>1&&counts["datatype"][t]?" ("+counts["datatype"][t]+")":"")}</h4></MenuItem>);
-               else message.push(<MenuItem><h4>{I18n.t("types."+_t)+(_t === "etext"?"":"s")+(false && displayTypes.length>=1&&counts["datatype"][t]?" ("+counts["datatype"][t]+")":"")}</h4></MenuItem>);
+               if(displayTypes.length > 1 || displayTypes.indexOf("Any") !== -1) message.push(<MenuItem  onClick={(e)=>this.handleCheck(e,t,true,{},true)}><h4>{I18n.t("types."+t.toLowerCase()+"s")+(false && displayTypes.length>1&&counts["datatype"][t]?" ("+counts["datatype"][t]+")":"")}</h4></MenuItem>);
+               else message.push(<MenuItem><h4>{I18n.t("types."+_t+(_t === "etext"?"":"s"))+(false && displayTypes.length>=1&&counts["datatype"][t]?" ("+counts["datatype"][t]+")":"")}</h4></MenuItem>);
                // TODO better handling of plural in translations
             }
             absi ++ ;
