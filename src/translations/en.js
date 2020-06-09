@@ -37,19 +37,9 @@ const enTranslation = {
       logout:"log out",
       profile:"profile",
       donate:"donate",
-      closeEtext:"Close Etext"
-   },
-   sort:{
-      reverse:"Reverse Order",
-      popu:"Popularity",
-      closestM:"Closest Matches", 
-      workT:"Work Title",
-      personN:"Person Name", 
-      yearB:"Year of Birth",
-      placeN:"Place Name",
-      yearP:"Year of Publication",
-      title:"Title",
-      numberMC:"Number of Matching Chunks"
+      closeEtext:"Close Etext",
+      history:"Search history",
+      bookmarks:"Bookmarks",
    },
    Lsidebar:{
       sortBy:{
@@ -81,6 +71,38 @@ const enTranslation = {
          reset:"Clear all filters"
       }
    },
+   sort:{
+      reverse:"Reverse Order",
+      popu:"Popularity",
+      closestM:"Closest Matches", 
+      workT:"Work Title",
+      personN:"Person Name", 
+      yearB:"Year of Birth",
+      placeN:"Place Name",
+      yearP:"Year of Publication",
+      title:"Title",
+      numberMC:"Number of Matching Chunks"
+   },
+   copyright:{
+      open:"Open Access",
+      fairUse:"Fair Use - Access to 20 first/last pages",
+      tempo:"Temporarily Restricted",
+      sealed:"Sealed",
+      view:"View Images",
+      scans:"Scans Available"
+   },
+   result:{
+      open:"Open",
+      resource:"resource",
+      in:"in",
+      available:"Resource available at",
+      inRootInstance:"In",
+      workBy:"By",
+      eTextIsForWork:"For Work",
+      year:"Year",
+      inInstance:"In Instance",
+      inInstancePart:"In Instance Part",
+   },
    user:{
       photo:{ 
          hover:"Update profile picture",
@@ -100,7 +122,9 @@ const enTranslation = {
       colon:":",
       datatype:"Back to datatypes",
       show:"Show all",
-      hide:"Hide"
+      hide:"Hide",
+      permalink:"Permalink",
+      clipboard:"Url has been copied to clipboard.\nCTRL+V to paste"
    },
    lang:{
       en:"English",

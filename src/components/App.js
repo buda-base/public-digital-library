@@ -535,13 +535,13 @@ export function top_right_menu(that,etextTitle,backUrl)
        <div>
          {logo}
 
-         {/* <a id="about" href="https://bdrc.io" target="_blank">{I18n.t("topbar.about")}</a> */}
+         <a id="about" href="https://bdrc.io" target="_blank">{I18n.t("topbar.about")}</a>
 
          <Link to="/"  onClick={() => { that.props.history.push({pathname:"/",search:""}); that.props.onResetSearch();} }><span>{I18n.t("topbar.search")}</span></Link>
 
          <div class="history">
-            <span><img src="/icons/histo.svg"/></span>
-            <span><img src="/icons/fav.svg"/></span>
+            <span title={I18n.t("topbar.history")}><img src="/icons/histo.svg"/></span>
+            <span title={I18n.t("topbar.bookmarks")}><img src="/icons/fav.svg"/></span>
          </div>
 
          <div id="login">
@@ -2612,7 +2612,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          let retList = [ 
             <div id="num-box" class={(this.state.checked[prettId] === true?"checked":"")} style={{flexShrink:0}} onClick={(e) => this.setState({repage:true,checked:{...this.state.checked,[prettId]:!this.state.checked[prettId]}})}>{warnStatus}{n}</div>,         
             <div id="icon" class={enType + (hasCopyR?" wCopyR":"")}>
-               { hasThumb.length > 0  && <div class="thumb" title="View Images">{
+               { hasThumb.length > 0  && <div class="thumb" title={I18n.t("copyright.view")}>{
                    getIconLink(viewUrl?viewUrl:resUrl+"#open-viewer", <img src={hasThumb}/>)
                   }</div> }
                { hasThumb.length === 0 && [
@@ -2624,12 +2624,12 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   }</div>] }
                <div class="RID">{prettId}</div>
                {/* <span>{hasCopyR}</span> */}
-               {hasCopyR === "copyleft" && <img title="Open Access" src="/icons/open.svg"/>}
-               {hasCopyR === "fair_use" && <img title="Fair Use - Access to 20 first/last pages" src="/icons/fair_use.svg"/>}
-               {hasCopyR === "temporarily" && <img title="Temporarily Restricted" src="/icons/temporarily.svg"/>}
-               {hasCopyR === "sealed" && <img title="Sealed" src="/icons/sealed.svg"/>}
+               {hasCopyR === "copyleft" && <img title={I18n.t("copyright.open")} src="/icons/open.svg"/>}
+               {hasCopyR === "fair_use" && <img title={I18n.t("copyright.fairUse")} src="/icons/fair_use.svg"/>}
+               {hasCopyR === "temporarily" && <img title={I18n.t("copyright.tempo")} src="/icons/temporarily.svg"/>}
+               {hasCopyR === "sealed" && <img title={I18n.t("copyright.sealed")} src="/icons/sealed.svg"/>}
                {hasCopyR === "unknown" && <img title={this.fullname(access)} src="/icons/unknown.svg"/>}
-               { hasThumb.length > 0 && getIconLink(viewUrl?viewUrl:resUrl+"#open-viewer", <img title="Scans Available" style={{width:"20px"}} src="/icons/search/images.svg"/>) }
+               { hasThumb.length > 0 && getIconLink(viewUrl?viewUrl:resUrl+"#open-viewer", <img title={I18n.t("copyright.scans")} style={{width:"20px"}} src="/icons/search/images.svg"/>) }
             </div>
          ]
 
@@ -2755,7 +2755,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                         <a 
                            /*onTouchEnd={(ev) => { if(src !== "bdr") { ev.stopPropagation(); ev.preventDefault(); this.handleOpenSourceMenu(ev,"menu-"+src+"-"+prettId); return false ; }}} href={url} target="_blank"*/
                            >
-                           <Tooltip placement="bottom-start" title={<span>Resource available at <b>{providers[src]}</b></span>}>{image}</Tooltip>
+                           <Tooltip placement="bottom-start" title={<span>{I18n.t("result.available")} <b>{providers[src]}</b></span>}>{image}</Tooltip>
                         </a>
                         {/* {src !== "bdr" && <span onMouseEnter={(ev) => this.handleOpenSourceMenu(ev,"menu-"+src+"-"+prettId)}></span> } */}
                      </div>
@@ -2800,18 +2800,18 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          else nbChunks = "?"
 
          retList.push( <div id='matches'>         
-            { this.getResultProp(tmp+"by",allProps,false,true,[tmp+"author"]) }
-            { this.getResultProp(tmp+"in",allProps,false,true,[bdo+"inRootInstance"]) } 
+            { this.getResultProp(I18n.t("result.workBy"),allProps,false,true,[tmp+"author"]) }
+            { this.getResultProp(I18n.t("result.inRootInstance"),allProps,false,true,[bdo+"inRootInstance"]) } 
 
             { this.state.filters.datatype[0] !== "Person" && 
-               this.getResultProp(tmp+"year",allProps,false,false,[tmp+"yearStart"]) }
+               this.getResultProp(I18n.t("result.year"),allProps,false,false,[tmp+"yearStart"]) }
             { this.state.filters.datatype[0] === "Person" && 
-               this.getResultProp(tmp+"year",allProps,false,false,[tmp+"onYear",bdo+"onYear",bdo+"notBefore",bdo+"notAfter"],null,[bdo+"personEvent"],[bdo+"PersonBirth",bdo+"PersonDeath"]) }
+               this.getResultProp(I18n.t("result.year"),allProps,false,false,[tmp+"onYear",bdo+"onYear",bdo+"notBefore",bdo+"notAfter"],null,[bdo+"personEvent"],[bdo+"PersonBirth",bdo+"PersonDeath"]) }
 
-            { this.getResultProp(tmp+"forWork",allProps) }            
+            { this.getResultProp(I18n.t("result.eTextIsForWork"),allProps,false,true,[tmp+"forWork"]) }            
             { this.getResultProp(bdo+"eTextIsVolume",allProps,false,false) }
-            { this.getResultProp(tmp+"inInstance",allProps) }
-            { this.getResultProp(tmp+"inInstancePart",allProps) }
+            { this.getResultProp(I18n.t("result.inInstance"),allProps,false,false,[tmp+"inInstance"]) }
+            { this.getResultProp(I18n.t("result.inInstancePart"),allProps,false,false,[tmp+"inInstancePart"]) }
 
             {
                rmatch.filter(m => m.type !== tmp+"nameMatch").map((m) => {
@@ -3132,10 +3132,10 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
       if(prettId.includes("bdr:")) retList.push( <CopyToClipboard text={"http://purl.bdrc.io/resource/"+prettId.replace(/^bdr:/,"")} onCopy={(e) =>
                 //alert("Resource url copied to clipboard\nCTRL+V to paste")
-                prompt("Resource url has been copied to clipboard.\nCTRL+V to paste",fullUri(prettId))
+                prompt(I18n.t("misc.clipboard"),fullUri(prettId))
           }>
 
-          <a id="permalink" {...this.state.collapse[id]?{class:"wInstance"}:{}} style={{marginLeft:"0px"}} title="Permalink">
+          <a id="permalink" {...this.state.collapse[id]?{class:"wInstance"}:{}} style={{marginLeft:"0px"}} title={I18n.t("misc.permalink")}>
              <img src="/icons/PLINK.svg"/>
           </a>
        </CopyToClipboard> )
@@ -4581,7 +4581,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                            /* <span className="void">Open {this._menus[id].full.length > 1 ?<b>&nbsp;{short}&nbsp;</b>:"resource"} in {this._menus[id].src} website</span> */
                            <a href={u} class="menu-item-source" target="_blank">
                               <MenuItem onClick={(ev) => this.handleCloseSourceMenu(ev,id)}>
-                                 Open {m.full.length > 1 ?<b>&nbsp;{short}&nbsp;</b>:"resource"} in &nbsp;<b>{m.src}</b><img src="/icons/link-out.svg"/>
+                                 {I18n.t("result.open")} {m.full.length > 1 ?<b>&nbsp;{short}&nbsp;</b>:I18n.t("result.resource")} {I18n.t("result.in")} &nbsp;<b>{m.src}</b><img src="/icons/link-out.svg"/>
                               </MenuItem>
                            </a>
                      )

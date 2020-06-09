@@ -284,7 +284,7 @@ body { overflow:auto !important;padding-right:0 !important; /*font-family:"Robot
 #login { top:0;right:0;z-index:1; display:inline-block; margin-left:auto;  color:#d73449; }
 #login button {color:rgba(0,0,0,0.54); }
 
-.nav #logo + a { margin-left:150px; }
+.nav #logo + a { margin-left:70px; margin-right:70px; }
 /* .nav #about  { margin-left:105px; margin-right:105px;  } */
 
 .nav a > span { color:#192229; display:inline-block;   }

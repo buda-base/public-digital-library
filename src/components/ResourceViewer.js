@@ -584,12 +584,12 @@ export function top_left_menu(that,pdfLink,monoVol,fairUse)
 
        { that.props.IRI && <CopyToClipboard text={"http://purl.bdrc.io/resource/"+that.props.IRI.replace(/^bdr:/,"")} onCopy={(e) =>
                 //alert("Resource url copied to clipboard\nCTRL+V to paste")
-                prompt("Resource url has been copied to clipboard.\nCTRL+V to paste",fullUri(that.props.IRI))
+                prompt(I18n.t("misc.clipboard"),fullUri(that.props.IRI))
           }>
 
-          <a id="permalink" style={{marginLeft:"0px"}} title="Permalink">
+          <a id="permalink" style={{marginLeft:"0px"}} title={I18n.t("misc.permalink")}>
              <img src="/icons/PLINK.png"/>{/* <ShareIcon /> */}
-             <span>Permalink</span>
+             <span>{I18n.t("misc.permalink")}</span>
           </a>
        </CopyToClipboard> }
 
@@ -722,7 +722,7 @@ export function top_left_menu(that,pdfLink,monoVol,fairUse)
 
              <CopyToClipboard text={that.props.imageAsset} onCopy={(e) =>
                       //alert("Resource url copied to clipboard\nCTRL+V to paste")
-                      prompt("IIIF Manifest url has been copied to clipboard.\nCTRL+V to paste",that.props.imageAsset)
+                      prompt(I18n.t("misc.clipboard"),that.props.imageAsset)
                 }>
 
                 <Button id="iiif" className="goBack" title="IIIF manifest"><img src="/iiif.png"/></Button>
@@ -4146,12 +4146,12 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
        { that.props.IRI && <CopyToClipboard text={"http://purl.bdrc.io/resource/"+that.props.IRI.replace(/^bdr:/,"")} onCopy={(e) =>
                 //alert("Resource url copied to clipboard\nCTRL+V to paste")
-                prompt("Resource url has been copied to clipboard.\nCTRL+V to paste",fullUri(that.props.IRI))
+                prompt(I18n.t("misc.clipboard"),fullUri(that.props.IRI))
           }>
 
-          <a id="permalink" style={{marginLeft:"0px"}} title="Permalink">
+          <a id="permalink" style={{marginLeft:"0px"}} title={I18n.t("misc.permalink")}>
              <img src="/icons/PLINK.png"/>{/* <ShareIcon /> */}
-             <span>Permalink</span>
+             <span>{I18n.t("misc.permalink")}</span>
           </a>
        </CopyToClipboard> }
 
@@ -4232,7 +4232,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
                        <CopyToClipboard text={that.props.imageAsset} onCopy={(e) =>
                                  //alert("Resource url copied to clipboard\nCTRL+V to paste")
-                                 prompt("IIIF Manifest url has been copied to clipboard.\nCTRL+V to paste",that.props.imageAsset)
+                                 prompt(I18n.t("misc.clipboard"),that.props.imageAsset)
                            }>
                            <a><MenuItem>Export IIIF manifest</MenuItem></a>
                         </CopyToClipboard>
@@ -5249,8 +5249,8 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                                  { e.details && <span id="anchor" title={tLabel+" - "+(this.state.collapse[tag+"-details"]?"Hide":"Show")+" Details"} onClick={(ev) => toggle(ev,root,e["@id"],"details")}>
                                     <img src="/icons/info.svg"/>
                                  </span> }
-                                 <CopyToClipboard text={fUri} onCopy={(e) => prompt("Resource url has been copied to clipboard.\nCTRL+V to paste",fUri)}>
-                                    <a class="permalink" title="Permalink">
+                                 <CopyToClipboard text={fUri} onCopy={(e) => prompt(I18n.t("misc.clipboard"),fUri)}>
+                                    <a class="permalink" title={I18n.t("misc.permalink")}>
                                        <img src="/icons/PLINK_small.svg"/>
                                        <img src="/icons/PLINK_small_r.svg"/>
                                     </a>

@@ -1,67 +1,255 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<svg width="72px" height="57px" viewBox="0 0 72 57" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->
-    <title>WORK_instance_grand</title>
-    <desc>Created with Sketch.</desc>
-    <defs>
-        <polygon id="path-1" points="0.0881504702 0.833165266 36.3684483 0.833165266 36.3684483 25.8906106 0.0881504702 25.8906106"></polygon>
-        <polygon id="path-3" points="0.417155556 0.390787879 18.0272 0.390787879 18.0272 12.7132121 0.417155556 12.7132121"></polygon>
-        <path d="M1.89561243,3.74666667 C-0.822754438,4.44833333 1.89561243,9.91833333 1.89561243,9.91833333 L64.4025266,9.91833333 C64.4025266,9.91833333 67.0639734,4.50166667 64.4025266,3.74666667 C56.8390503,1.6 45.4584763,0.6 33.9933846,0.6 C21.9401183,0.601666667 9.79198521,1.705 1.89561243,3.74666667" id="path-5"></path>
-        <path d="M1.89561243,3.74666667 C-0.822754438,4.44833333 1.89561243,9.91833333 1.89561243,9.91833333 L64.4025266,9.91833333 C64.4025266,9.91833333 67.0639734,4.50166667 64.4025266,3.74666667 C56.8390503,1.6 45.4584763,0.6 33.9916598,0.6 C21.9401183,0.6 9.79198521,1.705 1.89561243,3.74666667 Z" id="path-7"></path>
-        <path d="M1.51452632,0.362019512 C1.51452632,0.362019512 -1.16542105,5.01321951 1.51452632,5.66051707 C17.1356842,9.4392 48.939,9.07884878 64.4576842,5.66051707 C67.1932105,5.05826341 64.4576842,0.362019512 64.4576842,0.362019512" id="path-9"></path>
-        <path d="M1.51452632,0.362019512 C1.51452632,0.362019512 -1.16542105,5.01321951 1.51452632,5.66051707 C17.1356842,9.4392 48.939,9.07884878 64.4576842,5.66051707 C67.1932105,5.05826341 64.4576842,0.362019512 64.4576842,0.362019512 L1.51452632,0.362019512 Z" id="path-11"></path>
-    </defs>
-    <g id="WORK_instance_grand" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" opacity="0.800055804">
-        <g id="Group-8" transform="translate(3.000000, 3.000000)">
-            <polygon id="Stroke-5" stroke="#152631" stroke-width="2.29999995" fill="#FFFFFF" points="3 42 61 42 61 10 3 10"></polygon>
-            <g id="Group-9" transform="translate(16.000000, 7.000000)">
-                <mask id="mask-2" fill="white">
-                    <use xlink:href="#path-1"></use>
-                </mask>
-                <g id="Clip-7"></g>
-                <polygon id="Stroke-6" stroke="#B6B5B6" stroke-width="1.2" mask="url(#mask-2)" points="0.0881504702 25.8906106 36.3684483 25.8906106 36.3684483 0.831563025 0.0881504702 0.831563025"></polygon>
-                <polygon id="Stroke-8" stroke="#B6B5B6" stroke-width="1.2" mask="url(#mask-2)" points="-1623.47649 848.658936 290.332273 848.658936 290.332273 -730.056258 -1623.47649 -730.056258"></polygon>
-            </g>
-            <polygon id="Stroke-10" stroke="#152631" stroke-width="2.4000001" fill="#FFFFFF" points="16 35 52 35 52 10 16 10"></polygon>
-            <g id="Group-14" transform="translate(25.000000, 10.000000)">
-                <mask id="mask-4" fill="white">
-                    <use xlink:href="#path-3"></use>
-                </mask>
-                <g id="Clip-12"></g>
-                <polygon id="Stroke-11" stroke="#B6B5B6" stroke-width="1.2" mask="url(#mask-4)" points="0.417155556 12.7132121 18.0272 12.7132121 18.0272 0.390787879 0.417155556 0.390787879"></polygon>
-                <polygon id="Stroke-13" stroke="#B6B5B6" stroke-width="1.2" mask="url(#mask-4)" points="-1584.43111 834.206061 273.361867 834.206061 273.361867 -718.414667 -1584.43111 -718.414667"></polygon>
-            </g>
-            <polygon id="Stroke-15" stroke="#152631" stroke-width="2.20000005" points="25 22 43 22 43 10 25 10"></polygon>
-            <g id="Group-18">
-                <mask id="mask-6" fill="white">
-                    <use xlink:href="#path-5"></use>
-                </mask>
-                <g id="Clip-17"></g>
-                <polyline id="Stroke-16" stroke="#B6B5B6" stroke-width="1.2" mask="url(#mask-6)" points="64.4025266 3.74583333 64.4025266 9.91916667 1.89561243 9.91916667 1.89561243 3.74583333"></polyline>
-            </g>
-            <g id="Group-21">
-                <mask id="mask-8" fill="white">
-                    <use xlink:href="#path-7"></use>
-                </mask>
-                <g id="Clip-20"></g>
-                <polygon id="Stroke-19" stroke="#B6B5B6" stroke-width="1.2" mask="url(#mask-8)" points="-1297.86149 117.678333 253.758512 117.678333 253.758512 -94.4716667 -1297.86149 -94.4716667"></polygon>
-            </g>
-            <path d="M1.21006299,4.03802115 C16.6441247,0.192673567 48.2775591,-0.212947024 63.8152746,4.03802115 C66.4809067,4.76717245 63.8152746,10 63.8152746,10 L1.21006299,10 C1.21006299,10 -1.51257874,4.71566508 1.21006299,4.03802115 Z" id="Stroke-22" stroke="#152631" stroke-width="2.4000001"></path>
-            <g id="Group-29" transform="translate(0.000000, 40.000000)">
-                <g id="Group-26">
-                    <mask id="mask-10" fill="white">
-                        <use xlink:href="#path-9"></use>
-                    </mask>
-                    <g id="Clip-25"></g>
-                    <polyline id="Stroke-24" stroke="#B6B5B6" stroke-width="1.2" mask="url(#mask-10)" points="1.51574211 5.66051707 1.51574211 0.362019512 64.4571632 0.362019512 64.4571632 5.66051707"></polyline>
-                </g>
-                <mask id="mask-12" fill="white">
-                    <use xlink:href="#path-11"></use>
-                </mask>
-                <g id="Clip-28"></g>
-                <polygon id="Stroke-27" stroke="#B6B5B6" stroke-width="1.2" mask="url(#mask-12)" points="-189.157737 89.9510049 1373.24811 89.9510049 1373.24811 -92.1164488 -189.157737 -92.1164488"></polygon>
-            </g>
-            <path d="M63.7906905,46.6367259 C48.354719,49.6281148 16.7226385,49.9434589 1.18473937,46.6367259 C-1.48092421,46.0688146 1.18473937,42 1.18473937,42 L63.7906905,42 C63.7906905,42 66.5116368,46.1096925 63.7906905,46.6367259 Z" id="Stroke-30" stroke="#0F0F0F" stroke-width="2.4000001"></path>
-        </g>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="67.81559"
+   height="50.860786"
+   viewBox="0 0 67.81559 50.860787"
+   version="1.1"
+   id="svg59"
+   sodipodi:docname="instance.svg"
+   inkscape:version="0.92.4 (5da689c313, 2019-01-14)">
+  <metadata
+     id="metadata63">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title>WORK_instance_grand</dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1385"
+     inkscape:window-height="874"
+     id="namedview61"
+     showgrid="false"
+     fit-margin-top="0.2"
+     fit-margin-right="0.2"
+     fit-margin-bottom="0.2"
+     fit-margin-left="0.2"
+     inkscape:zoom="17.93098"
+     inkscape:cx="33.907795"
+     inkscape:cy="19.159689"
+     inkscape:window-x="1"
+     inkscape:window-y="1"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="WORK_instance_grand" />
+  <!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->
+  <title
+     id="title2">WORK_instance_grand</title>
+  <desc
+     id="desc4">Created with Sketch.</desc>
+  <defs
+     id="defs12">
+    <polygon
+       id="path-1"
+       points="0.08815047,0.83316527 36.368448,0.83316527 36.368448,25.890611 0.08815047,25.890611 " />
+    <polygon
+       id="path-3"
+       points="0.41715556,0.39078788 18.0272,0.39078788 18.0272,12.713212 0.41715556,12.713212 " />
+    <path
+       d="m 1.8956124,3.7466667 c -2.71836684,0.7016666 0,6.1716666 0,6.1716666 H 64.402527 c 0,0 2.661446,-5.4166666 0,-6.1716666 C 56.83905,1.6 45.458476,0.6 33.993385,0.6 21.940118,0.60166667 9.7919852,1.705 1.8956124,3.7466667"
+       id="path-5"
+       inkscape:connector-curvature="0" />
+    <path
+       d="m 1.8956124,3.7466667 c -2.71836684,0.7016666 0,6.1716666 0,6.1716666 H 64.402527 c 0,0 2.661446,-5.4166666 0,-6.1716666 C 56.83905,1.6 45.458476,0.6 33.99166,0.6 21.940118,0.6 9.7919852,1.705 1.8956124,3.7466667 Z"
+       id="path-7"
+       inkscape:connector-curvature="0" />
+    <path
+       d="m 1.5145263,0.36201951 c 0,0 -2.6799473,4.65119999 0,5.29849759 15.6211577,3.7786829 47.4244737,3.4183317 62.9431577,0 2.735527,-0.6022537 0,-5.29849759 0,-5.29849759"
+       id="path-9"
+       inkscape:connector-curvature="0" />
+    <path
+       d="m 1.5145263,0.36201951 c 0,0 -2.6799473,4.65119999 0,5.29849759 15.6211577,3.7786829 47.4244737,3.4183317 62.9431577,0 2.735527,-0.6022537 0,-5.29849759 0,-5.29849759 z"
+       id="path-11"
+       inkscape:connector-curvature="0" />
+  </defs>
+  <g
+     id="WORK_instance_grand"
+     style="opacity:0.80005583;fill:none;fill-rule:evenodd;stroke:none;stroke-width:1"
+     transform="translate(-1.5924506,-2.5629753)">
+    <polygon
+       style="fill:#ffffff;stroke:#152631;stroke-width:2.29999995"
+       points="61,10 3,10 3,42 61,42 "
+       id="Stroke-5"
+       transform="translate(3,3)" />
+    <g
+       transform="translate(19,10)"
+       id="Group-9">
+      <mask
+         fill="white"
+         id="mask-2">
+        <use
+           height="100%"
+           width="100%"
+           y="0"
+           x="0"
+           id="use15"
+           xlink:href="#path-1" />
+      </mask>
+      <g
+         id="Clip-7" />
+      <polygon
+         style="stroke:#b6b5b6;stroke-width:1.20000005"
+         points="36.368448,0.83156303 0.08815047,0.83156303 0.08815047,25.890611 36.368448,25.890611 "
+         mask="url(#mask-2)"
+         id="Stroke-6" />
+      <polygon
+         style="stroke:#b6b5b6;stroke-width:1.20000005"
+         points="290.33227,-730.05626 -1623.4765,-730.05626 -1623.4765,848.65894 290.33227,848.65894 "
+         mask="url(#mask-2)"
+         id="Stroke-8" />
     </g>
+    <polygon
+       style="fill:#ffffff;stroke:#152631;stroke-width:2.4000001"
+       points="16,10 16,35 52,35 52,10 "
+       id="Stroke-10"
+       transform="translate(1,3)" />
+    <g
+       transform="translate(28,13)"
+       id="Group-14">
+      <mask
+         fill="white"
+         id="mask-4">
+        <use
+           height="100%"
+           width="100%"
+           y="0"
+           x="0"
+           id="use23"
+           xlink:href="#path-3" />
+      </mask>
+      <g
+         id="Clip-12" />
+      <polygon
+         style="stroke:#b6b5b6;stroke-width:1.20000005"
+         points="18.0272,0.39078788 0.41715556,0.39078788 0.41715556,12.713212 18.0272,12.713212 "
+         mask="url(#mask-4)"
+         id="Stroke-11" />
+      <polygon
+         style="stroke:#b6b5b6;stroke-width:1.20000005"
+         points="273.36187,-718.41467 -1584.4311,-718.41467 -1584.4311,834.20606 273.36187,834.20606 "
+         mask="url(#mask-4)"
+         id="Stroke-13" />
+    </g>
+    <polygon
+       style="stroke:#152631;stroke-width:2.20000005"
+       points="25,10 25,22 43,22 43,10 "
+       id="Stroke-15"
+       transform="translate(1,3)" />
+    <g
+       id="Group-18"
+       transform="translate(3,3)">
+      <mask
+         fill="white"
+         id="mask-6">
+        <use
+           height="100%"
+           width="100%"
+           y="0"
+           x="0"
+           id="use31"
+           xlink:href="#path-5" />
+      </mask>
+      <g
+         id="Clip-17" />
+      <polyline
+         style="stroke:#b6b5b6;stroke-width:1.20000005"
+         points="64.4025266 3.74583333 64.4025266 9.91916667 1.89561243 9.91916667 1.89561243 3.74583333"
+         mask="url(#mask-6)"
+         id="Stroke-16" />
+    </g>
+    <g
+       id="Group-21"
+       transform="translate(3,3)">
+      <mask
+         fill="white"
+         id="mask-8">
+        <use
+           height="100%"
+           width="100%"
+           y="0"
+           x="0"
+           id="use37"
+           xlink:href="#path-7" />
+      </mask>
+      <g
+         id="Clip-20" />
+      <polygon
+         style="stroke:#b6b5b6;stroke-width:1.20000005"
+         points="253.75851,-94.471667 -1297.8615,-94.471667 -1297.8615,117.67833 253.75851,117.67833 "
+         mask="url(#mask-8)"
+         id="Stroke-19" />
+    </g>
+    <path
+       style="stroke:#152631;stroke-width:2.4000001"
+       inkscape:connector-curvature="0"
+       id="Stroke-22"
+       d="m 4.210063,7.0380211 c 15.434062,-3.8453475 47.067496,-4.2509681 62.605212,0 2.665632,0.7291514 0,5.9619789 0,5.9619789 H 4.210063 c 0,0 -2.7226417,-5.2843349 0,-5.9619789 z" />
+    <g
+       transform="translate(3,43)"
+       id="Group-29">
+      <g
+         id="Group-26">
+        <mask
+           fill="white"
+           id="mask-10">
+          <use
+             height="100%"
+             width="100%"
+             y="0"
+             x="0"
+             id="use44"
+             xlink:href="#path-9" />
+        </mask>
+        <g
+           id="Clip-25" />
+        <polyline
+           style="stroke:#b6b5b6;stroke-width:1.20000005"
+           points="1.51574211 5.66051707 1.51574211 0.362019512 64.4571632 0.362019512 64.4571632 5.66051707"
+           mask="url(#mask-10)"
+           id="Stroke-24" />
+      </g>
+      <mask
+         fill="white"
+         id="mask-12">
+        <use
+           height="100%"
+           width="100%"
+           y="0"
+           x="0"
+           id="use50"
+           xlink:href="#path-11" />
+      </mask>
+      <g
+         id="Clip-28" />
+      <polygon
+         style="stroke:#b6b5b6;stroke-width:1.20000005"
+         points="1373.2481,-92.116449 -189.15774,-92.116449 -189.15774,89.951005 1373.2481,89.951005 "
+         mask="url(#mask-12)"
+         id="Stroke-27" />
+    </g>
+    <path
+       style="stroke:#0f0f0f;stroke-width:2.4000001"
+       inkscape:connector-curvature="0"
+       id="Stroke-30"
+       d="m 66.79069,49.636726 c -15.435971,2.991389 -47.068052,3.306733 -62.6059506,0 -2.6656636,-0.567911 0,-4.636726 0,-4.636726 H 66.79069 c 0,0 2.720947,4.109693 0,4.636726 z" />
+  </g>
 </svg>
