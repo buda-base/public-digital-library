@@ -489,8 +489,9 @@ export function top_right_menu(that,etextTitle,backUrl)
 {
    let logo = [
             <div id="logo">
-               {/* <a href="https://bdrc.io/" target="_blank"><img src="/BDRC-Logo.png"/></a> */}
-               <Link to="/"  onClick={() => { that.props.history.push({pathname:"/",search:""}); that.props.onResetSearch();} }><img src="/BDRC-Logo.png"/></Link>
+               <Link to="/"  onClick={() => { that.props.history.push({pathname:"/",search:""}); that.props.onResetSearch();} }><span>BUDA</span></Link>               
+               <a><span>BY</span></a>
+               <a href="https://bdrc.io/" target="_blank"><img src="/BDRC-Logo.png"/></a>
             </div>,
 
    ]
@@ -533,7 +534,7 @@ export function top_right_menu(that,etextTitle,backUrl)
        <div>
          {logo}
 
-         <a id="about" href="https://bdrc.io" target="_blank">{I18n.t("topbar.about")}</a>
+         {/* <a id="about" href="https://bdrc.io" target="_blank">{I18n.t("topbar.about")}</a> */}
 
          <Link to="/"  onClick={() => { that.props.history.push({pathname:"/",search:""}); that.props.onResetSearch();} }><span>{I18n.t("topbar.search")}</span></Link>
 
@@ -4841,7 +4842,9 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      <div>
                         <div>
                            {/* { I18n.t("home.BUDA") } */}
-                           <h1>{ I18n.t("home.titleBDRC1") }<br/>{ I18n.t("home.titleBDRC2") }<br/>{ I18n.t("home.titleBDRC3") }</h1>
+                           {/* <h1>{ I18n.t("home.titleBDRC1") }<br/>{ I18n.t("home.titleBDRC2") }<br/>{ I18n.t("home.titleBDRC3") }</h1> */}
+                           <h1>{ I18n.t("home.archives1") }<br/>{ I18n.t("home.archives2") }</h1>
+                           <div>{ I18n.t("home.by") }</div>
                            <span>{ I18n.t("home.subtitle") }</span>
                         </div>
                      </div>
@@ -5075,6 +5078,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   <List id="samples">
                      {/* { messageD } */}
                      <h3>{ I18n.t("home.message") }</h3>
+                     <h4>{ I18n.t("home.submessage") }</h4>
                   </List> }
                { (this.props.datatypes && this.props.datatypes.hash && this.props.datatypes.metadata[bdo+this.state.filters.datatype[0]] && message.length === 0 && !this.props.loading) && 
                   <List id="results">

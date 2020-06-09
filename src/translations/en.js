@@ -8,8 +8,12 @@ const enTranslation = {
       titleBDRC1:"Buddhist",
       titleBDRC2:"Digital Resource",
       titleBDRC3:"Center",
-      subtitle:"Welcome to our new platform and library",
-      message:"WELCOME TO THE BETA VERSION OF BUDA!",
+      archives1:"The Buddhist",
+      archives2:"Digital Archives",
+      by:"by the Buddhist Digital Resource Center",
+      subtitle:"Discover millions of pages of texts from the major Buddhist traditions, languages, and cultures.",
+      message:"WELCOME TO THE BETA VERSION OF BDRC's NEW LIBRARY!",
+      submessage:"with new features, resources, and tools for faster and more in-depth research",
       search:"Search"
    },
    types:{
