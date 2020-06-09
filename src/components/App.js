@@ -491,7 +491,8 @@ export function top_right_menu(that,etextTitle,backUrl)
             <div id="logo">
                <Link to="/"  onClick={() => { that.props.history.push({pathname:"/",search:""}); that.props.onResetSearch();} }><span>BUDA</span></Link>               
                <a><span>BY</span></a>
-               <a href="https://bdrc.io/" target="_blank"><img src="/BDRC-Logo.png"/></a>
+               <a href="https://bdrc.io/" target="_blank"><img src="/BDRC-Logo_.png"/></a>
+               <a href="https://bdrc.io/" target="_blank"><span>BDRC</span></a>
             </div>,
 
    ]
