@@ -19,25 +19,25 @@ const enTranslation = {
    types:{
       any:"Any",
       corporation:"Corporation",
-      corporations:"Corporations",
+      corporation_plural:"Corporations",
       etext:"in Etext content",
-      etexts:"in Etext content",
+      etext_plural:"in Etext content",
       item:"Item",
-      items:"Items",
+      item_plural:"Items",
       lineage:"Lineage",
-      lineages:"Lineages",
+      lineage_plural:"Lineages",
       person:"Person",
-      persons:"Persons",
+      person_plural:"Persons",
       place:"Place",
-      places:"Places",
+      place_plural:"Places",
       role:"Role",
-      roles:"Roles",
+      role_plural:"Roles",
       topic:"Topic",
-      topics:"Topics",
+      topic_plural:"Topics",
       work:"Work",
-      works:"Works",
+      work_plural:"Works",
       instance:"Instance",
-      instances:"Instances"
+      instance_plural:"Instances"
    },
    topbar:{
       about:"about us",
@@ -105,13 +105,13 @@ const enTranslation = {
       "tmp:bestMatch":"Best Match",
       "tmp:relationType":"Relation Type",
       "tmp:nameMatch":"Name Match",
-      "tmp:nameMatches":"Name Matches",
+      "tmp:nameMatch_plural":"Name Matches",
       "tmp:otherTitle":"Other Title",
-      "tmp:otherTitles":"Other Titles",
+      "tmp:otherTitle_plural":"Other Titles",
       "tmp:otherName":"Other Name",
-      "tmp:otherNames":"Other Names",
-      "tmp:otherMatch":"Other Match",
-      "tmp:otherMatches":"Other Matches",
+      "tmp:otherName_plural":"Other Names",
+      "tmp:otherMatch":"Other Match (%{count})",
+      "tmp:otherMatch_plural":"Other Matches (%{count})",
       "tmp:originalRecord":"Original Record"
    },
    result:{
@@ -127,7 +127,9 @@ const enTranslation = {
       inInstancePart:"In Instance Part",
       expandC:"Expand Context",
       hideC:"Hide Context",
-      openE:"Open Etext"
+      openE:"Open Etext",
+      hasInstance:"Has %{count} Instance",
+      hasInstance_plural:"Has %{count} Instances"
    },
    user:{
       photo:{ 

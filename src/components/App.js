@@ -2141,7 +2141,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             ret = 
                <div style={{display:"block"}}>
                   <div class="match" style={{marginBottom:0}}>
-                     <span class="label">{I18n.t("misc.has")+" "+nb+" "+I18n.t("types.instance"+(nb > 1 ?"s":""))}</span>
+                     <span class="label">{I18n.t("result.hasInstance"+(nb > 1 ? "_plural":""), {count:nb})}</span>
                      <span class="assets">
                      { (hasOpen.length > 0) && <span title={getPropLabel(this,tmp+"assetAvailability",false)+": "+getPropLabel(this,tmp+"hasOpen",false)}><img src="/icons/open.png"/></span>}
                      { (hasImage.length > 0) && <span title={getPropLabel(this,tmp+"assetAvailability",false)+": "+getPropLabel(this,tmp+"hasImage",false)}>{svgImageS}</span>}
@@ -2231,9 +2231,9 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
       return ret;
    }
 
-   getResultProp(prop:string,allProps:[],plural:string="s", doLink:boolean = true, fromProp:[], exclude:string,useAux:[],findProp:[],altInfo:[],iri) {
+   getResultProp(prop:string,allProps:[],plural:string="_plural", doLink:boolean = true, fromProp:[], exclude:string,useAux:[],findProp:[],altInfo:[],iri) {
 
-      if(plural === true) plural = "s"
+      if(plural === true) plural = "_plural"
 
       if(allProps && this.props.assoRes) { 
          if(!fromProp) fromProp = [ prop ]
@@ -3073,14 +3073,14 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
 
 
-            { this.getResultProp("prop.tmp:nameMatch",allProps,"es",false,[ tmp+"nameMatch" ]) } {/* //,true,false) } */}
+            { this.getResultProp("prop.tmp:nameMatch",allProps,true,false,[ tmp+"nameMatch" ]) } {/* //,true,false) } */}
 
             { this.getResultProp(I18n.t("prop.tmp:relationType"),allProps,true,false,[ tmp+"relationType" ]) } 
             {/* { this.getResultProp(tmp+"InverseRelationType",allProps,true,true,[tmp+"relationTypeInv"]) } */}
             
             {/* { this.getResultProp(tmp+"numberOfMatchingChunks",allProps,true,false,[tmp+"nbChunks"]) } */}
             {/* { this.getResultProp(tmp+"maxScore",allProps,true,false) } */}
-            { (nbChunks > 1) && this.getResultProp(I18n.t("prop.tmp:otherMatches")+" ("+(nbChunks - 1)+")",allProps,false,false,[bdo+"eTextHasChunk"],null,[bdo+"chunkContents"],null,[tmp+"matchScore",bdo+"sliceStartChar"],id) }
+            { (nbChunks > 1) && this.getResultProp(I18n.t("prop.tmp:otherMatch"+(nbChunks - 1 > 1 ? "_plural":""), {count: nbChunks - 1}),allProps,false,false,[bdo+"eTextHasChunk"],null,[bdo+"chunkContents"],null,[tmp+"matchScore",bdo+"sliceStartChar"],id) }
             
             {/* { this.getResultProp(bdo+"workIsAbout",allProps,false) } */}
             {/* { this.getResultProp(bdo+"workGenre",allProps) } */}
@@ -3453,8 +3453,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                iniTitle = true
                let _t = t.toLowerCase()
                if(_t === "work" && this.props.isInstance) _t = "instance"
-               if(displayTypes.length > 1 || displayTypes.indexOf("Any") !== -1) message.push(<MenuItem  onClick={(e)=>this.handleCheck(e,t,true,{},true)}><h4>{I18n.t("types."+t.toLowerCase()+"s")+(false && displayTypes.length>1&&counts["datatype"][t]?" ("+counts["datatype"][t]+")":"")}</h4></MenuItem>);
-               else message.push(<MenuItem><h4>{I18n.t("types."+_t+(_t === "etext"?"":"s"))+(false && displayTypes.length>=1&&counts["datatype"][t]?" ("+counts["datatype"][t]+")":"")}</h4></MenuItem>);
+               if(displayTypes.length > 1 || displayTypes.indexOf("Any") !== -1) message.push(<MenuItem  onClick={(e)=>this.handleCheck(e,t,true,{},true)}><h4>{I18n.t("types."+t.toLowerCase()+"_plural")+(false && displayTypes.length>1&&counts["datatype"][t]?" ("+counts["datatype"][t]+")":"")}</h4></MenuItem>);
+               else message.push(<MenuItem><h4>{I18n.t("types."+_t+(_t === "etext"?"":"_plural"))+(false && displayTypes.length>=1&&counts["datatype"][t]?" ("+counts["datatype"][t]+")":"")}</h4></MenuItem>);
                // TODO better handling of plural in translations
             }
             absi ++ ;
