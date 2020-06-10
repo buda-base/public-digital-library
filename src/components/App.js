@@ -421,7 +421,7 @@ export function getFacetUrl(filters,dic){
 export function lang_selec(that,black:boolean = false)
 {
    return [
-         <span id="lang" title='Choose language' onClick={(e) => that.setState({...that.state,anchorLang:e.currentTarget, collapse: {...that.state.collapse, lang:!that.state.collapse.lang } } ) }><img src={"/icons/LANGUE"+(black?"b":"")+".svg"}/></span>
+         <span id="lang" title={I18n.t("home.choose")} onClick={(e) => that.setState({...that.state,anchorLang:e.currentTarget, collapse: {...that.state.collapse, lang:!that.state.collapse.lang } } ) }><img src={"/icons/LANGUE"+(black?"b":"")+".svg"}/></span>
          ,
          <Popover
             id="popLang"
@@ -2141,7 +2141,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             ret = 
                <div style={{display:"block"}}>
                   <div class="match" style={{marginBottom:0}}>
-                     <span class="label">{I18n.t("result.hasInstance"+(nb > 1 ? "_plural":""), {count:nb})}</span>
+                     <span class="label">{I18n.t("result.hasInstance", {count:nb})}</span>
                      <span class="assets">
                      { (hasOpen.length > 0) && <span title={getPropLabel(this,tmp+"assetAvailability",false)+": "+getPropLabel(this,tmp+"hasOpen",false)}><img src="/icons/open.png"/></span>}
                      { (hasImage.length > 0) && <span title={getPropLabel(this,tmp+"assetAvailability",false)+": "+getPropLabel(this,tmp+"hasImage",false)}>{svgImageS}</span>}
@@ -2219,12 +2219,12 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
       let ret = []
       //if(ret.length) 
-      if(hasName) ret.push(<div class="match publisher">
+      if(hasName) ret.push(<div class={"match publisher "+this.props.locale}>
                <span class="label">{this.fullname(bdo+"publisherName",[],true).split(" ").map(e => <span>{e}</span>)}</span>
                <div class="multi">{this.getVal(bdo+"publisherName",allProps)}</div>
             </div>)
       if(hasLoc) ret.push(<div class="match">
-               <span class="label">{this.fullname(bdo+"publisherLoc.",[],true).split(" ").map(e => <span>{e}</span>)}</span>
+               <span class="label">{this.fullname("prop.tmp:publisherLocation",[],true).split(" ").map(e => <span>{e}</span>)}</span>
                <div class="multi">{this.getVal(bdo+"publisherLocation",allProps)}</div>
             </div>)
 
@@ -3080,7 +3080,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             
             {/* { this.getResultProp(tmp+"numberOfMatchingChunks",allProps,true,false,[tmp+"nbChunks"]) } */}
             {/* { this.getResultProp(tmp+"maxScore",allProps,true,false) } */}
-            { (nbChunks > 1) && this.getResultProp(I18n.t("prop.tmp:otherMatch"+(nbChunks - 1 > 1 ? "_plural":""), {count: nbChunks - 1}),allProps,false,false,[bdo+"eTextHasChunk"],null,[bdo+"chunkContents"],null,[tmp+"matchScore",bdo+"sliceStartChar"],id) }
+            { (nbChunks > 1) && this.getResultProp(I18n.t("prop.tmp:otherMatch", {count: nbChunks - 1}),allProps,false,false,[bdo+"eTextHasChunk"],null,[bdo+"chunkContents"],null,[tmp+"matchScore",bdo+"sliceStartChar"],id) }
             
             {/* { this.getResultProp(bdo+"workIsAbout",allProps,false) } */}
             {/* { this.getResultProp(bdo+"workGenre",allProps) } */}

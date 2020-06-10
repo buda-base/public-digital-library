@@ -18,6 +18,28 @@ const dataLangUI = {
    "inc":{ "sub":["sa", "pi" ], "script":[ "deva", "newa", "sinh" ], "latin":[ "x-iast", "x-iso", "alalc97" ] }
 } ;
 
+const numtobodic = {
+  '0': '༠',
+  '1': '༡',
+  '2': '༢',
+  '3': '༣',
+  '4': '༤',
+  '5': '༥',
+  '6': '༦',
+  '7': '༧',
+  '8': '༨',
+  '9': '༩'
+}
+
+export function numtobo(c) {
+   var cstr = c.toString();
+   var res = '';
+	for (var c in cstr) {
+  	   res += numtobodic[c];
+   }
+   return res;
+}
+
 export function makeLangScriptLabel(code:string)
 {
    if(!code.match(/^[a-z]{2}(-[a-z0-9-]+)?$/)) throw new Error("Malformed Code ("+code+")");

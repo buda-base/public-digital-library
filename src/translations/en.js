@@ -14,7 +14,8 @@ const enTranslation = {
       subtitle:"Discover millions of pages of texts from the major Buddhist traditions, languages, and cultures.",
       message:"WELCOME TO THE BETA VERSION OF BDRC's NEW LIBRARY!",
       submessage:"with new features, resources, and tools for faster and more in-depth research",
-      search:"Search"
+      search:"Search",
+      choose:"Choose language"
    },
    types:{
       any:"Any",
@@ -22,6 +23,7 @@ const enTranslation = {
       corporation_plural:"Corporations",
       etext:"in Etext content",
       etext_plural:"in Etext content",
+      etext_title:"Etext",
       item:"Item",
       item_plural:"Items",
       lineage:"Lineage",
@@ -37,7 +39,9 @@ const enTranslation = {
       work:"Work",
       work_plural:"Works",
       instance:"Instance",
-      instance_plural:"Instances"
+      instance_plural:"Instances",
+      images:"Images",
+      volume:"Volume"
    },
    topbar:{
       about:"about us",
@@ -50,6 +54,8 @@ const enTranslation = {
       closeEtext:"Close Etext",
       history:"Search history",
       bookmarks:"Bookmarks",
+      results:"Search results for",
+      instances:"instances of"
    },
    Lsidebar:{
       sortBy:{
@@ -112,7 +118,14 @@ const enTranslation = {
       "tmp:otherName_plural":"Other Names",
       "tmp:otherMatch":"Other Match (%{count})",
       "tmp:otherMatch_plural":"Other Matches (%{count})",
-      "tmp:originalRecord":"Original Record"
+      "tmp:originalRecord":"Original Record",
+      "tmp:imageVolumeId":"Image Volume Id",
+      "tmp:workHasTranslationInCanonicalLanguage":"Canonical Translation",
+      "tmp:workHasTranslationInNonCanonicalLanguage":"Other Translation",
+      "tmp:entityScore":"Entity Score",
+      "tmp:instanceLabel":"Instance Label",
+      "tmp:dimensions":"Dimensions",
+      "tmp:publisherLocation":"Publisher Loc."
    },
    result:{
       open:"Open",
@@ -131,6 +144,13 @@ const enTranslation = {
       hasInstance:"Has %{count} Instance",
       hasInstance_plural:"Has %{count} Instances"
    },
+   index:{
+      openViewer:"Open in Viewer",
+      mainInfo:"Main Information",
+      outline:"Outline",
+      related:"Related Works",
+      extended:"Extended Information"
+   },
    user:{
       photo:{ 
          hover:"Update profile picture",
@@ -146,17 +166,38 @@ const enTranslation = {
          show:"Set public",
       }
    },
+   popover:{
+      moreInfo:"More Information",
+      source:"Source",
+      source_plural:"Sources",
+      notes:"Notes",
+      discussion:"Discussion",
+      lang:"Language/Script",
+      otherLang:"In Other Language",
+      otherLang_plural:"In Other Languages",
+      calendar:"In Calendar",
+      gregorian:"Gregorian Calendar",
+      imported:"This record was imported from",
+      seeO:"See original"
+   },
    misc:{
       colon:":",
       datatype:"Back to datatypes",
       has:"Has",
       or:"or",
+      seeA:"see all",
       browse:"browse all",
       show:"Show all",
+      seeMore:"See More",
+      readM:"Read more",
       hide:"Hide",
       preview:"preview",
       permalink:"Permalink",
-      clipboard:"Url has been copied to clipboard.\nCTRL+V to paste"
+      clipboard:"Url has been copied to clipboard.\nCTRL+V to paste",
+      from:"from",
+      in:"in",
+      of:"of",
+      please:"Please"
    },
    lang:{
       en:"English",
@@ -258,15 +299,49 @@ const enTranslation = {
    },
    resource:{
       back:"Go back to search page",
-      browse:"Browse associated resources",
-      collection:"",
-      download:"Download as",
-      export:"Export to",
-      in:"",
-      images:"",
+      browse:"Browse associated resources",      
+      openViewer:"Open in Etext Viewer",
+      download:"Download",
+      downloadAs:"Download as",
+      version:"%{format} version",
+      exportData:"Export %{data}",
+      exportDataAs:"Export %{data} as %{format}",
       settings:"Language Settings",
       toggle:"Toggle annotations panel",
       view:"View",
+      metadata:"metadata",
+      manifest:"IIIF manifest",
+      page:"p.%{num}",
+      volume:"Vol.%{num}",
+      availableScans:"available scans for this page",
+      about:"About",
+      createdB:"Created By",
+      extended:"Extended Properties",
+      showD:"Show Details",
+      hideD:"Hide Details",
+      searchO:"Search in outline",
+      start:"Start search",
+      reset:"Reset search"
+
+   },
+   mirador:{
+      return:"return to BUDA",
+      browse:"browse collection",
+      goto:"Go to p.",
+      zoomIn:"zoom in",
+      zoomOut:"zoom out",
+      showI:"Show images",
+      fullscreen:"fullscreen",
+      next:"next image",
+      prev:"previous image",
+      manip:"image manipulation",
+      increaseFont:"Increase Etext font size",
+      decreaseFont:"Decrease Etext font size",
+      downloadE:"Download Etext"
+   },
+   access:{
+      limited20:"Access limited to first & last 20 pages.",
+      credentials:"if you have sufficient credentials to get access to all images from this work."
    }
 } ;
 

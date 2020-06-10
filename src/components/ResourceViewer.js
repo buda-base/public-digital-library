@@ -612,7 +612,7 @@ export function top_left_menu(that,pdfLink,monoVol,fairUse)
           </a>]}</div>
        }
        { that.props.IRI && getEntiType(that.props.IRI) === "Etext" && <a target="_blank" style={{fontSize:"26px"}} download className="goBack pdfLoader" href={that.props.IRI?that.props.IRI.replace(/bdr:/,bdr)+".txt":""}>
-                <IconButton title={I18n.t("resource.download")+" TXT"}>
+                <IconButton title={I18n.t("resource.downloadAs")+" TXT"}>
                    <img src="/DL_icon.svg" height="24" />
                 </IconButton>
                </a> }
@@ -631,7 +631,7 @@ export function top_left_menu(that,pdfLink,monoVol,fairUse)
           that.props.IRI.match(/^bda[cn]:/) &&
        */}
        { /*that.props.IRI && getEntiType(that.props.IRI) === "Etext" && <a target="_blank" style={{fontSize:"26px"}} download={that.props.IRI?that.props.IRI.replace(/bdr:/,"")+".txt":""} className="goBack pdfLoader" href={that.props.IRI?that.props.IRI.replace(/bdr:/,bdr)+".txt":""}>
-                <IconButton title={I18n.t("resource.download")+" TXT"}>
+                <IconButton title={I18n.t("resource.downloadAs")+" TXT"}>
                    <img src="/DL_icon.svg" height="24" />
                 </IconButton>
                </a>*/ }
@@ -641,7 +641,7 @@ export function top_left_menu(that,pdfLink,monoVol,fairUse)
          &&
           [<a style={{fontSize:"26px"}} className="goBack pdfLoader">
              <Loader loaded={(!that.props.pdfVolumes || that.props.pdfVolumes.length > 0)} options={{position:"relative",left:"24px",top:"-7px"}} />
-                <IconButton title={I18n.t("resource.download")+" PDF/ZIP"} onClick={ev =>
+                <IconButton title={I18n.t("resource.downloadAs")+" PDF/ZIP"} onClick={ev =>
                       {
                          //if(that.props.createPdf) return ;
                           if((monoVol && monoVol.match && monoVol.match(/[^0-9]/)) || monoVol > 0){
@@ -1700,8 +1700,17 @@ class ResourceViewer extends Component<Props,State>
          //return this.props.ontology[prop][rdfs+"label"][0].value
       }
 
-      if(canSpan) return <span lang="">{this.pretty(prop,isUrl,noNewline)}</span>
-      else return this.pretty(prop,isUrl,noNewline)
+    
+      let sTmp = "prop."+shortUri(prop), trad = I18n.t(sTmp)
+      if(trad !== sTmp)  {
+         if(canSpan) return <span lang="">{this.pretty(trad,isUrl,noNewline)}</span>
+         else return this.pretty(trad,isUrl,noNewline)
+      }
+      else {
+         if(canSpan) return <span lang="">{this.pretty(prop,isUrl,noNewline)}</span>
+         else return this.pretty(prop,isUrl,noNewline)
+      }
+
    }
 
    hasValue(val:[],k:string)
@@ -2355,7 +2364,7 @@ class ResourceViewer extends Component<Props,State>
             let logo = provImg[pref]
             let prov = providers[pref]
             if(!this.props.IRI.startsWith(pref+":") && pref !== "bdr") nb ++
-            return (<span>Source: <img src={logo}/><b>{prov}</b></span>) 
+            return (<span>{I18n.t("popover.source")}: <img src={logo}/><b>{prov}</b></span>) 
          } ).filter(e => e)
 
 
@@ -2448,16 +2457,16 @@ class ResourceViewer extends Component<Props,State>
                            </div>}
                            <Tabs defaultIndex={fromSame?1:0}>
                               <TabList>
-                                 <Tab>More Information</Tab>
-                                 <Tab {... !fromSame?{disabled:"disabled"}:{}}>Source{(fromSame &&e.allSameAs.length > 1) && <span>s</span>}{fromSame && <b>&nbsp;({e.allSameAs.length})</b>}</Tab>
-                                 <Tab disabled>Notes</Tab>
-                                 <Tab disabled>Discussion</Tab>
+                                 <Tab>{I18n.t("popover.moreInfo")}</Tab>
+                                 <Tab {... !fromSame?{disabled:"disabled"}:{}}>{I18n.t("popover.source",{count:(fromSame &&e.allSameAs.length?e.allSameAs.length:1)})} {fromSame && <b>&nbsp;({e.allSameAs.length})</b>}</Tab>
+                                 <Tab disabled>{I18n.t("popover.notes")}</Tab>
+                                 <Tab disabled>{I18n.t("popover.discussion")}</Tab>
                               </TabList>
 
                               <TabPanel>
-                              { lang && <div><span class='first'>Language/Script</span><span>:&nbsp;</span><span><Translate value={languages[lang]?languages[lang].replace(/search/,"tip"):lang}/></span></div> }
-                              { (other.length > 0) && <div><span class='first'>In Other Languages</span><span>:&nbsp;</span><div>{other.map(o => <span class="label">{o.value}{this.tooltip(o.lang)}</span>)}</div></div> }
-                              { (e.datatype && e.datatype.endsWith("#gYear")) && <div><span class='first'>In Calendar</span><span>:&nbsp;</span><span>Gregorian Calendar</span></div>}
+                              { lang && <div><span class='first'>{I18n.t("popover.lang")}</span><span>:&nbsp;</span><span><Translate value={languages[lang]?languages[lang].replace(/search/,"tip"):lang}/></span></div> }
+                              { (other.length > 0) && <div><span class='first'>{I18n.t("popover.otherLang",{count:other.length})}</span><span>:&nbsp;</span><div>{other.map(o => <span class="label">{o.value}{this.tooltip(o.lang)}</span>)}</div></div> }
+                              { (e.datatype && e.datatype.endsWith("#gYear")) && <div><span class='first'>{I18n.t("popover.calendar")}</span><span>:&nbsp;</span><span>{I18n.t("popover.gregorian")}</span></div>}
                               { (era && era.length > 0) &&  <div><span class='first'>{this.proplink(bdo+"yearInEra")}</span><span>:&nbsp;</span><span>{this.proplink(era[0].value)}</span></div>  }
                               { (e.start !== undefined) &&  <div><span class='first'>{this.proplink(bdo+"startChar")}</span><span>:&nbsp;</span><span>{e.start}</span></div>  }
                               { (e.end !== undefined) &&  <div><span class='first'>{this.proplink(bdo+"endChar")}</span><span>:&nbsp;</span><span>{e.end}</span></div>  }
@@ -2472,7 +2481,7 @@ class ResourceViewer extends Component<Props,State>
                                  let asso,tab ;
                                  if(this.props.assocResources) asso = this.props.assocResources[f]                  
                                  if(asso && (tab=asso.filter(t => t.fromKey === adm+"canonicalHtml")).length) link = tab[0].value  
-                                 return (<div><a class="urilink" href={link} target="_blank">{a}{pref!=="bdr"&&<img src="/icons/link-out.svg"/>}</a><span>from</span><img src={logo}/><b>{prov}</b></div>)
+                                 return (<div><a class="urilink" href={link} target="_blank">{a}{pref!=="bdr"&&<img src="/icons/link-out.svg"/>}</a><span>{I18n.t("misc.from")}</span><img src={logo}/><b>{prov}</b></div>)
                               })}
                               </TabPanel>
                               <TabPanel>
@@ -3220,7 +3229,7 @@ class ResourceViewer extends Component<Props,State>
                <span
                   onClick={(e) => this.setState({...this.state,collapse:{...this.state.collapse,[prop]:!this.state.collapse[prop]}})}
                   className="expand">
-                     {(this.state.collapse[prop]?"hide":"see more")}&nbsp;<span
+                     {I18n.t("misc."+(this.state.collapse[prop]?"hide":"seeMore")).toLowerCase()}&nbsp;<span
                      className="toggle-expand">
                         { this.state.collapse[prop] && <ExpandLess/>}
                         { !this.state.collapse[prop] && <ExpandMore/>}
@@ -3564,7 +3573,7 @@ class ResourceViewer extends Component<Props,State>
             tooltip = this.props.dictionary[k][rdfs+"comment"].filter(comm => !comm.value.match(/^([Mm]igration|[Dd]eprecated)/))
       }
 
-      if(k === bdo+'note') txt = "Notes" ;
+      if(k === bdo+'note') txt = I18n.t("popover.notes") ;
 
       let ret = (<a class="propref" {...(k.match(/purl[.]bdrc[.]io/) && !k.match(/[/]tmp[/]/) ? {"href":k}:{})} target="_blank">{txt?txt:this.fullname(k,false,false,true)}</a>)
 
@@ -3604,7 +3613,10 @@ class ResourceViewer extends Component<Props,State>
    setTitle = (kZprop,_T,other,rootC) => {
 
       let title,titlElem,otherLabels = [], T_ = _T ;
-      _T = [<span class={"T "+_T.toLowerCase()}><span class="RID">{shortUri(other?other:this.props.IRI)}</span>{_T}</span>]
+      _T = [<span class={"T "+_T.toLowerCase()}>
+         <span class="RID">{shortUri(other?other:this.props.IRI)}</span>
+         {I18n.t("types."+_T.toLowerCase()+(_T == "Etext"?"_title":""))}
+      </span>]
 
       if(kZprop.indexOf(skos+"prefLabel") !== -1)       {
          titlElem = this.getResourceElem(skos+"prefLabel",other,this.props.assocResources);
@@ -3905,7 +3917,7 @@ class ResourceViewer extends Component<Props,State>
                               {eL && <div><span>End Line:</span> {eL}</div>}
                            </div>
                         }>
-                           <h4>{str}{str && w && <span class="of">{" of "}</span>}{w && this.uriformat(bdo+"contentLocationInstance",{value:w})}{this.hoverMenu()}</h4>
+                           <h4>{str}{str && w && <span class="of">{I18n.t("misc.of")}</span>}{w && this.uriformat(bdo+"contentLocationInstance",{value:w})}{this.hoverMenu()}</h4>
                      </Tooltip>]
                );
             else if(w)
@@ -4015,7 +4027,7 @@ class ResourceViewer extends Component<Props,State>
                   { (false || (!this.state.collapse[k] && hasMaxDisplay !== -1) ) && <span
                      onClick={(e) => this.setState({...this.state,collapse:{...this.state.collapse,[k]:!this.state.collapse[k]}})}
                      className="expand">
-                        {(this.state.collapse[k]?"hide":"see more")}&nbsp;<span
+                        {I18n.t("misc."+(this.state.collapse[k]?"hide":"seeMore")).toLowerCase()}&nbsp;<span
                         className="toggle-expand">
                            { this.state.collapse[k] && <ExpandLess/>}
                            { !this.state.collapse[k] && <ExpandMore/>}
@@ -4037,7 +4049,7 @@ class ResourceViewer extends Component<Props,State>
                { (this.state.collapse[k] || hasMaxDisplay === -1) && <span
                onClick={(e) => this.setState({...this.state,collapse:{...this.state.collapse,[k]:!this.state.collapse[k]}})}
                className="expand">
-                  {(this.state.collapse[k]?"hide":"see more")}&nbsp;<span
+                  {I18n.t("misc."+(this.state.collapse[k]?"hide":"seeMore")).toLowerCase()}&nbsp;<span
                   className="toggle-expand">
                      { this.state.collapse[k] && <ExpandLess/>}
                      { !this.state.collapse[k] && <ExpandMore/>}
@@ -4158,7 +4170,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
       { that.props.IRI && <span id="rid">{shortUri(that.props.IRI)}</span> }
 
       <span id="DL" onClick={(e) => this.setState({...this.state,anchorPermaDL:e.currentTarget, collapse: {...this.state.collapse, permaDL:!this.state.collapse.permaDL } } ) }>
-      Download { this.state.collapse.permaDL ? <ExpandLess/>:<ExpandMore/>}
+      {I18n.t("resource.download")} { this.state.collapse.permaDL ? <ExpandLess/>:<ExpandMore/>}
       </span>
 
 
@@ -4182,14 +4194,14 @@ perma_menu(pdfLink,monoVol,fairUse,other)
             onClose={e => { this.setState({...this.state,anchorPermaSame:null,collapse: {...this.state.collapse, permaSame:false } } ) }}
             >
             { same.map(s => { 
-                  let link = s.value, prov = shortUri(s.value).split(":")[0], name = "resource"
+                  let link = s.value, prov = shortUri(s.value).split(":")[0], name = I18n.t("result.resource")
                   if(prov.startsWith("http") && s.fromSeeOther) prov = s.fromSeeOther
                   let data,tab ;
                   if(this.props.assocResources) data = this.props.assocResources[s.value]                  
                   if(data && (tab=data.filter(t => t.fromKey === adm+"canonicalHtml")).length) link = tab[0].value  
                   
-                  let open = <MenuItem>Open {name} in &nbsp;<b>{providers[prov]}</b><img src="/icons/link-out.svg"/></MenuItem>
-                  if(s.isOrig) open = <MenuItem style={{display:"block",height:"32px",lineHeight:"12px"}}>This record was imported from <b>{providers[prov]}</b><br/>See original<img style={{verticalAlign:"middle"}} src="/icons/link-out.svg"/></MenuItem>
+                  let open = <MenuItem>{I18n.t("result.open")} {name} {I18n.t("misc.in")} &nbsp;<b>{providers[prov]}</b><img src="/icons/link-out.svg"/></MenuItem>
+                  if(s.isOrig) open = <MenuItem style={{display:"block",height:"32px",lineHeight:"12px"}}>{I18n.t("popover.imported")} <b>{providers[prov]}</b><br/>{I18n.t("popover.seeO")}<img style={{verticalAlign:"middle"}} src="/icons/link-out.svg"/></MenuItem>
 
                   //console.log("permaSame",s,data,tab,link,name,prov) 
 
@@ -4206,14 +4218,14 @@ perma_menu(pdfLink,monoVol,fairUse,other)
             >
 
                { isEtextVol && 
-                     <a target="_blank" title="Etext as TXT" rel="alternate" type="text"  download href={this.props.IRI?this.props.IRI.replace(/bdr:/,bdr)+".txt":""}>
-                        <MenuItem>Export Etext as TXT</MenuItem>
+                     <a target="_blank" title={I18n.t("resource.version",{format:"TXT"})} rel="alternate" type="text"  download href={this.props.IRI?this.props.IRI.replace(/bdr:/,bdr)+".txt":""}>
+                        <MenuItem>{I18n.t("resource.exportDataAs",{data: I18n.t("types.etext_title"), format:"TXT"})}</MenuItem>
                      </a> }
 
                { pdfLink && 
                   ( (!(that.props.manifestError && that.props.manifestError.error.message.match(/Restricted access/)) /*&& !fairUse*/) || (that.props.auth && that.props.auth.isAuthenticated()))
                   &&
-               <a> <MenuItem title={I18n.t("resource.download")+" PDF/ZIP"} onClick={ev =>
+               <a> <MenuItem title={I18n.t("resource.downloadAs")+" PDF/ZIP"} onClick={ev =>
                       {
                          //if(that.props.createPdf) return ;
                           if((monoVol && monoVol.match && monoVol.match(/[^0-9]/)) || monoVol > 0){
@@ -4225,7 +4237,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                          that.setState({...that.state, collapse:{...this.state.collapse,permaDL:false}, pdfOpen:true,anchorElPdf:ev.currentTarget})
                       }
                    }>
-                   Export images as PDF/ZIP
+                   {I18n.t("resource.exportDataAs",{data: "images", format:"PDF/ZIP"}) /* TODO use i18next interpolation with nesting '$t(types.images)'*/ }
                 </MenuItem></a>  }
 
                { !that.props.manifestError && that.props.imageAsset &&
@@ -4234,25 +4246,25 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                                  //alert("Resource url copied to clipboard\nCTRL+V to paste")
                                  prompt(I18n.t("misc.clipboard"),that.props.imageAsset)
                            }>
-                           <a><MenuItem>Export IIIF manifest</MenuItem></a>
+                           <a><MenuItem>{I18n.t("resource.exportData",{data: "IIIF manifest"})}</MenuItem></a>
                         </CopyToClipboard>
 
                    }
 
-               <a target="_blank" title="TTL version" rel="alternate" type="text/turtle" href={that.expand(that.props.IRI, true)+".ttl"} download>
-                  <MenuItem>Export metadata as TTL</MenuItem>
+               <a target="_blank" title={I18n.t("resource.version",{format:"TTL"})} rel="alternate" type="text/turtle" href={that.expand(that.props.IRI, true)+".ttl"} download>
+                  <MenuItem>{I18n.t("resource.exportDataAs",{data: "metadata", format:"TTL"})}</MenuItem>
                </a>
                
-               <a target="_blank" title="JSON-LD version" rel="alternate" type="application/ld+json" href={that.expand(that.props.IRI, true)+".jsonld"} download>
-                  <MenuItem>Export metadata as JSON-LD</MenuItem>           
+               <a target="_blank" title={I18n.t("resource.version",{format:"JSON-LD"})} rel="alternate" type="application/ld+json" href={that.expand(that.props.IRI, true)+".jsonld"} download>
+                  <MenuItem>{I18n.t("resource.exportDataAs",{data: "metadata", format:"JSON-LD"})}</MenuItem>           
                </a>
 
                { that.props.IRI && that.props.IRI.match(/bdr:MW/) && [
-                     <a target="_blank" title="MARC version" rel="alternate" type="application/marc" href={that.expand(that.props.IRI, true)+".mrc"} download>
-                        <MenuItem>Export metadata as MARC</MenuItem>           
+                     <a target="_blank" title={I18n.t("resource.version",{format:"MARC"})} rel="alternate" type="application/marc" href={that.expand(that.props.IRI, true)+".mrc"} download>
+                        <MenuItem>{I18n.t("resource.exportDataAs",{data: "metadata", format:"MARC"})}</MenuItem>           
                      </a>,
-                     <a target="_blank" title="MARCXML version" rel="alternate" type="application/marcxml+xml" href={that.expand(that.props.IRI, true)+".mrcx"} download>
-                        <MenuItem>Export metadata as MARCXML</MenuItem>           
+                     <a target="_blank" title={I18n.t("resource.version",{format:"MARCXML"})} rel="alternate" type="application/marcxml+xml" href={that.expand(that.props.IRI, true)+".mrcx"} download>
+                        <MenuItem>{I18n.t("resource.exportDataAs",{data: "metadata", format:"MARCXML"})}</MenuItem>           
                      </a> 
                   ]
                 }
@@ -4501,7 +4513,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                   })
                }
                { e.seq && <div> 
-                  <span class="button" title={(!this.state.collapse["image-"+this.props.IRI+"-"+e.seq]?"Show":"Hide")+" available scans for this page"} 
+                  <span class="button" title={I18n.t("misc."+(!this.state.collapse["image-"+this.props.IRI+"-"+e.seq]?"show":"hide"))+" "+I18n.t("available scans for this page")} 
                   onClick={(eve) => {
                         let id = "image-"+this.props.IRI+"-"+e.seq
                         this.setState({...this.state, collapse:{...this.state.collapse, [id]:!this.state.collapse[id]}}) 
@@ -4509,16 +4521,16 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                      <img src="/icons/image.svg"/>
                   </span> 
                   {/* { <h5><a title="Open image+text view in Mirador" onClick={eve => { openMiradorAtPage(imageLinks[e.seq].id) }}>p.{e.seq}</a></h5> } */}
-                  {   <h5><a title={(!this.state.collapse["image-"+this.props.IRI+"-"+e.seq]?"Show":"Hide")+" available scans for this page"} onClick={(eve) => {
+                  {   <h5><a title={I18n.t("misc."+(!this.state.collapse["image-"+this.props.IRI+"-"+e.seq]?"show":"hide"))+" "+I18n.t("available scans for this page")} onClick={(eve) => {
                         let id = "image-"+this.props.IRI+"-"+e.seq
                         this.setState({...this.state, collapse:{...this.state.collapse, [id]:!this.state.collapse[id]}}) 
-                     }}>p.{e.seq}</a>                                             
+                     }}>{I18n.t("resource.page",{num:e.seq})}</a>                                             
                      </h5> }
                      &nbsp;
                      { Object.keys(imageLinks).sort().map(id => {
                         if( /* !this.state.collapse["imageVolume-"+id] &&*/ imageLinks[id][e.seq]) 
                            return (
-                                 <h5>from {this.uriformat(null,{value:id.replace(/bdr:/,bdr).replace(/[/]V([^_]+)_I.+$/,"/W$1")})}</h5>
+                                 <h5>{I18n.t("misc.from")} {this.uriformat(null,{value:id.replace(/bdr:/,bdr).replace(/[/]V([^_]+)_I.+$/,"/W$1")})}</h5>
                            )
                      })}
 
@@ -4913,14 +4925,14 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
    renderNoAccess = (fairUse) => {
       if(fairUse && (!this.props.auth || !this.props.auth.isAuthenticated()) )
-         return <div class="data access"><h3 style={{display:"block",marginBottom:"15px"}}><span style={{textTransform:"none"}}>Access limited to first &amp; last 20 pages.<br/>
-                  Please <a class="login" onClick={this.props.auth.login.bind(this,this.props.history.location)}>login</a> if you have sufficient credentials to get access to all images from this work.</span></h3></div>
+         return <div class="data access"><h3 style={{display:"block",marginBottom:"15px"}}><span style={{textTransform:"none"}}>{I18n.t("access.limited20")}<br/>
+                   {I18n.t("misc.please")} <a class="login" onClick={this.props.auth.login.bind(this,this.props.history.location)}>{I18n.t("topbar.login")}</a> {I18n.t("access.credentials")}</span></h3></div>
    }
 
    // TODO check if this is actually used ??
    renderAccess = () => {
       if ( this.props.manifestError && this.props.manifestError.error.message.match(/Restricted access/) )
-         return  <div class="data access"><h3><span style={{textTransform:"none"}}>Please <a class="login" onClick={this.props.auth.login.bind(this,this.props.history.location)}>login</a> if you have sufficient credentials to get access to images from this work.</span></h3></div>
+         return  <div class="data access"><h3><span style={{textTransform:"none"}}>{I18n.t("misc.please")} <a class="login" onClick={this.props.auth.login.bind(this,this.props.history.location)}>{I18n.t("topbar.login")}</a> {I18n.t("access.credentials")}</span></h3></div>
    }
 
    renderPdfLink = (pdfLink, monoVol, fairUse) => {
@@ -4979,13 +4991,13 @@ perma_menu(pdfLink,monoVol,fairUse,other)
       return (
          <div id="etext-nav">
             <div>
-               <a id="DL" target="_blank" rel="alternate" type="text" download href={this.props.IRI?this.props.IRI.replace(/bdr:/,bdr)+".txt":""}>Download Etext<img src="/icons/DLw.png"/></a>
+               <a id="DL" target="_blank" rel="alternate" type="text" download href={this.props.IRI?this.props.IRI.replace(/bdr:/,bdr)+".txt":""}>{I18n.t("mirador.downloadE")}<img src="/icons/DLw.png"/></a>
                <div id="control">
-                  <span title="Increase Etext font size" class={!size||size < 2.4?"on":""} onClick={(e)=>etextSize(true)}><img src="/icons/Zp.svg"/></span>
-                  <span title="Decrease Etext font size" class={!size||size > 0.6?"on":""} onClick={(e)=>etextSize(false)}><img src="/icons/Zm.svg"/></span>
+                  <span title={I18n.t("mirador.increase")} class={!size||size < 2.4?"on":""} onClick={(e)=>etextSize(true)}><img src="/icons/Zp.svg"/></span>
+                  <span title={I18n.t("mirador.decrease")} class={!size||size > 0.6?"on":""} onClick={(e)=>etextSize(false)}><img src="/icons/Zm.svg"/></span>
                   {lang_selec(this,true)}
                </div>
-               <a onClick={(e) => this.setState({showEtextImages:!this.state.showEtextImages})}>{this.state.showEtextImages?<img id="check" src="/icons/check.svg"/>:<span id="check"></span>}Show images<img width="42" src="/icons/search/images_b.svg"/></a>
+               <a onClick={(e) => this.setState({showEtextImages:!this.state.showEtextImages})}>{this.state.showEtextImages?<img id="check" src="/icons/check.svg"/>:<span id="check"></span>}{I18n.t("mirador.showI")}<img width="42" src="/icons/search/images_b.svg"/></a>
             </div>
          </div>
       )
@@ -5164,7 +5176,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                               if(g.contentLocation) {
                                  if(!g.details) g.details = []
                                  g.hasImg = "/show/"+g["@id"].replace(/^((bdr:MW[^_]+)_[^_]+)$/,"$2?part=$1")+"#open-viewer"
-                                 g.details.push(<div class="sub view"><Link to={g.hasImg} class="ulink">&gt; View Images</Link></div>)
+                                 g.details.push(<div class="sub view"><Link to={g.hasImg} class="ulink">&gt; {I18n.t("copyright.view")}</Link></div>)
                               }
                               if(g.instanceOf) {
                                  if(!g.details) g.details = []
@@ -5228,25 +5240,26 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                         if(pType) { 
                            tLabel = getOntoLabel(this.props.dictionary,this.props.locale,fullUri(pType))
                            tLabel = tLabel[0].toUpperCase() + tLabel.slice(1)
+                           // TODO use translation from ontology
                         }
                         let open = this.state.collapse[tag] || (osearch &&  this.state.collapse[tag] === undefined )
                         if(pType && pType["@id"]) pType = pType["@id"]
                         ret.push(<span class={'top'+ (this.state.outlinePart === e['@id'] || (!this.state.outlinePart && this.props.IRI===e['@id']) ?" is-root":"")+(this.state.collapse[tag]||osearch?" on":"") }>
                               {(e.hasPart && !open && this.props.outlines[e['@id']] !== true) && <ExpandMore onClick={(ev) => toggle(ev,root,e["@id"])} className="xpd"/>}
                               {(e.hasPart && open && this.props.outlines[e['@id']] !== true) && <ExpandLess onClick={(ev) => toggle(ev,root,e["@id"])} className="xpd"/>}
-                              <span class={"parTy "+(e.details?"on":"")} {...e.details?{title:tLabel+" - "+(this.state.collapse[tag+"-details"]?"Hide":"Show")+" Details", onClick:(ev) => toggle(ev,root,e["@id"],"details")}:{title:tLabel}} >
+                              <span class={"parTy "+(e.details?"on":"")} {...e.details?{title:/*tLabel+" - "+*/ I18n.t("resource."+(this.state.collapse[tag+"-details"]?"hideD":"showD")), onClick:(ev) => toggle(ev,root,e["@id"],"details")}:{title:tLabel}} >
                                  {pType && parts[pType] ? <div>{parts[pType]}</div> : <div>{parts["?"]}</div> }
                               </span>
                               <span>{this.uriformat(null,{type:'uri', value:fUri, inOutline: (!e.hasPart?tag+"-details":tag), url:"/show/"+root+"?part="+e["@id"], debug:false, toggle:() => toggle(null,root,e["@id"],!e.hasPart?"details":"")})}</span>                              
                               <div class="abs">
-                                 { e.hasImg && <Link className="hasImg" title="View Images"  to={e.hasImg}><img src="/icons/search/images.svg"/><img src="/icons/search/images_r.svg"/></Link> }
+                                 { e.hasImg && <Link className="hasImg" title={I18n.t("copyright.view")}  to={e.hasImg}><img src="/icons/search/images.svg"/><img src="/icons/search/images_r.svg"/></Link> }
                                  { /* pType && 
                                     <span class={"pType "+(e.details?"on":"")} {...e.details?{title:(this.state.collapse[tag+"-details"]?"Hide":"Show")+" Details", onClick:(ev) => toggle(ev,root,e["@id"],"details")}:{}} >
                                        {this.proplink(pType)}
                                        { !this.state.collapse[tag+"-details"] && <ExpandMore className="details"/>}
                                        {  this.state.collapse[tag+"-details"] && <ExpandLess className="details"/>}
                                     </span> */ }
-                                 { e.details && <span id="anchor" title={tLabel+" - "+(this.state.collapse[tag+"-details"]?"Hide":"Show")+" Details"} onClick={(ev) => toggle(ev,root,e["@id"],"details")}>
+                                 { e.details && <span id="anchor" title={/*tLabel+" - "+*/I18n.t("resource."+(this.state.collapse[tag+"-details"]?"hideD":"showD"))} onClick={(ev) => toggle(ev,root,e["@id"],"details")}>
                                     <img src="/icons/info.svg"/>
                                  </span> }
                                  <CopyToClipboard text={fUri} onCopy={(e) => prompt(I18n.t("misc.clipboard"),fUri)}>
@@ -5336,17 +5349,17 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
          return ( 
          <div class="data" id="outline">
-            <h2>Outline</h2>
+            <h2>{I18n.t("index.outline")}</h2>
                <div class="search">
                   <div>
-                     <input type="text" placeholder="Search in outline" value={this.state.outlineKW} onChange={changeOutlineKW} onKeyPress={ (e) => { 
+                     <input type="text" placeholder={I18n.t("resource.searchO")} value={this.state.outlineKW} onChange={changeOutlineKW} onKeyPress={ (e) => { 
                         if(e.key === 'Enter' && this.state.outlineKW) { 
                            if(this.state.dataSource&&this.state.dataSource.length) outlineSearch(e,this.state.dataSource[0].split("@")[1])
                            else changeOutlineKW(null,this.state.outlineKW)
                         }
                      }}/>
-                     <span class="button" onClick={outlineSearch}  title="Start search"></span>
-                     { this.props.outlineKW && <span class="button" title="Reset search" onClick={(e) => { 
+                     <span class="button" onClick={outlineSearch}  title={I18n.t("resource.start")}></span>
+                     { this.props.outlineKW && <span class="button" title={I18n.t("resource.reset")} onClick={(e) => { 
                         this.setState({outlineKW:"",dataSource:[]})
                         this.props.onResetOutlineKW()
                         let loca = { ...this.props.history.location }
@@ -5542,7 +5555,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                   <div>
                      <Link to={"/show/"+s}><div class="header"></div></Link>
                      <div><span {...label.lang?{lang:label.lang}:{}}>{ label.value }</span>{ label.lang && this.tooltip(label.lang) }</div>
-                     <Link to={"/show/"+s}>Read more</Link>
+                     <Link to={"/show/"+s}>{I18n.t("misc.readM")}</Link>
                   </div>
                )
             }
@@ -5579,11 +5592,11 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          let url = "/show/"+shortUri(rid)+this.getTabs(tag)
          let view = "/show/"+shortUri(rid)+loca.search+"#open-viewer"
          return (<div>
-            { tag === "Images" && <h3><Link to={view} >Open in Viewer</Link></h3> }
-            <h3><Link to={url+"#main-info"} >Main Information</Link></h3>
-            { tag === "Instance" && <h3><Link to={url+"#outline"} >Outline</Link></h3> }
-            { tag === "Work" && <h3><Link to={url+"#resources"} >Related Works</Link></h3> }
-             <h3><Link to={url+"#ext-info"} >Extended Information</Link></h3> 
+            { tag === "Images" && <h3><Link to={view} >{I18n.t("index.openViewer")}</Link></h3> }
+            <h3><Link to={url+"#main-info"} >{I18n.t("index.mainInfo")}</Link></h3>
+            { tag === "Instance" && <h3><Link to={url+"#outline"} >{I18n.t("index.outline")}</Link></h3> }
+            { tag === "Work" && <h3><Link to={url+"#resources"} >{I18n.t("index.related")}</Link></h3> }
+             <h3><Link to={url+"#ext-info"} >{I18n.t("index.extended")}</Link></h3> 
          </div>)
       }
 
@@ -5595,7 +5608,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
       let root = this.getResourceElem(bdo+"inRootInstance");
       //console.log("root?",root)
       if(root && root.length) {
-         inTitle  = <h3><span>In: </span> {this.uriformat(tmp+"in",root[0])}</h3> 
+         inTitle  = <h3><span>{I18n.t("misc.in")}: </span> {this.uriformat(tmp+"in",root[0])}</h3> 
       }
 
       let isMirador = (!this.props.manifestError || (this.props.imageVolumeManifests && Object.keys(this.props.imageVolumeManifests).length)) && (this.props.imageAsset || this.props.imageVolumeManifests) && this.state.openMirador
@@ -5614,7 +5627,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          else { 
             backTo = decodeURIComponent(backTo.replace(new RegExp("(([?])|&)"+withW),"$2"))+"&"+withW
             searchUrl = backTo
-            searchTerm = "instances of "+searchUrl.replace(/.*i=([^&]+).*/,"$1")
+            searchTerm = I18n.t("topbar.instances")+" "+searchUrl.replace(/.*i=([^&]+).*/,"$1")
          }
       }
 
@@ -5663,8 +5676,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          // DONE
          // + update index links (add outline)
          // + fix open etext OR images
-         // TODO
-         // - add loader to show when back to seach
+         // + add loader to show when back to seach
 
          return (
          [getGDPRconsent(this),
@@ -5682,7 +5694,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                      ev.stopPropagation();
                      return false
                   }}
-                  ><img src="/icons/FILARIANE.svg" /><span>Search results for {searchTerm}</span></Link>
+                  ><img src="/icons/FILARIANE.svg" /><span>{I18n.t("topbar.results")} {searchTerm}</span></Link>
                   {this.state.ready && <Loader loaded={!this.props.loading} options={{position:"fixed",left:"50%",top:"50%"}} /> }
                </div> }
                <div class="index">                  
@@ -5703,7 +5715,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                   { this.renderWithdrawn() }             
                   <div class="title">{ wTitle }{ iTitle }{ rTitle }</div>
                   { this.renderHeader(kZprop.filter(k => mapProps.includes(k))) }
-                  { etext && <div class="data" id="open-etext"><div><Link to={loca.pathname+loca.search+"#open-viewer"}>Open in Etext Viewer</Link></div></div> }
+                  { etext && <div class="data" id="open-etext"><div><Link to={loca.pathname+loca.search+"#open-viewer"}>{I18n.t("resource.openViewer")}</Link></div></div> }
                   <div class="data">{title}{inTitle}</div>
                   { this.renderNoAccess(fairUse) }
                   { this.renderAccess() }
@@ -5714,14 +5726,14 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                   { ((related && related.length > 0)||(createdBy && createdBy.length > 0)) &&  
                      <div class="data related" id="resources">
                         <div>
-                           <div><h2>Related Works</h2>{ (related && related.length > 4 || createdBy && createdBy.length > 4) && <Link to={"/search?t=Work&r="+this.props.IRI}>{"see all"}</Link> }</div>
+                           <div><h2>{I18n.t("index.related")}</h2>{ (related && related.length > 4 || createdBy && createdBy.length > 4) && <Link to={"/search?t=Work&r="+this.props.IRI}>{I18n.t("misc.seeA")}</Link> }</div>
                            { (related && related.length > 0 && (!createdBy  || !createdBy.length)) && <div class="rel-or-crea">{related}</div>}
                            { (createdBy && createdBy.length > 0 && (!related  || !related.length)) && <div class="rel-or-crea">{createdBy}</div>}
                            { (related.length > 0 && createdBy.length > 0) && <div>
                               <Tabs>
                                  <TabList>
-                                    <Tab>About</Tab>
-                                    <Tab>Created By</Tab>
+                                    <Tab>{I18n.t("resource.about")}</Tab>
+                                    <Tab>{I18n.t("resource.createdB")}</Tab>
                                  </TabList>
                                  <TabPanel><div class="rel-or-crea">{related}</div></TabPanel>
                                  <TabPanel><div class="rel-or-crea">{createdBy}</div></TabPanel>
@@ -5734,7 +5746,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                   { theDataLegal }
                   { theDataExt && 
                      <div class="data ext-props" id="ext-info">
-                        <div><h2>Extended Properties</h2><span onClick={toggleExtProps}>{!this.state.collapse.extProps?"see all":"hide"}</span></div>
+                        <div><h2>{I18n.t("resource.extended")}</h2><span onClick={toggleExtProps}>{I18n.t("misc."+(!this.state.collapse.extProps?"seeA":"hide"))}</span></div>
                      </div> }
                   { theDataExt }
                </div>
