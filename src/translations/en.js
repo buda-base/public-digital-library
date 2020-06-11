@@ -11,7 +11,7 @@ const enTranslation = {
       archives1:"The Buddhist",
       archives2:"Digital Archives",
       by:"by the Buddhist Digital Resource Center",
-      subtitle:"Discover millions of pages of texts from the major Buddhist traditions, languages, and cultures.",
+      subtitle:"A cooperative platform for expanding access to Buddhist literature. Explore the millions of pages of texts contributed by BDRC and its many partners.",
       message:"WELCOME TO THE BETA VERSION OF BDRC's NEW LIBRARY!",
       submessage:"with new features, resources, and tools for faster and more in-depth research",
       search:"Search",
