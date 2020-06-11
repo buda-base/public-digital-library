@@ -11,7 +11,11 @@ import CancelIcon from '@material-ui/icons/CancelOutlined';
 import CloseIcon from '@material-ui/icons/Close'; 
 import InputAdornment from '@material-ui/core/InputAdornment';
 import AccountCircle from '@material-ui/icons/AccountCircle';
-import {Translate, I18n} from 'react-redux-i18n';
+
+//import {Translate, I18n} from 'react-redux-i18n';
+import I18n from 'i18next';
+
+
 import Popover from '@material-ui/core/Popover';
 import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';

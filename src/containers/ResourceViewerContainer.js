@@ -4,7 +4,9 @@ import { connect } from 'react-redux';
 import * as data from '../state/data/actions';
 import * as ui from '../state/ui/actions';
 import store from '../index';
-import { setLocale } from 'react-redux-i18n';
+
+//import { setLocale } from 'react-redux-i18n';
+import { i18nextChangeLanguage } from 'i18next-redux-saga';
 
 // import selectors from 'state/selectors';
 
@@ -97,7 +99,7 @@ const mapStateToProps = (state,ownProps) => {
    let createPdf = state.data.createPdf
    let pdfUrl = state.data.pdfUrl
 
-   let locale = state.i18n.locale
+   let locale = state.i18next.lang
    let langPreset = state.ui.langPreset
 
    let highlight = state.ui.highlight
@@ -175,7 +177,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
          dispatch(ui.toggleLanguagePanel());
       },
       onSetLocale:(lg:string) => {
-         dispatch(setLocale(lg));
+         //dispatch(setLocale(lg));
+         dispatch(i18nextChangeLanguage(lg));
       },
       onSetLangPreset:(langs:string[],i?:number) => {
          dispatch(ui.langPreset(langs,i))

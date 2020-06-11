@@ -3,7 +3,10 @@ import React from 'react';
 import { connect } from 'react-redux';
 import * as data from '../state/data/actions';
 import * as ui from '../state/ui/actions';
-import { setLocale } from 'react-redux-i18n';
+
+//import { setLocale } from 'react-redux-i18n';
+import { i18nextChangeLanguage } from 'i18next-redux-saga';
+
 import store from '../index';
 import LanguageSidePane from '../components/LanguageSidePane';
 
@@ -19,7 +22,7 @@ const mapStateToProps = (state,ownProps) => {
       }
       let collapse = state.ui.collapse
       let rightPanel = state.ui.rightPanel
-      let locale = state.i18n.locale
+      let locale = state.i18next.lang
 
       let anchor = state.ui.anchor
 
@@ -34,7 +37,8 @@ const mapStateToProps = (state,ownProps) => {
    const mapDispatchToProps = (dispatch, ownProps) => {
       return {
          onSetLocale:(lg:string) => {
-            dispatch(setLocale(lg));
+            //dispatch(setLocale(lg));
+            dispatch(i18nextChangeLanguage(lg));
          },
          onSetLangPreset:(langs:string[],i?:number) => {
             dispatch(ui.langPreset(langs,i))

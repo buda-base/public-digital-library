@@ -15,8 +15,8 @@ import {shortUri,fullUri} from '../../components/App'
 import qs from 'query-string'
 import history from '../../history.js'
 
-import { setHandleMissingTranslation } from 'react-i18nify';
-import { I18n } from 'react-redux-i18n';
+//import { setHandleMissingTranslation } from 'react-i18nify';
+//import { I18n } from 'react-redux-i18n';
 
 // to enable tests
 const api = new bdrcApi({...process.env.NODE_ENV === 'test' ? {server:"http://localhost:5555/test"}:{}});
@@ -52,7 +52,7 @@ async function initiateApp(params,iri,myprops) {
          const config = await api.loadConfig();
          auth.setConfig(config.auth,config.iiif,api)
 
-         I18n.setHandleMissingTranslation((key, replacements) => key);
+         //I18n.setHandleMissingTranslation((key, replacements) => key);
 
          if(myprops) {
             handleAuthentication(myprops);

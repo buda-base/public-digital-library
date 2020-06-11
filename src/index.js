@@ -19,9 +19,17 @@ import 'babel-polyfill';
 import createSagaMiddleware from 'redux-saga';
 import rootSaga from './state/sagas'
 
-// i18n
-import thunk from 'redux-thunk';
-import { loadTranslations, setLocale, syncTranslationWithStore, i18nReducer } from 'react-redux-i18n';
+
+// i18nify  deprecated
+// import thunk from 'redux-thunk';
+// import { loadTranslations, setLocale, syncTranslationWithStore, i18nReducer } from 'react-redux-i18n';
+
+
+// i18next
+import { i18nextInit, i18nextSaga } from 'i18next-redux-saga';
+import i18nextReducer from './state/i18n-reducer';
+import {numtobo} from "./lib/language"
+
 
 // For dev only
 import { composeWithDevTools } from 'redux-devtools-extension';
@@ -41,14 +49,37 @@ import boTranslation from "./translations/bo" ;
 
 import makeMainRoutes from './routes'
 
+//derprecated
 const translationsObject = {
 
    bo:boTranslation,
    en:enTranslation,
-   fr:frTranslation,
+   //fr:frTranslation,
    zh:zhTranslation,
-
 }
+
+
+// simple example i18next config with preloaded translations
+const i18nextConfig = {
+   nsSeparator: '|', // so we can use ':' for prefixes in properties
+   fallbackLng: 'en', // set to false to display missing keys (+debug:true)
+   //debug: true,   
+   whitelist: [ 'bo', 'en', 'zh'],
+   resources: {
+      en: { translation: enTranslation },
+      bo: { translation: boTranslation },
+      zh: { translation: zhTranslation },
+   },
+   interpolation: {
+      format: function(value, format, lng) {
+         if (format === 'counttobo') { 
+            //console.log("numtobo?",value,format,numtobo(value),numtobo(""+value))
+            return numtobo(""+value);
+         }
+         return value;
+      }
+   }
+};
 
 const logger = store => next => action => {
   console.group(action.type)
@@ -60,37 +91,45 @@ const logger = store => next => action => {
 }
 
 const sagaMiddleware = createSagaMiddleware();
+const i18nextMiddleware = createSagaMiddleware();
+
 let store;
 if (process.env.NODE_ENV !== 'production') {
    store = createStore(
       combineReducers({
          data:dataReducer,
          ui:uiReducer,
-         i18n: i18nReducer
+         //i18n: i18nReducer,
+         i18next: i18nextReducer
       }),
-      composeWithDevTools(
-         applyMiddleware(thunk,sagaMiddleware,logger)
-      )
+      //composeWithDevTools(
+         applyMiddleware(/*thunk,*/sagaMiddleware,i18nextMiddleware,logger)
+      //)
     );
 } else {
     store = createStore(
       combineReducers({
          data:dataReducer,
          ui:uiReducer,
-         i18n: i18nReducer
+         //i18n: i18nReducer,
+         i18next: i18nextReducer
       }),
-        applyMiddleware(thunk,sagaMiddleware)
+        applyMiddleware(/*thunk,*/sagaMiddleware,i18nextMiddleware)
     );
 }
 
+/* // i18nify deprecated
 syncTranslationWithStore(store)
 store.dispatch(loadTranslations(translationsObject));
 store.dispatch(setLocale('en'));
-
-export default store ;
+*/
 
 sagaMiddleware.run(rootSaga);
+i18nextMiddleware.run(i18nextSaga);
 
+store.dispatch(i18nextInit(i18nextConfig));
+
+export default store ;
 //const parsed = qs.parse(history.location.search);
 //console.log(parsed);
 

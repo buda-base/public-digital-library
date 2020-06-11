@@ -54,7 +54,10 @@ import React, { Component } from 'react';
 import qs from 'query-string'
 import Button from '@material-ui/core/Button';
 import Fade from '@material-ui/core/Fade';
-import {Translate, I18n} from 'react-redux-i18n';
+
+//import {Translate , I18n} from 'react-redux-i18n';
+import I18n from 'i18next';
+
 import { Link } from 'react-router-dom';
 //import AnnotatedEtextContainer from 'annotated-etext-react';
 import IIIFViewerContainer from '../containers/IIIFViewerContainer';
@@ -1701,8 +1704,8 @@ class ResourceViewer extends Component<Props,State>
       }
 
     
-      let sTmp = "prop."+shortUri(prop), trad = I18n.t(sTmp)
-      if(trad !== sTmp)  {
+      let sTmp, trad ;
+      if(prop && prop.matches && prop.matches(/[./]/) && (trad=I18n.t(sTmp="prop."+shortUri(prop))) !== sTmp)  {
          if(canSpan) return <span lang="">{this.pretty(trad,isUrl,noNewline)}</span>
          else return this.pretty(trad,isUrl,noNewline)
       }
@@ -2219,7 +2222,7 @@ class ResourceViewer extends Component<Props,State>
             
             ret.push([<span class={"ulink " + (sameAsPrefix?sameAsPrefix:'')  }>{befo}{link}</span>,lang?<Tooltip placement="bottom-end" title={
                <div style={{margin:"10px"}}>
-                  <Translate value={languages[lang]?languages[lang].replace(/search/,"tip"):lang}/>
+                  {I18n.t(languages[lang]?languages[lang].replace(/search/,"tip"):lang)}
                </div>
             }><span className="lang">{lang}</span></Tooltip>:null,bdrcData])
          }
@@ -2241,7 +2244,7 @@ class ResourceViewer extends Component<Props,State>
       //console.log("transL/",lang,languages[lang],languages)
       return lang?<Tooltip placement="bottom-end" title={
          <div style={{margin:"10px"}}>
-            <Translate value={languages[lang]?languages[lang].replace(/search/,"tip"):lang}/>
+            {I18n.t(languages[lang]?languages[lang].replace(/search/,"tip"):lang)}
          </div>
       }><span className="lang">{lang}</span></Tooltip>:null
    }
@@ -2464,7 +2467,7 @@ class ResourceViewer extends Component<Props,State>
                               </TabList>
 
                               <TabPanel>
-                              { lang && <div><span class='first'>{I18n.t("popover.lang")}</span><span>:&nbsp;</span><span><Translate value={languages[lang]?languages[lang].replace(/search/,"tip"):lang}/></span></div> }
+                              { lang && <div><span class='first'>{I18n.t("popover.lang")}</span><span>:&nbsp;</span><span>{I18n.t(languages[lang]?languages[lang].replace(/search/,"tip"):lang)}</span></div> }
                               { (other.length > 0) && <div><span class='first'>{I18n.t("popover.otherLang",{count:other.length})}</span><span>:&nbsp;</span><div>{other.map(o => <span class="label">{o.value}{this.tooltip(o.lang)}</span>)}</div></div> }
                               { (e.datatype && e.datatype.endsWith("#gYear")) && <div><span class='first'>{I18n.t("popover.calendar")}</span><span>:&nbsp;</span><span>{I18n.t("popover.gregorian")}</span></div>}
                               { (era && era.length > 0) &&  <div><span class='first'>{this.proplink(bdo+"yearInEra")}</span><span>:&nbsp;</span><span>{this.proplink(era[0].value)}</span></div>  }
@@ -2618,7 +2621,7 @@ class ResourceViewer extends Component<Props,State>
 
                   if(tLab.start === undefined) tmp.push(<Tooltip placement="bottom-end" title={
                         <div style={{margin:"10px"}}>
-                           <Translate value={languages[lang]?languages[lang].replace(/search/,"tip"):lang}/>
+                           {I18n.t(languages[lang]?languages[lang].replace(/search/,"tip"):lang)}
                         </div>
                      }><span className="lang">{lang}</span></Tooltip>);
 
@@ -2865,7 +2868,7 @@ class ResourceViewer extends Component<Props,State>
 
                   let tip = [this.fullname(tVal),lang?<Tooltip placement="bottom-end" title={
                      <div style={{margin:"10px"}}>
-                        <Translate value={languages[lang]?languages[lang].replace(/search/,"tip"):lang}/>
+                        {I18n.t(languages[lang]?languages[lang].replace(/search/,"tip"):lang)}
                      </div>
                   }><span className="lang">{lang}</span></Tooltip>:null]
 
@@ -3126,7 +3129,7 @@ class ResourceViewer extends Component<Props,State>
                                  if(!lang) lang = v["xml:lang"]
                                  txt = [txt,lang?<Tooltip placement="bottom-end" title={
                                     <div style={{margin:"10px"}}>
-                                       <Translate value={languages[lang]?languages[lang].replace(/search/,"tip"):lang}/>
+                                       {I18n.t(languages[lang]?languages[lang].replace(/search/,"tip"):lang)}
                                     </div>
                                  }><span className="lang">{lang}</span></Tooltip>:null]
                               }
@@ -4771,7 +4774,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
             { //this.props.datatypes && (results ? results.numResults > 0:true) &&
                <div className="data" style={{width:"333px",position:"relative"}}>
                   <Typography style={{fontSize:"30px",marginBottom:"20px",textAlign:"left"}}>
-                     <Translate value="Asidebar.title" />
+                     {I18n.t("Asidebar.title")}
                   </Typography>
                   {this.props.annoCollec == true && <Loader loaded={false}/>}
                   { (!this.props.annoCollec || Object.keys(this.props.annoCollec).length === 0 || this._annoPane.length == 0) && !this.state.newAnno &&  "No annotation to show for this "+(typeof this.state.showAnno === 'string' ? "collection":"resource")+"."}

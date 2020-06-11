@@ -1,6 +1,9 @@
 //@flow
 import React, { Component } from 'react';
-import {I18n, Translate} from "react-redux-i18n" ;
+
+//import {I18n, Translate} from "react-redux-i18n" ;
+import I18n from 'i18next';
+
 import ListItem from '@material-ui/core/List';
 import Typography from '@material-ui/core/Typography';
 import Collapse from '@material-ui/core/Collapse';
@@ -94,7 +97,7 @@ class LanguageSidePane extends Component<Props,State> {
          <IconButton className="close" onClick={e => this.props.onToggleLanguagePanel()} ><Close/></IconButton>
          <div style={{width:"333px",position:"relative"}}>
             <Typography style={{fontSize:"25px",marginBottom:"20px",textAlign:"center"}}>
-               <Translate value='Rsidebar.title' />
+               {I18n.t('Rsidebar.title')}
             </Typography>
             
             {

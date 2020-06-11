@@ -64,7 +64,8 @@ import {CopyToClipboard} from 'react-copy-to-clipboard' ;
 import CookieConsent from "react-cookie-consent";
 import ReactGA from 'react-ga';
 
-import {I18n, Translate, Localize } from "react-redux-i18n" ;
+//import { I18n, Translate, Localize } from "react-redux-i18n" ;
+import I18n from 'i18next';
 
 import LanguageSidePaneContainer from '../containers/LanguageSidePaneContainer';
 import ResourceViewerContainer from '../containers/ResourceViewerContainer';
@@ -2203,7 +2204,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          ret.push(<span>{val}{
             lang && <Tooltip placement="bottom-end" title={
                               <div style={{margin:"10px"}}>
-                                 <Translate value={languages[lang]?languages[lang].replace(/search/,"tip"):lang}/>
+                                 {I18n.t(languages[lang]?languages[lang].replace(/search/,"tip"):lang)}/>
                               </div>
                            }><span className="lang">&nbsp;{lang}</span></Tooltip>
                   }</span>)
@@ -2365,7 +2366,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                ret.push(<span>{val}{
                   lang && <Tooltip placement="bottom-end" title={
                                     <div style={{margin:"10px"}}>
-                                       <Translate value={languages[lang]?languages[lang].replace(/search/,"tip"):lang}/>
+                                       {I18n.t(languages[lang]?languages[lang].replace(/search/,"tip"):lang)}/>
                                     </div>
                                  }><span className="lang">&nbsp;{lang}</span></Tooltip>
                         }</span>)
@@ -2418,7 +2419,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   ret.push(<span><Link to={"/show/"+i.uri}>{i.value}</Link>{
                      i.lang && <Tooltip placement="bottom-end" title={
                                        <div style={{margin:"10px"}}>
-                                          <Translate value={languages[i.lang]?languages[i.lang].replace(/search/,"tip"):i.lang}/>
+                                          {I18n.t(languages[i.lang]?languages[i.lang].replace(/search/,"tip"):i.lang)}/>
                                        </div>
                                     }><span className="lang">&nbsp;{i.lang}</span></Tooltip>
                            }</span>)
@@ -2580,7 +2581,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                                  { (resUrl && !resUrl.includes("/show/bdr:")) && <img class="link-out" src="/icons/link-out_fit.svg"/>}
                                  { lang && <Tooltip key={"tip"} placement="bottom-end" title={
                                           <div style={{margin:"10px"}}>
-                                             <Translate value={languages[lang]?languages[lang].replace(/search/,"tip"):lang}/>
+                                             {I18n.t(languages[lang]?languages[lang].replace(/search/,"tip"):lang)}/>
                                           </div>
                                        }>
                                           <span className="lang">&nbsp;{lang}</span>
@@ -3018,7 +3019,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      
                      let getUrilink = (uri,val,lang) => ([ <Link className="urilink" to={"/show/"+shortUri(uri)}>{val}</Link>,lang?<Tooltip placement="bottom-end" title={
                            <div style={{margin:"10px"}}>
-                              <Translate value={languages[lang]?languages[lang].replace(/search/,"tip"):lang}/>
+                              {I18n.t(languages[lang]?languages[lang].replace(/search/,"tip"):lang)}/>
                            </div>
                         }><span className="lang">&nbsp;{lang}</span></Tooltip>:null])
 
@@ -3038,7 +3039,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                         <span className={"label " +(lastP === prop?"invisible":"")}>{(!from?prop:from)}:&nbsp;</span>
                         {!isArray && <span>{expand!==true?null:inPart}{[!uri?val:<Link className="urilink" to={uri}>{val}</Link>,lang?<Tooltip placement="bottom-end" title={
                            <div style={{margin:"10px"}}>
-                              <Translate value={languages[lang]?languages[lang].replace(/search/,"tip"):lang}/>
+                              {I18n.t(languages[lang]?languages[lang].replace(/search/,"tip"):lang)}/>
                            </div>
                         }><span className="lang">&nbsp;{lang}</span></Tooltip>:null]}{expand?<span class="etext-match"><br/>&gt;&nbsp;
                            <span class="uri-link" onClick={(e) => { 
@@ -3060,7 +3061,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                                     <Link to={"/show/"+url}>{m.tmpLabel?m.tmpLabel:label}</Link>
                                     { lang && <Tooltip placement="bottom-end" title={
                                        <div style={{margin:"10px"}}>
-                                          <Translate value={languages[lang]?languages[lang].replace(/search/,"tip"):lang}/>
+                                          {I18n.t(languages[lang]?languages[lang].replace(/search/,"tip"):lang)}/>
                                        </div>
                                     }><span className="lang">&nbsp;{lang}</span></Tooltip> }
                               
@@ -3845,7 +3846,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                
                }
             }
-            if(cpt == 0 ) { message.push(<Typography style={{margin:"20px 40px"}}><Translate value="search.filters.noresults"/></Typography>);}
+            if(cpt == 0 ) { message.push(<Typography style={{margin:"20px 40px"}}>{I18n.t("search.filters.noresults")}</Typography>);}
 
          }
          if(pagin.index == pagin.pages.length - 1) {
@@ -4042,7 +4043,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          k = getPropLabel(this,k)
       }
       else { t = <span>{t}</span>; k = <span>{k}</span> }
-      return <a title={I18n.t(!isExclu?"include":"exclude")+" "+t_+I18n.t("punc.colon")+" "+ k_} class={ "active-filter " + (isExclu?"exclu":"") }><span>{t}{I18n.t("punc.colon")} <b>{k}</b></span><a title={I18n.t("Lsidebar.activeF.remove")} onClick={f.bind(this)}><Close/></a></a>
+      return <a title={I18n.t("Lsidebar.tags."+(!isExclu?"include":"exclude"))+" "+t_+I18n.t("punc.colon")+" "+ k_} class={ "active-filter " + (isExclu?"exclu":"") }><span>{t}{I18n.t("punc.colon")} <b>{k}</b></span><a title={I18n.t("Lsidebar.activeF.remove")} onClick={f.bind(this)}><Close/></a></a>
    }
 
    resetFilters(e) {
@@ -4348,7 +4349,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                { //this.props.datatypes && (results ? results.numResults > 0:true) &&
                   <div style={{ /*minWidth:"335px",*/ position:"relative"}}>                     
                      <Typography className="sidebar-title">
-                        <Translate value="Lsidebar.title" />
+                        {I18n.t("Lsidebar.title")}
                      </Typography>
                      { /* // deprecated, now "Provider" facet
                         this.widget(I18n.t("Lsidebar.collection.title"),"collection",
@@ -4377,7 +4378,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                               this.setState({collapse:{ ...this.state.collapse, "datatype":!this.state.collapse["datatype"]} }); } }
                         >
                         <Typography className="widget-title">
-                           <Translate value="Lsidebar.datatypes.title"/>
+                           {I18n.t("Lsidebar.datatypes.title")}
                         </Typography>
                         { /*this.props.datatypes && this.props.datatypes.hash &&*/ !this.state.collapse["datatype"] ? <ExpandLess /> : <ExpandMore />  }
                      </ListItem>

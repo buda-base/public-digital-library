@@ -1,5 +1,5 @@
 //@flow
-import {I18n} from 'react-redux-i18n';
+import I18n from 'i18next';
 //import {toWylie,fromWylie} from "wylie"
 
 export const langScripts = {
@@ -34,7 +34,7 @@ const numtobodic = {
 export function numtobo(c) {
    var cstr = c.toString();
    var res = '';
-	for (var c in cstr) {
+	for (var c of cstr) {
   	   res += numtobodic[c];
    }
    return res;

@@ -9,7 +9,7 @@ require('../setupTests')
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { shallow,mount } from 'enzyme';
-import {Translate, I18n} from 'react-redux-i18n';
+import I18n from 'i18next';
 import store from '../index';
 import {initiateApp} from '../state/actions';
 import tcpPortUsed from 'tcp-port-used'

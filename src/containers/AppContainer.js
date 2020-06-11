@@ -5,7 +5,9 @@ import {initiateApp} from '../state/actions';
 import * as data from '../state/data/actions';
 import * as ui from '../state/ui/actions';
 import store from '../index';
-import { setLocale } from 'react-redux-i18n';
+
+//import { setLocale } from 'react-redux-i18n';
+import { i18nextChangeLanguage } from 'i18next-redux-saga';
 
 // import selectors from 'state/selectors';
 
@@ -34,7 +36,7 @@ const mapStateToProps = (state) => {
    let prefLang = state.ui.prefLang  ;
    let rightPanel = state.ui.rightPanel
 
-   let locale = state.i18n.locale
+   let locale = state.i18next.lang
    let langPreset = state.ui.langPreset
    let langIndex = state.ui.langIndex
 
@@ -112,7 +114,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
          dispatch(data.getContext(iri,start,end));
       },
       onSetLocale:(lg:string) => {
-         dispatch(setLocale(lg));
+         //dispatch(setLocale(lg));
+         dispatch(i18nextChangeLanguage(lg));
       },
       onSetLangPreset:(langs:string[],i?:number) => {
          dispatch(ui.langPreset(langs,i))
