@@ -451,6 +451,7 @@ export function lang_selec(that,black:boolean = false)
                                     onClick={(event) => { 
                                        that.setState({...that.state,anchorLang:null,collapse: {...that.state.collapse, lang:false } }); 
                                        that.props.onSetLocale(i);
+                                       document.documentElement.lang = i
                                        if(i === "bo") that.props.onSetLangPreset(["bo","zh-hans"])
                                        else if(i === "en") that.props.onSetLangPreset(["bo-x-ewts","sa-x-iast"])
                                     }} >{label}</MenuItem> ) 
@@ -2309,7 +2310,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                         <span class="instance-collapse" onClick={(e) => { 
                            this.setState({...this.state,collapse:{...this.state.collapse,[iri]:!this.state.collapse[iri] },repage:true })
                         }}>{!this.state.collapse[iri]?<ExpandMore/>:<ExpandLess/>}</span>,
-                        <span class="label">{this.fullname(prop+(plural && ret.length > 1 ?plural:""),[],true)}:&nbsp;</span>,
+                        <span class="label">{this.fullname(prop+(plural && ret.length > 1 ?plural:""),[],true)}{I18n.t("punc.colon")}&nbsp;</span>,
                         <div style={{clear:"both"}}></div>,
                         <Collapse in={this.state.collapse[iri]} >
                            {ret}
@@ -2426,7 +2427,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             }            
          }
          if(ret.length && !useAux) return <div class="match">
-                  <span class="label">{this.fullname(prop+(plural && ret.length > 1 ?plural:""),[],true)}:&nbsp;</span>
+                  <span class="label">{this.fullname(prop+(plural && ret.length > 1 ?plural:""),[],true)}{I18n.t("punc.colon")}&nbsp;</span>
                   <div class="multi">{ret}</div>
                 </div>
       }
@@ -3036,7 +3037,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      }
 
                      return (<div className={"match "+prop}>
-                        <span className={"label " +(lastP === prop?"invisible":"")}>{(!from?prop:from)}:&nbsp;</span>
+                        <span className={"label " +(lastP === prop?"invisible":"")}>{(!from?prop:from)}{I18n.t("punc.colon")}&nbsp;</span>
                         {!isArray && <span>{expand!==true?null:inPart}{[!uri?val:<Link className="urilink" to={uri}>{val}</Link>,lang?<Tooltip placement="bottom-end" title={
                            <div style={{margin:"10px"}}>
                               {I18n.t(languages[lang]?languages[lang].replace(/search/,"tip"):lang)}/>

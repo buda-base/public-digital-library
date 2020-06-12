@@ -69,6 +69,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faLanguage } from '@fortawesome/free-solid-svg-icons'
 //import {MapComponent} from './Map';
 import {getEntiType,dPrefix} from '../lib/api';
+import {numtobo} from '../lib/language';
 import {languages,getLangLabel,top_right_menu,prefixesMap as prefixes,sameAsMap,shortUri,fullUri,highlight,lang_selec,langSelect,searchLangSelec,report_GA,getGDPRconsent} from './App';
 import {narrowWithString} from "../lib/langdetect"
 import Popover from '@material-ui/core/Popover';
@@ -680,7 +681,7 @@ export function top_left_menu(that,pdfLink,monoVol,fairUse)
                                let Zloaded = e.zipFile && e.zipFile != true
 
                                return (<ListItem className="pdfMenu">
-                                     <b>{(e.volume !== undefined?(!e.volume.match || e.volume.match(/^[0-9]+$/)?"Volume ":"")+(e.volume):monoVol)}:</b>
+                                     <b>{(e.volume !== undefined?(!e.volume.match || e.volume.match(/^[0-9]+$/)?"Volume ":"")+(e.volume):monoVol)}{I18n.t("punc.colon")}</b>
                                      &nbsp;&nbsp;
                                      <a onClick={ev => that.handlePdfClick(ev,e.link,e.pdfFile)}
                                         {...(Ploaded ?{href:e.pdfFile}:{})}
@@ -1765,7 +1766,7 @@ class ResourceViewer extends Component<Props,State>
 
 
      return ([
-       <h4 className="first prop">{this.proplink(k)}:</h4>
+       <h4 className="first prop">{this.proplink(k)}{I18n.t("punc.colon")}</h4>
        ,
        <div>
        { vals }
@@ -1860,11 +1861,11 @@ class ResourceViewer extends Component<Props,State>
                else vals = tmp
 
                if(div == "sub")
-                  ret.push(<div className='sub hoy'><h4 className="first type">{this.proplink(p)}:</h4><div class="subgroup">{vals}</div></div>)
+                  ret.push(<div className='sub hoy'><h4 className="first type">{this.proplink(p)}{I18n.t("punc.colon")}</h4><div class="subgroup">{vals}</div></div>)
                else if(div == "subsub")
-                  ret.push(<div className={'subsub hoyoh'+(tmp.length>0?" full":"")}><h4 className="first prop">{this.proplink(p)}:</h4><div class="subsubgroup">{vals}</div></div>)
+                  ret.push(<div className={'subsub hoyoh'+(tmp.length>0?" full":"")}><h4 className="first prop">{this.proplink(p)}{I18n.t("punc.colon")}</h4><div class="subsubgroup">{vals}</div></div>)
                else if(div == "subsubsub")
-                  ret.push(<div className='subsubsub hoyhoy'><h4 className="first prop">{this.proplink(p)}:</h4>{vals}</div>)
+                  ret.push(<div className='subsubsub hoyhoy'><h4 className="first prop">{this.proplink(p)}{I18n.t("punc.colon")}</h4>{vals}</div>)
 
                //if(grandPa.length) grandPa[0].push(ret);
             }
@@ -1919,7 +1920,7 @@ class ResourceViewer extends Component<Props,State>
                if(!lang) lang = infoBase[0]["lang"]
                if(lang) info = infoBase[0].value 
                else info = null
-               if(infoBase[0].type && infoBase[0].type == bdo+"volumeNumber") info = I18n.t("types.volume",{num:infoBase[0].value}) ;
+               if(infoBase[0].type && infoBase[0].type == bdo+"volumeNumber") info = I18n.t("types.volume_num",{num:infoBase[0].value}) ;
                else if(info && info.match(/purl[.]bdrc/)) info = null
                //console.log("info0",info)
             }
@@ -2367,7 +2368,7 @@ class ResourceViewer extends Component<Props,State>
             let logo = provImg[pref]
             let prov = providers[pref]
             if(!this.props.IRI.startsWith(pref+":") && pref !== "bdr") nb ++
-            return (<span>{I18n.t("popover.source")}: <img src={logo}/><b>{prov}</b></span>) 
+            return (<span>{I18n.t("popover.source")}{I18n.t("punc.colon")} <img src={logo}/><b>{prov}</b></span>) 
          } ).filter(e => e)
 
 
@@ -2447,14 +2448,14 @@ class ResourceViewer extends Component<Props,State>
                         </span>
                         <div data-prop={shortUri(prop)}>
                            {!parent && [
-                              <h3>{this.proplink(prop)}:</h3>,
+                              <h3>{this.proplink(prop)}{I18n.t("punc.colon")}</h3>,
                               <div class="group"><h4>{current}</h4></div>
                            ]}
-                           { grandPa && <h3>{this.proplink(grandPa)}:</h3>}
+                           { grandPa && <h3>{this.proplink(grandPa)}{I18n.t("punc.colon")}</h3>}
                            { parent && <div class="sub">
                               {parent}
                               <div class="subgroup">
-                                 <h4 class="first">{this.proplink(prop)}:</h4>
+                                 <h4 class="first">{this.proplink(prop)}{I18n.t("punc.colon")}</h4>
                                  <div class="subsub"><h4>{current}</h4></div>
                               </div>
                            </div>}
@@ -2467,12 +2468,12 @@ class ResourceViewer extends Component<Props,State>
                               </TabList>
 
                               <TabPanel>
-                              { lang && <div><span class='first'>{I18n.t("popover.lang")}</span><span>:&nbsp;</span><span>{I18n.t(languages[lang]?languages[lang].replace(/search/,"tip"):lang)}</span></div> }
-                              { (other.length > 0) && <div><span class='first'>{I18n.t("popover.otherLang",{count:other.length})}</span><span>:&nbsp;</span><div>{other.map(o => <span class="label">{o.value}{this.tooltip(o.lang)}</span>)}</div></div> }
-                              { (e.datatype && e.datatype.endsWith("#gYear")) && <div><span class='first'>{I18n.t("popover.calendar")}</span><span>:&nbsp;</span><span>{I18n.t("popover.gregorian")}</span></div>}
-                              { (era && era.length > 0) &&  <div><span class='first'>{this.proplink(bdo+"yearInEra")}</span><span>:&nbsp;</span><span>{this.proplink(era[0].value)}</span></div>  }
-                              { (e.start !== undefined) &&  <div><span class='first'>{this.proplink(bdo+"startChar")}</span><span>:&nbsp;</span><span>{e.start}</span></div>  }
-                              { (e.end !== undefined) &&  <div><span class='first'>{this.proplink(bdo+"endChar")}</span><span>:&nbsp;</span><span>{e.end}</span></div>  }
+                              { lang && <div><span class='first'>{I18n.t("popover.lang")}</span><span>{I18n.t("punc.colon")}&nbsp;</span><span>{I18n.t(languages[lang]?languages[lang].replace(/search/,"tip"):lang)}</span></div> }
+                              { (other.length > 0) && <div><span class='first'>{I18n.t("popover.otherLang",{count:other.length})}</span><span>{I18n.t("punc.colon")}&nbsp;</span><div>{other.map(o => <span class="label">{o.value}{this.tooltip(o.lang)}</span>)}</div></div> }
+                              { (e.datatype && e.datatype.endsWith("#gYear")) && <div><span class='first'>{I18n.t("popover.calendar")}</span><span>{I18n.t("punc.colon")}&nbsp;</span><span>{I18n.t("popover.gregorian")}</span></div>}
+                              { (era && era.length > 0) &&  <div><span class='first'>{this.proplink(bdo+"yearInEra")}</span><span>{I18n.t("punc.colon")}&nbsp;</span><span>{this.proplink(era[0].value)}</span></div>  }
+                              { (e.start !== undefined) &&  <div><span class='first'>{this.proplink(bdo+"startChar")}</span><span>{I18n.t("punc.colon")}&nbsp;</span><span>{e.start}</span></div>  }
+                              { (e.end !== undefined) &&  <div><span class='first'>{this.proplink(bdo+"endChar")}</span><span>{I18n.t("punc.colon")}&nbsp;</span><span>{e.end}</span></div>  }
                               </TabPanel>
                               <TabPanel selected>
                               {fromSame && e.allSameAs.map(f => { 
@@ -2650,7 +2651,7 @@ class ResourceViewer extends Component<Props,State>
                         { <Visibility style={{right:"40px"}}
                                     onClick={(event) => { goToAnchor(id); this.setState({...this.state,viewAnno:id}); } }
                         /> }
-                        {this.proplink(e.predicate)}: {this.uriformat(e.predicate,e)}<hr/>
+                        {this.proplink(e.predicate)}{I18n.t("punc.colon")} {this.uriformat(e.predicate,e)}<hr/>
                         {/* <span onClick={(event) => this.setCollapse(node)}>{this.pretty(e.hasAnno)}</span> */}
                      </span>
                   )
@@ -2843,13 +2844,13 @@ class ResourceViewer extends Component<Props,State>
                //console.log("valSort?",valSort)               
                if(valSort.length) subProp = valSort[0].value
                noVal = false ;
-               sub.push(<Tag  data-prop={shortUri(prop)}  className={'first '+(div == "sub"?'type':'prop') +" "+ (sameAsPrefix?sameAsPrefix+" sameAs hasIcon":"")}>{befo}{[valSort.map((v,i) => i==0?[this.proplink(v.value)]:[" / ",this.proplink(v.value)]),": "]}{bdrcData}</Tag>)
+               sub.push(<Tag  data-prop={shortUri(prop)}  className={'first '+(div == "sub"?'type':'prop') +" "+ (sameAsPrefix?sameAsPrefix+" sameAs hasIcon":"")}>{befo}{[valSort.map((v,i) => i==0?[this.proplink(v.value)]:[" / ",this.proplink(v.value)]),I18n.t("punc.colon")+" "]}{bdrcData}</Tag>)
             }
             else if(val && val[0] && val[0].value)
             {
                subProp = val[0].value
                noVal = false ;
-               sub.push(<Tag  data-prop={shortUri(prop)}  className={'first '+(div == "sub"?'type':'prop') +" "+ (sameAsPrefix?sameAsPrefix+" sameAs hasIcon":"")}>{befo}{[this.proplink(val[0].value),": "]}{bdrcData}</Tag>)
+               sub.push(<Tag  data-prop={shortUri(prop)}  className={'first '+(div == "sub"?'type':'prop') +" "+ (sameAsPrefix?sameAsPrefix+" sameAs hasIcon":"")}>{befo}{[this.proplink(val[0].value),I18n.t("punc.colon")+" "]}{bdrcData}</Tag>)
             }
 
             //console.log("lab",lab,subProp,prop)
@@ -2873,7 +2874,7 @@ class ResourceViewer extends Component<Props,State>
                   }><span className="lang">{lang}</span></Tooltip>:null]
 
 
-                  tip.push(this.hoverMenu(subProp,{type:"literal",value:tVal,lang},[...tip],[<h4 class="first">{this.proplink(prop)}:</h4>]))
+                  tip.push(this.hoverMenu(subProp,{type:"literal",value:tVal,lang},[...tip],[<h4 class="first">{this.proplink(prop)}{I18n.t("punc.colon")}</h4>]))
 
                   let sav = <Tag className={'label '}>
                         {tip}
@@ -2961,7 +2962,7 @@ class ResourceViewer extends Component<Props,State>
                         }
 
                         let sav = [
-                              <Tag className="first type">{nbN++ /*this.proplink(bdo+"noteText","Note")*/}</Tag>,
+                              <Tag className="first type">{numtobo(nbN++) /*this.proplink(bdo+"noteText","Note")*/}</Tag>,
                               workuri,
                               <div class="subsub">
                                  <Tag>
@@ -2990,10 +2991,10 @@ class ResourceViewer extends Component<Props,State>
                         {
                            loca = [" @ ",noteData[bdo+"contentLocationStatement"].value]
                         }
-                        let workuri = <div><Tag style={{fontSize:"14px"}}>(from {this.uriformat(bdo+"noteSource",noteData[bdo+"noteSource"])}{loca})</Tag></div>
+                        let workuri = <div><Tag style={{fontSize:"14px"}}>({I18n.t("misc.from")} {this.uriformat(bdo+"noteSource",noteData[bdo+"noteSource"])}{loca})</Tag></div>
 
                         let sav = [
-                           <Tag className="first type">{nbN++ /*this.proplink(bdo+"noteSource","Note")*/}</Tag>,
+                           <Tag className="first type">{numtobo(nbN++) /*this.proplink(bdo+"noteSource","Note")*/}</Tag>,
                            workuri,
                            <ChatIcon className="annoticon"  onClick={
                               (function(val,prop,v,ev){
@@ -3048,10 +3049,10 @@ class ResourceViewer extends Component<Props,State>
                      //console.log("what",what,elem[f])
 
                      if(!noVal)
-                        subsub.push(<Tag data-prop={shortUri(f)} className={'first '+(div == ""?'type':'prop')}>{[this.proplink(f),": "]}</Tag>)
+                        subsub.push(<Tag data-prop={shortUri(f)} className={'first '+(div == ""?'type':'prop')}>{[this.proplink(f),I18n.t("punc.colon")+" "]}</Tag>)
                      //{...(val ? {className:'first prop'}:{className:'first type'}) }
                      else
-                        sub.push(<Tag data-prop={shortUri(f)} className={'first '+(!bnode?"type":"prop")}>{[this.proplink(f),": "]}</Tag>)
+                        sub.push(<Tag data-prop={shortUri(f)} className={'first '+(!bnode?"type":"prop")}>{[this.proplink(f),I18n.t("punc.colon")+" "]}</Tag>)
 
                      val = elem[f]
                      for(let v of val)
@@ -3892,16 +3893,16 @@ class ResourceViewer extends Component<Props,State>
          let loca = s => (elem && elem[bdo+"contentLocation"+s] && elem[bdo+"contentLocation"+s][0] && elem[bdo+"contentLocation"+s][0]["value"] ? elem[bdo+"contentLocation"+s][0]["value"]:null)
                   
          let vol = loca("Volume")
-         if(vol) str = "Vol."+vol+" " ;
+         if(vol) str = I18n.t("resource.volume",{num:vol})+" " ;
          let p = loca("Page")
-         if(p) str += "p."+p ;
+         if(p) str += I18n.t("resource.page",{num:p}) ;
          let l = loca("Line")
          if(l) str += "|"+l ;
          if(str && p) str += " - "
          let eV = loca("EndVolume")
-         if(eV) str += "Vol."+eV+" " ;
+         if(eV) str += I18n.t("resource.volume",{num:eV})+" " ;
          let eP = loca("EndPage")
-         if(eP) str += "p."+eP ;
+         if(eP) str += I18n.t("resource.page",{num:eP}) ;
          let eL = loca("EndLine")
          if(eL) str += "|"+eL ;
 
@@ -3912,21 +3913,21 @@ class ResourceViewer extends Component<Props,State>
                return ( 
                   [<Tooltip placement="bottom-start" style={{marginLeft:"50px"}} title={
                            <div style={{margin:"10px"}}>
-                              {vol && <div><span>Begin Volume:</span> {vol}</div>}
-                              {p && <div><span>Begin Page:</span> {p}</div>}
-                              {l && <div><span>Begin Line:</span> {l}</div>}
-                              {eV && <div><span>End Volume:</span> {eV}</div>}
-                              {eP && <div><span>End Page:</span> {eP}</div>}
-                              {eL && <div><span>End Line:</span> {eL}</div>}
+                              {vol && <div><span>{I18n.t("location.beginV",{num:vol})}</span></div>}
+                              {p && <div><span>{I18n.t("location.beginP",{num:p})}</span></div>}
+                              {l && <div><span>{I18n.t("location.beginL",{num:l})}</span></div>}
+                              {eV && <div><span>{I18n.t("location.endV",{num:eV})}</span></div>}
+                              {eP && <div><span>{I18n.t("location.endP",{num:eP})}</span></div>}
+                              {eL && <div><span>{I18n.t("location.endL",{num:eL})}</span></div>}
                            </div>
                         }>
-                           <h4>{str}{str && w && <span class="of">{I18n.t("misc.of")}</span>}{w && this.uriformat(bdo+"contentLocationInstance",{value:w})}{this.hoverMenu()}</h4>
+                           <h4>{str}{str && w && <span class="of">{I18n.t("misc.of")}</span>} {w && this.uriformat(bdo+"contentLocationInstance",{value:w})}{this.hoverMenu()}</h4>
                      </Tooltip>]
                );
             else if(w)
                return [<h4>{this.uriformat(bdo+"contentLocationInstance",{value:w})}</h4>]
          }
-         else return str.replace(/^Vol[.]/,"")
+         else return loca("Volume") //str.replace(/^Vol[.]/,"")
       }
    }
 
@@ -3938,7 +3939,7 @@ class ResourceViewer extends Component<Props,State>
 
       return ( 
          <div data-prop={shortUri(k)}>
-            <h3><span>{this.proplink(k)}:</span>&nbsp;</h3>
+            <h3><span>{this.proplink(k)}{I18n.t("punc.colon")}</span>&nbsp;</h3>
             { k == bdo+"placeLong" && tags }
             <div class="map"> {/* style={ {width:"100%",marginTop:"10px"} }> */}
                {  <Map ref={m => { this._leafletMap = m; }}
@@ -4024,7 +4025,7 @@ class ResourceViewer extends Component<Props,State>
 
          return (
             <div data-prop={shortUri(k)} class={"has-collapse custom max-"+(maxDisplay)+" "+(n%2===0?"even":"odd") }>
-               <h3><span>{this.proplink(k)}:</span></h3>
+               <h3><span>{this.proplink(k)}{I18n.t("punc.colon")}</span></h3>
                <div className={"propCollapseHeader in-"+(this.state.collapse[k]===true)}>
                   {ret.slice(0,maxDisplay)}
                   { (false || (!this.state.collapse[k] && hasMaxDisplay !== -1) ) && <span
@@ -4064,7 +4065,7 @@ class ResourceViewer extends Component<Props,State>
       else {
          return (
             <div  data-prop={shortUri(k)} {...(k===bdo+"note"?{class:"has-collapse custom"}:{})}>               
-               <h3><span>{this.proplink(k)}:</span>&nbsp;</h3>
+               <h3><span>{this.proplink(k)}{I18n.t("punc.colon")}</span>&nbsp;</h3>
                {this.preprop(k,0,n)}
                <div className={k === bdo+"personTeacherOf" || k === bdo + "personStudentOf" ? "propCollapseHeader in-false":"group"}>
                {ret}               
@@ -4296,7 +4297,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                                let Zloaded = e.zipFile && e.zipFile != true
 
                                return (<ListItem className="pdfMenu">
-                                     <b>{(e.volume !== undefined?(!e.volume.match || e.volume.match(/^[0-9]+$/)?"Volume ":"")+(e.volume):monoVol)}:</b>
+                                     <b>{(e.volume !== undefined?(!e.volume.match || e.volume.match(/^[0-9]+$/)?"Volume ":"")+(e.volume):monoVol)}{I18n.t("punc.colon")}</b>
                                      <a onClick={ev => that.handlePdfClick(ev,e.link,e.pdfFile)}
                                         {...(Ploaded ?{href:e.pdfFile}:{})}
                                      >
@@ -4789,11 +4790,11 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                      {(!this.state.newAnno || this.state.newAnno.replyTo) && this._annoPane}
                      {
                         this.state.newAnno && [<div class="anno new">
-                           {this.state.newAnno.prop}: {this.state.newAnno.val}
+                           {this.state.newAnno.prop}{I18n.t("punc.colon")} {this.state.newAnno.val}
                            <hr/>
                         </div> ,
                         <div class="sub">
-                           <h4 class="first type">{this.proplink("http://purl.bdrc.io/ontology/admin/supportedBy")}:</h4>
+                           <h4 class="first type">{this.proplink("http://purl.bdrc.io/ontology/admin/supportedBy")}{I18n.t("punc.colon")}</h4>
                            <div class="subsub new">
                               <TextField type="text" label="Assertion" multiline={true} fullWidth={true} rows={5} defaultValue={""} helperText="some short help text"/>
                               <TextField type="text" label="Location" multiline={true} fullWidth={true} rows={3} defaultValue={""} helperText="some short help text"/>
@@ -4801,7 +4802,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                            </div>
                         </div> ,
                         <div class="sub">
-                           <h4 class="first type">{this.proplink("http://purl.bdrc.io/ontology/admin/statementScore")}:</h4>
+                           <h4 class="first type">{this.proplink("http://purl.bdrc.io/ontology/admin/statementScore")}{I18n.t("punc.colon")}</h4>
                            <div class="subsub new">
                               <TextField type="text" label="Value" multiline={true} fullWidth={true} rows={1} defaultValue={""} helperText="some short help text"/>
                            </div>
@@ -5173,7 +5174,9 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                         let w_idx = elem.filter(f => f["@id"] === e) 
                         if(w_idx.length) {
                            let g = w_idx[0]
+                           if(g.details && g.lang !== this.props.locale) delete g.details
                            if(!g.details) {
+                              g.lang = this.props.locale
                               // deprecated
                               // if(! (["bdr:PartTypeSection", "bdr:PartTypeVolume"].includes(g.partType)) ) {
                               if(g.contentLocation) {
@@ -5183,13 +5186,13 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                               }
                               if(g.instanceOf) {
                                  if(!g.details) g.details = []
-                                 g.details.push(<div class="sub"><h4 class="first type">{this.proplink(bdo+"instanceOf")}: </h4>{this.format("h4","instacO","",false, "sub", [{type:"uri",value:fullUri(g.instanceOf)}])}</div>)
+                                 g.details.push(<div class="sub"><h4 class="first type">{this.proplink(bdo+"instanceOf")}{I18n.t("punc.colon")} </h4>{this.format("h4","instacO","",false, "sub", [{type:"uri",value:fullUri(g.instanceOf)}])}</div>)
                                  let instOf = elem.filter(f => f["@id"] === g.instanceOf)
                                  if(instOf.length && instOf[0]["tmp:labelMatch"]) {
                                     let node = instOf[0]["tmp:labelMatch"]
                                     if(!Array.isArray(node)) node = [node]                                    
                                     //console.log("instOf",instOf,node)
-                                    g.details.push(<div class="sub"><h4 class="first type">{this.proplink(tmp+"instanceLabel")}: </h4><div>{node.map(n => this.format("h4","","",false, "sub",[{ value:n["@value"], lang:n["@language"], type:"literal"}]))}</div></div>)
+                                    g.details.push(<div class="sub"><h4 class="first type">{this.proplink(tmp+"instanceLabel")}{I18n.t("punc.colon")} </h4><div>{node.map(n => this.format("h4","","",false, "sub",[{ value:n["@value"], lang:n["@language"], type:"literal"}]))}</div></div>)
                                  }
                               }
                               /*
@@ -5214,7 +5217,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                                        if(!Array.isArray(title)) title = [ title ]                                      
                                        title = title.map(f => ({value:f["@value"],lang:f["@language"], type:"literal"}))
                                        //console.log("title?",JSON.stringify(title,null,3))
-                                       g.details.push(<div class={"sub " + (hideT?"hideT":"")}><h4 class="first type">{this.proplink(titleT)}: </h4>{this.format("h4", "", "", false, "sub", title)}</div>)
+                                       g.details.push(<div class={"sub " + (hideT?"hideT":"")}><h4 class="first type">{this.proplink(titleT)}{I18n.t("punc.colon")} </h4>{this.format("h4", "", "", false, "sub", title)}</div>)
                                     }
                                  }
                               }
@@ -5226,7 +5229,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                                     let val = "" + loca[k]
                                     if(k.includes("content")) jLoca[bdo+k] = [ { value:(val.includes(":")?fullUri(loca[k]):loca[k]), type:"literal" } ]
                                  }                                 
-                                 g.details.push(<div class="sub loca"><h4 class="first type">{this.proplink(bdo+"contentLocation")}: </h4>{this.getWorkLocation([{value:loca["@id"]}],true, jLoca)}</div>)
+                                 g.details.push(<div class="sub loca"><h4 class="first type">{this.proplink(bdo+"contentLocation")}{I18n.t("punc.colon")} </h4>{this.getWorkLocation([{value:loca["@id"]}],true, jLoca)}</div>)
                               }
                            }
                            outline.push(g);
@@ -5611,7 +5614,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
       let root = this.getResourceElem(bdo+"inRootInstance");
       //console.log("root?",root)
       if(root && root.length) {
-         inTitle  = <h3><span>{I18n.t("misc.in")}: </span> {this.uriformat(tmp+"in",root[0])}</h3> 
+         inTitle  = <h3><span>{I18n.t("misc.in")}{I18n.t("punc.colon")} </span> {this.uriformat(tmp+"in",root[0])}</h3> 
       }
 
       let isMirador = (!this.props.manifestError || (this.props.imageVolumeManifests && Object.keys(this.props.imageVolumeManifests).length)) && (this.props.imageAsset || this.props.imageVolumeManifests) && this.state.openMirador

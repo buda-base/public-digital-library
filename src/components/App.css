@@ -1697,8 +1697,8 @@ TODO
 .resource .data > [data-prop="bdo:lineageHolder"] h4[data-prop^="bdo:lineageHolder"] 
 { display:none; }
 
-#popHoverM .resource .data h4[data-prop="bdo:role"] + h4 a::after,
-.resource .data > [data-prop="bdo:creator"] h4[data-prop="bdo:role"] + h4::after { content:':'; /*padding-right:5px;*/ }
+html[lang="en"] #popHoverM .resource .data h4[data-prop="bdo:role"] + h4 a::after,
+html[lang="en"] .resource .data > [data-prop="bdo:creator"] h4[data-prop="bdo:role"] + h4::after { content:':'; /*padding-right:5px;*/ }
 
 
 #popHoverM .resource .data h4[data-prop="bdo:role"] + h4 a,

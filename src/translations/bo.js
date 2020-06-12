@@ -1,7 +1,7 @@
 
-const enTranslation = {
+const boTranslation = {
    punc: {
-      colon:":"
+      colon:" "
    },
    home:{
       BUDA:"BUDA",
@@ -41,7 +41,8 @@ const enTranslation = {
       instance:"དཔེ་ཆ།",
       instance_plural:"དཔེ་ཆ།",
       images:"བཤེར་པར།",
-      volume:"བཤེར་པར། {{num,counttobo}}"
+      volume:"བཤེར་པར།",
+      volume_num:"Volume {{num,counttobo}}"
    },
    topbar:{
       about:"about us",
@@ -116,8 +117,8 @@ const enTranslation = {
       "tmp:otherTitle_plural":"Other Titles",
       "tmp:otherName":"Other Name",
       "tmp:otherName_plural":"Other Names",
-      "tmp:otherMatch":"Other Match ({{count}})",
-      "tmp:otherMatch_plural":"Other Matches ({{count}})",
+      "tmp:otherMatch":"Other Match ({{count,counttobo}})",
+      "tmp:otherMatch_plural":"Other Matches ({{count,counttobo}})",
       "tmp:originalRecord":"Original Record",
       "tmp:imageVolumeId":"Image Volume Id",
       "tmp:workHasTranslationInCanonicalLanguage":"Canonical Translation",
@@ -125,7 +126,11 @@ const enTranslation = {
       "tmp:entityScore":"Entity Score",
       "tmp:instanceLabel":"Instance Label",
       "tmp:dimensions":"Dimensions",
-      "tmp:publisherLocation":"Publisher Loc."
+      "tmp:publisherLocation":"Publisher Loc.",
+      "tmp:forWork":"For Work",
+      "tmp:provider":"Provider",
+      "tmp:author":"Author",
+      "tmp:assetAvailability":"Asset Availability"
    },
    result:{
       open:"Open",
@@ -141,9 +146,8 @@ const enTranslation = {
       expandC:"Expand Context",
       hideC:"Hide Context",
       openE:"Open Etext",
-      hasInstance:"Has {{count}} Instance",
-      hasInstance_plural:"Has {{count}} Instances",
-      hasInstance_plural_bo_example:"Has {{count,counttobo}} Instances"
+      hasInstance:"Has {{count,counttobo}} Instance",
+      hasInstance_plural:"Has {{count,counttobo}} Instances",
    },
    index:{
       openViewer:"Open in Viewer",
@@ -182,7 +186,7 @@ const enTranslation = {
       seeO:"See original"
    },
    misc:{
-      colon:":",
+      colon:" ",
       datatype:"Back to datatypes",
       has:"Has",
       or:"or",
@@ -312,8 +316,8 @@ const enTranslation = {
       view:"View",
       metadata:"metadata",
       manifest:"IIIF manifest",
-      page:"p.{{num}}",
-      volume:"Vol.{{num}}",
+      page:"p.{{num,counttobo}}",
+      volume:"Vol.{{num,counttobo}}",
       availableScans:"available scans for this page",
       about:"About",
       createdB:"Created By",
@@ -343,7 +347,15 @@ const enTranslation = {
    access:{
       limited20:"Access limited to first & last 20 pages.",
       credentials:"if you have sufficient credentials to get access to all images from this work."
+   },
+   location:{
+      beginV:"Begin Volume {{num,counttobo}}",
+      beginP:"Begin Page {{num,counttobo}}",
+      beginL:"Begin Line {{num,counttobo}}",
+      endV:"End Volume {{num,counttobo}}",
+      endP:"End Page {{num,counttobo}}",
+      endL:"End Line {{num,counttobo}}"
    }
 } ;
 
-export default enTranslation ;
+export default boTranslation ;

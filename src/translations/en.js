@@ -347,6 +347,14 @@ const enTranslation = {
    access:{
       limited20:"Access limited to first & last 20 pages.",
       credentials:"if you have sufficient credentials to get access to all images from this work."
+   },
+   location:{
+      beginV:"Begin Volume: {{num}}",
+      beginP:"Begin Page: {{num}}",
+      beginL:"Begin Line: {{num}}",
+      endV:"End Volume: {{num}}",
+      endP:"End Page: {{num}}",
+      endL:"End Line: {{num}}"
    }
 } ;
 
