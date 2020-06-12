@@ -20,7 +20,7 @@ const boTranslation = {
    },
    misc:{
       datatype:"Back to datatypes",
-      show:"Show all",
+      show:"འདི་ལས་མང་བ།",
       hide:"Hide"
    },
    lang:{
@@ -71,37 +71,37 @@ const boTranslation = {
          boXEwts:"Tibetan transliterated in Wylie"
       },
       langscript:{
-         zh:"Chinese",
-         en:"English",
-         pi:"Pali",
-         bo:"Tibetan",
-         inc:"Indic",
-         sa:"Sanskrit",
-         hans:"Simplified",
-         hant:"Traditional",
-         deva:"Devanagari",
-         newa:"Newari",
-         sinh:"Sinhalese",
-         latn:"Latin",
-         xEwts:"Wylie",
+         zh:"རྒྱ་ཡིག",
+         en:"ཨིན་ཡིག",
+         pi:"པཱ་ལི།",
+         bo:"བོད་ཡིག",
+         inc:"རྒྱ་གར་ཡུལ་གྱི་སྐད་རིགས།",
+         sa:"ལེགས་སྦྱར།",
+         hans:"གསར་མ།",
+         hant:"སྲོལ་རྒྱུན།",
+         deva:"དེ་ཝ་ན་ག་རི།",
+         newa:"ནེ་བ་རི།",
+         sinh:"སིང་ཧ་ལའི་ཡི་གེ།",
+         latn:"ལ་ཏིན་ཡི་གེ།",
+         xEwts:"ཝའི་ལི།",
          xDts:"DTS",
          xIast:"IAST",
          alalc97:"ALA-LC",
-         latnPinyin:"Pinyin"
+         latnPinyin:"ཕིན་ཡིག"
       }
    },
    types:{
       "any":"Any",
       "corporation":"Corporation",
-      "etext":"Etext",
-      "item":"Item",
-      "lineage":"Lineage",
-      "person":"Person",
-      "place":"Place",
-      "role":"Role",
-      "topic":"Topic",
-      "work":"Work",
-      "instance":"Work Instance"
+      "etext":"འཕྲུལ་ཡིག",
+      "item":"Item", # we don't want to translate this!
+      "lineage":"ཆོས་བརྒྱུད།",
+      "person":"མི་སྣ།",
+      "place":"ས་གནས།",
+      "role":"ལས་འགན།",
+      "topic":"བརྗོད་གཞི།",
+      "work":"བརྩམས་ཆོས།",
+      "instance":"དཔེ་ཆ།"
    },
    search:{
       filters:{
@@ -117,12 +117,12 @@ const boTranslation = {
          remove:"Remove filter",
          reset:"Clear all filters"
       },
-      title:"Refine your Search",
+      title:"ནང་གསེས་འདེམས་སྒྲུག",
       collection:{
          title:"Collection"
       },
       datatypes:{
-         title:"Data Types"
+         title:"དན་གྲངས་ཀྱི་རིགས།"
       }
    },
    Rsidebar:{
