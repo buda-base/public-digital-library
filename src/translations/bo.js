@@ -41,7 +41,7 @@ const enTranslation = {
       instance:"དཔེ་ཆ།",
       instance_plural:"དཔེ་ཆ།",
       images:"བཤེར་པར།",
-      volume:"བཤེར་པར།"
+      volume:"བཤེར་པར། {{num,counttobo}}"
    },
    topbar:{
       about:"about us",

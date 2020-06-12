@@ -1919,7 +1919,7 @@ class ResourceViewer extends Component<Props,State>
                if(!lang) lang = infoBase[0]["lang"]
                if(lang) info = infoBase[0].value 
                else info = null
-               if(infoBase[0].type && infoBase[0].type == bdo+"volumeNumber") info = "Volume "+infoBase[0].value ;
+               if(infoBase[0].type && infoBase[0].type == bdo+"volumeNumber") info = I18n.t("types.volume",{num:infoBase[0].value}) ;
                else if(info && info.match(/purl[.]bdrc/)) info = null
                //console.log("info0",info)
             }

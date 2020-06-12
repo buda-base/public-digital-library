@@ -10,7 +10,7 @@ require('formdata-polyfill')
 const CONFIG_PATH = '/config.json'
 const CONFIGDEFAULTS_PATH = '/config-defaults.json'
 const ONTOLOGY_PATH = '/ontology/core.json'
-const DICTIONARY_PATH = '/ontology/data/json'
+const DICTIONARY_PATH = '/graph/ontologySchema.json' //  deprecated '/ontology/data/json'
 const USER_PATH = '/resource-nc/user/me'
 const USER_EDIT_POLICIES_PATH = '/userEditPolicies'
 

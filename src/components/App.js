@@ -5059,7 +5059,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   <div id="pagine">
                      <div>
                            { pageLinks && <span>{I18n.t("search.page")} { pageLinks }</span>}
-                           <span id="nb">{nbResu} {I18n.t("search.result"+(nbResu>1?"_pl":""))}</span>
+                           <span id="nb">{I18n.t("search.result",{count:nbResu})}</span>
                      </div>
                   </div>
                </div>

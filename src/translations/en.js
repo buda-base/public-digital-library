@@ -41,7 +41,7 @@ const enTranslation = {
       instance:"Instance",
       instance_plural:"Instances",
       images:"Images",
-      volume:"Volume"
+      volume:"Volume {{num}}"
    },
    topbar:{
       about:"about us",
@@ -125,7 +125,11 @@ const enTranslation = {
       "tmp:entityScore":"Entity Score",
       "tmp:instanceLabel":"Instance Label",
       "tmp:dimensions":"Dimensions",
-      "tmp:publisherLocation":"Publisher Loc."
+      "tmp:publisherLocation":"Publisher Loc.",
+      "tmp:forWork":"For Work",
+      "tmp:provider":"Provider",
+      "tmp:author":"Author",
+      "tmp:assetAvailability":"Asset Availability"
    },
    result:{
       open:"Open",
@@ -275,8 +279,8 @@ const enTranslation = {
    },
    search:{
       page:"page",
-      result:"Result",
-      result_pl:"Results",
+      result:"{{count}} Result",
+      result_plural:"{{count}} Results",
       filters:{
          noresults:"No results matching your filters."
       }
