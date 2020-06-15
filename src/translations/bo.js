@@ -2,7 +2,7 @@
 const boTranslation = {
    punc: {
       colon:" ",
-      num:"{{num}}"
+      num:"{{num,counttobo}}"
    },
    home:{
       BUDA:"BUDA",
