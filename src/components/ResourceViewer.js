@@ -550,6 +550,7 @@ extProperties["Images"] = extProperties["Work"]
 const canoLang = ["Bo","Pi","Sa","Zh"]
 
 let reload = false ;
+let tiMir = 0
 
 function getRealUrl(that,url) {
 
@@ -775,8 +776,6 @@ class ResourceViewer extends Component<Props,State>
       propOrder = tmp
 
       window.closeViewer = () => { 
-         this.setState({...this.state, openUV:false, openMirador:false, openDiva:false}); 
-         if(window.MiradorUseEtext) delete window.MiradorUseEtext ;
          //delete window.mirador         
 
          console.log("closeV",this.state,this.props)
@@ -794,6 +793,10 @@ class ResourceViewer extends Component<Props,State>
                this.props.history.push({pathname:path[0],search:path[1]})
             }
          }
+
+         this.setState({...this.state, openUV:false, openMirador:false, openDiva:false}); 
+         if(window.mirador) delete window.mirador
+         if(window.MiradorUseEtext) delete window.MiradorUseEtext ;
       }
    }
 
@@ -1680,7 +1683,7 @@ class ResourceViewer extends Component<Props,State>
    {
       for(let p of Object.keys(prefixes)) { prop = prop.replace(new RegExp(p+":","g"),prefixes[p]) }
 
-      console.log("full",prop)
+      //console.log("full",prop)
 
       /*
       if(this.props.ontology[prop] && this.props.ontology[prop][rdfs+"label"])
@@ -3449,11 +3452,12 @@ class ResourceViewer extends Component<Props,State>
 
          console.log("num",num,useManifest)
 
-         let tiMir = setInterval( async () => {
+         if(!tiMir) tiMir = setInterval( async () => {
 
-            if(window.Mirador && window.Mirador.Viewer.prototype.setupViewer.toString().match(/going to previous page/)) {
+            if(window.Mirador && window.Mirador.Viewer.prototype.setupViewer.toString().match(/going to previous page/) && !window.mirador) {
 
                clearInterval(tiMir);
+               tiMir = 0
 
                $("#fond").addClass("hidden");
 
@@ -3487,7 +3491,8 @@ class ResourceViewer extends Component<Props,State>
 
                let config = await miradorConfig(data,manif,canvasID,withCredentials,this.props.langPreset,null,this.props.IRI);
 
-               //console.log("mir ador",num,config,this.props)
+               console.log("mir ador",num,config,this.props)
+
                if(window.mirador) delete window.mirador
                window.mirador = window.Mirador( config )
 
