@@ -255,7 +255,10 @@ const makeMainRoutes = () => {
                         
                         let IRI = props.match.params.IRI
                         let get = qs.parse(history.location.search)
-                        if(get.part && get.part !== IRI) IRI = get.part
+                        if(get.part && get.part !== IRI) {
+                           get.root = IRI
+                           IRI = get.part
+                        }
                         store.dispatch(initiateApp(get,IRI));
                      
                         return ( <ResourceViewerContainer  auth={auth} history={history} IRI={IRI}/> ) } }/>

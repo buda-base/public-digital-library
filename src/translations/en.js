@@ -42,7 +42,8 @@ const enTranslation = {
       instance:"Instance",
       instance_plural:"Instances",
       images:"Images",
-      volume:"Volume {{num}}"
+      volume:"Volume",
+      volume_num:"Volume {{num}}"
    },
    topbar:{
       about:"about us",

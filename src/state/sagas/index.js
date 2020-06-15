@@ -243,9 +243,11 @@ async function initiateApp(params,iri,myprops) {
    //}
 }
 
+
 if(params && params.osearch) {
    let p = params.osearch.split("@")
    let r = iri
+   if(params.root) r = params.root
 
    // TODO add search in part of outline
    //if(params.part) r = params.part

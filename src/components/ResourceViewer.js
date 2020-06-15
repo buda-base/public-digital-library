@@ -779,6 +779,7 @@ class ResourceViewer extends Component<Props,State>
          if(window.MiradorUseEtext) delete window.MiradorUseEtext ;
          //delete window.mirador         
 
+         console.log("closeV",this.state,this.props)
 
          if(this.state.fromSearch) {
             let backTo = this.state.fromSearch
@@ -786,7 +787,12 @@ class ResourceViewer extends Component<Props,State>
             console.log("fromS",this.state.fromSearch,backTo,withW)
             if(backTo === withW) backTo = decodeURIComponent(backTo)
             else backTo = decodeURIComponent(backTo.replace(new RegExp("(([?])|&)"+withW),"$2"))+"&"+withW
-            this.props.history.push({pathname:"/search",search:backTo})
+
+            if(!backTo.startsWith("/show")) this.props.history.push({pathname:"/search",search:backTo})
+            else {
+               let path = backTo.split("?")
+               this.props.history.push({pathname:path[0],search:path[1]})
+            }
          }
       }
    }
@@ -1140,6 +1146,12 @@ class ResourceViewer extends Component<Props,State>
          s.collapse = collapse
       }
 
+
+      if(get.s && (!s && !this.state.fromSearch || s && !s.fromSearch) ) { 
+         if(!s) s = { ...this.state } 
+         s.fromSearch = get.s
+      }
+
       // DONE
       // + clean collapsed nodes when changing node/part
       // + change hilighted node
@@ -1187,10 +1199,6 @@ class ResourceViewer extends Component<Props,State>
       let get = qs.parse(this.props.history.location.search)
       if(get.tabs && get.tabs.length) {         
          s = ResourceViewer.setTitleFromTabs(this.props,{...this.state, tabs:get.tabs.split(",")})
-      }
-      if(get.s) {
-         if(!s) s = { ...this.state } 
-         s.fromSearch = get.s
       }
 
 
@@ -1672,7 +1680,7 @@ class ResourceViewer extends Component<Props,State>
    {
       for(let p of Object.keys(prefixes)) { prop = prop.replace(new RegExp(p+":","g"),prefixes[p]) }
 
-      //console.log("full",prop)
+      console.log("full",prop)
 
       /*
       if(this.props.ontology[prop] && this.props.ontology[prop][rdfs+"label"])
@@ -1706,6 +1714,10 @@ class ResourceViewer extends Component<Props,State>
 
     
       let sTmp, trad ;
+      sTmp="prop."+shortUri(prop)
+      trad=I18n.t(sTmp)
+      console.log("trad",prop,sTmp,trad)
+
       if(prop && prop.matches && prop.matches(/[./]/) && (trad=I18n.t(sTmp="prop."+shortUri(prop))) !== sTmp)  {
          if(canSpan) return <span lang="">{this.pretty(trad,isUrl,noNewline)}</span>
          else return this.pretty(trad,isUrl,noNewline)
@@ -4065,7 +4077,7 @@ class ResourceViewer extends Component<Props,State>
       else {
          return (
             <div  data-prop={shortUri(k)} {...(k===bdo+"note"?{class:"has-collapse custom"}:{})}>               
-               <h3><span>{this.proplink(k)}{I18n.t("punc.colon")}</span>&nbsp;</h3>
+               <h3><span>{this.proplink(k)}{I18n.t("punc.colon")}</span> </h3>
                {this.preprop(k,0,n)}
                <div className={k === bdo+"personTeacherOf" || k === bdo + "personStudentOf" ? "propCollapseHeader in-false":"group"}>
                {ret}               
@@ -5180,8 +5192,8 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                               // deprecated
                               // if(! (["bdr:PartTypeSection", "bdr:PartTypeVolume"].includes(g.partType)) ) {
                               if(g.contentLocation) {
-                                 if(!g.details) g.details = []
-                                 g.hasImg = "/show/"+g["@id"].replace(/^((bdr:MW[^_]+)_[^_]+)$/,"$2?part=$1")+"#open-viewer"
+                                 if(!g.details) g.details = []                                 
+                                 g.hasImg = "/show/"+g["@id"].replace(/^((bdr:MW[^_]+)_[^_]+)$/,"$2?part=$1")+"&s="+encodeURIComponent(this.props.history.location.pathname+this.props.history.location.search)+"#open-viewer"
                                  g.details.push(<div class="sub view"><Link to={g.hasImg} class="ulink">&gt; {I18n.t("copyright.view")}</Link></div>)
                               }
                               if(g.instanceOf) {
@@ -5623,17 +5635,19 @@ perma_menu(pdfLink,monoVol,fairUse,other)
       
       if(this.state.fromSearch) {
          let backTo = this.state.fromSearch
-         let withW = backTo.replace(/^.*[?&](w=[^&]+)&?.*$/,"$1")
-         console.log("fromS",this.state.fromSearch,backTo,withW)
-         if(backTo === withW) { 
-            backTo = decodeURIComponent(backTo)
-            searchUrl = backTo
-            searchTerm = searchUrl.replace(/.*q=([^&]+).*/,"$1")
-         }
-         else { 
-            backTo = decodeURIComponent(backTo.replace(new RegExp("(([?])|&)"+withW),"$2"))+"&"+withW
-            searchUrl = backTo
-            searchTerm = I18n.t("topbar.instances")+" "+searchUrl.replace(/.*i=([^&]+).*/,"$1")
+         if(!decodeURIComponent(backTo).startsWith("/show/")) {
+            let withW = backTo.replace(/^.*[?&](w=[^&]+)&?.*$/,"$1")
+            console.log("fromS",this.state.fromSearch,backTo,withW)
+            if(backTo === withW) { 
+               backTo = decodeURIComponent(backTo)
+               searchUrl = backTo
+               searchTerm = searchUrl.replace(/.*q=([^&]+).*/,"$1")
+            }
+            else { 
+               backTo = decodeURIComponent(backTo.replace(new RegExp("(([?])|&)"+withW),"$2"))+"&"+withW
+               searchUrl = backTo
+               searchTerm = I18n.t("topbar.instances")+" "+searchUrl.replace(/.*i=([^&]+).*/,"$1")
+            }
          }
       }
 
