@@ -1,7 +1,8 @@
 
 const enTranslation = {
    punc: {
-      colon:":"
+      colon:":",
+      num:"{{num}}"
    },
    home:{
       BUDA:"BUDA",
@@ -129,7 +130,8 @@ const enTranslation = {
       "tmp:forWork":"For Work",
       "tmp:provider":"Provider",
       "tmp:author":"Author",
-      "tmp:assetAvailability":"Asset Availability"
+      "tmp:assetAvailability":"Asset Availability",
+      "tmp:textMatch":"Text Match"
    },
    result:{
       open:"Open",

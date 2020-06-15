@@ -2962,7 +2962,7 @@ class ResourceViewer extends Component<Props,State>
                         }
 
                         let sav = [
-                              <Tag className="first type">{numtobo(nbN++) /*this.proplink(bdo+"noteText","Note")*/}</Tag>,
+                              <Tag className="first type">{I18n.t("punc.num",{num:nbN++}) /*this.proplink(bdo+"noteText","Note")*/}</Tag>,
                               workuri,
                               <div class="subsub">
                                  <Tag>
@@ -2994,7 +2994,7 @@ class ResourceViewer extends Component<Props,State>
                         let workuri = <div><Tag style={{fontSize:"14px"}}>({I18n.t("misc.from")} {this.uriformat(bdo+"noteSource",noteData[bdo+"noteSource"])}{loca})</Tag></div>
 
                         let sav = [
-                           <Tag className="first type">{numtobo(nbN++) /*this.proplink(bdo+"noteSource","Note")*/}</Tag>,
+                           <Tag className="first type">{I18n.t("punc.num",{num:nbN++}) /*this.proplink(bdo+"noteSource","Note")*/}</Tag>,
                            workuri,
                            <ChatIcon className="annoticon"  onClick={
                               (function(val,prop,v,ev){
