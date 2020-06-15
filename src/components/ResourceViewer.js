@@ -1714,11 +1714,7 @@ class ResourceViewer extends Component<Props,State>
 
     
       let sTmp, trad ;
-      sTmp="prop."+shortUri(prop)
-      trad=I18n.t(sTmp)
-      console.log("trad",prop,sTmp,trad)
-
-      if(prop && prop.matches && prop.matches(/[./]/) && (trad=I18n.t(sTmp="prop."+shortUri(prop))) !== sTmp)  {
+      if(prop && prop.match && prop.match(/[./]/) && (trad=I18n.t(sTmp="prop."+shortUri(prop))) !== sTmp)  {
          if(canSpan) return <span lang="">{this.pretty(trad,isUrl,noNewline)}</span>
          else return this.pretty(trad,isUrl,noNewline)
       }
