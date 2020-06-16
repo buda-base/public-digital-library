@@ -65,28 +65,28 @@ const boTranslation = {
       },
       title:"ནང་གསེས་འདེམས་སྒྲུག",
       collection:{
-         title:"Collection"
+         title:"དཔེ་ཚོགས།"
       },
       datatypes:{
          title:"དན་གྲངས་ཀྱི་རིགས།"
       },
       widgets:{
-         root: "In Instance",
+         root: "ཡོང་ཁུངས།",
          tree: "རྩོམ་རིག་གི་རྣམ་དབྱེ།",
          relationInv: "Inverse Relation Type"
       },
       tags:{
-         type: "Type",
-         instanceOf: "Instance Of",
-         reset:"Reset filters",
-         include:"Include results with",
-         exclude:"Exclude results with"
+         type: "བཙལ་བྱ།",
+         instanceOf: "བརྩམས་ཆོས།",
+         reset:"ཚགས་སྒྲིག་སུབ་ཆས།",
+         include:"བཙལ་འབྲས་ནང་ཚུད་དགོས་པ། ",
+         exclude:"བཙལ་འབྲས་ནང་ཚུད་མི་དགོས་པ། "
 
       },
       activeF:{
-         title:"Active Filters",
-         remove:"Remove filter",
-         reset:"Clear all filters"
+         title:"རྟགས་བརྒྱབ་པའི་ཚགས་སྒྲིག",
+         remove:"ཚགས་སྒྲིག་མེད་པར་བཟོས།",
+         reset:"ཚགས་སྒྲིག་ཚང་མ་སུབ།"
       }
    },
    sort:{
@@ -120,7 +120,7 @@ const boTranslation = {
       "tmp:otherName_plural":"མིང་གཞན།",
       "tmp:otherMatch":"རྙེད་པ་གཞན། ({{count,counttobo}})",
       "tmp:otherMatch_plural":"རྙེད་པ་གཞན། ({{count,counttobo}})",
-      "tmp:originalRecord":"Original Record",
+      "tmp:originalRecord":"མ་དཔེའི་གནས་ཚུལ།",
       "tmp:imageVolumeId":"བཤེར་པར་པོད་ཀྱི་ཨང་རྟགས།",
       "tmp:workHasTranslationInCanonicalLanguage":"འགྱུར་རྙིང་།",
       "tmp:workHasTranslationInNonCanonicalLanguage":"འགྱུར་གསར།",
@@ -139,10 +139,10 @@ const boTranslation = {
       resource:"དཔེ་ཆ།",
       in:" ",
       available:"དཔེ་ཆ་ཡོད་ས།",
-      inRootInstance:"ཁུངས།",      
-      workBy:"By",
-      eTextIsForWork:"For Work",
-      year:"Year",
+      inRootInstance:"",      
+      workBy:"རྩོམ་པ་པོ།",
+      eTextIsForWork:"བརྩམས་ཆོས།",
+      year:"ལོ།",
       inInstance:"In Instance",
       inInstancePart:"In Instance Part",
       expandC:"མང་ཙམ་སྟོན།",
@@ -160,32 +160,32 @@ const boTranslation = {
    },
    user:{
       photo:{ 
-         hover:"Update profile picture",
-         label:"Profile Picture",                                
-         helperText:"Paste a direct link to an existing picture",
-         error:"Error: cannot find image, please check your link"
+         hover:"པར་གསར་པ་ཞོག",
+         label:"ཐོ་གཞུང་པར།",                                
+         helperText:"པར་གྱི་དྲྭ་ཐག་ཞོག",
+         error:"པར་གྱི་དྲྭ་ཐག་ལ་གནད་དོན་ཞིག་བྱུང་སོང་།"
       },      
       edit:{
-         add:"Add another value for property",
-         del:"Delete property",
-         set:"Modify value",
-         hide:"Set private",
-         show:"Set public",
+         add:"ཁྱད་ཆོས་སྣོན།",
+         del:"ཁྱད་ཆོས་སུབ།",
+         set:"ཁྱད་ཆོས་བཅོས།",
+         hide:"གཞན་ལ་མ་སྟོན།",
+         show:"ཚང་མར་སྟོན།",
       }
    },
    popover:{
-      moreInfo:"More Information",
-      source:"Source",
-      source_plural:"Sources",
-      notes:"Notes",
-      discussion:"Discussion",
-      lang:"Language/Script",
-      otherLang:"In Other Language",
-      otherLang_plural:"In Other Languages",
-      calendar:"In Calendar",
-      gregorian:"Gregorian Calendar",
-      imported:"This record was imported from",
-      seeO:"See original"
+      moreInfo:"གནས་ཚུལ་འདི་ལས་མང་བ།",
+      source:"ལུང་ཁུངས།",
+      source_plural:"ལུང་ཁུངས།",
+      notes:"མཆན།",
+      discussion:"དོགས་གཅོད།",
+      lang:"སྐད་ཡིག",
+      otherLang:"སྐད་རིགས་གཞན།",
+      otherLang_plural:"སྐད་རིགས་གཞན།",
+      calendar:"ལོ་བརྩི་སྟངས།",
+      gregorian:"གྷི་རི་གྷོ་རིའི་ལོ་ཐོ།",
+      imported:"གནས་ཚུལ་ལེན་ས།",
+      seeO:"མ་དཔེ་སྟོན།"
    },
    misc:{
       colon:" ",
@@ -193,7 +193,7 @@ const boTranslation = {
       has:"Has",
       or:"or",
       seeA:"ཚང་མ་སྟོན།",
-      browse:"རོབ་བལྟ་བྱོས།",
+      browse:"མིག་བཤེར་བྱོས།",
       show:"འདི་ལས་མང་བ།",
       seeMore:"འདི་ལས་མང་བ།",
       readM:"འདི་ལས་མང་བ།",
@@ -220,7 +220,7 @@ const boTranslation = {
          zhLatnPinyin:"རྒྱ་ཡིག (ཕིན་ཡིག)",
          zhXPhonEn:"རྒྱ་ཡིག (སྒྲ་ཡིག)",
          saXIast:"ལེགས་སྦྱར། (IAST)",
-         saXNdia:"ལེགས་སྦྱར། (Lenient)",
+         saXNdia:"ལེགས་སྦྱར། (འདྲ་བྲིས་མ།)",
          saDeva:"ལེགས་སྦྱར། (དེ་བ་ན་ག་རི།)",
          en:"ཨིན་ཡིག",
          pi:"པཱ་ལི།",
@@ -281,8 +281,8 @@ const boTranslation = {
    },
    search:{
       page:"ཤོག་ངོས།",
-      result:"བཙལ་འབྲས།",
-      result_pl:"བཙལ་འབྲས།",
+      result:"བཙལ་འབྲས། {{count}}",
+      result_pl:"བཙལ་འབྲས། {{count}}",
       filters:{
          noresults:"འདེམས་སྒྲུག་བྱས་པའི་བཙལ་འབྲས་མི་འདུག"
       }
@@ -296,17 +296,17 @@ const boTranslation = {
          title:"བཙལ་འབྲས་ཀྱི་སྐད་ཡིག་གཙོ་བོ།"
       },
       priority:{
-         title:"Data Language Priority",
-         help:"Please select the languages you want to have the data displayed in, by order of priority (you do not need to list them all)",
-         user:"User Defined"
+         title:"དན་གྲངས་ཀྱི་སྐད་ཡིག་གི་གོ་རིམ།",
+         help:"དན་གྲངས་སྟོན་སའི་སྐད་ཡིག་གལ་ཆེ་ཆུང་གི་རིམ་པ་ལྟར་འདེམས། སྐད་ཡིག་ཚང་མ་མ་འདེམས་རུང་ཆོག",
+         user:"ཁྱེད་ཀྱི་འདེམ་ཁ།"
       }
    },
    Asidebar:{
-      title:"Annotations"
+      title:"མཆན།"
    },
    resource:{
-      back:"Go back to search page",
-      browse:"Browse associated resources",      
+      back:"འཚོལ་ངོས་ལ་ཕྱིར་ལོག",
+      browse:"འབྲེལ་ཡོད་ཡིག་ཆར་མིག་བཤེར་བྱོས།",      
       openViewer:"འཕྲུལ་ཡིག་ཀློག",
       download:"ཕབ་ལེན།",
       downloadAs:"ཕབ་ལེན་གྱི་རྣམ་སྒྲིག ",
@@ -314,13 +314,13 @@ const boTranslation = {
       exportData:"{{data}}ཕབ་ལེན།",
       exportDataAs:"{{data}}{{format}}རྣམ་སྒྲིག་ནང་ཕབ་ལེན།",
       settings:"སྐད་རིགས་སྒྲིག་འགོད",
-      toggle:"Toggle annotations panel",
-      view:"View",
-      metadata:"metadata",
+      toggle:"མཆན་འབྲི་ས།",
+      view:"སྟོན།",
+      metadata:"དན་གྲངས་གོང་མ།",
       manifest:"IIIF manifest",
-      page:"p.{{num,counttobo}}",
-      volume:"Vol.{{num,counttobo}}",
-      availableScans:"available scans for this page",
+      page:"ཤོག་གྲངས། {{num,counttobo}}",
+      volume:"པོད། {{num,counttobo}}",
+      availableScans:"ཤོག་ངོས་འདིའི་བཤེར་པར་གང་ཡོད།",
       about:"About",
       createdB:"Created By",
       extended:"Extended Properties",
