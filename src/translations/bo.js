@@ -9,7 +9,7 @@ const boTranslation = {
       titleBDRC1:"ནང་བསྟན་",
       titleBDRC2:"དཔེ་ཚོགས་",
       titleBDRC3:"ལྟེ་གནས།",
-      archives1:"བུདྡྷ་དཔེ་མཛོད་", # where is this used?
+      archives1:"བུདྡྷ་དཔེ་མཛོད་",
       archives2:"རྒྱབ་སྟེགས།",
       by:"ནང་བསྟན་དཔེ་ཚོགས་ལྟེ་གནས་ཀྱིས།",
       subtitle:"ནང་བསྟན་གཞུང་ལུགས་ལྟ་ཀློག་རྒྱ་ཆེར་བྱ་སའི་དྲྭ་སྟེགས་འདི་ནས་ནང་བསྟན་དཔེ་ཚོགས་ལྟེ་གནས་གཙོས་ཚོགས་པ་དུ་མས་འཚོལ་བསྡུ་བྱས་པའི་དཔེ་ཆའི་ཤོག་ལྷེ་ས་ཡ་མང་པོ་ལྟ་ཀློག་བྱེད་ཐུབ།",
@@ -281,8 +281,8 @@ const boTranslation = {
    },
    search:{
       page:"ཤོག་ངོས།",
-      result:"བཙལ་འབྲས། {{count}}",
-      result_pl:"བཙལ་འབྲས། {{count}}",
+      result:"བཙལ་འབྲས། {{count,counttobo}}",
+      result_plural:"བཙལ་འབྲས། {{count,counttobo}}",
       filters:{
          noresults:"འདེམས་སྒྲུག་བྱས་པའི་བཙལ་འབྲས་མི་འདུག"
       }

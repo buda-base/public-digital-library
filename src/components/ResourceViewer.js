@@ -1681,7 +1681,16 @@ class ResourceViewer extends Component<Props,State>
 
    fullname(prop:string,isUrl:boolean=false,noNewline:boolean=false,useUIlang:boolean=false,canSpan = true)
    {
+
+
       for(let p of Object.keys(prefixes)) { prop = prop.replace(new RegExp(p+":","g"),prefixes[p]) }
+
+
+      let sTmp, trad ;
+      if(prop && prop.match && prop.match(/[./]/) && (trad=I18n.t(sTmp="prop."+shortUri(prop))) !== sTmp)  {
+         if(canSpan) return <span lang="">{this.pretty(trad,isUrl,noNewline)}</span>
+         else return this.pretty(trad,isUrl,noNewline)
+      }
 
       //console.log("full",prop)
 
@@ -1716,15 +1725,9 @@ class ResourceViewer extends Component<Props,State>
       }
 
     
-      let sTmp, trad ;
-      if(prop && prop.match && prop.match(/[./]/) && (trad=I18n.t(sTmp="prop."+shortUri(prop))) !== sTmp)  {
-         if(canSpan) return <span lang="">{this.pretty(trad,isUrl,noNewline)}</span>
-         else return this.pretty(trad,isUrl,noNewline)
-      }
-      else {
-         if(canSpan) return <span lang="">{this.pretty(prop,isUrl,noNewline)}</span>
-         else return this.pretty(prop,isUrl,noNewline)
-      }
+      if(canSpan) return <span lang="">{this.pretty(prop,isUrl,noNewline)}</span>
+      else return this.pretty(prop,isUrl,noNewline)
+    
 
    }
 

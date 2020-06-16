@@ -590,8 +590,11 @@ a.result + #matches .result-content #icon > :not(.thumb) img { width:40px; }
 #matches .match.publisher.en + .match > span > span:last-child { width:45px;}
 
 
-#matches .match.publisher.en > span > span:last-child::after,
-#matches .match.publisher.en + .match > span > span:last-child::after {  content:':';}
+#matches .match.publisher > span > span:last-child::after,
+#matches .match.publisher + .match > span > span:last-child::after {  content:':';}
+
+#matches .match.publisher.bo > span > span:last-child::after,
+#matches .match.publisher.bo + .match > span > span:last-child::after {  content:''; padding-left:5px;}
 
 #matches .match .assets { margin:0 4px; }
 #matches .match .assets img,

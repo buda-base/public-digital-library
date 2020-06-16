@@ -1859,6 +1859,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
    fullname(prop:string,preflabs:[],useUIlang:boolean=false)
    {
       if(!prop) return 
+      let sTmp = shortUri(prop), trad = I18n.t("prop."+sTmp)
+      if("prop."+sTmp !== trad) return trad
 
       if(this.props.dictionary && this.props.dictionary[prop] && this.props.dictionary[prop][rdfs+"label"])
       {
@@ -1901,9 +1903,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          //return preflabs[0][value]
       }
 
-      let trad = I18n.t(prop);
-      if(prop !== trad) return trad
-      else return this.pretty(prop)
+      return this.pretty(prop)
    }
 
 
@@ -2226,7 +2226,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                <div class="multi">{this.getVal(bdo+"publisherName",allProps)}</div>
             </div>)
       if(hasLoc) ret.push(<div class="match">
-               <span class="label">{this.fullname("prop.tmp:publisherLocation",[],true).split(" ").map(e => <span>{e}</span>)}</span>
+               <span class="label">{this.fullname("tmp:publisherLocation",[],true).split(" ").map(e => <span>{e}</span>)}</span>
                <div class="multi">{this.getVal(bdo+"publisherLocation",allProps)}</div>
             </div>)
 
@@ -2480,7 +2480,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
       else if(T === "Instance") langT = allProps.filter(p => p.type === bdo+"script")
 
       if(langT && langT.length) for(let l of langT) { 
-         langs.push(<span title={getPropLabel(this,bdo+(T==='Work'?'language':'script'),false)+": "+getPropLabel(this,l.value,false)} data-lang={l.value}>
+         langs.push(<span title={getPropLabel(this,bdo+(T==='Work'?'language':'script'),false)+I18n.t("punc.colon")+" "+getPropLabel(this,l.value,false)} data-lang={l.value}>
             {T==='Instance'?<span>{l.value.replace(/^.*[/]Script([^/]+)$/,"$1")}</span>:null}
          </span>)
       }
@@ -3075,7 +3075,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
 
 
-            { this.getResultProp("prop.tmp:nameMatch",allProps,true,false,[ tmp+"nameMatch" ]) } {/* //,true,false) } */}
+            { this.getResultProp("tmp:nameMatch",allProps,true,false,[ tmp+"nameMatch" ]) } {/* //,true,false) } */}
 
             { this.getResultProp(I18n.t("prop.tmp:relationType"),allProps,true,false,[ tmp+"relationType" ]) } 
             {/* { this.getResultProp(tmp+"InverseRelationType",allProps,true,true,[tmp+"relationTypeInv"]) } */}
@@ -3087,13 +3087,13 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             {/* { this.getResultProp(bdo+"workIsAbout",allProps,false) } */}
             {/* { this.getResultProp(bdo+"workGenre",allProps) } */}
 
-            { this.getResultProp(this.state.filters.datatype[0] === "Work"?"prop.tmp:otherTitle":"prop.tmp:otherName",allProps, true, false, [skos+"prefLabel", skos+"altLabel"], !preLit?preLit:preLit.replace(/[↦↤]/g,"") ) }
+            { this.getResultProp(this.state.filters.datatype[0] === "Work"?"tmp:otherTitle":"tmp:otherName",allProps, true, false, [skos+"prefLabel", skos+"altLabel"], !preLit?preLit:preLit.replace(/[↦↤]/g,"") ) }
             {/* { this.getResultProp(tmp+"assetAvailability",allProps,false,false) } */}
             
             {/* { this.getResultProp(rdf+"type",allProps.filter(e => e.type === rdf+"type" && e.value === bdo+"EtextInstance")) }  */}
             
             {/* //![bdo+"AbstractWork",bdo+"Work",bdo+"Instance",bdo+"SerialMember",bdo+"Topic"].includes(e.value))) } */}
-            { this.getResultProp("prop.tmp:originalRecord",allProps,false,false, [ tmp+"originalRecord", adm+"originalRecord"]) }
+            { this.getResultProp("tmp:originalRecord",allProps,false,false, [ tmp+"originalRecord", adm+"originalRecord"]) }
             {/* { this.getResultProp(bdo+"language",allProps) } */}
             {/* { this.getResultProp(bdo+"script",allProps) } */}
             

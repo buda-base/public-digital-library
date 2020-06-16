@@ -81,6 +81,23 @@ const i18nextConfig = {
    }
 };
 
+
+// TODO translation
+// - use original language in language switcher 
+// - save preference (localStorage+url param 'lang'+defautl to navigator.language)
+
+// TODO search
+// - change sortBy menu to regular popover
+// - fix reset filters (remove when nothing selected)
+// - rename "hasOpen" --> "OpenAccess"
+// - use topic facet ancestors
+
+// TODO mirador
+// - use our translations
+// - download pdf link not in another tab
+
+
+
 const logger = store => next => action => {
   console.group(action.type)
   console.info('dispatching', action)
