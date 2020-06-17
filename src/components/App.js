@@ -439,7 +439,7 @@ export function lang_selec(that,black:boolean = false)
                   
                   { ["zh", "en", "bo" ].map((i) => {
 
-                        let label = I18n.t("lang."+i);
+                        let label = I18n.t("lang."+i,{lng:i});
                         let disab = false ; //["en","bo"].indexOf(i) === -1
 
                         // TODO add link to user profile / language preferences
@@ -454,6 +454,7 @@ export function lang_selec(that,black:boolean = false)
                                        document.documentElement.lang = i
                                        if(i === "bo") that.props.onSetLangPreset(["bo","zh-hans"])
                                        else if(i === "en") that.props.onSetLangPreset(["bo-x-ewts","sa-x-iast"])
+                                       else if(i === "zh") that.props.onSetLangPreset(["zh-hans","bo"])
                                     }} >{label}</MenuItem> ) 
                   } ) } 
                   
@@ -2576,7 +2577,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      {/* <ListItemText style={{height:"auto",flexGrow:10,flexShrink:10}}
                         primary={ */}
                            <div>
-                              <span class="T">{T}{langs}</span>
+                              <span class="T">{I18n.t("types."+T.toLowerCase())}{langs}</span>
                               <h3 key="lit">
                                  {lit}
                                  { (resUrl && !resUrl.includes("/show/bdr:")) && <img class="link-out" src="/icons/link-out_fit.svg"/>}
@@ -2613,7 +2614,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
 
          let retList = [ 
-            <div id="num-box" class={(this.state.checked[prettId] === true?"checked":"")} style={{flexShrink:0}} onClick={(e) => this.setState({repage:true,checked:{...this.state.checked,[prettId]:!this.state.checked[prettId]}})}>{warnStatus}{n}</div>,         
+            <div id="num-box" class={(this.state.checked[prettId] === true?"checked":"")} style={{flexShrink:0}} onClick={(e) => this.setState({repage:true,checked:{...this.state.checked,[prettId]:!this.state.checked[prettId]}})}>{warnStatus}{I18n.t("punc.num",{num:n})}</div>,         
             <div id="icon" class={enType + (hasCopyR?" wCopyR":"")}>
                { hasThumb.length > 0  && <div class="thumb" title={I18n.t("copyright.view")}>{
                    getIconLink(viewUrl?viewUrl:resUrl+"#open-viewer", <img src={hasThumb}/>)
@@ -4315,7 +4316,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                         />
 
                      }
-                     label={<span>{label}&nbsp;<span class='facet-count-block'>{"("}<span class="facet-count">{cpt_i+cpt}</span>{")"}</span></span>}
+                     label={<span>{label}&nbsp;<span class='facet-count-block'>{"("}<span class="facet-count">{I18n.t("punc.num",{num:cpt_i+cpt})}</span>{")"}</span></span>}
                   />
                   { !isExclu && label !== "Any" && <div class="exclude"><Close onClick={(event, checked) => this.handleCheckFacet(event,jpre,checkable,true,true)} /></div> }
                   {
@@ -4399,7 +4400,6 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                            // || (this.props.language == "")
 
                               let count = counts["datatype"][i]
-                              if(typeof count === "string") count = "~"+count
 
                               return (
                                  <div key={i} style={{textAlign:"left"}}  className={"searchWidget datatype "+i.toLowerCase()}>
@@ -4419,7 +4419,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
                                        }
                                        {...counts["datatype"][i]
-                                       ?{label:<span>{I18n.t("types."+i.toLowerCase()) + " ("}<span class="facet-count">{count}</span>{")"}</span>}
+                                       ?{label:<span>{I18n.t("types."+i.toLowerCase()) + " ("}<span class="facet-count">{typeof count === "string" && "~"}{I18n.t("punc.num",{num:Number(count)})}</span>{")"}</span>}
                                        :{label:I18n.t("types."+i.toLowerCase())}}
                                     />
                                  </div>
@@ -4696,7 +4696,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                               />
 
                            }
-                           label={<a title={shortUri(i)}><span>{label}&nbsp;<span class="facet-count-block">{"("}<span class="facet-count">{cpt_i+meta[j][i].n}</span>{")"}</span></span></a>}
+                           label={<a title={shortUri(i)}><span>{label}&nbsp;<span class="facet-count-block">{"("}<span class="facet-count">{I18n.t("punc.num",{num:cpt_i+meta[j][i].n})}</span>{")"}</span></span></a>}
                         />
                         { !isExclu && label !== "Any" && <div class="exclude"><Close onClick={(event, checked) => this.handleCheckFacet(event,jpre,[i],true,true)} /></div> }
                      </div>
@@ -4857,7 +4857,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                         <div>
                            {/* { I18n.t("home.BUDA") } */}
                            {/* <h1>{ I18n.t("home.titleBDRC1") }<br/>{ I18n.t("home.titleBDRC2") }<br/>{ I18n.t("home.titleBDRC3") }</h1> */}
-                           <h1>{ I18n.t("home.archives1") }<br/>{ I18n.t("home.archives2") }</h1>
+                           <h1>{ I18n.t("home.archives1") }{this.props.locale==="en" && <br/>}{ I18n.t("home.archives2") }</h1>
                            <div>{ I18n.t("home.by") }</div>
                            <span>{ I18n.t("home.subtitle") }</span>
                         </div>

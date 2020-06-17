@@ -84,9 +84,13 @@ const i18nextConfig = {
    }
 };
 
+// DONE
+// + bug publisher
+// + translate number of results by datatype/facet
+// + use unicode for tibetan when chinese selected
+// + use original language in language switcher 
 
 // TODO translation
-// - use original language in language switcher 
 // - save preference (localStorage+url param 'lang'+defautl to navigator.language)
 
 // TODO search
@@ -95,7 +99,6 @@ const i18nextConfig = {
 // - rename "hasOpen" --> "OpenAccess"
 // - use topic facet ancestors
 // - intermediate/diagonal check state (both selected and unselected descendants)
-// - translate number of results by datatype
 
 // TODO mirador
 // - use our translations
