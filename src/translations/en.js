@@ -149,8 +149,7 @@ const enTranslation = {
       hideC:"Hide Context",
       openE:"Open Etext",
       hasInstance:"Has {{count}} Instance",
-      hasInstance_plural:"Has {{count}} Instances",
-      hasInstance_plural_bo_example:"Has {{count,counttobo}} Instances"
+      hasInstance_plural:"Has {{count}} Instances"
    },
    index:{
       openViewer:"Open in Viewer",
@@ -247,8 +246,6 @@ const enTranslation = {
       },
       tip:{
          zh:"Chinese",
-         zhHant:"Chinese (Hanzi)",
-         //zhHans:"Chinese (Simplified)",
          zhHant:"Chinese in traditional characters",
          zhHans:"Chinese in simplified characters",
          zhLatnPinyin:"Chinese in Pinyin",
