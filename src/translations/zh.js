@@ -2,7 +2,7 @@
 const zhTranslation = {
    punc: {
       colon:"：",
-      num:"{{num,counttozh}}"
+      num:"{{num}}"
    },
    home:{
       BUDA:"BUDA（佛教通用数字档案馆）",
@@ -33,7 +33,7 @@ const zhTranslation = {
       instance:"实例",
       images:"图像",
       volume:"卷",
-      volume_num:"卷{{num,counttozh}}"
+      volume_num:"卷{{num}}"
    },
    topbar:{
       about:"关于我们",
@@ -105,7 +105,7 @@ const zhTranslation = {
       "tmp:nameMatch":"名字匹配",
       "tmp:otherTitle":"题目别称匹配",
       "tmp:otherName":"名字别称匹配",
-      "tmp:otherMatch":"其他匹配 ({{count,counttozh}})",
+      "tmp:otherMatch":"其他匹配 ({{count}})",
       "tmp:originalRecord":"原始记录",
       "tmp:imageVolumeId":"图像所属卷号",
       "tmp:workHasTranslationInCanonicalLanguage":"藏经译本",
@@ -262,7 +262,7 @@ const zhTranslation = {
    },
    search:{
       page:"页",
-      result:"{{count,counttozh}}条结果",
+      result:"{{count}}条结果",
       filters:{
          noresults:"没有符合条件的结果"
       }
@@ -298,8 +298,8 @@ const zhTranslation = {
       view:"查看",
       metadata:"元数据",
       manifest:"IIIF清单",
-      page:"第{{num,counttozh}}页",
-      volume:"第{{num,counttozh}}卷",
+      page:"第{{num}}页",
+      volume:"第{{num}}卷",
       availableScans:"本页的可用扫描",
       about:"关于",
       createdB:"创建者",
@@ -331,12 +331,12 @@ const zhTranslation = {
       credentials:"如果你有足够的授权来获取这部作品的所有图像"
    },
    location:{
-      beginV:"起始卷{{num,counttozh}}",
-      beginP:"起始页{{num,counttozh}}",
-      beginL:"起始行{{num,counttozh}}",
-      endV:"结束卷{{num,counttozh}}",
-      endP:"结束页{{num,counttozh}}",
-      endL:"结束行{{num,counttozh}}"
+      beginV:"起始卷{{num}}",
+      beginP:"起始页{{num}}",
+      beginL:"起始行{{num}}",
+      endV:"结束卷{{num}}",
+      endP:"结束页{{num}}",
+      endL:"结束行{{num}}"
    }
 } ;
 
