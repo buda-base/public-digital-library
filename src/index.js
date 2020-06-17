@@ -89,6 +89,10 @@ const i18nextConfig = {
 // + translate number of results by datatype/facet
 // + use unicode for tibetan when chinese selected
 // + use original language in language switcher 
+// + remove Auth / chinese server
+
+// TODO profile
+// - new design
 
 // TODO translation
 // - save preference (localStorage+url param 'lang'+defautl to navigator.language)

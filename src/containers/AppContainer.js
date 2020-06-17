@@ -56,6 +56,8 @@ const mapStateToProps = (state) => {
       locale,prefLang,resources,ontoSearch,rightPanel,langPreset, langIndex, failures,dictionary,metadata, assoRes, 
       sortBy, topicParents, instances, isInstance }
 
+   if(config && !config.auth) newState.auth = false
+
    if(!global.inTest) console.log("mS2p",state,newState)
 
    return newState ;

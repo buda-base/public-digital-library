@@ -128,6 +128,8 @@ const mapStateToProps = (state,ownProps) => {
       annoCollec,rightPanel,locale,langPreset,imgData, nextChunk, nextPage, resourceManifest, imageVolumeManifests, userEditPolicies, highlight,
       outline,outlines,outlineKW }
 
+   if(config && !config.auth) props.auth = false
+
    console.log("mS2p",state,props)
 
    return props

@@ -50,12 +50,13 @@ async function initiateApp(params,iri,myprops) {
       if(!state.data.config)
       {
          const config = await api.loadConfig();
-         auth.setConfig(config.auth,config.iiif,api)
+
+         if(config.auth) auth.setConfig(config.auth,config.iiif,api)
 
          //I18n.setHandleMissingTranslation((key, replacements) => key);
 
          if(myprops) {
-            handleAuthentication(myprops);
+            if(config.auth) handleAuthentication(myprops);
          }
          store.dispatch(dataActions.loadedConfig(config));
          //console.log("config",config)

@@ -546,24 +546,24 @@ export function top_right_menu(that,etextTitle,backUrl)
             <span title={I18n.t("topbar.bookmarks")}><img src="/icons/fav.svg"/></span>
          </div>
 
-         <div id="login">
-        {/* <IconButton style={{marginLeft:"15px"}}  onClick={e => that.props.onToggleLanguagePanel()}>
-          <FontAwesomeIcon style={{fontSize:"28px"}} icon={faLanguage} title="Display Preferences"/>
-        </IconButton>  */}
-        {
-          !that.props.auth.isAuthenticated() && // TODO check redirection
-             <div>
-              <span onClick={() => that.props.auth.login(that.props.history.location,true)} >{I18n.t("topbar.register")}</span>
-              <span onClick={() => that.props.auth.login(that.props.history.location)} >{I18n.t("topbar.login")}</span>
-            </div>
-        }
-        {
-          that.props.auth.isAuthenticated() && 
-             <div>
-              <span onClick={(e) => { that.props.onUserProfile(that.props.history.location); that.props.history.push("/user");    }}>{I18n.t("topbar.profile")}</span>
-              <span onClick={that.props.auth.logout.bind(that,that.props.history.location.pathname!=="/user"?that.props.history.location:"/")} >{I18n.t("topbar.logout")}</span>
-            </div>
-        }
+         { that.props.auth && <div id="login">
+         {/* <IconButton style={{marginLeft:"15px"}}  onClick={e => that.props.onToggleLanguagePanel()}>
+            <FontAwesomeIcon style={{fontSize:"28px"}} icon={faLanguage} title="Display Preferences"/>
+         </IconButton>  */}
+            {
+               !that.props.auth.isAuthenticated() && // TODO check redirection
+                  <div>
+                  <span onClick={() => that.props.auth.login(that.props.history.location,true)} >{I18n.t("topbar.register")}</span>
+                  <span onClick={() => that.props.auth.login(that.props.history.location)} >{I18n.t("topbar.login")}</span>
+                  </div>
+            }
+            {
+               that.props.auth.isAuthenticated() && 
+                  <div>
+                  <span onClick={(e) => { that.props.onUserProfile(that.props.history.location); that.props.history.push("/user");    }}>{I18n.t("topbar.profile")}</span>
+                  <span onClick={that.props.auth.logout.bind(that,that.props.history.location.pathname!=="/user"?that.props.history.location:"/")} >{I18n.t("topbar.logout")}</span>
+                  </div>
+            }
         { /*
           that.props.auth.isAuthenticated() && (
               [<IconButton title="User Profile" onClick={(e) => { that.props.onUserProfile(that.props.history.location); that.props.history.push("/user");    }}>
@@ -575,7 +575,8 @@ export function top_right_menu(that,etextTitle,backUrl)
               </IconButton> ]
             )
         */}
-         </div>
+            </div>
+         }
 
          { lang_selec(that) }
 
@@ -2458,7 +2459,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
       let status = "",warnStatus,warnLabel
 
-      if(this.props.auth.isAuthenticated())
+      if(this.props.auth && this.props.auth.isAuthenticated())
       {
          if(allProps) status = allProps.filter(k => k.type === adm+"status" || k.type === tmp+"status")
          if(status && status.length) status = status[0].value
@@ -2517,7 +2518,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                if(access.includes("FairUse")) hasCopyR = "fair_use"
                else if(access.includes("Temporarily")) { hasCopyR = "temporarily";  hasThumb = []; }
                else if(access.includes("Sealed")) { hasCopyR = "sealed";  hasThumb = []; }
-               else if(access.includes("Quality")) { if(!this.props.auth.isAuthenticated()) hasThumb = []; }
+               else if(access.includes("Quality")) { if(this.props.auth && !this.props.auth.isAuthenticated()) hasThumb = []; }
                else if(access.includes("Open")) hasCopyR = "copyleft"
                //if(access.includes("Restricted")) { hasCopyR = "restricted"; hasThumb = []; }
             }
@@ -3801,7 +3802,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   //if(n != 0 && willBreak) break;
                   //else willBreak = false ;
 
-                  if(!this.props.auth.isAuthenticated())
+                  if(this.props.auth && !this.props.auth.isAuthenticated())
                   {
                      let allProps = sublist[o], status = allProps.filter(k => k.type === adm+"status" || k.type === tmp+"status")
                      if(status && status.length) status = status[0].value
@@ -4450,7 +4451,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
       const { isAuthenticated } = this.props.auth;
       let id ;
 
-      if(!global.inTest) console.log("render",this.props.keyword,this.props,this.state,isAuthenticated(),this._customLang,JSON.stringify(this.state.filters,null,3))
+      if(!global.inTest) console.log("render",this.props.keyword,this.props,this.state,isAuthenticated && isAuthenticated(),this._customLang,JSON.stringify(this.state.filters,null,3))
       // no search yet --> sample data
       if(!this.props.keyword || this.props.keyword == "")
       {

@@ -3937,7 +3937,7 @@ class ResourceViewer extends Component<Props,State>
                               {eL && <div><span>{I18n.t("location.endL",{num:eL})}</span></div>}
                            </div>
                         }>
-                           <h4>{str}{str && w && <span class="of">{I18n.t("misc.of")}</span>} {w && this.uriformat(bdo+"contentLocationInstance",{value:w})}{this.hoverMenu()}</h4>
+                           <h4>{str}{str && w && <span class="of"> {I18n.t("misc.of")}</span>} {w && this.uriformat(bdo+"contentLocationInstance",{value:w})}{this.hoverMenu()}</h4>
                      </Tooltip>]
                );
             else if(w)
@@ -4944,15 +4944,15 @@ perma_menu(pdfLink,monoVol,fairUse,other)
    // TODO case of part of instance after p.20 (see bdr:MW1KG2733_65CFB8)
 
    renderNoAccess = (fairUse) => {
-      if(fairUse && (!this.props.auth || !this.props.auth.isAuthenticated()) )
+      if(fairUse && (this.props.auth && !this.props.auth.isAuthenticated()) )
          return <div class="data access"><h3 style={{display:"block",marginBottom:"15px"}}><span style={{textTransform:"none"}}>{I18n.t("access.limited20")}<br/>
                    {I18n.t("misc.please")} <a class="login" onClick={this.props.auth.login.bind(this,this.props.history.location)}>{I18n.t("topbar.login")}</a> {I18n.t("access.credentials")}</span></h3></div>
    }
 
-   // TODO check if this is actually used ??
+   // DONE check if this is actually used (it is)
    renderAccess = () => {
-      if ( this.props.manifestError && this.props.manifestError.error.message.match(/Restricted access/) )
-         return  <div class="data access"><h3><span style={{textTransform:"none"}}>{I18n.t("misc.please")} <a class="login" onClick={this.props.auth.login.bind(this,this.props.history.location)}>{I18n.t("topbar.login")}</a> {I18n.t("access.credentials")}</span></h3></div>
+      if ( this.props.manifestError && this.props.auth && this.props.manifestError.error.message.match(/Restricted access/) )
+         return  <div class="data access"><h3><span style={{textTransform:"none"}}>{I18n.t("misc.please")} <a class="login" {...(this.props.auth?{onClick:this.props.auth.login.bind(this,this.props.history.location)}:{})}>{I18n.t("topbar.login")}</a> {I18n.t("access.credentials")}</span></h3></div>
    }
 
    renderPdfLink = (pdfLink, monoVol, fairUse) => {
@@ -5463,7 +5463,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                <Redirect404  history={this.props.history} message={"Record withdrawn in favor of "+redir} to={"/show/"+redir}/>
             )
          }
-         else if(this.props.auth.isAuthenticated() && redir[adm+"status"] && (redir = redir[adm+"status"]).length && redir[0].value === bda+"StatusWithdrawn"){
+         else if(this.props.auth && this.props.auth.isAuthenticated() && redir[adm+"status"] && (redir = redir[adm+"status"]).length && redir[0].value === bda+"StatusWithdrawn"){
             withdrawn = true 
             //console.log("WithD");
          }         
