@@ -440,7 +440,7 @@ export function lang_selec(that,black:boolean = false)
                   { ["zh", "en", "bo" ].map((i) => {
 
                         let label = I18n.t("lang."+i);
-                        let disab = ["en","bo"].indexOf(i) === -1
+                        let disab = false ; //["en","bo"].indexOf(i) === -1
 
                         // TODO add link to user profile / language preferences
 
@@ -4504,9 +4504,9 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   if(max > paginate.pages.length) max = paginate.pages.length
                }
 
-               if(min > 1) pageLinks.push([<a onClick={this.goPage.bind(this,id,1)}>1</a>," ... "]) 
-               for(let i = min ; i <= max ; i++) { pageLinks.push(<a onClick={this.goPage.bind(this,id,i)}>{((i-1)===this.state.paginate.index?<b><u>{i}</u></b>:i)}</a>) }
-               if(max < paginate.pages.length) pageLinks.push([" ... ",<a onClick={this.goPage.bind(this,id,paginate.pages.length)}>{paginate.pages.length}</a>]) 
+               if(min > 1) pageLinks.push([<a onClick={this.goPage.bind(this,id,1)}>{I18n.t("punc.num",{num:1})}</a>," ... "]) 
+               for(let i = min ; i <= max ; i++) { pageLinks.push(<a onClick={this.goPage.bind(this,id,i)}>{((i-1)===this.state.paginate.index?<b><u>{I18n.t("punc.num",{num:i})}</u></b>:I18n.t("punc.num",{num:i}))}</a>) }
+               if(max < paginate.pages.length) pageLinks.push([" ... ",<a onClick={this.goPage.bind(this,id,paginate.pages.length)}>{I18n.t("punc.num",{num:paginate.pages.length})}</a>]) 
             }
             
             //console.log("prep",message,counts,types,paginate)
@@ -4986,7 +4986,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                            ,*/
                            <div id="filters-UI">
                               <div>
-                              { this.state.filters.datatype.filter(k => k !== "Any").map(k => this.renderFilterTag(true, I18n.t("Lsidebar.tags.type"), k, (event, checked) => this.handleCheck(event, k, false) ) )}                              
+                              { this.state.filters.datatype.filter(k => k !== "Any").map(k => this.renderFilterTag(true, I18n.t("Lsidebar.tags.type"), I18n.t("types."+k.toLowerCase()), (event, checked) => this.handleCheck(event, k, false) ) )}                              
                               { this.props.isInstance && this.state.backToWorks && this.state.filters.instance && this.renderFilterTag(false, I18n.t("Lsidebar.tags.instanceOf"), this.state.filters.instance, (event, checked) => {
                                  this.resetFilters(event)
                               } )  } 

@@ -871,6 +871,13 @@ h4:not(:hover) > .lang
 .resource .data#outline span a:hover { border:none; text-decoration: underline; text-decoration-color: #343434; }
 .resource .data#outline span .lang { display:none; }
 .resource .data#outline div svg.xpd { width:20px; margin-right:5px;  cursor:pointer; opacity:0.75;}
+.resource .data#outline div span.xpd { position:absolute; margin-left:-24px;font-size:20px;font-weight:900;opacity:0;pointer-events:none;margin-top:-6px;
+   cursor:pointer;
+}
+
+/* WIP */
+/* .resource .data#outline span.top:hover span.xpd { opacity:0.65;pointer-events:auto;} */
+
 .resource .data#outline div::after { content:none !important;}
 .resource .data#outline div h2:not(.on) .T { display:none; }
 .resource .data#outline div .root { width:100%; display:flex; }
@@ -936,6 +943,7 @@ h4:not(:hover) > .lang
 .resource .data#outline .root + div .abs { position:absolute; width:80px;}
 
 .resource .data#outline .root + div span.top { display: block;  margin-top:5px; }
+.resource .data#outline .root + div span.top::before { content:'';display:block;position:absolute;width:50px;height:20px;left:-50px;top:0; }
 .resource .data#outline .root + div > .top:first-child { margin-top:3px; }
 .resource .data#outline .root + div span.top :not(.lang) { display:inline; vertical-align:top; }
 

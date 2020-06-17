@@ -76,6 +76,9 @@ const i18nextConfig = {
             //console.log("numtobo?",value,format,numtobo(value),numtobo(""+value))
             return numtobo(""+value);
          }
+         else if (format === 'counttozh') { 
+            return value.toLocaleString('zh-u-nu-hanidec');
+         }
          return value;
       }
    }
@@ -91,6 +94,8 @@ const i18nextConfig = {
 // - fix reset filters (remove when nothing selected)
 // - rename "hasOpen" --> "OpenAccess"
 // - use topic facet ancestors
+// - intermediate/diagonal check state (both selected and unselected descendants)
+// - translate number of results by datatype
 
 // TODO mirador
 // - use our translations

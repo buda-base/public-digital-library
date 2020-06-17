@@ -39,8 +39,8 @@ const enTranslation = {
       topic_plural:"Topics",
       work:"Work",
       work_plural:"Works",
-      instance:"Instance",
-      instance_plural:"Instances",
+      instance:"Version",
+      instance_plural:"Versions",
       images:"Images",
       volume:"Volume",
       volume_num:"Volume {{num}}"
@@ -57,7 +57,7 @@ const enTranslation = {
       history:"Search history",
       bookmarks:"Bookmarks",
       results:"Search results for",
-      instances:"instances of"
+      instances:"versions of"
    },
    Lsidebar:{
       sortBy:{
@@ -71,13 +71,13 @@ const enTranslation = {
          title:"Data Types"
       },
       widgets:{
-         root: "In Instance",
+         root: "In $t(types.instance)",
          tree: "Genre / Topic",
          relationInv: "Inverse Relation Type"
       },
       tags:{
          type: "Type",
-         instanceOf: "Instance Of",
+         instanceOf: "$t(types.instance) Of",
          reset:"Reset filters",
          include:"Include results with",
          exclude:"Exclude results with"
@@ -125,14 +125,17 @@ const enTranslation = {
       "tmp:workHasTranslationInCanonicalLanguage":"Canonical Translation",
       "tmp:workHasTranslationInNonCanonicalLanguage":"Other Translation",
       "tmp:entityScore":"Entity Score",
-      "tmp:instanceLabel":"Instance Label",
+      "tmp:instanceLabel":"$t(types.instance) Label",
       "tmp:dimensions":"Dimensions",
       "tmp:publisherLocation":"Publisher Loc.",
       "tmp:forWork":"For Work",
       "tmp:provider":"Provider",
       "tmp:author":"Author",
       "tmp:assetAvailability":"Asset Availability",
-      "tmp:textMatch":"Text Match"
+      "tmp:textMatch":"Text Match",
+      "bdo:workHasInstance":"Has $t(types.instance)",
+      "bdo:instanceOf":"$t(types.instance) Of"
+
    },
    result:{
       open:"Open",
@@ -143,13 +146,13 @@ const enTranslation = {
       workBy:"By",
       eTextIsForWork:"For Work",
       year:"Year",
-      inInstance:"In Instance",
-      inInstancePart:"In Instance Part",
+      inInstance:"In $t(types.instance)",
+      inInstancePart:"In $t(types.instance) Part",
       expandC:"Expand Context",
       hideC:"Hide Context",
       openE:"Open Etext",
-      hasInstance:"Has {{count}} Instance",
-      hasInstance_plural:"Has {{count}} Instances"
+      hasInstance:"Has {{count}} $t(types.instance)",
+      hasInstance_plural:"Has {{count}} $t(types.instance_plural)"
    },
    index:{
       openViewer:"Open in Viewer",

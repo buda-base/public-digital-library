@@ -5041,7 +5041,8 @@ perma_menu(pdfLink,monoVol,fairUse,other)
             console.log("toggle?",tag)
 
             this.setState( { collapse:{...this.state.collapse, [tag]:!val } })
-            if(!this.props.outlineKW /*&& !this.state.outlineKW*/ && !x && this.props.outlines && !this.props.outlines[i]) this.props.onGetOutline(i);
+            if(!this.props.outlineKW && // WIP
+               /* !this.state.outlineKW && */ !x && this.props.outlines && !this.props.outlines[i]) this.props.onGetOutline(i);
          }
 
 
@@ -5267,6 +5268,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                         let open = this.state.collapse[tag] || (osearch &&  this.state.collapse[tag] === undefined )
                         if(pType && pType["@id"]) pType = pType["@id"]
                         ret.push(<span class={'top'+ (this.state.outlinePart === e['@id'] || (!this.state.outlinePart && this.props.IRI===e['@id']) ?" is-root":"")+(this.state.collapse[tag]||osearch?" on":"") }>
+                              {(e.hasPart && osearch && this.props.outlines[e['@id']] !== true) && <span onClick={(ev) => toggle(ev,root,e["@id"])} className="xpd">...</span>}
                               {(e.hasPart && !open && this.props.outlines[e['@id']] !== true) && <ExpandMore onClick={(ev) => toggle(ev,root,e["@id"])} className="xpd"/>}
                               {(e.hasPart && open && this.props.outlines[e['@id']] !== true) && <ExpandLess onClick={(ev) => toggle(ev,root,e["@id"])} className="xpd"/>}
                               <span class={"parTy "+(e.details?"on":"")} {...e.details?{title:/*tLabel+" - "+*/ I18n.t("resource."+(this.state.collapse[tag+"-details"]?"hideD":"showD")), onClick:(ev) => toggle(ev,root,e["@id"],"details")}:{title:tLabel}} >
