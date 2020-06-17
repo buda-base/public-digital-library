@@ -108,6 +108,8 @@ const i18nextConfig = {
 // - use our translations
 // - download pdf link not in another tab
 
+// TODO outline
+// - open appeared sibling nodes the usual way when search (not clicking '...')
 
 
 const logger = store => next => action => {

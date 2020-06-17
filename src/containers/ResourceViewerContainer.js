@@ -166,8 +166,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       onGetPages:(IRI:string,next:number=0) => {
          dispatch(data.getPages(IRI,next));
       },
-      onGetOutline:(IRI:string) => {
-         dispatch(data.getOutline(IRI));
+      onGetOutline:(IRI:string,search?:string) => {
+         dispatch(data.getOutline(IRI,search));
       },
       onGetResource:(IRI:string) => {
          dispatch(data.getResource(IRI));

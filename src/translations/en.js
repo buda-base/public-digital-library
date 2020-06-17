@@ -2,7 +2,9 @@
 const enTranslation = {
    punc: {
       colon:":",
-      num:"{{num}}"
+      num:"{{num}}",
+      lpar:"(",
+      rpar:")"
    },
    home:{
       BUDA:"BUDA",

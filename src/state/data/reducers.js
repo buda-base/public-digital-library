@@ -850,6 +850,11 @@ export const gotOutline = (state: DataState, action: Action) => {
 
    let outlineKW = state.outlineKW
    if(action.payload.includes("@")) outlineKW = action.payload
+   else if(state.outlineKW) { // add siblings to given node
+      let root = outlines[state.outlineKW]
+      if(root) root = root["@graph"]
+      elem.map(e => root.push(e))
+   }
 
    return {
          ...state,

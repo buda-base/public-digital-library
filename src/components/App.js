@@ -4317,7 +4317,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                         />
 
                      }
-                     label={<span>{label}&nbsp;<span class='facet-count-block'>{"("}<span class="facet-count">{I18n.t("punc.num",{num:cpt_i+cpt})}</span>{")"}</span></span>}
+                     label={<span>{label}&nbsp;<span class='facet-count-block'>{I18n.t("punc.lpar")}<span class="facet-count">{I18n.t("punc.num",{num:cpt_i+cpt})}</span>{I18n.t("punc.rpar")}</span></span>}
                   />
                   { !isExclu && label !== "Any" && <div class="exclude"><Close onClick={(event, checked) => this.handleCheckFacet(event,jpre,checkable,true,true)} /></div> }
                   {
@@ -4420,7 +4420,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
                                        }
                                        {...counts["datatype"][i]
-                                       ?{label:<span>{I18n.t("types."+i.toLowerCase()) + " ("}<span class="facet-count">{typeof count === "string" && "~"}{I18n.t("punc.num",{num:Number(count)})}</span>{")"}</span>}
+                                       ?{label:<span>{I18n.t("types."+i.toLowerCase()) + " "+I18n.t("punc.lpar")}<span class="facet-count">{typeof count === "string" && "~"}{I18n.t("punc.num",{num:Number(count)})}</span>{I18n.t("punc.rpar")}</span>}
                                        :{label:I18n.t("types."+i.toLowerCase())}}
                                     />
                                  </div>
@@ -4697,7 +4697,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                               />
 
                            }
-                           label={<a title={shortUri(i)}><span>{label}&nbsp;<span class="facet-count-block">{"("}<span class="facet-count">{I18n.t("punc.num",{num:cpt_i+meta[j][i].n})}</span>{")"}</span></span></a>}
+                           label={<a title={shortUri(i)}><span>{label}&nbsp;<span class="facet-count-block">{I18n.t("punc.lpar")}<span class="facet-count">{I18n.t("punc.num",{num:cpt_i+meta[j][i].n})}</span>{I18n.t("punc.rpar")}</span></span></a>}
                         />
                         { !isExclu && label !== "Any" && <div class="exclude"><Close onClick={(event, checked) => this.handleCheckFacet(event,jpre,[i],true,true)} /></div> }
                      </div>

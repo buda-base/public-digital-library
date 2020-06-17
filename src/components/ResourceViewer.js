@@ -5033,16 +5033,22 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          let osearch 
          if(this.props.outlineKW) osearch = this.props.outlineKW
 
-         let toggle = (e,r,i,x = "") => {
+         let toggle = (e,r,i,x = "",force = false, node) => {
             let tag = "outline-"+r+"-"+i+(x?"-"+x:"")
             let val = this.state.collapse[tag]
-            if(osearch && val === undefined) val = true
+            if(osearch) {
 
-            console.log("toggle?",tag)
+               console.log("toggle?",tag,val,x,force,node) 
+
+               if(val === undefined && (!x || node.hasMatch) ) val = true // details of matching nodes + ancestor shown by default when search
+
+               if(force && val && !x) val = false
+            }
+
+            console.log("toggle!",tag,val)
 
             this.setState( { collapse:{...this.state.collapse, [tag]:!val } })
-            if(!this.props.outlineKW && // WIP
-               /* !this.state.outlineKW && */ !x && this.props.outlines && !this.props.outlines[i]) this.props.onGetOutline(i);
+            if((!this.props.outlineKW || force) &&  !x && this.props.outlines && !this.props.outlines[i]) this.props.onGetOutline(i);
          }
 
 
@@ -5178,7 +5184,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                   }
                }
                
-               //console.log("elem?",elem,top,parent)
+               //console.log("makeNode/elem:",elem,top,parent)
 
                let outline = []
                if(elem && elem["@graph"]) { 
@@ -5187,9 +5193,10 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                   if(node.length && node[0].hasPart) { 
                      if(!Array.isArray(node[0].hasPart)) node[0].hasPart = [ node[0].hasPart ]
                      for(let e of node[0].hasPart) {
-                        //console.log("e",e)  
+                        //console.log("node:",e)  
                         let w_idx = elem.filter(f => f["@id"] === e) 
                         if(w_idx.length) {
+                           //console.log("found:",w_idx[0])  
                            let g = w_idx[0]
                            if(g.details && g.lang !== this.props.locale) delete g.details
                            if(!g.details) {
@@ -5212,13 +5219,17 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                                     g.details.push(<div class="sub"><h4 class="first type">{this.proplink(tmp+"instanceLabel")}{I18n.t("punc.colon")} </h4><div>{node.map(n => this.format("h4","","",false, "sub",[{ value:n["@value"], lang:n["@language"], type:"literal"}]))}</div></div>)
                                  }
                               }
+                              if(g["tmp:titleMatch"] || g["tmp:labelMatch"]) {
+                                 g.hasMatch = true
+                              }
                               /*
                               if(osearch && g["tmp:titleMatch"]) {
                                  if(!g.details) g.details = []
                                  if(!Array.isArray(g["tmp:titleMatch"])) g["tmp:titleMatch"] = [ g["tmp:titleMatch"] ]
                                  g.details.push(<div class="sub"><h4 class="first type">{this.proplink(tmp+"titleMatch")}: </h4><div>{g["tmp:titleMatch"].map(t => <h4>{highlight(t["@value"])}</h4>)}</div></div>)
                               }
-                              else */
+                              else 
+                              */
                               if(g.hasTitle) {
                                  if(!g.details) g.details = []
                                  if(!Array.isArray(g.hasTitle)) g.hasTitle = [ g.hasTitle ]
@@ -5267,14 +5278,14 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                         }
                         let open = this.state.collapse[tag] || (osearch &&  this.state.collapse[tag] === undefined )
                         if(pType && pType["@id"]) pType = pType["@id"]
-                        ret.push(<span class={'top'+ (this.state.outlinePart === e['@id'] || (!this.state.outlinePart && this.props.IRI===e['@id']) ?" is-root":"")+(this.state.collapse[tag]||osearch?" on":"") }>
-                              {(e.hasPart && osearch && this.props.outlines[e['@id']] !== true) && <span onClick={(ev) => toggle(ev,root,e["@id"])} className="xpd">...</span>}
+                        ret.push(<span class={'top'+ (this.state.outlinePart === e['@id'] || (!this.state.outlinePart && this.props.IRI===e['@id']) ?" is-root":"")+(this.state.collapse[tag]||osearch&&e.hasMatch?" on":"") }>
+                              {(e.hasPart && open && osearch && !this.props.outlines[e['@id']]) && <span onClick={(ev) => toggle(ev,root,e["@id"],"",true)} className="xpd">...</span>}
                               {(e.hasPart && !open && this.props.outlines[e['@id']] !== true) && <ExpandMore onClick={(ev) => toggle(ev,root,e["@id"])} className="xpd"/>}
                               {(e.hasPart && open && this.props.outlines[e['@id']] !== true) && <ExpandLess onClick={(ev) => toggle(ev,root,e["@id"])} className="xpd"/>}
-                              <span class={"parTy "+(e.details?"on":"")} {...e.details?{title:/*tLabel+" - "+*/ I18n.t("resource."+(this.state.collapse[tag+"-details"]?"hideD":"showD")), onClick:(ev) => toggle(ev,root,e["@id"],"details")}:{title:tLabel}} >
+                              <span class={"parTy "+(e.details?"on":"")} {...e.details?{title:/*tLabel+" - "+*/ I18n.t("resource."+(this.state.collapse[tag+"-details"]?"hideD":"showD")), onClick:(ev) => toggle(ev,root,e["@id"],"details",false,e)}:{title:tLabel}} >
                                  {pType && parts[pType] ? <div>{parts[pType]}</div> : <div>{parts["?"]}</div> }
                               </span>
-                              <span>{this.uriformat(null,{type:'uri', value:fUri, inOutline: (!e.hasPart?tag+"-details":tag), url:"/show/"+root+"?part="+e["@id"], debug:false, toggle:() => toggle(null,root,e["@id"],!e.hasPart?"details":"")})}</span>                              
+                              <span>{this.uriformat(null,{type:'uri', value:fUri, inOutline: (!e.hasPart?tag+"-details":tag), url:"/show/"+root+"?part="+e["@id"], debug:false, toggle:() => toggle(null,root,e["@id"],!e.hasPart?"details":"",false,e)})}</span>                              
                               <div class="abs">
                                  { e.hasImg && <Link className="hasImg" title={I18n.t("copyright.view")}  to={e.hasImg}><img src="/icons/search/images.svg"/><img src="/icons/search/images_r.svg"/></Link> }
                                  { /* pType && 
@@ -5283,7 +5294,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                                        { !this.state.collapse[tag+"-details"] && <ExpandMore className="details"/>}
                                        {  this.state.collapse[tag+"-details"] && <ExpandLess className="details"/>}
                                     </span> */ }
-                                 { e.details && <span id="anchor" title={/*tLabel+" - "+*/I18n.t("resource."+(this.state.collapse[tag+"-details"]?"hideD":"showD"))} onClick={(ev) => toggle(ev,root,e["@id"],"details")}>
+                                 { e.details && <span id="anchor" title={/*tLabel+" - "+*/I18n.t("resource."+(this.state.collapse[tag+"-details"]?"hideD":"showD"))} onClick={(ev) => toggle(ev,root,e["@id"],"details",false,e)}>
                                     <img src="/icons/info.svg"/>
                                  </span> }
                                  <CopyToClipboard text={fUri} onCopy={(e) => prompt(I18n.t("misc.clipboard"),fUri)}>
@@ -5294,7 +5305,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                                  </CopyToClipboard>
                               </div>
                            </span>)
-                        if(((osearch && this.state.collapse[tag+"-details"] !== false) || this.state.collapse[tag+"-details"]) && e.details) ret.push(<div class="details">{e.details}</div>)
+                        if(((osearch && e.hasMatch && this.state.collapse[tag+"-details"] !== false) || this.state.collapse[tag+"-details"]) && e.details) ret.push(<div class="details">{e.details}</div>)
                         if((osearch && this.state.collapse[tag] !== false) || (this.props.outlines[e["@id"]] && this.props.outlines[e["@id"]] !== true && this.state.collapse[tag]) ) ret.push(<div style={{paddingLeft:"25px"}}>{makeNodes(e["@id"],top)}</div>)                        
                         return ( ret )
                      })
@@ -5317,8 +5328,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
             // DONE
             // + add to url (=>back button)
             // + add language alternatives using autodetection
-            // TODO 
-            // ? clean collapsed nodes before displaying results
+            // + clean collapsed nodes before displaying results
 
             if(this.state.outlineKW) { 
 
@@ -5371,6 +5381,8 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
          }
 
+         let colT = <span class={"parTy"} title={I18n.t("Lsidebar.collection.title")}><div>COL</div></span>
+
          return ( 
          <div class="data" id="outline">
             <h2>{I18n.t("index.outline")}</h2>
@@ -5408,8 +5420,9 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                <div>
                   <Loader loaded={this.props.loading !== "outline"}/>
                   <div class={"root " +(this.state.outlinePart === root || (!this.state.outlinePart && this.props.IRI===root)?"is-root":"")} >
-                     { !open && [<ExpandMore className="xpd" onClick={(e) => toggle(e,root,root)} />,<span onClick={rootClick}>{title}</span>]}
-                     {  open && [<ExpandLess className="xpd" onClick={(e) => toggle(e,root,root)} />,<span onClick={rootClick} class='on'>{title}</span>]}
+                     { (osearch && open /*&& !this.props.outlines[root]*/) && <span onClick={(ev) => toggle(ev,root,root,"",true)} className="xpd">...</span>}
+                     { !open && [<ExpandMore className="xpd" onClick={(e) => toggle(e,root,root)} />,colT,<span onClick={rootClick}>{title}</span>]}
+                     {  open && [<ExpandLess className="xpd" onClick={(e) => toggle(e,root,root)} />,colT,<span onClick={rootClick} class='on'>{title}</span>]}
                   </div>
                   { open && <div style={{paddingLeft:"50px"}}>{outline}</div> }
                </div>
