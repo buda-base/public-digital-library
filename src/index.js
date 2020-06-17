@@ -76,7 +76,7 @@ const i18nextConfig = {
             //console.log("numtobo?",value,format,numtobo(value),numtobo(""+value))
             return numtobo(""+value);
          }
-         else if (format === 'counttozh') { 
+         else if (format === 'counttozh' && value) { 
             return value.toLocaleString('zh-u-nu-hanidec');
          }
          return value;
