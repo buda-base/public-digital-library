@@ -4257,7 +4257,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                          that.setState({...that.state, collapse:{...this.state.collapse,permaDL:false}, pdfOpen:true,anchorElPdf:ev.currentTarget})
                       }
                    }>
-                   {I18n.t("resource.exportDataAs",{data: "images", format:"PDF/ZIP"}) /* TODO use i18next interpolation with nesting '$t(types.images)'*/ }
+                   {I18n.t("resource.exportDataAs",{data: "images", format:"PDF/ZIP", interpolation: {escapeValue: false}}) /* TODO use i18next interpolation with nesting '$t(types.images)'*/ }
                 </MenuItem></a>  }
 
                { !that.props.manifestError && that.props.imageAsset &&
@@ -5040,7 +5040,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
                console.log("toggle?",tag,val,x,force,node) 
 
-               if(val === undefined && (!x || node.hasMatch) ) val = true // details of matching nodes + ancestor shown by default when search
+               if(val === undefined && (!x && (!node || !node.notMatch ) || node.hasMatch) ) val = true // details of matching nodes + ancestor shown by default when search
 
                if(force && val && !x) val = false
             }
@@ -5048,7 +5048,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
             console.log("toggle!",tag,val)
 
             this.setState( { collapse:{...this.state.collapse, [tag]:!val } })
-            if((!this.props.outlineKW || force) &&  !x && this.props.outlines && !this.props.outlines[i]) this.props.onGetOutline(i);
+            if((!this.props.outlineKW || force || node && node.notMatch) &&  !x && this.props.outlines && (!this.props.outlines[i] || force && r === i) )this.props.onGetOutline(i);
          }
 
 
@@ -5276,12 +5276,12 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                            tLabel = tLabel[0].toUpperCase() + tLabel.slice(1)
                            // TODO use translation from ontology
                         }
-                        let open = this.state.collapse[tag] || (osearch &&  this.state.collapse[tag] === undefined )
+                        let open = this.state.collapse[tag] || (osearch &&  this.state.collapse[tag] === undefined && !e.notMatch)
                         if(pType && pType["@id"]) pType = pType["@id"]
                         ret.push(<span class={'top'+ (this.state.outlinePart === e['@id'] || (!this.state.outlinePart && this.props.IRI===e['@id']) ?" is-root":"")+(this.state.collapse[tag]||osearch&&e.hasMatch?" on":"") }>
                               {(e.hasPart && open && osearch && !this.props.outlines[e['@id']]) && <span onClick={(ev) => toggle(ev,root,e["@id"],"",true)} className="xpd">...</span>}
-                              {(e.hasPart && !open && this.props.outlines[e['@id']] !== true) && <ExpandMore onClick={(ev) => toggle(ev,root,e["@id"])} className="xpd"/>}
-                              {(e.hasPart && open && this.props.outlines[e['@id']] !== true) && <ExpandLess onClick={(ev) => toggle(ev,root,e["@id"])} className="xpd"/>}
+                              {(e.hasPart && !open && this.props.outlines[e['@id']] !== true) && <ExpandMore onClick={(ev) => toggle(ev,root,e["@id"],"",false,e)} className="xpd"/>}
+                              {(e.hasPart && open && this.props.outlines[e['@id']] !== true) && <ExpandLess onClick={(ev) => toggle(ev,root,e["@id"],"",false,e)} className="xpd"/>}
                               <span class={"parTy "+(e.details?"on":"")} {...e.details?{title:/*tLabel+" - "+*/ I18n.t("resource."+(this.state.collapse[tag+"-details"]?"hideD":"showD")), onClick:(ev) => toggle(ev,root,e["@id"],"details",false,e)}:{title:tLabel}} >
                                  {pType && parts[pType] ? <div>{parts[pType]}</div> : <div>{parts["?"]}</div> }
                               </span>
@@ -5420,7 +5420,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                <div>
                   <Loader loaded={this.props.loading !== "outline"}/>
                   <div class={"root " +(this.state.outlinePart === root || (!this.state.outlinePart && this.props.IRI===root)?"is-root":"")} >
-                     { (osearch && open /*&& !this.props.outlines[root]*/) && <span onClick={(ev) => toggle(ev,root,root,"",true)} className="xpd">...</span>}
+                     { (osearch && open && (this.props.outlines[root] && !this.props.outlines[osearch].reloaded)) && <span onClick={(ev) => toggle(ev,root,root,"",true)} className="xpd">...</span>}
                      { !open && [<ExpandMore className="xpd" onClick={(e) => toggle(e,root,root)} />,colT,<span onClick={rootClick}>{title}</span>]}
                      {  open && [<ExpandLess className="xpd" onClick={(e) => toggle(e,root,root)} />,colT,<span onClick={rootClick} class='on'>{title}</span>]}
                   </div>
