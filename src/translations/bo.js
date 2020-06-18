@@ -72,7 +72,7 @@ const boTranslation = {
       },
       widgets:{
          root: "ཡོང་ཁུངས།",
-         tree: "རྩོམ་རིག་གི་རྣམ་དབྱེ།",
+         tree: "རིགས།",
          relationInv: "Inverse Relation Type"
       },
       tags:{
@@ -324,15 +324,15 @@ const boTranslation = {
       about:"About",
       createdB:"Created By",
       extended:"Extended Properties",
-      showD:"Show Details",
-      hideD:"Hide Details",
-      searchO:"Search in outline",
-      start:"Start search",
+      showD:"ཞིབ་ཕྲ་སྟོན།",
+      hideD:"ཕྱིར་བསྡུ།",
+      searchO:"དཀར་ཆག་ནང་འཚོལ།",
+      start:"འཚོལ།",
       reset:"Reset search"
 
    },
    mirador:{
-      return:"return to BUDA",
+      return:"བུདྡྷ་ལ་ཕྱིར་ལོག",
       browse:"browse collection",
       goto:"Go to p.",
       zoomIn:"zoom in",
