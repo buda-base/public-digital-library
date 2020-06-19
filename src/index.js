@@ -90,6 +90,8 @@ const i18nextConfig = {
 // + use unicode for tibetan when chinese selected
 // + use original language in language switcher 
 // + remove Auth / chinese server
+// + outline | open appeared sibling nodes the usual way when search (not clicking '...')
+// + outline | change icons etc.
 
 // TODO profile
 // - new design
@@ -103,13 +105,13 @@ const i18nextConfig = {
 // - rename "hasOpen" --> "OpenAccess"
 // - use topic facet ancestors
 // - intermediate/diagonal check state (both selected and unselected descendants)
+// - fix 1st result link /search?q="red%20mda%27%20ba"&lg=bo-x-ewts&t=Instance (add etext icon?)
 
 // TODO mirador
 // - use our translations
 // - download pdf link not in another tab
 
 // TODO outline
-// - open appeared sibling nodes the usual way when search (not clicking '...')
 
 
 const logger = store => next => action => {

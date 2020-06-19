@@ -331,8 +331,8 @@ const enTranslation = {
       hideD:"Hide Details",
       searchO:"Search in outline",
       start:"Start search",
-      reset:"Reset search"
-
+      reset:"Reset search",
+      otherN:"Load non-matching subparts"
    },
    mirador:{
       return:"return to BUDA",

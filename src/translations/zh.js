@@ -310,8 +310,8 @@ const zhTranslation = {
       hideD:"隐藏细节",
       searchO:"在纲要中搜索",
       start:"开始搜索",
-      reset:"重置搜索"
-
+      reset:"重置搜索",
+      otherN:"Load non-matching subparts"
    },
    mirador:{
       return:"回到BUDA",

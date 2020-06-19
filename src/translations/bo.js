@@ -330,8 +330,8 @@ const boTranslation = {
       hideD:"ཕྱིར་བསྡུ།",
       searchO:"དཀར་ཆག་ནང་འཚོལ།",
       start:"འཚོལ།",
-      reset:"བཙལ་བྱ་སུབ།"
-
+      reset:"བཙལ་བྱ་སུབ།",
+      otherN:"Load non-matching subparts"
    },
    mirador:{
       return:"བུདྡྷ་ལ་ཕྱིར་ལོག",

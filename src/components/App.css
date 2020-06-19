@@ -875,12 +875,14 @@ h4:not(:hover) > .lang
 .resource .data#outline span a { color: #343434; display:flex; line-height:20px; }
 .resource .data#outline span a:hover { border:none; text-decoration: underline; text-decoration-color: #343434; }
 .resource .data#outline span .lang { display:none; }
-.resource .data#outline div svg.xpd { width:20px; margin-right:5px;  cursor:pointer; opacity:0.75;}
-.resource .data#outline div span.xpd { position:absolute; margin-left:-20px;font-size:20px;font-weight:900;opacity:0;pointer-events:none;margin-top:-6px;
+.resource .data#outline div img.xpd { width:7px; height:5px;margin-right:0px;  cursor:pointer; opacity:1; padding:5px; top:0;left:0;}
+/* .resource .data#outline div svg.xpd { width:20px; margin-right:5px;  cursor:pointer; opacity:0.75;} */
+.resource .data#outline div span.xpd { position:absolute; margin-left:-15px;font-size:20px;font-weight:900;opacity:0;pointer-events:none;margin-top:-4px;
    cursor:pointer;
 }
-.resource .data#outline .root span.xpd { margin-top:-8px;}
-.resource .data#outline .is-root > span.xpd { color: #d73449;}
+.resource .data#outline div span.xpd svg { width:16px;}
+.resource .data#outline .root span.xpd { margin-top:-1px;}
+/* .resource .data#outline .is-root > span.xpd { color: #d73449;} */
 .resource .data#outline .root:hover span.xpd,
 .resource .data#outline span.top:hover span.xpd { opacity:0.65;pointer-events:auto;} 
 
@@ -891,9 +893,10 @@ h4:not(:hover) > .lang
 .resource .data#outline .is-root h2 a span,
 .resource .data#outline span.is-root a  { color:#d73449;  }
 .resource .data#outline .is-root a:hover { text-decoration-color: #d73449;}
-.resource .data#outline .is-root svg.xpd { color:#d73449; margin-top:-2px; }
+.resource .data#outline .root img.xpd { margin-top:3px; }
+/* .resource .data#outline .is-root svg.xpd { color:#d73449; margin-top:-2px; } */
 .resource .data#outline .root + div > span { display:flex; position:relative; }
-.resource .data#outline .root + div .xpd { position:absolute; left:-23px; top:-2px; }
+.resource .data#outline .root + div .xpd { position:absolute; left:-19px; top:3px; }
 .resource .data#outline .root + div span{ position:relative; }
 
 .resource .data#outline .loader { width: 100%; top: 50%; }
@@ -958,18 +961,18 @@ h4:not(:hover) > .lang
 .resource .data#outline .root + div span.top :not(.lang) { display:inline; vertical-align:top; }
 
 
-.resource .data#outline .parTy div { text-transform: uppercase; font-size:9px; font-family:"Noto Sans SemCond" !important;  opacity:0.65;
+.resource .data#outline .parTy div { text-transform: uppercase; font-size:11px; font-family:"Noto Sans SemCond" !important;  opacity:1; 
    /*padding:4px 1px 0 1px; text-align: center;  margin-top:-2px; */
 }
-.resource .data#outline .is-root .parTy:not(#a).on { border-color:rgba(215, 52, 73,1); }
-.resource .data#outline .is-root .parTy:not(#a):not(.on) { border-color:rgba(215, 52, 73,0.5); }
-.resource .data#outline .is-root .parTy div { color:#d73449; }
+/* .resource .data#outline .is-root .parTy:not(#a).on { border-color:rgba(215, 52, 73,1); } */
+/* .resource .data#outline .is-root .parTy:not(#a):not(.on) { border-color:rgba(215, 52, 73,0.5); } */
+/* .resource .data#outline .is-root .parTy div { color:#d73449; } */
 
-.resource .data#outline .parTy:not(#a) { font-size:0;padding-bottom:3px; box-sizing: border-box; vertical-align: 2px;
-   display:inline-flex; align-items: flex-end; justify-content: center; margin-right:7px; width:21px;height:20px; border:1px solid rgba(0,0,0,0.35); 
+.resource .data#outline .parTy:not(#a) { font-size:0;padding-bottom:3px; padding-left:3px; padding-right:3px;box-sizing: border-box; vertical-align: 2px;
+   display:inline-flex; align-items: flex-end; justify-content: center; margin-right:7px; width:26px;height:20px; background: rgba(0,0,0,0.15); 
 }
-.resource .data#outline .parTy:not(#a).on { cursor:pointer; font-weight:700; border:1px solid rgba(0,0,0,0.65);}
-.resource .data#outline .parTy.on:hover { text-decoration: underline; text-decoration-color: #d73449; }
+.resource .data#outline .parTy:not(#a).on { cursor:pointer; font-weight:700; background:rgba(0,0,0,0.15);}
+.resource .data#outline .parTy.on:hover { text-decoration: underline; /*text-decoration-color: #d73449;*/ }
 .resource .data#outline .parTy.on div { opacity:1.0;}
 
 .resource .data#outline .root:not(.is-root) .parTy,

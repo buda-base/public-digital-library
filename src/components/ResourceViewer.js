@@ -54,6 +54,7 @@ import React, { Component } from 'react';
 import qs from 'query-string'
 import Button from '@material-ui/core/Button';
 import Fade from '@material-ui/core/Fade';
+import RefreshIcon from '@material-ui/icons/Refresh';
 
 //import {Translate , I18n} from 'react-redux-i18n';
 import I18n from 'i18next';
@@ -5213,6 +5214,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                                  g.details.push(<div class="sub"><h4 class="first type">{this.proplink(bdo+"instanceOf")}{I18n.t("punc.colon")} </h4>{this.format("h4","instacO","",false, "sub", [{type:"uri",value:fullUri(g.instanceOf)}])}</div>)
                                  let instOf = elem.filter(f => f["@id"] === g.instanceOf)
                                  if(instOf.length && instOf[0]["tmp:labelMatch"]) {
+                                    g.hasMatch = true
                                     let node = instOf[0]["tmp:labelMatch"]
                                     if(!Array.isArray(node)) node = [node]                                    
                                     //console.log("instOf",instOf,node)
@@ -5279,9 +5281,9 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                         let open = this.state.collapse[tag] || (osearch &&  this.state.collapse[tag] === undefined && !e.notMatch)
                         if(pType && pType["@id"]) pType = pType["@id"]
                         ret.push(<span class={'top'+ (this.state.outlinePart === e['@id'] || (!this.state.outlinePart && this.props.IRI===e['@id']) ?" is-root":"")+(this.state.collapse[tag]||osearch&&e.hasMatch?" on":"") }>
-                              {(e.hasPart && open && osearch && !this.props.outlines[e['@id']]) && <span onClick={(ev) => toggle(ev,root,e["@id"],"",true)} className="xpd">...</span>}
-                              {(e.hasPart && !open && this.props.outlines[e['@id']] !== true) && <ExpandMore onClick={(ev) => toggle(ev,root,e["@id"],"",false,e)} className="xpd"/>}
-                              {(e.hasPart && open && this.props.outlines[e['@id']] !== true) && <ExpandLess onClick={(ev) => toggle(ev,root,e["@id"],"",false,e)} className="xpd"/>}
+                              {(e.hasPart && open && osearch && !this.props.outlines[e['@id']]) && <span onClick={(ev) => toggle(ev,root,e["@id"],"",true)} className="xpd" title={I18n.t("resource.otherN")}><RefreshIcon /></span>}
+                              {(e.hasPart && !open && this.props.outlines[e['@id']] !== true) && <img src="/icons/triangle_.png" onClick={(ev) => toggle(ev,root,e["@id"],"",false,e)} className="xpd"/>}
+                              {(e.hasPart && open && this.props.outlines[e['@id']] !== true) && <img src="/icons/triangle.png" onClick={(ev) => toggle(ev,root,e["@id"],"",false,e)} className="xpd"/>}
                               <span class={"parTy "+(e.details?"on":"")} {...e.details?{title:/*tLabel+" - "+*/ I18n.t("resource."+(this.state.collapse[tag+"-details"]?"hideD":"showD")), onClick:(ev) => toggle(ev,root,e["@id"],"details",false,e)}:{title:tLabel}} >
                                  {pType && parts[pType] ? <div>{parts[pType]}</div> : <div>{parts["?"]}</div> }
                               </span>
@@ -5420,9 +5422,9 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                <div>
                   <Loader loaded={this.props.loading !== "outline"}/>
                   <div class={"root " +(this.state.outlinePart === root || (!this.state.outlinePart && this.props.IRI===root)?"is-root":"")} >
-                     { (osearch && open && (this.props.outlines[root] && !this.props.outlines[osearch].reloaded)) && <span onClick={(ev) => toggle(ev,root,root,"",true)} className="xpd">...</span>}
-                     { !open && [<ExpandMore className="xpd" onClick={(e) => toggle(e,root,root)} />,colT,<span onClick={rootClick}>{title}</span>]}
-                     {  open && [<ExpandLess className="xpd" onClick={(e) => toggle(e,root,root)} />,colT,<span onClick={rootClick} class='on'>{title}</span>]}
+                     { (osearch && open && (this.props.outlines[root] && !this.props.outlines[osearch].reloaded)) && <span onClick={(ev) => toggle(ev,root,root,"",true)} className="xpd" title={I18n.t("resource.otherN")}><RefreshIcon /></span>}
+                     { !open && [<img src="/icons/triangle_.png" className="xpd" onClick={(e) => toggle(e,root,root)} />,colT,<span onClick={rootClick}>{title}</span>]}
+                     {  open && [<img src="/icons/triangle.png" className="xpd" onClick={(e) => toggle(e,root,root)} />,colT,<span onClick={rootClick} class='on'>{title}</span>]}
                   </div>
                   { open && <div style={{paddingLeft:"50px"}}>{outline}</div> }
                </div>
