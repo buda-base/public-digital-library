@@ -2,7 +2,9 @@
 const zhTranslation = {
    punc: {
       colon:"：",
-      num:"{{num}}"
+      num:"{{num}}",
+      lpar:"（",
+      rpar:"）"
    },
    home:{
       BUDA:"BUDA（佛教通用数字档案馆）",
@@ -12,8 +14,8 @@ const zhTranslation = {
       archives1:"佛教",
       archives2:"数字档案馆",
       by:"由佛教数字资源中心提供",
-      subtitle:"扩展佛教文献易用性的合作平台。请在此探索由BDRC及其众多合作伙伴提供的千万页文本。",
-      message:"欢迎来到BDRC（or 佛教数字资源中心）新图书馆的测试版！",
+      subtitle:"这是一个令佛教文献触手可及的合作平台。请在此探索由BDRC及其合作伙伴们提供的千万页文本吧。",
+      message:"欢迎来到佛教数字资源中心（BDRC）新图书馆的测试版！",
       submessage:"新功能，新资源，新工具，促进更高效的研究",
       search:"搜索",
       choose:"选择语言"
@@ -21,8 +23,8 @@ const zhTranslation = {
    types:{
       any:"任意",
       corporation:"机构",
-      etext:"Etext语境",
-      etext_title:"Etext语境",
+      etext:"在电子档中",
+      etext_title:"电子档",
       item:"单件",
       lineage:"传承",
       person:"人物",
@@ -33,7 +35,7 @@ const zhTranslation = {
       instance:"实例",
       images:"图像",
       volume:"卷",
-      volume_num:"卷{{num}}"
+      volume_num:"第{{num}}卷"
    },
    topbar:{
       about:"关于我们",
@@ -43,7 +45,7 @@ const zhTranslation = {
       logout:"登出",
       profile:"用户档案",
       donate:"捐赠",
-      closeEtext:"关闭Etext",
+      closeEtext:"关闭电子档",
       history:"搜索历史",
       bookmarks:"收藏夹",
       results:"的搜索结果",
@@ -103,8 +105,8 @@ const zhTranslation = {
       "tmp:bestMatch":"最佳匹配",
       "tmp:relationType":"关联方式",
       "tmp:nameMatch":"名字匹配",
-      "tmp:otherTitle":"题目别称匹配",
-      "tmp:otherName":"名字别称匹配",
+      "tmp:otherTitle":"题目别称",
+      "tmp:otherName":"名字别称",
       "tmp:otherMatch":"其他匹配 ({{count}})",
       "tmp:originalRecord":"原始记录",
       "tmp:imageVolumeId":"图像所属卷号",
@@ -114,7 +116,7 @@ const zhTranslation = {
       "tmp:instanceLabel":"实例标签",
       "tmp:dimensions":"尺寸",
       "tmp:publisherLocation":"出版地点",
-      "tmp:forWork":"所属作品？",
+      "tmp:forWork":"所属作品",
       "tmp:provider":"提供者",
       "tmp:author":"作者",
       "tmp:assetAvailability":"原件的开放情况",
@@ -126,13 +128,13 @@ const zhTranslation = {
       in:"在",
       available:"资源收藏于",
       inRootInstance:"在",      
-      workBy:"由",
-      eTextIsForWork:"所属作品？",
+      workBy:"作者",
+      eTextIsForWork:"所属作品",
       year:"年份",
       inInstance:"归属实例",
       inInstancePart:"归属实例具体位置",
-      expandC:"展开语境",
-      hideC:"收起语境",
+      expandC:"显示前后文",
+      hideC:"收起前后文",
       openE:"开启Etext",
       hasInstance:"有{{count}}实例"
    },
@@ -161,7 +163,7 @@ const zhTranslation = {
    popover:{
       moreInfo:"更多信息",
       source:"资源",
-      notes:"笔记",
+      notes:"馆员注",
       discussion:"讨论",
       lang:"语言/字体",
       otherLang:"在其他语言中",
@@ -204,7 +206,7 @@ const zhTranslation = {
          zhXPhonEn:"中文（音译）",
          saXIast:"梵语（IAST转写）",
          saXNdia:"梵语（Lenient）",
-         saDeva:"梵语（Devanagari体）",
+         saDeva:"梵语（天城体）",
          en:"英语",
          pi:"巴利语",
          piXIast:"巴利语（罗马转写）",
@@ -235,7 +237,7 @@ const zhTranslation = {
          en:"英语",
          km:"高棉语",
          saXIast:"梵语（IAST转写）",
-         saDeva:"梵语（Devanagari体）",
+         saDeva:"梵语（天城体）",
          bo:"藏语（Unicode）",
          boXEwts:"藏语（Wylie转写）"
       },
@@ -328,7 +330,7 @@ const zhTranslation = {
    },
    access:{
       limited20:"仅限首尾各20页的访问权",
-      credentials:"如果你有足够的授权来获取这部作品的所有图像"
+      credentials:"如果您有权获取这部作品的全部图像"
    },
    location:{
       beginV:"起始卷{{num}}",
