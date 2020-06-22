@@ -371,6 +371,9 @@ export function getLangLabel(that:{},prop:string="",labels:[],proplang:boolean=f
 function getPropLabel(that, i, withSpan = true, withLang = false) {
    if(!that.props.dictionary) return 
 
+   let sTmp = shortUri(i), trad = I18n.t("prop."+sTmp)
+   if("prop."+sTmp !== trad) return trad
+
    let label = that.props.dictionary[i], labels
    if(label) {
       labels = label[skos+"prefLabel"]
@@ -2498,7 +2501,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             //hasCopyR = allProps.filter(a => a.type === tmp+"hasOpen")
             //if(hasCopyR.length && hasCopyR[0].value == "false") {
 
-            viewUrl = allProps.filter(a => a.type === bdo+"instanceHasReproduction")
+            viewUrl = allProps.filter(a => a.type === bdo+"instanceHasReproduction" && !a.value.includes("/resource/IE"))
             if(viewUrl.length) viewUrl = shortUri(viewUrl[0].value)
             else viewUrl = null
             if(viewUrl && viewUrl.startsWith("bdr:")) viewUrl = "/show/" + viewUrl + "?s="+ encodeURIComponent(window.location.href.replace(/^https?:[/][/][^?]+[?]?/gi,"").replace(/(&n=[^&]*)/g,"")+"&n="+n)+"#open-viewer"

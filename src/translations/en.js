@@ -136,8 +136,8 @@ const enTranslation = {
       "tmp:assetAvailability":"Asset Availability",
       "tmp:textMatch":"Text Match",
       "bdo:workHasInstance":"Has $t(types.instance)",
-      "bdo:instanceOf":"$t(types.instance) Of"
-
+      "bdo:instanceOf":"$t(types.instance) Of",
+      "tmp:hasOpen":"$t(copyright.open)"
    },
    result:{
       open:"Open",
