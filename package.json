@@ -99,11 +99,9 @@
       "test": "react-scripts test --env=jsdom",
       "eject": "react-scripts eject",
       "flow": "flow",
-      "cp-uv-to-public": "rm -rf public/scripts/uv && cp -R node_modules/universalviewer/uv public/scripts/",
-      "uv-custom-openseadragon": "cp -f node_modules/openseadragon/build/openseadragon/openseadragon.min.js public/scripts/uv/lib/",
       "cp-mirador-to-public": "rm -rf public/scripts/mirador && cp -R node_modules/mirador/dist public/scripts/mirador",
       "link-embed-iframe": "ln -nsf ../embed-iframe.html public/scripts/ && ln -nsf ../miradorInit.js public/scripts/ &&  ln -nsf ../tibcolldemo2.json public/scripts/ && ln -nsf ../../src/ public/scripts/  && cd public/scripts/src/lib && ln -nsf ../../public/scripts/mirador",
-      "postinstall": "yarn cp-uv-to-public && yarn uv-custom-openseadragon && yarn cp-mirador-to-public && yarn link-embed-iframe"
+      "postinstall": "yarn cp-mirador-to-public && yarn link-embed-iframe"
    },
    "devDependencies": {
       "abortcontroller-polyfill": "^1.2.5",
