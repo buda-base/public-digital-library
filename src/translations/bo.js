@@ -41,8 +41,8 @@ const boTranslation = {
       topic_plural:"བརྗོད་གཞི།",
       work:"བརྩམས་ཆོས།",
       work_plural:"བརྩམས་ཆོས།",
-      instance:"བྱེ་བྲག",
-      instance_plural:"བྱེ་བྲག",
+      instance:"དཔེ་རྒྱུན།",
+      instance_plural:"དཔེ་རྒྱུན།",
       images:"བཤེར་པར།",
       volume:"བཤེར་པར།",
       volume_num:"པོད་གྲངས། {{num,counttobo}}"
