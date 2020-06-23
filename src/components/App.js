@@ -800,7 +800,7 @@ class App extends Component<Props,State> {
       report_GA(this.props.config,this.props.history.location);
 
 
-      if(!this._get) this._get = qs.parse(this.props.history.location.search)
+      this._get = qs.parse(this.props.history.location.search)
       let get = this._get 
 
       let n, scrolled
@@ -864,7 +864,7 @@ class App extends Component<Props,State> {
          }
       }
 
-      //console.log("encoded",encoded)
+      console.log("encoded=|"+encoded+"|"+this.state.filters.encoded+"|")
 
       if(this.state.uriPage !== pg || this.state.backToWorks !== backToWorks || (encoded !== this.state.filters.encoded ) || (scrolled && this.state.scrolled !== scrolled) )
          this.setState({...this.state, repage:true, uriPage:pg, backToWorks, scrolled, collapse, ...(filters?{filters}:{})})
@@ -4320,7 +4320,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                         />
 
                      }
-                     label={<span>{label}&nbsp;<span class='facet-count-block'>{I18n.t("punc.lpar")}<span class="facet-count">{I18n.t("punc.num",{num:cpt_i+cpt})}</span>{I18n.t("punc.rpar")}</span></span>}
+                     label={<span>{label}&nbsp;<span class='facet-count-block'>{I18n.t("punc.lpar")}<span class="facet-count">{I18n.t("punc.num",{num:cpt_i+cpt, interpolation: {escapeValue: false}})}</span>{I18n.t("punc.rpar")}</span></span>}
                   />
                   { !isExclu && label !== "Any" && <div class="exclude"><Close onClick={(event, checked) => this.handleCheckFacet(event,jpre,checkable,true,true)} /></div> }
                   {
@@ -4700,7 +4700,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                               />
 
                            }
-                           label={<a title={shortUri(i)}><span>{label}&nbsp;<span class="facet-count-block">{I18n.t("punc.lpar")}<span class="facet-count">{I18n.t("punc.num",{num:cpt_i+meta[j][i].n})}</span>{I18n.t("punc.rpar")}</span></span></a>}
+                           label={<a title={shortUri(i)}><span>{label}&nbsp;<span class="facet-count-block">{I18n.t("punc.lpar")}<span class="facet-count">{I18n.t("punc.num",{num:cpt_i+meta[j][i].n, interpolation: {escapeValue: false}})}</span>{I18n.t("punc.rpar")}</span></span></a>}
                         />
                         { !isExclu && label !== "Any" && <div class="exclude"><Close onClick={(event, checked) => this.handleCheckFacet(event,jpre,[i],true,true)} /></div> }
                      </div>
@@ -5001,7 +5001,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                                     this.renderFilterTag(false, f, v, (event, checked) => this.handleCheckFacet(event, f, [ v ], false) ) 
                                  ) }
                               ):null }
-                              <a title={I18n.t("Lsidebar.activeF.reset")} id="clear-filters" onClick={this.resetFilters.bind(this)}><span>{I18n.t("Lsidebar.tags.reset")}</span><RefreshIcon /></a>
+                              { this.state.filters.facets && <a title={I18n.t("Lsidebar.activeF.reset")} id="clear-filters" onClick={this.resetFilters.bind(this)}><span>{I18n.t("Lsidebar.tags.reset")}</span><RefreshIcon /></a> }
                               </div>
                            </div>
                         ]

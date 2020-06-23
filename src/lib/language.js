@@ -35,7 +35,8 @@ export function numtobo(c) {
    var cstr = c.toString();
    var res = '';
 	for (var c of cstr) {
-  	   res += numtobodic[c];
+      if(numtobodic[c]) res += numtobodic[c]
+      else res += c
    }
    return res;
 }

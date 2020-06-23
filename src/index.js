@@ -95,11 +95,13 @@ const i18nextConfig = {
 // + search | fix 1st result link /search?q="red%20mda%27%20ba"&lg=bo-x-ewts&t=Instance 
 // + search | rename "hasOpen" --> "OpenAccess"
 
+
 // TODO profile
 // - new design
 
 // TODO translation
 // - save preference (localStorage+url param 'lang'+defautl to navigator.language)
+// - 
 
 // TODO search
 // - change sortBy menu to regular popover
@@ -113,6 +115,9 @@ const i18nextConfig = {
 
 // TODO outline
 
+// TODO clean / library-dev
+// - remove ontology/core.json
+// - use simpler ontologySchema (=> reload when translate) cf http://purl.bdrc.io/query/graph/OntologyUiStrings?L_LNG=en&format=json
 
 const logger = store => next => action => {
   console.group(action.type)
