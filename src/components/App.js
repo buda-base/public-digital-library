@@ -4303,7 +4303,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
          checkable = checkable.map(e => e.replace(/bdr:/,bdr))
 
-         let checked = this.state.filters.facets && this.state.filters.facets[jpre]
+         let checked = this.state.filters.facets && this.state.filters.facets[jpre],partial
 
          //console.log("checked1",jpre,e,checked)
 
@@ -4317,7 +4317,9 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             if(toCheck.val) toCheck = toCheck.val
             if(checkable.indexOf(e) === -1) {
                for(let c of checkable) {
-                  checked = checked && toCheck.indexOf(c) !== -1  ;
+                  let chk  = toCheck.indexOf(c) !== -1 
+                  checked = checked && chk ;
+                  partial = partial || chk
                }
             }
             else checked = toCheck.indexOf(e) !== -1
@@ -4342,7 +4344,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      control={
                         <Checkbox
                            checked={checked}
-                           className={"checkbox"}
+                           className={"checkbox "+(partial&&!checked?"partial":"")}
                            icon={<CheckBoxOutlineBlank/>}
                            checkedIcon={isExclu ? <Close className="excl"/>:<CheckBox  style={{color:"#d73449"}}/>}
                            onChange={(event, checked) => this.handleCheckFacet(event,jpre,checkable,checked)}
