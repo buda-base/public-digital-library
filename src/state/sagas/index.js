@@ -17,6 +17,7 @@ import history from '../../history.js'
 
 //import { setHandleMissingTranslation } from 'react-i18nify';
 //import { I18n } from 'react-redux-i18n';
+import { i18nextChangeLanguage } from 'i18next-redux-saga';
 
 // to enable tests
 const api = new bdrcApi({...process.env.NODE_ENV === 'test' ? {server:"http://localhost:5555/test"}:{}});
@@ -60,9 +61,29 @@ async function initiateApp(params,iri,myprops) {
          }
          store.dispatch(dataActions.loadedConfig(config));
          //console.log("config",config)
-         store.dispatch(uiActions.langPreset(config.language.data.presets[config.language.data.index]))
+         
+         // DONE UI language
+         let locale = "zh", val
+         // 1-url param
+         if(params.uilang && ['bo','en','zh'].includes(params.uilang)) locale = params.uilang
+         // 2-saved preference
+         else if(val = localStorage.getItem('uilang')) locale = val
+         // 3-browser default
+         else if(['bo','en','zh'].includes(val = window.navigator.language.slice(0, 2))) locale = val
+         // 4-config file
+         else locale = config.language.data.index
+         
+         // i18n locale
+         if(locale !== "en") store.dispatch(i18nextChangeLanguage(locale));
+         
+         // data language preferences
+         if(config.language.data.presets[locale]) store.dispatch(uiActions.langPreset(config.language.data.presets[locale]))
+         else store.dispatch(uiActions.langPreset(["bo-x-ewts,sa-x-iast"]))
+
          //console.log("preset",config.language.data.presets[config.language.data.index])
          //store.dispatch(dataActions.choosingHost(config.ldspdi.endpoints[config.ldspdi.index]));
+
+
       }
 
 

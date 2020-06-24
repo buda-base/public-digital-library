@@ -452,12 +452,16 @@ export function lang_selec(that,black:boolean = false)
                                     value={i}
                                     disabled={disab}
                                     onClick={(event) => { 
+                                       localStorage.setItem('uilang', i);
                                        that.setState({...that.state,anchorLang:null,collapse: {...that.state.collapse, lang:false } }); 
                                        that.props.onSetLocale(i);
                                        document.documentElement.lang = i
                                        if(i === "bo") that.props.onSetLangPreset(["bo","zh-hans"])
                                        else if(i === "en") that.props.onSetLangPreset(["bo-x-ewts","sa-x-iast"])
                                        else if(i === "zh") that.props.onSetLangPreset(["zh-hans","bo"])
+                                       let loca = { ...that.props.history.location }
+                                       loca.search = loca.search.replace(/[&]*uilang=[^&]+/,"")
+                                       that.props.history.push(loca)
                                     }} >{label}</MenuItem> ) 
                   } ) } 
                   
@@ -5023,7 +5027,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                                     this.renderFilterTag(false, f, v, (event, checked) => this.handleCheckFacet(event, f, [ v ], false) ) 
                                  ) }
                               ):null }
-                              { this.state.filters.facets && <a title={I18n.t("Lsidebar.activeF.reset")} id="clear-filters" onClick={this.resetFilters.bind(this)}><span>{I18n.t("Lsidebar.tags.reset")}</span><RefreshIcon /></a> }
+                              { (this.state.filters.facets || this.state.backToWorks )&& <a title={I18n.t("Lsidebar.activeF.reset")} id="clear-filters" onClick={this.resetFilters.bind(this)}><span>{I18n.t("Lsidebar.tags.reset")}</span><RefreshIcon /></a> }
                               </div>
                            </div>
                         ]
