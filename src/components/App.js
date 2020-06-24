@@ -454,13 +454,16 @@ export function lang_selec(that,black:boolean = false)
                                     onClick={(event) => { 
                                        localStorage.setItem('uilang', i);
                                        that.setState({...that.state,anchorLang:null,collapse: {...that.state.collapse, lang:false } }); 
-                                       that.props.onSetLocale(i);
                                        document.documentElement.lang = i
+
+                                       that.props.onSetLocale(i);
                                        if(i === "bo") that.props.onSetLangPreset(["bo","zh-hans"])
                                        else if(i === "en") that.props.onSetLangPreset(["bo-x-ewts","sa-x-iast"])
                                        else if(i === "zh") that.props.onSetLangPreset(["zh-hans","bo"])
+
                                        let loca = { ...that.props.history.location }
-                                       loca.search = loca.search.replace(/[&]*uilang=[^&]+/,"")
+                                       if(loca.search.includes("uilang")) loca.search = loca.search.replace(/uilang=[^&]+/,"uilang="+i)
+                                       else loca.search += (loca.search&&loca.search.match(/[?]./)?"&":"?")+"uilang="+i
                                        that.props.history.push(loca)
                                     }} >{label}</MenuItem> ) 
                   } ) } 

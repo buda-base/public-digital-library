@@ -96,14 +96,11 @@ const i18nextConfig = {
 // + search | rename "hasOpen" --> "OpenAccess"
 // + search | fix reset filters (remove when nothing selected)
 // + search | change sortBy menu to regular popover
+// + translation | save preference (localStorage+url param 'lang'+defautl to navigator.language)
 
 
 // TODO profile
 // - new design
-
-// TODO translation
-// - save preference (localStorage+url param 'lang'+defautl to navigator.language)
-// - 
 
 // TODO search
 // - use topic facet ancestors
@@ -113,11 +110,13 @@ const i18nextConfig = {
 // - use our translations
 // - download pdf link not in another tab
 
-// TODO outline
-
 // TODO clean / library-dev
 // - remove ontology/core.json
 // - use simpler ontologySchema (=> reload when translate) cf http://purl.bdrc.io/query/graph/OntologyUiStrings?L_LNG=en&format=json
+
+
+// TODO outline
+// TODO translation
 
 const logger = store => next => action => {
   console.group(action.type)
