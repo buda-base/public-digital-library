@@ -4175,6 +4175,28 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
       return ;
    }
 
+   popwidget(title:string,txt:string,inCollapse:Component)  { 
+      return (
+         [<ListItem key={1} className="widget-header"
+            onClick={(e) => { this.setState({collapse:{ ...this.state.collapse, [txt]:!this.state.collapse[txt]}, anchor:{...this.state.anchor, [txt]:e.currentTarget} }); } }
+            >
+            <Typography  className="widget-title" >{title}</Typography>
+            { this.state.collapse[txt] ? <ExpandLess /> : <ExpandMore />}
+         </ListItem>,
+         // TODO replace Collapse by Popover
+         <Popover key={2}
+               open={this.state.collapse[txt]}
+               className={["collapse sortBy ",this.state.collapse[txt]?"open":"close"].join(" ")}
+               transformOrigin={{ vertical: 'center', horizontal: 'left'}} 
+               anchorOrigin={{vertical: 'center', horizontal: 'right'}} 
+               anchorEl={this.state.anchor[txt]} 
+               onClose={e => { this.setState({...this.state,collapse: {...this.state.collapse, [txt]:false } } ) }}
+            >
+               {inCollapse}
+         </Popover> ]
+      )
+  }
+
 
    widget(title:string,txt:string,inCollapse:Component)  { 
       return (
@@ -5029,7 +5051,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
            {  (message.length > 0 || message.length == 0 && !this.props.loading ) && <div id="res-header">
                <div>
                { // TODO change to popover style open/close
-                     sortByList && this.widget(I18n.t("Lsidebar.sortBy.title"),"sortBy",
+                     sortByList && this.popwidget(I18n.t("Lsidebar.sortBy.title"),"sortBy",
                      (sortByList /*:["Year of Publication","Instance Title"]*/).map((i,n) => <div key={i} style={{width:"200px",textAlign:"left"}} className="searchWidget">
                            <FormControlLabel
                               control={
