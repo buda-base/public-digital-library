@@ -94,6 +94,8 @@ const i18nextConfig = {
 // + outline | change icons etc.
 // + search | fix 1st result link /search?q="red%20mda%27%20ba"&lg=bo-x-ewts&t=Instance 
 // + search | rename "hasOpen" --> "OpenAccess"
+// + search | fix reset filters (remove when nothing selected)
+// + search | change sortBy menu to regular popover
 
 
 // TODO profile
@@ -104,8 +106,6 @@ const i18nextConfig = {
 // - 
 
 // TODO search
-// - change sortBy menu to regular popover
-// - fix reset filters (remove when nothing selected)
 // - use topic facet ancestors
 // - intermediate/diagonal check state (both selected and unselected descendants)
 
