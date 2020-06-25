@@ -96,6 +96,7 @@ const i18nextConfig = {
 // + search | rename "hasOpen" --> "OpenAccess"
 // + search | fix reset filters (remove when nothing selected)
 // + search | change sortBy menu to regular popover
+// + search | intermediate/diagonal check state (both selected and unselected descendants)
 // + translation | save preference (localStorage+url param 'lang'+defautl to navigator.language)
 
 
@@ -104,7 +105,6 @@ const i18nextConfig = {
 
 // TODO search
 // - use topic facet ancestors
-// - intermediate/diagonal check state (both selected and unselected descendants)
 
 // TODO mirador
 // - use our translations

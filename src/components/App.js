@@ -1032,10 +1032,13 @@ class App extends Component<Props,State> {
             facets = Object.keys(facets).reduce((acc,f) => {
                   if(facets[f].indexOf && facets[f].indexOf("Any") !== -1) return acc ;
                   else if(facets[f].val && facets[f].val.indexOf("Any") !== -1) return acc ;
-                  else return { ...acc, [f]:facets[f] }
+                  else if(f !== bdo+"workGenre" || facets[f].alt) return { ...acc, [f]:facets[f] }
+                  else return { ...acc, [f]:{alt:[bdo+"workGenre",bdo+"workIsAbout"],val:facets[f]} }
                },{})
 
-            console.log("facets",facets,props.loading)
+            s.filters.facets = facets
+
+            console.log("facets?",facets,props.loading)
 
             if(!props.loading) 
                props.onUpdateFacets(
@@ -1049,14 +1052,13 @@ class App extends Component<Props,State> {
             else 
                setTimeout(() => {
                   props.onUpdateFacets(
-                  props.keyword+"@"+props.language,
-                  s.filters.datatype[0],
-                  facets,
-                  s.filters.exclude,
-                  props.searches[s.filters.datatype[0]][props.keyword+"@"+props.language].metadata,
-                  props.config.facets[s.filters.datatype[0]]
-               )}, 1000);
-            
+                     props.keyword+"@"+props.language,
+                     s.filters.datatype[0],
+                     facets,
+                     s.filters.exclude,
+                     props.searches[s.filters.datatype[0]][props.keyword+"@"+props.language].metadata,
+                     props.config.facets[s.filters.datatype[0]]
+                  )}, 1000);            
          }
       }
 
@@ -1535,6 +1537,8 @@ class App extends Component<Props,State> {
 
    handleCheckFacet = (ev:Event,prop:string,lab:string[],val:boolean,excl:boolean=false) => {
 
+      console.log("hCf:",ev,prop,lab,val,excl)
+
       let state =  this.state
 
       let propSet ;
@@ -1589,7 +1593,7 @@ class App extends Component<Props,State> {
 
       if(this.state.filters.datatype && this.state.filters.datatype.indexOf("Any") === -1 && this.props.searches && this.props.searches[this.state.filters.datatype[0]]) {
 
-         console.log("facets",facets)
+         console.log("facets?",facets,prop)
 
          state.filters.preload = true
 
@@ -4351,7 +4355,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                         />
 
                      }
-                     label={<span>{label}&nbsp;<span class='facet-count-block'>{I18n.t("punc.lpar")}<span class="facet-count">{I18n.t("punc.num",{num:cpt_i+cpt, interpolation: {escapeValue: false}})}</span>{I18n.t("punc.rpar")}</span></span>}
+                     label={<span title={e.replace(new RegExp(bdr),"bdr:")}>{label}&nbsp;<span class='facet-count-block'>{I18n.t("punc.lpar")}<span class="facet-count">{I18n.t("punc.num",{num:cpt_i+cpt, interpolation: {escapeValue: false}})}</span>{I18n.t("punc.rpar")}</span></span>}
                   />
                   { !isExclu && label !== "Any" && <div class="exclude"><Close onClick={(event, checked) => this.handleCheckFacet(event,jpre,checkable,true,true)} /></div> }
                   {

@@ -1349,7 +1349,7 @@ vertical-align:middle;}
 .resource .data:not(.legal-props) h4.sameAs .ulink.sameAs { margin-left:0 !important; }
 
 .resource .data [data-prop="bdo:note"] .noteCollapse.in-true { overflow: visible;}
-
+.resource .data.ext-props [data-prop="bdo:note"] { display:flex !important; align-items: flex-start !important;}
 .resource .data > [data-prop="bdo:workHasInstance"] h4:hover .urilink .svg { background-color:rgba(220,220,220,0.5); }
 
 
