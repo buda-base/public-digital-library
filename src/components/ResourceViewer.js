@@ -1907,7 +1907,7 @@ class ResourceViewer extends Component<Props,State>
                if(!lang) lang = infoBase[0]["lang"]
                if(lang) info = infoBase[0].value 
                else info = null
-               if(infoBase[0].type && infoBase[0].type == bdo+"volumeNumber") info = I18n.t("types.volume_num",{num:infoBase[0].value}) ;
+               if(infoBase[0].type && (infoBase[0].type == bdo+"volumeNumber" || infoBase[0].fromKey == bdo+"volumeNumber")) info = I18n.t("types.volume_num",{num:infoBase[0].value}) ;
                else if(info && info.match(/purl[.]bdrc/)) info = null
                //console.log("info0",info)
             }
@@ -1970,7 +1970,7 @@ class ResourceViewer extends Component<Props,State>
          
          if(dico) {
             infoBase = dico[elem.value]
-            if(infoBase) infoBase = infoBase.filter(e => [bdo+"volumeNumber",skos+"prefLabel",skos+"altLabel",foaf+"name","literal"].reduce( (acc,f) => (acc || f === e.type || f === e.fromKey), false))
+            if(infoBase) infoBase = infoBase.filter(e => [bdo+"volumeNumber",skos+"prefLabel",skos+"altLabel",foaf+"name" /*,"literal"*/].reduce( (acc,f) => (acc || f === e.type || f === e.fromKey), false))
          }
 
          if(!infoBase || !infoBase.length)  {
