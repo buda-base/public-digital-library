@@ -4627,7 +4627,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
             //if(!k.match(new RegExp("Revision|Entry|prefLabel|"+rdf+"|toberemoved"))) {
             if(elem && 
-               (!k.match(new RegExp(adm+"|adm:|isRoot$|SourcePath|"+rdf+"|toberemoved|entityScore|workPagination|partIndex|partTreeIndex|legacyOutlineNodeRID|sameAs|thumbnailIIIFService|seeOther|withSameAs"+(this._dontMatchProp?"|"+this._dontMatchProp:"")))
+               (!k.match(new RegExp(adm+"|adm:|isRoot$|SourcePath|"+rdf+"|toberemoved|entityScore|workPagination|partIndex|partTreeIndex|legacyOutlineNodeRID|sameAs|thumbnailIIIFService|instanceOf|instanceReproductionOf|seeOther|withSameAs"+(this._dontMatchProp?"|"+this._dontMatchProp:"")))
                ||k.match(/(metadataLegal|contentProvider|replaceWith)$/)
                //||k.match(/([/]see|[/]sameAs)[^/]*$/) // quickfix [TODO] test property ancestors
                || (this.props.IRI.match(/^bda:/) && (k.match(new RegExp(adm+"|adm:")))))
