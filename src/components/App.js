@@ -452,12 +452,19 @@ export function lang_selec(that,black:boolean = false)
                                     value={i}
                                     disabled={disab}
                                     onClick={(event) => { 
+                                       localStorage.setItem('uilang', i);
                                        that.setState({...that.state,anchorLang:null,collapse: {...that.state.collapse, lang:false } }); 
-                                       that.props.onSetLocale(i);
                                        document.documentElement.lang = i
+
+                                       that.props.onSetLocale(i);
                                        if(i === "bo") that.props.onSetLangPreset(["bo","zh-hans"])
                                        else if(i === "en") that.props.onSetLangPreset(["bo-x-ewts","sa-x-iast"])
                                        else if(i === "zh") that.props.onSetLangPreset(["zh-hans","bo"])
+
+                                       let loca = { ...that.props.history.location }
+                                       if(loca.search.includes("uilang")) loca.search = loca.search.replace(/uilang=[^&]+/,"uilang="+i)
+                                       else loca.search += (loca.search&&loca.search.match(/[?]./)?"&":"?")+"uilang="+i
+                                       that.props.history.push(loca)
                                     }} >{label}</MenuItem> ) 
                   } ) } 
                   
@@ -4296,7 +4303,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
          checkable = checkable.map(e => e.replace(/bdr:/,bdr))
 
-         let checked = this.state.filters.facets && this.state.filters.facets[jpre]
+         let checked = this.state.filters.facets && this.state.filters.facets[jpre],partial
 
          //console.log("checked1",jpre,e,checked)
 
@@ -4310,7 +4317,9 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             if(toCheck.val) toCheck = toCheck.val
             if(checkable.indexOf(e) === -1) {
                for(let c of checkable) {
-                  checked = checked && toCheck.indexOf(c) !== -1  ;
+                  let chk  = toCheck.indexOf(c) !== -1 
+                  checked = checked && chk ;
+                  partial = partial || chk
                }
             }
             else checked = toCheck.indexOf(e) !== -1
@@ -4335,7 +4344,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      control={
                         <Checkbox
                            checked={checked}
-                           className={"checkbox"}
+                           className={"checkbox "+(partial&&!checked?"partial":"")}
                            icon={<CheckBoxOutlineBlank/>}
                            checkedIcon={isExclu ? <Close className="excl"/>:<CheckBox  style={{color:"#d73449"}}/>}
                            onChange={(event, checked) => this.handleCheckFacet(event,jpre,checkable,checked)}
@@ -5023,7 +5032,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                                     this.renderFilterTag(false, f, v, (event, checked) => this.handleCheckFacet(event, f, [ v ], false) ) 
                                  ) }
                               ):null }
-                              { this.state.filters.facets && <a title={I18n.t("Lsidebar.activeF.reset")} id="clear-filters" onClick={this.resetFilters.bind(this)}><span>{I18n.t("Lsidebar.tags.reset")}</span><RefreshIcon /></a> }
+                              { (this.state.filters.facets || this.state.backToWorks )&& <a title={I18n.t("Lsidebar.activeF.reset")} id="clear-filters" onClick={this.resetFilters.bind(this)}><span>{I18n.t("Lsidebar.tags.reset")}</span><RefreshIcon /></a> }
                               </div>
                            </div>
                         ]

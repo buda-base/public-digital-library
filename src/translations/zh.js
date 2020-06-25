@@ -193,8 +193,8 @@ const zhTranslation = {
    },
    lang:{
       en:"英语",
-      fr:"中文",
-      zh:"汉语",
+      fr:"法文",
+      zh:"中文",
       bo:"藏语",
       km:"高棉语",
       lg:"语言",

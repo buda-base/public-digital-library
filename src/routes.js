@@ -155,7 +155,7 @@ const makeMainRoutes = () => {
                      { 
                         <Route exact path="/user" render={(props) => {
 
-                           store.dispatch(initiateApp());
+                           store.dispatch(initiateApp(qs.parse(history.location.search)));
 
                            return (<ProfileContainer auth={auth} history={history} />)
                         } } />
@@ -163,7 +163,7 @@ const makeMainRoutes = () => {
                      { 
                         <Route exact path="/testUser" render={(props) => {
 
-                           store.dispatch(initiateApp());
+                           store.dispatch(initiateApp(qs.parse(history.location.search)));
 
                            return (<UserViewerContainer auth={auth} history={history} />)
                         } } />
@@ -219,7 +219,7 @@ const makeMainRoutes = () => {
                         )
                      }}/>
                      <Route exact path="/" render={(props) => {
-                        store.dispatch(initiateApp());
+                        store.dispatch(initiateApp(qs.parse(history.location.search)));
                         return ( <AppContainer history={history} auth={auth}/> ) } } />
                      <Route path="/search" render={(props) => {
                         let get = qs.parse(history.location.search)

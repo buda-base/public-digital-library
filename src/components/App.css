@@ -2566,6 +2566,10 @@ body > .ol-li-lang:last-child li::before { content:'-';}
 .widget > label > span:last-child:nth-child(2) { margin-left:-18px;}
 .widget > .subcollapse { padding-left:18px !important;margin-left:-18px;}
 
+.widget > label > .checkbox.partial::before { content:'';width:0px !important;height:0px !important;display:inline-block;position:absolute;
+   border-top:12px solid #d73449; border-right:12px solid transparent ; left:3px;top:2px;z-index:0;
+}
+
 .widget > * { vertical-align:text-bottom !important;}
 
 span.subcollapse { opacity:0; transition:opacity 50ms ease-in-out ; }
