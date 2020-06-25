@@ -497,6 +497,7 @@ let extProperties = {
       "tmp:dimensions",
       "bdo:instanceReproductionOf",
       "bdo:note",
+      "bod:authorshipStatement",
    ],
    "Person": [,
       bf+"identifiedBy",
