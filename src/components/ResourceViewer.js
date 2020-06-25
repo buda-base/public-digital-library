@@ -493,25 +493,25 @@ let extProperties = {
       //tmp+"entityScore",
       //bdo+"authorshipStatement",
       bdo+"itemBDRCHoldingStatement",
-      "bdo:numberOfVolumes",
+      bdo+"numberOfVolumes",
       "tmp:dimensions",
-      "bdo:instanceReproductionOf",
-      "bdo:note",
-      "bod:authorshipStatement",
+      bdo+"bdo:instanceReproductionOf",
+      bdo+"note",
+      bdo+"authorshipStatement",
    ],
    "Person": [,
       bf+"identifiedBy",
       //tmp+"entityScore"
-      "bdo:note",
+      bdo+"note",
    ],
    "Place": [,
       bf+"identifiedBy",
       //tmp+"entityScore"
-      "bdo:note",
+      bdo+"note",
    ],
    "Lineage": [
-      "bdo:workLocation",
-      "bdo:note",
+      bdo+"workLocation",
+      bdo+"note",
    ]
 }
 extProperties["Etext"] = extProperties["Work"]
