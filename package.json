@@ -96,7 +96,7 @@
    "scripts": {
       "start": "react-scripts start",
       "build": "react-scripts build",
-      "mv-prod": "touch prod && mv prod old_prod && mv build prod && rm -rf old_prod",
+      "postbuild": "touch prod && mv prod old_prod && cp -r build prod && rm -rf old_prod",
       "test": "react-scripts test --env=jsdom",
       "eject": "react-scripts eject",
       "flow": "flow",
