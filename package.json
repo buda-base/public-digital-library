@@ -64,6 +64,7 @@
       "query-string": "^5.1.0",
       "react": "^16.2.0",
       "react-bootstrap": "^0.31.2",
+      "react-clear-cache": "^1.2.0",
       "react-cookie": "^3.0.4",
       "react-cookie-consent": "^5.0.1",
       "react-copy-to-clipboard": "^5.0.1",
@@ -101,7 +102,9 @@
       "flow": "flow",
       "cp-mirador-to-public": "rm -rf public/scripts/mirador && cp -R node_modules/mirador/dist public/scripts/mirador",
       "link-embed-iframe": "ln -nsf ../embed-iframe.html public/scripts/ && ln -nsf ../miradorInit.js public/scripts/ &&  ln -nsf ../tibcolldemo2.json public/scripts/ && ln -nsf ../../src/ public/scripts/  && cd public/scripts/src/lib && ln -nsf ../../public/scripts/mirador",
-      "postinstall": "yarn cp-mirador-to-public && yarn link-embed-iframe"
+      "postinstall": "yarn cp-mirador-to-public && yarn link-embed-iframe",
+      "prebuild": "yarn run generate-build-meta",
+      "generate-build-meta": "./node_modules/react-clear-cache/bin/cli.js"
    },
    "devDependencies": {
       "abortcontroller-polyfill": "^1.2.5",

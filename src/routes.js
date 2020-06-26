@@ -23,6 +23,8 @@ import UserViewerContainer from './containers/UserViewerContainer';
 import ProfileContainer from './containers/ProfileContainer';
 import Profile from './components/ProfileStatic';
 
+import ClearCache from "react-clear-cache";
+
 export const auth = new Auth();
 
 
@@ -132,6 +134,7 @@ const handleAuthentication = (nextState, replace) => {
 const makeMainRoutes = () => {
 
    return (
+      
         <Provider store={store}>
            <MuiThemeProvider theme={theme}>
               <Router history={history}>
@@ -220,7 +223,11 @@ const makeMainRoutes = () => {
                      }}/>
                      <Route exact path="/" render={(props) => {
                         store.dispatch(initiateApp(qs.parse(history.location.search)));
-                        return ( <AppContainer history={history} auth={auth}/> ) } } />
+                        return ( 
+                           <ClearCache auto={true}>
+                              {({ isLatestVersion, emptyCacheStorage }) => (<AppContainer history={history} auth={auth}/> )}
+                           </ClearCache>
+                        )}}/>
                      <Route path="/search" render={(props) => {
                         let get = qs.parse(history.location.search)
                         //if(!store.getState().data.ontology)
