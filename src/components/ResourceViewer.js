@@ -5634,7 +5634,11 @@ perma_menu(pdfLink,monoVol,fairUse,other)
             if(backTo === withW) { 
                backTo = decodeURIComponent(backTo)
                searchUrl = backTo
-               searchTerm = searchUrl.replace(/.*q=([^&]+).*/,"$1")
+               if(searchUrl.match(/q=/))               
+                  searchTerm = searchUrl.replace(/.*q=([^&]+).*/,"$1")
+               else if(searchUrl.match(/r=/))               
+                  searchTerm = searchUrl.replace(/.*r=([^&]+).*/,"$1")
+
             }
             else { 
                backTo = decodeURIComponent(backTo.replace(new RegExp("(([?])|&)"+withW),"$2"))+"&"+withW
