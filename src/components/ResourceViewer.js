@@ -1652,7 +1652,7 @@ class ResourceViewer extends Component<Props,State>
 
 
 
-   fullname(prop:string,isUrl:boolean=false,noNewline:boolean=false,useUIlang:boolean=false,canSpan = true)
+   fullname(prop:string,isUrl:boolean=false,noNewline:boolean=false,useUIlang:boolean=false,canSpan = true,count?:integer=1)
    {
 
 
@@ -1660,7 +1660,7 @@ class ResourceViewer extends Component<Props,State>
 
 
       let sTmp, trad ;
-      if(prop && prop.match && prop.match(/[./]/) && (trad=I18n.t(sTmp="prop."+shortUri(prop))) !== sTmp)  {
+      if(prop && prop.match && prop.match(/[./]/) && (trad=I18n.t(sTmp="prop."+shortUri(prop),{count})) !== sTmp)  {
          if(canSpan) return <span lang="">{this.pretty(trad,isUrl,noNewline)}</span>
          else return this.pretty(trad,isUrl,noNewline)
       }
@@ -3551,7 +3551,7 @@ class ResourceViewer extends Component<Props,State>
          });
    };
 
-   proplink = (k,txt) => {
+   proplink = (k,txt,count?:integer=1) => {
 
 
       if(txt) console.warn("use of txt in proplink",k,txt)
@@ -3568,7 +3568,7 @@ class ResourceViewer extends Component<Props,State>
 
       if(k === bdo+'note') txt = I18n.t("popover.notes") ;
 
-      let ret = (<a class="propref" {...(k.match(/purl[.]bdrc[.]io/) && !k.match(/[/]tmp[/]/) ? {"href":k}:{})} target="_blank">{txt?txt:this.fullname(k,false,false,true)}</a>)
+      let ret = (<a class="propref" {...(k.match(/purl[.]bdrc[.]io/) && !k.match(/[/]tmp[/]/) ? {"href":k}:{})} target="_blank">{txt?txt:this.fullname(k,false,false,true,true,count)}</a>)
 
       if(tooltip && tooltip.length > 0) ret = <Tooltip placement="bottom-start" classes={{tooltip:"commentT",popper:"commentP"}} style={{marginLeft:"50px"}} title={<div>{tooltip.map(tip => tip.value.split("\n").map(e => [e,<br/>]))}</div>}>{ret}</Tooltip>
 
@@ -4014,7 +4014,7 @@ class ResourceViewer extends Component<Props,State>
 
          return (
             <div data-prop={shortUri(k)} class={"has-collapse custom max-"+(maxDisplay)+" "+(n%2===0?"even":"odd") }>
-               <h3><span>{this.proplink(k)}{I18n.t("punc.colon")}</span></h3>
+               <h3><span>{this.proplink(k,null,n)}{I18n.t("punc.colon")}</span></h3>
                <div className={"propCollapseHeader in-"+(this.state.collapse[k]===true)}>
                   {ret.slice(0,maxDisplay)}
                   { (false || (!this.state.collapse[k] && hasMaxDisplay !== -1) ) && <span
@@ -4054,7 +4054,7 @@ class ResourceViewer extends Component<Props,State>
       else {
          return (
             <div  data-prop={shortUri(k)} {...(k===bdo+"note"?{class:"has-collapse custom"}:{})}>               
-               <h3><span>{this.proplink(k)}{I18n.t("punc.colon")}</span> </h3>
+               <h3><span>{this.proplink(k,null,n)}{I18n.t("punc.colon")}</span> </h3>
                {this.preprop(k,0,n)}
                <div className={k === bdo+"personTeacherOf" || k === bdo + "personStudentOf" ? "propCollapseHeader in-false":"group"}>
                {ret}               
