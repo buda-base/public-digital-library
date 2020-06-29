@@ -391,7 +391,7 @@ export default class API {
 
       try {
          let config = store.getState().data.config.ldspdi
-         let url = config.endpoints[config.index]+"/lib" // "/query/graph" ;
+         let url = config.endpoints[config.index]+(!useContext?"/lib":"/query/graph") ;
          let param = {"searchType":useContext?"chunkContext":"Chunks",...(useContext?{"R_UT":IRI}:{"R_RES":IRI}),"I_START":next,"I_END":next+nb,"L_NAME":"","LG_NAME":"", "I_LIM":"" }
          let data = await this.getQueryResults(url, IRI, param,"GET","application/ld+json");
 

@@ -4489,7 +4489,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
       const { isAuthenticated } = this.props.auth;
       let id ;
 
-      if(!global.inTest) console.log("render",this.props.keyword,this.props,this.state,isAuthenticated && isAuthenticated(),this._customLang,JSON.stringify(this.state.filters,null,3))
+      if(!global.inTest) console.log("render",this.props.keyword,this.props,this.state,isAuthenticated && isAuthenticated(),this._customLang) //,JSON.stringify(this.state.filters,null,3))
       // no search yet --> sample data
       if(!this.props.keyword || this.props.keyword == "")
       {
@@ -4864,6 +4864,19 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
       let nbResu = this.state.paginate && this.state.paginate.nMax ? this.state.paginate.nMax:(this.state.results&&this.state.results[this.state.id]?this.state.results[this.state.id].resLength:"--")
 
+      let facetTags 
+      if(this.state.filters.facets)
+         facetTags  = Object.keys(this.state.filters.facets).map(f => {
+            let vals = this.state.filters.facets[f]
+            if(vals.val) { 
+               vals = vals.val
+               // do not use leaf but top-level topics
+            }
+            return vals.filter(k => k !== "Any").map(v => 
+               this.renderFilterTag(false, f, v, (event, checked) => this.handleCheckFacet(event, f, [ v ], false) ) 
+            ) }
+         )
+
       return (
 <div>
    {getGDPRconsent(this)}
@@ -5029,13 +5042,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                               { this.props.isInstance && this.state.backToWorks && this.state.filters.instance && this.renderFilterTag(false, I18n.t("Lsidebar.tags.instanceOf"), this.state.filters.instance, (event, checked) => {
                                  this.resetFilters(event)
                               } )  } 
-                              { this.state.filters.facets?Object.keys(this.state.filters.facets).map(f => {
-                                 let vals = this.state.filters.facets[f]
-                                 if(vals.val) vals = vals.val
-                                 return vals.filter(k => k !== "Any").map(v => 
-                                    this.renderFilterTag(false, f, v, (event, checked) => this.handleCheckFacet(event, f, [ v ], false) ) 
-                                 ) }
-                              ):null }
+                              { facetTags }
                               { (this.state.filters.facets || this.state.backToWorks )&& <a title={I18n.t("Lsidebar.activeF.reset")} id="clear-filters" onClick={this.resetFilters.bind(this)}><span>{I18n.t("Lsidebar.tags.reset")}</span><RefreshIcon /></a> }
                               </div>
                            </div>

@@ -105,6 +105,7 @@ const i18nextConfig = {
 
 // TODO search
 // - use topic facet ancestors
+// - close sortBy on selection
 
 // TODO mirador
 // - use our translations
@@ -114,9 +115,18 @@ const i18nextConfig = {
 // - remove ontology/core.json
 // - use simpler ontologySchema (=> reload when translate) cf http://purl.bdrc.io/query/graph/OntologyUiStrings?L_LNG=en&format=json
 
+// TODO safari
+// - http://library.bdrc.io/search?q=%22dri%20med%20%27od%20zer%22&lg=bo-x-ewts&t=Work&uilang=en&s=work%20title%20reverse&pg=1&f=tree,inc,bdr:T23&f=tree,inc,bdr:T2183&f=tree,inc,bdr:T140&f=tree,inc,bdr:T354
 
-// TODO outline
 // TODO translation
+// - use lang=bo tag ("profile")
+// - font / title bug
+
+// TODO etext 
+// - 404/401 "not found" / "must login"
+
+
+
 
 const logger = store => next => action => {
   console.group(action.type)
