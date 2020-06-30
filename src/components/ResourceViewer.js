@@ -454,7 +454,6 @@ const topProperties = {
       skos+"altLabel",
       //bdo+"instanceReproductionOf",
       //bdo+"itemVolumes",
-      bdo+"instanceHasVolume"
    ],
    "Volume": [ 
       bdo+"hasTitle", 
@@ -498,6 +497,7 @@ let extProperties = {
       bdo+"bdo:instanceReproductionOf",
       bdo+"note",
       bdo+"authorshipStatement",
+      bdo+"instanceHasVolume",
    ],
    "Person": [,
       bf+"identifiedBy",
