@@ -377,6 +377,8 @@ body { overflow:auto !important;padding-right:0 !important; /*font-family:"Robot
 #samples { padding: 20px 0 40px 0 ; width:910px;margin-right:0px; /*padding-left:37px; */}
 #samples h3 { text-transform: uppercase; text-align: center; font-size:23px;margin:10px 0;}
 
+.SearchPane.resultPage { overflow-y:auto;}
+
 #res-container > ul li { padding-left:0; pointer-events:none; }
 #res-container > ul h4 { padding-left:22px;; }
 #res-container > ul h4 { color:#343434; font-size:24px; /*font-family:"Noto Sans";*/ font-weight:900; text-transform:uppercase;}
@@ -2555,10 +2557,7 @@ body > .ol-li-lang:last-child li::before { content:'-';}
 .searchWidget > .exclude svg, svg.excl { font-size:12px; color:white;background-color:#d73449;border-radius:2px; cursor:pointer;}
 .exclude:hover, .searchWidget label:hover + .exclude { display:inline-block;}
 
-.widget > label { display:inline; padding-left:3px;padding-bottom:2px; z-index:0;  
-   /* TODO better but not perfect... */
-   padding-right:40px;margin-right:-40px; 
-}
+.widget > label { display:inline; padding-left:3px;padding-bottom:2px; z-index:0;  overflow:visible;     }
 .widget > label > * { display:inline; vertical-align: text-top; }
 .widget > label > .checkbox { display:inline-block; width:18px !important;height:18px !important; }
 .widget > label > .checkbox > span:first-child { display:inline;  }
@@ -2575,7 +2574,7 @@ body > .ol-li-lang:last-child li::before { content:'-';}
 
 .widget > * { vertical-align:text-bottom !important;}
 
-span.subcollapse { opacity:0; transition:opacity 50ms ease-in-out ; }
+span.subcollapse { opacity:0; transition:opacity 50ms ease-in-out ;  }
 span.subcollapse svg { vertical-align:-6px; cursor:pointer; font-size:18px; }
 .collapse.open > div > div > .widget > span.subcollapse, 
 .collapse.open .subcollapse.open > div > div > .widget > span.subcollapse

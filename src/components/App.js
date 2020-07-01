@@ -4356,7 +4356,11 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
                      }
                      label={<span title={e.replace(new RegExp(bdr),"bdr:")}>{label}&nbsp;<span class='facet-count-block'>{I18n.t("punc.lpar")}<span class="facet-count">{I18n.t("punc.num",{num:cpt_i+cpt, interpolation: {escapeValue: false}})}</span>{I18n.t("punc.rpar")}</span></span>}
-                  />
+                  />&nbsp;{ elem && elem["taxHasSubClass"] && elem["taxHasSubClass"].length > 0 &&
+                     <span className={"subcollapse " + (disabled?"off":"")} /*style={{width:"335px"}}*/
+                           onClick={(ev) => { this.setState({collapse:{ ...this.state.collapse, [e]:!this.state.collapse[e]} }); } }>
+                     { this.state.collapse[e] ? <ExpandLess /> : <ExpandMore />}
+                     </span> }
                   { !isExclu && label !== "Any" && <div class="exclude"><Close onClick={(event, checked) => this.handleCheckFacet(event,jpre,checkable,true,true)} /></div> }
                   {
                      elem && elem["taxHasSubClass"] && elem["taxHasSubClass"].length > 0 &&
