@@ -1250,7 +1250,8 @@ class ResourceViewer extends Component<Props,State>
       if(!this.props.IRI || !this.props.resources || !this.props.resources[this.props.IRI]
          || !this.props.resources[this.props.IRI][this.expand(this.props.IRI)]) return {}
 
-      let onto = this.props.ontology, dic = this.props.dictionary
+      //let onto = this.props.ontology
+      let dic = this.props.dictionary
       let prop = this.props.resources[this.props.IRI][this.expand(this.props.IRI)] ;
       if(this.state.resource) prop = this.state.resource
       let w = prop[bdo+"dimWidth"]
@@ -1529,7 +1530,7 @@ class ResourceViewer extends Component<Props,State>
                         [rdfs+"subPropertyOf"]: [{type: "uri", value: tmp+"workHasTranslationInCanonicalLanguage"}],
                         [tmp+"langKey"]: [{type:"literal", value:lang}]
                      }
-                     onto[ontoProp] = newLang
+                     //onto[ontoProp] = newLang
                      dic[ontoProp] = newLang
                      if(!subLangDeriv[ontoProp]) subLangDeriv[ontoProp] = []
                      subLangDeriv[ontoProp].push(e)
@@ -1549,7 +1550,7 @@ class ResourceViewer extends Component<Props,State>
                         [rdfs+"subPropertyOf"]: [{type: "uri", value: tmp+"workHasTranslationInNonCanonicalLanguage"}],
                         [tmp+"langKey"]: [{type:"literal", value:lang}]
                      }
-                     onto[ontoProp] = newLang
+                     //onto[ontoProp] = newLang
                      dic[ontoProp] = newLang
                      if(!subLangDeriv[ontoProp]) subLangDeriv[ontoProp] = []
                      subLangDeriv[ontoProp].push(e)
@@ -1722,7 +1723,7 @@ class ResourceViewer extends Component<Props,State>
 
      console.log("showAssoc e k",e,k);
 
-     if(this.props.ontology[k] && this.props.ontology[k][bdo+"inferSubTree"]) return
+     if(this.props.dictionary[k] && this.props.dictionary[k][bdo+"inferSubTree"]) return
 
 
       let vals = [], n=0;
@@ -1764,25 +1765,25 @@ class ResourceViewer extends Component<Props,State>
    {
       //console.log("sup",k)
 
-      if(!this.props.ontology || !this.props.ontology[k] || (!this.props.ontology[k][rdfs+"subPropertyOf"] && !this.props.ontology[k][rdfs+"subClassOf"]))
+      if(!this.props.dictionary || !this.props.dictionary[k] || (!this.props.dictionary[k][rdfs+"subPropertyOf"] && !this.props.dictionary[k][rdfs+"subClassOf"]))
       {
          return false
       }
       else  {
-         let tmp = this.props.ontology[k][rdfs+"subPropertyOf"].map(e => e)
-         if(!tmp) tmp = this.props.ontology[k][rdfs+"subClassOf"].map(e => e)
+         let tmp = this.props.dictionary[k][rdfs+"subPropertyOf"].map(e => e)
+         if(!tmp) tmp = this.props.dictionary[k][rdfs+"subClassOf"].map(e => e)
          while(tmp && tmp.length > 0)
          {
             let e = tmp[0]
 
             //console.log("super e",e.value) //tmp,k,e.value,e, this.props.ontology[k], this.props.ontology[e.value])
 
-            if(this.props.ontology[e.value][rdfs+"subPropertyOf"])
-               tmp = tmp.concat(this.props.ontology[e.value][rdfs+"subPropertyOf"].map(f => f))
-            else if(this.props.ontology[e.value][rdfs+"subClassOf"])
-               tmp = tmp.concat(this.props.ontology[e.value][rdfs+"subClassOf"].map(f => f))
+            if(this.props.dictionary[e.value][rdfs+"subPropertyOf"])
+               tmp = tmp.concat(this.props.dictionary[e.value][rdfs+"subPropertyOf"].map(f => f))
+            else if(this.props.dictionary[e.value][rdfs+"subClassOf"])
+               tmp = tmp.concat(this.props.dictionary[e.value][rdfs+"subClassOf"].map(f => f))
 
-            if(this.props.ontology[e.value] && this.props.ontology[e.value][bdo+"inferSubTree"]) return true ;
+            if(this.props.dictionary[e.value] && this.props.dictionary[e.value][bdo+"inferSubTree"]) return true ;
             else if(e.value===bdo+"workTranslationOf") return false
 
             delete tmp[0]
@@ -1796,7 +1797,7 @@ class ResourceViewer extends Component<Props,State>
    hasSub(k:string)
    {
       if(!k.match(/^http:\/\/purl\.bdrc\.io/)) return false
-      else return (this.props.ontology[k] && this.props.ontology[k][bdo+"inferSubTree"])
+      else return (this.props.dictionary && this.props.dictionary[k] && this.props.dictionary[k][bdo+"inferSubTree"])
 
    }
 
@@ -1809,7 +1810,7 @@ class ResourceViewer extends Component<Props,State>
       if(this.props.IRI && this.props.resources[this.props.IRI] && this.props.resources[this.props.IRI][this.expand(this.props.IRI)]) {
 
          let res = this.props.resources[this.props.IRI][this.expand(this.props.IRI)]
-         let onto = this.props.ontology
+         let onto = this.props.dictionary
          let dict = this.props.dictionary
          let subKeys = Object.keys(res).map(q => {
             let key,alphaK="zz",numK=1000
@@ -1836,8 +1837,8 @@ class ResourceViewer extends Component<Props,State>
          for(let p of subKeys) {
 
 
-            if(this.props.ontology[p] && this.props.ontology[p][rdfs+"subPropertyOf"]
-               && this.props.ontology[p][rdfs+"subPropertyOf"].filter((e)=>(e.value == k)).length > 0)
+            if(this.props.dictionary[p] && this.props.dictionary[p][rdfs+"subPropertyOf"]
+               && this.props.dictionary[p][rdfs+"subPropertyOf"].filter((e)=>(e.value == k)).length > 0)
             {
                //console.log("p",p)
 
@@ -1871,7 +1872,7 @@ class ResourceViewer extends Component<Props,State>
       if(!info) info = [ getLangLabel(this, prop, infoBase.filter((e)=>((e["xml:lang"] || e["lang"] || e.fromKey && e.fromKey === foaf+"name")))) ]                        
       if(!info) info = [ getLangLabel(this, prop, infoBase.filter((e)=>((e["xml:lang"] || e["lang"]) && e.type==prop))) ]
 
-      //console.log("info",prop,infoBase,info)
+      console.log("info?",prop,infoBase,info)
 
       //if(info.value) info = info.value
 
@@ -1909,7 +1910,7 @@ class ResourceViewer extends Component<Props,State>
                else info = null
                if(infoBase[0].type && (infoBase[0].type == bdo+"volumeNumber" || infoBase[0].fromKey == bdo+"volumeNumber")) info = I18n.t("types.volume_num",{num:infoBase[0].value}) ;
                else if(info && info.match(/purl[.]bdrc/)) info = null
-               //console.log("info0",info)
+               console.log("info0",info)
             }
          }
       }
@@ -1947,7 +1948,7 @@ class ResourceViewer extends Component<Props,State>
    {
       if(elem) {
 
-         //console.log("uriformat",prop,elem.value,elem,dic,withProp,show)
+         console.log("uriformat",prop,elem.value,elem,dic,withProp,show)
          
          if(!elem.value.match(/^http:\/\/purl\.bdrc\.io/) /* && !hasExtPref */ && ((!dic || !dic[elem.value]) && !prop.match(/[/#]sameAs/))) {
             let link = elem.value
@@ -1979,7 +1980,7 @@ class ResourceViewer extends Component<Props,State>
             if(infoBase) infoBase = infoBase[skos+"prefLabel"]
          }
 
-         //console.log("base",JSON.stringify(infoBase,null,3))
+         console.log("base:",JSON.stringify(infoBase,null,3))
 
          if(infoBase) {
             let { _info, _lang } = this.getInfo(prop,infoBase,withProp) 

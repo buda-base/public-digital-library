@@ -89,13 +89,14 @@ async function initiateApp(params,iri,myprops) {
       }
 
 
+   /*
       if(!state.data.ontology)
       {
          const onto = await api.loadOntology();
          store.dispatch(dataActions.loadedOntology(onto));
          // console.log("params",params)
       }
-
+   */
       if(!state.data.dictionary)
       {
          const dico = await api.loadDictionary()

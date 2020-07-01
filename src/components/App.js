@@ -3278,21 +3278,21 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          // ontology property search ?
          if(this.props.ontoSearch == this.props.keyword)
          {
-            if(this.props.ontology)
+            if(this.props.dictionary)
             {
 
                let iri = this.props.keyword
                let url = this.props.keyword
                for(let k of Object.keys(prefixesMap)) url = url.replace(new RegExp(k+":"),prefixesMap[k])
 
-               let labels = this.props.ontology[url]
+               let labels = this.props.dictionary[url]
                if(!labels && this.props.keyword.match(/^:/))
                {
-                  for(let k of Object.keys(this.props.ontology)) {
+                  for(let k of Object.keys(this.props.dictionary)) {
                      console.log(k.replace(/^.*?[/]([^/]+)$/,":$1"),this.props.keyword)
                      if(k.replace(/^.*?[/]([^/]+)$/,":$1") === this.props.keyword)
                      {
-                        labels = this.props.ontology[k]
+                        labels = this.props.dictionary[k]
                         url = k
                         iri = k
                         for(let p of Object.keys(prefixesMap)) iri = iri.replace(new RegExp(prefixesMap[p]),p+":")
@@ -3509,7 +3509,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
             if(!label) label = { lang:"?", value:"?" }
 
-            let preProps = sublist[o].filter((e) => e.type && e.type.match(/relationType$/ )).map(e => this.props.ontology[e.value])
+            let preProps = sublist[o].filter((e) => e.type && e.type.match(/relationType$/ )).map(e => this.props.dictionary[e.value])
 
             //console.log("label",label) //,sList,sublist[o]) //,preProps)
 
@@ -3523,7 +3523,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   let use = true ;
 
                   if(e.type && e.type.match(/relationType$/)) {
-                     let prop = this.props.ontology[e.value]
+                     let prop = this.props.dictionary[e.value]
                      //console.log("e",e,prop)
                      if(prop)
                         for(let p of preProps) {
@@ -4651,7 +4651,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
 
       let facetWidgets 
-      if(meta && this.state.filters.datatype && this.state.filters.datatype.length === 1 && this.state.filters.datatype.indexOf("Any") === -1 && this.props.config && this.props.ontology) {
+      if(meta && this.state.filters.datatype && this.state.filters.datatype.length === 1 && this.state.filters.datatype.indexOf("Any") === -1 && this.props.config && this.props.dictionary) {
          facetWidgets = metaK.map((j) =>
          {
             // no need for language on instances page
@@ -4954,6 +4954,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                            >
                               { this.state.dataSource.map( (v) =>  {
                                  let tab = v.split("@")
+                                 console.log("suggest?",v,tab)
                                  return (
                                     <MenuItem key={v} style={{lineHeight:"1em"}} onClick={(e)=>{ 
                                        this.setState({...this.state,dataSource:[]});

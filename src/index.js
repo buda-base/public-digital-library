@@ -124,7 +124,7 @@ const i18nextConfig = {
 
 // TODO etext 
 // - 404/401 "not found" / "must login"
-
+// - fix Etext_base query to add volume number
 
 
 
