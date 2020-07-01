@@ -120,6 +120,7 @@ const i18nextConfig = {
 // TODO translation
 // - use lang=bo tag ("profile")
 // - font / title bug
+// - "has Scans"/"has Etext"
 
 // TODO etext 
 // - 404/401 "not found" / "must login"

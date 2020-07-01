@@ -437,6 +437,8 @@ const topProperties = {
    ],
    "Instance": [ 
       bdo+"instanceHasReproduction",
+      tmp+"hasScans",
+      tmp+"hasEtext",
       //bdo+"instanceOf",
       bdo+"creator",
       bdo+"hasTitle", 
@@ -1274,6 +1276,19 @@ class ResourceViewer extends Component<Props,State>
       //console.log("w h",w,h,prop)
 
       //prop["bdr:workDimensions"] =
+
+
+      if(prop[bdo+"instanceHasReproduction"]) {
+         let etexts = [ ...prop[bdo+"instanceHasReproduction"].filter(p => p.value && p.value.startsWith(bdr+"IE")) ] ;
+         let images = [ ...prop[bdo+"instanceHasReproduction"].filter(p => p.value && p.value.startsWith(bdr+"W")) ] ;
+
+         if(etexts.length) prop[tmp+"hasEtext"] = etexts
+         if(images.length) prop[tmp+"hasScans"] = images
+
+         //delete prop[bdo+"instanceHasReproduction"]
+      }
+         
+
       if(sorted)
       {
 
@@ -1872,7 +1887,7 @@ class ResourceViewer extends Component<Props,State>
       if(!info) info = [ getLangLabel(this, prop, infoBase.filter((e)=>((e["xml:lang"] || e["lang"] || e.fromKey && e.fromKey === foaf+"name")))) ]                        
       if(!info) info = [ getLangLabel(this, prop, infoBase.filter((e)=>((e["xml:lang"] || e["lang"]) && e.type==prop))) ]
 
-      console.log("info?",prop,infoBase,info)
+      //console.log("info?",prop,infoBase,info)
 
       //if(info.value) info = info.value
 
@@ -1910,7 +1925,7 @@ class ResourceViewer extends Component<Props,State>
                else info = null
                if(infoBase[0].type && (infoBase[0].type == bdo+"volumeNumber" || infoBase[0].fromKey == bdo+"volumeNumber")) info = I18n.t("types.volume_num",{num:infoBase[0].value}) ;
                else if(info && info.match(/purl[.]bdrc/)) info = null
-               console.log("info0",info)
+               //console.log("info0",info)
             }
          }
       }
@@ -1948,7 +1963,7 @@ class ResourceViewer extends Component<Props,State>
    {
       if(elem) {
 
-         console.log("uriformat",prop,elem.value,elem,dic,withProp,show)
+         //console.log("uriformat",prop,elem.value,elem,dic,withProp,show)
          
          if(!elem.value.match(/^http:\/\/purl\.bdrc\.io/) /* && !hasExtPref */ && ((!dic || !dic[elem.value]) && !prop.match(/[/#]sameAs/))) {
             let link = elem.value
@@ -1980,7 +1995,7 @@ class ResourceViewer extends Component<Props,State>
             if(infoBase) infoBase = infoBase[skos+"prefLabel"]
          }
 
-         console.log("base:",JSON.stringify(infoBase,null,3))
+         //console.log("base:",JSON.stringify(infoBase,null,3))
 
          if(infoBase) {
             let { _info, _lang } = this.getInfo(prop,infoBase,withProp) 
@@ -2009,18 +2024,20 @@ class ResourceViewer extends Component<Props,State>
 
          //console.log("s?",prop,prefix,sameAsPrefix,pretty,elem,info,infoBase)         
 
+         if(prop === bdo+"workHasInstance"  || prop === tmp+"hasScans" || prop === tmp+"hasEtext" ) {
+            if(!info) info = [] 
+            let enti = getEntiType(elem.value)
+            console.log("enti:",enti,elem.value)
+            if(enti === "Etext") ret = [<span class="svg">{svgEtextS}</span>]
+            else if(enti === "Instance") ret = [<span class="svg">{svgInstanceS}</span>]
+            else if(enti === "Images") ret = [<span class="svg">{svgImageS}</span>]
+         }
+         
          if((info && infoBase && infoBase.filter(e=>e["xml:lang"]||e["lang"]).length >= 0) || (prop && prop.match && prop.match(/[/#]sameAs/))) {
 
 
             // console.log("svg?",svgImageS)
 
-            if(prop === bdo+"workHasInstance") {
-               if(!info) info = [] 
-               let enti = getEntiType(elem.value)
-               if(enti === "Etext") info = [<span class="svg">{svgEtextS}</span>].concat(info)
-               else if(enti === "Instance") info = [<span class="svg">{svgInstanceS}</span>].concat(info)
-               else if(enti === "Images") info = [<span class="svg">{svgImageS}</span>].concat(info)
-            }
 
             let link,orec,canUrl;
             if(this.props.assocResources && this.props.assocResources[elem.value]) {
@@ -2219,7 +2236,7 @@ class ResourceViewer extends Component<Props,State>
             <Link className={"urilink "+prefix} to={"/"+show+"/"+prefix+":"+pretty}>{pretty}</Link>&nbsp;
             {/* <Link className="goBack" target="_blank" to={"/gallery?manifest=//iiifpres.bdrc.io/v:bdr:"+pretty+"/manifest"}>{"(view image gallery)"}</Link> */}
          </span> ) }
-         else if(pretty.toString().match(/^([A-Z]+[v_0-9-]*[A-Z]*)+$/)) ret.push(<Link className={"urilink "+ prefix} to={"/"+show+"/"+prefix+":"+pretty}><span lang="">{prefix+":"+pretty}</span></Link>)
+         else if(pretty.toString().match(/^([A-Z]+[v_0-9-]*[A-Z]*)+$/)) ret = (<Link className={"urilink "+ prefix} to={"/"+show+"/"+prefix+":"+pretty}><span lang="">{ret}{prefix+":"+pretty}</span></Link>)
          else ret.push(pretty)
 
          return ret
@@ -4629,7 +4646,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
             //if(!k.match(new RegExp("Revision|Entry|prefLabel|"+rdf+"|toberemoved"))) {
             if(elem && 
-               (!k.match(new RegExp(adm+"|adm:|isRoot$|SourcePath|"+rdf+"|toberemoved|entityScore|workPagination|partIndex|partTreeIndex|legacyOutlineNodeRID|sameAs|thumbnailIIIFService|instanceOf|instanceReproductionOf|seeOther|withSameAs"+(this._dontMatchProp?"|"+this._dontMatchProp:"")))
+               (!k.match(new RegExp(adm+"|adm:|isRoot$|SourcePath|"+rdf+"|toberemoved|entityScore|workPagination|partIndex|partTreeIndex|legacyOutlineNodeRID|sameAs|thumbnailIIIFService|instanceOf|instanceReproductionOf|instanceHasReproduction|seeOther|withSameAs"+(this._dontMatchProp?"|"+this._dontMatchProp:"")))
                ||k.match(/(metadataLegal|contentProvider|replaceWith)$/)
                //||k.match(/([/]see|[/]sameAs)[^/]*$/) // quickfix [TODO] test property ancestors
                || (this.props.IRI.match(/^bda:/) && (k.match(new RegExp(adm+"|adm:")))))
