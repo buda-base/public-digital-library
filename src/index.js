@@ -84,6 +84,8 @@ const i18nextConfig = {
    }
 };
 
+// NOTO
+// x use simpler ontologySchema (=> reload when translate) cf http://purl.bdrc.io/query/graph/OntologyUiStrings?L_LNG=en&format=json
 // DONE
 // + bug publisher
 // + translate number of results by datatype/facet
@@ -98,6 +100,7 @@ const i18nextConfig = {
 // + search | change sortBy menu to regular popover
 // + search | intermediate/diagonal check state (both selected and unselected descendants)
 // + translation | save preference (localStorage+url param 'lang'+defautl to navigator.language)
+// + clean | remove ontology/core.json
 
 
 // TODO profile
@@ -111,10 +114,6 @@ const i18nextConfig = {
 // - use our translations
 // - download pdf link not in another tab
 
-// TODO clean / library-dev
-// - remove ontology/core.json
-// - use simpler ontologySchema (=> reload when translate) cf http://purl.bdrc.io/query/graph/OntologyUiStrings?L_LNG=en&format=json
-
 // TODO safari
 // - http://library.bdrc.io/search?q=%22dri%20med%20%27od%20zer%22&lg=bo-x-ewts&t=Work&uilang=en&s=work%20title%20reverse&pg=1&f=tree,inc,bdr:T23&f=tree,inc,bdr:T2183&f=tree,inc,bdr:T140&f=tree,inc,bdr:T354
 
@@ -124,8 +123,9 @@ const i18nextConfig = {
 
 // TODO etext 
 // - 404/401 "not found" / "must login"
-// - fix Etext_base query to add volume number
+// - fix Etext_base query to add volume number (ex: fresh load of /bdr:UT00KG03612_I00KG03625_0000 without loading bdr:IExyz before)
 
+// TODO clean 
 
 
 const logger = store => next => action => {
