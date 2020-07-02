@@ -808,7 +808,7 @@ h4:not(:hover) > .lang
 /* -+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ resource */
 
 
-#open-etext { position:absolute; right:140px; margin-top:5px; }
+#open-etext { position:absolute; right:140px; margin-top:0px; z-index:10;}
 #open-etext > div { }
 #open-etext > div::after { content:none !important; }
 #open-etext + .data h2 { max-width:calc(100% - 150px - 30px); }
@@ -1518,16 +1518,28 @@ h4:hover a.no-bdrc img { opacity:1; }
 .resource .data + .data { padding-top:1px; }
 .resource .title + .data + .data { padding-bottom:60px; }
 
-.resource .data.etext-title { padding-right:270px; }
+
+.resource .data.images-title { display:flex; align-items: end;position:relative;}
+.resource .data.etext-title { padding-right:270px; display:flex; align-items: end;position:relative;}
+
 .resource .data h2.intro,
 .resource .data h2.intro + h2 span,
 .resource .title + .data + .data h2.on .T + span { font-size:30px; font-family:'Noto Sans SemCond';font-weight:bold; }
 
-.resource .data h2.intro { padding-right:8px;}
+.resource .data h2.intro { padding-right:8px; flex-shrink: 0;}
 
 .resource .data h2.intro,
 .resource .data h2.intro + h2,
-.resource .data h2.intro + h2 span { display:inline;}
+.resource .data h2.intro + h2 span { display:inline;vertical-align: baseline; position:relative;}
+
+.resource .data h2.intro + h2 a  { border:none; }
+.resource .data h2.intro + h2 a span { border-bottom:1px solid transparent;}
+.resource .data h2.intro + h2 a:hover span { border-bottom:1px solid #d73449;}
+
+.resource .data h2.intro + h2 span { max-width:470px;overflow:hidden ;text-overflow: ellipsis;white-space: nowrap; display:inline-block;}
+
+
+.resource .data.images-title h2.intro + h2 span { max-width:700px;}
 
 .resource .data h2.intro + h2 .lang,
 .resource .data h2.intro + h2 .T { display:none; }
