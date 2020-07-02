@@ -5751,7 +5751,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                   <div class="title">{ wTitle }{ iTitle }{ rTitle }</div>
                   { this.renderHeader(kZprop.filter(k => mapProps.includes(k))) }
                   { etext && <div class="data" id="open-etext"><div><Link to={loca.pathname+loca.search+"#open-viewer"}>{I18n.t("resource.openViewer")}</Link></div></div> }
-                  <div class="data">
+                  <div class={"data" + (_T === "Etext"?" etext-title":"")}>
                      {_T === "Images" && iTitle?[<h2 class="on intro">{I18n.t("resource.scanF")}</h2>,iTitle]:(_T === "Etext" && iTitle?[<h2 class="on intro">{I18n.t("resource.etextF")}</h2>,iTitle]:title)}
                      {inTitle}
                   </div>
