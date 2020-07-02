@@ -43,9 +43,9 @@ const enTranslation = {
       work_plural:"Works",
       instance:"Version",
       instance_plural:"Versions",
-      images:"Images",
+      images:"Scans",
       volume:"Volume",
-      volume_num:"Volume {{num}}"
+      volume_num:"Volume {{num}}",
    },
    topbar:{
       about:"about us",
@@ -108,7 +108,7 @@ const enTranslation = {
       fairUse:"Fair Use - Access to 20 first/last pages",
       tempo:"Temporarily Restricted",
       sealed:"Sealed",
-      view:"View Images",
+      view:"View Scans",
       scans:"Scans Available"
    },
    prop:{
@@ -342,7 +342,9 @@ const enTranslation = {
       searchO:"Search in outline",
       start:"Start search",
       reset:"Reset search",
-      otherN:"Load non-matching subparts"
+      otherN:"Load non-matching subparts",
+      scanF:"Scans for",
+      etextF:"Etext for"
    },
    mirador:{
       return:"return to BUDA",
@@ -350,7 +352,7 @@ const enTranslation = {
       goto:"Go to p.",
       zoomIn:"zoom in",
       zoomOut:"zoom out",
-      showI:"Show images",
+      showI:"Show Scans",
       fullscreen:"fullscreen",
       next:"next image",
       prev:"previous image",
@@ -361,7 +363,7 @@ const enTranslation = {
    },
    access:{
       limited20:"Access limited to first & last 20 pages.",
-      credentials:"if you have sufficient credentials to get access to all images from this work."
+      credentials:"if you have sufficient credentials to get access to all scans from this work."
    },
    location:{
       beginV:"Begin Volume: {{num}}",

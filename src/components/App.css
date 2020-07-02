@@ -1508,7 +1508,19 @@ h4:hover a.no-bdrc img { opacity:1; }
 .resource > .data:last-child { padding-bottom:50px; }
 .resource .data + .data { padding-top:1px; }
 .resource .title + .data + .data { padding-bottom:60px; }
+
+.resource .data h2.intro,
+.resource .data h2.intro + h2 span,
 .resource .title + .data + .data h2.on .T + span { font-size:30px; font-family:'Noto Sans SemCond';font-weight:bold; }
+
+.resource .data h2.intro { padding-right:8px;}
+
+.resource .data h2.intro,
+.resource .data h2.intro + h2,
+.resource .data h2.intro + h2 span { display:inline;}
+
+.resource .data h2.intro + h2 .lang,
+.resource .data h2.intro + h2 .T { display:none; }
 
 /* .resource .data > div:not(.firstImage) { display:flex;align-items:baseline;flex-wrap:nowrap;box-sizing: border-box;width:100%;position:relative;} */
 .resource .data > div:not(.firstImage):not(.browse):not(.header) { display:block; position:relative; }
