@@ -147,7 +147,7 @@ const enTranslation = {
       "bdo:personStudentOf":"Teacher",
       "bdo:personStudentOf_plural":"Teachers",
       "tmp:propHasScans":"Scans",
-      "tmp:propHasEtext":"See Etext",
+      "tmp:propHasEtext":"Etext",
    },
    result:{
       open:"Open",
