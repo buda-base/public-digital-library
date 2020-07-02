@@ -1360,6 +1360,15 @@ vertical-align:middle;}
 .resource .data .urilink { text-decoration: underline; text-decoration-color:transparent; border:none; }
 .resource .data .urilink:hover {  text-decoration-color:#d73449; border:none;}
 
+.resource .data .images-thumb { margin:0px 0px; width:145px; height:145px; background-size:cover;background-position:center;background-repeat:no-repeat; 
+   border:1px solid #ccc;display:inline-block;vertical-align: top;
+}
+
+.resource .data .images-thumb-links { display:inline-block; display:inline-flex;justify-content: flex-start; flex-direction: column;
+   margin-left:28px;vertical-align:top;
+}
+.resource .data .images-thumb-links a + a { margin-top:5px;display:inline-block;}
+
 .resource .data.ext-props .subgroup { width:calc(100% - 215px + 40px ); }
 
 .ulink { width:100%;}

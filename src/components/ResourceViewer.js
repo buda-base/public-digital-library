@@ -437,8 +437,8 @@ const topProperties = {
    ],
    "Instance": [ 
       bdo+"instanceHasReproduction",
-      tmp+"hasScans",
-      tmp+"hasEtext",
+      tmp+"propHasScans",
+      tmp+"propHasEtext",
       //bdo+"instanceOf",
       bdo+"creator",
       bdo+"hasTitle", 
@@ -1282,8 +1282,8 @@ class ResourceViewer extends Component<Props,State>
          let etexts = [ ...prop[bdo+"instanceHasReproduction"].filter(p => p.value && p.value.startsWith(bdr+"IE")) ] ;
          let images = [ ...prop[bdo+"instanceHasReproduction"].filter(p => p.value && p.value.startsWith(bdr+"W")) ] ;
 
-         if(etexts.length) prop[tmp+"hasEtext"] = etexts
-         if(images.length) prop[tmp+"hasScans"] = images
+         if(etexts.length) prop[tmp+"propHasEtext"] = etexts
+         if(images.length) prop[tmp+"propHasScans"] = images
 
          //delete prop[bdo+"instanceHasReproduction"]
       }
@@ -2024,13 +2024,28 @@ class ResourceViewer extends Component<Props,State>
 
          //console.log("s?",prop,prefix,sameAsPrefix,pretty,elem,info,infoBase)         
 
-         if(prop === bdo+"workHasInstance"  || prop === tmp+"hasScans" || prop === tmp+"hasEtext" ) {
+         let thumb
+         if(prop === bdo+"workHasInstance"  || prop === tmp+"propHasScans" || prop === tmp+"propHasEtext" ) {
             if(!info) info = [] 
             let enti = getEntiType(elem.value)
             console.log("enti:",enti,elem.value)
             if(enti === "Etext") ret = [<span class="svg">{svgEtextS}</span>]
             else if(enti === "Instance") ret = [<span class="svg">{svgInstanceS}</span>]
-            else if(enti === "Images") ret = [<span class="svg">{svgImageS}</span>]
+            else if(enti === "Images") { 
+               ret = []
+               thumb =  this.getResourceElem(tmp+"thumbnailIIIFService")
+               
+               /* // deprecated (thumbnail is a property of instance)
+               if(!this.props.resources || !this.props.resources[shortUri(elem.value)]) this.props.onGetResource(shortUri(elem.value));
+               else {
+                  let thumb =  this.props.resources[elem.value]
+                  if(thumb)   {
+                     console.log("thumb?",elem,thumb)
+                  }
+               }
+               */
+               ret.push(<span class="svg">{svgImageS}</span>)
+            }
          }
          
          if((info && infoBase && infoBase.filter(e=>e["xml:lang"]||e["lang"]).length >= 0) || (prop && prop.match && prop.match(/[/#]sameAs/))) {
@@ -2236,7 +2251,20 @@ class ResourceViewer extends Component<Props,State>
             <Link className={"urilink "+prefix} to={"/"+show+"/"+prefix+":"+pretty}>{pretty}</Link>&nbsp;
             {/* <Link className="goBack" target="_blank" to={"/gallery?manifest=//iiifpres.bdrc.io/v:bdr:"+pretty+"/manifest"}>{"(view image gallery)"}</Link> */}
          </span> ) }
-         else if(pretty.toString().match(/^([A-Z]+[v_0-9-]*[A-Z]*)+$/)) ret = (<Link className={"urilink "+ prefix} to={"/"+show+"/"+prefix+":"+pretty}><span lang="">{ret}{prefix+":"+pretty}</span></Link>)
+         else if(pretty.toString().match(/^([A-Z]+[v_0-9-]*[A-Z]*)+$/)){ 
+
+            if(!thumb) ret = (<Link className={"urilink "+ prefix} to={"/"+show+"/"+prefix+":"+pretty}><span lang="">{ret}{prefix+":"+pretty}</span></Link>)
+            else if(thumb.length) {
+               let vlink = "/"+show+"/"+prefix+":"+pretty+"?s="+encodeURIComponent(this.props.history.location.pathname+this.props.history.location.search)+"#open-viewer"                
+               thumb = <div class="images-thumb" style={{"background-image":"url("+thumb[0].value+"/full/,145/0/default.jpg)"}}/>;               
+
+               ret = [<Link className={"urilink "+ prefix} to={vlink}>{thumb}</Link>,
+                     <div class="images-thumb-links">
+                        <Link className={"urilink "+ prefix} to={vlink}>{"Open in Viewer"}</Link>
+                        <Link className={"urilink "+ prefix} to={"/"+show+"/"+prefix+":"+pretty}>{"Open Record"}</Link>
+                     </div>]
+            }
+         } 
          else ret.push(pretty)
 
          return ret
