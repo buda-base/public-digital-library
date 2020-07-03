@@ -2238,11 +2238,11 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
       let ret = []
       //if(ret.length) 
       if(hasName) ret.push(<div class={"match publisher "+this.props.locale}>
-               <span class="label">{this.fullname(bdo+"publisherName",[],true).split(" ").map(e => <span>{e}</span>)}</span>
+               <span class="label" lang={this.props.locale}>{this.fullname(bdo+"publisherName",[],true).split(" ").map(e => <span>{e}</span>)}</span>
                <div class="multi">{this.getVal(bdo+"publisherName",allProps)}</div>
             </div>)
       if(hasLoc) ret.push(<div class="match">
-               <span class="label">{this.fullname("tmp:publisherLocation",[],true).split(" ").map(e => <span>{e}</span>)}</span>
+               <span class="label" lang={this.props.locale}>{this.fullname("tmp:publisherLocation",[],true).split(" ").map(e => <span>{e}</span>)}</span>
                <div class="multi">{this.getVal(bdo+"publisherLocation",allProps)}</div>
             </div>)
 
@@ -2443,7 +2443,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             }            
          }
          if(ret.length && !useAux) return <div class="match">
-                  <span class="label">{this.fullname(prop+(plural && ret.length > 1 ?plural:""),[],true)}{I18n.t("punc.colon")}&nbsp;</span>
+                  <span class="label" lang={this.props.locale}>{this.fullname(prop+(plural && ret.length > 1 ?plural:""),[],true)}{I18n.t("punc.colon")}&nbsp;</span>
                   <div class="multi">{ret}</div>
                 </div>
       }
@@ -2593,7 +2593,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                         primary={ */}
                            <div>
                               <span class="T">{I18n.t("types."+T.toLowerCase())}{langs}</span>
-                              <h3 key="lit">
+                              <h3 key="lit" lang={lang}>
                                  {lit}
                                  { (resUrl && !resUrl.includes("/show/bdr:")) && <img class="link-out" src="/icons/link-out_fit.svg"/>}
                                  { lang && <Tooltip key={"tip"} placement="bottom-end" title={
@@ -4060,7 +4060,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          k = getPropLabel(this,k)
       }
       else { t = <span>{t}</span>; k = <span>{k}</span> }
-      return <a title={I18n.t("Lsidebar.tags."+(!isExclu?"include":"exclude"))+" "+t_+I18n.t("punc.colon")+" "+ k_} class={ "active-filter " + (isExclu?"exclu":"") }><span>{t}{I18n.t("punc.colon")} <b>{k}</b></span><a title={I18n.t("Lsidebar.activeF.remove")} onClick={f.bind(this)}><Close/></a></a>
+      return <a title={I18n.t("Lsidebar.tags."+(!isExclu?"include":"exclude"))+" "+t_+I18n.t("punc.colon")+" "+ k_} lang={this.props.locale} class={ "active-filter " + (isExclu?"exclu":"") }><span>{t}{I18n.t("punc.colon")} <b>{k}</b></span><a title={I18n.t("Lsidebar.activeF.remove")} onClick={f.bind(this)}><Close/></a></a>
    }
 
    resetFilters(e) {
@@ -4191,7 +4191,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          [<ListItem key={1} className="widget-header"
             onClick={(e) => { this.setState({collapse:{ ...this.state.collapse, [txt]:!this.state.collapse[txt]}, anchor:{...this.state.anchor, [txt]:e.currentTarget} }); } }
             >
-            <Typography  className="widget-title" >{title}</Typography>
+            <Typography  className="widget-title" ><span lang={this.props.locale}>{title}</span></Typography>
             { this.state.collapse[txt] ? <ExpandLess /> : <ExpandMore />}
          </ListItem>,
          // TODO replace Collapse by Popover
@@ -4214,7 +4214,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          [<ListItem key={1} className="widget-header"
             onClick={(e) => { this.setState({collapse:{ ...this.state.collapse, [txt]:!this.state.collapse[txt]} }); } }
             >
-            <Typography  className="widget-title" >{title}</Typography>
+            <Typography  className="widget-title" ><span lang={this.props.locale}>{title}</span></Typography>
             { this.state.collapse[txt] ? <ExpandLess /> : <ExpandMore />}
          </ListItem>,
          // TODO replace Collapse by Popover
@@ -4355,7 +4355,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                         />
 
                      }
-                     label={<span title={e.replace(new RegExp(bdr),"bdr:")}>{label}&nbsp;<span class='facet-count-block'>{I18n.t("punc.lpar")}<span class="facet-count">{I18n.t("punc.num",{num:cpt_i+cpt, interpolation: {escapeValue: false}})}</span>{I18n.t("punc.rpar")}</span></span>}
+                     label={<span title={e.replace(new RegExp(bdr),"bdr:")}>{label}&nbsp;<span class='facet-count-block'>{I18n.t("punc.lpar")}<span class="facet-count" lang={this.props.locale}>{I18n.t("punc.num",{num:cpt_i+cpt, interpolation: {escapeValue: false}})}</span>{I18n.t("punc.rpar")}</span></span>}
                   />&nbsp;{ elem && elem["taxHasSubClass"] && elem["taxHasSubClass"].length > 0 &&
                      <span className={"subcollapse " + (disabled?"off":"")} /*style={{width:"335px"}}*/
                            onClick={(ev) => { this.setState({collapse:{ ...this.state.collapse, [e]:!this.state.collapse[e]} }); } }>
@@ -4423,7 +4423,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                               this.setState({collapse:{ ...this.state.collapse, "datatype":!this.state.collapse["datatype"]} }); } }
                         >
                         <Typography className="widget-title">
-                           {I18n.t("Lsidebar.datatypes.title")}
+                           <span lang={this.props.locale}>{I18n.t("Lsidebar.datatypes.title")}</span>
                         </Typography>
                         { /*this.props.datatypes && this.props.datatypes.hash &&*/ !this.state.collapse["datatype"] ? <ExpandLess /> : <ExpandMore />  }
                      </ListItem>
@@ -4462,8 +4462,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
                                        }
                                        {...counts["datatype"][i]
-                                       ?{label:<span>{I18n.t("types."+i.toLowerCase()) + " "+I18n.t("punc.lpar")}<span class="facet-count">{typeof count === "string" && "~"}{I18n.t("punc.num",{num:Number(count)})}</span>{I18n.t("punc.rpar")}</span>}
-                                       :{label:I18n.t("types."+i.toLowerCase())}}
+                                       ?{label:<span lang={this.props.locale}>{I18n.t("types."+i.toLowerCase()) + " "+I18n.t("punc.lpar")}<span class="facet-count" lang={this.props.locale}>{typeof count === "string" && "~"}{I18n.t("punc.num",{num:Number(count)})}</span>{I18n.t("punc.rpar")}</span>}
+                                       :{label:<span lang={this.props.locale}>{I18n.t("types."+i.toLowerCase())}</span>}}
                                     />
                                  </div>
                               )
@@ -4671,7 +4671,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                */
 
                jlabel = getLangLabel(this,jpre,jlabel)
-               if(!jlabel) jlabel = this.pretty(jpre)
+               if(!jlabel) jlabel = I18n.t("prop."+shortUri(jpre))
                else jlabel = jlabel.value
             }
             // need to fix this after info is not in ontology anymore... make tree from relation/langScript 
@@ -4739,7 +4739,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                               />
 
                            }
-                           label={<a title={shortUri(i)}><span>{label}&nbsp;<span class="facet-count-block">{I18n.t("punc.lpar")}<span class="facet-count">{I18n.t("punc.num",{num:cpt_i+meta[j][i].n, interpolation: {escapeValue: false}})}</span>{I18n.t("punc.rpar")}</span></span></a>}
+                           label={<a title={shortUri(i)}><span lang={this.props.locale}>{label}&nbsp;<span class="facet-count-block">{I18n.t("punc.lpar")}<span class="facet-count" lang={this.props.locale}>{I18n.t("punc.num",{num:cpt_i+meta[j][i].n, interpolation: {escapeValue: false}})}</span>{I18n.t("punc.rpar")}</span></span></a>}
                         />
                         { !isExclu && label !== "Any" && <div class="exclude"><Close onClick={(event, checked) => this.handleCheckFacet(event,jpre,[i],true,true)} /></div> }
                      </div>
@@ -4990,7 +4990,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                     id: 'datatype',
                   }}
                 >
-                  {searchTypes.map(d => <MenuItem key={d} value={d}>{I18n.t("types."+d.toLowerCase())}</MenuItem>)}
+                  {searchTypes.map(d => <MenuItem key={d} value={d}><span lang={this.props.locale}>{I18n.t("types."+d.toLowerCase())}</span></MenuItem>)}
                </Select>
               </FormControl> 
 
@@ -5089,7 +5089,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                                  />
 
                               }
-                              label={i}
+                              label={<span lang={this.props.locale}>{i}</span>}
                            /></div> ).concat([
                               <div key={99} style={{width:"auto",textAlign:"left",marginTop:"5px",paddingTop:"5px"}} className="searchWidget">
                               <FormControlLabel
@@ -5103,12 +5103,12 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                                     />
 
                                  }
-                                 label={I18n.t("sort.reverse")}
+                                 label={<span lang={this.props.locale}>{I18n.t("sort.reverse")}</span>}
                               /></div>
                      ])) 
                   }
 
-                  <div id="pagine">
+                  <div id="pagine" lang={this.props.locale}>
                      <div>
                            { pageLinks && <span>{I18n.t("search.page")} { pageLinks }</span>}
                            <span id="nb">{I18n.t("search.result",{count:nbResu})}</span>

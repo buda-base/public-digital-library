@@ -75,6 +75,8 @@ async function initiateApp(params,iri,myprops) {
          // 4-config file
          else locale = config.language.data.index
 
+         // TODO fix html lang tag (always "en" before switching language)
+
          // set i18n locale
          if(locale !== "en") store.dispatch(i18nextChangeLanguage(locale));
          
