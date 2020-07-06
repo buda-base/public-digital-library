@@ -18,7 +18,8 @@ const enTranslation = {
       message:"WELCOME TO THE BETA VERSION OF BDRC's NEW LIBRARY!",
       submessage:"with new features, resources, and tools for faster and more in-depth research",
       search:"Search",
-      choose:"Choose language"
+      choose:"Choose language",
+      start:"Start typing then select search language"
    },
    types:{
       any:"Any",

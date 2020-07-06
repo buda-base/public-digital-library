@@ -1059,6 +1059,7 @@ vertical-align:middle;}
 .resource.lineage .data > .header::before { background-image:url("/icons/lineage.png");  }
 .resource.place .data > .header::before { background-image:url("/icons/search/place.svg");  }
 .resource.corporation .data > .header::before { background-image:url("/icons/search/corporation.svg");  }
+.resource.role .data > .header::before { background-image:url("/icons/search/role.svg"); background-size:58px auto;  }
 
 .resource .data .header.loading::before { background-image:none !important; }
 
