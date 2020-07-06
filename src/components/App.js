@@ -4833,6 +4833,10 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          }
          */
 
+         console.log("changeKW",value,keyEv)
+
+         if(!value) value = " "
+
          let language = this.state.language
          let detec = narrowWithString(value, this.state.langDetect)
          let possible = [ ...this.state.langPreset, ...langSelect ]
@@ -4841,6 +4845,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             else if(detec[0] === "hani") for(let p of possible) { if(p.match(/^zh((-[Hh])|$)/)) { language = p ; break ; } }
             else if(["ewts","iast","deva","pinyin"].indexOf(detec[0]) !== -1) for(let p of possible) { if(p.match(new RegExp(detec[0]+"$"))) { language = p ; break ; } }
          }
+
+         if(value==" ") value = ""
          
          possible = [ ...this.state.langPreset, ...langSelect.filter(l => !this.state.langPreset || !this.state.langPreset.includes(l))]
          console.log("detec",possible,detec,this.state.langPreset,this.state.langDetect)
@@ -4853,7 +4859,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             else if(["ewts","iast","deva","pinyin"].indexOf(d) !== -1) for(let p of possible) { if(p.match(new RegExp(d+"$"))) { presets.push(p); } }
             
             return [...acc, ...presets]
-         }, [] ).concat(value.match(/[a-zA-Z]/)?["en"]:[]).map(p => '"'+value+'"@'+(p == "sa-x-iast"?"sa-x-ndia":p)) } ) 
+         }, [] ).concat(!value || value.match(/[a-zA-Z]/)?["en"]:[]).map(p => '"'+value+'"@'+(p == "sa-x-iast"?"sa-x-ndia":p)) } ) 
          
          /*
          if(changeKWtimer) clearTimeout(changeKWtimer)
@@ -4931,6 +4937,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      placeholder={I18n.t("home.search")}                        
                      closeIcon={<Close className="searchClose" style={ {color:"rgba(0,0,0,1.0)",opacity:1} } onClick={() => { this.props.history.push({pathname:"/",search:""}); this.props.onResetSearch();} }/>}
                      disabled={this.props.hostFailure}
+                     onClick={(ev) => changeKW(this.state.keyword?this.state.keyword.replace(/\"/g,""):"")}
+                     onBlur={(ev) => { console.log("BLUR"); setTimeout(() => this.setState({...this.state,dataSource:[]}),100); }}
                      onChange={(value:string) => changeKW(value)}
                      onRequestSearch={this.requestSearch.bind(this)}
                      value={this.props.hostFailure?"Endpoint error: "+this.props.hostFailure+" ("+this.getEndpoint()+")":this.state.keyword !== undefined && this.state.keyword!==this.state.newKW?this.state.keyword:this.props.keyword&&this.state.newKW?this.state.newKW.replace(/\"/g,""):""}
@@ -4942,7 +4950,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      }}
                   />
                   {
-                     (this.state.keyword && this.state.keyword.length > 0 && this.state.dataSource.length > 0) &&                     
+                     (/* this.state.keyword && this.state.keyword.length > 0 && */ this.state.dataSource.length > 0) &&                     
                         <Paper
                            //onKeyDown={(e) => changeKW(this.state.keyword,e)} 
                            // this.setState({...this.state,dataSource:[]})}
@@ -4957,10 +4965,12 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                                  console.log("suggest?",v,tab)
                                  return (
                                     <MenuItem key={v} style={{lineHeight:"1em"}} onClick={(e)=>{ 
-                                       this.setState({...this.state,dataSource:[]});
-                                       this.requestSearch(tab[0],null,tab[1])
-                                    }}>{ tab[0].replace(/["]/g,"")} <SearchIcon style={{padding:"0 10px"}}/><span class="lang">{(I18n.t(""+(searchLangSelec[tab[1]]?searchLangSelec[tab[1]]:languages[tab[1]]))) }</span></MenuItem> ) 
-                                 } ) }
+                                          console.log("CLICK");
+                                          this.setState({...this.state,dataSource:[]});
+                                          if(this.state.keyword) this.requestSearch(tab[0],null,tab[1])
+                                       }} >{ tab[0].replace(/["]/g,"")} <SearchIcon style={{padding:"0 10px"}}/><span class="lang">{(I18n.t(""+(searchLangSelec[tab[1]]?searchLangSelec[tab[1]]:languages[tab[1]]))) }</span></MenuItem> ) 
+                                    })
+                              }
                         </Paper>
                   }
                </div>
