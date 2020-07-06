@@ -2592,7 +2592,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      {/* <ListItemText style={{height:"auto",flexGrow:10,flexShrink:10}}
                         primary={ */}
                            <div>
-                              <span class="T">{I18n.t("types."+T.toLowerCase())}{langs}</span>
+                              <span class="T">{I18n.t("types."+T.toLowerCase()+(T == "Etext" || T == "Instance"?"_title":""))}{langs}</span>
                               <h3 key="lit" lang={lang}>
                                  {lit}
                                  { (resUrl && !resUrl.includes("/show/bdr:")) && <img class="link-out" src="/icons/link-out_fit.svg"/>}
@@ -4835,23 +4835,20 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
          console.log("changeKW",value,keyEv)
 
-         if(!value) value = " "
-
          let language = this.state.language
-         let detec = narrowWithString(value, this.state.langDetect)
+         let detec ;
+         if(value) detec = narrowWithString(value, this.state.langDetect)
          let possible = [ ...this.state.langPreset, ...langSelect ]
-         if(detec.length < 3) { 
+         if(detec && detec.length < 3) { 
             if(detec[0] === "tibt") for(let p of possible) { if(p === "bo" || p.match(/-[Tt]ibt$/)) { language = p ; break ; } }
             else if(detec[0] === "hani") for(let p of possible) { if(p.match(/^zh((-[Hh])|$)/)) { language = p ; break ; } }
             else if(["ewts","iast","deva","pinyin"].indexOf(detec[0]) !== -1) for(let p of possible) { if(p.match(new RegExp(detec[0]+"$"))) { language = p ; break ; } }
          }
 
-         if(value==" ") value = ""
-         
          possible = [ ...this.state.langPreset, ...langSelect.filter(l => !this.state.langPreset || !this.state.langPreset.includes(l))]
          console.log("detec",possible,detec,this.state.langPreset,this.state.langDetect)
          
-         this.setState({...this.state,keyword:value, language, dataSource: detec.reduce( (acc,d) => {
+         this.setState({...this.state,keyword:value, language, dataSource: (detec?detec.reduce( (acc,d) => {
             
             let presets = []
             if(d === "tibt") for(let p of possible) { if(p === "bo" || p.match(/-[Tt]ibt$/)) { presets.push(p); } }
@@ -4859,7 +4856,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             else if(["ewts","iast","deva","pinyin"].indexOf(d) !== -1) for(let p of possible) { if(p.match(new RegExp(d+"$"))) { presets.push(p); } }
             
             return [...acc, ...presets]
-         }, [] ).concat(!value || value.match(/[a-zA-Z]/)?["en"]:[]).map(p => '"'+value+'"@'+(p == "sa-x-iast"?"sa-x-ndia":p)) } ) 
+         }, [] ).concat(!value || value.match(/[a-zA-Z]/)?["en"]:[]).map(p => '"'+value+'"@'+(p == "sa-x-iast"?"sa-x-ndia":p)):["guessing"])   } ) 
          
          /*
          if(changeKWtimer) clearTimeout(changeKWtimer)
@@ -4968,7 +4965,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                                           console.log("CLICK");
                                           this.setState({...this.state,dataSource:[]});
                                           if(this.state.keyword) this.requestSearch(tab[0],null,tab[1])
-                                       }} >{ tab[0].replace(/["]/g,"")} <SearchIcon style={{padding:"0 10px"}}/><span class="lang">{(I18n.t(""+(searchLangSelec[tab[1]]?searchLangSelec[tab[1]]:languages[tab[1]]))) }</span></MenuItem> ) 
+                                       }} >{ tab.length == 1 ?"":tab[0].replace(/["]/g,"")} <SearchIcon style={{padding:"0 10px"}}/><span class="lang">{tab.length == 1 ? "guessing language...":(I18n.t(""+(searchLangSelec[tab[1]]?searchLangSelec[tab[1]]:languages[tab[1]]))) }</span></MenuItem> ) 
                                     })
                               }
                         </Paper>

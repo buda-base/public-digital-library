@@ -3654,7 +3654,7 @@ class ResourceViewer extends Component<Props,State>
       let title,titlElem,otherLabels = [], T_ = _T ;
       _T = [<span class={"T "+_T.toLowerCase()}>
          <span class="RID">{shortUri(other?other:this.props.IRI)}</span>
-         {I18n.t("types."+_T.toLowerCase()+(_T == "Etext"?"_title":""))}
+         {I18n.t("types."+_T.toLowerCase()+(_T == "Etext"|| _T =="Instance" ?"_title":""))}
       </span>]
 
       if(kZprop.indexOf(skos+"prefLabel") !== -1)       {
