@@ -3654,7 +3654,7 @@ class ResourceViewer extends Component<Props,State>
       let title,titlElem,otherLabels = [], T_ = _T ;
       _T = [<span class={"T "+_T.toLowerCase()}>
          <span class="RID">{shortUri(other?other:this.props.IRI)}</span>
-         {I18n.t("types."+_T.toLowerCase()+(_T == "Etext"|| _T =="Instance" ?"_title":""))}
+         {I18n.t("types."+_T.toLowerCase())}
       </span>]
 
       if(kZprop.indexOf(skos+"prefLabel") !== -1)       {
@@ -4258,7 +4258,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
                { isEtextVol && 
                      <a target="_blank" title={I18n.t("resource.version",{format:"TXT"})} rel="alternate" type="text"  download href={this.props.IRI?this.props.IRI.replace(/bdr:/,bdr)+".txt":""}>
-                        <MenuItem>{I18n.t("resource.exportDataAs",{data: I18n.t("types.etext_title"), format:"TXT"})}</MenuItem>
+                        <MenuItem>{I18n.t("resource.exportDataAs",{data: I18n.t("types.etext"), format:"TXT"})}</MenuItem>
                      </a> }
 
                { pdfLink && 

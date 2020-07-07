@@ -168,7 +168,7 @@ body { overflow:auto !important;padding-right:0 !important; /*font-family:"Robot
 #search-bar { background-color: #fce08e; padding-top:30px;padding-bottom:30px; display:block;}
 #search-bar > div { display:inline-flex;}
 .SearchPane > div {display:flex;justify-content: center;}
-.SearchPane .formControl { margin-top:15px; margin-left:-180px; /*margin-left:calc(800px - 150px - 100px);*/ width:130px; position:absolute;}
+.SearchPane .formControl { margin-top:14px; margin-left:-240px; /*margin-left:calc(800px - 150px - 100px);*/ width:200px; position:absolute;}
 .SearchPane .formControl:before {  left: 0; right: 0; bottom: 0; content: "\00a0";  position: absolute;  }
 .SearchPane a {text-decoration:none}
 
@@ -218,6 +218,44 @@ body { overflow:auto !important;padding-right:0 !important; /*font-family:"Robot
 #menu-datatype > div:last-child { box-shadow: 0 -2px 4px rgba(187, 187, 187, 0.5);}
 
 .SearchPane .formControl { font-size:14px; font-weight:500; }
+
+#menu-datatype .menu-dataT,
+.SearchPane .formControl .menu-dataT {
+   padding-right: 45px;
+   position:relative;
+}
+#menu-datatype .menu-dataT .icone,
+.SearchPane .formControl .menu-dataT .icone{
+   width:35px;
+   height:140%;
+   background-repeat: no-repeat;
+   background-size: auto 100%;;
+   background-position: center;  
+   position:absolute;
+   right:0;
+   top:-20%;
+   opacity:0.8;
+}
+
+.SearchPane .formControl.instance .menu-dataT .icone, 
+.SearchPane .formControl.etext .menu-dataT .icone,
+#menu-datatype [data-value=Instance] .menu-dataT .icone, 
+#menu-datatype [data-value=Etext]  .menu-dataT .icone {
+   height:100%; 
+   top:0;
+}
+
+
+.SearchPane .formControl.lineage .menu-dataT .icone, 
+#menu-datatype [data-value=Lineage] .menu-dataT .icone {
+   height:120%; 
+   top:-10%;
+}
+
+.SearchPane .formControl > div > div > div { padding-right:24px; }
+
+
+#menu-datatype > div:last-child ul li { justify-content: flex-end; }
 
 #menu-datatype > div:last-child ul li,
 #suggestions li { padding:12px 16px; font-size:14px; color: #4c4c4c; font-weight:600; }

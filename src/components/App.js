@@ -2592,7 +2592,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      {/* <ListItemText style={{height:"auto",flexGrow:10,flexShrink:10}}
                         primary={ */}
                            <div>
-                              <span class="T">{I18n.t("types."+T.toLowerCase()+(T == "Etext" || T == "Instance"?"_title":""))}{langs}</span>
+                              <span class="T">{I18n.t("types."+T.toLowerCase())}{langs}</span>
                               <h3 key="lit" lang={lang}>
                                  {lit}
                                  { (resUrl && !resUrl.includes("/show/bdr:")) && <img class="link-out" src="/icons/link-out_fit.svg"/>}
@@ -3472,7 +3472,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                let _t = t.toLowerCase()
                if(_t === "work" && this.props.isInstance) _t = "instance"
                if(displayTypes.length > 1 || displayTypes.indexOf("Any") !== -1) message.push(<MenuItem  onClick={(e)=>this.handleCheck(e,t,true,{},true)}><h4>{I18n.t("types."+t.toLowerCase()+"_plural")+(false && displayTypes.length>1&&counts["datatype"][t]?" ("+counts["datatype"][t]+")":"")}</h4></MenuItem>);
-               else message.push(<MenuItem><h4>{I18n.t("types."+_t+(_t === "etext"?"":"_plural"))+(false && displayTypes.length>=1&&counts["datatype"][t]?" ("+counts["datatype"][t]+")":"")}</h4></MenuItem>);
+               else message.push(<MenuItem><h4>{I18n.t("types."+_t+("_plural"))+(false && displayTypes.length>=1&&counts["datatype"][t]?" ("+counts["datatype"][t]+")":"")}</h4></MenuItem>);
                // TODO better handling of plural in translations
             }
             absi ++ ;
@@ -4462,8 +4462,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
                                        }
                                        {...counts["datatype"][i]
-                                       ?{label:<span lang={this.props.locale}>{I18n.t("types."+i.toLowerCase()) + " "+I18n.t("punc.lpar")}<span class="facet-count" lang={this.props.locale}>{typeof count === "string" && "~"}{I18n.t("punc.num",{num:Number(count)})}</span>{I18n.t("punc.rpar")}</span>}
-                                       :{label:<span lang={this.props.locale}>{I18n.t("types."+i.toLowerCase())}</span>}}
+                                       ?{label:<span lang={this.props.locale}>{I18n.t("types."+i.toLowerCase()+"_plural")+" "+I18n.t("punc.lpar")}<span class="facet-count" lang={this.props.locale}>{typeof count === "string" && "~"}{I18n.t("punc.num",{num:Number(count)})}</span>{I18n.t("punc.rpar")}</span>}
+                                       :{label:<span lang={this.props.locale}>{I18n.t("types."+i.toLowerCase()+"_plural")}</span>}}
                                     />
                                  </div>
                               )
@@ -4856,7 +4856,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             else if(["ewts","iast","deva","pinyin"].indexOf(d) !== -1) for(let p of possible) { if(p.match(new RegExp(d+"$"))) { presets.push(p); } }
             
             return [...acc, ...presets]
-         }, [] ).concat(!value || value.match(/[a-zA-Z]/)?["en"]:[]).map(p => '"'+value+'"@'+(p == "sa-x-iast"?"sa-x-ndia":p)):["guessing"])   } ) 
+         }, [] ).concat(!value || value.match(/[a-zA-Z]/)?["en"]:[]).map(p => '"'+value+'"@'+(p == "sa-x-iast"?"sa-x-ndia":p)):[])   } ) 
          
          /*
          if(changeKWtimer) clearTimeout(changeKWtimer)
@@ -4965,7 +4965,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                                           console.log("CLICK");
                                           this.setState({...this.state,dataSource:[]});
                                           if(this.state.keyword) this.requestSearch(tab[0],null,tab[1])
-                                       }} >{ tab.length == 1 ?"":tab[0].replace(/["]/g,"")} <SearchIcon style={{padding:"0 10px"}}/><span class="lang">{tab.length == 1 ? "guessing language...":(I18n.t(""+(searchLangSelec[tab[1]]?searchLangSelec[tab[1]]:languages[tab[1]]))) }</span></MenuItem> ) 
+                                       }} >{ tab.length == 1 ?"":tab[0].replace(/["]/g,"")} <SearchIcon style={{padding:"0 10px"}}/><span class="lang">{tab.length == 1 ? I18n.t("home."+tab[0]):(I18n.t(""+(searchLangSelec[tab[1]]?searchLangSelec[tab[1]]:languages[tab[1]]))) }</span></MenuItem> ) 
                                     })
                               }
                         </Paper>
@@ -4982,12 +4982,12 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   margin="normal"
                /> */}
 
-              <FormControl className="formControl" style={{textAlign:"right"}}>
+              <FormControl className={"formControl "+this.state.searchTypes[0].toLowerCase()} style={{textAlign:"right"}}>
                 {/* <InputLabel htmlFor="datatype">In</InputLabel> */}
 
                 <Select
                   value={this.state.searchTypes[0]}
-                  //onChange={this.handleLanguage}
+                  //onChange={this.handleLanguage} 
                   onChange={this.handleSearchTypes}
                   open={this.state.langOpen}
                   onOpen={(e) => { console.log("open"); this.setState({...this.state,langOpen:true}) } }
@@ -4997,7 +4997,13 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                     id: 'datatype',
                   }}
                 >
-                  {searchTypes.map(d => <MenuItem key={d} value={d}><span lang={this.props.locale}>{I18n.t("types."+d.toLowerCase())}</span></MenuItem>)}
+                  {searchTypes.map(d => (
+                     <MenuItem key={d} value={d}>
+                        <span lang={this.props.locale} class="menu-dataT">
+                           <span class="icone" style={{backgroundImage:"url('/icons/home/"+d.toLowerCase()+".svg')"}}></span>
+                           {I18n.t("types.searchIn",{type:I18n.t("types."+d.toLowerCase()+"_plural").toLowerCase()}) /* cannot use format in nested translation ( https://github.com/i18next/i18next/issues/1377) */ }
+                        </span>
+                     </MenuItem>))}
                </Select>
               </FormControl> 
 
