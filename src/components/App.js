@@ -3246,7 +3246,21 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
       }
       */
 
+
       if(types.length) types = types.sort(function(a,b) { return Number(counts["datatype"][b]) - Number(counts["datatype"][a]) })
+
+      let showT =  [ this.state.filters.datatype[0] ] 
+
+      for(let t of [ "Person", "Place", "Work", "Instance" ]) 
+         if(!types.includes(t)) 
+            showT.push(t) ;
+      
+      for(let t of showT)  {
+         if(!types.includes(t)) {
+            types.push(t)
+            counts["datatype"][t] = 0
+         }
+      }
 
       /*
       if(types.length == 2 && !this.state.autocheck)
@@ -4443,10 +4457,11 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                            // || (this.props.language == "")
 
                               let count = counts["datatype"][i]
+                              if(count == 0) disabled = true
 
                               return (
                                  <div key={i} style={{textAlign:"left"}}  className={"searchWidget datatype "+i.toLowerCase()}>
-                                    <span class="img" style={{backgroundImage:"url('/icons/sidebar/"+i.toLowerCase()+".svg')"}} onClick={(event) => this.handleCheck(event,i,this.state.filters.datatype.indexOf(i) === -1)}></span>
+                                    <span class={"img "+(disabled?"disabled":"") } style={{backgroundImage:"url('/icons/sidebar/"+i.toLowerCase()+".svg')"}} onClick={(event) => this.handleCheck(event,i,this.state.filters.datatype.indexOf(i) === -1)}></span>
                                     <FormControlLabel
                                        control={
                                           <Checkbox
@@ -4461,7 +4476,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                                           />
 
                                        }
-                                       {...counts["datatype"][i]
+                                       {...counts["datatype"][i] !== undefined
                                        ?{label:<span lang={this.props.locale}>{I18n.t("types."+i.toLowerCase()+"_plural")+" "+I18n.t("punc.lpar")}<span class="facet-count" lang={this.props.locale}>{typeof count === "string" && "~"}{I18n.t("punc.num",{num:Number(count)})}</span>{I18n.t("punc.rpar")}</span>}
                                        :{label:<span lang={this.props.locale}>{I18n.t("types."+i.toLowerCase()+"_plural")}</span>}}
                                     />
