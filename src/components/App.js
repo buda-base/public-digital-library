@@ -3898,7 +3898,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   {  this.state.filters.facets && <span><br/>{this.renderResetF()}</span>}
                </Typography>);
 
-               if(other && other.length)   
+               if(!this.state.filters.facets && other && other.length)   
                   message.push(<Typography className="no-result"><span>{I18n.t("search.seeO")}{I18n.t("misc.colon")} {other.map(o => <a onClick={(event) => this.handleCheck(event,o,true)} class="uri-link">{I18n.t("types."+o.toLowerCase()+"_plural")}</a>)}</span></Typography>)
 
             }
