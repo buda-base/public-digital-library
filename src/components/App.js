@@ -3877,7 +3877,31 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                
                }
             }
-            if(cpt == 0 ) { message.push(<Typography style={{margin:"20px 40px"}}>{I18n.t("search.filters.noresults")}</Typography>);}
+            if(cpt == 0 ) { 
+               let lang = languages[this.props.language]
+               if(!lang) lang = this.props.language
+               let other = this.state.results[this.state.id]
+               if(other) other = other.counts
+               if(other) other = other.datatype
+               //console.log("other:",other)
+               if(other) other = Object.keys(other).filter(k => k !== "Any" && other[k] !== 0)
+               console.log("other:",other)
+               
+               //if(other && other.length) 
+               message.push(<Typography className="no-result">
+                  { I18n.t("search.filters.noresults",{ 
+                     keyword:this.props.keyword, 
+                     language:"$t("+lang+")", 
+                     type:I18n.t("types.searchIn", { type:I18n.t("types."+this.state.filters.datatype[0].toLowerCase()+"_plural").toLowerCase() }),  
+                     interpolation: {escapeValue: false} }) }
+                  {  this.state.filters.facets && " with the filters you set"}
+                  {  this.state.filters.facets && <span><br/>{this.renderResetF()}</span>}
+               </Typography>);
+
+               if(other && other.length)   
+                  message.push(<Typography className="no-result"><span>{I18n.t("search.seeO")}{I18n.t("misc.colon")} {other.map(o => <a onClick={(event) => this.handleCheck(event,o,true)} class="uri-link">{I18n.t("types."+o.toLowerCase()+"_plural")}</a>)}</span></Typography>)
+
+            }
 
          }
          if(pagin.index == pagin.pages.length - 1) {
@@ -4495,6 +4519,10 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             )
    }
 
+   renderResetF() {
+      return <a title={I18n.t("Lsidebar.activeF.reset")} id="clear-filters" onClick={this.resetFilters.bind(this)}><span>{I18n.t("Lsidebar.tags.reset")}</span><RefreshIcon /></a>
+   }
+
    render() {
 
       let results
@@ -4899,6 +4927,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             ) }
          )
 
+
+
       return (
 <div>
    {getGDPRconsent(this)}
@@ -5076,7 +5106,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                                  this.resetFilters(event)
                               } )  } 
                               { facetTags }
-                              { (this.state.filters.facets || this.state.backToWorks )&& <a title={I18n.t("Lsidebar.activeF.reset")} id="clear-filters" onClick={this.resetFilters.bind(this)}><span>{I18n.t("Lsidebar.tags.reset")}</span><RefreshIcon /></a> }
+                              { (this.state.filters.facets || this.state.backToWorks )&& this.renderResetF() }
                               </div>
                            </div>
                         ]

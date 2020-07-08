@@ -298,8 +298,9 @@ const enTranslation = {
       result:"{{count}} Result",
       result_plural:"{{count}} Results",
       filters:{
-         noresults:"No results matching your filters."
-      }
+         noresults:"No result for {{keyword}} [{{language}}] {{type}}"
+      },
+      seeO:"See results in other data types"
    },
    Rsidebar:{
       title:"Display Preferences",
