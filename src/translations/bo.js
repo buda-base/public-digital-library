@@ -148,6 +148,13 @@ const boTranslation = {
       "bdo:personStudentOf_plural":"དགེ་རྒན།",
       "tmp:propHasScans":"བཤེར་པར།",
       "tmp:propHasEtext":"འཕྲུལ་ཡིག",
+      "bf:identifiedBy":"Identified By",
+      "rdfs:subClassOf":"Subclass Of",
+      "tmp:isCreator":"Is Creator",
+      "tmp:hasImage":"Has Scans",
+      "tmp:hasEtext":"Has Etext",
+      "unspecified":"Unspecified",
+      "true":"True"
    },
    result:{
       open:"ཁ་ཕྱེ།",
@@ -344,7 +351,8 @@ const boTranslation = {
       searchO:"དཀར་ཆག་ནང་འཚོལ།",
       start:"འཚོལ།",
       reset:"བཙལ་བྱ་སུབ།",
-      otherN:"Load non-matching subparts"
+      otherN:"Load non-matching subparts",
+      openR:"Open Record"
    },
    mirador:{
       return:"བུདྡྷ་ལ་ཕྱིར་ལོག",
