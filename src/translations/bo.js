@@ -125,7 +125,9 @@ const boTranslation = {
       "tmp:originalRecord":"མ་དཔེའི་གནས་ཚུལ།",
       "tmp:imageVolumeId":"བཤེར་པར་པོད་ཀྱི་ཨང་རྟགས།",
       "tmp:workHasTranslationInCanonicalLanguage":"འགྱུར་རྙིང་།",
+      "tmp:workHasTranslationInCanonicalLanguage_plural":"Canonical Translations",
       "tmp:workHasTranslationInNonCanonicalLanguage":"འགྱུར་གསར།",
+      "tmp:workHasTranslationInNonCanonicalLanguage_plural":"Other Translations",
       "tmp:entityScore":"ཐོབ་སྐར།",
       "tmp:instanceLabel":"དཔེ་རྒྱུན་གྱི་མཆན་བྱང་།",
       "tmp:dimensions":"བོངས་ཚད།",
@@ -133,8 +135,26 @@ const boTranslation = {
       "tmp:forWork":"བརྩམས་ཆོས།",
       "tmp:provider":"མཁོ་འདོན་པ།",
       "tmp:author":"རྩོམ་པ་པོ།",
+      "bdo:note":"མཆན།",
+      "bdo:note_plural":"མཆན།",
       "tmp:assetAvailability":"དཔེ་ཆ་ཡོད་མེད།",
-      "tmp:textMatch":"རྙེད་པའི་ཡི་གེ"
+      "tmp:textMatch":"རྙེད་པའི་ཡི་གེ",
+      "bdo:workHasInstance":"$t(types.instance)",
+      "bdo:instanceOf":"$t(types.instance) Of",
+      "tmp:hasOpen":"$t(copyright.open)",
+      "bdo:personTeacherOf":"སློབ་ཕྲུག",
+      "bdo:personTeacherOf_plural":"སློབ་ཕྲུག",
+      "bdo:personStudentOf":"དགེ་རྒན།",
+      "bdo:personStudentOf_plural":"དགེ་རྒན།",
+      "tmp:propHasScans":"བཤེར་པར།",
+      "tmp:propHasEtext":"འཕྲུལ་ཡིག",
+      "bf:identifiedBy":"Identified By",
+      "rdfs:subClassOf":"Subclass Of",
+      "tmp:isCreator":"Is Creator",
+      "tmp:hasImage":"Has Scans",
+      "tmp:hasEtext":"Has Etext",
+      "unspecified":"Unspecified",
+      "true":"True"
    },
    result:{
       open:"ཁ་ཕྱེ།",
@@ -331,7 +351,8 @@ const boTranslation = {
       searchO:"དཀར་ཆག་ནང་འཚོལ།",
       start:"འཚོལ།",
       reset:"བཙལ་བྱ་སུབ།",
-      otherN:"Load non-matching subparts"
+      otherN:"Load non-matching subparts",
+      openR:"Open Record"
    },
    mirador:{
       return:"བུདྡྷ་ལ་ཕྱིར་ལོག",

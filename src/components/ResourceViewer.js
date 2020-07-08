@@ -2260,8 +2260,8 @@ class ResourceViewer extends Component<Props,State>
 
                ret = [<Link className={"urilink "+ prefix} to={vlink}>{thumb}</Link>,
                      <div class="images-thumb-links">
-                        <Link className={"urilink "+ prefix} to={vlink}>{"Open in Viewer"}</Link>
-                        <Link className={"urilink "+ prefix} to={"/"+show+"/"+prefix+":"+pretty}>{"Open Record"}</Link>
+                        <Link className={"urilink "+ prefix} to={vlink}>{I18n.t("index.openViewer")}</Link>
+                        <Link className={"urilink "+ prefix} to={"/"+show+"/"+prefix+":"+pretty}>{I18n.t("resource.openR")}</Link>
                      </div>]
             }
          } 
