@@ -138,7 +138,7 @@ const boTranslation = {
       "bdo:note":"མཆན།",
       "bdo:note_plural":"མཆན།",
       "tmp:assetAvailability":"དཔེ་ཆ་ཡོད་མེད།",
-      "tmp:textMatch":"རྙེད་པའི་ཡི་གེ"
+      "tmp:textMatch":"རྙེད་པའི་ཡི་གེ",
       "bdo:workHasInstance":"$t(types.instance)",
       "bdo:instanceOf":"$t(types.instance) Of",
       "tmp:hasOpen":"$t(copyright.open)",
