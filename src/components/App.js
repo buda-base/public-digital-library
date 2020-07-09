@@ -4389,7 +4389,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
    // TODO add providers icons
 
    render_filters(types,counts,sortByList,reverseSort,facetWidgets) {
-      return ( <div className={"SidePane left"}>
+      return ( <div className={"SidePane left "+(!this.state.collapse.settings?"closed":"")}>
                   {/* <IconButton className="close" onClick={e => this.setState({...this.state,leftPane:false,closeLeftPane:true})}><Close/></IconButton> */}
                { //this.props.datatypes && (results ? results.numResults > 0:true) &&
                   <div style={{ /*minWidth:"335px",*/ position:"relative"}}>                     
@@ -5075,6 +5075,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
            </div>
            {  (message.length > 0 || message.length == 0 && !this.props.loading ) && <div id="res-header">
                <div>
+                  <div id="settings" onClick={() => this.setState({collapse:{...this.state.collapse, settings:!this.state.collapse.settings}})}><img src="/icons/settings.svg"/></div>
                { // TODO change to popover style open/close
                      sortByList && this.popwidget(I18n.t("Lsidebar.sortBy.title"),"sortBy",
                      (sortByList /*:["Year of Publication","Instance Title"]*/).map((i,n) => <div key={i} style={{width:"200px",textAlign:"left"}} className="searchWidget">

@@ -2749,10 +2749,12 @@ svg.hide { opacity:0;pointer-events:none; }
   to { transform: rotate(360deg); }
 }
 
+/*
 .nav,
 body {
    min-width:800px;
 }
+*/
 
 
 /* specific font sizes for tibetan */
@@ -2817,18 +2819,69 @@ a.result .contenu ul > div:last-child h3[lang=bo] span { font-size:18px;}
 
    .nav .history { margin-left:auto;}
 
+   #res-header #pagine { padding-right:24px; }
+   #res-header > div { margin-left:24px; width:100%;}
+
+   #res-header > div .widget-header {  margin-left: 98px; }
+
    /* .nav a > span {margin-left:50px;} */
 }
 
 
+#settings { display:none; }
 
 @media (max-width:1024px)
 {
    .nav #donate { width:60px; color:transparent;padding-left:10px;}
+   #results, #samples { width:100%;margin:0 auto; padding:30px calc((100vw - 700px) / 2);}
+
+   .resource .title h2 .RID { max-width:80%; }
+   
+   #settings { display:block; }
+   #settings img { vertical-align: middle; }
+
+   .result-content { padding-left:0;padding-right:0; }
+   .result-content #permalink { right:0; }
+
+   #res-container > ul h4 { padding-left:0;}
+
+   #res-header > div .widget-header {
+      margin-right: auto;
+   }
+
+   #res-header #pagine,
+   #res-header > div .widget-header { margin-top:0; }
+
+   .SidePane.left { min-height:0; z-index:1; margin-top:-10px;padding-top:10px;padding-left:24px;}
+   .SidePane.left.closed { left:-500px;}
+
+   .resource .title h2 .RID { max-width:60%; }
+
+   #root > div > .resource { padding:155px calc((100% - 700px) /2 ); padding-bottom:80px; margin:0; min-width:100%; box-sizing:border-box;}
+
+   .resource:not(.etext-view) > :not(.index):not(.ariane) { width:100%; margin:0;}
+
+   .resource > .ariane { padding-left: calc((100% - 700px) /2) ; }
 }
+
 
 
 @media (max-width:865px)
 {
-   .nav #donate { display:none;}
+
+   .nav { padding:0 calc((100% - 700px) / 2); }
+   .nav #lang { margin-left:20px; }
+   .nav #donate { width:40px; margin-left:15px; } 
+   .nav #logo a img {  height:40px !important; }
+
+   #res-header > div .widget-header { 
+      margin-left: 145px;
+   }
+   #res-header > div { margin-left:0; padding-left:calc((100% - 700px) / 2); box-sizing: border-box;padding-right:calc((100% - 700px) / 2);}
+
+   #res-header #pagine { padding-right:0; }
+
+
+   .SidePane.left { padding-left:calc((100vw - 700px) / 2 );}
+
 }
