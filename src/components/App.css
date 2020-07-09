@@ -331,7 +331,7 @@ body { overflow:auto !important;padding-right:0 !important; /*font-family:"Robot
 
 .nav a > span { color:#192229; display:inline-block;   }
 
-#login span { display:inline-block; margin-left:20px; cursor:pointer; pointer-events:none; opacity:0.65;}
+#login span { display:inline-block; margin-left:20px; cursor:pointer; /*pointer-events:none; opacity:0.65;*/}
 
 .nav #donate { width:150px;height:50px;border-radius: 2px; color:white;background-color: #d73449; line-height:50px; 
    text-align:center; display:inline-block;  margin-left:35px; }
