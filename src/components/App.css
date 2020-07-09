@@ -2597,11 +2597,24 @@ body {overflow-x:hidden; }
 
 @keyframes toggle {
    50% {
-      opacity:0.25;
+      filter:opacity(0.25);
    }
 }
+.searchWidget.datatype > span:not(.disabled),
+.searchWidget.datatype > span:not(.disabled) + label {  animation: 1s toggle 3; }
 
-.searchWidget.datatype {  animation: 1s toggle 3; }
+/*
+@keyframes toggleOff {
+   50% {
+      filter:opacity(0);
+   }
+}
+.searchWidget.datatype > span.disabled,
+.searchWidget.datatype > span.disabled + label {  animation: 1s toggleOff 3; }
+*/
+
+
+
 
 .searchWidget.datatype { margin:5px 0;}
 .searchWidget.datatype .img {  display:inline-block;width:30px;height:40px;background-size:contain;background-position:center;vertical-align: middle;
