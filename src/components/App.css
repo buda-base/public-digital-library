@@ -2594,6 +2594,15 @@ body {overflow-x:hidden; }
 .facet-count { font-style:italic; opacity:0.65; font-size:11px; font-weight:400; padding-right:3px;}
 .facet-count-block { white-space:nowrap; }
 
+
+@keyframes toggle {
+   50% {
+      opacity:0.25;
+   }
+}
+
+.searchWidget.datatype {  animation: 1s toggle 3; }
+
 .searchWidget.datatype { margin:5px 0;}
 .searchWidget.datatype .img {  display:inline-block;width:30px;height:40px;background-size:contain;background-position:center;vertical-align: middle;
    background-repeat:no-repeat; margin-right:15px;margin-left:-10px; cursor:pointer;
