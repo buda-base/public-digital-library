@@ -108,7 +108,13 @@ body { overflow:auto !important;padding-right:0 !important; /*font-family:"Robot
 .SearchPane.resultPage .fond-logo { display:none; }
 
 
-.SearchPane #logo { display: inline-block; font-size:0; position:relative }
+.SearchPane #logo {    
+   width: 100%;
+   display: flex;
+   font-size: 0;
+   position: relative;
+   justify-content: center;
+}
 .SearchPane #logo > div { 
    width:1440px;
    max-width:100%;
@@ -2745,7 +2751,7 @@ svg.hide { opacity:0;pointer-events:none; }
 
 .nav,
 body {
-   min-width:960px;
+   min-width:800px;
 }
 
 
@@ -2806,6 +2812,23 @@ a.result .contenu ul > div:last-child h3[lang=bo] span { font-size:18px;}
    .SidePane.left { position:absolute; left:0;top:0; z-index:0 ;}
    #res-container { position:relative; }
 
+   .nav { padding-left:24px;padding-right:24px; max-width:100%; box-sizing: border-box;} 
+   #about, #about+a { display:none;}
+
+   .nav .history { margin-left:auto;}
+
    /* .nav a > span {margin-left:50px;} */
 }
 
+
+
+@media (max-width:1024px)
+{
+   .nav #donate { width:60px; color:transparent;padding-left:10px;}
+}
+
+
+@media (max-width:865px)
+{
+   .nav #donate { display:none;}
+}
