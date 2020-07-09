@@ -306,9 +306,12 @@ body { overflow:auto !important;padding-right:0 !important; /*font-family:"Robot
 
 .nav #logo { display:flex; align-items:center;}
 
-.nav #logo a { display: inline-block; margin-right:20px; }
+.nav #logo a { display: inline-block; margin-right:15px; }
 .nav #logo a:last-child span,
 .nav #logo a:first-child span { font-size:24px; line-height:26px; font-weight:500;}
+
+.nav #logo > a:first-child img { height:65px; display: inline-block; margin-right:10px;}
+.nav #logo > a:first-child * { vertical-align: middle;}
 
 .nav a { text-decoration: none; font-size:0; display:inline-block; }
 
@@ -323,7 +326,7 @@ body { overflow:auto !important;padding-right:0 !important; /*font-family:"Robot
 #login { top:0;right:0;z-index:1; display:inline-block; margin-left:auto;  color:#d73449; }
 #login button {color:rgba(0,0,0,0.54); }
 
-.nav #logo + a { margin-left:70px; margin-right:70px; }
+.nav #logo + a { margin-left:52px; margin-right:52px; }
 /* .nav #about  { margin-left:105px; margin-right:105px;  } */
 
 .nav a > span { color:#192229; display:inline-block;   }
