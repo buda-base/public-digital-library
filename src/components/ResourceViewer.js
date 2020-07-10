@@ -5636,7 +5636,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                   <div>
                      <Link to={"/show/"+s}><div class="header"></div></Link>
                      <div><span {...label.lang?{lang:label.lang}:{}}>{ label.value }</span>{ label.lang && this.tooltip(label.lang) }</div>
-                     <Link to={"/show/"+s}>Read more</Link>
+                     <Link to={"/show/"+s}>{I18n.t("misc.readM")}</Link>
                   </div>
                )
             }
