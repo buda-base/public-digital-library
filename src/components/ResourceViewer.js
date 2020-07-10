@@ -1,6 +1,5 @@
 //@flow
 //import {Mirador, m3core} from 'mirador'
-import diva from "diva.js" // v5.1.3
 //import diva from "diva.js" //v6.0, not working
 import Portal from 'react-leaflet-portal';
 import bbox from "@turf/bbox"
@@ -3361,111 +3360,6 @@ class ResourceViewer extends Component<Props,State>
       reload = true ;
    }
   */
-
-   showDiva()
-   {
-      if(!this.state.openDiva) // || !$("#diva-wrapper").hasClass("hidden"))
-      {
-         if(this.state.UVcanLoad) { window.location.hash = "diva"; window.location.reload(); }
-
-         let timerDiva = setInterval( () => {
-
-            if($("#diva-wrapper").length > 0) { // && window.Diva) && window.Diva.DownloadPlugin && window.Diva.ManipulationPlugin && window.Diva.MetadataPlugin) {
-               clearInterval(timerDiva);
-
-               $("#fond").addClass("hidden");
-
-               let manif = this.props.collecManif
-               if(!manif && this.props.manifests) manif = this.props.manifests[0]["@id"]
-               if(!manif) manif = this.props.imageAsset
-
-               /*
-               // v6.0 working from diva.js github demo site
-               let dv = new window.Diva('diva-wrapper',{
-                  "objectData": manif,
-                  //"enableZoomControls":"slider", // not compatible with v6
-                  "enableAutoTitle":false, // title not working by default (show first letter only, maybe because label is a list here ?)
-                  "tileWidth":4000,
-                  "tileHeight":4000,
-                  "plugins": [window.Diva.DownloadPlugin, window.Diva.ManipulationPlugin, window.Diva.MetadataPlugin],
-               });
-               dv.disableScrollable()
-               dv.enableScrollable()
-               dv.disableDragScrollable()
-               dv.enableDragScrollable()
-               *
-
-/*
-               // v6.0 not working as a import
-               let dv = new Diva('diva-wrapper',{
-                  "objectData": manif,
-                  "enableZoomControls":"slider",
-                  "tileWidth":4000,
-                  "tileHeight":4000,
-                  //"plugins": [Diva.DownloadPlugin, Diva.ManipulationPlugin, Diva.MetadataPlugin],
-                  //enableFullscreen:false
-               });
-*/
-               // fully working v5.1.3 (but no plugin)
-
-               let dv = diva.create('#diva-wrapper',{
-                   objectData: manif,
-                   enableZoomControls:"slider",
-                   tileWidth:4000,
-                   tileHeight:4000
-                   //plugins: [DownloadPlugin, ManipulationPlugin, MetadataPlugin],
-                   //enableFullscreen:false
-               });
-
-
-               let timerDiva2 = setInterval(() => {
-                  if($(".diva-fullscreen-icon").length > 0) {
-                     clearInterval(timerDiva2)
-
-                      // diva 5.1
-                       $(".diva-link-icon").remove()
-                       $(".diva-fullscreen-icon").remove();
-                       $(".diva-view-menu").append(`<button type="button" id="diva-1-fullscreen-icon" class="diva-fullscreen-icon diva-button" title="Close viewer"
-                          onClick="javascript:eval('window.closeViewer()')"></button>`)
-
-
-                      /*
-                      //diva 6
-                      let svg = $("#diva-1-fullscreen-icon svg").remove();
-                      $("#diva-1-fullscreen-icon").remove();
-                      $(".diva-view-menu").append(`<button type="button" id="diva-1-fullscreen-icon" class="diva-fullscreen-icon diva-button" title="Close viewer"
-                         onClick="javascript:document.getElementById(\'diva-wrapper\').classList.add(\'hidden\')"></button>`)
-                      $("#diva-1-fullscreen-icon").append(svg)
-                      */
-
-                     if(this.props.manifests) {
-                        $(".diva-tools").append("<span>Browse collection</span><select id='volume'>"+this.props.manifests.map(
-                           (v,i) => ("<option value='"+v["@id"]+"' "+(i===0?"selected":"")+">"+v["label"]+"</option>")
-                        ) +"</select>")
-                        $("#volume").change(
-                           function(){
-                              dv.changeObject($(this).val())
-                              dv.gotoPageByIndex(0);
-                           }
-                        )
-
-                     }
-                  }
-               }, 100)
-
-            }
-            else {
-               this.forceUpdate();
-            }
-         }, 100)
-      }
-      else {
-         //$('#diva-wrapper').removeClass('hidden')
-      }
-      let state = { ...this.state, openDiva:true, openUV:false, openMirador:false }
-      this.setState(state);
-
-   }
 
 
    showMirador(num?:number,useManifest?:{})
