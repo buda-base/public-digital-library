@@ -4919,11 +4919,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             else if(["ewts","iast","deva","pinyin"].indexOf(d) !== -1) for(let p of possible) { if(p.match(new RegExp(d+"$"))) { presets.push(p); } }
             
             return [...acc, ...presets]
-<<<<<<< HEAD
          }, [] ).concat(!value || value.match(/[a-zA-Z]/)?["en"]:[]).map(p => '"'+value+'"@'+(p == "sa-x-iast"?"sa-x-ndia":p)):[])   } ) 
-=======
-         }, [] ).concat(value.match(/[a-zA-Z]/)?["en"]:[]).map(p => value+'@'+(p == "sa-x-iast"?"sa-x-ndia":p)) } ) 
->>>>>>> master
          
          /*
          if(changeKWtimer) clearTimeout(changeKWtimer)
