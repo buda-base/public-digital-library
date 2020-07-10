@@ -5170,7 +5170,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   <List key={2} id="results">
                      { this.props.isInstance && this.state.backToWorks && <a className="uri-link"  onClick={(event) => {
                            this.resetFilters(event)
-                        }}><img src="/icons/back.png"/><span>Back to Works</span></a> }
+                        }}><img src="/icons/back.png"/><span>{I18n.t("search.backToW")}</span></a> }
                      { message }
                      <div id="pagine">
                         <NavigateBefore

@@ -118,9 +118,9 @@ const boTranslation = {
       "tmp:nameMatch_plural":"མིང་རྙེད་ཚད།",
       "tmp:otherTitle":"མཚན་བྱང་གཞན།",
       "tmp:otherTitle_plural":"མཚན་བྱང་གཞན།",
-      "bdo:instanceExtentStatement":"ཤོག་གྲངས་གསལ་བཤད།"
-      "bdo:serialHasInstance":"དཔེ་ཚོགས་ཀྱི་དཔེ་རྒྱུན།"
-      "bdo:inRootInstance":""
+      "bdo:instanceExtentStatement":"ཤོག་གྲངས་གསལ་བཤད།",
+      "bdo:serialHasInstance":"དཔེ་ཚོགས་ཀྱི་དཔེ་རྒྱུན།",
+      "bdo:inRootInstance":"",
       "tmp:otherName":"མིང་གཞན།",
       "tmp:otherName_plural":"མིང་གཞན།",
       "tmp:otherMatch":"རྙེད་པ་གཞན། ({{count,counttobo}})",
@@ -308,7 +308,8 @@ const boTranslation = {
       result_plural:"བཙལ་འབྲས། {{count,counttobo}}",
       filters:{
          noresults:"འདེམས་སྒྲུག་བྱས་པའི་བཙལ་འབྲས་མི་འདུག"
-      }
+      },
+      backToW:"Back to Works"
    },
    Rsidebar:{
       title:"རྣམ་པ་སྒྲིག་ས།",
@@ -353,7 +354,8 @@ const boTranslation = {
       start:"འཚོལ།",
       reset:"བཙལ་བྱ་སུབ།",
       otherN:"Load non-matching subparts",
-      openR:"དཔེ་ཐོ།"
+      openR:"དཔེ་ཐོ།",
+      loadP:"Load Previous Pages"
    },
    mirador:{
       return:"བུདྡྷ་ལ་ཕྱིར་ལོག",
