@@ -305,7 +305,8 @@ const enTranslation = {
       result_plural:"{{count}} Results",
       filters:{
          noresults:"No results matching your filters."
-      }
+      },
+      backToW:"Back to Works"
    },
    Rsidebar:{
       title:"Display Preferences",
@@ -352,7 +353,8 @@ const enTranslation = {
       otherN:"Load non-matching subparts",
       scanF:"Scans for",
       etextF:"Etext for",
-      openR:"Open Record"
+      openR:"Open Record",
+      loadP:"Load Previous Pages"
    },
    mirador:{
       return:"return to BUDA",

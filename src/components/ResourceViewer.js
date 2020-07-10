@@ -4061,7 +4061,7 @@ class ResourceViewer extends Component<Props,State>
          */
 
          let show = this.state.collapse[k]
-         if(hasMaxDisplay === -1 && k !== bf+"identifiedBy") show = true ; 
+         //if(hasMaxDisplay === -1 && k !== bf+"identifiedBy") show = true ; 
 
          return (
             <div data-prop={shortUri(k)} class={"has-collapse custom max-"+(maxDisplay)+" "+(n%2===0?"even":"odd") }>
@@ -4157,11 +4157,17 @@ perma_menu(pdfLink,monoVol,fairUse,other)
    }
    if(!same.length && sameLegalD) { 
       let prov = sameLegalD[adm+"provider"]
+      console.log("prov:",JSON.stringify(prov))
       if(prov && prov.length) prov = prov[0].value
+      console.log("prov:",JSON.stringify(prov))
       if(prov && this.props.dictionary) prov = this.props.dictionary[prov]
+      console.log("prov:",JSON.stringify(prov))
       if(prov) prov = prov[skos+"prefLabel"]
+      console.log("prov:",JSON.stringify(prov))
       if(prov && prov.length) prov = prov[0].value
+      console.log("prov:",JSON.stringify(prov))
       if(prov) prov = prov.replace(/(^\[ *)|( *\]$)/g,"") // CUDL
+      console.log("prov:",JSON.stringify(prov))
       //else prov = ""
 
       let orig = this.getResourceElem(adm+"originalRecord")
@@ -4190,7 +4196,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
       }
    }
 
-   //console.log("same",same)
+   console.log("same",same)
 
    // TODO 
    // + fix bdr:G3176 (sameAs Shakya Research Center)
@@ -4517,7 +4523,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          }
          //loader={<Loader loaded={false} />}
          >
-         { prev!==-1 && <h3 style={{marginBottom:"20px",width:"100%",textAlign:"right"}}><a onClick={(e) => this.props.onGetPages(this.props.IRI,prev)} class="download" style={{fontWeight:700,border:"none",textAlign:"right"}}>Load Previous Pages &lt;</a></h3>}
+         { prev!==-1 && <h3 style={{marginBottom:"20px",width:"100%",textAlign:"right"}}><a onClick={(e) => this.props.onGetPages(this.props.IRI,prev)} class="download" style={{fontWeight:700,border:"none",textAlign:"right"}}>{I18n.t("resource.loadP")} &lt;</a></h3>}
          {/* {this.hasSub(k)?this.subProps(k):tags.map((e)=> [e," "] )} */}
          { elem.map( e => { 
 
