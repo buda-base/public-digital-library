@@ -510,6 +510,11 @@ let extProperties = {
       bf+"identifiedBy",
       //tmp+"entityScore"
       bdo+"note",
+      bdo+"placeGB2260-2013",
+      bdo+"placeWB2000",
+      bdo+"placeWB2010",
+      bdo+"placeWBArea",
+      bdo+"placeGonpaPerEcumen",
    ],
    "Lineage": [
       bdo+"workLocation",
