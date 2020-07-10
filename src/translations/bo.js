@@ -152,7 +152,7 @@ const boTranslation = {
       "tmp:propHasScans":"བཤེར་པར།",
       "tmp:propHasEtext":"འཕྲུལ་ཡིག",
       "bf:identifiedBy":"ཨང་རྟགས།",
-      "rdfs:subClassOf":"Subclass Of",
+      "rdfs:subClassOf":"དབྱེ་གཞི།",
       "tmp:isCreator":"མཛད་མཁན།",
       "tmp:hasImage":"བཤེར་པར།",
       "tmp:hasEtext":"འཕྲུལ་ཡིག",
@@ -215,8 +215,8 @@ const boTranslation = {
    misc:{
       colon:" ",
       datatype:"དན་གྲངས་ལ་ཕྱིར་ལོག",
-      has:"Has",
-      or:"or",
+      has:"",
+      or:"ཡང་ན།",
       seeA:"ཚང་མ་སྟོན།",
       browse:"མིག་བཤེར་བྱོས།",
       show:"འདི་ལས་མང་བ།",
@@ -226,10 +226,10 @@ const boTranslation = {
       preview:"སྔོན་ལྟ།",
       permalink:"དྲ་ཐག",
       clipboard:"དྲ་ཐག་བཤུས་ཡོད།\nCTRL+Vབཀོལ་ནས་ཕོབ།",
-      from:"from",
-      in:"in",
-      of:"of",
-      please:"Please"
+      from:"",
+      in:"",
+      of:"",
+      please:""
    },
    lang:{
       en:"ཨིན་སྐད།",
