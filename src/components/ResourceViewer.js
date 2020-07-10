@@ -5268,7 +5268,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                if(!loca.search) loca.search = "?"
                else if(loca.search !== "?") loca.search += "&"
 
-               loca.search += "osearch="+keywordtolucenequery(this.state.outlineKW)+"@"+lg
+               loca.search += "osearch="+keywordtolucenequery(this.state.outlineKW, lg)+"@"+lg
 
                console.log("loca!",loca)
 

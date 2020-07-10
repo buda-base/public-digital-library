@@ -136,6 +136,7 @@ export function keywordtolucenequery(key:string, lang?:string) {
    // https://github.com/buda-base/public-digital-library/issues/155
    if (lang && lang.startsWith("bo"))
       key = key+"~1"
+   return key
 }
 
 
@@ -765,7 +766,7 @@ class App extends Component<Props,State> {
       else if(get.lg) lg = get.lg
 
       let kw = "", newKW
-      if(get.q) kw = get.q.replace(/"/g,"")
+      if(get.q) kw = lucenequerytokeyword(get.q)
       if(kw) newKW = kw
 
       let types = [ "Instance" ] //[ ...searchTypes.slice(1) ]
@@ -900,9 +901,11 @@ class App extends Component<Props,State> {
       let _key = ""+key
       if(!key || key == "" || !key.match) return ;
       if(!key.match(/:/)) {
-        key = keywordtolucenequery(key)
+        key = keywordtolucenequery(key, lang)
         key = encodeURIComponent(key) // prevent from losing '+' when adding it to url
       }
+      console.log("new key",key)
+
 
       let searchDT = this.state.searchTypes
       if(!label) label = searchDT
@@ -4672,7 +4675,9 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             // no need for language on instances page
             if(j === "language" && this.props.isInstance ) return
 
-            let jpre = this.props.config.facets[this.state.filters.datatype[0]][j]
+            let jpre = j;
+            if (this.props.config.facets[this.state.filters.datatype[0]])
+               jpre = this.props.config.facets[this.state.filters.datatype[0]][j]
             if(!jpre) jpre = j
             let jlabel ;
             if(facetLabel[j]) jlabel = I18n.t(facetLabel[j]);   
@@ -4868,7 +4873,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             else if(["ewts","iast","deva","pinyin"].indexOf(d) !== -1) for(let p of possible) { if(p.match(new RegExp(d+"$"))) { presets.push(p); } }
             
             return [...acc, ...presets]
-         }, [] ).concat(value.match(/[a-zA-Z]/)?["en"]:[]).map(p => '"'+value+'"@'+(p == "sa-x-iast"?"sa-x-ndia":p)) } ) 
+         }, [] ).concat(value.match(/[a-zA-Z]/)?["en"]:[]).map(p => value+'@'+(p == "sa-x-iast"?"sa-x-ndia":p)) } ) 
          
          /*
          if(changeKWtimer) clearTimeout(changeKWtimer)
@@ -4948,7 +4953,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      disabled={this.props.hostFailure}
                      onChange={(value:string) => changeKW(value)}
                      onRequestSearch={this.requestSearch.bind(this)}
-                     value={this.props.hostFailure?"Endpoint error: "+this.props.hostFailure+" ("+this.getEndpoint()+")":this.state.keyword !== undefined && this.state.keyword!==this.state.newKW?this.state.keyword:this.props.keyword&&this.state.newKW?this.state.newKW.replace(/\"/g,""):""}
+                     value={this.props.hostFailure?"Endpoint error: "+this.props.hostFailure+" ("+this.getEndpoint()+")":this.state.keyword !== undefined && this.state.keyword!==this.state.newKW?this.state.keyword:this.props.keyword&&this.state.newKW?lucenequerytokeyword(this.state.newKW):""}
                      style={{
                         marginTop: '0px',
                         width: "700px",
@@ -4974,7 +4979,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                                     <MenuItem key={v} style={{lineHeight:"1em"}} onClick={(e)=>{ 
                                        this.setState({...this.state,dataSource:[]});
                                        this.requestSearch(tab[0],null,tab[1])
-                                    }}>{ lucenequerytokeyword(tab[0])} <SearchIcon style={{padding:"0 10px"}}/><span class="lang">{(I18n.t(""+(searchLangSelec[tab[1]]?searchLangSelec[tab[1]]:languages[tab[1]]))) }</span></MenuItem> ) 
+                                    }}>{ tab[0] } <SearchIcon style={{padding:"0 10px"}}/><span class="lang">{(I18n.t(""+(searchLangSelec[tab[1]]?searchLangSelec[tab[1]]:languages[tab[1]]))) }</span></MenuItem> ) 
                                  } ) }
                         </Paper>
                   }
