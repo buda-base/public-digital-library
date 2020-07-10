@@ -118,6 +118,9 @@ const boTranslation = {
       "tmp:nameMatch_plural":"མིང་རྙེད་ཚད།",
       "tmp:otherTitle":"མཚན་བྱང་གཞན།",
       "tmp:otherTitle_plural":"མཚན་བྱང་གཞན།",
+      "bdo:instanceExtentStatement":"ཤོག་གྲངས་གསལ་བཤད།"
+      "bdo:serialHasInstance":"དཔེ་ཚོགས་ཀྱི་དཔེ་རྒྱུན།"
+      "bdo:inRootInstance":""
       "tmp:otherName":"མིང་གཞན།",
       "tmp:otherName_plural":"མིང་གཞན།",
       "tmp:otherMatch":"རྙེད་པ་གཞན། ({{count,counttobo}})",
@@ -148,13 +151,13 @@ const boTranslation = {
       "bdo:personStudentOf_plural":"དགེ་རྒན།",
       "tmp:propHasScans":"བཤེར་པར།",
       "tmp:propHasEtext":"འཕྲུལ་ཡིག",
-      "bf:identifiedBy":"Identified By",
+      "bf:identifiedBy":"ཨང་རྟགས།",
       "rdfs:subClassOf":"Subclass Of",
-      "tmp:isCreator":"Is Creator",
-      "tmp:hasImage":"Has Scans",
-      "tmp:hasEtext":"Has Etext",
-      "unspecified":"Unspecified",
-      "true":"True"
+      "tmp:isCreator":"མཛད་མཁན།",
+      "tmp:hasImage":"བཤེར་པར།",
+      "tmp:hasEtext":"འཕྲུལ་ཡིག",
+      "unspecified":"རིགས་མ་དགར་བ།",
+      "true":"ཡིན།"
    },
    result:{
       open:"ཁ་ཕྱེ།",
@@ -174,7 +177,7 @@ const boTranslation = {
       hasInstance_plural:"དཔེ་རྒྱུན་ {{count,counttobo}} ཡོད།",
    },
    index:{
-      openViewer:"སྟོན།",
+      openViewer:"ཀློག",
       mainInfo:"གནས་ཚུལ་ཞིབ་ཕྲ།",
       outline:"དཀར་ཆག",
       related:"འབྲེལ་ཡོད་བརྩམས་ཆོས།",
@@ -352,7 +355,7 @@ const boTranslation = {
       start:"འཚོལ།",
       reset:"བཙལ་བྱ་སུབ།",
       otherN:"Load non-matching subparts",
-      openR:"Open Record"
+      openR:"དཔེ་ཐོ།"
    },
    mirador:{
       return:"བུདྡྷ་ལ་ཕྱིར་ལོག",
