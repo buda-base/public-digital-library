@@ -134,7 +134,7 @@ export function keywordtolucenequery(key:string, lang?:string) {
    if(key.indexOf("\"") === -1) 
       key = "\""+key+"\""
    // https://github.com/buda-base/public-digital-library/issues/155
-   if (lang && lang.startsWith("bo"))
+   if (lang && lang.startsWith("bo") && !key.match(/~\d$/))
       key = key+"~1"
    return key
 }

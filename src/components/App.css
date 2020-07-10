@@ -830,8 +830,9 @@ h4:not(:hover) > .lang
 
 .resource > .ariane { position:absolute; top:105px; color: #343434; left:0; margin-left:140px;padding-left:12.125%; }
 .resource > .ariane img { display:inline-block; margin-right:5px; vertical-align: -1px;}
-.resource > .ariane a { text-decoration: none; color: #343434; font-weight:700; font-size:13px;}
+.resource > .ariane a { text-decoration: none; color: #343434; font-weight:500; font-size:13px;}
 .resource > .ariane a:hover span { text-decoration: underline;}
+.resource > .ariane a span span { font-weight:700; }
 
 .resource > .index .title { display:block; }
 
@@ -1361,8 +1362,11 @@ vertical-align:middle;}
 .resource .data:not(.legal-props) h4.sameAs .ulink.sameAs { margin-left:0 !important; }
 
 .resource .data [data-prop="bdo:note"] .noteCollapse.in-true { overflow: visible;}
-.resource .data.ext-props [data-prop="bdo:note"] { display:flex !important; align-items: flex-start !important;}
+/* .resource .data.ext-props [data-prop="bdo:note"] { display:flex !important; align-items: flex-start !important;} */
 .resource .data h4:hover .svg { background-color: #ededed; }
+.resource .data.ext-props .has-collapse.custom[data-prop="bdo:note"] .expand { 
+   position:absolute;right:35px;top:8px; width: calc(100% - 260px);
+}
 
 
 /* full width when hovering... */
@@ -1976,7 +1980,7 @@ html[lang="en"] .resource .data > [data-prop="bdo:creator"] h4[data-prop="bdo:ro
 .resource .data.ext-props .has-collapse.custom h3 { order:-2; display:flex; align-items: center; height:42px; line-height:20px;  }
 .resource .data.ext-props .has-collapse.custom h3 span a.propref { line-height:20px; }
 .resource .data.ext-props .has-collapse.custom .expand { order:-1; color:transparent;width:calc(100% - 190px);top:-5px;
-   margin-top:0 !important; border-color:#c2c2c2;margin-left:0;}
+   margin-top:0 !important; border-color:#c2c2c2;margin-left:0; }
 .resource .data.ext-props .has-collapse.custom .expand .toggle-expand { color:black; right:0;top:-5px; }
 
 .resource .data.ext-props .propCollapseHeader { display:none !important; }
