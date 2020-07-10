@@ -5589,9 +5589,9 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                backTo = decodeURIComponent(backTo)
                searchUrl = backTo
                if(searchUrl.match(/q=/))               
-                  searchTerm = searchUrl.replace(/.*q=([^&]+).*/,"$1")
+                  searchTerm = lucenequerytokeyword(searchUrl.replace(/.*q=([^&]+).*/,"$1")) 
                else if(searchUrl.match(/r=/))               
-                  searchTerm = searchUrl.replace(/.*r=([^&]+).*/,"$1")
+                  searchTerm = lucenequerytokeyword(searchUrl.replace(/.*r=([^&]+).*/,"$1")) 
 
             }
             else { 
@@ -5665,7 +5665,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                      ev.stopPropagation();
                      return false
                   }}
-                  ><img src="/icons/FILARIANE.svg" /><span>{I18n.t("topbar.results")} {searchTerm}</span></Link>
+                  ><img src="/icons/FILARIANE.svg" /><span>{I18n.t("topbar.results")} <span>{searchTerm}</span></span></Link>
                   {this.state.ready && <Loader loaded={!this.props.loading} options={{position:"fixed",left:"50%",top:"50%"}} /> }
                </div> }
                <div class="index">                  
