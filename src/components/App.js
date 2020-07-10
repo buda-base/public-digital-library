@@ -130,6 +130,21 @@ export function shortUri(id:string) {
    return id.replace(/[/]$/,"") ;
 }
 
+export function keywordtolucenequery(key:string, lang?:string) {
+   if(key.indexOf("\"") === -1) 
+      key = "\""+key+"\""
+   // https://github.com/buda-base/public-digital-library/issues/155
+   if (lang && lang.startsWith("bo"))
+      key = key+"~1"
+}
+
+
+export function lucenequerytokeyword(lq) {
+   lq = lq.replace(/~\d$/,"")
+   lq = lq.replace(/\"/g, "")
+   return lq
+}
+
 const facetLabel = {
    "root": "Lsidebar.widgets.root",
    "tree": "Lsidebar.widgets.tree",
@@ -885,7 +900,7 @@ class App extends Component<Props,State> {
       let _key = ""+key
       if(!key || key == "" || !key.match) return ;
       if(!key.match(/:/)) {
-        if(key.indexOf("\"") === -1) key = "\""+key+"\""
+        key = keywordtolucenequery(key)
         key = encodeURIComponent(key) // prevent from losing '+' when adding it to url
       }
 
@@ -4959,7 +4974,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                                     <MenuItem key={v} style={{lineHeight:"1em"}} onClick={(e)=>{ 
                                        this.setState({...this.state,dataSource:[]});
                                        this.requestSearch(tab[0],null,tab[1])
-                                    }}>{ tab[0].replace(/["]/g,"")} <SearchIcon style={{padding:"0 10px"}}/><span class="lang">{(I18n.t(""+(searchLangSelec[tab[1]]?searchLangSelec[tab[1]]:languages[tab[1]]))) }</span></MenuItem> ) 
+                                    }}>{ lucenequerytokeyword(tab[0])} <SearchIcon style={{padding:"0 10px"}}/><span class="lang">{(I18n.t(""+(searchLangSelec[tab[1]]?searchLangSelec[tab[1]]:languages[tab[1]]))) }</span></MenuItem> ) 
                                  } ) }
                         </Paper>
                   }

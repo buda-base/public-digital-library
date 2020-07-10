@@ -83,6 +83,8 @@ import 'react-tabs/style/react-tabs.css';
 
 import {svgEtextS,svgInstanceS,svgImageS} from "./icons"
 
+import {keywordtolucenequery,lucenequerytokeyword} from './App';
+
 
 delete L.Icon.Default.prototype._getIconUrl;
 
@@ -1187,8 +1189,9 @@ class ResourceViewer extends Component<Props,State>
       if(get.osearch && !this.state.outlineKW) { 
          if(!s) s = { ...this.state } 
          s.outlineKW = get.osearch
-         if(s.outlineKW.includes("@")) s.outlineKW = s.outlineKW.replace(/\"([^"]+)\"@.*/,"$1")
-
+         let keys = get.osearch.split("@")
+         lang = keys[1]
+         s.outlineKW = lucenequerytokeyword(keys[0])
          
          if(!timerScr) timerScr = setInterval( () => {
             const el = document.querySelector("#outline")
@@ -5259,7 +5262,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                if(!loca.search) loca.search = "?"
                else if(loca.search !== "?") loca.search += "&"
 
-               loca.search += "osearch=\""+this.state.outlineKW+"\"@"+lg
+               loca.search += "osearch="+keywordtolucenequery(this.state.outlineKW)+"@"+lg
 
                console.log("loca!",loca)
 
