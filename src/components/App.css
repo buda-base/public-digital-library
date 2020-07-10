@@ -2597,11 +2597,17 @@ body {overflow-x:hidden; }
 
 @keyframes toggle {
    50% {
-      filter:opacity(0.25);
+      /* filter:opacity(0.25); */
+      background-color:rgba(220,220,220,1);
    }
 }
+.searchWidget.datatype:not(.disabled),
+.searchWidget.datatype:not(.disabled) > span {  animation: 1s toggle 3; }
+
+/*
 .searchWidget.datatype > span:not(.disabled),
 .searchWidget.datatype > span:not(.disabled) + label {  animation: 1s toggle 3; }
+*/
 
 /*
 @keyframes toggleOff {

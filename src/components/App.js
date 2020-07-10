@@ -4484,7 +4484,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                               if(count == 0) disabled = true
 
                               return (
-                                 <div key={i} style={{textAlign:"left"}}  className={"searchWidget datatype "+i.toLowerCase()}>
+                                 <div key={i} style={{textAlign:"left"}}  className={"searchWidget datatype "+i.toLowerCase()+ (disabled?" disabled":"")}>
                                     <span class={"img "+(disabled?"disabled":"") } style={{backgroundImage:"url('/icons/sidebar/"+i.toLowerCase()+".svg')"}} onClick={(event) => this.handleCheck(event,i,this.state.filters.datatype.indexOf(i) === -1)}></span>
                                     <FormControlLabel
                                        control={
