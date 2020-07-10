@@ -268,8 +268,6 @@ const boTranslation = {
       },
       tip:{
          zh:"རྒྱ་ཡིག",
-         zhHant:"རྒྱ་ཡིག (ཧན་ཙི།)",
-         //zhHans:"རྒྱ་ཡིག (གསར་མ།)",
          zhHant:"སྲོལ་རྒྱུན་རྒྱ་ཡིག",
          zhHans:"རྒྱ་ཡིག་གསར་མ།",
          zhLatnPinyin:"ཕིན་ཡིག་རྒྱ་ཡིག",
