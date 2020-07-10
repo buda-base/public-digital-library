@@ -108,7 +108,13 @@ body { overflow:auto !important;padding-right:0 !important; /*font-family:"Robot
 .SearchPane.resultPage .fond-logo { display:none; }
 
 
-.SearchPane #logo { display: inline-block; font-size:0; position:relative }
+.SearchPane #logo {    
+   width: 100%;
+   display: flex;
+   font-size: 0;
+   position: relative;
+   justify-content: center;
+}
 .SearchPane #logo > div { 
    width:1440px;
    max-width:100%;
@@ -873,8 +879,9 @@ h4:not(:hover) > .lang
 
 .resource > .ariane { position:absolute; top:105px; color: #343434; left:0; margin-left:140px;padding-left:12.125%; }
 .resource > .ariane img { display:inline-block; margin-right:5px; vertical-align: -1px;}
-.resource > .ariane a { text-decoration: none; color: #343434; font-weight:700; font-size:13px;}
+.resource > .ariane a { text-decoration: none; color: #343434; font-weight:500; font-size:13px;}
 .resource > .ariane a:hover span { text-decoration: underline;}
+.resource > .ariane a span span { font-weight:700; }
 
 .resource > .index .title { display:block; }
 
@@ -1405,8 +1412,11 @@ vertical-align:middle;}
 .resource .data:not(.legal-props) h4.sameAs .ulink.sameAs { margin-left:0 !important; }
 
 .resource .data [data-prop="bdo:note"] .noteCollapse.in-true { overflow: visible;}
-.resource .data.ext-props [data-prop="bdo:note"] { display:flex !important; align-items: flex-start !important;}
+/* .resource .data.ext-props [data-prop="bdo:note"] { display:flex !important; align-items: flex-start !important;} */
 .resource .data h4:hover .svg { background-color: #ededed; }
+.resource .data.ext-props .has-collapse.custom[data-prop="bdo:note"] .expand { 
+   position:absolute;right:35px;top:8px; width: calc(100% - 260px);
+}
 
 
 /* full width when hovering... */
@@ -1514,9 +1524,11 @@ h4:not(.first)
 .resource .data > :not([data-prop="bf:identifiedBy"]):not([data-prop="bdo:volumeHasEtext"]) .propCollapse h4:not(.first)::before,
 .resource .data.ext-props > :not([data-prop="bf:identifiedBy"]) .propCollapse > div > div > h4:not(.first)::before { padding:8px 10px !important; top:-8px !important; }
 
+/*
 .resource .data.ext-props > :not([data-prop="bf:identifiedBy"]) .propCollapse { padding-left:0; }
 .resource .data.ext-props > :not([data-prop="bf:identifiedBy"]) .expand { display:none; }
 .resource .data.ext-props > :not([data-prop="bf:identifiedBy"]) { align-items: baseline;}
+*/
 
 .resource .data > :not([data-prop="bdo:volumeHasEtext"]) .propCollapseHeader h4:not(.first) .hover-menu,
 .resource .data > :not([data-prop="bf:identifiedBy"]):not([data-prop="bdo:volumeHasEtext"]) .propCollapse h4:not(.first) .hover-menu,
@@ -1573,7 +1585,7 @@ h4:hover a.no-bdrc img { opacity:1; }
 .resource .title + .data + .data { padding-bottom:60px; }
 
 
-.resource .data.images-title { display:flex; align-items: end;position:relative;}
+.resource .data.images-title { display:flex; /*align-items: end;*/ position:relative;}
 .resource .data.etext-title { padding-right:270px; display:flex; align-items: end;position:relative;}
 
 .resource .data h2.intro,
@@ -2018,7 +2030,7 @@ html[lang="en"] .resource .data > [data-prop="bdo:creator"] h4[data-prop="bdo:ro
 .resource .data.ext-props .has-collapse.custom h3 { order:-2; display:flex; align-items: center; height:42px; line-height:20px;  }
 .resource .data.ext-props .has-collapse.custom h3 span a.propref { line-height:20px; }
 .resource .data.ext-props .has-collapse.custom .expand { order:-1; color:transparent;width:calc(100% - 190px);top:-5px;
-   margin-top:0 !important; border-color:#c2c2c2;margin-left:0;}
+   margin-top:0 !important; border-color:#c2c2c2;margin-left:0; }
 .resource .data.ext-props .has-collapse.custom .expand .toggle-expand { color:black; right:0;top:-5px; }
 
 .resource .data.ext-props .propCollapseHeader { display:none !important; }
@@ -2822,10 +2834,12 @@ svg.hide { opacity:0;pointer-events:none; }
   to { transform: rotate(360deg); }
 }
 
+/*
 .nav,
 body {
-   min-width:960px;
+   min-width:800px;
 }
+*/
 
 
 /* specific font sizes for tibetan */
@@ -2885,6 +2899,78 @@ a.result .contenu ul > div:last-child h3[lang=bo] span { font-size:18px;}
    .SidePane.left { position:absolute; left:0;top:0; z-index:0 ;}
    #res-container { position:relative; }
 
+   .nav { padding-left:24px;padding-right:24px; max-width:100%; box-sizing: border-box;} 
+   #about, #about+a { display:none;}
+
+   .nav .history { margin-left:auto;}
+
    /* .nav a > span {margin-left:50px;} */
 }
 
+@media (max-width:1200px)
+{
+
+   #res-header #pagine { padding-right:24px; }
+   #res-header > div { margin-left:24px; width:100%;}
+
+   #res-header > div .widget-header {  margin-left: 98px; }
+
+}
+
+#settings { display:none; }
+
+@media (max-width:1024px)
+{
+   .nav #donate { width:60px; color:transparent;padding-left:10px;}
+   #results, #samples { width:100%;margin:0 auto; padding:30px calc((100vw - 700px) / 2);}
+
+   .resource .title h2 .RID { max-width:80%; }
+   
+   #settings { display:block; }
+   #settings img { vertical-align: middle; }
+
+   .result-content { padding-left:0;padding-right:0; }
+   .result-content #permalink { right:0; }
+
+   #res-container > ul h4 { padding-left:0;}
+
+   #res-header > div .widget-header {
+      margin-right: auto;
+   }
+
+   #res-header #pagine,
+   #res-header > div .widget-header { margin-top:0; }
+
+   .SidePane.left { min-height:0; z-index:1; margin-top:-10px;padding-top:10px;padding-left:24px;}
+   .SidePane.left.closed { left:-500px;}
+
+   .resource .title h2 .RID { max-width:60%; }
+
+   #root > div > .resource { padding:155px calc((100% - 700px) /2 ); padding-bottom:80px; margin:0; min-width:100%; box-sizing:border-box;}
+
+   .resource:not(.etext-view) > :not(.index):not(.ariane) { width:100%; margin:0;}
+
+   .resource > .ariane { padding-left: calc((100% - 700px) /2) ; }
+}
+
+
+
+@media (max-width:865px)
+{
+
+   .nav { padding:0 calc((100% - 700px) / 2); }
+   .nav #lang { margin-left:20px; }
+   .nav #donate { width:40px; margin-left:15px; } 
+   .nav #logo a img {  height:40px !important; }
+
+   #res-header > div .widget-header { 
+      margin-left: 145px;
+   }
+   #res-header > div { margin-left:0; padding-left:calc((100% - 700px) / 2); box-sizing: border-box;padding-right:calc((100% - 700px) / 2);}
+
+   #res-header #pagine { padding-right:0; }
+
+
+   .SidePane.left { padding-left:calc((100vw - 700px) / 2 );}
+
+}

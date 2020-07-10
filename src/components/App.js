@@ -130,6 +130,22 @@ export function shortUri(id:string) {
    return id.replace(/[/]$/,"") ;
 }
 
+export function keywordtolucenequery(key:string, lang?:string) {
+   if(key.indexOf("\"") === -1) 
+      key = "\""+key+"\""
+   // https://github.com/buda-base/public-digital-library/issues/155
+   if (lang && lang.startsWith("bo") && !key.match(/~\d$/))
+      key = key+"~1"
+   return key
+}
+
+
+export function lucenequerytokeyword(lq) {
+   lq = lq.replace(/~\d$/,"")
+   lq = lq.replace(/\"/g, "")
+   return lq
+}
+
 const facetLabel = {
    "root": "Lsidebar.widgets.root",
    "tree": "Lsidebar.widgets.tree",
@@ -750,7 +766,7 @@ class App extends Component<Props,State> {
       else if(get.lg) lg = get.lg
 
       let kw = "", newKW
-      if(get.q) kw = get.q.replace(/"/g,"")
+      if(get.q) kw = lucenequerytokeyword(get.q)
       if(kw) newKW = kw
 
       let types = [ "Instance" ] //[ ...searchTypes.slice(1) ]
@@ -885,9 +901,11 @@ class App extends Component<Props,State> {
       let _key = ""+key
       if(!key || key == "" || !key.match) return ;
       if(!key.match(/:/)) {
-        if(key.indexOf("\"") === -1) key = "\""+key+"\""
+        key = keywordtolucenequery(key, lang)
         key = encodeURIComponent(key) // prevent from losing '+' when adding it to url
       }
+      console.log("new key",key)
+
 
       let searchDT = this.state.searchTypes
       if(!label) label = searchDT
@@ -4427,7 +4445,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
    // TODO add providers icons
 
    render_filters(types,counts,sortByList,reverseSort,facetWidgets) {
-      return ( <div className={"SidePane left"}>
+      return ( <div className={"SidePane left "+(!this.state.collapse.settings?"closed":"")}>
                   {/* <IconButton className="close" onClick={e => this.setState({...this.state,leftPane:false,closeLeftPane:true})}><Close/></IconButton> */}
                { //this.props.datatypes && (results ? results.numResults > 0:true) &&
                   <div style={{ /*minWidth:"335px",*/ position:"relative"}}>                     
@@ -4700,7 +4718,9 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             // no need for language on instances page
             if(j === "language" && this.props.isInstance ) return
 
-            let jpre = this.props.config.facets[this.state.filters.datatype[0]][j]
+            let jpre = j;
+            if (this.props.config.facets[this.state.filters.datatype[0]])
+               jpre = this.props.config.facets[this.state.filters.datatype[0]][j]
             if(!jpre) jpre = j
             let jlabel ;
             if(facetLabel[j]) jlabel = I18n.t(facetLabel[j]);   
@@ -4899,7 +4919,11 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             else if(["ewts","iast","deva","pinyin"].indexOf(d) !== -1) for(let p of possible) { if(p.match(new RegExp(d+"$"))) { presets.push(p); } }
             
             return [...acc, ...presets]
+<<<<<<< HEAD
          }, [] ).concat(!value || value.match(/[a-zA-Z]/)?["en"]:[]).map(p => '"'+value+'"@'+(p == "sa-x-iast"?"sa-x-ndia":p)):[])   } ) 
+=======
+         }, [] ).concat(value.match(/[a-zA-Z]/)?["en"]:[]).map(p => value+'@'+(p == "sa-x-iast"?"sa-x-ndia":p)) } ) 
+>>>>>>> master
          
          /*
          if(changeKWtimer) clearTimeout(changeKWtimer)
@@ -4983,7 +5007,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      onBlur={(ev) => { console.log("BLUR"); setTimeout(() => this.setState({...this.state,dataSource:[]}),100); $("#search-bar input[type=text][placeholder]").attr("placeholder", I18n.t("home.search"));  } }
                      onChange={(value:string) => changeKW(value)}
                      onRequestSearch={this.requestSearch.bind(this)}
-                     value={this.props.hostFailure?"Endpoint error: "+this.props.hostFailure+" ("+this.getEndpoint()+")":this.state.keyword !== undefined && this.state.keyword!==this.state.newKW?this.state.keyword:this.props.keyword&&this.state.newKW?this.state.newKW.replace(/\"/g,""):""}
+                     value={this.props.hostFailure?"Endpoint error: "+this.props.hostFailure+" ("+this.getEndpoint()+")":this.state.keyword !== undefined && this.state.keyword!==this.state.newKW?this.state.keyword:this.props.keyword&&this.state.newKW?lucenequerytokeyword(this.state.newKW):""}
                      style={{
                         marginTop: '0px',
                         width: "700px",
@@ -5133,6 +5157,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
            </div>
            {  (message.length > 0 || message.length == 0 && !this.props.loading ) && <div id="res-header">
                <div>
+                  <div id="settings" onClick={() => this.setState({collapse:{...this.state.collapse, settings:!this.state.collapse.settings}})}><img src="/icons/settings.svg"/></div>
                { // TODO change to popover style open/close
                      sortByList && this.popwidget(I18n.t("Lsidebar.sortBy.title"),"sortBy",
                      (sortByList /*:["Year of Publication","Instance Title"]*/).map((i,n) => <div key={i} style={{width:"200px",textAlign:"left"}} className="searchWidget">
@@ -5212,7 +5237,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   <List key={2} id="results">
                      { this.props.isInstance && this.state.backToWorks && <a className="uri-link"  onClick={(event) => {
                            this.resetFilters(event)
-                        }}><img src="/icons/back.png"/><span>Back to Works</span></a> }
+                        }}><img src="/icons/back.png"/><span>{I18n.t("search.backToW")}</span></a> }
                      { message }
                      <div id="pagine">
                         <NavigateBefore

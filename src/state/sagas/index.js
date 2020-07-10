@@ -203,7 +203,6 @@ async function initiateApp(params,iri,myprops) {
 
 
       let bdrIRI = fullUri(iri) 
-
       
       let assoRes = {"data":Object.keys(res).reduce((acc,e)=>{
          //return ({...acc,[e]:Object.keys(res[e]).map(f => ( { type:f, ...res[e][f] } ) ) } )
@@ -247,7 +246,7 @@ async function initiateApp(params,iri,myprops) {
             let key = params.keyword.split("@"), lang
             if(key.length > 1) {
                lang = key[1]
-               key = key[0].replace(/\"/g,"")            
+               key = key[0]
                store.dispatch(uiActions.gotHighlight(iri,key,lang));
             }
          }
@@ -2013,7 +2012,7 @@ async function outlineSearch(iri,kw,lg) {
 
    store.dispatch(uiActions.loading(iri, "outline"));
    
-   let res = await api.outlineSearch(iri,kw,lg) 
+   let res = await api.outlineSearch(iri,kw,lg)
 
    store.dispatch(uiActions.loading(iri, false));
    

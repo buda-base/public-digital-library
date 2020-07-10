@@ -307,7 +307,8 @@ const enTranslation = {
       filters:{
          noresults:"No result for {{keyword}} [{{language}}] {{type}}"
       },
-      seeO:"See results in other data types"
+      seeO:"See results in other data types",
+      backToW:"Back to Works"
    },
    Rsidebar:{
       title:"Display Preferences",
@@ -354,7 +355,8 @@ const enTranslation = {
       otherN:"Load non-matching subparts",
       scanF:"Scans for",
       etextF:"Etext for",
-      openR:"Open Record"
+      openR:"Open Record",
+      loadP:"Load Previous Pages"
    },
    mirador:{
       return:"return to BUDA",
