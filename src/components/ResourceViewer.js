@@ -1,6 +1,5 @@
 //@flow
 //import {Mirador, m3core} from 'mirador'
-import diva from "diva.js" // v5.1.3
 //import diva from "diva.js" //v6.0, not working
 import Portal from 'react-leaflet-portal';
 import bbox from "@turf/bbox"
@@ -83,6 +82,8 @@ import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import 'react-tabs/style/react-tabs.css';
 
 import {svgEtextS,svgInstanceS,svgImageS} from "./icons"
+
+import {keywordtolucenequery,lucenequerytokeyword} from './App';
 
 
 delete L.Icon.Default.prototype._getIconUrl;
@@ -510,6 +511,11 @@ let extProperties = {
       bf+"identifiedBy",
       //tmp+"entityScore"
       bdo+"note",
+      bdo+"placeGB2260-2013",
+      bdo+"placeWB2000",
+      bdo+"placeWB2010",
+      bdo+"placeWBArea",
+      bdo+"placeGonpaPerEcumen",
    ],
    "Lineage": [
       bdo+"workLocation",
@@ -1183,8 +1189,9 @@ class ResourceViewer extends Component<Props,State>
       if(get.osearch && !this.state.outlineKW) { 
          if(!s) s = { ...this.state } 
          s.outlineKW = get.osearch
-         if(s.outlineKW.includes("@")) s.outlineKW = s.outlineKW.replace(/\"([^"]+)\"@.*/,"$1")
-
+         let keys = get.osearch.split("@")
+         lang = keys[1]
+         s.outlineKW = lucenequerytokeyword(keys[0])
          
          if(!timerScr) timerScr = setInterval( () => {
             const el = document.querySelector("#outline")
@@ -2260,8 +2267,8 @@ class ResourceViewer extends Component<Props,State>
 
                ret = [<Link className={"urilink "+ prefix} to={vlink}>{thumb}</Link>,
                      <div class="images-thumb-links">
-                        <Link className={"urilink "+ prefix} to={vlink}>{"Open in Viewer"}</Link>
-                        <Link className={"urilink "+ prefix} to={"/"+show+"/"+prefix+":"+pretty}>{"Open Record"}</Link>
+                        <Link className={"urilink "+ prefix} to={vlink}>{I18n.t("index.openViewer")}</Link>
+                        <Link className={"urilink "+ prefix} to={"/"+show+"/"+prefix+":"+pretty}>{I18n.t("resource.openR")}</Link>
                      </div>]
             }
          } 
@@ -3357,111 +3364,6 @@ class ResourceViewer extends Component<Props,State>
    }
   */
 
-   showDiva()
-   {
-      if(!this.state.openDiva) // || !$("#diva-wrapper").hasClass("hidden"))
-      {
-         if(this.state.UVcanLoad) { window.location.hash = "diva"; window.location.reload(); }
-
-         let timerDiva = setInterval( () => {
-
-            if($("#diva-wrapper").length > 0) { // && window.Diva) && window.Diva.DownloadPlugin && window.Diva.ManipulationPlugin && window.Diva.MetadataPlugin) {
-               clearInterval(timerDiva);
-
-               $("#fond").addClass("hidden");
-
-               let manif = this.props.collecManif
-               if(!manif && this.props.manifests) manif = this.props.manifests[0]["@id"]
-               if(!manif) manif = this.props.imageAsset
-
-               /*
-               // v6.0 working from diva.js github demo site
-               let dv = new window.Diva('diva-wrapper',{
-                  "objectData": manif,
-                  //"enableZoomControls":"slider", // not compatible with v6
-                  "enableAutoTitle":false, // title not working by default (show first letter only, maybe because label is a list here ?)
-                  "tileWidth":4000,
-                  "tileHeight":4000,
-                  "plugins": [window.Diva.DownloadPlugin, window.Diva.ManipulationPlugin, window.Diva.MetadataPlugin],
-               });
-               dv.disableScrollable()
-               dv.enableScrollable()
-               dv.disableDragScrollable()
-               dv.enableDragScrollable()
-               *
-
-/*
-               // v6.0 not working as a import
-               let dv = new Diva('diva-wrapper',{
-                  "objectData": manif,
-                  "enableZoomControls":"slider",
-                  "tileWidth":4000,
-                  "tileHeight":4000,
-                  //"plugins": [Diva.DownloadPlugin, Diva.ManipulationPlugin, Diva.MetadataPlugin],
-                  //enableFullscreen:false
-               });
-*/
-               // fully working v5.1.3 (but no plugin)
-
-               let dv = diva.create('#diva-wrapper',{
-                   objectData: manif,
-                   enableZoomControls:"slider",
-                   tileWidth:4000,
-                   tileHeight:4000
-                   //plugins: [DownloadPlugin, ManipulationPlugin, MetadataPlugin],
-                   //enableFullscreen:false
-               });
-
-
-               let timerDiva2 = setInterval(() => {
-                  if($(".diva-fullscreen-icon").length > 0) {
-                     clearInterval(timerDiva2)
-
-                      // diva 5.1
-                       $(".diva-link-icon").remove()
-                       $(".diva-fullscreen-icon").remove();
-                       $(".diva-view-menu").append(`<button type="button" id="diva-1-fullscreen-icon" class="diva-fullscreen-icon diva-button" title="Close viewer"
-                          onClick="javascript:eval('window.closeViewer()')"></button>`)
-
-
-                      /*
-                      //diva 6
-                      let svg = $("#diva-1-fullscreen-icon svg").remove();
-                      $("#diva-1-fullscreen-icon").remove();
-                      $(".diva-view-menu").append(`<button type="button" id="diva-1-fullscreen-icon" class="diva-fullscreen-icon diva-button" title="Close viewer"
-                         onClick="javascript:document.getElementById(\'diva-wrapper\').classList.add(\'hidden\')"></button>`)
-                      $("#diva-1-fullscreen-icon").append(svg)
-                      */
-
-                     if(this.props.manifests) {
-                        $(".diva-tools").append("<span>Browse collection</span><select id='volume'>"+this.props.manifests.map(
-                           (v,i) => ("<option value='"+v["@id"]+"' "+(i===0?"selected":"")+">"+v["label"]+"</option>")
-                        ) +"</select>")
-                        $("#volume").change(
-                           function(){
-                              dv.changeObject($(this).val())
-                              dv.gotoPageByIndex(0);
-                           }
-                        )
-
-                     }
-                  }
-               }, 100)
-
-            }
-            else {
-               this.forceUpdate();
-            }
-         }, 100)
-      }
-      else {
-         //$('#diva-wrapper').removeClass('hidden')
-      }
-      let state = { ...this.state, openDiva:true, openUV:false, openMirador:false }
-      this.setState(state);
-
-   }
-
 
    showMirador(num?:number,useManifest?:{})
    {
@@ -3654,7 +3556,7 @@ class ResourceViewer extends Component<Props,State>
       let title,titlElem,otherLabels = [], T_ = _T ;
       _T = [<span class={"T "+_T.toLowerCase()}>
          <span class="RID">{shortUri(other?other:this.props.IRI)}</span>
-         {I18n.t("types."+_T.toLowerCase()+(_T == "Etext"?"_title":""))}
+         {I18n.t("types."+_T.toLowerCase())}
       </span>]
 
       if(kZprop.indexOf(skos+"prefLabel") !== -1)       {
@@ -4056,7 +3958,7 @@ class ResourceViewer extends Component<Props,State>
          */
 
          let show = this.state.collapse[k]
-         if(hasMaxDisplay === -1 && k !== bf+"identifiedBy") show = true ; 
+         //if(hasMaxDisplay === -1 && k !== bf+"identifiedBy") show = true ; 
 
          return (
             <div data-prop={shortUri(k)} class={"has-collapse custom max-"+(maxDisplay)+" "+(n%2===0?"even":"odd") }>
@@ -4152,11 +4054,17 @@ perma_menu(pdfLink,monoVol,fairUse,other)
    }
    if(!same.length && sameLegalD) { 
       let prov = sameLegalD[adm+"provider"]
+      console.log("prov:",JSON.stringify(prov))
       if(prov && prov.length) prov = prov[0].value
+      console.log("prov:",JSON.stringify(prov))
       if(prov && this.props.dictionary) prov = this.props.dictionary[prov]
+      console.log("prov:",JSON.stringify(prov))
       if(prov) prov = prov[skos+"prefLabel"]
+      console.log("prov:",JSON.stringify(prov))
       if(prov && prov.length) prov = prov[0].value
+      console.log("prov:",JSON.stringify(prov))
       if(prov) prov = prov.replace(/(^\[ *)|( *\]$)/g,"") // CUDL
+      console.log("prov:",JSON.stringify(prov))
       //else prov = ""
 
       let orig = this.getResourceElem(adm+"originalRecord")
@@ -4185,7 +4093,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
       }
    }
 
-   //console.log("same",same)
+   console.log("same",same)
 
    // TODO 
    // + fix bdr:G3176 (sameAs Shakya Research Center)
@@ -4258,7 +4166,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
                { isEtextVol && 
                      <a target="_blank" title={I18n.t("resource.version",{format:"TXT"})} rel="alternate" type="text"  download href={this.props.IRI?this.props.IRI.replace(/bdr:/,bdr)+".txt":""}>
-                        <MenuItem>{I18n.t("resource.exportDataAs",{data: I18n.t("types.etext_title"), format:"TXT"})}</MenuItem>
+                        <MenuItem>{I18n.t("resource.exportDataAs",{data: I18n.t("types.etext"), format:"TXT"})}</MenuItem>
                      </a> }
 
                { pdfLink && 
@@ -4512,7 +4420,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          }
          //loader={<Loader loaded={false} />}
          >
-         { prev!==-1 && <h3 style={{marginBottom:"20px",width:"100%",textAlign:"right"}}><a onClick={(e) => this.props.onGetPages(this.props.IRI,prev)} class="download" style={{fontWeight:700,border:"none",textAlign:"right"}}>Load Previous Pages &lt;</a></h3>}
+         { prev!==-1 && <h3 style={{marginBottom:"20px",width:"100%",textAlign:"right"}}><a onClick={(e) => this.props.onGetPages(this.props.IRI,prev)} class="download" style={{fontWeight:700,border:"none",textAlign:"right"}}>{I18n.t("resource.loadP")} &lt;</a></h3>}
          {/* {this.hasSub(k)?this.subProps(k):tags.map((e)=> [e," "] )} */}
          { elem.map( e => { 
 
@@ -5360,7 +5268,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                if(!loca.search) loca.search = "?"
                else if(loca.search !== "?") loca.search += "&"
 
-               loca.search += "osearch=\""+this.state.outlineKW+"\"@"+lg
+               loca.search += "osearch="+keywordtolucenequery(this.state.outlineKW, lg)+"@"+lg
 
                console.log("loca!",loca)
 
@@ -5631,7 +5539,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                   <div>
                      <Link to={"/show/"+s}><div class="header"></div></Link>
                      <div><span {...label.lang?{lang:label.lang}:{}}>{ label.value }</span>{ label.lang && this.tooltip(label.lang) }</div>
-                     <Link to={"/show/"+s}>Read more</Link>
+                     <Link to={"/show/"+s}>{I18n.t("misc.readM")}</Link>
                   </div>
                )
             }
@@ -5681,9 +5589,9 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                backTo = decodeURIComponent(backTo)
                searchUrl = backTo
                if(searchUrl.match(/q=/))               
-                  searchTerm = searchUrl.replace(/.*q=([^&]+).*/,"$1")
+                  searchTerm = lucenequerytokeyword(searchUrl.replace(/.*q=([^&]+).*/,"$1")) 
                else if(searchUrl.match(/r=/))               
-                  searchTerm = searchUrl.replace(/.*r=([^&]+).*/,"$1")
+                  searchTerm = lucenequerytokeyword(searchUrl.replace(/.*r=([^&]+).*/,"$1")) 
 
             }
             else { 
@@ -5757,7 +5665,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                      ev.stopPropagation();
                      return false
                   }}
-                  ><img src="/icons/FILARIANE.svg" /><span>{I18n.t("topbar.results")} {searchTerm}</span></Link>
+                  ><img src="/icons/FILARIANE.svg" /><span>{I18n.t("topbar.results")} <span>{searchTerm}</span></span></Link>
                   {this.state.ready && <Loader loaded={!this.props.loading} options={{position:"fixed",left:"50%",top:"50%"}} /> }
                </div> }
                <div class="index">                  

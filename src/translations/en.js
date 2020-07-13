@@ -18,15 +18,15 @@ const enTranslation = {
       message:"WELCOME TO THE BETA VERSION OF BDRC's NEW LIBRARY!",
       submessage:"with new features, resources, and tools for faster and more in-depth research",
       search:"Search",
-      choose:"Choose language"
+      choose:"Choose language",
+      start:"Start typing then select search language"
    },
    types:{
       any:"Any",
       corporation:"Corporation",
       corporation_plural:"Corporations",
-      etext:"in Etext content",
-      etext_plural:"in Etext content",
-      etext_title:"Etext",
+      etext:"Etext",
+      etext_plural:"Etexts",
       item:"Item",
       item_plural:"Items",
       lineage:"Lineage",
@@ -46,6 +46,7 @@ const enTranslation = {
       images:"Scans",
       volume:"Volume",
       volume_num:"Volume {{num}}",
+      searchIn:"in {{type}}"
    },
    topbar:{
       about:"about us",
@@ -148,6 +149,13 @@ const enTranslation = {
       "bdo:personStudentOf_plural":"Teachers",
       "tmp:propHasScans":"Scans",
       "tmp:propHasEtext":"Etext",
+      "bf:identifiedBy":"Identified By",
+      "rdfs:subClassOf":"Subclass Of",
+      "tmp:isCreator":"Is Creator",
+      "tmp:hasImage":"Has Scans",
+      "tmp:hasEtext":"Has Etext",
+      "unspecified":"Unspecified",
+      "true":"True"
    },
    result:{
       open:"Open",
@@ -297,8 +305,10 @@ const enTranslation = {
       result:"{{count}} Result",
       result_plural:"{{count}} Results",
       filters:{
-         noresults:"No results matching your filters."
-      }
+         noresults:"No result for {{keyword}} [{{language}}] {{type}}"
+      },
+      seeO:"See results in other data types",
+      backToW:"Back to Works"
    },
    Rsidebar:{
       title:"Display Preferences",
@@ -344,7 +354,9 @@ const enTranslation = {
       reset:"Reset search",
       otherN:"Load non-matching subparts",
       scanF:"Scans for",
-      etextF:"Etext for"
+      etextF:"Etext for",
+      openR:"Open Record",
+      loadP:"Load Previous Pages"
    },
    mirador:{
       return:"return to BUDA",
