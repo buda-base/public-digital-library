@@ -4059,7 +4059,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
       if(prov && prov.length) prov = prov[0].value
       if(prov && this.props.dictionary) prov = this.props.dictionary[prov]
       if(prov) prov = prov[skos+"prefLabel"]
-      if(prov && prov.length) prov = prov.filter(e => e.lang === "en")
+      if(prov && prov.length) prov = prov.filter(e => e.lang === "en" || !e.lang)
       if(prov && prov.length) prov = prov[0].value
       if(prov) prov = prov.replace(/(^\[ *)|( *\]$)/g,"") // CUDL
       if(prov) prov = prov.replace(/Internet Archives/g,"IA") 
@@ -4795,7 +4795,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          if(prov && this.props.dictionary) prov = this.props.dictionary[prov]
          if(prov && prov[skos+"prefLabel"]) prov = prov[skos+"prefLabel"]
          else if(prov && prov[rdfs+"label"]) prov = prov[rdfs+"label"]
-         if(prov && prov.length) prov = prov.filter(e => e.lang === "en")
+         if(prov && prov.length) prov = prov.filter(e => e.lang === "en" || !e.lang)
          if(prov && prov.length) prov = prov[0].value
          if(prov) prov = prov.replace(/(^\[ *)|( *\]$)/g,"") // CUDL
          if(prov) prov = prov.replace(/Internet Archives/g,"IA") 
