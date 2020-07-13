@@ -1948,7 +1948,7 @@ class ResourceViewer extends Component<Props,State>
          if(provLab) provLab = provLab[skos+"prefLabel"]
          if(provLab && provLab.length) provLab = provLab[0].value 
          
-         //console.log("isExtW",isExtW,this.props.dictionary,provLab)
+         console.log("isExtW",isExtW,this.props.dictionary,provLab)
 
          if(provLab === "GRETIL") sameAsPrefix += "gretil provider hasIcon "
          else if(provLab === "EAP") sameAsPrefix += "eap provider hasIcon "
@@ -2071,7 +2071,9 @@ class ResourceViewer extends Component<Props,State>
 
             let srcProv = sameAsPrefix.replace(/^.*?([^ ]+) provider .*$/,"$1").toLowerCase()
             let srcSame = sameAsPrefix.replace(/^.*?([^ ]+) sameAs .*$/,"$1").toLowerCase()
-            //console.log("src",src,srcProv,srcSame)
+            
+            console.log("src:",src,srcProv,srcSame)
+            
             //if(src.match(/bdr/)) src = "bdr"
 
             let bdrcData 
