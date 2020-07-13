@@ -1587,6 +1587,17 @@ function rewriteAuxMain(result,keyword,datatype,sortBy,language)
          let t = datatype[0].toLowerCase()+"s"         
          canPopuSort = false        
          let dataWithAsset = keys.reduce( (acc,k) => { 
+
+            if(auth && !auth.isAuthenticated()) {
+               let status = result[e][k].filter(k => k.type === adm+"status" || k.type === tmp+"status")
+               if(status && status.length) status = status[0].value
+               else status = null
+
+               if(status && !status.match(/Released/)) 
+                  return acc ;
+                  
+            }
+
             let res = result[e][k].map(e => (!asset.includes(e.type)||e.value === "false"?e:{type:_tmp+"assetAvailability",value:e.type}))
             canPopuSort = canPopuSort || (res.filter(e => e.type === tmp+"entityScore").length > 0)            
             let chunks = res.filter(e => e.type === bdo+"eTextHasChunk")

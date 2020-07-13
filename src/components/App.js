@@ -3264,7 +3264,21 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
       }
       */
 
+
       if(types.length) types = types.sort(function(a,b) { return Number(counts["datatype"][b]) - Number(counts["datatype"][a]) })
+
+      let showT =  [ this.state.filters.datatype[0] ] 
+
+      for(let t of [ "Person", "Place", "Work", "Instance" ]) 
+         if(!types.includes(t)) 
+            showT.push(t) ;
+      
+      for(let t of showT)  {
+         if(!types.includes(t)) {
+            types.push(t)
+            counts["datatype"][t] = 0
+         }
+      }
 
       /*
       if(types.length == 2 && !this.state.autocheck)
@@ -3490,7 +3504,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                let _t = t.toLowerCase()
                if(_t === "work" && this.props.isInstance) _t = "instance"
                if(displayTypes.length > 1 || displayTypes.indexOf("Any") !== -1) message.push(<MenuItem  onClick={(e)=>this.handleCheck(e,t,true,{},true)}><h4>{I18n.t("types."+t.toLowerCase()+"_plural")+(false && displayTypes.length>1&&counts["datatype"][t]?" ("+counts["datatype"][t]+")":"")}</h4></MenuItem>);
-               else message.push(<MenuItem><h4>{I18n.t("types."+_t+(_t === "etext"?"":"_plural"))+(false && displayTypes.length>=1&&counts["datatype"][t]?" ("+counts["datatype"][t]+")":"")}</h4></MenuItem>);
+               else message.push(<MenuItem><h4>{I18n.t("types."+_t+("_plural"))+(false && displayTypes.length>=1&&counts["datatype"][t]?" ("+counts["datatype"][t]+")":"")}</h4></MenuItem>);
                // TODO better handling of plural in translations
             }
             absi ++ ;
@@ -3881,7 +3895,31 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                
                }
             }
-            if(cpt == 0 ) { message.push(<Typography style={{margin:"20px 40px"}}>{I18n.t("search.filters.noresults")}</Typography>);}
+            if(cpt == 0 ) { 
+               let lang = languages[this.props.language]
+               if(!lang) lang = this.props.language
+               let other = this.state.results[this.state.id]
+               if(other) other = other.counts
+               if(other) other = other.datatype
+               //console.log("other:",other)
+               if(other) other = Object.keys(other).filter(k => k !== "Any" && other[k] !== 0)
+               console.log("other:",other)
+               
+               //if(other && other.length) 
+               message.push(<Typography className="no-result">
+                  { I18n.t("search.filters.noresults",{ 
+                     keyword:this.props.keyword, 
+                     language:"$t("+lang+")", 
+                     type:I18n.t("types.searchIn", { type:I18n.t("types."+this.state.filters.datatype[0].toLowerCase()+"_plural").toLowerCase() }),  
+                     interpolation: {escapeValue: false} }) }
+                  {  this.state.filters.facets && " with the filters you set"}
+                  {  this.state.filters.facets && <span><br/>{this.renderResetF()}</span>}
+               </Typography>);
+
+               if(!this.state.filters.facets && other && other.length)   
+                  message.push(<Typography className="no-result"><span>{I18n.t("search.seeO")}{I18n.t("misc.colon")} {other.map(o => <a onClick={(event) => this.handleCheck(event,o,true)} class="uri-link">{I18n.t("types."+o.toLowerCase()+"_plural")}</a>)}</span></Typography>)
+
+            }
 
          }
          if(pagin.index == pagin.pages.length - 1) {
@@ -4461,10 +4499,11 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                            // || (this.props.language == "")
 
                               let count = counts["datatype"][i]
+                              if(count == 0) disabled = true
 
                               return (
-                                 <div key={i} style={{textAlign:"left"}}  className={"searchWidget datatype "+i.toLowerCase()}>
-                                    <span class="img" style={{backgroundImage:"url('/icons/sidebar/"+i.toLowerCase()+".svg')"}} onClick={(event) => this.handleCheck(event,i,this.state.filters.datatype.indexOf(i) === -1)}></span>
+                                 <div key={i} style={{textAlign:"left"}}  className={"searchWidget datatype "+i.toLowerCase()+ (disabled?" disabled":"")}>
+                                    <span class={"img "+(disabled?"disabled":"") } style={{backgroundImage:"url('/icons/sidebar/"+i.toLowerCase()+".svg')"}} onClick={(event) => this.handleCheck(event,i,this.state.filters.datatype.indexOf(i) === -1)}></span>
                                     <FormControlLabel
                                        control={
                                           <Checkbox
@@ -4479,9 +4518,9 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                                           />
 
                                        }
-                                       {...counts["datatype"][i]
-                                       ?{label:<span lang={this.props.locale}>{I18n.t("types."+i.toLowerCase()) + " "+I18n.t("punc.lpar")}<span class="facet-count" lang={this.props.locale}>{typeof count === "string" && "~"}{I18n.t("punc.num",{num:Number(count)})}</span>{I18n.t("punc.rpar")}</span>}
-                                       :{label:<span lang={this.props.locale}>{I18n.t("types."+i.toLowerCase())}</span>}}
+                                       {...counts["datatype"][i] !== undefined
+                                       ?{label:<span lang={this.props.locale}>{I18n.t("types."+i.toLowerCase()+"_plural")+" "+I18n.t("punc.lpar")}<span class="facet-count" lang={this.props.locale}>{typeof count === "string" && "~"}{I18n.t("punc.num",{num:Number(count)})}</span>{I18n.t("punc.rpar")}</span>}
+                                       :{label:<span lang={this.props.locale}>{I18n.t("types."+i.toLowerCase()+"_plural")}</span>}}
                                     />
                                  </div>
                               )
@@ -4496,6 +4535,10 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                }
                </div>
             )
+   }
+
+   renderResetF() {
+      return <a title={I18n.t("Lsidebar.activeF.reset")} id="clear-filters" onClick={this.resetFilters.bind(this)}><span>{I18n.t("Lsidebar.tags.reset")}</span><RefreshIcon /></a>
    }
 
    render() {
@@ -4853,19 +4896,22 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          }
          */
 
+         console.log("changeKW",value,keyEv)
+
          let language = this.state.language
-         let detec = narrowWithString(value, this.state.langDetect)
+         let detec ;
+         if(value) detec = narrowWithString(value, this.state.langDetect)
          let possible = [ ...this.state.langPreset, ...langSelect ]
-         if(detec.length < 3) { 
+         if(detec && detec.length < 3) { 
             if(detec[0] === "tibt") for(let p of possible) { if(p === "bo" || p.match(/-[Tt]ibt$/)) { language = p ; break ; } }
             else if(detec[0] === "hani") for(let p of possible) { if(p.match(/^zh((-[Hh])|$)/)) { language = p ; break ; } }
             else if(["ewts","iast","deva","pinyin"].indexOf(detec[0]) !== -1) for(let p of possible) { if(p.match(new RegExp(detec[0]+"$"))) { language = p ; break ; } }
          }
-         
+
          possible = [ ...this.state.langPreset, ...langSelect.filter(l => !this.state.langPreset || !this.state.langPreset.includes(l))]
          console.log("detec",possible,detec,this.state.langPreset,this.state.langDetect)
          
-         this.setState({...this.state,keyword:value, language, dataSource: detec.reduce( (acc,d) => {
+         this.setState({...this.state,keyword:value, language, dataSource: (detec?detec.reduce( (acc,d) => {
             
             let presets = []
             if(d === "tibt") for(let p of possible) { if(p === "bo" || p.match(/-[Tt]ibt$/)) { presets.push(p); } }
@@ -4873,7 +4919,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             else if(["ewts","iast","deva","pinyin"].indexOf(d) !== -1) for(let p of possible) { if(p.match(new RegExp(d+"$"))) { presets.push(p); } }
             
             return [...acc, ...presets]
-         }, [] ).concat(value.match(/[a-zA-Z]/)?["en"]:[]).map(p => value+'@'+(p == "sa-x-iast"?"sa-x-ndia":p)) } ) 
+         }, [] ).concat(!value || value.match(/[a-zA-Z]/)?["en"]:[]).map(p => '"'+value+'"@'+(p == "sa-x-iast"?"sa-x-ndia":p)):[])   } ) 
          
          /*
          if(changeKWtimer) clearTimeout(changeKWtimer)
@@ -4900,6 +4946,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                this.renderFilterTag(false, f, v, (event, checked) => this.handleCheckFacet(event, f, [ v ], false) ) 
             ) }
          )
+
+
 
       return (
 <div>
@@ -4951,6 +4999,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      placeholder={I18n.t("home.search")}                        
                      closeIcon={<Close className="searchClose" style={ {color:"rgba(0,0,0,1.0)",opacity:1} } onClick={() => { this.props.history.push({pathname:"/",search:""}); this.props.onResetSearch();} }/>}
                      disabled={this.props.hostFailure}
+                     onClick={(ev) => { changeKW(this.state.keyword?this.state.keyword.replace(/\"/g,""):""); $("#search-bar input[type=text][placeholder]").attr("placeholder",I18n.t("home.start"));  } }
+                     onBlur={(ev) => { console.log("BLUR"); setTimeout(() => this.setState({...this.state,dataSource:[]}),100); $("#search-bar input[type=text][placeholder]").attr("placeholder", I18n.t("home.search"));  } }
                      onChange={(value:string) => changeKW(value)}
                      onRequestSearch={this.requestSearch.bind(this)}
                      value={this.props.hostFailure?"Endpoint error: "+this.props.hostFailure+" ("+this.getEndpoint()+")":this.state.keyword !== undefined && this.state.keyword!==this.state.newKW?this.state.keyword:this.props.keyword&&this.state.newKW?lucenequerytokeyword(this.state.newKW):""}
@@ -4962,7 +5012,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      }}
                   />
                   {
-                     (this.state.keyword && this.state.keyword.length > 0 && this.state.dataSource.length > 0) &&                     
+                     (/* this.state.keyword && this.state.keyword.length > 0 && */ this.state.dataSource.length > 0) &&                     
                         <Paper
                            //onKeyDown={(e) => changeKW(this.state.keyword,e)} 
                            // this.setState({...this.state,dataSource:[]})}
@@ -4977,10 +5027,12 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                                  console.log("suggest?",v,tab)
                                  return (
                                     <MenuItem key={v} style={{lineHeight:"1em"}} onClick={(e)=>{ 
-                                       this.setState({...this.state,dataSource:[]});
-                                       this.requestSearch(tab[0],null,tab[1])
-                                    }}>{ tab[0] } <SearchIcon style={{padding:"0 10px"}}/><span class="lang">{(I18n.t(""+(searchLangSelec[tab[1]]?searchLangSelec[tab[1]]:languages[tab[1]]))) }</span></MenuItem> ) 
-                                 } ) }
+                                          console.log("CLICK");
+                                          this.setState({...this.state,dataSource:[]});
+                                          if(this.state.keyword) this.requestSearch(tab[0],null,tab[1])
+                                       }} >{ tab.length == 1 ?"":tab[0].replace(/["]/g,"")} <SearchIcon style={{padding:"0 10px"}}/><span class="lang">{tab.length == 1 ? I18n.t("home."+tab[0]):(I18n.t(""+(searchLangSelec[tab[1]]?searchLangSelec[tab[1]]:languages[tab[1]]))) }</span></MenuItem> ) 
+                                    })
+                              }
                         </Paper>
                   }
                </div>
@@ -4995,12 +5047,12 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   margin="normal"
                /> */}
 
-              <FormControl className="formControl" style={{textAlign:"right"}}>
+              <FormControl className={"formControl "+this.state.searchTypes[0].toLowerCase()} style={{textAlign:"right"}}>
                 {/* <InputLabel htmlFor="datatype">In</InputLabel> */}
 
                 <Select
                   value={this.state.searchTypes[0]}
-                  //onChange={this.handleLanguage}
+                  //onChange={this.handleLanguage} 
                   onChange={this.handleSearchTypes}
                   open={this.state.langOpen}
                   onOpen={(e) => { console.log("open"); this.setState({...this.state,langOpen:true}) } }
@@ -5010,7 +5062,13 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                     id: 'datatype',
                   }}
                 >
-                  {searchTypes.map(d => <MenuItem key={d} value={d}><span lang={this.props.locale}>{I18n.t("types."+d.toLowerCase())}</span></MenuItem>)}
+                  {searchTypes.map(d => (
+                     <MenuItem key={d} value={d}>
+                        <span lang={this.props.locale} class="menu-dataT">
+                           <span class="icone" style={{backgroundImage:"url('/icons/home/"+d.toLowerCase()+".svg')"}}></span>
+                           {I18n.t("types.searchIn",{type:I18n.t("types."+d.toLowerCase()+"_plural").toLowerCase()}) /* cannot use format in nested translation ( https://github.com/i18next/i18next/issues/1377) */ }
+                        </span>
+                     </MenuItem>))}
                </Select>
               </FormControl> 
 
@@ -5068,7 +5126,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                                  this.resetFilters(event)
                               } )  } 
                               { facetTags }
-                              { (this.state.filters.facets || this.state.backToWorks )&& <a title={I18n.t("Lsidebar.activeF.reset")} id="clear-filters" onClick={this.resetFilters.bind(this)}><span>{I18n.t("Lsidebar.tags.reset")}</span><RefreshIcon /></a> }
+                              { (this.state.filters.facets || this.state.backToWorks )&& this.renderResetF() }
                               </div>
                            </div>
                         ]
