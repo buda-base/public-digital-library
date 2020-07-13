@@ -309,7 +309,7 @@ const boTranslation = {
       filters:{
          noresults:"འདེམས་སྒྲུག་བྱས་པའི་བཙལ་འབྲས་མི་འདུག"
       },
-      backToW:"Back to Works"
+      backToW:"བརྩམས་ཆོས་སྟེང་ཕྱིར་ལོག"
    },
    Rsidebar:{
       title:"རྣམ་པ་སྒྲིག་ས།",
@@ -355,7 +355,7 @@ const boTranslation = {
       reset:"བཙལ་བྱ་སུབ།",
       otherN:"Load non-matching subparts",
       openR:"དཔེ་ཐོ།",
-      loadP:"Load Previous Pages"
+      loadP:"ཤོག་གྲངས་སྔོན་མ་ཀློག"
    },
    mirador:{
       return:"བུདྡྷ་ལ་ཕྱིར་ལོག",
@@ -374,7 +374,7 @@ const boTranslation = {
    },
    access:{
       limited20:"འགོ་མཇུག་གཉིས་ནས་ཤོག་ངོས་ཉི་ཤུ་ཉི་ཤུ་ལས་ལྷག་ལྟ་ཀློག་བྱེད་མི་ཐུབ།",
-      credentials:"ཁྱེད་ལ་བཤེར་པར་ཡོངས་རྫོགས་བལྟ་ཀློག་གི་ཆོག་མཆ་ན་ཡོད་ན་"
+      credentials:"ཁྱེད་ལ་བཤེར་པར་ཡོངས་རྫོགས་བལྟ་ཀློག་གི་ཆོག་མཆན་ཡོད་ན་"
    },
    location:{
       beginV:"པོད་ {{num,counttobo}} ནས་",
