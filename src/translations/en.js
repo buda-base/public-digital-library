@@ -148,6 +148,13 @@ const enTranslation = {
       "bdo:personStudentOf_plural":"Teachers",
       "tmp:propHasScans":"Scans",
       "tmp:propHasEtext":"Etext",
+      "bf:identifiedBy":"Identified By",
+      "rdfs:subClassOf":"Subclass Of",
+      "tmp:isCreator":"Is Creator",
+      "tmp:hasImage":"Has Scans",
+      "tmp:hasEtext":"Has Etext",
+      "unspecified":"Unspecified",
+      "true":"True"
    },
    result:{
       open:"Open",
@@ -298,7 +305,8 @@ const enTranslation = {
       result_plural:"{{count}} Results",
       filters:{
          noresults:"No results matching your filters."
-      }
+      },
+      backToW:"Back to Works"
    },
    Rsidebar:{
       title:"Display Preferences",
@@ -344,7 +352,9 @@ const enTranslation = {
       reset:"Reset search",
       otherN:"Load non-matching subparts",
       scanF:"Scans for",
-      etextF:"Etext for"
+      etextF:"Etext for",
+      openR:"Open Record",
+      loadP:"Load Previous Pages"
    },
    mirador:{
       return:"return to BUDA",
