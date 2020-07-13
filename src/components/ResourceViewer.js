@@ -1190,7 +1190,6 @@ class ResourceViewer extends Component<Props,State>
          if(!s) s = { ...this.state } 
          s.outlineKW = get.osearch
          let keys = get.osearch.split("@")
-         lang = keys[1]
          s.outlineKW = lucenequerytokeyword(keys[0])
          
          if(!timerScr) timerScr = setInterval( () => {
