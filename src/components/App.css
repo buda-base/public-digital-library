@@ -329,6 +329,7 @@ body { overflow:auto !important;padding-right:0 !important; /*font-family:"Robot
 .nav #donate, 
 .nav #login { font-weight:700; font-size:14px;letter-spacing: 0.29px; text-transform: uppercase; text-decoration: none; }
 
+.nav #logo #by span { padding-top:7px; text-transform:none; letter-spacing: 1px; font-weight:600;}
 
 .nav a#about { color: hsl(206, 24%, 13%);}
 
