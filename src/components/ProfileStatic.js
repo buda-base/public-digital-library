@@ -61,14 +61,15 @@ type State = {
    profile?:{},
    email?:{},
    errors:{[string]:string},
-   updating?:boolean
+   updating?:boolean,
+   collapse:{}
 }
 
 export class Profile extends Component<Props,State> {  
 
   constructor(props : Props) {
     super(props);
-    this.state = { name:{type:"literal"}, gender:{}, region:{}, interest:{}, agree:{type:"literal"}, errors:{} }
+    this.state = { name:{type:"literal"}, gender:{}, region:{}, interest:{}, agree:{type:"literal"}, errors:{}, collapse:{} }
 
   }
   
@@ -242,11 +243,15 @@ export class Profile extends Component<Props,State> {
         if(this.props.profile && this.state.profile && !this.props.resetLink) store.dispatch(data.getResetLink(this.props.userID, this.props.profile, this.state.profile))
 
         return (
-          [top_left_menu(this),
+        <div>
+          <div class="resource user">
+            <div class="index"></div>
+            <div>
+          {[top_left_menu(this),
            top_right_menu(this),
            getGDPRconsent(this),
-          <div className="profile-container resource user">
-            <div className="profile-area">
+          <div className="profile-container">
+            <div className="profile-area data">
 
               <h2>
                 <div id="avatar">
@@ -375,7 +380,10 @@ export class Profile extends Component<Props,State> {
 
             </div>
           </div>,          
-          <LanguageSidePaneContainer />]
+          <LanguageSidePaneContainer />]}
+          </div>
+        </div>
+        </div>
       );
     }
   }

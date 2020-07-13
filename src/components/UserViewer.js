@@ -95,12 +95,16 @@ class UserViewer extends ResourceViewer
         else return null ;
     }
     
-    getResourceElem = (prop:string, IRI?:string) => {
-        if(!IRI) IRI = this.props.IRI
+    getResourceElem = (prop:string, IRI?:string) => { 
+        
+         IRI = this.props.IRI
+             
+         let longIRI = fullUri(IRI)
 
-        if((!this.state.resource && !this.state.resource[prop]) && 
-            ( !IRI || !this.props.resources || !this.props.resources[IRI]
-            || !this.props.resources[IRI][this.expand(IRI)] || !this.props.resources[IRI][this.expand(IRI)][prop]) ) return ;
+         if(!IRI || !this.props.resources || !this.props.resources[IRI]
+            || !this.props.resources[IRI][longIRI]
+            || !this.props.resources[IRI][longIRI][prop]) 
+               return ;
 
         let elem ;        
 
