@@ -313,8 +313,11 @@ body { overflow:auto !important;padding-right:0 !important; /*font-family:"Robot
 .nav #logo { display:flex; align-items:center;}
 
 .nav #logo a { display: inline-block; margin-right:15px; }
+.nav #logo a#BDRC span,
 .nav #logo a:last-child span,
 .nav #logo a:first-child span { font-size:24px; line-height:26px; font-weight:500;}
+
+.nav #logo a#BDRC + a img { height:40px;}
 
 .nav #logo > a:first-child img { height:65px; display: inline-block; margin-right:10px;}
 .nav #logo > a:first-child * { vertical-align: middle;}
