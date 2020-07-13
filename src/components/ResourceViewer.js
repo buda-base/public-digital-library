@@ -212,7 +212,7 @@ export const providers = {
    "dila":"DILA Authority Database",
    "eap":"British Library (EAP)",
    "eftr":"84000",
-   "ia":"Internet Archive",                 
+   "ia":"Internet Archives",                 
    "gretil":"GRETIL",
    "mbbt":"Marcus Bingenheimer's website",
    "ngmpp":"NGMPP",
@@ -4056,17 +4056,14 @@ perma_menu(pdfLink,monoVol,fairUse,other)
    }
    if(!same.length && sameLegalD) { 
       let prov = sameLegalD[adm+"provider"]
-      console.log("prov:",JSON.stringify(prov))
       if(prov && prov.length) prov = prov[0].value
-      console.log("prov:",JSON.stringify(prov))
       if(prov && this.props.dictionary) prov = this.props.dictionary[prov]
-      console.log("prov:",JSON.stringify(prov))
       if(prov) prov = prov[skos+"prefLabel"]
-      console.log("prov:",JSON.stringify(prov))
+      if(prov && prov.length) prov = prov.filter(e => e.lang === "en")
       if(prov && prov.length) prov = prov[0].value
-      console.log("prov:",JSON.stringify(prov))
       if(prov) prov = prov.replace(/(^\[ *)|( *\]$)/g,"") // CUDL
-      console.log("prov:",JSON.stringify(prov))
+      if(prov) prov = prov.replace(/Internet Archives/g,"IA") 
+
       //else prov = ""
 
       let orig = this.getResourceElem(adm+"originalRecord")
@@ -4798,15 +4795,17 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          if(prov && this.props.dictionary) prov = this.props.dictionary[prov]
          if(prov && prov[skos+"prefLabel"]) prov = prov[skos+"prefLabel"]
          else if(prov && prov[rdfs+"label"]) prov = prov[rdfs+"label"]
+         if(prov && prov.length) prov = prov.filter(e => e.lang === "en")
          if(prov && prov.length) prov = prov[0].value
          if(prov) prov = prov.replace(/(^\[ *)|( *\]$)/g,"") // CUDL
+         if(prov) prov = prov.replace(/Internet Archives/g,"IA") 
          //else prov = ""
 
          let orig = this.getResourceElem(adm+"originalRecord")
          if(orig && orig.length) orig = orig[0].value
          else orig = ""
 
-         //console.log("prov x orig",prov,orig)
+         console.log("prov x orig",prov,orig)
 
          if(prov !== "BDRC" && prov) {
 
