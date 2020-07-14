@@ -342,7 +342,7 @@ const boTranslation = {
       view:"སྟོན།",
       metadata:"དན་གྲངས་གོང་མ།",
       manifest:"IIIF manifest",
-      page:"ཤོག་གྲངས། {{num,counttobo}}",
+      page:"པར་གྲངས། {{num,counttobo}}",
       volume:"པོད། {{num,counttobo}}",
       availableScans:"ཤོག་ངོས་འདིའི་བཤེར་པར་གང་ཡོད།",
       about:"ཁོང་གི་སྐོར།",
