@@ -111,6 +111,7 @@ const i18nextConfig = {
 // TODO search
 // - use topic facet ancestors
 // - close sortBy on selection
+// - fix number of results when resource with status not released
 
 // TODO mirador
 // - use our translations

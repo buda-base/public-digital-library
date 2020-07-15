@@ -2622,7 +2622,7 @@ body {overflow-x:hidden; }
    }
 }
 .searchWidget.datatype:not(.disabled),
-.searchWidget.datatype:not(.disabled) > span {  animation: 1s toggle 3; }
+.searchWidget.datatype:not(.disabled) > span {  animation: 1s toggle 1; animation-delay:0.75s; }
 
 /*
 .searchWidget.datatype > span:not(.disabled),
