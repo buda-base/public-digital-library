@@ -1112,7 +1112,10 @@ h4:not(:hover) > .lang
 .resource.user .data .FC { width:300px; min-width:0; }
 .resource.user .data [data-shrink="true"],
 .resource.user .data [class*="MuiInputLabel-shrink"] { display:none;}
-.resource.user .data [class*="MuiInput-underline"]::before {  border:none; }
+
+.resource.user .data label + div::before,
+.resource.user .data [class*="MuiInput-underline"]::before {  border:none; } 
+
 .resource.user .data .FC > div { margin-top:0; }
 .resource.user .data .FC > label { transform: translate(0, 7px) scale(1); }
 .resource.user .data [data-props="tmp:cultural"][lang="en"] a span { display:inline-block; width:140px; }
