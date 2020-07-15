@@ -29,9 +29,11 @@ const mapStateToProps = (state,ownProps) => {
 
    let resetLink = state.data.resetLink
 
+   let locale = state.i18next.lang
+   
    if(profile && resetLink && !profile[tmp+"passwordResetLink"]) resetLink = false
 
-   let props = { userID, profile, dictionary, rightPanel, resetLink, config }
+   let props = { userID, profile, dictionary, rightPanel, resetLink, config, locale }
 
    return props
 

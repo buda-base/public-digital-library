@@ -165,8 +165,9 @@ export class Profile extends Component<Props,State> {
     
     if(!response) { 
       response = await api.submitPatch(this.props.userID, this.state.patch)                 
+      if(response) response = JSON.parse(response)
 
-      if(response === "OK") { 
+      if(response  && response.message === "OK") { 
         store.dispatch(data.getUser(this.state.profile))
         if(!s) s = { ...this.state, updating:false }
         s.patch = '' 
@@ -245,35 +246,49 @@ export class Profile extends Component<Props,State> {
         return (
         <div>
           <div class="resource user">
-            <div class="index"></div>
+            <div class="index">
+              <div class="title">
+                <h2 class="on"><span class="T user">User Profile</span></h2>
+                <div>
+                  <h3><a href="/user#main-info">Personal Information</a></h3>
+                  {/* <h3><a href="/user#resources">Display Preferences</a></h3> */}
+                </div>
+              </div>
+            </div>
             <div>
           {[top_left_menu(this),
            top_right_menu(this),
            getGDPRconsent(this),
           <div className="profile-container">
-            <div className="profile-area data">
-
-              <h2>
-                <div id="avatar">
-                    <img src={profile.picture} width="80"/>
+            <div class="title"></div>
+            <div class="data" id="head">
+              <div class="header">
+                <div class="before">
+                  <img referrerpolicy="no-referrer" src={!profile.picture||profile.picture.match(/gravatar.*cdn[.]auth0/)?"/icons/header/user.png":profile.picture}/>
                 </div>
-                {this.props.profile?this.props.profile[skos+"prefLabel" /*foaf+"mbox"*/ ][0].value:null}
-              </h2>
+              </div>
+            </div>
+              <div class="data">
+                <h2>{this.props.profile?this.props.profile[skos+"prefLabel" /*foaf+"mbox"*/ ][0].value:null}</h2>
+              </div>
+              <div id="main-info" className="profile-area data">
               { 
                 this.state.profile && this.state.profile.sub.match(/^auth0[|]/) && //this.props.profile[tmp+"passwordResetLink"] && 
-                  <div>
-                      <TextField
-                        className="FC"
-                        label="Email"
-                        value={val.email}
-                        onChange={handleChange}
-                        inputProps={{ name: 'email', id: 'email' }}
-                        {... this.state.errors.email?{error:true,helperText:this.state.errors.email}:{} }
-                      />
+                  <div data-props>
+                    <h3><span><a class="propref"><span>Email</span></a></span></h3>
+                      <div class="group">
+                        <TextField
+                          className="FC"
+                          label="Email"
+                          value={val.email}
+                          onChange={handleChange}
+                          inputProps={{ name: 'email', id: 'email' }}
+                          {... this.state.errors.email?{error:true,helperText:this.state.errors.email}:{} }
+                        />
                     { this.props.profile && <a class={"ulink " + (this.props.resetLink && this.props.profile[tmp+"passwordResetLink"]&&!this.state.updating?"on":this.props.profile[tmp+"passwordResetLink"])} {... this.props.profile[tmp+"passwordResetLink"]?{href:this.props.profile[tmp+"passwordResetLink"][0].value}:{} }>
                       Change Password
                     </a> }
-                    <br/><br/>
+                    </div>
                   </div>
               }
 
@@ -288,67 +303,93 @@ export class Profile extends Component<Props,State> {
                 <pre>{JSON.stringify(profile, null, 2)}</pre>
               </Panel> 
               */}
-                <FormControl className="FC">
-                  <InputLabel htmlFor="name">Name</InputLabel>
-                  <Input
-                    value={val.name}
-                    onChange={handleChange}
-                    inputProps={{ name: 'name', id: 'name' }}
-                  />
-                </FormControl>
-                <FormControl className="FC">
-                  <InputLabel htmlFor="gender">Gender</InputLabel>
-                  <Select
-                    value={val.gender}
-                    onChange={handleChange}
-                    inputProps={{ name: 'gender', id: 'gender'}}
-                  >
-                    <MenuItem value={propsMap["male"]}>Male</MenuItem>
-                    <MenuItem value={propsMap["female"]}>Female</MenuItem>
-                    <MenuItem value={propsMap["no-answer"]}>Prefer not to answer</MenuItem>
-                  </Select>
-                </FormControl>
+                <div data-props>
+                  <h3><span><a class="propref"><span>Name</span></a></span></h3>
+                  <div class="group">
+                    <FormControl className="FC">
+                      <InputLabel htmlFor="name">Name</InputLabel>
+                      <Input
+                        value={val.name}
+                        onChange={handleChange}
+                        inputProps={{ name: 'name', id: 'name' }}
+                      />
+                    </FormControl>
+                  </div>
+                </div>
+                <div data-props>
+                  <h3><span><a class="propref"><span>Gender</span></a></span></h3>
+                  <div class="group">
+                    <FormControl className="FC">
+                      <InputLabel htmlFor="gender">Gender</InputLabel>
+                      <Select
+                        value={val.gender}
+                        onChange={handleChange}
+                        inputProps={{ name: 'gender', id: 'gender'}}
+                      >
+                        <MenuItem value={propsMap["male"]}>Male</MenuItem>
+                        <MenuItem value={propsMap["female"]}>Female</MenuItem>
+                        <MenuItem value={propsMap["no-answer"]}>Prefer not to answer</MenuItem>
+                      </Select>
+                    </FormControl>
+                  </div>
+                </div>
 
-                <FormControl className="FC">
-                  <InputLabel htmlFor="region">Area of Interest</InputLabel>
-                  <Select
-                    value={val.interest}
-                    onChange={handleChange}
-                    inputProps={{ name:"interest", id: 'interest'}}
-                  >
-                    <MenuItem value={propsMap["buddhism"]}>Buddhism</MenuItem>
-                  </Select>
-                </FormControl>
+                <div data-props>
+                  <h3><span><a class="propref"><span>Area of Interest</span></a></span></h3>
+                  <div class="group">
+                    <FormControl className="FC">
+                      <InputLabel htmlFor="region">Area of Interest</InputLabel>
+                      <Select
+                        value={val.interest}
+                        onChange={handleChange}
+                        inputProps={{ name:"interest", id: 'interest'}}
+                      >
+                        <MenuItem value={propsMap["buddhism"]}>Buddhism</MenuItem>
+                      </Select>
+                    </FormControl>
+                  </div>
+                </div>
 
-                <FormControl className="FC">
-                  <InputLabel htmlFor="region">Cultural Region (if in China)</InputLabel>
-                  <Select
-                    value={val.region}
-                    onChange={handleChange}
-                    inputProps={{ name: 'region', id: 'region'}}
-                  >
-                    <MenuItem value={propsMap["outside"]}>Not applicable</MenuItem>
-                    <MenuItem value={propsMap["kham"]}>Kham</MenuItem>
-                    <MenuItem value={propsMap["amdo"]}>Amdo</MenuItem>
-                    <MenuItem value={propsMap["u-tsang"]}>U-tsang</MenuItem>
-                    <MenuItem value={propsMap["other"]}>Other</MenuItem>
-                  </Select>
-                </FormControl>
-                <br/>
-                <FormControlLabel
-                     control={
-                        <Checkbox
-                           checked={val.agree === "true"}
-                           className={"checkbox"}
-                           icon={<CheckBoxOutlineBlank/>}
-                           checkedIcon={<CheckBox />}
-                           onChange={(e,val) => handleChange(e,"agree",val)}
-                           inputProps={{ name:"agree", id: 'agree'}}
-                        />
+                <div data-props="tmp:cultural" lang={this.props.locale}>
+                  <h3><span><a class="propref"><span>Cultural Region (if in China)</span></a></span></h3>
+                  <div class="group">
+                    <FormControl className="FC">
+                      <InputLabel htmlFor="region">Cultural Region (if in China)</InputLabel>
+                      <Select
+                        value={val.region}
+                        onChange={handleChange}
+                        inputProps={{ name: 'region', id: 'region'}}
+                      >
+                        <MenuItem value={propsMap["outside"]}>Not applicable</MenuItem>
+                        <MenuItem value={propsMap["kham"]}>Kham</MenuItem>
+                        <MenuItem value={propsMap["amdo"]}>Amdo</MenuItem>
+                        <MenuItem value={propsMap["u-tsang"]}>U-tsang</MenuItem>
+                        <MenuItem value={propsMap["other"]}>Other</MenuItem>
+                      </Select>
+                    </FormControl>
+                  </div>
+                </div>
 
-                     }
-                     label={"I agree to receive emails from BDRC"}
-                  />
+                <div data-props>
+                  <h3><span><a class="propref"><span></span></a></span></h3>
+                  <div class="group">
+                    <FormControlLabel
+                        control={
+                            <Checkbox
+                              checked={val.agree === "true"}
+                              className={"checkbox"}
+                              icon={<CheckBoxOutlineBlank/>}
+                              checkedIcon={<CheckBox />}
+                              onChange={(e,val) => handleChange(e,"agree",val)}
+                              inputProps={{ name:"agree", id: 'agree'}}
+                            />
+
+                        }
+                        label={"I agree to receive emails from BDRC"}
+                      />
+                      <a class={"ulink "+(this.state.patch&&!this.state.updating?"on":"")} id="upd" {... this.state.patch?{onClick:this.handlePatch.bind(this)}:{}}>{this.state.updating?"Updating...":"Update"}</a>
+                  </div>
+                </div>
 
                 {/* <FormControl className="FC">
                   <InputLabel htmlFor="region">Affiliation</InputLabel>
@@ -362,13 +403,14 @@ export class Profile extends Component<Props,State> {
                 </FormControl>
                  */}
                  
-              { this.state.patch && 
+              { 
+              /* this.state.patch && 
                    <pre id="patch" contentEditable="true">
                     { this.state.patch }
                    </pre> 
-              }
-              <br/>
-              <a class={"ulink "+(this.state.patch&&!this.state.updating?"on":"")} id="upd" {... this.state.patch?{onClick:this.handlePatch.bind(this)}:{}}>{this.state.updating?"Updating...":"Update"}</a>
+               */ 
+               }
+              
 
               {/*               
               <h5 onClick={ (e) => { 

@@ -343,7 +343,7 @@ body { overflow:auto !important;padding-right:0 !important; /*font-family:"Robot
 
 #login span { display:inline-block; margin-left:20px; cursor:pointer; /*pointer-events:none; opacity:0.65;*/}
 
-.nav #donate { width:150px;height:50px;border-radius: 2px; color:white;background-color: #d73449; line-height:50px; 
+.nav #donate { width:150px;height:50px;border-radius: 4px; color:white;background-color: #d73449; line-height:50px; 
    text-align:center; display:inline-block;  margin-left:35px; }
 .nav #donate img { vertical-align: middle; display: inline-block; margin-right:10px;}
 
@@ -1101,8 +1101,28 @@ h4:not(:hover) > .lang
 
 
 .resource .data .header { width:100%; height:160px; background:#fce08d; display:flex;align-items:center;justify-content: center; position:relative; }
-.resource .data .header::before { content:' '; width:120px; height:120px; background:white;border-radius:50%; 
-   background-size:auto;background-repeat:no-repeat; background-position: center;}
+.resource.user .data .header .before,
+.resource:not(.user) .data .header::before { content:' '; width:120px; height:120px; background:white;border-radius:50%; 
+   background-size:auto;background-repeat:no-repeat; background-position: center;
+}
+
+.resource.user .data .header .before { display:flex;align-items: center; justify-content: center;}
+.resource.user .data .header .before img { max-width:80px; height:auto; flex-shrink:0;flex-grow:0; }
+
+.resource.user .data .FC { width:300px; min-width:0; }
+.resource.user .data [class*="MuiInputLabel-shrink"] { display:none;}
+.resource.user .data [class*="MuiInput-underline"]::before {  border:none; }
+.resource.user .data .FC > div { margin-top:0; }
+.resource.user .data .FC > label { transform: translate(0, 7px) scale(1); }
+.resource.user .data [data-props="tmp:cultural"][lang="en"] a span { display:inline-block; width:140px; }
+
+.resource.user .data .ulink#upd { width:auto; position:absolute; right:0; margin-top:0; line-height:42px; height:42px;  color:white; background-color: #d73449; border-radius:5px;display:inline-flex;align-items: center;justify-content: center; 
+   padding: 0; border:none !important; font-weight:600; font-size:13px;min-width:150px; pointer-events: none;
+}
+.resource.user .data .ulink#upd.on {  cursor:pointer; pointer-events:auto; }
+
+.profile-area a.ulink.on:hover { text-decoration: none !important;}
+
 
 .resource .data .header .src { position: absolute; right: 0; bottom: 20px; width: 34px;  height: 60px; background-color: #172832; line-height:58px; }
 .resource .data .header .src.orig { cursor:pointer;}
@@ -1686,6 +1706,9 @@ span.in { font-weight:500;padding-left:0px; padding-right:10px; margin-left:36px
 
 .resource .data > div:not([data-prop="bdo:note"]):not(.header):not(.firstImage):not(#perma) 
 { display:flex !important; /*align-items: baseline;*/ flex-wrap:wrap;}
+
+.resource.user .data > div:not([data-prop="bdo:note"]):not(.header):not(.firstImage):not(#perma) 
+{ align-items: baseline; }
 
 /* ------------------------------------------------------------------------------------------------------------------------ properties */
 
@@ -2511,6 +2534,8 @@ h2.on .lang, .propCollapseHeader .lang, .propCollapse .lang { position:absolute 
 .resource .SidePane .data .subsub.new > div > label + div { font-size:12px;}
 .resource .SidePane .data .anno.new + .sub + .sub { padding-top:30px;}
 /* .resource .SidePane .data .subsub.new label + div { margin-top:0; } */
+
+
 
 .resource.user h2 + .browse { display:none; }
 .resource.user h2 img { vertical-align:middle; display:inline-block;  width:80px; height:80px; object-fit:cover; object-position: center; }
