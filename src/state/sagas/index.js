@@ -873,7 +873,7 @@ async function getImageVolumeManifest(url,iri) {
 
 // changes the dimension of a iiif url to the specified dimension string
 function changedims(imgurl, newdimstr) {
-   let fragments = imgurl.split('/')
+   let fragments = imgurl.split('/')      
    fragments[fragments.length-3] = newdimstr
    return fragments.join('/')
 }
@@ -882,7 +882,7 @@ function changedims(imgurl, newdimstr) {
 function getiiifthumbnailurl(imgres) {
    let origurl = imgres["@id"]
    // for odd CUDL manifests
-   if (origurl.match(/cudl[.]lib.*jp2/)) origurl += "/full/max/0/default.jpg"
+   if (origurl.match(/(cudl[.]lib)|(lib[.]cam).*jp2/)) origurl += "/full/max/0/default.jpg"
    let h = imgres["height"]
    let w = imgres["width"]
    let maxh = 1000
@@ -927,6 +927,7 @@ async function getManifest(url,iri) {
             manif.sequences[0].canvases[0].images[0].resource["@id"])
          {
             let imageres = manif.sequences[0].canvases[0].images[0].resource
+            
             //console.log("image",imageres )
 
             let imageIndex = 0
@@ -940,7 +941,9 @@ async function getManifest(url,iri) {
             let image = getiiifthumbnailurl(imageres)
 
             let test = await api.getURLContents(image,null,null,null,true)
+            
             //console.log("img",test)
+            
             //let imgData = btoa(String.fromCharCode(...new Uint8Array(test)));
             store.dispatch(dataActions.firstImage(image,iri,canvasID,collecManif,manifests,null,manif)) //,imgData))
          }
@@ -1587,6 +1590,17 @@ function rewriteAuxMain(result,keyword,datatype,sortBy,language)
          let t = datatype[0].toLowerCase()+"s"         
          canPopuSort = false        
          let dataWithAsset = keys.reduce( (acc,k) => { 
+
+            if(auth && !auth.isAuthenticated()) {	
+               let status = result[e][k].filter(k => k.type === adm+"status" || k.type === tmp+"status")	
+               if(status && status.length) status = status[0].value	
+               else status = null	
+
+               if(status && !status.match(/Released/)) 	
+                  return acc ;	
+
+            }
+            
             let res = result[e][k].map(e => (!asset.includes(e.type)||e.value === "false"?e:{type:_tmp+"assetAvailability",value:e.type}))
             canPopuSort = canPopuSort || (res.filter(e => e.type === tmp+"entityScore").length > 0)            
             let chunks = res.filter(e => e.type === bdo+"eTextHasChunk")

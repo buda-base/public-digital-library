@@ -2003,6 +2003,8 @@ html[lang="en"] .resource .data > [data-prop="bdo:creator"] h4[data-prop="bdo:ro
 /* .resource .data.legal-props > div h4 { min-height:27px; } */
 .resource .data.legal-props > div h4 a {  display:flex; align-items: center; }
 
+.resource .data.legal-props > div h4 > .ulink [href*="LD_IA_Metadata"]::before,
+.resource .data.legal-props > div h4 > .ulink [href*="LD_CUDL_metadata"]::before,
 .resource .data.legal-props > div h4 > .ulink [href*="LD_GRETIL"]::before,
 .resource .data.legal-props > div h4 > .ulink [href*="LD_rKTs"]::before ,
 .resource .data.legal-props > div h4 > .ulink [href*="LD_BDRC"]::before { background-image:url("/logo.svg"); background-position:center;
@@ -2013,6 +2015,8 @@ html[lang="en"] .resource .data > [data-prop="bdo:creator"] h4[data-prop="bdo:ro
 
 .resource .data.legal-props > div h4 > .ulink [href*="LD_rKTs"]::before { background-image:url("/RKTS.png"); background-size:14px auto; }
 .resource .data.legal-props > div h4 > .ulink [href*="LD_GRETIL"]::before { background-image:url("/GRETIL.png"); background-size:14px auto; }
+.resource .data.legal-props > div h4 > .ulink [href*="LD_CUDL_metadata"]::before { background-image:url("/CUDL.svg"); background-size:14px auto; background-position: top 5px center;}
+.resource .data.legal-props > div h4 > .ulink [href*="LD_IA_Metadata"]::before { background-image:url("/IA.png"); background-size:15px auto; }
 /* TODO exhaustive metadata provider list */
 
 /* ------------------------------------------------------------------------------------------------------------------------ extended properties */
@@ -2618,7 +2622,7 @@ body {overflow-x:hidden; }
    }
 }
 .searchWidget.datatype:not(.disabled),
-.searchWidget.datatype:not(.disabled) > span {  animation: 1s toggle 3; }
+.searchWidget.datatype:not(.disabled) > span {  animation: 1s toggle 1; animation-delay:0.75s; }
 
 /*
 .searchWidget.datatype > span:not(.disabled),
