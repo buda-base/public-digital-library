@@ -179,7 +179,9 @@ const enTranslation = {
       mainInfo:"Main Information",
       outline:"Outline",
       related:"Related Works",
-      extended:"Extended Information"
+      extended:"Extended Information",
+      userP:"User Profile",
+      personalI:"Personal Information"
    },
    user:{
       photo:{ 
@@ -194,7 +196,30 @@ const enTranslation = {
          set:"Modify value",
          hide:"Set private",
          show:"Set public",
-      }
+      },
+      email:"Email",
+      name:"Name",
+      gender:"Gender",
+      area:"Area of Interest",
+      region:"Cultural Region (if in China)",
+      password:"Change Password",
+      options:{
+         male:"Male",
+         female:"Female",
+         noanswer:"Prefer not to answer",
+         buddhism:"Buddhism",
+         outside:"Not applicable",
+         kham:"Kham",
+         amdo:"Amdo",
+         uTsang:"U-tsang",
+         other:"Other",
+
+      },
+      get:"Getting user info...",
+      redirect:"Not logged in... Redirecting",
+      agree:"I agree to receive emails from BDRC",
+      update:"Update",
+      updating:"Updating..."
    },
    popover:{
       moreInfo:"More Information",

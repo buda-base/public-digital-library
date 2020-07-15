@@ -23,6 +23,8 @@ import { top_right_menu, report_GA, getGDPRconsent } from './App'
 import { top_left_menu } from './ResourceViewer'
 import LanguageSidePaneContainer from '../containers/LanguageSidePaneContainer';
 
+import I18n from 'i18next';
+
 const api = new bdrcApi();
 
 const bdg   = "http://purl.bdrc.io/graph/" ;
@@ -197,12 +199,12 @@ export class Profile extends Component<Props,State> {
     
     console.log("render",profile,this.state,this.props)
     
-    let message = "Getting user info..."
+    let message = I18n.t("user.get");
 
     if(!profile || !Object.keys(profile).length) {
       if(!auth.isAuthenticated()) { 
         //message = <span>Please <a onclick={this.props.auth.login(this.props.history.location)}>log in</a></span>
-        message = "Not logged in... Redirecting"
+        message = I18n.t("user.redirect")
         this.tO = setTimeout(() => { 
           window.location.href = "/" 
         }, 1500)
@@ -248,9 +250,9 @@ export class Profile extends Component<Props,State> {
           <div class="resource user">
             <div class="index">
               <div class="title">
-                <h2 class="on"><span class="T user">User Profile</span></h2>
+                <h2 class="on"><span class="T user">{I18n.t("index.userP")}</span></h2>
                 <div>
-                  <h3><a href="/user#main-info">Personal Information</a></h3>
+                  <h3><a href="/user#main-info">{I18n.t("index.personalI")}</a></h3>
                   {/* <h3><a href="/user#resources">Display Preferences</a></h3> */}
                 </div>
               </div>
@@ -275,7 +277,7 @@ export class Profile extends Component<Props,State> {
               { 
                 this.state.profile && this.state.profile.sub.match(/^auth0[|]/) && //this.props.profile[tmp+"passwordResetLink"] && 
                   <div data-props>
-                    <h3><span><a class="propref"><span>Email</span></a></span></h3>
+                    <h3><span><a class="propref"><span>{I18n.t("user.email")}{I18n.t("punc.colon")}</span></a></span></h3>
                       <div class="group">
                         <TextField
                           className="FC"
@@ -286,7 +288,7 @@ export class Profile extends Component<Props,State> {
                           {... this.state.errors.email?{error:true,helperText:this.state.errors.email}:{} }
                         />
                     { this.props.profile && <a class={"ulink " + (this.props.resetLink && this.props.profile[tmp+"passwordResetLink"]&&!this.state.updating?"on":this.props.profile[tmp+"passwordResetLink"])} {... this.props.profile[tmp+"passwordResetLink"]?{href:this.props.profile[tmp+"passwordResetLink"][0].value}:{} }>
-                      Change Password
+                      {I18n.t("user.password")}
                     </a> }
                     </div>
                   </div>
@@ -304,10 +306,10 @@ export class Profile extends Component<Props,State> {
               </Panel> 
               */}
                 <div data-props>
-                  <h3><span><a class="propref"><span>Name</span></a></span></h3>
+                  <h3><span><a class="propref"><span>{I18n.t("user.name")}{I18n.t("punc.colon")}</span></a></span></h3>
                   <div class="group">
                     <FormControl className="FC">
-                      <InputLabel htmlFor="name">Name</InputLabel>
+                      <InputLabel htmlFor="name">{I18n.t("user.name")}</InputLabel>
                       <Input
                         value={val.name}
                         onChange={handleChange}
@@ -317,54 +319,54 @@ export class Profile extends Component<Props,State> {
                   </div>
                 </div>
                 <div data-props>
-                  <h3><span><a class="propref"><span>Gender</span></a></span></h3>
+                  <h3><span><a class="propref"><span>{I18n.t("user.gender")}{I18n.t("punc.colon")}</span></a></span></h3>
                   <div class="group">
                     <FormControl className="FC">
-                      <InputLabel htmlFor="gender">Gender</InputLabel>
+                      <InputLabel htmlFor="gender">{I18n.t("user.gender")}</InputLabel>
                       <Select
                         value={val.gender}
                         onChange={handleChange}
                         inputProps={{ name: 'gender', id: 'gender'}}
                       >
-                        <MenuItem value={propsMap["male"]}>Male</MenuItem>
-                        <MenuItem value={propsMap["female"]}>Female</MenuItem>
-                        <MenuItem value={propsMap["no-answer"]}>Prefer not to answer</MenuItem>
+                        <MenuItem value={propsMap["male"]}>{I18n.t("user.options.male")}</MenuItem>
+                        <MenuItem value={propsMap["female"]}>{I18n.t("user.options.female")}</MenuItem>
+                        <MenuItem value={propsMap["no-answer"]}>{I18n.t("user.options.noanswer")}</MenuItem>
                       </Select>
                     </FormControl>
                   </div>
                 </div>
 
                 <div data-props>
-                  <h3><span><a class="propref"><span>Area of Interest</span></a></span></h3>
+                  <h3><span><a class="propref"><span>{I18n.t("user.area")}{I18n.t("punc.colon")}</span></a></span></h3>
                   <div class="group">
                     <FormControl className="FC">
-                      <InputLabel htmlFor="region">Area of Interest</InputLabel>
+                      <InputLabel htmlFor="region">{I18n.t("user.area")}</InputLabel>
                       <Select
                         value={val.interest}
                         onChange={handleChange}
                         inputProps={{ name:"interest", id: 'interest'}}
                       >
-                        <MenuItem value={propsMap["buddhism"]}>Buddhism</MenuItem>
+                        <MenuItem value={propsMap["buddhism"]}>{I18n.t("user.options.buddhism")}</MenuItem>
                       </Select>
                     </FormControl>
                   </div>
                 </div>
 
                 <div data-props="tmp:cultural" lang={this.props.locale}>
-                  <h3><span><a class="propref"><span>Cultural Region (if in China)</span></a></span></h3>
+                  <h3><span><a class="propref"><span>{I18n.t("user.region")}{I18n.t("punc.colon")}</span></a></span></h3>
                   <div class="group">
                     <FormControl className="FC">
-                      <InputLabel htmlFor="region">Cultural Region (if in China)</InputLabel>
+                      <InputLabel htmlFor="region">{I18n.t("user.region")}</InputLabel>
                       <Select
                         value={val.region}
                         onChange={handleChange}
                         inputProps={{ name: 'region', id: 'region'}}
                       >
-                        <MenuItem value={propsMap["outside"]}>Not applicable</MenuItem>
-                        <MenuItem value={propsMap["kham"]}>Kham</MenuItem>
-                        <MenuItem value={propsMap["amdo"]}>Amdo</MenuItem>
-                        <MenuItem value={propsMap["u-tsang"]}>U-tsang</MenuItem>
-                        <MenuItem value={propsMap["other"]}>Other</MenuItem>
+                        <MenuItem value={propsMap["outside"]}>{I18n.t("user.options.outside")}</MenuItem>
+                        <MenuItem value={propsMap["kham"]}>{I18n.t("user.options.kham")}</MenuItem>
+                        <MenuItem value={propsMap["amdo"]}>{I18n.t("user.options.amdo")}</MenuItem>
+                        <MenuItem value={propsMap["u-tsang"]}>{I18n.t("user.options.uTsang")}</MenuItem>
+                        <MenuItem value={propsMap["other"]}>{I18n.t("user.options.other")}</MenuItem>
                       </Select>
                     </FormControl>
                   </div>
@@ -385,9 +387,9 @@ export class Profile extends Component<Props,State> {
                             />
 
                         }
-                        label={"I agree to receive emails from BDRC"}
+                        label={I18n.t("user.agree")}
                       />
-                      <a class={"ulink "+(this.state.patch&&!this.state.updating?"on":"")} id="upd" {... this.state.patch?{onClick:this.handlePatch.bind(this)}:{}}>{this.state.updating?"Updating...":"Update"}</a>
+                      <a class={"ulink "+(this.state.patch&&!this.state.updating?"on":"")} id="upd" {... this.state.patch?{onClick:this.handlePatch.bind(this)}:{}}>{this.state.updating?I18n.t("user.updating"):I18n.t("user.update")}</a>
                   </div>
                 </div>
 
