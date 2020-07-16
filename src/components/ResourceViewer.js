@@ -212,7 +212,7 @@ export const providers = {
    "dila":"DILA Authority Database",
    "eap":"British Library (EAP)",
    "eftr":"84000",
-   "ia":"Internet Archive",                 
+   "ia":"Internet Archives",                 
    "gretil":"GRETIL",
    "mbbt":"Marcus Bingenheimer's website",
    "ngmpp":"NGMPP",
@@ -1190,7 +1190,6 @@ class ResourceViewer extends Component<Props,State>
          if(!s) s = { ...this.state } 
          s.outlineKW = get.osearch
          let keys = get.osearch.split("@")
-         lang = keys[1]
          s.outlineKW = lucenequerytokeyword(keys[0])
          
          if(!timerScr) timerScr = setInterval( () => {
@@ -1948,7 +1947,7 @@ class ResourceViewer extends Component<Props,State>
          if(provLab) provLab = provLab[skos+"prefLabel"]
          if(provLab && provLab.length) provLab = provLab[0].value 
          
-         //console.log("isExtW",isExtW,this.props.dictionary,provLab)
+         console.log("isExtW",isExtW,this.props.dictionary,provLab)
 
          if(provLab === "GRETIL") sameAsPrefix += "gretil provider hasIcon "
          else if(provLab === "EAP") sameAsPrefix += "eap provider hasIcon "
@@ -2071,7 +2070,9 @@ class ResourceViewer extends Component<Props,State>
 
             let srcProv = sameAsPrefix.replace(/^.*?([^ ]+) provider .*$/,"$1").toLowerCase()
             let srcSame = sameAsPrefix.replace(/^.*?([^ ]+) sameAs .*$/,"$1").toLowerCase()
-            //console.log("src",src,srcProv,srcSame)
+            
+            console.log("src:",src,srcProv,srcSame)
+            
             //if(src.match(/bdr/)) src = "bdr"
 
             let bdrcData 
@@ -3556,7 +3557,7 @@ class ResourceViewer extends Component<Props,State>
       let title,titlElem,otherLabels = [], T_ = _T ;
       _T = [<span class={"T "+_T.toLowerCase()}>
          <span class="RID">{shortUri(other?other:this.props.IRI)}</span>
-         {I18n.t("types."+_T.toLowerCase()+(_T == "Etext"?"_title":""))}
+         {I18n.t("types."+_T.toLowerCase())}
       </span>]
 
       if(kZprop.indexOf(skos+"prefLabel") !== -1)       {
@@ -4054,17 +4055,14 @@ perma_menu(pdfLink,monoVol,fairUse,other)
    }
    if(!same.length && sameLegalD) { 
       let prov = sameLegalD[adm+"provider"]
-      console.log("prov:",JSON.stringify(prov))
       if(prov && prov.length) prov = prov[0].value
-      console.log("prov:",JSON.stringify(prov))
       if(prov && this.props.dictionary) prov = this.props.dictionary[prov]
-      console.log("prov:",JSON.stringify(prov))
       if(prov) prov = prov[skos+"prefLabel"]
-      console.log("prov:",JSON.stringify(prov))
+      if(prov && prov.length) prov = prov.filter(e => e.lang === "en" || !e.lang)
       if(prov && prov.length) prov = prov[0].value
-      console.log("prov:",JSON.stringify(prov))
       if(prov) prov = prov.replace(/(^\[ *)|( *\]$)/g,"") // CUDL
-      console.log("prov:",JSON.stringify(prov))
+      if(prov) prov = prov.replace(/Internet Archives/g,"IA") 
+
       //else prov = ""
 
       let orig = this.getResourceElem(adm+"originalRecord")
@@ -4166,7 +4164,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
                { isEtextVol && 
                      <a target="_blank" title={I18n.t("resource.version",{format:"TXT"})} rel="alternate" type="text"  download href={this.props.IRI?this.props.IRI.replace(/bdr:/,bdr)+".txt":""}>
-                        <MenuItem>{I18n.t("resource.exportDataAs",{data: I18n.t("types.etext_title"), format:"TXT"})}</MenuItem>
+                        <MenuItem>{I18n.t("resource.exportDataAs",{data: I18n.t("types.etext"), format:"TXT"})}</MenuItem>
                      </a> }
 
                { pdfLink && 
@@ -4796,15 +4794,17 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          if(prov && this.props.dictionary) prov = this.props.dictionary[prov]
          if(prov && prov[skos+"prefLabel"]) prov = prov[skos+"prefLabel"]
          else if(prov && prov[rdfs+"label"]) prov = prov[rdfs+"label"]
+         if(prov && prov.length) prov = prov.filter(e => e.lang === "en" || !e.lang)
          if(prov && prov.length) prov = prov[0].value
          if(prov) prov = prov.replace(/(^\[ *)|( *\]$)/g,"") // CUDL
+         if(prov) prov = prov.replace(/Internet Archives/g,"IA") 
          //else prov = ""
 
          let orig = this.getResourceElem(adm+"originalRecord")
          if(orig && orig.length) orig = orig[0].value
          else orig = ""
 
-         //console.log("prov x orig",prov,orig)
+         console.log("prov x orig",prov,orig)
 
          if(prov !== "BDRC" && prov) {
 
