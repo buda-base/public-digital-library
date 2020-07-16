@@ -421,6 +421,7 @@ export class Profile extends Component<Props,State> {
                     </div>
                   </div>
                   <div>
+                    <div class="help">{I18n.t('Rsidebar.priority.help')}</div>
                     <LangPrefTreeContainer/>
                   </div>
                 </div>
