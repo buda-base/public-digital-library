@@ -8,7 +8,7 @@ import * as ui from '../state/ui/actions';
 import { i18nextChangeLanguage } from 'i18next-redux-saga';
 
 import store from '../index';
-import LanguageSidePane from '../components/LanguageSidePane';
+import LanguageSidePane,{LangPrefTree} from '../components/LanguageSidePane';
 
 const mapStateToProps = (state,ownProps) => {
 
@@ -58,3 +58,11 @@ const mapStateToProps = (state,ownProps) => {
    )(LanguageSidePane);
 
    export default LanguageSidePaneContainer;
+
+
+   export const LangPrefTreeContainer = connect(
+       mapStateToProps,
+       mapDispatchToProps
+   )(LangPrefTree);
+
+   

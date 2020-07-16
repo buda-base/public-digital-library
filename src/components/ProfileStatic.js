@@ -21,7 +21,7 @@ import bdrcApi from '../lib/api' ;
 import renderPatch from '../lib/rdf-patch.js' ; 
 import { top_right_menu, report_GA, getGDPRconsent } from './App'
 import { top_left_menu } from './ResourceViewer'
-import LanguageSidePaneContainer from '../containers/LanguageSidePaneContainer';
+import LanguageSidePaneContainer,{LangPrefTreeContainer} from '../containers/LanguageSidePaneContainer';
 
 import I18n from 'i18next';
 
@@ -253,7 +253,7 @@ export class Profile extends Component<Props,State> {
                 <h2 class="on"><span class="T user">{I18n.t("index.userP")}</span></h2>
                 <div>
                   <h3><a href="/user#main-info">{I18n.t("index.personalI")}</a></h3>
-                  {/* <h3><a href="/user#resources">Display Preferences</a></h3> */}
+                  <h3><a href="/user#display">Display Preferences</a></h3>
                 </div>
               </div>
             </div>
@@ -412,6 +412,19 @@ export class Profile extends Component<Props,State> {
                   </div>
                 </div>
 
+            </div>
+                <div class="data" id="outline">
+                  <h2 id="display">Display Preferences</h2>
+                  <div class="search">
+                    <div>
+                      <h3>Data Language Priority{I18n.t("punc.colon")}</h3>
+                    </div>
+                  </div>
+                  <div>
+                    <LangPrefTreeContainer/>
+                  </div>
+                </div>
+
                 {/* <FormControl className="FC">
                   <InputLabel htmlFor="region">Affiliation</InputLabel>
                   <Select
@@ -441,9 +454,7 @@ export class Profile extends Component<Props,State> {
               }}>Back</h5> 
               */}
 
-            </div>
-          </div>,          
-          <LanguageSidePaneContainer />]}
+          </div>]}
           </div>
         </div>
         </div>
