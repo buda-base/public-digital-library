@@ -293,6 +293,25 @@ export class Profile extends Component<Props,State> {
                     </div>
                   </div>
               }
+              { 
+                 this.state.profile && !this.state.profile.sub.match(/^auth0[|]/) && 
+
+                  <div data-props>
+                    <h3><span><a class="propref"><span>{I18n.t("user.email")}{I18n.t("punc.colon")}</span></a></span></h3>
+                      <div class="group">
+                        {/* <h4>{this.props.profile && this.props.profile[foaf+"mbox"] && this.props.profile[foaf+"mbox"][0].value}</h4> */}
+                        <TextField
+                          className="FC"
+                          label="Email"
+                          disabled
+                          value={this.props.profile && this.props.profile[foaf+"mbox"] && this.props.profile[foaf+"mbox"][0].value}
+                          onChange={handleChange}
+                          inputProps={{ name: 'email', id: 'email' }}
+                          {... this.state.errors.email?{error:true,helperText:this.state.errors.email}:{} }
+                        />
+                    </div>
+                  </div>
+              }  
 
               {/* <h1><img src={profile.picture} alt="profile" />{this.props.profile?this.props.profile[foaf+"mbox"][0].value:null}</h1> */}
               { /*}
@@ -336,7 +355,7 @@ export class Profile extends Component<Props,State> {
                   </div>
                 </div>
 
-                <div data-props>
+                 { /*<div data-props>
                   <h3><span><a class="propref"><span>{I18n.t("user.area")}{I18n.t("punc.colon")}</span></a></span></h3>
                   <div class="group">
                     <FormControl className="FC">
@@ -350,7 +369,7 @@ export class Profile extends Component<Props,State> {
                       </Select>
                     </FormControl>
                   </div>
-                </div>
+                </div> */ }
 
                 <div data-props="tmp:cultural" lang={this.props.locale}>
                   <h3><span><a class="propref"><span>{I18n.t("user.region")}{I18n.t("punc.colon")}</span></a></span></h3>

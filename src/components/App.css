@@ -1127,6 +1127,7 @@ h4:not(:hover) > .lang
 
 .profile-area a.ulink.on:hover { text-decoration: none !important;}
 
+.resource.user .data input[disabled] { color:rgba(0,0,0,0.55); }
 
 .resource .data .header .src { position: absolute; right: 0; bottom: 20px; width: 34px;  height: 60px; background-color: #172832; line-height:58px; }
 .resource .data .header .src.orig { cursor:pointer;}
