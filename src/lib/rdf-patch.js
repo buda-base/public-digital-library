@@ -18,7 +18,7 @@ export const basePublicProps = [ skos+"prefLabel", bdou+"image" ]
 
 function getPatchValue(tag:string, value:any, dict:{}) {
     
-    //console.log("prop",prop,value)
+    console.log("prop",prop,value)
 
     let prop, T, start='', end=''
     prop = dict[tag]
@@ -33,7 +33,10 @@ function getPatchValue(tag:string, value:any, dict:{}) {
         }
     }
     else if(tag === foaf+"mbox" || tag === tmp+"agreeEmail") { start = '"' ; end = '"' ; }
-    return start + fullUri(value.value?value.value:value) + end
+    let vals = value
+    if(vals.value) vals = vals.value
+    if(!Array.isArray(vals)) vals = [ vals ]
+    return vals.map(v => start + fullUri(v) + end)
 }
 
 function getPatch(iri, updates, resource, tag:string, id:string, dict) {
@@ -46,21 +49,35 @@ function getPatch(iri, updates, resource, tag:string, id:string, dict) {
     let str = '' 
     for(let u in updates[tag]) {
 
-        //console.log("u",u,updates[tag][u])
+        console.log("u:",u,updates[tag][u])
 
         let pub = basePublicProps.indexOf(tag) !== -1
+        let uv = updates[tag][u].value
+        if(!Array.isArray(uv)) uv = [ uv ]
+        let rv = [], toDel =  [], toAdd = [ ...uv ]
+        if(resource[tag]) {
+            rv = resource[tag].map(v => v.value)
+            toDel = [ ...rv.filter(v => !uv.includes(v) ) ]
+            toAdd = toAdd.filter(v => !rv.includes(v)) 
+        }
+        console.log("add/del:",toAdd,toDel)
+        let diff = ( rv.length != uv.length || toDel.length || toAdd.length)
 
         //if(str !== '') str += "\n"            
-        if( !resource[tag] || !resource[tag][u] || ( resource[tag][u].value !== updates[tag][u].value ) ) { // TODO more generic test (lang etc.)
-            let val
-            if( resource[tag] && resource[tag][u] )  { 
-                val = getPatchValue(tag, resource[tag][u].value, dict)
-                str += `D  <${ iri }> <${ tag }> ${ val } <${ graphP }> .\n`
-                if(pub) str += `D  <${ iri }> <${ tag }> ${ val } <${ graph }> .\n`
+        if( !resource[tag] || !resource[tag][u] || ( diff ) ) { // TODO more generic test (lang etc.)
+            let vals
+            if( toDel.length )  { 
+                vals = getPatchValue(tag, toDel, dict)
+                for(let val of vals) {
+                    str += `D  <${ iri }> <${ tag }> ${ val } <${ graphP }> .\n`
+                    if(pub) str += `D  <${ iri }> <${ tag }> ${ val } <${ graph }> .\n`
+                }
             }
-            val = getPatchValue(tag, updates[tag][u].value, dict)
-            str += `A  <${ iri }> <${ tag }> ${ val } <${ graphP }> .\n`  
-            if(pub) str += `A  <${ iri }> <${ tag }> ${ val } <${ graph }> .\n`  
+            vals = getPatchValue(tag, toAdd, dict)
+            for(let val of vals) {
+                str += `A  <${ iri }> <${ tag }> ${ val } <${ graphP }> .\n`  
+                if(pub) str += `A  <${ iri }> <${ tag }> ${ val } <${ graph }> .\n`  
+            }
         }
     }
     return str ;

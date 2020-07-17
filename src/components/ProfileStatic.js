@@ -16,6 +16,8 @@ import Select from '@material-ui/core/Select';
 import TextField from '@material-ui/core/TextField';
 import {shortUri,fullUri} from './App'
 import Input from '@material-ui/core/Input';
+import Chip from '@material-ui/core/Chip';
+import { createStyles } from '@material-ui/core/styles';
 
 import bdrcApi from '../lib/api' ;
 import renderPatch from '../lib/rdf-patch.js' ; 
@@ -39,7 +41,7 @@ const tmp   = "http://purl.bdrc.io/ontology/tmp/" ;
 
 const propsMap = {  name: skos+"prefLabel", email: foaf+"mbox",
                     gender: bdo+"personGender", male: bdr+"GenderMale", female: bdr+"GenderFemale", "no-answer": bdr+"GenderNotSpecified",
-                    interest: bdou+"interest", buddhism: tmp+"buddhism",
+                    interest: bdou+"interest", 
                     region: bdou+"mainResidenceArea", outside:tmp+"outside", kham:tmp+"kham", amdo:tmp+"amdo", "u-tsang":tmp+"u-tsang", other:tmp+"other",
                     agree: tmp+"agreeEmail" }
 
@@ -129,10 +131,11 @@ export class Profile extends Component<Props,State> {
         let p
         if(p = propsMap[k]) {
           if(props.profile[p] && s[k] && s[k].value === undefined) { 
-            console.log("kp",k,p)
+            console.log("kp",k,p,props.profile[p])
             let type = s[k].type
             if(!type) type = "uri"
-            s[k] = { type, value: fullUri(props.profile[p][0].value) }
+            if(props.profile[p].length === 1) s[k] = { type, value: fullUri(props.profile[p][0].value) }
+            else s[k] = props.profile[p].map(e => e.value)
           }
         }
       }
@@ -237,13 +240,21 @@ export class Profile extends Component<Props,State> {
         let val = { name:"", gender:"", interest:"", region:"", email:"", agree:"" }
         for(let k of Object.keys(val)) {          
           if(this.state[k] && this.state[k].value !== undefined) val[k] = this.state[k].value
+          else if(this.state[k] && Array.isArray(this.state[k])) val[k] = this.state[k]
           else if(k !== "email" && this.props.profile && this.props.profile[propsMap[k]]) val.name = this.props.profile[propsMap[k]][0].value
           //if(!val[k]) val[k] = "?"
         }
+        if(!val.interest) val.interest = []
+        else if(!Array.isArray(val.interest)) val.interest = [ val.interest ]
 
         console.log("val",val)
 
         if(this.props.profile && this.state.profile && !this.props.resetLink) store.dispatch(data.getResetLink(this.props.userID, this.props.profile, this.state.profile))
+
+        /*
+        const classes = createStyles({root:"green"})
+        console.log("makeS:",classes)
+        */
 
         return (
         <div>
@@ -355,21 +366,33 @@ export class Profile extends Component<Props,State> {
                   </div>
                 </div>
 
-                 { /*<div data-props>
+                <div data-props>
                   <h3><span><a class="propref"><span>{I18n.t("user.area")}{I18n.t("punc.colon")}</span></a></span></h3>
                   <div class="group">
                     <FormControl className="FC">
-                      <InputLabel htmlFor="region">{I18n.t("user.area")}</InputLabel>
+                      <InputLabel htmlFor="interest" /*classes={{root:classes.root}}*/ >{I18n.t("user.area")}</InputLabel>
                       <Select
+                        classes={{root:"multiple-select"}}                        
                         value={val.interest}
                         onChange={handleChange}
                         inputProps={{ name:"interest", id: 'interest'}}
+                        multiple
+                        input={<Input id="select-multiple-chip" />}
+                        renderValue={(selected) => {
+                          //console.log("selec:",selected)
+                          return (
+                            <div>
+                              { selected.map((value) => <Chip key={value} className="chip" label={I18n.t("prop."+shortUri(value))} /> ) }
+                            </div>
+                          )
+                        }}
                       >
-                        <MenuItem value={propsMap["buddhism"]}>{I18n.t("user.options.buddhism")}</MenuItem>
+                        {["TibetanBuddhistTexts", "BonpoTexts", "SanskritTexts", "ChineseTexts", "SoutheastAsianTexts", "multiLingualTexts", "Bibliographies", "Maps", "BuddhistArt", "other"]
+                          .map((k) => <MenuItem value={tmp+k}>{I18n.t("prop."+"tmp:"+k)}</MenuItem>)}
                       </Select>
                     </FormControl>
                   </div>
-                </div> */ }
+                </div> 
 
                 <div data-props="tmp:cultural" lang={this.props.locale}>
                   <h3><span><a class="propref"><span>{I18n.t("user.region")}{I18n.t("punc.colon")}</span></a></span></h3>
@@ -438,13 +461,13 @@ export class Profile extends Component<Props,State> {
                 </FormControl>
                  */}
                  
-              { 
-              /* this.state.patch && 
+              { /*
+                this.state.patch && 
                    <pre id="patch" contentEditable="true">
                     { this.state.patch }
                    </pre> 
-               */ 
-               }
+                
+              */ }
               
 
               {/*               

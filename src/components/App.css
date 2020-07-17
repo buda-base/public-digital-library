@@ -1109,9 +1109,14 @@ h4:not(:hover) > .lang
 .resource.user .data .header .before { display:flex;align-items: center; justify-content: center;}
 .resource.user .data .header .before img { max-width:80px; height:auto; flex-shrink:0;flex-grow:0; }
 
-.resource.user .data .FC { width:300px; min-width:0; }
+.resource.user .data .FC { /*width:300px;*/ min-width:250px; }
+.resource.user .data .FC .multiple-select > div  { white-space: normal;}
+.resource.user .data .FC .multiple-select > div .chip { margin-bottom:4px;margin-right:3px; /* background-color: #fce08e; */ cursor:pointer;}
+
+
 .resource.user .data [data-shrink="true"],
 .resource.user .data [class*="MuiInputLabel-shrink"] { display:none;}
+
 
 .resource.user .data label + div::before,
 .resource.user .data [class*="MuiInput-underline"]::before {  border:none; } 
@@ -2572,7 +2577,7 @@ h2.on .lang, .propCollapseHeader .lang, .propCollapse .lang { position:absolute 
 .userPopoverContent .buttons a:last-child  svg { color:red; }
 
 .resource.user #patch { background:#eee; border:1px solid #999; padding:20px; position:relative; margin-top:30px; overflow-x:auto; overflow-y:visible;
-   display:none;
+   /* display:none; */
 }
 /* .resource.user #patch::before { content:'RDF Patch:'; position:absolute;left:-1px; top:-20px;display:block; } */
 
@@ -3005,7 +3010,7 @@ a.result .contenu ul > div:last-child h3[lang=bo] span { font-size:18px;}
 
    .resource .title h2 .RID { max-width:60%; }
 
-   #root > div > .resource { padding:155px calc((100% - 700px) /2 ); padding-bottom:80px; margin:0; min-width:100%; box-sizing:border-box;}
+   #root > div > .resource { padding:155px 24px; padding-bottom:80px; margin:0; min-width:100%; box-sizing:border-box;}
 
    .resource:not(.etext-view) > :not(.index):not(.ariane) { width:100%; margin:0;}
 

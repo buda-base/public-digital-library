@@ -155,7 +155,17 @@ const enTranslation = {
       "tmp:hasImage":"Has Scans",
       "tmp:hasEtext":"Has Etext",
       "unspecified":"Unspecified",
-      "true":"True"
+      "true":"True",
+      "tmp:TibetanBuddhistTexts":"Tibetan Buddhist Texts",
+      "tmp:BonpoTexts":"Bonpo Texts",
+      "tmp:SanskritTexts":"Sanskrit Texts",
+      "tmp:ChineseTexts":"Chinese Texts",
+      "tmp:SoutheastAsianTexts":"Southeast Asian Texts",
+      "tmp:multiLingualTexts":"Buddhist Canonical Texts (multi-lingual)",
+      "tmp:Bibliographies":"Bibliographies",
+      "tmp:Maps":"Maps",
+      "tmp:BuddhistArt":"Buddhist Art",
+      "tmp:other":"Other"
    },
    result:{
       open:"Open",
@@ -207,7 +217,6 @@ const enTranslation = {
          male:"Male",
          female:"Female",
          noanswer:"Prefer not to answer",
-         buddhism:"Buddhism",
          outside:"Not applicable",
          kham:"Kham",
          amdo:"Amdo",
