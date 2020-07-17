@@ -473,9 +473,9 @@ export function lang_selec(that,black:boolean = false)
                                        document.documentElement.lang = i
 
                                        that.props.onSetLocale(i);
-                                       if(i === "bo") that.props.onSetLangPreset(["bo","zh-hans"])
-                                       else if(i === "en") that.props.onSetLangPreset(["bo-x-ewts","sa-x-iast"])
-                                       else if(i === "zh") that.props.onSetLangPreset(["zh-hans","bo"])
+                                       if(i === "bo") that.props.onSetLangPreset(["bo","zh-hans"], "bo")
+                                       else if(i === "en") that.props.onSetLangPreset(["bo-x-ewts","sa-x-iast"], "en")
+                                       else if(i === "zh") that.props.onSetLangPreset(["zh-hans","bo"], "zh")
 
                                        let loca = { ...that.props.history.location }
                                        if(loca.search.includes("uilang")) loca.search = loca.search.replace(/uilang=[^&]+/,"uilang="+i)

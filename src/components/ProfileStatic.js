@@ -417,11 +417,11 @@ export class Profile extends Component<Props,State> {
                   <h2 id="display">Display Preferences</h2>
                   <div class="search">
                     <div>
-                      <h3>Data Language Priority{I18n.t("punc.colon")}</h3>
+                      <h3>Data Language Priority</h3>
                     </div>
                   </div>
                   <div>
-                    <div class="help">{I18n.t('Rsidebar.priority.help')}</div>
+                    <div class="help">{I18n.t('Rsidebar.priority.help')}{I18n.t("punc.colon")}</div>
                     <LangPrefTreeContainer/>
                   </div>
                 </div>

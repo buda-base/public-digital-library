@@ -62,7 +62,10 @@ class LanguageSidePane extends Component<Props,State> {
          if(prop === "locale") this.props.onSetLocale(lab);
          else if(prop === "priority") {
             if(!list && this.props.langPriority && this.props.langPriority.presets) list = this.props.langPriority.presets[lab]
-            if(list) this.props.onSetLangPreset(list,lab);
+            if(list) { 
+               localStorage.setItem('langpreset', lab);
+               this.props.onSetLangPreset(list,lab);
+            }
          }
       }
    }
@@ -82,7 +85,7 @@ class LanguageSidePane extends Component<Props,State> {
          }
          */
          else { //if(false) {
-            label = I18n.t("Rsidebar.priority.user");
+            label = I18n.t("Rsidebar.priority.user")+I18n.t("punc.colon");
             disab = true
 
             const SortableItem = SortableElement((args) =>  {

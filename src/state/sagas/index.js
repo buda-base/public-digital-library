@@ -81,7 +81,10 @@ async function initiateApp(params,iri,myprops) {
          if(locale !== "en") store.dispatch(i18nextChangeLanguage(locale));
          
          // set data language preferences
-         if(config.language.data.presets[locale]) store.dispatch(uiActions.langPreset(config.language.data.presets[locale]))
+         // 1-saved preference
+         if((val = localStorage.getItem('langpreset')) && config.language.data.presets[val]) store.dispatch(uiActions.langPreset(config.language.data.presets[val], val))
+         // 2- locale
+         else if(config.language.data.presets[locale]) store.dispatch(uiActions.langPreset(config.language.data.presets[locale], locale))
          else store.dispatch(uiActions.langPreset(["bo-x-ewts,sa-x-iast"]))
 
          //console.log("preset",config.language.data.presets[config.language.data.index])
