@@ -18,6 +18,8 @@ import {shortUri,fullUri} from './App'
 import Input from '@material-ui/core/Input';
 import Chip from '@material-ui/core/Chip';
 import { createStyles } from '@material-ui/core/styles';
+import _ from "lodash";
+import WarningIcon from '@material-ui/icons/Warning';
 
 import bdrcApi from '../lib/api' ;
 import renderPatch from '../lib/rdf-patch.js' ; 
@@ -40,6 +42,7 @@ const skos  = "http://www.w3.org/2004/02/skos/core#";
 const tmp   = "http://purl.bdrc.io/ontology/tmp/" ;
 
 const propsMap = {  name: skos+"prefLabel", email: foaf+"mbox",
+                    picture:bdou+"image",
                     gender: bdo+"personGender", male: bdr+"GenderMale", female: bdr+"GenderFemale", "no-answer": bdr+"GenderNotSpecified",
                     interest: bdou+"interest", otherInterest:tmp+"otherInterest",
                     region: bdou+"mainResidenceArea", outside:"outside", kham:"kham", amdo:"amdo", "u-tsang":"u-tsang", other:"other",
@@ -62,6 +65,7 @@ type State = {
    //affiliation:string,
    interest:{},
    otherInterest:{},
+   picture:{},
    patch?:{},
    profile?:{},
    email?:{},
@@ -74,7 +78,7 @@ export class Profile extends Component<Props,State> {
 
   constructor(props : Props) {
     super(props);
-    this.state = { name:{type:"literal"}, gender:{}, region:{}, interest:{},  otherInterest:{}, agree:{type:"literal"}, errors:{}, collapse:{} }
+    this.state = { name:{type:"literal"}, picture:{}, gender:{}, region:{}, interest:{},  otherInterest:{}, agree:{type:"literal"}, errors:{}, collapse:{} }
 
   }
   
@@ -142,6 +146,8 @@ export class Profile extends Component<Props,State> {
       }
 
       if(s.profile.sub.match(/^auth0[|]/) && props.profile[foaf+"mbox"] && s.email === undefined)  s.email = { value: props.profile[foaf+"mbox"][0].value }
+
+
     }
 
     if(s) return s
@@ -149,6 +155,9 @@ export class Profile extends Component<Props,State> {
   }
 
   handlePatch(e) {
+
+    if(!_.isEmpty(this.state.errors)) return 
+
     this.executePatch(e);
     this.setState({...this.state, updating:true })
   }
@@ -186,7 +195,7 @@ export class Profile extends Component<Props,State> {
 
   preparePatch = (state:{}) =>{
 
-      let mods = Object.keys(state).filter(k => k !== "patch" && state[k].type && state[k].value).reduce( (acc,k) => ({ ...acc, [propsMap[k]]: [ state[k] ] } ), {} )
+      let mods = Object.keys(state).filter(k => k !== "patch" && state[k].type && state[k].value !== undefined).reduce( (acc,k) => ({ ...acc, [propsMap[k]]: [ state[k] ] } ), {} )
       let id = shortUri(this.props.userID).split(':')[1]
       let that = { state: { resource:this.props.profile, updates:mods}, props:{ dictionary:this.props.dictionary, IRI:this.props.userID } }
 
@@ -195,6 +204,36 @@ export class Profile extends Component<Props,State> {
       state.patch = renderPatch(that, Object.keys(mods), id)
 
       return state
+  }
+
+
+  validateURI = async (url) => {
+    if(!url) return true ;
+    else if(!url.match(/^https?:[/][/]/i)) return false
+
+    try {
+      //let test = await api._fetch( url, { method:"GET", mode:"no-cors" } )            
+      //if(!test.ok) throw new Error("ERROR:"+test) 
+
+      let img = new Image(), _this = this ;
+      _this.setState({errors:{..._this.state.errors, picture:false}})
+      img.onerror = function () {
+        console.error("cannot load "+url);        
+        _this.setState({errors:{..._this.state.errors, picture:I18n.t("user.photo.error")}})
+      }
+      img.onload = function () {
+        let errors = { ..._this.state.errors }
+        delete errors.picture
+        _this.setState({errors})
+      }
+      img.src = url
+
+      //console.log("valid!",url,test)
+      return true
+    }
+    catch(e) {
+      return false;
+    }
   }
 
   render() {
@@ -238,7 +277,7 @@ export class Profile extends Component<Props,State> {
           this.setState(state)
         }
 
-        let val = { name:"", gender:"", interest:"", region:"", email:"", agree:"", otherInterest:"" }
+        let val = { name:"", gender:"", interest:"", region:"", email:"", agree:"", otherInterest:"", picture:"" }
         for(let k of Object.keys(val)) {          
           if(this.state[k] && this.state[k].value !== undefined) val[k] = this.state[k].value
           else if(this.state[k] && Array.isArray(this.state[k])) val[k] = this.state[k]
@@ -255,10 +294,16 @@ export class Profile extends Component<Props,State> {
 
         if(this.props.profile && this.state.profile && !this.props.resetLink) store.dispatch(data.getResetLink(this.props.userID, this.props.profile, this.state.profile))
 
+        let hasError = !_.isEmpty(this.state.errors)
+
         /*
         const classes = createStyles({root:"green"})
         console.log("makeS:",classes)
         */
+
+        let picUrl = "/icons/header/user.png" 
+        if(profile.picture && !profile.picture.match(/gravatar.*cdn[.]auth0/)) picUrl = profile.picture
+        if(val.picture && !this.state.errors.picture) picUrl = val.picture
 
         return (
         <div>
@@ -281,7 +326,7 @@ export class Profile extends Component<Props,State> {
             <div class="data" id="head">
               <div class="header">
                 <div class="before">
-                  <img referrerpolicy="no-referrer" src={!profile.picture||profile.picture.match(/gravatar.*cdn[.]auth0/)?"/icons/header/user.png":profile.picture}/>
+                  <img referrerpolicy="no-referrer" src={picUrl}/>
                 </div>
               </div>
             </div>
@@ -289,6 +334,22 @@ export class Profile extends Component<Props,State> {
                 <h2>{this.props.profile?this.props.profile[skos+"prefLabel" /*foaf+"mbox"*/ ][0].value:null}</h2>
               </div>
               <div id="main-info" className="profile-area data">
+
+
+                <div data-props>
+                  <h3><span><a class="propref"><span>{I18n.t("user.name")}{I18n.t("punc.colon")}</span></a></span></h3>
+                  <div class="group">
+                    <FormControl className="FC">
+                      <InputLabel htmlFor="name">{I18n.t("user.name")}</InputLabel>
+                      <Input
+                        value={val.name}
+                        onChange={handleChange}
+                        inputProps={{ name: 'name', id: 'name' }}
+                      />
+                    </FormControl>
+                  </div>
+                </div>
+
               { 
                 this.state.profile && this.state.profile.sub.match(/^auth0[|]/) && //this.props.profile[tmp+"passwordResetLink"] && 
                   <div data-props>
@@ -308,6 +369,7 @@ export class Profile extends Component<Props,State> {
                     </div>
                   </div>
               }
+              
               { 
                  this.state.profile && !this.state.profile.sub.match(/^auth0[|]/) && 
 
@@ -328,6 +390,41 @@ export class Profile extends Component<Props,State> {
                   </div>
               }  
 
+
+                <div data-props>
+                  <h3><span><a class="propref"><span>{I18n.t("user.photo.label")}{I18n.t("punc.colon")}</span></a></span></h3>
+                  <div class="group">
+                    <FormControl className="FC text">
+                      <TextField
+                        className="FC"
+                        label={I18n.t("user.photo.label")}
+                        value={val.picture}
+                        onChange={handleChange}
+                        onBlur={async (e) => {
+                          if(e.currentTarget.value) {
+                            let valid = await this.validateURI(e.currentTarget.value)
+                            console.log("valid:",valid)
+                            if(!valid) {
+                              this.setState({errors:{...this.state.errors, picture:I18n.t("user.photo.error")}})
+                            } else if(this.state.errors.picture) {
+                              let errors = { ...this.state.errors }
+                              delete errors.picture
+                              this.setState({errors})
+                            }
+                          } 
+                          else if(this.state.errors.picture) {
+                              let errors = { ...this.state.errors }
+                              delete errors.picture
+                              this.setState({errors})
+                          }
+                        }}
+                        inputProps={{ name: 'picture', id: 'picture' }}
+                        {... this.state.errors.picture?{error:true,helperText:this.state.errors.picture}:{} }
+                      />
+                    </FormControl>
+                  </div>
+                </div>
+
               {/* <h1><img src={profile.picture} alt="profile" />{this.props.profile?this.props.profile[foaf+"mbox"][0].value:null}</h1> */}
               { /*}
               <Panel header="Profile picture: ">
@@ -339,19 +436,7 @@ export class Profile extends Component<Props,State> {
                 <pre>{JSON.stringify(profile, null, 2)}</pre>
               </Panel> 
               */}
-                <div data-props>
-                  <h3><span><a class="propref"><span>{I18n.t("user.name")}{I18n.t("punc.colon")}</span></a></span></h3>
-                  <div class="group">
-                    <FormControl className="FC">
-                      <InputLabel htmlFor="name">{I18n.t("user.name")}</InputLabel>
-                      <Input
-                        value={val.name}
-                        onChange={handleChange}
-                        inputProps={{ name: 'name', id: 'name' }}
-                      />
-                    </FormControl>
-                  </div>
-                </div>
+
                 <div data-props>
                   <h3><span><a class="propref"><span>{I18n.t("user.gender")}{I18n.t("punc.colon")}</span></a></span></h3>
                   <div class="group">
@@ -446,7 +531,10 @@ export class Profile extends Component<Props,State> {
                         }
                         label={I18n.t("user.agree")}
                       />
-                      <a class={"ulink "+(this.state.patch&&!this.state.updating?"on":"")} id="upd" {... this.state.patch?{onClick:this.handlePatch.bind(this)}:{}}>{this.state.updating?I18n.t("user.updating"):I18n.t("user.update")}</a>
+                      <div id="validate">
+                        { hasError && <WarningIcon/>}
+                        <a class={"ulink "+(this.state.patch&&!hasError&&!this.state.updating?"on":"")} id="upd" {... this.state.patch?{onClick:this.handlePatch.bind(this)}:{}}>{this.state.updating?I18n.t("user.updating"):I18n.t("user.update")}</a>
+                      </div>
                   </div>
                 </div>
 

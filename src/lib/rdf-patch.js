@@ -58,7 +58,7 @@ function getPatch(iri, updates, resource, tag:string, id:string, dict) {
         if(resource[tag]) {
             rv = resource[tag].map(v => v.value)
             toDel = [ ...rv.filter(v => !uv.includes(v) ) ]
-            toAdd = toAdd.filter(v => !rv.includes(v)) 
+            toAdd = toAdd.filter(v => v && !rv.includes(v)) 
         }
         console.log("add/del:",toAdd,toDel)
         let diff = ( rv.length != uv.length || toDel.length || toAdd.length)
@@ -98,7 +98,7 @@ function renderPatch(that, mods, id) {
         let graph = bdgu+id
         let graphP = bdgup+id
 
-        //console.log("patch",mods,res,upd,iri,dict)
+        console.log("patch",mods,res,upd,iri,dict)
 
         let patch = mods.map(k => getPatch(iri, upd, res, k, id, dict)).join("")
 
