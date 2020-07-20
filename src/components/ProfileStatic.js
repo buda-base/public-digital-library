@@ -41,8 +41,8 @@ const tmp   = "http://purl.bdrc.io/ontology/tmp/" ;
 
 const propsMap = {  name: skos+"prefLabel", email: foaf+"mbox",
                     gender: bdo+"personGender", male: bdr+"GenderMale", female: bdr+"GenderFemale", "no-answer": bdr+"GenderNotSpecified",
-                    interest: bdou+"interest", 
-                    region: bdou+"mainResidenceArea", outside:tmp+"outside", kham:tmp+"kham", amdo:tmp+"amdo", "u-tsang":tmp+"u-tsang", other:tmp+"other",
+                    interest: bdou+"interest", otherInterest:tmp+"otherInterest",
+                    region: bdou+"mainResidenceArea", outside:"outside", kham:"kham", amdo:"amdo", "u-tsang":"u-tsang", other:"other",
                     agree: tmp+"agreeEmail" }
 
 type Props = {
@@ -61,6 +61,7 @@ type State = {
    region:{},
    //affiliation:string,
    interest:{},
+   otherInterest:{},
    patch?:{},
    profile?:{},
    email?:{},
@@ -73,7 +74,7 @@ export class Profile extends Component<Props,State> {
 
   constructor(props : Props) {
     super(props);
-    this.state = { name:{type:"literal"}, gender:{}, region:{}, interest:{}, agree:{type:"literal"}, errors:{}, collapse:{} }
+    this.state = { name:{type:"literal"}, gender:{}, region:{}, interest:{},  otherInterest:{}, agree:{type:"literal"}, errors:{}, collapse:{} }
 
   }
   
@@ -237,7 +238,7 @@ export class Profile extends Component<Props,State> {
           this.setState(state)
         }
 
-        let val = { name:"", gender:"", interest:"", region:"", email:"", agree:"" }
+        let val = { name:"", gender:"", interest:"", region:"", email:"", agree:"", otherInterest:"" }
         for(let k of Object.keys(val)) {          
           if(this.state[k] && this.state[k].value !== undefined) val[k] = this.state[k].value
           else if(this.state[k] && Array.isArray(this.state[k])) val[k] = this.state[k]
@@ -246,6 +247,9 @@ export class Profile extends Component<Props,State> {
         }
         if(!val.interest) val.interest = []
         else if(!Array.isArray(val.interest)) val.interest = [ val.interest ]
+
+        // support for property like "tmp:kham"
+        if(val.region && val.region.startsWith(tmp)) val.region = val.region.replace(new RegExp(tmp),"")
 
         console.log("val",val)
 
@@ -391,6 +395,17 @@ export class Profile extends Component<Props,State> {
                           .map((k) => <MenuItem value={tmp+k}>{I18n.t("prop."+"tmp:"+k)}</MenuItem>)}
                       </Select>
                     </FormControl>
+                    { val.interest.includes(tmp+"other") && <div class="sub otherI">
+                      <h4 class="first type"><a class="propref"><span lang={this.props.locale}>{I18n.t("prop.tmp:other")}{I18n.t("punc.colon")}</span></a></h4>
+                      <FormControl className="FC">
+                        <InputLabel htmlFor="otherInterest">{I18n.t("prop.tmp:other")}</InputLabel>
+                        <Input
+                          value={val.otherInterest}
+                          onChange={handleChange}
+                          inputProps={{ name: 'otherInterest', id: 'otherInterest' }}
+                        />
+                      </FormControl>
+                    </div> }
                   </div>
                 </div> 
 

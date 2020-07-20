@@ -1109,7 +1109,7 @@ h4:not(:hover) > .lang
 .resource.user .data .header .before { display:flex;align-items: center; justify-content: center;}
 .resource.user .data .header .before img { max-width:80px; height:auto; flex-shrink:0;flex-grow:0; }
 
-.resource.user .data .FC { /*width:300px;*/ min-width:250px; }
+.resource.user .data .FC { /*width:300px;*/ min-width:230px; }
 .resource.user .data .FC .multiple-select > div  { white-space: normal;}
 .resource.user .data .FC .multiple-select > div .chip { margin-bottom:4px;margin-right:3px; /* background-color: #fce08e; */ cursor:pointer;}
 
@@ -1129,6 +1129,10 @@ h4:not(:hover) > .lang
    padding: 0; border:none !important; font-weight:600; font-size:13px;min-width:150px; pointer-events: none;
 }
 .resource.user .data .ulink#upd.on {  cursor:pointer; pointer-events:auto; }
+
+.resource.user .data .group .sub.otherI { border: none; display: flex; align-items: baseline;}
+.resource.user .data .group .sub h4.first { width:195px; }
+.resource.user .data .group .sub .FC { width:calc(100% - 15px); }
 
 .profile-area a.ulink.on:hover { text-decoration: none !important;}
 
@@ -1372,6 +1376,8 @@ vertical-align:middle;}
 #popHoverM { margin-top:-25px; }
 #popSame { margin-top:-10px; z-index:1000000; }
 #popDL { margin-top:30px; }
+
+body > [id^="menu-"] { z-index:10010; }
 
 body > [id^="menu-"] > div:last-child,
 .collapse.sortBy > div:last-child,

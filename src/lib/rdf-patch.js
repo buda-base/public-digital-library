@@ -18,21 +18,21 @@ export const basePublicProps = [ skos+"prefLabel", bdou+"image" ]
 
 function getPatchValue(tag:string, value:any, dict:{}) {
     
-    console.log("prop",prop,value)
+    console.log("prop:",prop,value)
 
     let prop, T, start='', end=''
     prop = dict[tag]
     if(prop) {
         T = prop[rdfs+"range"]
 
-        console.log("range",T)        
+        console.log("range:",T)        
 
         if(T && T.length) {
             if(T[0].value === rdf+"PlainLiteral") { start = '"' ; end = '"' ; }                
             else if(T[0].value === xsd+"anyURI" || T[0].type === "uri") { start = "<" ; end = ">" ; }
         }
     }
-    else if(tag === foaf+"mbox" || tag === tmp+"agreeEmail") { start = '"' ; end = '"' ; }
+    else if(tag === foaf+"mbox" || tag === tmp+"agreeEmail" || tag === tmp+"otherInterest") { start = '"' ; end = '"' ; }
     let vals = value
     if(vals.value) vals = vals.value
     if(!Array.isArray(vals)) vals = [ vals ]
