@@ -79,7 +79,7 @@ export class Profile extends Component<Props,State> {
   constructor(props : Props) {
     super(props);
     this.state = { name:{type:"literal"}, picture:{}, gender:{}, region:{}, interest:{},  otherInterest:{}, agree:{type:"literal"}, errors:{}, collapse:{} }
-
+    this.validateURI = this.validateURI.bind(this);
   }
   
   /*
