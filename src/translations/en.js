@@ -196,7 +196,7 @@ const enTranslation = {
    user:{
       photo:{ 
          hover:"Update profile picture",
-         label:"Profile Picture",                                
+         label:"Profile Picture Url",                                
          helperText:"Paste a direct link to an existing picture",
          error:"Error: cannot find image, please check your link"
       },      

@@ -16,7 +16,7 @@ const xsd   = "http://www.w3.org/2001/XMLSchema#" ;
 
 export const basePublicProps = [ skos+"prefLabel", bdou+"image" ] 
 
-function getPatchValue(tag:string, value:any, dict:{}) {
+function getPatchValue(tag:string, value:any, dict:{}, locale:string) {
     
     console.log("prop:",prop,value)
 
@@ -28,18 +28,19 @@ function getPatchValue(tag:string, value:any, dict:{}) {
         console.log("range:",T)        
 
         if(T && T.length) {
-            if(T[0].value === rdf+"PlainLiteral") { start = '"' ; end = '"' ; }                
-            else if(T[0].value === xsd+"anyURI" || T[0].type === "uri") { start = "<" ; end = ">" ; }
+            if(T[0].value === xsd+"anyURI" || T[0].type === "uri" /*|| tag === bdou+"mainResidenceArea"*/ ) { start = "<" ; end = ">" ; }
+            else if(T[0].value === rdf+"PlainLiteral") { start = '"' ; end = '"' ; }                
+            else if(T[0].value === rdfs+"langString") { start = '"' ; end = '"' ; if(locale) end+="@"+locale; }     
         }
     }
-    else if(tag === foaf+"mbox" || tag === tmp+"agreeEmail" || tag === tmp+"otherInterest") { start = '"' ; end = '"' ; }
+    else if(tag === foaf+"mbox" || tag === tmp+"agreeEmail" || tag === tmp+"otherInterest") { start = '"' ; end = '"' ;  if(locale && tag === tmp+"otherInterest") end+="@"+locale; }
     let vals = value
     if(vals.value) vals = vals.value
     if(!Array.isArray(vals)) vals = [ vals ]
     return vals.map(v => start + fullUri(v) + end)
 }
 
-function getPatch(iri, updates, resource, tag:string, id:string, dict) {
+function getPatch(iri, updates, resource, tag:string, id:string, dict:{}, locale:string) {
 
     //console.log("getP",iri,updates,resource,tag,graph,dict)
 
@@ -67,13 +68,13 @@ function getPatch(iri, updates, resource, tag:string, id:string, dict) {
         if( !resource[tag] || !resource[tag][u] || ( diff ) ) { // TODO more generic test (lang etc.)
             let vals
             if( toDel.length )  { 
-                vals = getPatchValue(tag, toDel, dict)
+                vals = getPatchValue(tag, toDel, dict, locale)
                 for(let val of vals) {
                     str += `D  <${ iri }> <${ tag }> ${ val } <${ graphP }> .\n`
                     if(pub) str += `D  <${ iri }> <${ tag }> ${ val } <${ graph }> .\n`
                 }
             }
-            vals = getPatchValue(tag, toAdd, dict)
+            vals = getPatchValue(tag, toAdd, dict, locale)
             for(let val of vals) {
                 str += `A  <${ iri }> <${ tag }> ${ val } <${ graphP }> .\n`  
                 if(pub) str += `A  <${ iri }> <${ tag }> ${ val } <${ graph }> .\n`  
@@ -95,12 +96,14 @@ function renderPatch(that, mods, id) {
         let iri = that.props.IRI
         let dict = that.props.dictionary
 
+        let locale = that.props.locale
+
         let graph = bdgu+id
         let graphP = bdgup+id
 
-        console.log("patch",mods,res,upd,iri,dict)
+        console.log("patch",mods,res,upd,iri,dict,locale)
 
-        let patch = mods.map(k => getPatch(iri, upd, res, k, id, dict)).join("")
+        let patch = mods.map(k => getPatch(iri, upd, res, k, id, dict, locale)).join("")
 
 // H  id      "${ that._uuid }"
 

@@ -45,7 +45,7 @@ const propsMap = {  name: skos+"prefLabel", email: foaf+"mbox",
                     picture:bdou+"image",
                     gender: bdo+"personGender", male: bdr+"GenderMale", female: bdr+"GenderFemale", "no-answer": bdr+"GenderNotSpecified",
                     interest: bdou+"interest", otherInterest:tmp+"otherInterest",
-                    region: bdou+"mainResidenceArea", outside:"outside", kham:"kham", amdo:"amdo", "u-tsang":"u-tsang", other:"other",
+                    region: bdou+"mainResidenceArea", outside:tmp+"outside", kham:tmp+"kham", amdo:tmp+"amdo", "u-tsang":tmp+"uTsang", other:tmp+"other",
                     agree: tmp+"agreeEmail" }
 
 type Props = {
@@ -195,9 +195,9 @@ export class Profile extends Component<Props,State> {
 
   preparePatch = (state:{}) =>{
 
-      let mods = Object.keys(state).filter(k => k !== "patch" && state[k].type && state[k].value !== undefined).reduce( (acc,k) => ({ ...acc, [propsMap[k]]: [ state[k] ] } ), {} )
+      let mods = Object.keys(state).filter(k => k !== "patch" && state[k] && state[k].type && state[k].value !== undefined).reduce( (acc,k) => ({ ...acc, [propsMap[k]]: [ state[k] ] } ), {} )
       let id = shortUri(this.props.userID).split(':')[1]
-      let that = { state: { resource:this.props.profile, updates:mods}, props:{ dictionary:this.props.dictionary, IRI:this.props.userID } }
+      let that = { state: { resource:this.props.profile, updates:mods}, props:{ dictionary:this.props.dictionary, IRI:this.props.userID, locale:this.props.locale } }
 
       console.log("mods", mods, id, that)
 
@@ -265,13 +265,13 @@ export class Profile extends Component<Props,State> {
     else {
         if(this.tO) clearTimeout(this.tO)
 
-        let handleChange = (e,val1,val2) => {
+        let handleChange = (e,val1,val2,forceText:boolean=false) => {
 
 
           let type = this.state[e.target.name].type
           if(!type) type = 'uri'
           let value = propsMap[e.target.value]
-          if(!value) value = e.target.value
+          if(!value || forceText) value = e.target.value
 
           if(val1 === "agree") value = val2.toString()
 
@@ -294,8 +294,8 @@ export class Profile extends Component<Props,State> {
         if(!val.interest) val.interest = []
         else if(!Array.isArray(val.interest)) val.interest = [ val.interest ]
 
-        // support for property like "tmp:kham"
-        if(val.region && val.region.startsWith(tmp)) val.region = val.region.replace(new RegExp(tmp),"")
+        // deprecated / support for property like "tmp:kham"
+        // if(val.region && val.region.startsWith(tmp)) val.region = val.region.replace(new RegExp(tmp),"")
 
         console.log("val",val)
 
@@ -350,7 +350,7 @@ export class Profile extends Component<Props,State> {
                       <InputLabel htmlFor="name">{I18n.t("user.name")}</InputLabel>
                       <Input
                         value={val.name}
-                        onChange={handleChange}
+                        onChange={(e,v1,v2) => handleChange(e,v1,v2,true)}
                         inputProps={{ name: 'name', id: 'name' }}
                       />
                     </FormControl>
@@ -366,7 +366,7 @@ export class Profile extends Component<Props,State> {
                           className="FC"
                           label="Email"
                           value={val.email}
-                          onChange={handleChange}
+                          onChange={(e,v1,v2) => handleChange(e,v1,v2,true)}
                           inputProps={{ name: 'email', id: 'email' }}
                           {... this.state.errors.email?{error:true,helperText:this.state.errors.email}:{} }
                         />
@@ -406,7 +406,7 @@ export class Profile extends Component<Props,State> {
                         className="FC"
                         label={I18n.t("user.photo.label")}
                         value={val.picture}
-                        onChange={handleChange}
+                        onChange={(e,v1,v2) => handleChange(e,v1,v2,true)}
                         onBlur={async (e) => {
                           let ev = { ...e }
                           let value = ev.currentTarget.getAttribute('value') 
@@ -470,7 +470,7 @@ export class Profile extends Component<Props,State> {
                     <FormControl className="FC">
                       <InputLabel htmlFor="interest" /*classes={{root:classes.root}}*/ >{I18n.t("user.area")}</InputLabel>
                       <Select
-                        classes={{root:"multiple-select"}}                        
+                        classes={{root:"multiple-select",selected:"youpi"}}                        
                         value={val.interest}
                         onChange={handleChange}
                         inputProps={{ name:"interest", id: 'interest'}}
@@ -486,7 +486,7 @@ export class Profile extends Component<Props,State> {
                         }}
                       >
                         {["TibetanBuddhistTexts", "BonpoTexts", "SanskritTexts", "ChineseTexts", "SoutheastAsianTexts", "multiLingualTexts", "Bibliographies", "Maps", "BuddhistArt", "other"]
-                          .map((k) => <MenuItem value={tmp+k}>{I18n.t("prop."+"tmp:"+k)}</MenuItem>)}
+                          .map((k) => <MenuItem className={(val.interest.includes(tmp+k)?"selected":"")} value={tmp+k}>{I18n.t("prop."+"tmp:"+k)}</MenuItem>)}
                       </Select>
                     </FormControl>
                     { val.interest.includes(tmp+"other") && <div class="sub otherI">
@@ -495,7 +495,7 @@ export class Profile extends Component<Props,State> {
                         <InputLabel htmlFor="otherInterest">{I18n.t("prop.tmp:other")}</InputLabel>
                         <Input
                           value={val.otherInterest}
-                          onChange={handleChange}
+                          onChange={(e,v1,v2) => handleChange(e,v1,v2,true)}
                           inputProps={{ name: 'otherInterest', id: 'otherInterest' }}
                         />
                       </FormControl>
@@ -573,13 +573,13 @@ export class Profile extends Component<Props,State> {
                 </FormControl>
                  */}
                  
-              { /*
+              { 
                 this.state.patch && 
                    <pre id="patch" contentEditable="true">
                     { this.state.patch }
                    </pre> 
                 
-              */ }
+              }
               
 
               {/*               

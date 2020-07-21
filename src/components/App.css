@@ -1384,6 +1384,11 @@ vertical-align:middle;}
 #popDL { margin-top:30px; }
 
 body > [id^="menu-"] { z-index:10010; }
+#menu-interest ul li { padding-left:48px}
+#menu-interest ul li::after { content:'';display:inline-block;position:absolute;background: url(/icons/check-blank.svg); width:20px; height:20px; 
+   left:16px; opacity:0.65;
+}
+#menu-interest ul li.selected::after { background: url(/icons/check-black.svg); }
 
 body > [id^="menu-"] > div:last-child,
 .collapse.sortBy > div:last-child,
