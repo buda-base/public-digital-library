@@ -156,7 +156,14 @@ export class Profile extends Component<Props,State> {
 
   handlePatch(e) {
 
-    if(!_.isEmpty(this.state.errors)) return 
+    let hasError = !_.isEmpty(this.state.errors)
+    let errKeys,byPass ;
+    if(hasError) { 
+      errKeys = Object.keys(this.state.errors)
+      if(errKeys.length === 1 && this.state.errors.email) byPass = true  
+    }
+
+    if(hasError && !byPass) return 
 
     this.executePatch(e);
     this.setState({...this.state, updating:true })
@@ -165,6 +172,10 @@ export class Profile extends Component<Props,State> {
   async executePatch(e) {
 
     let response, s 
+    
+    if(!_.isEmpty(this.state.errors)) {
+      s = { ...this.state, errors:{} }
+    }
 
     if(this.state.email && this.state.email.value && this.props.profile && this.props.profile[foaf+"mbox"] && this.props.profile[foaf+"mbox"][0].value !== this.state.email.value) { 
       response = await api.updateEmail(this.state.profile.sub, this.state.email.value)
@@ -302,6 +313,12 @@ export class Profile extends Component<Props,State> {
         if(this.props.profile && this.state.profile && !this.props.resetLink) store.dispatch(data.getResetLink(this.props.userID, this.props.profile, this.state.profile))
 
         let hasError = !_.isEmpty(this.state.errors)
+        let errKeys,byPass ;
+        if(hasError) { 
+          errKeys = Object.keys(this.state.errors)
+          if(errKeys.length === 1 && this.state.errors.email) byPass = true  
+        }
+
 
         /*
         const classes = createStyles({root:"green"})
@@ -542,7 +559,7 @@ export class Profile extends Component<Props,State> {
                       />
                       <div id="validate">
                         { hasError && <WarningIcon/>}
-                        <a class={"ulink "+(this.state.patch&&!hasError&&!this.state.updating?"on":"")} id="upd" {... this.state.patch?{onClick:this.handlePatch.bind(this)}:{}}>{this.state.updating?I18n.t("user.updating"):I18n.t("user.update")}</a>
+                        <a class={"ulink "+(this.state.patch&&(!hasError||byPass)&&!this.state.updating?"on":"")} id="upd" {... this.state.patch?{onClick:this.handlePatch.bind(this)}:{}}>{this.state.updating?I18n.t("user.updating"):I18n.t("user.update")}</a>
                       </div>
                   </div>
                 </div>
