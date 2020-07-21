@@ -401,9 +401,10 @@ export class Profile extends Component<Props,State> {
                         value={val.picture}
                         onChange={handleChange}
                         onBlur={async (e) => {
-                          if(e.currentTarget.value) {
-                            let valid = await this.validateURI(e.currentTarget.value)
-                            console.log("valid:",valid)
+                          let ev = { ...e }
+                          if(ev.currentTarget.value) {
+                            let valid = await this.validateURI(ev.currentTarget.value)
+                            console.log("valid:", ev,ev.currenTarget, valid)
                             if(!valid) {
                               this.setState({errors:{...this.state.errors, picture:I18n.t("user.photo.error")}})
                             } else if(this.state.errors.picture) {
