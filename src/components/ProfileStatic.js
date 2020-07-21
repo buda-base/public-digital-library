@@ -573,13 +573,13 @@ export class Profile extends Component<Props,State> {
                 </FormControl>
                  */}
                  
-              { 
+              { /*
                 this.state.patch && 
                    <pre id="patch" contentEditable="true">
                     { this.state.patch }
                    </pre> 
                 
-              }
+              */ }
               
 
               {/*               
