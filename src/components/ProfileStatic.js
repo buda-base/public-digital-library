@@ -215,18 +215,12 @@ export class Profile extends Component<Props,State> {
 
     try {
 
-      console.log("validate:try",url)
-
       //let test = await api._fetch( url, { method:"GET", mode:"no-cors" } )            
       //if(!test.ok) throw new Error("ERROR:"+test) 
 
       let img = new Image(), _this = this ;
 
-      console.log("validate:img",img,_this)
-
       _this.setState({errors:{..._this.state.errors, picture:false}})
-
-      console.log("validate:set state")
 
       img.onerror = function () {
         console.error("validate:cannot load "+url);        
@@ -239,11 +233,7 @@ export class Profile extends Component<Props,State> {
         _this.setState({errors})
       }
 
-      console.log("validate:set src")
-
       img.src = url
-
-      console.log("validate:valid!",url,img)
 
       return true
     }
