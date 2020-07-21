@@ -3908,7 +3908,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                //if(other && other.length) 
                message.push(<Typography className="no-result">
                   { I18n.t("search.filters.noresults",{ 
-                     keyword:this.props.keyword, 
+                     keyword:'"'+lucenequerytokeyword(this.props.keyword)+'"', 
                      language:"$t("+lang+")", 
                      type:I18n.t("types.searchIn", { type:I18n.t("types."+this.state.filters.datatype[0].toLowerCase()+"_plural").toLowerCase() }),  
                      interpolation: {escapeValue: false} }) }
@@ -4999,7 +4999,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      placeholder={I18n.t("home.search")}                        
                      closeIcon={<Close className="searchClose" style={ {color:"rgba(0,0,0,1.0)",opacity:1} } onClick={() => { this.props.history.push({pathname:"/",search:""}); this.props.onResetSearch();} }/>}
                      disabled={this.props.hostFailure}
-                     onClick={(ev) => { changeKW(this.state.keyword?this.state.keyword.replace(/\"/g,""):""); $("#search-bar input[type=text][placeholder]").attr("placeholder",I18n.t("home.start"));  } }
+                     onClick={(ev) => { changeKW(this.state.keyword?lucenequerytokeyword(this.state.keyword):""); $("#search-bar input[type=text][placeholder]").attr("placeholder",I18n.t("home.start"));  } }
                      onBlur={(ev) => { console.log("BLUR"); setTimeout(() => this.setState({...this.state,dataSource:[]}),100); $("#search-bar input[type=text][placeholder]").attr("placeholder", I18n.t("home.search"));  } }
                      onChange={(value:string) => changeKW(value)}
                      onRequestSearch={this.requestSearch.bind(this)}

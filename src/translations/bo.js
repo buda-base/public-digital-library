@@ -45,7 +45,7 @@ const boTranslation = {
       instance_plural:"དཔེ་རྒྱུན།",
       images:"བཤེར་པར།",
       volume:"བཤེར་པར།",
-      volume_num:"པོད། {{num,counttobo}}"
+      volume_num:"པོད། {{num,counttobo}}",
       searchIn:"{{type}}"
    },
    topbar:{
