@@ -207,7 +207,7 @@ export class Profile extends Component<Props,State> {
   }
 
 
-  validateURI = async (url) => {
+  async validateURI(url) {
     console.log("validate",url)
 
     if(!url) return true ;
