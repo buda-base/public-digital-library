@@ -110,7 +110,7 @@ class LanguageSidePane extends Component<Props,State> {
                      {items.map((value, index) => (
                         <SortableItem key={`item-${value}`} index={index} value={value} />
                      ))}
-                     <div class="ol-li-lang"><li><a title="Add" onClick={(ev) => { this.props.onToggleCollapse("popover-lang",$(ev.currentTarget).closest(".widget")[0]) } }><AddBox className="add"/></a><label><span>More</span></label></li></div>
+                     <div class="ol-li-lang"><li><a title="Add" onClick={(ev) => { this.props.onToggleCollapse("popover-lang",$(ev.currentTarget).closest(".widget")[0]) } }><AddBox className="add"/></a><label><span>{I18n.t("Rsidebar.priority.more")}</span></label></li></div>
                   </ol>
                ]);
             });

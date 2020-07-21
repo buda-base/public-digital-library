@@ -566,10 +566,10 @@ export class Profile extends Component<Props,State> {
 
             </div>
                 <div class="data" id="outline">
-                  <h2 id="display">Display Preferences</h2>
+                  <h2 id="display">{I18n.t("Rsidebar.title")}</h2>
                   <div class="search">
                     <div>
-                      <h3>Data Language Priority</h3>
+                      <h3>{I18n.t("Rsidebar.priority.title")}</h3>
                     </div>
                   </div>
                   <div>

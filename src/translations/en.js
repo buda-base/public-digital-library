@@ -355,7 +355,8 @@ const enTranslation = {
       priority:{
          title:"Data Language Priority",
          help:"Please select the languages you want to have the data displayed in, by order of priority (you do not need to list them all)",
-         user:"User Defined"
+         user:"User Defined",
+         more:"More"
       }
    },
    Asidebar:{
