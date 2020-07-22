@@ -158,7 +158,8 @@ const boTranslation = {
       "tmp:hasImage":"བཤེར་པར།",
       "tmp:hasEtext":"འཕྲུལ་ཡིག",
       "unspecified":"རིགས་མ་དགར་བ།",
-      "true":"ཡིན།"
+      "true":"ཡིན།",
+      "tmp:noteMatch": "མཆན།",
    },
    result:{
       open:"ཁ་ཕྱེ།",

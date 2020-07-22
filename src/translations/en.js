@@ -165,7 +165,9 @@ const enTranslation = {
       "tmp:Bibliographies":"Bibliographies",
       "tmp:Maps":"Maps",
       "tmp:BuddhistArt":"Buddhist Art",
-      "tmp:other":"Other"
+      "tmp:other":"Other",
+      "tmp:noteMatch": "Note",
+      "tmp:extendedMatch": "Ext. match",
    },
    result:{
       open:"Open",
