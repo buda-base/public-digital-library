@@ -419,6 +419,13 @@ const enTranslation = {
       endV:"End Volume: {{num}}",
       endP:"End Page: {{num}}",
       endL:"End Line: {{num}}"
+   },
+   footer:{
+      BDRC: "Buddhist Digital Resource Center",
+      adr1: "1430 Massachusetts Ave., 5th floor",
+      adr2: "Cambridge, MA, USA 02138",
+      contact: "CONTACT US",
+      connect: "Connect with us on social media"
    }
 } ;
 

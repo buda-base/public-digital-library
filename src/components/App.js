@@ -74,6 +74,7 @@ import {getEntiType} from '../lib/api';
 import {narrowWithString} from "../lib/langdetect"
 import {sortLangScriptLabels, extendedPresets} from '../lib/transliterators';
 import './App.css';
+import Footer from "./Footer"
 
 import {svgEtextS,svgImageS} from "./icons"
 
@@ -5261,6 +5262,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             </div>
             <LanguageSidePaneContainer />
          </div>
+         <Footer locale={this.props.locale}/>
       </div>
       );
    }

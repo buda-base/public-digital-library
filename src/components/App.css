@@ -76,6 +76,37 @@
    font-weight: 900;
    font-style: normal;
 }
+/* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ footer */
+
+footer#site-footer { background:#172832; color:white; padding-bottom:0px; }
+footer#site-footer > div.head { background: #dddddd; position:absolute; height:55px; width:100%; display:block;z-index:0;}
+footer#site-footer > div.head::before { content:'';display:block;background:#efefef; height:100%; width:1440px;max-width:100%; margin:auto;}
+footer#site-footer > div.foot,
+footer#site-footer > div.body { padding:40px 60px; width:1222px; max-width:100%; margin:auto; z-index:1;
+   display:block;position: relative;
+}
+footer#site-footer > div.body { background:#fce08d; color:#172832; }
+footer#site-footer div * { vertical-align: top;}
+footer#site-footer .p50 { width:50%; display: inline-block;}
+footer#site-footer .p35 { width:35%; display: inline-block;}
+footer#site-footer .p65 { width:65%; display: inline-block;}
+
+footer#site-footer #b2 #f1 span a { color:#111312; text-decoration: none; font-size:12px;}
+
+footer#site-footer > .body * { font-size: 14px;  letter-spacing: 0.34px; line-height: 21px; font-weight: 400; font-family:"Noto Sans Tc" !important;} 
+footer#site-footer > .body #b1 #f1 p { font-size: 20px;  letter-spacing: 0.28px;  line-height: 25px; font-weight:700; display:inline-block; width:190px;margin:0; }
+footer#site-footer > .body #b2 #f1 span { border: 2px solid #111312; text-transform: uppercase; font-size: 12px; letter-spacing: 0.35px; border-radius: 2px;padding:10px;
+   margin-top:0px; display: inline-block;
+}
+footer#site-footer > .body #b2 #f1 { padding-bottom:16px; border-right:1px solid #111312; margin-right:-1px;}
+footer#site-footer > .body #b2 #f2 #s1 { display:flex; align-items: center;}
+footer#site-footer > .body #b2 #f2 #s1 > a:not(:last-child) > div svg { max-width:32px; position:relative !important; }
+footer#site-footer > .body #b2 #f2 #s1 > a:not(:last-child) > div,
+footer#site-footer > .body #b2 #f2 #s1 > a { width:52px !important;height:52px !important;display:inline-flex;align-items: center; justify-content: center; }
+footer#site-footer > .body #b2 #f2 #s1 > a { border:2px solid #111312; border-radius: 50%;margin-top:10px;margin-right:10px;}
+
+
+footer#site-footer > div.foot { color:transparent; }
 
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ home */
 
@@ -92,7 +123,7 @@
 #root > div > .resource {   box-sizing: content-box; background-color:#efefef; width:1160px; margin-left:auto;margin-right:auto;
    max-width:97%;background-color:#efefef;  position:relative;}
 
-#root > div > .resource {  padding:155px 140px; padding-bottom:200px; display:flex; text-align:left; }
+#root > div > .resource {  padding:155px 140px; padding-bottom:75px; display:flex; text-align:left; }
 
 
 
@@ -426,8 +457,10 @@ body { overflow:auto !important;padding-right:0 !important; /*font-family:"Robot
 #samples { width: 960px; margin-right:40px; /*margin: auto;*/ text-align: left; z-index: 0; padding:30px;background:white; display:block;
    padding-left:16px; padding-right:16px; padding-bottom:140px; max-width:100%;box-shadow: 0 2px 10px #e2e2e2; box-sizing:border-box;
 }
-#samples { padding: 20px 0 40px 0 ; width:910px;margin-right:0px; /*padding-left:37px; */}
+#samples { padding: 20px 0 40px 0 ; width:910px;margin-right:0px; /*padding-left:37px; */ margin-bottom:75px;}
 #samples h3 { text-transform: uppercase; text-align: center; font-size:23px;margin:10px 0;}
+
+#results {  padding-bottom:75px;margin-bottom:75px;}
 
 p.no-result { 
    font-size: 16px;
