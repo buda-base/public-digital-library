@@ -5262,7 +5262,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             </div>
             <LanguageSidePaneContainer />
          </div>
-         <Footer locale={this.props.locale}/>
+         { message.length == 0 && !this.props.loading && !this.props.keyword && <Footer locale={this.props.locale}/> }
       </div>
       );
    }

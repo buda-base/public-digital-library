@@ -611,7 +611,7 @@ export class Profile extends Component<Props,State> {
           </div>]}
           </div>
         </div>
-        <Footer locale={this.props.locale}/>
+        {/* <Footer locale={this.props.locale}/> */}
       </div>
       );
     }

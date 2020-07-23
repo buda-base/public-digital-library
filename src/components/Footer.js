@@ -34,7 +34,7 @@ class Footer extends Component<Props,State> {
                         <div id="f1" class="p35">
                             <span><a href={"https://bdrc.io/contact/"+locale} target="_blank">{I18n.t("footer.contact")}</a></span>
                         </div>
-                        <div id="f2" class="p65"><div style={{"float":"right",paddingRight:"80px"}}>
+                        <div id="f2" class="p65"><div>
                             <span>{I18n.t("footer.connect")}</span>
                             <div id="s1">
                                 <SocialIcon target="_blank" url="https://www.facebook.com/TBRC.org" fgColor="#111312" bgColor="transparent" />

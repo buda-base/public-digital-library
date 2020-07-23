@@ -5727,7 +5727,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                   { theDataExt }
                </div>
             </div>
-            <Footer locale={this.props.locale}/>
+            {/* <Footer locale={this.props.locale}/> */}
          </div>,
          <LanguageSidePaneContainer />]
 
