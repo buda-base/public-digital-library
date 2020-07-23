@@ -2236,7 +2236,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          else val = highlight(val)
          let lang = i["xml:lang"]
          if(!lang) lang = i["lang"]
-         ret.push(<span>{val}{
+         ret.push(<span lang={lang}>{val}{
             lang && <Tooltip placement="bottom-end" title={
                               <div style={{margin:"10px"}}>
                                  {I18n.t(languages[lang]?languages[lang].replace(/search/,"tip"):lang)}/>
@@ -3130,10 +3130,6 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             { this.getResultProp("tmp:originalRecord",allProps,false,false, [ tmp+"originalRecord", adm+"originalRecord"]) }
             {/* { this.getResultProp(bdo+"language",allProps) } */}
             {/* { this.getResultProp(bdo+"script",allProps) } */}
-            
-
-            { this.getResultProp(bdo+"incipit",allProps,false,false) }
-            
 
             { this.getResultProp(bdo+"workTranslationOf",allProps,false) }
 
@@ -3156,7 +3152,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
             {/* { this.getResultProp(bdo+"contentLocationStatement",allProps,false,false, [bdo+"instanceExtentStatement",bdo+"contentLocationStatement"]) } */}
 
-            { this.getResultProp(bdo+"biblioNote",allProps,false,false,[bdo+"biblioNote", bdo+"catalogInfo", rdfs+"comment"]) }
+            { this.getResultProp(bdo+"biblioNote",allProps,false,false,[bdo+"biblioNote", bdo+"catalogInfo", rdfs+"comment", tmp+"noteMatch" , tmp+"extendedMatch"]) }
 
             {/* { this.getResultProp(tmp+"provider",allProps) } */}
             {/* { this.getResultProp(tmp+"popularity",allProps,false,false, [tmp+"entityScore"]) } */}
@@ -5033,7 +5029,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                                  let tab = v.split("@")
                                  console.log("suggest?",v,tab)
                                  return (
-                                    <MenuItem key={v} style={{lineHeight:"1em"}} onClick={(e)=>{ 
+                                    <MenuItem key={v} style={{lineHeight:"1em"}} onMouseDown={(e) => e.preventDefault()} onClick={(e)=>{ 
                                           console.log("CLICK");
                                           this.setState({...this.state,dataSource:[]});
                                           if(this.state.keyword) this.requestSearch(tab[0],null,tab[1])
