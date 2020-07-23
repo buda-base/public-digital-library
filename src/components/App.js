@@ -74,6 +74,7 @@ import {getEntiType} from '../lib/api';
 import {narrowWithString} from "../lib/langdetect"
 import {sortLangScriptLabels, extendedPresets} from '../lib/transliterators';
 import './App.css';
+import Footer from "./Footer"
 
 import {svgEtextS,svgImageS} from "./icons"
 
@@ -4977,7 +4978,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
           { top_right_menu(this) }
 
-         <div className="App" style={{display:"flex"}}>
+         <div className={"App "+(message.length == 0 && !this.props.loading && !this.props.keyword ? "home":"")} style={{display:"flex"}}>
             <div className={"SearchPane"+(this.props.keyword ?" resultPage":"") }  ref={this._refs["logo"]}>            
             { showMenus }
                <div class="fond-logo">
@@ -5261,6 +5262,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             </div>
             <LanguageSidePaneContainer />
          </div>
+         { message.length == 0 && !this.props.loading && !this.props.keyword && <Footer locale={this.props.locale}/> }
       </div>
       );
    }

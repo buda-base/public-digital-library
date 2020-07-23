@@ -26,6 +26,7 @@ import renderPatch from '../lib/rdf-patch.js' ;
 import { top_right_menu, report_GA, getGDPRconsent } from './App'
 import { top_left_menu } from './ResourceViewer'
 import LanguageSidePaneContainer,{LangPrefTreeContainer} from '../containers/LanguageSidePaneContainer';
+import Footer from "./Footer" 
 
 import I18n from 'i18next';
 
@@ -610,7 +611,8 @@ export class Profile extends Component<Props,State> {
           </div>]}
           </div>
         </div>
-        </div>
+        {/* <Footer locale={this.props.locale}/> */}
+      </div>
       );
     }
   }
