@@ -1574,7 +1574,37 @@ function sortResultsByNbChunks(results,reverse) {
    return results
 }
 
-
+function filterExtendedMatch(resultMain) {
+   let res = {}
+   for (const [key, allProps] of Object.entries(resultMain)) {
+      let extMatchProps = allProps.filter(a => a.type === tmp+"extendedMatch")
+      if (extMatchProps.length < 1) {
+         continue;
+      }
+      let extMatchRepl = {}
+      extMatchProps.forEach((extMatchProp, i) => {
+         extMatchRepl[extMatchProp.value.replace(/[↦↤]/g,"")] = [extMatchProp.value, i]
+      });
+      res[key] = allProps.reduce((acc, prop) => {
+         // do not add the extendedMatches
+         if (prop.type === tmp+"extendedMatch") 
+            return acc;
+         // highlight the values that are in extendedMatch:
+         if (prop.value in extMatchRepl) {
+            // first remove the value from extMatchProps
+            let idxInExt = extMatchRepl[prop.value][0];
+            extMatchProps = extMatchProps.filter(function(v, i){
+               return idxInExt != i;
+            })
+            return [ ...acc, {...prop, value: extMatchRepl[prop.value][0]}];
+         }
+         return [...acc, prop];
+      });
+      res[key] = res[key].concat(extMatchProps)
+   }
+   console.error("RESMAIN", res)
+   return res;
+}
 
 function rewriteAuxMain(result,keyword,datatype,sortBy,language)
 {
@@ -1583,14 +1613,20 @@ function rewriteAuxMain(result,keyword,datatype,sortBy,language)
    let langPreset = state.ui.langPreset
    if(!sortBy) sortBy = state.ui.sortBy
    let reverse = sortBy && sortBy.endsWith("reverse")
-   let canPopuSort = false        
+   let canPopuSort = false
+   
+   if (datatype[0] == "Instance") {
+      result["main"] = filterExtendedMatch(result["main"])
+   }
+
    result = Object.keys(result).reduce((acc,e)=>{
       if(e === "main") {
          let keys = Object.keys(result[e])
          if(keys) {
             store.dispatch(dataActions.gotAssocResources(keyword,{ data: keys.reduce( (acc,k) => ({...acc, [k]: result[e][k].filter(e => e.type === skos+"altLabel" || e.type === skos+"prefLabel") }),{})  }))
          }
-         let t = datatype[0].toLowerCase()+"s"         
+         let t = datatype[0].toLowerCase()+"s"
+
          canPopuSort = false        
          let dataWithAsset = keys.reduce( (acc,k) => { 
 
