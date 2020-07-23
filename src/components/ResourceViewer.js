@@ -64,6 +64,8 @@ import IIIFViewerContainer from '../containers/IIIFViewerContainer';
 import LanguageSidePaneContainer from '../containers/LanguageSidePaneContainer';
 import {miradorConfig, miradorSetUI} from '../lib/miradorSetup';
 import { Redirect404 } from "../routes.js"
+import Footer from "./Footer"
+
 import Loader from "react-loader"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faLanguage } from '@fortawesome/free-solid-svg-icons'
@@ -5725,6 +5727,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                   { theDataExt }
                </div>
             </div>
+            {/* <Footer locale={this.props.locale}/> */}
          </div>,
          <LanguageSidePaneContainer />]
 
