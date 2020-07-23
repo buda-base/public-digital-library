@@ -2237,7 +2237,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          else val = highlight(val)
          let lang = i["xml:lang"]
          if(!lang) lang = i["lang"]
-         ret.push(<span>{val}{
+         ret.push(<span lang={lang}>{val}{
             lang && <Tooltip placement="bottom-end" title={
                               <div style={{margin:"10px"}}>
                                  {I18n.t(languages[lang]?languages[lang].replace(/search/,"tip"):lang)}/>
@@ -2452,7 +2452,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             for (let i of sortId) {
 
                if(i.value != "false") 
-                  ret.push(<span><Link to={"/show/"+i.uri}>{i.value}</Link>{
+                  ret.push(<span><Link to={"/show/"+i.uri}><span lang={i.lang}>{i.value}</span></Link>{
                      i.lang && <Tooltip placement="bottom-end" title={
                                        <div style={{margin:"10px"}}>
                                           {I18n.t(languages[i.lang]?languages[i.lang].replace(/search/,"tip"):i.lang)}/>
@@ -3073,7 +3073,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
                      return (<div className={"match "+prop}>
                         <span className={"label " +(lastP === prop?"invisible":"")}>{(!from?prop:from)}{I18n.t("punc.colon")}&nbsp;</span>
-                        {!isArray && <span>{expand!==true?null:inPart}{[!uri?val:<Link className="urilink" to={uri}>{val}</Link>,lang?<Tooltip placement="bottom-end" title={
+                        {!isArray && <span>{expand!==true?null:inPart}{[!uri?val:<Link className="urilink" to={uri}><span lang={lang}>{val}</span></Link>,lang?<Tooltip placement="bottom-end" title={
                            <div style={{margin:"10px"}}>
                               {I18n.t(languages[lang]?languages[lang].replace(/search/,"tip"):lang)}/>
                            </div>
@@ -3094,7 +3094,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                               if(e.lang) lang = e.lang
                               return (
                                  <span>
-                                    <Link to={"/show/"+url}>{m.tmpLabel?m.tmpLabel:label}</Link>
+                                    <Link to={"/show/"+url}><span lang={m.tmpLang?m.tmpLang:lang}>{m.tmpLabel?m.tmpLabel:label}</span></Link>
                                     { lang && <Tooltip placement="bottom-end" title={
                                        <div style={{margin:"10px"}}>
                                           {I18n.t(languages[lang]?languages[lang].replace(/search/,"tip"):lang)}/>
@@ -3131,10 +3131,6 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             { this.getResultProp("tmp:originalRecord",allProps,false,false, [ tmp+"originalRecord", adm+"originalRecord"]) }
             {/* { this.getResultProp(bdo+"language",allProps) } */}
             {/* { this.getResultProp(bdo+"script",allProps) } */}
-            
-
-            { this.getResultProp(bdo+"incipit",allProps,false,false) }
-            
 
             { this.getResultProp(bdo+"workTranslationOf",allProps,false) }
 
@@ -3157,7 +3153,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
             {/* { this.getResultProp(bdo+"contentLocationStatement",allProps,false,false, [bdo+"instanceExtentStatement",bdo+"contentLocationStatement"]) } */}
 
-            { this.getResultProp(bdo+"biblioNote",allProps,false,false,[bdo+"biblioNote", bdo+"catalogInfo", rdfs+"comment"]) }
+            { this.getResultProp(bdo+"biblioNote",allProps,false,false,[bdo+"biblioNote", bdo+"catalogInfo", rdfs+"comment", tmp+"noteMatch" , tmp+"extendedMatch"]) }
 
             {/* { this.getResultProp(tmp+"provider",allProps) } */}
             {/* { this.getResultProp(tmp+"popularity",allProps,false,false, [tmp+"entityScore"]) } */}
@@ -3648,7 +3644,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
                   r.match = r.match.concat( Object.keys(withKey).sort().reduce((acc,e)=>{
                      let elem = {"type":e,"value":withKey[e],lang}
-                     if(label) elem = { ...elem, "tmpLabel":label}
+                     if(label) elem = { ...elem, "tmpLabel":label, "tmpLang":lang}
                      acc.push(elem);
                      return acc;
                   } ,[]) )
@@ -5034,7 +5030,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                                  let tab = v.split("@")
                                  console.log("suggest?",v,tab)
                                  return (
-                                    <MenuItem key={v} style={{lineHeight:"1em"}} onClick={(e)=>{ 
+                                    <MenuItem key={v} style={{lineHeight:"1em"}} onMouseDown={(e) => e.preventDefault()} onClick={(e)=>{ 
                                           console.log("CLICK");
                                           this.setState({...this.state,dataSource:[]});
                                           if(this.state.keyword) this.requestSearch(tab[0],null,tab[1])

@@ -147,6 +147,8 @@ const enTranslation = {
       "bdo:personTeacherOf_plural":"Students",
       "bdo:personStudentOf":"Teacher",
       "bdo:personStudentOf_plural":"Teachers",
+      "bdo:biblioNote":"Note",
+      "bdo:biblioNote_plural":"Notes",
       "tmp:propHasScans":"Scans",
       "tmp:propHasEtext":"Etext",
       "bf:identifiedBy":"Identified By",
@@ -165,9 +167,7 @@ const enTranslation = {
       "tmp:Bibliographies":"Bibliographies",
       "tmp:Maps":"Maps",
       "tmp:BuddhistArt":"Buddhist Art",
-      "tmp:other":"Other",
-      "tmp:noteMatch": "Note",
-      "tmp:extendedMatch": "Ext. match",
+      "tmp:other":"Other"
    },
    result:{
       open:"Open",
