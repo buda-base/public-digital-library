@@ -129,14 +129,15 @@ footer#site-footer > div.foot #t2::before { content:''; display:block; position:
 
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ home */
 
-.App { min-height:100vh;}
+.App:not(.home) { min-height:100vh;} 
+.App:not(.home) .SearchPane { min-height:calc(100vh - 80px - 50px * 0);  }
 
 [role='tooltip'] *, .App *,.nav *,.App *::before,.App *::after, .react-tabs *, .resource *, .resource + * *  { 
    font-family:"Noto Sans", "Roboto", "Helvetica", "Arial", sans-serif !important;
 }
 
 .SearchPane { width:1000px; margin:auto;margin-top:80px;max-width:90%; z-index:0;background:white;padding:50px; padding-bottom:0;
-   min-height:calc(100vh - 80px - 50px * 0); padding-top:0 !important;  padding-bottom:0; }
+   padding-top:0 !important;  padding-bottom:0; }
 
 #root .App .SearchPane,
 #root > div > .resource {   box-sizing: content-box; background-color:#efefef; width:1160px; margin-left:auto;margin-right:auto;

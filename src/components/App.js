@@ -4978,7 +4978,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
           { top_right_menu(this) }
 
-         <div className="App" style={{display:"flex"}}>
+         <div className={"App "+(message.length == 0 && !this.props.loading && !this.props.keyword ? "home":"")} style={{display:"flex"}}>
             <div className={"SearchPane"+(this.props.keyword ?" resultPage":"") }  ref={this._refs["logo"]}>            
             { showMenus }
                <div class="fond-logo">
