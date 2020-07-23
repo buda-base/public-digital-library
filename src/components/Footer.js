@@ -20,6 +20,8 @@ class Footer extends Component<Props,State> {
 
     render() 
     {
+        let locale = "?lang="+(this.props.locale==="zh"?"zh-hans":this.props.locale)
+
         return (
             <footer id="site-footer">
                 <div class="head"></div>
@@ -30,7 +32,7 @@ class Footer extends Component<Props,State> {
                     </div>
                     <div id="b2" class="p50">
                         <div id="f1" class="p35">
-                            <span><a href={"https://bdrc.io/contact/?lang="+(this.props.locale==="zh"?"zh-hans":this.props.locale)} target="_blank">{I18n.t("footer.contact")}</a></span>
+                            <span><a href={"https://bdrc.io/contact/"+locale} target="_blank">{I18n.t("footer.contact")}</a></span>
                         </div>
                         <div id="f2" class="p65"><div style={{"float":"right",paddingRight:"80px"}}>
                             <span>{I18n.t("footer.connect")}</span>
@@ -43,13 +45,13 @@ class Footer extends Component<Props,State> {
                     </div>
                 </div>
                 <div class="foot">
-                    <div class="p65">
-                        <div class="p50">champ1</div>
-                        <div class="p50">champ2</div>
+                    <div class="p60" id="t1">
+                        <div class="p50" id="p1"><img src="/icons/Print-BDRC-icon.svg"/><div>{I18n.t("footer.print")}<a href={"https://bdrc.io/?p=1355"+locale.replace(/[?]/,"&")} target="_blank">{I18n.t("footer.order")}</a></div></div>
+                        <div class="p50" id="p2"><img src="/icons/Newsletter-BDRC-icon.svg"/><div>{I18n.t("footer.join")}<a href="https://tbrc.us5.list-manage.com/subscribe?u=a0b3cdd708836773fd5c50233&id=45722d0d96" target="_blank">{I18n.t("footer.subscribe")}</a></div></div>
                     </div>
-                    <div class="p35">
-                        <div class="p65">champ3</div>
-                        <div class="p35">champ4</div>
+                    <div class="p40" id="t2">
+                        <div class="p65" id="p1"><img src="/icons/donation.svg"/><span>{I18n.t("footer.support")}</span></div>
+                        <div class="p35"><a id="donate" href={"https://bdrc.io/donation/"+locale} target="_blank">{I18n.t("topbar.donate")}</a></div>
                     </div>
                 </div>
            </footer>  

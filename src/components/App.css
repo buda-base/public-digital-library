@@ -90,15 +90,21 @@ footer#site-footer div * { vertical-align: top;}
 footer#site-footer .p50 { width:50%; display: inline-block;}
 footer#site-footer .p35 { width:35%; display: inline-block;}
 footer#site-footer .p65 { width:65%; display: inline-block;}
+footer#site-footer .p40 { width:42%; display: inline-block;}
+footer#site-footer .p60 { width:58%; display: inline-block;}
 
 footer#site-footer #b2 #f1 span a { color:#111312; text-decoration: none; font-size:12px;}
 
-footer#site-footer > .body * { font-size: 14px;  letter-spacing: 0.34px; line-height: 21px; font-weight: 400; font-family:"Noto Sans Tc" !important;} 
+footer#site-footer > .foot *,
+footer#site-footer > .body * { font-size: 14px;  letter-spacing: 0.34px; font-family:"Noto Sans Tc" !important;} 
 footer#site-footer > .body #b1 #f1 p { font-size: 20px;  letter-spacing: 0.28px;  line-height: 25px; font-weight:700; display:inline-block; width:190px;margin:0; }
 footer#site-footer > .body #b2 #f1 span { border: 2px solid #111312; text-transform: uppercase; font-size: 12px; letter-spacing: 0.35px; border-radius: 2px;padding:10px;
    margin-top:0px; display: inline-block;
 }
-footer#site-footer > .body #b2 #f1 { padding-bottom:16px; border-right:1px solid #111312; margin-right:-1px;}
+footer#site-footer > .body #b1 #f2,
+footer#site-footer > .body #b2 #f1 { padding-top:10px;margin-top:10px;}
+
+footer#site-footer > .body #b2 #f1 { padding-bottom:15px; border-right:1px solid #111312; margin-right:-1px;}
 footer#site-footer > .body #b2 #f2 #s1 { display:flex; align-items: center;}
 footer#site-footer > .body #b2 #f2 #s1 > a:not(:last-child) > div svg { max-width:32px; position:relative !important; }
 footer#site-footer > .body #b2 #f2 #s1 > a:not(:last-child) > div,
@@ -106,7 +112,17 @@ footer#site-footer > .body #b2 #f2 #s1 > a { width:52px !important;height:52px !
 footer#site-footer > .body #b2 #f2 #s1 > a { border:2px solid #111312; border-radius: 50%;margin-top:10px;margin-right:10px;}
 
 
-footer#site-footer > div.foot { color:transparent; }
+footer#site-footer > div.foot #donate { text-transform:capitalize; width:120px; float:right; font-weight:700; font-family:"Noto Sans" !important; margin-top:20px; }
+footer#site-footer > div.foot #p2,
+footer#site-footer > div.foot #p1 { display:inline-flex; align-items: center;}
+footer#site-footer > div.foot #t1 > div { align-items: flex-start;  }
+footer#site-footer > div.foot #p2 img,
+footer#site-footer > div.foot #p1 img { margin-right:30px;}
+footer#site-footer > div.foot #p1 img + span  { padding-bottom:5px; display: inline-block; line-height:24px;}
+footer#site-footer > div.foot #p2 img + div,
+footer#site-footer > div.foot #p1 img + div { width:150px; line-height:24px;}
+footer#site-footer > div.foot #p1 img + div { width:220px; }
+footer#site-footer > div.foot img + div a { display:block; text-decoration: none; color:white; font-weight:600; margin-top:12px; }
 
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ home */
 
@@ -355,6 +371,7 @@ body { overflow:auto !important;padding-right:0 !important; /*font-family:"Robot
 
 .nav a { text-decoration: none; font-size:0; display:inline-block; }
 
+footer #donate,
 .nav a#about,
 .nav a > span,
 .nav #donate, 
@@ -374,6 +391,7 @@ body { overflow:auto !important;padding-right:0 !important; /*font-family:"Robot
 
 #login span { display:inline-block; margin-left:20px; cursor:pointer; /*pointer-events:none; opacity:0.65;*/}
 
+footer #donate,
 .nav #donate { width:150px;height:50px;border-radius: 4px; color:white;background-color: #d73449; line-height:50px; 
    text-align:center; display:inline-block;  margin-left:35px; }
 .nav #donate img { vertical-align: middle; display: inline-block; margin-right:10px;}

@@ -425,7 +425,12 @@ const enTranslation = {
       adr1: "1430 Massachusetts Ave., 5th floor",
       adr2: "Cambridge, MA, USA 02138",
       contact: "CONTACT US",
-      connect: "Connect with us on social media"
+      connect: "Connect with us on social media",
+      print:"Order printed copies of works referenced on our website",
+      order:"Order",
+      join:"Join our newsletter and stay up-to-date",
+      subscribe:"Subscribe",
+      support:"Support our mission of preservation and access"
    }
 } ;
 
