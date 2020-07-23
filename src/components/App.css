@@ -1705,7 +1705,9 @@ h4:hover a.no-bdrc img { opacity:1; }
 .resource .data h2.intro + h2 span,
 .resource .title + .data + .data h2.on .T + span { font-size:30px; font-family:'Noto Sans SemCond';font-weight:bold; }
 
-.resource .data h2.intro { padding-right:8px; flex-shrink: 0;}
+.resource .data h2.intro { padding-right:8px; flex-shrink: 0; line-height:42px;}
+
+.resource .data h2.intro + h2 { line-height:42px;}
 
 .resource .data h2.intro,
 .resource .data h2.intro + h2,

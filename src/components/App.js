@@ -922,10 +922,12 @@ class App extends Component<Props,State> {
 
       console.log("search::",key,_key,label) //,this.state,!global.inTest ? this.props:null)
       
-      if(_key.match(/^[UWPGRCTILE][A-Z0-9_]+/) || prefixesMap[key.replace(/^([^:]+):.*$/,"$1")])
+      if(_key.match(/(^[UWPGRCTILE][A-Z0-9_]+$)|(^([cpgwrt]|mw|wa|ws)\d[^ ]*$)/) || prefixesMap[key.replace(/^([^:]+):.*$/,"$1")])
       {
          if(!forceSearch) {
             if(_key.indexOf(":") === -1) _key = "bdr:"+_key
+            let uc = _key.split(":")
+            _key = uc[0] + ":" + uc[1].toUpperCase()
             this.props.history.push({pathname:"/show/"+_key})
          }
          else {
@@ -4905,29 +4907,40 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          */
 
          console.log("changeKW",value,keyEv)
-
+         
+         let dataSource = [] 
          let language = this.state.language
-         let detec ;
-         if(value) detec = narrowWithString(value, this.state.langDetect)
-         let possible = [ ...this.state.langPreset, ...langSelect ]
-         if(detec && detec.length < 3) { 
-            if(detec[0] === "tibt") for(let p of possible) { if(p === "bo" || p.match(/-[Tt]ibt$/)) { language = p ; break ; } }
-            else if(detec[0] === "hani") for(let p of possible) { if(p.match(/^zh((-[Hh])|$)/)) { language = p ; break ; } }
-            else if(["ewts","iast","deva","pinyin"].indexOf(detec[0]) !== -1) for(let p of possible) { if(p.match(new RegExp(detec[0]+"$"))) { language = p ; break ; } }
+         if(value.match(/(^([^:]+:)?[UWPGRCTILE][A-Z0-9_]+$)|(^([^:]+:)?([cpgwrt]|mw|wa|ws)\d[^ ]*$)/)) {
+            dataSource = [ value+"@Find resource with this RID", value+"@Find associated resources" ]
+         }
+         else {
+
+            let detec ;
+            if(value) detec = narrowWithString(value, this.state.langDetect)
+            let possible = [ ...this.state.langPreset, ...langSelect ]
+            if(detec && detec.length < 3) { 
+               if(detec[0] === "tibt") for(let p of possible) { if(p === "bo" || p.match(/-[Tt]ibt$/)) { language = p ; break ; } }
+               else if(detec[0] === "hani") for(let p of possible) { if(p.match(/^zh((-[Hh])|$)/)) { language = p ; break ; } }
+               else if(["ewts","iast","deva","pinyin"].indexOf(detec[0]) !== -1) for(let p of possible) { if(p.match(new RegExp(detec[0]+"$"))) { language = p ; break ; } }
+            }
+
+            possible = [ ...this.state.langPreset, ...langSelect.filter(l => !this.state.langPreset || !this.state.langPreset.includes(l))]
+            console.log("detec",possible,detec,this.state.langPreset,this.state.langDetect)
+            
+            if(detec) { 
+               dataSource = detec.reduce( (acc,d) => {
+                  
+                  let presets = []
+                  if(d === "tibt") for(let p of possible) { if(p === "bo" || p.match(/-[Tt]ibt$/)) { presets.push(p); } }
+                  else if(d === "hani") for(let p of possible) { if(p.match(/^zh((-[Hh])|$)/)) { presets.push(p); } }
+                  else if(["ewts","iast","deva","pinyin"].indexOf(d) !== -1) for(let p of possible) { if(p.match(new RegExp(d+"$"))) { presets.push(p); } }
+                  
+                  return [...acc, ...presets]
+               }, [] ).concat(!value || value.match(/[a-zA-Z]/)?["en"]:[]).map(p => '"'+value+'"@'+(p == "sa-x-iast"?"sa-x-ndia":p))
+            }
          }
 
-         possible = [ ...this.state.langPreset, ...langSelect.filter(l => !this.state.langPreset || !this.state.langPreset.includes(l))]
-         console.log("detec",possible,detec,this.state.langPreset,this.state.langDetect)
-         
-         this.setState({...this.state,keyword:value, language, dataSource: (detec?detec.reduce( (acc,d) => {
-            
-            let presets = []
-            if(d === "tibt") for(let p of possible) { if(p === "bo" || p.match(/-[Tt]ibt$/)) { presets.push(p); } }
-            else if(d === "hani") for(let p of possible) { if(p.match(/^zh((-[Hh])|$)/)) { presets.push(p); } }
-            else if(["ewts","iast","deva","pinyin"].indexOf(d) !== -1) for(let p of possible) { if(p.match(new RegExp(d+"$"))) { presets.push(p); } }
-            
-            return [...acc, ...presets]
-         }, [] ).concat(!value || value.match(/[a-zA-Z]/)?["en"]:[]).map(p => '"'+value+'"@'+(p == "sa-x-iast"?"sa-x-ndia":p)):[])   } ) 
+         this.setState({...this.state,keyword:value, language, dataSource   } ) 
          
          /*
          if(changeKWtimer) clearTimeout(changeKWtimer)
@@ -5030,15 +5043,25 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                            //anchorEl={() => this._refs["searchBar"].current} 
                            //onClose={()=>this.setState({...this.state,dataSource:[]})}
                            >
-                              { this.state.dataSource.map( (v) =>  {
+                              { this.state.dataSource.map( (v,i) =>  {
                                  let tab = v.split("@")
-                                 console.log("suggest?",v,tab)
+                                 console.log("suggest?",v,i,tab)
                                  return (
-                                    <MenuItem key={v} style={{lineHeight:"1em"}} onClick={(e)=>{ 
-                                          console.log("CLICK");
+                                    <MenuItem key={v} style={{lineHeight:"1em"}} onMouseDown={(e) => e.preventDefault()} onClick={(e)=>{ 
+                                          console.log("CLICK",v,i);
                                           this.setState({...this.state,dataSource:[]});
-                                          if(this.state.keyword) this.requestSearch(tab[0],null,tab[1])
-                                       }} >{ tab.length == 1 ?"":tab[0].replace(/["]/g,"")} <SearchIcon style={{padding:"0 10px"}}/><span class="lang">{tab.length == 1 ? I18n.t("home."+tab[0]):(I18n.t(""+(searchLangSelec[tab[1]]?searchLangSelec[tab[1]]:languages[tab[1]]))) }</span></MenuItem> ) 
+                                          let kw = tab[0]
+                                          let isRID = !languages[tab[1]]
+                                          if(isRID) {
+                                             if(!kw.includes(":")) kw = "bdr:"+kw.toUpperCase()
+                                             else {
+                                                kw = kw.split(":")
+                                                kw = kw[0].toLowerCase()+":"+kw[1].toUpperCase()
+                                             }
+                                          } 
+
+                                          if(this.state.keyword) this.requestSearch(kw,null,tab[1], isRID && i === 1)
+                                       }} >{ tab.length == 1 ?"":tab[0].replace(/["]/g,"")} <SearchIcon style={{padding:"0 10px"}}/><span class="lang">{tab.length == 1 ? I18n.t("home."+tab[0]):(I18n.t(""+(searchLangSelec[tab[1]]?searchLangSelec[tab[1]]:(languages[tab[1]]?languages[tab[1]]:tab[1])))) }</span></MenuItem> ) 
                                     })
                               }
                         </Paper>
