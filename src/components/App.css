@@ -697,11 +697,11 @@ a.result + #matches .result-content #icon > :not(.thumb) img { width:40px; }
 
 
 #matches .match.publisher.en > span > span,
-#matches .match.publisher.en + .match > span > span { text-transform: capitalize; display: inline-block;}
+#matches .match.publisher.en + .match > span > span { display: inline-block;}
 
 #matches .match.publisher.en { margin-bottom:0; }
 #matches .match.publisher.en + .match { margin-top:-1px; }
-#matches .match.publisher.en + .match > span > span:first-child { visibility:hidden;}
+#matches .match.publisher.en + .match > span.hidden-en { visibility:hidden;}
 
 #matches .match.publisher.en > span > span:first-child,
 #matches .match.publisher.en + .match > span > span:first-child { padding-right:3px;}
@@ -712,14 +712,8 @@ a.result + #matches .result-content #icon > :not(.thumb) img { width:40px; }
 #matches .match.publisher.bo > span > span:last-child::after,
 #matches .match.publisher.bo + .match > span > span:last-child::after {  content:''; padding-left:5px;}
 
-#matches .match.publisher.en > span > span:last-child::after,
-#matches .match.publisher.en + .match > span > span:last-child::after {  content:':';}
-
-#matches .match.publisher.zh > span > span:last-child::after,
-#matches .match.publisher.zh + .match > span > span:last-child::after {  content:'：';}
-
 #matches .match.publisher.bo > span > span + span,
-#matches .match.publisher.zh > span > span + span { padding-left:3px;text-transform: capitalize;display:inline-block;}
+#matches .match.publisher.zh > span > span + span { padding-left:3px;display:inline-block;}
 
 #matches .match .assets { margin:0 4px; }
 #matches .match .assets img,

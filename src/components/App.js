@@ -2257,11 +2257,11 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
       let ret = []
       //if(ret.length) 
       if(hasName) ret.push(<div class={"match publisher "+this.props.locale}>
-               <span class="label" lang={this.props.locale}>{this.fullname(bdo+"publisherName",[],true).split(" ").map(e => <span>{e}</span>)}</span>
+               <span class="label">{this.fullname(bdo+"publisherName",[],true)}{I18n.t("punc.colon")}&nbsp;</span>
                <div class="multi">{this.getVal(bdo+"publisherName",allProps)}</div>
             </div>)
       if(hasLoc) ret.push(<div class="match">
-               <span class="label" lang={this.props.locale}>{this.fullname(bdo+"publisherLocation",[],true).split(" ").map(e => <span>{e}</span>)}</span>
+               <span className={`label ${hasName ? "hidden-en" : ""}`}>{this.fullname(hasName?bdo+"publisherName":bdo+"publisherLocation",[],true)}{I18n.t("punc.colon")}&nbsp;</span>
                <div class="multi">{this.getVal(bdo+"publisherLocation",allProps)}</div>
             </div>)
 
@@ -2852,7 +2852,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             { this.getResultProp(I18n.t("result.inInstancePart"),allProps,false,false,[tmp+"inInstancePart"]) }
 
             {
-               rmatch.filter(m => !m.type.endsWith("Match")).map((m) => {
+               rmatch.filter(m => m.type !== tmp+"nameMatch").map((m) => {
 
                   //console.log("m",JSON.stringify(m)) //,allProps)
 
@@ -3477,7 +3477,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          //console.log("t",t,list,pagin)
 
          let iniTitle = false 
-         let sublist = list[t.toLowerCase()+"s"]
+         let sublist = list[t.toLowerCase()+"s"]         
          //if(!sublist) sublist = list[bdo+t]         
          let cpt = 0
          n = 0
