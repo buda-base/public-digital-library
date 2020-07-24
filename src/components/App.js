@@ -5071,6 +5071,11 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                               { this.state.dataSource.map( (v,i) =>  {
                                  let tab = v.split("@")
                                  console.log("suggest?",v,i,tab)
+
+                                 if(!this.state.langIndex && this.props.language && tab.length > 1 && tab[1] === this.props.language) {
+                                    this.setState({langIndex:i})
+                                 }
+
                                  return (
                                     <MenuItem key={v} style={{lineHeight:"1em"}} onMouseDown={(e) => e.preventDefault()} 
                                     className={(!this.state.langIndex && i===0 || this.state.langIndex === i || this.state.langIndex >= this.state.dataSource.length && i === 0?"active":"")} 
