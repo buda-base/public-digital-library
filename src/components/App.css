@@ -317,12 +317,21 @@ body { overflow:auto !important;padding-right:0 !important; /*font-family:"Robot
 #menu-datatype > div:last-child ul li,
 #suggestions li { padding:12px 16px; font-size:14px; color: #4c4c4c; font-weight:600; }
 
+#suggestions li.active,
 #menu-datatype > div:last-child ul li:hover,
 #suggestions li:hover {  background-color:#f5f5f5; }
 
 #suggestions .lang { text-transform: uppercase; color:#d73449; font-weight:700; font-size:10px; align-items:baseline; top:0px;}
 
 #search-bar button { opacity:1;}
+
+#suggestions li:hover  .lang,
+#suggestions li.active  .lang { font-weight:800; }
+
+
+#suggestions li:hover, 
+#suggestions li.active { color:black; font-weight:700; }
+
 
 /*
 #suggestions { z-index:10000; } 
@@ -1300,7 +1309,7 @@ vertical-align:middle;}
 .resource .title h2.on > :not(.T) { display:none; }
 
 .resource .title h2 .RID { display:block !important;position:absolute;top:32px;left:85px;color:rgba(0,0,0,0.5);font-size:11px;font-weight:400; letter-spacing:0; 
-   white-space: nowrap;   max-width: 135px;   overflow: hidden;   text-overflow: ellipsis;
+   white-space: nowrap;   max-width: 125px;   overflow: hidden;   text-overflow: ellipsis;
 }
 
 /* ------------------------------------------------------------------------------------------------------------------------ permalink */
@@ -1699,7 +1708,9 @@ h4:hover a.no-bdrc img { opacity:1; }
 .resource .data h2.intro + h2 span,
 .resource .title + .data + .data h2.on .T + span { font-size:30px; font-family:'Noto Sans SemCond';font-weight:bold; }
 
-.resource .data h2.intro { padding-right:8px; flex-shrink: 0;}
+.resource .data h2.intro { padding-right:8px; flex-shrink: 0; line-height:42px;}
+
+.resource .data h2.intro + h2 { line-height:42px;}
 
 .resource .data h2.intro,
 .resource .data h2.intro + h2,

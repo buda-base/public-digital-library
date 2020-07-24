@@ -929,19 +929,21 @@ class App extends Component<Props,State> {
 
       loggergen.log("search::",key,_key,label) //,this.state,!global.inTest ? this.props:null)
       
-      if(_key.match(/^[UWPGRCTILE][A-Z0-9_]+/) || prefixesMap[key.replace(/^([^:]+):.*$/,"$1")])
+      if(_key.match(/(^[UWPGRCTILE][A-Z0-9_]+$)|(^([cpgwrt]|mw|wa|ws)\d[^ ]*$)/) || prefixesMap[key.replace(/^([^:]+):.*$/,"$1")])
       {
-         if(!forceSearch) {
-            if(_key.indexOf(":") === -1) _key = "bdr:"+_key
+         if(_key.indexOf(":") === -1) _key = "bdr:"+_key
+         let uc = _key.split(":")
+         _key = uc[0] + ":" + uc[1].toUpperCase()         
+         
+         if(!forceSearch && !this.state.langIndex) {
+            
+
             this.props.history.push({pathname:"/show/"+_key})
          }
          else {
-
             if(!label) label = this.state.filters.datatype.filter((f)=>["Person","Work"].indexOf(f) !== -1)[0]
-            this.props.history.push({pathname:"/search",search:"?r="+key+(label?"&t="+label:"")})
+            this.props.history.push({pathname:"/search",search:"?r="+_key+(label?"&t="+label:"")})
          }
-
-
       }
       else if(key.match(/^[^:]*:[^ ]+/))
       {
@@ -982,6 +984,18 @@ class App extends Component<Props,State> {
 
    getLanguage():string
    {
+      if(!this.state.language || !this.state.dataSource || !this.state.dataSource.length) return this.state.language
+
+      let idx = this.state.langIndex
+      if(idx === undefined) idx = 0 
+      if(idx > this.state.dataSource.length) idx = 0
+      
+      let lang = this.state.dataSource[idx]
+      if(lang) {
+         lang = lang.split("@")
+         if(lang.length > 1) return lang[1]
+      }
+      
       return this.state.language
       /*
       if(lang && lang === "other")
@@ -4728,7 +4742,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
       this._refs["logo"] = React.createRef();
 
-      let changeKWtimer, changeKW = (value,keyEv) => {
+      let changeKWtimer, changeKW = (value,keyEv,ev) => {
 
          /* // TODO find a way to speed up rendering when changing keyword with some previous results already displayed
 
@@ -4737,30 +4751,41 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          }
          */
 
-         loggergen.log("changeKW",value,keyEv)
-
+         loggergen.log("changeKW",value,keyEv,ev)
+         
+         let dataSource = [] 
          let language = this.state.language
-         let detec ;
-         if(value) detec = narrowWithString(value, this.state.langDetect)
-         let possible = [ ...this.state.langPreset, ...langSelect ]
-         if(detec && detec.length < 3) { 
-            if(detec[0] === "tibt") for(let p of possible) { if(p === "bo" || p.match(/-[Tt]ibt$/)) { language = p ; break ; } }
-            else if(detec[0] === "hani") for(let p of possible) { if(p.match(/^zh((-[Hh])|$)/)) { language = p ; break ; } }
-            else if(["ewts","iast","deva","pinyin"].indexOf(detec[0]) !== -1) for(let p of possible) { if(p.match(new RegExp(detec[0]+"$"))) { language = p ; break ; } }
+         if(value.match(/(^([^:]+:)?[UWPGRCTILE][A-Z0-9_]+$)|(^([^:]+:)?([cpgwrt]|mw|wa|ws)\d[^ ]*$)/)) {
+            dataSource = [ value+"@Find resource with this RID", value+"@Find associated resources" ]
+         }
+         else {
+
+            let detec ;
+            if(value) detec = narrowWithString(value, this.state.langDetect)
+            let possible = [ ...this.state.langPreset, ...langSelect ]
+            if(detec && detec.length < 3) { 
+               if(detec[0] === "tibt") for(let p of possible) { if(p === "bo" || p.match(/-[Tt]ibt$/)) { language = p ; break ; } }
+               else if(detec[0] === "hani") for(let p of possible) { if(p.match(/^zh((-[Hh])|$)/)) { language = p ; break ; } }
+               else if(["ewts","iast","deva","pinyin"].indexOf(detec[0]) !== -1) for(let p of possible) { if(p.match(new RegExp(detec[0]+"$"))) { language = p ; break ; } }
+            }
+
+            possible = [ ...this.state.langPreset, ...langSelect.filter(l => !this.state.langPreset || !this.state.langPreset.includes(l))]
+            loggergen.log("detec",possible,detec,this.state.langPreset,this.state.langDetect)
+            
+            if(detec) { 
+               dataSource = detec.reduce( (acc,d) => {
+                  
+                  let presets = []
+                  if(d === "tibt") for(let p of possible) { if(p === "bo" || p.match(/-[Tt]ibt$/)) { presets.push(p); } }
+                  else if(d === "hani") for(let p of possible) { if(p.match(/^zh((-[Hh])|$)/)) { presets.push(p); } }
+                  else if(["ewts","iast","deva","pinyin"].indexOf(d) !== -1) for(let p of possible) { if(p.match(new RegExp(d+"$"))) { presets.push(p); } }
+                  
+                  return [...acc, ...presets]
+               }, [] ).concat(!value || value.match(/[a-zA-Z]/)?["en"]:[]).map(p => '"'+value+'"@'+(p == "sa-x-iast"?"sa-x-ndia":p))
+            }
          }
 
-         possible = [ ...this.state.langPreset, ...langSelect.filter(l => !this.state.langPreset || !this.state.langPreset.includes(l))]
-         loggergen.log("detec",possible,detec,this.state.langPreset,this.state.langDetect)
-         
-         this.setState({...this.state,keyword:value, language, dataSource: (detec?detec.reduce( (acc,d) => {
-            
-            let presets = []
-            if(d === "tibt") for(let p of possible) { if(p === "bo" || p.match(/-[Tt]ibt$/)) { presets.push(p); } }
-            else if(d === "hani") for(let p of possible) { if(p.match(/^zh((-[Hh])|$)/)) { presets.push(p); } }
-            else if(["ewts","iast","deva","pinyin"].indexOf(d) !== -1) for(let p of possible) { if(p.match(new RegExp(d+"$"))) { presets.push(p); } }
-            
-            return [...acc, ...presets]
-         }, [] ).concat(!value || value.match(/[a-zA-Z]/)?["en"]:[]).map(p => '"'+value+'"@'+(p == "sa-x-iast"?"sa-x-ndia":p)):[])   } ) 
+         this.setState({...this.state,keyword:value, language, dataSource   } ) 
          
          /*
          if(changeKWtimer) clearTimeout(changeKWtimer)
@@ -4843,6 +4868,18 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      onClick={(ev) => { changeKW(this.state.keyword?lucenequerytokeyword(this.state.keyword):""); $("#search-bar input[type=text][placeholder]").attr("placeholder",I18n.t("home.start"));  } }
                      onBlur={(ev) => { loggergen.log("BLUR"); setTimeout(() => this.setState({...this.state,dataSource:[]}),100); $("#search-bar input[type=text][placeholder]").attr("placeholder", I18n.t("home.search"));  } }
                      onChange={(value:string) => changeKW(value)}
+                     onKeyDown={(ev) => { 
+                        //console.log("kd:",ev)
+                        let idx = this.state.langIndex, max = this.state.dataSource.length
+                        if(!idx) idx = 0
+                        if (ev.key === 'ArrowUp') idx -- ;
+                        else if (ev.key === 'ArrowDown') idx ++ ;
+                        if(idx != this.state.langIndex) {
+                           if(idx >= max) idx = 0
+                           else if(idx < 0) idx = max - 1
+                           this.setState({langIndex:idx})
+                        }
+                     }}
                      onRequestSearch={this.requestSearch.bind(this)}
                      value={this.props.hostFailure?"Endpoint error: "+this.props.hostFailure+" ("+this.getEndpoint()+")":this.state.keyword !== undefined && this.state.keyword!==this.state.newKW?this.state.keyword:this.props.keyword&&this.state.newKW?lucenequerytokeyword(this.state.newKW):""}
                      style={{
@@ -4863,15 +4900,32 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                            //anchorEl={() => this._refs["searchBar"].current} 
                            //onClose={()=>this.setState({...this.state,dataSource:[]})}
                            >
-                              { this.state.dataSource.map( (v) =>  {
+                              { this.state.dataSource.map( (v,i) =>  {
                                  let tab = v.split("@")
-                                 loggergen.log("suggest?",v,tab)
+                                 loggergen.log("suggest?",v,i,tab)
+
+                                 if(this.state.langIndex === undefined && this.props.language && tab.length > 1 && tab[1] === this.props.language) {
+                                    this.setState({langIndex:i})
+                                 }
+
                                  return (
-                                    <MenuItem key={v} style={{lineHeight:"1em"}} onMouseDown={(e) => e.preventDefault()} onClick={(e)=>{ 
-                                          loggergen.log("CLICK");
-                                          this.setState({...this.state,dataSource:[]});
-                                          if(this.state.keyword) this.requestSearch(tab[0],null,tab[1])
-                                       }} >{ tab.length == 1 ?"":tab[0].replace(/["]/g,"")} <SearchIcon style={{padding:"0 10px"}}/><span class="lang">{tab.length == 1 ? I18n.t("home."+tab[0]):(I18n.t(""+(searchLangSelec[tab[1]]?searchLangSelec[tab[1]]:languages[tab[1]]))) }</span></MenuItem> ) 
+                                    <MenuItem key={v} style={{lineHeight:"1em"}} onMouseDown={(e) => e.preventDefault()} 
+                                    className={(!this.state.langIndex && i===0 || this.state.langIndex === i || this.state.langIndex >= this.state.dataSource.length && i === 0?"active":"")} 
+                                    onClick={(e)=>{ 
+                                          loggergen.log("CLICK",v,i);
+                                          this.setState({...this.state,langIndex:i,dataSource:[]});
+                                          let kw = tab[0]
+                                          let isRID = !languages[tab[1]]
+                                          if(isRID) {
+                                             if(!kw.includes(":")) kw = "bdr:"+kw.toUpperCase()
+                                             else {
+                                                kw = kw.split(":")
+                                                kw = kw[0].toLowerCase()+":"+kw[1].toUpperCase()
+                                             }
+                                          } 
+
+                                          if(this.state.keyword) this.requestSearch(kw,null,tab[1], isRID && i === 1)
+                                       }} >{ tab.length == 1 ?"":tab[0].replace(/["]/g,"")} <SearchIcon style={{padding:"0 10px"}}/><span class="lang">{tab.length == 1 ? I18n.t("home."+tab[0]):(I18n.t(""+(searchLangSelec[tab[1]]?searchLangSelec[tab[1]]:(languages[tab[1]]?languages[tab[1]]:tab[1])))) }</span></MenuItem> ) 
                                     })
                               }
                         </Paper>
