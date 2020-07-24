@@ -132,7 +132,7 @@ footer#site-footer > div.foot #t2::before { content:''; display:block; position:
 .App:not(.home) { min-height:100vh;} 
 .App:not(.home) .SearchPane { min-height:calc(100vh - 80px - 50px * 0);  }
 
-[role='tooltip'] *, .App *,.nav *,.App *::before,.App *::after, .react-tabs *, .resource *, .resource + * *  { 
+[role='tooltip'] *, .App *,.nav *,.App *::before,.App *::after, .react-tabs *, .resource *:not(.fa):not(.material-icons), .resource + * *  { 
    font-family:"Noto Sans", "Roboto", "Helvetica", "Arial", sans-serif !important;
 }
 
