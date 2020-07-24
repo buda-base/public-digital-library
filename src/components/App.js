@@ -977,6 +977,18 @@ class App extends Component<Props,State> {
 
    getLanguage():string
    {
+      if(!this.state.language || !this.state.dataSource || !this.state.dataSource.length) return this.state.language
+
+      let idx = this.state.langIndex
+      if(idx === undefined) idx = 0 
+      if(idx > this.state.dataSource.length) idx = 0
+      
+      let lang = this.state.dataSource[idx]
+      if(lang) {
+         lang = lang.split("@")
+         if(lang.length > 1) return lang[1]
+      }
+      
       return this.state.language
       /*
       if(lang && lang === "other")
@@ -4897,7 +4909,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
       this._refs["logo"] = React.createRef();
 
-      let changeKWtimer, changeKW = (value,keyEv) => {
+      let changeKWtimer, changeKW = (value,keyEv,ev) => {
 
          /* // TODO find a way to speed up rendering when changing keyword with some previous results already displayed
 
@@ -4906,7 +4918,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          }
          */
 
-         console.log("changeKW",value,keyEv)
+         console.log("changeKW",value,keyEv,ev)
          
          let dataSource = [] 
          let language = this.state.language
@@ -5023,6 +5035,18 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      onClick={(ev) => { changeKW(this.state.keyword?lucenequerytokeyword(this.state.keyword):""); $("#search-bar input[type=text][placeholder]").attr("placeholder",I18n.t("home.start"));  } }
                      onBlur={(ev) => { console.log("BLUR"); setTimeout(() => this.setState({...this.state,dataSource:[]}),100); $("#search-bar input[type=text][placeholder]").attr("placeholder", I18n.t("home.search"));  } }
                      onChange={(value:string) => changeKW(value)}
+                     onKeyDown={(ev) => { 
+                        //console.log("kd:",ev)
+                        let idx = this.state.langIndex, max = this.state.dataSource.length
+                        if(!idx) idx = 0
+                        if (ev.key === 'ArrowUp') idx -- ;
+                        else if (ev.key === 'ArrowDown') idx ++ ;
+                        if(idx != this.state.langIndex) {
+                           if(idx >= max) idx = 0
+                           else if(idx < 0) idx = max - 1
+                           this.setState({langIndex:idx})
+                        }
+                     }}
                      onRequestSearch={this.requestSearch.bind(this)}
                      value={this.props.hostFailure?"Endpoint error: "+this.props.hostFailure+" ("+this.getEndpoint()+")":this.state.keyword !== undefined && this.state.keyword!==this.state.newKW?this.state.keyword:this.props.keyword&&this.state.newKW?lucenequerytokeyword(this.state.newKW):""}
                      style={{
@@ -5047,7 +5071,9 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                                  let tab = v.split("@")
                                  console.log("suggest?",v,i,tab)
                                  return (
-                                    <MenuItem key={v} style={{lineHeight:"1em"}} onMouseDown={(e) => e.preventDefault()} onClick={(e)=>{ 
+                                    <MenuItem key={v} style={{lineHeight:"1em"}} onMouseDown={(e) => e.preventDefault()} 
+                                    className={(!this.state.langIndex && i===0 || this.state.langIndex === i || this.state.langIndex >= this.state.dataSource.length && i === 0?"active":"")} 
+                                    onClick={(e)=>{ 
                                           console.log("CLICK",v,i);
                                           this.setState({...this.state,dataSource:[]});
                                           let kw = tab[0]
