@@ -15,6 +15,8 @@ import {shortUri,fullUri} from '../../components/App'
 import qs from 'query-string'
 import history from '../../history.js'
 
+import logdown from 'logdown'
+
 //import { setHandleMissingTranslation } from 'react-i18nify';
 //import { I18n } from 'react-redux-i18n';
 import { i18nextChangeLanguage } from 'i18next-redux-saga';
@@ -22,6 +24,10 @@ import { i18nextChangeLanguage } from 'i18next-redux-saga';
 // to enable tests
 const api = new bdrcApi({...process.env.NODE_ENV === 'test' ? {server:"http://localhost:5555/test"}:{}});
 
+// for full debug, type this in the console:
+// window.localStorage.debug = 'gen'
+
+const loggergen = new logdown('gen', { markdown: false });
 
 const adm  = "http://purl.bdrc.io/ontology/admin/" ;
 const bda  = "http://purl.bdrc.io/admindata/"
@@ -46,7 +52,7 @@ async function initiateApp(params,iri,myprops) {
    try {
       let state = store.getState()
 
-      //      console.log("youpla?",prefix)
+      //      loggergen.log("youpla?",prefix)
 
       if(!state.data.config)
       {
@@ -61,7 +67,7 @@ async function initiateApp(params,iri,myprops) {
          }
          store.dispatch(dataActions.loadedConfig(config));
          
-         console.log("config?",config,params)
+         loggergen.log("config?",config,params)
          
          // DONE UI language
          let locale = "en", val
@@ -87,7 +93,7 @@ async function initiateApp(params,iri,myprops) {
          else if(config.language.data.presets[locale]) store.dispatch(uiActions.langPreset(config.language.data.presets[locale], locale))
          else store.dispatch(uiActions.langPreset(["bo-x-ewts,sa-x-iast"]))
 
-         //console.log("preset",config.language.data.presets[config.language.data.index])
+         //loggergen.log("preset",config.language.data.presets[config.language.data.index])
          //store.dispatch(dataActions.choosingHost(config.ldspdi.endpoints[config.ldspdi.index]));
 
 
@@ -99,7 +105,7 @@ async function initiateApp(params,iri,myprops) {
       {
          const onto = await api.loadOntology();
          store.dispatch(dataActions.loadedOntology(onto));
-         // console.log("params",params)
+         // loggergen.log("params",params)
       }
    */
       if(!state.data.dictionary)
@@ -139,7 +145,7 @@ async function initiateApp(params,iri,myprops) {
             for(let p of prop) 
                if(adminRes[iri.replace(/bdr:/,bda)][adm+p]) res[iri.replace(/bdr:/,bdr)][adm+p] = adminRes[iri.replace(/bdr:/,bda)][adm+p]
 
-            console.log("adminRes",adminRes,res)
+            loggergen.log("adminRes",adminRes,res)
          }
          catch(e) {
             console.error("no admin data for "+iri,e)
@@ -186,11 +192,11 @@ async function initiateApp(params,iri,myprops) {
             let res0 = { [ bdr+iri] : {...res["@graph"].reduce(
             (acc,e) => {
             let obj = {}, q
-            console.log("e",e)
+            loggergen.log("e",e)
             Object.keys(e).map(k => {
             if(!k.match(/[:@]/)) q = bdr+k
             else q = k
-            console.log("k",k,q,e[k],e[k].length)
+            loggergen.log("k",k,q,e[k],e[k].length)
             if(!e[k].length && e[k]["@id"]) obj[q] = { value:e[k]["@id"].replace(/bdr:/,bdr), type:"uri"}
             else if(!e[k].length || Array.isArray(e[k]) || !e[k].match(/^bdr:[A-Z][A-Z0-9_]+$/)) obj[q] = e[k]
             else obj[q] = { value:e[k].replace(/bdr:/,bdr), type:"uri"}
@@ -200,7 +206,7 @@ async function initiateApp(params,iri,myprops) {
       delete res0[bdr+iri]["@id"]
       let lab = res0[bdr+iri][bdr+"eTextTitle"]
       if(!lab["@value"]) lab = { "@value":lab, "@language":""}
-      console.log("lab",lab)
+      loggergen.log("lab",lab)
       res0[bdr+iri][skos+"prefLabel"] = { "lang" : lab["@language"], value : lab["@value"] } //{ value:res0[bdr+iri]["eTextTitle"], lang:"" }
       */
 
@@ -220,7 +226,7 @@ async function initiateApp(params,iri,myprops) {
             else return ({...acc, [e]:val })
          },{})}
 
-      //console.log("gotAR",JSON.stringify(assoRes,null,3));
+      //loggergen.log("gotAR",JSON.stringify(assoRes,null,3));
 
       store.dispatch(dataActions.gotAssocResources(iri,assoRes));
 
@@ -233,7 +239,7 @@ async function initiateApp(params,iri,myprops) {
             //else
             //   return acc
             /*Object.keys(res[bdr+iri][e]).reduce((ac,f) => {
-            console.log("e,ac,f",e,ac,f)
+            loggergen.log("e,ac,f",e,ac,f)
             return ( { ...ac, ...res[bdr+iri][e][f] })
          },{})})*/
       },{}) }
@@ -306,7 +312,7 @@ else if(params && params.q) {
 
    if(!params.lg) params.lg = "bo-x-ewts"
    
-   console.log("state q",state.data,params,iri)
+   loggergen.log("state q",state.data,params,iri)
 
    let dontGetDT = false
    let pt = params.t
@@ -359,7 +365,7 @@ else if(params && params.r) {
    let t = getEntiType(params.r)
    if(t === "Instance" || t === "Images" || t === "Volume") t = "Work"
 
-   console.log("state r",t,state.data.searches,params,iri)
+   loggergen.log("state r",t,state.data.searches,params,iri)
 
    let s = ["Any"]
    if(params.t && params.t != "Any") { s = [ params.t ] }
@@ -415,10 +421,10 @@ function extractAssoRes(iri,res) {
                if(!_res[e.value]) _res[e.value] = {}
                _res[e.value][bdo+"eventWho"] = res[e.value][bdo+"eventWho"].map(f => ({...f,type:"literal"}))
             }
-            console.log("preformat",e,JSON.stringify(_res[e.value],null,3))
+            loggergen.log("preformat",e,JSON.stringify(_res[e.value],null,3))
          })
          */
-         console.log("preformat",_res[k][bdo+"instanceEvent"])
+         loggergen.log("preformat",_res[k][bdo+"instanceEvent"])
       }
       if(k !== longIri) {
          let resK = Object.keys(res[k])
@@ -481,11 +487,11 @@ async function getUser(profile)
          let val = user[k]
          if(k === "type") k = "rdfs:type"
 
-         //console.log("acc",k,val)
+         //loggergen.log("acc",k,val)
 
          let toJson = (o) => {
 
-            //console.log("o",o)
+            //loggergen.log("o",o)
 
             if(o.match) {
                if(o.match(/:/)) 
@@ -517,7 +523,7 @@ async function getUser(profile)
 
       store.dispatch(uiActions.gotUserID(id));
       store.dispatch(dataActions.gotResource(id, user));
-      console.log("user",id,profile,user)
+      loggergen.log("user",id,profile,user)
    }
 
 }
@@ -581,7 +587,7 @@ async function getContext(iri,start,end,nb:integer = 1000) {
 
    }
 
-   //console.log("ctx",chunk,results.results.bindings['etexts'][uri],results,inInst,inInstP,data)
+   //loggergen.log("ctx",chunk,results.results.bindings['etexts'][uri],results,inInst,inInstP,data)
    
    store.dispatch(dataActions.foundResults(state.data.keyword, state.data.language, results,["Etext"]))
    store.dispatch(dataActions.gotContext(state.data.keyword+"@"+state.data.language,iri,start,end,data))
@@ -625,7 +631,7 @@ async function getChunks(iri,next,nb = 10000,useContext = false) {
          let cval = e.chunkContents["@value"]
          let clang = e.chunkContents["@language"]
 
-         //console.log("hi?",cval,clang,hilight,e)
+         //loggergen.log("hi?",cval,clang,hilight,e)
 
          if(hilight && hilight.lang !== clang) { 
             let langs = extendedPresets([clang])
@@ -638,7 +644,7 @@ async function getChunks(iri,next,nb = 10000,useContext = false) {
          return ({ value:cval, lang:clang, start:e.sliceStartChar, end:e.sliceEndChar}) 
       }); //+ " ("+e.seqNum+")" }))
 
-      //console.log("dataC",iri,next,data)
+      //loggergen.log("dataC",iri,next,data)
 
       if(!useContext) store.dispatch(dataActions.gotNextChunks(iri,data,next < 0))
       else { 
@@ -682,10 +688,10 @@ async function getPages(iri,next) {
 
       //let start = chunk[0].sliceStartChar
       //chunk = chunk.map(e => e.chunkContents["@value"]).join() //.replace(/..$/,"--")).join()      
-      //console.log("chunk@"+start,chunk)
+      //loggergen.log("chunk@"+start,chunk)
 
 
-      console.log("pages",pages)
+      loggergen.log("pages",pages)
 
       data = pages.map(e => {
 
@@ -730,7 +736,7 @@ async function getPages(iri,next) {
          
          if(hilight && hilight.lang === clang && value) value = value.replace(new RegExp("("+hilight.value+")","g"),"↦$1↤")
 
-         //console.log("page?",e,e.sliceStartChar,e.sliceEndChar,start)
+         //loggergen.log("page?",e,e.sliceStartChar,e.sliceEndChar,start)
          if(e.sliceEndChar <= chunk[chunk.length - 1].sliceEndChar) 
             return {
                //value:(chunk.substring(e.sliceStartChar - start,e.sliceEndChar - start - 1)).replace(/[\n\r]+/,"\n").replace(/(^\n)|(\n$)/,""),
@@ -743,7 +749,7 @@ async function getPages(iri,next) {
          
       }).filter(e => e); //+ " ("+e.seqNum+")" }))
 
-      console.log("dataP",iri,next,data)
+      loggergen.log("dataP",iri,next,data)
 
       store.dispatch(dataActions.gotNextPages(iri,data,next < 0))
    }
@@ -759,7 +765,7 @@ async function createPdf(url,iri) {
    {
 
       let nUrl = url.replace(/(pdf|zip)/,iri.file)
-      console.log("creaP",url,nUrl,iri,iri.file)
+      loggergen.log("creaP",url,nUrl,iri,iri.file)
       url = nUrl
 
       let config = store.getState()
@@ -767,11 +773,11 @@ async function createPdf(url,iri) {
       if(config) config = config.config
       if(config) config = config.iiif
       if(config) IIIFurl = config.endpoints[config.index]
-      console.log("IIIFu",IIIFurl,config)
+      loggergen.log("IIIFu",IIIFurl,config)
       let links = iri.links
       if(!links) {
          let data = JSON.parse(await api.getURLContents(IIIFurl+url,false,"application/json"))
-         console.log("pdf",data)
+         loggergen.log("pdf",data)
          links = data.links
       }
       store.dispatch(dataActions.pdfReady(IIIFurl+links,{url,iri:iri.iri}))
@@ -781,7 +787,7 @@ async function createPdf(url,iri) {
       //window.open(IIIFurl+data.links,"pdf");
 
       //let fic = await api.getURLContents("//iiif.bdrc.io"+data.links);
-      //console.log("pdf here")
+      //loggergen.log("pdf here")
       //fileDownload("//iiif.bdrc.io"+data.links,"name.pdf") ;
       //download("//iiif.bdrc.io"+data.links);
 
@@ -796,12 +802,12 @@ async function createPdf(url,iri) {
 async function requestPdf(url,iri) {
    try {
 
-      console.log("reqP",url,iri)
+      loggergen.log("reqP",url,iri)
 
 
       let data = JSON.parse(await api.getURLContents(url,false,"application/json"))
 
-      console.log("pdf",url,iri,data) //,_data)
+      loggergen.log("pdf",url,iri,data) //,_data)
 
       /* // deprecated - better use original "monoVol" code
 
@@ -834,19 +840,19 @@ async function requestPdf(url,iri) {
 }
 async function getAnnotations(iri) {
    try {
-      console.log("getA",iri)
+      loggergen.log("getA",iri)
 
       let listA = await api.loadAnnoList(iri)
-      console.log("listA",listA)
+      loggergen.log("listA",listA)
 
       for(let k of Object.keys(listA))
       {
-         console.log("k",k,listA[k])
+         loggergen.log("k",k,listA[k])
 
          let collec = await api.getQueryResults(k, "", {searchType:"",L_NAME:""}, "GET","application/json"
          ,{"Prefer": "return=representation;include=\"http://www.w3.org/ns/oa#PreferContainedDescriptions\""})
 
-         console.log(collec);
+         loggergen.log(collec);
 
          store.dispatch(dataActions.gotAnnoResource(iri,collec,k))
       }
@@ -861,7 +867,7 @@ async function getAnnotations(iri) {
 async function getImageVolumeManifest(url,iri) {
    try {
 
-      console.log("getIVM",url,iri)
+      loggergen.log("getIVM",url,iri)
 
       let manif = await api.loadManifest(url);
       store.dispatch(dataActions.gotImageVolumeManifest(manif,iri))
@@ -902,7 +908,7 @@ function getiiifthumbnailurl(imgres) {
 async function getManifest(url,iri) {
    try {
 
-      console.log("getM",url,iri)
+      loggergen.log("getM",url,iri)
 
       let collecManif
       let manif = await api.loadManifest(url);
@@ -931,7 +937,7 @@ async function getManifest(url,iri) {
          {
             let imageres = manif.sequences[0].canvases[0].images[0].resource
             
-            //console.log("image",imageres )
+            //loggergen.log("image",imageres )
 
             let imageIndex = 0
             if (imageres && imageres["@id"] && imageres["@id"].match(/archivelab[.]org.*rashodgson13[$]0[/]full/)) {
@@ -945,7 +951,7 @@ async function getManifest(url,iri) {
 
             let test = await api.getURLContents(image,null,null,null,true)
             
-            //console.log("img",test)
+            //loggergen.log("img",test)
             
             //let imgData = btoa(String.fromCharCode(...new Uint8Array(test)));
             store.dispatch(dataActions.firstImage(image,iri,canvasID,collecManif,manifests,null,manif)) //,imgData))
@@ -976,7 +982,7 @@ export function* getDatatypes(key,lang) {
 
 function getData(result,inMeta,outMeta)  {
 
-   console.log("kz",JSON.stringify(Object.keys(result)))
+   loggergen.log("kz",JSON.stringify(Object.keys(result)))
 
    let data = result, numR = -1
    if(!result.metadata && inMeta) result.metadata = { ...inMeta } 
@@ -1007,7 +1013,7 @@ function getData(result,inMeta,outMeta)  {
       delete metadata[bdo+"PublishedWork"]
       delete metadata["publishedwork"]
 
-      //console.log("data?W",data,metadata)
+      //loggergen.log("data?W",data,metadata)
    }
 
    if(data && data.abstractworks)
@@ -1067,29 +1073,29 @@ function getData(result,inMeta,outMeta)  {
       pre.push({ e:_.sortBy(data.chunks[c],"type"), k, c, n })
    }
    data.etexts = _.sortBy(pre,["k","n"]).reduce((acc,e) => ({...acc, [e.c]:e.e}),{})
-   //console.log("pre",pre,data.etexts)
+   //loggergen.log("pre",pre,data.etexts)
    */
 
      delete data.chunks
   }
 
    
-   console.log("data?W",data,metadata)
+   loggergen.log("data?W",data,metadata)
 
 
-  //console.log("resultR",result)
+  //loggergen.log("resultR",result)
   //&& Object.values(result).map(o => o?Object.keys(o):null).filter(k => (""+k).match(new RegExp(bdr))).length == 0)))
 
   if(Object.keys(result).length == 0 || (Object.keys(result).length == 1 && result["metadata"] )) { numR = 0 }
   else
   {
      numR = Object.keys(result).reduce((acc,e) => {
-        //console.log("res",result[e])
+        //loggergen.log("res",result[e])
         if(e !== "tree" && result[e]!=null) return ( acc + (e=="metadata"?0:Object.keys(result[e]).length))
         else return acc
      },0)
 
-     //console.log("numRa",numR,metadata)
+     //loggergen.log("numRa",numR,metadata)
 
      if(metadata)
      {
@@ -1102,10 +1108,10 @@ function getData(result,inMeta,outMeta)  {
         delete data.metadata
      }
 
-     //console.log("numRb",numR)
+     //loggergen.log("numRb",numR)
   }
 
-  //console.log("getData#result",result,numR)
+  //loggergen.log("getData#result",result,numR)
 
   data = {  numResults:numR, results : { bindings: {...data } } }
 
@@ -1122,11 +1128,11 @@ function getStats(cat:string,data:{},tree:{})
    if(config.facets[cat])
       keys = Object.keys(config.facets[cat])
 
-   console.log("stat/keys",keys,tree)
+   loggergen.log("stat/keys",keys,tree)
    
    if(auth && !auth.isAuthenticated()) {
       let hide = config["facets-hide-unlogged"][cat]
-      console.log("hide",hide)
+      loggergen.log("hide",hide)
       if(hide && hide.length) {
          keys = keys.reduce( (acc,k) => (hide.indexOf(k)===-1?[...acc,k]:acc),[])
       }
@@ -1158,7 +1164,7 @@ function getStats(cat:string,data:{},tree:{})
          }
       }
 
-      console.log("parents",parents,treeParents)
+      loggergen.log("parents",parents,treeParents)
 
       if(treeParents) tree["parents"] = treeParents
    }
@@ -1168,11 +1174,11 @@ function getStats(cat:string,data:{},tree:{})
    for(let _p of Object.keys(data["results"]["bindings"][cat.toLowerCase()+"s"]))   
    {
       let p = data["results"]["bindings"][cat.toLowerCase()+"s"][_p]
-      //console.log("p",p);
+      //loggergen.log("p",p);
       for(let f of keys)
       {
          
-         //console.log("f",f);
+         //loggergen.log("f",f);
          let genre = [bdo+"workGenre", bdo + "workIsAbout", _tmp + "etextAbout" ]
          let tmp ;
          
@@ -1198,7 +1204,7 @@ function getStats(cat:string,data:{},tree:{})
                }
             }
 
-            //console.log("f+1",f,tmp,pre)
+            //loggergen.log("f+1",f,tmp,pre)
          }
          else {
             if(!stat[f]) stat[f] = {}
@@ -1208,13 +1214,13 @@ function getStats(cat:string,data:{},tree:{})
             else pre ++ ;
             stat[f][unspecTag].n = pre ;
             stat[f][unspecTag].dict[_p] = p
-            //if(f==="tree") console.log("unspec+1",_p,p,f,tmp,pre)
+            //if(f==="tree") loggergen.log("unspec+1",_p,p,f,tmp,pre)
          }      
          
       }
    }
   
-   //console.log("f unspec",stat["tree"][unspecTag]); 
+   //loggergen.log("f unspec",stat["tree"][unspecTag]); 
 
    let state = store.getState()
    let langs = extendedPresets(state.ui.langPreset)
@@ -1238,7 +1244,7 @@ function getStats(cat:string,data:{},tree:{})
             tmpStat[n].push({...label[0], k })
          }
          let sortStat = []
-         //console.log("tmpStat",tmpStat,sortStat)         
+         //loggergen.log("tmpStat",tmpStat,sortStat)         
          let kz = _.orderBy(Object.keys(tmpStat).map(n => ({n:Number(n)})), [ "n" ], [ "desc" ]).map(k => k.n)
          for(let n of kz) {
             sortStat = sortStat.concat(sortLangScriptLabels(tmpStat[n],langs.flat,langs.translit))
@@ -1253,10 +1259,10 @@ function getStats(cat:string,data:{},tree:{})
 
 function addMeta(keyword:string,language:string,data:{},t:string,tree:{},found:boolean=true,facets:boolean=true)
 {
-   //console.log("aM",data,data["results"],t)
+   //loggergen.log("aM",data,data["results"],t)
 
    if(data["results"] &&  data["results"]["bindings"] && data["results"]["bindings"][t.toLowerCase()+"s"]){
-      console.log("FOUND",data);
+      loggergen.log("FOUND",data);
       let stat = getStats(t,data,tree);
 
       if(tree)
@@ -1265,7 +1271,7 @@ function addMeta(keyword:string,language:string,data:{},t:string,tree:{},found:b
 
             let elem = data["results"]["bindings"][t.toLowerCase()+"s"]
 
-            //console.log("elem tree",tree["@graph"][0]) ; //elem,stat)
+            //loggergen.log("elem tree",tree["@graph"][0]) ; //elem,stat)
 
             if(!tree["@graph"].length) tree["@graph"] = []
             //if(!tree["@graph"][0].length) tree["@graph"][0] = {}
@@ -1279,7 +1285,7 @@ function addMeta(keyword:string,language:string,data:{},t:string,tree:{},found:b
          stat = { ...stat, tree }
       }
 
-      console.log("stat",stat)
+      loggergen.log("stat",stat)
       if(found) store.dispatch(dataActions.foundResults(keyword, language, data, [t]));
       if(facets) store.dispatch(dataActions.foundFacetInfo(keyword,language,[t],stat))
       else return stat
@@ -1288,7 +1294,7 @@ function addMeta(keyword:string,language:string,data:{},t:string,tree:{},found:b
 
 function mergeSameAs(result,withSameAs,init = true,rootRes = result, force = false, keyword)
 {
-   //console.log("mSa",result,rootRes,keyword,init,force)
+   //loggergen.log("mSa",result,rootRes,keyword,init,force)
 
    if(!result) return
 
@@ -1303,7 +1309,7 @@ function mergeSameAs(result,withSameAs,init = true,rootRes = result, force = fal
       if(rData) rData = rData[owl+"sameAs"]
       if(rData) rData = rData.filter(r => r.value.match(new RegExp(bdr)))
       if(rData && rData.length) sameBDRC = rData[0].value
-      //console.log("rData",rData)
+      //loggergen.log("rData",rData)
    } 
  
    if(init) for(let t of Object.keys(result)) {
@@ -1320,14 +1326,14 @@ function mergeSameAs(result,withSameAs,init = true,rootRes = result, force = fal
       }
    }
 
-   //console.log("wSa",withSameAs)
+   //loggergen.log("wSa",withSameAs)
 
    let keys = Object.keys(withSameAs)
    if(keys) for(let i in keys) {
       let k = keys[i]
       let r = withSameAs[k]
       
-      //console.log("k r",k,r)
+      //loggergen.log("k r",k,r)
 
       if(force && rootRes[r.t] && !rootRes[r.t][k]) {
          delete result[r.t][k]
@@ -1342,7 +1348,7 @@ function mergeSameAs(result,withSameAs,init = true,rootRes = result, force = fal
          let hasSameK 
          if(result[r.t] && result[r.t][k] && (result[r.t][s] || isRid)) {
             
-            //console.log("same?",isRid,k,r.t,s,result[r.t][k],result[r.t][s])
+            //loggergen.log("same?",isRid,k,r.t,s,result[r.t][k],result[r.t][s])
 
             if(!isRid) { 
                hasSameK = false
@@ -1362,7 +1368,7 @@ function mergeSameAs(result,withSameAs,init = true,rootRes = result, force = fal
                   }
                   let v_ = { ...v }
 
-                  //console.log("v.type",v)
+                  //loggergen.log("v.type",v)
 
                   /* // deprecated
                   //if(v.type && v.type === skos+"prefLabel") v_.type = k 
@@ -1374,14 +1380,14 @@ function mergeSameAs(result,withSameAs,init = true,rootRes = result, force = fal
             }
          }
          let erase = [ k , ...(init||isRid?[]:r.props.filter(p => p.type === owl+"sameAs").map(p => p.value)) ]
-         //console.log("erase",erase,noK,hasSameK)
+         //loggergen.log("erase",erase,noK,hasSameK)
          for(let e of erase) {
             if(result[r.t] && result[r.t][e]) {
                delete result[r.t][e]
                if(isRid && result[r.t][s]) delete result[r.t][s]
                if(!noK && result.metadata && result.metadata[r.fullT]) {
                   result.metadata[r.fullT] --
-                  //console.log("meta",result.metadata[r.fullT]) 
+                  //loggergen.log("meta",result.metadata[r.fullT]) 
                }
             }
          }
@@ -1404,7 +1410,7 @@ function sortResultsByTitle(results, userLangs, reverse) {
          let lang,value,labels = results[k].filter(e => e.type && e.type.endsWith("abelMatch") ).map(e => ({ ...e, value:e.value.replace(/[↦]/g,"")})) 
          if(!labels.length) labels = results[k].filter(r => r.type && r.type === skos+"prefLabel") //r.value && r.value.match(/↦/))
          if(!labels.length && (assoR = state.data.assocResources[state.data.keyword]) && assoR[k]) labels = assoR[k].filter(r => r.type && r.type === skos+"prefLabel") 
-         //console.log("labels?",labels,assoR,k,assoR[k],results[k])
+         //loggergen.log("labels?",labels,assoR,k,assoR[k],results[k])
          if(labels.length) { 
             labels = sortLangScriptLabels(labels,langs.flat,langs.translit)
             labels = labels[0]
@@ -1416,14 +1422,14 @@ function sortResultsByTitle(results, userLangs, reverse) {
          }
          return { k, lang, value }
       },{})
-      console.log("keys1", keys)
+      loggergen.log("keys1", keys)
       let sortKeys = sortLangScriptLabels(keys,langs.flat,langs.translit)
       if(reverse) sortKeys = sortKeys.reverse()
-      console.log("keys2", sortKeys)
+      loggergen.log("keys2", sortKeys)
       let sortRes = {}
       for(let k of sortKeys) sortRes[k.k] = results[k.k]
 
-      console.log("sortResT",sortRes)
+      loggergen.log("sortResT",sortRes)
 
       return sortRes
    }
@@ -1447,7 +1453,7 @@ function sortResultsByRelevance(results,reverse) {
                else { 
                   let m = Number(v.value)
                   if(m > n || (reverse && n < m)) { 
-                     console.log("push",v,i,last,n,m)
+                     loggergen.log("push",v,i,last,n,m)
                      n = m
                      scoreDel.push(Number(last))
                      p--
@@ -1465,12 +1471,12 @@ function sortResultsByRelevance(results,reverse) {
       },{})
       keys = _.orderBy(keys,['n','p'],[(reverse?'asc':'desc'), (reverse?'asc':'desc')])
       
-      //console.log("sortK",JSON.stringify(keys,null,3))
+      //loggergen.log("sortK",JSON.stringify(keys,null,3))
 
       let sortRes = {}
       for(let k of keys) sortRes[k.k] = results[k.k]
 
-      //console.log("sortResR",sortRes)
+      //loggergen.log("sortResR",sortRes)
 
       return sortRes
    }
@@ -1496,12 +1502,12 @@ function sortResultsByPopularity(results,reverse) {
          return ({k, n, p})
       },{})
       keys = _.orderBy(keys,['n','p'],[(reverse?'asc':'desc'), (reverse?'asc':'desc')])
-      //console.log("sortK",keys)
+      //loggergen.log("sortK",keys)
 
       let sortRes = {}
       for(let k of keys) sortRes[k.k] = results[k.k]
 
-      //console.log("sortResP",reverse,sortRes)
+      //loggergen.log("sortResP",reverse,sortRes)
 
       return sortRes
    }
@@ -1528,12 +1534,12 @@ function sortResultsByYear(results,reverse) {
       },{})
       keys = _.orderBy(keys,['n','p'],[(reverse?'desc':'asc'), (reverse?'asc':'desc')])
       
-      //console.log("keysY",keys)
+      //loggergen.log("keysY",keys)
 
       let sortRes = {}
       for(let k of keys) sortRes[k.k] = results[k.k]
 
-      //console.log("sortResY",sortRes)
+      //loggergen.log("sortResY",sortRes)
 
       return sortRes
    }
@@ -1562,12 +1568,12 @@ function sortResultsByNbChunks(results,reverse) {
          return ({k, n, m, p})
       },{})
       keys = _.orderBy(keys,['n','m','p'],[(reverse?'asc':'desc'), (reverse?'asc':'desc')])
-      //console.log("sortK",keys)
+      //loggergen.log("sortK",keys)
 
       let sortRes = {}
       for(let k of keys) sortRes[k.k] = results[k.k]
 
-      //console.log("sortResP",reverse,sortRes)
+      //loggergen.log("sortResP",reverse,sortRes)
 
       return sortRes
    }
@@ -1629,13 +1635,13 @@ function rewriteAuxMain(result,keyword,datatype,sortBy,language)
                               .replace(/^[^↦↤]*(([་ ][^་ ↦↤]+[་ ]*){5}↦)/,"(…) $1")
                               .replace(/(↤([་ ]*[^་ ↦↤]+[་ ]){5})[^↦↤]*$/g,"$1 (…)") }
                   
-                  //console.log("full",content.value)
-                  //console.log("expand",expand.value)
+                  //loggergen.log("full",content.value)
+                  //loggergen.log("expand",expand.value)
 
                   return { e, n, m, p, content, expand }
                })
                chunks = _.orderBy(chunks, ['n','m'], ['desc','asc'])
-               //console.log("chunks",chunks)
+               //loggergen.log("chunks",chunks)
 
 
                res = [ ...res.filter(e => e.type !== bdo+"eTextHasChunk"), { ...chunks[0].content, type:tmp+"bestMatch", startChar:chunks[0].m, endChar:chunks[0].p, 
@@ -1647,7 +1653,7 @@ function rewriteAuxMain(result,keyword,datatype,sortBy,language)
             return ({...acc, [k]:res})
          },{})
         
-         console.log("dWa",t,dataWithAsset,sortBy,reverse,canPopuSort)
+         loggergen.log("dWa",t,dataWithAsset,sortBy,reverse,canPopuSort)
 
          if(!canPopuSort && sortBy.startsWith("popularity")) {            
             let {pathname,search} = history.location         
@@ -1689,7 +1695,7 @@ function rewriteAuxMain(result,keyword,datatype,sortBy,language)
 
 async function startSearch(keyword,language,datatype,sourcetype,dontGetDT) {
 
-   console.log("sSsearch",keyword,language,datatype,sourcetype);
+   loggergen.log("sSsearch",keyword,language,datatype,sourcetype);
 
    // why is this action dispatched twice ???
    store.dispatch(uiActions.loading(keyword, true));
@@ -1706,7 +1712,7 @@ async function startSearch(keyword,language,datatype,sourcetype,dontGetDT) {
 
       // adapt to new new JSON format
       if(result) {
-         console.log("res",result)
+         loggergen.log("res",result)
          if(result && (datatype && datatype.indexOf("Any") === -1) ) 
             result = rewriteAuxMain(result,keyword,datatype,null,language)
          else 
@@ -1719,7 +1725,7 @@ async function startSearch(keyword,language,datatype,sourcetype,dontGetDT) {
       if(rootRes) rootRes = rootRes.results.bindings  
       result = mergeSameAs(result,{},true,rootRes,true,!language?keyword:null)
 
-      console.log("newRes1",Object.keys(result[datatype[0].toLowerCase()+"s"],null,3))
+      loggergen.log("newRes1",Object.keys(result[datatype[0].toLowerCase()+"s"],null,3))
       */
 
 
@@ -1728,7 +1734,7 @@ async function startSearch(keyword,language,datatype,sourcetype,dontGetDT) {
       if(result.metadata && result.metadata[bdo+"Etext"] == 0)
       {
          delete result.metadata[bdo+"Etext"]
-         //console.log("deleted")
+         //loggergen.log("deleted")
       }
 
       if(sourcetype == 'Role' && result.data)
@@ -1738,7 +1744,7 @@ async function startSearch(keyword,language,datatype,sourcetype,dontGetDT) {
       }
 
       let metadata = result.metadata;
-      //console.log("meta",metadata)
+      //loggergen.log("meta",metadata)
 
       /*
       if(datatype && datatype.indexOf("Any") === -1) {
@@ -1760,7 +1766,7 @@ async function startSearch(keyword,language,datatype,sourcetype,dontGetDT) {
          }
       }
 
-      console.log("data",data,result)
+      loggergen.log("data",data,result)
 
       let metaD = {}
       data = getData(data,metadata,metaD);
@@ -1781,7 +1787,7 @@ async function startSearch(keyword,language,datatype,sourcetype,dontGetDT) {
       addMeta(keyword,language,data,"Place");
       */
 
-      console.log("sourcetype",data,datatype)
+      loggergen.log("sourcetype",data,datatype)
 
       /*
       if(metaSav) {
@@ -1802,7 +1808,7 @@ else {
 
    let data = getData(result);
 
-   console.log("kz1",JSON.stringify(Object.keys(data.results.bindings)))
+   loggergen.log("kz1",JSON.stringify(Object.keys(data.results.bindings)))
 
    store.dispatch(dataActions.foundResults(keyword, language, data, datatype));
 
@@ -1842,7 +1848,7 @@ else {
 
          let keys = Object.keys(withSameAs)
 
-         console.log("newRes2",result,data,keys)
+         loggergen.log("newRes2",result,data,keys)
 
          if(keys.length) {
             data.results.bindings = mergeSameAs(data.results.bindings,withSameAs,false)
@@ -1855,7 +1861,7 @@ else {
          metadata = result.metadata;
          data = getData(result);
          */
-         //console.log("kz2",JSON.stringify(Object.keys(data.results.bindings)))
+         //loggergen.log("kz2",JSON.stringify(Object.keys(data.results.bindings)))
 
          metadata = await api.getDatatypesOnly(keyword, language);
 
@@ -1890,7 +1896,7 @@ async function updateSortBy(i,t)
    if(state.data.searches[t] && state.data.searches[t][state.data.keyword+"@"+state.data.language]) data = state.data.searches[t][state.data.keyword+"@"+state.data.language]
    else if(state.data.searches[state.data.keyword+"@"+state.data.language]) data = state.data.searches[state.data.keyword+"@"+state.data.language]
 
-   console.log("uSb",i,t,state.data.searches[t],state,data,state.ui.sortBy)
+   loggergen.log("uSb",i,t,state.data.searches[t],state,data,state.ui.sortBy)
 
    if(!data) return
 
@@ -1936,7 +1942,7 @@ async function getInstances(uri,init=false)
    let assoR 
    if(data.main) assoR = Object.keys(data.main).reduce( (acc,k) => ([...acc, { type:tmp+"hasInstance",value:k }]),[])
 
-   console.log("gI",keyword,uri,init,data)
+   loggergen.log("gI",keyword,uri,init,data)
 
 
    if(init || keyword === uri+"@") {
@@ -1947,7 +1953,7 @@ async function getInstances(uri,init=false)
       let sortBy = state.ui.sortBy
       if(!sortBy || sortBy === "popularity") sortBy = "year of publication reverse" 
 
-      console.log("sortBy?2",sortBy,state.ui.sortBy,init,keyword)
+      loggergen.log("sortBy?2",sortBy,state.ui.sortBy,init,keyword)
 
       results = rewriteAuxMain(results,uri,["Work"],sortBy)
 
@@ -1969,7 +1975,7 @@ async function getInstances(uri,init=false)
 
       let sortBy = "year of publication reverse" 
 
-      console.log("sortBy?1",sortBy)
+      loggergen.log("sortBy?1",sortBy)
 
       results = rewriteAuxMain(results,keyword,["Work"],sortBy)
 
@@ -1997,7 +2003,7 @@ async function getOutline(iri) {
    let res = await api.loadOutline(iri) 
    store.dispatch(uiActions.loading(iri, false));
    
-   console.log("outline",res)
+   loggergen.log("outline",res)
 
    store.dispatch(dataActions.gotOutline(iri,res))
 
@@ -2022,7 +2028,7 @@ async function outlineSearch(iri,kw,lg) {
 
    store.dispatch(uiActions.loading(iri, false));
    
-   console.log("outlineSearch",iri,kw,lg,res)
+   loggergen.log("outlineSearch",iri,kw,lg,res)
 
    store.dispatch(dataActions.gotOutline(iri+"/"+kw+"@"+lg,res))
 
@@ -2039,7 +2045,7 @@ export function* watchOutlineSearch() {
 
 async function searchKeyword(keyword,language,datatype) {
 
-   console.log("searchK",keyword,language,datatype);
+   loggergen.log("searchK",keyword,language,datatype);
 
    // why is this action dispatched twice ???
    store.dispatch(uiActions.loading(keyword, true));
@@ -2064,7 +2070,7 @@ async function searchKeyword(keyword,language,datatype) {
 
 async function getOneDatatype(datatype,keyword,language:string) {
 
-   console.log("searchK1DT",datatype,keyword,language);
+   loggergen.log("searchK1DT",datatype,keyword,language);
 
    store.dispatch(uiActions.loading(keyword, true));
    try {
@@ -2081,7 +2087,7 @@ async function getOneDatatype(datatype,keyword,language:string) {
 
 async function getOneFacet(keyword,language:string,facet:{[string]:string}) {
 
-   console.log("searchK1F",keyword,language,facet);
+   loggergen.log("searchK1F",keyword,language,facet);
 
    store.dispatch(uiActions.loading(keyword, true));
    try {
@@ -2115,12 +2121,12 @@ async function getResource(iri:string) {
 
 async function getFacetInfo(keyword,language:string,property:string) {
 
-   console.log("searchFacet",keyword,language,property);
+   loggergen.log("searchFacet",keyword,language,property);
 
    try {
       const result = await api.getResultsSimpleFacet(keyword,language,property);
 
-      //console.log("back from call",property,result);
+      //loggergen.log("back from call",property,result);
 
       store.dispatch(dataActions.foundFacetInfo(keyword, language, property, result));
 

@@ -27,6 +27,7 @@
       "jsewts": "^1.0.1",
       "leaflet": "^1.6.0",
       "lodash": "^4.17.10",
+      "logdown": "^3.3.1",
       "material-colors": "^1.2.5",
       "material-ui-search-bar": "^1.0.0-beta.14",
       "mirador": "https://github.com/buda-base/mirador#2.7.0-bdrc",
