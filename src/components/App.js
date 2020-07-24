@@ -2468,6 +2468,90 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
       }
    }
 
+   getEtextMatches(prettId,startC,endC,bestM,rmatch,facet) { 
+      let lastP,prop = ""
+
+      return rmatch.filter(m => m.type !== tmp+"nameMatch").map((m) => {
+
+
+         let expand,context,inPart	
+         let uri,from	 	
+         prop = this.fullname(m.type.replace(/.*altLabelMatch/,skos+"altLabel"),[],true)                     	
+
+         let sTmp = shortUri(m.type), trad = I18n.t("prop."+sTmp)	
+         if(trad !== sTmp) from = trad	
+
+         let val,isArray = false ;	
+         let lang = m["lang"]	
+         if(!lang) lang = m["xml:lang"]	
+         if(!Array.isArray(m.value)) {
+
+            let mLit = getLangLabel(this,"",[m])	
+
+            expand = m.expand	
+            if(expand && expand.value) {	
+               if(!this.state.collapse[prettId+"@"+startC]) expand = getLangLabel(this,m.type,[{...m, "value":expand.value}])	
+               else expand = true	
+            }	
+
+            context = m.context	
+            if(context && context.value) {	
+               if(this.state.collapse[prettId+"@"+startC]) context = getLangLabel(this,m.type,[{...m, "value":context.value}])	
+               else context = false	
+            }	
+            else context = false	
+
+            inPart = m.inPart	
+
+            val = highlight(mLit["value"], facet, context?context:expand, context)	
+            //val =  mLit["value"]	
+            lang = mLit["lang"]	
+            if(!lang) lang = mLit["xml:lang"]	
+         }	
+
+
+         let toggleExpand = (e,id) => {	
+            //console.log("toggle",id)	
+            this.setState({...this.state,repage:true,collapse:{...this.state.collapse, [id]:!this.state.collapse[id]}})	
+         }	
+
+         let getUrilink = (uri,val,lang) => ([ <Link className="urilink" to={"/show/"+shortUri(uri)}>{val}</Link>,lang?<Tooltip placement="bottom-end" title={	
+               <div style={{margin:"10px"}}>	
+                  {I18n.t(languages[lang]?languages[lang].replace(/search/,"tip"):lang)}/>	
+               </div>	
+            }><span className="lang">&nbsp;{lang}</span></Tooltip>:null])	
+
+         if(inPart && inPart.length) {	
+
+            console.log("inPart",inPart)	
+
+            inPart = <div class="inPart">{[ <span>[ from part </span>, inPart.map( (p,i) => { 	
+               let label = getPropLabel(this,p,false,true)	
+               let ret = [getUrilink(p,label.value,label.lang)]	
+               if(i > 0) ret = [ " / ", ret ]	
+               return ret 	
+            }), " ]" ]}</div>	
+         }	
+
+         return (<div className={"match "+prop}>	
+            <span className={"label " +(lastP === prop?"invisible":"")}>{(!from?prop:from)}{I18n.t("punc.colon")}&nbsp;</span>	
+               <span>{expand!==true?null:inPart}{[!uri?val:<Link className="urilink" to={uri}><span lang={lang}>{val}</span></Link>,lang?<Tooltip placement="bottom-end" title={	
+               <div style={{margin:"10px"}}>	
+                  {I18n.t(languages[lang]?languages[lang].replace(/search/,"tip"):lang)}/>	
+               </div>	
+            }><span className="lang">&nbsp;{lang}</span></Tooltip>:null]}{expand?<span class="etext-match"><br/>&gt;&nbsp;	
+               <span class="uri-link" onClick={(e) => { 	
+                  if(!this.state.collapse[prettId+"@"+startC] && !m.context) this.props.onGetContext(prettId,startC,endC) ; 	
+                  toggleExpand(e,prettId+"@"+startC); } 	
+               }>{expand!==true?I18n.t("result.expandC"):I18n.t("result.hideC")}</span>	
+               <span> {I18n.t("misc.or")} </span>	
+               <Link to={"/show/"+prettId+bestM} class="uri-link">{I18n.t("result.openE")}</Link>	
+               </span>:null}</span>	                      	
+            </div>)	
+         
+      })	
+   }
+
    makeResult(id,n,t,lit,lang,tip,Tag,url,rmatch = [],facet,allProps = [],preLit,isInstance)
    {
       //console.log("res",id,allProps,n,t,lit,lang,tip,Tag,rmatch,sameAsRes)
@@ -2831,7 +2915,6 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          }
 
 
-         let lastP,prop = ""
 
          let nbChunks = allProps.filter(e => e.type === tmp+"nbChunks")
          if(nbChunks[0] && nbChunks[0].value) nbChunks = Number(nbChunks[0].value)
@@ -2851,6 +2934,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             { this.getResultProp(I18n.t("result.inInstance"),allProps,false,false,[tmp+"inInstance"]) }
             { this.getResultProp(I18n.t("result.inInstancePart"),allProps,false,false,[tmp+"inInstancePart"]) }
 
+            { this.getEtextMatches(prettId,startC,endC,bestM,rmatch,facet) }
 
             { this.getResultProp("tmp:nameMatch",allProps,true,false,[ tmp+"nameMatch" ]) } {/* //,true,false) } */}
 
