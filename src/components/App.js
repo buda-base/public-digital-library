@@ -2471,7 +2471,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
    getEtextMatches(prettId,startC,endC,bestM,rmatch,facet) { 
       let lastP,prop = ""
 
-      return rmatch.filter(m => m.type !== tmp+"nameMatch").map((m) => {
+      return rmatch.filter(m => !([ tmp+"nameMatch", bdo+"biblioNote", bdo+"catalogInfo", rdfs+"comment", tmp+"noteMatch", bdo+"colophon", bdo+"incipit" ].includes(m.type)) ).map((m) => {
 
 
          let expand,context,inPart	
