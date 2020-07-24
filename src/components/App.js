@@ -920,23 +920,24 @@ class App extends Component<Props,State> {
       let state = { ...this.state, dataSource:[], leftPane:true, filters:{ datatype:[ ...searchDT ] } }
       this.setState(state)
 
-      console.log("search::",key,_key,label) //,this.state,!global.inTest ? this.props:null)
+
+      console.log("search::",key,_key,label,lang,forceSearch) //,this.state,!global.inTest ? this.props:null)
       
       if(_key.match(/(^[UWPGRCTILE][A-Z0-9_]+$)|(^([cpgwrt]|mw|wa|ws)\d[^ ]*$)/) || prefixesMap[key.replace(/^([^:]+):.*$/,"$1")])
       {
-         if(!forceSearch) {
-            if(_key.indexOf(":") === -1) _key = "bdr:"+_key
-            let uc = _key.split(":")
-            _key = uc[0] + ":" + uc[1].toUpperCase()
+         if(_key.indexOf(":") === -1) _key = "bdr:"+_key
+         let uc = _key.split(":")
+         _key = uc[0] + ":" + uc[1].toUpperCase()         
+         
+         if(!forceSearch && !this.state.langIndex) {
+            
+
             this.props.history.push({pathname:"/show/"+_key})
          }
          else {
-
             if(!label) label = this.state.filters.datatype.filter((f)=>["Person","Work"].indexOf(f) !== -1)[0]
-            this.props.history.push({pathname:"/search",search:"?r="+key+(label?"&t="+label:"")})
+            this.props.history.push({pathname:"/search",search:"?r="+_key+(label?"&t="+label:"")})
          }
-
-
       }
       else if(key.match(/^[^:]*:[^ ]+/))
       {
@@ -5075,7 +5076,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                                     className={(!this.state.langIndex && i===0 || this.state.langIndex === i || this.state.langIndex >= this.state.dataSource.length && i === 0?"active":"")} 
                                     onClick={(e)=>{ 
                                           console.log("CLICK",v,i);
-                                          this.setState({...this.state,dataSource:[]});
+                                          this.setState({...this.state,langIndex:i,dataSource:[]});
                                           let kw = tab[0]
                                           let isRID = !languages[tab[1]]
                                           if(isRID) {
