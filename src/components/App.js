@@ -5072,7 +5072,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                                  let tab = v.split("@")
                                  console.log("suggest?",v,i,tab)
 
-                                 if(!this.state.langIndex && this.props.language && tab.length > 1 && tab[1] === this.props.language) {
+                                 if(this.state.langIndex === undefined && this.props.language && tab.length > 1 && tab[1] === this.props.language) {
                                     this.setState({langIndex:i})
                                  }
 
