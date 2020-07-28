@@ -15,8 +15,10 @@ const enTranslation = {
       archives2:"Digital Archives",
       by:"by the Buddhist Digital Resource Center",
       subtitle:"A cooperative platform for expanding access to Buddhist literature. Explore the millions of pages of texts contributed by BDRC and its many partners.",
-      message:"WELCOME TO THE BETA VERSION OF BDRC's NEW LIBRARY!",
-      submessage:"with new features, resources, and tools for faster and more in-depth research",
+      message:"WELCOME TO THE BETA VERSION OF BUDA, BDRC's NEW LIBRARY!",
+      submessage:"with new features, resources, and tools for faster and more in-depth research.",
+      subsubmessage:"We welcome your feedback. Help us improve by sending bug reports, comments and suggestions to ",
+      subsubmessage_afteremail:".",
       search:"Search",
       choose:"Choose language",
       start:"Start typing then select search language"

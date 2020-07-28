@@ -2258,7 +2258,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          else val = highlight(val)
          let lang = i["xml:lang"]
          if(!lang) lang = i["lang"]
-         ret.push(<span lang={lang}>{val}{
+         ret.push(<span {...(lang?{lang:lang}:{})}>{val}{
             lang && <Tooltip placement="bottom-end" title={
                               <div style={{margin:"10px"}}>
                                  {I18n.t(languages[lang]?languages[lang].replace(/search/,"tip"):lang)}/>
@@ -2475,7 +2475,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             for (let i of sortId) {
 
                if(i.value != "false") 
-                  ret.push(<span><Link to={"/show/"+i.uri}><span lang={i.lang}>{i.value}</span></Link>{
+                  ret.push(<span><Link to={"/show/"+i.uri}><span {...(i.lang?{lang:i.lang}:{})}>{i.value}</span></Link>{
                      i.lang && <Tooltip placement="bottom-end" title={
                                        <div style={{margin:"10px"}}>
                                           {I18n.t(languages[i.lang]?languages[i.lang].replace(/search/,"tip"):i.lang)}/>
@@ -2485,7 +2485,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             }            
          }
          if(ret.length && !useAux) return <div class="match">
-                  <span class="label" lang={this.props.locale}>{this.fullname(prop+(plural && ret.length > 1 ?plural:""),[],true)}{I18n.t("punc.colon")}&nbsp;</span>
+                  <span class="label">{this.fullname(prop+(plural && ret.length > 1 ?plural:""),[],true)}{I18n.t("punc.colon")}&nbsp;</span>
                   <div class="multi">{ret}</div>
                 </div>
       }
@@ -2558,7 +2558,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
          return (<div className={"match "+prop}>	
             <span className={"label " +(lastP === prop?"invisible":"")}>{(!from?prop:from)}{I18n.t("punc.colon")}&nbsp;</span>	
-               <span>{expand!==true?null:inPart}{[!uri?val:<Link className="urilink" to={uri}><span lang={lang}>{val}</span></Link>,lang?<Tooltip placement="bottom-end" title={	
+               <span>{expand!==true?null:inPart}{[!uri?val:<Link className="urilink" to={uri}><span {...(lang?{lang:lang}:{})}>{val}</span></Link>,lang?<Tooltip placement="bottom-end" title={	
                <div style={{margin:"10px"}}>	
                   {I18n.t(languages[lang]?languages[lang].replace(/search/,"tip"):lang)}/>	
                </div>	
@@ -5118,6 +5118,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      {/* { messageD } */}
                      <h3>{ I18n.t("home.message") }</h3>
                      <h4>{ I18n.t("home.submessage") }</h4>
+                     <h4 class="subsubtitleFront">{ I18n.t("home.subsubmessage") }<a title="email us" href="mailto:help@bdrc.io">help@bdrc.io</a>{ I18n.t("home.subsubmessage_afteremail") }</h4>
                   </List> }
                { (this.props.datatypes && this.props.datatypes.hash && this.props.datatypes.metadata[bdo+this.state.filters.datatype[0]] && message.length === 0 && !this.props.loading) && 
                   <List id="results">

@@ -145,7 +145,8 @@ footer#site-footer > div.foot #t2::before { content:''; display:block; position:
 
 #root > div > .resource {  padding:155px 140px; padding-bottom:75px; display:flex; text-align:left; }
 
-
+.subsubtitleFront { font-style:italic;margin-top:10px;max-width:70%;margin-left:15%; }
+.subsubtitleFront > a {text-decoration: none; color: #d73449;}
 
 
 body { overflow:auto !important;padding-right:0 !important; /*font-family:"Roboto", "Helvetica", "Arial", sans-serif; */
