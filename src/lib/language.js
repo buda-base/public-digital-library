@@ -1,4 +1,5 @@
 //@flow
+import React from 'react';
 import I18n from 'i18next';
 //import {toWylie,fromWylie} from "wylie"
 
@@ -41,7 +42,7 @@ export function numtobo(c) {
    return res;
 }
 
-export function makeLangScriptLabel(code:string)
+export function makeLangScriptLabel(code:string,span:boolean=false)
 {
    if(!code.match(/^[a-z]{2}(-[a-z0-9-]+)?$/)) throw new Error("Malformed Code ("+code+")");
 
@@ -57,5 +58,6 @@ export function makeLangScriptLabel(code:string)
    if(script.length) scriptLabel = I18n.t(langScripts[script])
    //console.log("label",langLabel,scriptLabel)
 
-   return langLabel + (scriptLabel?" (" + scriptLabel + ")":"")
+   if(!span) return langLabel + (scriptLabel?" (" + scriptLabel + ")":"")
+   else return <span>{[langLabel, (scriptLabel?<span class="lang-info"> ({scriptLabel})</span>:null)].filter(e => e)}</span>
 }

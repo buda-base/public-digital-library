@@ -48,7 +48,7 @@ const boTranslation = {
       instance_plural:"དཔེ་རྒྱུན།",
       images:"བཤེར་པར།",
       volume:"བཤེར་པར།",
-      volume_num:"པོད། {{num,counttobo}}"
+      volume_num:"པོད། {{num,counttobo}}",
       searchIn:"{{type}}"
    },
    topbar:{
@@ -161,7 +161,8 @@ const boTranslation = {
       "tmp:hasImage":"བཤེར་པར།",
       "tmp:hasEtext":"འཕྲུལ་ཡིག",
       "unspecified":"རིགས་མ་དགར་བ།",
-      "true":"ཡིན།"
+      "true":"ཡིན།",
+      "tmp:noteMatch": "མཆན།",
       "tmp:TibetanBuddhistTexts":"བོད་བརྒྱུད་ནང་བསྟན་གསུང་རབ།",
       "tmp:BonpoTexts":"བོན་པོའི་གསུང་དཔེ།",
       "tmp:SanskritTexts":"ལེགས་སྦྱར་སྐད་ནང་པའི་གསུང་དཔེ།",

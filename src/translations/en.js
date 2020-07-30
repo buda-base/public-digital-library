@@ -15,8 +15,10 @@ const enTranslation = {
       archives2:"Digital Archives",
       by:"by the Buddhist Digital Resource Center",
       subtitle:"A cooperative platform for expanding access to Buddhist literature. Explore the millions of pages of texts contributed by BDRC and its many partners.",
-      message:"WELCOME TO THE BETA VERSION OF BDRC's NEW LIBRARY!",
-      submessage:"with new features, resources, and tools for faster and more in-depth research",
+      message:"WELCOME TO THE BETA VERSION OF BUDA, BDRC's NEW LIBRARY!",
+      submessage:"with new features, resources, and tools for faster and more in-depth research.",
+      subsubmessage:"We welcome your feedback. Help us improve by sending bug reports, comments and suggestions to ",
+      subsubmessage_afteremail:".",
       search:"Search",
       choose:"Choose language",
       start:"Start typing then select search language"
@@ -132,7 +134,7 @@ const enTranslation = {
       "tmp:entityScore":"Entity Score",
       "tmp:instanceLabel":"$t(types.instance) Label",
       "tmp:dimensions":"Dimensions",
-      "tmp:publisherLocation":"Publisher Loc.",
+      "bdo:publisherName":"Publisher",
       "tmp:forWork":"For Work",
       "tmp:provider":"Provider",
       "tmp:author":"Author",
@@ -147,7 +149,10 @@ const enTranslation = {
       "bdo:personTeacherOf_plural":"Students",
       "bdo:personStudentOf":"Teacher",
       "bdo:personStudentOf_plural":"Teachers",
+      "bdo:biblioNote":"Note",
+      "bdo:biblioNote_plural":"Notes",
       "tmp:propHasScans":"Scans",
+      "bdo:CorporationMemberNotSpecified":"Member",
       "tmp:propHasEtext":"Etext",
       "bf:identifiedBy":"Identified By",
       "rdfs:subClassOf":"Subclass Of",
@@ -155,7 +160,17 @@ const enTranslation = {
       "tmp:hasImage":"Has Scans",
       "tmp:hasEtext":"Has Etext",
       "unspecified":"Unspecified",
-      "true":"True"
+      "true":"True",
+      "tmp:TibetanBuddhistTexts":"Tibetan Buddhist Texts",
+      "tmp:BonpoTexts":"Bonpo Texts",
+      "tmp:SanskritTexts":"Sanskrit Texts",
+      "tmp:ChineseTexts":"Chinese Texts",
+      "tmp:SoutheastAsianTexts":"Southeast Asian Texts",
+      "tmp:multiLingualTexts":"Buddhist Canonical Texts (multi-lingual)",
+      "tmp:Bibliographies":"Bibliographies",
+      "tmp:Maps":"Maps",
+      "tmp:BuddhistArt":"Buddhist Art",
+      "tmp:other":"Other"
    },
    result:{
       open:"Open",
@@ -179,12 +194,14 @@ const enTranslation = {
       mainInfo:"Main Information",
       outline:"Outline",
       related:"Related Works",
-      extended:"Extended Information"
+      extended:"Extended Information",
+      userP:"User Profile",
+      personalI:"Personal Information"
    },
    user:{
       photo:{ 
          hover:"Update profile picture",
-         label:"Profile Picture",                                
+         label:"Profile Picture Url",                                
          helperText:"Paste a direct link to an existing picture",
          error:"Error: cannot find image, please check your link"
       },      
@@ -194,7 +211,29 @@ const enTranslation = {
          set:"Modify value",
          hide:"Set private",
          show:"Set public",
-      }
+      },
+      email:"Email",
+      name:"Name",
+      gender:"Gender",
+      area:"Area of Interest",
+      region:"Cultural Region (if in China)",
+      password:"Change Password",
+      options:{
+         male:"Male",
+         female:"Female",
+         noanswer:"Prefer not to answer",
+         outside:"Not applicable",
+         kham:"Kham",
+         amdo:"Amdo",
+         uTsang:"U-tsang",
+         other:"Other",
+
+      },
+      get:"Getting user info...",
+      redirect:"Not logged in... Redirecting",
+      agree:"I agree to receive emails from BDRC",
+      update:"Update",
+      updating:"Updating..."
    },
    popover:{
       moreInfo:"More Information",
@@ -321,7 +360,8 @@ const enTranslation = {
       priority:{
          title:"Data Language Priority",
          help:"Please select the languages you want to have the data displayed in, by order of priority (you do not need to list them all)",
-         user:"User Defined"
+         user:"User Defined",
+         more:"More"
       }
    },
    Asidebar:{
@@ -384,6 +424,18 @@ const enTranslation = {
       endV:"End Volume: {{num}}",
       endP:"End Page: {{num}}",
       endL:"End Line: {{num}}"
+   },
+   footer:{
+      BDRC: "Buddhist Digital Resource Center",
+      adr1: "1430 Massachusetts Ave., 5th floor",
+      adr2: "Cambridge, MA, USA 02138",
+      contact: "CONTACT US",
+      connect: "Connect with us on social media",
+      print:"Order printed copies of works referenced on our website",
+      order:"Order",
+      join:"Join our newsletter and stay up-to-date",
+      subscribe:"Subscribe",
+      support:"Support our mission of preservation and access"
    }
 } ;
 

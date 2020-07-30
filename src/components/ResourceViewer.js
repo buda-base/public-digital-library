@@ -64,6 +64,8 @@ import IIIFViewerContainer from '../containers/IIIFViewerContainer';
 import LanguageSidePaneContainer from '../containers/LanguageSidePaneContainer';
 import {miradorConfig, miradorSetUI} from '../lib/miradorSetup';
 import { Redirect404 } from "../routes.js"
+import Footer from "./Footer"
+
 import Loader from "react-loader"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faLanguage } from '@fortawesome/free-solid-svg-icons'
@@ -2071,7 +2073,7 @@ class ResourceViewer extends Component<Props,State>
             let srcProv = sameAsPrefix.replace(/^.*?([^ ]+) provider .*$/,"$1").toLowerCase()
             let srcSame = sameAsPrefix.replace(/^.*?([^ ]+) sameAs .*$/,"$1").toLowerCase()
             
-            console.log("src:",src,srcProv,srcSame)
+            //console.log("src:",src,srcProv,srcSame)
             
             //if(src.match(/bdr/)) src = "bdr"
 
@@ -5725,6 +5727,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                   { theDataExt }
                </div>
             </div>
+            {/* <Footer locale={this.props.locale}/> */}
          </div>,
          <LanguageSidePaneContainer />]
 
