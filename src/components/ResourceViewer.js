@@ -879,28 +879,6 @@ class ResourceViewer extends Component<Props,State>
             instance = getElem(bdo+"instanceReproductionOf",props.IRI),
             images = getElem(bdo+"instanceHasReproduction",props.IRI)
 
-
-         if(state.outlinePart) { 
-            work = getElem(bdo+"contentLocation",props.IRI)
-            if(work && work.length) { 
-               work = work[0].value
-               work = getElem(bdo+"contentLocationInstance",props.IRI,null,work)
-               if(work && work.length) { 
-                  work = work[0].value
-                  if(props.assocResources && props.assocResources[work])  work = getElem(bdo+"instanceOf",work,props.assocResources)
-                  else work = null
-               }
-            }
-            else { 
-               work = getElem(bdo+"inRootInstance",props.IRI)  
-               if(work && work.length) { 
-                  work = work[0].value
-                  if(props.assocResources && props.assocResources[work])  work = getElem(bdo+"instanceOf",work,props.assocResources)
-                  else work = null
-               }
-            }
-         }
-
          // TODO find a way to keep an existing Etext/Images tab
          //if(images) images = images.filter(e => getEntiType(e.value) === "Images")
 
