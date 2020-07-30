@@ -48,7 +48,7 @@ const boTranslation = {
       instance_plural:"དཔེ་རྒྱུན།",
       images:"བཤེར་པར།",
       volume:"བཤེར་པར།",
-      volume_num:"པོད། {{num,counttobo}}",
+      volume_num:"པོད། {{num,counttobo}}"
       searchIn:"{{type}}"
    },
    topbar:{
@@ -161,13 +161,12 @@ const boTranslation = {
       "tmp:hasImage":"བཤེར་པར།",
       "tmp:hasEtext":"འཕྲུལ་ཡིག",
       "unspecified":"རིགས་མ་དགར་བ།",
-      "true":"ཡིན།",
-      "tmp:noteMatch": "མཆན།",
+      "true":"ཡིན།"
       "tmp:TibetanBuddhistTexts":"བོད་བརྒྱུད་ནང་བསྟན་གསུང་རབ།",
-      "tmp:BonpoTexts":"བོན་པོའི་གསུང་དཔེ།",
-      "tmp:SanskritTexts":"ལེགས་སྦྱར་སྐད་ནང་པའི་གསུང་དཔེ།",
+      "tmp:BonpoTexts":"བོན་གྱི་གསུང་རབ།",
+      "tmp:SanskritTexts":"ལེགས་སྦྱར་སྐད་ནང་ཡོད་པའི་གསུང་རབ།",
       "tmp:ChineseTexts":"རྒྱའི་ནང་བསྟན་གསུང་རབ།",
-      "tmp:SoutheastAsianTexts":"ཤར་ལྷོ་ཨེ་ཤི་ཨི་ནང་བསྟན་གསུང་དཔེ།",
+      "tmp:SoutheastAsianTexts":"ལྷོ་ཤར་ཨེ་ཤི་ཡའི་ནང་བསྟན་གསུང་རབ།",
       "tmp:multiLingualTexts":"ནང་བསྟན་སྤྱིའི་གསུང་དཔེ། (སྐད་རིགས་སྣ་མང་།)",
       "tmp:Bibliographies":"དཔེ་བསྐྲུན་གནས་ཚུལ།",
       "tmp:Maps":"ས་ཁྲ།",
@@ -219,7 +218,7 @@ const boTranslation = {
       gender:"ཕོ་མོ།",
       area:"དགའ་མོས་བྱེད་ས།",
       region:"ས་གནས། (རྒྱ་ནག)",
-      password:"གསང་ཚིག་བརྗེས།",
+      password:"གསང་ཚིག་རྗེ།",
       options:{
          male:"ཕོ།",
          female:"མོ།",
@@ -231,7 +230,7 @@ const boTranslation = {
          other:"གཞན།",
 
       },
-      get:"སྤྱོད་མཁན་གྱི་གནས་ཚཱུལ་མཁོ་སྒྲུབ་བྱེད་བཞིན་ཡོད།",
+      get:"སྤྱོད་མཁན་གྱི་གནས་ཚུལ་མཁོ་སྒྲུབ་བྱེད་བཞིན་ཡོད།",
       redirect:"ནང་འཛུལ་བྱས་མི་འདུག ཕྱིར་ལྡོག་བྱེད་བཞིན་ཡོད།",
       agree:"ནང་བསྟན་དཔེ་ཚོགས་ལྟེ་གནས་ཀྱིས་བསྐུར་བའི་གློག་འཕྲིན་ལ་ངོས་ལེན་ཡོད།",
       update:"ཁ་གསབ།",
@@ -431,7 +430,7 @@ const boTranslation = {
       BDRC: "Buddhist Digital Resource Center",
       adr1: "1430 Massachusetts Ave., 5th floor",
       adr2: "Cambridge, MA, USA 02138",
-      contact: "ང་ཚོར་འབྲེལ་གཏུགས་བྱེད་ས།",
+      contact: "འབྲེལ་གཏུགས་བྱེད་ས།",
       connect: "སྤྱི་ཚོགས་དྲ་རྒྱ་ཁག་བརྒྱུད་ནས་ང་ཚོར་འབྲེལ་བ་བྱོས།",
       print:"ང་ཚོའི་དྲ་ཐོག་ཏུ་ཡོད་པའི་དཔེ་ཆ་ཁག་དགོས་ཚེ་མངགས་ས་འདི་ན་ཡོད།",
       order:"མངགས་ཉོ།",
