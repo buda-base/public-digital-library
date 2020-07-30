@@ -5117,9 +5117,14 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                               // deprecated
                               // if(! (["bdr:PartTypeSection", "bdr:PartTypeVolume"].includes(g.partType)) ) {
                               if(g.contentLocation) {
-                                 if(!g.details) g.details = []                                 
+                                 if(!g.details) g.details = []
                                  g.hasImg = "/show/"+g["@id"].replace(/^((bdr:MW[^_]+)_[^_]+)$/,"$2?part=$1")+"&s="+encodeURIComponent(this.props.history.location.pathname+this.props.history.location.search)+"#open-viewer"
                                  g.details.push(<div class="sub view"><Link to={g.hasImg} class="ulink">&gt; {I18n.t("copyright.view")}</Link></div>)
+                              }
+                              else if (g.instanceHasReproduction) {
+                                 if(!g.details) g.details = []
+                                 g.hasImg = "/show/"+g.instanceHasReproduction+"?s="+encodeURIComponent(this.props.history.location.pathname+this.props.history.location.search)+"#open-viewer"
+                                 g.details.push(<div class="sub view"><Link to={g.hasImg} class="ulink">&gt; {I18n.t("copyright.view")}</Link></div>)  
                               }
                               if(g.instanceOf) {
                                  if(!g.details) g.details = []
@@ -5408,7 +5413,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
       let fairUse = false
       if(kZprop.indexOf(adm+"access") !== -1) {
          let elem = this.getResourceElem(adm+"access")
-         if(elem && elem.filter(e => e.value.match(/(AccessFairUse|AccessRestrictedInChina)$/)).length >= 1) fairUse = true
+         if(elem && elem.filter(e => e.value.match(/(AccessFairUse)$/)).length >= 1) fairUse = true
          //loggergen.log("adm",elem,fairUse)
       }
 
