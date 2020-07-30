@@ -20,7 +20,7 @@ const boTranslation = {
       subsubmessage:"We welcome your feedback. Help us improve by sending bug reports, comments and suggestions to ",
       subsubmessage_afteremail:".",
       search:"འཚོལ།",
-      choose:"སྐད་རིགས་འདེམ།"
+      choose:"སྐད་རིགས་འདེམ།",
       start:"Start typing then select search language"
    },
    types:{
@@ -138,7 +138,8 @@ const boTranslation = {
       "tmp:entityScore":"ཐོབ་སྐར།",
       "tmp:instanceLabel":"དཔེ་རྒྱུན་གྱི་མཆན་བྱང་།",
       "tmp:dimensions":"བོངས་ཚད།",
-      "tmp:publisherLocation":"པར་གནས།",
+      "bdo:publisherLocation":"པར་གནས།",
+      "bdo:publisherName":"པར་མཁན།",
       "tmp:forWork":"བརྩམས་ཆོས།",
       "tmp:provider":"མཁོ་འདོན་པ།",
       "tmp:author":"རྩོམ་པ་པོ།",
@@ -196,7 +197,7 @@ const boTranslation = {
       mainInfo:"གནས་ཚུལ་ཞིབ་ཕྲ།",
       outline:"དཀར་ཆག",
       related:"འབྲེལ་ཡོད་བརྩམས་ཆོས།",
-      extended:"གནས་ཚུལ་འཕར་མ།,
+      extended:"གནས་ཚུལ་འཕར་མ།",
       userP:"སྤྱོད་མཁན་གྱི་གནས་ཚུལ།",
       personalI:"སྒེར་གྱི་གནས་ཚུལ།"
    },
@@ -362,7 +363,7 @@ const boTranslation = {
       priority:{
          title:"དན་གྲངས་ཀྱི་སྐད་ཡིག་གི་གོ་རིམ།",
          help:"དན་གྲངས་སྟོན་སའི་སྐད་ཡིག་གལ་ཆེ་ཆུང་གི་རིམ་པ་ལྟར་འདེམས། སྐད་ཡིག་ཚང་མ་མ་འདེམས་རུང་ཆོག",
-         user:"ཁྱེད་ཀྱི་འདེམ་ཁ།"
+         user:"ཁྱེད་ཀྱི་འདེམ་ཁ།",
          more:"འདི་ལས་མང་བ།"
       }
    },
