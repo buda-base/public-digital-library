@@ -79,37 +79,57 @@ const i18nextConfig = {
          else if (format === 'counttozh' && value) { 
             return value.toLocaleString('zh-u-nu-hanidec');
          }
+         else if (format === 'lowercase') return value.toLowerCase();
+         else if (format === 'uppercase') return value.toUpperCase();
          return value;
       }
    }
 };
 
+// NOTO
+// x use simpler ontologySchema (=> reload when translate) cf http://purl.bdrc.io/query/graph/OntologyUiStrings?L_LNG=en&format=json
 // DONE
 // + bug publisher
 // + translate number of results by datatype/facet
 // + use unicode for tibetan when chinese selected
 // + use original language in language switcher 
 // + remove Auth / chinese server
+// + outline | open appeared sibling nodes the usual way when search (not clicking '...')
+// + outline | change icons etc.
+// + search | fix 1st result link /search?q="red%20mda%27%20ba"&lg=bo-x-ewts&t=Instance 
+// + search | rename "hasOpen" --> "OpenAccess"
+// + search | fix reset filters (remove when nothing selected)
+// + search | change sortBy menu to regular popover
+// + search | intermediate/diagonal check state (both selected and unselected descendants)
+// + translation | save preference (localStorage+url param 'lang'+defautl to navigator.language)
+// + clean | remove ontology/core.json
+
 
 // TODO profile
 // - new design
 
-// TODO translation
-// - save preference (localStorage+url param 'lang'+defautl to navigator.language)
-
 // TODO search
-// - change sortBy menu to regular popover
-// - fix reset filters (remove when nothing selected)
-// - rename "hasOpen" --> "OpenAccess"
 // - use topic facet ancestors
-// - intermediate/diagonal check state (both selected and unselected descendants)
+// - close sortBy on selection
+// - fix number of results when resource with status not released
 
 // TODO mirador
 // - use our translations
 // - download pdf link not in another tab
 
-// TODO outline
-// - open appeared sibling nodes the usual way when search (not clicking '...')
+// TODO safari
+// - http://library.bdrc.io/search?q=%22dri%20med%20%27od%20zer%22&lg=bo-x-ewts&t=Work&uilang=en&s=work%20title%20reverse&pg=1&f=tree,inc,bdr:T23&f=tree,inc,bdr:T2183&f=tree,inc,bdr:T140&f=tree,inc,bdr:T354
+
+// TODO translation
+// - use lang=bo tag ("profile")
+// - font / title bug
+// - "has Scans"/"has Etext"
+
+// TODO etext 
+// - 404/401 "not found" / "must login"
+// - fix Etext_base query to add volume number (ex: fresh load of /bdr:UT00KG03612_I00KG03625_0000 without loading bdr:IExyz before)
+
+// TODO clean 
 
 
 const logger = store => next => action => {

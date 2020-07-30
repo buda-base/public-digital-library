@@ -74,8 +74,16 @@ import {getEntiType} from '../lib/api';
 import {narrowWithString} from "../lib/langdetect"
 import {sortLangScriptLabels, extendedPresets} from '../lib/transliterators';
 import './App.css';
+import Footer from "./Footer"
 
 import {svgEtextS,svgImageS} from "./icons"
+
+import logdown from 'logdown'
+
+// for full debug, type this in the console:
+// window.localStorage.debug = 'gen'
+
+const loggergen = new logdown('gen', { markdown: false });
 
 const adm   = "http://purl.bdrc.io/ontology/admin/" ;
 const bda   = "http://purl.bdrc.io/admindata/";
@@ -128,6 +136,22 @@ export function shortUri(id:string) {
       id = id.replace(new RegExp(prefixesMap[k]),k+":")  
    }
    return id.replace(/[/]$/,"") ;
+}
+
+export function keywordtolucenequery(key:string, lang?:string) {
+   if(key.indexOf("\"") === -1) 
+      key = "\""+key+"\""
+   // https://github.com/buda-base/public-digital-library/issues/155
+   if (lang && lang.startsWith("bo") && !key.match(/~\d$/))
+      key = key+"~1"
+   return key
+}
+
+
+export function lucenequerytokeyword(lq) {
+   lq = lq.replace(/~\d$/,"")
+   lq = lq.replace(/\"/g, "")
+   return lq
 }
 
 const facetLabel = {
@@ -234,7 +258,7 @@ export function report_GA(config,location) {
       return ({...acc,[k[0]]:k[1]})
    },{})
    
-   console.log("ck?",ck,config,location,_GA)
+   loggergen.log("ck?",ck,config,location,_GA)
 
    if(!config || !location) return
 
@@ -247,7 +271,7 @@ export function report_GA(config,location) {
 
       let GAtxt = location.pathname+location.search+location.hash
 
-      console.log("GA?",GAtxt);
+      loggergen.log("GA?",GAtxt);
 
       ReactGA.pageview(GAtxt);
    }        
@@ -257,7 +281,7 @@ export function report_GA(config,location) {
 
 export function highlight(val,k,expand,newline)
 {
-   //console.log("hi:",val,k,expand)
+   //loggergen.log("hi:",val,k,expand)
 
    if(expand && expand.value) val = expand.value
 
@@ -272,7 +296,7 @@ export function highlight(val,k,expand,newline)
    {      
       val = val.split(/↦/)
       val = val.map((e,_idx) => { 
-         //console.log("e",i,e,e.length)
+         //loggergen.log("e",i,e,e.length)
          if(e.length) {
             let f = e.split(/↤/)
             if(f.length > 1) {
@@ -302,7 +326,7 @@ export function highlight(val,k,expand,newline)
    //                .replace(/[\[\]]+/g,"")
    //    let ret = val.replace(/↦[^↤]+↤([-/_()\[\]: ]+↦[^↤]+↤)*/g,"↦↤")
 
-   //    //console.log("str:",str,"=",ret)
+   //    //loggergen.log("str:",str,"=",ret)
 
    //    val = ret.split(/[\[\] ]*↦↤[\[\] ]*/).map((l) => ([<span>{l}</span>,<span className="highlight">{str}</span>])) ;
    // }
@@ -320,7 +344,7 @@ export function getLangLabel(that:{},prop:string="",labels:[],proplang:boolean=f
 {
    if(labels && labels.length)
    {
-      //console.log("getL",prop,labels,proplang);
+      //loggergen.log("getL",prop,labels,proplang);
 
       let langs = []
       if(that.state.langPreset) langs = that.state.langPreset
@@ -334,11 +358,11 @@ export function getLangLabel(that:{},prop:string="",labels:[],proplang:boolean=f
       // move that to redux state ?
       langs = extendedPresets(langs)
 
-      //console.log(JSON.stringify(labels,null,3))
+      //loggergen.log(JSON.stringify(labels,null,3))
 
       let sortLabels =  sortLangScriptLabels(labels,langs.flat,langs.translit)
 
-      //console.log(JSON.stringify(sortLabels,null,3))
+      //loggergen.log(JSON.stringify(sortLabels,null,3))
 
       if(otherLabels) {
          let labels = [ ...sortLabels ]
@@ -356,9 +380,9 @@ export function getLangLabel(that:{},prop:string="",labels:[],proplang:boolean=f
 
       for(let lang of langs) {
          l = labels.filter((e) => ((e.value||e["@value"]) && (e["lang"] == lang || e["xml:lang"] == lang || e["@language"] == lang)))
-         //console.log("l?",l,lang);
+         //loggergen.log("l?",l,lang);
          if(l.length > 0) {
-            //console.log("lang",lang,l)
+            //loggergen.log("lang",lang,l)
             return l[0]
          }
       }
@@ -370,6 +394,9 @@ export function getLangLabel(that:{},prop:string="",labels:[],proplang:boolean=f
 
 function getPropLabel(that, i, withSpan = true, withLang = false) {
    if(!that.props.dictionary) return 
+
+   let sTmp = shortUri(i), trad = I18n.t("prop."+sTmp)
+   if("prop."+sTmp !== trad) return trad
 
    let label = that.props.dictionary[i], labels
    if(label) {
@@ -387,7 +414,7 @@ function getPropLabel(that, i, withSpan = true, withLang = false) {
    if(labels) {
       label = getLangLabel(that,"",labels,true)
 
-      //console.log("label",i,label)
+      //loggergen.log("label",i,label)
 
       if(label) {
          if(label.lang) lang = label.lang
@@ -416,7 +443,7 @@ export function getFacetUrl(filters,dic){
          if(!vals.includes("Any")) str += vals.map(v => "&f="+dic[k]+","+(filters.exclude[k] && filters.exclude[k].indexOf(v) !== -1?"exc":"inc")+","+shortUri(v)).join("")
       }
    }
-   console.log("gFu",str,filters,dic)
+   loggergen.log("gFu",str,filters,dic)
    return str
 }
 export function lang_selec(that,black:boolean = false)
@@ -449,12 +476,19 @@ export function lang_selec(that,black:boolean = false)
                                     value={i}
                                     disabled={disab}
                                     onClick={(event) => { 
+                                       localStorage.setItem('uilang', i);
                                        that.setState({...that.state,anchorLang:null,collapse: {...that.state.collapse, lang:false } }); 
-                                       that.props.onSetLocale(i);
                                        document.documentElement.lang = i
-                                       if(i === "bo") that.props.onSetLangPreset(["bo","zh-hans"])
-                                       else if(i === "en") that.props.onSetLangPreset(["bo-x-ewts","sa-x-iast"])
-                                       else if(i === "zh") that.props.onSetLangPreset(["zh-hans","bo"])
+
+                                       that.props.onSetLocale(i);
+                                       if(i === "bo") that.props.onSetLangPreset(["bo","zh-hans"], "bo")
+                                       else if(i === "en") that.props.onSetLangPreset(["bo-x-ewts","sa-x-iast"], "en")
+                                       else if(i === "zh") that.props.onSetLangPreset(["zh-hans","bo"], "zh")
+
+                                       let loca = { ...that.props.history.location }
+                                       if(loca.search.includes("uilang")) loca.search = loca.search.replace(/uilang=[^&]+/,"uilang="+i)
+                                       else loca.search += (loca.search&&loca.search.match(/[?]./)?"&":"?")+"uilang="+i
+                                       that.props.history.push(loca)
                                     }} >{label}</MenuItem> ) 
                   } ) } 
                   
@@ -466,12 +500,12 @@ export function lang_selec(that,black:boolean = false)
 export function getGDPRconsent(that) {
 
    //ReactGA.pageview('/homepage');
-   console.log("cookie?",document.cookie)
+   loggergen.log("cookie?",document.cookie)
 
    return (
       <CookieConsent
          location="bottom"
-         onAccept={() => { console.log("accept!"); if(that) { report_GA(that.props.config,that.props.history.location); that.forceUpdate(); } } }
+         onAccept={() => { loggergen.log("accept!"); if(that) { report_GA(that.props.config,that.props.history.location); that.forceUpdate(); } } }
          cookieName="BDRC-GDPR-consent"
          style={{ background: "#2B373B",zIndex:100000,  }}
          buttonText="I agree"
@@ -491,10 +525,10 @@ export function top_right_menu(that,etextTitle,backUrl)
 {
    let logo = [
             <div id="logo">
-               <Link to="/"  onClick={() => { that.props.history.push({pathname:"/",search:""}); that.props.onResetSearch();} }><span>BUDA</span></Link>               
-               <a><span>BY</span></a>
+               <Link to="/"  onClick={() => { that.props.history.push({pathname:"/",search:""}); that.props.onResetSearch();} }><img src="/icons/BUDA-small.svg"/><span>BUDA</span></Link>                                  
+               <a id="by"><span>by</span></a>
+               <a href="https://bdrc.io/" target="_blank" id="BDRC"><span>BDRC</span></a>
                <a href="https://bdrc.io/" target="_blank"><img src="/BDRC-Logo_.png"/></a>
-               <a href="https://bdrc.io/" target="_blank"><span>BDRC</span></a>
             </div>,
 
    ]
@@ -740,7 +774,7 @@ class App extends Component<Props,State> {
       else if(get.lg) lg = get.lg
 
       let kw = "", newKW
-      if(get.q) kw = get.q.replace(/"/g,"")
+      if(get.q) kw = lucenequerytokeyword(get.q)
       if(kw) newKW = kw
 
       let types = [ "Instance" ] //[ ...searchTypes.slice(1) ]
@@ -748,7 +782,7 @@ class App extends Component<Props,State> {
       if(e !== -1) { 
          delete types[e]
          types = types.filter(e => e)
-         //console.log("types",types)
+         //loggergen.log("types",types)
       }
 
       // x reset facets when switching to instances (use w=)
@@ -782,7 +816,7 @@ class App extends Component<Props,State> {
 
       if(langSelect.indexOf(lg) === -1) this.state = { ...this.state, customLang:[lg]}
 
-      console.log('qs',get,this.state)
+      loggergen.log('qs',get,this.state)
 
 
    }
@@ -791,13 +825,13 @@ class App extends Component<Props,State> {
 
    componentDidUpdate() {
       
-      console.log("didU",this.state) //,this._refs)
+      loggergen.log("didU",this.state) //,this._refs)
 
 
       report_GA(this.props.config,this.props.history.location);
 
 
-      if(!this._get) this._get = qs.parse(this.props.history.location.search)
+      this._get = qs.parse(this.props.history.location.search)
       let get = this._get 
 
       let n, scrolled
@@ -811,7 +845,7 @@ class App extends Component<Props,State> {
 
                //else if(n === 0 && that._refs["logo"].current) window.scrollTop(0) //TODO scroll to top of window when changing page
 
-               console.log("timer")
+               loggergen.log("timer")
             })(this),10) 
 
             setTimeout(((that) => () => { clearInterval(this._scrollTimer)})(this),1000)
@@ -861,7 +895,7 @@ class App extends Component<Props,State> {
          }
       }
 
-      //console.log("encoded",encoded)
+      loggergen.log("encoded=|"+encoded+"|"+this.state.filters.encoded+"|")
 
       if(this.state.uriPage !== pg || this.state.backToWorks !== backToWorks || (encoded !== this.state.filters.encoded ) || (scrolled && this.state.scrolled !== scrolled) )
          this.setState({...this.state, repage:true, uriPage:pg, backToWorks, scrolled, collapse, ...(filters?{filters}:{})})
@@ -870,14 +904,16 @@ class App extends Component<Props,State> {
 
    requestSearch(key:string,label?:string,lang?:string,forceSearch:boolean=false)
    {
-      console.log("key",key,label,this.state.searchTypes)
+      loggergen.log("key",key,label,this.state.searchTypes)
 
       let _key = ""+key
       if(!key || key == "" || !key.match) return ;
       if(!key.match(/:/)) {
-        if(key.indexOf("\"") === -1) key = "\""+key+"\""
+        key = keywordtolucenequery(key, lang)
         key = encodeURIComponent(key) // prevent from losing '+' when adding it to url
       }
+      loggergen.log("new key",key)
+
 
       let searchDT = this.state.searchTypes
       if(!label) label = searchDT
@@ -891,21 +927,23 @@ class App extends Component<Props,State> {
       let state = { ...this.state, dataSource:[], leftPane:true, filters:{ datatype:[ ...searchDT ] } }
       this.setState(state)
 
-      console.log("search::",key,_key,label) //,this.state,!global.inTest ? this.props:null)
+      loggergen.log("search::",key,_key,label) //,this.state,!global.inTest ? this.props:null)
       
-      if(_key.match(/^[UWPGRCTILE][A-Z0-9_]+/) || prefixesMap[key.replace(/^([^:]+):.*$/,"$1")])
+      if(_key.match(/(^[UWPGRCTILE][A-Z0-9_]+$)|(^([cpgwrt]|mw|wa|ws)\d[^ ]*$)/) || prefixesMap[key.replace(/^([^:]+):.*$/,"$1")])
       {
-         if(!forceSearch) {
-            if(_key.indexOf(":") === -1) _key = "bdr:"+_key
+         if(_key.indexOf(":") === -1) _key = "bdr:"+_key
+         let uc = _key.split(":")
+         _key = uc[0] + ":" + uc[1].toUpperCase()         
+         
+         if(!forceSearch && !this.state.langIndex) {
+            
+
             this.props.history.push({pathname:"/show/"+_key})
          }
          else {
-
             if(!label) label = this.state.filters.datatype.filter((f)=>["Person","Work"].indexOf(f) !== -1)[0]
-            this.props.history.push({pathname:"/search",search:"?r="+key+(label?"&t="+label:"")})
+            this.props.history.push({pathname:"/search",search:"?r="+_key+(label?"&t="+label:"")})
          }
-
-
       }
       else if(key.match(/^[^:]*:[^ ]+/))
       {
@@ -946,6 +984,18 @@ class App extends Component<Props,State> {
 
    getLanguage():string
    {
+      if(!this.state.language || !this.state.dataSource || !this.state.dataSource.length) return this.state.language
+
+      let idx = this.state.langIndex
+      if(idx === undefined) idx = 0 
+      if(idx > this.state.dataSource.length) idx = 0
+      
+      let lang = this.state.dataSource[idx]
+      if(lang) {
+         lang = lang.split("@")
+         if(lang.length > 1) return lang[1]
+      }
+      
       return this.state.language
       /*
       if(lang && lang === "other")
@@ -1003,12 +1053,12 @@ class App extends Component<Props,State> {
                s.filters.facets[dic[k]] = s.filters.preload[k]
             }
             let exclude = {}
-            //console.log("exc1",JSON.stringify(s.filters.exclude,null,3))
+            //loggergen.log("exc1",JSON.stringify(s.filters.exclude,null,3))
             if(dic) for(let k of Object.keys(s.filters.exclude)) {
                exclude[dic[k]] = s.filters.exclude[k] 
             }
             s.filters.exclude = exclude
-            //console.log("exc2",JSON.stringify(exclude,null,3))
+            //loggergen.log("exc2",JSON.stringify(exclude,null,3))
 
             s.filters.preload = true
 
@@ -1022,10 +1072,13 @@ class App extends Component<Props,State> {
             facets = Object.keys(facets).reduce((acc,f) => {
                   if(facets[f].indexOf && facets[f].indexOf("Any") !== -1) return acc ;
                   else if(facets[f].val && facets[f].val.indexOf("Any") !== -1) return acc ;
-                  else return { ...acc, [f]:facets[f] }
+                  else if(f !== bdo+"workGenre" || facets[f].alt) return { ...acc, [f]:facets[f] }
+                  else return { ...acc, [f]:{alt:[bdo+"workGenre",bdo+"workIsAbout"],val:facets[f]} }
                },{})
 
-            console.log("facets",facets,props.loading)
+            s.filters.facets = facets
+
+            loggergen.log("facets?",facets,props.loading)
 
             if(!props.loading) 
                props.onUpdateFacets(
@@ -1039,14 +1092,13 @@ class App extends Component<Props,State> {
             else 
                setTimeout(() => {
                   props.onUpdateFacets(
-                  props.keyword+"@"+props.language,
-                  s.filters.datatype[0],
-                  facets,
-                  s.filters.exclude,
-                  props.searches[s.filters.datatype[0]][props.keyword+"@"+props.language].metadata,
-                  props.config.facets[s.filters.datatype[0]]
-               )}, 1000);
-            
+                     props.keyword+"@"+props.language,
+                     s.filters.datatype[0],
+                     facets,
+                     s.filters.exclude,
+                     props.searches[s.filters.datatype[0]][props.keyword+"@"+props.language].metadata,
+                     props.config.facets[s.filters.datatype[0]]
+                  )}, 1000);            
          }
       }
 
@@ -1062,13 +1114,13 @@ class App extends Component<Props,State> {
       }
 
 
-      //console.log("collap?",JSON.stringify(state.collapse,null,3))
+      //loggergen.log("collap?",JSON.stringify(state.collapse,null,3))
 
       
       // TODO deprecate in favor of query modification      
       if(props.language == "" && (!props.resources || !props.resources[props.keyword]))
       {
-         console.log("gRes?",props.resources,props.keyword);
+         loggergen.log("gRes?",props.resources,props.keyword);
          props.onGetResource(props.keyword);
       }
      
@@ -1083,9 +1135,9 @@ class App extends Component<Props,State> {
             if(d_sta.filter(i => !d_url.includes(i)).length > 0) {
                if(!s) s = { ...state }
                s = { ...s, filters : { ...s.filters, datatype : d_url }, repage:true }
-               console.log("filt::",d_url)
+               loggergen.log("filt::",d_url)
             }
-            //console.log("what...",d_sta,d_url)
+            //loggergen.log("what...",d_sta,d_url)
          }
       }
       */
@@ -1099,7 +1151,7 @@ class App extends Component<Props,State> {
          if(!s) s = { ...state }
          s.leftPane = false 
 
-         //console.log("no leftPane")
+         //loggergen.log("no leftPane")
       }
 
       
@@ -1114,7 +1166,7 @@ class App extends Component<Props,State> {
          if(props.langPreset) { 
             langP = props.langPreset.map(p => p.replace(/^.*?(ewts|iast|pinyin)?$/,"$1")).filter(e => e)
             langDetect = langDetect.map(d => ({d,i:(i=langP.indexOf(d))!==-1?i:99}))
-            console.log("langP",langDetect,langP,props.langPreset)         
+            loggergen.log("langP",langDetect,langP,props.langPreset)         
             langDetect = _.orderBy(langDetect, ["i","d"],["asc","asc"]).map(v => v.d)
          }
          s = { ...s, langPreset:props.langPreset, repage:true, langDetect }
@@ -1129,7 +1181,7 @@ class App extends Component<Props,State> {
 
       }
 
-      console.log("gDsFp",eq,props,state,s,state.id,state.LpanelWidth)
+      loggergen.log("gDsFp",eq,props,state,s,state.id,state.LpanelWidth)
 
       // pagination settings
       let d, newid = state.filters.datatype.sort()+"#"+props.keyword+"@"+props.language      
@@ -1161,9 +1213,9 @@ class App extends Component<Props,State> {
             s.results[newid] = { bookmarks: state.results[state.id].bookmarks }
          }
 
-         console.log("new id",state.id,newid,sameKW,state.filters.datatype,s.results&&s.results[newid]?JSON.stringify(s.results[newid].bookmarks,null,3):null)
+         loggergen.log("new id",state.id,newid,sameKW,state.filters.datatype,s.results&&s.results[newid]?JSON.stringify(s.results[newid].bookmarks,null,3):null)
          
-         //console.log("collap!",JSON.stringify(state.collapse,null,3))
+         //loggergen.log("collap!",JSON.stringify(state.collapse,null,3))
 
       }
       else {
@@ -1176,7 +1228,7 @@ class App extends Component<Props,State> {
          {
             needRefresh = true
             time = 1
-            console.log("refreshA",time)
+            loggergen.log("refreshA",time)
          }
          else {
             current = state.results[state.id].results.time
@@ -1184,14 +1236,14 @@ class App extends Component<Props,State> {
             if(props.searches && props.searches[k]) { // && props.searches[k].time > state.results[state.id].results.time) {
                needRefresh = true ;
                time = props.searches[k].time
-               console.log("refreshB",time)
+               loggergen.log("refreshB",time)
             }
             for(let d of ["Etext","Person","Instance","Work","Place","Topic","Corporation","Role","Lineage"]) {
                if(props.searches && props.searches[d] && props.searches[d][k]) {
                   if(!time || props.searches[d][k].time > time) { 
                      time = props.searches[d][k].time 
                      needRefresh = true 
-                     console.log("refreshC",time,d,state.id,current)
+                     loggergen.log("refreshC",time,d,state.id,current)
                   }
                }  
             }      
@@ -1209,14 +1261,14 @@ class App extends Component<Props,State> {
             time = props.searches[props.keyword+"@"+props.language].time
          }
 
-         console.log("K", props.keyword, time, current)
+         loggergen.log("K", props.keyword, time, current)
 
          let results
          if(state.filters.datatype.indexOf("Any") !== -1 || state.filters.datatype.length > 1 || state.filters.datatype.filter(d => ["Work","Etext","Person","Place","Topic","Role","Corporation","Lineage"].indexOf(d) === -1).length ) {
             results = { ...props.searches[props.keyword+"@"+props.language] }
-            //console.log("any")
+            //loggergen.log("any")
          }
-         //console.log("Ts1",JSON.stringify(state.searchTypes,null,3),JSON.stringify(state.filters.datatype,null,3))
+         //loggergen.log("Ts1",JSON.stringify(state.searchTypes,null,3),JSON.stringify(state.filters.datatype,null,3))
 
          let Ts = [ ] //[ ...state.searchTypes.filter(e => e !== "Any") ]
          for(let dt of state.filters.datatype) { 
@@ -1224,7 +1276,7 @@ class App extends Component<Props,State> {
             else if(Ts.indexOf(dt) === -1) Ts.push(dt)
          }
          
-         console.log("Ts",Ts) //,props.searches,props.keyword+"@"+props.language,props.searches[props.keyword+"@"+props.language])
+         loggergen.log("Ts",Ts) //,props.searches,props.keyword+"@"+props.language,props.searches[props.keyword+"@"+props.language])
 
          let merge 
          if(props.searches[props.keyword+"@"+props.language] !== undefined || props.language === "") for(let dt of Ts) { 
@@ -1244,7 +1296,7 @@ class App extends Component<Props,State> {
             let dts = dt.toLowerCase()+"s" 
             if(!merge) merge = {}
 
-            console.log("dts",dts,results,res)
+            loggergen.log("dts",dts,results,res)
 
             if(!res || !res.results || !res.results.bindings || !res.results.bindings[dts]) { 
 
@@ -1259,7 +1311,7 @@ class App extends Component<Props,State> {
                         let m = [ ...res.results.bindings[dts][k].map(p => (p.type === tmp+"labelMatch"?{...p, type:tmp+"prefLabelMatch"}:p)), //.filter(p => (!p.value || !p.value.match( /*/([Aa]bstract)*/ /([↦↤])/)) /*&& (!p.type || !p.type.match(/[Mm]atch|[Ee]xpression/))*/ ), 
                                  ...(!results.results.bindings[dts]||!results.results.bindings[dts][k]||!props.language?[]:results.results.bindings[dts][k]) ]
 
-                        //console.log("m?",dts,k,m.length) //,m)
+                        //loggergen.log("m?",dts,k,m.length) //,m)
 
                         return {
                            ...acc, 
@@ -1289,7 +1341,7 @@ class App extends Component<Props,State> {
             }
             
 
-            //console.log("res!",dts,JSON.stringify(merge[dts],null,3))
+            //loggergen.log("res!",dts,JSON.stringify(merge[dts],null,3))
          }         
          if(merge) { 
             if(!results.results) results = { results: {} }
@@ -1298,14 +1350,14 @@ class App extends Component<Props,State> {
          }
          
 
-         //console.log("rootres",JSON.stringify(results,null,3))
+         //loggergen.log("rootres",JSON.stringify(results,null,3))
 
          /*
          if(!results) {
 
             if(Ts.indexOf("Etext")!==-1 && props.searches["Etext"] && props.searches["Etext"][props.keyword+"@"+props.language])
             {
-               console.log("etexts?",props.searches["Etext"][props.keyword+"@"+props.language])
+               loggergen.log("etexts?",props.searches["Etext"][props.keyword+"@"+props.language])
                results = { ...props.searches["Etext"][props.keyword+"@"+props.language] }
             }
             ////results = { results:{ bindings:{} }, numResults:0 }
@@ -1338,7 +1390,7 @@ class App extends Component<Props,State> {
                let tmp = {}
                for(let o of ordered) { tmp[o] = works[o]; 
                
-                  //console.log("o",o,tmp[o].filter(e => e.value && e.value.match(/[Aa]bstract/)))
+                  //loggergen.log("o",o,tmp[o].filter(e => e.value && e.value.match(/[Aa]bstract/)))
                }
                results.results.bindings.works = tmp
                // results = ordered.reduce((acc,k) => { acc[k]=results[k]; },{})
@@ -1363,7 +1415,7 @@ class App extends Component<Props,State> {
                // s.paginate = {index:0,pages:[0],n:[0]}   
             }
 
-            //console.log("s.id",s.id,s.results[s.id],time)        
+            //loggergen.log("s.id",s.id,s.results[s.id],time)        
          }
 
          //console.groupEnd()
@@ -1378,8 +1430,8 @@ class App extends Component<Props,State> {
          }
 
          /*
-         console.log("inst ref",refresh,JSON.stringify(Object.keys(props.instances)))
-         if(state.instances) console.log(JSON.stringify(Object.keys(state.instances)))
+         loggergen.log("inst ref",refresh,JSON.stringify(Object.keys(props.instances)))
+         if(state.instances) loggergen.log(JSON.stringify(Object.keys(state.instances)))
          */
          
          if(refresh)
@@ -1400,14 +1452,14 @@ class App extends Component<Props,State> {
       }
 
       if(s) { 
-         console.log("newS",s)
+         loggergen.log("newS",s)
          return s ;
       }
       else return null;
    }
 
 
-      // console.log("newProps.facets",newProps.facets)
+      // loggergen.log("newProps.facets",newProps.facets)
 
 
 /*
@@ -1429,7 +1481,7 @@ class App extends Component<Props,State> {
          newF = { [prop] : lab }
       }
 
-      console.log("checkF",prop,lab,val,newF)
+      loggergen.log("checkF",prop,lab,val,newF)
 
       state = { ...state, paginate:{index:0,pages:[0],n:[0]}, repage: true }
       
@@ -1458,7 +1510,7 @@ class App extends Component<Props,State> {
    handleSearchTypes = (event:Event) => { //},lab:string,val:boolean) => {
 
 
-      console.log("checkST::",event.target,event.key,event.target.value)
+      loggergen.log("checkST::",event.target,event.key,event.target.value)
 
 
       this.setState( { ...this.state, searchTypes:[ event.target.value ], langOpen:false }  );
@@ -1525,6 +1577,8 @@ class App extends Component<Props,State> {
 
    handleCheckFacet = (ev:Event,prop:string,lab:string[],val:boolean,excl:boolean=false) => {
 
+      loggergen.log("hCf:",ev,prop,lab,val,excl)
+
       let state =  this.state
 
       let propSet ;
@@ -1579,7 +1633,7 @@ class App extends Component<Props,State> {
 
       if(this.state.filters.datatype && this.state.filters.datatype.indexOf("Any") === -1 && this.props.searches && this.props.searches[this.state.filters.datatype[0]]) {
 
-         console.log("facets",facets)
+         loggergen.log("facets?",facets,prop)
 
          state.filters.preload = true
 
@@ -1589,7 +1643,7 @@ class App extends Component<Props,State> {
 
       this.setState(state);
 
-      console.log("checkF",prop,lab,val,facets,state);
+      loggergen.log("checkF",prop,lab,val,facets,state);
 
 
 
@@ -1598,7 +1652,7 @@ class App extends Component<Props,State> {
    /*
    handleCheckMulti = (ev:Event,lab:string,val:boolean,params?:{},force?:boolean) => {
 
-      console.log("check::",lab,val,this.props.keyword,'('+this.state.keyword+')')
+      loggergen.log("check::",lab,val,this.props.keyword,'('+this.state.keyword+')')
 
       //if(this.props.language == "") return
 
@@ -1631,7 +1685,7 @@ class App extends Component<Props,State> {
             if(force) dt = [lab]
             else prevDT = null
 
-            console.log("dt:!:",dt,force,JSON.stringify(params,null,3))
+            loggergen.log("dt:!:",dt,force,JSON.stringify(params,null,3))
 
             state = { ...state, filters:{ ...state.filters, datatype: dt, prevDT }}
          }
@@ -1653,7 +1707,7 @@ class App extends Component<Props,State> {
             if((i = dt.indexOf("Any")) !== -1) { delete dt[i] }
             dt = dt.filter(e => e)
 
-            console.log("dt::",dt)
+            loggergen.log("dt::",dt)
 
             if(prevDT.length <= 1) prevDT = null
 
@@ -1664,14 +1718,14 @@ class App extends Component<Props,State> {
       }
 
       this.setState(state)
-      console.log("state::",JSON.stringify(state.collapse,null,3))
+      loggergen.log("state::",JSON.stringify(state.collapse,null,3))
 
    }
    */
 
    handleCheck = (ev:Event,lab:string,val:boolean,params?:{},force?:boolean) => {
 
-      console.log("check::",lab,val,this.props.keyword,'('+this.state.keyword+')')
+      loggergen.log("check::",lab,val,this.props.keyword,'('+this.state.keyword+')')
 
       //if(this.props.language == "") return
 
@@ -1718,13 +1772,13 @@ class App extends Component<Props,State> {
       */
 
       this.setState(state)
-      console.log("state::",JSON.stringify(state.collapse,null,3))
+      loggergen.log("state::",JSON.stringify(state.collapse,null,3))
 
    }
 /*
 handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
-      console.log("check::",lab,val,this.props.keyword,'('+this.state.keyword+')')
+      loggergen.log("check::",lab,val,this.props.keyword,'('+this.state.keyword+')')
 
       //if(this.props.language == "") return
 
@@ -1745,7 +1799,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
          if(this.props.language != "")
          {
-            console.log("here?",lab)
+            loggergen.log("here?",lab)
 
             if(["Any","Person","Work","Etext"].indexOf(lab) !== -1)
             {
@@ -1782,20 +1836,20 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
    handleLanguage = event => {
 
-      console.log("handleL",event.target,event.key,event.target.value)
+      loggergen.log("handleL",event.target,event.key,event.target.value)
 
       if(!event.key && event.target.value!== undefined)
       {
          let s = { ...this.state, [event.target.name]: event.target.value, langOpen:false }
          if(this.props.keyword) s = { ...s } //, willSearch:true }
 
-         console.log("s!!!",s)
+         loggergen.log("s!!!",s)
 
          this.setState( s );
       }
       else {
 
-         console.log("...",event,event.target.name,this._customLang.value)
+         loggergen.log("...",event,event.target.name,this._customLang.value)
 
          let s = { ...this.state,
                langOpen:true }
@@ -1809,7 +1863,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
             s = { ...s, [event.target.name]: this._customLang.value, langOpen:false, customLang }
 
-            console.log("s",s)
+            loggergen.log("s",s)
 
          }
          else if(!event.target.name) {
@@ -1826,19 +1880,19 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
    /*
      handleCustomLanguage(e)
      {
-         console.log("handleCL",e)
+         loggergen.log("handleCL",e)
 
          //this.setState({...this.state,customLang:this._customLang.value})
      }
 
      handleCustomLanguageKey(e)
      {
-        console.log("handleCLK",e)
+        loggergen.log("handleCLK",e)
 
         if (e.key === 'Enter')
         {
 
-            console.log("enter")
+            loggergen.log("enter")
            //this.handleLanguage(e,this._customLang.value)
 
            this._customLang.value = "" ;
@@ -1848,7 +1902,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
    pretty(str:string)
    {
-      //console.log("str",str)
+      //loggergen.log("str",str)
       if(!str || !str.length) return 
 
       for(let p of prefixes) { str = str.replace(new RegExp(p,"g"),"") }
@@ -1881,7 +1935,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
 
 
-         //console.log("fullN",prop,preflabs,this.props.locale,this.props.prefLang,typeof preflabs[0])
+         //loggergen.log("fullN",prop,preflabs,this.props.locale,this.props.prefLang,typeof preflabs[0])
 
          let lang = "lang";
          let val = "value";
@@ -1890,7 +1944,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
          let label = getLangLabel(this,prop,preflabs,false,useUIlang)
 
-         //console.log("full",prop,label,preflabs,useUIlang)
+         //loggergen.log("full",prop,label,preflabs,useUIlang)
 
          /*
          let label = preflabs.filter(e => e[lang] == this.props.locale )
@@ -1911,11 +1965,11 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
    counTree(tree:{},meta:{},any:integer=0,tag:string):[]
    {
-      //console.log("cT",tree,meta,any)
+      //loggergen.log("cT",tree,meta,any)
       let ret = [], idx = 0
       let tmp = Object.keys(tree).map(k => ({[k]:tree[k]}))
       let index = {}
-      //console.log("tmp",tmp)
+      //loggergen.log("tmp",tmp)
       while(tmp.length > 0) {
          let t = tmp[0]
 
@@ -1927,11 +1981,11 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          else if(labels && labels[skos+"prefLabel"]) labels = labels[skos+"prefLabel"]
          if(!labels) labels = []
 
-         //console.log("t",t,kZ,kZsub,labels)
+         //loggergen.log("t",t,kZ,kZsub,labels)
 
          tmp = tmp.concat(kZsub.map(k => ({[k]:t[kZ[0]][k]})))
 
-         //console.log("tmp",tmp)
+         //loggergen.log("tmp",tmp)
 
          let cpt,checkSub ;         
          if(meta[kZ[0]] && meta[kZ[0]].n) 
@@ -1954,7 +2008,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          }
          
 
-         //console.log("cpt",cpt)
+         //loggergen.log("cpt",cpt)
 
          var elem = {"@id":kZ[0],"taxHasSubClass":kZsub,["tmp:count"]:cpt,"skos:prefLabel":labels}
          if(cpt_i !== "") elem["tmp:subCount"] = cpt_i ;
@@ -1966,7 +2020,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          delete tmp[0]
          tmp = tmp.filter(e=> e != null);
 
-         //console.log("tmp",tmp,ret)
+         //loggergen.log("tmp",tmp,ret)
          //break;
       }
 
@@ -1975,7 +2029,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                {"@id":"Any",["tmp:count"]:any,"taxHasSubClass":[]}
            ].concat(ret)
 
-      //console.log("index",index)
+      //loggergen.log("index",index)
 
       if(tag && this.props.metadata && this.props.metadata[tag]) {
          let any_i = 0
@@ -1983,7 +2037,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             if(e !== "Any") {
                let root = ret[index[e]]
                /*
-               //console.log("root",root)
+               //loggergen.log("root",root)
                root["tmp:subCount"] = 0
                for(let f of root["taxHasSubClass"]) {
                   let i = ret[index[f]]["tmp:subCount"] 
@@ -2004,7 +2058,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
    {
       let state = this.state.results[id] 
       if(state) state = state.paginate
-      console.log("state",state)   
+      loggergen.log("state",state)   
       if(state && state.index > 0) {          
          this.setState({ 
             ...this.state, uriPage:false, results:{...this.state.results[id], message:[] }, paginate:{...state, index:state.index - 1}
@@ -2019,7 +2073,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
    {
       let state = this.state.results[id] 
       if(state) state = state.paginate
-      console.log("state",state)   
+      loggergen.log("state",state)   
       if(state && i > 0) { 
          this.setState({ 
             ...this.state, uriPage:false, results:{...this.state.results[id], message:[] }, paginate:{...state, index:i-1}
@@ -2046,17 +2100,17 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
    inserTree(k:string,p:{},tree:{}):boolean
    {
-      //console.log("ins",k,p,tree);
+      //loggergen.log("ins",k,p,tree);
 
       for(let t of Object.keys(tree))
       {
-         //console.log(" t",t)
+         //loggergen.log(" t",t)
 
          if(p[rdfs+"subPropertyOf"] && p[rdfs+"subPropertyOf"].filter(e => e.value == t).length > 0
          || p[rdfs+"subClassOf"] && p[rdfs+"subClassOf"].filter(e => e.value == t).length > 0
          || p[bdo+"taxSubClassOf"] && p[bdo+"taxSubClassOf"].filter(e => e.value == t).length > 0 )
          {
-            //console.log("  k",k)
+            //loggergen.log("  k",k)
             tree[t] = { ...tree[t], [k]:{} }
             return true
          }
@@ -2112,7 +2166,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
             let iUrl = "/search?i="+shortUri(id)+"&t=Work&w="+ encodeURIComponent(window.location.href.replace(/^https?:[/][/][^?]+[?]?/gi,"").replace(/(&n=[^&]*)/g,"")+"&n="+n) //"/search?q="+this.props.keyword+"&lg="+this.props.language+"&t=Work&s="+this.props.sortBy+"&i="+shortUri(id)
 
-            //console.log("inst",instances)
+            //loggergen.log("inst",instances)
 
             if(instances) { 
                let instK = Object.keys(instances), n = 1,  seeAll 
@@ -2204,7 +2258,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          else val = highlight(val)
          let lang = i["xml:lang"]
          if(!lang) lang = i["lang"]
-         ret.push(<span>{val}{
+         ret.push(<span {...(lang?{lang:lang}:{})}>{val}{
             lang && <Tooltip placement="bottom-end" title={
                               <div style={{margin:"10px"}}>
                                  {I18n.t(languages[lang]?languages[lang].replace(/search/,"tip"):lang)}/>
@@ -2217,6 +2271,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
    getPublisher(allProps)  {
 
+      if (this.state.filters.datatype[0] !== "Instance")
+         return
       let hasName, hasLoc
       hasName = allProps.filter(a => a.type === bdo+"publisherName").length > 0
       hasLoc = allProps.filter(a => a.type === bdo+"publisherLocation").length > 0
@@ -2224,11 +2280,11 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
       let ret = []
       //if(ret.length) 
       if(hasName) ret.push(<div class={"match publisher "+this.props.locale}>
-               <span class="label">{this.fullname(bdo+"publisherName",[],true).split(" ").map(e => <span>{e}</span>)}</span>
+               <span class="label">{this.fullname(bdo+"publisherName",[],true)}{I18n.t("punc.colon")}&nbsp;</span>
                <div class="multi">{this.getVal(bdo+"publisherName",allProps)}</div>
             </div>)
       if(hasLoc) ret.push(<div class="match">
-               <span class="label">{this.fullname("tmp:publisherLocation",[],true).split(" ").map(e => <span>{e}</span>)}</span>
+               <span className={`label ${hasName ? "hidden-en" : ""}`}>{this.fullname(hasName?bdo+"publisherName":bdo+"publisherLocation",[],true)}{I18n.t("punc.colon")}&nbsp;</span>
                <div class="multi">{this.getVal(bdo+"publisherLocation",allProps)}</div>
             </div>)
 
@@ -2250,13 +2306,13 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             else return acc
          },{}) 
          
-         //console.log("labels/prop",prop,id) //,useAux,fromProp,allProps) //,this.props.assoRes)         
+         //loggergen.log("labels/prop",prop,id) //,useAux,fromProp,allProps) //,this.props.assoRes)         
 
          if(useAux && !findProp) { // etext
 
             id = allProps.filter(e => fromProp.includes(e.type)).map(e => [{"@id":e.value}, ...this.props.assoRes[e.value].map(f => !e.expand||!e.expand.value||f.type !== bdo+"chunkContents"?f:{...e, ...f /*,expand:e.expand*/}) ]) //.reduce( (acc,e) => ([ ...acc, ...this.props.assoRes[e.value] ]),[]) 
 
-            //console.log("uA1",id,allProps,fromProp,useAux,findProp)
+            //loggergen.log("uA1",id,allProps,fromProp,useAux,findProp)
 
             let val,lang,cpt = 1
 
@@ -2278,7 +2334,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
                let inPart = labels.inPart
 
-               //console.log("expand",expand)
+               //loggergen.log("expand",expand)
 
                let info = ""
                if(altInfo) {
@@ -2321,7 +2377,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          }
          else if(useAux && findProp) {
             
-            //console.log("uA2",id,useAux,findProp)
+            //loggergen.log("uA2",id,useAux,findProp)
             
             let vals = []
 
@@ -2396,7 +2452,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   }
                }
 
-               //console.log("labels1",i,prop) //,labels,this.props.assoRes)
+               //loggergen.log("labels1",i,prop) //,labels,this.props.assoRes)
 
                if(labels) { 
                   labels = getLangLabel(this,prop,labels)
@@ -2407,7 +2463,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      val = labels.value
                      if(!val) val = labels["@value"]
                   }
-                  //console.log("labels2",labels)                        
+                  //loggergen.log("labels2",labels)                        
                }
 
                sortId.push({ value: val, lang, uri, _i})
@@ -2419,7 +2475,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             for (let i of sortId) {
 
                if(i.value != "false") 
-                  ret.push(<span><Link to={"/show/"+i.uri}>{i.value}</Link>{
+                  ret.push(<span><Link to={"/show/"+i.uri}><span {...(i.lang?{lang:i.lang}:{})}>{i.value}</span></Link>{
                      i.lang && <Tooltip placement="bottom-end" title={
                                        <div style={{margin:"10px"}}>
                                           {I18n.t(languages[i.lang]?languages[i.lang].replace(/search/,"tip"):i.lang)}/>
@@ -2435,9 +2491,93 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
       }
    }
 
+   getEtextMatches(prettId,startC,endC,bestM,rmatch,facet) { 
+      let lastP,prop = ""
+
+      return rmatch.filter(m => !([ tmp+"nameMatch", bdo+"biblioNote", bdo+"catalogInfo", rdfs+"comment", tmp+"noteMatch", bdo+"colophon", bdo+"incipit" ].includes(m.type)) ).map((m) => {
+
+
+         let expand,context,inPart	
+         let uri,from	 	
+         prop = this.fullname(m.type.replace(/.*altLabelMatch/,skos+"altLabel"),[],true)                     	
+
+         let sTmp = shortUri(m.type), trad = I18n.t("prop."+sTmp)	
+         if(trad !== sTmp) from = trad	
+
+         let val,isArray = false ;	
+         let lang = m["lang"]	
+         if(!lang) lang = m["xml:lang"]	
+         if(!Array.isArray(m.value)) {
+
+            let mLit = getLangLabel(this,"",[m])	
+
+            expand = m.expand	
+            if(expand && expand.value) {	
+               if(!this.state.collapse[prettId+"@"+startC]) expand = getLangLabel(this,m.type,[{...m, "value":expand.value}])	
+               else expand = true	
+            }	
+
+            context = m.context	
+            if(context && context.value) {	
+               if(this.state.collapse[prettId+"@"+startC]) context = getLangLabel(this,m.type,[{...m, "value":context.value}])	
+               else context = false	
+            }	
+            else context = false	
+
+            inPart = m.inPart	
+
+            val = highlight(mLit["value"], facet, context?context:expand, context)	
+            //val =  mLit["value"]	
+            lang = mLit["lang"]	
+            if(!lang) lang = mLit["xml:lang"]	
+         }	
+
+
+         let toggleExpand = (e,id) => {	
+            //loggergen.log("toggle",id)	
+            this.setState({...this.state,repage:true,collapse:{...this.state.collapse, [id]:!this.state.collapse[id]}})	
+         }	
+
+         let getUrilink = (uri,val,lang) => ([ <Link className="urilink" to={"/show/"+shortUri(uri)}>{val}</Link>,lang?<Tooltip placement="bottom-end" title={	
+               <div style={{margin:"10px"}}>	
+                  {I18n.t(languages[lang]?languages[lang].replace(/search/,"tip"):lang)}/>	
+               </div>	
+            }><span className="lang">&nbsp;{lang}</span></Tooltip>:null])	
+
+         if(inPart && inPart.length) {	
+
+            loggergen.log("inPart",inPart)	
+
+            inPart = <div class="inPart">{[ <span>[ from part </span>, inPart.map( (p,i) => { 	
+               let label = getPropLabel(this,p,false,true)	
+               let ret = [getUrilink(p,label.value,label.lang)]	
+               if(i > 0) ret = [ " / ", ret ]	
+               return ret 	
+            }), " ]" ]}</div>	
+         }	
+
+         return (<div className={"match "+prop}>	
+            <span className={"label " +(lastP === prop?"invisible":"")}>{(!from?prop:from)}{I18n.t("punc.colon")}&nbsp;</span>	
+               <span>{expand!==true?null:inPart}{[!uri?val:<Link className="urilink" to={uri}><span {...(lang?{lang:lang}:{})}>{val}</span></Link>,lang?<Tooltip placement="bottom-end" title={	
+               <div style={{margin:"10px"}}>	
+                  {I18n.t(languages[lang]?languages[lang].replace(/search/,"tip"):lang)}/>	
+               </div>	
+            }><span className="lang">&nbsp;{lang}</span></Tooltip>:null]}{expand?<span class="etext-match"><br/>&gt;&nbsp;	
+               <span class="uri-link" onClick={(e) => { 	
+                  if(!this.state.collapse[prettId+"@"+startC] && !m.context) this.props.onGetContext(prettId,startC,endC) ; 	
+                  toggleExpand(e,prettId+"@"+startC); } 	
+               }>{expand!==true?I18n.t("result.expandC"):I18n.t("result.hideC")}</span>	
+               <span> {I18n.t("misc.or")} </span>	
+               <Link to={"/show/"+prettId+bestM} class="uri-link">{I18n.t("result.openE")}</Link>	
+               </span>:null}</span>	                      	
+            </div>)	
+         
+      })	
+   }
+
    makeResult(id,n,t,lit,lang,tip,Tag,url,rmatch = [],facet,allProps = [],preLit,isInstance)
    {
-      //console.log("res",id,allProps,n,t,lit,lang,tip,Tag,rmatch,sameAsRes)
+      //loggergen.log("res",id,allProps,n,t,lit,lang,tip,Tag,rmatch,sameAsRes)
 
       let sameAsRes,otherSrc= [] ;
       if(allProps) sameAsRes = [ ...allProps ]
@@ -2455,7 +2595,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
       if(!lit) lit = prettId
 
-      //console.log("id",id,prettId)
+      //loggergen.log("id",id,prettId)
 
       let status = "",warnStatus,warnLabel
 
@@ -2493,12 +2633,12 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
       if(hasThumb.length) { 
          hasThumb = hasThumb[0].value 
          if(hasThumb) {             
-            //console.log("hasThumb",hasThumb)
+            //loggergen.log("hasThumb",hasThumb)
             
             //hasCopyR = allProps.filter(a => a.type === tmp+"hasOpen")
             //if(hasCopyR.length && hasCopyR[0].value == "false") {
 
-            viewUrl = allProps.filter(a => a.type === bdo+"instanceHasReproduction")
+            viewUrl = allProps.filter(a => a.type === bdo+"instanceHasReproduction" && !a.value.includes("/resource/IE"))
             if(viewUrl.length) viewUrl = shortUri(viewUrl[0].value)
             else viewUrl = null
             if(viewUrl && viewUrl.startsWith("bdr:")) viewUrl = "/show/" + viewUrl + "?s="+ encodeURIComponent(window.location.href.replace(/^https?:[/][/][^?]+[?]?/gi,"").replace(/(&n=[^&]*)/g,"")+"&n="+n)+"#open-viewer"
@@ -2511,7 +2651,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             if(this.props.config && this.props.config.iiif && this.props.config.iiif.endpoints[this.props.config.iiif.index].match(/iiif-dev/)) hasThumb = hasThumb.replace(/iiif([.]bdrc[.]io)/, "iiif-dev$1")
             hasThumb += "/full/,145/0/default.jpg" 
 
-            //console.log("access",access)
+            //loggergen.log("access",access)
 
             if(access) {
                hasCopyR = "unknown"            
@@ -2533,7 +2673,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          if(!bestM.length) bestM = rmatch.filter(e => e.type === tmp+"textMatch")
          let startC, endC 
 
-         //console.log("bestM",bestM)
+         //loggergen.log("bestM",bestM)
 
          if(bestM.length) { 
             endC = bestM[0].endChar
@@ -2579,7 +2719,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                         primary={ */}
                            <div>
                               <span class="T">{I18n.t("types."+T.toLowerCase())}{langs}</span>
-                              <h3 key="lit">
+                              <h3 key="lit" lang={lang}>
                                  {lit}
                                  { (resUrl && !resUrl.includes("/show/bdr:")) && <img class="link-out" src="/icons/link-out_fit.svg"/>}
                                  { lang && <Tooltip key={"tip"} placement="bottom-end" title={
@@ -2657,12 +2797,12 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             
             rmatch = rmatch.concat(sameAsRes.filter(p => p.type === owl+"sameAs")) // || p.type.match(/sameAsMBBT$/)))
             sameAsRes = sameAsRes.filter(p => (p.type === owl+"sameAs" || p.type === rdfs+"seeAlso" || p.type === adm+"canonicalHtml")) // || p.type.match(/sameAsMBBT$/))
-            //console.log("dico",dico)
+            //loggergen.log("dico",dico)
          }
 
          if(sameAsRes.length) {
             
-            //console.log("sameAs",prettId,id,dico,rmatch,sameAsRes)
+            //loggergen.log("sameAs",prettId,id,dico,rmatch,sameAsRes)
          
             let menus = {}
             let sources = []
@@ -2710,7 +2850,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   else  hasRes[src].push(prettId)
             }
 
-            //console.log("hasR",hasRes)
+            //loggergen.log("hasR",hasRes)
 
             for(let src of Object.keys(providers)) {
                if(src == "bdr") continue
@@ -2731,14 +2871,14 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   if(url.match(new RegExp("^("+src+":)|("+prefixesMap[src]+")"))) {                     
                      let canonUrl = sameAsRes.filter(p => p.type === adm+"canonicalHtml")                     
                      if(canonUrl.length) for(let ican in canonUrl) if(canonUrl[ican].value && canonUrl[ican].value.indexOf(_prefix) !== -1) { url = canonUrl[ican].value; break ; }
-                     //console.log("cUrl1",canonUrl,url,prefix,hres)
+                     //loggergen.log("cUrl1",canonUrl,url,prefix,hres)
                   }
 
                   if(this.props.assoRes && this.props.assoRes[url]) {
                      let canonUrl = this.props.assoRes[url]
                      if(canonUrl && canonUrl.filter) canonUrl = canonUrl.filter(p => p.type === adm+"canonicalHtml" || p.fromKey === adm+"canonicalHtml")
                      if(canonUrl.length) for(let ican in canonUrl) if(canonUrl[ican].value && canonUrl[ican].value.indexOf(_prefix) !== -1) { url = canonUrl[ican].value; break ; }
-                     //console.log("cUrl2",canonUrl,url,prefix,hres)
+                     //loggergen.log("cUrl2",canonUrl,url,prefix,hres)
                   }
 
                   let prov = src.toUpperCase()
@@ -2770,7 +2910,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   
                   let menuId = "menu-"+src+"-"+prettId
 
-                  //console.log("menuId",menuId,menus[menuId])
+                  //loggergen.log("menuId",menuId,menus[menuId])
 
                   if(!menus[menuId]) menus[menuId] = { full: [ url ], short:shortU, src:prov }
                   else if(menus[menuId].full.indexOf(url) === -1) {
@@ -2798,284 +2938,28 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          }
 
 
-         let lastP,prop = ""
 
          let nbChunks = allProps.filter(e => e.type === tmp+"nbChunks")
          if(nbChunks[0] && nbChunks[0].value) nbChunks = Number(nbChunks[0].value)
          else nbChunks = "?"
+         let type = this.state.filters.datatype[0]
+         let typeisbiblio = (type === "Work" || type === "Instance" || type === "Etext")
 
          retList.push( <div id='matches'>         
-            { this.getResultProp(I18n.t("result.workBy"),allProps,false,true,[tmp+"author"]) }
-            { this.getResultProp(I18n.t("result.inRootInstance"),allProps,false,true,[bdo+"inRootInstance"]) } 
+            { typeisbiblio && this.getResultProp(I18n.t("result.workBy"),allProps,false,true,[tmp+"author"]) }
+            { typeisbiblio && this.getResultProp(I18n.t("result.inRootInstance"),allProps,false,true,[bdo+"inRootInstance"]) } 
 
-            { this.state.filters.datatype[0] !== "Person" && 
+            { type !== "Person" && 
                this.getResultProp(I18n.t("result.year"),allProps,false,false,[tmp+"yearStart"]) }
-            { this.state.filters.datatype[0] === "Person" && 
+            { type === "Person" && 
                this.getResultProp(I18n.t("result.year"),allProps,false,false,[tmp+"onYear",bdo+"onYear",bdo+"notBefore",bdo+"notAfter"],null,[bdo+"personEvent"],[bdo+"PersonBirth",bdo+"PersonDeath"]) }
 
-            { this.getResultProp(I18n.t("result.eTextIsForWork"),allProps,false,true,[tmp+"forWork"]) }            
-            { this.getResultProp(bdo+"eTextIsVolume",allProps,false,false) }
-            { this.getResultProp(I18n.t("result.inInstance"),allProps,false,false,[tmp+"inInstance"]) }
-            { this.getResultProp(I18n.t("result.inInstancePart"),allProps,false,false,[tmp+"inInstancePart"]) }
+            { type === "Etext" && this.getResultProp(I18n.t("result.eTextIsForWork"),allProps,false,true,[tmp+"forWork"]) }            
+            { type === "Etext" && this.getResultProp(bdo+"eTextIsVolume",allProps,false,false) }
+            { type === "Etext" && this.getResultProp(I18n.t("result.inInstance"),allProps,false,false,[tmp+"inInstance"]) }
+            { type === "Etext" && this.getResultProp(I18n.t("result.inInstancePart"),allProps,false,false,[tmp+"inInstancePart"]) }
 
-            {
-               rmatch.filter(m => m.type !== tmp+"nameMatch").map((m) => {
-
-                  //console.log("m",JSON.stringify(m)) //,allProps)
-
-                  { 
-                     let expand,context,inPart
-                     let uri,from
-                     if(prop) lastP = prop 
-                     prop = this.fullname(m.type.replace(/.*altLabelMatch/,skos+"altLabel"),[],true)                     
-                     
-                     let sTmp = shortUri(m.type), trad = I18n.t("prop."+sTmp)
-                     if(trad !== sTmp) from = trad
-
-                     let val,isArray = false ;
-                     let lang = m["lang"]
-                     if(!lang) lang = m["xml:lang"]
-                     if(Array.isArray(m.value)) 
-                     { 
-                        val = m.value.map((e)=> {
-                           let lab =  getLangLabel(this,m.type,allProps.filter(l => l.type === e))
-                           if(!lab) return this.pretty(e)
-                           else {
-                              let lang = lab.lang
-                              if(!lang) lang = lab["xml:lang"]
-                              if(!lang) lang = lab["@language"]
-                              return { url:e, label:lab.value, lang} 
-                           }
-                        })
-                        isArray = true 
-                     }
-                     else {
-                        //val = highlight(this.pretty(m.value),k)
-                        let mLit = getLangLabel(this,"",[m])
-
-                        // TODO use .context instead of .expand 
-
-                        /*
-                        if(this.state.collapse[prettId+"@"+startC]) { 
-                           if(m.context && m.context.value) expand = m.context
-                           else if(expand && expand.value) expand = m.expand
-                           
-                           if(expand) expand = getLangLabel(this,"",[{...m, "value":expand.value}])
-                        }
-                        else expand = true
-                        */
-
-                        expand = m.expand
-                        if(expand && expand.value) {
-                           if(!this.state.collapse[prettId+"@"+startC]) expand = getLangLabel(this,m.type,[{...m, "value":expand.value}])
-                           else expand = true
-                        }
-
-                        context = m.context
-                        if(context && context.value) {
-                           if(this.state.collapse[prettId+"@"+startC]) context = getLangLabel(this,m.type,[{...m, "value":context.value}])
-                           else context = false
-                        }
-                        else context = false
-                        
-                        inPart = m.inPart
-
-                        val = highlight(mLit["value"], facet, context?context:expand, context)
-                        //val =  mLit["value"]
-                        lang = mLit["lang"]
-                        if(!lang) lang = mLit["xml:lang"]
-                     }
-
-                     //console.log("val",val,val.length,lang)
-
-                     if(m.type === tmp +"sameAsBDRC") {
-                        if(m.value === fullId || m.value == prettId) return ;
-                        prop = "Same As BDRC"
-                        uri = "/show/"+m.value ;
-                        val = m.lit
-                        if(litLang) {
-                           lang = litLang                              
-                        }
-                     }
-                     else if(m.type.match(/[/#]sameAs/)) {
-                        val = m.value;
-                        if(val === fullId || val == prettId || shortUri(val) === fullUri(val) ) return ;
-                        let label = dico[val]
-                        if(!label && this.props.assoRes && this.props.assoRes[val] && this.props.assoRes[val].filter) {
-
-                           //console.log("assoR",this.props.assoRes[val])
-
-                           label = this.props.assoRes[val].filter(v => v['lang'] || v['xml:lang'] || v['@language'] || v['fromKey'] === foaf+"name" )     
-
-                           if(!label.length) label = null
-                        }
-                        
-                        //console.log("val",label,val,lit,lang,dico)
-
-                        if(label && label.length) label = getLangLabel(this,m.type,label)
-                        if(label) {
-                           uri = val
-                           for(let k of Object.keys(prefixesMap)) { 
-                              if(uri.startsWith(prefixesMap[k])) prop = "Same As " + (sameAsMap[k]?sameAsMap[k]:k.toUpperCase())
-                              uri = uri.replace(new RegExp(prefixesMap[k]),k+":")
-                           }
-                           uri = "/show/"+uri
-                           if(label.value) {
-                              val = label.value
-                              lang = label.lang
-                           }
-                           else if(label["@value"]) {
-                              val = label["@value"]
-                              lang = label["@language"]
-                           }
-                           if(label["xml:lang"]) lang = label["xml:lang"]                              
-                           
-
-                           //console.log("lang",label,lang,uri,val);
-                        }
-                        else if(val.indexOf(rkts) !== -1) {                           
-                           prop = "Same As RKTS"
-                           val = [<a class="urilink" href={val}>{shortUri(val)}</a>]
-                           if(litLang) {
-                              lang = litLang                              
-                           }
-                        }
-                        else if(val.indexOf(wd) !== -1) {                           
-                           prop = "Same As WikiData"
-                           val = [<a class="urilink" href={val}>{shortUri(val)}</a>]
-                           if(litLang) {
-                              lang = litLang                              
-                           }
-                        }
-                        else if(val.indexOf(cbct) !== -1 || val.indexOf(cbcp) !== -1) {                           
-                           prop = "Same As CBC@"
-                           val = [<a class="urilink" href={val}>{shortUri(val)}</a>]
-                           if(litLang) {
-                              lang = litLang                              
-                           }
-                        }
-                     }
-                     else if(m.type.match(/relationType$/) || (m.value && m.value.match && m.value.match(new RegExp("^("+bdr+")?"+this.props.keyword.replace(/bdr:/,"(bdr:)?")+"$")))) {                       
-                       
-                        uri = this.props.keyword.replace(/bdr:/,"") 
-                        val = uri ;
-                        lang = null 
-                        let label = this.props.resources[this.props.keyword]
-                        if(label) label = label[bdr+uri]
-                        if(label) label = label[skos+"prefLabel"]
-                        if(!label) label = dico[this.props.keyword]
-                        if(!label) {
-                           label = this.props.resources[this.props.keyword]
-                           let fullURI = this.props.keyword
-                           for(let k of Object.keys(prefixesMap)) fullURI = fullURI.replace(new RegExp(k+":"),prefixesMap[k])
-                           label = label[fullURI]                 
-                           if(label && label[skos+"prefLabel"]) label = label[skos+"prefLabel"]
-                           else if(label) label = label[foaf+"name"]
-                        }
-                        if(label) label = getLangLabel(this,m.type,label)
-                        if(label) {
-                           if(label.value) {
-                              val = label.value
-                              lang = label.lang
-                           }
-                           else if(label["@value"]) {
-                              val = label["@value"]
-                              lang = label["@language"]
-                           }
-                           if(label["xml:lang"]) lang = label["xml:lang"]                              
-                              
-                        }
-
-                        //console.log("rTy",uri,val,lang,label)
-
-                        if(m.type.match(/relationType$/))  {
-                           
-                           from = I18n.t("prop.tmp:relationType")
-
-                           if(m.value.match(/sameAs[^/]*$/)) {
-                              return ;
-                              /* // not needed anymore - already returned by query 
-                              uri = this.props.keyword
-                              for(let k of Object.keys(prefixesMap)) { 
-                                 if(uri.startsWith(k+":")) prop = "Same As " + (sameAsMap[k]?sameAsMap[k]:k.toUpperCase())
-                              }
-                              uri = "/show/"+uri
-                              */
-                           } else {
-
-                              prop = this.fullname(m.value,[],true) 
-
-                              let sTmp = shortUri(m.value), trad = I18n.t("prop."+sTmp)
-                              if(trad !== sTmp) from = trad
-
-                              uri = "/show/"+this.props.keyword                           
-                           }
-                        }                        
-                     }
-
-                     //console.log("prop",prop,val,m.value,uri)
-
-                     let toggleExpand = (e,id) => {
-                        //console.log("toggle",id)
-                        this.setState({...this.state,repage:true,collapse:{...this.state.collapse, [id]:!this.state.collapse[id]}})
-                     }
-                     
-                     let getUrilink = (uri,val,lang) => ([ <Link className="urilink" to={"/show/"+shortUri(uri)}>{val}</Link>,lang?<Tooltip placement="bottom-end" title={
-                           <div style={{margin:"10px"}}>
-                              {I18n.t(languages[lang]?languages[lang].replace(/search/,"tip"):lang)}/>
-                           </div>
-                        }><span className="lang">&nbsp;{lang}</span></Tooltip>:null])
-
-                     if(inPart && inPart.length) {
-
-                        console.log("inPart",inPart)
-
-                        inPart = <div class="inPart">{[ <span>[ from part </span>, inPart.map( (p,i) => { 
-                           let label = getPropLabel(this,p,false,true)
-                           let ret = [getUrilink(p,label.value,label.lang)]
-                           if(i > 0) ret = [ " / ", ret ]
-                           return ret 
-                        }), " ]" ]}</div>
-                     }
-
-                     return (<div className={"match "+prop}>
-                        <span className={"label " +(lastP === prop?"invisible":"")}>{(!from?prop:from)}{I18n.t("punc.colon")}&nbsp;</span>
-                        {!isArray && <span>{expand!==true?null:inPart}{[!uri?val:<Link className="urilink" to={uri}>{val}</Link>,lang?<Tooltip placement="bottom-end" title={
-                           <div style={{margin:"10px"}}>
-                              {I18n.t(languages[lang]?languages[lang].replace(/search/,"tip"):lang)}/>
-                           </div>
-                        }><span className="lang">&nbsp;{lang}</span></Tooltip>:null]}{expand?<span class="etext-match"><br/>&gt;&nbsp;
-                           <span class="uri-link" onClick={(e) => { 
-                              if(!this.state.collapse[prettId+"@"+startC] && !m.context) this.props.onGetContext(prettId,startC,endC) ; 
-                              toggleExpand(e,prettId+"@"+startC); } 
-                           }>{expand!==true?I18n.t("result.expandC"):I18n.t("result.hideC")}</span>
-                           <span> {I18n.t("misc.or")} </span>
-                           <Link to={"/show/"+prettId+bestM} class="uri-link">{I18n.t("result.openE")}</Link>
-                           </span>:null}</span>
-                        }
-                        {isArray && <div class="multi">
-                           {val.map((e)=> {
-                              let url = e, label = e, lang = m.lang
-                              if(e.url) url = shortUri(e.url)
-                              if(e.label) label = e.label
-                              if(e.lang) lang = e.lang
-                              return (
-                                 <span>
-                                    <Link to={"/show/"+url}>{m.tmpLabel?m.tmpLabel:label}</Link>
-                                    { lang && <Tooltip placement="bottom-end" title={
-                                       <div style={{margin:"10px"}}>
-                                          {I18n.t(languages[lang]?languages[lang].replace(/search/,"tip"):lang)}/>
-                                       </div>
-                                    }><span className="lang">&nbsp;{lang}</span></Tooltip> }
-                              
-                                 </span> )
-                           })}</div>}
-                     </div>)
-                  }
-               })
-            }
-
-
+            { type === "Etext" && this.getEtextMatches(prettId,startC,endC,bestM,rmatch,facet) }
 
             { this.getResultProp("tmp:nameMatch",allProps,true,false,[ tmp+"nameMatch" ]) } {/* //,true,false) } */}
 
@@ -3098,12 +2982,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             { this.getResultProp("tmp:originalRecord",allProps,false,false, [ tmp+"originalRecord", adm+"originalRecord"]) }
             {/* { this.getResultProp(bdo+"language",allProps) } */}
             {/* { this.getResultProp(bdo+"script",allProps) } */}
-            
 
-            { this.getResultProp(bdo+"incipit",allProps,false,false) }
-            
-
-            { this.getResultProp(bdo+"workTranslationOf",allProps,false) }
+            { type === "Work" && this.getResultProp(bdo+"workTranslationOf",allProps,false) }
 
             {/* { this.getResultProp(bdo+"material",allProps) }
             { this.getResultProp(bdo+"printMethod",allProps) }
@@ -3111,12 +2991,12 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             
             {/* { this.getResultProp(tmp+"isCreator",allProps.filter(e => (e.type === tmp+"isCreator" && e.value !== "false")),false,false) } */}
 
-            { this.getResultProp(bdo+"placeLocatedIn",allProps,false) }
+            { type === "Place" && this.getResultProp(bdo+"placeLocatedIn",allProps,false) }
             {/* { this.getResultProp(bdo+"placeType",allProps) } */}
 
             {/* { this.getResultProp(bdo+"publisherName",allProps,false,false) }
             { this.getResultProp(bdo+"publisherLocation",allProps,false,false) } */}
-            { this.getPublisher(allProps) }
+            { (type === "Instance" || type === "Etext") && this.getPublisher(allProps) }
 
 
             {/* TODO fix facet count after preview instance */}
@@ -3124,7 +3004,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
             {/* { this.getResultProp(bdo+"contentLocationStatement",allProps,false,false, [bdo+"instanceExtentStatement",bdo+"contentLocationStatement"]) } */}
 
-            { this.getResultProp(bdo+"biblioNote",allProps,false,false,[bdo+"biblioNote",rdfs+"comment"]) }
+            { type === "Instance" && this.getResultProp(bdo+"biblioNote",allProps,false,false,[bdo+"biblioNote", bdo+"catalogInfo", rdfs+"comment", tmp+"noteMatch", bdo+"colophon", bdo+"incipit"]) }
 
             {/* { this.getResultProp(tmp+"provider",allProps) } */}
             {/* { this.getResultProp(tmp+"popularity",allProps,false,false, [tmp+"entityScore"]) } */}
@@ -3132,7 +3012,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             
             {/* { hasThumb.length > 0 && <div class="match">{getIconLink(viewUrl?viewUrl:resUrl+"#open-viewer",<span class="urilink"><b>View Images</b></span>)}</div>} // maybe a bit overkill...? */ }
 
-            { this.getInstanceLink(id,n,allProps) }
+            { typeisbiblio && this.getInstanceLink(id,n,allProps) }
 
             {/* { this.getEtextLink(id,n,allProps) } */}
 
@@ -3172,7 +3052,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          let typ = r.replace(/^.*?([^/]+)$/,"$1")
          typ = typ[0].toUpperCase() + typ.slice(1)
 
-         //console.log("typ1",typ)
+         //loggergen.log("typ1",typ)
 
          if(typ != "" && types.indexOf(typ) === -1)
          {
@@ -3186,12 +3066,12 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          }
 
 
-         //console.log("counts",counts,types)
+         //loggergen.log("counts",counts,types)
 
       }
       else if(this.state.searchTypes) for(let typ of this.state.searchTypes) {
          
-         //console.log("typ2",typ)
+         //loggergen.log("typ2",typ)
 
          if(typ != "" && types.indexOf(typ) === -1)
          {
@@ -3232,20 +3112,38 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
       }
       */
 
+
       if(types.length) types = types.sort(function(a,b) { return Number(counts["datatype"][b]) - Number(counts["datatype"][a]) })
+
+      let showT =  [ this.state.filters.datatype[0] ] 
+
+
+      for(let t of [ "Person", "Place", "Work", "Instance" ]) 
+         if(!types.includes(t)) 
+            showT.push(t) ;
+
+      
+      for(let t of showT)  {
+         if(!types.includes(t)) {
+            types.push(t)
+            
+            // breaks datatype count display...
+            // counts["datatype"][t] = 0
+         }
+      }
 
       /*
       if(types.length == 2 && !this.state.autocheck)
       {
          this.setState({ ...this.state, autocheck:true })
 
-         console.log("autocheck",types)
+         loggergen.log("autocheck",types)
 
          this.handleCheck(null, types[1], true)
       }
       */
 
-      //console.log("types",types,counts)
+      //loggergen.log("types",types,counts)
    }
 
    handleResOrOnto(message,id)
@@ -3256,7 +3154,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
       let results ;
       if(this.state.results && this.state.results[id] && this.state.results[id].results) results = this.state.results[id].results
       
-      //console.log("results?",this.state.filters.datatype,JSON.stringify(results,null,3),this.props.searches[this.props.keyword+"@"+this.props.language])
+      //loggergen.log("results?",this.state.filters.datatype,JSON.stringify(results,null,3),this.props.searches[this.props.keyword+"@"+this.props.language])
 
       // resource search ?
       if(this.props.language == "")
@@ -3264,21 +3162,21 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          // ontology property search ?
          if(this.props.ontoSearch == this.props.keyword)
          {
-            if(this.props.ontology)
+            if(this.props.dictionary)
             {
 
                let iri = this.props.keyword
                let url = this.props.keyword
                for(let k of Object.keys(prefixesMap)) url = url.replace(new RegExp(k+":"),prefixesMap[k])
 
-               let labels = this.props.ontology[url]
+               let labels = this.props.dictionary[url]
                if(!labels && this.props.keyword.match(/^:/))
                {
-                  for(let k of Object.keys(this.props.ontology)) {
-                     console.log(k.replace(/^.*?[/]([^/]+)$/,":$1"),this.props.keyword)
+                  for(let k of Object.keys(this.props.dictionary)) {
+                     loggergen.log(k.replace(/^.*?[/]([^/]+)$/,":$1"),this.props.keyword)
                      if(k.replace(/^.*?[/]([^/]+)$/,":$1") === this.props.keyword)
                      {
-                        labels = this.props.ontology[k]
+                        labels = this.props.dictionary[k]
                         url = k
                         iri = k
                         for(let p of Object.keys(prefixesMap)) iri = iri.replace(new RegExp(prefixesMap[p]),p+":")
@@ -3287,7 +3185,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   }
                }
 
-               console.log("onto lab",labels)
+               loggergen.log("onto lab",labels)
 
                if(labels)
                {
@@ -3330,12 +3228,12 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                if(labels) labels = labels[fullURI]
                if(labels) {
                   l = getLangLabel(this,"",labels[skos+"prefLabel"]?labels[skos+"prefLabel"]:labels[foaf+"name"])
-                  //console.log("l",labels,l)
+                  //loggergen.log("l",labels,l)
                   if(l) {
                      let sameAs = this.props.resources[this.props.keyword]
                      if(sameAs) sameAs = sameAs[fullURI]
                      if(sameAs) sameAs = Object.keys(sameAs).filter(k => k === adm+"canonicalHtml" || k === owl+"sameAs").reduce( (acc,k) => ([...acc, ...sameAs[k].map( s => ({ ...s, type:k }))]),[])
-                     //console.log("res sameAs", sameAs)
+                     //loggergen.log("res sameAs", sameAs)
                      if(!this.props.isInstance) {
                         message.push(<h4 key="keyResource">{"Resource Id Matching"}</h4>)
                         message.push(this.makeResult(this.props.keyword,1,null,l.value,l.lang,null,null,null,[],null,sameAs)) //[{"type":owl+"sameAs","value":this.props.keyword}]))
@@ -3363,14 +3261,14 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
       if(this.state.collapse[categ] == undefined) show = false
       else show = !this.state.collapse[categ]
       
-      console.log("setWC",categ,JSON.stringify(paginate,null,3))
+      loggergen.log("setWC",categ,JSON.stringify(paginate,null,3))
 
       let gotoCateg = paginate.index
       if(show && paginate.pages.length > 1 && paginate.bookmarks && paginate.bookmarks[categ]) { 
          for(let i in paginate.pages) { 
             if(i > 0 && paginate.pages[i-1] <= paginate.bookmarks[categ].i && paginate.bookmarks[categ].i < paginate.pages[i]) { 
                gotoCateg = i-1 ; 
-               console.log("catI",gotoCateg);
+               loggergen.log("catI",gotoCateg);
                break ; 
             }      
          }
@@ -3378,7 +3276,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
       let params = {  repage:true, paginate:{...paginate, gotoCateg }, collapse:{...this.state.collapse, [categ]:show} }
       
-      console.log("categ",categ,paginate,show,JSON.stringify(params,null,3))
+      loggergen.log("categ",categ,paginate,show,JSON.stringify(params,null,3))
 
       if(this.state.filters.datatype.indexOf("Work") === -1 || this.state.filters.datatype.length > 1) this.handleCheck(null, "Work", true, params, true )
       else this.setState({...this.state, ...params})
@@ -3390,7 +3288,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
       this._menus = {}
 
       let n = 0, m = 0 ;
-      console.log("results",results,paginate);
+      loggergen.log("results",results,paginate);
       let list = results.results.bindings
 
       let displayTypes = types //["Person"]
@@ -3400,7 +3298,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
       //if(displayTypes.length) displayTypes = displayTypes.sort(function(a,b) { return searchTypes.indexOf(a) - searchTypes.indexOf(b) })
 
-      //console.log("list x types",list,types,displayTypes)
+      //loggergen.log("list x types",list,types,displayTypes)
 
       for(let t of displayTypes) {
 
@@ -3415,11 +3313,11 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          
          /* // deprecated
          if(t === "Work" && pagin.gotoCateg !== undefined) { 
-            //console.log("pagin.goto A",JSON.stringify(pagin,null,3))                  
+            //loggergen.log("pagin.goto A",JSON.stringify(pagin,null,3))                  
             pagin.index = pagin.gotoCateg
             pagin.pages = pagin.pages.slice(0,pagin.gotoCateg+1)
             pagin.n = pagin.n.slice(0,pagin.gotoCateg+1)
-            //console.log("pagin.goto Z",JSON.stringify(pagin,null,3))
+            //loggergen.log("pagin.goto Z",JSON.stringify(pagin,null,3))
          }
          */
 
@@ -3427,7 +3325,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          
          if(t === "Any") continue ;
 
-         //console.log("t",t,list,pagin)
+         //loggergen.log("t",t,list,pagin)
 
          let iniTitle = false 
          let sublist = list[t.toLowerCase()+"s"]         
@@ -3436,7 +3334,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          n = 0
          let begin = pagin.pages[pagin.index]
 
-         //console.log("begin",begin,JSON.stringify(Object.keys(sublist),null,3))
+         //loggergen.log("begin",begin,JSON.stringify(Object.keys(sublist),null,3))
 
          let categ = "Other" ;
          let end = n
@@ -3458,12 +3356,12 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                let _t = t.toLowerCase()
                if(_t === "work" && this.props.isInstance) _t = "instance"
                if(displayTypes.length > 1 || displayTypes.indexOf("Any") !== -1) message.push(<MenuItem  onClick={(e)=>this.handleCheck(e,t,true,{},true)}><h4>{I18n.t("types."+t.toLowerCase()+"_plural")+(false && displayTypes.length>1&&counts["datatype"][t]?" ("+counts["datatype"][t]+")":"")}</h4></MenuItem>);
-               else message.push(<MenuItem><h4>{I18n.t("types."+_t+(_t === "etext"?"":"_plural"))+(false && displayTypes.length>=1&&counts["datatype"][t]?" ("+counts["datatype"][t]+")":"")}</h4></MenuItem>);
+               else message.push(<MenuItem><h4>{I18n.t("types."+_t+("_plural"))+(false && displayTypes.length>=1&&counts["datatype"][t]?" ("+counts["datatype"][t]+")":"")}</h4></MenuItem>);
                // TODO better handling of plural in translations
             }
             absi ++ ;
 
-            //console.log("cpt",absi,cpt,n,begin,findFirst,findNext,o) //,sublist[o])
+            //loggergen.log("cpt",absi,cpt,n,begin,findFirst,findNext,o) //,sublist[o])
 
             if(absi < begin && findFirst) { cpt++ ; m++ ;  continue; }
             else if(cpt == begin && !findNext && findFirst) {
@@ -3471,7 +3369,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                m = 0 ;
                findFirst = false ;
                n = pagin.n[pagin.index];
-               //console.log("=0",n)
+               //loggergen.log("=0",n)
             }
 
             //message.push(["cpt="+cpt+"="+absi,<br/>])
@@ -3488,16 +3386,16 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             })
             */
 
-            //console.log("sList",o,sublist[o],JSON.stringify(sList,null,3));
+            //loggergen.log("sList",o,sublist[o],JSON.stringify(sList,null,3));
 
             label = getLangLabel(this,"",sList) // ,true)
             if(label && label.length > 0) label = label[0]
 
             if(!label) label = { lang:"?", value:"?" }
 
-            let preProps = sublist[o].filter((e) => e.type && e.type.match(/relationType$/ )).map(e => this.props.ontology[e.value])
+            let preProps = sublist[o].filter((e) => e.type && e.type.match(/relationType$/ )).map(e => this.props.dictionary[e.value])
 
-            //console.log("label",label) //,sList,sublist[o]) //,preProps)
+            //loggergen.log("label",label) //,sList,sublist[o]) //,preProps)
 
 
             let r = {
@@ -3509,12 +3407,12 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   let use = true ;
 
                   if(e.type && e.type.match(/relationType$/)) {
-                     let prop = this.props.ontology[e.value]
-                     //console.log("e",e,prop)
+                     let prop = this.props.dictionary[e.value]
+                     //loggergen.log("e",e,prop)
                      if(prop)
                         for(let p of preProps) {
 
-                           //console.log("::",p,preProps) //p[rdfs+"subPropertyOf"])
+                           //loggergen.log("::",p,preProps) //p[rdfs+"subPropertyOf"])
 
                            if(p && (p[rdfs+"subClassOf"] && p[rdfs+"subClassOf"].filter(q => q.value == e.value).length > 0
                               || p[rdfs+"subPropertyOf"] && p[rdfs+"subPropertyOf"].filter(q => q.value == e.value).length > 0
@@ -3526,7 +3424,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                         }
                   }
 
-                  //console.log("e",e,this.state.filters.facets)
+                  //loggergen.log("e",e,this.state.filters.facets)
 
                   return ( /*(this.state.filters.facets && e.type && this.state.filters.facets[e.type]) ||*/ use && (
                   ( this.props.language != "" ? e.value && ((e.value.match(/[↦↤]/) && e.type  && !e.type.match(/(creator)/) && (!e.type.match(/(prefLabelMatch$)/) || (!label.value.match(/[↦↤]/)))))
@@ -3538,7 +3436,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             }
 
 
-            //console.log("r",r,label);
+            //loggergen.log("r",r,label);
 
             // || (e.type && e.type.match(/[Ee]xpression/) )
             // || ( )
@@ -3579,7 +3477,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      }
                   }
 
-                  //console.log("sub",subL,subR,label);
+                  //loggergen.log("sub",subL,subR,label);
 
                   let withKey ;
                   if(!multiP) withKey= subL.reduce((acc,e) => {
@@ -3593,16 +3491,16 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      return acc;
                   }, {} )
 
-                  //console.log("wK",withKey);
+                  //loggergen.log("wK",withKey);
 
                   r.match = r.match.concat( Object.keys(withKey).sort().reduce((acc,e)=>{
                      let elem = {"type":e,"value":withKey[e],lang}
-                     if(label) elem = { ...elem, "tmpLabel":label}
+                     if(label) elem = { ...elem, "tmpLabel":label, "tmpLang":lang}
                      acc.push(elem);
                      return acc;
                   } ,[]) )
 
-                  //console.log("r.match",r.match)
+                  //loggergen.log("r.match",r.match)
                }
 
             }
@@ -3630,7 +3528,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             //if(r.f && r.f.value) typ = r.f.value.replace(/^.*?([^/]+)$/,"$1")
 
 
-            //console.log("r",o,sublist[o],r,label,lit);
+            //loggergen.log("r",o,sublist[o],r,label,lit);
 
             let filtered = true ;
 
@@ -3643,7 +3541,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   let exclude = this.state.filters.exclude
                   if(exclude) exclude = exclude[k]
 
-                  //console.log("k",k,v,exclude)
+                  //loggergen.log("k",k,v,exclude)
 
                   let withProp = false, hasProp = false, isExclu = false                   
                   for(let e of sublist[o]) {
@@ -3652,7 +3550,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                         for(let a of v.alt) {
                            if(e.type === a) { 
                               hasProp = true ;
-                              //console.log("e sub",e)
+                              //loggergen.log("e sub",e)
                               if( v.val.indexOf("Any") !== -1 || e.value === v.val || v.val.indexOf(e.value) !== -1 )  withProp = true ;                              
                               if(exclude && exclude.indexOf(e.value) !== -1) isExclu = true
                            }
@@ -3689,10 +3587,10 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
                   //if(isExclu) filtered = false
 
-                  //console.log("hP",o, hasProp,withProp,isExclu,filtered) //,k,v) //,sublist[o])
+                  //loggergen.log("hP",o, hasProp,withProp,isExclu,filtered) //,k,v) //,sublist[o])
                }
 
-               //console.log("typ",typ,t,filtered)
+               //loggergen.log("typ",typ,t,filtered)
 
                //if(this.state.filters.datatype.length == 0 || this.state.filters.datatype.indexOf("Any") !== -1 || this.state.filters.datatype.indexOf(typ) !== -1)
                if((!typ || typ === t) && filtered)
@@ -3707,7 +3605,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                                  n: pagin.n.concat([end])
                               };
 
-                     //console.log("good!",next,willBreak,JSON.stringify(pagin))
+                     //loggergen.log("good!",next,willBreak,JSON.stringify(pagin))
 
                      /*
                      if(this.state.paginate.pages.indexOf(next) === -1)
@@ -3721,7 +3619,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      dontShow = true
                      index ++ ;
                      
-                     //console.log("index",index)
+                     //loggergen.log("index",index)
 
                      if(paginate.length && pagin.gotoCateg === undefined) break ;
 
@@ -3734,7 +3632,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      */
                   }
 
-                  //console.log("lit",lit,n,cpt,max_cpt,categ,isAbs)
+                  //loggergen.log("lit",lit,n,cpt,max_cpt,categ,isAbs)
 
 
                   let Tag,tip,categChange = false, showCateg = false, prevCateg = categ, tmpN = n, prevH5 = h5  ;
@@ -3761,23 +3659,23 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                            if(!pagin.bookmarks[categ]) { 
                               pagin.bookmarks[categ] = {i:absi}
                            }
-                           //console.log("bookMa",JSON.stringify(pagin.bookmarks,null,3))
+                           //loggergen.log("bookMa",JSON.stringify(pagin.bookmarks,null,3))
 
                            if(pagin.bookmarks[prevCateg] && pagin.bookmarks[prevCateg].i < absi && pagin.bookmarks[prevCateg].nb === undefined) pagin.bookmarks[prevCateg] = { ...pagin.bookmarks[prevCateg], nb:absi - pagin.bookmarks[prevCateg].i }
 
-                           //console.log("bookMb",JSON.stringify(pagin.bookmarks,null,3))
+                           //loggergen.log("bookMb",JSON.stringify(pagin.bookmarks,null,3))
                         }
 
-                        //console.log("categC",categChange,lastN,tmpN,categ)
+                        //loggergen.log("categC",categChange,lastN,tmpN,categ)
 
                         // // deprecated
                         // if(categChange && (cpt - lastN > 1 || tmpN > 3)) {// && (!pagin.bookmarks || (!pagin.bookmarks[categ] || !pagin.bookmarks[prevCateg] || pagin.bookmarks[categ] - pagin.bookmarks[prevCateg] > 3))) {
-                        //    //console.log("bookM...",pagin.bookmarks)
+                        //    //loggergen.log("bookM...",pagin.bookmarks)
                         //    message.push(<MenuItem className="menu-categ-collapse" onClick={this.setWorkCateg.bind(this,prevCateg,pagin)}><h5>{I18n.t(this.state.collapse[prevCateg]==false?"misc.hide":"misc.show" ) + " " + t + "s" + /*" / " + prevH5.replace(/ \([0-9]+\)$/,"")*/ (pagin.bookmarks[prevCateg].nb ? " ("+pagin.bookmarks[prevCateg].nb +")":"") /*+" "+prevCateg*/}</h5></MenuItem>);                      
                         // }
                         
 
-                        //console.log("bookM",pagin.bookmarks)
+                        //loggergen.log("bookM",pagin.bookmarks)
 
                         h5 = tip
                         if(h5 === "Work") h5 = "Other"
@@ -3792,13 +3690,13 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                            </MenuItem>);
                         */
 
-                        //console.log("categIndex",categIndex,h5)
+                        //loggergen.log("categIndex",categIndex,h5)
                      }  
                   }
 
-                  //console.log("lit",lit,n)
+                  //loggergen.log("lit",lit,n)
 
-                  //console.log("willB",n,willBreak,categ)
+                  //loggergen.log("willB",n,willBreak,categ)
                   //if(n != 0 && willBreak) break;
                   //else willBreak = false ;
 
@@ -3817,7 +3715,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   if(!willBreak && !dontShow && !unreleased) { 
                      lastN = cpt ;
                      nMax = n
-                     //console.log("lastN",lastN)
+                     //loggergen.log("lastN",lastN)
                      message.push(this.makeResult(id,n,t,lit,lang,tip,Tag,null,r.match,k,sublist[o],r.lit.value))
                   }
                   else {
@@ -3828,7 +3726,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   let isCollapsed = ( canCollapse && !(this.state.collapse[categ] || this.state.collapse[categ] == undefined))                  
                   if(!isCollapsed || n <= 3) m++ ;                  
                   
-                  //console.log("cpt",cpt,categ,canCollapse,isCollapsed,m,this.state.collapse[categ],index,n,willBreak,lastN,absi)
+                  //loggergen.log("cpt",cpt,categ,canCollapse,isCollapsed,m,this.state.collapse[categ],index,n,willBreak,lastN,absi)
 
                   
                   if(displayTypes.length > 1 || t == "Work") {
@@ -3849,7 +3747,31 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                
                }
             }
-            if(cpt == 0 ) { message.push(<Typography style={{margin:"20px 40px"}}>{I18n.t("search.filters.noresults")}</Typography>);}
+            if(cpt == 0 ) { 
+               let lang = languages[this.props.language]
+               if(!lang) lang = this.props.language
+               let other = this.state.results[this.state.id]
+               if(other) other = other.counts
+               if(other) other = other.datatype
+               //loggergen.log("other:",other)
+               if(other) other = Object.keys(other).filter(k => k !== "Any" && other[k] !== 0)
+               loggergen.log("other:",other)
+               
+               //if(other && other.length) 
+               message.push(<Typography className="no-result">
+                  { I18n.t("search.filters.noresults",{ 
+                     keyword:'"'+lucenequerytokeyword(this.props.keyword)+'"', 
+                     language:"$t("+lang+")", 
+                     type:I18n.t("types.searchIn", { type:I18n.t("types."+this.state.filters.datatype[0].toLowerCase()+"_plural").toLowerCase() }),  
+                     interpolation: {escapeValue: false} }) }
+                  {  this.state.filters.facets && " with the filters you set"}
+                  {  this.state.filters.facets && <span><br/>{this.renderResetF()}</span>}
+               </Typography>);
+
+               if(!this.state.filters.facets && other && other.length)   
+                  message.push(<Typography className="no-result"><span>{I18n.t("search.seeO")}{I18n.t("misc.colon")} {other.map(o => <a onClick={(event) => this.handleCheck(event,o,true)} class="uri-link">{I18n.t("types."+o.toLowerCase()+"_plural")}</a>)}</span></Typography>)
+
+            }
 
          }
          if(pagin.index == pagin.pages.length - 1) {
@@ -3882,7 +3804,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
           }
          
 
-         //console.log("end pagin",pagin,paginate)
+         //loggergen.log("end pagin",pagin,paginate)
          if(pagin) {
             
             // TODO also use status in counts
@@ -3890,7 +3812,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
             if(pagin && pagin.bookmarks && pagin.bookmarks[categ] && pagin.bookmarks[categ].nb === undefined) { 
                pagin.bookmarks[categ] = { ...pagin.bookmarks[categ], nb:Object.keys(sublist).length - pagin.bookmarks[categ].i }
-               //console.log("bookM2",JSON.stringify(pagin.bookmarks,null,3))
+               //loggergen.log("bookM2",JSON.stringify(pagin.bookmarks,null,3))
             }
 
             if(pagin.gotoCateg !== undefined && paginate[0]) { paginate.length = 0; delete pagin.gotoCateg ; }
@@ -3913,11 +3835,11 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
       if(results && results.results && results.results.bindings)
          resLength = Object.keys(results.results.bindings).filter(d => { 
                         let t = d[0].toUpperCase()+d.slice(1).replace(/s$/,"")
-                        //console.log("t",t)
+                        //loggergen.log("t",t)
                         return searchTypes.indexOf(t) !== -1 
                      }).reduce((acc,e)=>acc+Object.keys(results.results.bindings[e]).length,0)
 
-      //console.log("res::",id,results,message,message.length,resLength,resMatch,this.props.loading)
+      //loggergen.log("res::",id,results,message,message.length,resLength,resMatch,this.props.loading)
 
       let sta = { ...this.state }
 
@@ -3944,12 +3866,12 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
       }
       else 
       {
-         //if(sta.results) console.log("results::",JSON.stringify(Object.keys(sta.results),null,3),sta)
+         //if(sta.results) loggergen.log("results::",JSON.stringify(Object.keys(sta.results),null,3),sta)
 
          /*
          if(!this.props.datatypes || !this.props.datatypes.metadata)
          {
-            //console.log("dtp?",this.props.datatypes)
+            //loggergen.log("dtp?",this.props.datatypes)
          }
          else {
             
@@ -3957,7 +3879,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          */
 
          /*
-         console.log("sta?",sta.id !== id,sta.repage,"=repage",
+         loggergen.log("sta?",sta.id !== id,sta.repage,"=repage",
             !sta.results,
             !sta.results || !sta.results[id], 
             sta.results && sta.results[id] && (sta.results[id].resLength != resLength),
@@ -3978,21 +3900,21 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             if(sta.results && sta.results[id] && sta.results[id].bookmarks) bookmarks = sta.results[id].bookmarks                        
             else noBookM = true
 
-            //console.log("paginate?",JSON.stringify(paginate))
+            //loggergen.log("paginate?",JSON.stringify(paginate))
 
             if(results) this.handleResults(types,counts,message,results,paginate,bookmarks);
             
-            //console.log("bookM:",JSON.stringify(paginate,null,3))
+            //loggergen.log("bookM:",JSON.stringify(paginate,null,3))
             
          }
          else {
             message = sta.results[id].message
             paginate = [ sta.results[id].paginate ]
             bookmarks = sta.results[id].bookmarks      
-            //console.log("bookM!",JSON.stringify(paginate,null,3))
+            //loggergen.log("bookM!",JSON.stringify(paginate,null,3))
          }
 
-         //console.log("mesg",id,message,types,counts,JSON.stringify(paginate,null,3))
+         //loggergen.log("mesg",id,message,types,counts,JSON.stringify(paginate,null,3))
 
          if(sta.id !== id || sta.repage || !sta.results || !sta.results[id] || (sta.results[id].resLength != resLength) || (sta.results[id].resMatch != resMatch) || ( sta.results[id].message.length < message.length ) || Object.keys(sta.results[id].counts.datatype).length != Object.keys(counts.datatype).length) {
             if(!sta.results) sta.results = {}
@@ -4009,7 +3931,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                sta.paginate = paginate[0]
                sta.paginate.bookmarks = newSta.bookmarks
             }
-            //console.log("bookM?",JSON.stringify(newSta.paginate,null,3))
+            //loggergen.log("bookM?",JSON.stringify(newSta.paginate,null,3))
             sta.results[id] = newSta
             sta.repage = false
             sta.id = id
@@ -4018,7 +3940,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
             //else sta.repage = false
             
-            //console.log("repage?",sta.repage)
+            //loggergen.log("repage?",sta.repage)
 
             this.setState(sta);
          }
@@ -4046,7 +3968,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          k = getPropLabel(this,k)
       }
       else { t = <span>{t}</span>; k = <span>{k}</span> }
-      return <a title={I18n.t("Lsidebar.tags."+(!isExclu?"include":"exclude"))+" "+t_+I18n.t("punc.colon")+" "+ k_} class={ "active-filter " + (isExclu?"exclu":"") }><span>{t}{I18n.t("punc.colon")} <b>{k}</b></span><a title={I18n.t("Lsidebar.activeF.remove")} onClick={f.bind(this)}><Close/></a></a>
+      return <a title={I18n.t("Lsidebar.tags."+(!isExclu?"include":"exclude"))+" "+t_+I18n.t("punc.colon")+" "+ k_} lang={this.props.locale} class={ "active-filter " + (isExclu?"exclu":"") }><span>{t}{I18n.t("punc.colon")} <b>{k}</b></span><a title={I18n.t("Lsidebar.activeF.remove")} onClick={f.bind(this)}><Close/></a></a>
    }
 
    resetFilters(e) {
@@ -4066,7 +3988,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          let tree ;
          if(meta[j]) tree = meta[j]["@graph"]
 
-         //console.log("meta tree",tree,meta[j],counts)
+         //loggergen.log("meta tree",tree,meta[j],counts)
 
          if(tree && tree[0]
             && this.state.filters && this.state.filters.datatype
@@ -4088,13 +4010,13 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          //let rooTax = false
          do // until every property has been put somewhere
          {
-            //console.log("loop",JSON.stringify(tmProps,null,3))
+            //loggergen.log("loop",JSON.stringify(tmProps,null,3))
             change = false ;
             for(let i in tmProps) { // try each one
                let k = tmProps[i]
                let p = this.props.dictionary[k]
 
-               //console.log("p",k,p)
+               //loggergen.log("p",k,p)
 
                /* // not really useful, better change bdr:BoTibt label to "Tibetan in Tibetan script" (see bdr:EnLatn)
                let isSubClassOfASubClassOfLangScript ;
@@ -4113,7 +4035,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   )
                   && (!p[bdo+"taxSubClassOf"] || p[bdo+"taxSubClassOf"].filter(e => e.value == bdr+"LanguageTaxonomy").length != 0 ) ) ) // is it a root property ?
                {
-                  //console.log("root",k,p)
+                  //loggergen.log("root",k,p)
                   tree[k] = {} ;
                   delete tmProps[i];
                   change = true ;
@@ -4122,7 +4044,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                else // find its root property in tree
                {
                   change = this.inserTree(k,p,tree)
-                  //console.log("inT",change)
+                  //loggergen.log("inT",change)
                   if(change) {
                      delete tmProps[i];
                      break ;
@@ -4131,27 +4053,27 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             }
             tmProps = tmProps.filter(String)
 
-            //console.log("ici?",tmProps,change)
+            //loggergen.log("ici?",tmProps,change)
             //if(rooTax) break ;
 
             if(!change) { //} && !rooTax) {
-               //console.log("!no change!")
+               //loggergen.log("!no change!")
                for(let i in tmProps) {
                   let k = tmProps[i]
                   let p = this.props.dictionary[k]
                   // is it a root property ?
-                  //console.log("k?",k,p)
+                  //loggergen.log("k?",k,p)
                   if(p && p[bdo+"taxSubClassOf"] && p[bdo+"taxSubClassOf"].filter(q => tmProps.filter(r => r == q.value).length != 0).length == 0)
                   {
                      tmProps = tmProps.concat(p[bdo+"taxSubClassOf"].map(e => e.value));
-                     //console.log(" k1",k,tmProps)
+                     //loggergen.log(" k1",k,tmProps)
                      change = true ;
                      //rooTax = true ;
                   }
                   else if(p && p[rdfs+"subClassOf"] && p[rdfs+"subClassOf"].filter(q => tmProps.filter(r => r == q.value).length != 0).length == 0)
                   {
                      tmProps = tmProps.concat(p[rdfs+"subClassOf"].map(e => e.value));
-                     //console.log(" k2",k,tmProps)
+                     //loggergen.log(" k2",k,tmProps)
                      change = true ;
                      //rooTax = true ;
                   }
@@ -4162,9 +4084,9 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          }
          while(tmProps.length > 0);
 
-         //console.log("inserTree",tree)
+         //loggergen.log("inserTree",tree)
          tree = this.counTree(tree,meta[j],counts["datatype"][this.state.filters.datatype[0]],j)
-         //console.log("counTree",JSON.stringify(tree,null,3),j)
+         //loggergen.log("counTree",JSON.stringify(tree,null,3),j)
 
          return this.widget(jlabel,j,this.subWidget(tree,jpre,tree[0]['taxHasSubClass'],false,j));
       }
@@ -4172,13 +4094,35 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
       return ;
    }
 
+   popwidget(title:string,txt:string,inCollapse:Component)  { 
+      return (
+         [<ListItem key={1} className="widget-header"
+            onClick={(e) => { this.setState({collapse:{ ...this.state.collapse, [txt]:!this.state.collapse[txt]}, anchor:{...this.state.anchor, [txt]:e.currentTarget} }); } }
+            >
+            <Typography  className="widget-title" ><span lang={this.props.locale}>{title}</span></Typography>
+            { this.state.collapse[txt] ? <ExpandLess /> : <ExpandMore />}
+         </ListItem>,
+         // TODO replace Collapse by Popover
+         <Popover key={2}
+               open={this.state.collapse[txt]}
+               className={["collapse sortBy ",this.state.collapse[txt]?"open":"close"].join(" ")}
+               transformOrigin={{ vertical: 'center', horizontal: 'left'}} 
+               anchorOrigin={{vertical: 'center', horizontal: 'right'}} 
+               anchorEl={this.state.anchor[txt]} 
+               onClose={e => { this.setState({...this.state,collapse: {...this.state.collapse, [txt]:false } } ) }}
+            >
+               {inCollapse}
+         </Popover> ]
+      )
+  }
+
 
    widget(title:string,txt:string,inCollapse:Component)  { 
       return (
          [<ListItem key={1} className="widget-header"
             onClick={(e) => { this.setState({collapse:{ ...this.state.collapse, [txt]:!this.state.collapse[txt]} }); } }
             >
-            <Typography  className="widget-title" >{title}</Typography>
+            <Typography  className="widget-title" ><span lang={this.props.locale}>{title}</span></Typography>
             { this.state.collapse[txt] ? <ExpandLess /> : <ExpandMore />}
          </ListItem>,
          // TODO replace Collapse by Popover
@@ -4204,7 +4148,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
       })
       subs = _.orderBy(subs,'index','desc').map(e => e.str)
 
-      //console.log("subW",tree,subs,jpre,tag)
+      //loggergen.log("subW",tree,subs,jpre,tag)
 
       let checkbox = subs.map(e => {
 
@@ -4212,7 +4156,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
          let elem = tree.filter(f => f["@id"] == e)
 
-         //console.log("elem",elem,e)
+         //loggergen.log("elem",elem,e)
 
          if(elem.length > 0) elem = elem[0]
          else return
@@ -4222,12 +4166,12 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          //else if(label && label["@value"]) label = label["@value"]
          if(!label) label = { value: this.fullname(e,elem["skos:prefLabel"],true) }
 
-         //console.log("check",e,label,elem,disable);
+         //loggergen.log("check",e,label,elem,disable);
 
          let cpt   = tree.filter(f => f["@id"] == e)[0]["tmp:count"]
          let cpt_i                
          let id = elem["@id"].replace(/bdr:/,bdr)
-         //console.log("@id",id)
+         //loggergen.log("@id",id)
          if(this.props.metadata && this.props.metadata[tag] && this.props.metadata[tag][id]) { 
             cpt_i = this.props.metadata[tag][id].i + " / "
          }
@@ -4253,7 +4197,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             {
                let t = tree.filter(f => f["@id"] == tmp[0])
 
-               //console.log("t",t);
+               //loggergen.log("t",t);
 
                if(t.length > 0) {
                   t = t[0]
@@ -4265,15 +4209,15 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
                delete tmp[0]
                tmp = tmp.filter(String)
-               //console.log("tmp",tmp,checkable)
+               //loggergen.log("tmp",tmp,checkable)
             }
          }
 
          checkable = checkable.map(e => e.replace(/bdr:/,bdr))
 
-         let checked = this.state.filters.facets && this.state.filters.facets[jpre]
+         let checked = this.state.filters.facets && this.state.filters.facets[jpre],partial
 
-         //console.log("checked1",jpre,e,checked)
+         //loggergen.log("checked1",jpre,e,checked)
 
 
          if(!checked) {
@@ -4285,13 +4229,15 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             if(toCheck.val) toCheck = toCheck.val
             if(checkable.indexOf(e) === -1) {
                for(let c of checkable) {
-                  checked = checked && toCheck.indexOf(c) !== -1  ;
+                  let chk  = toCheck.indexOf(c) !== -1 
+                  checked = checked && chk ;
+                  partial = partial || chk
                }
             }
             else checked = toCheck.indexOf(e) !== -1
          }
 
-         //console.log("checkedN",checked)
+         //loggergen.log("checkedN",checked)
 
          let isExclu = this.state.filters.exclude && this.state.filters.exclude[jpre] && checkable && checkable.reduce( (acc,k) => (acc && this.state.filters.exclude[jpre].includes(k)), true )
 
@@ -4310,15 +4256,19 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      control={
                         <Checkbox
                            checked={checked}
-                           className={"checkbox"}
+                           className={"checkbox "+(partial&&!checked?"partial":"")}
                            icon={<CheckBoxOutlineBlank/>}
                            checkedIcon={isExclu ? <Close className="excl"/>:<CheckBox  style={{color:"#d73449"}}/>}
                            onChange={(event, checked) => this.handleCheckFacet(event,jpre,checkable,checked)}
                         />
 
                      }
-                     label={<span>{label}&nbsp;<span class='facet-count-block'>{I18n.t("punc.lpar")}<span class="facet-count">{I18n.t("punc.num",{num:cpt_i+cpt})}</span>{I18n.t("punc.rpar")}</span></span>}
-                  />
+                     label={<span title={e.replace(new RegExp(bdr),"bdr:")}>{label}&nbsp;<span class='facet-count-block'>{I18n.t("punc.lpar")}<span class="facet-count" lang={this.props.locale}>{I18n.t("punc.num",{num:cpt_i+cpt, interpolation: {escapeValue: false}})}</span>{I18n.t("punc.rpar")}</span></span>}
+                  />&nbsp;{ elem && elem["taxHasSubClass"] && elem["taxHasSubClass"].length > 0 &&
+                     <span className={"subcollapse " + (disabled?"off":"")} /*style={{width:"335px"}}*/
+                           onClick={(ev) => { this.setState({collapse:{ ...this.state.collapse, [e]:!this.state.collapse[e]} }); } }>
+                     { this.state.collapse[e] ? <ExpandLess /> : <ExpandMore />}
+                     </span> }
                   { !isExclu && label !== "Any" && <div class="exclude"><Close onClick={(event, checked) => this.handleCheckFacet(event,jpre,checkable,true,true)} /></div> }
                   {
                      elem && elem["taxHasSubClass"] && elem["taxHasSubClass"].length > 0 &&
@@ -4347,7 +4297,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
    // TODO add providers icons
 
    render_filters(types,counts,sortByList,reverseSort,facetWidgets) {
-      return ( <div className={"SidePane left"}>
+      return ( <div className={"SidePane left "+(!this.state.collapse.settings?"closed":"")}>
                   {/* <IconButton className="close" onClick={e => this.setState({...this.state,leftPane:false,closeLeftPane:true})}><Close/></IconButton> */}
                { //this.props.datatypes && (results ? results.numResults > 0:true) &&
                   <div style={{ /*minWidth:"335px",*/ position:"relative"}}>                     
@@ -4381,7 +4331,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                               this.setState({collapse:{ ...this.state.collapse, "datatype":!this.state.collapse["datatype"]} }); } }
                         >
                         <Typography className="widget-title">
-                           {I18n.t("Lsidebar.datatypes.title")}
+                           <span lang={this.props.locale}>{I18n.t("Lsidebar.datatypes.title")}</span>
                         </Typography>
                         { /*this.props.datatypes && this.props.datatypes.hash &&*/ !this.state.collapse["datatype"] ? <ExpandLess /> : <ExpandMore />  }
                      </ListItem>
@@ -4395,16 +4345,20 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
                                  if(i==="Any") return
 
-                                 //console.log("counts",i,counts,counts["datatype"][i],this.state.filters.datatype.indexOf(i))
+                                 //loggergen.log("counts",i,counts,counts["datatype"][i],this.state.filters.datatype.indexOf(i))
 
                               let disabled = (!["Work","Instance","Person", "Place","Topic","Corporation","Role","Lineage","Etext"].includes(i)) // false // (!this.props.keyword && ["Any","Etext","Person","Work"].indexOf(i)===-1 && this.props.language  != "")
                            // || (this.props.language == "")
 
                               let count = counts["datatype"][i]
+                              if(!count || count == 0) { 
+                                 disabled = true
+                                 count = 0
+                              }
 
                               return (
-                                 <div key={i} style={{textAlign:"left"}}  className={"searchWidget datatype "+i.toLowerCase()}>
-                                    <span class="img" style={{backgroundImage:"url('/icons/sidebar/"+i.toLowerCase()+".svg')"}} onClick={(event) => this.handleCheck(event,i,this.state.filters.datatype.indexOf(i) === -1)}></span>
+                                 <div key={i} style={{textAlign:"left"}}  className={"searchWidget datatype "+i.toLowerCase()+ (disabled?" disabled":"")}>
+                                    <span class={"img "+(disabled?"disabled":"") } style={{backgroundImage:"url('/icons/sidebar/"+i.toLowerCase()+".svg')"}} onClick={(event) => this.handleCheck(event,i,this.state.filters.datatype.indexOf(i) === -1)}></span>
                                     <FormControlLabel
                                        control={
                                           <Checkbox
@@ -4419,9 +4373,9 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                                           />
 
                                        }
-                                       {...counts["datatype"][i]
-                                       ?{label:<span>{I18n.t("types."+i.toLowerCase()) + " "+I18n.t("punc.lpar")}<span class="facet-count">{typeof count === "string" && "~"}{I18n.t("punc.num",{num:Number(count)})}</span>{I18n.t("punc.rpar")}</span>}
-                                       :{label:I18n.t("types."+i.toLowerCase())}}
+                                       {...count !== undefined
+                                       ?{label:<span lang={this.props.locale}>{I18n.t("types."+i.toLowerCase()+"_plural")+" "+I18n.t("punc.lpar")}<span class="facet-count" lang={this.props.locale}>{typeof count === "string" && "~"}{I18n.t("punc.num",{num:Number(count)})}</span>{I18n.t("punc.rpar")}</span>}
+                                       :{label:<span lang={this.props.locale}>{I18n.t("types."+i.toLowerCase()+"_plural")}</span>}}
                                     />
                                  </div>
                               )
@@ -4438,6 +4392,10 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             )
    }
 
+   renderResetF() {
+      return <a title={I18n.t("Lsidebar.activeF.reset")} id="clear-filters" onClick={this.resetFilters.bind(this)}><span>{I18n.t("Lsidebar.tags.reset")}</span><RefreshIcon /></a>
+   }
+
    render() {
 
       let results
@@ -4451,7 +4409,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
       const { isAuthenticated } = this.props.auth;
       let id ;
 
-      if(!global.inTest) console.log("render",this.props.keyword,this.props,this.state,isAuthenticated && isAuthenticated(),this._customLang,JSON.stringify(this.state.filters,null,3))
+      if(!global.inTest) loggergen.log("render",this.props.keyword,this.props,this.state,isAuthenticated && isAuthenticated(),this._customLang) //,JSON.stringify(this.state.filters,null,3))
       // no search yet --> sample data
       if(!this.props.keyword || this.props.keyword == "")
       {
@@ -4460,9 +4418,9 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             messageD.push(<h4 key={"sample"} style={{marginLeft:"16px"}}>Sample Resources</h4>)
             let i = 0
             for(let l of this.props.config.links) {
-               //console.log("l",l)
+               //loggergen.log("l",l)
                let who = getLangLabel(this,"", l.label)
-               //console.log("who",who)
+               //loggergen.log("who",who)
                messageD.push(<h5 key={i}>{l.title}</h5>)
                messageD.push(this.makeResult(l.id,null,getEntiType(l.id),who.value,who.lang,l.icon,TagTab[l.icon]))
                i++;
@@ -4477,7 +4435,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          if(e !== -1) { 
             delete types[e]
             types = types.filter(e => e)
-            console.log("types",types)
+            loggergen.log("types",types)
          }
          */
          //types = types.sort()
@@ -4486,7 +4444,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          
          id = this.prepareResults();
 
-         //console.log("id",id)
+         //loggergen.log("id",id)
 
          if(this.state.results && this.state.results[id])
          {
@@ -4510,7 +4468,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                if(max < paginate.pages.length) pageLinks.push([" ... ",<a onClick={this.goPage.bind(this,id,paginate.pages.length)}>{I18n.t("punc.num",{num:paginate.pages.length})}</a>]) 
             }
             
-            //console.log("prep",message,counts,types,paginate)
+            //loggergen.log("prep",message,counts,types,paginate)
 
             if(!this.props.loading && !message.length && ( (this.props.searches[this.props.keyword+"@"+this.props.language] && !this.props.searches[this.props.keyword+"@"+this.props.language].numResults ) 
                   || (!this.props.loading && results && results.results && results.results.bindings && !results.results.bindings.numResults) ) 
@@ -4536,7 +4494,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
             meta = this.props.searches[this.state.filters.datatype[0]][this.props.keyword+"@"+this.props.language]
 
-            //console.log("ici",meta)
+            //loggergen.log("ici",meta)
 
             if(meta) meta = meta.metadata
             if(meta) {
@@ -4548,15 +4506,15 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          }
       }
 
-      //console.log("metaK",metaK)
+      //loggergen.log("metaK",metaK)
 
       /*
 
          <Popover 
             className="menu-source"
             id={"menu-"+src+"-"+prettId} 
-            anchorEl={(()=>{ console.log("where!!!???"); return this.state.anchor["menu-"+src+"-"+prettId]})()} 
-            open={(() => { console.log("what!!!???"); return this.state.collapse["menu-"+src+"-"+prettId]})()}                       
+            anchorEl={(()=>{ loggergen.log("where!!!???"); return this.state.anchor["menu-"+src+"-"+prettId]})()} 
+            open={(() => { loggergen.log("what!!!???"); return this.state.collapse["menu-"+src+"-"+prettId]})()}                       
             onClose={(ev) => this.handleCloseSourceMenu(ev,"menu-"+src+"-"+prettId)}
             >
                <MenuItem onClick={(ev) => this.handleCloseSourceMenu(ev,"menu-"+src+"-"+prettId)}>View data in Public Digital Library</MenuItem>
@@ -4573,7 +4531,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          menuK[mK].push(this._menus[k])
       })
 
-      //console.log("_menus",this._menus, menuK)
+      //loggergen.log("_menus",this._menus, menuK)
 
       let showMenus = Object.keys(menuK).map(id => 
             <Popover 
@@ -4603,19 +4561,21 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             </Popover> 
       );
 
-      //console.log("messageD",this._menus,showMenus,messageD,message)
+      //loggergen.log("messageD",this._menus,showMenus,messageD,message)
 
       const textStyle = {marginLeft:"15px",marginBottom:"10px",marginRight:"15px"}
 
 
       let facetWidgets 
-      if(meta && this.state.filters.datatype && this.state.filters.datatype.length === 1 && this.state.filters.datatype.indexOf("Any") === -1 && this.props.config && this.props.ontology) {
+      if(meta && this.state.filters.datatype && this.state.filters.datatype.length === 1 && this.state.filters.datatype.indexOf("Any") === -1 && this.props.config && this.props.dictionary) {
          facetWidgets = metaK.map((j) =>
          {
             // no need for language on instances page
             if(j === "language" && this.props.isInstance ) return
 
-            let jpre = this.props.config.facets[this.state.filters.datatype[0]][j]
+            let jpre = j;
+            if (this.props.config.facets[this.state.filters.datatype[0]])
+               jpre = this.props.config.facets[this.state.filters.datatype[0]][j]
             if(!jpre) jpre = j
             let jlabel ;
             if(facetLabel[j]) jlabel = I18n.t(facetLabel[j]);   
@@ -4629,13 +4589,13 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                */
 
                jlabel = getLangLabel(this,jpre,jlabel)
-               if(!jlabel) jlabel = this.pretty(jpre)
+               if(!jlabel) jlabel = I18n.t("prop."+shortUri(jpre))
                else jlabel = jlabel.value
             }
             // need to fix this after info is not in ontology anymore... make tree from relation/langScript 
             if(["tree","relation","langScript"].indexOf(j) !== -1) {
 
-               console.log("widgeTree",j,jpre,meta[j],counts["datatype"],this.state.filters.datatype[0])
+               loggergen.log("widgeTree",j,jpre,meta[j],counts["datatype"],this.state.filters.datatype[0])
 
                return this.treeWidget(j,meta,counts,jlabel,jpre)
             }
@@ -4668,7 +4628,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
                   let label = getPropLabel(this,i)
 
-                  //console.log("label",i,j,jpre,label,meta)
+                  //loggergen.log("label",i,j,jpre,label,meta)
 
                   let checked = this.state.filters.facets && this.state.filters.facets[jpre]
                   if(!checked) {
@@ -4677,7 +4637,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   }
                   else checked = this.state.filters.facets[jpre].indexOf(i) !== -1
 
-                  //console.log("checked",i,checked)
+                  //loggergen.log("checked",i,checked)
 
                   let isExclu = this.state.filters.exclude && this.state.filters.exclude[jpre] && this.state.filters.exclude[jpre].includes(i)
 
@@ -4697,7 +4657,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                               />
 
                            }
-                           label={<a title={shortUri(i)}><span>{label}&nbsp;<span class="facet-count-block">{I18n.t("punc.lpar")}<span class="facet-count">{I18n.t("punc.num",{num:cpt_i+meta[j][i].n})}</span>{I18n.t("punc.rpar")}</span></span></a>}
+                           label={<a title={shortUri(i)}><span lang={this.props.locale}>{label}&nbsp;<span class="facet-count-block">{I18n.t("punc.lpar")}<span class="facet-count" lang={this.props.locale}>{I18n.t("punc.num",{num:cpt_i+meta[j][i].n, interpolation: {escapeValue: false}})}</span>{I18n.t("punc.rpar")}</span></span></a>}
                         />
                         { !isExclu && label !== "Any" && <div class="exclude"><Close onClick={(event, checked) => this.handleCheckFacet(event,jpre,[i],true,true)} /></div> }
                      </div>
@@ -4714,8 +4674,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                            {checkboxes.slice(12)}
                         </Collapse>
                         ,
-                        <span style={{fontSize:"10px",cursor:"pointer", marginTop:"5px",marginRight:"25px",display:"inline-block",fontWeight:600}} onClick={(e) => this.setState({...this.state, collapse:{...this.state.collapse, [j+"_widget"]:!this.state.collapse[j+"_widget"]}})}>
-                           {(!this.state.collapse[j+"_widget"]?"Show all":"Hide")}
+                        <span style={{fontSize:(this.props.locale==="bo"?"14px":"10px"),cursor:"pointer", marginTop:"5px",marginRight:"25px",display:"inline-block",fontWeight:600}} onClick={(e) => this.setState({...this.state, collapse:{...this.state.collapse, [j+"_widget"]:!this.state.collapse[j+"_widget"]}})}>
+                           {(!this.state.collapse[j+"_widget"]?I18n.t("misc.show"):I18n.t("misc.hide"))}
                         </span>]
                      }
                   </div> )
@@ -4741,12 +4701,12 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
       /*
       
-      console.log(JSON.stringify(allSortByLists,null,3))
+      loggergen.log(JSON.stringify(allSortByLists,null,3))
 
       let tmpSort
       if(this.state.filters.datatype[0] && allSortByLists[this.state.filters.datatype[0]]) tmpSort = allSortByLists[this.state.filters.datatype[0]].map(e => ""+e)
 
-      //console.log(JSON.stringify(allSortByLists,null,3),JSON.stringify(tmpSort,null,3))
+      //loggergen.log(JSON.stringify(allSortByLists,null,3),JSON.stringify(tmpSort,null,3))
          
       this._get = qs.parse(this.props.history.location.search)
       let get = this._get 
@@ -4759,7 +4719,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          }
       }
    
-      console.log(JSON.stringify(allSortByLists,null,3),JSON.stringify(sortByList,null,3))
+      loggergen.log(JSON.stringify(allSortByLists,null,3),JSON.stringify(sortByList,null,3))
       */
 
       // DONE
@@ -4782,7 +4742,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
       this._refs["logo"] = React.createRef();
 
-      let changeKWtimer, changeKW = (value,keyEv) => {
+      let changeKWtimer, changeKW = (value,keyEv,ev) => {
 
          /* // TODO find a way to speed up rendering when changing keyword with some previous results already displayed
 
@@ -4791,27 +4751,41 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          }
          */
 
+         loggergen.log("changeKW",value,keyEv,ev)
+         
+         let dataSource = [] 
          let language = this.state.language
-         let detec = narrowWithString(value, this.state.langDetect)
-         let possible = [ ...this.state.langPreset, ...langSelect ]
-         if(detec.length < 3) { 
-            if(detec[0] === "tibt") for(let p of possible) { if(p === "bo" || p.match(/-[Tt]ibt$/)) { language = p ; break ; } }
-            else if(detec[0] === "hani") for(let p of possible) { if(p.match(/^zh((-[Hh])|$)/)) { language = p ; break ; } }
-            else if(["ewts","iast","deva","pinyin"].indexOf(detec[0]) !== -1) for(let p of possible) { if(p.match(new RegExp(detec[0]+"$"))) { language = p ; break ; } }
+         if(value.match(/(^([^:]+:)?[UWPGRCTILE][A-Z0-9_]+$)|(^([^:]+:)?([cpgwrt]|mw|wa|ws)\d[^ ]*$)/)) {
+            dataSource = [ value+"@Find resource with this RID", value+"@Find associated resources" ]
          }
-         
-         possible = [ ...this.state.langPreset, ...langSelect.filter(l => !this.state.langPreset || !this.state.langPreset.includes(l))]
-         console.log("detec",possible,detec,this.state.langPreset,this.state.langDetect)
-         
-         this.setState({...this.state,keyword:value, language, dataSource: detec.reduce( (acc,d) => {
+         else {
+
+            let detec ;
+            if(value) detec = narrowWithString(value, this.state.langDetect)
+            let possible = [ ...this.state.langPreset, ...langSelect ]
+            if(detec && detec.length < 3) { 
+               if(detec[0] === "tibt") for(let p of possible) { if(p === "bo" || p.match(/-[Tt]ibt$/)) { language = p ; break ; } }
+               else if(detec[0] === "hani") for(let p of possible) { if(p.match(/^zh((-[Hh])|$)/)) { language = p ; break ; } }
+               else if(["ewts","iast","deva","pinyin"].indexOf(detec[0]) !== -1) for(let p of possible) { if(p.match(new RegExp(detec[0]+"$"))) { language = p ; break ; } }
+            }
+
+            possible = [ ...this.state.langPreset, ...langSelect.filter(l => !this.state.langPreset || !this.state.langPreset.includes(l))]
+            loggergen.log("detec",possible,detec,this.state.langPreset,this.state.langDetect)
             
-            let presets = []
-            if(d === "tibt") for(let p of possible) { if(p === "bo" || p.match(/-[Tt]ibt$/)) { presets.push(p); } }
-            else if(d === "hani") for(let p of possible) { if(p.match(/^zh((-[Hh])|$)/)) { presets.push(p); } }
-            else if(["ewts","iast","deva","pinyin"].indexOf(d) !== -1) for(let p of possible) { if(p.match(new RegExp(d+"$"))) { presets.push(p); } }
-            
-            return [...acc, ...presets]
-         }, [] ).concat(value.match(/[a-zA-Z]/)?["en"]:[]).map(p => '"'+value+'"@'+(p == "sa-x-iast"?"sa-x-ndia":p)) } ) 
+            if(detec) { 
+               dataSource = detec.reduce( (acc,d) => {
+                  
+                  let presets = []
+                  if(d === "tibt") for(let p of possible) { if(p === "bo" || p.match(/-[Tt]ibt$/)) { presets.push(p); } }
+                  else if(d === "hani") for(let p of possible) { if(p.match(/^zh((-[Hh])|$)/)) { presets.push(p); } }
+                  else if(["ewts","iast","deva","pinyin"].indexOf(d) !== -1) for(let p of possible) { if(p.match(new RegExp(d+"$"))) { presets.push(p); } }
+                  
+                  return [...acc, ...presets]
+               }, [] ).concat(!value || value.match(/[a-zA-Z]/)?["en"]:[]).map(p => '"'+value+'"@'+(p == "sa-x-iast"?"sa-x-ndia":p))
+            }
+         }
+
+         this.setState({...this.state,keyword:value, language, dataSource   } ) 
          
          /*
          if(changeKWtimer) clearTimeout(changeKWtimer)
@@ -4825,6 +4799,21 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
       this._refs["searchBar"] = React.createRef();
 
       let nbResu = this.state.paginate && this.state.paginate.nMax ? this.state.paginate.nMax:(this.state.results&&this.state.results[this.state.id]?this.state.results[this.state.id].resLength:"--")
+
+      let facetTags 
+      if(this.state.filters.facets)
+         facetTags  = Object.keys(this.state.filters.facets).map(f => {
+            let vals = this.state.filters.facets[f]
+            if(vals.val) { 
+               vals = vals.val
+               // do not use leaf but top-level topics
+            }
+            return vals.filter(k => k !== "Any").map(v => 
+               this.renderFilterTag(false, f, v, (event, checked) => this.handleCheckFacet(event, f, [ v ], false) ) 
+            ) }
+         )
+
+
 
       return (
 <div>
@@ -4847,7 +4836,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
           { top_right_menu(this) }
 
-         <div className="App" style={{display:"flex"}}>
+         <div className={"App "+(message.length == 0 && !this.props.loading && !this.props.keyword ? "home":"")} style={{display:"flex"}}>
             <div className={"SearchPane"+(this.props.keyword ?" resultPage":"") }  ref={this._refs["logo"]}>            
             { showMenus }
                <div class="fond-logo">
@@ -4876,9 +4865,23 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      placeholder={I18n.t("home.search")}                        
                      closeIcon={<Close className="searchClose" style={ {color:"rgba(0,0,0,1.0)",opacity:1} } onClick={() => { this.props.history.push({pathname:"/",search:""}); this.props.onResetSearch();} }/>}
                      disabled={this.props.hostFailure}
+                     onClick={(ev) => { changeKW(this.state.keyword?lucenequerytokeyword(this.state.keyword):""); $("#search-bar input[type=text][placeholder]").attr("placeholder",I18n.t("home.start"));  } }
+                     onBlur={(ev) => { loggergen.log("BLUR"); setTimeout(() => this.setState({...this.state,dataSource:[]}),100); $("#search-bar input[type=text][placeholder]").attr("placeholder", I18n.t("home.search"));  } }
                      onChange={(value:string) => changeKW(value)}
+                     onKeyDown={(ev) => { 
+                        //console.log("kd:",ev)
+                        let idx = this.state.langIndex, max = this.state.dataSource.length
+                        if(!idx) idx = 0
+                        if (ev.key === 'ArrowUp') idx -- ;
+                        else if (ev.key === 'ArrowDown') idx ++ ;
+                        if(idx != this.state.langIndex) {
+                           if(idx >= max) idx = 0
+                           else if(idx < 0) idx = max - 1
+                           this.setState({langIndex:idx})
+                        }
+                     }}
                      onRequestSearch={this.requestSearch.bind(this)}
-                     value={this.props.hostFailure?"Endpoint error: "+this.props.hostFailure+" ("+this.getEndpoint()+")":this.state.keyword !== undefined && this.state.keyword!==this.state.newKW?this.state.keyword:this.props.keyword&&this.state.newKW?this.state.newKW.replace(/\"/g,""):""}
+                     value={this.props.hostFailure?"Endpoint error: "+this.props.hostFailure+" ("+this.getEndpoint()+")":this.state.keyword !== undefined && this.state.keyword!==this.state.newKW?this.state.keyword:this.props.keyword&&this.state.newKW?lucenequerytokeyword(this.state.newKW):""}
                      style={{
                         marginTop: '0px',
                         width: "700px",
@@ -4887,7 +4890,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      }}
                   />
                   {
-                     (this.state.keyword && this.state.keyword.length > 0 && this.state.dataSource.length > 0) &&                     
+                     (/* this.state.keyword && this.state.keyword.length > 0 && */ this.state.dataSource.length > 0) &&                     
                         <Paper
                            //onKeyDown={(e) => changeKW(this.state.keyword,e)} 
                            // this.setState({...this.state,dataSource:[]})}
@@ -4897,14 +4900,34 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                            //anchorEl={() => this._refs["searchBar"].current} 
                            //onClose={()=>this.setState({...this.state,dataSource:[]})}
                            >
-                              { this.state.dataSource.map( (v) =>  {
+                              { this.state.dataSource.map( (v,i) =>  {
                                  let tab = v.split("@")
+                                 loggergen.log("suggest?",v,i,tab)
+
+                                 if(this.state.langIndex === undefined && this.props.language && tab.length > 1 && tab[1] === this.props.language) {
+                                    this.setState({langIndex:i})
+                                 }
+
                                  return (
-                                    <MenuItem key={v} style={{lineHeight:"1em"}} onClick={(e)=>{ 
-                                       this.setState({...this.state,dataSource:[]});
-                                       this.requestSearch(tab[0],null,tab[1])
-                                    }}>{ tab[0].replace(/["]/g,"")} <SearchIcon style={{padding:"0 10px"}}/><span class="lang">{(I18n.t(""+(searchLangSelec[tab[1]]?searchLangSelec[tab[1]]:languages[tab[1]]))) }</span></MenuItem> ) 
-                                 } ) }
+                                    <MenuItem key={v} style={{lineHeight:"1em"}} onMouseDown={(e) => e.preventDefault()} 
+                                    className={(!this.state.langIndex && i===0 || this.state.langIndex === i || this.state.langIndex >= this.state.dataSource.length && i === 0?"active":"")} 
+                                    onClick={(e)=>{ 
+                                          loggergen.log("CLICK",v,i);
+                                          this.setState({...this.state,langIndex:i,dataSource:[]});
+                                          let kw = tab[0]
+                                          let isRID = !languages[tab[1]]
+                                          if(isRID) {
+                                             if(!kw.includes(":")) kw = "bdr:"+kw.toUpperCase()
+                                             else {
+                                                kw = kw.split(":")
+                                                kw = kw[0].toLowerCase()+":"+kw[1].toUpperCase()
+                                             }
+                                          } 
+
+                                          if(this.state.keyword) this.requestSearch(kw,null,tab[1], isRID && i === 1)
+                                       }} >{ tab.length == 1 ?"":tab[0].replace(/["]/g,"")} <SearchIcon style={{padding:"0 10px"}}/><span class="lang">{tab.length == 1 ? I18n.t("home."+tab[0]):(I18n.t(""+(searchLangSelec[tab[1]]?searchLangSelec[tab[1]]:(languages[tab[1]]?languages[tab[1]]:tab[1])))) }</span></MenuItem> ) 
+                                    })
+                              }
                         </Paper>
                   }
                </div>
@@ -4919,22 +4942,28 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   margin="normal"
                /> */}
 
-              <FormControl className="formControl" style={{textAlign:"right"}}>
+              <FormControl className={"formControl "+this.state.searchTypes[0].toLowerCase()} style={{textAlign:"right"}}>
                 {/* <InputLabel htmlFor="datatype">In</InputLabel> */}
 
                 <Select
                   value={this.state.searchTypes[0]}
-                  //onChange={this.handleLanguage}
+                  //onChange={this.handleLanguage} 
                   onChange={this.handleSearchTypes}
                   open={this.state.langOpen}
-                  onOpen={(e) => { console.log("open"); this.setState({...this.state,langOpen:true}) } }
+                  onOpen={(e) => { loggergen.log("open"); this.setState({...this.state,langOpen:true}) } }
                   onClose={(e) => this.setState({...this.state,langOpen:false})}
                   inputProps={{
                     name: 'datatype',
                     id: 'datatype',
                   }}
                 >
-                  {searchTypes.map(d => <MenuItem key={d} value={d}>{I18n.t("types."+d.toLowerCase())}</MenuItem>)}
+                  {searchTypes.map(d => (
+                     <MenuItem key={d} value={d}>
+                        <span lang={this.props.locale} class="menu-dataT">
+                           <span class="icone" style={{backgroundImage:"url('/icons/home/"+d.toLowerCase()+".svg')"}}></span>
+                           {I18n.t("types.searchIn",{type:I18n.t("types."+d.toLowerCase()+"_plural").toLowerCase()}) /* cannot use format in nested translation ( https://github.com/i18next/i18next/issues/1377) */ }
+                        </span>
+                     </MenuItem>))}
                </Select>
               </FormControl> 
 
@@ -4947,7 +4976,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   value={this.getLanguage()}
                   onChange={this.handleLanguage}
                   open={this.state.langOpen}
-                  onOpen={(e) => { console.log("open"); this.setState({...this.state,langOpen:true}) } }
+                  onOpen={(e) => { loggergen.log("open"); this.setState({...this.state,langOpen:true}) } }
                   onClose={this.handleLanguage} //(e) => this.setState({...this.state,langOpen:false})}
                   inputProps={{
                     name: 'language',
@@ -4991,14 +5020,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                               { this.props.isInstance && this.state.backToWorks && this.state.filters.instance && this.renderFilterTag(false, I18n.t("Lsidebar.tags.instanceOf"), this.state.filters.instance, (event, checked) => {
                                  this.resetFilters(event)
                               } )  } 
-                              { this.state.filters.facets?Object.keys(this.state.filters.facets).map(f => {
-                                 let vals = this.state.filters.facets[f]
-                                 if(vals.val) vals = vals.val
-                                 return vals.filter(k => k !== "Any").map(v => 
-                                    this.renderFilterTag(false, f, v, (event, checked) => this.handleCheckFacet(event, f, [ v ], false) ) 
-                                 ) }
-                              ):null }
-                              <a title={I18n.t("Lsidebar.activeF.reset")} id="clear-filters" onClick={this.resetFilters.bind(this)}><span>{I18n.t("Lsidebar.tags.reset")}</span><RefreshIcon /></a>
+                              { facetTags }
+                              { (this.state.filters.facets || this.state.backToWorks )&& this.renderResetF() }
                               </div>
                            </div>
                         ]
@@ -5025,8 +5048,9 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
            </div>
            {  (message.length > 0 || message.length == 0 && !this.props.loading ) && <div id="res-header">
                <div>
+                  <div id="settings" onClick={() => this.setState({collapse:{...this.state.collapse, settings:!this.state.collapse.settings}})}><img src="/icons/settings.svg"/></div>
                { // TODO change to popover style open/close
-                     sortByList && this.widget(I18n.t("Lsidebar.sortBy.title"),"sortBy",
+                     sortByList && this.popwidget(I18n.t("Lsidebar.sortBy.title"),"sortBy",
                      (sortByList /*:["Year of Publication","Instance Title"]*/).map((i,n) => <div key={i} style={{width:"200px",textAlign:"left"}} className="searchWidget">
                            <FormControlLabel
                               control={
@@ -5039,7 +5063,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                                  />
 
                               }
-                              label={i}
+                              label={<span lang={this.props.locale}>{i}</span>}
                            /></div> ).concat([
                               <div key={99} style={{width:"auto",textAlign:"left",marginTop:"5px",paddingTop:"5px"}} className="searchWidget">
                               <FormControlLabel
@@ -5053,12 +5077,12 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                                     />
 
                                  }
-                                 label={I18n.t("sort.reverse")}
+                                 label={<span lang={this.props.locale}>{I18n.t("sort.reverse")}</span>}
                               /></div>
                      ])) 
                   }
 
-                  <div id="pagine">
+                  <div id="pagine" lang={this.props.locale}>
                      <div>
                            { pageLinks && <span>{I18n.t("search.page")} { pageLinks }</span>}
                            <span id="nb">{I18n.t("search.result",{count:nbResu})}</span>
@@ -5094,6 +5118,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      {/* { messageD } */}
                      <h3>{ I18n.t("home.message") }</h3>
                      <h4>{ I18n.t("home.submessage") }</h4>
+                     <h4 class="subsubtitleFront">{ I18n.t("home.subsubmessage") }<a title="email us" href="mailto:help@bdrc.io">help@bdrc.io</a>{ I18n.t("home.subsubmessage_afteremail") }</h4>
                   </List> }
                { (this.props.datatypes && this.props.datatypes.hash && this.props.datatypes.metadata[bdo+this.state.filters.datatype[0]] && message.length === 0 && !this.props.loading) && 
                   <List id="results">
@@ -5104,7 +5129,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   <List key={2} id="results">
                      { this.props.isInstance && this.state.backToWorks && <a className="uri-link"  onClick={(event) => {
                            this.resetFilters(event)
-                        }}><img src="/icons/back.png"/><span>Back to Works</span></a> }
+                        }}><img src="/icons/back.png"/><span>{I18n.t("search.backToW")}</span></a> }
                      { message }
                      <div id="pagine">
                         <NavigateBefore
@@ -5125,6 +5150,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             </div>
             <LanguageSidePaneContainer />
          </div>
+         { message.length == 0 && !this.props.loading && !this.props.keyword && <Footer locale={this.props.locale}/> }
       </div>
       );
    }

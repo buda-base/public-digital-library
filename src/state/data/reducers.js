@@ -853,7 +853,13 @@ export const gotOutline = (state: DataState, action: Action) => {
    else if(state.outlineKW) { // add siblings to given node
       let root = outlines[state.outlineKW]
       if(root) root = root["@graph"]
-      elem.map(e => root.push(e))
+      elem.map(e => { e.notMatch = true ; root.push(e); })
+
+      root = state.outlineKW.split("/")
+      if(root.length > 0) {
+         root = root[0] 
+         if(action.payload === root) outlines[state.outlineKW].reloaded = true
+      }
    }
 
    return {

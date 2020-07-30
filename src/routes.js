@@ -23,6 +23,8 @@ import UserViewerContainer from './containers/UserViewerContainer';
 import ProfileContainer from './containers/ProfileContainer';
 import Profile from './components/ProfileStatic';
 
+import ClearCache from "react-clear-cache";
+
 export const auth = new Auth();
 
 
@@ -132,6 +134,7 @@ const handleAuthentication = (nextState, replace) => {
 const makeMainRoutes = () => {
 
    return (
+      
         <Provider store={store}>
            <MuiThemeProvider theme={theme}>
               <Router history={history}>
@@ -155,17 +158,25 @@ const makeMainRoutes = () => {
                      { 
                         <Route exact path="/user" render={(props) => {
 
-                           store.dispatch(initiateApp());
+                           store.dispatch(initiateApp(qs.parse(history.location.search)));
 
-                           return (<ProfileContainer auth={auth} history={history} />)
+                           return (
+                              <ClearCache auto={true}>
+                                 {({ isLatestVersion, emptyCacheStorage }) => (<ProfileContainer auth={auth} history={history} />)}
+                              </ClearCache>
+                           )
                         } } />
                      }
                      { 
                         <Route exact path="/testUser" render={(props) => {
 
-                           store.dispatch(initiateApp());
+                           store.dispatch(initiateApp(qs.parse(history.location.search)));
 
-                           return (<UserViewerContainer auth={auth} history={history} />)
+                           return (
+                              <ClearCache auto={true}>
+                                 {({ isLatestVersion, emptyCacheStorage }) => (<UserViewerContainer auth={auth} history={history} />)}
+                              </ClearCache>
+                           )
                         } } />
                      }
                      {/*
@@ -219,8 +230,12 @@ const makeMainRoutes = () => {
                         )
                      }}/>
                      <Route exact path="/" render={(props) => {
-                        store.dispatch(initiateApp());
-                        return ( <AppContainer history={history} auth={auth}/> ) } } />
+                        store.dispatch(initiateApp(qs.parse(history.location.search)));
+                        return ( 
+                           <ClearCache auto={true}>
+                              {({ isLatestVersion, emptyCacheStorage }) => (<AppContainer history={history} auth={auth}/> )}
+                           </ClearCache>
+                        )}}/>
                      <Route path="/search" render={(props) => {
                         let get = qs.parse(history.location.search)
                         //if(!store.getState().data.ontology)
@@ -229,7 +244,11 @@ const makeMainRoutes = () => {
                            //if(!store.getState().ui.loading)
                            store.dispatch(initiateApp(qs.parse(history.location.search)))
                         }
-                        return ( <AppContainer history={history}  auth={auth}/> ) } } />
+                        return ( 
+                           <ClearCache auto={true}>
+                              {({ isLatestVersion, emptyCacheStorage }) => (<AppContainer history={history} auth={auth}/> )}
+                           </ClearCache>
+                        )}}/>
                      <Route path="/view/:IRI" render={(props) =>
                         {
                            let get = qs.parse(history.location.search)
@@ -261,7 +280,11 @@ const makeMainRoutes = () => {
                         }
                         store.dispatch(initiateApp(get,IRI));
                      
-                        return ( <ResourceViewerContainer  auth={auth} history={history} IRI={IRI}/> ) } }/>
+                        return (
+                           <ClearCache auto={true}>
+                              {({ isLatestVersion, emptyCacheStorage }) => (<ResourceViewerContainer  auth={auth} history={history} IRI={IRI}/> )}
+                           </ClearCache>
+                        )}}/>
                      <Route render={(props) =>
                         <Redirect404  history={history}  auth={auth}/>}/>
                      <Route path="/scripts/" onEnter={() => window.location.reload(true)} />

@@ -10,7 +10,7 @@ require('formdata-polyfill')
 const CONFIG_PATH = '/config.json'
 const CONFIGDEFAULTS_PATH = '/config-defaults.json'
 const ONTOLOGY_PATH = '/ontology/core.json'
-const DICTIONARY_PATH = '/graph/ontologySchema.json' //  deprecated '/ontology/data/json'
+const DICTIONARY_PATH = '/ontology/data/json' //  '/graph/ontologySchema.json'
 const USER_PATH = '/resource-nc/user/me'
 const USER_EDIT_POLICIES_PATH = '/userEditPolicies'
 
@@ -391,7 +391,7 @@ export default class API {
 
       try {
          let config = store.getState().data.config.ldspdi
-         let url = config.endpoints[config.index]+"/query/graph" ;
+         let url = config.endpoints[config.index]+(!useContext?"/lib":"/query/graph") ;
          let param = {"searchType":useContext?"chunkContext":"Chunks",...(useContext?{"R_UT":IRI}:{"R_RES":IRI}),"I_START":next,"I_END":next+nb,"L_NAME":"","LG_NAME":"", "I_LIM":"" }
          let data = await this.getQueryResults(url, IRI, param,"GET","application/ld+json");
 
@@ -415,7 +415,7 @@ export default class API {
       //console.log("etext",resource)
       try {
          let config = store.getState().data.config.ldspdi
-         let url = config.endpoints[config.index]+"/query/graph" ;
+         let url = config.endpoints[config.index]+"/lib" // "/query/graph" ;
          let param = {"searchType":"ChunksByPage","R_RES":IRI,"I_START":next,"I_END":next+10,"L_NAME":"","LG_NAME":"" }
          let data = await this.getQueryResults(url, IRI, param,"GET","application/ld+json");
 

@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import * as data from '../state/data/actions';
 import * as ui from '../state/ui/actions';
 import store from '../index';
+import { i18nextChangeLanguage } from 'i18next-redux-saga';
 
 // import selectors from 'state/selectors';
 
@@ -28,9 +29,11 @@ const mapStateToProps = (state,ownProps) => {
 
    let resetLink = state.data.resetLink
 
+   let locale = state.i18next.lang
+   
    if(profile && resetLink && !profile[tmp+"passwordResetLink"]) resetLink = false
 
-   let props = { userID, profile, dictionary, rightPanel, resetLink, config }
+   let props = { userID, profile, dictionary, rightPanel, resetLink, config, locale }
 
    return props
 
@@ -41,8 +44,14 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       onToggleLanguagePanel:() => {
          dispatch(ui.toggleLanguagePanel());
       },
+      onSetLocale:(lg:string) => {
+         dispatch(i18nextChangeLanguage(lg));
+      },
       onUserProfile:(url:{}) => {
          dispatch(ui.userProfile(url));
+      },
+      onSetLangPreset:(langs:string[],i?:number) => {
+         dispatch(ui.langPreset(langs,i))
       },
    }
 }

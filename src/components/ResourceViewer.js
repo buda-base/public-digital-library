@@ -1,6 +1,5 @@
 //@flow
 //import {Mirador, m3core} from 'mirador'
-import diva from "diva.js" // v5.1.3
 //import diva from "diva.js" //v6.0, not working
 import Portal from 'react-leaflet-portal';
 import bbox from "@turf/bbox"
@@ -54,6 +53,7 @@ import React, { Component } from 'react';
 import qs from 'query-string'
 import Button from '@material-ui/core/Button';
 import Fade from '@material-ui/core/Fade';
+import RefreshIcon from '@material-ui/icons/Refresh';
 
 //import {Translate , I18n} from 'react-redux-i18n';
 import I18n from 'i18next';
@@ -64,6 +64,8 @@ import IIIFViewerContainer from '../containers/IIIFViewerContainer';
 import LanguageSidePaneContainer from '../containers/LanguageSidePaneContainer';
 import {miradorConfig, miradorSetUI} from '../lib/miradorSetup';
 import { Redirect404 } from "../routes.js"
+import Footer from "./Footer"
+
 import Loader from "react-loader"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faLanguage } from '@fortawesome/free-solid-svg-icons'
@@ -82,6 +84,8 @@ import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import 'react-tabs/style/react-tabs.css';
 
 import {svgEtextS,svgInstanceS,svgImageS} from "./icons"
+
+import {keywordtolucenequery,lucenequerytokeyword} from './App';
 
 
 delete L.Icon.Default.prototype._getIconUrl;
@@ -210,7 +214,7 @@ export const providers = {
    "dila":"DILA Authority Database",
    "eap":"British Library (EAP)",
    "eftr":"84000",
-   "ia":"Internet Archive",                 
+   "ia":"Internet Archives",                 
    "gretil":"GRETIL",
    "mbbt":"Marcus Bingenheimer's website",
    "ngmpp":"NGMPP",
@@ -256,17 +260,12 @@ let propOrder = {
    "Etext":[
       "adm:metadataLegal",
       "bdo:eTextTitle",
-      "bdo:eTextIsVolume",
-      "bdo:eTextInVolume",
+      //"bdo:eTextIsVolume",
+      //"bdo:eTextInVolume",
       "bdo:eTextInInstance",
-      "tmp:imageVolumeId",
-      "bdo:eTextVolumeIndex",
-      "bdo:eTextInItem",
-      "tmp:workLabel",
-      "bdo:itemForWork",
-      "bdo:isRoot",
-      "bdo:eTextHasPage",
-      "bdo:eTextHasChunk",
+      //"bdo:eTextVolumeIndex",
+      //"bdo:eTextHasPage",
+      //"bdo:eTextHasChunk",
    ],
    /*
    "Volume":[
@@ -290,9 +289,10 @@ let propOrder = {
       "adm:metadataLegal",
       "skos:prefLabel",
       "skos:altLabel",
-      "bdo:lineageObject",
       "bdo:lineageType",
-      "bdo:workLocation",
+      "bdo:lineageObject",
+      
+      
    ],
    "Person" : [
       "adm:metadataLegal",
@@ -306,18 +306,9 @@ let propOrder = {
       "bdo:isIncarnation",
       "bdo:hasIncarnation",
       // "bdo:incarnationGeneral",
-      "bdo:personTeacherOf",
       "bdo:personStudentOf",
+      "bdo:personTeacherOf",
       "bdo:note",
-      "owl:sameAs",
-      "adm:sameAsBDRC",
-      "bdo:sameAsVIAF",
-      "adm:sameAsMBBT",
-      "adm:sameAsVIAF",
-      "adm:sameAsrKTs",
-      "adm:sameAsToL",
-      "adm:sameAsWorldCat",   
-      "adm:sameAsWikidata",
       "rdfs:seeAlso",
     ],
    "Place":[
@@ -350,21 +341,15 @@ let propOrder = {
    "Work":[
       "adm:metadataLegal",
       "bdo:hasTitle",
-      "bdo:workTitle",
       "skos:prefLabel",
       "skos:altLabel",
-      "bdo:workType",
-      "bdo:workExpressionOf",
-      "bdo:numberOfVolumes",
-      "bdo:itemVolumes",
-      "bdo:instanceHasVolume",
+      //"bdo:workType",
       "bdo:instanceHasReproduction",
       "bdo:instanceOf",
-      "bdo:instanceReproductionOf",
+      //"bdo:instanceReproductionOf",
       "tmp:siblingExpressions",
       "bdo:workDerivativeOf",
       "bdo:workTranslationOf",
-      "bdo:workHasExpression",
       "bdo:workHasDerivative",
       "bdo:workHasTranslation",
       "tmp:workHasTranslationInCanonicalLanguage",
@@ -374,13 +359,8 @@ let propOrder = {
       // "bdo:creatorMainAuthor",
       // "bdo:creatorContributingAuthor",
       "bdo:creator",
-      "bdo:workCreator",
       "bdo:language",
       "bdo:script",
-      "bdo:workLangScript",
-      "bdo:workOtherLangScript",
-      "bdo:workObjectType",
-      "tmp:dimensions",
       "bdo:workDimWidth",
       "bdo:workDimHeight",
       "tmp:hasEtext",
@@ -395,24 +375,13 @@ let propOrder = {
       "bdo:partOf",
       "bdo:workPartOf",
       "bdo:partType",
-      "bdo:partIndex",
-      "bdo:partTreeIndex",
+      //"bdo:partIndex",
+      //"bdo:partTreeIndex",
       "bdo:hasPart",
       "bdo:workHasPart",
       "bdo:instanceHasItem",
-      "bdo:workHasItem",
       "bdo:hasItem",
       "bf:identifiedBy",
-      "bdo:workRefTaisho",
-      "bdo:sameAsVIAF",
-      "owl:sameAs",
-      "adm:sameAsBDRC",
-      "adm:sameAsMBBT",
-      "adm:sameAsVIAF",
-      "adm:sameAsrKTs",
-      "adm:sameAsToL",
-      "adm:sameAsWorldCat",   
-      "adm:sameAsWikidata",
       "rdfs:seeAlso",
       "bdo:incipit",
       "bdo:catalogInfo",
@@ -421,22 +390,18 @@ let propOrder = {
       "bdo:workEvent",
       "bdo:publisherName",
       "bdo:publisherLocation",
-      "bdo:workHasSourcePrintery",
       "bdo:hasSourcePrintery",
       "bdo:printMethod",
       "bdo:printType",
-      "bdo:workPagination",
       "bdo:workExtentStatement",
       "bdo:authorshipStatement",
       "bdo:editionStatement",
-      "bdo:itemBDRCHoldingStatement",
       "bdo:material",
-      "bdo:workMaterial",
-      "adm:contentProvider",
+      //"adm:contentProvider",
       "bdo:biblioNote", 
       "bdo:scanInfo",
       "adm:originalRecord",
-      "bdo:note",
+      "bdo:instanceHasVolume",
    ],
    "Taxonomy":[],
    "User" : [
@@ -470,9 +435,14 @@ const topProperties = {
       skos+"altLabel", 
       bdo+"creator",
       bdo+"workTranslationOf",
+      bdo+"editionStatement",
       bdo+"workHasInstance"
    ],
    "Instance": [ 
+      bdo+"instanceHasReproduction",
+      tmp+"propHasScans",
+      tmp+"propHasEtext",
+      //bdo+"instanceOf",
       bdo+"creator",
       bdo+"hasTitle", 
       skos+"prefLabel", 
@@ -481,16 +451,14 @@ const topProperties = {
       bdo+"instanceEvent",
       bdo+"publisherName",
       bdo+"publisherLocation",
-      bdo+"instanceOf",
-      bdo+"instanceHasReproduction",
+      bdo+"editionStatement",
    ],
    "Images": [ 
       bdo+"hasTitle", 
       skos+"prefLabel", 
       skos+"altLabel",
-      bdo+"instanceReproductionOf",
-      bdo+"itemVolumes",
-      bdo+"instanceHasVolume"
+      //bdo+"instanceReproductionOf",
+      //bdo+"itemVolumes",
    ],
    "Volume": [ 
       bdo+"hasTitle", 
@@ -503,18 +471,18 @@ const topProperties = {
       bdo+"hasTitle", 
       skos+"prefLabel", 
       skos+"altLabel",
-      bdo+"instanceOf",
-      adm+"originalRecord",
+      //bdo+"instanceOf",
+      //adm+"originalRecord",
       bdo+"eTextTitle",
       bdo+"eTextIsVolume",
       bdo+"eTextInVolume",
       bdo+"eTextInInstance",
       //tmp+"imageVolumeId", // TODO uncommenting this breaks image display 
       bdo+"eTextVolumeIndex",
-      bdo+"eTextInItem",
-      tmp+"workLabel",
-      bdo+"itemForWork",
-      bdo+"isRoot",
+      //bdo+"eTextInItem",
+      //tmp+"workLabel",
+      //bdo+"itemForWork",
+      //bdo+"isRoot",
       
    ]
 }
@@ -524,21 +492,36 @@ let extProperties = {
       bf+"identifiedBy",
       bdo+"contentMethod",
       bdo+"material",
-      bdo+"workMaterial",
-      bdo+"workPagination",
+      //bdo+"workPagination",
       bdo+"workExtentStatement",
-      tmp+"entityScore",
-      bdo+"authorshipStatement",
-      bdo+"editionStatement",
+      //tmp+"entityScore",
+      //bdo+"authorshipStatement",
       bdo+"itemBDRCHoldingStatement",
+      bdo+"numberOfVolumes",
+      "tmp:dimensions",
+      bdo+"bdo:instanceReproductionOf",
+      bdo+"note",
+      bdo+"authorshipStatement",
+      bdo+"instanceHasVolume",
    ],
    "Person": [,
       bf+"identifiedBy",
-      tmp+"entityScore"
+      //tmp+"entityScore"
+      bdo+"note",
    ],
    "Place": [,
       bf+"identifiedBy",
-      tmp+"entityScore"
+      //tmp+"entityScore"
+      bdo+"note",
+      bdo+"placeGB2260-2013",
+      bdo+"placeWB2000",
+      bdo+"placeWB2010",
+      bdo+"placeWBArea",
+      bdo+"placeGonpaPerEcumen",
+   ],
+   "Lineage": [
+      bdo+"workLocation",
+      bdo+"note",
    ]
 }
 extProperties["Etext"] = extProperties["Work"]
@@ -1208,8 +1191,8 @@ class ResourceViewer extends Component<Props,State>
       if(get.osearch && !this.state.outlineKW) { 
          if(!s) s = { ...this.state } 
          s.outlineKW = get.osearch
-         if(s.outlineKW.includes("@")) s.outlineKW = s.outlineKW.replace(/\"([^"]+)\"@.*/,"$1")
-
+         let keys = get.osearch.split("@")
+         s.outlineKW = lucenequerytokeyword(keys[0])
          
          if(!timerScr) timerScr = setInterval( () => {
             const el = document.querySelector("#outline")
@@ -1277,7 +1260,8 @@ class ResourceViewer extends Component<Props,State>
       if(!this.props.IRI || !this.props.resources || !this.props.resources[this.props.IRI]
          || !this.props.resources[this.props.IRI][this.expand(this.props.IRI)]) return {}
 
-      let onto = this.props.ontology, dic = this.props.dictionary
+      //let onto = this.props.ontology
+      let dic = this.props.dictionary
       let prop = this.props.resources[this.props.IRI][this.expand(this.props.IRI)] ;
       if(this.state.resource) prop = this.state.resource
       let w = prop[bdo+"dimWidth"]
@@ -1300,6 +1284,19 @@ class ResourceViewer extends Component<Props,State>
       //console.log("w h",w,h,prop)
 
       //prop["bdr:workDimensions"] =
+
+
+      if(prop[bdo+"instanceHasReproduction"]) {
+         let etexts = [ ...prop[bdo+"instanceHasReproduction"].filter(p => p.value && p.value.startsWith(bdr+"IE")) ] ;
+         let images = [ ...prop[bdo+"instanceHasReproduction"].filter(p => p.value && p.value.startsWith(bdr+"W")) ] ;
+
+         if(etexts.length) prop[tmp+"propHasEtext"] = etexts
+         if(images.length) prop[tmp+"propHasScans"] = images
+
+         //delete prop[bdo+"instanceHasReproduction"]
+      }
+         
+
       if(sorted)
       {
 
@@ -1556,7 +1553,7 @@ class ResourceViewer extends Component<Props,State>
                         [rdfs+"subPropertyOf"]: [{type: "uri", value: tmp+"workHasTranslationInCanonicalLanguage"}],
                         [tmp+"langKey"]: [{type:"literal", value:lang}]
                      }
-                     onto[ontoProp] = newLang
+                     //onto[ontoProp] = newLang
                      dic[ontoProp] = newLang
                      if(!subLangDeriv[ontoProp]) subLangDeriv[ontoProp] = []
                      subLangDeriv[ontoProp].push(e)
@@ -1576,7 +1573,7 @@ class ResourceViewer extends Component<Props,State>
                         [rdfs+"subPropertyOf"]: [{type: "uri", value: tmp+"workHasTranslationInNonCanonicalLanguage"}],
                         [tmp+"langKey"]: [{type:"literal", value:lang}]
                      }
-                     onto[ontoProp] = newLang
+                     //onto[ontoProp] = newLang
                      dic[ontoProp] = newLang
                      if(!subLangDeriv[ontoProp]) subLangDeriv[ontoProp] = []
                      subLangDeriv[ontoProp].push(e)
@@ -1679,7 +1676,7 @@ class ResourceViewer extends Component<Props,State>
 
 
 
-   fullname(prop:string,isUrl:boolean=false,noNewline:boolean=false,useUIlang:boolean=false,canSpan = true)
+   fullname(prop:string,isUrl:boolean=false,noNewline:boolean=false,useUIlang:boolean=false,canSpan = true,count?:integer=1)
    {
 
 
@@ -1687,7 +1684,7 @@ class ResourceViewer extends Component<Props,State>
 
 
       let sTmp, trad ;
-      if(prop && prop.match && prop.match(/[./]/) && (trad=I18n.t(sTmp="prop."+shortUri(prop))) !== sTmp)  {
+      if(prop && prop.match && prop.match(/[./]/) && (trad=I18n.t(sTmp="prop."+shortUri(prop),{count})) !== sTmp)  {
          if(canSpan) return <span lang="">{this.pretty(trad,isUrl,noNewline)}</span>
          else return this.pretty(trad,isUrl,noNewline)
       }
@@ -1749,7 +1746,7 @@ class ResourceViewer extends Component<Props,State>
 
      console.log("showAssoc e k",e,k);
 
-     if(this.props.ontology[k] && this.props.ontology[k][bdo+"inferSubTree"]) return
+     if(this.props.dictionary[k] && this.props.dictionary[k][bdo+"inferSubTree"]) return
 
 
       let vals = [], n=0;
@@ -1791,25 +1788,25 @@ class ResourceViewer extends Component<Props,State>
    {
       //console.log("sup",k)
 
-      if(!this.props.ontology || !this.props.ontology[k] || (!this.props.ontology[k][rdfs+"subPropertyOf"] && !this.props.ontology[k][rdfs+"subClassOf"]))
+      if(!this.props.dictionary || !this.props.dictionary[k] || (!this.props.dictionary[k][rdfs+"subPropertyOf"] && !this.props.dictionary[k][rdfs+"subClassOf"]))
       {
          return false
       }
       else  {
-         let tmp = this.props.ontology[k][rdfs+"subPropertyOf"].map(e => e)
-         if(!tmp) tmp = this.props.ontology[k][rdfs+"subClassOf"].map(e => e)
+         let tmp = this.props.dictionary[k][rdfs+"subPropertyOf"].map(e => e)
+         if(!tmp) tmp = this.props.dictionary[k][rdfs+"subClassOf"].map(e => e)
          while(tmp && tmp.length > 0)
          {
             let e = tmp[0]
 
             //console.log("super e",e.value) //tmp,k,e.value,e, this.props.ontology[k], this.props.ontology[e.value])
 
-            if(this.props.ontology[e.value][rdfs+"subPropertyOf"])
-               tmp = tmp.concat(this.props.ontology[e.value][rdfs+"subPropertyOf"].map(f => f))
-            else if(this.props.ontology[e.value][rdfs+"subClassOf"])
-               tmp = tmp.concat(this.props.ontology[e.value][rdfs+"subClassOf"].map(f => f))
+            if(this.props.dictionary[e.value][rdfs+"subPropertyOf"])
+               tmp = tmp.concat(this.props.dictionary[e.value][rdfs+"subPropertyOf"].map(f => f))
+            else if(this.props.dictionary[e.value][rdfs+"subClassOf"])
+               tmp = tmp.concat(this.props.dictionary[e.value][rdfs+"subClassOf"].map(f => f))
 
-            if(this.props.ontology[e.value] && this.props.ontology[e.value][bdo+"inferSubTree"]) return true ;
+            if(this.props.dictionary[e.value] && this.props.dictionary[e.value][bdo+"inferSubTree"]) return true ;
             else if(e.value===bdo+"workTranslationOf") return false
 
             delete tmp[0]
@@ -1823,7 +1820,7 @@ class ResourceViewer extends Component<Props,State>
    hasSub(k:string)
    {
       if(!k.match(/^http:\/\/purl\.bdrc\.io/)) return false
-      else return (this.props.ontology[k] && this.props.ontology[k][bdo+"inferSubTree"])
+      else return (this.props.dictionary && this.props.dictionary[k] && this.props.dictionary[k][bdo+"inferSubTree"])
 
    }
 
@@ -1836,7 +1833,7 @@ class ResourceViewer extends Component<Props,State>
       if(this.props.IRI && this.props.resources[this.props.IRI] && this.props.resources[this.props.IRI][this.expand(this.props.IRI)]) {
 
          let res = this.props.resources[this.props.IRI][this.expand(this.props.IRI)]
-         let onto = this.props.ontology
+         let onto = this.props.dictionary
          let dict = this.props.dictionary
          let subKeys = Object.keys(res).map(q => {
             let key,alphaK="zz",numK=1000
@@ -1863,8 +1860,8 @@ class ResourceViewer extends Component<Props,State>
          for(let p of subKeys) {
 
 
-            if(this.props.ontology[p] && this.props.ontology[p][rdfs+"subPropertyOf"]
-               && this.props.ontology[p][rdfs+"subPropertyOf"].filter((e)=>(e.value == k)).length > 0)
+            if(this.props.dictionary[p] && this.props.dictionary[p][rdfs+"subPropertyOf"]
+               && this.props.dictionary[p][rdfs+"subPropertyOf"].filter((e)=>(e.value == k)).length > 0)
             {
                //console.log("p",p)
 
@@ -1898,7 +1895,7 @@ class ResourceViewer extends Component<Props,State>
       if(!info) info = [ getLangLabel(this, prop, infoBase.filter((e)=>((e["xml:lang"] || e["lang"] || e.fromKey && e.fromKey === foaf+"name")))) ]                        
       if(!info) info = [ getLangLabel(this, prop, infoBase.filter((e)=>((e["xml:lang"] || e["lang"]) && e.type==prop))) ]
 
-      //console.log("info",prop,infoBase,info)
+      //console.log("info?",prop,infoBase,info)
 
       //if(info.value) info = info.value
 
@@ -1934,7 +1931,7 @@ class ResourceViewer extends Component<Props,State>
                if(!lang) lang = infoBase[0]["lang"]
                if(lang) info = infoBase[0].value 
                else info = null
-               if(infoBase[0].type && infoBase[0].type == bdo+"volumeNumber") info = I18n.t("types.volume_num",{num:infoBase[0].value}) ;
+               if(infoBase[0].type && (infoBase[0].type == bdo+"volumeNumber" || infoBase[0].fromKey == bdo+"volumeNumber")) info = I18n.t("types.volume_num",{num:infoBase[0].value}) ;
                else if(info && info.match(/purl[.]bdrc/)) info = null
                //console.log("info0",info)
             }
@@ -1952,7 +1949,7 @@ class ResourceViewer extends Component<Props,State>
          if(provLab) provLab = provLab[skos+"prefLabel"]
          if(provLab && provLab.length) provLab = provLab[0].value 
          
-         //console.log("isExtW",isExtW,this.props.dictionary,provLab)
+         console.log("isExtW",isExtW,this.props.dictionary,provLab)
 
          if(provLab === "GRETIL") sameAsPrefix += "gretil provider hasIcon "
          else if(provLab === "EAP") sameAsPrefix += "eap provider hasIcon "
@@ -1997,7 +1994,7 @@ class ResourceViewer extends Component<Props,State>
          
          if(dico) {
             infoBase = dico[elem.value]
-            if(infoBase) infoBase = infoBase.filter(e => [bdo+"volumeNumber",skos+"prefLabel",skos+"altLabel",foaf+"name","literal"].reduce( (acc,f) => (acc || f === e.type || f === e.fromKey), false))
+            if(infoBase) infoBase = infoBase.filter(e => [bdo+"volumeNumber",skos+"prefLabel",skos+"altLabel",foaf+"name" /*,"literal"*/].reduce( (acc,f) => (acc || f === e.type || f === e.fromKey), false))
          }
 
          if(!infoBase || !infoBase.length)  {
@@ -2006,7 +2003,7 @@ class ResourceViewer extends Component<Props,State>
             if(infoBase) infoBase = infoBase[skos+"prefLabel"]
          }
 
-         //console.log("base",JSON.stringify(infoBase,null,3))
+         //console.log("base:",JSON.stringify(infoBase,null,3))
 
          if(infoBase) {
             let { _info, _lang } = this.getInfo(prop,infoBase,withProp) 
@@ -2035,18 +2032,35 @@ class ResourceViewer extends Component<Props,State>
 
          //console.log("s?",prop,prefix,sameAsPrefix,pretty,elem,info,infoBase)         
 
+         let thumb
+         if(prop === bdo+"workHasInstance"  || prop === tmp+"propHasScans" || prop === tmp+"propHasEtext" ) {
+            if(!info) info = [] 
+            let enti = getEntiType(elem.value)
+            console.log("enti:",enti,elem.value)
+            if(enti === "Etext") ret = [<span class="svg">{svgEtextS}</span>]
+            else if(enti === "Instance") ret = [<span class="svg">{svgInstanceS}</span>]
+            else if(enti === "Images") { 
+               ret = []
+               thumb =  this.getResourceElem(tmp+"thumbnailIIIFService")
+               
+               /* // deprecated (thumbnail is a property of instance)
+               if(!this.props.resources || !this.props.resources[shortUri(elem.value)]) this.props.onGetResource(shortUri(elem.value));
+               else {
+                  let thumb =  this.props.resources[elem.value]
+                  if(thumb)   {
+                     console.log("thumb?",elem,thumb)
+                  }
+               }
+               */
+               ret.push(<span class="svg">{svgImageS}</span>)
+            }
+         }
+         
          if((info && infoBase && infoBase.filter(e=>e["xml:lang"]||e["lang"]).length >= 0) || (prop && prop.match && prop.match(/[/#]sameAs/))) {
 
 
             // console.log("svg?",svgImageS)
 
-            if(prop === bdo+"workHasInstance") {
-               if(!info) info = [] 
-               let enti = getEntiType(elem.value)
-               if(enti === "Etext") info = [<span class="svg">{svgEtextS}</span>].concat(info)
-               else if(enti === "Instance") info = [<span class="svg">{svgInstanceS}</span>].concat(info)
-               else if(enti === "Images") info = [<span class="svg">{svgImageS}</span>].concat(info)
-            }
 
             let link,orec,canUrl;
             if(this.props.assocResources && this.props.assocResources[elem.value]) {
@@ -2058,7 +2072,9 @@ class ResourceViewer extends Component<Props,State>
 
             let srcProv = sameAsPrefix.replace(/^.*?([^ ]+) provider .*$/,"$1").toLowerCase()
             let srcSame = sameAsPrefix.replace(/^.*?([^ ]+) sameAs .*$/,"$1").toLowerCase()
-            //console.log("src",src,srcProv,srcSame)
+            
+            //console.log("src:",src,srcProv,srcSame)
+            
             //if(src.match(/bdr/)) src = "bdr"
 
             let bdrcData 
@@ -2245,7 +2261,20 @@ class ResourceViewer extends Component<Props,State>
             <Link className={"urilink "+prefix} to={"/"+show+"/"+prefix+":"+pretty}>{pretty}</Link>&nbsp;
             {/* <Link className="goBack" target="_blank" to={"/gallery?manifest=//iiifpres.bdrc.io/v:bdr:"+pretty+"/manifest"}>{"(view image gallery)"}</Link> */}
          </span> ) }
-         else if(pretty.toString().match(/^([A-Z]+[v_0-9-]*[A-Z]*)+$/)) ret.push(<Link className={"urilink "+ prefix} to={"/"+show+"/"+prefix+":"+pretty}><span lang="">{prefix+":"+pretty}</span></Link>)
+         else if(pretty.toString().match(/^([A-Z]+[v_0-9-]*[A-Z]*)+$/)){ 
+
+            if(!thumb) ret = (<Link className={"urilink "+ prefix} to={"/"+show+"/"+prefix+":"+pretty}><span lang="">{ret}{prefix+":"+pretty}</span></Link>)
+            else if(thumb.length) {
+               let vlink = "/"+show+"/"+prefix+":"+pretty+"?s="+encodeURIComponent(this.props.history.location.pathname+this.props.history.location.search)+"#open-viewer"                
+               thumb = <div class="images-thumb" style={{"background-image":"url("+thumb[0].value+"/full/,145/0/default.jpg)"}}/>;               
+
+               ret = [<Link className={"urilink "+ prefix} to={vlink}>{thumb}</Link>,
+                     <div class="images-thumb-links">
+                        <Link className={"urilink "+ prefix} to={vlink}>{I18n.t("index.openViewer")}</Link>
+                        <Link className={"urilink "+ prefix} to={"/"+show+"/"+prefix+":"+pretty}>{I18n.t("resource.openR")}</Link>
+                     </div>]
+            }
+         } 
          else ret.push(pretty)
 
          return ret
@@ -3338,111 +3367,6 @@ class ResourceViewer extends Component<Props,State>
    }
   */
 
-   showDiva()
-   {
-      if(!this.state.openDiva) // || !$("#diva-wrapper").hasClass("hidden"))
-      {
-         if(this.state.UVcanLoad) { window.location.hash = "diva"; window.location.reload(); }
-
-         let timerDiva = setInterval( () => {
-
-            if($("#diva-wrapper").length > 0) { // && window.Diva) && window.Diva.DownloadPlugin && window.Diva.ManipulationPlugin && window.Diva.MetadataPlugin) {
-               clearInterval(timerDiva);
-
-               $("#fond").addClass("hidden");
-
-               let manif = this.props.collecManif
-               if(!manif && this.props.manifests) manif = this.props.manifests[0]["@id"]
-               if(!manif) manif = this.props.imageAsset
-
-               /*
-               // v6.0 working from diva.js github demo site
-               let dv = new window.Diva('diva-wrapper',{
-                  "objectData": manif,
-                  //"enableZoomControls":"slider", // not compatible with v6
-                  "enableAutoTitle":false, // title not working by default (show first letter only, maybe because label is a list here ?)
-                  "tileWidth":4000,
-                  "tileHeight":4000,
-                  "plugins": [window.Diva.DownloadPlugin, window.Diva.ManipulationPlugin, window.Diva.MetadataPlugin],
-               });
-               dv.disableScrollable()
-               dv.enableScrollable()
-               dv.disableDragScrollable()
-               dv.enableDragScrollable()
-               *
-
-/*
-               // v6.0 not working as a import
-               let dv = new Diva('diva-wrapper',{
-                  "objectData": manif,
-                  "enableZoomControls":"slider",
-                  "tileWidth":4000,
-                  "tileHeight":4000,
-                  //"plugins": [Diva.DownloadPlugin, Diva.ManipulationPlugin, Diva.MetadataPlugin],
-                  //enableFullscreen:false
-               });
-*/
-               // fully working v5.1.3 (but no plugin)
-
-               let dv = diva.create('#diva-wrapper',{
-                   objectData: manif,
-                   enableZoomControls:"slider",
-                   tileWidth:4000,
-                   tileHeight:4000
-                   //plugins: [DownloadPlugin, ManipulationPlugin, MetadataPlugin],
-                   //enableFullscreen:false
-               });
-
-
-               let timerDiva2 = setInterval(() => {
-                  if($(".diva-fullscreen-icon").length > 0) {
-                     clearInterval(timerDiva2)
-
-                      // diva 5.1
-                       $(".diva-link-icon").remove()
-                       $(".diva-fullscreen-icon").remove();
-                       $(".diva-view-menu").append(`<button type="button" id="diva-1-fullscreen-icon" class="diva-fullscreen-icon diva-button" title="Close viewer"
-                          onClick="javascript:eval('window.closeViewer()')"></button>`)
-
-
-                      /*
-                      //diva 6
-                      let svg = $("#diva-1-fullscreen-icon svg").remove();
-                      $("#diva-1-fullscreen-icon").remove();
-                      $(".diva-view-menu").append(`<button type="button" id="diva-1-fullscreen-icon" class="diva-fullscreen-icon diva-button" title="Close viewer"
-                         onClick="javascript:document.getElementById(\'diva-wrapper\').classList.add(\'hidden\')"></button>`)
-                      $("#diva-1-fullscreen-icon").append(svg)
-                      */
-
-                     if(this.props.manifests) {
-                        $(".diva-tools").append("<span>Browse collection</span><select id='volume'>"+this.props.manifests.map(
-                           (v,i) => ("<option value='"+v["@id"]+"' "+(i===0?"selected":"")+">"+v["label"]+"</option>")
-                        ) +"</select>")
-                        $("#volume").change(
-                           function(){
-                              dv.changeObject($(this).val())
-                              dv.gotoPageByIndex(0);
-                           }
-                        )
-
-                     }
-                  }
-               }, 100)
-
-            }
-            else {
-               this.forceUpdate();
-            }
-         }, 100)
-      }
-      else {
-         //$('#diva-wrapper').removeClass('hidden')
-      }
-      let state = { ...this.state, openDiva:true, openUV:false, openMirador:false }
-      this.setState(state);
-
-   }
-
 
    showMirador(num?:number,useManifest?:{})
    {
@@ -3578,7 +3502,7 @@ class ResourceViewer extends Component<Props,State>
          });
    };
 
-   proplink = (k,txt) => {
+   proplink = (k,txt,count?:integer=1) => {
 
 
       if(txt) console.warn("use of txt in proplink",k,txt)
@@ -3595,7 +3519,7 @@ class ResourceViewer extends Component<Props,State>
 
       if(k === bdo+'note') txt = I18n.t("popover.notes") ;
 
-      let ret = (<a class="propref" {...(k.match(/purl[.]bdrc[.]io/) && !k.match(/[/]tmp[/]/) ? {"href":k}:{})} target="_blank">{txt?txt:this.fullname(k,false,false,true)}</a>)
+      let ret = (<a class="propref" {...(k.match(/purl[.]bdrc[.]io/) && !k.match(/[/]tmp[/]/) ? {"href":k}:{})} target="_blank">{txt?txt:this.fullname(k,false,false,true,true,count)}</a>)
 
       if(tooltip && tooltip.length > 0) ret = <Tooltip placement="bottom-start" classes={{tooltip:"commentT",popper:"commentP"}} style={{marginLeft:"50px"}} title={<div>{tooltip.map(tip => tip.value.split("\n").map(e => [e,<br/>]))}</div>}>{ret}</Tooltip>
 
@@ -3626,8 +3550,8 @@ class ResourceViewer extends Component<Props,State>
 
       //console.log("H2?",rootC)
 
-      if(other) return <h2><Link  {... rootC?{onClick:rootC}:{}}  to={"/show/"+shortUri(other)+this.getTabs(T_,other)}>{_T}<span>{_befo}{title.value}</span>{this.tooltip(title.lang)}</Link></h2>
-      else return <h2 class="on">{_T}<span>{_befo}{title.value}</span>{this.tooltip(title.lang)}</h2>
+      if(other) return <h2 title={title.value}><Link  {... rootC?{onClick:rootC}:{}}  to={"/show/"+shortUri(other)+this.getTabs(T_,other)}>{_T}<span>{_befo}{title.value}</span>{this.tooltip(title.lang)}</Link></h2>
+      else return <h2 title={title.value} class="on">{_T}<span>{_befo}{title.value}</span>{this.tooltip(title.lang)}</h2>
    }
 
    setTitle = (kZprop,_T,other,rootC) => {
@@ -3635,7 +3559,7 @@ class ResourceViewer extends Component<Props,State>
       let title,titlElem,otherLabels = [], T_ = _T ;
       _T = [<span class={"T "+_T.toLowerCase()}>
          <span class="RID">{shortUri(other?other:this.props.IRI)}</span>
-         {I18n.t("types."+_T.toLowerCase()+(_T == "Etext"?"_title":""))}
+         {I18n.t("types."+_T.toLowerCase())}
       </span>]
 
       if(kZprop.indexOf(skos+"prefLabel") !== -1)       {
@@ -4037,11 +3961,11 @@ class ResourceViewer extends Component<Props,State>
          */
 
          let show = this.state.collapse[k]
-         if(hasMaxDisplay === -1 && k !== bf+"identifiedBy") show = true ; 
+         //if(hasMaxDisplay === -1 && k !== bf+"identifiedBy") show = true ; 
 
          return (
             <div data-prop={shortUri(k)} class={"has-collapse custom max-"+(maxDisplay)+" "+(n%2===0?"even":"odd") }>
-               <h3><span>{this.proplink(k)}{I18n.t("punc.colon")}</span></h3>
+               <h3><span>{this.proplink(k,null,n)}{I18n.t("punc.colon")}</span></h3>
                <div className={"propCollapseHeader in-"+(this.state.collapse[k]===true)}>
                   {ret.slice(0,maxDisplay)}
                   { (false || (!this.state.collapse[k] && hasMaxDisplay !== -1) ) && <span
@@ -4081,7 +4005,7 @@ class ResourceViewer extends Component<Props,State>
       else {
          return (
             <div  data-prop={shortUri(k)} {...(k===bdo+"note"?{class:"has-collapse custom"}:{})}>               
-               <h3><span>{this.proplink(k)}{I18n.t("punc.colon")}</span> </h3>
+               <h3><span>{this.proplink(k,null,n)}{I18n.t("punc.colon")}</span> </h3>
                {this.preprop(k,0,n)}
                <div className={k === bdo+"personTeacherOf" || k === bdo + "personStudentOf" ? "propCollapseHeader in-false":"group"}>
                {ret}               
@@ -4136,8 +4060,11 @@ perma_menu(pdfLink,monoVol,fairUse,other)
       if(prov && prov.length) prov = prov[0].value
       if(prov && this.props.dictionary) prov = this.props.dictionary[prov]
       if(prov) prov = prov[skos+"prefLabel"]
+      if(prov && prov.length) prov = prov.filter(e => e.lang === "en" || !e.lang)
       if(prov && prov.length) prov = prov[0].value
       if(prov) prov = prov.replace(/(^\[ *)|( *\]$)/g,"") // CUDL
+      if(prov) prov = prov.replace(/Internet Archives/g,"IA") 
+
       //else prov = ""
 
       let orig = this.getResourceElem(adm+"originalRecord")
@@ -4166,7 +4093,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
       }
    }
 
-   //console.log("same",same)
+   console.log("same",same)
 
    // TODO 
    // + fix bdr:G3176 (sameAs Shakya Research Center)
@@ -4239,7 +4166,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
                { isEtextVol && 
                      <a target="_blank" title={I18n.t("resource.version",{format:"TXT"})} rel="alternate" type="text"  download href={this.props.IRI?this.props.IRI.replace(/bdr:/,bdr)+".txt":""}>
-                        <MenuItem>{I18n.t("resource.exportDataAs",{data: I18n.t("types.etext_title"), format:"TXT"})}</MenuItem>
+                        <MenuItem>{I18n.t("resource.exportDataAs",{data: I18n.t("types.etext"), format:"TXT"})}</MenuItem>
                      </a> }
 
                { pdfLink && 
@@ -4257,7 +4184,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                          that.setState({...that.state, collapse:{...this.state.collapse,permaDL:false}, pdfOpen:true,anchorElPdf:ev.currentTarget})
                       }
                    }>
-                   {I18n.t("resource.exportDataAs",{data: "images", format:"PDF/ZIP"}) /* TODO use i18next interpolation with nesting '$t(types.images)'*/ }
+                   {I18n.t("resource.exportDataAs",{data: "images", format:"PDF/ZIP", interpolation: {escapeValue: false}}) /* TODO use i18next interpolation with nesting '$t(types.images)'*/ }
                 </MenuItem></a>  }
 
                { !that.props.manifestError && that.props.imageAsset &&
@@ -4493,7 +4420,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          }
          //loader={<Loader loaded={false} />}
          >
-         { prev!==-1 && <h3 style={{marginBottom:"20px",width:"100%",textAlign:"right"}}><a onClick={(e) => this.props.onGetPages(this.props.IRI,prev)} class="download" style={{fontWeight:700,border:"none",textAlign:"right"}}>Load Previous Pages &lt;</a></h3>}
+         { prev!==-1 && <h3 style={{marginBottom:"20px",width:"100%",textAlign:"right"}}><a onClick={(e) => this.props.onGetPages(this.props.IRI,prev)} class="download" style={{fontWeight:700,border:"none",textAlign:"right"}}>{I18n.t("resource.loadP")} &lt;</a></h3>}
          {/* {this.hasSub(k)?this.subProps(k):tags.map((e)=> [e," "] )} */}
          { elem.map( e => { 
 
@@ -4655,7 +4582,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
             //if(!k.match(new RegExp("Revision|Entry|prefLabel|"+rdf+"|toberemoved"))) {
             if(elem && 
-               (!k.match(new RegExp(adm+"|adm:|isRoot$|SourcePath|"+rdf+"|toberemoved|partIndex|partTreeIndex|legacyOutlineNodeRID|sameAs|thumbnailIIIFService|seeOther|withSameAs"+(this._dontMatchProp?"|"+this._dontMatchProp:"")))
+               (!k.match(new RegExp(adm+"|adm:|isRoot$|SourcePath|"+rdf+"|toberemoved|entityScore|workPagination|partIndex|partTreeIndex|legacyOutlineNodeRID|sameAs|thumbnailIIIFService|instanceOf|instanceReproductionOf|instanceHasReproduction|seeOther|withSameAs"+(this._dontMatchProp?"|"+this._dontMatchProp:"")))
                ||k.match(/(metadataLegal|contentProvider|replaceWith)$/)
                //||k.match(/([/]see|[/]sameAs)[^/]*$/) // quickfix [TODO] test property ancestors
                || (this.props.IRI.match(/^bda:/) && (k.match(new RegExp(adm+"|adm:")))))
@@ -4869,15 +4796,17 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          if(prov && this.props.dictionary) prov = this.props.dictionary[prov]
          if(prov && prov[skos+"prefLabel"]) prov = prov[skos+"prefLabel"]
          else if(prov && prov[rdfs+"label"]) prov = prov[rdfs+"label"]
+         if(prov && prov.length) prov = prov.filter(e => e.lang === "en" || !e.lang)
          if(prov && prov.length) prov = prov[0].value
          if(prov) prov = prov.replace(/(^\[ *)|( *\]$)/g,"") // CUDL
+         if(prov) prov = prov.replace(/Internet Archives/g,"IA") 
          //else prov = ""
 
          let orig = this.getResourceElem(adm+"originalRecord")
          if(orig && orig.length) orig = orig[0].value
          else orig = ""
 
-         //console.log("prov x orig",prov,orig)
+         console.log("prov x orig",prov,orig)
 
          if(prov !== "BDRC" && prov) {
 
@@ -5040,7 +4969,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
                console.log("toggle?",tag,val,x,force,node) 
 
-               if(val === undefined && (!x || node.hasMatch) ) val = true // details of matching nodes + ancestor shown by default when search
+               if(val === undefined && (!x && (!node || !node.notMatch ) || node.hasMatch) ) val = true // details of matching nodes + ancestor shown by default when search
 
                if(force && val && !x) val = false
             }
@@ -5048,7 +4977,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
             console.log("toggle!",tag,val)
 
             this.setState( { collapse:{...this.state.collapse, [tag]:!val } })
-            if((!this.props.outlineKW || force) &&  !x && this.props.outlines && !this.props.outlines[i]) this.props.onGetOutline(i);
+            if((!this.props.outlineKW || force || node && node.notMatch) &&  !x && this.props.outlines && (!this.props.outlines[i] || force && r === i) )this.props.onGetOutline(i);
          }
 
 
@@ -5213,6 +5142,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                                  g.details.push(<div class="sub"><h4 class="first type">{this.proplink(bdo+"instanceOf")}{I18n.t("punc.colon")} </h4>{this.format("h4","instacO","",false, "sub", [{type:"uri",value:fullUri(g.instanceOf)}])}</div>)
                                  let instOf = elem.filter(f => f["@id"] === g.instanceOf)
                                  if(instOf.length && instOf[0]["tmp:labelMatch"]) {
+                                    g.hasMatch = true
                                     let node = instOf[0]["tmp:labelMatch"]
                                     if(!Array.isArray(node)) node = [node]                                    
                                     //console.log("instOf",instOf,node)
@@ -5276,12 +5206,12 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                            tLabel = tLabel[0].toUpperCase() + tLabel.slice(1)
                            // TODO use translation from ontology
                         }
-                        let open = this.state.collapse[tag] || (osearch &&  this.state.collapse[tag] === undefined )
+                        let open = this.state.collapse[tag] || (osearch &&  this.state.collapse[tag] === undefined && !e.notMatch)
                         if(pType && pType["@id"]) pType = pType["@id"]
                         ret.push(<span class={'top'+ (this.state.outlinePart === e['@id'] || (!this.state.outlinePart && this.props.IRI===e['@id']) ?" is-root":"")+(this.state.collapse[tag]||osearch&&e.hasMatch?" on":"") }>
-                              {(e.hasPart && open && osearch && !this.props.outlines[e['@id']]) && <span onClick={(ev) => toggle(ev,root,e["@id"],"",true)} className="xpd">...</span>}
-                              {(e.hasPart && !open && this.props.outlines[e['@id']] !== true) && <ExpandMore onClick={(ev) => toggle(ev,root,e["@id"])} className="xpd"/>}
-                              {(e.hasPart && open && this.props.outlines[e['@id']] !== true) && <ExpandLess onClick={(ev) => toggle(ev,root,e["@id"])} className="xpd"/>}
+                              {(e.hasPart && open && osearch && !this.props.outlines[e['@id']]) && <span onClick={(ev) => toggle(ev,root,e["@id"],"",true)} className="xpd" title={I18n.t("resource.otherN")}><RefreshIcon /></span>}
+                              {(e.hasPart && !open && this.props.outlines[e['@id']] !== true) && <img src="/icons/triangle_.png" onClick={(ev) => toggle(ev,root,e["@id"],"",false,e)} className="xpd"/>}
+                              {(e.hasPart && open && this.props.outlines[e['@id']] !== true) && <img src="/icons/triangle.png" onClick={(ev) => toggle(ev,root,e["@id"],"",false,e)} className="xpd"/>}
                               <span class={"parTy "+(e.details?"on":"")} {...e.details?{title:/*tLabel+" - "+*/ I18n.t("resource."+(this.state.collapse[tag+"-details"]?"hideD":"showD")), onClick:(ev) => toggle(ev,root,e["@id"],"details",false,e)}:{title:tLabel}} >
                                  {pType && parts[pType] ? <div>{parts[pType]}</div> : <div>{parts["?"]}</div> }
                               </span>
@@ -5340,7 +5270,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                if(!loca.search) loca.search = "?"
                else if(loca.search !== "?") loca.search += "&"
 
-               loca.search += "osearch=\""+this.state.outlineKW+"\"@"+lg
+               loca.search += "osearch="+keywordtolucenequery(this.state.outlineKW, lg)+"@"+lg
 
                console.log("loca!",loca)
 
@@ -5420,9 +5350,9 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                <div>
                   <Loader loaded={this.props.loading !== "outline"}/>
                   <div class={"root " +(this.state.outlinePart === root || (!this.state.outlinePart && this.props.IRI===root)?"is-root":"")} >
-                     { (osearch && open /*&& !this.props.outlines[root]*/) && <span onClick={(ev) => toggle(ev,root,root,"",true)} className="xpd">...</span>}
-                     { !open && [<ExpandMore className="xpd" onClick={(e) => toggle(e,root,root)} />,colT,<span onClick={rootClick}>{title}</span>]}
-                     {  open && [<ExpandLess className="xpd" onClick={(e) => toggle(e,root,root)} />,colT,<span onClick={rootClick} class='on'>{title}</span>]}
+                     { (osearch && open && (this.props.outlines[root] && !this.props.outlines[osearch].reloaded)) && <span onClick={(ev) => toggle(ev,root,root,"",true)} className="xpd" title={I18n.t("resource.otherN")}><RefreshIcon /></span>}
+                     { !open && [<img src="/icons/triangle_.png" className="xpd" onClick={(e) => toggle(e,root,root)} />,colT,<span onClick={rootClick}>{title}</span>]}
+                     {  open && [<img src="/icons/triangle.png" className="xpd" onClick={(e) => toggle(e,root,root)} />,colT,<span onClick={rootClick} class='on'>{title}</span>]}
                   </div>
                   { open && <div style={{paddingLeft:"50px"}}>{outline}</div> }
                </div>
@@ -5611,7 +5541,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                   <div>
                      <Link to={"/show/"+s}><div class="header"></div></Link>
                      <div><span {...label.lang?{lang:label.lang}:{}}>{ label.value }</span>{ label.lang && this.tooltip(label.lang) }</div>
-                     <Link to={"/show/"+s}>Read more</Link>
+                     <Link to={"/show/"+s}>{I18n.t("misc.readM")}</Link>
                   </div>
                )
             }
@@ -5660,7 +5590,11 @@ perma_menu(pdfLink,monoVol,fairUse,other)
             if(backTo === withW) { 
                backTo = decodeURIComponent(backTo)
                searchUrl = backTo
-               searchTerm = searchUrl.replace(/.*q=([^&]+).*/,"$1")
+               if(searchUrl.match(/q=/))               
+                  searchTerm = lucenequerytokeyword(searchUrl.replace(/.*q=([^&]+).*/,"$1")) 
+               else if(searchUrl.match(/r=/))               
+                  searchTerm = lucenequerytokeyword(searchUrl.replace(/.*r=([^&]+).*/,"$1")) 
+
             }
             else { 
                backTo = decodeURIComponent(backTo.replace(new RegExp("(([?])|&)"+withW),"$2"))+"&"+withW
@@ -5733,7 +5667,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                      ev.stopPropagation();
                      return false
                   }}
-                  ><img src="/icons/FILARIANE.svg" /><span>{I18n.t("topbar.results")} {searchTerm}</span></Link>
+                  ><img src="/icons/FILARIANE.svg" /><span>{I18n.t("topbar.results")} <span>{searchTerm}</span></span></Link>
                   {this.state.ready && <Loader loaded={!this.props.loading} options={{position:"fixed",left:"50%",top:"50%"}} /> }
                </div> }
                <div class="index">                  
@@ -5755,7 +5689,10 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                   <div class="title">{ wTitle }{ iTitle }{ rTitle }</div>
                   { this.renderHeader(kZprop.filter(k => mapProps.includes(k))) }
                   { etext && <div class="data" id="open-etext"><div><Link to={loca.pathname+loca.search+"#open-viewer"}>{I18n.t("resource.openViewer")}</Link></div></div> }
-                  <div class="data">{title}{inTitle}</div>
+                  <div class={"data" + (_T === "Etext"?" etext-title":"")+(_T === "Images"?" images-title":"")}>
+                     {_T === "Images" && iTitle?[<h2 class="on intro">{I18n.t("resource.scanF")}</h2>,iTitle]:(_T === "Etext" && iTitle?[<h2 class="on intro">{I18n.t("resource.etextF")}</h2>,iTitle]:title)}
+                     {inTitle}
+                  </div>
                   { this.renderNoAccess(fairUse) }
                   { this.renderAccess() }
                   { this.renderMirador(isMirador) }           
@@ -5790,6 +5727,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                   { theDataExt }
                </div>
             </div>
+            {/* <Footer locale={this.props.locale}/> */}
          </div>,
          <LanguageSidePaneContainer />]
 
