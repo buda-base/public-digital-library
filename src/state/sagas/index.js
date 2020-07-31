@@ -50,6 +50,8 @@ let sameAsR = {}
 
 async function initiateApp(params,iri,myprops) {
    try {
+      loggergen.log("params=",params)
+      loggergen.log("iri=",iri)
       let state = store.getState()
 
       //      loggergen.log("youpla?",prefix)

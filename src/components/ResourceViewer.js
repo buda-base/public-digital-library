@@ -87,6 +87,12 @@ import {svgEtextS,svgInstanceS,svgImageS} from "./icons"
 
 import {keywordtolucenequery,lucenequerytokeyword} from './App';
 
+import logdown from 'logdown'
+
+// for full debug, type this in the console:
+// window.localStorage.debug = 'rv'
+
+const loggergen = new logdown('rv', { markdown: false });
 
 delete L.Icon.Default.prototype._getIconUrl;
 
@@ -751,22 +757,22 @@ class ResourceViewer extends Component<Props,State>
 
       this.state = { uviewer:false, imageLoaded:false, collapse:{}, pdfOpen:false, showAnno:true, errors:{},updates:{},title:{}, anchorEl:{} }
 
-      console.log("props",props)
+      loggergen.log("props",props)
 
       let tmp = {}
       for(let k of Object.keys(propOrder)){ tmp[k] = propOrder[k].map((e) => this.expand(e)) }
-      //console.log("tmp",tmp)
+      //loggergen.log("tmp",tmp)
       propOrder = tmp
 
       window.closeViewer = () => { 
          //delete window.mirador         
 
-         console.log("closeV",this.state,this.props)
+         loggergen.log("closeV",this.state,this.props)
 
          if(this.state.fromSearch) {
             let backTo = this.state.fromSearch
             let withW = backTo.replace(/^.*[?&](w=[^&]+)&?.*$/,"$1")
-            console.log("fromS",this.state.fromSearch,backTo,withW)
+            loggergen.log("fromS",this.state.fromSearch,backTo,withW)
             if(backTo === withW) backTo = decodeURIComponent(backTo)
             else backTo = decodeURIComponent(backTo.replace(new RegExp("(([?])|&)"+withW),"$2"))+"&"+withW
 
@@ -804,7 +810,7 @@ class ResourceViewer extends Component<Props,State>
          s.title = { instance, images }
       }
       
-      //console.log("title:",_T,work,instance,images)
+      //loggergen.log("title:",_T,work,instance,images)
       return s
    
       
@@ -849,7 +855,7 @@ class ResourceViewer extends Component<Props,State>
          if(props.langPreset) { 
             langP = props.langPreset.map(p => p.replace(/^.*?(ewts|iast|pinyin)?$/,"$1")).filter(e => e)
             langDetect = langDetect.map(d => ({d,i:(i=langP.indexOf(d))!==-1?i:99}))
-            console.log("langP",langDetect,langP,props.langPreset)         
+            loggergen.log("langP",langDetect,langP,props.langPreset)         
             langDetect = _.orderBy(langDetect, ["i","d"],["asc","asc"]).map(v => v.d)
          }
          s = { ...s, langPreset:props.langPreset, repage:true, langDetect }
@@ -873,34 +879,12 @@ class ResourceViewer extends Component<Props,State>
             instance = getElem(bdo+"instanceReproductionOf",props.IRI),
             images = getElem(bdo+"instanceHasReproduction",props.IRI)
 
-
-         if(state.outlinePart) { 
-            work = getElem(bdo+"contentLocation",props.IRI)
-            if(work && work.length) { 
-               work = work[0].value
-               work = getElem(bdo+"contentLocationInstance",props.IRI,null,work)
-               if(work && work.length) { 
-                  work = work[0].value
-                  if(props.assocResources && props.assocResources[work])  work = getElem(bdo+"instanceOf",work,props.assocResources)
-                  else work = null
-               }
-            }
-            else { 
-               work = getElem(bdo+"inRootInstance",props.IRI)  
-               if(work && work.length) { 
-                  work = work[0].value
-                  if(props.assocResources && props.assocResources[work])  work = getElem(bdo+"instanceOf",work,props.assocResources)
-                  else work = null
-               }
-            }
-         }
-
          // TODO find a way to keep an existing Etext/Images tab
          //if(images) images = images.filter(e => getEntiType(e.value) === "Images")
 
          let _T = getEntiType(props.IRI)
 
-         //console.log("title!",_T,JSON.stringify(state.title,null,3),JSON.stringify(work,null,3),JSON.stringify(instance,null,3),JSON.stringify(images,null,3))
+         //loggergen.log("title!",_T,JSON.stringify(state.title,null,3),JSON.stringify(work,null,3),JSON.stringify(instance,null,3),JSON.stringify(images,null,3))
 
          
          if(_T === "Etext") {            
@@ -944,7 +928,7 @@ class ResourceViewer extends Component<Props,State>
                s.title = { work:[ { type:"uri", value:fullUri(props.IRI) } ] }   
                let has = getElem(bdo+"workHasInstance",props.IRI)
                
-               //console.log("has!",has)
+               //loggergen.log("has!",has)
 
                // take a guess using ids [TODO add instance type to query]
                if(has && has.length <= 2) {
@@ -965,7 +949,7 @@ class ResourceViewer extends Component<Props,State>
                if(has && !instance && (instance=has.filter(e => props.resources[shortUri(e.value)])).length) { 
                   s.title.instance = instance                            
                   images = getElem(bdo+"instanceHasReproduction",shortUri(instance[0].value))
-                  console.log("has!i",instance[0].value,images)
+                  loggergen.log("has!i",instance[0].value,images)
                   if(images) s.title.images = images.filter(e => getEntiType(e.value) === "Images")
                }
                */
@@ -976,7 +960,7 @@ class ResourceViewer extends Component<Props,State>
             s.title = { work:[ { type:"uri", value:fullUri(props.IRI) } ] }
          }
 
-         //console.log("title?",JSON.stringify(state.title,null,3),JSON.stringify(s?s.title:state.title,null,3),props.IRI,_T)
+         //loggergen.log("title?",JSON.stringify(state.title,null,3),JSON.stringify(s?s.title:state.title,null,3),props.IRI,_T)
       }
 
       if(props.IRI && props.resources && props.resources[props.IRI]) {
@@ -991,7 +975,7 @@ class ResourceViewer extends Component<Props,State>
 /*
    componentWillMount()
    {
-      console.log("mount")
+      loggergen.log("mount")
 
       if(!this.state.ready && this.props.IRI && this.props.resources && this.props.resources[this.props.IRI] )
       {
@@ -1011,7 +995,7 @@ class ResourceViewer extends Component<Props,State>
 */
    componentWillUpdate(newProps,newState)
    {
-      //console.log("stateU",this.state,newState,newProps)
+      //loggergen.log("stateU",this.state,newState,newProps)
 
 
       if(newState.annoPane && !newProps.annoCollec)
@@ -1036,7 +1020,7 @@ class ResourceViewer extends Component<Props,State>
       if(etext && etext.filter(e=> e.value.startsWith(bdo+"Etext")).length) etext = true
       else etext = false
 
-      console.log("isEt?",etext)
+      loggergen.log("isEt?",etext)
 
       return etext
    }
@@ -1046,7 +1030,7 @@ class ResourceViewer extends Component<Props,State>
       // TODO scroll to top when IRI changed (and not on collapse open/close)
       // window.scrollTo(0, 0)
 
-      console.log("histo?",JSON.stringify(history.location),this.state.openEtext)
+      loggergen.log("histo?",JSON.stringify(history.location),this.state.openEtext)
 
       if(!history) return
 
@@ -1059,7 +1043,7 @@ class ResourceViewer extends Component<Props,State>
             let timerViewer = setInterval(() => {
                
                let etext = this.isEtext()
-               console.log("etxt?",etext)
+               loggergen.log("etxt?",etext)
 
                if(!etext && this.props.imageAsset && this.props.firstImage && !this.state.openMirador) {
                   clearInterval(timerViewer)
@@ -1125,7 +1109,7 @@ class ResourceViewer extends Component<Props,State>
          s.outlinePart = false
          clear = true
       }
-      
+      loggergen.log("outlinePart: ", s?s.outlinePart:"no s")
       if(clear) {
          let collapse = { ...s.collapse }
          Object.keys(collapse).filter(k => k.startsWith("outline-")).map(k => { delete collapse[k]; })
@@ -1144,7 +1128,7 @@ class ResourceViewer extends Component<Props,State>
       // TODO
       // - expand '...' node already open by search
 
-      console.log("update!!",s)
+      loggergen.log("update!!",s)
 
 
       let loca = { ...this.props.history.location }
@@ -1153,7 +1137,7 @@ class ResourceViewer extends Component<Props,State>
       if (hash && hash.length && hash === "open-viewer") {
 
          let etext = this.isEtext()
-         console.log("etxt?",etext)
+         loggergen.log("etxt?",etext)
 
          if(!etext && this.props.imageAsset && this.props.firstImage && !this.state.openMirador) {
             this.showMirador()   
@@ -1177,7 +1161,7 @@ class ResourceViewer extends Component<Props,State>
    
    componentDidMount()
    {
-      console.log("mount!!")
+      loggergen.log("mount!!")
       
       window.addEventListener('popstate', this.onBackButtonEvent);  
 
@@ -1196,7 +1180,7 @@ class ResourceViewer extends Component<Props,State>
          
          if(!timerScr) timerScr = setInterval( () => {
             const el = document.querySelector("#outline")
-            console.log("seTi?",el)
+            loggergen.log("seTi?",el)
             if(el) { 
                el.scrollIntoView()      
                clearInterval(timerScr)
@@ -1237,7 +1221,7 @@ class ResourceViewer extends Component<Props,State>
       for(let p of Object.values(prefixes)) { str = str.replace(new RegExp(p,"g"),"") }
       //str = shortUri(str);
 
-      //console.log("pretty",str)
+      //loggergen.log("pretty",str)
 
       //if(stripuri) {
 
@@ -1267,7 +1251,7 @@ class ResourceViewer extends Component<Props,State>
       let w = prop[bdo+"dimWidth"]
       let h = prop[bdo+"dimHeight"]
 
-      //console.log("propZ",prop,sorted)
+      //loggergen.log("propZ",prop,sorted)
 
       if(w && h && w[0] && h[0] && !w[0].value.match(/cm/) && !h[0].value.match(/cm/)) {
          prop[tmp+"dimensions"] = [ {type: "literal", value: w[0].value+"×"+h[0].value+"cm" } ]
@@ -1281,7 +1265,7 @@ class ResourceViewer extends Component<Props,State>
          prop[bdo+"dimHeight"] = [ { ...h[0], value:h[0].value+"cm" } ]
       }
 
-      //console.log("w h",w,h,prop)
+      //loggergen.log("w h",w,h,prop)
 
       //prop["bdr:workDimensions"] =
 
@@ -1387,13 +1371,13 @@ class ResourceViewer extends Component<Props,State>
                   let lang
                   valSort = valSort.map(v => ({...v,type:'bnode'})).map(w => w.type!=='bnode'||!assoR[w.value]?w:{...w,'bnode':w.value,'k':!assoR[w.value]||!assoR[w.value][rdf+"type"]?"":assoR[w.value][rdf+"type"].reduce( (acc,e) => {
                      let p = this.props.dictionary[e.value]
-                     //console.log("p?",p)
+                     //loggergen.log("p?",p)
                      if(p) p = p[rdfs+"subClassOf"]
                      if(p) p = p.filter(f => f.value === bdo+tagEnd[0].toUpperCase()+tagEnd.substring(1)).length
                      if(p) return e.value + ";" + acc  
                      else return acc+e.value+";"
                   },"") + ((lang = getLangLabel(this, "", assoR[w.value][rdfs+"label"]))&&lang.lang?lang.lang+";"+lang.value:"") })
-                  //console.log("valsort",assoR,valSort)
+                  //loggergen.log("valsort",assoR,valSort)
                   valSort = _.orderBy(valSort,['k'],['asc']).map(e => ({'type':'bnode','k':e.k,'value':e.bnode,'sorted':true, ...e.fromEvent?{fromEvent:e.fromEvent}:{}, ...e.fromSameAs?{fromSameAs:e.fromSameAs}:{}}))               
                }
             }
@@ -1446,7 +1430,7 @@ class ResourceViewer extends Component<Props,State>
                      if(w.type!=='bnode'||!assoR[w.value]) return w
                      else return { ...w, d, n, k, bnode:w.value }
                   })
-                  //console.log("valsort",assoR,valSort)
+                  //loggergen.log("valsort",assoR,valSort)
                   valSort = _.orderBy(valSort,['fromEvent','n', 'd', 'k'],['asc']).map(e => ({'type':'bnode','n':e.n,'k':e.k,'d':e.d,'value':e.bnode,'sorted':true, ...e.fromEvent?{fromEvent:e.fromEvent}:{}, ...e.fromSameAs?{fromSameAs:e.fromSameAs}:{}}))               
                }
             }
@@ -1464,7 +1448,7 @@ class ResourceViewer extends Component<Props,State>
          {
             expr = prop[xp]
 
-            //console.log("xp",xp,expr)
+            //loggergen.log("xp",xp,expr)
 
             if(expr) {
 
@@ -1473,7 +1457,7 @@ class ResourceViewer extends Component<Props,State>
 
                   expr = expr.map((e) => {
 
-                     //console.log("index",e) //,assoR[e.value])
+                     //loggergen.log("index",e) //,assoR[e.value])
                      
                      // TODO use language dedicated sort ?
                      let label1 = "zzz" + shortUri(e.value), label2 = "" ;
@@ -1483,7 +1467,7 @@ class ResourceViewer extends Component<Props,State>
                         if(label1 && label1.value) label1 = label1.value
                         if(!label1) label1 = "z" + shortUri(e.value)
 
-                        //console.log("index",e,assoR[e.value])
+                        //loggergen.log("index",e,assoR[e.value])
                         if(assoR[e.value])
                         {
                            let root = assoR[e.value].filter(e => e.type === bdo+"inRootInstance")
@@ -1499,9 +1483,9 @@ class ResourceViewer extends Component<Props,State>
 
                   prop[xp] = _.orderBy(expr,['label1','label2'])
 
-                  //console.log("expr",expr,prop[xp]);
+                  //loggergen.log("expr",expr,prop[xp]);
 
-                  //for(let o of prop[bdo+"workHasExpression"]) console.log("xp",o.value,o.label1)
+                  //for(let o of prop[bdo+"workHasExpression"]) loggergen.log("xp",o.value,o.label1)
 
                }
             }
@@ -1529,7 +1513,7 @@ class ResourceViewer extends Component<Props,State>
          expr = prop[bdo+"workHasTranslation"]
          if(expr !== undefined) {
 
-            //console.log("hasDerivCa",expr)
+            //loggergen.log("hasDerivCa",expr)
 
             let assoR = this.props.assocResources
             if (assoR) {
@@ -1539,7 +1523,7 @@ class ResourceViewer extends Component<Props,State>
                   let lang = assoR[e.value],langLab
                   if(lang) lang = lang.filter(l => l.type === bdo+"workLangScript" || l.type === tmp+"language"|| l.type === bdo+"language")                  
 
-                  //console.log("cano",lang,assoR[e.value],e.value)
+                  //loggergen.log("cano",lang,assoR[e.value],e.value)
 
                   if(lang && lang.length) { 
                      lang = lang[0].value.replace(/[/]Lang/,"/")                  
@@ -1597,7 +1581,7 @@ class ResourceViewer extends Component<Props,State>
          {
             let that = this ;
 
-            //console.log("sort",prop,propOrder[t])
+            //loggergen.log("sort",prop,propOrder[t])
 
             let sortProp = Object.keys(prop).map(e => {
                let index = propOrder[t].indexOf(e)
@@ -1606,12 +1590,12 @@ class ResourceViewer extends Component<Props,State>
             })
             sortProp = _.orderBy(sortProp,['index','value'],['asc','asc'])
 
-            //console.log("sortProp",sortProp)
+            //loggergen.log("sortProp",sortProp)
 
             /*Object.keys(prop).sort((a,b)=> {
                let ia = propOrder[t].indexOf(a)
                let ib = propOrder[t].indexOf(b)
-               //console.log(t,a,ia,b,ib)
+               //loggergen.log(t,a,ia,b,ib)
                if ((ia != -1 && ib != -1 && ia < ib) || (ia != -1 && ib == -1)) return -1
                else if(ia == -1 && ib == -1) return (a < b ? -1 : (a == b ? 0 : -1))
                else return 1 ;
@@ -1621,10 +1605,10 @@ class ResourceViewer extends Component<Props,State>
 
                if(e.value === bdo+"eTextHasChunk") return { ...acc, [e.value]:prop[e.value]}
 
-               //console.log("sorting",e,prop[e])
+               //loggergen.log("sorting",e,prop[e])
 
                if(customSort.indexOf(e.value) !== -1) {
-                  //console.log("skip sort parts",prop[e][0],prop[e])
+                  //loggergen.log("skip sort parts",prop[e][0],prop[e])
                   return { ...acc, [e.value]:prop[e.value] }
                }
 
@@ -1635,7 +1619,7 @@ class ResourceViewer extends Component<Props,State>
                   if(a.type == "bnode" && a.value) a = that.getResourceBNode(a.value)
                   if(b.type == "bnode" && b.value) b = that.getResourceBNode(b.value)
 
-                  //console.log("A,B",A,B,a,b)
+                  //loggergen.log("A,B",A,B,a,b)
 
                   
                   if(a && !a["value"] && a[rdfs+"label"] && a[rdfs+"label"][0]) a = a[rdfs+"label"][0]
@@ -1650,7 +1634,7 @@ class ResourceViewer extends Component<Props,State>
                   else if(b && b["type"] == "uri") b = b["value"]
                   else b = null
 
-                  //console.log("a,b",a,b)
+                  //loggergen.log("a,b",a,b)
 
                   if( a && b ) {
                      let _a = shortUri(a) ;
@@ -1665,7 +1649,7 @@ class ResourceViewer extends Component<Props,State>
                }) })},{})
 
 
-            //console.log("propSort",prop,sortProp)
+            //loggergen.log("propSort",prop,sortProp)
 
             this._properties = prop ;
             return sortProp
@@ -1689,7 +1673,7 @@ class ResourceViewer extends Component<Props,State>
          else return this.pretty(trad,isUrl,noNewline)
       }
 
-      //console.log("full",prop)
+      //loggergen.log("full",prop)
 
       /*
       if(this.props.ontology[prop] && this.props.ontology[prop][rdfs+"label"])
@@ -1744,7 +1728,7 @@ class ResourceViewer extends Component<Props,State>
    {
      let enti = getEntiType(this.props.IRI)
 
-     console.log("showAssoc e k",e,k);
+     loggergen.log("showAssoc e k",e,k);
 
      if(this.props.dictionary[k] && this.props.dictionary[k][bdo+"inferSubTree"]) return
 
@@ -1752,7 +1736,7 @@ class ResourceViewer extends Component<Props,State>
       let vals = [], n=0;
       for(let v of Object.keys(this.props.resources[this.props.IRI+"@"][e]))
       {
-        // console.log("v",v);
+        // loggergen.log("v",v);
 
          let infoBase = this.props.resources[this.props.IRI+"@"][e][v]
          let info = infoBase.filter((e)=>(enti == "Topic" || e.type == k)) // || e.value == bdr+this.props.IRI))
@@ -1764,7 +1748,7 @@ class ResourceViewer extends Component<Props,State>
           */
            info = getLangLabel(this, "",  infoBase.filter((e)=>(e.type == skos+"prefLabel")))
 
-           //console.log("infoB",info)
+           //loggergen.log("infoB",info)
            if(info && info[0] && n <= 10) vals.push(<h4><Link className="urilink prefLabel" to={"/show/bdr:"+this.pretty(v,true)}>{info[0].value}</Link></h4>)
            else if(n == 11) vals.push("...")
            n ++
@@ -1786,7 +1770,7 @@ class ResourceViewer extends Component<Props,State>
 
    hasSuper(k:string)
    {
-      //console.log("sup",k)
+      //loggergen.log("sup",k)
 
       if(!this.props.dictionary || !this.props.dictionary[k] || (!this.props.dictionary[k][rdfs+"subPropertyOf"] && !this.props.dictionary[k][rdfs+"subClassOf"]))
       {
@@ -1799,7 +1783,7 @@ class ResourceViewer extends Component<Props,State>
          {
             let e = tmp[0]
 
-            //console.log("super e",e.value) //tmp,k,e.value,e, this.props.ontology[k], this.props.ontology[e.value])
+            //loggergen.log("super e",e.value) //tmp,k,e.value,e, this.props.ontology[k], this.props.ontology[e.value])
 
             if(this.props.dictionary[e.value][rdfs+"subPropertyOf"])
                tmp = tmp.concat(this.props.dictionary[e.value][rdfs+"subPropertyOf"].map(f => f))
@@ -1827,7 +1811,7 @@ class ResourceViewer extends Component<Props,State>
    subProps(k:string,div:string="sub")
    {
 
-      //console.log("subP",div,k)
+      //loggergen.log("subP",div,k)
 
       let ret = []
       if(this.props.IRI && this.props.resources[this.props.IRI] && this.props.resources[this.props.IRI][this.expand(this.props.IRI)]) {
@@ -1853,7 +1837,7 @@ class ResourceViewer extends Component<Props,State>
             return {"val":q, numK,alphaK}
          })
          subKeys = _.orderBy(subKeys,['numK','alphaK','val'])
-         //console.log("subK",k,JSON.stringify(subKeys,null,3))
+         //loggergen.log("subK",k,JSON.stringify(subKeys,null,3))
          subKeys = subKeys.map(q => q.val)
          
 
@@ -1863,7 +1847,7 @@ class ResourceViewer extends Component<Props,State>
             if(this.props.dictionary[p] && this.props.dictionary[p][rdfs+"subPropertyOf"]
                && this.props.dictionary[p][rdfs+"subPropertyOf"].filter((e)=>(e.value == k)).length > 0)
             {
-               //console.log("p",p)
+               //loggergen.log("p",p)
 
                let tmp = this.subProps(p,div+"sub")
                let vals, grandPa = []
@@ -1895,7 +1879,7 @@ class ResourceViewer extends Component<Props,State>
       if(!info) info = [ getLangLabel(this, prop, infoBase.filter((e)=>((e["xml:lang"] || e["lang"] || e.fromKey && e.fromKey === foaf+"name")))) ]                        
       if(!info) info = [ getLangLabel(this, prop, infoBase.filter((e)=>((e["xml:lang"] || e["lang"]) && e.type==prop))) ]
 
-      //console.log("info?",prop,infoBase,info)
+      //loggergen.log("info?",prop,infoBase,info)
 
       //if(info.value) info = info.value
 
@@ -1909,7 +1893,7 @@ class ResourceViewer extends Component<Props,State>
          
          info = [ getLangLabel(this, prop, infoBase) ]
 
-         //console.log("info?",info)
+         //loggergen.log("info?",info)
 
          if(info && info[0] &&  !info[0].datatype) {
             lang = info[0]["xml:lang"]
@@ -1933,7 +1917,7 @@ class ResourceViewer extends Component<Props,State>
                else info = null
                if(infoBase[0].type && (infoBase[0].type == bdo+"volumeNumber" || infoBase[0].fromKey == bdo+"volumeNumber")) info = I18n.t("types.volume_num",{num:infoBase[0].value}) ;
                else if(info && info.match(/purl[.]bdrc/)) info = null
-               //console.log("info0",info)
+               //loggergen.log("info0",info)
             }
          }
       }
@@ -1949,7 +1933,7 @@ class ResourceViewer extends Component<Props,State>
          if(provLab) provLab = provLab[skos+"prefLabel"]
          if(provLab && provLab.length) provLab = provLab[0].value 
          
-         console.log("isExtW",isExtW,this.props.dictionary,provLab)
+         loggergen.log("isExtW",isExtW,this.props.dictionary,provLab)
 
          if(provLab === "GRETIL") sameAsPrefix += "gretil provider hasIcon "
          else if(provLab === "EAP") sameAsPrefix += "eap provider hasIcon "
@@ -1971,7 +1955,7 @@ class ResourceViewer extends Component<Props,State>
    {
       if(elem) {
 
-         //console.log("uriformat",prop,elem.value,elem,dic,withProp,show)
+         //loggergen.log("uriformat",prop,elem.value,elem,dic,withProp,show)
          
          if(!elem.value.match(/^http:\/\/purl\.bdrc\.io/) /* && !hasExtPref */ && ((!dic || !dic[elem.value]) && !prop.match(/[/#]sameAs/))) {
             let link = elem.value
@@ -1999,18 +1983,18 @@ class ResourceViewer extends Component<Props,State>
 
          if(!infoBase || !infoBase.length)  {
             if(this.props.dictionary) infoBase = this.props.dictionary[elem.value]
-            //console.log("ib",infoBase,dico)
+            //loggergen.log("ib",infoBase,dico)
             if(infoBase) infoBase = infoBase[skos+"prefLabel"]
          }
 
-         //console.log("base:",JSON.stringify(infoBase,null,3))
+         //loggergen.log("base:",JSON.stringify(infoBase,null,3))
 
          if(infoBase) {
             let { _info, _lang } = this.getInfo(prop,infoBase,withProp) 
             info = _info
             lang = _lang
 
-            //console.log("info!",info)
+            //loggergen.log("info!",info)
 
             if(!info) info = shortUri(elem.value)
          }
@@ -2030,13 +2014,13 @@ class ResourceViewer extends Component<Props,State>
          if(elem && elem.value && elem.value === bda+"LD_EAP_metadata") { prefix = "eap"; sameAsPrefix = "eap hasIcon provider" ; }
          else if(elem && elem.value && elem.value === bda+"LD_NGMPP_Metadata") { prefix = "ngmpp"; sameAsPrefix = "ngmpp hasIcon provider" ; }
 
-         //console.log("s?",prop,prefix,sameAsPrefix,pretty,elem,info,infoBase)         
+         //loggergen.log("s?",prop,prefix,sameAsPrefix,pretty,elem,info,infoBase)         
 
          let thumb
          if(prop === bdo+"workHasInstance"  || prop === tmp+"propHasScans" || prop === tmp+"propHasEtext" ) {
             if(!info) info = [] 
             let enti = getEntiType(elem.value)
-            console.log("enti:",enti,elem.value)
+            loggergen.log("enti:",enti,elem.value)
             if(enti === "Etext") ret = [<span class="svg">{svgEtextS}</span>]
             else if(enti === "Instance") ret = [<span class="svg">{svgInstanceS}</span>]
             else if(enti === "Images") { 
@@ -2048,7 +2032,7 @@ class ResourceViewer extends Component<Props,State>
                else {
                   let thumb =  this.props.resources[elem.value]
                   if(thumb)   {
-                     console.log("thumb?",elem,thumb)
+                     loggergen.log("thumb?",elem,thumb)
                   }
                }
                */
@@ -2059,21 +2043,21 @@ class ResourceViewer extends Component<Props,State>
          if((info && infoBase && infoBase.filter(e=>e["xml:lang"]||e["lang"]).length >= 0) || (prop && prop.match && prop.match(/[/#]sameAs/))) {
 
 
-            // console.log("svg?",svgImageS)
+            // loggergen.log("svg?",svgImageS)
 
 
             let link,orec,canUrl;
             if(this.props.assocResources && this.props.assocResources[elem.value]) {
                orec = this.props.assocResources[elem.value].filter(r => r.type === adm+"originalRecord" || r.fromKey === adm+"originalRecord")
                canUrl = this.props.assocResources[elem.value].filter(r => r.type === adm+"canonicalHtml" ||  r.fromKey === adm+"canonicalHtml")
-               //console.log("orec",prop,sameAsPrefix,orec,canUrl, this.props.assocResources[elem.value])
+               //loggergen.log("orec",prop,sameAsPrefix,orec,canUrl, this.props.assocResources[elem.value])
             }
             if(prefix !== "bdr" && (!canUrl || !canUrl.length)) canUrl = [ { value : elem.value } ]
 
             let srcProv = sameAsPrefix.replace(/^.*?([^ ]+) provider .*$/,"$1").toLowerCase()
             let srcSame = sameAsPrefix.replace(/^.*?([^ ]+) sameAs .*$/,"$1").toLowerCase()
             
-            //console.log("src:",src,srcProv,srcSame)
+            //loggergen.log("src:",src,srcProv,srcSame)
             
             //if(src.match(/bdr/)) src = "bdr"
 
@@ -2085,7 +2069,7 @@ class ResourceViewer extends Component<Props,State>
             if(sameBDRC && sameBDRC.length && sameBDRC[0].value) sameBDRC = sameBDRC[0].value
             else sameBDRC = null
 
-            //console.log("sameBDRC",sameBDRC)
+            //loggergen.log("sameBDRC",sameBDRC)
 
             if(!elem.value.match(/[.]bdrc[.]/)) { 
                if(orec && orec.length) link = <a class="urilink prefLabel no-bdrc" href={orec[0].value} target="_blank">{info}<Tooltip placement="bottom-end" title={<span>See on <b>{providers[prefix]}</b></span>}><img src="/icons/link-out.svg"/></Tooltip></a>
@@ -2110,7 +2094,7 @@ class ResourceViewer extends Component<Props,State>
                /* // deprecated
                let pI 
                if(dic && dic[elem.value]) pI = dic[elem.value] 
-               //console.log("pretty?",pretty,elem.value,infoBase,pI)
+               //loggergen.log("pretty?",pretty,elem.value,infoBase,pI)
                if(uri.match(/^bdr:MW[^_]+_[^_]+$/) || pI && pI[bdo+"partIndex"] && pI[bdo+"partIndex"].length || pI && pI.filter && pI.filter(i => i.type === bdo+"partIndex").length) { 
                */
 
@@ -2132,7 +2116,7 @@ class ResourceViewer extends Component<Props,State>
                            let part = elem.url.replace(/.*\?part=/,"")
                            let root = elem.url.replace(/\?part=.*/,"")
 
-                           console.log("furi?",root,part)
+                           loggergen.log("furi?",root,part)
 
                            let collapse = { ...this.state.collapse }
                            if(this.props.outlineKW) collapse[elem.inOutline] = (collapse[elem.inOutline] === undefined ? false : !collapse[elem.inOutline])
@@ -2184,7 +2168,7 @@ class ResourceViewer extends Component<Props,State>
                if(elem.fromSameAs) srcList = [ elem.fromSameAs ]
                if(elem.allSameAs)  srcList = elem.allSameAs 
                
-               //console.log("srcL",srcList)
+               //loggergen.log("srcL",srcList)
 
                let uriPrefix 
                for(let p of Object.keys(prefixes)) if(this.props.keyword && this.props.keyword.match(new RegExp("^"+p))) { uriPrefix = p ; break ; }
@@ -2197,7 +2181,7 @@ class ResourceViewer extends Component<Props,State>
 
                   if(srcPrefix) srcPrefixList.push(srcPrefix);
 
-                  //console.log("srcP",srcPrefix,srcUri)
+                  //loggergen.log("srcP",srcPrefix,srcUri)
 
                   if(srcPrefix !== "bdr") locaLink = <a class="urilink" href={getRealUrl(this,srcUri)} target="_blank"></a>
                   else locaLink = <Link to={"/"+show+"/"+shortUri(srcUri)}></Link>
@@ -2285,7 +2269,7 @@ class ResourceViewer extends Component<Props,State>
 
    tooltip(lang:string)
    {
-      //console.log("transL/",lang,languages[lang],languages)
+      //loggergen.log("transL/",lang,languages[lang],languages)
       return lang?<Tooltip placement="bottom-end" title={
          <div style={{margin:"10px"}}>
             {I18n.t(languages[lang]?languages[lang].replace(/search/,"tip"):lang)}
@@ -2324,7 +2308,7 @@ class ResourceViewer extends Component<Props,State>
 
       }
 
-      //console.log("gR",prop,IRI,elem)
+      //loggergen.log("gR",prop,IRI,elem)
 
       return elem
    }
@@ -2359,7 +2343,7 @@ class ResourceViewer extends Component<Props,State>
       let befo = [], bdrcData = null
 
       if(e.fromSameAs ) { 
-         //console.log("e.f",e.fromSameAs)
+         //loggergen.log("e.f",e.fromSameAs)
 
          bdrcData = <Link className="hoverlink" to={"/show/"+shortUri(e.fromSameAs)}></Link>               
          let src ;
@@ -2396,7 +2380,7 @@ class ResourceViewer extends Component<Props,State>
    {
       let ID = "ID-"+prop+"-"+(e&&e.value?e.value:e)
       
-      //console.log("hover?",e,ID,prop)
+      //loggergen.log("hover?",e,ID,prop)
 
       if(!e) return;
 
@@ -2439,7 +2423,7 @@ class ResourceViewer extends Component<Props,State>
          }
       }
 
-      //console.log("data",lang,data,other)                  
+      //loggergen.log("data",lang,data,other)                  
 
       let loca = { ...this.props.history.location }
       if(e.start !== undefined) { 
@@ -2561,7 +2545,7 @@ class ResourceViewer extends Component<Props,State>
 
          //div = div +"sub"
 
-         //console.log("?bnode",elem)
+         //loggergen.log("?bnode",elem)
 
          //return this.format(Tag,prop,txt,false,div)
 
@@ -2577,7 +2561,7 @@ class ResourceViewer extends Component<Props,State>
       else {
          elem = this.getResourceElem(prop)
 
-         //console.log("?normal",elem)
+         //loggergen.log("?normal",elem)
       }
 
       /*
@@ -2590,14 +2574,14 @@ class ResourceViewer extends Component<Props,State>
       })
       */
 
-      //console.log("format",Tag, prop,JSON.stringify(elem,null,3),txt,bnode,div);
+      //loggergen.log("format",Tag, prop,JSON.stringify(elem,null,3),txt,bnode,div);
 
       let ret = [],pre = []
       let note = []
 
       if(elem && !Array.isArray(elem)) elem = [ elem ]
 
-      //console.log("elem", elem)
+      //loggergen.log("elem", elem)
 
       let nbN = 1, T, lastT
 
@@ -2611,7 +2595,7 @@ class ResourceViewer extends Component<Props,State>
 
          if(prop === bdo+"workHasInstance" && e.value && e.value.match(new RegExp(bdr+"W"))) continue ;
 
-         //console.log("iK",iKeep,e,elem,elem.length)
+         //loggergen.log("iK",iKeep,e,elem,elem.length)
 
          let value = ""+e
          if(e.value || e.value === "") value = e.value
@@ -2621,14 +2605,14 @@ class ResourceViewer extends Component<Props,State>
 
          if(value === bdr+"LanguageTaxonomy") continue ;
 
-         //console.log("e",e,pretty,value)
+         //loggergen.log("e",e,pretty,value)
 
          //if(this.props.assocResources && this.props.assocResources[value] && this.props.assocResources[value][0] && this.props.assocResources[value][0].fromKey && !prop.match(/[/#]sameAs/) ) 
          if(this.props.resources && this.props.resources[this.props.IRI] && this.props.resources[this.props.IRI][value] && !prop.match(/[/#]sameAs/) ) 
          { 
             e.type = "bnode" 
 
-            //console.log("aRes",this.props.assocResources[value])
+            //loggergen.log("aRes",this.props.assocResources[value])
          }
 
 
@@ -2678,7 +2662,7 @@ class ResourceViewer extends Component<Props,State>
                let col = "score1";
                if(e.score && Number(e.score) < 0) col = "score0"
 
-               console.log("hasAnno",e,this.state.showAnno);
+               loggergen.log("hasAnno",e,this.state.showAnno);
 
                if(((!this.state.showAnno || this.state.showAnno == true || this.state.showAnno == e.collecId)) && (!this.state.viewAnno || this.state.viewAnno == e.collapseId)) {
                   viewAnno = true ;
@@ -2727,7 +2711,7 @@ class ResourceViewer extends Component<Props,State>
                if(root) root = root.filter(e => e.type == bdo+"inRootInstance")
                if(root && root.length > 0) tmp = [<span style={{marginRight:"-30px",display:"inline"}}>{tmp}</span>, " ", <span class="over-in"><span class="in">in</span>{this.uriformat(bdo+"inRootInstance",root[0])}</span>]
 
-               //console.log("root",root)
+               //loggergen.log("root",root)
             }
             /*
             else if(this.props.assocResources && prop.match(/[/]workhasTranslation[^/]*$/))  {
@@ -2753,7 +2737,7 @@ class ResourceViewer extends Component<Props,State>
                   let ori = elem.filter(e => e.type == bdo+"originalRecord")
                   let lab = elem.filter(e => e.type == bdo+"contentProvider")
 
-                  //console.log("ori,lab",ori,lab)
+                  //loggergen.log("ori,lab",ori,lab)
 
                   if(ori.length > 0 && lab.length > 0) tmp = [tmp," at ",<a href={ori[0].value} target="_blank">{lab[0].value}</a>]
                }
@@ -2772,7 +2756,7 @@ class ResourceViewer extends Component<Props,State>
             )
             */
 
-            //console.log("newAnno?",tmp,this._plink)
+            //loggergen.log("newAnno?",tmp,this._plink)
 
             let annoB = <ChatIcon className="annoticon"  onClick={
                (function(val,prop,v,ev){
@@ -2789,10 +2773,10 @@ class ResourceViewer extends Component<Props,State>
             //if(grandPa !== undefined) grandPa.push(sav)
 
 
-               //(function(ev,prop,val){return function(){ console.log("new",ev,prop,val) }})(event,this._plink,tmp)
+               //(function(ev,prop,val){return function(){ loggergen.log("new",ev,prop,val) }})(event,this._plink,tmp)
                /*
                (ev,prop,val) => {
-               console.log("new")
+               loggergen.log("new")
                this.setState({...this.state,annoPane:true,newAnno:{prop:this._plink,val:tmp}})}
                */
 
@@ -2805,7 +2789,7 @@ class ResourceViewer extends Component<Props,State>
             else ret.push(<Tag className={(elem && elem.length > 1?"multiple ":"") +  (sameAsPrefix?sameAsPrefix+" sameAs hasIcon":"") }>{befo}{tmp+" "+txt}{bdrcData}</Tag>)
 
 
-            //console.log("ret",ret)
+            //loggergen.log("ret",ret)
          }
          else {
 
@@ -2817,7 +2801,7 @@ class ResourceViewer extends Component<Props,State>
                if(T.length) T = T[0]
                if(T === lastT) keepT = true
 
-               //console.log("keep?",T,lastT,e,keepT)
+               //loggergen.log("keep?",T,lastT,e,keepT)
 
                if(iKeep < _elem.length - 1) {
                   let nxT = _elem[iKeep+1]
@@ -2827,7 +2811,7 @@ class ResourceViewer extends Component<Props,State>
                      if(nxT.length) nxT = nxT[0]
                      if(T === nxT) willK = true
                   }
-                  //console.log("willK?",nxT,willK)
+                  //loggergen.log("willK?",nxT,willK)
                }
             }
 
@@ -2843,7 +2827,7 @@ class ResourceViewer extends Component<Props,State>
                }
             }
 
-            //console.log("bnode",prop,e.value,elem)
+            //loggergen.log("bnode",prop,e.value,elem)
 
             if(!elem) continue ;
 
@@ -2854,13 +2838,13 @@ class ResourceViewer extends Component<Props,State>
 
             if(prop === bdo+"instanceEvent")  {
                let from = e.fromEvent
-               console.log("from",from,this.getResourceBNode(from)        )
+               loggergen.log("from",from,this.getResourceBNode(from)        )
                if(from) from = this.getResourceBNode(from)        
                if(from && from[rdf+"type"]) val = from[rdf+"type"]
             }
 
-            //console.log("val",val);
-            //console.log("lab",lab);
+            //loggergen.log("val",val);
+            //loggergen.log("lab",lab);
 
             let noVal = true ;
             
@@ -2873,7 +2857,7 @@ class ResourceViewer extends Component<Props,State>
                   else return {v,k:-1}
                })
                valSort = _.orderBy(valSort,['k'],['desc']).map(e => e.v)
-               //console.log("valSort!",valSort)               
+               //loggergen.log("valSort!",valSort)               
             }
 
             let sameAsPrefix ;
@@ -2884,7 +2868,7 @@ class ResourceViewer extends Component<Props,State>
             // property name ?            
             let subProp = ""
             if(valSort) {
-               //console.log("valSort?",valSort)               
+               //loggergen.log("valSort?",valSort)               
                if(valSort.length) subProp = valSort[0].value
                noVal = false ;
                sub.push(<Tag  data-prop={shortUri(prop)}  className={'first '+(div == "sub"?'type':'prop') +" "+ (sameAsPrefix?sameAsPrefix+" sameAs hasIcon":"")}>{befo}{[valSort.map((v,i) => i==0?[this.proplink(v.value)]:[" / ",this.proplink(v.value)]),I18n.t("punc.colon")+" "]}{bdrcData}</Tag>)
@@ -2896,7 +2880,7 @@ class ResourceViewer extends Component<Props,State>
                sub.push(<Tag  data-prop={shortUri(prop)}  className={'first '+(div == "sub"?'type':'prop') +" "+ (sameAsPrefix?sameAsPrefix+" sameAs hasIcon":"")}>{befo}{[this.proplink(val[0].value),I18n.t("punc.colon")+" "]}{bdrcData}</Tag>)
             }
 
-            //console.log("lab",lab,subProp,prop)
+            //loggergen.log("lab",lab,subProp,prop)
 
             // direct property value/label ?
             if(prop !== bdo+"instanceEvent" && lab && lab[0] && lab[0].value)
@@ -2974,7 +2958,7 @@ class ResourceViewer extends Component<Props,State>
                      else return { k:5, tag:elem }
                   } )
                   keys = _.orderBy(keys,['k','tag'],[ "asc" ]).map(e => e.tag)
-                  //console.log("key5",keys)
+                  //loggergen.log("key5",keys)
                }
 
 
@@ -2986,11 +2970,11 @@ class ResourceViewer extends Component<Props,State>
 
                   if(!f.match(/[/]note/)) first="" ;
 
-                  //console.log("f",prop,f)
+                  //loggergen.log("f",prop,f)
 
                   if(f === tmp+"noteFinal")
                   {
-                     //console.log("noteData",noteData)
+                     //loggergen.log("noteData",noteData)
                      if(noteData[bdo+"noteText"])
                      {
                         let workuri ;
@@ -3089,7 +3073,7 @@ class ResourceViewer extends Component<Props,State>
                   else
                   {
                      let what = this.props.resources[this.props.IRI][elem[f][0].value]
-                     //console.log("what",what,elem[f])
+                     //loggergen.log("what",what,elem[f])
 
                      if(!noVal)
                         subsub.push(<Tag data-prop={shortUri(f)} className={'first '+(div == ""?'type':'prop')}>{[this.proplink(f),I18n.t("punc.colon")+" "]}</Tag>)
@@ -3100,7 +3084,7 @@ class ResourceViewer extends Component<Props,State>
                      val = elem[f]
                      for(let v of val)
                      {
-                        //console.log("v",v,f,subProp);
+                        //loggergen.log("v",v,f,subProp);
 
                         if(f == bdo+"contentLocationStatement" || f == bdo+"noteSource" || f == bdo+"noteText") {
                            noteData[f] = v
@@ -3166,7 +3150,7 @@ class ResourceViewer extends Component<Props,State>
                            }
                            else { txt = this.fullname(v.value)
 
-                              //console.log("txt",txt)
+                              //loggergen.log("txt",txt)
 
                               if(v["lang"] || v["xml:lang"]) {
                                  let lang = v["lang"]
@@ -3196,13 +3180,13 @@ class ResourceViewer extends Component<Props,State>
                      }
                   }
                   if(!noVal && !f.match(/[/]note[^F]/) && f !== bdo+"contentLocationStatement") {
-                     //console.log("push?sub+",subsub)
+                     //loggergen.log("push?sub+",subsub)
                      group.push(<div className={div+"sub "+(hasBnode?"full":"")}>{subsub}</div>)
                   }
                   else {
 
                      if(subsub.length > 0) { 
-                        //console.log("push?subsub",subsub)
+                        //loggergen.log("push?subsub",subsub)
                         sub.push(subsub) //<div className="sub">{subsub}</div>)
                      }
 
@@ -3211,7 +3195,7 @@ class ResourceViewer extends Component<Props,State>
                         /*
                         if(f == bdo+"noteText") {
 
-                           console.log("noteData",noteData)
+                           loggergen.log("noteData",noteData)
 
                            if(noteVol && noteVol != true) sub.push(noteVol)
                            if(noteLoc && noteLoc != true) sub.push(noteLoc)
@@ -3228,7 +3212,7 @@ class ResourceViewer extends Component<Props,State>
                         */
                      }
                      else if(sub.length) {
-                        //console.log("push?sub",sub)
+                        //loggergen.log("push?sub",sub)
                         ret.push(<div className={div+ first}>{sub}</div>)
                      }
 
@@ -3240,7 +3224,7 @@ class ResourceViewer extends Component<Props,State>
                if(group.length) sub.push(<div class="subgroup">{group}</div>)
 
                if(!noVal && sub.length) ret.push(<div className={div+" "+(bnode?"full":"") + (keepT?" keep":"") +  (willK?" willK":"") }>{sub}</div>)
-               //console.log("ret",ret,ret.length)
+               //loggergen.log("ret",ret,ret.length)
 
 
 
@@ -3264,7 +3248,7 @@ class ResourceViewer extends Component<Props,State>
       if(note.length) {
 
          // TODO collapse not if more than 3
-         console.log("note",note);
+         loggergen.log("note",note);
 
          if(note.length <= 3) pre.push(<div class="no-collapse">{note}</div>)
          else pre.push([<div>         
@@ -3313,13 +3297,13 @@ class ResourceViewer extends Component<Props,State>
                         let token = localStorage.getItem('id_token');
                         xhr.setRequestHeader("credentials", "include");
                         //xhr.setRequestHeader("Authorization", "Bearer " + token);
-                        console.log("xhr",xhr)
+                        loggergen.log("xhr",xhr)
                     }
                   }
                 })
 
-               console.log("uv",window.UV)
-               console.log("createuv",window.createUV)
+               loggergen.log("uv",window.UV)
+               loggergen.log("createuv",window.createUV)
 
                $("#fond").addClass("hidden");
                $("#uv").addClass("open")
@@ -3377,7 +3361,7 @@ class ResourceViewer extends Component<Props,State>
 
          if(this.state.UVcanLoad) { window.location.hash = "mirador"; window.location.reload(); }
 
-         console.log("num",num,useManifest)
+         loggergen.log("num",num,useManifest)
 
          if(!tiMir) tiMir = setInterval( async () => {
 
@@ -3418,7 +3402,7 @@ class ResourceViewer extends Component<Props,State>
 
                let config = await miradorConfig(data,manif,canvasID,withCredentials,this.props.langPreset,null,this.props.IRI);
 
-               console.log("mir ador",num,config,this.props)
+               loggergen.log("mir ador",num,config,this.props)
 
                if(window.mirador) delete window.mirador
                window.mirador = window.Mirador( config )
@@ -3451,7 +3435,7 @@ class ResourceViewer extends Component<Props,State>
       if(!askPdf)
       {
          event.preventDefault();
-         //console.log("pdf",pdf,file)
+         //loggergen.log("pdf",pdf,file)
          this.props.onCreatePdf(pdf,{iri:this.props.IRI,file});
       }
 
@@ -3540,7 +3524,7 @@ class ResourceViewer extends Component<Props,State>
          if(this.state.title && this.state.title.images && this.state.title.images.length) tabs.push(shortUri(this.state.title.images[0].value))
       }
 
-      //console.log("tabs?",_T,other,tabs)
+      //loggergen.log("tabs?",_T,other,tabs)
 
       if(tabs.length) return "?tabs="+tabs.join(",")
       else return ""
@@ -3548,7 +3532,7 @@ class ResourceViewer extends Component<Props,State>
 
    getH2 = (title,_befo,_T,other,T_,rootC) => {
 
-      //console.log("H2?",rootC)
+      //loggergen.log("H2?",rootC)
 
       if(other) return <h2 title={title.value}><Link  {... rootC?{onClick:rootC}:{}}  to={"/show/"+shortUri(other)+this.getTabs(T_,other)}>{_T}<span>{_befo}{title.value}</span>{this.tooltip(title.lang)}</Link></h2>
       else return <h2 title={title.value} class="on">{_T}<span>{_befo}{title.value}</span>{this.tooltip(title.lang)}</h2>
@@ -3582,7 +3566,7 @@ class ResourceViewer extends Component<Props,State>
             title = getLangLabel(this,"", titlElem, false, false, otherLabels)
          }
          
-         //console.log("titl",kZprop,titlElem,title,otherLabels,other)
+         //loggergen.log("titl",kZprop,titlElem,title,otherLabels,other)
 
          let _befo
          if(title && title.value) {
@@ -3596,7 +3580,7 @@ class ResourceViewer extends Component<Props,State>
          title = this.getH2(title,_befo,_T,other,T_,rootC)         
       }
 
-      //console.log("sT",other,title,titlElem)
+      //loggergen.log("sT",other,title,titlElem)
 
       return { title, titlElem, otherLabels }
    }
@@ -3644,7 +3628,7 @@ class ResourceViewer extends Component<Props,State>
          }
          let work = this.getResourceElem(bdo+"instanceReproductionOf")
 
-         console.log("isReprOf?",elem,nbVol,work)
+         loggergen.log("isReprOf?",elem,nbVol,work)
 
          if(elem[0] && elem[0].value && !this.props.imageAsset && !this.props.manifestError) {
             this.setState({...this.state, imageLoaded:false})
@@ -3678,7 +3662,7 @@ class ResourceViewer extends Component<Props,State>
                let assoc = this.props.assocResources[e.value]
                let imItem = assoc
 
-               //console.log("hImA",assoc,e.value)
+               //loggergen.log("hImA",assoc,e.value)
 
                if(assoc && assoc.length > 0 && !this.props.imageAsset && !this.props.manifestError && (imItem = assoc.filter(e => e.type === tmp+"itemType" && e.value === bdo+"ImageInstance")).length) {
 
@@ -3703,7 +3687,7 @@ class ResourceViewer extends Component<Props,State>
          let iiif = "//iiif.bdrc.io" ;
          if(this.props.config && this.props.config.iiif) iiif = this.props.config.iiif.endpoints[this.props.config.iiif.index]
 
-         console.log("iiif",this.props.imageAsset,iiif,this.props.config)
+         loggergen.log("iiif",this.props.imageAsset,iiif,this.props.config)
 
          let id = this.props.IRI.replace(/^[^:]+:./,"")
          if(this.props.imageAsset.match(/[/]i:/) || (this.props.imageAsset.match(/[/]wio:/) && this.props.manifests)) {
@@ -3747,7 +3731,7 @@ class ResourceViewer extends Component<Props,State>
 
             let elem = this.getResourceElem(bdo+"itemVolumes")
 
-            //console.log("itVol?",elem)
+            //loggergen.log("itVol?",elem)
 
             if(elem && elem.length > 0 && elem[0].value && elem[0].value == "1") {               
                   monoVol = Number(elem[0].value)
@@ -3760,13 +3744,13 @@ class ResourceViewer extends Component<Props,State>
             if(link) { 
                pdfLink = link
                let mono  = this.getWorkLocation(this.getResourceElem(bdo+"contentLocation"), false)
-               //console.log("mono?",mono)
+               //loggergen.log("mono?",mono)
                if(mono && monoVol === -1) monoVol = mono
             }
          }
 
 
-         //console.log("monoV",monoVol)
+         //loggergen.log("monoV",monoVol)
 
 
          /* // missing ImageItem
@@ -3786,7 +3770,7 @@ class ResourceViewer extends Component<Props,State>
                if(end && end.length > 0 && end[0].value) end = Number(end[0].value)
                if(work && vol && begin && end)
                   pdfLink = "//iiif.bdrc.io/download/pdf/wv:bdr:"+work+"::bdr:V"+id+"::"+begin+"-"+end ;
-               console.log("loca",vol,begin,end,pdfLink)
+               loggergen.log("loca",vol,begin,end,pdfLink)
                // ex: http://iiif.bdrc.io/pdfdownload/wv:bdr:W29329::bdr:V29329_I1KG15043::1-10
             }
 
@@ -3804,14 +3788,14 @@ class ResourceViewer extends Component<Props,State>
       if(kZprop.indexOf(bdo+"placeLong") !== -1 && kZprop.indexOf(bdo+"placeLat") !== -1)
       {
          doMap = [].concat(this.fullname(this.getResourceElem(bdo+"placeLat")[0].value,false,false,false,false)).concat(this.fullname(this.getResourceElem(bdo+"placeLong")[0].value,false,false,false,false))
-         console.log("doMap",doMap)
+         loggergen.log("doMap",doMap)
       }
       if(kZprop.indexOf(bdo+"placeRegionPoly") !== -1)
       {
          doRegion = JSON.parse(this.getResourceElem(bdo+"placeRegionPoly")[0].value)
          regBox = bbox(doRegion)
          regBox = [ [regBox[1],regBox[0]], [regBox[3],regBox[2]] ]
-         //console.log("reg",doRegion,regBox)
+         //loggergen.log("reg",doRegion,regBox)
       }
 
       return { doMap, doRegion, regBox }
@@ -3826,7 +3810,7 @@ class ResourceViewer extends Component<Props,State>
 
          let str = ""
          
-         //console.log("loca",elem)
+         //loggergen.log("loca",elem)
 
          if(!elem) return [<h4><Link to={"/show/"+shortUri(_elem[0].value)}>{shortUri(_elem[0].value)}</Link></h4>]
 
@@ -3875,7 +3859,7 @@ class ResourceViewer extends Component<Props,State>
 
       const { BaseLayer} = LayersControl;
 
-      //console.log("map",elem, k, tags, kZprop, doMap, doRegion, regBox, title)
+      //loggergen.log("map",elem, k, tags, kZprop, doMap, doRegion, regBox, title)
 
       return ( 
          <div data-prop={shortUri(k)}>
@@ -3950,7 +3934,7 @@ class ResourceViewer extends Component<Props,State>
       if(elem && elem.filter) n = elem.filter(t=>t && ( (t.type === "uri" && (k !== bdo+"workHasInstance" || t.value.match(/[/]MW[^/]+$/))) || t.type === "literal")).length
       ret = this.insertPreprop(k, n, ret)
 
-      //console.log("genP",elem,k,maxDisplay,n)
+      //loggergen.log("genP",elem,k,maxDisplay,n)
 
       if(!isSub && n > maxDisplay) {      
          /* CSS columns won't balance evenly
@@ -4047,7 +4031,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
    else if((cLegalD && cLegalD.endsWith("Undetermined"))||(!cLegalD && legalD && legalD.endsWith("Undetermined"))) copyR = "open_unknown" ;
    // TODO other kind of licenses ?
 
-   //console.log("legal",cLegal,cLegalD,legal,legalD)
+   //loggergen.log("legal",cLegal,cLegalD,legal,legalD)
 
    let same = this.getResourceElem(owl+"sameAs")
    if(!same || !same.length) same = [] 
@@ -4072,7 +4056,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
    
       //else orig = ""
 
-      console.log("prov,orig",prov,orig)
+      loggergen.log("prov,orig",prov,orig)
 
       if(prov && orig) same = [ { fromSeeOther:prov.toLowerCase(), value:orig, isOrig:true } ]
    }
@@ -4093,7 +4077,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
       }
    }
 
-   console.log("same",same)
+   loggergen.log("same",same)
 
    // TODO 
    // + fix bdr:G3176 (sameAs Shakya Research Center)
@@ -4150,7 +4134,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                   let open = <MenuItem>{I18n.t("result.open")} {name} {I18n.t("misc.in")} &nbsp;<b>{providers[prov]}</b><img src="/icons/link-out.svg"/></MenuItem>
                   if(s.isOrig) open = <MenuItem style={{display:"block",height:"32px",lineHeight:"12px"}}>{I18n.t("popover.imported")} <b>{providers[prov]}</b><br/>{I18n.t("popover.seeO")}<img style={{verticalAlign:"middle"}} src="/icons/link-out.svg"/></MenuItem>
 
-                  //console.log("permaSame",s,data,tab,link,name,prov) 
+                  //loggergen.log("permaSame",s,data,tab,link,name,prov) 
 
                   // TODO case when more than on resource from a given provider (cf RKTS)
                   if(prov != "bdr") return (<a target="_blank" href={link}>{open}</a>) 
@@ -4290,7 +4274,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
       if(!prev) prev = -1
 
 
-      //console.log("etext",prev,next,elem,this.props.nextChunk,tags,this.hasSub(k))
+      //loggergen.log("etext",prev,next,elem,this.props.nextChunk,tags,this.hasSub(k))
 
       // + sort etext by sliceStartchar not seqNum
       // DONE 
@@ -4306,7 +4290,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
             pageStart={0}
             loadMore={(e) => { 
             
-               //console.log("next?",this.props.nextChunk,next,JSON.stringify(elem,null,3))
+               //loggergen.log("next?",this.props.nextChunk,next,JSON.stringify(elem,null,3))
 
                if(next && this.props.nextChunk !== next) {                               
                   this.props.onGetChunks(this.props.IRI,next); 
@@ -4350,7 +4334,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          let elem = this.getResourceElem(tmp+"imageVolumeId")
          if(elem && elem.length)
          {
-            //console.log("elem",elem)
+            //loggergen.log("elem",elem)
             for(let e of elem) {
                this.props.onImageVolumeManifest(iiifpres+"/v:"+ e.value.replace(new RegExp(bdr), "bdr:") + "/manifest",this.props.IRI);
             }
@@ -4362,23 +4346,23 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          {
             let manif = this.props.imageVolumeManifests[id]
             
-            console.log("k",id,manif)
+            loggergen.log("k",id,manif)
 
             if(manif && manif.sequences && manif.sequences[0] && manif.sequences[0].canvases) {
                let nc = 0, np = 0                           
                imageLinks[id] = manif.sequences[0].canvases.reduce( (acc,e) => {
                   if(e.label) { 
-                     //console.log("label",e.label)
+                     //loggergen.log("label",e.label)
                      return ({
                         ...acc, [Number((""+(Array.isArray(e.label)?e.label[0]["@value"]:e.label["@value"])).replace(/[^0-9]/g,""))]:{id:e["@id"],image:(e.images?e.images[0].resource["@id"]:null) }
                      })
                   }
                   else {
-                     //console.log("no lab",e)
+                     //loggergen.log("no lab",e)
                      return acc ; 
                   }
                },{})
-               //console.log("imaL",imageLinks)
+               //loggergen.log("imaL",imageLinks)
                this.setState({ ...this.state,imageLinks:{...this.state.imageLinks, [this.props.IRI]: imageLinks } })
             }
          }
@@ -4396,12 +4380,12 @@ perma_menu(pdfLink,monoVol,fairUse,other)
       */
 
       let openMiradorAtPage = (num,manif) => {
-         //console.log("num?",num)
+         //loggergen.log("num?",num)
          window.MiradorUseEtext = true ; 
          this.showMirador(num,manif);
       }
 
-      console.log("imL",imageLinks)
+      loggergen.log("imL",imageLinks)
 
       return (
          
@@ -4411,7 +4395,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
             pageStart={0}
             loadMore={(e) => { 
             
-               //console.log("next?",this.props.nextChunk,next,JSON.stringify(elem,null,3))
+               //loggergen.log("next?",this.props.nextChunk,next,JSON.stringify(elem,null,3))
 
                if(next && this.props.nextPage !== next) {                               
                   this.props.onGetPages(this.props.IRI,next); 
@@ -4570,15 +4554,15 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
       let { doMap, doRegion, regBox } = this.getMapInfo(kZprop);
 
-      //console.log("data!",kZprop)
+      //loggergen.log("data!",kZprop)
 
       let data = kZprop.map((k) => {
 
             let elem = this.getResourceElem(k);
             let hasMaxDisplay ;
 
-            //console.log("prop",k,elem,this.hasSuper(k))
-            //for(let e of elem) console.log(e.value,e.label1);
+            //loggergen.log("prop",k,elem,this.hasSuper(k))
+            //for(let e of elem) loggergen.log(e.value,e.label1);
 
             //if(!k.match(new RegExp("Revision|Entry|prefLabel|"+rdf+"|toberemoved"))) {
             if(elem && 
@@ -4627,7 +4611,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                         if(hasCano && !found && i < 10) { hasMaxDisplay = Number(i) ; break ; } 
                      }
 
-                     //console.log("hMd",allLabels,hasMaxDisplay)
+                     //loggergen.log("hMd",allLabels,hasMaxDisplay)
 
                      /*
                      let sortLabel = []
@@ -4638,11 +4622,11 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
                   let tags = this.format("h4",k,"",false,"sub",allLabels)
 
-                  //console.log("tags",tags,k,elem)
+                  //loggergen.log("tags",tags,k,elem)
 
                   if(k == bdo+"note")
                   {
-                     //console.log("note",tags,k);//tags = [<h4>Note</h4>]
+                     //loggergen.log("note",tags,k);//tags = [<h4>Note</h4>]
                   }           
                   else if(k == bdo+"contentLocation")
                   {
@@ -4667,7 +4651,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
       data = data.filter(e => e)
 
-      //console.log("data?",kZprop,data)
+      //loggergen.log("data?",kZprop,data)
 
       if(data && data.length) return <div className={div!=="header"?"data "+div:div} {...hash?{id:hash}:{}}>
          {data}
@@ -4697,7 +4681,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                   <MenuItem onClick={this.handleAnnoCollec.bind(this,true)}>All Annotations</MenuItem>
                   { this.props.annoCollec && Object.keys(this.props.annoCollec).map((e) => {
                      let labels = this.props.annoCollec[e][rdfs+"label"]
-                     //console.log("labs",labels,this.props.annoCollec[e])
+                     //loggergen.log("labs",labels,this.props.annoCollec[e])
                      let l = e
                      if(labels) {
                         /*
@@ -4806,7 +4790,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          if(orig && orig.length) orig = orig[0].value
          else orig = ""
 
-         console.log("prov x orig",prov,orig)
+         loggergen.log("prov x orig",prov,orig)
 
          if(prov !== "BDRC" && prov) {
 
@@ -4967,14 +4951,14 @@ perma_menu(pdfLink,monoVol,fairUse,other)
             let val = this.state.collapse[tag]
             if(osearch) {
 
-               console.log("toggle?",tag,val,x,force,node) 
+               loggergen.log("toggle?",tag,val,x,force,node) 
 
                if(val === undefined && (!x && (!node || !node.notMatch ) || node.hasMatch) ) val = true // details of matching nodes + ancestor shown by default when search
 
                if(force && val && !x) val = false
             }
 
-            console.log("toggle!",tag,val)
+            loggergen.log("toggle!",tag,val)
 
             this.setState( { collapse:{...this.state.collapse, [tag]:!val } })
             if((!this.props.outlineKW || force || node && node.notMatch) &&  !x && this.props.outlines && (!this.props.outlines[i] || force && r === i) )this.props.onGetOutline(i);
@@ -4983,7 +4967,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
          let rootClick = (e) => {
 
-            console.log("rootC?")
+            loggergen.log("rootC?")
 
             toggle(null,root,root)            
 
@@ -5029,7 +5013,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          else if(root !== this.props.IRI) opart = this.props.IRI
          else opart = root
 
-         console.log("renderO?",osearch,opart,title)
+         loggergen.log("renderO?",osearch,opart,title)
 
 
          if(opart && opart !== root && this.state.collapse["outline-"+root+"-"+root] === undefined) toggle(null,root,root)         
@@ -5039,7 +5023,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
             let collapse = {...this.state.collapse }
 
-            console.log("collapse!",root,opart,JSON.stringify(collapse,null,3),this.props.outlines[opart])
+            loggergen.log("collapse!",root,opart,JSON.stringify(collapse,null,3),this.props.outlines[opart])
 
             if(!this.props.outlines[opart]) this.props.onGetOutline(opart);
 
@@ -5054,7 +5038,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                   let head = opart
                   do {
                      head = nodes.filter(n => n.hasPart && (n.hasPart === head || n.hasPart.includes(head)))
-                     console.log("head?",head)
+                     loggergen.log("head?",head)
                      if(head && head.length) { 
                         head = head[0]["@id"]
                         if(collapse["outline-"+root+"-"+head] === undefined) { //} && (opart !== root || head !== root)) {
@@ -5066,7 +5050,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                }
 
                this.setState( { collapse } )               
-               //console.log("collapse?",JSON.stringify(collapse,null,3))
+               //loggergen.log("collapse?",JSON.stringify(collapse,null,3))
 
                
                if(opart) {
@@ -5113,7 +5097,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                   }
                }
                
-               //console.log("makeNode/elem:",elem,top,parent)
+               //loggergen.log("makeNode/elem:",elem,top,parent)
 
                let outline = []
                if(elem && elem["@graph"]) { 
@@ -5122,10 +5106,10 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                   if(node.length && node[0].hasPart) { 
                      if(!Array.isArray(node[0].hasPart)) node[0].hasPart = [ node[0].hasPart ]
                      for(let e of node[0].hasPart) {
-                        //console.log("node:",e)  
+                        //loggergen.log("node:",e)  
                         let w_idx = elem.filter(f => f["@id"] === e) 
                         if(w_idx.length) {
-                           //console.log("found:",w_idx[0])  
+                           //loggergen.log("found:",w_idx[0])  
                            let g = w_idx[0]
                            if(g.details && g.lang !== this.props.locale) delete g.details
                            if(!g.details) {
@@ -5133,9 +5117,14 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                               // deprecated
                               // if(! (["bdr:PartTypeSection", "bdr:PartTypeVolume"].includes(g.partType)) ) {
                               if(g.contentLocation) {
-                                 if(!g.details) g.details = []                                 
+                                 if(!g.details) g.details = []
                                  g.hasImg = "/show/"+g["@id"].replace(/^((bdr:MW[^_]+)_[^_]+)$/,"$2?part=$1")+"&s="+encodeURIComponent(this.props.history.location.pathname+this.props.history.location.search)+"#open-viewer"
                                  g.details.push(<div class="sub view"><Link to={g.hasImg} class="ulink">&gt; {I18n.t("copyright.view")}</Link></div>)
+                              }
+                              else if (g.instanceHasReproduction) {
+                                 if(!g.details) g.details = []
+                                 g.hasImg = "/show/"+g.instanceHasReproduction+"?s="+encodeURIComponent(this.props.history.location.pathname+this.props.history.location.search)+"#open-viewer"
+                                 g.details.push(<div class="sub view"><Link to={g.hasImg} class="ulink">&gt; {I18n.t("copyright.view")}</Link></div>)  
                               }
                               if(g.instanceOf) {
                                  if(!g.details) g.details = []
@@ -5145,7 +5134,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                                     g.hasMatch = true
                                     let node = instOf[0]["tmp:labelMatch"]
                                     if(!Array.isArray(node)) node = [node]                                    
-                                    //console.log("instOf",instOf,node)
+                                    //loggergen.log("instOf",instOf,node)
                                     g.details.push(<div class="sub"><h4 class="first type">{this.proplink(tmp+"instanceLabel")}{I18n.t("punc.colon")} </h4><div>{node.map(n => this.format("h4","","",false, "sub",[{ value:n["@value"], lang:n["@language"], type:"literal"}]))}</div></div>)
                                  }
                               }
@@ -5174,7 +5163,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                                        if(title && title["rdfs:label"]) title = title["rdfs:label"]
                                        if(!Array.isArray(title)) title = [ title ]                                      
                                        title = title.map(f => ({value:f["@value"],lang:f["@language"], type:"literal"}))
-                                       //console.log("title?",JSON.stringify(title,null,3))
+                                       //loggergen.log("title?",JSON.stringify(title,null,3))
                                        g.details.push(<div class={"sub " + (hideT?"hideT":"")}><h4 class="first type">{this.proplink(titleT)}{I18n.t("punc.colon")} </h4>{this.format("h4", "", "", false, "sub", title)}</div>)
                                     }
                                  }
@@ -5194,7 +5183,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                         }
                      }
                      
-                     //console.log("outline?",elem,outline)
+                     //loggergen.log("outline?",elem,outline)
 
                      outline = _.orderBy(outline,["partIndex"],["asc"]).map(e => {
                         let tag = "outline-"+root+"-"+e['@id']
@@ -5251,7 +5240,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          let tag = "outline-"+root+"-"+root
 
          let outlineSearch = (e, lg = "bo-x-ewts") => {
-            console.log("outlineS",this.state.outlineKW)
+            loggergen.log("outlineS",this.state.outlineKW)
 
             // NOTO
             // x search either from root or current node
@@ -5272,7 +5261,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
                loca.search += "osearch="+keywordtolucenequery(this.state.outlineKW, lg)+"@"+lg
 
-               console.log("loca!",loca)
+               loggergen.log("loca!",loca)
 
                this.setState({dataSource:[]});
                this.props.history.push(loca)
@@ -5297,7 +5286,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
             }
             
             possible = [ ...this.state.langPreset, ...langSelect.filter(l => !this.state.langPreset || !this.state.langPreset.includes(l))]
-            console.log("detec",possible,detec,this.state.langPreset,this.state.langDetect)
+            loggergen.log("detec",possible,detec,this.state.langPreset,this.state.langDetect)
             
             this.setState({ outlineKW:value, outlineKWlang: language, dataSource: detec.reduce( (acc,d) => {
                
@@ -5366,7 +5355,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          let wUri = shortUri(baseW[0].value);
          if(this.props.resources && !this.props.resources[wUri]) this.props.onGetResource(wUri);
          
-         //console.log("is?",baseW[0].value,this.props.assocResources?this.props.assocResources[baseW[0].value]:null)
+         //loggergen.log("is?",baseW[0].value,this.props.assocResources?this.props.assocResources[baseW[0].value]:null)
 
          let baseData = []
          if(this.props.assocResources) {
@@ -5383,7 +5372,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
    render()
    {
-      console.log("render",this.props,this.state)
+      loggergen.log("render",this.props,this.state)
    
       this._annoPane = []
 //
@@ -5399,7 +5388,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
       let redir, withdrawn
       if(this.props.resources && (redir = this.props.resources[this.props.IRI]) && (redir = redir[fullUri(this.props.IRI)]))
       {
-         //console.log("WithD?",redir);
+         //loggergen.log("WithD?",redir);
          if(redir[adm+"replaceWith"]) {
             redir = shortUri(redir[adm+"replaceWith"][0].value)            
             return (
@@ -5408,24 +5397,24 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          }
          else if(this.props.auth && this.props.auth.isAuthenticated() && redir[adm+"status"] && (redir = redir[adm+"status"]).length && redir[0].value === bda+"StatusWithdrawn"){
             withdrawn = true 
-            //console.log("WithD");
+            //loggergen.log("WithD");
          }         
       }
-      //console.log("WithD...",redir);
+      //loggergen.log("WithD...",redir);
 
 
       let kZprop = Object.keys(this.properties(true))
-      //console.log("kZprop",kZprop)
+      //loggergen.log("kZprop",kZprop)
 
       // [TODO] test external pdf download using "rendering" field of manifest
       let { pdfLink, monoVol } = this.getPdfLink();
-      //console.log("pdf",pdfLink,this._annoPane.length)
+      //loggergen.log("pdf",pdfLink,this._annoPane.length)
       
       let fairUse = false
       if(kZprop.indexOf(adm+"access") !== -1) {
          let elem = this.getResourceElem(adm+"access")
-         if(elem && elem.filter(e => e.value.match(/(AccessFairUse|AccessRestrictedInChina)$/)).length >= 1) fairUse = true
-         //console.log("adm",elem,fairUse)
+         if(elem && elem.filter(e => e.value.match(/(AccessFairUse)$/)).length >= 1) fairUse = true
+         //loggergen.log("adm",elem,fairUse)
       }
 
       let iiifpres = "//iiifpres.bdrc.io" ;
@@ -5478,7 +5467,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          rTitle = getWtitle(baseW)
       }
       
-      //console.log("ttlm",titlElem,otherLabels)
+      //loggergen.log("ttlm",titlElem,otherLabels)
       
       let mapProps = [bdo+"placeRegionPoly", bdo+"placeLong", bdo+"placeLat" ]
                            
@@ -5513,7 +5502,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
             let v = this.props.assocResources[k]
             let s = shortUri(k)
             let isA = v.filter(k => k.fromKey === bdo+"workIsAbout" && k.value === res)
-            //console.log("isA",v,s,isA)
+            //loggergen.log("isA",v,s,isA)
             if(isA.length) {
                let label, pLab = v.filter(k => k.fromKey === skos+"prefLabel" || k.type === skos+"prefLabel")
                if(pLab.length) label = getLangLabel(this,"",pLab)
@@ -5532,7 +5521,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
             let v = this.props.assocResources[k]
             let s = shortUri(k)
             let crea = v.filter(k => k.fromKey === tmp+"createdBy" && k.value === res)
-            //console.log("isA",v,s,isA)
+            //loggergen.log("isA",v,s,isA)
             if(crea.length) {
                let label, pLab = v.filter(k => k.fromKey === skos+"prefLabel" || k.type === skos+"prefLabel")
                if(pLab.length) label = getLangLabel(this,"",pLab)
@@ -5573,7 +5562,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
       let inTitle 
       let root = this.getResourceElem(bdo+"inRootInstance");
-      //console.log("root?",root)
+      //loggergen.log("root?",root)
       if(root && root.length) {
          inTitle  = <h3><span>{I18n.t("misc.in")}{I18n.t("punc.colon")} </span> {this.uriformat(tmp+"in",root[0])}</h3> 
       }
@@ -5586,7 +5575,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          let backTo = this.state.fromSearch
          if(!decodeURIComponent(backTo).startsWith("/show/")) {
             let withW = backTo.replace(/^.*[?&](w=[^&]+)&?.*$/,"$1")
-            console.log("fromS",this.state.fromSearch,backTo,withW)
+            loggergen.log("fromS",this.state.fromSearch,backTo,withW)
             if(backTo === withW) { 
                backTo = decodeURIComponent(backTo)
                searchUrl = backTo
@@ -5608,7 +5597,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
       
       let hasChunks = this.getResourceElem(bdo+"eTextHasChunk")
 
-      console.log("chunks?",hasChunks)
+      loggergen.log("chunks?",hasChunks)
 
       if(hasChunks && hasChunks.length && this.state.openEtext) {
          

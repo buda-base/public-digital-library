@@ -276,7 +276,7 @@ const makeMainRoutes = () => {
                         let get = qs.parse(history.location.search)
                         if(get.part && get.part !== IRI) {
                            get.root = IRI
-                           IRI = get.part
+                           //IRI = get.part
                         }
                         store.dispatch(initiateApp(get,IRI));
                      
