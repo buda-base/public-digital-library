@@ -92,6 +92,7 @@ const bdan  = "http://purl.bdrc.io/annotation/" ;
 const bdo   = "http://purl.bdrc.io/ontology/core/"
 const bdou  = "http://purl.bdrc.io/ontology/ext/user/" ;
 const bdr   = "http://purl.bdrc.io/resource/";
+const bdr_len   = bdr.length ;
 const bdu   = "http://purl.bdrc.io/resource-nc/user/" ;
 const bf    = "http://id.loc.gov/ontologies/bibframe/";
 const cbcp  = "https://dazangthings.nz/cbc/person/"
@@ -2684,10 +2685,14 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          let prefix = prettId.replace(/:.*$/,""), resUrl
          
          let directSameAs = false
+
          if(!prettId.match(/^bdr:/) && (fullId.match(new RegExp(cbcp+"|"+cbct+"|"+rkts)) || !sameAsRes || !sameAsRes.filter(s => s.value.match(/[#/]sameAs/) || (s.type.match(/[#/]sameAs/) && (s.value.indexOf(".bdrc.io") !== -1 || s.value.indexOf("bdr:") !== -1))).length))   {
             let u 
-            if((u = sameAsRes.filter(s => s.type === adm+"canonicalHtml")).length) u = u[0].value
-            else u = fullId
+            if ((u = sameAsRes.filter(s => s.type === adm+"canonicalHtml")).length) {
+               u = u[0].value
+            } else {
+               u = fullId
+            }
 
             resUrl = u
             //retList.push( <a target="_blank" href={u} className="result">{ret}</a> )
@@ -2697,8 +2702,16 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             directSameAs = true
          }
          else if(prettId.match(/^([^:])+:/)) {
-
-            resUrl = "/show/"+prettId+"?s="+ encodeURIComponent(window.location.href.replace(/^https?:[/][/][^?]+[?]?/gi,"").replace(/(&n=[^&]*)/g,"")+"&n="+n)+(!bestM?"":"&"+bestM)
+            let urlpart = prettId+"?"
+            let inRoot = allProps.filter(e => e.type === bdo+"inRootInstance")
+            if (inRoot.length > 0) {
+               let root = inRoot[0].value
+               if (root.startsWith(bdr)) {
+                  root = "bdr:"+root.substring(bdr_len)
+                  urlpart = root+"?part="+prettId+"&"
+               }
+            }
+            resUrl = "/show/"+urlpart+"s="+ encodeURIComponent(window.location.href.replace(/^https?:[/][/][^?]+[?]?/gi,"").replace(/(&n=[^&]*)/g,"")+"&n="+n)+(!bestM?"":"&"+bestM)
             //retList.push( <Link key={n} to={"/show/"+prettId+bestM} className="result">{ret}</Link> )
          }
          else
