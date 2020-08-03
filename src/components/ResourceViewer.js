@@ -5118,7 +5118,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                               // if(! (["bdr:PartTypeSection", "bdr:PartTypeVolume"].includes(g.partType)) ) {
                               if(g.contentLocation) {
                                  if(!g.details) g.details = []
-                                 g.hasImg = "/show/"+g["@id"].replace(/^((bdr:MW[^_]+)_[^_]+)$/,"$2?part=$1")+"&s="+encodeURIComponent(this.props.history.location.pathname+this.props.history.location.search)+"#open-viewer"
+                                 g.hasImg = "/show/"+g["@id"].replace(/^((bdr:MW[^_]+)_[^_]+)$/,"$1")+"?s="+encodeURIComponent(this.props.history.location.pathname+this.props.history.location.search)+"#open-viewer"
                                  g.details.push(<div class="sub view"><Link to={g.hasImg} class="ulink">&gt; {I18n.t("copyright.view")}</Link></div>)
                               }
                               else if (g.instanceHasReproduction) {
