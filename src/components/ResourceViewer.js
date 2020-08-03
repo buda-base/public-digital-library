@@ -4807,13 +4807,30 @@ perma_menu(pdfLink,monoVol,fairUse,other)
       }
       let etext = this.isEtext()
 
-      if(!this.props.manifestError &&  this.props.imageAsset && !etext)
+      let iiifThumb = this.getResourceElem(tmp+"thumbnailIIIFService")
+      if(iiifThumb && iiifThumb.length) iiifThumb = iiifThumb[0].value
+
+      if(iiifThumb) 
+         return  ( 
+            <div class="data" id="first-image">
+               <div className={"firstImage "+(this.state.imageLoaded?"loaded":"")} {...(this.props.config.hideViewers?{"onClick":this.showMirador.bind(this),"style":{cursor:"pointer"}}:{})} >
+                  <Loader className="uvLoader" loaded={this.state.imageLoaded} color="#fff"/>
+                  <img onLoad={(e)=>this.setState({...this.state,imageLoaded:true})} src={iiifThumb+"/full/1000,/0/default.jpg"} /> 
+               </div>
+            </div>
+         )
+      else if(!this.props.manifestError &&  this.props.imageAsset && !etext)
          return  ( 
          <div class="data" id="first-image">
             <div className={"firstImage "+(this.state.imageLoaded?"loaded":"")} {...(this.props.config.hideViewers?{"onClick":this.showMirador.bind(this),"style":{cursor:"pointer"}}:{})} >
                <Loader className="uvLoader" loaded={this.state.imageLoaded} color="#fff"/>
-               { this.props.firstImage && <img src={this.props.firstImage} /*src={`data:image/${this.props.firstImage.match(/png$/)?'png':'jpeg'};base64,${this.props.imgData}`}*/  onLoad={(e)=>this.setState({...this.state,imageLoaded:true})}/> }
-               {
+               { 
+                  this.props.firstImage && 
+                  <img onLoad={(e)=>this.setState({...this.state,imageLoaded:true})}
+                     src={this.props.firstImage} 
+                   /*src={`data:image/${this.props.firstImage.match(/png$/)?'png':'jpeg'};base64,${this.props.imgData}`}*/  
+                  /> }
+               { /* // deprecated 
                   this.props.firstImage && this.state.imageLoaded &&
                   <div id="title">
                      { (!this.props.config || !this.props.config.hideViewers) &&
@@ -4832,14 +4849,14 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                            </div>
                         ]
                      }
-                     { /* this.props.config && this.props.config.hideViewers &&
-                        <div onClick={this.showMirador.bind(this)}>
-                           <span>{I18n.t("resource.view")} {I18n.t("resource."+imageLabel)}</span>
-                           <Fullscreen style={{transform: "scale(1.4)",position:"absolute",right:"3px",top:"3px"}}/>
-                        </div>
-                        */ }
+                     { // this.props.config && this.props.config.hideViewers &&
+                       // <div onClick={this.showMirador.bind(this)}>
+                       //    <span>{I18n.t("resource.view")} {I18n.t("resource."+imageLabel)}</span>
+                       //    <Fullscreen style={{transform: "scale(1.4)",position:"absolute",right:"3px",top:"3px"}}/>
+                       // </div>
+                     }
                   </div>
-               }
+               */}
             </div>
          </div>
          )
