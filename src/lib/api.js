@@ -681,7 +681,7 @@ export default class API {
       let response
       try {
          let token = localStorage.getItem('id_token')
-         response = await (await this._fetch( 'http://editserv.bdrc.io/resource-nc/user/patch/'+id.replace(/^.*[/]([^/]+)$/, "$1"),  {
+         response = await (await this._fetch( '//editserv.bdrc.io/resource-nc/user/patch/'+id.replace(/^.*[/]([^/]+)$/, "$1"),  {
             method: 'PATCH',
             body: patch,
             headers:new Headers({ 'content-type': 'text/plain', 'authorization': "Bearer " + token})

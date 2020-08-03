@@ -79,6 +79,8 @@ const i18nextConfig = {
          else if (format === 'counttozh' && value) { 
             return value.toLocaleString('zh-u-nu-hanidec');
          }
+         else if (format === 'lowercase') return value.toLowerCase();
+         else if (format === 'uppercase') return value.toUpperCase();
          return value;
       }
    }
@@ -109,6 +111,7 @@ const i18nextConfig = {
 // TODO search
 // - use topic facet ancestors
 // - close sortBy on selection
+// - fix number of results when resource with status not released
 
 // TODO mirador
 // - use our translations

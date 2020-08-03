@@ -11,14 +11,17 @@ const boTranslation = {
       titleBDRC1:"ནང་བསྟན་",
       titleBDRC2:"དཔེ་ཚོགས་",
       titleBDRC3:"ལྟེ་གནས།",
-      archives1:"བུདྡྷ་དཔེ་མཛོད་",
-      archives2:"རྒྱབ་སྟེགས།",
+      archives1:"བུདྡྷ་དྲྭ་ཐོག་",
+      archives2:"དཔེ་མཛཽད།",
       by:"ནང་བསྟན་དཔེ་ཚོགས་ལྟེ་གནས་ཀྱིས།",
-      subtitle:"ནང་བསྟན་གཞུང་ལུགས་ལྟ་ཀློག་རྒྱ་ཆེར་བྱ་སའི་དྲྭ་སྟེགས་འདི་ནས་ནང་བསྟན་དཔེ་ཚོགས་ལྟེ་གནས་གཙོས་ཚོགས་པ་དུ་མས་འཚོལ་བསྡུ་བྱས་པའི་དཔེ་ཆའི་ཤོག་ལྷེ་ས་ཡ་མང་པོ་ལྟ་ཀློག་བྱེད་ཐུབ།",
+      subtitle:"ནང་བསྟན་གཞུང་ལུགས་ལྟ་ཀློག་རྒྱ་ཆེར་བྱ་སའི་དྲྭ་སྟེགས་འདི་ནས་ངེད་ཚོགས་པ་གཙོ་བྱས་པའི་ཚོགས་པ་དུ་མས་འཚོལ་བསྡུ་བྱས་པའི་དཔེ་ཆའི་ཤོག་ལྷེ་ས་ཡ་མང་པོ་ལྟ་ཀློག་བྱེད་ཐུབ།",
       message:"ནང་བསྟན་དཔེ་ཚོགས་ལྟེ་གནས་ཀྱི་དྲྭ་ཐོག་དཔེ་མཛོད་གསར་པར་ཕེབས་པར་དགའ་བསུ་ཞུ།",
-      submessage:"ཉམས་ཞིབ་ཞིབ་ཚགས་པ་དང་སྔར་ལས་མགྱོགས་པ་ཡོང་ཕྱིར་འདིའི་ནང་ཁྱད་ཆོས་དང་རྒྱུ་ཆ་གསར་པ། ལག་ཆ་གསར་པ་མང་པོ་ཁ་སྣོན་བྱས་ཡོད",
+      submessage:"ཉམས་ཞིབ་ཞིབ་ཚགས་པ་དང་སྔར་ལས་མགྱོགས་པ་ཡོང་ཕྱིར་འདིའི་ནང་ཁྱད་ཆོས་དང་རྒྱུ་ཆ་གསར་པ། ལག་ཆ་གསར་པ་མང་པོ་ཁ་སྣོན་བྱས་ཡོད།",
+      subsubmessage:"ངེད་ཚོགས་པའི་ལས་རིགས་ཀྱི་སྤུས་ཀ་ཇེ་ལེགས་སུ་གཏོང་བར་བསམ་ཚུལ་དང་སློབ་སྟོན་རེ་ཡོད་ཚེ་འདི་ནས་འགོད་རོགས།",
+      subsubmessage_afteremail:".",
       search:"འཚོལ།",
-      choose:"སྐད་རིགས་འདེམ།"
+      choose:"སྐད་རིགས་འདེམ།",
+      start:"Start typing then select search language"
    },
    types:{
       any:"གང་རུང་།",
@@ -45,7 +48,8 @@ const boTranslation = {
       instance_plural:"དཔེ་རྒྱུན།",
       images:"བཤེར་པར།",
       volume:"བཤེར་པར།",
-      volume_num:"པོད། {{num,counttobo}}"
+      volume_num:"པོད། {{num,counttobo}}",
+      searchIn:"{{type}}"
    },
    topbar:{
       about:"ང་ཚོའི་སྐོར།",
@@ -118,6 +122,9 @@ const boTranslation = {
       "tmp:nameMatch_plural":"མིང་རྙེད་ཚད།",
       "tmp:otherTitle":"མཚན་བྱང་གཞན།",
       "tmp:otherTitle_plural":"མཚན་བྱང་གཞན།",
+      "bdo:instanceExtentStatement":"ཤོག་གྲངས་གསལ་བཤད།",
+      "bdo:serialHasInstance":"དཔེ་ཚོགས་ཀྱི་དཔེ་རྒྱུན།",
+      "bdo:inRootInstance":"",
       "tmp:otherName":"མིང་གཞན།",
       "tmp:otherName_plural":"མིང་གཞན།",
       "tmp:otherMatch":"རྙེད་པ་གཞན། ({{count,counttobo}})",
@@ -125,16 +132,48 @@ const boTranslation = {
       "tmp:originalRecord":"མ་དཔེའི་གནས་ཚུལ།",
       "tmp:imageVolumeId":"བཤེར་པར་པོད་ཀྱི་ཨང་རྟགས།",
       "tmp:workHasTranslationInCanonicalLanguage":"འགྱུར་རྙིང་།",
+      "tmp:workHasTranslationInCanonicalLanguage_plural":"འགྱུར་རྙིང་།",
       "tmp:workHasTranslationInNonCanonicalLanguage":"འགྱུར་གསར།",
+      "tmp:workHasTranslationInNonCanonicalLanguage_plural":"འགྱུར་གསར།",
       "tmp:entityScore":"ཐོབ་སྐར།",
       "tmp:instanceLabel":"དཔེ་རྒྱུན་གྱི་མཆན་བྱང་།",
       "tmp:dimensions":"བོངས་ཚད།",
-      "tmp:publisherLocation":"པར་གནས།",
+      "bdo:publisherLocation":"པར་གནས།",
+      "bdo:publisherName":"པར་མཁན།",
       "tmp:forWork":"བརྩམས་ཆོས།",
       "tmp:provider":"མཁོ་འདོན་པ།",
       "tmp:author":"རྩོམ་པ་པོ།",
+      "bdo:note":"མཆན།",
+      "bdo:note_plural":"མཆན།",
       "tmp:assetAvailability":"དཔེ་ཆ་ཡོད་མེད།",
-      "tmp:textMatch":"རྙེད་པའི་ཡི་གེ"
+      "tmp:textMatch":"རྙེད་པའི་ཡི་གེ",
+      "bdo:workHasInstance":"$t(types.instance)",
+      "bdo:instanceOf":"$t(types.instance) Of",
+      "tmp:hasOpen":"$t(copyright.open)",
+      "bdo:personTeacherOf":"སློབ་ཕྲུག",
+      "bdo:personTeacherOf_plural":"སློབ་ཕྲུག",
+      "bdo:personStudentOf":"དགེ་རྒན།",
+      "bdo:personStudentOf_plural":"དགེ་རྒན།",
+      "tmp:propHasScans":"བཤེར་པར།",
+      "tmp:propHasEtext":"འཕྲུལ་ཡིག",
+      "bf:identifiedBy":"ཨང་རྟགས།",
+      "rdfs:subClassOf":"དབྱེ་གཞི།",
+      "tmp:isCreator":"མཛད་མཁན།",
+      "tmp:hasImage":"བཤེར་པར།",
+      "tmp:hasEtext":"འཕྲུལ་ཡིག",
+      "unspecified":"རིགས་མ་དགར་བ།",
+      "true":"ཡིན།",
+      "tmp:noteMatch": "མཆན།",
+      "tmp:TibetanBuddhistTexts":"བོད་བརྒྱུད་ནང་བསྟན་གསུང་རབ།",
+      "tmp:BonpoTexts":"བོན་གྱི་གསུང་རབ།",
+      "tmp:SanskritTexts":"ལེགས་སྦྱར་སྐད་ནང་ཡོད་པའི་གསུང་རབ།",
+      "tmp:ChineseTexts":"རྒྱའི་ནང་བསྟན་གསུང་རབ།",
+      "tmp:SoutheastAsianTexts":"ལྷོ་ཤར་ཨེ་ཤི་ཡའི་ནང་བསྟན་གསུང་རབ།",
+      "tmp:multiLingualTexts":"ནང་བསྟན་སྤྱིའི་གསུང་རབ། (སྐད་རིགས་སྣ་མང་།)",
+      "tmp:Bibliographies":"དཔེ་བསྐྲུན་གནས་ཚུལ།",
+      "tmp:Maps":"ས་ཁྲ།",
+      "tmp:BuddhistArt":"ནང་བསྟན་རིགས་གནས།",
+      "tmp:other":"གཞན།"
    },
    result:{
       open:"ཁ་ཕྱེ།",
@@ -154,11 +193,13 @@ const boTranslation = {
       hasInstance_plural:"དཔེ་རྒྱུན་ {{count,counttobo}} ཡོད།",
    },
    index:{
-      openViewer:"སྟོན།",
+      openViewer:"ཀློག",
       mainInfo:"གནས་ཚུལ་ཞིབ་ཕྲ།",
       outline:"དཀར་ཆག",
       related:"འབྲེལ་ཡོད་བརྩམས་ཆོས།",
-      extended:"གནས་ཚུལ་འཕར་མ།"
+      extended:"གནས་ཚུལ་འཕར་མ།",
+      userP:"སྤྱོད་མཁན་གྱི་གནས་ཚུལ།",
+      personalI:"སྒེར་གྱི་གནས་ཚུལ།"
    },
    user:{
       photo:{ 
@@ -173,7 +214,29 @@ const boTranslation = {
          set:"ཁྱད་ཆོས་བཅོས།",
          hide:"གཞན་ལ་མ་སྟོན།",
          show:"ཚང་མ་སྟོན།",
-      }
+      },
+      email:"གློག་འཕྲིན།",
+      name:"མཚན།",
+      gender:"ཕོ་མོ།",
+      area:"དགའ་མོས་བྱེད་ས།",
+      region:"ས་གནས། (རྒྱ་ནག)",
+      password:"གསང་ཚིག་རྗེ།",
+      options:{
+         male:"ཕོ།",
+         female:"མོ།",
+         noanswer:"ལན་མེད།",
+         outside:"ཆ་རྐྱེན་ཚང་མི་འདུག",
+         kham:"ཁམས།",
+         amdo:"ཨ་མདོ།",
+         uTsang:"དབུས་གཙང་།",
+         other:"གཞན།",
+
+      },
+      get:"སྤྱོད་མཁན་གྱི་གནས་ཚུལ་མཁོ་སྒྲུབ་བྱེད་བཞིན་ཡོད།",
+      redirect:"ནང་འཛུལ་བྱས་མི་འདུག ཕྱིར་ལྡོག་བྱེད་བཞིན་ཡོད།",
+      agree:"ནང་བསྟན་དཔེ་ཚོགས་ལྟེ་གནས་ཀྱིས་བསྐུར་བའི་གློག་འཕྲིན་ལ་ངོས་ལེན་ཡོད།",
+      update:"ཁ་གསབ།",
+      updating:"ཁ་གསབ་བྱེད་བཞིན་ཡོད།"
    },
    popover:{
       moreInfo:"གནས་ཚུལ་འདི་ལས་མང་བ།",
@@ -192,8 +255,8 @@ const boTranslation = {
    misc:{
       colon:" ",
       datatype:"དན་གྲངས་ལ་ཕྱིར་ལོག",
-      has:"Has",
-      or:"or",
+      has:"",
+      or:"ཡང་ན།",
       seeA:"ཚང་མ་སྟོན།",
       browse:"མིག་བཤེར་བྱོས།",
       show:"འདི་ལས་མང་བ།",
@@ -203,10 +266,10 @@ const boTranslation = {
       preview:"སྔོན་ལྟ།",
       permalink:"དྲ་ཐག",
       clipboard:"དྲ་ཐག་བཤུས་ཡོད།\nCTRL+Vབཀོལ་ནས་ཕོབ།",
-      from:"from",
-      in:"in",
-      of:"of",
-      please:"Please"
+      from:"",
+      in:"",
+      of:"",
+      please:""
    },
    lang:{
       en:"ཨིན་སྐད།",
@@ -248,8 +311,6 @@ const boTranslation = {
       },
       tip:{
          zh:"རྒྱ་ཡིག",
-         zhHant:"རྒྱ་ཡིག (ཧན་ཙི།)",
-         //zhHans:"རྒྱ་ཡིག (གསར་མ།)",
          zhHant:"སྲོལ་རྒྱུན་རྒྱ་ཡིག",
          zhHans:"རྒྱ་ཡིག་གསར་མ།",
          zhLatnPinyin:"ཕིན་ཡིག་རྒྱ་ཡིག",
@@ -287,7 +348,9 @@ const boTranslation = {
       result_plural:"བཙལ་འབྲས། {{count,counttobo}}",
       filters:{
          noresults:"འདེམས་སྒྲུག་བྱས་པའི་བཙལ་འབྲས་མི་འདུག"
-      }
+      },
+      seeO:"See results in other data types",
+      backToW:"བརྩམས་ཆོས་སྟེང་ཕྱིར་ལོག"
    },
    Rsidebar:{
       title:"རྣམ་པ་སྒྲིག་ས།",
@@ -300,7 +363,8 @@ const boTranslation = {
       priority:{
          title:"དན་གྲངས་ཀྱི་སྐད་ཡིག་གི་གོ་རིམ།",
          help:"དན་གྲངས་སྟོན་སའི་སྐད་ཡིག་གལ་ཆེ་ཆུང་གི་རིམ་པ་ལྟར་འདེམས། སྐད་ཡིག་ཚང་མ་མ་འདེམས་རུང་ཆོག",
-         user:"ཁྱེད་ཀྱི་འདེམ་ཁ།"
+         user:"ཁྱེད་ཀྱི་འདེམ་ཁ།",
+         more:"འདི་ལས་མང་བ།"
       }
    },
    Asidebar:{
@@ -320,7 +384,7 @@ const boTranslation = {
       view:"སྟོན།",
       metadata:"དན་གྲངས་གོང་མ།",
       manifest:"IIIF manifest",
-      page:"ཤོག་གྲངས། {{num,counttobo}}",
+      page:"པར་གྲངས། {{num,counttobo}}",
       volume:"པོད། {{num,counttobo}}",
       availableScans:"ཤོག་ངོས་འདིའི་བཤེར་པར་གང་ཡོད།",
       about:"ཁོང་གི་སྐོར།",
@@ -331,7 +395,11 @@ const boTranslation = {
       searchO:"དཀར་ཆག་ནང་འཚོལ།",
       start:"འཚོལ།",
       reset:"བཙལ་བྱ་སུབ།",
-      otherN:"Load non-matching subparts"
+      otherN:"Load non-matching subparts",
+       scanF:"",
+      etextF:"",
+      openR:"དཔེ་ཐོ།",
+      loadP:"ཤོག་གྲངས་སྔོན་མ་ཀློག"
    },
    mirador:{
       return:"བུདྡྷ་ལ་ཕྱིར་ལོག",
@@ -350,7 +418,7 @@ const boTranslation = {
    },
    access:{
       limited20:"འགོ་མཇུག་གཉིས་ནས་ཤོག་ངོས་ཉི་ཤུ་ཉི་ཤུ་ལས་ལྷག་ལྟ་ཀློག་བྱེད་མི་ཐུབ།",
-      credentials:"ཁྱེད་ལ་བཤེར་པར་ཡོངས་རྫོགས་བལྟ་ཀློག་གི་ཆོག་མཆ་ན་ཡོད་ན་"
+      credentials:"ཁྱེད་ལ་བཤེར་པར་ཡོངས་རྫོགས་བལྟ་ཀློག་གི་ཆོག་མཆན་ཡོད་ན་"
    },
    location:{
       beginV:"པོད་ {{num,counttobo}} ནས་",
@@ -359,6 +427,18 @@ const boTranslation = {
       endV:"པོད་ {{num,counttobo}} བར།",
       endP:"ཤོག་ངོས་ {{num,counttobo}} ནས་",
       endL:"ཐིག་ཕྲེང་ {{num,counttobo}} བར།"
+    },
+   footer:{
+      BDRC: "Buddhist Digital Resource Center",
+      adr1: "1430 Massachusetts Ave., 5th floor",
+      adr2: "Cambridge, MA, USA 02138",
+      contact: "བྲེལ་གཏུགས་བྱ་ཡུལ།",
+      connect: "སྤྱི་ཚོགས་དྲ་ལམ་བརྒྱུད་ནས་ང་ཚོར་འབྲེལ་བ་བྱ་ཡུལ།",
+      print:"ང་ཚོའི་དྲ་ཐོག་ཏུ་ཡོད་པའི་དཔེ་ཆ་ཁག་དགོས་ཚེ་འདི་ནས་མངགས།",
+      order:"མངགས་ཉོ།",
+      join:"ང་ཚོའི་སྐོར་ཀྱི་གནས་ཚུལ་གསར་ཤོས་ཤེས་འདོད་ཚེ་འཛུལ་ཞུགས་བྱོས།",
+      subscribe:"མངགས་ཉོ།",
+      support:"ངེད་ཚོགས་པའི་ལས་རིགས་ལ་རྒྱབ་སྐྱོར།"
    }
 } ;
 

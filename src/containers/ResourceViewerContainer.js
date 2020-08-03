@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import * as data from '../state/data/actions';
 import * as ui from '../state/ui/actions';
 import store from '../index';
+import keywordtolucenequery from '../components/App';
 
 //import { setLocale } from 'react-redux-i18n';
 import { i18nextChangeLanguage } from 'i18next-redux-saga';
@@ -186,7 +187,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
          dispatch(ui.langPreset(langs,i))
       },
       onOutlineSearch:(iri:string,keyword:string,language:string) => {
-         dispatch(data.outlineSearch(iri,keyword,language));
+         dispatch(data.outlineSearch(iri, keywordtolucenequery(keyword, language), language));
       },
       onResetOutlineKW:() => {
          dispatch(data.resetOutlineSearch());
