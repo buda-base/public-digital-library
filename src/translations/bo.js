@@ -12,7 +12,7 @@ const boTranslation = {
       titleBDRC2:"དཔེ་ཚོགས་",
       titleBDRC3:"ལྟེ་གནས།",
       archives1:"བུདྡྷ་དྲྭ་ཐོག་",
-      archives2:"དཔེ་མཛཽད།",
+      archives2:"དཔེ་མཛོད།",
       by:"ནང་བསྟན་དཔེ་ཚོགས་ལྟེ་གནས་ཀྱིས།",
       subtitle:"ནང་བསྟན་གཞུང་ལུགས་ལྟ་ཀློག་རྒྱ་ཆེར་བྱ་སའི་དྲྭ་སྟེགས་འདི་ནས་ངེད་ཚོགས་པ་གཙོ་བྱས་པའི་ཚོགས་པ་དུ་མས་འཚོལ་བསྡུ་བྱས་པའི་དཔེ་ཆའི་ཤོག་ལྷེ་ས་ཡ་མང་པོ་ལྟ་ཀློག་བྱེད་ཐུབ།",
       message:"ནང་བསྟན་དཔེ་ཚོགས་ལྟེ་གནས་ཀྱི་དྲྭ་ཐོག་དཔེ་མཛོད་གསར་པར་ཕེབས་པར་དགའ་བསུ་ཞུ།",
@@ -21,7 +21,7 @@ const boTranslation = {
       subsubmessage_afteremail:".",
       search:"འཚོལ།",
       choose:"སྐད་རིགས་འདེམ།",
-      start:"Start typing then select search language"
+      start:"དཔེ་མཛོད་སྔོགས།"
    },
    types:{
       any:"གང་རུང་།",
@@ -431,7 +431,7 @@ const boTranslation = {
       BDRC: "Buddhist Digital Resource Center",
       adr1: "1430 Massachusetts Ave., 5th floor",
       adr2: "Cambridge, MA, USA 02138",
-      contact: "བྲེལ་གཏུགས་བྱ་ཡུལ།",
+      contact: "འབྲེལ་གཏུགས་བྱ་ཡུལ།",
       connect: "སྤྱི་ཚོགས་དྲ་ལམ་བརྒྱུད་ནས་ང་ཚོར་འབྲེལ་བ་བྱ་ཡུལ།",
       print:"ང་ཚོའི་དྲ་ཐོག་ཏུ་ཡོད་པའི་དཔེ་ཆ་ཁག་དགོས་ཚེ་འདི་ནས་མངགས།",
       order:"མངགས་ཉོ།",
