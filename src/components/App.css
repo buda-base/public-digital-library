@@ -145,8 +145,10 @@ footer#site-footer > div.foot #t2::before { content:''; display:block; position:
 
 #root > div > .resource {  padding:155px 140px; padding-bottom:75px; display:flex; text-align:left; }
 
-.subsubtitleFront { font-style:italic;margin-top:10px;max-width:70%;margin-left:15%; }
-.subsubtitleFront > a {text-decoration: none; color: #d73449;}
+.subsubtitleFront { /*font-style:italic;*/ margin-top:10px;max-width:70%;margin-left:15%;  font-weight:700 !important; }
+.subsubtitleFront > a {text-decoration: none; color: #d73449; }
+
+.subsubtitleFront + .subsubtitleFront { font-weight:400 !important;}
 
 
 body { overflow:auto !important;padding-right:0 !important; /*font-family:"Roboto", "Helvetica", "Arial", sans-serif; */
@@ -511,7 +513,7 @@ p.no-result {
 #res-container > ul h4 { padding-left:22px;; }
 #res-container > ul h4 { color:#343434; font-size:24px; /*font-family:"Noto Sans";*/ font-weight:900; text-transform:uppercase;}
 
-#res-container #samples > h4 { padding-left:0; font-size:18px; text-transform: none;  font-weight:500; text-align:center; }
+#res-container #samples > h4 { padding-left:0; font-size:18px; text-transform: none;  font-weight:400; text-align:center; }
 
 /* .SearchPane.resultPage #res-container { padding-top:70px;} */
 
