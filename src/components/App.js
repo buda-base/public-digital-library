@@ -4860,7 +4860,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                         <div>
                            {/* { I18n.t("home.BUDA") } */}
                            {/* <h1>{ I18n.t("home.titleBDRC1") }<br/>{ I18n.t("home.titleBDRC2") }<br/>{ I18n.t("home.titleBDRC3") }</h1> */}
-                           <h1>{ I18n.t("home.archives1") }{this.props.locale==="en" && <br/>}{ I18n.t("home.archives2") }</h1>
+                           <h1 lang={this.props.locale}>{ I18n.t("home.archives1") }{this.props.locale==="en" && <br/>}{ I18n.t("home.archives2") }</h1>
                            <div>{ I18n.t("home.by") }</div>
                            <span>{ I18n.t("home.subtitle") }</span>
                         </div>
