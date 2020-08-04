@@ -4761,7 +4761,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          )
    }
 
-   renderHeader = (kZprop) => {
+   renderHeader = (kZprop, T) => {
 
       let imageLabel = "images"
       if(!this.props.collecManif && this.props.imageAsset && this.props.imageAsset.match(/[/]collection[/]/)) imageLabel = "collection"
@@ -4810,7 +4810,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
       let iiifThumb = this.getResourceElem(tmp+"thumbnailIIIFService")
       if(iiifThumb && iiifThumb.length) iiifThumb = iiifThumb[0].value
 
-      if(iiifThumb) 
+      if(iiifThumb && T === "Images") 
          return  ( 
             <div class="data" id="first-image">
                <div className={"firstImage "+(this.state.imageLoaded?"loaded":"")} {...(this.props.config.hideViewers?{"onClick":this.showMirador.bind(this),"style":{cursor:"pointer"}}:{})} >
@@ -5693,7 +5693,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                   {/* { this.renderAnnoPanel() } */}
                   { this.renderWithdrawn() }             
                   <div class="title">{ wTitle }{ iTitle }{ rTitle }</div>
-                  { this.renderHeader(kZprop.filter(k => mapProps.includes(k))) }
+                  { this.renderHeader(kZprop.filter(k => mapProps.includes(k)), _T) }
                   { etext && <div class="data" id="open-etext"><div><Link to={loca.pathname+loca.search+"#open-viewer"}>{I18n.t("resource.openViewer")}</Link></div></div> }
                   <div class={"data" + (_T === "Etext"?" etext-title":"")+(_T === "Images"?" images-title":"")}>
                      {_T === "Images" && iTitle?[<h2 class="on intro">{I18n.t("resource.scanF")}</h2>,iTitle]:(_T === "Etext" && iTitle?[<h2 class="on intro">{I18n.t("resource.etextF")}</h2>,iTitle]:title)}
