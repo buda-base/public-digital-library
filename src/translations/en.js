@@ -19,7 +19,9 @@ const enTranslation = {
       submessage:"with new features, resources, and tools for faster and more in-depth research.",
       subsubmessage:"We welcome your feedback. Help us improve by sending bug reports, comments and suggestions to ",
       subsubmessage_afteremail:".",
-      subsubmessage_account:"All users, including users with existing accounts on tbrc.org, will need to register for a free BDRC account for full access. Click on the Register link above to create a new account",
+      subsubmessage_account1:"All users, including users with existing accounts on tbrc.org, will need to ", 
+      subsubmessage_account2:" for a free BDRC account for full access. Click on the ",
+      subsubmessage_account3:" link above to create a new account.",
       search:"Search",
       choose:"Choose language",
       start:"Start typing then select search language"
