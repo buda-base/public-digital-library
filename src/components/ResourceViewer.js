@@ -220,6 +220,7 @@ export const providers = {
    "dila":"DILA Authority Database",
    "eap":"British Library (EAP)",
    "eftr":"84000",
+   "har":"Himalayan Art",
    "ia":"Internet Archives",                 
    "gretil":"GRETIL",
    "mbbt":"Marcus Bingenheimer's website",
@@ -246,6 +247,7 @@ export const provImg = {
    "eftr": "/84000.svg",
    "84000": "/84000.svg",
    "gretil": "/GRETIL.png",
+   "har": "/HAR.png",
    "ia": "/IA.png",
    "mbbt": "/MB-icon.jpg",
    "ngmpp":"/NGMPP.svg",
@@ -4031,7 +4033,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
    else if((cLegalD && cLegalD.endsWith("Undetermined"))||(!cLegalD && legalD && legalD.endsWith("Undetermined"))) copyR = "open_unknown" ;
    // TODO other kind of licenses ?
 
-   //loggergen.log("legal",cLegal,cLegalD,legal,legalD)
+   loggergen.log("legal",cLegal,cLegalD,legal,legalD)
 
    let same = this.getResourceElem(owl+"sameAs")
    if(!same || !same.length) same = [] 
@@ -4077,7 +4079,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
       }
    }
 
-   loggergen.log("same",same)
+   loggergen.log("same:",same)
 
    // TODO 
    // + fix bdr:G3176 (sameAs Shakya Research Center)
@@ -4109,6 +4111,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
       <span id="same" class={noS?"PE0":""} onClick={(e) => this.setState({...this.state,anchorPermaSame:e.currentTarget, collapse: {...this.state.collapse, permaSame:!this.state.collapse.permaSame } } ) }>
          {same.map(s => {
+            loggergen.log("s.val:",s.value)
             let prefix = shortUri(s.value).split(":")[0]
             if(prefix.startsWith("http") && s.fromSeeOther) prefix = s.fromSeeOther
             // TODO fix Sakya Research Center
@@ -4134,7 +4137,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                   let open = <MenuItem>{I18n.t("result.open")} {name} {I18n.t("misc.in")} &nbsp;<b>{providers[prov]}</b><img src="/icons/link-out.svg"/></MenuItem>
                   if(s.isOrig) open = <MenuItem style={{display:"block",height:"32px",lineHeight:"12px"}}>{I18n.t("popover.imported")} <b>{providers[prov]}</b><br/>{I18n.t("popover.seeO")}<img style={{verticalAlign:"middle"}} src="/icons/link-out.svg"/></MenuItem>
 
-                  //loggergen.log("permaSame",s,data,tab,link,name,prov) 
+                  loggergen.log("permaSame",s,data,tab,link,name,prov) 
 
                   // TODO case when more than on resource from a given provider (cf RKTS)
                   if(prov != "bdr") return (<a target="_blank" href={link}>{open}</a>) 
