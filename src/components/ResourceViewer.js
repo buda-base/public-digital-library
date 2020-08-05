@@ -4058,7 +4058,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
    
       //else orig = ""
 
-      loggergen.log("prov,orig",prov,orig)
+      //loggergen.log("prov,orig",prov,orig)
 
       if(prov && orig) same = [ { fromSeeOther:prov.toLowerCase(), value:orig, isOrig:true } ]
    }
@@ -4079,7 +4079,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
       }
    }
 
-   loggergen.log("same:",same)
+   //loggergen.log("same:",same)
 
    // TODO 
    // + fix bdr:G3176 (sameAs Shakya Research Center)
@@ -4137,10 +4137,10 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                   let open = <MenuItem>{I18n.t("result.open")} {name} {I18n.t("misc.in")} &nbsp;<b>{providers[prov]}</b><img src="/icons/link-out.svg"/></MenuItem>
                   if(s.isOrig) open = <MenuItem style={{display:"block",height:"32px",lineHeight:"12px"}}>{I18n.t("popover.imported")} <b>{providers[prov]}</b><br/>{I18n.t("popover.seeO")}<img style={{verticalAlign:"middle"}} src="/icons/link-out.svg"/></MenuItem>
 
-                  loggergen.log("permaSame",s,data,tab,link,name,prov) 
+                  //loggergen.log("permaSame",s,data,tab,link,name,prov) 
 
                   // TODO case when more than on resource from a given provider (cf RKTS)
-                  if(prov != "bdr") return (<a target="_blank" href={link}>{open}</a>) 
+                  if(prov != "bdr") return (<a target="_blank" href={link.replace(/^https?:/,"")}>{open}</a>) 
             } ) }
          </Popover>
 
