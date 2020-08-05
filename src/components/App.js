@@ -470,7 +470,9 @@ export function lang_selec(that,black:boolean = false)
                   
                   { ["zh", "en", "bo" ].map((i) => {
 
-                        let label = I18n.t("lang."+i,{lng:i});
+                        let label = "English";
+                        if (i === "bo") label="བོད་ཡིག";
+                        if (i === "zh") label="中文";
                         let disab = false ; //["en","bo"].indexOf(i) === -1
 
                         // TODO add link to user profile / language preferences
