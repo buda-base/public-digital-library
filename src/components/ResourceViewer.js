@@ -5161,6 +5161,17 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                               if(g["tmp:titleMatch"] || g["tmp:labelMatch"]) {
                                  g.hasMatch = true
                               }
+                              if(g["bf:identifiedBy"]) {
+                                 if(!Array.isArray(g["bf:identifiedBy"])) g["bf:identifiedBy"] = [ g["bf:identifiedBy"] ]
+                                 if(g["bf:identifiedBy"].length) { 
+                                    g.id = []
+                                    for(let node of g["bf:identifiedBy"]) {
+                                       let id = elem.filter(f => f["@id"] === node) 
+                                       // TODO add prefix letter (either in value or from ontology property)
+                                       if(id.length) g.id.push(<span class="id" title={this.fullname(id[0].type,false,false,true,false)}>{id[0]["rdf:value"]}</span>)
+                                    }
+                                 }
+                              }
                               /*
                               if(osearch && g["tmp:titleMatch"]) {
                                  if(!g.details) g.details = []
@@ -5224,7 +5235,8 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                               <span class={"parTy "+(e.details?"on":"")} {...e.details?{title:/*tLabel+" - "+*/ I18n.t("resource."+(this.state.collapse[tag+"-details"]?"hideD":"showD")), onClick:(ev) => toggle(ev,root,e["@id"],"details",false,e)}:{title:tLabel}} >
                                  {pType && parts[pType] ? <div>{parts[pType]}</div> : <div>{parts["?"]}</div> }
                               </span>
-                              <span>{this.uriformat(null,{type:'uri', value:fUri, inOutline: (!e.hasPart?tag+"-details":tag), url:"/show/"+root+"?part="+e["@id"], debug:false, toggle:() => toggle(null,root,e["@id"],!e.hasPart?"details":"",false,e)})}</span>                              
+                              <span>{this.uriformat(null,{type:'uri', value:fUri, inOutline: (!e.hasPart?tag+"-details":tag), url:"/show/"+root+"?part="+e["@id"], debug:false, toggle:() => toggle(null,root,e["@id"],!e.hasPart?"details":"",false,e)})}</span>
+                              {e.id}
                               <div class="abs">
                                  { e.hasImg && <Link className="hasImg" title={I18n.t("copyright.view")}  to={e.hasImg}><img src="/icons/search/images.svg"/><img src="/icons/search/images_r.svg"/></Link> }
                                  { /* pType && 

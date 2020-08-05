@@ -1079,7 +1079,14 @@ h4:not(:hover) > .lang
 
 .resource .data#outline  .parTy + span { margin-right:5px;}
 
-.resource .data#outline .root + div .abs { position:absolute; width:80px;}
+.resource .data#outline div .id { padding-right:6px; font-size:14px !important; font-weight:600 !important; }
+.resource .data#outline div .id::after,
+.resource .data#outline div .id::before { content:'['; padding:0 2px; font-size:12px!important;vertical-align:1px;}
+.resource .data#outline div .id::after { content:']'; }
+
+.resource .data#outline .is-root .id { color:#d73449; }
+
+.resource .data#outline .root + div .abs { position:absolute; width:auto;}
 
 .resource .data#outline .root + div span.top { display: block;  margin-top:5px; }
 
