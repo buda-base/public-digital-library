@@ -408,7 +408,9 @@ export async function miradorConfig(data, manifest, canvasID, useCredentials, la
           */
          ]
          
-      }
+      },
+
+      locale:langList[0].replace(/^([^-]+).*?$/,"$1")
    }
    if(!manifest) {
 

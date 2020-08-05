@@ -4860,7 +4860,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                         <div>
                            {/* { I18n.t("home.BUDA") } */}
                            {/* <h1>{ I18n.t("home.titleBDRC1") }<br/>{ I18n.t("home.titleBDRC2") }<br/>{ I18n.t("home.titleBDRC3") }</h1> */}
-                           <h1>{ I18n.t("home.archives1") }{this.props.locale==="en" && <br/>}{ I18n.t("home.archives2") }</h1>
+                           <h1 lang={this.props.locale}>{ I18n.t("home.archives1") }{this.props.locale==="en" && <br/>}{ I18n.t("home.archives2") }</h1>
                            <div>{ I18n.t("home.by") }</div>
                            <span>{ I18n.t("home.subtitle") }</span>
                         </div>
@@ -5131,6 +5131,12 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      {/* { messageD } */}
                      <h3>{ I18n.t("home.message") }</h3>
                      <h4>{ I18n.t("home.submessage") }</h4>
+                     <h4 class="subsubtitleFront">
+                        { I18n.t("home.subsubmessage_account1")}
+                        <span class="uri-link" onClick={() => this.props.auth.login(this.props.history.location,true)} >{I18n.t("topbar.register")}</span>
+                        { I18n.t("home.subsubmessage_account2")}
+                        <span class="uri-link" style={{textTransform:"capitalize"}} onClick={() => this.props.auth.login(this.props.history.location,true)} >{I18n.t("topbar.register")}</span>
+                        { I18n.t("home.subsubmessage_account3")}</h4>
                      <h4 class="subsubtitleFront">{ I18n.t("home.subsubmessage") }<a title="email us" href="mailto:help@bdrc.io">help@bdrc.io</a>{ I18n.t("home.subsubmessage_afteremail") }</h4>
                   </List> }
                { (this.props.datatypes && this.props.datatypes.hash && this.props.datatypes.metadata[bdo+this.state.filters.datatype[0]] && message.length === 0 && !this.props.loading) && 
