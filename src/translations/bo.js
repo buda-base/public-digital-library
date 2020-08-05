@@ -19,6 +19,9 @@ const boTranslation = {
       submessage:"ཉམས་ཞིབ་ཞིབ་ཚགས་པ་དང་སྔར་ལས་མགྱོགས་པ་ཡོང་ཕྱིར་འདིའི་ནང་ཁྱད་ཆོས་དང་རྒྱུ་ཆ་གསར་པ། ལག་ཆ་གསར་པ་མང་པོ་ཁ་སྣོན་བྱས་ཡོད།",
       subsubmessage:"ངེད་ཚོགས་པའི་ལས་རིགས་ཀྱི་སྤུས་ཀ་ཇེ་ལེགས་སུ་གཏོང་བར་བསམ་ཚུལ་དང་སློབ་སྟོན་རེ་ཡོད་ཚེ་འདི་ནས་འགོད་རོགས།",
       subsubmessage_afteremail:".",
+      subsubmessage_account1:"All users, including users with existing accounts on tbrc.org, will need to ", 
+      subsubmessage_account2:" for a free BDRC account for full access. Click on the ",
+      subsubmessage_account3:" link above to create a new account.",
       search:"འཚོལ།",
       choose:"སྐད་རིགས་འདེམ།",
       start:"དཔེ་མཛོད་སྔོགས།"
