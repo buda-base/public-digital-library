@@ -220,6 +220,7 @@ export const providers = {
    "dila":"DILA Authority Database",
    "eap":"British Library (EAP)",
    "eftr":"84000",
+   "har":"Himalayan Art",
    "ia":"Internet Archives",                 
    "gretil":"GRETIL",
    "mbbt":"Marcus Bingenheimer's website",
@@ -246,6 +247,7 @@ export const provImg = {
    "eftr": "/84000.svg",
    "84000": "/84000.svg",
    "gretil": "/GRETIL.png",
+   "har": "/HAR.png",
    "ia": "/IA.png",
    "mbbt": "/MB-icon.jpg",
    "ngmpp":"/NGMPP.svg",
@@ -4031,7 +4033,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
    else if((cLegalD && cLegalD.endsWith("Undetermined"))||(!cLegalD && legalD && legalD.endsWith("Undetermined"))) copyR = "open_unknown" ;
    // TODO other kind of licenses ?
 
-   //loggergen.log("legal",cLegal,cLegalD,legal,legalD)
+   loggergen.log("legal",cLegal,cLegalD,legal,legalD)
 
    let same = this.getResourceElem(owl+"sameAs")
    if(!same || !same.length) same = [] 
@@ -4056,7 +4058,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
    
       //else orig = ""
 
-      loggergen.log("prov,orig",prov,orig)
+      //loggergen.log("prov,orig",prov,orig)
 
       if(prov && orig) same = [ { fromSeeOther:prov.toLowerCase(), value:orig, isOrig:true } ]
    }
@@ -4077,7 +4079,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
       }
    }
 
-   loggergen.log("same",same)
+   //loggergen.log("same:",same)
 
    // TODO 
    // + fix bdr:G3176 (sameAs Shakya Research Center)
@@ -4109,6 +4111,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
       <span id="same" class={noS?"PE0":""} onClick={(e) => this.setState({...this.state,anchorPermaSame:e.currentTarget, collapse: {...this.state.collapse, permaSame:!this.state.collapse.permaSame } } ) }>
          {same.map(s => {
+            loggergen.log("s.val:",s.value)
             let prefix = shortUri(s.value).split(":")[0]
             if(prefix.startsWith("http") && s.fromSeeOther) prefix = s.fromSeeOther
             // TODO fix Sakya Research Center
@@ -4137,7 +4140,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                   //loggergen.log("permaSame",s,data,tab,link,name,prov) 
 
                   // TODO case when more than on resource from a given provider (cf RKTS)
-                  if(prov != "bdr") return (<a target="_blank" href={link}>{open}</a>) 
+                  if(prov != "bdr") return (<a target="_blank" href={link.replace(/^https?:/,"")}>{open}</a>) 
             } ) }
          </Popover>
 
@@ -4761,7 +4764,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          )
    }
 
-   renderHeader = (kZprop) => {
+   renderHeader = (kZprop, T) => {
 
       let imageLabel = "images"
       if(!this.props.collecManif && this.props.imageAsset && this.props.imageAsset.match(/[/]collection[/]/)) imageLabel = "collection"
@@ -4807,13 +4810,30 @@ perma_menu(pdfLink,monoVol,fairUse,other)
       }
       let etext = this.isEtext()
 
-      if(!this.props.manifestError &&  this.props.imageAsset && !etext)
+      let iiifThumb = this.getResourceElem(tmp+"thumbnailIIIFService")
+      if(iiifThumb && iiifThumb.length) iiifThumb = iiifThumb[0].value
+
+      if(iiifThumb && T === "Images") 
+         return  ( 
+            <div class="data" id="first-image">
+               <div className={"firstImage "+(this.state.imageLoaded?"loaded":"")} {...(this.props.config.hideViewers?{"onClick":this.showMirador.bind(this),"style":{cursor:"pointer"}}:{})} >
+                  <Loader className="uvLoader" loaded={this.state.imageLoaded} color="#fff"/>
+                  <img onLoad={(e)=>this.setState({...this.state,imageLoaded:true})} src={iiifThumb+"/full/1000,/0/default.jpg"} /> 
+               </div>
+            </div>
+         )
+      else if(!this.props.manifestError &&  this.props.imageAsset && !etext)
          return  ( 
          <div class="data" id="first-image">
             <div className={"firstImage "+(this.state.imageLoaded?"loaded":"")} {...(this.props.config.hideViewers?{"onClick":this.showMirador.bind(this),"style":{cursor:"pointer"}}:{})} >
                <Loader className="uvLoader" loaded={this.state.imageLoaded} color="#fff"/>
-               { this.props.firstImage && <img src={this.props.firstImage} /*src={`data:image/${this.props.firstImage.match(/png$/)?'png':'jpeg'};base64,${this.props.imgData}`}*/  onLoad={(e)=>this.setState({...this.state,imageLoaded:true})}/> }
-               {
+               { 
+                  this.props.firstImage && 
+                  <img onLoad={(e)=>this.setState({...this.state,imageLoaded:true})}
+                     src={this.props.firstImage} 
+                   /*src={`data:image/${this.props.firstImage.match(/png$/)?'png':'jpeg'};base64,${this.props.imgData}`}*/  
+                  /> }
+               { /* // deprecated 
                   this.props.firstImage && this.state.imageLoaded &&
                   <div id="title">
                      { (!this.props.config || !this.props.config.hideViewers) &&
@@ -4832,14 +4852,14 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                            </div>
                         ]
                      }
-                     { /* this.props.config && this.props.config.hideViewers &&
-                        <div onClick={this.showMirador.bind(this)}>
-                           <span>{I18n.t("resource.view")} {I18n.t("resource."+imageLabel)}</span>
-                           <Fullscreen style={{transform: "scale(1.4)",position:"absolute",right:"3px",top:"3px"}}/>
-                        </div>
-                        */ }
+                     { // this.props.config && this.props.config.hideViewers &&
+                       // <div onClick={this.showMirador.bind(this)}>
+                       //    <span>{I18n.t("resource.view")} {I18n.t("resource."+imageLabel)}</span>
+                       //    <Fullscreen style={{transform: "scale(1.4)",position:"absolute",right:"3px",top:"3px"}}/>
+                       // </div>
+                     }
                   </div>
-               }
+               */}
             </div>
          </div>
          )
@@ -5676,7 +5696,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                   {/* { this.renderAnnoPanel() } */}
                   { this.renderWithdrawn() }             
                   <div class="title">{ wTitle }{ iTitle }{ rTitle }</div>
-                  { this.renderHeader(kZprop.filter(k => mapProps.includes(k))) }
+                  { this.renderHeader(kZprop.filter(k => mapProps.includes(k)), _T) }
                   { etext && <div class="data" id="open-etext"><div><Link to={loca.pathname+loca.search+"#open-viewer"}>{I18n.t("resource.openViewer")}</Link></div></div> }
                   <div class={"data" + (_T === "Etext"?" etext-title":"")+(_T === "Images"?" images-title":"")}>
                      {_T === "Images" && iTitle?[<h2 class="on intro">{I18n.t("resource.scanF")}</h2>,iTitle]:(_T === "Etext" && iTitle?[<h2 class="on intro">{I18n.t("resource.etextF")}</h2>,iTitle]:title)}
