@@ -22,6 +22,7 @@ const enTranslation = {
       subsubmessage_account1:"All users, including users with existing accounts on tbrc.org, will need to ", 
       subsubmessage_account2:" for a free BDRC account for full access. Click on the ",
       subsubmessage_account3:" link above to create a new account.",
+      subsubmessage_account4:"register",
       search:"Search",
       choose:"Choose language",
       start:"Start typing then select search language"
