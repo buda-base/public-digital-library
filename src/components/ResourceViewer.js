@@ -4813,12 +4813,12 @@ perma_menu(pdfLink,monoVol,fairUse,other)
       let iiifThumb = this.getResourceElem(tmp+"thumbnailIIIFService")
       if(iiifThumb && iiifThumb.length) iiifThumb = iiifThumb[0].value
 
-      if(iiifThumb && T === "Images") 
+      if(!this.state.imageError && iiifThumb && T === "Images") 
          return  ( 
-            <div class="data" id="first-image">
+            <div class="data simple" id="first-image">
                <div className={"firstImage "+(this.state.imageLoaded?"loaded":"")} {...(this.props.config.hideViewers?{"onClick":this.showMirador.bind(this),"style":{cursor:"pointer"}}:{})} >
                   <Loader className="uvLoader" loaded={this.state.imageLoaded} color="#fff"/>
-                  <img onLoad={(e)=>this.setState({...this.state,imageLoaded:true})} src={iiifThumb+"/full/1000,/0/default.jpg"} /> 
+                  <img onError={(e)=>this.setState({...this.state,imageError:true})} onLoad={(e)=>this.setState({...this.state,imageLoaded:true,imageError:false})} src={iiifThumb+"/full/1000,/0/default.jpg"} /> 
                </div>
             </div>
          )
