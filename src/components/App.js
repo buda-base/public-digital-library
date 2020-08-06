@@ -5140,7 +5140,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                         { I18n.t("home.subsubmessage_account1")}
                         <span class="uri-link" onClick={() => this.props.auth.login(this.props.history.location,true)} >{I18n.t("home.subsubmessage_account4")}</span>
                         { I18n.t("home.subsubmessage_account2")}
-                        <span class="uri-link" style={{textTransform:"capitalize"}} onClick={() => this.props.auth.login(this.props.history.location,true)} >{I18n.t("home.subsubmessage_account4")}</span>
+                        <span class="uri-link" style={{textTransform:"capitalize"}} onClick={() => this.props.auth.login(this.props.history.location,true)} >{I18n.t("home.subsubmessage_account5")}</span>
                         { I18n.t("home.subsubmessage_account3")}</h4>
                      <h4 class="subsubtitleFront">{ I18n.t("home.subsubmessage") }<a title="email us" href="mailto:help@bdrc.io">help@bdrc.io</a>{ I18n.t("home.subsubmessage_afteremail") }</h4>
                   </List> }
