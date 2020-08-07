@@ -5172,6 +5172,28 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                                     }
                                  }
                               }
+
+                              /* WIP sameAs icon / seeAlso link
+                              if(g["owl:sameAs"] || g["rdfs:seeAlso"]){
+                                 g.same = []
+                                 if(g["owl:sameAs"] && !Array.isArray(g["owl:sameAs"])) g["owl:sameAs"] = [ g["owl:sameAs"] ]
+                                 if(g["rdfs:seeAlso"] && !Array.isArray(g["rdfs:seeAlso"])) g["rdfs:seeAlso"] = [ g["rdfs:seeAlso"] ]
+                                 let same = []
+                                 if(g["owl:sameAs"] && g["owl:sameAs"].length) same = same.concat(g["owl:sameAs"])
+                                 if(g["rdfs:seeAlso"] && g["rdfs:seeAlso"].length) same = same.concat(g["rdfs:seeAlso"])
+                                 for(let node of same) {                                    
+                                    let prefix,url ;
+                                    if(node["@id"]) { 
+                                       prefix = shortUri(node["@id"]).split(":")[0]
+                                       url = node["@id"]
+                                    }
+                                    // TODO link to NGMPP
+                                    //else if(node["@value"] && node["type"] === "xsd:anyURI")
+                                    if(prefix && url) g.same.push(<a href={url} target="_blank" class={"provider "+prefix}>{provImg[prefix]?<img src={provImg[prefix]}/>:<span class="img">{prefix.replace(/^cbc.$/,"cbc@").toUpperCase()}</span>}</a>)
+                                 }
+                              }
+                              */
+
                               /*
                               if(osearch && g["tmp:titleMatch"]) {
                                  if(!g.details) g.details = []
@@ -5237,6 +5259,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                               </span>
                               <span>{this.uriformat(null,{type:'uri', value:fUri, inOutline: (!e.hasPart?tag+"-details":tag), url:"/show/"+root+"?part="+e["@id"], debug:false, toggle:() => toggle(null,root,e["@id"],!e.hasPart?"details":"",false,e)})}</span>
                               {e.id}
+                              {e.same}
                               <div class="abs">
                                  { e.hasImg && <Link className="hasImg" title={I18n.t("copyright.view")}  to={e.hasImg}><img src="/icons/search/images.svg"/><img src="/icons/search/images_r.svg"/></Link> }
                                  { /* pType && 
