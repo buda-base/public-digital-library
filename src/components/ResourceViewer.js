@@ -5140,6 +5140,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                            if(g.details && g.lang !== this.props.locale) delete g.details
                            if(!g.details) {
                               g.lang = this.props.locale
+                              if(!g.hidden) g.hidden = []
                               // deprecated
                               // if(! (["bdr:PartTypeSection", "bdr:PartTypeVolume"].includes(g.partType)) ) {
                               if(g.contentLocation) {
@@ -5154,14 +5155,14 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                               }
                               if(g.instanceOf) {
                                  if(!g.details) g.details = []
-                                 g.details.push(<div class="sub"><h4 class="first type">{this.proplink(bdo+"instanceOf")}{I18n.t("punc.colon")} </h4>{this.format("h4","instacO","",false, "sub", [{type:"uri",value:fullUri(g.instanceOf)}])}</div>)
+                                 g.hidden.push(<div class="sub"><h4 class="first type">{this.proplink(bdo+"instanceOf")}{I18n.t("punc.colon")} </h4>{this.format("h4","instacO","",false, "sub", [{type:"uri",value:fullUri(g.instanceOf)}])}</div>)
                                  let instOf = elem.filter(f => f["@id"] === g.instanceOf)
                                  if(instOf.length && instOf[0]["tmp:labelMatch"]) {
                                     g.hasMatch = true
                                     let node = instOf[0]["tmp:labelMatch"]
                                     if(!Array.isArray(node)) node = [node]                                    
                                     //loggergen.log("instOf",instOf,node)
-                                    g.details.push(<div class="sub"><h4 class="first type">{this.proplink(tmp+"instanceLabel")}{I18n.t("punc.colon")} </h4><div>{node.map(n => this.format("h4","","",false, "sub",[{ value:n["@value"], lang:n["@language"], type:"literal"}]))}</div></div>)
+                                    g.hidden.push(<div class="sub"><h4 class="first type">{this.proplink(tmp+"instanceLabel")}{I18n.t("punc.colon")} </h4><div>{node.map(n => this.format("h4","","",false, "sub",[{ value:n["@value"], lang:n["@language"], type:"literal"}]))}</div></div>)
                                  }
                               }
                               if(g["tmp:titleMatch"] || g["tmp:labelMatch"]) {
@@ -5180,6 +5181,16 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                               }
 
                               
+                              if(g.contentLocation) {
+                                 if(!g.details) g.details = []
+                                 let loca = elem.filter(f => f["@id"] === g.contentLocation), jLoca = {}
+                                 if(loca && loca.length) loca = loca[0]
+                                 for(let k of Object.keys(loca)) {
+                                    let val = "" + loca[k]
+                                    if(k.includes("content")) jLoca[bdo+k] = [ { value:(val.includes(":")?fullUri(loca[k]):loca[k]), type:"literal" } ]
+                                 }                                 
+                                 g.details.push(<div class="sub loca"><h4 class="first type">{this.proplink(bdo+"contentLocation")}{I18n.t("punc.colon")} </h4>{this.getWorkLocation([{value:loca["@id"]}],true, jLoca)}</div>)
+                              }
 
                               /*
                               if(osearch && g["tmp:titleMatch"]) {
@@ -5189,6 +5200,9 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                               }
                               else 
                               */
+
+
+                              
                               if(g.hasTitle) {
                                  if(!g.details) g.details = []
                                  if(!Array.isArray(g.hasTitle)) g.hasTitle = [ g.hasTitle ]
@@ -5204,19 +5218,13 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                                        if(!Array.isArray(title)) title = [ title ]                                      
                                        title = title.map(f => ({value:f["@value"],lang:f["@language"], type:"literal"}))
                                        //loggergen.log("title?",JSON.stringify(title,null,3))
-                                       g.details.push(<div class={"sub " + (hideT?"hideT":"")}><h4 class="first type">{this.proplink(titleT)}{I18n.t("punc.colon")} </h4>{this.format("h4", "", "", false, "sub", title)}</div>)
+                                       
+                                       // TODO which to show or not ? in outline search results ?
+                                       let addTo = g.hidden
+                                       if(titleT === bdo+"Title"|| (title.length && title[0].value && title[0].value.includes("↦"))) addTo = g.details 
+                                       addTo.push(<div class={"sub " + (hideT?"hideT":"")}><h4 class="first type">{this.proplink(titleT)}{I18n.t("punc.colon")} </h4>{this.format("h4", "", "", false, "sub", title)}</div>)
                                     }
                                  }
-                              }
-                              if(g.contentLocation) {
-                                 if(!g.details) g.details = []
-                                 let loca = elem.filter(f => f["@id"] === g.contentLocation), jLoca = {}
-                                 if(loca && loca.length) loca = loca[0]
-                                 for(let k of Object.keys(loca)) {
-                                    let val = "" + loca[k]
-                                    if(k.includes("content")) jLoca[bdo+k] = [ { value:(val.includes(":")?fullUri(loca[k]):loca[k]), type:"literal" } ]
-                                 }                                 
-                                 g.details.push(<div class="sub loca"><h4 class="first type">{this.proplink(bdo+"contentLocation")}{I18n.t("punc.colon")} </h4>{this.getWorkLocation([{value:loca["@id"]}],true, jLoca)}</div>)
                               }
 
 
@@ -5293,7 +5301,23 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                                  </CopyToClipboard>
                               </div>
                            </span>)
-                        if(((osearch && e.hasMatch && this.state.collapse[tag+"-details"] !== false) || this.state.collapse[tag+"-details"]) && e.details) ret.push(<div class="details">{e.details}</div>)
+                        if(((osearch && e.hasMatch && this.state.collapse[tag+"-details"] !== false) || this.state.collapse[tag+"-details"]) && e.details) 
+                           ret.push(<div class="details">
+                              {e.details}
+                              { e.hidden && [
+                                 <Collapse timeout={{enter:0,exit:0}} className={"outlineCollapse in-"+(this.state.collapse["hide-"+fUri]===true)} in={this.state.collapse["hide-"+fUri]}>
+                                    {e.hidden}
+                                 </Collapse>,
+                                 <span
+                                    onClick={(e) => this.setState({...this.state,collapse:{...this.state.collapse,["hide-"+fUri]:!this.state.collapse["hide-"+fUri]}})}
+                                    className="expand">
+                                       {I18n.t("misc."+(this.state.collapse["hide-"+fUri]?"hide":"seeMore")).toLowerCase()}&nbsp;<span
+                                       className="toggle-expand">
+                                          { this.state.collapse["hide-"+fUri] && <ExpandLess/>}
+                                          { !this.state.collapse["hide-"+fUri] && <ExpandMore/>}
+                                       </span>
+                                 </span>] }</div>
+                           )
                         if((osearch && this.state.collapse[tag] !== false) || (this.props.outlines[e["@id"]] && this.props.outlines[e["@id"]] !== true && this.state.collapse[tag]) ) ret.push(<div style={{paddingLeft:"25px"}}>{makeNodes(e["@id"],top)}</div>)                        
                         return ( ret )
                      })

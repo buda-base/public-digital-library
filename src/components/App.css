@@ -1227,7 +1227,14 @@ h4:not(:hover) > .lang
 
 
 
-.resource .data#outline a.no-bdrc img { position:relative; margin-top:-6px; } 
+.resource .data#outline a.no-bdrc img { position:relative; margin-top:-8px; } 
+
+.resource .data#outline .expand { position:absolute; margin:0;top:0; font-size:12px !important;font-weight:700 !important;
+   text-transform:capitalize; padding-top:7px;
+}
+.resource .data#outline .expand svg { vertical-align: middle;}
+
+.resource .data#outline .outlineCollapse.in-true { padding-top:10px;}
 
 .resource .data .header .src { position: absolute; right: 0; bottom: 20px; width: 34px;  height: 60px; background-color: #172832; line-height:58px; }
 .resource .data .header .src.orig { cursor:pointer;}
