@@ -1079,7 +1079,14 @@ h4:not(:hover) > .lang
 
 .resource .data#outline  .parTy + span { margin-right:5px;}
 
-.resource .data#outline .root + div .abs { position:absolute; width:80px;}
+.resource .data#outline div .id { padding-right:6px; font-size:14px !important; font-weight:600 !important; }
+.resource .data#outline div .id::after,
+.resource .data#outline div .id::before { content:'['; padding:0 2px; font-size:12px!important;vertical-align:1px;}
+.resource .data#outline div .id::after { content:']'; }
+
+.resource .data#outline .is-root .id { color:#d73449; }
+
+.resource .data#outline .root + div .abs { position:absolute; width:110px;}
 
 .resource .data#outline .root + div span.top { display: block;  margin-top:5px; }
 
@@ -1213,6 +1220,10 @@ h4:not(:hover) > .lang
 .resource.user .data#outline > .search { justify-content: flex-start; padding-left:37px;  }
 .resource.user .data#outline > .search h3 { font-weight:600;}
 .resource.user .data#outline .help { font-size:14px; margin-bottom:24px; margin-top:8px; font-weight:400;padding-left:2px;}
+
+
+.resource .data#outline .provider img { height:16px; vertical-align: -3px !important;}
+.resource .data#outline .provider { padding-right:10px; }
 
 .resource .data .header .src { position: absolute; right: 0; bottom: 20px; width: 34px;  height: 60px; background-color: #172832; line-height:58px; }
 .resource .data .header .src.orig { cursor:pointer;}
@@ -1581,6 +1592,8 @@ h4:not(.first)
 {
    opacity:1 !important;
 }
+
+.resource .sub > h4.label:not(:first-of-type) + .label { margin-left:175px;}
 
 
 /* perfect narrow highlighting of property values */
@@ -2427,6 +2440,7 @@ h2 .wd .before { background-image:url("/WD.svg");  background-size:18px auto; ba
 .sameAs.eftr:not(.ulink):not(h4) .before, h4 .eftr .before { background-image:url("/84000.svg"); background-size:16px auto; background-position:top 4px left 0px;}
 .sameAs.rkts:not(.ulink):not(h4) .before, h4 .rkts .before { background-image:url("/RKTS.png"); background-position:top 2px left 2px; }
 .sameAs.wd:not(.ulink):not(h4) .before, h4 .wd .before { background-image:url("/WD.svg");  background-size:18px auto; background-position:top 2px left 2px;}
+.sameAs.tol:not(.ulink):not(h4) .before, h4 .tol .before { background-image:url("/ToL.png");  background-size:19px auto; background-position: center}
 
 .provider.bdr .before { background-image:url("/logo.svg"); background-size:17px auto; background-position:top 1px right 5px; }
 .provider.bnf .before { background-image:url("/BNF.svg"); background-size:19px auto;background-position:top 4px left;}

@@ -21,6 +21,8 @@ import Select from '@material-ui/core/Select';
 import TextField from '@material-ui/core/TextField';
 
 
+import I18n from 'i18next';
+
 import IconButton from '@material-ui/core/IconButton';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faLanguage,faUserCircle,faSignOutAlt } from '@fortawesome/free-solid-svg-icons'
@@ -121,8 +123,8 @@ export default class Auth {
     console.log("redirect",redirect)
     if(redirect) localStorage.setItem('auth0_redirect', JSON.stringify(redirect));
     else localStorage.setItem('auth0_redirect', '/');
-    if(signup === true) this.auth1.authorize({'bdrc_showsignup':1});
-    else this.auth1.authorize();
+    if(signup === true) this.auth1.authorize({'bdrc_showsignup':1,"locale":"en"});
+    else this.auth1.authorize({"warn": I18n.t("home.subsubmessage_auth"), "locale":"en"});
   }
 
   constructor() {

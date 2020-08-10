@@ -220,6 +220,7 @@ export const providers = {
    "dila":"DILA Authority Database",
    "eap":"British Library (EAP)",
    "eftr":"84000",
+   "har":"Himalayan Art",
    "ia":"Internet Archives",                 
    "gretil":"GRETIL",
    "mbbt":"Marcus Bingenheimer's website",
@@ -246,6 +247,7 @@ export const provImg = {
    "eftr": "/84000.svg",
    "84000": "/84000.svg",
    "gretil": "/GRETIL.png",
+   "har": "/HAR.png",
    "ia": "/IA.png",
    "mbbt": "/MB-icon.jpg",
    "ngmpp":"/NGMPP.svg",
@@ -4031,7 +4033,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
    else if((cLegalD && cLegalD.endsWith("Undetermined"))||(!cLegalD && legalD && legalD.endsWith("Undetermined"))) copyR = "open_unknown" ;
    // TODO other kind of licenses ?
 
-   //loggergen.log("legal",cLegal,cLegalD,legal,legalD)
+   loggergen.log("legal",cLegal,cLegalD,legal,legalD)
 
    let same = this.getResourceElem(owl+"sameAs")
    if(!same || !same.length) same = [] 
@@ -4056,7 +4058,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
    
       //else orig = ""
 
-      loggergen.log("prov,orig",prov,orig)
+      //loggergen.log("prov,orig",prov,orig)
 
       if(prov && orig) same = [ { fromSeeOther:prov.toLowerCase(), value:orig, isOrig:true } ]
    }
@@ -4077,7 +4079,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
       }
    }
 
-   loggergen.log("same",same)
+   //loggergen.log("same:",same)
 
    // TODO 
    // + fix bdr:G3176 (sameAs Shakya Research Center)
@@ -4109,6 +4111,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
       <span id="same" class={noS?"PE0":""} onClick={(e) => this.setState({...this.state,anchorPermaSame:e.currentTarget, collapse: {...this.state.collapse, permaSame:!this.state.collapse.permaSame } } ) }>
          {same.map(s => {
+            loggergen.log("s.val:",s.value)
             let prefix = shortUri(s.value).split(":")[0]
             if(prefix.startsWith("http") && s.fromSeeOther) prefix = s.fromSeeOther
             // TODO fix Sakya Research Center
@@ -4137,7 +4140,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                   //loggergen.log("permaSame",s,data,tab,link,name,prov) 
 
                   // TODO case when more than on resource from a given provider (cf RKTS)
-                  if(prov != "bdr") return (<a target="_blank" href={link}>{open}</a>) 
+                  if(prov != "bdr") return (<a target="_blank" href={link.replace(/^https?:/,"")}>{open}</a>) 
             } ) }
          </Popover>
 
@@ -4810,12 +4813,12 @@ perma_menu(pdfLink,monoVol,fairUse,other)
       let iiifThumb = this.getResourceElem(tmp+"thumbnailIIIFService")
       if(iiifThumb && iiifThumb.length) iiifThumb = iiifThumb[0].value
 
-      if(iiifThumb && T === "Images") 
+      if(!this.state.imageError && iiifThumb && T === "Images") 
          return  ( 
-            <div class="data" id="first-image">
+            <div class="data simple" id="first-image">
                <div className={"firstImage "+(this.state.imageLoaded?"loaded":"")} {...(this.props.config.hideViewers?{"onClick":this.showMirador.bind(this),"style":{cursor:"pointer"}}:{})} >
                   <Loader className="uvLoader" loaded={this.state.imageLoaded} color="#fff"/>
-                  <img onLoad={(e)=>this.setState({...this.state,imageLoaded:true})} src={iiifThumb+"/full/1000,/0/default.jpg"} /> 
+                  <img onError={(e)=>this.setState({...this.state,imageError:true})} onLoad={(e)=>this.setState({...this.state,imageLoaded:true,imageError:false})} src={iiifThumb+"/full/1000,/0/default.jpg"} /> 
                </div>
             </div>
          )
@@ -5158,6 +5161,39 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                               if(g["tmp:titleMatch"] || g["tmp:labelMatch"]) {
                                  g.hasMatch = true
                               }
+                              if(g["bf:identifiedBy"]) {
+                                 if(!Array.isArray(g["bf:identifiedBy"])) g["bf:identifiedBy"] = [ g["bf:identifiedBy"] ]
+                                 if(g["bf:identifiedBy"].length) { 
+                                    g.id = []
+                                    for(let node of g["bf:identifiedBy"]) {
+                                       let id = elem.filter(f => f["@id"] === node) 
+                                       // TODO add prefix letter (either in value or from ontology property)
+                                       if(id.length) g.id.push(<span class="id" title={this.fullname(id[0].type,false,false,true,false)}>{id[0]["rdf:value"]}</span>)
+                                    }
+                                 }
+                              }
+
+                              /* WIP sameAs icon / seeAlso link
+                              if(g["owl:sameAs"] || g["rdfs:seeAlso"]){
+                                 g.same = []
+                                 if(g["owl:sameAs"] && !Array.isArray(g["owl:sameAs"])) g["owl:sameAs"] = [ g["owl:sameAs"] ]
+                                 if(g["rdfs:seeAlso"] && !Array.isArray(g["rdfs:seeAlso"])) g["rdfs:seeAlso"] = [ g["rdfs:seeAlso"] ]
+                                 let same = []
+                                 if(g["owl:sameAs"] && g["owl:sameAs"].length) same = same.concat(g["owl:sameAs"])
+                                 if(g["rdfs:seeAlso"] && g["rdfs:seeAlso"].length) same = same.concat(g["rdfs:seeAlso"])
+                                 for(let node of same) {                                    
+                                    let prefix,url ;
+                                    if(node["@id"]) { 
+                                       prefix = shortUri(node["@id"]).split(":")[0]
+                                       url = node["@id"]
+                                    }
+                                    // TODO link to NGMPP
+                                    //else if(node["@value"] && node["type"] === "xsd:anyURI")
+                                    if(prefix && url) g.same.push(<a href={url} target="_blank" class={"provider "+prefix}>{provImg[prefix]?<img src={provImg[prefix]}/>:<span class="img">{prefix.replace(/^cbc.$/,"cbc@").toUpperCase()}</span>}</a>)
+                                 }
+                              }
+                              */
+
                               /*
                               if(osearch && g["tmp:titleMatch"]) {
                                  if(!g.details) g.details = []
@@ -5221,7 +5257,9 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                               <span class={"parTy "+(e.details?"on":"")} {...e.details?{title:/*tLabel+" - "+*/ I18n.t("resource."+(this.state.collapse[tag+"-details"]?"hideD":"showD")), onClick:(ev) => toggle(ev,root,e["@id"],"details",false,e)}:{title:tLabel}} >
                                  {pType && parts[pType] ? <div>{parts[pType]}</div> : <div>{parts["?"]}</div> }
                               </span>
-                              <span>{this.uriformat(null,{type:'uri', value:fUri, inOutline: (!e.hasPart?tag+"-details":tag), url:"/show/"+root+"?part="+e["@id"], debug:false, toggle:() => toggle(null,root,e["@id"],!e.hasPart?"details":"",false,e)})}</span>                              
+                              <span>{this.uriformat(null,{type:'uri', value:fUri, inOutline: (!e.hasPart?tag+"-details":tag), url:"/show/"+root+"?part="+e["@id"], debug:false, toggle:() => toggle(null,root,e["@id"],!e.hasPart?"details":"",false,e)})}</span>
+                              {e.id}
+                              {e.same}
                               <div class="abs">
                                  { e.hasImg && <Link className="hasImg" title={I18n.t("copyright.view")}  to={e.hasImg}><img src="/icons/search/images.svg"/><img src="/icons/search/images_r.svg"/></Link> }
                                  { /* pType && 
