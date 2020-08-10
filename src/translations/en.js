@@ -402,7 +402,9 @@ const enTranslation = {
       scanF:"Scans for",
       etextF:"Etext for",
       openR:"Open Record",
-      loadP:"Load Previous Pages"
+      loadP:"Load Previous Pages",
+      sameL:"Link to External Resource",
+      sameL_plural:"Links to External Resources",
    },
    mirador:{
       return:"return to BUDA",
