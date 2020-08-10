@@ -3811,31 +3811,48 @@ class ResourceViewer extends Component<Props,State>
          else elem = node
 
          let str = ""
-         
-         //loggergen.log("loca",elem)
+
+         let monoVol = this.getResourceElem(bdo+"numberOfVolumes")
+         if(monoVol && monoVol.length && monoVol[0].value === "1") monoVol = true
+         else monoVol = false
+
+         //loggergen.log("loca",elem,monoVol,withTag,node)
 
          if(!elem) return [<h4><Link to={"/show/"+shortUri(_elem[0].value)}>{shortUri(_elem[0].value)}</Link></h4>]
 
          let loca = s => (elem && elem[bdo+"contentLocation"+s] && elem[bdo+"contentLocation"+s][0] && elem[bdo+"contentLocation"+s][0]["value"] ? elem[bdo+"contentLocation"+s][0]["value"]:null)
-                  
+               
+
+         let stat = loca("Statement")
+
          let vol = loca("Volume")
-         if(vol) str = I18n.t("resource.volume",{num:vol})+" " ;
          let p = loca("Page")
-         if(p) str += I18n.t("resource.page",{num:p}) ;
          let l = loca("Line")
-         if(l) str += "|"+l ;
-         if(str && p) str += " - "
          let eV = loca("EndVolume")
-         if(eV) str += I18n.t("resource.volume",{num:eV})+" " ;
          let eP = loca("EndPage")
-         if(eP) str += I18n.t("resource.page",{num:eP}) ;
          let eL = loca("EndLine")
-         if(eL) str += "|"+eL ;
+
+         let oneP = false
+         if( (eV === vol || !vol ) && p === eP) oneP = true
+
+         if(vol) str = I18n.t("resource.volume",{num:vol})+" " ;
+         if(p) str += I18n.t("resource.page",{num:p}) ;
+         if(l) str += "|"+l ;
+         if(!oneP) {
+            if(str && p) str += " - "
+            if(eV) str += I18n.t("resource.volume",{num:eV})+" " ;
+            if(eP) str += I18n.t("resource.page",{num:eP}) ;
+            if(eL) str += "|"+eL ;
+         }
 
          let w = loca("Instance")
 
          if(withTag) { 
-            if(vol) 
+   
+            if(stat) str = stat
+
+            if(vol || monoVol) 
+               
                return ( 
                   [<Tooltip placement="bottom-start" style={{marginLeft:"50px"}} title={
                            <div style={{margin:"10px"}}>
@@ -5188,7 +5205,10 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                                  for(let k of Object.keys(loca)) {
                                     let val = "" + loca[k]
                                     if(k.includes("content")) jLoca[bdo+k] = [ { value:(val.includes(":")?fullUri(loca[k]):loca[k]), type:"literal" } ]
-                                 }                                 
+                                 }                                                             
+                                 if(g.contentLocationStatement) {
+                                    jLoca[bdo+"contentLocationStatement"] = [ { value:g.contentLocationStatement, type:"literal" } ]
+                                 }
                                  g.details.push(<div class="sub loca"><h4 class="first type">{this.proplink(bdo+"contentLocation")}{I18n.t("punc.colon")} </h4>{this.getWorkLocation([{value:loca["@id"]}],true, jLoca)}</div>)
                               }
 
