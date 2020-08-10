@@ -19,9 +19,15 @@ const boTranslation = {
       submessage:"ཉམས་ཞིབ་ཞིབ་ཚགས་པ་དང་སྔར་ལས་མགྱོགས་པ་ཡོང་ཕྱིར་འདིའི་ནང་ཁྱད་ཆོས་དང་རྒྱུ་ཆ་གསར་པ། ལག་ཆ་གསར་པ་མང་པོ་ཁ་སྣོན་བྱས་ཡོད།",
       subsubmessage:"ངེད་ཚོགས་པའི་ལས་རིགས་ཀྱི་སྤུས་ཀ་ཇེ་ལེགས་སུ་གཏོང་བར་བསམ་ཚུལ་དང་སློབ་སྟོན་རེ་ཡོད་ཚེ་འདི་ནས་འགོད་རོགས།",
       subsubmessage_afteremail:".",
+      subsubmessage_account1:"བུདྡྷ་དཔེ་མཛོད་ནང་གི་དཔེ་ཆ་ཚང་མ་བལྟ་ཀློག་དང་ཕབ་ལེན་ཆེད་ཐོ་འགོད་བྱེད་དགོས། འདིར་བསྣུན།", 
+      subsubmessage_account2:"",
+      subsubmessage_account3:"",
+      subsubmessage_account4:"ཐོ་འགོད།",
+      subsubmessage_account5:"",
+      subsubmessage_auth:"All users, including users with existing accounts on tbrc.org, will need to register for a free BDRC account for full access.",
       search:"འཚོལ།",
       choose:"སྐད་རིགས་འདེམ།",
-      start:"Start typing then select search language"
+      start:"དཔེ་མཛོད་སྔོགས།"
    },
    types:{
       any:"གང་རུང་།",
@@ -48,7 +54,7 @@ const boTranslation = {
       instance_plural:"དཔེ་རྒྱུན།",
       images:"བཤེར་པར།",
       volume:"བཤེར་པར།",
-      volume_num:"པོད། {{num,counttobo}}",
+      volume_num:"པོད། {{num,counttobo}}"
       searchIn:"{{type}}"
    },
    topbar:{
@@ -162,8 +168,7 @@ const boTranslation = {
       "tmp:hasImage":"བཤེར་པར།",
       "tmp:hasEtext":"འཕྲུལ་ཡིག",
       "unspecified":"རིགས་མ་དགར་བ།",
-      "true":"ཡིན།",
-      "tmp:noteMatch": "མཆན།",
+      "true":"ཡིན།"
       "tmp:TibetanBuddhistTexts":"བོད་བརྒྱུད་ནང་བསྟན་གསུང་རབ།",
       "tmp:BonpoTexts":"བོན་གྱི་གསུང་རབ།",
       "tmp:SanskritTexts":"ལེགས་སྦྱར་སྐད་ནང་ཡོད་པའི་གསུང་རབ།",
@@ -432,7 +437,7 @@ const boTranslation = {
       BDRC: "Buddhist Digital Resource Center",
       adr1: "1430 Massachusetts Ave., 5th floor",
       adr2: "Cambridge, MA, USA 02138",
-      contact: "བྲེལ་གཏུགས་བྱ་ཡུལ།",
+      contact: "འབྲེལ་གཏུགས་བྱ་ཡུལ།",
       connect: "སྤྱི་ཚོགས་དྲ་ལམ་བརྒྱུད་ནས་ང་ཚོར་འབྲེལ་བ་བྱ་ཡུལ།",
       print:"ང་ཚོའི་དྲ་ཐོག་ཏུ་ཡོད་པའི་དཔེ་ཆ་ཁག་དགོས་ཚེ་འདི་ནས་མངགས།",
       order:"མངགས་ཉོ།",
