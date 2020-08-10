@@ -3849,7 +3849,11 @@ class ResourceViewer extends Component<Props,State>
 
          if(withTag) { 
    
-            if(stat) str = stat
+            if(stat) { 
+               if(Array.isArray(stat)) str = stat.join(" / ")
+               else str = stat
+            }
+
 
             if(vol || monoVol) 
                
