@@ -1462,9 +1462,11 @@ class ResourceViewer extends Component<Props,State>
                      //loggergen.log("index",e) //,assoR[e.value])
                      
                      // TODO use language dedicated sort ?
-                     let label1 = "zzz" + shortUri(e.value), label2 = "" ;
+                     let label1 = "zzz" + shortUri(e.value), label2 = "", withThumb = 1 ;
                      if(e && assoR[e.value])
                      {
+                        withThumb = 1 - assoR[e.value].filter(e => e.type === tmp+"thumbnailIIIFService").length 
+
                         label1 = getLangLabel(this, "", assoR[e.value].filter(e => e.type === skos+"prefLabel"))
                         if(label1 && label1.value) label1 = label1.value
                         if(!label1) label1 = "z" + shortUri(e.value)
@@ -1480,10 +1482,10 @@ class ResourceViewer extends Component<Props,State>
                            }
                         }
                      }  
-                     return ({ ...e, label1, label2 })
+                     return ({ ...e, withThumb, label1, label2 })
                   })
 
-                  prop[xp] = _.orderBy(expr,['label1','label2'])
+                  prop[xp] = _.orderBy(expr,['withThumb', 'label1','label2'])
 
                   //loggergen.log("expr",expr,prop[xp]);
 
@@ -3972,6 +3974,7 @@ class ResourceViewer extends Component<Props,State>
 
       let expand
       let maxDisplay = 9
+      if(k === bdo+"workHasInstance") maxDisplay = 10 ;
       if(hasMaxDisplay) maxDisplay = hasMaxDisplay ;
 
       let n = 0

@@ -2604,7 +2604,8 @@ h3 .expand svg { position:absolute; margin-top:-18px; }*/
 .resource .data [data-prop="bdo:workHasInstance"] .group { column-count:2; }
 [data-prop="bdo:workHasInstance"] h4.multiple { line-height:20px; }
 .resource .data [data-prop="bdo:workHasInstance"] .group h4 { top:0px; } /* TODO CSS column hover bug ... */
-
+.resource .data [data-prop="bdo:workHasInstance"] .propCollapseHeader.in-false { margin-bottom:20px;}
+.resource .data [data-prop="bdo:workHasInstance"] .propCollapseHeader .expand { position:absolute;left:0;bottom:-20px;top:auto;}
 
 .has-collapse.custom .expand { position:relative; bottom:auto; color:#d73449; font-weight:700;font-size:13px;margin-top:10px; }
 .has-collapse.custom .expand:hover { border-color:#d73449; }
