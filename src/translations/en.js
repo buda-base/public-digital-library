@@ -387,8 +387,8 @@ const enTranslation = {
       view:"View",
       metadata:"metadata",
       manifest:"IIIF manifest",
-      page:"p.{{num}}",
-      volume:"Vol.{{num}}",
+      page:"img. {{num}}",
+      volume:"v. {{num}}",
       availableScans:"available scans for this page",
       about:"About",
       createdB:"Created By",
@@ -409,10 +409,10 @@ const enTranslation = {
    mirador:{
       return:"return to BUDA",
       browse:"browse collection",
-      goto:"Go to p.",
+      goto:"Go to img.",
       zoomIn:"zoom in",
       zoomOut:"zoom out",
-      showI:"Show Scans",
+      showI:"Show scans",
       fullscreen:"fullscreen",
       next:"next image",
       prev:"previous image",
@@ -426,12 +426,12 @@ const enTranslation = {
       credentials:"if you have sufficient credentials to get access to all scans from this work."
    },
    location:{
-      beginV:"Begin Volume: {{num}}",
-      beginP:"Begin Page: {{num}}",
-      beginL:"Begin Line: {{num}}",
-      endV:"End Volume: {{num}}",
-      endP:"End Page: {{num}}",
-      endL:"End Line: {{num}}"
+      beginV:"Begin volume: {{num}}",
+      beginP:"Begin image: {{num}}",
+      beginL:"Begin line: {{num}}",
+      endV:"End volume: {{num}}",
+      endP:"End image: {{num}}",
+      endL:"End line: {{num}}"
    },
    footer:{
       BDRC: "Buddhist Digital Resource Center",
