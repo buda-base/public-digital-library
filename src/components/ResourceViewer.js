@@ -2018,13 +2018,23 @@ class ResourceViewer extends Component<Props,State>
 
          //loggergen.log("s?",prop,prefix,sameAsPrefix,pretty,elem,info,infoBase)         
 
-         let thumb
+         let thumb, thumbV
          if(prop === bdo+"workHasInstance"  || prop === tmp+"propHasScans" || prop === tmp+"propHasEtext" ) {
             if(!info) info = [] 
             let enti = getEntiType(elem.value)
             loggergen.log("enti:",enti,elem.value)
             if(enti === "Etext") ret = [<span class="svg">{svgEtextS}</span>]
-            else if(enti === "Instance") ret = [<span class="svg">{svgInstanceS}</span>]
+            else if(enti === "Instance") { 
+               ret = [<span class="svg">{svgInstanceS}</span>]
+
+               
+               thumbV =  this.getResourceElem(tmp+"thumbnailIIIFService", shortUri(elem.value), this.props.assocResources)
+               if(thumbV && thumbV.length) ret = []
+               
+
+
+               loggergen.log("thumbV:",thumbV,elem.value)
+            }
             else if(enti === "Images") { 
                ret = []
                thumb =  this.getResourceElem(tmp+"thumbnailIIIFService")
@@ -2042,10 +2052,10 @@ class ResourceViewer extends Component<Props,State>
             }
          }
          
-         if((info && infoBase && infoBase.filter(e=>e["xml:lang"]||e["lang"]).length >= 0) || (prop && prop.match && prop.match(/[/#]sameAs/))) {
+         if((!thumbV || !thumbV.length) && ((info && infoBase && infoBase.filter(e=>e["xml:lang"]||e["lang"]).length >= 0) || (prop && prop.match && prop.match(/[/#]sameAs/)))) {
 
 
-            // loggergen.log("svg?",svgImageS)
+            loggergen.log("svg?",svgImageS)
 
 
             let link,orec,canUrl;
@@ -2249,12 +2259,23 @@ class ResourceViewer extends Component<Props,State>
          </span> ) }
          else if(pretty.toString().match(/^([A-Z]+[v_0-9-]*[A-Z]*)+$/)){ 
 
-            if(!thumb) ret = (<Link className={"urilink "+ prefix} to={"/"+show+"/"+prefix+":"+pretty}><span lang="">{ret}{prefix+":"+pretty}</span></Link>)
-            else if(thumb.length) {
+            if(!thumb && !thumbV) ret = (<Link className={"urilink "+ prefix} to={"/"+show+"/"+prefix+":"+pretty}><span lang="">{ret}{prefix+":"+pretty}</span></Link>)
+            else if(thumb && thumb.length) {
                let vlink = "/"+show+"/"+prefix+":"+pretty+"?s="+encodeURIComponent(this.props.history.location.pathname+this.props.history.location.search)+"#open-viewer"                
                thumb = <div class="images-thumb" style={{"background-image":"url("+thumb[0].value+"/full/,145/0/default.jpg)"}}/>;               
 
                ret = [<Link className={"urilink "+ prefix} to={vlink}>{thumb}</Link>,
+                     <div class="images-thumb-links">
+                        <Link className={"urilink "+ prefix} to={vlink}>{I18n.t("index.openViewer")}</Link>
+                        <Link className={"urilink "+ prefix} to={"/"+show+"/"+prefix+":"+pretty}>{I18n.t("resource.openR")}</Link>
+                     </div>]
+            } else if(thumbV && thumbV.length) {
+               let repro = this.getResourceElem(bdo+"instanceHasReproduction", shortUri(elem.value), this.props.assocResources)
+               if(repro && repro.length) repro = shortUri(repro[0].value)
+               let vlink = "/"+show+"/"+repro+"?s="+encodeURIComponent(this.props.history.location.pathname+this.props.history.location.search)+"#open-viewer"                
+               thumbV = <div class="images-thumb" style={{"background-image":"url("+thumbV[0].value+"/full/,145/0/default.jpg)"}}/>;               
+
+               ret = [<Link className={"urilink "+ prefix} to={vlink}>{thumbV}</Link>,
                      <div class="images-thumb-links">
                         <Link className={"urilink "+ prefix} to={vlink}>{I18n.t("index.openViewer")}</Link>
                         <Link className={"urilink "+ prefix} to={"/"+show+"/"+prefix+":"+pretty}>{I18n.t("resource.openR")}</Link>

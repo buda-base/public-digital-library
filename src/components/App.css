@@ -2591,15 +2591,19 @@ h3 .expand svg { position:absolute; margin-top:-18px; }*/
 .has-collapse.custom .propCollapseHeader { column-count:2; }
 
 .has-collapse.custom[data-prop="bdo:creator"] .propCollapse,
-.has-collapse.custom[data-prop="bdo:creator"] .propCollapseHeader,
-.has-collapse.custom[data-prop="bdo:workHasInstance"] .propCollapse,
-.has-collapse.custom[data-prop="bdo:workHasInstance"] .propCollapseHeader { column-count:1; }
+.has-collapse.custom[data-prop="bdo:creator"] .propCollapseHeader { column-count:1; }
 
+/*
+.has-collapse.custom[data-prop="bdo:workHasInstance"] .propCollapse,
+.has-collapse.custom[data-prop="bdo:workHasInstance"] .propCollapseHeader { column-count:2; }
+*/
 
 .has-collapse.custom[data-prop="bdo:creator"] .propCollapse .subgroup,
 .has-collapse.custom[data-prop="bdo:creator"] .propCollapseHeader .subgroup { width:100%; }
 
+.resource .data [data-prop="bdo:workHasInstance"] .group { column-count:2; }
 [data-prop="bdo:workHasInstance"] h4.multiple { line-height:20px; }
+.resource .data [data-prop="bdo:workHasInstance"] .group h4 { top:0px; } /* TODO CSS column hover bug ... */
 
 
 .has-collapse.custom .expand { position:relative; bottom:auto; color:#d73449; font-weight:700;font-size:13px;margin-top:10px; }
