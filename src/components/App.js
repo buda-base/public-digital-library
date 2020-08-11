@@ -2981,6 +2981,10 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
             { this.getResultProp("tmp:nameMatch",allProps,true,false,[ tmp+"nameMatch" ]) } {/* //,true,false) } */}
 
+
+            { this.getResultProp("bdo:note",allProps,true,false,[ tmp+"noteMatch" ]) }
+
+
             { this.getResultProp(I18n.t("prop.tmp:relationType"),allProps,true,false,[ tmp+"relationType" ]) } 
             {/* { this.getResultProp(tmp+"InverseRelationType",allProps,true,true,[tmp+"relationTypeInv"]) } */}
             
@@ -3546,7 +3550,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             //if(r.f && r.f.value) typ = r.f.value.replace(/^.*?([^/]+)$/,"$1")
 
 
-            //loggergen.log("r",o,sublist[o],r,label,lit);
+            loggergen.log("sublist:",o,sublist[o],r,label,lit);
 
             let filtered = true ;
 
