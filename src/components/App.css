@@ -127,6 +127,8 @@ footer#site-footer > div.foot img + div a { display:block; text-decoration: none
 footer#site-footer > div.foot #t2 { position:relative;}
 footer#site-footer > div.foot #t2::before { content:''; display:block; position: absolute; left:-65px; top:5px;height:75px; border-left: 1px solid white;}
 
+footer#site-footer [lang='bo'] { font-size:18px !important;}
+
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ home */
 
 .App:not(.home) { min-height:100vh;} 
@@ -147,6 +149,7 @@ footer#site-footer > div.foot #t2::before { content:''; display:block; position:
 
 .subsubtitleFront { /*font-style:italic;*/ margin-top:10px;max-width:70%;margin-left:15%;  font-weight:700 !important; }
 .subsubtitleFront > a {text-decoration: none; color: #d73449; }
+.subsubtitleFront > a[lang="bo"] { padding-left:5px; }
 
 .subsubtitleFront + .subsubtitleFront { font-weight:400 !important;}
 
