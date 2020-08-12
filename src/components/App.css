@@ -1577,10 +1577,18 @@ body > [id^="menu-"] > div:last-child,
 .resource .data [data-prop="bdo:workHasInstance"] .images-thumb { width:100px;height:100px;}
 .resource .data [data-prop="bdo:workHasInstance"] .images-thumb-links { margin-left:10px;}
 
-.resource .data .images-thumb.no-thumb { background-size:60px auto; float:left; margin-right:10px;/*border-color:transparent;*/}
+.resource .data > [data-prop="bdo:workHasInstance"] > h3 ~ .group > h4.multiple { display:inline-block; }
+
+.resource .data .images-thumb.no-thumb { background-size:60px auto; /*border-color:transparent;*/}
 /* .resource .data .images-thumb.no-thumb + .ulink { display:inline-block;margin-left:28px; width:auto;} */
 
-.resource .data .images-thumb.no-thumb:hover { border-color:#ccc;}
+
+.resource .data [data-prop="bdo:workHasInstance"]  .images-thumb { float:left; margin-right:10px; }
+
+
+.resource .data [data-prop="tmp:propHasEtext"]  .images-thumb.no-thumb {margin-right:28px; }
+
+.resource .data .images-thumb:hover { border-color:#ccc;}
 
 .resource .data .images-thumb-links { display:inline-block; display:inline-flex;justify-content: flex-start; flex-direction: column;
    margin-left:28px;vertical-align:top;
@@ -2610,11 +2618,36 @@ h3 .expand svg { position:absolute; margin-top:-18px; }*/
 .has-collapse.custom[data-prop="bdo:creator"] .propCollapse .subgroup,
 .has-collapse.custom[data-prop="bdo:creator"] .propCollapseHeader .subgroup { width:100%; }
 
+.resource .data [data-prop="bdo:workHasInstance"] .ellip { text-overflow: ellipsis; white-space: nowrap; overflow: hidden;
+   width:12px; display:inline-block;vertical-align: bottom; margin-left:0px;
+}
+
 .resource .data [data-prop="bdo:workHasInstance"] .group { column-count:2; }
+#popHoverM .resource .data [data-prop="bdo:workHasInstance"] .group { column-count:1; width:}
+#popHoverM .resource .data [data-prop="bdo:workHasInstance"] .group h4 { width:100% !important;}
+
+
+#popHoverM .resource .data [data-prop="bdo:workHasInstance"] .ellip { white-space: normal; width:auto; display:inline; margin-left:0;} 
+
+#popHoverM .resource .data [data-prop="bdo:workHasInstance"] h4 .urilink:hover .ellip { text-decoration: underline;}
+
 [data-prop="bdo:workHasInstance"] h4.multiple { line-height:20px; }
 .resource .data [data-prop="bdo:workHasInstance"] .group h4 { top:0px; } /* TODO CSS column hover bug ... */
 .resource .data [data-prop="bdo:workHasInstance"] .propCollapseHeader.in-false { margin-bottom:30px;}
 .resource .data [data-prop="bdo:workHasInstance"] .propCollapseHeader .expand { position:absolute;left:0;bottom:-30px;top:auto;}
+
+.resource .data [data-prop="bdo:workHasInstance"] span.in { margin-left:0;  }
+.resource .data [data-prop="bdo:workHasInstance"] span.in::before { content:'';display:block;}
+.resource .data [data-prop="bdo:workHasInstance"] .over-in { white-space:normal; top:10px; position: relative; } 
+
+.resource .data [data-prop="bdo:workHasInstance"] h4.multiple { margin-bottom:15px;}
+
+/*
+   position:absolute;background:white;top:40px;padding-top:5px; 
+   display:block; left:112px;z-index:1;
+*/
+
+.resource .data [data-prop="bdo:workHasInstance"] .images-thumb::after { content:'';height:10px;display:block;top:100%; }
 
 .has-collapse.custom .expand { position:relative; bottom:auto; color:#d73449; font-weight:700;font-size:13px;margin-top:10px; }
 .has-collapse.custom .expand:hover { border-color:#d73449; }
