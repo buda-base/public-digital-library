@@ -1574,11 +1574,20 @@ body > [id^="menu-"] > div:last-child,
 .resource .data .images-thumb { margin:0px 0px; width:145px; height:145px; background-size:cover;background-position:center;background-repeat:no-repeat; 
    border:1px solid #ccc;display:inline-block;vertical-align: top;
 }
+.resource .data [data-prop="bdo:workHasInstance"] .images-thumb { width:100px;height:100px;}
+.resource .data [data-prop="bdo:workHasInstance"] .images-thumb-links { margin-left:10px;}
+
+.resource .data .images-thumb.no-thumb { background-size:60px auto; float:left; margin-right:10px;/*border-color:transparent;*/}
+/* .resource .data .images-thumb.no-thumb + .ulink { display:inline-block;margin-left:28px; width:auto;} */
+
+.resource .data .images-thumb.no-thumb:hover { border-color:#ccc;}
 
 .resource .data .images-thumb-links { display:inline-block; display:inline-flex;justify-content: flex-start; flex-direction: column;
    margin-left:28px;vertical-align:top;
 }
 .resource .data .images-thumb-links a + a { margin-top:5px;display:inline-block;}
+
+.resource .data .images-thumb-links a.disable { opacity:0.5; pointer-events:none; }
 
 .resource .data.ext-props .subgroup { width:calc(100% - 215px + 40px ); }
 
@@ -2604,8 +2613,8 @@ h3 .expand svg { position:absolute; margin-top:-18px; }*/
 .resource .data [data-prop="bdo:workHasInstance"] .group { column-count:2; }
 [data-prop="bdo:workHasInstance"] h4.multiple { line-height:20px; }
 .resource .data [data-prop="bdo:workHasInstance"] .group h4 { top:0px; } /* TODO CSS column hover bug ... */
-.resource .data [data-prop="bdo:workHasInstance"] .propCollapseHeader.in-false { margin-bottom:20px;}
-.resource .data [data-prop="bdo:workHasInstance"] .propCollapseHeader .expand { position:absolute;left:0;bottom:-20px;top:auto;}
+.resource .data [data-prop="bdo:workHasInstance"] .propCollapseHeader.in-false { margin-bottom:30px;}
+.resource .data [data-prop="bdo:workHasInstance"] .propCollapseHeader .expand { position:absolute;left:0;bottom:-30px;top:auto;}
 
 .has-collapse.custom .expand { position:relative; bottom:auto; color:#d73449; font-weight:700;font-size:13px;margin-top:10px; }
 .has-collapse.custom .expand:hover { border-color:#d73449; }

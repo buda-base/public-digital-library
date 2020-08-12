@@ -2025,16 +2025,18 @@ class ResourceViewer extends Component<Props,State>
             if(!info) info = [] 
             let enti = getEntiType(elem.value)
             loggergen.log("enti:",enti,elem.value)
-            if(enti === "Etext") ret = [<span class="svg">{svgEtextS}</span>]
+            if(enti === "Etext") {
+               //ret = [<span class="svg">{svgEtextS}</span>]
+               
+               ret = [  <Link to={"/show/"+shortUri(elem.value)} class={"images-thumb no-thumb"} style={{"background-image":"url(/icons/etext.png)"}}></Link> ]
+            
+            }
             else if(enti === "Instance") { 
-               ret = [<span class="svg">{svgInstanceS}</span>]
-
+               //ret = [<span class="svg">{svgInstanceS}</span>]
                
                thumbV =  this.getResourceElem(tmp+"thumbnailIIIFService", shortUri(elem.value), this.props.assocResources)
-               if(thumbV && thumbV.length) ret = []
-               
-
-
+               if(!thumbV || !thumbV.length)  ret = [  <Link to={"/show/"+shortUri(elem.value)} class={"images-thumb no-thumb"} style={{"background-image":"url(/icons/header/instance.svg)"}}></Link> ]
+            
                loggergen.log("thumbV:",thumbV,elem.value)
             }
             else if(enti === "Images") { 
@@ -2274,12 +2276,15 @@ class ResourceViewer extends Component<Props,State>
             } else if(thumbV && thumbV.length) {
                let repro = this.getResourceElem(bdo+"instanceHasReproduction", shortUri(elem.value), this.props.assocResources)
                if(repro && repro.length) repro = shortUri(repro[0].value)
+               let img = thumbV[0].value, hasT = true
+               if(img.startsWith("http")) img += "/full/,145/0/default.jpg"
+               else hasT = false
                let vlink = "/"+show+"/"+repro+"?s="+encodeURIComponent(this.props.history.location.pathname+this.props.history.location.search)+"#open-viewer"                
-               thumbV = <div class="images-thumb" style={{"background-image":"url("+thumbV[0].value+"/full/,145/0/default.jpg)"}}/>;               
+               thumbV = <div class={"images-thumb"+(!hasT?" no-thumb":"")} style={{"background-image":"url("+img+")"}}/>;               
 
-               ret = [<Link className={"urilink "+ prefix} to={vlink}>{thumbV}</Link>,
+               ret = [<Link className={"urilink "+ prefix} to={hasT?vlink:"/"+show+"/"+prefix+":"+pretty}>{thumbV}</Link>,
                      <div class="images-thumb-links">
-                        <Link className={"urilink "+ prefix} to={vlink}>{I18n.t("index.openViewer")}</Link>
+                        <Link className={"urilink "+ prefix + (!hasT?" disable":"")} to={vlink}>{I18n.t("index.openViewer")}</Link>
                         <Link className={"urilink "+ prefix} to={"/"+show+"/"+prefix+":"+pretty}>{I18n.t("resource.openR")}</Link>
                      </div>]
             }
