@@ -2066,7 +2066,7 @@ class ResourceViewer extends Component<Props,State>
          if((!thumbV || !thumbV.length) && ((info && infoBase && infoBase.filter(e=>e["xml:lang"]||e["lang"]).length >= 0) || (prop && prop.match && prop.match(/[/#]sameAs/)))) {
 
 
-            loggergen.log("svg?",svgImageS)
+            //loggergen.log("svg?",svgImageS)
 
 
             let link,orec,canUrl;
@@ -5325,7 +5325,10 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                         let ret = []
                         let pType = e["partType"], fUri = fullUri(e["@id"])
                         let tLabel 
-                        if(pType) { 
+                        if(pType) {
+
+                           if(Array.isArray(pType)) pType = pType[0]
+
                            tLabel = getOntoLabel(this.props.dictionary,this.props.locale,fullUri(pType))
                            tLabel = tLabel[0].toUpperCase() + tLabel.slice(1)
                            // TODO use translation from ontology
