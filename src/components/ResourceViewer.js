@@ -5458,6 +5458,11 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
          let colT = <span class={"parTy"} title={I18n.t("Lsidebar.collection.title")}><div>COL</div></span>
 
+         if(opart) setTimeout(()=>{
+            const el = document.querySelector("#outline .is-root")
+            if(el) el.scrollIntoView()      
+         }, 100)
+         
          return ( 
          <div class="data" id="outline">
             <h2>{I18n.t("index.outline")}</h2>
