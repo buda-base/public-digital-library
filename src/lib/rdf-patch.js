@@ -18,7 +18,7 @@ export const basePublicProps = [ skos+"prefLabel", bdou+"image" ]
 
 function getPatchValue(tag:string, value:any, dict:{}, locale:string) {
     
-    console.log("prop:",prop,value)
+    console.log("prop:",tag,value,dict,locale)
 
     let prop, T, start='', end=''
     prop = dict[tag]
@@ -28,9 +28,9 @@ function getPatchValue(tag:string, value:any, dict:{}, locale:string) {
         console.log("range:",T)        
 
         if(T && T.length) {
-            if(T[0].value === xsd+"anyURI" || T[0].type === "uri" /*|| tag === bdou+"mainResidenceArea"*/ ) { start = "<" ; end = ">" ; }
+            if(T[0].value === rdf+"langString") { start = '"' ; end = '"' ; if(locale && T[0].lang) end+="@"+locale; }     
             else if(T[0].value === rdf+"PlainLiteral") { start = '"' ; end = '"' ; }                
-            else if(T[0].value === rdfs+"langString") { start = '"' ; end = '"' ; if(locale) end+="@"+locale; }     
+            else if(T[0].value === xsd+"anyURI" || T[0].type === "uri" /*|| tag === bdou+"mainResidenceArea"*/ ) { start = "<" ; end = ">" ; }
         }
     }
     else if(tag === foaf+"mbox" || tag === tmp+"agreeEmail" || tag === tmp+"otherInterest") { start = '"' ; end = '"' ;  if(locale && tag === tmp+"otherInterest") end+="@"+locale; }

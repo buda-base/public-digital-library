@@ -289,7 +289,10 @@ export class Profile extends Component<Props,State> {
 
           console.log("e",e.target,val1,val2,type,value)
 
-          let state = {...this.state, [e.target.name]:{ type, value } } 
+          let lang
+          if(type === "literal") lang = this.props.locale
+
+          let state = {...this.state, [e.target.name]:{ type, value, lang } } 
 
           state = this.preparePatch(state)
           
@@ -595,8 +598,7 @@ export class Profile extends Component<Props,State> {
                 this.state.patch && 
                    <pre id="patch" contentEditable="true">
                     { this.state.patch }
-                   </pre> 
-                
+                   </pre>
               */ }
               
 
