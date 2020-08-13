@@ -239,7 +239,12 @@ const enTranslation = {
       redirect:"Not logged in... Redirecting",
       agree:"I agree to receive emails from BDRC",
       update:"Update",
-      updating:"Updating..."
+      updating:"Updating...",
+      errors:{
+         server1:"Server error",
+         server2:"Please try again later",
+         email:"Wrong email format"
+      }
    },
    popover:{
       moreInfo:"More Information",

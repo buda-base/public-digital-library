@@ -141,7 +141,16 @@ export class Profile extends Component<Props,State> {
             let type = s[k].type
             if(!type) type = "uri"
             if(props.profile[p].length === 1) s[k] = { type, value: fullUri(props.profile[p][0].value) }
-            else s[k] = props.profile[p].map(e => e.value)
+            else { 
+              s[k] = props.profile[p].map(e => e.value)
+              /* // WIP clean deprecated data
+              if(k === bdou+"mainResidenceArea") {
+                let vs = propsMap.values()
+                s[k] = s[k].filter(v => vs.includes(v))
+              }
+              */
+            }
+            console.log("sk",s[k])
           }
         }
       }
@@ -186,7 +195,7 @@ export class Profile extends Component<Props,State> {
         console.log("response",response)
 
         if(!s) s = { ...this.state, updating:false }
-        s.errors.email = response.message.replace(/.*validation error.*/,"Wrong email format")
+        s.errors.email = response.message.replace(/.*validation error.*/,I18n.t("user.errors.email"))
       }
     }
     
@@ -194,10 +203,14 @@ export class Profile extends Component<Props,State> {
       response = await api.submitPatch(this.props.userID, this.state.patch)                 
       if(response) response = JSON.parse(response)
 
-      if(response  && response.message === "OK") { 
-        store.dispatch(data.getUser(this.state.profile))
+      if(response) {
         if(!s) s = { ...this.state, updating:false }
-        s.patch = '' 
+        if(response.message === "OK") { 
+          store.dispatch(data.getUser(this.state.profile))
+          s.patch = '' 
+        } else  {
+          s.errors.server = response.message
+        }
       }
     }
 
@@ -317,10 +330,11 @@ export class Profile extends Component<Props,State> {
         if(this.props.profile && this.state.profile && !this.props.resetLink) store.dispatch(data.getResetLink(this.props.userID, this.props.profile, this.state.profile))
 
         let hasError = !_.isEmpty(this.state.errors)
-        let errKeys,byPass ;
+        let errKeys,byPass,servErr ;
         if(hasError) { 
           errKeys = Object.keys(this.state.errors)
           if(errKeys.length === 1 && this.state.errors.email) byPass = true  
+          if(this.state.errors.server) { servErr = <div class="error">{I18n.t("user.errors.server1")}<br/>{I18n.t("user.errors.server2")}</div> }
         }
 
 
@@ -332,6 +346,9 @@ export class Profile extends Component<Props,State> {
         let picUrl = "/icons/header/user.png" 
         if(profile.picture && !profile.picture.match(/gravatar.*cdn[.]auth0/)) picUrl = profile.picture
         if(val.picture && !this.state.errors.picture) picUrl = val.picture
+
+        let title = "User Profile"
+        if(this.props.profile && this.props.profile[skos+"prefLabel"]) title =  this.props.profile[skos+"prefLabel"][0].value
 
         return (
         <div>
@@ -359,7 +376,7 @@ export class Profile extends Component<Props,State> {
               </div>
             </div>
               <div class="data">
-                <h2>{this.props.profile?this.props.profile[skos+"prefLabel" /*foaf+"mbox"*/ ][0].value:null}</h2>
+                <h2>{title}</h2>
               </div>
               <div id="main-info" className="profile-area data">
 
@@ -564,6 +581,7 @@ export class Profile extends Component<Props,State> {
                       <div id="validate">
                         { hasError && <WarningIcon/>}
                         <a class={"ulink "+(this.state.patch&&(!hasError||byPass)&&!this.state.updating?"on":"")} id="upd" {... this.state.patch?{onClick:this.handlePatch.bind(this)}:{}}>{this.state.updating?I18n.t("user.updating"):I18n.t("user.update")}</a>
+                        { servErr }
                       </div>
                   </div>
                 </div>

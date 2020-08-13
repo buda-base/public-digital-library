@@ -1207,6 +1207,9 @@ h4:not(:hover) > .lang
 
 .resource.user .data #validate { position:absolute; right:0; display:inline-flex; align-items:center;}
 .resource.user .data #validate > svg { opacity:0.55; margin-right:20px; color:#d73449; }
+.resource.user .data #validate .error { position:absolute; top:100%;right:0;font-size:14px;font-weight:600;color:#d73449;text-align:center;
+   margin-top:5px;
+}
 
 .resource.user .data .ulink#upd { width:auto; margin-top:0; line-height:42px; height:42px;  color:white; background-color: #d73449; border-radius:5px;display:inline-flex;align-items: center;justify-content: center; 
    padding: 0; border:none !important; font-weight:600; font-size:13px;min-width:150px; pointer-events: none;
