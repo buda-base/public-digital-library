@@ -4282,26 +4282,48 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                           ,<hr/>]
                          */}
                          {
-                            that.props.pdfVolumes.map(e => {
+                           that.props.pdfVolumes.map(e => {
 
-                               let Ploading = e.pdfFile && e.pdfFile == true
-                               let Ploaded = e.pdfFile && e.pdfFile != true
-                               let Zloading = e.zipFile && e.zipFile == true
-                               let Zloaded = e.zipFile && e.zipFile != true
+                              let Ploading = e.pdfFile && e.pdfFile == true
+                              let Ploaded = e.pdfFile && e.pdfFile != true
+                              let Zloading = e.zipFile && e.zipFile == true
+                              let Zloaded = e.zipFile && e.zipFile != true
 
-                               return (<ListItem className="pdfMenu">
+
+                              let pdfMsg = I18n.t("resource.gener1")+" PDF"
+                              let zipMsg = "ZIP"
+
+                              if(Ploading) {
+                                 pdfMsg = I18n.t("resource.gener2")+" PDF" + I18n.t("resource.gener3")
+                                 zipMsg =  I18n.t("resource.gener1")+" ZIP"
+                              }
+
+                              if(Ploaded) {
+                                 pdfMsg = I18n.t("resource.download")+" PDF"
+                                 zipMsg =  I18n.t("resource.gener1")+" ZIP"
+                              }
+
+                              if(Zloading) {
+                                 zipMsg = I18n.t("resource.gener2")+" ZIP" + I18n.t("resource.gener3")
+                              }
+
+                              if(Zloaded) {                                 
+                                 zipMsg =  (Ploaded?"":I18n.t("resource.download")+" ")+"ZIP"
+                              }
+
+                              return (<ListItem className="pdfMenu">
                                      <b>{(e.volume !== undefined?(!e.volume.match || e.volume.match(/^[0-9]+$/)?"Volume ":"")+(e.volume):monoVol)}{I18n.t("punc.colon")}</b>
                                      <a onClick={ev => that.handlePdfClick(ev,e.link,e.pdfFile)}
                                         {...(Ploaded ?{href:e.pdfFile}:{})}
                                      >
                                         { Ploading && <Loader className="pdfSpinner" loaded={Ploaded} scale={0.35}/> }
-                                        <span {... (Ploading?{className:"pdfLoading"}:{})}>PDF</span>
+                                        <span {... (Ploading?{className:"pdfLoading"}:{})}>{pdfMsg}</span>
                                      </a>
                                      <a onClick={ev => that.handlePdfClick(ev,e.link,e.zipFile,"zip")}
                                         {...(Zloaded ?{href:e.zipFile}:{})}
                                      >
                                         { Zloading && <Loader className="zipSpinner" loaded={Zloaded} scale={0.35}/> }
-                                        <span {... (Zloading?{className:"zipLoading"}:{})}>ZIP</span>
+                                        <span {... (Zloading?{className:"zipLoading"}:{})}>{zipMsg}</span>
                                        </a>
                                        { that.props.IRI && getEntiType(that.props.IRI) === "Etext" && // TODO fix download etext
                                           <div> 

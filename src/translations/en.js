@@ -410,6 +410,9 @@ const enTranslation = {
       loadP:"Load Previous Pages",
       sameL:"Link to External Resource",
       sameL_plural:"Links to External Resources",
+      gener1:"Generate",
+      gener2:"Generating",
+      gener3:"..."
    },
    mirador:{
       return:"return to BUDA",

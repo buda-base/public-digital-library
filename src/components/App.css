@@ -1551,8 +1551,8 @@ body > [id^="menu-"] > div:last-child,
 
 .pdfMenu a { position:relative;}
 .pdfMenu b { display:inline-block; white-space: nowrap;}
-.pdfLoading,.zipLoading { color:white; }
-.pdfSpinner,.zipSpinner { left: 55% !important;  top: 45% !important; }
+.pdfLoading,.zipLoading { /*color:white;*/ padding-right:25px; }
+.pdfSpinner,.zipSpinner { left: calc(100% - 20px) !important;  top: 45% !important; }
 
 .poPdf > div a li:hover,
 #popDL a li:hover { background-color:#f5f5f5;}
