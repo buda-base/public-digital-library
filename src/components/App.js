@@ -183,6 +183,7 @@ export const languages = {
    "pi-x-iast": "lang.search.piXIast",
    "bo":"lang.search.bo",
    "bo-x-ewts":"lang.search.boXEwts",
+   "bo-x-ewts_lower":"lang.search.boXEwtsLower",
    "bo-x-dts":"lang.search.boXDts",
    "bo-alalc97":"lang.search.boAlaLc",
    //"other":"lang.search.other"
@@ -957,8 +958,12 @@ class App extends Component<Props,State> {
 
       }
       else {
-
-         this.props.history.push({pathname:"/search",search:"?q="+key+"&lg="+(lang?lang:this.getLanguage())+"&t="+label})
+         lang = (lang?lang:this.getLanguage())
+         if(lang === "bo-x-ewts_lower" ) {
+            key = key.toLowerCase();
+            lang = "bo-x-ewts"
+         }
+         this.props.history.push({pathname:"/search",search:"?q="+key+"&lg="+lang+"&t="+label})
          
          // TODO add permanent filters (here ?)
       }
@@ -4800,10 +4805,15 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   let presets = []
                   if(d === "tibt") for(let p of possible) { if(p === "bo" || p.match(/-[Tt]ibt$/)) { presets.push(p); } }
                   else if(d === "hani") for(let p of possible) { if(p.match(/^zh((-[Hh])|$)/)) { presets.push(p); } }
-                  else if(["ewts","iast","deva","pinyin"].indexOf(d) !== -1) for(let p of possible) { if(p.match(new RegExp(d+"$"))) { presets.push(p); } }
+                  else if(["ewts","iast","deva","pinyin"].indexOf(d) !== -1) for(let p of possible) { 
+                     if(p.match(new RegExp(d+"$"))) { 
+                        if(p === "bo-x-ewts" && value.toLowerCase() !== value) { presets.push("bo-x-ewts_lower"); }
+                        presets.push(p); 
+                     } 
+                  }
                   
                   return [...acc, ...presets]
-               }, [] ).concat(!value || value.match(/[a-zA-Z]/)?["en"]:[]).map(p => '"'+value+'"@'+(p == "sa-x-iast"?"sa-x-ndia":p))
+               }, [] ).concat(!value || value.match(/[a-zA-Z]/)?["en"]:[]).map(p => '"'+(p==="bo-x-ewts_lower"?value.toLowerCase():value)+'"@'+(p == "sa-x-iast"?"sa-x-ndia":p))
             }
          }
 

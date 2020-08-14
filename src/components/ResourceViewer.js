@@ -5483,7 +5483,6 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          if(opart) { 
             let _this = this, timinter = setInterval(()=>{
                const el = document.querySelector("#outline .is-root")
-               console.log("el/view",el,_this.state.opartinview)
                if(el) { 
                   clearInterval(timinter)
                   if(_this.state.opartinview != opart) {

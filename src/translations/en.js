@@ -300,6 +300,7 @@ const enTranslation = {
          piXIast:"Pali (Rom.)",
          bo:"Tibetan (Unicode)",
          boXEwts:"Tibetan (Wylie)",
+         boXEwtsLower:"Tibetan (lower case, Wylie)",
          boXDts:"Tibetan (DTS)",
          boAlaLc:"Tibetan (ALA-LC)",
          other:"Other",
