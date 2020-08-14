@@ -112,7 +112,8 @@ const mapStateToProps = (state,ownProps) => {
       if(ownProps.IRI.match(/^bdr:MW[^_]+(_[^_]+)?$/)) {
          let root = ownProps.IRI.replace(/^((bdr:MW[^_]+)(_[^_]+)?)$/,"$2")
          let outL = state.data.outlines[root]
-         if(outL && outL["@graph"] && ! outL["@graph"].filter(o => o["@id"] === root && o.hasPart).length ) outline = true
+         if(!outL) outline = true
+         else if(outL["@graph"] && ! outL["@graph"].filter(o => o["@id"] === root && o.hasPart).length ) outline = true
          //else outline = outline[ownProps.IRI]
       }
    }

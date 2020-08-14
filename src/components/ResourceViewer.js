@@ -4231,7 +4231,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                           else if(!that.props.pdfVolumes) {
                             that.props.onRequestPdf(that.props.IRI,pdfLink)
                          }
-                         that.setState({...that.state, collapse:{...this.state.collapse,permaDL:false}, pdfOpen:true,anchorElPdf:ev.currentTarget})
+                         that.setState({...that.state, collapse:{...this.state.collapse,permaDL:false}, pdfOpen:true,anchorElPdf:({...ev}).currentTarget})
                       }
                    }>
                    {I18n.t("resource.exportDataAs",{data: "images", format:"PDF/ZIP", interpolation: {escapeValue: false}}) /* TODO use i18next interpolation with nesting '$t(types.images)'*/ }
@@ -5480,11 +5480,20 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
          let colT = <span class={"parTy"} title={I18n.t("Lsidebar.collection.title")}><div>COL</div></span>
 
-         if(opart) setTimeout(()=>{
-            const el = document.querySelector("#outline .is-root")
-            if(el) el.scrollIntoView()      
-         }, 100)
-         
+         if(opart) { 
+            let _this = this, timinter = setInterval(()=>{
+               const el = document.querySelector("#outline .is-root")
+               console.log("el/view",el,_this.state.opartinview)
+               if(el) { 
+                  clearInterval(timinter)
+                  if(_this.state.opartinview != opart) {
+                     el.scrollIntoView()      
+                     _this.setState({opartinview: opart})
+                  }
+               }
+            }, 250)
+         }
+
          return ( 
          <div class="data" id="outline">
             <h2>{I18n.t("index.outline")}</h2>
