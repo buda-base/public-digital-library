@@ -1959,7 +1959,7 @@ class ResourceViewer extends Component<Props,State>
    {
       if(elem) {
 
-         //loggergen.log("uriformat",prop,elem.value,elem,dic,withProp,show)
+         loggergen.log("uriformat",prop,elem.value,elem,dic,withProp,show)
          
          if(!elem.value.match(/^http:\/\/purl\.bdrc\.io/) /* && !hasExtPref */ && ((!dic || !dic[elem.value]) && !prop.match(/[/#]sameAs/))) {
             let link = elem.value
@@ -1982,7 +1982,7 @@ class ResourceViewer extends Component<Props,State>
          
          if(dico) {
             infoBase = dico[elem.value]
-            if(infoBase) infoBase = infoBase.filter(e => [bdo+"volumeNumber",skos+"prefLabel",skos+"altLabel",foaf+"name" /*,"literal"*/].reduce( (acc,f) => (acc || f === e.type || f === e.fromKey), false))
+            if(infoBase) infoBase = infoBase.filter(e => [bdo+"volumeNumber",skos+"prefLabel", /*skos+"altLabel",*/ foaf+"name" /*,"literal"*/].reduce( (acc,f) => ((acc || f === e.type || f === e.fromKey) && !e.fromSameAs), false))
          }
 
          if(!infoBase || !infoBase.length)  {
@@ -1991,7 +1991,7 @@ class ResourceViewer extends Component<Props,State>
             if(infoBase) infoBase = infoBase[skos+"prefLabel"]
          }
 
-         //loggergen.log("base:",JSON.stringify(infoBase,null,3))
+         loggergen.log("base:",JSON.stringify(infoBase,null,3))
 
          if(infoBase) {
             let { _info, _lang } = this.getInfo(prop,infoBase,withProp) 
