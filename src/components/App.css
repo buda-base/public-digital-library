@@ -2643,8 +2643,8 @@ h3 .expand svg { position:absolute; margin-top:-18px; }*/
 .resource .data [data-prop="bdo:workHasInstance"] .propCollapseHeader .expand { position:absolute;left:0;bottom:-30px;top:auto;}
 
 .resource .data [data-prop="bdo:workHasInstance"] span.in { margin-left:0;  }
-.resource .data [data-prop="bdo:workHasInstance"] span.in::before { content:'';display:block;}
-.resource .data [data-prop="bdo:workHasInstance"] .over-in { white-space:normal; top:10px; position: relative; } 
+/* .resource .data [data-prop="bdo:workHasInstance"] span.in::before { content:'';display:block;} */
+.resource .data [data-prop="bdo:workHasInstance"] .over-in { white-space:normal; margin-top:10px; position: relative; display:block; } 
 
 .resource .data [data-prop="bdo:workHasInstance"] h4.multiple { margin-bottom:15px;}
 
