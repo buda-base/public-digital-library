@@ -4160,8 +4160,15 @@ perma_menu(pdfLink,monoVol,fairUse,other)
    }
    let noS = false
    if(!same.length) { 
-      same = same.concat([{ type:"uri", value:fullUri(this.props.IRI)}])
-      if(this.props.IRI.startsWith("bdr:")) noS = true
+      if (!this.props.IRI.startsWith("bda:")) {
+         same = same.concat([{ type:"uri", value:fullUri(this.props.IRI)}])
+         if(this.props.IRI.startsWith("bdr:")) noS = true      
+      }
+      else {
+         // change url to bdr: to display icon
+         same = same.concat([{ type:"uri", value:fullUri(this.props.IRI).replace(/admindata/,"resource")}])
+         noS = true
+      }
    }
    
 
@@ -4175,7 +4182,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
       }
    }
 
-   //loggergen.log("same:",same)
+   loggergen.log("same:",same)
 
    // TODO 
    // + fix bdr:G3176 (sameAs Shakya Research Center)

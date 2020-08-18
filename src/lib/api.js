@@ -15,6 +15,9 @@ const USER_PATH = '/resource-nc/user/me'
 const USER_EDIT_POLICIES_PATH = '/userEditPolicies'
 
 export const dPrefix = {
+   "bda": {
+      "CP" : "Corporation",
+   },
    "bdr": {
       "C" : "Corporation",
       "E" : "Etext",
@@ -63,7 +66,7 @@ export function getEntiType(t:string):string {
    else if(p === "src" && t.includes("persons")) return "Person" ;
    else if(p === "ola") return "Person" ;
    else if(p == "mbbt" ) return "Work" ; // [TODO]
-   let v = uri.replace(/^([^:]+:)?([ACEILGPQMRTWOVU][AERTLW]?).*$/,"$2")
+   let v = uri.replace(/^([^:]+:)?([ACEILGPQMRTWOVU][AERTLWP]?).*$/,"$2")
    //console.log("gEt?",v,p)
    if(!dPrefix[p] || !dPrefix[p][v]) return "" ;
    else return dPrefix[p][v]; }
