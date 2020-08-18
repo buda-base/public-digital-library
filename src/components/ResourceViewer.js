@@ -3437,7 +3437,7 @@ class ResourceViewer extends Component<Props,State>
                let elem = this.getResourceElem(adm+"access")
                if(elem && elem.filter(e => e.value.match(/(AccessFairUse)|(Restricted.*)$/)).length >= 1) withCredentials = true
 
-               let config = await miradorConfig(data,manif,canvasID,withCredentials,this.props.langPreset,null,this.props.IRI);
+               let config = await miradorConfig(data,manif,canvasID,withCredentials,this.props.langPreset,null,this.props.IRI,this.props.locale);
 
                loggergen.log("mir ador",num,config,this.props)
 
@@ -4129,7 +4129,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
    else if((cLegalD && cLegalD.endsWith("Undetermined"))||(!cLegalD && legalD && legalD.endsWith("Undetermined"))) copyR = "open_unknown" ;
    // TODO other kind of licenses ?
 
-   loggergen.log("legal",cLegal,cLegalD,legal,legalD)
+   //loggergen.log("legal",cLegal,cLegalD,legal,legalD)
 
    let same = this.getResourceElem(owl+"sameAs")
    if(!same || !same.length) same = [] 
@@ -4182,7 +4182,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
       }
    }
 
-   loggergen.log("same:",same)
+   //loggergen.log("same:",same)
 
    // TODO 
    // + fix bdr:G3176 (sameAs Shakya Research Center)

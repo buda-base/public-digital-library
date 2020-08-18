@@ -302,7 +302,7 @@ async function hasEtextPage(manifest) {
 const NB_PAGES = 10 ; 
 let etextPages = {};
 
-export async function miradorConfig(data, manifest, canvasID, useCredentials, langList, cornerButton, resID)
+export async function miradorConfig(data, manifest, canvasID, useCredentials, langList, cornerButton, resID, locale)
 {
    console.log("cB",cornerButton,data,resID)
 
@@ -410,7 +410,7 @@ export async function miradorConfig(data, manifest, canvasID, useCredentials, la
          
       },
 
-      locale:langList[0].replace(/^([^-]+).*?$/,"$1")
+      locale //(langList[0].replace(/^([^-]+).*?$/,"$1")
    }
    if(!manifest) {
 
@@ -817,7 +817,7 @@ function miradorInitMenu(maxWonly) {
    //console.log("maxW",window.maxW)
 }
 
-export async function miradorInitView(work,lang,callerURI) {
+export async function miradorInitView(work,lang,callerURI,locale) {
 
    const bdr = "http://purl.bdrc.io/resource/"
 
@@ -919,7 +919,7 @@ export async function miradorInitView(work,lang,callerURI) {
             onClick : "javascript:eval('if(window.Mirador.fullscreenElement()) { window.Mirador.exitFullscreen(); $(\".user-buttons .fs\").addClass(\"fs-expand\").removeClass(\"fa-compress\"); } else { window.Mirador.enterFullscreen($(\".mirador-container\")[0]) ; $(\".user-buttons .fs\").removeClass(\"fs-expand\").addClass(\"fa-compress\"); }')" }
       }
 
-   let config = await miradorConfig(data,manif,null,null,lang,corner,work);
+   let config = await miradorConfig(data,manif,null,null,lang,corner,work,locale);
 
    let initTimer = setInterval( ((cfg) => () => {
       console.log("init?",cfg,window.Mirador)
