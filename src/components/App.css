@@ -3090,6 +3090,22 @@ body {
 
 a.result .contenu ul > div:last-child h3[lang=bo] span { font-size:18px;}
 
+/* safari css fix for columns (#227) */
+@media not all and (min-resolution:.001dpcm) { 
+   @supports (-webkit-appearance:none) and (stroke-color:transparent) {
+
+      .resource .data .propCollapseHeader,
+      .resource .data .propCollapse.in-true { margin-top:-5px; }
+
+      .resource .data .propCollapseHeader h4,
+      .resource .data .propCollapse.in-true h4 { margin-top:8px; }
+
+      .resource .data .propCollapseHeader .expand,
+      .resource .data .propCollapse.in-true .expand { margin-top:10px !important; }
+
+   }
+}
+
 
 @media (max-width:1600px)
 {
