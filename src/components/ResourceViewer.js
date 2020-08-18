@@ -1525,7 +1525,7 @@ class ResourceViewer extends Component<Props,State>
                let cano = [], nonCano = [], subLangDeriv = {}
                expr.filter(e => {
                   let lang = assoR[e.value],langLab
-                  if(lang) lang = lang.filter(l => l.type === bdo+"workLangScript" || l.type === tmp+"language"|| l.type === bdo+"language")                  
+                  if(lang) lang = lang.filter(l => l.type === bdo+"workLangScript" || l.type === tmp+"language"|| l.type === bdo+"language"|| l.fromKey === bdo+"language")
 
                   //loggergen.log("cano",lang,assoR[e.value],e.value)
 
@@ -1959,7 +1959,7 @@ class ResourceViewer extends Component<Props,State>
    {
       if(elem) {
 
-         loggergen.log("uriformat",prop,elem.value,elem,dic,withProp,show)
+         //loggergen.log("uriformat",prop,elem.value,elem,dic,withProp,show)
          
          if(!elem.value.match(/^http:\/\/purl\.bdrc\.io/) /* && !hasExtPref */ && ((!dic || !dic[elem.value]) && !prop.match(/[/#]sameAs/))) {
             let link = elem.value
@@ -1991,7 +1991,7 @@ class ResourceViewer extends Component<Props,State>
             if(infoBase) infoBase = infoBase[skos+"prefLabel"]
          }
 
-         loggergen.log("base:",JSON.stringify(infoBase,null,3))
+         //loggergen.log("base:",JSON.stringify(infoBase,null,3))
 
          if(infoBase) {
             let { _info, _lang } = this.getInfo(prop,infoBase,withProp) 
@@ -2044,7 +2044,7 @@ class ResourceViewer extends Component<Props,State>
 
                thumbV = null
 
-               loggergen.log("thumbV:",thumbV,elem.value)
+               //loggergen.log("thumbV:",thumbV,elem.value)
             }
             else if(enti === "Images") { 
                ret = []
