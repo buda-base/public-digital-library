@@ -385,6 +385,9 @@ else if(params && params.r) {
       }
    }
 }
+else if(!iri && store.getState().data.keyword) {
+   store.dispatch(dataActions.resetSearch())
+}
 
 } catch(e) {
    console.error('initiateApp error: %o', e);
