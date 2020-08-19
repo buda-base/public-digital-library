@@ -274,7 +274,7 @@ export default class API {
          catch(e)
          {
             //throw(e)
-            console.error(e)
+            console.error("ERROR outline",e)
             return true
          }
 

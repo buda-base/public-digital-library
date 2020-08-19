@@ -75,8 +75,12 @@ const mapStateToProps = (state,ownProps) => {
    let imageVolumeManifests
    let IIIFinfo = state.data.IIIFinfo
    let manifestWpdf
+   let IIIFerrors
 
    if(IIIFinfo) {
+
+      IIIFerrors = Object.keys(IIIFinfo).reduce( (acc,k) => ({...acc,[k]:IIIFinfo[k].manifestError}), {}) 
+
       IIIFinfo = IIIFinfo[ownProps.IRI]
       if(IIIFinfo) {
          firstImage = IIIFinfo.firstImage
@@ -128,7 +132,8 @@ const mapStateToProps = (state,ownProps) => {
    let props = { logged,config,resources, ontology, dictionary, keyword, language, datatype, assocResources, prefLang, failures, loading,
       imageAsset,firstImage,canvasID,collecManif,manifests,manifestError,pdfVolumes,createPdf,pdfUrl, manifestWpdf,
       annoCollec,rightPanel,locale,langPreset,imgData, nextChunk, nextPage, resourceManifest, imageVolumeManifests, userEditPolicies, highlight,
-      outline,outlines,outlineKW }
+      outline,outlines,outlineKW,      
+      IIIFerrors }
 
    if(config && !config.auth) props.auth = false
 

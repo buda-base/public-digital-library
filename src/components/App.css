@@ -974,6 +974,8 @@ h4:not(:hover) > .lang
 /* .resource > :not(.index) > .title h2 .T::before { display:none; } */
 /* .resource  > :not(.index) > .title h2 .RID { left:0; } */
 
+.resource > .index .disabled { pointer-events: none; opacity:0.5; }
+
 #main-info, #resources, #ext-info {
    scroll-margin: 100px;
 }

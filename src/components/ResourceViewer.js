@@ -132,6 +132,7 @@ type Props = {
        lang:string 
     },
    outline?:{},
+   IIIFerrors?:{},
    onInitPdf: (u:string,s:string) => void,
    onRequestPdf: (u:string,s:string) => void,
    onCreatePdf: (s:string,u:string) => void,
@@ -2024,7 +2025,7 @@ class ResourceViewer extends Component<Props,State>
          if(prop === bdo+"workHasInstance"  || prop === tmp+"propHasScans" || prop === tmp+"propHasEtext" ) {
             if(!info) info = [] 
             let enti = getEntiType(elem.value)
-            loggergen.log("enti:",enti,elem.value)
+            //loggergen.log("enti:",enti,elem.value)
             if(enti === "Etext") {
                //ret = [<span class="svg">{svgEtextS}</span>]
                
@@ -2314,7 +2315,7 @@ class ResourceViewer extends Component<Props,State>
       }><span className="lang">{lang}</span></Tooltip>:null
    }
 
-   getResourceElem(prop:string, IRI?:string, useAssoc?:{})
+   getResourceElem(prop:string, IRI?:string, useAssoc?:{}, auxId?:string)
    {
       let elem ;
 
@@ -2335,9 +2336,15 @@ class ResourceViewer extends Component<Props,State>
       }
       else if(useAssoc) {
 
-         let longIRI = fullUri(IRI)
+         if(auxId && useAssoc) {
+            elem = useAssoc[IRI]
+            if(elem) elem = elem[auxId]       
+            if(elem) elem = elem[prop]
+         }
+         else if(useAssoc) { 
 
-         if(useAssoc) { 
+            let longIRI = fullUri(IRI)
+
             elem = useAssoc[longIRI]
             if(elem) elem = elem.filter(e => e.type === prop || e.fromKey === prop)
             else elem = null
@@ -3622,13 +3629,15 @@ class ResourceViewer extends Component<Props,State>
       return { title, titlElem, otherLabels }
    }
 
-   setManifest = (kZprop,iiifpres) => {
+   setManifest = (kZprop,iiifpres, rid = this.props.IRI, fullRid = fullUri(this.props.IRI)) => {
+
+      //console.log("kZprop:",kZprop,iiifpres,rid)
 
       if(kZprop.indexOf(bdo+"imageList") !== -1)
       {
          if(!this.props.imageAsset && !this.props.manifestError) {
-            this.setState({...this.state, imageLoaded:false})
-            this.props.onHasImageAsset(iiifpres+"/v:"+ this.props.IRI+ "/manifest",this.props.IRI);
+            if(rid !== this.props.IRI) this.setState({...this.state, imageLoaded:false})
+            this.props.onHasImageAsset(iiifpres+"/v:"+ rid+ "/manifest",rid);
          }
       }/*
       else if(kZprop.indexOf(tmp+"imageVolumeId") !== -1)
@@ -3636,56 +3645,56 @@ class ResourceViewer extends Component<Props,State>
          let elem = this.getResourceElem(tmp+"imageVolumeId")
          if(!this.props.imageAsset && !this.props.manifestError) {
             this.setState({...this.state, imageLoaded:false})
-            this.props.onHasImageAsset(iiifpres+"/v:"+ elem[0].value.replace(new RegExp(bdr), "bdr:") + "/manifest",this.props.IRI);
+            this.props.onHasImageAsset(iiifpres+"/v:"+ elem[0].value.replace(new RegExp(bdr), "bdr:") + "/manifest",rid);
             this.props.onGetResource("bdr:"+this.pretty(elem[0].value));
          }
       }*/
       else if(kZprop.indexOf(bdo+"hasIIIFManifest") !== -1)
       {
-         let elem = this.getResourceElem(bdo+"hasIIIFManifest")
+         let elem = this.getResourceElem(bdo+"hasIIIFManifest",rid,this.props.resources,fullRid)
          if(elem[0] && elem[0].value && !this.props.manifestError && !this.props.imageAsset) {
-            this.setState({...this.state, imageLoaded:false})
-            this.props.onHasImageAsset(elem[0].value,this.props.IRI);
+            if(rid !== this.props.IRI) this.setState({...this.state, imageLoaded:false})
+            this.props.onHasImageAsset(elem[0].value,rid);
          }
       }
       else if(kZprop.indexOf(bdo+"contentLocation") !== -1)
       {
          if(!this.props.imageAsset && !this.props.manifestError) {
-            this.setState({...this.state, imageLoaded:false})
-            this.props.onHasImageAsset(iiifpres+"/collection/wio:"+this.props.IRI,this.props.IRI)
+            if(rid !== this.props.IRI) this.setState({...this.state, imageLoaded:false})
+            this.props.onHasImageAsset(iiifpres+"/collection/wio:"+rid,rid)
          }
       }      
       else if(kZprop.indexOf(bdo+"instanceReproductionOf") !== -1)
       {
-         let elem = [{value:this.props.IRI}] 
-         let nbVol = this.getResourceElem(bdo+"itemVolumes")
+         let elem = [{value:rid}] 
+         let nbVol = this.getResourceElem(bdo+"itemVolumes",rid,this.props.resources,fullRid)
          if(!nbVol) { 
-            nbVol = this.getResourceElem(bdo+"instanceHasVolume")
+            nbVol = this.getResourceElem(bdo+"instanceHasVolume",rid,this.props.resources,fullRid)
             if(nbVol && nbVol.length) nbVol = [{value:nbVol.length}]
          }
-         let work = this.getResourceElem(bdo+"instanceReproductionOf")
+         let work = this.getResourceElem(bdo+"instanceReproductionOf",rid,this.props.resources,fullRid)
 
          loggergen.log("isReprOf?",elem,nbVol,work)
 
          if(elem[0] && elem[0].value && !this.props.imageAsset && !this.props.manifestError) {
-            this.setState({...this.state, imageLoaded:false})
+            if(rid !== this.props.IRI)this.setState({...this.state, imageLoaded:false})
             let manif = iiifpres + "/wv:"+elem[0].value.replace(new RegExp(bdr),"bdr:")+"/manifest"
             if(nbVol && nbVol[0] && nbVol[0].value && nbVol[0].value >= 1 && work && work[0] && work[0].value)
               manif = iiifpres + "/collection/wio:"+work[0].value.replace(new RegExp(bdr),"bdr:")
-            this.props.onHasImageAsset(manif,this.props.IRI)
+            this.props.onHasImageAsset(manif,rid)
          }
       }
       else if(kZprop.indexOf(bdo+"itemHasVolume") !== -1)
       {
-         let elem = this.getResourceElem(bdo+"instanceHasVolume")
-         let nbVol = this.getResourceElem(bdo+"instanceVolumes")
-         let work = this.getResourceElem(bdo+"instanceReproductionOf")
+         let elem = this.getResourceElem(bdo+"instanceHasVolume",rid,this.props.resources,fullRid)
+         let nbVol = this.getResourceElem(bdo+"instanceVolumes",rid,this.props.resources,fullRid)
+         let work = this.getResourceElem(bdo+"instanceReproductionOf",rid,this.props.resources,fullRid)
          if(elem[0] && elem[0].value && !this.props.imageAsset && !this.props.manifestError) {
-            this.setState({...this.state, imageLoaded:false})
+            if(rid !== this.props.IRI)this.setState({...this.state, imageLoaded:false})
             let manif = iiifpres + "/v:"+elem[0].value.replace(new RegExp(bdr),"bdr:")+"/manifest"
             if(nbVol && nbVol[0] && nbVol[0].value && nbVol[0].value > 1 && work && work[0] && work[0].value)
               manif = iiifpres + "/collection/wio:"+work[0].value.replace(new RegExp(bdr),"bdr:")
-            this.props.onHasImageAsset(manif,this.props.IRI)
+            this.props.onHasImageAsset(manif,rid)
          }
       }
       else {
@@ -3693,7 +3702,7 @@ class ResourceViewer extends Component<Props,State>
          if (this.props.assocResources) {
             let kZasso = Object.keys(this.props.assocResources) ;
 
-            let elem = this.getResourceElem(bdo+"instanceHasReproduction")
+            let elem = this.getResourceElem(bdo+"instanceHasReproduction",rid,this.props.resources,fullRid)
             if(!this.props.manifestError && elem) for(let e of elem)
             {
                let assoc = this.props.assocResources[e.value]
@@ -3703,10 +3712,10 @@ class ResourceViewer extends Component<Props,State>
 
                if(assoc && assoc.length > 0 && !this.props.imageAsset && !this.props.manifestError && (imItem = assoc.filter(e => e.type === tmp+"itemType" && e.value === bdo+"ImageInstance")).length) {
 
-                  this.setState({...this.state, imageLoaded:false})
+                  if(rid !== this.props.IRI) this.setState({...this.state, imageLoaded:false})
 
-                  if(assoc.length == 1) { this.props.onHasImageAsset(iiifpres + "/v:bdr:"+this.pretty(imItem[0].value,true)+"/manifest",this.props.IRI); }
-                  else { this.props.onHasImageAsset(iiifpres + "/collection/wio:"+this.pretty(this.props.IRI,true),this.props.IRI);  }
+                  if(assoc.length == 1) { this.props.onHasImageAsset(iiifpres + "/v:bdr:"+this.pretty(imItem[0].value,true)+"/manifest",rid); }
+                  else { this.props.onHasImageAsset(iiifpres + "/collection/wio:"+this.pretty(rid,true),rid);  }
 
                }
             }
@@ -5619,7 +5628,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
       if(this.props.config && this.props.config.iiifpres) iiifpres = this.props.config.iiifpres.endpoints[this.props.config.iiifpres.index]      
       //iiifpres += "/2.1.1"
 
-      this.setManifest(kZprop,iiifpres)    
+      if(this.props.resources && this.props.resources[this.props.IRI]) this.setManifest(kZprop,iiifpres)    
 
 
       let getWtitle = this.getWtitle.bind(this)
@@ -5693,9 +5702,13 @@ perma_menu(pdfLink,monoVol,fairUse,other)
       // - use '...' to tell it's just an overview
       // - use prefLabel in tabs title 
 
-      let related, createdBy
+      let related, createdBy, wUrl = fullUri(this.props.IRI)
+      if(this.state.title.work && this.state.title.work[0].value) wUrl = this.state.title.work[0].value
+
       if(this.props.assocResources) {
-         let res = fullUri(this.props.IRI)
+
+         let res = wUrl
+
          related = Object.keys(this.props.assocResources).map(k => {
             let v = this.props.assocResources[k]
             let s = shortUri(k)
@@ -5735,22 +5748,26 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          } ).filter(k => k)
       }
 
+      let hasRel = ((related && related.length > 0)||(createdBy && createdBy.length > 0))
+      
 
       let toggleExtProps = (e) => {
          let state = { ...this.state, collapse:{ ...this.state.collapse, extProps:!this.state.collapse.extProps, ...extProps.reduce( (acc,p) => ({...acc, [p]:!this.state.collapse.extProps}),{} ) } }
          this.setState(state)
       }
 
-      let sideMenu = (rid,tag) => {
+      let sideMenu = (rid,tag,rel,ext,outL,openV) => {
+         let sRid = shortUri(rid)
          let loca = this.props.history.location
-         let url = "/show/"+shortUri(rid)+this.getTabs(tag)
-         let view = "/show/"+shortUri(rid)+loca.search+"#open-viewer"
+         let url = "/show/"+sRid+this.getTabs(tag)
+         //if(sRid === this.props.IRI) url = ""
+         let view = "/show/"+sRid+loca.search+"#open-viewer"
          return (<div>
-            { tag === "Images" && <h3><Link to={view} >{I18n.t("index.openViewer")}</Link></h3> }
+            { tag === "Images" && <h3><Link to={view} class={(!openV?"disabled":"")}>{I18n.t("index.openViewer")}</Link></h3> }
             <h3><Link to={url+"#main-info"} >{I18n.t("index.mainInfo")}</Link></h3>
-            { tag === "Instance" && <h3><Link to={url+"#outline"} >{I18n.t("index.outline")}</Link></h3> }
-            { tag === "Work" && <h3><Link to={url+"#resources"} >{I18n.t("index.related")}</Link></h3> }
-             <h3><Link to={url+"#ext-info"} >{I18n.t("index.extended")}</Link></h3> 
+            { tag === "Instance" && <h3><Link to={url+"#outline"} class={(!outL?"disabled":"")}>{I18n.t("index.outline")}</Link></h3> }
+            { tag === "Work" && <h3><Link to={url+"#resources"} class={(!rel?"disabled":"")}>{I18n.t("index.related")}</Link></h3> }
+             <h3><Link class={(!ext?"disabled":"")} to={url+"#ext-info"} >{I18n.t("index.extended")}</Link></h3> 
          </div>)
       }
 
@@ -5833,10 +5850,47 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
          let loca = this.props.history.location            
 
+         let rView = true, iOutline, wDataExt, iDataExt, rDataExt, checkDataExt = (rid) => {            
+            let sRid = shortUri(rid)
+            for(let p of extProps) { 
+               let ret = this.getResourceElem(p, sRid, this.props.resources, rid) 
+               //console.log("rid:",sRid,p,ret)
+               if(ret && ret.length) return true
+            }
+            return false
+         }
+
+         if(this.state.title.work && this.state.title.work[0].value) wDataExt = checkDataExt(this.state.title.work[0].value)
+         if(this.state.title.instance && this.state.title.instance[0].value) { 
+            iDataExt = checkDataExt(this.state.title.instance[0].value)
+            let sRid = shortUri(this.state.title.instance[0].value)               
+            if(this.props.outlines && this.props.outlines[sRid] !== undefined  && this.props.outlines[sRid]) {
+               if(this.props.outlines[sRid]["@graph"] &&  this.props.outlines[sRid]["@graph"].filter &&  this.props.outlines[sRid]["@graph"].filter(n => n.hasPart).length) iOutline = true
+            }
+            else if(this.props.config) {
+               this.props.onGetOutline(sRid);
+            }
+         }
+         if(this.state.title.images && this.state.title.images[0].value) {
+            rDataExt = checkDataExt(this.state.title.images[0].value)
+            let sRid = shortUri(this.state.title.images[0].value)
+            
+            if(this.props.IIIFerrors) {
+               if(this.props.IIIFerrors[sRid]) rView = false
+            }
+            else {
+               if(sRid !== this.props.IRI && this.props.resources  && this.props.resources[sRid] && this.props.resources[sRid][this.state.title.images[0].value])  {
+                  this.setManifest(Object.keys(this.props.resources[sRid][this.state.title.images[0].value]),iiifpres,sRid,this.state.title.images[0].value)    
+               }
+            }
+
+         }
+
          // DONE
          // + update index links (add outline)
          // + fix open etext OR images
          // + add loader to show when back to seach
+
 
          return (
          [getGDPRconsent(this),
@@ -5862,11 +5916,11 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                   {/* { this.renderPdfLink(pdfLink,monoVol,fairUse) } */}
                   <div class="title">
                   { wTitle }
-                  { wTitle && this.state.title.work && sideMenu(this.state.title.work[0].value, "Work") }
+                  { wTitle && this.state.title.work && sideMenu(this.state.title.work[0].value, "Work", hasRel, wDataExt)  }
                   { iTitle }
-                  { iTitle && this.state.title.instance && sideMenu(this.state.title.instance[0].value,"Instance") }
+                  { iTitle && this.state.title.instance && sideMenu(this.state.title.instance[0].value,"Instance", false, iDataExt, iOutline) }
                   { rTitle }
-                  { rTitle && this.state.title.images && sideMenu(this.state.title.images[0].value,"Images") }
+                  { rTitle && this.state.title.images && sideMenu(this.state.title.images[0].value,"Images", false, rDataExt, false, rView) }
                   </div>
                </div>
                <div>
@@ -5886,7 +5940,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                   { theDataTop }
                   <div class="data" id="perma">{ this.perma_menu(pdfLink,monoVol,fairUse,kZprop.filter(k => k.startsWith(adm+"seeOther")))  }</div>
                   { theDataBot }
-                  { ((related && related.length > 0)||(createdBy && createdBy.length > 0)) &&  
+                  { hasRel &&  
                      <div class="data related" id="resources">
                         <div>
                            <div><h2>{I18n.t("index.related")}</h2>{ (related && related.length > 4 || createdBy && createdBy.length > 4) && <Link to={"/search?t=Work&r="+this.props.IRI}>{I18n.t("misc.seeA")}</Link> }</div>
