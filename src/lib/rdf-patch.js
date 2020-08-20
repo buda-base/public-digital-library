@@ -16,7 +16,7 @@ const xsd   = "http://www.w3.org/2001/XMLSchema#" ;
 
 export const basePublicProps = [ skos+"prefLabel", bdou+"image" ] 
 
-function getPatchValue(tag:string, value:any, dict:{}, locale:string) {
+function getPatchValue(tag:string, value:any, dict:{}, locale:string, oldT?:string) {
     
     console.log("prop:",tag,value,dict,locale)
 
@@ -37,7 +37,12 @@ function getPatchValue(tag:string, value:any, dict:{}, locale:string) {
     let vals = value
     if(vals.value) vals = vals.value
     if(!Array.isArray(vals)) vals = [ vals ]
-    return vals.map(v => start + fullUri(v) + end)
+    if(!oldT) return vals.map(v => start + fullUri(v) + end)
+    else return vals.map( (v,i) => {
+        if(start === '"' && oldT[i] === "uri") return "<" + fullUri(v) + ">"
+        if(start === '<' && oldT[i] === "literal") return '"' + fullUri(v) + '"'
+        else return start + fullUri(v) + end 
+    })
 }
 
 function getPatch(iri, updates, resource, tag:string, id:string, dict:{}, locale:string) {
@@ -55,20 +60,21 @@ function getPatch(iri, updates, resource, tag:string, id:string, dict:{}, locale
         let pub = basePublicProps.indexOf(tag) !== -1
         let uv = updates[tag][u].value
         if(!Array.isArray(uv)) uv = [ uv ]
-        let rv = [], toDel =  [], toAdd = [ ...uv ]
+        let rv = [], toDel =  [], toAdd = [ ...uv ], toDelT = []
         if(resource[tag]) {
             rv = resource[tag].map(v => v.value)
             toDel = [ ...rv.filter(v => !uv.includes(v) ) ]
+            toDelT = resource[tag].filter(v => !uv.includes(v.value)).map(v => v.type)
             toAdd = toAdd.filter(v => v && !rv.includes(v)) 
         }
-        console.log("add/del:",toAdd,toDel)
+        console.log("add/del:",toAdd,toDel,toDelT)
         let diff = ( rv.length != uv.length || toDel.length || toAdd.length)
 
         //if(str !== '') str += "\n"            
         if( !resource[tag] || !resource[tag][u] || ( diff ) ) { // TODO more generic test (lang etc.)
             let vals
             if( toDel.length )  { 
-                vals = getPatchValue(tag, toDel, dict, locale)
+                vals = getPatchValue(tag, toDel, dict, locale, toDelT)
                 for(let val of vals) {
                     str += `D  <${ iri }> <${ tag }> ${ val } <${ graphP }> .\n`
                     if(pub) str += `D  <${ iri }> <${ tag }> ${ val } <${ graph }> .\n`

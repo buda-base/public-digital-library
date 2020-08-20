@@ -45,7 +45,7 @@ const tmp   = "http://purl.bdrc.io/ontology/tmp/" ;
 const propsMap = {  name: skos+"prefLabel", email: foaf+"mbox",
                     picture:bdou+"image",
                     gender: bdo+"personGender", male: bdr+"GenderMale", female: bdr+"GenderFemale", "no-answer": bdr+"GenderNotSpecified",
-                    interest: bdou+"interest", otherInterest:tmp+"otherInterest",
+                    interest: bdou+"interest", otherInterest:tmp+"otherInterest", tibetB:tmp+"TibetanBuddhistTexts", bonpoT:tmp+"BonpoTexts",  sanskT:tmp+"SanskritTexts", zhT:tmp+"ChineseTexts", multiT:tmp+"multiLingualTexts", maps:tmp+"Maps", art:tmp+"BuddhistArt", biblio:tmp+"Bibliographies", SEAt:tmp+"SoutheastAsianTexts",
                     region: bdou+"mainResidenceArea", outside:tmp+"outside", kham:tmp+"kham", amdo:tmp+"amdo", "u-tsang":tmp+"uTsang", other:tmp+"other",
                     agree: tmp+"agreeEmail" }
 
@@ -132,6 +132,8 @@ export class Profile extends Component<Props,State> {
 
       // TODO clean profile from resource[userID]
       //store.dispatch(data.gotResource(props.userID, { [props.userID] : userProfile }))
+      let vs = Object.values(propsMap)
+
 
       for(let k of Object.keys(s)) {
         let p
@@ -140,16 +142,16 @@ export class Profile extends Component<Props,State> {
             console.log("kp",k,p,props.profile[p])
             let type = s[k].type
             if(!type) type = "uri"
-            if(props.profile[p].length === 1) s[k] = { type, value: fullUri(props.profile[p][0].value) }
-            else { 
-              s[k] = props.profile[p].map(e => e.value)
-              /* // WIP clean deprecated data
-              if(k === bdou+"mainResidenceArea") {
-                let vs = propsMap.values()
-                s[k] = s[k].filter(v => vs.includes(v))
-              }
-              */
+
+            if(["name", "gender", "region", "interest"].includes(k)) {
+                s[k] =  props.profile[p].map(e => e.value).filter(v => k === "name" || vs.includes(v)).map(v => ({ type, value:fullUri(v)}))
+
+                if(k !== "interest") s[k] = s[k][0] 
+                else s[k] = s[k].map(e => e.value)
             }
+            else if(props.profile[p].length === 1) s[k] = { type, value: fullUri(props.profile[p][0].value) }
+            else s[k] = props.profile[p].map(e => e.value)
+            
             console.log("sk",s[k])
           }
         }
