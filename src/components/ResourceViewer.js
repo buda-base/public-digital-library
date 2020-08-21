@@ -5746,6 +5746,8 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                )
             }
          } ).filter(k => k)
+
+         //console.log("rel:",related,createdBy)
       }
 
       let hasRel = ((related && related.length > 0)||(createdBy && createdBy.length > 0))
@@ -5940,7 +5942,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                   { theDataTop }
                   <div class="data" id="perma">{ this.perma_menu(pdfLink,monoVol,fairUse,kZprop.filter(k => k.startsWith(adm+"seeOther")))  }</div>
                   { theDataBot }
-                  { (_T === "Work" && hasRel) &&  
+                  { (hasRel && !["Instance","Images","Etext"].includes(_T)) &&  
                      <div class="data related" id="resources">
                         <div>
                            <div><h2>{I18n.t("index.related")}</h2>{ (related && related.length > 4 || createdBy && createdBy.length > 4) && <Link to={"/search?t=Work&r="+this.props.IRI}>{I18n.t("misc.seeA")}</Link> }</div>
