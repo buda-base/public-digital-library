@@ -767,11 +767,12 @@ class ResourceViewer extends Component<Props,State>
       //loggergen.log("tmp",tmp)
       propOrder = tmp
 
-      window.closeViewer = () => { 
-         //delete window.mirador         
+      window.closeViewer = () => {
+         //delete window.mirador
 
          loggergen.log("closeV",this.state,this.props)
 
+         let fromSearch
          if(this.state.fromSearch) {
             let backTo = this.state.fromSearch
             let withW = backTo.replace(/^.*[?&](w=[^&]+)&?.*$/,"$1")
@@ -781,12 +782,13 @@ class ResourceViewer extends Component<Props,State>
 
             if(!backTo.startsWith("/show")) this.props.history.push({pathname:"/search",search:backTo})
             else {
+               fromSearch = this.state.fromSearch
                let path = backTo.split("?")
                this.props.history.push({pathname:path[0],search:path[1]})
             }
          }
 
-         this.setState({...this.state, openUV:false, openMirador:false, openDiva:false}); 
+         this.setState({...this.state, openUV:false, openMirador:false, openDiva:false,fromSearch}); 
          if(window.mirador) delete window.mirador
          if(window.MiradorUseEtext) delete window.MiradorUseEtext ;
       }
@@ -1084,9 +1086,12 @@ class ResourceViewer extends Component<Props,State>
 
       report_GA(this.props.config,this.props.history.location);
 
-      if(window.closeMirador && this.state.openMirador && window.closeViewer) {
+      
+      if(window.closeMirador) { 
          delete window.closeMirador
-         window.closeViewer()
+         if(this.state.openMirador && window.closeViewer) {
+            window.closeViewer()         
+         }
       }
 
       let get = qs.parse(this.props.history.location.search)
@@ -1120,7 +1125,7 @@ class ResourceViewer extends Component<Props,State>
       }
 
 
-      if(get.s && (!s && !this.state.fromSearch || s && !s.fromSearch) ) { 
+      if(get.s && (!s && this.state.fromSearch !== get.s || s && s.fromSearch !== get.s ) ) { 
          if(!s) s = { ...this.state } 
          s.fromSearch = get.s
       }
@@ -3409,7 +3414,7 @@ class ResourceViewer extends Component<Props,State>
 
          if(!tiMir) tiMir = setInterval( async () => {
 
-            if(window.Mirador && window.Mirador.Viewer.prototype.setupViewer.toString().match(/going to previous page/) && !window.mirador) {
+            if(window.Mirador && $("#viewer").length && window.Mirador.Viewer.prototype.setupViewer.toString().match(/going to previous page/) && !window.mirador) {
 
                clearInterval(tiMir);
                tiMir = 0
@@ -3449,6 +3454,7 @@ class ResourceViewer extends Component<Props,State>
                loggergen.log("mir ador",num,config,this.props)
 
                if(window.mirador) delete window.mirador
+
                window.mirador = window.Mirador( config )
 
                miradorSetUI(true, num);
