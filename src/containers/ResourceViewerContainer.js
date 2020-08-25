@@ -114,10 +114,10 @@ const mapStateToProps = (state,ownProps) => {
    if(outline && outline[ownProps.IRI] !== undefined) { 
       outline = outline[ownProps.IRI]
       if(ownProps.IRI.match(/^bdr:MW[^_]+(_[^_]+)?$/)) {
-         let root = ownProps.IRI.replace(/^((bdr:MW[^_]+)(_[^_]+)?)$/,"$2")
+         let root = ownProps.IRI.replace(/^((bdr:MW[^_]+)(_[^_]+)?)$/,"$2") // doesn't work in Taisho 
          let outL = state.data.outlines[root]
          if(!outL) outline = true
-         else if(outL["@graph"] && ! outL["@graph"].filter(o => o["@id"] === root && o.hasPart).length ) outline = true
+         else if(outL["@graph"] && ! outL["@graph"].filter(o => /*o["@id"] === root && */ o.hasPart).length ) outline = true 
          //else outline = outline[ownProps.IRI]
       }
    }

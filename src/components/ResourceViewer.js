@@ -2669,7 +2669,7 @@ class ResourceViewer extends Component<Props,State>
          {
 
             let tmp
-            if(e.type == "uri" || (e.type === 'literal' && e.datatype === xsd+'anyURI' )) { 
+            if(e.type == "uri" || (e.type === 'literal' && (e.datatype === xsd+'anyURI' || e.datatype === xsd+'AnyURI' ))) { 
                tmp = this.uriformat(prop,e)
             }
             else {

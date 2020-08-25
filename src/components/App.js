@@ -1925,7 +1925,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
    fullname(prop:string,preflabs:[],useUIlang:boolean=false)
    {
-      if(!prop) return 
+      if(!prop||prop.length === 0) return 
       let sTmp = shortUri(prop), trad = I18n.t("prop."+sTmp)
       if("prop."+sTmp !== trad) return trad
 
