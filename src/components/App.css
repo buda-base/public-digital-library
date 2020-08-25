@@ -1107,7 +1107,8 @@ h4:not(:hover) > .lang
 
 .resource .data#outline .is-root { scroll-margin: calc((100vh - 80px) /2); }
 
-.resource .data#outline .top.is-root .parTy + span > .ulink > a:hover { text-decoration: none; }
+.resource .data#outline .root.is-root .parTy + span > h2 > a:hover,
+.resource .data#outline .top:not(.is-root) .parTy + span > .ulink > a:hover { text-decoration: none; }
 .resource .data#outline .top:not(.is-root) .parTy + span > .ulink > a:hover { text-decoration: none; color:black;}
 
 .resource .data#outline .parTy div { text-transform: uppercase; font-size:11px; font-family:"Noto Sans SemCond" !important;  opacity:1; 

@@ -5268,7 +5268,11 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                                  if(nav.length) nav.push(<span>|</span>)
                                  nav.push(<Link to={"/show/"+g["@id"]} class="ulink">{I18n.t("resource.openR")}</Link>)
                               }
-                              if(nav.length) g.details.push(<div class="sub view">{nav}</div>)
+
+                              if(nav.length) { 
+                                 if(!g.details) g.details = []
+                                 g.details.push(<div class="sub view">{nav}</div>)
+                              }
 
                               if(g["tmp:titleMatch"] || g["tmp:labelMatch"]) {
                                  g.hasMatch = true
@@ -5429,7 +5433,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                         if(((osearch && e.hasMatch && this.state.collapse[tag+"-details"] !== false) || this.state.collapse[tag+"-details"]) && e.details) 
                            ret.push(<div class="details">
                               {e.details}
-                              { e.hidden && [
+                              { (e.hidden && e.hidden.length > 0) && [
                                  <Collapse timeout={{enter:0,exit:0}} className={"outlineCollapse in-"+(this.state.collapse["hide-"+fUri]===true)} in={this.state.collapse["hide-"+fUri]}>
                                     {e.hidden}
                                  </Collapse>,
