@@ -1027,7 +1027,9 @@ h4:not(:hover) > .lang
 
 .resource .data#outline .is-root h2 a span,
 .resource .data#outline span.is-root a  { color:#d73449;  }
-.resource .data#outline .is-root a:hover { text-decoration-color: #d73449;}
+
+/* .resource .data#outline .is-root a:hover { text-decoration-color: #d73449;} */
+
 .resource .data#outline .root img.xpd { margin-top:3px; }
 /* .resource .data#outline .is-root svg.xpd { color:#d73449; margin-top:-2px; } */
 .resource .data#outline .root + div > span { display:flex; position:relative; }
@@ -1105,6 +1107,8 @@ h4:not(:hover) > .lang
 
 .resource .data#outline .is-root { scroll-margin: calc((100vh - 80px) /2); }
 
+.resource .data#outline .top.is-root .parTy + span > .ulink > a:hover { text-decoration: none; }
+.resource .data#outline .top:not(.is-root) .parTy + span > .ulink > a:hover { text-decoration: none; color:black;}
 
 .resource .data#outline .parTy div { text-transform: uppercase; font-size:11px; font-family:"Noto Sans SemCond" !important;  opacity:1; 
    /*padding:4px 1px 0 1px; text-align: center;  margin-top:-2px; */
@@ -1145,9 +1149,9 @@ h4:not(:hover) > .lang
 .resource .data#outline .root + div .top + .details .sub h4,
 .resource .data#outline .root + div .top + .details .sub a,
 .resource .data#outline .root + div .top + .details .sub h4 span { font-size:12px;line-height:16px; }
-.resource .data#outline .root + div .top + .details .sub h4.first { width:100px; align-self: end; }
+.resource .data#outline .root + div .top + .details .sub h4.first { width:120px; align-self: end; }
 .resource .data#outline .root + div .top + .details .sub h4.first span { font-weight:700;}
-.resource .data#outline .root + div .top + .details .sub h4.first + h4 { width:calc(100% - 100px); }
+.resource .data#outline .root + div .top + .details .sub h4.first + h4 { width:calc(100% - 120px); }
 .resource .data#outline .root + div .top + .details .sub h4 { padding-right:20px; /* vertical-align: -100%; */ }
 .resource .data#outline .root + div .top + .details .sub .lang { display:none; } 
 .resource .data#outline .root + div .top + .details .sub h4:not(.first) a { color:#d73449;} 
@@ -1157,6 +1161,9 @@ h4:not(:hover) > .lang
 
 .resource .data#outline .root + div .top + .details .sub.view a { border:none;font-weight:700; }
 .resource .data#outline .root + div .top + .details .sub.view a:hover { text-decoration:underline; }
+.resource .data#outline .root + div .top + .details .sub.view::before,
+.resource .data#outline .root + div .top + .details .sub.view span { font-size:14px; padding:0 5px; font-weight:700;color:#d73449;}
+.resource .data#outline .root + div .top + .details .sub.view::before { content:">";padding:0 5px 0 0; }
 
 .resource .data#outline .root + div .top + .details .sub.loca .urilink { display:inline; }
 

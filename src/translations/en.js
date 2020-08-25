@@ -176,7 +176,8 @@ const enTranslation = {
       "tmp:Bibliographies":"Bibliographies",
       "tmp:Maps":"Maps",
       "tmp:BuddhistArt":"Buddhist Art",
-      "tmp:other":"Other"
+      "tmp:other":"Other",
+      "tmp:instanceOfWork":"Version of Work"
    },
    result:{
       open:"Open",

@@ -5238,34 +5238,38 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                         if(w_idx.length) {
                            //loggergen.log("found:",w_idx[0])  
                            let g = w_idx[0]
-                           if(g.details && g.lang !== this.props.locale) delete g.details
+                           
+                           if(g.details && (g.lang !== this.props.locale || g.rid === g["@id"] || g["@id"] === this.props.IRI)) { 
+                              delete g.details ;
+                              delete g.hidden ;
+                           }
+
                            if(!g.details) {
+                              g.rid = this.props.IRI
                               g.lang = this.props.locale
                               if(!g.hidden) g.hidden = []
                               // deprecated
                               // if(! (["bdr:PartTypeSection", "bdr:PartTypeVolume"].includes(g.partType)) ) {
+
+                              let nav = []
+
                               if(g.contentLocation) {
                                  if(!g.details) g.details = []
                                  g.hasImg = "/show/"+g["@id"].replace(/^((bdr:MW[^_]+)_[^_]+)$/,"$1")+"?s="+encodeURIComponent(this.props.history.location.pathname+this.props.history.location.search)+"#open-viewer"
-                                 g.details.push(<div class="sub view"><Link to={g.hasImg} class="ulink">&gt; {I18n.t("copyright.view")}</Link></div>)
+                                 nav.push(<Link to={g.hasImg} class="ulink">{I18n.t("copyright.view")}</Link>)
                               }
                               else if (g.instanceHasReproduction) {
                                  if(!g.details) g.details = []
                                  g.hasImg = "/show/"+g.instanceHasReproduction+"?s="+encodeURIComponent(this.props.history.location.pathname+this.props.history.location.search)+"#open-viewer"
-                                 g.details.push(<div class="sub view"><Link to={g.hasImg} class="ulink">&gt; {I18n.t("copyright.view")}</Link></div>)  
+                                 nav.push(<Link to={g.hasImg} class="ulink">{I18n.t("copyright.view")}</Link>)  
                               }
-                              if(g.instanceOf) {
-                                 if(!g.details) g.details = []
-                                 g.hidden.push(<div class="sub"><h4 class="first type">{this.proplink(bdo+"instanceOf")}{I18n.t("punc.colon")} </h4>{this.format("h4","instacO","",false, "sub", [{type:"uri",value:fullUri(g.instanceOf)}])}</div>)
-                                 let instOf = elem.filter(f => f["@id"] === g.instanceOf)
-                                 if(instOf.length && instOf[0]["tmp:labelMatch"]) {
-                                    g.hasMatch = true
-                                    let node = instOf[0]["tmp:labelMatch"]
-                                    if(!Array.isArray(node)) node = [node]                                    
-                                    //loggergen.log("instOf",instOf,node)
-                                    g.hidden.push(<div class="sub"><h4 class="first type">{this.proplink(tmp+"instanceLabel")}{I18n.t("punc.colon")} </h4><div>{node.map(n => this.format("h4","","",false, "sub",[{ value:n["@value"], lang:n["@language"], type:"literal"}]))}</div></div>)
-                                 }
+
+                              if(g["@id"] !== this.props.IRI || (g["@id"] === opart && opart !== this.props.IRI)) {
+                                 if(nav.length) nav.push(<span>|</span>)
+                                 nav.push(<Link to={"/show/"+g["@id"]} class="ulink">{I18n.t("resource.openR")}</Link>)
                               }
+                              if(nav.length) g.details.push(<div class="sub view">{nav}</div>)
+
                               if(g["tmp:titleMatch"] || g["tmp:labelMatch"]) {
                                  g.hasMatch = true
                               }
@@ -5328,6 +5332,20 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                                        if(titleT === bdo+"Title"|| (title.length && title[0].value && title[0].value.includes("↦"))) addTo = g.details 
                                        addTo.push(<div class={"sub " + (hideT?"hideT":"")}><h4 class="first type">{this.proplink(titleT)}{I18n.t("punc.colon")} </h4>{this.format("h4", "", "", false, "sub", title)}</div>)
                                     }
+                                 }
+                              }
+
+
+                              if(g.instanceOf) {
+                                 if(!g.details) g.details = []
+                                 g.details.push(<div class="sub"><h4 class="first type">{this.proplink(tmp+"instanceOfWork")}{I18n.t("punc.colon")} </h4>{this.format("h4","instacO","",false, "sub", [{type:"uri",value:fullUri(g.instanceOf)}])}</div>)
+                                 let instOf = elem.filter(f => f["@id"] === g.instanceOf)
+                                 if(instOf.length && instOf[0]["tmp:labelMatch"]) {
+                                    g.hasMatch = true
+                                    let node = instOf[0]["tmp:labelMatch"]
+                                    if(!Array.isArray(node)) node = [node]                                    
+                                    //loggergen.log("instOf",instOf,node)
+                                    g.hidden.push(<div class="sub"><h4 class="first type">{this.proplink(tmp+"instanceLabel")}{I18n.t("punc.colon")} </h4><div>{node.map(n => this.format("h4","","",false, "sub",[{ value:n["@value"], lang:n["@language"], type:"literal"}]))}</div></div>)
                                  }
                               }
 
