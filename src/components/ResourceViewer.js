@@ -1278,6 +1278,22 @@ class ResourceViewer extends Component<Props,State>
 
       //prop["bdr:workDimensions"] =
 
+      if(prop[rdfs+"seeAlso"]) {
+         if(!prop[adm+"seeOther"]) prop[adm+"seeOther"] = []
+
+         prop[rdfs+"seeAlso"] = prop[rdfs+"seeAlso"].map(e => {
+            let short = shortUri(e.value)
+            if(short != e.value.replace(/[/]$/,"")) {
+               if(!prop[adm+"seeOther"].filter(f => f.value === e.value).length) prop[adm+"seeOther"].push(e) 
+               return null
+            } 
+            else {
+               return e
+            }
+         }).filter(e => e)
+
+         if(!prop[rdfs+"seeAlso"].length) delete prop[rdfs+"seeAlso"];
+      }
 
       if(prop[bdo+"instanceHasReproduction"]) {
          let etexts = [ ...prop[bdo+"instanceHasReproduction"].filter(p => p.value && p.value.startsWith(bdr+"IE")) ] ;
