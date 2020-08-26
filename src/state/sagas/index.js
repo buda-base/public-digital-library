@@ -372,7 +372,7 @@ else if(params && params.r) {
    let s = ["Any"]
    if(params.t && params.t != "Any") { s = [ params.t ] }
    
-   if(t && ["Person","Place","Topic","Work","Role","Corporation","Lineage","Etext"].indexOf(t) !== -1
+   if(t && ["Person","Place","Topic","Work","Role","Corporation","Lineage","Etext","Product"].indexOf(t) !== -1
    && (!state.data.searches[params.t] || !state.data.searches[params.t][params.r+"@"]))
    {
       store.dispatch(dataActions.startSearch(params.r,"",s,t)); //,params.t.split(",")));
