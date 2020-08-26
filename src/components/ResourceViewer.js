@@ -357,6 +357,7 @@ let propOrder = {
       "bdo:instanceOf",
       //"bdo:instanceReproductionOf",
       "tmp:siblingExpressions",
+      "bdo:workHasParallelsIn",
       "bdo:workDerivativeOf",
       "bdo:workTranslationOf",
       "bdo:workHasDerivative",
