@@ -214,7 +214,7 @@ export const langSelect = [
 ]
 
 //const searchTypes = ["All","Work","Etext","Topic","Person","Place","Lineage","Corporation","Role"]
-const searchTypes = [ "Work", "Instance","Etext", "Person","Place","Topic","Lineage","Role","Corporation" ]
+const searchTypes = [ "Work", "Instance","Etext", "Person","Place","Topic","Lineage","Role","Corporation", "Product" ]
 
 /*
 export const langProfile = [
@@ -1250,7 +1250,7 @@ class App extends Component<Props,State> {
                time = props.searches[k].time
                loggergen.log("refreshB",time)
             }
-            for(let d of ["Etext","Person","Instance","Work","Place","Topic","Corporation","Role","Lineage"]) {
+            for(let d of ["Etext","Person","Instance","Work","Place","Topic","Corporation","Role","Lineage","Product"]) {
                if(props.searches && props.searches[d] && props.searches[d][k]) {
                   if(!time || props.searches[d][k].time > time) { 
                      time = props.searches[d][k].time 
@@ -1276,7 +1276,7 @@ class App extends Component<Props,State> {
          loggergen.log("K", props.keyword, time, current)
 
          let results
-         if(state.filters.datatype.indexOf("Any") !== -1 || state.filters.datatype.length > 1 || state.filters.datatype.filter(d => ["Work","Etext","Person","Place","Topic","Role","Corporation","Lineage"].indexOf(d) === -1).length ) {
+         if(state.filters.datatype.indexOf("Any") !== -1 || state.filters.datatype.length > 1 || state.filters.datatype.filter(d => ["Work","Etext","Person","Place","Topic","Role","Corporation","Lineage","Product"].indexOf(d) === -1).length ) {
             results = { ...props.searches[props.keyword+"@"+props.language] }
             //loggergen.log("any")
          }
@@ -1765,7 +1765,7 @@ class App extends Component<Props,State> {
 
          if(state.sortBy) delete state.sortBy
          
-         if([ /*"Any",*/ "Person","Place","Work","Etext","Role","Topic","Corporation","Lineage","Instance"].indexOf(lab) !== -1)
+         if([ /*"Any",*/ "Person","Place","Work","Etext","Role","Topic","Corporation","Lineage","Instance","Product"].indexOf(lab) !== -1)
          {
             this.requestSearch(this.props.keyword,[ lab ], this.props.language, true);
          }
@@ -2593,7 +2593,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
       let sameAsRes,otherSrc= [] ;
       if(allProps) sameAsRes = [ ...allProps ]
-      if(!id.match(/[:/]/)) id = "bdr:" + id
+      if(!id.match(/[:/]/)) id = (id.startsWith("PR")?"bda:":"bdr:") + id
 
       let litLang = lang
       let savLit = "" + lit
@@ -2697,7 +2697,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          
          let directSameAs = false
 
-         if(!prettId.match(/^bdr:/) && (fullId.match(new RegExp(cbcp+"|"+cbct+"|"+rkts)) || !sameAsRes || !sameAsRes.filter(s => s.value.match(/[#/]sameAs/) || (s.type.match(/[#/]sameAs/) && (s.value.indexOf(".bdrc.io") !== -1 || s.value.indexOf("bdr:") !== -1))).length))   {
+         if(!prettId.match(/^bd[ar]:/) && (fullId.match(new RegExp(cbcp+"|"+cbct+"|"+rkts)) || !sameAsRes || !sameAsRes.filter(s => s.value.match(/[#/]sameAs/) || (s.type.match(/[#/]sameAs/) && (s.value.indexOf(".bdrc.io") !== -1 || s.value.indexOf("bdr:") !== -1))).length))   {
             let u 
             if ((u = sameAsRes.filter(s => s.type === adm+"canonicalHtml")).length) {
                u = u[0].value
@@ -2745,7 +2745,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                               <span class="T">{I18n.t("types."+T.toLowerCase())}{langs}</span>
                               <h3 key="lit" lang={lang}>
                                  {lit}
-                                 { (resUrl && !resUrl.includes("/show/bdr:")) && <img class="link-out" src="/icons/link-out_fit.svg"/>}
+                                 { (resUrl && !resUrl.includes("/show/bdr:") && !resUrl.includes("/show/bda:")) && <img class="link-out" src="/icons/link-out_fit.svg"/>}
                                  { lang && <Tooltip key={"tip"} placement="bottom-end" title={
                                           <div style={{margin:"10px"}}>
                                              {I18n.t(languages[lang]?languages[lang].replace(/search/,"tip"):lang)}/>
@@ -4375,7 +4375,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
                                  //loggergen.log("counts",i,counts,counts["datatype"][i],this.state.filters.datatype.indexOf(i))
 
-                              let disabled = (!["Work","Instance","Person", "Place","Topic","Corporation","Role","Lineage","Etext"].includes(i)) // false // (!this.props.keyword && ["Any","Etext","Person","Work"].indexOf(i)===-1 && this.props.language  != "")
+                              let disabled = (!["Work","Instance","Person", "Place","Topic","Corporation","Role","Lineage","Etext","Product"].includes(i)) // false // (!this.props.keyword && ["Any","Etext","Person","Work"].indexOf(i)===-1 && this.props.language  != "")
                            // || (this.props.language == "")
 
                               let count = counts["datatype"][i]
@@ -4719,6 +4719,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          "WorkInstance": [ "workT", "yearP" ].map(m => I18n.t("sort."+m)),
          "Instance": [ "popu", "title", "yearP" ].map(m => I18n.t("sort."+m)),
          "Etext": [ "closestM", "numberMC" ].map(m => I18n.t("sort."+m)),
+         "Product": [ "closestM", "title" ].map(m => I18n.t("sort."+m)),
       }
 
       let sortByList = allSortByLists[this.state.filters.datatype[0]]

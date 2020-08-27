@@ -54,7 +54,9 @@ const enTranslation = {
       images:"Scans",
       volume:"Volume",
       volume_num:"Volume {{num}}",
-      searchIn:"in {{type}}"
+      searchIn:"in {{type}}",
+      product:"Product",
+      product_plural:"Products"
    },
    topbar:{
       about:"about us",

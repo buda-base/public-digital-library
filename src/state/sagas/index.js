@@ -318,7 +318,7 @@ else if(params && params.q) {
 
    let dontGetDT = false
    let pt = params.t
-   if(pt && !pt.match(/,/) && ["Place", "Person","Work","Etext", "Topic","Role","Corporation","Lineage","Instance"].indexOf(pt) !== -1)  {
+   if(pt && !pt.match(/,/) && ["Place", "Person","Work","Etext", "Topic","Role","Corporation","Lineage","Instance","Product"].indexOf(pt) !== -1)  {
 
       if(!state.data.searches || !state.data.searches[pt] || !state.data.searches[pt][params.q+"@"+params.lg]) {
          store.dispatch(dataActions.startSearch(params.q,params.lg,[pt],null,dontGetDT)); 
@@ -1824,7 +1824,7 @@ else {
    else {
 
 
-      if(["Person","Place","Role","Corporation","Topic","Lineage","Etext"].indexOf(datatype[0]) !== -1) {
+      if(["Person","Place","Role","Corporation","Topic","Lineage","Etext","Product"].indexOf(datatype[0]) !== -1) {
 
          addMeta(keyword,language,data,datatype[0],null,false);
       }

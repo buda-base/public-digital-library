@@ -4696,7 +4696,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                (!k.match(new RegExp(adm+"|adm:|isRoot$|SourcePath|"+rdf+"|toberemoved|entityScore|inRootInstance|workPagination|partIndex|partTreeIndex|legacyOutlineNodeRID|sameAs|thumbnailIIIFService|instanceOf|instanceReproductionOf|instanceHasReproduction|seeOther|withSameAs"+(this._dontMatchProp?"|"+this._dontMatchProp:"")))
                ||k.match(/(metadataLegal|contentProvider|replaceWith)$/)
                //||k.match(/([/]see|[/]sameAs)[^/]*$/) // quickfix [TODO] test property ancestors
-               || (this.props.IRI.match(/^bda:/) && (k.match(new RegExp(adm+"|adm:")))))
+               || (this.props.IRI.match(/^bda:/) && (k.match(new RegExp(adm+"|adm:"))) && !k.match(/\/(git[RP]|adminAbout|logEntry|graphId|facetIndex)/)))
             && (k !== bdo+"eTextHasChunk" || kZprop.indexOf(bdo+"eTextHasPage") === -1) 
             && ( (k !== bdo+"hasPart" && k !== bdo+"partOf") || !this.props.outline || this.props.outline === true) 
             )

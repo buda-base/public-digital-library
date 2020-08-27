@@ -17,6 +17,7 @@ const USER_EDIT_POLICIES_PATH = '/userEditPolicies'
 export const dPrefix = {
    "bda": {
       "CP" : "Corporation",
+      "PR": "Product",
    },
    "bdr": {
       "C" : "Corporation",
@@ -618,6 +619,7 @@ export default class API {
              let R_TYPE 
              if(typ[0] === "Etext") searchType = "etextContentFacet" //chunksFacet"
              else if(["Work","Person","Place","Instance"].includes(typ[0]))  searchType = typ[0].toLowerCase()+(["Work","Instance"].includes(typ[0])?"Facet":"")              
+             else if(["Product"].includes(typ[0])) R_TYPE = "adm:"+typ[0]
              else R_TYPE = "bdo:"+typ[0]
              searchType+="Graph"
 
@@ -638,7 +640,7 @@ export default class API {
               let config = store.getState().data.config.ldspdi
               let url = config.endpoints[config.index]+"/lib" ;
               let simple = !["Work","Person","Place"].includes(dtyp)
-              let param = {"searchType":"associated"+(!simple?dtyp:"SimpleType")+"s",...(simple?{R_TYPE:"bdo:"+dtyp}:{}),"R_RES":key,"L_NAME":"","LG_NAME":"", "I_LIM":"" }
+              let param = {"searchType":"associated"+(!simple?dtyp:"SimpleType")+"s",...(simple?{R_TYPE:(["Product"].includes(dtyp)?"adm:":"bdo:")+dtyp}:{}),"R_RES":key,"L_NAME":"","LG_NAME":"", "I_LIM":"" }
               let data = this.getQueryResults(url, key, param,"GET");
               // let data = this.getSearchContents(url, key);
 

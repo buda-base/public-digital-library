@@ -700,7 +700,7 @@ a.result + #matches .result-content #icon > :not(.thumb) img { width:40px; }
 .result-content #permalink { position: absolute;  right: 15px;  top: calc(50% - 16px); cursor:pointer; }
 .result-content #permalink.wInstance { top:100px; }
 
-.result-content { position:relative;  scroll-margin:80px; margin:0 0px; padding: 35px 25px; min-height:70px;} 
+.result-content { position:relative;  scroll-margin:80px; margin:0 0px; padding: 35px 25px; min-height:100px;} 
 .result-content+.result-content::before { content:" ";width:calc(100% - 80px - 50px);display:block;position:absolute;
    border-top: 4px solid rgba(239,238,238,0.6); left:80px; top:-2px; }
 
@@ -1274,6 +1274,7 @@ vertical-align:middle;}
 .resource.place .data > .header::before { background-image:url("/icons/search/place.svg");  }
 .resource.corporation .data > .header::before { background-image:url("/icons/search/corporation.svg");  }
 .resource.role .data > .header::before { background-image:url("/icons/search/role.svg"); background-size:58px auto;  }
+.resource.product .data > .header::before { background-image:url("/icons/search/product.svg"); background-size:58px auto;  }
 
 .resource .data .header.loading::before { background-image:none !important; }
 
