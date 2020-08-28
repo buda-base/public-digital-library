@@ -1360,6 +1360,9 @@ vertical-align:middle;}
    white-space: nowrap;   max-width: 125px;   overflow: hidden;   text-overflow: ellipsis;
 }
 
+
+.resource h4 .nbTrans { font-size:14px; color:#555; font-weight:400;}
+
 /* ------------------------------------------------------------------------------------------------------------------------ permalink */
 
 .resource .data#perma { background-color:#ffffff; padding:0 35px 50px 35px;}

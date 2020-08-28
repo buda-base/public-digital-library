@@ -419,7 +419,9 @@ const enTranslation = {
       gener3pdf:"Download PDF",
       gener1zip:"Generate ZIP",
       gener2zip:"Generating ZIP...",
-      gener3zip:"Download ZIP"
+      gener3zip:"Download ZIP",
+      nbTrans:" ({{count}} translation)",
+      nbTrans_plural:" ({{count}} translations)"
    },
    mirador:{
       return:"return to BUDA",

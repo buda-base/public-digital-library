@@ -2809,6 +2809,14 @@ class ResourceViewer extends Component<Props,State>
                }
             }
 
+
+            let nbT
+            if(this.props.assocResources && this.props.assocResources[e.value] 
+               && (nbT=this.props.assocResources[e.value].filter(f => f.type === _tmp+"nbTranslations")).length > 0)
+            {
+               tmp = [tmp,<span class="nbTrans">{I18n.t("resource.nbTrans",{count:Number(nbT[0].value)})}</span>]
+            }
+
             // else  return ( <Link to={"/resource?IRI="+pretty}>{pretty}</Link> ) ;
 
             /*
