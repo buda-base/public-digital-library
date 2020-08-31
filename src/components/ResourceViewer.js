@@ -443,10 +443,11 @@ const topProperties = {
       bdo+"hasTitle", 
       skos+"prefLabel", 
       skos+"altLabel", 
+      bdo+"language",
       bdo+"creator",
       bdo+"workTranslationOf",
       bdo+"editionStatement",
-      bdo+"workHasInstance"
+      bdo+"workHasInstance",
    ],
    "Instance": [ 
       bdo+"instanceHasReproduction",
@@ -4909,8 +4910,9 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          legalD = this.props.dictionary[legal[0].value]
          sameLegalD = legalD
       }
+      let prov,orig
       if(sameLegalD) { 
-         let prov = sameLegalD[adm+"provider"]
+         prov = sameLegalD[adm+"provider"]
          if(prov && prov.length) prov = prov[0].value
          if(prov && this.props.dictionary) prov = this.props.dictionary[prov]
          if(prov && prov[skos+"prefLabel"]) prov = prov[skos+"prefLabel"]
@@ -4921,7 +4923,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          if(prov) prov = prov.replace(/Internet Archives/g,"IA") 
          //else prov = ""
 
-         let orig = this.getResourceElem(adm+"originalRecord")
+         orig = this.getResourceElem(adm+"originalRecord")
          if(orig && orig.length) orig = orig[0].value
          else orig = ""
 
@@ -4930,7 +4932,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          if(prov !== "BDRC" && prov) {
 
             if(orig) 
-               src = <div class="src orig" onClick={(e) => this.setState({...this.state,anchorPermaSame:e.currentTarget, collapse: {...this.state.collapse, permaSame:!this.state.collapse.permaSame } } ) }>
+               src = <div class="src orig" onClick={(e) => this.setState({...this.state,anchorPermaSame:e.currentTarget, collapse: {...this.state.collapse, ["permaSame-permalink"]:!this.state.collapse["permaSame-permalink"] } } ) }>
                   <img src={provImg[prov.toLowerCase()]}/>
                </div> 
             else  
@@ -4997,7 +4999,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          )
       else if(kZprop.length)
          return <div class="data" id="map">{this.renderData(kZprop,null,null,null,"header")}</div>
-      else if(etext) {
+      else if(etext && !(prov !== "BDRC" && prov && orig)) {
          let loca = this.props.history.location
          return <div class="data" id="head"><Link title='View Etext' to={loca.pathname+loca.search+"#open-viewer"}><div class={"header "+(!this.state.ready?"loading":"")}>{ !this.state.ready && <Loader loaded={false} /> }{src}</div></Link></div>
       }
@@ -5630,6 +5632,28 @@ perma_menu(pdfLink,monoVol,fairUse,other)
       return null
    }
 
+   getProv() {
+
+      let legal = this.getResourceElem(adm+"metadataLegal"), legalD
+      if(legal && legal.length) legal = legal.filter(p => !p.fromSameAs)
+      if(legal && legal.length && legal[0].value && this.props.dictionary) { 
+         legalD = this.props.dictionary[legal[0].value]
+         
+         let prov = legalD[adm+"provider"]
+         if(prov && prov.length) prov = prov[0].value
+         if(prov && this.props.dictionary) prov = this.props.dictionary[prov]
+         if(prov && prov[skos+"prefLabel"]) prov = prov[skos+"prefLabel"]
+         else if(prov && prov[rdfs+"label"]) prov = prov[rdfs+"label"]
+         if(prov && prov.length) prov = prov.filter(e => e.lang === "en" || !e.lang)
+         if(prov && prov.length) prov = prov[0].value
+         if(prov) prov = prov.replace(/(^\[ *)|( *\]$)/g,"") // CUDL
+         if(prov) prov = prov.replace(/Internet Archives/g,"IA") 
+         
+         return prov
+      }
+            
+   }
+
    render()
    {
       loggergen.log("render",this.props,this.state)
@@ -5946,6 +5970,13 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          // + fix open etext OR images
          // + add loader to show when back to seach
 
+         let orig = this.getResourceElem(adm+"originalRecord")
+         if(orig && orig.length) orig = orig[0].value
+         else orig = ""
+
+
+         let prov = this.getProv()
+
 
          return (
          [getGDPRconsent(this),
@@ -5975,7 +6006,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                   { iTitle }
                   { iTitle && this.state.title.instance && sideMenu(this.state.title.instance[0].value,"Instance", false, iDataExt, iOutline) }
                   { rTitle }
-                  { rTitle && this.state.title.images && sideMenu(this.state.title.images[0].value,"Images", false, rDataExt, false, rView) }
+                  { rTitle && this.state.title.images && sideMenu(this.state.title.images[0].value,"Images", false, rDataExt, false, rView && !orig) }
                   </div>
                </div>
                <div>
@@ -5984,7 +6015,8 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                   { this.renderWithdrawn() }             
                   <div class="title">{ wTitle }{ iTitle }{ rTitle }</div>
                   { this.renderHeader(kZprop.filter(k => mapProps.includes(k)), _T) }
-                  { etext && <div class="data" id="open-etext"><div><Link to={loca.pathname+loca.search+"#open-viewer"}>{I18n.t("resource.openViewer")}</Link></div></div> }
+                  { (etext && !orig) && <div class="data" id="open-etext"><div><Link to={loca.pathname+loca.search+"#open-viewer"}>{I18n.t("resource.openViewer")}</Link></div></div> }
+                  { (etext && orig) && <div class="data" id="open-etext"><div><a target="_blank" href={orig}>{I18n.t("resource.openO",{src:prov})}<img src="/icons/link-out_.svg"/></a></div></div> }
                   <div class={"data" + (_T === "Etext"?" etext-title":"")+(_T === "Images"?" images-title":"")}>
                      {_T === "Images" && iTitle?[<h2 class="on intro">{I18n.t("resource.scanF")}</h2>,iTitle]:(_T === "Etext" && iTitle?[<h2 class="on intro">{I18n.t("resource.etextF")}</h2>,iTitle]:title)}
                      {inTitle}

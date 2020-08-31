@@ -941,7 +941,7 @@ h4:not(:hover) > .lang
 #open-etext { position:absolute; right:140px; margin-top:0px; z-index:10;}
 #open-etext > div { }
 #open-etext > div::after { content:none !important; }
-#open-etext + .data h2 { max-width:calc(100% - 150px - 30px); }
+#open-etext + .data h2 { max-width:calc(100% - 30px); }  /*- 150px */ 
 #open-etext > div a { color:white; background-color: #d73449; border-radius:5px;display:flex;align-items: center;justify-content: center; height:40px;
    padding: 0 15px; border:none !important; font-weight:600; font-size:13px; cursor:pointer;}
 
