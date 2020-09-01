@@ -5187,6 +5187,12 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   </List>
                }
                </div>
+               { message.length == 0 && !this.props.loading && !this.props.keyword && 
+                  <div id="latest">
+                     <h3>Newly Released Digital Works</h3>
+                     <div></div>
+                  </div>
+               }
             </div>
             <LanguageSidePaneContainer />
          </div>
