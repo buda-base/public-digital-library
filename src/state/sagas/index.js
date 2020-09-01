@@ -385,8 +385,17 @@ else if(params && params.r) {
       }
    }
 }
-else if(!iri && store.getState().data.keyword) {
-   store.dispatch(dataActions.resetSearch())
+else if(!iri) {
+
+   let state = store.getState()
+   
+   if(!state.data.latestSyncs) {
+      store.dispatch(dataActions.getLatestSyncs())
+   }
+
+   if(state.data.keyword) {
+      store.dispatch(dataActions.resetSearch())
+   }
 }
 
 } catch(e) {
@@ -2003,6 +2012,30 @@ export function* watchGetInstances() {
 
 
 
+
+async function getLatestSyncs() {
+
+   let res = await api.loadLatestSyncs() 
+   let keys = _.orderBy(Object.keys(res).map(k => ({id:k,t:res[k][tmp+"datesync"][0].value})), "t", "desc")
+
+   let sorted = {}
+   keys.map(k => { sorted[k.id] = res[k.id]; })
+      
+   loggergen.log("syncs",res,sorted)
+
+   store.dispatch(dataActions.gotLatestSyncs(sorted))
+
+}
+
+
+export function* watchGetLatestSyncs() {
+
+   yield takeLatest(
+      dataActions.TYPES.getLatestSyncs,
+      (action) => getLatestSyncs()
+   );
+}
+
 async function getOutline(iri) {
 
    store.dispatch(uiActions.loading(iri, "outline"));
@@ -2263,6 +2296,7 @@ export default function* rootSaga() {
       watchInitiateApp(),
       watchGetUser(),
       watchGetOutline(),
+      watchGetLatestSyncs(),
       watchOutlineSearch(),
       watchGetResetLink(),
       watchUpdateSortBy(),

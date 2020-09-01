@@ -781,6 +781,26 @@ export const searchingKeyword = (state: DataState, action: SearchAction) => {
 }
 reducers[actions.TYPES.searchingKeyword] = searchingKeyword;
 
+export const getLatestSyncs = (state: DataState, action: Action) => {
+
+   return {
+      ...state,
+      latestSyncs:true
+   }
+}
+reducers[actions.TYPES.getLatestSyncs] = getLatestSyncs;
+
+
+export const gotLatestSyncs = (state: DataState, action: Action) => {
+
+   return {
+      ...state,
+      latestSyncs:action.payload
+   }
+}
+reducers[actions.TYPES.gotLatestSyncs] = gotLatestSyncs;
+
+
 
 export const getOutline = (state: DataState, action: Action) => {
 

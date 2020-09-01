@@ -179,6 +179,22 @@ export const getUser = (profile: string): Action => {
 }
 
 
+
+TYPES.getLatestSyncs = 'GET_LATEST_SYNCS';
+export const getLatestSyncs = (): Action => {
+    return {
+        type: TYPES.getLatestSyncs
+    }
+}
+
+TYPES.gotLatestSyncs = 'GOT_LATEST_SYNCS';
+export const gotLatestSyncs = (res): Action => {
+    return {
+        type: TYPES.gotLatestSyncs,
+        payload:res
+    }
+}
+
 TYPES.getOutline = 'GET_OUTLINE';
 export const getOutline = (iri: string): Action => {
     return {
