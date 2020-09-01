@@ -27,7 +27,8 @@ const enTranslation = {
       subsubmessage_auth:"All users, including users with existing accounts on tbrc.org, will need to register for a free BDRC account for full access.",
       search:"Search",
       choose:"Choose language",
-      start:"Start typing then select search language"
+      start:"Start typing then select search language",
+      new:"Newly Released Digital Works"
    },
    types:{
       any:"Any",

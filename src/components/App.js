@@ -5189,8 +5189,36 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                </div>
                { message.length == 0 && !this.props.loading && !this.props.keyword && 
                   <div id="latest">
-                     <h3>Newly Released Digital Works</h3>
-                     <div></div>
+                     <h3>{I18n.t("home.new")}</h3>
+                     <div>
+                        <div class="slide-bg">
+                           <div>
+                              <a href="/show/bdr:WA1KG13112"><div class="header"></div></a>
+                              <p lang="bo-x-ewts">bod 'gyur dam pa'i chos pad+ma dkar po zhes bya ba theg pa chen po'i mdo/</p>
+                              <a href="/show/bdr:WA1KG13112">{I18n.t("misc.readM")}</a>
+                           </div>
+                           <div>
+                              <a href="/show/bdr:WA1KG13112"><div class="header"></div></a>
+                              <p lang="bo-x-ewts">bod 'gyur dam pa'i chos pad+ma dkar po zhes bya ba theg pa chen po'i mdo/</p>
+                              <a href="/show/bdr:WA1KG13112">{I18n.t("misc.readM")}</a>
+                           </div>
+                           <div>
+                              <a href="/show/bdr:WA1KG13112"><div class="header"></div></a>
+                              <p lang="bo-x-ewts">bod 'gyur dam pa'i chos pad+ma dkar po zhes bya ba theg pa chen po'i mdo/</p>
+                              <a href="/show/bdr:WA1KG13112">{I18n.t("misc.readM")}</a>
+                           </div>
+                           <div>
+                              <a href="/show/bdr:WA1KG13112"><div class="header"></div></a>
+                              <p lang="bo-x-ewts">bod 'gyur dam pa'i chos pad+ma dkar po zhes bya ba theg pa chen po'i mdo/</p>
+                              <a href="/show/bdr:WA1KG13112">{I18n.t("misc.readM")}</a>
+                           </div>
+                           <div>
+                              <a href="/show/bdr:WA1KG13112"><div class="header"></div></a>
+                              <p lang="bo-x-ewts">bod 'gyur dam pa'i chos pad+ma dkar po zhes bya ba theg pa chen po'i mdo/</p>
+                              <a href="/show/bdr:WA1KG13112">{I18n.t("misc.readM")}</a>
+                           </div>
+                        </div>
+                     </div>
                   </div>
                }
             </div>
