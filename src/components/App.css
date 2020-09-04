@@ -581,7 +581,9 @@ li + a.result { margin-top:-5px; }
    border-radius: 50%; content:''; background-repeat: no-repeat; background-position: center;
 }
 #latest .slide-bg > div .header.thumb::before {content:none;}
-#latest .slide-bg > div .header.thumb { background-size:cover; background-position:center;background-repeat: no-repeat; }
+#latest .slide-bg > div .header.thumb { background-size:auto 100%; background-position:center;background-repeat: no-repeat; 
+   box-shadow: 0 1px 4px #cecece; background-color:black;
+}
 
 #latest .slide-bg > div p { color: #343434; font-weight: 500; font-size: 15px; margin-top:30px;}
 #latest .slide-bg > div p + a { color: #343434;font-weight: 700;font-size: 13px; }

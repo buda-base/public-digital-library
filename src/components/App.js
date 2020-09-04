@@ -5208,7 +5208,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                                  console.log("thumb",thumb)
                                  return (
                                     <div>
-                                       <a href={uri}><div class={"header "+(thumb?"thumb":"")} {...thumb?{style:{"background-image":"url("+ thumb+"/square/195,195/0/default.jpg)"}}:{}}></div></a>
+                                       <a href={uri}><div class={"header "+(thumb?"thumb":"")} {...thumb?{style:{"background-image":"url("+ thumb+"/full/,195/0/default.jpg)"}}:{}}></div></a>
                                        <p lang={lang}>{value}</p>
                                        <a href={uri}>{I18n.t("misc.readM")}</a>
                                     </div>
