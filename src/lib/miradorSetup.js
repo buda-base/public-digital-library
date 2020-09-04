@@ -237,7 +237,8 @@ async function hasEtextPage(manifest) {
             //console.log("loading DATA",id);
 
             for(let i = id ; i <= id+NB_PAGES-1 ; i++) etextPages[ut][i] = true ;
-            let data = await window.fetch(ldspdi+"/query/graph/ChunksByPage?R_RES="+ut+"&I_START="+id+"&I_END="+(id+NB_PAGES-1)) ;
+
+            let data = await window.fetch(ldspdi+"/lib/ChunksByPage?R_RES="+ut+"&I_START="+id+"&I_END="+(id+NB_PAGES-1), { headers:new Headers({accept:"application/ld+json"})}) ;
             
             let json = await data.json() ;
 
@@ -888,8 +889,11 @@ export async function miradorInitView(work,lang,callerURI,locale) {
 
             //console.log(checkV)
             
-         }         
-         else {
+         } else if(propK["type"] === "ImageGroup") {
+            data = [
+               { "manifestUri" : iiifpres+"/vo:"+work+"/manifest", location:"" }
+            ]
+         } else {
             data = [
                { "collectionUri" : iiifpres+"/collection/wio:"+work, location:"" }
             ]
