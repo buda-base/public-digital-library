@@ -1208,8 +1208,9 @@ class ResourceViewer extends Component<Props,State>
       this.scrollToHashID(this.props.history)
    }
 
-   onBackButtonEvent(event) {
-      window.closeMirador = true      
+   onBackButtonEvent(event) {      
+      // DONE fix back button to page with open mirador not working
+      if(window.location.hash !== "#open-viewer") window.closeMirador = true ;
    }
 
    expand(str:string, useCfg:boolean = false) //,stripuri:boolean=true)
@@ -2061,7 +2062,7 @@ class ResourceViewer extends Component<Props,State>
                
                thumbV =  this.getResourceElem(tmp+"thumbnailIIIFService", shortUri(elem.value), this.props.assocResources)
                if(!thumbV || !thumbV.length)  ret = [  <Link to={"/show/"+shortUri(elem.value)} class={"images-thumb no-thumb"} style={{"background-image":"url(/icons/header/instance.svg)"}}></Link> ]
-               else ret = [  <Link to={"/show/"+shortUri(elem.value)} class={"images-thumb"} style={{"background-image":"url("+ thumbV[0].value+"/full/,145/0/default.jpg)"}}></Link> ]
+               else ret = [  <Link to={"/show/"+shortUri(elem.value)} class={"images-thumb"} style={{"background-image":"url("+ thumbV[0].value+"/square/145,145/0/default.jpg)"}}></Link> ]
             
                let inRoot =  this.getResourceElem(bdo+"inRootInstance", shortUri(elem.value), this.props.assocResources)
                if(inRoot && inRoot.length && info && lang && lang === "bo-x-ewts" && info.match(/^([^ ]+ ){11}/)) info = [ info.replace(/^(([^ ]+ ){10}).*?$/,"$1"), <span class="ellip">{info.replace(/^([^ ]+ ){10}[^ ]+(.*?)$/,"$2")}</span> ]

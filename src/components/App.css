@@ -580,6 +580,9 @@ li + a.result { margin-top:-5px; }
 #latest .slide-bg > div .header::before { background-image:url("/icons/image.svg"); background-size:52px auto; width:125px;height:125px;background-color:white;
    border-radius: 50%; content:''; background-repeat: no-repeat; background-position: center;
 }
+#latest .slide-bg > div .header.thumb::before {content:none;}
+#latest .slide-bg > div .header.thumb { background-size:cover; background-position:center;background-repeat: no-repeat; }
+
 #latest .slide-bg > div p { color: #343434; font-weight: 500; font-size: 15px; margin-top:30px;}
 #latest .slide-bg > div p + a { color: #343434;font-weight: 700;font-size: 13px; }
 #latest .slide-bg > div p + a:hover { border-bottom: 1px solid #343434;}

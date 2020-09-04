@@ -5202,10 +5202,13 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                               { Object.keys(this.props.latestSyncs).map(s => {
                                  let label = getLangLabel(this,"",this.props.latestSyncs[s][skos+"prefLabel"])
                                  let uri = "/show/"+shortUri(s), lang = label.lang, value = label.value
-                                 // TODO use thumbnail when available
+                                 // DONE use thumbnail when available
+                                 let thumb = this.props.latestSyncs[s][tmp+"thumbnailIIIFService"]
+                                 if(thumb && thumb.length) thumb = thumb[0].value 
+                                 console.log("thumb",thumb)
                                  return (
                                     <div>
-                                       <a href={uri}><div class="header"></div></a>
+                                       <a href={uri}><div class={"header "+(thumb?"thumb":"")} {...thumb?{style:{"background-image":"url("+ thumb+"/square/195,195/0/default.jpg)"}}:{}}></div></a>
                                        <p lang={lang}>{value}</p>
                                        <a href={uri}>{I18n.t("misc.readM")}</a>
                                     </div>
