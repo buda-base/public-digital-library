@@ -266,8 +266,8 @@ export default class API {
             const date = new Date(Date.now() - 1000 * 3600 * 24 * 14)
 
             let config = store.getState().data.config.ldspdi
-            // TODO remove ldspdi-dev --> ldspdi 
-            let url = config.endpoints[config.index].replace(/-dev/,"") + "/query/graph" ;            
+            // DONE remove ldspdi-dev --> ldspdi 
+            let url = config.endpoints[config.index] /*.replace(/-dev/,"")*/ + "/query/graph" ;            
             let param = {"searchType":"latestsyncssince","L_NAME":"","LG_NAME":"", "I_LIM":"", "D_SINCE":date.toISOString().replace(/T.*$/,"T00:00:00") }
             let data = await this.getQueryResults(url, "", param,"GET","application/json");         
 
