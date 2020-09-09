@@ -249,6 +249,19 @@ const makeMainRoutes = () => {
                               {({ isLatestVersion, emptyCacheStorage }) => (<AppContainer history={history} auth={auth}/> )}
                            </ClearCache>
                         )}}/>
+                     <Route path="/latest" render={(props) => {
+                        let get = qs.parse(history.location.search)
+                        //if(!store.getState().data.ontology)
+                        {
+                           console.log("new route",props,store.getState())
+                           //if(!store.getState().ui.loading)
+                           store.dispatch(initiateApp(qs.parse(history.location.search), null, null, "latest"))
+                        }
+                        return ( 
+                           <ClearCache auto={true}>
+                              {({ isLatestVersion, emptyCacheStorage }) => (<AppContainer history={history} auth={auth}/> )}
+                           </ClearCache>
+                        )}}/>
                      <Route path="/view/:IRI" render={(props) =>
                         {
                            let get = qs.parse(history.location.search)

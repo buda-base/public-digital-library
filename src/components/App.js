@@ -4377,7 +4377,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
                                  //loggergen.log("counts",i,counts,counts["datatype"][i],this.state.filters.datatype.indexOf(i))
 
-                              let disabled = (!["Work","Instance","Person", "Place","Topic","Corporation","Role","Lineage","Etext","Product"].includes(i)) // false // (!this.props.keyword && ["Any","Etext","Person","Work"].indexOf(i)===-1 && this.props.language  != "")
+                              let disabled = (!["Work","Instance","Person", "Place","Topic","Corporation","Role","Lineage","Etext","Product","Scan"].includes(i)) // false // (!this.props.keyword && ["Any","Etext","Person","Work"].indexOf(i)===-1 && this.props.language  != "")
                            // || (this.props.language == "")
 
                               let count = counts["datatype"][i]
@@ -5192,7 +5192,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   </List>
                }
                </div>
-               { false && message.length == 0 && !this.props.loading && !this.props.keyword && 
+               { message.length == 0 && !this.props.loading && !this.props.keyword && 
                   <div id="latest">
                      <h3>{I18n.t("home.new")}</h3>
                      <div>

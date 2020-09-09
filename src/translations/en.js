@@ -57,7 +57,9 @@ const enTranslation = {
       volume_num:"Volume {{num}}",
       searchIn:"in {{type}}",
       product:"Product",
-      product_plural:"Products"
+      product_plural:"Products",
+      scan:"Scan",
+      scan_plural:"Scans"
    },
    topbar:{
       about:"about us",
@@ -113,7 +115,8 @@ const enTranslation = {
       placeN:"Place Name",
       yearP:"Year of Publication",
       title:"Title",
-      numberMC:"Number of Matching Chunks"
+      numberMC:"Number of Matching Chunks",
+      lastS:"Last Sync"
    },
    copyright:{
       open:"Open Access",

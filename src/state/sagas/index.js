@@ -48,7 +48,7 @@ const handleAuthentication = (nextState, replace) => {
 
 let sameAsR = {}
 
-async function initiateApp(params,iri,myprops) {
+async function initiateApp(params,iri,myprops,route) {
    try {
       loggergen.log("params=",params)
       loggergen.log("iri=",iri)
@@ -385,11 +385,14 @@ else if(params && params.r) {
       }
    }
 }
+else if(route === "latest") {
+   store.dispatch(dataActions.getLatestSyncsAsResults());
+}
 else if(!iri) {
 
    let state = store.getState()
    
-   if(false && !state.data.latestSyncs) {
+   if(!state.data.latestSyncs) {
       store.dispatch(dataActions.getLatestSyncs())
    }
 
@@ -407,7 +410,7 @@ else if(!iri) {
 function* watchInitiateApp() {
    yield takeLatest(
       INITIATE_APP,
-      (action) => initiateApp(action.payload,action.meta.iri,action.meta.auth)
+      (action) => initiateApp(action.payload,action.meta.iri,action.meta.auth,action.meta.route)
    );
 }
 
@@ -1561,6 +1564,36 @@ function sortResultsByYear(results,reverse) {
    return results
 }
 
+function sortResultsByLastSync(results,reverse) {
+
+   if(!results) return 
+
+   let keys = Object.keys(results)
+   if(keys && keys.length) {
+      keys = keys.map(k => {
+         let n = "9999-99-99T99:99:99.999Z", score, p = results[k].length
+         if(reverse) n = "0000-00-00T00:00:00.000Z"
+         for(let i in results[k]) {
+            let v = results[k][i]
+            if(v.type === tmp+"lastSync") {
+               n = v.value
+            }
+         }
+         return ({k, n, p})
+      },{})
+      keys = _.orderBy(keys,['n','p'],[(reverse?'asc':'desc'), (reverse?'desc':'asc')])
+      
+      //loggergen.log("keysY",keys)
+
+      let sortRes = {}
+      for(let k of keys) sortRes[k.k] = results[k.k]
+
+      //loggergen.log("sortResY",sortRes)
+
+      return sortRes
+   }
+   return results
+}
 
 
 function sortResultsByNbChunks(results,reverse) {
@@ -1685,6 +1718,7 @@ function rewriteAuxMain(result,keyword,datatype,sortBy,language)
          else if(sortBy.startsWith("closest matches")) return { ...acc, [t]: sortResultsByRelevance(dataWithAsset,reverse) }
          else if(sortBy.startsWith("number of matching chunks")) return { ...acc, [t]: sortResultsByNbChunks(dataWithAsset,reverse) }
          else if(sortBy.includes("title") ||  sortBy.includes("name") ) return { ...acc, [t]: sortResultsByTitle(dataWithAsset, langPreset, reverse) }
+         else if(sortBy.startsWith("lastSync")) return { ...acc, [t]: sortResultsByLastSync(dataWithAsset,reverse) }
       }
       else if(e === "aux") {                  
          store.dispatch(dataActions.gotAssocResources(keyword,{ data: result[e] } ) )
@@ -1925,6 +1959,7 @@ async function updateSortBy(i,t)
       let langPreset = state.ui.langPreset
       data.results.bindings[t.toLowerCase()+"s"] = sortResultsByTitle(data.results.bindings[t.toLowerCase()+"s"], langPreset, reverse)
    }
+   else if(i.startsWith("lastSync")) data.results.bindings[t.toLowerCase()+"s"] = sortResultsByLastSync(data.results.bindings[t.toLowerCase()+"s"], reverse)  
    data.time = Date.now()
 
    store.dispatch(dataActions.foundResults(state.data.keyword,state.data.language, data, t))     
@@ -2010,6 +2045,38 @@ export function* watchGetInstances() {
    );
 }
 
+
+
+async function getLatestSyncsAsResults() {
+
+
+   store.dispatch(uiActions.loading(null, true));
+
+   let res = await api.loadLatestSyncsAsResults()
+      
+   res = rewriteAuxMain(res,"",["Scan"],"lastSync")
+
+   let data = getData(res)
+
+   loggergen.log("syncs",res,data)
+   
+   store.dispatch(dataActions.foundResults(" ", "en", data, ["Scan"]));
+
+   store.dispatch(dataActions.foundDatatypes(" ","en",{ metadata:{[bdo+"Scan"]:data.numResults}, hash:true}));
+
+   addMeta(" ","en",data,"Scan",null,false); 
+
+   store.dispatch(uiActions.loading(null, false));
+
+}
+
+export function* watchGetLatestSyncsAsResults() {
+
+   yield takeLatest(
+      dataActions.TYPES.getLatestSyncsAsResults,
+      (action) => getLatestSyncsAsResults()
+   );
+}
 
 
 
@@ -2296,6 +2363,7 @@ export default function* rootSaga() {
       watchInitiateApp(),
       watchGetUser(),
       watchGetOutline(),
+      watchGetLatestSyncsAsResults(),
       watchGetLatestSyncs(),
       watchOutlineSearch(),
       watchGetResetLink(),

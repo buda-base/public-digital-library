@@ -259,6 +259,30 @@ export default class API {
          return dico ;
    }
 
+    async loadLatestSyncsAsResults(): Promise<string>
+    {
+         try {
+            
+            const dateA = new Date(Date.now() - 1000 * 3600 * 24 * 7)
+            const dateB = new Date(Date.now())
+
+            let config = store.getState().data.config.ldspdi
+            let url = config.endpoints[config.index] + "/lib" ;            
+            let param = {"searchType":"iinstanceSyncedIn","L_NAME":"","LG_NAME":"", "I_LIM":"", "D_START":dateA.toISOString().replace(/T.*$/,"T00:00:00"), "D_END":dateB.toISOString().replace(/T.*$/,"T00:00:00") }
+            let data = await this.getQueryResults(url, "", param,"GET","application/json");         
+
+            return data ;
+         }
+         catch(e)
+         {
+            //throw(e)
+            console.error("ERROR outline",e)
+            return true
+         }
+
+   }
+
+
     async loadLatestSyncs(): Promise<string>
     {
          try {
