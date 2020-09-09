@@ -223,9 +223,10 @@ async function hasEtextPage(manifest) {
          if(!id || id.match(/[^0-9]/)) return "(issue with canvas label: "+JSON.stringify(canvas.label,null,3)+")" ;
          else id = Number(id)
 
-         console.log("page " +id);
-
          if(!etextPages[ut]) etextPages[ut] = {}
+
+         console.log("page " +id,etextPages[ut][id]);
+
          if(etextPages[ut][id] === true) {            
             return new Promise((resolve,reject) => {
                let timer = setInterval(()=>{
@@ -255,7 +256,7 @@ async function hasEtextPage(manifest) {
 
             if(json && json["@graph"]) json = json["@graph"]
             if(json.status === 404 || !json.filter) {
-               for(let i = id + 1 ; i <= id+NB_PAGES-1 ; i++) delete etextPages[ut][i]  ;               
+               for(let i = id ; i <= id+NB_PAGES-1 ; i++) delete etextPages[ut][i]  ;               
                //console.error("Etext ERROR",json)
                return ; //[{"@language":"en","@value":"no data found (yet !?)"}]
             }
@@ -309,7 +310,7 @@ async function hasEtextPage(manifest) {
 }
 
 
-const NB_PAGES = 10 ; 
+const NB_PAGES = 20 ; 
 let etextPages = {};
 
 export async function miradorConfig(data, manifest, canvasID, useCredentials, langList, cornerButton, resID, locale)

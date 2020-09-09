@@ -510,7 +510,7 @@ export function getGDPRconsent(that) {
    //ReactGA.pageview('/homepage');
    loggergen.log("cookie?",document.cookie)
 
-   return (
+   if(that.props.config && that.props.config.GA) return (
       <CookieConsent
          location="bottom"
          onAccept={() => { loggergen.log("accept!"); if(that) { report_GA(that.props.config,that.props.history.location); that.forceUpdate(); } } }
@@ -5192,7 +5192,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   </List>
                }
                </div>
-               { message.length == 0 && !this.props.loading && !this.props.keyword && 
+               { false && message.length == 0 && !this.props.loading && !this.props.keyword && 
                   <div id="latest">
                      <h3>{I18n.t("home.new")}</h3>
                      <div>

@@ -389,7 +389,7 @@ else if(!iri) {
 
    let state = store.getState()
    
-   if(!state.data.latestSyncs) {
+   if(false && !state.data.latestSyncs) {
       store.dispatch(dataActions.getLatestSyncs())
    }
 
