@@ -690,6 +690,7 @@ type Props = {
    sortBy?:string,
    instances?:{},
    isInstance?:boolean,
+   latestSyncs?:boolean|{},
    onResetSearch:()=>void,
    onOntoSearch:(k:string)=>void,
    onStartSearch:(k:string,lg:string,t?:string)=>void,
@@ -752,7 +753,8 @@ type State = {
    },
    assoRes?:{},
    locale:string,
-   checked:{}
+   checked:{},
+   syncsSlided?:boolean
 }
 
 class App extends Component<Props,State> {
@@ -4848,6 +4850,9 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          )
 
 
+      let syncSlide = (e) => {
+         this.setState({syncsSlided:!this.state.syncsSlided})
+      }
 
       return (
 <div>
@@ -5187,6 +5192,39 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   </List>
                }
                </div>
+               { false && message.length == 0 && !this.props.loading && !this.props.keyword && 
+                  <div id="latest">
+                     <h3>{I18n.t("home.new")}</h3>
+                     <div>
+                        { this.props.latestSyncs === true && <Loader loaded={false}/> }
+                        { (this.props.latestSyncs && this.props.latestSyncs !== true) &&
+                           <div class={"slide-bg "+(this.state.syncsSlided?"slided":"")}>
+                              { Object.keys(this.props.latestSyncs).map(s => {
+                                 let label = getLangLabel(this,"",this.props.latestSyncs[s][skos+"prefLabel"])
+                                 let uri = "/show/"+shortUri(s), lang = label.lang, value = label.value
+                                 // DONE use thumbnail when available
+                                 let thumb = this.props.latestSyncs[s][tmp+"thumbnailIIIFService"]
+                                 if(thumb && thumb.length) thumb = thumb[0].value 
+                                 console.log("thumb",thumb)
+                                 return (
+                                    <div>
+                                       <a href={uri}><div class={"header "+(thumb?"thumb":"")} {...thumb?{style:{"background-image":"url("+ thumb+"/full/,195/0/default.jpg)"}}:{}}></div></a>
+                                       <p lang={lang}>{value}</p>
+                                       <a href={uri}>{I18n.t("misc.readM")}</a>
+                                    </div>
+                                 )
+                              })}
+                           </div>
+                        }
+                     </div>
+                     { (this.props.latestSyncs && this.props.latestSyncs !== true) && 
+                        <div id="syncs-nav" >
+                           <span class={this.state.syncsSlided?"on":""} onClick={syncSlide}><img src="/icons/g.svg"/></span>
+                           <span class={this.state.syncsSlided?"":"on"} onClick={syncSlide}><img src="/icons/d.svg"/></span>
+                        </div>
+                     }
+                  </div>
+               }
             </div>
             <LanguageSidePaneContainer />
          </div>
