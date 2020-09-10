@@ -669,6 +669,7 @@ type Props = {
          index:number
       }
    },
+   latest?:boolean,
    facets?:{[string]:boolean|{}},
    searches:{[string]:{}},
    resources:{[string]:{}},
@@ -691,6 +692,7 @@ type Props = {
    instances?:{},
    isInstance?:boolean,
    latestSyncs?:boolean|{},
+   latestSyncsNb?:integer,
    onResetSearch:()=>void,
    onOntoSearch:(k:string)=>void,
    onStartSearch:(k:string,lg:string,t?:string)=>void,
@@ -1654,7 +1656,9 @@ class App extends Component<Props,State> {
          state.filters.preload = true
 
          let {pathname,search} = this.props.history.location
-         this.props.history.push({pathname,search:search.replace(/(&([nf]|pg)=[^&]+)/g,"")+"&pg=1"+getFacetUrl(state.filters,this.props.config.facets[state.filters.datatype[0]])})
+         search = search.replace(/(&([nf]|pg)=[^&]+)/g,"")+"&pg=1"+getFacetUrl(state.filters,this.props.config.facets[state.filters.datatype[0]])+(this.props.latest&&!(""+search).match(/t=/)?"&t=Scan":"")
+         search = search.replace(/\?&/,"?")
+         this.props.history.push({pathname,search })
       }
 
       this.setState(state);
@@ -3051,6 +3055,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
 
             { type === "Scan" &&  this.getResultProp(tmp+"date",allProps,false,false,[tmp+"lastSync"]) }
+            {/* { type === "Scan" &&  this.getResultProp(tmp+"InverseRelationType",allProps,false,false,[tmp+"relationTypeInv"]) }  */}
 
             {/* { this.getEtextLink(id,n,allProps) } */}
 
@@ -3394,7 +3399,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                let _t = t.toLowerCase()
                if(_t === "work" && this.props.isInstance) _t = "instance"
                if(displayTypes.length > 1 || displayTypes.indexOf("Any") !== -1) message.push(<MenuItem  onClick={(e)=>this.handleCheck(e,t,true,{},true)}><h4>{I18n.t("types."+t.toLowerCase()+"_plural")+(false && displayTypes.length>1&&counts["datatype"][t]?" ("+counts["datatype"][t]+")":"")}</h4></MenuItem>);
-               else message.push(<MenuItem><h4>{I18n.t("types."+_t+("_plural"))+(false && displayTypes.length>=1&&counts["datatype"][t]?" ("+counts["datatype"][t]+")":"")}</h4></MenuItem>);
+               else message.push(<MenuItem><h4>{this.props.latest?I18n.t("home.new"):(I18n.t("types."+_t+("_plural"))+(false && displayTypes.length>=1&&counts["datatype"][t]?" ("+counts["datatype"][t]+")":""))}</h4></MenuItem>);
                // TODO better handling of plural in translations
             }
             absi ++ ;
@@ -4013,7 +4018,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
       
       let {pathname,search} = this.props.history.location
       
-      if(!this.props.isInstance) this.props.history.push({pathname,search:search.replace(/(&([tfin]|pg)=[^&]+)/g,"")+"&t="+this.state.filters.datatype[0]})
+      if(!this.props.isInstance) this.props.history.push({pathname,search:(search.replace(/((&|(\?))([tfin]|pg)=[^&]+)/g,"$3")+"&t="+this.state.filters.datatype[0]).replace(/\?&/,"?")})
       else this.props.history.push({pathname,search:this.state.backToWorks})
       
       // TODO fix reset filters 
@@ -4730,7 +4735,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          "Instance": [ "popu", "title", "yearP" ].map(m => I18n.t("sort."+m)),
          "Etext": [ "closestM", "numberMC" ].map(m => I18n.t("sort."+m)),
          "Product": [ "closestM", "title" ].map(m => I18n.t("sort."+m)),
-         "Scan": [ "lastS", "title" ].map(m => I18n.t("sort."+m)),
+         "Scan": (!this.props.latest?[]:["lastS"]).concat([ "title" ]).map(m => I18n.t("sort."+m)),
       }
 
       let sortByList = allSortByLists[this.state.filters.datatype[0]]
@@ -4790,6 +4795,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             changeKWtimer = setTimeout( () => { changeKW() }, 1000) ;
          }
          */
+         if(this.props.latest&&this.state.keyword==="(latest)") value = ""
 
          loggergen.log("changeKW",value,keyEv,ev)
          
@@ -4929,7 +4935,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                         }
                      }}
                      onRequestSearch={this.requestSearch.bind(this)}
-                     value={this.props.hostFailure?"Endpoint error: "+this.props.hostFailure+" ("+this.getEndpoint()+")":this.state.keyword !== undefined && this.state.keyword!==this.state.newKW?this.state.keyword:this.props.keyword&&this.state.newKW?lucenequerytokeyword(this.state.newKW):""}
+                     value={this.props.latest&&this.state.keyword==="(latest)"?"":(this.props.hostFailure?"Endpoint error: "+this.props.hostFailure+" ("+this.getEndpoint()+")":this.state.keyword !== undefined && this.state.keyword!==this.state.newKW?this.state.keyword:this.props.keyword&&this.state.newKW?lucenequerytokeyword(this.state.newKW):"")}
                      style={{
                         marginTop: '0px',
                         width: "700px",
@@ -5204,6 +5210,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                { message.length == 0 && !this.props.loading && !this.props.keyword && 
                   <div id="latest">
                      <h3>{I18n.t("home.new")}</h3>
+                     <Link class="seeAll" to="/latest" onClick={()=>this.setState({filters:{...this.state.filters,datatype:["Scan"]}})}>{I18n.t("misc.seeAnum",{count:this.props.latestSyncsNb})}</Link>
                      <div>
                         { this.props.latestSyncs === true && <Loader loaded={false}/> }
                         { (this.props.latestSyncs && this.props.latestSyncs !== true) &&

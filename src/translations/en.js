@@ -273,6 +273,7 @@ const enTranslation = {
       has:"Has",
       or:"or",
       seeA:"see all",
+      seeAnum:"see all {{count}}",
       browse:"browse all",
       show:"Show all",
       seeMore:"See More",

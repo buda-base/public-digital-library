@@ -294,7 +294,7 @@ if(params && params.osearch) {
 
 
 if(params && params.t /*&& !params.i */) {
-   store.dispatch(uiActions.updateSortBy(params.s?params.s.toLowerCase():(params.i?"year of publication reverse":(params.t==="Etext"?"closest matches":"popularity")),params.t))
+   store.dispatch(uiActions.updateSortBy(params.s?params.s.toLowerCase():(params.i?"year of publication reverse":(params.t==="Etext"?"closest matches":(params.t==="Scan"?"title":"popularity"))),params.t))
 }
 
 if(params && params.i) {
@@ -2061,7 +2061,7 @@ async function getLatestSyncsAsResults() {
 
    let res = await api.loadLatestSyncsAsResults()
       
-   res = rewriteAuxMain(res,"",["Scan"],sortBy)
+   res = rewriteAuxMain(res,"(latest)",["Scan"],sortBy)
 
    let data = getData(res)
 
@@ -2092,14 +2092,19 @@ export function* watchGetLatestSyncsAsResults() {
 async function getLatestSyncs() {
 
    let res = await api.loadLatestSyncs() 
-   let keys = _.orderBy(Object.keys(res).filter(k => k !== _tmp+"totalRes").map(k => ({id:k,t:res[k][tmp+"datesync"][0].value})), "t", "desc")
+   
+   let nb = res[tmp+"totalRes"]
+   if(nb) nb = nb[tmp+"totalSyncs"]
+   if(nb && nb.length) nb = nb[0].value 
+
+   let keys = _.orderBy(Object.keys(res).filter(k => k !== tmp+"totalRes").map(k => ({id:k,t:res[k][tmp+"datesync"][0].value})), "t", "desc")
 
    let sorted = {}
    keys.map(k => { sorted[k.id] = res[k.id]; })
       
-   loggergen.log("syncs",res,sorted)
+   loggergen.log("syncs",res,sorted,nb)
 
-   store.dispatch(dataActions.gotLatestSyncs(sorted))
+   store.dispatch(dataActions.gotLatestSyncs(sorted,nb))
 
 }
 

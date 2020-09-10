@@ -195,10 +195,11 @@ export const getLatestSyncs = (): Action => {
 }
 
 TYPES.gotLatestSyncs = 'GOT_LATEST_SYNCS';
-export const gotLatestSyncs = (res): Action => {
+export const gotLatestSyncs = (res,nb): Action => {
     return {
         type: TYPES.gotLatestSyncs,
-        payload:res
+        payload:res,
+        meta:nb
     }
 }
 
