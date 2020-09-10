@@ -4722,6 +4722,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          "Instance": [ "popu", "title", "yearP" ].map(m => I18n.t("sort."+m)),
          "Etext": [ "closestM", "numberMC" ].map(m => I18n.t("sort."+m)),
          "Product": [ "closestM", "title" ].map(m => I18n.t("sort."+m)),
+         "Scan": [ "lastS" ].map(m => I18n.t("sort."+m)),
       }
 
       let sortByList = allSortByLists[this.state.filters.datatype[0]]
