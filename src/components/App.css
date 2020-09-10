@@ -304,8 +304,10 @@ body { overflow:auto !important;padding-right:0 !important; /*font-family:"Robot
    opacity:0.8;
 }
 
+.SearchPane .formControl.scan .menu-dataT .icone, 
 .SearchPane .formControl.instance .menu-dataT .icone, 
 .SearchPane .formControl.etext .menu-dataT .icone,
+#menu-datatype [data-value=Scan] .menu-dataT .icone, 
 #menu-datatype [data-value=Instance] .menu-dataT .icone, 
 #menu-datatype [data-value=Etext]  .menu-dataT .icone {
    height:100%; 

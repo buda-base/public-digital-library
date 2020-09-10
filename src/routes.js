@@ -259,7 +259,7 @@ const makeMainRoutes = () => {
                         }
                         return ( 
                            <ClearCache auto={true}>
-                              {({ isLatestVersion, emptyCacheStorage }) => (<AppContainer history={history} auth={auth}/> )}
+                              {({ isLatestVersion, emptyCacheStorage }) => (<AppContainer history={history} auth={auth} latest={true}/> )}
                            </ClearCache>
                         )}}/>
                      <Route path="/view/:IRI" render={(props) =>

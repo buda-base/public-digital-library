@@ -318,7 +318,7 @@ else if(params && params.q) {
 
    let dontGetDT = false
    let pt = params.t
-   if(pt && !pt.match(/,/) && ["Place", "Person","Work","Etext", "Topic","Role","Corporation","Lineage","Instance","Product"].indexOf(pt) !== -1)  {
+   if(pt && !pt.match(/,/) && ["Place", "Person","Work","Etext", "Topic","Role","Corporation","Lineage","Instance","Product", "Scan"].indexOf(pt) !== -1)  {
 
       if(!state.data.searches || !state.data.searches[pt] || !state.data.searches[pt][params.q+"@"+params.lg]) {
          store.dispatch(dataActions.startSearch(params.q,params.lg,[pt],null,dontGetDT)); 
@@ -365,14 +365,14 @@ else if(params && params.q) {
 }
 else if(params && params.r) {
    let t = getEntiType(params.r)
-   if(t === "Instance" || t === "Images" || t === "Volume") t = "Work"
+   if(t === "Instance" || t === "Images" || t === "Volume" || t== "Scan") t = "Work"
 
    loggergen.log("state r",t,state.data.searches,params,iri)
 
    let s = ["Any"]
    if(params.t && params.t != "Any") { s = [ params.t ] }
    
-   if(t && ["Person","Place","Topic","Work","Role","Corporation","Lineage","Etext","Product"].indexOf(t) !== -1
+   if(t && ["Person","Place","Topic","Work","Role","Corporation","Lineage","Etext","Product", "Scan"].indexOf(t) !== -1
    && (!state.data.searches[params.t] || !state.data.searches[params.t][params.r+"@"]))
    {
       store.dispatch(dataActions.startSearch(params.r,"",s,t)); //,params.t.split(",")));
@@ -386,6 +386,9 @@ else if(params && params.r) {
    }
 }
 else if(route === "latest") {
+   let sortBy = "last sync"
+   if(params && params.s) sortBy = params.s
+   store.dispatch(uiActions.updateSortBy(sortBy,"Scan"))
    store.dispatch(dataActions.getLatestSyncsAsResults());
 }
 else if(!iri) {
@@ -1718,7 +1721,7 @@ function rewriteAuxMain(result,keyword,datatype,sortBy,language)
          else if(sortBy.startsWith("closest matches")) return { ...acc, [t]: sortResultsByRelevance(dataWithAsset,reverse) }
          else if(sortBy.startsWith("number of matching chunks")) return { ...acc, [t]: sortResultsByNbChunks(dataWithAsset,reverse) }
          else if(sortBy.includes("title") ||  sortBy.includes("name") ) return { ...acc, [t]: sortResultsByTitle(dataWithAsset, langPreset, reverse) }
-         else if(sortBy.startsWith("lastSync")) return { ...acc, [t]: sortResultsByLastSync(dataWithAsset,reverse) }
+         else if(sortBy.startsWith("last")) return { ...acc, [t]: sortResultsByLastSync(dataWithAsset,reverse) }
       }
       else if(e === "aux") {                  
          store.dispatch(dataActions.gotAssocResources(keyword,{ data: result[e] } ) )
@@ -1871,13 +1874,14 @@ else {
 
          addMeta(keyword,language,data,datatype[0],null,false);
       }
-      else if(["Instance","Work","Etext"].indexOf(datatype[0]) !== -1) {
+      else if(["Instance","Work","Etext","Scan"].indexOf(datatype[0]) !== -1) {
 
          metadata = { ...metadata, tree:result.tree}
 
          let dt = "Etext" ;
          if(datatype.indexOf("Work") !== -1 ) { dt="Work" ; addMeta(keyword,language,data,"Work",result.tree,false); }
          else if(datatype.indexOf("Instance") !== -1 ) { dt="Instance" ; addMeta(keyword,language,data,"Instance",result.tree,false); }
+         else if(datatype.indexOf("Scan") !== -1 ) { dt="Scan" ; addMeta(keyword,language,data,"Scan",result.tree,false); }
          else store.dispatch(dataActions.foundFacetInfo(keyword,language,datatype,metadata))
 
          //store.dispatch(dataActions.foundDatatypes(keyword,language,{ metadata:{ [bdo+dt]:data.numResults } } ));
@@ -1959,7 +1963,7 @@ async function updateSortBy(i,t)
       let langPreset = state.ui.langPreset
       data.results.bindings[t.toLowerCase()+"s"] = sortResultsByTitle(data.results.bindings[t.toLowerCase()+"s"], langPreset, reverse)
    }
-   else if(i.startsWith("lastSync")) data.results.bindings[t.toLowerCase()+"s"] = sortResultsByLastSync(data.results.bindings[t.toLowerCase()+"s"], reverse)  
+   else if(i.startsWith("last")) data.results.bindings[t.toLowerCase()+"s"] = sortResultsByLastSync(data.results.bindings[t.toLowerCase()+"s"], reverse)  
    data.time = Date.now()
 
    store.dispatch(dataActions.foundResults(state.data.keyword,state.data.language, data, t))     
@@ -2049,22 +2053,27 @@ export function* watchGetInstances() {
 
 async function getLatestSyncsAsResults() {
 
+   let state = store.getState()
+   let sortBy = state.ui.sortBy
+   if(!sortBy) sortBy = "last sync"
 
    store.dispatch(uiActions.loading(null, true));
 
    let res = await api.loadLatestSyncsAsResults()
       
-   res = rewriteAuxMain(res,"",["Scan"],"lastSync")
+   res = rewriteAuxMain(res,"",["Scan"],sortBy)
 
    let data = getData(res)
 
    loggergen.log("syncs",res,data)
    
-   store.dispatch(dataActions.foundResults(" ", "en", data, ["Scan"]));
+   store.dispatch(dataActions.foundResults("(latest)", "en", { results: {bindings: {} } } ) ); // needed to initialize ("Any" / legacy code)
 
-   store.dispatch(dataActions.foundDatatypes(" ","en",{ metadata:{[bdo+"Scan"]:data.numResults}, hash:true}));
+   store.dispatch(dataActions.foundResults("(latest)", "en", data, ["Scan"]));
 
-   addMeta(" ","en",data,"Scan",null,false); 
+   store.dispatch(dataActions.foundDatatypes("(latest)","en",{ metadata:{[bdo+"Scan"]:data.numResults}, hash:true}));
+
+   addMeta("(latest)","en",data,"Scan",null,false); 
 
    store.dispatch(uiActions.loading(null, false));
 
@@ -2083,7 +2092,7 @@ export function* watchGetLatestSyncsAsResults() {
 async function getLatestSyncs() {
 
    let res = await api.loadLatestSyncs() 
-   let keys = _.orderBy(Object.keys(res).map(k => ({id:k,t:res[k][tmp+"datesync"][0].value})), "t", "desc")
+   let keys = _.orderBy(Object.keys(res).filter(k => k !== _tmp+"totalRes").map(k => ({id:k,t:res[k][tmp+"datesync"][0].value})), "t", "desc")
 
    let sorted = {}
    keys.map(k => { sorted[k.id] = res[k.id]; })

@@ -271,7 +271,7 @@ export default class API {
             let param = {"searchType":"iinstanceSyncedIn","L_NAME":"","LG_NAME":"", "I_LIM":"", "D_START":dateA.toISOString().replace(/T.*$/,"T00:00:00"), "D_END":dateB.toISOString().replace(/T.*$/,"T00:00:00") }
             let data = await this.getQueryResults(url, "", param,"GET","application/json");         
 
-            return data ;
+            return data
          }
          catch(e)
          {
@@ -282,12 +282,11 @@ export default class API {
 
    }
 
-
     async loadLatestSyncs(): Promise<string>
     {
          try {
             
-            const date = new Date(Date.now() - 1000 * 3600 * 24 * 14)
+            const date = new Date(Date.now() - 1000 * 3600 * 24 * 7)
 
             let config = store.getState().data.config.ldspdi
             // DONE remove ldspdi-dev --> ldspdi 
@@ -687,7 +686,7 @@ export default class API {
               let config = store.getState().data.config.ldspdi
               let url = config.endpoints[config.index]+"/lib" ;
               let simple = !["Work","Person","Place"].includes(dtyp)
-              let param = {"searchType":"associated"+(!simple?dtyp:"SimpleType")+"s",...(simple?{R_TYPE:(["Product"].includes(dtyp)?"adm:":"bdo:")+dtyp}:{}),"R_RES":key,"L_NAME":"","LG_NAME":"", "I_LIM":"" }
+              let param = {"searchType":"associated"+(!simple?dtyp:(styp=="Product"&&dtyp=="Scan"?"IInstance":"SimpleType"))+"s",...(simple?{R_TYPE:(["Product"].includes(dtyp)?"adm:":"bdo:")+dtyp}:{}),"R_RES":key,"L_NAME":"","LG_NAME":"", "I_LIM":"" }
               let data = this.getQueryResults(url, key, param,"GET");
               // let data = this.getSearchContents(url, key);
 

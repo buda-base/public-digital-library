@@ -214,7 +214,7 @@ export const langSelect = [
 ]
 
 //const searchTypes = ["All","Work","Etext","Topic","Person","Place","Lineage","Corporation","Role"]
-const searchTypes = [ "Work", "Instance","Etext", "Person","Place","Topic","Lineage","Role","Corporation", "Product" ]
+const searchTypes = [ "Work", "Instance","Scan", "Etext", "Person","Place","Topic","Lineage","Role","Corporation", "Product" ]
 
 /*
 export const langProfile = [
@@ -808,7 +808,7 @@ class App extends Component<Props,State> {
          langOpen:false,
          UI:{language:"en"},
          filters: {
-            datatype:get.t?get.t.split(","):["Any"],
+            datatype:this.props.latest?["Scan"]:(get.t?get.t.split(","):["Any"]),
          },
          collapse:{},
          sortBy,
@@ -1252,7 +1252,7 @@ class App extends Component<Props,State> {
                time = props.searches[k].time
                loggergen.log("refreshB",time)
             }
-            for(let d of ["Etext","Person","Instance","Work","Place","Topic","Corporation","Role","Lineage","Product"]) {
+            for(let d of ["Etext","Person","Instance","Work","Place","Topic","Corporation","Role","Lineage","Product","Scan"]) {
                if(props.searches && props.searches[d] && props.searches[d][k]) {
                   if(!time || props.searches[d][k].time > time) { 
                      time = props.searches[d][k].time 
@@ -1278,7 +1278,7 @@ class App extends Component<Props,State> {
          loggergen.log("K", props.keyword, time, current)
 
          let results
-         if(state.filters.datatype.indexOf("Any") !== -1 || state.filters.datatype.length > 1 || state.filters.datatype.filter(d => ["Work","Etext","Person","Place","Topic","Role","Corporation","Lineage","Product"].indexOf(d) === -1).length ) {
+         if(state.filters.datatype.indexOf("Any") !== -1 || state.filters.datatype.length > 1 || state.filters.datatype.filter(d => ["Work","Etext","Person","Place","Topic","Role","Corporation","Lineage","Product","Scan"].indexOf(d) === -1).length ) {
             results = { ...props.searches[props.keyword+"@"+props.language] }
             //loggergen.log("any")
          }
@@ -1582,9 +1582,11 @@ class App extends Component<Props,State> {
 
       if(check && (!this.props.sortBy || i !== this.props.sortBy)) {            
 
+         this.setState({collapse:{...this.state.collapse, sortBy:false}})
+
          let {pathname,search} = this.props.history.location
          
-         this.props.history.push({pathname,search:search.replace(/(&s=[^&#]+)/g,"")+"&s="+i.toLowerCase()})         
+         this.props.history.push({pathname,search:search.replace(/(([&?])s=[^&#]+)/g,"$2")+(search?"":"?")+"s="+i.toLowerCase()})         
          
       } 
    }
@@ -1767,7 +1769,7 @@ class App extends Component<Props,State> {
 
          if(state.sortBy) delete state.sortBy
          
-         if([ /*"Any",*/ "Person","Place","Work","Etext","Role","Topic","Corporation","Lineage","Instance","Product"].indexOf(lab) !== -1)
+         if([ /*"Any",*/ "Person","Place","Work","Etext","Role","Topic","Corporation","Lineage","Instance","Product","Scan"].indexOf(lab) !== -1)
          {
             this.requestSearch(this.props.keyword,[ lab ], this.props.language, true);
          }
@@ -2432,8 +2434,11 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             for(let i of labels) {
                let val = i["value"] 
                if(val === exclude) continue
-               if(val && val.startsWith("http")) val = this.fullname(val,[],true)
+
+               if((""+val).match(/^[0-9-]+T[0-9:.]+Z+$/)) val = val.replace(/[ZT]/g," ").replace(/:[0-9][0-9][.].*?$/,"")
+               else if(val && val.startsWith("http")) val = this.fullname(val,[],true)
                else val = highlight(val)
+
                let lang = i["xml:lang"]
                if(!lang) lang = i["lang"]
                ret.push(<span>{val}{
@@ -3043,6 +3048,9 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             {/* { hasThumb.length > 0 && <div class="match">{getIconLink(viewUrl?viewUrl:resUrl+"#open-viewer",<span class="urilink"><b>View Images</b></span>)}</div>} // maybe a bit overkill...? */ }
 
             { typeisbiblio && this.getInstanceLink(id,n,allProps) }
+
+
+            { type === "Scan" &&  this.getResultProp(tmp+"date",allProps,false,false,[tmp+"lastSync"]) }
 
             {/* { this.getEtextLink(id,n,allProps) } */}
 
@@ -4722,7 +4730,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          "Instance": [ "popu", "title", "yearP" ].map(m => I18n.t("sort."+m)),
          "Etext": [ "closestM", "numberMC" ].map(m => I18n.t("sort."+m)),
          "Product": [ "closestM", "title" ].map(m => I18n.t("sort."+m)),
-         "Scan": [ "lastS" ].map(m => I18n.t("sort."+m)),
+         "Scan": [ "lastS", "title" ].map(m => I18n.t("sort."+m)),
       }
 
       let sortByList = allSortByLists[this.state.filters.datatype[0]]
