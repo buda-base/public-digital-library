@@ -183,7 +183,8 @@ const enTranslation = {
       "tmp:Maps":"Maps",
       "tmp:BuddhistArt":"Buddhist Art",
       "tmp:other":"Other",
-      "tmp:instanceOfWork":"Version of Work"
+      "tmp:instanceOfWork":"Version of Work",
+      "tmp:lastSync":"Release Date"
    },
    result:{
       open:"Open",

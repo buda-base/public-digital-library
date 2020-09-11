@@ -2439,7 +2439,21 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                let val = i["value"] 
                if(val === exclude) continue
 
-               if((""+val).match(/^[0-9-]+T[0-9:.]+Z+$/)) val = val.replace(/[ZT]/g," ").replace(/:[0-9][0-9][.].*?$/,"")
+               if((""+val).match(/^[0-9-]+T[0-9:.]+Z+$/)) {
+                  //val.replace(/[ZT]/g," ").replace(/:[0-9][0-9][.].*?$/,"")
+                  
+                  let code = "en-US"
+                  let opt = { month: 'long', day: 'numeric' }
+                  if(this.props.locale === "bo") { 
+                     code = "en-US-u-nu-tibt"; 
+                     opt = { day:'2-digit', month:'2-digit' } 
+                     val = new Intl.DateTimeFormat(code, opt).formatToParts(new Date(val)).map(p => p.type === 'literal'?'-':p.value).join('')
+                  }
+                  else {
+                     if(this.props.locale === "zh") code = "zh-CN"
+                     val = new Date(val).toLocaleDateString(code, { month: 'long', day: 'numeric' });  // does not work for tibetan
+                  }
+               }
                else if(val && val.startsWith("http")) val = this.fullname(val,[],true)
                else val = highlight(val)
 
@@ -2978,7 +2992,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          if(nbChunks[0] && nbChunks[0].value) nbChunks = Number(nbChunks[0].value)
          else nbChunks = "?"
          let type = this.state.filters.datatype[0]
-         let typeisbiblio = (type === "Work" || type === "Instance" || type === "Etext")
+         let typeisbiblio = (type === "Work" || type === "Instance" || type === "Etext" || type === "Scan")
 
          retList.push( <div id='matches'>         
             { typeisbiblio && this.getResultProp(I18n.t("result.workBy"),allProps,false,true,[tmp+"author"]) }
@@ -3035,7 +3049,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
             {/* { this.getResultProp(bdo+"publisherName",allProps,false,false) }
             { this.getResultProp(bdo+"publisherLocation",allProps,false,false) } */}
-            { (type === "Instance" || type === "Etext") && this.getPublisher(allProps) }
+            { (type === "Instance" || type === "Etext" || type === "Scan") && this.getPublisher(allProps) }
 
 
             {/* TODO fix facet count after preview instance */}
@@ -3043,7 +3057,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
             {/* { this.getResultProp(bdo+"contentLocationStatement",allProps,false,false, [bdo+"instanceExtentStatement",bdo+"contentLocationStatement"]) } */}
 
-            { type === "Instance" && this.getResultProp(bdo+"biblioNote",allProps,false,false,[bdo+"biblioNote", bdo+"catalogInfo", rdfs+"comment", tmp+"noteMatch", bdo+"colophon", bdo+"incipit"]) }
+            { (type === "Instance" || type === "Scan") && this.getResultProp(bdo+"biblioNote",allProps,false,false,[bdo+"biblioNote", bdo+"catalogInfo", rdfs+"comment", tmp+"noteMatch", bdo+"colophon", bdo+"incipit"]) }
 
             {/* { this.getResultProp(tmp+"provider",allProps) } */}
             {/* { this.getResultProp(tmp+"popularity",allProps,false,false, [tmp+"entityScore"]) } */}
@@ -3054,7 +3068,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             { typeisbiblio && this.getInstanceLink(id,n,allProps) }
 
 
-            { type === "Scan" &&  this.getResultProp(tmp+"date",allProps,false,false,[tmp+"lastSync"]) }
+            { type === "Scan" &&  this.getResultProp(tmp+"lastSync",allProps,false,false) }
             {/* { type === "Scan" &&  this.getResultProp(tmp+"InverseRelationType",allProps,false,false,[tmp+"relationTypeInv"]) }  */}
 
             {/* { this.getEtextLink(id,n,allProps) } */}
