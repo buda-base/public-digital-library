@@ -201,7 +201,8 @@ const enTranslation = {
       hideC:"Hide Context",
       openE:"Open Etext",
       hasInstance:"Has {{count}} $t(types.instance)",
-      hasInstance_plural:"Has {{count}} $t(types.instance_plural)"
+      hasInstance_plural:"Has {{count}} $t(types.instance_plural)",
+      assoc:"{{type}} associated with: {{name}}"
    },
    index:{
       openViewer:"Open in Viewer",

@@ -2451,7 +2451,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   if(this.props.locale === "bo") { 
                      code = "en-US-u-nu-tibt"; 
                      opt = { day:'2-digit', month:'2-digit' } 
-                     val = 'ཟླ་' + (new Intl.DateTimeFormat(code, opt).formatToParts(new Date(val)).map(p => p.type === 'literal'?'ཚེས་':p.value).join(''))
+                     val = 'ཟླ་' + (new Intl.DateTimeFormat(code, opt).formatToParts(new Date(val)).map(p => p.type === 'literal'?' ཚེས་':p.value).join(''))
                      lang= "bo"
                   }
                   else {
@@ -3417,7 +3417,21 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                let _t = t.toLowerCase()
                if(_t === "work" && this.props.isInstance) _t = "instance"
                if(displayTypes.length > 1 || displayTypes.indexOf("Any") !== -1) message.push(<MenuItem  onClick={(e)=>this.handleCheck(e,t,true,{},true)}><h4>{I18n.t("types."+t.toLowerCase()+"_plural")+(false && displayTypes.length>1&&counts["datatype"][t]?" ("+counts["datatype"][t]+")":"")}</h4></MenuItem>);
-               else message.push(<MenuItem><h4>{this.props.latest?I18n.t("home.new"):(I18n.t("types."+_t+("_plural"))+(false && displayTypes.length>=1&&counts["datatype"][t]?" ("+counts["datatype"][t]+")":""))}</h4></MenuItem>);
+               else { 
+                  let txt = ""
+                  if(this.props.latest) txt = I18n.t("home.new")
+                  else txt = I18n.t("types."+_t+("_plural")) 
+                  
+                  if(this.props.language==="") {
+                     let label = this.props.resources[this.props.keyword]
+                     if(label) label = label[fullUri(this.props.keyword)]
+                     if(label) label = label[skos+"prefLabel"]
+                     if(label) label = getLangLabel(this,"",label)
+                     if(label && label.value) txt = I18n.t("result.assoc",{type:txt,name:label.value})
+                  }
+                  //(false && displayTypes.length>=1&&counts["datatype"][t]?" ("+counts["datatype"][t]+")":""))}
+                  message.push(<MenuItem><h4>{txt}</h4></MenuItem>);
+               }
                // TODO better handling of plural in translations
             }
             absi ++ ;
