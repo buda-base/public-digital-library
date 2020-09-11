@@ -28,7 +28,7 @@ const enTranslation = {
       search:"Search",
       choose:"Choose language",
       start:"Start typing then select search language",
-      new:"New Scans This Week"
+      new:"New Scans Released This Week"
    },
    types:{
       any:"Any",

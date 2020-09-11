@@ -685,7 +685,7 @@ export default class API {
          try {
               let config = store.getState().data.config.ldspdi
               let url = config.endpoints[config.index]+"/lib" ;
-              let simple = !["Work","Person","Place"].includes(dtyp)
+              let simple = !["Work","Person","Place","Instance"].includes(dtyp)
               let param = {"searchType":"associated"+(!simple?dtyp:(styp=="Product"&&dtyp=="Scan"?"IInstance":"SimpleType"))+"s",...(simple?{R_TYPE:(["Product"].includes(dtyp)?"adm:":"bdo:")+dtyp}:{}),"R_RES":key,"L_NAME":"","LG_NAME":"", "I_LIM":"" }
               let data = this.getQueryResults(url, key, param,"GET");
               // let data = this.getSearchContents(url, key);
