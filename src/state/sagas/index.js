@@ -386,7 +386,7 @@ else if(params && params.r) {
    }
 }
 else if(route === "latest") {
-   let sortBy = "last sync"
+   let sortBy = "release date"
    if(params && params.s) sortBy = params.s
    store.dispatch(uiActions.updateSortBy(sortBy,"Scan"))
    store.dispatch(dataActions.getLatestSyncsAsResults());
@@ -1721,7 +1721,7 @@ function rewriteAuxMain(result,keyword,datatype,sortBy,language)
          else if(sortBy.startsWith("closest matches")) return { ...acc, [t]: sortResultsByRelevance(dataWithAsset,reverse) }
          else if(sortBy.startsWith("number of matching chunks")) return { ...acc, [t]: sortResultsByNbChunks(dataWithAsset,reverse) }
          else if(sortBy.includes("title") ||  sortBy.includes("name") ) return { ...acc, [t]: sortResultsByTitle(dataWithAsset, langPreset, reverse) }
-         else if(sortBy.startsWith("last")) return { ...acc, [t]: sortResultsByLastSync(dataWithAsset,reverse) }
+         else if(sortBy.includes("date")) return { ...acc, [t]: sortResultsByLastSync(dataWithAsset,reverse) }
       }
       else if(e === "aux") {                  
          store.dispatch(dataActions.gotAssocResources(keyword,{ data: result[e] } ) )
@@ -1963,7 +1963,7 @@ async function updateSortBy(i,t)
       let langPreset = state.ui.langPreset
       data.results.bindings[t.toLowerCase()+"s"] = sortResultsByTitle(data.results.bindings[t.toLowerCase()+"s"], langPreset, reverse)
    }
-   else if(i.startsWith("last")) data.results.bindings[t.toLowerCase()+"s"] = sortResultsByLastSync(data.results.bindings[t.toLowerCase()+"s"], reverse)  
+   else if(i.includes("date")) data.results.bindings[t.toLowerCase()+"s"] = sortResultsByLastSync(data.results.bindings[t.toLowerCase()+"s"], reverse)  
    data.time = Date.now()
 
    store.dispatch(dataActions.foundResults(state.data.keyword,state.data.language, data, t))     
@@ -2055,7 +2055,7 @@ async function getLatestSyncsAsResults() {
 
    let state = store.getState()
    let sortBy = state.ui.sortBy
-   if(!sortBy) sortBy = "last sync"
+   if(!sortBy) sortBy = "release date"
 
    store.dispatch(uiActions.loading(null, true));
 

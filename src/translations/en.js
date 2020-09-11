@@ -116,7 +116,7 @@ const enTranslation = {
       yearP:"Year of Publication",
       title:"Title",
       numberMC:"Number of Matching Chunks",
-      lastS:"Last Sync"
+      lastS:"Release Date"
    },
    copyright:{
       open:"Open Access",

@@ -1027,7 +1027,8 @@ class App extends Component<Props,State> {
       let props = { ...prop }
 
       if(props.keyword) { 
-         document.title = /*""+*/ props.keyword+" search results - Public Digital Library"
+         if(props.keyword === "(latest)") document.title = I18n.t("home.new") + " - Public Digital Library"
+         else document.title = /*""+*/ props.keyword+" search results - Public Digital Library"
          
       }
 
@@ -1587,8 +1588,10 @@ class App extends Component<Props,State> {
          this.setState({collapse:{...this.state.collapse, sortBy:false}})
 
          let {pathname,search} = this.props.history.location
-         
-         this.props.history.push({pathname,search:search.replace(/(([&?])s=[^&#]+)/g,"$2")+(search?"":"?")+"s="+i.toLowerCase()})         
+         search = search.replace(/((&|[?])s=[^&#]+)/g,"")      
+         search += (search === ""?"?":"&")+"s="+i.toLowerCase()
+         search = search.replace(/(\?&)|(^&)/,"?")
+         this.props.history.push({pathname,search})         
          
       } 
    }
@@ -1657,7 +1660,7 @@ class App extends Component<Props,State> {
 
          let {pathname,search} = this.props.history.location
          search = search.replace(/(&([nf]|pg)=[^&]+)/g,"")+"&pg=1"+getFacetUrl(state.filters,this.props.config.facets[state.filters.datatype[0]])+(this.props.latest&&!(""+search).match(/t=/)?"&t=Scan":"")
-         search = search.replace(/\?&/,"?")
+         search = search.replace(/(\?&)|(^&)/,"?")
          this.props.history.push({pathname,search })
       }
 
@@ -2438,6 +2441,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             for(let i of labels) {
                let val = i["value"] 
                if(val === exclude) continue
+               let lang = i["xml:lang"]
 
                if((""+val).match(/^[0-9-]+T[0-9:.]+Z+$/)) {
                   //val.replace(/[ZT]/g," ").replace(/:[0-9][0-9][.].*?$/,"")
@@ -2447,7 +2451,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   if(this.props.locale === "bo") { 
                      code = "en-US-u-nu-tibt"; 
                      opt = { day:'2-digit', month:'2-digit' } 
-                     val = new Intl.DateTimeFormat(code, opt).formatToParts(new Date(val)).map(p => p.type === 'literal'?'-':p.value).join('')
+                     val = 'ཟླ་' + (new Intl.DateTimeFormat(code, opt).formatToParts(new Date(val)).map(p => p.type === 'literal'?'ཚེས་':p.value).join(''))
+                     lang= "bo"
                   }
                   else {
                      if(this.props.locale === "zh") code = "zh-CN"
@@ -2457,9 +2462,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                else if(val && val.startsWith("http")) val = this.fullname(val,[],true)
                else val = highlight(val)
 
-               let lang = i["xml:lang"]
                if(!lang) lang = i["lang"]
-               ret.push(<span>{val}{
+               ret.push(<span {...lang?{lang}:{}}>{val}{
                   lang && <Tooltip placement="bottom-end" title={
                                     <div style={{margin:"10px"}}>
                                        {I18n.t(languages[lang]?languages[lang].replace(/search/,"tip"):lang)}/>
@@ -4742,14 +4746,14 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
       }
 
       const allSortByLists = { 
-         "Work": [ "popu", "closestM", "workT" ].map(m => I18n.t("sort."+m)),
-         "Person": [ "popu", "closestM", "personN", "yearB" ].map(m => I18n.t("sort."+m)),
-         "Place": [ "popu", "closestM", "placeN" ].map(m => I18n.t("sort."+m)),
-         "WorkInstance": [ "workT", "yearP" ].map(m => I18n.t("sort."+m)),
-         "Instance": [ "popu", "title", "yearP" ].map(m => I18n.t("sort."+m)),
-         "Etext": [ "closestM", "numberMC" ].map(m => I18n.t("sort."+m)),
-         "Product": [ "closestM", "title" ].map(m => I18n.t("sort."+m)),
-         "Scan": (!this.props.latest?[]:["lastS"]).concat([ "title" ]).map(m => I18n.t("sort."+m)),
+         "Work": [ "popu", "closestM", "workT" ], 
+         "Person": [ "popu", "closestM", "personN", "yearB" ],  
+         "Place": [ "popu", "closestM", "placeN" ],  
+         "WorkInstance": [ "workT", "yearP" ],  
+         "Instance": [ "popu", "title", "yearP" ],  
+         "Etext": [ "closestM", "numberMC" ],  
+         "Product": [ "closestM", "title" ],  
+         "Scan": (!this.props.latest?[]:["lastS"]).concat([ "title" ]) //.map(m => I18n.t("sort."+m)),
       }
 
       let sortByList = allSortByLists[this.state.filters.datatype[0]]
@@ -5119,7 +5123,9 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   <div id="settings" onClick={() => this.setState({collapse:{...this.state.collapse, settings:!this.state.collapse.settings}})}><img src="/icons/settings.svg"/></div>
                { // TODO change to popover style open/close
                      sortByList && this.popwidget(I18n.t("Lsidebar.sortBy.title"),"sortBy",
-                     (sortByList /*:["Year of Publication","Instance Title"]*/).map((i,n) => <div key={i} style={{width:"200px",textAlign:"left"}} className="searchWidget">
+                     (sortByList /*:["Year of Publication","Instance Title"]*/).map((t,n) => {
+                        let i = I18n.t("sort."+t,{lng:"en"})
+                        return(<div key={i} style={{width:"200px",textAlign:"left"}} className="searchWidget">
                            <FormControlLabel
                               control={
                                  <Checkbox
@@ -5131,8 +5137,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                                  />
 
                               }
-                              label={<span lang={this.props.locale}>{i}</span>}
-                           /></div> ).concat([
+                              label={<span lang={this.props.locale}>{I18n.t("sort."+t)}</span>}
+                           /></div>) } ).concat([
                               <div key={99} style={{width:"auto",textAlign:"left",marginTop:"5px",paddingTop:"5px"}} className="searchWidget">
                               <FormControlLabel
                                  control={
