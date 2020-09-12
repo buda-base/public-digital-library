@@ -264,7 +264,7 @@ export default class API {
          try {
             
             const dateA = new Date(Date.now() - 1000 * 3600 * 24 * 7)
-            const dateB = new Date(Date.now())
+            const dateB = new Date(Date.now() + 1000 * 3600 * 24 * 2)
 
             let config = store.getState().data.config.ldspdi
             let url = config.endpoints[config.index] + "/lib" ;            
