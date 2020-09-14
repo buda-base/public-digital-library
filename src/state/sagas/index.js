@@ -294,7 +294,7 @@ if(params && params.osearch) {
 
 
 if(params && params.t /*&& !params.i */) {
-   store.dispatch(uiActions.updateSortBy(params.s?params.s.toLowerCase():(params.i?"year of publication reverse":(params.t==="Etext"?"closest matches":(params.t==="Scan"?"title":"popularity"))),params.t))
+   store.dispatch(uiActions.updateSortBy(params.s?params.s.toLowerCase():(params.i?"year of publication reverse":(params.t==="Etext"?"closest matches":(params.t==="Scan"?(route ==="latest"?"release date":"title"):"popularity"))),params.t))
 }
 
 if(params && params.i) {
@@ -1638,7 +1638,7 @@ function rewriteAuxMain(result,keyword,datatype,sortBy,language)
    let langPreset = state.ui.langPreset
    if(!sortBy) sortBy = state.ui.sortBy
    let reverse = sortBy && sortBy.endsWith("reverse")
-   let canPopuSort = false
+   let canPopuSort = false, isScan, isTypeScan = datatype.includes("Scan")
 
    result = Object.keys(result).reduce((acc,e)=>{
       if(e === "main") {
@@ -1648,8 +1648,10 @@ function rewriteAuxMain(result,keyword,datatype,sortBy,language)
          }
          let t = datatype[0].toLowerCase()+"s"
 
-         canPopuSort = false        
+         canPopuSort = false 
          let dataWithAsset = keys.reduce( (acc,k) => { 
+
+            isScan = false       
 
             if(auth && !auth.isAuthenticated()) {	
                let status = result[e][k].filter(k => k.type === adm+"status" || k.type === tmp+"status")	
@@ -1661,7 +1663,14 @@ function rewriteAuxMain(result,keyword,datatype,sortBy,language)
 
             }
             
-            let res = result[e][k].map(e => (!asset.includes(e.type)||e.value === "false"?e:{type:_tmp+"assetAvailability",value:e.type}))
+            let res = result[e][k].map(e => { 
+               if(!asset.includes(e.type)||e.value === "false") return e
+               else {
+                  if(isTypeScan && e.type === _tmp+"hasImage") isScan = true ; 
+                  return ({type:_tmp+"assetAvailability",value:e.type})
+               }
+            } )
+
             canPopuSort = canPopuSort || (res.filter(e => e.type === tmp+"entityScore").length > 0)            
             let chunks = res.filter(e => e.type === bdo+"eTextHasChunk")
             if(chunks.length) {
@@ -1701,14 +1710,15 @@ function rewriteAuxMain(result,keyword,datatype,sortBy,language)
                if(chunks.length > 1) res = res.concat(chunks.slice(1).map(e => ({...e.e, expand:e.expand, startChar:e.m, endChar:e.p})))
             }
 
-            return ({...acc, [k]:res})
+            if(isTypeScan && !isScan) return ({...acc})
+            else return ({...acc, [k]:res})
          },{})
         
          loggergen.log("dWa",t,dataWithAsset,sortBy,reverse,canPopuSort)
 
          if(!canPopuSort && sortBy.startsWith("popularity")) {            
             let {pathname,search} = history.location         
-            history.push({pathname,search:search.replace(/(&s=[^&]+)/g,"")+"&s=closest matches forced"})         
+            history.push({pathname,search:search.replace(/(([&?])s=[^&]+)/g,"$2")+"s=closest matches forced"})         
          }
 
          if(language !== undefined) { 
