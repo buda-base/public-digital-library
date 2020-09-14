@@ -4767,10 +4767,10 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          "Person": [ "popu", "closestM", "personN", "yearB" ],  
          "Place": [ "popu", "closestM", "placeN" ],  
          "WorkInstance": [ "workT", "yearP" ],  
-         "Instance": [ "popu", "title", "yearP" ],  
+         "Instance": [ "popu", "closestM", "title", "yearP" ],  
          "Etext": [ "closestM", "numberMC" ],  
          "Product": [ "closestM", "title" ],  
-         "Scan": (!this.props.latest?["title", "yearP"]:["lastS", "title"]) //.map(m => I18n.t("sort."+m)),
+         "Scan": (!this.props.latest?["popu", "closestM", "title", "yearP"]:["lastS", "title"]) //.map(m => I18n.t("sort."+m)),
       }
 
       let sortByList = allSortByLists[this.state.filters.datatype[0]]
