@@ -294,7 +294,7 @@ if(params && params.osearch) {
 
 
 if(params && params.t /*&& !params.i */) {
-   store.dispatch(uiActions.updateSortBy(params.s?params.s.toLowerCase():(params.i?"year of publication reverse":(params.t==="Etext"?"closest matches":(params.t==="Scan"?(route ==="latest"?"release date":"title"):"popularity"))),params.t))
+   store.dispatch(uiActions.updateSortBy(params.s?params.s.toLowerCase():(params.i?"year of publication reverse":(params.t==="Etext"?"closest matches":(params.t==="Scan"?(route ==="latest"?"release date":"popularity"):"popularity"))),params.t))
 }
 
 if(params && params.i) {
