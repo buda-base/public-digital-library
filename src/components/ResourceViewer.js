@@ -782,7 +782,8 @@ class ResourceViewer extends Component<Props,State>
             if(backTo === withW) backTo = decodeURIComponent(backTo)
             else backTo = decodeURIComponent(backTo.replace(new RegExp("(([?])|&)"+withW),"$2"))+"&"+withW
 
-            if(!backTo.startsWith("/show")) this.props.history.push({pathname:"/search",search:backTo})
+            if(backTo.startsWith("latest")) this.props.history.push({pathname:"/latest",search:backTo.replace(/^latest/,"")})
+            else if(!backTo.startsWith("/show")) this.props.history.push({pathname:"/search",search:backTo})
             else {
                fromSearch = this.state.fromSearch
                let path = backTo.split("?")
@@ -5986,18 +5987,24 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          <div class={isMirador?"H100vh OF0":""}>
             <div className={"resource "+getEntiType(this.props.IRI).toLowerCase()}>               
                {searchUrl && <div class="ariane">
-                  <Link to={"/search?"+searchUrl} onClick={(ev) => {
+                  <Link to={searchUrl.startsWith("latest")?searchUrl:"/search?"+searchUrl} onClick={(ev) => {
                      this.props.onLoading("search",true)                     
 
+                     let pathname = "/search"
+                     if(searchUrl.startsWith("latest")) {
+                        pathname = "/latest"
+                        searchUrl = searchUrl.replace(/^latest[?]/,"")
+                     }
+
                      setTimeout(() => { 
-                           this.props.history.push({pathname:"/search",search:"?"+searchUrl}) ; 
+                           this.props.history.push({pathname,search:"?"+searchUrl}) ; 
                      }, 100)
 
                      ev.preventDefault()
                      ev.stopPropagation();
                      return false
                   }}
-                  ><img src="/icons/FILARIANE.svg" /><span>{I18n.t("topbar.results")} <span>{searchTerm}</span></span></Link>
+                  ><img src="/icons/FILARIANE.svg" /><span>{searchUrl.startsWith("latest")?I18n.t("home.new").toLowerCase():I18n.t("topbar.results")} <span>{searchTerm}</span></span></Link>
                   {this.state.ready && <Loader loaded={!this.props.loading} options={{position:"fixed",left:"50%",top:"50%"}} /> }
                </div> }
                <div class="index">                  

@@ -663,7 +663,8 @@ export default class API {
 
              let searchType = "typeSimple" 
              let R_TYPE 
-             if(typ[0] === "Etext") searchType = "etextContentFacet" //chunksFacet"
+             if(typ[0] === "Scan") searchType = "instanceFacet" 
+             else if(typ[0] === "Etext") searchType = "etextContentFacet" //chunksFacet"
              else if(["Work","Person","Place","Instance"].includes(typ[0]))  searchType = typ[0].toLowerCase()+(["Work","Instance"].includes(typ[0])?"Facet":"")              
              else if(["Product"].includes(typ[0])) R_TYPE = "adm:"+typ[0]
              else R_TYPE = "bdo:"+typ[0]

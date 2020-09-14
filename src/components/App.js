@@ -2751,7 +2751,10 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   urlpart = root+"?part="+prettId+"&"
                }
             }
-            resUrl = "/show/"+urlpart+"s="+ encodeURIComponent(window.location.href.replace(/^https?:[/][/][^?]+[?]?/gi,"").replace(/(&n=[^&]*)/g,"")+"&n="+n)+(!bestM?"":"&"+bestM)
+            let urlBase ;
+            if(window.location.href.match(/\/latest/)) urlBase = window.location.href.replace(/.*?\/latest[\/]?/,"latest?");
+            else urlBase = window.location.href.replace(/^https?:[/][/][^?]+[?]?/gi,"")+"&"
+            resUrl = "/show/"+urlpart+"s="+ encodeURIComponent(urlBase.replace(/([&?]n=[^&]*)/g,"")+"n="+n)+(!bestM?"":"&"+bestM)
             //retList.push( <Link key={n} to={"/show/"+prettId+bestM} className="result">{ret}</Link> )
          }
          else
