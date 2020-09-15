@@ -777,10 +777,11 @@ class ResourceViewer extends Component<Props,State>
          let fromSearch
          if(this.state.fromSearch) {
             let backTo = this.state.fromSearch
-            let withW = backTo.replace(/^.*[?&](w=[^&]+)&?.*$/,"$1")
+
+            let withW = backTo.replace(/^.*[?&]([sw]=[^&]+)&?.*$/,"$1")
             loggergen.log("fromS",this.state.fromSearch,backTo,withW)
             if(backTo === withW) backTo = decodeURIComponent(backTo)
-            else backTo = decodeURIComponent(backTo.replace(new RegExp("(([?])|&)"+withW),"$2"))+"&"+withW
+            else backTo = (decodeURIComponent(backTo.replace(new RegExp("(([?])|&)"+withW),"$2"))+"&"+withW).replace(/\?&/,"?")
 
             if(backTo.startsWith("latest")) this.props.history.push({pathname:"/latest",search:backTo.replace(/^latest/,"")})
             else if(!backTo.startsWith("/show")) this.props.history.push({pathname:"/search",search:backTo})
