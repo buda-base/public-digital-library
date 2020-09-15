@@ -1718,7 +1718,7 @@ function rewriteAuxMain(result,keyword,datatype,sortBy,language)
 
          if(!canPopuSort && sortBy.startsWith("popularity")) {            
             let {pathname,search} = history.location         
-            history.push({pathname,search:search.replace(/(([&?])s=[^&]+)/g,"$2")+"s=closest matches forced"})         
+            history.push({pathname,search:search.replace(/(([&?])s=[^&]+)/g,"$2")+(!search.match(/[?&]s=/)?"&":"")+"s="+(sortBy=(language?"closest matches":"title")+" forced")})   
          }
 
          if(language !== undefined) { 

@@ -202,7 +202,7 @@ const enTranslation = {
       openE:"Open Etext",
       hasInstance:"Has {{count}} $t(types.instance)",
       hasInstance_plural:"Has {{count}} $t(types.instance_plural)",
-      assoc:"{{type}} associated with: {{name}}"
+      assoc:"{{type}} associated with: {{- name}}"
    },
    index:{
       openViewer:"Open in Viewer",

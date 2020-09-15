@@ -324,6 +324,7 @@ body { overflow:auto !important;padding-right:0 !important; /*font-family:"Robot
 
 .SearchPane .formControl > div > div > div { padding-right:28px; }
 
+#menu-datatype > div:last-child ul li[data-value="Scan"] { display:none; }
 
 #menu-datatype > div:last-child ul li { justify-content: flex-end; }
 
@@ -521,7 +522,9 @@ p.no-result {
 
 #res-container > ul li { padding-left:0; pointer-events:none; }
 #res-container > ul h4 { padding-left:22px;; }
-#res-container > ul h4 { color:#343434; font-size:24px; /*font-family:"Noto Sans";*/ font-weight:900; text-transform:uppercase;}
+#res-container > ul h4 { color:#343434; font-size:24px; /*font-family:"Noto Sans";*/ font-weight:900; text-transform:uppercase;
+   white-space: nowrap; text-overflow: ellipsis; overflow: hidden;
+}
 
 #res-container #samples > h4 { padding-left:0; font-size:18px; text-transform: none;  font-weight:400; text-align:center; }
 
@@ -997,7 +1000,7 @@ h4:not(:hover) > .lang
 .resource > .ariane img { display:inline-block; margin-right:5px; vertical-align: -1px;}
 .resource > .ariane a { text-decoration: none; color: #343434; font-weight:500; font-size:13px; }
 .resource > .ariane a span { display:inline-block; }
-.resource > .ariane a span::first-letter { text-transform: capitalize;}
+.resource > .ariane a > span::first-letter { text-transform: capitalize;}
 .resource > .ariane a:hover span { text-decoration: underline;}
 .resource > .ariane a span span { font-weight:700; }
 

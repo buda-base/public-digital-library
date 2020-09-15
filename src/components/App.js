@@ -936,6 +936,11 @@ class App extends Component<Props,State> {
       if(label.indexOf("Any") !== -1) label = "Any" 
       else label = label.join(",")
 
+      if(label.indexOf("Scan") !== -1) {
+         searchDT = [ "Instance" ]
+         label = [ "Instance" ] 
+      }
+
       let state = { ...this.state, dataSource:[], leftPane:true, filters:{ datatype:[ ...searchDT ] } }
       this.setState(state)
 
@@ -2754,7 +2759,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             let urlBase ;
             if(window.location.href.match(/\/latest/)) urlBase = window.location.href.replace(/.*?\/latest[\/]?/,"latest?");
             else urlBase = window.location.href.replace(/^https?:[/][/][^?]+[?]?/gi,"")+"&"
-            resUrl = "/show/"+urlpart+"s="+ encodeURIComponent(urlBase.replace(/([&?]n=[^&]*)/g,"")+"n="+n)+(!bestM?"":"&"+bestM)
+            console.log("urlB",urlBase)
+            resUrl = "/show/"+urlpart+"s="+ encodeURIComponent((urlBase.replace(/((([?])?&*|^)n=[^&]*)/g,"$3")+(!urlBase.match(/[\?&]$/)?"&":"")+"n="+n).replace(/\?+&?/,"?"))+(!bestM?"":"&"+bestM)
             //retList.push( <Link key={n} to={"/show/"+prettId+bestM} className="result">{ret}</Link> )
          }
          else
@@ -5035,7 +5041,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                 {/* <InputLabel htmlFor="datatype">In</InputLabel> */}
 
                 <Select
-                  value={this.state.searchTypes[0]}
+                  value={this.state.searchTypes[0]==="Scan"?"Instance":this.state.searchTypes[0]}
                   //onChange={this.handleLanguage} 
                   onChange={this.handleSearchTypes}
                   open={this.state.langOpen}
