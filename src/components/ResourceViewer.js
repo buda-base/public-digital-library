@@ -3430,11 +3430,22 @@ class ResourceViewer extends Component<Props,State>
   */
 
 
-   showMirador(num?:number,useManifest?:{})
+   showMirador(num?:number,useManifest?:{},click)
    {
+      let state = { ...this.state, openMirador:true, openDiva:false, openUV:false }
 
       if(!this.state.openMirador) // || !$("#viewer").hasClass("hidden"))
       {
+
+
+         if(click && state.fromSearch && state.fromSearch.startsWith("latest")) {
+            let loca = {... this.props.history.location}
+            if(loca.search.match(/[?&]s=/)) loca.search = loca.search.replace(/[?&]s=[^&]+/,"")
+            if(loca.search && !loca.search.endsWith("?")) loca.search += "&"            
+            loca.search += "s="+encodeURIComponent(window.location.href.replace(/.*(\/show\/)/,"$1"))
+            this.props.history.push(loca)
+         }
+
          $("#fond").removeClass("hidden");
 
          if(this.state.UVcanLoad) { window.location.hash = "mirador"; window.location.reload(); }
@@ -3496,7 +3507,6 @@ class ResourceViewer extends Component<Props,State>
       }
 
 
-      let state = { ...this.state, openMirador:true, openDiva:false, openUV:false }
       //if(state.hideUV)
       this.setState(state);
    }
@@ -4955,7 +4965,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
       if(!this.state.imageError && iiifThumb && T === "Images") 
          return  ( 
             <div class="data simple" id="first-image">
-               <div className={"firstImage "+(this.state.imageLoaded?"loaded":"")} {...(this.props.config.hideViewers?{"onClick":this.showMirador.bind(this),"style":{cursor:"pointer"}}:{})} >
+               <div className={"firstImage "+(this.state.imageLoaded?"loaded":"")} {...(this.props.config.hideViewers?{"onClick":() => this.showMirador(null,null,true),"style":{cursor:"pointer"}}:{})} >
                   <Loader className="uvLoader" loaded={this.state.imageLoaded} color="#fff"/>
                   <img onError={(e)=>this.setState({...this.state,imageError:true})} onLoad={(e)=>this.setState({...this.state,imageLoaded:true,imageError:false})} src={iiifThumb+"/full/1000,/0/default.jpg"} /> 
                </div>
