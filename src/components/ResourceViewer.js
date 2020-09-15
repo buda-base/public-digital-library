@@ -3438,7 +3438,7 @@ class ResourceViewer extends Component<Props,State>
       {
 
 
-         if(click && state.fromSearch && state.fromSearch.startsWith("latest")) {
+         if(click && state.fromSearch && (state.fromSearch.startsWith("latest") || state.fromSearch.includes("t=Scan"))) {
             let loca = {... this.props.history.location}
             if(loca.search.match(/[?&]s=/)) loca.search = loca.search.replace(/[?&]s=[^&]+/,"")
             if(loca.search && !loca.search.endsWith("?")) loca.search += "&"            
