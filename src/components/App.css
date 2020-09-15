@@ -524,8 +524,9 @@ p.no-result {
 #res-container > ul h4 { padding-left:22px;; }
 #res-container > ul h4 { color:#343434; font-size:24px; /*font-family:"Noto Sans";*/ font-weight:900; text-transform:uppercase; }
 #res-container > ul:not(#samples) h4 {
-   white-space: nowrap; text-overflow: ellipsis; overflow: hidden;
+   white-space: nowrap; text-overflow: ellipsis; overflow: hidden; height:32px;
 }
+#res-container > ul:not(#samples) li { height:32px;}
 
 #res-container #samples > h4 { padding-left:0; font-size:18px; text-transform: none;  font-weight:400; text-align:center; }
 
