@@ -179,6 +179,13 @@ export const getUser = (profile: string): Action => {
 }
 
 
+TYPES.getLatestSyncsAsResults = 'GET_LATEST_SYNCS_AS_RESULTS';
+export const getLatestSyncsAsResults = (): Action => {
+    return {
+        type: TYPES.getLatestSyncsAsResults
+    }
+}
+
 
 TYPES.getLatestSyncs = 'GET_LATEST_SYNCS';
 export const getLatestSyncs = (): Action => {
@@ -188,10 +195,11 @@ export const getLatestSyncs = (): Action => {
 }
 
 TYPES.gotLatestSyncs = 'GOT_LATEST_SYNCS';
-export const gotLatestSyncs = (res): Action => {
+export const gotLatestSyncs = (res,nb): Action => {
     return {
         type: TYPES.gotLatestSyncs,
-        payload:res
+        payload:res,
+        meta:nb
     }
 }
 

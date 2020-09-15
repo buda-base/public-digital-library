@@ -48,7 +48,7 @@ const handleAuthentication = (nextState, replace) => {
 
 let sameAsR = {}
 
-async function initiateApp(params,iri,myprops) {
+async function initiateApp(params,iri,myprops,route) {
    try {
       loggergen.log("params=",params)
       loggergen.log("iri=",iri)
@@ -294,7 +294,7 @@ if(params && params.osearch) {
 
 
 if(params && params.t /*&& !params.i */) {
-   store.dispatch(uiActions.updateSortBy(params.s?params.s.toLowerCase():(params.i?"year of publication reverse":(params.t==="Etext"?"closest matches":"popularity")),params.t))
+   store.dispatch(uiActions.updateSortBy(params.s?params.s.toLowerCase():(params.i?"year of publication reverse":(params.t==="Etext"?"closest matches":(params.t==="Scan"?(route ==="latest"?"release date":"popularity"):"popularity"))),params.t))
 }
 
 if(params && params.i) {
@@ -318,7 +318,7 @@ else if(params && params.q) {
 
    let dontGetDT = false
    let pt = params.t
-   if(pt && !pt.match(/,/) && ["Place", "Person","Work","Etext", "Topic","Role","Corporation","Lineage","Instance","Product"].indexOf(pt) !== -1)  {
+   if(pt && !pt.match(/,/) && ["Place", "Person","Work","Etext", "Topic","Role","Corporation","Lineage","Instance","Product", "Scan"].indexOf(pt) !== -1)  {
 
       if(!state.data.searches || !state.data.searches[pt] || !state.data.searches[pt][params.q+"@"+params.lg]) {
          store.dispatch(dataActions.startSearch(params.q,params.lg,[pt],null,dontGetDT)); 
@@ -365,14 +365,14 @@ else if(params && params.q) {
 }
 else if(params && params.r) {
    let t = getEntiType(params.r)
-   if(t === "Instance" || t === "Images" || t === "Volume") t = "Work"
+   if(t === "Instance" || t === "Images" || t === "Volume" || t== "Scan") t = "Work"
 
    loggergen.log("state r",t,state.data.searches,params,iri)
 
    let s = ["Any"]
    if(params.t && params.t != "Any") { s = [ params.t ] }
    
-   if(t && ["Person","Place","Topic","Work","Role","Corporation","Lineage","Etext","Product"].indexOf(t) !== -1
+   if(t && ["Person","Place","Topic","Work","Role","Corporation","Lineage","Etext","Product", "Scan"].indexOf(t) !== -1
    && (!state.data.searches[params.t] || !state.data.searches[params.t][params.r+"@"]))
    {
       store.dispatch(dataActions.startSearch(params.r,"",s,t)); //,params.t.split(",")));
@@ -385,11 +385,17 @@ else if(params && params.r) {
       }
    }
 }
+else if(route === "latest") {
+   let sortBy = "release date"
+   if(params && params.s) sortBy = params.s
+   store.dispatch(uiActions.updateSortBy(sortBy,"Scan"))
+   store.dispatch(dataActions.getLatestSyncsAsResults());
+}
 else if(!iri) {
 
    let state = store.getState()
    
-   if(false && !state.data.latestSyncs) {
+   if(!state.data.latestSyncs) {
       store.dispatch(dataActions.getLatestSyncs())
    }
 
@@ -407,7 +413,7 @@ else if(!iri) {
 function* watchInitiateApp() {
    yield takeLatest(
       INITIATE_APP,
-      (action) => initiateApp(action.payload,action.meta.iri,action.meta.auth)
+      (action) => initiateApp(action.payload,action.meta.iri,action.meta.auth,action.meta.route)
    );
 }
 
@@ -1561,6 +1567,36 @@ function sortResultsByYear(results,reverse) {
    return results
 }
 
+function sortResultsByLastSync(results,reverse) {
+
+   if(!results) return 
+
+   let keys = Object.keys(results)
+   if(keys && keys.length) {
+      keys = keys.map(k => {
+         let n = "9999-99-99T99:99:99.999Z", score, p = results[k].length
+         if(reverse) n = "0000-00-00T00:00:00.000Z"
+         for(let i in results[k]) {
+            let v = results[k][i]
+            if(v.type === tmp+"lastSync") {
+               n = v.value
+            }
+         }
+         return ({k, n, p})
+      },{})
+      keys = _.orderBy(keys,['n','p'],[(reverse?'asc':'desc'), (reverse?'desc':'asc')])
+      
+      //loggergen.log("keysY",keys)
+
+      let sortRes = {}
+      for(let k of keys) sortRes[k.k] = results[k.k]
+
+      //loggergen.log("sortResY",sortRes)
+
+      return sortRes
+   }
+   return results
+}
 
 
 function sortResultsByNbChunks(results,reverse) {
@@ -1602,7 +1638,7 @@ function rewriteAuxMain(result,keyword,datatype,sortBy,language)
    let langPreset = state.ui.langPreset
    if(!sortBy) sortBy = state.ui.sortBy
    let reverse = sortBy && sortBy.endsWith("reverse")
-   let canPopuSort = false
+   let canPopuSort = false, isScan, isTypeScan = datatype.includes("Scan")
 
    result = Object.keys(result).reduce((acc,e)=>{
       if(e === "main") {
@@ -1612,8 +1648,10 @@ function rewriteAuxMain(result,keyword,datatype,sortBy,language)
          }
          let t = datatype[0].toLowerCase()+"s"
 
-         canPopuSort = false        
+         canPopuSort = false 
          let dataWithAsset = keys.reduce( (acc,k) => { 
+
+            isScan = false       
 
             if(auth && !auth.isAuthenticated()) {	
                let status = result[e][k].filter(k => k.type === adm+"status" || k.type === tmp+"status")	
@@ -1625,7 +1663,14 @@ function rewriteAuxMain(result,keyword,datatype,sortBy,language)
 
             }
             
-            let res = result[e][k].map(e => (!asset.includes(e.type)||e.value === "false"?e:{type:_tmp+"assetAvailability",value:e.type}))
+            let res = result[e][k].map(e => { 
+               if(!asset.includes(e.type)||e.value === "false") return e
+               else {
+                  if(isTypeScan && e.type === _tmp+"hasImage") isScan = true ; 
+                  return ({type:_tmp+"assetAvailability",value:e.type})
+               }
+            } )
+
             canPopuSort = canPopuSort || (res.filter(e => e.type === tmp+"entityScore").length > 0)            
             let chunks = res.filter(e => e.type === bdo+"eTextHasChunk")
             if(chunks.length) {
@@ -1665,14 +1710,15 @@ function rewriteAuxMain(result,keyword,datatype,sortBy,language)
                if(chunks.length > 1) res = res.concat(chunks.slice(1).map(e => ({...e.e, expand:e.expand, startChar:e.m, endChar:e.p})))
             }
 
-            return ({...acc, [k]:res})
+            if(isTypeScan && !isScan) return ({...acc})
+            else return ({...acc, [k]:res})
          },{})
         
          loggergen.log("dWa",t,dataWithAsset,sortBy,reverse,canPopuSort)
 
          if(!canPopuSort && sortBy.startsWith("popularity")) {            
             let {pathname,search} = history.location         
-            history.push({pathname,search:search.replace(/(&s=[^&]+)/g,"")+"&s=closest matches forced"})         
+            history.push({pathname,search:search.replace(/(([&?])s=[^&]+)/g,"$2")+(!search.match(/[?&]s=/)?"&":"")+"s="+(sortBy=(language?"closest matches":"title")+" forced")})   
          }
 
          if(language !== undefined) { 
@@ -1685,6 +1731,7 @@ function rewriteAuxMain(result,keyword,datatype,sortBy,language)
          else if(sortBy.startsWith("closest matches")) return { ...acc, [t]: sortResultsByRelevance(dataWithAsset,reverse) }
          else if(sortBy.startsWith("number of matching chunks")) return { ...acc, [t]: sortResultsByNbChunks(dataWithAsset,reverse) }
          else if(sortBy.includes("title") ||  sortBy.includes("name") ) return { ...acc, [t]: sortResultsByTitle(dataWithAsset, langPreset, reverse) }
+         else if(sortBy.includes("date")) return { ...acc, [t]: sortResultsByLastSync(dataWithAsset,reverse) }
       }
       else if(e === "aux") {                  
          store.dispatch(dataActions.gotAssocResources(keyword,{ data: result[e] } ) )
@@ -1837,13 +1884,14 @@ else {
 
          addMeta(keyword,language,data,datatype[0],null,false);
       }
-      else if(["Instance","Work","Etext"].indexOf(datatype[0]) !== -1) {
+      else if(["Instance","Work","Etext","Scan"].indexOf(datatype[0]) !== -1) {
 
          metadata = { ...metadata, tree:result.tree}
 
          let dt = "Etext" ;
          if(datatype.indexOf("Work") !== -1 ) { dt="Work" ; addMeta(keyword,language,data,"Work",result.tree,false); }
          else if(datatype.indexOf("Instance") !== -1 ) { dt="Instance" ; addMeta(keyword,language,data,"Instance",result.tree,false); }
+         else if(datatype.indexOf("Scan") !== -1 ) { dt="Scan" ; addMeta(keyword,language,data,"Scan",result.tree,false); }
          else store.dispatch(dataActions.foundFacetInfo(keyword,language,datatype,metadata))
 
          //store.dispatch(dataActions.foundDatatypes(keyword,language,{ metadata:{ [bdo+dt]:data.numResults } } ));
@@ -1925,6 +1973,7 @@ async function updateSortBy(i,t)
       let langPreset = state.ui.langPreset
       data.results.bindings[t.toLowerCase()+"s"] = sortResultsByTitle(data.results.bindings[t.toLowerCase()+"s"], langPreset, reverse)
    }
+   else if(i.includes("date")) data.results.bindings[t.toLowerCase()+"s"] = sortResultsByLastSync(data.results.bindings[t.toLowerCase()+"s"], reverse)  
    data.time = Date.now()
 
    store.dispatch(dataActions.foundResults(state.data.keyword,state.data.language, data, t))     
@@ -2012,18 +2061,60 @@ export function* watchGetInstances() {
 
 
 
+async function getLatestSyncsAsResults() {
+
+   let state = store.getState()
+   let sortBy = state.ui.sortBy
+   if(!sortBy) sortBy = "release date"
+
+   store.dispatch(uiActions.loading(null, true));
+
+   let res = await api.loadLatestSyncsAsResults()
+      
+   res = rewriteAuxMain(res,"(latest)",["Scan"],sortBy)
+
+   let data = getData(res)
+
+   loggergen.log("syncs",res,data)
+   
+   store.dispatch(dataActions.foundResults("(latest)", "en", { results: {bindings: {} } } ) ); // needed to initialize ("Any" / legacy code)
+
+   store.dispatch(dataActions.foundResults("(latest)", "en", data, ["Scan"]));
+
+   store.dispatch(dataActions.foundDatatypes("(latest)","en",{ metadata:{[bdo+"Scan"]:data.numResults}, hash:true}));
+
+   addMeta("(latest)","en",data,"Scan",null,false); 
+
+   store.dispatch(uiActions.loading(null, false));
+
+}
+
+export function* watchGetLatestSyncsAsResults() {
+
+   yield takeLatest(
+      dataActions.TYPES.getLatestSyncsAsResults,
+      (action) => getLatestSyncsAsResults()
+   );
+}
+
+
 
 async function getLatestSyncs() {
 
    let res = await api.loadLatestSyncs() 
-   let keys = _.orderBy(Object.keys(res).map(k => ({id:k,t:res[k][tmp+"datesync"][0].value})), "t", "desc")
+   
+   let nb = res[tmp+"totalRes"]
+   if(nb) nb = nb[tmp+"totalSyncs"]
+   if(nb && nb.length) nb = nb[0].value 
+
+   let keys = _.orderBy(Object.keys(res).filter(k => k !== tmp+"totalRes").map(k => ({id:k,t:res[k][tmp+"datesync"][0].value})), "t", "desc")
 
    let sorted = {}
    keys.map(k => { sorted[k.id] = res[k.id]; })
       
-   loggergen.log("syncs",res,sorted)
+   loggergen.log("syncs",res,sorted,nb)
 
-   store.dispatch(dataActions.gotLatestSyncs(sorted))
+   store.dispatch(dataActions.gotLatestSyncs(sorted,nb))
 
 }
 
@@ -2296,6 +2387,7 @@ export default function* rootSaga() {
       watchInitiateApp(),
       watchGetUser(),
       watchGetOutline(),
+      watchGetLatestSyncsAsResults(),
       watchGetLatestSyncs(),
       watchOutlineSearch(),
       watchGetResetLink(),

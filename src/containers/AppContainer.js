@@ -53,12 +53,13 @@ const mapStateToProps = (state) => {
 
     
    let latestSyncs = state.data.latestSyncs
+   let latestSyncsNb = state.data.latestSyncsNb
 
 
    let newState = { logged,config, hostFailure, searches, keyword, language,loading,datatypes,ontology,facets,
       locale,prefLang,resources,ontoSearch,rightPanel,langPreset, langIndex, failures,dictionary,metadata, assoRes, 
       sortBy, topicParents, instances, isInstance,
-      latestSyncs }
+      latestSyncs,latestSyncsNb }
 
    if(config && !config.auth) newState.auth = false
 

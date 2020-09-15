@@ -161,7 +161,7 @@ const makeMainRoutes = () => {
                            store.dispatch(initiateApp(qs.parse(history.location.search)));
 
                            return (
-                              <ClearCache auto={true}>
+                              <ClearCache auto={true} duration={20*60*1000}>
                                  {({ isLatestVersion, emptyCacheStorage }) => (<ProfileContainer auth={auth} history={history} />)}
                               </ClearCache>
                            )
@@ -173,7 +173,7 @@ const makeMainRoutes = () => {
                            store.dispatch(initiateApp(qs.parse(history.location.search)));
 
                            return (
-                              <ClearCache auto={true}>
+                              <ClearCache auto={true}  duration={20*60*1000}>
                                  {({ isLatestVersion, emptyCacheStorage }) => (<UserViewerContainer auth={auth} history={history} />)}
                               </ClearCache>
                            )
@@ -232,7 +232,7 @@ const makeMainRoutes = () => {
                      <Route exact path="/" render={(props) => {
                         store.dispatch(initiateApp(qs.parse(history.location.search)));
                         return ( 
-                           <ClearCache auto={true}>
+                           <ClearCache auto={true}  duration={20*60*1000}>
                               {({ isLatestVersion, emptyCacheStorage }) => (<AppContainer history={history} auth={auth}/> )}
                            </ClearCache>
                         )}}/>
@@ -245,8 +245,21 @@ const makeMainRoutes = () => {
                            store.dispatch(initiateApp(qs.parse(history.location.search)))
                         }
                         return ( 
-                           <ClearCache auto={true}>
+                           <ClearCache auto={true}  duration={20*60*1000}>
                               {({ isLatestVersion, emptyCacheStorage }) => (<AppContainer history={history} auth={auth}/> )}
+                           </ClearCache>
+                        )}}/>
+                     <Route path="/latest" render={(props) => {
+                        let get = qs.parse(history.location.search)
+                        //if(!store.getState().data.ontology)
+                        {
+                           console.log("new route",props,store.getState())
+                           //if(!store.getState().ui.loading)
+                           store.dispatch(initiateApp(qs.parse(history.location.search), null, null, "latest"))
+                        }
+                        return ( 
+                           <ClearCache auto={true}  duration={20*60*1000}>
+                              {({ isLatestVersion, emptyCacheStorage }) => (<AppContainer history={history} auth={auth} latest={true}/> )}
                            </ClearCache>
                         )}}/>
                      <Route path="/view/:IRI" render={(props) =>
@@ -281,7 +294,7 @@ const makeMainRoutes = () => {
                         store.dispatch(initiateApp(get,IRI));
                      
                         return (
-                           <ClearCache auto={true}>
+                           <ClearCache auto={true} duration={20*60*1000}>
                               {({ isLatestVersion, emptyCacheStorage }) => (<ResourceViewerContainer  auth={auth} history={history} IRI={IRI}/> )}
                            </ClearCache>
                         )}}/>

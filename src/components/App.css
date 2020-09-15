@@ -266,6 +266,7 @@ body { overflow:auto !important;padding-right:0 !important; /*font-family:"Robot
 .active-filter { font-size:0; box-shadow: 0 2px 4px rgba(187, 187, 187, 0.5); border-radius: 2px;background:white; height:28px;line-height:28px;}
 .active-filter,#clear-filters  {  margin-bottom:10px;  }
 
+.active-filter span b,
 .active-filter b span { color: #152631; font-size:11px; font-weight:700; padding-left:2px;}
 /* .active-filter > span > b { margin-left:10px;} */
 
@@ -304,8 +305,10 @@ body { overflow:auto !important;padding-right:0 !important; /*font-family:"Robot
    opacity:0.8;
 }
 
+.SearchPane .formControl.scan .menu-dataT .icone, 
 .SearchPane .formControl.instance .menu-dataT .icone, 
 .SearchPane .formControl.etext .menu-dataT .icone,
+#menu-datatype [data-value=Scan] .menu-dataT .icone, 
 #menu-datatype [data-value=Instance] .menu-dataT .icone, 
 #menu-datatype [data-value=Etext]  .menu-dataT .icone {
    height:100%; 
@@ -321,6 +324,7 @@ body { overflow:auto !important;padding-right:0 !important; /*font-family:"Robot
 
 .SearchPane .formControl > div > div > div { padding-right:28px; }
 
+#menu-datatype > div:last-child ul li[data-value="Scan"] { display:none; }
 
 #menu-datatype > div:last-child ul li { justify-content: flex-end; }
 
@@ -518,7 +522,9 @@ p.no-result {
 
 #res-container > ul li { padding-left:0; pointer-events:none; }
 #res-container > ul h4 { padding-left:22px;; }
-#res-container > ul h4 { color:#343434; font-size:24px; /*font-family:"Noto Sans";*/ font-weight:900; text-transform:uppercase;}
+#res-container > ul h4 { color:#343434; font-size:24px; /*font-family:"Noto Sans";*/ font-weight:900; text-transform:uppercase;
+   white-space: nowrap; text-overflow: ellipsis; overflow: hidden;
+}
 
 #res-container #samples > h4 { padding-left:0; font-size:18px; text-transform: none;  font-weight:400; text-align:center; }
 
@@ -567,7 +573,7 @@ li + a.result { margin-top:-5px; }
 
 /* ---------------------------------------------------------------------------------------------------------------------------- latest */
 
-#latest { width:100%;background:white;padding:60px 60px 100px 60px;display: block;box-sizing: border-box;}
+#latest { width:100%;background:white;padding:60px 60px 100px 60px;display: block;box-sizing: border-box; position:relative;}
 
 #latest > div:first-of-type { padding: 60px 30px ; margin:auto; width:1220px;background:#efefef;box-sizing: border-box;max-width:100%;margin-top:60px; }
 #latest .slide-bg { display:flex; justify-content: flex-start; margin-left:0; transition: margin-left 0.8s ease-in-out; }
@@ -600,6 +606,11 @@ li + a.result { margin-top:-5px; }
 #latest #syncs-nav span.on { cursor:pointer; opacity:1;}
 
 #latest .slide-bg.slided { margin-left:calc(-100% + 5px); }
+
+#latest .seeAll { position: absolute; right:0; color:#343434; margin-right:calc(60px + 49px + 36px + 18px); display: inline-block; text-transform:uppercase;
+   border-bottom:2px solid #343434;font-weight:500;top:70px;;
+}
+#latest .seeAll:hover { color:#d73449; border-color: #d73449;}
 
 /* --------------------------------------------------------------------------------------------------------------------- results/matches */
 
@@ -987,7 +998,9 @@ h4:not(:hover) > .lang
 
 .resource > .ariane { position:absolute; top:105px; color: #343434; left:0; margin-left:140px;padding-left:12.125%; }
 .resource > .ariane img { display:inline-block; margin-right:5px; vertical-align: -1px;}
-.resource > .ariane a { text-decoration: none; color: #343434; font-weight:500; font-size:13px;}
+.resource > .ariane a { text-decoration: none; color: #343434; font-weight:500; font-size:13px; }
+.resource > .ariane a span { display:inline-block; }
+.resource > .ariane a > span::first-letter { text-transform: capitalize;}
 .resource > .ariane a:hover span { text-decoration: underline;}
 .resource > .ariane a span span { font-weight:700; }
 
@@ -3196,6 +3209,8 @@ a.result .contenu ul > div:last-child h3[lang=bo] span { font-size:18px;}
 
 @media (max-width:1320px)
 {
+   #latest .seeAll { margin-right:60px;}
+   
    #res-header > div, #results /*, #samples*/ { margin-left:calc((100% - 700px)/2);}
    .SidePane.left { position:absolute; left:0;top:0; z-index:0 ;}
    #res-container { position:relative; }

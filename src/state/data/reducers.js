@@ -795,7 +795,8 @@ export const gotLatestSyncs = (state: DataState, action: Action) => {
 
    return {
       ...state,
-      latestSyncs:action.payload
+      latestSyncs:action.payload,
+      latestSyncsNb:action.meta
    }
 }
 reducers[actions.TYPES.gotLatestSyncs] = gotLatestSyncs;

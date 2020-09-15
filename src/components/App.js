@@ -214,7 +214,7 @@ export const langSelect = [
 ]
 
 //const searchTypes = ["All","Work","Etext","Topic","Person","Place","Lineage","Corporation","Role"]
-const searchTypes = [ "Work", "Instance","Etext", "Person","Place","Topic","Lineage","Role","Corporation", "Product" ]
+const searchTypes = [ "Work", "Instance","Scan", "Etext", "Person","Place","Topic","Lineage","Role","Corporation", "Product" ]
 
 /*
 export const langProfile = [
@@ -669,6 +669,7 @@ type Props = {
          index:number
       }
    },
+   latest?:boolean,
    facets?:{[string]:boolean|{}},
    searches:{[string]:{}},
    resources:{[string]:{}},
@@ -691,6 +692,7 @@ type Props = {
    instances?:{},
    isInstance?:boolean,
    latestSyncs?:boolean|{},
+   latestSyncsNb?:integer,
    onResetSearch:()=>void,
    onOntoSearch:(k:string)=>void,
    onStartSearch:(k:string,lg:string,t?:string)=>void,
@@ -808,7 +810,7 @@ class App extends Component<Props,State> {
          langOpen:false,
          UI:{language:"en"},
          filters: {
-            datatype:get.t?get.t.split(","):["Any"],
+            datatype:this.props.latest?["Scan"]:(get.t?get.t.split(","):["Any"]),
          },
          collapse:{},
          sortBy,
@@ -934,6 +936,11 @@ class App extends Component<Props,State> {
       if(label.indexOf("Any") !== -1) label = "Any" 
       else label = label.join(",")
 
+      if(label.indexOf("Scan") !== -1) {
+         searchDT = [ "Instance" ]
+         label = [ "Instance" ] 
+      }
+
       let state = { ...this.state, dataSource:[], leftPane:true, filters:{ datatype:[ ...searchDT ] } }
       this.setState(state)
 
@@ -1025,7 +1032,8 @@ class App extends Component<Props,State> {
       let props = { ...prop }
 
       if(props.keyword) { 
-         document.title = /*""+*/ props.keyword+" search results - Public Digital Library"
+         if(props.keyword === "(latest)") document.title = I18n.t("home.new") + " - Public Digital Library"
+         else document.title = /*""+*/ props.keyword+" search results - Public Digital Library"
          
       }
 
@@ -1252,7 +1260,7 @@ class App extends Component<Props,State> {
                time = props.searches[k].time
                loggergen.log("refreshB",time)
             }
-            for(let d of ["Etext","Person","Instance","Work","Place","Topic","Corporation","Role","Lineage","Product"]) {
+            for(let d of ["Etext","Person","Instance","Work","Place","Topic","Corporation","Role","Lineage","Product","Scan"]) {
                if(props.searches && props.searches[d] && props.searches[d][k]) {
                   if(!time || props.searches[d][k].time > time) { 
                      time = props.searches[d][k].time 
@@ -1278,7 +1286,7 @@ class App extends Component<Props,State> {
          loggergen.log("K", props.keyword, time, current)
 
          let results
-         if(state.filters.datatype.indexOf("Any") !== -1 || state.filters.datatype.length > 1 || state.filters.datatype.filter(d => ["Work","Etext","Person","Place","Topic","Role","Corporation","Lineage","Product"].indexOf(d) === -1).length ) {
+         if(state.filters.datatype.indexOf("Any") !== -1 || state.filters.datatype.length > 1 || state.filters.datatype.filter(d => ["Work","Etext","Person","Place","Topic","Role","Corporation","Lineage","Product","Scan"].indexOf(d) === -1).length ) {
             results = { ...props.searches[props.keyword+"@"+props.language] }
             //loggergen.log("any")
          }
@@ -1582,9 +1590,13 @@ class App extends Component<Props,State> {
 
       if(check && (!this.props.sortBy || i !== this.props.sortBy)) {            
 
+         this.setState({collapse:{...this.state.collapse, sortBy:false}})
+
          let {pathname,search} = this.props.history.location
-         
-         this.props.history.push({pathname,search:search.replace(/(&s=[^&#]+)/g,"")+"&s="+i.toLowerCase()})         
+         search = search.replace(/((&|[?])s=[^&#]+)/g,"")      
+         search += (search === ""?"?":"&")+"s="+i.toLowerCase()
+         search = search.replace(/(\?&)|(^&)/,"?")
+         this.props.history.push({pathname,search})         
          
       } 
    }
@@ -1652,7 +1664,9 @@ class App extends Component<Props,State> {
          state.filters.preload = true
 
          let {pathname,search} = this.props.history.location
-         this.props.history.push({pathname,search:search.replace(/(&([nf]|pg)=[^&]+)/g,"")+"&pg=1"+getFacetUrl(state.filters,this.props.config.facets[state.filters.datatype[0]])})
+         search = search.replace(/(&([nf]|pg)=[^&]+)/g,"")+"&pg=1"+getFacetUrl(state.filters,this.props.config.facets[state.filters.datatype[0]])+(this.props.latest&&!(""+search).match(/t=/)?"&t=Scan":"")
+         search = search.replace(/(\?&)|(^&)/,"?")
+         this.props.history.push({pathname,search })
       }
 
       this.setState(state);
@@ -1767,7 +1781,7 @@ class App extends Component<Props,State> {
 
          if(state.sortBy) delete state.sortBy
          
-         if([ /*"Any",*/ "Person","Place","Work","Etext","Role","Topic","Corporation","Lineage","Instance","Product"].indexOf(lab) !== -1)
+         if([ /*"Any",*/ "Person","Place","Work","Etext","Role","Topic","Corporation","Lineage","Instance","Product","Scan"].indexOf(lab) !== -1)
          {
             this.requestSearch(this.props.keyword,[ lab ], this.props.language, true);
          }
@@ -2432,11 +2446,29 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             for(let i of labels) {
                let val = i["value"] 
                if(val === exclude) continue
-               if(val && val.startsWith("http")) val = this.fullname(val,[],true)
-               else val = highlight(val)
                let lang = i["xml:lang"]
+
+               if((""+val).match(/^[0-9-]+T[0-9:.]+Z+$/)) {
+                  //val.replace(/[ZT]/g," ").replace(/:[0-9][0-9][.].*?$/,"")
+                  
+                  let code = "en-US"
+                  let opt = { month: 'long', day: 'numeric' }
+                  if(this.props.locale === "bo") { 
+                     code = "en-US-u-nu-tibt"; 
+                     opt = { day:'2-digit', month:'2-digit' } 
+                     val = 'ཟླ་' + (new Intl.DateTimeFormat(code, opt).formatToParts(new Date(val)).map(p => p.type === 'literal'?' ཚེས་':p.value).join(''))
+                     lang= "bo"
+                  }
+                  else {
+                     if(this.props.locale === "zh") code = "zh-CN"
+                     val = new Date(val).toLocaleDateString(code, { month: 'long', day: 'numeric' });  // does not work for tibetan
+                  }
+               }
+               else if(val && val.startsWith("http")) val = this.fullname(val,[],true)
+               else val = highlight(val)
+
                if(!lang) lang = i["lang"]
-               ret.push(<span>{val}{
+               ret.push(<span {...lang?{lang}:{}}>{val}{
                   lang && <Tooltip placement="bottom-end" title={
                                     <div style={{margin:"10px"}}>
                                        {I18n.t(languages[lang]?languages[lang].replace(/search/,"tip"):lang)}/>
@@ -2724,7 +2756,11 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   urlpart = root+"?part="+prettId+"&"
                }
             }
-            resUrl = "/show/"+urlpart+"s="+ encodeURIComponent(window.location.href.replace(/^https?:[/][/][^?]+[?]?/gi,"").replace(/(&n=[^&]*)/g,"")+"&n="+n)+(!bestM?"":"&"+bestM)
+            let urlBase ;
+            if(window.location.href.match(/\/latest/)) urlBase = window.location.href.replace(/.*?\/latest[\/]?/,"latest?");
+            else urlBase = window.location.href.replace(/^https?:[/][/][^?]+[?]?/gi,"")+"&"
+            console.log("urlB",urlBase)
+            resUrl = "/show/"+urlpart+"s="+ encodeURIComponent((urlBase.replace(/((([?])?&*|^)n=[^&]*)/g,"$3")+(!urlBase.match(/[\?&]$/)?"&":"")+"n="+n).replace(/\?+&?/,"?"))+(!bestM?"":"&"+bestM)
             //retList.push( <Link key={n} to={"/show/"+prettId+bestM} className="result">{ret}</Link> )
          }
          else
@@ -2969,7 +3005,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          if(nbChunks[0] && nbChunks[0].value) nbChunks = Number(nbChunks[0].value)
          else nbChunks = "?"
          let type = this.state.filters.datatype[0]
-         let typeisbiblio = (type === "Work" || type === "Instance" || type === "Etext")
+         let typeisbiblio = (type === "Work" || type === "Instance" || type === "Etext" || type === "Scan")
 
          retList.push( <div id='matches'>         
             { typeisbiblio && this.getResultProp(I18n.t("result.workBy"),allProps,false,true,[tmp+"author"]) }
@@ -3026,7 +3062,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
             {/* { this.getResultProp(bdo+"publisherName",allProps,false,false) }
             { this.getResultProp(bdo+"publisherLocation",allProps,false,false) } */}
-            { (type === "Instance" || type === "Etext") && this.getPublisher(allProps) }
+            { (type === "Instance" || type === "Etext" || type === "Scan") && this.getPublisher(allProps) }
 
 
             {/* TODO fix facet count after preview instance */}
@@ -3034,7 +3070,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
             {/* { this.getResultProp(bdo+"contentLocationStatement",allProps,false,false, [bdo+"instanceExtentStatement",bdo+"contentLocationStatement"]) } */}
 
-            { type === "Instance" && this.getResultProp(bdo+"biblioNote",allProps,false,false,[bdo+"biblioNote", bdo+"catalogInfo", rdfs+"comment", tmp+"noteMatch", bdo+"colophon", bdo+"incipit"]) }
+            { (type === "Instance" || type === "Scan") && this.getResultProp(bdo+"biblioNote",allProps,false,false,[bdo+"biblioNote", bdo+"catalogInfo", rdfs+"comment", tmp+"noteMatch", bdo+"colophon", bdo+"incipit"]) }
 
             {/* { this.getResultProp(tmp+"provider",allProps) } */}
             {/* { this.getResultProp(tmp+"popularity",allProps,false,false, [tmp+"entityScore"]) } */}
@@ -3043,6 +3079,10 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             {/* { hasThumb.length > 0 && <div class="match">{getIconLink(viewUrl?viewUrl:resUrl+"#open-viewer",<span class="urilink"><b>View Images</b></span>)}</div>} // maybe a bit overkill...? */ }
 
             { typeisbiblio && this.getInstanceLink(id,n,allProps) }
+
+
+            { type === "Scan" &&  this.getResultProp(tmp+"lastSync",allProps,false,false) }
+            {/* { type === "Scan" &&  this.getResultProp(tmp+"InverseRelationType",allProps,false,false,[tmp+"relationTypeInv"]) }  */}
 
             {/* { this.getEtextLink(id,n,allProps) } */}
 
@@ -3386,7 +3426,21 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                let _t = t.toLowerCase()
                if(_t === "work" && this.props.isInstance) _t = "instance"
                if(displayTypes.length > 1 || displayTypes.indexOf("Any") !== -1) message.push(<MenuItem  onClick={(e)=>this.handleCheck(e,t,true,{},true)}><h4>{I18n.t("types."+t.toLowerCase()+"_plural")+(false && displayTypes.length>1&&counts["datatype"][t]?" ("+counts["datatype"][t]+")":"")}</h4></MenuItem>);
-               else message.push(<MenuItem><h4>{I18n.t("types."+_t+("_plural"))+(false && displayTypes.length>=1&&counts["datatype"][t]?" ("+counts["datatype"][t]+")":"")}</h4></MenuItem>);
+               else { 
+                  let txt = ""
+                  if(this.props.latest) txt = I18n.t("home.new")
+                  else txt = I18n.t("types."+_t+("_plural")) 
+                  
+                  if(this.props.language==="") {
+                     let label = this.props.resources[this.props.keyword]
+                     if(label) label = label[fullUri(this.props.keyword)]
+                     if(label) label = label[skos+"prefLabel"]
+                     if(label) label = getLangLabel(this,"",label)
+                     if(label && label.value) txt = I18n.t("result.assoc",{type:txt,name:label.value})
+                  }
+                  //(false && displayTypes.length>=1&&counts["datatype"][t]?" ("+counts["datatype"][t]+")":""))}
+                  message.push(<MenuItem><h4>{txt}</h4></MenuItem>);
+               }
                // TODO better handling of plural in translations
             }
             absi ++ ;
@@ -4005,7 +4059,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
       
       let {pathname,search} = this.props.history.location
       
-      if(!this.props.isInstance) this.props.history.push({pathname,search:search.replace(/(&([tfin]|pg)=[^&]+)/g,"")+"&t="+this.state.filters.datatype[0]})
+      if(!this.props.isInstance) this.props.history.push({pathname,search:(search.replace(/((&|(\?))([tfin]|pg)=[^&]+)/g,"$3")+"&t="+this.state.filters.datatype[0]).replace(/\?&/,"?")})
       else this.props.history.push({pathname,search:this.state.backToWorks})
       
       // TODO fix reset filters 
@@ -4377,7 +4431,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
                                  //loggergen.log("counts",i,counts,counts["datatype"][i],this.state.filters.datatype.indexOf(i))
 
-                              let disabled = (!["Work","Instance","Person", "Place","Topic","Corporation","Role","Lineage","Etext","Product"].includes(i)) // false // (!this.props.keyword && ["Any","Etext","Person","Work"].indexOf(i)===-1 && this.props.language  != "")
+                              let disabled = (!["Work","Instance","Person", "Place","Topic","Corporation","Role","Lineage","Etext","Product","Scan"].includes(i)) // false // (!this.props.keyword && ["Any","Etext","Person","Work"].indexOf(i)===-1 && this.props.language  != "")
                            // || (this.props.language == "")
 
                               let count = counts["datatype"][i]
@@ -4715,13 +4769,14 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
       }
 
       const allSortByLists = { 
-         "Work": [ "popu", "closestM", "workT" ].map(m => I18n.t("sort."+m)),
-         "Person": [ "popu", "closestM", "personN", "yearB" ].map(m => I18n.t("sort."+m)),
-         "Place": [ "popu", "closestM", "placeN" ].map(m => I18n.t("sort."+m)),
-         "WorkInstance": [ "workT", "yearP" ].map(m => I18n.t("sort."+m)),
-         "Instance": [ "popu", "title", "yearP" ].map(m => I18n.t("sort."+m)),
-         "Etext": [ "closestM", "numberMC" ].map(m => I18n.t("sort."+m)),
-         "Product": [ "closestM", "title" ].map(m => I18n.t("sort."+m)),
+         "Work": [ "popu", "closestM", "workT" ], 
+         "Person": [ "popu", "closestM", "personN", "yearB" ],  
+         "Place": [ "popu", "closestM", "placeN" ],  
+         "WorkInstance": [ "workT", "yearP" ],  
+         "Instance": [ "popu", "closestM", "title", "yearP" ],  
+         "Etext": [ "closestM", "numberMC" ],  
+         "Product": [ "closestM", "title" ],  
+         "Scan": (!this.props.latest?["popu", "closestM", "title", "yearP"]:["lastS", "title"]) //.map(m => I18n.t("sort."+m)),
       }
 
       let sortByList = allSortByLists[this.state.filters.datatype[0]]
@@ -4781,6 +4836,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             changeKWtimer = setTimeout( () => { changeKW() }, 1000) ;
          }
          */
+         if(this.props.latest&&this.state.keyword==="(latest)") value = ""
 
          loggergen.log("changeKW",value,keyEv,ev)
          
@@ -4920,7 +4976,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                         }
                      }}
                      onRequestSearch={this.requestSearch.bind(this)}
-                     value={this.props.hostFailure?"Endpoint error: "+this.props.hostFailure+" ("+this.getEndpoint()+")":this.state.keyword !== undefined && this.state.keyword!==this.state.newKW?this.state.keyword:this.props.keyword&&this.state.newKW?lucenequerytokeyword(this.state.newKW):""}
+                     value={this.props.latest&&this.state.keyword==="(latest)"?"":(this.props.hostFailure?"Endpoint error: "+this.props.hostFailure+" ("+this.getEndpoint()+")":this.state.keyword !== undefined && this.state.keyword!==this.state.newKW?this.state.keyword:this.props.keyword&&this.state.newKW?lucenequerytokeyword(this.state.newKW):"")}
                      style={{
                         marginTop: '0px',
                         width: "700px",
@@ -4985,7 +5041,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                 {/* <InputLabel htmlFor="datatype">In</InputLabel> */}
 
                 <Select
-                  value={this.state.searchTypes[0]}
+                  value={this.state.searchTypes[0]==="Scan"?"Instance":this.state.searchTypes[0]}
                   //onChange={this.handleLanguage} 
                   onChange={this.handleSearchTypes}
                   open={this.state.langOpen}
@@ -5090,7 +5146,9 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   <div id="settings" onClick={() => this.setState({collapse:{...this.state.collapse, settings:!this.state.collapse.settings}})}><img src="/icons/settings.svg"/></div>
                { // TODO change to popover style open/close
                      sortByList && this.popwidget(I18n.t("Lsidebar.sortBy.title"),"sortBy",
-                     (sortByList /*:["Year of Publication","Instance Title"]*/).map((i,n) => <div key={i} style={{width:"200px",textAlign:"left"}} className="searchWidget">
+                     (sortByList /*:["Year of Publication","Instance Title"]*/).map((t,n) => {
+                        let i = I18n.t("sort."+t,{lng:"en"})
+                        return(<div key={i} style={{width:"200px",textAlign:"left"}} className="searchWidget">
                            <FormControlLabel
                               control={
                                  <Checkbox
@@ -5102,8 +5160,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                                  />
 
                               }
-                              label={<span lang={this.props.locale}>{i}</span>}
-                           /></div> ).concat([
+                              label={<span lang={this.props.locale}>{I18n.t("sort."+t)}</span>}
+                           /></div>) } ).concat([
                               <div key={99} style={{width:"auto",textAlign:"left",marginTop:"5px",paddingTop:"5px"}} className="searchWidget">
                               <FormControlLabel
                                  control={
@@ -5192,9 +5250,10 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   </List>
                }
                </div>
-               { false && message.length == 0 && !this.props.loading && !this.props.keyword && 
+               { message.length == 0 && !this.props.loading && !this.props.keyword && 
                   <div id="latest">
                      <h3>{I18n.t("home.new")}</h3>
+                     <Link class="seeAll" to="/latest" onClick={()=>this.setState({filters:{...this.state.filters,datatype:["Scan"]}})}>{I18n.t("misc.seeAnum",{count:this.props.latestSyncsNb})}</Link>
                      <div>
                         { this.props.latestSyncs === true && <Loader loaded={false}/> }
                         { (this.props.latestSyncs && this.props.latestSyncs !== true) &&

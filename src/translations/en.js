@@ -28,7 +28,7 @@ const enTranslation = {
       search:"Search",
       choose:"Choose language",
       start:"Start typing then select search language",
-      new:"Newly Released Digital Works"
+      new:"New Scans Released This Week"
    },
    types:{
       any:"Any",
@@ -57,7 +57,9 @@ const enTranslation = {
       volume_num:"Volume {{num}}",
       searchIn:"in {{type}}",
       product:"Product",
-      product_plural:"Products"
+      product_plural:"Products",
+      scan:"Scan",
+      scan_plural:"Scans"
    },
    topbar:{
       about:"about us",
@@ -113,7 +115,8 @@ const enTranslation = {
       placeN:"Place Name",
       yearP:"Year of Publication",
       title:"Title",
-      numberMC:"Number of Matching Chunks"
+      numberMC:"Number of Matching Chunks",
+      lastS:"Release Date"
    },
    copyright:{
       open:"Open Access",
@@ -180,7 +183,8 @@ const enTranslation = {
       "tmp:Maps":"Maps",
       "tmp:BuddhistArt":"Buddhist Art",
       "tmp:other":"Other",
-      "tmp:instanceOfWork":"Version of Work"
+      "tmp:instanceOfWork":"Version of Work",
+      "tmp:lastSync":"Release Date"
    },
    result:{
       open:"Open",
@@ -197,7 +201,8 @@ const enTranslation = {
       hideC:"Hide Context",
       openE:"Open Etext",
       hasInstance:"Has {{count}} $t(types.instance)",
-      hasInstance_plural:"Has {{count}} $t(types.instance_plural)"
+      hasInstance_plural:"Has {{count}} $t(types.instance_plural)",
+      assoc:"{{type}} associated with: {{- name}}"
    },
    index:{
       openViewer:"Open in Viewer",
@@ -270,6 +275,7 @@ const enTranslation = {
       has:"Has",
       or:"or",
       seeA:"see all",
+      seeAnum:"see all {{count}}",
       browse:"browse all",
       show:"Show all",
       seeMore:"See More",
