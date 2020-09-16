@@ -918,6 +918,8 @@ class App extends Component<Props,State> {
    {
       loggergen.log("key",key,label,this.state.searchTypes)
 
+      if(key) key = key.trim()
+
       let _key = ""+key
       if(!key || key == "" || !key.match) return ;
       if(!key.match(/:/)) {
@@ -4873,7 +4875,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   }
                   
                   return [...acc, ...presets]
-               }, [] ).concat(!value || value.match(/[a-zA-Z]/)?["en"]:[]).map(p => '"'+(p==="bo-x-ewts_lower"?value.toLowerCase():value)+'"@'+(p == "sa-x-iast"?"sa-x-ndia":p))
+               }, [] ).concat(!value || value.match(/[a-zA-Z]/)?["en"]:[]).map(p => '"'+(p==="bo-x-ewts_lower"?value.toLowerCase():value).trim()+'"@'+(p == "sa-x-iast"?"sa-x-ndia":p))
             }
          }
 
