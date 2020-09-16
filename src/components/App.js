@@ -1241,6 +1241,16 @@ class App extends Component<Props,State> {
          
          //loggergen.log("collap!",JSON.stringify(state.collapse,null,3))
 
+         if(props.config && props.config["facets-open"]) for(let o of props.config["facets-open"]) {
+            if(o.types) {
+               if(o.types.includes(state.filters.datatype.join("")) && o.facets) for(let p of o.facets) { 
+                  if(s.collapse[p] === undefined) s.collapse[p] = true ;
+               }
+            } else {
+               if(s.collapse[o] === undefined) s.collapse[o] = true ;
+            }
+         }
+
       }
       else {
          newid = null
