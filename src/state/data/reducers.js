@@ -298,12 +298,25 @@ export const gotResource = (state: DataState, action: Action) => {
                         }                        
                      }
                   }
-                  if(!found) {                     
-                     v.allSameAs = [ k ]
-                     v.fromSameAs = k
-                     data[uri][p].push(v)
+                  if(!found) {
+
+                     if(v.type !== "bnode" && v.type !== "uri") {
+                        v.allSameAs = [ k ]
+                        v.fromSameAs = k
+                     } else { 
+                        let v_ev = data[v.value]
+                        if(v_ev) for(let q of [bdo+"onYear", bdo+"onDate", bdo+"eventWhere"]){
+                           if(v_ev[q] && v_ev[q].length) {
+                              v_ev[q][0].allSameAs = [ k ]
+                              v_ev[q][0].fromSameAs = k
+                           }
+                        }  
+                        //console.log("v_ev",v_ev)
+                     }
                      
-                     //console.log("new v",JSON.stringify(v))
+                     data[uri][p].push(v)
+
+                     //console.log("new v",JSON.stringify(v,null,3))
                   } 
                   else {
                      if(!found.allSameAs) { found.allSameAs = [ uri ] ; }
