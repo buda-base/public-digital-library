@@ -3209,7 +3209,7 @@ class ResourceViewer extends Component<Props,State>
                            else if(v.type == 'uri') txt = this.uriformat(f,v)
                            else if(v.type === 'literal' && v.datatype === xsd+"gYear") {
 
-                              txt = [txt,<Tooltip placement="bottom-end" title={<div style={{margin:"10px"}}>{"Gregorian Calendar"}</div>}><span className="lang">{"GC"}</span></Tooltip>]
+                              txt = [txt.replace(/^0+/,""),<Tooltip placement="bottom-end" title={<div style={{margin:"10px"}}>{"Gregorian Calendar"}</div>}><span className="lang">{"GC"}</span></Tooltip>]
                            }
                            else if(v.type === 'literal' && v.datatype && this.props.dictionary && (dic = this.props.dictionary[v.datatype]) && dic[rdfs+"subClassOf"] 
                               && dic[rdfs+"subClassOf"].filter(s => s.value === bdo+"AnyDate").length) {

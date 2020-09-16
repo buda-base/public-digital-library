@@ -195,6 +195,7 @@ export const gotResource = (state: DataState, action: Action) => {
    const adm   = "http://purl.bdrc.io/ontology/admin/"
    const bdo   = "http://purl.bdrc.io/ontology/core/"
    const bdr   = "http://purl.bdrc.io/resource/"
+   const rdf  = "http://www.w3.org/1999/02/22-rdf-syntax-ns#";
    let data = { ...action.meta }
    let uri = fullUri(action.payload)
    let sameR = {}, sameP = {}
@@ -241,13 +242,17 @@ export const gotResource = (state: DataState, action: Action) => {
          }                   
       }
 
-      console.log("sameR",sameR,sameP,uri,data,sameAsInfo)
+      //console.log("sameR",sameR,sameP,uri,data,sameAsInfo)
 
       // merging data into resource
       if(get["cw"] !== "none") for(let k of Object.keys(sameR)) {
+         
          //console.log("same k",k)
+         
          if(sameR[k]) for(let p of Object.keys(sameR[k])) {
+            
             //console.log("p",p)
+            
             if(p.match(/purl\.bdrc\.io/) || p.match(/(pref|alt)Label$/) ) { 
                if(!data[uri][p]) data[uri][p] = []
                
@@ -256,12 +261,16 @@ export const gotResource = (state: DataState, action: Action) => {
 
                let val = sameR[k][p].filter(e => !e.value || e.value !== uri) 
                for(let v of val) {
+                  
                   //console.log("check",v)
+
                   let found = false
                   let v_val = getVal(v), w_val
                   for(let w of data[uri][p]) {
                      w_val = getVal(w)
-                     //console.log("check",v_val,w_val,v,w)
+                     
+                     //console.log("vs",v_val,w_val,v,w)
+
                      if(v_val === w_val && getLg(v) === getLg(w)) { 
                         found = w
                         break; 
@@ -270,19 +279,40 @@ export const gotResource = (state: DataState, action: Action) => {
                         found = w
                         break; 
                      }
+                     else if(p.endsWith("Event") && (v.type === "bnode" || w.type === "bnode" || v.type === "uri" || w.type === "uri")){
+                        let v_ev = data[v.value], w_ev = data[w.value]
+                        
+                        // found same event type
+                        if(v_ev[rdf+"type"] && w_ev[rdf+"type"] && v_ev[rdf+"type"].length && w_ev[rdf+"type"].length && v_ev[rdf+"type"][0].value === w_ev[rdf+"type"][0].value) {
+
+                           //console.log("nodes:",v_ev,w_ev)
+                           
+                           // found same year
+                           if(v_ev[bdo+"onYear"] && w_ev[bdo+"onYear"] && v_ev[bdo+"onYear"].length && w_ev[bdo+"onYear"].length && v_ev[bdo+"onYear"][0].value === w_ev[bdo+"onYear"][0].value) {
+                              found = w_ev[bdo+"onYear"][0] ;
+                              found.bnode = true 
+                              break ;
+                           }
+
+                           // TODO example with :eventWhere ?
+                        }                        
+                     }
                   }
                   if(!found) {                     
                      v.allSameAs = [ k ]
                      v.fromSameAs = k
                      data[uri][p].push(v)
+                     
                      //console.log("new v",JSON.stringify(v))
                   } 
                   else {
                      if(!found.allSameAs) { found.allSameAs = [ uri ] ; }
                      if(!found.fromSameAs) found.fromSameAs = k
 
-                     if(w_val.match(new RegExp(bdr))) { found.value = w_val ; }
-                     else if(v_val.match(new RegExp(bdr))) { found.value = v_val ; }
+                     if(!found.bnode) {
+                        if(w_val.match(new RegExp(bdr))) { found.value = w_val ; }
+                        else if(v_val.match(new RegExp(bdr))) { found.value = v_val ; }
+                     }
 
                      if(found.allSameAs.indexOf(k) === -1) found.allSameAs.push(k) ;
 
