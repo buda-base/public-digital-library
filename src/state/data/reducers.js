@@ -196,6 +196,7 @@ export const gotResource = (state: DataState, action: Action) => {
    const bdo   = "http://purl.bdrc.io/ontology/core/"
    const bdr   = "http://purl.bdrc.io/resource/"
    const rdf  = "http://www.w3.org/1999/02/22-rdf-syntax-ns#";
+   const rdfs = "http://www.w3.org/2000/01/rdf-schema#" ;
    let data = { ...action.meta }
    let uri = fullUri(action.payload)
    let sameR = {}, sameP = {}
@@ -279,6 +280,15 @@ export const gotResource = (state: DataState, action: Action) => {
                         found = w
                         break; 
                      }
+                     else if(p.endsWith("Name") && (v.type === "bnode" || w.type === "bnode" || v.type === "uri" || w.type === "uri")){
+                        let v_nm = data[v.value], w_nm = data[w.value]
+
+                        if(v_nm[rdf+"type"] && w_nm[rdf+"type"] && v_nm[rdf+"type"].length && w_nm[rdf+"type"].length && v_nm[rdf+"type"][0].value === w_nm[rdf+"type"][0].value) {
+
+                           console.log("nodes:",v_nm,w_nm)
+
+                        }
+                     }
                      else if(p.endsWith("Event") && (v.type === "bnode" || w.type === "bnode" || v.type === "uri" || w.type === "uri")){
                         let v_ev = data[v.value], w_ev = data[w.value]
                         
@@ -303,7 +313,7 @@ export const gotResource = (state: DataState, action: Action) => {
                      if(v.type !== "bnode" && v.type !== "uri") {
                         v.allSameAs = [ k ]
                         v.fromSameAs = k
-                     } else { 
+                     } else if(p.endsWith("Event")) { 
                         let v_ev = data[v.value]
                         if(v_ev) for(let q of [bdo+"onYear", bdo+"onDate", bdo+"eventWhere"]){
                            if(v_ev[q] && v_ev[q].length) {
@@ -312,7 +322,16 @@ export const gotResource = (state: DataState, action: Action) => {
                            }
                         }  
                         //console.log("v_ev",v_ev)
+                     } 
+                     /* // WIP
+                     else if(p.endsWith("Name")) { 
+                        let v_nm = data[v.value]
+                        if(v_nm && v_nm[rdfs+"label"] && v_nm[rdfs+"label"].length) for(let q of v_nm[rdfs+"label"]) {
+                           q.allSameAs = [ k ]
+                           q.fromSameAs = k
+                        }
                      }
+                     */
                      
                      data[uri][p].push(v)
 

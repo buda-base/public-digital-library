@@ -2248,16 +2248,27 @@ html[lang="en"] .resource .data > [data-prop="bdo:creator"] h4[data-prop="bdo:ro
 /* .resource .data.legal-props > div h4 { min-height:27px; } */
 .resource .data.legal-props > div h4 a {  display:flex; align-items: center; }
 
+
+.resource .data.legal-props > div h4 > .ulink [href*="LD_SRC_Metadata"]::before,
+.resource .data.legal-props > div h4 > .ulink [href*="LD_WD_Metadata"]::before,
+.resource .data.legal-props > div h4 > .ulink [href*="LD_DILA_BSADP"]::before,
+.resource .data.legal-props > div h4 > .ulink [href*="TOLLegalData"]::before,
 .resource .data.legal-props > div h4 > .ulink [href*="LD_IA_Metadata"]::before,
 .resource .data.legal-props > div h4 > .ulink [href*="LD_CUDL_metadata"]::before,
 .resource .data.legal-props > div h4 > .ulink [href*="LD_GRETIL"]::before,
 .resource .data.legal-props > div h4 > .ulink [href*="LD_rKTs"]::before ,
 .resource .data.legal-props > div h4 > .ulink [href*="LD_BDRC"]::before { background-image:url("/logo.svg"); background-position:center;
-   background-size:18px auto; content:' ';display:inline-block;width:25px;height:25px;  background-color:white;border-radius:13px; 
+   background-size:19px auto; content:' ';display:inline-block;width:25px;height:25px;  background-color:white;border-radius:13px; 
    background-repeat:no-repeat; margin-bottom:2px; margin-left:-45px;margin-right:20px;
     /* vertical-align:middle; position:absolute;  */
 }
 
+.resource .data.legal-props > div h4 > .ulink.src .bdr { display:none; }
+
+.resource .data.legal-props > div h4 > .ulink [href*="LD_SRC_Metadata"]::before { background-image:url("/SRC.svg"); background-size:15px auto; }
+.resource .data.legal-props > div h4 > .ulink [href*="LD_WD_Metadata"]::before { background-image:url("/WD.svg"); background-size:21px auto;}
+.resource .data.legal-props > div h4 > .ulink [href*="LD_DILA_BSADP"]::before { background-image:url("/DILA-favicon.ico"); background-size:17px auto; }
+.resource .data.legal-props > div h4 > .ulink [href*="TOLLegalData"]::before { background-image:url("/ToL.png"); background-size:23px auto; }
 .resource .data.legal-props > div h4 > .ulink [href*="LD_rKTs"]::before { background-image:url("/RKTS.png"); background-size:14px auto; }
 .resource .data.legal-props > div h4 > .ulink [href*="LD_GRETIL"]::before { background-image:url("/GRETIL.png"); background-size:14px auto; }
 .resource .data.legal-props > div h4 > .ulink [href*="LD_CUDL_metadata"]::before { background-image:url("/CUDL.svg"); background-size:14px auto; background-position: top 5px center;}
