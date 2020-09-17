@@ -5851,6 +5851,8 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          this.setState(state)
       }
 
+      let root = this.getResourceElem(bdo+"inRootInstance");
+
       let sideMenu = (rid,tag,rel,ext,outL,openV) => {
          let sRid = shortUri(rid)
          let loca = this.props.history.location
@@ -5860,7 +5862,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          return (<div>
             { tag === "Images" && <h3><Link to={view} class={(!openV?"disabled":"")}>{I18n.t("index.openViewer")}</Link></h3> }
             <h3><Link to={url+"#main-info"} >{I18n.t("index.mainInfo")}</Link></h3>
-            { tag === "Instance" && <h3><Link to={url+"#outline"} class={(!outL||!this.state.outlinePart?"disabled":"")}>{I18n.t("index.outline")}</Link></h3> }
+            { tag === "Instance" && <h3><Link to={url+"#outline"} class={(!outL||!this.state.outlinePart && root && root.length?"disabled":"")}>{I18n.t("index.outline")}</Link></h3> }
             { tag === "Work" && <h3><Link to={url+"#resources"} class={(!rel?"disabled":"")}>{I18n.t("index.related")}</Link></h3> }
              <h3><Link class={(!ext?"disabled":"")} to={url+"#ext-info"} >{I18n.t("index.extended")}</Link></h3> 
          </div>)
@@ -5871,7 +5873,6 @@ perma_menu(pdfLink,monoVol,fairUse,other)
       
 
       let inTitle 
-      let root = this.getResourceElem(bdo+"inRootInstance");
       //loggergen.log("root?",root)
       if(root && root.length) {
          inTitle  = [ 
