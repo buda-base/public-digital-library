@@ -874,8 +874,8 @@ class ResourceViewer extends Component<Props,State>
 
       if(props.resources && props.resources[props.IRI]) {
 
-         if(props.IRI && !props.outline && getEntiType(props.IRI) === "Instance" && props.config && state.outlinePart) props.onGetOutline(props.IRI)
-         if(state.outlinePart && props.outlines && !props.outlines[state.outlinePart] && props.config && state.outlinePart) props.onGetOutline(state.outlinePart)
+         if(props.IRI && !props.outline && getEntiType(props.IRI) === "Instance" && props.config) props.onGetOutline(props.IRI)
+         if(state.outlinePart && props.outlines && !props.outlines[state.outlinePart] && props.config) props.onGetOutline(state.outlinePart)
 
          let root = getElem(bdo+"inRootInstance",props.IRI)
          if(root && root.length) {
