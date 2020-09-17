@@ -124,7 +124,8 @@ const enTranslation = {
       tempo:"Temporarily Restricted",
       sealed:"Sealed",
       view:"View Scans",
-      scans:"Scans Available"
+      scans:"Scans Available",
+      provided:"Data provided by {{- provider}}"
    },
    prop:{
       "tmp:bestMatch":"Best Match",

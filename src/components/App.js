@@ -2687,7 +2687,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
       let enType = getEntiType(id).toLowerCase()
 
-      let hasThumb = allProps.filter(a => a.type === tmp+"thumbnailIIIFService"), hasCopyR, viewUrl,access, hasProv
+      let hasThumb = allProps.filter(a => a.type === tmp+"thumbnailIIIFService"), hasCopyR, viewUrl,access
       if(hasThumb.length) { 
          hasThumb = hasThumb[0].value 
          if(hasThumb) {             
@@ -2721,15 +2721,17 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                //if(access.includes("Restricted")) { hasCopyR = "restricted"; hasThumb = []; }
             }
 
-            let prov = allProps.filter(a => a.type === tmp+"provider")
-            if(prov && prov.length && this.props.dictionary) prov = this.props.dictionary[prov[0].value]
-            if(prov && prov[skos+"prefLabel"] && prov[skos+"prefLabel"]) prov = (""+prov[skos+"prefLabel"][0].value).toLowerCase()
-            if(prov) prov = prov.replace(/(^\[ *)|( *\]$)/g,"") // CUDL
-            if(prov) prov = prov.replace(/Internet Archives/g,"ia") 
-            if(prov && prov !== "bdrc" && img[prov]) hasProv = <img class="provImg" title={providers[prov]} src={img[prov]}/>
-            //console.log("prov:",prov)
          }
       }
+
+      let hasProv, prov = allProps.filter(a => a.type === tmp+"provider")
+      if(prov && prov.length && this.props.dictionary) prov = this.props.dictionary[prov[0].value]
+      if(prov && prov[skos+"prefLabel"] && prov[skos+"prefLabel"]) prov = (""+prov[skos+"prefLabel"].filter(p=>!p.lang || p.lang === "en")[0].value).toLowerCase()
+      else prov = false
+      console.log("prov:",prov)
+      if(prov) prov = prov.replace(/(^\[ *)|( *\]$)/g,"") // CUDL
+      if(prov) prov = prov.replace(/internet archives/g,"ia") 
+      if(prov && prov !== "bdrc" && img[prov]) hasProv = <img class={"provImg "+prov} title={I18n.t("copyright.provided",{provider:providers[prov]})} src={img[prov]}/>
 
 
     
@@ -2848,7 +2850,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   }</div>, 
                   <div>{
                      getIconLink(resUrl,<img src={"/icons/search/"+enType+"_.svg"}/>)
-                  }</div>] }
+                  }</div>] }                  
                <div class="RID">{prettId}</div>
                {hasProv}
                {/* <span>{hasCopyR}</span> */}

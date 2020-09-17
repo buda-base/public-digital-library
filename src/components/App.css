@@ -713,8 +713,13 @@ a.result + #matches .result-content::before { left:110px; width:calc(100% - 110p
 
 .result-content #icon.wCopyR > a img { width:24px !important; margin-bottom:4px; }
 
-.result-content #icon.wCopyR .provImg { vertical-align: text-bottom; margin-right:0; height:36px; }
+.result-content #icon .provImg { vertical-align: baseline; margin-right:0 !important; height:36px; width:auto !important;}
 
+.result-content #icon .provImg.cudl,
+.result-content #icon .provImg.gretil,
+.result-content #icon .provImg.ia { height:24px; }
+
+.result-content #icon:not(.wCopyR) .provImg { margin-top:8px; }
 /*
 .result-content #icon.lineage img { width:80px;}
 
