@@ -5199,6 +5199,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
             if(this.props.outlines[opart] && this.props.outlines[opart] !== true && this.state.collapse["outline-"+root+"-"+opart+"-details"] === undefined) {
 
                Object.keys(collapse).filter(k => k.startsWith("outline-"+root)).map(k => { delete collapse[k]; })
+               collapse["outline-"+root+"-"+opart] = true
                collapse["outline-"+root+"-"+opart+"-details"] = true          
 
                let nodes = this.props.outlines[opart]
