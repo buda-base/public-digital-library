@@ -34,7 +34,7 @@ var transinfos = {
 		"alphanok": ""
 	},
 	"iast": {
-		"nonalphaok": "ṁṀm̐M̐ṃṂ-|āĀīĪūŪṛṚṝṜḷḶḹḸḥḤṅṄñÑṭṬḍḌṇṆśŚṣṢḻḺ",
+		"nonalphaok": "ṁṀm̐M̐ṃṂ-|āĀīĪūŪṛṚṝṜḷḶḹḸḥḤṅṄñÑṭṬḍḌṇṆśŚṣṢḻḺ̣̄́̇◌̃",
 		"alphanok": "fx"
 	}
 };
