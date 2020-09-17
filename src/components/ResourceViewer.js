@@ -874,13 +874,13 @@ class ResourceViewer extends Component<Props,State>
 
       if(props.resources && props.resources[props.IRI]) {
 
-         if(props.IRI && !props.outline && getEntiType(props.IRI) === "Instance" && props.config) props.onGetOutline(props.IRI)
-         if(state.outlinePart && props.outlines && !props.outlines[state.outlinePart] && props.config) props.onGetOutline(state.outlinePart)
+         if(props.IRI && !props.outline && getEntiType(props.IRI) === "Instance" && props.config && state.outlinePart) props.onGetOutline(props.IRI)
+         if(state.outlinePart && props.outlines && !props.outlines[state.outlinePart] && props.config && state.outlinePart) props.onGetOutline(state.outlinePart)
 
          let root = getElem(bdo+"inRootInstance",props.IRI)
          if(root && root.length) {
             let shR = shortUri(root[0].value)
-            if(props.outlines && !props.outlines[shR] && props.config) props.onGetOutline(shR)
+            if(props.outlines && !props.outlines[shR] && props.config && state.outlinePart) props.onGetOutline(shR)
          }
 
          let 
@@ -5130,7 +5130,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
             loggergen.log("toggle!",tag,val)
 
             this.setState( { collapse:{...this.state.collapse, [tag]:!val } })
-            if((!this.props.outlineKW || force || node && node.notMatch) &&  !x && this.props.outlines && (!this.props.outlines[i] || force && r === i) )this.props.onGetOutline(i);
+            if(this.state.outlinePart && (!this.props.outlineKW || force || node && node.notMatch) &&  !x && this.props.outlines && (!this.props.outlines[i] || force && r === i) )this.props.onGetOutline(i);
          }
 
 
@@ -5223,7 +5223,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                //loggergen.log("collapse?",JSON.stringify(collapse,null,3))
 
                
-               if(opart) {
+               if(opart && this.state.outlinePart) {
                   const el = document.querySelector("#outline")
                   if(el) el.scrollIntoView()      
                }
@@ -5567,7 +5567,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
          let colT = <span class={"parTy"} title={I18n.t("Lsidebar.collection.title")}><div>COL</div></span>
 
-         if(opart) { 
+         if(opart && this.state.outlinePart) { 
             let _this = this, timinter = setInterval(()=>{
                const el = document.querySelector("#outline .is-root")
                if(el) { 
@@ -5962,7 +5962,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
             if(this.props.outlines && this.props.outlines[sRid] !== undefined  && this.props.outlines[sRid]) {
                if(this.props.outlines[sRid]["@graph"] &&  this.props.outlines[sRid]["@graph"].filter &&  this.props.outlines[sRid]["@graph"].filter(n => n.hasPart).length) iOutline = true
             }
-            else if(this.props.config) {
+            else if(this.props.config && this.state.outlinePart) {
                this.props.onGetOutline(sRid);
             }
          }
