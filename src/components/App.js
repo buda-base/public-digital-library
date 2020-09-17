@@ -2687,7 +2687,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
       let enType = getEntiType(id).toLowerCase()
 
-      let hasThumb = allProps.filter(a => a.type === tmp+"thumbnailIIIFService"), hasCopyR, viewUrl,access
+      let hasThumb = allProps.filter(a => a.type === tmp+"thumbnailIIIFService"), hasCopyR, viewUrl,access, hasProv
       if(hasThumb.length) { 
          hasThumb = hasThumb[0].value 
          if(hasThumb) {             
@@ -2720,6 +2720,14 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                else if(access.includes("Open")) hasCopyR = "copyleft"
                //if(access.includes("Restricted")) { hasCopyR = "restricted"; hasThumb = []; }
             }
+
+            let prov = allProps.filter(a => a.type === tmp+"provider")
+            if(prov && prov.length && this.props.dictionary) prov = this.props.dictionary[prov[0].value]
+            if(prov && prov[skos+"prefLabel"] && prov[skos+"prefLabel"]) prov = (""+prov[skos+"prefLabel"][0].value).toLowerCase()
+            if(prov) prov = prov.replace(/(^\[ *)|( *\]$)/g,"") // CUDL
+            if(prov) prov = prov.replace(/Internet Archives/g,"ia") 
+            if(prov && prov !== "bdrc" && img[prov]) hasProv = <img class="provImg" title={providers[prov]} src={img[prov]}/>
+            //console.log("prov:",prov)
          }
       }
 
@@ -2842,6 +2850,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      getIconLink(resUrl,<img src={"/icons/search/"+enType+"_.svg"}/>)
                   }</div>] }
                <div class="RID">{prettId}</div>
+               {hasProv}
                {/* <span>{hasCopyR}</span> */}
                {hasCopyR === "copyleft" && <img title={I18n.t("copyright.open")} src="/icons/open.svg"/>}
                {hasCopyR === "fair_use" && <img title={I18n.t("copyright.fairUse")} src="/icons/fair_use.svg"/>}
@@ -3038,7 +3047,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             { this.getResultProp("tmp:nameMatch",allProps,true,false,[ tmp+"nameMatch" ]) } {/* //,true,false) } */}
 
 
-            { this.getResultProp("bdo:note",allProps,true,false,[ tmp+"noteMatch" ]) }
+            {/* { this.getResultProp("bdo:note",allProps,true,false,[ tmp+"noteMatch" ]) } // see biblioNote below */}
 
 
             { this.getResultProp(I18n.t("prop.tmp:relationType"),allProps,true,false,[ tmp+"relationType" ]) } 
@@ -5276,7 +5285,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                                  // DONE use thumbnail when available
                                  let thumb = this.props.latestSyncs[s][tmp+"thumbnailIIIFService"]
                                  if(thumb && thumb.length) thumb = thumb[0].value 
-                                 console.log("thumb",thumb)
+                                 //console.log("thumb",thumb)
                                  return (
                                     <div>
                                        <a href={uri}><div class={"header "+(thumb?"thumb":"")} {...thumb?{style:{"background-image":"url("+ thumb+"/full/,195/0/default.jpg)"}}:{}}></div></a>

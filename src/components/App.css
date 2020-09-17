@@ -712,6 +712,9 @@ a.result + #matches .result-content::before { left:110px; width:calc(100% - 110p
 .result-content #icon.wCopyR { margin-bottom:50px; }
 
 .result-content #icon.wCopyR > a img { width:24px !important; margin-bottom:4px; }
+
+.result-content #icon.wCopyR .provImg { vertical-align: text-bottom; margin-right:0; height:36px; }
+
 /*
 .result-content #icon.lineage img { width:80px;}
 
