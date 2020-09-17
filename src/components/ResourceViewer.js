@@ -5944,7 +5944,8 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          let theDataExt = this.renderData(extProps,iiifpres,title,otherLabels,"ext-props")      
          let theDataLegal = this.renderData([adm+"metadataLegal"],iiifpres,title,otherLabels,"legal-props")      
          
-         let theOutline = this.renderOutline()      
+         let theOutline ;
+         if(!root || !root.length) theOutline = this.renderOutline()      
 
          let etext = this.isEtext()
 
