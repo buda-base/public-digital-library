@@ -224,6 +224,7 @@ export const providers = {
    "har":"Himalayan Art",
    "ia":"Internet Archives",                 
    "gretil":"GRETIL",
+   "loc":"Library of Congress",
    "mbbt":"Marcus Bingenheimer's website",
    "ngmpp":"NGMPP",
    "rkts":"rKTs",
@@ -250,6 +251,7 @@ export const provImg = {
    "gretil": "/GRETIL.png",
    "har": "/HAR.png",
    "ia": "/IA.png",
+   "loc":"/LOC.svg",
    "mbbt": "/MB-icon.jpg",
    "ngmpp":"/NGMPP.svg",
    "ola":  "/OL.png",  //"https://openlibrary.org/static/images/openlibrary-logo-tighter.svg" //"https://seeklogo.com/images/O/open-library-logo-0AB99DA900-seeklogo.com.png", 
@@ -1970,6 +1972,7 @@ class ResourceViewer extends Component<Props,State>
          else if(provLab === "EAP") sameAsPrefix += "eap provider hasIcon "
          else if(provLab === "BnF") sameAsPrefix += "bnf provider hasIcon "
          else if(provLab === "Internet Archives") sameAsPrefix += "ia provider hasIcon "
+         else if(provLab === "Library of Congress") sameAsPrefix += "loc provider hasIcon "
          else if(provLab === "EFT") sameAsPrefix += "eftr provider hasIcon "
          else if(provLab === "CUDL") sameAsPrefix += "cudl provider hasIcon "
          //else if(provLab === "rKTs") sameAsPrefix += "rkts provider hasIcon "
@@ -3209,7 +3212,7 @@ class ResourceViewer extends Component<Props,State>
                            else if(v.type == 'uri') txt = this.uriformat(f,v)
                            else if(v.type === 'literal' && v.datatype === xsd+"gYear") {
 
-                              txt = [txt.replace(/^0+/,""),<Tooltip placement="bottom-end" title={<div style={{margin:"10px"}}>{"Gregorian Calendar"}</div>}><span className="lang">{"GC"}</span></Tooltip>]
+                              txt = [txt.replace(/^(-?)0+/,"$1"),<Tooltip placement="bottom-end" title={<div style={{margin:"10px"}}>{"Gregorian Calendar"}</div>}><span className="lang">{"GC"}</span></Tooltip>]
                            }
                            else if(v.type === 'literal' && v.datatype && this.props.dictionary && (dic = this.props.dictionary[v.datatype]) && dic[rdfs+"subClassOf"] 
                               && dic[rdfs+"subClassOf"].filter(s => s.value === bdo+"AnyDate").length) {
@@ -4200,6 +4203,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
       if(prov && prov.length) prov = prov[0].value
       if(prov) prov = prov.replace(/(^\[ *)|( *\]$)/g,"") // CUDL
       if(prov) prov = prov.replace(/Internet Archives/g,"IA") 
+      if(prov) prov = prov.replace(/Library of Congress/g,"LOC") 
 
       //else prov = ""
 
@@ -4936,6 +4940,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          if(prov && prov.length) prov = prov[0].value
          if(prov) prov = prov.replace(/(^\[ *)|( *\]$)/g,"") // CUDL
          if(prov) prov = prov.replace(/Internet Archives/g,"IA") 
+         if(prov) prov = prov.replace(/Library of Congress/g,"LOC") 
          //else prov = ""
 
          orig = this.getResourceElem(adm+"originalRecord")
@@ -5655,7 +5660,8 @@ perma_menu(pdfLink,monoVol,fairUse,other)
       if(legal && legal.length && legal[0].value && this.props.dictionary) { 
          legalD = this.props.dictionary[legal[0].value]
          
-         let prov = legalD[adm+"provider"]
+         let prov ;
+         if(legalD) prov = legalD[adm+"provider"]
          if(prov && prov.length) prov = prov[0].value
          if(prov && this.props.dictionary) prov = this.props.dictionary[prov]
          if(prov && prov[skos+"prefLabel"]) prov = prov[skos+"prefLabel"]
@@ -5664,6 +5670,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          if(prov && prov.length) prov = prov[0].value
          if(prov) prov = prov.replace(/(^\[ *)|( *\]$)/g,"") // CUDL
          if(prov) prov = prov.replace(/Internet Archives/g,"IA") 
+         if(prov) prov = prov.replace(/Library of Congress/g,"LOC") 
          
          return prov
       }

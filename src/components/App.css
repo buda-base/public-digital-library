@@ -713,7 +713,11 @@ a.result + #matches .result-content::before { left:110px; width:calc(100% - 110p
 
 .result-content #icon.wCopyR > a img { width:24px !important; margin-bottom:4px; }
 
+.result-content.otherSrc #icon .provImg { display:none;}
+
 .result-content #icon .provImg { vertical-align: baseline; margin-right:0 !important; height:36px; width:auto !important;}
+
+.result-content #icon .provImg.loc {height:15px;}
 
 .result-content #icon .provImg.cudl,
 .result-content #icon .provImg.gretil,
@@ -1428,6 +1432,8 @@ vertical-align:middle;}
 /* ------------------------------------------------------------------------------------------------------------------------ permalink */
 
 .resource .data#perma { background-color:#ffffff; padding:0 35px 50px 35px;}
+
+#perma #same .provider.loc img { height:16px;}
 
 #perma #same .provider.tol { background:white;border-radius:50%;}
 #perma #same .provider.tol img { width:28px;height:28px;}
@@ -2259,6 +2265,8 @@ html[lang="en"] .resource .data > [data-prop="bdo:creator"] h4[data-prop="bdo:ro
 .resource .data.legal-props > div h4 a {  display:flex; align-items: center; }
 
 
+.resource .data.legal-props > div h4 > .ulink > a[href*="LOC_metadata"]::before,
+.resource .data.legal-props > div h4 > .ulink > a[href*="mbingenheimer"]::before,
 .resource .data.legal-props > div h4 > .ulink [href*="LD_SRC_Metadata"]::before,
 .resource .data.legal-props > div h4 > .ulink [href*="LD_WD_Metadata"]::before,
 .resource .data.legal-props > div h4 > .ulink [href*="LD_DILA_BSADP"]::before,
@@ -2271,10 +2279,15 @@ html[lang="en"] .resource .data > [data-prop="bdo:creator"] h4[data-prop="bdo:ro
    background-size:19px auto; content:' ';display:inline-block;width:25px;height:25px;  background-color:white;border-radius:13px; 
    background-repeat:no-repeat; margin-bottom:2px; margin-left:-45px;margin-right:20px;
     /* vertical-align:middle; position:absolute;  */
+   flex-shrink:0;
 }
+
+.resource .data.legal-props > div h4 > .ulink.mbbt > span { margin-right:0; opacity:0; pointer-events:none;}
 
 .resource .data.legal-props > div h4 > .ulink.src .bdr { display:none; }
 
+.resource .data.legal-props > div h4 > .ulink > a[href*="LOC_metadata"]::before { background-image:url("/LOC.svg"); background-size:23px auto;}
+.resource .data.legal-props > div h4 > .ulink > a[href*="mbingenheimer"]::before { background-image:url("/MB-icon.jpg"); background-size:15px auto; }
 .resource .data.legal-props > div h4 > .ulink [href*="LD_SRC_Metadata"]::before { background-image:url("/SRC.svg"); background-size:15px auto; }
 .resource .data.legal-props > div h4 > .ulink [href*="LD_WD_Metadata"]::before { background-image:url("/WD.svg"); background-size:21px auto;}
 .resource .data.legal-props > div h4 > .ulink [href*="LD_DILA_BSADP"]::before { background-image:url("/DILA-favicon.ico"); background-size:17px auto; }

@@ -121,10 +121,11 @@ const ngmpp = "https://catalogue.ngmcp.uni-hamburg.de/receive/"
 const sat   = "http://21dzk.l.u-tokyo.ac.jp/SAT2018/"
 const src   = "https://sakyaresearch.org/"
 const tol   = "http://api.treasuryoflives.org/resource/";
+const loc   = "http://lccn.loc.gov/"
 
 
 export const prefixesMap = { adm, bda, bdac, bdan, bdo, bdou, bdr, bdu, bf, cbcp, cbct, dila, eftr, foaf, oa, mbbt, owl, rdf, rdfs, rkts, skos, wd, ola, viaf, xsd, tmp, 
-   cbeta, har, ngmpp, sat, src, tol }
+   cbeta, har, loc, ngmpp, sat, src, tol }
 export const prefixes = Object.values(prefixesMap) ;
 export const sameAsMap = { wd:"WikiData", ol:"Open Library", ola:"Open Library", bdr:"BDRC", mbbt:"Marcus Bingenheimer", eftr:"84000" }
 
@@ -2731,6 +2732,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
       console.log("prov:",prov)
       if(prov) prov = prov.replace(/(^\[ *)|( *\]$)/g,"") // CUDL
       if(prov) prov = prov.replace(/internet archives/g,"ia") 
+      if(prov) prov = prov.replace(/library of congress/g,"loc") 
       if(prov && prov !== "bdrc" && img[prov]) hasProv = <img class={"provImg "+prov} title={I18n.t("copyright.provided",{provider:providers[prov]})} src={img[prov]}/>
 
 
@@ -3128,7 +3130,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
           </a>
        </CopyToClipboard> )
 
-      retList = <div {... (!isInstance?{id:"result-"+n}:{})} ref={this._refs[n]} className={"result-content " + status + " " + enType + (hasThumb.length?" wThumb":"")}>{retList}</div>
+      retList = <div {... (!isInstance?{id:"result-"+n}:{})} ref={this._refs[n]} className={"result-content " + (otherSrc && otherSrc.length?"otherSrc ":"") + status + " " + enType + (hasThumb.length?" wThumb":"")}>{retList}</div>
 
 
 
