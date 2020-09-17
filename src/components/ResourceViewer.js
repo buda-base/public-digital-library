@@ -5130,7 +5130,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
             loggergen.log("toggle!",tag,val)
 
             this.setState( { collapse:{...this.state.collapse, [tag]:!val } })
-            if(this.state.outlinePart && (!this.props.outlineKW || force || node && node.notMatch) &&  !x && this.props.outlines && (!this.props.outlines[i] || force && r === i) )this.props.onGetOutline(i);
+            if(/*this.state.outlinePart  &&*/ (!this.props.outlineKW || force || node && node.notMatch) &&  !x && this.props.outlines && (!this.props.outlines[i] || force && r === i) )this.props.onGetOutline(i);
          }
 
 
