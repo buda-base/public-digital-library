@@ -1259,9 +1259,16 @@ class App extends Component<Props,State> {
             }
          }
 
+         if(s.uriPage) delete s.uriPage
+
       }
       else {
          newid = null
+
+         if(props.keyword === "(latest)" && state.uriPage !== undefined) {
+            if(!s) s = { ...state }
+            delete s.uriPage
+         }
       }
 
       let needRefresh, time, current ;
