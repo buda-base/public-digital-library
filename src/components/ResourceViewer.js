@@ -1695,7 +1695,10 @@ class ResourceViewer extends Component<Props,State>
 
    fullname(prop:string,isUrl:boolean=false,noNewline:boolean=false,useUIlang:boolean=false,canSpan = true,count?:integer=1)
    {
-
+      if(prop && !prop.replace) {
+         console.warn("prop:?:",prop)
+         return prop
+      }
 
       for(let p of Object.keys(prefixes)) { prop = prop.replace(new RegExp(p+":","g"),prefixes[p]) }
 
@@ -1987,7 +1990,14 @@ class ResourceViewer extends Component<Props,State>
 
    uriformat(prop:string,elem:{},dic:{} = this.props.assocResources, withProp?:string,show?:string="show")
    {
+
+
       if(elem) {
+
+         if(elem && elem.value && !elem.value.match) {
+            console.warn("elem:?:",elem)
+            return JSON.stringify(elem);
+         }
 
          //loggergen.log("uriformat",prop,elem.value,elem,dic,withProp,show)
          
@@ -5281,7 +5291,9 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                   if(node.length && node[0].hasPart) { 
                      if(!Array.isArray(node[0].hasPart)) node[0].hasPart = [ node[0].hasPart ]
                      for(let e of node[0].hasPart) {
+                        
                         //loggergen.log("node:",e)  
+
                         let w_idx = elem.filter(f => f["@id"] === e) 
                         if(w_idx.length) {
                            //loggergen.log("found:",w_idx[0])  
@@ -5389,6 +5401,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
 
                               if(g.instanceOf) {
+                                 //if(Array.isArray(g.instanceOf)) g.instanceOf = 
                                  if(!g.details) g.details = []
                                  g.details.push(<div class="sub"><h4 class="first type">{this.proplink(tmp+"instanceOfWork")}{I18n.t("punc.colon")} </h4>{this.format("h4","instacO","",false, "sub", [{type:"uri",value:fullUri(g.instanceOf)}])}</div>)
                                  let instOf = elem.filter(f => f["@id"] === g.instanceOf)
