@@ -913,6 +913,8 @@ class App extends Component<Props,State> {
       let uriPage = this.state.uriPage
       if(uriPage !== pg && this.state.paginate && this.state.paginate.index !== pg && this.state.paginate.pages.length >= pg) {
          uriPage = pg
+      } else if(pg === undefined) {
+         uriPage = 0
       }
 
       if(this.state.uriPage !== uriPage || this.state.backToWorks !== backToWorks || (encoded !== this.state.filters.encoded ) || (scrolled && this.state.scrolled !== scrolled) )
