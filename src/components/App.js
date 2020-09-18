@@ -838,7 +838,7 @@ class App extends Component<Props,State> {
 
    componentDidUpdate() {
       
-      loggergen.log("didU",this.state) //,this._refs)
+      loggergen.log("didU",this.state,this.state.uriPage) //,this._refs)
 
 
       report_GA(this.props.config,this.props.history.location);
@@ -908,10 +908,15 @@ class App extends Component<Props,State> {
          }
       }
 
-      loggergen.log("encoded=|"+encoded+"|"+this.state.filters.encoded+"|")
+      loggergen.log("encoded=|"+encoded+"|"+this.state.filters.encoded+"| pg="+pg)
 
-      if(this.state.uriPage !== pg || this.state.backToWorks !== backToWorks || (encoded !== this.state.filters.encoded ) || (scrolled && this.state.scrolled !== scrolled) )
-         this.setState({...this.state, repage:true, uriPage:pg, backToWorks, scrolled, collapse, ...(filters?{filters}:{})})
+      let uriPage = this.state.uriPage
+      if(uriPage !== pg && this.state.paginate && this.state.paginate.index !== pg && this.state.paginate.pages.length >= pg) {
+         uriPage = pg
+      }
+
+      if(this.state.uriPage !== uriPage || this.state.backToWorks !== backToWorks || (encoded !== this.state.filters.encoded ) || (scrolled && this.state.scrolled !== scrolled) )
+         this.setState({...this.state, repage:true, uriPage, backToWorks, scrolled, collapse, ...(filters?{filters}:{})})
 
    }
 
@@ -1677,7 +1682,7 @@ class App extends Component<Props,State> {
          state.filters.preload = true
 
          let {pathname,search} = this.props.history.location
-         search = search.replace(/(&([nf]|pg)=[^&]+)/g,"")+"&pg=1"+getFacetUrl(state.filters,this.props.config.facets[state.filters.datatype[0]])+(this.props.latest&&!(""+search).match(/t=/)?"&t=Scan":"")
+         search = search.replace(/([&?]([nf]|pg)=[^&]+)/g,"")+"&pg=1"+getFacetUrl(state.filters,this.props.config.facets[state.filters.datatype[0]])+(this.props.latest&&!(""+search).match(/t=/)?"&t=Scan":"")
          search = search.replace(/(\?&)|(^&)/,"?")
          this.props.history.push({pathname,search })
       }
@@ -2106,7 +2111,9 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          }) 
 
          let {pathname,search} = this.props.history.location
-         this.props.history.push({pathname,search:search.replace(/(&(n|pg)=[^&]+)/g,"")+"&pg="+(state.index - 1 + 1)+"&n="+(state.n[state.index - 1]+1)})
+         search = search.replace(/(([&?])(n|pg)=[^&]+)/g,"")
+         if(search) search += "&"
+         this.props.history.push({pathname,search:search+"pg="+(state.index - 1 + 1)+"&n="+(state.n[state.index - 1]+1)})
       }
    }
 
@@ -2121,7 +2128,9 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          }) 
 
          let {pathname,search} = this.props.history.location
-         this.props.history.push({pathname,search:search.replace(/(&(n|pg)=[^&]+)/g,"")+"&pg="+(i)+"&n="+(state.n[i-1]+1)})
+         search = search.replace(/(([&?])(n|pg)=[^&]+)/g,"")
+         if(search) search += "&"
+         this.props.history.push({pathname,search:search+"pg="+(i)+"&n="+(state.n[i-1]+1)})
       }
    }
 
@@ -2135,7 +2144,9 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          }) 
 
          let {pathname,search} = this.props.history.location
-         this.props.history.push({pathname,search:search.replace(/(&(n|pg)=[^&]+)/g,"")+"&pg="+(state.index + 1 + 1)+"&n="+(state.n[state.index + 1]+1)})
+         search = search.replace(/(([&?])(n|pg)=[^&]+)/g,"")
+         if(search) search += "&"
+         this.props.history.push({pathname,search:search+"pg="+(state.index + 1 + 1)+"&n="+(state.n[state.index + 1]+1)})
       }
    }
 
@@ -3420,7 +3431,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          
          if(t === "Any") continue ;
 
-         //loggergen.log("t",t,list,pagin)
+         // DONE uriPage is set to a page that does not exist... yet
+         //loggergen.log("dT:",t,list,pagin,this.state.uriPage)
 
          let iniTitle = false 
          let sublist = list[t.toLowerCase()+"s"]         
@@ -3637,7 +3649,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             //if(r.f && r.f.value) typ = r.f.value.replace(/^.*?([^/]+)$/,"$1")
 
 
-            loggergen.log("sublist:",o,sublist[o],r,label,lit);
+            //loggergen.log("sublist:",o,sublist[o],r,label,lit);
 
             let filtered = true ;
 
