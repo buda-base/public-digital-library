@@ -1465,6 +1465,8 @@ vertical-align:middle;}
 
 #popLang.black > div:last-child li { padding-left:10px; }
 
+#popHoverM .resource .data {/* width:100%;*/margin-left:0; }
+
 #popHoverM #anchor { position:absolute; right:57px; margin-top:-3px; }
 
 /* #popHoverM .resource .data > div[data-prop] > h3 { margin-top:-4px;} */
@@ -1507,7 +1509,7 @@ vertical-align:middle;}
 #popHoverM .resource .data .sub > .subgroup > .subsub > h4::before,
 #popHoverM .resource .data .group h4::before { opacity:1 !important; }
 
-#popHoverM > div:last-child { width:953px; box-shadow:0 3px 4px #cecece,0 -1px 4px #cecece; 
+#popHoverM > div:last-child { width:953px; box-shadow:0 3px 4px #cecece,0 -1px 4px #cecece; max-width:1000px;
    left:calc((100vw - 1440px)/2 + 324px) !important; /* TODO fix when width under ~1250px */
 }
 
@@ -1556,7 +1558,7 @@ vertical-align:middle;}
 
 #popHoverM + #popHoverM {display:none !important; }
 
-#popHoverM { margin-top:-25px; }
+#popHoverM { top:-53px !important;left:63px !important; }
 #popSame { margin-top:-10px; z-index:1000000; }
 #popDL { margin-top:30px; }
 
@@ -2481,6 +2483,8 @@ html[lang="en"] .resource .data > [data-prop="bdo:creator"] h4[data-prop="bdo:ro
 .resource .data .sub .subsub a.propref { font-weight:400;letter-spacing:0px; font-size:14px;}
 .resource .data h3 a.propref:hover,.resource .data h4 a.propref:hover { border-bottom:1px solid black;}
 
+
+div[role="tooltip"]#popHoverM > div > div { color:black; }
 
 div[role="tooltip"] { margin:0px;  opacity:1;  }
 div[role="tooltip"] > div { font-weight:500;font-size:12px; background-color:white; border-radius:0; color:#4d4d4d;padding:0; max-width:450px;

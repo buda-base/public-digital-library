@@ -75,6 +75,8 @@ import {numtobo} from '../lib/language';
 import {languages,getLangLabel,top_right_menu,prefixesMap as prefixes,sameAsMap,shortUri,fullUri,highlight,lang_selec,langSelect,searchLangSelec,report_GA,getGDPRconsent} from './App';
 import {narrowWithString} from "../lib/langdetect"
 import Popover from '@material-ui/core/Popover';
+import Popper from '@material-ui/core/Popper';
+import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import MenuItem from '@material-ui/core/MenuItem';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -2537,21 +2539,34 @@ class ResourceViewer extends Component<Props,State>
                   <img src="/icons/info.svg" onClick={toggleHoverM} />
                </span> 
             }
-
-            <Popover 
+            <Popper
                data-ID={ID}
                id="popHoverM"
                data-class={(e.start !== undefined?"in-etext":"")}
                marginThreshold={0}
                open={this.state.collapse["hover"+ID]}
-               anchorOrigin={{horizontal:"right",vertical:"top"}}
-               transformOrigin={{horizontal:"right",vertical:"top"}}
+               //anchorOrigin={{horizontal:"right",vertical:"top"}}
+               //transformOrigin={{horizontal:"right",vertical:"top"}}
+               placement="bottom-end"
                anchorEl={this.state.anchorEl["hover"+ID]}
                onClose={() => this.setState({...this.state,collapse:{...this.state.collapse,["hover"+ID]:false} } ) }
                TransitionComponent={Fade}
+               modifiers={{
+                  flip: {
+                     enabled: false
+                  },
+                  preventOverflow: {
+                     enabled: true,
+                     boundariesElement: "scrollParent"
+                  }
+               }}
                >
+            <ClickAwayListener onClickAway={() => {
+               console.log("clickA",ID)
+               this.setState({collapse:{...this.state.collapse, ["hover"+ID]:false}})
+            }}>
                { prop && 
-                  <div class={"resource"}>
+                  <div><div class={"resource"}>
                      <div class="data">
                         <span id="anchor">                         
                            <img src="/icons/info.svg"/>
@@ -2606,9 +2621,10 @@ class ResourceViewer extends Component<Props,State>
                         </div>
                      </div>
                   </div>
+                  </div>
                }
-            </Popover>
-         
+            </ClickAwayListener >
+            </Popper>
             
          </div>
 
@@ -2876,8 +2892,11 @@ class ResourceViewer extends Component<Props,State>
 
             const {befo,bdrcData} = this.getSameLink(e,sameAsPrefix)            
 
-            if(!txt) ret.push(<Tag className={(elem && elem.length > 1?"multiple ":"") + (sameAsPrefix?sameAsPrefix+" sameAs hasIcon":"") }>{befo}{tmp}{bdrcData}</Tag>)
-            else ret.push(<Tag className={(elem && elem.length > 1?"multiple ":"") +  (sameAsPrefix?sameAsPrefix+" sameAs hasIcon":"") }>{befo}{tmp+" "+txt}{bdrcData}</Tag>)
+            let ID = "ID-"+prop+"-"+(e&&e.value?e.value:e)      
+            let toggleHoverM = (ev) => this.setState({...this.state,collapse:{...this.state.collapse,["hover"+ID]:!this.state.collapse["hover"+ID]}, anchorEl:{...this.state.anchorEl,["hover"+ID]:ev.currentTarget} } ) 
+
+            if(!txt) ret.push(<Tag onClick={toggleHoverM} className={(elem && elem.length > 1?"multiple ":"") + (sameAsPrefix?sameAsPrefix+" sameAs hasIcon":"") }>{befo}{tmp}{bdrcData}</Tag>)
+            else ret.push(<Tag onClick={toggleHoverM} className={(elem && elem.length > 1?"multiple ":"") +  (sameAsPrefix?sameAsPrefix+" sameAs hasIcon":"") }>{befo}{tmp+" "+txt}{bdrcData}</Tag>)
 
 
             //loggergen.log("ret",ret)
