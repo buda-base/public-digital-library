@@ -38,8 +38,9 @@ let waiter = setInterval( async ()=>{
       //init();
       const work = urlParams.get('work') || "bdr:W22084";
       let lg = urlParams.get('lang') || "bo,zh-hans";
+      let uilg = urlParams.get('uilang') || "bo";
       lg = lg.split(",")
-      window.miradorInitView(work,lg);
+      window.miradorInitView(work,lg,null,uilg);
    }
 
 },100)

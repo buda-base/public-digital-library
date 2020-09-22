@@ -117,17 +117,23 @@ const xsd   = "http://www.w3.org/2001/XMLSchema#" ;
 // experimental
 const cbeta = "http://cbetaonline.dila.edu.tw/"
 const har   = "http://www.himalayanart.org/search/"
+const ngmpp = "https://catalogue.ngmcp.uni-hamburg.de/receive/"
 const sat   = "http://21dzk.l.u-tokyo.ac.jp/SAT2018/"
 const src   = "https://sakyaresearch.org/"
 const tol   = "http://api.treasuryoflives.org/resource/";
+const loc   = "http://lccn.loc.gov/"
 
 
 export const prefixesMap = { adm, bda, bdac, bdan, bdo, bdou, bdr, bdu, bf, cbcp, cbct, dila, eftr, foaf, oa, mbbt, owl, rdf, rdfs, rkts, skos, wd, ola, viaf, xsd, tmp, 
-   cbeta, har, sat, src, tol }
+   cbeta, har, loc, ngmpp, sat, src, tol }
 export const prefixes = Object.values(prefixesMap) ;
 export const sameAsMap = { wd:"WikiData", ol:"Open Library", ola:"Open Library", bdr:"BDRC", mbbt:"Marcus Bingenheimer", eftr:"84000" }
 
-export function fullUri(id:string, force:boolean=false) {
+export function fullUri(id:string, force:boolean=false) {   
+   if(id && !id.replace) {
+      console.warn("id:?:",id)
+      return id
+   }
    if(force && id.indexOf(":") === -1) id = bdo + id
    else for(let k of Object.keys(prefixesMap)) {
       id = id.replace(new RegExp(k+":"),prefixesMap[k])
@@ -183,6 +189,7 @@ export const languages = {
    "pi-x-iast": "lang.search.piXIast",
    "bo":"lang.search.bo",
    "bo-x-ewts":"lang.search.boXEwts",
+   "bo-x-ewts_lower":"lang.search.boXEwtsLower",
    "bo-x-dts":"lang.search.boXDts",
    "bo-alalc97":"lang.search.boAlaLc",
    //"other":"lang.search.other"
@@ -212,7 +219,7 @@ export const langSelect = [
 ]
 
 //const searchTypes = ["All","Work","Etext","Topic","Person","Place","Lineage","Corporation","Role"]
-const searchTypes = [ "Work", "Instance","Etext", "Person","Place","Topic","Lineage","Role","Corporation" ]
+const searchTypes = [ "Work", "Instance","Scan", "Etext", "Person","Place","Topic","Lineage","Role","Corporation", "Product" ]
 
 /*
 export const langProfile = [
@@ -508,7 +515,7 @@ export function getGDPRconsent(that) {
    //ReactGA.pageview('/homepage');
    loggergen.log("cookie?",document.cookie)
 
-   return (
+   if(that.props.config && that.props.config.GA) return (
       <CookieConsent
          location="bottom"
          onAccept={() => { loggergen.log("accept!"); if(that) { report_GA(that.props.config,that.props.history.location); that.forceUpdate(); } } }
@@ -667,6 +674,7 @@ type Props = {
          index:number
       }
    },
+   latest?:boolean,
    facets?:{[string]:boolean|{}},
    searches:{[string]:{}},
    resources:{[string]:{}},
@@ -688,6 +696,8 @@ type Props = {
    sortBy?:string,
    instances?:{},
    isInstance?:boolean,
+   latestSyncs?:boolean|{},
+   latestSyncsNb?:integer,
    onResetSearch:()=>void,
    onOntoSearch:(k:string)=>void,
    onStartSearch:(k:string,lg:string,t?:string)=>void,
@@ -750,7 +760,8 @@ type State = {
    },
    assoRes?:{},
    locale:string,
-   checked:{}
+   checked:{},
+   syncsSlided?:boolean
 }
 
 class App extends Component<Props,State> {
@@ -804,7 +815,7 @@ class App extends Component<Props,State> {
          langOpen:false,
          UI:{language:"en"},
          filters: {
-            datatype:get.t?get.t.split(","):["Any"],
+            datatype:this.props.latest?["Scan"]:(get.t?get.t.split(","):["Any"]),
          },
          collapse:{},
          sortBy,
@@ -831,7 +842,7 @@ class App extends Component<Props,State> {
 
    componentDidUpdate() {
       
-      loggergen.log("didU",this.state) //,this._refs)
+      loggergen.log("didU",this.state,this.state.uriPage) //,this._refs)
 
 
       report_GA(this.props.config,this.props.history.location);
@@ -901,16 +912,25 @@ class App extends Component<Props,State> {
          }
       }
 
-      loggergen.log("encoded=|"+encoded+"|"+this.state.filters.encoded+"|")
+      loggergen.log("encoded=|"+encoded+"|"+this.state.filters.encoded+"| pg="+pg)
 
-      if(this.state.uriPage !== pg || this.state.backToWorks !== backToWorks || (encoded !== this.state.filters.encoded ) || (scrolled && this.state.scrolled !== scrolled) )
-         this.setState({...this.state, repage:true, uriPage:pg, backToWorks, scrolled, collapse, ...(filters?{filters}:{})})
+      let uriPage = this.state.uriPage
+      if(uriPage !== pg && this.state.paginate && this.state.paginate.index !== pg && this.state.paginate.pages.length >= pg) {
+         uriPage = pg
+      } else if(pg === undefined) {
+         uriPage = 0
+      }
+
+      if(this.state.uriPage !== uriPage || this.state.backToWorks !== backToWorks || (encoded !== this.state.filters.encoded ) || (scrolled && this.state.scrolled !== scrolled) )
+         this.setState({...this.state, repage:true, uriPage, backToWorks, scrolled, collapse, ...(filters?{filters}:{})})
 
    }
 
    requestSearch(key:string,label?:string,lang?:string,forceSearch:boolean=false)
    {
       loggergen.log("key",key,label,this.state.searchTypes)
+
+      if(key) key = key.trim()
 
       let _key = ""+key
       if(!key || key == "" || !key.match) return ;
@@ -929,6 +949,11 @@ class App extends Component<Props,State> {
       }
       if(label.indexOf("Any") !== -1) label = "Any" 
       else label = label.join(",")
+
+      if(label.indexOf("Scan") !== -1) {
+         searchDT = [ "Instance" ]
+         label = [ "Instance" ] 
+      }
 
       let state = { ...this.state, dataSource:[], leftPane:true, filters:{ datatype:[ ...searchDT ] } }
       this.setState(state)
@@ -957,8 +982,12 @@ class App extends Component<Props,State> {
 
       }
       else {
-
-         this.props.history.push({pathname:"/search",search:"?q="+key+"&lg="+(lang?lang:this.getLanguage())+"&t="+label})
+         lang = (lang?lang:this.getLanguage())
+         if(lang === "bo-x-ewts_lower" ) {
+            key = key.toLowerCase();
+            lang = "bo-x-ewts"
+         }
+         this.props.history.push({pathname:"/search",search:"?q="+key+"&lg="+lang+"&t="+label})
          
          // TODO add permanent filters (here ?)
       }
@@ -1017,7 +1046,8 @@ class App extends Component<Props,State> {
       let props = { ...prop }
 
       if(props.keyword) { 
-         document.title = /*""+*/ props.keyword+" search results - Public Digital Library"
+         if(props.keyword === "(latest)") document.title = I18n.t("home.new") + " - Public Digital Library"
+         else document.title = /*""+*/ props.keyword+" search results - Public Digital Library"
          
       }
 
@@ -1223,9 +1253,26 @@ class App extends Component<Props,State> {
          
          //loggergen.log("collap!",JSON.stringify(state.collapse,null,3))
 
+         if(props.config && props.config["facets-open"]) for(let o of props.config["facets-open"]) {
+            if(o.types) {
+               if(o.types.includes(state.filters.datatype.join("")) && o.facets) for(let p of o.facets) { 
+                  if(s.collapse[p] === undefined) s.collapse[p] = true ;
+               }
+            } else {
+               if(s.collapse[o] === undefined) s.collapse[o] = true ;
+            }
+         }
+
+         if(s.uriPage) delete s.uriPage
+
       }
       else {
          newid = null
+
+         if(props.keyword === "(latest)" && state.uriPage !== undefined) {
+            if(!s) s = { ...state }
+            delete s.uriPage
+         }
       }
 
       let needRefresh, time, current ;
@@ -1244,7 +1291,7 @@ class App extends Component<Props,State> {
                time = props.searches[k].time
                loggergen.log("refreshB",time)
             }
-            for(let d of ["Etext","Person","Instance","Work","Place","Topic","Corporation","Role","Lineage"]) {
+            for(let d of ["Etext","Person","Instance","Work","Place","Topic","Corporation","Role","Lineage","Product","Scan"]) {
                if(props.searches && props.searches[d] && props.searches[d][k]) {
                   if(!time || props.searches[d][k].time > time) { 
                      time = props.searches[d][k].time 
@@ -1270,7 +1317,7 @@ class App extends Component<Props,State> {
          loggergen.log("K", props.keyword, time, current)
 
          let results
-         if(state.filters.datatype.indexOf("Any") !== -1 || state.filters.datatype.length > 1 || state.filters.datatype.filter(d => ["Work","Etext","Person","Place","Topic","Role","Corporation","Lineage"].indexOf(d) === -1).length ) {
+         if(state.filters.datatype.indexOf("Any") !== -1 || state.filters.datatype.length > 1 || state.filters.datatype.filter(d => ["Work","Etext","Person","Place","Topic","Role","Corporation","Lineage","Product","Scan"].indexOf(d) === -1).length ) {
             results = { ...props.searches[props.keyword+"@"+props.language] }
             //loggergen.log("any")
          }
@@ -1574,9 +1621,13 @@ class App extends Component<Props,State> {
 
       if(check && (!this.props.sortBy || i !== this.props.sortBy)) {            
 
+         this.setState({collapse:{...this.state.collapse, sortBy:false}})
+
          let {pathname,search} = this.props.history.location
-         
-         this.props.history.push({pathname,search:search.replace(/(&s=[^&#]+)/g,"")+"&s="+i.toLowerCase()})         
+         search = search.replace(/((&|[?])s=[^&#]+)/g,"")      
+         search += (search === ""?"?":"&")+"s="+i.toLowerCase()
+         search = search.replace(/(\?&)|(^&)/,"?")
+         this.props.history.push({pathname,search})         
          
       } 
    }
@@ -1644,7 +1695,9 @@ class App extends Component<Props,State> {
          state.filters.preload = true
 
          let {pathname,search} = this.props.history.location
-         this.props.history.push({pathname,search:search.replace(/(&([nf]|pg)=[^&]+)/g,"")+"&pg=1"+getFacetUrl(state.filters,this.props.config.facets[state.filters.datatype[0]])})
+         search = search.replace(/([&?]([nf]|pg)=[^&]+)/g,"")+"&pg=1"+getFacetUrl(state.filters,this.props.config.facets[state.filters.datatype[0]])+(this.props.latest&&!(""+search).match(/t=/)?"&t=Scan":"")
+         search = search.replace(/(\?&)|(^&)/,"?")
+         this.props.history.push({pathname,search })
       }
 
       this.setState(state);
@@ -1759,7 +1812,7 @@ class App extends Component<Props,State> {
 
          if(state.sortBy) delete state.sortBy
          
-         if([ /*"Any",*/ "Person","Place","Work","Etext","Role","Topic","Corporation","Lineage","Instance"].indexOf(lab) !== -1)
+         if([ /*"Any",*/ "Person","Place","Work","Etext","Role","Topic","Corporation","Lineage","Instance","Product","Scan"].indexOf(lab) !== -1)
          {
             this.requestSearch(this.props.keyword,[ lab ], this.props.language, true);
          }
@@ -1920,7 +1973,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
    fullname(prop:string,preflabs:[],useUIlang:boolean=false)
    {
-      if(!prop) return 
+      if(!prop||prop.length === 0) return 
       let sTmp = shortUri(prop), trad = I18n.t("prop."+sTmp)
       if("prop."+sTmp !== trad) return trad
 
@@ -2071,7 +2124,9 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          }) 
 
          let {pathname,search} = this.props.history.location
-         this.props.history.push({pathname,search:search.replace(/(&(n|pg)=[^&]+)/g,"")+"&pg="+(state.index - 1 + 1)+"&n="+(state.n[state.index - 1]+1)})
+         search = search.replace(/(([&?])(n|pg)=[^&]+)/g,"")
+         if(search) search += "&"
+         this.props.history.push({pathname,search:search+"pg="+(state.index - 1 + 1)+"&n="+(state.n[state.index - 1]+1)})
       }
    }
 
@@ -2086,7 +2141,9 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          }) 
 
          let {pathname,search} = this.props.history.location
-         this.props.history.push({pathname,search:search.replace(/(&(n|pg)=[^&]+)/g,"")+"&pg="+(i)+"&n="+(state.n[i-1]+1)})
+         search = search.replace(/(([&?])(n|pg)=[^&]+)/g,"")
+         if(search) search += "&"
+         this.props.history.push({pathname,search:search+"pg="+(i)+"&n="+(state.n[i-1]+1)})
       }
    }
 
@@ -2100,7 +2157,9 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          }) 
 
          let {pathname,search} = this.props.history.location
-         this.props.history.push({pathname,search:search.replace(/(&(n|pg)=[^&]+)/g,"")+"&pg="+(state.index + 1 + 1)+"&n="+(state.n[state.index + 1]+1)})
+         search = search.replace(/(([&?])(n|pg)=[^&]+)/g,"")
+         if(search) search += "&"
+         this.props.history.push({pathname,search:search+"pg="+(state.index + 1 + 1)+"&n="+(state.n[state.index + 1]+1)})
       }
    }
 
@@ -2424,11 +2483,29 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             for(let i of labels) {
                let val = i["value"] 
                if(val === exclude) continue
-               if(val && val.startsWith("http")) val = this.fullname(val,[],true)
-               else val = highlight(val)
                let lang = i["xml:lang"]
+
+               if((""+val).match(/^[0-9-]+T[0-9:.]+Z+$/)) {
+                  //val.replace(/[ZT]/g," ").replace(/:[0-9][0-9][.].*?$/,"")
+                  
+                  let code = "en-US"
+                  let opt = { month: 'long', day: 'numeric' }
+                  if(this.props.locale === "bo") { 
+                     code = "en-US-u-nu-tibt"; 
+                     opt = { day:'2-digit', month:'2-digit' } 
+                     val = 'ཟླ་' + (new Intl.DateTimeFormat(code, opt).formatToParts(new Date(val)).map(p => p.type === 'literal'?' ཚེས་':p.value).join(''))
+                     lang= "bo"
+                  }
+                  else {
+                     if(this.props.locale === "zh") code = "zh-CN"
+                     val = new Date(val).toLocaleDateString(code, { month: 'long', day: 'numeric' });  // does not work for tibetan
+                  }
+               }
+               else if(val && val.startsWith("http")) val = this.fullname(val,[],true)
+               else val = highlight(val)
+
                if(!lang) lang = i["lang"]
-               ret.push(<span>{val}{
+               ret.push(<span {...lang?{lang}:{}}>{val}{
                   lang && <Tooltip placement="bottom-end" title={
                                     <div style={{margin:"10px"}}>
                                        {I18n.t(languages[lang]?languages[lang].replace(/search/,"tip"):lang)}/>
@@ -2587,7 +2664,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
       let sameAsRes,otherSrc= [] ;
       if(allProps) sameAsRes = [ ...allProps ]
-      if(!id.match(/[:/]/)) id = "bdr:" + id
+      if(!id.match(/[:/]/)) id = (id.startsWith("PR")?"bda:":"bdr:") + id
 
       let litLang = lang
       let savLit = "" + lit
@@ -2668,8 +2745,19 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                else if(access.includes("Open")) hasCopyR = "copyleft"
                //if(access.includes("Restricted")) { hasCopyR = "restricted"; hasThumb = []; }
             }
+
          }
       }
+
+      let hasProv, prov = allProps.filter(a => a.type === tmp+"provider")
+      if(prov && prov.length && this.props.dictionary) prov = this.props.dictionary[prov[0].value]
+      if(prov && prov[skos+"prefLabel"] && prov[skos+"prefLabel"]) prov = (""+prov[skos+"prefLabel"].filter(p=>!p.lang || p.lang === "en")[0].value).toLowerCase()
+      else prov = false
+      console.log("prov:",prov)
+      if(prov) prov = prov.replace(/(^\[ *)|( *\]$)/g,"") // CUDL
+      if(prov) prov = prov.replace(/internet archives/g,"ia") 
+      if(prov) prov = prov.replace(/library of congress/g,"loc") 
+      if(prov && prov !== "bdrc" && img[prov]) hasProv = <img class={"provImg "+prov} title={I18n.t("copyright.provided",{provider:providers[prov]})} src={img[prov]}/>
 
 
     
@@ -2691,7 +2779,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          
          let directSameAs = false
 
-         if(!prettId.match(/^bdr:/) && (fullId.match(new RegExp(cbcp+"|"+cbct+"|"+rkts)) || !sameAsRes || !sameAsRes.filter(s => s.value.match(/[#/]sameAs/) || (s.type.match(/[#/]sameAs/) && (s.value.indexOf(".bdrc.io") !== -1 || s.value.indexOf("bdr:") !== -1))).length))   {
+         if(!prettId.match(/^bd[ar]:/) && (fullId.match(new RegExp(cbcp+"|"+cbct+"|"+rkts)) || !sameAsRes || !sameAsRes.filter(s => s.value.match(/[#/]sameAs/) || (s.type.match(/[#/]sameAs/) && (s.value.indexOf(".bdrc.io") !== -1 || s.value.indexOf("bdr:") !== -1))).length))   {
             let u 
             if ((u = sameAsRes.filter(s => s.type === adm+"canonicalHtml")).length) {
                u = u[0].value
@@ -2716,7 +2804,11 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   urlpart = root+"?part="+prettId+"&"
                }
             }
-            resUrl = "/show/"+urlpart+"s="+ encodeURIComponent(window.location.href.replace(/^https?:[/][/][^?]+[?]?/gi,"").replace(/(&n=[^&]*)/g,"")+"&n="+n)+(!bestM?"":"&"+bestM)
+            let urlBase ;
+            if(window.location.href.match(/\/latest/)) urlBase = window.location.href.replace(/.*?\/latest[\/]?/,"latest?");
+            else urlBase = window.location.href.replace(/^https?:[/][/][^?]+[?]?/gi,"")+"&"
+            //console.log("urlB",urlBase)
+            resUrl = "/show/"+urlpart+"s="+ encodeURIComponent((urlBase.replace(/((([?])?&*|^)n=[^&]*)/g,"$3")+(!urlBase.match(/[\?&]$/)?"&":"")+"n="+n).replace(/\?+&?/,"?"))+(!bestM?"":"&"+bestM)
             //retList.push( <Link key={n} to={"/show/"+prettId+bestM} className="result">{ret}</Link> )
          }
          else
@@ -2739,7 +2831,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                               <span class="T">{I18n.t("types."+T.toLowerCase())}{langs}</span>
                               <h3 key="lit" lang={lang}>
                                  {lit}
-                                 { (resUrl && !resUrl.includes("/show/bdr:")) && <img class="link-out" src="/icons/link-out_fit.svg"/>}
+                                 { (resUrl && !resUrl.includes("/show/bdr:") && !resUrl.includes("/show/bda:")) && <img class="link-out" src="/icons/link-out_fit.svg"/>}
                                  { lang && <Tooltip key={"tip"} placement="bottom-end" title={
                                           <div style={{margin:"10px"}}>
                                              {I18n.t(languages[lang]?languages[lang].replace(/search/,"tip"):lang)}/>
@@ -2784,8 +2876,9 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   }</div>, 
                   <div>{
                      getIconLink(resUrl,<img src={"/icons/search/"+enType+"_.svg"}/>)
-                  }</div>] }
+                  }</div>] }                  
                <div class="RID">{prettId}</div>
+               {hasProv}
                {/* <span>{hasCopyR}</span> */}
                {hasCopyR === "copyleft" && <img title={I18n.t("copyright.open")} src="/icons/open.svg"/>}
                {hasCopyR === "fair_use" && <img title={I18n.t("copyright.fairUse")} src="/icons/fair_use.svg"/>}
@@ -2961,7 +3054,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          if(nbChunks[0] && nbChunks[0].value) nbChunks = Number(nbChunks[0].value)
          else nbChunks = "?"
          let type = this.state.filters.datatype[0]
-         let typeisbiblio = (type === "Work" || type === "Instance" || type === "Etext")
+         let typeisbiblio = (type === "Work" || type === "Instance" || type === "Etext" || type === "Scan")
 
          retList.push( <div id='matches'>         
             { typeisbiblio && this.getResultProp(I18n.t("result.workBy"),allProps,false,true,[tmp+"author"]) }
@@ -2980,6 +3073,10 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             { type === "Etext" && this.getEtextMatches(prettId,startC,endC,bestM,rmatch,facet) }
 
             { this.getResultProp("tmp:nameMatch",allProps,true,false,[ tmp+"nameMatch" ]) } {/* //,true,false) } */}
+
+
+            {/* { this.getResultProp("bdo:note",allProps,true,false,[ tmp+"noteMatch" ]) } // see biblioNote below */}
+
 
             { this.getResultProp(I18n.t("prop.tmp:relationType"),allProps,true,false,[ tmp+"relationType" ]) } 
             {/* { this.getResultProp(tmp+"InverseRelationType",allProps,true,true,[tmp+"relationTypeInv"]) } */}
@@ -3014,7 +3111,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
             {/* { this.getResultProp(bdo+"publisherName",allProps,false,false) }
             { this.getResultProp(bdo+"publisherLocation",allProps,false,false) } */}
-            { (type === "Instance" || type === "Etext") && this.getPublisher(allProps) }
+            { (type === "Instance" || type === "Etext" || type === "Scan") && this.getPublisher(allProps) }
 
 
             {/* TODO fix facet count after preview instance */}
@@ -3022,7 +3119,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
             {/* { this.getResultProp(bdo+"contentLocationStatement",allProps,false,false, [bdo+"instanceExtentStatement",bdo+"contentLocationStatement"]) } */}
 
-            { type === "Instance" && this.getResultProp(bdo+"biblioNote",allProps,false,false,[bdo+"biblioNote", bdo+"catalogInfo", rdfs+"comment", tmp+"noteMatch", bdo+"colophon", bdo+"incipit"]) }
+            { (type === "Instance" || type === "Scan") && this.getResultProp(bdo+"biblioNote",allProps,false,false,[bdo+"biblioNote", bdo+"catalogInfo", rdfs+"comment", tmp+"noteMatch", bdo+"colophon", bdo+"incipit"]) }
 
             {/* { this.getResultProp(tmp+"provider",allProps) } */}
             {/* { this.getResultProp(tmp+"popularity",allProps,false,false, [tmp+"entityScore"]) } */}
@@ -3031,6 +3128,10 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             {/* { hasThumb.length > 0 && <div class="match">{getIconLink(viewUrl?viewUrl:resUrl+"#open-viewer",<span class="urilink"><b>View Images</b></span>)}</div>} // maybe a bit overkill...? */ }
 
             { typeisbiblio && this.getInstanceLink(id,n,allProps) }
+
+
+            { type === "Scan" &&  this.getResultProp(tmp+"lastSync",allProps,false,false) }
+            {/* { type === "Scan" &&  this.getResultProp(tmp+"InverseRelationType",allProps,false,false,[tmp+"relationTypeInv"]) }  */}
 
             {/* { this.getEtextLink(id,n,allProps) } */}
 
@@ -3053,7 +3154,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
           </a>
        </CopyToClipboard> )
 
-      retList = <div {... (!isInstance?{id:"result-"+n}:{})} ref={this._refs[n]} className={"result-content " + status + " " + enType + (hasThumb.length?" wThumb":"")}>{retList}</div>
+      retList = <div {... (!isInstance?{id:"result-"+n}:{})} ref={this._refs[n]} className={"result-content " + (otherSrc && otherSrc.length?"otherSrc ":"") + status + " " + enType + (hasThumb.length?" wThumb":"")}>{retList}</div>
 
 
 
@@ -3343,7 +3444,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          
          if(t === "Any") continue ;
 
-         //loggergen.log("t",t,list,pagin)
+         // DONE uriPage is set to a page that does not exist... yet
+         //loggergen.log("dT:",t,list,pagin,this.state.uriPage)
 
          let iniTitle = false 
          let sublist = list[t.toLowerCase()+"s"]         
@@ -3374,7 +3476,21 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                let _t = t.toLowerCase()
                if(_t === "work" && this.props.isInstance) _t = "instance"
                if(displayTypes.length > 1 || displayTypes.indexOf("Any") !== -1) message.push(<MenuItem  onClick={(e)=>this.handleCheck(e,t,true,{},true)}><h4>{I18n.t("types."+t.toLowerCase()+"_plural")+(false && displayTypes.length>1&&counts["datatype"][t]?" ("+counts["datatype"][t]+")":"")}</h4></MenuItem>);
-               else message.push(<MenuItem><h4>{I18n.t("types."+_t+("_plural"))+(false && displayTypes.length>=1&&counts["datatype"][t]?" ("+counts["datatype"][t]+")":"")}</h4></MenuItem>);
+               else { 
+                  let txt = ""
+                  if(this.props.latest) txt = I18n.t("home.new")
+                  else txt = I18n.t("types."+_t+("_plural")) 
+                  
+                  if(this.props.language==="") {
+                     let label = this.props.resources[this.props.keyword]
+                     if(label) label = label[fullUri(this.props.keyword)]
+                     if(label) label = label[skos+"prefLabel"]
+                     if(label) label = getLangLabel(this,"",label)
+                     if(label && label.value) txt = I18n.t("result.assoc",{type:txt,name:label.value})
+                  }
+                  //(false && displayTypes.length>=1&&counts["datatype"][t]?" ("+counts["datatype"][t]+")":""))}
+                  message.push(<MenuItem><h4>{txt}</h4></MenuItem>);
+               }
                // TODO better handling of plural in translations
             }
             absi ++ ;
@@ -3546,7 +3662,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             //if(r.f && r.f.value) typ = r.f.value.replace(/^.*?([^/]+)$/,"$1")
 
 
-            //loggergen.log("r",o,sublist[o],r,label,lit);
+            //loggergen.log("sublist:",o,sublist[o],r,label,lit);
 
             let filtered = true ;
 
@@ -3993,7 +4109,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
       
       let {pathname,search} = this.props.history.location
       
-      if(!this.props.isInstance) this.props.history.push({pathname,search:search.replace(/(&([tfin]|pg)=[^&]+)/g,"")+"&t="+this.state.filters.datatype[0]})
+      if(!this.props.isInstance) this.props.history.push({pathname,search:(search.replace(/((&|(\?))([tfin]|pg)=[^&]+)/g,"$3")+"&t="+this.state.filters.datatype[0]).replace(/\?&/,"?")})
       else this.props.history.push({pathname,search:this.state.backToWorks})
       
       // TODO fix reset filters 
@@ -4365,7 +4481,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
                                  //loggergen.log("counts",i,counts,counts["datatype"][i],this.state.filters.datatype.indexOf(i))
 
-                              let disabled = (!["Work","Instance","Person", "Place","Topic","Corporation","Role","Lineage","Etext"].includes(i)) // false // (!this.props.keyword && ["Any","Etext","Person","Work"].indexOf(i)===-1 && this.props.language  != "")
+                              let disabled = (!["Work","Instance","Person", "Place","Topic","Corporation","Role","Lineage","Etext","Product","Scan"].includes(i)) // false // (!this.props.keyword && ["Any","Etext","Person","Work"].indexOf(i)===-1 && this.props.language  != "")
                            // || (this.props.language == "")
 
                               let count = counts["datatype"][i]
@@ -4703,12 +4819,14 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
       }
 
       const allSortByLists = { 
-         "Work": [ "popu", "closestM", "workT" ].map(m => I18n.t("sort."+m)),
-         "Person": [ "popu", "closestM", "personN", "yearB" ].map(m => I18n.t("sort."+m)),
-         "Place": [ "popu", "closestM", "placeN" ].map(m => I18n.t("sort."+m)),
-         "WorkInstance": [ "workT", "yearP" ].map(m => I18n.t("sort."+m)),
-         "Instance": [ "popu", "title", "yearP" ].map(m => I18n.t("sort."+m)),
-         "Etext": [ "closestM", "numberMC" ].map(m => I18n.t("sort."+m)),
+         "Work": [ "popu", "closestM", "workT" ], 
+         "Person": [ "popu", "closestM", "personN", "yearB" ],  
+         "Place": [ "popu", "closestM", "placeN" ],  
+         "WorkInstance": [ "workT", "yearP" ],  
+         "Instance": [ "popu", "closestM", "title", "yearP" ],  
+         "Etext": [ "closestM", "numberMC" ],  
+         "Product": [ "closestM", "title" ],  
+         "Scan": (!this.props.latest?["popu", "closestM", "title", "yearP"]:["lastS", "title"]) //.map(m => I18n.t("sort."+m)),
       }
 
       let sortByList = allSortByLists[this.state.filters.datatype[0]]
@@ -4768,6 +4886,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             changeKWtimer = setTimeout( () => { changeKW() }, 1000) ;
          }
          */
+         if(this.props.latest&&this.state.keyword==="(latest)") value = ""
 
          loggergen.log("changeKW",value,keyEv,ev)
          
@@ -4796,10 +4915,15 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   let presets = []
                   if(d === "tibt") for(let p of possible) { if(p === "bo" || p.match(/-[Tt]ibt$/)) { presets.push(p); } }
                   else if(d === "hani") for(let p of possible) { if(p.match(/^zh((-[Hh])|$)/)) { presets.push(p); } }
-                  else if(["ewts","iast","deva","pinyin"].indexOf(d) !== -1) for(let p of possible) { if(p.match(new RegExp(d+"$"))) { presets.push(p); } }
+                  else if(["ewts","iast","deva","pinyin"].indexOf(d) !== -1) for(let p of possible) { 
+                     if(p.match(new RegExp(d+"$"))) { 
+                        if(p === "bo-x-ewts" && value.toLowerCase() !== value) { presets.push("bo-x-ewts_lower"); }
+                        presets.push(p); 
+                     } 
+                  }
                   
                   return [...acc, ...presets]
-               }, [] ).concat(!value || value.match(/[a-zA-Z]/)?["en"]:[]).map(p => '"'+value+'"@'+(p == "sa-x-iast"?"sa-x-ndia":p))
+               }, [] ).concat(!value || value.match(/[a-zA-Z]/)?["en"]:[]).map(p => '"'+(p==="bo-x-ewts_lower"?value.toLowerCase():value).trim()+'"@'+(p == "sa-x-iast"?"sa-x-ndia":p))
             }
          }
 
@@ -4832,6 +4956,9 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          )
 
 
+      let syncSlide = (e) => {
+         this.setState({syncsSlided:!this.state.syncsSlided})
+      }
 
       return (
 <div>
@@ -4899,7 +5026,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                         }
                      }}
                      onRequestSearch={this.requestSearch.bind(this)}
-                     value={this.props.hostFailure?"Endpoint error: "+this.props.hostFailure+" ("+this.getEndpoint()+")":this.state.keyword !== undefined && this.state.keyword!==this.state.newKW?this.state.keyword:this.props.keyword&&this.state.newKW?lucenequerytokeyword(this.state.newKW):""}
+                     value={this.props.latest&&this.state.keyword==="(latest)"?"":(this.props.hostFailure?"Endpoint error: "+this.props.hostFailure+" ("+this.getEndpoint()+")":this.state.keyword !== undefined && this.state.keyword!==this.state.newKW?this.state.keyword:this.props.keyword&&this.state.newKW?lucenequerytokeyword(this.state.newKW):"")}
                      style={{
                         marginTop: '0px',
                         width: "700px",
@@ -4964,7 +5091,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                 {/* <InputLabel htmlFor="datatype">In</InputLabel> */}
 
                 <Select
-                  value={this.state.searchTypes[0]}
+                  value={this.state.searchTypes[0]==="Scan"?"Instance":this.state.searchTypes[0]}
                   //onChange={this.handleLanguage} 
                   onChange={this.handleSearchTypes}
                   open={this.state.langOpen}
@@ -5069,7 +5196,9 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   <div id="settings" onClick={() => this.setState({collapse:{...this.state.collapse, settings:!this.state.collapse.settings}})}><img src="/icons/settings.svg"/></div>
                { // TODO change to popover style open/close
                      sortByList && this.popwidget(I18n.t("Lsidebar.sortBy.title"),"sortBy",
-                     (sortByList /*:["Year of Publication","Instance Title"]*/).map((i,n) => <div key={i} style={{width:"200px",textAlign:"left"}} className="searchWidget">
+                     (sortByList /*:["Year of Publication","Instance Title"]*/).map((t,n) => {
+                        let i = I18n.t("sort."+t,{lng:"en"})
+                        return(<div key={i} style={{width:"200px",textAlign:"left"}} className="searchWidget">
                            <FormControlLabel
                               control={
                                  <Checkbox
@@ -5081,8 +5210,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                                  />
 
                               }
-                              label={<span lang={this.props.locale}>{i}</span>}
-                           /></div> ).concat([
+                              label={<span lang={this.props.locale}>{I18n.t("sort."+t)}</span>}
+                           /></div>) } ).concat([
                               <div key={99} style={{width:"auto",textAlign:"left",marginTop:"5px",paddingTop:"5px"}} className="searchWidget">
                               <FormControlLabel
                                  control={
@@ -5142,7 +5271,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                         { I18n.t("home.subsubmessage_account2")}
                         <span class="uri-link" style={{textTransform:"capitalize"}} onClick={() => this.props.auth.login(this.props.history.location,true)} >{I18n.t("home.subsubmessage_account5")}</span>
                         { I18n.t("home.subsubmessage_account3")}</h4>
-                     <h4 class="subsubtitleFront">{ I18n.t("home.subsubmessage") }<a title="email us" href="mailto:help@bdrc.io">help@bdrc.io</a>{ I18n.t("home.subsubmessage_afteremail") }</h4>
+                     <h4 class="subsubtitleFront">{ I18n.t("home.subsubmessage") }<a title="email us" href="mailto:help@bdrc.io" lang={this.props.locale}>help@bdrc.io</a>{ I18n.t("home.subsubmessage_afteremail") }</h4>
                   </List> }
                { (this.props.datatypes && this.props.datatypes.hash && this.props.datatypes.metadata[bdo+this.state.filters.datatype[0]] && message.length === 0 && !this.props.loading) && 
                   <List id="results">
@@ -5171,6 +5300,40 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   </List>
                }
                </div>
+               { message.length == 0 && !this.props.loading && !this.props.keyword && 
+                  <div id="latest">
+                     <h3>{I18n.t("home.new")}</h3>
+                     <Link class="seeAll" to="/latest" onClick={()=>this.setState({filters:{...this.state.filters,datatype:["Scan"]}})}>{I18n.t("misc.seeAnum",{count:this.props.latestSyncsNb})}</Link>
+                     <div>
+                        { this.props.latestSyncs === true && <Loader loaded={false}/> }
+                        { (this.props.latestSyncs && this.props.latestSyncs !== true) &&
+                           <div class={"slide-bg "+(this.state.syncsSlided?"slided":"")}>
+                              { Object.keys(this.props.latestSyncs).map(s => {
+                                 let label = getLangLabel(this,"",this.props.latestSyncs[s][skos+"prefLabel"])
+                                 let uri = "/show/"+shortUri(s), lang = label.lang, value = label.value
+                                 // DONE use thumbnail when available
+                                 let thumb = this.props.latestSyncs[s][tmp+"thumbnailIIIFService"]
+                                 if(thumb && thumb.length) thumb = thumb[0].value 
+                                 //console.log("thumb",thumb)
+                                 return (
+                                    <div>
+                                       <a href={uri}><div class={"header "+(thumb?"thumb":"")} {...thumb?{style:{"background-image":"url("+ thumb+"/full/,195/0/default.jpg)"}}:{}}></div></a>
+                                       <p lang={lang}>{value}</p>
+                                       <a href={uri}>{I18n.t("misc.readM")}</a>
+                                    </div>
+                                 )
+                              })}
+                           </div>
+                        }
+                     </div>
+                     { (this.props.latestSyncs && this.props.latestSyncs !== true) && 
+                        <div id="syncs-nav" >
+                           <span class={this.state.syncsSlided?"on":""} onClick={syncSlide}><img src="/icons/g.svg"/></span>
+                           <span class={this.state.syncsSlided?"":"on"} onClick={syncSlide}><img src="/icons/d.svg"/></span>
+                        </div>
+                     }
+                  </div>
+               }
             </div>
             <LanguageSidePaneContainer />
          </div>

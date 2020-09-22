@@ -25,7 +25,7 @@ var nativeranges = [
 
 var transinfos = {
 	"ewts": {
-		"nonalphaok": "*@#+-~'`?&/;:=().",
+		"nonalphaok": "*@#+-~'ʾ`?&/;:=().",
 		"alphanok": "xqfv",
 		"maxlen": 10 // quite conservative
 	},
@@ -34,7 +34,7 @@ var transinfos = {
 		"alphanok": ""
 	},
 	"iast": {
-		"nonalphaok": "ṁṀm̐M̐ṃṂ-|āĀīĪūŪṛṚṝṜḷḶḹḸḥḤṅṄñÑṭṬḍḌṇṆśŚṣṢḻḺ",
+		"nonalphaok": "ṁṀm̐M̐ṃṂ-|āĀīĪūŪṛṚṝṜḷḶḹḸḥḤṅṄñÑṭṬḍḌṇṆśŚṣṢḻḺ̣̄́̇◌̃",
 		"alphanok": "fx"
 	}
 };

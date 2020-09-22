@@ -15,6 +15,10 @@ const USER_PATH = '/resource-nc/user/me'
 const USER_EDIT_POLICIES_PATH = '/userEditPolicies'
 
 export const dPrefix = {
+   "bda": {
+      "CP" : "Corporation",
+      "PR": "Product",
+   },
    "bdr": {
       "C" : "Corporation",
       "E" : "Etext",
@@ -63,7 +67,7 @@ export function getEntiType(t:string):string {
    else if(p === "src" && t.includes("persons")) return "Person" ;
    else if(p === "ola") return "Person" ;
    else if(p == "mbbt" ) return "Work" ; // [TODO]
-   let v = uri.replace(/^([^:]+:)?([ACEILGPQMRTWOVU][AERTLW]?).*$/,"$2")
+   let v = uri.replace(/^([^:]+:)?([ACEILGPQMRTWOVU][AERTLWP]?).*$/,"$2")
    //console.log("gEt?",v,p)
    if(!dPrefix[p] || !dPrefix[p][v]) return "" ;
    else return dPrefix[p][v]; }
@@ -255,6 +259,52 @@ export default class API {
          return dico ;
    }
 
+    async loadLatestSyncsAsResults(): Promise<string>
+    {
+         try {
+            
+            const dateA = new Date(Date.now() - 1000 * 3600 * 24 * 7)
+            const dateB = new Date(Date.now() + 1000 * 3600 * 24 * 2)
+
+            let config = store.getState().data.config.ldspdi
+            let url = config.endpoints[config.index] + "/lib" ;            
+            let param = {"searchType":"iinstanceSyncedIn","L_NAME":"","LG_NAME":"", "I_LIM":"", "D_START":dateA.toISOString().replace(/T.*$/,"T00:00:00"), "D_END":dateB.toISOString().replace(/T.*$/,"T00:00:00") }
+            let data = await this.getQueryResults(url, "", param,"GET","application/json");         
+
+            return data
+         }
+         catch(e)
+         {
+            //throw(e)
+            console.error("ERROR outline",e)
+            return true
+         }
+
+   }
+
+    async loadLatestSyncs(): Promise<string>
+    {
+         try {
+            
+            const date = new Date(Date.now() - 1000 * 3600 * 24 * 7)
+
+            let config = store.getState().data.config.ldspdi
+            // DONE remove ldspdi-dev --> ldspdi 
+            let url = config.endpoints[config.index] /*.replace(/-dev/,"")*/ + "/query/graph" ;            
+            let param = {"searchType":"latestsyncssince","L_NAME":"","LG_NAME":"", "I_LIM":"", "D_SINCE":date.toISOString().replace(/T.*$/,"T00:00:00") }
+            let data = await this.getQueryResults(url, "", param,"GET","application/json");         
+
+            return data ;
+         }
+         catch(e)
+         {
+            //throw(e)
+            console.error("ERROR outline",e)
+            return true
+         }
+
+   }
+
 
     async loadOutline(IRI:string): Promise<string>
     {
@@ -271,7 +321,7 @@ export default class API {
          catch(e)
          {
             //throw(e)
-            console.error(e)
+            console.error("ERROR outline",e)
             return true
          }
 
@@ -613,8 +663,10 @@ export default class API {
 
              let searchType = "typeSimple" 
              let R_TYPE 
-             if(typ[0] === "Etext") searchType = "etextContentFacet" //chunksFacet"
+             if(typ[0] === "Scan") searchType = "instanceFacet" 
+             else if(typ[0] === "Etext") searchType = "etextContentFacet" //chunksFacet"
              else if(["Work","Person","Place","Instance"].includes(typ[0]))  searchType = typ[0].toLowerCase()+(["Work","Instance"].includes(typ[0])?"Facet":"")              
+             else if(["Product"].includes(typ[0])) R_TYPE = "adm:"+typ[0]
              else R_TYPE = "bdo:"+typ[0]
              searchType+="Graph"
 
@@ -634,8 +686,8 @@ export default class API {
          try {
               let config = store.getState().data.config.ldspdi
               let url = config.endpoints[config.index]+"/lib" ;
-              let simple = !["Work","Person","Place"].includes(dtyp)
-              let param = {"searchType":"associated"+(!simple?dtyp:"SimpleType")+"s",...(simple?{R_TYPE:"bdo:"+dtyp}:{}),"R_RES":key,"L_NAME":"","LG_NAME":"", "I_LIM":"" }
+              let simple = !["Work","Person","Place","Instance"].includes(dtyp)
+              let param = {"searchType":"associated"+(!simple?dtyp:(styp=="Product"&&dtyp=="Scan"?"IInstance":"SimpleType"))+"s",...(simple?{R_TYPE:(["Product"].includes(dtyp)?"adm:":"bdo:")+dtyp}:{}),"R_RES":key,"L_NAME":"","LG_NAME":"", "I_LIM":"" }
               let data = this.getQueryResults(url, key, param,"GET");
               // let data = this.getSearchContents(url, key);
 

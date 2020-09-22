@@ -27,7 +27,8 @@ const enTranslation = {
       subsubmessage_auth:"All users, including users with existing accounts on tbrc.org, will need to register for a free BDRC account for full access.",
       search:"Search",
       choose:"Choose language",
-      start:"Start typing then select search language"
+      start:"Start typing then select search language",
+      new:"New Scans Released This Week"
    },
    types:{
       any:"Any",
@@ -54,7 +55,11 @@ const enTranslation = {
       images:"Scans",
       volume:"Volume",
       volume_num:"Volume {{num}}",
-      searchIn:"in {{type}}"
+      searchIn:"in {{type}}",
+      product:"Product",
+      product_plural:"Products",
+      scan:"Scan",
+      scan_plural:"Scans"
    },
    topbar:{
       about:"about us",
@@ -110,7 +115,8 @@ const enTranslation = {
       placeN:"Place Name",
       yearP:"Year of Publication",
       title:"Title",
-      numberMC:"Number of Matching Chunks"
+      numberMC:"Number of Matching Chunks",
+      lastS:"Release Date"
    },
    copyright:{
       open:"Open Access",
@@ -118,7 +124,8 @@ const enTranslation = {
       tempo:"Temporarily Restricted",
       sealed:"Sealed",
       view:"View Scans",
-      scans:"Scans Available"
+      scans:"Scans Available",
+      provided:"Data provided by {{- provider}}"
    },
    prop:{
       "tmp:bestMatch":"Best Match",
@@ -135,8 +142,8 @@ const enTranslation = {
       "tmp:imageVolumeId":"Image Volume Id",
       "tmp:workHasTranslationInCanonicalLanguage":"Canonical Translation",
       "tmp:workHasTranslationInCanonicalLanguage_plural":"Canonical Translations",
-      "tmp:workHasTranslationInNonCanonicalLanguage":"Other Translation",
-      "tmp:workHasTranslationInNonCanonicalLanguage_plural":"Other Translations",
+      "tmp:workHasTranslationInNonCanonicalLanguage":"Translation",
+      "tmp:workHasTranslationInNonCanonicalLanguage_plural":"Translations",
       "tmp:entityScore":"Entity Score",
       "tmp:instanceLabel":"$t(types.instance) Label",
       "tmp:dimensions":"Dimensions",
@@ -176,7 +183,9 @@ const enTranslation = {
       "tmp:Bibliographies":"Bibliographies",
       "tmp:Maps":"Maps",
       "tmp:BuddhistArt":"Buddhist Art",
-      "tmp:other":"Other"
+      "tmp:other":"Other",
+      "tmp:instanceOfWork":"Version of Work",
+      "tmp:lastSync":"Release Date"
    },
    result:{
       open:"Open",
@@ -193,7 +202,8 @@ const enTranslation = {
       hideC:"Hide Context",
       openE:"Open Etext",
       hasInstance:"Has {{count}} $t(types.instance)",
-      hasInstance_plural:"Has {{count}} $t(types.instance_plural)"
+      hasInstance_plural:"Has {{count}} $t(types.instance_plural)",
+      assoc:"{{type}} associated with: {{- name}}"
    },
    index:{
       openViewer:"Open in Viewer",
@@ -239,7 +249,12 @@ const enTranslation = {
       redirect:"Not logged in... Redirecting",
       agree:"I agree to receive emails from BDRC",
       update:"Update",
-      updating:"Updating..."
+      updating:"Updating...",
+      errors:{
+         server1:"Server error",
+         server2:"Please try again later",
+         email:"Wrong email format"
+      }
    },
    popover:{
       moreInfo:"More Information",
@@ -261,6 +276,7 @@ const enTranslation = {
       has:"Has",
       or:"or",
       seeA:"see all",
+      seeAnum:"see all {{count}}",
       browse:"browse all",
       show:"Show all",
       seeMore:"See More",
@@ -295,6 +311,7 @@ const enTranslation = {
          piXIast:"Pali (Rom.)",
          bo:"Tibetan (Unicode)",
          boXEwts:"Tibetan (Wylie)",
+         boXEwtsLower:"Tibetan (lower case, Wylie)",
          boXDts:"Tibetan (DTS)",
          boAlaLc:"Tibetan (ALA-LC)",
          other:"Other",
@@ -387,8 +404,8 @@ const enTranslation = {
       view:"View",
       metadata:"metadata",
       manifest:"IIIF manifest",
-      page:"p.{{num}}",
-      volume:"Vol.{{num}}",
+      page:"img. {{num}}",
+      volume:"v. {{num}}",
       availableScans:"available scans for this page",
       about:"About",
       createdB:"Created By",
@@ -402,15 +419,26 @@ const enTranslation = {
       scanF:"Scans for",
       etextF:"Etext for",
       openR:"Open Record",
-      loadP:"Load Previous Pages"
+      loadP:"Load Previous Pages",
+      sameL:"Link to External Resource",
+      sameL_plural:"Links to External Resources",
+      gener1pdf:"Generate PDF",
+      gener2pdf:"Generating PDF...",
+      gener3pdf:"Download PDF",
+      gener1zip:"Generate ZIP",
+      gener2zip:"Generating ZIP...",
+      gener3zip:"Download ZIP",
+      nbTrans:" ({{count}} translation)",
+      nbTrans_plural:" ({{count}} translations)",
+      openO:"Open on {{src}}"
    },
    mirador:{
       return:"return to BUDA",
       browse:"browse collection",
-      goto:"Go to p.",
+      goto:"Go to img.",
       zoomIn:"zoom in",
       zoomOut:"zoom out",
-      showI:"Show Scans",
+      showI:"Show scans",
       fullscreen:"fullscreen",
       next:"next image",
       prev:"previous image",
@@ -424,12 +452,12 @@ const enTranslation = {
       credentials:"if you have sufficient credentials to get access to all scans from this work."
    },
    location:{
-      beginV:"Begin Volume: {{num}}",
-      beginP:"Begin Page: {{num}}",
-      beginL:"Begin Line: {{num}}",
-      endV:"End Volume: {{num}}",
-      endP:"End Page: {{num}}",
-      endL:"End Line: {{num}}"
+      beginV:"Begin volume: {{num}}",
+      beginP:"Begin image: {{num}}",
+      beginL:"Begin line: {{num}}",
+      endV:"End volume: {{num}}",
+      endP:"End image: {{num}}",
+      endL:"End line: {{num}}"
    },
    footer:{
       BDRC: "Buddhist Digital Resource Center",

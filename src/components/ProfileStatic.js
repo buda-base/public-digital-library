@@ -45,7 +45,7 @@ const tmp   = "http://purl.bdrc.io/ontology/tmp/" ;
 const propsMap = {  name: skos+"prefLabel", email: foaf+"mbox",
                     picture:bdou+"image",
                     gender: bdo+"personGender", male: bdr+"GenderMale", female: bdr+"GenderFemale", "no-answer": bdr+"GenderNotSpecified",
-                    interest: bdou+"interest", otherInterest:tmp+"otherInterest",
+                    interest: bdou+"interest", otherInterest:tmp+"otherInterest", tibetB:tmp+"TibetanBuddhistTexts", bonpoT:tmp+"BonpoTexts",  sanskT:tmp+"SanskritTexts", zhT:tmp+"ChineseTexts", multiT:tmp+"multiLingualTexts", maps:tmp+"Maps", art:tmp+"BuddhistArt", biblio:tmp+"Bibliographies", SEAt:tmp+"SoutheastAsianTexts",
                     region: bdou+"mainResidenceArea", outside:tmp+"outside", kham:tmp+"kham", amdo:tmp+"amdo", "u-tsang":tmp+"uTsang", other:tmp+"other",
                     agree: tmp+"agreeEmail" }
 
@@ -132,6 +132,8 @@ export class Profile extends Component<Props,State> {
 
       // TODO clean profile from resource[userID]
       //store.dispatch(data.gotResource(props.userID, { [props.userID] : userProfile }))
+      let vs = Object.values(propsMap)
+
 
       for(let k of Object.keys(s)) {
         let p
@@ -140,8 +142,17 @@ export class Profile extends Component<Props,State> {
             console.log("kp",k,p,props.profile[p])
             let type = s[k].type
             if(!type) type = "uri"
-            if(props.profile[p].length === 1) s[k] = { type, value: fullUri(props.profile[p][0].value) }
+
+            if(["name", "gender", "region", "interest"].includes(k)) {
+                s[k] =  props.profile[p].map(e => e.value).filter(v => k === "name" || vs.includes(v)).map(v => ({ type, value:fullUri(v)}))
+
+                if(k !== "interest") s[k] = s[k][0] 
+                else s[k] = s[k].map(e => e.value)
+            }
+            else if(props.profile[p].length === 1) s[k] = { type, value: fullUri(props.profile[p][0].value) }
             else s[k] = props.profile[p].map(e => e.value)
+            
+            console.log("sk",s[k])
           }
         }
       }
@@ -186,7 +197,7 @@ export class Profile extends Component<Props,State> {
         console.log("response",response)
 
         if(!s) s = { ...this.state, updating:false }
-        s.errors.email = response.message.replace(/.*validation error.*/,"Wrong email format")
+        s.errors.email = response.message.replace(/.*validation error.*/,I18n.t("user.errors.email"))
       }
     }
     
@@ -194,10 +205,14 @@ export class Profile extends Component<Props,State> {
       response = await api.submitPatch(this.props.userID, this.state.patch)                 
       if(response) response = JSON.parse(response)
 
-      if(response  && response.message === "OK") { 
-        store.dispatch(data.getUser(this.state.profile))
+      if(response) {
         if(!s) s = { ...this.state, updating:false }
-        s.patch = '' 
+        if(response.message === "OK") { 
+          store.dispatch(data.getUser(this.state.profile))
+          s.patch = '' 
+        } else  {
+          s.errors.server = response.message
+        }
       }
     }
 
@@ -289,7 +304,10 @@ export class Profile extends Component<Props,State> {
 
           console.log("e",e.target,val1,val2,type,value)
 
-          let state = {...this.state, [e.target.name]:{ type, value } } 
+          let lang
+          if(type === "literal") lang = this.props.locale
+
+          let state = {...this.state, [e.target.name]:{ type, value, lang } } 
 
           state = this.preparePatch(state)
           
@@ -314,10 +332,11 @@ export class Profile extends Component<Props,State> {
         if(this.props.profile && this.state.profile && !this.props.resetLink) store.dispatch(data.getResetLink(this.props.userID, this.props.profile, this.state.profile))
 
         let hasError = !_.isEmpty(this.state.errors)
-        let errKeys,byPass ;
+        let errKeys,byPass,servErr ;
         if(hasError) { 
           errKeys = Object.keys(this.state.errors)
           if(errKeys.length === 1 && this.state.errors.email) byPass = true  
+          if(this.state.errors.server) { servErr = <div class="error">{I18n.t("user.errors.server1")}<br/>{I18n.t("user.errors.server2")}</div> }
         }
 
 
@@ -329,6 +348,9 @@ export class Profile extends Component<Props,State> {
         let picUrl = "/icons/header/user.png" 
         if(profile.picture && !profile.picture.match(/gravatar.*cdn[.]auth0/)) picUrl = profile.picture
         if(val.picture && !this.state.errors.picture) picUrl = val.picture
+
+        let title = "User Profile"
+        if(this.props.profile && this.props.profile[skos+"prefLabel"]) title =  this.props.profile[skos+"prefLabel"][0].value
 
         return (
         <div>
@@ -356,7 +378,7 @@ export class Profile extends Component<Props,State> {
               </div>
             </div>
               <div class="data">
-                <h2>{this.props.profile?this.props.profile[skos+"prefLabel" /*foaf+"mbox"*/ ][0].value:null}</h2>
+                <h2>{title}</h2>
               </div>
               <div id="main-info" className="profile-area data">
 
@@ -561,6 +583,7 @@ export class Profile extends Component<Props,State> {
                       <div id="validate">
                         { hasError && <WarningIcon/>}
                         <a class={"ulink "+(this.state.patch&&(!hasError||byPass)&&!this.state.updating?"on":"")} id="upd" {... this.state.patch?{onClick:this.handlePatch.bind(this)}:{}}>{this.state.updating?I18n.t("user.updating"):I18n.t("user.update")}</a>
+                        { servErr }
                       </div>
                   </div>
                 </div>
@@ -595,8 +618,7 @@ export class Profile extends Component<Props,State> {
                 this.state.patch && 
                    <pre id="patch" contentEditable="true">
                     { this.state.patch }
-                   </pre> 
-                
+                   </pre>
               */ }
               
 

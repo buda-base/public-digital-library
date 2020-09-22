@@ -75,8 +75,12 @@ const mapStateToProps = (state,ownProps) => {
    let imageVolumeManifests
    let IIIFinfo = state.data.IIIFinfo
    let manifestWpdf
+   let IIIFerrors
 
    if(IIIFinfo) {
+
+      IIIFerrors = Object.keys(IIIFinfo).reduce( (acc,k) => ({...acc,[k]:IIIFinfo[k].manifestError}), {}) 
+
       IIIFinfo = IIIFinfo[ownProps.IRI]
       if(IIIFinfo) {
          firstImage = IIIFinfo.firstImage
@@ -110,9 +114,11 @@ const mapStateToProps = (state,ownProps) => {
    if(outline && outline[ownProps.IRI] !== undefined) { 
       outline = outline[ownProps.IRI]
       if(ownProps.IRI.match(/^bdr:MW[^_]+(_[^_]+)?$/)) {
-         let root = ownProps.IRI.replace(/^((bdr:MW[^_]+)(_[^_]+)?)$/,"$2")
+         let root = ownProps.IRI.replace(/^((bdr:MW[^_]+)(_[^_]+)?)$/,"$2") // doesn't work in Taisho 
          let outL = state.data.outlines[root]
-         if(outL && outL["@graph"] && ! outL["@graph"].filter(o => o["@id"] === root && o.hasPart).length ) outline = true
+         if(!outL) outline = true
+         else if(outL["@graph"] && ! outL["@graph"].filter(o => /*o["@id"] === root && */ o.hasPart).length ) outline = true 
+         else if(!outL["@graph"]) outline = true
          //else outline = outline[ownProps.IRI]
       }
    }
@@ -127,7 +133,8 @@ const mapStateToProps = (state,ownProps) => {
    let props = { logged,config,resources, ontology, dictionary, keyword, language, datatype, assocResources, prefLang, failures, loading,
       imageAsset,firstImage,canvasID,collecManif,manifests,manifestError,pdfVolumes,createPdf,pdfUrl, manifestWpdf,
       annoCollec,rightPanel,locale,langPreset,imgData, nextChunk, nextPage, resourceManifest, imageVolumeManifests, userEditPolicies, highlight,
-      outline,outlines,outlineKW }
+      outline,outlines,outlineKW,      
+      IIIFerrors }
 
    if(config && !config.auth) props.auth = false
 

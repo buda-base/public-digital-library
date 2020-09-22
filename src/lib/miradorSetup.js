@@ -188,9 +188,13 @@ async function hasEtextPage(manifest) {
          delete window.MiradorUseEtext
          return 
       }
-      
+      else {
+         if(!window.MiradorUseEtext) window.MiradorUseEtext = true;
+      }
 
 
+
+      /* // deprecated
       if(!window.setEtext) { 
          window.setEtext = (obj,e) => {
             console.log("setetext",obj,e,e.target.tagName)
@@ -207,6 +211,7 @@ async function hasEtextPage(manifest) {
             }               
          }
       }
+      */
 
       let getEtextPage = async (canvas) => { 
 
@@ -218,34 +223,40 @@ async function hasEtextPage(manifest) {
          if(!id || id.match(/[^0-9]/)) return "(issue with canvas label: "+JSON.stringify(canvas.label,null,3)+")" ;
          else id = Number(id)
 
-         //console.log("page " +id);
-
          if(!etextPages[ut]) etextPages[ut] = {}
+
+         console.log("page " +id,etextPages[ut][id]);
+
          if(etextPages[ut][id] === true) {            
             return new Promise((resolve,reject) => {
                let timer = setInterval(()=>{
-                  //console.log("id?",etextPages[ut][id])
+                  console.log("id?",id,etextPages[ut][id])
                   if(etextPages[ut][id] && etextPages[ut][id] !== true) {
                      resolve(etextPages[ut][id].chunks);
                      clearInterval(timer);
+                     timer = 0 ;
                   }
                },100);   
+               setTimeout(() => {
+                  if(timer) clearInterval(timer);
+               },3000)
             })
          }
          else if(!etextPages[ut][id]) {            
             
-            //console.log("loading DATA",id);
+            console.log("loading DATA",id);
 
             for(let i = id ; i <= id+NB_PAGES-1 ; i++) etextPages[ut][i] = true ;
-            let data = await window.fetch(ldspdi+"/query/graph/ChunksByPage?R_RES="+ut+"&I_START="+id+"&I_END="+(id+NB_PAGES-1)) ;
+
+            let data = await window.fetch(ldspdi+"/lib/ChunksByPage?R_RES="+ut+"&I_START="+id+"&I_END="+(id+NB_PAGES-1), { headers:new Headers({accept:"application/ld+json"})}) ;
             
             let json = await data.json() ;
 
-            //console.log("DATA OK",id,json);
+            console.log("DATA OK",id,json);
 
             if(json && json["@graph"]) json = json["@graph"]
             if(json.status === 404 || !json.filter) {
-               for(let i = id ; i <= id+NB_PAGES-1 ; i++) delete etextPages[ut][i]  ;
+               for(let i = id ; i <= id+NB_PAGES-1 ; i++) delete etextPages[ut][i]  ;               
                //console.error("Etext ERROR",json)
                return ; //[{"@language":"en","@value":"no data found (yet !?)"}]
             }
@@ -299,10 +310,10 @@ async function hasEtextPage(manifest) {
 }
 
 
-const NB_PAGES = 10 ; 
+const NB_PAGES = 20 ; 
 let etextPages = {};
 
-export async function miradorConfig(data, manifest, canvasID, useCredentials, langList, cornerButton, resID)
+export async function miradorConfig(data, manifest, canvasID, useCredentials, langList, cornerButton, resID, locale)
 {
    console.log("cB",cornerButton,data,resID)
 
@@ -410,7 +421,7 @@ export async function miradorConfig(data, manifest, canvasID, useCredentials, la
          
       },
 
-      locale:langList[0].replace(/^([^-]+).*?$/,"$1")
+      locale //(langList[0].replace(/^([^-]+).*?$/,"$1")
    }
    if(!manifest) {
 
@@ -817,7 +828,7 @@ function miradorInitMenu(maxWonly) {
    //console.log("maxW",window.maxW)
 }
 
-export async function miradorInitView(work,lang,callerURI) {
+export async function miradorInitView(work,lang,callerURI,locale) {
 
    const bdr = "http://purl.bdrc.io/resource/"
 
@@ -888,8 +899,11 @@ export async function miradorInitView(work,lang,callerURI) {
 
             //console.log(checkV)
             
-         }         
-         else {
+         } else if(propK["type"] === "ImageGroup") {
+            data = [
+               { "manifestUri" : iiifpres+"/vo:"+work+"/manifest", location:"" }
+            ]
+         } else {
             data = [
                { "collectionUri" : iiifpres+"/collection/wio:"+work, location:"" }
             ]
@@ -919,7 +933,7 @@ export async function miradorInitView(work,lang,callerURI) {
             onClick : "javascript:eval('if(window.Mirador.fullscreenElement()) { window.Mirador.exitFullscreen(); $(\".user-buttons .fs\").addClass(\"fs-expand\").removeClass(\"fa-compress\"); } else { window.Mirador.enterFullscreen($(\".mirador-container\")[0]) ; $(\".user-buttons .fs\").removeClass(\"fs-expand\").addClass(\"fa-compress\"); }')" }
       }
 
-   let config = await miradorConfig(data,manif,null,null,lang,corner,work);
+   let config = await miradorConfig(data,manif,null,null,lang,corner,work,locale);
 
    let initTimer = setInterval( ((cfg) => () => {
       console.log("init?",cfg,window.Mirador)
