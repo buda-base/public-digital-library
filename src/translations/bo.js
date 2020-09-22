@@ -27,7 +27,7 @@ const boTranslation = {
       subsubmessage_auth:"All users, including users with existing accounts on tbrc.org, will need to register for a free BDRC account for full access.",
       search:"འཚོལ།",
       choose:"སྐད་རིགས་འདེམ།",
-      start:"དཔེ་མཛོད་སྔོགས།"
+      start:"དཔེ་མཛོད་སྔོགས།",
       new:"New Scans Released This Week"
    },
    types:{
@@ -56,7 +56,7 @@ const boTranslation = {
       images:"བཤེར་པར།",
       volume:"བཤེར་པར།",
       volume_num:"པོད། {{num,counttobo}}",
-      searchIn:"{{type}}"
+      searchIn:"{{type}}",
       product:"Product",
       product_plural:"Products",
       scan:"Scan",
@@ -116,7 +116,7 @@ const boTranslation = {
       placeN:"ས་གནས་མིང་།",
       yearP:"པར་ལོ།",
       title:"མཚན་བྱང་།",
-      numberMC:"བཙལ་བྱ་རྙེད་སའི་དུམ་ཚན་གྱི་གྲངས།"
+      numberMC:"བཙལ་བྱ་རྙེད་སའི་དུམ་ཚན་གྱི་གྲངས།",
       lastS:"Release Date"
    },
    copyright:{
@@ -125,7 +125,7 @@ const boTranslation = {
       tempo:"གནས་སྐབས་རིང་གི་བཀག་རྒྱ།",
       sealed:"བཀའ་རྒྱ་མ།",
       view:"བཤེར་པར་སྟོན།",
-      scans:"བཤེར་པར་ཡོད།"
+      scans:"བཤེར་པར་ཡོད།",
       provided:"Data provided by {{- provider}}"
    },
    prop:{
@@ -185,7 +185,7 @@ const boTranslation = {
       "tmp:Bibliographies":"དཔེ་བསྐྲུན་གནས་ཚུལ།",
       "tmp:Maps":"ས་ཁྲ།",
       "tmp:BuddhistArt":"ནང་བསྟན་རིགས་གནས།",
-      "tmp:other":"གཞན།"
+      "tmp:other":"གཞན།",
       "tmp:instanceOfWork":"Version of Work",
       "tmp:lastSync":"Release Date"
    },
@@ -251,11 +251,12 @@ const boTranslation = {
       redirect:"ནང་འཛུལ་བྱས་མི་འདུག ཕྱིར་ལྡོག་བྱེད་བཞིན་ཡོད།",
       agree:"ནང་བསྟན་དཔེ་ཚོགས་ལྟེ་གནས་ཀྱིས་བསྐུར་བའི་གློག་འཕྲིན་ལ་ངོས་ལེན་ཡོད།",
       update:"ཁ་གསབ།",
-      updating:"ཁ་གསབ་བྱེད་བཞིན་ཡོད།"
+      updating:"ཁ་གསབ་བྱེད་བཞིན་ཡོད།",
       errors:{
         server1:"Server error",
         server2:"Please try again later",
         email:"Wrong email format"
+      }
    },
    popover:{
       moreInfo:"གནས་ཚུལ་འདི་ལས་མང་བ།",
@@ -420,7 +421,7 @@ const boTranslation = {
        scanF:"",
       etextF:"",
       openR:"དཔེ་ཐོ།",
-      loadP:"ཤོག་གྲངས་སྔོན་མ་ཀློག"
+      loadP:"ཤོག་གྲངས་སྔོན་མ་ཀློག",
       sameL:"Link to External Resource",
       sameL_plural:"Links to External Resources",
       gener1pdf:"Generate PDF",

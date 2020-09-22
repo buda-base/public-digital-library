@@ -130,6 +130,7 @@ const enTranslation = {
    prop:{
       "tmp:bestMatch":"Best Match",
       "tmp:relationType":"Relation Type",
+      "tmp:relationType_plural":"Relation Types",
       "tmp:nameMatch":"Name Match",
       "tmp:nameMatch_plural":"Name Matches",
       "tmp:otherTitle":"Other Title",
