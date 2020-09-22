@@ -1559,6 +1559,8 @@ vertical-align:middle;}
 #popHoverM + #popHoverM {display:none !important; }
 
 #popHoverM { top:-53px !important;left:63px !important; }
+#popHoverM.fixW { left:345px !important; }
+
 #popSame { margin-top:-10px; z-index:1000000; }
 #popDL { margin-top:30px; }
 
@@ -1643,6 +1645,9 @@ body > [id^="menu-"] > div:last-child,
 
 /* ------------------------------------------------------------------------------------------------------------------------ hover panel */
 
+.hasTogHovM { cursor:help;}
+.hasTogHovM span { cursor:auto;}
+
 .resource .data:not(.legal-props) span > .before,
 .resource .data:not(.legal-props) span > .sameAs > .sameAs { display:none; }
 
@@ -1653,6 +1658,9 @@ body > [id^="menu-"] > div:last-child,
 .resource .data h4:hover .svg { background-color: #ededed; }
 .resource .data.ext-props .has-collapse.custom[data-prop="bdo:note"] .expand { 
    position:absolute;right:35px;top:8px; width: calc(100% - 260px);
+}
+.resource .data.ext-props .has-collapse.custom[data-prop="bdo:note"] .propCollapse .expand { 
+   display:none
 }
 
 
@@ -2642,6 +2650,8 @@ a.download:hover { text-decoration:underline; }
 .propCollapseHeader { width:calc(100% - 190px); display:inline-block;vertical-align:top;padding-top:0px;/*line-height:24px;*/ column-count:2;  column-gap: 30px;}
 
 .propCollapseHeader .expand { margin:0 0 0 0  !important; top:-2px;bottom:initial;}
+
+.propCollapseHeader:last-child { column-count:1; }
 
 h3 + .group h4.multiple,
 h3 + h4.multiple,
