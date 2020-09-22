@@ -2584,7 +2584,7 @@ class ResourceViewer extends Component<Props,State>
                                  <div class="subsub"><h4>{current}</h4></div>
                               </div>
                            </div>}
-                           <Tabs defaultIndex={fromSame?1:0}>
+                           <Tabs defaultIndex={fromSame?1:0} onClick={ev => { ev.preventDefault();ev.stopPropagation();return false; }}>
                               <TabList>
                                  <Tab>{I18n.t("popover.moreInfo")}</Tab>
                                  <Tab {... !fromSame?{disabled:"disabled"}:{}}>{I18n.t("popover.source",{count:(fromSame &&e.allSameAs.length?e.allSameAs.length:1)})} {fromSame && <b>&nbsp;({e.allSameAs.length})</b>}</Tab>
@@ -4090,7 +4090,7 @@ class ResourceViewer extends Component<Props,State>
          */
 
          let show = this.state.collapse[k]
-         //if(hasMaxDisplay === -1 && k !== bf+"identifiedBy") show = true ; 
+         if(hasMaxDisplay === -1 && ![bf+"identifiedBy",bdo+"note"].includes(k) && this.state.collapse[k] === undefined) show = true ; 
 
          return (
             <div data-prop={shortUri(k)} class={"has-collapse custom max-"+(maxDisplay)+" "+(n%2===0?"even":"odd") }>
@@ -4120,12 +4120,12 @@ class ResourceViewer extends Component<Props,State>
                   {ret.slice(i2,n)}
                </Collapse> */}
                { (this.state.collapse[k] || hasMaxDisplay === -1) && <span
-               onClick={(e) => this.setState({...this.state,collapse:{...this.state.collapse,[k]:!this.state.collapse[k]}})}
+               onClick={(e) => this.setState({...this.state,collapse:{...this.state.collapse,[k]:!show}})}
                className="expand">
-                  {I18n.t("misc."+(this.state.collapse[k]?"hide":"seeMore")).toLowerCase()}&nbsp;<span
+                  {I18n.t("misc."+(show?"hide":"seeMore")).toLowerCase()}&nbsp;<span
                   className="toggle-expand">
-                     { this.state.collapse[k] && <ExpandLess/>}
-                     { !this.state.collapse[k] && <ExpandMore/>}
+                     { show && <ExpandLess/>}
+                     { !show && <ExpandMore/>}
                   </span>
                </span> }
             </div>
@@ -5885,8 +5885,21 @@ perma_menu(pdfLink,monoVol,fairUse,other)
       let hasRel = ((related && related.length > 0)||(createdBy && createdBy.length > 0))
       
 
+      let hasLongExtP = [bf+"identifiedBy",bdo+"note"].filter(k => kZprop.includes(k) ).length > 0
+
+      let extPlabel = "hide"
+      if(hasLongExtP) {
+         extPlabel = "seeA"
+         if(this.state.collapse.extProps) extPlabel = "hide"
+      }
+      else {
+         if(this.state.collapse.extProps) extPlabel = "seeA"
+      }
+      
       let toggleExtProps = (e) => {
-         let state = { ...this.state, collapse:{ ...this.state.collapse, extProps:!this.state.collapse.extProps, ...extProps.reduce( (acc,p) => ({...acc, [p]:!this.state.collapse.extProps}),{} ) } }
+         let show = this.state.collapse.extProps
+         if(!hasLongExtP) show = (this.state.collapse.extProps === undefined) || !this.state.collapse.extProps
+         let state = { ...this.state, collapse:{ ...this.state.collapse, extProps:!this.state.collapse.extProps, ...extProps.reduce( (acc,p) => ({...acc, [p]:!show}),{} ) } }
          this.setState(state)
       }
 
@@ -6038,7 +6051,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
          let prov = this.getProv()
 
-
+         
          return (
          [getGDPRconsent(this),
          <div class={isMirador?"H100vh OF0":""}>
@@ -6117,7 +6130,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                   { theDataLegal }
                   { theDataExt && 
                      <div class="data ext-props" id="ext-info">
-                        <div><h2>{I18n.t("resource.extended")}</h2><span onClick={toggleExtProps}>{I18n.t("misc."+(!this.state.collapse.extProps?"seeA":"hide"))}</span></div>
+                        <div><h2>{I18n.t("resource.extended")}</h2><span onClick={toggleExtProps}>{I18n.t("misc."+extPlabel)}</span></div>
                      </div> }
                   { theDataExt }
                </div>
