@@ -3078,7 +3078,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             {/* { this.getResultProp("bdo:note",allProps,true,false,[ tmp+"noteMatch" ]) } // see biblioNote below */}
 
 
-            { this.getResultProp(I18n.t("prop.tmp:relationType"),allProps,true,false,[ tmp+"relationType" ]) } 
+            { this.getResultProp("tmp:relationType",allProps,true,false,[ tmp+"relationType" ]) } 
             {/* { this.getResultProp(tmp+"InverseRelationType",allProps,true,true,[tmp+"relationTypeInv"]) } */}
             
             {/* { this.getResultProp(tmp+"numberOfMatchingChunks",allProps,true,false,[tmp+"nbChunks"]) } */}
