@@ -28,7 +28,7 @@ const boTranslation = {
       search:"འཚོལ།",
       choose:"སྐད་རིགས་འདེམ།",
       start:"དཔེ་མཛོད་སྔོགས།"
-      new:"New Scans Released This Week"
+      new:"New Scans Released This Week བདུན་ཕྲག་འདིའི་ནང་སྤེལ་བའི་དཔེ་ཆའི་བཤེར་པར་གསར་པ་ཁག"
    },
    types:{
       any:"གང་རུང་།",
@@ -59,8 +59,8 @@ const boTranslation = {
       searchIn:"{{type}}"
       product:"Product",
       product_plural:"Products",
-      scan:"Scan",
-      scan_plural:"Scans"
+      scan:"བཤེར་པར།",
+      scan_plural:"བཤེར་པར།"
    },
    topbar:{
       about:"ང་ཚོའི་སྐོར།",
@@ -187,7 +187,7 @@ const boTranslation = {
       "tmp:BuddhistArt":"ནང་བསྟན་རིགས་གནས།",
       "tmp:other":"གཞན།"
       "tmp:instanceOfWork":"Version of Work",
-      "tmp:lastSync":"Release Date"
+      "tmp:lastSync":"Release Date སྤེལ་དུས།"
    },
    result:{
       open:"ཁ་ཕྱེ།",
@@ -253,9 +253,9 @@ const boTranslation = {
       update:"ཁ་གསབ།",
       updating:"ཁ་གསབ་བྱེད་བཞིན་ཡོད།"
       errors:{
-        server1:"Server error",
-        server2:"Please try again later",
-        email:"Wrong email format"
+        server1:"གནད་དོན་ལྷགས་སོང་།",
+        server2:"ཏོག་ཙམ་རྗེས་ནས་ཡང་བསྐྱར་ཚོད་ལྟ་བྱོས།",
+        email:"གློག་འཕྲིན་ནོར་འདུག"
    },
    popover:{
       moreInfo:"གནས་ཚུལ་འདི་ལས་མང་བ།",
@@ -423,12 +423,12 @@ const boTranslation = {
       loadP:"ཤོག་གྲངས་སྔོན་མ་ཀློག"
       sameL:"Link to External Resource",
       sameL_plural:"Links to External Resources",
-      gener1pdf:"Generate PDF",
-      gener2pdf:"Generating PDF...",
-      gener3pdf:"Download PDF",
-      gener1zip:"Generate ZIP",
-      gener2zip:"Generating ZIP...",
-      gener3zip:"Download ZIP",
+      gener1pdf:"PDF བཟོས།",
+      gener2pdf:"PDF བཟོ་བཞིན་ཡོད་་་་་་་།",
+      gener3pdf:"PDF ཕབ་ལེན།",
+      gener1zip:"ZIP བཟོས།",
+      gener2zip:"ZIP བཟོ་བཞིན་ཡོད་་་་་་་",
+      gener3zip:"ZIP ཕབ་ལེན།",
       nbTrans:" ({{count}} translation)",
       nbTrans_plural:" ({{count}} translations)",
       openO:"Open on {{src}}"
