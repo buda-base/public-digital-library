@@ -4120,7 +4120,7 @@ class ResourceViewer extends Component<Props,State>
          */
 
          let show = this.state.collapse[k]
-         if(hasMaxDisplay === -1 && ![bf+"identifiedBy",bdo+"note"].includes(k) && this.state.collapse[k] === undefined) show = true ; 
+         if(hasMaxDisplay === -1 /*&& ![bf+"identifiedBy",bdo+"note"].includes(k)*/ && this.state.collapse[k] === undefined) show = true ; 
 
          return (
             <div data-prop={shortUri(k)} class={"has-collapse custom max-"+(maxDisplay)+" "+(n%2===0?"even":"odd") }>
@@ -5915,7 +5915,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
       let hasRel = ((related && related.length > 0)||(createdBy && createdBy.length > 0))
       
 
-      let hasLongExtP = [bf+"identifiedBy",bdo+"note"].filter(k => kZprop.includes(k) ).length > 0
+      let hasLongExtP = false; //[bf+"identifiedBy",bdo+"note"].filter(k => kZprop.includes(k) ).length > 0
 
       let extPlabel = "hide"
       if(hasLongExtP) {
