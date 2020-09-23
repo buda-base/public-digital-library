@@ -2581,7 +2581,8 @@ class ResourceViewer extends Component<Props,State>
                   },
                   preventOverflow: {
                      enabled: true,
-                     boundariesElement: "scrollParent"
+                     boundariesElement: "scrollParent",
+                     escapeWithReference:true
                   }
                }}
                >
