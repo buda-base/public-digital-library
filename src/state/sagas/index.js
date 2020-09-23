@@ -365,7 +365,7 @@ else if(params && params.q) {
 }
 else if(params && params.r) {
    let t = getEntiType(params.r)
-   if(t === "Instance" || t === "Images" || t === "Volume" || t== "Scan") t = "Work"
+   if(["Instance", "Images", "Volume", "Scan"].includes(t) || ["bdo:SerialWork"].includes(params.r) ) t = "Work"
 
    loggergen.log("state r",t,state.data.searches,params,iri)
 
