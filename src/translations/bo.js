@@ -28,7 +28,7 @@ const boTranslation = {
       search:"འཚོལ།",
       choose:"སྐད་རིགས་འདེམ།",
       start:"དཔེ་མཛོད་སྔོགས།"
-      new:"New Scans Released This Week བདུན་ཕྲག་འདིའི་ནང་སྤེལ་བའི་དཔེ་ཆའི་བཤེར་པར་གསར་པ་ཁག"
+      new:"བདུན་ཕྲག་འདིའི་ནང་སྤེལ་བའི་དཔེ་ཆའི་བཤེར་པར་གསར་པ་ཁག"
    },
    types:{
       any:"གང་རུང་།",
@@ -117,7 +117,7 @@ const boTranslation = {
       yearP:"པར་ལོ།",
       title:"མཚན་བྱང་།",
       numberMC:"བཙལ་བྱ་རྙེད་སའི་དུམ་ཚན་གྱི་གྲངས།"
-      lastS:"Release Date"
+      lastS:"སྤེལ་དུས།"
    },
    copyright:{
       open:"བཀག་རྒྱ་མེད་པ།",
@@ -126,7 +126,7 @@ const boTranslation = {
       sealed:"བཀའ་རྒྱ་མ།",
       view:"བཤེར་པར་སྟོན།",
       scans:"བཤེར་པར་ཡོད།"
-      provided:"Data provided by {{- provider}}"
+      provided:"མཁོ་མདོན་པ། Data provided by {{- provider}}"
    },
    prop:{
       "tmp:bestMatch":"བཙལ་འབྲས་མཐུན་ཤོས།",
@@ -187,7 +187,7 @@ const boTranslation = {
       "tmp:BuddhistArt":"ནང་བསྟན་རིགས་གནས།",
       "tmp:other":"གཞན།"
       "tmp:instanceOfWork":"Version of Work",
-      "tmp:lastSync":"Release Date སྤེལ་དུས།"
+      "tmp:lastSync":"སྤེལ་དུས།"
    },
    result:{
       open:"ཁ་ཕྱེ།",
@@ -277,7 +277,7 @@ const boTranslation = {
       has:"",
       or:"ཡང་ན།",
       seeA:"ཚང་མ་སྟོན།",
-      seeAnum:"see all {{count}}",
+      seeAnum:"ཚང་མར་ལྟ། {{count}}",
       browse:"མིག་བཤེར་བྱོས།",
       show:"འདི་ལས་མང་བ།",
       seeMore:"འདི་ལས་མང་བ།",
@@ -370,7 +370,7 @@ const boTranslation = {
       filters:{
          noresults:"འདེམས་སྒྲུག་བྱས་པའི་བཙལ་འབྲས་མི་འདུག"
       },
-      seeO:"See results in other data types",
+      seeO:"དན་གྲངས་རིགས་གཞན་པའི་བཙལ་འབྲས་ལ་ལྟོས།",
       backToW:"བརྩམས་ཆོས་སྟེང་ཕྱིར་ལོག"
    },
    Rsidebar:{
