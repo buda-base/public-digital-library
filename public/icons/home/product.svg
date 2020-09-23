@@ -22,7 +22,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -37,8 +37,8 @@
      guidetolerance="10"
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
-     inkscape:window-width="1001"
-     inkscape:window-height="825"
+     inkscape:window-width="1918"
+     inkscape:window-height="1054"
      id="namedview2996"
      showgrid="false"
      fit-margin-top="50"
@@ -50,16 +50,21 @@
      inkscape:cy="107.77937"
      inkscape:window-x="1"
      inkscape:window-y="1"
-     inkscape:window-maximized="0"
+     inkscape:window-maximized="1"
      inkscape:current-layer="svg2991" />
   <style
      id="style2993">
 		tspan { white-space:pre }
 	</style>
-  <path
-     id="Text layer 1"
-     d="M 33.375,29.95 H 60.075001 C 72.875,29.95 82.475,32.2 88.875,36.7 c 6.5,4.5 9.75,12.05 9.75,22.65 0,8.2 -2.200001,14.6 -6.6,19.2 -4.300001,4.6 -9.7,7.9 -16.199999,9.9 l -3.4428,1.33324 -1.945111,0.41369 -2.6247,0.41568 L 42.075001,90.85 v 46.2 H 33.375 Z m 25.950001,7.8 h -17.25 v 45.6 h 20.25 c 8.7,0 15.399999,-2.05 20.099999,-6.15 4.799999,-4.1 7.2,-9.95 7.2,-17.55 0,-8.2 -2.5,-13.9 -7.5,-17.1 -4.9,-3.2 -12.5,-4.8 -22.799999,-4.8 z"
-     inkscape:connector-curvature="0"
-     style="fill:#000000"
-     sodipodi:nodetypes="cscscccccccccsccscscs" />
+  <text
+     xml:space="preserve"
+     style="font-style:normal;font-weight:normal;font-size:133.33332825px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
+     x="15.106798"
+     y="133.9556"
+     id="text18"><tspan
+       sodipodi:role="line"
+       id="tspan16"
+       style="font-size:133.33332825px;white-space:pre"
+       x="15.106798"
+       y="133.9556">C</tspan></text>
 </svg>

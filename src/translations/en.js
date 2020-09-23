@@ -56,8 +56,8 @@ const enTranslation = {
       volume:"Volume",
       volume_num:"Volume {{num}}",
       searchIn:"in {{type}}",
-      product:"Product",
-      product_plural:"Products",
+      product:"Collection",
+      product_plural:"Collections",
       scan:"Scan",
       scan_plural:"Scans"
    },
