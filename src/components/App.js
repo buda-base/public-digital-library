@@ -2664,7 +2664,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
       let sameAsRes,otherSrc= [] ;
       if(allProps) sameAsRes = [ ...allProps ]
-      if(!id.match(/[:/]/)) id = (id.startsWith("PR")?"bda:":"bdr:") + id
+      if(!id.match(/[:/]/)) id = "bdr:"+id // (id.startsWith("PR")?"bda:":"bdr:") + id
 
       let litLang = lang
       let savLit = "" + lit
