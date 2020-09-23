@@ -2700,8 +2700,11 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          else status = ""
       }
 
-      let T = getEntiType(id), langT, langs = [];
-      if(T === "Work") langT = allProps.filter(p => p.type === bdo+"language")      
+      let T = getEntiType(id), langT, langs = [], isSerial;
+      if(T === "Work") { 
+         langT = allProps.filter(p => p.type === bdo+"language")      
+         isSerial = allProps.filter(a => a.type === rdf+"type" && a.value === bdo+"SerialWork").length > 0
+      }
       else if(T === "Instance") langT = allProps.filter(p => p.type === bdo+"script")
 
       if(langT && langT.length) for(let l of langT) { 
@@ -2828,7 +2831,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      {/* <ListItemText style={{height:"auto",flexGrow:10,flexShrink:10}}
                         primary={ */}
                            <div>
-                              <span class="T">{I18n.t("types."+T.toLowerCase())}{langs}</span>
+                              <span class="T">{I18n.t("types."+(isSerial?"serial":T).toLowerCase())}{langs}</span>
                               <h3 key="lit" lang={lang}>
                                  {lit}
                                  { (resUrl && !resUrl.includes("/show/bdr:") && !resUrl.includes("/show/bda:")) && <img class="link-out" src="/icons/link-out_fit.svg"/>}

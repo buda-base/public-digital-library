@@ -59,7 +59,8 @@ const enTranslation = {
       product:"Collection",
       product_plural:"Collections",
       scan:"Scan",
-      scan_plural:"Scans"
+      scan_plural:"Scans",
+      serial:"Series"
    },
    topbar:{
       about:"about us",
