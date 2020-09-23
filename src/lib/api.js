@@ -666,7 +666,7 @@ export default class API {
              if(typ[0] === "Scan") searchType = "instanceFacet" 
              else if(typ[0] === "Etext") searchType = "etextContentFacet" //chunksFacet"
              else if(["Work","Person","Place","Instance"].includes(typ[0]))  searchType = typ[0].toLowerCase()+(["Work","Instance"].includes(typ[0])?"Facet":"")              
-             else if(["Product"].includes(typ[0])) R_TYPE = "adm:"+typ[0]
+             else if(["Product"].includes(typ[0])) R_TYPE = "bdo:Collection"
              else R_TYPE = "bdo:"+typ[0]
              searchType+="Graph"
 
@@ -687,7 +687,7 @@ export default class API {
               let config = store.getState().data.config.ldspdi
               let url = config.endpoints[config.index]+"/lib" ;
               let simple = !["Work","Person","Place","Instance"].includes(dtyp)
-              let param = {"searchType":"associated"+(!simple?dtyp:(styp=="Product"&&dtyp=="Scan"?"IInstance":"SimpleType"))+"s",...(simple?{R_TYPE:(["Product"].includes(dtyp)?"adm:":"bdo:")+dtyp}:{}),"R_RES":key,"L_NAME":"","LG_NAME":"", "I_LIM":"" }
+              let param = {"searchType":"associated"+(!simple?dtyp:(styp=="Product"&&dtyp=="Scan"?"IInstance":"SimpleType"))+"s",...(simple?{R_TYPE:(["Product"].includes(dtyp)?"bdo:Collection":"bdo:"+dtyp)}:{}),"R_RES":key,"L_NAME":"","LG_NAME":"", "I_LIM":"" }
               let data = this.getQueryResults(url, key, param,"GET");
               // let data = this.getSearchContents(url, key);
 
