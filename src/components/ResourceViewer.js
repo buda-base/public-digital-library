@@ -2241,17 +2241,16 @@ class ResourceViewer extends Component<Props,State>
                   
                   srcPrefix = src
                   for(let p of Object.keys(prefixes)) if(srcUri.match(new RegExp(prefixes[p]))) { srcPrefix = p ; break ; }
-
-                  if(srcPrefix) srcPrefixList.push(srcPrefix);
-
+                  
                   //loggergen.log("srcP",srcPrefix,srcUri)
 
                   if(srcPrefix !== "bdr") locaLink = <a class="urilink" href={getRealUrl(this,srcUri)} target="_blank"></a>
                   else locaLink = <Link to={"/"+show+"/"+shortUri(srcUri)}></Link>
 
+
                   //bdrcData = <Link className="hoverlink" to={"/"+show+"/"+shortUri(srcUri)}></Link>
                   
-                  befo.push(
+                  if(!srcPrefixList.includes(srcPrefix)) befo.push(
 
                      [ //<span class="meta-before"></span>,
                         <Tooltip placement="bottom-start" title={
@@ -2268,6 +2267,9 @@ class ResourceViewer extends Component<Props,State>
                         </Tooltip> 
                      ]
                   )
+
+                  if(srcPrefix) srcPrefixList.push(srcPrefix);
+
                }
 
                if(srcPrefixList.indexOf("bdr") === -1) bdrcData =  <Tooltip placement="top-end" title={<div class={"uriTooltip "}>View this resource on BUDA</div>}><span class="hover-anchor">{bdrcData}</span></Tooltip>
@@ -4128,6 +4130,8 @@ class ResourceViewer extends Component<Props,State>
 
    samePopup(same,id,noS) {
 
+      let list = []
+
       if(same && same.length) return ([
     
          <span id="same" title={I18n.t("resource.sameL",{count:same.length})} class={noS?"PE0":""} onClick={(e) => this.setState({...this.state,anchorPermaSame:e.currentTarget, collapse: {...this.state.collapse, ["permaSame-"+id]:!this.state.collapse["permaSame-"+id] } } ) }>
@@ -4136,7 +4140,10 @@ class ResourceViewer extends Component<Props,State>
                let prefix = shortUri(s.value).split(":")[0]
                if(prefix.startsWith("http") && s.fromSeeOther) prefix = s.fromSeeOther
                // TODO fix Sakya Research Center
-               return <span class={"provider "+prefix}>{provImg[prefix]?<img src={provImg[prefix]}/>:<span class="img">{prefix.replace(/^cbc.$/,"cbc@").toUpperCase()}</span>}</span>
+               if(!list.includes(prefix)) {
+                  list.push(prefix)
+                  return <span class={"provider "+prefix}>{provImg[prefix]?<img src={provImg[prefix]}/>:<span class="img">{prefix.replace(/^cbc.$/,"cbc@").toUpperCase()}</span>}</span>
+               }
             })}
          </span>,
 

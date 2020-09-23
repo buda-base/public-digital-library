@@ -1612,6 +1612,7 @@ body > [id^="menu-"] > div:last-child,
 #perma #same .provider::before {  content:none; display:none; }
 #perma #same .provider.eap img { height:36px;}
 
+#perma #same .provider.bdr:not(:last-child) { display:none; }
 
 /* #perma #rid + * { display:none;} */
 
