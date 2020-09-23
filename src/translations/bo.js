@@ -220,7 +220,7 @@ const boTranslation = {
       photo:{ 
          hover:"པར་གསར་པ་ཞོག",
          label:"ཐོ་གཞུང་པར།",                                
-         helperText:"པར་གྱི་དྲྭ་ཐག་ཞོག",
+         helperText:"པར་གྱི་དྲ་ཐག་ཞོག",
          error:"པར་གྱི་དྲ་ཐག་ལ་གནད་དོན་ཞིག་བྱུང་སོང་།"
       },      
       edit:{
@@ -376,7 +376,7 @@ const boTranslation = {
    Rsidebar:{
       title:"རྣམ་པ་སྒྲིག་ས།",
       UI:{
-         title:"དྲྭ་གདོང་གི་སྐད་ཡིག"
+         title:"དྲ་གདོང་གི་སྐད་ཡིག"
       },
       results:{
          title:"བཙལ་འབྲས་ཀྱི་སྐད་ཡིག་གཙོ་བོ།"
