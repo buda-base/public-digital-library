@@ -1559,12 +1559,7 @@ vertical-align:middle;}
 #popHoverM + #popHoverM {display:none !important; }
 
 #popHoverM { top:-53px !important;left:63px !important; }
-
 #popHoverM.fixW { left:403px !important; }
-@media (max-width:calc(960px)) {
-   #popHoverM.fixW { left:cacl(403px - (100vw - 960px)) !important; }
-}
-
 
 #popSame { margin-top:-10px; z-index:1000000; }
 #popDL { margin-top:30px; }
