@@ -451,7 +451,9 @@ const enTranslation = {
    },
    access:{
       limited20:"Access limited to first & last 20 pages.",
-      credentials:"if you have sufficient credentials to get access to all scans from this work."
+      credentials:"if you have sufficient credentials to get access to all scans from this work.",
+      notyet:"Images not yet available.",
+      error:"An error occurred while trying to access the images."
    },
    location:{
       beginV:"Begin volume: {{num}}",
