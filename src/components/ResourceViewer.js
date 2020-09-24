@@ -2088,7 +2088,7 @@ class ResourceViewer extends Component<Props,State>
             }
             else if(enti === "Images") { 
                ret = []
-               thumb =  this.getResourceElem(tmp+"thumbnailIIIFService")
+               thumb =  this.getResourceElem(tmp+"thumbnailIIIFService", shortUri(elem.value), this.props.assocResources)
                
                /* // deprecated (thumbnail is a property of instance)
                if(!this.props.resources || !this.props.resources[shortUri(elem.value)]) this.props.onGetResource(shortUri(elem.value));
