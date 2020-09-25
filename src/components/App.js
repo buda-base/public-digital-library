@@ -5272,6 +5272,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      <h4>{ I18n.t("home.submessage") }</h4>
                      <h4 class="subsubtitleFront">
                         { I18n.t("home.subsubmessage_account1")}
+                        {this.props.locale==="bo"?<span> </span>:""}
                         <span class="uri-link" onClick={() => this.props.auth.login(this.props.history.location,true)} >{I18n.t("home.subsubmessage_account4")}</span>
                         { I18n.t("home.subsubmessage_account2")}
                         <span class="uri-link" style={{textTransform:"capitalize"}} onClick={() => this.props.auth.login(this.props.history.location,true)} >{I18n.t("home.subsubmessage_account5")}</span>
