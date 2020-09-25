@@ -193,7 +193,9 @@ export const languages = {
    "bo-x-dts":"lang.search.boXDts",
    "bo-alalc97":"lang.search.boAlaLc",
    //"other":"lang.search.other"
-   "inc":"lang.search.inc","sa":"lang.search.sa",
+   "inc":"lang.search.inc",
+   "inc-x-ndia":"lang.search.incXNdia",
+   "sa":"lang.search.sa",
    "hans":"lang.search.hans","hant":"lang.search.hant",
    "deva":"lang.search.deva","newa":"lang.search.newa","sinh":"lang.search.sinh",
    "latn":"lang.search.ltn",
@@ -215,7 +217,7 @@ export const langSelect = [
    "sa-x-iast",
    "sa-deva",
    "en",
-   "pi-x-iast"
+   //"pi-x-iast"
 ]
 
 //const searchTypes = ["All","Work","Etext","Topic","Person","Place","Lineage","Corporation","Role"]
@@ -4926,7 +4928,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   }
                   
                   return [...acc, ...presets]
-               }, [] ).concat(!value || value.match(/[a-zA-Z]/)?["en"]:[]).map(p => '"'+(p==="bo-x-ewts_lower"?value.toLowerCase():value).trim()+'"@'+(p == "sa-x-iast"?"sa-x-ndia":p))
+               }, [] ).concat(!value || value.match(/[a-zA-Z]/)?["en"]:[]).map(p => '"'+(p==="bo-x-ewts_lower"?value.toLowerCase():value).trim()+'"@'+(p == "sa-x-iast"?"inc-x-ndia":p))
             }
          }
 
