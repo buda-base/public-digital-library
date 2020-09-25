@@ -308,6 +308,7 @@ const enTranslation = {
          saXIast:"Sanskrit (IAST)",
          saXNdia:"Sanskrit (Lenient)",
          saDeva:"Sanskrit (Devanagari)",
+         incXNdia:"Indic (Sanskrit, Pali, Lenient)",
          en:"English",
          pi:"Pali",
          piXIast:"Pali (Rom.)",
