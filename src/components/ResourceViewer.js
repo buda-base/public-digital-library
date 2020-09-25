@@ -5057,11 +5057,11 @@ perma_menu(pdfLink,monoVol,fairUse,other)
    // DONE check if this is actually used (it is)
    renderAccess = () => {
 
-      if ( this.props.manifestError && this.props.manifestError.error.message.match(/resource does not exist/) )
+      if ( this.props.manifestError && this.props.manifestError.error.code === 404)
          return  <div class="data access"><h3><span style={{textTransform:"none"}}>{I18n.t("access.notyet")}</span></h3></div>
-      else if ( this.props.manifestError && this.props.auth && this.props.manifestError.error.message.match(/Restricted access/) )
+      else if ( this.props.manifestError && this.props.auth && this.props.manifestError.error.code === 401) 
          return  <div class="data access"><h3><span style={{textTransform:"none"}}>{I18n.t("misc.please")} <a class="login" {...(this.props.auth?{onClick:this.props.auth.login.bind(this,this.props.history.location)}:{})}>{I18n.t("topbar.login")}</a> {I18n.t("access.credentials")}</span></h3></div>
-      else if ( this.props.manifestError && this.props.manifestError.error.message.match(/Problem fetching/) )
+      else if ( this.props.manifestError && this.props.manifestError.error.code === 500 )
          return  <div class="data access"><h3><span style={{textTransform:"none"}}>{I18n.t("access.error")}</span></h3></div>
       
    }
