@@ -2484,6 +2484,7 @@ class ResourceViewer extends Component<Props,State>
             target = $(ev.currentTarget).closest(".sub")
             if(target.length) target = target.find(".hover-menu")[0]
             else target = ev.currentTarget
+            console.log("tg:",target)
          }
          if(!noSame || ev.target === ev.currentTarget) this.setState({...this.state,collapse:{...this.state.collapse,["hover"+ID]:!this.state.collapse["hover"+ID],popperFix}, anchorEl:{...this.state.anchorEl,["hover"+ID]:target} } ) 
       }
@@ -2496,7 +2497,7 @@ class ResourceViewer extends Component<Props,State>
          if(that.state.collapse[prop]) elem = $(".propCollapse [data-id=\""+ID+"\"]")
          else elem = $("[data-id=\""+ID+"\"]")
          
-         //console.log("ID:",prop,ID,val,elem)
+         console.log("ID:",prop,ID,val,elem)
 
          if(elem.length) for(let e of elem) {
             if(val && (!that._mouseover[ID] || that._mouseover[ID] < 20)) {  // must be triggered twice ...              
@@ -3081,7 +3082,9 @@ class ResourceViewer extends Component<Props,State>
 
                   tip.push(this.hoverMenu(subProp,{type:"literal",value:tVal,lang},[...tip],[<h4 class="first">{this.proplink(prop)}{I18n.t("punc.colon")}</h4>]))
 
-                  let sav = <Tag className={'label '}>
+                  let ID = "ID-"+subProp+"-"+tVal
+
+                  let sav = <Tag onClick={this.toggleHoverM(ID,true)} onMouseEnter={this.toggleHoverMtooltip(this,ID,true)} onMouseLeave={this.toggleHoverMtooltip(this,ID,false)} className={'label hasTogHovM'}>
                         {tip}
                      </Tag>
                   sub.push(sav)
@@ -3166,11 +3169,12 @@ class ResourceViewer extends Component<Props,State>
                            workuri = <div><Tag style={{fontSize:"14px"}}>(from {this.uriformat(bdo+"noteSource",noteData[bdo+"noteSource"])}{loca})</Tag></div>
                         }
 
+
                         let sav = [
                               <Tag className="first type">{I18n.t("punc.num",{num:nbN++}) /*this.proplink(bdo+"noteText","Note")*/}</Tag>,
                               workuri,
                               <div class="subsub">
-                                 <Tag>
+                                 <Tag >
                                     {this.pretty(noteData[bdo+"noteText"].value)}
                                     {this.tooltip(noteData[bdo+"noteText"].lang)}
                                     <ChatIcon className="annoticon"  onClick={
@@ -3184,8 +3188,10 @@ class ResourceViewer extends Component<Props,State>
 
                         sav.push(this.hoverMenu(prop,{value:"note-i-"+nbN,noteData},<div class="sub">{[...sav]}</div>))
 
+                        let ID = "ID-"+prop+"-"+"note-i-"+nbN
+                        
                         note.push(
-                           <div class="sub">
+                           <div class="sub hasTogHovM"  onClick={this.toggleHoverM(ID)} onMouseEnter={this.toggleHoverMtooltip(this,ID,true)} onMouseLeave={this.toggleHoverMtooltip(this,ID,false)}>
                             {sav}
                            </div>)
                      }
@@ -3198,8 +3204,9 @@ class ResourceViewer extends Component<Props,State>
                         }
                         let workuri = <div><Tag style={{fontSize:"14px"}}>({I18n.t("misc.from")} {this.uriformat(bdo+"noteSource",noteData[bdo+"noteSource"])}{loca})</Tag></div>
 
+
                         let sav = [
-                           <Tag className="first type">{I18n.t("punc.num",{num:nbN++}) /*this.proplink(bdo+"noteSource","Note")*/}</Tag>,
+                           <Tag  className="first type">{I18n.t("punc.num",{num:nbN++}) /*this.proplink(bdo+"noteSource","Note")*/}</Tag>,
                            workuri,
                            <ChatIcon className="annoticon"  onClick={
                               (function(val,prop,v,ev){
@@ -3210,8 +3217,10 @@ class ResourceViewer extends Component<Props,State>
                         
                         sav.push(this.hoverMenu(prop,{value:"note-i-"+nbN,noteData},<div class="sub">{[...sav]}</div>))
 
+                        let ID = "ID-"+prop+"-"+"note-i-"+nbN
+
                         note.push(
-                           <div class="sub">
+                           <div class="sub  hasTogHovM"  onClick={this.toggleHoverM(ID)} onMouseEnter={this.toggleHoverMtooltip(this,ID,true)} onMouseLeave={this.toggleHoverMtooltip(this,ID,false)}>
                               {sav}
                            </div>
                         )
@@ -3431,7 +3440,7 @@ class ResourceViewer extends Component<Props,State>
          if(note.length <= 3) pre.push(<div class="no-collapse">{note}</div>)
          else pre.push([<div>         
                {note.slice(0,3)}
-               <Collapse timeout={{enter:0,exit:0}} className={"noteCollapse in-"+(this.state.collapse[prop]===true)} in={this.state.collapse[prop]}>
+               <Collapse timeout={{enter:0,exit:0}} className={"noteCollapse in-"+(this.state.collapse[prop]===true)} in={this.state.collapse[prop] !== false }>
                   {note.slice(3)}
                </Collapse>          
                </div>,     

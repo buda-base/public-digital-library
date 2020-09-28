@@ -1648,6 +1648,7 @@ body > [id^="menu-"] > div:last-child,
 /* ------------------------------------------------------------------------------------------------------------------------ hover panel */
 
 .hasTogHovM { cursor:help;}
+.sub.hasTogHovM .subsub h4,
 .hasTogHovM span { cursor:auto;}
 
 .resource .data:not(.legal-props) span > .before,
