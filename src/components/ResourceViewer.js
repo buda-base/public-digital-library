@@ -5134,18 +5134,24 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
    renderNoAccess = (fairUse) => {
       if(fairUse && (this.props.auth && !this.props.auth.isAuthenticated()) )
-         return <div class="data access"><h3 style={{display:"block",marginBottom:"15px"}}><span style={{textTransform:"none"}}>{I18n.t("access.limited20")}<br/>
-                   {I18n.t("misc.please")} <a class="login" onClick={this.props.auth.login.bind(this,this.props.history.location)}>{I18n.t("topbar.login")}</a> {I18n.t("access.credentials")}</span></h3></div>
+         return <div class="data access">
+                  <h3 style={{display:"block",marginBottom:"15px"}}>
+                     <span style={{textTransform:"none"}}>{I18n.t("access.limited20")}<br/>
+                   { this.props.locale !== "bo" && [ I18n.t("misc.please"), " ", <a class="login" onClick={this.props.auth.login.bind(this,this.props.history.location)}>{I18n.t("topbar.login")}</a>, " ", I18n.t("access.credentials") ] }
+                   { this.props.locale === "bo" && [ I18n.t("access.credentials"), " ", <a class="login" onClick={this.props.auth.login.bind(this,this.props.history.location)}>{I18n.t("topbar.login")}</a> ] }
+                   </span>
+                  </h3>
+               </div>
    }
 
    // DONE check if this is actually used (it is)
    renderAccess = () => {
 
-      if ( this.props.manifestError && this.props.manifestError.error.message.match(/resource does not exist/) )
+      if ( this.props.manifestError && this.props.manifestError.error.code === 404)
          return  <div class="data access"><h3><span style={{textTransform:"none"}}>{I18n.t("access.notyet")}</span></h3></div>
-      else if ( this.props.manifestError && this.props.auth && this.props.manifestError.error.message.match(/Restricted access/) )
+      else if ( this.props.manifestError && this.props.auth && this.props.manifestError.error.code === 401) 
          return  <div class="data access"><h3><span style={{textTransform:"none"}}>{I18n.t("misc.please")} <a class="login" {...(this.props.auth?{onClick:this.props.auth.login.bind(this,this.props.history.location)}:{})}>{I18n.t("topbar.login")}</a> {I18n.t("access.credentials")}</span></h3></div>
-      else if ( this.props.manifestError && this.props.manifestError.error.message.match(/Problem fetching/) )
+      else if ( this.props.manifestError && this.props.manifestError.error.code === 500 )
          return  <div class="data access"><h3><span style={{textTransform:"none"}}>{I18n.t("access.error")}</span></h3></div>
       
    }

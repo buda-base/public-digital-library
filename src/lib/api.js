@@ -82,7 +82,12 @@ type APIOptions = {
     fetch?: (req: string, args?:{}) => Promise<*>
 }
 
-export class ResourceNotFound extends Error {};
+export class ResourceNotFound extends Error {
+   constructor(txt:string,nb:integer) {
+      super(txt);
+      this.code = nb ;
+   }
+};
 
 export class InvalidResource extends Error {};
 
@@ -137,14 +142,14 @@ export default class API {
 
          if (!response.ok) {
              if (response.status === 404) {
-                 throw new ResourceNotFound('The resource does not exist.');
+                 throw new ResourceNotFound('The resource does not exist.',404);
              }
              else if (response.status === 401) {
-                 throw new ResourceNotFound('Restricted access');
+                 throw new ResourceNotFound('Restricted access',401);
              }
              else {
                 console.error("FETCH pb",response)
-                 throw new ResourceNotFound('Problem fetching the resource');
+                 throw new ResourceNotFound('Problem fetching the resource (code:'+response.status+')',500);
              }
          }
 
