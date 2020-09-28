@@ -1841,7 +1841,7 @@ h4:hover a.no-bdrc img { opacity:1; }
 .resource .title + .data + .data { padding-bottom:60px; }
 
 
-.resource .data.images-title { display:flex; /*align-items: end;*/ position:relative;}
+.resource .data.images-title { display:flex; /*align-items: end;*/ position:relative; flex-wrap:wrap;}
 .resource .data.etext-title { padding-right:270px; display:flex; align-items: end;position:relative;}
 
 .resource .data h2.intro,
