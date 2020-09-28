@@ -1864,6 +1864,7 @@ h4:hover a.no-bdrc img { opacity:1; }
 
 
 .resource .data.images-title h2.intro + h2 span { max-width:700px;}
+.resource .data.images-title h3 { width:100%;}
 
 .resource .data h2.intro + h2 .lang,
 .resource .data h2.intro + h2 .T { display:none; }
