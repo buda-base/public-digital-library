@@ -425,7 +425,7 @@ function extractAssoRes(iri,res) {
    let assocRes = {}, _res = {}
    let allowK = [ skos+"prefLabel", tmp+"withSameAs", bdo+"inRootInstance", bdo+"language", adm+"canonicalHtml", bdo+"partIndex", bdo+"volumeNumber", tmp+"thumbnailIIIFService", bdo+"instanceHasReproduction",
                   tmp+"nbTranslations" ]
-   let allowR = [ skos+"prefLabel", bdo+"partIndex", bdo+"volumeNumber" ]
+   let allowR = [ skos+"prefLabel", bdo+"partIndex", bdo+"volumeNumber",  tmp+"thumbnailIIIFService" ]
 
    for(let k of Object.keys(res)) {                  
       _res[k] = { ...res[k], ..._res[k] }
