@@ -2013,10 +2013,8 @@ class ResourceViewer extends Component<Props,State>
                link = "http://authority.dila.edu.tw/"+dir+"/index.php?fromInner="+link
             }
             let prefix = shortUri(elem.value).split(":")[0]
-            return <a href={link} target="_blank" class="no-bdrc">{shortUri(decodeURI(elem.value))}
-               {providers[prefix] && <Tooltip placement="bottom-end" title={<span>See on <b>{providers[prefix]}</b></span>}><img src="/icons/link-out.svg"/></Tooltip>}
-               {!providers[prefix] && <img src="/icons/link-out.svg"/>}
-            </a> ;
+            if(!providers[prefix]) return <a href={link} target="_blank" class="no-bdrc">{shortUri(decodeURI(elem.value))}<img src="/icons/link-out.svg"/></a>
+            else return <Tooltip placement="bottom-end" title={<span>{I18n.t("misc.seeO")} <b>{providers[prefix]}</b></span>}><a href={link} target="_blank" class="no-bdrc">{shortUri(decodeURI(elem.value))}<img src="/icons/link-out.svg"/></a></Tooltip>
          }
 
          let dico = dic, ret = []
@@ -2468,17 +2466,18 @@ class ResourceViewer extends Component<Props,State>
 
    toggleHoverM(ID,noSame,wTip) { 
       return (ev) => { 
-         let elem = $(ev.target).closest(".propCollapseHeader,.propCollapse")
+         let elem = $(ev.target).closest(".propCollapseHeader,.propCollapse,[data-prop='bdo:workHasInstance']")
          let popperFix 
          if(elem.length > 0) {
             let i = $(ev.target).closest("h4").index() 
             let n = elem.find("h4").parent().children().length
             let x = elem.find(".expand")
             let p = elem.closest(".ext-props")
+            let h = elem.closest("[data-prop='bdo:workHasInstance']")
             
-            console.log("i/n",i,n)
+            //console.log("i/n",i,n)
             
-            if(!p.length && (elem.hasClass("propCollapse") || x.length) && i < Math.floor(n/2)) popperFix = true
+            if(!p.length && (elem.hasClass("propCollapse") || x.length || h.length) && i < Math.floor(n/2)) popperFix = true
          }
          let target = $(ev.currentTarget).closest("h4")
          if(target.length) target = target.find(".hover-menu")[0]  
@@ -2487,7 +2486,7 @@ class ResourceViewer extends Component<Props,State>
             if(target.length) target = target.find(".hover-menu")[0]
             else target = ev.currentTarget
 
-            console.log("tg:",target)
+            //console.log("tg:",target)
          }
          if(!noSame || ev.target === ev.currentTarget) this.setState({...this.state,collapse:{...this.state.collapse,["hover"+ID]:!this.state.collapse["hover"+ID],popperFix}, anchorEl:{...this.state.anchorEl,["hover"+ID]:target} } ) 
          if(wTip !== undefined) (this.toggleHoverMtooltip(ID,wTip))(ev)
@@ -2502,7 +2501,7 @@ class ResourceViewer extends Component<Props,State>
          if(that.state.collapse[prop]) elem = $(".propCollapse [data-id=\""+ID+"\"]")
          else elem = $("[data-id=\""+ID+"\"]")
          
-         console.log("ID:",prop,ID,val,elem)
+         //console.log("ID:",prop,ID,val,elem)
 
          if(elem.length) for(let e of elem) {
             if(val && (!that._mouseover[ID] || that._mouseover[ID] < 20)) {  // must be triggered twice ...              
@@ -2590,7 +2589,7 @@ class ResourceViewer extends Component<Props,State>
             } } />
             */}
 
-            { hasTT && <Tooltip placement="top-end" title={info} >
+            { hasTT && <Tooltip placement="top-end" title={<span class="over" onMouseEnter={this.toggleHoverMtooltip(ID,false)}>{info}</span>} >
                <div style={{display:"inline-block" /*,pointerEvents:"none"*/ }} data-id={ID}>
                   <span id="anchor" onClick={this.toggleHoverM(ID)}>
                      <img src="/icons/info.svg"/>
@@ -3088,7 +3087,7 @@ class ResourceViewer extends Component<Props,State>
                   }><span className="lang">{lang}</span></Tooltip>:null]
 
 
-                  tip.push(this.hoverMenu(subProp,{type:"literal",value:tVal,lang},[...tip],[<h4 class="first">{this.proplink(prop)}{I18n.t("punc.colon")}</h4>]))
+                  tip.push(this.hoverMenu(subProp,{type:"literal",value:tVal,lang,allSameAs:tLab.allSameAs},[...tip],[<h4 class="first">{this.proplink(prop)}{I18n.t("punc.colon")}</h4>]))
 
                   let ID = "ID-"+subProp+"-"+tVal
 

@@ -290,7 +290,8 @@ const enTranslation = {
       from:"from",
       in:"in",
       of:"of",
-      please:"Please"
+      please:"Please",
+      seeO:"See on",
    },
    lang:{
       en:"English",
