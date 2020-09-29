@@ -1468,7 +1468,7 @@ vertical-align:middle;}
 
 #popHoverM .resource .data {/* width:100%;*/margin-left:0; }
 
-#popHoverM #anchor { position:absolute; right:57px; margin-top:-3px; }
+#popHoverM #anchor { position:absolute; right:57px; margin-top:-3px; cursor:pointer;}
 
 /* #popHoverM .resource .data > div[data-prop] > h3 { margin-top:-4px;} */
 /* #popHoverM .resource .data > div[data-prop] > .sub:first-child { margin-top:-4px;} */
@@ -1835,6 +1835,7 @@ line-height:12px; }
 .resource .data.data.legal-props > [data-prop="bdo:creator"] .subgroup .subsub:first-child .hover-menu,
 .resource .data > [data-prop="bdo:creator"] .subgroup .subsub:first-child .hover-menu { display:none !important; }
 
+#popHoverM + [role=tooltip]:not(#popHoverM) { z-index:9999 !important;}
 
 a.no-bdrc img { position:absolute; margin-top:-2px; opacity:0; } 
 h4:hover a.no-bdrc img { opacity:1; }

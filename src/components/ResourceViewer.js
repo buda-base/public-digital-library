@@ -2466,7 +2466,7 @@ class ResourceViewer extends Component<Props,State>
    }
 
 
-   toggleHoverM(ID,noSame) { 
+   toggleHoverM(ID,noSame,wTip) { 
       return (ev) => { 
          let elem = $(ev.target).closest(".propCollapseHeader,.propCollapse")
          let popperFix 
@@ -2475,7 +2475,9 @@ class ResourceViewer extends Component<Props,State>
             let n = elem.find("h4").parent().children().length
             let x = elem.find(".expand")
             let p = elem.closest(".ext-props")
+            
             console.log("i/n",i,n)
+            
             if(!p.length && (elem.hasClass("propCollapse") || x.length) && i < Math.floor(n/2)) popperFix = true
          }
          let target = $(ev.currentTarget).closest("h4")
@@ -2484,13 +2486,16 @@ class ResourceViewer extends Component<Props,State>
             target = $(ev.currentTarget).closest(".sub")
             if(target.length) target = target.find(".hover-menu")[0]
             else target = ev.currentTarget
+
             console.log("tg:",target)
          }
          if(!noSame || ev.target === ev.currentTarget) this.setState({...this.state,collapse:{...this.state.collapse,["hover"+ID]:!this.state.collapse["hover"+ID],popperFix}, anchorEl:{...this.state.anchorEl,["hover"+ID]:target} } ) 
+         if(wTip !== undefined) (this.toggleHoverMtooltip(ID,wTip))(ev)
       }
    }
 
-   toggleHoverMtooltip(that,ID,val) { 
+   toggleHoverMtooltip(ID,val) { 
+      let that = this
       return (ev) => {          
          let prop = ID.replace(/^ID-([^-]+)-.*$/,"$1"), elem
 
@@ -2586,7 +2591,7 @@ class ResourceViewer extends Component<Props,State>
             */}
 
             { hasTT && <Tooltip placement="top-end" title={info} >
-               <div style={{display:"inline-block"}} data-id={ID}>
+               <div style={{display:"inline-block" /*,pointerEvents:"none"*/ }} data-id={ID}>
                   <span id="anchor" onClick={this.toggleHoverM(ID)}>
                      <img src="/icons/info.svg"/>
                      {nb>0 && <span id="nb">{nb}</span> }
@@ -2595,10 +2600,12 @@ class ResourceViewer extends Component<Props,State>
             </Tooltip> }
 
             {! hasTT && 
-               <span id="anchor" >
-                  { (e.start !== undefined) && <Link to={loca.pathname+loca.search+"#open-viewer"}><img style={{width:"16px"}} src="/icons/PLINK_small.svg"/></Link> }
-                  <img src="/icons/info.svg" onClick={this.toggleHoverM(ID)} />
-               </span> 
+               <div /*style={{pointerEvents:"none"}}*/ >
+                  <span id="anchor">
+                     { (e.start !== undefined) && <Link to={loca.pathname+loca.search+"#open-viewer"}><img style={{width:"16px"}} src="/icons/PLINK_small.svg"/></Link> }
+                     <img src="/icons/info.svg" onClick={this.toggleHoverM(ID)} />
+                  </span> 
+               </div>
             }
             <Popper
                data-ID={ID}
@@ -2632,8 +2639,9 @@ class ResourceViewer extends Component<Props,State>
                <div class="popper">                     
                   <div class={"resource"}>
                      <div class="data">
-                        <span id="anchor">                         
-                           <img src="/icons/info.svg"/>
+                        <span id="anchor" onClick={this.toggleHoverM(ID,null,false)}>     
+                           <Close/>                    
+                           {/* <img src="/icons/info.svg"/> */}
                         </span>
                         <div data-prop={shortUri(prop)}>
                            {!parent && [
@@ -2964,8 +2972,8 @@ class ResourceViewer extends Component<Props,State>
             }
             */
 
-            if(!txt) ret.push(<Tag onClick={this.toggleHoverM(ID,true)} onMouseEnter={this.toggleHoverMtooltip(this,ID,true)} onMouseLeave={this.toggleHoverMtooltip(this,ID,false)} className={(elem && elem.length > 1?"multiple ":"") + (sameAsPrefix?sameAsPrefix+" sameAs hasIcon":"") + " hasTogHovM"}>{befo}{tmp}{bdrcData}</Tag>)
-            else ret.push(<Tag onClick={this.toggleHoverM(ID,true)} onMouseEnter={this.toggleHoverMtooltip(this,ID,true)} onMouseLeave={this.toggleHoverMtooltip(this,ID,false)} className={(elem && elem.length > 1?"multiple ":"") +  (sameAsPrefix?sameAsPrefix+" sameAs hasIcon":"")+ " hasTogHovM" }>{befo}{tmp+" "+txt}{bdrcData}</Tag>)
+            if(!txt) ret.push(<Tag onClick={this.toggleHoverM(ID,true)} onMouseEnter={this.toggleHoverMtooltip(ID,true)} onMouseLeave={this.toggleHoverMtooltip(ID,false)} className={(elem && elem.length > 1?"multiple ":"") + (sameAsPrefix?sameAsPrefix+" sameAs hasIcon":"") + " hasTogHovM"}>{befo}{tmp}{bdrcData}</Tag>)
+            else ret.push(<Tag onClick={this.toggleHoverM(ID,true)} onMouseEnter={this.toggleHoverMtooltip(ID,true)} onMouseLeave={this.toggleHoverMtooltip(ID,false)} className={(elem && elem.length > 1?"multiple ":"") +  (sameAsPrefix?sameAsPrefix+" sameAs hasIcon":"")+ " hasTogHovM" }>{befo}{tmp+" "+txt}{bdrcData}</Tag>)
 
 
             //loggergen.log("ret",ret)
@@ -3084,7 +3092,7 @@ class ResourceViewer extends Component<Props,State>
 
                   let ID = "ID-"+subProp+"-"+tVal
 
-                  let sav = <Tag onClick={this.toggleHoverM(ID,true)} onMouseEnter={this.toggleHoverMtooltip(this,ID,true)} onMouseLeave={this.toggleHoverMtooltip(this,ID,false)} className={'label hasTogHovM'}>
+                  let sav = <Tag onClick={this.toggleHoverM(ID,true)} onMouseEnter={this.toggleHoverMtooltip(ID,true)} onMouseLeave={this.toggleHoverMtooltip(ID,false)} className={'label hasTogHovM'}>
                         {tip}
                      </Tag>
                   sub.push(sav)
@@ -3191,7 +3199,7 @@ class ResourceViewer extends Component<Props,State>
                         let ID = "ID-"+prop+"-"+"note-i-"+nbN
                         
                         note.push(
-                           <div class="sub hasTogHovM"  onClick={this.toggleHoverM(ID)} onMouseEnter={this.toggleHoverMtooltip(this,ID,true)} onMouseLeave={this.toggleHoverMtooltip(this,ID,false)}>
+                           <div class="sub hasTogHovM"  onClick={this.toggleHoverM(ID)} onMouseEnter={this.toggleHoverMtooltip(ID,true)} onMouseLeave={this.toggleHoverMtooltip(ID,false)}>
                             {sav}
                            </div>)
                      }
@@ -3220,7 +3228,7 @@ class ResourceViewer extends Component<Props,State>
                         let ID = "ID-"+prop+"-"+"note-i-"+nbN
 
                         note.push(
-                           <div class="sub  hasTogHovM"  onClick={this.toggleHoverM(ID)} onMouseEnter={this.toggleHoverMtooltip(this,ID,true)} onMouseLeave={this.toggleHoverMtooltip(this,ID,false)}>
+                           <div class="sub  hasTogHovM"  onClick={this.toggleHoverM(ID)} onMouseEnter={this.toggleHoverMtooltip(ID,true)} onMouseLeave={this.toggleHoverMtooltip(ID,false)}>
                               {sav}
                            </div>
                         )
@@ -3361,8 +3369,10 @@ class ResourceViewer extends Component<Props,State>
 
                            //<ChatIcon className="annoticon" onClick={e => this.setState({...this.state,annoPane:true,newAnno:true})}/>
 
-                           if(!noVal) subsub.push(<Tag>{txt}</Tag>)
-                           else sub.push(<Tag>{txt}</Tag>)
+                           let ID = "ID-"+f+"-"+v.value
+
+                           if(!noVal) subsub.push(<Tag class="hasTogHovM"  onClick={this.toggleHoverM(ID,true)} onMouseEnter={this.toggleHoverMtooltip(ID,true)} onMouseLeave={this.toggleHoverMtooltip(ID,false)}>{txt}</Tag>)
+                           else sub.push(<Tag class="hasTogHovM"  onClick={this.toggleHoverM(ID,true)} onMouseEnter={this.toggleHoverMtooltip(ID,true)} onMouseLeave={this.toggleHoverMtooltip(ID,false)}>{txt}</Tag>)
                         }
                      }
                   }
