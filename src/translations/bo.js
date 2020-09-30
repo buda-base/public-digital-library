@@ -14,8 +14,8 @@ const boTranslation = {
       archives1:"བུདྡྷ་དྲ་ཐོག་",
       archives2:"དཔེ་མཛོད།",
       by:"ནང་བསྟན་དཔེ་ཚོགས་ལྟེ་གནས་ཀྱིས།",
-      subtitle:"ནང་བསྟན་གཞུང་ལུགས་ལྟ་ཀློག་རྒྱ་ཆེར་བྱ་སའི་དྲྭ་སྟེགས་འདི་ནས་ངེད་ཚོགས་པ་གཙོ་བྱས་པའི་ཚོགས་པ་དུ་མས་འཚོལ་བསྡུ་བྱས་པའི་དཔེ་ཆའི་ཤོག་ལྷེ་ས་ཡ་མང་པོ་ལྟ་ཀློག་བྱེད་ཐུབ།",
-      message:"ནང་བསྟན་དཔེ་ཚོགས་ལྟེ་གནས་ཀྱི་དྲྭ་ཐོག་དཔེ་མཛོད་གསར་པར་ཕེབས་པར་དགའ་བསུ་ཞུ།",
+      subtitle:"ནང་བསྟན་གཞུང་ལུགས་ལྟ་ཀློག་རྒྱ་ཆེར་བྱ་སའི་དྲ་སྟེགས་འདི་ནས་ངེད་ཚོགས་པ་གཙོ་བྱས་པའི་ཚོགས་པ་དུ་མས་འཚོལ་བསྡུ་བྱས་པའི་དཔེ་ཆའི་ཤོག་ལྷེ་ས་ཡ་མང་པོ་ལྟ་ཀློག་བྱེད་ཐུབ།",
+      message:"ནང་བསྟན་དཔེ་ཚོགས་ལྟེ་གནས་ཀྱི་དྲ་ཐོག་དཔེ་མཛོད་གསར་པར་ཕེབས་པར་དགའ་བསུ་ཞུ།",
       submessage:"ཉམས་ཞིབ་ཞིབ་ཚགས་པ་དང་སྔར་ལས་མགྱོགས་པ་ཡོང་ཕྱིར་འདིའི་ནང་ཁྱད་ཆོས་དང་རྒྱུ་ཆ་གསར་པ། ལག་ཆ་གསར་པ་མང་པོ་ཁ་སྣོན་བྱས་ཡོད།",
       subsubmessage:"ངེད་ཚོགས་པའི་ལས་རིགས་ཀྱི་སྤུས་ཀ་ཇེ་ལེགས་སུ་གཏོང་བར་བསམ་ཚུལ་དང་སློབ་སྟོན་རེ་ཡོད་ཚེ་འདི་ནས་འགོད་རོགས།",
       subsubmessage_afteremail:".",
@@ -28,7 +28,7 @@ const boTranslation = {
       search:"འཚོལ།",
       choose:"སྐད་རིགས་འདེམ།",
       start:"དཔེ་མཛོད་སྔོགས།",
-      new:"New Scans Released This Week"
+      new:"བདུན་ཕྲག་འདིའི་ནང་སྤེལ་བའི་དཔེ་ཆའི་བཤེར་པར་གསར་པ་ཁག"
    },
    types:{
       any:"གང་རུང་།",
@@ -59,8 +59,8 @@ const boTranslation = {
       searchIn:"{{type}}",
       product:"Product",
       product_plural:"Products",
-      scan:"Scan",
-      scan_plural:"Scans"
+      scan:"བཤེར་པར།",
+      scan_plural:"བཤེར་པར།"
    },
    topbar:{
       about:"ང་ཚོའི་སྐོར།",
@@ -117,7 +117,7 @@ const boTranslation = {
       yearP:"པར་ལོ།",
       title:"མཚན་བྱང་།",
       numberMC:"བཙལ་བྱ་རྙེད་སའི་དུམ་ཚན་གྱི་གྲངས།",
-      lastS:"Release Date"
+      lastS:"སྤེལ་དུས།"
    },
    copyright:{
       open:"བཀག་རྒྱ་མེད་པ།",
@@ -126,7 +126,7 @@ const boTranslation = {
       sealed:"བཀའ་རྒྱ་མ།",
       view:"བཤེར་པར་སྟོན།",
       scans:"བཤེར་པར་ཡོད།",
-      provided:"Data provided by {{- provider}}"
+      provided:"མཁོ་འདོན་པ། {{- provider}}"
    },
    prop:{
       "tmp:bestMatch":"བཙལ་འབྲས་མཐུན་ཤོས།",
@@ -187,7 +187,7 @@ const boTranslation = {
       "tmp:BuddhistArt":"ནང་བསྟན་རིགས་གནས།",
       "tmp:other":"གཞན།",
       "tmp:instanceOfWork":"Version of Work",
-      "tmp:lastSync":"Release Date"
+      "tmp:lastSync":"སྤེལ་དུས།"
    },
    result:{
       open:"ཁ་ཕྱེ།",
@@ -220,8 +220,8 @@ const boTranslation = {
       photo:{ 
          hover:"པར་གསར་པ་ཞོག",
          label:"ཐོ་གཞུང་པར།",                                
-         helperText:"པར་གྱི་དྲྭ་ཐག་ཞོག",
-         error:"པར་གྱི་དྲྭ་ཐག་ལ་གནད་དོན་ཞིག་བྱུང་སོང་།"
+         helperText:"པར་གྱི་དྲ་ཐག་ཞོག",
+         error:"པར་གྱི་དྲ་ཐག་ལ་གནད་དོན་ཞིག་བྱུང་སོང་།"
       },      
       edit:{
          add:"ཁྱད་ཆོས་སྣོན།",
@@ -253,9 +253,9 @@ const boTranslation = {
       update:"ཁ་གསབ།",
       updating:"ཁ་གསབ་བྱེད་བཞིན་ཡོད།",
       errors:{
-        server1:"Server error",
-        server2:"Please try again later",
-        email:"Wrong email format"
+        server1:"གནད་དོན་ལྷགས་སོང་།",
+        server2:"ཏོག་ཙམ་རྗེས་ནས་ཡང་བསྐྱར་ཚོད་ལྟ་བྱོས།",
+        email:"གློག་འཕྲིན་ནོར་འདུག"
       }
    },
    popover:{
@@ -313,7 +313,7 @@ const boTranslation = {
          piXIast:"པཱ་ལི། (ཨིན་ཡིག)",
          bo:"བོད་ཡིག (གཅིག་འགྱུར་ཨང་།)",
          boXEwts:"བོད་ཡིག (ཝའི་ལི།)",
-         boXEwtsLower:"Tibetan (lower case, Wylie)",
+         boXEwtsLower:"བོད་ཡིག (མགོ་ཡིག་མ་ཡིན་པ། ཝའི་ལི།)",
          boXDts:"བོད་ཡིག (DTS)",
          boAlaLc:"བོད་ཡིག (ALA-LC)",
          other:"ཡིག་རིགས་གཞན།",
@@ -371,13 +371,13 @@ const boTranslation = {
       filters:{
          noresults:"འདེམས་སྒྲུག་བྱས་པའི་བཙལ་འབྲས་མི་འདུག"
       },
-      seeO:"See results in other data types",
+      seeO:"དན་གྲངས་རིགས་གཞན་པའི་བཙལ་འབྲས་ལ་ལྟོས།",
       backToW:"བརྩམས་ཆོས་སྟེང་ཕྱིར་ལོག"
    },
    Rsidebar:{
       title:"རྣམ་པ་སྒྲིག་ས།",
       UI:{
-         title:"དྲྭ་གདོང་གི་སྐད་ཡིག"
+         title:"དྲ་གདོང་གི་སྐད་ཡིག"
       },
       results:{
          title:"བཙལ་འབྲས་ཀྱི་སྐད་ཡིག་གཙོ་བོ།"
@@ -422,16 +422,16 @@ const boTranslation = {
       etextF:"",
       openR:"དཔེ་ཐོ།",
       loadP:"ཤོག་གྲངས་སྔོན་མ་ཀློག",
-      sameL:"Link to External Resource",
-      sameL_plural:"Links to External Resources",
-      gener1pdf:"Generate PDF",
-      gener2pdf:"Generating PDF...",
-      gener3pdf:"Download PDF",
-      gener1zip:"Generate ZIP",
-      gener2zip:"Generating ZIP...",
-      gener3zip:"Download ZIP",
-      nbTrans:" ({{count}} translation)",
-      nbTrans_plural:" ({{count}} translations)",
+      sameL:"དྲ་ཚིགས་གཞན་ནང་ཡོད་པའི་དཔེ་ཆ།",
+      sameL_plural:"དྲ་ཚིགས་གཞན་ནང་ཡོད་པའི་དཔེ་ཆ།",
+      gener1pdf:"PDF བཟོས།",
+      gener2pdf:"PDF བཟོ་བཞིན་ཡོད་་་་་་་།",
+      gener3pdf:"PDF ཕབ་ལེན།",
+      gener1zip:"ZIP PDF བཟོས།",
+      gener2zip:"ZIP བཟོ་བཞིན་ཡོད་་་་་་་།",
+      gener3zip:"ZIP ཕབ་ལེན།",
+      nbTrans:" ( འགྱུར་མ། {{count}})",
+      nbTrans_plural:" (འགྱུར་མ། {{count}})",
       openO:"Open on {{src}}"
    },
    mirador:{
@@ -451,7 +451,7 @@ const boTranslation = {
    },
    access:{
       limited20:"འགོ་མཇུག་གཉིས་ནས་ཤོག་ངོས་ཉི་ཤུ་ཉི་ཤུ་ལས་ལྷག་ལྟ་ཀློག་བྱེད་མི་ཐུབ།",
-      credentials:"ཁྱེད་ལ་བཤེར་པར་ཡོངས་རྫོགས་བལྟ་ཀློག་གི་ཆོག་མཆན་ཡོད་ན་"
+      credentials:"དམིགས་བསལ་གྱི་ཐོབ་ཐང་ཡོད་ན་འདིར་བསྣུན།"
    },
    location:{
       beginV:"པོད་ {{num,counttobo}} ནས་",
