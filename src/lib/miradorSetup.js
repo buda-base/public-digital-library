@@ -175,6 +175,10 @@ async function hasEtextPage(manifest) {
       }
       else ut = false ;
       */
+
+      let initEtext = window.MiradorUseEtext
+      window.MiradorUseEtext = "pending" ;
+
       let check = await window.fetch(ldspdi+"/query/graph/Etext_base?R_RES="+IRI+"&format=json") ;
       let ut  = await check.json()
       if(ut) ut = ut[IRI.replace(/bdr:/,bdr)]
@@ -189,7 +193,8 @@ async function hasEtextPage(manifest) {
          return 
       }
       else {
-         if(!window.MiradorUseEtext) window.MiradorUseEtext = true;
+         if(!initEtext || initEtext === "pending") initEtext = true
+         window.MiradorUseEtext = initEtext;
       }
 
 
@@ -360,6 +365,7 @@ export async function miradorConfig(data, manifest, canvasID, useCredentials, la
 
    }
 
+   if(!window.MiradorUseEtext) window.MiradorUseEtext = "pending" ;
 
    let config = {
       id:"viewer",
