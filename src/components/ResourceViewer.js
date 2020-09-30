@@ -75,6 +75,8 @@ import {numtobo} from '../lib/language';
 import {languages,getLangLabel,top_right_menu,prefixesMap as prefixes,sameAsMap,shortUri,fullUri,highlight,lang_selec,langSelect,searchLangSelec,report_GA,getGDPRconsent} from './App';
 import {narrowWithString} from "../lib/langdetect"
 import Popover from '@material-ui/core/Popover';
+import Popper from '@material-ui/core/Popper';
+import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import MenuItem from '@material-ui/core/MenuItem';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -757,6 +759,7 @@ class ResourceViewer extends Component<Props,State>
    _leafletMap = null ;
    _properties = {} ;
    _dontMatchProp = "" ;
+   _mouseover = {}
 
    constructor(props:Props)
    {
@@ -2010,10 +2013,8 @@ class ResourceViewer extends Component<Props,State>
                link = "http://authority.dila.edu.tw/"+dir+"/index.php?fromInner="+link
             }
             let prefix = shortUri(elem.value).split(":")[0]
-            return <a href={link} target="_blank" class="no-bdrc">{shortUri(decodeURI(elem.value))}
-               {providers[prefix] && <Tooltip placement="bottom-end" title={<span>See on <b>{providers[prefix]}</b></span>}><img src="/icons/link-out.svg"/></Tooltip>}
-               {!providers[prefix] && <img src="/icons/link-out.svg"/>}
-            </a> ;
+            if(!providers[prefix]) return <a href={link} target="_blank" class="no-bdrc">{shortUri(decodeURI(elem.value))}<img src="/icons/link-out.svg"/></a>
+            else return <Tooltip placement="bottom-end" title={<span>{I18n.t("misc.seeO")} <b>{providers[prefix]}</b></span>}><a href={link} target="_blank" class="no-bdrc">{shortUri(decodeURI(elem.value))}<img src="/icons/link-out.svg"/></a></Tooltip>
          }
 
          let dico = dic, ret = []
@@ -2462,6 +2463,70 @@ class ResourceViewer extends Component<Props,State>
       return { befo,bdrcData }
    }
 
+
+   toggleHoverM(ID,noSame,wTip) { 
+      return (ev) => { 
+         let elem = $(ev.target).closest(".propCollapseHeader,.propCollapse,[data-prop='bdo:workHasInstance']")
+         let popperFix 
+         if(elem.length > 0) {
+            let i = $(ev.target).closest("h4").index() 
+            let n = elem.find("h4").parent().children().length
+            let x = elem.find(".expand")
+            let p = elem.closest(".ext-props")
+            let h = elem.closest("[data-prop='bdo:workHasInstance']")
+            
+            //console.log("i/n",i,n)
+            
+            if(!p.length && (elem.hasClass("propCollapse") || x.length || h.length) && (i < Math.floor(n/2) || i === 0 && n === 1)) popperFix = true
+         }
+         let target = $(ev.currentTarget).closest("h4")
+         if(target.length) target = target.find(".hover-menu")[0]  
+         else {
+            target = $(ev.currentTarget).closest(".sub")
+            if(target.length) target = target.find(".hover-menu")[0]
+            else target = ev.currentTarget
+
+            //console.log("tg:",target)
+         }
+         if(!noSame || ev.target === ev.currentTarget) this.setState({...this.state,collapse:{...this.state.collapse,["hover"+ID]:!this.state.collapse["hover"+ID],popperFix}, anchorEl:{...this.state.anchorEl,["hover"+ID]:target} } ) 
+         if(wTip !== undefined) (this.toggleHoverMtooltip(ID,wTip))(ev)
+      }
+   }
+
+   toggleHoverMtooltip(ID,val) { 
+      let that = this
+      return (ev) => {          
+         let prop = ID.replace(/^ID-([^-]+)-.*$/,"$1"), elem
+
+         if(that.state.collapse[prop]) elem = $(".propCollapse [data-id=\""+ID+"\"]")
+         else elem = $("[data-id=\""+ID+"\"]")
+         
+         //console.log("ID:",prop,ID,val,elem)
+
+         if(elem.length) for(let e of elem) {
+            if(val && (!that._mouseover[ID] || that._mouseover[ID] < 20)) {  // must be triggered twice ...              
+               if(!that._mouseover[ID]) that._mouseover[ID] = 0
+               that._mouseover[ID] ++
+               const event = new MouseEvent('mouseover', {
+                  view: window,
+                  bubbles: true,
+                  cancelable: true
+               })
+               e.dispatchEvent(event)
+            }
+            else if(!val && that._mouseover[ID] > 0) {                
+               that._mouseover[ID] --
+               if(!that._mouseover[ID]) delete that._mouseover[ID] 
+               const event = new MouseEvent('mouseout', {
+                  view: window,
+                  bubbles: true,
+                  cancelable: true
+               })
+               e.dispatchEvent(event)
+            }
+         }
+      }
+   }
    hoverMenu(prop,e,current,parent,grandPa)
    {
       let ID = "ID-"+prop+"-"+(e&&e.value?e.value:e)
@@ -2485,7 +2550,6 @@ class ResourceViewer extends Component<Props,State>
          } ).filter(e => e)
 
 
-      let toggleHoverM = (e) => this.setState({...this.state,collapse:{...this.state.collapse,["hover"+ID]:!this.state.collapse["hover"+ID]}, anchorEl:{...this.state.anchorEl,["hover"+ID]:e.currentTarget} } ) 
 
       let fromSame = (e.allSameAs && e.allSameAs.length > 0)
 
@@ -2525,9 +2589,9 @@ class ResourceViewer extends Component<Props,State>
             } } />
             */}
 
-            { hasTT && <Tooltip placement="top-end" title={info}>
-               <div style={{display:"inline-block"}}>
-                  <span id="anchor" onClick={toggleHoverM}>
+            { hasTT && <Tooltip placement="top-end" title={<span class="over" onMouseEnter={this.toggleHoverMtooltip(ID,false)}>{info}</span>} >
+               <div style={{display:"inline-block" /*,pointerEvents:"none"*/ }} data-id={ID}>
+                  <span id="anchor" onClick={this.toggleHoverM(ID)}>
                      <img src="/icons/info.svg"/>
                      {nb>0 && <span id="nb">{nb}</span> }
                   </span>
@@ -2535,29 +2599,48 @@ class ResourceViewer extends Component<Props,State>
             </Tooltip> }
 
             {! hasTT && 
-               <span id="anchor" >
-                  { (e.start !== undefined) && <Link to={loca.pathname+loca.search+"#open-viewer"}><img style={{width:"16px"}} src="/icons/PLINK_small.svg"/></Link> }
-                  <img src="/icons/info.svg" onClick={toggleHoverM} />
-               </span> 
+               <div /*style={{pointerEvents:"none"}}*/ >
+                  <span id="anchor">
+                     { (e.start !== undefined) && <Link to={loca.pathname+loca.search+"#open-viewer"}><img style={{width:"16px"}} src="/icons/PLINK_small.svg"/></Link> }
+                     <img src="/icons/info.svg" onClick={this.toggleHoverM(ID)} />
+                  </span> 
+               </div>
             }
-
-            <Popover 
+            <Popper
                data-ID={ID}
                id="popHoverM"
+               className={this.state.collapse.popperFix?"fixW":""}
                data-class={(e.start !== undefined?"in-etext":"")}
                marginThreshold={0}
                open={this.state.collapse["hover"+ID]}
-               anchorOrigin={{horizontal:"right",vertical:"top"}}
-               transformOrigin={{horizontal:"right",vertical:"top"}}
+               //anchorOrigin={{horizontal:"right",vertical:"top"}}
+               //transformOrigin={{horizontal:"right",vertical:"top"}}
+               placement={"bottom-end"}
                anchorEl={this.state.anchorEl["hover"+ID]}
-               onClose={() => this.setState({...this.state,collapse:{...this.state.collapse,["hover"+ID]:false} } ) }
+               //onClose={() => this.setState({...this.state,collapse:{...this.state.collapse,["hover"+ID]:false} } ) }
                TransitionComponent={Fade}
+               modifiers={{
+                  flip: {
+                     enabled: false
+                  },
+                  preventOverflow: {
+                     enabled: true,
+                     boundariesElement: "scrollParent",
+                     escapeWithReference:true
+                  }
+               }}
                >
                { prop && 
+                  <ClickAwayListener onClickAway={(ev) => {
+                     //console.log("clickA",ID,ev,ev.target,ev.currentTarget)                     
+                     if(!$(ev.target).closest(".popper").length) this.setState({collapse:{...this.state.collapse, ["hover"+ID]:false}})
+                  }}>
+               <div class="popper">                     
                   <div class={"resource"}>
                      <div class="data">
-                        <span id="anchor">                         
-                           <img src="/icons/info.svg"/>
+                        <span id="anchor" onClick={this.toggleHoverM(ID,null,false)}>     
+                           <Close/>                    
+                           {/* <img src="/icons/info.svg"/> */}
                         </span>
                         <div data-prop={shortUri(prop)}>
                            {!parent && [
@@ -2609,9 +2692,10 @@ class ResourceViewer extends Component<Props,State>
                         </div>
                      </div>
                   </div>
-               }
-            </Popover>
-         
+               </div>
+               </ClickAwayListener >
+            }
+            </Popper>
             
          </div>
 
@@ -2879,8 +2963,16 @@ class ResourceViewer extends Component<Props,State>
 
             const {befo,bdrcData} = this.getSameLink(e,sameAsPrefix)            
 
-            if(!txt) ret.push(<Tag className={(elem && elem.length > 1?"multiple ":"") + (sameAsPrefix?sameAsPrefix+" sameAs hasIcon":"") }>{befo}{tmp}{bdrcData}</Tag>)
-            else ret.push(<Tag className={(elem && elem.length > 1?"multiple ":"") +  (sameAsPrefix?sameAsPrefix+" sameAs hasIcon":"") }>{befo}{tmp+" "+txt}{bdrcData}</Tag>)
+            let ID = "ID-"+prop+"-"+(e&&e.value?e.value:e)      
+            /*
+            let toggleHoverM = (ev) => {
+               //console.log("togHovM",ev,ev.currentTarget)
+               if(ev.target === ev.currentTarget) this.setState({...this.state,collapse:{...this.state.collapse,["hover"+ID]:!this.state.collapse["hover"+ID]}, anchorEl:{...this.state.anchorEl,["hover"+ID]:ev.currentTarget} } ) 
+            }
+            */
+
+            if(!txt) ret.push(<Tag onClick={this.toggleHoverM(ID,true)} onMouseEnter={this.toggleHoverMtooltip(ID,true)} onMouseLeave={this.toggleHoverMtooltip(ID,false)} className={(elem && elem.length > 1?"multiple ":"") + (sameAsPrefix?sameAsPrefix+" sameAs hasIcon":"") + " hasTogHovM"}>{befo}{tmp}{bdrcData}</Tag>)
+            else ret.push(<Tag onClick={this.toggleHoverM(ID,true)} onMouseEnter={this.toggleHoverMtooltip(ID,true)} onMouseLeave={this.toggleHoverMtooltip(ID,false)} className={(elem && elem.length > 1?"multiple ":"") +  (sameAsPrefix?sameAsPrefix+" sameAs hasIcon":"")+ " hasTogHovM" }>{befo}{tmp+" "+txt}{bdrcData}</Tag>)
 
 
             //loggergen.log("ret",ret)
@@ -2995,9 +3087,11 @@ class ResourceViewer extends Component<Props,State>
                   }><span className="lang">{lang}</span></Tooltip>:null]
 
 
-                  tip.push(this.hoverMenu(subProp,{type:"literal",value:tVal,lang},[...tip],[<h4 class="first">{this.proplink(prop)}{I18n.t("punc.colon")}</h4>]))
+                  tip.push(this.hoverMenu(subProp,{type:"literal",value:tVal,lang,allSameAs:tLab.allSameAs},[...tip],[<h4 class="first">{this.proplink(prop)}{I18n.t("punc.colon")}</h4>]))
 
-                  let sav = <Tag className={'label '}>
+                  let ID = "ID-"+subProp+"-"+tVal
+
+                  let sav = <Tag onClick={this.toggleHoverM(ID,true)} onMouseEnter={this.toggleHoverMtooltip(ID,true)} onMouseLeave={this.toggleHoverMtooltip(ID,false)} className={'label hasTogHovM'}>
                         {tip}
                      </Tag>
                   sub.push(sav)
@@ -3082,11 +3176,12 @@ class ResourceViewer extends Component<Props,State>
                            workuri = <div><Tag style={{fontSize:"14px"}}>(from {this.uriformat(bdo+"noteSource",noteData[bdo+"noteSource"])}{loca})</Tag></div>
                         }
 
+
                         let sav = [
                               <Tag className="first type">{I18n.t("punc.num",{num:nbN++}) /*this.proplink(bdo+"noteText","Note")*/}</Tag>,
                               workuri,
                               <div class="subsub">
-                                 <Tag>
+                                 <Tag >
                                     {this.pretty(noteData[bdo+"noteText"].value)}
                                     {this.tooltip(noteData[bdo+"noteText"].lang)}
                                     <ChatIcon className="annoticon"  onClick={
@@ -3100,8 +3195,10 @@ class ResourceViewer extends Component<Props,State>
 
                         sav.push(this.hoverMenu(prop,{value:"note-i-"+nbN,noteData},<div class="sub">{[...sav]}</div>))
 
+                        let ID = "ID-"+prop+"-"+"note-i-"+nbN
+                        
                         note.push(
-                           <div class="sub">
+                           <div class="sub hasTogHovM"  onClick={this.toggleHoverM(ID)} onMouseEnter={this.toggleHoverMtooltip(ID,true)} onMouseLeave={this.toggleHoverMtooltip(ID,false)}>
                             {sav}
                            </div>)
                      }
@@ -3114,8 +3211,9 @@ class ResourceViewer extends Component<Props,State>
                         }
                         let workuri = <div><Tag style={{fontSize:"14px"}}>({I18n.t("misc.from")} {this.uriformat(bdo+"noteSource",noteData[bdo+"noteSource"])}{loca})</Tag></div>
 
+
                         let sav = [
-                           <Tag className="first type">{I18n.t("punc.num",{num:nbN++}) /*this.proplink(bdo+"noteSource","Note")*/}</Tag>,
+                           <Tag  className="first type">{I18n.t("punc.num",{num:nbN++}) /*this.proplink(bdo+"noteSource","Note")*/}</Tag>,
                            workuri,
                            <ChatIcon className="annoticon"  onClick={
                               (function(val,prop,v,ev){
@@ -3126,8 +3224,10 @@ class ResourceViewer extends Component<Props,State>
                         
                         sav.push(this.hoverMenu(prop,{value:"note-i-"+nbN,noteData},<div class="sub">{[...sav]}</div>))
 
+                        let ID = "ID-"+prop+"-"+"note-i-"+nbN
+
                         note.push(
-                           <div class="sub">
+                           <div class="sub  hasTogHovM"  onClick={this.toggleHoverM(ID)} onMouseEnter={this.toggleHoverMtooltip(ID,true)} onMouseLeave={this.toggleHoverMtooltip(ID,false)}>
                               {sav}
                            </div>
                         )
@@ -3268,8 +3368,10 @@ class ResourceViewer extends Component<Props,State>
 
                            //<ChatIcon className="annoticon" onClick={e => this.setState({...this.state,annoPane:true,newAnno:true})}/>
 
-                           if(!noVal) subsub.push(<Tag>{txt}</Tag>)
-                           else sub.push(<Tag>{txt}</Tag>)
+                           let ID = "ID-"+f+"-"+v.value
+
+                           if(!noVal) subsub.push(<Tag class="hasTogHovM"  onClick={this.toggleHoverM(ID,true)} onMouseEnter={this.toggleHoverMtooltip(ID,true)} onMouseLeave={this.toggleHoverMtooltip(ID,false)}>{txt}</Tag>)
+                           else sub.push(<Tag class="hasTogHovM"  onClick={this.toggleHoverM(ID,true)} onMouseEnter={this.toggleHoverMtooltip(ID,true)} onMouseLeave={this.toggleHoverMtooltip(ID,false)}>{txt}</Tag>)
                         }
                      }
                   }
@@ -3347,7 +3449,7 @@ class ResourceViewer extends Component<Props,State>
          if(note.length <= 3) pre.push(<div class="no-collapse">{note}</div>)
          else pre.push([<div>         
                {note.slice(0,3)}
-               <Collapse timeout={{enter:0,exit:0}} className={"noteCollapse in-"+(this.state.collapse[prop]===true)} in={this.state.collapse[prop]}>
+               <Collapse timeout={{enter:0,exit:0}} className={"noteCollapse in-"+(this.state.collapse[prop]===true)} in={this.state.collapse[prop] !== false }>
                   {note.slice(3)}
                </Collapse>          
                </div>,     
@@ -4074,7 +4176,7 @@ class ResourceViewer extends Component<Props,State>
          */
 
          let show = this.state.collapse[k]
-         //if(hasMaxDisplay === -1 && k !== bf+"identifiedBy") show = true ; 
+         if(hasMaxDisplay === -1 /*&& ![bf+"identifiedBy",bdo+"note"].includes(k)*/ && this.state.collapse[k] === undefined) show = true ; 
 
          return (
             <div data-prop={shortUri(k)} class={"has-collapse custom max-"+(maxDisplay)+" "+(n%2===0?"even":"odd") }>
@@ -4104,12 +4206,12 @@ class ResourceViewer extends Component<Props,State>
                   {ret.slice(i2,n)}
                </Collapse> */}
                { (this.state.collapse[k] || hasMaxDisplay === -1) && <span
-               onClick={(e) => this.setState({...this.state,collapse:{...this.state.collapse,[k]:!this.state.collapse[k]}})}
+               onClick={(e) => this.setState({...this.state,collapse:{...this.state.collapse,[k]:!show}})}
                className="expand">
-                  {I18n.t("misc."+(this.state.collapse[k]?"hide":"seeMore")).toLowerCase()}&nbsp;<span
+                  {I18n.t("misc."+(show?"hide":"seeMore")).toLowerCase()}&nbsp;<span
                   className="toggle-expand">
-                     { this.state.collapse[k] && <ExpandLess/>}
-                     { !this.state.collapse[k] && <ExpandMore/>}
+                     { show && <ExpandLess/>}
+                     { !show && <ExpandMore/>}
                   </span>
                </span> }
             </div>
@@ -5886,8 +5988,21 @@ perma_menu(pdfLink,monoVol,fairUse,other)
       let hasRel = ((related && related.length > 0)||(createdBy && createdBy.length > 0))
       
 
+      let hasLongExtP = false; //[bf+"identifiedBy",bdo+"note"].filter(k => kZprop.includes(k) ).length > 0
+
+      let extPlabel = "hide"
+      if(hasLongExtP) {
+         extPlabel = "seeA"
+         if(this.state.collapse.extProps) extPlabel = "hide"
+      }
+      else {
+         if(this.state.collapse.extProps) extPlabel = "seeA"
+      }
+      
       let toggleExtProps = (e) => {
-         let state = { ...this.state, collapse:{ ...this.state.collapse, extProps:!this.state.collapse.extProps, ...extProps.reduce( (acc,p) => ({...acc, [p]:!this.state.collapse.extProps}),{} ) } }
+         let show = this.state.collapse.extProps
+         if(!hasLongExtP) show = (this.state.collapse.extProps === undefined) || !this.state.collapse.extProps
+         let state = { ...this.state, collapse:{ ...this.state.collapse, extProps:!this.state.collapse.extProps, ...extProps.reduce( (acc,p) => ({...acc, [p]:!show}),{} ) } }
          this.setState(state)
       }
 
@@ -6039,7 +6154,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
          let prov = this.getProv()
 
-
+         
          return (
          [getGDPRconsent(this),
          <div class={isMirador?"H100vh OF0":""}>
@@ -6118,7 +6233,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                   { theDataLegal }
                   { theDataExt && 
                      <div class="data ext-props" id="ext-info">
-                        <div><h2>{I18n.t("resource.extended")}</h2><span onClick={toggleExtProps}>{I18n.t("misc."+(!this.state.collapse.extProps?"seeA":"hide"))}</span></div>
+                        <div><h2>{I18n.t("resource.extended")}</h2><span onClick={toggleExtProps}>{I18n.t("misc."+extPlabel)}</span></div>
                      </div> }
                   { theDataExt }
                </div>

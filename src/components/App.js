@@ -5063,7 +5063,6 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                                     className={(!this.state.langIndex && i===0 || this.state.langIndex === i || this.state.langIndex >= this.state.dataSource.length && i === 0?"active":"")} 
                                     onClick={(e)=>{ 
                                           loggergen.log("CLICK",v,i);
-                                          this.setState({...this.state,langIndex:i,dataSource:[]});
                                           let kw = tab[0]
                                           let isRID = !languages[tab[1]]
                                           if(isRID) {
@@ -5075,6 +5074,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                                           } 
 
                                           if(this.state.keyword) this.requestSearch(kw,null,tab[1], isRID && i === 1)
+                                          this.setState({...this.state,langIndex:i,dataSource:[]});
+                                          
                                        }} >{ tab.length == 1 ?"":tab[0].replace(/["]/g,"")} <SearchIcon style={{padding:"0 10px"}}/><span class="lang">{tab.length == 1 ? I18n.t("home."+tab[0]):(I18n.t(""+(searchLangSelec[tab[1]]?searchLangSelec[tab[1]]:(languages[tab[1]]?languages[tab[1]]:tab[1])))) }</span></MenuItem> ) 
                                     })
                               }
