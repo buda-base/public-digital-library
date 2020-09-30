@@ -2477,7 +2477,7 @@ class ResourceViewer extends Component<Props,State>
             
             //console.log("i/n",i,n)
             
-            if(!p.length && (elem.hasClass("propCollapse") || x.length || h.length) && i < Math.floor(n/2)) popperFix = true
+            if(!p.length && (elem.hasClass("propCollapse") || x.length || h.length) && (i < Math.floor(n/2) || i === 0 && n === 1)) popperFix = true
          }
          let target = $(ev.currentTarget).closest("h4")
          if(target.length) target = target.find(".hover-menu")[0]  
