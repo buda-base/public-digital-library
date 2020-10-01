@@ -2470,6 +2470,7 @@ html[lang="en"] .resource .data > [data-prop="bdo:creator"] h4[data-prop="bdo:ro
 #etext-nav #control span:not(#lang):not(.on) { pointer-events:none; }
 #etext-nav #control span:not(#lang):not(.on) img { opacity:0.5; }
 #etext-nav a { color:white; font-size:14px; text-decoration: none; font-weight:500; cursor:pointer;}
+#etext-nav a:not(.on) { opacity:0.35; pointer-events: none; }
 #etext-nav a img { vertical-align:middle; display:inline-block;margin-left:20px; }
 #etext-nav a#DL img { width:42px;}
 #etext-nav a:hover { text-decoration:underline; } 

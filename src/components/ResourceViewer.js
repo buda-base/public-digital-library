@@ -5224,19 +5224,21 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
       let size = this.state.etextSize
 
-
-      // TODO remove "show images" when not needed
+      // DONE remove "show images" when not needed
+      let showToggleScan = this.getResourceElem(bdo+"eTextHasPage")
+      if(showToggleScan && showToggleScan.length) showToggleScan = (showToggleScan[0].seq !== undefined)
+      else showToggleScan = false
 
       return (
          <div id="etext-nav">
             <div>
-               <a id="DL" target="_blank" rel="alternate" type="text" download href={this.props.IRI?this.props.IRI.replace(/bdr:/,bdr)+".txt":""}>{I18n.t("mirador.downloadE")}<img src="/icons/DLw.png"/></a>
+               <a id="DL" class="on" target="_blank" rel="alternate" type="text" download href={this.props.IRI?this.props.IRI.replace(/bdr:/,bdr)+".txt":""}>{I18n.t("mirador.downloadE")}<img src="/icons/DLw.png"/></a>
                <div id="control">
                   <span title={I18n.t("mirador.decrease")} class={!size||size > 0.6?"on":""} onClick={(e)=>etextSize(false)}><img src="/icons/Zm.svg"/></span>
                   <span title={I18n.t("mirador.increase")} class={!size||size < 2.4?"on":""} onClick={(e)=>etextSize(true)}><img src="/icons/Zp.svg"/></span>
                   {lang_selec(this,true)}
                </div>
-               <a onClick={(e) => this.setState({showEtextImages:!this.state.showEtextImages})}>{this.state.showEtextImages?<img id="check" src="/icons/check.svg"/>:<span id="check"></span>}{I18n.t("mirador.showI")}<img width="42" src="/icons/search/images_b.svg"/></a>
+               <a class={showToggleScan?"on":""} onClick={(e) => this.setState({showEtextImages:!this.state.showEtextImages})}>{this.state.showEtextImages?<img id="check" src="/icons/check.svg"/>:<span id="check"></span>}{I18n.t("mirador.showI")}<img width="42" src="/icons/search/images_b.svg"/></a>
             </div>
          </div>
       )
