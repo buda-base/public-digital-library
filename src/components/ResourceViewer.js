@@ -3580,7 +3580,14 @@ class ResourceViewer extends Component<Props,State>
                $("#fond").addClass("hidden");
 
                let data = [], manif, canvasID
-               if(this.props.imageAsset) 
+               if(useManifest)
+               {
+                  manif = useManifest
+                  if(!manif) manif = this.props.imageAsset+"?continuous=true"
+                  data.push({"manifestUri": manif, location:"Test Manifest Location" })
+                  canvasID = this.props.canvasID
+               }
+               else if(this.props.imageAsset) 
                {
                   if(this.props.imageAsset.match(/[/]collection[/]/) && !this.props.collecManif)
                   {
@@ -3594,13 +3601,6 @@ class ResourceViewer extends Component<Props,State>
                      data.push({"manifestUri": manif, location:"Test Manifest Location" })
                      canvasID = this.props.canvasID
                   }
-               }
-               else if(useManifest)
-               {
-                  manif = useManifest
-                  if(!manif) manif = this.props.imageAsset+"?continuous=true"
-                  data.push({"manifestUri": manif, location:"Test Manifest Location" })
-                  canvasID = this.props.canvasID
                }
 
                let withCredentials = false
