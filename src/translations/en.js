@@ -398,6 +398,7 @@ const enTranslation = {
       back:"Go back to search page",
       browse:"Browse associated resources",      
       openViewer:"Open in Etext Viewer",
+      openVolViewer:"Open Vol.{{VolN}} in Etext Viewer", /*Sec.{{TxtN}}",*/
       download:"Download",
       downloadAs:"Download as",
       version:"{{format}} version",

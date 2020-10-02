@@ -4841,7 +4841,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
             //if(!k.match(new RegExp("Revision|Entry|prefLabel|"+rdf+"|toberemoved"))) {
             if(elem && 
-               (!k.match(new RegExp(adm+"|adm:|isRoot$|SourcePath|"+rdf+"|toberemoved|entityScore|lastSync|dateCreated|inRootInstance|workPagination|partIndex|partTreeIndex|legacyOutlineNodeRID|sameAs|thumbnailIIIFService|instanceOf|instanceReproductionOf|instanceHasReproduction|seeOther|withSameAs"+(this._dontMatchProp?"|"+this._dontMatchProp:"")))
+               (!k.match(new RegExp(adm+"|adm:|isRoot$|SourcePath|"+rdf+"|toberemoved|entityScore|lastSync|dateCreated|inRootInstance|workPagination|partIndex|partTreeIndex|legacyOutlineNodeRID|sameAs|thumbnailIIIFService|instanceOf|instanceReproductionOf|instanceHasReproduction|seeOther|withSameAs|first(Text|Vol)N?"+(this._dontMatchProp?"|"+this._dontMatchProp:"")))
                ||k.match(/(metadataLegal|contentProvider|replaceWith)$/)
                //||k.match(/([/]see|[/]sameAs)[^/]*$/) // quickfix [TODO] test property ancestors
                || (this.props.IRI.match(/^bda:/) && (k.match(new RegExp(adm+"|adm:"))) && !k.match(/\/(git[RP]|adminAbout|logEntry|graphId|facetIndex)/)))
@@ -5036,7 +5036,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          )
    }
 
-   renderHeader = (kZprop, T) => {
+   renderHeader = (kZprop, T, etextUT) => {
 
       let imageLabel = "images"
       if(!this.props.collecManif && this.props.imageAsset && this.props.imageAsset.match(/[/]collection[/]/)) imageLabel = "collection"
@@ -5141,7 +5141,9 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          return <div class="data" id="map">{this.renderData(kZprop,null,null,null,"header")}</div>
       else if(etext && !(prov !== "BDRC" && prov && orig)) {
          let loca = this.props.history.location
-         return <div class="data" id="head"><Link title='View Etext' to={loca.pathname+loca.search+"#open-viewer"}><div class={"header "+(!this.state.ready?"loading":"")}>{ !this.state.ready && <Loader loaded={false} /> }{src}</div></Link></div>
+         let view = loca.pathname+loca.search+"#open-viewer"
+         if(etextUT) view = etextUT+"#open-viewer"
+         return <div class="data" id="head"><Link title='View Etext' to={view}><div class={"header "+(!this.state.ready?"loading":"")}>{ !this.state.ready && <Loader loaded={false} /> }{src}</div></Link></div>
       }
       else  
          return <div class="data" id="head"><div class={"header "+(!this.state.ready?"loading":"")}>{ !this.state.ready && <Loader loaded={false} /> }{src}</div></div>
@@ -6010,14 +6012,14 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
       let root = this.getResourceElem(bdo+"inRootInstance");
 
-      let sideMenu = (rid,tag,rel,ext,outL,openV) => {
+      let sideMenu = (rid,tag,rel,ext,outL,openV,etextUT) => {
          let sRid = shortUri(rid)
          let loca = this.props.history.location
          let url = "/show/"+sRid+this.getTabs(tag)
          //if(sRid === this.props.IRI) url = ""
          let view = "/show/"+sRid+loca.search+"#open-viewer"
          return (<div>
-            { tag === "Images" && <h3><Link to={view} class={(!openV?"disabled":"")}>{I18n.t("index.openViewer")}</Link></h3> }
+            { tag === "Images" && <h3><Link to={!etextUT?view:etextUT+"#open-viewer"} class={(!openV?"disabled":"")}>{I18n.t("index.openViewer")}</Link></h3> }
             <h3><Link to={url+"#main-info"} >{I18n.t("index.mainInfo")}</Link></h3>
             { tag === "Instance" && <h3><Link to={url+"#outline"} class={(!outL||!this.state.outlinePart && root && root.length?"disabled":"")}>{I18n.t("index.outline")}</Link></h3> }
             { tag === "Work" && <h3><Link to={url+"#resources"} class={(!rel?"disabled":"")}>{I18n.t("index.related")}</Link></h3> }
@@ -6075,13 +6077,16 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          
          let hasPages = this.getResourceElem(bdo+"eTextHasPage")
          let etext_data = this.renderData([!hasPages?bdo+"eTextHasChunk":bdo+"eTextHasPage"],iiifpres,title,otherLabels,"etext-data")
+         let etextRes = this.getResourceElem(bdo+"eTextInInstance")
+         if(etextRes && etextRes.length) etextRes = shortUri(etextRes[0].value)
+         else etextRes = null
 
          // TODO fix loader not hiding when closing then opening again
 
          return ([
             getGDPRconsent(this),
             <div>
-               { top_right_menu(this,title,searchUrl) }               
+               { top_right_menu(this,title,searchUrl,etextRes) }               
                { this.renderMirador(isMirador) }           
                <div class="resource etext-view">
                   <Loader loaded={!this.props.loading}  options={{position:"fixed",left:"50%",top:"50%"}} />
@@ -6156,6 +6161,17 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
          let prov = this.getProv()
 
+         let etextLoca = I18n.t("resource.openViewer"), etextVolN, etextTxtN, etextUT = loca.pathname+loca.search
+         if(etext) {
+            let fVol = this.getResourceElem(tmp+"firstVolN")
+            if(fVol && fVol.length) etextVolN = fVol[0].value
+            let fTxt = this.getResourceElem(tmp+"firstTextN")
+            if(fTxt && fTxt.length) etextTxtN = fTxt[0].value
+            let fUT = this.getResourceElem(tmp+"firstText")
+            if(fUT && fUT.length) etextUT = "/show/"+shortUri(fUT[0].value)
+            if(fVol && fTxt) etextLoca = I18n.t("resource.openVolViewer", {VolN:etextVolN}) // not sure we need this:  TxtN:etextTxtN
+         }
+
          
          return (
          [getGDPRconsent(this),
@@ -6191,7 +6207,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                   { iTitle }
                   { iTitle && this.state.title.instance && sideMenu(this.state.title.instance[0].value,"Instance", false, iDataExt, iOutline) }
                   { rTitle }
-                  { rTitle && this.state.title.images && sideMenu(this.state.title.images[0].value,"Images", false, rDataExt, false, rView && !orig) }
+                  { rTitle && this.state.title.images && sideMenu(this.state.title.images[0].value,"Images", false, rDataExt, false, rView && !orig, etextUT) }
                   </div>
                </div>
                <div>
@@ -6199,8 +6215,8 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                   {/* { this.renderAnnoPanel() } */}
                   { this.renderWithdrawn() }             
                   <div class="title">{ wTitle }{ iTitle }{ rTitle }</div>
-                  { this.renderHeader(kZprop.filter(k => mapProps.includes(k)), _T) }
-                  { (etext && !orig) && <div class="data" id="open-etext"><div><Link to={loca.pathname+loca.search+"#open-viewer"}>{I18n.t("resource.openViewer")}</Link></div></div> }
+                  { this.renderHeader(kZprop.filter(k => mapProps.includes(k)), _T, etextUT) }
+                  { (etext && !orig) && <div class="data" id="open-etext"><div><Link to={etextUT+"#open-viewer"}>{etextLoca}</Link></div></div> }
                   { (etext && orig) && <div class="data" id="open-etext"><div><a target="_blank" href={orig}>{I18n.t("resource.openO",{src:prov})}<img src="/icons/link-out_.svg"/></a></div></div> }
                   <div class={"data" + (_T === "Etext"?" etext-title":"")+(_T === "Images"?" images-title":"")}>
                      {_T === "Images" && iTitle?[<h2 class="on intro">{I18n.t("resource.scanF")}</h2>,iTitle]:(_T === "Etext" && iTitle?[<h2 class="on intro">{I18n.t("resource.etextF")}</h2>,iTitle]:title)}

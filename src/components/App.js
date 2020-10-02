@@ -536,7 +536,7 @@ export function getGDPRconsent(that) {
    )
 }
 
-export function top_right_menu(that,etextTitle,backUrl)
+export function top_right_menu(that,etextTitle,backUrl,etextres)
 {
    let logo = [
             <div id="logo">
@@ -554,14 +554,14 @@ export function top_right_menu(that,etextTitle,backUrl)
          <div>
             {logo}
 
-            <span id="back"><span>&lt;</span><a onClick={() => {
+            <span id="back"><span>&lt;</span><a {...etextres?{href:"/show/"+etextres}:{}} onClick={() => {
 
                   // DONE add loader to wait when back to search 
                   // TODO dont go back to search when opened from button
 
                   that.props.onLoading("search",true)
 
-                  setTimeout(() => { 
+                  if(!etextres) setTimeout(() => { 
                      if(!backUrl) {
                         let loca = { ...that.props.history.location };                  
                         delete loca.hash

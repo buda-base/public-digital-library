@@ -1873,7 +1873,7 @@ h4:hover a.no-bdrc img { opacity:1; }
 .resource .data h2.intro + h2 a span { border-bottom:1px solid transparent;}
 .resource .data h2.intro + h2 a:hover span { border-bottom:1px solid #d73449;}
 
-.resource .data h2.intro + h2 span { max-width:470px;overflow:hidden ;text-overflow: ellipsis;white-space: nowrap; display:inline-block;}
+.resource .data h2.intro + h2 span { max-width:445px;overflow:hidden ;text-overflow: ellipsis;white-space: nowrap; display:inline-block;}
 
 
 .resource .data.images-title h2.intro + h2 span { max-width:700px;}
