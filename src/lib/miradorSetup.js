@@ -220,6 +220,8 @@ async function hasEtextPage(manifest) {
 
       let getEtextPage = async (canvas) => { 
 
+         if(window.MiradorUseEtext != "open") return ;
+
          if(!canvas || !ut) return "(issue with canvas data: "+JSON.stringify(canvas,null,3)+")" ;
 
          let id = canvas.label ;
@@ -251,6 +253,8 @@ async function hasEtextPage(manifest) {
             
             console.log("loading DATA",id);
 
+            let start = id ;
+            while(id > 0 && start - id < NB_PAGES && !etextPages[ut][id - 1] ) { id -- ; } 
             for(let i = id ; i <= id+NB_PAGES-1 ; i++) etextPages[ut][i] = true ;
 
             let data = await window.fetch(ldspdi+"/lib/ChunksByPage?R_RES="+ut+"&I_START="+id+"&I_END="+(id+NB_PAGES-1), { headers:new Headers({accept:"application/ld+json"})}) ;
