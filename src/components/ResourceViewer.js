@@ -210,6 +210,8 @@ const viaf  = "http://viaf.org/viaf/"
 const wd    = "http://www.wikidata.org/entity/"
 const xsd   = "http://www.w3.org/2001/XMLSchema#" ;
 
+//other
+const cbeta = "http://cbetaonline.dila.edu.tw/"
 
 //const prefixes = { adm, bdac, bdan, bda, bdo, bdr, foaf, oa, owl, rdf, rdfs, skos, xsd, tmp, dila }
 
@@ -2006,6 +2008,9 @@ class ResourceViewer extends Component<Props,State>
          
          if(!elem.value.match(/^http:\/\/purl\.bdrc\.io/) /* && !hasExtPref */ && ((!dic || !dic[elem.value]) && !prop.match(/[/#]sameAs/))) {
             let link = elem.value
+
+            if(this.props.config && this.props.config.chineseMirror) link = link.replace(new RegExp(cbeta), "http://cbetaonline.cn/")
+            
             if(link.indexOf(dila) !== -1) { 
                link = link.replace(/^.*?[/]([^/]+)$/,"$1")
                let dir = dPrefix["dila"][link.replace(/[0-9]+$/,"")]
@@ -4269,6 +4274,8 @@ class ResourceViewer extends Component<Props,State>
                   if(s.isOrig) open = <MenuItem style={{display:"block",height:"32px",lineHeight:"12px"}}>{I18n.t("popover.imported")} <b>{providers[prov]}</b><br/>{I18n.t("popover.seeO")}<img style={{verticalAlign:"middle"}} src="/icons/link-out.svg"/></MenuItem>
 
                   //loggergen.log("permaSame",s,data,tab,link,name,prov) 
+
+                  if(this.props.config && this.props.config.chineseMirror) link = link.replace(new RegExp(cbeta), "http://cbetaonline.cn/")
 
                   // TODO case when more than on resource from a given provider (cf RKTS)
                   if(prov != "bdr") return (<a target="_blank" href={link.replace(/^https?:/,"")}>{open}</a>) 

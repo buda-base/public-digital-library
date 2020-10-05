@@ -4688,6 +4688,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                    */}
                   { menuK[id].map(m => m.full.map( u =>  {
                      let short = shortUri(u)
+                     if(this.props.config && this.props.config.chineseMirror) u = u.replace(new RegExp(cbeta), "http://cbetaonline.cn/")
                      return (
                            /* <span className="void">Open {this._menus[id].full.length > 1 ?<b>&nbsp;{short}&nbsp;</b>:"resource"} in {this._menus[id].src} website</span> */
                            <a href={u} class="menu-item-source" target="_blank">
@@ -5073,8 +5074,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                                              }
                                           } 
 
-                                          if(this.state.keyword) this.requestSearch(kw,null,tab[1], isRID && i === 1)
                                           this.setState({...this.state,langIndex:i,dataSource:[]});
+                                          if(this.state.keyword) this.requestSearch(kw,null,tab[1], isRID && i === 1)
                                           
                                        }} >{ tab.length == 1 ?"":tab[0].replace(/["]/g,"")} <SearchIcon style={{padding:"0 10px"}}/><span class="lang">{tab.length == 1 ? I18n.t("home."+tab[0]):(I18n.t(""+(searchLangSelec[tab[1]]?searchLangSelec[tab[1]]:(languages[tab[1]]?languages[tab[1]]:tab[1])))) }</span></MenuItem> ) 
                                     })
