@@ -1330,6 +1330,7 @@ vertical-align:middle;}
 .resource .data.related .header::before,
 .resource.work .data .header::before { background-image:url("/icons/work.png");  }
 .resource.instance .data .header::before { background-image:url("/icons/header/instance.svg"); background-size:64px auto; }
+.resource.volume .data .header::before,
 .resource.images .data .header::before { background-image:url("/icons/image.svg"); background-size:58px auto;  }
 .resource.person .data > .header::before { background-image:url("/icons/person.png");  }
 .resource.topic .data > .header::before { background-image:url("/icons/topic.png");  }

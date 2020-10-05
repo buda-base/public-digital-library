@@ -3817,6 +3817,13 @@ class ResourceViewer extends Component<Props,State>
             this.props.onGetResource("bdr:"+this.pretty(elem[0].value));
          }
       }*/
+      else if(kZprop.indexOf(bdo+"volumeOf") !== -1)
+      {
+         if(!this.props.imageAsset) {
+            this.setState({...this.state, imageLoaded:false})
+            this.props.onHasImageAsset(iiifpres+"/vo:"+ rid + "/manifest",rid);
+         }
+      }
       else if(kZprop.indexOf(bdo+"hasIIIFManifest") !== -1)
       {
          let elem = this.getResourceElem(bdo+"hasIIIFManifest",rid,this.props.resources,fullRid)
