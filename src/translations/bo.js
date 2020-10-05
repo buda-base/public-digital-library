@@ -278,7 +278,7 @@ const boTranslation = {
       has:"",
       or:"ཡང་ན།",
       seeA:"ཚང་མ་སྟོན།",
-      seeAnum:"see all {{count}}",
+      seeAnum:"ཚང་མར་གཟིགས། {{count}}",
       browse:"མིག་བཤེར་བྱོས།",
       show:"འདི་ལས་མང་བ།",
       seeMore:"འདི་ལས་མང་བ།",
@@ -291,6 +291,7 @@ const boTranslation = {
       in:"",
       of:"",
       please:""
+      seeO:"See on",
    },
    lang:{
       en:"ཨིན་སྐད།",
@@ -308,6 +309,7 @@ const boTranslation = {
          saXIast:"ལེགས་སྦྱར། (IAST)",
          saXNdia:"ལེགས་སྦྱར། (འདྲ་བྲིས་མ།)",
          saDeva:"ལེགས་སྦྱར། (དེ་བ་ན་ག་རི།)",
+         incXNdia:"Indic (Sanskrit or Pāli, Lenient)",
          en:"ཨིན་ཡིག",
          pi:"པཱ་ལི།",
          piXIast:"པཱ་ལི། (ཨིན་ཡིག)",
@@ -396,6 +398,7 @@ const boTranslation = {
       back:"འཚོལ་ངོས་ལ་ཕྱིར་ལོག",
       browse:"འབྲེལ་ཡོད་ཡིག་ཆར་མིག་བཤེར་བྱོས།",      
       openViewer:"འཕྲུལ་ཡིག་ཀློག",
+      openVolViewer:"Open Vol.{{VolN}} in Etext Viewer", /*Sec.{{TxtN}}",*/
       download:"ཕབ་ལེན།",
       downloadAs:"ཕབ་ལེན་གྱི་རྣམ་སྒྲིག ",
       version:"{{format}} ཐོན་རིམ།",
@@ -418,7 +421,7 @@ const boTranslation = {
       start:"འཚོལ།",
       reset:"བཙལ་བྱ་སུབ།",
       otherN:"Load non-matching subparts",
-       scanF:"",
+      scanF:"",
       etextF:"",
       openR:"དཔེ་ཐོ།",
       loadP:"ཤོག་གྲངས་སྔོན་མ་ཀློག",
@@ -452,6 +455,8 @@ const boTranslation = {
    access:{
       limited20:"འགོ་མཇུག་གཉིས་ནས་ཤོག་ངོས་ཉི་ཤུ་ཉི་ཤུ་ལས་ལྷག་ལྟ་ཀློག་བྱེད་མི་ཐུབ།",
       credentials:"དམིགས་བསལ་གྱི་ཐོབ་ཐང་ཡོད་ན་འདིར་བསྣུན།"
+      notyet:"བཤེར་པར་ད་དུང་མི་འདུག",
+      error:"བཤེར་པར་ཁ་ཕྱེ་སྐབས་གནད་དོན་ཞིག་ལྷག་སོང་།"
    },
    location:{
       beginV:"པོད་ {{num,counttobo}} ནས་",
