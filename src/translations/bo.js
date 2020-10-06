@@ -28,7 +28,7 @@ const boTranslation = {
       search:"འཚོལ།",
       choose:"སྐད་རིགས་འདེམ།",
       start:"དཔེ་མཛོད་སྔོགས།",
-      new:"བདུན་ཕྲག་འདིའི་ནང་སྤེལ་བའི་དཔེ་ཆའི་བཤེར་པར་གསར་པ་ཁག"
+      new:"བདུན་ཕྲག་འདིའི་ནང་སྤེལ་བའི་དཔེ་ཆ།"
    },
    types:{
       any:"གང་རུང་།",
@@ -309,7 +309,7 @@ const boTranslation = {
          saXIast:"ལེགས་སྦྱར། (IAST)",
          saXNdia:"ལེགས་སྦྱར། (འདྲ་བྲིས་མ།)",
          saDeva:"ལེགས་སྦྱར། (དེ་བ་ན་ག་རི།)",
-         incXNdia:"Indic (Sanskrit or Pāli, Lenient)",
+         incXNdia:"རྒྱ་གར་ཡུལ་གྱི་སྐད་རིགས། (ལེགས་སྦྱར་རམ་པཱ་ལི།)",
          en:"ཨིན་ཡིག",
          pi:"པཱ་ལི།",
          piXIast:"པཱ་ལི། (ཨིན་ཡིག)",
@@ -398,7 +398,7 @@ const boTranslation = {
       back:"འཚོལ་ངོས་ལ་ཕྱིར་ལོག",
       browse:"འབྲེལ་ཡོད་ཡིག་ཆར་མིག་བཤེར་བྱོས།",      
       openViewer:"འཕྲུལ་ཡིག་ཀློག",
-      openVolViewer:"Open Vol.{{VolN}} in Etext Viewer", /*Sec.{{TxtN}}",*/
+      openVolViewer:"འཕྲུལ་ཡིག་ཀློག པོད་{{VolN}}", /*Sec.{{TxtN}}",*/
       download:"ཕབ་ལེན།",
       downloadAs:"ཕབ་ལེན་གྱི་རྣམ་སྒྲིག ",
       version:"{{format}} ཐོན་རིམ།",
