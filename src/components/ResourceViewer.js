@@ -5944,6 +5944,8 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          rTitle = getWtitle(baseW)
       }
       
+      let resLabel = getLangLabel(this,"",titlElem)
+
       //loggergen.log("ttlm",titlElem,otherLabels)
       
       let mapProps = [bdo+"placeRegionPoly", bdo+"placeLong", bdo+"placeLat" ]
@@ -6001,15 +6003,18 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          createdBy = Object.keys(this.props.assocResources).map(k => {
             let v = this.props.assocResources[k]
             let s = shortUri(k)
-            let crea = v.filter(k => k.fromKey === tmp+"createdBy" && k.value === res)
+            let crea = v.filter(k => k.fromKey === (_T === "Place"?tmp+"printedAt":tmp+"createdBy") && k.value === res)
             //loggergen.log("isA",v,s,isA)
             if(crea.length) {
                let label, pLab = v.filter(k => k.fromKey === skos+"prefLabel" || k.type === skos+"prefLabel")
                if(pLab.length) label = getLangLabel(this,"",pLab)
                if(!label) label = { value:s }
+               let thumb = v.filter(k => k.fromKey === tmp+"thumbnailIIIFService" || k.type === tmp+"thumbnailIIIFService")
+               if(thumb && thumb.length) thumb = thumb[0].value
+               else thumb = null
                return ( 
                   <div>
-                     <Link to={"/show/"+s}><div class="header"></div></Link>
+                     <Link to={"/show/"+s}><div class={"header "+(thumb?"thumb":"")} style={{backgroundImage:"url("+thumb+"/full/,185/0/default.jpg)"}}></div></Link>
                      <div><span {...label.lang?{lang:label.lang}:{}}>{ label.value }</span>{ label.lang && this.tooltip(label.lang) }</div>
                      <Link to={"/show/"+s}>{I18n.t("misc.readM")}</Link>
                   </div>
@@ -6053,7 +6058,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
             { tag === "Images" && <h3><Link to={!etextUT?view:etextUT+"#open-viewer"} class={(!openV?"disabled":"")}>{I18n.t("index.openViewer")}</Link></h3> }
             <h3><Link to={url+"#main-info"} >{I18n.t("index.mainInfo")}</Link></h3>
             { tag === "Instance" && <h3><Link to={url+"#outline"} class={(!outL||!this.state.outlinePart && root && root.length?"disabled":"")}>{I18n.t("index.outline")}</Link></h3> }
-            { tag === "Work" && <h3><Link to={url+"#resources"} class={(!rel?"disabled":"")}>{I18n.t("index.related")}</Link></h3> }
+            { tag === "Work" && <h3><Link to={url+"#resources"} class={(!rel?"disabled":"")}>{I18n.t(_T ==="Place"?"index.relatedR":"index.related")}</Link></h3> }
              <h3><Link class={(!ext?"disabled":"")} to={url+"#ext-info"} >{I18n.t("index.extended")}</Link></h3> 
          </div>)
       }
@@ -6262,14 +6267,14 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                   { (hasRel && !["Instance","Images","Etext"].includes(_T)) &&  
                      <div class="data related" id="resources">
                         <div>
-                           <div><h2>{I18n.t("index.related")}</h2>{ (related && related.length > 4 || createdBy && createdBy.length > 4) && <Link to={"/search?t=Work&r="+this.props.IRI}>{I18n.t("misc.seeA")}</Link> }</div>
+                           <div><h2>{I18n.t(_T=== "Place"?"index.relatedR":"index.related")}</h2>{ (related && related.length > 4 || createdBy && createdBy.length > 4) && <Link to={"/search?t="+(_T==="Place"&&this.state.relatedTab?"Instance":"Work")+"&r="+this.props.IRI}>{I18n.t("misc.seeA")}</Link> }</div>
                            { (related && related.length > 0 && (!createdBy  || !createdBy.length)) && <div class="rel-or-crea">{related}</div>}
                            { (createdBy && createdBy.length > 0 && (!related  || !related.length)) && <div class="rel-or-crea">{createdBy}</div>}
                            { (related.length > 0 && createdBy.length > 0) && <div>
                               <Tabs>
                                  <TabList>
-                                    <Tab>{I18n.t("resource.about")}</Tab>
-                                    <Tab>{I18n.t("resource.createdB")}</Tab>
+                                    <Tab onClick={(ev)=>this.setState({relatedTab:false})}>{I18n.t(_T=== "Place"?"resource.wAbout":"resource.about",{resLabel, count:related.length, interpolation: {escapeValue: false}})} </Tab>
+                                    <Tab onClick={(ev)=>this.setState({relatedTab:true})}>{I18n.t(_T=== "Place"?"resource.printedA":"resource.createdB",{resLabel, count:related.length, interpolation: {escapeValue: false}})}</Tab>
                                  </TabList>
                                  <TabPanel><div class="rel-or-crea">{related}</div></TabPanel>
                                  <TabPanel><div class="rel-or-crea">{createdBy}</div></TabPanel>
