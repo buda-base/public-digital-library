@@ -5101,19 +5101,36 @@ perma_menu(pdfLink,monoVol,fairUse,other)
       let iiifThumb = this.getResourceElem(tmp+"thumbnailIIIFService")
       if(iiifThumb && iiifThumb.length) iiifThumb = iiifThumb[0].value
 
+      let handleViewer = (ev) => {
+         if(ev.type === 'click') { 
+            this.showMirador(null,null,true)
+            ev.preventDefault();
+            ev.stopPropagation();
+            return false ;
+         }
+      }
+
+
+      let viewUrl = { ...this.props.history.location }
+      viewUrl.pathname = viewUrl.pathname.replace(/\/show\//,"/view/")
+      viewUrl.search = "" 
+      if(this.props.langPreset) viewUrl.search = "?lang="+this.props.langPreset.join(",")
+
       if(!this.state.imageError && iiifThumb && T === "Images") 
          return  ( 
             <div class="data simple" id="first-image">
-               <div className={"firstImage "+(this.state.imageLoaded?"loaded":"")} {...(this.props.config.hideViewers?{"onClick":() => this.showMirador(null,null,true),"style":{cursor:"pointer"}}:{})} >
+               <a onClick={handleViewer} onContextMenu={handleViewer}  href={viewUrl.pathname+viewUrl.search} target="_blank" className={"firstImage "+(this.state.imageLoaded?"loaded":"")} 
+               /*{...(this.props.config.hideViewers?{"onClick":() => this.showMirador(null,null,true),"style":{cursor:"pointer"}}:{})}*/ >
                   <Loader className="uvLoader" loaded={this.state.imageLoaded} color="#fff"/>
                   <img onError={(e)=>this.setState({...this.state,imageError:true})} onLoad={(e)=>this.setState({...this.state,imageLoaded:true,imageError:false})} src={iiifThumb+"/full/1000,/0/default.jpg"} /> 
-               </div>
+               </a>
             </div>
          )
       else if(!this.props.manifestError &&  this.props.imageAsset && !etext)
          return  ( 
          <div class="data" id="first-image">
-            <div className={"firstImage "+(this.state.imageLoaded?"loaded":"")} {...(this.props.config.hideViewers?{"onClick":this.showMirador.bind(this),"style":{cursor:"pointer"}}:{})} >
+            <a onClick={handleViewer} onContextMenu={handleViewer} href={viewUrl.pathname+viewUrl.search} target="_blank" className={"firstImage "+(this.state.imageLoaded?"loaded":"")} 
+               /*{...(this.props.config.hideViewers?{"onClick":this.showMirador.bind(this),"style":{cursor:"pointer"}}:{})}*/ >
                <Loader className="uvLoader" loaded={this.state.imageLoaded} color="#fff"/>
                { 
                   this.props.firstImage && 
@@ -5148,7 +5165,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                      }
                   </div>
                */}
-            </div>
+            </a>
          </div>
          )
       else if(kZprop.length)

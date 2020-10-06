@@ -863,7 +863,14 @@ export async function miradorInitView(work,lang,callerURI,locale) {
       if(propK)
       {
          
-         if(propK["workHasItemImageAsset"] || propK["workLocation"]) { //workHasItemImageAsset
+         if(propK["instanceReproductionOf"]) {
+            const repro = propK["instanceReproductionOf"]
+
+            data = [
+               { "collectionUri" : iiifpres+"/collection/wio:"+repro["@id"], location:"" }
+            ]
+         }
+         else if(propK["workHasItemImageAsset"] || propK["workLocation"]) { //workHasItemImageAsset
 
             const item = propK["workHasItemImageAsset"]?propK["workHasItemImageAsset"]:propK["workLocation"]
 
