@@ -1,7 +1,7 @@
 
 const bdr = "http://purl.bdrc.io/resource/"
 
-const iiifpres = "//iiifpres.bdrc.io"
+let iiifpres = "//iiifpres.bdrc.io"
 
 let miradorConfig, miradorSetUI
 
@@ -9,6 +9,7 @@ async function init() {
 
    const urlParams = new URLSearchParams(window.location.search);
    const work = urlParams.get('work') || "bdr:W22084";
+   if(urlParams.get('iiifpres')) iiifpres = "//" + urlParams.get('iiifpres') ;
    let data = [
       { "collectionUri" :iiifpres+"/2.1.1/collection/wio:"+work, location:"" }
    ]

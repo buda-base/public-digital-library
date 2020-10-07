@@ -1,7 +1,7 @@
 
 
 const ldspdi = "//ldspdi.bdrc.io"
-const iiifpres = "//iiifpres.bdrc.io"
+let iiifpres = "//iiifpres.bdrc.io"
 
 let jQ,extendedPresets,sortLangScriptLabels,__
 
@@ -847,7 +847,10 @@ export async function miradorInitView(work,lang,callerURI,locale) {
    let data = [
       { "collectionUri": "../tibcolldemo2.json", location: "BDRC - Palpung Collection"}
    ]
+   
    const urlParams = new URLSearchParams(window.location.search);
+   if(urlParams.get('iiifpres')) iiifpres = "//" + urlParams.get('iiifpres') 
+
    //const work = props.match.params.IRI;
    if(work) {
       console.log("work",work)
