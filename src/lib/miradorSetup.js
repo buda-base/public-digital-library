@@ -847,6 +847,10 @@ export async function miradorInitView(work,lang,callerURI,locale) {
    let data = [
       { "collectionUri": "../tibcolldemo2.json", location: "BDRC - Palpung Collection"}
    ]
+
+   let conf = await (await fetch("/config.json")).json()
+   //console.log("conf:",conf)
+   if(conf.iiifpres) iiifpres = conf.iiifpres.endpoints[conf.iiifpres.index]
    
    const urlParams = new URLSearchParams(window.location.search);
    if(urlParams.get('iiifpres')) iiifpres = "//" + urlParams.get('iiifpres') 
