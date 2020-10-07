@@ -772,7 +772,7 @@ function miradorAddZoomer() {
 
             scrollT.css({
                "transform":"scale("+coef+") translateY("+10/coef+"px) translateX("+trX/coef+"px)",
-               "margin-bottom":"-500000px" // no more empty space at bottom 
+               "margin-bottom":"-50000000px" // no more empty space at bottom 
             })            
             
             scrollT.find(".thumb-label").css({

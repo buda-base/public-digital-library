@@ -491,7 +491,10 @@ export function lang_selec(that,black:boolean = false)
                                     value={i}
                                     disabled={disab}
                                     onClick={(event) => { 
+
                                        localStorage.setItem('uilang', i);
+                                       localStorage.setItem('langpreset', i);
+
                                        that.setState({...that.state,anchorLang:null,collapse: {...that.state.collapse, lang:false } }); 
                                        document.documentElement.lang = i
 
