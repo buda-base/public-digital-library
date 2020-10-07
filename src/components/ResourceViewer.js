@@ -400,8 +400,6 @@ let propOrder = {
       "bf:identifiedBy",
       "rdfs:seeAlso",
       "bdo:incipit",
-      "bdo:catalogInfo",
-      "bdo:workCatalogInfo",
       "bdo:instanceEvent",
       "bdo:workEvent",
       "bdo:publisherName",
@@ -448,11 +446,11 @@ const topProperties = {
    "Work": [ 
       bdo+"hasTitle", 
       skos+"prefLabel", 
-      skos+"altLabel", 
+      skos+"altLabel",
       bdo+"language",
       bdo+"creator",
+      bdo+"catalogInfo",
       bdo+"workTranslationOf",
-      bdo+"editionStatement",
       bdo+"workHasInstance",
    ],
    "Instance": [ 
