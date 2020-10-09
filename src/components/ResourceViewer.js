@@ -5116,6 +5116,24 @@ perma_menu(pdfLink,monoVol,fairUse,other)
       viewUrl.search = "" 
       if(this.props.langPreset) viewUrl.search = "?lang="+this.props.langPreset.join(",")
 
+      let copyRicon
+
+      let access = this.getResourceElem(adm+"access");
+      if(access && access.length) access = access[0].value ;
+
+      let hasCopyR = "" 
+      if(access) {
+         if(access.includes("FairUse")) hasCopyR = "fair_use"
+         else if(access.includes("Temporarily"))  hasCopyR = "temporarily"; 
+         else if(access.includes("Sealed"))  hasCopyR = "sealed";  
+         else if(access.includes("Quality")) hasCopyR = "quality" ;
+      }
+
+      if(hasCopyR === "fair_use") copyRicon = <img class="access-icon" title={I18n.t("copyright.fairUse")} src="/icons/fair_use.svg"/>
+      else if(hasCopyR === "temporarily") copyRicon = <img class="access-icon" title={I18n.t("copyright.tempo")} src="/icons/temporarily.svg"/>
+      else if(hasCopyR === "sealed") copyRicon = <img class="access-icon" title={I18n.t("copyright.sealed")} src="/icons/sealed.svg"/>
+      else if(hasCopyR === "quality") copyRicon = <img class="access-icon" title={I18n.t("copyright.quality")} src="/icons/unknown.svg"/>
+      
       if(!this.state.imageError && iiifThumb && T === "Images") 
          return  ( 
             <div class="data simple" id="first-image">
@@ -5174,11 +5192,10 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          let loca = this.props.history.location
          let view = loca.pathname+loca.search+"#open-viewer"
          if(etextUT) view = etextUT+"#open-viewer"
-         return <div class="data" id="head"><Link title='View Etext' to={view}><div class={"header "+(!this.state.ready?"loading":"")}>{ !this.state.ready && <Loader loaded={false} /> }{src}</div></Link></div>
+         return <div class="data" id="head"><Link title='View Etext' to={view}><div class={"header "+(!this.state.ready?"loading":"")}>{ !this.state.ready && <Loader loaded={false} /> }{src}{copyRicon}</div></Link></div>
       }
-      else  
-         return <div class="data" id="head"><div class={"header "+(!this.state.ready?"loading":"")}>{ !this.state.ready && <Loader loaded={false} /> }{src}</div></div>
-   
+      else 
+         return <div class="data" id="head"><div class={"header "+(!this.state.ready?"loading":"")}>{ !this.state.ready && <Loader loaded={false} /> }{src}{copyRicon}</div></div>   
    }
 
    // TODO case of part of instance after p.20 (see bdr:MW1KG2733_65CFB8)
@@ -5186,10 +5203,12 @@ perma_menu(pdfLink,monoVol,fairUse,other)
    renderNoAccess = (fairUse) => {
       if(fairUse && (this.props.auth && !this.props.auth.isAuthenticated()) )
          return <div class="data access">
-                  <h3 style={{display:"block",marginBottom:"15px"}}>
-                     <span style={{textTransform:"none"}}>{I18n.t("access.limited20")}<br/>
-                   { this.props.locale !== "bo" && [ I18n.t("misc.please"), " ", <a class="login" onClick={this.props.auth.login.bind(this,this.props.history.location)}>{I18n.t("topbar.login")}</a>, " ", I18n.t("access.credentials") ] }
-                   { this.props.locale === "bo" && [ I18n.t("access.credentials"), " ", <a class="login" onClick={this.props.auth.login.bind(this,this.props.history.location)}>{I18n.t("topbar.login")}</a> ] }
+                  <h3>
+                     <span style={{textTransform:"none"}}>
+                     {/* {I18n.t("access.limited20")}<br/> */}
+                     { I18n.t("access.fairuse1")} { I18n.t("access.fairuse2")} <a href="mailto:help@bdrc.io">help@bdrc.io</a> { I18n.t("access.fairuse3")}
+                     { /*this.props.locale !== "bo" && [ I18n.t("misc.please"), " ", <a class="login" onClick={this.props.auth.login.bind(this,this.props.history.location)}>{I18n.t("topbar.login")}</a>, " ", I18n.t("access.credentials") ] }
+                     { this.props.locale === "bo" && [ I18n.t("access.credentials"), " ", <a class="login" onClick={this.props.auth.login.bind(this,this.props.history.location)}>{I18n.t("topbar.login")}</a> ] */ }
                    </span>
                   </h3>
                </div>
@@ -5198,10 +5217,17 @@ perma_menu(pdfLink,monoVol,fairUse,other)
    // DONE check if this is actually used (it is)
    renderAccess = () => {
 
+
+      let elem = this.getResourceElem(adm+"access");
+      if(elem && elem.length) elem = elem[0].value ;
+
       if ( this.props.manifestError && this.props.manifestError.error.code === 404)
          return  <div class="data access"><h3><span style={{textTransform:"none"}}>{I18n.t("access.notyet")}</span></h3></div>
       else if ( this.props.manifestError && this.props.auth && this.props.manifestError.error.code === 401) 
-         return  <div class="data access"><h3><span style={{textTransform:"none"}}>{I18n.t("misc.please")} <a class="login" {...(this.props.auth?{onClick:this.props.auth.login.bind(this,this.props.history.location)}:{})}>{I18n.t("topbar.login")}</a> {I18n.t("access.credentials")}</span></h3></div>
+         if(elem.includes("RestrictedSealed"))
+            return  <div class="data access"><h3><span style={{textTransform:"none"}}>{I18n.t("access.sealed")} <a href="mailto:help@bdrc.io">help@bdrc.io</a>{I18n.t("punc.point")}</span></h3></div>
+         else 
+            return  <div class="data access"><h3><span style={{textTransform:"none"}}>{I18n.t("misc.please")} <a class="login" {...(this.props.auth?{onClick:this.props.auth.login.bind(this,this.props.history.location)}:{})}>{I18n.t("topbar.login")}</a> {I18n.t("access.credentials")}</span></h3></div>
       else if ( this.props.manifestError && this.props.manifestError.error.code === 500 )
          return  <div class="data access"><h3><span style={{textTransform:"none"}}>{I18n.t("access.error")}</span></h3></div>
       

@@ -1344,7 +1344,8 @@ vertical-align:middle;}
 
 .resource .data .header.loading::before { background-image:none !important; }
 
-
+.resource .data .header .access-icon { position: absolute; width: 20px; margin-left: 45px; margin-top: 55px; opacity: 0.8; }
+.resource.etext .data .header .access-icon { margin-left: 65px; margin-top: 60px;  }
 
 /*
 .resource .data [data-prop^="adm:seeOther"]:not(#a):not(.a):not(#b),
@@ -1845,6 +1846,7 @@ h4:hover a.no-bdrc img { opacity:1; }
 /* ------------------------------------------------------------------------------------------------------------------------ properties/misc */
 
 .resource .data.access { text-align:center; padding-bottom:80px;}
+.resource .data.access h3 { display:"block" ; margin-bottom:15px; max-width:720px; }
 
 .resource .data.top-props .has-collapse:not(.custom):last-child { margin-bottom:-25px; }
 
