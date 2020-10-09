@@ -3575,6 +3575,8 @@ class ResourceViewer extends Component<Props,State>
 
          if(!tiMir) tiMir = setInterval( async () => {
 
+            console.log("tiMir")
+
             if(window.Mirador && $("#viewer").length && window.Mirador.Viewer.prototype.setupViewer.toString().match(/going to previous page/) && !window.mirador) {
 
                clearInterval(tiMir);
@@ -3620,7 +3622,7 @@ class ResourceViewer extends Component<Props,State>
 
                miradorSetUI(true, num);
             }
-         }, 10)
+         }, 1000)
       }
       else
       {

@@ -8948,7 +8948,7 @@ minizlib@^1.2.1:
 
 "mirador@https://github.com/buda-base/mirador#2.7.0-bdrc":
   version "2.7.0"
-  resolved "https://github.com/buda-base/mirador#81f6b12c3f400efde81c683cc47f9ba9e2e6ef5a"
+  resolved "https://github.com/buda-base/mirador#fec82acc046cc195c01f1de71c39117307c49325"
   dependencies:
     bootbox "^4.4.0"
     bootstrap "^3.3.7"
