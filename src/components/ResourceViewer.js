@@ -761,6 +761,7 @@ class ResourceViewer extends Component<Props,State>
    _properties = {} ;
    _dontMatchProp = "" ;
    _mouseover = {}
+   _refs = {}
 
    constructor(props:Props)
    {
@@ -5877,7 +5878,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
    render()
    {
-      loggergen.log("render",this.props,this.state)
+      loggergen.log("render",this.props,this.state,this._refs)
    
       this._annoPane = []
 //
@@ -6009,7 +6010,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
          let res = wUrl
 
-         related = Object.keys(this.props.assocResources).map(k => {
+         related = Object.keys(this.props.assocResources).map((k,i) => {
             let v = this.props.assocResources[k]
             let s = shortUri(k)
             let isA = v.filter(k => k.fromKey === bdo+"workIsAbout" && k.value === res)
@@ -6029,15 +6030,8 @@ perma_menu(pdfLink,monoVol,fairUse,other)
             }
          }).filter(k => k)
          related = _.orderBy(related, ["n","m"], ["desc","asc"])
-         related = related.map( ({s,k,n,m,label}) => ( 
-            <div>
-               <Link to={"/show/"+s}><div class="header"></div></Link>
-               <div><span {...label.lang?{lang:label.lang}:{}}>{ label.value }</span>{ label.lang && this.tooltip(label.lang) }</div>
-               <Link to={"/show/"+s}>{I18n.t("misc.readM")}</Link>
-            </div>
-         ))
 
-         createdBy = Object.keys(this.props.assocResources).map(k => {
+         createdBy = Object.keys(this.props.assocResources).map( (k,i) => {
             let v = this.props.assocResources[k]
             let s = shortUri(k)
             let crea = v.filter(k => k.fromKey === (_T === "Place"?tmp+"printedAt":tmp+"createdBy") && k.value === res)
@@ -6062,15 +6056,31 @@ perma_menu(pdfLink,monoVol,fairUse,other)
             }
          }).filter(k => k)
          createdBy = _.orderBy(createdBy, ["n","m"], ["desc","asc"])
-         createdBy = createdBy.map( ({s,k,n,m,label,thumb}) => ( 
-            <div>
-               <Link to={"/show/"+s}><div class={"header "+(thumb?"thumb":"")} style={{backgroundImage:"url("+thumb+"/full/,185/0/default.jpg)"}}></div></Link>
-               <div><span {...label.lang?{lang:label.lang}:{}}>{ label.value }</span>{ label.lang && this.tooltip(label.lang) }</div>
-               <Link to={"/show/"+s}>{I18n.t("misc.readM")}</Link>
-            </div>
-         ))
 
          console.log("rel:",related,createdBy)
+
+         related = related.map( ({s,k,n,m,label},i) => {            
+            this._refs["rel-"+i] = React.createRef();
+            return ( 
+               <div ref={this._refs["rel-"+i]}>
+                  <Link to={"/show/"+s}><div class="header"></div></Link>
+                  <div><span {...label.lang?{lang:label.lang}:{}}>{ label.value }</span>{ label.lang && this.tooltip(label.lang) }</div>
+                  <Link to={"/show/"+s}>{I18n.t("misc.readM")}</Link>
+               </div>
+            )
+         })
+
+         createdBy = createdBy.map( ({s,k,n,m,label,thumb},i) => {             
+            this._refs["crea-"+i] = React.createRef();
+            return ( 
+               <div ref={this._refs["crea-"+i]}>
+                  <Link to={"/show/"+s}><div class={"header "+(thumb?"thumb":"")} style={{backgroundImage:"url("+thumb+"/full/,185/0/default.jpg)"}}></div></Link>
+                  <div><span {...label.lang?{lang:label.lang}:{}}>{ label.value }</span>{ label.lang && this.tooltip(label.lang) }</div>
+                  <Link to={"/show/"+s}>{I18n.t("misc.readM")}</Link>
+               </div>
+            )
+         })
+
       }
 
       let hasRel = ((related && related.length > 0)||(createdBy && createdBy.length > 0))
@@ -6256,7 +6266,29 @@ perma_menu(pdfLink,monoVol,fairUse,other)
             if(fVol && fTxt) etextLoca = I18n.t("resource.openVolViewer", {VolN:etextVolN}) // not sure we need this:  TxtN:etextTxtN
          }
 
-         
+         let scrollRel = (ev,next) => { 
+            let idx = !this.state.relatedTab?"rel":"crea"
+            let max = !this.state.relatedTab?related.length:createdBy.length
+            let i = (this.state["i"+idx]!==undefined?this.state["i"+idx]:0)
+            if(next) i+=4 ;
+            else i-=4 ;
+            if(i > max) i = max
+            else if(i < 0) i = 0
+            console.log("i:",next,i,max,idx,this._refs[i],this._refs)
+            if(this._refs[ idx + "-" + i ]) {
+               this._refs[ idx + "-" + i ].current.scrollIntoView({behavior:"smooth",block:"nearest",inline:"start"})
+               this.setState({["i"+idx]:i})
+            }
+         }
+
+         let navNext = false          
+         if(related && !this.state.relatedTab) {
+            navNext = this.state.irel === undefined || (this.state.irel / 4) * 4 + 4 < related.length - 1 
+         }
+         else if(createdBy) {
+            navNext = this.state.icrea === undefined || (this.state.icrea / 4) * 4 + 4 < createdBy.length - 1 
+         }
+
          return (
          [getGDPRconsent(this),
          <div class={isMirador?"H100vh OF0":""}>
@@ -6321,14 +6353,21 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                            { (related.length > 0 && createdBy.length > 0) && <div>
                               <Tabs>
                                  <TabList>
-                                    <Tab onClick={(ev)=>this.setState({relatedTab:false})}>{I18n.t(_T=== "Place"?"resource.wAbout":"resource.about",{resLabel, count:related.length, interpolation: {escapeValue: false}})} </Tab>
-                                    <Tab onClick={(ev)=>this.setState({relatedTab:true})}>{I18n.t(_T=== "Place"?"resource.printedA":"resource.createdB",{resLabel, count:related.length, interpolation: {escapeValue: false}})}</Tab>
+                                    <Tab onClick={(ev)=>this.setState({relatedTab:false,irel:0,icrea:0})}>{I18n.t(_T=== "Place"?"resource.wAbout":"resource.about",{resLabel, count:related.length, interpolation: {escapeValue: false}})} </Tab>
+                                    <Tab onClick={(ev)=>this.setState({relatedTab:true,irel:0,icrea:0})}>{I18n.t(_T=== "Place"?"resource.printedA":"resource.createdB",{resLabel, count:related.length, interpolation: {escapeValue: false}})}</Tab>
                                  </TabList>
                                  <TabPanel><div class="rel-or-crea">{related}</div></TabPanel>
                                  <TabPanel><div class="rel-or-crea">{createdBy}</div></TabPanel>
                               </Tabs>
                            </div> }
                         </div>
+                        { 
+                           (!this.state.relatedTab && related.length > 4 || this.state.relatedTab && createdBy.length > 4) &&
+                           <div id="related-nav" >
+                              <span class={!this.state.relatedTab?(this.state.irel>0?"on":""):(this.state.icrea>0?"on":"")} onClick={(ev) => scrollRel(ev)}><img src="/icons/g.svg"/></span>
+                              <span class={navNext?"on":""} onClick={(ev) => scrollRel(ev,true)}><img src="/icons/d.svg"/></span>
+                           </div>
+                        }
                      </div> 
                   }         
                   { theOutline }

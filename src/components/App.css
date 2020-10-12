@@ -604,8 +604,10 @@ li + a.result { margin-top:-5px; }
 #latest .slide-bg.slided > div:nth-child(-n+5) { opacity: 0;}
 
 #latest #syncs-nav { margin-top: 60px; }
-#latest #syncs-nav span { display: inline-block; margin:0px 10px; opacity:0.35; }
-#latest #syncs-nav span.on { cursor:pointer; opacity:1;}
+#related-nav span, #latest #syncs-nav span { display: inline-block; margin:0px 10px; opacity:0.35; }
+#related-nav span.on, #latest #syncs-nav span.on { cursor:pointer; opacity:1;}
+
+#related-nav { text-align:center;}
 
 #latest .slide-bg.slided { margin-left:calc(-100% + 5px); }
 
@@ -1523,7 +1525,7 @@ vertical-align:middle;}
 #popHoverM > div:last-child .resource .data { padding-left:53px; padding-bottom:35px; padding-top:27px; margin-left:0; }
 #popHoverM > div:last-child .resource .data .react-tabs { background-color:#fcf5e2; min-width:898px; margin-left:-25px;margin-top:20px; min-height:150px; font-size:0;}
 #popHoverM .react-tabs__tab { border:none;border-radius:0; width:calc(25% - 1px); font-size:10px; padding:0; text-align:center; line-height:40px; bottom:-1px !important; 
-   background-color:#fce08d; border-right:1px solid white; 
+   background-color:#999487; border-right:1px solid white; 
 }
 #popHoverM .react-tabs__tab:last-child { width:calc(25%); border:none; }
 #popHoverM .react-tabs__tab.react-tabs__tab--selected {background-color:#fcf5e2;  }
@@ -2237,8 +2239,9 @@ html[lang="en"] .resource .data > [data-prop="bdo:creator"] h4[data-prop="bdo:ro
 .resource .data.related > div div.rel-or-crea { display:flex; overflow:hidden; }
 .resource .data.related > div div.rel-or-crea > div {display:inline-block; width:185px;margin-right:35px; flex-shrink:0;}
 .resource .data.related > div div.rel-or-crea > div .header { height:185px; }
-.resource .data.related > div div.rel-or-crea > :nth-child(n+5) { display:none; }
-.resource .data.related > div div.rel-or-crea > :nth-child(4n+4) { margin-right:0; }
+/* .resource .data.related > div div.rel-or-crea > :nth-child(n+5) { display:none; } */
+/* .resource .data.related > div div.rel-or-crea > :nth-child(4n+4) { margin-right:0; } */
+.resource .data.related > div div.rel-or-crea > :last-child { padding-right:22px; } 
 .resource .data.related > div div.rel-or-crea > div a { color:#343434; font-weight:700; font-size:13px; border-color:#343434;}
 .resource .data.related > div div.rel-or-crea > div > div { color:#343434; font-weight:500; font-size:15px; margin:30px 0 20px 0; 
    position:relative; }
@@ -2257,6 +2260,11 @@ html[lang="en"] .resource .data > [data-prop="bdo:creator"] h4[data-prop="bdo:ro
 
 .resource .data.related .header.thumb:before { content:none; }
 .resource .data.related .header.thumb { background-position:center; background-size:cover; border: 1px solid #ccc;}
+
+/* .resource .data.related .react-tabs .react-tabs__tab-panel .rel-or-crea { overflow-x:scroll;} */
+
+.resource .data.related > div div.rel-or-crea > div { scroll-margin:20px;}
+
 /* ------------------------------------------------------------------------------------------------------------------------ extended properties */
 
 
