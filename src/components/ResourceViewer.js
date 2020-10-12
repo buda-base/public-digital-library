@@ -6014,19 +6014,28 @@ perma_menu(pdfLink,monoVol,fairUse,other)
             let s = shortUri(k)
             let isA = v.filter(k => k.fromKey === bdo+"workIsAbout" && k.value === res)
             //loggergen.log("isA",v,s,isA)
-            if(isA.length) {
+            if(isA.length) {               
                let label, pLab = v.filter(k => k.fromKey === skos+"prefLabel" || k.type === skos+"prefLabel")
                if(pLab.length) label = getLangLabel(this,"",pLab)
                if(!label) label = { value:s }
-               return ( 
-                  <div>
-                     <Link to={"/show/"+s}><div class="header"></div></Link>
-                     <div><span {...label.lang?{lang:label.lang}:{}}>{ label.value }</span>{ label.lang && this.tooltip(label.lang) }</div>
-                     <Link to={"/show/"+s}>{I18n.t("misc.readM")}</Link>
-                  </div>
-               )
+
+               let n = v.filter(k => k.fromKey === tmp+"entityScore")
+               if(n.length) n = Number(n[0].value)
+               else n = -99 
+               
+               let m = label.lang+"_"+label.value
+
+               return {s,k,n,m,label} ;
             }
-         } ).filter(k => k)
+         }).filter(k => k)
+         related = _.orderBy(related, ["n","m"], ["desc","asc"])
+         related = related.map( ({s,k,n,m,label}) => ( 
+            <div>
+               <Link to={"/show/"+s}><div class="header"></div></Link>
+               <div><span {...label.lang?{lang:label.lang}:{}}>{ label.value }</span>{ label.lang && this.tooltip(label.lang) }</div>
+               <Link to={"/show/"+s}>{I18n.t("misc.readM")}</Link>
+            </div>
+         ))
 
          createdBy = Object.keys(this.props.assocResources).map(k => {
             let v = this.props.assocResources[k]
@@ -6034,23 +6043,34 @@ perma_menu(pdfLink,monoVol,fairUse,other)
             let crea = v.filter(k => k.fromKey === (_T === "Place"?tmp+"printedAt":tmp+"createdBy") && k.value === res)
             //loggergen.log("isA",v,s,isA)
             if(crea.length) {
+
                let label, pLab = v.filter(k => k.fromKey === skos+"prefLabel" || k.type === skos+"prefLabel")
                if(pLab.length) label = getLangLabel(this,"",pLab)
                if(!label) label = { value:s }
+
+               let n = v.filter(k => k.fromKey === tmp+"entityScore")
+               if(n.length) n = Number(n[0].value)
+               else n = -99 
+               
+               let m = label.lang+"_"+label.value
+
                let thumb = v.filter(k => k.fromKey === tmp+"thumbnailIIIFService" || k.type === tmp+"thumbnailIIIFService")
                if(thumb && thumb.length) thumb = thumb[0].value
                else thumb = null
-               return ( 
-                  <div>
-                     <Link to={"/show/"+s}><div class={"header "+(thumb?"thumb":"")} style={{backgroundImage:"url("+thumb+"/full/,185/0/default.jpg)"}}></div></Link>
-                     <div><span {...label.lang?{lang:label.lang}:{}}>{ label.value }</span>{ label.lang && this.tooltip(label.lang) }</div>
-                     <Link to={"/show/"+s}>{I18n.t("misc.readM")}</Link>
-                  </div>
-               )
-            }
-         } ).filter(k => k)
 
-         //console.log("rel:",related,createdBy)
+               return {s,k,n,m,label,thumb};
+            }
+         }).filter(k => k)
+         createdBy = _.orderBy(createdBy, ["n","m"], ["desc","asc"])
+         createdBy = createdBy.map( ({s,k,n,m,label,thumb}) => ( 
+            <div>
+               <Link to={"/show/"+s}><div class={"header "+(thumb?"thumb":"")} style={{backgroundImage:"url("+thumb+"/full/,185/0/default.jpg)"}}></div></Link>
+               <div><span {...label.lang?{lang:label.lang}:{}}>{ label.value }</span>{ label.lang && this.tooltip(label.lang) }</div>
+               <Link to={"/show/"+s}>{I18n.t("misc.readM")}</Link>
+            </div>
+         ))
+
+         console.log("rel:",related,createdBy)
       }
 
       let hasRel = ((related && related.length > 0)||(createdBy && createdBy.length > 0))
