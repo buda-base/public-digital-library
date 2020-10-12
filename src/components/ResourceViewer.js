@@ -3819,7 +3819,8 @@ class ResourceViewer extends Component<Props,State>
       }*/
       else if(kZprop.indexOf(bdo+"volumeOf") !== -1)
       {
-         if(!this.props.imageAsset && !this.props.manifestError) {
+         let elem = this.getResourceElem(bdo+"volumeHasEtext",rid,this.props.resources,fullRid)
+         if(!elem && !this.props.imageAsset && !this.props.manifestError) {
             this.setState({...this.state, imageLoaded:false})
             this.props.onHasImageAsset(iiifpres+"/vo:"+ rid + "/manifest",rid);
          }
