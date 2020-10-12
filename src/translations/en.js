@@ -460,10 +460,10 @@ const enTranslation = {
       downloadE:"Download Etext"
    },
    access:{
-      fairuse1:"BDRC restricts access to this work (only the first and last 20 pages are available online) because the work is under copyright.",
+      fairuse1:"BDRC <bold>restricts access</bold> to this work (only the first and last 20 images are available online) because the work is under <bold>copyright</bold>.",
       fairuse2:"Please contact",
       fairuse3:"for information about possibly accessing this work under fair use.",
-      sealed:"BDRC restricts access to this work because it was provided to BDRC on the condition that we respect traditional restrictions applied to it. If you have received the proper transmission from a spiritual teacher to access this work or have other questions about how to access this work please contact",
+      sealed:"BDRC <bold>restricts access</bold> to this work because it was provided to BDRC on the condition that we respect <bold>traditional restrictions</bold> applied to it. If you have received the proper transmission from a spiritual teacher to access this work or have other questions about how to access this work please contact",
       limited20:"Access limited to first & last 20 pages.",
       credentials:"if you have sufficient credentials to get access to all scans from this work.",
       notyet:"Images not yet available.",

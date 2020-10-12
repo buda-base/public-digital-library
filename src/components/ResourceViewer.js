@@ -57,6 +57,7 @@ import RefreshIcon from '@material-ui/icons/Refresh';
 
 //import {Translate , I18n} from 'react-redux-i18n';
 import I18n from 'i18next';
+import { Trans } from 'react-i18next'
 
 import { Link } from 'react-router-dom';
 //import AnnotatedEtextContainer from 'annotated-etext-react';
@@ -5207,7 +5208,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                   <h3>
                      <span style={{textTransform:"none"}}>
                      {/* {I18n.t("access.limited20")}<br/> */}
-                     { I18n.t("access.fairuse1")} { I18n.t("access.fairuse2")} <a href="mailto:help@bdrc.io">help@bdrc.io</a> { I18n.t("access.fairuse3")}
+                     <Trans i18nKey="access.fairuse1" components={{ bold: <u /> }} /> { I18n.t("access.fairuse2")} <a href="mailto:help@bdrc.io">help@bdrc.io</a> { I18n.t("access.fairuse3")}
                      { /*this.props.locale !== "bo" && [ I18n.t("misc.please"), " ", <a class="login" onClick={this.props.auth.login.bind(this,this.props.history.location)}>{I18n.t("topbar.login")}</a>, " ", I18n.t("access.credentials") ] }
                      { this.props.locale === "bo" && [ I18n.t("access.credentials"), " ", <a class="login" onClick={this.props.auth.login.bind(this,this.props.history.location)}>{I18n.t("topbar.login")}</a> ] */ }
                    </span>
@@ -5226,7 +5227,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          return  <div class="data access"><h3><span style={{textTransform:"none"}}>{I18n.t("access.notyet")}</span></h3></div>
       else if ( this.props.manifestError && this.props.auth && this.props.manifestError.error.code === 401) 
          if(elem.includes("RestrictedSealed"))
-            return  <div class="data access"><h3><span style={{textTransform:"none"}}>{I18n.t("access.sealed")} <a href="mailto:help@bdrc.io">help@bdrc.io</a>{I18n.t("punc.point")}</span></h3></div>
+            return  <div class="data access"><h3><span style={{textTransform:"none"}}><Trans i18nKey="access.sealed" components={{ bold: <u /> }} /> <a href="mailto:help@bdrc.io">help@bdrc.io</a>{I18n.t("punc.point")}</span></h3></div>
          else 
             return  <div class="data access"><h3><span style={{textTransform:"none"}}>{I18n.t("misc.please")} <a class="login" {...(this.props.auth?{onClick:this.props.auth.login.bind(this,this.props.history.location)}:{})}>{I18n.t("topbar.login")}</a> {I18n.t("access.credentials")}</span></h3></div>
       else if ( this.props.manifestError && this.props.manifestError.error.code === 500 )
