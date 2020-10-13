@@ -340,13 +340,15 @@ export async function miradorConfig(data, manifest, canvasID, useCredentials, la
    if(!_sortLangScriptLabels) _sortLangScriptLabels = window.sortLangScriptLabels
    if(langList === undefined) langList = [ "bo", "zh-hans" ]
 
-   let labelToString = (labels,labelArray) => {
+   let labelToString = (labels,labelArray,forceUIlg) => {
 
       if(!labels) return ;
 
       // dont assume bo-x-ewts on unlocalized labels...
       // if(typeof labels == "string") labels = [ { "@value": labels, "@language":"bo-x-ewts" } ]
       if(typeof labels == "string") return labels
+
+      if(forceUIlg) langList = [ locale ].concat(langList);
 
       let langs = _extendedPresets(langList)
       let sortLabels = _sortLangScriptLabels(labels,langs.flat,langs.translit)
