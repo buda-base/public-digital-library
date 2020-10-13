@@ -442,7 +442,8 @@ const enTranslation = {
       gener3zip:"Download ZIP",
       nbTrans:" ({{count}} translation)",
       nbTrans_plural:" ({{count}} translations)",
-      openO:"Open on {{src}}"
+      openO:"Open on {{src}}",
+      noT:"[no title]"
    },
    mirador:{
       return:"return to BUDA",

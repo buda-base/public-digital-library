@@ -2110,7 +2110,7 @@ class ResourceViewer extends Component<Props,State>
             }
          }
          
-         if((!thumbV || !thumbV.length) && ((info && infoBase && infoBase.filter(e=>e["xml:lang"]||e["lang"]).length >= 0) || (prop && prop.match && prop.match(/[/#]sameAs/)))) {
+         if(elem.inOutline || ((!thumbV || !thumbV.length) && ((info && infoBase && infoBase.filter(e=>e["xml:lang"]||e["lang"]).length >= 0) || (prop && prop.match && prop.match(/[/#]sameAs/))))) {
 
 
             //loggergen.log("svg?",svgImageS)
@@ -2158,8 +2158,8 @@ class ResourceViewer extends Component<Props,State>
                } 
             }
             else {                
-               if(!info) info = shortUri(elem.value)
                let uri = shortUri(elem.value)
+               if(!info) info = uri
 
                /* // deprecated
                let pI 
@@ -2172,6 +2172,9 @@ class ResourceViewer extends Component<Props,State>
                   
                   //if(pI) uri = this.props.IRI+"?part="+uri
                   //else uri = uri.replace(/^((bdr:MW[^_]+)_[^_]+)/,"$2?part=$1")
+
+                  if(info === uri) info = I18n.t("resource.noT")
+
 
                   link = <a class={"urilink prefLabel " } href={elem.url} onClick={(e) => { 
 
@@ -2209,7 +2212,6 @@ class ResourceViewer extends Component<Props,State>
                         return false; }
                   }>{info}</a>
                }
-
                else link = <Link className={"urilink prefLabel " } to={"/"+show+"/"+uri}>{info}</Link>
                bdrcData = null
             }

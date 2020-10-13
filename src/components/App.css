@@ -1092,6 +1092,8 @@ h4:not(:hover) > .lang
 .resource .data#outline div h2:not(.on) .T { display:none; }
 .resource .data#outline div .root { width:100%; display:flex; }
 
+.resource .data#outline span.is-root .parTy + span a:hover { text-decoration-color:#d73449;}
+
 .resource .data#outline .is-root h2 a span,
 .resource .data#outline span.is-root a  { color:#d73449;  }
 
@@ -1207,7 +1209,7 @@ h4:not(:hover) > .lang
 .resource .data#outline .root + div .top:hover .pType.on svg.details { display:inline; }
 
 .resource .data#outline .root + div { width:calc(100% - 25px - 50px - 35px); }
-.resource .data#outline .root + div .top + .details { width:100%; background-color:#ffffff80; margin:5px 25px 7px 25px; padding:15px 15px 15px 28px;}
+.resource .data#outline .root + div .top + .details { width:100%; background-color:#ffffff80; margin:5px 25px 7px 33px; padding:15px 15px 15px 20px;}
 
 
 .resource .data#outline .root + div .top + .details .sub { margin:0;border:none;padding:0; display:flex; flex-wrap:nowrap; /*align-items:baseline;*/}
