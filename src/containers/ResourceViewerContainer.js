@@ -191,6 +191,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
          dispatch(i18nextChangeLanguage(lg));
       },
       onSetLangPreset:(langs:string[],i?:number) => {
+         localStorage.setItem('lang', langs);
          dispatch(ui.langPreset(langs,i))
       },
       onOutlineSearch:(iri:string,keyword:string,language:string) => {

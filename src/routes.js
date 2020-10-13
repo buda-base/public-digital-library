@@ -266,11 +266,12 @@ const makeMainRoutes = () => {
                         {
                            let get = qs.parse(history.location.search)
                            console.log("props",props,get)
-                           let lang = get["lang"]
+                           let lang = get["lang"] || localStorage.getItem('lang')  || "bo-x-ewts,sa-x-ewts"
+                           let uilang = get["uilang"] || localStorage.getItem('uilang') || "en"
                            if(lang) lang = lang.split(",")
                            let callerURI = get["callerURI"]
 
-                           miradorInitView(props.match.params.IRI,lang,callerURI);
+                           miradorInitView(props.match.params.IRI,lang,callerURI,uilang);
 
 
                            return [

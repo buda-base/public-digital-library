@@ -5117,6 +5117,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
       let viewUrl = { ...this.props.history.location }
       viewUrl.pathname = viewUrl.pathname.replace(/\/show\//,"/view/")
       viewUrl.search = "" 
+      // TODO do we really need this now?
       if(this.props.langPreset) viewUrl.search = "?lang="+this.props.langPreset.join(",")
 
       let copyRicon

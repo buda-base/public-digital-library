@@ -51,6 +51,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
          dispatch(ui.userProfile(url));
       },
       onSetLangPreset:(langs:string[],i?:number) => {
+         localStorage.setItem('lang', langs);
          dispatch(ui.langPreset(langs,i))
       },
    }
