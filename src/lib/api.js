@@ -137,7 +137,7 @@ export default class API {
             if(!cookie) head = { ...head, "Authorization":"Bearer "+id_token }
          }
 
-         console.log("access:",{id_token,access_token,isAuth:isAuthenticated(),url,minSize,acc,cookie,xhrArgs,head});
+         //console.log("access:",{id_token,access_token,isAuth:isAuthenticated(),url,minSize,acc,cookie,xhrArgs,head});
 
          let response = await this._fetch( url, { method:"GET",headers:new Headers(head), ...xhrArgs } )
 
