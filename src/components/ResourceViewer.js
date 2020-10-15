@@ -3786,7 +3786,7 @@ class ResourceViewer extends Component<Props,State>
 
          let _befo
          if(title && title.value) {
-            if(!other) document.title = title.value + " - Public Digital Library"
+            if(!other && !document.title.includes(title.value) ) document.title = title.value + " - Public Digital Library"
             if(title.fromSameAs && !title.fromSameAs.match(new RegExp(bdr))) {
                const {befo,bdrcData} = this.getSameLink(title,shortUri(title.fromSameAs).split(":")[0]+" sameAs hasIcon")            
                _befo = befo
@@ -6270,8 +6270,8 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          }
 
          let scrollRel = (ev,next) => { 
-            let idx = !this.state.relatedTab?"rel":"crea"
-            let max = !this.state.relatedTab?related.length:createdBy.length
+            let idx = !this.state.relatedTab&&related.length?"rel":"crea"
+            let max = !this.state.relatedTab&&related.length?related.length:createdBy.length
             let i = (this.state["i"+idx]!==undefined?this.state["i"+idx]:0)
             if(next) i+=4 ;
             else i-=4 ;
@@ -6285,11 +6285,42 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          }
 
          let navNext = false          
-         if(related && !this.state.relatedTab) {
+         if(related && related.length && !this.state.relatedTab) {
             navNext = this.state.irel === undefined || (this.state.irel / 4) * 4 + 4 < related.length - 1 
          }
          else if(createdBy) {
             navNext = this.state.icrea === undefined || (this.state.icrea / 4) * 4 + 4 < createdBy.length - 1 
+         }
+
+         let dates ;
+         if(_T === "Person") {
+            let elem = this.getResourceElem(bdo+"personEvent")
+            if(elem && elem.length) {
+               let birth = elem.filter(e => e.k && e.k.endsWith("PersonBirth")).map(e => this.getResourceBNode(e.value));
+               if(birth.length) birth = birth[0]
+               let death = elem.filter(e => e.k && e.k.endsWith("PersonDeath")).map(e => this.getResourceBNode(e.value));
+               if(death.length) death = death[0]
+               console.log("dates:",birth,death,elem)
+               //elem = elem.filter(e => )
+               
+               let vals = []
+               for(const [p,date] of Object.entries({ [bdo+"PersonBirth"]:birth, [bdo+"PersonDeath"]:death })  ) {
+                  if(!date) continue ;
+                  let val = date[bdo+"onYear"]
+                  if(val && val.length) val = <span>{val[0].value}</span>
+                  else {
+                     let bef = date[bdo+"notBefore"]
+                     let aft = date[bdo+"notAfter"]
+                     if(bef && bef.length && aft && aft.length) val = <span>{bef[0].value+ "~" +aft[0].value}</span>
+                     else val = null
+                  }
+
+                  if(p.includes("Death") && !vals.length) {vals.push(<span>&nbsp;&ndash;&nbsp;</span>) }
+                  if(val) vals.push(val)
+                  if(p.includes("Birth")) vals.push(<span>&nbsp;&ndash;&nbsp;</span>)
+               }
+               if(vals.length > 1) dates = <span clas='date'>{vals}</span> ;
+            }
          }
 
          return (
@@ -6340,6 +6371,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                   <div class={"data" + (_T === "Etext"?" etext-title":"")+(_T === "Images"?" images-title":"")}>
                      {_T === "Images" && iTitle?[<h2 class="on intro">{I18n.t("resource.scanF")}</h2>,iTitle]:(_T === "Etext" && iTitle?[<h2 class="on intro">{I18n.t("resource.etextF")}</h2>,iTitle]:title)}
                      {inTitle}
+                     {dates}
                   </div>
                   { this.renderNoAccess(fairUse) }
                   { this.renderAccess() }
@@ -6365,9 +6397,9 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                            </div> }
                         </div>
                         { 
-                           (!this.state.relatedTab && related.length > 4 || this.state.relatedTab && createdBy.length > 4) &&
+                           (!this.state.relatedTab && related.length > 4 || this.state.relatedTab && createdBy.length > 4 || !related.length && createdBy.length > 4) &&
                            <div id="related-nav" >
-                              <span class={!this.state.relatedTab?(this.state.irel>0?"on":""):(this.state.icrea>0?"on":"")} onClick={(ev) => scrollRel(ev)}><img src="/icons/g.svg"/></span>
+                              <span class={!this.state.relatedTab&&related.length?(this.state.irel>0?"on":""):(this.state.icrea>0?"on":"")} onClick={(ev) => scrollRel(ev)}><img src="/icons/g.svg"/></span>
                               <span class={navNext?"on":""} onClick={(ev) => scrollRel(ev,true)}><img src="/icons/d.svg"/></span>
                            </div>
                         }

@@ -2096,7 +2096,7 @@ TODO
 .resource .data .sub.willK:not(.keep) > h4.first + .subgroup,
 .resource .data .sub.willK:not(.keep) > h4.first + h4.label { margin-left:calc(160px + 15px); }
 
-
+.resource  .data [data-prop="bdo:personEvent"] .sub.keep  { margin-top:-10px; }
 
 .resource .data > div > .sub { line-height:28px; }
 .resource .data > div > .sub + .sub { width:calc(100% - 190px); margin-left:190px; } 
