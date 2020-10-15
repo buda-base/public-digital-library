@@ -148,6 +148,7 @@
 
 .scroll-view [data-image-id="https://iiif.archivelab.org/iiif/rashodgson13$0/canvas"] { display:none !important; }
 
+.mirador-container .mirador-viewer ul.panel-listing-thumbs li img[data=''],
 .mirador-container .mirador-viewer ul.scroll-listing-thumbs li img[data=''] { display:none; }
 
 
