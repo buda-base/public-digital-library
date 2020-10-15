@@ -124,7 +124,6 @@ export default class API {
          const id_token = localStorage.getItem('id_token');
          //const expires_at = localStorage.getItem('expires_at');
 
-         //console.log("access",id_token,access_token,isAuthenticated(),url,minSize,acc,cookie)
 
          let head = {}
          if(acc) head = { ...head, "Accept":acc }
@@ -137,6 +136,8 @@ export default class API {
             if(url.match(/setcookie/)) xhrArgs = { credentials: 'include' } //, 'mode':'no-cors'}
             if(!cookie) head = { ...head, "Authorization":"Bearer "+id_token }
          }
+
+         console.log("access:",{id_token,access_token,isAuth:isAuthenticated(),url,minSize,acc,cookie,xhrArgs,head});
 
          let response = await this._fetch( url, { method:"GET",headers:new Headers(head), ...xhrArgs } )
 
