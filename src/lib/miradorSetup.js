@@ -347,6 +347,7 @@ export async function miradorConfig(data, manifest, canvasID, useCredentials, la
       // dont assume bo-x-ewts on unlocalized labels...
       // if(typeof labels == "string") labels = [ { "@value": labels, "@language":"bo-x-ewts" } ]
       if(typeof labels == "string") return labels
+      else if(labels.length && typeof labels[0] === "string")  return labels[0] 
 
       if(forceUIlg) langList = [ locale ].concat(langList);
 
