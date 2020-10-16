@@ -1639,7 +1639,7 @@ body > [id^="menu-"] > div:last-child,
 .poPdf > div:last-child { max-height:60vh; box-shadow:0 1px 4px #cecece; }
 .poPdf > div b,
 .poPdf > div a { font-size:12px; font-family: "Noto Sans"; color:#4d4d4d;}
-.poPdf > div li { padding-top:6px; padding-bottom:6px; }
+.poPdf > div li { padding:6px 17px; }
 .poPdf > div a { padding:0 6px;}
 .poPdf > div a + a { border-left:1px solid rgba(0,0,0,0.35); }
 .poPdf > div a[href] { color:#d73449;}

@@ -3963,6 +3963,12 @@ class ResourceViewer extends Component<Props,State>
                   monoVol = Number(elem[0].value)
             }
          }
+         else if(this.props.imageAsset.match(/[/]vo:/)) {
+            monoVol = 1
+            let elem = this.getResourceElem(bdo+"volumeNumber")
+            if(elem && elem.length > 0 && elem[0].value)
+               monoVol = Number(elem[0].value)
+         }
 
          if(!pdfLink && this.props.manifestWpdf && this.props.manifestWpdf.rendering) {
             let link = this.props.manifestWpdf.rendering.filter(e => e.format === "application/zip")
