@@ -1056,6 +1056,14 @@ class App extends Component<Props,State> {
          
       }
 
+      if(!props.language && props.keyword) {
+         if(state.resReceived !== props.keyword && props.resources[props.keyword] && props.resources[props.keyword] !== true) {
+            if(!s) s = { ...state }
+            s.resReceived = props.keyword ;
+            s.repage = true
+         }
+      }
+
       if(props.assoRes && (!state.assoRes || Object.keys(state.assoRes).length !== Object.keys(props.assoRes).length)) {
 
          if(!s) s = { ...state }
@@ -3494,7 +3502,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      if(label) label = label[fullUri(this.props.keyword)]
                      if(label) label = label[skos+"prefLabel"]
                      if(label) label = getLangLabel(this,"",label)
-                     if(label && label.value) txt = I18n.t("result.assoc",{type:txt,name:label.value})
+                     if(!label || !label.value) label = { value: shortUri(this.props.keyword) }
+                     txt = I18n.t("result.assoc",{type:txt,name:label.value})
                   }
                   //(false && displayTypes.length>=1&&counts["datatype"][t]?" ("+counts["datatype"][t]+")":""))}
                   message.push(<MenuItem><h4>{txt}</h4></MenuItem>);
