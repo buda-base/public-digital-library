@@ -66,6 +66,8 @@ import ReactGA from 'react-ga';
 
 //import { I18n, Translate, Localize } from "react-redux-i18n" ;
 import I18n from 'i18next';
+import { Trans } from 'react-i18next'
+
 
 import LanguageSidePaneContainer from '../containers/LanguageSidePaneContainer';
 import ResourceViewerContainer from '../containers/ResourceViewerContainer';
@@ -3502,8 +3504,9 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      if(label) label = label[fullUri(this.props.keyword)]
                      if(label) label = label[skos+"prefLabel"]
                      if(label) label = getLangLabel(this,"",label)
-                     if(!label || !label.value) label = { value: shortUri(this.props.keyword) }
-                     txt = I18n.t("result.assoc",{type:txt,name:label.value})
+                     if(!label || !label.value) label = { value: this.props.keyword }
+                     //txt = I18n.t("result.assoc",{type:txt,name:label.value})
+                     txt = <Trans i18nKey="result.assoc" components={{ res: <a /> }} values={{type:txt,name:label.value,rid:this.props.keyword}} /> 
                   }
                   //(false && displayTypes.length>=1&&counts["datatype"][t]?" ("+counts["datatype"][t]+")":""))}
                   message.push(<MenuItem><h4>{txt}</h4></MenuItem>);

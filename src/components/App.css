@@ -524,7 +524,7 @@ p.no-result {
 #res-container > ul h4 { padding-left:22px;; }
 #res-container > ul h4 { color:#343434; font-size:24px; /*font-family:"Noto Sans";*/ font-weight:900; text-transform:uppercase; }
 #res-container > ul:not(#samples) h4 {
-   white-space: nowrap; text-overflow: ellipsis; overflow: hidden; height:32px;
+   /* white-space: nowrap; text-overflow: ellipsis; overflow: hidden; height:32px; */
 }
 #res-container > ul:not(#samples) li { height:32px;}
 
@@ -569,6 +569,12 @@ p.no-result {
 #pagine div a:hover { text-decoration:underline; }
 
 #results > li > h4 + svg { margin-top:10px; }
+#res-container > ul li h4 { white-space: normal;line-height:28px; }
+#res-container > ul li h4 a { pointer-events:auto; text-transform:none; font-weight:500;color: #d73449; padding-bottom:30px; display:inline-block;}
+#res-container > ul li h4 a:hover { text-decoration: underline;}
+#res-container > ul li h4 + span { display:none !important;}
+#res-container > ul li:hover { background:none;}
+#res-container > ul li { height:auto !important;}
 
 .result-content > hr { margin:0;height:0;padding:0;opacity:0;border:0; }
 li + a.result { margin-top:-5px; }
