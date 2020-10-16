@@ -148,6 +148,9 @@ export default class API {
              else if (response.status === 401) {
                  throw new ResourceNotFound('Restricted access',401);
              }
+             else if (response.status === 403) {
+                 throw new ResourceNotFound('Forbidden access',403);
+             }
              else {
                 console.error("FETCH pb",response)
                  throw new ResourceNotFound('Problem fetching the resource (code:'+response.status+')',500);
