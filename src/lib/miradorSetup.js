@@ -875,8 +875,17 @@ export async function miradorInitView(work,lang,callerURI,locale) {
          
          if(propK["instanceReproductionOf"]) {
             const repro = propK["instanceReproductionOf"]
+            const elem = propK["instanceHasVolume"]
+            const nbVol = propK["itemVolumes"]
 
-            data = [
+            //.log("iRo:",repro,elem,nbVol);
+
+            if(nbVol === 1) {
+               data = [
+                  { "manifestUri" : iiifpres+"/vo:"+elem["@id"]+"/manifest", location:"" }
+               ]
+            }
+            else data = [
                { "collectionUri" : iiifpres+"/collection/wio:"+repro["@id"], location:"" }
             ]
          }

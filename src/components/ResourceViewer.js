@@ -3844,6 +3844,19 @@ class ResourceViewer extends Component<Props,State>
             this.props.onHasImageAsset(iiifpres+"/collection/wio:"+rid,rid)
          }
       }      
+       else if(kZprop.indexOf(bdo+"instanceHasVolume") !== -1)
+      {
+         let elem = this.getResourceElem(bdo+"instanceHasVolume",rid,this.props.resources,fullRid)
+         let nbVol = this.getResourceElem(bdo+"itemVolumes",rid,this.props.resources,fullRid)
+         let work = this.getResourceElem(bdo+"instanceReproductionOf",rid,this.props.resources,fullRid)
+         if(elem[0] && elem[0].value && !this.props.imageAsset && !this.props.manifestError) {
+            if(rid !== this.props.IRI)this.setState({...this.state, imageLoaded:false})
+            let manif = iiifpres + "/vo:"+elem[0].value.replace(new RegExp(bdr),"bdr:")+"/manifest"
+            if(nbVol && nbVol[0] && nbVol[0].value && nbVol[0].value > 1 && work && work[0] && work[0].value)
+              manif = iiifpres + "/collection/wio:"+work[0].value.replace(new RegExp(bdr),"bdr:")
+            this.props.onHasImageAsset(manif,rid)
+         }
+      }
       else if(kZprop.indexOf(bdo+"instanceReproductionOf") !== -1)
       {
          let elem = [{value:rid}] 
