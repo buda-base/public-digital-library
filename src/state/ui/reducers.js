@@ -16,6 +16,7 @@ export type UIState = {
    logged?:boolean,
    rightPanel?:boolean,
    langPreset?:string[],
+   langExt?:string[],
    langIndex?:number,
    collapse:{[string]:boolean},
    metadata:{[string]:{}},
@@ -64,7 +65,10 @@ reducers[actions.TYPES.closeLanguagePanel] = closeLanguagePanel
 
 export const langPreset = (state: UIState, action: Action): UIState => {
    state =  {...state, langPreset:action.payload }
-   if(action.meta != undefined) state = { ...state, langIndex:action.meta }  
+   if(action.meta) {
+        if(action.meta.i != undefined) state.langIndex = action.meta.i 
+        if(action.meta.ext) state.langExt = action.meta.ext 
+   }
    return state
 };
 reducers[actions.TYPES.langPreset] = langPreset

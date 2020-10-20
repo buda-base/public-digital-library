@@ -370,8 +370,13 @@ export function getLangLabel(that:{},prop:string="",labels:[],proplang:boolean=f
          langs = [ ...langs, that.props.locale ]
       }            
 
-      // move that to redux state ?
-      langs = extendedPresets(langs)
+      // DONE move that to redux state 
+      if(!that.props.langExt) { 
+         console.log("regenerate langExt");
+         langs = extendedPresets(langs)
+      } else {
+         langs = that.props.langExt      
+      }
 
       //loggergen.log(JSON.stringify(labels,null,3))
 
@@ -687,6 +692,7 @@ type Props = {
    resources:{[string]:{}},
    hostFailure?:string,
    langIndex?:integer,
+   langExt?:string[],
    loading?:boolean,
    keyword?:string,
    language?:string,
