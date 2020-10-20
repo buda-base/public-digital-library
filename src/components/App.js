@@ -370,13 +370,18 @@ export function getLangLabel(that:{},prop:string="",labels:[],proplang:boolean=f
          langs = [ ...langs, that.props.locale ]
       }            
 
-      // DONE move that to redux state 
+      // TODO move that to redux state 
+      // not that simple because UI lang has to be used first or not
+      /*
       if(!that.props.langExt) { 
          console.log("regenerate langExt");
          langs = extendedPresets(langs)
       } else {
          langs = that.props.langExt      
       }
+      */
+
+      langs = extendedPresets(langs)
 
       //loggergen.log(JSON.stringify(labels,null,3))
 
