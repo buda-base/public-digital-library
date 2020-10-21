@@ -3183,13 +3183,17 @@ class ResourceViewer extends Component<Props,State>
                            workuri = <div><Tag style={{fontSize:"14px"}}>(from {this.uriformat(bdo+"noteSource",noteData[bdo+"noteSource"])}{loca})</Tag></div>
                         }
 
+                        let text = getLangLabel(this,"",[ noteData[bdo+"noteText"] ])
+                        //console.log("text:",text)
+                        if(text) text = text.value
+                        else text = this.pretty(noteData[bdo+"noteText"].value) 
 
                         let sav = [
                               <Tag className="first type">{I18n.t("punc.num",{num:nbN++}) /*this.proplink(bdo+"noteText","Note")*/}</Tag>,
                               workuri,
                               <div class="subsub">
                                  <Tag >
-                                    {this.pretty(noteData[bdo+"noteText"].value)}
+                                    { text }
                                     {this.tooltip(noteData[bdo+"noteText"].lang)}
                                     <ChatIcon className="annoticon"  onClick={
                                        (function(val,prop,v,ev){
