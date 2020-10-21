@@ -312,7 +312,7 @@ export const gotResource = (state: DataState, action: Action) => {
                   }
                   if(!found) {
 
-                     if(v.type !== "bnode" && v.type !== "uri") {
+                     if(v.type !== "bnode" && v.type !== "uri" || p.includes("Translation") ) {
                         v.allSameAs = [ k ]
                         v.fromSameAs = k
                      } else if(p.endsWith("Event")) { 
