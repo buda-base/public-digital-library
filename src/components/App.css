@@ -1693,6 +1693,13 @@ body > [id^="menu-"] > div:last-child,
 
 .resource .data > [data-prop="bdo:workHasInstance"] > h3 ~ .group > h4.multiple { display:inline-block; }
 
+.resource .data > [data-prop="bdo:workHasInstance"] .provider::before { content:none;}
+
+.resource .data > [data-prop="bdo:workHasInstance"] .inst-prov { position:absolute; width:40px;height:40px; left:65px; top:65px;
+   display:flex; align-items: center; justify-content: center; cursor:pointer;
+}
+.resource .data > [data-prop="bdo:workHasInstance"] .inst-prov img { flex-shrink:0; height:65%; }
+
 .resource .data .images-thumb.no-thumb { background-size:60px auto; /*border-color:transparent;*/}
 /* .resource .data .images-thumb.no-thumb + .ulink { display:inline-block;margin-left:28px; width:auto;} */
 
