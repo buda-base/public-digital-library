@@ -1974,7 +1974,7 @@ class ResourceViewer extends Component<Props,State>
          if(provLab) provLab = provLab[skos+"prefLabel"]
          if(provLab && provLab.length) provLab = provLab[0].value 
          
-         loggergen.log("isExtW",isExtW,this.props.dictionary,provLab)
+         //loggergen.log("isExtW",isExtW,this.props.dictionary,provLab)
 
          if(provLab === "GRETIL") sameAsPrefix += "gretil provider hasIcon "
          else if(provLab === "EAP") sameAsPrefix += "eap provider hasIcon "
@@ -1992,6 +1992,19 @@ class ResourceViewer extends Component<Props,State>
 
       return sameAsPrefix
    }
+
+   getProviderID(prov) {
+      if(prov && prov.length) prov = prov[0].value
+      if(prov && this.props.dictionary) prov = this.props.dictionary[prov]
+      if(prov && prov[skos+"prefLabel"]) prov = prov[skos+"prefLabel"]
+      else if(prov && prov[rdfs+"label"]) prov = prov[rdfs+"label"]
+      if(prov && prov.length) prov = prov.filter(e => e.lang === "en" || !e.lang)
+      if(prov && prov.length) prov = prov[0].value
+      if(prov) prov = prov.replace(/(^\[ *)|( *\]$)/g,"") // CUDL
+      if(prov) prov = prov.replace(/Internet Archives/g,"IA") 
+      if(prov) prov = prov.replace(/Library of Congress/g,"LOC")
+      return prov
+   } 
 
    uriformat(prop:string,elem:{},dic:{} = this.props.assocResources, withProp?:string,show?:string="show")
    {
@@ -2070,31 +2083,45 @@ class ResourceViewer extends Component<Props,State>
          if(prop === bdo+"workHasInstance"  || prop === tmp+"propHasScans" || prop === tmp+"propHasEtext" ) {
             if(!info) info = [] 
             let enti = getEntiType(elem.value)
-            //loggergen.log("enti:",enti,elem.value)
+            let sUri = shortUri(elem.value)
+
+            let prov = this.getResourceElem(tmp+"provider", sUri, this.props.assocResources)
+            prov = this.getProviderID(prov);
+            if(prov && prov !== "BDRC") { 
+               prov = prov.toLowerCase()
+               prov = <Tooltip placement="right" title={<span>{I18n.t("prop.tmp:provider")}{I18n.t("punc.colon")} <b>{providers[prov]}</b></span>}><div class={"inst-prov "+(prov)}><img src={provImg[prov]} /></div></Tooltip>
+            }
+            else prov = null
+
+            loggergen.log("enti:",prov,enti,elem.value)
+
             if(enti === "Etext") {
                //ret = [<span class="svg">{svgEtextS}</span>]
                
-               ret = [  <Link to={"/show/"+shortUri(elem.value)} class={"images-thumb no-thumb"} style={{"background-image":"url(/icons/etext.png)"}}></Link> ]
+               ret = [  <Link to={"/show/"+sUri} class={"images-thumb no-thumb"} style={{"background-image":"url(/icons/etext.png)"}}></Link> ]
+               if(prov) ret.push(prov)
             
             }
             else if(enti === "Instance") { 
                //ret = [<span class="svg">{svgInstanceS}</span>]
                
                
-               thumbV =  this.getResourceElem(tmp+"thumbnailIIIFService", shortUri(elem.value), this.props.assocResources)
-               if(!thumbV || !thumbV.length)  ret = [  <Link to={"/show/"+shortUri(elem.value)} class={"images-thumb no-thumb"} style={{"background-image":"url(/icons/header/instance.svg)"}}></Link> ]
-               else ret = [  <Link to={"/show/"+shortUri(elem.value)} class={"images-thumb"} style={{"background-image":"url("+ thumbV[0].value+"/full/,145/0/default.jpg)"}}></Link> ]
+               thumbV =  this.getResourceElem(tmp+"thumbnailIIIFService", sUri, this.props.assocResources)
+               if(!thumbV || !thumbV.length)  ret = [  <Link to={"/show/"+sUri} class={"images-thumb no-thumb"} style={{"background-image":"url(/icons/header/instance.svg)"}}></Link> ]
+               else ret = [  <Link to={"/show/"+sUri} class={"images-thumb"} style={{"background-image":"url("+ thumbV[0].value+"/full/,145/0/default.jpg)"}}></Link> ]
             
-               let inRoot =  this.getResourceElem(bdo+"inRootInstance", shortUri(elem.value), this.props.assocResources)
+               let inRoot =  this.getResourceElem(bdo+"inRootInstance", sUri, this.props.assocResources)
                if(inRoot && inRoot.length && info && lang && lang === "bo-x-ewts" && info.match(/^([^ ]+ ){11}/)) info = [ info.replace(/^(([^ ]+ ){10}).*?$/,"$1"), <span class="ellip">{info.replace(/^([^ ]+ ){10}[^ ]+(.*?)$/,"$2")}</span> ]
 
-               thumbV = null
+               if(prov) ret.push(prov)
 
                //loggergen.log("thumbV:",thumbV,elem.value)
+
+               thumbV = null
             }
             else if(enti === "Images") { 
                ret = []
-               thumb =  this.getResourceElem(tmp+"thumbnailIIIFService", shortUri(elem.value), this.props.assocResources)
+               thumb =  this.getResourceElem(tmp+"thumbnailIIIFService", sUri, this.props.assocResources)
                if(thumb && !thumb.length) thumb = null
 
                /* // deprecated (thumbnail is a property of instance)
@@ -4358,14 +4385,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
    }
    if(!same.length && sameLegalD) { 
       let prov = sameLegalD[adm+"provider"]
-      if(prov && prov.length) prov = prov[0].value
-      if(prov && this.props.dictionary) prov = this.props.dictionary[prov]
-      if(prov) prov = prov[skos+"prefLabel"]
-      if(prov && prov.length) prov = prov.filter(e => e.lang === "en" || !e.lang)
-      if(prov && prov.length) prov = prov[0].value
-      if(prov) prov = prov.replace(/(^\[ *)|( *\]$)/g,"") // CUDL
-      if(prov) prov = prov.replace(/Internet Archives/g,"IA") 
-      if(prov) prov = prov.replace(/Library of Congress/g,"LOC") 
+      prov = this.getProviderID(prov)
 
       //else prov = ""
 
@@ -5094,15 +5114,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
       let prov,orig
       if(sameLegalD) { 
          prov = sameLegalD[adm+"provider"]
-         if(prov && prov.length) prov = prov[0].value
-         if(prov && this.props.dictionary) prov = this.props.dictionary[prov]
-         if(prov && prov[skos+"prefLabel"]) prov = prov[skos+"prefLabel"]
-         else if(prov && prov[rdfs+"label"]) prov = prov[rdfs+"label"]
-         if(prov && prov.length) prov = prov.filter(e => e.lang === "en" || !e.lang)
-         if(prov && prov.length) prov = prov[0].value
-         if(prov) prov = prov.replace(/(^\[ *)|( *\]$)/g,"") // CUDL
-         if(prov) prov = prov.replace(/Internet Archives/g,"IA") 
-         if(prov) prov = prov.replace(/Library of Congress/g,"LOC") 
+         prov = this.getProviderID(prov)
          //else prov = ""
 
          orig = this.getResourceElem(adm+"originalRecord")
@@ -5887,15 +5899,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          
          let prov ;
          if(legalD) prov = legalD[adm+"provider"]
-         if(prov && prov.length) prov = prov[0].value
-         if(prov && this.props.dictionary) prov = this.props.dictionary[prov]
-         if(prov && prov[skos+"prefLabel"]) prov = prov[skos+"prefLabel"]
-         else if(prov && prov[rdfs+"label"]) prov = prov[rdfs+"label"]
-         if(prov && prov.length) prov = prov.filter(e => e.lang === "en" || !e.lang)
-         if(prov && prov.length) prov = prov[0].value
-         if(prov) prov = prov.replace(/(^\[ *)|( *\]$)/g,"") // CUDL
-         if(prov) prov = prov.replace(/Internet Archives/g,"IA") 
-         if(prov) prov = prov.replace(/Library of Congress/g,"LOC") 
+         prov = this.getProviderID(prov)
          
          return prov
       }
