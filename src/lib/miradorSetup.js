@@ -3,7 +3,7 @@
 const ldspdi = "//ldspdi.bdrc.io"
 let iiifpres = "//iiifpres.bdrc.io"
 
-let jQ,extendedPresets,sortLangScriptLabels,__
+let jQ,extendedPresets,sortLangScriptLabels,getMainLabel,__
 
 let importModules = async () => {
    try {
@@ -13,6 +13,7 @@ let importModules = async () => {
 
       require(['./transliterators.js'],(module) => {
          sortLangScriptLabels = module.sortLangScriptLabels
+         getMainLabel = module.getMainLabel
          extendedPresets = module.extendedPresets ;
       });
 
@@ -338,6 +339,8 @@ export async function miradorConfig(data, manifest, canvasID, useCredentials, la
    if(!_extendedPresets) _extendedPresets = window.extendedPresets
    let _sortLangScriptLabels = sortLangScriptLabels
    if(!_sortLangScriptLabels) _sortLangScriptLabels = window.sortLangScriptLabels
+   let _getMainLabel = getMainLabel
+   if(!_getMainLabel) _getMainLabel = window.getMainLabel
    if(langList === undefined) langList = [ "bo", "zh-hans" ]
    let langs = _extendedPresets(langList)
 
@@ -352,23 +355,10 @@ export async function miradorConfig(data, manifest, canvasID, useCredentials, la
 
       if(forceUIlg) langList = [ locale ].concat(langList);
 
-      let sortLabels = _sortLangScriptLabels(labels,langs.flat,langs.translit)
-      let label = sortLabels[0]
+      let label = getMainLabel(labels,langs)
 
       if(labelArray) labelArray.push(label);
-
-      //console.log("label",JSON.stringify(label,null,3))
-
-      if(label["@value"]) return label["@value"] //+"@"+label["@language"]
-      if(label["value"]) return label["value"]  //+"@"+label["language"]
-      else return label
-
-      /*
-      if(Array.isArray(label)) return label.map( e => (e["@value"]?e["@value"]+"@"+e["@language"]:e)).join("; ")
-      else if(label["@value"]) return label["@value"]+"@"+label["@language"]
-      else if(label["value"]) return label["value"]+"@"+label["language"]
-      else return label
-      */
+      return label["value"]
 
    }
 

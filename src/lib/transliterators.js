@@ -28,19 +28,20 @@ export const importModules = async () => {
 importModules();
 
 export const transliterators = {
-   "bo":{ "bo-x-ewts": (val) => jsEWTS.toWylie(val) },
+   "bo": { "bo-x-ewts": (val) => jsEWTS.toWylie(val) },
+   "bo-tibt": { "bo-x-ewts": (val) => jsEWTS.toWylie(val) },
+   "sa-tibt": { "bo-x-ewts": (val) => jsEWTS.toWylie(val) },
    "bo-x-ewts":{ "bo": (val) => jsEWTS.fromWylie(val) },
+   "dz": { "bo-x-ewts": (val) => jsEWTS.toWylie(val) },
+   "dz-x-ewts": { "bo": (val) => jsEWTS.fromWylie(val) },
+   "sa-x-ewts": { "bo": (val) => jsEWTS.toWylie(val) },
    
-   "sa-[Dd]eva":{ "sa-x-iast": (val) => Sanscript.t(val,"devanagari","iast") },
+   "sa-deva":{ "sa-x-iast": (val) => Sanscript.t(val,"devanagari","iast") },
    "sa-x-iast":{ "sa-deva": (val) => Sanscript.t(val.toLowerCase(),"iast","devanagari") },
    
-   "zh-[Hh]an[st]":{ "zh-latn-pinyin" : (val) => pinyin4js.convertToPinyinString(val, ' ', pinyin4js.WITH_TONE_MARK) },
-
-   "zh-[Hh]ant":{ "zh-hans" : (val) => hanziConv.tc2sc(val) },
-   "zh-[Hh]ans":{ "zh-hant" : (val) => hanziConv.sc2tc(val) },
-
-   "(.*?)-[Tt]ibt":{ "(.*?)-x-ewts": (val) => jsEWTS.toWylie(val) },
-   "(.*?)-x-ewts" :{ "(.*?)-Tibt"  : (val) => jsEWTS.fromWylie(val) },
+   "zh-hans":{ "zh-latn-pinyin" : (val) => pinyin4js.convertToPinyinString(val, ' ', pinyin4js.WITH_TONE_MARK) , "zh-hant" : (val) => hanziConv.sc2tc(val) },
+   "zh-hant":{ "zh-latn-pinyin" : (val) => pinyin4js.convertToPinyinString(val, ' ', pinyin4js.WITH_TONE_MARK) , "zh-hans" : (val) => hanziConv.tc2sc(val) },
+   "zh-hani":{ "zh-latn-pinyin" : (val) => pinyin4js.convertToPinyinString(val, ' ', pinyin4js.WITH_TONE_MARK) , "zh-hant" : (val) => hanziConv.sc2tc(val) , "zh-hans" : (val) => hanziConv.tc2sc(val) },
 }
 
 export function translitHelper(src,dst) {
@@ -54,54 +55,44 @@ export function translitHelper(src,dst) {
 
 export function extendedPresets(preset)
 {
-    /*
-   let preset_ =
-      preset
-      .map( k => [ k, ...(transliterators[k]?Object.keys(transliterators[k]):[]) ] )
-      .reduce( (acc,k) => [...acc,...(k.length == 1?k:[k])],[])
-      */
+   // invscore is a score assigned to each possible lang tags, the lower the better. In the rest of the
+   // code, we consider that invscore for lang tags not in the list is 99, with a score for no lang tag
+   // being slightly higher, 98. Also we start at 1 to avoid unfortunate comparisons with 0 as being null
+   let extPreset = { flat:[], translit:{}, invscores: { "": 98 } }
+   let curscore = 1;
 
-   // v2
-   /*
-   let extPreset = { flat:[], translit:{} }
-   for(let k of preset) {
-      extPreset.flat.push(k)
-      for(let t of Object.keys(transliterators)) {
-         if(transliterators[t][k]) {
-            extPreset.flat.push(t)
-            extPreset.translit[t] = k
-         }
-      }
-   }
-   */
-
-   // v3
-
-   let extPreset = { flat:[], translit:{} }
    for(let lg of preset) {
-      //console.log("lg",lg) 
       extPreset.flat.push(lg)
+      extPreset.invscores[lg] = curscore;
+      curscore += 1;
+      if (lg == "bo") {
+        extPreset.invscores["dz"] = curscore;
+        extPreset.invscores["sa-tibt"] = curscore;
+      } else if (lg == "bo-x-ewts") {
+        extPreset.invscores["dz-x-ewts"] = curscore;
+        extPreset.invscores["sa-x-ewts"] = curscore;
+      }
+      // we bump the score twice, to account for the following cases:
+      //  - when a user asks bo, they "automatically" ask "dz" and "sa-tibt", but at a slightly lower score:
+      //  - when a user asks "zh-latn-pinyin", they automatically ask for a transformed "zh-han[tsi]", but at a slightly lower score
       for(let src of Object.keys(transliterators)) {
          //console.log("  src",src)
          for(let dst of Object.keys(transliterators[src])) {
             //console.log("    dst",dst)
             let regexp 
-            if(regexp = lg.match(new RegExp("^"+dst+"$"))) {
+            if (regexp = lg.match(new RegExp("^"+dst+"$"))) {
                //console.log("rx",regexp)
                if(src.indexOf("(.*?)") !== -1) src = src.replace(/\(([^)]+)\)/,regexp[1])
                if(dst.indexOf("(.*?)") !== -1) dst = dst.replace(/\(([^)]+)\)/,regexp[1])
 
                extPreset.flat.push(src)
+               extPreset.invscores[src] = curscore;
                extPreset.translit[src] = dst
-              
-               //console.log("eP!",extPreset)
             }
          }
       }
+      curscore += 1;
    }
-
-   //console.log("extP",extPreset)
-
    return extPreset
 }
 
@@ -196,6 +187,37 @@ export function sortLangScriptLabels(data,preset,translit)
    return data_
 }
 
+export function getMainLabel(data,extpreset)
+{
+   if(!Array.isArray(data)) data = [ data ]
+
+   let bestelt = null;
+   let bestlt = null;
+   let bestscore = 99;
+   for(let e of data) {
+      let k = e["lang"]
+      if(!k) k = e["@language"]
+      if(!k) k = e["xml:lang"]
+      let thisscore = extpreset.invscores[k] || 99;
+      if (thisscore < bestscore || bestelt === null) {
+        bestelt = e;
+        bestscore = thisscore;
+        bestlt = k;
+      }
+   }
+   let val = bestelt["value"]
+   if (!val) val = bestelt["@value"]
+   if (!val) return null;
+
+   if (extpreset.translit[bestlt] && transliterators[bestlt] && transliterators[bestlt][extpreset.translit[bestlt]]) {
+      val = transliterators[bestlt][extpreset.translit[bestlt]](val)
+      bestlt = extpreset.translit[bestlt]
+   }
+
+   return {"value": val, "lang": bestlt}
+}
+
 
 window.extendedPresets = extendedPresets
 window.sortLangScriptLabels = sortLangScriptLabels
+window.getMainLabel = getMainLabel
