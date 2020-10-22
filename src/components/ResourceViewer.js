@@ -2089,7 +2089,7 @@ class ResourceViewer extends Component<Props,State>
             prov = this.getProviderID(prov);
             if(prov && prov !== "BDRC") { 
                prov = prov.toLowerCase()
-               prov = <Tooltip placement="right" title={<span>{I18n.t("prop.tmp:provider")}{I18n.t("punc.colon")} <b>{providers[prov]}</b></span>}><div class={"inst-prov "+(prov)}><img src={provImg[prov]} /></div></Tooltip>
+               prov = <Link to={"/show/"+sUri}><Tooltip placement="top" title={<span>{I18n.t("prop.tmp:provider")}{I18n.t("punc.colon")} <b>{providers[prov]}</b></span>}><div class={"inst-prov "+(prov)}><img src={provImg[prov]} /></div></Tooltip></Link>
             }
             else prov = null
 
