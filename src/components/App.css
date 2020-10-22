@@ -1693,6 +1693,8 @@ body > [id^="menu-"] > div:last-child,
 
 .resource .data > [data-prop="bdo:workHasInstance"] > h3 ~ .group > h4.multiple { display:inline-block; }
 
+.resource .data > [data-prop="bdo:workHasInstance"] .provider::before { content:none;}
+
 .resource .data .images-thumb.no-thumb { background-size:60px auto; /*border-color:transparent;*/}
 /* .resource .data .images-thumb.no-thumb + .ulink { display:inline-block;margin-left:28px; width:auto;} */
 
