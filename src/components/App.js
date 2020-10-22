@@ -2761,7 +2761,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             if(access.length) access = access[0].value            
             
             if(this.props.config && this.props.config.iiif && this.props.config.iiif.endpoints[this.props.config.iiif.index].match(/iiif-dev/)) hasThumb = hasThumb.replace(/iiif([.]bdrc[.]io)/, "iiif-dev$1")
-            hasThumb += "/full/!145,145/0/default.jpg" 
+            hasThumb += "/full/,145/0/default.jpg" 
 
             //loggergen.log("access",access)
 
@@ -5351,7 +5351,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                                  //console.log("thumb",thumb)
                                  return (
                                     <div>
-                                       <a href={uri}><div class={"header "+(thumb?"thumb":"")} {...thumb?{style:{"background-image":"url("+ thumb+"/full/!195,195/0/default.jpg)"}}:{}}></div></a>
+                                       <a href={uri}><div class={"header "+(thumb?"thumb":"")} {...thumb?{style:{"background-image":"url("+ thumb+"/full/,195/0/default.jpg)"}}:{}}></div></a>
                                        <p lang={lang}>{value}</p>
                                        <a href={uri}>{I18n.t("misc.readM")}</a>
                                     </div>
