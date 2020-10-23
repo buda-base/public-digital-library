@@ -343,6 +343,7 @@ export async function miradorConfig(data, manifest, canvasID, useCredentials, la
    if(!_getMainLabel) _getMainLabel = window.getMainLabel
    if(langList === undefined) langList = [ "bo", "zh-hans" ]
    let langs = _extendedPresets(langList)
+   let langsUI = _extendedPresets([ locale ].concat(langList))
 
    let labelToString = (labels,labelArray,forceUIlg) => {
 
@@ -353,9 +354,7 @@ export async function miradorConfig(data, manifest, canvasID, useCredentials, la
       if(typeof labels == "string") return labels
       else if(labels.length && typeof labels[0] === "string")  return labels[0] 
 
-      if(forceUIlg) langList = [ locale ].concat(langList);
-
-      let label = getMainLabel(labels,langs)
+      let label = getMainLabel(labels,forceUIlg?langsUI:langs)
 
       if(labelArray) labelArray.push(label);
       return label["value"]
