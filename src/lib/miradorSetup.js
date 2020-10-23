@@ -3,7 +3,7 @@
 const ldspdi = "//ldspdi.bdrc.io"
 let iiifpres = "//iiifpres.bdrc.io"
 
-let jQ,extendedPresets,sortLangScriptLabels,getMainLabel,__
+let jQ,extendedPresets,sortLangScriptLabels,getMainLabel,getMainLabels,__
 
 let importModules = async () => {
    try {
@@ -341,24 +341,36 @@ export async function miradorConfig(data, manifest, canvasID, useCredentials, la
    if(!_sortLangScriptLabels) _sortLangScriptLabels = window.sortLangScriptLabels
    let _getMainLabel = getMainLabel
    if(!_getMainLabel) _getMainLabel = window.getMainLabel
+   let _getMainLabels = getMainLabels
+   if(!_getMainLabels) _getMainLabels = window.getMainLabels
    if(langList === undefined) langList = [ "bo", "zh-hans" ]
    let langs = _extendedPresets(langList)
    let langsUI = _extendedPresets([ locale ].concat(langList))
 
-   let labelToString = (labels,labelArray,forceUIlg) => {
+   let labelToString = (labels,labelArray,forceUIlg,keepAll) => {
 
       if(!labels) return ;
 
       // dont assume bo-x-ewts on unlocalized labels...
       // if(typeof labels == "string") labels = [ { "@value": labels, "@language":"bo-x-ewts" } ]
-      if(typeof labels == "string") return labels
-      else if(labels.length && typeof labels[0] === "string")  return labels[0] 
+      
+      let label ;
+      if(!keepAll) {
 
-      let label = getMainLabel(labels,forceUIlg?langsUI:langs)
+         if(typeof labels == "string") return labels
+         else if(labels.length && typeof labels[0] === "string")  return labels[0] 
 
-      if(labelArray) labelArray.push(label);
-      return label["value"]
+         label = _getMainLabel(labels,forceUIlg?langsUI:langs)
+         if(labelArray) labelArray.push(label);
+         return label["value"]
+         
+      } else {
+         if(typeof labels == "string") return [ { value: labels } ]
+         else if(labels.length && typeof labels[0] === "string")  return labels.map(function(e){return ({ value: e});}) 
 
+         label = _getMainLabels(labels,forceUIlg?langsUI:langs)
+         return label
+      }
    }
 
    if(!window.MiradorUseEtext) window.MiradorUseEtext = "pending" ;
