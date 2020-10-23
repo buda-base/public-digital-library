@@ -217,7 +217,44 @@ export function getMainLabel(data,extpreset)
    return {"value": val, "lang": bestlt}
 }
 
+export function getMainLabels(data,extpreset)
+{
+   if(!Array.isArray(data)) data = [ data ]
+
+   let bestelts = null;
+   let bestlt = null;
+   let bestscore = 99;
+   for(let e of data) {
+      let k = e["lang"]
+      if(!k) k = e["@language"]
+      if(!k) k = e["xml:lang"]
+      let thisscore = extpreset.invscores[k] || 99;
+      if (thisscore < bestscore || bestelts === null) {
+        bestelts = [e];
+        bestscore = thisscore;
+        bestlt = k;
+      } else if (thisscore === bestscore) {
+        bestelts.push(e);
+      }
+   }
+   let vals = []
+   for (let e of bestelts) {
+     let val = e["value"]
+     if (!val) val = e["@value"]
+     if (!val) continue;
+
+     if (extpreset.translit[bestlt] && transliterators[bestlt] && transliterators[bestlt][extpreset.translit[bestlt]]) {
+        val = transliterators[bestlt][extpreset.translit[bestlt]](val)
+        bestlt = extpreset.translit[bestlt]
+     }
+     vals.push(val)
+   }
+   
+   return {"values": vals, "lang": bestlt}
+}
+
 
 window.extendedPresets = extendedPresets
 window.sortLangScriptLabels = sortLangScriptLabels
 window.getMainLabel = getMainLabel
+window.getMainLabels = getMainLabels

@@ -16,7 +16,7 @@ import tcpPortUsed from 'tcp-port-used'
 import 'whatwg-fetch'
 import {narrowWithString} from "./langdetect"
 import {langScripts,makeLangScriptLabel} from "./language"
-import {sortLangScriptLabels,transliterators,translitHelper,extendedPresets, importModules, getMainLabel} from "./transliterators"
+import {sortLangScriptLabels,transliterators,translitHelper,extendedPresets, importModules, getMainLabel, getMainLabels} from "./transliterators"
 
 let makeRoutes = require('../routes').default
 let bdrcAPI = require('../lib/api').default;
@@ -252,6 +252,7 @@ describe('language settings tests', () => {
 
          const jsonLabels3 = [
             { type: "literal", value: "རྫོགས་ཆེན།", lang: "bo" },
+            { type: "literal", value: "རྫོགས་པ་ཆེན་པོ།", lang: "bo" },
             { type: "literal", value: "rdzogs chen", lang: "bo-x-ewts" },
             { type: "literal", value: "大圆满", lang: "zh-hans" },
             { type: "literal", value: "Dà yuánmǎn", lang: "zh-latn-pinyin" },
@@ -263,6 +264,7 @@ describe('language settings tests', () => {
         expect(getMainLabel(jsonLabels3, extendedPresets(["en", "bo"]))).toEqual({"value": "great perfection", "lang": "en"})
         expect(getMainLabel(jsonLabels3, extendedPresets(["bo", "en"]))).toEqual({"value": "རྫོགས་ཆེན།", "lang": "bo"})
         expect(getMainLabel(jsonLabels2, extendedPresets(["bo", "en"]))).toEqual({"value": "རྫོགས་ཆེན", "lang": "bo"})
+        expect(getMainLabels(jsonLabels3, extendedPresets(["bo", "en"]))).toEqual({"values": ["རྫོགས་ཆེན།", "རྫོགས་པ་ཆེན་པོ།"], "lang": "bo"})
         done()
     })
 
