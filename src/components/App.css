@@ -1054,6 +1054,9 @@ h4:not(:hover) > .lang
 }
 
 /* ------------------------------------------------------------------------------------------------------------------------ outline */
+
+
+
 .resource .data#main-info,
 .resource .data#outline { scroll-margin:80px; }
 
@@ -1255,6 +1258,13 @@ h4:not(:hover) > .lang
 .resource .data#outline .root + div .top + .details .sub h4 .highlight:first-child { margin-left:0; }
 .resource .data#outline .root + div .top + .details .sub h4 .highlight:first-child::before  { margin-left:0; }
 
+#outline a.no-bdrc img { vertical-align: -7px;}
+#outline .hover-menu { display:none; }
+
+#outline #same { cursor:pointer;}
+#outline #same > span:not(:last-child) { padding-right:5px; }
+#outline #same > span .img { font-weight:600; }
+#outline #same > span.sat .img { color:green; }
 
 /* ------------------------------------------------------------------------------------------------------------------------ header */
 
@@ -1660,7 +1670,10 @@ body > [id^="menu-"] > div:last-child,
 
 /* ------------------------------------------------------------------------------------------------------------------------ hover panel */
 
+
+
 .hasTogHovM { cursor:help;}
+#outline .hasTogHovM,
 .sub.hasTogHovM .subsub h4,
 .hasTogHovM span { cursor:auto;}
 

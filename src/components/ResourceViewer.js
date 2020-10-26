@@ -2824,7 +2824,7 @@ class ResourceViewer extends Component<Props,State>
          {
 
             let tmp
-            if(e.type == "uri" || (e.type === 'literal' && (e.datatype === xsd+'anyURI' || e.datatype === xsd+'AnyURI' ))) { 
+            if(e.type == "uri" || (e.type === 'literal' && (e.datatype === xsd+'anyURI' || e.datatype === xsd+'AnyURI')) || e.type === 'xsd:anyURI'|| e.type === 'xsd:anyUri' ) { 
                tmp = this.uriformat(prop,e)
             }
             else {
@@ -5648,16 +5648,18 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                                  if(g["owl:sameAs"] && g["owl:sameAs"].length) same = same.concat(g["owl:sameAs"])
                                  if(g["rdfs:seeAlso"] && g["rdfs:seeAlso"].length) same = same.concat(g["rdfs:seeAlso"])
                                  for(let node of same) {                                    
-                                    let prefix,url ;
                                     if(node["@id"]) { 
-                                       //prefix = shortUri(node["@id"]).split(":")[0]                                       
                                        g.same.push({value:node["@id"]})
-                                    }
+                                    } 
                                     // DONE link to NGMPP
                                     else if(node["@value"] && node["type"] === "xsd:anyURI") {
-                                       if(!g.details) g.details = [] 
-                                       g.details.push(<div class="sub"><h4 class="first type">{this.proplink(rdfs+"seeAlso")}{I18n.t("punc.colon")} </h4><div>{this.format("h4","","",false, "sub",[{ value:node["@value"], type:"xsd:anyUri"}])}</div></div>)
-                                 
+                                       let prefix = shortUri(node["@value"]).split(":")[0];
+                                       if(providers[prefix]) {
+                                          g.same.push({value:node["@value"]})                                             
+                                       } else {
+                                          if(!g.details) g.details = [] 
+                                          g.details.push(<div class="sub"><h4 class="first type">{this.proplink(rdfs+"seeAlso")}{I18n.t("punc.colon")} </h4><div>{this.format("h4","","",false, "sub",[{ value:node["@value"], type:"xsd:anyUri"}])}</div></div>)
+                                       }                                 
                                     }
                                     
                                     // deprecated
