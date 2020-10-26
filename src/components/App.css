@@ -1266,6 +1266,8 @@ h4:not(:hover) > .lang
 #outline #same > span .img { font-weight:600; }
 #outline #same > span.sat .img { color:green; }
 
+#outline #same .provider::before { content:none; }
+
 /* ------------------------------------------------------------------------------------------------------------------------ header */
 
 .resource .data#head { background-color:#ffffff; padding:35px; padding-bottom:45px; padding-top:35px;}
