@@ -365,8 +365,8 @@ export async function miradorConfig(data, manifest, canvasID, useCredentials, la
          return label["value"]
          
       } else {
-         if(typeof labels == "string") return [ { value: labels } ]
-         else if(labels.length && typeof labels[0] === "string")  return labels.map(function(e){return ({ value: e});}) 
+         if(typeof labels == "string") return ({ values: [ labels ] })
+         else if(labels.length && typeof labels[0] === "string")  return ({ values: labels }) 
 
          label = _getMainLabels(labels,forceUIlg?langsUI:langs)
          return label
