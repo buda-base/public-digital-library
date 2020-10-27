@@ -189,12 +189,14 @@ export function sortLangScriptLabels(data,preset,translit)
 
 export function getMainLabel(data,extpreset)
 {
-   if(!Array.isArray(data)) data = [ data ]
+   if(!data) return ;
+   else if(!Array.isArray(data)) data = [ data ]
 
    let bestelt = null;
    let bestlt = null;
    let bestscore = 99;
    for(let e of data) {
+      if(!e) continue ;
       let k = e["lang"]
       if(!k) k = e["@language"]
       if(!k) k = e["xml:lang"]
@@ -219,7 +221,8 @@ export function getMainLabel(data,extpreset)
 
 export function getMainLabels(data,extpreset)
 {
-   if(!Array.isArray(data)) data = [ data ]
+   if(!data) return ;
+   else if(!Array.isArray(data)) data = [ data ]
 
    let bestelts = null;
    let bestlt = null;

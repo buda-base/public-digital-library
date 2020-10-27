@@ -349,6 +349,7 @@ export async function miradorConfig(data, manifest, canvasID, useCredentials, la
 
    let labelToString = (labels,labelArray,forceUIlg,keepAll) => {
 
+      //console.warn("labels:",labels);
       if(!labels) return ;
 
       // dont assume bo-x-ewts on unlocalized labels...

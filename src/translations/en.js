@@ -469,7 +469,7 @@ const enTranslation = {
       credentials:"if you have sufficient credentials to get access to all scans from this work.",
       notyet:"Images not yet available.",
       error:"An error occurred while trying to access the images.",
-      generic:"BDRC has restricted access to this work in accordance with our access policies. You can read those policies here: <policies href='https://bdrc.io/access-policies/' target='_blank'>https://bdrc.io/access-policies/</policies>."
+      generic:"BDRC has restricted access to this work in accordance with our access policies. You can read those policies here: <policies href='https://bdrc.io/access-policies/' target='_blank'>https://bdrc.io/access-policies/</policies>"
    },
    location:{
       beginV:"Begin volume: {{num}}",
