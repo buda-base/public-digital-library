@@ -5265,7 +5265,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
       if ( this.props.manifestError && this.props.manifestError.error.code === 404)
          return  <div class="data access"><h3><span style={{textTransform:"none"}}>{I18n.t("access.notyet")}</span></h3></div>
       else if ( this.props.manifestError && this.props.auth && (this.props.manifestError.error.code === 401 || this.props.manifestError.error.code === 403) ) 
-         if(elem.includes("RestrictedSealed"))
+         if(elem && elem.includes("RestrictedSealed"))
             return  <div class="data access"><h3><span style={{textTransform:"none"}}><Trans i18nKey="access.sealed" components={{ bold: <u /> }} /> <a href="mailto:help@bdrc.io">help@bdrc.io</a>{I18n.t("punc.point")}</span></h3></div>
          else 
             return  <div class="data access"><h3><span style={{textTransform:"none"}}>{I18n.t("misc.please")} <a class="login" {...(this.props.auth?{onClick:this.props.auth.login.bind(this,this.props.history.location)}:{})}>{I18n.t("topbar.login")}</a> {I18n.t("access.credentials")}</span></h3></div>
