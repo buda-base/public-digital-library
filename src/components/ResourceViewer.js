@@ -5255,6 +5255,15 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                </div>
    }
 
+   renderOCR = () => {
+      let elem = this.getResourceElem(bdo+"contentMethod");
+      console.log("OCR:",elem)
+      if(elem && elem.length) elem = elem[0].value ;
+      if(elem === bdr+"ContentMethod_OCR") {
+         return <div class="data access"><h3><span style={{textTransform:"none"}}>{I18n.t("access.OCR")}</span></h3></div>
+      }
+   }
+
    // DONE check if this is actually used (it is)
    renderAccess = () => {
 
@@ -5961,8 +5970,6 @@ perma_menu(pdfLink,monoVol,fairUse,other)
       if(this.props.config && this.props.config.iiifpres) iiifpres = this.props.config.iiifpres.endpoints[this.props.config.iiifpres.index]      
       //iiifpres += "/2.1.1"
 
-      if(this.props.resources && this.props.resources[this.props.IRI]) this.setManifest(kZprop,iiifpres)    
-
 
       let getWtitle = this.getWtitle.bind(this)
       let wTitle,iTitle,rTitle ;
@@ -6007,6 +6014,9 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          rTitle = getWtitle(baseW)
       }
       
+      if(this.props.resources && this.props.resources[this.props.IRI] && _T !== "Etext") this.setManifest(kZprop,iiifpres)    
+
+
       let resLabel = getLangLabel(this,"",titlElem)
 
       //loggergen.log("ttlm",titlElem,otherLabels)
@@ -6404,6 +6414,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                      {inTitle}
                      {dates}
                   </div>
+                  { this.renderOCR() }
                   { this.renderNoAccess(fairUse) }
                   { this.renderAccess() }
                   { this.renderMirador(isMirador) }           
