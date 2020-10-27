@@ -80,7 +80,7 @@
 
 footer#site-footer { background:#172832; color:white; padding-bottom:0px; }
 footer#site-footer > div.head { background: #dddddd; position:absolute; height:55px; width:100%; display:block;z-index:0;}
-footer#site-footer > div.head::before { content:'';display:block;background:/*white*/#efefef; height:100%; width:1440px;max-width:100%; margin:auto;}
+footer#site-footer > div.head::before { content:'';display:block;background:white /*#efefef*/; height:100%; width:1440px;max-width:100%; margin:auto;}
 footer#site-footer > div.foot,
 footer#site-footer > div.body { padding:40px 60px; width:1222px; max-width:100%; margin:auto; z-index:1;
    display:block;position: relative;

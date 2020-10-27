@@ -5360,10 +5360,10 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                            </div>
                         }
                      </div>
-                     { (this.props.latestSyncs && this.props.latestSyncs !== true) && 
+                     { (this.props.latestSyncs && this.props.latestSyncs !== true && this.props.latestSyncsNb > 5) && 
                         <div id="syncs-nav" >
                            <span class={this.state.syncsSlided?"on":""} onClick={syncSlide}><img src="/icons/g.svg"/></span>
-                           <span class={this.state.syncsSlided?"":"on"} onClick={syncSlide}><img src="/icons/d.svg"/></span>
+                           <span class={this.state.syncsSlided||this.props.latestSyncsNb<=5?"":"on"} onClick={syncSlide}><img src="/icons/d.svg"/></span>
                         </div>
                      }
                   </div>
