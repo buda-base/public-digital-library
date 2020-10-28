@@ -553,12 +553,14 @@ export function getGDPRconsent(that) {
 
 export function top_right_menu(that,etextTitle,backUrl,etextres)
 {
+   let onZhMirror = (that.props.config && that.props.config.chineseMirror)
+
    let logo = [
             <div id="logo">
                <Link to="/"  onClick={() => { that.props.history.push({pathname:"/",search:""}); that.props.onResetSearch();} }><img src="/icons/BUDA-small.svg"/><span>BUDA</span></Link>                                  
                <a id="by"><span>by</span></a>
-               <a href="https://bdrc.io/" target="_blank" id="BDRC"><span>BDRC</span></a>
-               <a href="https://bdrc.io/" target="_blank"><img src="/BDRC-Logo_.png"/></a>
+               <a {...(!onZhMirror?{href:"https://bdrc.io/"}:{})} target="_blank" id="BDRC"><span>BDRC</span></a>
+               <a {...(!onZhMirror?{href:"https://bdrc.io/"}:{})} target="_blank"><img src="/BDRC-Logo_.png"/></a>
             </div>,
 
    ]
@@ -601,7 +603,7 @@ export function top_right_menu(that,etextTitle,backUrl,etextres)
        <div>
          {logo}
 
-         <a id="about" href="https://bdrc.io" target="_blank">{I18n.t("topbar.about")}</a>
+         { !onZhMirror && <a id="about" href="https://bdrc.io" target="_blank">{I18n.t("topbar.about")}</a> }
 
          <Link to="/"  onClick={() => { that.props.history.push({pathname:"/",search:""}); that.props.onResetSearch();} }><span>{I18n.t("topbar.search")}</span></Link>
 
