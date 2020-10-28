@@ -104,6 +104,8 @@ footer#site-footer > .body #b2 #f1 span { border: 2px solid #111312; text-transf
 footer#site-footer > .body #b1 #f2,
 footer#site-footer > .body #b2 #f1 { padding-top:10px;margin-top:10px;}
 
+footer#site-footer > .body #b1 #f2 { padding-top:0; }
+
 footer#site-footer > .body #b2 #f1 { padding-bottom:15px; border-right:1px solid #111312; margin-right:-1px;}
 footer#site-footer > .body #b2 #f2 > div { float:right; padding-right:80px; }
 footer#site-footer > .body #b2 #f2 #s1 { display:flex; align-items: center;}

@@ -484,6 +484,7 @@ const enTranslation = {
       BDRC: "Buddhist Digital Resource Center",
       adr1: "1430 Massachusetts Ave., 5th floor",
       adr2: "Cambridge, MA, USA 02138",
+      adr:"Mailing address:<br/>198 Tremont St. #421<br/>Boston, MA, USA 02116",
       contact: "CONTACT US",
       connect: "Connect with us on social media",
       print:"Order printed copies of works referenced on our website",

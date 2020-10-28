@@ -1,6 +1,7 @@
 //@flow
 import React, { Component } from 'react';
 import I18n from 'i18next';
+import { Trans } from 'react-i18next'
 import { SocialIcon } from 'react-social-icons';
 
 type Props = {
@@ -28,7 +29,9 @@ class Footer extends Component<Props,State> {
                 <div class="body">
                     <div id="b1" class="p50">
                         <div id="f1" class="p50"><p>{this.props.locale != "en" ? I18n.t("footer.BDRC"):[I18n.t("home.titleBDRC1"),<br/>,I18n.t("home.titleBDRC2"),<br/>,I18n.t("home.titleBDRC3")]}</p></div>
-                        <div id="f2" class="p50">{I18n.t("footer.adr1")}<br/>{I18n.t("footer.adr2")}</div>
+                        <div id="f2" class="p50">{/*I18n.t("footer.adr1")}<br/>{I18n.t("footer.adr2")*/}
+                            <Trans i18nKey="footer.adr" components={{ newl: <br /> }} />
+                        </div>
                     </div>
                     <div id="b2" class="p50">
                         <div id="f1" class="p35">
