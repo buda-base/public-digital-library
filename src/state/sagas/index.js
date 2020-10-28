@@ -1639,7 +1639,7 @@ function rewriteAuxMain(result,keyword,datatype,sortBy,language)
    let langPreset = state.ui.langPreset
    if(!sortBy) sortBy = state.ui.sortBy
    let reverse = sortBy && sortBy.endsWith("reverse")
-   let canPopuSort = false, isScan, isTypeScan = datatype.includes("Scan")
+   let canPopuSort = false, isScan, isTypeScan = datatype.includes("Scan"), inRoot
 
    result = Object.keys(result).reduce((acc,e)=>{
       if(e === "main") {
@@ -1653,6 +1653,7 @@ function rewriteAuxMain(result,keyword,datatype,sortBy,language)
          let dataWithAsset = keys.reduce( (acc,k) => { 
 
             isScan = false       
+            inRoot = false
 
             if(auth && !auth.isAuthenticated()) {	
                let status = result[e][k].filter(k => k.type === adm+"status" || k.type === tmp+"status")	
@@ -1665,12 +1666,21 @@ function rewriteAuxMain(result,keyword,datatype,sortBy,language)
             }
             
             let res = result[e][k].map(e => { 
-               if(!asset.includes(e.type)||e.value === "false") return e
-               else {
+               if(asset.includes(e.type) && e.value) {
                   if(isTypeScan && e.type === _tmp+"hasImage") isScan = true ; 
                   return ({type:_tmp+"assetAvailability",value:e.type})
+               } else if(e.type === bdo+"inRootInstance") {
+                  inRoot = true
                }
+               return e
             } )
+
+            if(t === "instances") {
+               if(!inRoot) res.push({type:_tmp+"versionType", value:_tmp+"standalone"})
+               else res.push({type:_tmp+"versionType", value:_tmp+"partOfVersion"})
+            }
+
+
 
             canPopuSort = canPopuSort || (res.filter(e => e.type === tmp+"entityScore").length > 0)            
             let chunks = res.filter(e => e.type === bdo+"eTextHasChunk")

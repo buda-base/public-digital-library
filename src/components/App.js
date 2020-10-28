@@ -4283,17 +4283,18 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
 
    widget(title:string,txt:string,inCollapse:Component)  { 
+      let open = this.state.collapse[txt]||(this.state.collapse[txt] === undefined && txt === "versionType")
       return (
          [<ListItem key={1} className="widget-header"
             onClick={(e) => { this.setState({collapse:{ ...this.state.collapse, [txt]:!this.state.collapse[txt]} }); } }
             >
             <Typography  className="widget-title" ><span lang={this.props.locale}>{title}</span></Typography>
-            { this.state.collapse[txt] ? <ExpandLess /> : <ExpandMore />}
+            { open ? <ExpandLess /> : <ExpandMore />}
          </ListItem>,
          // TODO replace Collapse by Popover
          <Collapse key={2}
-            in={this.state.collapse[txt]}
-            className={["collapse ",this.state.collapse[txt]?"open":"close"].join(" ")}
+            in={open}
+            className={["collapse ",open?"open":"close"].join(" ")}
             >
                {inCollapse}
          </Collapse> ]

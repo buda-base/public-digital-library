@@ -189,7 +189,10 @@ const enTranslation = {
       "tmp:BuddhistArt":"Buddhist Art",
       "tmp:other":"Other",
       "tmp:instanceOfWork":"Version of Work",
-      "tmp:lastSync":"Release Date"
+      "tmp:lastSync":"Release Date",
+      "tmp:versionType":"Version Type",
+      "tmp:standalone":"Standalone",
+      "tmp:partOfVersion":"Part of another Version"
    },
    result:{
       open:"Open",
