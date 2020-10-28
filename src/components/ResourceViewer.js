@@ -6415,8 +6415,8 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                      {dates}
                   </div>
                   { this.renderOCR() }
-                  { this.renderNoAccess(fairUse) }
-                  { this.renderAccess() }
+                  { this.props.auth && this.renderNoAccess(fairUse) }
+                  { this.props.auth && this.renderAccess() }
                   { this.renderMirador(isMirador) }           
                   { theDataTop }
                   <div class="data" id="perma">{ this.perma_menu(pdfLink,monoVol,fairUse,kZprop.filter(k => k.startsWith(adm+"seeOther")))  }</div>

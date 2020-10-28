@@ -2767,7 +2767,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
             //loggergen.log("access",access)
 
-            if(access) {
+            if(this.props.auth && access) {
                hasCopyR = "unknown"            
                if(access.includes("FairUse")) hasCopyR = "fair_use"
                else if(access.includes("Temporarily")) { hasCopyR = "temporarily";  hasThumb = []; }
