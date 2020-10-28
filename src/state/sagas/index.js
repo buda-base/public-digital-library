@@ -73,6 +73,7 @@ async function initiateApp(params,iri,myprops,route) {
          
          // DONE UI language
          let locale = "en", val
+         if(config && config.chineseMirror) locale = "zh"
 
          // 1-url param
          if(params && params.uilang && ['bo','en','zh'].includes(params.uilang)) locale = params.uilang
