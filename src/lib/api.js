@@ -995,13 +995,15 @@ export default class API {
      get _ontologyPath(): string {
         let path = ONTOLOGY_PATH;
 
-       let config = store.getState().data.config.ldspdi
-       let url = config.endpoints[config.index] ;
+       let config = store.getState().data.config
+       let url = config.ldspdi.endpoints[config.index] ;
 
          path = url +  ONTOLOGY_PATH;
          
          // to use with ldspdi running locally
          path = "//purl.bdrc.io" +  ONTOLOGY_PATH;
+
+         if(config && config.chineseMirror) path = "/ldspdi" + ONTOLOGY_PATH;
 
         return path;
     }
@@ -1009,13 +1011,15 @@ export default class API {
      get _dictionaryPath(): string {
         let path = DICTIONARY_PATH
 
-       let config = store.getState().data.config.ldspdi
-       let url = config.endpoints[config.index] ;
+       let config = store.getState().data.config
+       let url = config.ldspdi.endpoints[config.index] ;
 
          path = url +  DICTIONARY_PATH;
 
          // to use with ldspdi running locally
-         path = "//purl.bdrc.io" +  DICTIONARY_PATH;
+         path = "//purl.bdrc.io" +  DICTIONARY_PATH;         
+
+         if(config && config.chineseMirror) path = "/ldspdi" + DICTIONARY_PATH;
 
          // to use with ldspdi-dev
          //path = "//ldspdi-dev.bdrc.io" +  DICTIONARY_PATH;
