@@ -34,6 +34,7 @@ const zhTranslation = {
       work:"作品",
       instance:"实例",
       images:"图像",
+      searchIn:"{{type}}",
       volume:"卷",
       volume_num:"第{{num}}卷"
    },
