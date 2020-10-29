@@ -5242,7 +5242,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
    // TODO case of part of instance after p.20 (see bdr:MW1KG2733_65CFB8)
 
    renderNoAccess = (fairUse) => {
-      if(fairUse && (this.props.auth && !this.props.auth.isAuthenticated()) )
+      if(fairUse && (!this.props.auth || this.props.auth && !this.props.auth.isAuthenticated()) ) 
          return <div class="data access">
                   <h3>
                      <span style={{textTransform:"none"}}>
@@ -5273,7 +5273,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
       if ( this.props.manifestError && this.props.manifestError.error.code === 404)
          return  <div class="data access"><h3><span style={{textTransform:"none"}}>{I18n.t("access.notyet")}</span></h3></div>
-      else if ( this.props.manifestError && this.props.auth && (this.props.manifestError.error.code === 401 || this.props.manifestError.error.code === 403) ) 
+      else if ( this.props.manifestError && (!this.props.auth || this.props.auth && (this.props.manifestError.error.code === 401 || this.props.manifestError.error.code === 403) )) 
          if(elem && elem.includes("RestrictedSealed"))
             return  <div class="data access"><h3><span style={{textTransform:"none"}}><Trans i18nKey="access.sealed" components={{ bold: <u /> }} /> <a href="mailto:help@bdrc.io">help@bdrc.io</a>{I18n.t("punc.point")}</span></h3></div>
          else 
@@ -6415,8 +6415,8 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                      {dates}
                   </div>
                   { this.renderOCR() }
-                  { this.props.auth && this.renderNoAccess(fairUse) }
-                  { this.props.auth && this.renderAccess() }
+                  { this.renderNoAccess(fairUse) }
+                  { this.renderAccess() }
                   { this.renderMirador(isMirador) }           
                   { theDataTop }
                   <div class="data" id="perma">{ this.perma_menu(pdfLink,monoVol,fairUse,kZprop.filter(k => k.startsWith(adm+"seeOther")))  }</div>

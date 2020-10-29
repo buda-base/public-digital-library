@@ -646,7 +646,7 @@ export function top_right_menu(that,etextTitle,backUrl,etextres)
 
          { lang_selec(that) }
 
-         <a target="_blank" href="https://bdrc.io/donation/" id="donate"><img src="/donate.svg"/>{I18n.t("topbar.donate")}</a>
+         { (!that.props.config || !that.props.config.chineseMirror) && <a target="_blank" href="https://bdrc.io/donation/" id="donate"><img src="/donate.svg"/>{I18n.t("topbar.donate")}</a> }
        </div>
      </div>
   )
@@ -2771,7 +2771,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
             //loggergen.log("access",access)
 
-            if(this.props.auth && access) {
+            if(access) {
                hasCopyR = "unknown"            
                if(access.includes("FairUse")) hasCopyR = "fair_use"
                else if(access.includes("Temporarily")) { hasCopyR = "temporarily";  hasThumb = []; }
@@ -5389,7 +5389,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             </div>
             <LanguageSidePaneContainer />
          </div>
-         { message.length == 0 && !this.props.loading && !this.props.keyword && <Footer locale={this.props.locale}/> }
+         { message.length == 0 && !this.props.loading && !this.props.keyword && (!this.props.config || !this.props.config.chineseMirror) && <Footer locale={this.props.locale}/> }
       </div>
       );
    }
