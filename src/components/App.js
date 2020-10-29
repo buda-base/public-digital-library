@@ -2534,7 +2534,11 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   }
                }
                else if(val && val.startsWith("http")) val = this.fullname(val,[],true)
-               else val = highlight(val)
+               else { 
+                  val = getLangLabel(this,prop,[i])
+                  val = highlight(val.value)
+                  lang = val.lang
+               }
 
                if(!lang) lang = i["lang"]
                ret.push(<span {...lang?{lang}:{}}>{val}{
