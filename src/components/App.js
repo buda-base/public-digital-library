@@ -2003,10 +2003,10 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
       return str ;
    }
 
-   fullname(prop:string,preflabs:[],useUIlang:boolean=false)
+   fullname(prop:string,preflabs:[],useUIlang:boolean=false,count)
    {
       if(!prop||prop.length === 0) return 
-      let sTmp = shortUri(prop), trad = I18n.t("prop."+sTmp)
+      let sTmp = shortUri(prop), trad = I18n.t("prop."+sTmp,{count})
       if("prop."+sTmp !== trad) return trad
 
       if(this.props.dictionary && this.props.dictionary[prop] && this.props.dictionary[prop][rdfs+"label"])
@@ -2370,20 +2370,26 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
       if (this.state.filters.datatype[0] !== "Instance")
          return
-      let hasName, hasLoc
-      hasName = allProps.filter(a => a.type === bdo+"publisherName").length > 0
-      hasLoc = allProps.filter(a => a.type === bdo+"publisherLocation").length > 0
-
+      let hasName, hasLoc, lab
+      hasName = allProps.filter(a => a.type === bdo+"publisherName")  //.length > 0
+      hasLoc = allProps.filter(a => a.type === bdo+"publisherLocation") //.length > 0
+      
       let ret = []
       //if(ret.length) 
-      if(hasName) ret.push(<div class={"match publisher "+this.props.locale}>
-               <span class="label">{this.fullname(bdo+"publisherName",[],true)}{I18n.t("punc.colon")}&nbsp;</span>
-               <div class="multi">{this.getVal(bdo+"publisherName",allProps)}</div>
+      if(hasName.length) { 
+         lab = getLangLabel(this,"",hasName)
+         ret.push(<div class={"match publisher "+this.props.locale}>
+               <span class="label">{this.fullname("tmp:publisherName",[],true)}{I18n.t("punc.colon")}&nbsp;</span>
+               <div class="multi">{lab.value}</div>
             </div>)
-      if(hasLoc) ret.push(<div class="match">
-               <span className={`label ${hasName ? "hidden-en" : ""}`}>{this.fullname(hasName?bdo+"publisherName":bdo+"publisherLocation",[],true)}{I18n.t("punc.colon")}&nbsp;</span>
-               <div class="multi">{this.getVal(bdo+"publisherLocation",allProps)}</div>
+      }
+      if(hasLoc.length) { 
+         lab = getLangLabel(this,"",hasLoc)
+         ret.push(<div class="match publisher">
+               <span className={`label ${hasName.length ? "hidden-en" : ""}`}>{this.fullname("tmp:publisherName",[],true)}{I18n.t("punc.colon")}&nbsp;</span>
+               <div class="multi">{lab.value}</div>
             </div>)
+      }
 
       return ret;
    }
@@ -2465,7 +2471,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                         <span class="instance-collapse" onClick={(e) => { 
                            this.setState({...this.state,collapse:{...this.state.collapse,[iri]:!this.state.collapse[iri] },repage:true })
                         }}>{!this.state.collapse[iri]?<ExpandMore/>:<ExpandLess/>}</span>,
-                        <span class="label">{this.fullname(prop+(plural && ret.length > 1 ?plural:""),[],true)}{I18n.t("punc.colon")}&nbsp;</span>,
+                        <span class="label">{this.fullname(prop,[],true,(plural && ret.length > 1 ?2:1))}{I18n.t("punc.colon")}&nbsp;</span>,
                         <div style={{clear:"both"}}></div>,
                         <Collapse in={this.state.collapse[iri]} >
                            {ret}
@@ -2604,7 +2610,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             }            
          }
          if(ret.length && !useAux) return <div class="match">
-                  <span class="label">{this.fullname(prop+(plural && ret.length > 1 ?plural:""),[],true)}{I18n.t("punc.colon")}&nbsp;</span>
+                  <span class="label">{this.fullname(prop,[],true,(plural && ret.length > 1 ?2:1))}{I18n.t("punc.colon")}&nbsp;</span>
                   <div class="multi">{ret}</div>
                 </div>
       }
@@ -3158,8 +3164,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
             {/* { this.getResultProp(bdo+"contentLocationStatement",allProps,false,false, [bdo+"instanceExtentStatement",bdo+"contentLocationStatement"]) } */}
 
-            { (type === "Instance" || type === "Scan") && this.getResultProp(bdo+"biblioNote",allProps,false,false,[bdo+"biblioNote", bdo+"catalogInfo", rdfs+"comment", tmp+"noteMatch", bdo+"colophon", bdo+"incipit"]) }
-            { (type !== "Instance" && type !== "Scan") && this.getResultProp(bdo+"biblioNote",allProps,false,false,[ tmp+"noteMatch" ]) }
+            { (type === "Instance" || type === "Scan") && this.getResultProp(bdo+"biblioNote",allProps,true,false,[bdo+"biblioNote", bdo+"catalogInfo", rdfs+"comment", tmp+"noteMatch", bdo+"colophon", bdo+"incipit"]) }
+            { (type !== "Instance" && type !== "Scan") && this.getResultProp(bdo+"biblioNote",allProps,true,false,[ tmp+"noteMatch" ]) }
 
             {/* { this.getResultProp(tmp+"provider",allProps) } */}
             {/* { this.getResultProp(tmp+"popularity",allProps,false,false, [tmp+"entityScore"]) } */}
@@ -3515,11 +3521,11 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                iniTitle = true
                let _t = t.toLowerCase()
                if(_t === "work" && this.props.isInstance) _t = "instance"
-               if(displayTypes.length > 1 || displayTypes.indexOf("Any") !== -1) message.push(<MenuItem  onClick={(e)=>this.handleCheck(e,t,true,{},true)}><h4>{I18n.t("types."+t.toLowerCase()+"_plural")+(false && displayTypes.length>1&&counts["datatype"][t]?" ("+counts["datatype"][t]+")":"")}</h4></MenuItem>);
+               if(displayTypes.length > 1 || displayTypes.indexOf("Any") !== -1) message.push(<MenuItem  onClick={(e)=>this.handleCheck(e,t,true,{},true)}><h4>{I18n.t("types."+t.toLowerCase(),{count:2})+(false && displayTypes.length>1&&counts["datatype"][t]?" ("+counts["datatype"][t]+")":"")}</h4></MenuItem>);
                else { 
                   let txt = ""
                   if(this.props.latest) txt = I18n.t("home.new")
-                  else txt = I18n.t("types."+_t+("_plural")) 
+                  else txt = I18n.t("types."+_t,{count:2}) 
                   
                   if(this.props.language==="") {
                      let label = this.props.resources[this.props.keyword]
@@ -3938,14 +3944,14 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   { I18n.t("search.filters.noresults",{ 
                      keyword:'"'+lucenequerytokeyword(this.props.keyword)+'"', 
                      language:"$t("+lang+")", 
-                     type:I18n.t("types.searchIn", { type:I18n.t("types."+this.state.filters.datatype[0].toLowerCase()+"_plural").toLowerCase() }),  
+                     type:I18n.t("types.searchIn", { type:I18n.t("types."+this.state.filters.datatype[0].toLowerCase(),{count:2}).toLowerCase() }),  
                      interpolation: {escapeValue: false} }) }
                   {  this.state.filters.facets && " with the filters you set"}
                   {  this.state.filters.facets && <span><br/>{this.renderResetF()}</span>}
                </Typography>);
 
                if(!this.state.filters.facets && other && other.length)   
-                  message.push(<Typography className="no-result"><span>{I18n.t("search.seeO")}{I18n.t("misc.colon")} {other.map(o => <a onClick={(event) => this.handleCheck(event,o,true)} class="uri-link">{I18n.t("types."+o.toLowerCase()+"_plural")}</a>)}</span></Typography>)
+                  message.push(<Typography className="no-result"><span>{I18n.t("search.seeO")}{I18n.t("misc.colon")} {other.map(o => <a onClick={(event) => this.handleCheck(event,o,true)} class="uri-link">{I18n.t("types."+o.toLowerCase(),{count:2})}</a>)}</span></Typography>)
 
             } 
 
@@ -4551,8 +4557,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
                                        }
                                        {...count !== undefined
-                                       ?{label:<span lang={this.props.locale}>{I18n.t("types."+i.toLowerCase()+"_plural")+" "+I18n.t("punc.lpar")}<span class="facet-count" lang={this.props.locale}>{typeof count === "string" && "~"}{I18n.t("punc.num",{num:Number(count)})}</span>{I18n.t("punc.rpar")}</span>}
-                                       :{label:<span lang={this.props.locale}>{I18n.t("types."+i.toLowerCase()+"_plural")}</span>}}
+                                       ?{label:<span lang={this.props.locale}>{I18n.t("types."+i.toLowerCase(),{count:2})+" "+I18n.t("punc.lpar")}<span class="facet-count" lang={this.props.locale}>{typeof count === "string" && "~"}{I18n.t("punc.num",{num:Number(count)})}</span>{I18n.t("punc.rpar")}</span>}
+                                       :{label:<span lang={this.props.locale}>{I18n.t("types."+i.toLowerCase(),{count:2})}</span>}}
                                     />
                                  </div>
                               )
@@ -5008,7 +5014,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
       
       if(this.state.filters.datatype.includes("Instance") && this.state.results&&this.state.results[this.state.id] && nbResu != this.state.results[this.state.id].resLength && message.length > 2 && message[1].type === "div" 
          && this.state.filters.facets && this.state.filters.facets[tmp+"assetAvailability"] && this.state.filters.facets[tmp+"assetAvailability"].includes(tmp+"hasOpen"))  {
-         let txt = I18n.t("types."+this.state.filters.datatype[0].toLowerCase()+"_plural").toLowerCase(); 
+         let txt = I18n.t("types."+this.state.filters.datatype[0].toLowerCase(),{count:2}).toLowerCase(); 
          let moreres = <Typography className="no-result more-result">{I18n.t("result.moreres",{txt})} {this.renderResetF()}</Typography>
          let head = message.shift()
          message.unshift(moreres)
@@ -5162,7 +5168,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      <MenuItem key={d} value={d}>
                         <span lang={this.props.locale} class="menu-dataT">
                            <span class="icone" style={{backgroundImage:"url('/icons/home/"+d.toLowerCase()+".svg')"}}></span>
-                           {I18n.t("types.searchIn",{type:I18n.t("types."+d.toLowerCase()+"_plural").toLowerCase()}) /* cannot use format in nested translation ( https://github.com/i18next/i18next/issues/1377) */ }
+                           {I18n.t("types.searchIn",{type:I18n.t("types."+d.toLowerCase(),{count:2}).toLowerCase()}) /* cannot use format in nested translation ( https://github.com/i18next/i18next/issues/1377) */ }
                         </span>
                      </MenuItem>))}
                </Select>
@@ -5357,7 +5363,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   </List>
                }
                </div>
-               { message.length == 0 && !this.props.loading && !this.props.keyword && (!this.props.config || !this.props.config.chineseMirror) &&
+               { message.length == 0 && !this.props.loading && !this.props.keyword && (!this.props.config || !this.props.config.chineseMirror) && 
                   <div id="latest">
                      <h3>{I18n.t("home.new")}</h3>
                      <Link class="seeAll" to="/latest" onClick={()=>this.setState({filters:{...this.state.filters,datatype:["Scan"]}})}>{I18n.t("misc.seeAnum",{count:this.props.latestSyncsNb})}</Link>
