@@ -1666,7 +1666,7 @@ function rewriteAuxMain(result,keyword,datatype,sortBy,language)
             }
             
             let res = result[e][k].map(e => { 
-               if(asset.includes(e.type) && e.value) {
+               if(asset.includes(e.type) && e.value == "true") {
                   if(isTypeScan && e.type === _tmp+"hasImage") isScan = true ; 
                   return ({type:_tmp+"assetAvailability",value:e.type})
                } else if(e.type === bdo+"inRootInstance") {

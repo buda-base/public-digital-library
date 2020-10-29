@@ -520,6 +520,9 @@ p.no-result {
 
 .no-result .uri-link { display:inline-block; margin-left:10px;  }
 
+.no-result.more-result { display:flex; align-items: baseline; margin-bottom:10px;}
+.no-result.more-result #clear-filters { display:inline-flex; margin:0; margin-left:5px; }
+
 .SearchPane.resultPage { overflow-y:auto;}
 
 #res-container > ul li { padding-left:0; pointer-events:none; }

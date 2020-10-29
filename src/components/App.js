@@ -979,7 +979,10 @@ class App extends Component<Props,State> {
       this.setState(state)
 
       loggergen.log("search::",key,_key,label) //,this.state,!global.inTest ? this.props:null)
-      
+
+      let hasOpen = ""
+      if(label.includes("Instance") || label.includes("Scan")) hasOpen = "&f=asset,inc,tmp:hasOpen" ;
+
       if(_key.match(/(^[UWPGRCTILE][A-Z0-9_]+$)|(^([cpgwrt]|mw|wa|ws)\d[^ ]*$)/) || prefixesMap[key.replace(/^([^:]+):.*$/,"$1")])
       {
          if(_key.indexOf(":") === -1) _key = "bdr:"+_key
@@ -993,7 +996,7 @@ class App extends Component<Props,State> {
          }
          else {
             if(!label) label = this.state.filters.datatype.filter((f)=>["Person","Work"].indexOf(f) !== -1)[0]
-            this.props.history.push({pathname:"/search",search:"?r="+_key+(label?"&t="+label:"")})
+            this.props.history.push({pathname:"/search",search:"?r="+_key+(label?"&t="+label+hasOpen:"")})
          }
       }
       else if(key.match(/^[^:]*:[^ ]+/))
@@ -1007,10 +1010,11 @@ class App extends Component<Props,State> {
             key = key.toLowerCase();
             lang = "bo-x-ewts"
          }
-         this.props.history.push({pathname:"/search",search:"?q="+key+"&lg="+lang+"&t="+label})
+         this.props.history.push({pathname:"/search",search:"?q="+key+"&lg="+lang+"&t="+label+hasOpen})
          
          // TODO add permanent filters (here ?)
       }
+
 
       /*
       else if(label === "Any") // || ( !label)) // && ( this.state.filters.datatype.length === 0 || this.state.filters.datatype.indexOf("Any") !== -1 ) ) )
@@ -3433,7 +3437,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
    }
    */
 
-   handleResults(types,counts,message,results,paginate,bookmarks) 
+   handleResults(types,counts,message,results,paginate,bookmarks,resLength) 
    {
       this._menus = {}
 
@@ -3938,7 +3942,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                if(!this.state.filters.facets && other && other.length)   
                   message.push(<Typography className="no-result"><span>{I18n.t("search.seeO")}{I18n.t("misc.colon")} {other.map(o => <a onClick={(event) => this.handleCheck(event,o,true)} class="uri-link">{I18n.t("types."+o.toLowerCase()+"_plural")}</a>)}</span></Typography>)
 
-            }
+            } 
 
          }
          if(pagin.index == pagin.pages.length - 1) {
@@ -4069,7 +4073,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
             //loggergen.log("paginate?",JSON.stringify(paginate))
 
-            if(results) this.handleResults(types,counts,message,results,paginate,bookmarks);
+            if(results) this.handleResults(types,counts,message,results,paginate,bookmarks,resLength);
             
             //loggergen.log("bookM:",JSON.stringify(paginate,null,3))
             
@@ -4288,7 +4292,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
       let open = this.state.collapse[txt]||(this.state.collapse[txt] === undefined && txt === "versionType")
       return (
          [<ListItem key={1} className="widget-header"
-            onClick={(e) => { this.setState({collapse:{ ...this.state.collapse, [txt]:!this.state.collapse[txt]} }); } }
+            onClick={(e) => { this.setState({collapse:{ ...this.state.collapse, [txt]:!open} }); } }
             >
             <Typography  className="widget-title" ><span lang={this.props.locale}>{title}</span></Typography>
             { open ? <ExpandLess /> : <ExpandMore />}
@@ -4993,6 +4997,17 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
       let syncSlide = (e) => {
          this.setState({syncsSlided:!this.state.syncsSlided})
+      }
+      
+       //           let nbResu = this.state.paginate && this.state.paginate.nMax ? this.state.paginate.nMax:(this.state.results&&this.state.results[this.state.id]?this.state.results[this.state.id].resLength:"--")
+      
+      if(this.state.filters.datatype.includes("Instance") && this.state.results&&this.state.results[this.state.id] && nbResu != this.state.results[this.state.id].resLength && message.length > 2 && message[1].type === "div" 
+         && this.state.filters.facets && this.state.filters.facets[tmp+"assetAvailability"] && this.state.filters.facets[tmp+"assetAvailability"].includes(tmp+"hasOpen"))  {
+         let txt = I18n.t("types."+this.state.filters.datatype[0].toLowerCase()+"_plural").toLowerCase(); 
+         let moreres = <Typography className="no-result more-result">{I18n.t("result.moreres",{txt})} {this.renderResetF()}</Typography>
+         let head = message.shift()
+         message.unshift(moreres)
+         message.unshift(head)
       }
 
       return (

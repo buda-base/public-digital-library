@@ -181,12 +181,19 @@ export const updateFacets = (state: UIState, action: actions.LoadingAction) => {
             for(let q of props) {
                 if(q !== "Any") {
                     update[k][q] = { i:0 } 
-                    //console.log("q",q,meta[q])
+
+                    //console.log("q",q,meta[q].dict)
 
                     if(meta[q] && meta[q].dict) for(let _e of Object.keys(meta[q].dict)) {
                         let e = meta[q].dict[_e]
                         let flat = {}
+                        
+                        //console.log("e",_e, e);
+
                         for(let f of e)  {
+                            
+                            if(!f) continue ; 
+
                             let val = flat[f.type]
                             if(!val) val = []
                             val.push(f.value)
