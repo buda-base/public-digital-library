@@ -85,6 +85,7 @@ footer#site-footer > div.foot,
 footer#site-footer > div.body { padding:40px 60px; width:1222px; max-width:100%; margin:auto; z-index:1;
    display:block;position: relative;
 }
+
 footer#site-footer > div.body { background:#fce08d; color:#172832; }
 footer#site-footer div * { vertical-align: top;}
 footer#site-footer .p50 { width:50%; display: inline-block;}
@@ -131,6 +132,7 @@ footer#site-footer > div.foot #t2::before { content:''; display:block; position:
 
 footer#site-footer [lang='bo'] { font-size:18px !important;}
 
+footer#site-footer.no-syncs > div.head::before { background-color:#efefef; }
 
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ home */
 

@@ -24,7 +24,7 @@ class Footer extends Component<Props,State> {
         let locale = "?lang="+(this.props.locale==="zh"?"zh-hans":this.props.locale)
 
         return (
-            <footer id="site-footer">
+            <footer id="site-footer" class={!this.props.hasSyncs?"no-syncs":""}>
                 <div class="head"></div>
                 <div class="body">
                     <div id="b1" class="p50">
