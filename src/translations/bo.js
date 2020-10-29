@@ -2,6 +2,7 @@
 const boTranslation = {
    punc: {
       colon:" ",
+      point:"",
       num:"{{num,counttobo}}",
       lpar:"（",
       rpar:"）"
@@ -33,34 +34,22 @@ const boTranslation = {
    types:{
       any:"གང་རུང་།",
       corporation:"ཚོགས་སྡེ།",
-      corporation_plural:"ཚོགས་སྡེ།",
       etext:"འཕྲུལ་ཡིག་ནང་།",
-      etext_plural:"འཕྲུལ་ཡིག་ནང་།",
       etext_title:"འཕྲུལ་ཡིག",
       item:"དཔེ་ཆ།",
-      item_plural:"དཔེ་ཆ།",
       lineage:"ཆོས་བརྒྱུད།",
-      lineage_plural:"ཆོས་བརྒྱུད།",
       person:"མི་སྣ།",
-      person_plural:"མི་སྣ།",
       place:"ས་གནས།",
-      place_plural:"ས་གནས།",
       role:"ལས་འགན།",
-      role_plural:"ལས་འགན།",
       topic:"བརྗོད་གཞི།",
-      topic_plural:"བརྗོད་གཞི།",
       work:"བརྩམས་ཆོས།",
-      work_plural:"བརྩམས་ཆོས།",
       instance:"དཔེ་རྒྱུན།",
-      instance_plural:"དཔེ་རྒྱུན།",
       images:"བཤེར་པར།",
       volume:"བཤེར་པར།",
       volume_num:"པོད། {{num,counttobo}}",
       searchIn:"{{type}}",
       product:"Product",
-      product_plural:"Products",
       scan:"བཤེར་པར།",
-      scan_plural:"བཤེར་པར།"
    },
    topbar:{
       about:"ང་ཚོའི་སྐོར།",
@@ -187,7 +176,10 @@ const boTranslation = {
       "tmp:BuddhistArt":"ནང་བསྟན་རིགས་གནས།",
       "tmp:other":"གཞན།",
       "tmp:instanceOfWork":"Version of Work",
-      "tmp:lastSync":"སྤེལ་དུས།"
+      "tmp:lastSync":"སྤེལ་དུས།",
+      "tmp:versionType":"Version Type",
+      "tmp:standalone":"Standalone",
+      "tmp:partOfVersion":"Part of another Version"
    },
    result:{
       open:"ཁ་ཕྱེ།",
@@ -205,7 +197,8 @@ const boTranslation = {
       openE:"འཕྲུལ་ཡིག་ཀློག",
       hasInstance:"དཔེ་རྒྱུན་ {{count,counttobo}} ཡོད།",
       hasInstance_plural:"དཔེ་རྒྱུན་ {{count,counttobo}} ཡོད།",
-      assoc:"{{type}} associated with: {{- name}}"
+      assoc:"{{type}} associated with: {{- name}}",
+      moreres:"More {{txt}} are available, do you want to see them?"
    },
    index:{
       openViewer:"ཀློག",
@@ -290,7 +283,8 @@ const boTranslation = {
       from:"",
       in:"",
       of:"",
-      please:""
+      please:"",
+      seeO:"See on",
    },
    lang:{
       en:"ཨིན་སྐད།",
@@ -418,7 +412,7 @@ const boTranslation = {
       start:"འཚོལ།",
       reset:"བཙལ་བྱ་སུབ།",
       otherN:"Load non-matching subparts",
-       scanF:"",
+      scanF:"",
       etextF:"",
       openR:"དཔེ་ཐོ།",
       loadP:"ཤོག་གྲངས་སྔོན་མ་ཀློག",
@@ -451,7 +445,15 @@ const boTranslation = {
    },
    access:{
       limited20:"འགོ་མཇུག་གཉིས་ནས་ཤོག་ངོས་ཉི་ཤུ་ཉི་ཤུ་ལས་ལྷག་ལྟ་ཀློག་བྱེད་མི་ཐུབ།",
-      credentials:"དམིགས་བསལ་གྱི་ཐོབ་ཐང་ཡོད་ན་འདིར་བསྣུན།"
+      credentials:"དམིགས་བསལ་གྱི་ཐོབ་ཐང་ཡོད་ན་འདིར་བསྣུན།",
+      fairuse1:"BDRC <bold>restricts access</bold> to this work (only the first and last 20 images are available online) because the work is under <bold>copyright</bold>.",
+      fairuse2:"Please contact",
+      fairuse3:"for information about possibly accessing this work under fair use.",
+      sealed:"BDRC <bold>restricts access</bold> to this work because it was provided to BDRC on the condition that we respect <bold>traditional restrictions</bold> applied to it. If you have received the proper transmission from a spiritual teacher to access this work or have other questions about how to access this work please contact",
+      notyet:"Images not yet available.",
+      error:"An error occurred while trying to access the images.",
+      generic:"BDRC has restricted access to this work in accordance with our access policies. You can read those policies here: <policies href='https://bdrc.io/access-policies/' target='_blank'>https://bdrc.io/access-policies/</policies>",
+      OCR:"These etexts were created through OCR (optical character recognition), not manually input, and have not been edited. OCR for Tibetan script is not 100% perfect but it is accurate enough to create text that will enhance the BDRC database. We hope that etexts like these improve the discoverability and usefulness of the BDRC archive for you."
    },
    location:{
       beginV:"པོད་ {{num,counttobo}} ནས་",
@@ -472,6 +474,27 @@ const boTranslation = {
       join:"ང་ཚོའི་སྐོར་ཀྱི་གནས་ཚུལ་གསར་ཤོས་ཤེས་འདོད་ཚེ་འཛུལ་ཞུགས་བྱོས།",
       subscribe:"མངགས་ཉོ།",
       support:"ངེད་ཚོགས་པའི་ལས་རིགས་ལ་རྒྱབ་སྐྱོར།"
+   },
+   location:{
+      beginV:"Begin volume: {{num}}",
+      beginP:"Begin image: {{num}}",
+      beginL:"Begin line: {{num}}",
+      endV:"End volume: {{num}}",
+      endP:"End image: {{num}}",
+      endL:"End line: {{num}}"
+   },
+   footer:{
+      BDRC: "Buddhist Digital Resource Center",
+      adr1: "1430 Massachusetts Ave., 5th floor",
+      adr2: "Cambridge, MA, USA 02138",
+      adr:"Mailing address:<br/>198 Tremont St. #421<br/>Boston, MA, USA 02116",
+      contact: "CONTACT US",
+      connect: "Connect with us on social media",
+      print:"Order printed copies of works referenced on our website",
+      order:"Order",
+      join:"Join our newsletter and stay up-to-date",
+      subscribe:"Subscribe",
+      support:"Support our mission of preservation and access"
    }
 } ;
 
