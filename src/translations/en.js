@@ -151,7 +151,7 @@ const enTranslation = {
       "tmp:entityScore":"Entity Score",
       "tmp:instanceLabel":"$t(types.instance) Label",
       "tmp:dimensions":"Dimensions",
-      "bdo:publisherName":"Publisher",
+      "tmp:publisherName":"Publisher",
       "tmp:forWork":"For Work",
       "tmp:provider":"Provider",
       "tmp:author":"Author",

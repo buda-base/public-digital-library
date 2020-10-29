@@ -123,7 +123,7 @@ const zhTranslation = {
       "tmp:entityScore":"Entity Score",
       "tmp:instanceLabel":"实例标签",
       "tmp:dimensions":"尺寸",
-      "tmp:publisherLocation":"出版地点",
+      "tmp:publisherName":"出版地点",
       "tmp:forWork":"所属作品",
       "tmp:provider":"提供者",
       "tmp:author":"作者",

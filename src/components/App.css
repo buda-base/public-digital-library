@@ -789,13 +789,17 @@ a.result + #matches .result-content #icon > :not(.thumb) img { width:40px; }
 
 .result-box { width:calc(100% - 75px);display:flex; justify-content: flex-end; position:absolute; bottom:10px;}
 
+#matches .match.publisher + .publisher > span.hidden-en { visibility: hidden; }
+#matches .match.publisher + .publisher { margin-top:-11px; }
 
+
+/*
 #matches .match.publisher.en > span > span,
 #matches .match.publisher.en + .match > span > span { display: inline-block;}
 
 #matches .match.publisher.en { margin-bottom:0; }
 #matches .match.publisher.en + .match { margin-top:-1px; }
-#matches .match.publisher.en + .match > span.hidden-en { visibility:hidden;}
+#matches .match.publisher.en + .match.publisher > span.hidden-en { visibility:hidden;}
 
 #matches .match.publisher.en > span > span:first-child,
 #matches .match.publisher.en + .match > span > span:first-child { padding-right:3px;}
@@ -808,6 +812,7 @@ a.result + #matches .result-content #icon > :not(.thumb) img { width:40px; }
 
 #matches .match.publisher.bo > span > span + span,
 #matches .match.publisher.zh > span > span + span { padding-left:3px;display:inline-block;}
+*/
 
 #matches .match .assets { margin:0 4px; }
 #matches .match .assets img,
