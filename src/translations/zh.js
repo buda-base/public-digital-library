@@ -2,6 +2,7 @@
 const zhTranslation = {
    punc: {
       colon:"：",
+      point:"。",
       num:"{{num}}",
       lpar:"（",
       rpar:"）"
@@ -18,7 +19,9 @@ const zhTranslation = {
       message:"欢迎来到佛教数字资源中心（BDRC）新图书馆的测试版！",
       submessage:"新功能，新资源，新工具，促进更高效的研究",
       search:"搜索",
-      choose:"选择语言"
+      choose:"选择语言",
+      start:"Start typing then select search language",
+      new:"New Scans Released This Week"
    },
    types:{
       any:"任意",
@@ -36,7 +39,9 @@ const zhTranslation = {
       images:"图像",
       searchIn:"{{type}}",
       volume:"卷",
-      volume_num:"第{{num}}卷"
+      volume_num:"第{{num}}卷",
+      scan:"Scan",
+      serial:"Series"
    },
    topbar:{
       about:"关于我们",
@@ -92,7 +97,8 @@ const zhTranslation = {
       placeN:"地名",
       yearP:"出版年代",
       title:"题目",
-      numberMC:"匹配部分的数量"
+      numberMC:"匹配部分的数量",
+      lastS:"Release Date"
    },
    copyright:{
       open:"开放访问",
@@ -100,7 +106,8 @@ const zhTranslation = {
       tempo:"暂时限制访问",
       sealed:"封存",
       view:"查看图像",
-      scans:"可查看扫描件"
+      scans:"可查看扫描件",
+      provided:"Data provided by {{- provider}}"
    },
    prop:{
       "tmp:bestMatch":"最佳匹配",
@@ -121,7 +128,36 @@ const zhTranslation = {
       "tmp:provider":"提供者",
       "tmp:author":"作者",
       "tmp:assetAvailability":"原件的开放情况",
-      "tmp:textMatch":"Text Match"
+      "tmp:textMatch":"Text Match",
+      "tmp:hasOpen":"$t(copyright.open)",
+      "bdo:personTeacherOf":"Student",
+      "bdo:personStudentOf":"Teacher",
+      "bdo:biblioNote":"Note",
+      "tmp:propHasScans":"Scans",
+      "bdo:CorporationMemberNotSpecified":"Member",
+      "tmp:propHasEtext":"Etext",
+      "bf:identifiedBy":"Identified By",
+      "rdfs:subClassOf":"Subclass Of",
+      "tmp:isCreator":"Is Creator",
+      "tmp:hasImage":"Has Scans",
+      "tmp:hasEtext":"Has Etext",
+      "unspecified":"Unspecified",
+      "true":"True",
+      "tmp:instanceOfWork":"Version of Work",
+      "tmp:lastSync":"Release Date",
+      "tmp:versionType":"Version Type",
+      "tmp:standalone":"Standalone",
+      "tmp:partOfVersion":"Part of another Version",
+      "tmp:TibetanBuddhistTexts":"Tibetan Buddhist Texts",
+      "tmp:BonpoTexts":"Bonpo Texts",
+      "tmp:SanskritTexts":"Sanskrit Texts",
+      "tmp:ChineseTexts":"Chinese Texts",
+      "tmp:SoutheastAsianTexts":"Southeast Asian Texts",
+      "tmp:multiLingualTexts":"Buddhist Canonical Texts (multi-lingual)",
+      "tmp:Bibliographies":"Bibliographies",
+      "tmp:Maps":"Maps",
+      "tmp:BuddhistArt":"Buddhist Art",
+      "tmp:other":"Other",
    },
    result:{
       open:"开放",
@@ -137,14 +173,17 @@ const zhTranslation = {
       expandC:"显示前后文",
       hideC:"收起前后文",
       openE:"开启Etext",
-      hasInstance:"有{{count}}实例"
+      hasInstance:"有{{count}}实例",
+      assoc:"{{type}} associated with: <res href='/show/{{- rid}}'>{{- name}}</res>",
+      moreres:"More {{txt}} are available, do you want to see them?"
    },
    index:{
       openViewer:"在查看器中打开",
       mainInfo:"主要信息",
       outline:"纲要",
       related:"相关作品",
-      extended:"扩展信息"
+      extended:"扩展信息",
+      personalI:"Personal Information"
    },
    user:{
       photo:{ 
@@ -159,6 +198,33 @@ const zhTranslation = {
          set:"修改值",
          hide:"设为不公开",
          show:"设为公开",
+      },
+      email:"Email",
+      name:"Name",
+      gender:"Gender",
+      area:"Area of Interest",
+      region:"Cultural Region (if in China)",
+      password:"Change Password",
+      options:{
+         male:"Male",
+         female:"Female",
+         noanswer:"Prefer not to answer",
+         outside:"Not applicable",
+         kham:"Kham",
+         amdo:"Amdo",
+         uTsang:"U-tsang",
+         other:"Other",
+
+      },
+      get:"Getting user info...",
+      redirect:"Not logged in... Redirecting",
+      agree:"I agree to receive emails from BDRC",
+      update:"Update",
+      updating:"Updating...",
+      errors:{
+         server1:"Server error",
+         server2:"Please try again later",
+         email:"Wrong email format"
       }
    },
    popover:{
@@ -190,7 +256,8 @@ const zhTranslation = {
       from:"自",
       in:"在",
       of:"属",
-      please:"请"
+      please:"请",
+      seeO:"See on",
    },
    lang:{
       en:"英语",
@@ -312,7 +379,23 @@ const zhTranslation = {
       searchO:"在纲要中搜索",
       start:"开始搜索",
       reset:"重置搜索",
-      otherN:"Load non-matching subparts"
+      otherN:"Load non-matching subparts",
+      scanF:"Scans for",
+      etextF:"Etext for",
+      openR:"Open Record",
+      loadP:"Load Previous Pages",
+      sameL:"Link to External Resource",
+      sameL_plural:"Links to External Resources",
+      gener1pdf:"Generate PDF",
+      gener2pdf:"Generating PDF...",
+      gener3pdf:"Download PDF",
+      gener1zip:"Generate ZIP",
+      gener2zip:"Generating ZIP...",
+      gener3zip:"Download ZIP",
+      nbTrans:" ({{count}} translation)",
+      nbTrans_plural:" ({{count}} translations)",
+      openO:"Open on {{src}}",
+      noT:"[no title]"
    },
    mirador:{
       return:"回到BUDA",
