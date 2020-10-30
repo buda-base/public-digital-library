@@ -2516,9 +2516,9 @@ html[lang="en"] .resource .data > [data-prop="bdo:creator"] h4[data-prop="bdo:ro
    justify-content: center;
 }
 #etext-nav > div { justify-content: flex-start; align-items: center; }
-#etext-nav #control { margin-left:auto; margin-right:65px; }
+#etext-nav #control { margin-left:auto; margin-right:65px; display:flex; }
 #etext-nav #control img {   height:22px; display:inline-block;  }
-#etext-nav #control #lang img { height:18px; padding-bottom:2px; }
+#etext-nav #control #lang img { width:28px; height: auto; padding-bottom:0px; }
 #etext-nav #control > * { padding:0px 10px ; display:inline-flex; height:40px; align-items: center; border-left:1px solid rgba(255,255,255,0.51); cursor:pointer;}
 #etext-nav #control > *:first-child { border-left:none; }
 #etext-nav #control > #lang {  }

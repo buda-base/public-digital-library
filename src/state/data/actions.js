@@ -65,11 +65,11 @@ export const getImageVolumeManifest = (url: string,IRI:string): Action => {
 }
 
 TYPES.gotImageVolumeManifest = 'GOT_IMAGE_VOLUME_MANIFEST';
-export const gotImageVolumeManifest = (manifest:{},IRI:string): Action => {
+export const gotImageVolumeManifest = (manifest:{},IRI:string,imageList:[]): Action => {
     return {
         type: TYPES.gotImageVolumeManifest,
         payload: manifest,
-        meta:IRI
+        meta:{iri:IRI,imageList}
     }
 }
 

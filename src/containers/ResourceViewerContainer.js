@@ -72,7 +72,7 @@ const mapStateToProps = (state,ownProps) => {
    let manifestError
    let pdfVolumes
    let resourceManifest
-   let imageVolumeManifests
+   let imageVolumeManifests, imageLists
    let IIIFinfo = state.data.IIIFinfo
    let manifestWpdf
    let IIIFerrors
@@ -93,6 +93,7 @@ const mapStateToProps = (state,ownProps) => {
          imgData = IIIFinfo.imgData
          resourceManifest = IIIFinfo.resourceManifest
          imageVolumeManifests = IIIFinfo.imageVolumeManifests
+         imageLists = IIIFinfo.imageLists
          manifestWpdf = IIIFinfo.manifestWpdf
 
          //console.log("IIIF",pdfVolumes,IIIFinfo)
@@ -133,7 +134,7 @@ const mapStateToProps = (state,ownProps) => {
 
    let props = { logged,config,resources, ontology, dictionary, keyword, language, datatype, assocResources, prefLang, failures, loading,
       imageAsset,firstImage,canvasID,collecManif,manifests,manifestError,pdfVolumes,createPdf,pdfUrl, manifestWpdf,
-      annoCollec,rightPanel,locale,langPreset,langExt,imgData, nextChunk, nextPage, resourceManifest, imageVolumeManifests, userEditPolicies, highlight,
+      annoCollec,rightPanel,locale,langPreset,langExt,imgData, nextChunk, nextPage, resourceManifest, imageVolumeManifests, imageLists, userEditPolicies, highlight,
       outline,outlines,outlineKW,      
       IIIFerrors }
 

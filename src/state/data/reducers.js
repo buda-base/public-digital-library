@@ -1335,22 +1335,27 @@ reducers[actions.TYPES.getImageVolumeManifest] = getImageVolumeManifest;
 export const gotImageVolumeManifest = (state: DataState, action: Action) => {
 
 
-   let imageVolumeManifests ;
+   let imageVolumeManifests,imageLists ;
    let iiif = state.IIIFinfo   
-   if(iiif) iiif = iiif[action.meta]
-   if(iiif) imageVolumeManifests = iiif.imageVolumeManifests ;
+   if(iiif) iiif = iiif[action.meta.iri]
+   if(iiif) { 
+      imageVolumeManifests = iiif.imageVolumeManifests ;
+      imageLists = iiif.imageLists ;
+   }
    if(!imageVolumeManifests) imageVolumeManifests = true
    else { 
       let manif = action.payload ;
       let id = manif["@id"].replace(/^.*(bdr:[^/]+).*$/,"$1");
       imageVolumeManifests = { ...imageVolumeManifests, [id]:manif }
+      imageLists = { ...imageLists, [id]:action.meta.imageList }
    }
 
     state = {
         ...state,
         IIIFinfo:{ ...state.IIIFinfo,
-           [action.meta]:{ ...state.IIIFinfo?state.IIIFinfo[action.meta]:{},
-               imageVolumeManifests
+           [action.meta.iri]:{ ...state.IIIFinfo?state.IIIFinfo[action.meta.iri]:{},
+               imageVolumeManifests,
+               imageLists
             }
          }
     }

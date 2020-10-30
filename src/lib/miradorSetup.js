@@ -225,13 +225,19 @@ async function hasEtextPage(manifest) {
 
          if(!canvas || !ut) return "(issue with canvas data: "+JSON.stringify(canvas,null,3)+")" ;
 
+         
          let id = canvas.label ;
          if(id && !Array.isArray(id)) id = [ id ] 
          if(id) for(let i of id) {
             if(i["@value"].includes("i.")){ 
                id = i["@value"].replace(/[^0-9]/g,"")
             }
-         }
+         } 
+
+         /*
+         let id = canvas.label ;
+         if(id && id[0] && id[0]["@value"]) id = id[0]["@value"].replace(/[^0-9]/g,"")
+         */
 
          if(!id || id.match(/[^0-9]/)) return "(issue with canvas label: "+JSON.stringify(canvas.label,null,3)+")" ;
          else id = Number(id)
@@ -630,7 +636,7 @@ function miradorAddScroll(toImage)
 
             let fromInp = false 
             if(id !== undefined) {
-               if(id && id.match && !id.match(/^http/)) {
+               if(id && id.match && !id.match(/^(https?)?[/][/]/)) {
                   fromInp = true
                   if(id.match(/^[0-9]+$/)) { 
                      let num = id
@@ -646,7 +652,7 @@ function miradorAddScroll(toImage)
                   }
                   else id = false
                }
-               else id = jQ(".scroll-view img[data-image-id='"+id+"']").first()
+               else id = jQ(".scroll-view img[data-image-id$='"+id+"']").first()
             }
             
             if(!id || !id.length) id = jQ(".panel-listing-thumbs li.highlight img").first()

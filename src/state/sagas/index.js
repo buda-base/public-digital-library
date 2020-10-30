@@ -892,7 +892,13 @@ async function getImageVolumeManifest(url,iri) {
       loggergen.log("getIVM",url,iri)
 
       let manif = await api.loadManifest(url);
-      store.dispatch(dataActions.gotImageVolumeManifest(manif,iri))
+      
+      let config = store.getState().data.config, iiifpres = "//iiifpres.bdrc.io"
+      if(config.iiifpres) iiifpres = config.iiifpres.endpoints[config.iiifpres.index]
+      let imL = await JSON.parse(await api.getURLContents(iiifpres+"/il/v:"+url.replace(/^.*?(bdr:[^/]+).*?$/,"$1"), false));      
+      //loggergen.log("getIML:",imL)
+
+      store.dispatch(dataActions.gotImageVolumeManifest(manif,iri,imL))
 
    }
    catch(e){

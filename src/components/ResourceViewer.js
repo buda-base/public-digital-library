@@ -126,6 +126,7 @@ type Props = {
    nextChunk?:number,
    resourceManifest?:{},
    imageVolumeManifests?:{},
+   imageLists?:{},
    ontology:{},
    dictionary:{},
    authUser?:{},
@@ -2541,8 +2542,8 @@ class ResourceViewer extends Component<Props,State>
       return (ev) => {          
          let prop = ID.replace(/^ID-([^-]+)-.*$/,"$1"), elem
 
-         if(that.state.collapse[prop]) elem = $(".propCollapse [data-id=\""+ID+"\"]")
-         else elem = $("[data-id=\""+ID+"\"]")
+         if(that.state.collapse[prop]) elem = $(".propCollapse [data-id=\""+ID.replace(/["]/g,"")+"\"]")
+         else elem = $("[data-id=\""+ID.replace(/["]/g,"")+"\"]")
          
          //console.log("ID:",prop,ID,val,elem)
 
@@ -4692,9 +4693,29 @@ perma_menu(pdfLink,monoVol,fairUse,other)
             
             loggergen.log("k",id,manif)
 
+            let imageList = this.props.imageLists, iiifpres = "//iiifpres.bdrc.io", iiif = "//iiif.bdrc.io"            
+            if(imageList) imageList = imageList[id]
+            if(this.props.config && this.props.config.iiifpres) iiifpres = this.props.config.iiifpres.endpoints[this.props.config.iiifpres.index]      
+            if(this.props.config && this.props.config.iiif) iiif = this.props.config.iiif.endpoints[this.props.config.iiif.index]      
+            imageLinks[id] = elem.reduce( (acc,e) => {               
+               let can, image, file, i = Number(e.seq) 
+               console.log("i:",i,e)
+               if( i > 0 && i < imageList.length) file = imageList[i-1].filename
+               if(file) {               
+                  can = iiifpres + "/v:" + id + "/canvas/" + file
+                  image = iiif + "/" + id + "::" + file + "/full/max/0/default.jpg"
+                  return {...acc, [e.seq]: { id:can, image } }
+               }
+               return acc ;
+            }, {})
+            this.setState({ ...this.state,imageLinks:{...this.state.imageLinks, [this.props.IRI]: imageLinks } })
+
+            
+               /*
             if(manif && manif.sequences && manif.sequences[0] && manif.sequences[0].canvases) {
+               
                let nc = 0, np = 0                           
-               imageLinks[id] = manif.sequences[0].canvases.reduce( (acc,e) => {
+               imageLinks[id] = manif.sequences[0].canvases.reduce( (acc,e,i) => {
                   if(e.label) { 
                      //loggergen.log("label",e.label)
                      return ({
@@ -4709,6 +4730,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                //loggergen.log("imaL",imageLinks)
                this.setState({ ...this.state,imageLinks:{...this.state.imageLinks, [this.props.IRI]: imageLinks } })
             }
+               */
          }
       }
       
@@ -4767,7 +4789,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                            <div class="imagePage">
                               <img class="page" title="Open image+text reading view" src={imageLinks[id][e.seq].image} onClick={eve => { 
                                  let manif = this.props.imageVolumeManifests[id]
-                                 window.MiradorUseEtext = "open" ;
+                                 window.MiradorUseEtext = "open" ;                                 
                                  this.showMirador(imageLinks[id][e.seq].id,manif["@id"]);
                                  //openMiradorAtPage(imageLinks[id][e.seq].id,manif["@id"])
                               }}/>          
