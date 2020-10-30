@@ -473,6 +473,9 @@ export function getFacetUrl(filters,dic){
 }
 export function lang_selec(that,black:boolean = false)
 {
+   let prio = ["zh", "en", "bo" ]
+   if(that.props.config && that.props.config.language && that.props.config.language.menu) prio = that.props.config.language.menu
+
    return [
          <span id="lang" title={I18n.t("home.choose")} onClick={(e) => that.setState({...that.state,anchorLang:e.currentTarget, collapse: {...that.state.collapse, lang:!that.state.collapse.lang } } ) }><img src={"/icons/LANGUE"+(black?"b":"")+".svg"}/></span>
          ,
@@ -489,7 +492,7 @@ export function lang_selec(that,black:boolean = false)
               <FormControl className="formControl">
                 {/* <InputLabel htmlFor="datatype">In</InputLabel> */}
                   
-                  { ["zh", "en", "bo" ].map((i) => {
+                  { prio.map((i) => {
 
                         let label = "English";
                         if (i === "bo") label="བོད་ཡིག";

@@ -151,7 +151,7 @@
 .mirador-container .mirador-viewer ul.panel-listing-thumbs li img[data=''],
 .mirador-container .mirador-viewer ul.scroll-listing-thumbs li img[data=''] { display:none; }
 
-
+.mirador-container .view-nav #control #lang img { width:26px;height:auto;}
 
 
 /* -------------------------------------------------- TODO move to mirador build when 100% done */

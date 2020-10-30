@@ -428,7 +428,7 @@ footer #donate,
 .nav #donate img { vertical-align: middle; display: inline-block; margin-right:10px;}
 
 .nav #lang { cursor:pointer; margin-top:7px; margin-left:50px; display: inline-block;}
-.nav #lang img { display: inline-block;  } 
+.nav #lang img { display: inline-block; width:28px; } 
 
 /* .resource .title + .data + .data .browse { display:none; } */
 .nav .history { margin-left:35px; display:flex;}
