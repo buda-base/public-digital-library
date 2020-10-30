@@ -83,6 +83,7 @@
       }
    ],
    "language": {
+      "menu":[ "bo", "en", "zh" ],
       "data":{
          "presets":{
             "0":[ "bo-x-ewts", "sa-x-iast" ],
