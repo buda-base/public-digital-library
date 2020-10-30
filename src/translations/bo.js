@@ -29,7 +29,7 @@ const boTranslation = {
       search:"འཚོལ།",
       choose:"སྐད་རིགས་འདེམ།",
       start:"དཔེ་མཛོད་སྔོགས།",
-      new:"བདུན་ཕྲག་འདིའི་ནང་སྤེལ་བའི་དཔེ་ཆའི་བཤེར་པར་གསར་པ་ཁག"
+      new:"བདུན་ཕྲག་འདིའི་ནང་སྤེལ་བའི་དཔེ་ཆ།"
    },
    types:{
       any:"གང་རུང་།",
@@ -271,7 +271,7 @@ const boTranslation = {
       has:"",
       or:"ཡང་ན།",
       seeA:"ཚང་མ་སྟོན།",
-      seeAnum:"see all {{count}}",
+      seeAnum:"ཚང་མར་གཟིགས། {{count}}",
       browse:"མིག་བཤེར་བྱོས།",
       show:"འདི་ལས་མང་བ།",
       seeMore:"འདི་ལས་མང་བ།",
@@ -302,6 +302,7 @@ const boTranslation = {
          saXIast:"ལེགས་སྦྱར། (IAST)",
          saXNdia:"ལེགས་སྦྱར། (འདྲ་བྲིས་མ།)",
          saDeva:"ལེགས་སྦྱར། (དེ་བ་ན་ག་རི།)",
+         incXNdia:"རྒྱ་གར་ཡུལ་གྱི་སྐད་རིགས། (ལེགས་སྦྱར་རམ་པཱ་ལི།)",
          en:"ཨིན་ཡིག",
          pi:"པཱ་ལི།",
          piXIast:"པཱ་ལི། (ཨིན་ཡིག)",
@@ -390,6 +391,7 @@ const boTranslation = {
       back:"འཚོལ་ངོས་ལ་ཕྱིར་ལོག",
       browse:"འབྲེལ་ཡོད་ཡིག་ཆར་མིག་བཤེར་བྱོས།",      
       openViewer:"འཕྲུལ་ཡིག་ཀློག",
+      openVolViewer:"འཕྲུལ་ཡིག་ཀློག པོད་{{VolN}}", /*Sec.{{TxtN}}",*/
       download:"ཕབ་ལེན།",
       downloadAs:"ཕབ་ལེན་གྱི་རྣམ་སྒྲིག ",
       version:"{{format}} ཐོན་རིམ།",
@@ -450,8 +452,8 @@ const boTranslation = {
       fairuse2:"Please contact",
       fairuse3:"for information about possibly accessing this work under fair use.",
       sealed:"BDRC <bold>restricts access</bold> to this work because it was provided to BDRC on the condition that we respect <bold>traditional restrictions</bold> applied to it. If you have received the proper transmission from a spiritual teacher to access this work or have other questions about how to access this work please contact",
-      notyet:"Images not yet available.",
-      error:"An error occurred while trying to access the images.",
+      notyet:"བཤེར་པར་ད་དུང་མི་འདུག",
+      error:"བཤེར་པར་ཁ་ཕྱེ་སྐབས་གནད་དོན་ཞིག་ལྷག་སོང་།",
       generic:"BDRC has restricted access to this work in accordance with our access policies. You can read those policies here: <policies href='https://bdrc.io/access-policies/' target='_blank'>https://bdrc.io/access-policies/</policies>",
       OCR:"These etexts were created through OCR (optical character recognition), not manually input, and have not been edited. OCR for Tibetan script is not 100% perfect but it is accurate enough to create text that will enhance the BDRC database. We hope that etexts like these improve the discoverability and usefulness of the BDRC archive for you."
    },
