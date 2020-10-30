@@ -226,7 +226,12 @@ async function hasEtextPage(manifest) {
          if(!canvas || !ut) return "(issue with canvas data: "+JSON.stringify(canvas,null,3)+")" ;
 
          let id = canvas.label ;
-         if(id && id[0] && id[0]["@value"]) id = id[0]["@value"].replace(/[^0-9]/g,"")
+         if(id && !Array.isArray(id)) id = [ id ] 
+         if(id) for(let i of id) {
+            if(i["@value"].includes("i.")){ 
+               id = i["@value"].replace(/[^0-9]/g,"")
+            }
+         }
 
          if(!id || id.match(/[^0-9]/)) return "(issue with canvas label: "+JSON.stringify(canvas.label,null,3)+")" ;
          else id = Number(id)
@@ -262,7 +267,7 @@ async function hasEtextPage(manifest) {
             
             let json = await data.json() ;
 
-            console.log("DATA OK",id,json);
+            console.log("DATA OK",start,json);
 
             if(json && json["@graph"]) json = json["@graph"]
             if(json.status === 404 || !json.filter) {
