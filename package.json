@@ -42,6 +42,7 @@
       "react-copy-to-clipboard": "^5.0.1",
       "react-dom": "^16.2.0",
       "react-ga": "^2.7.0",
+      "react-i18next": "^11.7.3",
       "react-infinite-scroller": "^1.1.4",
       "react-leaflet": "^2.0.1",
       "react-leaflet-google": "https://github.com/danieldunderfelt/react-leaflet-google.git",

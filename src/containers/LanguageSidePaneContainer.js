@@ -41,6 +41,7 @@ const mapStateToProps = (state,ownProps) => {
             dispatch(i18nextChangeLanguage(lg));
          },
          onSetLangPreset:(langs:string[],i?:number) => {
+            localStorage.setItem('lang', langs);
             dispatch(ui.langPreset(langs,i))
          },
          onToggleLanguagePanel:() => {

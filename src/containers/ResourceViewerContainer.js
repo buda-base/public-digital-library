@@ -106,6 +106,7 @@ const mapStateToProps = (state,ownProps) => {
 
    let locale = state.i18next.lang
    let langPreset = state.ui.langPreset
+   let langExt = state.ui.langExt
 
    let highlight = state.ui.highlight
    if(highlight && highlight.uri !== ownProps.IRI) highlight = null 
@@ -132,7 +133,7 @@ const mapStateToProps = (state,ownProps) => {
 
    let props = { logged,config,resources, ontology, dictionary, keyword, language, datatype, assocResources, prefLang, failures, loading,
       imageAsset,firstImage,canvasID,collecManif,manifests,manifestError,pdfVolumes,createPdf,pdfUrl, manifestWpdf,
-      annoCollec,rightPanel,locale,langPreset,imgData, nextChunk, nextPage, resourceManifest, imageVolumeManifests, userEditPolicies, highlight,
+      annoCollec,rightPanel,locale,langPreset,langExt,imgData, nextChunk, nextPage, resourceManifest, imageVolumeManifests, userEditPolicies, highlight,
       outline,outlines,outlineKW,      
       IIIFerrors }
 
@@ -191,6 +192,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
          dispatch(i18nextChangeLanguage(lg));
       },
       onSetLangPreset:(langs:string[],i?:number) => {
+         localStorage.setItem('lang', langs);
          dispatch(ui.langPreset(langs,i))
       },
       onOutlineSearch:(iri:string,keyword:string,language:string) => {

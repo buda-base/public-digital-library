@@ -1,6 +1,7 @@
 // @flow
 import { createAction } from 'redux-actions';
 import type { Action } from '../actions';
+import { extendedPresets } from '../../lib/transliterators';
 
 export const TYPES = {};
 
@@ -37,7 +38,8 @@ export const selectType = (datatype: string): Action => {
 
 TYPES.langPreset = 'LANG_PRESET';
 export const langPreset = (lang: string[],i?:number): Action => {
-   let meta = i
+   let ext = extendedPresets(lang)
+   let meta = {i,ext}
    return {
       type: TYPES.langPreset,
       payload: lang,

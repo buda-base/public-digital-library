@@ -39,6 +39,7 @@ const mapStateToProps = (state) => {
    let locale = state.i18next.lang
    let langPreset = state.ui.langPreset
    let langIndex = state.ui.langIndex
+   let langExt = state.ui.langExt
 
    let failures = state.data.failures ;
 
@@ -57,7 +58,7 @@ const mapStateToProps = (state) => {
 
 
    let newState = { logged,config, hostFailure, searches, keyword, language,loading,datatypes,ontology,facets,
-      locale,prefLang,resources,ontoSearch,rightPanel,langPreset, langIndex, failures,dictionary,metadata, assoRes, 
+      locale,prefLang,resources,ontoSearch,rightPanel,langPreset, langIndex, langExt, failures,dictionary,metadata, assoRes, 
       sortBy, topicParents, instances, isInstance,
       latestSyncs,latestSyncsNb }
 
@@ -125,6 +126,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
          dispatch(i18nextChangeLanguage(lg));
       },
       onSetLangPreset:(langs:string[],i?:number) => {
+         localStorage.setItem('lang', langs);
          dispatch(ui.langPreset(langs,i))
       },
       onLoading:(kw:string,load:boolean) => {

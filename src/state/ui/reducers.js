@@ -16,6 +16,7 @@ export type UIState = {
    logged?:boolean,
    rightPanel?:boolean,
    langPreset?:string[],
+   langExt?:string[],
    langIndex?:number,
    collapse:{[string]:boolean},
    metadata:{[string]:{}},
@@ -64,7 +65,10 @@ reducers[actions.TYPES.closeLanguagePanel] = closeLanguagePanel
 
 export const langPreset = (state: UIState, action: Action): UIState => {
    state =  {...state, langPreset:action.payload }
-   if(action.meta != undefined) state = { ...state, langIndex:action.meta }  
+   if(action.meta) {
+        if(action.meta.i != undefined) state.langIndex = action.meta.i 
+        if(action.meta.ext) state.langExt = action.meta.ext 
+   }
    return state
 };
 reducers[actions.TYPES.langPreset] = langPreset
@@ -177,12 +181,19 @@ export const updateFacets = (state: UIState, action: actions.LoadingAction) => {
             for(let q of props) {
                 if(q !== "Any") {
                     update[k][q] = { i:0 } 
-                    //console.log("q",q,meta[q])
+
+                    //console.log("q",q,meta[q].dict)
 
                     if(meta[q] && meta[q].dict) for(let _e of Object.keys(meta[q].dict)) {
                         let e = meta[q].dict[_e]
                         let flat = {}
+                        
+                        //console.log("e",_e, e);
+
                         for(let f of e)  {
+                            
+                            if(!f) continue ; 
+
                             let val = flat[f.type]
                             if(!val) val = []
                             val.push(f.value)

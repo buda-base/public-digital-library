@@ -82,7 +82,12 @@ type APIOptions = {
     fetch?: (req: string, args?:{}) => Promise<*>
 }
 
-export class ResourceNotFound extends Error {};
+export class ResourceNotFound extends Error {
+   constructor(txt:string,nb:integer) {
+      super(txt);
+      this.code = nb ;
+   }
+};
 
 export class InvalidResource extends Error {};
 
@@ -119,7 +124,6 @@ export default class API {
          const id_token = localStorage.getItem('id_token');
          //const expires_at = localStorage.getItem('expires_at');
 
-         //console.log("access",id_token,access_token,isAuthenticated(),url,minSize,acc,cookie)
 
          let head = {}
          if(acc) head = { ...head, "Accept":acc }
@@ -133,18 +137,23 @@ export default class API {
             if(!cookie) head = { ...head, "Authorization":"Bearer "+id_token }
          }
 
+         //console.log("access:",{id_token,access_token,isAuth:isAuthenticated(),url,minSize,acc,cookie,xhrArgs,head});
+
          let response = await this._fetch( url, { method:"GET",headers:new Headers(head), ...xhrArgs } )
 
          if (!response.ok) {
              if (response.status === 404) {
-                 throw new ResourceNotFound('The resource does not exist.');
+                 throw new ResourceNotFound('The resource does not exist.',404);
              }
              else if (response.status === 401) {
-                 throw new ResourceNotFound('Restricted access');
+                 throw new ResourceNotFound('Restricted access',401);
+             }
+             else if (response.status === 403) {
+                 throw new ResourceNotFound('Forbidden access',403);
              }
              else {
                 console.error("FETCH pb",response)
-                 throw new ResourceNotFound('Problem fetching the resource');
+                 throw new ResourceNotFound('Problem fetching the resource (code:'+response.status+')',500);
              }
          }
 
@@ -666,7 +675,7 @@ export default class API {
              if(typ[0] === "Scan") searchType = "instanceFacet" 
              else if(typ[0] === "Etext") searchType = "etextContentFacet" //chunksFacet"
              else if(["Work","Person","Place","Instance"].includes(typ[0]))  searchType = typ[0].toLowerCase()+(["Work","Instance"].includes(typ[0])?"Facet":"")              
-             else if(["Product"].includes(typ[0])) R_TYPE = "adm:"+typ[0]
+             else if(["Product"].includes(typ[0])) R_TYPE = "bdo:Collection"
              else R_TYPE = "bdo:"+typ[0]
              searchType+="Graph"
 
@@ -687,7 +696,7 @@ export default class API {
               let config = store.getState().data.config.ldspdi
               let url = config.endpoints[config.index]+"/lib" ;
               let simple = !["Work","Person","Place","Instance"].includes(dtyp)
-              let param = {"searchType":"associated"+(!simple?dtyp:(styp=="Product"&&dtyp=="Scan"?"IInstance":"SimpleType"))+"s",...(simple?{R_TYPE:(["Product"].includes(dtyp)?"adm:":"bdo:")+dtyp}:{}),"R_RES":key,"L_NAME":"","LG_NAME":"", "I_LIM":"" }
+              let param = {"searchType":"associated"+(!simple?dtyp:(styp=="Product"&&dtyp=="Scan"?"IInstance":"SimpleType"))+"s",...(simple?{R_TYPE:(["Product"].includes(dtyp)?"bdo:Collection":"bdo:"+dtyp)}:{}),"R_RES":key,"L_NAME":"","LG_NAME":"", "I_LIM":"" }
               let data = this.getQueryResults(url, key, param,"GET");
               // let data = this.getSearchContents(url, key);
 
@@ -986,13 +995,15 @@ export default class API {
      get _ontologyPath(): string {
         let path = ONTOLOGY_PATH;
 
-       let config = store.getState().data.config.ldspdi
-       let url = config.endpoints[config.index] ;
+       let config = store.getState().data.config
+       let url = config.ldspdi.endpoints[config.index] ;
 
          path = url +  ONTOLOGY_PATH;
          
          // to use with ldspdi running locally
          path = "//purl.bdrc.io" +  ONTOLOGY_PATH;
+
+         if(config && config.chineseMirror) path = "/ldspdi" + ONTOLOGY_PATH;
 
         return path;
     }
@@ -1000,13 +1011,15 @@ export default class API {
      get _dictionaryPath(): string {
         let path = DICTIONARY_PATH
 
-       let config = store.getState().data.config.ldspdi
-       let url = config.endpoints[config.index] ;
+       let config = store.getState().data.config
+       let url = config.ldspdi.endpoints[config.index] ;
 
          path = url +  DICTIONARY_PATH;
 
          // to use with ldspdi running locally
-         path = "//purl.bdrc.io" +  DICTIONARY_PATH;
+         path = "//purl.bdrc.io" +  DICTIONARY_PATH;         
+
+         if(config && config.chineseMirror) path = "/ldspdi" + DICTIONARY_PATH;
 
          // to use with ldspdi-dev
          //path = "//ldspdi-dev.bdrc.io" +  DICTIONARY_PATH;

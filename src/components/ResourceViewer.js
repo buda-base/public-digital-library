@@ -57,6 +57,7 @@ import RefreshIcon from '@material-ui/icons/Refresh';
 
 //import {Translate , I18n} from 'react-redux-i18n';
 import I18n from 'i18next';
+import { Trans } from 'react-i18next'
 
 import { Link } from 'react-router-dom';
 //import AnnotatedEtextContainer from 'annotated-etext-react';
@@ -75,6 +76,8 @@ import {numtobo} from '../lib/language';
 import {languages,getLangLabel,top_right_menu,prefixesMap as prefixes,sameAsMap,shortUri,fullUri,highlight,lang_selec,langSelect,searchLangSelec,report_GA,getGDPRconsent} from './App';
 import {narrowWithString} from "../lib/langdetect"
 import Popover from '@material-ui/core/Popover';
+import Popper from '@material-ui/core/Popper';
+import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import MenuItem from '@material-ui/core/MenuItem';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -208,6 +211,8 @@ const viaf  = "http://viaf.org/viaf/"
 const wd    = "http://www.wikidata.org/entity/"
 const xsd   = "http://www.w3.org/2001/XMLSchema#" ;
 
+//other
+const cbeta = "http://cbetaonline.dila.edu.tw/"
 
 //const prefixes = { adm, bdac, bdan, bda, bdo, bdr, foaf, oa, owl, rdf, rdfs, skos, xsd, tmp, dila }
 
@@ -396,8 +401,6 @@ let propOrder = {
       "bf:identifiedBy",
       "rdfs:seeAlso",
       "bdo:incipit",
-      "bdo:catalogInfo",
-      "bdo:workCatalogInfo",
       "bdo:instanceEvent",
       "bdo:workEvent",
       "bdo:publisherName",
@@ -444,11 +447,11 @@ const topProperties = {
    "Work": [ 
       bdo+"hasTitle", 
       skos+"prefLabel", 
-      skos+"altLabel", 
+      skos+"altLabel",
       bdo+"language",
       bdo+"creator",
+      bdo+"catalogInfo",
       bdo+"workTranslationOf",
-      bdo+"editionStatement",
       bdo+"workHasInstance",
    ],
    "Instance": [ 
@@ -757,6 +760,8 @@ class ResourceViewer extends Component<Props,State>
    _leafletMap = null ;
    _properties = {} ;
    _dontMatchProp = "" ;
+   _mouseover = {}
+   _refs = {}
 
    constructor(props:Props)
    {
@@ -1969,7 +1974,7 @@ class ResourceViewer extends Component<Props,State>
          if(provLab) provLab = provLab[skos+"prefLabel"]
          if(provLab && provLab.length) provLab = provLab[0].value 
          
-         loggergen.log("isExtW",isExtW,this.props.dictionary,provLab)
+         //loggergen.log("isExtW",isExtW,this.props.dictionary,provLab)
 
          if(provLab === "GRETIL") sameAsPrefix += "gretil provider hasIcon "
          else if(provLab === "EAP") sameAsPrefix += "eap provider hasIcon "
@@ -1988,6 +1993,19 @@ class ResourceViewer extends Component<Props,State>
       return sameAsPrefix
    }
 
+   getProviderID(prov) {
+      if(prov && prov.length) prov = prov[0].value
+      if(prov && this.props.dictionary) prov = this.props.dictionary[prov]
+      if(prov && prov[skos+"prefLabel"]) prov = prov[skos+"prefLabel"]
+      else if(prov && prov[rdfs+"label"]) prov = prov[rdfs+"label"]
+      if(prov && prov.length) prov = prov.filter(e => e.lang === "en" || !e.lang)
+      if(prov && prov.length) prov = prov[0].value
+      if(prov) prov = prov.replace(/(^\[ *)|( *\]$)/g,"") // CUDL
+      if(prov) prov = prov.replace(/Internet Archives/g,"IA") 
+      if(prov) prov = prov.replace(/Library of Congress/g,"LOC")
+      return prov
+   } 
+
    uriformat(prop:string,elem:{},dic:{} = this.props.assocResources, withProp?:string,show?:string="show")
    {
 
@@ -2003,6 +2021,9 @@ class ResourceViewer extends Component<Props,State>
          
          if(!elem.value.match(/^http:\/\/purl\.bdrc\.io/) /* && !hasExtPref */ && ((!dic || !dic[elem.value]) && !prop.match(/[/#]sameAs/))) {
             let link = elem.value
+
+            if(this.props.config && this.props.config.chineseMirror) link = link.replace(new RegExp(cbeta), "http://cbetaonline.cn/")
+            
             if(link.indexOf(dila) !== -1) { 
                link = link.replace(/^.*?[/]([^/]+)$/,"$1")
                let dir = dPrefix["dila"][link.replace(/[0-9]+$/,"")]
@@ -2010,10 +2031,8 @@ class ResourceViewer extends Component<Props,State>
                link = "http://authority.dila.edu.tw/"+dir+"/index.php?fromInner="+link
             }
             let prefix = shortUri(elem.value).split(":")[0]
-            return <a href={link} target="_blank" class="no-bdrc">{shortUri(decodeURI(elem.value))}
-               {providers[prefix] && <Tooltip placement="bottom-end" title={<span>See on <b>{providers[prefix]}</b></span>}><img src="/icons/link-out.svg"/></Tooltip>}
-               {!providers[prefix] && <img src="/icons/link-out.svg"/>}
-            </a> ;
+            if(!providers[prefix]) return <a href={link} target="_blank" class="no-bdrc">{shortUri(decodeURI(elem.value))}<img src="/icons/link-out.svg"/></a>
+            else return <Tooltip placement="bottom-end" title={<span>{I18n.t("misc.seeO")} <b>{providers[prefix]}</b></span>}><a href={link} target="_blank" class="no-bdrc">{shortUri(decodeURI(elem.value))}<img src="/icons/link-out.svg"/></a></Tooltip>
          }
 
          let dico = dic, ret = []
@@ -2064,32 +2083,47 @@ class ResourceViewer extends Component<Props,State>
          if(prop === bdo+"workHasInstance"  || prop === tmp+"propHasScans" || prop === tmp+"propHasEtext" ) {
             if(!info) info = [] 
             let enti = getEntiType(elem.value)
-            //loggergen.log("enti:",enti,elem.value)
+            let sUri = shortUri(elem.value)
+
+            let prov = this.getResourceElem(tmp+"provider", sUri, this.props.assocResources)
+            prov = this.getProviderID(prov);
+            if(prov && prov !== "BDRC") { 
+               prov = prov.toLowerCase()
+               prov = <Link to={"/show/"+sUri}><Tooltip placement="top" title={<span>{I18n.t("prop.tmp:provider")}{I18n.t("punc.colon")} <b>{providers[prov]}</b></span>}><div class={"inst-prov "+(prov)}><img src={provImg[prov]} /></div></Tooltip></Link>
+            }
+            else prov = null
+
+            loggergen.log("enti:",prov,enti,elem.value)
+
             if(enti === "Etext") {
                //ret = [<span class="svg">{svgEtextS}</span>]
                
-               ret = [  <Link to={"/show/"+shortUri(elem.value)} class={"images-thumb no-thumb"} style={{"background-image":"url(/icons/etext.png)"}}></Link> ]
+               ret = [  <Link to={"/show/"+sUri} class={"images-thumb no-thumb"} style={{"background-image":"url(/icons/etext.png)"}}></Link> ]
+               if(prov) ret.push(prov)
             
             }
             else if(enti === "Instance") { 
                //ret = [<span class="svg">{svgInstanceS}</span>]
                
                
-               thumbV =  this.getResourceElem(tmp+"thumbnailIIIFService", shortUri(elem.value), this.props.assocResources)
-               if(!thumbV || !thumbV.length)  ret = [  <Link to={"/show/"+shortUri(elem.value)} class={"images-thumb no-thumb"} style={{"background-image":"url(/icons/header/instance.svg)"}}></Link> ]
-               else ret = [  <Link to={"/show/"+shortUri(elem.value)} class={"images-thumb"} style={{"background-image":"url("+ thumbV[0].value+"/full/,145/0/default.jpg)"}}></Link> ]
+               thumbV =  this.getResourceElem(tmp+"thumbnailIIIFService", sUri, this.props.assocResources)
+               if(!thumbV || !thumbV.length)  ret = [  <Link to={"/show/"+sUri} class={"images-thumb no-thumb"} style={{"background-image":"url(/icons/header/instance.svg)"}}></Link> ]
+               else ret = [  <Link to={"/show/"+sUri} class={"images-thumb"} style={{"background-image":"url("+ thumbV[0].value+"/full/,145/0/default.jpg)"}}></Link> ]
             
-               let inRoot =  this.getResourceElem(bdo+"inRootInstance", shortUri(elem.value), this.props.assocResources)
+               let inRoot =  this.getResourceElem(bdo+"inRootInstance", sUri, this.props.assocResources)
                if(inRoot && inRoot.length && info && lang && lang === "bo-x-ewts" && info.match(/^([^ ]+ ){11}/)) info = [ info.replace(/^(([^ ]+ ){10}).*?$/,"$1"), <span class="ellip">{info.replace(/^([^ ]+ ){10}[^ ]+(.*?)$/,"$2")}</span> ]
 
-               thumbV = null
+               if(prov) ret.push(prov)
 
                //loggergen.log("thumbV:",thumbV,elem.value)
+
+               thumbV = null
             }
             else if(enti === "Images") { 
                ret = []
-               thumb =  this.getResourceElem(tmp+"thumbnailIIIFService")
-               
+               thumb =  this.getResourceElem(tmp+"thumbnailIIIFService", sUri, this.props.assocResources)
+               if(thumb && !thumb.length) thumb = null
+
                /* // deprecated (thumbnail is a property of instance)
                if(!this.props.resources || !this.props.resources[shortUri(elem.value)]) this.props.onGetResource(shortUri(elem.value));
                else {
@@ -2103,7 +2137,7 @@ class ResourceViewer extends Component<Props,State>
             }
          }
          
-         if((!thumbV || !thumbV.length) && ((info && infoBase && infoBase.filter(e=>e["xml:lang"]||e["lang"]).length >= 0) || (prop && prop.match && prop.match(/[/#]sameAs/)))) {
+         if(elem.inOutline || ((!thumbV || !thumbV.length) && ((info && infoBase && infoBase.filter(e=>e["xml:lang"]||e["lang"]).length >= 0) || (prop && prop.match && prop.match(/[/#]sameAs/))))) {
 
 
             //loggergen.log("svg?",svgImageS)
@@ -2151,8 +2185,8 @@ class ResourceViewer extends Component<Props,State>
                } 
             }
             else {                
-               if(!info) info = shortUri(elem.value)
                let uri = shortUri(elem.value)
+               if(!info) info = uri
 
                /* // deprecated
                let pI 
@@ -2165,6 +2199,9 @@ class ResourceViewer extends Component<Props,State>
                   
                   //if(pI) uri = this.props.IRI+"?part="+uri
                   //else uri = uri.replace(/^((bdr:MW[^_]+)_[^_]+)/,"$2?part=$1")
+
+                  if(info === uri) info = I18n.t("resource.noT")
+
 
                   link = <a class={"urilink prefLabel " } href={elem.url} onClick={(e) => { 
 
@@ -2202,7 +2239,6 @@ class ResourceViewer extends Component<Props,State>
                         return false; }
                   }>{info}</a>
                }
-
                else link = <Link className={"urilink prefLabel " } to={"/"+show+"/"+uri}>{info}</Link>
                bdrcData = null
             }
@@ -2241,17 +2277,16 @@ class ResourceViewer extends Component<Props,State>
                   
                   srcPrefix = src
                   for(let p of Object.keys(prefixes)) if(srcUri.match(new RegExp(prefixes[p]))) { srcPrefix = p ; break ; }
-
-                  if(srcPrefix) srcPrefixList.push(srcPrefix);
-
+                  
                   //loggergen.log("srcP",srcPrefix,srcUri)
 
                   if(srcPrefix !== "bdr") locaLink = <a class="urilink" href={getRealUrl(this,srcUri)} target="_blank"></a>
                   else locaLink = <Link to={"/"+show+"/"+shortUri(srcUri)}></Link>
 
+
                   //bdrcData = <Link className="hoverlink" to={"/"+show+"/"+shortUri(srcUri)}></Link>
                   
-                  befo.push(
+                  if(!srcPrefixList.includes(srcPrefix)) befo.push(
 
                      [ //<span class="meta-before"></span>,
                         <Tooltip placement="bottom-start" title={
@@ -2268,6 +2303,9 @@ class ResourceViewer extends Component<Props,State>
                         </Tooltip> 
                      ]
                   )
+
+                  if(srcPrefix) srcPrefixList.push(srcPrefix);
+
                }
 
                if(srcPrefixList.indexOf("bdr") === -1) bdrcData =  <Tooltip placement="top-end" title={<div class={"uriTooltip "}>View this resource on BUDA</div>}><span class="hover-anchor">{bdrcData}</span></Tooltip>
@@ -2459,6 +2497,70 @@ class ResourceViewer extends Component<Props,State>
       return { befo,bdrcData }
    }
 
+
+   toggleHoverM(ID,noSame,wTip) { 
+      return (ev) => { 
+         let elem = $(ev.target).closest(".propCollapseHeader,.propCollapse,[data-prop='bdo:workHasInstance']")
+         let popperFix 
+         if(elem.length > 0) {
+            let i = $(ev.target).closest("h4").index() 
+            let n = elem.find("h4").parent().children().length
+            let x = elem.find(".expand")
+            let p = elem.closest(".ext-props")
+            let h = elem.closest("[data-prop='bdo:workHasInstance']")
+            
+            //console.log("i/n",i,n)
+            
+            if(!p.length && (elem.hasClass("propCollapse") || x.length || h.length) && (i < Math.floor(n/2) || i === 0 && n === 1)) popperFix = true
+         }
+         let target = $(ev.currentTarget).closest("h4")
+         if(target.length) target = target.find(".hover-menu")[0]  
+         else {
+            target = $(ev.currentTarget).closest(".sub")
+            if(target.length) target = target.find(".hover-menu")[0]
+            else target = ev.currentTarget
+
+            //console.log("tg:",target)
+         }
+         if(!noSame || ev.target === ev.currentTarget) this.setState({...this.state,collapse:{...this.state.collapse,["hover"+ID]:!this.state.collapse["hover"+ID],popperFix}, anchorEl:{...this.state.anchorEl,["hover"+ID]:target} } ) 
+         if(wTip !== undefined) (this.toggleHoverMtooltip(ID,wTip))(ev)
+      }
+   }
+
+   toggleHoverMtooltip(ID,val) { 
+      let that = this
+      return (ev) => {          
+         let prop = ID.replace(/^ID-([^-]+)-.*$/,"$1"), elem
+
+         if(that.state.collapse[prop]) elem = $(".propCollapse [data-id=\""+ID+"\"]")
+         else elem = $("[data-id=\""+ID+"\"]")
+         
+         //console.log("ID:",prop,ID,val,elem)
+
+         if(elem.length) for(let e of elem) {
+            if(val && (!that._mouseover[ID] || that._mouseover[ID] < 20)) {  // must be triggered twice ...              
+               if(!that._mouseover[ID]) that._mouseover[ID] = 0
+               that._mouseover[ID] ++
+               const event = new MouseEvent('mouseover', {
+                  view: window,
+                  bubbles: true,
+                  cancelable: true
+               })
+               e.dispatchEvent(event)
+            }
+            else if(!val && that._mouseover[ID] > 0) {                
+               that._mouseover[ID] --
+               if(!that._mouseover[ID]) delete that._mouseover[ID] 
+               const event = new MouseEvent('mouseout', {
+                  view: window,
+                  bubbles: true,
+                  cancelable: true
+               })
+               e.dispatchEvent(event)
+            }
+         }
+      }
+   }
    hoverMenu(prop,e,current,parent,grandPa)
    {
       let ID = "ID-"+prop+"-"+(e&&e.value?e.value:e)
@@ -2482,7 +2584,6 @@ class ResourceViewer extends Component<Props,State>
          } ).filter(e => e)
 
 
-      let toggleHoverM = (e) => this.setState({...this.state,collapse:{...this.state.collapse,["hover"+ID]:!this.state.collapse["hover"+ID]}, anchorEl:{...this.state.anchorEl,["hover"+ID]:e.currentTarget} } ) 
 
       let fromSame = (e.allSameAs && e.allSameAs.length > 0)
 
@@ -2522,9 +2623,9 @@ class ResourceViewer extends Component<Props,State>
             } } />
             */}
 
-            { hasTT && <Tooltip placement="top-end" title={info}>
-               <div style={{display:"inline-block"}}>
-                  <span id="anchor" onClick={toggleHoverM}>
+            { hasTT && <Tooltip placement="top-end" title={<span class="over" onMouseEnter={this.toggleHoverMtooltip(ID,false)}>{info}</span>} >
+               <div style={{display:"inline-block" /*,pointerEvents:"none"*/ }} data-id={ID}>
+                  <span id="anchor" onClick={this.toggleHoverM(ID)}>
                      <img src="/icons/info.svg"/>
                      {nb>0 && <span id="nb">{nb}</span> }
                   </span>
@@ -2532,29 +2633,48 @@ class ResourceViewer extends Component<Props,State>
             </Tooltip> }
 
             {! hasTT && 
-               <span id="anchor" >
-                  { (e.start !== undefined) && <Link to={loca.pathname+loca.search+"#open-viewer"}><img style={{width:"16px"}} src="/icons/PLINK_small.svg"/></Link> }
-                  <img src="/icons/info.svg" onClick={toggleHoverM} />
-               </span> 
+               <div /*style={{pointerEvents:"none"}}*/ >
+                  <span id="anchor">
+                     { (e.start !== undefined) && <Link to={loca.pathname+loca.search+"#open-viewer"}><img style={{width:"16px"}} src="/icons/PLINK_small.svg"/></Link> }
+                     <img src="/icons/info.svg" onClick={this.toggleHoverM(ID)} />
+                  </span> 
+               </div>
             }
-
-            <Popover 
+            <Popper
                data-ID={ID}
                id="popHoverM"
+               className={this.state.collapse.popperFix?"fixW":""}
                data-class={(e.start !== undefined?"in-etext":"")}
                marginThreshold={0}
                open={this.state.collapse["hover"+ID]}
-               anchorOrigin={{horizontal:"right",vertical:"top"}}
-               transformOrigin={{horizontal:"right",vertical:"top"}}
+               //anchorOrigin={{horizontal:"right",vertical:"top"}}
+               //transformOrigin={{horizontal:"right",vertical:"top"}}
+               placement={"bottom-end"}
                anchorEl={this.state.anchorEl["hover"+ID]}
-               onClose={() => this.setState({...this.state,collapse:{...this.state.collapse,["hover"+ID]:false} } ) }
+               //onClose={() => this.setState({...this.state,collapse:{...this.state.collapse,["hover"+ID]:false} } ) }
                TransitionComponent={Fade}
+               modifiers={{
+                  flip: {
+                     enabled: false
+                  },
+                  preventOverflow: {
+                     enabled: true,
+                     boundariesElement: "scrollParent",
+                     escapeWithReference:true
+                  }
+               }}
                >
                { prop && 
+                  <ClickAwayListener onClickAway={(ev) => {
+                     //console.log("clickA",ID,ev,ev.target,ev.currentTarget)                     
+                     if(!$(ev.target).closest(".popper").length) this.setState({collapse:{...this.state.collapse, ["hover"+ID]:false}})
+                  }}>
+               <div class="popper">                     
                   <div class={"resource"}>
                      <div class="data">
-                        <span id="anchor">                         
-                           <img src="/icons/info.svg"/>
+                        <span id="anchor" onClick={this.toggleHoverM(ID,null,false)}>     
+                           <Close/>                    
+                           {/* <img src="/icons/info.svg"/> */}
                         </span>
                         <div data-prop={shortUri(prop)}>
                            {!parent && [
@@ -2606,9 +2726,10 @@ class ResourceViewer extends Component<Props,State>
                         </div>
                      </div>
                   </div>
-               }
-            </Popover>
-         
+               </div>
+               </ClickAwayListener >
+            }
+            </Popper>
             
          </div>
 
@@ -2703,7 +2824,7 @@ class ResourceViewer extends Component<Props,State>
          {
 
             let tmp
-            if(e.type == "uri" || (e.type === 'literal' && (e.datatype === xsd+'anyURI' || e.datatype === xsd+'AnyURI' ))) { 
+            if(e.type == "uri" || (e.type === 'literal' && (e.datatype === xsd+'anyURI' || e.datatype === xsd+'AnyURI')) || e.type === 'xsd:anyURI'|| e.type === 'xsd:anyUri' ) { 
                tmp = this.uriformat(prop,e)
             }
             else {
@@ -2876,8 +2997,16 @@ class ResourceViewer extends Component<Props,State>
 
             const {befo,bdrcData} = this.getSameLink(e,sameAsPrefix)            
 
-            if(!txt) ret.push(<Tag className={(elem && elem.length > 1?"multiple ":"") + (sameAsPrefix?sameAsPrefix+" sameAs hasIcon":"") }>{befo}{tmp}{bdrcData}</Tag>)
-            else ret.push(<Tag className={(elem && elem.length > 1?"multiple ":"") +  (sameAsPrefix?sameAsPrefix+" sameAs hasIcon":"") }>{befo}{tmp+" "+txt}{bdrcData}</Tag>)
+            let ID = "ID-"+prop+"-"+(e&&e.value?e.value:e)      
+            /*
+            let toggleHoverM = (ev) => {
+               //console.log("togHovM",ev,ev.currentTarget)
+               if(ev.target === ev.currentTarget) this.setState({...this.state,collapse:{...this.state.collapse,["hover"+ID]:!this.state.collapse["hover"+ID]}, anchorEl:{...this.state.anchorEl,["hover"+ID]:ev.currentTarget} } ) 
+            }
+            */
+
+            if(!txt) ret.push(<Tag onClick={this.toggleHoverM(ID,true)} onMouseEnter={this.toggleHoverMtooltip(ID,true)} onMouseLeave={this.toggleHoverMtooltip(ID,false)} className={(elem && elem.length > 1?"multiple ":"") + (sameAsPrefix?sameAsPrefix+" sameAs hasIcon":"") + " hasTogHovM"}>{befo}{tmp}{bdrcData}</Tag>)
+            else ret.push(<Tag onClick={this.toggleHoverM(ID,true)} onMouseEnter={this.toggleHoverMtooltip(ID,true)} onMouseLeave={this.toggleHoverMtooltip(ID,false)} className={(elem && elem.length > 1?"multiple ":"") +  (sameAsPrefix?sameAsPrefix+" sameAs hasIcon":"")+ " hasTogHovM" }>{befo}{tmp+" "+txt}{bdrcData}</Tag>)
 
 
             //loggergen.log("ret",ret)
@@ -2992,9 +3121,11 @@ class ResourceViewer extends Component<Props,State>
                   }><span className="lang">{lang}</span></Tooltip>:null]
 
 
-                  tip.push(this.hoverMenu(subProp,{type:"literal",value:tVal,lang},[...tip],[<h4 class="first">{this.proplink(prop)}{I18n.t("punc.colon")}</h4>]))
+                  tip.push(this.hoverMenu(subProp,{type:"literal",value:tVal,lang,allSameAs:tLab.allSameAs},[...tip],[<h4 class="first">{this.proplink(prop)}{I18n.t("punc.colon")}</h4>]))
 
-                  let sav = <Tag className={'label '}>
+                  let ID = "ID-"+subProp+"-"+tVal
+
+                  let sav = <Tag onClick={this.toggleHoverM(ID,true)} onMouseEnter={this.toggleHoverMtooltip(ID,true)} onMouseLeave={this.toggleHoverMtooltip(ID,false)} className={'label hasTogHovM'}>
                         {tip}
                      </Tag>
                   sub.push(sav)
@@ -3079,12 +3210,17 @@ class ResourceViewer extends Component<Props,State>
                            workuri = <div><Tag style={{fontSize:"14px"}}>(from {this.uriformat(bdo+"noteSource",noteData[bdo+"noteSource"])}{loca})</Tag></div>
                         }
 
+                        let text = getLangLabel(this,"",[ noteData[bdo+"noteText"] ])
+                        //console.log("text:",text)
+                        if(text) text = text.value
+                        else text = this.pretty(noteData[bdo+"noteText"].value) 
+
                         let sav = [
                               <Tag className="first type">{I18n.t("punc.num",{num:nbN++}) /*this.proplink(bdo+"noteText","Note")*/}</Tag>,
                               workuri,
                               <div class="subsub">
-                                 <Tag>
-                                    {this.pretty(noteData[bdo+"noteText"].value)}
+                                 <Tag >
+                                    { text }
                                     {this.tooltip(noteData[bdo+"noteText"].lang)}
                                     <ChatIcon className="annoticon"  onClick={
                                        (function(val,prop,v,ev){
@@ -3097,8 +3233,10 @@ class ResourceViewer extends Component<Props,State>
 
                         sav.push(this.hoverMenu(prop,{value:"note-i-"+nbN,noteData},<div class="sub">{[...sav]}</div>))
 
+                        let ID = "ID-"+prop+"-"+"note-i-"+nbN
+                        
                         note.push(
-                           <div class="sub">
+                           <div class="sub hasTogHovM"  onClick={this.toggleHoverM(ID)} onMouseEnter={this.toggleHoverMtooltip(ID,true)} onMouseLeave={this.toggleHoverMtooltip(ID,false)}>
                             {sav}
                            </div>)
                      }
@@ -3111,8 +3249,9 @@ class ResourceViewer extends Component<Props,State>
                         }
                         let workuri = <div><Tag style={{fontSize:"14px"}}>({I18n.t("misc.from")} {this.uriformat(bdo+"noteSource",noteData[bdo+"noteSource"])}{loca})</Tag></div>
 
+
                         let sav = [
-                           <Tag className="first type">{I18n.t("punc.num",{num:nbN++}) /*this.proplink(bdo+"noteSource","Note")*/}</Tag>,
+                           <Tag  className="first type">{I18n.t("punc.num",{num:nbN++}) /*this.proplink(bdo+"noteSource","Note")*/}</Tag>,
                            workuri,
                            <ChatIcon className="annoticon"  onClick={
                               (function(val,prop,v,ev){
@@ -3123,8 +3262,10 @@ class ResourceViewer extends Component<Props,State>
                         
                         sav.push(this.hoverMenu(prop,{value:"note-i-"+nbN,noteData},<div class="sub">{[...sav]}</div>))
 
+                        let ID = "ID-"+prop+"-"+"note-i-"+nbN
+
                         note.push(
-                           <div class="sub">
+                           <div class="sub  hasTogHovM"  onClick={this.toggleHoverM(ID)} onMouseEnter={this.toggleHoverMtooltip(ID,true)} onMouseLeave={this.toggleHoverMtooltip(ID,false)}>
                               {sav}
                            </div>
                         )
@@ -3265,8 +3406,10 @@ class ResourceViewer extends Component<Props,State>
 
                            //<ChatIcon className="annoticon" onClick={e => this.setState({...this.state,annoPane:true,newAnno:true})}/>
 
-                           if(!noVal) subsub.push(<Tag>{txt}</Tag>)
-                           else sub.push(<Tag>{txt}</Tag>)
+                           let ID = "ID-"+f+"-"+v.value
+
+                           if(!noVal) subsub.push(<Tag class="hasTogHovM"  onClick={this.toggleHoverM(ID,true)} onMouseEnter={this.toggleHoverMtooltip(ID,true)} onMouseLeave={this.toggleHoverMtooltip(ID,false)}>{txt}</Tag>)
+                           else sub.push(<Tag class="hasTogHovM"  onClick={this.toggleHoverM(ID,true)} onMouseEnter={this.toggleHoverMtooltip(ID,true)} onMouseLeave={this.toggleHoverMtooltip(ID,false)}>{txt}</Tag>)
                         }
                      }
                   }
@@ -3344,7 +3487,7 @@ class ResourceViewer extends Component<Props,State>
          if(note.length <= 3) pre.push(<div class="no-collapse">{note}</div>)
          else pre.push([<div>         
                {note.slice(0,3)}
-               <Collapse timeout={{enter:0,exit:0}} className={"noteCollapse in-"+(this.state.collapse[prop]===true)} in={this.state.collapse[prop]}>
+               <Collapse timeout={{enter:0,exit:0}} className={"noteCollapse in-"+(this.state.collapse[prop]===true)} in={this.state.collapse[prop] !== false }>
                   {note.slice(3)}
                </Collapse>          
                </div>,     
@@ -3467,6 +3610,8 @@ class ResourceViewer extends Component<Props,State>
 
          if(!tiMir) tiMir = setInterval( async () => {
 
+            console.log("tiMir")
+
             if(window.Mirador && $("#viewer").length && window.Mirador.Viewer.prototype.setupViewer.toString().match(/going to previous page/) && !window.mirador) {
 
                clearInterval(tiMir);
@@ -3475,7 +3620,14 @@ class ResourceViewer extends Component<Props,State>
                $("#fond").addClass("hidden");
 
                let data = [], manif, canvasID
-               if(this.props.imageAsset) 
+               if(useManifest)
+               {
+                  manif = useManifest
+                  if(!manif) manif = this.props.imageAsset+"?continuous=true"
+                  data.push({"manifestUri": manif, location:"Test Manifest Location" })
+                  canvasID = this.props.canvasID
+               }
+               else if(this.props.imageAsset) 
                {
                   if(this.props.imageAsset.match(/[/]collection[/]/) && !this.props.collecManif)
                   {
@@ -3489,13 +3641,6 @@ class ResourceViewer extends Component<Props,State>
                      data.push({"manifestUri": manif, location:"Test Manifest Location" })
                      canvasID = this.props.canvasID
                   }
-               }
-               else if(useManifest)
-               {
-                  manif = useManifest
-                  if(!manif) manif = this.props.imageAsset+"?continuous=true"
-                  data.push({"manifestUri": manif, location:"Test Manifest Location" })
-                  canvasID = this.props.canvasID
                }
 
                let withCredentials = false
@@ -3512,7 +3657,7 @@ class ResourceViewer extends Component<Props,State>
 
                miradorSetUI(true, num);
             }
-         }, 10)
+         }, 1000)
       }
       else
       {
@@ -3672,7 +3817,7 @@ class ResourceViewer extends Component<Props,State>
 
          let _befo
          if(title && title.value) {
-            if(!other) document.title = title.value + " - Public Digital Library"
+            if(!other && !document.title.includes(title.value) ) document.title = title.value + " - Public Digital Library"
             if(title.fromSameAs && !title.fromSameAs.match(new RegExp(bdr))) {
                const {befo,bdrcData} = this.getSameLink(title,shortUri(title.fromSameAs).split(":")[0]+" sameAs hasIcon")            
                _befo = befo
@@ -3707,6 +3852,14 @@ class ResourceViewer extends Component<Props,State>
             this.props.onGetResource("bdr:"+this.pretty(elem[0].value));
          }
       }*/
+      else if(kZprop.indexOf(bdo+"volumeOf") !== -1)
+      {
+         let elem = this.getResourceElem(bdo+"volumeHasEtext",rid,this.props.resources,fullRid)
+         if(!elem && !this.props.imageAsset && !this.props.manifestError) {
+            this.setState({...this.state, imageLoaded:false})
+            this.props.onHasImageAsset(iiifpres+"/vo:"+ rid + "/manifest",rid);
+         }
+      }
       else if(kZprop.indexOf(bdo+"hasIIIFManifest") !== -1)
       {
          let elem = this.getResourceElem(bdo+"hasIIIFManifest",rid,this.props.resources,fullRid)
@@ -3722,6 +3875,19 @@ class ResourceViewer extends Component<Props,State>
             this.props.onHasImageAsset(iiifpres+"/collection/wio:"+rid,rid)
          }
       }      
+       else if(kZprop.indexOf(bdo+"instanceHasVolume") !== -1)
+      {
+         let elem = this.getResourceElem(bdo+"instanceHasVolume",rid,this.props.resources,fullRid)
+         let nbVol = this.getResourceElem(bdo+"itemVolumes",rid,this.props.resources,fullRid)
+         let work = this.getResourceElem(bdo+"instanceReproductionOf",rid,this.props.resources,fullRid)
+         if(elem[0] && elem[0].value && !this.props.imageAsset && !this.props.manifestError) {
+            if(rid !== this.props.IRI)this.setState({...this.state, imageLoaded:false})
+            let manif = iiifpres + "/vo:"+elem[0].value.replace(new RegExp(bdr),"bdr:")+"/manifest"
+            if(nbVol && nbVol[0] && nbVol[0].value && nbVol[0].value > 1 && work && work[0] && work[0].value)
+              manif = iiifpres + "/collection/wio:"+work[0].value.replace(new RegExp(bdr),"bdr:")
+            this.props.onHasImageAsset(manif,rid)
+         }
+      }
       else if(kZprop.indexOf(bdo+"instanceReproductionOf") !== -1)
       {
          let elem = [{value:rid}] 
@@ -3840,6 +4006,12 @@ class ResourceViewer extends Component<Props,State>
             if(elem && elem.length > 0 && elem[0].value && elem[0].value == "1") {               
                   monoVol = Number(elem[0].value)
             }
+         }
+         else if(this.props.imageAsset.match(/[/]vo:/)) {
+            monoVol = 1
+            let elem = this.getResourceElem(bdo+"volumeNumber")
+            if(elem && elem.length > 0 && elem[0].value)
+               monoVol = Number(elem[0].value)
          }
 
          if(!pdfLink && this.props.manifestWpdf && this.props.manifestWpdf.rendering) {
@@ -4071,7 +4243,7 @@ class ResourceViewer extends Component<Props,State>
          */
 
          let show = this.state.collapse[k]
-         //if(hasMaxDisplay === -1 && k !== bf+"identifiedBy") show = true ; 
+         if(hasMaxDisplay === -1 /*&& ![bf+"identifiedBy",bdo+"note"].includes(k)*/ && this.state.collapse[k] === undefined) show = true ; 
 
          return (
             <div data-prop={shortUri(k)} class={"has-collapse custom max-"+(maxDisplay)+" "+(n%2===0?"even":"odd") }>
@@ -4101,12 +4273,12 @@ class ResourceViewer extends Component<Props,State>
                   {ret.slice(i2,n)}
                </Collapse> */}
                { (this.state.collapse[k] || hasMaxDisplay === -1) && <span
-               onClick={(e) => this.setState({...this.state,collapse:{...this.state.collapse,[k]:!this.state.collapse[k]}})}
+               onClick={(e) => this.setState({...this.state,collapse:{...this.state.collapse,[k]:!show}})}
                className="expand">
-                  {I18n.t("misc."+(this.state.collapse[k]?"hide":"seeMore")).toLowerCase()}&nbsp;<span
+                  {I18n.t("misc."+(show?"hide":"seeMore")).toLowerCase()}&nbsp;<span
                   className="toggle-expand">
-                     { this.state.collapse[k] && <ExpandLess/>}
-                     { !this.state.collapse[k] && <ExpandMore/>}
+                     { show && <ExpandLess/>}
+                     { !show && <ExpandMore/>}
                   </span>
                </span> }
             </div>
@@ -4128,6 +4300,8 @@ class ResourceViewer extends Component<Props,State>
 
    samePopup(same,id,noS) {
 
+      let list = []
+
       if(same && same.length) return ([
     
          <span id="same" title={I18n.t("resource.sameL",{count:same.length})} class={noS?"PE0":""} onClick={(e) => this.setState({...this.state,anchorPermaSame:e.currentTarget, collapse: {...this.state.collapse, ["permaSame-"+id]:!this.state.collapse["permaSame-"+id] } } ) }>
@@ -4136,7 +4310,10 @@ class ResourceViewer extends Component<Props,State>
                let prefix = shortUri(s.value).split(":")[0]
                if(prefix.startsWith("http") && s.fromSeeOther) prefix = s.fromSeeOther
                // TODO fix Sakya Research Center
-               return <span class={"provider "+prefix}>{provImg[prefix]?<img src={provImg[prefix]}/>:<span class="img">{prefix.replace(/^cbc.$/,"cbc@").toUpperCase()}</span>}</span>
+               if(!list.includes(prefix)) {
+                  list.push(prefix)
+                  return <span class={"provider "+prefix}>{provImg[prefix]?<img src={provImg[prefix]}/>:<span class="img">{prefix.replace(/^cbc.$/,"cbc@").toUpperCase()}</span>}</span>
+               }
             })}
          </span>,
 
@@ -4159,6 +4336,8 @@ class ResourceViewer extends Component<Props,State>
                   if(s.isOrig) open = <MenuItem style={{display:"block",height:"32px",lineHeight:"12px"}}>{I18n.t("popover.imported")} <b>{providers[prov]}</b><br/>{I18n.t("popover.seeO")}<img style={{verticalAlign:"middle"}} src="/icons/link-out.svg"/></MenuItem>
 
                   //loggergen.log("permaSame",s,data,tab,link,name,prov) 
+
+                  if(this.props.config && this.props.config.chineseMirror) link = link.replace(new RegExp(cbeta), "http://cbetaonline.cn/")
 
                   // TODO case when more than on resource from a given provider (cf RKTS)
                   if(prov != "bdr") return (<a target="_blank" href={link.replace(/^https?:/,"")}>{open}</a>) 
@@ -4206,14 +4385,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
    }
    if(!same.length && sameLegalD) { 
       let prov = sameLegalD[adm+"provider"]
-      if(prov && prov.length) prov = prov[0].value
-      if(prov && this.props.dictionary) prov = this.props.dictionary[prov]
-      if(prov) prov = prov[skos+"prefLabel"]
-      if(prov && prov.length) prov = prov.filter(e => e.lang === "en" || !e.lang)
-      if(prov && prov.length) prov = prov[0].value
-      if(prov) prov = prov.replace(/(^\[ *)|( *\]$)/g,"") // CUDL
-      if(prov) prov = prov.replace(/Internet Archives/g,"IA") 
-      if(prov) prov = prov.replace(/Library of Congress/g,"LOC") 
+      prov = this.getProviderID(prov)
 
       //else prov = ""
 
@@ -4731,7 +4903,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
             //if(!k.match(new RegExp("Revision|Entry|prefLabel|"+rdf+"|toberemoved"))) {
             if(elem && 
-               (!k.match(new RegExp(adm+"|adm:|isRoot$|SourcePath|"+rdf+"|toberemoved|entityScore|lastSync|dateCreated|inRootInstance|workPagination|partIndex|partTreeIndex|legacyOutlineNodeRID|sameAs|thumbnailIIIFService|instanceOf|instanceReproductionOf|instanceHasReproduction|seeOther|withSameAs"+(this._dontMatchProp?"|"+this._dontMatchProp:"")))
+               (!k.match(new RegExp(adm+"|adm:|isRoot$|SourcePath|"+rdf+"|toberemoved|entityScore|lastSync|dateCreated|inRootInstance|workPagination|partIndex|partTreeIndex|legacyOutlineNodeRID|sameAs|thumbnailIIIFService|instanceOf|instanceReproductionOf|instanceHasReproduction|seeOther|withSameAs|first(Text|Vol)N?"+(this._dontMatchProp?"|"+this._dontMatchProp:"")))
                ||k.match(/(metadataLegal|contentProvider|replaceWith)$/)
                //||k.match(/([/]see|[/]sameAs)[^/]*$/) // quickfix [TODO] test property ancestors
                || (this.props.IRI.match(/^bda:/) && (k.match(new RegExp(adm+"|adm:"))) && !k.match(/\/(git[RP]|adminAbout|logEntry|graphId|facetIndex)/)))
@@ -4926,7 +5098,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          )
    }
 
-   renderHeader = (kZprop, T) => {
+   renderHeader = (kZprop, T, etextUT) => {
 
       let imageLabel = "images"
       if(!this.props.collecManif && this.props.imageAsset && this.props.imageAsset.match(/[/]collection[/]/)) imageLabel = "collection"
@@ -4942,15 +5114,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
       let prov,orig
       if(sameLegalD) { 
          prov = sameLegalD[adm+"provider"]
-         if(prov && prov.length) prov = prov[0].value
-         if(prov && this.props.dictionary) prov = this.props.dictionary[prov]
-         if(prov && prov[skos+"prefLabel"]) prov = prov[skos+"prefLabel"]
-         else if(prov && prov[rdfs+"label"]) prov = prov[rdfs+"label"]
-         if(prov && prov.length) prov = prov.filter(e => e.lang === "en" || !e.lang)
-         if(prov && prov.length) prov = prov[0].value
-         if(prov) prov = prov.replace(/(^\[ *)|( *\]$)/g,"") // CUDL
-         if(prov) prov = prov.replace(/Internet Archives/g,"IA") 
-         if(prov) prov = prov.replace(/Library of Congress/g,"LOC") 
+         prov = this.getProviderID(prov)
          //else prov = ""
 
          orig = this.getResourceElem(adm+"originalRecord")
@@ -4977,19 +5141,55 @@ perma_menu(pdfLink,monoVol,fairUse,other)
       let iiifThumb = this.getResourceElem(tmp+"thumbnailIIIFService")
       if(iiifThumb && iiifThumb.length) iiifThumb = iiifThumb[0].value
 
+      let handleViewer = (ev) => {
+         if(ev.type === 'click') { 
+            this.showMirador(null,null,true)
+            ev.preventDefault();
+            ev.stopPropagation();
+            return false ;
+         }
+      }
+
+
+      let viewUrl = { ...this.props.history.location }
+      viewUrl.pathname = viewUrl.pathname.replace(/\/show\//,"/view/")
+      viewUrl.search = "" 
+      // TODO do we really need this now?
+      if(this.props.langPreset) viewUrl.search = "?lang="+this.props.langPreset.join(",")
+
+      let copyRicon
+
+      let access = this.getResourceElem(adm+"access");
+      if(access && access.length) access = access[0].value ;
+
+      let hasCopyR = "" 
+      if(access) {
+         if(access.includes("FairUse")) hasCopyR = "fair_use"
+         else if(access.includes("Temporarily"))  hasCopyR = "temporarily"; 
+         else if(access.includes("Sealed"))  hasCopyR = "sealed";  
+         else if(access.includes("Quality")) hasCopyR = "quality" ;
+      }
+
+      if(hasCopyR === "fair_use") copyRicon = <img class="access-icon" title={I18n.t("copyright.fairUse")} src="/icons/fair_use.svg"/>
+      else if(hasCopyR === "temporarily") copyRicon = <img class="access-icon" title={I18n.t("copyright.tempo")} src="/icons/temporarily.svg"/>
+      else if(hasCopyR === "sealed") copyRicon = <img class="access-icon" title={I18n.t("copyright.sealed")} src="/icons/sealed.svg"/>
+      else if(hasCopyR === "quality") copyRicon = <img class="access-icon" title={I18n.t("copyright.quality")} src="/icons/unknown.svg"/>
+      
       if(!this.state.imageError && iiifThumb && T === "Images") 
          return  ( 
             <div class="data simple" id="first-image">
-               <div className={"firstImage "+(this.state.imageLoaded?"loaded":"")} {...(this.props.config.hideViewers?{"onClick":() => this.showMirador(null,null,true),"style":{cursor:"pointer"}}:{})} >
+               <a onClick={handleViewer} onContextMenu={handleViewer}  href={viewUrl.pathname+viewUrl.search} target="_blank" className={"firstImage "+(this.state.imageLoaded?"loaded":"")} 
+               /*{...(this.props.config.hideViewers?{"onClick":() => this.showMirador(null,null,true),"style":{cursor:"pointer"}}:{})}*/ >
                   <Loader className="uvLoader" loaded={this.state.imageLoaded} color="#fff"/>
-                  <img onError={(e)=>this.setState({...this.state,imageError:true})} onLoad={(e)=>this.setState({...this.state,imageLoaded:true,imageError:false})} src={iiifThumb+"/full/1000,/0/default.jpg"} /> 
-               </div>
+                  <img onError={(e)=>this.setState({...this.state,imageError:true})} onLoad={(e)=>this.setState({...this.state,imageLoaded:true,imageError:false})} src={iiifThumb+"/full/!1000,500/0/default.jpg"} /> 
+               </a>
             </div>
          )
       else if(!this.props.manifestError &&  this.props.imageAsset && !etext)
          return  ( 
          <div class="data" id="first-image">
-            <div className={"firstImage "+(this.state.imageLoaded?"loaded":"")} {...(this.props.config.hideViewers?{"onClick":this.showMirador.bind(this),"style":{cursor:"pointer"}}:{})} >
+            <a onClick={handleViewer} onContextMenu={handleViewer} href={viewUrl.pathname+viewUrl.search} target="_blank" className={"firstImage "+(this.state.imageLoaded?"loaded":"")} 
+               /*{...(this.props.config.hideViewers?{"onClick":this.showMirador.bind(this),"style":{cursor:"pointer"}}:{})}*/ >
                <Loader className="uvLoader" loaded={this.state.imageLoaded} color="#fff"/>
                { 
                   this.props.firstImage && 
@@ -5024,32 +5224,65 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                      }
                   </div>
                */}
-            </div>
+            </a>
          </div>
          )
       else if(kZprop.length)
          return <div class="data" id="map">{this.renderData(kZprop,null,null,null,"header")}</div>
       else if(etext && !(prov !== "BDRC" && prov && orig)) {
          let loca = this.props.history.location
-         return <div class="data" id="head"><Link title='View Etext' to={loca.pathname+loca.search+"#open-viewer"}><div class={"header "+(!this.state.ready?"loading":"")}>{ !this.state.ready && <Loader loaded={false} /> }{src}</div></Link></div>
+         let view = loca.pathname+loca.search+"#open-viewer"
+         if(etextUT) view = etextUT+"#open-viewer"
+         return <div class="data" id="head"><Link title='View Etext' to={view}><div class={"header "+(!this.state.ready?"loading":"")}>{ !this.state.ready && <Loader loaded={false} /> }{src}{copyRicon}</div></Link></div>
       }
-      else  
-         return <div class="data" id="head"><div class={"header "+(!this.state.ready?"loading":"")}>{ !this.state.ready && <Loader loaded={false} /> }{src}</div></div>
-   
+      else 
+         return <div class="data" id="head"><div class={"header "+(!this.state.ready?"loading":"")}>{ !this.state.ready && <Loader loaded={false} /> }{src}{copyRicon}</div></div>   
    }
 
    // TODO case of part of instance after p.20 (see bdr:MW1KG2733_65CFB8)
 
    renderNoAccess = (fairUse) => {
-      if(fairUse && (this.props.auth && !this.props.auth.isAuthenticated()) )
-         return <div class="data access"><h3 style={{display:"block",marginBottom:"15px"}}><span style={{textTransform:"none"}}>{I18n.t("access.limited20")}<br/>
-                   {I18n.t("misc.please")} <a class="login" onClick={this.props.auth.login.bind(this,this.props.history.location)}>{I18n.t("topbar.login")}</a> {I18n.t("access.credentials")}</span></h3></div>
+      if(fairUse && (!this.props.auth || this.props.auth && !this.props.auth.isAuthenticated()) ) 
+         return <div class="data access">
+                  <h3>
+                     <span style={{textTransform:"none"}}>
+                     {/* {I18n.t("access.limited20")}<br/> */}
+                     <Trans i18nKey="access.fairuse1" components={{ bold: <u /> }} /> { I18n.t("access.fairuse2")} <a href="mailto:help@bdrc.io">help@bdrc.io</a> { I18n.t("access.fairuse3")}
+                     { /*this.props.locale !== "bo" && [ I18n.t("misc.please"), " ", <a class="login" onClick={this.props.auth.login.bind(this,this.props.history.location)}>{I18n.t("topbar.login")}</a>, " ", I18n.t("access.credentials") ] }
+                     { this.props.locale === "bo" && [ I18n.t("access.credentials"), " ", <a class="login" onClick={this.props.auth.login.bind(this,this.props.history.location)}>{I18n.t("topbar.login")}</a> ] */ }
+                   </span>
+                  </h3>
+               </div>
+   }
+
+   renderOCR = () => {
+      let elem = this.getResourceElem(bdo+"contentMethod");
+      console.log("OCR:",elem)
+      if(elem && elem.length) elem = elem[0].value ;
+      if(elem === bdr+"ContentMethod_OCR") {
+         return <div class="data access"><h3><span style={{textTransform:"none"}}>{I18n.t("access.OCR")}</span></h3></div>
+      }
    }
 
    // DONE check if this is actually used (it is)
    renderAccess = () => {
-      if ( this.props.manifestError && this.props.auth && this.props.manifestError.error.message.match(/Restricted access/) )
-         return  <div class="data access"><h3><span style={{textTransform:"none"}}>{I18n.t("misc.please")} <a class="login" {...(this.props.auth?{onClick:this.props.auth.login.bind(this,this.props.history.location)}:{})}>{I18n.t("topbar.login")}</a> {I18n.t("access.credentials")}</span></h3></div>
+
+
+      let elem = this.getResourceElem(adm+"access");
+      if(elem && elem.length) elem = elem[0].value ;
+
+      if ( this.props.manifestError && this.props.manifestError.error.code === 404)
+         return  <div class="data access"><h3><span style={{textTransform:"none"}}>{I18n.t("access.notyet")}</span></h3></div>
+      else if ( this.props.manifestError && (!this.props.auth || this.props.auth && (this.props.manifestError.error.code === 401 || this.props.manifestError.error.code === 403) )) 
+         if(elem && elem.includes("RestrictedSealed"))
+            return  <div class="data access"><h3><span style={{textTransform:"none"}}><Trans i18nKey="access.sealed" components={{ bold: <u /> }} /> <a href="mailto:help@bdrc.io">help@bdrc.io</a>{I18n.t("punc.point")}</span></h3></div>
+         else 
+            //return  <div class="data access"><h3><span style={{textTransform:"none"}}>{I18n.t("misc.please")} <a class="login" {...(this.props.auth?{onClick:this.props.auth.login.bind(this,this.props.history.location)}:{})}>{I18n.t("topbar.login")}</a> {I18n.t("access.credentials")}</span></h3></div>
+            return  <div class="data access"><h3><span style={{textTransform:"none"}}><Trans i18nKey="access.generic" components={{ policies: <a /> }} /></span></h3></div>
+            
+      else if ( this.props.manifestError && this.props.manifestError.error.code === 500 )
+         return  <div class="data access"><h3><span style={{textTransform:"none"}}>{I18n.t("access.error")}</span></h3></div>
+      
    }
 
    renderPdfLink = (pdfLink, monoVol, fairUse) => {
@@ -5102,19 +5335,21 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
       let size = this.state.etextSize
 
-
-      // TODO remove "show images" when not needed
+      // DONE remove "show images" when not needed
+      let showToggleScan = this.getResourceElem(bdo+"eTextHasPage")
+      if(showToggleScan && showToggleScan.length) showToggleScan = (showToggleScan[0].seq !== undefined)
+      else showToggleScan = false
 
       return (
          <div id="etext-nav">
             <div>
-               <a id="DL" target="_blank" rel="alternate" type="text" download href={this.props.IRI?this.props.IRI.replace(/bdr:/,bdr)+".txt":""}>{I18n.t("mirador.downloadE")}<img src="/icons/DLw.png"/></a>
+               <a id="DL" class="on" target="_blank" rel="alternate" type="text" download href={this.props.IRI?this.props.IRI.replace(/bdr:/,bdr)+".txt":""}>{I18n.t("mirador.downloadE")}<img src="/icons/DLw.png"/></a>
                <div id="control">
                   <span title={I18n.t("mirador.decrease")} class={!size||size > 0.6?"on":""} onClick={(e)=>etextSize(false)}><img src="/icons/Zm.svg"/></span>
                   <span title={I18n.t("mirador.increase")} class={!size||size < 2.4?"on":""} onClick={(e)=>etextSize(true)}><img src="/icons/Zp.svg"/></span>
                   {lang_selec(this,true)}
                </div>
-               <a onClick={(e) => this.setState({showEtextImages:!this.state.showEtextImages})}>{this.state.showEtextImages?<img id="check" src="/icons/check.svg"/>:<span id="check"></span>}{I18n.t("mirador.showI")}<img width="42" src="/icons/search/images_b.svg"/></a>
+               <a class={showToggleScan?"on":""} onClick={(e) => this.setState({showEtextImages:!this.state.showEtextImages})}>{this.state.showEtextImages?<img id="check" src="/icons/check.svg"/>:<span id="check"></span>}{I18n.t("mirador.showI")}<img width="42" src="/icons/search/images_b.svg"/></a>
             </div>
          </div>
       )
@@ -5424,16 +5659,18 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                                  if(g["owl:sameAs"] && g["owl:sameAs"].length) same = same.concat(g["owl:sameAs"])
                                  if(g["rdfs:seeAlso"] && g["rdfs:seeAlso"].length) same = same.concat(g["rdfs:seeAlso"])
                                  for(let node of same) {                                    
-                                    let prefix,url ;
                                     if(node["@id"]) { 
-                                       //prefix = shortUri(node["@id"]).split(":")[0]                                       
                                        g.same.push({value:node["@id"]})
-                                    }
+                                    } 
                                     // DONE link to NGMPP
                                     else if(node["@value"] && node["type"] === "xsd:anyURI") {
-                                       if(!g.details) g.details = [] 
-                                       g.details.push(<div class="sub"><h4 class="first type">{this.proplink(rdfs+"seeAlso")}{I18n.t("punc.colon")} </h4><div>{this.format("h4","","",false, "sub",[{ value:node["@value"], type:"xsd:anyUri"}])}</div></div>)
-                                 
+                                       let prefix = shortUri(node["@value"]).split(":")[0];
+                                       if(providers[prefix]) {
+                                          g.same.push({value:node["@value"]})                                             
+                                       } else {
+                                          if(!g.details) g.details = [] 
+                                          g.details.push(<div class="sub"><h4 class="first type">{this.proplink(rdfs+"seeAlso")}{I18n.t("punc.colon")} </h4><div>{this.format("h4","","",false, "sub",[{ value:node["@value"], type:"xsd:anyUri"}])}</div></div>)
+                                       }                                 
                                     }
                                     
                                     // deprecated
@@ -5675,15 +5912,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          
          let prov ;
          if(legalD) prov = legalD[adm+"provider"]
-         if(prov && prov.length) prov = prov[0].value
-         if(prov && this.props.dictionary) prov = this.props.dictionary[prov]
-         if(prov && prov[skos+"prefLabel"]) prov = prov[skos+"prefLabel"]
-         else if(prov && prov[rdfs+"label"]) prov = prov[rdfs+"label"]
-         if(prov && prov.length) prov = prov.filter(e => e.lang === "en" || !e.lang)
-         if(prov && prov.length) prov = prov[0].value
-         if(prov) prov = prov.replace(/(^\[ *)|( *\]$)/g,"") // CUDL
-         if(prov) prov = prov.replace(/Internet Archives/g,"IA") 
-         if(prov) prov = prov.replace(/Library of Congress/g,"LOC") 
+         prov = this.getProviderID(prov)
          
          return prov
       }
@@ -5692,7 +5921,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
    render()
    {
-      loggergen.log("render",this.props,this.state)
+      loggergen.log("render",this.props,this.state,this._refs)
    
       this._annoPane = []
 //
@@ -5741,8 +5970,6 @@ perma_menu(pdfLink,monoVol,fairUse,other)
       if(this.props.config && this.props.config.iiifpres) iiifpres = this.props.config.iiifpres.endpoints[this.props.config.iiifpres.index]      
       //iiifpres += "/2.1.1"
 
-      if(this.props.resources && this.props.resources[this.props.IRI]) this.setManifest(kZprop,iiifpres)    
-
 
       let getWtitle = this.getWtitle.bind(this)
       let wTitle,iTitle,rTitle ;
@@ -5787,6 +6014,11 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          rTitle = getWtitle(baseW)
       }
       
+      if(this.props.resources && this.props.resources[this.props.IRI] && _T !== "Etext") this.setManifest(kZprop,iiifpres)    
+
+
+      let resLabel = getLangLabel(this,"",titlElem)
+
       //loggergen.log("ttlm",titlElem,otherLabels)
       
       let mapProps = [bdo+"placeRegionPoly", bdo+"placeLong", bdo+"placeLat" ]
@@ -5822,68 +6054,113 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
          let res = wUrl
 
-         related = Object.keys(this.props.assocResources).map(k => {
+         related = Object.keys(this.props.assocResources).map((k,i) => {
             let v = this.props.assocResources[k]
             let s = shortUri(k)
             let isA = v.filter(k => k.fromKey === bdo+"workIsAbout" && k.value === res)
             //loggergen.log("isA",v,s,isA)
-            if(isA.length) {
+            if(isA.length) {               
                let label, pLab = v.filter(k => k.fromKey === skos+"prefLabel" || k.type === skos+"prefLabel")
                if(pLab.length) label = getLangLabel(this,"",pLab)
                if(!label) label = { value:s }
-               return ( 
-                  <div>
-                     <Link to={"/show/"+s}><div class="header"></div></Link>
-                     <div><span {...label.lang?{lang:label.lang}:{}}>{ label.value }</span>{ label.lang && this.tooltip(label.lang) }</div>
-                     <Link to={"/show/"+s}>{I18n.t("misc.readM")}</Link>
-                  </div>
-               )
-            }
-         } ).filter(k => k)
 
-         createdBy = Object.keys(this.props.assocResources).map(k => {
+               let n = v.filter(k => k.fromKey === tmp+"entityScore")
+               if(n.length) n = Number(n[0].value)
+               else n = -99 
+               
+               let m = label.lang+"_"+label.value
+
+               return {s,k,n,m,label} ;
+            }
+         }).filter(k => k)
+         related = _.orderBy(related, ["n","m"], ["desc","asc"])
+
+         createdBy = Object.keys(this.props.assocResources).map( (k,i) => {
             let v = this.props.assocResources[k]
             let s = shortUri(k)
-            let crea = v.filter(k => k.fromKey === tmp+"createdBy" && k.value === res)
+            let crea = v.filter(k => k.fromKey === (_T === "Place"?tmp+"printedAt":tmp+"createdBy") && k.value === res)
             //loggergen.log("isA",v,s,isA)
             if(crea.length) {
+
                let label, pLab = v.filter(k => k.fromKey === skos+"prefLabel" || k.type === skos+"prefLabel")
                if(pLab.length) label = getLangLabel(this,"",pLab)
                if(!label) label = { value:s }
-               return ( 
-                  <div>
-                     <Link to={"/show/"+s}><div class="header"></div></Link>
-                     <div><span {...label.lang?{lang:label.lang}:{}}>{ label.value }</span>{ label.lang && this.tooltip(label.lang) }</div>
-                     <Link to={"/show/"+s}>{I18n.t("misc.readM")}</Link>
-                  </div>
-               )
-            }
-         } ).filter(k => k)
 
-         //console.log("rel:",related,createdBy)
+               let n = v.filter(k => k.fromKey === tmp+"entityScore")
+               if(n.length) n = Number(n[0].value)
+               else n = -99 
+               
+               let m = label.lang+"_"+label.value
+
+               let thumb = v.filter(k => k.fromKey === tmp+"thumbnailIIIFService" || k.type === tmp+"thumbnailIIIFService")
+               if(thumb && thumb.length) thumb = thumb[0].value
+               else thumb = null
+
+               return {s,k,n,m,label,thumb};
+            }
+         }).filter(k => k)
+         createdBy = _.orderBy(createdBy, ["n","m"], ["desc","asc"])
+
+         console.log("rel:",related,createdBy)
+
+         related = related.map( ({s,k,n,m,label},i) => {            
+            this._refs["rel-"+i] = React.createRef();
+            return ( 
+               <div ref={this._refs["rel-"+i]}>
+                  <Link to={"/show/"+s}><div class="header"></div></Link>
+                  <div><span {...label.lang?{lang:label.lang}:{}}>{ label.value }</span>{ label.lang && this.tooltip(label.lang) }</div>
+                  <Link to={"/show/"+s}>{I18n.t("misc.readM")}</Link>
+               </div>
+            )
+         })
+
+         createdBy = createdBy.map( ({s,k,n,m,label,thumb},i) => {             
+            this._refs["crea-"+i] = React.createRef();
+            return ( 
+               <div ref={this._refs["crea-"+i]}>
+                  <Link to={"/show/"+s}><div class={"header "+(thumb?"thumb":"")} style={{backgroundImage:"url("+thumb+"/full/,185/0/default.jpg)"}}></div></Link>
+                  <div><span {...label.lang?{lang:label.lang}:{}}>{ label.value }</span>{ label.lang && this.tooltip(label.lang) }</div>
+                  <Link to={"/show/"+s}>{I18n.t("misc.readM")}</Link>
+               </div>
+            )
+         })
+
       }
 
       let hasRel = ((related && related.length > 0)||(createdBy && createdBy.length > 0))
       
 
+      let hasLongExtP = false; //[bf+"identifiedBy",bdo+"note"].filter(k => kZprop.includes(k) ).length > 0
+
+      let extPlabel = "hide"
+      if(hasLongExtP) {
+         extPlabel = "seeA"
+         if(this.state.collapse.extProps) extPlabel = "hide"
+      }
+      else {
+         if(this.state.collapse.extProps) extPlabel = "seeA"
+      }
+      
       let toggleExtProps = (e) => {
-         let state = { ...this.state, collapse:{ ...this.state.collapse, extProps:!this.state.collapse.extProps, ...extProps.reduce( (acc,p) => ({...acc, [p]:!this.state.collapse.extProps}),{} ) } }
+         let show = this.state.collapse.extProps
+         if(!hasLongExtP) show = (this.state.collapse.extProps === undefined) || !this.state.collapse.extProps
+         let state = { ...this.state, collapse:{ ...this.state.collapse, extProps:!this.state.collapse.extProps, ...extProps.reduce( (acc,p) => ({...acc, [p]:!show}),{} ) } }
          this.setState(state)
       }
 
       let root = this.getResourceElem(bdo+"inRootInstance");
 
-      let sideMenu = (rid,tag,rel,ext,outL,openV) => {
+      let sideMenu = (rid,tag,rel,ext,outL,openV,etextUT) => {
          let sRid = shortUri(rid)
          let loca = this.props.history.location
          let url = "/show/"+sRid+this.getTabs(tag)
          //if(sRid === this.props.IRI) url = ""
          let view = "/show/"+sRid+loca.search+"#open-viewer"
          return (<div>
-            { tag === "Images" && <h3><Link to={view} class={(!openV?"disabled":"")}>{I18n.t("index.openViewer")}</Link></h3> }
+            { tag === "Images" && <h3><Link to={!etextUT?view:etextUT+"#open-viewer"} class={(!openV?"disabled":"")}>{I18n.t("index.openViewer")}</Link></h3> }
             <h3><Link to={url+"#main-info"} >{I18n.t("index.mainInfo")}</Link></h3>
             { tag === "Instance" && <h3><Link to={url+"#outline"} class={(!outL||!this.state.outlinePart && root && root.length?"disabled":"")}>{I18n.t("index.outline")}</Link></h3> }
-            { tag === "Work" && <h3><Link to={url+"#resources"} class={(!rel?"disabled":"")}>{I18n.t("index.related")}</Link></h3> }
+            { tag === "Work" && <h3><Link to={url+"#resources"} class={(!rel?"disabled":"")}>{I18n.t(_T ==="Place"?"index.relatedR":"index.related")}</Link></h3> }
              <h3><Link class={(!ext?"disabled":"")} to={url+"#ext-info"} >{I18n.t("index.extended")}</Link></h3> 
          </div>)
       }
@@ -5938,13 +6215,16 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          
          let hasPages = this.getResourceElem(bdo+"eTextHasPage")
          let etext_data = this.renderData([!hasPages?bdo+"eTextHasChunk":bdo+"eTextHasPage"],iiifpres,title,otherLabels,"etext-data")
+         let etextRes = this.getResourceElem(bdo+"eTextInInstance")
+         if(etextRes && etextRes.length) etextRes = shortUri(etextRes[0].value)
+         else etextRes = null
 
          // TODO fix loader not hiding when closing then opening again
 
          return ([
             getGDPRconsent(this),
             <div>
-               { top_right_menu(this,title,searchUrl) }               
+               { top_right_menu(this,title,searchUrl,etextRes) }               
                { this.renderMirador(isMirador) }           
                <div class="resource etext-view">
                   <Loader loaded={!this.props.loading}  options={{position:"fixed",left:"50%",top:"50%"}} />
@@ -6019,6 +6299,70 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
          let prov = this.getProv()
 
+         let etextLoca = I18n.t("resource.openViewer"), etextVolN, etextTxtN, etextUT = loca.pathname+loca.search
+         if(etext) {
+            let fVol = this.getResourceElem(tmp+"firstVolN")
+            if(fVol && fVol.length) etextVolN = fVol[0].value
+            let fTxt = this.getResourceElem(tmp+"firstTextN")
+            if(fTxt && fTxt.length) etextTxtN = fTxt[0].value
+            let fUT = this.getResourceElem(tmp+"firstText")
+            if(fUT && fUT.length) etextUT = "/show/"+shortUri(fUT[0].value)
+            if(fVol && fTxt) etextLoca = I18n.t("resource.openVolViewer", {VolN:etextVolN}) // not sure we need this:  TxtN:etextTxtN
+         }
+
+         let scrollRel = (ev,next) => { 
+            let idx = !this.state.relatedTab&&related.length?"rel":"crea"
+            let max = !this.state.relatedTab&&related.length?related.length:createdBy.length
+            let i = (this.state["i"+idx]!==undefined?this.state["i"+idx]:0)
+            if(next) i+=4 ;
+            else i-=4 ;
+            if(i > max) i = max
+            else if(i < 0) i = 0
+            console.log("i:",next,i,max,idx,this._refs[i],this._refs)
+            if(this._refs[ idx + "-" + i ]) {
+               this._refs[ idx + "-" + i ].current.scrollIntoView({behavior:"smooth",block:"nearest",inline:"start"})
+               this.setState({["i"+idx]:i})
+            }
+         }
+
+         let navNext = false          
+         if(related && related.length && !this.state.relatedTab) {
+            navNext = this.state.irel === undefined || (this.state.irel / 4) * 4 + 4 < related.length - 1 
+         }
+         else if(createdBy) {
+            navNext = this.state.icrea === undefined || (this.state.icrea / 4) * 4 + 4 < createdBy.length - 1 
+         }
+
+         let dates ;
+         if(_T === "Person") {
+            let elem = this.getResourceElem(bdo+"personEvent")
+            if(elem && elem.length) {
+               let birth = elem.filter(e => e.k && e.k.endsWith("PersonBirth")).map(e => this.getResourceBNode(e.value));
+               if(birth.length) birth = birth[0]
+               let death = elem.filter(e => e.k && e.k.endsWith("PersonDeath")).map(e => this.getResourceBNode(e.value));
+               if(death.length) death = death[0]
+               console.log("dates:",birth,death,elem)
+               //elem = elem.filter(e => )
+               
+               let vals = []
+               for(const [p,date] of Object.entries({ [bdo+"PersonBirth"]:birth, [bdo+"PersonDeath"]:death })  ) {
+                  if(!date) continue ;
+                  let val = date[bdo+"onYear"]
+                  if(val && val.length) val = <span>{val[0].value}</span>
+                  else {
+                     let bef = date[bdo+"notBefore"]
+                     let aft = date[bdo+"notAfter"]
+                     if(bef && bef.length && aft && aft.length) val = <span>{bef[0].value+ "~" +aft[0].value}</span>
+                     else val = null
+                  }
+
+                  if(p.includes("Death") && !vals.length) {vals.push(<span>&nbsp;&ndash;&nbsp;</span>) }
+                  if(val) vals.push(val)
+                  if(p.includes("Birth")) vals.push(<span>&nbsp;&ndash;&nbsp;</span>)
+               }
+               if(vals.length > 1) dates = <span clas='date'>{vals}</span> ;
+            }
+         }
 
          return (
          [getGDPRconsent(this),
@@ -6054,7 +6398,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                   { iTitle }
                   { iTitle && this.state.title.instance && sideMenu(this.state.title.instance[0].value,"Instance", false, iDataExt, iOutline) }
                   { rTitle }
-                  { rTitle && this.state.title.images && sideMenu(this.state.title.images[0].value,"Images", false, rDataExt, false, rView && !orig) }
+                  { rTitle && this.state.title.images && sideMenu(this.state.title.images[0].value,"Images", false, rDataExt, false, rView && !orig, etextUT) }
                   </div>
                </div>
                <div>
@@ -6062,13 +6406,15 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                   {/* { this.renderAnnoPanel() } */}
                   { this.renderWithdrawn() }             
                   <div class="title">{ wTitle }{ iTitle }{ rTitle }</div>
-                  { this.renderHeader(kZprop.filter(k => mapProps.includes(k)), _T) }
-                  { (etext && !orig) && <div class="data" id="open-etext"><div><Link to={loca.pathname+loca.search+"#open-viewer"}>{I18n.t("resource.openViewer")}</Link></div></div> }
+                  { this.renderHeader(kZprop.filter(k => mapProps.includes(k)), _T, etextUT) }
+                  { (etext && !orig) && <div class="data" id="open-etext"><div><Link to={etextUT+"#open-viewer"}>{etextLoca}</Link></div></div> }
                   { (etext && orig) && <div class="data" id="open-etext"><div><a target="_blank" href={orig}>{I18n.t("resource.openO",{src:prov})}<img src="/icons/link-out_.svg"/></a></div></div> }
                   <div class={"data" + (_T === "Etext"?" etext-title":"")+(_T === "Images"?" images-title":"")}>
                      {_T === "Images" && iTitle?[<h2 class="on intro">{I18n.t("resource.scanF")}</h2>,iTitle]:(_T === "Etext" && iTitle?[<h2 class="on intro">{I18n.t("resource.etextF")}</h2>,iTitle]:title)}
                      {inTitle}
+                     {dates}
                   </div>
+                  { this.renderOCR() }
                   { this.renderNoAccess(fairUse) }
                   { this.renderAccess() }
                   { this.renderMirador(isMirador) }           
@@ -6078,27 +6424,34 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                   { (hasRel && !["Instance","Images","Etext"].includes(_T)) &&  
                      <div class="data related" id="resources">
                         <div>
-                           <div><h2>{I18n.t("index.related")}</h2>{ (related && related.length > 4 || createdBy && createdBy.length > 4) && <Link to={"/search?t=Work&r="+this.props.IRI}>{I18n.t("misc.seeA")}</Link> }</div>
+                           <div><h2>{I18n.t(_T=== "Place"?"index.relatedR":"index.related")}</h2>{ (related && related.length > 4 || createdBy && createdBy.length > 4) && <Link to={"/search?t="+(_T==="Place"&&this.state.relatedTab?"Instance":"Work")+"&r="+this.props.IRI}>{I18n.t("misc.seeA")}</Link> }</div>
                            { (related && related.length > 0 && (!createdBy  || !createdBy.length)) && <div class="rel-or-crea">{related}</div>}
                            { (createdBy && createdBy.length > 0 && (!related  || !related.length)) && <div class="rel-or-crea">{createdBy}</div>}
                            { (related.length > 0 && createdBy.length > 0) && <div>
                               <Tabs>
                                  <TabList>
-                                    <Tab>{I18n.t("resource.about")}</Tab>
-                                    <Tab>{I18n.t("resource.createdB")}</Tab>
+                                    <Tab onClick={(ev)=>this.setState({relatedTab:false,irel:0,icrea:0})}>{I18n.t(_T=== "Place"?"resource.wAbout":"resource.about",{resLabel, count:related.length, interpolation: {escapeValue: false}})} </Tab>
+                                    <Tab onClick={(ev)=>this.setState({relatedTab:true,irel:0,icrea:0})}>{I18n.t(_T=== "Place"?"resource.printedA":"resource.createdB",{resLabel, count:related.length, interpolation: {escapeValue: false}})}</Tab>
                                  </TabList>
                                  <TabPanel><div class="rel-or-crea">{related}</div></TabPanel>
                                  <TabPanel><div class="rel-or-crea">{createdBy}</div></TabPanel>
                               </Tabs>
                            </div> }
                         </div>
+                        { 
+                           (!this.state.relatedTab && related.length > 4 || this.state.relatedTab && createdBy.length > 4 || !related.length && createdBy.length > 4) &&
+                           <div id="related-nav" >
+                              <span class={!this.state.relatedTab&&related.length?(this.state.irel>0?"on":""):(this.state.icrea>0?"on":"")} onClick={(ev) => scrollRel(ev)}><img src="/icons/g.svg"/></span>
+                              <span class={navNext?"on":""} onClick={(ev) => scrollRel(ev,true)}><img src="/icons/d.svg"/></span>
+                           </div>
+                        }
                      </div> 
                   }         
                   { theOutline }
                   { theDataLegal }
                   { theDataExt && 
                      <div class="data ext-props" id="ext-info">
-                        <div><h2>{I18n.t("resource.extended")}</h2><span onClick={toggleExtProps}>{I18n.t("misc."+(!this.state.collapse.extProps?"seeA":"hide"))}</span></div>
+                        <div><h2>{I18n.t("resource.extended")}</h2><span onClick={toggleExtProps}>{I18n.t("misc."+extPlabel)}</span></div>
                      </div> }
                   { theDataExt }
                </div>

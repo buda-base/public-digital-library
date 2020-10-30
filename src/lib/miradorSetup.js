@@ -1,9 +1,9 @@
 
 
 const ldspdi = "//ldspdi.bdrc.io"
-const iiifpres = "//iiifpres.bdrc.io"
+let iiifpres = "//iiifpres.bdrc.io"
 
-let jQ,extendedPresets,sortLangScriptLabels,__
+let jQ,extendedPresets,sortLangScriptLabels,getMainLabel,getMainLabels,__
 
 let importModules = async () => {
    try {
@@ -13,6 +13,7 @@ let importModules = async () => {
 
       require(['./transliterators.js'],(module) => {
          sortLangScriptLabels = module.sortLangScriptLabels
+         getMainLabel = module.getMainLabel
          extendedPresets = module.extendedPresets ;
       });
 
@@ -175,6 +176,10 @@ async function hasEtextPage(manifest) {
       }
       else ut = false ;
       */
+
+      let initEtext = window.MiradorUseEtext
+      window.MiradorUseEtext = "pending" ;
+
       let check = await window.fetch(ldspdi+"/query/graph/Etext_base?R_RES="+IRI+"&format=json") ;
       let ut  = await check.json()
       if(ut) ut = ut[IRI.replace(/bdr:/,bdr)]
@@ -189,7 +194,8 @@ async function hasEtextPage(manifest) {
          return 
       }
       else {
-         if(!window.MiradorUseEtext) window.MiradorUseEtext = true;
+         if(!initEtext || initEtext === "pending") initEtext = true
+         window.MiradorUseEtext = initEtext;
       }
 
 
@@ -214,6 +220,8 @@ async function hasEtextPage(manifest) {
       */
 
       let getEtextPage = async (canvas) => { 
+
+         if(window.MiradorUseEtext != "open") return ;
 
          if(!canvas || !ut) return "(issue with canvas data: "+JSON.stringify(canvas,null,3)+")" ;
 
@@ -246,6 +254,8 @@ async function hasEtextPage(manifest) {
             
             console.log("loading DATA",id);
 
+            let start = id ;
+            while(id > 0 && start - id < NB_PAGES && !etextPages[ut][id - 1] ) { id -- ; } 
             for(let i = id ; i <= id+NB_PAGES-1 ; i++) etextPages[ut][i] = true ;
 
             let data = await window.fetch(ldspdi+"/lib/ChunksByPage?R_RES="+ut+"&I_START="+id+"&I_END="+(id+NB_PAGES-1), { headers:new Headers({accept:"application/ld+json"})}) ;
@@ -329,37 +339,42 @@ export async function miradorConfig(data, manifest, canvasID, useCredentials, la
    if(!_extendedPresets) _extendedPresets = window.extendedPresets
    let _sortLangScriptLabels = sortLangScriptLabels
    if(!_sortLangScriptLabels) _sortLangScriptLabels = window.sortLangScriptLabels
+   let _getMainLabel = getMainLabel
+   if(!_getMainLabel) _getMainLabel = window.getMainLabel
+   let _getMainLabels = getMainLabels
+   if(!_getMainLabels) _getMainLabels = window.getMainLabels
    if(langList === undefined) langList = [ "bo", "zh-hans" ]
+   let langs = _extendedPresets(langList)
+   let langsUI = _extendedPresets([ locale ].concat(langList))
 
-   let labelToString = (labels,labelArray) => {
+   let labelToString = (labels,labelArray,forceUIlg,keepAll) => {
 
+      //console.warn("labels:",labels);
       if(!labels) return ;
 
       // dont assume bo-x-ewts on unlocalized labels...
       // if(typeof labels == "string") labels = [ { "@value": labels, "@language":"bo-x-ewts" } ]
-      if(typeof labels == "string") return labels
+      
+      let label ;
+      if(!keepAll) {
 
-      let langs = _extendedPresets(langList)
-      let sortLabels = _sortLangScriptLabels(labels,langs.flat,langs.translit)
-      let label = sortLabels[0]
+         if(typeof labels == "string") return labels
+         else if(labels.length && typeof labels[0] === "string")  return labels[0] 
 
-      if(labelArray) labelArray.push(label);
+         label = _getMainLabel(labels,forceUIlg?langsUI:langs)
+         if(labelArray) labelArray.push(label);
+         return label["value"]
+         
+      } else {
+         if(typeof labels == "string") return ({ values: [ labels ] })
+         else if(labels.length && typeof labels[0] === "string")  return ({ values: labels }) 
 
-      //console.log("label",JSON.stringify(label,null,3))
-
-      if(label["@value"]) return label["@value"] //+"@"+label["@language"]
-      if(label["value"]) return label["value"]  //+"@"+label["language"]
-      else return label
-
-      /*
-      if(Array.isArray(label)) return label.map( e => (e["@value"]?e["@value"]+"@"+e["@language"]:e)).join("; ")
-      else if(label["@value"]) return label["@value"]+"@"+label["@language"]
-      else if(label["value"]) return label["value"]+"@"+label["language"]
-      else return label
-      */
-
+         label = _getMainLabels(labels,forceUIlg?langsUI:langs)
+         return label
+      }
    }
 
+   if(!window.MiradorUseEtext) window.MiradorUseEtext = "pending" ;
 
    let config = {
       id:"viewer",
@@ -762,7 +777,7 @@ function miradorAddZoomer() {
 
             scrollT.css({
                "transform":"scale("+coef+") translateY("+10/coef+"px) translateX("+trX/coef+"px)",
-               "margin-bottom":"-500000px" // no more empty space at bottom 
+               "margin-bottom":"-50000000px" // no more empty space at bottom 
             })            
             
             scrollT.find(".thumb-label").css({
@@ -837,7 +852,14 @@ export async function miradorInitView(work,lang,callerURI,locale) {
    let data = [
       { "collectionUri": "../tibcolldemo2.json", location: "BDRC - Palpung Collection"}
    ]
+
+   let conf = await (await fetch("/config.json")).json()
+   //console.log("conf:",conf)
+   if(conf.iiifpres) iiifpres = conf.iiifpres.endpoints[conf.iiifpres.index]
+   
    const urlParams = new URLSearchParams(window.location.search);
+   if(urlParams.get('iiifpres')) iiifpres = "//" + urlParams.get('iiifpres') 
+
    //const work = props.match.params.IRI;
    if(work) {
       console.log("work",work)
@@ -853,7 +875,23 @@ export async function miradorInitView(work,lang,callerURI,locale) {
       if(propK)
       {
          
-         if(propK["workHasItemImageAsset"] || propK["workLocation"]) { //workHasItemImageAsset
+         if(propK["instanceReproductionOf"]) {
+            const repro = propK["instanceReproductionOf"]
+            const elem = propK["instanceHasVolume"]
+            const nbVol = propK["itemVolumes"]
+
+            //.log("iRo:",repro,elem,nbVol);
+
+            if(nbVol === 1) {
+               data = [
+                  { "manifestUri" : iiifpres+"/vo:"+elem["@id"]+"/manifest", location:"" }
+               ]
+            }
+            else data = [
+               { "collectionUri" : iiifpres+"/collection/wio:"+repro["@id"], location:"" }
+            ]
+         }
+         else if(propK["workHasItemImageAsset"] || propK["workLocation"]) { //workHasItemImageAsset
 
             const item = propK["workHasItemImageAsset"]?propK["workHasItemImageAsset"]:propK["workLocation"]
 

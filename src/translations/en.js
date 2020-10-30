@@ -1,6 +1,7 @@
 
 const enTranslation = {
    punc: {
+      point:".",
       colon:":",
       num:"{{num}}",
       lpar:"(",
@@ -56,10 +57,11 @@ const enTranslation = {
       volume:"Volume",
       volume_num:"Volume {{num}}",
       searchIn:"in {{type}}",
-      product:"Product",
-      product_plural:"Products",
+      product:"Collection",
+      product_plural:"Collections",
       scan:"Scan",
-      scan_plural:"Scans"
+      scan_plural:"Scans",
+      serial:"Series"
    },
    topbar:{
       about:"about us",
@@ -122,6 +124,7 @@ const enTranslation = {
       open:"Open Access",
       fairUse:"Fair Use - Access to 20 first/last pages",
       tempo:"Temporarily Restricted",
+      quality:"Restricted by Quality",
       sealed:"Sealed",
       view:"View Scans",
       scans:"Scans Available",
@@ -148,7 +151,7 @@ const enTranslation = {
       "tmp:entityScore":"Entity Score",
       "tmp:instanceLabel":"$t(types.instance) Label",
       "tmp:dimensions":"Dimensions",
-      "bdo:publisherName":"Publisher",
+      "tmp:publisherName":"Publisher",
       "tmp:forWork":"For Work",
       "tmp:provider":"Provider",
       "tmp:author":"Author",
@@ -186,7 +189,10 @@ const enTranslation = {
       "tmp:BuddhistArt":"Buddhist Art",
       "tmp:other":"Other",
       "tmp:instanceOfWork":"Version of Work",
-      "tmp:lastSync":"Release Date"
+      "tmp:lastSync":"Release Date",
+      "tmp:versionType":"Version Type",
+      "tmp:standalone":"Standalone",
+      "tmp:partOfVersion":"Part of another Version"
    },
    result:{
       open:"Open",
@@ -204,13 +210,15 @@ const enTranslation = {
       openE:"Open Etext",
       hasInstance:"Has {{count}} $t(types.instance)",
       hasInstance_plural:"Has {{count}} $t(types.instance_plural)",
-      assoc:"{{type}} associated with: {{- name}}"
+      assoc:"{{type}} associated with: <res href='/show/{{- rid}}'>{{- name}}</res>",
+      moreres:"More {{txt}} are available, do you want to see them?"
    },
    index:{
       openViewer:"Open in Viewer",
       mainInfo:"Main Information",
       outline:"Outline",
       related:"Related Works",
+      relatedR:"Related Resources",
       extended:"Extended Information",
       userP:"User Profile",
       personalI:"Personal Information"
@@ -289,7 +297,8 @@ const enTranslation = {
       from:"from",
       in:"in",
       of:"of",
-      please:"Please"
+      please:"Please",
+      seeO:"See on",
    },
    lang:{
       en:"English",
@@ -307,9 +316,10 @@ const enTranslation = {
          saXIast:"Sanskrit (IAST)",
          saXNdia:"Sanskrit (Lenient)",
          saDeva:"Sanskrit (Devanagari)",
+         incXNdia:"Indic (Sanskrit or Pāli, Lenient)",
          en:"English",
-         pi:"Pali",
-         piXIast:"Pali (Rom.)",
+         pi:"Pāli",
+         piXIast:"Pāli (Rom.)",
          bo:"Tibetan (Unicode)",
          boXEwts:"Tibetan (Wylie)",
          boXEwtsLower:"Tibetan (lower case, Wylie)",
@@ -395,6 +405,7 @@ const enTranslation = {
       back:"Go back to search page",
       browse:"Browse associated resources",      
       openViewer:"Open in Etext Viewer",
+      openVolViewer:"Open Vol.{{VolN}} in Etext Viewer", /*Sec.{{TxtN}}",*/
       download:"Download",
       downloadAs:"Download as",
       version:"{{format}} version",
@@ -408,8 +419,12 @@ const enTranslation = {
       page:"img. {{num}}",
       volume:"v. {{num}}",
       availableScans:"available scans for this page",
-      about:"About",
-      createdB:"Created By",
+      about:"About {{resLabel.value}}",
+      wAbout:"Work about {{resLabel.value}}",
+      wAbout_plural:"Works about {{resLabel.value}}",
+      createdB:"Created by {{resLabel.value}}",
+      printedA:"Version printed at {{resLabel.value}}",
+      printedA_plural:"Versions printed at {{resLabel.value}}",
       extended:"Extended Properties",
       showD:"Show Details",
       hideD:"Hide Details",
@@ -431,7 +446,8 @@ const enTranslation = {
       gener3zip:"Download ZIP",
       nbTrans:" ({{count}} translation)",
       nbTrans_plural:" ({{count}} translations)",
-      openO:"Open on {{src}}"
+      openO:"Open on {{src}}",
+      noT:"[no title]"
    },
    mirador:{
       return:"return to BUDA",
@@ -449,8 +465,16 @@ const enTranslation = {
       downloadE:"Download Etext"
    },
    access:{
+      fairuse1:"BDRC <bold>restricts access</bold> to this work (only the first and last 20 images are available online) because the work is under <bold>copyright</bold>.",
+      fairuse2:"Please contact",
+      fairuse3:"for information about possibly accessing this work under fair use.",
+      sealed:"BDRC <bold>restricts access</bold> to this work because it was provided to BDRC on the condition that we respect <bold>traditional restrictions</bold> applied to it. If you have received the proper transmission from a spiritual teacher to access this work or have other questions about how to access this work please contact",
       limited20:"Access limited to first & last 20 pages.",
-      credentials:"if you have sufficient credentials to get access to all scans from this work."
+      credentials:"if you have sufficient credentials to get access to all scans from this work.",
+      notyet:"Images not yet available.",
+      error:"An error occurred while trying to access the images.",
+      generic:"BDRC has restricted access to this work in accordance with our access policies. You can read those policies here: <policies href='https://bdrc.io/access-policies/' target='_blank'>https://bdrc.io/access-policies/</policies>",
+      OCR:"These etexts were created through OCR (optical character recognition), not manually input, and have not been edited. OCR for Tibetan script is not 100% perfect but it is accurate enough to create text that will enhance the BDRC database. We hope that etexts like these improve the discoverability and usefulness of the BDRC archive for you."
    },
    location:{
       beginV:"Begin volume: {{num}}",
@@ -464,6 +488,7 @@ const enTranslation = {
       BDRC: "Buddhist Digital Resource Center",
       adr1: "1430 Massachusetts Ave., 5th floor",
       adr2: "Cambridge, MA, USA 02138",
+      adr:"Mailing address:<br/>198 Tremont St. #421<br/>Boston, MA, USA 02116",
       contact: "CONTACT US",
       connect: "Connect with us on social media",
       print:"Order printed copies of works referenced on our website",

@@ -73,6 +73,7 @@ async function initiateApp(params,iri,myprops,route) {
          
          // DONE UI language
          let locale = "en", val
+         if(config && config.chineseMirror) locale = "zh"
 
          // 1-url param
          if(params && params.uilang && ['bo','en','zh'].includes(params.uilang)) locale = params.uilang
@@ -365,7 +366,7 @@ else if(params && params.q) {
 }
 else if(params && params.r) {
    let t = getEntiType(params.r)
-   if(t === "Instance" || t === "Images" || t === "Volume" || t== "Scan") t = "Work"
+   if(["Instance", "Images", "Volume", "Scan"].includes(t) || ["bdo:SerialWork"].includes(params.r) ) t = "Work"
 
    loggergen.log("state r",t,state.data.searches,params,iri)
 
@@ -424,8 +425,8 @@ function extractAssoRes(iri,res) {
 
    let assocRes = {}, _res = {}
    let allowK = [ skos+"prefLabel", tmp+"withSameAs", bdo+"inRootInstance", bdo+"language", adm+"canonicalHtml", bdo+"partIndex", bdo+"volumeNumber", tmp+"thumbnailIIIFService", bdo+"instanceHasReproduction",
-                  tmp+"nbTranslations" ]
-   let allowR = [ skos+"prefLabel", bdo+"partIndex", bdo+"volumeNumber" ]
+                  tmp+"nbTranslations", tmp+"provider" ]
+   let allowR = [ skos+"prefLabel", bdo+"partIndex", bdo+"volumeNumber",  tmp+"thumbnailIIIFService" ]
 
    for(let k of Object.keys(res)) {                  
       _res[k] = { ...res[k], ..._res[k] }
@@ -1638,7 +1639,7 @@ function rewriteAuxMain(result,keyword,datatype,sortBy,language)
    let langPreset = state.ui.langPreset
    if(!sortBy) sortBy = state.ui.sortBy
    let reverse = sortBy && sortBy.endsWith("reverse")
-   let canPopuSort = false, isScan, isTypeScan = datatype.includes("Scan")
+   let canPopuSort = false, isScan, isTypeScan = datatype.includes("Scan"), inRoot
 
    result = Object.keys(result).reduce((acc,e)=>{
       if(e === "main") {
@@ -1652,6 +1653,7 @@ function rewriteAuxMain(result,keyword,datatype,sortBy,language)
          let dataWithAsset = keys.reduce( (acc,k) => { 
 
             isScan = false       
+            inRoot = false
 
             if(auth && !auth.isAuthenticated()) {	
                let status = result[e][k].filter(k => k.type === adm+"status" || k.type === tmp+"status")	
@@ -1664,12 +1666,21 @@ function rewriteAuxMain(result,keyword,datatype,sortBy,language)
             }
             
             let res = result[e][k].map(e => { 
-               if(!asset.includes(e.type)||e.value === "false") return e
-               else {
+               if(asset.includes(e.type) && e.value == "true") {
                   if(isTypeScan && e.type === _tmp+"hasImage") isScan = true ; 
                   return ({type:_tmp+"assetAvailability",value:e.type})
+               } else if(e.type === bdo+"inRootInstance") {
+                  inRoot = true
                }
+               return e
             } )
+
+            if(t === "instances") {
+               if(!inRoot) res.push({type:_tmp+"versionType", value:_tmp+"standalone"})
+               else res.push({type:_tmp+"versionType", value:_tmp+"partOfVersion"})
+            }
+
+
 
             canPopuSort = canPopuSort || (res.filter(e => e.type === tmp+"entityScore").length > 0)            
             let chunks = res.filter(e => e.type === bdo+"eTextHasChunk")

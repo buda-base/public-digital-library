@@ -29,7 +29,8 @@ import rootSaga from './state/sagas'
 import { i18nextInit, i18nextSaga } from 'i18next-redux-saga';
 import i18nextReducer from './state/i18n-reducer';
 import {numtobo} from "./lib/language"
-
+import { initReactI18next } from 'react-i18next';
+import I18n from 'i18next';
 
 // For dev only
 import { composeWithDevTools } from 'redux-devtools-extension';
@@ -85,6 +86,11 @@ const i18nextConfig = {
       }
    }
 };
+
+
+I18n.use(initReactI18next);
+
+
 
 // NOTO
 // x use simpler ontologySchema (=> reload when translate) cf http://purl.bdrc.io/query/graph/OntologyUiStrings?L_LNG=en&format=json

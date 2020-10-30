@@ -285,6 +285,8 @@ export const gotResource = (state: DataState, action: Action) => {
 
                         if(v_nm[rdf+"type"] && w_nm[rdf+"type"] && v_nm[rdf+"type"].length && w_nm[rdf+"type"].length && v_nm[rdf+"type"][0].value === w_nm[rdf+"type"][0].value) {
 
+                           // TODO merge labels (same name/title type? same language?)
+
                            console.log("nodes:",v_nm,w_nm)
 
                         }
@@ -310,7 +312,7 @@ export const gotResource = (state: DataState, action: Action) => {
                   }
                   if(!found) {
 
-                     if(v.type !== "bnode" && v.type !== "uri") {
+                     if(v.type !== "bnode" && v.type !== "uri" || p.includes("Translation") ) {
                         v.allSameAs = [ k ]
                         v.fromSameAs = k
                      } else if(p.endsWith("Event")) { 
@@ -323,7 +325,6 @@ export const gotResource = (state: DataState, action: Action) => {
                         }  
                         //console.log("v_ev",v_ev)
                      } 
-                     /* // WIP
                      else if(p.endsWith("Name")) { 
                         let v_nm = data[v.value]
                         if(v_nm && v_nm[rdfs+"label"] && v_nm[rdfs+"label"].length) for(let q of v_nm[rdfs+"label"]) {
@@ -331,7 +332,6 @@ export const gotResource = (state: DataState, action: Action) => {
                            q.fromSameAs = k
                         }
                      }
-                     */
                      
                      data[uri][p].push(v)
 
