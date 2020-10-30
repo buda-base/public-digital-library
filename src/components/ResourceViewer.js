@@ -779,7 +779,7 @@ class ResourceViewer extends Component<Props,State>
       window.closeViewer = () => {
          //delete window.mirador
 
-         loggergen.log("closeV",this.state,this.props)
+         loggergen.log("closeV",this.state.fromSearch,this.state,this.props)
 
          let fromSearch
          if(this.state.fromSearch) {
@@ -799,9 +799,18 @@ class ResourceViewer extends Component<Props,State>
             }
          }
 
-         this.setState({...this.state, openUV:false, openMirador:false, openDiva:false,fromSearch}); 
          if(window.mirador) delete window.mirador
          if(window.MiradorUseEtext) delete window.MiradorUseEtext ;
+
+         let loca = { ...this.props.history.location }
+         if(loca.hash == "#open-viewer") { 
+            loca.hash = ""
+            window.closeMirador = true;
+            this.props.history.push(loca);            
+         }
+
+         this.setState({...this.state, openUV:false, openMirador:false, openDiva:false,fromSearch}); 
+
       }
    }
 
