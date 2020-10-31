@@ -16,7 +16,9 @@ To start the test server:
 
 It should automatically open the test page in Chrome. Otherwise, visit <http://localhost:3000>
 
+To test:
 
+    yarn jest language
 
 ## Settings
 

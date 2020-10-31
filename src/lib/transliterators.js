@@ -53,6 +53,12 @@ export function translitHelper(src,dst) {
    }
 }
 
+export function ewtsToDisplay(src) {
+   src = src.replace(/_/g, " ")
+   src = src.replace(/[ \/]+$/, "")
+   return src
+}
+
 export function extendedPresets(preset)
 {
    // invscore is a score assigned to each possible lang tags, the lower the better. In the rest of the
@@ -131,12 +137,19 @@ export function sortLangScriptLabels(data,preset,translit)
       //console.log("k v",k,v,translit[k],e) //,transliterators)
 
       let tLit
-      if(translit[k]) {
+      if (translit[k]) {
          tLit = { ...e }
          let val = "@value", lan = "@language"
          if(!e["@value"]) {  val = "value" ; lan = "lang" ; tLit["type"] = "literal" ; }
          tLit[val] = translitHelper(k,translit[k])(v)
          tLit[lan] = translit[k]
+         if(tLit["xml:lang"]) delete tLit["xml:lang"]
+      } else if (k.endsWith("ewts")) {
+         tLit = { ...e }
+         let val = "@value", lan = "@language"
+         if(!e["@value"]) {  val = "value" ; lan = "lang" ; tLit["type"] = "literal" ; }
+         tLit[val] = ewtsToDisplay(v)
+         tLit[lan] = k
          if(tLit["xml:lang"]) delete tLit["xml:lang"]
       }
 
@@ -214,6 +227,8 @@ export function getMainLabel(data,extpreset)
    if (extpreset.translit[bestlt] && transliterators[bestlt] && transliterators[bestlt][extpreset.translit[bestlt]]) {
       val = transliterators[bestlt][extpreset.translit[bestlt]](val)
       bestlt = extpreset.translit[bestlt]
+   } else if (bestlt.endsWith("ewts")) {
+      val = ewtsToDisplay(val)
    }
 
    return {"value": val, "lang": bestlt}
@@ -249,6 +264,8 @@ export function getMainLabels(data,extpreset)
      if (extpreset.translit[bestlt] && transliterators[bestlt] && transliterators[bestlt][extpreset.translit[bestlt]]) {
         val = transliterators[bestlt][extpreset.translit[bestlt]](val)
         bestlt = extpreset.translit[bestlt]
+     } else if (bestlt.endsWith("ewts")) {
+        val = ewtsToDisplay(val)
      }
      vals.push(val)
    }

@@ -16,7 +16,7 @@ import tcpPortUsed from 'tcp-port-used'
 import 'whatwg-fetch'
 import {narrowWithString} from "./langdetect"
 import {langScripts,makeLangScriptLabel} from "./language"
-import {sortLangScriptLabels,transliterators,translitHelper,extendedPresets, importModules, getMainLabel, getMainLabels} from "./transliterators"
+import {sortLangScriptLabels,transliterators,translitHelper,extendedPresets, importModules, getMainLabel, getMainLabels, ewtsToDisplay} from "./transliterators"
 
 let makeRoutes = require('../routes').default
 let bdrcAPI = require('../lib/api').default;
@@ -94,16 +94,16 @@ describe('language settings tests', () => {
    it('sorting json/jsonld labels', () => {
 
       const jsonldLabels1sorted1 = [
-         { "@language": "bo-x-ewts", "@value": "rdzogs chen/", "_val": "rdzogs chen/" },
-         { "@language": "bo-x-ewts","@value": "rdzogs pa chen po/","_val": "rdzogs pa chen po/" },
+         { "@language": "bo-x-ewts", "@value": "rdzogs chen", "_val": "rdzogs chen" },
+         { "@language": "bo-x-ewts","@value": "rdzogs pa chen po","_val": "rdzogs pa chen po" },
          { "@language": "sa-x-iast", "@value": "mahāśānti", "_val": "mahāśānti" },
          { "@language": "en", "@value": "great perfection", "_val": "great perfection" },
          { "@language": "zh-hans", "@value": "大圆满", "_val": "大圆满" },
       ] ;
 
       const jsonLabels1sorted1 = [
-         { type: "literal", value: "rdzogs chen/", "_val": "rdzogs chen/", lang: "bo-x-ewts" },
-         { type: "literal", value: "rdzogs pa chen po/", "_val": "rdzogs pa chen po/", lang: "bo-x-ewts" },
+         { type: "literal", value: "rdzogs chen", "_val": "rdzogs chen", lang: "bo-x-ewts" },
+         { type: "literal", value: "rdzogs pa chen po", "_val": "rdzogs pa chen po", lang: "bo-x-ewts" },
          { type: "literal", value: "mahāśānti", "_val": "mahāśānti", lang: "sa-x-iast" },
          { type: "literal", value: "great perfection", "_val": "great perfection", lang: "en" },
          { type: "literal", value: "大圆满", "_val": "大圆满", lang: "zh-hans" },
@@ -117,16 +117,16 @@ describe('language settings tests', () => {
 
       const jsonldLabels1sorted2 = [
          { "@language": "zh-hans", "@value": "大圆满", "_val": "大圆满" },
-         { "@language": "bo-x-ewts", "@value": "rdzogs chen/", "_val": "rdzogs chen/" },
-         { "@language": "bo-x-ewts","@value": "rdzogs pa chen po/","_val": "rdzogs pa chen po/" },
+         { "@language": "bo-x-ewts", "@value": "rdzogs chen", "_val": "rdzogs chen" },
+         { "@language": "bo-x-ewts","@value": "rdzogs pa chen po","_val": "rdzogs pa chen po" },
          { "@language": "en", "@value": "great perfection", "_val": "great perfection" },
          { "@language": "sa-x-iast", "@value": "mahāśānti", "_val": "mahāśānti" },
       ] ;
 
       const jsonLabels1sorted2 = [
          { type: "literal", value: "大圆满", _val: "大圆满", lang: "zh-hans" },
-         { type: "literal", value: "rdzogs chen/", _val: "rdzogs chen/", lang: "bo-x-ewts" },
-         { type: "literal", value: "rdzogs pa chen po/", _val: "rdzogs pa chen po/", lang: "bo-x-ewts" },
+         { type: "literal", value: "rdzogs chen", _val: "rdzogs chen", lang: "bo-x-ewts" },
+         { type: "literal", value: "rdzogs pa chen po", _val: "rdzogs pa chen po", lang: "bo-x-ewts" },
          { type: "literal", value: "great perfection", _val: "great perfection", lang: "en" },
          { type: "literal", value: "mahāśānti", _val: "mahāśānti", lang: "sa-x-iast" },
       ] ;
@@ -265,6 +265,14 @@ describe('language settings tests', () => {
         expect(getMainLabel(jsonLabels3, extendedPresets(["bo", "en"]))).toEqual({"value": "རྫོགས་ཆེན།", "lang": "bo"})
         expect(getMainLabel(jsonLabels2, extendedPresets(["bo", "en"]))).toEqual({"value": "རྫོགས་ཆེན", "lang": "bo"})
         expect(getMainLabels(jsonLabels3, extendedPresets(["bo", "en"]))).toEqual({"values": ["རྫོགས་ཆེན།", "རྫོགས་པ་ཆེན་པོ།"], "lang": "bo"})
+        done()
+    })
+
+   it('testing ewtsToDisplay', async (done) => {
+
+        await importModules()
+
+        expect(ewtsToDisplay("rdzogs test_chen / test_2// //")).toEqual("rdzogs test chen / test 2")
         done()
     })
 
