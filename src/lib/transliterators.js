@@ -213,6 +213,8 @@ export function getMainLabel(data,extpreset)
       let k = e["lang"]
       if(!k) k = e["@language"]
       if(!k) k = e["xml:lang"]
+      // case of strings with no lang tag
+      if(!k) k = ""
       let thisscore = extpreset.invscores[k] || 99;
       if (thisscore < bestscore || bestelt === null) {
         bestelt = e;
@@ -246,6 +248,8 @@ export function getMainLabels(data,extpreset)
       let k = e["lang"]
       if(!k) k = e["@language"]
       if(!k) k = e["xml:lang"]
+      // case of strings with no lang tag
+      if(!k) k = ""
       let thisscore = extpreset.invscores[k] || 99;
       if (thisscore < bestscore || bestelts === null) {
         bestelts = [e];

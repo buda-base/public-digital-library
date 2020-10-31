@@ -381,20 +381,22 @@ export function getLangLabel(that:{},prop:string="",labels:[],proplang:boolean=f
       }
       */
 
-      langs = extendedPresets(langs)
+      langs = extendedPresets(langs);
 
       //loggergen.log(JSON.stringify(labels,null,3))
-      //loggergen.log(JSON.stringify(sortLabels,null,3))
 
-      if(otherLabels) {
-         let sortLabels =  sortLangScriptLabels(labels,langs.flat,langs.translit)
-         let labels = [ ...sortLabels ]
-         labels.shift()
-         for(let e of labels) otherLabels.push(e)
-         return sortLabels[0]
+      if (!otherLabels) {
+         return getMainLabel(labels, langs)
       }
 
-      return getMainLabel(labels, langs)
+      let sortLabels =  sortLangScriptLabels(labels,langs.flat,langs.translit);
+
+      let labels2 = [ ...sortLabels ];
+      labels2.shift();
+      for(let e of labels2) otherLabels.push(e);
+      return sortLabels[0];
+
+   //   return sortLabels[0];
 
       /*
       let l,langs = [];
