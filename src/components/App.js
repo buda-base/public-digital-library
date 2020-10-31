@@ -74,7 +74,7 @@ import ResourceViewerContainer from '../containers/ResourceViewerContainer';
 import {getOntoLabel,provImg as img,providers} from './ResourceViewer';
 import {getEntiType} from '../lib/api';
 import {narrowWithString} from "../lib/langdetect"
-import {sortLangScriptLabels, extendedPresets} from '../lib/transliterators';
+import {sortLangScriptLabels, extendedPresets, getMainLabel} from '../lib/transliterators';
 import './App.css';
 import Footer from "./Footer"
 
@@ -384,18 +384,17 @@ export function getLangLabel(that:{},prop:string="",labels:[],proplang:boolean=f
       langs = extendedPresets(langs)
 
       //loggergen.log(JSON.stringify(labels,null,3))
-
-      let sortLabels =  sortLangScriptLabels(labels,langs.flat,langs.translit)
-
       //loggergen.log(JSON.stringify(sortLabels,null,3))
 
       if(otherLabels) {
+         let sortLabels =  sortLangScriptLabels(labels,langs.flat,langs.translit)
          let labels = [ ...sortLabels ]
          labels.shift()
          for(let e of labels) otherLabels.push(e)
+         return sortLabels[0]
       }
 
-      return sortLabels[0]
+      return getMainLabel(labels, langs)
 
       /*
       let l,langs = [];
