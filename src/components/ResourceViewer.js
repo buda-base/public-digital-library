@@ -5001,7 +5001,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                      tags = this.getWorkLocation(elem)
                   }             
                   
-                  if(k == bdo+"placeRegionPoly" || (k == bdo+"placeLong" && !doRegion)) {
+                  if((!this.props.config || !this.props.config.chineseMirror) && (k == bdo+"placeRegionPoly" || (k == bdo+"placeLong" && !doRegion))) {
                      return this.renderMap(elem, k, tags, kZprop, doMap, doRegion, regBox, title)
                   }
                   else if(this.state.openEtext && k == bdo+"eTextHasPage") {
@@ -5258,7 +5258,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
             </a>
          </div>
          )
-      else if(kZprop.length)
+      else if(kZprop.length && (!this.props.config || !this.props.config.chineseMirror))
          return <div class="data" id="map">{this.renderData(kZprop,null,null,null,"header")}</div>
       else if(etext && !(prov !== "BDRC" && prov && orig)) {
          let loca = this.props.history.location

@@ -1019,7 +1019,8 @@ export default class API {
          // to use with ldspdi running locally
          path = "//purl.bdrc.io" +  DICTIONARY_PATH;         
 
-         if(config && config.chineseMirror) path = "/ldspdi" + DICTIONARY_PATH;
+         if(!window.location.href.startsWith("http://localhost") && config && config.chineseMirror) path = "/ldspdi" + DICTIONARY_PATH;
+
 
          // to use with ldspdi-dev
          //path = "//ldspdi-dev.bdrc.io" +  DICTIONARY_PATH;
