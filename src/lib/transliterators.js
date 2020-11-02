@@ -260,6 +260,7 @@ export function getMainLabels(data,extpreset)
       }
    }
    let vals = []
+   let destlt = bestlt
    for (let e of bestelts) {
      let val = e["value"]
      if (!val) val = e["@value"]
@@ -267,14 +268,14 @@ export function getMainLabels(data,extpreset)
 
      if (extpreset.translit[bestlt] && transliterators[bestlt] && transliterators[bestlt][extpreset.translit[bestlt]]) {
         val = transliterators[bestlt][extpreset.translit[bestlt]](val)
-        bestlt = extpreset.translit[bestlt]
+        destlt = extpreset.translit[bestlt]
      } else if (bestlt.endsWith("ewts")) {
         val = ewtsToDisplay(val)
      }
      vals.push(val)
    }
    
-   return {"values": vals, "lang": bestlt}
+   return {"values": vals, "lang": destlt}
 }
 
 

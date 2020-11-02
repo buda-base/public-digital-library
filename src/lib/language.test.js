@@ -268,6 +268,21 @@ describe('language settings tests', () => {
         done()
     })
 
+   it('testing getMainLabels', async (done) => {
+
+        await importModules()
+
+         const jsonLabels2 = [
+            { type: "literal", value: "rdzogs chen", lang: "bo-x-ewts" },
+            { type: "literal", value: "大圆满", lang: "zh-hans" },
+            { type: "literal", value: "rdzogs pa chen po/", lang: "bo-x-ewts" },
+            { type: "literal", value: "great perfection", lang: "en" },
+         ] ;
+
+        expect(getMainLabels(jsonLabels2, extendedPresets(["sa-deva", "bo", "en"]))).toEqual({"values": ["རྫོགས་ཆེན", "རྫོགས་པ་ཆེན་པོ།"], "lang": "bo"})
+        done()
+    })
+
    it('testing ewtsToDisplay', async (done) => {
 
         await importModules()
