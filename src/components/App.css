@@ -361,7 +361,7 @@ body { overflow:auto !important;padding-right:0 !important; /*font-family:"Robot
 /* --------------------------------------------------------------------------------------------------------------------- topbar */
 
 .nav { width:100%; height:80px; position:fixed;top:0;left:0;background:white; display:flex;align-items: center; justify-content: center;
-   box-shadow: 0 2px 4px rgba(187, 187, 187, 0.5); z-index:10010;
+   box-shadow: 0 2px 4px rgba(187, 187, 187, 0.5); z-index:10010; position:relative;
 }
 
 .nav #back,.nav #back h2 span { 
@@ -373,7 +373,7 @@ body { overflow:auto !important;padding-right:0 !important; /*font-family:"Robot
 .nav #back > * { vertical-align:middle;}
 .nav #back {  max-width:calc(100% - 400px); display: flex;  align-items: center; justify-content: flex-end;}
 .nav #back span { margin-left:auto; }
-.nav #back > span:first-child { padding-right:10px; } 
+.nav #back > span:first-child { padding-right:10px;padding-top:2px; } 
 .nav #back a { cursor: pointer; flex-shrink:0;}
 .nav #back h2::before { content:' '; border-left:2px solid  #152631; margin:0 10px; height:12px;width:2px; display:inline-block; vertical-align:-1px; }
 .nav #back h2 .T { display:none; }
@@ -382,12 +382,16 @@ body { overflow:auto !important;padding-right:0 !important; /*font-family:"Robot
 .nav #back h2.on > *,.nav #back h2.on::before { vertical-align: middle;}
 .nav #back h2 .lang { display:none; }
 
-.nav #back > span:last-child { display:inline-block;   max-width:50vw; margin-left:0;   white-space: pre;   }
-.nav #back h2 {    overflow: hidden; margin:0; display:inline-block; } 
-.nav #back h2 span { overflow: hidden; text-overflow: ellipsis; max-width:calc(50vw - 70px); display:inline-block;} 
+.nav #back > span:last-child { display:inline-block;   max-width:calc(100% - 100px); margin-left:0;   white-space: pre; overflow: hidden; text-overflow: ellipsis;  
+   color:#d73449;
+}
+.nav #back h2 {    overflow: hidden; margin:0; display:inline; } 
+.nav #back h2 span { /*max-width:calc(75% - 70px);*/ display:inline;} 
+
+.nav #back span + a { padding-top:4px;}
 
 #etext-nav > div,
-.nav > div { width:1222px; display:flex;justify-content: space-between;align-items:center; }
+.nav > div { width:1222px; display:flex;justify-content: space-between;align-items:center; max-width:100%;}
 /* .nav > div > a > img { height:50px; } */
 
 .nav > div > div > a > img { vertical-align: middle;}
