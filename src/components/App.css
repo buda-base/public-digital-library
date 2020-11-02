@@ -7,6 +7,9 @@
 
 @import url('//fonts.googleapis.com/css2?family=Noto+Sans+TC&display=swap');
 
+
+@import url('//fonts.googleapis.com/earlyaccess/notosanstibetan.css');
+
 /* CSS debug mode */
 /* * {background-color:rgba(255,0,128,0.05);}   */
 
@@ -437,6 +440,7 @@ footer #donate,
    padding-left:2px; box-sizing: border-box; 
 }
 .nav .history span img { opacity:0.5; }
+
 
 
 /* ---------------------------------------------------------------------------------------------------------------------- "sidepanes" */
@@ -1392,6 +1396,14 @@ vertical-align:middle;}
 */
 
 /* ------------------------------------------------------------------------------------------------------------------------ title/tabs */
+
+
+.resource .nav + .title h2[lang=bo] span:not(.RID) { font-family:"Noto Sans Tibetan","Noto Sans", "Roboto", "Helvetica", "Arial", sans-serif !important;
+   font-size:20px ; 
+}
+
+.resource .nav + .title h2[lang=bo] .RID { top:38px; }
+.resource .nav + .title h2[lang=bo] .T::before { vertical-align: -28px; }
 
 .resource .title h2:first-of-type:last-of-type { display:none; }
 

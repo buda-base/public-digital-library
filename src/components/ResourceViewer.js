@@ -3791,8 +3791,8 @@ class ResourceViewer extends Component<Props,State>
 
       //loggergen.log("H2?",rootC)
 
-      if(other) return <h2 title={title.value}><Link  {... rootC?{onClick:rootC}:{}}  to={"/show/"+shortUri(other)+this.getTabs(T_,other)}>{_T}<span>{_befo}{title.value}</span>{this.tooltip(title.lang)}</Link></h2>
-      else return <h2 title={title.value} class="on">{_T}<span>{_befo}{title.value}</span>{this.tooltip(title.lang)}</h2>
+      if(other) return <h2 title={title.value} lang={this.props.locale}><Link  {... rootC?{onClick:rootC}:{}}  to={"/show/"+shortUri(other)+this.getTabs(T_,other)}>{_T}<span>{_befo}{title.value}</span>{this.tooltip(title.lang)}</Link></h2>
+      else return <h2 title={title.value} lang={this.props.locale} class="on">{_T}<span>{_befo}{title.value}</span>{this.tooltip(title.lang)}</h2>
    }
 
    setTitle = (kZprop,_T,other,rootC) => {
@@ -3813,8 +3813,8 @@ class ResourceViewer extends Component<Props,State>
          titlElem = this.getResourceElem(rdfs+"label",other,this.props.assocResources);
       }
       else {
-          if(other) title = <h2><Link to={"/show/"+shortUri(other)+this.getTabs(T_,other)}>{_T}<span>{shortUri(other?other:this.props.IRI)}</span></Link></h2>
-          else  title = <h2 class="on">{_T}<span>{shortUri(other?other:this.props.IRI)}</span></h2>
+          if(other) title = <h2 lang={this.props.locale}><Link to={"/show/"+shortUri(other)+this.getTabs(T_,other)}>{_T}<span>{shortUri(other?other:this.props.IRI)}</span></Link></h2>
+          else  title = <h2 class="on" lang={this.props.locale}>{_T}<span>{shortUri(other?other:this.props.IRI)}</span></h2>
       }
       
       if(!title) {
