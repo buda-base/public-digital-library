@@ -927,6 +927,9 @@ class ResourceViewer extends Component<Props,State>
          if(_T === "Images" || _T === "Etext") {            
             if(!s) s = { ...state }
             if(!work && s.title.work) work = s.title.work
+            else if( /* _T === "Etext" && */ instance) {
+               work = getElem(bdo+"instanceOf",shortUri(instance[0].value));
+            }
             if(!instance && s.title.instance) instance = s.title.instance
             images = [ { type:"uri", value:fullUri(props.IRI) } ]
             s.title = { work, images, instance }
@@ -938,7 +941,10 @@ class ResourceViewer extends Component<Props,State>
             //if(!work && s.title.work) work = s.title.work
 
             // TODO find a way to keep an existing Etext/Images tab
-            //if(!s.title.images) images = images.filter(e => getEntiType(e.value) === "Images")
+            if(s.title.images) {  
+               let _in = getElem(bdo+"instanceReproductionOf",shortUri(s.title.images[0].value))
+               if(_in && _in.length && shortUri(_in[0].value) === props.IRI) images = s.title.images
+            }
 
             instance = [ { type:"uri", value:fullUri(props.IRI) } ]
             s.title = { work, instance, images }
@@ -4778,6 +4784,8 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
                let pageVal ="", pageLang = "", current = []
 
+            let showIm = ((this.state.showEtextImages && !(this.state.collapse["image-"+this.props.IRI+"-"+e.seq] === false)) || this.state.collapse["image-"+this.props.IRI+"-"+e.seq])
+
             return (
             <div class={"etextPage"+(this.props.manifestError&&!imageLinks?" manifest-error":"")+ (!e.value.match(/[\n\r]/)?" unformated":"") + (e.seq?" hasSeq":"")/*+(e.language === "bo"?" lang-bo":"")*/ }>
                {/*                                          
@@ -4785,7 +4793,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                   <img title="Open image+text view in Mirador" onClick={eve => { openMiradorAtPage(imageLinks[e.seq].id) }} style={{maxWidth:"100%"}} src={imageLinks[e.seq].image} />
                */}
                {
-                  e.seq && ((this.state.showEtextImages && !(this.state.collapse["image-"+this.props.IRI+"-"+e.seq] === false)) || this.state.collapse["image-"+this.props.IRI+"-"+e.seq]) && Object.keys(imageLinks).sort().map(id => {
+                  e.seq && showIm && Object.keys(imageLinks).sort().map(id => {
                      if(!this.state.collapse["imageVolume-"+id] && imageLinks[id][e.seq]) 
                         return (
                            <div class="imagePage">
@@ -4814,17 +4822,17 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                   })
                }
                { e.seq && <div> 
-                  <span class="button" title={I18n.t("misc."+(!this.state.collapse["image-"+this.props.IRI+"-"+e.seq]?"show":"hide"))+" "+I18n.t("available scans for this page")} 
+                  <span class="button" title={I18n.t("misc."+(!showIm?"show":"hide"))+" "+I18n.t("available scans for this page")} 
                   onClick={(eve) => {
                         let id = "image-"+this.props.IRI+"-"+e.seq
-                        this.setState({...this.state, collapse:{...this.state.collapse, [id]:!this.state.collapse[id]}}) 
+                        this.setState({...this.state, collapse:{...this.state.collapse, [id]:!showIm}}) 
                      }}> 
                      <img src="/icons/image.svg"/>
                   </span> 
                   {/* { <h5><a title="Open image+text view in Mirador" onClick={eve => { openMiradorAtPage(imageLinks[e.seq].id) }}>p.{e.seq}</a></h5> } */}
-                  {   <h5><a title={I18n.t("misc."+(!this.state.collapse["image-"+this.props.IRI+"-"+e.seq]?"show":"hide"))+" "+I18n.t("available scans for this page")} onClick={(eve) => {
+                  {   <h5><a title={I18n.t("misc."+(!showIm?"show":"hide"))+" "+I18n.t("available scans for this page")} onClick={(eve) => {
                         let id = "image-"+this.props.IRI+"-"+e.seq
-                        this.setState({...this.state, collapse:{...this.state.collapse, [id]:!this.state.collapse[id]}}) 
+                        this.setState({...this.state, collapse:{...this.state.collapse, [id]:!showIm}}) 
                      }}>{I18n.t("resource.page",{num:e.seq})}</a>                                             
                      </h5> }
                      &nbsp;
@@ -6047,6 +6055,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          rTitle = getWtitle(baseW)
       }
       
+      console.log("_T!!",_T)
       if(this.props.resources && this.props.resources[this.props.IRI] && _T !== "Etext") this.setManifest(kZprop,iiifpres)    
 
 
@@ -6313,7 +6322,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                if(this.props.IIIFerrors[sRid]) rView = false
             }
             else {
-               if(sRid !== this.props.IRI && this.props.resources  && this.props.resources[sRid] && this.props.resources[sRid][this.state.title.images[0].value])  {
+               if(sRid !== this.props.IRI && this.props.resources  && this.props.resources[sRid] && this.props.resources[sRid][this.state.title.images[0].value] && !this.state.title.images[0].value.includes("resource/IE"))  {
                   this.setManifest(Object.keys(this.props.resources[sRid][this.state.title.images[0].value]),iiifpres,sRid,this.state.title.images[0].value)    
                }
             }
