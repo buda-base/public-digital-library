@@ -940,7 +940,7 @@ class ResourceViewer extends Component<Props,State>
             // see #283
             //if(!work && s.title.work) work = s.title.work
 
-            // TODO find a way to keep an existing Etext/Images tab
+            // DONE find a way to keep an existing Etext/Images tab
             if(s.title.images) {  
                let _in = getElem(bdo+"instanceReproductionOf",shortUri(s.title.images[0].value))
                if(_in && _in.length && shortUri(_in[0].value) === props.IRI) images = s.title.images
@@ -1938,7 +1938,7 @@ class ResourceViewer extends Component<Props,State>
       if(!info) info = [ getLangLabel(this, prop, infoBase.filter((e)=>((e["xml:lang"] || e["lang"] || e.fromKey && e.fromKey === foaf+"name")))) ]                        
       if(!info) info = [ getLangLabel(this, prop, infoBase.filter((e)=>((e["xml:lang"] || e["lang"]) && e.type==prop))) ]
 
-      //loggergen.log("info?",prop,infoBase,info)
+      loggergen.log("info?",prop,infoBase,info)
 
       //if(info.value) info = info.value
 
@@ -1952,9 +1952,9 @@ class ResourceViewer extends Component<Props,State>
          
          info = [ getLangLabel(this, prop, infoBase) ]
 
-         //loggergen.log("info?",info)
+         loggergen.log("info?",info)
 
-         if(info && info[0] &&  !info[0].datatype) {
+         if(info && info[0] && (info[0]["xml:lang"] || info[0]["lang"]) && !info[0].datatype) {
             lang = info[0]["xml:lang"]
             if(!lang) lang = info[0]["lang"]
             info = info[0].value 
