@@ -371,7 +371,7 @@ body { overflow:auto !important;padding-right:0 !important; /*font-family:"Robot
    color: #152631;
 }
 .nav #back > * { vertical-align:middle;}
-.nav #back {  max-width:calc(100% - 300px); display: flex;  align-items: center; justify-content: flex-end;}
+.nav #back {  max-width:calc(100% - 400px); display: flex;  align-items: center; justify-content: flex-end;}
 .nav #back span { margin-left:auto; }
 .nav #back > span:first-child { padding-right:10px; } 
 .nav #back a { cursor: pointer; flex-shrink:0;}
@@ -382,9 +382,9 @@ body { overflow:auto !important;padding-right:0 !important; /*font-family:"Robot
 .nav #back h2.on > *,.nav #back h2.on::before { vertical-align: middle;}
 .nav #back h2 .lang { display:none; }
 
-.nav #back > span:last-child { display:inline-block;   max-width:60vw; margin-left:0;   white-space: pre;   }
+.nav #back > span:last-child { display:inline-block;   max-width:50vw; margin-left:0;   white-space: pre;   }
 .nav #back h2 {    overflow: hidden; margin:0; display:inline-block; } 
-.nav #back h2 span { overflow: hidden; text-overflow: ellipsis; max-width:calc(60vw - 70px); display:inline-block;} 
+.nav #back h2 span { overflow: hidden; text-overflow: ellipsis; max-width:calc(50vw - 70px); display:inline-block;} 
 
 #etext-nav > div,
 .nav > div { width:1222px; display:flex;justify-content: space-between;align-items:center; }
@@ -1563,7 +1563,7 @@ vertical-align:middle;}
    left:calc((100vw - 1440px)/2 + 324px) !important; /* TODO fix when width under ~1250px */
 }
 
-#popHoverM[data-class="in-etext"] > div:last-child { width:calc(90% - 60px); left:calc((100vw - 90% + 60px)/2 - 7px) !important; }
+#popHoverM[data-class="in-etext"] > div:last-child { width:min(90vw,1100px);}
 #popHoverM[data-class="in-etext"] > div:last-child .data { padding-right:30px; }
 #popHoverM[data-class="in-etext"] > div:last-child .data .react-tabs { flex-grow: 10; flex-shrink: 0; max-width: 1000%; width: 100%; }
 
@@ -2445,7 +2445,8 @@ html[lang="en"] .resource .data > [data-prop="bdo:creator"] h4[data-prop="bdo:ro
 #root > div > .resource.etext-view .data .etextPage { display:block; width:100%; }
 #root > div > .resource.etext-view .data .etextPage:first-child { border:none; margin-top:0; padding-top:0;}
 
-.resource.etext #etext-scroll [lang=bo] > span:not(.startChar) { font-family:'Tibetan Machine Uni'; }
+.resource.etext-view [lang=bo] > span[lang],
+.resource.etext #etext-scroll [lang=bo] > span:not(.startChar) { font-family:'Tibetan Machine Uni' !important; }
 
 #etext-scroll > .etextPage:first-child { margin-top:20px; }
 
@@ -2457,6 +2458,8 @@ html[lang="en"] .resource .data > [data-prop="bdo:creator"] h4[data-prop="bdo:ro
 .resource .data h4.page .startChar { display:block; }
 
 .resource .etext-data .startChar { display:none !important;}
+
+.resource .etext-data > div > h4 > span[lang] > span { padding-right:15px; display: block;  }
 
 /* .resource .data .chunk ~ h4 [lang=bo-x-ewts], .etextPage h4.page [lang=bo-x-ewts] { text-align:justify; display:inline-block; } */
 
@@ -2523,7 +2526,7 @@ html[lang="en"] .resource .data > [data-prop="bdo:creator"] h4[data-prop="bdo:ro
    width: 100%;
    height: 80px;
    background: #172832;
-   z-index: 100;
+   z-index: 10001;
    box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.5);
    display: flex;
    align-items: center;

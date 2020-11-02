@@ -2867,7 +2867,10 @@ class ResourceViewer extends Component<Props,State>
                   if(tmp.length || tVal.match(/[↦↤]/)) tmp.push(highlight(tVal,null,null,false /*true*/))
                   else tmp.push(this.fullname(tVal))
 
-                  if(lang) tmp = [ <span lang={lang}>{tmp}</span> ]
+                  if(lang) {
+                     let size = this.state.etextSize
+                     tmp = [ <span lang={lang} {...this.state.etextSize?{style:{ fontSize:size+"em", lineHeight:(Math.max(1.0, size + 0.75))+"em" }}:{}}>{tmp}</span> ]
+                  }
 
                   if(tLab.start === undefined) tmp.push(<Tooltip placement="bottom-end" title={
                         <div style={{margin:"10px"}}>
@@ -4632,13 +4635,13 @@ perma_menu(pdfLink,monoVol,fairUse,other)
       // + sort etext by sliceStartchar not seqNum
       // DONE 
 
-      return tags ;
+      //return tags ; // what??
 
       return (
          
          <InfiniteScroll
             //isReverse={true}
-            id="etext-scroll"
+            //id="etext-scroll"
             hasMore={true}
             pageStart={0}
             loadMore={(e) => { 
