@@ -107,7 +107,7 @@ export function sortLangScriptLabels(data,preset,translit)
    if(translit == undefined) translit={}
    if(!Array.isArray(data)) data = [ data ]
    
-   //console.log("sort",JSON.stringify(data,null,3)); //preset,translit,data)
+   console.log("sort",JSON.stringify(data,null,3)); //preset,translit,data)
 
    let data_ = data.map(e => {
       let k = e["lang"]

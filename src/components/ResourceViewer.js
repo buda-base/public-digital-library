@@ -933,7 +933,7 @@ class ResourceViewer extends Component<Props,State>
          } 
          else if(_T === "Instance") {            
             if(!s) s = { ...state }
-            
+
             // see #283
             //if(!work && s.title.work) work = s.title.work
 
@@ -4753,7 +4753,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          this.showMirador(num,manif);
       }
 
-      loggergen.log("imL",imageLinks)
+      loggergen.log("imL:",imageLinks,JSON.stringify(elem,null,3))
 
       return (
          
@@ -4849,9 +4849,9 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                </div> }
                <div class="overpage">
                   <h4 class="page">{!e.value.match(/[\n\r]/) && !e.seq ?[<span class="startChar"><span>[&nbsp;<Link to={"/show/"+this.props.IRI+"?startChar="+e.start+"#open-viewer"}>@{e.start}</Link>&nbsp;]</span></span>]:null}{e.value.split("\n").map(f => {
-                        let label = getLangLabel(this,"",[{"@language":e.language,"@value":f}]), lang
-                        if(label) { lang = label["@language"] ; if(!pageLang) pageLang = lang }
-                        if(label) { label = label["@value"]; pageVal += " "+label ; }
+                        let label = getLangLabel(this,"",[{"lang":e.language,"value":f}]), lang
+                        if(label) { lang = label["lang"] ; if(!pageLang) pageLang = lang }
+                        if(label) { label = label["value"]; pageVal += " "+label ; }
                         if(label) { label = highlight(label); current.push(label); }
                         //label = f
                         let size = this.state.etextSize
