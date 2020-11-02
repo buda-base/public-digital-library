@@ -933,7 +933,9 @@ class ResourceViewer extends Component<Props,State>
          } 
          else if(_T === "Instance") {            
             if(!s) s = { ...state }
-            if(!work && s.title.work) work = s.title.work
+            
+            // see #283
+            //if(!work && s.title.work) work = s.title.work
 
             // TODO find a way to keep an existing Etext/Images tab
             //if(!s.title.images) images = images.filter(e => getEntiType(e.value) === "Images")
@@ -2521,7 +2523,7 @@ class ResourceViewer extends Component<Props,State>
             
             //console.log("i/n",i,n)
             
-            if(!p.length && (elem.hasClass("propCollapse") || x.length || h.length) && (i < Math.floor(n/2) || i === 0 && n === 1)) popperFix = true
+            if(!p.length && (elem.hasClass("propCollapse") || x.length || h.length) && (i < Math.floor(n/2) || (n%2 == 1 && i == Math.floor(n/2)) || i === 0 && n === 1)) popperFix = true
          }
          let target = $(ev.currentTarget).closest("h4")
          if(target.length) target = target.find(".hover-menu")[0]  
