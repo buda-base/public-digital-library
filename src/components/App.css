@@ -2699,6 +2699,7 @@ h2 .wd .before { background-image:url("/WD.svg");  background-size:18px auto; ba
 .sameAs.src .before { background-image:url("/SRC.svg"); background-size: 15px auto; }
 
 h4.sameAs .ulink.sameAs { margin-left:-21px; } 
+h4.sameAs .ulink.mbbt.sameAs { margin-left:0px; } 
 
 h4.hasIcon ~ .subsub { padding-left:40px; }
 

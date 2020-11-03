@@ -312,12 +312,9 @@ export const gotResource = (state: DataState, action: Action) => {
                   }
                   if(!found) {
 
-                     if(v.type !== "bnode" && v.type !== "uri" || p.includes("Translation") ) {
-                        v.allSameAs = [ k ]
-                        v.fromSameAs = k
-                     } else if(p.endsWith("Event")) { 
+                     if(p.endsWith("Event")) { 
                         let v_ev = data[v.value]
-                        if(v_ev) for(let q of [bdo+"onYear", bdo+"onDate", bdo+"eventWhere"]){
+                        if(v_ev) for(let q of [bdo+"onYear", bdo+"onDate", bdo+"eventWhere", bdo+"notBefore", bdo+"notAfter"]){
                            if(v_ev[q] && v_ev[q].length) {
                               v_ev[q][0].allSameAs = [ k ]
                               v_ev[q][0].fromSameAs = k
@@ -327,11 +324,16 @@ export const gotResource = (state: DataState, action: Action) => {
                      } 
                      else if(p.endsWith("Name")) { 
                         let v_nm = data[v.value]
+                        //console.log("!found",v_nm,v.value)
                         if(v_nm && v_nm[rdfs+"label"] && v_nm[rdfs+"label"].length) for(let q of v_nm[rdfs+"label"]) {
                            q.allSameAs = [ k ]
                            q.fromSameAs = k
                         }
                      }
+                     else /*if(v.type !== "bnode")*/ { //} && v.type !== "uri") { //} || p.includes("Translation")) { //}  || p.includes("Translation") || p.includes("Gender") || p.includes("Teacher") || p.includes("Student")) {
+                        v.allSameAs = [ k ]
+                        v.fromSameAs = k
+                     } 
                      
                      data[uri][p].push(v)
 

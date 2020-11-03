@@ -3142,7 +3142,7 @@ class ResourceViewer extends Component<Props,State>
                   }><span className="lang">{lang}</span></Tooltip>:null]
 
 
-                  tip.push(this.hoverMenu(subProp,{type:"literal",value:tVal,lang,allSameAs:tLab.allSameAs},[...tip],[<h4 class="first">{this.proplink(prop)}{I18n.t("punc.colon")}</h4>]))
+                  tip.push(this.hoverMenu(subProp,{type:"literal",value:tVal,lang,allSameAs:l.allSameAs},[...tip],[<h4 class="first">{this.proplink(prop)}{I18n.t("punc.colon")}</h4>]))
 
                   let ID = "ID-"+subProp+"-"+tVal
 
