@@ -87,7 +87,7 @@ async function initiateApp(params,iri,myprops,route) {
          // TODO fix html lang tag (always "en" before switching language)
 
          // set i18n locale
-         if(locale !== "en") store.dispatch(i18nextChangeLanguage(locale));
+         store.dispatch(i18nextChangeLanguage(locale));
          
          // set data language preferences
          // 1-saved preference
@@ -102,6 +102,7 @@ async function initiateApp(params,iri,myprops,route) {
 
       }
 
+      if(route === "static") return ;
 
    /*
       if(!state.data.ontology)

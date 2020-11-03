@@ -6,6 +6,7 @@ import { Switch, Route, Router } from 'react-router-dom';
 import history from './history';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import indigo from '@material-ui/core/colors/indigo';
+import Loader from 'react-loader';
 import { Provider } from 'react-redux';
 import ResourceViewerContainer from './containers/ResourceViewerContainer'
 import IIIFViewerContainer from './containers/IIIFViewerContainer'
@@ -24,6 +25,8 @@ import ProfileContainer from './containers/ProfileContainer';
 import Profile from './components/ProfileStatic';
 
 import ClearCache from "react-clear-cache";
+
+import I18n from 'i18next';
 
 export const auth = new Auth();
 
@@ -124,6 +127,33 @@ export class Redirect404 extends Component<Props>
    }
 }
 
+type State = { content:any, error:integer }
+
+export class StaticRouteNoExt extends Component<State>
+{
+   constructor(props) {
+      super(props);
+      this.state = { content: "" } //"loading..."+props.dir+"/"+props.page }
+      store.dispatch(initiateApp(qs.parse(history.location.search),null,null,"static"))
+      let i18nLoaded = setInterval(() => {
+         console.log("i18n",I18n,I18n.language,I18n.languages);
+         if(I18n.language) {
+            clearInterval(i18nLoaded);
+            window.fetch("/static/"+this.props.dir+"/"+this.props.page+"."+I18n.language+".html").then(async (data) => {        
+               //console.log("data:",data)
+               let content = await data.text()
+               if(!content.includes("You need to enable JavaScript to run this app.")) this.setState({content})
+               else this.setState({error:true})
+            })
+         } 
+      }, 1000);
+   }
+   render(props) { 
+      if(!I18n.language || !this.state.content)  return <Loader loaded={false} />
+      else if(I18n.language && this.state.error) return <Redirect404  history={history}  auth={auth}/>
+      else return this.state.content ; 
+   }
+}
 
 const handleAuthentication = (nextState, replace) => {
   if (/access_token|id_token|error/.test(nextState.location.hash)) {
@@ -139,12 +169,12 @@ const makeMainRoutes = () => {
            <MuiThemeProvider theme={theme}>
               <Router history={history}>
                 <Switch>
+                     <Route path="/static/:DIR/:PAGE" render={(props) => 
+                        <StaticRouteNoExt dir={props.match.params.DIR} page={props.match.params.PAGE}/>
+                     }/>                        
                      <Route path="/testToken" render={(props) => {
-
                         store.dispatch(initiateApp());
-
                         return (<TestToken auth={auth} history={history} />)
-
                      } }/>
                      <Route path="/auth/callback" render={(props) => {
                         store.dispatch(initiateApp(null,null,props));
@@ -299,8 +329,7 @@ const makeMainRoutes = () => {
                               {({ isLatestVersion, emptyCacheStorage }) => (<ResourceViewerContainer  auth={auth} history={history} IRI={IRI}/> )}
                            </ClearCache>
                         )}}/>
-                     <Route render={(props) =>
-                        <Redirect404  history={history}  auth={auth}/>}/>
+                     <Route render={(props) => { return <Redirect404  history={history}  auth={auth}/> }}/>
                      <Route path="/scripts/" onEnter={() => window.location.reload(true)} />
                   </Switch>
                </Router>
