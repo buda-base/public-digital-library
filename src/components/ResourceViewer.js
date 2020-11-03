@@ -3386,6 +3386,9 @@ class ResourceViewer extends Component<Props,State>
 
                               txt = [txt.replace(/^(-?)0+/,"$1"),<Tooltip placement="bottom-end" title={<div style={{margin:"10px"}}>{"Gregorian Calendar"}</div>}><span className="lang">{"GC"}</span></Tooltip>]
                            }
+                           else if(v.type === 'literal' && v.datatype === xsd+"date") { 
+                              txt = [txt.replace(/^(-?)0+/,"$1")]
+                           }
                            else if(v.type === 'literal' && v.datatype && this.props.dictionary && (dic = this.props.dictionary[v.datatype]) && dic[rdfs+"subClassOf"] 
                               && dic[rdfs+"subClassOf"].filter(s => s.value === bdo+"AnyDate").length) {
 
@@ -6393,11 +6396,11 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                for(const [p,date] of Object.entries({ [bdo+"PersonBirth"]:birth, [bdo+"PersonDeath"]:death })  ) {
                   if(!date) continue ;
                   let val = date[bdo+"onYear"]
-                  if(val && val.length) val = <span>{val[0].value}</span>
+                  if(val && val.length) val = <span>{(""+val[0].value).replace(/^([^0-9]*)0+/,"$1")}</span>
                   else {
                      let bef = date[bdo+"notBefore"]
                      let aft = date[bdo+"notAfter"]
-                     if(bef && bef.length && aft && aft.length) val = <span>{bef[0].value+ "~" +aft[0].value}</span>
+                     if(bef && bef.length && aft && aft.length) val = <span>{(""+bef[0].value).replace(/^([^0-9]*)0+/,"$1")+ "~" +(""+aft[0].value).replace(/^([^0-9]*)0+/,"$1")}</span>
                      else val = null
                   }
 

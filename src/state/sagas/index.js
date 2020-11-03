@@ -33,7 +33,9 @@ const adm  = "http://purl.bdrc.io/ontology/admin/" ;
 const bda  = "http://purl.bdrc.io/admindata/"
 const bdo  = "http://purl.bdrc.io/ontology/core/";
 const bdr  = "http://purl.bdrc.io/resource/";
-const owl   = "http://www.w3.org/2002/07/owl#" ; 
+const owl   = "http://www.w3.org/2002/07/owl#" ;
+const rdf   = "http://www.w3.org/1999/02/22-rdf-syntax-ns#";
+const rdfs  = "http://www.w3.org/2000/01/rdf-schema#"; 
 const skos = "http://www.w3.org/2004/02/skos/core#";
 const tmp = "http://purl.bdrc.io/ontology/tmp/" ;
 const _tmp = tmp ;
@@ -426,7 +428,7 @@ function extractAssoRes(iri,res) {
 
    let assocRes = {}, _res = {}
    let allowK = [ skos+"prefLabel", tmp+"withSameAs", bdo+"inRootInstance", bdo+"language", adm+"canonicalHtml", bdo+"partIndex", bdo+"volumeNumber", tmp+"thumbnailIIIFService", bdo+"instanceHasReproduction",
-                  tmp+"nbTranslations", tmp+"provider" ]
+                  tmp+"nbTranslations", tmp+"provider", rdfs+"comment", rdf+"type" ]
    let allowR = [ skos+"prefLabel", bdo+"partIndex", bdo+"volumeNumber",  tmp+"thumbnailIIIFService" ]
 
    for(let k of Object.keys(res)) {                  

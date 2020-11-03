@@ -2493,11 +2493,11 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                if(id[p]) {
  
                   let val = id[p].filter(e => e.type === bdo+"onYear")
-                  if(val.length) val = <span>{val[0].value}</span>
+                  if(val.length) val = <span>{(""+val[0].value).replace(/^([^0-9]*)0+/,"$1")}</span>
                   else {
                      let bef = id[p].filter(e => e.type === bdo+"notBefore")
                      let aft = id[p].filter(e => e.type === bdo+"notAfter")
-                     if(bef.length && aft.length) val = <span>{bef[0].value+"~" +aft[0].value}</span>
+                     if(bef.length && aft.length) val = <span>{(""+bef[0].value).replace(/^([^0-9]*)0+/,"$1")+"~" +(""+aft[0].value).replace(/^([^0-9]*)0+/,"$1")}</span>
                      else val = null
                   }
 
