@@ -930,7 +930,7 @@ class ResourceViewer extends Component<Props,State>
             else if( /* _T === "Etext" && */ instance) {
                work = getElem(bdo+"instanceOf",shortUri(instance[0].value));
             }
-            if(!instance && s.title.instance) instance = s.title.instance
+            if(!instance && s.title.instance && s.title.instance[0].value !== fullUri(props.IRI)) instance = s.title.instance
             images = [ { type:"uri", value:fullUri(props.IRI) } ]
             s.title = { work, images, instance }
          } 
@@ -973,7 +973,7 @@ class ResourceViewer extends Component<Props,State>
                      s.title.instance = [ { type: "uri", value: inst[0].value } ] 
                      if(!etx.length) s.title.images = [ { type: "uri", value: ima[0].value } ]
                   }
-                  else if(has.length == 1 && inst.length === 1) {
+                  else if(has.length == 1 && inst.length === 1 && !etx.length) {
                      s.title.instance = [ { type: "uri", value: inst[0].value } ] 
                   }
                }
