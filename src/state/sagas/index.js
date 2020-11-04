@@ -2160,6 +2160,27 @@ async function getOutline(iri) {
 }
 
 
+export function* watchGetETextRefs() {
+
+   yield takeLatest(
+      dataActions.TYPES.getETextRefs,
+      (action) => getETextRefs(action.payload)
+   );
+}
+
+async function getETextRefs(iri) {
+
+   store.dispatch(uiActions.loading(iri, "ETextRefs"));
+   let res = await api.loadETextRefs(iri) 
+   store.dispatch(uiActions.loading(iri, false));
+   
+   loggergen.log("ETextRefs",res)
+
+   store.dispatch(dataActions.gotETextRefs(iri,res))
+
+}
+
+
 export function* watchGetOutline() {
 
    yield takeLatest(
@@ -2167,7 +2188,6 @@ export function* watchGetOutline() {
       (action) => getOutline(action.payload)
    );
 }
-
 
 
 async function outlineSearch(iri,kw,lg) {
@@ -2407,6 +2427,7 @@ export default function* rootSaga() {
       watchInitiateApp(),
       watchGetUser(),
       watchGetOutline(),
+      watchGetETextRefs(),
       watchGetLatestSyncsAsResults(),
       watchGetLatestSyncs(),
       watchOutlineSearch(),

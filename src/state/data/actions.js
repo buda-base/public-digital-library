@@ -220,6 +220,22 @@ export const gotOutline = (iri:string, obj: {}): Action => {
     }
 }
 
+TYPES.getETextRefs = 'GET_ETEXTREFS';
+export const getETextRefs = (iri: string): Action => {
+    return {
+        type: TYPES.getETextRefs,
+        payload: iri
+    }
+}
+
+TYPES.gotETextRefs = 'GOT_ETEXTREFS';
+export const gotETextRefs = (iri:string, obj: {}): Action => {
+    return {
+        type: TYPES.gotETextRefs,
+        payload: iri,
+        meta:obj
+    }
+}
 
 TYPES.outlineSearch = 'OUTLINE_SEARCH';
 export const outlineSearch = (iri:string, kw:string, lg: string): Action => {

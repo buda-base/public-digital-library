@@ -126,6 +126,8 @@ const mapStateToProps = (state,ownProps) => {
    }
    else outline = false
 
+   let eTextRefs = state.data.eTextRefs
+   if(eTextRefs) eTextRefs = eTextRefs[ownProps.IRI]
 
    let loading = state.ui.loading  ;
 
@@ -136,6 +138,7 @@ const mapStateToProps = (state,ownProps) => {
       imageAsset,firstImage,canvasID,collecManif,manifests,manifestError,pdfVolumes,createPdf,pdfUrl, manifestWpdf,
       annoCollec,rightPanel,locale,langPreset,langExt,imgData, nextChunk, nextPage, resourceManifest, imageVolumeManifests, imageLists, userEditPolicies, highlight,
       outline,outlines,outlineKW,      
+      eTextRefs,
       IIIFerrors }
 
    if(config && !config.auth) props.auth = false
@@ -178,6 +181,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       },
       onGetOutline:(IRI:string,search?:string) => {
          dispatch(data.getOutline(IRI,search));
+      },
+      onGetETextRefs:(IRI:string) => {
+         dispatch(data.getETextRefs(IRI));
       },
       onGetResource:(IRI:string) => {
          dispatch(data.getResource(IRI));

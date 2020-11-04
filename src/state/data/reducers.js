@@ -47,6 +47,7 @@ export type DataState = {
    instances?:{},
    isInstance?:boolean,
    outlines?:{},
+   eTextRefs?:{},
 }
 
 const DEFAULT_STATE: DataState = {
@@ -958,6 +959,36 @@ export const gotOutline = (state: DataState, action: Action) => {
     }
 }
 reducers[actions.TYPES.gotOutline] = gotOutline;
+
+
+
+export const getETextRefs = (state: DataState, action: Action) => {
+
+   let eTextRefs = {}
+   if(state.eTextRefs) eTextRefs = state.eTextRefs
+   return {
+      ...state,
+      eTextRefs:{
+         ...eTextRefs,
+         [action.payload]:true,
+      }
+   }
+}
+reducers[actions.TYPES.getETextRefs] = getETextRefs;
+
+export const gotETextRefs = (state: DataState, action: Action) => {
+
+   let eTextRefs = {}
+   if(state.eTextRefs) eTextRefs = state.eTextRefs
+   return {
+      ...state,
+      eTextRefs:{
+         ...eTextRefs,
+         [action.payload]:action.meta,
+      }
+   }
+}
+reducers[actions.TYPES.gotETextRefs] = gotETextRefs;
 
 
 export const resetOutlineSearch = (state: DataState, action: Action) => {

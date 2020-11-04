@@ -146,6 +146,7 @@ type Props = {
    onHasImageAsset:(u:string,s:string) => void,
    onGetChunks: (s:string,b:number) => void,
    onGetPages: (s:string,b:number) => void,
+   onGetETextRefs: (s:string) => void,
    onToggleLanguagePanel:()=>void,
    onResetSearch:()=>void,
    onUserProfile:(url:{})=>void
@@ -1938,7 +1939,7 @@ class ResourceViewer extends Component<Props,State>
       if(!info) info = [ getLangLabel(this, prop, infoBase.filter((e)=>((e["xml:lang"] || e["lang"] || e.fromKey && e.fromKey === foaf+"name")))) ]                        
       if(!info) info = [ getLangLabel(this, prop, infoBase.filter((e)=>((e["xml:lang"] || e["lang"]) && e.type==prop))) ]
 
-      loggergen.log("info?",prop,infoBase,info)
+      //loggergen.log("info?",prop,infoBase,info)
 
       //if(info.value) info = info.value
 
@@ -1952,7 +1953,7 @@ class ResourceViewer extends Component<Props,State>
          
          info = [ getLangLabel(this, prop, infoBase) ]
 
-         loggergen.log("info?",info)
+         //loggergen.log("info?",info)
 
          if(info && info[0] && (info[0]["xml:lang"] || info[0]["lang"]) && !info[0].datatype) {
             lang = info[0]["xml:lang"]
@@ -6296,6 +6297,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          if(!root || !root.length) theOutline = this.renderOutline()      
 
          let etext = this.isEtext()
+         if(etext && !this.props.eTextRefs) this.props.onGetETextRefs(this.props.IRI);
 
          let loca = this.props.history.location            
 
