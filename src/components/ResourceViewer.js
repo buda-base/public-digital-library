@@ -6364,7 +6364,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
             if(fTxt && fTxt.length) etextTxtN = fTxt[0].value
             let fUT = this.getResourceElem(tmp+"firstText")
             if(fUT && fUT.length) etextUT = "/show/"+shortUri(fUT[0].value)
-            if(fVol && fTxt) etextLoca = I18n.t("resource.openVolViewer", {VolN:etextVolN}) // not sure we need this:  TxtN:etextTxtN
+            if(fVol && fTxt && (this.props.eTextRefs && this.props.eTextRefs !== true && !this.props.eTextRefs.mono)) etextLoca = I18n.t("resource.openVolViewer", {VolN:etextVolN}) // not sure we need this:  TxtN:etextTxtN
          }
 
          let scrollRel = (ev,next) => { 
