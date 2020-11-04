@@ -4437,7 +4437,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
    }
    
 
-   let isEtextVol = false 
+   let isEtextVol = false
    if(this.props.IRI && getEntiType(this.props.IRI) === "Etext") {
       let isVol = this.getResourceElem(bdo+"eTextIsVolume")
       if(isVol && isVol.length) isEtextVol = true
@@ -4446,6 +4446,8 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          if(isVol && isVol.length) isEtextVol = true
       }
    }
+
+
 
    //loggergen.log("same:",same)
 
@@ -4485,6 +4487,11 @@ perma_menu(pdfLink,monoVol,fairUse,other)
             anchorEl={this.state.anchorPermaDL}
             onClose={e => { this.setState({...this.state,anchorPermaDL:null,collapse: {...this.state.collapse, permaDL:false } } ) }}
             >
+
+               { (this.props.eTextRefs && this.props.eTextRefs.mono) && 
+                     <a target="_blank" title={I18n.t("resource.version",{format:"TXT"})} rel="alternate" type="text"  download href={this.props.eTextRefs.mono.replace(/bdr:/,bdr)+".txt"}>
+                        <MenuItem>{I18n.t("resource.exportDataAs",{data: I18n.t("types.etext"), format:"TXT"})}</MenuItem>
+                     </a> }
 
                { isEtextVol && 
                      <a target="_blank" title={I18n.t("resource.version",{format:"TXT"})} rel="alternate" type="text"  download href={this.props.IRI?this.props.IRI.replace(/bdr:/,bdr)+".txt":""}>

@@ -980,11 +980,26 @@ export const gotETextRefs = (state: DataState, action: Action) => {
 
    let eTextRefs = {}
    if(state.eTextRefs) eTextRefs = state.eTextRefs
+
+   let root = { ...action.meta["@graph"].filter(e => e["@id"] === action.payload)[0] }
+
+   let mono = root.instanceHasVolume
+   if(mono && !Array.isArray(mono)) {
+      //console.log("mono:",mono)
+      mono = action.meta["@graph"].filter(e => e["@id"] === mono["@id"])
+      if(mono && mono.length && mono[0].volumeHasEtext && !Array.isArray(mono[0].volumeHasEtext)) {
+         mono = action.meta["@graph"].filter(e => e["@id"] === mono[0].volumeHasEtext)
+         if(mono && mono.length) {
+            mono = mono[0].eTextResource
+         } else mono = false
+      } else mono = false
+   } else mono = false
+
    return {
       ...state,
       eTextRefs:{
          ...eTextRefs,
-         [action.payload]:action.meta,
+         [action.payload]:{ ...action.meta, [action.payload]: root, mono },
       }
    }
 }
