@@ -566,20 +566,25 @@ function getRealUrl(that,url) {
    return url ;
 }
 
-export function getOntoLabel(dict,locale,lang,prop = skos+"prefLabel") {
+export function getOntoLabel(dict,locale,lang,props = [skos+"prefLabel", rdfs+"label"]) {
+   let _lang = lang
    if(dict[lang]) {
-      lang = dict[lang][prop]
-      if(lang && lang.length) {
-         let uilang = lang.filter(l => l["lang"] === locale)
-         if(uilang.length) lang = uilang[0].value 
-         else {
-            uilang = lang.filter(l => l["lang"] === "en")
+      if(!Array.isArray(props)) props = [ props ]
+      for(let prop of props) {
+         lang = dict[_lang][prop]
+         if(lang && lang.length) {
+            let uilang = lang.filter(l => l["lang"] === locale)
             if(uilang.length) lang = uilang[0].value 
-            else lang = lang[0].value
+            else {
+               uilang = lang.filter(l => l["lang"] === "en")
+               if(uilang.length) lang = uilang[0].value 
+               else lang = lang[0].value
+            }
+            return lang
          }
       }
    }
-   return lang;
+   return _lang;
 }
 
 export function top_left_menu(that,pdfLink,monoVol,fairUse)
@@ -2224,39 +2229,45 @@ class ResourceViewer extends Component<Props,State>
 
                   link = <a class={"urilink prefLabel " } href={elem.url} onClick={(e) => { 
 
-                        if(!elem.debug) {
+                     if(!elem.debug) {
 
+                        if(elem.toggle) {
                            elem.toggle()
 
+                           e.preventDefault();
+                           e.stopPropagation();
+                           return false;
                         }
-                        else {
-                           // "debug mode" if elem.url not set
 
-                           let part = elem.url.replace(/.*\?part=/,"")
-                           let root = elem.url.replace(/\?part=.*/,"")
+                     }
+                     else {
+                        // "debug mode" if elem.url not set
 
-                           loggergen.log("furi?",root,part)
+                        let part = elem.url.replace(/.*\?part=/,"")
+                        let root = elem.url.replace(/\?part=.*/,"")
 
-                           let collapse = { ...this.state.collapse }
-                           if(this.props.outlineKW) collapse[elem.inOutline] = (collapse[elem.inOutline] === undefined ? false : !collapse[elem.inOutline])
-                           else collapse[elem.inOutline] = !collapse[elem.inOutline]
-                           this.setState({ collapse }) // ,outlineKW:"" })
-                           
-                           let loca = {...this.props.history.location}
+                        loggergen.log("furi?",root,part)
 
-                           loca.search = loca.search.replace(/((&part|part)=[^&]+)/,"") //|(&*osearch=[^&]+))/g,"")  ;
-                           loca.search += "&part="+part
-                           loca.search = loca.search.replace(/[?]&/,"?")
-                           
-                           loca.pathname = root
-                           this.props.history.push(loca)
-                        }
-                                                
+                        let collapse = { ...this.state.collapse }
+                        if(this.props.outlineKW) collapse[elem.inOutline] = (collapse[elem.inOutline] === undefined ? false : !collapse[elem.inOutline])
+                        else collapse[elem.inOutline] = !collapse[elem.inOutline]
+                        this.setState({ collapse }) // ,outlineKW:"" })
                         
+                        let loca = {...this.props.history.location}
+
+                        loca.search = loca.search.replace(/((&part|part)=[^&]+)/,"") //|(&*osearch=[^&]+))/g,"")  ;
+                        loca.search += "&part="+part
+                        loca.search = loca.search.replace(/[?]&/,"?")
+                        
+                        loca.pathname = root
+                        this.props.history.push(loca)
+
                         e.preventDefault();
                         e.stopPropagation();
-                        return false; }
-                  }>{info}</a>
+                        return false;
+                     }
+                                                
+                  } }>{info}</a>
                }
                else link = <Link className={"urilink prefLabel " } to={"/"+show+"/"+uri}>{info}</Link>
                bdrcData = null
@@ -5410,6 +5421,186 @@ perma_menu(pdfLink,monoVol,fairUse,other)
       )
    }
 
+
+   renderEtextRefs() {
+
+      let toggle = (e,r,i,x = "") => {         
+         let tag = "etextrefs-"+r+"-"+i+(x?"-"+x:"")
+         let val = this.state.collapse[tag]
+         if(r === i && val === undefined) val = true ;
+         this.setState( { collapse:{...this.state.collapse, [tag]:!val } })         
+      }
+      
+      let title = this.state.title.instance
+      if(title) title = title[0].value
+      else { 
+         title = this.state.title.work
+         if(title) title = title[0].value
+      }
+      if(title) title = this.getResourceElem(skos+"prefLabel", title, this.props.assocResources)
+      if(title && title.length) title = getLangLabel(this,"",title)
+      if(title && title.value) title = <h2><a><span>{title.value}</span></a></h2>
+
+      // TODO fix for UTxyz
+      let root = this.props.IRI 
+
+
+      const parts = {
+         "bdo:VolumeEtextAsset":"vol",
+         "bdo:EtextRef":"txt",
+         "?":"unk",
+      }
+
+
+      let makeNodes = (top,parent) => {               
+         let elem = this.props.eTextRefs["@graph"]
+         let node = elem.filter(e => e["@id"] === top) 
+         let etextrefs = []
+
+         console.log("node:",node,top)
+
+         if(node.length && (node[0].instanceHasVolume || node[0].volumeHasEtext))
+         {
+            let children = node[0].instanceHasVolume
+            if(!children) children = node[0].volumeHasEtext 
+            if(children && !Array.isArray(children)) children = [ children ]
+            
+            //console.log("chil:",children);
+
+            for(let e of children) {
+               console.log("e:",e);
+
+               let w_idx = elem.filter(f => e["@id"] && f["@id"] === e["@id"] || f["@id"] === e) 
+               if(w_idx.length) {
+                  
+                  //loggergen.log("found:",w_idx[0])  
+
+                  let g = w_idx[0]
+                  
+                  if(g.details && (g.lang !== this.props.locale || g.rid === g["@id"] || g["@id"] === this.props.IRI)) { 
+                     delete g.details ;
+                     delete g.hidden ;
+                  }
+
+                  if(!g.details) {
+                     g.rid = this.props.IRI
+                     g.lang = this.props.locale
+                  }
+
+                  if(g.volumeNumber) { 
+                     g.index = g.volumeNumber
+                     g.link = g["@id"]
+                     if(g.volumeHasEtext) {
+                        if(!Array.isArray(g.volumeHasEtext)) {
+                           let txt = elem.filter(e => e["@id"] === g.volumeHasEtext)
+                           if(txt.length) g.link = txt[0].eTextResource + "#open-viewer"
+                        }
+                        else {
+                           g.hasPart = true
+                           
+                        }
+                     }
+                  } else if(g.seqNum && g.eTextResource) {
+                     g.index = g.seqNum
+                     g.link = g.eTextResource + "#open-viewer"
+                  }
+
+                  //else if(g.)
+
+                  etextrefs.push(g)
+               }
+            }         
+         } 
+
+         etextrefs = _.orderBy(etextrefs,["index"],["asc"]).map(e => {
+            
+            let tag = "etextrefs-"+root+"-"+e['@id']
+            let ret = []
+            let pType = e["type"], fUri = fullUri(e["@id"])
+            let gUri = fUri ;
+            if(e.link) gUri = fullUri(e.link).replace(/#.*/,"")
+            if(pType && pType["@id"]) pType = pType["@id"]
+            else pType = "bdo:"+pType
+            let tLabel 
+            console.log("e:",tag,pType,parts);
+            if(pType) {
+               if(Array.isArray(pType)) pType = pType[0]
+               tLabel = getOntoLabel(this.props.dictionary,this.props.locale,fullUri(pType))
+               tLabel = tLabel[0].toUpperCase() + tLabel.slice(1)
+               // TODO use translation from ontology
+            }
+            let open = this.state.collapse[tag]                         
+
+            ret.push(<span class={'top'+ (this.state.collapse[tag]?" on":"") }>
+                  {(e.hasPart && !open) && <img src="/icons/triangle_.png" onClick={(ev) => toggle(ev,root,e["@id"],"",false,e)} className="xpd"/>}
+                  {(e.hasPart && open) && <img src="/icons/triangle.png" onClick={(ev) => toggle(ev,root,e["@id"],"",false,e)} className="xpd"/>}
+                  <span class={"parTy "+(e.details?"on":"")} {...e.details?{title: I18n.t("resource."+(this.state.collapse[tag+"-details"]?"hideD":"showD")), onClick:(ev) => toggle(ev,root,e["@id"],"details",false,e)}:{title:tLabel}} >
+                     {pType && parts[pType] ? <div>{parts[pType]}</div> : <div>{parts["?"]}</div> }
+                  </span>
+                  <span>{this.uriformat(null,{type:'uri', value:gUri, inOutline: (!e.hasPart?tag+"-details":tag), url:"/show/"+e.link, debug:false, ...(e.hasPart?{toggle:() => toggle(null,root,e["@id"],!e.hasPart?"details":"",false,e)}:{}) })}</span>
+                  <div class="abs">
+                     { e.hasImg && <Link className="hasImg" title={I18n.t("copyright.view")}  to={e.hasImg}><img src="/icons/search/images.svg"/><img src="/icons/search/images_r.svg"/></Link> }                   
+                     { e.details && <span id="anchor" title={I18n.t("resource."+(this.state.collapse[tag+"-details"]?"hideD":"showD"))} onClick={(ev) => toggle(ev,root,e["@id"],"details",false,e)}>
+                        <img src="/icons/info.svg"/>
+                     </span> }
+                     <CopyToClipboard text={gUri} onCopy={(e) => prompt(I18n.t("misc.clipboard"),gUri)}>
+                        <a class="permalink" title={I18n.t("misc.permalink")}>
+                           <img src="/icons/PLINK_small.svg"/>
+                           <img src="/icons/PLINK_small_r.svg"/>
+                        </a>
+                     </CopyToClipboard>
+                  </div>
+               </span>)
+               /*
+            if(((osearch && e.hasMatch && this.state.collapse[tag+"-details"] !== false) || this.state.collapse[tag+"-details"]) && e.details) 
+               ret.push(<div class="details">
+                  {e.details}
+                  { (e.hidden && e.hidden.length > 0) && [
+                     <Collapse timeout={{enter:0,exit:0}} className={"outlineCollapse in-"+(this.state.collapse["hide-"+fUri]===true)} in={this.state.collapse["hide-"+fUri]}>
+                        {e.hidden}
+                     </Collapse>,
+                     <span
+                        onClick={(e) => this.setState({...this.state,collapse:{...this.state.collapse,["hide-"+fUri]:!this.state.collapse["hide-"+fUri]}})}
+                        className="expand">
+                           {I18n.t("misc."+(this.state.collapse["hide-"+fUri]?"hide":"seeMore")).toLowerCase()}&nbsp;<span
+                           className="toggle-expand">
+                              { this.state.collapse["hide-"+fUri] && <ExpandLess/>}
+                              { !this.state.collapse["hide-"+fUri] && <ExpandMore/>}
+                           </span>
+                     </span>] }</div>
+               )*/
+            if(e.hasPart && this.state.collapse[tag]) ret.push(<div style={{paddingLeft:"25px"}}>{makeNodes(e["@id"],top)}</div>)
+            return ret
+         })
+
+         return etextrefs
+      }
+
+      let etextRefs = makeNodes(root,root)
+
+      let colT = <span class={"parTy"} title={I18n.t("types.etext")}><div>TXT</div></span>
+      if(!this.props.eTextRefs.mono) colT = <span class={"parTy"} title={I18n.t("Lsidebar.collection.title")}><div>COL</div></span>
+      let open = this.state.collapse["etextrefs-"+root+"-"+root] === undefined || this.state.collapse["etextrefs-"+root+"-"+root];
+
+      return (
+         <div class="data etextrefs" id="outline">
+            <h2>{I18n.t("resource.browsE")}</h2>
+               <div class="search">
+                  <div>
+                     <input type="text" class="disabled" />
+                     <span class="button" title={I18n.t("resource.start")}></span> 
+                  </div>
+               </div>
+               <div>
+                  <div class={"root is-root"} onClick={(e) => toggle(e,root,root)} >                     
+                     { !open && [<img src="/icons/triangle_.png" className="xpd" />,colT,<span >{title}</span>]}
+                     {  open && [<img src="/icons/triangle.png" className="xpd"  />,colT,<span class='on'>{title}</span>]}
+                  </div>
+                  { open && <div style={{paddingLeft:"50px"}}>{etextRefs}</div> }
+               </div>
+         </div> )
+   }
+
    renderOutline() {
 
       if(this.props.outline && this.props.outline !== true) {
@@ -6306,6 +6497,9 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          let etext = this.isEtext()
          if(etext && !this.props.eTextRefs) this.props.onGetETextRefs(this.props.IRI);
 
+         let theEtext
+         if(this.props.eTextRefs && this.props.eTextRefs !== true) theEtext = this.renderEtextRefs()      
+
          let loca = this.props.history.location            
 
          let rView = true, iOutline, wDataExt, iDataExt, rDataExt, checkDataExt = (rid) => {            
@@ -6467,7 +6661,10 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                   { (etext && !orig) && <div class="data" id="open-etext"><div><Link to={etextUT+"#open-viewer"}>{etextLoca}</Link></div></div> }
                   { (etext && orig) && <div class="data" id="open-etext"><div><a target="_blank" href={orig}>{I18n.t("resource.openO",{src:prov})}<img src="/icons/link-out_.svg"/></a></div></div> }
                   <div class={"data" + (_T === "Etext"?" etext-title":"")+(_T === "Images"?" images-title":"")}>
-                     {_T === "Images" && iTitle?[<h2 class="on intro">{I18n.t("resource.scanF")}</h2>,iTitle]:(_T === "Etext" && iTitle?[<h2 class="on intro">{I18n.t("resource.etextF")}</h2>,iTitle]:title)}
+                     {_T === "Images" && iTitle?[<h2 class="on intro">{I18n.t("resource.scanF")}</h2>,iTitle]
+                      :(_T === "Etext" && iTitle?[<h2 class="on intro">{I18n.t("resource.etextF")}</h2>,iTitle]
+                       :(_T === "Etext" && wTitle?[<h2 class="on intro">{I18n.t("resource.etextF")}</h2>,wTitle]
+                       :title))}
                      {inTitle}
                      {dates}
                   </div>
@@ -6504,6 +6701,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                         }
                      </div> 
                   }         
+                  { theEtext }
                   { theOutline }
                   { theDataLegal }
                   { theDataExt && 

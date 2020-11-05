@@ -997,11 +997,32 @@ export const gotETextRefs = (state: DataState, action: Action) => {
       } else mono = false
    }
 
+
+   const skos = "http://www.w3.org/2004/02/skos/core#"
+
+   let assoR = state.assocResources
+   if(assoR) assoR = assoR[action.payload]
+   if(!assoR) assoR = {}   
+   action.meta["@graph"].map(g => {
+      let uri = fullUri(g["@id"])
+      if(g["skos:prefLabel"]) {
+         if(!Array.isArray(g["skos:prefLabel"])) g["skos:prefLabel"] = [ g["skos:prefLabel"] ]
+         if(!assoR[uri]) assoR[uri] = []
+         for(let l of g["skos:prefLabel"]) assoR[uri].push({ type:skos+"prefLabel", value:l["@value"], lang:l["@language"]})
+      }
+   })
+
+   console.log("assoR:",assoR)
+
    return {
       ...state,
       eTextRefs:{
          ...eTextRefs,
          [action.payload]:{ ...action.meta, [action.payload]: root, mono },
+      },
+      assocResources:{
+         ...state.assocResources,
+         [action.payload]:assoR
       }
    }
 }

@@ -428,7 +428,8 @@ const boTranslation = {
       gener3zip:"ZIP ཕབ་ལེན།",
       nbTrans:" ( འགྱུར་མ། {{count}})",
       nbTrans_plural:" (འགྱུར་མ། {{count}})",
-      openO:"Open on {{src}}"
+      openO:"Open on {{src}}",
+      browsE:"Browse"
    },
    mirador:{
       return:"བུདྡྷ་ལ་ཕྱིར་ལོག",

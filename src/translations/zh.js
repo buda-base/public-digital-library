@@ -395,7 +395,8 @@ const zhTranslation = {
       nbTrans:" ({{count}} translation)",
       nbTrans_plural:" ({{count}} translations)",
       openO:"Open on {{src}}",
-      noT:"[no title]"
+      noT:"[no title]",
+      browsE:"Browse"
    },
    mirador:{
       return:"回到BUDA",

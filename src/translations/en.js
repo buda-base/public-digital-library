@@ -447,7 +447,8 @@ const enTranslation = {
       nbTrans:" ({{count}} translation)",
       nbTrans_plural:" ({{count}} translations)",
       openO:"Open on {{src}}",
-      noT:"[no title]"
+      noT:"[no title]",
+      browsE:"Browse"
    },
    mirador:{
       return:"return to BUDA",

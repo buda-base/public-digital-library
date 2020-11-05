@@ -1096,6 +1096,9 @@ h4:not(:hover) > .lang
 }
 .resource .data#outline > .search input + span + span { right:30px; display:inline-flex; align-items: center;justify-content: center; width:30px;}
 
+.resource .data#outline > .search input.disabled { pointer-events: none; background:#f9f9f9; }
+.resource .data#outline > .search input.disabled ~ span { pointer-events: none; opacity:0.4; }
+
 .resource .data#outline:last-child { padding-bottom:45px; }
 .resource .data#outline div { flex-wrap:wrap; }
 .resource .data#outline div h2,
@@ -1289,6 +1292,9 @@ h4:not(:hover) > .lang
 
 #outline #same .provider::before { content:none; }
 
+
+.resource .data#outline.etextrefs .is-root h2 a span { color: #343434; cursor:pointer;}
+
 /* ------------------------------------------------------------------------------------------------------------------------ header */
 
 .resource .data#head { background-color:#ffffff; padding:35px; padding-bottom:45px; padding-top:35px;}
@@ -1438,7 +1444,7 @@ vertical-align:middle;}
 .resource .data *,
 .resource .related div { /*font-family: "Noto Sans", "Roboto", "Helvetica", "Arial", sans-serif;*/ }
 
-.resource .data h2 { font-size:34px; letter-spacing: 0px; position:relative;}
+.resource .data h2 { font-size:32px; letter-spacing: 0px; position:relative;}
 
 .resource .title h2 .T { position:relative; letter-spacing:0px;}
 
@@ -1923,7 +1929,7 @@ h4:hover a.no-bdrc img { opacity:1; }
 
 .resource .data h2.intro,
 .resource .data h2.intro + h2 span,
-.resource .title + .data + .data h2.on .T + span { font-size:30px; font-family:'Noto Sans SemCond';font-weight:bold; }
+.resource .title + .data + .data h2.on .T + span { font-size:32px; font-family:'Noto Sans SemCond';font-weight:bold; }
 
 .resource .data h2.intro { padding-right:8px; flex-shrink: 0; line-height:42px;}
 
@@ -1937,7 +1943,7 @@ h4:hover a.no-bdrc img { opacity:1; }
 .resource .data h2.intro + h2 a span { border-bottom:1px solid transparent;}
 .resource .data h2.intro + h2 a:hover span { border-bottom:1px solid #d73449;}
 
-.resource .data h2.intro + h2 span { max-width:445px;overflow:hidden ;text-overflow: ellipsis;white-space: nowrap; display:inline-block;}
+.resource .data h2.intro + h2 span { max-width:440px;overflow:hidden ;text-overflow: ellipsis;white-space: nowrap; display:inline-block;}
 
 
 .resource .data.images-title h2.intro + h2 span { max-width:680px;}
