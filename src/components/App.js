@@ -5024,7 +5024,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          message.unshift(moreres)
          message.unshift(head)
       }
-      let reverse, by, sortByPopup = sortByList.map((t,n) => {
+      let reverse, by, sortByPopup ;
+      if(sortByList) sortByPopup = sortByList.map((t,n) => {
          let i = I18n.t("sort."+t,{lng:"en"}), label = I18n.t("sort."+t), check = (this.props.sortBy && this.props.sortBy.startsWith(i.toLowerCase()) ) || (!this.props.sortBy && n === 0)
          if(check) by = label
          if(reverseSort) reverse = I18n.t("sort.reverseS")
