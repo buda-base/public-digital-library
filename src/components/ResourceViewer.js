@@ -5424,10 +5424,10 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
    renderEtextRefs() {
 
-      let toggle = (e,r,i,x = "") => {         
+      let toggle = (e,r,i,x = "",force) => {         
          let tag = "etextrefs-"+r+"-"+i+(x?"-"+x:"")
          let val = this.state.collapse[tag]
-         if(r === i && val === undefined) val = true ;
+         if((r === i || force) && val === undefined) val = true ;
          this.setState( { collapse:{...this.state.collapse, [tag]:!val } })         
       }
       
@@ -5477,7 +5477,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
                   let g = w_idx[0]
                   
-                  if(g.details && (g.lang !== this.props.locale || g.rid === g["@id"] || g["@id"] === this.props.IRI)) { 
+                  if(g.details) { //} && (g.lang !== this.props.locale || g.rid === g["@id"] || g["@id"] === this.props.IRI)) { 
                      delete g.details ;
                      delete g.hidden ;
                   }
@@ -5487,6 +5487,23 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                      g.lang = this.props.locale
                   }
 
+                  let nav = []
+
+                  /*
+                  if(g.contentLocation) {
+                     if(!g.details) g.details = []
+                     g.hasImg = "/show/"+g["@id"].replace(/^((bdr:MW[^_]+)_[^_]+)$/,"$1")+"?s="+encodeURIComponent(this.props.history.location.pathname+this.props.history.location.search)+"#open-viewer"
+                     nav.push(<Link to={g.hasImg} class="ulink">{I18n.t("copyright.view")}</Link>)
+                  }
+                  else if (g.instanceHasReproduction) {
+                     if(!g.details) g.details = []
+                     g.hasImg = "/show/"+g.instanceHasReproduction+"?s="+encodeURIComponent(this.props.history.location.pathname+this.props.history.location.search)+"#open-viewer"
+                     nav.push(<Link to={g.hasImg} class="ulink">{I18n.t("copyright.view")}</Link>)  
+                  }
+                  */
+
+
+
                   if(g.volumeNumber) { 
                      g.index = g.volumeNumber
                      g.link = g["@id"]
@@ -5494,6 +5511,14 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                         if(!Array.isArray(g.volumeHasEtext)) {
                            let txt = elem.filter(e => e["@id"] === g.volumeHasEtext)
                            if(txt.length) g.link = txt[0].eTextResource + "#open-viewer"
+
+
+                           nav.push(<Link to={"/show/"+txt[0].eTextResource} class="ulink">{I18n.t("resource.openR")}</Link>)
+                           nav.push(<span>|</span>)
+                           nav.push(<Link to={"/show/"+txt[0].eTextResource+"#open-viewer"} class="ulink">{I18n.t("result.openE")}</Link>)
+                           nav.push(<span>|</span>)
+                           nav.push(<a href={fullUri(txt[0].eTextResource)+".txt"} class="ulink"  download type="text" target="_blank">{I18n.t("mirador.downloadE")}</a>)
+
                         }
                         else {
                            g.hasPart = true
@@ -5503,6 +5528,20 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                   } else if(g.seqNum && g.eTextResource) {
                      g.index = g.seqNum
                      g.link = g.eTextResource + "#open-viewer"
+
+
+                     nav.push(<Link to={"/show/"+g.eTextResource} class="ulink">{I18n.t("resource.openR")}</Link>)
+                     nav.push(<span>|</span>)
+                     nav.push(<Link to={"/show/"+g.eTextResource+"#open-viewer"} class="ulink">{I18n.t("result.openE")}</Link>)
+                     nav.push(<span>|</span>)
+                     nav.push(<a href={fullUri(g.eTextResource)+".txt"} class="ulink" download type="text" target="_blank">{I18n.t("mirador.downloadE")}</a>)
+
+                  }
+
+
+                  if(nav.length) { 
+                     if(!g.details) g.details = []
+                     g.details.push(<div class="sub view">{nav}</div>)
                   }
 
                   //else if(g.)
@@ -5530,17 +5569,19 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                // TODO use translation from ontology
             }
             let open = this.state.collapse[tag]                         
+            let mono = etextrefs.length === 1
+            let openD = this.state.collapse[tag+"-details"] || this.state.collapse[tag+"-details"]  === undefined && mono
 
             ret.push(<span class={'top'+ (this.state.collapse[tag]?" on":"") }>
                   {(e.hasPart && !open) && <img src="/icons/triangle_.png" onClick={(ev) => toggle(ev,root,e["@id"],"",false,e)} className="xpd"/>}
                   {(e.hasPart && open) && <img src="/icons/triangle.png" onClick={(ev) => toggle(ev,root,e["@id"],"",false,e)} className="xpd"/>}
-                  <span class={"parTy "+(e.details?"on":"")} {...e.details?{title: I18n.t("resource."+(this.state.collapse[tag+"-details"]?"hideD":"showD")), onClick:(ev) => toggle(ev,root,e["@id"],"details",false,e)}:{title:tLabel}} >
+                  <span class={"parTy "+(e.details?"on":"")} {...e.details?{title: I18n.t("resource."+(openD?"hideD":"showD")), onClick:(ev) => toggle(ev,root,e["@id"],"details",mono)}:{title:tLabel}} >
                      {pType && parts[pType] ? <div>{parts[pType]}</div> : <div>{parts["?"]}</div> }
                   </span>
-                  <span>{this.uriformat(null,{type:'uri', value:gUri, inOutline: (!e.hasPart?tag+"-details":tag), url:"/show/"+e.link, debug:false, ...(e.hasPart?{toggle:() => toggle(null,root,e["@id"],!e.hasPart?"details":"",false,e)}:{}) })}</span>
-                  <div class="abs">
-                     { e.hasImg && <Link className="hasImg" title={I18n.t("copyright.view")}  to={e.hasImg}><img src="/icons/search/images.svg"/><img src="/icons/search/images_r.svg"/></Link> }                   
-                     { e.details && <span id="anchor" title={I18n.t("resource."+(this.state.collapse[tag+"-details"]?"hideD":"showD"))} onClick={(ev) => toggle(ev,root,e["@id"],"details",false,e)}>
+                  <span>{this.uriformat(null,{type:'uri', value:gUri, inOutline: (!e.hasPart?tag+"-details":tag), url:"/show/"+e.link, debug:false, toggle:() => toggle(null,root,e["@id"],!e.hasPart?"details":"",mono) })}</span>
+                  <div class="abs">                  
+                     { !e.hasPart && <Link className="hasImg hasTxt" title={I18n.t("result.openE")}  to={"/show/"+e.link}><img src="/icons/search/etext.svg"/><img src="/icons/search/etext_r.svg"/></Link> }                   
+                     { e.details && <span id="anchor" title={I18n.t("resource."+(openD?"hideD":"showD"))} onClick={(ev) => toggle(ev,root,e["@id"],"details",mono)}>
                         <img src="/icons/info.svg"/>
                      </span> }
                      <CopyToClipboard text={gUri} onCopy={(e) => prompt(I18n.t("misc.clipboard"),gUri)}>
@@ -5551,25 +5592,12 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                      </CopyToClipboard>
                   </div>
                </span>)
-               /*
-            if(((osearch && e.hasMatch && this.state.collapse[tag+"-details"] !== false) || this.state.collapse[tag+"-details"]) && e.details) 
+               
+            if(openD && e.details) 
                ret.push(<div class="details">
-                  {e.details}
-                  { (e.hidden && e.hidden.length > 0) && [
-                     <Collapse timeout={{enter:0,exit:0}} className={"outlineCollapse in-"+(this.state.collapse["hide-"+fUri]===true)} in={this.state.collapse["hide-"+fUri]}>
-                        {e.hidden}
-                     </Collapse>,
-                     <span
-                        onClick={(e) => this.setState({...this.state,collapse:{...this.state.collapse,["hide-"+fUri]:!this.state.collapse["hide-"+fUri]}})}
-                        className="expand">
-                           {I18n.t("misc."+(this.state.collapse["hide-"+fUri]?"hide":"seeMore")).toLowerCase()}&nbsp;<span
-                           className="toggle-expand">
-                              { this.state.collapse["hide-"+fUri] && <ExpandLess/>}
-                              { !this.state.collapse["hide-"+fUri] && <ExpandMore/>}
-                           </span>
-                     </span>] }</div>
-               )*/
-            if(e.hasPart && this.state.collapse[tag]) ret.push(<div style={{paddingLeft:"25px"}}>{makeNodes(e["@id"],top)}</div>)
+                     {e.details}
+                  </div>)
+            if(e.hasPart && open) ret.push(<div style={{paddingLeft:"25px"}}>{makeNodes(e["@id"],top)}</div>)
             return ret
          })
 

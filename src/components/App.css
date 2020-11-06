@@ -1168,6 +1168,7 @@ h4:not(:hover) > .lang
 .resource .data#outline .root + div .permalink::before,
 .resource .data#outline .root + div .hasImg::before { opacity:0.65;}
 .resource .data#outline .root + div .hasImg img { width:18px; opacity:0.8; vertical-align: middle !important; }
+.resource .data#outline .root + div .hasImg.hasTxt img { width:17px; }
 
 .resource .data#outline .root + div .top.is-root .permalink img:first-child,
 .resource .data#outline .root + div .top:not(.is-root) .permalink img:last-child,
