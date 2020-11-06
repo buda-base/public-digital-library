@@ -106,7 +106,8 @@ const boTranslation = {
       yearP:"པར་ལོ།",
       title:"མཚན་བྱང་།",
       numberMC:"བཙལ་བྱ་རྙེད་སའི་དུམ་ཚན་གྱི་གྲངས།",
-      lastS:"སྤེལ་དུས།"
+      lastS:"སྤེལ་དུས།",
+      reverseS:"(reverse)"
    },
    copyright:{
       open:"བཀག་རྒྱ་མེད་པ།",
