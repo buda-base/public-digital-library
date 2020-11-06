@@ -4292,8 +4292,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          <Popover key={2}
                open={this.state.collapse[txt]}
                className={["collapse sortBy ",this.state.collapse[txt]?"open":"close"].join(" ")}
-               transformOrigin={{ vertical: 'center', horizontal: 'left'}} 
-               anchorOrigin={{vertical: 'center', horizontal: 'right'}} 
+               transformOrigin={{ vertical: 'top', horizontal: 'left'}} 
+               anchorOrigin={{vertical: 'bottom', horizontal: 'left'}} 
                anchorEl={this.state.anchor[txt]} 
                onClose={e => { this.setState({...this.state,collapse: {...this.state.collapse, [txt]:false } } ) }}
             >
