@@ -179,6 +179,8 @@ const enTranslation = {
       "tmp:hasEtext":"Has Etext",
       "unspecified":"Unspecified",
       "true":"True",
+      "bdo:eTextIsVolume": "Vol.",
+      "bdo:eTextInVolume": "Vol.",
       "tmp:TibetanBuddhistTexts":"Tibetan Buddhist Texts",
       "tmp:BonpoTexts":"Bonpo Texts",
       "tmp:SanskritTexts":"Sanskrit Texts",
