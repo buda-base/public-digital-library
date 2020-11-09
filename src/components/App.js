@@ -2477,7 +2477,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                </div>)
                */
                
-               ret.push(<div>{this.makeResult(iri /*i[0]["@id"]*/,cpt,null,"@"+startChar+"~"+endChar,"",null,null,null,
+               ret.push(<div>{this.makeResult(iri /*i[0]["@id"]*/,cpt,null,"@"+startChar+"~"+endChar,"?",null,null,null,
                   [{lang,value:val,type:tmp+"textMatch",expand,context,startChar,endChar,inPart} ], //...i.filter(e => [bdo+"sliceStartChar",tmp+"matchScore"].includes(e.type) )],
                   null,[],null,true)}</div>)
 
@@ -2719,7 +2719,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
    makeResult(id,n,t,lit,lang,tip,Tag,url,rmatch = [],facet,allProps = [],preLit,isInstance)
    {
-      loggergen.log("res",id,allProps,n,t,lit,lang,tip,Tag,rmatch,sameAsRes)
+      //loggergen.log("res",id,allProps,n,t,lit,lang,tip,Tag,rmatch,sameAsRes)
 
       let sameAsRes,otherSrc= [] ;
       if(allProps) sameAsRes = [ ...allProps ]
