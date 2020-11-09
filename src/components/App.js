@@ -296,7 +296,7 @@ export function report_GA(config,location) {
 
 export function highlight(val,k,expand,newline)
 {
-   //loggergen.log("hi:",val,k,expand)
+   loggergen.log("hi:",val,k,expand)
 
    if(expand && expand.value) val = expand.value
 
@@ -305,8 +305,10 @@ export function highlight(val,k,expand,newline)
    val = val.replace(/(↦↤)|(\[ *\])/g,"");
    val = val.replace(/\[( *\(…\) *)\]/g," $1 ");
 
-   if(!val.match(/↤/) && k)
-      val = /*val.replace(/@.* /,"")*/ val.split(new RegExp(k.replace(/[ -'ʾ]/g,"[ -'ʾ]"))).map((l) => ([<span>{l}</span>,<span className="highlight">{k}</span>])) ;
+   if(!val.match(/↤/) && k) {
+      //console.log("k:",k.replace(/[ -'ʾ_]/g,"[ -'ʾ_]"))
+      val = /*val.replace(/@.* /,"")*/ val.split(new RegExp(k.replace(/[ -'ʾ_]/g,"[ -'ʾ_]+"))).map((l) => ([<span>{l}</span>,<span className="highlight">{k}</span>])) ;
+   }
    else //if (val.match(/↤.*?[^-/_()\[\]: ]+.*?↦/))
    {      
       val = val.split(/↦/)
