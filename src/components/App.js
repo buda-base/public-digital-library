@@ -2425,18 +2425,19 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             else return acc
          },{}) 
          
-         //loggergen.log("labels/prop",prop,id) //,useAux,fromProp,allProps) //,this.props.assoRes)         
+         loggergen.log("labels/prop",prop,id) //,useAux,fromProp,allProps) //,this.props.assoRes)         
 
          if(useAux && !findProp) { // etext
 
             id = allProps.filter(e => fromProp.includes(e.type)).map(e => [{"@id":e.value}, ...this.props.assoRes[e.value].map(f => !e.expand||!e.expand.value||f.type !== bdo+"chunkContents"?f:{...e, ...f /*,expand:e.expand*/}) ]) //.reduce( (acc,e) => ([ ...acc, ...this.props.assoRes[e.value] ]),[]) 
 
-            //loggergen.log("uA1",id,allProps,fromProp,useAux,findProp)
+            loggergen.log("uA1",id,allProps,fromProp,useAux,findProp)
 
             let val,lang,cpt = 1
 
             for(let i of id) {
-               let labels = getLangLabel(this,prop,i.filter(e => useAux.includes(e.type)))
+               let lab = i.filter(e => useAux.includes(e.type)), 
+                  labels = getLangLabel(this,prop,lab) 
 
                lang = labels["xml:lang"]
                if(!lang) lang = labels["lang"]
@@ -2444,14 +2445,14 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                val = labels.value
                if(!val) val = labels["@value"]
 
-               let startChar = labels.startChar, endChar = labels.endChar
+               let startChar = lab[0].startChar, endChar = lab[0].endChar
                
-               let expand = labels.expand
+               let expand = lab[0].expand
                if(expand && expand.value) expand = getLangLabel(this,prop,[ expand ])
-               let context = labels.context
+               let context = lab[0].context
                if(context && context.value) context = getLangLabel(this,prop,[ context ])
 
-               let inPart = labels.inPart
+               let inPart = lab[0].inPart
 
                //loggergen.log("expand",expand)
 
@@ -2718,7 +2719,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
    makeResult(id,n,t,lit,lang,tip,Tag,url,rmatch = [],facet,allProps = [],preLit,isInstance)
    {
-      //loggergen.log("res",id,allProps,n,t,lit,lang,tip,Tag,rmatch,sameAsRes)
+      loggergen.log("res",id,allProps,n,t,lit,lang,tip,Tag,rmatch,sameAsRes)
 
       let sameAsRes,otherSrc= [] ;
       if(allProps) sameAsRes = [ ...allProps ]
