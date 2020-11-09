@@ -2425,13 +2425,13 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             else return acc
          },{}) 
          
-         loggergen.log("labels/prop",prop,id) //,useAux,fromProp,allProps) //,this.props.assoRes)         
+         //loggergen.log("labels/prop",prop,id) //,useAux,fromProp,allProps) //,this.props.assoRes)         
 
          if(useAux && !findProp) { // etext
 
             id = allProps.filter(e => fromProp.includes(e.type)).map(e => [{"@id":e.value}, ...this.props.assoRes[e.value].map(f => !e.expand||!e.expand.value||f.type !== bdo+"chunkContents"?f:{...e, ...f /*,expand:e.expand*/}) ]) //.reduce( (acc,e) => ([ ...acc, ...this.props.assoRes[e.value] ]),[]) 
 
-            loggergen.log("uA1",id,allProps,fromProp,useAux,findProp)
+            //loggergen.log("uA1",id,allProps,fromProp,useAux,findProp)
 
             let val,lang,cpt = 1
 

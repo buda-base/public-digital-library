@@ -1476,21 +1476,25 @@ function sortResultsByRelevance(results,reverse) {
    let keys = Object.keys(results)
    if(keys && keys.length) {
       keys = keys.map(k => {
-         let n = 0, score, p = results[k].length, scoreDel = [],last
+         let n = 0, score, p = results[k].length, scoreDel = [],last, max = 0
          for(let i in results[k]) {
             let v = results[k][i]
             if(v.type === tmp+"matchScore") {
-               if(!n) n = Number(v.value)
+               if(!max) max = Number(v.value)
                else { 
                   let m = Number(v.value)
-                  if(m > n || (reverse && n < m)) { 
+                  if(m > max || (reverse && m < max)) { 
                      loggergen.log("push",v,i,last,n,m)
-                     n = m
+                     max = m
                      scoreDel.push(Number(last))
                      p--
                   }
                }
                last = i
+            } else if(v.type === tmp+"maxScore") {
+               max = Number(v.value)
+            } else if(v.type === tmp+"nbChunks") {
+               n = Number(v.value)
             }
          }
          // TODO no need to keep all scores (needs to be elsewhere more generic)
@@ -1498,16 +1502,16 @@ function sortResultsByRelevance(results,reverse) {
             for(let i of scoreDel) delete results[k][i]
             results[k] = results[k].filter(e=>e)
          }
-         return ({k, n, p})
+         return ({k, max, n, p})
       },{})
-      keys = _.orderBy(keys,['n','p'],[(reverse?'asc':'desc'), (reverse?'asc':'desc')])
+      keys = _.orderBy(keys,[ 'max', 'n','p'],[(reverse?'asc':'desc'), (reverse?'asc':'desc')])
       
-      //loggergen.log("sortK",JSON.stringify(keys,null,3))
+      loggergen.log("sortK",JSON.stringify(keys,null,3))
 
       let sortRes = {}
       for(let k of keys) sortRes[k.k] = results[k.k]
 
-      //loggergen.log("sortResR",sortRes)
+      loggergen.log("sortResR",sortRes)
 
       return sortRes
    }
@@ -1616,25 +1620,26 @@ function sortResultsByNbChunks(results,reverse) {
    let keys = Object.keys(results)
    if(keys && keys.length) {
       keys = keys.map(k => {
-         let n = 0, score, p = results[k].length, m = 0
+         let n = 0, score, p = results[k].length, max = 0
          for(let i in results[k]) {
             let v = results[k][i]
             if(v.type === tmp+"nbChunks") {
                n = Number(v.value)
             }
             else if(v.type === tmp+"maxScore") {
-               m = Number(v.value)
+               max = Number(v.value)
             }
          }
-         return ({k, n, m, p})
+         return ({k, n, max, p})
       },{})
-      keys = _.orderBy(keys,['n','m','p'],[(reverse?'asc':'desc'), (reverse?'asc':'desc')])
-      //loggergen.log("sortK",keys)
+      keys = _.orderBy(keys,['n','max','p'],[(reverse?'asc':'desc'), (reverse?'asc':'desc')])
+      
+      loggergen.log("sortK",JSON.stringify(keys,null,3))
 
       let sortRes = {}
       for(let k of keys) sortRes[k.k] = results[k.k]
 
-      //loggergen.log("sortResP",reverse,sortRes)
+      loggergen.log("sortResNb",reverse,sortRes)
 
       return sortRes
    }
