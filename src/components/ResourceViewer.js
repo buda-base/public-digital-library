@@ -2041,7 +2041,7 @@ class ResourceViewer extends Component<Props,State>
             return JSON.stringify(elem);
          }
 
-         //loggergen.log("uriformat",prop,elem.value,elem,dic,withProp,show)
+         loggergen.log("uriformat",prop,elem.value,elem,dic,withProp,show)
          
          if(!elem.value.match(/^http:\/\/purl\.bdrc\.io/) /* && !hasExtPref */ && ((!dic || !dic[elem.value]) && !prop.match(/[/#]sameAs/))) {
             let link = elem.value
@@ -2224,7 +2224,20 @@ class ResourceViewer extends Component<Props,State>
                   //if(pI) uri = this.props.IRI+"?part="+uri
                   //else uri = uri.replace(/^((bdr:MW[^_]+)_[^_]+)/,"$2?part=$1")
 
-                  if(info === uri) info = I18n.t("resource.noT")
+
+                  if(info === uri) {                      
+                     if(elem.volume) {
+                        infoBase = dico[elem.volume]
+                        console.log("iB:",infoBase)
+                        if(infoBase) infoBase = infoBase.filter(e => [bdo+"volumeNumber",skos+"prefLabel", /*skos+"altLabel",*/ foaf+"name" /*,"literal"*/].reduce( (acc,f) => ((acc || f === e.type || f === e.fromKey) && !e.fromSameAs), false))
+                        let { _info, _lang } = this.getInfo(prop,infoBase,withProp) 
+                        if(_info) {
+                           info = _info
+                           lang = _lang
+                        }
+                     }
+                     if(!info || info === uri) info = I18n.t("resource.noT")
+                  }
 
 
                   link = <a class={"urilink prefLabel " } href={elem.url} onClick={(e) => { 
@@ -5458,7 +5471,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          if(elem) node = elem.filter(e => e["@id"] === top) 
          let etextrefs = []
 
-         console.log("node:",this.props.eTextRefs,node,top)
+         //console.log("node:",this.props.eTextRefs,node,top)
 
          if(node.length && (node[0].instanceHasVolume || node[0].volumeHasEtext))
          {
@@ -5469,7 +5482,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
             //console.log("chil:",children);
 
             for(let e of children) {
-               console.log("e:",e);
+               //console.log("e:",e);
 
                let w_idx = elem.filter(f => e["@id"] && f["@id"] === e["@id"] || f["@id"] === e) 
                if(w_idx.length) {
@@ -5579,7 +5592,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                   <span class={"parTy "+(e.details?"on":"")} {...e.details?{title: I18n.t("resource."+(openD?"hideD":"showD")), onClick:(ev) => toggle(ev,root,e["@id"],"details",mono)}:{title:tLabel}} >
                      {pType && parts[pType] ? <div>{parts[pType]}</div> : <div>{parts["?"]}</div> }
                   </span>
-                  <span>{this.uriformat(null,{type:'uri', value:gUri, inOutline: (!e.hasPart?tag+"-details":tag), url:"/show/"+e.link, debug:false, toggle:() => toggle(null,root,e["@id"],!e.hasPart?"details":"",mono) })}</span>
+                  <span>{this.uriformat(null,{type:'uri', value:gUri, volume:fUri, inOutline: (!e.hasPart?tag+"-details":tag), url:"/show/"+e.link, debug:false, toggle:() => toggle(null,root,e["@id"],!e.hasPart?"details":"",mono) })}</span>
                   <div class="abs">                  
                      { !e.hasPart && <Link className="hasImg hasTxt" title={I18n.t("result.openE")}  to={"/show/"+e.link}><img src="/icons/search/etext.svg"/><img src="/icons/search/etext_r.svg"/></Link> }                   
                      { e.details && <span id="anchor" title={I18n.t("resource."+(openD?"hideD":"showD"))} onClick={(ev) => toggle(ev,root,e["@id"],"details",mono)}>
