@@ -80,7 +80,7 @@ const enTranslation = {
    },
    Lsidebar:{
       sortBy:{
-         title:"Sort By"
+         title:"Sort By {{by}} {{reverse}}"
       },
       title:"Refine your Search",
       collection:{
@@ -119,7 +119,8 @@ const enTranslation = {
       yearP:"Year of Publication",
       title:"Title",
       numberMC:"Number of Matching Chunks",
-      lastS:"Release Date"
+      lastS:"Release Date",
+      reverseS:"(reverse order)"
    },
    copyright:{
       open:"Open Access",
@@ -179,6 +180,8 @@ const enTranslation = {
       "tmp:hasEtext":"Has Etext",
       "unspecified":"Unspecified",
       "true":"True",
+      "bdo:eTextIsVolume": "Vol.",
+      "bdo:eTextInVolume": "Vol.",
       "tmp:TibetanBuddhistTexts":"Tibetan Buddhist Texts",
       "tmp:BonpoTexts":"Bonpo Texts",
       "tmp:SanskritTexts":"Sanskrit Texts",

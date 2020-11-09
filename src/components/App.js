@@ -4307,8 +4307,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          <Popover key={2}
                open={this.state.collapse[txt]}
                className={["collapse sortBy ",this.state.collapse[txt]?"open":"close"].join(" ")}
-               transformOrigin={{ vertical: 'center', horizontal: 'left'}} 
-               anchorOrigin={{vertical: 'center', horizontal: 'right'}} 
+               transformOrigin={{ vertical: 'top', horizontal: 'left'}} 
+               anchorOrigin={{vertical: 'bottom', horizontal: 'left'}} 
                anchorEl={this.state.anchor[txt]} 
                onClose={e => { this.setState({...this.state,collapse: {...this.state.collapse, [txt]:false } } ) }}
             >
@@ -5039,6 +5039,40 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          message.unshift(moreres)
          message.unshift(head)
       }
+      let reverse, by, sortByPopup ;
+      if(sortByList) sortByPopup = sortByList.map((t,n) => {
+         let i = I18n.t("sort."+t,{lng:"en"}), label = I18n.t("sort."+t), check = (this.props.sortBy && this.props.sortBy.startsWith(i.toLowerCase()) ) || (!this.props.sortBy && n === 0)
+         if(check) by = label
+         if(reverseSort) reverse = I18n.t("sort.reverseS")
+         return(<div key={i} style={{width:"200px",textAlign:"left"}} className="searchWidget">
+            <FormControlLabel
+               control={
+                  <Checkbox
+                     checked={check}
+                     className="checkbox"
+                     icon={<PanoramaFishEye/>}
+                     checkedIcon={<CheckCircle  style={{color:"#d73449"}}/>}
+                     onChange={(event, checked) => this.updateSortBy(event, checked, i) }
+                  />
+
+               }
+               label={<span lang={this.props.locale}>{label}</span>}
+            /></div>) } ).concat([
+               <div key={99} style={{width:"auto",textAlign:"left",marginTop:"5px",paddingTop:"5px"}} className="searchWidget">
+               <FormControlLabel
+                  control={
+                     <Checkbox
+                        checked={reverseSort}
+                        className="checkbox"
+                        icon={<CheckBoxOutlineBlank/>}
+                        checkedIcon={<CheckBox  style={{color:"#d73449"}}/>}
+                        onChange={(event, checked) => this.reverseSortBy(event, checked) }
+                     />
+
+                  }
+                  label={<span lang={this.props.locale}>{I18n.t("sort.reverse")}</span>}
+               /></div>
+      ] )
 
       return (
 <div>
@@ -5275,39 +5309,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
            {  (message.length > 0 || message.length == 0 && !this.props.loading ) && <div id="res-header">
                <div>
                   <div id="settings" onClick={() => this.setState({collapse:{...this.state.collapse, settings:!this.state.collapse.settings}})}><img src="/icons/settings.svg"/></div>
-               { // TODO change to popover style open/close
-                     sortByList && this.popwidget(I18n.t("Lsidebar.sortBy.title"),"sortBy",
-                     (sortByList /*:["Year of Publication","Instance Title"]*/).map((t,n) => {
-                        let i = I18n.t("sort."+t,{lng:"en"})
-                        return(<div key={i} style={{width:"200px",textAlign:"left"}} className="searchWidget">
-                           <FormControlLabel
-                              control={
-                                 <Checkbox
-                                    checked={(this.props.sortBy && this.props.sortBy.startsWith(i.toLowerCase()) ) || (!this.props.sortBy && n === 0) }
-                                    className="checkbox"
-                                    icon={<PanoramaFishEye/>}
-                                    checkedIcon={<CheckCircle  style={{color:"#d73449"}}/>}
-                                    onChange={(event, checked) => this.updateSortBy(event, checked, i) }
-                                 />
-
-                              }
-                              label={<span lang={this.props.locale}>{I18n.t("sort."+t)}</span>}
-                           /></div>) } ).concat([
-                              <div key={99} style={{width:"auto",textAlign:"left",marginTop:"5px",paddingTop:"5px"}} className="searchWidget">
-                              <FormControlLabel
-                                 control={
-                                    <Checkbox
-                                       checked={reverseSort}
-                                       className="checkbox"
-                                       icon={<CheckBoxOutlineBlank/>}
-                                       checkedIcon={<CheckBox  style={{color:"#d73449"}}/>}
-                                       onChange={(event, checked) => this.reverseSortBy(event, checked) }
-                                    />
-
-                                 }
-                                 label={<span lang={this.props.locale}>{I18n.t("sort.reverse")}</span>}
-                              /></div>
-                     ])) 
+                  {  // DONE change to popover style open/close
+                     sortByList && this.popwidget(I18n.t("Lsidebar.sortBy.title",{by,reverse}),"sortBy",sortByPopup ) 
                   }
 
                   <div id="pagine" lang={this.props.locale}>

@@ -6537,7 +6537,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          if(!root || !root.length) theOutline = this.renderOutline()      
 
          let etext = this.isEtext()
-         if(etext && !this.props.eTextRefs) this.props.onGetETextRefs(this.props.IRI);
+         //if(etext && !this.props.eTextRefs) this.props.onGetETextRefs(this.props.IRI);
 
          let theEtext
          if(this.props.eTextRefs && this.props.eTextRefs !== true) theEtext = this.renderEtextRefs()      

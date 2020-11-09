@@ -99,7 +99,8 @@ const zhTranslation = {
       yearP:"出版年代",
       title:"题目",
       numberMC:"匹配部分的数量",
-      lastS:"Release Date"
+      lastS:"Release Date",
+      reverseS:"(reverse)"
    },
    copyright:{
       open:"开放访问",
