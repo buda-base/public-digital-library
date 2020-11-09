@@ -982,7 +982,7 @@ export const gotETextRefs = (state: DataState, action: Action) => {
    if(state.eTextRefs) eTextRefs = state.eTextRefs
 
    let root, mono ; 
-   if(action.meta !== true) {
+   if(action.meta !== true && action.meta["@graph"]) {
       root = { ...action.meta["@graph"].filter(e => e["@id"] === action.payload)[0] }
       mono = root.instanceHasVolume
       if(mono && !Array.isArray(mono)) {
@@ -1003,7 +1003,7 @@ export const gotETextRefs = (state: DataState, action: Action) => {
    let assoR = state.assocResources
    if(assoR) assoR = assoR[action.payload]
    if(!assoR) assoR = {}   
-   action.meta["@graph"].map(g => {
+   if(action.meta !== true && action.meta["@graph"]) action.meta["@graph"].map(g => {
       let uri = fullUri(g["@id"])
       if(g["skos:prefLabel"]) {
          if(!Array.isArray(g["skos:prefLabel"])) g["skos:prefLabel"] = [ g["skos:prefLabel"] ]

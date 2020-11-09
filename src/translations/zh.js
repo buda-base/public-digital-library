@@ -41,7 +41,8 @@ const zhTranslation = {
       volume:"卷",
       volume_num:"第{{num}}卷",
       scan:"Scan",
-      serial:"Series"
+      serial:"Series",
+      match:"match"
    },
    topbar:{
       about:"关于我们",
@@ -176,7 +177,8 @@ const zhTranslation = {
       openE:"开启Etext",
       hasInstance:"有{{count}}实例",
       assoc:"{{type}} associated with: <res href='/show/{{- rid}}'>{{- name}}</res>",
-      moreres:"More {{txt}} are available, do you want to see them?"
+      moreres:"More {{txt}} are available, do you want to see them?",
+      openEin:"Open in Etext"
    },
    index:{
       openViewer:"在查看器中打开",

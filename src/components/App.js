@@ -587,7 +587,7 @@ export function top_right_menu(that,etextTitle,backUrl,etextres)
                   that.props.onLoading("search",true,etextres)
 
                   //if(!etextres) 
-                  //setTimeout(() => { 
+                  setTimeout(() => { 
                      if(!backUrl) {
                         let loca = { ...that.props.history.location };                  
                         delete loca.hash
@@ -597,10 +597,10 @@ export function top_right_menu(that,etextTitle,backUrl,etextres)
                         that.props.history.push({pathname:"/search",search:"?"+backUrl}) ; 
                      }
 
-                     //that.props.onLoading("search",false)
-                     setTimeout(()=>that.props.onLoading("search",false),100)                     
+                     that.props.onLoading("search",false)
+                     //setTimeout(()=>that.props.onLoading("search",false),100)                     
 
-                  //}, 100)
+                  }, 100)
                   
                   /*
                   ev.preventDefault();
@@ -2710,7 +2710,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   toggleExpand(e,prettId+"@"+startC); } 	
                }>{expand!==true?I18n.t("result.expandC"):I18n.t("result.hideC")}</span>	
                <span> {I18n.t("misc.or")} </span>	
-               <Link to={"/show/"+prettId+bestM} class="uri-link">{I18n.t("result.openE")}</Link>	
+               <Link to={"/show/"+prettId+bestM} class="uri-link">{I18n.t("result.openEin")}</Link>	
                </span>:null}</span>	                      	
             </div>)	
          
@@ -2760,6 +2760,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
       }
 
       let T = getEntiType(id), langT, langs = [], isSerial;
+      if(lit && lit.startsWith && lit.startsWith("@")) T = "match"
       if(T === "Work") { 
          langT = allProps.filter(p => p.type === bdo+"language")      
          isSerial = allProps.filter(a => a.type === rdf+"type" && a.value === bdo+"SerialWork").length > 0
@@ -2870,7 +2871,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             if(window.location.href.match(/\/latest/)) urlBase = window.location.href.replace(/.*?\/latest[\/]?/,"latest?");
             else urlBase = window.location.href.replace(/^https?:[/][/][^?]+[?]?/gi,"")+"&"
             //console.log("urlB",urlBase)
-            resUrl = "/show/"+urlpart+"s="+ encodeURIComponent((urlBase.replace(/((([?])?&*|^)n=[^&]*)/g,"$3")+(!urlBase.match(/[\?&]$/)?"&":"")+"n="+n).replace(/\?+&?/,"?"))+(!bestM?"":"&"+bestM)
+            resUrl = "/show/"+urlpart+"s="+ encodeURIComponent((urlBase.replace(/((([?])?&*|^)n=[^&]*)/g,"$3")+(!urlBase.match(/[\?&]$/)?"&":"")+"n="+n).replace(/\?+&?/,"?"))+(!bestM?"":"&"+bestM.replace(/^\?/,""))
             //retList.push( <Link key={n} to={"/show/"+prettId+bestM} className="result">{ret}</Link> )
          }
          else

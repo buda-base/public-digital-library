@@ -61,7 +61,8 @@ const enTranslation = {
       product_plural:"Collections",
       scan:"Scan",
       scan_plural:"Scans",
-      serial:"Series"
+      serial:"Series",
+      match:"match"
    },
    topbar:{
       about:"about us",
@@ -209,6 +210,7 @@ const enTranslation = {
       expandC:"Expand Context",
       hideC:"Hide Context",
       openE:"Open Etext",
+      openEin:"Open in Etext",
       hasInstance:"Has {{count}} $t(types.instance)",
       hasInstance_plural:"Has {{count}} $t(types.instance_plural)",
       assoc:"{{type}} associated with: <res href='/show/{{- rid}}'>{{- name}}</res>",

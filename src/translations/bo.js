@@ -50,6 +50,7 @@ const boTranslation = {
       searchIn:"{{type}}",
       product:"Product",
       scan:"བཤེར་པར།",
+      match:"match"
    },
    topbar:{
       about:"ང་ཚོའི་སྐོར།",
@@ -199,7 +200,8 @@ const boTranslation = {
       hasInstance:"དཔེ་རྒྱུན་ {{count,counttobo}} ཡོད།",
       hasInstance_plural:"དཔེ་རྒྱུན་ {{count,counttobo}} ཡོད།",
       assoc:"{{type}} associated with: {{- name}}",
-      moreres:"More {{txt}} are available, do you want to see them?"
+      moreres:"More {{txt}} are available, do you want to see them?",
+      openEin:"Open in Etext"
    },
    index:{
       openViewer:"ཀློག",
