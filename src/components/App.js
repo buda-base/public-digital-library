@@ -575,14 +575,19 @@ export function top_right_menu(that,etextTitle,backUrl,etextres)
          <div>
             {logo}
 
-            <span id="back"><span>&lt;</span><a {...etextres?{href:"/show/"+etextres}:{}} onClick={() => {
+            <span id="back"><span>&lt;</span><a //{...etextres?{href:"/show/"+etextres}:{}}
+               onClick={(ev) => {
 
                   // DONE add loader to wait when back to search 
                   // TODO dont go back to search when opened from button
 
-                  that.props.onLoading("search",true)
 
-                  if(!etextres) setTimeout(() => { 
+                  //console.log('cV:',backUrl,etextres)
+
+                  that.props.onLoading("search",true,etextres)
+
+                  //if(!etextres) 
+                  //setTimeout(() => { 
                      if(!backUrl) {
                         let loca = { ...that.props.history.location };                  
                         delete loca.hash
@@ -592,9 +597,16 @@ export function top_right_menu(that,etextTitle,backUrl,etextres)
                         that.props.history.push({pathname:"/search",search:"?"+backUrl}) ; 
                      }
 
-                     that.props.onLoading("search",false)                     
+                     //that.props.onLoading("search",false)
+                     setTimeout(()=>that.props.onLoading("search",false),100)                     
 
-                  }, 100)
+                  //}, 100)
+                  
+                  /*
+                  ev.preventDefault();
+                  ev.stopPropagation();
+                  return false;
+                  */
 
                }}><span style={{verticalAlign:"-3px"}}>{I18n.t("topbar.closeEtext")}</span></a>
                <span>{etextTitle}</span>
