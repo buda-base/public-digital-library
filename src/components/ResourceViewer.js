@@ -5359,7 +5359,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
             //return  <div class="data access"><h3><span style={{textTransform:"none"}}>{I18n.t("misc.please")} <a class="login" {...(this.props.auth?{onClick:this.props.auth.login.bind(this,this.props.history.location)}:{})}>{I18n.t("topbar.login")}</a> {I18n.t("access.credentials")}</span></h3></div>
             return  <div class="data access"><h3><span style={{textTransform:"none"}}><Trans i18nKey="access.generic" components={{ policies: <a /> }} /></span></h3></div>
             
-      else if ( this.props.manifestError && this.props.manifestError.error.code === 500 )
+      else if ( this.props.manifestError && this.props.manifestError.error.code === 500 && this.props.IRI && !this.props.IRI.match(/^bdr:(IE|UT)/))
          return  <div class="data access"><h3><span style={{textTransform:"none"}}>{I18n.t("access.error")}</span></h3></div>
       
    }
@@ -6540,7 +6540,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          if(etext && !this.props.eTextRefs) this.props.onGetETextRefs(this.props.IRI);
 
          let theEtext
-         if(this.props.eTextRefs && this.props.eTextRefs !== true) theEtext = this.renderEtextRefs()      
+         if(this.props.eTextRefs && this.props.eTextRefs !== true && this.props.IRI && this.props.IRI.startsWith("bdr:IE")) theEtext = this.renderEtextRefs()      
 
          let loca = this.props.history.location            
 
