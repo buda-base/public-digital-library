@@ -1715,7 +1715,8 @@ function rewriteAuxMain(result,keyword,datatype,sortBy,language)
                   let m = getVal(e.value,bdo+"sliceStartChar")
                   let p = getVal(e.value,bdo+"sliceEndChar")
                   let content = getVal(e.value,bdo+"chunkContents",false)
-                  let expand = { lang:content["xml:lang"], value: content.value
+                  let expand 
+                  if(content) expand = { lang:content["xml:lang"], value: content.value
                               .replace(/(↤([་ ]*[^་ ↦↤]+[་ ]){5})[^↦↤]*(([་ ][^་ ↦↤]+[་ ]*){5}↦)/g,"$1 (…) $3")
                               .replace(/^[^↦↤]*(([་ ][^་ ↦↤]+[་ ]*){5}↦)/,"(…) $1")
                               .replace(/(↤([་ ]*[^་ ↦↤]+[་ ]){5})[^↦↤]*$/g,"$1 (…)") }

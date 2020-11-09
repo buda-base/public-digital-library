@@ -2431,7 +2431,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
          if(useAux && !findProp) { // etext
 
-            id = allProps.filter(e => fromProp.includes(e.type)).map(e => [{"@id":e.value}, ...this.props.assoRes[e.value].map(f => !e.expand||!e.expand.value||f.type !== bdo+"chunkContents"?f:{...e, ...f /*,expand:e.expand*/}) ]) //.reduce( (acc,e) => ([ ...acc, ...this.props.assoRes[e.value] ]),[]) 
+            id = allProps.filter(e => fromProp.includes(e.type)).map(e => [{"@id":e.value}, ...(!this.props.assoRes[e.value]?[]:this.props.assoRes[e.value].map(f => !e.expand||!e.expand.value||f.type !== bdo+"chunkContents"?f:{...e, ...f /*,expand:e.expand*/})) ]) //.reduce( (acc,e) => ([ ...acc, ...this.props.assoRes[e.value] ]),[]) 
 
             //loggergen.log("uA1",id,allProps,fromProp,useAux,findProp)
 
@@ -2441,20 +2441,28 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                let lab = i.filter(e => useAux.includes(e.type)), 
                   labels = getLangLabel(this,prop,lab) 
 
-               lang = labels["xml:lang"]
-               if(!lang) lang = labels["lang"]
-               if(!lang) lang = labels["@language"]
-               val = labels.value
-               if(!val) val = labels["@value"]
 
-               let startChar = lab[0].startChar, endChar = lab[0].endChar
+               if(labels) { 
+                  lang = labels["xml:lang"]
+                  if(!lang) lang = labels["lang"]
+                  if(!lang) lang = labels["@language"]
+                  val = labels.value
+                  if(!val) val = labels["@value"]
+               }
+
+               let startChar, endChar, expand, context, inPart
+
+               if(lab.length) { 
+                  startChar = lab[0].startChar ; 
+                  endChar = lab[0].endChar
                
-               let expand = lab[0].expand
-               if(expand && expand.value) expand = getLangLabel(this,prop,[ expand ])
-               let context = lab[0].context
-               if(context && context.value) context = getLangLabel(this,prop,[ context ])
+                  expand = lab[0].expand
+                  if(expand && expand.value) expand = getLangLabel(this,prop,[ expand ])
+                  context = lab[0].context
+                  if(context && context.value) context = getLangLabel(this,prop,[ context ])
 
-               let inPart = lab[0].inPart
+                  inPart = lab[0].inPart
+               }
 
                //loggergen.log("expand",expand)
 
@@ -2670,10 +2678,12 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
             inPart = m.inPart	
 
-            val = highlight(mLit["value"], facet, context?context:expand, context)	
-            //val =  mLit["value"]	
-            lang = mLit["lang"]	
-            if(!lang) lang = mLit["xml:lang"]	
+            if(mLit) {
+               val = highlight(mLit["value"], facet, context?context:expand, context)	
+               //val =  mLit["value"]	
+               lang = mLit["lang"]	
+               if(!lang) lang = mLit["xml:lang"]	
+            }
          }	
 
 
