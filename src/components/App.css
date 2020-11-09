@@ -1305,6 +1305,9 @@ h4:not(:hover) > .lang
 
 .resource .data#outline.etextrefs .is-root h2 a span { color: #343434; cursor:pointer;}
 
+
+.resource .data#outline.etextrefs > .search:not(#a) { display:none !important; }
+
 /* ------------------------------------------------------------------------------------------------------------------------ header */
 
 .resource .data#head { background-color:#ffffff; padding:35px; padding-bottom:45px; padding-top:35px;}
