@@ -90,7 +90,7 @@ const zhTranslation = {
    sort:{
       reverse:"逆序排列",
       popu:"流行度",
-      closestM:"最接近的匹配", 
+      closestM:"最接近的匹配",
       workT:"作品题目",
       personN:"人名", 
       yearB:"出生年代",
@@ -158,6 +158,7 @@ const zhTranslation = {
       "tmp:Maps":"Maps",
       "tmp:BuddhistArt":"Buddhist Art",
       "tmp:other":"Other",
+      "tmp:inRootInstance":"Instance"
    },
    result:{
       open:"开放",

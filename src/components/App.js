@@ -2275,7 +2275,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                for(let k of instK) {
                   let label = getLangLabel(this,"",instances[k].filter(e => e.type === skos+"prefLabel"))
                   
-                  if(!label) label = { value:"?","xml:lang":"?"}
+                  if(!label) label = { value:"","xml:lang":"?"}
                   // TODO etext instance ?
 
                   ret.push(this.makeResult(k,n,null,label.value,label["xml:lang"],null,null,null,[],null,instances[k],label.value,true))
@@ -3106,15 +3106,16 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          let typeisbiblio = (type === "Work" || type === "Instance" || type === "Etext" || type === "Scan")
 
          retList.push( <div id='matches'>         
+
+            { typeisbiblio && this.getResultProp(I18n.t("result.inRootInstance"),allProps,false,true,[bdo+"inRootInstance",tmp+"inRootInstance"]) } 
             { typeisbiblio && this.getResultProp(I18n.t("result.workBy"),allProps,false,true,[tmp+"author"]) }
-            { typeisbiblio && this.getResultProp(I18n.t("result.inRootInstance"),allProps,false,true,[bdo+"inRootInstance"]) } 
 
             { type !== "Person" && 
                this.getResultProp(I18n.t("result.year"),allProps,false,false,[tmp+"yearStart"]) }
             { type === "Person" && 
                this.getResultProp(I18n.t("result.year"),allProps,false,false,[tmp+"onYear",bdo+"onYear",bdo+"notBefore",bdo+"notAfter"],null,[bdo+"personEvent"],[bdo+"PersonBirth",bdo+"PersonDeath"]) }
 
-            { type === "Etext" && this.getResultProp(I18n.t("result.eTextIsForWork"),allProps,false,true,[tmp+"forWork"]) }            
+            {/* { type === "Etext" && this.getResultProp(I18n.t("result.eTextIsForWork"),allProps,false,true,[tmp+"forWork"]) }             */}
             { type === "Etext" && this.getResultProp(bdo+"eTextIsVolume",allProps,false,false) }
             { type === "Etext" && this.getResultProp(I18n.t("result.inInstance"),allProps,false,false,[tmp+"inInstance"]) }
             { type === "Etext" && this.getResultProp(I18n.t("result.inInstancePart"),allProps,false,false,[tmp+"inInstancePart"]) }

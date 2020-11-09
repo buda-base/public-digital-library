@@ -179,7 +179,8 @@ const boTranslation = {
       "tmp:lastSync":"སྤེལ་དུས།",
       "tmp:versionType":"Version Type",
       "tmp:standalone":"Standalone",
-      "tmp:partOfVersion":"Part of another Version"
+      "tmp:partOfVersion":"Part of another Version",
+      "tmp:inRootInstance":"Instance"
    },
    result:{
       open:"ཁ་ཕྱེ།",

@@ -192,7 +192,8 @@ const enTranslation = {
       "tmp:lastSync":"Release Date",
       "tmp:versionType":"Version Type",
       "tmp:standalone":"Standalone",
-      "tmp:partOfVersion":"Part of another Version"
+      "tmp:partOfVersion":"Part of another Version",
+      "tmp:inRootInstance":"Instance"
    },
    result:{
       open:"Open",

@@ -5454,10 +5454,11 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
       let makeNodes = (top,parent) => {               
          let elem = this.props.eTextRefs["@graph"]
-         let node = elem.filter(e => e["@id"] === top) 
+         let node = []
+         if(elem) node = elem.filter(e => e["@id"] === top) 
          let etextrefs = []
 
-         console.log("node:",node,top)
+         console.log("node:",this.props.eTextRefs,node,top)
 
          if(node.length && (node[0].instanceHasVolume || node[0].volumeHasEtext))
          {

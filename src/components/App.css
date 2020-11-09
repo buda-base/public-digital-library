@@ -983,6 +983,9 @@ a.result .contenu ul > div:last-child h3 {
    line-height: 22px; display:block; margin:3px 0 5px 0;
 }
 
+a.result .contenu ul > div:last-child h3[lang="?"] span:empty,
+a.result .contenu ul > div:last-child h3[lang="?"] { display:none; }
+
 a.result .contenu ul > div:last-child p {
    color: rgba(0, 0, 0, 0.54);   font-size: 0.85rem;   font-weight: 400; 
    line-height: 1.46429em; margin: 0;  display: block;
