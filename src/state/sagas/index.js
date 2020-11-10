@@ -806,7 +806,7 @@ async function createPdf(url,iri) {
          loggergen.log("pdf",data)
          links = data.links
       }
-      if(links && !links.includes(".bdrc.io/")) links = IIIFurl+links
+      if(links && !links.match(/^(https?:)?\/\//)) links = IIIFurl+links
       store.dispatch(dataActions.pdfReady(links,{url,iri:iri.iri}))
 
 
