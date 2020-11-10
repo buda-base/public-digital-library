@@ -146,7 +146,10 @@ const makeMainRoutes = () => {
                 <Switch>
                      <Route path="/static/:DIR/:PAGE" render={(props) => 
                         <StaticRouteContainer dir={props.match.params.DIR} page={props.match.params.PAGE} history={history}/>
-                     }/>                        
+                     }/>
+                     <Route path="/static/:PAGE" render={(props) => 
+                        <StaticRouteContainer dir={""} page={props.match.params.PAGE} history={history}/>
+                     }/>                                                
                      <Route path="/testToken" render={(props) => {
                         store.dispatch(initiateApp());
                         return (<TestToken auth={auth} history={history} />)
