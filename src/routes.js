@@ -23,6 +23,7 @@ import Auth,{TestToken} from './Auth.js';
 import UserViewerContainer from './containers/UserViewerContainer';
 import ProfileContainer from './containers/ProfileContainer';
 import Profile from './components/ProfileStatic';
+import { top_right_menu } from './components/App'
 
 import ClearCache from "react-clear-cache";
 
@@ -151,7 +152,17 @@ export class StaticRouteNoExt extends Component<State>
    render(props) { 
       if(!I18n.language || !this.state.content)  return <Loader loaded={false} />
       else if(I18n.language && this.state.error) return <Redirect404  history={history}  auth={auth}/>
-      else return this.state.content ; 
+      else return (
+         <div>
+            { top_right_menu(this) }
+            <div class="resource static">
+               
+               <div className="static-container">
+                  {this.state.content}
+               </div>
+            </div> 
+         </div>
+      );
    }
 }
 
