@@ -801,11 +801,13 @@ async function createPdf(url,iri) {
       loggergen.log("IIIFu",IIIFurl,config)
       let links = iri.links
       if(!links) {
+
          let data = JSON.parse(await api.getURLContents(IIIFurl+url,false,"application/json"))
          loggergen.log("pdf",data)
          links = data.links
       }
-      store.dispatch(dataActions.pdfReady(IIIFurl+links,{url,iri:iri.iri}))
+      if(links && !links.includes(".bdrc.io/")) links = IIIFurl+links
+      store.dispatch(dataActions.pdfReady(links,{url,iri:iri.iri}))
 
 
 
