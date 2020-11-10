@@ -628,7 +628,7 @@ export function top_right_menu(that,etextTitle,backUrl,etextres)
        <div>
          {logo}
 
-         { !onZhMirror && <a id="about" href="https://bdrc.io" target="_blank">{I18n.t("topbar.about")}</a> }
+         <a id="about" href={!onZhMirror?"https://bdrc.io":"/static/test/hello/"} {...!onZhMirror?{target:"_blank"}:{}}>{I18n.t("topbar.about")}</a> 
 
          <Link to="/"  onClick={() => { that.props.history.push({pathname:"/",search:""}); that.props.onResetSearch();} }><span>{I18n.t("topbar.search")}</span></Link>
 

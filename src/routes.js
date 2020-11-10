@@ -22,6 +22,7 @@ import qs from 'query-string'
 import Auth,{TestToken} from './Auth.js';
 import UserViewerContainer from './containers/UserViewerContainer';
 import ProfileContainer from './containers/ProfileContainer';
+import StaticRouteContainer from './containers/StaticRouteContainer';
 import Profile from './components/ProfileStatic';
 import { top_right_menu } from './components/App'
 
@@ -128,43 +129,6 @@ export class Redirect404 extends Component<Props>
    }
 }
 
-type State = { content:any, error:integer }
-
-export class StaticRouteNoExt extends Component<State>
-{
-   constructor(props) {
-      super(props);
-      this.state = { content: "" } //"loading..."+props.dir+"/"+props.page }
-      store.dispatch(initiateApp(qs.parse(history.location.search),null,null,"static"))
-      let i18nLoaded = setInterval(() => {
-         console.log("i18n",I18n,I18n.language,I18n.languages);
-         if(I18n.language) {
-            clearInterval(i18nLoaded);
-            window.fetch("/static/"+this.props.dir+"/"+this.props.page+"."+I18n.language+".html").then(async (data) => {        
-               //console.log("data:",data)
-               let content = await data.text()
-               if(!content.includes("You need to enable JavaScript to run this app.")) this.setState({content})
-               else this.setState({error:true})
-            })
-         } 
-      }, 1000);
-   }
-   render(props) { 
-      if(!I18n.language || !this.state.content)  return <Loader loaded={false} />
-      else if(I18n.language && this.state.error) return <Redirect404  history={history}  auth={auth}/>
-      else return (
-         <div>
-            { top_right_menu(this) }
-            <div class="resource static">
-               
-               <div className="static-container">
-                  {this.state.content}
-               </div>
-            </div> 
-         </div>
-      );
-   }
-}
 
 const handleAuthentication = (nextState, replace) => {
   if (/access_token|id_token|error/.test(nextState.location.hash)) {
@@ -181,7 +145,7 @@ const makeMainRoutes = () => {
               <Router history={history}>
                 <Switch>
                      <Route path="/static/:DIR/:PAGE" render={(props) => 
-                        <StaticRouteNoExt dir={props.match.params.DIR} page={props.match.params.PAGE}/>
+                        <StaticRouteContainer dir={props.match.params.DIR} page={props.match.params.PAGE} history={history}/>
                      }/>                        
                      <Route path="/testToken" render={(props) => {
                         store.dispatch(initiateApp());
