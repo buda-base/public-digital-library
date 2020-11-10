@@ -300,43 +300,50 @@ export function highlight(val,k,expand,newline)
 
    if(expand && expand.value) val = expand.value
 
+   if(!val.match(/↤/) && k) {
+
+      //val = /*val.replace(/@.* /,"")*/ val.split(new RegExp(k.replace(/[ -'ʾ_]/g,"[ -'ʾ_]+"))).map((l) => ([<span>{l}</span>,<span className="highlight">{k}</span>])) ;
+      //console.log("val:",val)
+      
+      // DONE "manually" add the ↦
+      val = val.replace(new RegExp(k.replace(/[ -'ʾ_/  \[\]0-9\n\r།]+/gu,"[ -'ʾ_/  \\[\\]0-9\n\r།]+"),"gu"),"↦"+k+"↤")
+
+      //console.log("k:",val,k.replace(/[ -'ʾ_/  \[\]0-9\n\r།]+/gu,"[ -'ʾ_/  \\[\\]0-9\n\r།]+"))
+   }
+
+
    val = val.replace(/(\[[^\]]*?)([↦])([^\]]*?\])/g,"$1$3$2");
    val = val.replace(/(\[[^\]]*?)([↤])([^\]]*?\])/g,"$2$1$3");
    val = val.replace(/(↦↤)|(\[ *\])/g,"");
    val = val.replace(/\[( *\(…\) *)\]/g," $1 ");
 
-   if(!val.match(/↤/) && k) {
-      //console.log("k:",k.replace(/[ -'ʾ_]/g,"[ -'ʾ_]"))
-      val = /*val.replace(/@.* /,"")*/ val.split(new RegExp(k.replace(/[ -'ʾ_]/g,"[ -'ʾ_]+"))).map((l) => ([<span>{l}</span>,<span className="highlight">{k}</span>])) ;
-   }
-   else //if (val.match(/↤.*?[^-/_()\[\]: ]+.*?↦/))
-   {      
-      val = val.split(/↦/)
-      val = val.map((e,_idx) => { 
-         //loggergen.log("e",i,e,e.length)
-         if(e.length) {
-            let f = e.split(/↤/)
-            if(f.length > 1) {
-               let tail 
-               if(newline && f[1].indexOf("\n\n") !== -1) { 
-                  tail = f[1].split("\n\n")
-                  tail = tail.map((i,idx) => [<span>{i}</span>,<br data-last={_idx >= val.length - 1 && idx === tail.length - 1}/>,<br/>])
-               }
-               else tail = [ <span>{f[1]}</span> ]
-               return [<span className="highlight">{f[0]}</span>,...tail,<span></span>]
+   val = val.split(/↦/)
+   val = val.map((e,_idx) => { 
+      
+      //loggergen.log("e:",_idx,e,e.length)
+
+      if(e.length) {
+         let f = e.split(/↤/)
+         if(f.length > 1) {
+            let tail 
+            if(newline && f[1].indexOf("\n\n") !== -1) { 
+               tail = f[1].split(/\n\n/)
+               tail = tail.map((i,idx) => [<span>{i}</span>, ...(idx==tail.length - 1 ?[]:[<br data-last={_idx >= val.length - 1 && idx === tail.length - 1}/>,<br/>]) ])
             }
-            else {
-               let tail 
-               if(newline && f[0].indexOf("\n\n") !== -1) { 
-                  tail = f[0].split("\n\n")
-                  tail = tail.map( (i,idx) => [<span>{i}</span>,<br data-last={_idx >= val.length - 1 && idx === tail.length - 1}/>,<br/>])
-               }
-               else tail = [ <span>{f[0]}</span> ]
-               return [...tail,<span></span>]
-            }
+            else tail = [ <span>{f[1]}</span> ]
+            return [<span className="highlight">{f[0]}</span>,...tail,<span></span>]
          }
-      })
-   }    
+         else {
+            let tail 
+            if(newline && f[0].indexOf("\n\n") !== -1) { 
+               tail = f[0].split(/\n\n/)
+               tail = tail.map( (i,idx) => [<span>{i}</span>, ...(idx==tail.length - 1 ?[]:[<br data-last={_idx >= val.length - 1 && idx === tail.length - 1}/>,<br/>]) ])
+            }
+            else tail = [ <span>{f[0]}</span> ]
+            return [...tail,<span></span>]
+         }
+      }
+   })
    
    // else {
    //    let str = val.replace(/[\n\r]+/g," ").replace(/^.*?(↦([^↤]+)↤([-/_()\[\]: ]+↦([^↤]+)↤)*).*$/g,"$1").replace(/↤([-/_() ]+)↦/g,"$1").replace(/[↤↦]/g,"")
@@ -2370,7 +2377,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          let val = i["value"] 
          //if(val === exclude) continue
          if(val && val.startsWith("http")) val = this.fullname(val,[],true)
-         else val = highlight(val)
+         else val = highlight(val,lucenequerytokeyword(this.props.keyword))
          let lang = i["xml:lang"]
          if(!lang) lang = i["lang"]
          ret.push(<span {...(lang?{lang:lang}:{})}>{val}{
@@ -2569,7 +2576,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                else if(val && val.startsWith("http")) val = this.fullname(val,[],true)
                else { 
                   val = getLangLabel(this,prop,[i])
-                  val = highlight(val.value)
+                  val = highlight(val.value,lucenequerytokeyword(this.props.keyword))
                   lang = val.lang
                }
 
@@ -2678,7 +2685,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
             inPart = m.inPart	
 
-            if(mLit) {
+            if(mLit) {               
+               if(!facet && this.props.keyword) facet = lucenequerytokeyword(this.props.keyword)
                val = highlight(mLit["value"], facet, context?context:expand, context)	
                //val =  mLit["value"]	
                lang = mLit["lang"]	
@@ -2700,7 +2708,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
          if(inPart && inPart.length) {	
 
-            loggergen.log("inPart",inPart)	
+            //loggergen.log("inPart",inPart)	
 
             inPart = <div class="inPart">{[ <span>[ from part </span>, inPart.map( (p,i) => { 	
                let label = getPropLabel(this,p,false,true)	
@@ -2731,7 +2739,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
    makeResult(id,n,t,lit,lang,tip,Tag,url,rmatch = [],facet,allProps = [],preLit,isInstance)
    {
-      //loggergen.log("res",id,allProps,n,t,lit,lang,tip,Tag,rmatch,sameAsRes)
+      //loggergen.log("res:",id,facet,allProps,n,t,lit,lang,tip,Tag,rmatch,sameAsRes)
 
       let sameAsRes,otherSrc= [] ;
       if(allProps) sameAsRes = [ ...allProps ]
@@ -2828,7 +2836,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
       if(prov && prov.length && this.props.dictionary) prov = this.props.dictionary[prov[0].value]
       if(prov && prov[skos+"prefLabel"] && prov[skos+"prefLabel"]) prov = (""+prov[skos+"prefLabel"].filter(p=>!p.lang || p.lang === "en")[0].value).toLowerCase()
       else prov = false
-      console.log("prov:",prov)
+      //console.log("prov:",prov)
       if(prov) prov = prov.replace(/(^\[ *)|( *\]$)/g,"") // CUDL
       if(prov) prov = prov.replace(/internet archives/g,"ia") 
       if(prov) prov = prov.replace(/library of congress/g,"loc") 
@@ -3726,7 +3734,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             addTmpProp(hasRoot,"inRootInstance","rootPrefLabel");
             addTmpProp(workLab,"forWork","workLabel");
 
-            let k = this.props.keyword.replace(/"/g,"")
+            let k = lucenequerytokeyword(this.props.keyword) //this.props.keyword.replace(/"/g,"")
 
             let id = r.s.value
             if(sublist[o].filter(e => e.type && e.type === tmp+"forEtext").length > 0) id = sublist[o].filter(e => e.type === tmp+"forEtext")[0].value

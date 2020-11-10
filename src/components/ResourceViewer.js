@@ -4797,7 +4797,14 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          this.showMirador(num,manif);
       }
 
-      loggergen.log("imL:",imageLinks,JSON.stringify(elem,null,3))
+      //loggergen.log("imL:",imageLinks,JSON.stringify(elem,null,3))
+
+      let kw 
+
+      if(this.props.highlight.key) {
+         kw = getLangLabel(this,"",[{value:lucenequerytokeyword(this.props.highlight.key), lang:this.props.highlight.lang}])
+         if(kw) kw = kw.value         
+      }
 
       return (
          
@@ -4898,7 +4905,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                         let label = getLangLabel(this,"",[{"lang":e.language,"value":f}]), lang
                         if(label) { lang = label["lang"] ; if(!pageLang) pageLang = lang }
                         if(label) { label = label["value"]; pageVal += " "+label ; }
-                        if(label && this.props.highlight && this.props.highlight.key) { label = highlight(label,lucenequerytokeyword(this.props.highlight.key)); current.push(label); }
+                        if(label && this.props.highlight && this.props.highlight.key) { label = highlight(label,kw); current.push(label); }
                         //label = f
                         let size = this.state.etextSize
                         if(lang === "bo") { size += 0.4 ; }
@@ -6498,7 +6505,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
       
       let hasChunks = this.getResourceElem(bdo+"eTextHasChunk")
 
-      loggergen.log("chunks?",hasChunks)
+      //loggergen.log("chunks?",hasChunks)
 
       if(hasChunks && hasChunks.length && this.state.openEtext) {
          
