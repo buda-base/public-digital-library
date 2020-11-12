@@ -1,6 +1,7 @@
 
 import React, { Component } from 'react';
 import Loader from 'react-loader';
+import {Markup} from "interweave"
 
 import qs from 'query-string'
 import I18n from 'i18next';
@@ -53,16 +54,16 @@ export class StaticRouteNoExt extends Component<State, Props>
         else return (
             <div>
                 { (!I18n.language || !this.props.locale || !this.state.content) && <Loader loaded={false} /> }
-                { top_right_menu(this) }
                 <div class="App home static">
                     <div class="SearchPane">
                         <div className="static-container">
                             <div id="samples">
-                                <h3>{this.state.content}</h3>
+                                <Markup content={this.state.content}/>
                             </div>
                         </div> 
                     </div>
                 </div>
+                { top_right_menu(this) }
             </div>
         );
     }

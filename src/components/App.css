@@ -1083,6 +1083,21 @@ h4:not(:hover) > .lang
    scroll-margin: 100px;
 }
 
+/* ------------------------------------------------------------------------------------------------------------------------ static pages */
+
+.static-container > #samples { padding-top:65px;}
+.static-container > #samples > div { padding-left:70px; padding-right:70px; }
+.static-container #samples a { color:#d73449;}
+.static-container #samples a:hover { text-decoration: underline;}
+
+.static-container #samples h3 { margin-bottom:32px;}
+.static-container #samples p + h3 { margin-top:65px;}
+
+
+.home.static + .nav a#about { margin-right:0; margin-left:20px;  }
+.home.static + .nav a#about + a { margin-left:-95px;  }
+
+
 /* ------------------------------------------------------------------------------------------------------------------------ outline */
 
 
