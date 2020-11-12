@@ -570,10 +570,16 @@ export function top_right_menu(that,etextTitle,backUrl,etextres)
 
    let logo = [
             <div id="logo">
-               <Link to="/"  onClick={() => { that.props.history.push({pathname:"/",search:""}); that.props.onResetSearch();} }><img src="/icons/BUDA-small.svg"/><span>BUDA</span></Link>                                  
+               <Link to="/"  onClick={() => { that.props.history.push({pathname:"/",search:""}); if(that.props.keyword) { that.props.onResetSearch(); } } }><img src="/icons/BUDA-small.svg"/><span>BUDA</span></Link>                                  
                <a id="by"><span>by</span></a>
-               <a href={(!onZhMirror?"https://bdrc.io/":"/static/about")} target="_blank" id="BDRC"><span>BDRC</span></a>
-               <a href={(!onZhMirror?"https://bdrc.io/":"/static/about")} target="_blank"><img src="/BDRC-Logo_.png"/></a>
+               { !onZhMirror && [
+                  <a href={"https://bdrc.io/"} target="_blank" id="BDRC"><span>BDRC</span></a>,
+                  <a href={"https://bdrc.io/"} target="_blank"><img src="/BDRC-Logo_.png"/></a>
+               ]}
+               { onZhMirror && [
+                  <Link to={"/static/about"} id="BDRC"><span>BDRC</span></Link>,
+                  <Link to={"/static/about"} ><img src="/BDRC-Logo_.png"/></Link>
+               ]}
             </div>,
 
    ]
@@ -628,9 +634,10 @@ export function top_right_menu(that,etextTitle,backUrl,etextres)
        <div>
          {logo}
 
-         <a id="about" href={!onZhMirror?"https://bdrc.io":"/static/about"} {...!onZhMirror?{target:"_blank"}:{}}>{I18n.t("topbar.about")}</a> 
+         {!onZhMirror && <a id="about" href={"https://bdrc.io"} target="_blank">{I18n.t("topbar.about")}</a> }
+         {onZhMirror  && <Link id="about" to={"/static/about"} >{I18n.t("topbar.about")}</Link> }  
 
-         <Link to="/"  onClick={() => { that.props.history.push({pathname:"/",search:""}); that.props.onResetSearch();} }><span>{I18n.t("topbar.search")}</span></Link>
+         <Link to="/"  onClick={() => { that.props.history.push({pathname:"/",search:""}); if(that.props.keyword) { that.props.onResetSearch();} } }><span>{I18n.t("topbar.search")}</span></Link>
 
          <div class="history">
             <span title={I18n.t("topbar.history")}><img src="/icons/histo.svg"/></span>
