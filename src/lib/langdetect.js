@@ -25,7 +25,7 @@ var nativeranges = [
 
 var transinfos = {
 	"ewts": {
-		"nonalphaok": "*@#+-~'ʾ`?&/;:=().",
+		"nonalphaok": "*@#+-~'ʾ`’?&/;:=().",
 		"alphanok": "xqfv",
 		"maxlen": 10 // quite conservative
 	},
