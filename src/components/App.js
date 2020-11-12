@@ -580,7 +580,7 @@ export function top_right_menu(that,etextTitle,backUrl,etextres)
 
    if(etextTitle)
       return (
-      <div class="nav">
+      <div class={"nav"+(onZhMirror?" zhMirror":"")}>
          <div>
             {logo}
 
@@ -624,7 +624,7 @@ export function top_right_menu(that,etextTitle,backUrl,etextres)
       </div>)
    else 
       return (
-      <div class="nav">
+      <div class={"nav"+(onZhMirror?" zhMirror":"")}>
        <div>
          {logo}
 

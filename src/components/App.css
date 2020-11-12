@@ -1094,8 +1094,8 @@ h4:not(:hover) > .lang
 .static-container #samples p + h3 { margin-top:65px;}
 
 
-.home.static + .nav a#about { margin-right:0; margin-left:20px;  }
-.home.static + .nav a#about + a { margin-left:-95px;  }
+.nav.zhMirror a#about { margin-right:0; margin-left:20px;  }
+.nav.zhMirror a#about + a { margin-left:-95px;  }
 
 
 /* ------------------------------------------------------------------------------------------------------------------------ outline */
