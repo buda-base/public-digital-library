@@ -1766,7 +1766,7 @@ body > [id^="menu-"] > div:last-child,
 .resource .data .images-thumb { margin:0px 0px; width:145px; height:145px; background-size:cover;background-position:center;background-repeat:no-repeat; 
    border:1px solid #ccc;display:inline-block;vertical-align: top;
 }
-.resource .data [data-prop="bdo:workHasInstance"] .images-thumb { width:100px;height:100px;}
+.resource .data [data-prop="bdo:workHasInstance"] .images-thumb { width:100px;height:100px;z-index:1;position:relative;}
 .resource .data [data-prop="bdo:workHasInstance"] .images-thumb-links { margin-left:10px;}
 
 .resource .data > [data-prop="bdo:workHasInstance"] > h3 ~ .group > h4.multiple { display:inline-block; margin-top:4px;}
@@ -2877,7 +2877,7 @@ h3 .expand svg { position:absolute; margin-top:-18px; }*/
 
 .resource .data [data-prop="bdo:workHasInstance"] span.in { margin-left:0;  }
 /* .resource .data [data-prop="bdo:workHasInstance"] span.in::before { content:'';display:block;} */
-.resource .data [data-prop="bdo:workHasInstance"] .over-in { white-space:normal; margin-top:10px; position: relative; display:block; } 
+.resource .data [data-prop="bdo:workHasInstance"] .over-in { white-space:normal; margin-top:10px; position: relative; display:block; z-index:0} 
 
 .resource .data [data-prop="bdo:workHasInstance"] h4.multiple { margin-bottom:15px;}
 

@@ -789,7 +789,7 @@ class ResourceViewer extends Component<Props,State>
          loggergen.log("closeV",this.state.fromSearch,this.state,this.props)
 
          let fromSearch
-         if(this.state.fromSearch) {
+         if(this.state.fromSearch && !this.state.fromClick) {
             let backTo = this.state.fromSearch
 
             let withW = backTo.replace(/^.*[?&]([sw]=[^&]+)&?.*$/,"$1")
@@ -816,7 +816,7 @@ class ResourceViewer extends Component<Props,State>
             this.props.history.push(loca);            
          }
 
-         this.setState({...this.state, openUV:false, openMirador:false, openDiva:false,fromSearch}); 
+         this.setState({...this.state, openUV:false, openMirador:false, openDiva:false, ...(fromSearch?{fromSearch}:{}) } ); 
 
       }
    }
@@ -3649,6 +3649,10 @@ class ResourceViewer extends Component<Props,State>
             if(loca.search && !loca.search.endsWith("?")) loca.search += "&"            
             loca.search += "s="+encodeURIComponent(window.location.href.replace(/.*(\/show\/)/,"$1"))
             this.props.history.push(loca)
+         } else if(click) {
+            state.fromClick = true ;
+         } else {
+            state.fromClick = false ;
          }
 
          $("#fond").removeClass("hidden");
