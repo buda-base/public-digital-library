@@ -31,7 +31,7 @@ export class StaticRouteNoExt extends Component<State, Props>
                 clearInterval(i18nLoaded);
                 this.updateContent();
             } 
-        }, 1000);
+        }, 10);
     }
 
     componentDidUpdate() {
