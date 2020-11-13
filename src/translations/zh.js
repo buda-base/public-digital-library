@@ -187,7 +187,9 @@ const zhTranslation = {
       outline:"纲要",
       related:"相关作品",
       extended:"扩展信息",
-      personalI:"Personal Information"
+      personalI:"Personal Information",
+      relatedM:"Collection Members",
+      relatedS:"Serial Members"
    },
    user:{
       photo:{ 

@@ -211,7 +211,9 @@ const boTranslation = {
       related:"འབྲེལ་ཡོད་བརྩམས་ཆོས།",
       extended:"གནས་ཚུལ་འཕར་མ།",
       userP:"སྤྱོད་མཁན་གྱི་གནས་ཚུལ།",
-      personalI:"སྒེར་གྱི་གནས་ཚུལ།"
+      personalI:"སྒེར་གྱི་གནས་ཚུལ།",
+      relatedM:"Collection Members",
+      relatedS:"Serial Members"
    },
    user:{
       photo:{ 

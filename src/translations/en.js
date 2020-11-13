@@ -227,7 +227,9 @@ const enTranslation = {
       relatedR:"Related Resources",
       extended:"Extended Information",
       userP:"User Profile",
-      personalI:"Personal Information"
+      personalI:"Personal Information",
+      relatedM:"Collection Members",
+      relatedS:"Serial Members"
    },
    user:{
       photo:{ 
@@ -454,7 +456,9 @@ const enTranslation = {
       nbTrans_plural:" ({{count}} translations)",
       openO:"Open on {{src}}",
       noT:"[no title]",
-      browsE:"Browse"
+      browsE:"Browse",
+      memberO:"Member of {{resLabel.value}}",
+      memberO_plural:"Members of {{resLabel.value}}",
    },
    mirador:{
       return:"return to BUDA",

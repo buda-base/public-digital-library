@@ -4993,7 +4993,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
             //if(!k.match(new RegExp("Revision|Entry|prefLabel|"+rdf+"|toberemoved"))) {
             if(elem && 
-               (!k.match(new RegExp(adm+"|adm:|isRoot$|SourcePath|"+rdf+"|toberemoved|entityScore|lastSync|dateCreated|inRootInstance|workPagination|partIndex|partTreeIndex|legacyOutlineNodeRID|sameAs|thumbnailIIIFService|instanceOf|instanceReproductionOf|instanceHasReproduction|seeOther|withSameAs|first(Text|Vol)N?"+(this._dontMatchProp?"|"+this._dontMatchProp:"")))
+               (!k.match(new RegExp(adm+"|adm:|isRoot$|SourcePath|"+rdf+"|toberemoved|entityScore|lastSync|dateCreated|inRootInstance|workPagination|partIndex|partTreeIndex|legacyOutlineNodeRID|sameAs|thumbnailIIIFService|instanceOf|instanceReproductionOf|instanceHasReproduction|seeOther|(Has|ction)Member$|withSameAs|first(Text|Vol)N?"+(this._dontMatchProp?"|"+this._dontMatchProp:"")))
                ||k.match(/(metadataLegal|contentProvider|replaceWith)$/)
                //||k.match(/([/]see|[/]sameAs)[^/]*$/) // quickfix [TODO] test property ancestors
                || (this.props.IRI.match(/^bda:/) && (k.match(new RegExp(adm+"|adm:"))) && !k.match(/\/(git[RP]|adminAbout|logEntry|graphId|facetIndex)/)))
@@ -6347,7 +6347,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
       // - use '...' to tell it's just an overview
       // - use prefLabel in tabs title 
 
-      let related, createdBy, wUrl = fullUri(this.props.IRI)
+      let related, createdBy, wUrl = fullUri(this.props.IRI), serial
       if(this.state.title.work && this.state.title.work[0].value) wUrl = this.state.title.work[0].value
 
       if(this.props.assocResources) {
@@ -6357,8 +6357,10 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          related = Object.keys(this.props.assocResources).map((k,i) => {
             let v = this.props.assocResources[k]
             let s = shortUri(k)
-            let isA = v.filter(k => k.fromKey === bdo+"workIsAbout" && k.value === res)
+            let isA = v.filter(k => k.fromKey === (bdo+"workIsAbout") && k.value === res)
+            
             //loggergen.log("isA",v,s,isA)
+
             if(isA.length) {               
                let label, pLab = v.filter(k => k.fromKey === skos+"prefLabel" || k.type === skos+"prefLabel")
                if(pLab.length) label = getLangLabel(this,"",pLab)
@@ -6375,11 +6377,19 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          }).filter(k => k)
          related = _.orderBy(related, ["n","m"], ["desc","asc"])
 
+         serial = this.getResourceElem(bdo+"serialHasMember");
+         if(!serial) serial = this.getResourceElem(bdo+"collectionMember");
+         if(!serial) serial = this.getResourceElem(bdo+"corporationHasMember");
+         
+         //loggergen.log("serial:",serial)
+
          createdBy = Object.keys(this.props.assocResources).map( (k,i) => {
             let v = this.props.assocResources[k]
             let s = shortUri(k)
-            let crea = v.filter(k => k.fromKey === (_T === "Place"?tmp+"printedAt":tmp+"createdBy") && k.value === res)
-            //loggergen.log("isA",v,s,isA)
+            let crea = v.filter(m => !serial && m.fromKey === (_T === "Place"?tmp+"printedAt":tmp+"createdBy") && m.value === res || serial && serial.filter(s => s.value === k).length )
+            
+            //loggergen.log("crea:",k,s,v,crea)
+
             if(crea.length) {
 
                let label, pLab = v.filter(k => k.fromKey === skos+"prefLabel" || k.type === skos+"prefLabel")
@@ -6731,17 +6741,17 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                   { (hasRel && !["Instance","Images","Etext"].includes(_T)) &&  
                      <div class="data related" id="resources">
                         <div>
-                           <div><h2>{I18n.t(_T=== "Place"?"index.relatedR":"index.related")}</h2>{ (related && related.length > 4 || createdBy && createdBy.length > 4) && <Link to={"/search?t="+(_T==="Place"&&this.state.relatedTab?"Instance":"Work")+"&r="+this.props.IRI}>{I18n.t("misc.seeA")}</Link> }</div>
+                           <div><h2>{I18n.t(_T=== "Place"||_T==="Corporation"?"index.relatedR":(_T==="Product"?"index.relatedM":(_T==="Work"&&serial?"index.relatedS":"index.related")))}</h2>{ (related && related.length > 4 || createdBy && createdBy.length > 4) && <Link to={"/search?t="+(_T==="Place"&&this.state.relatedTab?"Instance":(_T==="Product"?"Scan":"Work"))+"&r="+this.props.IRI}>{I18n.t("misc.seeA")}</Link> }</div>
                            { (related && related.length > 0 && (!createdBy  || !createdBy.length)) && <div class="rel-or-crea">{related}</div>}
                            { (createdBy && createdBy.length > 0 && (!related  || !related.length)) && <div class="rel-or-crea">{createdBy}</div>}
                            { (related.length > 0 && createdBy.length > 0) && <div>
                               <Tabs>
                                  <TabList>
                                     <Tab onClick={(ev)=>this.setState({relatedTab:false,irel:0,icrea:0})}>{I18n.t(_T=== "Place"?"resource.wAbout":"resource.about",{resLabel, count:related.length, interpolation: {escapeValue: false}})} </Tab>
-                                    <Tab onClick={(ev)=>this.setState({relatedTab:true,irel:0,icrea:0})}>{I18n.t(_T=== "Place"?"resource.printedA":"resource.createdB",{resLabel, count:related.length, interpolation: {escapeValue: false}})}</Tab>
+                                    <Tab onClick={(ev)=>this.setState({relatedTab:true,irel:0,icrea:0})}>{I18n.t(_T=== "Place"?"resource.printedA":(_T==="Corporation"?"resource.memberO":"resource.createdB"),{resLabel, count:createdBy.length, interpolation: {escapeValue: false}})}</Tab>
                                  </TabList>
                                  <TabPanel><div class="rel-or-crea">{related}</div></TabPanel>
-                                 <TabPanel><div class="rel-or-crea">{createdBy}</div></TabPanel>
+                                 <TabPanel><div class={"rel-or-crea"+(_T==="Corporation"?" person":"")}>{createdBy}</div></TabPanel>
                               </Tabs>
                            </div> }
                         </div>
