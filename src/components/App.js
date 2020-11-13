@@ -29,6 +29,7 @@ import TranslateIcon from '@material-ui/icons/Translate';
 import Apps from '@material-ui/icons/Apps';
 import Close from '@material-ui/icons/Close';
 import Cancel from '@material-ui/icons/Cancel';
+import ImportExport from '@material-ui/icons/ImportExport';
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
 import NavigateBefore from '@material-ui/icons/NavigateBefore';
@@ -4322,11 +4323,12 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
       return ;
    }
 
-   popwidget(title:string,txt:string,inCollapse:Component)  { 
+   popwidget(title:string,txt:string,inCollapse:Component,icon:Component)  { 
       return (
          [<ListItem key={1} className="widget-header"
             onClick={(e) => { this.setState({collapse:{ ...this.state.collapse, [txt]:!this.state.collapse[txt]}, anchor:{...this.state.anchor, [txt]:e.currentTarget} }); } }
             >
+            {icon}
             <Typography  className="widget-title" ><span lang={this.props.locale}>{title}</span></Typography>
             { this.state.collapse[txt] ? <ExpandLess /> : <ExpandMore />}
          </ListItem>,
@@ -5337,7 +5339,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                <div>
                   <div id="settings" onClick={() => this.setState({collapse:{...this.state.collapse, settings:!this.state.collapse.settings}})}><img src="/icons/settings.svg"/></div>
                   {  // DONE change to popover style open/close
-                     sortByList && this.popwidget(I18n.t("Lsidebar.sortBy.title",{by,reverse}),"sortBy",sortByPopup ) 
+                     sortByList && this.popwidget(I18n.t("Lsidebar.sortBy.title",{by,reverse}),"sortBy",sortByPopup, <ImportExport className="header-icon"/> ) 
                   }
 
                   <div id="pagine" lang={this.props.locale}>

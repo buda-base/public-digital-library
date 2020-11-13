@@ -499,6 +499,9 @@ footer #donate,
 .SidePane.left .widget-header {display:flex;justify-content:space-between;padding:0;border-bottom:1px solid #c1c1c1; cursor:pointer;}
 .SidePane.left .widget-header svg { font-size:18px; }
 
+#settings + .widget-header { align-items: center;}
+#settings + .widget-header .header-icon { color:#4a4a4a; font-size:20px; padding-top:2px;padding-right:4px;}
+
 .SidePane.left .widget-title { color: #4a4a4a; font-weight:700;font-size:10px;text-transform: uppercase; /*font-family:"Noto Sans";*/ }
 
 .SidePane.left .collapse { padding:5px 0 0 15px; transition:none;}
