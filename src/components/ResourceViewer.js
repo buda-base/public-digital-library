@@ -4219,7 +4219,7 @@ class ResourceViewer extends Component<Props,State>
                {  <Map ref={m => { this._leafletMap = m; }}
                   className={"placeMap"} // + (this.state.largeMap?" large":"")}
                   // style={{boxShadow: "0 0 5px 0px rgba(0,0,0,0.5)"}}
-                  center={doMap} zoom={17} bounds={doRegion?regBox:null}
+                  center={doMap} zoom={5} bounds={doRegion?regBox:null}
                   //attributionControl={false}
                   >
                   <LayersControl position="topright">
