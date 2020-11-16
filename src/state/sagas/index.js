@@ -1282,7 +1282,7 @@ function getStats(cat:string,data:{},tree:{})
             sortStat = sortStat.concat(sortLangScriptLabels(tmpStat[n],langs.flat,langs.translit))
          }         
 
-         loggergen.log("tmpStat",tmpStat,sortStat)         
+         //loggergen.log("tmpStat",tmpStat,sortStat)         
          
          stat[f] = sortStat.reduce( (acc,k) => ({...acc, [(f==="century"?" "+k.k:k.k)]:stat[f][k.k]}),{})
       }

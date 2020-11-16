@@ -4858,9 +4858,12 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
                let checkboxes = meta_sort.map(  (i) =>  {                  
 
-                  let label ;
+                  let label, i_nosp = i
                   if(j === "century" && i === " unspecified" ) return
-                  else if(j === "century" && i !== " unspecified" ) label = <span>{I18n.t("misc.ord",{num:i.replace(/^ /,"")})}</span>
+                  else if(j === "century" && i !== " unspecified" ) { 
+                      i_nosp = i.replace(/^ /,"")
+                     label = <span>{I18n.t("misc.ord",{num:i_nosp})}</span>
+                  }
                   else label = getPropLabel(this,i)
 
                   //loggergen.log("label",i,j,jpre,label,meta)
@@ -4870,9 +4873,9 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      if(label === "Any") checked = true ;
                      else checked = false ;
                   }
-                  else checked = this.state.filters.facets[jpre].indexOf(i) !== -1
+                  else checked = this.state.filters.facets[jpre].indexOf(i_nosp) !== -1
 
-                  //loggergen.log("checked",i,checked)
+                  //loggergen.log("checked:"+i+";",checked)
 
                   let isExclu = this.state.filters.exclude && this.state.filters.exclude[jpre] && this.state.filters.exclude[jpre].includes(i)
 
@@ -4888,7 +4891,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                                  className="checkbox"
                                  icon={<CheckBoxOutlineBlank/>}
                                  checkedIcon={isExclu ? <Close className="excl"/>:<CheckBox  style={{color:"#d73449"}}/>}
-                                 onChange={(event, checked) => this.handleCheckFacet(event,jpre,[i],checked)}
+                                 onChange={(event, checked) => this.handleCheckFacet(event,jpre,[(j==="century"?i_nosp.replace(/[^0-9]+/g,""):i)],checked)}
                               />
 
                            }
