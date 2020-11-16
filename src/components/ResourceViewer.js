@@ -4805,7 +4805,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
       let kw 
 
-      if(this.props.highlight.key) {
+      if(this.props.highlight && this.props.highlight.key) {
          kw = getLangLabel(this,"",[{value:lucenequerytokeyword(this.props.highlight.key), lang:this.props.highlight.lang}])
          if(kw) kw = kw.value         
       }
