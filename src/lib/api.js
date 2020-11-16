@@ -56,9 +56,12 @@ export const dPrefix = {
       "WA": "Work",
    },
    "src": {
-      "sources":"Instance",
-      "topics":"Topic",
-      "persons":"Person"
+      "sources": "Instance",
+      "persons": "Person",
+      "places": "Place",
+      "topics": "Topic",
+      "deities": "Topic",
+      "literary_forms": "Topic"
    }
 };
 
