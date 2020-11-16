@@ -56,18 +56,22 @@ export const dPrefix = {
       "WA": "Work",
    },
    "src": {
-
+      "sources":"Instance",
+      "topics":"Topic",
+      "persons":"Person"
    }
 };
 
 export function getEntiType(t:string):string {
    let uri = shortUri(t)
    let p = uri.replace(/^([^:]+):.*$/,"$1")
-   if(p === "src" && t.includes("sources")) return "Instance" ;
-   else if(p === "src" && t.includes("persons")) return "Person" ;
-   else if(p === "ola") return "Person" ;
+   //if(p === "src" && t.includes("sources")) return "Instance" ;
+   //else if(p === "src" && t.includes("persons")) return "Person" ;   
+   if(p === "ola") return "Person" ;
    else if(p == "mbbt" ) return "Work" ; // [TODO]
-   let v = uri.replace(/^([^:]+:)?([ACEILGPQMRTWOVU][AERTLWP]?).*$/,"$2")
+   let v ;
+   if(p !== "src") v = uri.replace(/^([^:]+:)?([ACEILGPQMRTWOVU][AERTLWP]?).*$/,"$2")
+   else v = uri.replace(/^[^:]+:([a-z]+)\/[0-9]+/,"$1")
    //console.log("gEt?",v,p)
    if(!dPrefix[p] || !dPrefix[p][v]) return "" ;
    else return dPrefix[p][v]; }
