@@ -1276,13 +1276,15 @@ function getStats(cat:string,data:{},tree:{})
             tmpStat[n].push({...label[0], k })
          }
          let sortStat = []
-         //loggergen.log("tmpStat",tmpStat,sortStat)         
+         
          let kz = _.orderBy(Object.keys(tmpStat).map(n => ({n:Number(n)})), [ "n" ], [ "desc" ]).map(k => k.n)
          for(let n of kz) {
             sortStat = sortStat.concat(sortLangScriptLabels(tmpStat[n],langs.flat,langs.translit))
          }         
+
+         loggergen.log("tmpStat",tmpStat,sortStat)         
          
-         stat[f] = sortStat.reduce( (acc,k) => ({...acc, [k.k]:stat[f][k.k]}),{})
+         stat[f] = sortStat.reduce( (acc,k) => ({...acc, [(f==="century"?" "+k.k:k.k)]:stat[f][k.k]}),{})
       }
    }
 

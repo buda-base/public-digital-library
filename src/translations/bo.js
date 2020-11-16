@@ -182,7 +182,8 @@ const boTranslation = {
       "tmp:versionType":"Version Type",
       "tmp:standalone":"Standalone",
       "tmp:partOfVersion":"Part of another Version",
-      "tmp:inRootInstance":"Instance"
+      "tmp:inRootInstance":"Instance",
+      "tmp:associatedCentury":"Century"
    },
    result:{
       open:"ཁ་ཕྱེ།",
@@ -291,6 +292,7 @@ const boTranslation = {
       of:"",
       please:"",
       seeO:"See on",
+      ord:"{{num,ordinal}}"
    },
    lang:{
       en:"ཨིན་སྐད།",

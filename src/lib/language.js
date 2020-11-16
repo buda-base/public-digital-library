@@ -19,6 +19,26 @@ const dataLangUI = {
    "inc":{ "sub":["sa", "pi" ], "script":[ "deva", "newa", "sinh" ], "latin":[ "x-iast", "x-iso", "alalc97" ] }
 } ;
 
+// from https://stackoverflow.com/questions/13627308/add-st-nd-rd-and-th-ordinal-suffix-to-a-number#answer-57518703
+const english_ordinal_rules = new Intl.PluralRules("en", {type: "ordinal"});
+const suffixes = {
+	one: "st",
+	two: "nd",
+	few: "rd",
+	other: "th"
+};
+export function ordinal_en(number) {
+	const suffix = suffixes[english_ordinal_rules.select(number)];
+	return (number + suffix);
+}
+
+
+export function ordinal_bo(number) {
+	
+	return ("དུས་རབས་ "+numtobo(number));
+}
+
+
 const numtobodic = {
   '0': '༠',
   '1': '༡',

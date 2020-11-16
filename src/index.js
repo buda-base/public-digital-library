@@ -28,7 +28,7 @@ import rootSaga from './state/sagas'
 // i18next
 import { i18nextInit, i18nextSaga } from 'i18next-redux-saga';
 import i18nextReducer from './state/i18n-reducer';
-import {numtobo} from "./lib/language"
+import {numtobo,ordinal_en,ordinal_bo} from "./lib/language"
 import { initReactI18next } from 'react-i18next';
 import I18n from 'i18next';
 
@@ -82,6 +82,10 @@ const i18nextConfig = {
          }
          else if (format === 'lowercase') return value.toLowerCase();
          else if (format === 'uppercase') return value.toUpperCase();
+         else if (format === 'ordinal') {
+            if(lng === "en") return ordinal_en(value);
+            else if(lng === "bo") return ordinal_bo(value);
+         }
          return value;
       }
    }

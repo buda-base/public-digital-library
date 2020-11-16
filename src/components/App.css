@@ -3177,6 +3177,9 @@ body > .ol-li-lang:last-child li::before { content:'(--)';}
 
 .widget > * { vertical-align:text-bottom !important;}
 
+
+.facetWidget.century .checkbox + span { text-transform: none;}
+
 span.subcollapse { opacity:0; transition:opacity 50ms ease-in-out ;  }
 span.subcollapse svg { vertical-align:-6px; cursor:pointer; font-size:18px; }
 .collapse.open > div > div > .widget > span.subcollapse, 

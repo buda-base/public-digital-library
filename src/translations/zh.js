@@ -160,7 +160,8 @@ const zhTranslation = {
       "tmp:Maps":"地图",
       "tmp:BuddhistArt":"佛教艺术",
       "tmp:other":"其他",
-      "tmp:inRootInstance":"在"
+      "tmp:inRootInstance":"在",
+      "tmp:associatedCentury":"Century"
    },
    result:{
       open:"开放",
@@ -264,6 +265,7 @@ const zhTranslation = {
       of:"属",
       please:"请",
       seeO:"See on",
+      ord:"{{num,ordinal}}"
    },
    lang:{
       en:"英语",

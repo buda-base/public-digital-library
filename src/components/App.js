@@ -4856,9 +4856,12 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
                meta[j]["Any"] =  { n: counts["datatype"][this.state.filters.datatype[0]]}
 
-               let checkboxes = meta_sort.map(  (i) =>  {
+               let checkboxes = meta_sort.map(  (i) =>  {                  
 
-                  let label = getPropLabel(this,i)
+                  let label ;
+                  if(j === "century" && i === " unspecified" ) return
+                  else if(j === "century" && i !== " unspecified" ) label = <span>{I18n.t("misc.ord",{num:i.replace(/^ /,"")})}</span>
+                  else label = getPropLabel(this,i)
 
                   //loggergen.log("label",i,j,jpre,label,meta)
 
@@ -4876,7 +4879,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   let cpt_i = this.subcount(j,i)
                   
                   if(i !== "Any" && i !== "unspecified" && i !== "false") return (
-                     <div key={i} style={{width:"auto",textAlign:"left"}} className="widget searchWidget">
+                     <div key={i} style={{width:"auto",textAlign:"left"}} className={"widget searchWidget "}>
                         <FormControlLabel
                            {... cpt_i.startsWith("0")&&!checked?{disabled:true}:{}}
                            control={
@@ -4899,7 +4902,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                return (
 
                  this.widget(jlabel,j, 
-                  <div style={{textAlign:"right"}}>
+                  <div style={{textAlign:"right"}} class={"facetWidget " + j}>
                      {checkboxes.slice(0,12)}                     
                      {checkboxes.length > 12 && 
                         [<Collapse in={this.state.collapse[j+"_widget"]}>
