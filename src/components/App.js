@@ -3500,7 +3500,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
       this._menus = {}
 
       let n = 0, m = 0 ;
-      loggergen.log("results::",results,paginate);
+      //loggergen.log("results::",results,paginate);
       let list = results.results.bindings
 
       let displayTypes = types //["Person"]
@@ -3978,7 +3978,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             }
          }
 
-         console.log("cpt:")
+         //console.log("cpt:",cpt)
 
          if(cpt == 0 ) { 
             let lang = languages[this.props.language]
@@ -4075,7 +4075,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                         return searchTypes.indexOf(t) !== -1 
                      }).reduce((acc,e)=>acc+Object.keys(results.results.bindings[e]).length,0)
 
-      loggergen.log("res::",id,results,message,message.length,resLength,resMatch,this.props.loading)
+      //loggergen.log("res::",id,results,message,message.length,resLength,resMatch,this.props.loading)
 
       let sta = { ...this.state }
 
@@ -4141,7 +4141,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             if(!results) results = { results:{bindings:{}}}
             this.handleResults(types,counts,message,results,paginate,bookmarks,resLength);
             
-            loggergen.log("bookM:",results,JSON.stringify(paginate,null,3))
+            //loggergen.log("bookM:",results,JSON.stringify(paginate,null,3))
             
          }
          else {
@@ -4149,7 +4149,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             paginate = [ sta.results[id].paginate ]
             bookmarks = sta.results[id].bookmarks      
 
-            loggergen.log("bookM!",JSON.stringify(paginate,null,3))
+            //loggergen.log("bookM!",JSON.stringify(paginate,null,3))
          }
 
          //loggergen.log("mesg",id,message,types,counts,JSON.stringify(paginate,null,3))
@@ -4710,6 +4710,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             
             //loggergen.log("prep",message,counts,types,paginate)
 
+            /* // deprecated
             if(!this.props.loading && !message.length && ( (this.props.searches[this.props.keyword+"@"+this.props.language] && !this.props.searches[this.props.keyword+"@"+this.props.language].numResults ) 
                   || (!this.props.loading && results && results.results && results.results.bindings && !results.results.bindings.numResults) ) 
                   || (!this.props.language && !this.props.loading && (counts["datatype"]["Any"] == 0 || !counts["datatype"][this.state.filters.datatype[0]]) ) )
@@ -4721,6 +4722,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   ]
                    
             }
+            */
          }
 
 
