@@ -6547,10 +6547,16 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          ])
       }
       else {
-
-
+         
          let theDataTop = this.renderData(topProps,iiifpres,title,otherLabels,"top-props","main-info")      
          let theDataBot = this.renderData(kZprop.filter(k => !topProps.includes(k) && !extProps.includes(k)),iiifpres,title,otherLabels,"bot-props")      
+
+         let theEtext
+         if(this.props.eTextRefs && this.props.eTextRefs !== true && this.props.IRI && this.props.IRI.startsWith("bdr:IE")) { 
+            extProps = extProps.filter(p => p !== bdo+"instanceHasVolume")
+            theEtext = this.renderEtextRefs()      
+         }
+
          let theDataExt = this.renderData(extProps,iiifpres,title,otherLabels,"ext-props")      
          let theDataLegal = this.renderData([adm+"metadataLegal"],iiifpres,title,otherLabels,"legal-props")      
          
@@ -6559,9 +6565,6 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
          let etext = this.isEtext()
          if(etext && !this.props.eTextRefs) this.props.onGetETextRefs(this.props.IRI);
-
-         let theEtext
-         if(this.props.eTextRefs && this.props.eTextRefs !== true && this.props.IRI && this.props.IRI.startsWith("bdr:IE")) theEtext = this.renderEtextRefs()      
 
          let loca = this.props.history.location            
 
