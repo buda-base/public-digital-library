@@ -4821,6 +4821,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          {
             // no need for language on instances page
             if(j === "language" && this.props.isInstance ) return
+            if(j === "creator" && !meta[j]["true"]) return
 
             let jpre = j;
             if (this.props.config.facets[this.state.filters.datatype[0]])
@@ -4904,7 +4905,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
                   let cpt_i = this.subcount(j,i)
                   
-                  if(i !== "Any" && i !== "unspecified" && i !== "false") return (
+                  if(i !== "Any" && i !== "unspecified" && (i !== "false" || meta_sort.length === 3)) return (
                      <div key={i} style={{width:"auto",textAlign:"left"}} className={"widget searchWidget "}>
                         <FormControlLabel
                            {... cpt_i.startsWith("0")&&!checked?{disabled:true}:{}}
