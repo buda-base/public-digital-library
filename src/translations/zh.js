@@ -161,7 +161,8 @@ const zhTranslation = {
       "tmp:BuddhistArt":"佛教艺术",
       "tmp:other":"其他",
       "tmp:inRootInstance":"在",
-      "tmp:associatedCentury":"Century"
+      "tmp:associatedCentury":"Century",
+      "tmp:associatedAuthorCentury":"Author's Century"
    },
    result:{
       open:"开放",

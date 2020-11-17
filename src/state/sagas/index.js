@@ -1272,6 +1272,10 @@ function getStats(cat:string,data:{},tree:{})
             if(labels) label = sortLangScriptLabels(labels,langs.flat,langs.translit)
             if(!label || !label.length) label = [{ type:"literal", value:"", lang:"" }]
             let n = ""+stat[f][k].n
+            if(f === "century") { 
+               if(k !== "unspecified") n = k
+               else n = -10000
+            }
             if(!tmpStat[n]) tmpStat[n] = []
             tmpStat[n].push({...label[0], k })
          }
@@ -1284,7 +1288,7 @@ function getStats(cat:string,data:{},tree:{})
 
          //loggergen.log("tmpStat",tmpStat,sortStat)         
          
-         stat[f] = sortStat.reduce( (acc,k) => ({...acc, [(f==="century"?" "+k.k:k.k)]:stat[f][k.k]}),{})
+         stat[f] = sortStat.reduce( (acc,k) => ({...acc, [(f==="century"?(k.k!==-10000?" "+k.k:" unspecified"):k.k)]:stat[f][k.k]}),{})
       }
    }
 

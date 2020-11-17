@@ -90,6 +90,7 @@ const enTranslation = {
          title:"Data Types"
       },
       widgets:{
+         unknown:"unknown",
          root: "In $t(types.instance)",
          tree: "Genre / Topic",
          relationInv: "Inverse Relation Type"
@@ -198,7 +199,8 @@ const enTranslation = {
       "tmp:standalone":"Standalone",
       "tmp:partOfVersion":"Part of another Version",
       "tmp:inRootInstance":"Instance",
-      "tmp:associatedCentury":"Century"
+      "tmp:associatedCentury":"Century",
+      "tmp:associatedAuthorCentury":"Author's Century"
    },
    result:{
       open:"Open",

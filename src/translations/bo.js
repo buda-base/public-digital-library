@@ -183,7 +183,8 @@ const boTranslation = {
       "tmp:standalone":"Standalone",
       "tmp:partOfVersion":"Part of another Version",
       "tmp:inRootInstance":"Instance",
-      "tmp:associatedCentury":"Century"
+      "tmp:associatedCentury":"Century",
+      "tmp:associatedAuthorCentury":"Author's Century"
    },
    result:{
       open:"ཁ་ཕྱེ།",

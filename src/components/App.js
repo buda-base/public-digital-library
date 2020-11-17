@@ -4810,7 +4810,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                jpre = this.props.config.facets[this.state.filters.datatype[0]][j]
             if(!jpre) jpre = j
             let jlabel ;
-            if(facetLabel[j]) jlabel = I18n.t(facetLabel[j]);   
+            if(j === "century" && !this.state.filters.datatype.includes("Person")) jlabel = I18n.t("prop.tmp:associatedAuthorCentury")
+            else if(facetLabel[j]) jlabel = I18n.t(facetLabel[j]);   
             else {
                jlabel = this.props.dictionary[jpre]
                if(jlabel) jlabel = jlabel["http://www.w3.org/2000/01/rdf-schema#label"]
@@ -4856,13 +4857,16 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
                meta[j]["Any"] =  { n: counts["datatype"][this.state.filters.datatype[0]]}
 
-               let checkboxes = meta_sort.map(  (i) =>  {                  
+               let idx_check
+
+               let checkboxes = meta_sort.map(  (i,idx) =>  {                  
 
                   let label, i_nosp = i
-                  if(j === "century" && i === " unspecified" ) return
-                  else if(j === "century" && i !== " unspecified" ) { 
-                      i_nosp = i.replace(/^ /,"")
-                     label = <span>{I18n.t("misc.ord",{num:i_nosp})}</span>
+                  if(j === "century") { 
+                     i_nosp = i.replace(/^ /,"")
+                     if(i === " unspecified" ) label = <span>{I18n.t("Lsidebar.widgets.unknown")}</span>
+                     else label = <span>{I18n.t("misc.ord",{num:i_nosp})}</span>
+
                   }
                   else label = getPropLabel(this,i)
 
@@ -4874,6 +4878,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      else checked = false ;
                   }
                   else checked = this.state.filters.facets[jpre].indexOf(i_nosp) !== -1
+
+                  if(checked) idx_check = idx
 
                   //loggergen.log("checked:"+i+";",checked)
 
@@ -4891,7 +4897,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                                  className="checkbox"
                                  icon={<CheckBoxOutlineBlank/>}
                                  checkedIcon={isExclu ? <Close className="excl"/>:<CheckBox  style={{color:"#d73449"}}/>}
-                                 onChange={(event, checked) => this.handleCheckFacet(event,jpre,[(j==="century"?i_nosp.replace(/[^0-9]+/g,""):i)],checked)}
+                                 onChange={(event, checked) => this.handleCheckFacet(event,jpre,[(j==="century"?(i_nosp==="unspecified"?i_nosp:i_nosp.replace(/[^0-9]+/g,"")):i)],checked)}
                               />
 
                            }
@@ -4902,18 +4908,20 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   )
                })
 
+               let open = this.state.collapse[j+"_widget"] || this.state.collapse[j+"_widget"] === undefined && idx_check > 11
+
                return (
 
                  this.widget(jlabel,j, 
                   <div style={{textAlign:"right"}} class={"facetWidget " + j}>
-                     {checkboxes.slice(0,12)}                     
+                     {checkboxes.slice(0,11)}                     
                      {checkboxes.length > 12 && 
-                        [<Collapse in={this.state.collapse[j+"_widget"]}>
-                           {checkboxes.slice(12)}
+                        [<Collapse in={open} className="facetCollapse">
+                           {checkboxes.slice(11)}
                         </Collapse>
                         ,
-                        <span style={{fontSize:(this.props.locale==="bo"?"14px":"10px"),cursor:"pointer", marginTop:"5px",marginRight:"25px",display:"inline-block",fontWeight:600}} onClick={(e) => this.setState({...this.state, collapse:{...this.state.collapse, [j+"_widget"]:!this.state.collapse[j+"_widget"]}})}>
-                           {(!this.state.collapse[j+"_widget"]?I18n.t("misc.show"):I18n.t("misc.hide"))}
+                        <span style={{fontSize:(this.props.locale==="bo"?"14px":"10px"),cursor:"pointer", marginTop:"5px",marginRight:"25px",display:"inline-block",fontWeight:600}} onClick={(e) => this.setState({...this.state, collapse:{...this.state.collapse, [j+"_widget"]:!open}})}>
+                           {(!open?I18n.t("misc.show"):I18n.t("misc.hide"))}
                         </span>]
                      }
                   </div> )
