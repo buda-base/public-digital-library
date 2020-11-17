@@ -809,7 +809,9 @@ a.result + #matches .result-content #icon > :not(.thumb) img { width:40px; }
 
 .result-box { width:calc(100% - 75px);display:flex; justify-content: flex-end; position:absolute; bottom:10px;}
 
+#matches .match.by + .by > span.label,
 #matches .match.publisher + .publisher > span.hidden-en { visibility: hidden; }
+#matches .match.by + .by,
 #matches .match.publisher + .publisher { margin-top:-11px; }
 
 

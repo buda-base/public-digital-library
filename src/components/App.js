@@ -2651,7 +2651,11 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                            }</span>)
             }            
          }
-         if(ret.length && !useAux) return <div class="match">
+
+         let by ;
+         if(fromProp) by = fromProp.filter(p => p.includes("/author")).length > 0
+
+         if(ret.length && !useAux) return <div class={"match"+(by?" by":"")}>
                   <span class="label">{this.fullname(prop,[],true,(plural && ret.length > 1 ?2:1))}{I18n.t("punc.colon")}&nbsp;</span>
                   <div class="multi">{ret}</div>
                 </div>
@@ -3151,6 +3155,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
             { typeisbiblio && this.getResultProp(I18n.t("result.inRootInstance"),allProps,false,true,[bdo+"inRootInstance",tmp+"inRootInstance"]) } 
             { typeisbiblio && this.getResultProp(I18n.t("result.workBy"),allProps,false,true,[tmp+"author"]) }
+            { typeisbiblio && this.getResultProp(I18n.t("result.workBy"),allProps,true,false,[bdo+"authorshipStatement"]) }
 
             { type !== "Person" && 
                this.getResultProp(I18n.t("result.year"),allProps,false,false,[tmp+"yearStart"]) }
@@ -3991,23 +3996,24 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             loggergen.log("other:",other)
             
             //if(other && other.length) 
-            message.push(<Typography className="no-result">
-               { lang && I18n.t("search.filters.noresults",{ 
-                  keyword:'"'+lucenequerytokeyword(this.props.keyword)+'"', 
-                  language:"$t("+lang+")", 
-                  type:I18n.t("types.searchIn", { type:I18n.t("types."+this.state.filters.datatype[0].toLowerCase(),{count:2}).toLowerCase() }),  
-                  interpolation: {escapeValue: false} }) }
-               { !lang && I18n.t("search.filters.noresultsAsso",{ 
-                  keyword:lucenequerytokeyword(this.props.keyword), 
-                  type:I18n.t("types.searchIn", { type:I18n.t("types."+this.state.filters.datatype[0].toLowerCase(),{count:2}).toLowerCase() }),  
-                  interpolation: {escapeValue: false} }) }
-               {  this.state.filters.facets && " with the filters you set"}
-               {  this.state.filters.facets && <span><br/>{this.renderResetF()}</span>}
-            </Typography>);
+            if(!this.props.loading) {
+               message.push(<Typography className="no-result">
+                  { lang && I18n.t("search.filters.noresults",{ 
+                     keyword:'"'+lucenequerytokeyword(this.props.keyword)+'"', 
+                     language:"$t("+lang+")", 
+                     type:I18n.t("types.searchIn", { type:I18n.t("types."+this.state.filters.datatype[0].toLowerCase(),{count:2}).toLowerCase() }),  
+                     interpolation: {escapeValue: false} }) }
+                  { !lang && I18n.t("search.filters.noresultsAsso",{ 
+                     keyword:lucenequerytokeyword(this.props.keyword), 
+                     type:I18n.t("types.searchIn", { type:I18n.t("types."+this.state.filters.datatype[0].toLowerCase(),{count:2}).toLowerCase() }),  
+                     interpolation: {escapeValue: false} }) }
+                  {  this.state.filters.facets && " with the filters you set"}
+                  {  this.state.filters.facets && <span><br/>{this.renderResetF()}</span>}
+               </Typography>);
 
-            if(!this.state.filters.facets && other && other.length)   
-               message.push(<Typography className="no-result"><span>{I18n.t("search.seeO")}{I18n.t("misc.colon")} {other.map(o => <a onClick={(event) => this.handleCheck(event,o,true)} class="uri-link">{I18n.t("types."+o.toLowerCase(),{count:2})}</a>)}</span></Typography>)
-
+               if(!this.state.filters.facets && other && other.length)   
+                  message.push(<Typography className="no-result"><span>{I18n.t("search.seeO")}{I18n.t("misc.colon")} {other.map(o => <a onClick={(event) => this.handleCheck(event,o,true)} class="uri-link">{I18n.t("types."+o.toLowerCase(),{count:2})}</a>)}</span></Typography>)
+            }
          } 
 
          if(pagin.index == pagin.pages.length - 1) {
