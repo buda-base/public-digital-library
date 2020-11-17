@@ -3500,7 +3500,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
       this._menus = {}
 
       let n = 0, m = 0 ;
-      loggergen.log("results",results,paginate);
+      loggergen.log("results::",results,paginate);
       let list = results.results.bindings
 
       let displayTypes = types //["Person"]
@@ -3976,33 +3976,40 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                
                }
             }
-            if(cpt == 0 ) { 
-               let lang = languages[this.props.language]
-               if(!lang) lang = this.props.language
-               let other = this.state.results[this.state.id]
-               if(other) other = other.counts
-               if(other) other = other.datatype
-               //loggergen.log("other:",other)
-               if(other) other = Object.keys(other).filter(k => k !== "Any" && other[k] !== 0)
-               loggergen.log("other:",other)
-               
-               //if(other && other.length) 
-               message.push(<Typography className="no-result">
-                  { I18n.t("search.filters.noresults",{ 
-                     keyword:'"'+lucenequerytokeyword(this.props.keyword)+'"', 
-                     language:"$t("+lang+")", 
-                     type:I18n.t("types.searchIn", { type:I18n.t("types."+this.state.filters.datatype[0].toLowerCase(),{count:2}).toLowerCase() }),  
-                     interpolation: {escapeValue: false} }) }
-                  {  this.state.filters.facets && " with the filters you set"}
-                  {  this.state.filters.facets && <span><br/>{this.renderResetF()}</span>}
-               </Typography>);
-
-               if(!this.state.filters.facets && other && other.length)   
-                  message.push(<Typography className="no-result"><span>{I18n.t("search.seeO")}{I18n.t("misc.colon")} {other.map(o => <a onClick={(event) => this.handleCheck(event,o,true)} class="uri-link">{I18n.t("types."+o.toLowerCase(),{count:2})}</a>)}</span></Typography>)
-
-            } 
-
          }
+
+         console.log("cpt:")
+
+         if(cpt == 0 ) { 
+            let lang = languages[this.props.language]
+            if(!lang) lang = this.props.language
+            let other = this.state.results[this.state.id]
+            if(other) other = other.counts
+            if(other) other = other.datatype
+            //loggergen.log("other:",other)
+            if(other) other = Object.keys(other).filter(k => k !== "Any" && other[k] !== 0)
+            loggergen.log("other:",other)
+            
+            //if(other && other.length) 
+            message.push(<Typography className="no-result">
+               { lang && I18n.t("search.filters.noresults",{ 
+                  keyword:'"'+lucenequerytokeyword(this.props.keyword)+'"', 
+                  language:"$t("+lang+")", 
+                  type:I18n.t("types.searchIn", { type:I18n.t("types."+this.state.filters.datatype[0].toLowerCase(),{count:2}).toLowerCase() }),  
+                  interpolation: {escapeValue: false} }) }
+               { !lang && I18n.t("search.filters.noresultsAsso",{ 
+                  keyword:lucenequerytokeyword(this.props.keyword), 
+                  type:I18n.t("types.searchIn", { type:I18n.t("types."+this.state.filters.datatype[0].toLowerCase(),{count:2}).toLowerCase() }),  
+                  interpolation: {escapeValue: false} }) }
+               {  this.state.filters.facets && " with the filters you set"}
+               {  this.state.filters.facets && <span><br/>{this.renderResetF()}</span>}
+            </Typography>);
+
+            if(!this.state.filters.facets && other && other.length)   
+               message.push(<Typography className="no-result"><span>{I18n.t("search.seeO")}{I18n.t("misc.colon")} {other.map(o => <a onClick={(event) => this.handleCheck(event,o,true)} class="uri-link">{I18n.t("types."+o.toLowerCase(),{count:2})}</a>)}</span></Typography>)
+
+         } 
+
          if(pagin.index == pagin.pages.length - 1) {
 
             //  // deprecated
@@ -4068,7 +4075,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                         return searchTypes.indexOf(t) !== -1 
                      }).reduce((acc,e)=>acc+Object.keys(results.results.bindings[e]).length,0)
 
-      //loggergen.log("res::",id,results,message,message.length,resLength,resMatch,this.props.loading)
+      loggergen.log("res::",id,results,message,message.length,resLength,resMatch,this.props.loading)
 
       let sta = { ...this.state }
 
@@ -4131,16 +4138,18 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
             //loggergen.log("paginate?",JSON.stringify(paginate))
 
-            if(results) this.handleResults(types,counts,message,results,paginate,bookmarks,resLength);
+            if(!results) results = { results:{bindings:{}}}
+            this.handleResults(types,counts,message,results,paginate,bookmarks,resLength);
             
-            //loggergen.log("bookM:",JSON.stringify(paginate,null,3))
+            loggergen.log("bookM:",results,JSON.stringify(paginate,null,3))
             
          }
          else {
             message = sta.results[id].message
             paginate = [ sta.results[id].paginate ]
             bookmarks = sta.results[id].bookmarks      
-            //loggergen.log("bookM!",JSON.stringify(paginate,null,3))
+
+            loggergen.log("bookM!",JSON.stringify(paginate,null,3))
          }
 
          //loggergen.log("mesg",id,message,types,counts,JSON.stringify(paginate,null,3))

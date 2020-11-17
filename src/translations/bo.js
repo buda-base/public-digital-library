@@ -373,7 +373,8 @@ const boTranslation = {
       result:"བཙལ་འབྲས། {{count,counttobo}}",
       result_plural:"བཙལ་འབྲས། {{count,counttobo}}",
       filters:{
-         noresults:"འདེམས་སྒྲུག་བྱས་པའི་བཙལ་འབྲས་མི་འདུག"
+         noresults:"འདེམས་སྒྲུག་བྱས་པའི་བཙལ་འབྲས་མི་འདུག",
+         noresultsAsso:"No result associated with {{keyword}} {{type}}"
       },
       seeO:"དན་གྲངས་རིགས་གཞན་པའི་བཙལ་འབྲས་ལ་ལྟོས།",
       backToW:"བརྩམས་ཆོས་སྟེང་ཕྱིར་ལོག"

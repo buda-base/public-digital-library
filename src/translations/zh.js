@@ -343,7 +343,8 @@ const zhTranslation = {
       page:"页",
       result:"{{count}}条结果",
       filters:{
-         noresults:"没有符合条件的结果"
+         noresults:"没有符合条件的结果",
+         noresultsAsso:"No result associated with {{keyword}} {{type}}"
       }
    },
    Rsidebar:{

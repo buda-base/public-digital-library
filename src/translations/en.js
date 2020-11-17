@@ -390,7 +390,8 @@ const enTranslation = {
       result:"{{count}} Result",
       result_plural:"{{count}} Results",
       filters:{
-         noresults:"No result for {{keyword}} [{{language}}] {{type}}"
+         noresults:"No result for {{keyword}} [{{language}}] {{type}}",
+         noresultsAsso:"No result associated with {{keyword}} {{type}}"
       },
       seeO:"See results in other data types",
       backToW:"Back to Works"
