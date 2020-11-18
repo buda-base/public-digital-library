@@ -230,7 +230,7 @@ export const providers = {
    "eftr":"84000",
    "har":"Himalayan Art",
    "ia":"Internet Archives",        
-   "idp":"British Library (IDP)",         
+   "idp":"International Dunhuang Project",         
    "gretil":"GRETIL",
    "loc":"Library of Congress",
    "mbbt":"Marcus Bingenheimer's website",
