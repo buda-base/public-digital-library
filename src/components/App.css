@@ -2564,7 +2564,8 @@ html[lang="en"] .resource .data > [data-prop="bdo:creator"] h4[data-prop="bdo:ro
 .etextPage > .imagePage:hover .button.hide { opacity:0.54; }
 .etextPage.lang-bo h4.page { font-family:"Tibetan Machine Uni";}
 
-
+.etextPage h5 a.unpag { color: #343434; cursor:auto;}
+.etextPage h5 a.unpag:hover { border:none; }
 
 .etextPage .overpage + div { margin:20px 0 5px 0; }
 

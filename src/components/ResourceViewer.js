@@ -4814,6 +4814,8 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          if(kw) kw = kw.value         
       }
 
+      let unpag = this.unpaginated()
+
       return (
          
          [<InfiniteScroll
@@ -4875,19 +4877,20 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                   })
                }
                { e.seq && <div> 
-                  <span class="button" title={I18n.t("misc."+(!showIm?"show":"hide"))+" "+I18n.t("available scans for this page")} 
+                  { !unpag && <span class="button" title={I18n.t("misc."+(!showIm?"show":"hide"))+" "+I18n.t("available scans for this page")} 
                   onClick={(eve) => {
                         let id = "image-"+this.props.IRI+"-"+e.seq
                         this.setState({...this.state, collapse:{...this.state.collapse, [id]:!showIm}}) 
                      }}> 
                      <img src="/icons/image.svg"/>
-                  </span> 
+                  </span> }
                   {/* { <h5><a title="Open image+text view in Mirador" onClick={eve => { openMiradorAtPage(imageLinks[e.seq].id) }}>p.{e.seq}</a></h5> } */}
-                  {   <h5><a title={I18n.t("misc."+(!showIm?"show":"hide"))+" "+I18n.t("available scans for this page")} onClick={(eve) => {
+                  {   !unpag && <h5><a title={I18n.t("misc."+(!showIm?"show":"hide"))+" "+I18n.t("available scans for this page")} onClick={(eve) => {
                         let id = "image-"+this.props.IRI+"-"+e.seq
                         this.setState({...this.state, collapse:{...this.state.collapse, [id]:!showIm}}) 
                      }}>{I18n.t("resource.page",{num:e.seq})}</a>                                             
                      </h5> }
+                     { unpag && <h5><a class="unpag" title={I18n.t("resource.unpag")}>{I18n.t("resource.pageN",{num:e.seq})}</a></h5>}
                      &nbsp;
                      { Object.keys(imageLinks).sort().map(id => {
                         if( /* !this.state.collapse["imageVolume-"+id] &&*/ imageLinks[id][e.seq]) 
@@ -5443,7 +5446,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                   <span title={I18n.t("mirador.increase")} class={!size||size < 2.4?"on":""} onClick={(e)=>etextSize(true)}><img src="/icons/Zp.svg"/></span>
                   {lang_selec(this,true)}
                </div>
-               <a class={showToggleScan?"on":""} onClick={(e) => this.setState({showEtextImages:!this.state.showEtextImages})}>{this.state.showEtextImages?<img id="check" src="/icons/check.svg"/>:<span id="check"></span>}{I18n.t("mirador.showI")}<img width="42" src="/icons/search/images_b.svg"/></a>
+               <a class={showToggleScan && !this.unpaginated()?"on":""} onClick={(e) => this.setState({showEtextImages:!this.state.showEtextImages})}>{this.state.showEtextImages?<img id="check" src="/icons/check.svg"/>:<span id="check"></span>}{I18n.t("mirador.showI")}<img width="42" src="/icons/search/images_b.svg"/></a>
             </div>
          </div>
       )
@@ -6222,6 +6225,14 @@ perma_menu(pdfLink,monoVol,fairUse,other)
             
    }
 
+   unpaginated() {
+      let unpag = this.getResourceElem(rdf+"type")
+      if(unpag && unpag.length && unpag.filter(u => u.value === bdo+"EtextNonPaginated")) unpag = true
+      else unpag = false
+
+      return unpag
+   }
+
    render()
    {
       loggergen.log("render",this.props,this.state,this._refs)
@@ -6533,6 +6544,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          if(etextRes && etextRes.length) etextRes = shortUri(etextRes[0].value)
          else etextRes = null
 
+
          // TODO fix loader not hiding when closing then opening again
 
          return ([
@@ -6541,8 +6553,9 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                { top_right_menu(this,title,searchUrl,etextRes) }               
                { this.renderMirador(isMirador) }           
                <div class="resource etext-view">
-                  <Loader loaded={!this.props.loading}  options={{position:"fixed",left:"50%",top:"50%"}} />
+                  <Loader loaded={!this.props.loading}  options={{position:"fixed",left:"50%",top:"50%"}} />      
                   <div class="">
+                     { this.unpaginated() && <h4 style={{fontSize:"16px",fontWeight:600,textAlign:"center", marginBottom:"50px",top:"-15px"}}>{I18n.t("resource.unpag")}</h4>}
                      { etext_data }
                   </div>                  
                </div>

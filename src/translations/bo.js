@@ -439,7 +439,9 @@ const boTranslation = {
       nbTrans:" ( འགྱུར་མ། {{count}})",
       nbTrans_plural:" (འགྱུར་མ། {{count}})",
       openO:"Open on {{src}}",
-      browsE:"Browse"
+      browsE:"Browse",
+      unpag:"The pages of this etext may correspond to page in the original edition, but we cannot provide the exact mapping.",
+      pageN:"p. {{num,counttobo}}"
    },
    mirador:{
       return:"བུདྡྷ་ལ་ཕྱིར་ལོག",

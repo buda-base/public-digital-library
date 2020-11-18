@@ -464,6 +464,8 @@ const enTranslation = {
       browsE:"Browse",
       memberO:"Member of {{resLabel.value}}",
       memberO_plural:"Members of {{resLabel.value}}",
+      unpag:"The pages of this etext may correspond to page in the original edition, but we cannot provide the exact mapping.",
+      pageN:"p. {{num}}"
    },
    mirador:{
       return:"return to BUDA",

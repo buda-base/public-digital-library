@@ -404,7 +404,9 @@ const zhTranslation = {
       nbTrans:"({{count}}翻译)",
       openO:"在{{src}}上打开",
       noT:"[无标题]",
-      browsE:"Browse"
+      browsE:"Browse",
+      unpag:"The pages of this etext may correspond to page in the original edition, but we cannot provide the exact mapping.",
+      pageN:"p. {{num}}"
    },
    mirador:{
       return:"回到BUDA",
