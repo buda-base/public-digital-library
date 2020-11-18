@@ -4130,13 +4130,15 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             sta.results && sta.results[id] && sta.results[id].counts && sta.results[id].counts.datatype && Object.keys(sta.results[id].counts.datatype) && Object.keys(sta.results[id].counts.datatype).length != Object.keys(counts.datatype).length)
          */
          let paginate = [], bookmarks, noBookM = false;
-         if(sta.id !== id || sta.repage 
+         if(!this.props.loading && 
+          (  sta.id !== id || sta.repage 
          || !sta.results 
          || !sta.results[id] 
          || (sta.results[id].resLength != resLength) 
          || (sta.results[id].resMatch != resMatch) 
          || ( sta.results[id].message.length <= 1) 
-         || Object.keys(sta.results[id].counts.datatype).length != Object.keys(counts.datatype).length ) { 
+         || Object.keys(sta.results[id].counts.datatype).length != Object.keys(counts.datatype).length ) 
+         ) { 
             
             if(sta.id == id && this.state.paginate && this.state.paginate.pages && this.state.paginate.pages.length > 1) paginate = [ this.state.paginate ]
             if(sta.results && sta.results[id] && sta.results[id].bookmarks) bookmarks = sta.results[id].bookmarks                        
@@ -4150,7 +4152,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             //loggergen.log("bookM:",results,JSON.stringify(paginate,null,3))
             
          }
-         else {
+         else if(!this.props.loading) {
             message = sta.results[id].message
             paginate = [ sta.results[id].paginate ]
             bookmarks = sta.results[id].bookmarks      

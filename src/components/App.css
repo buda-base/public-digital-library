@@ -1709,6 +1709,7 @@ body > [id^="menu-"] > div:last-child,
 #perma #same .provider.bdr img { height:28px;}
 
 #perma #same .provider::before {  content:none; display:none; }
+#perma #same .provider.idp img,
 #perma #same .provider.eap img { height:36px;}
 
 #perma #same .provider.bdr:not(:last-child) { display:none; }
@@ -2393,6 +2394,7 @@ html[lang="en"] .resource .data > [data-prop="bdo:creator"] h4[data-prop="bdo:ro
 .resource .data.legal-props > div h4 a {  display:flex; align-items: center; }
 
 
+.resource .data.legal-props > div h4 > .ulink > a[href*="LD_IDP_metadata"]::before,
 .resource .data.legal-props > div h4 > .ulink > a[href*="LOC_metadata"]::before,
 .resource .data.legal-props > div h4 > .ulink > a[href*="mbingenheimer"]::before,
 .resource .data.legal-props > div h4 > .ulink [href*="LD_SRC_Metadata"]::before,
@@ -2414,6 +2416,7 @@ html[lang="en"] .resource .data > [data-prop="bdo:creator"] h4[data-prop="bdo:ro
 
 .resource .data.legal-props > div h4 > .ulink.src .bdr { display:none; }
 
+.resource .data.legal-props > div h4 > .ulink > a[href*="LD_IDP_metadata"]::before { background-image:url("/BL.gif"); background-size:auto 21px;}
 .resource .data.legal-props > div h4 > .ulink > a[href*="LOC_metadata"]::before { background-image:url("/LOC.svg"); background-size:23px auto;}
 .resource .data.legal-props > div h4 > .ulink > a[href*="mbingenheimer"]::before { background-image:url("/MB-icon.jpg"); background-size:15px auto; }
 .resource .data.legal-props > div h4 > .ulink [href*="LD_SRC_Metadata"]::before { background-image:url("/SRC.svg"); background-size:15px auto; }
@@ -2687,6 +2690,7 @@ h4:hover .hoverlink { opacity:1;pointer-events: auto;}
 h2 .bdr .before { background-image:url("/logo.svg"); background-size:17px auto; background-position:top 1px right 5px; }
 h2 .bnf .before { background-image:url("/BNF.svg"); background-size:19px auto;background-position:top 4px left;}
 h2 .dila .before { background-image:url("/DILA-favicon.ico"); background-position:top 1px right 5px;}
+h2 .idp .before,
 h2 .eap .before { background-image:url("/BL.gif"); background-size:auto 13px; background-position:left 4px top; }
 h2 .gretil .before { background-image:url("/GRETIL.png"); background-size:auto 13px; background-position:top 1px right 6px;}
 h2 .ia .before { background-image:url("/IA.png"); background-size:auto 13px;background-position:top 0px left 2px;}
@@ -2704,6 +2708,7 @@ h2 .wd .before { background-image:url("/WD.svg");  background-size:18px auto; ba
 .sameAs.bdr:not(.ulink):not(h4) .before, h4 .bdr .before { background-image:url("/logo.svg"); background-size:17px auto; background-position:top 1px right 5px; }
 .sameAs.bnf:not(.ulink):not(h4) .before, h4 .bnf .before { background-image:url("/BNF.svg"); background-size:19px auto;background-position:top 4px left;}
 .sameAs.dila:not(.ulink):not(h4) .before, h4 .dila .before { background-image:url("/DILA-favicon.ico"); background-position:top 1px right 5px;}
+.sameAs.idp:not(.ulink):not(h4) .before, h4 .idp .before,
 .sameAs.eap:not(.ulink):not(h4) .before, h4 .eap .before { background-image:url("/BL.gif"); background-size:auto 13px; background-position:left 4px top; }
 .sameAs.gretil:not(.ulink):not(h4) .before, h4 .gretil .before { background-image:url("/GRETIL.png"); background-size:auto 13px; background-position:top 1px right 6px;}
 .sameAs.ia:not(.ulink):not(h4) .before, h4 .ia .before { background-image:url("/IA.png"); background-size:auto 13px;background-position:top 0px left 2px;}
@@ -2720,10 +2725,14 @@ h2 .wd .before { background-image:url("/WD.svg");  background-size:18px auto; ba
 .provider.dila .before { background-image:url("/DILA-favicon.ico"); background-position:top 1px right 5px;}
 
 .provider.ngmpp::before,
+.provider.idp::before,
 .provider.eap::before { content: ' '; width: 25px;  height: 25px; border-radius: 13px;  background:white;position:absolute;
    background-repeat:no-repeat; left:-20px;}
+
+.provider.idp::before,
 .provider.eap::before { background-image:url("/BL.gif"); background-size:auto 21px; background-position:center; }
 
+.provider.idp .before,
 .provider.eap .before { background-image:url("/BL.gif"); background-size:auto 13px; background-position:left 4px top; }
 
 .provider.ngmpp::before { background-image:url("/NGMPP.svg"); background-size:auto 15px; background-position:center; }
@@ -2749,6 +2758,7 @@ h4.hasIcon ~ .subsub { padding-left:40px; }
 .uriTooltip .logo.bdr  { background-image:url("/logo.svg");  background-size: 52px auto;}
 .uriTooltip .logo.bnf  { background-image:url("/BNF.svg");  background-size: 52px auto; }
 .uriTooltip .logo.dila  { background-image:url("/DILA-big.png"); }
+.uriTooltip .logo.idp,
 .uriTooltip .logo.eap  { background-image:url("/BL.gif"); }
 .uriTooltip .logo.gretil {  background-image:url("/GRETIL.png"); } 
 .uriTooltip .logo.ia  { background-image:url("/IA.png"); }
