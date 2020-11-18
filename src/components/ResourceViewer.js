@@ -426,7 +426,8 @@ let propOrder = {
    "User" : [
       "skos:prefLabel",
       "skos:altLabel",
-   ]
+   ],
+   "Product":[]
 }
 
 propOrder["Etext"] = propOrder["Work"]

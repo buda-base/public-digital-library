@@ -2641,14 +2641,21 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
             for (let i of sortId) {
 
-               if(i.value != "false") 
-                  ret.push(<span><Link to={"/show/"+i.uri}><span {...(i.lang?{lang:i.lang}:{})}>{i.value}</span></Link>{
+               if(i.value != "false") {
+                  let urilink
+
+                  if(i.uri && !i.uri.includes(".bdrc.") && i.uri.startsWith("http")) urilink = <a target="_blank" href={i.uri}><span {...(i.lang?{lang:i.lang}:{})}>{i.value}</span></a> 
+                  else urilink =  <Link to={"/show/"+i.uri}><span {...(i.lang?{lang:i.lang}:{})}>{i.value}</span></Link> 
+
+                  ret.push(<span>{urilink}
+                     {
                      i.lang && <Tooltip placement="bottom-end" title={
                                        <div style={{margin:"10px"}}>
                                           {I18n.t(languages[i.lang]?languages[i.lang].replace(/search/,"tip"):i.lang)}/>
                                        </div>
                                     }><span className="lang">&nbsp;{i.lang}</span></Tooltip>
                            }</span>)
+               }
             }            
          }
 
@@ -3191,7 +3198,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             {/* { this.getResultProp(rdf+"type",allProps.filter(e => e.type === rdf+"type" && e.value === bdo+"EtextInstance")) }  */}
             
             {/* //![bdo+"AbstractWork",bdo+"Work",bdo+"Instance",bdo+"SerialMember",bdo+"Topic"].includes(e.value))) } */}
-            { this.getResultProp("tmp:originalRecord",allProps,false,false, [ tmp+"originalRecord", adm+"originalRecord"]) }
+            { this.getResultProp("tmp:originalRecord",allProps,false,true, [ tmp+"originalRecord", adm+"originalRecord"]) }
             {/* { this.getResultProp(bdo+"language",allProps) } */}
             {/* { this.getResultProp(bdo+"script",allProps) } */}
 
