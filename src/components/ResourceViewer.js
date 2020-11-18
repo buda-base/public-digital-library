@@ -259,7 +259,7 @@ export const provImg = {
    "gretil": "/GRETIL.png",
    "har": "/HAR.png",
    "ia": "/IA.png",
-   "idp":  "/BL.gif",
+   "idp":  "/IDP.jpg",
    "loc":"/LOC.svg",
    "mbbt": "/MB-icon.jpg",
    "ngmpp":"/NGMPP.svg",
@@ -2102,7 +2102,7 @@ class ResourceViewer extends Component<Props,State>
          //TODO lien legaldata / provider dans l'ontologie
 
          if(elem && elem.value && elem.value === bda+"LD_EAP_metadata") { prefix = "eap"; sameAsPrefix = "eap hasIcon provider" ; }
-         else if(elem && elem.value && elem.value === bda+"LD_IDP_metadata") { prefix = "eap"; sameAsPrefix = "idp hasIcon provider" ; }
+         else if(elem && elem.value && elem.value === bda+"LD_IDP_metadata") { prefix = "idp"; sameAsPrefix = "idp hasIcon provider" ; }
          else if(elem && elem.value && elem.value === bda+"LD_NGMPP_Metadata") { prefix = "ngmpp"; sameAsPrefix = "ngmpp hasIcon provider" ; }
 
          //loggergen.log("s?",prop,prefix,sameAsPrefix,pretty,elem,info,infoBase)         
@@ -4448,8 +4448,6 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
       let orig = this.getResourceElem(adm+"originalRecord")
       if(orig && orig.length) orig = orig[0].value
-      else orig = this.getResourceElem(adm+"canonicalHtml")
-      if(orig && orig.length) orig = orig[0].value
    
       //else orig = ""
 
@@ -5214,8 +5212,6 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          //else prov = ""
 
          orig = this.getResourceElem(adm+"originalRecord")
-         if(orig && orig.length) orig = orig[0].value
-         else orig = this.getResourceElem(adm+"canonicalHtml")
          if(orig && orig.length) orig = orig[0].value
          else orig = ""
 
