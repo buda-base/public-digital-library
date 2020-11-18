@@ -2291,7 +2291,7 @@ class ResourceViewer extends Component<Props,State>
             }
             
             let befo = [],src
-            if(providers[src = srcProv] && !prop.match(/[/#]sameAs/)) { // || ( src !== "bdr" && providers[src = srcSame])) { 
+            if(providers[src = srcProv] && (!prop || !prop.match(/[/#]sameAs/))) { // || ( src !== "bdr" && providers[src = srcSame])) { 
                befo.push( 
 
                   [ //<span class="meta-before"></span>,

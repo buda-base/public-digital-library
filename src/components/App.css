@@ -1160,6 +1160,8 @@ h4:not(:hover) > .lang
 
 .resource .data#outline span.is-root .parTy + span a:hover { text-decoration-color:#d73449;}
 
+.resource .data#outline .parTy + span .ulink .before  { display:none !important; }
+
 .resource .data#outline .is-root h2 a span,
 .resource .data#outline span.is-root a  { color:#d73449;  }
 
@@ -2729,7 +2731,6 @@ h2 .wd .before { background-image:url("/WD.svg");  background-size:18px auto; ba
 .provider.dila .before { background-image:url("/DILA-favicon.ico"); background-position:top 1px right 5px;}
 
 .provider.ngmpp::before,
-.provider.idp::before,
 .provider.eap::before { content: ' '; width: 25px;  height: 25px; border-radius: 13px;  background:white;position:absolute;
    background-repeat:no-repeat; left:-20px;}
 
