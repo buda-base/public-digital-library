@@ -363,13 +363,14 @@ export function highlight(val,k,expand,newline)
 }
 
 const preferUIlang = [ bdo+"placeType", bdo+"workIsAbout", bdo+"workGenre", bdo+"role", bdo+"language", bdo+"script", adm+"metadataLegal", bdo+"personGender", bdo+"printMethod", bdo+"workGenre",
-   tmp+"relationType", bdo+"material", adm+"status", adm+"access", adm+"contentLegal", bdo+"partType", adm+"contentLegal" ]
+   tmp+"relationType", bdo+"material", adm+"status", adm+"access", adm+"contentLegal", bdo+"partType", adm+"contentLegal",
+   bdo+"binding" ]
 
 export function getLangLabel(that:{},prop:string="",labels:[],proplang:boolean=false,uilang:boolean=false,otherLabels:[],dontUseUI:boolean=false)
 {
    if(labels && labels.length)
    {
-      //loggergen.log("getL",prop,labels,proplang);
+      //loggergen.log("getL",prop,labels,proplang,uilang,dontUseUI);
 
       let langs = []
       if(that.state.langPreset) langs = that.state.langPreset

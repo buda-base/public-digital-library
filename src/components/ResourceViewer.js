@@ -2072,13 +2072,28 @@ class ResourceViewer extends Component<Props,State>
             if(infoBase) infoBase = infoBase.filter(e => [bdo+"volumeNumber",skos+"prefLabel", /*skos+"altLabel",*/ foaf+"name" /*,"literal"*/].reduce( (acc,f) => ((acc || f === e.type || f === e.fromKey) && !e.fromSameAs), false))
          }
 
+         let noLink = false
+   
+         // some properties are found both in query and ontology (#360)
+         let ib ;
+         if(this.props.dictionary) {
+            ib = this.props.dictionary[elem.value]            
+            if(ib && (ib[skos+"prefLabel"] || ib[rdfs+"label"] )) noLink = true
+         }   
+
          if(!infoBase || !infoBase.length)  {
             if(this.props.dictionary) infoBase = this.props.dictionary[elem.value]
+            
             //loggergen.log("ib",infoBase,dico)
-            if(infoBase) infoBase = infoBase[skos+"prefLabel"]
+
+            if(infoBase &&  infoBase[skos+"prefLabel"]) infoBase = infoBase[skos+"prefLabel"]
+            else if(infoBase &&  infoBase[rdfs+"label"]) infoBase = infoBase[rdfs+"label"]
+
+            // need to know when info is from ontology (#360)
+            if(infoBase) noLink = true
          }
 
-         //loggergen.log("base:",JSON.stringify(infoBase,null,3))
+         //loggergen.log("base:", noLink, JSON.stringify(infoBase,null,3))
 
          if(infoBase) {
             let { _info, _lang } = this.getInfo(prop,infoBase,withProp) 
@@ -2288,6 +2303,9 @@ class ResourceViewer extends Component<Props,State>
                   } }>{info}</a>
                }
                else link = <Link className={"urilink prefLabel " } to={"/"+show+"/"+uri}>{info}</Link>
+
+               if(noLink) link = info
+
                bdrcData = null
             }
             
@@ -2382,7 +2400,6 @@ class ResourceViewer extends Component<Props,State>
             else {
                bdrcData = null
             }
-            
             
             ret.push([<span class={"ulink " + (sameAsPrefix?sameAsPrefix:'')  }>{befo}{link}</span>,lang?<Tooltip placement="bottom-end" title={
                <div style={{margin:"10px"}}>
