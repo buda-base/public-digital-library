@@ -4363,7 +4363,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
 
    widget(title:string,txt:string,inCollapse:Component)  { 
-      let open = this.state.collapse[txt]||(this.state.collapse[txt] === undefined && txt === "versionType")
+      let open = this.state.collapse[txt] // ||(this.state.collapse[txt] === undefined && txt === "versionType")
       return (
          [<ListItem key={1} className="widget-header"
             onClick={(e) => { this.setState({collapse:{ ...this.state.collapse, [txt]:!open} }); } }
