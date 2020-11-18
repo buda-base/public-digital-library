@@ -4329,9 +4329,16 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
          }
          while(tmProps.length > 0);
-
+         
+         if(tree[bdo+"Facet"]) {
+            tree = { ...tree, ...tree[bdo+"Facet"] }
+            delete tree[bdo+"Facet"] ;
+         }
+         
          //loggergen.log("inserTree",tree)
+
          tree = this.counTree(tree,meta[j],counts["datatype"][this.state.filters.datatype[0]],j)
+         
          //loggergen.log("counTree",JSON.stringify(tree,null,3),j)
 
          return this.widget(jlabel,j,this.subWidget(tree,jpre,tree[0]['taxHasSubClass'],false,j));
