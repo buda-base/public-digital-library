@@ -6516,7 +6516,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
             { tag === "Images" && <h3><Link to={!etextUT?view:etextUT+"#open-viewer"} class={(!openV?"disabled":"")}>{I18n.t("index.openViewer")}</Link></h3> }
             <h3><Link to={url+"#main-info"} >{I18n.t("index.mainInfo")}</Link></h3>
             { tag === "Instance" && <h3><Link to={url+"#outline"} class={(!outL||!this.state.outlinePart && root && root.length?"disabled":"")}>{I18n.t("index.outline")}</Link></h3> }
-            { tag === "Work" && <h3><Link to={url+"#resources"} class={(!rel?"disabled":"")}>{I18n.t(_T ==="Place"?"index.relatedR":"index.related")}</Link></h3> }
+            { tag === "Work" && <h3><Link to={url+"#resources"} class={(!rel?"disabled":"")}>{I18n.t(_T ==="Place"||_T==="Corporation"?"index.relatedR":"index.related")}</Link></h3> }
              <h3><Link class={(!ext?"disabled":"")} to={url+"#ext-info"} >{I18n.t("index.extended")}</Link></h3> 
          </div>)
       }
@@ -6792,16 +6792,16 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                   { (hasRel && !["Instance","Images","Etext"].includes(_T)) &&  
                      <div class="data related" id="resources">
                         <div>
-                           <div><h2>{I18n.t(_T=== "Place"||_T==="Corporation"?"index.relatedR":(_T==="Product"?"index.relatedM":(_T==="Work"&&serial?"index.relatedS":"index.related")))}</h2>{ (related && related.length > 4 || createdBy && createdBy.length > 4) && <Link to={"/search?t="+(_T==="Corporation"&&this.state.relatedTab?"Person":(_T==="Place"&&this.state.relatedTab?"Instance":(_T==="Product"?"Scan":"Work")))+"&r="+this.props.IRI}>{I18n.t("misc.seeA")}</Link> }</div>
+                           <div><h2>{I18n.t(_T=== "Place"||_T==="Corporation"?"index.relatedR":(_T==="Product"?"index.relatedM":(_T==="Work"&&serial?"index.relatedS":"index.related")))}</h2>{ (related && related.length > 4 || createdBy && createdBy.length > 4) && <Link to={"/search?t="+(_T==="Corporation"&&(this.state.relatedTab||!related.length)?"Person":(_T==="Place"&&this.state.relatedTab?"Instance":(_T==="Product"?"Scan":"Work")))+"&r="+this.props.IRI}>{I18n.t("misc.seeA")}</Link> }</div>
                            { (related && related.length > 0 && (!createdBy  || !createdBy.length)) && <div class="rel-or-crea">{related}</div>}
-                           { (createdBy && createdBy.length > 0 && (!related  || !related.length)) && <div class="rel-or-crea">{createdBy}</div>}
+                           { (createdBy && createdBy.length > 0 && (!related  || !related.length)) && <div class={"rel-or-crea"+(_T==="Corporation"?" person":"")}>{createdBy}</div>}
                            { (related.length > 0 && createdBy.length > 0) && <div>
                               <Tabs>
                                  <TabList>
                                     <Tab onClick={(ev)=>this.setState({relatedTab:false,irel:0,icrea:0})}>{I18n.t(_T=== "Place"?"resource.wAbout":"resource.about",{resLabel, count:related.length, interpolation: {escapeValue: false}})} </Tab>
                                     <Tab onClick={(ev)=>this.setState({relatedTab:true,irel:0,icrea:0})}>{I18n.t(_T=== "Place"?"resource.printedA":(_T==="Corporation"?"resource.memberO":"resource.createdB"),{resLabel, count:createdBy.length, interpolation: {escapeValue: false}})}</Tab>
                                  </TabList>
-                                 <TabPanel><div class="rel-or-crea">{related}</div></TabPanel>
+                                 <TabPanel><div class={"rel-or-crea"}>{related}</div></TabPanel>
                                  <TabPanel><div class={"rel-or-crea"+(_T==="Corporation"?" person":"")}>{createdBy}</div></TabPanel>
                               </Tabs>
                            </div> }
