@@ -6430,7 +6430,9 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          createdBy = Object.keys(this.props.assocResources).map( (k,i) => {
             let v = this.props.assocResources[k]
             let s = shortUri(k)
-            let crea = v.filter(m => !serial && m.fromKey === (_T === "Place"?tmp+"printedAt":tmp+"createdBy") && m.value === res || serial && serial.filter(s => s.value === k).length )
+            if(_T === "Corporation" && v.filter(m => m.fromKey === bdo+"corporationMember").length) { s = shortUri(v.filter(m => m.fromKey === bdo+"corporationMember")[0].value); }
+            let crea = v.filter(m => !serial && m.fromKey === (_T === "Place"?tmp+"printedAt":tmp +"createdBy") && m.value === res || serial && serial.filter(s => s.value === k).length )
+
             
             //loggergen.log("crea:",k,s,v,crea)
 
