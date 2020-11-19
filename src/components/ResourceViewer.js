@@ -6245,7 +6245,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
    unpaginated() {
       let unpag = this.getResourceElem(rdf+"type")
-      if(unpag && unpag.length && unpag.filter(u => u.value === bdo+"EtextNonPaginated")) unpag = true
+      if(unpag && unpag.length && unpag.filter(u => u.value === bdo+"EtextNonPaginated").length) unpag = true
       else unpag = false
 
       return unpag
