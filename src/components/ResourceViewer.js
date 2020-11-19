@@ -2074,11 +2074,13 @@ class ResourceViewer extends Component<Props,State>
 
          let noLink = false
    
-         // some properties are found both in query and ontology (#360)
+         // we need to know when info is from ontology (#360) 
+         // + some properties are found both in query and ontology
+         // + special case for copyright/metadata (link is not clickable so we can keep it as is)
          let ib ;
          if(this.props.dictionary) {
             ib = this.props.dictionary[elem.value]            
-            if(ib && (ib[skos+"prefLabel"] || ib[rdfs+"label"] )) noLink = true
+            if(ib && !elem.value.includes("LD_") && (ib[skos+"prefLabel"] || ib[rdfs+"label"] )) noLink = true
          }   
 
          if(!infoBase || !infoBase.length)  {
@@ -2089,8 +2091,6 @@ class ResourceViewer extends Component<Props,State>
             if(infoBase &&  infoBase[skos+"prefLabel"]) infoBase = infoBase[skos+"prefLabel"]
             else if(infoBase &&  infoBase[rdfs+"label"]) infoBase = infoBase[rdfs+"label"]
 
-            // need to know when info is from ontology (#360)
-            if(infoBase) noLink = true
          }
 
          //loggergen.log("base:", noLink, JSON.stringify(infoBase,null,3))
@@ -2652,7 +2652,7 @@ class ResourceViewer extends Component<Props,State>
 
       let fromSame = (e.allSameAs && e.allSameAs.length > 0)
 
-      let lang, data, other = [], era ;
+      let lang, data, other = [], era, comment ;
       if(e.type === "literal") { 
          lang = e.lang
          if(!lang) lang = e["xml:lang"]
@@ -2660,7 +2660,9 @@ class ResourceViewer extends Component<Props,State>
       }
       else if(e.type === "uri") {
          if(this.props.assocResources) data = this.props.assocResources[e.value]
+         if(!data && this.props.dictionary && this.props.dictionary[e.value]) data = Object.keys(this.props.dictionary[e.value]).filter(k => [skos+"prefLabel",skos+"altLabel",rdfs+"label"].includes(k)).reduce( (acc,k)=>([...acc,...this.props.dictionary[e.value][k].map(d => ({...d,fromKey:k})) ]),[])
          if(data && data.length) data = getLangLabel(this,prop,data.filter(d => [skos+"prefLabel",skos+"altLabel",rdfs+"label"].includes(d.type) || [skos+"prefLabel",skos+"altLabel",rdfs+"label"].includes(d.fromKey)),false,false,other)
+        // console.log("other:",other,data)
          if(data) {
             lang = data.lang
             if(!lang) lang = data["xml:lang"]
@@ -2669,6 +2671,14 @@ class ResourceViewer extends Component<Props,State>
          else {
             if(this.props.assocResources) data = this.props.assocResources[e.value]
             if(data && data.filter(d => d.fromKey === bdo+"yearInEra")) era = data.filter(d => d.fromKey === bdo+"era")
+         }
+         if(this.props.dictionary[e.value]) {
+            comment = this.props.dictionary[e.value]
+            if(comment) {
+               if(comment[rdfs+"comment"])  comment = getLangLabel(this,prop,comment[rdfs+"comment"],false,false,other)
+               else comment = undefined            
+            }
+            //console.log("comm:",comment)
          }
       }
 
@@ -2769,6 +2779,7 @@ class ResourceViewer extends Component<Props,State>
                               { (era && era.length > 0) &&  <div><span class='first'>{this.proplink(bdo+"yearInEra")}</span><span>{I18n.t("punc.colon")}&nbsp;</span><span>{this.proplink(era[0].value)}</span></div>  }
                               { (e.start !== undefined) &&  <div><span class='first'>{this.proplink(bdo+"startChar")}</span><span>{I18n.t("punc.colon")}&nbsp;</span><span>{e.start}</span></div>  }
                               { (e.end !== undefined) &&  <div><span class='first'>{this.proplink(bdo+"endChar")}</span><span>{I18n.t("punc.colon")}&nbsp;</span><span>{e.end}</span></div>  }
+                              { (comment !== undefined) &&  <div><span class='first'>{this.proplink(rdfs+"comment")}</span><span>{I18n.t("punc.colon")}&nbsp;</span><span>{comment.value}</span></div>  }
                               </TabPanel>
                               <TabPanel selected>
                               {fromSame && e.allSameAs.map(f => { 
