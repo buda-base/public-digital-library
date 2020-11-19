@@ -543,6 +543,9 @@ let extProperties = {
    "Lineage": [
       bdo+"workLocation",
       bdo+"note",
+   ],
+   "Corporation": [
+      bdo+"note",
    ]
 }
 extProperties["Etext"] = extProperties["Work"]
