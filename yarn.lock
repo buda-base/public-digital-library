@@ -7974,9 +7974,9 @@ joi@^11.1.1:
     topo "2.x.x"
 
 jquery-migrate@^3.0.0:
-  version "3.3.1"
-  resolved "https://registry.yarnpkg.com/jquery-migrate/-/jquery-migrate-3.3.1.tgz#0f8e2b7531228fda5d88be58dc0e7d5848e52fd1"
-  integrity sha512-QAXfshB6xqaANDX8OPExKnnooLtX0cSDCKfRnqhdv+3CVEVD9L1v3zNAhZum/4AukKlWUWUoxM6ywJJcLMXLSA==
+  version "3.3.2"
+  resolved "https://registry.yarnpkg.com/jquery-migrate/-/jquery-migrate-3.3.2.tgz#7829ee24de3054d0d2f42dd093390d8a7b7af01a"
+  integrity sha512-L3gYhr7yEtLUSAeqXSicVa0vRD4aGwjw/bWY8YzrO2o/qDY1BaMyP3oB3bZf5Auy3Hu9ynliio0CTyDWCBPVDw==
 
 "jquery-plugin@git+https://github.com/cowboy/jquery-tiny-pubsub.git":
   version "0.0.0-ignored"
@@ -8969,7 +8969,7 @@ minizlib@^1.2.1:
 
 "mirador@https://github.com/buda-base/mirador#2.7.0-bdrc":
   version "2.7.0"
-  resolved "https://github.com/buda-base/mirador#2cc4cad4d512bf0bfa600287c9dc71c391f9d7e4"
+  resolved "https://github.com/buda-base/mirador#baaaa15a24e6285df8098d03b076165d2044c889"
   dependencies:
     bootbox "^4.4.0"
     bootstrap "^3.3.7"
@@ -13117,9 +13117,9 @@ uglify-js@3.4.x:
     source-map "~0.6.1"
 
 uglify-js@^3.1.4:
-  version "3.11.5"
-  resolved "https://registry.yarnpkg.com/uglify-js/-/uglify-js-3.11.5.tgz#d6788bc83cf35ff18ea78a65763e480803409bc6"
-  integrity sha512-btvv/baMqe7HxP7zJSF7Uc16h1mSfuuSplT0/qdjxseesDU+yYzH33eHBH+eMdeRXwujXspaCTooWHQVVBh09w==
+  version "3.11.6"
+  resolved "https://registry.yarnpkg.com/uglify-js/-/uglify-js-3.11.6.tgz#144b50d3e05eadd3ad4dd047c60ca541a8cd4e9c"
+  integrity sha512-oASI1FOJ7BBFkSCNDZ446EgkSuHkOZBuqRFrwXIKWCoXw8ZXQETooTQjkAcBS03Acab7ubCKsXnwuV2svy061g==
 
 uncontrollable@^4.1.0:
   version "4.1.0"
