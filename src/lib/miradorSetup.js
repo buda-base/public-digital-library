@@ -244,7 +244,7 @@ async function hasEtextPage(manifest) {
 
          if(!etextPages[ut]) etextPages[ut] = {}
 
-         console.log("page " +id,etextPages[ut][id]);
+         //console.log("page " +id,etextPages[ut][id]);
 
          if(etextPages[ut][id] === true) {            
             return new Promise((resolve,reject) => {
@@ -263,7 +263,7 @@ async function hasEtextPage(manifest) {
          }
          else if(!etextPages[ut][id]) {            
             
-            console.log("loading DATA",id);
+            //console.log("loading DATA",id);
 
             let start = id ;
             while(id > 0 && start - id < NB_PAGES && !etextPages[ut][id - 1] ) { id -- ; } 
@@ -273,7 +273,7 @@ async function hasEtextPage(manifest) {
             
             let json = await data.json() ;
 
-            console.log("DATA OK",start,json);
+            //console.log("DATA OK",start,json);
 
             if(json && json["@graph"]) json = json["@graph"]
             if(json.status === 404 || !json.filter) {
@@ -661,8 +661,11 @@ function miradorAddScroll(toImage)
 
             if(!id || !id.length) { 
                if(fromInp) {
-                  jQ("#gotoPage").addClass("error");
-                  jQ("#gotoPage").val("≤"+jQ(".scroll-view img[data-image-id]").last().attr('title').replace(/[^0-9]+/g,""));
+                  var t = jQ(".scroll-view img[data-image-id]").last().attr('title')
+                  if(t) {
+                     jQ("#gotoPage").addClass("error");
+                     jQ("#gotoPage").val("≤"+t.replace(/[^0-9]+/g,""));
+                  }
                }
                return  ;
             }
@@ -796,6 +799,14 @@ function miradorAddZoomer() {
                "margin-bottom":20/coef,
                "transform":"scale("+1/coef+")"
             })
+
+            window.currentZoom = coef
+
+            /* // NOTO etext might not be loaded 
+            scrollT.find(".etext-content  div").css({
+               "transform":"scale("+1/coef+")"
+            })
+            */
             
             let nuH = scrollT[0].getBoundingClientRect().height;
             let sT = scrollV.scrollTop() + (nuH - oldH)*(scrollV.scrollTop()/oldH)

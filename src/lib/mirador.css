@@ -226,6 +226,7 @@
     top:0;
     overflow:visible;
     transition:all 400ms ease-in-out;
+    transform:none !important;
 }
 
 .mirador-container .panel-thumbnail-view {
@@ -360,9 +361,9 @@
 /* TODO does not work from mirador css */
 
 .mirador-container .hud-control .ui-slider, .mirador-container .ui-slider-horizontal {
-  margin-left: 34px;
+  margin-left: 30px;
   position: absolute;
-  top: 0px; 
+  top: 2px; 
   width:100px;
   height:5px;
 }
