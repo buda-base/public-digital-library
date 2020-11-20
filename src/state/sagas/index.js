@@ -1983,6 +1983,23 @@ store.dispatch(uiActions.loading(keyword, false));
 }
 
 
+export function* watchGetAssocTypes() {
+
+   yield takeLatest(
+      dataActions.TYPES.getAssocTypes,
+      (action) => getAssocTypes(action.payload)
+   );
+}
+
+
+async function getAssocTypes(rid) {
+   //store.dispatch(dataActions.getDatatypes(rid,""))
+   let metadata = await api.getDatatypesOnly(rid, "");
+   store.dispatch(dataActions.foundDatatypes(rid,"",{ metadata, hash:true}));
+
+}
+
+
 async function updateSortBy(i,t)
 {   
 
@@ -2438,6 +2455,7 @@ export function* watchGetAnnotations() {
 export default function* rootSaga() {
    yield all([
       watchInitiateApp(),
+      watchGetAssocTypes(),
       watchGetUser(),
       watchGetOutline(),
       watchGetETextRefs(),

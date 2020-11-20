@@ -134,11 +134,17 @@ const mapStateToProps = (state,ownProps) => {
    let outlines = state.data.outlines
    let outlineKW = state.data.outlineKW
 
+   let assocTypes
+   let datatypes = state.data.datatypes ;
+   if(datatypes /*&& datatypes[ownProps.IRI+"@"]*/) assocTypes = datatypes
+   
+
    let props = { logged,config,resources, ontology, dictionary, keyword, language, datatype, assocResources, prefLang, failures, loading,
       imageAsset,firstImage,canvasID,collecManif,manifests,manifestError,pdfVolumes,createPdf,pdfUrl, manifestWpdf,
       annoCollec,rightPanel,locale,langPreset,langExt,imgData, nextChunk, nextPage, resourceManifest, imageVolumeManifests, imageLists, userEditPolicies, highlight,
       outline,outlines,outlineKW,      
       eTextRefs,
+      assocTypes,
       IIIFerrors }
 
    if(config && !config.auth) props.auth = false
@@ -153,6 +159,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
    return {
       onResetSearch:() => {
          dispatch(data.resetSearch())
+      },
+      onGetAssocTypes:(rid:string) => {
+         dispatch(data.getAssocTypes(rid))
       },
       onRequestPdf:(iri:string,url:string) => {
          dispatch(data.requestPdf(iri,url.replace(/zip/,"pdf")));

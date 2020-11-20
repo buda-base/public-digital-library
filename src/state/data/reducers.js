@@ -1050,6 +1050,18 @@ console.log("get1DT")
 reducers[actions.TYPES.getOneDatatype] = getOneDatatype;
 
 
+export const getAssocTypes = (state: DataState, action: Action) => {
+
+    return {
+        ...state,
+      datatypes : {
+         ...state.datatypes,
+         [action.payload+"@"]: true
+      }
+    }
+}
+reducers[actions.TYPES.getAssocTypes] = getAssocTypes;
+
 export const getDatatypes = (state: DataState, action: Action) => {
 
    console.log("getDTs")
@@ -1063,6 +1075,7 @@ export const getDatatypes = (state: DataState, action: Action) => {
     }
 }
 reducers[actions.TYPES.getDatatypes] = getDatatypes;
+
 
 export const getFacetInfo = (state: DataState, action: actions.SearchAction) => {
     return {

@@ -112,6 +112,7 @@ type Props = {
    IRI:string,
    resources?:{},
    assocResources?:{},
+   assocTypes?:{},
    annoCollec?:{},
    imageAsset?:string,
    collecManif?:string,
@@ -137,6 +138,7 @@ type Props = {
     },
    outline?:{},
    IIIFerrors?:{},
+   onGetAssocTypes: (s:string) => void,
    onInitPdf: (u:string,s:string) => void,
    onRequestPdf: (u:string,s:string) => void,
    onCreatePdf: (s:string,u:string) => void,
@@ -6515,11 +6517,27 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          let url = "/show/"+sRid+this.getTabs(tag)
          //if(sRid === this.props.IRI) url = ""
          let view = "/show/"+sRid+loca.search+"#open-viewer"
+         let relW = url+"#resources"
+         if(tag === "Work" && !rel) {
+            relW = '/search?r='+sRid
+            let keys
+            if(this.props.config &&  (!this.props.assocTypes || !this.props.assocTypes[sRid+"@"])) this.props.onGetAssocTypes(sRid)
+            else if(this.props.assocTypes && this.props.assocTypes[sRid+"@"] && this.props.assocTypes[sRid+"@"].metadata && (keys = Object.keys(this.props.assocTypes[sRid+"@"].metadata)).length) { 
+               let max = 0, i = 0, m ;
+               for(let k in keys) if((m = Number(this.props.assocTypes[sRid+"@"].metadata[keys[k]])) > max) {
+                  max = m
+                  i = k
+                  console.log("max=",max,i)
+               }
+               relW += "&t=" + keys[i].replace(/.*\/([^/]+)$/,"$1")
+            }
+            else relW += "&t=Instance"
+         }
          return (<div>
             { tag === "Images" && <h3><Link to={!etextUT?view:etextUT+"#open-viewer"} class={(!openV?"disabled":"")}>{I18n.t("index.openViewer")}</Link></h3> }
             <h3><Link to={url+"#main-info"} >{I18n.t("index.mainInfo")}</Link></h3>
             { tag === "Instance" && <h3><Link to={url+"#outline"} class={(!outL||!this.state.outlinePart && root && root.length?"disabled":"")}>{I18n.t("index.outline")}</Link></h3> }
-            { tag === "Work" && <h3><Link to={url+"#resources"} class={(!rel?"disabled":"")}>{I18n.t(_T ==="Place"||_T==="Corporation"?"index.relatedR":"index.related")}</Link></h3> }
+            { tag === "Work" && <h3><Link to={relW} /*class={(!rel?"disabled":"")}*/>{I18n.t(!rel || _T ==="Place"||_T==="Corporation"?"index.relatedR":"index.related")}</Link></h3> }
              <h3><Link class={(!ext?"disabled":"")} to={url+"#ext-info"} >{I18n.t("index.extended")}</Link></h3> 
          </div>)
       }

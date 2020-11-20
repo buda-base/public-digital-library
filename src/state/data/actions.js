@@ -99,6 +99,16 @@ export const noResource = (iri: string, error:string): Action => {
     }
 }
 
+
+TYPES.getAssocTypes = 'GET_ASSOC_TYPES';
+export const getAssocTypes = (rid: string): Action => {
+    return {
+        type: TYPES.getAssocTypes,
+        payload: rid
+    }
+}
+
+
 TYPES.initPdf = 'INIT_PDF';
 export const initPdf = (iri: string,link:string): Action => {
     return {
