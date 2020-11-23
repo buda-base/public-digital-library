@@ -2568,7 +2568,7 @@ class ResourceViewer extends Component<Props,State>
    }
 
 
-   toggleHoverM(ID,noSame,wTip) { 
+   toggleHoverM(ID,noSame,wTip,dontClose) { 
       return (ev) => { 
          let elem = $(ev.target).closest(".propCollapseHeader,.propCollapse,[data-prop='bdo:workHasInstance']")
          let popperFix 
@@ -2592,7 +2592,7 @@ class ResourceViewer extends Component<Props,State>
 
             //console.log("tg:",target)
          }
-         if(!noSame || ev.target === ev.currentTarget) this.setState({...this.state,collapse:{...this.state.collapse,["hover"+ID]:!this.state.collapse["hover"+ID],popperFix}, anchorEl:{...this.state.anchorEl,["hover"+ID]:target} } ) 
+         if(!dontClose || !this.state.collapse["hover"+ID]) if(!noSame || ev.target === ev.currentTarget) this.setState({...this.state,collapse:{...this.state.collapse,["hover"+ID]:!this.state.collapse["hover"+ID],popperFix}, anchorEl:{...this.state.anchorEl,["hover"+ID]:target} } ) 
          if(wTip !== undefined) (this.toggleHoverMtooltip(ID,wTip))(ev)
       }
    }
@@ -3320,9 +3320,10 @@ class ResourceViewer extends Component<Props,State>
                         let ID = "ID-"+prop+"-"+"note-i-"+nbN
                         
                         note.push(
-                           <div class="sub hasTogHovM"  onClick={this.toggleHoverM(ID)} onMouseEnter={this.toggleHoverMtooltip(ID,true)} onMouseLeave={this.toggleHoverMtooltip(ID,false)}>
+                            <div class="sub hasTogHovM"  onClick={this.toggleHoverM(ID,null,null,true)} onMouseEnter={this.toggleHoverMtooltip(ID,true)} onMouseLeave={this.toggleHoverMtooltip(ID,false)}>
                             {sav}
-                           </div>)
+                           </div>
+                        )
                      }
                      else if(noteData[bdo+"noteSource"])
                      {
@@ -3349,7 +3350,7 @@ class ResourceViewer extends Component<Props,State>
                         let ID = "ID-"+prop+"-"+"note-i-"+nbN
 
                         note.push(
-                           <div class="sub  hasTogHovM"  onClick={this.toggleHoverM(ID)} onMouseEnter={this.toggleHoverMtooltip(ID,true)} onMouseLeave={this.toggleHoverMtooltip(ID,false)}>
+                           <div class="sub  hasTogHovM"  onClick={this.toggleHoverM(ID,null,null,true)} onMouseEnter={this.toggleHoverMtooltip(ID,true)} onMouseLeave={this.toggleHoverMtooltip(ID,false)}>
                               {sav}
                            </div>
                         )
