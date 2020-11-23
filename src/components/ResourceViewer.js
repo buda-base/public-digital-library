@@ -6527,7 +6527,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                for(let k in keys) if((m = Number(this.props.assocTypes[sRid+"@"].metadata[keys[k]])) > max) {
                   max = m
                   i = k
-                  console.log("max=",max,i)
+                  //console.log("max=",max,i)
                }
                relW += "&t=" + keys[i].replace(/.*\/([^/]+)$/,"$1")
             }

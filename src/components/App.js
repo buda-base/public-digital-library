@@ -120,6 +120,7 @@ const xsd   = "http://www.w3.org/2001/XMLSchema#" ;
 // experimental
 const cbeta = "http://cbetaonline.dila.edu.tw/"
 const har   = "http://www.himalayanart.org/search/"
+const idp   = "http://idp.bl.uk:80/"
 const ngmpp = "https://catalogue.ngmcp.uni-hamburg.de/receive/"
 const sat   = "http://21dzk.l.u-tokyo.ac.jp/SAT2018/"
 const src   = "https://sakyaresearch.org/"
@@ -128,7 +129,7 @@ const loc   = "http://lccn.loc.gov/"
 
 
 export const prefixesMap = { adm, bda, bdac, bdan, bdo, bdou, bdr, bdu, bf, cbcp, cbct, dila, eftr, foaf, oa, mbbt, owl, rdf, rdfs, rkts, skos, wd, ola, viaf, xsd, tmp, 
-   cbeta, har, loc, ngmpp, sat, src, tol }
+   cbeta, har, idp, loc, ngmpp, sat, src, tol }
 export const prefixes = Object.values(prefixesMap) ;
 export const sameAsMap = { wd:"WikiData", ol:"Open Library", ola:"Open Library", bdr:"BDRC", mbbt:"Marcus Bingenheimer", eftr:"84000" }
 
@@ -2852,15 +2853,19 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          }
       }
 
+      let orec = allProps.filter(e => e.type === adm+"originalRecord")
+
       let hasProv, prov = allProps.filter(a => a.type === tmp+"provider")
       if(prov && prov.length && this.props.dictionary) prov = this.props.dictionary[prov[0].value]
       if(prov && prov[skos+"prefLabel"] && prov[skos+"prefLabel"]) prov = (""+prov[skos+"prefLabel"].filter(p=>!p.lang || p.lang === "en")[0].value).toLowerCase()
       else prov = false
+      
       //console.log("prov:",prov)
+
       if(prov) prov = prov.replace(/(^\[ *)|( *\]$)/g,"") // CUDL
       if(prov) prov = prov.replace(/internet archives/g,"ia") 
       if(prov) prov = prov.replace(/library of congress/g,"loc") 
-      if(prov && prov !== "bdrc" && img[prov]) hasProv = <img class={"provImg "+prov} title={I18n.t("copyright.provided",{provider:providers[prov]})} src={img[prov]}/>
+      if(prov && prov !== "bdrc" && img[prov]) hasProv = <img class={"provImg "+prov+ (orec.length?" oriRec":"")} title={I18n.t("copyright.provided",{provider:providers[prov]})} src={img[prov]}/>
 
 
     
@@ -2967,6 +2972,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          ])
 
 
+
          let retList = [ 
             <div id="num-box" class={(this.state.checked[prettId] === true?"checked":"")} style={{flexShrink:0}} onClick={(e) => this.setState({repage:true,checked:{...this.state.checked,[prettId]:!this.state.checked[prettId]}})}>{warnStatus}{I18n.t("punc.num",{num:n})}</div>,         
             <div id="icon" class={enType + (hasCopyR?" wCopyR":"")}>
@@ -2998,7 +3004,13 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          let dico
          if(!sameAsRes) sameAsRes = []        
 
-         if(rmatch.filter(e => e.type === owl+"sameAs")) sameAsRes.push({type:owl+"sameAs",value:id});
+         if(rmatch.filter(e => e.type === owl+"sameAs")) { 
+
+            if(orec.length) orec = orec[0].value
+            else orec = undefined
+
+            sameAsRes.push({type:owl+"sameAs",value:id, orec});
+         }
 
          if(!sameAsRes.length) sameAsRes = sameAsRes.concat(rmatch.filter(e => e.value === owl+"sameAs")).map(e => ({ "type":owl+"sameAs", "value":this.props.keyword}))
          else {
@@ -3011,12 +3023,13 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             
             rmatch = rmatch.concat(sameAsRes.filter(p => p.type === owl+"sameAs")) // || p.type.match(/sameAsMBBT$/)))
             sameAsRes = sameAsRes.filter(p => (p.type === owl+"sameAs" || p.type === rdfs+"seeAlso" || p.type === adm+"canonicalHtml")) // || p.type.match(/sameAsMBBT$/))
+            
             //loggergen.log("dico",dico)
          }
 
          if(sameAsRes.length) {
             
-            //loggergen.log("sameAs",prettId,id,dico,rmatch,sameAsRes)
+            //loggergen.log("sameAs:",prettId,id,dico,rmatch,sameAsRes)
          
             let menus = {}
             let sources = []
@@ -3050,10 +3063,13 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             for(let res of sameAsRes.filter(r => r.type === rdfs+"seeAlso" || r.type.match(/[#/]sameAs[^/]*$/))) {
                for(let src of Object.keys(providers)) {
                   if(src == "bdr") continue
-                  if(res.value.match(new RegExp("(^"+src+":)|(^"+prefixesMap[src]+")"))) { 
-                     if(!hasRes[src]) hasRes[src] = [ res.value ] //.replace(new RegExp(prefixesMap[src]),src+":")                  
-                     else hasRes[src].push(res.value)
-                  }  
+                  let val = res.value                  
+                  if(res.orec) val = res.orec
+
+                  if(val.match(new RegExp("(^"+src+":)|(^"+prefixesMap[src]+")"))) { 
+                     if(!hasRes[src]) hasRes[src] = [ val ] //.replace(new RegExp(prefixesMap[src]),src+":")                  
+                     else hasRes[src].push(val)
+                  } 
                }
             }
             
@@ -3064,7 +3080,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   else  hasRes[src].push(prettId)
             }
 
-            //loggergen.log("hasR",hasRes)
+            //loggergen.log("hasR:",hasRes)
 
             for(let src of Object.keys(providers)) {
                if(src == "bdr") continue
@@ -3183,7 +3199,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             {/* { this.getResultProp("bdo:note",allProps,true,false,[ tmp+"noteMatch" ]) } // see biblioNote below */}
 
 
-            { this.getResultProp("tmp:relationType",allProps,true,false,[ tmp+"relationType" ]) } 
+            {/* { this.getResultProp("tmp:relationType",allProps,true,false,[ tmp+"relationType" ]) }  */}
+            
             {/* { this.getResultProp(tmp+"InverseRelationType",allProps,true,true,[tmp+"relationTypeInv"]) } */}
             
             {/* { this.getResultProp(tmp+"numberOfMatchingChunks",allProps,true,false,[tmp+"nbChunks"]) } */}
@@ -3199,7 +3216,9 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             {/* { this.getResultProp(rdf+"type",allProps.filter(e => e.type === rdf+"type" && e.value === bdo+"EtextInstance")) }  */}
             
             {/* //![bdo+"AbstractWork",bdo+"Work",bdo+"Instance",bdo+"SerialMember",bdo+"Topic"].includes(e.value))) } */}
-            { this.getResultProp("tmp:originalRecord",allProps,false,true, [ tmp+"originalRecord", adm+"originalRecord"]) }
+            
+            {/* { this.getResultProp("tmp:originalRecord",allProps,false,true, [ tmp+"originalRecord", adm+"originalRecord"]) } */}
+
             {/* { this.getResultProp(bdo+"language",allProps) } */}
             {/* { this.getResultProp(bdo+"script",allProps) } */}
 
