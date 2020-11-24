@@ -2374,13 +2374,13 @@ html[lang="en"] .resource .data > [data-prop="bdo:creator"] h4[data-prop="bdo:ro
 .resource .data.related .react-tabs__tab,
 .resource .data.related .react-tabs__tab.react-tabs__tab--selected,
 .resource .data.related .react-tabs__tab:focus { box-shadow:none; border:none; border-radius:0;padding:15px 25px; text-align:center;
-   max-width:calc(50% - 50px - 85px); font-size:16px; overflow: hidden;  text-overflow: ellipsis;  white-space: nowrap;
+    font-size:16px; overflow: hidden;  text-overflow: ellipsis;  white-space: nowrap;
 }
 
-.resource .data.related .react-tabs__tab:last-child { width:120px;}
+.resource .data.related .react-tabs__tab:last-child { min-width:80px;}
 
 
-.resource .data.related .react-tabs__tab-list { border:none; font-weight:600; position:relative;} 
+.resource .data.related .react-tabs__tab-list { border:none; font-weight:600; position:relative;display:flex;} 
 
 .resource .data.related .header.thumb:before { content:none; }
 .resource .data.related .header.thumb { background-position:center; background-size:cover; border: 1px solid #ccc;}
