@@ -293,7 +293,9 @@ const boTranslation = {
       of:"",
       please:"",
       seeO:"See on",
-      ord:"{{num,ordinal}}"
+      ord:"{{num,ordinal}}",
+      all:"All",
+      allC:"All ({{count}})"
    },
    lang:{
       en:"ཨིན་སྐད།",

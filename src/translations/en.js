@@ -310,7 +310,9 @@ const enTranslation = {
       of:"of",
       please:"Please",
       seeO:"See on",
-      ord:"{{num,ordinal}} c."
+      ord:"{{num,ordinal}} c.",
+      all:"All",
+      allC:"All ({{count}})"
    },
    lang:{
       en:"English",

@@ -266,7 +266,9 @@ const zhTranslation = {
       of:"属",
       please:"请",
       seeO:"See on",
-      ord:"{{num,ordinal}}"
+      ord:"{{num,ordinal}}",
+      all:"All",
+      allC:"All ({{count}})"
    },
    lang:{
       en:"英语",
