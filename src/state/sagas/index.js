@@ -1868,6 +1868,8 @@ async function startSearch(keyword,language,datatype,sourcetype,dontGetDT) {
       store.dispatch(dataActions.foundResults(keyword, language, data, datatype));
 
       metadata = await api.getDatatypesOnly(keyword, language);
+      let sorted = Object.keys(metadata).map(m => ({m,k:Number(metadata[m])}))
+      metadata = _.orderBy(sorted,["k"],["desc"]).reduce( (acc,m) => ({...acc,[m.m]:metadata[m.m]}),{})
       store.dispatch(dataActions.foundDatatypes(keyword,language,{ metadata, hash:true}));
 
       let newMeta = {}
@@ -1993,9 +1995,16 @@ export function* watchGetAssocTypes() {
 
 
 async function getAssocTypes(rid) {
+
+   store.dispatch(uiActions.loading("assocTypes", true));
+
    //store.dispatch(dataActions.getDatatypes(rid,""))
    let metadata = await api.getDatatypesOnly(rid, "");
+   let sorted = Object.keys(metadata).map(m => ({m,k:Number(metadata[m])}))
+   metadata = _.orderBy(sorted,["k"],["desc"]).reduce( (acc,m) => ({...acc,[m.m]:metadata[m.m]}),{})
    store.dispatch(dataActions.foundDatatypes(rid,"",{ metadata, hash:true}));
+
+   store.dispatch(uiActions.loading("assocTypes", false));
 
 }
 

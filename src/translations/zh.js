@@ -268,7 +268,8 @@ const zhTranslation = {
       seeO:"See on",
       ord:"{{num,ordinal}}",
       all:"All",
-      allC:"All ({{count}})"
+      allC:"All ({{count}})",
+      allT:"{{type}} ({{count}})"
    },
    lang:{
       en:"英语",

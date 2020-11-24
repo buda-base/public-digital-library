@@ -6397,7 +6397,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
       // - use '...' to tell it's just an overview
       // - use prefLabel in tabs title 
 
-      let related = [], createdBy = [], allRelRes, wUrl = fullUri(this.props.IRI), serial
+      let related = [], createdBy = [], wUrl = fullUri(this.props.IRI), serial
       if(this.state.title.work && this.state.title.work[0].value) wUrl = this.state.title.work[0].value
 
       if(this.props.assocResources) {
@@ -6490,7 +6490,28 @@ perma_menu(pdfLink,monoVol,fairUse,other)
       }
 
       let hasRel = ((related && related.length > 0)||(createdBy && createdBy.length > 0))
-      
+      if((!hasRel || this.state.relatedTabAll) && !["Instance","Images","Etext"].includes(_T)) {
+         if(this.props.assocResources && this.props.config &&  (!this.props.assocTypes || !this.props.assocTypes[this.props.IRI+"@"])) this.props.onGetAssocTypes(this.props.IRI)
+      }  
+      let all    
+      if(this.props.assocTypes && this.props.assocTypes[this.props.IRI+"@"] && this.props.assocTypes[this.props.IRI+"@"].metadata) {
+         all = Object.values(this.props.assocTypes[this.props.IRI+"@"].metadata).reduce( (acc,c) => acc+Number(c), 0)
+      }
+
+      let allRel, t1 ;
+      if(this.props.assocTypes && this.props.assocTypes[this.props.IRI+"@"] && this.props.assocTypes[this.props.IRI+"@"].metadata) {
+         allRel = Object.keys(this.props.assocTypes[this.props.IRI+"@"].metadata).map(r => { 
+            let v = Number(this.props.assocTypes[this.props.IRI+"@"].metadata[r])
+            let t = r.replace(/^.*\/([^/]+)$/,"$1")
+            let url = "/search?r="+this.props.IRI+"&t="+t
+            if(!t1) t1 = url
+            return (<div>                                                                           
+               <Link to={url}><div class={"header "+t.toLowerCase()}></div></Link>
+               <div><span lang={this.props.locale}>{I18n.t("misc.allT",{count:v,type:I18n.t("types."+t.toLowerCase(),{count:v})})}</span></div>
+               <Link to={url}>{I18n.t("misc.show")}</Link>
+            </div>)
+         })
+      }
 
       let hasLongExtP = false; //[bf+"identifiedBy",bdo+"note"].filter(k => kZprop.includes(k) ).length > 0
 
@@ -6519,10 +6540,11 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          //if(sRid === this.props.IRI) url = ""
          let view = "/show/"+sRid+loca.search+"#open-viewer"
          let relW = url+"#resources"
+         /*
          if(tag === "Work" && !rel) {
             relW = '/search?r='+sRid
             let keys
-            if(this.props.config &&  (!this.props.assocTypes || !this.props.assocTypes[sRid+"@"])) this.props.onGetAssocTypes(sRid)
+            //if(this.props.config &&  (!this.props.assocTypes || !this.props.assocTypes[sRid+"@"])) this.props.onGetAssocTypes(sRid)
             else if(this.props.assocTypes && this.props.assocTypes[sRid+"@"] && this.props.assocTypes[sRid+"@"].metadata && (keys = Object.keys(this.props.assocTypes[sRid+"@"].metadata)).length) { 
                let max = 0, i = 0, m ;
                for(let k in keys) if((m = Number(this.props.assocTypes[sRid+"@"].metadata[keys[k]])) > max) {
@@ -6534,11 +6556,12 @@ perma_menu(pdfLink,monoVol,fairUse,other)
             }
             else relW += "&t=Instance"
          }
+         */
          return (<div>
             { tag === "Images" && <h3><Link to={!etextUT?view:etextUT+"#open-viewer"} class={(!openV?"disabled":"")}>{I18n.t("index.openViewer")}</Link></h3> }
             <h3><Link to={url+"#main-info"} >{I18n.t("index.mainInfo")}</Link></h3>
             { tag === "Instance" && <h3><Link to={url+"#outline"} class={(!outL||!this.state.outlinePart && root && root.length?"disabled":"")}>{I18n.t("index.outline")}</Link></h3> }
-            { tag === "Work" && <h3><Link to={relW} /*class={(!rel?"disabled":"")}*/>{I18n.t(!rel || _T ==="Place"||_T==="Corporation"?"index.relatedR":"index.related")}</Link></h3> }
+            { tag === "Work" && <h3><Link to={relW} /*class={(!rel?"disabled":"")}*/>{I18n.t(true || !rel || _T ==="Place"||_T==="Corporation"?"index.relatedR":"index.related")}</Link></h3> }
              <h3><Link class={(!ext?"disabled":"")} to={url+"#ext-info"} >{I18n.t("index.extended")}</Link></h3> 
          </div>)
       }
@@ -6811,27 +6834,32 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                   { theDataTop }
                   <div class="data" id="perma">{ this.perma_menu(pdfLink,monoVol,fairUse,kZprop.filter(k => k.startsWith(adm+"seeOther")))  }</div>
                   { theDataBot }
-                  { /*(hasRel && !["Instance","Images","Etext"].includes(_T)) && */
+                  { ( /*hasRel &&*/ this.props.assocResources && !["Instance","Images","Etext"].includes(_T)) &&
                      <div class="data related" id="resources">
                         <div>
-                           <div><h2>{I18n.t(_T=== "Place"||_T==="Corporation"?"index.relatedR":(_T==="Product"?"index.relatedM":(_T==="Work"&&serial?"index.relatedS":"index.related")))}</h2>{ (related && related.length > 4 || createdBy && createdBy.length > 4) && <Link to={"/search?t="+(_T==="Corporation"&&(this.state.relatedTab||!related.length)?"Person":(_T==="Place"&&this.state.relatedTab?"Instance":(_T==="Product"?"Scan":"Work")))+"&r="+this.props.IRI}>{I18n.t("misc.seeA")}</Link> }</div>
+                           <div><h2>{I18n.t(true || _T=== "Place"||_T==="Corporation"?"index.relatedR":(_T==="Product"?"index.relatedM":(_T==="Work"&&serial?"index.relatedS":"index.related")))}</h2>{ (related && related.length > 4 || createdBy && createdBy.length > 4) && <Link to={this.state.relatedTabAll&&t1?t1:("/search?t="+(_T==="Corporation"&&(this.state.relatedTab||!related.length)?"Person":(_T==="Place"&&this.state.relatedTab?"Instance":(_T==="Product"?"Scan":"Work")))+"&r="+this.props.IRI)}>{I18n.t("misc.seeA")}</Link> }</div>
                            { /*(related && related.length > 0 && (!createdBy  || !createdBy.length)) && <div class="rel-or-crea">{related}</div>*/}
                            { /*(createdBy && createdBy.length > 0 && (!related  || !related.length)) && <div class={"rel-or-crea"+(_T==="Corporation"?" person":"")}>{createdBy}</div> */}
                            { /*(related.length > 0 && createdBy.length > 0) && */ <div>
                               <Tabs>
                                  <TabList>
-                                    { (related.length > 0) && <Tab onClick={(ev)=>this.setState({relatedTab:false,irel:0,icrea:0})}>{I18n.t(_T=== "Place"?"resource.wAbout":"resource.about",{resLabel, count:related.length, interpolation: {escapeValue: false}})} </Tab> }
-                                    { (createdBy.length > 0) && <Tab onClick={(ev)=>this.setState({relatedTab:true,irel:0,icrea:0})}>{I18n.t(_T=== "Place"?"resource.printedA":(_T==="Corporation"?"resource.memberO":"resource.createdB"),{resLabel, count:createdBy.length, interpolation: {escapeValue: false}})}</Tab> }
-                                    <Tab /*onClick={(ev)=>this.setState({relatedTab:false,irel:0,icrea:0})}*/>{I18n.t("misc.all")} </Tab>
+                                    { (related.length > 0) && <Tab onClick={(ev)=>this.setState({relatedTab:false,relatedTabAll:false,irel:0,icrea:0})}>{I18n.t(_T=== "Place"?"resource.wAbout":"resource.about",{resLabel, count:related.length, interpolation: {escapeValue: false}})} </Tab> }
+                                    { (createdBy.length > 0) && <Tab onClick={(ev)=>this.setState({relatedTab:true,relatedTabAll:false,irel:0,icrea:0})}>{I18n.t(_T=== "Place"?"resource.printedA":(_T==="Corporation"?"resource.memberO":"resource.createdB"),{resLabel, count:createdBy.length, interpolation: {escapeValue: false}})}</Tab> }
+                                    <Tab onClick={(ev)=>this.setState({relatedTab:false,relatedTabAll:true,irel:0,icrea:0})}>{I18n.t(all=== undefined?"misc.all":"misc.allC",{count:all})} </Tab>
                                  </TabList>
                                  { (related.length > 0) &&  <TabPanel><div class={"rel-or-crea"}>{related}</div></TabPanel> }
                                  { (createdBy.length > 0) && <TabPanel><div class={"rel-or-crea"+(_T==="Corporation"?" person":"")}>{createdBy}</div></TabPanel> }
-                                 <TabPanel><div class={"rel-or-crea all"}>{}</div></TabPanel>
+                                 <TabPanel>
+                                    <div class={"rel-or-crea all"}>
+                                    { this.props.loading && <Loader loaded={false} /> }
+                                    { !this.props.loading && allRel }
+                                    </div>
+                                 </TabPanel>
                               </Tabs>
                            </div> }
                         </div>
                         { 
-                           (!this.state.relatedTab && related.length > 4 || this.state.relatedTab && createdBy.length > 4 || !related.length && createdBy.length > 4) &&
+                           (!this.state.relatedTab && !this.state.relatedTabAll && related.length > 4 || this.state.relatedTab && createdBy.length > 4 || !related.length && createdBy.length > 4) &&
                            <div id="related-nav" >
                               <span class={!this.state.relatedTab&&related.length?(this.state.irel>0?"on":""):(this.state.icrea>0?"on":"")} onClick={(ev) => scrollRel(ev)}><img src="/icons/g.svg"/></span>
                               <span class={navNext?"on":""} onClick={(ev) => scrollRel(ev,true)}><img src="/icons/d.svg"/></span>

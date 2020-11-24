@@ -1092,6 +1092,8 @@ h4:not(:hover) > .lang
    scroll-margin: 100px;
 }
 
+#resources:last-child { padding-bottom:35px; }
+
 /* ------------------------------------------------------------------------------------------------------------------------ static pages */
 
 .static-container > #samples { padding-top:65px;}
@@ -1415,26 +1417,38 @@ vertical-align:middle;}
 .resource .data .header .src img[src^="/BL."] { padding:0;margin:0;width:100%;}
    /* background-size:90% auto;background-position:center;background-repeat:no-repeat; } */
 
+.resource .data.related .rel-or-crea.all .header.work::before,
 .resource .data.related .header::before,
 .resource.work .data .header::before { background-image:url("/icons/work.png");  }
+.resource .data.related .rel-or-crea.all .header.instance::before,
 .resource.instance .data .header::before { background-image:url("/icons/header/instance.svg"); background-size:64px auto; }
 .resource.volume .data .header::before,
 .resource.images .data .header::before { background-image:url("/icons/image.svg"); background-size:58px auto;  }
+.resource .data.related .rel-or-crea.all .header.person::before,
 .resource .data.related .rel-or-crea.person .header::before,
 .resource.person .data > .header::before { background-image:url("/icons/person.png");  }
+.resource .data.related .rel-or-crea.all .header.topic::before,
 .resource.topic .data > .header::before { background-image:url("/icons/topic.png");  }
 .resource.etext .data > .header::before { background-image:url("/icons/etext.png");  }
 .resource.etext .data > a > .header::before { background-image:url("/icons/etext.png");  }
+.resource .data.related .rel-or-crea.all .header.lineage::before,
 .resource.lineage .data > .header::before { background-image:url("/icons/lineage.png");  }
+.resource .data.related .rel-or-crea.all .header.place::before,
 .resource.place .data > .header::before { background-image:url("/icons/search/place.svg");  }
+.resource .data.related .rel-or-crea.all .header.corporation::before,
 .resource.corporation .data > .header::before { background-image:url("/icons/search/corporation.svg");  }
+.resource .data.related .rel-or-crea.all .header.role::before,
 .resource.role .data > .header::before { background-image:url("/icons/search/role.svg"); background-size:58px auto;  }
+.resource .data.related .rel-or-crea.all .header.product::before,
 .resource.product .data > .header::before { background-image:url("/icons/search/product.svg"); background-size:58px auto;  }
 
 .resource .data .header.loading::before { background-image:none !important; }
 
 .resource .data .header .access-icon { position: absolute; width: 20px; margin-left: 45px; margin-top: 55px; opacity: 0.8; }
 .resource.etext .data .header .access-icon { margin-left: 65px; margin-top: 60px;  }
+
+.resource .data.related .rel-or-crea.all { position:relative; min-height:250px;}
+.resource .data.related .rel-or-crea.all .loader { width:calc(100% - 20px); position:relative; margin-top:50px; margin-bottom:110px;}
 
 /*
 .resource .data [data-prop^="adm:seeOther"]:not(#a):not(.a):not(#b),
@@ -2355,11 +2369,16 @@ html[lang="en"] .resource .data > [data-prop="bdo:creator"] h4[data-prop="bdo:ro
 
 .resource .data.related .react-tabs .rel-or-crea { background: rgba(255,255,255,0.65); padding:20px;}
 .resource .data.related .react-tabs .rel-or-crea > div { margin-right: 22px !important; }
-.resource .data.related .react-tabs__tab-list { margin-bottom:0; }
+.resource .data.related .react-tabs__tab-list { margin-bottom:0; font-size:0;}
 
 .resource .data.related .react-tabs__tab,
 .resource .data.related .react-tabs__tab.react-tabs__tab--selected,
-.resource .data.related .react-tabs__tab:focus { box-shadow:none; border:none; border-radius:0;padding:15px 25px; max-width:calc(50% - 50px); text-align:center;}
+.resource .data.related .react-tabs__tab:focus { box-shadow:none; border:none; border-radius:0;padding:15px 25px; text-align:center;
+   max-width:calc(50% - 50px - 85px); font-size:16px; overflow-x: hidden;  text-overflow: ellipsis;  white-space: nowrap;
+}
+
+.resource .data.related .react-tabs__tab:last-child { width:120px;}
+
 
 .resource .data.related .react-tabs__tab-list { border:none; font-weight:600; position:relative;} 
 

@@ -312,7 +312,8 @@ const enTranslation = {
       seeO:"See on",
       ord:"{{num,ordinal}} c.",
       all:"All",
-      allC:"All ({{count}})"
+      allC:"All ({{count}})",
+      allT:"{{type}} ({{count}})"
    },
    lang:{
       en:"English",
