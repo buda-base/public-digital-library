@@ -313,7 +313,9 @@ const enTranslation = {
       ord:"{{num,ordinal}} c.",
       all:"All",
       allC:"All ({{count}})",
-      allT:"{{type}} ({{count}})"
+      allT:"{{type}} ({{count}})",
+      seeR:"See result",
+      seeR_plural:"See results"
    },
    lang:{
       en:"English",
@@ -468,7 +470,8 @@ const enTranslation = {
       memberO:"Member of {{resLabel.value}}",
       memberO_plural:"Members of {{resLabel.value}}",
       unpag:"The pages of this etext may correspond to page in the original edition, but we cannot provide the exact mapping.",
-      pageN:"p. {{num}}"
+      pageN:"p. {{num}}",
+      noAssoc:"No associated resources found"
    },
    mirador:{
       return:"return to BUDA",

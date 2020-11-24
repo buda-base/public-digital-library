@@ -6508,9 +6508,9 @@ perma_menu(pdfLink,monoVol,fairUse,other)
             return (<div>                                                                           
                <Link to={url}><div class={"header "+t.toLowerCase()}></div></Link>
                <div><span lang={this.props.locale}>{I18n.t("misc.allT",{count:v,type:I18n.t("types."+t.toLowerCase(),{count:v})})}</span></div>
-               <Link to={url}>{I18n.t("misc.show")}</Link>
+               <Link to={url}>{I18n.t("misc.seeR",{count:v})}</Link>
             </div>)
-         })
+         })         
       }
 
       let hasLongExtP = false; //[bf+"identifiedBy",bdo+"note"].filter(k => kZprop.includes(k) ).length > 0
@@ -6850,9 +6850,10 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                                  { (related.length > 0) &&  <TabPanel><div class={"rel-or-crea"}>{related}</div></TabPanel> }
                                  { (createdBy.length > 0) && <TabPanel><div class={"rel-or-crea"+(_T==="Corporation"?" person":"")}>{createdBy}</div></TabPanel> }
                                  <TabPanel>
-                                    <div class={"rel-or-crea all"}>
+                                    <div class={"rel-or-crea all"+(allRel && !allRel.length?" noAssoc":"")}>
                                     { this.props.loading && <Loader loaded={false} /> }
                                     { !this.props.loading && allRel }
+                                    { !this.props.loading && allRel !== undefined && !allRel.length && <p>{I18n.t("resource.noAssoc")}</p>}
                                     </div>
                                  </TabPanel>
                               </Tabs>

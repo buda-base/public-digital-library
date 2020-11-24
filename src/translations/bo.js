@@ -296,7 +296,9 @@ const boTranslation = {
       ord:"{{num,ordinal}}",
       all:"All",
       allC:"All ({{count}})",
-      allT:"{{type}} ({{count}})"
+      allT:"{{type}} ({{count}})",
+      seeR:"See result",
+      seeR_plural:"See results"
    },
    lang:{
       en:"ཨིན་སྐད།",
@@ -444,7 +446,8 @@ const boTranslation = {
       openO:"Open on {{src}}",
       browsE:"Browse",
       unpag:"The pages of this etext may correspond to page in the original edition, but we cannot provide the exact mapping.",
-      pageN:"p. {{num,counttobo}}"
+      pageN:"p. {{num,counttobo}}",
+      noAssoc:"No associated resources found"
    },
    mirador:{
       return:"བུདྡྷ་ལ་ཕྱིར་ལོག",

@@ -1450,6 +1450,8 @@ vertical-align:middle;}
 .resource .data.related .rel-or-crea.all { position:relative; min-height:250px;}
 .resource .data.related .rel-or-crea.all .loader { width:calc(100% - 20px); position:relative; margin-top:50px; margin-bottom:110px;}
 
+.resource .data.related .rel-or-crea.all.noAssoc { display:flex; align-items: center; justify-content: center;}
+
 /*
 .resource .data [data-prop^="adm:seeOther"]:not(#a):not(.a):not(#b),
 .resource .data [data-prop^="adm:original"]:not(#a):not(.a):not(#b),
