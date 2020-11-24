@@ -2363,9 +2363,17 @@ html[lang="en"] .resource .data > [data-prop="bdo:creator"] h4[data-prop="bdo:ro
 /* .resource .data.related > div div.rel-or-crea > :nth-child(n+5) { display:none; } */
 /* .resource .data.related > div div.rel-or-crea > :nth-child(4n+4) { margin-right:0; } */
 .resource .data.related > div div.rel-or-crea > :last-child { padding-right:22px; } 
+/*
 .resource .data.related > div div.rel-or-crea > div a { color:#343434; font-weight:700; font-size:13px; border-color:#343434;}
 .resource .data.related > div div.rel-or-crea > div > div { color:#343434; font-weight:500; font-size:15px; margin:30px 0 20px 0; 
    position:relative; }
+*/
+.resource .data.related > div div.rel-or-crea > div a span  { color:#343434; font-weight:500; font-size:15px; margin:30px 0 20px 0; 
+   position:relative; display:inline-block;
+}
+.resource .data.related > div div.rel-or-crea > div a:hover { border:none; }
+/* .resource .data.related > div div.rel-or-crea > div a:hover span { text-decoration: underline;} */
+
 .resource .data.related > div div.rel-or-crea > div > div .lang { display:none; position:absolute !important; top:calc(100% - 7px); }
 /* .resource .data.related > div > div:last-child > div > div:hover .lang { display:inline-block; } */
 

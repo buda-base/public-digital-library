@@ -6470,8 +6470,8 @@ perma_menu(pdfLink,monoVol,fairUse,other)
             return ( 
                <div ref={this._refs["rel-"+i]}>
                   <Link to={"/show/"+s}><div class="header"></div></Link>
-                  <div><span {...label.lang?{lang:label.lang}:{}}>{ label.value }</span>{ label.lang && this.tooltip(label.lang) }</div>
-                  <Link to={"/show/"+s}>{I18n.t("misc.readM")}</Link>
+                  <div><Link to={"/show/"+s}><span {...label.lang?{lang:label.lang}:{}}>{ label.value }</span></Link>{ label.lang && this.tooltip(label.lang) }</div>
+                  {/* <Link to={"/show/"+s}>{I18n.t("misc.readM")}</Link> */}
                </div>
             )
          })
@@ -6481,8 +6481,8 @@ perma_menu(pdfLink,monoVol,fairUse,other)
             return ( 
                <div ref={this._refs["crea-"+i]}>
                   <Link to={"/show/"+s}><div class={"header "+(thumb?"thumb":"")} style={{backgroundImage:"url("+thumb+"/full/,185/0/default.jpg)"}}></div></Link>
-                  <div><span {...label.lang?{lang:label.lang}:{}}>{ label.value }</span>{ label.lang && this.tooltip(label.lang) }</div>
-                  <Link to={"/show/"+s}>{I18n.t("misc.readM")}</Link>
+                  <div><Link to={"/show/"+s}><span {...label.lang?{lang:label.lang}:{}}>{ label.value }</span></Link>{ label.lang && this.tooltip(label.lang) }</div>
+                  {/* <Link to={"/show/"+s}>{I18n.t("misc.readM")}</Link> */}
                </div>
             )
          })
@@ -6507,8 +6507,8 @@ perma_menu(pdfLink,monoVol,fairUse,other)
             if(!t1) t1 = url
             return (<div>                                                                           
                <Link to={url}><div class={"header "+t.toLowerCase()}></div></Link>
-               <div><span lang={this.props.locale}>{I18n.t("misc.allT",{count:v,type:I18n.t("types."+t.toLowerCase(),{count:v})})}</span></div>
-               <Link to={url}>{I18n.t("misc.seeR",{count:v})}</Link>
+               <div><Link to={url}><span lang={this.props.locale}>{I18n.t("misc.allT",{count:v,type:I18n.t("types."+t.toLowerCase(),{count:v})})}</span></Link></div>
+               {/* <Link to={url}>{I18n.t("misc.seeR",{count:v})}</Link> */}
             </div>)
          })         
       }
