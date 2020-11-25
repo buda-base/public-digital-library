@@ -118,6 +118,7 @@ const wd    = "http://www.wikidata.org/entity/"
 const xsd   = "http://www.w3.org/2001/XMLSchema#" ;
 
 // experimental
+const bn    = "https://buddhanexus.net/tib/";
 const cbeta = "http://cbetaonline.dila.edu.tw/"
 const har   = "http://www.himalayanart.org/search/"
 const idp   = "http://idp.bl.uk:80/"
@@ -129,7 +130,7 @@ const loc   = "http://lccn.loc.gov/"
 
 
 export const prefixesMap = { adm, bda, bdac, bdan, bdo, bdou, bdr, bdu, bf, cbcp, cbct, dila, eftr, foaf, oa, mbbt, owl, rdf, rdfs, rkts, skos, wd, ola, viaf, xsd, tmp, 
-   cbeta, har, idp, loc, ngmpp, sat, src, tol }
+   bn, cbeta, har, idp, loc, ngmpp, sat, src, tol }
 export const prefixes = Object.values(prefixesMap) ;
 export const sameAsMap = { wd:"WikiData", ol:"Open Library", ola:"Open Library", bdr:"BDRC", mbbt:"Marcus Bingenheimer", eftr:"84000" }
 

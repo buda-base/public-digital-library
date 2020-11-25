@@ -222,6 +222,7 @@ const cbeta = "http://cbetaonline.dila.edu.tw/"
 
 export const providers = { 
    "bdr":"BDRC", //"Buddhist Digital Resource Center",
+   "bn":"Buddhanexus",
    "bnf":"BNF (French National Library)",
    "cbcp":"CBC@",
    "cbct":"CBC@",
@@ -249,6 +250,7 @@ export const providers = {
 
 export const provImg = {
    "bdr":  "/logo.svg", 
+   "bn":  "/BUDDHANEXUS.png",
    "bnf":  "/BNF.svg",
    //"cbct": false,
    //"cbcp": false,
