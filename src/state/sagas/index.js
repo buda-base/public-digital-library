@@ -957,13 +957,18 @@ async function getManifest(url,iri) {
             if(!collecManif && manif.manifests.length === 1) isSingle = true ;
             else manifests = manif.manifests
             if(!collecManif) collecManif = manif.manifests[0]["@id"]
-            manif = await api.loadManifest(manif.manifests[0]["@id"]);
             if(!isSingle) collecManif = null  //manif.manifests[0]["@id"]
+
+            try {
+               manif = await api.loadManifest(manif.manifests[0]["@id"]);
+            } catch(e) {
+               // case of missing 1st volume (#370)
+            }
          }
          else throw new Error("collection without manifest list")
       }      
 
-      if(manif.sequences && manif.sequences[0] && manif.sequences[0].canvases) {
+      if(manif && manif.sequences && manif.sequences[0] && manif.sequences[0].canvases) {
          if(manif.sequences[0].canvases[0] && manif.sequences[0].canvases[0].images[0] &&
             manif.sequences[0].canvases[0].images[0].resource["@id"])
          {
