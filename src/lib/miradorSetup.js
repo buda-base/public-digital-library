@@ -804,12 +804,12 @@ function miradorAddZoomer() {
 
             if(window.currentZoom) { 
                jQ(".scroll-listing-thumbs .etext-content:not(:empty)").each(function(i,e){
-               var etc = jQ(e);
-               var h0 = etc.attr('data-h0');
-               var p = etc.find("div:not(.pad)");
-               var h = p.attr('data-h');
-               p.css({"transform":"scale("+1/window.currentZoom+")"});
-               etc.find(".pad").height(30 / window.currentZoom + 0.5 * (h / window.currentZoom - h0));
+                  var etc = jQ(e);
+                  var h0 = etc.attr('data-h0');
+                  var p = etc.find("div:not(.pad)");
+                  var h = p.attr('data-h');
+                  p.css({"transform":"scale("+1/window.currentZoom+")"});
+                  etc.find(".pad").height(30 / window.currentZoom + 0.5 * (h / window.currentZoom - h0));
                });
             }
 
@@ -820,8 +820,17 @@ function miradorAddZoomer() {
             */
             
             let nuH = scrollT[0].getBoundingClientRect().height;
-            let sT = scrollV.scrollTop() + (nuH - oldH)*(scrollV.scrollTop()/oldH)
-            scrollV.scrollTop(sT)            
+            let fixed = 0
+            scrollT.find(".etext-content.loaded").map( (i,e) => {
+               let rect = e.getBoundingClientRect()
+               if(rect.top < 0) { 
+                  //console.log("e:",e,JSON.stringify(rect))
+                  fixed += rect.height
+               }
+            })
+            let sT = scrollV.scrollTop() + (nuH - oldH)*((scrollV.scrollTop() - fixed)/(oldH - fixed))
+            //console.log("sT:",sT,fixed)
+            scrollV.scrollTop(sT) 
             scrollV.scrollLeft((nuW - scrollV.innerWidth() ) / 2)
          }
 
