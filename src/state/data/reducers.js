@@ -286,9 +286,27 @@ export const gotResource = (state: DataState, action: Action) => {
 
                         if(v_nm && w_nm && v_nm[rdf+"type"] && w_nm[rdf+"type"] && v_nm[rdf+"type"].length && w_nm[rdf+"type"].length && v_nm[rdf+"type"][0].value === w_nm[rdf+"type"][0].value) {
 
-                           // TODO merge labels (same name/title type? same language?)
+                           // DONE merge labels (same name/title type + label)
 
-                           console.log("nodes:",v_nm,w_nm)
+
+                           //console.log("nodes:",v_nm,w_nm)
+                           
+                           if(v_nm && v_nm[rdfs+"label"] && v_nm[rdfs+"label"].length) for(let r of v_nm[rdfs+"label"]) {
+                              if(w_nm && w_nm[rdfs+"label"] && w_nm[rdfs+"label"].length) for(let q of w_nm[rdfs+"label"]) {
+                                 
+                                 //console.log("r/q:",r,q)
+
+                                 if( q.value === r.value || q.value === r.value + "/" || q.value + "/" === r.value ) {
+                                    found = true
+
+                                    if(!q.allSameAs) q.allSameAs = [ uri ]
+                                    if(q.allSameAs.indexOf(k) === -1) q.allSameAs.push(k)
+                                    q.fromSameAs = k
+                                 }
+                              }
+                           }
+
+                           if(found) break ;
 
                         }
                      }
@@ -340,7 +358,7 @@ export const gotResource = (state: DataState, action: Action) => {
 
                      //console.log("new v",JSON.stringify(v,null,3))
                   } 
-                  else {
+                  else if(found !== true) {
                      if(!found.allSameAs) { found.allSameAs = [ uri ] ; }
                      if(!found.fromSameAs) found.fromSameAs = k
 
