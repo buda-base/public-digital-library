@@ -1550,12 +1550,6 @@ vertical-align:middle;}
 
 .resource .data#perma { background-color:#ffffff; padding:0 35px 50px 35px;}
 
-#perma #same .provider.loc img { height:16px;}
-
-#perma #same .provider.tol { background:white;border-radius:50%;}
-#perma #same .provider.tol img { width:28px;height:28px;}
-/* #perma #same .provider.tol:first-child:last-child img { width:42px;height:42px;} */
-
 /* #top-left { position:absolute; top:calc(100% + 40px);right:40px; } */
 #perma > div { position:relative; background:#efefef; display:flex;align-items: center; justify-content:flex-start; margin-bottom:0px;
    padding:20px 35px; }
@@ -1708,16 +1702,34 @@ body > [id^="menu-"] > div:last-child,
 
 #perma #DL + #same { margin-left:auto; }
 
-#perma #copyright { margin-left:auto; border-right:1px solid rgba(0,0,0,0.35);padding:2px 16px;  }
+#perma #copyright { margin-left:auto; /*border-right:1px solid rgba(0,0,0,0.35);padding:2px 16px; */ }
 #perma #copyright img { height:20px; vertical-align: middle;}
 #perma #copyright img[src$="/.png"] { visibility:hidden;}
 
-#perma #same { display:flex; align-items: center; padding-left:16px; cursor:pointer;}
+#perma #same { display:flex; align-items: center; padding-left:16px; cursor:pointer; padding:0 10px; border-radius: 5px;background:white;
+   border:1px solid  rgba(0,0,0,0.35);
+}
+
+#perma #same > span:first-child { font-weight:600;font-size:13px;padding-right:5px;}
+
 #perma #same .provider { display:inline-block; vertical-align: middle; line-height:0; pointer-events:none; }
+#perma #same .provider { margin-left:0; height:40px; background:white;display:inline-flex;align-items: center;justify-content: center; padding:0 5px;}
+
 #perma #same .provider img { height:22px; display:inline-block;} 
 #perma #same .provider .img { height:22px; display:inline-flex;align-items: center; padding:5px 5px;background-color:rgba(255,255,255,0.75); border-radius:4px;
    border:2px solid #4d4d4d; font-size:12px; font-weight:700; color:#4a4a4a;
-} 
+}
+
+#perma #same.PE0 { display:none; }
+
+#perma #same .provider.loc img { height:16px;}
+
+/* #perma #same .provider.tol { background:white;border-radius:50%;} */
+#perma #same .provider.tol img { width:28px;height:28px;}
+
+
+/* #perma #same .provider.tol:first-child:last-child img { width:42px;height:42px;} */
+
 
 .result-box #cbct .sameAsLogo,
 #perma #same .provider.cbct .img { border-color:rgba(0,0,238,1); }
@@ -1726,7 +1738,7 @@ body > [id^="menu-"] > div:last-child,
 .result-box #src .sameAsLogo,
 #perma #same .provider.src .img { border-color:#be1e23; }
 
-#perma #same .provider:not(:first-child) { margin-left:10px;}
+/* #perma #same .provider:not(:first-child) { margin-left:10px;} */
 #perma #same .provider.bdr { margin-bottom:2px; }
 #perma #same .provider.bdr:not(:first-child) { margin-left:8px;}
 #perma #same .provider.bdr img { height:28px;}

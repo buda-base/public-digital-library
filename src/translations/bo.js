@@ -298,7 +298,9 @@ const boTranslation = {
       allC:"All ({{count}})",
       allT:"{{type}} ({{count}})",
       seeR:"See result",
-      seeR_plural:"See results"
+      seeR_plural:"See results",
+      link:"Link:",
+      link_plural:"Links:"
    },
    lang:{
       en:"ཨིན་སྐད།",

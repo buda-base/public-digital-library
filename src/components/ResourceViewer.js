@@ -2583,7 +2583,7 @@ class ResourceViewer extends Component<Props,State>
             
             //console.log("i/n",i,n)
             
-            if(!p.length && (elem.hasClass("propCollapse") || x.length || h.length) && (i < Math.floor(n/2) || (n%2 == 1 && i == Math.floor(n/2)) || i === 0 && n === 1)) popperFix = true
+            if(/*!p.length &&*/ (elem.hasClass("propCollapse") || x.length || h.length) && (i < Math.floor(n/2) || (n%2 == 1 && i == Math.floor(n/2)) || i === 0 && n === 1)) popperFix = true
          }
          let target = $(ev.currentTarget).closest("h4")
          if(target.length) target = target.find(".hover-menu")[0]  
@@ -4400,48 +4400,54 @@ class ResourceViewer extends Component<Props,State>
 
       let list = []
 
-      if(same && same.length) return ([
+      if(same && same.length) { 
+         
+         let mapSame = same.map(s => {
+            loggergen.log("s.val:",s.value)
+            let prefix = shortUri(s.value).split(":")[0]
+            if(prefix.startsWith("http") && s.fromSeeOther) prefix = s.fromSeeOther
+            // TODO fix Sakya Research Center
+            if(!list.includes(prefix)) {
+               list.push(prefix)
+               return <span class={"provider "+prefix}>{provImg[prefix]?<img src={provImg[prefix]}/>:<span class="img">{prefix.replace(/^cbc.$/,"cbc@").toUpperCase()}</span>}</span>
+            }
+         })
+
+         return ([
     
-         <span id="same" title={I18n.t("resource.sameL",{count:same.length})} class={noS?"PE0":""} onClick={(e) => this.setState({...this.state,anchorPermaSame:e.currentTarget, collapse: {...this.state.collapse, ["permaSame-"+id]:!this.state.collapse["permaSame-"+id] } } ) }>
-            {same.map(s => {
-               loggergen.log("s.val:",s.value)
-               let prefix = shortUri(s.value).split(":")[0]
-               if(prefix.startsWith("http") && s.fromSeeOther) prefix = s.fromSeeOther
-               // TODO fix Sakya Research Center
-               if(!list.includes(prefix)) {
-                  list.push(prefix)
-                  return <span class={"provider "+prefix}>{provImg[prefix]?<img src={provImg[prefix]}/>:<span class="img">{prefix.replace(/^cbc.$/,"cbc@").toUpperCase()}</span>}</span>
-               }
-            })}
-         </span>,
+            <span id="same" title={I18n.t("resource.sameL",{count:same.length})} class={noS?"PE0":""} onClick={(e) => this.setState({...this.state,anchorPermaSame:e.currentTarget, collapse: {...this.state.collapse, ["permaSame-"+id]:!this.state.collapse["permaSame-"+id] } } ) }>
+               { id === "permalink" && <span>{I18n.t("misc.link",{count:mapSame.length})}</span> }
+               { mapSame}
+            </span>,
 
-         <Popover
-            id="popSame"
-            open={this.state.collapse["permaSame-"+id]?true:false}
-            transformOrigin={{vertical:'bottom',horizontal:'right'}}
-            anchorOrigin={{vertical:'top',horizontal:'right'}}
-            anchorEl={this.state.anchorPermaSame}
-            onClose={e => { this.setState({...this.state,anchorPermaSame:null,collapse: {...this.state.collapse, ["permaSame-"+id]:false } } ) }}
-            >
-            { same.map(s => { 
-                  let link = s.value, prov = shortUri(s.value).split(":")[0], name = I18n.t("result.resource")
-                  if(prov.startsWith("http") && s.fromSeeOther) prov = s.fromSeeOther
-                  let data,tab ;
-                  if(this.props.assocResources) data = this.props.assocResources[s.value]                  
-                  if(data && (tab=data.filter(t => t.fromKey === adm+"canonicalHtml")).length) link = tab[0].value  
-                  
-                  let open = <MenuItem>{I18n.t("result.open")} {name} {I18n.t("misc.in")} &nbsp;<b>{providers[prov]}</b><img src="/icons/link-out.svg"/></MenuItem>
-                  if(s.isOrig) open = <MenuItem style={{display:"block",height:"32px",lineHeight:"12px"}}>{I18n.t("popover.imported")} <b>{providers[prov]}</b><br/>{I18n.t("popover.seeO")}<img style={{verticalAlign:"middle"}} src="/icons/link-out.svg"/></MenuItem>
+            <Popover
+               id="popSame"
+               open={this.state.collapse["permaSame-"+id]?true:false}
+               transformOrigin={{vertical:'bottom',horizontal:'right'}}
+               anchorOrigin={{vertical:'top',horizontal:'right'}}
+               anchorEl={this.state.anchorPermaSame}
+               onClose={e => { this.setState({...this.state,anchorPermaSame:null,collapse: {...this.state.collapse, ["permaSame-"+id]:false } } ) }}
+               >
+               { same.map(s => { 
+                     let link = s.value, prov = shortUri(s.value).split(":")[0], name = I18n.t("result.resource")
+                     if(prov.startsWith("http") && s.fromSeeOther) prov = s.fromSeeOther
+                     let data,tab ;
+                     if(this.props.assocResources) data = this.props.assocResources[s.value]                  
+                     if(data && (tab=data.filter(t => t.fromKey === adm+"canonicalHtml")).length) link = tab[0].value  
+                     
+                     let open = <MenuItem>{I18n.t("result.open")} {name} {I18n.t("misc.in")} &nbsp;<b>{providers[prov]}</b><img src="/icons/link-out.svg"/></MenuItem>
+                     if(s.isOrig) open = <MenuItem style={{display:"block",height:"32px",lineHeight:"12px"}}>{I18n.t("popover.imported")} <b>{providers[prov]}</b><br/>{I18n.t("popover.seeO")}<img style={{verticalAlign:"middle"}} src="/icons/link-out.svg"/></MenuItem>
 
-                  //loggergen.log("permaSame",s,data,tab,link,name,prov) 
+                     //loggergen.log("permaSame",s,data,tab,link,name,prov) 
 
-                  if(this.props.config && this.props.config.chineseMirror) link = link.replace(new RegExp(cbeta), "http://cbetaonline.cn/")
+                     if(this.props.config && this.props.config.chineseMirror) link = link.replace(new RegExp(cbeta), "http://cbetaonline.cn/")
 
-                  // TODO case when more than on resource from a given provider (cf RKTS)
-                  if(prov != "bdr") return (<a target="_blank" href={link.replace(/^https?:/,"")}>{open}</a>) 
-            } ) }
-         </Popover>
-      ])
+                     // TODO case when more than on resource from a given provider (cf RKTS)
+                     if(prov != "bdr") return (<a target="_blank" href={link.replace(/^https?:/,"")}>{open}</a>) 
+               } ) }
+            </Popover>
+         ])
+      }
    }
 
 perma_menu(pdfLink,monoVol,fairUse,other)

@@ -284,7 +284,7 @@ export const gotResource = (state: DataState, action: Action) => {
                      else if(p.endsWith("Name") && (v.type === "bnode" || w.type === "bnode" || v.type === "uri" || w.type === "uri")){
                         let v_nm = data[v.value], w_nm = data[w.value]
 
-                        if(v_nm[rdf+"type"] && w_nm[rdf+"type"] && v_nm[rdf+"type"].length && w_nm[rdf+"type"].length && v_nm[rdf+"type"][0].value === w_nm[rdf+"type"][0].value) {
+                        if(v_nm && w_nm && v_nm[rdf+"type"] && w_nm[rdf+"type"] && v_nm[rdf+"type"].length && w_nm[rdf+"type"].length && v_nm[rdf+"type"][0].value === w_nm[rdf+"type"][0].value) {
 
                            // TODO merge labels (same name/title type? same language?)
 
