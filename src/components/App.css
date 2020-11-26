@@ -1091,6 +1091,7 @@ h4:not(:hover) > .lang
 #main-info, #resources, #ext-info {
    scroll-margin: 100px;
 }
+#ext-info > div::after { content:none !important;}
 
 #resources:last-child { padding-bottom:35px; }
 
@@ -1776,14 +1777,19 @@ body > [id^="menu-"] > div:last-child,
 .resource .data:not(.legal-props) h4.sameAs .ulink.sameAs { margin-left:0 !important; }
 
 .resource .data [data-prop="bdo:note"] .noteCollapse.in-true { overflow: visible;}
-/* .resource .data.ext-props [data-prop="bdo:note"] { display:flex !important; align-items: flex-start !important;} */
+
+.resource .data.ext-props [data-prop="bdo:note"] { display:flex !important; align-items: flex-start !important;}
+
 .resource .data h4:hover .svg { background-color: #ededed; }
+
+/*
 .resource .data.ext-props .has-collapse.custom[data-prop="bdo:note"] .expand { 
    position:absolute;right:35px;top:8px; width: calc(100% - 260px);
 }
 .resource .data.ext-props .has-collapse.custom[data-prop="bdo:note"] .propCollapse .expand { 
    display:none
 }
+*/
 
 
 /* full width when hovering... */
@@ -1914,8 +1920,9 @@ h4:not(.first)
 */
 
 .resource .data > :not([data-prop="bdo:volumeHasEtext"]) .propCollapseHeader h4:not(.first)::before,
-.resource .data > :not([data-prop="bf:identifiedBy"]):not([data-prop="bdo:volumeHasEtext"]) .propCollapse h4:not(.first)::before,
-.resource .data.ext-props > :not([data-prop="bf:identifiedBy"]) .propCollapse > div > div > h4:not(.first)::before { padding:8px 10px !important; top:-8px !important; }
+.resource .data > :not([data-prop="bf:identifiedBy"]):not([data-prop="bdo:volumeHasEtext"]) .propCollapse h4:not(.first)::before
+/* .resource .data.ext-props > :not([data-prop="bf:identifiedBy"]) .propCollapse > div > div > h4:not(.first)::before  */
+{ padding:8px 10px !important; top:-8px !important; }
 
 /*
 .resource .data.ext-props > :not([data-prop="bf:identifiedBy"]) .propCollapse { padding-left:0; }
@@ -1928,12 +1935,12 @@ h4:not(.first)
 .resource .data.ext-props > :not([data-prop="bf:identifiedBy"]) .propCollapse > div > div > h4:not(.first) .hover-menu { top:-4px; right:-6px; }
 
 .resource .data.ext-props > [data-prop="bf:identifiedBy"] h4:not(.first)::before { padding-right:5px !important; }
-.resource .data.ext-props > [data-prop="bf:identifiedBy"] .propCollapse { padding-right:0;width:calc(100% + 5px); }
+.resource .data.ext-props > [data-prop="bf:identifiedBy"] .propCollapse { padding-right:0; /*width:calc(100% + 5px);*/ }
 .resource .data.ext-props > [data-prop="bf:identifiedBy"] h4 .hover-menu { right:-3px;  }
 
 .resource .data .group > h4 { max-width:calc(100% - 10px - 20px); padding-right:20px;}
 
-.resource .data.ext-props .propCollapse ::before { background-color:white !important;}
+.resource .data.ext-props [data-prop] /*.propCollapse*/ ::before { background-color:white !important;}
 
 .resource .data .propCollapseHeader,
 .resource .data .propCollapse.in-true { overflow:visible; position:relative; }
@@ -2010,7 +2017,7 @@ h4:hover a.no-bdrc img { opacity:1; }
 
 /* .resource .data > div:not(.firstImage) { display:flex;align-items:baseline;flex-wrap:nowrap;box-sizing: border-box;width:100%;position:relative;} */
 .resource .data > div:not(.firstImage):not(.browse):not(.header) { display:block; position:relative; }
-.resource .data:not(.ext-props):not(#perma) > div:not(.firstImage):not(.browse):not(.header)::after { content:''; width:calc(100% - 190px);; height:1px;margin:25px 0 25px 190px;display:block;}
+.resource .data:not(#perma) > div:not(.firstImage):not(.browse):not(.header)::after { content:''; width:calc(100% - 190px);; height:1px;margin:25px 0 25px 190px;display:block;}
 .resource .data > div:not(.firstImage):not(.browse):not(.header):not(:last-child)::after { background:rgba(0,0,0,0.25);}
 .resource .data.top-props > div:last-child::after { margin-bottom:20px !important; margin-top:0 !important; }
 
@@ -2473,26 +2480,35 @@ html[lang="en"] .resource .data > [data-prop="bdo:creator"] h4[data-prop="bdo:ro
 .resource .data.ext-props + .data.ext-props { padding-top:0; }
 .resource .data.bot-props + .data.ext-props > div::after { content:none !important;}
 .resource .data.ext-props h2 { line-height:44px;margin:45px 0; }
+
+/*
 .resource .data.ext-props h2 + span { position:absolute;text-transform:uppercase;font-weight:500;border-bottom:2px solid black; 
    height:24px; right:35px; cursor:pointer; padding-top:58px; color:#343434;}
 .resource .data.ext-props h2 + span:hover { color:#d73449;border-color:#d73449; }
-
 .resource .data.ext-props  > div { align-items: center; }
+*/
 
+/*
 .resource .data.ext-props .has-collapse.custom h3 { order:-2; display:flex; align-items: center; height:42px; line-height:20px;  }
 .resource .data.ext-props .has-collapse.custom h3 span a.propref { line-height:20px; }
+*/
+
+/*
 .resource .data.ext-props .has-collapse.custom .expand { order:-1; color:transparent;width:calc(100% - 190px);top:-5px;
    margin-top:0 !important; border-color:#c2c2c2;margin-left:0; }
 .resource .data.ext-props .has-collapse.custom .expand .toggle-expand { color:black; right:0;top:-5px; }
-
 .resource .data.ext-props .propCollapseHeader { display:none !important; }
-.resource .data.ext-props .propCollapse { margin:5px 0 0px 0 !important; }
+*/
 
-.resource .data.ext-props .propCollapse { padding-left:190px; }
-.resource .data.ext-props .propCollapse.in-true { margin:25px 0 20px 0 ; }
+/* .resource .data.ext-props .propCollapse { margin:5px 0 0px 0 !important; } */
+
+/* .resource .data.ext-props .propCollapse { padding-left:190px; } */
+
+/* .resource .data.ext-props .propCollapse.in-true { margin:25px 0 20px 0 ; } */
+
 .resource .data.ext-props > div:last-child .propCollapse.in-true { margin-bottom:0px; }
 
-.resource .data.ext-props .propCollapse { column-count: 1; }
+/* .resource .data.ext-props .propCollapse { column-count: 1; } */
 
 /* ------------------------------------------------------------------------------------------------------------------------ map */
 

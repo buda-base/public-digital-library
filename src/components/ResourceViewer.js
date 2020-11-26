@@ -3577,7 +3577,7 @@ class ResourceViewer extends Component<Props,State>
          if(note.length <= 3) pre.push(<div class="no-collapse">{note}</div>)
          else pre.push([<div>         
                {note.slice(0,3)}
-               <Collapse timeout={{enter:0,exit:0}} className={"noteCollapse in-"+(this.state.collapse[prop]===true)} in={this.state.collapse[prop] !== false }>
+               <Collapse timeout={{enter:0,exit:0}} className={"noteCollapse in-"+(this.state.collapse[prop]===true)} in={this.state.collapse[prop] /*!== false*/ }>
                   {note.slice(3)}
                </Collapse>          
                </div>,     
@@ -5118,7 +5118,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                      return this.renderEtextHasChunk(elem, k, tags)                     
                   }
                   else if(k !== bdo+"eTextHasChunk" && k !== bdo+"eTextHasPage" ) {
-                     return this.renderGenericProp(elem, k, tags, div!=="ext-props"?hasMaxDisplay:-1)
+                     return this.renderGenericProp(elem, k, tags, hasMaxDisplay) //div!=="ext-props"?hasMaxDisplay:-1)
                   }
                }
             }
@@ -6519,6 +6519,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          })         
       }
 
+   /* //deprecated
       let hasLongExtP = false; //[bf+"identifiedBy",bdo+"note"].filter(k => kZprop.includes(k) ).length > 0
 
       let extPlabel = "hide"
@@ -6536,7 +6537,8 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          let state = { ...this.state, collapse:{ ...this.state.collapse, extProps:!this.state.collapse.extProps, ...extProps.reduce( (acc,p) => ({...acc, [p]:!show}),{} ) } }
          this.setState(state)
       }
-
+   */
+   
       let root = this.getResourceElem(bdo+"inRootInstance");
 
       let sideMenu = (rid,tag,rel,ext,outL,openV,etextUT) => {
@@ -6879,7 +6881,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                   { theDataLegal }
                   { theDataExt && 
                      <div class="data ext-props" id="ext-info">
-                        <div><h2>{I18n.t("resource.extended")}</h2><span onClick={toggleExtProps}>{I18n.t("misc."+extPlabel)}</span></div>
+                        <div><h2>{I18n.t("resource.extended")}</h2>{/*<span onClick={toggleExtProps}>{I18n.t("misc."+extPlabel)}</span>*/}</div>
                      </div> }
                   { theDataExt }
                </div>
