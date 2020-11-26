@@ -231,8 +231,8 @@ const enTranslation = {
       extended:"Extended Information",
       userP:"User Profile",
       personalI:"Personal Information",
-      relatedM:"Collection Members",
-      relatedS:"Serial Members"
+      relatedM:"Collection members of {{resLabel.value}}",
+      relatedS:"Serial members of {{resLabel.value}}"
    },
    user:{
       photo:{ 

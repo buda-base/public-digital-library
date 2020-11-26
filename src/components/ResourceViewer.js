@@ -6858,7 +6858,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                               <Tabs>
                                  <TabList>
                                     { (related.length > 0) && <Tab onClick={(ev)=>this.setState({relatedTab:false,relatedTabAll:false,irel:0,icrea:0})}>{I18n.t(_T=== "Place"?"resource.wAbout":"resource.about",{resLabel, count:related.length, interpolation: {escapeValue: false}})} </Tab> }
-                                    { (createdBy.length > 0) && <Tab onClick={(ev)=>this.setState({relatedTab:true,relatedTabAll:false,irel:0,icrea:0})}>{I18n.t(_T=== "Place"?"resource.printedA":(_T==="Corporation"?"resource.memberO":"resource.createdB"),{resLabel, count:createdBy.length, interpolation: {escapeValue: false}})}</Tab> }
+                                    { (createdBy.length > 0) && <Tab onClick={(ev)=>this.setState({relatedTab:true,relatedTabAll:false,irel:0,icrea:0})}>{I18n.t(_T=== "Place"?"resource.printedA":(_T==="Corporation"?"resource.memberO":(_T==="Product"?"index.relatedM":(_T==="Work"&&serial?"index.relatedS":"resource.createdB"))),{resLabel, count:createdBy.length, interpolation: {escapeValue: false}})}</Tab> }
                                     <Tab onClick={(ev)=>this.setState({relatedTab:false,relatedTabAll:true,irel:0,icrea:0})}>{I18n.t(all=== undefined?"misc.all":"misc.allC",{count:all})} </Tab>
                                  </TabList>
                                  { (related.length > 0) &&  <TabPanel><div class={"rel-or-crea"}>{related}</div></TabPanel> }
