@@ -752,6 +752,8 @@ a.result + #matches .result-content::before { left:110px; width:calc(100% - 110p
 
 .result-content #icon .provImg.loc {height:15px;}
 
+.result-content #icon .provImg.sbb { height:30px;}
+
 .result-content #icon .provImg.idp,
 .result-content #icon .provImg.rkts,
 .result-content #icon .provImg.cudl,
@@ -1415,6 +1417,7 @@ h4:not(:hover) > .lang
 .resource .data .header .src.orig { cursor:pointer;}
 .resource .data .header .src img { background-color: white; width:calc(100% - 3px * 2 - 2px * 2);padding:2px; margin-left:3px; display:inline-block; 
 vertical-align:middle;}
+.resource .data .header .src img[src^="/SBB."] { padding:0; width:calc(100% - 3px * 2) ;}
 .resource .data .header .src img[src^="/BL."] { padding:0;margin:0;width:100%;}
    /* background-size:90% auto;background-position:center;background-repeat:no-repeat; } */
 
@@ -2447,6 +2450,7 @@ html[lang="en"] .resource .data > [data-prop="bdo:creator"] h4[data-prop="bdo:ro
 .resource .data.legal-props > div h4 a {  display:flex; align-items: center; }
 
 
+.resource .data.legal-props > div h4 > .ulink > a[href*="LD_SBB_metadata"]::before,
 .resource .data.legal-props > div h4 > .ulink > a[href*="LD_IDP_metadata"]::before,
 .resource .data.legal-props > div h4 > .ulink > a[href*="LOC_metadata"]::before,
 .resource .data.legal-props > div h4 > .ulink > a[href*="mbingenheimer"]::before,
@@ -2469,6 +2473,7 @@ html[lang="en"] .resource .data > [data-prop="bdo:creator"] h4[data-prop="bdo:ro
 
 .resource .data.legal-props > div h4 > .ulink.src .bdr { display:none; }
 
+.resource .data.legal-props > div h4 > .ulink > a[href*="LD_SBB_metadata"]::before { background-image:url("/SBB.png"); background-size:auto 19px;}
 .resource .data.legal-props > div h4 > .ulink > a[href*="LD_IDP_metadata"]::before { background-image:url("/IDP.jpg"); background-size:auto 21px;}
 .resource .data.legal-props > div h4 > .ulink > a[href*="LOC_metadata"]::before { background-image:url("/LOC.svg"); background-size:23px auto;}
 .resource .data.legal-props > div h4 > .ulink > a[href*="mbingenheimer"]::before { background-image:url("/MB-icon.jpg"); background-size:15px auto; }

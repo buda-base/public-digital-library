@@ -124,13 +124,14 @@ const har   = "http://www.himalayanart.org/search/"
 const idp   = "http://idp.bl.uk:80/"
 const ngmpp = "https://catalogue.ngmcp.uni-hamburg.de/receive/"
 const sat   = "http://21dzk.l.u-tokyo.ac.jp/SAT2018/"
+const sbb   = "http://resolver.staatsbibliothek-berlin.de/"
 const src   = "https://sakyaresearch.org/"
 const tol   = "http://api.treasuryoflives.org/resource/";
 const loc   = "http://lccn.loc.gov/"
 
 
 export const prefixesMap = { adm, bda, bdac, bdan, bdo, bdou, bdr, bdu, bf, cbcp, cbct, dila, eftr, foaf, oa, mbbt, owl, rdf, rdfs, rkts, skos, wd, ola, viaf, xsd, tmp, 
-   bn, cbeta, har, idp, loc, ngmpp, sat, src, tol }
+   bn, cbeta, har, idp, loc, ngmpp, sat, sbb, src, tol }
 export const prefixes = Object.values(prefixesMap) ;
 export const sameAsMap = { wd:"WikiData", ol:"Open Library", ola:"Open Library", bdr:"BDRC", mbbt:"Marcus Bingenheimer", eftr:"84000" }
 
@@ -2866,6 +2867,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
       if(prov) prov = prov.replace(/(^\[ *)|( *\]$)/g,"") // CUDL
       if(prov) prov = prov.replace(/internet archives/g,"ia") 
       if(prov) prov = prov.replace(/library of congress/g,"loc") 
+      if(prov) prov = prov.replace(/staatsbibliothek zu berlin/g,"sbb")
       if(prov && prov !== "bdrc" && img[prov]) hasProv = <img class={"provImg "+prov+ (orec.length?" oriRec":"")} title={I18n.t("copyright.provided",{provider:providers[prov]})} src={img[prov]}/>
 
 

@@ -241,6 +241,7 @@ export const providers = {
    "rkts":"rKTs",
    "ola":"Open Library",
    "sat":"SAT Daizōkyō Text Database",
+   "sbb":"Staatsbibliothek zu Berlin",
    "src":"Sakya Research Center",
    "tol":"Treasury of Lives",
    "viaf":"VIAF",
@@ -269,7 +270,8 @@ export const provImg = {
    "ngmpp":"/NGMPP.svg",
    "ola":  "/OL.png",  //"https://openlibrary.org/static/images/openlibrary-logo-tighter.svg" //"https://seeklogo.com/images/O/open-library-logo-0AB99DA900-seeklogo.com.png", 
    "rkts": "/RKTS.png",
-   "src": "/SRC.svg",
+   "sbb": "/SBB.png",
+   "src": "/SRC.svg",   
    "tol": "/ToL.png",
    "viaf": "/VIAF.png",
    "wd":   "/WD.svg",
@@ -2018,6 +2020,7 @@ class ResourceViewer extends Component<Props,State>
          else if(provLab === "Library of Congress") sameAsPrefix += "loc provider hasIcon "
          else if(provLab === "EFT") sameAsPrefix += "eftr provider hasIcon "
          else if(provLab === "CUDL") sameAsPrefix += "cudl provider hasIcon "
+         else if(provLab === "SBB") sameAsPrefix += "sbb provider hasIcon "
          //else if(provLab === "rKTs") sameAsPrefix += "rkts provider hasIcon "
       }      
 
@@ -2037,6 +2040,7 @@ class ResourceViewer extends Component<Props,State>
       if(prov && prov.length) prov = prov[0].value
       if(prov) prov = prov.replace(/(^\[ *)|( *\]$)/g,"") // CUDL
       if(prov) prov = prov.replace(/Internet Archives/g,"IA") 
+      if(prov) prov = prov.replace(/Staatsbibliothek zu Berlin/g,"SBB")
       if(prov) prov = prov.replace(/Library of Congress/g,"LOC")
       return prov
    } 
