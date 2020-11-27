@@ -139,7 +139,7 @@ export default class API {
 
          // CORS issue - to be continued
          let xhrArgs
-         if(isAuthenticated() && (url.match(/bdrc[.]io/) || url.match(/localhost/))) {
+         if(isAuthenticated() && (url.match(/bdrc[.]io/) && !url.match(/bdr:[^/]+LOC/) || url.match(/localhost/))) {
             if(url.match(/setcookie/)) xhrArgs = { credentials: 'include' } //, 'mode':'no-cors'}
             if(!cookie) head = { ...head, "Authorization":"Bearer "+id_token }
          }
