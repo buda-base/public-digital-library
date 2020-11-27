@@ -200,7 +200,8 @@ const enTranslation = {
       "tmp:partOfVersion":"Part of another Version",
       "tmp:inRootInstance":"Instance",
       "tmp:associatedCentury":"Century",
-      "tmp:associatedAuthorCentury":"Author's Century"
+      "tmp:associatedAuthorCentury":"Author's Century",
+      "tmp:ontologyProperty":"Ontology Property"
    },
    result:{
       open:"Open",

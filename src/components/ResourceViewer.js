@@ -2663,7 +2663,7 @@ class ResourceViewer extends Component<Props,State>
 
       let fromSame = (e.allSameAs && e.allSameAs.length > 0)
 
-      let lang, data, other = [], era, comment ;
+      let lang, data, other = [], era, comment, ontolink ;
       if(e.type === "literal") { 
          lang = e.lang
          if(!lang) lang = e["xml:lang"]
@@ -2689,6 +2689,8 @@ class ResourceViewer extends Component<Props,State>
                if(comment[rdfs+"comment"])  comment = getLangLabel(this,prop,comment[rdfs+"comment"],false,false,other)
                else comment = undefined            
             }
+            ontolink = shortUri(e.value)
+
             //console.log("comm:",comment)
          }
       }
@@ -2791,6 +2793,7 @@ class ResourceViewer extends Component<Props,State>
                               { (e.start !== undefined) &&  <div><span class='first'>{this.proplink(bdo+"startChar")}</span><span>{I18n.t("punc.colon")}&nbsp;</span><span>{e.start}</span></div>  }
                               { (e.end !== undefined) &&  <div><span class='first'>{this.proplink(bdo+"endChar")}</span><span>{I18n.t("punc.colon")}&nbsp;</span><span>{e.end}</span></div>  }
                               { (comment !== undefined) &&  <div><span class='first'>{this.proplink(rdfs+"comment")}</span><span>{I18n.t("punc.colon")}&nbsp;</span><span>{comment.value}</span></div>  }
+                              { (ontolink !== undefined) &&  <div><span class='first'>{I18n.t("prop.tmp:ontologyProperty")}</span><span>{I18n.t("punc.colon")}&nbsp;</span><Link class="ontolink" to={"/show/"+ontolink}>{ontolink}</Link></div>  }
                               </TabPanel>
                               <TabPanel selected>
                               {fromSame && e.allSameAs.map(f => { 

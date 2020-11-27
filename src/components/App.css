@@ -1623,6 +1623,7 @@ vertical-align:middle;}
 #popHoverM .resource .data .sub > .subgroup > .subsub > h4::before,
 #popHoverM .resource .data .group h4::before { opacity:1 !important; }
 
+
 #popHoverM > div:last-child { width:953px; box-shadow:0 3px 4px #cecece,0 -1px 4px #cecece; max-width:1000px;
    left:calc((100vw - 1440px)/2 + 324px) !important; /* TODO fix when width under ~1250px */
 }
@@ -1669,6 +1670,8 @@ vertical-align:middle;}
 
 #popHoverM .react-tabs__tab-panel span.label { margin-right:0;}
 #popHoverM .react-tabs__tab-panel span.label:not(:last-child)::after { content:";";padding:0 5px;}
+
+#popHoverM .react-tabs__tab-panel .ontolink:hover { border:none; text-decoration:underline; }
 
 #popHoverM + #popHoverM {display:none !important; }
 
