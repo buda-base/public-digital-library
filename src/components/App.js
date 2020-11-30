@@ -2588,7 +2588,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                else if(val && val.startsWith("http")) val = this.fullname(val,[],true)
                else { 
                   val = getLangLabel(this,prop,[i])
-                  if(val.value === exclude) continue ;
+                  if(val.value && exclude && val.value.replace(/[↦↤]/g,"") === exclude) continue ;
                   val = highlight(val.value,lucenequerytokeyword(this.props.keyword))
                   lang = val.lang
                }
@@ -3197,7 +3197,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
             { type === "Etext" && this.getEtextMatches(prettId,startC,endC,bestM,rmatch,facet) }
 
-            { this.getResultProp("tmp:nameMatch",allProps,true,false,[ tmp+"nameMatch" ]) } {/* //,true,false) } */}
+            { this.getResultProp("tmp:nameMatch",allProps,true,false,[ tmp+"nameMatch" ], !preLit?preLit:preLit.replace(/[↦↤]/g,"") ) } {/* //,true,false) } */}
 
 
             {/* { this.getResultProp("bdo:note",allProps,true,false,[ tmp+"noteMatch" ]) } // see biblioNote below */}
