@@ -3904,8 +3904,9 @@ class ResourceViewer extends Component<Props,State>
          titlElem = this.getResourceElem(rdfs+"label",other,this.props.assocResources);
       }
       else {
-          if(other) title = <h2 lang={this.props.locale}><Link to={"/show/"+shortUri(other)+this.getTabs(T_,other)}>{_T}<span>{T_ === "Work" || T_ === "Instance"?I18n.t("resource.noT"):shortUri(other?other:this.props.IRI)}</span></Link></h2>
-          else  title = <h2 class="on" lang={this.props.locale}>{_T}<span>{T_ === "Work" || T_ === "Instance"?I18n.t("resource.noT"):shortUri(other?other:this.props.IRI)}</span></h2>
+          let loaded = this.props.resources && this.props.resources[other?other:this.props.IRI] 
+          if(other) title = <h2 lang={this.props.locale}><Link to={"/show/"+shortUri(other)+this.getTabs(T_,other)}>{_T}<span>{loaded && (T_ === "Work" || T_ === "Instance")?I18n.t("resource.noT"):shortUri(other?other:this.props.IRI)}</span></Link></h2>
+          else  title = <h2 class="on" lang={this.props.locale}>{_T}<span>{loaded && (T_ === "Work" || T_ === "Instance")?I18n.t("resource.noT"):shortUri(other?other:this.props.IRI)}</span></h2>
       }
       
       if(!title) {
@@ -4195,7 +4196,7 @@ class ResourceViewer extends Component<Props,State>
          if(monoVol && monoVol.length && monoVol[0].value === "1") monoVol = true
          else monoVol = false
 
-         //loggergen.log("loca",elem,monoVol,withTag,node)
+         //loggergen.log("loca:",elem,monoVol,withTag,node)
 
          if(!elem) return [<h4><Link to={"/show/"+shortUri(_elem[0].value)}>{shortUri(_elem[0].value)}</Link></h4>]
 
@@ -4215,6 +4216,7 @@ class ResourceViewer extends Component<Props,State>
          if( (eV === vol || !vol ) && p === eP) oneP = true
 
          if(vol) str = I18n.t("resource.volume",{num:vol})+" " ;
+         else monoVol = true
          if(p) str += I18n.t("resource.page",{num:p}) ;
          if(l) str += "|"+l ;
          if(!oneP) {

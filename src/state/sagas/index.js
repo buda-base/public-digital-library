@@ -959,10 +959,12 @@ async function getManifest(url,iri) {
             if(!collecManif) collecManif = manif.manifests[0]["@id"]
             if(!isSingle) collecManif = null  //manif.manifests[0]["@id"]
 
+            // missing 1st volume (#370)
             try {
                manif = await api.loadManifest(manif.manifests[0]["@id"]);
             } catch(e) {
-               // case of missing 1st volume (#370)
+               // only volume in collection (#383)
+               if(manif.manifests.length === 1) throw e 
             }
          }
          else throw new Error("collection without manifest list")
