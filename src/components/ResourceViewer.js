@@ -3904,8 +3904,8 @@ class ResourceViewer extends Component<Props,State>
          titlElem = this.getResourceElem(rdfs+"label",other,this.props.assocResources);
       }
       else {
-          if(other) title = <h2 lang={this.props.locale}><Link to={"/show/"+shortUri(other)+this.getTabs(T_,other)}>{_T}<span>{shortUri(other?other:this.props.IRI)}</span></Link></h2>
-          else  title = <h2 class="on" lang={this.props.locale}>{_T}<span>{shortUri(other?other:this.props.IRI)}</span></h2>
+          if(other) title = <h2 lang={this.props.locale}><Link to={"/show/"+shortUri(other)+this.getTabs(T_,other)}>{_T}<span>{T_ === "Work" || T_ === "Instance"?I18n.t("resource.noT"):shortUri(other?other:this.props.IRI)}</span></Link></h2>
+          else  title = <h2 class="on" lang={this.props.locale}>{_T}<span>{T_ === "Work" || T_ === "Instance"?I18n.t("resource.noT"):shortUri(other?other:this.props.IRI)}</span></h2>
       }
       
       if(!title) {
