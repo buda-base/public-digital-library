@@ -354,6 +354,7 @@ body { overflow:auto !important;padding-right:0 !important; /*font-family:"Robot
 #suggestions li:hover, 
 #suggestions li.active { color:black; font-weight:700; }
 
+#suggestions li .maxW { /*background:yellow; */ max-width:100%; overflow: hidden; text-overflow: ellipsis; padding:10px 0; } 
 
 /*
 #suggestions { z-index:10000; } 
