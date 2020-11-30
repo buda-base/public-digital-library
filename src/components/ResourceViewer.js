@@ -251,7 +251,7 @@ export const providers = {
 
 export const provImg = {
    "bdr":  "/logo.svg", 
-   "bn":  "/BUDDHANEXUS.png",
+   "bn":  "/BN.svg",
    "bnf":  "/BNF.svg",
    //"cbct": false,
    //"cbcp": false,
