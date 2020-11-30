@@ -2148,7 +2148,7 @@ class ResourceViewer extends Component<Props,State>
             }
             else prov = null
 
-            loggergen.log("enti:",prov,enti,elem.value)
+            //loggergen.log("enti:",prov,enti,elem.value)
 
             if(enti === "Etext") {
                //ret = [<span class="svg">{svgEtextS}</span>]
@@ -4407,18 +4407,20 @@ class ResourceViewer extends Component<Props,State>
 
    samePopup(same,id,noS) {
 
-      let list = []
+      let list = [], useRid = []
 
       if(same && same.length) { 
          
          let mapSame = same.map(s => {
-            loggergen.log("s.val:",s.value)
+            //loggergen.log("s.val:",s.value)
             let prefix = shortUri(s.value).split(":")[0]
             if(prefix.startsWith("http") && s.fromSeeOther) prefix = s.fromSeeOther
             // TODO fix Sakya Research Center
             if(!list.includes(prefix)) {
                list.push(prefix)
                return <span class={"provider "+prefix}>{provImg[prefix]?<img src={provImg[prefix]}/>:<span class="img">{prefix.replace(/^cbc.$/,"cbc@").toUpperCase()}</span>}</span>
+            } else {
+               useRid.push(prefix)
             }
          })
 
@@ -4442,17 +4444,19 @@ class ResourceViewer extends Component<Props,State>
                      if(prov.startsWith("http") && s.fromSeeOther) prov = s.fromSeeOther
                      let data,tab ;
                      if(this.props.assocResources) data = this.props.assocResources[s.value]                  
-                     if(data && (tab=data.filter(t => t.fromKey === adm+"canonicalHtml")).length) link = tab[0].value  
+                     if(data && (tab=data.filter(t => t.fromKey === adm+"canonicalHtml")).length) link = tab[0].value                       
                      
-                     let open = <MenuItem>{I18n.t("result.open")} {name} {I18n.t("misc.in")} &nbsp;<b>{providers[prov]}</b><img src="/icons/link-out.svg"/></MenuItem>
+                     // DONE case when more than on resource from a given provider (cf RKTS)
+                     let useR = !useRid.includes(prov)
+                     
+                     let open = <MenuItem>{I18n.t("result.open")} {useR && name} {!useR && <emph> {shortUri(s.value)} </emph>}{I18n.t("misc.in")} &nbsp;<b>{providers[prov]}</b><img src="/icons/link-out.svg"/></MenuItem>
                      if(s.isOrig) open = <MenuItem style={{display:"block",height:"32px",lineHeight:"12px"}}>{I18n.t("popover.imported")} <b>{providers[prov]}</b><br/>{I18n.t("popover.seeO")}<img style={{verticalAlign:"middle"}} src="/icons/link-out.svg"/></MenuItem>
 
                      //loggergen.log("permaSame",s,data,tab,link,name,prov) 
 
                      if(this.props.config && this.props.config.chineseMirror) link = link.replace(new RegExp(cbeta), "http://cbetaonline.cn/")
 
-                     // TODO case when more than on resource from a given provider (cf RKTS)
-                     if(prov != "bdr") return (<a target="_blank" href={link.replace(/^https?:/,"")}>{open}</a>) 
+                     if(prov != "bdr") return (<a target="_blank" href={link  /*.replace(/^https?:/,"") */ }>{open}</a>) // keep original http/s prefix (#381)
                } ) }
             </Popover>
          ])

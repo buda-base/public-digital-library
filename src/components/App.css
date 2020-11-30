@@ -1680,6 +1680,8 @@ vertical-align:middle;}
 #popHoverM.fixW { left:403px !important; }
 #popHoverM.fixW[data-id*='/workHasInstance'] { left:399px !important; }
 
+#popSame a li emph { padding:0 5px; font-weight:800; }
+
 #popSame { margin-top:-10px; z-index:1000000; }
 #popDL { margin-top:30px; }
 
