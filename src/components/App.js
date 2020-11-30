@@ -2446,7 +2446,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             else return acc
          },{}) 
          
-         //loggergen.log("labels/prop",prop,id) //,useAux,fromProp,allProps) //,this.props.assoRes)         
+         //loggergen.log("labels/prop",prop,id,exclude) //,useAux,fromProp,allProps) //,this.props.assoRes)         
 
          if(useAux && !findProp) { // etext
 
@@ -2588,6 +2588,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                else if(val && val.startsWith("http")) val = this.fullname(val,[],true)
                else { 
                   val = getLangLabel(this,prop,[i])
+                  if(val.value === exclude) continue ;
                   val = highlight(val.value,lucenequerytokeyword(this.props.keyword))
                   lang = val.lang
                }
@@ -2762,7 +2763,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
    makeResult(id,n,t,lit,lang,tip,Tag,url,rmatch = [],facet,allProps = [],preLit,isInstance)
    {
-      //loggergen.log("res:",id,facet,allProps,n,t,lit,lang,tip,Tag,rmatch,sameAsRes)
+      //loggergen.log("res:",id,facet,allProps,n,t,lit,preLit,lang,tip,Tag,rmatch,sameAsRes)
 
       let sameAsRes,otherSrc= [] ;
       if(allProps) sameAsRes = [ ...allProps ]
