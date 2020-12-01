@@ -1712,7 +1712,8 @@ body > [id^="menu-"] > div:last-child,
 
 #perma #DL + #same { margin-left:auto; }
 
-#perma #copyright { margin-left:auto; /*border-right:1px solid rgba(0,0,0,0.35);padding:2px 16px; */ }
+#perma #copyright { margin-left:auto;  /*border-right:1px solid rgba(0,0,0,0.35);padding:2px 16px; */ }
+#perma #copyright:not(:last-child) { padding-right:15px; }
 #perma #copyright img { height:20px; vertical-align: middle;}
 #perma #copyright img[src$="/.png"] { visibility:hidden;}
 

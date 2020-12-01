@@ -820,6 +820,7 @@ class ResourceViewer extends Component<Props,State>
 
          if(window.mirador) delete window.mirador
          if(window.MiradorUseEtext) delete window.MiradorUseEtext ;
+         if(window.currentZoom) delete window.currentZoom ;
 
          let loca = { ...this.props.history.location }
          if(loca.hash == "#open-viewer") { 

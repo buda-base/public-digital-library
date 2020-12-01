@@ -526,6 +526,9 @@ function miradorAddClick(firstInit){
                   //})
                   //item.addClass("setClick").click(() => {
 
+                     
+                     if(window.currentZoom) delete window.currentZoom ;
+
                      if(window.Mirador.ThumbnailsView) {
                         let manif = jQ(e.target);
                         if(manif.length) manif = manif.parent().parent().attr("data-manifest")
@@ -746,7 +749,7 @@ function miradorAddZoomer() {
 
       window.setZoom = (val) => {
 
-         console.log("sZ",window.maxW,window.maxH)
+         console.log("sZ:",val,window.maxW,window.maxH)
 
          if(!window.maxW && !window.maxH) miradorInitMenu(true)
          if(!window.maxW && !window.maxH) return ;
@@ -799,10 +802,25 @@ function miradorAddZoomer() {
                "margin-bottom":20/coef,
                "transform":"scale("+1/coef+")"
             })
+            
+            if(window.currentZoom === undefined) {
+               console.log("set zoom menu");
+
+               let li = jQ(".view-nav #Zmenu ul.select li")
+               li.each((i,e)=>{
+                  let elem = jQ(e);
+                  if(i < li.length - 1) elem.text(Math.floor(100 * (1 - (1-coef)*i/4))+"%")
+                  else elem.attr("data-auto",coef)
+                  if(elem.attr("data-selected")) jQ("#Zmenu span").text( elem.text() );
+               })
+            }
+
+            // TODO not correct when resizing window 
+            if(window.currentZoom && !jQ(".view-nav #Zmenu ul.select li[data-selected]").length) jQ("#Zmenu span").text( val > 0 ? Math.floor(coef*100 + 100*(1-coef)*val)+"%":"auto" );
 
             window.currentZoom = coef
 
-            if(window.currentZoom) { 
+            if(window.currentZoom !== undefined) { 
                jQ(".scroll-listing-thumbs .etext-content:not(:empty)").each(function(i,e){
                   var etc = jQ(e);
                   var h0 = etc.attr('data-h0');
@@ -811,7 +829,8 @@ function miradorAddZoomer() {
                   p.css({"transform":"scale("+1/window.currentZoom+")"});
                   etc.find(".pad").height(30 / window.currentZoom + 0.5 * (h / window.currentZoom - h0));
                });
-            }
+
+            } 
 
             /* // NOTO etext might not be loaded 
             scrollT.find(".etext-content  div").css({
