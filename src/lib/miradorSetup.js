@@ -771,9 +771,13 @@ function miradorAddZoomer() {
             let coefW = 1 - (1 - dMinW) * (1 - val)            
             coef = coefW            
             nuW = maxW * coef
+
+            console.log("coef",coef)
+            console.log("nuW",nuW);
+
          }
 
-         if(maxH) {
+         if(val <= 1 && maxH) {
             let dMinH = 0.9 * scrollV.innerHeight() / maxH
             let coefH = 1 - (1 - dMinH) * (1 - val)            
             coef = Math.min(coef,coefH)
@@ -782,6 +786,10 @@ function miradorAddZoomer() {
             if(nuW < scrollV.innerWidth() && coef < 1 && maxW > scrollV.innerWidth()) {
                trX = ( scrollV.innerWidth() - nuW ) / 2
             }
+
+            console.log("coefH",coef)
+            console.log("nuW",nuW,trX);
+
          }
 
 
@@ -803,20 +811,32 @@ function miradorAddZoomer() {
                "transform":"scale("+1/coef+")"
             })
             
+            let selec = jQ(".view-nav #Zmenu ul.select li[data-selected]")
             if(window.currentZoom === undefined) {
-               console.log("set zoom menu");
+               //console.log("set zoom menu");
 
-               let li = jQ(".view-nav #Zmenu ul.select li")
+               let li = jQ(".view-nav #Zmenu ul.select li"), a = 150 / (150 - coef * 100), b = 150 - 150 * a, nega = false, y, elem, prev, txt
+               li.parent().attr("data-min-zoom",coef)
                li.each((i,e)=>{
-                  let elem = jQ(e);
-                  if(i < li.length - 1) elem.text(Math.floor(100 * (1 - (1-coef)*i/4))+"%")
-                  else elem.attr("data-auto",coef)
-                  if(elem.attr("data-selected")) jQ("#Zmenu span").text( elem.text() );
+                  elem = jQ(e);
+                                    
+                  elem.text((30-i)*5+"%").removeClass("zoom0")
+                  y = a * (30-i)*5 + b
+                  if(y < 0 && !nega) {
+                     nega = true
+                     y = 0
+                     txt = Math.round(coef*100)+"%"
+                     if(txt === prev.text()) elem = prev
+                     elem.text(txt).addClass("zoom0")
+                     if(!selec.length) elem.attr("data-selected","true")
+                  }
+                  elem.attr("data-value", y) 
+
+                  if(elem.attr("data-selected")) jQ("#Zmenu span").text( y > 0 ? elem.text(): Math.round(coef*100)+"%" );
+
+                  prev = elem
                })
             }
-
-            // TODO not correct when resizing window 
-            if(window.currentZoom && !jQ(".view-nav #Zmenu ul.select li[data-selected]").length) jQ("#Zmenu span").text( val > 0 ? Math.floor(coef*100 + 100*(1-coef)*val)+"%":"auto" );
 
             window.currentZoom = coef
 
@@ -863,7 +883,7 @@ function miradorInitMenu(maxWonly) {
 
    if(maxWonly == undefined) maxWonly = false
 
-   console.log("maxWo",maxWonly)
+   //console.log("maxWo",maxWonly)
 
    if(!maxWonly) jQ(".user-buttons.mirador-main-menu li:nth-last-child(n-5):nth-last-child(n+2)").addClass("on")
    window.maxW = jQ(".mirador-container ul.scroll-listing-thumbs ").width()
