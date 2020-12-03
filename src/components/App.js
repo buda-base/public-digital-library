@@ -3192,8 +3192,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
             {/* { type === "Etext" && this.getResultProp(I18n.t("result.eTextIsForWork"),allProps,false,true,[tmp+"forWork"]) }             */}
             { type === "Etext" && this.getResultProp(bdo+"eTextIsVolume",allProps,false,false) }
-            { type === "Etext" && this.getResultProp(I18n.t("result.inInstance"),allProps,false,false,[tmp+"inInstance"]) }
-            { type === "Etext" && this.getResultProp(I18n.t("result.inInstancePart"),allProps,false,false,[tmp+"inInstancePart"]) }
+            { type === "Etext" && this.getResultProp(I18n.t("result.inInstance"),allProps,false,true,[tmp+"inInstance"]) }
+            { type === "Etext" && this.getResultProp(I18n.t("result.inInstancePart"),allProps,false,true,[tmp+"inInstancePart"]) }
 
             { type === "Etext" && this.getEtextMatches(prettId,startC,endC,bestM,rmatch,facet) }
 
@@ -3618,6 +3618,12 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      if(!label || !label.value) label = { value: this.props.keyword }
                      //txt = I18n.t("result.assoc",{type:txt,name:label.value})
                      txt = <Trans i18nKey="result.assoc" components={{ res: <a /> }} values={{type:txt,name:label.value,rid:this.props.keyword}} /> 
+                  } else if(this.props.searches[this.state.filters.datatype[0]][this.props.keyword+"@"+this.props.language].inEtext) {
+                     let inEtext = this.props.searches[this.state.filters.datatype[0]][this.props.keyword+"@"+this.props.language].inEtext
+                     let label = getPropLabel(this,fullUri(inEtext),false,true)
+                     
+                     if(!label) label = inEtext
+                     txt = <Trans i18nKey="result.inEtext" components={{ res: <a />, key: <span /> }} values={{keyword:this.props.keyword, language:"$t("+languages[this.props.language]+")", name:label.value,rid:inEtext}} /> 
                   }
                   //(false && displayTypes.length>=1&&counts["datatype"][t]?" ("+counts["datatype"][t]+")":""))}
                   message.push(<MenuItem><h4>{txt}</h4></MenuItem>);
@@ -4161,7 +4167,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             sta.results && sta.results[id] && sta.results[id].counts && sta.results[id].counts.datatype && Object.keys(sta.results[id].counts.datatype) && Object.keys(sta.results[id].counts.datatype).length != Object.keys(counts.datatype).length)
          */
          let paginate = [], bookmarks, noBookM = false;
-         if(!this.props.loading && 
+         if( //!this.props.loading && 
           (  sta.id !== id || sta.repage 
          || !sta.results 
          || !sta.results[id] 
@@ -4245,7 +4251,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          k = getPropLabel(this,k)
       }
       else { t = <span>{t}</span>; k = <span>{k}</span> }
-      return <a title={I18n.t("Lsidebar.tags."+(!isExclu?"include":"exclude"))+" "+t_+I18n.t("punc.colon")+" "+ k_} lang={this.props.locale} class={ "active-filter " + (isExclu?"exclu":"") }><span>{t}{I18n.t("punc.colon")} <b>{k}</b></span><a title={I18n.t("Lsidebar.activeF.remove")} onClick={f.bind(this)}><Close/></a></a>
+      return <a  title={I18n.t("Lsidebar.tags."+(!isExclu?"include":"exclude"))+" "+t_+I18n.t("punc.colon")+" "+ k_} lang={this.props.locale} class={ "active-filter " + (isExclu?"exclu":"") + (!f?" disabled":"")}><span>{t}{I18n.t("punc.colon")} <b>{k}</b></span><a title={I18n.t("Lsidebar.activeF.remove")} {...f?{onClick:f.bind(this)}:{}}><Close/></a></a>
    }
 
    resetFilters(e) {
@@ -5001,6 +5007,19 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
       let sortByList = allSortByLists[this.state.filters.datatype[0]]
 
+
+      let inEtext 
+      if(this.props.searches && this.props.searches[this.state.filters.datatype[0]] && this.props.searches[this.state.filters.datatype[0]][this.props.keyword+"@"+this.props.language] && this.props.searches[this.state.filters.datatype[0]][this.props.keyword+"@"+this.props.language].inEtext) {
+         inEtext = this.props.searches[this.state.filters.datatype[0]][this.props.keyword+"@"+this.props.language].inEtext
+         //console.log("inEt:",inEtext)         
+         if(inEtext) {
+            sortByList.push("volumeN")
+         }
+      }
+
+
+
+
       // TODO 
       // - fix bug when removing popularity from menu --> find a better solution than s=...forced (popularity is back after another sort is selected)
       // - fix bug when search "無著" then "thogs med" validated by RETURN (lang still zh)
@@ -5381,6 +5400,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                               { this.props.isInstance && this.state.backToWorks && this.state.filters.instance && this.renderFilterTag(false, I18n.t("Lsidebar.tags.instanceOf"), this.state.filters.instance, (event, checked) => {
                                  this.resetFilters(event)
                               } )  } 
+                              { inEtext && this.renderFilterTag(false, I18n.t("Lsidebar.widgets.root"), fullUri(inEtext) )  } 
                               { facetTags }
                               { (this.state.filters.facets || this.state.backToWorks )&& this.renderResetF() }
                               </div>

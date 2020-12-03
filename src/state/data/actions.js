@@ -474,7 +474,7 @@ export type SearchAction = {
 };
 
 TYPES.startSearch = 'START_SEARCH';
-export const startSearch = (keyword: string, language: string,datatype?:string[],sourcetype?:string,dontGetDT?:boolean): SearchAction => {
+export const startSearch = (keyword: string, language: string,datatype?:string[],sourcetype?:string,dontGetDT?:boolean,inEtext?:string): SearchAction => {
     return {
         type: TYPES.startSearch,
         payload: {
@@ -482,7 +482,8 @@ export const startSearch = (keyword: string, language: string,datatype?:string[]
             language,
             datatype,
             sourcetype,
-            dontGetDT
+            dontGetDT,
+            inEtext
         }
     }
 }

@@ -693,7 +693,7 @@ export default class API {
       }
   }
 
-     async _getStartResultsData(key: string,lang: string,typ:string[]): Promise<{} | null> {
+     async _getStartResultsData(key: string,lang: string,typ:string[],inEtext?:string): Promise<{} | null> {
         try {
              let config = store.getState().data.config.ldspdi
              let url = config.endpoints[config.index]+"/lib" ;
@@ -702,11 +702,17 @@ export default class API {
              let searchType = "typeSimple" 
              let R_TYPE 
              if(typ[0] === "Scan") searchType = "instanceFacet" 
-             else if(typ[0] === "Etext") searchType = "etextContentFacet" //chunksFacet"
+             else if(typ[0] === "Etext") { 
+                if(inEtext) { 
+                   searchType = "etextContentFacetGraphInInstance"
+                   param.R_EINST = inEtext
+                }
+                else searchType = "etextContentFacet" //chunksFacet"
+             }
              else if(["Work","Person","Place","Instance"].includes(typ[0]))  searchType = typ[0].toLowerCase()+(["Work","Instance"].includes(typ[0])?"Facet":"")              
              else if(["Product"].includes(typ[0])) R_TYPE = "bdo:Collection"
              else R_TYPE = "bdo:"+typ[0]
-             searchType+="Graph"
+             if(!inEtext) searchType+="Graph"
 
              if(typ && typ.length >= 1 && typ[0] !== "Any") { param = { ...param, searchType, ...(R_TYPE?{R_TYPE}:{}) } }
              else url = url.replace(/-dev/,"") // fix while -dev/rootSearch returns nothing
@@ -947,11 +953,11 @@ export default class API {
         }
     }
 
-     async getStartResults(key: string,lang:string,types:string[]): Promise<{} | null> {
+     async getStartResults(key: string,lang:string,types:string[],inEtext?:string): Promise<{} | null> {
        let data = [];
 
        try {
-           data = await this._getStartResultsData(key,lang,types)
+           data = await this._getStartResultsData(key,lang,types,inEtext)
 
            return data ;
         } catch(e) {

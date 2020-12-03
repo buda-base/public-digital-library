@@ -1139,11 +1139,13 @@ export const foundResults = (state: DataState, action: actions.FoundResultsActio
       if(state.searches && state.searches[action.payload.datatype] && state.searches[action.payload.datatype][action.payload.keyword + "@" + action.payload.language]) 
          time = state.searches[action.payload.datatype][action.payload.keyword + "@" + action.payload.language].time
 
+      let inEtext = action.payload.results.inEtext
+
       searches = {
             ...state.searches,
             [action.payload.datatype] : {
                ...state.searches[action.payload.datatype],
-               [action.payload.keyword + "@" + action.payload.language]: { ...action.payload.results, time }
+               [action.payload.keyword + "@" + action.payload.language]: { ...action.payload.results, time, ...(inEtext?{inEtext}:{}) }
             }
       }
    }

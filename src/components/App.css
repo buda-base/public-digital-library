@@ -269,6 +269,7 @@ body { overflow:auto !important;padding-right:0 !important; /*font-family:"Robot
 
 /* .active-filter > span > span:first-child { display:none; } */
 
+.active-filter.disabled > a:last-child,
 .active-filter:first-child > a:last-child { opacity:0.5; pointer-events: none;  }
 
 .active-filter { font-size:0; box-shadow: 0 2px 4px rgba(187, 187, 187, 0.5); border-radius: 2px;background:white; height:28px;line-height:28px;}
@@ -539,6 +540,9 @@ p.no-result {
 .no-result.more-result #clear-filters { display:inline-flex; margin:0; margin-left:5px; }
 
 .SearchPane.resultPage { overflow-y:auto;}
+
+
+#res-container > ul li h4 span { text-transform: none; font-weight:500;}
 
 #res-container > ul li { padding-left:0; pointer-events:none; }
 #res-container > ul h4 { padding-left:22px;; }
@@ -1338,7 +1342,7 @@ h4:not(:hover) > .lang
 .resource .data#outline.etextrefs .is-root h2 a span { color: #343434; cursor:pointer;}
 
 
-.resource .data#outline.etextrefs > .search:not(#a) { display:none !important; }
+/* .resource .data#outline.etextrefs > .search:not(#a) { display:none !important; } */
 
 /* ------------------------------------------------------------------------------------------------------------------------ header */
 

@@ -100,7 +100,8 @@ const zhTranslation = {
       title:"题目",
       numberMC:"匹配部分的数量",
       lastS:"发布时间",
-      reverseS:"(逆序)"
+      reverseS:"(逆序)",
+      volumeN:"Volume Number"
    },
    copyright:{
       open:"开放访问",
@@ -182,7 +183,8 @@ const zhTranslation = {
       hasInstance:"有{{count}}实例",
       assoc:"{{type}}关联于: <res href='/show/{{- rid}}'>{{- name}}</res>",
       moreres:"是否想阅览更多的{{txt}}？",
-      openEin:"Open in Etext"
+      openEin:"Open in Etext",
+      inEtext:"Results for <key>{{- keyword}}</key> <key>[{{language}}]</key><br/>in <res href='/show/{{- rid}}'>{{- name}}</res>",
    },
    index:{
       openViewer:"在查看器中打开",

@@ -5708,7 +5708,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
             <h2>{I18n.t("resource.browsE")}</h2>
                <div class="search">
                   <div>
-                     <input type="text" class="disabled" />
+                     <input type="text" /*class="disabled"*/ />
                      <span class="button" title={I18n.t("resource.start")}></span> 
                   </div>
                </div>

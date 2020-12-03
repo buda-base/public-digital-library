@@ -777,7 +777,9 @@ function miradorAddZoomer() {
 
          }
 
-         if(val <= 1 && maxH) {
+         if(maxH 
+            && val <= 1 // quickfix for zoom > 1 on "smaller" images like bdr:W22084 (#377)
+            ) { 
             let dMinH = 0.9 * scrollV.innerHeight() / maxH
             let coefH = 1 - (1 - dMinH) * (1 - val)            
             coef = Math.min(coef,coefH)

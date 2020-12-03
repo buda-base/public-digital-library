@@ -108,7 +108,8 @@ const boTranslation = {
       title:"མཚན་བྱང་།",
       numberMC:"བཙལ་བྱ་རྙེད་སའི་དུམ་ཚན་གྱི་གྲངས།",
       lastS:"སྤེལ་དུས།",
-      reverseS:"(reverse)"
+      reverseS:"(reverse)",
+      volumeN:"Volume Number"
    },
    copyright:{
       open:"བཀག་རྒྱ་མེད་པ།",
@@ -205,7 +206,8 @@ const boTranslation = {
       hasInstance_plural:"དཔེ་རྒྱུན་ {{count,counttobo}} ཡོད།",
       assoc:"{{type}} associated with: {{- name}}",
       moreres:"More {{txt}} are available, do you want to see them?",
-      openEin:"Open in Etext"
+      openEin:"Open in Etext",
+      inEtext:"Results for <key>{{- keyword}}</key> <key>[{{language}}]</key><br/>in <res href='/show/{{- rid}}'>{{- name}}</res>",
    },
    index:{
       openViewer:"ཀློག",

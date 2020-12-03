@@ -324,8 +324,11 @@ else if(params && params.q) {
    let pt = params.t
    if(pt && !pt.match(/,/) && ["Place", "Person","Work","Etext", "Topic","Role","Corporation","Lineage","Instance","Product", "Scan"].indexOf(pt) !== -1)  {
 
-      if(!state.data.searches || !state.data.searches[pt] || !state.data.searches[pt][params.q+"@"+params.lg]) {
-         store.dispatch(dataActions.startSearch(params.q,params.lg,[pt],null,dontGetDT)); 
+      let inEtext
+      if(params.r && pt === "Etext") inEtext = params.r
+
+      if(!state.data.searches || !state.data.searches[pt] || !state.data.searches[pt][params.q+"@"+params.lg] || !state.data.searches[pt][params.q+"@"+params.lg].inEtext !== inEtext) {
+         store.dispatch(dataActions.startSearch(params.q,params.lg,[pt],null,dontGetDT,inEtext)); 
          dontGetDT = true
       }
       else {
@@ -1302,13 +1305,15 @@ function getStats(cat:string,data:{},tree:{})
    return stat
 }
 
-function addMeta(keyword:string,language:string,data:{},t:string,tree:{},found:boolean=true,facets:boolean=true)
+function addMeta(keyword:string,language:string,data:{},t:string,tree:{},found:boolean=true,facets:boolean=true,inEtext)
 {
-   //loggergen.log("aM",data,data["results"],t)
+   loggergen.log("aM:",data,data["results"],t,inEtext)
 
    if(data["results"] &&  data["results"]["bindings"] && data["results"]["bindings"][t.toLowerCase()+"s"]){
       loggergen.log("FOUND",data);
       let stat = getStats(t,data,tree);
+
+      if(inEtext) data.inEtext = inEtext
 
       if(tree)
       {
@@ -1443,6 +1448,40 @@ function mergeSameAs(result,withSameAs,init = true,rootRes = result, force = fal
    return result
 }
 
+
+
+function sortResultsByVolumeNb(results,reverse) {
+   
+   if(!results) return 
+
+   let keys = Object.keys(results)
+   if(keys && keys.length) {
+      keys = keys.map(k => {
+         let n = 0, score, p = results[k].length
+         for(let i in results[k]) {
+            let v = results[k][i]
+            if(v.type === bdo+"eTextIsVolume") {
+               n = Number(v.value)
+            } else if(v.type === bdo+"eTextInVolume") {
+               n = Number(v.value)
+            }
+         }
+         return ({k, n, p})
+      },{})
+      keys = _.orderBy(keys,['n','p'],[(reverse?'desc':'asc'), (reverse?'asc':'desc')])
+
+      //loggergen.log("sortK",keys)
+
+      let sortRes = {}
+      for(let k of keys) sortRes[k.k] = results[k.k]
+
+      //loggergen.log("sortResP",reverse,sortRes)
+
+      return sortRes
+   }
+   return results
+}
+
 function sortResultsByTitle(results, userLangs, reverse) {
 
    if(!results) return 
@@ -1467,14 +1506,14 @@ function sortResultsByTitle(results, userLangs, reverse) {
          }
          return { k, lang, value }
       },{})
-      loggergen.log("keys1", keys)
+      //loggergen.log("keys1", keys)
       let sortKeys = sortLangScriptLabels(keys,langs.flat,langs.translit)
       if(reverse) sortKeys = sortKeys.reverse()
-      loggergen.log("keys2", sortKeys)
+      //loggergen.log("keys2", sortKeys)
       let sortRes = {}
       for(let k of sortKeys) sortRes[k.k] = results[k.k]
 
-      loggergen.log("sortResT",sortRes)
+      //loggergen.log("sortResT",sortRes)
 
       return sortRes
    }
@@ -1520,12 +1559,12 @@ function sortResultsByRelevance(results,reverse) {
       },{})
       keys = _.orderBy(keys,[ 'max', 'n','p'],[(reverse?'asc':'desc'), (reverse?'asc':'desc')])
       
-      loggergen.log("sortK",JSON.stringify(keys,null,3))
+      //loggergen.log("sortK",JSON.stringify(keys,null,3))
 
       let sortRes = {}
       for(let k of keys) sortRes[k.k] = results[k.k]
 
-      loggergen.log("sortResR",sortRes)
+      //loggergen.log("sortResR",sortRes)
 
       return sortRes
    }
@@ -1770,6 +1809,7 @@ function rewriteAuxMain(result,keyword,datatype,sortBy,language)
          else if(sortBy.startsWith("year of")) return { ...acc, [t]: sortResultsByYear(dataWithAsset,reverse) }
          else if(sortBy.startsWith("closest matches")) return { ...acc, [t]: sortResultsByRelevance(dataWithAsset,reverse) }
          else if(sortBy.startsWith("number of matching chunks")) return { ...acc, [t]: sortResultsByNbChunks(dataWithAsset,reverse) }
+         else if(sortBy.startsWith("volume number")) return { ...acc, [t]: sortResultsByVolumeNb(dataWithAsset,reverse) }
          else if(sortBy.includes("title") ||  sortBy.includes("name") ) return { ...acc, [t]: sortResultsByTitle(dataWithAsset, langPreset, reverse) }
          else if(sortBy.includes("date")) return { ...acc, [t]: sortResultsByLastSync(dataWithAsset,reverse) }
       }
@@ -1795,9 +1835,9 @@ function rewriteAuxMain(result,keyword,datatype,sortBy,language)
 }
 
 
-async function startSearch(keyword,language,datatype,sourcetype,dontGetDT) {
+async function startSearch(keyword,language,datatype,sourcetype,dontGetDT,inEtext) {
 
-   loggergen.log("sSsearch",keyword,language,datatype,sourcetype);
+   loggergen.log("sSsearch",keyword,language,datatype,sourcetype,inEtext);
 
    // why is this action dispatched twice ???
    store.dispatch(uiActions.loading(keyword, true));
@@ -1808,7 +1848,7 @@ async function startSearch(keyword,language,datatype,sourcetype,dontGetDT) {
       let result ;
 
       if(!sourcetype)
-      result = await api.getStartResults(keyword,language,datatype);
+      result = await api.getStartResults(keyword,language,datatype,inEtext);
       else
       result = await api.getAssocResults(keyword,sourcetype,datatype[0]);
 
@@ -1912,7 +1952,9 @@ else {
 
    let data = getData(result);
 
-   loggergen.log("kz1",JSON.stringify(Object.keys(data.results.bindings)))
+   //loggergen.log("kz1",JSON.stringify(Object.keys(data.results.bindings)))
+
+   if(inEtext) data.inEtext = inEtext
 
    store.dispatch(dataActions.foundResults(keyword, language, data, datatype));
 
@@ -1924,7 +1966,7 @@ else {
 
       if(["Person","Place","Role","Corporation","Topic","Lineage","Etext","Product"].indexOf(datatype[0]) !== -1) {
 
-         addMeta(keyword,language,data,datatype[0],null,false);
+         addMeta(keyword,language,data,datatype[0],null,false, true);
       }
       else if(["Instance","Work","Etext","Scan"].indexOf(datatype[0]) !== -1) {
 
@@ -1968,7 +2010,8 @@ else {
          */
          //loggergen.log("kz2",JSON.stringify(Object.keys(data.results.bindings)))
 
-         metadata = await api.getDatatypesOnly(keyword, language);
+         if(!inEtext) metadata = await api.getDatatypesOnly(keyword, language);
+         else  metadata = { [bdo+"Etext"]: data.numResults}
 
          store.dispatch(dataActions.foundResults(keyword, language, { results: { bindings: { } } } ) ) //data));
          store.dispatch(dataActions.foundDatatypes(keyword,language,{ metadata, hash:true}));
@@ -2034,6 +2077,7 @@ async function updateSortBy(i,t)
    if(i.startsWith("popularity")) data.results.bindings[t.toLowerCase()+"s"] = sortResultsByPopularity(data.results.bindings[t.toLowerCase()+"s"], reverse) 
    else if(i.startsWith("closest matches")) data.results.bindings[t.toLowerCase()+"s"] = sortResultsByRelevance(data.results.bindings[t.toLowerCase()+"s"], reverse) 
    else if(i.startsWith("year of")) data.results.bindings[t.toLowerCase()+"s"] = sortResultsByYear(data.results.bindings[t.toLowerCase()+"s"], reverse) 
+   else if(i.startsWith("volume number")) data.results.bindings[t.toLowerCase()+"s"] = sortResultsByVolumeNb(data.results.bindings[t.toLowerCase()+"s"], reverse) 
    else if(i.startsWith("number of matching chunks")) data.results.bindings[t.toLowerCase()+"s"] = sortResultsByNbChunks(data.results.bindings[t.toLowerCase()+"s"], reverse) 
    else if(i.includes("title") || i.includes("name")) { 
       let langPreset = state.ui.langPreset
@@ -2364,7 +2408,7 @@ export function* watchStartSearch() {
 
    yield takeLatest(
       dataActions.TYPES.startSearch,
-      (action) => startSearch(action.payload.keyword,action.payload.language,action.payload.datatype,action.payload.sourcetype,action.payload.dontGetDT)
+      (action) => startSearch(action.payload.keyword,action.payload.language,action.payload.datatype,action.payload.sourcetype,action.payload.dontGetDT,action.payload.inEtext)
    );
 }
 
