@@ -236,6 +236,7 @@ export const providers = {
    "idp":"International Dunhuang Project",         
    "gretil":"GRETIL",
    "loc":"Library of Congress",
+   "lul":"Leiden University Libraries",
    "mbbt":"Marcus Bingenheimer's website",
    "ngmpp":"NGMPP",
    "rkts":"rKTs",
@@ -266,6 +267,7 @@ export const provImg = {
    "ia": "/IA.png",
    "idp":  "/IDP.jpg",
    "loc":"/LOC.svg",
+   "lul":"/LULDC.png",
    "mbbt": "/MB-icon.jpg",
    "ngmpp":"/NGMPP.svg",
    "ola":  "/OL.png",  //"https://openlibrary.org/static/images/openlibrary-logo-tighter.svg" //"https://seeklogo.com/images/O/open-library-logo-0AB99DA900-seeklogo.com.png", 
@@ -2022,6 +2024,7 @@ class ResourceViewer extends Component<Props,State>
          else if(provLab === "EFT") sameAsPrefix += "eftr provider hasIcon "
          else if(provLab === "CUDL") sameAsPrefix += "cudl provider hasIcon "
          else if(provLab === "SBB") sameAsPrefix += "sbb provider hasIcon "
+         else if(provLab === "LUL") sameAsPrefix += "lul provider hasIcon "
          //else if(provLab === "rKTs") sameAsPrefix += "rkts provider hasIcon "
       }      
 
@@ -2043,6 +2046,7 @@ class ResourceViewer extends Component<Props,State>
       if(prov) prov = prov.replace(/Internet Archives/g,"IA") 
       if(prov) prov = prov.replace(/Staatsbibliothek zu Berlin/g,"SBB")
       if(prov) prov = prov.replace(/Library of Congress/g,"LOC")
+      if(prov) prov = prov.replace(/Leiden University Libraries/g,"LUL")      
       return prov
    } 
 
