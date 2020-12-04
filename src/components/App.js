@@ -1351,7 +1351,11 @@ class App extends Component<Props,State> {
 
       let needRefresh, time, current ;
       if(state.id && !newid) {
-         if(!state.results || !state.results[state.id] || !state.results[state.id].results) //|| !state.results[state.id].results.resLength //|| !Object.keys(state.results[state.id].results).length
+         let inEtext 
+         if(props.searches && props.searches[state.filters.datatype[0]] && props.searches[state.filters.datatype[0]][props.keyword+"@"+props.language] && props.searches[state.filters.datatype[0]][props.keyword+"@"+props.language].inEtext) {
+            inEtext = props.searches[state.filters.datatype[0]][props.keyword+"@"+props.language].inEtext
+         }         
+         if(!state.results || !state.results[state.id] || !state.results[state.id].results || state.results[state.id].results.inEtext !== inEtext ) //|| !state.results[state.id].results.resLength //|| !Object.keys(state.results[state.id].results).length
          {
             needRefresh = true
             time = 1
@@ -1379,6 +1383,8 @@ class App extends Component<Props,State> {
          }
       }
 
+      //console.log("time:",time,state.id,needRefresh,current)
+
       // 
       if(state.id && needRefresh && time && (!current || time > current))
       {
@@ -1388,7 +1394,7 @@ class App extends Component<Props,State> {
             time = props.searches[props.keyword+"@"+props.language].time
          }
 
-         loggergen.log("K", props.keyword, time, current)
+         //loggergen.log("K:", props.keyword, time, current)
 
          let results
          if(state.filters.datatype.indexOf("Any") !== -1 || state.filters.datatype.length > 1 || state.filters.datatype.filter(d => ["Work","Etext","Person","Place","Topic","Role","Corporation","Lineage","Product","Scan"].indexOf(d) === -1).length ) {
@@ -1403,7 +1409,7 @@ class App extends Component<Props,State> {
             else if(Ts.indexOf(dt) === -1) Ts.push(dt)
          }
          
-         loggergen.log("Ts",Ts) //,props.searches,props.keyword+"@"+props.language,props.searches[props.keyword+"@"+props.language])
+         //loggergen.log("Ts",Ts) //,props.searches,props.keyword+"@"+props.language,props.searches[props.keyword+"@"+props.language])
 
          let merge 
          if(props.searches[props.keyword+"@"+props.language] !== undefined || props.language === "") for(let dt of Ts) { 
@@ -1415,8 +1421,8 @@ class App extends Component<Props,State> {
                results = { results:{ bindings:{} } }
             }
             else if(!results) {
-               results = { ...props.searches[props.keyword+"@"+props.language] }
-               if(results) { results = { time:results.time, results: { bindings:{ ...results.results.bindings } } }; }
+               results = { ...props.searches[props.keyword+"@"+props.language] }               
+               if(results) { results = { time:results.time, ...(res.inEtext?{inEtext:res.inEtext}:{}), results: { bindings:{ ...results.results.bindings } } }; }
                else results = { results: { time, bindings:{ } } }
             }
             
