@@ -1422,7 +1422,7 @@ class App extends Component<Props,State> {
             }
             else if(!results) {
                results = { ...props.searches[props.keyword+"@"+props.language] }               
-               if(results) { results = { time:results.time, ...(res.inEtext?{inEtext:res.inEtext}:{}), results: { bindings:{ ...results.results.bindings } } }; }
+               if(results) { results = { time:results.time, ...(res && res.inEtext?{inEtext:res.inEtext}:{}), results: { bindings:{ ...results.results.bindings } } }; }
                else results = { results: { time, bindings:{ } } }
             }
             
