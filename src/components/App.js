@@ -1048,7 +1048,11 @@ class App extends Component<Props,State> {
             key = key.toLowerCase();
             lang = "bo-x-ewts"
          }
-         this.props.history.push({pathname:"/search",search:"?q="+key+"&lg="+lang+"&t="+label+hasOpen})
+         let inEtext
+         if(this.props.searches && this.props.searches[this.state.filters.datatype[0]] && this.props.searches[this.state.filters.datatype[0]][this.props.keyword+"@"+this.props.language] && this.props.searches[this.state.filters.datatype[0]][this.props.keyword+"@"+this.props.language].inEtext) {
+            inEtext = this.props.searches[this.state.filters.datatype[0]][this.props.keyword+"@"+this.props.language].inEtext
+         }
+         this.props.history.push({pathname:"/search",search:"?q="+key+"&lg="+lang+"&t="+label+hasOpen+(inEtext?"&r="+inEtext:"")})
          
          // TODO add permanent filters (here ?)
       }
@@ -4260,7 +4264,15 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
       
       let {pathname,search} = this.props.history.location
       
-      if(!this.props.isInstance) this.props.history.push({pathname,search:(search.replace(/((&|(\?))([tfin]|pg)=[^&]+)/g,"$3")+"&t="+this.state.filters.datatype[0]).replace(/\?&/,"?")})
+      if(!this.props.isInstance) {
+         search = (search.replace(/((&|(\?))([tfin]|pg)=[^&]+)/g,"$3")+"&t="+this.state.filters.datatype[0])            
+         let inEtext 
+         if(this.props.searches && this.props.searches[this.state.filters.datatype[0]] && this.props.searches[this.state.filters.datatype[0]][this.props.keyword+"@"+this.props.language] && this.props.searches[this.state.filters.datatype[0]][this.props.keyword+"@"+this.props.language].inEtext) {
+            inEtext = this.props.searches[this.state.filters.datatype[0]][this.props.keyword+"@"+this.props.language].inEtext
+            if(inEtext) search = search.replace(/((&|(\?))([r])=[^&]+)/g,"$3")
+         }
+         this.props.history.push({pathname,search:search.replace(/\?&/,"?")})
+      }
       else this.props.history.push({pathname,search:this.state.backToWorks})
       
       // TODO fix reset filters 
@@ -5402,7 +5414,9 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                               { this.props.isInstance && this.state.backToWorks && this.state.filters.instance && this.renderFilterTag(false, I18n.t("Lsidebar.tags.instanceOf"), this.state.filters.instance, (event, checked) => {
                                  this.resetFilters(event)
                               } )  } 
-                              { inEtext && this.renderFilterTag(false, I18n.t("Lsidebar.widgets.root"), fullUri(inEtext) )  } 
+                              { inEtext && this.renderFilterTag(false, I18n.t("Lsidebar.widgets.root"), fullUri(inEtext), (event, checked) => {
+                                 this.resetFilters(event)
+                              } )  } 
                               { facetTags }
                               { (this.state.filters.facets || this.state.backToWorks )&& this.renderResetF() }
                               </div>

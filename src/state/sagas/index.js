@@ -327,7 +327,7 @@ else if(params && params.q) {
       let inEtext
       if(params.r && pt === "Etext") inEtext = params.r
 
-      if(!state.data.searches || !state.data.searches[pt] || !state.data.searches[pt][params.q+"@"+params.lg] || !state.data.searches[pt][params.q+"@"+params.lg].inEtext !== inEtext) {
+      if(!state.data.searches || !state.data.searches[pt] || !state.data.searches[pt][params.q+"@"+params.lg] || state.data.searches[pt][params.q+"@"+params.lg].inEtext !== inEtext) {
          store.dispatch(dataActions.startSearch(params.q,params.lg,[pt],null,dontGetDT,inEtext)); 
          dontGetDT = true
       }
@@ -1981,8 +1981,8 @@ else {
          //store.dispatch(dataActions.foundDatatypes(keyword,language,{ metadata:{ [bdo+dt]:data.numResults } } ));
       }
 
-      
-      if(!dontGetDT && !store.getState().data.searches[keyword+"@"+language]){
+      let state = store.getState()
+      if(!dontGetDT && (!state.data.searches[keyword+"@"+language] || state.data.searches[keyword+"@"+language].inEtext !== inEtext) ) {
 
          /* // deprecated
          store.dispatch(dataActions.getDatatypes(keyword,language));
@@ -2013,7 +2013,10 @@ else {
          if(!inEtext) metadata = await api.getDatatypesOnly(keyword, language);
          else  metadata = { [bdo+"Etext"]: data.numResults}
 
-         store.dispatch(dataActions.foundResults(keyword, language, { results: { bindings: { } } } ) ) //data));
+         data = { results: { bindings: { } } }
+         if(inEtext) data.inEtext = inEtext
+
+         store.dispatch(dataActions.foundResults(keyword, language, data ) ) //data));
          store.dispatch(dataActions.foundDatatypes(keyword,language,{ metadata, hash:true}));
       }
    }

@@ -5658,7 +5658,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
             if(pType && pType["@id"]) pType = pType["@id"]
             else pType = "bdo:"+pType
             let tLabel 
-            console.log("e:",tag,pType,parts);
+            //console.log("e:",tag,pType,parts);
             if(pType) {
                if(Array.isArray(pType)) pType = pType[0]
                tLabel = getOntoLabel(this.props.dictionary,this.props.locale,fullUri(pType))
@@ -5709,22 +5709,91 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
       return (
          <div class="data etextrefs" id="outline">
-            <h2>{I18n.t("resource.browsE")}</h2>
-               <div class="search">
-                  <div>
-                     <input type="text" /*class="disabled"*/ />
-                     <span class="button" title={I18n.t("resource.start")}></span> 
-                  </div>
-               </div>
+            <h2>{I18n.t("home.search")}</h2>
+            <div class="search on">
                <div>
-                  <div class={"root is-root"} onClick={(e) => toggle(e,root,root)} >                     
-                     { !open && [<img src="/icons/triangle_.png" className="xpd" />,colT,<span >{title}</span>]}
-                     {  open && [<img src="/icons/triangle.png" className="xpd"  />,colT,<span class='on'>{title}</span>]}
-                  </div>
-                  { open && <div style={{paddingLeft:"50px"}}>{etextRefs}</div> }
+                  <input type="text" placeholder={I18n.t("resource.searchE")} value={this.state.outlineKW} onChange={this.changeOutlineKW.bind(this)} onKeyPress={ (e) => { 
+                     if(e.key === 'Enter' && this.state.outlineKW) { 
+                        if(this.state.dataSource&&this.state.dataSource.length) { 
+                           let param = this.state.dataSource[0].split("@")
+                           let loca = { pathname:"/search", search:"?q="+keywordtolucenequery(param[0])+"&lg="+param[1]+"&r="+this.props.IRI+"&t=Etext" }
+                           this.props.history.push(loca)
+                        }
+                        else this.changeOutlineKW(null,this.state.outlineKW)
+                     }
+                  }} />
+                  <span class="button" /*onClick={outlineSearch}*/  title={I18n.t("resource.start")}></span>
+                  { (this.state.outlineKW || this.props.outlineKW) && <span class="button" title={I18n.t("resource.reset")} onClick={(e) => { 
+                     this.setState({outlineKW:"",dataSource:[]})
+                     if(this.props.outlineKW) {
+                        this.props.onResetOutlineKW()
+                        let loca = { ...this.props.history.location }
+                        if(!loca.search) loca.search = ""
+                        loca.search = loca.search.replace(/(&osearch|osearch)=[^&]+/, "").replace(/[?]&/,"?")
+                        this.props.history.push(loca)
+                     }
+                  }}><Close/></span> }                  
+                  { (this.state.outlineKW && this.state.dataSource && this.state.dataSource.length > 0) &&   
+                     <div><Paper id="suggestions">
+                     { this.state.dataSource.map( (v) =>  {
+                           let tab = v.split("@")
+                           return (
+                              <MenuItem key={v} style={{lineHeight:"1em"}} onClick={(e)=>{ 
+                                 this.setState({dataSource:[]});
+                                 let param = this.state.dataSource[0].split("@")
+                                 let loca = { pathname:"/search", search:"?q="+keywordtolucenequery(param[0])+"&lg="+param[1]+"&r="+this.props.IRI+"&t=Etext" }
+                                 this.props.history.push(loca)
+                              }}>{ tab[0].replace(/["]/g,"")} <SearchIcon style={{padding:"0 10px"}}/><span class="lang">{(I18n.t(""+(searchLangSelec[tab[1]]?searchLangSelec[tab[1]]:languages[tab[1]]))) }</span></MenuItem> ) 
+                           } ) }
+                     </Paper></div> }
                </div>
-         </div> )
+            </div>
+            <h2>{I18n.t("resource.browsE")}</h2>
+            <div class="search">
+               <div>
+                  <input type="text" class="disabled" placeholder={I18n.t("resource.searchO")}  />
+                  <span class="button" title={I18n.t("resource.start")}></span> 
+               </div>
+            </div>
+            <div>
+               <div class={"root is-root"} onClick={(e) => toggle(e,root,root)} >                     
+                  { !open && [<img src="/icons/triangle_.png" className="xpd" />,colT,<span >{title}</span>]}
+                  {  open && [<img src="/icons/triangle.png" className="xpd"  />,colT,<span class='on'>{title}</span>]}
+               </div>
+               { open && <div style={{paddingLeft:"50px"}}>{etextRefs}</div> }
+            </div>
+         </div> 
+         )
    }
+
+   changeOutlineKW(e, value) {
+
+      if(!value && e) value = e.target.value
+
+      let language = this.state.language
+      let detec = narrowWithString(value, this.state.langDetect)
+      let possible = [ ...this.state.langPreset, ...langSelect ]
+      if(detec.length < 3) { 
+         if(detec[0] === "tibt") for(let p of possible) { if(p === "bo" || p.match(/-[Tt]ibt$/)) { language = p ; break ; } }
+         else if(detec[0] === "hani") for(let p of possible) { if(p.match(/^zh((-[Hh])|$)/)) { language = p ; break ; } }
+         else if(["ewts","iast","deva","pinyin"].indexOf(detec[0]) !== -1) for(let p of possible) { if(p.match(new RegExp(detec[0]+"$"))) { language = p ; break ; } }
+      }
+      
+      possible = [ ...this.state.langPreset, ...langSelect.filter(l => !this.state.langPreset || !this.state.langPreset.includes(l))]
+      loggergen.log("detec",possible,detec,this.state.langPreset,this.state.langDetect)
+      
+      this.setState({ outlineKW:value, outlineKWlang: language, dataSource: detec.reduce( (acc,d) => {
+         
+         let presets = []
+         if(d === "tibt") for(let p of possible) { if(p === "bo" || p.match(/-[Tt]ibt$/)) { presets.push(p); } }
+         else if(d === "hani") for(let p of possible) { if(p.match(/^zh((-[Hh])|$)/)) { presets.push(p); } }
+         else if(["ewts","iast","deva","pinyin"].indexOf(d) !== -1) for(let p of possible) { if(p.match(new RegExp(d+"$"))) { presets.push(p); } }
+         
+         return [...acc, ...presets]
+      }, [] ).concat(value.match(/[a-zA-Z]/)?["en"]:[]).map(p => '"'+value+'"@'+(p == "sa-x-iast"?"sa-x-ndia":p)) } ) 
+
+   }
+
 
    renderOutline() {
 
@@ -6163,33 +6232,6 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
          let open = this.state.collapse[tag] || (osearch && this.state.collapse[tag] === undefined)
 
-         let changeOutlineKW = (e, value) => {
-
-            if(!value && e) value = e.target.value
-
-            let language = this.state.language
-            let detec = narrowWithString(value, this.state.langDetect)
-            let possible = [ ...this.state.langPreset, ...langSelect ]
-            if(detec.length < 3) { 
-               if(detec[0] === "tibt") for(let p of possible) { if(p === "bo" || p.match(/-[Tt]ibt$/)) { language = p ; break ; } }
-               else if(detec[0] === "hani") for(let p of possible) { if(p.match(/^zh((-[Hh])|$)/)) { language = p ; break ; } }
-               else if(["ewts","iast","deva","pinyin"].indexOf(detec[0]) !== -1) for(let p of possible) { if(p.match(new RegExp(detec[0]+"$"))) { language = p ; break ; } }
-            }
-            
-            possible = [ ...this.state.langPreset, ...langSelect.filter(l => !this.state.langPreset || !this.state.langPreset.includes(l))]
-            loggergen.log("detec",possible,detec,this.state.langPreset,this.state.langDetect)
-            
-            this.setState({ outlineKW:value, outlineKWlang: language, dataSource: detec.reduce( (acc,d) => {
-               
-               let presets = []
-               if(d === "tibt") for(let p of possible) { if(p === "bo" || p.match(/-[Tt]ibt$/)) { presets.push(p); } }
-               else if(d === "hani") for(let p of possible) { if(p.match(/^zh((-[Hh])|$)/)) { presets.push(p); } }
-               else if(["ewts","iast","deva","pinyin"].indexOf(d) !== -1) for(let p of possible) { if(p.match(new RegExp(d+"$"))) { presets.push(p); } }
-               
-               return [...acc, ...presets]
-            }, [] ).concat(value.match(/[a-zA-Z]/)?["en"]:[]).map(p => '"'+value+'"@'+(p == "sa-x-iast"?"sa-x-ndia":p)) } ) 
-
-         }
 
          let colT = <span class={"parTy"} title={I18n.t("Lsidebar.collection.title")}><div>COL</div></span>
 
@@ -6211,20 +6253,22 @@ perma_menu(pdfLink,monoVol,fairUse,other)
             <h2>{I18n.t("index.outline")}</h2>
                <div class="search">
                   <div>
-                     <input type="text" placeholder={I18n.t("resource.searchO")} value={this.state.outlineKW} onChange={changeOutlineKW} onKeyPress={ (e) => { 
+                     <input type="text" placeholder={I18n.t("resource.searchO")} value={this.state.outlineKW} onChange={this.changeOutlineKW.bind(this)} onKeyPress={ (e) => { 
                         if(e.key === 'Enter' && this.state.outlineKW) { 
                            if(this.state.dataSource&&this.state.dataSource.length) outlineSearch(e,this.state.dataSource[0].split("@")[1])
-                           else changeOutlineKW(null,this.state.outlineKW)
+                           else this.changeOutlineKW(null,this.state.outlineKW)
                         }
                      }}/>
                      <span class="button" onClick={outlineSearch}  title={I18n.t("resource.start")}></span>
-                     { this.props.outlineKW && <span class="button" title={I18n.t("resource.reset")} onClick={(e) => { 
+                     { (this.props.outlineKW || this.state.outlineKW) && <span class="button" title={I18n.t("resource.reset")} onClick={(e) => { 
                         this.setState({outlineKW:"",dataSource:[]})
-                        this.props.onResetOutlineKW()
-                        let loca = { ...this.props.history.location }
-                        if(!loca.search) loca.search = ""
-                        loca.search = loca.search.replace(/(&osearch|osearch)=[^&]+/, "").replace(/[?]&/,"?")
-                        this.props.history.push(loca)
+                        if(this.props.outlineKW) {
+                           this.props.onResetOutlineKW()
+                           let loca = { ...this.props.history.location }
+                           if(!loca.search) loca.search = ""
+                           loca.search = loca.search.replace(/(&osearch|osearch)=[^&]+/, "").replace(/[?]&/,"?")
+                           this.props.history.push(loca)
+                        }
                      }}><Close/></span> }                  
                      { (this.state.outlineKW && this.state.dataSource && this.state.dataSource.length > 0) &&   
                         <div><Paper id="suggestions">

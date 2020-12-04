@@ -452,7 +452,8 @@ const boTranslation = {
       browsE:"Browse",
       unpag:"The pages of this etext may correspond to page in the original edition, but we cannot provide the exact mapping.",
       pageN:"p. {{num,counttobo}}",
-      noAssoc:"No associated resources found"
+      noAssoc:"No associated resources found",
+      searchE:"Search in the content of this etext"
    },
    mirador:{
       return:"བུདྡྷ་ལ་ཕྱིར་ལོག",

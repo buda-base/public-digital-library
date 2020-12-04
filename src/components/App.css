@@ -1346,7 +1346,11 @@ h4:not(:hover) > .lang
 .resource .data#outline.etextrefs .is-root h2 a span { color: #343434; cursor:pointer;}
 
 
-.resource .data#outline.etextrefs > .search:not(#a) { display:none !important; }
+.resource .data#outline.etextrefs > .search:not(.on):not(#a) { display:none !important; }
+
+/* .resource .data#outline.etextrefs > .search.on { background-color:#d73449; } */
+
+.resource .data#outline.etextrefs .search + h2 { margin-top:70px;}
 
 /* ------------------------------------------------------------------------------------------------------------------------ header */
 
@@ -2490,7 +2494,7 @@ html[lang="en"] .resource .data > [data-prop="bdo:creator"] h4[data-prop="bdo:ro
 
 .resource .data.legal-props > div h4 > .ulink.src .bdr { display:none; }
 
-.resource .data.legal-props > div h4 > .ulink > a[href*="LD_LULDC_metadata"]::before { background-image:url("/LULDC.png"); background-size:auto 25px;}
+.resource .data.legal-props > div h4 > .ulink > a[href*="LD_LULDC_metadata"]::before { background-image:url("/LULDC.png"); background-size:auto 24px;}
 .resource .data.legal-props > div h4 > .ulink > a[href*="LD_SBB_metadata"]::before { background-image:url("/SBB.png"); background-size:auto 19px;}
 .resource .data.legal-props > div h4 > .ulink > a[href*="LD_IDP_metadata"]::before { background-image:url("/IDP.jpg"); background-size:auto 21px;}
 .resource .data.legal-props > div h4 > .ulink > a[href*="LOC_metadata"]::before { background-image:url("/LOC.svg"); background-size:23px auto;}
