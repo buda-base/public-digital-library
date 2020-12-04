@@ -1839,7 +1839,7 @@ body > [id^="menu-"] > div:last-child,
 .resource .data > [data-prop="bdo:workHasInstance"] .provider::before { content:none;}
 
 .resource .data > [data-prop="bdo:workHasInstance"] .inst-prov { position:absolute; width:40px;height:40px; left:65px; top:65px;
-   display:flex; align-items: center; justify-content: center; cursor:pointer;
+   display:flex; align-items: center; justify-content: center; cursor:pointer; z-index:1;
 }
 .resource .data > [data-prop="bdo:workHasInstance"] .inst-prov img { flex-shrink:0; height:65%; }
 
