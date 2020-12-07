@@ -1351,7 +1351,7 @@ class App extends Component<Props,State> {
       }
 
       let needRefresh, time, current ;
-      if(state.id && !newid) {
+      if(state.id && !newid && !props.loading) { 
          let inEtext 
          if(props.searches && props.searches[state.filters.datatype[0]] && props.searches[state.filters.datatype[0]][props.keyword+"@"+props.language] && props.searches[state.filters.datatype[0]][props.keyword+"@"+props.language].inEtext) {
             inEtext = props.searches[state.filters.datatype[0]][props.keyword+"@"+props.language].inEtext
