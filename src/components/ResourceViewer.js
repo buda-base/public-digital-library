@@ -5509,7 +5509,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
       // DONE remove "show images" when not needed
       let showToggleScan = this.getResourceElem(bdo+"eTextHasPage")
-      if(showToggleScan && showToggleScan.length) showToggleScan = (showToggleScan[0].seq !== undefined)
+      if(showToggleScan && showToggleScan.length && !this.unpaginated()) showToggleScan = (showToggleScan[0].seq !== undefined)
       else showToggleScan = false
 
       return (
@@ -5521,7 +5521,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                   <span title={I18n.t("mirador.increase")} class={!size||size < 2.4?"on":""} onClick={(e)=>etextSize(true)}><img src="/icons/Zp.svg"/></span>
                   {lang_selec(this,true)}
                </div>
-               <a class={showToggleScan && !this.unpaginated()?"on":""} onClick={(e) => this.setState({showEtextImages:!this.state.showEtextImages})}>{this.state.showEtextImages?<img id="check" src="/icons/check.svg"/>:<span id="check"></span>}{I18n.t("mirador.showI")}<img width="42" src="/icons/search/images_b.svg"/></a>
+               <a class={showToggleScan?"on":""} onClick={(e) => this.setState({showEtextImages:!this.state.showEtextImages})}>{this.state.showEtextImages?<img id="check" src="/icons/check.svg"/>:<span id="check"></span>}{I18n.t("mirador.showI")}<img width="42" src="/icons/search/images_b.svg"/></a>
             </div>
          </div>
       )
