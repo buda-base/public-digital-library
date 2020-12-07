@@ -4809,21 +4809,21 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          if(!imageLinks[id])
          {
             let manif = this.props.imageVolumeManifests[id]
-            
-            loggergen.log("k",id,manif)
-
             let imageList = this.props.imageLists, iiifpres = "//iiifpres.bdrc.io", iiif = "//iiif.bdrc.io"            
             if(imageList) imageList = imageList[id]
+            
+            loggergen.log("k:",id,manif,imageList)
+
             if(this.props.config && this.props.config.iiifpres) iiifpres = this.props.config.iiifpres.endpoints[this.props.config.iiifpres.index]      
             if(this.props.config && this.props.config.iiif) iiif = this.props.config.iiif.endpoints[this.props.config.iiif.index]      
-            imageLinks[id] = elem.reduce( (acc,e) => {               
-               let can, image, file, i = Number(e.seq) 
-               console.log("i:",i,e)
-               if( i > 0 && i < imageList.length) file = imageList[i-1].filename
-               if(file) {               
+            // DONE prepare all images at once, not just according to etext pages that are already loaded
+            imageLinks[id] = imageList.reduce( (acc,e,i) => {               
+               let can, image, file
+               file = imageList[i].filename
+               if(file) {                                 
                   can = iiifpres + "/v:" + id + "/canvas/" + file
-                  image = iiif + "/" + id + "::" + file + "/full/max/0/default.jpg"
-                  return {...acc, [e.seq]: { id:can, image } }
+                  image = iiif + "/" + id + "::" + file + "/full/"+(imageList[i].width > 3500 ? "3500,":"max")+"/0/default.jpg"
+                  return {...acc, [i+1]: { id:can, image } }
                }
                return acc ;
             }, {})
