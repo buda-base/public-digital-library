@@ -246,6 +246,7 @@ export const providers = {
    "src":"Sakya Research Center",
    "tol":"Treasury of Lives",
    "viaf":"VIAF",
+   "wc":"WorldCat",
    "wd":"Wikidata",
 }
    
@@ -276,6 +277,7 @@ export const provImg = {
    "src": "/SRC.svg",   
    "tol": "/ToL.png",
    "viaf": "/VIAF.png",
+   "wc":   "/WORLDCAT.png",
    "wd":   "/WD.svg",
 }
 
@@ -4416,8 +4418,16 @@ class ResourceViewer extends Component<Props,State>
 
       if(same && same.length) { 
          
+         let viaf = same.filter(s => s.value.includes("viaf.org/"))
+         if(viaf.length) {
+            viaf = viaf[0].value
+            if(viaf && !same.filter(s => s.value.includes("worldcat.org/")).length) same.push({value:viaf.replace(/^.*\/([^/]+)$/,"https://www.worldcat.org/identities/containsVIAFID/$1"),type:"uri"})
+         } 
+            
+
          let mapSame = same.map(s => {
             //loggergen.log("s.val:",s.value)
+
             let prefix = shortUri(s.value).split(":")[0]
             if(prefix.startsWith("http") && s.fromSeeOther) prefix = s.fromSeeOther
             // TODO fix Sakya Research Center

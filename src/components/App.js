@@ -129,10 +129,11 @@ const sat   = "http://21dzk.l.u-tokyo.ac.jp/SAT2018/"
 const sbb   = "http://resolver.staatsbibliothek-berlin.de/"
 const src   = "https://sakyaresearch.org/"
 const tol   = "http://api.treasuryoflives.org/resource/";
+const wc    = "https://www.worldcat.org/identities/";
 
 
 export const prefixesMap = { adm, bda, bdac, bdan, bdo, bdou, bdr, bdu, bf, cbcp, cbct, dila, eftr, foaf, oa, mbbt, owl, rdf, rdfs, rkts, skos, wd, ola, viaf, xsd, tmp, 
-   bn, cbeta, har, idp, loc, lul, ngmpp, sat, sbb, src, tol }
+   bn, cbeta, har, idp, loc, lul, ngmpp, sat, sbb, src, tol, wc }
 export const prefixes = Object.values(prefixesMap) ;
 export const sameAsMap = { wd:"WikiData", ol:"Open Library", ola:"Open Library", bdr:"BDRC", mbbt:"Marcus Bingenheimer", eftr:"84000" }
 
@@ -3045,8 +3046,14 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
          if(sameAsRes.length) {
             
+            let viaf = sameAsRes.filter(s => s.value.includes("viaf.org/"))
+            if(viaf.length) {
+               viaf = viaf[0].value
+               if(viaf && !sameAsRes.filter(s => s.value.includes("worldcat.org/")).length) sameAsRes.push({value:viaf.replace(/^.*\/([^/]+)$/,"https://www.worldcat.org/identities/containsVIAFID/$1"),type:owl+"sameAs"})
+            } 
+            
             //loggergen.log("sameAs:",prettId,id,dico,rmatch,sameAsRes)
-         
+
             let menus = {}
             let sources = []
             let hasRes = {}
