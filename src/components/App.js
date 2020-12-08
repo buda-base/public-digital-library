@@ -312,7 +312,7 @@ export function highlight(val,k,expand,newline)
       //console.log("val:",val)
       
       // DONE "manually" add the ↦
-      val = val.replace(new RegExp(k.replace(/[ -'ʾ_/  \[\]0-9\n\r།]+/gu,"[ -'ʾ_/  \\[\\]0-9\n\r།]+"),"gu"),"↦"+k+"↤")
+      val = val.replace(new RegExp(k.replace(/[ -'ʾʼʹ‘_/  \[\]0-9\n\r།]+/gu,"[ -'ʾʼʹ‘_/  \\[\\]0-9\n\r།]+"),"gu"),"↦"+k+"↤")
 
       //console.log("k:",val,k.replace(/[ -'ʾ_/  \[\]0-9\n\r།]+/gu,"[ -'ʾ_/  \\[\\]0-9\n\r།]+"))
    }
