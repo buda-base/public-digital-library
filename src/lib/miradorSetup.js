@@ -749,13 +749,14 @@ function miradorAddZoomer() {
 
       window.setZoom = (val) => {
 
-         console.log("sZ:",val,window.maxW,window.maxH)
 
          if(!window.maxW && !window.maxH) miradorInitMenu(true)
          if(!window.maxW && !window.maxH) return ;
 
          let scrollT = jQ(".mirador-container ul.scroll-listing-thumbs")
          let scrollV = jQ(".scroll-view")
+
+         //console.log("sZ:",val,window.maxW,window.maxH,scrollV.innerWidth())
 
          let maxW = window.maxW
          let maxH = window.maxH
@@ -764,16 +765,16 @@ function miradorAddZoomer() {
          // val = 1 => w =  1 * W
          // val = 0 => w =  x * W <=> x = dMin
 
-         let coef = 1, nuW = scrollV.innerWidth(), trX = 0
+         let coef = 1, nuW = scrollV.innerWidth(), trX = 0, coefW, coefH
 
          if(maxW) {
             let dMinW = 0.95 * scrollV.innerWidth() / maxW
-            let coefW = 1 - (1 - dMinW) * (1 - val)            
+            coefW = 1 - (1 - dMinW) * (1 - val)            
             coef = coefW            
             nuW = maxW * coef
 
-            console.log("coef",coef)
-            console.log("nuW",nuW);
+            //console.log("coef",coef)
+            //console.log("nuW",nuW);
 
          }
 
@@ -781,7 +782,8 @@ function miradorAddZoomer() {
             && val <= 1 // quickfix for zoom > 1 on "smaller" images like bdr:W22084 (#377)
             ) { 
             let dMinH = 0.9 * scrollV.innerHeight() / maxH
-            let coefH = 1 - (1 - dMinH) * (1 - val)            
+            coefH = 1 - (1 - dMinH) * (1 - val)            
+
             coef = Math.min(coef,coefH)
             nuW = maxW * coef
             
@@ -789,11 +791,12 @@ function miradorAddZoomer() {
                trX = ( scrollV.innerWidth() - nuW ) / 2
             }
 
-            console.log("coefH",coef)
-            console.log("nuW",nuW,trX);
+            //console.log("nuW",nuW,trX);
+            //console.log("coefH",coef)
 
          }
 
+         //console.log("trX/",trX/coefW,trX/coefH);
 
          //console.log("coef1",coef,val)
          //console.log("nuW",nuW,scrollV.innerWidth(),trX);

@@ -200,6 +200,10 @@
 }
 */
 
+.mirador-container .v-direction-rtl {
+    direction:ltr;
+}
+
 .mirador-container .mirador-hud { 
     display:flex; 
     align-items:center;
