@@ -312,7 +312,7 @@ export function highlight(val,k,expand,newline)
       //console.log("val:",val)
       
       // DONE "manually" add the ↦
-      val = val.replace(new RegExp(k.replace(/[ -'ʾʼʹ‘_/  \[\]0-9\n\r།]+/gu,"[ -'ʾʼʹ‘_/  \\[\\]0-9\n\r།]+"),"gu"),"↦"+k+"↤")
+      val = val.replace(new RegExp("("+k.replace(/[ -'ʾʼʹ‘_/  \[\]0-9\n\r།]+/igu,"[ -'ʾʼʹ‘_/  \\[\\]0-9\n\r།]+")+")","igu"),"↦$1↤")
 
       //console.log("k:",val,k.replace(/[ -'ʾ_/  \[\]0-9\n\r།]+/gu,"[ -'ʾ_/  \\[\\]0-9\n\r།]+"))
    }
@@ -1442,7 +1442,7 @@ class App extends Component<Props,State> {
                merge[dts] = { 
                   ...Object.keys(res.results.bindings[dts]).reduce( (acc,k) =>{
 
-                        let m = [ ...res.results.bindings[dts][k].map(p => (p.type === tmp+"labelMatch"?{...p, type:tmp+"prefLabelMatch"}:p)), //.filter(p => (!p.value || !p.value.match( /*/([Aa]bstract)*/ /([↦↤])/)) /*&& (!p.type || !p.type.match(/[Mm]atch|[Ee]xpression/))*/ ), 
+                        let m = [ ...res.results.bindings[dts][k].map(p => (p.type === tmp+"labelMatch"?{...p, type:tmp+/*pref*/"labelMatch"}:p)), //.filter(p => (!p.value || !p.value.match( /*/([Aa]bstract)*/ /([↦↤])/)) /*&& (!p.type || !p.type.match(/[Mm]atch|[Ee]xpression/))*/ ), 
                                  ...(!results.results.bindings[dts]||!results.results.bindings[dts][k]||!props.language?[]:results.results.bindings[dts][k]) ]
 
                         //loggergen.log("m?",dts,k,m.length) //,m)
@@ -3666,7 +3666,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
             let unreleased = false
             let label ; // sublist[o].filter((e) => (e.type && e.type.match(/prefLabelMatch$/)))[0]
-            let sList = sublist[o].filter(e => e.type && e.type.endsWith("abelMatch") )   //( (e) => (e.type && e.type.match(/(prefLabel(Match)?|eTextTitle)$/)))
+            let sList = sublist[o].filter(e => e.type && e.type.endsWith(/*label*/ "LabelMatch") )   //( (e) => (e.type && e.type.match(/(prefLabel(Match)?|eTextTitle)$/)))
             if(!sList.length) sList = sublist[o].filter(e => (e.type && e.type === skos+"prefLabel")) //.match(/(prefLabel(Match)?|eTextTitle)$/)))
 
             /* // deprecated 
