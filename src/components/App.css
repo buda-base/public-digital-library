@@ -829,6 +829,8 @@ a.result + #matches .result-content #icon > :not(.thumb) img { width:40px; }
 #matches .match.by + .by,
 #matches .match.publisher + .publisher { margin-top:-11px; }
 
+#matches .match.publisher div.multi > span { display:inline-block; }
+
 
 /*
 #matches .match.publisher.en > span > span,
