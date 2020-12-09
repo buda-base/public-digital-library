@@ -6099,6 +6099,18 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                                  }
                               }
 
+                              if(g["tmp:author"]) {
+                                 g.hidden.push(<div class="sub"><h4 class="first type">{this.proplink(tmp+"author")}{I18n.t("punc.colon")} </h4>{this.format("h4","instacO","",false, "sub", [{type:"uri",value:fullUri(g["tmp:author"]["@id"])}])}</div>)
+                              }
+
+                              for(let p of [ "colophon", "authorshipStatement", "incipit", "explicit" ]) {
+                                 node = g[p]
+                                 if(!node) continue;
+                                 if(!Array.isArray(node)) node = [node]
+                                 if(!p.includes(":")) p = bdo+p
+                                 g.hidden.push(<div class="sub"><h4 class="first type">{this.proplink(p)}{I18n.t("punc.colon")} </h4><div>{node.map(n => this.format("h4","","",false, "sub",[{ value:n["@value"], lang:n["@language"], type:"literal"}]))}</div></div>)
+                              }
+
 
                               // WIP sameAs icon / seeAlso link
                               if(g["owl:sameAs"] || g["rdfs:seeAlso"]){

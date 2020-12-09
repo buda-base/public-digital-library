@@ -1213,8 +1213,10 @@ h4:not(:hover) > .lang
 */
 
 .resource .data#outline h4:hover::before { content:none !important;display:none;}
+/*
 .resource .data#outline h4 .of + *,
 .resource .data#outline h4 .of { display:none ; }
+*/
 
 .resource .data#outline .root + div .permalink::before,
 .resource .data#outline .root + div .hasImg::before { opacity:0.65;}
@@ -1321,6 +1323,7 @@ h4:not(:hover) > .lang
 .resource .data#outline .root + div .top + .details .sub.view::before { content:">";padding:0 5px 0 0; }
 
 .resource .data#outline .root + div .top + .details .sub.loca .urilink { display:inline; }
+.resource .data#outline .root + div .top + .details .sub.loca .urilink span { color:#d73449;}
 
 .resource .data#outline .root + div .top + .details .sub h4.first + div { display:flex;}
 

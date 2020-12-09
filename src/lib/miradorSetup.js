@@ -885,6 +885,7 @@ function miradorAddZoomer() {
             let sT = scrollV.scrollTop() + (nuH - oldH)*((scrollV.scrollTop() - fixed)/(oldH - fixed))
             //console.log("sT:",sT,fixed)
             scrollV.scrollTop(sT) 
+            // TODO not always centered when zoom > 135% (bdr:W1KG18629)
             scrollV.scrollLeft((nuW - scrollV.innerWidth() ) / 2)
          }
 
