@@ -744,7 +744,7 @@ function miradorAddZoomer() {
          if(window.maxW <= jQ(".scroll-view").innerWidth() + 1)  jQ(".mirador-container ul.scroll-listing-thumbs ").addClass("transOri50"); 
          else jQ(".mirador-container ul.scroll-listing-thumbs ").removeClass("transOri50"); 
 
-         jQ("input#zoomer").trigger("input")
+         //jQ("input#zoomer").trigger("input")
       })
 
       window.setZoom = (val) => {
@@ -762,14 +762,17 @@ function miradorAddZoomer() {
          let maxH = window.maxH
 
       
-         // val = 1 => w =  1 * W
-         // val = 0 => w =  x * W <=> x = dMin
+         // val = 1.5 => w =  1.5 * W
+         // val = 1   => w =  1 * W
+         // val = 0   => w =  x * W <=> x = dMin
 
-         let coef = 1, nuW = scrollV.innerWidth(), trX = 0, coefW, coefH
+         let coef = 1, nuW = scrollV.innerWidth(), trX = 0, coefW, coefH, val_sav = val
+         if(val > 1) val = 1
 
          if(maxW) {
             let dMinW = 0.95 * scrollV.innerWidth() / maxW
-            coefW = 1 - (1 - dMinW) * (1 - val)            
+            coefW = 1 - (1 - dMinW) * (1 - val)       
+            if(val_sav != val) coefW *= val_sav    
             coef = coefW            
             nuW = maxW * coef
 
@@ -778,23 +781,30 @@ function miradorAddZoomer() {
 
          }
 
-         if(maxH 
-            && val <= 1 // quickfix for zoom > 1 on "smaller" images like bdr:W22084 (#377)
-            ) { 
+         if(maxH) { 
             let dMinH = 0.9 * scrollV.innerHeight() / maxH
-            coefH = 1 - (1 - dMinH) * (1 - val)            
+            coefH = 1 - (1 - dMinH) * (1 - val)                   
+            if(val_sav != val) coefH *= val_sav
 
             coef = Math.min(coef,coefH)
             nuW = maxW * coef
             
-            if(nuW < scrollV.innerWidth() && coef < 1 && maxW > scrollV.innerWidth()) {
-               trX = ( scrollV.innerWidth() - nuW ) / 2
-            }
-
+            
             //console.log("nuW",nuW,trX);
             //console.log("coefH",coef)
 
          }
+
+         if(nuW < scrollV.innerWidth()) { // && coef < 1 && maxW > scrollV.innerWidth()) {
+            trX = ( scrollV.innerWidth() - nuW ) / 2
+            if(maxW <  scrollV.innerWidth()) {
+               trX = 0
+               scrollT.addClass("transOri50")
+            }
+         } else {
+            scrollT.removeClass("transOri50")
+         }
+
 
          //console.log("trX/",trX/coefW,trX/coefH);
 
@@ -917,9 +927,10 @@ function miradorInitMenu(maxWonly) {
    if(window.maxW < jQ(".scroll-view").innerWidth())
    {
       //window.maxW = 0
+      jQ(".mirador-container ul.scroll-listing-thumbs ").addClass("transOri50"); 
+      
+      //if(!window.maxWimg) 
       if(!maxWonly)  {
-         jQ(".mirador-container ul.scroll-listing-thumbs ").addClass("transOri50"); 
-         //if(!window.maxWimg) 
          jQ(".user-buttons.mirador-main-menu").find("li:nth-last-child(3),li:nth-last-child(4)").removeClass("on").hide()
       }
    }
