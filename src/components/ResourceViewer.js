@@ -6097,10 +6097,15 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                                     //loggergen.log("instOf",instOf,node)
                                     g.hidden.push(<div class="sub"><h4 class="first type">{this.proplink(tmp+"instanceLabel")}{I18n.t("punc.colon")} </h4><div>{node.map(n => this.format("h4","","",false, "sub",[{ value:n["@value"], lang:n["@language"], type:"literal"}]))}</div></div>)
                                  }
+   
                               }
 
+
                               if(g["tmp:author"]) {
-                                 g.hidden.push(<div class="sub"><h4 class="first type">{this.proplink(tmp+"author")}{I18n.t("punc.colon")} </h4>{this.format("h4","instacO","",false, "sub", [{type:"uri",value:fullUri(g["tmp:author"]["@id"])}])}</div>)
+                                 if(!Array.isArray(g["tmp:author"])) g["tmp:author"] = [ g["tmp:author"] ]
+                                 g.hidden.push(<div class="sub"><h4 class="first type">{this.proplink(tmp+"author")}{I18n.t("punc.colon")} </h4>{this.format("h4","instacO","",false, "sub", 
+                                    g["tmp:author"].map(aut => ({type:"uri",value:fullUri(aut["@id"])}))
+                                 )}</div>)
                               }
 
                               for(let p of [ "colophon", "authorshipStatement", "incipit", "explicit" ]) {
