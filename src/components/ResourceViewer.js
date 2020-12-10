@@ -2170,7 +2170,7 @@ class ResourceViewer extends Component<Props,State>
                
                thumbV =  this.getResourceElem(tmp+"thumbnailIIIFService", sUri, this.props.assocResources)
                if(!thumbV || !thumbV.length)  ret = [  <Link to={"/show/"+sUri} class={"images-thumb no-thumb"} style={{"background-image":"url(/icons/header/instance.svg)"}}></Link> ]
-               else ret = [  <Link to={"/show/"+sUri} class={"images-thumb"} style={{"background-image":"url("+ thumbV[0].value+"/full/!2000,145/0/default.jpg)"}}></Link> ]
+               else ret = [  <Link to={"/show/"+sUri} class={"images-thumb"} style={{"background-image":"url("+ thumbV[0].value+"/full/"+(thumbV[0].value.includes(".bdrc.io/")?"!2000,145":",145")+"/0/default.jpg)"}}></Link> ]
             
                let inRoot =  this.getResourceElem(bdo+"inRootInstance", sUri, this.props.assocResources)
                if(inRoot && inRoot.length && info && lang && lang === "bo-x-ewts" && info.match(/^([^ ]+ ){11}/)) info = [ info.replace(/^(([^ ]+ ){10}).*?$/,"$1"), <span class="ellip">{info.replace(/^([^ ]+ ){10}[^ ]+(.*?)$/,"$2")}</span> ]
@@ -2434,7 +2434,7 @@ class ResourceViewer extends Component<Props,State>
             if(!thumb && !thumbV) ret = (<Link className={"urilink "+ prefix} to={"/"+show+"/"+prefix+":"+pretty}><span lang="">{ret}{prefix+":"+pretty}</span></Link>)
             else if(thumb && thumb.length) {
                let vlink = "/"+show+"/"+prefix+":"+pretty+"?s="+encodeURIComponent(this.props.history.location.pathname+this.props.history.location.search)+"#open-viewer"                
-               thumb = <div class="images-thumb" style={{"background-image":"url("+thumb[0].value+"/full/!2000,145/0/default.jpg)"}}/>;               
+               thumb = <div class="images-thumb" style={{"background-image":"url("+thumb[0].value+"/full/"+(thumb[0].value.includes(".bdrc.io/")?"!2000,145":",145")+"/0/default.jpg)"}}/>;               
 
                ret = [<Link className={"urilink "+ prefix} to={vlink}>{thumb}</Link>,
                      <div class="images-thumb-links">
@@ -2445,7 +2445,7 @@ class ResourceViewer extends Component<Props,State>
                let repro = this.getResourceElem(bdo+"instanceHasReproduction", shortUri(elem.value), this.props.assocResources)
                if(repro && repro.length) repro = shortUri(repro[0].value)
                let img = thumbV[0].value, hasT = true
-               if(img.startsWith("http")) img += "/full/!2000,145/0/default.jpg"
+               if(img.startsWith("http")) img += "/full/"+(img.includes(".bdrc.io/")?"!2000,145":",145")+"/0/default.jpg"
                else hasT = false
                let vlink = "/"+show+"/"+repro+"?s="+encodeURIComponent(this.props.history.location.pathname+this.props.history.location.search)+"#open-viewer"                
                thumbV = <div class={"images-thumb"+(!hasT?" no-thumb":"")} style={{"background-image":"url("+img+")"}}/>;               
@@ -6582,7 +6582,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
             this._refs["crea-"+i] = React.createRef();
             return ( 
                <div ref={this._refs["crea-"+i]}>
-                  <Link to={"/show/"+s}><div class={"header"+(thumb?" thumb":"") + (_T === "Product"?" instance":"")} style={{backgroundImage:"url("+thumb+"/full/!2000,185/0/default.jpg)"}}></div></Link>
+                  <Link to={"/show/"+s}><div class={"header"+(thumb?" thumb":"") + (_T === "Product"?" instance":"")} style={{backgroundImage:"url("+thumb+"/full/"+(thumb.includes(".bdrc.io/")?"!2000,185":",185")+"/0/default.jpg)"}}></div></Link>
                   <div><Link to={"/show/"+s}><span {...label.lang?{lang:label.lang}:{}}>{ label.value }</span></Link>{ label.lang && this.tooltip(label.lang) }</div>
                   {/* <Link to={"/show/"+s}>{I18n.t("misc.readM")}</Link> */}
                </div>
