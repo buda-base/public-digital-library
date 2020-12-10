@@ -3267,7 +3267,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             {/* { this.getResultProp(bdo+"contentLocationStatement",allProps,false,false, [bdo+"instanceExtentStatement",bdo+"contentLocationStatement"]) } */}
 
             { (type === "Instance" || type === "Scan" || type === "Work") && this.getResultProp(bdo+"biblioNote",allProps,true,false,[bdo+"biblioNote", bdo+"catalogInfo", rdfs+"comment", tmp+"noteMatch", bdo+"colophon", bdo+"incipit"]) }
-            { (type !== "Instance" && type !== "Scan") && this.getResultProp(bdo+"biblioNote",allProps,true,false,[ tmp+"noteMatch" ]) }
+            { (type !== "Instance" && type !== "Scan" && type !== "Work") && this.getResultProp(bdo+"biblioNote",allProps,true,false,[ tmp+"noteMatch" ]) }
 
             {/* { this.getResultProp(tmp+"provider",allProps) } */}
             {/* { this.getResultProp(tmp+"popularity",allProps,false,false, [tmp+"entityScore"]) } */}

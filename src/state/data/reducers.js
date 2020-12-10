@@ -1136,8 +1136,10 @@ export const foundResults = (state: DataState, action: actions.FoundResultsActio
    else { // what ? only time in Person results after switching from Work (keyword "bdr:P1583")
 
       let time = Date.now()
-      if(state.searches && state.searches[action.payload.datatype] && state.searches[action.payload.datatype][action.payload.keyword + "@" + action.payload.language]) 
-         time = state.searches[action.payload.datatype][action.payload.keyword + "@" + action.payload.language].time
+
+      // deprecated (fixes #391)
+      //if(state.searches && state.searches[action.payload.datatype] && state.searches[action.payload.datatype][action.payload.keyword + "@" + action.payload.language]) 
+      //   time = state.searches[action.payload.datatype][action.payload.keyword + "@" + action.payload.language].time
 
       let inEtext = action.payload.results.inEtext
 
