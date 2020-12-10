@@ -6582,7 +6582,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
             this._refs["crea-"+i] = React.createRef();
             return ( 
                <div ref={this._refs["crea-"+i]}>
-                  <Link to={"/show/"+s}><div class={"header"+(thumb?" thumb":"") + (_T === "Product"?" instance":"")} style={{backgroundImage:"url("+thumb+"/full/"+(thumb.includes(".bdrc.io/")?"!2000,185":",185")+"/0/default.jpg)"}}></div></Link>
+                  <Link to={"/show/"+s}><div class={"header"+(thumb?" thumb":"") + (_T === "Product"?" instance":"")} style={{backgroundImage:"url("+thumb+"/full/"+(thumb&&thumb.includes(".bdrc.io/")?"!2000,185":",185")+"/0/default.jpg)"}}></div></Link>
                   <div><Link to={"/show/"+s}><span {...label.lang?{lang:label.lang}:{}}>{ label.value }</span></Link>{ label.lang && this.tooltip(label.lang) }</div>
                   {/* <Link to={"/show/"+s}>{I18n.t("misc.readM")}</Link> */}
                </div>
