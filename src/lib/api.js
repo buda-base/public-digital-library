@@ -706,6 +706,7 @@ export default class API {
                 if(inEtext) { 
                    searchType = "etextContentFacetGraphInInstance"
                    param.R_EINST = inEtext
+                   param.LI_NAME = 4000
                 }
                 else searchType = "etextContentFacet" //chunksFacet"
              }
