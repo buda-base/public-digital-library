@@ -2429,14 +2429,14 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          lab = getLangLabel(this,"",hasName)
          ret.push(<div class={"match publisher "+this.props.locale}>
                <span class="label">{this.fullname("tmp:publisherName",[],true)}{I18n.t("punc.colon")}&nbsp;</span>
-               <div class="multi">{highlight(lab.value,lucenequerytokeyword(this.props.keyword))}</div>
+               <div class="multi"><span>{highlight(lab.value,lucenequerytokeyword(this.props.keyword))}</span></div>
             </div>)
       }
       if(hasLoc.length) { 
          lab = getLangLabel(this,"",hasLoc)
          ret.push(<div class="match publisher">
                <span className={`label ${hasName.length ? "hidden-en" : ""}`}>{this.fullname("tmp:publisherName",[],true)}{I18n.t("punc.colon")}&nbsp;</span>
-               <div class="multi">{highlight(lab.value,lucenequerytokeyword(this.props.keyword))}</div>
+               <div class="multi"><span>{highlight(lab.value,lucenequerytokeyword(this.props.keyword))}</span></div>
             </div>)
       }
 
