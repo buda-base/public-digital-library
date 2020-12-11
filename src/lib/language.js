@@ -2,6 +2,7 @@
 import React from 'react';
 import I18n from 'i18next';
 //import {toWylie,fromWylie} from "wylie"
+import 'intl-pluralrules' // #400
 
 export const langScripts = {
    "zh":"lang.langscript.zh", "en":"lang.langscript.en", "pi":"lang.langscript.pi", "bo":"lang.langscript.bo", "sa":"lang.langscript.sa", "inc":"lang.langscript.inc",
