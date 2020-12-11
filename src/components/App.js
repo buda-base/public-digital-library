@@ -3005,13 +3005,12 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   }</div>] }                  
                <div class="RID">{prettId}</div>
                {hasProv}
-               {/* <span>{hasCopyR}</span> */}
-               {hasCopyR === "copyleft" && <img title={I18n.t("copyright.open")} src="/icons/open.svg"/>}
-               {hasCopyR === "fair_use" && <img title={I18n.t("copyright.fairUse")} src="/icons/fair_use.svg"/>}
-               {hasCopyR === "temporarily" && <img title={I18n.t("copyright.tempo")} src="/icons/temporarily.svg"/>}
-               {hasCopyR === "sealed" && <img title={I18n.t("copyright.sealed")} src="/icons/sealed.svg"/>}
-               {hasCopyR === "unknown" && <img title={this.fullname(access)} src="/icons/unknown.svg"/>}
-               { hasThumb.length > 0 && getIconLink(viewUrl?viewUrl:resUrl+"#open-viewer", <img title={I18n.t("copyright.scans")} style={{width:"20px"}} src="/icons/search/images.svg"/>) }
+               { /*hasCopyR === "copyleft" && <img title={I18n.t("copyright.open")} src="/icons/open.svg"/>*/ }
+               {hasCopyR === "fair_use" && <span class="copyRi"><img title={I18n.t("copyright.fairUse")} src="/icons/fair_use.svg"/></span>}
+               {hasCopyR === "temporarily" && <span class="copyRi"><img title={I18n.t("copyright.tempo")} src="/icons/temporarily.svg"/></span>}
+               {hasCopyR === "sealed" && <span class="copyRi"><img title={I18n.t("copyright.sealed")} src="/icons/sealed.svg"/></span>}
+               {hasCopyR === "unknown" && <span class="copyRi"><img title={this.fullname(access)} src="/icons/unknown.svg"/></span>}
+               { /* hasThumb.length > 0 && getIconLink(viewUrl?viewUrl:resUrl+"#open-viewer", <img title={I18n.t("copyright.scans")} style={{width:"20px"}} src="/icons/search/images.svg"/>) */}
             </div>
          ]
 
