@@ -764,7 +764,7 @@ a.result + #matches .result-content::before { left:110px; width:calc(100% - 110p
 .result-content #icon.wCopyR .copyRi img { margin:1px; opacity:0.7;}
 
 .result-content #icon .copyRi.noImg { display:flex;align-items: center;justify-content: center;}
-.result-content #icon .copyRi.noImg img { width:24px;margin-left:1px;}
+.result-content #icon .copyRi.noImg img { width:35px;}
 
 .result-content.otherSrc #icon .provImg:not(.oriRec) { display:none;}
 
