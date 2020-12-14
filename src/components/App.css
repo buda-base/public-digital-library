@@ -1693,7 +1693,11 @@ vertical-align:middle;}
 /* #popHoverM .react-tabs__tab-panel > div { display:flex;align-items: baseline; } */
 #popHoverM .react-tabs__tab-panel img { height:20px; vertical-align:-6px; display: inline-block; margin-right:5px;}
 #popHoverM .react-tabs__tab-panel * { font-weight:400; margin:0 5px 0 0;padding:0; display:inline-block;}
-#popHoverM .react-tabs__tab-panel > div { font-size:13px; display:block; line-height:32px;}
+#popHoverM .react-tabs__tab-panel > div { font-size:13px; display:block; line-height:32px; }
+
+#popHoverM .react-tabs__tab-panel:first-of-type > div { font-size:13px; display:flex; line-height:32px; align-items: baseline;}
+#popHoverM .react-tabs__tab-panel:first-of-type > div > span.first + span + span { line-height:20px; }
+
 /* #popHoverM .react-tabs__tab-panel > div:before { content:'•'; padding-right:5px;} */
 #popHoverM .react-tabs__tab-panel b { font-weight:700;}
 #popHoverM .react-tabs__tab-panel a img { margin-right:0;}
