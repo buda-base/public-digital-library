@@ -5353,11 +5353,21 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                <a onClick={handleViewer} onContextMenu={handleViewer}  href={viewUrl.pathname+viewUrl.search} target="_blank" className={"firstImage "+(this.state.imageLoaded?"loaded":"")} 
                /*{...(this.props.config.hideViewers?{"onClick":() => this.showMirador(null,null,true),"style":{cursor:"pointer"}}:{})}*/ >
                   <Loader className="uvLoader" loaded={this.state.imageLoaded} color="#fff"/>
-                  <img onError={(e)=>this.setState({...this.state,imageError:true})} onLoad={(e)=>this.setState({...this.state,imageLoaded:true,imageError:false})} src={iiifThumb+"/full/!1000,500/0/default.jpg"} /> 
+                  <img onError={(e)=>this.setState({...this.state,imageError:"!"})} onLoad={(e)=>this.setState({...this.state,imageLoaded:true,imageError:false})} src={iiifThumb+"/full/!1000,500/0/default.jpg"} /> 
                </a>
             </div>
          )
-      else if(!this.props.manifestError &&  this.props.imageAsset && !etext)
+      else if(this.state.imageError === "!" && iiifThumb && T === "Images") 
+         return  ( 
+            <div class="data simple" id="first-image">
+               <a onClick={handleViewer} onContextMenu={handleViewer}  href={viewUrl.pathname+viewUrl.search} target="_blank" className={"firstImage "+(this.state.imageLoaded?"loaded":"")} 
+               /*{...(this.props.config.hideViewers?{"onClick":() => this.showMirador(null,null,true),"style":{cursor:"pointer"}}:{})}*/ >
+                  <Loader className="uvLoader" loaded={this.state.imageLoaded} color="#fff"/>
+                  <img onError={(e)=>this.setState({...this.state,imageError:true})} onLoad={(e)=>this.setState({...this.state,imageLoaded:true})} src={iiifThumb+"/full/,500/0/default.jpg"} /> 
+               </a>
+            </div>
+         )
+      else if(!this.props.manifestError && this.props.imageAsset && !etext)
          return  ( 
          <div class="data" id="first-image">
             <a onClick={handleViewer} onContextMenu={handleViewer} href={viewUrl.pathname+viewUrl.search} target="_blank" className={"firstImage "+(this.state.imageLoaded?"loaded":"")} 
