@@ -165,7 +165,8 @@ const zhTranslation = {
       "tmp:inRootInstance":"在",
       "tmp:associatedCentury":"Century",
       "tmp:associatedAuthorCentury":"Author's Century",
-      "tmp:ontologyProperty":"Ontology Property"
+      "tmp:ontologyProperty":"Ontology Property",
+      "tmp:hasRole":"Has Role"
    },
    result:{
       open:"开放",

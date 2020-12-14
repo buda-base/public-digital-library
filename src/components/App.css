@@ -832,7 +832,11 @@ a.result + #matches .result-content #icon > :not(.thumb) img { width:40px; }
 .result-content+.result-content::before { content:" ";width:calc(100% - 80px - 50px);display:block;position:absolute;
    border-top: 4px solid rgba(239,238,238,0.6); left:80px; top:-2px; 
 }
-   
+
+.place.result-content { min-height:110px; } 
+.person.result-content { min-height:95px; } 
+.work.result-content { min-height:100px; } 
+.topic.result-content { min-height:70px; } 
 
 .result-content:hover::after { content:' ';width:100%;height:100%;position:absolute;z-index:-2;top:0;left:0;background-color: rgba(239,238,238,0.6); }
 

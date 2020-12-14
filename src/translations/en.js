@@ -203,7 +203,8 @@ const enTranslation = {
       "tmp:inRootInstance":"Instance",
       "tmp:associatedCentury":"Century",
       "tmp:associatedAuthorCentury":"Author's Century",
-      "tmp:ontologyProperty":"Ontology Property"
+      "tmp:ontologyProperty":"Ontology Property",
+      "tmp:hasRole":"Has Role"
    },
    result:{
       open:"Open",
