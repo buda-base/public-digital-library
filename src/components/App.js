@@ -3014,7 +3014,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                {hasCopyR === "temporarily" && <span class="copyRi" title={I18n.t("copyright.tempo")}><img src="/icons/temporarily.svg"/></span>}
                {hasCopyR === "sealed" && <span class="copyRi" title={I18n.t("copyright.sealed")}><img src="/icons/sealed.svg"/></span>}
                {hasCopyR === "unknown" && <span class="copyRi" title={this.fullname(access)}><img src="/icons/unknown.svg"/></span>}
-               {!hasImage && <span class="copyRi noImg" title={I18n.t("copyright.noImg")}><img src="/icons/noimg.png"/></span>}
+               {!hasImage && <span class="copyRi noImg" title={I18n.t("copyright.noImg")}><img src="/icons/noimg.svg"/></span>}
                { /* hasThumb.length > 0 && getIconLink(viewUrl?viewUrl:resUrl+"#open-viewer", <img title={I18n.t("copyright.scans")} style={{width:"20px"}} src="/icons/search/images.svg"/>) */}
             </div>
          ]
