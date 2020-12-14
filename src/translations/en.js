@@ -132,7 +132,8 @@ const enTranslation = {
       sealed:"Sealed",
       view:"View Scans",
       scans:"Scans Available",
-      provided:"Data provided by {{- provider}}"
+      provided:"Data provided by {{- provider}}",
+      noImg:"No image available"
    },
    prop:{
       "tmp:bestMatch":"Best Match",

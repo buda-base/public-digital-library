@@ -2831,6 +2831,10 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
       let enType = getEntiType(id).toLowerCase()
 
+      let hasImage = allProps.filter(p => p.type === tmp+"assetAvailability" && p.value === tmp+"hasImage") 
+      if(enType === "instance" && (!hasImage || !hasImage.length)) hasImage = false
+      else hasImage = true
+
       let hasThumb = allProps.filter(a => a.type === tmp+"thumbnailIIIFService"), hasCopyR, viewUrl,access
       if(hasThumb.length) { 
          hasThumb = hasThumb[0].value 
@@ -3006,10 +3010,11 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                <div class="RID">{prettId}</div>
                {hasProv}
                { /*hasCopyR === "copyleft" && <img title={I18n.t("copyright.open")} src="/icons/open.svg"/>*/ }
-               {hasCopyR === "fair_use" && <span class="copyRi"><img title={I18n.t("copyright.fairUse")} src="/icons/fair_use.svg"/></span>}
-               {hasCopyR === "temporarily" && <span class="copyRi"><img title={I18n.t("copyright.tempo")} src="/icons/temporarily.svg"/></span>}
-               {hasCopyR === "sealed" && <span class="copyRi"><img title={I18n.t("copyright.sealed")} src="/icons/sealed.svg"/></span>}
-               {hasCopyR === "unknown" && <span class="copyRi"><img title={this.fullname(access)} src="/icons/unknown.svg"/></span>}
+               {hasCopyR === "fair_use" && <span class="copyRi" title={I18n.t("copyright.fairUse")}><img src="/icons/fair_use.svg"/></span>}
+               {hasCopyR === "temporarily" && <span class="copyRi" title={I18n.t("copyright.tempo")}><img src="/icons/temporarily.svg"/></span>}
+               {hasCopyR === "sealed" && <span class="copyRi" title={I18n.t("copyright.sealed")}><img src="/icons/sealed.svg"/></span>}
+               {hasCopyR === "unknown" && <span class="copyRi" title={this.fullname(access)}><img src="/icons/unknown.svg"/></span>}
+               {!hasImage && <span class="copyRi noImg" title={I18n.t("copyright.noImg")}><img src="/icons/noimg.png"/></span>}
                { /* hasThumb.length > 0 && getIconLink(viewUrl?viewUrl:resUrl+"#open-viewer", <img title={I18n.t("copyright.scans")} style={{width:"20px"}} src="/icons/search/images.svg"/>) */}
             </div>
          ]

@@ -118,7 +118,8 @@ const boTranslation = {
       sealed:"བཀའ་རྒྱ་མ།",
       view:"བཤེར་པར་སྟོན།",
       scans:"བཤེར་པར་ཡོད།",
-      provided:"མཁོ་འདོན་པ། {{- provider}}"
+      provided:"མཁོ་འདོན་པ། {{- provider}}",
+      noImg:"No image available"
    },
    prop:{
       "tmp:bestMatch":"བཙལ་འབྲས་མཐུན་ཤོས།",

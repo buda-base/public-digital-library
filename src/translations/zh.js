@@ -110,7 +110,8 @@ const zhTranslation = {
       sealed:"封存",
       view:"查看图像",
       scans:"可查看扫描件",
-      provided:"数据由{{- provider}}提供"
+      provided:"数据由{{- provider}}提供",
+      noImg:"No image available"
    },
    prop:{
       "tmp:bestMatch":"最佳匹配",
