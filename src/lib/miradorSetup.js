@@ -976,7 +976,11 @@ export async function miradorInitView(work,lang,callerURI,locale) {
          if(propK["instanceReproductionOf"]) {
             const repro = propK["instanceReproductionOf"]
             const elem = propK["instanceHasVolume"]
-            const nbVol = propK["itemVolumes"]
+            let nbVol = propK["itemVolumes"]
+            if(!nbVol && propK["itemHasVolume"]) {
+               if(!Array.isArray(propK["itemHasVolume"])) nbVol = 1
+               else nbVol = propK["itemHasVolume"].length
+            }
 
             //.log("iRo:",repro,elem,nbVol);
 
