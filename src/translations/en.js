@@ -226,6 +226,7 @@ const enTranslation = {
       assoc:"{{type}} associated with: <res href='/show/{{- rid}}'>{{- name}}</res>",
       moreres:"More {{txt}} are cataloged, do you want to see them?",
       inEtext:"Results for <key>{{- keyword}}</key> <key>[{{language}}]</key><br/>in <res href='/show/{{- rid}}'>{{- name}}</res>",
+      openO:"Open in Outline"
    },
    index:{
       openViewer:"Open in Viewer",

@@ -2657,15 +2657,25 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             let langs = extendedPresets(this.state.langPreset)
             sortId = sortLangScriptLabels(sortId,langs.flat,langs.translit)
 
+            let outlineB 
+            if(fromProp.filter(p => p.includes("/inRootInstance")).length) outlineB = []
+
             for (let i of sortId) {
 
                if(i.value != "false") {
                   let urilink
 
                   if(i.uri && !i.uri.includes(".bdrc.") && i.uri.startsWith("http")) urilink = <a target="_blank" href={i.uri}><span {...(i.lang?{lang:i.lang}:{})}>{i.value}</span></a> 
-                  else urilink =  <Link to={"/show/"+i.uri}><span {...(i.lang?{lang:i.lang}:{})}>{i.value}</span></Link> 
+                  else urilink =  <Link class="inRoot" to={"/show/"+i.uri}><span {...(i.lang?{lang:i.lang}:{})}>{i.value}</span></Link> 
 
-                  ret.push(<span>{urilink}
+                  if(outlineB !== undefined) {
+                     outlineB.push(<span class="sepa"/>)
+                     outlineB.push(<Link class="outL" to={iri}><img src="/scripts/mirador/images/collecR.svg"/>{I18n.t("result.openO")}</Link>)
+                     outlineB.push(<span class="sepa"/>)
+                     outlineB.push(<Link class="rec" to={iri.replace(/(show[/]).*?part=([^&]+)&/,"$1$2?")}><img src="/icons/rec.svg"/>{I18n.t("resource.openR")}</Link>)
+                  }
+
+                  ret.push(<span>{urilink}{outlineB}
                      {
                      i.lang && <Tooltip placement="bottom-end" title={
                                        <div style={{margin:"10px"}}>
@@ -3205,7 +3215,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
          retList.push( <div id='matches'>         
 
-            { typeisbiblio && this.getResultProp(I18n.t("result.inRootInstance"),allProps,false,true,[bdo+"inRootInstance",tmp+"inRootInstance"]) } 
+            { typeisbiblio && this.getResultProp(I18n.t("result.inRootInstance"),allProps,false,true,[bdo+"inRootInstance",tmp+"inRootInstance"],null,null,null,null,resUrl) } 
             { typeisbiblio && this.getResultProp(I18n.t("result.workBy"),allProps,false,true,[tmp+"author"]) }
             { typeisbiblio && this.getResultProp(I18n.t("result.workBy"),allProps,true,false,[bdo+"authorshipStatement"]) }
 

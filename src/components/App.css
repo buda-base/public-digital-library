@@ -880,6 +880,14 @@ a.result + #matches .result-content #icon > :not(.thumb) img { width:40px; }
 #matches .match.publisher.zh > span > span + span { padding-left:3px;display:inline-block;}
 */
 
+.match .inRoot ~ a { font-weight:600; vertical-align: 0px; white-space:nowrap;}
+.match .inRoot ~ .sepa { margin:0 10px;  display:inline-block; height:13px; vertical-align: -4px; border:1px solid #343434; }
+.match .rec img,
+.match .outL img { vertical-align: middle; background: white; margin-left:-5px;}
+.result-content:hover .match .rec img,
+.result-content:hover .match .outL img { background: #f5f5f5;}
+
+
 #matches .match .assets { margin:0 4px; }
 #matches .match .assets img,
 #matches .match .assets svg { height:16px; vertical-align:-4px; width:auto !important; display:inline-block;margin:0 4px; }

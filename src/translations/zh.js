@@ -187,6 +187,7 @@ const zhTranslation = {
       moreres:"是否想阅览更多的{{txt}}？",
       openEin:"Open in Etext",
       inEtext:"Results for <key>{{- keyword}}</key> <key>[{{language}}]</key><br/>in <res href='/show/{{- rid}}'>{{- name}}</res>",
+      openO:"Open in Outline"
    },
    index:{
       openViewer:"在查看器中打开",

@@ -210,6 +210,7 @@ const boTranslation = {
       moreres:"More {{txt}} are available, do you want to see them?",
       openEin:"Open in Etext",
       inEtext:"Results for <key>{{- keyword}}</key> <key>[{{language}}]</key><br/>in <res href='/show/{{- rid}}'>{{- name}}</res>",
+      openO:"Open in Outline"
    },
    index:{
       openViewer:"ཀློག",
