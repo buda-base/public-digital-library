@@ -880,13 +880,23 @@ a.result + #matches .result-content #icon > :not(.thumb) img { width:40px; }
 #matches .match.publisher.zh > span > span + span { padding-left:3px;display:inline-block;}
 */
 
+.resource a.outL,
 .match .inRoot ~ a { font-weight:600; vertical-align: 0px; white-space:nowrap;}
+.resource h2 + h3 .sepa,
 .match .inRoot ~ .sepa { margin:0 10px;  display:inline-block; height:13px; vertical-align: -4px; border:1px solid #343434; }
+.resource a.outL img,
 .match .rec img,
 .match .outL img { vertical-align: middle; background: white; margin-left:-5px;}
 .result-content:hover .match .rec img,
 .result-content:hover .match .outL img { background: #f5f5f5;}
 
+.resource a.outL { float:none; background: #d73449; border:none !important; border-radius:5px; padding:0px 15px;  color:white !important;
+   margin-top:-5px; margin-left:15px; font-size:13px; height:40px;line-height: 40px; display: inline-block;
+}
+.resource a.outL img { background:none; filter:invert(100%) saturate(0%) brightness(1000%); vertical-align: -9px;}
+.resource a.outL:hover { text-decoration: underline;}
+
+.resource h3.inT { width:calc(100%); padding-top:5px;}
 
 #matches .match .assets { margin:0 4px; }
 #matches .match .assets img,
