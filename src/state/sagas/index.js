@@ -804,7 +804,7 @@ async function createPdf(url,iri) {
       loggergen.log("IIIFu",IIIFurl,config)
       let links = iri.links
       if(!links) {
-         let data = JSON.parse(await api.getURLContents(url,false,"application/json"))
+         let data = JSON.parse(await api.getURLContents((url.startsWith("/")?IIIFurl:"")+url,false,"application/json"))
          loggergen.log("pdf",data)
          links = data.links
       }
