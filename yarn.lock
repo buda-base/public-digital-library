@@ -8974,7 +8974,7 @@ minizlib@^1.2.1:
 
 "mirador@https://github.com/buda-base/mirador#2.7.0-bdrc":
   version "2.7.0"
-  resolved "https://github.com/buda-base/mirador#4ad35b01376573fe3a92d82ca0a459d486df03ac"
+  resolved "https://github.com/buda-base/mirador#89c04cd32d80c83fa53f5324747d5beb0657abc0"
   dependencies:
     bootbox "^4.4.0"
     bootstrap "^3.3.7"
@@ -13296,9 +13296,9 @@ uri-js@^4.2.2:
     punycode "^2.1.0"
 
 urijs@^1.16.1:
-  version "1.19.3"
-  resolved "https://registry.yarnpkg.com/urijs/-/urijs-1.19.3.tgz#f8d601ae3e68c2126ea45894eb18a93cc6afa561"
-  integrity sha512-Kuh0CMvOiSbq6aDlcuhUobc4q/uHx3NsKTAU9s5VxTgK8jlkauPhr6LtoxHqP+W8p/CV+xprjLb9vwN2YQxtXQ==
+  version "1.19.4"
+  resolved "https://registry.yarnpkg.com/urijs/-/urijs-1.19.4.tgz#3953d7dacd801336c17921ee8c5518b150cbf965"
+  integrity sha512-2YF/wdFu02Gsly/wyx+S/f5w/oCF0ihVSgK/Sn8fcY/ZYMYtqxgi03Vi3V7HqyQP8mj8xHMuNFTBIPufmPRdoA==
 
 urix@^0.1.0:
   version "0.1.0"
