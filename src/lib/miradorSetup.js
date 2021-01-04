@@ -43,6 +43,12 @@ export function miradorSetUI(closeCollec, num)
    if(closeCollec == undefined) closeCollec = true
    if(!jQ) importModules()
 
+   // TODO use "responsive" flag to work in library as well
+   var urlParams = new URLSearchParams(window.location.search), origin = urlParams.get("origin");
+   origin = origin && origin.startsWith("BDRCLibApp");
+   if(origin) jQ(".embed#viewer").addClass("inApp");
+
+
 
    clearInterval(scrollTimer)
    clearInterval(scrollTimer2)
