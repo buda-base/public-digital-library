@@ -789,6 +789,9 @@ function miradorAddZoomer() {
 
          if(maxH) { 
             let dMinH = 0.9 * scrollV.innerHeight() / maxH
+
+            if(jQ("body > .inApp").length) dMinH = 0.9 * window.innerHeight / maxH
+
             coefH = 1 - (1 - dMinH) * (1 - val)                   
             if(val_sav != val) coefH *= val_sav
 
