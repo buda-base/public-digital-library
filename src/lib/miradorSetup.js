@@ -573,9 +573,11 @@ function miradorAddClick(firstInit){
                            clearInterval(scrollTimer)
 
                            setTimeout( () => {
+                              let elem = jQ(".scroll-view")                              
+                              if(jQ("#viewer.inApp").length) elem = jQ("body,html").scrollTop(0)
 
                               //console.log(jQ(".mirador-container ul.scroll-listing-thumbs ").width(),jQ(window).width())
-                              jQ(".scroll-view")
+                              elem
                               .scrollLeft((jQ(".mirador-container ul.scroll-listing-thumbs ").width() - jQ(window).width()) / 2)
                               .scrollTop(0) //jQ(".scroll-view").scrollTop()+1)
                               .find("img.thumbnail-image").click(()=>{
