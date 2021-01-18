@@ -788,6 +788,8 @@ a.result + #matches .result-content::before { left:110px; width:calc(100% - 110p
 
 .result-content #icon:not(.wCopyR) .provImg { margin-top:-45px !important; right:35px; background:white;}
 
+.result-content #icon:not(.wCopyR).work .provImg { margin-top:-61px !important; } 
+
 .result-content #icon > div:first-child:not(.thumb) ~ .provImg.eap { right: 40px; margin-top:-55px !important;}
 /* 
 .result-content #icon.lineage img { width:80px;}

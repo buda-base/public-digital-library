@@ -2601,9 +2601,13 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                else if(val && val.startsWith("http")) val = this.fullname(val,[],true)
                else { 
                   val = getLangLabel(this,prop,[i])
-                  if(val.value && exclude && val.value.replace(/[↦↤]/g,"") === exclude) continue ;
-                  val = highlight(val.value,lucenequerytokeyword(this.props.keyword))
-                  lang = val.lang
+                  if(val) {
+                     if(val.value && exclude && val.value.replace(/[↦↤]/g,"") === exclude) continue ;
+                     val = highlight(val.value,lucenequerytokeyword(this.props.keyword))
+                     lang = val.lang
+                  } else {
+                     console.warn("val==NULL:",val,prop,i)
+                  }
                }
 
                if(!lang) lang = i["lang"]
