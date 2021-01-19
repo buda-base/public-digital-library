@@ -5255,7 +5255,15 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             else if(m.severity=="warning") icon = <WarnIcon className="warn"/>
             else if(m.severity=="error") icon = <ErrorIconC className="error"/>
 
-            if(lab) return <p>{icon}{lab.value}{icon}</p>
+            if(lab) {
+               let link ;
+               let content = lab.value
+               if(link = lab.value.match(/\[([^\]]+)\]\(([^)]+)\)(.*?$)/)) {
+                  content = lab.value.split(/\[[^\]]+\]\([^)]+\)/)
+                  content = [ content[0], <a href={link[2]} target="_blank">{link[1]}</a>, link[3] ]
+               } 
+               return <p>{icon}{content}</p>
+            }
          }) }</div>
 
          if(infoPanelH && infoPanelH.length) infoPanelH = rend(infoPanelH)

@@ -6903,8 +6903,16 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                if(m.severity=="info") icon = <InfoIcon className="info"/>
                else if(m.severity=="warning") icon = <WarnIcon className="warn"/>
                else if(m.severity=="error") icon = <ErrorIcon className="error"/>
-
-               if(lab) return <p>{icon}{lab.value}{icon}</p>
+               
+               if(lab) {
+                  let link ;
+                  let content = lab.value
+                  if(link = lab.value.match(/\[([^\]]+)\]\(([^)]+)\)(.*?$)/)) {
+                     content = lab.value.split(/\[[^\]]+\]\([^)]+\)/)
+                     content = [ content[0], <a href={link[2]} target="_blank">{link[1]}</a>, link[3] ]
+                  } 
+                  return <p>{icon}{content}</p>
+               }
             }) }</div>
 
             if(infoPanelR && infoPanelR.length) infoPanelR = rend(infoPanelR)

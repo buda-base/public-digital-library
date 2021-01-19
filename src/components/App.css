@@ -237,6 +237,8 @@ body { overflow:auto !important;padding-right:0 !important; /*font-family:"Robot
 .infoPanel p { width:100%; }
 .infoPanel p + p { margin-top:-5px;  }
 
+.infoPanel p a { color:white; text-decoration: underline;}
+
 .infoPanel.inRes {
    left: 0;
    margin: 80px auto 0 auto!important;
