@@ -22,6 +22,8 @@ import Collapse from '@material-ui/core/Collapse';
 import MenuIcon from '@material-ui/icons/Menu';
 import RefreshIcon from '@material-ui/icons/Refresh';
 import ErrorIcon from '@material-ui/icons/Error';
+import ErrorIconC from '@material-ui/icons/AddCircle';
+import InfoIcon from '@material-ui/icons/InfoOutlined';
 import WarnIcon from '@material-ui/icons/Warning';
 import SearchIcon from '@material-ui/icons/Search';
 import Settings from '@material-ui/icons/SettingsSharp';
@@ -5244,10 +5246,16 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
       if(this.props.config && this.props.config.msg) {
          if(message.length == 0 && !this.props.loading && !this.props.keyword) infoPanelH = this.props.config.msg.filter(m => m.display && m.display.includes("home"))
          else infoPanelR = this.props.config.msg.filter(m => m.display && m.display.includes("search"))
-
+         
          let rend = (infoPanel) => <div class="infoPanel">{ infoPanel.map(m => {
             let lab = getLangLabel(this,"",m.text)
-            if(lab) return <p>{m.severity=="warning"?<WarnIcon/>:null}{lab.value}</p>
+            let icon 
+            
+            if(m.severity=="info") icon = <InfoIcon className="info"/>
+            else if(m.severity=="warning") icon = <WarnIcon className="warn"/>
+            else if(m.severity=="error") icon = <ErrorIconC className="error"/>
+
+            if(lab) return <p>{icon}{lab.value}{icon}</p>
          }) }</div>
 
          if(infoPanelH && infoPanelH.length) infoPanelH = rend(infoPanelH)

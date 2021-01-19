@@ -227,7 +227,11 @@ body { overflow:auto !important;padding-right:0 !important; /*font-family:"Robot
 
 .infoPanel p svg {
    vertical-align: bottom;
-   padding-right:5px;
+   padding:0 5px;
+}
+.infoPanel p svg.error {
+   transform:rotate(45deg);   
+   vertical-align: -6px;
 }
 
 .infoPanel p { width:100%; }
@@ -246,10 +250,10 @@ body { overflow:auto !important;padding-right:0 !important; /*font-family:"Robot
 
 .infoPanel p { width:100%; margin:16px 0; display: inline-block;}
 
-
 .infoPanel + .resource > .ariane { top:30px; }
 
 #root > div > .infoPanel + .resource { padding-top:85px; }
+
 /* -------------------------------------------------------------------------------------------------------------------- searchbar */
 
 #data-checkbox { display:flex;justify-content: center; margin:10px; margin-left:-105px; visibility:hidden;}

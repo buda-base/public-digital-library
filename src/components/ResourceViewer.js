@@ -29,6 +29,8 @@ import SpeakerNotes from '@material-ui/icons/SpeakerNotes';
 import SpeakerNotesOff from '@material-ui/icons/SpeakerNotesOff';
 import Feedback from '@material-ui/icons/QuestionAnswer';
 //import NewWindow from 'react-new-window'
+import InfoIcon from '@material-ui/icons/InfoOutlined';
+import ErrorIcon from '@material-ui/icons/AddCircle';
 import Collapse from '@material-ui/core/Collapse';
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
@@ -6896,7 +6898,13 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
             let rend = (infoPanel) => <div class="infoPanel inRes">{ infoPanel.map(m => {
                let lab = getLangLabel(this,"",m.text)
-               if(lab) return <p>{m.severity=="warning"?<WarnIcon/>:null}{lab.value}</p>
+               let icon 
+
+               if(m.severity=="info") icon = <InfoIcon className="info"/>
+               else if(m.severity=="warning") icon = <WarnIcon className="warn"/>
+               else if(m.severity=="error") icon = <ErrorIcon className="error"/>
+
+               if(lab) return <p>{icon}{lab.value}{icon}</p>
             }) }</div>
 
             if(infoPanelR && infoPanelR.length) infoPanelR = rend(infoPanelR)
