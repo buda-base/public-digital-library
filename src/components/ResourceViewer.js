@@ -6888,9 +6888,24 @@ perma_menu(pdfLink,monoVol,fairUse,other)
             }
          }
 
+
+         let infoPanelR
+         if(this.props.config && this.props.config.msg) {
+
+            infoPanelR = this.props.config.msg.filter(m => m.display && m.display.includes("resource"))            
+
+            let rend = (infoPanel) => <div class="infoPanel inRes">{ infoPanel.map(m => {
+               let lab = getLangLabel(this,"",m.text)
+               if(lab) return <p>{m.severity=="warning"?<WarnIcon/>:null}{lab.value}</p>
+            }) }</div>
+
+            if(infoPanelR && infoPanelR.length) infoPanelR = rend(infoPanelR)
+         }
+
          return (
          [getGDPRconsent(this),
          <div class={isMirador?"H100vh OF0":""}>
+            {infoPanelR}
             <div className={"resource "+getEntiType(this.props.IRI).toLowerCase()}>               
                {searchUrl && <div class="ariane">
                   <Link to={searchUrl.startsWith("latest")?searchUrl:"/search?"+searchUrl} onClick={(ev) => {

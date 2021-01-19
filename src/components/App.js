@@ -5240,6 +5240,20 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                /></div>
       ] )
 
+      let infoPanelH, infoPanelR
+      if(this.props.config && this.props.config.msg) {
+         if(message.length == 0 && !this.props.loading && !this.props.keyword) infoPanelH = this.props.config.msg.filter(m => m.display && m.display.includes("home"))
+         else infoPanelR = this.props.config.msg.filter(m => m.display && m.display.includes("search"))
+
+         let rend = (infoPanel) => <div class="infoPanel">{ infoPanel.map(m => {
+            let lab = getLangLabel(this,"",m.text)
+            if(lab) return <p>{m.severity=="warning"?<WarnIcon/>:null}{lab.value}</p>
+         }) }</div>
+
+         if(infoPanelH && infoPanelH.length) infoPanelH = rend(infoPanelH)
+         if(infoPanelR && infoPanelR.length) infoPanelR = rend(infoPanelR)
+      }
+
       return (
 <div>
    {getGDPRconsent(this)}
@@ -5279,6 +5293,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      </div>
                   </a>
                </div>
+               { infoPanelH }
                {/* <h2>BUDA Platform</h2> */}
                {/* <h3>Buddhist Digital Resource Center</h3> */}
                <div id="search-bar">
@@ -5475,6 +5490,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                */ }
             </FormGroup>
            </div>
+           { infoPanelR }
            {  (message.length > 0 || message.length == 0 && !this.props.loading ) && <div id="res-header">
                <div>
                   <div id="settings" onClick={() => this.setState({collapse:{...this.state.collapse, settings:!this.state.collapse.settings}})}><img src="/icons/settings.svg"/></div>
@@ -5491,6 +5507,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                </div>
             </div>
            }
+            
            <div id="res-container">
            {  (message.length > 0 || message.length == 0 && !this.props.loading) && this.render_filters(types,counts,sortByList,reverseSort,facetWidgets) }
                { /*false && this.state.keyword.length > 0 && this.state.dataSource.length > 0 &&

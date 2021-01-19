@@ -142,7 +142,8 @@ footer#site-footer.no-syncs > div.head::before { background-color:#efefef; }
 .App:not(.home) { min-height:100vh;} 
 .App:not(.home) .SearchPane { min-height:calc(100vh - 80px - 50px * 0);  }
 
-[role='tooltip'] *, .App *,.nav *,.App *::before,.App *::after, .react-tabs *, .resource *:not(.fa):not(.material-icons), .resource + * *  { 
+[role='tooltip'] *, .App *,.nav *,.App *::before,.App *::after, .react-tabs *, .resource *:not(.fa):not(.material-icons), .resource + * *,
+.inRes *  { 
    font-family:"Noto Sans", "Roboto", "Helvetica", "Arial", sans-serif !important;
 }
 
@@ -217,8 +218,38 @@ body { overflow:auto !important;padding-right:0 !important; /*font-family:"Robot
    /* letter-spacing: 0.31px; */
 }
 
+.infoPanel {
+   background: #d73449;
+   color: white;
+   font-weight: 600;
+   flex-wrap: wrap;
+}
+
+.infoPanel p svg {
+   vertical-align: bottom;
+   padding-right:5px;
+}
+
+.infoPanel p { width:100%; }
+.infoPanel p + p { margin-top:-5px;  }
+
+.infoPanel.inRes {
+   left: 0;
+   margin: 80px auto 0 auto!important;
+   width: 100% !important;
+   top: 0;
+   text-align: center;
+   width:calc(1160px + 2*140px) !important;   
+   max-width:100%;
+}
 
 
+.infoPanel p { width:100%; margin:16px 0; display: inline-block;}
+
+
+.infoPanel + .resource > .ariane { top:30px; }
+
+#root > div > .infoPanel + .resource { padding-top:85px; }
 /* -------------------------------------------------------------------------------------------------------------------- searchbar */
 
 #data-checkbox { display:flex;justify-content: center; margin:10px; margin-left:-105px; visibility:hidden;}
