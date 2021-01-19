@@ -36,7 +36,7 @@ catch(e){
 
 
 
-let timerConf, scrollTimer, scrollTimer2, clickTimer ;
+let timerConf, scrollTimer, scrollTimer2, clickTimer, inApp ;
 
 export function miradorSetUI(closeCollec, num)
 {
@@ -46,7 +46,10 @@ export function miradorSetUI(closeCollec, num)
    // TODO use "responsive" flag to work in library as well
    var urlParams = new URLSearchParams(window.location.search), origin = urlParams.get("origin");
    origin = origin && origin.startsWith("BDRCLibApp");
-   if(origin) jQ(".embed#viewer").addClass("inApp");
+   if(origin) { 
+      jQ(".embed#viewer").addClass("inApp");
+      inApp = true
+   }
 
 
 
@@ -826,12 +829,12 @@ function miradorAddZoomer() {
 
             let oldH = scrollT[0].getBoundingClientRect().height;
 
-
             scrollT.css({
                "transform":"scale("+coef+") translateY("+10/coef+"px) translateX("+trX/coef+"px)",
+               ...(!inApp?{ "margin-bottom":"-50000000px" }:{})
             })            
             
-            scrollV.css({            
+            if(inApp) scrollV.css({            
                "margin-bottom": "calc(-1 * ("+scrollV[0].getBoundingClientRect().height+"px - "+scrollT[0].getBoundingClientRect().height+"px - 100px) )" //"-50000000px" // no more empty space at bottom 
             })
             
