@@ -5622,7 +5622,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   </div>
                }
             </div>
-            <LanguageSidePaneContainer />
+            {/* <LanguageSidePaneContainer /> */}
          </div>
          { message.length == 0 && !this.props.loading && !this.props.keyword && (!this.props.config || !this.props.config.chineseMirror) && <Footer locale={this.props.locale} hasSyncs={this.props.latestSyncsNb > 0}/> }
       </div>
