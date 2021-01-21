@@ -962,6 +962,8 @@ function miradorInitMenu(maxWonly) {
 
 export async function miradorInitView(work,lang,callerURI,locale) {
 
+   document.getElementsByName("viewport")[0].content = "width=device-width, initial-scale=1.0, maximum-scale=1.0" ;
+
    const bdr = "http://purl.bdrc.io/resource/"
 
    if(lang === undefined) lang = ["bo","zh-hans"]

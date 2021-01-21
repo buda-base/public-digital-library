@@ -804,6 +804,8 @@ class ResourceViewer extends Component<Props,State>
       window.closeViewer = () => {
          //delete window.mirador
 
+         document.getElementsByName("viewport")[0].content = "width=device-width, initial-scale=1, shrink-to-fit=no" ;
+
          loggergen.log("closeV",this.state.fromSearch,this.state,this.props)
 
          let fromSearch
@@ -3698,7 +3700,7 @@ class ResourceViewer extends Component<Props,State>
 
       if(!this.state.openMirador) // || !$("#viewer").hasClass("hidden"))
       {
-
+         document.getElementsByName("viewport")[0].content = "width=device-width, initial-scale=1.0, maximum-scale=1.0" ;
 
          if(click && state.fromSearch && (state.fromSearch.startsWith("latest") || state.fromSearch.includes("t=Scan"))) {
             let loca = {... this.props.history.location}

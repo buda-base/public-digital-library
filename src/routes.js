@@ -281,7 +281,6 @@ const makeMainRoutes = () => {
 
                            miradorInitView(props.match.params.IRI,lang,callerURI,uilang);
 
-
                            return [
                                     <div id="viewer" class={"view " + (callerURI?" hasCallerURI":"")}></div>,
                                     <link rel="stylesheet" type="text/css" href="../scripts/mirador/css/mirador-combined.css"/>,

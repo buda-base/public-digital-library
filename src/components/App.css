@@ -3712,6 +3712,7 @@ a.result .contenu ul > div:last-child h3[lang=bo] span { font-size:18px;}
 
 
 #root.auto_rela > .auto_rela > .resource { padding:0; }
+#root.auto_rela > .auto_rela > .infoPanel,
 #root.auto_rela > .auto_rela > .resource > .auto_rela > :not(#viewer),
 #root.auto_rela > .auto_rela > .resource > .index { display:none; }
 #root.auto_rela > .auto_rela > .resource > .auto_rela { margin-left:0; width:100%;}
