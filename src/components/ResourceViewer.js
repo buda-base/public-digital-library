@@ -7026,8 +7026,12 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                </div>
             </div>
             {/* <Footer locale={this.props.locale}/> */}
-         </div>,
-         <LanguageSidePaneContainer />]
+         </div>
+         /*
+         ,
+         <LanguageSidePaneContainer />
+         */
+         ]
 
       ) ;
    }
