@@ -3708,6 +3708,8 @@ a.result .contenu ul > div:last-child h3[lang=bo] span { font-size:18px;}
 
    .SidePane.left { padding-left:calc((100vw - 700px) / 2 );}
 
+
+
 }
 
 
@@ -3727,3 +3729,54 @@ a.result .contenu ul > div:last-child h3[lang=bo] span { font-size:18px;}
    }
 }
 
+
+@media (min-height:481px)
+{
+   .mobile-button.top,
+   .nav .close { display:none; }
+}
+
+@media (max-height:480px)
+{
+   #root .nav {  height:60px; padding:0 10px; top:0px; transition:all 400ms ease-in-out; 
+      z-index: 100001;
+   }
+   #root .App .SearchPane { margin-top:0px; }
+   #root .nav .history,
+   #root .nav #logo > :not(:first-child) { display: none;}
+   #root .nav #donate {  margin-left:35px; 
+      /* width:150px; color:white; padding-left:0; */
+   }
+   #root .nav #lang,
+   #root .nav #login span { margin-left:35px;}
+
+
+   #root .nav .close { font-size:40px; transform:rotate(45deg); margin-left:35px;}
+   #root .nav:not(.on) { top:-60px; }
+
+   .fond-logo img { height:100vh; }
+
+   .SearchPane #logo > div {
+      transform: scale(0.75);
+      transform-origin: 100% 50%;
+   }
+
+   #search-bar > div:first-child > div:first-child { width:calc(100vw - 80px) !important; }
+
+   .mobile-button {
+      top: 5px;
+      left: 5px;
+      background-color: white;
+      position: fixed;
+      border-radius: 50%;
+      font-size: 0;
+      padding: 5px;
+      z-index: 100000;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      transition: all 400ms ease-in-out;
+      align-items: center;
+      justify-content: center;
+   }
+}

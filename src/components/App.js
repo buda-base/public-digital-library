@@ -639,9 +639,10 @@ export function top_right_menu(that,etextTitle,backUrl,etextres)
          </div>
       </div>)
    else 
-      return (
-      <div class={"nav"+(onZhMirror?" zhMirror":"")}>
-       <div>
+      return ([
+      <div class="mobile-button top" onClick={()=>that.setState({collapse:{...that.state.collapse,navMenu:!that.state.collapse.navMenu}})}><img src="/icons/burger.svg" /></div>,
+         <div class={"nav"+(onZhMirror?" zhMirror":"")+ (that.state.collapse.navMenu?" on":"")}>
+          <div>
          {logo}
 
          {!onZhMirror && <a id="about" href={"https://bdrc.io"} target="_blank">{I18n.t("topbar.about")}</a> }
@@ -689,8 +690,10 @@ export function top_right_menu(that,etextTitle,backUrl,etextres)
          { lang_selec(that) }
 
          { (!that.props.config || !that.props.config.chineseMirror) && <a target="_blank" href="https://bdrc.io/donation/" id="donate"><img src="/donate.svg"/>{I18n.t("topbar.donate")}</a> }
+
+         { <div class="close" onClick={()=>that.setState({collapse:{...that.state.collapse,navMenu:false}})}>+</div> }
        </div>
-     </div>
+     </div>]
   )
 }
 

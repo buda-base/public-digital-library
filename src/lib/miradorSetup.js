@@ -6,6 +6,8 @@ let iiifpres = "//iiifpres.bdrc.io"
 let jQ,extendedPresets,sortLangScriptLabels,getMainLabel,getMainLabels,__
 
 let importModules = async () => {
+   
+
    try {
       const val = await require("jquery")
       console.log("jQ",val)
@@ -27,6 +29,8 @@ let importModules = async () => {
 
 
 }
+
+
 try { 
    if(process.env.NODE_ENV !== 'test') importModules();
 }
@@ -34,12 +38,72 @@ catch(e){
    console.log("(not running in a node environment)")
 }
 
+// Fullscreen API polyfill (see https://github.com/rafgraph/fscreen/blob/main/src/index.js )
+
+const key = {
+   fullscreenEnabled: 0,
+   fullscreenElement: 1,
+   requestFullscreen: 2,
+   exitFullscreen: 3,
+   fullscreenchange: 4,
+   fullscreenerror: 5,
+   fullscreen: 6
+};
+
+const webkit = [
+   'webkitFullscreenEnabled',
+   'webkitFullscreenElement',
+   'webkitRequestFullscreen',
+   'webkitExitFullscreen',
+   'webkitfullscreenchange',
+   'webkitfullscreenerror',
+   '-webkit-full-screen',
+];
+
+const moz = [
+   'mozFullScreenEnabled',
+   'mozFullScreenElement',
+   'mozRequestFullScreen',
+   'mozCancelFullScreen',
+   'mozfullscreenchange',
+   'mozfullscreenerror',
+   '-moz-full-screen',
+];
+
+const ms = [
+   'msFullscreenEnabled',
+   'msFullscreenElement',
+   'msRequestFullscreen',
+   'msExitFullscreen',
+   'MSFullscreenChange',
+   'MSFullscreenError',
+   '-ms-fullscreen',
+];
+
+
+const docu = typeof window !== 'undefined' && typeof window.document !== 'undefined' ? window.document : {};
+
+const vend = (
+   ('fullscreenEnabled' in docu && Object.keys(key)) ||
+   (webkit[0] in docu && webkit) ||
+   (moz[0] in docu && moz) ||
+   (ms[0] in docu && ms) ||
+   []
+);
+
+const  reqFS = element => element[vend[key.requestFullscreen]]();
+
+/*
+// TODO bypass (?) 'can only be initiated by a user gesture'
+if(jQ) reqFS(jQ("body")[0]);
+*/
 
 
 let timerConf, scrollTimer, scrollTimer2, clickTimer, inApp ;
 
 export function miradorSetUI(closeCollec, num)
 {
+
    if(closeCollec == undefined) closeCollec = true
    if(!jQ) importModules()
 
@@ -58,6 +122,9 @@ export function miradorSetUI(closeCollec, num)
    clearInterval(clickTimer)
    clearInterval(timerConf)
    timerConf = setInterval( () => {
+
+
+      
 
       //console.log("miraconf...",window.maxW)
       jQ(".mirador-container .mirador-main-menu li a").addClass('on');
@@ -961,6 +1028,9 @@ function miradorInitMenu(maxWonly) {
 }
 
 export async function miradorInitView(work,lang,callerURI,locale) {
+
+
+   
 
    document.getElementsByName("viewport")[0].content = "width=device-width, initial-scale=1.0, maximum-scale=1.0" ;
 
