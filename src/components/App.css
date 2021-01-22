@@ -3763,7 +3763,7 @@ a.result .contenu ul > div:last-child h3[lang=bo] span { font-size:18px;}
 
    #search-bar > div:first-child > div:first-child { width:calc(100vw - 80px) !important; }
 
-   .mobile-button {
+   .mobile-button.top {
       top: 5px;
       left: 5px;
       background-color: white;
