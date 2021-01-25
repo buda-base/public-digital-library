@@ -5594,10 +5594,14 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   <div id="latest">
                      <h3>{I18n.t("home.new")}</h3>
                      <Link class="seeAll" to="/latest" onClick={()=>this.setState({filters:{...this.state.filters,datatype:["Scan"]}})}>{I18n.t("misc.seeAnum",{count:this.props.latestSyncsNb})}</Link>
-                     <div>
+                     <div 
+                        onTouchStart={ev => {this.tx0 = ev.targetTouches[0].clientX}} 
+                        onTouchMove={ev => {this.tx1 = ev.targetTouches[0].clientX}} 
+                        onTouchEnd={ev => {if (Math.abs(this.tx0 - this.tx1) > 75) { syncSlide(); } }}
+                     >
                         { this.props.latestSyncs === true && <Loader loaded={false}/> }
                         { (this.props.latestSyncs && this.props.latestSyncs !== true) &&
-                           <div class={"slide-bg "+(this.state.syncsSlided?"slided":"")}>
+                           <div class={"slide-bg "+(this.state.syncsSlided?"slided":"")} >
                               { Object.keys(this.props.latestSyncs).map(s => {
                                  let label = getLangLabel(this,"",this.props.latestSyncs[s][skos+"prefLabel"])
                                  let uri = "/show/"+shortUri(s), lang = label.lang, value = label.value
