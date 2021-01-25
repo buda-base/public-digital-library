@@ -3815,6 +3815,9 @@ a.result .contenu ul > div:last-child h3[lang=bo] span { font-size:18px;}
       width: calc((100vw - 2*40px - 30px - 2*15px) / 3);
       margin:0; margin-right:15px;
    }
+   #latest .slide-bg > div .header {
+      height: calc((100vw - 2*40px - 30px - 2*15px) / 3);
+   }
 
    #latest .slide-bg.slided {
       margin-left: calc(-100% - 60px);
