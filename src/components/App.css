@@ -3720,23 +3720,13 @@ a.result .contenu ul > div:last-child h3[lang=bo] span { font-size:18px;}
 #root.auto_rela > .auto_rela > .resource > .auto_rela { margin-left:0; width:100%;}
 
 
-@media only screen and (orientation:portrait) and (max-width:480px){
-   body {
-     width: 100vh;
-     height: 100vw;
-     transform: rotate(90deg) translateY(-100vw);
-     transform-origin: 0px 0px;
-   }
-}
-
-
-@media (min-height:481px)
+@media (min-device-width:768px)
 {
    .mobile-button.top,
    .nav .close { display:none; }
 }
 
-@media (max-height:480px)
+@media (max-width:768px)
 {
    #root .nav {  height:60px; padding:0 10px; top:0px; transition:all 400ms ease-in-out; 
       z-index: 100001;
@@ -3828,3 +3818,17 @@ a.result .contenu ul > div:last-child h3[lang=bo] span { font-size:18px;}
 
    #latest .slide-bg.slided > div:nth-child(-n+3) { opacity:1; }
 }
+
+
+@media only screen and (orientation:portrait) and (max-device-width:767px) and (max-width:480px) {
+   body {
+     width: 100vh;
+     height: 100vw;
+     transform: rotate(90deg) translateY(-100vw);
+     transform-origin: 0px 0px;
+   }
+
+
+   .fond-logo img { height:100vw;}
+}
+
