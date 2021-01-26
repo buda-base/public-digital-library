@@ -3821,6 +3821,11 @@ a.result .contenu ul > div:last-child h3[lang=bo] span { font-size:18px;}
 
 
 @media only screen and (orientation:portrait) and (max-device-width:767px) and (max-width:480px) {
+
+   html {
+      overflow:hidden;
+   }
+
    body {
      width: 100vh;
      height: 100vw;
@@ -3830,5 +3835,18 @@ a.result .contenu ul > div:last-child h3[lang=bo] span { font-size:18px;}
 
 
    .fond-logo img { height:100vw;}
+
+   #root .App #res-container,
+   #search-bar > div:first-child > div:first-child { width:calc(100vh - 80px) !important; }
+
+   #latest .slide-bg > div {
+      width: calc((100vh - 2*40px - 30px - 2*15px) / 3);
+      margin:0; margin-right:15px;
+   }
+   #latest .slide-bg > div .header {
+      height: calc((100vh - 2*40px - 30px - 2*15px) / 3);
+   }
+
+
 }
 

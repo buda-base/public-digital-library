@@ -900,7 +900,14 @@ class App extends Component<Props,State> {
 
       loggergen.log('qs',get,this.state)
 
-
+      /*
+      window.onresize = function(ev) { 
+         if(window.innerWidth < window.innerHeight && window.screen.width < 768) {
+            console.log("resize:",window.innerHeight);
+            $("body").height(window.innerHeight)
+         }
+      }
+      */ 
    }
 
 
@@ -4752,6 +4759,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
       const { isAuthenticated } = this.props.auth;
       let id ;
 
+      
       if(!global.inTest) loggergen.log("render",this.props.keyword,this.props,this.state,isAuthenticated && isAuthenticated(),this._customLang) //,JSON.stringify(this.state.filters,null,3))
       // no search yet --> sample data
       if(!this.props.keyword || this.props.keyword == "")
