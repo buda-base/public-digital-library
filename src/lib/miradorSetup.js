@@ -968,11 +968,21 @@ function miradorAddZoomer() {
                   fixed += rect.height
                }
             })
-            let sT = scrollV.scrollTop() + (nuH - oldH)*((scrollV.scrollTop() - fixed)/(oldH - fixed))
-            //console.log("sT:",sT,fixed)
-            scrollV.scrollTop(sT) 
+            let sT = scrollV.scrollTop() + (nuH - oldH)*((scrollV.scrollTop() - fixed)/(oldH - fixed)), body ;
+            if(!inApp) {
+               scrollV.scrollTop(sT) 
+            } else {            
+               body = jQ("html,body");
+               sT = body.scrollTop() + (nuH - oldH)*((body.scrollTop() - fixed)/(oldH - fixed))
+               body.scrollTop(sT) 
+            }
+            console.log("sT:",sT,fixed)
+
             // TODO not always centered when zoom > 135% (bdr:W1KG18629)
             scrollV.scrollLeft((nuW - scrollV.innerWidth() ) / 2)
+
+
+
          }
 
          
