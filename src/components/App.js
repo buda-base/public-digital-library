@@ -3697,7 +3697,11 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
             let unreleased = false
             let label ; // sublist[o].filter((e) => (e.type && e.type.match(/prefLabelMatch$/)))[0]
-            let sList = sublist[o].filter(e => e.type && e.type.endsWith(/*label*/ "LabelMatch") )   //( (e) => (e.type && e.type.match(/(prefLabel(Match)?|eTextTitle)$/)))
+            let prefL = sublist[o].filter(e => e.type && e.type === skos+"prefLabel")
+            let sList = sublist[o].filter(e => e.type && e.type.endsWith("labelMatch")).filter(l => {
+               let val = l.value.replace(/[↦↤]/g,"")
+               return prefL.filter(p => p.value === val).length > 0 // keep match only if it is an actual prefLabe<l
+            })
             if(!sList.length) sList = sublist[o].filter(e => (e.type && e.type === skos+"prefLabel")) //.match(/(prefLabel(Match)?|eTextTitle)$/)))
 
             /* // deprecated 
@@ -5165,7 +5169,10 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   else if(d === "hani") for(let p of possible) { if(p.match(/^zh((-[Hh])|$)/)) { presets.push(p); } }
                   else if(["ewts","iast","deva","pinyin"].indexOf(d) !== -1) for(let p of possible) { 
                      if(p.match(new RegExp(d+"$"))) { 
-                        if(p === "bo-x-ewts" && value.toLowerCase() !== value) { presets.push("bo-x-ewts_lower"); }
+                        
+                        // disable lower case Wylie
+                        //if(p === "bo-x-ewts" && value.toLowerCase() !== value) { presets.push("bo-x-ewts_lower"); }
+                        
                         presets.push(p); 
                      } 
                   }
