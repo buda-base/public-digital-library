@@ -3697,7 +3697,11 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
             let unreleased = false
             let label ; // sublist[o].filter((e) => (e.type && e.type.match(/prefLabelMatch$/)))[0]
-            let sList = sublist[o].filter(e => e.type && e.type.endsWith(/*label*/ "abelMatch") )   //( (e) => (e.type && e.type.match(/(prefLabel(Match)?|eTextTitle)$/)))
+            let prefL = sublist[o].filter(e => e.type && e.type === skos+"prefLabel")
+            let sList = sublist[o].filter(e => e.type && e.type.endsWith("labelMatch")).filter(l => {
+               let val = l.value.replace(/[↦↤]/g,"")
+               return prefL.filter(p => p.value === val).length > 0 // keep match only if it is an actual prefLabe<l
+            })
             if(!sList.length) sList = sublist[o].filter(e => (e.type && e.type === skos+"prefLabel")) //.match(/(prefLabel(Match)?|eTextTitle)$/)))
 
             /* // deprecated 
