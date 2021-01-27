@@ -5610,9 +5610,9 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      <h3>{I18n.t("home.new")}</h3>
                      <Link class="seeAll" to="/latest" onClick={()=>this.setState({filters:{...this.state.filters,datatype:["Scan"]}})}>{I18n.t("misc.seeAnum",{count:this.props.latestSyncsNb})}</Link>
                      <div 
-                        onTouchStart={ev => {this.tx0 = ev.targetTouches[0].clientX}} 
-                        onTouchMove={ev => {this.tx1 = ev.targetTouches[0].clientX}} 
-                        onTouchEnd={ev => {if (Math.abs(this.tx0 - this.tx1) > 75) { syncSlide(); } }}
+                        onTouchStart={ev => {this.tx0 = ev.targetTouches[0].clientX; this.ty0 = ev.targetTouches[0].clientY; }} 
+                        onTouchMove={ev => {this.tx1 = ev.targetTouches[0].clientX; this.ty1 = ev.targetTouches[0].clientY; }} 
+                        onTouchEnd={ev => {if(Math.abs(this.ty0 - this.ty1) < Math.abs(this.tx0 - this.tx1) && Math.abs(this.tx0 - this.tx1) > 75) { syncSlide(); } }}
                      >
                         { this.props.latestSyncs === true && <Loader loaded={false}/> }
                         { (this.props.latestSyncs && this.props.latestSyncs !== true) &&
@@ -5626,7 +5626,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                                  //console.log("thumb",thumb)
                                  return (
                                     <div>
-                                       <a href={uri}><div class={"header "+(thumb?"thumb":"")} {...thumb?{style:{"background-image":"url("+ thumb+"/full/"+(thumb.includes(".bdrc.io/")?"!2000,195":",195")+"/0/default.jpg)"}}:{}}></div></a>
+                                       <a href={uri}><div class={"header "+(thumb?"thumb":"")} {...thumb?{style:{"backgroundImage":"url("+ thumb+"/full/"+(thumb.includes(".bdrc.io/")?"!2000,195":",195")+"/0/default.jpg)"}}:{}}></div></a>
                                        <p lang={lang}>{value}</p>
                                        <a href={uri}>{I18n.t("misc.readM")}</a>
                                     </div>

@@ -3813,10 +3813,17 @@ a.result .contenu ul > div:last-child h3[lang=bo] span { font-size:18px;}
       margin-left: calc(-100% - 60px);
    }
 
-   #latest .slide-bg.slided > div:nth-child(-n+5) { opacity:1; }
+   
+   /*
+   #latest .slide-bg:not(.slided) > div:nth-child(-n+3), 
+   #latest .slide-bg:not(.slided) > div:nth-child(-n+3):not(:nth-child(-n+5)) { opacity: 1;}
 
+   #latest .slide-bg.slided > div:nth-child(-n+3),
+   */
 
-   #latest .slide-bg.slided > div:nth-child(-n+3) { opacity:1; }
+   #latest .slide-bg:not(.slided) > div:not(:nth-child(-n+3)) { opacity:0; }
+
+   #latest .slide-bg.slided > div:not(:nth-child(-n+3)) { opacity:1; }
 }
 
 
@@ -3825,14 +3832,14 @@ a.result .contenu ul > div:last-child h3[lang=bo] span { font-size:18px;}
    html {
       overflow:hidden;
    }
-
-   body {
+   
+   html:not(.supports) body:not(.auto_rela) {
      width: 100vh;
      height: 100vw;
      transform: rotate(90deg) translateY(-100vw);
      transform-origin: 0px 0px;
    }
-
+   
 
    .fond-logo img { height:100vw;}
 
