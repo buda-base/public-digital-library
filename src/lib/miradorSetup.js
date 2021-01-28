@@ -972,7 +972,9 @@ function miradorAddZoomer() {
             if(!inApp) {
                scrollV.scrollTop(sT) 
             } else {            
-               body = jQ("html,body");
+               // DONE fix scroll to top bug when zooming in/out in portrait mode
+               if(window.innerWidth > window.innerHeight) body = jQ("html,body");
+               else body = jQ(window)
                sT = body.scrollTop() + (nuH - oldH)*((body.scrollTop() - fixed)/(oldH - fixed))
                body.scrollTop(sT) 
             }
