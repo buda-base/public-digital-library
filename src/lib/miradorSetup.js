@@ -972,13 +972,21 @@ function miradorAddZoomer() {
             if(!inApp) {
                scrollV.scrollTop(sT) 
             } else {            
+               body = scrollT
+               while(!body.scrollTop() && !body.is("html")) {
+                  body = body.parent();
+               } 
+               if(body.is("html") && !body.scrollTop()) body = jQ(window)
+               
                // DONE fix scroll to top bug when zooming in/out in portrait mode
-               if(window.innerWidth > window.innerHeight) body = jQ("html,body");
-               else body = jQ("body")
+               //if(window.innerWidth > window.innerHeight) body = jQ("html,body");
+               //else body = jQ("body")
+
+               //console.log(body.scrollTop())
                sT = body.scrollTop() + (nuH - oldH)*((body.scrollTop() - fixed)/(oldH - fixed))
-               body.scrollTop(sT) 
+               if(!window.miradorNoScroll) body.scrollTop(sT) 
             }
-            console.log("sT:",sT,fixed)
+            //console.log("sT:",sT,fixed,nuH,oldH,body)
 
             // TODO not always centered when zoom > 135% (bdr:W1KG18629)
             scrollV.scrollLeft((nuW - scrollV.innerWidth() ) / 2)
