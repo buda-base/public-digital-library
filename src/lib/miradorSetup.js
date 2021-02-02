@@ -758,13 +758,6 @@ function miradorAddScroll(toImage)
             // /!\ WIP 
             //jQ(".mirador-viewer li.scroll-option").click();
 
-
-            let sT = jQ(".scroll-view").scrollTop()
-            if(!sT) sT = 0
-
-            let sTd = jQ(document).scrollTop()
-            if(!sTd) sTd = 0
-
             let im
             if(id) im = jQ(".scroll-view img[data-image-id='"+id.attr("data-image-id")+"']").first()
             else im = jQ(".scroll-view img[data-image-id]").first()
@@ -772,11 +765,28 @@ function miradorAddScroll(toImage)
             let imgY = 0 ;
             if(id && im && im.length > 0) imgY = im.parent().offset().top
 
-            //console.log("y",sT,sTd,imgY,im)
 
-            jQ(".scroll-view").stop().animate({scrollTop:-sTd+sT+imgY-90}
-               //,"scrollLeft": (jQ(".mirador-container ul.scroll-listing-thumbs ").width() - jQ(window).width()) / 2}
-               ,0, () => { jQ("input#zoomer").trigger("input") })
+            if(jQ("#viewer.inApp").length) {
+
+               if(window.innerWidth > window.innerHeight) jQ("html,body").scrollTop(imgY);
+               else jQ("body").scrollTop(imgY);
+               
+
+            } else {
+
+
+               let sT = jQ(".scroll-view").scrollTop()
+               if(!sT) sT = 0
+
+               let sTd = jQ(document).scrollTop()
+               if(!sTd) sTd = 0
+
+               //console.log("y",sT,sTd,imgY,im)
+
+               jQ(".scroll-view").stop().animate({scrollTop:-sTd+sT+imgY-90}
+                  //,"scrollLeft": (jQ(".mirador-container ul.scroll-listing-thumbs ").width() - jQ(window).width()) / 2}
+                  ,0, () => { jQ("input#zoomer").trigger("input") })
+            }
 
             jQ(".mirador-container .scroll-view").show().fadeTo(250,1); 
       }
