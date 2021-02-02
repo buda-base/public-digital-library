@@ -1920,7 +1920,8 @@ body > [id^="menu-"] > div:last-child,
 
 .resource .data [data-prop="bdo:note"] .noteCollapse.in-true { overflow: visible;}
 
-.resource .data.ext-props [data-prop="bdo:note"] { display:flex !important; align-items: flex-start !important;}
+/* added for #364 (cf git blame) then removed for #421 */
+/* .resource .data.ext-props [data-prop="bdo:note"] { display:flex !important; align-items: flex-start !important;} */
 
 .resource .data h4:hover .svg { background-color: #ededed; }
 
