@@ -1921,8 +1921,8 @@ async function startSearch(keyword,language,datatype,sourcetype,dontGetDT,inEtex
 
       let newMeta = {}
 
-      if(datatype[0] !== "Work") addMeta(keyword,language,data,datatype[0]);      
-      else addMeta(keyword,language,data,"Work",result.tree);      
+      if(["Work","Instance","Scan"].includes(datatype[0])) addMeta(keyword,language,data,datatype[0],result.tree);      
+      else addMeta(keyword,language,data,datatype[0]);      
 
       /* // deprecated
       addMeta(keyword,language,data,"Person");      
