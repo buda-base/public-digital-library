@@ -3829,7 +3829,7 @@ a.result .contenu ul > div:last-child h3[lang=bo] span { font-size:18px;}
 
 @media only screen and (orientation:portrait) and (max-device-width:767px) and (max-width:480px) {
 
-   html {
+   html:not(.auto_rela) {
       overflow:hidden;
    }
    
