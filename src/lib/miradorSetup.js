@@ -927,6 +927,11 @@ function miradorAddZoomer() {
             if(window.currentZoom === undefined) {
                //console.log("set zoom menu");
 
+               if(selec.length) { 
+                  selec.removeAttr("data-selected");
+                  selec = []
+               }
+
                let li = jQ(".view-nav #Zmenu ul.select li"), a = 150 / (150 - coef * 100), b = 150 - 150 * a, nega = false, y, elem, prev, txt
                li.parent().attr("data-min-zoom",coef)
                li.each((i,e)=>{
