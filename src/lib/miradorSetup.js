@@ -768,8 +768,9 @@ function miradorAddScroll(toImage)
 
             if(jQ("#viewer.inApp").length) {
 
-               if(window.innerWidth > window.innerHeight) jQ("html,body").scrollTop(imgY);
-               else jQ("body").scrollTop(imgY);
+               //if(window.innerWidth > window.innerHeight) 
+               jQ("html,body").scrollTop(imgY);
+               //else jQ("body").scrollTop(imgY);
                
 
             } else {
