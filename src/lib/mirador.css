@@ -204,11 +204,6 @@
     direction:ltr;
 }
 
-.mirador-container .mirador-hud { 
-    display:flex; 
-    align-items:center;
-    justify-content:center;
-}
 
 .mirador-container .view-container.thumbs-off .bottomPanel {
     left:-280px;
