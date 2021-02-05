@@ -3728,6 +3728,8 @@ a.result .contenu ul > div:last-child h3[lang=bo] span { font-size:18px;}
 
 @media (max-width:768px)
 {
+
+   /* ------------------------------------------------------------------------------------------------------------------------ home/topbar */ 
    #root .nav {  height:60px; padding:0 10px; top:0px; transition:all 400ms ease-in-out; 
       z-index: 100001;
    }
@@ -3824,6 +3826,20 @@ a.result .contenu ul > div:last-child h3[lang=bo] span { font-size:18px;}
    #latest .slide-bg:not(.slided) > div:not(:nth-child(-n+3)) { opacity:0; }
 
    #latest .slide-bg.slided > div:not(:nth-child(-n+3)) { opacity:1; }
+
+
+   /* ------------------------------------------------------------------------------------------------------------------------ results */
+
+   #root .App .resultPage #res-container { padding-top:0; }
+   #root .App .resultPage #filters-UI > div { padding-left:40px;padding-right:40px; }
+   #root .App .resultPage #res-header > div { padding-left:40px;padding-right:40px; }
+   #root .App .resultPage #res-header > div .widget-header { margin-left:auto; margin-right:auto;}
+   #root .App .resultPage #res-container h4 { font-size:24px;}
+   #root .App .resultPage .result-content { padding-left:20px;padding-right:20px;}
+   .result-content #permalink { right:20px;}
+   a.result  {  max-width: calc(100% - 30px); }
+   #matches .match { max-width: calc(100% - 40px);}
+   
 }
 
 
