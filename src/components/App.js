@@ -5618,8 +5618,13 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                         { (this.props.latestSyncs && this.props.latestSyncs !== true) &&
                            <div class={"slide-bg "+(this.state.syncsSlided?"slided":"")} >
                               { Object.keys(this.props.latestSyncs).map(s => {
+                                 console.log("s:",s);
                                  let label = getLangLabel(this,"",this.props.latestSyncs[s][skos+"prefLabel"])
-                                 let uri = "/show/"+shortUri(s), lang = label.lang, value = label.value
+                                 let uri = "/show/"+shortUri(s), value = I18n.t("resource.noT"), lang = this.props.locale
+                                 if(label) {
+                                    lang = label.lang;
+                                    value = label.value;
+                                 }
                                  // DONE use thumbnail when available
                                  let thumb = this.props.latestSyncs[s][tmp+"thumbnailIIIFService"]
                                  if(thumb && thumb.length) thumb = thumb[0].value 
