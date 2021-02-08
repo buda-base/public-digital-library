@@ -3732,6 +3732,7 @@ a.result .contenu ul > div:last-child h3[lang=bo] span { font-size:18px;}
 #root.auto_rela > .auto_rela > .resource > .index { display:none; }
 #root.auto_rela > .auto_rela > .resource > .auto_rela { margin-left:0; width:100%;}
 
+.App #results .more-details,
 .SidePane.left #closeSettings { display:none; }
 
 @media (min-device-width:768px)
@@ -3873,6 +3874,19 @@ a.result .contenu ul > div:last-child h3[lang=bo] span { font-size:18px;}
    a.result ~ #matches { margin-left:150px; }
 
    .match .inRoot + .sepa { display:block;border:none; }
+
+   .result-content > #num-box,
+   .result-content > #icon { float:left; position: relative;}
+
+   a.result {  max-width: calc(100% - 150px); }   
+   .result-content > .result > .contenu { margin-left:0;max-width:calc(100% - 40px); padding-left:5px; }
+   a.result ~ #matches { margin-left:0; padding-left:5px; clear:both;  }
+   a.result ~ #matches > .match { padding-left:28px; }
+
+   .App #results .more-details { display:inline-block; margin-top:10px;}
+   .App #results .more-details:not(.on) + #matches {display:none; }
+
+   .result-content.wThumb { min-height:110px;}
 }
 
 

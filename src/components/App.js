@@ -3049,6 +3049,11 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          if(!resUrl.startsWith("http")) retList.push(<Link to={resUrl.replace(/#open-viewer$/,"")} className="result">{ret}</Link>)         
          else retList.push(<a href={resUrl} target="_blank" className="result">{ret}</a>)         
 
+         retList.push(<div class={"more-details"+( this.state.collapse["more-details-"+id] == true ?" on":"" )} onClick={() => this.setState({ repage:true, collapse:{...this.state.collapse, ["more-details-"+id]:!this.state.collapse["more-details-"+id]}})}>
+            { this.state.collapse["more-details-"+id] != true && <ExpandMore /> }
+            { this.state.collapse["more-details-"+id] && <ExpandLess /> }
+         </div>)
+
          let dico
          if(!sameAsRes) sameAsRes = []        
 
