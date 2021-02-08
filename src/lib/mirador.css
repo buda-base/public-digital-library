@@ -117,7 +117,7 @@ body:not(.inApp) .image-view .provider { top:calc(100vh - 120px - 70px); }
 .mirador-container .mirador-viewer .image-view { position:absolute; }
 .mirador-container .mirador-viewer ul.scroll-listing-thumbs li {  width:auto;display:block;position:relative; padding:0; margin-bottom:0; }
 .mirador-container .mirador-viewer ul.scroll-listing-thumbs li img { position:relative; }
-.mirador-container ul.scroll-listing-thumbs li .thumb-label { display:inline-block; }
+.mirador-container ul.scroll-listing-thumbs li .thumb-label { display:inline-block; border:none !important;}
 .user-buttons.mirador-main-menu li:nth-last-child(3) { padding-left:5px;cursor:default;  }
 .user-buttons.mirador-main-menu li:nth-last-child(4) { padding-right:0px;cursor:default;  }
 .user-buttons.mirador-main-menu li:nth-last-child(4).on a {opacity:1; }
