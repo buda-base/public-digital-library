@@ -5633,12 +5633,12 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                      if(g.volumeHasEtext) {
                         if(!Array.isArray(g.volumeHasEtext)) {
                            let txt = elem.filter(e => e["@id"] === g.volumeHasEtext)
-                           if(txt.length) g.link = txt[0].eTextResource + "#open-viewer"
+                           if(txt.length) g.link = txt[0].eTextResource + "?backToEtext="+this.props.IRI + "#open-viewer"
 
 
                            //nav.push(<Link to={"/show/"+txt[0].eTextResource} class="ulink">{I18n.t("resource.openR")}</Link>)
                            //nav.push(<span>|</span>)
-                           nav.push(<Link to={"/show/"+txt[0].eTextResource+"#open-viewer"} class="ulink">{I18n.t("result.openE")}</Link>)
+                           nav.push(<Link to={"/show/"+txt[0].eTextResource+"?backToEtext="+this.props.IRI+"#open-viewer"} class="ulink">{I18n.t("result.openE")}</Link>)
                            nav.push(<span>|</span>)
                            nav.push(<a href={fullUri(txt[0].eTextResource)+".txt"} class="ulink"  download type="text" target="_blank">{I18n.t("mirador.downloadE")}</a>)
 
@@ -5650,12 +5650,12 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                      }
                   } else if(g.seqNum && g.eTextResource) {
                      g.index = g.seqNum
-                     g.link = g.eTextResource + "#open-viewer"
+                     g.link = g.eTextResource + "?backToEtext="+this.props.IRI + "#open-viewer"
 
 
                      //nav.push(<Link to={"/show/"+g.eTextResource} class="ulink">{I18n.t("resource.openR")}</Link>)
                      //nav.push(<span>|</span>)
-                     nav.push(<Link to={"/show/"+g.eTextResource+"#open-viewer"} class="ulink">{I18n.t("result.openE")}</Link>)
+                     nav.push(<Link to={"/show/"+g.eTextResource+"?backToEtext="+this.props.IRI+"#open-viewer"} class="ulink">{I18n.t("result.openE")}</Link>)
                      nav.push(<span>|</span>)
                      nav.push(<a href={fullUri(g.eTextResource)+".txt"} class="ulink" download type="text" target="_blank">{I18n.t("mirador.downloadE")}</a>)
 
@@ -6966,7 +6966,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                   { this.renderWithdrawn() }             
                   <div class="title">{ wTitle }{ iTitle }{ rTitle }</div>
                   { this.renderHeader(kZprop.filter(k => mapProps.includes(k)), _T, etextUT) }
-                  { (etext && !orig) && <div class="data" id="open-etext"><div><Link to={etextUT+"#open-viewer"}>{etextLoca}</Link></div></div> }
+                  { (etext && !orig) && <div class="data" id="open-etext"><div><Link to={etextUT+"?backToEtext="+this.props.IRI+"#open-viewer"}>{etextLoca}</Link></div></div> }
                   { (etext && orig) && <div class="data" id="open-etext"><div><a target="_blank" href={orig}>{I18n.t("resource.openO",{src:prov})}<img src="/icons/link-out_.svg"/></a></div></div> }
                   <div class={"data" + (_T === "Etext"?" etext-title":"")+(_T === "Images"?" images-title":"")}>
                      {_T === "Images" && iTitle?[<h2 class="on intro">{I18n.t("resource.scanF")}</h2>,iTitle]

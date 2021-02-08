@@ -613,10 +613,21 @@ export function top_right_menu(that,etextTitle,backUrl,etextres)
 
                   //if(!etextres) 
                   setTimeout(() => { 
+                     
                      if(!backUrl) {
                         let loca = { ...that.props.history.location };                  
-                        delete loca.hash
-                        that.props.history.push(loca) ; 
+                        const urlParams = new URLSearchParams(loca.search);
+                        if(urlParams.get("backToEtext")) {
+                           loca.pathname = "/show/"+urlParams.get("backToEtext")
+                           delete loca.search
+                           loca.hash = "outline"
+                           console.log("loca:",loca)
+                           that.props.history.push(loca) ; 
+                        }
+                        else {
+                           delete loca.hash
+                           that.props.history.push(loca) ; 
+                        }                        
                         // that.setState({...that.state, openEtext: false });
                      } else {
                         that.props.history.push({pathname:"/search",search:"?"+backUrl}) ; 
