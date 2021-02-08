@@ -4654,7 +4654,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
       return ( <div className={"SidePane left "+(!this.state.collapse.settings?"closed":"")}>
                   {/* <IconButton className="close" onClick={e => this.setState({...this.state,leftPane:false,closeLeftPane:true})}><Close/></IconButton> */}
                { //this.props.datatypes && (results ? results.numResults > 0:true) &&
-                  <div style={{ /*minWidth:"335px",*/ position:"relative"}}>                     
+                  <div style={{ /*minWidth:"335px",*/ position:"relative"}}>                 
+                     <div id="closeSettings" onClick={() => this.setState({collapse:{...this.state.collapse, settings:false}})}><Close /></div>    
                      <Typography className="sidebar-title">
                         {I18n.t("Lsidebar.title")}
                      </Typography>
