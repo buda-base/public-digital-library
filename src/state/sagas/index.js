@@ -430,7 +430,7 @@ function extractAssoRes(iri,res) {
    let longIri = fullUri(iri);
 
    let assocRes = {}, _res = {}
-   let allowK = [ skos+"prefLabel", tmp+"withSameAs", bdo+"inRootInstance", bdo+"language", adm+"canonicalHtml", bdo+"partIndex", bdo+"volumeNumber", tmp+"thumbnailIIIFService", bdo+"instanceHasReproduction",
+   let allowK = [ skos+"prefLabel", skos+"altLabel", tmp+"withSameAs", bdo+"inRootInstance", bdo+"language", adm+"canonicalHtml", bdo+"partIndex", bdo+"volumeNumber", tmp+"thumbnailIIIFService", bdo+"instanceHasReproduction",
                   tmp+"nbTranslations", tmp+"provider", rdfs+"comment", rdf+"type" ]
    let allowR = [ skos+"prefLabel", bdo+"partIndex", bdo+"volumeNumber",  tmp+"thumbnailIIIFService" ]
 
@@ -1921,8 +1921,8 @@ async function startSearch(keyword,language,datatype,sourcetype,dontGetDT,inEtex
 
       let newMeta = {}
 
-      if(datatype[0] !== "Work") addMeta(keyword,language,data,datatype[0]);      
-      else addMeta(keyword,language,data,"Work",result.tree);      
+      if(["Work","Instance","Scan"].includes(datatype[0])) addMeta(keyword,language,data,datatype[0],result.tree);      
+      else addMeta(keyword,language,data,datatype[0]);      
 
       /* // deprecated
       addMeta(keyword,language,data,"Person");      

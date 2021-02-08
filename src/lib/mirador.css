@@ -77,6 +77,11 @@
     font-style: normal;
 }
 
+
+body:not(.inApp) .scroll-view .provider div,
+body:not(.inApp) .image-view .provider { top:calc(100vh - 120px - 70px); }
+
+
 /* TODO show only one scroll bar whern mirador is open & no horizontal scroll when non need*/
 
 #viewer.mirador-container { position:fixed;width:100%;height:100%;top:0;left:0;z-index:100000; }

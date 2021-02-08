@@ -1518,11 +1518,21 @@ h4:not(:hover) > .lang
 .resource .data#outline .expand svg { vertical-align: middle;}
 
 .resource .data#outline .outlineCollapse.in-true { padding-top:10px;}
-
+.resource .data#first-image .src,
 .resource .data .header .src { position: absolute; right: 0; bottom: 20px; width: 34px;  height: 60px; background-color: #172832; line-height:58px; }
+
+.resource .data#first-image .src.orig,
 .resource .data .header .src.orig { cursor:pointer;}
+
+
+.resource .data#first-image .src.orig:not(#a) { margin-right:35px; margin-bottom: 70px; z-index:10; display:block !important;}
+
+.resource .data#first-image.simple { position:relative;}
+
+.resource .data#first-image .src img,
 .resource .data .header .src img { background-color: white; width:calc(100% - 3px * 2 - 2px * 2);padding:2px; margin-left:3px; display:inline-block; 
 vertical-align:middle;}
+
 .resource .data .header .src img[src^="/SBB."] { padding:0; width:calc(100% - 3px * 2) ;}
 .resource .data .header .src img[src^="/BL."] { padding:0;margin:0;width:100%;}
    /* background-size:90% auto;background-position:center;background-repeat:no-repeat; } */
@@ -1910,7 +1920,8 @@ body > [id^="menu-"] > div:last-child,
 
 .resource .data [data-prop="bdo:note"] .noteCollapse.in-true { overflow: visible;}
 
-.resource .data.ext-props [data-prop="bdo:note"] { display:flex !important; align-items: flex-start !important;}
+/* added for #364 (cf git blame) then removed for #421 */
+/* .resource .data.ext-props [data-prop="bdo:note"] { display:flex !important; align-items: flex-start !important;} */
 
 .resource .data h4:hover .svg { background-color: #ededed; }
 
@@ -2217,7 +2228,7 @@ span.in { font-weight:500;padding-left:0px; padding-right:10px; margin-left:36px
 .resource .sub .sub { padding-left:60px;}
 .resource .subsub.full .subsub .subsubsub h4.first.prop { font-style:normal; }
 
-.resource .data > div:not([data-prop="bdo:note"]):not(.header):not(.firstImage):not(#perma) 
+.resource .data > div:not([data-prop="bdo:note"]):not(.header):not(.firstImage):not(#perma)
 { display:flex !important; /*align-items: baseline;*/ flex-wrap:wrap;}
 
 .resource.user .data > div:not([data-prop="bdo:note"]):not(.header):not(.firstImage):not(#perma) 
@@ -2273,8 +2284,10 @@ span.in { font-weight:500;padding-left:0px; padding-right:10px; margin-left:36px
 
 .resource .data > [data-prop="bdo:instanceReproductionOf"] > h3 { margin-right:20px; box-sizing: border-box; width:170px;}
 
+/* see #423 */
 .resource .data > [data-prop="bdo:workHasTranslation"] > h3 { display:none; }
 .resource .data > [data-prop="bdo:workHasTranslation"] > .group { width:100%; }
+
 .resource .data > [data-prop="bdo:workHasTranslation"] > .group > .sub > h4.first {  width: calc(190px - 15px);  padding-right: 15px; margin-right:0; font-size:16px;  }
 .resource .data > [data-prop="bdo:workHasTranslation"] > .group > .sub > h4.first a.propref { color: #343434;  font-size: 16px; letter-spacing: 0px;
    /*line-height: 23px;*/ width: calc(190px - 15px);  padding-right: 0px; margin-right:0px; word-spacing:50px; font-weight:600;

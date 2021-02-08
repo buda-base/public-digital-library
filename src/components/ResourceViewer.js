@@ -5354,6 +5354,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
       if(!this.state.imageError && iiifThumb && T === "Images") 
          return  ( 
             <div class="data simple" id="first-image">
+               { /*(prov && prov !== "BDRC" && orig) &&*/ src }
                <a onClick={handleViewer} onContextMenu={handleViewer}  href={viewUrl.pathname+viewUrl.search} target="_blank" className={"firstImage "+(this.state.imageLoaded?"loaded":"")} 
                /*{...(this.props.config.hideViewers?{"onClick":() => this.showMirador(null,null,true),"style":{cursor:"pointer"}}:{})}*/ >
                   <Loader className="uvLoader" loaded={this.state.imageLoaded} color="#fff"/>
@@ -5364,6 +5365,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
       else if(this.state.imageError === "!" && iiifThumb && T === "Images") 
          return  ( 
             <div class="data simple" id="first-image">
+               { /*(prov && prov !== "BDRC" && orig) &&*/  src }
                <a onClick={handleViewer} onContextMenu={handleViewer}  href={viewUrl.pathname+viewUrl.search} target="_blank" className={"firstImage "+(this.state.imageLoaded?"loaded":"")} 
                /*{...(this.props.config.hideViewers?{"onClick":() => this.showMirador(null,null,true),"style":{cursor:"pointer"}}:{})}*/ >
                   <Loader className="uvLoader" loaded={this.state.imageLoaded} color="#fff"/>
