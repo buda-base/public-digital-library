@@ -131,6 +131,11 @@ body:not(.inApp) .image-view .provider { top:calc(100vh - 120px - 70px); }
 #viewer .member-select-results li { cursor:auto; }
 #viewer .member-select-results li .preview-image { cursor:pointer; }
 
+.mirador-container .mirador-viewer ul.scroll-listing-thumbs li img,
+.mirador-container .etext-content,
+.mirador-container .mirador-viewer ul.scroll-listing-thumbs li,
+.mirador-container .etext-content div { border:none !important;}
+
 .mirador-container .repo-image img { top: 0px; }
 /* #viewer .member-select-results li { display: block; height: 120px; } */
 /*
