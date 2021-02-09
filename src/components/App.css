@@ -3732,6 +3732,7 @@ a.result .contenu ul > div:last-child h3[lang=bo] span { font-size:18px;}
 #root.auto_rela > .auto_rela > .resource > .index { display:none; }
 #root.auto_rela > .auto_rela > .resource > .auto_rela { margin-left:0; width:100%;}
 
+a.result + #matches.mobile,
 .App #results .more-details,
 .SidePane.left #closeSettings { display:none; }
 
@@ -3854,7 +3855,7 @@ a.result .contenu ul > div:last-child h3[lang=bo] span { font-size:18px;}
    .result-content #permalink { right:20px;}
    a.result  {  max-width: calc(100% - 30px); }
    #matches .match { max-width: calc(100% - 40px);}
-   a.result + #matches.mobile { margin-left:150px; }
+   a.result + #matches.mobile { margin-left:150px; display:block;}
    a.result + #matches.mobile .more-details { margin-left:-5px;margin-top:5px;}
    
 
