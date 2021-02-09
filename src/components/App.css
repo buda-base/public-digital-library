@@ -2152,7 +2152,10 @@ h4:hover a.no-bdrc img { opacity:1; }
 .resource .data h2.intro + h2 span { max-width:440px;overflow:hidden ;text-overflow: ellipsis;white-space: nowrap; display:inline-block;}
 
 
-.resource .data.images-title h2.intro + h2 span { max-width:680px;}
+@media(min-width:769px) { 
+   .resource .data.images-title h2.intro + h2 span { max-width:680px;}
+}
+
 .resource .data.images-title h3 { width:100%;}
 
 .resource .data h2.intro + h2 .lang,
@@ -3896,6 +3899,123 @@ a.result + #matches.mobile,
    .App #results #matches.mobile.on + #matches:not(.mobile) .match.by ~ .match.by .label { visibility: visible;}
 
    .result-content.wThumb { min-height:110px;}
+
+
+   /* ------------------------------------------------------------------------------------------------------------------------ resource */
+
+   #root > div > .resource { padding:5px; padding-top:60px; }
+
+   .resource > .ariane { left:75px; top:18px;} 
+
+   #root > div > .resource > .index { display:none; }
+
+   .resource:not(.etext-view):not(.static) > :not(.index):not(.ariane) { margin-left:0; width:100%;}
+   
+   .resource .data#first-image.simple,
+   .resource .title + .data,
+   .resource .data#head { padding:15px;}
+
+   .resource .data#outline,
+   .resource .data.related,
+   .resource .data.ext-props,
+   .resource .data.legal-props,
+   .resource .data#perma,
+   .resource .data { padding-left:15px; padding-right:15px;}
+
+   .resource .data#outline > div,
+   .resource .data h2.on,
+   .resource .data.related > div:not(#a):not(#b):not(#c),
+   .resource .data.ext-props > div,
+   .resource .data.legal-props > div,
+   #perma > div { padding-left:20px; padding-right:20px;}
+
+   .resource .data h2.on { padding-right:0;}
+
+   .resource .data.top-props,
+   .resource .data.bot-props { padding-left:35px; }
+
+   .resource .data .header { height:120px;}
+
+   .resource.user .data .header .before, .resource:not(.user) .data .header::before {width:100px;height:100px; background-size: 65%; }
+
+   .firstImage { height: 100vh;}
+   
+   .resource .data.related > div h2,
+   .resource .data.ext-props > div h2 { margin:20px 0; }
+
+   .resource .data > div > h3 { width:calc(155px - 15px); }
+
+   .resource .data:not(#perma) > div:not(.firstImage):not(.browse):not(.header)::after { margin:25px 0 25px 155px; width: calc(100% - 155px); }
+   .resource .data .group { width: calc(100% - 155px); }
+
+   .resource .sub > h4.label:not(:first-of-type) {}
+
+   .resource .data.legal-props > div h3 {  width: 105px; padding-right:30px;  }
+
+   #perma #rid { margin-left:22px; }
+
+   .resource .data .propCollapseHeader > .sub > h4.first, 
+   .resource .data .propCollapse > div > div > .sub > h4.first, 
+   .resource .data > [data-prop="bdo:creator"] .subgroup .subsub:first-child, 
+   .resource .data > div > .group > .sub > h4.first { width:120px; }
+
+   .resource .sub > h4.label:not(:first-of-type) { max-width: calc(100% - 120px - 15px - 10px); padding-right:0; }
+
+   .resource .data > div .sub > .subgroup > .subsub > h4.first { width:100px; }
+
+   .resource .data > div > .group > .sub > .subgroup { width: calc(100% - 100px - 15px - 20px)}
+
+   .resource .subsub { padding-right:0; }
+
+   .resource .data > div:not([data-prop="bdo:creator"]):not([data-prop="bf:identifiedBy"]):not([data-prop="bdo:corporationHasMember"]) .sub > .subgroup > .subsub > h4.first + * 
+   { width:calc(100% - 100px - 15px )}
+
+   #popHoverM { left:14px !important; }
+   #popHoverM > div:last-child { width:calc(100vw - 30px); overflow:hidden; }
+   #popHoverM > div:last-child .resource .data .react-tabs { min-width:calc(100% - 50px ); margin-left:0; }
+
+   #popHoverM > div:last-child .resource .data { padding-left:25px;}
+
+   .propCollapse,
+   .has-collapse.custom .propCollapseHeader,
+   .resource .data [data-prop="bdo:workHasInstance"] .group {  
+      -webkit-column-count: 1; column-count: 1; 
+      width:calc(100% - 150px - 5px); padding-right:0; 
+   }
+
+   .expand { margin-left:155px;}
+
+   .resource .data .images-thumb,
+   .resource .data [data-prop="bdo:workHasInstance"] .images-thumb { width:115px;height:115px; margin-right:17px;}
+
+   .resource .data .images-thumb-links {margin-left:0;}
+
+   .resource .data#outline > h2 { margin:0 0px 20px 20px; }
+
+   .resource .data#outline > h2,
+   .resource .data.related > div h2, 
+   .resource .data.ext-props > div h2,
+   .resource .data h2.on,
+   .resource .data h2.on + h2 a span,
+   .resource .data h2.on span:not(.T):not(.lang):not(#a) { font-size:28px;}
+
+   .resource .data.images-title,
+   .resource .data h2.intro + h2,
+   .resource .data h2.on,
+   .resource .data h2.on + h2 a span,
+   .resource .data.related > div h2, 
+   .resource .data.ext-props > div h2,
+   .resource .data h2 { line-height:36px;  }
+
+   .resource .data h2.intro + h2 { padding-left:20px; }
+
+   .resource .title h2 { font-size:22px;}
+
+   .resource .title h2 .T::before { margin-right:20px; }
+
+   .resource .title h2 .RID { left:70px; }
+
+   .resource .data#outline div .root { flex-wrap:nowrap;}
 }
 
 
