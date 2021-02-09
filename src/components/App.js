@@ -2724,7 +2724,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
       }
    }
 
-   getEtextMatches(prettId,startC,endC,bestM,rmatch,facet) { 
+   getEtextMatches(prettId,startC,endC,bestM,rmatch,facet,n) { 
       let lastP,prop = ""
 
       return rmatch.filter(m => !([ tmp+"nameMatch", bdo+"biblioNote", bdo+"catalogInfo", rdfs+"comment", tmp+"noteMatch", bdo+"colophon", bdo+"incipit" ].includes(m.type)) ).map((m) => {
@@ -2771,7 +2771,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
          let toggleExpand = (e,id) => {	
             //loggergen.log("toggle",id)	
-            this.setState({...this.state,repage:true,collapse:{...this.state.collapse, [id]:!this.state.collapse[id]}})	
+            this.setState({...this.state,repage:true,collapse:{...this.state.collapse, [id]:!this.state.collapse[id]}})
          }	
 
          let getUrilink = (uri,val,lang) => ([ <Link className="urilink" to={"/show/"+shortUri(uri)}>{val}</Link>,lang?<Tooltip placement="bottom-end" title={	
@@ -2801,8 +2801,11 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             }><span className="lang">&nbsp;{lang}</span></Tooltip>:null]}{expand?<span class="etext-match"><br/>&gt;&nbsp;	
                <span class="uri-link" onClick={(e) => { 	
                   if(!this.state.collapse[prettId+"@"+startC] && !m.context) this.props.onGetContext(prettId,startC,endC) ; 	
-                  toggleExpand(e,prettId+"@"+startC); } 	
-               }>{expand!==true?I18n.t("result.expandC"):I18n.t("result.hideC")}</span>	
+                  if(this.state.collapse[prettId+"@"+startC]) {  
+                     if(this._refs && this._refs[n] && this._refs[n].current) this._refs[n].current.scrollIntoView(); 
+                  }
+                  toggleExpand(e,prettId+"@"+startC); 
+               }}>{expand!==true?I18n.t("result.expandC"):I18n.t("result.hideC")}</span>	
                <span> {I18n.t("misc.or")} </span>	
                <Link to={"/show/"+prettId+bestM} class="uri-link">{I18n.t("result.openEin")}</Link>	
                </span>:null}</span>	                      	
@@ -3256,7 +3259,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             { type === "Etext" && this.getResultProp(I18n.t("result.inInstance"),allProps,false,true,[tmp+"inInstance"]) }
             { type === "Etext" && this.getResultProp(I18n.t("result.inInstancePart"),allProps,false,true,[tmp+"inInstancePart"]) }
 
-            { type === "Etext" && this.getEtextMatches(prettId,startC,endC,bestM,rmatch,facet) }
+            { type === "Etext" && this.getEtextMatches(prettId,startC,endC,bestM,rmatch,facet,n) }
 
             { this.getResultProp("tmp:nameMatch",allProps,true,false,[ tmp+"nameMatch" ], !preLit?preLit:preLit.replace(/[↦↤]/g,"") ) } {/* //,true,false) } */}
 
