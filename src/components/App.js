@@ -3049,10 +3049,28 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          if(!resUrl.startsWith("http")) retList.push(<Link to={resUrl.replace(/#open-viewer$/,"")} className="result">{ret}</Link>)         
          else retList.push(<a href={resUrl} target="_blank" className="result">{ret}</a>)         
 
-         retList.push(<div class={"more-details"+( this.state.collapse["more-details-"+id] == true ?" on":"" )} onClick={() => this.setState({ repage:true, collapse:{...this.state.collapse, ["more-details-"+id]:!this.state.collapse["more-details-"+id]}})}>
-            { this.state.collapse["more-details-"+id] != true && <ExpandMore /> }
-            { this.state.collapse["more-details-"+id] && <ExpandLess /> }
-         </div>)
+         let type = this.state.filters.datatype[0]
+         let typeisbiblio = (type === "Work" || type === "Instance" || type === "Etext" || type === "Scan")
+         let by = this.getResultProp(I18n.t("result.workBy"),allProps,false,true,[tmp+"author"])
+         let byStat = this.getResultProp(I18n.t("result.workBy"),allProps,true,false,[bdo+"authorshipStatement"])
+         let details = <div class={"more-details"+( this.state.collapse["more-details-"+id] == true ?" on":"" )} onClick={() => this.setState({ repage:true, collapse:{...this.state.collapse, ["more-details-"+id]:!this.state.collapse["more-details-"+id]}})}>
+                        { this.state.collapse["more-details-"+id] != true && <ExpandMore /> }
+                        { this.state.collapse["more-details-"+id] && <ExpandLess /> }
+                     </div>
+
+         if(typeisbiblio && by /*|| byStat) */ ) retList.push( <div id='matches' class={"mobile hasAuthor "+( this.state.collapse["more-details-"+id] == true ?" on":"" )}>         
+
+               {/* { typeisbiblio && this.getResultProp(I18n.t("result.inRootInstance"),allProps,false,true,[bdo+"inRootInstance",tmp+"inRootInstance"],null,null,null,null,resUrl) }  */}
+               { typeisbiblio && by }
+               {/* { typeisbiblio && byStat } */}
+               { details}
+            </div>)
+         else {
+
+            retList.push(details)
+         }   
+         
+
 
          let dico
          if(!sameAsRes) sameAsRes = []        
@@ -3231,14 +3249,12 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          let nbChunks = allProps.filter(e => e.type === tmp+"nbChunks")
          if(nbChunks[0] && nbChunks[0].value) nbChunks = Number(nbChunks[0].value)
          else nbChunks = "?"
-         let type = this.state.filters.datatype[0]
-         let typeisbiblio = (type === "Work" || type === "Instance" || type === "Etext" || type === "Scan")
 
          retList.push( <div id='matches'>         
 
             { typeisbiblio && this.getResultProp(I18n.t("result.inRootInstance"),allProps,false,true,[bdo+"inRootInstance",tmp+"inRootInstance"],null,null,null,null,resUrl) } 
-            { typeisbiblio && this.getResultProp(I18n.t("result.workBy"),allProps,false,true,[tmp+"author"]) }
-            { typeisbiblio && this.getResultProp(I18n.t("result.workBy"),allProps,true,false,[bdo+"authorshipStatement"]) }
+            { typeisbiblio && by }
+            { typeisbiblio && byStat }
 
             { type !== "Person" && 
                this.getResultProp(I18n.t("result.year"),allProps,false,false,[tmp+"yearStart"]) }

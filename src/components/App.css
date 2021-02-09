@@ -3854,6 +3854,8 @@ a.result .contenu ul > div:last-child h3[lang=bo] span { font-size:18px;}
    .result-content #permalink { right:20px;}
    a.result  {  max-width: calc(100% - 30px); }
    #matches .match { max-width: calc(100% - 40px);}
+   a.result + #matches.mobile { margin-left:150px; }
+   a.result + #matches.mobile .more-details { margin-left:-5px;margin-top:5px;}
    
 
    #settings { position:fixed;bottom:5px;right:5px; border-radius:50%; background:white;box-shadow: 0 0 5px 0px rgb(0 0 0 / 13%); 
@@ -3871,7 +3873,7 @@ a.result .contenu ul > div:last-child h3[lang=bo] span { font-size:18px;}
    .result-content #icon > .thumb { width:100px; height:100px;}
 
    .result-content > .result > .contenu { margin-left:125px;}
-   a.result ~ #matches { margin-left:150px; }
+   a.result ~ #matches:not(.mobile) { margin-left:150px; }
 
    .match .inRoot + .sepa { display:block;border:none; }
 
@@ -3880,11 +3882,17 @@ a.result .contenu ul > div:last-child h3[lang=bo] span { font-size:18px;}
 
    a.result {  max-width: calc(100% - 150px); }   
    .result-content > .result > .contenu { margin-left:0;max-width:calc(100% - 40px); padding-left:5px; }
-   a.result ~ #matches { margin-left:0; padding-left:5px; clear:both;  }
-   a.result ~ #matches > .match { padding-left:28px; }
+   a.result ~ #matches:not(.mobile) { margin-left:0; padding-left:5px; clear:both;  }
+   a.result ~ #matches:not(.mobile) > .match { padding-left:28px; }
 
    .App #results .more-details { display:inline-block; margin-top:10px;}
-   .App #results .more-details:not(.on) + #matches {display:none; }
+
+   .App #results #matches.mobile.on + #matches:not(.mobile) .match.by,
+   .App #results #matches.mobile:not(.on) + #matches:not(.mobile),
+   .App #results .more-details:not(.on) + #matches:not(.mobile) {display:none; }
+
+   .App #results #matches.mobile.on + #matches:not(.mobile) .match.by ~ .match.by { display:block; }
+   .App #results #matches.mobile.on + #matches:not(.mobile) .match.by ~ .match.by .label { visibility: visible;}
 
    .result-content.wThumb { min-height:110px;}
 }
