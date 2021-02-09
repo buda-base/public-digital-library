@@ -3891,7 +3891,7 @@ a.result .contenu ul > div:last-child h3[lang=bo] span { font-size:18px;}
    .App #results #matches.mobile:not(.on) + #matches:not(.mobile),
    .App #results .more-details:not(.on) + #matches:not(.mobile) {display:none; }
 
-   .App #results #matches.mobile.on + #matches:not(.mobile) .match.by ~ .match.by { display:block; }
+   .App #results #matches.mobile.on + #matches:not(.mobile) .match.by ~ .match.by { display:flex; }
    .App #results #matches.mobile.on + #matches:not(.mobile) .match.by ~ .match.by .label { visibility: visible;}
 
    .result-content.wThumb { min-height:110px;}
