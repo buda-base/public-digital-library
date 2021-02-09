@@ -2467,7 +2467,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
       return ret;
    }
 
-   getResultProp(prop:string,allProps:[],plural:string="_plural", doLink:boolean = true, fromProp:[], exclude:string,useAux:[],findProp:[],altInfo:[],iri) {
+   getResultProp(prop:string,allProps:[],plural:string="_plural", doLink:boolean = true, fromProp:[], exclude:string,useAux:[],findProp:[],altInfo:[],iri,T) {
 
       if(plural === true) plural = "_plural"
 
@@ -2695,7 +2695,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   if(i.uri && !i.uri.includes(".bdrc.") && i.uri.startsWith("http")) urilink = <a target="_blank" href={i.uri}><span {...(i.lang?{lang:i.lang}:{})}>{i.value}</span></a> 
                   else urilink =  <Link class="inRoot" to={"/show/"+i.uri}><span {...(i.lang?{lang:i.lang}:{})}>{i.value}</span></Link> 
 
-                  if(outlineB !== undefined) {
+                  if(outlineB !== undefined && (!T || T !== "Etext")) {
                      outlineB.push(<span class="sepa"/>)
                      outlineB.push(<Link class="outL" to={iri}><img src="/scripts/mirador/images/collecR.svg"/>{I18n.t("result.openO")}</Link>)
                      outlineB.push(<span class="sepa"/>)
@@ -3242,7 +3242,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
          retList.push( <div id='matches'>         
 
-            { typeisbiblio && this.getResultProp(I18n.t("result.inRootInstance"),allProps,false,true,[bdo+"inRootInstance",tmp+"inRootInstance"],null,null,null,null,resUrl) } 
+            { typeisbiblio && this.getResultProp(I18n.t("result.inRootInstance"),allProps,false,true,[bdo+"inRootInstance",tmp+"inRootInstance"],null,null,null,null,resUrl,T) } 
             { typeisbiblio && this.getResultProp(I18n.t("result.workBy"),allProps,false,true,[tmp+"author"]) }
             { typeisbiblio && this.getResultProp(I18n.t("result.workBy"),allProps,true,false,[bdo+"authorshipStatement"]) }
 
