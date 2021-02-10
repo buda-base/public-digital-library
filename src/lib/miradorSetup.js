@@ -758,13 +758,6 @@ function miradorAddScroll(toImage)
             // /!\ WIP 
             //jQ(".mirador-viewer li.scroll-option").click();
 
-
-            let sT = jQ(".scroll-view").scrollTop()
-            if(!sT) sT = 0
-
-            let sTd = jQ(document).scrollTop()
-            if(!sTd) sTd = 0
-
             let im
             if(id) im = jQ(".scroll-view img[data-image-id='"+id.attr("data-image-id")+"']").first()
             else im = jQ(".scroll-view img[data-image-id]").first()
@@ -772,11 +765,29 @@ function miradorAddScroll(toImage)
             let imgY = 0 ;
             if(id && im && im.length > 0) imgY = im.parent().offset().top
 
-            //console.log("y",sT,sTd,imgY,im)
 
-            jQ(".scroll-view").stop().animate({scrollTop:-sTd+sT+imgY-90}
-               //,"scrollLeft": (jQ(".mirador-container ul.scroll-listing-thumbs ").width() - jQ(window).width()) / 2}
-               ,0, () => { jQ("input#zoomer").trigger("input") })
+            if(jQ("#viewer.inApp").length) {
+
+               //if(window.innerWidth > window.innerHeight) 
+               jQ("html,body").scrollTop(imgY);
+               //else jQ("body").scrollTop(imgY);
+               
+
+            } else {
+
+
+               let sT = jQ(".scroll-view").scrollTop()
+               if(!sT) sT = 0
+
+               let sTd = jQ(document).scrollTop()
+               if(!sTd) sTd = 0
+
+               //console.log("y",sT,sTd,imgY,im)
+
+               jQ(".scroll-view").stop().animate({scrollTop:-sTd+sT+imgY-90}
+                  //,"scrollLeft": (jQ(".mirador-container ul.scroll-listing-thumbs ").width() - jQ(window).width()) / 2}
+                  ,0, () => { jQ("input#zoomer").trigger("input") })
+            }
 
             jQ(".mirador-container .scroll-view").show().fadeTo(250,1); 
       }
@@ -916,6 +927,11 @@ function miradorAddZoomer() {
             if(window.currentZoom === undefined) {
                //console.log("set zoom menu");
 
+               if(selec.length) { 
+                  selec.removeAttr("data-selected");
+                  selec = []
+               }
+
                let li = jQ(".view-nav #Zmenu ul.select li"), a = 150 / (150 - coef * 100), b = 150 - 150 * a, nega = false, y, elem, prev, txt
                li.parent().attr("data-min-zoom",coef)
                li.each((i,e)=>{
@@ -968,11 +984,31 @@ function miradorAddZoomer() {
                   fixed += rect.height
                }
             })
-            let sT = scrollV.scrollTop() + (nuH - oldH)*((scrollV.scrollTop() - fixed)/(oldH - fixed))
-            //console.log("sT:",sT,fixed)
-            scrollV.scrollTop(sT) 
+            let sT = scrollV.scrollTop() + (nuH - oldH)*((scrollV.scrollTop() - fixed)/(oldH - fixed)), body ;
+            if(!inApp) {
+               scrollV.scrollTop(sT) 
+            } else {            
+               body = scrollT
+               while(!body.scrollTop() && !body.is("html")) {
+                  body = body.parent();
+               } 
+               if(body.is("html") && !body.scrollTop()) body = jQ(window)
+               
+               // DONE fix scroll to top bug when zooming in/out in portrait mode
+               //if(window.innerWidth > window.innerHeight) body = jQ("html,body");
+               //else body = jQ("body")
+
+               //console.log(body.scrollTop())
+               sT = body.scrollTop() + (nuH - oldH)*((body.scrollTop() - fixed)/(oldH - fixed))
+               if(!window.miradorNoScroll) body.scrollTop(sT) 
+            }
+            //console.log("sT:",sT,fixed,nuH,oldH,body)
+
             // TODO not always centered when zoom > 135% (bdr:W1KG18629)
             scrollV.scrollLeft((nuW - scrollV.innerWidth() ) / 2)
+
+
+
          }
 
          

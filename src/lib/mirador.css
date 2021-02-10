@@ -214,11 +214,6 @@ body:not(.inApp) .image-view .provider { top:calc(100vh - 120px - 70px); }
     direction:ltr;
 }
 
-.mirador-container .mirador-hud { 
-    display:flex; 
-    align-items:center;
-    justify-content:center;
-}
 
 .mirador-container .view-container.thumbs-off .bottomPanel {
     left:-280px;

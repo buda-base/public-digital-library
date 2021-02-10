@@ -158,7 +158,7 @@ export function shortUri(id:string) {
    return id.replace(/[/]$/,"") ;
 }
 
-
+/*
 // get the queryinfo from the search bar
 export function searchbartoqueryinfo(key:string, lang?:string) {
    res = {lang: lang}
@@ -211,6 +211,7 @@ export function luceneqtoqueryinfo(luceneq, lang) {
       res.keywords.push(k)
    }
 }
+*/
 
 export function keywordtolucenequery(key:string, lang?:string) {
    if(key.indexOf("\"") === -1) 
@@ -3117,6 +3118,29 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          if(!resUrl.startsWith("http")) retList.push(<Link to={resUrl.replace(/#open-viewer$/,"")} className="result">{ret}</Link>)         
          else retList.push(<a href={resUrl} target="_blank" className="result">{ret}</a>)         
 
+         let type = this.state.filters.datatype[0]
+         let typeisbiblio = (type === "Work" || type === "Instance" || type === "Etext" || type === "Scan")
+         let by = this.getResultProp(I18n.t("result.workBy"),allProps,false,true,[tmp+"author"])
+         let byStat = this.getResultProp(I18n.t("result.workBy"),allProps,true,false,[bdo+"authorshipStatement"])
+         let details = <div class={"more-details"+( this.state.collapse["more-details-"+id] == true ?" on":"" )} onClick={() => this.setState({ repage:true, collapse:{...this.state.collapse, ["more-details-"+id]:!this.state.collapse["more-details-"+id]}})}>
+                        { this.state.collapse["more-details-"+id] != true && <ExpandMore /> }
+                        { this.state.collapse["more-details-"+id] && <ExpandLess /> }
+                     </div>
+
+         if(typeisbiblio && by /*|| byStat) */ ) retList.push( <div id='matches' class={"mobile hasAuthor "+( this.state.collapse["more-details-"+id] == true ?" on":"" )}>         
+
+               {/* { typeisbiblio && this.getResultProp(I18n.t("result.inRootInstance"),allProps,false,true,[bdo+"inRootInstance",tmp+"inRootInstance"],null,null,null,null,resUrl) }  */}
+               { typeisbiblio && by }
+               {/* { typeisbiblio && byStat } */}
+               { details}
+            </div>)
+         else {
+
+            retList.push(details)
+         }   
+         
+
+
          let dico
          if(!sameAsRes) sameAsRes = []        
 
@@ -3294,14 +3318,12 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          let nbChunks = allProps.filter(e => e.type === tmp+"nbChunks")
          if(nbChunks[0] && nbChunks[0].value) nbChunks = Number(nbChunks[0].value)
          else nbChunks = "?"
-         let type = this.state.filters.datatype[0]
-         let typeisbiblio = (type === "Work" || type === "Instance" || type === "Etext" || type === "Scan")
 
          retList.push( <div id='matches'>         
 
             { typeisbiblio && this.getResultProp(I18n.t("result.inRootInstance"),allProps,false,true,[bdo+"inRootInstance",tmp+"inRootInstance"],null,null,null,null,resUrl,T) } 
-            { typeisbiblio && this.getResultProp(I18n.t("result.workBy"),allProps,false,true,[tmp+"author"]) }
-            { typeisbiblio && this.getResultProp(I18n.t("result.workBy"),allProps,true,false,[bdo+"authorshipStatement"]) }
+            { typeisbiblio && by }
+            { typeisbiblio && byStat }
 
             { type !== "Person" && 
                this.getResultProp(I18n.t("result.year"),allProps,false,false,[tmp+"yearStart"]) }
@@ -4722,7 +4744,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
       return ( <div className={"SidePane left "+(!this.state.collapse.settings?"closed":"")}>
                   {/* <IconButton className="close" onClick={e => this.setState({...this.state,leftPane:false,closeLeftPane:true})}><Close/></IconButton> */}
                { //this.props.datatypes && (results ? results.numResults > 0:true) &&
-                  <div style={{ /*minWidth:"335px",*/ position:"relative"}}>                     
+                  <div style={{ /*minWidth:"335px",*/ position:"relative"}}>                 
+                     <div id="closeSettings" onClick={() => this.setState({collapse:{...this.state.collapse, settings:false}})}><Close /></div>    
                      <Typography className="sidebar-title">
                         {I18n.t("Lsidebar.title")}
                      </Typography>
@@ -5678,9 +5701,9 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      <h3>{I18n.t("home.new")}</h3>
                      <Link class="seeAll" to="/latest" onClick={()=>this.setState({filters:{...this.state.filters,datatype:["Scan"]}})}>{I18n.t("misc.seeAnum",{count:this.props.latestSyncsNb})}</Link>
                      <div 
-                        onTouchStart={ev => {this.tx0 = ev.targetTouches[0].clientX}} 
-                        onTouchMove={ev => {this.tx1 = ev.targetTouches[0].clientX}} 
-                        onTouchEnd={ev => {if (Math.abs(this.tx0 - this.tx1) > 75) { syncSlide(); } }}
+                        onTouchStart={ev => {this.tx0 = ev.targetTouches[0].clientX; this.ty0 = ev.targetTouches[0].clientY; }} 
+                        onTouchMove={ev => {this.tx1 = ev.targetTouches[0].clientX; this.ty1 = ev.targetTouches[0].clientY; }} 
+                        onTouchEnd={ev => {if(Math.abs(this.ty0 - this.ty1) < Math.abs(this.tx0 - this.tx1) && Math.abs(this.tx0 - this.tx1) > 75) { syncSlide(); } }}
                      >
                         { this.props.latestSyncs === true && <Loader loaded={false}/> }
                         { (this.props.latestSyncs && this.props.latestSyncs !== true) &&
@@ -5699,7 +5722,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                                  //console.log("thumb",thumb)
                                  return (
                                     <div>
-                                       <a href={uri}><div class={"header "+(thumb?"thumb":"")} {...thumb?{style:{"background-image":"url("+ thumb+"/full/"+(thumb.includes(".bdrc.io/")?"!2000,195":",195")+"/0/default.jpg)"}}:{}}></div></a>
+                                       <a href={uri}><div class={"header "+(thumb?"thumb":"")} {...thumb?{style:{"backgroundImage":"url("+ thumb+"/full/"+(thumb.includes(".bdrc.io/")?"!2000,195":",195")+"/0/default.jpg)"}}:{}}></div></a>
                                        <p lang={lang}>{value}</p>
                                        <a href={uri}>{I18n.t("misc.readM")}</a>
                                     </div>
