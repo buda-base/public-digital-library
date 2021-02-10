@@ -3970,6 +3970,17 @@ a.result + #matches.mobile,
    .resource .data > div:not([data-prop="bdo:creator"]):not([data-prop="bf:identifiedBy"]):not([data-prop="bdo:corporationHasMember"]) .sub > .subgroup > .subsub > h4.first + * 
    { width:calc(100% - 100px - 15px )}
 
+   .resource .data [data-prop="bf:identifiedBy"] .sub.keep > h4.first + .subgroup, .resource .data .sub.willK:not(.keep) > h4.first + .subgroup, .resource .data .sub.willK:not(.keep) > h4.first + h4.label {
+      margin-left: calc(120px + 15px);
+   }
+
+   .resource .data [data-prop="tmp:propHasEtext"] .images-thumb.no-thumb { margin-right:20px; }
+
+   .resource .data .group > h4 {
+      max-width: calc(100%);
+      padding-right: 0px;
+  }
+
    #popHoverM { left:14px !important; }
    #popHoverM > div:last-child { width:calc(100vw - 30px); overflow:hidden; }
    #popHoverM > div:last-child .resource .data .react-tabs { min-width:calc(100% - 50px ); margin-left:0; }
@@ -4009,6 +4020,9 @@ a.result + #matches.mobile,
 
    .resource .data h2.intro + h2 { padding-left:20px; }
 
+
+   /* ------------------------------------------------------------------------------------------------------------------------ topbar etc. */
+
    .resource .title h2 { font-size:22px;}
 
    .resource .title h2 .T::before { margin-right:20px; }
@@ -4016,6 +4030,14 @@ a.result + #matches.mobile,
    .resource .title h2 .RID { left:70px; }
 
    .resource .data#outline div .root { flex-wrap:nowrap;}
+
+   .infoPanel.inRes {  margin: 60px auto 0 auto!important; }
+   
+   #root > div > .infoPanel + .resource {  padding-top: 5px;  }
+
+   #root .App .SearchPane, #root > div > .resource { position:static;}
+
+   .infoPanel + .resource > .ariane { top:18px; }
 }
 
 
