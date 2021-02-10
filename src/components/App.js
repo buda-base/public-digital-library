@@ -158,24 +158,9 @@ export function shortUri(id:string) {
    return id.replace(/[/]$/,"") ;
 }
 
-/*
-// get the queryinfo from the search bar
-export function searchbartoqueryinfo(key:string, lang?:string) {
-   res = {lang: lang}
-   if (key.indexOf(" AND ") === -1) {
-      res.keywords = [key.replace('"', "").trim()]
-      return res
-   }
-   // we have an "AND":
-   keys = key.split(" AND ", 4)
-   res.keywords = []
-   for (k in keys) {
-      if (k)
-         res.keywords.push(k.replace('"', "").trim())
-   }
-   return res
-}
 
+
+/*
 // can also be used for display purposes (in the breadcrumbs)
 export function queryinfotosearchbar(qi) {
    if (!qi || !qi.keywords)
@@ -214,10 +199,14 @@ export function luceneqtoqueryinfo(luceneq, lang) {
 */
 
 export function keywordtolucenequery(key:string, lang?:string) {
-   if(key.indexOf("\"") === -1) 
+
+   // advanced query syntax
+   if(key.indexOf(" AND ") !== -1) 
+      key = '("' + key.replace(/(^\(")|("\))$/g,"").replace(/([^" ]) +AND +([^" ])/g,'$1" AND "$2') + '")'   
+   else if(key.indexOf("\"") === -1) 
       key = "\""+key+"\""
    // https://github.com/buda-base/public-digital-library/issues/155
-   if (lang && lang.startsWith("bo") && !key.match(/~\d$/))
+   if (lang && lang.startsWith("bo") && !key.match(/(~\d$)|( AND )/))
       key = key+"~1"
    return key
 }
@@ -226,7 +215,26 @@ export function keywordtolucenequery(key:string, lang?:string) {
 export function lucenequerytokeyword(lq) {
    lq = lq.replace(/~\d$/,"")
    lq = lq.replace(/\"/g, "")
+   lq = lq.replace(/^\(|\)$/g, "") // advanced query
    return lq
+}
+
+
+// get array of keywords
+export function lucenequerytokeywordmulti(key:string) {
+   let res = []
+   if (key.indexOf(" AND ") === -1) {
+      res = [key.replace(/["()]g/, "").trim()]
+      return res
+   }
+   // we have an "AND":
+   let keys = key.split(" AND ") //, 4)
+   for (let k of keys) {
+      if (k)
+         res.push(k.replace(/["()]/g, "").trim())
+   }
+   //console.log("multi:",res)
+   return res
 }
 
 const facetLabel = {
@@ -366,10 +374,15 @@ export function highlight(val,k,expand,newline)
    if(!val.match(/↤/) && k) {
 
       //val = /*val.replace(/@.* /,"")*/ val.split(new RegExp(k.replace(/[ -'ʾ_]/g,"[ -'ʾ_]+"))).map((l) => ([<span>{l}</span>,<span className="highlight">{k}</span>])) ;
+
       //console.log("val:",val)
       
       // DONE "manually" add the ↦
-      val = val.replace(new RegExp("("+k.replace(/[ -'ʾʼʹ‘_/  \[\]0-9\n\r།]+/igu,"[ -'ʾʼʹ‘_/  \\[\\]0-9\n\r།]+")+")","igu"),"↦$1↤")
+      if(!Array.isArray(k)) 
+         val = val.replace(new RegExp("("+k.replace(/[ -'ʾʼʹ‘_/  \[\]0-9\n\r།]+/igu,"[ -'ʾʼʹ‘_/  \\[\\]0-9\n\r།]+")+")","igu"),"↦$1↤")
+      else for(let key of k) { // advanced query
+         val =  val.replace(new RegExp("("+key.replace(/[ -'ʾʼʹ‘_/  \[\]0-9\n\r།]+/igu,"[ -'ʾʼʹ‘_/  \\[\\]0-9\n\r།]+")+")","igu"),"↦$1↤")
+      }
 
       //console.log("k:",val,k.replace(/[ -'ʾ_/  \[\]0-9\n\r།]+/gu,"[ -'ʾ_/  \\[\\]0-9\n\r།]+"))
    }
@@ -2480,7 +2493,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          let val = i["value"] 
          //if(val === exclude) continue
          if(val && val.startsWith("http")) val = this.fullname(val,[],true)
-         else val = highlight(val,lucenequerytokeyword(this.props.keyword))
+         else val = highlight(val,lucenequerytokeywordmulti(this.props.keyword))
          let lang = i["xml:lang"]
          if(!lang) lang = i["lang"]
          ret.push(<span {...(lang?{lang:lang}:{})}>{val}{
@@ -2508,14 +2521,14 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          lab = getLangLabel(this,"",hasName)
          ret.push(<div class={"match publisher "+this.props.locale}>
                <span class="label">{this.fullname("tmp:publisherName",[],true)}{I18n.t("punc.colon")}&nbsp;</span>
-               <div class="multi"><span>{highlight(lab.value,lucenequerytokeyword(this.props.keyword))}</span></div>
+               <div class="multi"><span>{highlight(lab.value,lucenequerytokeywordmulti(this.props.keyword))}</span></div>
             </div>)
       }
       if(hasLoc.length) { 
          lab = getLangLabel(this,"",hasLoc)
          ret.push(<div class="match publisher">
                <span className={`label ${hasName.length ? "hidden-en" : ""}`}>{this.fullname("tmp:publisherName",[],true)}{I18n.t("punc.colon")}&nbsp;</span>
-               <div class="multi"><span>{highlight(lab.value,lucenequerytokeyword(this.props.keyword))}</span></div>
+               <div class="multi"><span>{highlight(lab.value,lucenequerytokeywordmulti(this.props.keyword))}</span></div>
             </div>)
       }
 
@@ -2681,7 +2694,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   val = getLangLabel(this,prop,[i])
                   if(val) {
                      if(val.value && exclude && val.value.replace(/[↦↤]/g,"") === exclude) continue ;
-                     val = highlight(val.value,lucenequerytokeyword(this.props.keyword))
+                     val = highlight(val.value,lucenequerytokeywordmulti(this.props.keyword))
                      lang = val.lang
                   } else {
                      console.warn("val==NULL:",val,prop,i)
@@ -2815,7 +2828,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             inPart = m.inPart	
 
             if(mLit) {               
-               if(!facet && this.props.keyword) facet = lucenequerytokeyword(this.props.keyword)
+               if(!facet && this.props.keyword) facet = lucenequerytokeywordmulti(this.props.keyword)
                val = highlight(mLit["value"], facet, context?context:expand, context)	
                //val =  mLit["value"]	
                lang = mLit["lang"]	
@@ -3935,7 +3948,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             if(id.match(/bdrc[.]io/)) id = id.replace(/^.*?([^/]+)$/,"$1")
 
             let lit ;
-            if(r.lit) { lit = highlight(r.lit.value,k) }
+            if(r.lit) { lit = highlight(r.lit.value,lucenequerytokeywordmulti(this.props.keyword)) }
             let lang ;
             if(r.lit) lang= r.lit["lang"]
             if(r.lit && !lang) lang = r.lit["xml:lang"]

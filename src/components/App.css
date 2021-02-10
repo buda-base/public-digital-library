@@ -729,7 +729,7 @@ a.result + #matches .result-content #matches { margin-left:125px; margin-bottom:
 a.result + #matches .result-content.etext #permalink,
 a.result + #matches .result-content.etext #icon .RID { visibility:hidden;}
 
-a.result + #matches .result-content #matches .match.Text.Match .label { display:none; }
+a.result ~ #matches .result-content #matches .match.Text.Match .label { display:none; }
 a.result + #matches .result-content #matches .match.Text.Match { margin-top:0;}
 
 a.result + #matches .result-content::before { left:110px; width:calc(100% - 110px - 50px); }
