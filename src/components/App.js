@@ -158,6 +158,60 @@ export function shortUri(id:string) {
    return id.replace(/[/]$/,"") ;
 }
 
+
+// get the queryinfo from the search bar
+export function searchbartoqueryinfo(key:string, lang?:string) {
+   res = {lang: lang}
+   if (key.indexOf(" AND ") === -1) {
+      res.keywords = [key.replace('"', "").trim()]
+      return res
+   }
+   // we have an "AND":
+   keys = key.split(" AND ", 4)
+   res.keywords = []
+   for (k in keys) {
+      if (k)
+         res.keywords.push(k.replace('"', "").trim())
+   }
+   return res
+}
+
+// can also be used for display purposes (in the breadcrumbs)
+export function queryinfotosearchbar(qi) {
+   if (!qi || !qi.keywords)
+      return ""
+   if (qi.keywords.length == 1)
+      return qi.keywords[0]
+   return '"'+qi.keywords.join('" AND "')+'"'
+}
+
+// to get from query info to the SPARQL queries and routes
+export function queryinfotolucene(qi) {
+   if (!qi || !qi.keywords)
+      return null
+   if (qi.keywords.length == 1) {
+      k = qi.keywords[0]
+      if (qi.lang.startsWith("bo"))
+         return '"'+k+'"~1'
+      return '"'+k+'"'
+   }
+   return '("'+qi.keywords.join('" AND "')+'")'
+}
+
+// to parse the route
+export function luceneqtoqueryinfo(luceneq, lang) {
+   res = {lang: lang}
+   if (luceneq.startswith('(') && luceneq.endswith(')'))
+      luceneq = luceneq.substring(1, luceneq.length-1)
+   res.keywords = []
+   for (k in luceneq.split(' AND ')) {
+      if (k.endswith('~1'))
+         k = k.substring(0, k.length-2)
+      k = k.replace('"', '')
+      res.keywords.push(k)
+   }
+}
+
 export function keywordtolucenequery(key:string, lang?:string) {
    if(key.indexOf("\"") === -1) 
       key = "\""+key+"\""
