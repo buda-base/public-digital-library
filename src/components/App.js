@@ -201,8 +201,17 @@ export function luceneqtoqueryinfo(luceneq, lang) {
 export function keywordtolucenequery(key:string, lang?:string) {
 
    // advanced query syntax
-   if(key.indexOf(" AND ") !== -1) 
-      key = '("' + key.replace(/(^\(")|("\))$/g,"").replace(/([^" ]) +AND +([^" ])/g,'$1" AND "$2') + '")'   
+   if (key.indexOf(" AND ") !== -1) {
+      let keywords = []
+      for (let k of key.split(' AND ')) {
+         if (k.endsWith('~1'))
+            k = k.substring(0, k.length-2)
+         k = k.replace(/"/g, '')
+         keywords.push(k)
+      }
+      key = '("'+keywords.join('" AND "')+'")'
+      return key
+   }
    else if(key.indexOf("\"") === -1) 
       key = "\""+key+"\""
    // https://github.com/buda-base/public-digital-library/issues/155
@@ -236,9 +245,6 @@ export function lucenequerytokeywordmulti(key:string) {
    //console.log("multi:",res)
    return res
 }
-
-window.tmplucenequerytokeywordmulti = lucenequerytokeywordmulti
-window.tmplucenequerytokeyword = lucenequerytokeyword
 
 const facetLabel = {
    "root": "Lsidebar.widgets.root",
