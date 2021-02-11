@@ -1153,7 +1153,7 @@ class App extends Component<Props,State> {
             key = key.toLowerCase();
             lang = "bo-x-ewts"
          }
-         
+
          let inEtext
          if(this.props.searches && this.props.searches[this.state.filters.datatype[0]] && this.props.searches[this.state.filters.datatype[0]][this.props.keyword+"@"+this.props.language] && this.props.searches[this.state.filters.datatype[0]][this.props.keyword+"@"+this.props.language].inEtext) {
             inEtext = this.props.searches[this.state.filters.datatype[0]][this.props.keyword+"@"+this.props.language].inEtext
@@ -2810,7 +2810,6 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
       return rmatch.filter(m => !([ tmp+"nameMatch", bdo+"biblioNote", bdo+"catalogInfo", rdfs+"comment", tmp+"noteMatch", bdo+"colophon", bdo+"incipit" ].includes(m.type)) ).map((m) => {
 
-
          let expand,context,inPart	
          let uri,from	 	
          prop = this.fullname(m.type.replace(/.*altLabelMatch/,skos+"altLabel"),[],true)                     	
@@ -2841,13 +2840,17 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             inPart = m.inPart	
 
             if(mLit) {               
-               if(!facet && this.props.keyword) facet = lucenequerytokeywordmulti(this.props.keyword)
-               val = highlight(mLit["value"], facet, context?context:expand, context)	
-               //val =  mLit["value"]	
                lang = mLit["lang"]	
                if(!lang) lang = mLit["xml:lang"]	
+               if(!facet && this.props.keyword || facet && facet.indexOf(" AND ") !== -1) {
+                  facet = []
+                  for(let k of lucenequerytokeywordmulti(this.props.keyword)) facet.push(getLangLabel(this,"",[{value:k, lang:this.props.language}]))
+                  if(facet.length) facet = facet.map(k => k.value)
+               }
+               val = highlight(mLit["value"], facet, context?context:expand, context)	
+               //val =  mLit["value"]	
             }
-         }	
+         } 
 
 
          let toggleExpand = (e,id) => {	
@@ -2897,7 +2900,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
    makeResult(id,n,t,lit,lang,tip,Tag,url,rmatch = [],facet,allProps = [],preLit,isInstance)
    {
-      //loggergen.log("res:",id,facet,allProps,n,t,lit,preLit,lang,tip,Tag,rmatch,sameAsRes)
+      loggergen.log("res:",id,facet,allProps,n,t,lit,preLit,lang,tip,Tag,rmatch,sameAsRes)
 
       let sameAsRes,otherSrc= [] ;
       if(allProps) sameAsRes = [ ...allProps ]
