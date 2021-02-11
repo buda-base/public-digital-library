@@ -1957,7 +1957,6 @@ class ResourceViewer extends Component<Props,State>
 
    getInfo(prop,infoBase,withProp)
    {
-
       let lang, info = [ getLangLabel(this, prop, infoBase.filter((e)=>(e.type === skos+"prefLabel" || e.type === skos+"altLabel" || e.type === foaf+"name" 
                                                                        || e.fromKey === skos+"prefLabel" || e.fromKey === skos+"altLabel" || e.fromKey === foaf+"name" ) ) ) ]
       
@@ -2272,10 +2271,12 @@ class ResourceViewer extends Component<Props,State>
                         infoBase = dico[elem.volume]
                         //console.log("iB:",infoBase)
                         if(infoBase) infoBase = infoBase.filter(e => [bdo+"volumeNumber",skos+"prefLabel", /*skos+"altLabel",*/ foaf+"name" /*,"literal"*/].reduce( (acc,f) => ((acc || f === e.type || f === e.fromKey) && !e.fromSameAs), false))
-                        let { _info, _lang } = this.getInfo(prop,infoBase,withProp) 
-                        if(_info) {
-                           info = _info
-                           lang = _lang
+                        if(infoBase) {
+                           let { _info, _lang } = this.getInfo(prop,infoBase,withProp) 
+                           if(_info) {
+                              info = _info
+                              lang = _lang
+                           }
                         }
                      }
                      if(!info || info === uri) info = I18n.t("resource.noT")
