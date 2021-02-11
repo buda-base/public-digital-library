@@ -90,7 +90,7 @@ import 'react-tabs/style/react-tabs.css';
 
 import {svgEtextS,svgInstanceS,svgImageS} from "./icons"
 
-import {keywordtolucenequery,lucenequerytokeyword} from './App';
+import {keywordtolucenequery,lucenequerytokeyword,lucenequerytokeywordmulti} from './App';
 
 import logdown from 'logdown'
 
@@ -4887,11 +4887,11 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
       //loggergen.log("imL:",imageLinks,JSON.stringify(elem,null,3))
 
-      let kw 
+      let kw = []
 
       if(this.props.highlight && this.props.highlight.key) {
-         kw = getLangLabel(this,"",[{value:lucenequerytokeyword(this.props.highlight.key), lang:this.props.highlight.lang}])
-         if(kw) kw = kw.value         
+         for(let k of lucenequerytokeywordmulti(this.props.highlight.key)) kw.push(getLangLabel(this,"",[{value:k, lang:this.props.highlight.lang}]))
+         if(kw.length) kw = kw.map(k => k.value)
       }
 
       let unpag = this.unpaginated()

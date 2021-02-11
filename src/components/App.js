@@ -158,24 +158,9 @@ export function shortUri(id:string) {
    return id.replace(/[/]$/,"") ;
 }
 
-/*
-// get the queryinfo from the search bar
-export function searchbartoqueryinfo(key:string, lang?:string) {
-   res = {lang: lang}
-   if (key.indexOf(" AND ") === -1) {
-      res.keywords = [key.replace('"', "").trim()]
-      return res
-   }
-   // we have an "AND":
-   keys = key.split(" AND ", 4)
-   res.keywords = []
-   for (k in keys) {
-      if (k)
-         res.keywords.push(k.replace('"', "").trim())
-   }
-   return res
-}
 
+
+/*
 // can also be used for display purposes (in the breadcrumbs)
 export function queryinfotosearchbar(qi) {
    if (!qi || !qi.keywords)
@@ -214,10 +199,23 @@ export function luceneqtoqueryinfo(luceneq, lang) {
 */
 
 export function keywordtolucenequery(key:string, lang?:string) {
-   if(key.indexOf("\"") === -1) 
+
+   // advanced query syntax
+   if (key.indexOf(" AND ") !== -1) {
+      let keywords = []
+      for (let k of key.split(' AND ')) {
+         if (k.endsWith('~1'))
+            k = k.substring(0, k.length-2)
+         k = k.replace(/"/g, '')
+         keywords.push(k)
+      }
+      key = '("'+keywords.join('" AND "')+'")'
+      return key
+   }
+   else if(key.indexOf("\"") === -1) 
       key = "\""+key+"\""
    // https://github.com/buda-base/public-digital-library/issues/155
-   if (lang && lang.startsWith("bo") && !key.match(/~\d$/))
+   if (lang && lang.startsWith("bo") && !key.match(/(~\d$)|( AND )/))
       key = key+"~1"
    return key
 }
@@ -226,7 +224,26 @@ export function keywordtolucenequery(key:string, lang?:string) {
 export function lucenequerytokeyword(lq) {
    lq = lq.replace(/~\d$/,"")
    lq = lq.replace(/\"/g, "")
+   lq = lq.replace(/^\(|\)$/g, "") // advanced query
    return lq
+}
+
+
+// get array of keywords
+export function lucenequerytokeywordmulti(key:string) {
+   let res = []
+   if (key.indexOf(" AND ") === -1) {
+      res = [key.replace(/["()]g/, "").trim()]
+      return res
+   }
+   // we have an "AND":
+   let keys = key.split(" AND ") //, 4)
+   for (let k of keys) {
+      if (k)
+         res.push(k.replace(/["()]/g, "").trim())
+   }
+   //console.log("multi:",res)
+   return res
 }
 
 const facetLabel = {
@@ -366,10 +383,15 @@ export function highlight(val,k,expand,newline)
    if(!val.match(/↤/) && k) {
 
       //val = /*val.replace(/@.* /,"")*/ val.split(new RegExp(k.replace(/[ -'ʾ_]/g,"[ -'ʾ_]+"))).map((l) => ([<span>{l}</span>,<span className="highlight">{k}</span>])) ;
+
       //console.log("val:",val)
       
       // DONE "manually" add the ↦
-      val = val.replace(new RegExp("("+k.replace(/[ -'ʾʼʹ‘_/  \[\]0-9\n\r།]+/igu,"[ -'ʾʼʹ‘_/  \\[\\]0-9\n\r།]+")+")","igu"),"↦$1↤")
+      if(!Array.isArray(k)) 
+         val = val.replace(new RegExp("("+k.replace(/[ -'ʾʼʹ‘_/  \[\]0-9\n\r།]+/igu,"[ -'ʾʼʹ‘_/  \\[\\]0-9\n\r།]+")+")","igu"),"↦$1↤")
+      else for(let key of k) { // advanced query
+         val =  val.replace(new RegExp("("+key.replace(/[ -'ʾʼʹ‘_/  \[\]0-9\n\r།]+/igu,"[ -'ʾʼʹ‘_/  \\[\\]0-9\n\r།]+")+")","igu"),"↦$1↤")
+      }
 
       //console.log("k:",val,k.replace(/[ -'ʾ_/  \[\]0-9\n\r།]+/gu,"[ -'ʾ_/  \\[\\]0-9\n\r།]+"))
    }
@@ -1066,8 +1088,11 @@ class App extends Component<Props,State> {
 
    requestSearch(key:string,label?:string,lang?:string,forceSearch:boolean=false)
    {
-      loggergen.log("key",key,label,this.state.searchTypes)
+      loggergen.log("key",key,label,lang,this.state.searchTypes)
 
+      // moved this from else at bottom of function to fix adding ~1 suffix
+      lang = (lang?lang:this.getLanguage())
+      
       if(key) key = key.trim()
 
       let _key = ""+key
@@ -1123,11 +1148,12 @@ class App extends Component<Props,State> {
 
       }
       else {
-         lang = (lang?lang:this.getLanguage())
+
          if(lang === "bo-x-ewts_lower" ) {
             key = key.toLowerCase();
             lang = "bo-x-ewts"
          }
+
          let inEtext
          if(this.props.searches && this.props.searches[this.state.filters.datatype[0]] && this.props.searches[this.state.filters.datatype[0]][this.props.keyword+"@"+this.props.language] && this.props.searches[this.state.filters.datatype[0]][this.props.keyword+"@"+this.props.language].inEtext) {
             inEtext = this.props.searches[this.state.filters.datatype[0]][this.props.keyword+"@"+this.props.language].inEtext
@@ -2402,7 +2428,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   if(!label) label = { value:"","xml:lang":"?"}
                   // TODO etext instance ?
 
-                  ret.push(this.makeResult(k,n,null,label.value,label["xml:lang"],null,null,null,[],null,instances[k],label.value,true))
+                  ret.push(this.makeResult(k,-n,null,label.value,label["xml:lang"],null,null,null,[],null,instances[k],label.value,true))
                   n++
                   if(n>3) { 
                      seeAll = true
@@ -2480,7 +2506,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          let val = i["value"] 
          //if(val === exclude) continue
          if(val && val.startsWith("http")) val = this.fullname(val,[],true)
-         else val = highlight(val,lucenequerytokeyword(this.props.keyword))
+         else val = highlight(val,lucenequerytokeywordmulti(this.props.keyword))
          let lang = i["xml:lang"]
          if(!lang) lang = i["lang"]
          ret.push(<span {...(lang?{lang:lang}:{})}>{val}{
@@ -2508,14 +2534,14 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          lab = getLangLabel(this,"",hasName)
          ret.push(<div class={"match publisher "+this.props.locale}>
                <span class="label">{this.fullname("tmp:publisherName",[],true)}{I18n.t("punc.colon")}&nbsp;</span>
-               <div class="multi"><span>{highlight(lab.value,lucenequerytokeyword(this.props.keyword))}</span></div>
+               <div class="multi"><span>{highlight(lab.value,lucenequerytokeywordmulti(this.props.keyword))}</span></div>
             </div>)
       }
       if(hasLoc.length) { 
          lab = getLangLabel(this,"",hasLoc)
          ret.push(<div class="match publisher">
                <span className={`label ${hasName.length ? "hidden-en" : ""}`}>{this.fullname("tmp:publisherName",[],true)}{I18n.t("punc.colon")}&nbsp;</span>
-               <div class="multi"><span>{highlight(lab.value,lucenequerytokeyword(this.props.keyword))}</span></div>
+               <div class="multi"><span>{highlight(lab.value,lucenequerytokeywordmulti(this.props.keyword))}</span></div>
             </div>)
       }
 
@@ -2597,7 +2623,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                </div>)
                */
                
-               ret.push(<div>{this.makeResult(iri /*i[0]["@id"]*/,cpt,null,"@"+startChar+"~"+endChar,"?",null,null,null,
+               ret.push(<div>{this.makeResult(iri /*i[0]["@id"]*/,-cpt,null,"@"+startChar+"~"+endChar,"?",null,null,null,
                   [{lang,value:val,type:tmp+"textMatch",expand,context,startChar,endChar,inPart} ], //...i.filter(e => [bdo+"sliceStartChar",tmp+"matchScore"].includes(e.type) )],
                   null,[],null,true)}</div>)
 
@@ -2681,7 +2707,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   val = getLangLabel(this,prop,[i])
                   if(val) {
                      if(val.value && exclude && val.value.replace(/[↦↤]/g,"") === exclude) continue ;
-                     val = highlight(val.value,lucenequerytokeyword(this.props.keyword))
+                     val = highlight(val.value,lucenequerytokeywordmulti(this.props.keyword))
                      lang = val.lang
                   } else {
                      console.warn("val==NULL:",val,prop,i)
@@ -2784,7 +2810,6 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
       return rmatch.filter(m => !([ tmp+"nameMatch", bdo+"biblioNote", bdo+"catalogInfo", rdfs+"comment", tmp+"noteMatch", bdo+"colophon", bdo+"incipit" ].includes(m.type)) ).map((m) => {
 
-
          let expand,context,inPart	
          let uri,from	 	
          prop = this.fullname(m.type.replace(/.*altLabelMatch/,skos+"altLabel"),[],true)                     	
@@ -2815,13 +2840,17 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             inPart = m.inPart	
 
             if(mLit) {               
-               if(!facet && this.props.keyword) facet = lucenequerytokeyword(this.props.keyword)
-               val = highlight(mLit["value"], facet, context?context:expand, context)	
-               //val =  mLit["value"]	
                lang = mLit["lang"]	
                if(!lang) lang = mLit["xml:lang"]	
+               if(!facet && this.props.keyword || facet && facet.indexOf(" AND ") !== -1) {
+                  facet = []
+                  for(let k of lucenequerytokeywordmulti(this.props.keyword)) facet.push(getLangLabel(this,"",[{value:k, lang:this.props.language}]))
+                  if(facet.length) facet = facet.map(k => k.value)
+               }
+               val = highlight(mLit["value"], facet, context?context:expand, context)	
+               //val =  mLit["value"]	
             }
-         }	
+         } 
 
 
          let toggleExpand = (e,id) => {	
@@ -2858,6 +2887,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   if(!this.state.collapse[prettId+"@"+startC] && !m.context) this.props.onGetContext(prettId,startC,endC) ; 	
                   if(this.state.collapse[prettId+"@"+startC]) {  
                      if(this._refs && this._refs[n] && this._refs[n].current) this._refs[n].current.scrollIntoView(); 
+                     //console.log("refs:",this._refs)
                   }
                   toggleExpand(e,prettId+"@"+startC); 
                }}>{expand!==true?I18n.t("result.expandC"):I18n.t("result.hideC")}</span>	
@@ -2871,7 +2901,14 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
    makeResult(id,n,t,lit,lang,tip,Tag,url,rmatch = [],facet,allProps = [],preLit,isInstance)
    {
-      //loggergen.log("res:",id,facet,allProps,n,t,lit,preLit,lang,tip,Tag,rmatch,sameAsRes)
+      loggergen.log("res:",id,facet,allProps,n,t,lit,preLit,lang,tip,Tag,rmatch,sameAsRes)
+
+      // DONE fix scrolling back to result (#425)
+      let doRef = true
+      if(n < 0) { 
+         n = -n
+         doRef = false
+      }
 
       let sameAsRes,otherSrc= [] ;
       if(allProps) sameAsRes = [ ...allProps ]
@@ -3411,7 +3448,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          else retList.push(otherSrc);
       }
 
-      this._refs[n] = React.createRef();
+      if(doRef) this._refs[n] = React.createRef();
 
       if(prettId.includes("bdr:")) retList.push( <CopyToClipboard text={"http://purl.bdrc.io/resource/"+prettId.replace(/^bdr:/,"")} onCopy={(e) =>
                 //alert("Resource url copied to clipboard\nCTRL+V to paste")
@@ -3423,7 +3460,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
           </a>
        </CopyToClipboard> )
 
-      retList = <div {... (!isInstance?{id:"result-"+n}:{})} ref={this._refs[n]} className={"result-content " + (otherSrc && otherSrc.length?"otherSrc ":"") + status + " " + enType + (hasThumb.length?" wThumb":"")}>{retList}</div>
+      retList = <div {... (!isInstance?{id:"result-"+n}:{})} {...(doRef?{ref:this._refs[n]}:{})} className={"result-content " + (otherSrc && otherSrc.length?"otherSrc ":"") + status + " " + enType + (hasThumb.length?" wThumb":"")}>{retList}</div>
 
 
 
@@ -3935,7 +3972,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             if(id.match(/bdrc[.]io/)) id = id.replace(/^.*?([^/]+)$/,"$1")
 
             let lit ;
-            if(r.lit) { lit = highlight(r.lit.value,k) }
+            if(r.lit) { lit = highlight(r.lit.value,lucenequerytokeywordmulti(this.props.keyword)) }
             let lang ;
             if(r.lit) lang= r.lit["lang"]
             if(r.lit && !lang) lang = r.lit["xml:lang"]
