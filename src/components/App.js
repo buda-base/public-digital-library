@@ -237,6 +237,9 @@ export function lucenequerytokeywordmulti(key:string) {
    return res
 }
 
+window.tmplucenequerytokeywordmulti = lucenequerytokeywordmulti
+window.tmplucenequerytokeyword = lucenequerytokeyword
+
 const facetLabel = {
    "root": "Lsidebar.widgets.root",
    "tree": "Lsidebar.widgets.tree",
