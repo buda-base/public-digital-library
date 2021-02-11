@@ -2428,7 +2428,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   if(!label) label = { value:"","xml:lang":"?"}
                   // TODO etext instance ?
 
-                  ret.push(this.makeResult(k,n,null,label.value,label["xml:lang"],null,null,null,[],null,instances[k],label.value,true))
+                  ret.push(this.makeResult(k,-n,null,label.value,label["xml:lang"],null,null,null,[],null,instances[k],label.value,true))
                   n++
                   if(n>3) { 
                      seeAll = true
@@ -2623,7 +2623,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                </div>)
                */
                
-               ret.push(<div>{this.makeResult(iri /*i[0]["@id"]*/,cpt,null,"@"+startChar+"~"+endChar,"?",null,null,null,
+               ret.push(<div>{this.makeResult(iri /*i[0]["@id"]*/,-cpt,null,"@"+startChar+"~"+endChar,"?",null,null,null,
                   [{lang,value:val,type:tmp+"textMatch",expand,context,startChar,endChar,inPart} ], //...i.filter(e => [bdo+"sliceStartChar",tmp+"matchScore"].includes(e.type) )],
                   null,[],null,true)}</div>)
 
@@ -2887,6 +2887,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   if(!this.state.collapse[prettId+"@"+startC] && !m.context) this.props.onGetContext(prettId,startC,endC) ; 	
                   if(this.state.collapse[prettId+"@"+startC]) {  
                      if(this._refs && this._refs[n] && this._refs[n].current) this._refs[n].current.scrollIntoView(); 
+                     //console.log("refs:",this._refs)
                   }
                   toggleExpand(e,prettId+"@"+startC); 
                }}>{expand!==true?I18n.t("result.expandC"):I18n.t("result.hideC")}</span>	
@@ -2901,6 +2902,13 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
    makeResult(id,n,t,lit,lang,tip,Tag,url,rmatch = [],facet,allProps = [],preLit,isInstance)
    {
       loggergen.log("res:",id,facet,allProps,n,t,lit,preLit,lang,tip,Tag,rmatch,sameAsRes)
+
+      // DONE fix scrolling back to result (#425)
+      let doRef = true
+      if(n < 0) { 
+         n = -n
+         doRef = false
+      }
 
       let sameAsRes,otherSrc= [] ;
       if(allProps) sameAsRes = [ ...allProps ]
@@ -3440,7 +3448,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          else retList.push(otherSrc);
       }
 
-      this._refs[n] = React.createRef();
+      if(doRef) this._refs[n] = React.createRef();
 
       if(prettId.includes("bdr:")) retList.push( <CopyToClipboard text={"http://purl.bdrc.io/resource/"+prettId.replace(/^bdr:/,"")} onCopy={(e) =>
                 //alert("Resource url copied to clipboard\nCTRL+V to paste")
@@ -3452,7 +3460,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
           </a>
        </CopyToClipboard> )
 
-      retList = <div {... (!isInstance?{id:"result-"+n}:{})} ref={this._refs[n]} className={"result-content " + (otherSrc && otherSrc.length?"otherSrc ":"") + status + " " + enType + (hasThumb.length?" wThumb":"")}>{retList}</div>
+      retList = <div {... (!isInstance?{id:"result-"+n}:{})} {...(doRef?{ref:this._refs[n]}:{})} className={"result-content " + (otherSrc && otherSrc.length?"otherSrc ":"") + status + " " + enType + (hasThumb.length?" wThumb":"")}>{retList}</div>
 
 
 
