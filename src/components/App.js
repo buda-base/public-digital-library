@@ -2000,7 +2000,7 @@ class App extends Component<Props,State> {
          
          if([ /*"Any",*/ "Person","Place","Work","Etext","Role","Topic","Corporation","Lineage","Instance","Product","Scan"].indexOf(lab) !== -1)
          {
-            this.requestSearch(this.props.keyword,[ lab ], this.props.language, true);
+            this.requestSearch(this.props.keyword.replace(/(^[(")]+)|([")]+$)/g,""),[ lab ], this.props.language, true);
          }
          
       }
