@@ -1082,8 +1082,11 @@ class App extends Component<Props,State> {
 
    requestSearch(key:string,label?:string,lang?:string,forceSearch:boolean=false)
    {
-      loggergen.log("key",key,label,this.state.searchTypes)
+      loggergen.log("key",key,label,lang,this.state.searchTypes)
 
+      // moved this from else at bottom of function to fix adding ~1 suffix
+      lang = (lang?lang:this.getLanguage())
+      
       if(key) key = key.trim()
 
       let _key = ""+key
@@ -1139,11 +1142,12 @@ class App extends Component<Props,State> {
 
       }
       else {
-         lang = (lang?lang:this.getLanguage())
+
          if(lang === "bo-x-ewts_lower" ) {
             key = key.toLowerCase();
             lang = "bo-x-ewts"
          }
+         
          let inEtext
          if(this.props.searches && this.props.searches[this.state.filters.datatype[0]] && this.props.searches[this.state.filters.datatype[0]][this.props.keyword+"@"+this.props.language] && this.props.searches[this.state.filters.datatype[0]][this.props.keyword+"@"+this.props.language].inEtext) {
             inEtext = this.props.searches[this.state.filters.datatype[0]][this.props.keyword+"@"+this.props.language].inEtext
