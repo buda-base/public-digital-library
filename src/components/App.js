@@ -1137,7 +1137,9 @@ class App extends Component<Props,State> {
       if(label.includes("Instance") || label.includes("Scan")) hasOpen = "&f=asset,inc,tmp:hasOpen" ;
 
       if(dataInfo) {
-         console.log("new route?",dataInfo)
+         console.log("new route:",dataInfo)
+
+         this.props.history.push({pathname:"/search",search:"?"+(dataInfo==="date"?"date":"id")+"="+key+"&t="+label})
       }
       else if(_key.match(/(^[UWPGRCTILE][A-Z0-9_]+$)|(^([cpgwrt]|mw|wa|ws)\d[^ ]*$)/) || prefixesMap[key.replace(/^([^:]+):.*$/,"$1")])
       {

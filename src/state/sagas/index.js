@@ -392,6 +392,16 @@ else if(params && params.r) {
       }
    }
 }
+else if(params && params.date && params.t) {
+
+   store.dispatch(dataActions.getResultsByDate(params.date, params.t));
+
+}
+else if(params && params.id && params.t) {
+
+   store.dispatch(dataActions.getResultsByID(params.id, params.t));
+
+}
 else if(route === "latest") {
    let sortBy = "release date"
    if(params && params.s) sortBy = params.s
