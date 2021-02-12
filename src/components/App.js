@@ -2548,7 +2548,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
       return ret;
    }
 
-   getResultProp(prop:string,allProps:[],plural:string="_plural", doLink:boolean = true, fromProp:[], exclude:string,useAux:[],findProp:[],altInfo:[],iri,T) {
+   getResultProp(prop:string,allProps:[],plural:string="_plural", doLink:boolean = true, fromProp:[], exclude:string,useAux:[],findProp:[],altInfo:[],iri,T,n) {
 
       if(plural === true) plural = "_plural"
 
@@ -2623,7 +2623,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                </div>)
                */
                
-               ret.push(<div>{this.makeResult(iri /*i[0]["@id"]*/,-cpt,null,"@"+startChar+"~"+endChar,"?",null,null,null,
+               ret.push(<div>{this.makeResult(iri /*i[0]["@id"]*/,n+"_"+cpt,null,"@"+startChar+"~"+endChar,"?",null,null,null,
                   [{lang,value:val,type:tmp+"textMatch",expand,context,startChar,endChar,inPart} ], //...i.filter(e => [bdo+"sliceStartChar",tmp+"matchScore"].includes(e.type) )],
                   null,[],null,true)}</div>)
 
@@ -2886,8 +2886,10 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                <span class="uri-link" onClick={(e) => { 	
                   if(!this.state.collapse[prettId+"@"+startC] && !m.context) this.props.onGetContext(prettId,startC,endC) ; 	
                   if(this.state.collapse[prettId+"@"+startC]) {  
-                     if(this._refs && this._refs[n] && this._refs[n].current) this._refs[n].current.scrollIntoView(); 
-                     //console.log("refs:",this._refs)
+                     if(this._refs && this._refs[n] && this._refs[n].current) {
+                        this._refs[n].current.scrollIntoView(); 
+                        console.log("ref:",n,this._refs[n].current)
+                     }
                   }
                   toggleExpand(e,prettId+"@"+startC); 
                }}>{expand!==true?I18n.t("result.expandC"):I18n.t("result.hideC")}</span>	
@@ -2904,10 +2906,12 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
       loggergen.log("res:",id,facet,allProps,n,t,lit,preLit,lang,tip,Tag,rmatch,sameAsRes)
 
       // DONE fix scrolling back to result (#425)
-      let doRef = true
+      let doRef = true, nsub = n
       if(n < 0) { 
          n = -n
          doRef = false
+      } else if((""+n).includes("_")) {
+         n = nsub.split("_")[1]         
       }
 
       let sameAsRes,otherSrc= [] ;
@@ -3372,7 +3376,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             { type === "Etext" && this.getResultProp(I18n.t("result.inInstance"),allProps,false,true,[tmp+"inInstance"]) }
             { type === "Etext" && this.getResultProp(I18n.t("result.inInstancePart"),allProps,false,true,[tmp+"inInstancePart"]) }
 
-            { type === "Etext" && this.getEtextMatches(prettId,startC,endC,bestM,rmatch,facet,n) }
+            { type === "Etext" && this.getEtextMatches(prettId,startC,endC,bestM,rmatch,facet,nsub) }
 
             { this.getResultProp("tmp:nameMatch",allProps,true,false,[ tmp+"nameMatch" ], !preLit?preLit:preLit.replace(/[↦↤]/g,"") ) } {/* //,true,false) } */}
 
@@ -3386,7 +3390,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             
             {/* { this.getResultProp(tmp+"numberOfMatchingChunks",allProps,true,false,[tmp+"nbChunks"]) } */}
             {/* { this.getResultProp(tmp+"maxScore",allProps,true,false) } */}
-            { (nbChunks > 1) && this.getResultProp(I18n.t("prop.tmp:otherMatch", {count: nbChunks - 1}),allProps,false,false,[bdo+"eTextHasChunk"],null,[bdo+"chunkContents"],null,[tmp+"matchScore",bdo+"sliceStartChar"],id) }
+            { (nbChunks > 1) && this.getResultProp(I18n.t("prop.tmp:otherMatch", {count: nbChunks - 1}),allProps,false,false,[bdo+"eTextHasChunk"],null,[bdo+"chunkContents"],null,[tmp+"matchScore",bdo+"sliceStartChar"],id,T,n) }
             
             {/* { this.getResultProp(bdo+"workIsAbout",allProps,false) } */}
             {/* { this.getResultProp(bdo+"workGenre",allProps) } */}
@@ -3448,7 +3452,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          else retList.push(otherSrc);
       }
 
-      if(doRef) this._refs[n] = React.createRef();
+      if(doRef) this._refs[nsub] = React.createRef();
 
       if(prettId.includes("bdr:")) retList.push( <CopyToClipboard text={"http://purl.bdrc.io/resource/"+prettId.replace(/^bdr:/,"")} onCopy={(e) =>
                 //alert("Resource url copied to clipboard\nCTRL+V to paste")
@@ -3460,7 +3464,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
           </a>
        </CopyToClipboard> )
 
-      retList = <div {... (!isInstance?{id:"result-"+n}:{})} {...(doRef?{ref:this._refs[n]}:{})} className={"result-content " + (otherSrc && otherSrc.length?"otherSrc ":"") + status + " " + enType + (hasThumb.length?" wThumb":"")}>{retList}</div>
+      retList = <div {... (!isInstance?{id:"result-"+n}:{})} {...(doRef?{ref:this._refs[nsub]}:{})} className={"result-content " + (otherSrc && otherSrc.length?"otherSrc ":"") + status + " " + enType + (hasThumb.length?" wThumb":"")}>{retList}</div>
 
 
 
