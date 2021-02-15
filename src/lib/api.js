@@ -897,7 +897,7 @@ export default class API {
            let config = store.getState().data.config.ldspdi
            let url = config.endpoints[config.index]+"/query/table" ;
            let data ;
-           if(dateOrId) data = await this.getQueryResults(url, key, {"NO_QUOTES":true, "searchType":"count"+dateOrId+"Types",[dateOrId==="date"?"GY_RES":"L_ID"]:key.replace(/"/g,"")}, "GET", "application/json");
+           if(dateOrId) data = await this.getQueryResults(url, key, {"NO_QUOTES":true, "searchType":"count"+dateOrId+"Types",[dateOrId==="Date"?"GY_RES":"L_ID"]:key.replace(/"/g,"")}, "GET", "application/json");
            else if(lang) data = await this.getQueryResults(url, key, {"NO_QUOTES":true, "LG_NAME":lang,"searchType":"count"+(dateOrId?dateOrId:"")+"Types","LI_NAME":700}, "GET", "application/json");
            else data = await this.getQueryResults(url, key, {"L_NAME":"","R_RES":key,"searchType":"countAssociatedTypes","LI_NAME":700}, "GET", "application/json");
 
