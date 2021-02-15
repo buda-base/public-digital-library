@@ -2015,7 +2015,7 @@ class App extends Component<Props,State> {
          
          if([ /*"Any",*/ "Person","Place","Work","Etext","Role","Topic","Corporation","Lineage","Instance","Product","Scan"].indexOf(lab) !== -1)
          {
-            this.requestSearch(this.props.keyword.replace(/(^[(")]+)|([")]+(~1)?$)/g,""),[ lab ], this.props.language, true);
+            this.requestSearch(this.props.keyword.replace(/(^[(")]+)|([")]+(~1)?$)/g,""),[ lab ], this.props.language, true, ["date","id"].includes(this.props.language)?this.props.language:null);
          }
          
       }
