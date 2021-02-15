@@ -198,11 +198,11 @@ export const getResultsByDate = (date:string,t:string): Action => {
     }
 }
 
-TYPES.getResultsByID = 'GET_RESULTS_BY_ID';
-export const getResultsByID = (id:string,t:string): Action => {
+TYPES.getResultsById = 'GET_RESULTS_BY_ID';
+export const getResultsById = (date:string,t:string): Action => {
     return {
-        type: TYPES.getResultsByID,
-        payload:id,
+        type: TYPES.getResultsById,
+        payload:date,
         meta:t
     }
 }

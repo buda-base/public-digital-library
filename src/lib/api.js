@@ -280,13 +280,13 @@ export default class API {
    }
 
 
-    async loadResultsByDate(date,t): Promise<string>
+    async loadResultsByDateOrId(date,t, dateOrId): Promise<string>
     {
          try {
             
             let config = store.getState().data.config.ldspdi
             let url = config.endpoints[config.index] + "/lib" ;            
-            let param = {"searchType":"date"+t+"s","L_NAME":"","LG_NAME":"", "I_LIM":"", "GY_RES":date.replace(/"/g,"") }
+            let param = {"searchType": dateOrId+t+"s","L_NAME":"","LG_NAME":"", "I_LIM":"", [ dateOrId==="date"?"GY_RES":"L_ID"]:date.replace(/"/g,"") }
             let data = await this.getQueryResults(url, "", param,"GET","application/json");         
 
             return data
@@ -294,7 +294,7 @@ export default class API {
          catch(e)
          {
             //throw(e)
-            console.error("ERROR byDate",e)
+            console.error("ERROR byDateOrId",e)
             return true
          }
 
@@ -597,7 +597,7 @@ export default class API {
 
       if(param["NO_QUOTES"]) delete param["NO_QUOTES"]
 
-      if(param["GY_RES"]) {
+      if(param["GY_RES"] || param["L_ID"]) {
          delete param["LG_NAME"]
          delete param["L_NAME"]
          delete param["I_LIM"]
@@ -897,7 +897,7 @@ export default class API {
            let config = store.getState().data.config.ldspdi
            let url = config.endpoints[config.index]+"/query/table" ;
            let data ;
-           if(dateOrId) data = await this.getQueryResults(url, key, {"NO_QUOTES":true, "searchType":"count"+dateOrId+"Types","GY_RES":key.replace(/"/g,"")}, "GET", "application/json");
+           if(dateOrId) data = await this.getQueryResults(url, key, {"NO_QUOTES":true, "searchType":"count"+dateOrId+"Types",[dateOrId==="date"?"GY_RES":"L_ID"]:key.replace(/"/g,"")}, "GET", "application/json");
            else if(lang) data = await this.getQueryResults(url, key, {"NO_QUOTES":true, "LG_NAME":lang,"searchType":"count"+(dateOrId?dateOrId:"")+"Types","LI_NAME":700}, "GET", "application/json");
            else data = await this.getQueryResults(url, key, {"L_NAME":"","R_RES":key,"searchType":"countAssociatedTypes","LI_NAME":700}, "GET", "application/json");
 
