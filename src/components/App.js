@@ -2795,10 +2795,11 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             }            
          }
 
-         let by ;
+         let by, inRoo ;
          if(fromProp) by = fromProp.filter(p => p.includes("/author")).length > 0
+         if(fromProp) inRoo = fromProp.filter(p => p.includes("/inRootInstance")).length > 0
 
-         if(ret.length && !useAux) return <div class={"match"+(by?" by":"")}>
+         if(ret.length && !useAux) return <div class={"match"+(by?" by":(inRoo?" inRootInst":""))}>
                   <span class="label">{this.fullname(prop,[],true,(plural && ret.length > 1 ?2:1))}{I18n.t("punc.colon")}&nbsp;</span>
                   <div class="multi">{ret}</div>
                 </div>
@@ -3167,10 +3168,10 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                         { this.state.collapse["more-details-"+id] != true && <ExpandMore /> }
                         { this.state.collapse["more-details-"+id] && <ExpandLess /> }
                      </div>
+         let inRoo = this.getResultProp(I18n.t("result.inRootInstance"),allProps,false,true,[bdo+"inRootInstance",tmp+"inRootInstance"],null,null,null,null,resUrl,T)
+         if(typeisbiblio && (by || inRoo) /*|| byStat) */ ) retList.push( <div id='matches' class={"mobile hasAuthor "+( this.state.collapse["more-details-"+id] == true ?" on":"" )}>         
 
-         if(typeisbiblio && by /*|| byStat) */ ) retList.push( <div id='matches' class={"mobile hasAuthor "+( this.state.collapse["more-details-"+id] == true ?" on":"" )}>         
-
-               {/* { typeisbiblio && this.getResultProp(I18n.t("result.inRootInstance"),allProps,false,true,[bdo+"inRootInstance",tmp+"inRootInstance"],null,null,null,null,resUrl) }  */}
+               { typeisbiblio && inRoo } 
                { typeisbiblio && by }
                {/* { typeisbiblio && byStat } */}
                { details}
@@ -3362,7 +3363,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
          retList.push( <div id='matches'>         
 
-            { typeisbiblio && this.getResultProp(I18n.t("result.inRootInstance"),allProps,false,true,[bdo+"inRootInstance",tmp+"inRootInstance"],null,null,null,null,resUrl,T) } 
+            { typeisbiblio && inRoo } 
             { typeisbiblio && by }
             { typeisbiblio && byStat }
 

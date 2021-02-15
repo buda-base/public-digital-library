@@ -3887,10 +3887,19 @@ a.result + #matches.mobile,
    a.result {  max-width: calc(100% - 150px); }   
    .result-content > .result > .contenu { margin-left:0;max-width:calc(100% - 40px); padding-left:5px; }
    a.result ~ #matches:not(.mobile) { margin-left:0; padding-left:5px; clear:both;  }
+
+   #root .App .resultPage .result-content .result-content,
+   a.result ~ #matches:not(.mobile) > .match ~ .label,
    a.result ~ #matches:not(.mobile) > .match { padding-left:28px; }
+
+   .App #results .result-content .result-content .more-details,
+   .result-content .result-content #icon { display:none; }
+
+   .result-content .result-content > .result > .contenu { padding-left:7px; }
 
    .App #results .more-details { display:inline-block; margin-top:10px;}
 
+   .App #results #matches.mobile.on + #matches:not(.mobile) .match.inRootInst,
    .App #results #matches.mobile.on + #matches:not(.mobile) .match.by,
    .App #results #matches.mobile:not(.on) + #matches:not(.mobile),
    .App #results .more-details:not(.on) + #matches:not(.mobile) {display:none; }
@@ -3905,7 +3914,7 @@ a.result + #matches.mobile,
 
    #root > div > .resource { padding:5px; padding-top:60px; }
 
-   .resource > .ariane { left:75px; top:18px;} 
+   .resource > .ariane { left:75px; top:18px;} > .ma
 
    #root > div > .resource > .index { display:none; }
 
