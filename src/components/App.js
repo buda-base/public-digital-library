@@ -5330,7 +5330,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             }
          }
 
-         if(value.match(/(^[0-9]{3,4}$)/)) dataSource.push(value+"@find as a date")         
+         if(value.match(/(^[0-9]{3,4}$)/) && Number(value) < 2100)  dataSource.unshift(value+"@find as a date")         
          if(value) dataSource.push(value+"@find as an identifier")
 
          this.setState({...this.state,keyword:value, language, dataSource   } ) 

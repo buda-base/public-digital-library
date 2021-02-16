@@ -1354,7 +1354,7 @@ function addMeta(keyword:string,language:string,data:{},t:string,tree:{},found:b
 
 function mergeSameAs(result,withSameAs,init = true,rootRes = result, force = false, keyword)
 {
-   //loggergen.log("mSa",result,rootRes,keyword,init,force)
+   //loggergen.log("mSa:",result,rootRes,keyword,init,force)
 
    if(!result) return
 
@@ -1369,7 +1369,8 @@ function mergeSameAs(result,withSameAs,init = true,rootRes = result, force = fal
       if(rData) rData = rData[owl+"sameAs"]
       if(rData) rData = rData.filter(r => r.value.match(new RegExp(bdr)))
       if(rData && rData.length) sameBDRC = rData[0].value
-      //loggergen.log("rData",rData)
+      
+      //loggergen.log("rData:",rData)
    } 
  
    if(init) for(let t of Object.keys(result)) {
@@ -1803,7 +1804,7 @@ function rewriteAuxMain(result,keyword,datatype,sortBy,language)
             else return ({...acc, [k]:res})
          },{})
         
-         loggergen.log("dWa",t,dataWithAsset,sortBy,reverse,canPopuSort)
+         //loggergen.log("dWa:",language,t,dataWithAsset,sortBy,reverse,canPopuSort)
 
          if(!canPopuSort && sortBy.startsWith("popularity")) {            
             let {pathname,search} = history.location         
@@ -2207,7 +2208,7 @@ async function getResultsByDateOrId(date, t, dateOrId) {
 
       res = await api.loadResultsByDateOrId(date,t,dateOrId)
          
-      res = rewriteAuxMain(res,date,[t])
+      res = rewriteAuxMain(res,date,[t], null, dateOrId)
 
       data = getData(res)
 
