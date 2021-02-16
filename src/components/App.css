@@ -3892,6 +3892,16 @@ a.result + #matches.mobile,
    a.result ~ #matches:not(.mobile) > .match ~ .label,
    a.result ~ #matches:not(.mobile) > .match { padding-left:28px; }
 
+   #root .App .resultPage .result-content .result-content.etext {  padding-top:15px;padding-bottom:0; padding-right:0;  }
+   
+   #root .App .resultPage .result-content .result-content.etext #icon + .result { display:none;  }
+
+   #root .App .resultPage .result-content .result-content.etext #permalink { top:12px; right:0; }
+
+   #root .App .resultPage .result-content .result-content.etext #matches .match { padding-left:10px; margin-top:0;  }
+
+   #root .App .resultPage .result-content .result-content.etext #matches { display:inline-block; clear:none; padding-left:0; position:relative; max-width: calc(100% - 40px);}
+
    .App #results .result-content .result-content .more-details,
    .result-content .result-content #icon { display:none; }
 
