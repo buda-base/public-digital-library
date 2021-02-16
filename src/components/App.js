@@ -2858,10 +2858,17 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             if(mLit) {               
                lang = mLit["lang"]	
                if(!lang) lang = mLit["xml:lang"]	
-               if(!facet && this.props.keyword || facet && facet.indexOf(" AND ") !== -1) {
+               
+               if(!facet && this.props.keyword && !this.props.keyword.includes(" AND ")) {
+                  facet = lucenequerytokeyword(this.props.keyword) 
+                  facet = getLangLabel(this,"",[{value:facet, lang:this.props.language}]) 
+                  facet = facet.value
+                  //console.log("facet2:",facet)
+               } else if(!facet && this.props.keyword || facet && facet.indexOf(" AND ") !== -1) {
                   facet = []
                   for(let k of lucenequerytokeywordmulti(this.props.keyword)) facet.push(getLangLabel(this,"",[{value:k, lang:this.props.language}]))
-                  if(facet.length) facet = facet.map(k => k.value)
+                  if(facet.length) facet = facet.map(k => k.value)                  
+                  //console.log("facet1:",facet)
                }
                val = highlight(mLit["value"], facet, context?context:expand, context)	
                //val =  mLit["value"]	
