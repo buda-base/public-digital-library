@@ -286,7 +286,7 @@ export default class API {
             
             let config = store.getState().data.config.ldspdi
             let url = config.endpoints[config.index] + "/lib" ;            
-            let param = {"searchType": dateOrId+t+"s","L_NAME":"","LG_NAME":"", "I_LIM":"", [ dateOrId==="date"?"GY_RES":"L_ID"]:date.replace(/"/g,"") }
+            let param = {"searchType": dateOrId+t+"s","L_NAME":"","LG_NAME":"", "I_LIM":"700", [ dateOrId==="date"?"GY_RES":"L_ID"]:date.replace(/"/g,"") }
             let data = await this.getQueryResults(url, "", param,"GET","application/json");         
 
             return data
@@ -600,7 +600,7 @@ export default class API {
       if(param["GY_RES"] || param["L_ID"]) {
          delete param["LG_NAME"]
          delete param["L_NAME"]
-         delete param["I_LIM"]
+         //delete param["I_LIM"]
       }
 
       delete param["searchType"]
