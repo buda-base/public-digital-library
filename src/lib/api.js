@@ -62,6 +62,9 @@ export const dPrefix = {
       "topics": "Topic",
       "deities": "Topic",
       "literary_forms": "Topic"
+   },
+   "tol": {
+      "TOLP": "Person"
    }
 };
 
@@ -73,8 +76,9 @@ export function getEntiType(t:string):string {
    if(p === "ola") return "Person" ;
    else if(p == "mbbt" ) return "Work" ; // [TODO]
    let v ;
-   if(p !== "src") v = uri.replace(/^([^:]+:)?([ACEILGPQMRTWOVU][AERTLWP]?).*$/,"$2")
-   else v = uri.replace(/^[^:]+:([a-z]+)\/[0-9]+/,"$1")
+   if(p === "src") v = uri.replace(/^[^:]+:([a-z]+)\/[0-9]+/,"$1")
+   else if(p === "tol") v = uri.replace(/^[^:]+:([a-zA-Z]+)[0-9]+/,"$1")
+   else v = uri.replace(/^([^:]+:)?([ACEILGPQMRTWOVU][AERTLWP]?).*$/,"$2")
    //console.log("gEt?",v,p)
    if(!dPrefix[p] || !dPrefix[p][v]) return "" ;
    else return dPrefix[p][v]; }
@@ -273,6 +277,27 @@ export default class API {
          let dico =  JSON.parse(await this.getURLContents(this._dictionaryPath,false));
          console.log("dico",dico)
          return dico ;
+   }
+
+
+    async loadResultsByDateOrId(date,t, dateOrId): Promise<string>
+    {
+         try {
+            
+            let config = store.getState().data.config.ldspdi
+            let url = config.endpoints[config.index] + "/lib" ;            
+            let param = {"searchType": dateOrId+t+"s","L_NAME":"","LG_NAME":"", "I_LIM":"", [ dateOrId==="date"?"GY_RES":"L_ID"]:date.replace(/"/g,"") }
+            let data = await this.getQueryResults(url, "", param,"GET","application/json");         
+
+            return data
+         }
+         catch(e)
+         {
+            //throw(e)
+            console.error("ERROR byDateOrId",e)
+            return true
+         }
+
    }
 
     async loadLatestSyncsAsResults(): Promise<string>
@@ -559,7 +584,7 @@ export default class API {
       let res = {}
       param = { "searchType":"Res_withType","LG_NAME":"bo-x-ewts","I_LIM":500, ...param }
 
-      if(key.indexOf("\"") === -1) key = "\""+key+"\""
+      if(key.indexOf("\"") === -1 && !param["NO_QUOTES"]) key = "\""+key+"\""
       if(param["L_NAME"] != "") param["L_NAME"] = key ;
       else { delete param["L_NAME"] ; delete param["LG_NAME"] ;  }
 
@@ -569,6 +594,14 @@ export default class API {
       else delete param["I_LIM"] ;
 
       if(param["I_LIM"] === "") delete param["I_LIM"]
+
+      if(param["NO_QUOTES"]) delete param["NO_QUOTES"]
+
+      if(param["GY_RES"] || param["L_ID"]) {
+         delete param["LG_NAME"]
+         delete param["L_NAME"]
+         delete param["I_LIM"]
+      }
 
       delete param["searchType"]
 
@@ -853,9 +886,10 @@ export default class API {
   }
 
 
+
    // TODO prevent UI from freezing 
 
-   async getDatatypesOnly(key: string,lang: string) {
+   async getDatatypesOnly(key: string,lang: string,dateOrId:string) {
 
       const bdo  = "http://purl.bdrc.io/ontology/core/";
 
@@ -863,7 +897,8 @@ export default class API {
            let config = store.getState().data.config.ldspdi
            let url = config.endpoints[config.index]+"/query/table" ;
            let data ;
-           if(lang) data = await this.getQueryResults(url, key, {"LG_NAME":lang,"searchType":"countTypes","LI_NAME":700}, "GET", "application/json");
+           if(dateOrId) data = await this.getQueryResults(url, key, {"NO_QUOTES":true, "searchType":"count"+dateOrId+"Types",[dateOrId==="Date"?"GY_RES":"L_ID"]:key.replace(/"/g,"")}, "GET", "application/json");
+           else if(lang) data = await this.getQueryResults(url, key, {"NO_QUOTES":true, "LG_NAME":lang,"searchType":"count"+(dateOrId?dateOrId:"")+"Types","LI_NAME":700}, "GET", "application/json");
            else data = await this.getQueryResults(url, key, {"L_NAME":"","R_RES":key,"searchType":"countAssociatedTypes","LI_NAME":700}, "GET", "application/json");
 
             if(data && data.results && data.results.bindings) {

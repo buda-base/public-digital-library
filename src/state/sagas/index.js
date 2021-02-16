@@ -392,6 +392,16 @@ else if(params && params.r) {
       }
    }
 }
+else if(params && params.date && params.t) {
+
+   store.dispatch(dataActions.getResultsByDate(params.date, params.t));
+
+}
+else if(params && params.id && params.t) {
+
+   store.dispatch(dataActions.getResultsById(params.id, params.t));
+
+}
 else if(route === "latest") {
    let sortBy = "release date"
    if(params && params.s) sortBy = params.s
@@ -1344,7 +1354,7 @@ function addMeta(keyword:string,language:string,data:{},t:string,tree:{},found:b
 
 function mergeSameAs(result,withSameAs,init = true,rootRes = result, force = false, keyword)
 {
-   //loggergen.log("mSa",result,rootRes,keyword,init,force)
+   //loggergen.log("mSa:",result,rootRes,keyword,init,force)
 
    if(!result) return
 
@@ -1359,7 +1369,8 @@ function mergeSameAs(result,withSameAs,init = true,rootRes = result, force = fal
       if(rData) rData = rData[owl+"sameAs"]
       if(rData) rData = rData.filter(r => r.value.match(new RegExp(bdr)))
       if(rData && rData.length) sameBDRC = rData[0].value
-      //loggergen.log("rData",rData)
+      
+      //loggergen.log("rData:",rData)
    } 
  
    if(init) for(let t of Object.keys(result)) {
@@ -1793,7 +1804,7 @@ function rewriteAuxMain(result,keyword,datatype,sortBy,language)
             else return ({...acc, [k]:res})
          },{})
         
-         loggergen.log("dWa",t,dataWithAsset,sortBy,reverse,canPopuSort)
+         //loggergen.log("dWa:",language,t,dataWithAsset,sortBy,reverse,canPopuSort)
 
          if(!canPopuSort && sortBy.startsWith("popularity")) {            
             let {pathname,search} = history.location         
@@ -2174,6 +2185,82 @@ export function* watchGetInstances() {
 
 
 
+
+async function getResultsByDateOrId(date, t, dateOrId) {
+
+   let state = store.getState(), res, data
+
+
+   store.dispatch(uiActions.loading(null, true));
+
+   // DONE fix using already loaded data
+   if(state.data.searches && state.data.searches[t] && state.data.searches[t][date+"@"+ dateOrId] && state.data.searches[t][date+"@"+ dateOrId].numResults){
+
+      //console.log("deja:",JSON.stringify(state.data.searches[t][date+"@date"], null, 3 ))
+
+      // no need, already done
+      //store.dispatch(dataActions.foundResults(date, "date", { results: {bindings: {} } } ) ); // needed to initialize ("Any" / legacy code)
+
+      store.dispatch(dataActions.foundResults(date,  dateOrId, state.data.searches[t][date+"@"+ dateOrId], [t]));
+
+   }
+   else {
+
+      res = await api.loadResultsByDateOrId(date,t,dateOrId)
+         
+      res = rewriteAuxMain(res,date,[t], null, dateOrId)
+
+      data = getData(res)
+
+      loggergen.log("byDateOrId:",  dateOrId, date, t, res, data)
+      
+      store.dispatch(dataActions.foundResults(date,  dateOrId, { results: {bindings: {} } } ) ); // needed to initialize ("Any" / legacy code)
+
+      store.dispatch(dataActions.foundResults(date,  dateOrId, data, [t]));
+
+      addMeta(date,  dateOrId, data, t, null,false); 
+      
+   
+   }
+   
+
+   // DONE don't fetch datatypes counts if we already have them
+   if(state.data.datatypes && state.data.datatypes[date+"@"+ dateOrId]){
+
+      store.dispatch(dataActions.foundDatatypes(date,  dateOrId, state.data.datatypes[date+"@"+ dateOrId] ));
+
+   } else {
+
+      let metadata = await api.getDatatypesOnly(date,  dateOrId,  dateOrId==="date"?"Date":"Id" );
+      let sorted = Object.keys(metadata).map(m => ({m,k:Number(metadata[m])}))
+      metadata = _.orderBy(sorted,["k"],["desc"]).reduce( (acc,m) => ({...acc,[m.m]:metadata[m.m]}),{})
+      store.dispatch(dataActions.foundDatatypes(date,  dateOrId,{ metadata, hash:true}));
+
+      //store.dispatch(dataActions.foundDatatypes(date,"date",{ metadata:{[bdo+t]:data.numResults}, hash:true}));
+
+
+   }
+
+   store.dispatch(uiActions.loading(null, false));
+}
+
+export function* watchGetResultsByDate() {
+
+   yield takeLatest(
+      dataActions.TYPES.getResultsByDate,
+      (action) => getResultsByDateOrId(action.payload, action.meta, "date")
+   );
+}
+
+export function* watchGetResultsById() {
+
+   yield takeLatest(
+      dataActions.TYPES.getResultsById,
+      (action) => getResultsByDateOrId(action.payload, action.meta, "id")
+   );
+}
+
+
 async function getLatestSyncsAsResults() {
 
    let state = store.getState()
@@ -2522,6 +2609,8 @@ export default function* rootSaga() {
       watchGetUser(),
       watchGetOutline(),
       watchGetETextRefs(),
+      watchGetResultsByDate(),
+      watchGetResultsById(),
       watchGetLatestSyncsAsResults(),
       watchGetLatestSyncs(),
       watchOutlineSearch(),

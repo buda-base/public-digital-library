@@ -189,6 +189,24 @@ export const getUser = (profile: string): Action => {
 }
 
 
+TYPES.getResultsByDate = 'GET_RESULTS_BY_DATE';
+export const getResultsByDate = (date:string,t:string): Action => {
+    return {
+        type: TYPES.getResultsByDate,
+        payload:date,
+        meta:t
+    }
+}
+
+TYPES.getResultsById = 'GET_RESULTS_BY_ID';
+export const getResultsById = (date:string,t:string): Action => {
+    return {
+        type: TYPES.getResultsById,
+        payload:date,
+        meta:t
+    }
+}
+
 TYPES.getLatestSyncsAsResults = 'GET_LATEST_SYNCS_AS_RESULTS';
 export const getLatestSyncsAsResults = (): Action => {
     return {

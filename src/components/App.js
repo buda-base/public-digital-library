@@ -380,17 +380,27 @@ export function highlight(val,k,expand,newline)
 
    if(expand && expand.value) val = expand.value
 
-   if(!val.match(/↤/) && k) {
+   if(!val.match(/↤/) && k ) { 
 
       //val = /*val.replace(/@.* /,"")*/ val.split(new RegExp(k.replace(/[ -'ʾ_]/g,"[ -'ʾ_]+"))).map((l) => ([<span>{l}</span>,<span className="highlight">{k}</span>])) ;
 
       //console.log("val:",val)
       
-      // DONE "manually" add the ↦
-      if(!Array.isArray(k)) 
-         val = val.replace(new RegExp("("+k.replace(/[ -'ʾʼʹ‘_/  \[\]0-9\n\r།]+/igu,"[ -'ʾʼʹ‘_/  \\[\\]0-9\n\r།]+")+")","igu"),"↦$1↤")
-      else for(let key of k) { // advanced query
-         val =  val.replace(new RegExp("("+key.replace(/[ -'ʾʼʹ‘_/  \[\]0-9\n\r།]+/igu,"[ -'ʾʼʹ‘_/  \\[\\]0-9\n\r།]+")+")","igu"),"↦$1↤")
+      // DONE fix highlight bug when keyword is a number
+      if(!((""+k).match(/^"?[0-9]+"?$/))) {
+
+         // DONE "manually" add the ↦
+         if(!Array.isArray(k)) 
+            val = val.replace(new RegExp("("+k.replace(/[ -'ʾʼʹ‘_/  \[\]0-9\n\r།]+/igu,"[ -'ʾʼʹ‘_/  \\[\\]0-9\n\r།]+")+")","igu"),"↦$1↤")
+         else for(let key of k) { // advanced query
+            val =  val.replace(new RegExp("("+key.replace(/[ -'ʾʼʹ‘_/  \[\]0-9\n\r།]+/igu,"[ -'ʾʼʹ‘_/  \\[\\]0-9\n\r།]+")+")","igu"),"↦$1↤")
+         }
+      } else {
+         if(!Array.isArray(k)) 
+            val = val.replace(new RegExp("("+k.replace(/[ -'ʾʼʹ‘_/  \[\]\n\r།]+/igu,"[ -'ʾʼʹ‘_/  \\[\\]\n\r།]+")+")","igu"),"↦$1↤")
+         else for(let key of k) { // advanced query
+            val =  val.replace(new RegExp("("+key.replace(/[ -'ʾʼʹ‘_/  \[\]\n\r།]+/igu,"[ -'ʾʼʹ‘_/  \\[\\]\n\r།]+")+")","igu"),"↦$1↤")
+         }
       }
 
       //console.log("k:",val,k.replace(/[ -'ʾ_/  \[\]0-9\n\r།]+/gu,"[ -'ʾ_/  \\[\\]0-9\n\r།]+"))
@@ -1086,9 +1096,9 @@ class App extends Component<Props,State> {
 
    }
 
-   requestSearch(key:string,label?:string,lang?:string,forceSearch:boolean=false)
+   requestSearch(key:string,label?:string,lang?:string,forceSearch:boolean=false,dataInfo:string)
    {
-      loggergen.log("key",key,label,lang,this.state.searchTypes)
+      loggergen.log("key:",key,label,lang,this.state.searchTypes,dataInfo)
 
       // moved this from else at bottom of function to fix adding ~1 suffix
       lang = (lang?lang:this.getLanguage())
@@ -1126,7 +1136,12 @@ class App extends Component<Props,State> {
       let hasOpen = ""
       if(label.includes("Instance") || label.includes("Scan")) hasOpen = "&f=asset,inc,tmp:hasOpen" ;
 
-      if(_key.match(/(^[UWPGRCTILE][A-Z0-9_]+$)|(^([cpgwrt]|mw|wa|ws)\d[^ ]*$)/) || prefixesMap[key.replace(/^([^:]+):.*$/,"$1")])
+      if(dataInfo) {
+         console.log("new route:",dataInfo)
+
+         this.props.history.push({pathname:"/search",search:"?"+(dataInfo==="date"?"date":"id")+"="+key+"&t="+label})
+      }
+      else if(_key.match(/(^[UWPGRCTILE][A-Z0-9_]+$)|(^([cpgwrt]|mw|wa|ws)\d[^ ]*$)/) || prefixesMap[key.replace(/^([^:]+):.*$/,"$1")])
       {
          if(_key.indexOf(":") === -1) _key = "bdr:"+_key
          let uc = _key.split(":")
@@ -2000,7 +2015,7 @@ class App extends Component<Props,State> {
          
          if([ /*"Any",*/ "Person","Place","Work","Etext","Role","Topic","Corporation","Lineage","Instance","Product","Scan"].indexOf(lab) !== -1)
          {
-            this.requestSearch(this.props.keyword.replace(/(^[(")]+)|([")]+$)/g,""),[ lab ], this.props.language, true);
+            this.requestSearch(this.props.keyword.replace(/(^[(")]+)|([")]+(~1)?$)/g,""),[ lab ], this.props.language, true, ["date","id"].includes(this.props.language)?this.props.language:null);
          }
          
       }
@@ -2904,7 +2919,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
    makeResult(id,n,t,lit,lang,tip,Tag,url,rmatch = [],facet,allProps = [],preLit,isInstance)
    {
-      loggergen.log("res:",id,facet,allProps,n,t,lit,preLit,lang,tip,Tag,rmatch,sameAsRes)
+      //loggergen.log("res:",id,facet,allProps,n,t,lit,preLit,lang,tip,Tag,rmatch,sameAsRes)
 
       // DONE fix scrolling back to result (#425)
       let doRef = true, nsub = n
@@ -5277,6 +5292,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          
          let dataSource = [] 
          let language = this.state.language
+         
          if(value.match(/(^([^:]+:)?[UWPGRCTILE][A-Z0-9_]+$)|(^([^:]+:)?([cpgwrt]|mw|wa|ws)\d[^ ]*$)/)) {
             dataSource = [ value+"@Find resource with this RID", value+"@Find associated resources" ]
          }
@@ -5311,9 +5327,12 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   }
                   
                   return [...acc, ...presets]
-               }, [] ).concat(!value || value.match(/[a-zA-Z]/)?["en"]:[]).map(p => '"'+(p==="bo-x-ewts_lower"?value.toLowerCase():value).trim()+'"@'+(p == "sa-x-iast"?"inc-x-ndia":p))
+               }, [] ).concat(!value || value.match(/[a-zA-Z0-9]/)?["en"]:[]).map(p => '"'+(p==="bo-x-ewts_lower"?value.toLowerCase():value).trim()+'"@'+(p == "sa-x-iast"?"inc-x-ndia":p))
             }
          }
+
+         if(value.match(/(^[0-9]{3,4}$)/) && Number(value) < 2100)  dataSource.unshift(value+"@find as a date")         
+         if(value) dataSource.push(value+"@find as an identifier")
 
          this.setState({...this.state,keyword:value, language, dataSource   } ) 
          
@@ -5509,7 +5528,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                            >
                               { this.state.dataSource.map( (v,i) =>  {
                                  let tab = v.split("@")
-                                 loggergen.log("suggest?",v,i,tab)
+                                 //loggergen.log("suggest?",v,i,tab)
 
                                  if(this.state.langIndex === undefined && this.props.language && tab.length > 1 && tab[1] === this.props.language) {
                                     this.setState({langIndex:i})
@@ -5519,11 +5538,14 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                                     <MenuItem key={v} style={{lineHeight:"1em"}} onMouseDown={(e) => e.preventDefault()} 
                                     className={(!this.state.langIndex && i===0 || this.state.langIndex === i || this.state.langIndex >= this.state.dataSource.length && i === 0?"active":"")} 
                                     onClick={(e)=>{ 
-                                          loggergen.log("CLICK",v,i);
+                                          loggergen.log("CLICK:",v,i,tab[0],tab[1]);
                                           let kw = tab[0]
-                                          let isRID = !languages[tab[1]]
+                                          let isRID = !languages[tab[1]], isDateOrId
                                           if(isRID) {
-                                             if(!kw.includes(":")) kw = "bdr:"+kw.toUpperCase()
+                                             if(!kw.includes(":")) {
+                                                if(!tab[1].match(/date|identifier/)) kw = "bdr:"+kw.toUpperCase()
+                                                else isRID = "IDorDate"
+                                             }
                                              else {
                                                 kw = kw.split(":")
                                                 kw = kw[0].toLowerCase()+":"+kw[1].toUpperCase()
@@ -5531,7 +5553,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                                           } 
 
                                           this.setState({...this.state,langIndex:i,dataSource:[]});
-                                          if(this.state.keyword) this.requestSearch(kw,null,tab[1], isRID && i === 1)
+                                          if(this.state.keyword) this.requestSearch(kw,null,tab[1], isRID && i === 1, (isRID == "IDorDate"?tab[1].replace(/^.*(date|identifier).*$/,"$1"):null))
                                           
                                        }} ><span class="maxW">{ tab.length == 1 ?"":tab[0].replace(/["]/g,"")}</span> <SearchIcon style={{padding:"0 10px"}}/><span class="lang">{tab.length == 1 ? I18n.t("home."+tab[0]):(I18n.t(""+(searchLangSelec[tab[1]]?searchLangSelec[tab[1]]:(languages[tab[1]]?languages[tab[1]]:tab[1])))) }</span></MenuItem> ) 
                                     })
@@ -5751,7 +5773,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                         { (this.props.latestSyncs && this.props.latestSyncs !== true) &&
                            <div class={"slide-bg "+(this.state.syncsSlided?"slided":"")} >
                               { Object.keys(this.props.latestSyncs).map(s => {
-                                 console.log("s:",s);
+                                 //console.log("s:",s);
                                  let label = getLangLabel(this,"",this.props.latestSyncs[s][skos+"prefLabel"])
                                  let uri = "/show/"+shortUri(s), value = I18n.t("resource.noT"), lang = this.props.locale
                                  if(label) {
