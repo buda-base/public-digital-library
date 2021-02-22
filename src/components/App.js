@@ -1098,6 +1098,23 @@ class App extends Component<Props,State> {
 
    requestSearch(key:string,label?:string,lang?:string,forceSearch:boolean=false,dataInfo:string)
    {
+      // DONE trigger find as date/id when press return
+      let idx = this.state.langIndex
+      if(idx === undefined) idx = 0 
+      if(idx > this.state.dataSource.length) idx = 0
+      
+      let tab = this.state.dataSource[idx]
+      if(tab) {
+         tab = tab.split("@")
+         let kw = tab[0]
+         let isRID = !languages[tab[1]]
+         if(isRID && !kw.includes(":")) {
+            if(tab[1].match(/date|identifier/)) {
+               dataInfo = tab[1].replace(/^.*?([^ ]+)$/,"$1")
+            }
+         }
+      }
+
       loggergen.log("key:",key,label,lang,this.state.searchTypes,dataInfo)
 
       // moved this from else at bottom of function to fix adding ~1 suffix
