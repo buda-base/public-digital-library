@@ -4237,7 +4237,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             if(other) other = other.counts
             if(other) other = other.datatype
             //loggergen.log("other:",other)
-            if(other) other = Object.keys(other).filter(k => k !== "Any" && other[k] !== 0)
+            if(other) other = Object.keys(other).filter(k => k !== "Any" && k !== t && other[k] !== 0)
             loggergen.log("other:",other)
             
             //if(other && other.length) 
@@ -4860,6 +4860,9 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                            // || (this.props.language == "")
 
                               let count = counts["datatype"][i]
+                              if(this.props.searches && this.props.searches[i] && this.props.searches[i][this.props.keyword+"@"+this.props.language]) {
+                                 if(this.props.searches[i][this.props.keyword+"@"+this.props.language].numResults == 0) count = 0
+                              }
                               if(!count || count == 0) { 
                                  disabled = true
                                  count = 0
