@@ -3507,7 +3507,11 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
           </a>
        </CopyToClipboard> )
 
-      retList = <div {... (!isInstance?{id:"result-"+n}:{})} {...(doRef?{ref:this._refs[nsub]}:{})} className={"result-content " + (otherSrc && otherSrc.length?"otherSrc ":"") + status + " " + enType + (hasThumb.length?" wThumb":"")}>{retList}</div>
+      retList = <div onClick={(ev) => {
+         if(this.props.simple) {
+            window.top.postMessage('{"hello":"world"}',"*")
+         }
+      }} {... (!isInstance?{id:"result-"+n}:{})} {...(doRef?{ref:this._refs[nsub]}:{})} className={"result-content " + (otherSrc && otherSrc.length?"otherSrc ":"") + status + " " + enType + (hasThumb.length?" wThumb":"")}>{retList}</div>
 
 
 
