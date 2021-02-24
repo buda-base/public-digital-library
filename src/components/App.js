@@ -2706,7 +2706,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                }
             }
 
-            if(vals.length > 1) ret.push(<div class="match">{vals}</div>)
+            if(vals.length > 1) ret.push(<div class="match dates">{vals}</div>)
             
             return ret
          }
@@ -3208,11 +3208,14 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                         { this.state.collapse["more-details-"+id] && <ExpandLess /> }
                      </div>
          let inRoo = this.getResultProp(I18n.t("result.inRootInstance"),allProps,false,true,[bdo+"inRootInstance",tmp+"inRootInstance"],null,null,null,null,resUrl,T)
-         if(typeisbiblio && (by || inRoo) /*|| byStat) */ ) retList.push( <div id='matches' class={"mobile hasAuthor "+( this.state.collapse["more-details-"+id] == true ?" on":"" )}>         
+         let personDates = this.getResultProp(I18n.t("result.year"),allProps,false,false,[tmp+"onYear",bdo+"onYear",bdo+"notBefore",bdo+"notAfter"],null,[bdo+"personEvent"],[bdo+"PersonBirth",bdo+"PersonDeath"]) 
+
+         if(typeisbiblio && (by || inRoo) || type === "Person" && personDates ) retList.push( <div id='matches' class={"mobile hasAuthor "+( this.state.collapse["more-details-"+id] == true ?" on":"" )}>         
 
                { typeisbiblio && inRoo } 
                { typeisbiblio && by }
                {/* { typeisbiblio && byStat } */}
+               { type === "Person" && personDates }
                { details}
             </div>)
          else {
@@ -3408,8 +3411,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
             { type !== "Person" && 
                this.getResultProp(I18n.t("result.year"),allProps,false,false,[tmp+"yearStart"]) }
-            { type === "Person" && 
-               this.getResultProp(I18n.t("result.year"),allProps,false,false,[tmp+"onYear",bdo+"onYear",bdo+"notBefore",bdo+"notAfter"],null,[bdo+"personEvent"],[bdo+"PersonBirth",bdo+"PersonDeath"]) }
+
+            { type === "Person" && personDates }
 
             {/* { type === "Etext" && this.getResultProp(I18n.t("result.eTextIsForWork"),allProps,false,true,[tmp+"forWork"]) }             */}
             { type === "Etext" && this.getResultProp(bdo+"eTextIsVolume",allProps,false,false) }
