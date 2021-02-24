@@ -5471,7 +5471,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
       }
 
       return (
-<div>
+<div className={(this.props.simple?"simpleSearch":"")}>
    {getGDPRconsent(this)}
    {/* <Link to="/about">About</Link> */}
 
@@ -5774,7 +5774,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                            this.resetFilters(event)
                         }}><img src="/icons/back.png"/><span>{I18n.t("search.backToW")}</span></a> }
                      { message }
-                     <div id="pagine">
+                     { pageLinks && <div id="pagine">
                         <NavigateBefore
                            title="Previous page"
                            className={!paginate || paginate.index == 0 ? "hide":""}
@@ -5786,7 +5786,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                            title="Next page"
                            className={!paginate || paginate.index == paginate.pages.length - 1 ? "hide":""}
                            onClick={this.nextPage.bind(this,id)} />
-                     </div>
+                     </div> }
                   </List>
                }
                </div>
