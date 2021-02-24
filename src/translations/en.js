@@ -122,7 +122,8 @@ const enTranslation = {
       numberMC:"Number of Matching Chunks",
       lastS:"Release Date",
       reverseS:"(reverse order)",
-      volumeN:"Volume Number"
+      volumeN:"Volume Number",
+      roleN:"Role Name",
    },
    copyright:{
       open:"Open Access",

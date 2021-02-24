@@ -109,7 +109,8 @@ const boTranslation = {
       numberMC:"བཙལ་བྱ་རྙེད་སའི་དུམ་ཚན་གྱི་གྲངས།",
       lastS:"སྤེལ་དུས།",
       reverseS:"(reverse)",
-      volumeN:"Volume Number"
+      volumeN:"Volume Number",
+      roleN:"Role Name",
    },
    copyright:{
       open:"བཀག་རྒྱ་མེད་པ།",
