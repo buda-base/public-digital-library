@@ -3509,7 +3509,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
       retList = <div onClick={(ev) => {
          if(this.props.simple) {
-            window.top.postMessage('{"hello":"world"}',"*")
+            window.top.postMessage('{"@id":"'+prettId+'"}',"*")
          }
       }} {... (!isInstance?{id:"result-"+n}:{})} {...(doRef?{ref:this._refs[nsub]}:{})} className={"result-content " + (otherSrc && otherSrc.length?"otherSrc ":"") + status + " " + enType + (hasThumb.length?" wThumb":"")}>{retList}</div>
 
