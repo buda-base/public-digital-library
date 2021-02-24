@@ -257,6 +257,14 @@ const makeMainRoutes = () => {
                               {({ isLatestVersion, emptyCacheStorage }) => (<AppContainer history={history} auth={auth}/> )}
                            </ClearCache>
                         )}}/>
+                     <Route path="/simplesearch" render={(props) => {
+                        let get = qs.parse(history.location.search)
+                        store.dispatch(initiateApp(qs.parse(history.location.search)))
+                        return ( 
+                           <ClearCache auto={true}  duration={20*60*1000}>
+                              {({ isLatestVersion, emptyCacheStorage }) => (<AppContainer simple={true} history={history} auth={auth}/> )}
+                           </ClearCache>
+                        )}}/>
                      <Route path="/latest" render={(props) => {
                         let get = qs.parse(history.location.search)
                         //if(!store.getState().data.ontology)

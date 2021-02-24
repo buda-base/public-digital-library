@@ -642,7 +642,7 @@ export function getGDPRconsent(that) {
    //ReactGA.pageview('/homepage');
    loggergen.log("cookie?",document.cookie)
 
-   if(that.props.config && that.props.config.GA) return (
+   if(that.props.config && that.props.config.GA && !that.props.simple) return (
       <CookieConsent
          location="bottom"
          onAccept={() => { loggergen.log("accept!"); if(that) { report_GA(that.props.config,that.props.history.location); that.forceUpdate(); } } }
