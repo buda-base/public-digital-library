@@ -2972,6 +2972,23 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
       //loggergen.log("id",id,prettId)
 
+      let sendMsg = (ev,prevent = false) => {
+         if(this.props.simple) {
+            console.log("(MSG)")
+            window.top.postMessage(
+               '{"@id":"'+prettId
+               +'","skos:prefLabel":'+JSON.stringify(allProps.filter(p => p.type === skos+"prefLabel").map(p => ({"@value":p.value,"@language":p["xml:lang"]})))
+               +',"tmp:keyword":{"@value":'+this.props.keyword+',"@language":"'+this.props.language+'"}'
+               +'}', 
+               "*") // TODO set target url for message
+            if(prevent) {
+               ev.preventDefault()
+               ev.stopPropagation()
+               return false;
+            }
+         }
+      }
+
       let status = "",warnStatus,warnLabel
 
       if(this.props.auth && this.props.auth.isAuthenticated())
@@ -3123,8 +3140,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
          let getIconLink = (resUrl,div) => {
 
-            if(!resUrl.startsWith("http")) return <Link to={resUrl}>{div}</Link>
-            else return <a href={resUrl} target="_blank">{div}</a>
+            if(!resUrl.startsWith("http")) return <Link to={resUrl}  onClick={(ev) => sendMsg(ev, true)}>{div}</Link>
+            else return <a href={resUrl} target="_blank"  onClick={(ev) => sendMsg(ev, true)}>{div}</a>
 
          }
 
@@ -3196,8 +3213,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             </div>
          ]
 
-         if(!resUrl.startsWith("http")) retList.push(<Link to={resUrl.replace(/#open-viewer$/,"")} className="result">{ret}</Link>)         
-         else retList.push(<a href={resUrl} target="_blank" className="result">{ret}</a>)         
+         if(!resUrl.startsWith("http")) retList.push(<Link to={resUrl.replace(/#open-viewer$/,"")} className="result" onClick={(ev) => sendMsg(ev, true)}>{ret}</Link>)         
+         else retList.push(<a href={resUrl} target="_blank" className="result"  onClick={(ev) => sendMsg(ev, true)}>{ret}</a>)         
 
          let type = this.state.filters.datatype[0]
          let typeisbiblio = (type === "Work" || type === "Instance" || type === "Etext" || type === "Scan")
@@ -3512,11 +3529,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
           </a>
        </CopyToClipboard> )
 
-      retList = <div onClick={(ev) => {
-         if(this.props.simple) {
-            window.top.postMessage('{"@id":"'+prettId+'"}',"*")
-         }
-      }} {... (!isInstance?{id:"result-"+n}:{})} {...(doRef?{ref:this._refs[nsub]}:{})} className={"result-content " + (otherSrc && otherSrc.length?"otherSrc ":"") + status + " " + enType + (hasThumb.length?" wThumb":"")}>{retList}</div>
+      retList = <div onClick={sendMsg} {... (!isInstance?{id:"result-"+n}:{})} {...(doRef?{ref:this._refs[nsub]}:{})} className={"result-content " + (otherSrc && otherSrc.length?"otherSrc ":"") + status + " " + enType + (hasThumb.length?" wThumb":"")}>{retList}</div>
 
 
 
