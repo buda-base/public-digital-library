@@ -812,14 +812,25 @@ async function createPdf(url,iri) {
       if(config) config = config.iiif
       if(config) IIIFurl = config.endpoints[config.index]
       loggergen.log("IIIFu",IIIFurl,config)
-      let links = iri.links
-      if(!links) {
-         let data = JSON.parse(await api.getURLContents((url.startsWith("/")?IIIFurl:"")+url,false,"application/json"))
-         loggergen.log("pdf",data)
-         links = data.links
-      }
-      if(links && !links.match(/^(https?:)?\/\//)) links = IIIFurl+links
-      store.dispatch(dataActions.pdfReady(links,{url,iri:iri.iri}))
+      let pdfCheck = setInterval(async () => {
+
+         let links = iri.links
+         if(!links) {
+            let data = JSON.parse(await api.getURLContents((url.startsWith("/")?IIIFurl:"")+url,false,"application/json"))
+            loggergen.log("pdf:",data)
+            links = data.links
+         }
+         if(links && !links.match(/^(https?:)?\/\//)) links = IIIFurl+links
+
+         loggergen.log("links:",links)
+         if(links) {
+            clearInterval(pdfCheck)
+            store.dispatch(dataActions.pdfReady(links,{url,iri:iri.iri}))
+         } else {
+
+         }
+
+      }, 3000);
 
 
 
