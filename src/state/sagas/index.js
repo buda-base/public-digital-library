@@ -818,7 +818,7 @@ async function createPdf(url,iri) {
          if(!links) {
             let data = JSON.parse(await api.getURLContents((url.startsWith("/")?IIIFurl:"")+url,false,"application/json"))
             loggergen.log("pdf:",data)
-            links = data.links
+            links = data.link
          }
          if(links && !links.match(/^(https?:)?\/\//)) links = IIIFurl+links
 
