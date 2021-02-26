@@ -3203,7 +3203,12 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          let typeisbiblio = (type === "Work" || type === "Instance" || type === "Etext" || type === "Scan")
          let by = this.getResultProp(I18n.t("result.workBy"),allProps,false,true,[tmp+"author"])
          let byStat = this.getResultProp(I18n.t("result.workBy"),allProps,true,false,[bdo+"authorshipStatement"])
-         let details = <div class={"more-details"+( this.state.collapse["more-details-"+id] == true ?" on":"" )} onClick={() => this.setState({ repage:true, collapse:{...this.state.collapse, ["more-details-"+id]:!this.state.collapse["more-details-"+id]}})}>
+         let details = <div class={"more-details"+( this.state.collapse["more-details-"+id] == true ?" on":"" )} onClick={(ev) => {
+            this.setState({ repage:true, collapse:{...this.state.collapse, ["more-details-"+id]:!this.state.collapse["more-details-"+id]}})
+            ev.preventDefault();
+            ev.stopPropagation();
+            return false;
+         }}>
                         { this.state.collapse["more-details-"+id] != true && <ExpandMore /> }
                         { this.state.collapse["more-details-"+id] && <ExpandLess /> }
                      </div>
@@ -5753,7 +5758,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      </Paper>
                   </div> */
                }
-               { (this.props.keyword && (this.props.loading || (this.props.datatypes && !this.props.datatypes.hash))) && <Loader className="mainloader"/> }
+               { (this.props.simple && !this.props.keyword || (this.props.keyword && (this.props.loading || (this.props.datatypes && !this.props.datatypes.hash)))) && <Loader className="mainloader"/> }
                { message.length == 0 && !this.props.loading && !this.props.keyword && 
                   <List id="samples">
                      {/* { messageD } */}
