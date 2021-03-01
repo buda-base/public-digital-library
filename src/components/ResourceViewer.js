@@ -3931,7 +3931,7 @@ class ResourceViewer extends Component<Props,State>
 
          let _befo
          if(title && title.value) {
-            if(!other && !document.title.includes(title.value) ) document.title = title.value + " - Public Digital Library"
+            if(!other && !document.title.includes(title.value) ) document.title = title.value + " - Buddhist Digital Archives"
             if(title.fromSameAs && !title.fromSameAs.match(new RegExp(bdr))) {
                const {befo,bdrcData} = this.getSameLink(title,shortUri(title.fromSameAs).split(":")[0]+" sameAs hasIcon")            
                _befo = befo

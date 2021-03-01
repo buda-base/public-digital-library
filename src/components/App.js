@@ -1250,8 +1250,8 @@ class App extends Component<Props,State> {
       let props = { ...prop }
 
       if(props.keyword) { 
-         if(props.keyword === "(latest)") document.title = I18n.t("home.new") + " - Public Digital Library"
-         else document.title = /*""+*/ props.keyword+" search results - Public Digital Library"
+         if(props.keyword === "(latest)") document.title = I18n.t("home.new") + " - Buddhist Digital Archives"
+         else document.title = /*""+*/ props.keyword+" search results - Buddhist Digital Archives"
          
       }
 
