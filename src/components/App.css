@@ -1584,6 +1584,7 @@ vertical-align:middle;}
 
 /* ------------------------------------------------------------------------------------------------------------------------ title/tabs */
 
+span[lang^='sa-']:not([lang$='-ewts']) { text-transform: capitalize;}
 
 .resource .nav + .title h2[lang=bo] span:not(.RID) { font-family:"Noto Sans Tibetan","Noto Sans", "Roboto", "Helvetica", "Arial", sans-serif !important;
    font-size:20px ; 

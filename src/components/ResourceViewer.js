@@ -1743,7 +1743,7 @@ class ResourceViewer extends Component<Props,State>
 
 
 
-   fullname(prop:string,isUrl:boolean=false,noNewline:boolean=false,useUIlang:boolean=false,canSpan = true,count?:integer=1)
+   fullname(prop:string,isUrl:boolean=false,noNewline:boolean=false,useUIlang:boolean=false,canSpan = true,count?:integer=1,lang?:string="")
    {
       if(prop && !prop.replace) {
          console.warn("prop:?:",prop)
@@ -1792,7 +1792,7 @@ class ResourceViewer extends Component<Props,State>
       }
 
     
-      if(canSpan) return <span lang="">{this.pretty(prop,isUrl,noNewline)}</span>
+      if(canSpan) return <span lang={lang}>{this.pretty(prop,isUrl,noNewline)}</span>
       else return this.pretty(prop,isUrl,noNewline)
     
 
@@ -3219,7 +3219,7 @@ class ResourceViewer extends Component<Props,State>
                   if(!lang) lang = tLab["xml:lang"]
                   let tVal = tLab.value
 
-                  let tip = [this.fullname(tVal),lang?<Tooltip placement="bottom-end" title={
+                  let tip = [this.fullname(tVal,false,false,false,true,1,lang),lang?<Tooltip placement="bottom-end" title={
                      <div style={{margin:"10px"}}>
                         {I18n.t(languages[lang]?languages[lang].replace(/search/,"tip"):lang)}
                      </div>
