@@ -814,23 +814,25 @@ async function createPdf(url,iri) {
       loggergen.log("IIIFu",IIIFurl,config)
       let pdfCheck = setInterval(async () => {
 
-         let links = iri.links
-         if(!links) {
-            let data = JSON.parse(await api.getURLContents((url.startsWith("/")?IIIFurl:"")+url,false,"application/json"))
+         let link = iri.link, data
+         if(!link) {
+            data = JSON.parse(await api.getURLContents((url.startsWith("/")?IIIFurl:"")+url,false,"application/json"))
             loggergen.log("pdf:",data)
-            links = data.link
+            link = data.link
          }
-         if(links && !links.match(/^(https?:)?\/\//)) links = IIIFurl+links
+         if(link && !link.match(/^(https?:)?\/\//)) link = IIIFurl+link
 
-         loggergen.log("links:",links)
-         if(links) {
+         loggergen.log("link:",link)
+         if(link) {
             clearInterval(pdfCheck)
-            store.dispatch(dataActions.pdfReady(links,{url,iri:iri.iri}))
+            store.dispatch(dataActions.pdfReady(link,{url,iri:iri.iri}))
          } else {
-
+            if(data && data.percentdone !== undefined) store.dispatch(dataActions.pdfNotReady("",{url,iri:iri.iri,percent:data.percentdone}))
          }
 
       }, 3000);
+
+      store.dispatch(dataActions.pdfNotReady("",{url,iri:iri.iri,percent:0}))
 
 
 
@@ -870,7 +872,7 @@ async function requestPdf(url,iri) {
       else {
          */
          
-         data = _.sortBy(Object.keys(data).map(e => ({...data[e],volume:Number(data[e].volume)+1,id:e})),["volume"])
+         data = _.sortBy(Object.keys(data).map(e => ({...data[e],volume:Number(data[e].volnum)+1,id:e})),["volume"])
          store.dispatch(dataActions.pdfVolumes(iri,data))
 
          /*

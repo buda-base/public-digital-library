@@ -4709,12 +4709,14 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                                      >
                                         { Ploading && <Loader className="pdfSpinner" loaded={Ploaded} scale={0.35}/> }
                                         <span {... (Ploading?{className:"pdfLoading"}:{})}>{pdfMsg}</span>
+                                        { Ploading && e.pdfPercent !== undefined && <span>&nbsp;{e.pdfPercent}%</span>}
                                      </a>
                                      <a onClick={ev => that.handlePdfClick(ev,e.link,e.zipFile,"zip")}
                                         {...(Zloaded ?{href:e.zipFile}:{})}
                                      >
                                         { Zloading && <Loader className="zipSpinner" loaded={Zloaded} scale={0.35}/> }
                                         <span {... (Zloading?{className:"zipLoading"}:{})}>{zipMsg}</span>
+                                        { Zloading && e.zipPercent !== undefined && <span>&nbsp;{e.zipPercent}%</span>}
                                        </a>
                                        { that.props.IRI && getEntiType(that.props.IRI) === "Etext" && // TODO fix download etext
                                           <div> 

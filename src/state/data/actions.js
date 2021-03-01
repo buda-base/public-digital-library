@@ -154,6 +154,14 @@ export const pdfReady = (url: string, iri:string): Action => {
     }
 }
 
+TYPES.pdfNotReady = 'PDF_NOT_READY';
+export const pdfNotReady = (url: string, iri:string): Action => {
+    return {
+        type: TYPES.pdfNotReady,
+        payload: url,
+        meta:iri
+    }
+}
 
 TYPES.resetSearch = 'RESET_SEARCH';
 export const resetSearch = (): Action => {
