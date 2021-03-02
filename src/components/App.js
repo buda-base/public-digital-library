@@ -2978,7 +2978,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             window.top.postMessage(
                '{"@id":"'+prettId
                +'","skos:prefLabel":'+JSON.stringify(allProps.filter(p => p.type === skos+"prefLabel").map(p => ({"@value":p.value,"@language":p["xml:lang"]})))
-               +',"tmp:keyword":{"@value":'+this.props.keyword+',"@language":"'+this.props.language+'"}'
+               +',"tmp:keyword":{"@value":"'+lucenequerytokeyword(this.props.keyword)+'","@language":"'+this.props.language+'"}'
+               +',"tmp:propid":"'+this.props.propid+'"'
                +'}', 
                "*") // TODO set target url for message
             if(prevent) {
