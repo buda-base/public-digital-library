@@ -4070,7 +4070,7 @@ class ResourceViewer extends Component<Props,State>
    getPdfLink = (data) =>  {
 
       let pdfLink,monoVol = -1 ;
-      if(this.props.firstImage &&  !this.props.manifestError && this.props.firstImage.match(/[.]bdrc[.]io/))
+      if(this.props.firstImage &&  !this.props.manifestError && this.props.firstImage.match(/([.]bdrc[.]io)|(buda[.]zju)/)) // allow pdf download on chinese server too
       {
          let iiif = "//iiif.bdrc.io" ;
          if(this.props.config && this.props.config.iiif) iiif = this.props.config.iiif.endpoints[this.props.config.iiif.index]
