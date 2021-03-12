@@ -3898,7 +3898,7 @@ class ResourceViewer extends Component<Props,State>
       else return <h2 title={title.value} lang={this.props.locale} class="on">{_T}<span>{_befo}{title.value}</span>{this.tooltip(title.lang)}</h2>
    }
 
-   setTitle = (kZprop,_T,other,rootC) => {
+   setTitle = (kZprop,_T,other,rootC,noSame:boolean=false) => {
 
       let title,titlElem,otherLabels = [], T_ = _T ;
       _T = [<span class={"T "+_T.toLowerCase()}>
@@ -3907,7 +3907,7 @@ class ResourceViewer extends Component<Props,State>
       </span>]
 
       if(kZprop.indexOf(skos+"prefLabel") !== -1)       {
-         titlElem = this.getResourceElem(skos+"prefLabel",other,this.props.assocResources);
+         titlElem = this.getResourceElem(skos+"prefLabel",other,this.props.assocResources);         
       }
       else if(kZprop.indexOf(bdo+"eTextTitle") !== -1)     {
          titlElem = this.getResourceElem(bdo+"eTextTitle",other,this.props.assocResources);
@@ -3924,7 +3924,12 @@ class ResourceViewer extends Component<Props,State>
       if(!title) {
          if(titlElem) {
             if(typeof titlElem !== 'object') titlElem =  { "value" : titlElem, "lang":""}
-            title = getLangLabel(this,"", titlElem, false, false, otherLabels)
+            if(noSame) {
+               let asArray = titlElem
+               if(!Array.isArray(asArray)) asArray = [ asArray]
+               titlElem = asArray.filter(a => !a.allSameAs || a.allSameAs.filter(b => b.includes(bdr)).length)
+            }
+            title = getLangLabel(this,"", titlElem, false, false, otherLabels)            
          }
          
          //loggergen.log("titl",kZprop,titlElem,title,otherLabels,other)
@@ -6444,7 +6449,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
       let getWtitle = this.getWtitle.bind(this)
       let wTitle,iTitle,rTitle ;
       let _T = getEntiType(this.props.IRI)
-      let { title,titlElem,otherLabels } = this.setTitle(kZprop,_T) ;
+      let { title,titlElem,otherLabels } = this.setTitle(kZprop,_T,null,null,true) ;
       if(_T === "Instance") { 
          iTitle = title ; 
 

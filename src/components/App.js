@@ -2943,7 +2943,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
    makeResult(id,n,t,lit,lang,tip,Tag,url,rmatch = [],facet,allProps = [],preLit,isInstance)
    {
-      //loggergen.log("res:",id,facet,allProps,n,t,lit,preLit,lang,tip,Tag,rmatch,sameAsRes)
+      loggergen.log("res:",id,facet,allProps,n,t,lit,preLit,lang,tip,Tag,rmatch,sameAsRes)
 
       // DONE fix scrolling back to result (#425)
       let doRef = true, nsub = n
