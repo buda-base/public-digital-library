@@ -1448,7 +1448,7 @@ function mergeSameAs(result,withSameAs,init = true,rootRes = result, force = fal
                   //if(v.type && v.type === skos+"prefLabel") v_.type = k 
                   //if(v.type && v.type === s) v_.type = skos+"prefLabel"
                   */
-                  if(!found) result[r.t][s].push(v_)
+                  if(!found) result[r.t][s].push({ ...v_, "fromSameAs":k })
                }
                if(noK && !hasSameK && init) result[r.t][s].push({type:owl+"sameAs",value:k})
             }

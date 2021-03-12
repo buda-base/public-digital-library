@@ -3927,7 +3927,7 @@ class ResourceViewer extends Component<Props,State>
             if(noSame) {
                let asArray = titlElem
                if(!Array.isArray(asArray)) asArray = [ asArray]
-               titlElem = asArray.filter(a => !a.allSameAs || a.allSameAs.filter(b => b.includes(bdr)).length)
+               //titlElem = asArray.filter(a => !a.allSameAs || a.allSameAs.filter(b => b.includes(bdr)).length)
             }
             title = getLangLabel(this,"", titlElem, false, false, otherLabels)            
          }

@@ -747,6 +747,8 @@ export default class API {
              else if(["Product"].includes(typ[0])) R_TYPE = "bdo:Collection"
              else R_TYPE = "bdo:"+typ[0]
              if(!inEtext) searchType+="Graph"
+             // attempt at #439
+             if(typ[0]==="Person") searchType += "-sameAs"
 
              if(typ && typ.length >= 1 && typ[0] !== "Any") { param = { ...param, searchType, ...(R_TYPE?{R_TYPE}:{}) } }
              else url = url.replace(/-dev/,"") // fix while -dev/rootSearch returns nothing
