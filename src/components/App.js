@@ -151,10 +151,11 @@ export function fullUri(id:string, force:boolean=false) {
    return id ;
 }
 
-export function shortUri(id:string) {
+export function shortUri(id:string, nobdo?:boolean=false) {
    for(let k of Object.keys(prefixesMap)) {
       id = id.replace(new RegExp(prefixesMap[k]),k+":")  
    }
+   if(nobdo) id = id.replace(/^bdo:/,"")
    return id.replace(/[/]$/,"") ;
 }
 
@@ -2970,16 +2971,29 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
       if(!lit) lit = prettId
 
+      let T = getEntiType(id)
+
       //loggergen.log("id",id,prettId)
+
 
       let sendMsg = (ev,prevent = false) => {
          if(this.props.simple) {
-            console.log("(MSG)")
+            let otherData = {};
+            if(T === "Person") {
+               otherData = allProps.filter(e => [bdo+"personEvent"].includes(e.type)).map(e => this.props.assoRes[e.value]).reduce( (acc,e) =>{
+                  let t = e.filter(f => f.type === rdf+"type")
+                  if(t.length) return { ...acc, [shortUri(t[0].value, true)]:e.filter(e => [bdo+"onYear", bdo+"notBefore", bdo+"notAfter", bdo+"eventWhere"].includes(e.type))
+                     .reduce( (subacc,p)=>( {...subacc, [shortUri(p.type, true)]: shortUri(p.value, true) }),{}) }
+                  else return acc
+               },{}) 
+            }
+            console.log("(MSG)",JSON.stringify(otherData,null,3))
             window.top.postMessage(
                '{"@id":"'+prettId
                +'","skos:prefLabel":'+JSON.stringify(allProps.filter(p => p.type === skos+"prefLabel").map(p => ({"@value":p.value,"@language":p["xml:lang"]})))
                +',"tmp:keyword":{"@value":"'+lucenequerytokeyword(this.props.keyword)+'","@language":"'+this.props.language+'"}'
                +',"tmp:propid":"'+this.props.propid+'"'
+               +(otherData?',"tmp:otherData":'+JSON.stringify(otherData):'')
                +'}', 
                "*") // TODO set target url for message
             if(prevent) {
@@ -3010,7 +3024,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          else status = ""
       }
 
-      let T = getEntiType(id), langT, langs = [], isSerial;
+      let langT, langs = [], isSerial;
       if(lit && lit.startsWith && lit.startsWith("@")) T = "match"
       if(T === "Work") { 
          langT = allProps.filter(p => p.type === bdo+"language")      
