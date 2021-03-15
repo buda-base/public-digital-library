@@ -1365,7 +1365,7 @@ function addMeta(keyword:string,language:string,data:{},t:string,tree:{},found:b
    }
 }
 
-function mergeSameAs(result,withSameAs,init = true,rootRes = result, force = false, keyword)
+function mergeSameAs(result,withSameAs,init = true,rootRes = result, force = false, keyword, assoR = {})
 {
    //loggergen.log("mSa:",result,rootRes,keyword,init,force)
 
@@ -1400,7 +1400,8 @@ function mergeSameAs(result,withSameAs,init = true,rootRes = result, force = fal
       }
    }
 
-   //loggergen.log("wSa",withSameAs)
+   loggergen.log("wSa",withSameAs)
+   
 
    let keys = Object.keys(withSameAs)
    if(keys) for(let i in keys) {
@@ -1417,12 +1418,13 @@ function mergeSameAs(result,withSameAs,init = true,rootRes = result, force = fal
          let isRid = (fullKW && s === fullKW)
          if(result[r.t] && !result[r.t][s] && !isRid) { 
             result[r.t][s] = []
+            if(assoR[s]) result[r.t][s] = [ ...assoR[s] ]
             noK = true
          }
          let hasSameK 
          if(result[r.t] && result[r.t][k] && (result[r.t][s] || isRid)) {
             
-            //loggergen.log("same?",isRid,k,r.t,s,result[r.t][k],result[r.t][s])
+            loggergen.log("same?",isRid,k,r.t,s,result[r.t][k],result[r.t][s],assoR)
 
             if(!isRid) { 
                hasSameK = false
@@ -1448,7 +1450,10 @@ function mergeSameAs(result,withSameAs,init = true,rootRes = result, force = fal
                   //if(v.type && v.type === skos+"prefLabel") v_.type = k 
                   //if(v.type && v.type === s) v_.type = skos+"prefLabel"
                   */
-                  if(!found) result[r.t][s].push({ ...v_, "fromSameAs":k })
+                  
+                  
+                 
+                  if(!found) result[r.t][s].push({ ...v_, "fromSameAs":[ ...(v_.fromSameAs?v_.fromSameAs:[]), k ] }) //(v_.fromSameAs?v_.fromSameAs:[]).push(k) })
                }
                if(noK && !hasSameK && init) result[r.t][s].push({type:owl+"sameAs",value:k})
             }
@@ -1825,7 +1830,7 @@ function rewriteAuxMain(result,keyword,datatype,sortBy,language)
          }
 
          if(language !== undefined) { 
-            dataWithAsset = mergeSameAs({[t]:dataWithAsset},{},true,{},true,!language?keyword:null)
+            dataWithAsset = mergeSameAs({[t]:dataWithAsset},{},true,{},true,!language?keyword:null,result["aux"])
             dataWithAsset = dataWithAsset[t]
          }
 

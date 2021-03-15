@@ -3400,22 +3400,29 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          if(nbChunks[0] && nbChunks[0].value) nbChunks = Number(nbChunks[0].value)
          else nbChunks = "?"
 
+         let slashEq = (a,b) => a ===b || a + "/" === b || a === b + "/"
 
-         let allLabels = [ ...allProps.filter(a => a.type.endsWith("Label") && !a.fromSameAs) ]
-         let allMatch = [ ...allProps.filter(a => a.value.match(/[↦↤]/)).map(a => ({...a, value:a.value.replace(/[↦↤]/g,"")})) ]
+         let allLabels = [ ], allLabelsNoMatch = [ ]
+         allProps.filter(a => a.type.match(/([Ll]abel|[Mm]atch)$/)).map(a => {   
+            let labelNoMatch = a.value.replace(/[↦↤]/g,"")
+            if(!allLabelsNoMatch.filter(b => slashEq(b.value,labelNoMatch)).length) { 
+               allLabels.push(a)
+               allLabelsNoMatch.push({...a, value:labelNoMatch})
+            }
+         })  
 
          for(let p of allProps) {
             if(p.type.endsWith("#sameAs") && p.value != fullId && this.props.assoRes[p.value]) {
                //console.log("sA?",p,this.props.assoRes[p.value])
                for(let q of this.props.assoRes[p.value]) {
-                  if(q.type.endsWith("Label") && !allLabels.filter(a => a.value === q.value).length && !allMatch.filter(a => a.value === q.value).length) {
+                  if(q.type.match(/[Ll]abel$/) && !allLabelsNoMatch.filter(a => slashEq(a.value,q.value)).length) {
                      allLabels.push(q)
                   }
                }
             }
          }
 
-//         console.log("allM:",allMatch,allLabels)
+         //console.log("allM:",allLabels)
 
          retList.push( <div id='matches'>         
 
@@ -3435,7 +3442,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
             { type === "Etext" && this.getEtextMatches(prettId,startC,endC,bestM,rmatch,facet,nsub) }
 
-            { this.getResultProp("tmp:nameMatch",allProps,true,false,[ tmp+"nameMatch" ], !preLit?preLit:preLit.replace(/[↦↤]/g,"") ) } {/* //,true,false) } */}
+            {/* { this.getResultProp("tmp:nameMatch",allLabels,true,false,[ tmp+"nameMatch" ], !preLit?preLit:preLit.replace(/[↦↤]/g,"") ) } */}
 
 
             {/* { this.getResultProp("bdo:note",allProps,true,false,[ tmp+"noteMatch" ]) } // see biblioNote below */}
@@ -3452,7 +3459,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             {/* { this.getResultProp(bdo+"workIsAbout",allProps,false) } */}
             {/* { this.getResultProp(bdo+"workGenre",allProps) } */}
 
-            { this.getResultProp(this.state.filters.datatype[0] === "Work"?"tmp:otherTitle":"tmp:otherName",allLabels, true, false, [skos+"prefLabel", skos+"altLabel"], !preLit?preLit:preLit.replace(/[↦↤]/g,"") ) }
+            { this.getResultProp(this.state.filters.datatype[0] === "Work"?"tmp:otherTitle":"tmp:otherName",allLabels, true, false, [ tmp+"labelMatch", tmp+"nameMatch", skos+"prefLabel", skos+"altLabel"], !preLit?preLit:preLit.replace(/[↦↤]/g,"") ) }
             {/* { this.getResultProp(tmp+"assetAvailability",allProps,false,false) } */}
             
             {/* { this.getResultProp(rdf+"type",allProps.filter(e => e.type === rdf+"type" && e.value === bdo+"EtextInstance")) }  */}
