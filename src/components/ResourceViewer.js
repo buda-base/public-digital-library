@@ -6891,7 +6891,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                   if(val) vals.push(val)
                   if(p.includes("Birth")) vals.push(<span>&nbsp;&ndash;&nbsp;</span>)
                }
-               if(vals.length > 1) dates = <span clas='date'>{vals}</span> ;
+               if(vals.length > 1) dates = <span class='date'>{vals}</span> ;
             }
          }
 

@@ -3951,6 +3951,7 @@ a.result + #matches.mobile,
    .resource .data#perma,
    .resource .data { padding-left:15px; padding-right:15px;}
 
+   .resource .data h2.on ~ .date,
    .resource .data#outline > div,
    .resource .data h2.on,
    .resource .data.related > div:not(#a):not(#b):not(#c),
