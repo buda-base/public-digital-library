@@ -77,6 +77,7 @@
     font-style: normal;
 }
 
+#viewer:not(.inApp) .mirador-hud-nav { display:none; }
 
 body:not(.inApp) .scroll-view .provider div,
 body:not(.inApp) .image-view .provider { top:calc(100vh - 120px - 70px); }

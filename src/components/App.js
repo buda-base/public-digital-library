@@ -234,7 +234,7 @@ export function lucenequerytokeyword(lq) {
 export function lucenequerytokeywordmulti(key:string) {
    let res = []
    if (key.indexOf(" AND ") === -1) {
-      res = [key.replace(/["()]g/, "").trim()]
+      res = [ lucenequerytokeyword(key).trim() ] //.replace(/["()]g/, "").trim()]
       return res
    }
    // we have an "AND":
@@ -1251,8 +1251,8 @@ class App extends Component<Props,State> {
       let props = { ...prop }
 
       if(props.keyword) { 
-         if(props.keyword === "(latest)") document.title = I18n.t("home.new") + " - Public Digital Library"
-         else document.title = /*""+*/ props.keyword+" search results - Public Digital Library"
+         if(props.keyword === "(latest)") document.title = I18n.t("home.new") + " - Buddhist Digital Archives"
+         else document.title = /*""+*/ props.keyword+" search results - Buddhist Digital Archives"
          
       }
 
@@ -2944,7 +2944,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
    makeResult(id,n,t,lit,lang,tip,Tag,url,rmatch = [],facet,allProps = [],preLit,isInstance)
    {
-      //loggergen.log("res:",id,facet,allProps,n,t,lit,preLit,lang,tip,Tag,rmatch,sameAsRes)
+      //loggergen.log("res:",lit,id,facet,allProps,n,t,lit,preLit,lang,tip,Tag,rmatch,sameAsRes)
 
       // DONE fix scrolling back to result (#425)
       let doRef = true, nsub = n
@@ -3440,6 +3440,30 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          if(nbChunks[0] && nbChunks[0].value) nbChunks = Number(nbChunks[0].value)
          else nbChunks = "?"
 
+         let slashEq = (a,b) => a ===b || a + "/" === b || a === b + "/"
+
+         let allLabels = [ ], allLabelsNoMatch = [ ]
+         allProps.filter(a => a.type.match(/([Ll]abel|[Mm]atch)$/)).map(a => {   
+            let labelNoMatch = a.value.replace(/[↦↤]/g,"")
+            if(!allLabelsNoMatch.filter(b => slashEq(b.value,labelNoMatch)).length) { 
+               allLabels.push(a)
+               allLabelsNoMatch.push({...a, value:labelNoMatch})
+            }
+         })  
+
+         for(let p of allProps) {
+            if(p.type.endsWith("#sameAs") && p.value != fullId && this.props.assoRes[p.value]) {
+               //console.log("sA?",p,this.props.assoRes[p.value])
+               for(let q of this.props.assoRes[p.value]) {
+                  if(q.type.match(/[Ll]abel$/) && !allLabelsNoMatch.filter(a => slashEq(a.value,q.value)).length) {
+                     allLabels.push(q)
+                  }
+               }
+            }
+         }
+
+         //console.log("allM:",allLabels)
+
          retList.push( <div id='matches'>         
 
             { typeisbiblio && inRoo } 
@@ -3458,7 +3482,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
             { type === "Etext" && this.getEtextMatches(prettId,startC,endC,bestM,rmatch,facet,nsub) }
 
-            { this.getResultProp("tmp:nameMatch",allProps,true,false,[ tmp+"nameMatch" ], !preLit?preLit:preLit.replace(/[↦↤]/g,"") ) } {/* //,true,false) } */}
+            {/* { this.getResultProp("tmp:nameMatch",allLabels,true,false,[ tmp+"nameMatch" ], !preLit?preLit:preLit.replace(/[↦↤]/g,"") ) } */}
 
 
             {/* { this.getResultProp("bdo:note",allProps,true,false,[ tmp+"noteMatch" ]) } // see biblioNote below */}
@@ -3475,7 +3499,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             {/* { this.getResultProp(bdo+"workIsAbout",allProps,false) } */}
             {/* { this.getResultProp(bdo+"workGenre",allProps) } */}
 
-            { this.getResultProp(this.state.filters.datatype[0] === "Work"?"tmp:otherTitle":"tmp:otherName",allProps, true, false, [skos+"prefLabel", skos+"altLabel"], !preLit?preLit:preLit.replace(/[↦↤]/g,"") ) }
+            { this.getResultProp(this.state.filters.datatype[0] === "Work"?"tmp:otherTitle":"tmp:otherName",allLabels, true, false, [ tmp+"labelMatch", tmp+"nameMatch", skos+"prefLabel", skos+"altLabel"], !preLit?preLit:preLit.replace(/[↦↤]/g,"") ) }
             {/* { this.getResultProp(tmp+"assetAvailability",allProps,false,false) } */}
             
             {/* { this.getResultProp(rdf+"type",allProps.filter(e => e.type === rdf+"type" && e.value === bdo+"EtextInstance")) }  */}
@@ -3909,7 +3933,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             let unreleased = false
             let label ; // sublist[o].filter((e) => (e.type && e.type.match(/prefLabelMatch$/)))[0]
             let prefL = sublist[o].filter(e => e.type && e.type === skos+"prefLabel")
-            let sList = sublist[o].filter(e => e.type && e.type.endsWith("labelMatch")).filter(l => {
+            let sList = sublist[o].filter(e => e.type && e.type.endsWith("(label|name)Match")).filter(l => {
                let val = l.value.replace(/[↦↤]/g,"")
                return prefL.filter(p => p.value === val).length > 0 // keep match only if it is an actual prefLabe<l
             })
@@ -4056,7 +4080,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             if(id.match(/bdrc[.]io/)) id = id.replace(/^.*?([^/]+)$/,"$1")
 
             let lit ;
-            if(r.lit) { lit = highlight(r.lit.value,lucenequerytokeywordmulti(this.props.keyword)) }
+            if(r.lit) lit = highlight(r.lit.value,lucenequerytokeywordmulti(this.props.keyword)) 
             let lang ;
             if(r.lit) lang= r.lit["lang"]
             if(r.lit && !lang) lang = r.lit["xml:lang"]

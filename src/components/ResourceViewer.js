@@ -1743,7 +1743,7 @@ class ResourceViewer extends Component<Props,State>
 
 
 
-   fullname(prop:string,isUrl:boolean=false,noNewline:boolean=false,useUIlang:boolean=false,canSpan = true,count?:integer=1)
+   fullname(prop:string,isUrl:boolean=false,noNewline:boolean=false,useUIlang:boolean=false,canSpan = true,count?:integer=1,lang?:string="")
    {
       if(prop && !prop.replace) {
          console.warn("prop:?:",prop)
@@ -1792,7 +1792,7 @@ class ResourceViewer extends Component<Props,State>
       }
 
     
-      if(canSpan) return <span lang="">{this.pretty(prop,isUrl,noNewline)}</span>
+      if(canSpan) return <span lang={lang}>{this.pretty(prop,isUrl,noNewline)}</span>
       else return this.pretty(prop,isUrl,noNewline)
     
 
@@ -3219,7 +3219,7 @@ class ResourceViewer extends Component<Props,State>
                   if(!lang) lang = tLab["xml:lang"]
                   let tVal = tLab.value
 
-                  let tip = [this.fullname(tVal),lang?<Tooltip placement="bottom-end" title={
+                  let tip = [this.fullname(tVal,false,false,false,true,1,lang),lang?<Tooltip placement="bottom-end" title={
                      <div style={{margin:"10px"}}>
                         {I18n.t(languages[lang]?languages[lang].replace(/search/,"tip"):lang)}
                      </div>
@@ -3898,7 +3898,7 @@ class ResourceViewer extends Component<Props,State>
       else return <h2 title={title.value} lang={this.props.locale} class="on">{_T}<span>{_befo}{title.value}</span>{this.tooltip(title.lang)}</h2>
    }
 
-   setTitle = (kZprop,_T,other,rootC) => {
+   setTitle = (kZprop,_T,other,rootC,noSame:boolean=false) => {
 
       let title,titlElem,otherLabels = [], T_ = _T ;
       _T = [<span class={"T "+_T.toLowerCase()}>
@@ -3907,7 +3907,7 @@ class ResourceViewer extends Component<Props,State>
       </span>]
 
       if(kZprop.indexOf(skos+"prefLabel") !== -1)       {
-         titlElem = this.getResourceElem(skos+"prefLabel",other,this.props.assocResources);
+         titlElem = this.getResourceElem(skos+"prefLabel",other,this.props.assocResources);         
       }
       else if(kZprop.indexOf(bdo+"eTextTitle") !== -1)     {
          titlElem = this.getResourceElem(bdo+"eTextTitle",other,this.props.assocResources);
@@ -3924,14 +3924,19 @@ class ResourceViewer extends Component<Props,State>
       if(!title) {
          if(titlElem) {
             if(typeof titlElem !== 'object') titlElem =  { "value" : titlElem, "lang":""}
-            title = getLangLabel(this,"", titlElem, false, false, otherLabels)
+            if(noSame) {
+               let asArray = titlElem
+               if(!Array.isArray(asArray)) asArray = [ asArray]
+               titlElem = asArray.filter(a => !a.allSameAs || a.allSameAs.filter(b => b.includes(bdr)).length)
+            }
+            title = getLangLabel(this,"", titlElem, false, false, otherLabels)            
          }
          
          //loggergen.log("titl",kZprop,titlElem,title,otherLabels,other)
 
          let _befo
          if(title && title.value) {
-            if(!other && !document.title.includes(title.value) ) document.title = title.value + " - Public Digital Library"
+            if(!other && !document.title.includes(title.value) ) document.title = title.value + " - Buddhist Digital Archives"
             if(title.fromSameAs && !title.fromSameAs.match(new RegExp(bdr))) {
                const {befo,bdrcData} = this.getSameLink(title,shortUri(title.fromSameAs).split(":")[0]+" sameAs hasIcon")            
                _befo = befo
@@ -4070,7 +4075,7 @@ class ResourceViewer extends Component<Props,State>
    getPdfLink = (data) =>  {
 
       let pdfLink,monoVol = -1 ;
-      if(this.props.firstImage &&  !this.props.manifestError && this.props.firstImage.match(/[.]bdrc[.]io/))
+      if(this.props.firstImage &&  !this.props.manifestError && this.props.firstImage.match(/([.]bdrc[.]io)|(buda[.]zju)/)) // allow pdf download on chinese server too
       {
          let iiif = "//iiif.bdrc.io" ;
          if(this.props.config && this.props.config.iiif) iiif = this.props.config.iiif.endpoints[this.props.config.iiif.index]
@@ -4709,12 +4714,14 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                                      >
                                         { Ploading && <Loader className="pdfSpinner" loaded={Ploaded} scale={0.35}/> }
                                         <span {... (Ploading?{className:"pdfLoading"}:{})}>{pdfMsg}</span>
+                                        { Ploading && e.pdfPercent !== undefined && <span>&nbsp;{e.pdfPercent}%</span>}
                                      </a>
                                      <a onClick={ev => that.handlePdfClick(ev,e.link,e.zipFile,"zip")}
                                         {...(Zloaded ?{href:e.zipFile}:{})}
                                      >
                                         { Zloading && <Loader className="zipSpinner" loaded={Zloaded} scale={0.35}/> }
                                         <span {... (Zloading?{className:"zipLoading"}:{})}>{zipMsg}</span>
+                                        { Zloading && e.zipPercent !== undefined && <span>&nbsp;{e.zipPercent}%</span>}
                                        </a>
                                        { that.props.IRI && getEntiType(that.props.IRI) === "Etext" && // TODO fix download etext
                                           <div> 
@@ -6442,7 +6449,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
       let getWtitle = this.getWtitle.bind(this)
       let wTitle,iTitle,rTitle ;
       let _T = getEntiType(this.props.IRI)
-      let { title,titlElem,otherLabels } = this.setTitle(kZprop,_T) ;
+      let { title,titlElem,otherLabels } = this.setTitle(kZprop,_T,null,null,true) ;
       if(_T === "Instance") { 
          iTitle = title ; 
 

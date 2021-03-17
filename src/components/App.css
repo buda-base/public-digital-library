@@ -1584,6 +1584,7 @@ vertical-align:middle;}
 
 /* ------------------------------------------------------------------------------------------------------------------------ title/tabs */
 
+span[lang^='sa-']:not([lang$='-ewts']) { text-transform: capitalize;}
 
 .resource .nav + .title h2[lang=bo] span:not(.RID) { font-family:"Noto Sans Tibetan","Noto Sans", "Roboto", "Helvetica", "Arial", sans-serif !important;
    font-size:20px ; 
@@ -1892,13 +1893,14 @@ body > [id^="menu-"] > div:last-child,
 .poPdf > div b,
 .poPdf > div a { font-size:12px; font-family: "Noto Sans"; color:#4d4d4d;}
 .poPdf > div li { padding:6px 17px; }
-.poPdf > div a { padding:0 6px;}
+.poPdf > div a { padding:0 6px; display:flex;}
 .poPdf > div a + a { border-left:1px solid rgba(0,0,0,0.35); }
 .poPdf > div a[href] { color:#d73449;}
 
 .pdfMenu a { position:relative;}
 .pdfMenu b { display:inline-block; white-space: nowrap;}
-.pdfLoading,.zipLoading { /*color:white;*/ padding-right:25px; }
+.pdfLoading:last-of-type,.zipLoading:last-of-type,
+.pdfLoading + span,.zipLoading + span { padding-right:25px; }
 .pdfSpinner,.zipSpinner { left: calc(100% - 20px) !important;  top: 45% !important; }
 
 .poPdf > div a li:hover,
@@ -3748,6 +3750,7 @@ a.result + #matches.mobile,
 @media (max-width:768px)
 {
 
+   
    /* ------------------------------------------------------------------------------------------------------------------------ home/topbar */ 
    #root .nav {  height:60px; padding:0 10px; top:0px; transition:all 400ms ease-in-out; 
       z-index: 100001;
@@ -4050,7 +4053,8 @@ a.result + #matches.mobile,
 
    .resource .data h2.intro + h2 { padding-left:20px; }
 
-
+   .firstImage img { max-height:100vh; }
+   
    /* ------------------------------------------------------------------------------------------------------------------------ topbar etc. */
 
    .resource .title h2 { font-size:22px;}
@@ -4097,7 +4101,6 @@ a.result + #matches.mobile,
    #latest .slide-bg > div .header {
       height: calc((100vh - 2*40px - 30px - 2*15px) / 3);
    }
-
 
 }
 

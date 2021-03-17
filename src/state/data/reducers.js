@@ -1249,6 +1249,37 @@ export const pdfReady = (state: DataState, action: Action) => {
 }
 reducers[actions.TYPES.pdfReady] = pdfReady;
 
+
+
+
+
+export const pdfNotReady = (state: DataState, action: Action) => {
+
+      let id = new RegExp(action.meta.url.replace(/[/](zip|pdf)[/]/,"/.../"))
+      let fileT = action.meta.url.replace(/^.*[/](zip|pdf)[/].*$/,"$1")
+      let pdfVolumes = state.IIIFinfo
+
+      if(pdfVolumes) pdfVolumes = pdfVolumes[action.meta.iri]
+      if(pdfVolumes) pdfVolumes = pdfVolumes.pdfVolumes
+      if(pdfVolumes) pdfVolumes = pdfVolumes.map(e => {
+         if(e.link.match(id)) return { ...e, [fileT+"Percent"]: action.meta.percent } 
+         return e ;
+      })
+      
+      return {
+      ...state,
+      IIIFinfo : {
+         ...state.IIIFinfo,
+         [action.meta.iri]:{ ...state.IIIFinfo?state.IIIFinfo[action.meta.iri]:{},
+            pdfVolumes
+         }
+      }
+   }
+}
+reducers[actions.TYPES.pdfNotReady] = pdfNotReady;
+
+
+
 export const createPdf = (state: DataState, action: Action) => {
 
          let id = new RegExp(action.payload.replace(/[/](zip|pdf)[/]/,"/.../"))
