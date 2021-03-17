@@ -2987,7 +2987,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   else return acc
                },{}) 
             }
-            console.log("(MSG)",JSON.stringify(otherData,null,3))
+            console.log("(MSG)",this.props.propid,JSON.stringify(otherData,null,3))
             window.top.postMessage(
                '{"@id":"'+prettId
                +'","skos:prefLabel":'+JSON.stringify(allProps.filter(p => p.type === skos+"prefLabel").map(p => ({"@value":p.value,"@language":p["xml:lang"]})))
@@ -4337,7 +4337,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   {  this.state.filters.facets && <span><br/>{this.renderResetF()}</span>}
                </Typography>);
 
-               if(!this.state.filters.facets && other && other.length)   
+               if(!this.state.filters.facets && other && other.length && !this.props.simple)   
                   message.push(<Typography className="no-result"><span>{I18n.t("search.seeO")}{I18n.t("misc.colon")} {other.map(o => <a onClick={(event) => this.handleCheck(event,o,true)} class="uri-link">{I18n.t("types."+o.toLowerCase(),{count:2})}</a>)}</span></Typography>)
             }
          } 
