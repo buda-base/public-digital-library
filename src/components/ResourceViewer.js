@@ -6932,6 +6932,9 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
    
          let sendMsg = (ev,prevent = false) => {
+
+            if(this.props.loading) return ;
+
             if(this.props.simple /*&& this.props.propid*/) {
                let otherData = {}, prettId = this.props.IRI;
                /*
