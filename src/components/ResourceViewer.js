@@ -6930,11 +6930,41 @@ perma_menu(pdfLink,monoVol,fairUse,other)
             if(infoPanelR && infoPanelR.length) infoPanelR = rend(infoPanelR)
          }
 
+   
+         let sendMsg = (ev,prevent = false) => {
+            if(this.props.simple /*&& this.props.propid*/) {
+               let otherData = {}, prettId = this.props.IRI;
+               /*
+               if(_T === "Person") {
+                  otherData = allProps.filter(e => [bdo+"personEvent"].includes(e.type)).map(e => this.props.assoRes[e.value]).reduce( (acc,e) =>{
+                     let t = e.filter(f => f.type === rdf+"type")
+                     if(t.length) return { ...acc, [shortUri(t[0].value, true)]:e.filter(e => [bdo+"onYear", bdo+"notBefore", bdo+"notAfter", bdo+"eventWhere"].includes(e.type))
+                        .reduce( (subacc,p)=>( {...subacc, [shortUri(p.type, true)]: shortUri(p.value, true) }),{}) }
+                     else return acc
+                  },{}) 
+               }
+               */
+               let msg = 
+                  '{"@id":"'+prettId+'"'
+                  +',"skos:prefLabel":'+JSON.stringify(this.getResourceElem(skos+"prefLabel").map(p => ({"@value":p.value,"@language":p.lang})))
+                  +',"tmp:keyword":{"@value":"'+this.props.IRI+'","@language":""}'
+                  +',"tmp:propid":"'+this.props.propid+'"'
+                  +(otherData?',"tmp:otherData":'+JSON.stringify(otherData):'')
+                  +'}'
+               console.log("(MSG)",this.props.propid,JSON.stringify(otherData,null,3),msg)
+               window.top.postMessage(msg, "*") // TODO set target url for message
+               if(prevent) {
+                  ev.preventDefault()
+                  ev.stopPropagation()
+                  return false;
+               }
+            }
+         }
          return (
          [getGDPRconsent(this),
          <div class={isMirador?"H100vh OF0":""}>
             {infoPanelR}
-            <div className={"resource "+getEntiType(this.props.IRI).toLowerCase()}>               
+            <div className={"resource "+getEntiType(this.props.IRI).toLowerCase() + (this.props.simple?" simple":"")} {...this.props.simple?{onClick:sendMsg}:{}}>                              
                {searchUrl && <div class="ariane">
                   <Link to={searchUrl.startsWith("latest")?searchUrl:"/search?"+searchUrl} onClick={(ev) => {
                      this.props.onLoading("search",true)                     

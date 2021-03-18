@@ -314,6 +314,17 @@ const makeMainRoutes = () => {
                               {({ isLatestVersion, emptyCacheStorage }) => (<ResourceViewerContainer  auth={auth} history={history} IRI={IRI}/> )}
                            </ClearCache>
                         )}}/>
+
+                     <Route path="/simple/:IRI" render={(props) => {
+                        let IRI = props.match.params.IRI
+                        let get = qs.parse(history.location.search)
+                        if(get.part && get.part !== IRI) get.root = IRI
+                        store.dispatch(initiateApp(get,IRI));                     
+                        return (
+                           <ClearCache auto={true} duration={20*60*1000}>
+                              {({ isLatestVersion, emptyCacheStorage }) => (<ResourceViewerContainer  auth={auth} history={history} IRI={IRI} simple={true} propid={get.for}/> )}
+                           </ClearCache>
+                        )}}/>
                      <Route render={(props) => { return <Redirect404  history={history}  auth={auth}/> }}/>
                      <Route path="/scripts/" onEnter={() => window.location.reload(true)} />
                   </Switch>

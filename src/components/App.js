@@ -2976,33 +2976,6 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
       //loggergen.log("id",id,prettId)
 
 
-      let sendMsg = (ev,prevent = false) => {
-         if(this.props.simple) {
-            let otherData = {};
-            if(T === "Person") {
-               otherData = allProps.filter(e => [bdo+"personEvent"].includes(e.type)).map(e => this.props.assoRes[e.value]).reduce( (acc,e) =>{
-                  let t = e.filter(f => f.type === rdf+"type")
-                  if(t.length) return { ...acc, [shortUri(t[0].value, true)]:e.filter(e => [bdo+"onYear", bdo+"notBefore", bdo+"notAfter", bdo+"eventWhere"].includes(e.type))
-                     .reduce( (subacc,p)=>( {...subacc, [shortUri(p.type, true)]: shortUri(p.value, true) }),{}) }
-                  else return acc
-               },{}) 
-            }
-            console.log("(MSG)",this.props.propid,JSON.stringify(otherData,null,3))
-            window.top.postMessage(
-               '{"@id":"'+prettId
-               +'","skos:prefLabel":'+JSON.stringify(allProps.filter(p => p.type === skos+"prefLabel").map(p => ({"@value":p.value,"@language":p["xml:lang"]})))
-               +',"tmp:keyword":{"@value":"'+lucenequerytokeyword(this.props.keyword)+'","@language":"'+this.props.language+'"}'
-               +',"tmp:propid":"'+this.props.propid+'"'
-               +(otherData?',"tmp:otherData":'+JSON.stringify(otherData):'')
-               +'}', 
-               "*") // TODO set target url for message
-            if(prevent) {
-               ev.preventDefault()
-               ev.stopPropagation()
-               return false;
-            }
-         }
-      }
 
       let status = "",warnStatus,warnLabel
 
@@ -3152,6 +3125,39 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          else
             resUrl = (url?url.replace(/^https?:/,""):id.replace(/^https?:/,""))
             //retList.push( <Link key={n} to={url?url.replace(/^https?:/,""):id.replace(/^https?:/,"")} target="_blank" className="result">{ret}</Link> )
+
+
+
+
+         let sendMsg = (ev,prevent = false) => {
+            if(this.props.simple) {
+               let otherData = {};
+               if(T === "Person") {
+                  otherData = allProps.filter(e => [bdo+"personEvent"].includes(e.type)).map(e => this.props.assoRes[e.value]).reduce( (acc,e) =>{
+                     let t = e.filter(f => f.type === rdf+"type")
+                     if(t.length) return { ...acc, [shortUri(t[0].value, true)]:e.filter(e => [bdo+"onYear", bdo+"notBefore", bdo+"notAfter", bdo+"eventWhere"].includes(e.type))
+                        .reduce( (subacc,p)=>( {...subacc, [shortUri(p.type, true)]: shortUri(p.value, true) }),{}) }
+                     else return acc
+                  },{}) 
+               }
+               if(!prettId.startsWith("bdr:")) otherData["tmp:externalUrl"] = resUrl
+               let msg = 
+                  '{"@id":"'+prettId+'"'
+                  +',"skos:prefLabel":'+JSON.stringify(allProps.filter(p => p.type === skos+"prefLabel").map(p => ({"@value":p.value,"@language":p["xml:lang"]})))
+                  +',"tmp:keyword":{"@value":"'+lucenequerytokeyword(this.props.keyword)+'","@language":"'+this.props.language+'"}'
+                  +',"tmp:propid":"'+this.props.propid+'"'
+                  +(otherData?',"tmp:otherData":'+JSON.stringify(otherData):'')
+                  +'}'
+               console.log("(MSG)",this.props.propid,JSON.stringify(otherData,null,3),msg)
+               window.top.postMessage(msg, "*") // TODO set target url for message
+               if(prevent) {
+                  ev.preventDefault()
+                  ev.stopPropagation()
+                  return false;
+               }
+            }
+         }
+
 
          let getIconLink = (resUrl,div) => {
 
