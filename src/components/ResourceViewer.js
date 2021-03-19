@@ -6933,20 +6933,42 @@ perma_menu(pdfLink,monoVol,fairUse,other)
    
          let sendMsg = (ev,prevent = false) => {
 
-            if(this.props.loading) return ;
+            if(this.props.loading || !this.props.resources || !this.props.resources[this.props.IRI] || !this.props.resources[this.props.IRI][fullUri(this.props.IRI)]) return ;
 
             if(this.props.simple /*&& this.props.propid*/) {
                let otherData = {}, prettId = this.props.IRI;
-               /*
+               
                if(_T === "Person") {
+                  let pEv = this.getResourceElem(bdo+"personEvent")
+                  if(pEv) for(let p of pEv) {
+                     let elem = this.getResourceBNode(p.value)                     
+                     //console.log("elem:",p.value,elem)
+                     if(elem) {
+                        let prop = elem[rdf+"type"]
+                        if(prop && prop.length) prop = shortUri(prop[0].value, true)
+                        else prop = false
+                        if(prop) {
+                           let data 
+                           [bdo+"onYear", bdo+"notBefore", bdo+"notAfter", bdo+"eventWhere"].map(e => {
+                              if(!data) data = {}
+                              if(elem[e] && elem[e].length) data[shortUri(e,true)] = shortUri(elem[e][0].value)
+                           })
+                           if(data) otherData[prop] = data
+                        }
+                     }
+                  }
+                  
+                  
+                  /*
                   otherData = allProps.filter(e => [bdo+"personEvent"].includes(e.type)).map(e => this.props.assoRes[e.value]).reduce( (acc,e) =>{
                      let t = e.filter(f => f.type === rdf+"type")
                      if(t.length) return { ...acc, [shortUri(t[0].value, true)]:e.filter(e => [bdo+"onYear", bdo+"notBefore", bdo+"notAfter", bdo+"eventWhere"].includes(e.type))
                         .reduce( (subacc,p)=>( {...subacc, [shortUri(p.type, true)]: shortUri(p.value, true) }),{}) }
                      else return acc
                   },{}) 
+                  */
                }
-               */
+               
                let msg = 
                   '{"@id":"'+prettId+'"'
                   +',"skos:prefLabel":'+JSON.stringify(this.getResourceElem(skos+"prefLabel").map(p => ({"@value":p.value,"@language":p.lang})))
