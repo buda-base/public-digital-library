@@ -6957,21 +6957,14 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                         }
                      }
                   }
-                  
-                  
-                  /*
-                  otherData = allProps.filter(e => [bdo+"personEvent"].includes(e.type)).map(e => this.props.assoRes[e.value]).reduce( (acc,e) =>{
-                     let t = e.filter(f => f.type === rdf+"type")
-                     if(t.length) return { ...acc, [shortUri(t[0].value, true)]:e.filter(e => [bdo+"onYear", bdo+"notBefore", bdo+"notAfter", bdo+"eventWhere"].includes(e.type))
-                        .reduce( (subacc,p)=>( {...subacc, [shortUri(p.type, true)]: shortUri(p.value, true) }),{}) }
-                     else return acc
-                  },{}) 
-                  */
                }
                
+               // TODO add altLabel/prefLabel from sameAs (related to #438)
                let msg = 
                   '{"@id":"'+prettId+'"'
-                  +',"skos:prefLabel":'+JSON.stringify(this.getResourceElem(skos+"prefLabel").map(p => ({"@value":p.value,"@language":p.lang})))
+                  +',"skos:prefLabel":'+JSON.stringify(this.getResourceElem(skos+"prefLabel")
+                     .filter(p => !p.fromSameAs || p.allSameAs && p.allSameAs.length && p.allSameAs.filter(a => a.startsWith(bdr)).length)
+                     .map(p => ({"@value":p.value,"@language":p.lang})))
                   +',"tmp:keyword":{"@value":"'+this.props.IRI+'","@language":""}'
                   +',"tmp:propid":"'+this.props.propid+'"'
                   +(otherData?',"tmp:otherData":'+JSON.stringify(otherData):'')
