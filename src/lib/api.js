@@ -734,7 +734,7 @@ export default class API {
 
              let searchType = "typeSimple" 
              let R_TYPE 
-             if(typ[0] === "Scan") searchType = "instanceFacet" 
+             if(typ[0] === "Scan") searchType = "iinstanceFacet" 
              else if(typ[0] === "Etext") { 
                 if(inEtext) { 
                    searchType = "etextContentFacetGraphInInstance"

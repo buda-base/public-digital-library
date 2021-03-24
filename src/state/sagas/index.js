@@ -1818,8 +1818,10 @@ function rewriteAuxMain(result,keyword,datatype,sortBy,language)
                if(chunks.length > 1) res = res.concat(chunks.slice(1).map(e => ({...e.e, expand:e.expand, startChar:e.m, endChar:e.p})))
             }
 
-            if(isTypeScan && !isScan) return ({...acc})
-            else return ({...acc, [k]:res})
+            
+            //if(isTypeScan && !isScan) return ({...acc})
+            //else 
+            return ({...acc, [k]:res})
          },{})
         
          //loggergen.log("dWa:",language,t,dataWithAsset,sortBy,reverse,canPopuSort)
