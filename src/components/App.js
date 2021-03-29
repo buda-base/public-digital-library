@@ -3127,11 +3127,15 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             //retList.push( <Link key={n} to={url?url.replace(/^https?:/,""):id.replace(/^https?:/,"")} target="_blank" className="result">{ret}</Link> )
 
 
-
+         let getBDOtype = (t) => {
+            // TODO: check compliance with BLMP
+            if(t === "Scans") return "bdo:ImageInstance"
+            return "bdo:"+t
+         }
 
          let sendMsg = (ev,prevent = false) => {
             if(this.props.simple) {
-               let otherData = {};
+               let otherData =  { "tmp:type": getBDOtype(T) } ;
                if(T === "Person") {
                   otherData = allProps.filter(e => [bdo+"personEvent"].includes(e.type)).map(e => this.props.assoRes[e.value]).reduce( (acc,e) =>{
                      let t = e.filter(f => f.type === rdf+"type")

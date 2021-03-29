@@ -6936,7 +6936,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
             if(this.props.loading || !this.props.resources || !this.props.resources[this.props.IRI] || !this.props.resources[this.props.IRI][fullUri(this.props.IRI)]) return ;
 
             if(this.props.simple /*&& this.props.propid*/) {
-               let otherData = {}, prettId = this.props.IRI;
+               let otherData = { "tmp:type": this.getResourceElem(rdf+"type").map(e => shortUri(e.value)) }, prettId = this.props.IRI;
                
                if(_T === "Person") {
                   let pEv = this.getResourceElem(bdo+"personEvent")
@@ -6960,9 +6960,11 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                }
                
                // TODO add altLabel/prefLabel from sameAs (related to #438)
+               let labels = this.getResourceElem(skos+"prefLabel")
+               if(!labels) labels = []
                let msg = 
                   '{"@id":"'+prettId+'"'
-                  +',"skos:prefLabel":'+JSON.stringify(this.getResourceElem(skos+"prefLabel")
+                  +',"skos:prefLabel":'+JSON.stringify(labels
                      .filter(p => !p.fromSameAs || p.allSameAs && p.allSameAs.length && p.allSameAs.filter(a => a.startsWith(bdr)).length)
                      .map(p => ({"@value":p.value,"@language":p.lang})))
                   +',"tmp:keyword":{"@value":"'+this.props.IRI+'","@language":""}'
