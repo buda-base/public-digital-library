@@ -82,6 +82,7 @@
 body:not(.inApp) .scroll-view .provider div,
 body:not(.inApp) .image-view .provider { top:calc(100vh - 120px - 70px); }
 
+body.auto_rela .inApp.mirador-container .slotIconContainer { position:absolute !important ;}
 
 /* TODO show only one scroll bar whern mirador is open & no horizontal scroll when non need*/
 
