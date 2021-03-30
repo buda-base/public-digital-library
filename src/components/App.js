@@ -3135,7 +3135,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
          let sendMsg = (ev,prevent = false) => {
             if(this.props.simple) {
-               let otherData =  { "tmp:type": getBDOtype(T) } ;
+               let otherData =  {} ;
                if(T === "Person") {
                   otherData = allProps.filter(e => [bdo+"personEvent"].includes(e.type)).map(e => this.props.assoRes[e.value]).reduce( (acc,e) =>{
                      let t = e.filter(f => f.type === rdf+"type")
@@ -3144,6 +3144,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      else return acc
                   },{}) 
                }
+               otherData["tmp:type"] = getBDOtype(T) 
                if(!prettId.startsWith("bdr:")) otherData["tmp:externalUrl"] = resUrl
                let msg = 
                   '{"@id":"'+prettId+'"'
