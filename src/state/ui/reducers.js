@@ -184,7 +184,7 @@ export const updateFacets = (state: UIState, action: actions.LoadingAction) => {
 
                     //console.log("q",q,meta[q].dict)
 
-                    if(meta[q] && meta[q].dict) for(let _e of Object.keys(meta[q].dict)) {
+                    if(meta && meta[q] && meta[q].dict) for(let _e of Object.keys(meta[q].dict)) {
                         let e = meta[q].dict[_e]
                         let flat = {}
                         

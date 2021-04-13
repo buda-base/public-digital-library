@@ -1096,10 +1096,11 @@ class App extends Component<Props,State> {
 
    }
 
-   requestSearch(key:string,label?:string,lang?:string,forceSearch:boolean=false,dataInfo:string)
+   requestSearch(key:string,label?:string,lang?:string,forceSearch:boolean=false,dataInfo:string,menu_i?:number)
    {
       // DONE trigger find as date/id when press return
-      let idx = this.state.langIndex
+      let idx = menu_i      
+      if(idx === undefined) idx = this.state.langIndex
       if(idx === undefined) idx = 0 
       if(idx > this.state.dataSource.length) idx = 0
       
@@ -1115,7 +1116,7 @@ class App extends Component<Props,State> {
          }
       }
 
-      loggergen.log("key:",key,label,lang,this.state.searchTypes,dataInfo)
+      loggergen.log("key:",idx,tab,key,label,lang,this.state.searchTypes,dataInfo)
 
       // moved this from else at bottom of function to fix adding ~1 suffix
       lang = (lang?lang:this.getLanguage())
@@ -5603,8 +5604,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                                              }
                                           } 
 
+                                          if(this.state.keyword) this.requestSearch(kw,null,tab[1], isRID && i === 1, (isRID == "IDorDate"?tab[1].replace(/^.*(date|identifier).*$/,"$1"):null), i)
                                           this.setState({...this.state,langIndex:i,dataSource:[]});
-                                          if(this.state.keyword) this.requestSearch(kw,null,tab[1], isRID && i === 1, (isRID == "IDorDate"?tab[1].replace(/^.*(date|identifier).*$/,"$1"):null))
                                           
                                        }} ><span class="maxW">{ tab.length == 1 ?"":tab[0].replace(/["]/g,"")}</span> <SearchIcon style={{padding:"0 10px"}}/><span class="lang">{tab.length == 1 ? I18n.t("home."+tab[0]):(I18n.t(""+(searchLangSelec[tab[1]]?searchLangSelec[tab[1]]:(languages[tab[1]]?languages[tab[1]]:tab[1])))) }</span></MenuItem> ) 
                                     })
