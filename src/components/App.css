@@ -867,7 +867,7 @@ a.result + #matches .result-content #icon > :not(.thumb) img { width:40px; }
 .result-content #permalink.wInstance { top:100px; }
 
 
-.result-content { position:relative;  scroll-margin:80px; margin:0 0px; padding: 35px 25px; min-height:65px; } 
+.result-content { position:relative;  scroll-margin:80px; margin:0 0px; padding: 35px 25px; min-height:80px; } 
 .result-content+.result-content::before { content:" ";width:calc(100% - 80px - 50px);display:block;position:absolute;
    border-top: 4px solid rgba(239,238,238,0.6); left:80px; top:-2px; 
 }
