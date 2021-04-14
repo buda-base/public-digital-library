@@ -1524,8 +1524,9 @@ h4:not(:hover) > .lang
 .resource .data#first-image .src.orig,
 .resource .data .header .src.orig { cursor:pointer;}
 
+.resource .data#first-image { position:relative; }
 
-.resource .data#first-image .src.orig:not(#a) { margin-right:35px; margin-bottom: 70px; z-index:10; display:block !important;}
+.resource .data#first-image .src:not(#a) { margin-right:35px; margin-bottom: 70px; z-index:10; display:block !important;}
 
 .resource .data#first-image.simple { position:relative;}
 

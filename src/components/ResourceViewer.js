@@ -5367,7 +5367,6 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                /*{...(this.props.config.hideViewers?{"onClick":() => this.showMirador(null,null,true),"style":{cursor:"pointer"}}:{})}*/ >
                   <Loader className="uvLoader" loaded={this.state.imageLoaded} color="#fff"/>
                   <img onError={(e)=>this.setState({...this.state,imageError:"!"})} onLoad={(e)=>this.setState({...this.state,imageLoaded:true,imageError:false})} src={iiifThumb+"/full/!1000,500/0/default.jpg"} /> 
-                  {src}
                </a>
             </div>
          )
@@ -5379,13 +5378,13 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                /*{...(this.props.config.hideViewers?{"onClick":() => this.showMirador(null,null,true),"style":{cursor:"pointer"}}:{})}*/ >
                   <Loader className="uvLoader" loaded={this.state.imageLoaded} color="#fff"/>
                   <img onError={(e)=>this.setState({...this.state,imageError:true})} onLoad={(e)=>this.setState({...this.state,imageLoaded:true})} src={iiifThumb+"/full/,500/0/default.jpg"} /> 
-                  {src}
                </a>
             </div>
          )
       else if(!this.props.manifestError && this.props.imageAsset && !etext)
          return  ( 
          <div class="data" id="first-image">
+            { /*(prov && prov !== "BDRC" && orig) &&*/  src }
             <a onClick={handleViewer} onContextMenu={handleViewer} href={viewUrl.pathname+viewUrl.search} target="_blank" className={"firstImage "+(this.state.imageLoaded?"loaded":"")} 
                /*{...(this.props.config.hideViewers?{"onClick":this.showMirador.bind(this),"style":{cursor:"pointer"}}:{})}*/ >
                <Loader className="uvLoader" loaded={this.state.imageLoaded} color="#fff"/>
@@ -5422,7 +5421,6 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                      }
                   </div>
                */}
-               {src}
             </a>
          </div>
          )
