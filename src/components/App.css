@@ -1531,10 +1531,12 @@ h4:not(:hover) > .lang
 .resource .data#first-image.simple { position:relative;}
 
 .resource .data#first-image .src img,
-.resource .data .header .src img { background-color: white; width:calc(100% - 3px * 2 - 2px * 2);padding:2px; margin-left:3px; display:inline-block; 
+.resource .data .header .src img { background-color: white; width:calc(100% - 3px * 2 - 2px * 2 );padding:2px; margin-left:3px; display:inline-block; 
 vertical-align:middle;}
 
+.resource .data#first-image .src img[src^="/SBB."],
 .resource .data .header .src img[src^="/SBB."] { padding:0; width:calc(100% - 3px * 2) ;}
+.resource .data#first-image .src img[src^="/BL."],
 .resource .data .header .src img[src^="/BL."] { padding:0;margin:0;width:100%;}
    /* background-size:90% auto;background-position:center;background-repeat:no-repeat; } */
 

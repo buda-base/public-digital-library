@@ -5289,12 +5289,13 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
 
       let src //= <div class="src"><img src="/logo.svg"/></div> 
-      let legal = this.getResourceElem(adm+"metadataLegal"), legalD, sameLegalD
+      let legal = this.getResourceElem(adm+(T=="Images"?"contentLegal":"metadataLegal")), legalD, sameLegalD
       if(legal && legal.length) legal = legal.filter(p => !p.fromSameAs)
       if(legal && legal.length && legal[0].value && this.props.dictionary) { 
          legalD = this.props.dictionary[legal[0].value]
          sameLegalD = legalD
       }
+      
       let prov,orig
       if(sameLegalD) { 
          prov = sameLegalD[adm+"provider"]
