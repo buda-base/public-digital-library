@@ -5367,6 +5367,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                /*{...(this.props.config.hideViewers?{"onClick":() => this.showMirador(null,null,true),"style":{cursor:"pointer"}}:{})}*/ >
                   <Loader className="uvLoader" loaded={this.state.imageLoaded} color="#fff"/>
                   <img onError={(e)=>this.setState({...this.state,imageError:"!"})} onLoad={(e)=>this.setState({...this.state,imageLoaded:true,imageError:false})} src={iiifThumb+"/full/!1000,500/0/default.jpg"} /> 
+                  {src}
                </a>
             </div>
          )
@@ -5378,6 +5379,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                /*{...(this.props.config.hideViewers?{"onClick":() => this.showMirador(null,null,true),"style":{cursor:"pointer"}}:{})}*/ >
                   <Loader className="uvLoader" loaded={this.state.imageLoaded} color="#fff"/>
                   <img onError={(e)=>this.setState({...this.state,imageError:true})} onLoad={(e)=>this.setState({...this.state,imageLoaded:true})} src={iiifThumb+"/full/,500/0/default.jpg"} /> 
+                  {src}
                </a>
             </div>
          )
@@ -5420,6 +5422,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                      }
                   </div>
                */}
+               {src}
             </a>
          </div>
          )

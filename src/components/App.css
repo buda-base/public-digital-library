@@ -2859,7 +2859,7 @@ a.login { text-decoration:underline; cursor:pointer; }
 .instance-link .urilink:hover,
 .match .urilink:hover, 
 .match .multi a:hover,
-.resource .data a:hover { border-bottom:1px solid #d73449; }
+.resource .data:not(#first-image) a:hover { border-bottom:1px solid #d73449; }
 
 .urilink { position:relative; }
 /*h4:not(.sameAs)*/ .urilink.hasIcon, h4.hasIcon { padding-left:0px; }
