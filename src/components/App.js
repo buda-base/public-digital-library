@@ -1093,7 +1093,10 @@ class App extends Component<Props,State> {
 
       if(this.state.uriPage !== uriPage || this.state.backToWorks !== backToWorks || (encoded !== this.state.filters.encoded ) || (scrolled && this.state.scrolled !== scrolled) )
          this.setState({...this.state, repage:true, uriPage, backToWorks, scrolled, collapse, ...(filters?{filters}:{})})
-
+      else if(get.t) {
+         let dt = get.t.split(",").filter(d => !this.state.filters.datatype.includes(d))
+         if(dt.length) this.setState({...this.state, filters:{...this.state.filters, datatype:dt}})
+      }
    }
 
    requestSearch(key:string,label?:string,lang?:string,forceSearch:boolean=false,dataInfo:string,menu_i?:number)
@@ -1146,10 +1149,8 @@ class App extends Component<Props,State> {
          label = [ "Instance" ] 
       }
 
-      let state = { ...this.state, dataSource:[], leftPane:true, filters:{ datatype:[ ...searchDT ] } }
-      this.setState(state)
 
-      loggergen.log("search::",key,_key,label) //,this.state,!global.inTest ? this.props:null)
+      loggergen.log("search::",key,_key,label,searchDT) //,this.state,!global.inTest ? this.props:null)
 
       let hasOpen = ""
       if(label.includes("Instance") || label.includes("Scan")) hasOpen = "&f=asset,inc,tmp:hasOpen" ;
@@ -1195,6 +1196,10 @@ class App extends Component<Props,State> {
          
          // TODO add permanent filters (here ?)
       }
+
+
+      let state = { ...this.state, dataSource:[], leftPane:true, filters:{ datatype:[ ...searchDT ] } }
+      this.setState(state)
 
 
       /*
@@ -1430,7 +1435,7 @@ class App extends Component<Props,State> {
 
       }
 
-      loggergen.log("gDsFp",eq,props,state,s,state.id,state.LpanelWidth)
+      loggergen.log("gDsFp",eq,props,state,s,state.id,state.LpanelWidth,JSON.stringify(state.filters))
 
       // pagination settings
       let d, newid = state.filters.datatype.sort()+"#"+props.keyword+"@"+props.language      
@@ -3786,9 +3791,10 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
       let list = results.results.bindings
 
       let displayTypes = types //["Person"]
-      if(this.state.filters.datatype.indexOf("Any") === -1) { 
-         displayTypes = displayTypes.filter(d => this.state.filters.datatype.indexOf(d) !== -1) ;
+      if(this.state.filters.datatype.indexOf("Any") !== -1) { 
+         console.warn("!Any?"+types)
       }
+      displayTypes = displayTypes.filter(d => this.state.filters.datatype.indexOf(d) !== -1) ;
 
       //if(displayTypes.length) displayTypes = displayTypes.sort(function(a,b) { return searchTypes.indexOf(a) - searchTypes.indexOf(b) })
 
@@ -4283,7 +4289,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             loggergen.log("other:",other)
             
             //if(other && other.length) 
-            if(!this.props.loading) {
+            if(!this.props.loading && this.state.filters.datatype[0] !== "Any" ) {
                message.push(<Typography className="no-result">
                   { lang && I18n.t("search.filters.noresults",{ 
                      keyword:'"'+lucenequerytokeyword(this.props.keyword)+'"', 
