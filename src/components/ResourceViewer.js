@@ -4606,12 +4606,12 @@ perma_menu(pdfLink,monoVol,fairUse,other)
             >
 
                { (this.props.eTextRefs && this.props.eTextRefs.mono) && 
-                     <a target="_blank" title={I18n.t("resource.version",{format:"TXT"})} rel="alternate" type="text"  download href={this.props.eTextRefs.mono.replace(/bdr:/,bdr)+".txt"}>
+                     <a target="_blank" title={I18n.t("resource.version",{format:"TXT"})} rel="alternate" type="text"  download href={fullUri(this.props.eTextRefs.mono).replace(/^http:/,"https:")+".txt"}>
                         <MenuItem>{I18n.t("resource.exportDataAs",{data: I18n.t("types.etext"), format:"TXT"})}</MenuItem>
                      </a> }
 
                { isEtextVol && 
-                     <a target="_blank" title={I18n.t("resource.version",{format:"TXT"})} rel="alternate" type="text"  download href={this.props.IRI?this.props.IRI.replace(/bdr:/,bdr)+".txt":""}>
+                     <a target="_blank" title={I18n.t("resource.version",{format:"TXT"})} rel="alternate" type="text"  download href={this.props.IRI?fullUri(this.props.IRI).replace(/^http:/,"https:")+".txt":""}>
                         <MenuItem>{I18n.t("resource.exportDataAs",{data: I18n.t("types.etext"), format:"TXT"})}</MenuItem>
                      </a> }
 
@@ -5541,7 +5541,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
       return (
          <div id="etext-nav">
             <div>
-               <a id="DL" class="on" target="_blank" rel="alternate" type="text" download href={this.props.IRI?this.props.IRI.replace(/bdr:/,bdr)+".txt":""}>{I18n.t("mirador.downloadE")}<img src="/icons/DLw.png"/></a>
+               <a id="DL" class="on" target="_blank" rel="alternate" type="text" download href={this.props.IRI?fullUri(this.props.IRI).replace(/^http:/,"https:")+".txt":""}>{I18n.t("mirador.downloadE")}<img src="/icons/DLw.png"/></a>
                <div id="control">
                   <span title={I18n.t("mirador.decrease")} class={!size||size > 0.6?"on":""} onClick={(e)=>etextSize(false)}><img src="/icons/Zm.svg"/></span>
                   <span title={I18n.t("mirador.increase")} class={!size||size < 2.4?"on":""} onClick={(e)=>etextSize(true)}><img src="/icons/Zp.svg"/></span>
@@ -5650,7 +5650,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                            //nav.push(<span>|</span>)
                            nav.push(<Link to={"/show/"+txt[0].eTextResource+"?backToEtext="+this.props.IRI+"#open-viewer"} class="ulink">{I18n.t("result.openE")}</Link>)
                            nav.push(<span>|</span>)
-                           nav.push(<a href={fullUri(txt[0].eTextResource)+".txt"} class="ulink"  download type="text" target="_blank">{I18n.t("mirador.downloadE")}</a>)
+                           nav.push(<a href={fullUri(txt[0].eTextResource).replace(/^http:/,"https:")+".txt"} class="ulink"  download type="text" target="_blank">{I18n.t("mirador.downloadE")}</a>)
 
                         }
                         else {
@@ -5667,7 +5667,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                      //nav.push(<span>|</span>)
                      nav.push(<Link to={"/show/"+g.eTextResource+"?backToEtext="+this.props.IRI+"#open-viewer"} class="ulink">{I18n.t("result.openE")}</Link>)
                      nav.push(<span>|</span>)
-                     nav.push(<a href={fullUri(g.eTextResource)+".txt"} class="ulink" download type="text" target="_blank">{I18n.t("mirador.downloadE")}</a>)
+                     nav.push(<a href={fullUri(g.eTextResource).replace(/^http:/,"https:")+".txt"} class="ulink" download type="text" target="_blank">{I18n.t("mirador.downloadE")}</a>)
 
                   }
 
