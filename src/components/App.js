@@ -1114,6 +1114,7 @@ class App extends Component<Props,State> {
          let isRID = !languages[tab[1]]
          if(isRID && !kw.includes(":")) {
             if(tab[1].match(/date|identifier/)) {
+               key = key.replace(/^d([0-9]+)/,"D$1")
                dataInfo = tab[1].replace(/^.*?([^ ]+)$/,"$1")
             }
          }
