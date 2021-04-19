@@ -510,7 +510,7 @@ export class Profile extends Component<Props,State> {
                     <FormControl className="FC">
                       <InputLabel htmlFor="interest" /*classes={{root:classes.root}}*/ >{I18n.t("user.area")}</InputLabel>
                       <Select
-                        classes={{root:"multiple-select",selected:"youpi"}}                        
+                        classes={{root:"multiple-select",select:"multi-selec"}}                        
                         value={val.interest}
                         onChange={handleChange}
                         inputProps={{ name:"interest", id: 'interest'}}
