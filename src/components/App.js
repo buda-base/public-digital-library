@@ -4304,8 +4304,13 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   {  this.state.filters.facets && <span><br/>{this.renderResetF()}</span>}
                </Typography>);
 
-               if(!this.state.filters.facets && other && other.length)   
+               if(!this.state.filters.facets && other && other.length) 
                   message.push(<Typography className="no-result"><span>{I18n.t("search.seeO")}{I18n.t("misc.colon")} {other.map(o => <a onClick={(event) => this.handleCheck(event,o,true)} class="uri-link">{I18n.t("types."+o.toLowerCase(),{count:2})}</a>)}</span></Typography>)
+               else if(this.props.language === "id" && this.props.keyword.match(/(^\"[UWPGRCTILE][A-Z0-9_]+\"$)|(^\"([cpgwrt]|mw|wa|ws)\d[^ ]*\"$)/))
+                  message.push(<Typography className="no-result" style={{ lineHeight:"120%" }}>
+                     <Link style={{ marginLeft:0 }} className="uri-link" to={"/show/"+this.props.keyword.toUpperCase().replace(/^"([^:]+)"$/,"bdr:$1")}>Find resource with this RID</Link>
+                  </Typography>)
+               
             }
          } 
 

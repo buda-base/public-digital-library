@@ -152,7 +152,7 @@ footer#site-footer.no-syncs > div.head::before { background-color:#efefef; }
 
 #root .App .SearchPane,
 #root > div > .resource {   box-sizing: content-box; background-color:#efefef; width:1160px; margin-left:auto;margin-right:auto;
-   max-width:97%;background-color:#efefef;  position:relative;}
+   max-width:97%;background-color:#efefef;  position:relative; }
 
 #root > div > .resource {  padding:155px 140px; padding-bottom:75px; display:flex; text-align:left; }
 
@@ -1565,6 +1565,11 @@ vertical-align:middle;}
 .resource.role .data > .header::before { background-image:url("/icons/search/role.svg"); background-size:58px auto;  }
 .resource .data.related .rel-or-crea.all .header.product::before,
 .resource.product .data > .header::before { background-image:url("/icons/search/product.svg"); background-size:58px auto;  }
+
+
+.resource .data.related {
+   overflow:hidden !important;
+}
 
 .resource .data .header.loading::before { background-image:none !important; }
 
