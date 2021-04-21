@@ -1167,8 +1167,7 @@ class App extends Component<Props,State> {
          let uc = _key.split(":")
          _key = uc[0] + ":" + uc[1].toUpperCase()         
          
-         if(!forceSearch && !this.state.langIndex) {
-            
+         if(!forceSearch && !idx) { 
 
             this.props.history.push({pathname:"/show/"+_key})
          }
