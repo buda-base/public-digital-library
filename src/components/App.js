@@ -4312,7 +4312,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      rid = this.props.keyword.split(":")
                      rid = rid[0].toLowerCase()+":"+rid[1].toUpperCase()
                   } else {
-                     rid = rid.toUpperCase().replace(/^"?([^:]+)"?$/,"bdr:$1")
+                     rid = rid.toUpperCase().replace(/^"?([^:"]+)"?$/,"bdr:$1")
                   }
                   message.push(<Typography className="no-result" style={{ lineHeight:"120%" }}>
                      <Link style={{ marginLeft:0 }} className="uri-link" to={"/show/"+rid}>Find resource with this RID</Link>
