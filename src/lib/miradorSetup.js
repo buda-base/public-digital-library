@@ -215,6 +215,8 @@ export function miradorSetUI(closeCollec, num)
 
 async function hasEtextPage(manifest) {
 
+   if(jQ("#viewer.inApp").length) return
+
    if(manifest) {
       /*
       let ut = manifest.replace(/^.*bdr:V([^/]+).*$/,"bdr:UT$1_0000")
