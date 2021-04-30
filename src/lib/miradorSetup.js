@@ -215,7 +215,7 @@ export function miradorSetUI(closeCollec, num)
 
 async function hasEtextPage(manifest) {
 
-   if(jQ("#viewer.inApp").length) return
+   if(jQ && jQ("#viewer.inApp").length) return
 
    if(manifest) {
       /*
