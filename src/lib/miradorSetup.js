@@ -116,6 +116,24 @@ export function miradorSetUI(closeCollec, num)
    }
 
 
+   //console.log("Mtrap",window.Mousetrap)      
+   window.Mousetrap.unbind("left")
+   window.Mousetrap.unbind("right")
+   window.Mousetrap.unbind("space")
+
+   window.Mousetrap.bind("esc", function(ev){
+      console.log("kp:",ev)
+      var elem = jQ("#breadcrumbs #return"), href = elem.attr("href")
+      if(!href) elem.click()
+      else { 
+         href = window.location.href.replace(/^(https?:\/\/[^/]+)\/.*/,"$1"+href)
+         window.location.assign(href); 
+      }
+      ev.preventDefault()
+      ev.stopPropagation()
+      return false;
+   })
+
 
    clearInterval(scrollTimer)
    clearInterval(scrollTimer2)
@@ -124,7 +142,6 @@ export function miradorSetUI(closeCollec, num)
    timerConf = setInterval( () => {
 
 
-      
 
       //console.log("miraconf...",window.maxW)
       jQ(".mirador-container .mirador-main-menu li a").addClass('on');
