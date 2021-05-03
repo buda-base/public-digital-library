@@ -116,10 +116,6 @@ export function miradorSetUI(closeCollec, num)
    }
 
 
-   //console.log("Mtrap",window.Mousetrap)      
-   window.Mousetrap.unbind("left")
-   window.Mousetrap.unbind("right")
-   window.Mousetrap.unbind("space")
 
    window.Mousetrap.bind("esc", function(ev){
       console.log("kp:",ev)
@@ -141,6 +137,10 @@ export function miradorSetUI(closeCollec, num)
    clearInterval(timerConf)
    timerConf = setInterval( () => {
 
+      //console.log("Mtrap",window.Mousetrap)      
+      window.Mousetrap.unbind("left")
+      window.Mousetrap.unbind("right")
+      window.Mousetrap.unbind("space")
 
 
       //console.log("miraconf...",window.maxW)
