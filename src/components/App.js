@@ -4046,11 +4046,21 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             if(sublist[o].filter(e => e.type && e.type === tmp+"forEtext").length > 0) id = sublist[o].filter(e => e.type === tmp+"forEtext")[0].value
             if(id.match(/bdrc[.]io/)) id = id.replace(/^.*?([^/]+)$/,"$1")
 
-            let lit ;
-            if(r.lit) lit = highlight(r.lit.value,lucenequerytokeywordmulti(this.props.keyword)) 
-            let lang ;
-            if(r.lit) lang= r.lit["lang"]
-            if(r.lit && !lang) lang = r.lit["xml:lang"]
+
+
+            let lit,lang ;
+            if(r.lit) { 
+               let val = getLangLabel(this,"",[r.lit]), kw = lucenequerytokeywordmulti(this.props.keyword) 
+               if(this.props.language) kw = getLangLabel(this,"",[ { "value":kw.join("__PIPE__"), "lang": this.props.language } ])
+               if(val && this.props.language) {
+                  lit = highlight(val.value,kw.value.replace(/ *\[__PIPE__\] */g,"|").trim())
+                  lang = val.lang
+               } else {
+                  lit = highlight(r.lit.value,lucenequerytokeywordmulti(this.props.keyword)) 
+                  lang= r.lit["lang"]
+                  if(!lang) lang = r.lit["xml:lang"]
+               }
+            }
             let typ ;
             //if(r.f && r.f.value) typ = r.f.value.replace(/^.*?([^/]+)$/,"$1")
 
