@@ -936,10 +936,14 @@ function miradorAddZoomer() {
             })
             
                
-            scrollT.find(".thumb-label").css({
-               "margin":10/coef,
-               "margin-bottom":20/coef,
-               "transform":"scale("+1/coef+")"
+            const tlab = scrollT.find(".thumb-label")
+            tlab.each((i,e)=> {
+               const el = jQ(e)
+               el.css({
+                  "margin":10/coef,
+                  "margin-bottom":(window.innerWidth <= 800 ?(el.is("[lang=bo]")?0.35:0.7):1.0)*20/coef,
+                  "transform":"scale("+1/coef+")"
+               })
             })
             
             let selec = jQ(".view-nav #Zmenu ul.select li[data-selected]")
