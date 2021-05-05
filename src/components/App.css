@@ -3751,13 +3751,15 @@ a.result + #matches.mobile,
 .App #results .more-details,
 .SidePane.left #closeSettings { display:none; }
 
-@media (min-device-width:768px)
+
+@media (min-device-width:801px)
 {
    .mobile-button.top,
    .nav .close { display:none; }
 }
 
-@media (max-width:768px)
+
+@media (max-width:800px)
 {
 
    

@@ -394,7 +394,7 @@ body.auto_rela .inApp.mirador-container .slotIconContainer { position:absolute !
 }
 
 
-@media (max-width:768px) {
+@media (max-width:799px) {
     /* .mirador-container .mirador-main-menu.user-buttons li:nth-last-child(-n+5):not(:last-child) { display:none; } */
 
     .mirador-container .repo-image { position:absolute;right:0; display:none;}

@@ -1000,7 +1000,7 @@ class App extends Component<Props,State> {
 
       /*
       window.onresize = function(ev) { 
-         if(window.innerWidth < window.innerHeight && window.screen.width < 768) {
+         if(window.innerWidth < window.innerHeight && window.screen.width < 800) {
             console.log("resize:",window.innerHeight);
             $("body").height(window.innerHeight)
          }
