@@ -4050,13 +4050,14 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
             let lit,lang ;
             if(r.lit) { 
-               let val = getLangLabel(this,"",[r.lit]), kw = lucenequerytokeywordmulti(this.props.keyword) 
-               if(this.props.language) kw = getLangLabel(this,"",[ { "value":kw.join("__PIPE__"), "lang": this.props.language } ])
+               let val = getLangLabel(this,"",[r.lit]), kw = lucenequerytokeywordmulti(this.props.keyword).map(v => v.trim().replace(/[་༌།]+$/,""))
+               // join by "EEEE" as it won't be affected in wylie from/to conversion 
+               if(this.props.language) kw = getLangLabel(this,"",[ { "value":kw.join("EEEE"), "lang": this.props.language } ])
                if(val && this.props.language) {
-                  lit = highlight(val.value,kw.value.replace(/ *\[__PIPE__\] */g,"|").trim())
+                  lit = highlight(val.value,kw.value.replace(/ *\[?EEEE\]? */g,"|"))
                   lang = val.lang
                } else {
-                  lit = highlight(r.lit.value,lucenequerytokeywordmulti(this.props.keyword)) 
+                  lit = highlight(r.lit.value,kw.join("|"))
                   lang= r.lit["lang"]
                   if(!lang) lang = r.lit["xml:lang"]
                }
