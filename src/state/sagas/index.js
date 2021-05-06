@@ -1735,7 +1735,7 @@ function rewriteAuxMain(result,keyword,datatype,sortBy,language)
    let langPreset = state.ui.langPreset
    if(!sortBy) sortBy = state.ui.sortBy
    let reverse = sortBy && sortBy.endsWith("reverse")
-   let canPopuSort = false, isScan, isTypeScan = datatype.includes("Scan"), inRoot
+   let canPopuSort = false, isScan, isTypeScan = datatype.includes("Scan"), inRoot, context
 
    result = Object.keys(result).reduce((acc,e)=>{
       if(e === "main") {
@@ -1750,6 +1750,7 @@ function rewriteAuxMain(result,keyword,datatype,sortBy,language)
 
             isScan = false       
             inRoot = false
+            context = []
 
             if(auth && !auth.isAuthenticated()) {	
                let status = result[e][k].filter(k => k.type === adm+"status" || k.type === tmp+"status")	
@@ -1767,6 +1768,16 @@ function rewriteAuxMain(result,keyword,datatype,sortBy,language)
                   return ({type:_tmp+"assetAvailability",value:e.type})
                } else if(e.type === bdo+"inRootInstance") {
                   inRoot = true
+               } else if(e.value && e.value.match && e.value.match(/[↦↤]/)) {
+                  if(e.type === _tmp+"labelMatch") {
+                     if(["works","instances","scans","etexts"].includes(t)) {
+                        context.push(_tmp+"titleContext")
+                     } else {
+                        context.push(_tmp+"nameContext")
+                     }
+                  } else {
+                     context.push(_tmp+"otherContext")
+                  }                  
                }
                return e
             } )
@@ -1774,6 +1785,10 @@ function rewriteAuxMain(result,keyword,datatype,sortBy,language)
             if(t === "instances") {
                if(!inRoot) res.push({type:_tmp+"versionType", value:_tmp+"standalone"})
                else res.push({type:_tmp+"versionType", value:_tmp+"partOfVersion"})
+            }
+
+            for(let ctx of context){
+               res.push({ type:_tmp+"matchContext", value: ctx})
             }
 
 

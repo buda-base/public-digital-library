@@ -188,7 +188,11 @@ const boTranslation = {
       "tmp:associatedCentury":"Century",
       "tmp:associatedAuthorCentury":"Author's Century",
       "tmp:ontologyProperty":"Ontology Property",
-      "tmp:hasRole":"Has Role"
+      "tmp:hasRole":"Has Role",
+      "tmp:matchContext":"Match Context",
+      "tmp:titleContext":"Title",
+      "tmp:nameContext":"Name",
+      "tmp:otherContext":"Secondary Data",
    },
    result:{
       open:"ཁ་ཕྱེ།",
