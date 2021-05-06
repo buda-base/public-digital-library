@@ -3465,7 +3465,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             {/* { this.getResultProp(bdo+"workIsAbout",allProps,false) } */}
             {/* { this.getResultProp(bdo+"workGenre",allProps) } */}
 
-            { this.getResultProp(this.state.filters.datatype[0] === "Work"?"tmp:otherTitle":"tmp:otherName",allLabels, true, false, [ tmp+"labelMatch", tmp+"nameMatch", skos+"prefLabel", skos+"altLabel"], !preLit?preLit:preLit.replace(/[↦↤]/g,"") ) }
+            { this.getResultProp(["Work","Instance","Scan","Etext"].includes(this.state.filters.datatype[0])?"tmp:otherTitle":"tmp:otherName",allLabels, true, false, [ tmp+"labelMatch", tmp+"nameMatch", skos+"prefLabel", skos+"altLabel"], !preLit?preLit:preLit.replace(/[↦↤]/g,"") ) }
             {/* { this.getResultProp(tmp+"assetAvailability",allProps,false,false) } */}
             
             {/* { this.getResultProp(rdf+"type",allProps.filter(e => e.type === rdf+"type" && e.value === bdo+"EtextInstance")) }  */}
