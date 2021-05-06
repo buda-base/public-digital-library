@@ -1768,16 +1768,16 @@ function rewriteAuxMain(result,keyword,datatype,sortBy,language)
                   return ({type:_tmp+"assetAvailability",value:e.type})
                } else if(e.type === bdo+"inRootInstance") {
                   inRoot = true
-               } else if(e.value && e.value.match && e.value.match(/[↦↤]/)) {
+               } else if(e.value && e.value.match && e.value.match(/[↦↤]/)) {                  
                   if([_tmp+"nameMatch",_tmp+"labelMatch"].includes(e.type)) {
                      if(["works","instances","scans","etexts"].includes(t)) {
-                        context.push(_tmp+"titleContext")
+                        if(!context.includes(_tmp+"titleContext")) context.push(_tmp+"titleContext")
                      } else {
-                        context.push(_tmp+"nameContext")
+                        if(!context.includes(_tmp+"nameContext")) context.push(_tmp+"nameContext")
                      }
                   } else {
-                     context.push(_tmp+"otherContext")
-                  }                  
+                     if(!context.includes(e.type)) context.push(e.type)
+                  } 
                }
                return e
             } )

@@ -191,8 +191,7 @@ const boTranslation = {
       "tmp:hasRole":"Has Role",
       "tmp:matchContext":"Match Context",
       "tmp:titleContext":"Title",
-      "tmp:nameContext":"Name",
-      "tmp:otherContext":"Secondary Data",
+      "tmp:nameContext":"Name"
    },
    result:{
       open:"ཁ་ཕྱེ།",
