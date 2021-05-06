@@ -1769,7 +1769,7 @@ function rewriteAuxMain(result,keyword,datatype,sortBy,language)
                } else if(e.type === bdo+"inRootInstance") {
                   inRoot = true
                } else if(e.value && e.value.match && e.value.match(/[↦↤]/)) {
-                  if(e.type === _tmp+"labelMatch") {
+                  if([_tmp+"nameMatch",_tmp+"labelMatch"].includes(e.type)) {
                      if(["works","instances","scans","etexts"].includes(t)) {
                         context.push(_tmp+"titleContext")
                      } else {
