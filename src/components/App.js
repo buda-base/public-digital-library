@@ -2742,6 +2742,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                }
                else if(val && val.startsWith("http")) val = this.fullname(val,[],true)
                else { 
+                  /*
                   val = getLangLabel(this,prop,[i])
                   if(val) {
                      if(val.value && exclude && val.value.replace(/[↦↤]/g,"") === exclude) continue ;
@@ -2749,6 +2750,24 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      lang = val.lang
                   } else {
                      console.warn("val==NULL:",val,prop,i)
+                  }
+                  */
+                  val = getLangLabel(this,prop,[i])
+                  let kw = lucenequerytokeywordmulti(this.props.keyword).map(v => v.trim().replace(/[་༌།]+$/,""))
+                  // join by "EEEE" as it won't be affected in wylie from/to conversion 
+                  if(this.props.language) {
+                     kw = getLangLabel(this,"",[ { "value":kw.join("EEEE"), "lang": this.props.language } ])
+                     if(val) {
+                        val = highlight(val.value,kw.value.replace(/ *\[?EEEE\]? */g,"|"))
+                        lang = val.lang
+                     } else {
+                        val = highlight(i.value,kw.join("|"))
+                        lang = i["lang"]
+                        if(!lang) lang = i["xml:lang"]
+                     }
+                  } else {
+                     if(val.value) val = val.value
+                     else val = i.value
                   }
                }
 

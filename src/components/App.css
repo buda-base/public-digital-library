@@ -2422,7 +2422,7 @@ html[lang="en"] .resource .data > [data-prop="bdo:creator"] h4[data-prop="bdo:ro
 */
 
 /* Lineage option 2 */
-.resource .data > [data-prop="bdo:lineageHolder"] .sub .subgroup { width:calc(100%);}
+.resource .data > [data-prop="bdo:lineageHolder"] .sub .subgroup:not(#a) { width:calc(100%);}
 .resource .data > [data-prop="bdo:lineageHolder"] .sub .subsub { width:calc(100% - 5px);}
 .resource .data > [data-prop="bdo:lineageHolder"] .subgroup .subsub + .subsub { margin-left:calc(170px + 15px); width:calc(100% - 170px); }
 .resource .data > [data-prop="bdo:lineageHolder"] .subgroup .subsub > h4.first { width:170px !important;} 
