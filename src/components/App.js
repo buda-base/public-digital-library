@@ -4634,7 +4634,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                                              //|| isSubClassOfASubClassOfLangScript 
                   )
                   && (!p[bdo+"taxSubClassOf"] || p[bdo+"taxSubClassOf"].filter(e => e.value == bdr+"LanguageTaxonomy").length != 0 ) )  // is it a root property ?
-                  && (p[rdf+"type"] && p[rdf+"type"].includes(bdo+"WorkPartType") && ( k === _tmp+"standalone" || k === _tmp+"partOfVersion" ) )
+                  && (j !== "versionType" || p[rdf+"type"] && p[rdf+"type"].includes(bdo+"WorkPartType") && ( k === _tmp+"standalone" || k === _tmp+"partOfVersion" ) )
                )
                {
                   //loggergen.log("root",k,p)
