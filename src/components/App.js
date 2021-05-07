@@ -2389,15 +2389,16 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
    inserTree(k:string,p:{},tree:{}):boolean
    {
-      //loggergen.log("ins",k,p,tree);
+      //loggergen.log("ins:",k,p,tree);
 
       for(let t of Object.keys(tree))
       {
-         //loggergen.log(" t",t)
+         //loggergen.log(" t:",t)
 
          if(p[rdfs+"subPropertyOf"] && p[rdfs+"subPropertyOf"].filter(e => e.value == t).length > 0
          || p[rdfs+"subClassOf"] && p[rdfs+"subClassOf"].filter(e => e.value == t).length > 0
-         || p[bdo+"taxSubClassOf"] && p[bdo+"taxSubClassOf"].filter(e => e.value == t).length > 0 )
+         || p[bdo+"taxSubClassOf"] && p[bdo+"taxSubClassOf"].filter(e => e.value == t).length > 0 
+         || t === _tmp+"partOfVersion")
          {
             //loggergen.log("  k",k)
             tree[t] = { ...tree[t], [k]:{} }
@@ -4574,7 +4575,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
    }
 
    treeWidget(j,meta,counts,jlabel,jpre) {
-      if(j == "tree") { // && meta[j]["@graph"]) { //
+      if(j == "tree" ) { // && meta[j]["@graph"]) { //
          let tree ;
          if(meta[j]) tree = meta[j]["@graph"]
 
@@ -4594,8 +4595,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
             return this.widget(jlabel,j,this.subWidget(tree,jpre,tree[0]['taxHasSubClass'],true,j));
          }
-      }
-      else { //sort according to ontology properties hierarchy
+      } else { //sort according to ontology properties hierarchy
          let tree = {}, tmProps = Object.keys(meta[j]).map(e => e), change = false
          //let rooTax = false
          do // until every property has been put somewhere
@@ -4623,7 +4623,9 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   && (!p[rdfs+"subClassOf"] || p[rdfs+"subClassOf"].filter(e => e.value == bdo+"Event").length != 0  || p[rdfs+"subClassOf"].filter(e => e.value == bdo+"LangScript").length != 0 
                                              //|| isSubClassOfASubClassOfLangScript 
                   )
-                  && (!p[bdo+"taxSubClassOf"] || p[bdo+"taxSubClassOf"].filter(e => e.value == bdr+"LanguageTaxonomy").length != 0 ) ) ) // is it a root property ?
+                  && (!p[bdo+"taxSubClassOf"] || p[bdo+"taxSubClassOf"].filter(e => e.value == bdr+"LanguageTaxonomy").length != 0 ) )  // is it a root property ?
+                  && (p[rdf+"type"] && p[rdf+"type"].includes(bdo+"WorkPartType") && ( k === _tmp+"standalone" || k === _tmp+"partOfVersion" ) )
+               )
                {
                   //loggergen.log("root",k,p)
                   tree[k] = {} ;
@@ -5202,9 +5204,9 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                else jlabel = jlabel.value
             }
             // need to fix this after info is not in ontology anymore... make tree from relation/langScript 
-            if(["tree","relation","langScript"].indexOf(j) !== -1) {
+            if(["tree","relation","langScript","versionType"].indexOf(j) !== -1) {
 
-               loggergen.log("widgeTree",j,jpre,meta[j],counts["datatype"],this.state.filters.datatype[0])
+               //loggergen.log("widgeTree",j,jpre,meta[j],counts["datatype"],this.state.filters.datatype[0])
 
                return this.treeWidget(j,meta,counts,jlabel,jpre)
             }

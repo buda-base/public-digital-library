@@ -441,7 +441,8 @@ function extractAssoRes(iri,res) {
 
    let assocRes = {}, _res = {}
    let allowK = [ skos+"prefLabel", skos+"altLabel", tmp+"withSameAs", bdo+"inRootInstance", bdo+"language", adm+"canonicalHtml", bdo+"partIndex", bdo+"volumeNumber", tmp+"thumbnailIIIFService", bdo+"instanceHasReproduction",
-                  tmp+"nbTranslations", tmp+"provider", rdfs+"comment", rdf+"type", bdo+"note", bdo+"script", bdo+"partOf", bdo+"partType", bdo+"isComplete", bdo+"instanceOf" ]
+                  tmp+"nbTranslations", tmp+"provider", rdfs+"comment", rdf+"type", bdo+"note", bdo+"script", bdo+"partOf", bdo+"partType", bdo+"isComplete", bdo+"instanceOf", bdo+"instanceEvent", bdo+"instanceHasItem",
+                  bdo+"material", bdo+"biblioNote", bdo+"sponsoshipStatement", bdo+"sponsorshipStatement", bdo+"ownershipStatement" ]
    let allowR = [ skos+"prefLabel", bdo+"partIndex", bdo+"volumeNumber",  tmp+"thumbnailIIIFService" ]
 
    for(let k of Object.keys(res)) {                  
@@ -1243,7 +1244,8 @@ function getStats(cat:string,data:{},tree:{})
       for(let f of keys)
       {
          
-         //loggergen.log("f",f);
+         //loggergen.log("f:",f);
+
          let genre = [bdo+"workGenre", bdo + "workIsAbout", _tmp + "etextAbout" ]
          let tmp ;
          
@@ -1358,7 +1360,7 @@ function addMeta(keyword:string,language:string,data:{},t:string,tree:{},found:b
          stat = { ...stat, tree }
       }
 
-      loggergen.log("stat",stat)
+      loggergen.log("stat:",stat)
       if(found) store.dispatch(dataActions.foundResults(keyword, language, data, [t]));
       if(facets) store.dispatch(dataActions.foundFacetInfo(keyword,language,[t],stat))
       else return stat
@@ -1735,7 +1737,7 @@ function rewriteAuxMain(result,keyword,datatype,sortBy,language)
    let langPreset = state.ui.langPreset
    if(!sortBy) sortBy = state.ui.sortBy
    let reverse = sortBy && sortBy.endsWith("reverse")
-   let canPopuSort = false, isScan, isTypeScan = datatype.includes("Scan"), inRoot, context
+   let canPopuSort = false, isScan, isTypeScan = datatype.includes("Scan"), inRoot, partType, context
 
    result = Object.keys(result).reduce((acc,e)=>{
       if(e === "main") {
@@ -1750,6 +1752,7 @@ function rewriteAuxMain(result,keyword,datatype,sortBy,language)
 
             isScan = false       
             inRoot = false
+            partType = ""
             context = []
 
             if(auth && !auth.isAuthenticated()) {	
@@ -1768,6 +1771,8 @@ function rewriteAuxMain(result,keyword,datatype,sortBy,language)
                   return ({type:_tmp+"assetAvailability",value:e.type})
                } else if(e.type === bdo+"inRootInstance") {
                   inRoot = true
+               } else if(e.type === bdo+"partType") {
+                  partType = e.value
                } else if(e.value && e.value.match && e.value.match(/[↦↤]/)) {                  
                   if([_tmp+"nameMatch",_tmp+"labelMatch"].includes(e.type)) {
                      if(["works","instances","scans","etexts"].includes(t)) {
@@ -1784,7 +1789,10 @@ function rewriteAuxMain(result,keyword,datatype,sortBy,language)
 
             if(t === "instances") {
                if(!inRoot) res.push({type:_tmp+"versionType", value:_tmp+"standalone"})
-               else res.push({type:_tmp+"versionType", value:_tmp+"partOfVersion"})
+               else { 
+                  res.push({type:_tmp+"versionType", value:_tmp+"partOfVersion"})
+                  if(partType) res.push({type:_tmp+"versionType", value:partType})
+               }
             }
 
             for(let ctx of context){
