@@ -2248,7 +2248,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
    counTree(tree:{},meta:{},any:integer=0,tag:string):[]
    {
-      //loggergen.log("cT",tree,meta,any)
+      //loggergen.log("cT:",tree,meta,any)
       let ret = [], idx = 0
       let tmp = Object.keys(tree).map(k => ({[k]:tree[k]}))
       let index = {}
@@ -2264,14 +2264,14 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          else if(labels && labels[skos+"prefLabel"]) labels = labels[skos+"prefLabel"]
          if(!labels) labels = []
 
-         //loggergen.log("t",t,kZ,kZsub,labels)
+         //loggergen.log("t:",t,kZ,kZsub,labels)
 
          tmp = tmp.concat(kZsub.map(k => ({[k]:t[kZ[0]][k]})))
 
          //loggergen.log("tmp",tmp)
 
          let cpt,checkSub ;         
-         if(meta[kZ[0]] && meta[kZ[0]].n) 
+         if(meta[kZ[0]] && meta[kZ[0]].n && kZ[0] != _tmp+"partOfVersion") 
             cpt = meta[kZ[0]].n
          else {
             cpt = kZsub.reduce((acc,e) => { return acc + (meta[e]&&meta[e].n?meta[e].n:0) ; },0)
@@ -3154,13 +3154,23 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
          }
 
+         let resulType = T
+         if(T === "Instance") {            
+            resulType = allProps.filter(p => p.type === bdo+"partType")
+            if(resulType.length) resulType = getPropLabel(this,resulType[0].value,false)
+            else resulType = I18n.t("types.instance")
+         } else {
+            if(isSerial) resulType = "serial"
+            resulType = I18n.t("types."+resulType.toLowerCase())
+         }
+
            let ret = ([            
             <div key={t+"_"+n+"__"}  className={"contenu" }>
                   <ListItem style={{paddingLeft:"0"}}>
                      {/* <ListItemText style={{height:"auto",flexGrow:10,flexShrink:10}}
                         primary={ */}
                            <div>
-                              <span class="T">{I18n.t("types."+(isSerial?"serial":T).toLowerCase())}{langs}</span>
+                              <span class="T">{resulType}{langs}</span>
                               <h3 key="lit" lang={lang}>
                                  {lit}
                                  { (resUrl && !resUrl.includes("/show/bdr:") && !resUrl.includes("/show/bda:")) && <img class="link-out" src="/icons/link-out_fit.svg"/>}

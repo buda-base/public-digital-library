@@ -199,7 +199,7 @@ const enTranslation = {
       "tmp:lastSync":"Release Date",
       "tmp:versionType":"Version Type",
       "tmp:standalone":"Standalone",
-      "tmp:partOfVersion":"Part of another Version",
+      "tmp:partOfVersion":"Part",
       "tmp:inRootInstance":"Instance",
       "tmp:associatedCentury":"Century",
       "tmp:associatedAuthorCentury":"Author's Century",
