@@ -80,7 +80,8 @@ const boTranslation = {
       widgets:{
          root: "ཡོང་ཁུངས།",
          tree: "རིགས།",
-         relationInv: "Inverse Relation Type"
+         relationInv: "Inverse Relation Type",
+         new:"NEW!"
       },
       tags:{
          type: "བཙལ་བྱ།",

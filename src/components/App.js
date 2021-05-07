@@ -4728,12 +4728,17 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
 
    widget(title:string,txt:string,inCollapse:Component)  { 
+      let isNew = false
+      if(this.props.config && this.props.config["facets-new"] && this.props.config["facets-new"].includes(txt)) isNew = true
       let open = this.state.collapse[txt] // ||(this.state.collapse[txt] === undefined && txt === "versionType")
       return (
          [<ListItem key={1} className="widget-header"
             onClick={(e) => { this.setState({collapse:{ ...this.state.collapse, [txt]:!open} }); } }
             >
-            <Typography  className="widget-title" ><span lang={this.props.locale}>{title}</span></Typography>
+            <Typography  className="widget-title" >
+               <span lang={this.props.locale}>{title}</span>
+               { isNew && <span className="new">{I18n.t("Lsidebar.widgets.new")}</span> }
+            </Typography>
             { open ? <ExpandLess /> : <ExpandMore />}
          </ListItem>,
          // TODO replace Collapse by Popover

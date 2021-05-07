@@ -93,7 +93,8 @@ const enTranslation = {
          unknown:"unknown",
          root: "In $t(types.instance)",
          tree: "Genre / Topic",
-         relationInv: "Inverse Relation Type"
+         relationInv: "Inverse Relation Type",
+         new:"NEW!"
       },
       tags:{
          type: "Type",

@@ -72,7 +72,8 @@ const zhTranslation = {
       widgets:{
          root: "实例",
          tree: "文体类型/主题",
-         relationInv: "反转关联方式"
+         relationInv: "反转关联方式",
+         new:"NEW!"
       },
       tags:{
          type: "Type",

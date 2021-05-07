@@ -541,7 +541,8 @@ footer #donate,
 #settings + .widget-header { align-items: center;}
 #settings + .widget-header .header-icon { color:#4a4a4a; font-size:20px; padding-top:2px;padding-right:4px;}
 
-.SidePane.left .widget-title { color: #4a4a4a; font-weight:700;font-size:10px;text-transform: uppercase; /*font-family:"Noto Sans";*/ }
+.SidePane.left .widget-title { color: #4a4a4a; font-weight:700;font-size:10px;text-transform: uppercase; /*font-family:"Noto Sans";*/  }
+.SidePane.left .widget-title .new { position:absolute; font-weight:400; color:#d73449; padding-left:5px; font-size:8px; margin-top:1px;}
 
 .SidePane.left .collapse { padding:5px 0 0 15px; transition:none;}
 
