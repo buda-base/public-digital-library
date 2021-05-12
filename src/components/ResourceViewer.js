@@ -1366,7 +1366,50 @@ class ResourceViewer extends Component<Props,State>
       {
 
          let customSort = [ bdo+"hasPart", bdo+"instanceHasVolume", bdo+"workHasInstance", tmp+"siblingInstances", bdo+"hasTitle", bdo+"personName", bdo+"volumeHasEtext",
-                            bdo+"personEvent", bdo+"placeEvent", bdo+"workEvent", bdo+"instanceEvent", bf+"identifiedBy" ]
+                            bdo+"personEvent", bdo+"placeEvent", bdo+"workEvent", bdo+"instanceEvent", bf+"identifiedBy", bdo+"lineageHolder" ]
+
+
+         let sortLineageHolder = () => {
+            let parts = prop[bdo+"lineageHolder"]
+            if(parts) {
+               let assoR = this.props.assocResources, extData = [], sorted = []
+               if (assoR) {
+                  for(let p of parts) {
+                     let lh = assoR[p.value]
+                     if(lh) {
+                        let from = lh.filter(t => t.fromKey == bdo+"lineageFrom")
+                        if(from.length) from = from[0].value
+                        else from = null
+                        let to = lh.filter(t => t.fromKey == bdo+"lineageWho")
+                        if(to.length) to = to[0].value
+                        else to = null
+                        extData.push({...p, from, to})                        
+                     }
+                  }
+                  console.log("lh:",extData)
+                  for(let p of extData) {
+                     if(!sorted.length) sorted.push(p)
+                     else {   
+                        let idx = sorted.length
+                        for(let i in sorted) {
+                           let s = sorted[i]
+                           if(s.from === p.to) {
+                              idx = i  ;
+                              break ;
+                           }
+                        }                     
+                        sorted.splice( idx, 0, p );
+                     }
+                  }
+                  console.log("sorted:",sorted)
+                  return sorted.reverse()
+               }
+               return parts ;
+            }
+         }
+
+         if(prop[bdo+"lineageHolder"]) prop[bdo+"lineageHolder"] = sortLineageHolder();
+
 
          let sortByPropSubType = (tag:string) => {
             let parts = prop[tag]
