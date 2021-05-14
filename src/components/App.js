@@ -66,6 +66,7 @@ import {CopyToClipboard} from 'react-copy-to-clipboard' ;
 import {Map,TileLayer,LayersControl,Marker,Popup,GeoJSON,Popup as MapPopup} from 'react-leaflet' ;
 import 'leaflet/dist/leaflet.css';
 import { GoogleLayer } from "react-leaflet-google" ;
+import L from 'leaflet';
 
 import CookieConsent from "react-cookie-consent";
 import ReactGA from 'react-ga';
@@ -4363,8 +4364,19 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                               return n.replace(/ [EWSN]$/,"")
                            })
                            latLongs.push(latLong)
-                           markers.push(<Marker position={latLong} permanent> 
-                                 <MapPopup direction="top">{lit}</MapPopup>
+
+                           var redIcon = new L.Icon({
+                              iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
+                              shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+                              iconSize: [25, 41],
+                              iconAnchor: [12, 41],
+                              popupAnchor: [1, -34],
+                              shadowSize: [41, 41]
+                           });
+
+                           let sUri = shortUri(o), url = "/show/"+sUri+"?s="+ encodeURIComponent(window.location.href.replace(/^https?:[/][/][^?]+[?]?/gi,"").replace(/(&n=[^&]*)/g,"")+"&n="+n)
+                           markers.push(<Marker position={latLong} permanent icon={redIcon}> 
+                                 <MapPopup direction="top"><Link to={url}>{lit}<br/><span className="RID">{sUri}</span></Link></MapPopup>
                            </Marker>)
                         }
                      }

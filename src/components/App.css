@@ -3261,6 +3261,27 @@ h2.on .lang, .propCollapseHeader .lang, .propCollapse .lang { position:absolute 
 .resultsMap[data-nb-markers='0'] { display:none; }
 .resultsMap[data-nb-markers='0'] + .result-content { scroll-margin: 214px;}
 
+
+.resultsMap a {
+   color:#d73449;
+ }
+
+.resultsMap .leaflet-popup-content a {
+   display:block;
+   font-size:14px;
+   line-height:16px;
+}
+.resultsMap .leaflet-popup-content a:hover :not(.RID) {
+   text-decoration: underline;
+}
+.resultsMap .leaflet-popup-content a .RID {
+   color:#888;
+   font-size:11px;
+}
+.resultsMap .leaflet-popup-content span.highlight {
+   background-color: #fce08e; padding:0 2px; font-weight:700;
+}
+
 body {overflow-x:hidden; }
 
 /* .SearchPane .hidden { opacity:0; pointer-events:none; } */
@@ -3425,6 +3446,7 @@ span.subcollapse.off { opacity:0.5 !important; }
 
 .img.disabled,
 .checkbox.disabled { opacity:0.5; pointer-events: none; }
+
 
 h4 span.highlight,
 h3 span.highlight,
