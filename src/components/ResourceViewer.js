@@ -5371,7 +5371,9 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
       let handleViewer = (ev) => {
          if(ev.type === 'click') { 
-            this.showMirador(null,null,true)
+            let location = { ...this.props.history.location, hash:"open-viewer" }
+            this.props.history.push(location)
+            //this.showMirador(null,null,true)
             ev.preventDefault();
             ev.stopPropagation();
             return false ;
@@ -5382,8 +5384,8 @@ perma_menu(pdfLink,monoVol,fairUse,other)
       let viewUrl = { ...this.props.history.location }
       viewUrl.pathname = viewUrl.pathname.replace(/\/show\//,"/view/")
       viewUrl.search = "" 
-      // TODO do we really need this now?
-      if(this.props.langPreset) viewUrl.search = "?lang="+this.props.langPreset.join(",")
+      // DONE do we really need this now? no we don't
+      //if(this.props.langPreset) viewUrl.search = "?lang="+this.props.langPreset.join(",")
 
       let copyRicon
 
