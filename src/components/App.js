@@ -63,6 +63,9 @@ import FormGroup from '@material-ui/core/FormGroup';
 import Popover from '@material-ui/core/Popover';
 import $ from 'jquery' ;
 import {CopyToClipboard} from 'react-copy-to-clipboard' ;
+import {Map,TileLayer,LayersControl,Marker,Popup,GeoJSON,Popup as MapPopup} from 'react-leaflet' ;
+import 'leaflet/dist/leaflet.css';
+import { GoogleLayer } from "react-leaflet-google" ;
 
 import CookieConsent from "react-cookie-consent";
 import ReactGA from 'react-ga';
@@ -3880,6 +3883,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          
          let h5
 
+         const markers = [], latLongs = []
+
          if(sublist) { for(let o of Object.keys(sublist))
          {
             if(!iniTitle) {
@@ -3910,7 +3915,57 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   //(false && displayTypes.length>=1&&counts["datatype"][t]?" ("+counts["datatype"][t]+")":""))}
                   message.push(<MenuItem><h4>{txt}</h4></MenuItem>);
                }
-               // TODO better handling of plural in translations
+               
+               if(t === "Place") {
+
+
+                  const { BaseLayer} = LayersControl;
+                  
+                  this._refs["map"] = React.createRef()
+
+                  const map =  (this.props.config && 
+                     <Map ref={this._refs["map"]}
+                        center={[0,0]} zoom={18}
+                        className={"placeMap resultsMap"}                         
+                        whenReady={ () => { 
+                           console.log("map:",this._refs["map"].current)
+                           this._refs["map"].current.leafletElement.fitBounds(latLongs)
+                        }}
+                        >
+                        <LayersControl position="topright">
+                           { this.props.config.googleAPIkey && [
+                              <BaseLayer name='Satellite+Roadmap'>
+
+                                 <GoogleLayer googlekey={this.props.config.googleAPIkey} maptype='HYBRID'
+                                       //attribution="&amp;copy <a href=&quot;http://osm.org/copyright&quot;></a> contributors"
+                                       attribution="&amp;copy 2018 Google"
+                                 />
+                              </BaseLayer>,
+                              <BaseLayer checked name='Terrain'>
+                                 <GoogleLayer googlekey={this.props.config.googleAPIkey} maptype='TERRAIN'/>
+                              </BaseLayer>,
+                              <BaseLayer name='Satellite'>
+                                 <GoogleLayer googlekey={this.props.config.googleAPIkey} maptype='SATELLITE'/>
+                              </BaseLayer>,
+                              <BaseLayer name='Roadmap'>
+                                 <GoogleLayer googlekey={this.props.config.googleAPIkey} maptype='ROADMAP'/>
+                              </BaseLayer>]
+                           }
+                           { !this.props.config.googleAPIkey && <BaseLayer checked name='OpenStreetMap'>
+                              <TileLayer
+                                 //attribution="&amp;copy <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
+                                 //url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                                 url="https://{s}.tile.iosb.fraunhofer.de/tiles/osmde/{z}/{x}/{y}.png"
+                              />
+                           </BaseLayer> }
+                        </LayersControl>
+                        { markers } 
+                     </Map>)
+                  
+                  if(map) message.push(map)
+               }
+
+               
             }
             absi ++ ;
 
@@ -4285,6 +4340,18 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      nMax = n
                      //loggergen.log("lastN",lastN)
                      message.push(this.makeResult(id,n,t,lit,lang,tip,Tag,null,r.match,k,sublist[o],r.lit.value))
+
+                     if(t === "Place") {
+                        const lat = sublist[o].filter(k => k.type === bdo+"placeLat")
+                        const long = sublist[o].filter(k => k.type === bdo+"placeLong")
+                        if(lat.length && long.length) { 
+                           const latLong = [lat[0].value,long[0].value]
+                           latLongs.push(latLong)
+                           markers.push(<Marker position={latLong} permanent> 
+                                 <MapPopup direction="top">{lit}</MapPopup>
+                           </Marker>)
+                        }
+                     }
                   }
                   else {
                      if(unreleased) n --
@@ -5557,6 +5624,9 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          if(infoPanelH && infoPanelH.length) infoPanelH = rend(infoPanelH)
          if(infoPanelR && infoPanelR.length) infoPanelR = rend(infoPanelR)
       }
+
+
+
 
       return (
 <div>

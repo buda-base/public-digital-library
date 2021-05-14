@@ -3255,6 +3255,8 @@ h2.on .lang, .propCollapseHeader .lang, .propCollapse .lang { position:absolute 
 .gm-style > iframe + div {  margin-bottom:20px; }
 .placeMap.large .gm-style > iframe + div {  margin-bottom:25px; }
 
+.resultsMap { width:100%; height:480px; margin-bottom:16px;}
+
 body {overflow-x:hidden; }
 
 /* .SearchPane .hidden { opacity:0; pointer-events:none; } */
