@@ -3928,8 +3928,14 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                         center={[0,0]} zoom={18}
                         className={"placeMap resultsMap"}                         
                         whenReady={ () => { 
-                           console.log("map:",this._refs["map"].current)
-                           this._refs["map"].current.leafletElement.fitBounds(latLongs)
+                           let timeo = setInterval(() => {
+                              if(this._refs["map"].current) {
+                                 console.log("map:",this._refs["map"].current)
+                                 clearInterval(timeo)
+                                 this._refs["map"].current.leafletElement.fitBounds(latLongs)
+                                 $(".resultsMap").attr("data-nb-markers", latLongs.length)
+                              }
+                           }, 10);
                         }}
                         >
                         <LayersControl position="topright">
@@ -4342,10 +4348,15 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      message.push(this.makeResult(id,n,t,lit,lang,tip,Tag,null,r.match,k,sublist[o],r.lit.value))
 
                      if(t === "Place") {
-                        const lat = sublist[o].filter(k => k.type === bdo+"placeLat")
-                        const long = sublist[o].filter(k => k.type === bdo+"placeLong")
+                        let lat = sublist[o].filter(k => k.type === bdo+"placeLat"),
+                            long = sublist[o].filter(k => k.type === bdo+"placeLong")
                         if(lat.length && long.length) { 
-                           const latLong = [lat[0].value,long[0].value]
+                           lat = lat[0].value;
+                           long = long[0].value                           
+                           const latLong = [lat,long].map(n => {
+                              if(n.match(/ [WS]$/)) n = "-" + n
+                              return n.replace(/ [EWSN]$/,"")
+                           })
                            latLongs.push(latLong)
                            markers.push(<Marker position={latLong} permanent> 
                                  <MapPopup direction="top">{lit}</MapPopup>

@@ -873,6 +873,8 @@ a.result + #matches .result-content #icon > :not(.thumb) img { width:40px; }
    border-top: 4px solid rgba(239,238,238,0.6); left:80px; top:-2px; 
 }
 
+.resultsMap + .result-content { scroll-margin:710px; }
+
 .place.result-content { min-height:110px; } 
 .person.result-content { min-height:95px; } 
 .work.result-content { min-height:100px; } 
