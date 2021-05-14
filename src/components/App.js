@@ -1015,8 +1015,12 @@ class App extends Component<Props,State> {
 
    componentDidUpdate() {
       
-      loggergen.log("didU",this.state,this.state.uriPage) //,this._refs)
+      loggergen.log("didU:",this.state,this.state.uriPage,this._refs["markers"]) //,this._refs)
 
+      if(this._refs.map && this._refs.map.current) {
+         if(this._refs.markers) $(".resultsMap").attr("data-nb-markers", this._refs["markers"].length)
+         if(this._refs["markers"].length) this._refs.map.current.leafletElement.fitBounds(this._refs["markers"])
+      }
 
       report_GA(this.props.config,this.props.history.location);
 
@@ -3922,6 +3926,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   const { BaseLayer} = LayersControl;
                   
                   this._refs["map"] = React.createRef()
+                  this._refs["markers"] = latLongs
 
                   const map =  (this.props.config && 
                      <Map ref={this._refs["map"]}
@@ -3933,7 +3938,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                                  console.log("map:",this._refs["map"].current)
                                  clearInterval(timeo)
                                  this._refs["map"].current.leafletElement.fitBounds(latLongs)
-                                 $(".resultsMap").attr("data-nb-markers", latLongs.length)
+                                 //$(".resultsMap").attr("data-nb-markers", latLongs.length)
                               }
                            }, 10);
                         }}
