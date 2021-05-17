@@ -193,6 +193,11 @@ const zhTranslation = {
       inEtext:"Results for <key>{{- keyword}}</key> <key>[{{language}}]</key><br/>in <res href='/show/{{- rid}}'>{{- name}}</res>",
       openO:"Open in Outline"
    },
+   map:{    
+      touch: "Use two fingers to move the map",
+      scroll: "Use ctrl + scroll to zoom the map",
+      scrollMac: "Use \u2318 + scroll to zoom the map"  
+   },
    index:{
       openViewer:"在查看器中打开",
       mainInfo:"主要信息",

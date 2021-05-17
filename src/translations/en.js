@@ -230,7 +230,12 @@ const enTranslation = {
       assoc:"{{type}} associated with: <res href='/show/{{- rid}}'>{{- name}}</res>",
       moreres:"More {{txt}} are cataloged, do you want to see them?",
       inEtext:"Results for <key>{{- keyword}}</key> <key>[{{language}}]</key><br/>in <res href='/show/{{- rid}}'>{{- name}}</res>",
-      openO:"Open in Outline"
+      openO:"Open in Outline"   
+   },
+   map:{    
+      touch: "Use two fingers to move the map",
+      scroll: "Use ctrl + scroll to zoom the map",
+      scrollMac: "Use \u2318 + scroll to zoom the map"  
    },
    index:{
       openViewer:"Open in Viewer",

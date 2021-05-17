@@ -63,10 +63,14 @@ import FormGroup from '@material-ui/core/FormGroup';
 import Popover from '@material-ui/core/Popover';
 import $ from 'jquery' ;
 import {CopyToClipboard} from 'react-copy-to-clipboard' ;
+
 import {Map,TileLayer,LayersControl,Marker,Popup,GeoJSON,Popup as MapPopup} from 'react-leaflet' ;
-import 'leaflet/dist/leaflet.css';
 import { GoogleLayer } from "react-leaflet-google" ;
 import L from 'leaflet';
+import { GestureHandling } from "leaflet-gesture-handling";
+
+import 'leaflet/dist/leaflet.css';
+import "leaflet-gesture-handling/dist/leaflet-gesture-handling.css";
 
 import CookieConsent from "react-cookie-consent";
 import ReactGA from 'react-ga';
@@ -1001,6 +1005,8 @@ class App extends Component<Props,State> {
       if(langSelect.indexOf(lg) === -1) this.state = { ...this.state, customLang:[lg]}
 
       loggergen.log('qs',get,this.state)
+
+      if(window.innerWidth < 800) L.Map.addInitHook("addHandler", "gestureHandling", GestureHandling);
 
       /*
       window.onresize = function(ev) { 
@@ -3927,15 +3933,23 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   const { BaseLayer} = LayersControl;
                   
                   this._refs["map"] = React.createRef()
-                  this._refs["markers"] = latLongs
+                  this._refs["markers"] = latLongs                                    
 
                   const map =  (this.props.config && 
                      <Map ref={this._refs["map"]}
                         center={[0,0]} zoom={18}
                         className={"placeMap resultsMap"}                         
-                        whenReady={ () => { 
+                        gestureHandling={window.innerWidth < 800}
+                        gestureHandlingOptions={{
+                           text: {
+                                 touch: I18n.t("map.touch"),
+                                 scroll: I18n.t("map.scroll"),
+                                 scrollMac: I18n.t("map.scrollMac")
+                           }
+                        }}
+                        whenReady={ () => {                            
                            let timeo = setInterval(() => {
-                              if(this._refs["map"].current) {
+                              if(this._refs["map"].current) {                                                         
                                  console.log("map:",this._refs["map"].current)
                                  clearInterval(timeo)
                                  this._refs["map"].current.leafletElement.fitBounds(latLongs)
