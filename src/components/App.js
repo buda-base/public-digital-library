@@ -63,6 +63,10 @@ import FormGroup from '@material-ui/core/FormGroup';
 import Popover from '@material-ui/core/Popover';
 import $ from 'jquery' ;
 import {CopyToClipboard} from 'react-copy-to-clipboard' ;
+import {Map,TileLayer,LayersControl,Marker,Popup,GeoJSON,Popup as MapPopup} from 'react-leaflet' ;
+import 'leaflet/dist/leaflet.css';
+import { GoogleLayer } from "react-leaflet-google" ;
+import L from 'leaflet';
 
 import CookieConsent from "react-cookie-consent";
 import ReactGA from 'react-ga';
@@ -1012,8 +1016,12 @@ class App extends Component<Props,State> {
 
    componentDidUpdate() {
       
-      loggergen.log("didU",this.state,this.state.uriPage) //,this._refs)
+      loggergen.log("didU:",this.state,this.state.uriPage,this._refs["markers"]) //,this._refs)
 
+      if(this._refs.map && this._refs.map.current) {
+         if(this._refs.markers) $(".resultsMap").attr("data-nb-markers", this._refs["markers"].length)
+         if(this._refs["markers"].length) this._refs.map.current.leafletElement.fitBounds(this._refs["markers"])
+      }
 
       report_GA(this.props.config,this.props.history.location);
 
@@ -3880,6 +3888,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          
          let h5
 
+         const markers = [], latLongs = []
+
          if(sublist) { for(let o of Object.keys(sublist))
          {
             if(!iniTitle) {
@@ -3910,7 +3920,64 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   //(false && displayTypes.length>=1&&counts["datatype"][t]?" ("+counts["datatype"][t]+")":""))}
                   message.push(<MenuItem><h4>{txt}</h4></MenuItem>);
                }
-               // TODO better handling of plural in translations
+               
+               if(t === "Place") {
+
+
+                  const { BaseLayer} = LayersControl;
+                  
+                  this._refs["map"] = React.createRef()
+                  this._refs["markers"] = latLongs
+
+                  const map =  (this.props.config && 
+                     <Map ref={this._refs["map"]}
+                        center={[0,0]} zoom={18}
+                        className={"placeMap resultsMap"}                         
+                        whenReady={ () => { 
+                           let timeo = setInterval(() => {
+                              if(this._refs["map"].current) {
+                                 console.log("map:",this._refs["map"].current)
+                                 clearInterval(timeo)
+                                 this._refs["map"].current.leafletElement.fitBounds(latLongs)
+                                 //$(".resultsMap").attr("data-nb-markers", latLongs.length)
+                              }
+                           }, 10);
+                        }}
+                        >
+                        <LayersControl position="topright">
+                           { this.props.config.googleAPIkey && [
+                              <BaseLayer name='Satellite+Roadmap'>
+
+                                 <GoogleLayer googlekey={this.props.config.googleAPIkey} maptype='HYBRID'
+                                       //attribution="&amp;copy <a href=&quot;http://osm.org/copyright&quot;></a> contributors"
+                                       attribution="&amp;copy 2018 Google"
+                                 />
+                              </BaseLayer>,
+                              <BaseLayer checked name='Terrain'>
+                                 <GoogleLayer googlekey={this.props.config.googleAPIkey} maptype='TERRAIN'/>
+                              </BaseLayer>,
+                              <BaseLayer name='Satellite'>
+                                 <GoogleLayer googlekey={this.props.config.googleAPIkey} maptype='SATELLITE'/>
+                              </BaseLayer>,
+                              <BaseLayer name='Roadmap'>
+                                 <GoogleLayer googlekey={this.props.config.googleAPIkey} maptype='ROADMAP'/>
+                              </BaseLayer>]
+                           }
+                           { !this.props.config.googleAPIkey && <BaseLayer checked name='OpenStreetMap'>
+                              <TileLayer
+                                 //attribution="&amp;copy <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
+                                 //url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                                 url="https://{s}.tile.iosb.fraunhofer.de/tiles/osmde/{z}/{x}/{y}.png"
+                              />
+                           </BaseLayer> }
+                        </LayersControl>
+                        { markers } 
+                     </Map>)
+                  
+                  if(map) message.push(map)
+               }
+
+               
             }
             absi ++ ;
 
@@ -4285,6 +4352,34 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      nMax = n
                      //loggergen.log("lastN",lastN)
                      message.push(this.makeResult(id,n,t,lit,lang,tip,Tag,null,r.match,k,sublist[o],r.lit.value))
+
+                     if(t === "Place") {
+                        let lat = sublist[o].filter(k => k.type === bdo+"placeLat"),
+                            long = sublist[o].filter(k => k.type === bdo+"placeLong")
+                        if(lat.length && long.length) { 
+                           lat = lat[0].value;
+                           long = long[0].value                           
+                           const latLong = [lat,long].map(n => {
+                              if(n.match(/ [WS]$/)) n = "-" + n
+                              return n.replace(/ [EWSN]$/,"")
+                           })
+                           latLongs.push(latLong)
+
+                           var redIcon = new L.Icon({
+                              iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
+                              shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+                              iconSize: [25, 41],
+                              iconAnchor: [12, 41],
+                              popupAnchor: [1, -34],
+                              shadowSize: [41, 41]
+                           });
+
+                           let sUri = shortUri(o), url = "/show/"+sUri+"?s="+ encodeURIComponent(window.location.href.replace(/^https?:[/][/][^?]+[?]?/gi,"").replace(/(&n=[^&]*)/g,"")+"&n="+n)
+                           markers.push(<Marker position={latLong} permanent icon={redIcon}> 
+                                 <MapPopup direction="top"><Link to={url}>{lit}<br/><span className="RID">{sUri}</span></Link></MapPopup>
+                           </Marker>)
+                        }
+                     }
                   }
                   else {
                      if(unreleased) n --
@@ -5557,6 +5652,9 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          if(infoPanelH && infoPanelH.length) infoPanelH = rend(infoPanelH)
          if(infoPanelR && infoPanelR.length) infoPanelR = rend(infoPanelR)
       }
+
+
+
 
       return (
 <div>

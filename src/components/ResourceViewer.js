@@ -4325,6 +4325,15 @@ class ResourceViewer extends Component<Props,State>
 
       //loggergen.log("map",elem, k, tags, kZprop, doMap, doRegion, regBox, title)
 
+      var redIcon = new L.Icon({
+         iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
+         shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+         iconSize: [25, 41],
+         iconAnchor: [12, 41],
+         popupAnchor: [1, -34],
+         shadowSize: [41, 41]
+      });
+
       return ( 
          <div data-prop={shortUri(k)}>
             <h3><span>{this.proplink(k)}{I18n.t("punc.colon")}</span>&nbsp;</h3>
@@ -4363,8 +4372,8 @@ class ResourceViewer extends Component<Props,State>
                         />
                      </BaseLayer> }
                   </LayersControl>
-                  <Marker position={doMap} >
-                        <ToolT direction="top">{title}</ToolT>
+                  <Marker position={doMap} icon={redIcon}>
+                        {/* <ToolT direction="top">{title}</ToolT> */}
                   </Marker>
                   {doRegion && <GeoJSON data={doRegion} style={ {color: '#006699', weight: 5, opacity: 0.65} }/>}
                   <Portal position="bottomleft">
