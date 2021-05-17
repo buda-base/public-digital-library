@@ -166,7 +166,7 @@ export const updateFacets = (state: UIState, action: actions.LoadingAction) => {
         let keys = Object.keys(action.payload)        
         if(keys.length > 0 && (!action.payload[prop] || keys.length > 1)) {
             update[k] = {}
-            console.log("k",k,prop)
+            //console.log("k",k,prop)
 
             let meta = action.meta.facets[k]
             let props = Object.keys(meta)
@@ -293,7 +293,7 @@ export const updateFacets = (state: UIState, action: actions.LoadingAction) => {
             //update[k]["Any"] = { i:0 } //Object.keys(update[k]).reduce((acc,v)=>acc+Number(update[k][v].i),0)  }            
             update[k]["Any"] = { i:Object.keys(total_i).length  }
 
-            console.log("uF",update[k])
+            //console.log("uF",update[k])
         }
     })
 
