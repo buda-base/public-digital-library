@@ -3897,6 +3897,8 @@ a.result + #matches.mobile,
 
    /* ------------------------------------------------------------------------------------------------------------------------ results */
 
+   .resultsMap { height:75vh;}
+
    #root .App .resultPage #res-container { padding-top:0; }
    #root .App .resultPage #filters-UI > div { padding-left:40px;padding-right:40px; }
    #root .App .resultPage #res-header > div { padding-left:40px;padding-right:40px; }
