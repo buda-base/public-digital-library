@@ -4440,8 +4440,29 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                            });
 
                            let sUri = shortUri(o), url = "/show/"+sUri+"?s="+ encodeURIComponent(window.location.href.replace(/^https?:[/][/][^?]+[?]?/gi,"").replace(/(&n=[^&]*)/g,"")+"&n="+n)
+
+                           const sendMsgMap = (ev) => {
+                              if(this.props.simple) {
+                                 let otherData =  {}, allProps = sublist[o] ;                              
+                                 otherData["tmp:type"] = "bdo:Place"
+                                 //if(!prettId.startsWith("bdr:")) otherData["tmp:externalUrl"] = resUrl
+                                 let msg = 
+                                    '{"@id":"'+sUri+'"'
+                                    +',"skos:prefLabel":'+JSON.stringify(allProps.filter(p => p.type === skos+"prefLabel").map(p => ({"@value":p.value,"@language":p["xml:lang"]})))
+                                    +',"tmp:keyword":{"@value":"'+lucenequerytokeyword(this.props.keyword)+'","@language":"'+this.props.language+'"}'
+                                    +',"tmp:propid":"'+this.props.propid+'"'
+                                    +(otherData?',"tmp:otherData":'+JSON.stringify(otherData):'')
+                                    +'}'
+                                 console.log("(MSG)",this.props.propid,JSON.stringify(otherData,null,3),msg)
+                                 window.top.postMessage(msg, "*") // TODO set target url for message
+                                 ev.preventDefault()
+                                 ev.stopPropagation()
+                                 return false
+                              }
+                           }
+
                            markers.push(<Marker position={latLong} permanent icon={redIcon}> 
-                                 <MapPopup direction="top"><Link to={url}>{lit}<br/><span className="RID">{sUri}</span></Link></MapPopup>
+                                 <MapPopup direction="top"><Link onClick={(ev) => sendMsgMap(ev)} to={url}>{lit}<br/><span className="RID">{sUri}</span></Link></MapPopup>
                            </Marker>)
                         }
                      }
