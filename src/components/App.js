@@ -159,10 +159,11 @@ export function fullUri(id:string, force:boolean=false) {
    return id ;
 }
 
-export function shortUri(id:string) {
+export function shortUri(id:string, nobdo?:boolean=false) {
    for(let k of Object.keys(prefixesMap)) {
       id = id.replace(new RegExp(prefixesMap[k]),k+":")  
    }
+   if(nobdo) id = id.replace(/^bdo:/,"")
    return id.replace(/[/]$/,"") ;
 }
 
@@ -2727,7 +2728,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                }
             }
 
-            if(vals.length > 1) ret.push(<div class="match">{vals}</div>)
+            if(vals.length > 1) ret.push(<div class="match dates">{vals}</div>)
             
             return ret
          }
@@ -3010,7 +3011,11 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
       if(!lit) lit = prettId
 
+      let T = getEntiType(id)
+
       //loggergen.log("id",id,prettId)
+
+
 
       let status = "",warnStatus,warnLabel
 
@@ -3032,7 +3037,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          else status = ""
       }
 
-      let T = getEntiType(id), langT, langs = [], isSerial;
+      let langT, langs = [], isSerial;
       if(lit && lit.startsWith && lit.startsWith("@")) T = "match"
       if(T === "Work") { 
          langT = allProps.filter(p => p.type === bdo+"language")      
@@ -3068,7 +3073,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             else if(viewUrl) viewUrl = fullUri(viewUrl)
 
 
-            access = allProps.filter(a => a.type === tmp+"hasReproAccess")
+            access = allProps.filter(a => [tmp+"hasReproAccess", adm+"access"].includes(a.type))
             if(access.length) access = access[0].value            
             
             if(this.props.config && this.props.config.iiif && this.props.config.iiif.endpoints[this.props.config.iiif.index].match(/iiif-dev/)) hasThumb = hasThumb.replace(/iiif([.]bdrc[.]io)/, "iiif-dev$1")
@@ -3161,10 +3166,48 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             resUrl = (url?url.replace(/^https?:/,""):id.replace(/^https?:/,""))
             //retList.push( <Link key={n} to={url?url.replace(/^https?:/,""):id.replace(/^https?:/,"")} target="_blank" className="result">{ret}</Link> )
 
+
+         let getBDOtype = (t) => {
+            // TODO: check compliance with BLMP
+            if(t === "Scans") return "bdo:ImageInstance"
+            return "bdo:"+t
+         }
+
+         let sendMsg = (ev,prevent = false) => {
+            if(this.props.simple) {
+               let otherData =  {} ;
+               if(T === "Person") {
+                  otherData = allProps.filter(e => [bdo+"personEvent"].includes(e.type)).map(e => this.props.assoRes[e.value]).reduce( (acc,e) =>{
+                     let t = e.filter(f => f.type === rdf+"type")
+                     if(t.length) return { ...acc, [shortUri(t[0].value, true)]:e.filter(e => [bdo+"onYear", bdo+"notBefore", bdo+"notAfter", bdo+"eventWhere"].includes(e.type))
+                        .reduce( (subacc,p)=>( {...subacc, [shortUri(p.type, true)]: shortUri(p.value, true) }),{}) }
+                     else return acc
+                  },{}) 
+               }
+               otherData["tmp:type"] = getBDOtype(T) 
+               if(!prettId.startsWith("bdr:")) otherData["tmp:externalUrl"] = resUrl
+               let msg = 
+                  '{"@id":"'+prettId+'"'
+                  +',"skos:prefLabel":'+JSON.stringify(allProps.filter(p => p.type === skos+"prefLabel").map(p => ({"@value":p.value,"@language":p["xml:lang"]})))
+                  +',"tmp:keyword":{"@value":"'+lucenequerytokeyword(this.props.keyword)+'","@language":"'+this.props.language+'"}'
+                  +',"tmp:propid":"'+this.props.propid+'"'
+                  +(otherData?',"tmp:otherData":'+JSON.stringify(otherData):'')
+                  +'}'
+               console.log("(MSG)",this.props.propid,JSON.stringify(otherData,null,3),msg)
+               window.top.postMessage(msg, "*") // TODO set target url for message
+               if(prevent) {
+                  ev.preventDefault()
+                  ev.stopPropagation()
+                  return false;
+               }
+            }
+         }
+
+
          let getIconLink = (resUrl,div) => {
 
-            if(!resUrl.startsWith("http")) return <Link to={resUrl}>{div}</Link>
-            else return <a href={resUrl} target="_blank">{div}</a>
+            if(!resUrl.startsWith("http")) return <Link to={resUrl}  onClick={(ev) => sendMsg(ev, true)}>{div}</Link>
+            else return <a href={resUrl} target="_blank"  onClick={(ev) => sendMsg(ev, true)}>{div}</a>
 
          }
 
@@ -3246,23 +3289,31 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             </div>
          ]
 
-         if(!resUrl.startsWith("http")) retList.push(<Link to={resUrl.replace(/#open-viewer$/,"")} className="result">{ret}</Link>)         
-         else retList.push(<a href={resUrl} target="_blank" className="result">{ret}</a>)         
+         if(!resUrl.startsWith("http")) retList.push(<Link to={resUrl.replace(/#open-viewer$/,"")} className="result" onClick={(ev) => sendMsg(ev, true)}>{ret}</Link>)         
+         else retList.push(<a href={resUrl} target="_blank" className="result"  onClick={(ev) => sendMsg(ev, true)}>{ret}</a>)         
 
          let type = this.state.filters.datatype[0]
          let typeisbiblio = (type === "Work" || type === "Instance" || type === "Etext" || type === "Scan")
          let by = this.getResultProp(I18n.t("result.workBy"),allProps,false,true,[tmp+"author"])
          let byStat = this.getResultProp(I18n.t("result.workBy"),allProps,true,false,[bdo+"authorshipStatement"])
-         let details = <div class={"more-details"+( this.state.collapse["more-details-"+id] == true ?" on":"" )} onClick={() => this.setState({ repage:true, collapse:{...this.state.collapse, ["more-details-"+id]:!this.state.collapse["more-details-"+id]}})}>
+         let details = <div class={"more-details"+( this.state.collapse["more-details-"+id] == true ?" on":"" )} onClick={(ev) => {
+            this.setState({ repage:true, collapse:{...this.state.collapse, ["more-details-"+id]:!this.state.collapse["more-details-"+id]}})
+            ev.preventDefault();
+            ev.stopPropagation();
+            return false;
+         }}>
                         { this.state.collapse["more-details-"+id] != true && <ExpandMore /> }
                         { this.state.collapse["more-details-"+id] && <ExpandLess /> }
                      </div>
          let inRoo = this.getResultProp(I18n.t("result.inRootInstance"),allProps,false,true,[bdo+"inRootInstance",tmp+"inRootInstance"],null,null,null,null,resUrl,T)
-         if(typeisbiblio && (by || inRoo) /*|| byStat) */ ) retList.push( <div id='matches' class={"mobile hasAuthor "+( this.state.collapse["more-details-"+id] == true ?" on":"" )}>         
+         let personDates = this.getResultProp(I18n.t("result.year"),allProps,false,false,[tmp+"onYear",bdo+"onYear",bdo+"notBefore",bdo+"notAfter"],null,[bdo+"personEvent"],[bdo+"PersonBirth",bdo+"PersonDeath"]) 
+
+         if(typeisbiblio && (by || inRoo) || type === "Person" && personDates ) retList.push( <div id='matches' class={"mobile hasAuthor "+( this.state.collapse["more-details-"+id] == true ?" on":"" )}>         
 
                { typeisbiblio && inRoo } 
                { typeisbiblio && by }
                {/* { typeisbiblio && byStat } */}
+               { type === "Person" && personDates }
                { details}
             </div>)
          else {
@@ -3482,8 +3533,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
             { type !== "Person" && 
                this.getResultProp(I18n.t("result.year"),allProps,false,false,[tmp+"yearStart"]) }
-            { type === "Person" && 
-               this.getResultProp(I18n.t("result.year"),allProps,false,false,[tmp+"onYear",bdo+"onYear",bdo+"notBefore",bdo+"notAfter"],null,[bdo+"personEvent"],[bdo+"PersonBirth",bdo+"PersonDeath"]) }
+
+            { type === "Person" && personDates }
 
             {/* { type === "Etext" && this.getResultProp(I18n.t("result.eTextIsForWork"),allProps,false,true,[tmp+"forWork"]) }             */}
             { type === "Etext" && this.getResultProp(bdo+"eTextIsVolume",allProps,false,false) }
@@ -3578,7 +3629,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
           </a>
        </CopyToClipboard> )
 
-      retList = <div {... (!isInstance?{id:"result-"+n}:{})} {...(doRef?{ref:this._refs[nsub]}:{})} className={"result-content " + (otherSrc && otherSrc.length?"otherSrc ":"") + status + " " + enType + (hasThumb.length?" wThumb":"")}>{retList}</div>
+      retList = <div onClick={sendMsg} {... (!isInstance?{id:"result-"+n}:{})} {...(doRef?{ref:this._refs[nsub]}:{})} className={"result-content " + (otherSrc && otherSrc.length?"otherSrc ":"") + status + " " + enType + (hasThumb.length?" wThumb":"")}>{retList}</div>
 
 
 
@@ -4454,7 +4505,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   {  this.state.filters.facets && <span><br/>{this.renderResetF()}</span>}
                </Typography>);
 
-               if(!this.state.filters.facets && other && other.length) 
+               if(!this.state.filters.facets && other && other.length && !this.props.simple)   
                   message.push(<Typography className="no-result"><span>{I18n.t("search.seeO")}{I18n.t("misc.colon")} {other.map(o => <a onClick={(event) => this.handleCheck(event,o,true)} class="uri-link">{I18n.t("types."+o.toLowerCase(),{count:2})}</a>)}</span></Typography>)
                else if(this.props.language === "id" && this.props.keyword.match(/(^\"?([^:]+:)?[UWPGRCTILE][A-Z0-9_]+\"?$)|(^\"?([^:]+:)?([cpgwrt]|mw|wa|ws)\d[^ ]*\"?$)/)) {
                   let rid = this.props.keyword //
@@ -5433,6 +5484,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
       }
 
       const allSortByLists = { 
+         "Role": [ "closestM", "roleN" ],
          "Work": [ "popu", "closestM", "workT" ], 
          "Person": [ "popu", "closestM", "personN", "yearB" ],  
          "Place": [ "popu", "closestM", "placeN" ],  
@@ -5671,7 +5723,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
 
       return (
-<div>
+<div className={(this.props.simple?"simpleSearch":"")}>
    {getGDPRconsent(this)}
    {/* <Link to="/about">About</Link> */}
 
@@ -5949,7 +6001,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      </Paper>
                   </div> */
                }
-               { (this.props.keyword && (this.props.loading || (this.props.datatypes && !this.props.datatypes.hash))) && <Loader className="mainloader"/> }
+               { (this.props.simple && !this.props.keyword || (this.props.keyword && (this.props.loading || (this.props.datatypes && !this.props.datatypes.hash)))) && <Loader className="mainloader"/> }
                { message.length == 0 && !this.props.loading && !this.props.keyword && 
                   <List id="samples">
                      {/* { messageD } */}
@@ -5975,7 +6027,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                            this.resetFilters(event)
                         }}><img src="/icons/back.png"/><span>{I18n.t("search.backToW")}</span></a> }
                      { message }
-                     <div id="pagine">
+                     { pageLinks && <div id="pagine">
                         <NavigateBefore
                            title="Previous page"
                            className={!paginate || paginate.index == 0 ? "hide":""}
@@ -5987,7 +6039,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                            title="Next page"
                            className={!paginate || paginate.index == paginate.pages.length - 1 ? "hide":""}
                            onClick={this.nextPage.bind(this,id)} />
-                     </div>
+                     </div> }
                   </List>
                }
                </div>

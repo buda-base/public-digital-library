@@ -102,7 +102,8 @@ const zhTranslation = {
       numberMC:"匹配部分的数量",
       lastS:"发布时间",
       reverseS:"(逆序)",
-      volumeN:"Volume Number"
+      volumeN:"Volume Number",
+      roleN:"Role Name",
    },
    copyright:{
       open:"开放访问",

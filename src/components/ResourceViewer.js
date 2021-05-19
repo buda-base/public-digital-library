@@ -6954,7 +6954,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                   if(val) vals.push(val)
                   if(p.includes("Birth")) vals.push(<span>&nbsp;&ndash;&nbsp;</span>)
                }
-               if(vals.length > 1) dates = <span clas='date'>{vals}</span> ;
+               if(vals.length > 1) dates = <span class='date'>{vals}</span> ;
             }
          }
 
@@ -6986,11 +6986,61 @@ perma_menu(pdfLink,monoVol,fairUse,other)
             if(infoPanelR && infoPanelR.length) infoPanelR = rend(infoPanelR)
          }
 
+   
+         let sendMsg = (ev,prevent = false) => {
+
+            if(this.props.loading || !this.props.resources || !this.props.resources[this.props.IRI] || !this.props.resources[this.props.IRI][fullUri(this.props.IRI)]) return ;
+
+            if(this.props.simple /*&& this.props.propid*/) {
+               let otherData = { "tmp:type": this.getResourceElem(rdf+"type").map(e => shortUri(e.value)) }, prettId = this.props.IRI;
+               
+               if(_T === "Person") {
+                  let pEv = this.getResourceElem(bdo+"personEvent")
+                  if(pEv) for(let p of pEv) {
+                     let elem = this.getResourceBNode(p.value)                     
+                     //console.log("elem:",p.value,elem)
+                     if(elem) {
+                        let prop = elem[rdf+"type"]
+                        if(prop && prop.length) prop = shortUri(prop[0].value, true)
+                        else prop = false
+                        if(prop) {
+                           let data 
+                           [bdo+"onYear", bdo+"notBefore", bdo+"notAfter", bdo+"eventWhere"].map(e => {
+                              if(!data) data = {}
+                              if(elem[e] && elem[e].length) data[shortUri(e,true)] = shortUri(elem[e][0].value)
+                           })
+                           if(data) otherData[prop] = data
+                        }
+                     }
+                  }
+               }
+               
+               // TODO add altLabel/prefLabel from sameAs (related to #438)
+               let labels = this.getResourceElem(skos+"prefLabel")
+               if(!labels) labels = []
+               let msg = 
+                  '{"@id":"'+prettId+'"'
+                  +',"skos:prefLabel":'+JSON.stringify(labels
+                     .filter(p => !p.fromSameAs || p.allSameAs && p.allSameAs.length && p.allSameAs.filter(a => a.startsWith(bdr)).length)
+                     .map(p => ({"@value":p.value,"@language":p.lang})))
+                  +',"tmp:keyword":{"@value":"'+this.props.IRI+'","@language":""}'
+                  +',"tmp:propid":"'+this.props.propid+'"'
+                  +(otherData?',"tmp:otherData":'+JSON.stringify(otherData):'')
+                  +'}'
+               console.log("(MSG)",this.props.propid,JSON.stringify(otherData,null,3),msg)
+               window.top.postMessage(msg, "*") // TODO set target url for message
+               if(prevent) {
+                  ev.preventDefault()
+                  ev.stopPropagation()
+                  return false;
+               }
+            }
+         }
          return (
          [getGDPRconsent(this),
          <div class={isMirador?"H100vh OF0":""}>
             {infoPanelR}
-            <div className={"resource "+getEntiType(this.props.IRI).toLowerCase()}>               
+            <div className={"resource "+getEntiType(this.props.IRI).toLowerCase() + (this.props.simple?" simple":"")} {...this.props.simple?{onClick:sendMsg}:{}}>                              
                {searchUrl && <div class="ariane">
                   <Link to={searchUrl.startsWith("latest")?searchUrl:"/search?"+searchUrl} onClick={(ev) => {
                      this.props.onLoading("search",true)                     
