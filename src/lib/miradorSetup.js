@@ -101,8 +101,9 @@ if(jQ) reqFS(jQ("body")[0]);
 
 let timerConf, scrollTimer, scrollTimer2, clickTimer, inApp ;
 
-export function miradorSetUI(closeCollec, num)
+export function miradorSetUI(closeCollec, num, opt = {})
 {
+   //console.log("opt:",opt)
 
    if(closeCollec == undefined) closeCollec = true
    if(!jQ) importModules()
@@ -1108,12 +1109,16 @@ export async function miradorInitView(work,lang,callerURI,locale) {
    const urlParams = new URLSearchParams(window.location.search);
    if(urlParams.get('iiifpres')) iiifpres = "//" + urlParams.get('iiifpres') 
 
+   let opt = {}
+
    //const work = props.match.params.IRI;
    if(work) {
       console.log("work",work)
 
       const resData = await(await fetch(ldspdi+"/query/graph/ResInfo?R_RES="+work+"&format=jsonld")).json()
       console.log(resData)
+
+      if(resData["qualityGrade"] != undefined) opt["qualityGrade"] = resData["qualityGrade"]
 
       let propK ;
       if(resData.status && resData.status == 404) { console.log("echec",work)}
@@ -1229,8 +1234,8 @@ export async function miradorInitView(work,lang,callerURI,locale) {
       console.log("init?",cfg,window.Mirador)
       if(window.Mirador !== undefined) {
          clearInterval(initTimer);
-         window.mirador = window.Mirador( cfg )
-         miradorSetUI();
+         window.mirador = window.Mirador( { ...cfg, ...opt } )
+         miradorSetUI(undefined,undefined);
       }
    })(config), 1000)
 }
