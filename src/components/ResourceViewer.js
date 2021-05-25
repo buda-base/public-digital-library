@@ -5507,6 +5507,15 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                </div>
    }
 
+   renderQuality = () => {
+      let elem = this.getResourceElem(bdo+"qualityGrade");
+      console.log("QG:",elem)
+      if(elem && elem.length) elem = elem[0].value ;
+      if(elem === "0") {
+         return <div class="data access"><h3><span style={{textTransform:"none"}}>{I18n.t("access.quality0")}</span></h3></div>
+      }
+   }
+
    renderOCR = () => {
       let elem = this.getResourceElem(bdo+"contentMethod");
       console.log("OCR:",elem)
@@ -7090,6 +7099,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                      {inTitle}
                      {dates}
                   </div>
+                  { this.renderQuality() }
                   { this.renderOCR() }
                   { this.renderNoAccess(fairUse) }
                   { this.renderAccess() }

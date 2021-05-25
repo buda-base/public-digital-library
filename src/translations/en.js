@@ -135,7 +135,8 @@ const enTranslation = {
       view:"View Scans",
       scans:"Scans Available",
       provided:"Data provided by {{- provider}}",
-      noImg:"No image available"
+      noImg:"No image available",
+      lowQuality:"Low quality scans"
    },
    prop:{
       "tmp:bestMatch":"Best Match",
@@ -518,7 +519,8 @@ const enTranslation = {
       notyet:"Images not yet available.",
       error:"An error occurred while trying to access the images.",
       generic:"BDRC has restricted access to this work in accordance with our access policies. You can read those policies here: <policies href='https://bdrc.io/access-policies/' target='_blank'>https://bdrc.io/access-policies/</policies>",
-      OCR:"These etexts were created through OCR (optical character recognition), not manually input, and have not been edited. OCR for Tibetan script is not 100% perfect but it is accurate enough to create text that will enhance the BDRC database. We hope that etexts like these improve the discoverability and usefulness of the BDRC archive for you."
+      OCR:"These etexts were created through OCR (optical character recognition), not manually input, and have not been edited. OCR for Tibetan script is not 100% perfect but it is accurate enough to create text that will enhance the BDRC database. We hope that etexts like these improve the discoverability and usefulness of the BDRC archive for you.",
+      quality0:"We acknowledge the poor quality of these scans and apologize for it. We think these might still be useful for scholarship and make them available, while searching for higher quality ones."
    },
    location:{
       beginV:"Begin volume: {{num}}",

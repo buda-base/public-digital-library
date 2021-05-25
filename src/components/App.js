@@ -3057,7 +3057,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
       if(enType === "instance" && (!hasImage || !hasImage.length)) hasImage = false
       else hasImage = true
 
-      let hasThumb = allProps.filter(a => a.type === tmp+"thumbnailIIIFService"), hasCopyR, viewUrl,access
+      let hasThumb = allProps.filter(a => a.type === tmp+"thumbnailIIIFService"), hasCopyR, viewUrl,access, quality
       if(hasThumb.length) { 
          hasThumb = hasThumb[0].value 
          if(hasThumb) {             
@@ -3079,7 +3079,11 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             if(this.props.config && this.props.config.iiif && this.props.config.iiif.endpoints[this.props.config.iiif.index].match(/iiif-dev/)) hasThumb = hasThumb.replace(/iiif([.]bdrc[.]io)/, "iiif-dev$1")
             hasThumb += "/full/"+(hasThumb.includes(".bdrc.io/")?"!2000,145":",145")+"/0/default.jpg" 
 
-            //loggergen.log("access",access)
+
+            quality = allProps.filter(a => [ bdo+"qualityGrade", tmp+"hasReproQuality" ].includes(a.type))
+            if(quality.length) quality = quality[0].value            
+
+            loggergen.log("access",access,quality)
 
             if(access) {
                hasCopyR = "unknown"            
@@ -3089,6 +3093,10 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                else if(access.includes("Quality")) { if(this.props.auth && !this.props.auth.isAuthenticated()) hasThumb = []; }
                else if(access.includes("Open")) hasCopyR = "copyleft"
                //if(access.includes("Restricted")) { hasCopyR = "restricted"; hasThumb = []; }
+            } 
+
+            if(quality === "0") {
+               hasCopyR = "quality"
             }
 
          }
@@ -3280,6 +3288,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                <div class="RID">{prettId}</div>
                {hasProv}
                { /*hasCopyR === "copyleft" && <img title={I18n.t("copyright.open")} src="/icons/open.svg"/>*/ }
+               {hasCopyR === "quality" && <span class="copyRi lowQ" title={I18n.t("copyright.lowQuality")}><img src="/icons/lowrate.png"/></span>}
                {hasCopyR === "fair_use" && <span class="copyRi" title={I18n.t("copyright.fairUse")}><img src="/icons/fair_use.svg"/></span>}
                {hasCopyR === "temporarily" && <span class="copyRi" title={I18n.t("copyright.tempo")}><img src="/icons/temporarily.svg"/></span>}
                {hasCopyR === "sealed" && <span class="copyRi" title={I18n.t("copyright.sealed")}><img src="/icons/sealed.svg"/></span>}

@@ -113,7 +113,8 @@ const zhTranslation = {
       view:"查看图像",
       scans:"可查看扫描件",
       provided:"数据由{{- provider}}提供",
-      noImg:"No image available"
+      noImg:"No image available",
+      lowQuality:"Low quality scans"
    },
    prop:{
       "tmp:bestMatch":"最佳匹配",
@@ -451,7 +452,8 @@ const zhTranslation = {
    },
    access:{
       limited20:"仅限首尾各20页的访问权",
-      credentials:"如果您有权获取这部作品的全部图像"
+      credentials:"如果您有权获取这部作品的全部图像",
+      quality0:"We acknowledge the <bold>poor quality of these scans</bold> and apologize for it. We think these might still be useful for scholarship and make them available, while searching for higher quality ones."
    },
    location:{
       beginV:"起始卷{{num}}",
