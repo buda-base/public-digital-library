@@ -4689,7 +4689,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
                        <CopyToClipboard text={that.props.imageAsset} onCopy={(e) =>
                                  //alert("Resource url copied to clipboard\nCTRL+V to paste")
-                                 prompt(I18n.t("misc.clipboard"),that.props.imageAsset)
+                                 prompt(I18n.t("misc.clipboard"),that.props.imageAsset.replace(/^\/\//,"https://"))
                            }>
                            <a><MenuItem>{I18n.t("resource.exportData",{data: "IIIF manifest"})}</MenuItem></a>
                         </CopyToClipboard>
