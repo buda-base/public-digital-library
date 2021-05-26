@@ -1100,6 +1100,8 @@ class ResourceViewer extends Component<Props,State>
       
       if (hash && hash.length) {
          if(hash === "open-viewer") {
+
+         if(this.state.opartinview) this.setState({ opartinview:"" })
             /*
             let timerViewer = setInterval(() => {
                
