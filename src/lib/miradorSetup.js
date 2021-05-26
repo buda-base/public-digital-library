@@ -101,9 +101,7 @@ if(jQ) reqFS(jQ("body")[0]);
 
 let timerConf, scrollTimer, scrollTimer2, clickTimer, inApp ;
 
-export function miradorSetUI(closeCollec, num, opt = {})
-{
-   //console.log("opt:",opt)
+export function miradorSetUI(closeCollec, num) {
 
    if(closeCollec == undefined) closeCollec = true
    if(!jQ) importModules()
@@ -1234,8 +1232,8 @@ export async function miradorInitView(work,lang,callerURI,locale) {
       console.log("init?",cfg,window.Mirador)
       if(window.Mirador !== undefined) {
          clearInterval(initTimer);
-         window.mirador = window.Mirador( { ...cfg, ...opt } )
-         miradorSetUI(undefined,undefined);
+         window.mirador = window.Mirador( { ...cfg, windowSettings:{ ...cfg.windowSettings, ...opt } } )
+         miradorSetUI();
       }
    })(config), 1000)
 }

@@ -3809,8 +3809,8 @@ class ResourceViewer extends Component<Props,State>
 
                if(window.mirador) delete window.mirador
 
-               var qG = this.getResourceElem(bdo+"qualityGrade"), opt = {}
-               if(qG && qG.length) opt["qualityGrade"] = qG[0].value
+               var qG = this.getResourceElem(bdo+"qualityGrade")
+               if(qG && qG.length) config["windowSettings"]["qualityGrade"] = qG[0].value
 
                window.mirador = window.Mirador( config )
 
