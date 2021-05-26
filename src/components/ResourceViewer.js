@@ -6772,7 +6772,10 @@ perma_menu(pdfLink,monoVol,fairUse,other)
       //loggergen.log("root?",root)
       if(root && root.length) {
          inTitle  = [ 
-            <h3 class="inT"><span>{I18n.t("misc.in")}{I18n.t("punc.colon")} </span> {this.uriformat(tmp+"in",root[0])}<Link to={"/show/"+shortUri(root[0].value)+"?part="+this.props.IRI} class="outL"><img src="/scripts/mirador/images/collecR.svg"/>{I18n.t("result.openO")}</Link></h3>,
+            <h3 class="inT">
+               <span>{I18n.t("misc.in")}{I18n.t("punc.colon")} </span> {this.uriformat(tmp+"in",root[0])}
+               <Link onClick={() => this.setState({opartinview:""})} to={"/show/"+shortUri(root[0].value)+"?part="+this.props.IRI} class="outL"><img src="/scripts/mirador/images/collecR.svg"/>{I18n.t("result.openO")}</Link>
+            </h3>,
             //<br/>,
             //<h3 class="outline-link"><Link class="urilink" to={"/show/"+shortUri(root[0].value)+"?part="+this.props.IRI+"#outline"}>{"View in the outline"}</Link></h3>
          ]
