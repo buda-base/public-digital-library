@@ -2163,6 +2163,12 @@ h4:hover a.no-bdrc img { opacity:1; }
 
 .resource .data h2.intro + h2 { line-height:42px;}
 
+.resource .data h2.intro + h2[lang=bo],
+.resource .data h2[lang=bo] { line-height:64px; }
+
+.resource .data h2.intro + h2[lang=bo] > a > span:not(.T,.lang),
+.resource .data h2[lang=bo] > span:not(.T,.lang) { font-family: "Noto Sans Tibetan", "Noto Sans", "Roboto", "Helvetica", "Arial", sans-serif !important; }
+
 .resource .data h2.intro,
 .resource .data h2.intro + h2,
 .resource .data h2.intro + h2 span { display:inline;vertical-align: baseline; position:relative;}
