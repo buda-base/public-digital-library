@@ -2221,6 +2221,8 @@ span.in { font-weight:500;padding-left:0px; padding-right:10px; margin-left:36px
 .resource .group > h4:first-child:not(.first),
 .resource .group > h4:first-child:not(.first) .ulink { vertical-align: top;}
 
+.resource .group > h4.multiple > span .over-in .urilink { vertical-align: baseline;}
+
 /* .resource .group > h4.multiple, */
 /* .resource .group > h4.multiple > span, */
 .resource .group > h4:first-child:not(.first),
