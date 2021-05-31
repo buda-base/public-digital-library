@@ -1253,6 +1253,34 @@ reducers[actions.TYPES.pdfReady] = pdfReady;
 
 
 
+export const pdfError = (state: DataState, action: Action) => {
+
+      let id = new RegExp(action.meta.url.replace(/[/](zip|pdf)[/]/,"/.../"))
+      let fileT = action.meta.url.replace(/^.*[/](zip|pdf)[/].*$/,"$1")
+      let pdfVolumes = state.IIIFinfo
+
+      if(pdfVolumes) pdfVolumes = pdfVolumes[action.meta.iri]
+      if(pdfVolumes) pdfVolumes = pdfVolumes.pdfVolumes
+      if(pdfVolumes) pdfVolumes = pdfVolumes.map(e => {
+         if(e.link.match(id)) return { ...e, [fileT+"Error"]: action.payload } 
+         return e ;
+      })
+      
+      return {
+      ...state,
+      IIIFinfo : {
+         ...state.IIIFinfo,
+         [action.meta.iri]:{ ...state.IIIFinfo?state.IIIFinfo[action.meta.iri]:{},
+            pdfVolumes
+         }
+      }
+   }
+}
+reducers[actions.TYPES.pdfError] = pdfError;
+
+
+
+
 export const pdfNotReady = (state: DataState, action: Action) => {
 
       let id = new RegExp(action.meta.url.replace(/[/](zip|pdf)[/]/,"/.../"))

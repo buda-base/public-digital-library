@@ -4739,8 +4739,10 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
                               let Ploading = e.pdfFile && e.pdfFile == true
                               let Ploaded = e.pdfFile && e.pdfFile != true
+                              let Perror = e.pdfFile && e.pdfError
                               let Zloading = e.zipFile && e.zipFile == true
                               let Zloaded = e.zipFile && e.zipFile != true
+                              let Zerror = e.zipFile && e.zipError
 
 
                               let pdfMsg = I18n.t("resource.gener1pdf")
@@ -4756,12 +4758,22 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                                  zipMsg =  I18n.t("resource.gener1zip")
                               }
 
+                              if(Perror) {
+                                 Ploading = false
+                                 pdfMsg = e.pdfError + " error"
+                              }
+
                               if(Zloading) {
                                  zipMsg = I18n.t("resource.gener2zip")
                               }
 
                               if(Zloaded) {                                 
                                  zipMsg =  (Ploaded?"ZIP":I18n.t("resource.gener3zip"))
+                              }
+
+                              if(Zerror) {
+                                 Zloading = false
+                                 zipMsg = e.zipError + " error"
                               }
 
                               return (<ListItem className="pdfMenu">

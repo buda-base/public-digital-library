@@ -154,6 +154,15 @@ export const pdfReady = (url: string, iri:string): Action => {
     }
 }
 
+TYPES.pdfError = 'PDF_ERROR';
+export const pdfError = (code: string, iri:string): Action => {
+    return {
+        type: TYPES.pdfError,
+        payload: code,
+        meta:iri
+    }
+}
+
 TYPES.pdfNotReady = 'PDF_NOT_READY';
 export const pdfNotReady = (url: string, iri:string): Action => {
     return {

@@ -813,13 +813,19 @@ async function createPdf(url,iri) {
       if(config) config = config.iiif
       if(config) IIIFurl = config.endpoints[config.index]
       loggergen.log("IIIFu",IIIFurl,config)
-      let pdfCheck = setInterval(async () => {
-
+      let checkPdf = async () => {
          let link = iri.link, data
          if(!link) {
-            data = JSON.parse(await api.getURLContents((url.startsWith("/")?IIIFurl:"")+url,false,"application/json"))
-            loggergen.log("pdf:",data)
-            link = data.link
+            try { 
+               data = JSON.parse(await api.getURLContents((url.startsWith("/")?IIIFurl:"")+url,false,"application/json"))
+               loggergen.log("pdf:",data)
+               link = data.link
+            } catch(e) {
+               console.warn("PDF code",e.code)
+               clearInterval(pdfCheck)
+               store.dispatch(dataActions.pdfError(e.code,{url,iri:iri.iri}))
+               return
+            }
          }
          if(link && !link.match(/^(https?:)?\/\//)) link = IIIFurl+link
 
@@ -831,7 +837,9 @@ async function createPdf(url,iri) {
             if(data && data.percentdone !== undefined) store.dispatch(dataActions.pdfNotReady("",{url,iri:iri.iri,percent:data.percentdone}))
          }
 
-      }, 3000);
+      }
+      checkPdf()
+      let pdfCheck = setInterval(checkPdf, 3000);
 
       store.dispatch(dataActions.pdfNotReady("",{url,iri:iri.iri,percent:0}))
 
