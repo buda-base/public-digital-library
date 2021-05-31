@@ -4734,8 +4734,9 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                           [<MenuItem onClick={e => that.setState({...that.state,pdfOpen:false})}><a href={that.props.pdfUrl} target="_blank">Download</a></MenuItem>
                           ,<hr/>]
                          */}
+                         { !that.props.auth.isAuthenticated() && <ListItem><a className="mustLogin" onClick={() => that.props.auth.login(that.props.history.location)}>{I18n.t("resource.mustLogin")}</a></ListItem>}
                          {
-                           that.props.pdfVolumes.map(e => {
+                           that.props.auth.isAuthenticated() && that.props.pdfVolumes.map(e => {
 
                               let Ploading = e.pdfFile && e.pdfFile == true
                               let Ploaded = e.pdfFile && e.pdfFile != true
@@ -4760,7 +4761,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
                               if(Perror) {
                                  Ploading = false
-                                 pdfMsg = e.pdfError + " error"
+                                 pdfMsg = "server error (" + e.pdfError + ")"
                               }
 
                               if(Zloading) {
@@ -4773,7 +4774,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
                               if(Zerror) {
                                  Zloading = false
-                                 zipMsg = e.zipError + " error"
+                                 zipMsg = "server error (" + e.zipError + ")"
                               }
 
                               return (<ListItem className="pdfMenu">

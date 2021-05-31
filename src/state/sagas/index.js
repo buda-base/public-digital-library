@@ -104,7 +104,14 @@ async function initiateApp(params,iri,myprops,route) {
 
       }
 
-      if(route === "static") return ;
+      if(route === "static" || route === "mirador") {
+         
+         if(route === "mirador" && params.backToViewer) {
+            if(!auth.isAuthenticated()) auth.login(decodeURIComponent(params.backToViewer))
+         }
+         
+         return ;
+      }
 
    /*
       if(!state.data.ontology)

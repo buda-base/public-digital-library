@@ -142,7 +142,8 @@ export default class Auth {
         this.setSession(authResult);
         let redirect = JSON.parse(localStorage.getItem('auth0_redirect'))
         if(!redirect) redirect = '/'
-        history.replace(redirect);
+        if(redirect.startsWith("http")) window.location.href = redirect
+        else history.replace(redirect);
         //store.dispatch(ui.loggedIn())
       } else if (err) {
         history.replace('/');

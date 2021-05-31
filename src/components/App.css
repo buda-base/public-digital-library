@@ -1926,6 +1926,9 @@ body > [id^="menu-"] > div:last-child,
 .poPdf > div a li:hover,
 #popDL a li:hover { background-color:#f5f5f5;}
 
+
+.mustLogin:hover { text-decoration: underline;}
+
 /* ------------------------------------------------------------------------------------------------------------------------ hover panel */
 
 

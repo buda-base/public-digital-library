@@ -236,6 +236,15 @@ const makeMainRoutes = () => {
                               Redirecting...
                            </div>
                         )
+                     }}/>>
+                     <Route exact path="/login" render={(props) => {
+                        const get = qs.parse(history.location.search)
+                        store.dispatch(initiateApp(get, undefined, undefined, get.backToViewer?"mirador":"static"));
+                        return (
+                           <div style={{textAlign:"center",marginTop:"100px",fontSize:"22px"}}>                              
+                              Redirecting...
+                           </div>
+                        )
                      }}/>
                      <Route exact path="/" render={(props) => {
                         store.dispatch(initiateApp(qs.parse(history.location.search)));
