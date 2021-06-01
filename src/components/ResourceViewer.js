@@ -4622,6 +4622,20 @@ perma_menu(pdfLink,monoVol,fairUse,other)
    }
 
 
+   let authError = false ;
+   if(this.props.pdfVolumes && this.props.pdfVolumes.length > 0) {
+      for(let v of this.props.pdfVolumes) {
+         if(v.pdfError || v.zipError) { 
+            authError = true 
+            //setImmediate(() => window.dispatchEvent(new CustomEvent('resize')))
+            break;
+         }
+      }
+   }
+
+
+   //this._refs["perma_DL"] = React.createRef();
+   
 
    //loggergen.log("same:",same)
 
@@ -4646,7 +4660,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
       { that.props.IRI && <span id="rid">{shortUri(that.props.IRI)}</span> }
 
-      <span id="DL" onClick={(e) => this.setState({...this.state,anchorPermaDL:e.currentTarget, collapse: {...this.state.collapse, permaDL:!this.state.collapse.permaDL } } ) }>
+      <span id="DL" ref={this._refs["perma_DL"]} onClick={(e) => this.setState({...this.state,anchorPermaDL:e.currentTarget, collapse: {...this.state.collapse, permaDL:!this.state.collapse.permaDL } } ) }>
       {I18n.t("resource.download")} { this.state.collapse.permaDL ? <ExpandLess/>:<ExpandMore/>}
       </span>
 
@@ -4726,6 +4740,8 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                       className="poPdf"
                       open={that.state.pdfOpen == true || that.props.pdfReady == true}
                       anchorEl={that.state.anchorElPdf}
+                      //anchorOrigin={{ vertical: 'bottom' }}
+                      //transformOrigin={{ vertical: 'top' }}
                       onClose={that.handleRequestClosePdf.bind(this)}
                    >
                       <List>
@@ -4734,9 +4750,9 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                           [<MenuItem onClick={e => that.setState({...that.state,pdfOpen:false})}><a href={that.props.pdfUrl} target="_blank">Download</a></MenuItem>
                           ,<hr/>]
                          */}
-                         { !that.props.auth.isAuthenticated() && <ListItem><a className="mustLogin" onClick={() => that.props.auth.login(that.props.history.location)}>{I18n.t("resource.mustLogin")}</a></ListItem>}
+                         { authError && <ListItem><a className="mustLogin" onClick={() => that.props.auth.login(that.props.history.location)}>{I18n.t("resource.mustLogin")}</a></ListItem>}
                          {
-                           that.props.auth.isAuthenticated() && that.props.pdfVolumes.map(e => {
+                           !authError && that.props.pdfVolumes.map(e => {
 
                               let Ploading = e.pdfFile && e.pdfFile == true
                               let Ploaded = e.pdfFile && e.pdfFile != true
