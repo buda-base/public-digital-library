@@ -2977,6 +2977,7 @@ class ResourceViewer extends Component<Props,State>
             else {
                let lang = e["lang"]
                if(!lang) lang = e["xml:lang"]
+               if(!lang) lang = e["@language"]
                tmp = [pretty]
 
                if(lang) {
@@ -6144,6 +6145,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
                               if(g["tmp:titleMatch"] || g["tmp:labelMatch"]) {
                                  g.hasMatch = true
+                                 if(g["tmp:titleMatch"] && !Array.isArray(g["tmp:titleMatch"])) g["tmp:titleMatch"] = [ g["tmp:titleMatch"] ]
                               }
                               if(g["bf:identifiedBy"]) {
                                  if(!Array.isArray(g["bf:identifiedBy"])) g["bf:identifiedBy"] = [ g["bf:identifiedBy"] ]
@@ -6197,13 +6199,21 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                                        lasTy = title.type
                                        if(title && title["rdfs:label"]) title = title["rdfs:label"]
                                        if(!Array.isArray(title)) title = [ title ]                                      
-                                       title = title.map(f => ({value:f["@value"],lang:f["@language"], type:"literal"}))
+                                       title = title.map(f => ({value:f["@value"],lang:f["@language"], type:"literal"}))                                       
                                        //loggergen.log("title?",JSON.stringify(title,null,3))
                                        
                                        // TODO which to show or not ? in outline search results ?
-                                       let addTo = g.hidden
-                                       if(titleT === bdo+"Title"|| (title.length && title[0].value && title[0].value.includes("↦"))) addTo = g.details 
-                                       addTo.push(<div class={"sub " + (hideT?"hideT":"")}><h4 class="first type">{this.proplink(titleT)}{I18n.t("punc.colon")} </h4>{this.format("h4", "", "", false, "sub", title)}</div>)
+                                       let addTo = g.hidden, useT
+                                       if(g["tmp:titleMatch"]) useT = g["tmp:titleMatch"].filter(tm => title[0].value == tm["@value"].replace(/[↦↤]/g,""))
+                                       if(titleT === bdo+"Title"|| 
+                                          //(title.length && title[0].value && title[0].value == .includes("↦"))) 
+                                          title.length && title[0].value && g["tmp:titleMatch"] && useT.length) {
+
+                                          addTo = g.details 
+                                          addTo.push(<div class={"sub " + (hideT?"hideT":"")}><h4 class="first type">{this.proplink(titleT)}{I18n.t("punc.colon")} </h4>{this.format("h4", "", "", false, "sub", useT?useT:title)}</div>)
+                                       } else {
+                                          addTo.push(<div class={"sub " + (hideT?"hideT":"")}><h4 class="first type">{this.proplink(titleT)}{I18n.t("punc.colon")} </h4>{this.format("h4", "", "", false, "sub", title)}</div>)
+                                       }
                                     }
                                  }
                               }
@@ -6218,7 +6228,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                                     g.hasMatch = true
                                     let node = instOf[0]["tmp:labelMatch"]
                                     if(!Array.isArray(node)) node = [node]                                    
-                                    //loggergen.log("instOf",instOf,node)
+                                    loggergen.log("instOf",instOf,node)
                                     g.hidden.push(<div class="sub"><h4 class="first type">{this.proplink(tmp+"instanceLabel")}{I18n.t("punc.colon")} </h4><div>{node.map(n => this.format("h4","","",false, "sub",[{ value:n["@value"], lang:n["@language"], type:"literal"}]))}</div></div>)
                                  }
    
