@@ -913,6 +913,24 @@ export const gotOutline = (state: DataState, action: Action) => {
    let elem = action.meta
    if(elem && elem["@graph"]) elem = elem["@graph"]
    if(elem && elem.length) for(let e of elem) {
+
+      // patching after something's changed in data (#494)
+      if(!e["@id"]) { 
+         if(e["id"]) { 
+            e["@id"] = e["id"]
+            delete e["id"]
+         }
+         else console.warn("no @id for node ",e,"in outline ",action)
+      }
+      for(let k of Object.keys(e)) {
+         if(e[k]["id"]) {
+            e[k]["@id"] = e[k]["id"]
+            delete e[k]["id"]
+         }
+      }
+
+
+
       let uri = fullUri(e["@id"])
       if(e["skos:prefLabel"]) {
          if(!assoR[e["@id"]]) assoR[e["@id"]] = { [uri]:[] }
