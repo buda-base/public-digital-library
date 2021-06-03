@@ -6236,7 +6236,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
 
                               if(g["tmp:author"]) {
-                                 //console.log("g:",g["tmp:author"],g["@id"]);
+                                 console.log("g:",g["tmp:author"],g["@id"]);
                                  if(!Array.isArray(g["tmp:author"])) g["tmp:author"] = [ g["tmp:author"] ]
                                  g.hidden.push(<div class="sub"><h4 class="first type">{this.proplink(tmp+"author")}{I18n.t("punc.colon")} </h4>{this.format("h4","instacO","",false, "sub", 
                                     g["tmp:author"].map(aut => ({type:"uri",value:fullUri(aut["@id"])}))

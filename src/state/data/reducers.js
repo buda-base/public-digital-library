@@ -921,11 +921,18 @@ export const gotOutline = (state: DataState, action: Action) => {
             delete e["id"]
          }
          else console.warn("no @id for node ",e,"in outline ",action)
-      }
+      }      
       for(let k of Object.keys(e)) {
-         if(e[k]["id"]) {
-            e[k]["@id"] = e[k]["id"]
-            delete e[k]["id"]
+         if(!Array.isArray(e[k])) {
+            if(e[k]["id"]) {
+               e[k]["@id"] = e[k]["id"]
+               delete e[k]["id"]
+            }
+         } else for(let f of e[k]) {
+            if(f["id"]) {
+               f["@id"] = f["id"]
+               delete f["id"]
+            }
          }
       }
 
