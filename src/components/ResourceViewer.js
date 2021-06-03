@@ -6150,7 +6150,8 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                                  if(g["bf:identifiedBy"].length) { 
                                     g.id = []
                                     for(let node of g["bf:identifiedBy"]) {
-                                       let id = elem.filter(f => f["@id"] === node) 
+                                       let id = elem.filter(f => f["@id"] === node["@id"]) 
+                                       //console.log("idBy:",g["bf:identifiedBy"],g,id,elem,node)
                                        // TODO add prefix letter (either in value or from ontology property)
                                        if(id.length) g.id.push(<span class="id" title={this.fullname(id[0].type,false,false,true,false)}>{id[0]["rdf:value"]}</span>)
                                     }
