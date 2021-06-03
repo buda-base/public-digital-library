@@ -163,6 +163,7 @@ const enTranslation = {
       "tmp:forWork":"For Work",
       "tmp:provider":"Provider",
       "tmp:author":"Author",
+      "tmp:author_plural":"Authors",
       "bdo:note":"Note",
       "bdo:note_plural":"Notes",
       "tmp:assetAvailability":"Asset Availability",

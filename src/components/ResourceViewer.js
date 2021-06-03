@@ -6228,7 +6228,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                                     g.hasMatch = true
                                     let node = instOf[0]["tmp:labelMatch"]
                                     if(!Array.isArray(node)) node = [node]                                    
-                                    loggergen.log("instOf",instOf,node)
+                                    //loggergen.log("instOf",instOf,node)
                                     g.hidden.push(<div class="sub"><h4 class="first type">{this.proplink(tmp+"instanceLabel")}{I18n.t("punc.colon")} </h4><div>{node.map(n => this.format("h4","","",false, "sub",[{ value:n["@value"], lang:n["@language"], type:"literal"}]))}</div></div>)
                                  }
    
@@ -6238,7 +6238,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                               if(g["tmp:author"]) {
                                  console.log("g:",g["tmp:author"],g["@id"]);
                                  if(!Array.isArray(g["tmp:author"])) g["tmp:author"] = [ g["tmp:author"] ]
-                                 g.hidden.push(<div class="sub"><h4 class="first type">{this.proplink(tmp+"author")}{I18n.t("punc.colon")} </h4>{this.format("h4","instacO","",false, "sub", 
+                                 g.hidden.push(<div class="sub"><h4 class="first type">{this.proplink(tmp+"author", undefined, g["tmp:author"].length)}{I18n.t("punc.colon")} </h4>{this.format("h4","instacO","",false, "sub", 
                                     g["tmp:author"].map(aut => ({type:"uri",value:fullUri(aut["@id"])}))
                                  )}</div>)
                               }
