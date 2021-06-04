@@ -888,7 +888,8 @@ async function requestPdf(url,iri) {
       else {
          */
          
-         data = _.sortBy(Object.keys(data).map(e => ({...data[e],volume:Number(data[e].volnum)+1,id:e})),["volume"])
+         // volume number starting at 0 (#496)
+         data = _.sortBy(Object.keys(data).map(e => ({...data[e],volume:Number(data[e].volnum) /* +1 */,id:e})),["volume"])
          store.dispatch(dataActions.pdfVolumes(iri,data))
 
          /*
