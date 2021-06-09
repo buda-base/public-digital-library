@@ -2576,11 +2576,15 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
    getPublisher(allProps)  {
 
-      if (this.state.filters.datatype[0] !== "Instance")
-         return
+      //if (this.state.filters.datatype[0] !== "Instance")
+      //   return
+
       let hasName, hasLoc, lab
       hasName = allProps.filter(a => a.type === bdo+"publisherName")  //.length > 0
       hasLoc = allProps.filter(a => a.type === bdo+"publisherLocation") //.length > 0
+      
+      const Ystart = allProps.filter(a => a.type === tmp+"yearStart") 
+      const Yend = allProps.filter(a => a.type === tmp+"yearEnd") 
       
       let ret = []
       //if(ret.length) 
@@ -2596,6 +2600,15 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          ret.push(<div class="match publisher">
                <span className={`label ${hasName.length ? "hidden-en" : ""}`}>{this.fullname("tmp:publisherName",[],true)}{I18n.t("punc.colon")}&nbsp;</span>
                <div class="multi"><span>{highlight(lab.value,lucenequerytokeywordmulti(this.props.keyword))}</span></div>
+            </div>)
+      }
+      if(Ystart.length || Yend.length) {
+         let dates = ""
+         if(Ystart.length) dates += Ystart[0].value
+         if(Yend.length) dates += " – " + Yend[0].value
+         ret.push(<div class="match publisher">
+               <span className={`label ${hasName.length||hasLoc.length ? "hidden-en" : ""}`}>{this.fullname("tmp:publisherName",[],true)}{I18n.t("punc.colon")}&nbsp;</span>
+               <div class="multi"><span>{dates}</span></div>
             </div>)
       }
 
@@ -3540,8 +3553,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             { typeisbiblio && by }
             { typeisbiblio && byStat }
 
-            { type !== "Person" && 
-               this.getResultProp(I18n.t("result.year"),allProps,false,false,[tmp+"yearStart"]) }
+            { /*type === "Work" && // DONE: show in workInstanceGraph query
+               this.getResultProp(I18n.t("result.year"),allProps,false,false,[tmp+"yearStart"]) */}
 
             { type === "Person" && personDates }
 
@@ -3594,7 +3607,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
             {/* { this.getResultProp(bdo+"publisherName",allProps,false,false) }
             { this.getResultProp(bdo+"publisherLocation",allProps,false,false) } */}
-            { (type === "Instance" || type === "Etext" || type === "Scan") && this.getPublisher(allProps) }
+            { (type === "Instance" || type === "Etext" || type === "Scan" || type === "Work") && this.getPublisher(allProps) }
 
 
             {/* TODO fix facet count after preview instance */}
