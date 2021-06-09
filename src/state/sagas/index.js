@@ -614,7 +614,7 @@ async function getContext(iri,start,end,nb:integer = 1000) {
                     .map(e => Array.isArray(e["tmp:inInstancePart"]) ? e["tmp:inInstancePart"] : [ e["tmp:inInstancePart"] ])
                     .reduce( (acc,e) => ([ ...acc, ...(Array.isArray(e)?e:[e]) ]),[]) 
    let dict = sav.filter(e => e["skos:prefLabel"]).reduce( (acc,e) => (
-      {...acc,[fullUri(e["@id"])]: [ ...(Array.isArray(e["skos:prefLabel"])?e["skos:prefLabel"]:[e["skos:prefLabel"]]).map(p => ({value:p["@value"],"xml:lang":p["@language"],type:skos+"prefLabel"} )) ] }  
+      {...acc,[fullUri(e["id"])]: [ ...(Array.isArray(e["skos:prefLabel"])?e["skos:prefLabel"]:[e["skos:prefLabel"]]).map(p => ({value:p["@value"],"xml:lang":p["@language"],type:skos+"prefLabel"} )) ] }  
    ),{})
 
    let state = store.getState()
@@ -626,10 +626,10 @@ async function getContext(iri,start,end,nb:integer = 1000) {
    if(state.data.searches[t] && state.data.searches[t][state.data.keyword+"@"+state.data.language]) results = state.data.searches[t][state.data.keyword+"@"+state.data.language]
    if(results && results.results && results.results.bindings && results.results.bindings['etexts'] && results.results.bindings['etexts'][uri]) { 
       
-      results.results.bindings['etexts'][uri] = results.results.bindings['etexts'][uri].concat(inInst.filter(e => results.results.bindings['etexts'][uri].filter(f => f.type === tmp+"inInstance" && f.value === fullUri(e["@id"])).length === 0).map(e => ({value:fullUri(e["@id"]),type:tmp+"inInstance"})))      
+      results.results.bindings['etexts'][uri] = results.results.bindings['etexts'][uri].concat(inInst.filter(e => results.results.bindings['etexts'][uri].filter(f => f.type === tmp+"inInstance" && f.value === fullUri(e["id"])).length === 0).map(e => ({value:fullUri(e["id"]),type:tmp+"inInstance"})))      
 
       chunk = results.results.bindings['etexts'][uri].filter(e => e.startChar == start && e.endChar == end)
-      if(chunk.length) chunk[0].inPart = inInstP.map(e => fullUri(e["@id"]))
+      if(chunk.length) chunk[0].inPart = inInstP.map(e => fullUri(e["id"]))
 
    }
 
