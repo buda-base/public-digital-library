@@ -900,20 +900,10 @@ export const getOutline = (state: DataState, action: Action) => {
 }
 reducers[actions.TYPES.getOutline] = getOutline;
 
-export const gotOutline = (state: DataState, action: Action) => {
 
-   const skos  = "http://www.w3.org/2004/02/skos/core#";
-
-   let outlines = {}
-   if(state.outlines) outlines = state.outlines
-
-   let assoR = {}
-   if(state.assocResources) assoR = { ...state.assocResources }
-
-   let elem = action.meta
-   if(elem && elem["@graph"]) elem = elem["@graph"]
-   if(elem && elem.length) for(let e of elem) {
-
+const patchId = (graph, action) => {
+   if(!Array.isArray(graph)) graph = [ graph ]
+   for(let e of graph) {
       // patching after something's changed in data (#494)
       if(!e["@id"]) { 
          if(e["id"]) { 
@@ -935,8 +925,23 @@ export const gotOutline = (state: DataState, action: Action) => {
             }
          }
       }
+   }
+   return graph
+}
 
+export const gotOutline = (state: DataState, action: Action) => {
 
+   const skos  = "http://www.w3.org/2004/02/skos/core#";
+
+   let outlines = {}
+   if(state.outlines) outlines = state.outlines
+
+   let assoR = {}
+   if(state.assocResources) assoR = { ...state.assocResources }
+
+   let elem = action.meta
+   if(elem && elem["@graph"]) elem = patchId(elem["@graph"], action)
+   if(elem && elem.length) for(let e of elem) {
 
       let uri = fullUri(e["@id"])
       if(e["skos:prefLabel"]) {
@@ -1026,6 +1031,7 @@ export const gotETextRefs = (state: DataState, action: Action) => {
 
    let root, mono ; 
    if(action.meta !== true && action.meta["@graph"]) {
+      action.meta["@graph"] = patchId(action.meta["@graph"], action)
       root = { ...action.meta["@graph"].filter(e => e["@id"] === action.payload)[0] }
       mono = root.instanceHasVolume
       if(mono && !Array.isArray(mono)) {

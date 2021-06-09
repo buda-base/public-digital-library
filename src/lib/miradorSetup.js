@@ -1120,7 +1120,7 @@ export async function miradorInitView(work,lang,callerURI,locale) {
 
       let propK ;
       if(resData.status && resData.status == 404) { console.log("echec",work)}
-      else if(resData["@graph"]) propK = resData["@graph"].filter(d => d["@id"] == work)[0]
+      else if(resData["@graph"]) propK = resData["@graph"].filter(d => d["id"] == work)[0]
       else propK = resData
       console.log("pK",propK)
       if(propK)
@@ -1139,12 +1139,14 @@ export async function miradorInitView(work,lang,callerURI,locale) {
 
             if(nbVol === 1) {
                data = [
-                  { "manifestUri" : iiifpres+"/vo:"+elem["@id"]+"/manifest", location:"" }
+                  { "manifestUri" : iiifpres+"/vo:"+elem/*["id"]*/+"/manifest", location:"" }
                ]
             }
             else data = [
-               { "collectionUri" : iiifpres+"/collection/wio:"+repro["@id"], location:"" }
+               { "collectionUri" : iiifpres+"/collection/wio:"+repro, location:"" }
             ]
+
+            console.log("data:",data)
          }
          else if(propK["workHasItemImageAsset"] || propK["workLocation"]) { //workHasItemImageAsset
 
@@ -1178,19 +1180,19 @@ export async function miradorInitView(work,lang,callerURI,locale) {
             ]
          } else if(propK["hasIIIFManifest"]) {
             data = [
-               { "manifestUri" : propK["hasIIIFManifest"]["@id"], location:"" }
+               { "manifestUri" : propK["hasIIIFManifest"]["id"], location:"" }
             ]
-         } else if(propK["eTextInItem"]) {
+         } else if(propK["eTextInInstance"]) {
             let checkV = await (await fetch(ldspdi+"/query/graph/Etext_base?R_RES="+work)).json()
             if(checkV["@graph"]) checkV = checkV["@graph"]
-            let res = checkV.filter(e => e["@id"] === work)
+            let res = checkV.filter(e => e["id"] === work)
             if(res.length && res[0]["tmp:imageVolumeId"]) {
                data = [
-                   { "manifestUri" : iiifpres+"/v:"+res[0]["tmp:imageVolumeId"]["@id"]+"/manifest", location:"" }
+                   { "manifestUri" : iiifpres+"/v:"+res[0]["tmp:imageVolumeId"]["id"]+"/manifest", location:"" }
                ]
             }
 
-            //console.log(checkV)
+            console.log("cV:",checkV,data)
             
          } else if(propK["type"] === "ImageGroup") {
             data = [

@@ -1203,9 +1203,9 @@ class ResourceViewer extends Component<Props,State>
       if (hash && hash.length && hash === "open-viewer") {
 
          let etext = this.isEtext()
-         loggergen.log("etxt?",etext)
+         loggergen.log("etxt?",etext, this.props.imageAsset,this.props.firstImage)
 
-         if(!etext && this.props.imageAsset && this.props.firstImage && !this.state.openMirador) {
+         if(!etext && this.props.imageAsset /*&& this.props.firstImage*/ && !this.state.openMirador) {
             this.showMirador()   
             //delete loca.hash      
             //history.replace(loca)
@@ -2952,6 +2952,7 @@ class ResourceViewer extends Component<Props,State>
          if(e.value || e.value === "") value = e.value
          else if(e["@value"]) value = e["@value"]
          else if(e["@id"]) value = e["@id"]
+         else if(e["id"]) value = e["id"]
          let pretty = this.fullname(value,null,prop === bdo+"eTextHasChunk") // || prop === bdo+"eTextHasPage")
 
          if(value === bdr+"LanguageTaxonomy") continue ;
