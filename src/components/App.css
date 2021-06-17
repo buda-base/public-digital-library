@@ -2541,9 +2541,16 @@ html[lang="en"] .resource .data > [data-prop="bdo:creator"] h4[data-prop="bdo:ro
 .resource .data.related > div:not(.a):not(#b):not(.c) { background-color:#f5f5f5;padding:5px 35px 45px 35px; position:relative; display:block !important;}
 .resource .data.related h2 { line-height:44px;margin:45px 0; }
 .resource .data.related > div::after { content:none !important; }
+
+.resource .data.ext-props > a:first-child,
 .resource .data.related h2 + a { position:absolute;text-transform:uppercase;font-weight:500;border-bottom:2px solid black; 
    height:24px; right:35px; cursor:pointer; padding-top:14px; color:#343434;}
+
+.resource .data.ext-props > a:first-child { margin-top:-93px;margin-right:35px;}
+
+.resource .data.ext-props > a:first-child:hover,
 .resource .data.related h2 + a:hover { color:#d73449;border-color:#d73449; }
+
 .resource .data.related > div > div:first-child {display:flex;align-items: center;}
 .resource .data.related > div div.rel-or-crea { display:flex; overflow:hidden; }
 .resource .data.related > div div.rel-or-crea > div {display:inline-block; width:185px;margin-right:35px; flex-shrink:0;}

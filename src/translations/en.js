@@ -234,7 +234,7 @@ const enTranslation = {
       assoc:"{{type}} associated with: <res href='/show/{{- rid}}'>{{- name}}</res>",
       moreres:"More {{txt}} are cataloged, do you want to see them?",
       inEtext:"Results for <key>{{- keyword}}</key> <key>[{{language}}]</key><br/>in <res href='/show/{{- rid}}'>{{- name}}</res>",
-      openO:"Open in Outline"   
+      openO:"Open in Outline"
    },
    map:{    
       touch: "Use two fingers to move the map",
@@ -494,7 +494,9 @@ const enTranslation = {
       pageN:"p. {{num}}",
       noAssoc:"No associated resources found",
       searchE:"Search in the content of this etext",
-      mustLogin:"You must be logged in to download PDFs or ZIPs."
+      mustLogin:"You must be logged in to download PDFs or ZIPs.",
+      commitV:"View commit history",
+      commitH:"Hide commit history"
    },
    mirador:{
       return:"return to BUDA",

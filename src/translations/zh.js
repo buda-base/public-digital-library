@@ -434,7 +434,9 @@ const zhTranslation = {
       pageN:"p. {{num}}",
       noAssoc:"No associated resources found",
       searchE:"Search in the content of this etext",
-      mustLogin:"You must be logged in to download PDFs or ZIPs."
+      mustLogin:"You must be logged in to download PDFs or ZIPs.",
+      commitV:"View commit history",
+      commitH:"Hide commit history"
    },
    mirador:{
       return:"回到BUDA",

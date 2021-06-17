@@ -871,6 +871,23 @@ class ResourceViewer extends Component<Props,State>
 
    static getDerivedStateFromProps(props:Props,state:State)
    {
+      if(props.auth) {
+         const { userProfile, getProfile, isAuthenticated } = props.auth;         
+         if (isAuthenticated() && !userProfile) {
+            // this will set props.auth.userProfile
+            getProfile((err, profile) => {
+               // console.log("profile:",profile,this.props.auth.userProfile)
+            });
+         }
+
+         if(state.collapse["commit"]) {
+            let logs = props.resources[props.IRI][bda+props.IRI.replace(/bdr:/,"")]
+            if(logs && logs[adm+"logEntry"]) {
+               logs = logs[adm+"logEntry"]
+               console.log("logs:",logs)
+            }
+         }
+      }
 
       let getElem = (prop,IRI,useAssoc,subIRI) => {         
          let longIRI = fullUri(IRI)
@@ -1143,7 +1160,6 @@ class ResourceViewer extends Component<Props,State>
    componentDidUpdate()  {
 
       report_GA(this.props.config,this.props.history.location);
-
       
       if(window.closeMirador) { 
          delete window.closeMirador
@@ -5262,6 +5278,27 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
       //loggergen.log("data?",kZprop,data)
 
+      let groups 
+      if(div == "ext-props" && this.props.auth && this.props.auth.userProfile && (groups = this.props.auth.userProfile["https://auth.bdrc.io/groups"])) {         
+         if(groups.includes("admin")) {
+            data.unshift(
+               <a class="" onClick={() => this.setState({collapse:{...this.state.collapse, commit:!this.state.collapse["commit"]}})}>
+                  {I18n.t(this.state.collapse["commit"]?"resource.commitH":"resource.commitV")}
+               </a>
+            )
+            if(this.state.collapse["commit"]) { 
+               let logs = this.props.resources[this.props.IRI][bda+this.props.IRI.replace(/bdr:/,"")]
+               if(logs && logs[adm+"logEntry"]) {
+                  logs = logs[adm+"logEntry"]
+                  //console.log("logs:",logs)
+                  logs = this.renderGenericProp(logs, bda+"logEntry", [], -1) 
+                  data.push(<div>{logs}</div>)
+               }
+            }
+         }
+      }
+
+
       if(data && data.length) return <div className={div!=="header"?"data "+div:div} {...hash?{id:hash}:{}}>
          {data}
          {/* // TODO not working anymore
@@ -7094,6 +7131,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                }
             }
          }
+
          return (
          [getGDPRconsent(this),
          <div class={isMirador?"H100vh OF0":""}>
