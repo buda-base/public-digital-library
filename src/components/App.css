@@ -2561,6 +2561,8 @@ html[lang="en"] .resource .data > [data-prop="bdo:creator"] h4[data-prop="bdo:ro
 
 .resource .data.ext-props > a:first-child { bottom: 70px; right: auto;left: 70px; z-index: 1;}
 
+.resource .data.ext-props + .resource .data.ext-props { position:relative; }
+
 .resource .data.ext-props > a:first-child:hover,
 .resource .data.related h2 + a:hover { color:#d73449;border-color:#d73449; }
 
