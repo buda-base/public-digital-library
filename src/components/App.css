@@ -2092,6 +2092,10 @@ h4:not(.first)
 /* .resource .data.ext-props > :not([data-prop="bf:identifiedBy"]) .propCollapse > div > div > h4:not(.first)::before  */
 { padding:8px 10px !important; top:-8px !important; }
 
+
+.resource .data > [data-prop="adm:logEntry"] .propCollapseHeader h4:not(.first)::before 
+{ padding:4px 10px !important; top:-4px !important; }
+
 /*
 .resource .data.ext-props > :not([data-prop="bf:identifiedBy"]) .propCollapse { padding-left:0; }
 .resource .data.ext-props > :not([data-prop="bf:identifiedBy"]) .expand { display:none; }
@@ -2306,6 +2310,15 @@ span.in { font-weight:500;padding-left:0px; padding-right:10px; margin-left:36px
 .resource .data > div:not([data-prop="bdo:creator"]):not([data-prop="bf:identifiedBy"]):not([data-prop="bdo:corporationHasMember"]) .sub > .subgroup > .subsub > h4.first + * { 
    /*max-*/ width: calc(100% - 150px - 15px - 5px ); 
 }
+
+.resource .data.ext-props > div[data-prop="adm:logEntry"]:not(#a) .sub > .subgroup > .subsub > h4.first + * 
+{ width:calc(100% - 150px - 15px); }
+
+.resource .data.ext-props > div[data-prop="adm:logEntry"] .propCollapseHeader ~ * { display:none !important; }
+.resource .data.ext-props > div[data-prop="adm:logEntry"] .propCollapseHeader { column-count: 1;}
+
+.resource .data.ext-props > div[data-prop="adm:logEntry"]:not(#a) .sub > .subgroup > .subsub:not(last-child) { margin-bottom:5px; }
+
 .resource .data > div:not([data-prop="bdo:creator"]):not([data-prop="bf:identifiedBy"]) .sub > .subgroup > .subsub > h4.first + * h4 { 
    padding-right:20px; box-sizing: border-box;
 }

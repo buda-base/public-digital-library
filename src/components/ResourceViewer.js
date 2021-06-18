@@ -2941,7 +2941,7 @@ class ResourceViewer extends Component<Props,State>
       })
       */
 
-      //loggergen.log("format",Tag, prop,JSON.stringify(elem,null,3),txt,bnode,div);
+      loggergen.log("format",Tag, prop,JSON.stringify(elem,null,3),txt,bnode,div);
 
       let ret = [],pre = []
       let note = []
@@ -5286,13 +5286,14 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                   {I18n.t(this.state.collapse["commit"]?"resource.commitH":"resource.commitV")}
                </a>
             )
-            if(this.state.collapse["commit"]) { 
+            if(this.state.collapse["commit"] && this.props.resources && this.props.resources[this.props.IRI]) { 
                let logs = this.props.resources[this.props.IRI][bda+this.props.IRI.replace(/bdr:/,"")]
                if(logs && logs[adm+"logEntry"]) {
                   logs = logs[adm+"logEntry"]
                   //console.log("logs:",logs)
-                  logs = this.renderGenericProp(logs, bda+"logEntry", [], -1) 
-                  data.push(<div>{logs}</div>)
+                  let tags = this.format("h4",adm+"logEntry","",false,"sub",logs)
+                  logs = this.renderGenericProp(logs, adm+"logEntry", tags, -1) 
+                  data.push(logs)
                }
             }
          }
