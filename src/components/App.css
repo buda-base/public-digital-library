@@ -2106,6 +2106,10 @@ h4:not(.first)
 .resource .data > :not([data-prop="bf:identifiedBy"]):not([data-prop="bdo:volumeHasEtext"]) .propCollapse h4:not(.first) .hover-menu,
 .resource .data.ext-props > :not([data-prop="bf:identifiedBy"]) .propCollapse > div > div > h4:not(.first) .hover-menu { top:-4px; right:-6px; }
 
+.resource .data.ext-props > [data-prop="adm:logEntry"]:not(#a) .propCollapse  h4:not(.first) .hover-menu { top:-1px; }
+
+
+
 .resource .data.ext-props > [data-prop="bf:identifiedBy"] h4:not(.first)::before { padding-right:5px !important; }
 .resource .data.ext-props > [data-prop="bf:identifiedBy"] .propCollapse { padding-right:0; /*width:calc(100% + 5px);*/ }
 .resource .data.ext-props > [data-prop="bf:identifiedBy"] h4 .hover-menu { right:-3px;  }
@@ -2314,8 +2318,11 @@ span.in { font-weight:500;padding-left:0px; padding-right:10px; margin-left:36px
 .resource .data.ext-props > div[data-prop="adm:logEntry"]:not(#a) .sub > .subgroup > .subsub > h4.first + * 
 { width:calc(100% - 150px - 15px - 25px); padding-right:25px; }
 
-.resource .data.ext-props > div[data-prop="adm:logEntry"] .propCollapseHeader ~ * { display:none !important; }
-.resource .data.ext-props > div[data-prop="adm:logEntry"] .propCollapseHeader { column-count: 1;}
+.resource .data.ext-props + .ext-props > a:last-child { display:none; }
+
+.resource .data.ext-props > div[data-prop="adm:logEntry"] .propCollapseHeader,
+.resource .data.ext-props > div[data-prop="adm:logEntry"] .propCollapse ~ * { display:none !important; }
+.resource .data.ext-props > div[data-prop="adm:logEntry"] .propCollapse { column-count: 1;}
 
 .resource .data.ext-props > div[data-prop="adm:logEntry"]:not(#a) .sub > .subgroup > .subsub:not(last-child) { margin-bottom:5px; }
 

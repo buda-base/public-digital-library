@@ -2154,6 +2154,7 @@ class ResourceViewer extends Component<Props,State>
          }
 
          let noLink = false
+         if(prop === adm+"logWho") noLink = true
    
          // we need to know when info is from ontology (#360) 
          // + some properties are found both in query and ontology
@@ -2659,7 +2660,9 @@ class ResourceViewer extends Component<Props,State>
             
             //console.log("i/n",i,n)
             
-            if(/*!p.length &&*/ (elem.hasClass("propCollapse") || x.length || h.length) && (i < Math.floor(n/2) || (n%2 == 1 && i == Math.floor(n/2)) || i === 0 && n === 1)) popperFix = true
+            if(/*!p.length &&*/ (elem.hasClass("propCollapse") && !elem.closest("[data-prop]") === "adm:logEntry" 
+               || x.length || h.length) && (i < Math.floor(n/2) || (n%2 == 1 && i == Math.floor(n/2)) || i === 0 && n === 1)) 
+                  popperFix = true
          }
          let target = $(ev.currentTarget).closest("h4")
          if(target.length) target = target.find(".hover-menu")[0]  
@@ -3541,8 +3544,11 @@ class ResourceViewer extends Component<Props,State>
                               if(this.props.locale === "bo") { 
                                  // TODO: add year
                                  code = "en-US-u-nu-tibt"; 
-                                 opt = { day:'2-digit', month:'2-digit' } 
-                                 txt = 'ཟླ་' + (new Intl.DateTimeFormat(code, opt).formatToParts(new Date(v.value)).map(p => p.type === 'literal'?' ཚེས་':p.value).join(''))
+                                 opt = { year:'numeric', day:'2-digit', month:'2-digit' } 
+                                 let dtf = new Intl.DateTimeFormat(code, opt).formatToParts(new Date(v.value))
+                                 console.log("dtf:",dtf)
+                                 txt = "སྤྱི་ལོ་"+dtf[4].value + " ཟླ་" + dtf[0].value + " ཚེས་" +  dtf[2].value 
+                                 //txt = 'ཟླ་' + (new Intl.DateTimeFormat(code, opt).formatToParts(new Date(v.value)).map(p => p.type === 'literal'?' ཚེས་':p.value).join(''))
                               }
                               else {
                                  if(this.props.locale === "zh") code = "zh-CN"
