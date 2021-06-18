@@ -7177,9 +7177,10 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          }
 
          return (
-         [getGDPRconsent(this),
+         [getGDPRconsent(this),         
          <div class={isMirador?"H100vh OF0":""}>
-            {infoPanelR}
+            { ["Images","Instance"].includes(_T) && <abbr class="unapi-id" title={this.props.IRI}></abbr> }
+            { infoPanelR }
             <div className={"resource "+getEntiType(this.props.IRI).toLowerCase() + (this.props.simple?" simple":"")} {...this.props.simple?{onClick:sendMsg}:{}}>                              
                {searchUrl && <div class="ariane">
                   <Link to={searchUrl.startsWith("latest")?searchUrl:"/search?"+searchUrl} onClick={(ev) => {
