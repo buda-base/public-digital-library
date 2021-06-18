@@ -880,7 +880,7 @@ class ResourceViewer extends Component<Props,State>
             });
          }
 
-         if(state.collapse["commit"]) {
+         if(state.collapse["commit"] && props.resources && props.resources[props.IRI]) {
             let logs = props.resources[props.IRI][bda+props.IRI.replace(/bdr:/,"")]
             if(logs && logs[adm+"logEntry"]) {
                logs = logs[adm+"logEntry"]
@@ -1385,7 +1385,6 @@ class ResourceViewer extends Component<Props,State>
 
          let customSort = [ bdo+"hasPart", bdo+"instanceHasVolume", bdo+"workHasInstance", tmp+"siblingInstances", bdo+"hasTitle", bdo+"personName", bdo+"volumeHasEtext",
                             bdo+"personEvent", bdo+"placeEvent", bdo+"workEvent", bdo+"instanceEvent", bf+"identifiedBy", bdo+"lineageHolder" ]
-
 
          let sortLineageHolder = () => {
             let parts = prop[bdo+"lineageHolder"]
@@ -2941,7 +2940,7 @@ class ResourceViewer extends Component<Props,State>
       })
       */
 
-      loggergen.log("format",Tag, prop,JSON.stringify(elem,null,3),txt,bnode,div);
+      //loggergen.log("format",Tag, prop,JSON.stringify(elem,null,3),txt,bnode,div);
 
       let ret = [],pre = []
       let note = []
@@ -3536,6 +3535,19 @@ class ResourceViewer extends Component<Props,State>
                            }
                            else if(v.type === 'literal' && v.datatype === xsd+"date") { 
                               txt = [txt.replace(/^(-?)0+/,"$1")]
+                           }
+                           else if(v.type === 'literal' && v.datatype === xsd+"dateTime" && v.value.match(/^[0-9-]+T[0-9:.]+Z+$/)) {                  
+                              let code = "en-US", opt = { year: 'numeric', month: 'long', day: 'numeric' }
+                              if(this.props.locale === "bo") { 
+                                 // TODO: add year
+                                 code = "en-US-u-nu-tibt"; 
+                                 opt = { day:'2-digit', month:'2-digit' } 
+                                 txt = 'ཟླ་' + (new Intl.DateTimeFormat(code, opt).formatToParts(new Date(v.value)).map(p => p.type === 'literal'?' ཚེས་':p.value).join(''))
+                              }
+                              else {
+                                 if(this.props.locale === "zh") code = "zh-CN"
+                                 txt = new Date(v.value).toLocaleDateString(code, opt);  
+                              }
                            }
                            else if(v.type === 'literal' && v.datatype && this.props.dictionary && (dic = this.props.dictionary[v.datatype]) && dic[rdfs+"subClassOf"] 
                               && dic[rdfs+"subClassOf"].filter(s => s.value === bdo+"AnyDate").length) {
@@ -5286,10 +5298,35 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                   {I18n.t(this.state.collapse["commit"]?"resource.commitH":"resource.commitV")}
                </a>
             )
-            if(this.state.collapse["commit"] && this.props.resources && this.props.resources[this.props.IRI]) { 
+            if(this.state.collapse["commit"] && this.props.resources && this.props.resources[this.props.IRI]) {                
                let logs = this.props.resources[this.props.IRI][bda+this.props.IRI.replace(/bdr:/,"")]
                if(logs && logs[adm+"logEntry"]) {
                   logs = logs[adm+"logEntry"]
+
+                  let sortByTypeAndDate = (parts) => {
+                     let assoR = this.props.assocResources, extData = [], sorted = []
+                     if (assoR) {
+                        for(let p of parts) {
+                           let le = assoR[p.value]
+                           if(le) {
+                              //console.log("le?",le)
+                              let ty = le.filter(t => t.fromKey == rdf+"type")
+                              if(ty.length) ty = ty[0].value
+                              else ty = null
+                              let da = le.filter(t => t.datatype == xsd+"dateTime")
+                              if(da.length) da = da[0].value
+                              else da = null
+                              extData.push({...p, ty, da})                        
+                           }
+                        }
+                        //console.log("le:",extData) 
+                        return _.orderBy(extData, ["ty","da"], ["asc","asc"])
+                     }
+                     return parts
+                  }
+
+                  logs = sortByTypeAndDate(logs);
+
                   //console.log("logs:",logs)
                   let tags = this.format("h4",adm+"logEntry","",false,"sub",logs)
                   logs = this.renderGenericProp(logs, adm+"logEntry", tags, -1) 

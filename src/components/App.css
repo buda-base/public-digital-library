@@ -2312,7 +2312,7 @@ span.in { font-weight:500;padding-left:0px; padding-right:10px; margin-left:36px
 }
 
 .resource .data.ext-props > div[data-prop="adm:logEntry"]:not(#a) .sub > .subgroup > .subsub > h4.first + * 
-{ width:calc(100% - 150px - 15px); }
+{ width:calc(100% - 150px - 15px - 25px); padding-right:25px; }
 
 .resource .data.ext-props > div[data-prop="adm:logEntry"] .propCollapseHeader ~ * { display:none !important; }
 .resource .data.ext-props > div[data-prop="adm:logEntry"] .propCollapseHeader { column-count: 1;}
@@ -2559,7 +2559,7 @@ html[lang="en"] .resource .data > [data-prop="bdo:creator"] h4[data-prop="bdo:ro
 .resource .data.related h2 + a { position:absolute;text-transform:uppercase;font-weight:500;border-bottom:2px solid black; 
    height:24px; right:35px; cursor:pointer; padding-top:14px; color:#343434;}
 
-.resource .data.ext-props > a:first-child { margin-top:-93px;margin-right:35px;}
+.resource .data.ext-props > a:first-child { bottom: 70px; right: auto;left: 70px; z-index: 1;}
 
 .resource .data.ext-props > a:first-child:hover,
 .resource .data.related h2 + a:hover { color:#d73449;border-color:#d73449; }
