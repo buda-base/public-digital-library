@@ -2093,7 +2093,7 @@ h4:not(.first)
 { padding:8px 10px !important; top:-8px !important; }
 
 
-.resource .data > [data-prop="adm:logEntry"] .propCollapseHeader h4:not(.first)::before 
+.resource .data > [data-prop="adm:logEntry"]:not(#a) .propCollapse h4:not(.first)::before 
 { padding:4px 10px !important; top:-4px !important; }
 
 /*
@@ -2319,6 +2319,7 @@ span.in { font-weight:500;padding-left:0px; padding-right:10px; margin-left:36px
 { width:calc(100% - 150px - 15px - 25px); padding-right:25px; }
 
 .resource .data.ext-props + .ext-props > a:last-child { display:none; }
+.resource .data.ext-props + .ext-props > div:empty { padding-bottom: 0 !important; }
 
 .resource .data.ext-props > div[data-prop="adm:logEntry"] .propCollapseHeader,
 .resource .data.ext-props > div[data-prop="adm:logEntry"] .propCollapse ~ * { display:none !important; }

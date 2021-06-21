@@ -5304,7 +5304,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                   {I18n.t(this.state.collapse["commit"]?"resource.commitH":"resource.commitV")}
                </a>
             )
-            if(this.state.collapse["commit"] && this.props.resources && this.props.resources[this.props.IRI]) {                
+            if(this.props.resources && this.props.resources[this.props.IRI]) {                
                let logs = this.props.resources[this.props.IRI][bda+this.props.IRI.replace(/bdr:/,"")]
                if(logs && logs[adm+"logEntry"]) {
                   logs = logs[adm+"logEntry"]
@@ -5334,9 +5334,11 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                   logs = sortByTypeAndDate(logs);
 
                   //console.log("logs:",logs)
+                  
                   let tags = this.format("h4",adm+"logEntry","",false,"sub",logs)
                   logs = this.renderGenericProp(logs, adm+"logEntry", tags, -1) 
-                  data.push(logs)
+                  if(this.state.collapse["commit"]) data.push(logs)
+                  else data.push(<div></div>)
                }
             }
          }
