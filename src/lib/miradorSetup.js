@@ -1228,6 +1228,7 @@ export async function miradorInitView(work,lang,callerURI,locale) {
             onClick : "javascript:eval('if(window.Mirador.fullscreenElement()) { window.Mirador.exitFullscreen(); $(\".user-buttons .fs\").addClass(\"fs-expand\").removeClass(\"fa-compress\"); } else { window.Mirador.enterFullscreen($(\".mirador-container\")[0]) ; $(\".user-buttons .fs\").removeClass(\"fs-expand\").addClass(\"fa-compress\"); }')" }
       }
 
+   // TODO: check if credentials needed (related to #506)
    let config = await miradorConfig(data,manif,null,null,lang,corner,work,locale);
 
    let initTimer = setInterval( ((cfg) => () => {

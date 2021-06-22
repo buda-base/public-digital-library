@@ -3843,11 +3843,11 @@ class ResourceViewer extends Component<Props,State>
 
                let withCredentials = false
                let elem = this.getResourceElem(adm+"access")
-               if(elem && elem.filter(e => e.value.match(/(AccessFairUse)|(Restricted.*)$/)).length >= 1) withCredentials = true
+               if(elem && elem.filter(e => e.value.match(/(AccessFairUse)|(Restricted.*)$/)).length >= 1) withCredentials = true               
 
                let config = await miradorConfig(data,manif,canvasID,withCredentials,this.props.langPreset,null,this.props.IRI,this.props.locale);
 
-               loggergen.log("mir ador",num,config,this.props)
+               loggergen.log("mir ador",num,config,this.props,withCredentials,elem)
 
                if(window.mirador) delete window.mirador
 
