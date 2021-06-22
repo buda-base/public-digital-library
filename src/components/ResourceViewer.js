@@ -871,9 +871,14 @@ class ResourceViewer extends Component<Props,State>
 
    static getDerivedStateFromProps(props:Props,state:State)
    {
+
+      let s 
+
       if(props.auth) {
          const { userProfile, getProfile, isAuthenticated } = props.auth;         
-         if (isAuthenticated() && !userProfile) {
+         if (isAuthenticated() && !userProfile && !state.fetchedProfile) {
+            if(!s) s = { ...state }
+            s.fetchedProfile = true
             // this will set props.auth.userProfile
             getProfile((err, profile) => {
                // console.log("profile:",profile,this.props.auth.userProfile)
@@ -904,7 +909,6 @@ class ResourceViewer extends Component<Props,State>
          }
       }
 
-      let s 
 
 
       // TODO fix reopening etext after being closed
