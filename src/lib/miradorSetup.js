@@ -498,7 +498,7 @@ export async function miradorConfig(data, manifest, canvasID, useCredentials, la
 
       windowSettings: {
          resID,
-         ajaxWithCredentials:useCredentials,
+         ajaxWithCredentials:true, //useCredentials, // try always true (cf #506)
          sidePanelVisible: false,
          labelToString,         
          getEtextPage: await hasEtextPage(manifest),
@@ -1229,7 +1229,7 @@ export async function miradorInitView(work,lang,callerURI,locale) {
       }
 
    // TODO: check if credentials needed (related to #506)
-   let config = await miradorConfig(data,manif,null,null,lang,corner,work,locale);
+   let config = await miradorConfig(data,manif,null,true,lang,corner,work,locale);
 
    let initTimer = setInterval( ((cfg) => () => {
       console.log("init?",cfg,window.Mirador)
