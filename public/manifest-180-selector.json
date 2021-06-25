@@ -1,0 +1,93 @@
+{
+  "@context": "http://iiif.io/api/presentation/2/context.json",
+  "@type": "sc:Manifest",
+  "@id": "https://iiifpres.bdrc.io/v:bdr:I4CZ75258/manifest",
+  "label": [
+    {
+      "@language": "en",
+      "@value": "volume 1"
+    },
+    {
+      "@language": "bo-x-ewts",
+      "@value": "pod/_1"
+    }
+  ],
+  "license": "http://creativecommons.org/publicdomain/mark/1.0/",
+  "attribution": [
+    {
+      "@language": "en",
+      "@value": "Buddhist Digital Resource Center"
+    },
+    {
+      "@language": "bo",
+      "@value": "ནང་བསྟན་དཔེ་ཚོགས་ལྟེ་གནས།"
+    },
+    {
+      "@language": "zh",
+      "@value": "佛教数字资源中心（BDRC）"
+    }
+  ],
+  "rendering": [
+    {
+      "@id": "https://iiif.bdrc.io/download/pdf/v:bdr:I4CZ75258::1-",
+      "label": "Download as PDF",
+      "format": "application/pdf"
+    },
+    {
+      "@id": "https://iiif.bdrc.io/download/zip/v:bdr:I4CZ75258::1-",
+      "label": "Download as ZIP",
+      "format": "application/zip"
+    }
+  ],
+  "sequences": [
+    {
+      "@id": "https://iiifpres.bdrc.io/v:bdr:I4CZ75258/sequence/mainbvm",
+      "@type": "sc:Sequence",
+      "startCanvas": "https://iiifpres.bdrc.io/v:bdr:I4CZ75258/canvas/I4CZ752580003.jpg",
+      "canvases": [
+        {
+          "@id": "https://iiifpres.bdrc.io/v:bdr:I4CZ75258/canvas/I4CZ752580003.jpg",
+          "@type": "sc:Canvas",
+          "label": "1a",
+          "images": [
+            {
+              "@type": "oa:Annotation",
+              "motivation": "sc:painting",
+              "resource": {
+                "@id": "https://iiif.bdrc.io/bdr:I4CZ75258::I4CZ752580003.jpg/full/max/180/default.jpg",
+                "@type": "oa:SpecificResource",
+                "service": {
+                  "@context": "http://iiif.io/api/image/2/context.json",
+                  "@id": "https://iiif.bdrc.io/bdr:I4CZ75258::I4CZ752580003.jpg",
+                  "width": 2550,
+                  "height": 879,
+                  "profile": "http://iiif.io/api/image/2/level0.json",
+                  "protocol": "http://iiif.io/api/image"
+                },
+                "full": {
+                  "@id": "https://iiif.bdrc.io/bdr:I4CZ75258::I4CZ752580003.jpg/full/max/0/default.jpg",
+                  "@type": "dctypes:Image",                  
+                  "format": "image/jpeg",
+                  "width": 2550,
+                  "height": 879
+                },
+                "selector": {
+                  "@context": "http://iiif.io/api/annex/openannotation/context.json",
+                  "@type": "iiif:ImageApiSelector",
+                  "rotation": "180"
+                }
+             },
+              "on": "https://iiifpres.bdrc.io/v:bdr:I4CZ75258/canvas/I4CZ752580003.jpg"
+            }
+          ],
+          "width": 2550,
+          "height": 879
+        }
+      ]
+    }
+  ],
+  "logo": {
+    "@id": "http://iiif.bdrc.io/static::logo.png/full/max/0/default.png",
+    "format": "image/png"
+  }
+}

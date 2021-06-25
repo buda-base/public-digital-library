@@ -1085,7 +1085,7 @@ function miradorInitMenu(maxWonly) {
    //console.log("maxW",window.maxW)
 }
 
-export async function miradorInitView(work,lang,callerURI,locale) {
+export async function miradorInitView(work,lang,callerURI,locale,extManif) {
 
 
    
@@ -1110,7 +1110,7 @@ export async function miradorInitView(work,lang,callerURI,locale) {
    let opt = {}
 
    //const work = props.match.params.IRI;
-   if(work) {
+   if(!extManif && work) {
       console.log("work",work)
 
       const resData = await(await fetch(ldspdi+"/query/graph/ResInfo?R_RES="+work+"&format=jsonld")).json()
@@ -1206,9 +1206,15 @@ export async function miradorInitView(work,lang,callerURI,locale) {
       }
    }
 
-   let manif = data.filter(e => e.manifestUri)[0]
-   if(manif && manif.manifestUri) manif = manif.manifestUri
-   console.log("data",data,manif,callerURI)
+   let manif
+   if(extManif) {
+      manif = extManif
+      data = [{ "manifestUri": manif}]
+   } else {
+      manif  = data.filter(e => e.manifestUri)[0]
+      if(manif && manif.manifestUri) manif = manif.manifestUri
+      console.log("data",data,manif,callerURI)
+   }
 
    
    let corner ;

@@ -4746,7 +4746,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
                { !that.props.manifestError && that.props.imageAsset &&
 
-                       <CopyToClipboard text={that.props.imageAsset} onCopy={(e) =>
+                       <CopyToClipboard text={that.props.imageAsset.replace(/^\/\//,"https://")} onCopy={(e) =>
                                  //alert("Resource url copied to clipboard\nCTRL+V to paste")
                                  prompt(I18n.t("misc.clipboard"),that.props.imageAsset.replace(/^\/\//,"https://"))
                            }>

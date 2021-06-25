@@ -296,7 +296,7 @@ const makeMainRoutes = () => {
                            if(lang) lang = lang.split(",")
                            let callerURI = get["callerURI"]
 
-                           miradorInitView(props.match.params.IRI,lang,callerURI,uilang);
+                           miradorInitView(props.match.params.IRI,lang,callerURI,uilang,get.manifest);
 
                            return [
                                     <div id="viewer" class={"view " + (callerURI?" hasCallerURI":"")}></div>,
