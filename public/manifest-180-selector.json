@@ -317,6 +317,82 @@
           ],
           "width": 2200,
           "height": 3389
+        },
+        {
+          "@id": "https://iiifpres.bdrc.io/v:bdr:I4CZ75258/canvas/I4CZ752580004.jpg",
+          "@type": "sc:Canvas",
+          "label": "2a",
+          "images": [
+            {
+              "@type": "oa:Annotation",
+              "motivation": "sc:painting",
+              "resource": {
+                "@id": "https://iiif.bdrc.io/bdr:I4CZ75258::I4CZ752580004.jpg/full/max/180/default.jpg",
+                "@type": "oa:SpecificResource",
+                "full": {
+                  "@id": "https://iiif.bdrc.io/bdr:I4CZ75258::I4CZ752580004.jpg/full/max/0/default.jpg",
+                  "@type": "dctypes:Image",                  
+                  "format": "image/jpeg",
+                  "width": 2550,
+                  "height": 786,
+                  "service": {
+                    "@context": "http://iiif.io/api/image/2/context.json",
+                    "@id": "https://iiif.bdrc.io/bdr:I4CZ75258::I4CZ752580004.jpg",
+                    "width": 2550,
+                    "height": 786,
+                    "profile": "http://iiif.io/api/image/2/level0.json",
+                    "protocol": "http://iiif.io/api/image"
+                  }
+                },
+                "selector": {
+                  "@context": "http://iiif.io/api/annex/openannotation/context.json",
+                  "@type": "iiif:ImageApiSelector",
+                  "rotation": "90"
+                }
+             },
+              "on": "https://iiifpres.bdrc.io/v:bdr:I4CZ75258/canvas/I4CZ752580004.jpg"
+            }
+          ],
+          "width": 2550,
+          "height": 786
+        },
+        {
+          "@id": "https://iiifpres.bdrc.io/v:bdr:I4CZ75258/canvas/I4CZ752580005.jpg",
+          "@type": "sc:Canvas",
+          "label": "3a",
+          "images": [
+            {
+              "@type": "oa:Annotation",
+              "motivation": "sc:painting",
+              "resource": {
+                "@id": "https://iiif.bdrc.io/bdr:I4CZ75258::I4CZ752580005.jpg/full/max/180/default.jpg",
+                "@type": "oa:SpecificResource",
+                "full": {
+                  "@id": "https://iiif.bdrc.io/bdr:I4CZ75258::I4CZ752580005.jpg/full/max/0/default.jpg",
+                  "@type": "dctypes:Image",                  
+                  "format": "image/jpeg",
+                  "width": 2550,
+                  "height": 843,
+                  "service": {
+                    "@context": "http://iiif.io/api/image/2/context.json",
+                    "@id": "https://iiif.bdrc.io/bdr:I4CZ75258::I4CZ752580005.jpg",
+                    "width": 2550,
+                    "height":843,
+                    "profile": "http://iiif.io/api/image/2/level0.json",
+                    "protocol": "http://iiif.io/api/image"
+                  }
+                },
+                "selector": {
+                  "@context": "http://iiif.io/api/annex/openannotation/context.json",
+                  "@type": "iiif:ImageApiSelector",
+                  "rotation": "90"
+                }
+             },
+              "on": "https://iiifpres.bdrc.io/v:bdr:I4CZ75258/canvas/I4CZ752580005.jpg"
+            }
+          ],
+          "width": 2550,
+          "height": 843
         }
       ]
     }
