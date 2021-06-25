@@ -56,20 +56,20 @@
               "resource": {
                 "@id": "https://iiif.bdrc.io/bdr:I4CZ75258::I4CZ752580003.jpg/full/max/180/default.jpg",
                 "@type": "oa:SpecificResource",
-                "service": {
-                  "@context": "http://iiif.io/api/image/2/context.json",
-                  "@id": "https://iiif.bdrc.io/bdr:I4CZ75258::I4CZ752580003.jpg",
-                  "width": 2550,
-                  "height": 879,
-                  "profile": "http://iiif.io/api/image/2/level0.json",
-                  "protocol": "http://iiif.io/api/image"
-                },
                 "full": {
                   "@id": "https://iiif.bdrc.io/bdr:I4CZ75258::I4CZ752580003.jpg/full/max/0/default.jpg",
                   "@type": "dctypes:Image",                  
                   "format": "image/jpeg",
                   "width": 2550,
-                  "height": 879
+                  "height": 879,
+                  "service": {
+                    "@context": "http://iiif.io/api/image/2/context.json",
+                    "@id": "https://iiif.bdrc.io/bdr:I4CZ75258::I4CZ752580003.jpg",
+                    "width": 2550,
+                    "height": 879,
+                    "profile": "http://iiif.io/api/image/2/level0.json",
+                    "protocol": "http://iiif.io/api/image"
+                  }
                 },
                 "selector": {
                   "@context": "http://iiif.io/api/annex/openannotation/context.json",
@@ -82,6 +82,241 @@
           ],
           "width": 2550,
           "height": 879
+        },
+        {
+          "@id": "https://iiifpres.bdrc.io/v:bdr:I8LS76071/canvas/I8LS760710008.jpg",
+          "@type": "sc:Canvas",
+          "label": [
+            {
+              "@language": "en",
+              "@value": "i. 8"
+            },
+            {
+              "@language": "bo-x-ewts",
+              "@value": "par grangs _8"
+            }
+          ],
+          "metadata": [
+            {
+              "label": "filename",
+              "value": "I8LS760710008.jpg"
+            }
+          ],
+          "images": [
+            {
+              "@type": "oa:Annotation",
+              "motivation": "sc:painting",
+              "resource": {
+                "@id": "https://iiif.bdrc.io/bdr:I8LS76071::I8LS760710008.jpg/full/max/0/default.jpg",
+                "@type": "dctypes:Image",
+                "service": {
+                  "@context": "http://iiif.io/api/image/2/context.json",
+                  "@id": "https://iiif.bdrc.io/bdr:I8LS76071::I8LS760710008.jpg",
+                  "width": 2200,
+                  "height": 3389,
+                  "profile": "http://iiif.io/api/image/2/level0.json",
+                  "protocol": "http://iiif.io/api/image"
+                },
+                "format": "image/jpeg",
+                "width": 2200,
+                "height": 3389
+              },
+              "on": "https://iiifpres.bdrc.io/v:bdr:I8LS76071/canvas/I8LS760710008.jpg"
+            }
+          ],
+          "width": 2200,
+          "height": 3389
+        },
+        {
+          "@id": "https://iiifpres.bdrc.io/v:bdr:I8LS76071/canvas/I8LS760710009.jpg",
+          "@type": "sc:Canvas",
+          "label": [
+            {
+              "@language": "en",
+              "@value": "i. 9"
+            },
+            {
+              "@language": "bo-x-ewts",
+              "@value": "par grangs _9"
+            }
+          ],
+          "metadata": [
+            {
+              "label": "filename",
+              "value": "I8LS760710009.jpg"
+            }
+          ],
+          "images": [
+            {
+              "@type": "oa:Annotation",
+              "motivation": "sc:painting",
+              "resource": {
+                "@id": "https://iiif.bdrc.io/bdr:I8LS76071::I8LS760710009.jpg/full/max/0/default.jpg",
+                "@type": "dctypes:Image",
+                "service": {
+                  "@context": "http://iiif.io/api/image/2/context.json",
+                  "@id": "https://iiif.bdrc.io/bdr:I8LS76071::I8LS760710009.jpg",
+                  "width": 2200,
+                  "height": 3389,
+                  "profile": "http://iiif.io/api/image/2/level0.json",
+                  "protocol": "http://iiif.io/api/image"
+                },
+                "format": "image/jpeg",
+                "width": 2200,
+                "height": 3389,
+                "selector": {
+                  "@context": "http://iiif.io/api/annex/openannotation/context.json",
+                  "@type": "iiif:ImageApiSelector",
+                  "rotation": "90"
+                }
+              },
+              "on": "https://iiifpres.bdrc.io/v:bdr:I8LS76071/canvas/I8LS760710009.jpg"
+            }
+          ],
+          "width": 2200,
+          "height": 3389
+        },
+        {
+          "@id": "https://iiifpres.bdrc.io/v:bdr:I8LS76071/canvas/I8LS760710010.jpg",
+          "@type": "sc:Canvas",
+          "label": [
+            {
+              "@language": "en",
+              "@value": "i. 10"
+            },
+            {
+              "@language": "bo-x-ewts",
+              "@value": "par grangs _10"
+            }
+          ],
+          "metadata": [
+            {
+              "label": "filename",
+              "value": "I8LS760710010.jpg"
+            }
+          ],
+          "images": [
+            {
+              "@type": "oa:Annotation",
+              "motivation": "sc:painting",
+              "resource": {
+                "@id": "https://iiif.bdrc.io/bdr:I8LS76071::I8LS760710010.jpg/full/max/0/default.jpg",
+                "@type": "dctypes:Image",
+                "service": {
+                  "@context": "http://iiif.io/api/image/2/context.json",
+                  "@id": "https://iiif.bdrc.io/bdr:I8LS76071::I8LS760710010.jpg",
+                  "width": 2200,
+                  "height": 3389,
+                  "profile": "http://iiif.io/api/image/2/level0.json",
+                  "protocol": "http://iiif.io/api/image"
+                },
+                "format": "image/jpeg",
+                "width": 2200,
+                "height": 3389,
+                "selector": {
+                  "@context": "http://iiif.io/api/annex/openannotation/context.json",
+                  "@type": "iiif:ImageApiSelector",
+                  "rotation": "90"
+                }
+              },
+              "on": "https://iiifpres.bdrc.io/v:bdr:I8LS76071/canvas/I8LS760710010.jpg"
+            }
+          ],
+          "width": 2200,
+          "height": 3389
+        },
+        {
+          "@id": "https://iiifpres.bdrc.io/v:bdr:I8LS76071/canvas/I8LS760710011.jpg",
+          "@type": "sc:Canvas",
+          "label": [
+            {
+              "@language": "en",
+              "@value": "i. 11"
+            },
+            {
+              "@language": "bo-x-ewts",
+              "@value": "par grangs _11"
+            }
+          ],
+          "metadata": [
+            {
+              "label": "filename",
+              "value": "I8LS760710011.jpg"
+            }
+          ],
+          "images": [
+            {
+              "@type": "oa:Annotation",
+              "motivation": "sc:painting",
+              "resource": {
+                "@id": "https://iiif.bdrc.io/bdr:I8LS76071::I8LS760710011.jpg/full/max/0/default.jpg",
+                "@type": "dctypes:Image",
+                "service": {
+                  "@context": "http://iiif.io/api/image/2/context.json",
+                  "@id": "https://iiif.bdrc.io/bdr:I8LS76071::I8LS760710011.jpg",
+                  "width": 2200,
+                  "height": 3389,
+                  "profile": "http://iiif.io/api/image/2/level0.json",
+                  "protocol": "http://iiif.io/api/image"
+                },
+                "format": "image/jpeg",
+                "width": 2200,
+                "height": 3389,
+                "selector": {
+                  "@context": "http://iiif.io/api/annex/openannotation/context.json",
+                  "@type": "iiif:ImageApiSelector",
+                  "rotation": "90"
+                }
+              },
+              "on": "https://iiifpres.bdrc.io/v:bdr:I8LS76071/canvas/I8LS760710011.jpg"
+            }
+          ],
+          "width": 2200,
+          "height": 3389
+        },
+        {
+          "@id": "https://iiifpres.bdrc.io/v:bdr:I8LS76071/canvas/I8LS760710012.jpg",
+          "@type": "sc:Canvas",
+          "label": [
+            {
+              "@language": "en",
+              "@value": "i. 12"
+            },
+            {
+              "@language": "bo-x-ewts",
+              "@value": "par grangs _12"
+            }
+          ],
+          "metadata": [
+            {
+              "label": "filename",
+              "value": "I8LS760710012.jpg"
+            }
+          ],
+          "images": [
+            {
+              "@type": "oa:Annotation",
+              "motivation": "sc:painting",
+              "resource": {
+                "@id": "https://iiif.bdrc.io/bdr:I8LS76071::I8LS760710012.jpg/full/max/0/default.jpg",
+                "@type": "dctypes:Image",
+                "service": {
+                  "@context": "http://iiif.io/api/image/2/context.json",
+                  "@id": "https://iiif.bdrc.io/bdr:I8LS76071::I8LS760710012.jpg",
+                  "width": 2200,
+                  "height": 3389,
+                  "profile": "http://iiif.io/api/image/2/level0.json",
+                  "protocol": "http://iiif.io/api/image"
+                },
+                "format": "image/jpeg",
+                "width": 2200,
+                "height": 3389
+              },
+              "on": "https://iiifpres.bdrc.io/v:bdr:I8LS76071/canvas/I8LS760710012.jpg"
+            }
+          ],
+          "width": 2200,
+          "height": 3389
         }
       ]
     }
