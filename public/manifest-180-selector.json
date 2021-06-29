@@ -162,8 +162,8 @@
                   "protocol": "http://iiif.io/api/image"
                 },
                 "format": "image/jpeg",
-                "width": 2200,
-                "height": 3389,
+                "width": 3389,
+                "height": 2200,
                 "selector": {
                   "@context": "http://iiif.io/api/annex/openannotation/context.json",
                   "@type": "iiif:ImageApiSelector",
@@ -173,8 +173,8 @@
               "on": "https://iiifpres.bdrc.io/v:bdr:I8LS76071/canvas/I8LS760710009.jpg"
             }
           ],
-          "width": 2200,
-          "height": 3389
+          "width": 3389,
+          "height": 2200
         },
         {
           "@id": "https://iiifpres.bdrc.io/v:bdr:I8LS76071/canvas/I8LS760710010.jpg",
@@ -211,8 +211,8 @@
                   "protocol": "http://iiif.io/api/image"
                 },
                 "format": "image/jpeg",
-                "width": 2200,
-                "height": 3389,
+                "width": 3389,
+                "height": 2200,
                 "selector": {
                   "@context": "http://iiif.io/api/annex/openannotation/context.json",
                   "@type": "iiif:ImageApiSelector",
@@ -222,8 +222,8 @@
               "on": "https://iiifpres.bdrc.io/v:bdr:I8LS76071/canvas/I8LS760710010.jpg"
             }
           ],
-          "width": 2200,
-          "height": 3389
+          "width": 3389,
+          "height": 2200
         },
         {
           "@id": "https://iiifpres.bdrc.io/v:bdr:I8LS76071/canvas/I8LS760710011.jpg",
@@ -260,8 +260,8 @@
                   "protocol": "http://iiif.io/api/image"
                 },
                 "format": "image/jpeg",
-                "width": 2200,
-                "height": 3389,
+                "width": 3389,
+                "height": 2200,
                 "selector": {
                   "@context": "http://iiif.io/api/annex/openannotation/context.json",
                   "@type": "iiif:ImageApiSelector",
@@ -271,8 +271,8 @@
               "on": "https://iiifpres.bdrc.io/v:bdr:I8LS76071/canvas/I8LS760710011.jpg"
             }
           ],
-          "width": 2200,
-          "height": 3389
+          "width": 3389,
+          "height": 2200
         },
         {
           "@id": "https://iiifpres.bdrc.io/v:bdr:I8LS76071/canvas/I8LS760710012.jpg",
@@ -309,14 +309,14 @@
                   "protocol": "http://iiif.io/api/image"
                 },
                 "format": "image/jpeg",
-                "width": 2200,
-                "height": 3389
+                "width": 3389,
+                "height": 2200
               },
               "on": "https://iiifpres.bdrc.io/v:bdr:I8LS76071/canvas/I8LS760710012.jpg"
             }
           ],
-          "width": 2200,
-          "height": 3389
+          "width": 3389,
+          "height": 2200
         },
         {
           "@id": "https://iiifpres.bdrc.io/v:bdr:I4CZ75258/canvas/I4CZ752580004.jpg",
@@ -333,8 +333,8 @@
                   "@id": "https://iiif.bdrc.io/bdr:I4CZ75258::I4CZ752580004.jpg/full/max/0/default.jpg",
                   "@type": "dctypes:Image",                  
                   "format": "image/jpeg",
-                  "width": 2550,
-                  "height": 786,
+                  "width": 786,
+                  "height": 2550,
                   "service": {
                     "@context": "http://iiif.io/api/image/2/context.json",
                     "@id": "https://iiif.bdrc.io/bdr:I4CZ75258::I4CZ752580004.jpg",
@@ -353,8 +353,8 @@
               "on": "https://iiifpres.bdrc.io/v:bdr:I4CZ75258/canvas/I4CZ752580004.jpg"
             }
           ],
-          "width": 2550,
-          "height": 786
+          "width": 786,
+          "height": 2550
         },
         {
           "@id": "https://iiifpres.bdrc.io/v:bdr:I4CZ75258/canvas/I4CZ752580005.jpg",
@@ -371,8 +371,8 @@
                   "@id": "https://iiif.bdrc.io/bdr:I4CZ75258::I4CZ752580005.jpg/full/max/0/default.jpg",
                   "@type": "dctypes:Image",                  
                   "format": "image/jpeg",
-                  "width": 2550,
-                  "height": 843,
+                  "width": 843,
+                  "height": 2550,
                   "service": {
                     "@context": "http://iiif.io/api/image/2/context.json",
                     "@id": "https://iiif.bdrc.io/bdr:I4CZ75258::I4CZ752580005.jpg",
@@ -391,8 +391,8 @@
               "on": "https://iiifpres.bdrc.io/v:bdr:I4CZ75258/canvas/I4CZ752580005.jpg"
             }
           ],
-          "width": 2550,
-          "height": 843
+          "width": 843,
+          "height": 2550
         }
       ]
     }
