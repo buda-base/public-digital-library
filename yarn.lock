@@ -9003,7 +9003,7 @@ minizlib@^1.2.1:
 
 "mirador@https://github.com/buda-base/mirador#2.7.0-bdrc":
   version "2.7.0"
-  resolved "https://github.com/buda-base/mirador#e65a32cde3f154d21a9d1f6020c36bfc239c439c"
+  resolved "https://github.com/buda-base/mirador#55fb0388e4d63b1b4aaa532dd0769085ec4921dd"
   dependencies:
     bootbox "^4.4.0"
     bootstrap "^3.3.7"
@@ -13151,9 +13151,9 @@ uglify-js@3.4.x:
     source-map "~0.6.1"
 
 uglify-js@^3.1.4:
-  version "3.13.9"
-  resolved "https://registry.yarnpkg.com/uglify-js/-/uglify-js-3.13.9.tgz#4d8d21dcd497f29cfd8e9378b9df123ad025999b"
-  integrity sha512-wZbyTQ1w6Y7fHdt8sJnHfSIuWeDgk6B5rCb4E/AM6QNNPbOMIZph21PW5dRB3h7Df0GszN+t7RuUH6sWK5bF0g==
+  version "3.13.10"
+  resolved "https://registry.yarnpkg.com/uglify-js/-/uglify-js-3.13.10.tgz#a6bd0d28d38f592c3adb6b180ea6e07e1e540a8d"
+  integrity sha512-57H3ACYFXeo1IaZ1w02sfA71wI60MGco/IQFjOqK+WtKoprh7Go2/yvd2HPtoJILO2Or84ncLccI4xoHMTSbGg==
 
 uncontrollable@^4.1.0:
   version "4.1.0"
