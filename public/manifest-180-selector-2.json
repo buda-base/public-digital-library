@@ -150,7 +150,7 @@
                 "selector": {
                   "@context": "http://iiif.io/api/annex/openannotation/context.json",
                   "@type": "iiif:ImageApiSelector",
-                  "rotation": "90"
+                  "rotation": "270"
                 }
              },
               "on": "https://iiifpres.bdrc.io/v:bdr:I4CZ75258/canvas/I4CZ752580005.jpg"
