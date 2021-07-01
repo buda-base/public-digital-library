@@ -1968,6 +1968,10 @@ body > [id^="menu-"] > div:last-child,
 .resource .data .images-thumb { margin:0px 0px; width:145px; height:145px; background-size:cover;background-position:center;background-repeat:no-repeat; 
    border:1px solid #ccc;display:inline-block;vertical-align: top;
 }
+.resource .data .images-thumb:not(.no-thumb) {
+   background-size: auto 100%;
+   background-color: black;
+}
 .resource .data [data-prop="bdo:workHasInstance"] .images-thumb { width:100px;height:100px;z-index:1;position:relative;}
 .resource .data [data-prop="bdo:workHasInstance"] .images-thumb-links { margin-left:10px;}
 
@@ -2611,7 +2615,10 @@ html[lang="en"] .resource .data > [data-prop="bdo:creator"] h4[data-prop="bdo:ro
 .resource .data.related .react-tabs__tab-list { border:none; font-weight:600; position:relative;display:flex;} 
 
 .resource .data.related .header.thumb:before { content:none; }
-.resource .data.related .header.thumb { background-position:center; background-size:cover; border: 1px solid #ccc;}
+.resource .data.related .header.thumb { background-position:center; background-size:cover; border: 1px solid #ccc;
+   background-size: auto 100%;
+   background-color: black;
+}
 
 /* .resource .data.related .react-tabs .react-tabs__tab-panel .rel-or-crea { overflow-x:scroll;} */
 

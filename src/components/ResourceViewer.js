@@ -6818,8 +6818,10 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          createdBy = createdBy.map( ({s,k,n,m,label,thumb},i) => {             
             this._refs["crea-"+i] = React.createRef();            
             let thumbUrl = thumb 
-            if(!thumbUrl.match(/[/]default[.][^.]+$/)) thumbUrl += "/full/"+(thumb&&thumb.includes(".bdrc.io/")?"!2000,185":",185")+"/0/default.jpg"
-            else thumbUrl = thumbUrl.replace(/[/]max[/]/,"/"+(thumbUrl.includes(".bdrc.io/")?"!2000,185":",185")+"/")            
+            if(thumbUrl) {
+               if(!thumbUrl.match(/[/]default[.][^.]+$/)) thumbUrl += "/full/"+(thumb&&thumb.includes(".bdrc.io/")?"!2000,185":",185")+"/0/default.jpg"
+               else thumbUrl = thumbUrl.replace(/[/]max[/]/,"/"+(thumbUrl.includes(".bdrc.io/")?"!2000,185":",185")+"/")            
+            }
             return ( 
                <div ref={this._refs["crea-"+i]}>
                   <Link to={"/show/"+s}><div class={"header"+(thumb?" thumb":"") + (_T === "Product"?" instance":"")} style={{backgroundImage:"url("+thumbUrl+")"}}></div></Link>
