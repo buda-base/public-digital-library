@@ -1824,6 +1824,7 @@ span[lang^='sa-']:not([lang$='-ewts']) { text-transform: capitalize;}
 #popSame a li emph { padding:0 5px; font-weight:800; }
 
 #popSame { margin-top:-10px; z-index:1000000; }
+.poPdf,
 #popDL { margin-top:30px; }
 
 body > [id^="menu-"] { z-index:10010; }

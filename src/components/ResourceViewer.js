@@ -4713,7 +4713,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
             id="popDL"
             open={this.state.collapse.permaDL}
             anchorEl={this.state.anchorPermaDL}
-            onClose={e => { this.setState({...this.state,anchorPermaDL:null,collapse: {...this.state.collapse, permaDL:false } } ) }}
+            onClose={e => { this.setState({...this.state, /*anchorPermaDL:null,*/ collapse: {...this.state.collapse, permaDL:false } } ) }}
             >
 
                { (this.props.eTextRefs && this.props.eTextRefs.mono) && 
@@ -4772,14 +4772,55 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                      </a> 
                   ]
                 }
+
+                { that.props.IRI && that.props.IRI.match(/bdr:((MW)|(W[0-9])|(IE))/) && 
+                  <a onClick={ev => {
+                        that.setState({
+                           collapse:{ ...that.state.collapse, citation:!that.state.collapse.citation, permaDL:false },
+                           anchorEl:{ ...that.state.anchorEl, citation:({...ev }).currentTarget }
+                        })
+                     }}>
+                     <MenuItem>{I18n.t("resource.exportData",{data: I18n.t("resource.citation") })}</MenuItem>
+                  </a>                  
+                }
               
          </Popover>
 
+            
+            { that.props.config && 
+               <Popover
+                  id="popDL"
+                  open={that.state.collapse.citation}
+                  anchorEl={that.state.anchorPermaDL}
+                  onClose={ev => that.setState({ collapse:{ ...that.state.collapse, citation:false }})}
+               >
+                     <FormControl className={"formControl"} style={{ width:"calc(100% - 16px * 2)", margin:"16px" }}>
+                        <InputLabel htmlFor="citationStyle">{I18n.t("resource.citationS")}</InputLabel>
+                        <Select
+                           value={that.state.citationStyle?this.state.citationStyle:"style0"} 
+                           onChange={ev => that.setState({ citationStyle: ev.target.value })}
+                           open={that.state.collapse.citationStyle}
+                           onClose={(e) => e.preventDefault() }
+                           inputProps={{ name: 'citationStyle', id: 'citationStyle', }}
+                           //style={{ width: "100%" }}
+                        >
+                           {[ "style A", "style B", "style C" ].map( (d,i) => (
+                              <MenuItem key={d} value={"style"+i}>{d}</MenuItem>)) 
+                           }
+                        </Select>
+                     </FormControl> 
+                  
+
+                  { [ ...that.props.config.language.menu, "x" ].map(lg => <a><MenuItem>{ I18n.t("resource.citationI", {lg: I18n.t("lang."+lg) })}</MenuItem></a>) }
+               </Popover>
+            }
+
+   
            { (that.props.pdfVolumes && that.props.pdfVolumes.length > 0) &&
                    <Popover
                       className="poPdf"
                       open={that.state.pdfOpen == true || that.props.pdfReady == true}
-                      anchorEl={that.state.anchorElPdf}
+                      anchorEl={that.state.anchorPermaDL}
                       //anchorOrigin={{ vertical: 'bottom' }}
                       //transformOrigin={{ vertical: 'top' }}
                       onClose={that.handleRequestClosePdf.bind(this)}

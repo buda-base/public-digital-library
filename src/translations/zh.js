@@ -362,7 +362,8 @@ const zhTranslation = {
          xIast:"IAST转写",
          alalc97:"ALA-LC转写",
          latnPinyin:"拼音"
-      }
+      },
+      x:"Transliterated"
    },
    search:{
       page:"页",
@@ -436,7 +437,10 @@ const zhTranslation = {
       searchE:"Search in the content of this etext",
       mustLogin:"You must be logged in to download PDFs or ZIPs.",
       commitV:"View commit history",
-      commitH:"Hide commit history"
+      commitH:"Hide commit history",
+      citation:"bibliographic citation",
+      citationI:"{{lg}} citation",
+      citationS:"Citation style"
    },
    mirador:{
       return:"回到BUDA",

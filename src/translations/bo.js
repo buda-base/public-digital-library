@@ -391,7 +391,8 @@ const boTranslation = {
          xIast:"IAST",
          alalc97:"ALA-LC",
          latnPinyin:"ཕིན་ཡིག"
-      }
+      },
+      x:"Transliterated"
    },
    search:{
       page:"ཤོག་ངོས།",
@@ -471,7 +472,10 @@ const boTranslation = {
       searchE:"Search in the content of this etext",
       mustLogin:"You must be logged in to download PDFs or ZIPs.",
       commitV:"View commit history",
-      commitH:"Hide commit history"
+      commitH:"Hide commit history",
+      citation:"bibliographic citation",
+      citationI:"{{lg}} citation",
+      citationS:"Citation style"
    },
    mirador:{
       return:"བུདྡྷ་ལ་ཕྱིར་ལོག",
