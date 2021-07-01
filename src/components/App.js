@@ -3071,7 +3071,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
       if(enType === "instance" && (!hasImage || !hasImage.length)) hasImage = false
       else hasImage = true
 
-      let hasThumb = allProps.filter(a => a.type === tmp+"thumbnailIIIFService"), hasCopyR, viewUrl,access, quality
+      let hasThumb = allProps.filter(a => a.type && a.type.startsWith(tmp+"thumbnailIIIFSe")), hasCopyR, viewUrl,access, quality
       if(hasThumb.length) { 
          hasThumb = hasThumb[0].value 
          if(hasThumb) {             
@@ -3091,7 +3091,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             if(access.length) access = access[0].value            
             
             if(this.props.config && this.props.config.iiif && this.props.config.iiif.endpoints[this.props.config.iiif.index].match(/iiif-dev/)) hasThumb = hasThumb.replace(/iiif([.]bdrc[.]io)/, "iiif-dev$1")
-            hasThumb += "/full/"+(hasThumb.includes(".bdrc.io/")?"!2000,145":",145")+"/0/default.jpg" 
+            if(!hasThumb.match(/[/]default[.][^.]+$/)) hasThumb += "/full/"+(hasThumb.includes(".bdrc.io/")?"!2000,145":",145")+"/0/default.jpg" 
 
 
             quality = allProps.filter(a => [ bdo+"qualityGrade", tmp+"hasReproQuality" ].includes(a.type))
@@ -6109,6 +6109,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                                  }
                                  // DONE use thumbnail when available
                                  let thumb = this.props.latestSyncs[s][tmp+"thumbnailIIIFService"]
+                                 if(!thumb || !thumb.length) thumb = this.props.latestSyncs[s][tmp+"thumbnailIIIFSelected"]
                                  if(thumb && thumb.length) thumb = thumb[0].value 
                                  //console.log("thumb",thumb)
                                  return (

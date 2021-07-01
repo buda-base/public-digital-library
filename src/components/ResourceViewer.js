@@ -1608,7 +1608,7 @@ class ResourceViewer extends Component<Props,State>
                      let label1 = "zzz" + shortUri(e.value), label2 = "", withThumb = 1 ;
                      if(e && assoR[e.value])
                      {
-                        withThumb = 1 - assoR[e.value].filter(e => e.type === tmp+"thumbnailIIIFService").length 
+                        withThumb = 1 - assoR[e.value].filter(e => e.type && e.type.startsWith(tmp+"thumbnailIIIFSe")).length 
 
                         label1 = getLangLabel(this, "", assoR[e.value].filter(e => e.type === skos+"prefLabel"))
                         if(label1 && label1.value) label1 = label1.value
@@ -2237,8 +2237,14 @@ class ResourceViewer extends Component<Props,State>
                
                
                thumbV =  this.getResourceElem(tmp+"thumbnailIIIFService", sUri, this.props.assocResources)
+               if(!thumbV || !thumbV.length) thumbV = this.getResourceElem(tmp+"thumbnailIIIFSelected", sUri, this.props.assocResources)
+               
                if(!thumbV || !thumbV.length)  ret = [  <Link to={"/show/"+sUri} class={"images-thumb no-thumb"} style={{"background-image":"url(/icons/header/instance.svg)"}}></Link> ]
-               else ret = [  <Link to={"/show/"+sUri} class={"images-thumb"} style={{"background-image":"url("+ thumbV[0].value+"/full/"+(thumbV[0].value.includes(".bdrc.io/")?"!2000,145":",145")+"/0/default.jpg)"}}></Link> ]
+               else {
+                  let thumbUrl = thumbV[0].value
+                  if(!thumbUrl.match(/[/]default[.][^.]+$/)) thumbUrl += "/full/"+(thumbV[0].value.includes(".bdrc.io/")?"!2000,145":",145")+"/0/default.jpg"
+                  ret = [  <Link to={"/show/"+sUri} class={"images-thumb"} style={{"background-image":"url("+thumbUrl+")"}}></Link> ]
+               }
             
                let inRoot =  this.getResourceElem(bdo+"inRootInstance", sUri, this.props.assocResources)
                if(inRoot && inRoot.length && info && lang && lang === "bo-x-ewts" && info.match(/^([^ ]+ ){11}/)) info = [ info.replace(/^(([^ ]+ ){10}).*?$/,"$1"), <span class="ellip">{info.replace(/^([^ ]+ ){10}[^ ]+(.*?)$/,"$2")}</span> ]
@@ -2252,6 +2258,7 @@ class ResourceViewer extends Component<Props,State>
             else if(enti === "Images") { 
                ret = []
                thumb =  this.getResourceElem(tmp+"thumbnailIIIFService", sUri, this.props.assocResources)
+               if(!thumb || !thumb.length) thumb = this.getResourceElem(tmp+"thumbnailIIIFSelected", sUri, this.props.assocResources)
                if(thumb && !thumb.length) thumb = null
 
                /* // deprecated (thumbnail is a property of instance)
@@ -2503,8 +2510,10 @@ class ResourceViewer extends Component<Props,State>
 
             if(!thumb && !thumbV) ret = (<Link className={"urilink "+ prefix} to={"/"+show+"/"+prefix+":"+pretty}><span lang="">{ret}{prefix+":"+pretty}</span></Link>)
             else if(thumb && thumb.length) {
+               let thumbUrl = thumb[0].value
+               if(!thumbUrl.match(/[/]default[.][^.]+$/)) thumbUrl += "/full/"+(thumb[0].value.includes(".bdrc.io/")?"!2000,145":",145")+"/0/default.jpg"
                let vlink = "/"+show+"/"+prefix+":"+pretty+"?s="+encodeURIComponent(this.props.history.location.pathname+this.props.history.location.search)+"#open-viewer"                
-               thumb = <div class="images-thumb" style={{"background-image":"url("+thumb[0].value+"/full/"+(thumb[0].value.includes(".bdrc.io/")?"!2000,145":",145")+"/0/default.jpg)"}}/>;               
+               thumb = <div class="images-thumb" style={{"background-image":"url("+thumbUrl+")"}}/>;               
 
                ret = [<Link className={"urilink "+ prefix} to={vlink}>{thumb}</Link>,
                      <div class="images-thumb-links">
@@ -2515,7 +2524,9 @@ class ResourceViewer extends Component<Props,State>
                let repro = this.getResourceElem(bdo+"instanceHasReproduction", shortUri(elem.value), this.props.assocResources)
                if(repro && repro.length) repro = shortUri(repro[0].value)
                let img = thumbV[0].value, hasT = true
-               if(img.startsWith("http")) img += "/full/"+(img.includes(".bdrc.io/")?"!2000,145":",145")+"/0/default.jpg"
+               if(img.startsWith("http")) { 
+                  if(!img.match(/[/]default[.][^.]+$/)) img += "/full/"+(img.includes(".bdrc.io/")?"!2000,145":",145")+"/0/default.jpg"
+               }
                else hasT = false
                let vlink = "/"+show+"/"+repro+"?s="+encodeURIComponent(this.props.history.location.pathname+this.props.history.location.search)+"#open-viewer"                
                thumbV = <div class={"images-thumb"+(!hasT?" no-thumb":"")} style={{"background-image":"url("+img+")"}}/>;               
@@ -5213,7 +5224,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
             //if(!k.match(new RegExp("Revision|Entry|prefLabel|"+rdf+"|toberemoved"))) {
             if(elem && 
-               (!k.match(new RegExp(adm+"|adm:|isRoot$|SourcePath|"+rdf+"|toberemoved|entityScore|associatedCentury|lastSync|dateCreated|qualityGrade|digitalLendingPossible|inRootInstance|workPagination|partIndex|partTreeIndex|legacyOutlineNodeRID|sameAs|thumbnailIIIFService|instanceOf|instanceReproductionOf|instanceHasReproduction|seeOther|(Has|ction)Member$|withSameAs|first(Text|Vol)N?"+(this._dontMatchProp?"|"+this._dontMatchProp:"")))
+               (!k.match(new RegExp(adm+"|adm:|isRoot$|SourcePath|"+rdf+"|toberemoved|entityScore|associatedCentury|lastSync|dateCreated|qualityGrade|digitalLendingPossible|inRootInstance|workPagination|partIndex|partTreeIndex|legacyOutlineNodeRID|sameAs|thumbnailIIIFSe|instanceOf|instanceReproductionOf|instanceHasReproduction|seeOther|(Has|ction)Member$|withSameAs|first(Text|Vol)N?"+(this._dontMatchProp?"|"+this._dontMatchProp:"")))
                ||k.match(/(metadataLegal|contentProvider|replaceWith)$/)
                //||k.match(/([/]see|[/]sameAs)[^/]*$/) // quickfix [TODO] test property ancestors
                || (this.props.IRI.match(/^bda:/) && (k.match(new RegExp(adm+"|adm:"))) && !k.match(/\/(git[RP]|adminAbout|logEntry|graphId|facetIndex)/)))
@@ -5499,6 +5510,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
       let etext = this.isEtext()
 
       let iiifThumb = this.getResourceElem(tmp+"thumbnailIIIFService")
+      if(!iiifThumb || !iiifThumb.length) iiifThumb = this.getResourceElem(tmp+"thumbnailIIIFSelected")
       if(iiifThumb && iiifThumb.length) iiifThumb = iiifThumb[0].value
 
       let handleViewer = (ev) => {
@@ -6778,7 +6790,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                
                let m = label.lang+"_"+label.value
 
-               let thumb = v.filter(k => k.fromKey === tmp+"thumbnailIIIFService" || k.type === tmp+"thumbnailIIIFService")
+               let thumb = v.filter(k => k.fromKey && k.fromKey.startsWith(tmp+"thumbnailIIIFSe") || k.type && k.type.startsWith(tmp+"thumbnailIIIFSe"))
                if(thumb && thumb.length) thumb = thumb[0].value
                else thumb = null
 
@@ -6801,10 +6813,12 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          })
 
          createdBy = createdBy.map( ({s,k,n,m,label,thumb},i) => {             
-            this._refs["crea-"+i] = React.createRef();
+            this._refs["crea-"+i] = React.createRef();            
+            let thumbUrl = thumb 
+            if(!thumbUrl.match(/[/]default[.][^.]+$/)) thumbUrl += "/full/"+(thumb&&thumb.includes(".bdrc.io/")?"!2000,185":",185")+"/0/default.jpg"
             return ( 
                <div ref={this._refs["crea-"+i]}>
-                  <Link to={"/show/"+s}><div class={"header"+(thumb?" thumb":"") + (_T === "Product"?" instance":"")} style={{backgroundImage:"url("+thumb+"/full/"+(thumb&&thumb.includes(".bdrc.io/")?"!2000,185":",185")+"/0/default.jpg)"}}></div></Link>
+                  <Link to={"/show/"+s}><div class={"header"+(thumb?" thumb":"") + (_T === "Product"?" instance":"")} style={{backgroundImage:"url("+thumbUrl+")"}}></div></Link>
                   <div><Link to={"/show/"+s}><span {...label.lang?{lang:label.lang}:{}}>{ label.value }</span></Link>{ label.lang && this.tooltip(label.lang) }</div>
                   {/* <Link to={"/show/"+s}>{I18n.t("misc.readM")}</Link> */}
                </div>
