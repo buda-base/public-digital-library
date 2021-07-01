@@ -4786,7 +4786,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          </Popover>
 
             
-            { that.props.config && 
+            { that.props.config && that.props.config.language && that.props.config.language.menu &&
                <Popover
                   id="popDL"
                   open={that.state.collapse.citation}
