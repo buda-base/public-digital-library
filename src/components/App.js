@@ -3092,7 +3092,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             
             if(this.props.config && this.props.config.iiif && this.props.config.iiif.endpoints[this.props.config.iiif.index].match(/iiif-dev/)) hasThumb = hasThumb.replace(/iiif([.]bdrc[.]io)/, "iiif-dev$1")
             if(!hasThumb.match(/[/]default[.][^.]+$/)) hasThumb += "/full/"+(hasThumb.includes(".bdrc.io/")?"!2000,145":",145")+"/0/default.jpg" 
-
+            else hasThumb = hasThumb.replace(/[/]max[/]/,"/"+(hasThumb.includes(".bdrc.io/")?"!2000,145":",145")+"/")
 
             quality = allProps.filter(a => [ bdo+"qualityGrade", tmp+"hasReproQuality" ].includes(a.type))
             if(quality.length) quality = quality[0].value            

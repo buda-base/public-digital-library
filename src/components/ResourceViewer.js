@@ -2243,6 +2243,7 @@ class ResourceViewer extends Component<Props,State>
                else {
                   let thumbUrl = thumbV[0].value
                   if(!thumbUrl.match(/[/]default[.][^.]+$/)) thumbUrl += "/full/"+(thumbV[0].value.includes(".bdrc.io/")?"!2000,145":",145")+"/0/default.jpg"
+                  else thumbUrl = thumbUrl.replace(/[/]max[/]/,"/"+(thumbUrl.includes(".bdrc.io/")?"!2000,145":",145")+"/")
                   ret = [  <Link to={"/show/"+sUri} class={"images-thumb"} style={{"background-image":"url("+thumbUrl+")"}}></Link> ]
                }
             
@@ -2512,6 +2513,7 @@ class ResourceViewer extends Component<Props,State>
             else if(thumb && thumb.length) {
                let thumbUrl = thumb[0].value
                if(!thumbUrl.match(/[/]default[.][^.]+$/)) thumbUrl += "/full/"+(thumb[0].value.includes(".bdrc.io/")?"!2000,145":",145")+"/0/default.jpg"
+               else thumbUrl = thumbUrl.replace(/[/]max[/]/,"/"+(thumbUrl.includes(".bdrc.io/")?"!2000,145":",145")+"/")
                let vlink = "/"+show+"/"+prefix+":"+pretty+"?s="+encodeURIComponent(this.props.history.location.pathname+this.props.history.location.search)+"#open-viewer"                
                thumb = <div class="images-thumb" style={{"background-image":"url("+thumbUrl+")"}}/>;               
 
@@ -2525,7 +2527,8 @@ class ResourceViewer extends Component<Props,State>
                if(repro && repro.length) repro = shortUri(repro[0].value)
                let img = thumbV[0].value, hasT = true
                if(img.startsWith("http")) { 
-                  if(!img.match(/[/]default[.][^.]+$/)) img += "/full/"+(img.includes(".bdrc.io/")?"!2000,145":",145")+"/0/default.jpg"
+                  if(!img.match(/[/]default[.][^.]+$/)) img += "/full/"+(img.includes(".bdrc.io/")?"!2000,145":",145")+"/0/default.jpg"                  
+                  else img = img.replace(/[/]max[/]/,"/"+(img.includes(".bdrc.io/")?"!2000,145":",145")+"/")
                }
                else hasT = false
                let vlink = "/"+show+"/"+repro+"?s="+encodeURIComponent(this.props.history.location.pathname+this.props.history.location.search)+"#open-viewer"                
@@ -6816,6 +6819,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
             this._refs["crea-"+i] = React.createRef();            
             let thumbUrl = thumb 
             if(!thumbUrl.match(/[/]default[.][^.]+$/)) thumbUrl += "/full/"+(thumb&&thumb.includes(".bdrc.io/")?"!2000,185":",185")+"/0/default.jpg"
+            else thumbUrl = thumbUrl.replace(/[/]max[/]/,"/"+(thumbUrl.includes(".bdrc.io/")?"!2000,185":",185")+"/")            
             return ( 
                <div ref={this._refs["crea-"+i]}>
                   <Link to={"/show/"+s}><div class={"header"+(thumb?" thumb":"") + (_T === "Product"?" instance":"")} style={{backgroundImage:"url("+thumbUrl+")"}}></div></Link>
