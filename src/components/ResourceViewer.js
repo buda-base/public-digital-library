@@ -4786,7 +4786,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          </Popover>
 
             
-            { that.props.config && that.props.config.language && that.props.config.language.menu &&
+            { that.props.config && 
                <Popover
                   id="popDL"
                   open={that.state.collapse.citation}
@@ -4810,7 +4810,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                      </FormControl> 
                   
 
-                  { [ ...that.props.config.language.menu, "x" ].map(lg => <a><MenuItem>{ I18n.t("resource.citationI", {lg: I18n.t("lang."+lg) })}</MenuItem></a>) }
+                  { that.props.config.language && that.props.config.language.menu && [ ...that.props.config.language.menu, "x" ].map(lg => <a><MenuItem>{ I18n.t("resource.citationI", {lg: I18n.t("lang."+lg) })}</MenuItem></a>) }
                </Popover>
             }
 
