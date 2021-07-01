@@ -4776,8 +4776,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                 { that.props.IRI && that.props.IRI.match(/bdr:((MW)|(W[0-9])|(IE))/) && 
                   <a onClick={ev => {
                         that.setState({
-                           collapse:{ ...that.state.collapse, citation:!that.state.collapse.citation, permaDL:false },
-                           anchorEl:{ ...that.state.anchorEl, citation:({...ev }).currentTarget }
+                           collapse:{ ...that.state.collapse, citation:!that.state.collapse.citation, permaDL:false }
                         })
                      }}>
                      <MenuItem>{I18n.t("resource.exportData",{data: I18n.t("resource.citation") })}</MenuItem>
