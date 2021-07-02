@@ -143,7 +143,7 @@ footer#site-footer.no-syncs > div.head::before { background-color:#efefef; }
 .App:not(.home) .SearchPane { min-height:calc(100vh - 80px - 50px * 0);  }
 
 [role='tooltip'] *, .App *,.nav *,.App *::before,.App *::after, .react-tabs *, .resource *:not(.fa):not(.material-icons), .resource + * *,
-.inRes *  { 
+.inRes *, #popDL.cite *, #menu-citationLang * { 
    font-family:"Noto Sans", "Roboto", "Helvetica", "Arial", sans-serif !important;
 }
 
@@ -1696,19 +1696,51 @@ span[lang^='sa-']:not([lang$='-ewts']) { text-transform: capitalize;}
    padding:20px 35px; }
 #perma > div button {color:rgba(0,0,0,0.54); }
 
+#popDL.cite #clipB,
 #perma #permalink { color:white; background-color: #d73449; border-radius:5px;display:flex;align-items: center;justify-content: center; height:40px;
-   padding: 0 15px; border:none !important; font-weight:600; font-size:13px; cursor:pointer;}
+   padding: 0 15px; border:none !important; font-weight:600; font-size:13px; cursor:pointer;
+}
+
+#popDL.cite #clipB { display:inline-flex; /*margin-left: auto;*/ box-sizing: border-box;}
+
+#popDL.cite #clipB svg,
 #perma #permalink img { display:inline-block; margin-right:10px; }
 
+
+
+#perma #cite,
 #perma #DL,
 #perma #rid { font-size:13px;font-weight:600;display:inline-block;color:#343434; padding-right:16px;  }
    
+#perma #rid { margin-left:57px;  /*border-right:1px solid rgba(0,0,0,0.35);*/ }
 
-#perma #rid { margin-left:57px;  border-right:1px solid rgba(0,0,0,0.35); }
+#perma #cite,
+#perma #DL { cursor:pointer; padding-left:16px; display:flex; align-items: center; border-left: 1px solid rgba(0,0,0,0.35);}
 
-
-#perma #DL { cursor:pointer; padding-left:16px;}
 #perma #DL svg { vertical-align:-4px; font-size:18px; padding-left:0px;}
+
+#popDL.cite #clipB svg,
+#perma #cite svg,
+#perma #DL img { 
+   box-sizing:border-box; width:26px; height:26px; padding:5px; margin-right:10px; display:inline-block; vertical-align: middle; border-radius: 50%; box-shadow:0 0 0px 1.35px #343434; 
+}
+
+#popDL.cite #clipB svg { box-shadow:0 0 0px 1.35px white; }
+
+#popDL.cite #clipB.copied { background:none; color:#d73449; border:1px solid #d73449 !important; }
+#popDL.cite #clipB.copied svg { box-shadow:0 0 0px 1.35px #d73449; }
+
+#perma #cite {  padding-left:16px;  }
+
+#perma #cite svg { color:#343434; padding:3px; }
+
+#popDL.cite > div { display:flex; }
+#popDL.cite > div .output { width: 420px; padding:16px; display: flex; flex-direction: column; justify-content: center; align-items: center;}
+#popDL.cite > div .output .main { max-height: 130px; width:100%; margin-bottom:16px; text-align:left; font-size:14px; padding:0 16px; 
+   box-sizing: border-box;
+}
+
+#popDL.cite .selected-style { background:#ddd !important; }
 
 #popLang { z-index:100100; }
 #popLang.black > div:last-child { margin-top:0px; }
@@ -1843,6 +1875,7 @@ body > [id^="menu-"] > div:last-child,
 #popSame a,
 #popDL a { text-decoration: none; }
 
+#menu-citationLang li,
 #popHoverM li,
 #popLang li,
 #popSame a li,
@@ -1851,7 +1884,7 @@ body > [id^="menu-"] > div:last-child,
 #popSame a b { font-weight:900; }
 #popSame a img { display: inline-block; margin-bottom:2px;margin-left:2px;}
 
-#perma #DL + #same { margin-left:auto; }
+#perma #DL ~ #same { margin-left:auto; }
 
 #perma #copyright { margin-left:auto;  /*border-right:1px solid rgba(0,0,0,0.35);padding:2px 16px; */ }
 #perma #copyright:not(:last-child) { padding-right:15px; }

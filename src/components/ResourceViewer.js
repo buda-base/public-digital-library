@@ -49,6 +49,9 @@ import ShareIcon from '@material-ui/icons/Share';
 import HomeIcon from '@material-ui/icons/Home';
 import ChatIcon from '@material-ui/icons/Chat';
 import SearchIcon from '@material-ui/icons/Search';
+import CiteIcon from '@material-ui/icons/FormatQuote';
+import ClipboardIcon from '@material-ui/icons/Assignment';
+import CheckIcon from '@material-ui/icons/Check';
 import PhotoIcon from '@material-ui/icons/PhotoSizeSelectActual';
 import Script from 'react-load-script'
 import React, { Component } from 'react';
@@ -4701,9 +4704,20 @@ perma_menu(pdfLink,monoVol,fairUse,other)
       { that.props.IRI && <span id="rid">{shortUri(that.props.IRI)}</span> }
 
       <span id="DL" ref={this._refs["perma_DL"]} onClick={(e) => this.setState({...this.state,anchorPermaDL:e.currentTarget, collapse: {...this.state.collapse, permaDL:!this.state.collapse.permaDL } } ) }>
-      {I18n.t("resource.download")} { this.state.collapse.permaDL ? <ExpandLess/>:<ExpandMore/>}
+         <img src="/icons/DL_.svg"/>{I18n.t("resource.download")} { this.state.collapse.permaDL ? <ExpandLess/>:<ExpandMore/>}
       </span>
 
+      { that.props.IRI && that.props.IRI.match(/bdr:((MW)|(W[0-9])|(IE))/) && 
+         <span id="cite" onClick={ev => {
+            that.setState({
+               collapse:{ ...that.state.collapse, citation:!that.state.collapse.citation },
+               anchorEl:{ ...that.state.anchorEl, citation:({...ev}).currentTarget }
+            })
+         }}>
+            <CiteIcon />{I18n.t("resource.cite")} 
+         </span> 
+      }
+      
 
       { cLegalD && <span id="copyright" title={this.fullname(cLegalD,false,false,true,false)}><img src={"/icons/"+copyR+".png"}/></span> }
 
@@ -4773,44 +4787,60 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                   ]
                 }
 
-                { that.props.IRI && that.props.IRI.match(/bdr:((MW)|(W[0-9])|(IE))/) && 
-                  <a onClick={ev => {
-                        that.setState({
-                           collapse:{ ...that.state.collapse, citation:!that.state.collapse.citation, permaDL:false }
-                        })
-                     }}>
-                     <MenuItem>{I18n.t("resource.exportData",{data: I18n.t("resource.citation") })}</MenuItem>
-                  </a>                  
-                }
               
          </Popover>
 
             
-            { that.props.config && 
+            { that.props.config && that.props.config.language && that.props.config.language.menu &&
                <Popover
                   id="popDL"
+                  className="cite"
                   open={that.state.collapse.citation}
-                  anchorEl={that.state.anchorPermaDL}
+                  anchorEl={that.state.anchorEl.citation}
                   onClose={ev => that.setState({ collapse:{ ...that.state.collapse, citation:false }})}
                >
+                  <div>
                      <FormControl className={"formControl"} style={{ width:"calc(100% - 16px * 2)", margin:"16px" }}>
-                        <InputLabel htmlFor="citationStyle">{I18n.t("resource.citationS")}</InputLabel>
+                        <InputLabel htmlFor="citationLang">{I18n.t("lang.lg")}</InputLabel>
                         <Select
-                           value={that.state.citationStyle?this.state.citationStyle:"style0"} 
-                           onChange={ev => that.setState({ citationStyle: ev.target.value })}
-                           open={that.state.collapse.citationStyle}
+                           value={that.state.citationLang?that.state.citationLang:that.props.locale} 
+                           onChange={ev => that.setState({ citationLang: ev.target.value })}
+                           open={that.state.collapse.citationLang}
                            onClose={(e) => e.preventDefault() }
-                           inputProps={{ name: 'citationStyle', id: 'citationStyle', }}
+                           inputProps={{ name: 'citationLang', id: 'citationLang', }}
                            //style={{ width: "100%" }}
                         >
-                           {[ "style A", "style B", "style C" ].map( (d,i) => (
-                              <MenuItem key={d} value={"style"+i}>{d}</MenuItem>)) 
+                           { [ ...that.props.config.language.menu, "x" ].map( (lg,i) => (
+                              <MenuItem key={lg} value={lg}>{I18n.t("lang."+lg)}</MenuItem>)) 
                            }
                         </Select>
                      </FormControl> 
                   
 
-                  { that.props.config.language && that.props.config.language.menu && [ ...that.props.config.language.menu, "x" ].map(lg => <a><MenuItem>{ I18n.t("resource.citationI", {lg: I18n.t("lang."+lg) })}</MenuItem></a>) }
+                  { [ "style A", "style B", "style C" ].map( (s,i) => 
+                     <a>
+                        <MenuItem 
+                           classes={{ selected: "selected-style" }} 
+                           onClick={ev => that.setState({citationStyle: s})} {...!that.state.citationStyle&&i==0||that.state.citationStyle === s?{selected:true}:{}}>
+                              {s}
+                        </MenuItem>
+                     </a>) }
+                  </div>
+                  <div class="output">
+                     <div class="main">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce auctor est vitae nulla bibendum volutpat. Praesent lacinia urna quis dolor lacinia ultrices.</div>
+                     <CopyToClipboard text={"Lorem ipsum"} onCopy={(e) => {
+                           that.setState({citationCopied:true})
+                           setTimeout(()=>that.setState({citationCopied:false}), 3000)
+                        }}>
+                        
+                           <a id="clipB" className={that.state.citationCopied?"copied":""}>
+                              { that.state.citationCopied 
+                                 ? [<CheckIcon/>,I18n.t("resource.clipC")] 
+                                 : [<ClipboardIcon/>,I18n.t("resource.clipB")] 
+                              }
+                           </a>
+                     </CopyToClipboard>
+                  </div>
                </Popover>
             }
 

@@ -440,7 +440,10 @@ const zhTranslation = {
       commitH:"Hide commit history",
       citation:"bibliographic citation",
       citationI:"{{lg}} citation",
-      citationS:"Citation style"
+      citationS:"Citation style",
+      cite:"Cite this item",
+      clipB:"Copy to clipboard",
+      clipC:"Citation copied"
    },
    mirador:{
       return:"回到BUDA",
