@@ -1729,6 +1729,7 @@ span[lang^='sa-']:not([lang$='-ewts']) { text-transform: capitalize;}
 }
 
 #popDL.cite #export { border:none; padding-right:0; }
+#popDL.cite #export .icon img { width:15px; margin-left:2px; }
 
 #popDL.cite #clipB svg { box-shadow:0 0 0px 1.35px white; }
 
