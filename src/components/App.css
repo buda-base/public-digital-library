@@ -1708,22 +1708,27 @@ span[lang^='sa-']:not([lang$='-ewts']) { text-transform: capitalize;}
 
 
 
+#popDL.cite #export,
 #perma #cite,
 #perma #DL,
 #perma #rid { font-size:13px;font-weight:600;display:inline-block;color:#343434; padding-right:16px;  }
    
 #perma #rid { margin-left:57px;  /*border-right:1px solid rgba(0,0,0,0.35);*/ }
 
+#popDL.cite #export,
 #perma #cite,
 #perma #DL { cursor:pointer; padding-left:16px; display:flex; align-items: center; border-left: 1px solid rgba(0,0,0,0.35);}
 
 #perma #DL svg { vertical-align:-4px; font-size:18px; padding-left:0px;}
 
+#popDL.cite #export .icon,
 #popDL.cite #clipB svg,
 #perma #cite svg,
 #perma #DL img { 
    box-sizing:border-box; width:26px; height:26px; padding:5px; margin-right:10px; display:inline-block; vertical-align: middle; border-radius: 50%; box-shadow:0 0 0px 1.35px #343434; 
 }
+
+#popDL.cite #export { border:none; padding-right:0; }
 
 #popDL.cite #clipB svg { box-shadow:0 0 0px 1.35px white; }
 
@@ -1735,12 +1740,15 @@ span[lang^='sa-']:not([lang$='-ewts']) { text-transform: capitalize;}
 #perma #cite svg { color:#343434; padding:3px; }
 
 #popDL.cite > div { display:flex; }
-#popDL.cite > div .output { width: 420px; padding:16px; display: flex; flex-direction: column; justify-content: center; align-items: center;}
-#popDL.cite > div .output .main { max-height: 130px; width:100%; margin-bottom:16px; text-align:left; font-size:14px; padding:0 16px; 
-   box-sizing: border-box;
-}
+#popDL.cite > div .output { width: 430px; padding:16px; display: flex; flex-direction: column; justify-content: center; align-items: center;}
+#popDL.cite > div .output .main { max-height: 130px; width:100%; margin-bottom:16px; text-align:left; font-size:14px; padding:0 16px 8px 16px; box-sizing: border-box; }
+
+#popDL.cite > div .output .actions { width:100%; display:flex; justify-content: space-between; padding:0 16px; box-sizing: border-box;}
 
 #popDL.cite .selected-style { background:#ddd !important; }
+
+#popDL.export { margin-top:40px;}
+#popDL.export li { max-width:260px; white-space:normal; }
 
 #popLang { z-index:100100; }
 #popLang.black > div:last-child { margin-top:0px; }

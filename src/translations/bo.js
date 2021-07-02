@@ -478,7 +478,10 @@ const boTranslation = {
       citationS:"Citation style",
       cite:"Cite this item",
       clipB:"Copy to clipboard",
-      clipC:"Citation copied"
+      clipC:"Citation copied",
+      export:"Export",
+      export2:"Export to {{format}}",
+      exportRIS:"Export a RIS file (for EndNote, ProCite, Reference Manager, Zotero, Mendeley, etc.)"
    },
    mirador:{
       return:"བུདྡྷ་ལ་ཕྱིར་ལོག",

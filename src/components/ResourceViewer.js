@@ -4777,7 +4777,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                   <MenuItem>{I18n.t("resource.exportDataAs",{data: "metadata", format:"JSON-LD"})}</MenuItem>           
                </a>
 
-               { that.props.IRI && that.props.IRI.match(/bdr:MW/) && [
+               { /* that.props.IRI && that.props.IRI.match(/bdr:MW/) && [
                      <a target="_blank" title={I18n.t("resource.version",{format:"MARC"})} rel="alternate" type="application/marc" href={that.expand(that.props.IRI, true)+".mrc"} download>
                         <MenuItem>{I18n.t("resource.exportDataAs",{data: "metadata", format:"MARC"})}</MenuItem>           
                      </a>,
@@ -4785,7 +4785,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                         <MenuItem>{I18n.t("resource.exportDataAs",{data: "metadata", format:"MARCXML"})}</MenuItem>           
                      </a> 
                   ]
-                }
+                */ }
 
               
          </Popover>
@@ -4795,6 +4795,8 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                <Popover
                   id="popDL"
                   className="cite"
+                  anchorOrigin={{ horizontal: 30 }}
+                  transformOrigin={{ horizontal: 'center' }}
                   open={that.state.collapse.citation}
                   anchorEl={that.state.anchorEl.citation}
                   onClose={ev => that.setState({ collapse:{ ...that.state.collapse, citation:false }})}
@@ -4828,22 +4830,51 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                   </div>
                   <div class="output">
                      <div class="main">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce auctor est vitae nulla bibendum volutpat. Praesent lacinia urna quis dolor lacinia ultrices.</div>
-                     <CopyToClipboard text={"Lorem ipsum"} onCopy={(e) => {
-                           that.setState({citationCopied:true})
-                           setTimeout(()=>that.setState({citationCopied:false}), 3000)
+                     <div class="actions">
+                        <CopyToClipboard text={"Lorem ipsum"} onCopy={(e) => {
+                              that.setState({citationCopied:true})
+                              setTimeout(()=>that.setState({citationCopied:false}), 3000)
+                           }}>                        
+                              <a id="clipB" className={that.state.citationCopied?"copied":""}>
+                                 { that.state.citationCopied 
+                                    ? [<CheckIcon/>,I18n.t("resource.clipC")] 
+                                    : [<ClipboardIcon/>,I18n.t("resource.clipB")] 
+                                 }
+                              </a>
+                        </CopyToClipboard>
+                        <a id="export" onClick={ev => {
+                           that.setState({
+                              collapse:{ ...that.state.collapse, export:!that.state.collapse.export },
+                              anchorEl:{ ...that.state.anchorEl, export:({...ev}).currentTarget }
+                           })
                         }}>
-                        
-                           <a id="clipB" className={that.state.citationCopied?"copied":""}>
-                              { that.state.citationCopied 
-                                 ? [<CheckIcon/>,I18n.t("resource.clipC")] 
-                                 : [<ClipboardIcon/>,I18n.t("resource.clipB")] 
-                              }
-                           </a>
-                     </CopyToClipboard>
+                           <span class="icon"><img src="/icons/export.svg"/></span> {I18n.t("resource.export")} { this.state.collapse.export ? <ExpandLess/>:<ExpandMore/>}
+                        </a>
+                     </div>
                   </div>
                </Popover>
             }
 
+
+            
+            { that.state.collapse.export &&
+               <Popover
+                  id="popDL"
+                  className="export"
+                  //anchorOrigin={{ horizontal: 30 }}
+                  //transformOrigin={{ horizontal: 'center' }}
+                  open={that.state.collapse.export}
+                  anchorEl={that.state.anchorEl.export}
+                  onClose={ev => that.setState({ collapse:{ ...that.state.collapse, export:false }})}
+               >
+                  { [ "RIS", ...(that.props.IRI && that.props.IRI.match(/bdr:MW/)?["MARC", "MARCXML"]:[]) ].map( (s,i) => 
+                     <a>
+                        <MenuItem>
+                              { I18n.t("resource.export"+(s === "RIS"?"RIS":"2"), {format:s})}
+                        </MenuItem>
+                     </a>) }
+               </Popover>
+            }  
    
            { (that.props.pdfVolumes && that.props.pdfVolumes.length > 0) &&
                    <Popover
