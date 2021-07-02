@@ -1740,7 +1740,7 @@ span[lang^='sa-']:not([lang$='-ewts']) { text-transform: capitalize;}
 #perma #cite svg { color:#343434; padding:3px; }
 
 #popDL.cite > div { display:flex; }
-#popDL.cite > div .output { width: 430px; padding:16px; display: flex; flex-direction: column; justify-content: center; align-items: center;}
+#popDL.cite > div .output { width: 450px; padding:16px; display: flex; flex-direction: column; justify-content: center; align-items: center;}
 #popDL.cite > div .output .main { max-height: 130px; width:100%; margin-bottom:16px; text-align:left; font-size:14px; padding:0 16px 8px 16px; box-sizing: border-box; }
 
 #popDL.cite > div .output .actions { width:100%; display:flex; justify-content: space-between; padding:0 16px; box-sizing: border-box;}
