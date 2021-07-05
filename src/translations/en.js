@@ -410,7 +410,8 @@ const enTranslation = {
          alalc97:"ALA-LC",
          latnPinyin:"Pinyin"
       },
-      x:"Transliterated"
+      x:"Transliterated",
+      latn:"Transliterated"
    },
    search:{
       page:"page",

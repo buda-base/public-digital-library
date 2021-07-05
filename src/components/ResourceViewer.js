@@ -4812,7 +4812,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                            inputProps={{ name: 'citationLang', id: 'citationLang', }}
                            //style={{ width: "100%" }}
                         >
-                           { [ ...that.props.config.language.menu, "x" ].map( (lg,i) => (
+                           { [ ...that.props.config.language.menu, "latn" ].map( (lg,i) => (
                               <MenuItem key={lg} value={lg}>{I18n.t("lang."+lg)}</MenuItem>)) 
                            }
                         </Select>
@@ -4867,12 +4867,20 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                   anchorEl={that.state.anchorEl.export}
                   onClose={ev => that.setState({ collapse:{ ...that.state.collapse, export:false }})}
                >
-                  { [ "RIS", ...(that.props.IRI && that.props.IRI.match(/bdr:MW/)?["MARC", "MARCXML"]:[]) ].map( (s,i) => 
-                     <a>
-                        <MenuItem>
-                              { I18n.t("resource.export"+(s === "RIS"?"RIS":"2"), {format:s})}
-                        </MenuItem>
-                     </a>) }
+                     <a rel="alternate" type="application/x-research-info-systems" 
+                        href={"http://ldspdi.bdrc.io/RIS/"+that.props.IRI+"/"+(that.state.citationLang?that.state.citationLang:that.props.locale)} download>
+                           <MenuItem>
+                                 { I18n.t("resource.exportRIS", {format:"RIS"})}
+                           </MenuItem>
+                     </a>
+                     { that.props.IRI && that.props.IRI.match(/bdr:MW/) && [
+                        <a rel="alternate" type="application/marc" href={that.expand(that.props.IRI, true)+".mrc"} download>
+                              <MenuItem>{I18n.t("resource.export2",{format:"MARC"})}</MenuItem>           
+                        </a>,
+                        <a rel="alternate" type="application/marcxml+xml" href={that.expand(that.props.IRI, true)+".mrcx"} download>
+                              <MenuItem>{I18n.t("resource.export2",{format:"MARCXML"})}</MenuItem>           
+                        </a> 
+                     ]}
                </Popover>
             }  
    
