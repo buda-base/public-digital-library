@@ -220,6 +220,12 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       onLoading:(kw:string,load:boolean) => {
          dispatch(ui.loading(kw,load))
       },
+      onGetCitationLocale:(lang:string) => {
+         dispatch(data.getCitationLocale(lang))
+      },
+      onGetCitationStyle:(s:string) => {
+         dispatch(data.getCitationStyle(s))
+      },
    }
 }
 

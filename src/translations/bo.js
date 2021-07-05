@@ -481,7 +481,12 @@ const boTranslation = {
       clipC:"Citation copied",
       export:"Export",
       export2:"Export to {{format}}",
-      exportRIS:"Export a RIS file (for EndNote, ProCite, Reference Manager, Zotero, Mendeley, etc.)"
+      exportRIS:"Export a RIS file (for EndNote, ProCite, Reference Manager, Zotero, Mendeley, etc.)",
+      citation:{
+         mla:"Modern Language Association",
+         chicago:"Chicago Manual of Style",
+         apa:"American Psychological Association"         
+      }
    },
    mirador:{
       return:"བུདྡྷ་ལ་ཕྱིར་ལོག",

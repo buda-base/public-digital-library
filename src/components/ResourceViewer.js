@@ -97,6 +97,8 @@ import {keywordtolucenequery,lucenequerytokeyword,lucenequerytokeywordmulti} fro
 
 import logdown from 'logdown'
 
+import Cite from 'citation-js'
+
 // for full debug, type this in the console:
 // window.localStorage.debug = 'rv'
 
@@ -143,6 +145,7 @@ type Props = {
     },
    outline?:{},
    IIIFerrors?:{},
+   citationData?:{},
    onGetAssocTypes: (s:string) => void,
    onInitPdf: (u:string,s:string) => void,
    onRequestPdf: (u:string,s:string) => void,
@@ -156,7 +159,9 @@ type Props = {
    onGetETextRefs: (s:string) => void,
    onToggleLanguagePanel:()=>void,
    onResetSearch:()=>void,
-   onUserProfile:(url:{})=>void
+   onUserProfile:(url:{})=>void,
+   onGetCitationLocale:(lg:string)=>void,
+   onGetCitationStyle:(s:string)=>void
 }
 type State = {
    uviewer : boolean,
@@ -191,7 +196,10 @@ type State = {
    title:{work:{},instance:{},images:{}},
    tabs:[],
    anchorEl:{},
-   openEtext?:boolean
+   openEtext?:boolean,
+   initCitation?:boolean,
+   citationStyle?:string,
+   citationLang?:string
  }
 
 
@@ -790,6 +798,7 @@ class ResourceViewer extends Component<Props,State>
    _dontMatchProp = "" ;
    _mouseover = {}
    _refs = {}
+   _citationConfig = null ;
 
    constructor(props:Props)
    {
@@ -875,7 +884,36 @@ class ResourceViewer extends Component<Props,State>
    static getDerivedStateFromProps(props:Props,state:State)
    {
 
-      let s 
+      let s
+
+      
+      if(state.collapse.citation) {
+         let citaLg = (!state.citationLang?props.locale:state.citationLang), hasLg = false ;
+         let citaSty = (!state.citationStyle?"mla":state.citationStyle), hasSty = false ;
+         if(!props.citationData 
+         || !props.citationData.locales 
+         || (hasLg = !props.citationData.locales[citaLg])
+         || !props.citationData.styles
+         || (hasSty = !props.citationData.styles[citaSty])) {
+
+            if(!hasLg && (!state.initCitation || !state.initCitation.includes(citaLg))) { 
+               const supportedLocales = { "en":"en-US", "zh":"zh-CN" }
+               if(supportedLocales[citaLg]) { 
+                  props.onGetCitationLocale(supportedLocales[citaLg])            
+               }
+               if(!s) s = { ...state }
+               if(!s.initCitation) s.initCitation = []
+               s.initCitation.push(citaLg)
+            }
+
+            if(!hasSty && (!state.initCitation || !state.initCitation.includes(citaSty))) { 
+               props.onGetCitationStyle(citaSty)            
+               if(!s) s = { ...state }
+               if(!s.initCitation) s.initCitation = []
+               s.initCitation.push(citaSty)
+            }
+         } 
+      }
 
       if(props.auth) {
          const { userProfile, getProfile, isAuthenticated } = props.auth;         
@@ -4677,6 +4715,25 @@ perma_menu(pdfLink,monoVol,fairUse,other)
    }
 
 
+   if(this.state.collapse.citation) {
+      if(!this._citationConfig) this._citationConfig = Cite.plugins.config.get('@csl')
+      //console.log("_cite:",this._citationConfig)
+      
+      let citaSty = "mla"
+      if(this.state.citationStyle) citaSty = this.state.citationStyle
+      if(!this._citationConfig.templates[citaSty] && this.props.citationData && this.props.citationData.styles  && this.props.citationData.styles[citaSty] ) {
+         // add new style
+      }
+
+      let citaLg = this.props.locale
+      if(this.state.citationLocale) citaLg = this.state.citationLocale
+      const supportedLocales = { "en":"en-US", "zh":"zh-CN" }
+      if(supportedLocales[citaLg] && !this._citationConfig.locales[supportedLocales[citaLg]]
+         && this.props.citationData && this.props.citationData.locales  && this.props.citationData.locales[supportedLocales[citaLg]] ) { 
+         // add new locale
+      }
+   }
+
    //this._refs["perma_DL"] = React.createRef();
    
 
@@ -4795,14 +4852,14 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                <Popover
                   id="popDL"
                   className="cite"
-                  anchorOrigin={{ horizontal: 30 }}
+                  anchorOrigin={{ horizontal: 89 }}
                   transformOrigin={{ horizontal: 'center' }}
                   open={that.state.collapse.citation}
                   anchorEl={that.state.anchorEl.citation}
                   onClose={ev => that.setState({ collapse:{ ...that.state.collapse, citation:false }})}
                >
                   <div>
-                     <FormControl className={"formControl"} style={{ width:"calc(100% - 16px * 2)", margin:"16px" }}>
+                     <FormControl className={"formControl"} style={{ width:"calc(100% - 16px)", margin:"16px", marginRight:0 }}>
                         <InputLabel htmlFor="citationLang">{I18n.t("lang.lg")}</InputLabel>
                         <Select
                            value={that.state.citationLang?that.state.citationLang:that.props.locale} 
@@ -4819,12 +4876,12 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                      </FormControl> 
                   
 
-                  { [ "style A", "style B", "style C" ].map( (s,i) => 
+                  { [ "mla", "chicago", "apa" ].map( (s,i) => 
                      <a>
                         <MenuItem 
                            classes={{ selected: "selected-style" }} 
                            onClick={ev => that.setState({citationStyle: s})} {...!that.state.citationStyle&&i==0||that.state.citationStyle === s?{selected:true}:{}}>
-                              {s}
+                              {I18n.t("resource.citation."+s)}
                         </MenuItem>
                      </a>) }
                   </div>

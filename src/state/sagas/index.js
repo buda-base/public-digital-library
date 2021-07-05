@@ -2429,6 +2429,48 @@ export function* watchGetOutline() {
 }
 
 
+
+async function getCitationStyle(s) {
+
+   store.dispatch(uiActions.loading(s, "citation"));
+   let res = await api.loadCitationStyle(s) 
+   store.dispatch(uiActions.loading(s, false));
+   
+   //loggergen.log("citaSty:",s,res)
+
+   store.dispatch(dataActions.gotCitationStyle(s,res))
+
+}
+
+async function getCitationLocale(lg) {
+
+   store.dispatch(uiActions.loading(lg, "citation"));
+   let res = await api.loadCitationLocale(lg) 
+   store.dispatch(uiActions.loading(lg, false));
+   
+   //loggergen.log("citaLg:",lg,res)
+
+   store.dispatch(dataActions.gotCitationLocale(lg,res))
+
+}
+
+
+
+export function* watchGetCitationStyle() {
+
+   yield takeLatest(
+      dataActions.TYPES.getCitationStyle,
+      (action) => getCitationStyle(action.payload)
+   );
+}
+export function* watchGetCitationLocale() {
+
+   yield takeLatest(
+      dataActions.TYPES.getCitationLocale,
+      (action) => getCitationLocale(action.payload)
+   );
+}
+
 async function outlineSearch(iri,kw,lg) {
 
    store.dispatch(uiActions.loading(iri, "outline"));
@@ -2677,6 +2719,8 @@ export default function* rootSaga() {
       watchUpdateSortBy(),
       watchGetInstances(),
       watchGetContext(),
+      watchGetCitationStyle(),
+      watchGetCitationLocale(),
       //watchChoosingHost(),
       //watchGetDatatypes(),
       watchGetChunks(),

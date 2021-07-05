@@ -126,6 +126,7 @@ export const requestPdf = (iri: string,link:string): Action => {
         meta:iri
     }
 }
+
 TYPES.pdfVolumes = 'PDF_VOLUMES';
 export const pdfVolumes = (iri: string,data:{}): Action => {
     return {
@@ -169,6 +170,40 @@ export const pdfNotReady = (url: string, iri:string): Action => {
         type: TYPES.pdfNotReady,
         payload: url,
         meta:iri
+    }
+}
+
+TYPES.getCitationLocale = 'GET_CITATION_LOCALE';
+export const getCitationLocale = (lg: string): Action => {
+    return {
+        type: TYPES.getCitationLocale,
+        payload:lg
+    }
+}
+
+TYPES.gotCitationLocale = 'GOT_CITATION_LOCALE';
+export const gotCitationLocale = (lg: string, res:string): Action => {
+    return {
+        type: TYPES.gotCitationLocale,
+        payload:lg,
+        meta:res
+    }
+}
+
+TYPES.getCitationStyle = 'GET_CITATION_STYLE';
+export const getCitationStyle = (s: string): Action => {
+    return {
+        type: TYPES.getCitationStyle,
+        payload:s
+    }
+}
+
+TYPES.gotCitationStyle = 'GOT_CITATION_STYLE';
+export const gotCitationStyle = (s: string, res:string): Action => {
+    return {
+        type: TYPES.gotCitationStyle,
+        payload:s,
+        meta:res
     }
 }
 
