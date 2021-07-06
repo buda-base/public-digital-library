@@ -97,11 +97,12 @@ import {keywordtolucenequery,lucenequerytokeyword,lucenequerytokeywordmulti} fro
 
 import logdown from 'logdown'
 
-import Cite from 'citation-js'
+//error when using after build: "Uncaught ReferenceError: s is not defined"
+//import Cite from 'citation-js'
+let Cite ;
 
 // for full debug, type this in the console:
 // window.localStorage.debug = 'rv'
-
 const loggergen = new logdown('rv', { markdown: false });
 
 delete L.Icon.Default.prototype._getIconUrl;
@@ -914,6 +915,7 @@ class ResourceViewer extends Component<Props,State>
             }
          } 
       }
+      
 
       if(props.auth) {
          const { userProfile, getProfile, isAuthenticated } = props.auth;         
@@ -4715,7 +4717,8 @@ perma_menu(pdfLink,monoVol,fairUse,other)
    }
 
 
-   if(this.state.collapse.citation) {
+   
+   if(Cite && Cite.plugins && Cite.plugins.config && this.state.collapse.citation) {
       if(!this._citationConfig) this._citationConfig = Cite.plugins.config.get('@csl')
       //console.log("_cite:",this._citationConfig)
       
@@ -4733,6 +4736,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          // add new locale
       }
    }
+   
 
    //this._refs["perma_DL"] = React.createRef();
    
@@ -7349,7 +7353,12 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          }
 
          return (
-         [getGDPRconsent(this),         
+         [getGDPRconsent(this),   
+
+         (this.state.collapse.citation && !Cite 
+         ? <Script url={"https://cdn.jsdelivr.net/npm/citation-js@0.5.1/build/citation.min.js"} onLoad={(e) => { Cite = require("citation-js"); }} />
+         : null),
+
          <div class={isMirador?"H100vh OF0":""}>
             { ["Images","Instance"].includes(_T) && <abbr class="unapi-id" title={this.props.IRI}></abbr> }
             { infoPanelR }
