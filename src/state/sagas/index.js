@@ -2454,7 +2454,17 @@ async function getCitationLocale(lg) {
 
 }
 
+async function getCitationData(id) {
 
+   store.dispatch(uiActions.loading(id, "citation"));
+   let res = await api.loadCitationData(id) 
+   store.dispatch(uiActions.loading(id, false));
+   
+   loggergen.log("citaData:",id,res)
+
+   store.dispatch(dataActions.gotCitationData(id,JSON.parse(res)))
+
+}
 
 export function* watchGetCitationStyle() {
 
@@ -2463,11 +2473,20 @@ export function* watchGetCitationStyle() {
       (action) => getCitationStyle(action.payload)
    );
 }
+
 export function* watchGetCitationLocale() {
 
    yield takeLatest(
       dataActions.TYPES.getCitationLocale,
       (action) => getCitationLocale(action.payload)
+   );
+}
+
+export function* watchGetCitationData() {
+
+   yield takeLatest(
+      dataActions.TYPES.getCitationData,
+      (action) => getCitationData(action.payload)
    );
 }
 
@@ -2721,6 +2740,7 @@ export default function* rootSaga() {
       watchGetContext(),
       watchGetCitationStyle(),
       watchGetCitationLocale(),
+      watchGetCitationData(),
       //watchChoosingHost(),
       //watchGetDatatypes(),
       watchGetChunks(),

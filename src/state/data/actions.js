@@ -207,6 +207,22 @@ export const gotCitationStyle = (s: string, res:string): Action => {
     }
 }
 
+TYPES.getCitationData = 'GET_CITATION_DATA';
+export const getCitationData = (s: string): Action => {
+    return {
+        type: TYPES.getCitationData,
+        payload:s
+    }
+}
+
+TYPES.gotCitationData = 'GOT_CITATION_DATA';
+export const gotCitationData = (s: string, res:string): Action => {
+    return {
+        type: TYPES.gotCitationData,
+        payload:s,
+        meta:res
+    }
+}
 TYPES.resetSearch = 'RESET_SEARCH';
 export const resetSearch = (): Action => {
     return {

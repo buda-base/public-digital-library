@@ -95,11 +95,13 @@ import {svgEtextS,svgInstanceS,svgImageS} from "./icons"
 
 import {keywordtolucenequery,lucenequerytokeyword,lucenequerytokeywordmulti} from './App';
 
+import HTMLparse from 'html-react-parser';
+
 import logdown from 'logdown'
 
 //error when using after build: "Uncaught ReferenceError: s is not defined"
 //import Cite from 'citation-js'
-let Cite ;
+let Cite, citationConfig ;
 
 // for full debug, type this in the console:
 // window.localStorage.debug = 'rv'
@@ -162,7 +164,8 @@ type Props = {
    onResetSearch:()=>void,
    onUserProfile:(url:{})=>void,
    onGetCitationLocale:(lg:string)=>void,
-   onGetCitationStyle:(s:string)=>void
+   onGetCitationStyle:(s:string)=>void,
+   onGetCitationData:(id:string)=>void
 }
 type State = {
    uviewer : boolean,
@@ -791,6 +794,7 @@ export function top_left_menu(that,pdfLink,monoVol,fairUse)
    )
 }
 
+
 class ResourceViewer extends Component<Props,State>
 {
    _annoPane = [] ;
@@ -799,7 +803,6 @@ class ResourceViewer extends Component<Props,State>
    _dontMatchProp = "" ;
    _mouseover = {}
    _refs = {}
-   _citationConfig = null ;
 
    constructor(props:Props)
    {
@@ -884,11 +887,67 @@ class ResourceViewer extends Component<Props,State>
 
    static getDerivedStateFromProps(props:Props,state:State)
    {
-
       let s
 
-      
       if(state.collapse.citation) {
+
+         if(Cite && Cite.plugins && Cite.plugins.config) {
+
+            if(!citationConfig) citationConfig = Cite.plugins.config.get('@csl')
+            console.log("_cite:",citationConfig,props.citationData)
+            
+            let citaSty = "mla"
+            if(state.citationStyle) citaSty = state.citationStyle
+            // add new style if needed
+            if(!citationConfig.templates.data[citaSty]) {
+               if(!state.initCitation || !state.initCitation.includes(citaSty)) { 
+                  props.onGetCitationStyle(citaSty)            
+                  if(!s) s = { ...state }
+                  if(!s.initCitation) s.initCitation = []
+                  s.initCitation.push(citaSty)
+               } else if(props.citationData && props.citationData.styles && props.citationData.styles[citaSty]){
+                  citationConfig.templates.add(citaSty, props.citationData.styles[citaSty])
+                  console.log("added:",citaSty,citationConfig)
+               }
+            } 
+
+            let citaLg = props.locale
+            if(state.citationLang) citaLg = state.citationLang
+            const supportedLocales = { "bo":"en-US", "en":"en-US", "zh":"zh-CN", "latn":"en-US" }
+            // add new locale if needed
+            if(supportedLocales[citaLg] && !citationConfig.locales.data[supportedLocales[citaLg]]) {               
+               if(!state.initCitation || !state.initCitation.includes(citaLg)) { 
+                  const supportedLocales = { "en":"en-US", "zh":"zh-CN" }
+                  if(supportedLocales[citaLg]) { 
+                     props.onGetCitationLocale(supportedLocales[citaLg])            
+                  }
+                  if(!s) s = { ...state }
+                  if(!s.initCitation) s.initCitation = []
+                  s.initCitation.push(citaLg)
+               } else if(props.citationData && props.citationData.locales && props.citationData.locales[supportedLocales[citaLg]]){
+                  citationConfig.locales.add(supportedLocales[citaLg], props.citationData.locales[supportedLocales[citaLg]])
+                  console.log("added:",citaLg,citationConfig)
+               }
+            }
+
+            // fetch citation data if needed
+            if(props.IRI && (!props.citationData || !props.citationData.data || !props.citationData.data[props.IRI])) {
+               if(!state.initCitation || !state.initCitation.includes(props.IRI)) { 
+                  props.onGetCitationData(props.IRI)            
+                  if(!s) s = { ...state }
+                  if(!s.initCitation) s.initCitation = []
+                  s.initCitation.push(props.IRI)
+               } else if(props.citationData && props.citationData.data && props.citationData.data[props.IRI]){
+                  //citationConfig.templates.add(citaSty, props.citationData.styles[citaSty])
+                  console.log("added:",props.citationData.data[props.IRI])
+               }
+            } 
+            
+         }
+      }
+
+/* // v0
+ 
          let citaLg = (!state.citationLang?props.locale:state.citationLang), hasLg = false ;
          let citaSty = (!state.citationStyle?"mla":state.citationStyle), hasSty = false ;
          if(!props.citationData 
@@ -914,7 +973,8 @@ class ResourceViewer extends Component<Props,State>
                s.initCitation.push(citaSty)
             }
          } 
-      }
+         */
+      
       
 
       if(props.auth) {
@@ -4715,28 +4775,34 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          }
       }
    }
-
-
    
-   if(Cite && Cite.plugins && Cite.plugins.config && this.state.collapse.citation) {
-      if(!this._citationConfig) this._citationConfig = Cite.plugins.config.get('@csl')
-      //console.log("_cite:",this._citationConfig)
-      
+
+   let citation = "", citaD ;
+   if(this.state.collapse.citation && this.props.IRI && (citaD = this.props.citationData)) {
+
+      const supportedLocales = { "bo":"en-US", "en":"en-US", "zh":"zh-CN", "latn":"en-US" }
+      let citaLg = this.props.locale
+      if(this.state.citationLang) citaLg = this.state.citationLang
+
       let citaSty = "mla"
       if(this.state.citationStyle) citaSty = this.state.citationStyle
-      if(!this._citationConfig.templates[citaSty] && this.props.citationData && this.props.citationData.styles  && this.props.citationData.styles[citaSty] ) {
-         // add new style
+
+      console.log("citaD:",citaD,citaSty,citaLg,supportedLocales[citaLg],citationConfig)
+
+      if(citationConfig.templates.data[citaSty] && supportedLocales[citaLg] && citationConfig.locales.data[supportedLocales[citaLg]] && citaD.data && citaD.data[this.props.IRI]&& citaD.data[this.props.IRI][citaLg]) {
+
+         let cite = new Cite(citaD.data[this.props.IRI][citaLg], { 'forceType': '@csl/object' })
+
+         console.log("cite:",cite,citaD.data[this.props.IRI][citaLg])
+
+         if(cite) citation = cite.format('bibliography', {
+            format: 'html',
+            template: citaSty,
+            lang: supportedLocales[citaLg]
+         })
       }
 
-      let citaLg = this.props.locale
-      if(this.state.citationLocale) citaLg = this.state.citationLocale
-      const supportedLocales = { "en":"en-US", "zh":"zh-CN" }
-      if(supportedLocales[citaLg] && !this._citationConfig.locales[supportedLocales[citaLg]]
-         && this.props.citationData && this.props.citationData.locales  && this.props.citationData.locales[supportedLocales[citaLg]] ) { 
-         // add new locale
-      }
    }
-   
 
    //this._refs["perma_DL"] = React.createRef();
    
@@ -4890,9 +4956,10 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                      </a>) }
                   </div>
                   <div class="output">
-                     <div class="main">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce auctor est vitae nulla bibendum volutpat. Praesent lacinia urna quis dolor lacinia ultrices.</div>
-                     <div class="actions">
-                        <CopyToClipboard text={"Lorem ipsum"} onCopy={(e) => {
+                     { this.props.loading && <Loader loaded={!this.props.loading}  options={{position:"relative",top:"0px"}}/> }
+                     { !this.props.loading && <div class="main">{HTMLparse(citation)}</div> }
+                     { !this.props.loading && <div class="actions">
+                        <CopyToClipboard text={citation.replace(/<[^>]+>/g, '')} onCopy={(e) => {
                               that.setState({citationCopied:true})
                               setTimeout(()=>that.setState({citationCopied:false}), 3000)
                            }}>                        
@@ -4911,7 +4978,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                         }}>
                            <span class="icon"><img src="/icons/export.svg"/></span> {I18n.t("resource.export")} { this.state.collapse.export ? <ExpandLess/>:<ExpandMore/>}
                         </a>
-                     </div>
+                     </div>}
                   </div>
                </Popover>
             }
@@ -7355,9 +7422,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          return (
          [getGDPRconsent(this),   
 
-         (this.state.collapse.citation && !Cite 
-         ? <Script url={"https://cdn.jsdelivr.net/npm/citation-js@0.5.1/build/citation.min.js"} onLoad={(e) => { Cite = require("citation-js"); }} />
-         : null),
+         <Script url={"https://cdn.jsdelivr.net/npm/citation-js@0.5.1/build/citation.js"} onLoad={(e) => { Cite = require("citation-js"); }} />,
 
          <div class={isMirador?"H100vh OF0":""}>
             { ["Images","Instance"].includes(_T) && <abbr class="unapi-id" title={this.props.IRI}></abbr> }

@@ -20,6 +20,7 @@
       "google-maps": "^3.3.0",
       "google-maps-react": "^2.0.0",
       "hanzi-tsconv": "^0.1.1",
+      "html-react-parser": "^1.2.7",
       "i18next": "^19.4.5",
       "i18next-redux-saga": "git+https://github.com/alexiusp/i18next-redux-saga.git",
       "interweave": "^12.6.0",
