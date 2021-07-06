@@ -99,9 +99,11 @@ import HTMLparse from 'html-react-parser';
 
 import logdown from 'logdown'
 
-//error when using after build: "Uncaught ReferenceError: s is not defined"
-//import Cite from 'citation-js'
-let Cite, citationConfig ;
+// error when using after build: "Uncaught ReferenceError: s is not defined"
+// => fixed by upgrading react-scripts
+import Cite from 'citation-js'
+let citationConfig ;
+
 
 // for full debug, type this in the console:
 // window.localStorage.debug = 'rv'
@@ -7421,9 +7423,6 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
          return (
          [getGDPRconsent(this),   
-
-         <Script url={"https://cdn.jsdelivr.net/npm/citation-js@0.5.1/build/citation.js"} onLoad={(e) => { Cite = require("citation-js"); }} />,
-
          <div class={isMirador?"H100vh OF0":""}>
             { ["Images","Instance"].includes(_T) && <abbr class="unapi-id" title={this.props.IRI}></abbr> }
             { infoPanelR }
