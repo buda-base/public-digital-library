@@ -1743,6 +1743,13 @@ span[lang^='sa-']:not([lang$='-ewts']) { text-transform: capitalize;}
 #popDL.cite > div { display:flex; }
 #popDL.cite > div .output { width: 480px; padding:16px; display: flex; flex-direction: column; justify-content: center; align-items: center;}
 #popDL.cite > div .output .main { max-height: 130px; width:100%; margin-bottom:16px; text-align:left; font-size:14px; padding:0 16px 8px 16px; box-sizing: border-box; }
+#popDL.cite > div .output .main > div {
+   padding: 10px;
+   box-shadow: 0 0 3px 0px #a4a4a4;
+   border: 1px solid #A4A4A4;
+   max-height: 100px;
+   overflow-y: auto;
+}
 
 #popDL.cite > div .output .actions { width:100%; display:flex; justify-content: space-between; padding:0 16px; box-sizing: border-box;}
 
