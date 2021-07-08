@@ -4770,9 +4770,16 @@ renderPopupCitation(IRI) {
                { ...(IRI !== this.props.IRI?{popperOptions:{modifiers:{ offset: { enabled: true, offset: '350,0' }}}}:{}) }
             >
                <ClickAwayListener onClickAway={ev => { 
-                     //console.log("ev:",ev.target,ev.currentTarget)
-                     if(!$(ev.target).closest("[role='tooltip'],#popDL,#menu-citationLang").length) 
-                        this.setState({ collapse:{ ...this.state.collapse, citation:false }})
+                     //console.log("ev1:",ev.target,ev.currentTarget)
+                     if(!$(ev.target).closest("[role='tooltip'],#popDL,#menu-citationLang").length){
+                        if(this.state.collapse.export){
+                           //console.log("ev1a:",ev.target,ev.currentTarget)
+                           this.setState({ collapse:{ ...this.state.collapse, export:false }}) 
+                        } else {
+                           //console.log("ev1b:",ev.target,ev.currentTarget)
+                           this.setState({ citationRID:false, collapse:{ ...this.state.collapse, citation:false }})
+                        } 
+                     }  
                   }}>
                   <div>
                      <FormControl className={"formControl"} style={{ width:"calc(100% - 16px)", margin:"16px", marginRight:0 }}>
@@ -4817,6 +4824,7 @@ renderPopupCitation(IRI) {
                               </a>
                         </CopyToClipboard>
                         <a id="export" onClick={ev => {
+                           //console.log("ev3:",ev.target,ev.currentTarget)
                            this.setState({
                               collapse:{ ...this.state.collapse, export:!this.state.collapse.export },
                               anchorEl:{ ...this.state.anchorEl, export:({...ev}).currentTarget }
@@ -4833,15 +4841,22 @@ renderPopupCitation(IRI) {
             
       if(this.state.collapse.export) {
          popupCitation.push(
-            <Popover
+            <Popper
                id="popDL"
                className="export"
                //anchorOrigin={{ horizontal: 30 }}
                //transformOrigin={{ horizontal: 'center' }}
                open={this.state.collapse.export}
                anchorEl={this.state.anchorEl.export}
-               onClose={ev => this.setState({ collapse:{ ...this.state.collapse, export:false }})}
+               placement={"bottom-end"}
             >
+               <ClickAwayListener onClickAway={ev => {
+                     //console.log("ev2:",ev.target,ev.currentTarget)
+                     if(!$(ev.target).closest("#popDL.export,#export").length) {
+                        //console.log("ev2a:",ev.target,ev.currentTarget)
+                        this.setState({ collapse:{ ...this.state.collapse, export:false }}) 
+                     }
+                  }}> 
                   <a rel="alternate" type="application/x-research-info-systems" 
                      href={RISexportPath(IRI,(this.state.citationLang?this.state.citationLang:this.props.locale))} download>
                         {/* "https://ldspdi.bdrc.io/RIS/"+IRI+"/"+(this.state.citationLang?this.state.citationLang:this.props.locale)"+ */}
@@ -4857,7 +4872,8 @@ renderPopupCitation(IRI) {
                            <MenuItem>{I18n.t("resource.export2",{format:"MARCXML"})}</MenuItem>           
                      </a> 
                   ]}
-            </Popover>
+               </ClickAwayListener>
+            </Popper>
          )
       }  
 
