@@ -1110,6 +1110,7 @@ export default class API {
         return path;
     }
 
+    
      get _ontologyPath(): string {
         let path = ONTOLOGY_PATH;
 
@@ -1167,3 +1168,13 @@ export default class API {
       return path;
   }
 }
+
+export const RISexportPath = (RID:string, locale:string): string => {
+   let config = store.getState().data.config
+   let url = config.ldspdi.endpoints[config.index] ;
+   let path = "//purl.bdrc.io" 
+   if(config && config.chineseMirror) path = "/ldspdi" 
+   path += "/RIS/" + RID + "/" + locale
+   return path;
+}
+    

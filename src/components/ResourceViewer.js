@@ -76,7 +76,7 @@ import Loader from "react-loader"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faLanguage } from '@fortawesome/free-solid-svg-icons'
 //import {MapComponent} from './Map';
-import {getEntiType,dPrefix} from '../lib/api';
+import {getEntiType,dPrefix,RISexportPath} from '../lib/api';
 import {numtobo} from '../lib/language';
 import {languages,getLangLabel,top_right_menu,prefixesMap as prefixes,sameAsMap,shortUri,fullUri,highlight,lang_selec,langSelect,searchLangSelec,report_GA,getGDPRconsent} from './App';
 import {narrowWithString} from "../lib/langdetect"
@@ -5041,7 +5041,8 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                   onClose={ev => that.setState({ collapse:{ ...that.state.collapse, export:false }})}
                >
                      <a rel="alternate" type="application/x-research-info-systems" 
-                        href={"https://ldspdi.bdrc.io/RIS/"+that.props.IRI+"/"+(that.state.citationLang?that.state.citationLang:that.props.locale)} download>
+                        href={RISexportPath(that.props.IRI,(that.state.citationLang?that.state.citationLang:that.props.locale))} download>
+                           {/* "https://ldspdi.bdrc.io/RIS/"+that.props.IRI+"/"+(that.state.citationLang?that.state.citationLang:that.props.locale)"+ */}
                            <MenuItem>
                                  { I18n.t("resource.exportRIS", {format:"RIS"})}
                            </MenuItem>
