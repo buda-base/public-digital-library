@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <style xmlns="http://purl.org/net/xbiblio/csl" class="note" version="1.0" demote-non-dropping-particle="display-and-sort" page-range-format="chicago">
   <info>
-    <title>Chicago Manual of Style 17th edition (full note, BDRC patch)</title>
-    <id>http://www.zotero.org/styles/chicago-fullnote-bibliography-bdrc</id>
+    <title>Chicago Manual of Style 17th edition (full note)</title>
+    <id>http://www.zotero.org/styles/chicago-fullnote-bibliography</id>
     <link href="http://www.zotero.org/styles/chicago-fullnote-bibliography" rel="self"/>
     <link href="http://www.chicagomanualofstyle.org/tools_citationguide.html" rel="documentation"/>
     <author>
@@ -31,13 +31,10 @@
     <contributor>
       <name>Brenton M. Wiernik</name>
     </contributor>
-    <contributor>
-      <name>Elie Roux</name>
-    </contributor>
     <category citation-format="note"/>
     <category field="generic-base"/>
-    <summary>Chicago format with full notes and bibliography, BDRC patch</summary>
-    <updated>2021-07-08T12:00:00+00:00</updated>
+    <summary>Chicago format with full notes and bibliography</summary>
+    <updated>2017-10-12T12:00:00+00:00</updated>
     <rights license="http://creativecommons.org/licenses/by-sa/3.0/">This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 License</rights>
   </info>
   <locale xml:lang="en">
@@ -1240,12 +1237,14 @@
           <text macro="archive-note"/>
         </else-if>
       </choose>
-        <!-- BDRC patch -->
+      <choose>
+        <if variable="issued" match="none">
           <group delimiter=" ">
             <text term="accessed"/>
             <date variable="accessed" form="text"/>
           </group>
-        <!-- end BDRC patch -->
+        </if>
+      </choose>
       <choose>
         <if type="legal_case" match="none">
           <choose>
@@ -1270,12 +1269,14 @@
           <text macro="archive"/>
         </else-if>
       </choose>
-      <!-- BDRC patch -->
-      <group delimiter=" ">
-        <text term="accessed" text-case="capitalize-first"/>
-        <date variable="accessed" form="text"/>
-      </group>
-      <!-- BDRC patch end -->
+      <choose>
+        <if variable="issued" match="none">
+          <group delimiter=" ">
+            <text term="accessed" text-case="capitalize-first"/>
+            <date variable="accessed" form="text"/>
+          </group>
+        </if>
+      </choose>
       <choose>
         <if type="legal_case" match="none">
           <choose>

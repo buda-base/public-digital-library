@@ -4778,6 +4778,20 @@ perma_menu(pdfLink,monoVol,fairUse,other)
       }
    }
    
+   // from https://css-tricks.com/better-line-breaks-for-long-urls/
+   const formatUrl = (url) => {
+      var doubleSlash = url.split('//')
+      var formatted = doubleSlash.map(str =>
+         str.replace(/(:)/giu, '$1<wbr>')
+            .replace(/([/~.,\-_?#%])/giu, '<wbr>$1')
+            .replace(/([=&])/giu, '<wbr>$1<wbr>')
+         ).join('//<wbr>')
+
+      console.log("fU:",formatted)
+
+      return formatted
+   }
+   
 
    let citation = "", citaD ;
    if(this.state.collapse.citation && this.props.IRI && (citaD = this.props.citationData)) {
@@ -4800,8 +4814,16 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          if(cite) citation = cite.format('bibliography', {
             format: 'html',
             template: citaSty,
-            lang: supportedLocales[citaLg]
+            lang: supportedLocales[citaLg],
+            append: ({id}) => {
+               return ` [BDRC ${id}]`
+            }
          })
+
+         if(citation) {
+            citation = citation.replace(/(https?:[^;, ]+)/g,(m,g1) => formatUrl(g1))
+            if(citaSty === "mla") citation = citation.replace(/https?[^/]+\/\//,"")
+         }
       }
 
    }
