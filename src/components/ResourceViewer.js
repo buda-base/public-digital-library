@@ -4771,7 +4771,7 @@ renderPopupCitation(IRI) {
             >
                <ClickAwayListener onClickAway={ev => { 
                      //console.log("ev1:",ev.target,ev.currentTarget)
-                     if(!$(ev.target).closest("[role='tooltip'],#popDL,#menu-citationLang").length){
+                     if(!$(ev.target).closest("[role='tooltip'],#popDL,#menu-citationLang,#cite").length){
                         if(this.state.collapse.export){
                            //console.log("ev1a:",ev.target,ev.currentTarget)
                            this.setState({ collapse:{ ...this.state.collapse, export:false }}) 
