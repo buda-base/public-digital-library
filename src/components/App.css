@@ -1701,7 +1701,7 @@ span[lang^='sa-']:not([lang$='-ewts']) { text-transform: capitalize;}
    padding: 0 15px; border:none !important; font-weight:600; font-size:13px; cursor:pointer;
 }
 
-#popDL.cite { background:white; box-shadow: 0 1px 4px #cecece; }
+#popDL.cite { background:white; box-shadow: 0 1px 4px #cecece; margin-left:13px;}
 
 #popDL.cite #clipB { display:inline-flex; /*margin-left: auto;*/ box-sizing: border-box;}
 
