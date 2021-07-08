@@ -4960,14 +4960,18 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                <Popper
                   id="popDL"
                   className="cite"
-                  anchorOrigin={{ horizontal: 89 }}
-                  transformOrigin={{ horizontal: 'center' }}
+                  //anchorOrigin={{ horizontal: 89 }}
+                  //transformOrigin={{ horizontal: 'center' }}
                   open={that.state.collapse.citation}
                   anchorEl={that.state.anchorEl.citation}
                   //keepMounted
-                  //placement={"bottom"}
+                  placement={"bottom"}
                >
-                  <ClickAwayListener onClickAway={ev => that.setState({ collapse:{ ...that.state.collapse, citation:false }})}>
+                  <ClickAwayListener onClickAway={ev => { 
+                        //console.log("ev:",ev.target,ev.currentTarget)
+                        if(!$(ev.target).closest("[role='tooltip'],#popDL,#menu-citationLang").length) 
+                           that.setState({ collapse:{ ...that.state.collapse, citation:false }})
+                     }}>
                      <div>
                         <FormControl className={"formControl"} style={{ width:"calc(100% - 16px)", margin:"16px", marginRight:0 }}>
                            <InputLabel htmlFor="citationLang">{I18n.t("lang.lg")}</InputLabel>
