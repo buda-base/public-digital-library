@@ -25,7 +25,7 @@ const mapStateToProps = (state,ownProps) => {
    let keyword = state.data.keyword
    let language = state.data.language
    let datatype = state.ui.datatype
-   
+
    let annoCollec = state.data.annoCollec
    if(annoCollec) annoCollec = annoCollec[ownProps.IRI]
 
@@ -137,7 +137,9 @@ const mapStateToProps = (state,ownProps) => {
    let assocTypes
    let datatypes = state.data.datatypes ;
    if(datatypes /*&& datatypes[ownProps.IRI+"@"]*/) assocTypes = datatypes
-   
+
+   let citationData = state.data.citationData
+      
 
    let props = { logged,config,resources, ontology, dictionary, keyword, language, datatype, assocResources, prefLang, failures, loading,
       imageAsset,firstImage,canvasID,collecManif,manifests,manifestError,pdfVolumes,createPdf,pdfUrl, manifestWpdf,
@@ -145,7 +147,8 @@ const mapStateToProps = (state,ownProps) => {
       outline,outlines,outlineKW,      
       eTextRefs,
       assocTypes,
-      IIIFerrors }
+      IIIFerrors,
+      citationData }
 
    if(config && !config.auth) props.auth = false
 
@@ -220,6 +223,15 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       onLoading:(kw:string,load:boolean) => {
          dispatch(ui.loading(kw,load))
       },
+      onGetCitationLocale:(lang:string) => {
+         dispatch(data.getCitationLocale(lang))
+      },
+      onGetCitationStyle:(s:string) => {
+         dispatch(data.getCitationStyle(s))
+      },
+      onGetCitationData:(id:string) => {
+         dispatch(data.getCitationData(id))
+      }
    }
 }
 

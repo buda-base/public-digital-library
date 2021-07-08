@@ -14,7 +14,10 @@ public/config.json
 /build
 
 # static files
-/public/scripts/
+/public/scripts/*
+!/public/scripts/citation-js/
+/public/scripts/citation-js/*
+!/public/scripts/citation-js/*
 
 # misc
 .DS_Store

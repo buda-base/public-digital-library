@@ -2429,6 +2429,67 @@ export function* watchGetOutline() {
 }
 
 
+
+async function getCitationStyle(s) {
+
+   store.dispatch(uiActions.loading(s, "citation"));
+   let res = await api.loadCitationStyle(s) 
+   store.dispatch(uiActions.loading(s, false));
+   
+   //loggergen.log("citaSty:",s,res)
+
+   store.dispatch(dataActions.gotCitationStyle(s,res))
+
+}
+
+async function getCitationLocale(lg) {
+
+   store.dispatch(uiActions.loading(lg, "citation"));
+   let res = await api.loadCitationLocale(lg) 
+   store.dispatch(uiActions.loading(lg, false));
+   
+   //loggergen.log("citaLg:",lg,res)
+
+   store.dispatch(dataActions.gotCitationLocale(lg,res))
+
+}
+
+async function getCitationData(id) {
+
+   store.dispatch(uiActions.loading(id, "citation"));
+   let res = await api.loadCitationData(id) 
+   store.dispatch(uiActions.loading(id, false));
+   
+   loggergen.log("citaData:",id,res)
+
+   store.dispatch(dataActions.gotCitationData(id,JSON.parse(res)))
+
+}
+
+export function* watchGetCitationStyle() {
+
+   yield takeLatest(
+      dataActions.TYPES.getCitationStyle,
+      (action) => getCitationStyle(action.payload)
+   );
+}
+
+export function* watchGetCitationLocale() {
+
+   yield takeLatest(
+      dataActions.TYPES.getCitationLocale,
+      (action) => getCitationLocale(action.payload)
+   );
+}
+
+export function* watchGetCitationData() {
+
+   yield takeLatest(
+      dataActions.TYPES.getCitationData,
+      (action) => getCitationData(action.payload)
+   );
+}
+
 async function outlineSearch(iri,kw,lg) {
 
    store.dispatch(uiActions.loading(iri, "outline"));
@@ -2677,6 +2738,9 @@ export default function* rootSaga() {
       watchUpdateSortBy(),
       watchGetInstances(),
       watchGetContext(),
+      watchGetCitationStyle(),
+      watchGetCitationLocale(),
+      watchGetCitationData(),
       //watchChoosingHost(),
       //watchGetDatatypes(),
       watchGetChunks(),

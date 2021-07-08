@@ -48,6 +48,7 @@ export type DataState = {
    isInstance?:boolean,
    outlines?:{},
    eTextRefs?:{},
+   citationData?:{}
 }
 
 const DEFAULT_STATE: DataState = {
@@ -153,6 +154,54 @@ export const gotInstances = (state: DataState, action: Action) => {
    }
 }
 reducers[actions.TYPES.gotInstances] = gotInstances;
+
+
+export const gotCitationStyle = (state: DataState, action: Action) => {
+   
+   let citationData = state.citationData
+   if(!citationData) citationData = {}
+   if(!citationData.styles) citationData.styles = {}
+
+   citationData.styles[action.payload] = action.meta
+
+   return {
+      ...state,
+      citationData
+   }
+}
+reducers[actions.TYPES.gotCitationStyle] = gotCitationStyle;
+
+
+export const gotCitationLocale = (state: DataState, action: Action) => {
+   
+   let citationData = state.citationData
+   if(!citationData) citationData = {}
+   if(!citationData.locales) citationData.locales = {}
+
+   citationData.locales[action.payload] = action.meta
+
+   return {
+      ...state,
+      citationData
+   }
+}
+reducers[actions.TYPES.gotCitationLocale] = gotCitationLocale;
+
+
+export const gotCitationData = (state: DataState, action: Action) => {
+   
+   let citationData = state.citationData
+   if(!citationData) citationData = {}
+   if(!citationData.data) citationData.data = {}
+
+   citationData.data[action.payload] = action.meta
+
+   return {
+      ...state,
+      citationData
+   }
+}
+reducers[actions.TYPES.gotCitationData] = gotCitationData;
 
 
 export const getResource = (state: DataState, action: Action) => {

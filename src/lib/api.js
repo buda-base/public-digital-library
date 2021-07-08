@@ -544,6 +544,24 @@ export default class API {
    }
 
 
+   async loadCitationData(id:string): Promise<string>
+   {
+      let resource =  await this.getURLContents(this._citationDataPath(id),false);
+      return resource ;
+   }
+
+   async loadCitationStyle(s:string): Promise<string>
+   {
+      let resource =  await this.getURLContents(this._citationStylePath(s),false);
+      return resource ;
+   }
+
+   async loadCitationLocale(lg:string): Promise<string>
+   {
+      let resource =  await this.getURLContents(this._citationLocalePath(lg),false);
+      return resource ;
+   }
+
 
    async loadAssocResources(IRI:string): Promise<string>
    {
@@ -1014,6 +1032,33 @@ export default class API {
                throw e;
             }
         }
+
+      _citationStylePath(s:string): string {
+
+          let path = "//" + window.location.host +  "/scripts/citation-js/styles/" + s + ".csl"
+
+          return path;
+      }
+
+      _citationLocalePath(s:string): string {
+
+          let path = "//" + window.location.host +  "/scripts/citation-js/locales/" + s + ".xml"
+
+          return path;
+      }
+
+
+      _citationDataPath(IRI:string): string {
+
+         if(!IRI.indexOf(':') === -1) IRI = "bdr:"+IRI
+
+         let config = store.getState().data.config.ldspdi
+         let url = config.endpoints[config.index] ;
+
+          let path = url +  "/CSLObj/" + IRI;
+
+          return path;
+      }
 
       _resourcePath(IRI:string): string {
 
