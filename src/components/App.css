@@ -1701,6 +1701,8 @@ span[lang^='sa-']:not([lang$='-ewts']) { text-transform: capitalize;}
    padding: 0 15px; border:none !important; font-weight:600; font-size:13px; cursor:pointer;
 }
 
+#popDL.cite { background:white; box-shadow: 0 1px 4px #cecece; }
+
 #popDL.cite #clipB { display:inline-flex; /*margin-left: auto;*/ box-sizing: border-box;}
 
 #popDL.cite #clipB svg,
@@ -1740,18 +1742,18 @@ span[lang^='sa-']:not([lang$='-ewts']) { text-transform: capitalize;}
 
 #perma #cite svg { color:#343434; padding:3px; }
 
-#popDL.cite > div { display:flex; }
-#popDL.cite > div .output { width: 480px; padding:16px; display: flex; flex-direction: column; justify-content: center; align-items: center;}
-#popDL.cite > div .output .main { max-height: 135px; width:100%; margin-bottom:16px; text-align:left; font-size:14px; padding:0 16px 8px 16px; box-sizing: border-box; }
-#popDL.cite > div .output .main > div {
-   padding: 10px;
-   box-shadow: 0 0 3px 0px #a4a4a4;
-   border: 1px solid #A4A4A4;
-   max-height: 115px;
+#popDL.cite  { display:flex; margin-top:5px; z-index: 100 !important; }
+#popDL.cite .output { width: 480px; padding:16px; display: flex; flex-direction: column; justify-content: center; align-items: center; box-shadow:none; }
+#popDL.cite .output .main { max-height: 135px; width:100%; margin-bottom:16px; text-align:left; font-size:14px; padding:0 16px 8px 16px; box-sizing: border-box; }
+#popDL.cite .output .main > div {
+   padding: 15px;
+   /* box-shadow: 0 0 3px 0px #a4a4a4; */
+   border: 1px solid #cccccc;
+   max-height: 85px;
    overflow-y: auto;
 }
 
-#popDL.cite > div .output .actions { width:100%; display:flex; justify-content: space-between; padding:0 16px; box-sizing: border-box;}
+#popDL.cite .output .actions { width:100%; display:flex; justify-content: space-between; padding:0 16px; box-sizing: border-box;}
 
 #popDL.cite .selected-style { background:#ddd !important; }
 
@@ -2946,18 +2948,18 @@ html[lang="en"] .resource .data > [data-prop="bdo:creator"] h4[data-prop="bdo:ro
 
 div[role="tooltip"]#popHoverM > div > div { color:black; }
 
-div[role="tooltip"] { margin:0px;  opacity:1;  }
-div[role="tooltip"] > div { font-weight:500;font-size:12px; background-color:white; border-radius:0; color:#4d4d4d;padding:0; max-width:450px;
+div[role="tooltip"]:not(.cite) { margin:0px;  opacity:1;  }
+div[role="tooltip"]:not(.cite) > div { font-weight:500;font-size:12px; background-color:white; border-radius:0; color:#4d4d4d;padding:0; max-width:450px;
    box-shadow: 0 2px 4px rgba(187, 187, 187, 0.5),0 -2px 4px rgba(187, 187, 187, 0.5); margin-bottom:5px;margin-right:5px;}
-div[role="tooltip"] > div > .over > span,
-div[role="tooltip"] > div > span:not(.over) { padding:12px 16px; display:block; white-space: nowrap; vertical-align: middle;}
-div[role="tooltip"] > div > span + span { padding-top:6px;}
-div[role="tooltip"] > div > span img { height:20px;vertical-align: middle; display:inline-block; margin:0 4px 2px 8px;} 
-div[role="tooltip"] > div b { font-weight:700; }
+div[role="tooltip"]:not(.cite) > div > .over > span,
+div[role="tooltip"]:not(.cite) > div > span:not(.over) { padding:12px 16px; display:block; white-space: nowrap; vertical-align: middle;}
+div[role="tooltip"]:not(.cite) > div > span + span { padding-top:6px;}
+div[role="tooltip"]:not(.cite) > div > span img { height:20px;vertical-align: middle; display:inline-block; margin:0 4px 2px 8px;} 
+div[role="tooltip"]:not(.cite) > div b { font-weight:700; }
 
 .commentP,.commentT {max-width:700px !important; }
 .commentT { padding:10px !important;}
-[role=tooltip]:not(.commentP) > div { padding:1px !important;}
+[role=tooltip]:not(.commentP,.cite) > div { padding:1px !important;}
 
 .person #person, .place #place { display:none;}
 

@@ -4957,68 +4957,71 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
             
             { that.props.config && that.props.config.language && that.props.config.language.menu &&
-               <Popover
+               <Popper
                   id="popDL"
                   className="cite"
-                  anchorOrigin={{ horizontal: 89 }}
-                  transformOrigin={{ horizontal: 'center' }}
+                  //anchorOrigin={{ horizontal: 89 }}
+                  //transformOrigin={{ horizontal: 'center' }}
                   open={that.state.collapse.citation}
                   anchorEl={that.state.anchorEl.citation}
-                  onClose={ev => that.setState({ collapse:{ ...that.state.collapse, citation:false }})}
+                  //keepMounted
+                  placement={"bottom"}
                >
-                  <div>
-                     <FormControl className={"formControl"} style={{ width:"calc(100% - 16px)", margin:"16px", marginRight:0 }}>
-                        <InputLabel htmlFor="citationLang">{I18n.t("lang.lg")}</InputLabel>
-                        <Select
-                           value={that.state.citationLang?that.state.citationLang:that.props.locale} 
-                           onChange={ev => that.setState({ citationLang: ev.target.value })}
-                           open={that.state.collapse.citationLang}
-                           onClose={(e) => e.preventDefault() }
-                           inputProps={{ name: 'citationLang', id: 'citationLang', }}
-                           //style={{ width: "100%" }}
-                        >
-                           { [ ...that.props.config.language.menu, "latn" ].map( (lg,i) => (
-                              <MenuItem key={lg} value={lg}>{I18n.t("lang."+lg)}</MenuItem>)) 
-                           }
-                        </Select>
-                     </FormControl> 
-                  
+                  <ClickAwayListener onClickAway={ev => that.setState({ collapse:{ ...that.state.collapse, citation:false }})}>
+                     <div>
+                        <FormControl className={"formControl"} style={{ width:"calc(100% - 16px)", margin:"16px", marginRight:0 }}>
+                           <InputLabel htmlFor="citationLang">{I18n.t("lang.lg")}</InputLabel>
+                           <Select
+                              value={that.state.citationLang?that.state.citationLang:that.props.locale} 
+                              onChange={ev => that.setState({ citationLang: ev.target.value })}
+                              open={that.state.collapse.citationLang}
+                              onClose={(e) => e.preventDefault() }
+                              inputProps={{ name: 'citationLang', id: 'citationLang', }}
+                              //style={{ width: "100%" }}
+                           >
+                              { [ ...that.props.config.language.menu, "latn" ].map( (lg,i) => (
+                                 <MenuItem key={lg} value={lg}>{I18n.t("lang."+lg)}</MenuItem>)) 
+                              }
+                           </Select>
+                        </FormControl> 
+                     
 
-                  { [ "mla", "chicago", "apa" ].map( (s,i) => 
-                     <a>
-                        <MenuItem 
-                           classes={{ selected: "selected-style" }} 
-                           onClick={ev => that.setState({citationStyle: s})} {...!that.state.citationStyle&&i==0||that.state.citationStyle === s?{selected:true}:{}}>
-                              {I18n.t("resource.citation."+s)}
-                        </MenuItem>
-                     </a>) }
-                  </div>
-                  <div class="output">
-                     { this.props.loading && <Loader loaded={!this.props.loading}  options={{position:"relative",top:"0px"}}/> }
-                     { !this.props.loading && <div class="main">{HTMLparse(citation)}</div> }
-                     { !this.props.loading && <div class="actions">
-                        <CopyToClipboard text={citation.replace(/<[^>]+>/g, '')} onCopy={(e) => {
-                              that.setState({citationCopied:true})
-                              setTimeout(()=>that.setState({citationCopied:false}), 3000)
-                           }}>                        
-                              <a id="clipB" className={that.state.citationCopied?"copied":""}>
-                                 { that.state.citationCopied 
-                                    ? [<CheckIcon/>,I18n.t("resource.clipC")] 
-                                    : [<ClipboardIcon/>,I18n.t("resource.clipB")] 
-                                 }
-                              </a>
-                        </CopyToClipboard>
-                        <a id="export" onClick={ev => {
-                           that.setState({
-                              collapse:{ ...that.state.collapse, export:!that.state.collapse.export },
-                              anchorEl:{ ...that.state.anchorEl, export:({...ev}).currentTarget }
-                           })
-                        }}>
-                           <span class="icon"><img src="/icons/export.svg"/></span> {I18n.t("resource.export")} { this.state.collapse.export ? <ExpandLess/>:<ExpandMore/>}
-                        </a>
-                     </div>}
-                  </div>
-               </Popover>
+                     { [ "mla", "chicago", "apa" ].map( (s,i) => 
+                        <a>
+                           <MenuItem 
+                              classes={{ selected: "selected-style" }} 
+                              onClick={ev => that.setState({citationStyle: s})} {...!that.state.citationStyle&&i==0||that.state.citationStyle === s?{selected:true}:{}}>
+                                 {I18n.t("resource.citation."+s)}
+                           </MenuItem>
+                        </a>) }
+                     </div>
+                     <div class="output">
+                        { this.props.loading && <Loader loaded={!this.props.loading}  options={{position:"relative",top:"0px"}}/> }
+                        { !this.props.loading && <div class="main">{HTMLparse(citation)}</div> }
+                        { !this.props.loading && <div class="actions">
+                           <CopyToClipboard text={citation.replace(/<[^>]+>/g, '')} onCopy={(e) => {
+                                 that.setState({citationCopied:true})
+                                 setTimeout(()=>that.setState({citationCopied:false}), 3000)
+                              }}>                        
+                                 <a id="clipB" className={that.state.citationCopied?"copied":""}>
+                                    { that.state.citationCopied 
+                                       ? [<CheckIcon/>,I18n.t("resource.clipC")] 
+                                       : [<ClipboardIcon/>,I18n.t("resource.clipB")] 
+                                    }
+                                 </a>
+                           </CopyToClipboard>
+                           <a id="export" onClick={ev => {
+                              that.setState({
+                                 collapse:{ ...that.state.collapse, export:!that.state.collapse.export },
+                                 anchorEl:{ ...that.state.anchorEl, export:({...ev}).currentTarget }
+                              })
+                           }}>
+                              <span class="icon"><img src="/icons/export.svg"/></span> {I18n.t("resource.export")} { this.state.collapse.export ? <ExpandLess/>:<ExpandMore/>}
+                           </a>
+                        </div>}
+                     </div>
+                  </ClickAwayListener>
+               </Popper>
             }
 
 
