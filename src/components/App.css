@@ -1298,9 +1298,16 @@ h4:not(:hover) > .lang
    vertical-align:middle; /*padding-left:6px;*/margin-left:0px; margin-bottom:1px; 
 }
 
+.resource .data#outline .root + div #cite { margin-left:5px !important; display: inline-block; }
+.resource .data#outline .root + div #cite svg { width:14px !important; height:14px; border:1px solid #343434; border-radius:50%; }
+
+.resource .data#outline .root + div #cite,
 .resource .data#outline .root + div .permalink {  opacity:0; margin-left:0px; cursor:pointer; }
+.resource .data#outline .root + div .top:hover #cite,
 .resource .data#outline .root + div .top:hover .permalink  {  opacity:0.8; }
+.resource .data#outline .root + div #cite svg,
 .resource .data#outline .root + div .permalink img { width:16px; vertical-align: middle !important; }
+.resource .data#outline .root + div .top:hover #cite:hover,
 .resource .data#outline .root + div .top:hover .permalink:hover { opacity:1; }
 
 /*

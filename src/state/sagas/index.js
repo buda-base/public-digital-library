@@ -2457,12 +2457,16 @@ async function getCitationLocale(lg) {
 async function getCitationData(id) {
 
    store.dispatch(uiActions.loading(id, "citation"));
-   let res = await api.loadCitationData(id) 
-   store.dispatch(uiActions.loading(id, false));
-   
-   loggergen.log("citaData:",id,res)
+   try {
+      let res = await api.loadCitationData(id) 
+      store.dispatch(uiActions.loading(id, false));
+      
+      loggergen.log("citaData:",id,res)
 
-   store.dispatch(dataActions.gotCitationData(id,JSON.parse(res)))
+      store.dispatch(dataActions.gotCitationData(id,JSON.parse(res)))
+   } catch(e) {
+      store.dispatch(uiActions.loading(id, false));
+   }
 
 }
 

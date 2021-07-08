@@ -205,7 +205,8 @@ type State = {
    openEtext?:boolean,
    initCitation?:boolean,
    citationStyle?:string,
-   citationLang?:string
+   citationLang?:string,
+   citationRID?:string
  }
 
 
@@ -4704,6 +4705,166 @@ class ResourceViewer extends Component<Props,State>
       }
    }
 
+renderPopupCitation(IRI) {
+
+   console.log("rPc:",IRI)
+
+   // from https://css-tricks.com/better-line-breaks-for-long-urls/
+   const formatUrl = (url) => {
+      var doubleSlash = url.split('//')
+      var formatted = doubleSlash.map(str =>
+         str.replace(/(:)/giu, '$1<wbr>')
+            .replace(/([/~.,\-_?#%])/giu, '<wbr>$1')
+            .replace(/([=&])/giu, '<wbr>$1<wbr>')
+         ).join('//<wbr>')
+
+      console.log("fU:",formatted)
+
+      return formatted
+   }
+   
+   let citation = "", citaD, popupCitation = [];
+   if(this.state.collapse.citation && IRI && (citaD = this.props.citationData)) {
+
+      const supportedLocales = { "bo":"en-US", "en":"en-US", "zh":"zh-CN", "latn":"en-US" }
+      let citaLg = this.props.locale
+      if(this.state.citationLang) citaLg = this.state.citationLang
+
+      let citaSty = "mla"
+      if(this.state.citationStyle) citaSty = this.state.citationStyle
+
+      console.log("citaD:",citaD,citaSty,citaLg,supportedLocales[citaLg],citationConfig)
+
+      if(citationConfig.templates.data[citaSty] && supportedLocales[citaLg] && citationConfig.locales.data[supportedLocales[citaLg]] && citaD.data && citaD.data[IRI]&& citaD.data[IRI][citaLg]) {
+
+         let cite = new Cite(citaD.data[IRI][citaLg], { 'forceType': '@csl/object' })
+
+         console.log("cite:",cite,citaD.data[IRI][citaLg])
+
+         if(cite) citation = cite.format('bibliography', {
+            format: 'html',
+            template: citaSty,
+            lang: supportedLocales[citaLg],
+            append: ({id}) => {
+               return ` [BDRC ${id}]`
+            }
+         })
+
+         if(citation) {
+            citation = citation.replace(/(https?:[^;, ]+)/g,(m,g1) => formatUrl(g1))
+            if(citaSty === "mla") citation = citation.replace(/https?[^/]+\/\//,"")
+         }
+      }
+
+      if(this.props.config && this.props.config.language && this.props.config.language.menu) {
+         popupCitation.push(
+            <Popper
+               id="popDL"
+               className="cite"
+               //anchorOrigin={{ horizontal: 89 }}
+               //transformOrigin={{ horizontal: 'center' }}
+               open={this.state.collapse.citation}
+               anchorEl={this.state.anchorEl.citation}
+               //keepMounted
+               placement={"bottom"}
+               { ...(IRI !== this.props.IRI?{popperOptions:{modifiers:{ offset: { enabled: true, offset: '350,0' }}}}:{}) }
+            >
+               <ClickAwayListener onClickAway={ev => { 
+                     //console.log("ev:",ev.target,ev.currentTarget)
+                     if(!$(ev.target).closest("[role='tooltip'],#popDL,#menu-citationLang").length) 
+                        this.setState({ collapse:{ ...this.state.collapse, citation:false }})
+                  }}>
+                  <div>
+                     <FormControl className={"formControl"} style={{ width:"calc(100% - 16px)", margin:"16px", marginRight:0 }}>
+                        <InputLabel htmlFor="citationLang">{I18n.t("lang.lg")}</InputLabel>
+                        <Select
+                           value={this.state.citationLang?this.state.citationLang:this.props.locale} 
+                           onChange={ev => this.setState({ citationLang: ev.target.value })}
+                           open={this.state.collapse.citationLang}
+                           onClose={(e) => e.preventDefault() }
+                           inputProps={{ name: 'citationLang', id: 'citationLang', }}
+                           //style={{ width: "100%" }}
+                        >
+                           { [ ...this.props.config.language.menu, "latn" ].map( (lg,i) => (
+                              <MenuItem key={lg} value={lg}>{I18n.t("lang."+lg)}</MenuItem>)) 
+                           }
+                        </Select>
+                     </FormControl> 
+                  
+
+                  { [ "mla", "chicago", "apa" ].map( (s,i) => 
+                     <a>
+                        <MenuItem 
+                           classes={{ selected: "selected-style" }} 
+                           onClick={ev => this.setState({citationStyle: s})} {...!this.state.citationStyle&&i==0||this.state.citationStyle === s?{selected:true}:{}}>
+                              {I18n.t("resource.citation."+s)}
+                        </MenuItem>
+                     </a>) }
+                  </div>
+                  <div class="output">
+                     { this.props.loading && <Loader loaded={!this.props.loading}  options={{position:"relative",top:"0px"}}/> }
+                     { !this.props.loading && <div class="main">{HTMLparse(citation)}</div> }
+                     { !this.props.loading && <div class="actions">
+                        <CopyToClipboard text={citation.replace(/<[^>]+>/g, '')} onCopy={(e) => {
+                              this.setState({citationCopied:true})
+                              setTimeout(()=>this.setState({citationCopied:false}), 3000)
+                           }}>                        
+                              <a id="clipB" className={this.state.citationCopied?"copied":""}>
+                                 { this.state.citationCopied 
+                                    ? [<CheckIcon/>,I18n.t("resource.clipC")] 
+                                    : [<ClipboardIcon/>,I18n.t("resource.clipB")] 
+                                 }
+                              </a>
+                        </CopyToClipboard>
+                        <a id="export" onClick={ev => {
+                           this.setState({
+                              collapse:{ ...this.state.collapse, export:!this.state.collapse.export },
+                              anchorEl:{ ...this.state.anchorEl, export:({...ev}).currentTarget }
+                           })
+                        }}>
+                           <span class="icon"><img src="/icons/export.svg"/></span> {I18n.t("resource.export")} { this.state.collapse.export ? <ExpandLess/>:<ExpandMore/>}
+                        </a>
+                     </div>}
+                  </div>
+               </ClickAwayListener>
+            </Popper>
+         )
+      }
+            
+      if(this.state.collapse.export) {
+         popupCitation.push(
+            <Popover
+               id="popDL"
+               className="export"
+               //anchorOrigin={{ horizontal: 30 }}
+               //transformOrigin={{ horizontal: 'center' }}
+               open={this.state.collapse.export}
+               anchorEl={this.state.anchorEl.export}
+               onClose={ev => this.setState({ collapse:{ ...this.state.collapse, export:false }})}
+            >
+                  <a rel="alternate" type="application/x-research-info-systems" 
+                     href={RISexportPath(IRI,(this.state.citationLang?this.state.citationLang:this.props.locale))} download>
+                        {/* "https://ldspdi.bdrc.io/RIS/"+IRI+"/"+(this.state.citationLang?this.state.citationLang:this.props.locale)"+ */}
+                        <MenuItem>
+                              { I18n.t("resource.exportRIS", {format:"RIS"})}
+                        </MenuItem>
+                  </a>
+                  { IRI && IRI.match(/^bdr:MW[^_]+$/) && [
+                     <a rel="alternate" type="application/marc" href={this.expand(IRI, true)+".mrc"} download>
+                           <MenuItem>{I18n.t("resource.export2",{format:"MARC"})}</MenuItem>           
+                     </a>,
+                     <a rel="alternate" type="application/marcxml+xml" href={this.expand(IRI, true)+".mrcx"} download>
+                           <MenuItem>{I18n.t("resource.export2",{format:"MARCXML"})}</MenuItem>           
+                     </a> 
+                  ]}
+            </Popover>
+         )
+      }  
+
+   }
+   return popupCitation
+}
+
 perma_menu(pdfLink,monoVol,fairUse,other)
 {
    let that = this
@@ -4792,56 +4953,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
       }
    }
    
-   // from https://css-tricks.com/better-line-breaks-for-long-urls/
-   const formatUrl = (url) => {
-      var doubleSlash = url.split('//')
-      var formatted = doubleSlash.map(str =>
-         str.replace(/(:)/giu, '$1<wbr>')
-            .replace(/([/~.,\-_?#%])/giu, '<wbr>$1')
-            .replace(/([=&])/giu, '<wbr>$1<wbr>')
-         ).join('//<wbr>')
-
-      console.log("fU:",formatted)
-
-      return formatted
-   }
-   
-
-   let citation = "", citaD ;
-   if(this.state.collapse.citation && this.props.IRI && (citaD = this.props.citationData)) {
-
-      const supportedLocales = { "bo":"en-US", "en":"en-US", "zh":"zh-CN", "latn":"en-US" }
-      let citaLg = this.props.locale
-      if(this.state.citationLang) citaLg = this.state.citationLang
-
-      let citaSty = "mla"
-      if(this.state.citationStyle) citaSty = this.state.citationStyle
-
-      console.log("citaD:",citaD,citaSty,citaLg,supportedLocales[citaLg],citationConfig)
-
-      if(citationConfig.templates.data[citaSty] && supportedLocales[citaLg] && citationConfig.locales.data[supportedLocales[citaLg]] && citaD.data && citaD.data[this.props.IRI]&& citaD.data[this.props.IRI][citaLg]) {
-
-         let cite = new Cite(citaD.data[this.props.IRI][citaLg], { 'forceType': '@csl/object' })
-
-         console.log("cite:",cite,citaD.data[this.props.IRI][citaLg])
-
-         if(cite) citation = cite.format('bibliography', {
-            format: 'html',
-            template: citaSty,
-            lang: supportedLocales[citaLg],
-            append: ({id}) => {
-               return ` [BDRC ${id}]`
-            }
-         })
-
-         if(citation) {
-            citation = citation.replace(/(https?:[^;, ]+)/g,(m,g1) => formatUrl(g1))
-            if(citaSty === "mla") citation = citation.replace(/https?[^/]+\/\//,"")
-         }
-      }
-
-   }
-
+   let popupCitation = this.renderPopupCitation(!this.state.citationRID?this.props.IRI:this.state.citationRID);
    //this._refs["perma_DL"] = React.createRef();
    
 
@@ -4956,107 +5068,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          </Popover>
 
             
-            { that.props.config && that.props.config.language && that.props.config.language.menu &&
-               <Popper
-                  id="popDL"
-                  className="cite"
-                  //anchorOrigin={{ horizontal: 89 }}
-                  //transformOrigin={{ horizontal: 'center' }}
-                  open={that.state.collapse.citation}
-                  anchorEl={that.state.anchorEl.citation}
-                  //keepMounted
-                  placement={"bottom"}
-               >
-                  <ClickAwayListener onClickAway={ev => { 
-                        //console.log("ev:",ev.target,ev.currentTarget)
-                        if(!$(ev.target).closest("[role='tooltip'],#popDL,#menu-citationLang").length) 
-                           that.setState({ collapse:{ ...that.state.collapse, citation:false }})
-                     }}>
-                     <div>
-                        <FormControl className={"formControl"} style={{ width:"calc(100% - 16px)", margin:"16px", marginRight:0 }}>
-                           <InputLabel htmlFor="citationLang">{I18n.t("lang.lg")}</InputLabel>
-                           <Select
-                              value={that.state.citationLang?that.state.citationLang:that.props.locale} 
-                              onChange={ev => that.setState({ citationLang: ev.target.value })}
-                              open={that.state.collapse.citationLang}
-                              onClose={(e) => e.preventDefault() }
-                              inputProps={{ name: 'citationLang', id: 'citationLang', }}
-                              //style={{ width: "100%" }}
-                           >
-                              { [ ...that.props.config.language.menu, "latn" ].map( (lg,i) => (
-                                 <MenuItem key={lg} value={lg}>{I18n.t("lang."+lg)}</MenuItem>)) 
-                              }
-                           </Select>
-                        </FormControl> 
-                     
-
-                     { [ "mla", "chicago", "apa" ].map( (s,i) => 
-                        <a>
-                           <MenuItem 
-                              classes={{ selected: "selected-style" }} 
-                              onClick={ev => that.setState({citationStyle: s})} {...!that.state.citationStyle&&i==0||that.state.citationStyle === s?{selected:true}:{}}>
-                                 {I18n.t("resource.citation."+s)}
-                           </MenuItem>
-                        </a>) }
-                     </div>
-                     <div class="output">
-                        { this.props.loading && <Loader loaded={!this.props.loading}  options={{position:"relative",top:"0px"}}/> }
-                        { !this.props.loading && <div class="main">{HTMLparse(citation)}</div> }
-                        { !this.props.loading && <div class="actions">
-                           <CopyToClipboard text={citation.replace(/<[^>]+>/g, '')} onCopy={(e) => {
-                                 that.setState({citationCopied:true})
-                                 setTimeout(()=>that.setState({citationCopied:false}), 3000)
-                              }}>                        
-                                 <a id="clipB" className={that.state.citationCopied?"copied":""}>
-                                    { that.state.citationCopied 
-                                       ? [<CheckIcon/>,I18n.t("resource.clipC")] 
-                                       : [<ClipboardIcon/>,I18n.t("resource.clipB")] 
-                                    }
-                                 </a>
-                           </CopyToClipboard>
-                           <a id="export" onClick={ev => {
-                              that.setState({
-                                 collapse:{ ...that.state.collapse, export:!that.state.collapse.export },
-                                 anchorEl:{ ...that.state.anchorEl, export:({...ev}).currentTarget }
-                              })
-                           }}>
-                              <span class="icon"><img src="/icons/export.svg"/></span> {I18n.t("resource.export")} { this.state.collapse.export ? <ExpandLess/>:<ExpandMore/>}
-                           </a>
-                        </div>}
-                     </div>
-                  </ClickAwayListener>
-               </Popper>
-            }
-
-
-            
-            { that.state.collapse.export &&
-               <Popover
-                  id="popDL"
-                  className="export"
-                  //anchorOrigin={{ horizontal: 30 }}
-                  //transformOrigin={{ horizontal: 'center' }}
-                  open={that.state.collapse.export}
-                  anchorEl={that.state.anchorEl.export}
-                  onClose={ev => that.setState({ collapse:{ ...that.state.collapse, export:false }})}
-               >
-                     <a rel="alternate" type="application/x-research-info-systems" 
-                        href={RISexportPath(that.props.IRI,(that.state.citationLang?that.state.citationLang:that.props.locale))} download>
-                           {/* "https://ldspdi.bdrc.io/RIS/"+that.props.IRI+"/"+(that.state.citationLang?that.state.citationLang:that.props.locale)"+ */}
-                           <MenuItem>
-                                 { I18n.t("resource.exportRIS", {format:"RIS"})}
-                           </MenuItem>
-                     </a>
-                     { that.props.IRI && that.props.IRI.match(/bdr:MW/) && [
-                        <a rel="alternate" type="application/marc" href={that.expand(that.props.IRI, true)+".mrc"} download>
-                              <MenuItem>{I18n.t("resource.export2",{format:"MARC"})}</MenuItem>           
-                        </a>,
-                        <a rel="alternate" type="application/marcxml+xml" href={that.expand(that.props.IRI, true)+".mrcx"} download>
-                              <MenuItem>{I18n.t("resource.export2",{format:"MARCXML"})}</MenuItem>           
-                        </a> 
-                     ]}
-               </Popover>
-            }  
+            { popupCitation }
    
            { (that.props.pdfVolumes && that.props.pdfVolumes.length > 0) &&
                    <Popover
@@ -6673,11 +6685,14 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                         }
                         let open = this.state.collapse[tag] || (osearch &&  this.state.collapse[tag] === undefined && !e.notMatch)
                         if(pType && pType["@id"]) pType = pType["@id"]
+
+                        const citeRef = React.createRef()
+
                         ret.push(<span class={'top'+ (this.state.outlinePart === e['@id'] || (!this.state.outlinePart && this.props.IRI===e['@id']) ?" is-root":"")+(this.state.collapse[tag]||osearch&&e.hasMatch?" on":"") }>
                               {(e.hasPart && open && osearch && !this.props.outlines[e['@id']]) && <span onClick={(ev) => toggle(ev,root,e["@id"],"",true)} className="xpd" title={I18n.t("resource.otherN")}><RefreshIcon /></span>}
                               {(e.hasPart && !open && this.props.outlines[e['@id']] !== true) && <img src="/icons/triangle_.png" onClick={(ev) => toggle(ev,root,e["@id"],"",false,e)} className="xpd"/>}
                               {(e.hasPart && open && this.props.outlines[e['@id']] !== true) && <img src="/icons/triangle.png" onClick={(ev) => toggle(ev,root,e["@id"],"",false,e)} className="xpd"/>}
-                              <span class={"parTy "+(e.details?"on":"")} {...e.details?{title:/*tLabel+" - "+*/ I18n.t("resource."+(this.state.collapse[tag+"-details"]?"hideD":"showD")), onClick:(ev) => toggle(ev,root,e["@id"],"details",false,e)}:{title:tLabel}} >
+                              <span class={"parTy "+(e.details?"on":"")}  ref={citeRef} {...e.details?{title:/*tLabel+" - "+*/ I18n.t("resource."+(this.state.collapse[tag+"-details"]?"hideD":"showD")), onClick:(ev) => toggle(ev,root,e["@id"],"details",false,e)}:{title:tLabel}} >
                                  {pType && parts[pType] ? <div>{parts[pType]}</div> : <div>{parts["?"]}</div> }
                               </span>
                               <span>{this.uriformat(null,{type:'uri', value:fUri, inOutline: (!e.hasPart?tag+"-details":tag), url:"/show/"+root+"?part="+e["@id"], debug:false, toggle:() => toggle(null,root,e["@id"],!e.hasPart?"details":"",false,e)})}</span>
@@ -6700,6 +6715,29 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                                        <img src="/icons/PLINK_small_r.svg"/>
                                     </a>
                                  </CopyToClipboard>
+
+                                 
+                                 <span id="cite" title={I18n.t("resource.cite")} onClick={ev => {
+                                    let s = {
+                                       citationRID:e["@id"],
+                                       collapse:{ ...this.state.collapse, citation:!this.state.collapse.citation },
+                                       anchorEl:{ ...this.state.anchorEl, citation:citeRef&&citeRef.current?citeRef.current:({...ev}).currentTarget }
+                                    }
+                                    // fetch citation data if needed
+                                    if(e["@id"] && (!this.props.citationData || !this.props.citationData.data || !this.props.citationData.data[e["@id"]])) {
+                                       if(!this.state.initCitation || !this.state.initCitation.includes(e["@id"])) { 
+                                          this.props.onGetCitationData(e["@id"])            
+                                          if(!s.initCitation) s.initCitation = []
+                                          s.initCitation.push(e["@id"])
+                                       } else if(this.props.citationData && this.props.citationData.data && this.props.citationData.data[e["@id"]]){
+                                          console.log("added:",this.props.citationData.data[e["@id"]])
+                                       }
+                                    } 
+                                    this.setState(s)
+                                 }}>
+                                    <CiteIcon /> 
+                                 </span> 
+                              
                               </div>
                            </span>)
                         if(((osearch && e.hasMatch && this.state.collapse[tag+"-details"] !== false) || this.state.collapse[tag+"-details"]) && e.details) 
