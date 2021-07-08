@@ -1274,8 +1274,11 @@ h4:not(:hover) > .lang
 
 .resource .data#outline .parTy + span .ulink .before  { display:none !important; }
 
+.resource .data#outline span.is-root #cite,
 .resource .data#outline .is-root h2 a span,
 .resource .data#outline span.is-root a  { color:#d73449;  }
+
+.resource .data#outline span.is-root #cite svg { border-color:#d73449 !important;  }
 
 /* .resource .data#outline .is-root a:hover { text-decoration-color: #d73449;} */
 
@@ -1331,6 +1334,7 @@ h4:not(:hover) > .lang
 .resource .data#outline .root + div .top.is-root .hasImg img:first-child,
 .resource .data#outline .root + div .top:not(.is-root) .hasImg img:last-child { display:none;}
 
+.resource .data#outline .root + div .top.is-root #cite,
 .resource .data#outline .root + div .top.is-root .permalink,
 .resource .data#outline .root + div .top.is-root #anchor,
 .resource .data#outline .root + div .top.is-root #anchor img,
