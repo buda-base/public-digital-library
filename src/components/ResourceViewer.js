@@ -5041,7 +5041,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                   onClose={ev => that.setState({ collapse:{ ...that.state.collapse, export:false }})}
                >
                      <a rel="alternate" type="application/x-research-info-systems" 
-                        href={"http://ldspdi.bdrc.io/RIS/"+that.props.IRI+"/"+(that.state.citationLang?that.state.citationLang:that.props.locale)} download>
+                        href={"https://ldspdi.bdrc.io/RIS/"+that.props.IRI+"/"+(that.state.citationLang?that.state.citationLang:that.props.locale)} download>
                            <MenuItem>
                                  { I18n.t("resource.exportRIS", {format:"RIS"})}
                            </MenuItem>
