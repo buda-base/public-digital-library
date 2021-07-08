@@ -4960,12 +4960,12 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                <Popper
                   id="popDL"
                   className="cite"
-                  //anchorOrigin={{ horizontal: 89 }}
-                  //transformOrigin={{ horizontal: 'center' }}
+                  anchorOrigin={{ horizontal: 89 }}
+                  transformOrigin={{ horizontal: 'center' }}
                   open={that.state.collapse.citation}
                   anchorEl={that.state.anchorEl.citation}
                   //keepMounted
-                  placement={"bottom"}
+                  //placement={"bottom"}
                >
                   <ClickAwayListener onClickAway={ev => that.setState({ collapse:{ ...that.state.collapse, citation:false }})}>
                      <div>
