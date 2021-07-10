@@ -243,7 +243,7 @@
         <text variable="genre"/>
       </if>
       <else-if type="book graphic map motion_picture song" match="any">
-        <text variable="title" text-case="title" font-style="italic"/>
+        <text variable="title" font-style="italic"/>
         <group delimiter=" " prefix=", ">
           <text term="version"/>
           <text variable="version"/>
@@ -256,7 +256,7 @@
         <text variable="title" font-style="italic" prefix="review of "/>
       </else-if>
       <else>
-        <text variable="title" text-case="title" quotes="true"/>
+        <text variable="title" quotes="true"/>
       </else>
     </choose>
   </macro>
@@ -270,7 +270,7 @@
         </choose>
       </if>
       <else-if type="book graphic motion_picture song" match="any">
-        <text variable="title" text-case="title" font-style="italic"/>
+        <text variable="title" font-style="italic"/>
         <group prefix=" (" suffix=")" delimiter=" ">
           <text term="version"/>
           <text variable="version"/>
@@ -289,7 +289,7 @@
         <text variable="title"/>
       </else-if>
       <else>
-        <text variable="title" text-case="title" quotes="true"/>
+        <text variable="title" quotes="true"/>
       </else>
     </choose>
   </macro>
@@ -306,7 +306,7 @@
         </choose>
       </if>
       <else-if type="book graphic motion_picture song" match="any">
-        <text variable="title" text-case="title" form="short" font-style="italic"/>
+        <text variable="title" form="short" font-style="italic"/>
       </else-if>
       <else-if type="legal_case" variable="title-short" match="all">
         <text variable="title" font-style="italic" form="short"/>
@@ -318,7 +318,7 @@
         <text variable="title"/>
       </else-if>
       <else>
-        <text variable="title" text-case="title" form="short" quotes="true"/>
+        <text variable="title" form="short" quotes="true"/>
       </else>
     </choose>
   </macro>
@@ -397,10 +397,10 @@
           <text variable="container-title"/>
         </if>
         <else-if type="post-weblog">
-          <text variable="container-title" text-case="title" font-style="italic" suffix=" (blog)"/>
+          <text variable="container-title" font-style="italic" suffix=" (blog)"/>
         </else-if>
         <else-if type="bill legislation legal_case" match="none">
-          <text variable="container-title" text-case="title" font-style="italic"/>
+          <text variable="container-title" font-style="italic"/>
         </else-if>
       </choose>
     </group>
@@ -417,10 +417,10 @@
           <text variable="container-title"/>
         </if>
         <else-if type="post-weblog">
-          <text variable="container-title" text-case="title" font-style="italic" suffix=" (blog)"/>
+          <text variable="container-title" font-style="italic" suffix=" (blog)"/>
         </else-if>
         <else-if type="bill legislation legal_case" match="none">
-          <text variable="container-title" text-case="title" font-style="italic"/>
+          <text variable="container-title" font-style="italic"/>
         </else-if>
       </choose>
     </group>
@@ -431,13 +431,13 @@
         <choose>
           <if match="none" is-numeric="collection-number">
             <group delimiter=", ">
-              <text variable="collection-title" text-case="title"/>
+              <text variable="collection-title"/>
               <text variable="collection-number"/>
             </group>
           </if>
           <else>
             <group delimiter=" ">
-              <text variable="collection-title" text-case="title"/>
+              <text variable="collection-title"/>
               <text variable="collection-number"/>
             </group>
           </else>
