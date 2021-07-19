@@ -5934,17 +5934,40 @@ perma_menu(pdfLink,monoVol,fairUse,other)
    // TODO case of part of instance after p.20 (see bdr:MW1KG2733_65CFB8)
 
    renderNoAccess = (fairUse) => {
-      if(fairUse && (!this.props.auth || this.props.auth && !this.props.auth.isAuthenticated()) ) 
+      if(fairUse && (!this.props.auth || this.props.auth && !this.props.auth.isAuthenticated()) ) { 
+
+         let fairTxt, hasIA, elem = this.getResourceElem(bdo+"digitalLendingPossible");
+         if(this.props.config && !this.props.config.chineseMirror) {
+            console.log("elemIA:",elem)
+            if(!elem || elem.length && elem[0].value == "true" ) { 
+               hasIA = true
+            }
+         }
+
+         if(!hasIA) {
+            fairTxt = <><Trans i18nKey="access.fairuse1" components={{ bold: <u /> }} /> { I18n.t("access.fairuse2")} <a href="mailto:help@bdrc.io">help@bdrc.io</a> { I18n.t("access.fairuse3")}</>
+         } else {
+            fairTxt = <>
+               <Trans i18nKey="access.fairUseIA1" components={{ bold: <u /> }} />
+               <br/><br/>
+               <a class="fairuse-IA-link" target="_blank" href={"https://archive.org/details/bdrc-"+this.props.IRI.replace(/^bdr:/,"")}>
+                  {I18n.t("access.fairUseIA2")}
+                  <img src="/IA.svg"/>
+               </a>
+            </>
+         }
+
          return <div class="data access">
                   <h3>
                      <span style={{textTransform:"none"}}>
                      {/* {I18n.t("access.limited20")}<br/> */}
-                     <Trans i18nKey="access.fairuse1" components={{ bold: <u /> }} /> { I18n.t("access.fairuse2")} <a href="mailto:help@bdrc.io">help@bdrc.io</a> { I18n.t("access.fairuse3")}
+                     {fairTxt}
                      { /*this.props.locale !== "bo" && [ I18n.t("misc.please"), " ", <a class="login" onClick={this.props.auth.login.bind(this,this.props.history.location)}>{I18n.t("topbar.login")}</a>, " ", I18n.t("access.credentials") ] }
                      { this.props.locale === "bo" && [ I18n.t("access.credentials"), " ", <a class="login" onClick={this.props.auth.login.bind(this,this.props.history.location)}>{I18n.t("topbar.login")}</a> ] */ }
                    </span>
                   </h3>
                </div>
+      }
    }
 
    renderQuality = () => {

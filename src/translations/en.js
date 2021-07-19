@@ -533,7 +533,7 @@ const enTranslation = {
    access:{
       fairuse1:"BDRC <bold>restricts access</bold> to this work (only the first and last 20 images are available online) because the work is under <bold>copyright</bold>.",
       fairuse2:"Please contact",
-      fairuse3:"for information about possibly accessing this work under fair use.",
+      fairuse3:"for information about possibly accessing this work under fair use.",      
       sealed:"BDRC <bold>restricts access</bold> to this work because it was provided to BDRC on the condition that we respect <bold>traditional restrictions</bold> applied to it. If you have received the proper transmission from a spiritual teacher to access this work or have other questions about how to access this work please contact",
       limited20:"Access limited to first & last 20 pages.",
       credentials:"if you have sufficient credentials to get access to all scans from this work.",
@@ -541,7 +541,9 @@ const enTranslation = {
       error:"An error occurred while trying to access the images.",
       generic:"BDRC has restricted access to this work in accordance with our access policies. You can read those policies here: <policies href='https://bdrc.io/access-policies/' target='_blank'>https://bdrc.io/access-policies/</policies>",
       OCR:"These etexts were created through OCR (optical character recognition), not manually input, and have not been edited. OCR for Tibetan script is not 100% perfect but it is accurate enough to create text that will enhance the BDRC database. We hope that etexts like these improve the discoverability and usefulness of the BDRC archive for you.",
-      quality0:"We acknowledge the poor quality of these scans, which might be difficult to read or in the wrong order, and we apologize for it. We think these might still be useful for scholarship and make them available, while searching for higher quality ones."
+      quality0:"We acknowledge the poor quality of these scans, which might be difficult to read or in the wrong order, and we apologize for it. We think these might still be useful for scholarship and make them available, while searching for higher quality ones.",
+      fairUseIA1:"This work is <bold>copyrighted</bold>. As a result, BDRC can only make very limited portions available for private research and study. The full text of the work is viewable on <bold>Internet Archive</bold>, a close partner of ours, through their <bold>Open Library program</bold>.",
+      fairUseIA2:"Access this work on Internet Archive"
    },
    location:{
       beginV:"Begin volume: {{num}}",

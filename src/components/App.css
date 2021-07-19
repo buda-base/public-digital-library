@@ -1153,6 +1153,15 @@ h4:not(:hover) > .lang
 #root > div > .resource.simple > *    { pointer-events:none; }
 #root > div > .resource.simple .mobile-button { display:none; }
 
+.resource .fairuse-IA-link {
+   display:inline-flex; 
+   align-items:center; 
+   justify-content:center;
+}
+
+.resource .fairuse-IA-link img { width: 23px; margin-left:10px; display: inline-block;}
+
+.resource .fairuse-IA-link:hover { text-decoration: underline; border:none !important; }
 
 /* -+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ resource */
 

@@ -472,7 +472,9 @@ const zhTranslation = {
    access:{
       limited20:"仅限首尾各20页的访问权",
       credentials:"如果您有权获取这部作品的全部图像",
-      quality0:"We acknowledge the poor quality of these scans, which might be difficult to read or in the wrong order, and we apologize for it. We think these might still be useful for scholarship and make them available, while searching for higher quality ones."
+      quality0:"We acknowledge the poor quality of these scans, which might be difficult to read or in the wrong order, and we apologize for it. We think these might still be useful for scholarship and make them available, while searching for higher quality ones.",
+      fairUseIA1:"This work is <bold>copyrighted</bold>. As a result, BDRC can only make very limited portions available for private research and study. The full text of the work is viewable on <bold>Internet Archive</bold>, a close partner of ours, through their <bold>Open Library program</bold>.",
+      fairUseIA2:"Access this work on Internet Archive"
    },
    location:{
       beginV:"起始卷{{num}}",
