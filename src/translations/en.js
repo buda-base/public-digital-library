@@ -376,7 +376,8 @@ const enTranslation = {
          xEwts:"Wylie",
          xDts:"DTS",
          alalc97:"ALA-LC",
-         latnPinyin:"Pinyin"
+         latnPinyin:"Pinyin",
+         piXNdia:"Pali / Burmese / Khmer (transliterated)"
       },
       tip:{
          zh:"Chinese",

@@ -358,7 +358,8 @@ const boTranslation = {
          xEwts:"ཝའི་ལི།",
          xDts:"DTS",
          alalc97:"ALA-LC",
-         latnPinyin:"ཕིན་ཡིག"
+         latnPinyin:"ཕིན་ཡིག",
+         piXNdia:"Pali / Burmese / Khmer (transliterated)"
       },
       tip:{
          zh:"རྒྱ་ཡིག",

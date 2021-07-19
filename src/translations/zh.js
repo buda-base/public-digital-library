@@ -329,7 +329,8 @@ const zhTranslation = {
          xEwts:"Wylie转写",
          xDts:"DTS转写",
          alalc97:"ALA-LC转写",
-         latnPinyin:"拼音"
+         latnPinyin:"拼音",
+         piXNdia:"Pali / Burmese / Khmer (transliterated)"
       },
       tip:{
          zh:"中文",

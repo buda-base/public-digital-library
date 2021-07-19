@@ -278,6 +278,7 @@ export const languages = {
    "en":"lang.search.en",
    "pi":"lang.search.pi",
    "pi-x-iast": "lang.search.piXIast",
+   "pi-x-ndia":"lang.search.piXNdia",
    "bo":"lang.search.bo",
    "bo-x-ewts":"lang.search.boXEwts",
    "bo-x-ewts_lower":"lang.search.boXEwtsLower",
@@ -2783,14 +2784,15 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   }
                   */
                   val = getLangLabel(this,prop,[i])
-                  let kw = lucenequerytokeywordmulti(this.props.keyword).map(v => v.trim().replace(/[་༌།]+$/,""))
+                  let kw = lucenequerytokeywordmulti(this.props.keyword).map(v => v.trim().replace(/[་༌།]+$/,""))                  
                   // join by "EEEE" as it won't be affected in wylie from/to conversion 
                   if(this.props.language) {
                      kw = getLangLabel(this,"",[ { "value":kw.join("EEEE"), "lang": this.props.language } ])
-                     if(val) {
+                     if(val && kw.value !== undefined) {
                         val = highlight(val.value,kw.value.replace(/ *\[?EEEE\]? */g,"|"))
                         lang = val.lang
-                     } else {
+                     } else { 
+                        if(!Array.isArray(kw)) kw = [ kw ]
                         val = highlight(i.value,kw.join("|"))
                         lang = i["lang"]
                         if(!lang) lang = i["xml:lang"]
@@ -5648,6 +5650,9 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                         presets.push(p); 
                      } 
                   }
+
+                  // #509
+                  if(d === "iast") presets.push("pi-x-ndia")                  
                   
                   return [...acc, ...presets]
                }, [] ).concat(!value || value.match(/[a-zA-Z0-9]/)?["en"]:[]).map(p => '"'+(p==="bo-x-ewts_lower"?value.toLowerCase():value).trim()+'"@'+(p == "sa-x-iast"?"inc-x-ndia":p))
