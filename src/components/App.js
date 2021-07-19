@@ -1029,7 +1029,7 @@ class App extends Component<Props,State> {
 
       if(this._refs.map && this._refs.map.current) {
          if(this._refs.markers) $(".resultsMap").attr("data-nb-markers", this._refs["markers"].length)
-         if(this._refs["markers"].length) this._refs.map.current.leafletElement.fitBounds(this._refs["markers"])
+         if(this._refs["markers"].length) this._refs.map.current.leafletElement.fitBounds(this._refs["markers"], this._refs["markers"].length === 1 ? {maxZoom: 10}:{})
       }
 
       report_GA(this.props.config,this.props.history.location);
@@ -4033,7 +4033,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                               if(this._refs["map"].current) {                                                         
                                  console.log("map:",this._refs["map"].current)
                                  clearInterval(timeo)
-                                 this._refs["map"].current.leafletElement.fitBounds(latLongs)
+                                 this._refs["map"].current.leafletElement.fitBounds(latLongs, latLongs.length === 1 ?{maxZoom: 10}:{})
                                  //$(".resultsMap").attr("data-nb-markers", latLongs.length)
                               }
                            }, 10);
