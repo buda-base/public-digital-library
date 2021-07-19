@@ -1159,7 +1159,8 @@ h4:not(:hover) > .lang
    justify-content:center;
 }
 
-.resource .fairuse-IA-link img { width: 23px; margin-left:10px; display: inline-block;}
+.resource .fairuse-IA-link img.ia { width: 19px; margin-right:10px; display: inline-block;}
+.resource .fairuse-IA-link img.link-out { margin-left:5px; display: inline-block; }
 
 .resource .fairuse-IA-link:hover { text-decoration: underline; border:none !important; }
 
