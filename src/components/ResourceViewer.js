@@ -910,12 +910,13 @@ class ResourceViewer extends Component<Props,State>
                   s.initCitation.push(citaSty)
                } else if(props.citationData && props.citationData.styles && props.citationData.styles[citaSty]){
                   citationConfig.templates.add(citaSty, props.citationData.styles[citaSty])
-                  console.log("added:",citaSty,citationConfig)
+                  //console.log("added:",citaSty,citationConfig)
                }
             } 
 
             let citaLg = props.locale
             if(state.citationLang) citaLg = state.citationLang
+            else if(props.locale === "en") citaLg = "latn"
             const supportedLocales = { "bo":"en-US", "en":"en-US", "zh":"zh-CN", "latn":"en-US" }
             // add new locale if needed
             if(supportedLocales[citaLg] && !citationConfig.locales.data[supportedLocales[citaLg]]) {               
@@ -929,7 +930,7 @@ class ResourceViewer extends Component<Props,State>
                   s.initCitation.push(citaLg)
                } else if(props.citationData && props.citationData.locales && props.citationData.locales[supportedLocales[citaLg]]){
                   citationConfig.locales.add(supportedLocales[citaLg], props.citationData.locales[supportedLocales[citaLg]])
-                  console.log("added:",citaLg,citationConfig)
+                  //console.log("added:",citaLg,citationConfig)
                }
             }
 
@@ -940,10 +941,13 @@ class ResourceViewer extends Component<Props,State>
                   if(!s) s = { ...state }
                   if(!s.initCitation) s.initCitation = []
                   s.initCitation.push(props.IRI)
+               }
+               /* // moved to getDerivedStateFromProp
                } else if(props.citationData && props.citationData.data && props.citationData.data[props.IRI]){
                   //citationConfig.templates.add(citaSty, props.citationData.styles[citaSty])
                   console.log("added:",props.citationData.data[props.IRI])
                }
+               */
             } 
             
          }
@@ -4729,6 +4733,7 @@ renderPopupCitation(IRI) {
       const supportedLocales = { "bo":"en-US", "en":"en-US", "zh":"zh-CN", "latn":"en-US" }
       let citaLg = this.props.locale
       if(this.state.citationLang) citaLg = this.state.citationLang
+      else if(this.props.locale === "en") citaLg = "latn"
 
       let citaSty = "mla"
       if(this.state.citationStyle) citaSty = this.state.citationStyle
@@ -4785,7 +4790,7 @@ renderPopupCitation(IRI) {
                      <FormControl className={"formControl"} style={{ width:"calc(100% - 16px)", margin:"16px", marginRight:0 }}>
                         <InputLabel htmlFor="citationLang">{I18n.t("lang.lg")}</InputLabel>
                         <Select
-                           value={this.state.citationLang?this.state.citationLang:this.props.locale} 
+                           value={citaLg} 
                            onChange={ev => this.setState({ citationLang: ev.target.value })}
                            open={this.state.collapse.citationLang}
                            onClose={(e) => e.preventDefault() }
