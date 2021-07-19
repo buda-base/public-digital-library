@@ -3236,7 +3236,12 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          }
 
          let resulType = T
-         if(T === "Instance") {            
+         if(T === "Place") {            
+            resulType = allProps.filter(p => p.type === bdo+"placeType")
+            if(resulType.length) resulType = getPropLabel(this,resulType[0].value,false)
+            else resulType = I18n.t("types.place")
+         }
+         else if(T === "Instance") {            
             resulType = allProps.filter(p => p.type === bdo+"partType")
             if(resulType.length) resulType = getPropLabel(this,resulType[0].value,false)
             else resulType = I18n.t("types.instance")
