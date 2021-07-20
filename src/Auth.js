@@ -78,6 +78,7 @@ export default class Auth {
    auth1 : WebAuth ;
    iiif:{};
    api:{};
+   config:{}
 
 
   getProfile(cb) {
@@ -103,6 +104,7 @@ export default class Auth {
      console.log("auth1",this.isAuthenticated())
      this.iiif = iiif
      this.api = api         
+     this.config = config
      
       if(iiif && api && this.isAuthenticated()) {
           try{
@@ -135,10 +137,26 @@ export default class Auth {
   }
 
   handleAuthentication(silent = false) {
-    if(silent) this.auth1.popup.authorize({"prompt":"none"}, (error, response) => { 
-      console.warn("popup:",error,response)
-      if(this.isAuthenticated()) store.dispatch(ui.logEvent(true))
-    }); 
+    if(silent) { 
+      /* // popup is blocked...
+      this.auth1.popup.authorize({"prompt":"none"}, (error, response) => { 
+        console.warn("popup:",error,response)
+        if(this.isAuthenticated()) store.dispatch(ui.logEvent(true))
+      }); 
+      */
+      // cf https://github.com/auth0/auth0.js/issues/406#issuecomment-312738290 (https://giters.com/ksgy/auth0.js?amp=1)
+      this.auth1.renewAuth({ ...this.config, 
+          usePostMessage: true, 
+          postMessageDataType: 'my-custom-data-type', 
+          redirectUri: window.location.origin+"/scripts/silent_callback.html" 
+        }, (error, authResult) => {         
+        console.log("renewAuth:",error,authResult,this.isAuthenticated())
+        if(authResult) {
+          this.setSession(authResult);
+          store.dispatch(ui.logEvent(true))
+        }
+      }); 
+    }
     else this.auth1.parseHash(async (err, authResult) => {
       if (authResult && authResult.accessToken && authResult.idToken) {
         this.setSession(authResult);
@@ -164,10 +182,11 @@ export default class Auth {
 
     console.log("session",authResult)
 
-
+    /* popup is blocked...
     if(this.isAuthenticated() && window.opener) { 
-      setTimeout(() => window.close(), 150);
+      setTimeout(() => window.close(), 350);
     } 
+    */
 
     if(this.isAuthenticated() && this.iiif && this.api) {
       try {
