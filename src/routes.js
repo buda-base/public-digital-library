@@ -155,11 +155,11 @@ const makeMainRoutes = () => {
                         return (<TestToken auth={auth} history={history} />)
                      } }/>
                      <Route path="/auth/callback" render={(props) => {
-                        store.dispatch(initiateApp(null,null,props));
+                        store.dispatch(initiateApp(null,null,props,null,true));
                         store.dispatch(ui.logEvent(true));
                         return (
                            <div style={{textAlign:"center",marginTop:"100px",fontSize:"22px"}}>
-                              Redirecting...
+                              Successfully logged, redirecting...
                            </div>
                         )
                      }}/>

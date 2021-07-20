@@ -104,18 +104,16 @@ export default class Auth {
      this.iiif = iiif
      this.api = api         
      
-
-     if(this.isAuthenticated() && iiif && api) {
-          
-         try{
+      if(iiif && api && this.isAuthenticated()) {
+          try{
             let cookie = await api.getURLContents(iiif.endpoints[iiif.index]+"/setcookie",false)
             console.log("cookie",cookie)
-         }
-         catch(e)
-         {
-          console.error("ERROR with cookie",e)
-         }
-     }
+          }
+          catch(e)
+          {
+            console.error("ERROR with cookie",e)
+          }      
+      }
   }
 
   login(redirect,signup = false) {
@@ -136,8 +134,9 @@ export default class Auth {
     this.getProfile = this.getProfile.bind(this);
   }
 
-  handleAuthentication() {
-    this.auth1.parseHash(async (err, authResult) => {
+  handleAuthentication(silent = false) {
+    if(silent) this.auth1.authorize({"prompt":"none"}); 
+    else this.auth1.parseHash(async (err, authResult) => {
       if (authResult && authResult.accessToken && authResult.idToken) {
         this.setSession(authResult);
         let redirect = JSON.parse(localStorage.getItem('auth0_redirect'))

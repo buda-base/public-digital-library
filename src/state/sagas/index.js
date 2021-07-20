@@ -42,15 +42,17 @@ const _tmp = tmp ;
 
 let IIIFurl = "//iiif.bdrc.io" ;
 
-const handleAuthentication = (nextState, replace) => {
-   if (/access_token|id_token|error/.test(nextState.location.hash)) {
+const handleAuthentication = (nextState, isAuthCallback) => {
+   if (nextState && /access_token|id_token|error/.test(nextState.location.hash)) {
       auth.handleAuthentication();
+   } else if(auth && !isAuthCallback && !auth.isAuthenticated()) { 
+      auth.handleAuthentication(true)
    }
 }
 
 let sameAsR = {}
 
-async function initiateApp(params,iri,myprops,route) {
+async function initiateApp(params,iri,myprops,route,isAuthCallback) {
    try {
       loggergen.log("params=",params)
       loggergen.log("iri=",iri)
@@ -62,12 +64,13 @@ async function initiateApp(params,iri,myprops,route) {
       {
          const config = await api.loadConfig();
 
-         if(config.auth) auth.setConfig(config.auth,config.iiif,api)
-
          //I18n.setHandleMissingTranslation((key, replacements) => key);
 
-         if(myprops) {
-            if(config.auth) handleAuthentication(myprops);
+         if(config.auth) {
+            auth.setConfig(config.auth,config.iiif,api)
+
+            if(myprops) handleAuthentication(myprops, isAuthCallback);
+            else handleAuthentication(null, isAuthCallback)
          }
          store.dispatch(dataActions.loadedConfig(config));
          
