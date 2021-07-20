@@ -35,7 +35,7 @@ function scheduleRenewal() {
   if(!token) return
   var expiresAt = JSON.parse(token) - 5*60*1000 ;
   var delay = expiresAt - Date.now();
-  console.log("delay",delay)
+  console.log("delay:",delay)
   if (delay > 0) {
     tokenRenewalTimeout = setTimeout(function() {
       renewToken();
@@ -123,8 +123,8 @@ export default class Auth {
     console.log("redirect",redirect)
     if(redirect) localStorage.setItem('auth0_redirect', JSON.stringify(redirect));
     else localStorage.setItem('auth0_redirect', '/');
-    if(signup === true) this.auth1.authorize({'bdrc_showsignup':1,"locale":"en"});
-    else this.auth1.authorize({"warn": I18n.t("home.subsubmessage_auth"), "locale":"en"});
+    if(signup === true) this.auth1.authorize({'bdrc_showsignup':1, "locale":"en" }); //, "prompt":"none"}); 
+    else this.auth1.authorize({"warn": I18n.t("home.subsubmessage_auth"), "locale":"en" }); //, "prompt":"none"});
   }
 
   constructor() {
@@ -158,6 +158,7 @@ export default class Auth {
     localStorage.setItem('access_token', authResult.accessToken);
     localStorage.setItem('id_token', authResult.idToken);
     localStorage.setItem('expires_at', expiresAt);
+    scheduleRenewal();
 
     console.log("session",authResult)
 
