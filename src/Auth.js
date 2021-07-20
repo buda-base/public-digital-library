@@ -135,7 +135,10 @@ export default class Auth {
   }
 
   handleAuthentication(silent = false) {
-    if(silent) this.auth1.authorize({"prompt":"none"}); 
+    if(silent) this.auth1.popup.authorize({"prompt":"none"}, (error, response) => { 
+      console.warn("popup:",error,response)
+      if(this.isAuthenticated()) store.dispatch(ui.logEvent(true))
+    }); 
     else this.auth1.parseHash(async (err, authResult) => {
       if (authResult && authResult.accessToken && authResult.idToken) {
         this.setSession(authResult);
@@ -160,6 +163,11 @@ export default class Auth {
     scheduleRenewal();
 
     console.log("session",authResult)
+
+
+    if(this.isAuthenticated() && window.opener) { 
+      setTimeout(() => window.close(), 150);
+    } 
 
     if(this.isAuthenticated() && this.iiif && this.api) {
       try {
