@@ -201,7 +201,7 @@ export default class Auth {
 
   }
 
-  logout(redirect:{}|string='/', delay:number=1000) {
+  logout(redirect:{}|string=window.location.origin , delay:number=1000) {
      setTimeout(((iiif,api) => async () => {
          try {
             if(this.isAuthenticated()) {
@@ -220,11 +220,13 @@ export default class Auth {
          localStorage.removeItem('id_token');
          localStorage.removeItem('expires_at');
          // navigate to previous route if any
-         history.replace(redirect);
+         // history.replace(redirect); // must be after auth0 logout call
          store.dispatch(ui.logEvent(false))
 
-
         clearTimeout(tokenRenewalTimeout);
+
+        localStorage.setItem('auth0_redirect', JSON.stringify(redirect));
+        this.auth1.logout({ returnTo: window.location.origin })
      })(this.iiif,this.api),delay)
   }
 

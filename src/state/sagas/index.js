@@ -60,6 +60,10 @@ async function initiateApp(params,iri,myprops,route,isAuthCallback) {
 
       //      loggergen.log("youpla?",prefix)
 
+      let redirect = JSON.parse(localStorage.getItem('auth0_redirect'))
+      localStorage.removeItem('auth0_redirect')
+      if(redirect && redirect.startsWith && redirect.startsWith("http")) window.location.href = redirect
+      
       if(!state.data.config)
       {
          const config = await api.loadConfig();

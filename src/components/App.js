@@ -779,7 +779,7 @@ export function top_right_menu(that,etextTitle,backUrl,etextres)
                that.props.auth.isAuthenticated() && 
                   <div>
                   <span onClick={(e) => { that.props.onUserProfile(that.props.history.location); that.props.history.push("/user");    }}>{I18n.t("topbar.profile")}</span>
-                  <span onClick={that.props.auth.logout.bind(that,that.props.history.location.pathname!=="/user"?that.props.history.location:"/")} >{I18n.t("topbar.logout")}</span>
+                  <span onClick={(e) => { that.props.auth.logout(that.props.history.location.pathname!=="/user"?window.location.href:window.location.origin) }} >{I18n.t("topbar.logout")}</span>
                   </div>
             }
         { /*
