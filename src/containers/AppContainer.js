@@ -13,6 +13,10 @@ import { i18nextChangeLanguage } from 'i18next-redux-saga';
 
 import App from '../components/App';
 
+import {auth} from '../routes';
+
+
+
 const mapStateToProps = (state) => {
 
    let logged = state.ui.logged ;
@@ -57,10 +61,15 @@ const mapStateToProps = (state) => {
    let latestSyncsNb = state.data.latestSyncsNb
 
 
+   let profileName
+   if(auth && auth.userProfile) {
+      if(auth.userProfile.name) profileName = auth.userProfile.name
+   }
+
    let newState = { logged,config, hostFailure, searches, keyword, language,loading,datatypes,ontology,facets,
       locale,prefLang,resources,ontoSearch,rightPanel,langPreset, langIndex, langExt, failures,dictionary,metadata, assoRes, 
       sortBy, topicParents, instances, isInstance,
-      latestSyncs,latestSyncsNb }
+      latestSyncs,latestSyncsNb, profileName }
 
    if(config && !config.auth) newState.auth = false
 

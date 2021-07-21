@@ -455,6 +455,9 @@ footer #donate,
 .nav #donate, 
 .nav #login { font-weight:700; font-size:14px;letter-spacing: 0.29px; text-transform: uppercase; text-decoration: none; }
 
+.nav #login > div { display: flex;  }
+.nav #login > div > span:first-child { max-width:150px ; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;}
+
 .nav #logo #by span { padding-top:7px; text-transform:none; letter-spacing: 1px; font-weight:600;}
 
 .nav a#about { color: hsl(206, 24%, 13%);}
@@ -483,6 +486,7 @@ footer #donate,
    padding-left:2px; box-sizing: border-box; 
 }
 .nav .history span img { opacity:0.5; }
+.nav .history {visibility:hidden; display:none; }
 
 
 

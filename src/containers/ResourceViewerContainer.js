@@ -14,6 +14,8 @@ import { i18nextChangeLanguage } from 'i18next-redux-saga';
 import ResourceViewer from '../components/ResourceViewer';
 import UserViewer from '../components/UserViewer';
 
+import {auth} from '../routes';
+
 const mapStateToProps = (state,ownProps) => {
 
   let logged = state.ui.logged ;
@@ -140,6 +142,10 @@ const mapStateToProps = (state,ownProps) => {
 
    let citationData = state.data.citationData
       
+   let profileName
+   if(auth && auth.userProfile) {
+      if(auth.userProfile.name) profileName = auth.userProfile.name
+   }
 
    let props = { logged,config,resources, ontology, dictionary, keyword, language, datatype, assocResources, prefLang, failures, loading,
       imageAsset,firstImage,canvasID,collecManif,manifests,manifestError,pdfVolumes,createPdf,pdfUrl, manifestWpdf,
@@ -148,7 +154,8 @@ const mapStateToProps = (state,ownProps) => {
       eTextRefs,
       assocTypes,
       IIIFerrors,
-      citationData }
+      citationData,
+      profileName }
 
    if(config && !config.auth) props.auth = false
 

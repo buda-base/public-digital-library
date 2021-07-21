@@ -90,6 +90,7 @@ export default class Auth {
         if(token) this.auth1.client.userInfo(token, (err, profile) => {
           if (profile) {
             this.userProfile = profile;
+            store.dispatch(store.dispatch(ui.logEvent("profile")))
           }
           cb(err, profile);
         });
@@ -153,13 +154,14 @@ export default class Auth {
         console.log("renewAuth:",error,authResult,this.isAuthenticated())
         if(authResult) {
           this.setSession(authResult);
-          store.dispatch(ui.logEvent(true))
+          this.getProfile(() => {})
         }
       }); 
     }
     else this.auth1.parseHash(async (err, authResult) => {
       if (authResult && authResult.accessToken && authResult.idToken) {
         this.setSession(authResult);
+        this.getProfile(() => {})
         let redirect = JSON.parse(localStorage.getItem('auth0_redirect'))
         if(!redirect) redirect = '/'
         if(redirect && redirect.startsWith && redirect.startsWith("http")) window.location.href = redirect

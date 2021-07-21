@@ -692,6 +692,9 @@ export function top_right_menu(that,etextTitle,backUrl,etextres)
 
    ]
 
+   let profileName = I18n.t("topbar.profile")
+   if(that.props.profileName) profileName = that.props.profileName
+
    if(etextTitle)
       return (
       <div class={"nav"+(onZhMirror?" zhMirror":"")}>
@@ -778,7 +781,7 @@ export function top_right_menu(that,etextTitle,backUrl,etextres)
             {
                that.props.auth.isAuthenticated() && 
                   <div>
-                  <span onClick={(e) => { that.props.onUserProfile(that.props.history.location); that.props.history.push("/user");    }}>{I18n.t("topbar.profile")}</span>
+                  <span onClick={(e) => { that.props.onUserProfile(that.props.history.location); that.props.history.push("/user");    }}>{profileName}</span>
                   <span onClick={(e) => { that.props.auth.logout(that.props.history.location.pathname!=="/user"?window.location.href:window.location.origin) }} >{I18n.t("topbar.logout")}</span>
                   </div>
             }
@@ -6124,9 +6127,9 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                                  //console.log("thumb",thumb)
                                  return (
                                     <div>
-                                       <a href={uri}><div class={"header "+(thumb?"thumb":"")} {...thumb?{style:{"backgroundImage":"url("+ thumb+"/full/"+(thumb.includes(".bdrc.io/")?"!2000,195":",195")+"/0/default.jpg)"}}:{}}></div></a>
+                                       <Link to={uri}><div class={"header "+(thumb?"thumb":"")} {...thumb?{style:{"backgroundImage":"url("+ thumb+"/full/"+(thumb.includes(".bdrc.io/")?"!2000,195":",195")+"/0/default.jpg)"}}:{}}></div></Link>
                                        <p lang={lang}>{value}</p>
-                                       <a href={uri}>{I18n.t("misc.readM")}</a>
+                                       <Link to={uri}>{I18n.t("misc.readM")}</Link>
                                     </div>
                                  )
                               })}

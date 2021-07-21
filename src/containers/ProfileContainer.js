@@ -10,6 +10,8 @@ import { i18nextChangeLanguage } from 'i18next-redux-saga';
 
 import Profile from '../components/ProfileStatic';
 
+import {auth} from '../routes';
+
 const tmp   = "http://purl.bdrc.io/ontology/tmp/" ;
 
 const mapStateToProps = (state,ownProps) => {
@@ -33,7 +35,12 @@ const mapStateToProps = (state,ownProps) => {
    
    if(profile && resetLink && !profile[tmp+"passwordResetLink"]) resetLink = false
 
-   let props = { userID, profile, dictionary, rightPanel, resetLink, config, locale }
+   let profileName
+   if(auth && auth.userProfile) {
+      if(auth.userProfile.name) profileName = auth.userProfile.name
+   }
+
+   let props = { userID, profile, dictionary, rightPanel, resetLink, config, locale, profileName }
 
    return props
 
