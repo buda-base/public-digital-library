@@ -47,6 +47,8 @@ const handleAuthentication = (nextState, isAuthCallback) => {
       auth.handleAuthentication();
    } else if(auth && !isAuthCallback && !auth.isAuthenticated()) { 
       auth.handleAuthentication(true)
+   } else if(auth && auth.isAuthenticated()) {
+      auth.getProfile(() => {})
    }
 }
 
