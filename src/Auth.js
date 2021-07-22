@@ -227,7 +227,7 @@ export default class Auth {
 
         clearTimeout(tokenRenewalTimeout);
 
-        localStorage.setItem('auth0_redirect', JSON.stringify(redirect));
+        localStorage.setItem('auth0_redirect_logout', JSON.stringify(redirect));
         this.auth1.logout({ returnTo: window.location.origin })
      })(this.iiif,this.api),delay)
   }
