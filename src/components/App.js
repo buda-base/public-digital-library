@@ -3195,8 +3195,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
 
          let getBDOtype = (t) => {
-            // TODO: check compliance with BLMP
-            if(t === "Scans") return "bdo:ImageInstance"
+            // DONE: check compliance with BLMP
+            if(t === "Images") return "bdo:ImageInstance"
             return "bdo:"+t
          }
 

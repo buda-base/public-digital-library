@@ -90,7 +90,7 @@ export default class Auth {
         if(token) this.auth1.client.userInfo(token, (err, profile) => {
           if (profile) {
             this.userProfile = profile;
-            store.dispatch(store.dispatch(ui.logEvent("profile")))
+            if(store.ui && store.ui.logged !== "profile") store.dispatch(store.dispatch(ui.logEvent("profile")))
           }
           cb(err, profile);
         });
