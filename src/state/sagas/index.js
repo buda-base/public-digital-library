@@ -1757,7 +1757,7 @@ function sortResultsByNbChunks(results,reverse) {
 
 function rewriteAuxMain(result,keyword,datatype,sortBy,language)
 {
-   let asset = [  _tmp+"possibleAccess", _tmp+"hasEtext", _tmp+"hasImage", _tmp+"catalogOnly"]
+   let asset = [  _tmp+"possibleAccess", _tmp+"hasOpen", _tmp+"hasEtext", _tmp+"hasImage", _tmp+"catalogOnly"]
    let state = store.getState()
    let langPreset = state.ui.langPreset
    if(!sortBy) sortBy = state.ui.sortBy

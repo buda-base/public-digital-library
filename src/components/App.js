@@ -1174,7 +1174,7 @@ class App extends Component<Props,State> {
       loggergen.log("search::",key,_key,label,searchDT) //,this.state,!global.inTest ? this.props:null)
 
       let hasOpenPossibly = ""
-      if(label.includes("Instance") || label.includes("Scan")) hasOpenPossibly = "&f=asset,inc,tmp:possibleAccess" ;
+      if(label.includes("Instance") || label.includes("Scan")) hasOpenPossibly = "&f=asset,inc,tmp:possibleAccess&f=asset,inc,tmp:catalogOnly" ;
 
       if(dataInfo) {
          console.log("new route:",dataInfo)
