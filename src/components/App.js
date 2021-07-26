@@ -1173,8 +1173,8 @@ class App extends Component<Props,State> {
 
       loggergen.log("search::",key,_key,label,searchDT) //,this.state,!global.inTest ? this.props:null)
 
-      let hasOpen = ""
-      if(label.includes("Instance") || label.includes("Scan")) hasOpen = "&f=asset,inc,tmp:hasOpen" ;
+      let hasOpenPossibly = ""
+      if(label.includes("Instance") || label.includes("Scan")) hasOpenPossibly = "&f=asset,inc,tmp:possibleAccess" ;
 
       if(dataInfo) {
          console.log("new route:",dataInfo)
@@ -1193,7 +1193,7 @@ class App extends Component<Props,State> {
          }
          else {
             if(!label) label = this.state.filters.datatype.filter((f)=>["Person","Work"].indexOf(f) !== -1)[0]
-            this.props.history.push({pathname:"/search",search:"?r="+_key+(label?"&t="+label+hasOpen:"")})
+            this.props.history.push({pathname:"/search",search:"?r="+_key+(label?"&t="+label+hasOpenPossibly:"")})
          }
       }
       else if(key.match(/^[^:]*:[^ ]+/))
@@ -1212,7 +1212,7 @@ class App extends Component<Props,State> {
          if(this.props.searches && this.props.searches[this.state.filters.datatype[0]] && this.props.searches[this.state.filters.datatype[0]][this.props.keyword+"@"+this.props.language] && this.props.searches[this.state.filters.datatype[0]][this.props.keyword+"@"+this.props.language].inEtext) {
             inEtext = this.props.searches[this.state.filters.datatype[0]][this.props.keyword+"@"+this.props.language].inEtext
          }
-         this.props.history.push({pathname:"/search",search:"?q="+key+"&lg="+lang+"&t="+label+hasOpen+(inEtext?"&r="+inEtext:"")})
+         this.props.history.push({pathname:"/search",search:"?q="+key+"&lg="+lang+"&t="+label+hasOpenPossibly+(inEtext?"&r="+inEtext:"")})
          
          // TODO add permanent filters (here ?)
       }
@@ -2502,7 +2502,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                }
             }
 
-            let hasOpen = allProps.filter(p => p.type === tmp+"assetAvailability" && p.value === tmp+"hasOpen") 
+            let hasOpenPossibly = allProps.filter(p => p.type === tmp+"assetAvailability" && p.value === tmp+"possibleAccess") 
             let hasImage = allProps.filter(p => p.type === tmp+"assetAvailability" && p.value === tmp+"hasImage") 
             let hasEtext = allProps.filter(p => p.type === tmp+"assetAvailability" && p.value === tmp+"hasEtext") 
 
@@ -2511,7 +2511,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   <div class="match" style={{marginBottom:0}}>
                      <span class="label">{I18n.t("result.hasInstance", {count:nb})}</span>
                      <span class="assets">
-                     { (hasOpen.length > 0) && <span title={getPropLabel(this,tmp+"assetAvailability",false)+": "+getPropLabel(this,tmp+"hasOpen",false)}><img src="/icons/open.png"/></span>}
+                     { (hasOpenPossibly.length > 0) && <span title={getPropLabel(this,tmp+"assetAvailability",false)+": "+getPropLabel(this,tmp+"possibleAccess",false)}><img src="/icons/open.png"/></span>}
                      { (hasImage.length > 0) && <span title={getPropLabel(this,tmp+"assetAvailability",false)+": "+getPropLabel(this,tmp+"hasImage",false)}>{svgImageS}</span>}
                      { (hasEtext.length > 0) && <span title={getPropLabel(this,tmp+"assetAvailability",false)+": "+getPropLabel(this,tmp+"hasEtext",false)}>{svgEtextS}</span>}
                      </span>
@@ -5706,7 +5706,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
        //           let nbResu = this.state.paginate && this.state.paginate.nMax ? this.state.paginate.nMax:(this.state.results&&this.state.results[this.state.id]?this.state.results[this.state.id].resLength:"--")
       
       if(this.state.filters.datatype.includes("Instance") && this.state.results&&this.state.results[this.state.id] && nbResu != this.state.results[this.state.id].resLength && message.length > 2 && message[1].type === "div" 
-         && this.state.filters.facets && this.state.filters.facets[tmp+"assetAvailability"] && this.state.filters.facets[tmp+"assetAvailability"].includes(tmp+"hasOpen"))  {
+         && this.state.filters.facets && this.state.filters.facets[tmp+"assetAvailability"] && this.state.filters.facets[tmp+"assetAvailability"].includes(tmp+"possibleAccess"))  {
          let txt = I18n.t("types."+this.state.filters.datatype[0].toLowerCase(),{count:2}).toLowerCase(); 
          let moreres = <Typography className="no-result more-result">{I18n.t("result.moreres",{txt})} {this.renderResetF()}</Typography>
          let head = message.shift()
