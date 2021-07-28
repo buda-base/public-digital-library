@@ -183,8 +183,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       onCreatePdf:(url:string,iri:string) => {
          dispatch(data.createPdf(url,iri));
       },
-      onHasImageAsset:(url:string,IRI:string) => {
-         dispatch(data.getManifest(url,IRI));
+      onHasImageAsset:(url:string,IRI:string,thumb:string) => {
+         dispatch(data.getManifest(url,IRI,thumb));
       },
       onImageVolumeManifest:(url:string,IRI:string) => {
          dispatch(data.getImageVolumeManifest(url,IRI));

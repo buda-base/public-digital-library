@@ -1547,7 +1547,7 @@ export const getManifest = (state: DataState, action: Action) => {
     state = {
         ...state,
         IIIFinfo:{ ...state.IIIFinfo,
-           [action.meta]:{ ...state.IIIFinfo?state.IIIFinfo[action.meta]:{},
+           [action.meta.rid]:{ ...state.IIIFinfo?state.IIIFinfo[action.meta.rid]:{},
              imageAsset:action.payload
             }
          }

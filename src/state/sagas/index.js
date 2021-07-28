@@ -989,15 +989,15 @@ function getiiifthumbnailurl(imgres) {
    return changedims(origurl, resultw+",")
 }
 
-async function getManifest(url,iri) {
+async function getManifest(url,iri,thumb) {
    try {
 
-      loggergen.log("getM",url,iri)
+      loggergen.log("getM:",url,iri,thumb)
 
       let collecManif
       let manif = await api.loadManifest(url);
       store.dispatch(dataActions.gotManifest(manif,iri))
-      let manifests
+      let manifests, noVol1 = false
       //collection ?
       if(!manif.sequences ) {
          while (!manif.manifests && manif.collections) {
@@ -1017,6 +1017,9 @@ async function getManifest(url,iri) {
             } catch(e) {
                // only volume in collection (#383)
                if(manif.manifests.length === 1) throw e 
+
+               // no volume 1 + no thumbnail (#525)
+               if(!thumb) throw e 
             }
          }
          else throw new Error("collection without manifest list")
@@ -2649,7 +2652,7 @@ export function* watchGetManifest() {
 
    yield takeLatest(
       dataActions.TYPES.getManifest,
-      (action) => getManifest(action.payload,action.meta)
+      (action) => getManifest(action.payload,action.meta.rid,action.meta.thumb)
    );
 }
 
