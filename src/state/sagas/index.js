@@ -11,7 +11,7 @@ import store from '../../index';
 import bdrcApi, { getEntiType } from '../../lib/api';
 import {sortLangScriptLabels, extendedPresets} from '../../lib/transliterators';
 import {auth} from '../../routes';
-import {shortUri,fullUri} from '../../components/App'
+import {shortUri,fullUri,isAdmin} from '../../components/App'
 import qs from 'query-string'
 import history from '../../history.js'
 
@@ -1226,9 +1226,20 @@ function getStats(cat:string,data:{},tree:{})
    
    if(auth && !auth.isAuthenticated()) {
       let hide = config["facets-hide-unlogged"][cat]
-      loggergen.log("hide",hide)
+      //loggergen.log("hide",hide)
       if(hide && hide.length) {
          keys = keys.reduce( (acc,k) => (hide.indexOf(k)===-1?[...acc,k]:acc),[])
+      }
+   }
+   // hide status if not admin, step 1 (#522)
+   let groups
+   if(auth && !auth.isAuthenticated() || auth && auth.userProfile && (groups = auth.userProfile["https://auth.bdrc.io/groups"])) {    
+      let hide = config["facets-hide-notadmin"]
+      //loggergen.log("hide admin",hide,groups)
+      if(!groups || !groups.includes("admin")) {
+         if(hide && hide.length) {
+            keys = keys.reduce( (acc,k) => (hide.indexOf(k)===-1?[...acc,k]:acc),[])
+         }
       }
    }
 
@@ -1765,7 +1776,7 @@ function rewriteAuxMain(result,keyword,datatype,sortBy,language)
    let langPreset = state.ui.langPreset
    if(!sortBy) sortBy = state.ui.sortBy
    let reverse = sortBy && sortBy.endsWith("reverse")
-   let canPopuSort = false, isScan, isTypeScan = datatype.includes("Scan"), inRoot, partType, context
+   let canPopuSort = false, isScan, isTypeScan = datatype.includes("Scan"), inRoot, partType, context, unreleased
 
    result = Object.keys(result).reduce((acc,e)=>{
       if(e === "main") {
@@ -1782,8 +1793,9 @@ function rewriteAuxMain(result,keyword,datatype,sortBy,language)
             inRoot = false
             partType = ""
             context = []
+            unreleased = false
 
-            if(auth && !auth.isAuthenticated()) {	
+            if(auth && !auth.isAuthenticated() || !isAdmin(auth)) {	
                let status = result[e][k].filter(k => k.type === adm+"status" || k.type === tmp+"status")	
                if(status && status.length) status = status[0].value	
                else status = null	
@@ -1811,6 +1823,10 @@ function rewriteAuxMain(result,keyword,datatype,sortBy,language)
                   } else {
                      if(!context.includes(e.type)) context.push(e.type)
                   } 
+               } else if(e.type === _tmp+"status" && e.value) {
+                  if(!e.value.match(/Released/)) { 
+                     unreleased = true
+                  }
                }
                return e
             } )
@@ -1825,6 +1841,10 @@ function rewriteAuxMain(result,keyword,datatype,sortBy,language)
 
             for(let ctx of context){
                res.push({ type:_tmp+"matchContext", value: ctx})
+            }
+
+            if(unreleased) {
+               res.push({type:_tmp+"nonReleasedItems", value:_tmp+"show"})
             }
 
 

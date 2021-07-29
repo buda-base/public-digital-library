@@ -826,6 +826,13 @@ function getVal(label)
    return val
 }
 
+export function isAdmin(auth) {
+   let groups, result = auth && auth.isAuthenticated() && auth.userProfile && (groups = auth.userProfile["https://auth.bdrc.io/groups"]) && groups.includes("admin")
+   console.log("isAdm:",result)
+   return result
+}
+
+
 const TagTab = {
    "Abstract Work":CropFreeIcon,
    "Work Has Expression":CenterFocusStrong,
@@ -3038,7 +3045,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
       let status = "",warnStatus,warnLabel
 
-      if(this.props.auth && this.props.auth.isAuthenticated())
+      if(isAdmin(this.props.auth))
       {
          if(allProps) status = allProps.filter(k => k.type === adm+"status" || k.type === tmp+"status")
          if(status && status.length) status = status[0].value
@@ -3910,6 +3917,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
    }
    */
 
+
+
    handleResults(types,counts,message,results,paginate,bookmarks,resLength) 
    {
       this._menus = {}
@@ -3927,6 +3936,11 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
       //if(displayTypes.length) displayTypes = displayTypes.sort(function(a,b) { return searchTypes.indexOf(a) - searchTypes.indexOf(b) })
 
       //loggergen.log("list x types",list,types,displayTypes)
+
+
+      // hide status if not admin, step 2 (#522)
+      const removeUnreleased = !isAdmin(this.props.auth) || !this.state.filters.facets || !this.state.filters.facets[tmp+"nonReleasedItems"]
+
 
       for(let t of displayTypes) {
 
@@ -4433,7 +4447,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   //if(n != 0 && willBreak) break;
                   //else willBreak = false ;
 
-                  if(this.props.auth && !this.props.auth.isAuthenticated())
+                  if(removeUnreleased)
                   {
                      let allProps = sublist[o], status = allProps.filter(k => k.type === adm+"status" || k.type === tmp+"status")
                      if(status && status.length) status = status[0].value

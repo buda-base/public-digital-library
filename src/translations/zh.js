@@ -175,7 +175,8 @@ const zhTranslation = {
       "tmp:nameContext":"Name",
       "tmp:noteMatch":"Note",
       "tmp:possibleAccess":"Access Possible",
-      "tmp:catalogOnly":"Catalog Only"
+      "tmp:catalogOnly":"Catalog Only",
+      "tmp:nonReleasedItems":"Non-released items"
    },
    result:{
       open:"开放",
