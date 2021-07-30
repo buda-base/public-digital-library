@@ -2238,7 +2238,20 @@ h4:hover a.no-bdrc img { opacity:1; }
 /* ------------------------------------------------------------------------------------------------------------------------ properties/misc */
 
 .resource .data.access { text-align:center; padding-bottom:80px;}
-.resource .data.access h3 { display:"block" ; margin-bottom:15px; max-width:720px; }
+.resource .data.access h3 { display:flex ; margin-bottom:15px; max-width:720px; justify-content: center; align-items: center; }
+.resource .data.access h3 span { padding:0 10px; }
+.resource .data.access h3::before { content:''; width:50px; height:50px; background-image:url("/icons/unknown.svg"); background-size:contain; background-repeat:no-repeat;flex-shrink:0;
+   background-position: center right;  
+}
+.resource .data.access.hasIA h3 { align-items:flex-start; }
+.resource .data.access.hasIA h3::before { margin-top:10px;}
+
+.resource .data.access.fairuse h3::before,
+.resource .data.access.hasIA h3::before { background-image:url("/icons/fair_use.svg");  }
+
+.resource .data.access.notyet h3::before { background-image:url("/icons/noimg.svg");  }
+
+.resource .data.access.sealed h3::before { background-image:url("/icons/sealed.svg");  }
 
 .resource .data.top-props .has-collapse:not(.custom):last-child { margin-bottom:-25px; }
 
