@@ -1061,12 +1061,39 @@ class ResourceViewer extends Component<Props,State>
          let 
             work = getElem(bdo+"instanceOf",props.IRI),
             instance = getElem(bdo+"instanceReproductionOf",props.IRI),
-            images = getElem(bdo+"instanceHasReproduction",props.IRI)
+            images = getElem(bdo+"instanceHasReproduction",props.IRI),
+            _T = getEntiType(props.IRI)
+
+
+            
+
+         // no scans for instance/work (#527)
+         if(_T == "Instance" && state.title && !state.title.images && (!root || !root.length)) { 
+            
+               console.warn("no scans!",_T)
+
+         } else if(_T === "Work" && state.title && state.title.instance && !state.title.images) {
+
+            let img = getElem(bdo+"instanceHasReproduction",shortUri(state.title.instance[0].value))
+            let inRoot = getElem(bdo+"inRootInstance",shortUri(state.title.instance[0].value))
+
+            if((!img || !img.length)  && (!inRoot || !inRoot.length)) {
+
+               console.warn("no scans or not loaded yet?",_T,img,inRoot)
+
+            } else {
+
+               console.warn("not has no scans!",_T,img,inRoot)
+
+            }
+            
+         }
+
+
 
          // TODO find a way to keep an existing Etext/Images tab
          //if(images) images = images.filter(e => getEntiType(e.value) === "Images")
 
-         let _T = getEntiType(props.IRI)
 
          //loggergen.log("title!",_T,JSON.stringify(state.title,null,3),JSON.stringify(work,null,3),JSON.stringify(instance,null,3),JSON.stringify(images,null,3))
 
@@ -1120,7 +1147,7 @@ class ResourceViewer extends Component<Props,State>
                s.title = { work:[ { type:"uri", value:fullUri(props.IRI) } ] }   
                let has = getElem(bdo+"workHasInstance",props.IRI)
                
-               //loggergen.log("has!",has)
+               //console.warn("has!",has)
 
                // take a guess using ids [TODO add instance type to query]
                if(has && has.length <= 2) {
