@@ -9117,7 +9117,7 @@ minipass@^3.0.0, minipass@^3.1.1:
 
 "mirador@https://github.com/buda-base/mirador#2.7.0-bdrc":
   version "2.7.0"
-  resolved "https://github.com/buda-base/mirador#bbb4472f6cb844ee0af697780d63df112e6d5de2"
+  resolved "https://github.com/buda-base/mirador#f67168590cc345fbe58fcbe3b7d4a7c009c4eca3"
   dependencies:
     bootbox "^4.4.0"
     bootstrap "^3.3.7"
@@ -10053,9 +10053,9 @@ pbkdf2@^3.0.3:
     sha.js "^2.4.8"
 
 perfect-scrollbar@^1.5.0:
-  version "1.5.1"
-  resolved "https://registry.yarnpkg.com/perfect-scrollbar/-/perfect-scrollbar-1.5.1.tgz#8ee5b3ca06ce9c3f7338fd4ab67a55248a6cf3be"
-  integrity sha512-MrSImINnIh3Tm1hdPT6bji6fmIeRorVEegQvyUnhqko2hDGTHhmjPefHXfxG/Jb8xVbfCwgmUIlIajERGXjVXQ==
+  version "1.5.2"
+  resolved "https://registry.yarnpkg.com/perfect-scrollbar/-/perfect-scrollbar-1.5.2.tgz#41167ac6bc95e3a5e87a7402fa36fdacca9bc298"
+  integrity sha512-McHAinFkyzKbBZrFtb4MT2mxkehp15KvOX/UrjB8C5EZZXHTHgyETo5IGFYtHRTI2Pb2bsV0OE0YnkjT9Cw3aw==
 
 performance-now@^2.1.0:
   version "2.1.0"
@@ -13428,9 +13428,9 @@ ua-parser-js@^0.7.18:
   integrity sha512-6Gurc1n//gjp9eQNXjD9O3M/sMwVtN5S8Lv9bvOYBfKfDNiIIhqiyi01vMBO45u4zkDE420w/e0se7Vs+sIg+g==
 
 uglify-js@^3.1.4:
-  version "3.13.10"
-  resolved "https://registry.yarnpkg.com/uglify-js/-/uglify-js-3.13.10.tgz#a6bd0d28d38f592c3adb6b180ea6e07e1e540a8d"
-  integrity sha512-57H3ACYFXeo1IaZ1w02sfA71wI60MGco/IQFjOqK+WtKoprh7Go2/yvd2HPtoJILO2Or84ncLccI4xoHMTSbGg==
+  version "3.14.1"
+  resolved "https://registry.yarnpkg.com/uglify-js/-/uglify-js-3.14.1.tgz#e2cb9fe34db9cb4cf7e35d1d26dfea28e09a7d06"
+  integrity sha512-JhS3hmcVaXlp/xSo3PKY5R0JqKs5M3IV+exdLHW99qKvKivPO4Z8qbej6mte17SOPqAOVMjt/XGgWacnFSzM3g==
 
 unbox-primitive@^1.0.1:
   version "1.0.1"
@@ -13607,9 +13607,9 @@ uri-js@^4.2.2:
     punycode "^2.1.0"
 
 urijs@^1.16.1:
-  version "1.19.6"
-  resolved "https://registry.yarnpkg.com/urijs/-/urijs-1.19.6.tgz#51f8cb17ca16faefb20b9a31ac60f84aa2b7c870"
-  integrity sha512-eSXsXZ2jLvGWeLYlQA3Gh36BcjF+0amo92+wHPyN1mdR8Nxf75fuEuYTd9c0a+m/vhCjRK0ESlE9YNLW+E1VEw==
+  version "1.19.7"
+  resolved "https://registry.yarnpkg.com/urijs/-/urijs-1.19.7.tgz#4f594e59113928fea63c00ce688fb395b1168ab9"
+  integrity sha512-Id+IKjdU0Hx+7Zx717jwLPsPeUqz7rAtuVBRLLs+qn+J2nf9NGITWVCxcijgYxBqe83C7sqsQPs6H1pyz3x9gA==
 
 urix@^0.1.0:
   version "0.1.0"

@@ -5123,7 +5123,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
 
                               let pdfMsg = I18n.t("resource.gener1pdf")
-                              let zipMsg = "ZIP"
+                              let zipMsg = I18n.t("resource.gener0zip")
 
                               if(Ploading) {
                                  pdfMsg = I18n.t("resource.gener2pdf")
@@ -5145,7 +5145,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                               }
 
                               if(Zloaded) {                                 
-                                 zipMsg =  (Ploaded?"ZIP":I18n.t("resource.gener3zip"))
+                                 zipMsg =  (Ploaded?I18n.t("resource.gener0zip"):I18n.t("resource.gener3zip"))
                               }
 
                               if(Zerror) {
