@@ -1159,13 +1159,13 @@ class ResourceViewer extends Component<Props,State>
 
          // no scans for instance/work (#527)
          let catalogOnly = state.catalogOnly
-         if(_T == "Instance" && state.title && !state.title.images && (!root || !root.length)) {             
+         if(_T == "Instance" && state.title && !state.title.images && (!s || !s.title || !s.title.images) && (!root || !root.length)) {             
             //console.warn("no scans!",_T)
             catalogOnly = true 
-         } else if(_T === "Work" && state.title && state.title.instance && !state.title.images) {
+         } else if(_T === "Work" && state.title && state.title.instance && !state.title.images ) {
             let img = getElem(bdo+"instanceHasReproduction",shortUri(state.title.instance[0].value))
             let inRoot = getElem(bdo+"inRootInstance",shortUri(state.title.instance[0].value))
-            if((!img || !img.length)  && (!inRoot || !inRoot.length)) {
+            if((!img || !img.length)  && (!inRoot || !inRoot.length) && (!s || !s.title || !s.title.images) ) {
                //console.warn("no scans or not loaded yet?",_T,img,inRoot)
                catalogOnly = true 
             } else {
@@ -1177,7 +1177,7 @@ class ResourceViewer extends Component<Props,State>
             if(!s) s = { ...state }
             s.catalogOnly = catalogOnly
          }
-         //console.warn("catOn:",catalogOnly)
+         console.warn("catOn:",catalogOnly)
 
 
 
