@@ -46,7 +46,7 @@ const boTranslation = {
       instance:"དཔེ་རྒྱུན།",
       images:"བཤེར་པར།",
       volume:"བཤེར་པར།",
-      volume_num:"པོད། {{num,counttobo}}",
+      volume_num:"པོད། {{num,counttobo}} [{{id}}]",
       searchIn:"{{type}}",
       product:"Product",
       scan:"བཤེར་པར།",

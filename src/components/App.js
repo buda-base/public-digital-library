@@ -828,7 +828,7 @@ function getVal(label)
 
 export function isAdmin(auth) {
    let groups, result = auth && auth.isAuthenticated() && auth.userProfile && (groups = auth.userProfile["https://auth.bdrc.io/groups"]) && groups.includes("admin")
-   console.log("isAdm:",result)
+   //console.log("isAdm:",result)
    return result
 }
 

@@ -39,7 +39,7 @@ const zhTranslation = {
       images:"图像",
       searchIn:"{{type}}",
       volume:"卷",
-      volume_num:"第{{num}}卷",
+      volume_num:"第{{num}}卷 [{{id}}]",
       scan:"Scan",
       serial:"Series",
       match:"match"

@@ -93,7 +93,7 @@ import 'react-tabs/style/react-tabs.css';
 
 import {svgEtextS,svgInstanceS,svgImageS} from "./icons"
 
-import {keywordtolucenequery,lucenequerytokeyword,lucenequerytokeywordmulti} from './App';
+import {keywordtolucenequery,lucenequerytokeyword,lucenequerytokeywordmulti, isAdmin} from './App';
 
 import HTMLparse from 'html-react-parser';
 
@@ -2160,7 +2160,7 @@ class ResourceViewer extends Component<Props,State>
       return ret
    }
 
-   getInfo(prop,infoBase,withProp)
+   getInfo(prop,infoBase,withProp,parent = "")
    {
       let lang, info = [ getLangLabel(this, prop, infoBase.filter((e)=>(e.type === skos+"prefLabel" || e.type === skos+"altLabel" || e.type === foaf+"name" 
                                                                        || e.fromKey === skos+"prefLabel" || e.fromKey === skos+"altLabel" || e.fromKey === foaf+"name" ) ) ) ]
@@ -2205,7 +2205,7 @@ class ResourceViewer extends Component<Props,State>
                if(!lang) lang = infoBase[0]["lang"]
                if(lang) info = infoBase[0].value 
                else info = null
-               if(infoBase[0].type && (infoBase[0].type == bdo+"volumeNumber" || infoBase[0].fromKey == bdo+"volumeNumber")) info = I18n.t("types.volume_num",{num:infoBase[0].value}) ;
+               if(infoBase[0].type && (infoBase[0].type == bdo+"volumeNumber" || infoBase[0].fromKey == bdo+"volumeNumber")) info = I18n.t("types.volume_num",{num:infoBase[0].value, id:shortUri(parent).replace(/^[^:]+:/,"")}) ;
                else if(info && info.match(/purl[.]bdrc/)) info = null
                //loggergen.log("info0",info)
             }
@@ -2271,7 +2271,7 @@ class ResourceViewer extends Component<Props,State>
             return JSON.stringify(elem);
          }
 
-         //loggergen.log("uriformat",prop,elem.value,elem,dic,withProp,show)
+         loggergen.log("uriformat",prop,elem.value,elem,dic,withProp,show)
          
          if(!elem.value.match(/^http:\/\/purl\.bdrc\.io/) /* && !hasExtPref */ && ((!dic || !dic[elem.value]) && !prop.match(/[/#]sameAs/))) {
             let link = elem.value
@@ -2323,7 +2323,7 @@ class ResourceViewer extends Component<Props,State>
          //loggergen.log("base:", noLink, JSON.stringify(infoBase,null,3))
 
          if(infoBase) {
-            let { _info, _lang } = this.getInfo(prop,infoBase,withProp) 
+            let { _info, _lang } = this.getInfo(prop,infoBase,withProp,elem.value) 
             info = _info
             lang = _lang
 
@@ -5640,7 +5640,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                   else if(this.state.openEtext && k == bdo+"eTextHasChunk" && kZprop.indexOf(bdo+"eTextHasPage") === -1) {
                      return this.renderEtextHasChunk(elem, k, tags)                     
                   }
-                  else if(k !== bdo+"eTextHasChunk" && k !== bdo+"eTextHasPage" ) {
+                  else if(k !== bdo+"eTextHasChunk" && k !== bdo+"eTextHasPage" && (k !== bdo+"instanceHasVolume" || this.props.logged === "admin")) {
                      return this.renderGenericProp(elem, k, tags, hasMaxDisplay) //div!=="ext-props"?hasMaxDisplay:-1)
                   }
                }
@@ -5654,11 +5654,6 @@ perma_menu(pdfLink,monoVol,fairUse,other)
       let groups 
       if(div == "ext-props" && this.props.auth && this.props.auth.userProfile && (groups = this.props.auth.userProfile["https://auth.bdrc.io/groups"])) {         
          if(groups.includes("admin")) {
-            data.unshift(
-               <a class="" onClick={() => this.setState({collapse:{...this.state.collapse, commit:!this.state.collapse["commit"]}})}>
-                  {I18n.t(this.state.collapse["commit"]?"resource.commitH":"resource.commitV")}
-               </a>
-            )
             if(this.props.resources && this.props.resources[this.props.IRI]) {                
                let logs = this.props.resources[this.props.IRI][bda+this.props.IRI.replace(/bdr:/,"")]
                if(logs && logs[adm+"logEntry"]) {
@@ -5693,7 +5688,15 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                   let tags = this.format("h4",adm+"logEntry","",false,"sub",logs)
                   logs = this.renderGenericProp(logs, adm+"logEntry", tags, -1) 
                   if(this.state.collapse["commit"]) data.push(logs)
-                  else data.push(<div></div>)
+                  else if(logs && logs.length) data.push(<div></div>)
+
+                  if(logs && logs.length) {
+                     data.unshift(
+                        <a class="" onClick={() => this.setState({collapse:{...this.state.collapse, commit:!this.state.collapse["commit"]}})}>
+                           {I18n.t(this.state.collapse["commit"]?"resource.commitH":"resource.commitV")}
+                        </a>
+                     )
+                  }
                }
             }
          }

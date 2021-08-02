@@ -9,7 +9,7 @@ import Panel from 'react-bootstrap/lib/Panel';
 import ControlLabel from 'react-bootstrap/lib/ControlLabel';
 import Glyphicon from 'react-bootstrap/lib/Glyphicon';
 import { Link } from 'react-router-dom';
-import {top_right_menu} from './components/App';
+import {top_right_menu, isAdmin} from './components/App';
 import ResourceViewerContainer,{ UserViewerContainer } from './containers/ResourceViewerContainer'
 
 import bdrcApi from './lib/api';
@@ -83,14 +83,16 @@ export default class Auth {
 
   getProfile(cb) {
     let tO = setInterval( () => {
-      console.log("getP",this.auth1)
+      console.log("getP:",this.auth1)
       if(this.auth1)  {
         clearInterval(tO);
         var token = localStorage.getItem('access_token')
         if(token) this.auth1.client.userInfo(token, (err, profile) => {
           if (profile) {
-            this.userProfile = profile;
-            if(store.ui && store.ui.logged !== "profile") store.dispatch(store.dispatch(ui.logEvent("profile")))
+            this.userProfile = profile;       
+            let val = "profile", groups
+            if((groups = profile["https://auth.bdrc.io/groups"]) && groups.includes("admin")) val = "admin"     
+            if(store.getState().ui.logged !== val) store.dispatch(ui.logEvent(val))
           }
           cb(err, profile);
         });

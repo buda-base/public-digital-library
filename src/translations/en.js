@@ -55,7 +55,7 @@ const enTranslation = {
       instance_plural:"Versions",
       images:"Scans",
       volume:"Volume",
-      volume_num:"Volume {{num}}",
+      volume_num:"Volume {{num}} [{{id}}]",
       searchIn:"in {{type}}",
       product:"Collection",
       product_plural:"Collections",
