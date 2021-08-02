@@ -206,7 +206,8 @@ type State = {
    initCitation?:boolean,
    citationStyle?:string,
    citationLang?:string,
-   citationRID?:string
+   citationRID?:string,
+   catalogOnly?:boolean
  }
 
 
@@ -1067,30 +1068,6 @@ class ResourceViewer extends Component<Props,State>
 
             
 
-         // no scans for instance/work (#527)
-         if(_T == "Instance" && state.title && !state.title.images && (!root || !root.length)) { 
-            
-               console.warn("no scans!",_T)
-
-         } else if(_T === "Work" && state.title && state.title.instance && !state.title.images) {
-
-            let img = getElem(bdo+"instanceHasReproduction",shortUri(state.title.instance[0].value))
-            let inRoot = getElem(bdo+"inRootInstance",shortUri(state.title.instance[0].value))
-
-            if((!img || !img.length)  && (!inRoot || !inRoot.length)) {
-
-               console.warn("no scans or not loaded yet?",_T,img,inRoot)
-
-            } else {
-
-               console.warn("not has no scans!",_T,img,inRoot)
-
-            }
-            
-         }
-
-
-
          // TODO find a way to keep an existing Etext/Images tab
          //if(images) images = images.filter(e => getEntiType(e.value) === "Images")
 
@@ -1178,6 +1155,32 @@ class ResourceViewer extends Component<Props,State>
             if(!s) s = { ...state }
             s.title = { work:[ { type:"uri", value:fullUri(props.IRI) } ] }
          }
+
+
+         // no scans for instance/work (#527)
+         let catalogOnly = state.catalogOnly
+         if(_T == "Instance" && state.title && !state.title.images && (!root || !root.length)) {             
+            //console.warn("no scans!",_T)
+            catalogOnly = true 
+         } else if(_T === "Work" && state.title && state.title.instance && !state.title.images) {
+            let img = getElem(bdo+"instanceHasReproduction",shortUri(state.title.instance[0].value))
+            let inRoot = getElem(bdo+"inRootInstance",shortUri(state.title.instance[0].value))
+            if((!img || !img.length)  && (!inRoot || !inRoot.length)) {
+               //console.warn("no scans or not loaded yet?",_T,img,inRoot)
+               catalogOnly = true 
+            } else {
+               //console.warn("not has no scans!",_T,img,inRoot)
+               catalogOnly = false 
+            }            
+         }
+         if(catalogOnly != state.catalogOnly) {
+            if(!s) s = { ...state }
+            s.catalogOnly = catalogOnly
+         }
+         //console.warn("catOn:",catalogOnly)
+
+
+
 
          //loggergen.log("title?",JSON.stringify(state.title,null,3),JSON.stringify(s?s.title:state.title,null,3),props.IRI,_T)
       }
@@ -7052,9 +7055,12 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          let baseW = this.state.title.work 
          wTitle = getWtitle(baseW);
 
-         baseW = this.state.title.images 
-         rTitle = getWtitle(baseW)
-
+         if(!this.state.catalogOnly) {
+            baseW = this.state.title.images 
+            rTitle = getWtitle(baseW)
+         } else {
+            rTitle = <h2 class="catalogOnly" title={I18n.t("resource.noImages")}><span class="T catalog">{I18n.t("types.images")}<span class="RID">{I18n.t("prop.tmp:catalogOnly")}</span></span></h2>
+         }
       }
       else if(_T === "Images") { 
          rTitle = title ; 
@@ -7081,8 +7087,12 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          let baseW = this.state.title.instance
          iTitle = getWtitle(baseW)
 
-         baseW = this.state.title.images
-         rTitle = getWtitle(baseW)
+         if(!this.state.catalogOnly) {
+            baseW = this.state.title.images
+            rTitle = getWtitle(baseW)
+         } else {
+            rTitle = <h2 class="catalogOnly" title={I18n.t("resource.noImages")}><span class="T catalog">{I18n.t("types.images")}<span class="RID">{I18n.t("prop.tmp:catalogOnly")}</span></span></h2>
+         }
       }
       
       console.log("_T!!",_T)

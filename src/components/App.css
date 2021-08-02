@@ -758,6 +758,7 @@ a.result + #matches .result-content::before { left:110px; width:calc(100% - 110p
 .match a { /*word-break:  break-word;*/ overflow-wrap: break-word; }
 .match .label.invisible { opacity:0; }
 
+#matches .match.same.As,
 #matches .match.same.as,
 #matches .match.Same.As { display:none;}
 
@@ -1683,6 +1684,9 @@ span[lang^='sa-']:not([lang$='-ewts']) { text-transform: capitalize;}
 .resource .title h2.on .T.instance::before { background-image:url("/icons/instance_50b.png"); }
 .resource .title h2.on .T.images::before { background-image:url("/icons/images_50b.png"); }
 
+.resource .title h2.catalogOnly { cursor:not-allowed; }
+.resource .title h2.catalogOnly > * { color:rgba(0,0,0,0.35); }
+.resource .title h2 .T.catalog::before { background-image:url("/icons/noimg.svg"); background-size: 45px auto; opacity:0.65;}
 
 .resource .title h2 .T.etext::before { background-image:url("/icons/etext.png"); background-size: contain;}
 

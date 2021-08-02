@@ -455,7 +455,8 @@ const zhTranslation = {
          mla:"Modern Language Association",
          chicago:"Chicago Manual of Style",
          apa:"American Psychological Association"         
-      }
+      },
+      noImages:"BDRC does not have associated images, the record is purely for reference"
    },
    mirador:{
       return:"回到BUDA",
