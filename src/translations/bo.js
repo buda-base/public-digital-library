@@ -521,7 +521,8 @@ const boTranslation = {
       OCR:"These etexts were created through OCR (optical character recognition), not manually input, and have not been edited. OCR for Tibetan script is not 100% perfect but it is accurate enough to create text that will enhance the BDRC database. We hope that etexts like these improve the discoverability and usefulness of the BDRC archive for you.",
       quality0:"We acknowledge the poor quality of these scans, which might be difficult to read or in the wrong order, and we apologize for it. We think these might still be useful for scholarship and make them available, while searching for higher quality ones.",
       fairUseIA1:"This work is <bold>copyrighted</bold>. As a result, BDRC can only make very limited portions available for private research and study. The full text of the work is viewable on Internet Archive, a close partner of ours, through their Open Library program.",
-      fairUseIA2:"Access this work on Internet Archive"
+      fairUseIA2:"Access this work on Internet Archive",
+      not:"Images not available."
    },
    location:{
       beginV:"པོད་ {{num,counttobo}} ནས་",

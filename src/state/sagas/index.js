@@ -8,7 +8,7 @@ import * as dataActions from '../data/actions';
 import * as uiActions from '../ui/actions';
 import selectors from '../selectors';
 import store from '../../index';
-import bdrcApi, { getEntiType } from '../../lib/api';
+import bdrcApi, { getEntiType, ResourceNotFound } from '../../lib/api';
 import {sortLangScriptLabels, extendedPresets} from '../../lib/transliterators';
 import {auth} from '../../routes';
 import {shortUri,fullUri,isAdmin} from '../../components/App'
@@ -1022,7 +1022,10 @@ async function getManifest(url,iri,thumb) {
                if(!thumb) throw e 
             }
          }
-         else throw new Error("collection without manifest list")
+         else { 
+            //throw new Error("collection without manifest list")
+            throw new ResourceNotFound('The resource does not exist.',444);
+         }
       }      
 
       if(manif && manif.sequences && manif.sequences[0] && manif.sequences[0].canvases) {

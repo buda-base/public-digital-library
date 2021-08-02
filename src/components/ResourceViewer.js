@@ -207,7 +207,7 @@ type State = {
    citationStyle?:string,
    citationLang?:string,
    citationRID?:string,
-   catalogOnly?:boolean
+   catalogOnly?:{}
  }
 
 
@@ -1158,7 +1158,8 @@ class ResourceViewer extends Component<Props,State>
 
 
          // no scans for instance/work (#527)
-         let catalogOnly = state.catalogOnly
+         let catalogOnly = false
+         if(state.catalogOnly && state.catalogOnly[props.IRI] !== undefined) catalogOnly = catalogOnly[props.IRI] 
          if(_T == "Instance" && state.title && !state.title.images && (!s || !s.title || !s.title.images) && (!root || !root.length)) {             
             //console.warn("no scans!",_T)
             catalogOnly = true 
@@ -1173,11 +1174,11 @@ class ResourceViewer extends Component<Props,State>
                catalogOnly = false 
             }            
          }
-         if(catalogOnly != state.catalogOnly) {
+         if(catalogOnly) {
             if(!s) s = { ...state }
-            s.catalogOnly = catalogOnly
+            s.catalogOnly = { ...s.catalogOnly, [props.IRI]:true }
          }
-         console.warn("catOn:",catalogOnly)
+         console.warn("catOn:",catalogOnly,s.catalogOnly)
 
 
 
@@ -6030,8 +6031,8 @@ perma_menu(pdfLink,monoVol,fairUse,other)
       let elem = this.getResourceElem(adm+"access");
       if(elem && elem.length) elem = elem[0].value ;
 
-      if ( this.props.manifestError && this.props.manifestError.error.code === 404)
-         return  <div class="data access notyet"><h3><span style={{textTransform:"none"}}>{I18n.t("access.notyet")}</span></h3></div>
+      if ( this.props.manifestError && [404, 444].includes(this.props.manifestError.error.code))
+         return  <div class="data access notyet"><h3><span style={{textTransform:"none"}}>{I18n.t(this.props.outline?"access.not":"access.notyet")}</span></h3></div>
       else if ( this.props.manifestError && (!this.props.auth || this.props.auth && (this.props.manifestError.error.code === 401 || this.props.manifestError.error.code === 403) )) 
          if(elem && elem.includes("RestrictedSealed"))
             return  <div class="data access sealed"><h3><span style={{textTransform:"none"}}><Trans i18nKey="access.sealed" components={{ bold: <u /> }} /> <a href="mailto:help@bdrc.io">help@bdrc.io</a>{I18n.t("punc.point")}</span></h3></div>
@@ -6585,7 +6586,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
                               let nav = []
 
-                              if(g.contentLocation) {
+                              if(g.contentLocation && (!this.state.catalogOnly || !this.state.catalogOnly[this.props.IRI])) {
                                  if(!g.details) g.details = []
                                  g.hasImg = "/show/"+g["@id"].replace(/^((bdr:MW[^_]+)_[^_]+)$/,"$1")+"?s="+encodeURIComponent(this.props.history.location.pathname+this.props.history.location.search)+"#open-viewer"
                                  nav.push(<Link to={g.hasImg} class="ulink">{I18n.t("copyright.view")}</Link>)
@@ -7055,11 +7056,11 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          let baseW = this.state.title.work 
          wTitle = getWtitle(baseW);
 
-         if(!this.state.catalogOnly) {
+         if(this.state.catalogOnly  && this.state.catalogOnly[this.props.IRI]) {
+            rTitle = <h2 class="catalogOnly" title={I18n.t("resource.noImages")}><span class="T catalog">{I18n.t("types.images")}<span class="RID">{I18n.t("prop.tmp:catalogOnly")}</span></span></h2>
+         } else {
             baseW = this.state.title.images 
             rTitle = getWtitle(baseW)
-         } else {
-            rTitle = <h2 class="catalogOnly" title={I18n.t("resource.noImages")}><span class="T catalog">{I18n.t("types.images")}<span class="RID">{I18n.t("prop.tmp:catalogOnly")}</span></span></h2>
          }
       }
       else if(_T === "Images") { 
@@ -7087,11 +7088,11 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          let baseW = this.state.title.instance
          iTitle = getWtitle(baseW)
 
-         if(!this.state.catalogOnly) {
+         if(this.state.catalogOnly && this.state.catalogOnly[this.props.IRI]) {
+            rTitle = <h2 class="catalogOnly" title={I18n.t("resource.noImages")}><span class="T catalog">{I18n.t("types.images")}<span class="RID">{I18n.t("prop.tmp:catalogOnly")}</span></span></h2>
+         } else {
             baseW = this.state.title.images
             rTitle = getWtitle(baseW)
-         } else {
-            rTitle = <h2 class="catalogOnly" title={I18n.t("resource.noImages")}><span class="T catalog">{I18n.t("types.images")}<span class="RID">{I18n.t("prop.tmp:catalogOnly")}</span></span></h2>
          }
       }
       
