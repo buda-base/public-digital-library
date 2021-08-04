@@ -518,7 +518,13 @@ const enTranslation = {
          chicago:"Chicago Manual of Style",
          apa:"American Psychological Association"         
       },
-      noImages:"BDRC does not have associated images, the record is purely for reference"
+      noImages:"BDRC does not have associated images, the record is purely for reference",
+      getPDF:"Get images or PDF",
+      print:"Print on demand",
+      clipT:"Text copied",
+      orderVT:"Copy the text below, click on the following link and paste it in the comments box:",
+      contactVT:"Contact Vimala Treasures",
+      contactVTcopy:"I wish to order 1 copy of {{uri}}"
    },
    mirador:{
       return:"return to BUDA",

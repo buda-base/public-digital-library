@@ -34,6 +34,8 @@ import ErrorIcon from '@material-ui/icons/AddCircle';
 import Collapse from '@material-ui/core/Collapse';
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
+import MailIcon from '@material-ui/icons/MailOutline';
+import PrintIcon from '@material-ui/icons/LocalPrintshop';
 import CheckCircle from '@material-ui/icons/CheckCircle';
 import PanoramaFishEye from '@material-ui/icons/PanoramaFishEye';
 import Paper from '@material-ui/core/Paper';
@@ -624,6 +626,21 @@ export function getOntoLabel(dict,locale,lang,props = [skos+"prefLabel", rdfs+"l
    return _lang;
 }
 
+
+// from https://css-tricks.com/better-line-breaks-for-long-urls/
+function formatUrl(url) {
+   var doubleSlash = url.split('//')
+   var formatted = doubleSlash.map(str =>
+      str.replace(/(:)/giu, '$1<wbr>')
+         .replace(/([/~.,\-_?#%])/giu, '<wbr>$1')
+         .replace(/([=&])/giu, '<wbr>$1<wbr>')
+      ).join('//<wbr>')
+
+   console.log("fU:",formatted)
+
+   return formatted
+}
+
 export function top_left_menu(that,pdfLink,monoVol,fairUse)
 {
   return (
@@ -1178,7 +1195,7 @@ class ResourceViewer extends Component<Props,State>
             if(!s) s = { ...state }
             s.catalogOnly = { ...s.catalogOnly, [props.IRI]:true }
          }
-         console.warn("catOn:",catalogOnly,s.catalogOnly)
+         //console.warn("catOn:",catalogOnly,s.catalogOnly)
 
 
 
@@ -2271,7 +2288,7 @@ class ResourceViewer extends Component<Props,State>
             return JSON.stringify(elem);
          }
 
-         loggergen.log("uriformat",prop,elem.value,elem,dic,withProp,show)
+         //loggergen.log("uriformat",prop,elem.value,elem,dic,withProp,show)
          
          if(!elem.value.match(/^http:\/\/purl\.bdrc\.io/) /* && !hasExtPref */ && ((!dic || !dic[elem.value]) && !prop.match(/[/#]sameAs/))) {
             let link = elem.value
@@ -4747,20 +4764,6 @@ class ResourceViewer extends Component<Props,State>
 renderPopupCitation(IRI) {
 
    console.log("rPc:",IRI)
-
-   // from https://css-tricks.com/better-line-breaks-for-long-urls/
-   const formatUrl = (url) => {
-      var doubleSlash = url.split('//')
-      var formatted = doubleSlash.map(str =>
-         str.replace(/(:)/giu, '$1<wbr>')
-            .replace(/([/~.,\-_?#%])/giu, '<wbr>$1')
-            .replace(/([=&])/giu, '<wbr>$1<wbr>')
-         ).join('//<wbr>')
-
-      console.log("fU:",formatted)
-
-      return formatted
-   }
    
    let citation = "", citaD, popupCitation = [];
    if(this.state.collapse.citation && IRI && (citaD = this.props.citationData)) {
@@ -4921,6 +4924,47 @@ renderPopupCitation(IRI) {
    return popupCitation
 }
 
+renderPopupPrint(IRI,place = "bottom-start") {
+   return (
+      <Popper
+         id="popDL"
+         className="print"
+         open={this.state.collapse.print}
+         anchorEl={this.state.anchorEl.print}
+         placement={place}
+      >
+         <ClickAwayListener onClickAway={ev => { this.setState({ printRID:false, collapse:{ ...this.state.collapse, print:false }})}}>
+            <div> 
+               <div class="main">
+                  <p>{I18n.t("resource.orderVT")}</p>
+                  <div>I want to order 1 copy of {HTMLparse(formatUrl(fullUri(IRI)))}</div>
+               </div>
+               <div class="actions">
+                  <CopyToClipboard text={"I want to order 1 copy of "+fullUri(IRI)} onCopy={(e) => {
+                        this.setState({printCopied:true})
+                        setTimeout(()=>this.setState({printCopied:false}), 3000)
+                     }}>                        
+                        <a id="clipB" className={this.state.printCopied?"copied":""}>
+                           { this.state.printCopied 
+                              ? [<CheckIcon/>,I18n.t("resource.clipT")] 
+                              : [<ClipboardIcon/>,I18n.t("resource.clipB")] 
+                           }
+                        </a>
+                  </CopyToClipboard>
+                  <a id="export" href="http://vimalatreasures.org/contact-us.aspx" target="_blank">
+                     <span class="icon"><MailIcon/></span> {I18n.t("resource.contactVT")}
+                  </a>
+               </div>
+            </div>
+            {/*
+            <div class="output">
+               { this.props.loading && <Loader loaded={!this.props.loading}  options={{position:"relative",top:"0px"}}/> }
+               { !this.props.loading && }*/}
+         </ClickAwayListener>
+      </Popper>
+   )
+}
+
 perma_menu(pdfLink,monoVol,fairUse,other)
 {
    let that = this
@@ -5011,7 +5055,8 @@ perma_menu(pdfLink,monoVol,fairUse,other)
    
    let popupCitation = this.renderPopupCitation(!this.state.citationRID?this.props.IRI:this.state.citationRID);
    //this._refs["perma_DL"] = React.createRef();
-   
+
+   let popupPrint =  this.renderPopupPrint(this.state.printRID?this.state.printRID:this.props.IRI,this.state.printRID?"bottom-end":null)
 
    //loggergen.log("same:",same)
 
@@ -5075,8 +5120,8 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
                { pdfLink && 
                   ( (!(that.props.manifestError && that.props.manifestError.error.message.match(/Restricted access/)) /*&& !fairUse*/) || (that.props.auth && that.props.auth.isAuthenticated()))
-                  &&
-               <a> <MenuItem title={I18n.t("resource.downloadAs")+" PDF/ZIP"} onClick={ev =>
+                  && <>
+               <a> <MenuItem onClick={ev =>
                       {
                          //if(that.props.createPdf) return ;
                           if((monoVol && monoVol.match && monoVol.match(/[^0-9]/)) || monoVol > 0){
@@ -5088,8 +5133,17 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                          that.setState({...that.state, collapse:{...this.state.collapse,permaDL:false}, pdfOpen:true,anchorElPdf:({...ev}).currentTarget})
                       }
                    }>
-                   {I18n.t("resource.exportDataAs",{data: "images", format:"PDF/ZIP", interpolation: {escapeValue: false}}) /* TODO use i18next interpolation with nesting '$t(types.images)'*/ }
-                </MenuItem></a>  }
+                   {I18n.t("resource.getPDF")}
+                </MenuItem></a>
+                  <a><MenuItem  onClick={ev => {
+                        that.setState({...that.state, 
+                           collapse:{...this.state.collapse,permaDL:false,print:true},
+                           anchorEl:{...this.state.anchorEl, print:this.state.anchorPermaDL}
+                        })
+                      }}>
+                   {I18n.t("resource.print")}
+                </MenuItem></a>
+                </>  }
 
                { !that.props.manifestError && that.props.imageAsset &&
 
@@ -5123,6 +5177,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
               
          </Popover>
 
+            { popupPrint }
             
             { popupCitation }
    
@@ -6769,7 +6824,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                         let open = this.state.collapse[tag] || (osearch &&  this.state.collapse[tag] === undefined && !e.notMatch)
                         if(pType && pType["@id"]) pType = pType["@id"]
 
-                        const citeRef = React.createRef()
+                        const citeRef = React.createRef(), printRef = React.createRef()
 
                         ret.push(<span class={'top'+ (this.state.outlinePart === e['@id'] || (!this.state.outlinePart && this.props.IRI===e['@id']) ?" is-root":"")+(this.state.collapse[tag]||osearch&&e.hasMatch?" on":"") }>
                               {(e.hasPart && open && osearch && !this.props.outlines[e['@id']]) && <span onClick={(ev) => toggle(ev,root,e["@id"],"",true)} className="xpd" title={I18n.t("resource.otherN")}><RefreshIcon /></span>}
@@ -6820,6 +6875,18 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                                  }}>
                                     <CiteIcon /> 
                                  </span> 
+
+                                 { e.hasImg && 
+                                 <span id="print" title={I18n.t("resource.print")} onClick={ev => {
+                                    let s = { 
+                                       printRID:e["@id"],
+                                       collapse:{ ...this.state.collapse, print:!this.state.collapse.print }, 
+                                       anchorEl:{ ...this.state.anchorEl, print: printRef&&printRef.current?printRef.current:({...ev}).currentTarget }}
+                                    this.setState(s)
+                                 }}>
+                                    {/* <span class="icon"><img src="/icons/print.svg"/></span>  */}
+                                    <PrintIcon/>
+                                 </span> }
                               
                               </div>
                            </span>)

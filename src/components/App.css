@@ -1289,10 +1289,12 @@ h4:not(:hover) > .lang
 
 .resource .data#outline .parTy + span .ulink .before  { display:none !important; }
 
+.resource .data#outline span.is-root #print,
 .resource .data#outline span.is-root #cite,
 .resource .data#outline .is-root h2 a span,
 .resource .data#outline span.is-root a  { color:#d73449;  }
 
+/* .resource .data#outline span.is-root #print svg, */
 .resource .data#outline span.is-root #cite svg { border-color:#d73449 !important;  }
 
 /* .resource .data#outline .is-root a:hover { text-decoration-color: #d73449;} */
@@ -1316,15 +1318,23 @@ h4:not(:hover) > .lang
    vertical-align:middle; /*padding-left:6px;*/margin-left:0px; margin-bottom:1px; 
 }
 
+.resource .data#outline .root + div #print,
 .resource .data#outline .root + div #cite { margin-left:5px !important; display: inline-block; }
+.resource .data#outline .root + div #print svg,
 .resource .data#outline .root + div #cite svg { width:14px !important; height:14px; border:1px solid #343434; border-radius:50%; }
 
+.resource .data#outline .root + div #print svg { border:none; width:19px! important; height:19px;}
+
+.resource .data#outline .root + div #print,
 .resource .data#outline .root + div #cite,
 .resource .data#outline .root + div .permalink {  opacity:0; margin-left:0px; cursor:pointer; }
+.resource .data#outline .root + div .top:hover #print,
 .resource .data#outline .root + div .top:hover #cite,
 .resource .data#outline .root + div .top:hover .permalink  {  opacity:0.8; }
+.resource .data#outline .root + div #print svg,
 .resource .data#outline .root + div #cite svg,
 .resource .data#outline .root + div .permalink img { width:16px; vertical-align: middle !important; }
+.resource .data#outline .root + div .top:hover #print:hover,
 .resource .data#outline .root + div .top:hover #cite:hover,
 .resource .data#outline .root + div .top:hover .permalink:hover { opacity:1; }
 
@@ -1349,6 +1359,7 @@ h4:not(:hover) > .lang
 .resource .data#outline .root + div .top.is-root .hasImg img:first-child,
 .resource .data#outline .root + div .top:not(.is-root) .hasImg img:last-child { display:none;}
 
+.resource .data#outline .root + div .top.is-root #print,
 .resource .data#outline .root + div .top.is-root #cite,
 .resource .data#outline .root + div .top.is-root .permalink,
 .resource .data#outline .root + div .top.is-root #anchor,
@@ -1725,19 +1736,24 @@ span[lang^='sa-']:not([lang$='-ewts']) { text-transform: capitalize;}
    padding:20px 35px; }
 #perma > div button {color:rgba(0,0,0,0.54); }
 
+#popDL.print #clipB,
 #popDL.cite #clipB,
 #perma #permalink { color:white; background-color: #d73449; border-radius:5px;display:flex;align-items: center;justify-content: center; height:40px;
    padding: 0 15px; border:none !important; font-weight:600; font-size:13px; cursor:pointer;
 }
 
+
+#popDL.print { margin-top:5px; }
+#popDL.print > div { padding:16px !important; }
+
 #popDL.cite { background:white; box-shadow: 0 1px 4px #cecece; }
 
+#popDL.print #clipB,
 #popDL.cite #clipB { display:inline-flex; /*margin-left: auto;*/ box-sizing: border-box;}
 
+#popDL.print #clipB svg,
 #popDL.cite #clipB svg,
 #perma #permalink img { display:inline-block; margin-right:10px; }
-
-
 
 #popDL.cite #export,
 #perma #cite,
@@ -1746,12 +1762,15 @@ span[lang^='sa-']:not([lang$='-ewts']) { text-transform: capitalize;}
    
 #perma #rid { margin-left:57px;  /*border-right:1px solid rgba(0,0,0,0.35);*/ }
 
+#popDL.print #export,
 #popDL.cite #export,
 #perma #cite,
 #perma #DL { cursor:pointer; padding-left:16px; display:flex; align-items: center; border-left: 1px solid rgba(0,0,0,0.35);}
 
 #perma #DL svg { vertical-align:-4px; font-size:18px; padding-left:0px;}
 
+#popDL.print #clipB svg,
+#popDL.print #export svg,
 #popDL.cite #export .icon,
 #popDL.cite #clipB svg,
 #perma #cite svg,
@@ -1759,12 +1778,17 @@ span[lang^='sa-']:not([lang$='-ewts']) { text-transform: capitalize;}
    box-sizing:border-box; width:26px; height:26px; padding:5px; margin-right:10px; display:inline-block; vertical-align: middle; border-radius: 50%; box-shadow:0 0 0px 1.35px #343434; 
 }
 
+#popDL.print #export,
 #popDL.cite #export { border:none; padding-right:0; }
+#popDL.print #export .icon img,
 #popDL.cite #export .icon img { width:15px; margin-left:2px; }
 
+#popDL.print #clipB svg,
 #popDL.cite #clipB svg { box-shadow:0 0 0px 1.35px white; }
 
+#popDL.print #clipB.copied,
 #popDL.cite #clipB.copied { background:none; color:#d73449; border:1px solid #d73449 !important; }
+#popDL.print #clipB.copied svg,
 #popDL.cite #clipB.copied svg { box-shadow:0 0 0px 1.35px #d73449; }
 
 #perma #cite {  padding-left:16px;  }
@@ -1772,8 +1796,11 @@ span[lang^='sa-']:not([lang$='-ewts']) { text-transform: capitalize;}
 #perma #cite svg { color:#343434; padding:3px; }
 
 #popDL.cite  { display:flex; margin-top:5px; z-index: 100 !important; }
+#popDL.print > div,
 #popDL.cite .output { width: 480px; padding:16px; display: flex; flex-direction: column; justify-content: center; align-items: center; box-shadow:none; }
+#popDL.print > div .main,
 #popDL.cite .output .main { max-height: 135px; width:100%; margin-bottom:16px; text-align:left; font-size:14px; padding:0 16px 8px 16px; box-sizing: border-box; }
+#popDL.print > div .main > div,
 #popDL.cite .output .main > div {
    padding: 15px;
    /* box-shadow: 0 0 3px 0px #a4a4a4; */
@@ -1782,6 +1809,7 @@ span[lang^='sa-']:not([lang$='-ewts']) { text-transform: capitalize;}
    overflow-y: auto;
 }
 
+#popDL.print > div .actions,
 #popDL.cite .output .actions { width:100%; display:flex; justify-content: space-between; padding:0 16px; box-sizing: border-box;}
 
 #popDL.cite .selected-style { background:#ddd !important; }
@@ -1793,6 +1821,27 @@ span[lang^='sa-']:not([lang$='-ewts']) { text-transform: capitalize;}
 
 
 #popDL.cite li { max-width:150px; white-space:normal; }
+
+
+
+
+#popDL.print > div { max-width:470px; width:470px; }
+
+#popDL.print .main p + div { font-style: italic; }
+#popDL.print > div .main,
+#popDL.print > div .actions { padding:0; }
+#popDL.print > div .main p { margin-top:0; }
+
+#popDL.print > div .actions a:last-child { color:#343434 !important; }
+
+#popDL.print #export svg { padding:4px; }
+
+
+#popDL.cite,
+#popDL.print { z-index:1000000!important;}
+
+
+
 
 #popLang { z-index:100100; }
 #popLang.black > div:last-child { margin-top:0px; }
