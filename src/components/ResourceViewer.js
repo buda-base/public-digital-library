@@ -5056,7 +5056,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
    let popupCitation = this.renderPopupCitation(!this.state.citationRID?this.props.IRI:this.state.citationRID);
    //this._refs["perma_DL"] = React.createRef();
 
-   let popupPrint =  this.renderPopupPrint(this.state.printRID?this.state.printRID:this.props.IRI,this.state.printRID?"bottom-end":null)
+   let popupPrint =  this.renderPopupPrint(this.state.printRID?this.state.printRID:this.props.IRI,this.state.printRID?"bottom-end":"bottom-start")
 
    //loggergen.log("same:",same)
 
