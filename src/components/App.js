@@ -3010,7 +3010,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
    makeResult(id,n,t,lit,lang,tip,Tag,url,rmatch = [],facet,allProps = [],preLit,isInstance)
    {
-      //loggergen.log("res:",lit,id,facet,allProps,n,t,lit,preLit,lang,tip,Tag,rmatch,sameAsRes)
+      //loggergen.log("res:",id,facet,allProps,n,t,lit,preLit,lang,tip,Tag,rmatch,sameAsRes)
 
       // DONE fix scrolling back to result (#425)
       let doRef = true, nsub = n
@@ -4109,7 +4109,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             let unreleased = false
             let label ; // sublist[o].filter((e) => (e.type && e.type.match(/prefLabelMatch$/)))[0]
             let prefL = sublist[o].filter(e => e.type && e.type === skos+"prefLabel")
-            let sList = sublist[o].filter(e => e.type && e.type.endsWith("(label|name)Match")).filter(l => {
+            let sList = sublist[o].filter(e => e.type && e.type.match(/(label|name)Match$/)).filter(l => {
                let val = l.value.replace(/[↦↤]/g,"")
                return prefL.filter(p => p.value === val).length > 0 // keep match only if it is an actual prefLabe<l
             })
@@ -4441,7 +4441,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      }  
                   }
 
-                  //loggergen.log("lit",lit,n)
+                  //loggergen.log("lit:",lit,n)
 
                   //loggergen.log("willB",n,willBreak,categ)
                   //if(n != 0 && willBreak) break;
