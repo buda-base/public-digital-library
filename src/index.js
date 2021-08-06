@@ -43,19 +43,17 @@ import * as data from './state/data/actions' ;
 import history from './history'
 import qs from 'query-string'
 
-import enTranslation from "./translations/en" ;
-import frTranslation from "./translations/fr" ;
-import zhTranslation from "./translations/zh" ;
-import boTranslation from "./translations/bo" ;
-
 import makeMainRoutes from './routes'
+
+const enTranslation = require("./translations/en.json") ;
+const zhTranslation = require("./translations/zh.json") ;
+const boTranslation = require("./translations/bo.json") ;
+
 
 //derprecated
 const translationsObject = {
-
    bo:boTranslation,
    en:enTranslation,
-   //fr:frTranslation,
    zh:zhTranslation,
 }
 
