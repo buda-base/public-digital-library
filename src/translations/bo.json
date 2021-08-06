@@ -529,26 +529,16 @@
       "fairUseIA2": "Access this work on Internet Archive",
       "not": "Images not available."
    },
-   "location": [
-      {
+   "location": {
          "beginV": "པོད་ {{num,counttobo}} ནས་",
          "beginP": "ཤོག་ངོས་ {{num,counttobo}} ནས་",
          "beginL": "ཐིག་ཕྲེང་ {{num,counttobo}} ནས་",
          "endV": "པོད་ {{num,counttobo}} བར།",
          "endP": "ཤོག་ངོས་ {{num,counttobo}} ནས་",
          "endL": "ཐིག་ཕྲེང་ {{num,counttobo}} བར།"
-      },
-      {
-         "beginV": "Begin volume: {{num}}",
-         "beginP": "Begin image: {{num}}",
-         "beginL": "Begin line: {{num}}",
-         "endV": "End volume: {{num}}",
-         "endP": "End image: {{num}}",
-         "endL": "End line: {{num}}"
       }
-   ],
-   "footer": [
-      {
+   },
+   "footer": {
          "BDRC": "Buddhist Digital Resource Center",
          "adr1": "1430 Massachusetts Ave., 5th floor",
          "adr2": "Cambridge, MA, USA 02138",
@@ -559,19 +549,5 @@
          "join": "ང་ཚོའི་སྐོར་ཀྱི་གནས་ཚུལ་གསར་ཤོས་ཤེས་འདོད་ཚེ་འཛུལ་ཞུགས་བྱོས།",
          "subscribe": "མངགས་ཉོ།",
          "support": "ངེད་ཚོགས་པའི་ལས་རིགས་ལ་རྒྱབ་སྐྱོར།"
-      },
-      {
-         "BDRC": "Buddhist Digital Resource Center",
-         "adr1": "1430 Massachusetts Ave., 5th floor",
-         "adr2": "Cambridge, MA, USA 02138",
-         "adr": "Mailing address:<br/>198 Tremont St. #421<br/>Boston, MA, USA 02116",
-         "contact": "CONTACT US",
-         "connect": "Connect with us on social media",
-         "print": "Order printed copies of works referenced on our website",
-         "order": "Order",
-         "join": "Join our newsletter and stay up-to-date",
-         "subscribe": "Subscribe",
-         "support": "Support our mission of preservation and access"
-      }
-   ]
+   }
 }
