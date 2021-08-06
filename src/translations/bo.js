@@ -34,7 +34,7 @@ const boTranslation = {
    types:{
       any:"གང་རུང་།",
       corporation:"ཚོགས་སྡེ།",
-      etext:"འཕྲུལ་ཡིག་ནང་།",
+      etext:"འཕྲུལ་ཡིག",
       etext_title:"འཕྲུལ་ཡིག",
       item:"དཔེ་ཆ།",
       lineage:"ཆོས་བརྒྱུད།",
