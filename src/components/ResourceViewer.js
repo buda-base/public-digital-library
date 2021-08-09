@@ -2373,10 +2373,9 @@ class ResourceViewer extends Component<Props,State>
 
          //loggergen.log("s?",prop,prefix,sameAsPrefix,pretty,elem,info,infoBase)         
 
-         let thumb, thumbV, hasThumbV
+         let thumb, thumbV, hasThumbV, enti = getEntiType(elem.value)
          if(prop === bdo+"workHasInstance"  || prop === tmp+"propHasScans" || prop === tmp+"propHasEtext" ) {
             if(!info) info = [] 
-            let enti = getEntiType(elem.value)
             let sUri = shortUri(elem.value)
 
             let prov = this.getResourceElem(tmp+"provider", sUri, this.props.assocResources)
@@ -2392,7 +2391,12 @@ class ResourceViewer extends Component<Props,State>
             if(enti === "Etext") {
                //ret = [<span class="svg">{svgEtextS}</span>]
                
-               ret = [  <Link to={"/show/"+sUri} class={"images-thumb no-thumb"} style={{"background-image":"url(/icons/etext.png)"}}></Link> ]
+               let vlink = "/"+show+"/"+prefix+":"+pretty+"?s="+encodeURIComponent(this.props.history.location.pathname+this.props.history.location.search)+"#open-viewer"    
+               ret = [  <Link to={"/show/"+sUri} class={"images-thumb no-thumb"} style={{"background-image":"url(/icons/etext.png)"}}></Link> ,
+                     <div class="images-thumb-links">
+                        <Link className={"urilink "+ prefix} to={vlink}>{I18n.t("resource.openViewer")}</Link>
+                        <Link className={"urilink "+ prefix} to={"/"+show+"/"+prefix+":"+pretty}>{I18n.t("resource.openR")}</Link>
+                     </div> ]
                if(prov) ret.push(prov)
             
             }
@@ -2673,7 +2677,9 @@ class ResourceViewer extends Component<Props,State>
          </span> ) }
          else if(pretty.toString().match(/^([A-Z]+[v_0-9-]*[A-Z]*)+$/)){ 
 
-            if(!thumb && !thumbV) ret = (<Link className={"urilink "+ prefix} to={"/"+show+"/"+prefix+":"+pretty}><span lang="">{ret}{prefix+":"+pretty}</span></Link>)
+            if(!thumb && !thumbV) {
+               ret = (<Link className={"urilink "+ prefix} to={"/"+show+"/"+prefix+":"+pretty}><span lang="">{ret}{enti!="Etext"?prefix+":"+pretty:""}</span></Link>)
+            }
             else if(thumb && thumb.length) {
                let thumbUrl = thumb[0].value
                if(!thumbUrl.match(/[/]default[.][^.]+$/)) thumbUrl += "/full/"+(thumb[0].value.includes(".bdrc.io/")?"!2000,145":",145")+"/0/default.jpg"

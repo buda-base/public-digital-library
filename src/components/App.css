@@ -2126,7 +2126,7 @@ body > [id^="menu-"] > div:last-child,
 .resource .data [data-prop="bdo:workHasInstance"]  .images-thumb { float:left; margin-right:10px; }
 
 
-.resource .data [data-prop="tmp:propHasEtext"]  .images-thumb.no-thumb {margin-right:28px; }
+/* .resource .data [data-prop="tmp:propHasEtext"]  .images-thumb.no-thumb {margin-right:28px; } */
 
 .resource .data .images-thumb:hover { border-color:#ccc;}
 
