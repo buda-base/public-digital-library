@@ -49,7 +49,8 @@
       "searchIn": "{{type}}",
       "product": "Product",
       "scan": "བཤེར་པར།",
-      "match": "match"
+      "match": "match",
+      "volume_num_noid": "པོད། {{num,counttobo}}"
    },
    "topbar": {
       "about": "ང་ཚོའི་སྐོར།",
@@ -530,13 +531,12 @@
       "not": "Images not available."
    },
    "location": {
-         "beginV": "པོད་ {{num,counttobo}} ནས་",
-         "beginP": "ཤོག་ངོས་ {{num,counttobo}} ནས་",
-         "beginL": "ཐིག་ཕྲེང་ {{num,counttobo}} ནས་",
-         "endV": "པོད་ {{num,counttobo}} བར།",
-         "endP": "ཤོག་ངོས་ {{num,counttobo}} ནས་",
-         "endL": "ཐིག་ཕྲེང་ {{num,counttobo}} བར།"
-      }
+      "beginV": "པོད་ {{num,counttobo}} ནས་",
+      "beginP": "ཤོག་ངོས་ {{num,counttobo}} ནས་",
+      "beginL": "ཐིག་ཕྲེང་ {{num,counttobo}} ནས་",
+      "endV": "པོད་ {{num,counttobo}} བར།",
+      "endP": "ཤོག་ངོས་ {{num,counttobo}} ནས་",
+      "endL": "ཐིག་ཕྲེང་ {{num,counttobo}} བར།"
    },
    "footer": {
          "BDRC": "Buddhist Digital Resource Center",

@@ -55,6 +55,7 @@
       "images": "Scans",
       "volume": "Volume",
       "volume_num": "Volume {{num}} [{{id}}]",
+      "volume_num_noid": "Volume {{num}}",
       "searchIn": "in {{type}}",
       "product": "Collection",
       "product_plural": "Collections",

@@ -41,7 +41,8 @@
       "volume_num": "第{{num}}卷 [{{id}}]",
       "scan": "Scan",
       "serial": "Series",
-      "match": "match"
+      "match": "match",
+      "volume_num_noid": "第{{num}}卷"
    },
    "topbar": {
       "about": "关于我们",

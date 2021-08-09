@@ -2222,7 +2222,10 @@ class ResourceViewer extends Component<Props,State>
                if(!lang) lang = infoBase[0]["lang"]
                if(lang) info = infoBase[0].value 
                else info = null
-               if(infoBase[0].type && (infoBase[0].type == bdo+"volumeNumber" || infoBase[0].fromKey == bdo+"volumeNumber")) info = I18n.t("types.volume_num",{num:infoBase[0].value, id:shortUri(parent).replace(/^[^:]+:/,"")}) ;
+               if(infoBase[0].type && (infoBase[0].type == bdo+"volumeNumber" || infoBase[0].fromKey == bdo+"volumeNumber"))  {
+                  if(parent) info = I18n.t("types.volume_num",{num:infoBase[0].value, id:shortUri(parent).replace(/^[^:]+:/,"")}) ;
+                  else info = I18n.t("types.volume_num_noid",{num:infoBase[0].value }) ;
+               }
                else if(info && info.match(/purl[.]bdrc/)) info = null
                //loggergen.log("info0",info)
             }
