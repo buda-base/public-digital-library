@@ -1194,6 +1194,9 @@ class ResourceViewer extends Component<Props,State>
          if(catalogOnly) {
             if(!s) s = { ...state }
             s.catalogOnly = { ...s.catalogOnly, [props.IRI]:true }
+         } else if(state.catalogOnly && state.catalogOnly[props.IRI]) {
+            if(!s) s = { ...state }
+            s.catalogOnly = { ...s.catalogOnly, [props.IRI]:false }
          }
          //console.warn("catOn:",catalogOnly,s.catalogOnly)
 
