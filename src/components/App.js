@@ -716,12 +716,13 @@ export function top_right_menu(that,etextTitle,backUrl,etextres)
                   setTimeout(() => { 
                      
                      if(!backUrl) {
-                        let loca = { ...that.props.history.location };                  
-                        const urlParams = new URLSearchParams(loca.search);
-                        if(urlParams.get("backToEtext")) {
-                           loca.pathname = "/show/"+urlParams.get("backToEtext")
+                        let loca = { ...that.props.history.location }, rid                  
+                        const urlParams = new URLSearchParams(loca.search)
+                        if(rid = urlParams.get("backToEtext")) {
+                           loca.pathname = "/show/"+rid
                            delete loca.search
-                           loca.hash = "outline"
+                           delete loca.hash
+                           if(!rid.startsWith("bdr:MW")) loca.hash = "outline"
                            console.log("loca:",loca)
                            that.props.history.push(loca) ; 
                         }

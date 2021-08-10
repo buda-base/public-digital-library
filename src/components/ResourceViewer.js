@@ -2391,7 +2391,8 @@ class ResourceViewer extends Component<Props,State>
             if(enti === "Etext") {
                //ret = [<span class="svg">{svgEtextS}</span>]
                
-               let vlink = "/"+show+"/"+prefix+":"+pretty+"?s="+encodeURIComponent(this.props.history.location.pathname+this.props.history.location.search)+"#open-viewer"    
+               //let vlink = "/"+show+"/"+prefix+":"+pretty+"?s="+encodeURIComponent(this.props.history.location.pathname+this.props.history.location.search)+"#open-viewer"    
+               let vlink = "/"+show+"/"+prefix+":"+pretty+"?backToEtext="+this.props.IRI+"#open-reader"    
                ret = [  <Link to={"/show/"+sUri} class={"images-thumb no-thumb"} style={{"background-image":"url(/icons/etext.png)"}}></Link> ,
                      <div class="images-thumb-links">
                         <Link className={"urilink "+ prefix} to={vlink}>{I18n.t("resource.openViewer")}</Link>
@@ -7543,6 +7544,12 @@ perma_menu(pdfLink,monoVol,fairUse,other)
             let fUT = this.getResourceElem(tmp+"firstText")
             if(fUT && fUT.length) etextUT = "/show/"+shortUri(fUT[0].value)
             if(fVol && fTxt && (this.props.eTextRefs && this.props.eTextRefs !== true && !this.props.eTextRefs.mono)) etextLoca = I18n.t("resource.openVolViewer", {VolN:etextVolN}) // not sure we need this:  TxtN:etextTxtN
+            if(this.props.history.location.hash == "#open-reader") { //} && this.state.fromSearch) {
+
+               let loca = { ...this.props.history.location, hash:"#open-viewer", pathname: etextUT } //, search:"?backToEtext="+encodeURIComponent(this.state.fromSearch) }
+               this.props.history.replace(loca)
+
+            }
          }
 
          let scrollRel = (ev,next) => { 
