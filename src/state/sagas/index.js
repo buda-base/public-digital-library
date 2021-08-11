@@ -252,7 +252,7 @@ async function initiateApp(params,iri,myprops,route,isAuthCallback) {
 
       store.dispatch(dataActions.gotAssocResources(iri,assoRes));
 
-      res = { [bdrIRI] : Object.keys(res).reduce((acc,e) => {
+      res = { [bdrIRI] : _.sortBy(Object.keys(res)).reduce((acc,e) => {
 
          //if(Object.keys(res[e]).indexOf(skos+"prefLabel") === -1)
          return ({...acc, ...Object.keys(res[e]).filter(k => k !== bdo+"itemHasVolume").reduce(

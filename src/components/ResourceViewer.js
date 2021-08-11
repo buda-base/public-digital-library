@@ -2346,7 +2346,7 @@ class ResourceViewer extends Component<Props,State>
          //loggergen.log("base:", noLink, JSON.stringify(infoBase,null,3))
 
          if(infoBase) {
-            let { _info, _lang } = this.getInfo(prop,infoBase,withProp,elem.value) 
+            let { _info, _lang } = this.getInfo(prop,infoBase,withProp, !elem.noid?elem.value:undefined) 
             info = _info
             lang = _lang
 
@@ -5527,7 +5527,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                      { Object.keys(imageLinks).sort().map(id => {
                         if( /* !this.state.collapse["imageVolume-"+id] &&*/ imageLinks[id][e.seq]) 
                            return (
-                                 <h5>{I18n.t("misc.from")} {this.uriformat(null,{value:id.replace(/bdr:/,bdr).replace(/[/]V([^_]+)_I.+$/,"/W$1")})}</h5>
+                                 <h5>{I18n.t("misc.from")} {this.uriformat(null,{noid:true,value:id.replace(/bdr:/,bdr).replace(/[/]V([^_]+)_I.+$/,"/W$1")})}</h5>
                            )
                      })}
 
