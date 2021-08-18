@@ -75,13 +75,13 @@
          "title": "དཔེ་ཚོགས།"
       },
       "datatypes": {
-         "title": "དན་གྲངས་ཀྱི་རིགས།"
+         "title": "གཞི་གྲངས་ཀྱི་རིགས།"
       },
       "widgets": {
          "root": "ཡོང་ཁུངས།",
          "tree": "རིགས།",
-         "relationInv": "Inverse Relation Type",
-         "new": "NEW!"
+         "relationInv": "འབྲེལ་བའི་རིགས་མགོ་གཞུག་ལྡོག",
+         "new": "གསར་པ།!"
       },
       "tags": {
          "type": "བཙལ་བྱ།",
@@ -104,13 +104,13 @@
       "personN": "མི་སྣའི་མིང་།",
       "yearB": "སྐྱེས་ལོ།",
       "placeN": "ས་གནས་མིང་།",
-      "yearP": "པར་ལོ།",
+      "yearP": "དཔར་ལོ།",
       "title": "མཚན་བྱང་།",
       "numberMC": "བཙལ་བྱ་རྙེད་སའི་དུམ་ཚན་གྱི་གྲངས།",
       "lastS": "སྤེལ་དུས།",
       "reverseS": "(reverse)",
-      "volumeN": "Volume Number",
-      "roleN": "Role Name"
+      "volumeN": "པོད་གྲངས།",
+      "roleN": "མི་སྣའི་མཚན།"
    },
    "copyright": {
       "open": "བཀག་རྒྱ་མེད་པ།",
@@ -151,8 +151,8 @@
       "tmp:forWork": "བརྩམས་ཆོས།",
       "tmp:provider": "མཁོ་འདོན་པ།",
       "tmp:author": "རྩོམ་པ་པོ།",
-      "bdo:note": "མཆན།",
-      "bdo:note_plural": "མཆན།",
+      "bdo:note": "ཟུར་མཆན།",
+      "bdo:note_plural": "ཟུར་མཆན།",
       "tmp:assetAvailability": "དཔེ་ཆ་ཡོད་མེད།",
       "tmp:textMatch": "རྙེད་པའི་ཡི་གེ",
       "bdo:workHasInstance": "$t(types.instance)",
@@ -186,11 +186,11 @@
       "tmp:versionType": "པར་གཞིའི་རིགས།",
       "tmp:standalone": "རང་རྐྱ་བ།",
       "tmp:partOfVersion": "དཔེ་གཞི་གཞན་གྱི་ཆ་ཤས།",
-      "tmp:inRootInstance": "Instance",
+      "tmp:inRootInstance": "དཔེ་གཞི།",
       "tmp:associatedCentury": "དུས་རབས།",
       "tmp:associatedAuthorCentury": "མཛད་པ་པོའི་དུས་རབས།",
       "tmp:ontologyProperty": "Ontology Property",
-      "tmp:hasRole": "Has Role",
+      "tmp:hasRole": "མི་སྣ་ཡོད་པ་དག།",
       "tmp:matchContext": "སྐབས་ཐོག་དང་མཐུན་པ་ཁག",
       "tmp:titleContext": "མཚན་བྱང་།",
       "tmp:nameContext": "མཚན།",
@@ -215,11 +215,11 @@
       "openE": "འཕྲུལ་ཡིག་ཀློག",
       "hasInstance": "དཔེ་རྒྱུན་ {{count,counttobo}} ཡོད།",
       "hasInstance_plural": "དཔེ་རྒྱུན་ {{count,counttobo}} ཡོད།",
-      "assoc": "{{type}} associated with: {{- name}}",
+      "assoc": "{{type}} འདི་དག་དང་འབྲེལ་ཡོད་: {{- name}}",
       "moreres": "འདི་ལས་' {{txt}} མང་བ་འདུག, དེ་དག་ལ་བལྟ་འདོད་ཡོད་དམ།",
       "openEin": "འཕྲུལ་ཡིག་ནང་སྟོན།",
       "inEtext": "Results for <key>{{- keyword}}<\/key> <key>[{{language}}]<\/key><br/>in <res href='/show/{{- rid}}'>{{- name}}<\/res>",
-      "openO": "Open in Outline"
+      "openO": "དཀར་ཆག་ནང་སྒོ་ཕྱེ།"
    },
    "map": {
       "touch": "Use two fingers to move the map",
@@ -234,8 +234,8 @@
       "extended": "གནས་ཚུལ་འཕར་མ།",
       "userP": "སྤྱོད་མཁན་གྱི་གནས་ཚུལ།",
       "personalI": "སྒེར་གྱི་གནས་ཚུལ།",
-      "relatedM": "Collection Members",
-      "relatedS": "Serial Members"
+      "relatedM": "ཕྱོགས་བསྒྲིགས་ཨང་།",
+      "relatedS": "ཐོན་རིམ་གྱི་ཨང་།"
    },
    "user": {
       "photo": {
@@ -282,7 +282,7 @@
       "moreInfo": "གནས་ཚུལ་འདི་ལས་མང་བ།",
       "source": "ལུང་ཁུངས།",
       "source_plural": "ལུང་ཁུངས།",
-      "notes": "མཆན།",
+      "notes": "ཟུར་མཆན།",
       "discussion": "དོགས་གཅོད།",
       "lang": "སྐད་ཡིག",
       "otherLang": "སྐད་རིགས་གཞན།",
@@ -294,7 +294,7 @@
    },
    "misc": {
       "colon": " ",
-      "datatype": "དན་གྲངས་ལ་ཕྱིར་ལོག",
+      "datatype": "གཞི་གྲངས་ལ་ཕྱིར་ལོག",
       "has": "",
       "or": "ཡང་ན།",
       "seeA": "ཚང་མ་སྟོན།",
@@ -313,13 +313,13 @@
       "please": "",
       "seeO": "See on",
       "ord": "{{num,ordinal}}",
-      "all": "All",
-      "allC": "All ({{count}})",
+      "all": "ཡོངས།",
+      "allC": "ཡོངས། ({{count}})",
       "allT": "{{type}} ({{count}})",
-      "seeR": "See result",
-      "seeR_plural": "See results",
-      "link": "Link:",
-      "link_plural": "Links:"
+      "seeR": "བཙལ་འབྲས་ལ་གཟིགས།",
+      "seeR_plural": "བཙལ་འབྲས་ལ་གཟིགས།",
+      "link": "དྲ་ཐག:",
+      "link_plural": "དྲ་ཐག་ཁག:"
    },
    "lang": {
       "en": "ཨིན་སྐད།",
@@ -402,9 +402,9 @@
       "result_plural": "བཙལ་འབྲས། {{count,counttobo}}",
       "filters": {
          "noresults": "འདེམས་སྒྲུག་བྱས་པའི་བཙལ་འབྲས་མི་འདུག",
-         "noresultsAsso": "No result associated with {{keyword}} {{type}}"
+         "noresultsAsso": "འདི་དང་འབྲེལ་བའི་བཙལ་འབྲས་མི་འདུག {{keyword}} {{type}}"
       },
-      "seeO": "དན་གྲངས་རིགས་གཞན་པའི་བཙལ་འབྲས་ལ་ལྟོས།",
+      "seeO": "གཞི་གྲངས་རིགས་གཞན་པའི་བཙལ་འབྲས་ལ་ལྟོས།",
       "backToW": "བརྩམས་ཆོས་སྟེང་ཕྱིར་ལོག"
    },
    "Rsidebar": {
@@ -416,8 +416,8 @@
          "title": "བཙལ་འབྲས་ཀྱི་སྐད་ཡིག་གཙོ་བོ།"
       },
       "priority": {
-         "title": "དན་གྲངས་ཀྱི་སྐད་ཡིག་གི་གོ་རིམ།",
-         "help": "དན་གྲངས་སྟོན་སའི་སྐད་ཡིག་གལ་ཆེ་ཆུང་གི་རིམ་པ་ལྟར་འདེམས། སྐད་ཡིག་ཚང་མ་མ་འདེམས་རུང་ཆོག",
+         "title": "གཞི་གྲངས་ཀྱི་སྐད་ཡིག་གི་གོ་རིམ།",
+         "help": "གཞི་གྲངས་སྟོན་སའི་སྐད་ཡིག་གལ་ཆེ་ཆུང་གི་རིམ་པ་ལྟར་འདེམས། སྐད་ཡིག་ཚང་མ་མ་འདེམས་རུང་ཆོག",
          "user": "ཁྱེད་ཀྱི་འདེམ་ཁ།",
          "more": "འདི་ལས་མང་བ།"
       }
@@ -431,21 +431,21 @@
       "openViewer": "འཕྲུལ་ཡིག་ཀློག",
       "openVolViewer": "འཕྲུལ་ཡིག་ཀློག པོད་{{VolN}}",
       "download": "ཕབ་ལེན།",
-      "downloadAs": "ཕབ་ལེན་གྱི་རྣམ་སྒྲིག ",
+      "downloadAs": "ཕབ་ལེན་གྱི་རྣམ་སྒྲིག",
       "version": "{{format}} ཐོན་རིམ།",
       "exportData": "{{data}} ཕབ་ལེན།",
       "exportDataAs": "{{data}} རྣམ་སྒྲིག་ {{format}} ནང་ཕབ་ལེན།",
       "settings": "སྐད་རིགས་སྒྲིག་འགོད",
       "toggle": "མཆན་འབྲི་ས།",
       "view": "སྟོན།",
-      "metadata": "དན་གྲངས་གོང་མ།",
+      "metadata": "གཞི་གྲངས་གོང་མ།",
       "manifest": "IIIF manifest",
       "page": "པར་གྲངས། {{num,counttobo}}",
       "volume": "པོད། {{num,counttobo}}",
       "availableScans": "ཤོག་ངོས་འདིའི་བཤེར་པར་གང་ཡོད།",
       "about": "ཁོང་གི་སྐོར།",
       "createdB": "ཁོང་གི་བརྩམས་ཆོས།",
-      "extended": "དན་གྲངས་གོང་མ་རྒྱས་པ།",
+      "extended": "གཞི་གྲངས་གོང་མ་རྒྱས་པ།",
       "showD": "ཞིབ་ཕྲ་སྟོན།",
       "hideD": "ཕྱིར་བསྡུ།",
       "searchO": "དཀར་ཆག་ནང་འཚོལ།",
@@ -466,7 +466,7 @@
       "gener3zip": "ZIP ཕབ་ལེན།",
       "nbTrans": " ( འགྱུར་མ། {{count}})",
       "nbTrans_plural": " (འགྱུར་མ། {{count}})",
-      "openO": "Open on {{src}}",
+      "openO": "འདིའི་ནང་སྒོ་ཕྱེ། {{src}}",
       "browsE": "མིག་བཤེར།",
       "unpag": "The pages of this etext may correspond to page in the original edition, but we cannot provide the exact mapping.",
       "pageN": "p. {{num,counttobo}}",
@@ -483,7 +483,7 @@
             "apa": "American Psychological Association"
          }
       ],
-      "citationI": "{{lg}} citation",
+      "citationI": "{{lg}} ཁུངས་འདྲེན།",
       "citationS": "ཡོང་ཁུངས་ཀྱི་ཁྱད་ཆོས།",
       "cite": "འདིའི་ཡོང་ཁུངས།",
       "clipB": "འདི་ངོ་བཤུ་བྱོས།",
@@ -492,9 +492,9 @@
       "export2": "Export to {{format}}",
       "exportRIS": "Export a RIS file (for EndNote, ProCite, Reference Manager, Zotero, Mendeley, etc.)",
       "noImages": "BDRC does not have associated images, the record is purely for reference",
-      "getPDF": "Get images or PDF",
+      "getPDF": "བཤེར་པར་དགོས་སམ་ PDF དགོས།",
       "print": "Print on demand",
-      "clipT": "Text copied",
+      "clipT": "ཡིག་རྐྱང་ངོ་བཤུ་བྱས་ཡོད།",
       "orderVT": "Copy the text below, click on the following link and paste it in the comments box:",
       "contactVT": "Contact Vimala Treasures",
       "contactVTcopy": "I wish to order 1 copy of {{uri}}"
@@ -527,8 +527,8 @@
       "OCR": "These etexts were created through OCR (optical character recognition), not manually input, and have not been edited. OCR for Tibetan script is not 100% perfect but it is accurate enough to create text that will enhance the BDRC database. We hope that etexts like these improve the discoverability and usefulness of the BDRC archive for you.",
       "quality0": "We acknowledge the poor quality of these scans, which might be difficult to read or in the wrong order, and we apologize for it. We think these might still be useful for scholarship and make them available, while searching for higher quality ones.",
       "fairUseIA1": "This work is <bold>copyrighted<\/bold>. As a result, BDRC can only make very limited portions available for private research and study. The full text of the work is viewable on Internet Archive, a close partner of ours, through their Open Library program.",
-      "fairUseIA2": "Access this work on Internet Archive",
-      "not": "Images not available."
+      "fairUseIA2": "དྲ་ཐོག་དཔེ་མཛོད་བརྒྱུད་ནས་བརྩམས་ཆོས་འདི་སྔོགས།",
+      "not": "བཤེར་པར་མི་འདུག"
    },
    "location": {
       "beginV": "པོད་ {{num,counttobo}} ནས་",
@@ -543,10 +543,10 @@
          "adr1": "1430 Massachusetts Ave., 5th floor",
          "adr2": "Cambridge, MA, USA 02138",
          "contact": "འབྲེལ་གཏུགས་བྱ་ཡུལ།",
-         "connect": "སྤྱི་ཚོགས་དྲ་ལམ་བརྒྱུད་ནས་ང་ཚོར་འབྲེལ་བ་བྱ་ཡུལ།",
+         "connect": "སྤྱི་ཚོགས་དྲ་ལམ་བརྒྱུད་ནས་ང་ཚོར་འབྲེལ་ཡུལ།",
          "print": "ང་ཚོའི་དྲ་ཐོག་ཏུ་ཡོད་པའི་དཔེ་ཆ་ཁག་དགོས་ཚེ་འདི་ནས་མངགས།",
          "order": "མངགས་ཉོ།",
-         "join": "ང་ཚོའི་སྐོར་ཀྱི་གནས་ཚུལ་གསར་ཤོས་ཤེས་འདོད་ཚེ་འཛུལ་ཞུགས་བྱོས།",
+         "join": "ང་ཚོའི་སྐོར་ཀྱི་གནས་ཚུལ་གསར་ཤོས་ཤེས་འདོད་ན་ནང་འཛུལ་བྱོས།",
          "subscribe": "མངགས་ཉོ།",
          "support": "ངེད་ཚོགས་པའི་ལས་རིགས་ལ་རྒྱབ་སྐྱོར།"
    }
