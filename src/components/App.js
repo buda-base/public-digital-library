@@ -3546,6 +3546,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
          let allLabels = [ ], allLabelsNoMatch = [ ]
          allProps.filter(a => a.type.match(/([Ll]abel|[Mm]atch)$/)).map(a => {   
+            if(!a || !a.value) return
             let labelNoMatch = a.value.replace(/[↦↤]/g,"")
             if(!allLabelsNoMatch.filter(b => slashEq(b.value,labelNoMatch)).length) { 
                allLabels.push(a)
