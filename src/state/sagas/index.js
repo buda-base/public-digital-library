@@ -111,6 +111,10 @@ async function initiateApp(params,iri,myprops,route,isAuthCallback) {
          //store.dispatch(dataActions.choosingHost(config.ldspdi.endpoints[config.ldspdi.index]));
 
 
+         if(val = localStorage.getItem('etextlang')) {
+            store.dispatch(uiActions.setEtextLang(val))
+         }
+
       }
 
       if(route === "static" || route === "mirador") {

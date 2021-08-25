@@ -80,7 +80,7 @@ import { faLanguage } from '@fortawesome/free-solid-svg-icons'
 //import {MapComponent} from './Map';
 import {getEntiType,dPrefix,RISexportPath} from '../lib/api';
 import {numtobo} from '../lib/language';
-import {languages,getLangLabel,top_right_menu,prefixesMap as prefixes,sameAsMap,shortUri,fullUri,highlight,lang_selec,langSelect,searchLangSelec,report_GA,getGDPRconsent} from './App';
+import {languages,getLangLabel,top_right_menu,prefixesMap as prefixes,sameAsMap,shortUri,fullUri,highlight,lang_selec,etext_lang_selec,langSelect,searchLangSelec,report_GA,getGDPRconsent} from './App';
 import {narrowWithString} from "../lib/langdetect"
 import Popover from '@material-ui/core/Popover';
 import Popper from '@material-ui/core/Popper';
@@ -153,6 +153,7 @@ type Props = {
    outline?:{},
    IIIFerrors?:{},
    citationData?:{},
+   etextLang?:string,
    onGetAssocTypes: (s:string) => void,
    onInitPdf: (u:string,s:string) => void,
    onRequestPdf: (u:string,s:string) => void,
@@ -169,7 +170,8 @@ type Props = {
    onUserProfile:(url:{})=>void,
    onGetCitationLocale:(lg:string)=>void,
    onGetCitationStyle:(s:string)=>void,
-   onGetCitationData:(id:string)=>void
+   onGetCitationData:(id:string)=>void,
+   onSetEtextLang:(lang:string)=>void
 }
 type State = {
    uviewer : boolean,
@@ -5442,7 +5444,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
       let kw = []
 
       if(this.props.highlight && this.props.highlight.key) {
-         for(let k of lucenequerytokeywordmulti(this.props.highlight.key)) kw.push(getLangLabel(this,"",[{value:k, lang:this.props.highlight.lang}]))
+         for(let k of lucenequerytokeywordmulti(this.props.highlight.key)) kw.push(getLangLabel(this,bdo+"eTextHasPage",[{value:k, lang:this.props.highlight.lang}]))
          if(kw.length) kw = kw.map(k => k.value)
       }
 
@@ -5545,7 +5547,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                </div> }
                <div class="overpage">
                   <h4 class="page">{!e.value.match(/[\n\r]/) && !e.seq ?[<span class="startChar"><span>[&nbsp;<Link to={"/show/"+this.props.IRI+"?startChar="+e.start+"#open-viewer"}>@{e.start}</Link>&nbsp;]</span></span>]:null}{e.value.split("\n").map(f => {
-                        let label = getLangLabel(this,"",[{"lang":e.language,"value":f}]), lang
+                        let label = getLangLabel(this,bdo+"eTextHasPage",[{"lang":e.language,"value":f}]), lang
                         if(label) { lang = label["lang"] ; if(!pageLang) pageLang = lang }
                         if(label) { label = label["value"]; pageVal += " "+label ; }
                         if(label && this.props.highlight && this.props.highlight.key) { label = highlight(label,kw); current.push(label); }
@@ -6178,7 +6180,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                <div id="control">
                   <span title={I18n.t("mirador.decrease")} class={!size||size > 0.6?"on":""} onClick={(e)=>etextSize(false)}><img src="/icons/Zm.svg"/></span>
                   <span title={I18n.t("mirador.increase")} class={!size||size < 2.4?"on":""} onClick={(e)=>etextSize(true)}><img src="/icons/Zp.svg"/></span>
-                  {lang_selec(this,true)}
+                  {etext_lang_selec(this,true)}
                </div>
                <a class={showToggleScan?"on":""} onClick={(e) => this.setState({showEtextImages:!this.state.showEtextImages})}>{this.state.showEtextImages?<img id="check" src="/icons/check.svg"/>:<span id="check"></span>}{I18n.t("mirador.showI")}<img width="42" src="/icons/search/images_b.svg"/></a>
             </div>

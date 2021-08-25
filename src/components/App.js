@@ -487,6 +487,13 @@ export function getLangLabel(that:{},prop:string="",labels:[],proplang:boolean=f
          langs = [ ...langs, that.props.locale ]
       }            
 
+      
+      if(that.props.etextLang && (prop == bdo+"eTextHasPage" || prop == bdo+"eTextHasChunk")) { 
+         langs = [ that.props.etextLang ]
+         //console.log("prop:",langs,prop)
+      }
+      
+
       // TODO move that to redux state 
       // not that simple because UI lang has to be used first or not
       /*
@@ -640,6 +647,64 @@ export function lang_selec(that,black:boolean = false)
                                        if(loca.search.includes("uilang")) loca.search = loca.search.replace(/uilang=[^&]+/,"uilang="+i)
                                        else loca.search += (loca.search&&loca.search.match(/[?]./)?"&":"?")+"uilang="+i
                                        that.props.history.push(loca)
+                                    }} >{label}</MenuItem> ) 
+                  } ) } 
+                  
+            </FormControl>
+         </Popover>
+   ]
+}
+export function etext_lang_selec(that,black:boolean = false)
+{
+   
+   let text = { "bo":"lang.tip.bo","bo-x-ewts":"lang.tip.boXEwts" }, prio = ["bo", "bo-x-ewts" ]
+
+   let current = that.props.etextLang
+   if(!current || !text[current]) {
+      if(that.props.locale === "en") current = "bo-x-ewts"
+      else current = "bo"
+   }
+
+   return [
+         <span id="lang" title={I18n.t("home.choose")} onClick={(e) => that.setState({...that.state,anchorLang:e.currentTarget, collapse: {...that.state.collapse, lang:!that.state.collapse.lang } } ) }><img src={"/icons/LANGUE"+(black?"b":"")+".svg"}/></span>
+         ,
+         <Popover
+            id="popLang"
+            open={that.state.collapse&&that.state.collapse.lang?true:false}
+            transformOrigin={{vertical:(!black?'top':'bottom'),horizontal:(!black?'right':'left')}}
+            anchorOrigin={{vertical:(!black?'bottom':'top'),horizontal:(!black?'right':'left')}}
+            anchorEl={that.state.anchorLang}
+            onClose={e => { that.setState({...that.state,anchorLang:null,collapse: {...that.state.collapse, lang:false } } ) }}
+            className={black?"black":""}
+            >
+
+              <FormControl className="formControl">
+                {/* <InputLabel htmlFor="datatype">In</InputLabel> */}
+                  
+                  { prio.map((i) => {
+
+                        let label = I18n.t(text[i]);
+
+                        // TODO add link to user profile / language preferences
+
+                        return ( <MenuItem
+                                    className={current===i?"is-locale":""}     
+                                    value={i}
+                                    onClick={(event) => { 
+
+                                       localStorage.setItem('etextlang', i);
+
+                                       that.setState({...that.state,anchorLang:null,collapse: {...that.state.collapse, lang:false } }); 
+
+                                       that.props.onSetEtextLang(i)
+
+                                       /*
+                                       // not sure we need a url param
+                                       let loca = { ...that.props.history.location }
+                                       if(loca.search.includes("etextlang")) loca.search = loca.search.replace(/etextlang=[^&]+/,"etextlang="+i)
+                                       else loca.search += (loca.search&&loca.search.match(/[?]./)?"&":"?")+"etextlang="+i
+                                       that.props.history.push(loca)
+                                       */
                                     }} >{label}</MenuItem> ) 
                   } ) } 
                   

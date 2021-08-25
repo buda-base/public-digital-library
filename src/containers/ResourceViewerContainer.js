@@ -147,6 +147,8 @@ const mapStateToProps = (state,ownProps) => {
       if(auth.userProfile.name) profileName = auth.userProfile.name
    }
 
+   let etextLang = state.ui.etextLang
+
    let props = { logged,config,resources, ontology, dictionary, keyword, language, datatype, assocResources, prefLang, failures, loading,
       imageAsset,firstImage,canvasID,collecManif,manifests,manifestError,pdfVolumes,createPdf,pdfUrl, manifestWpdf,
       annoCollec,rightPanel,locale,langPreset,langExt,imgData, nextChunk, nextPage, resourceManifest, imageVolumeManifests, imageLists, userEditPolicies, highlight,
@@ -155,7 +157,8 @@ const mapStateToProps = (state,ownProps) => {
       assocTypes,
       IIIFerrors,
       citationData,
-      profileName }
+      profileName,
+      etextLang }
 
    if(config && !config.auth) props.auth = false
 
@@ -220,6 +223,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       onSetLangPreset:(langs:string[],i?:number) => {
          localStorage.setItem('lang', langs);
          dispatch(ui.langPreset(langs,i))
+      },
+      onSetEtextLang:(lang:string) => {
+         dispatch(ui.setEtextLang(lang))
       },
       onOutlineSearch:(iri:string,keyword:string,language:string) => {
          dispatch(data.outlineSearch(iri, keywordtolucenequery(keyword, language), language));

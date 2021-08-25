@@ -106,6 +106,16 @@ export const setPrefLang = (state: UIState, action: Action) => {
 reducers[actions.TYPES.setPrefLang] = setPrefLang;
 
 
+export const setEtextLang = (state: UIState, action: Action) => {
+
+      return {
+      ...state,
+      etextLang:action.payload
+   }
+}
+reducers[actions.TYPES.setEtextLang] = setEtextLang;
+
+
 export const showResults = (state: UIState, action: Action) => {
 
       return {
