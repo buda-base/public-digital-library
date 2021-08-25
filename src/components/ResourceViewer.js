@@ -1284,8 +1284,8 @@ class ResourceViewer extends Component<Props,State>
       
       if (hash && hash.length) {
          if(hash === "open-viewer") {
-
-         if(this.state.opartinview) this.setState({ opartinview:"" })
+            // fix infinite loop - TODO? directly open viewer when outline node
+            if(this.state.opartinview) this.setState({ opartinview:"tmp:none" })
             /*
             let timerViewer = setInterval(() => {
                
@@ -5444,7 +5444,10 @@ perma_menu(pdfLink,monoVol,fairUse,other)
       let kw = []
 
       if(this.props.highlight && this.props.highlight.key) {
-         for(let k of lucenequerytokeywordmulti(this.props.highlight.key)) kw.push(getLangLabel(this,bdo+"eTextHasPage",[{value:k, lang:this.props.highlight.lang}]))
+         for(let k of lucenequerytokeywordmulti(this.props.highlight.key)) { 
+            const subkw = getLangLabel(this,bdo+"eTextHasPage",[{value:k, lang:this.props.highlight.lang}])
+            kw.push(subkw)
+         }
          if(kw.length) kw = kw.map(k => k.value)
       }
 
@@ -7732,7 +7735,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                   { this.renderWithdrawn() }             
                   <div class="title">{ wTitle }{ iTitle }{ rTitle }</div>
                   { this.renderHeader(kZprop.filter(k => mapProps.includes(k)), _T, etextUT) }
-                  { (etext && !orig) && <div class="data" id="open-etext"><div><Link to={etextUT+"?backToEtext="+this.props.IRI+"#open-viewer"}>{etextLoca}</Link></div></div> }
+                  { (etext && !orig) && <div class="data" id="open-etext"><div><Link to={etextUT+(etextUT.includes("?")?"&":"?")+"backToEtext="+this.props.IRI+"#open-viewer"}>{etextLoca}</Link></div></div> }
                   { (etext && orig) && <div class="data" id="open-etext"><div><a target="_blank" href={orig}>{I18n.t("resource.openO",{src:prov})}<img src="/icons/link-out_.svg"/></a></div></div> }
                   <div class={"data" + (_T === "Etext"?" etext-title":"")+(_T === "Images"?" images-title":"")}>
                      {_T === "Images" && iTitle?[<h2 class="on intro">{I18n.t("resource.scanF")}</h2>,iTitle]

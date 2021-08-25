@@ -795,7 +795,7 @@ export function top_right_menu(that,etextTitle,backUrl,etextres)
                            delete loca.hash
                            that.props.history.push(loca) ; 
                         }                        
-                        // that.setState({...that.state, openEtext: false });
+                        if(that.state.openEtext) that.setState({...that.state, openEtext: false });
                      } else {
                         that.props.history.push({pathname:"/search",search:"?"+backUrl}) ; 
                      }
