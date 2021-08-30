@@ -1285,7 +1285,7 @@ class ResourceViewer extends Component<Props,State>
       if (hash && hash.length) {
          if(hash === "open-viewer") {
             // fix infinite loop - TODO? directly open viewer when outline node
-            if(this.state.opartinview) this.setState({ opartinview:"tmp:none" })
+            if(this.state.opartinview && this.state.opartinview !== "tmp:none") this.setState({ opartinview:"tmp:none" })
             /*
             let timerViewer = setInterval(() => {
                
