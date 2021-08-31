@@ -323,7 +323,7 @@ async function hasEtextPage(manifest) {
          let id = canvas.label ;
          if(id && !Array.isArray(id)) id = [ id ] 
          if(id) for(let i of id) {
-            if(i["@value"].includes("i.")){ 
+            if(i["@value"].includes("i.") || i["@value"].includes("img.")){ 
                id = i["@value"].replace(/[^0-9]/g,"")
             }
          } 
