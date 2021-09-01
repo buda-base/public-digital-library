@@ -4,6 +4,8 @@ import store from '../../index';
 import type { Action } from '../actions';
 import createReducer from '../../lib/createReducer';
 import * as actions from './actions';
+import {auth} from '../../routes';
+import {isAdmin} from '../../components/App';
 
 let reducers = {};
 
@@ -171,6 +173,12 @@ export const updateFacets = (state: UIState, action: actions.LoadingAction) => {
     let key = action.meta.key
     let update = {}
     let topicParents 
+
+    // #548
+    const _tmp = "http://purl.bdrc.io/ontology/tmp/"
+    const removeUnreleased = !isAdmin(auth) || !action.payload[_tmp+"nonReleasedItems"]
+    console.log("removeU:",removeUnreleased)
+
     let facets = Object.keys(action.meta.facets).map(k => {
         let prop = action.meta.config[k]
         let keys = Object.keys(action.payload)        
@@ -198,7 +206,7 @@ export const updateFacets = (state: UIState, action: actions.LoadingAction) => {
                         let e = meta[q].dict[_e]
                         let flat = {}
                         
-                        //console.log("e",_e, e);
+                        //console.log("_e:",_e, e);
 
                         for(let f of e)  {
                             
@@ -210,8 +218,12 @@ export const updateFacets = (state: UIState, action: actions.LoadingAction) => {
                             flat[f.type] = val 
                         }
                         //console.log("f",flat)
-                        let hasAllProp = true
-                        for(let p of Object.keys(action.payload)) {
+
+                        // #548
+                        let hasAllProp = true 
+                        if(removeUnreleased && e.some( a => a.type === _tmp+"status" &&  a.value && !a.value.endsWith("Released")))  hasAllProp = false
+
+                        if(hasAllProp) for(let p of Object.keys(action.payload)) {
 
                             //console.log("p",p)
 
