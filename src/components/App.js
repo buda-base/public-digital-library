@@ -2589,15 +2589,24 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      { (hasEtext.length > 0) && <span title={getPropLabel(this,tmp+"assetAvailability",false)+": "+getPropLabel(this,tmp+"hasEtext",false)}>{svgEtextS}</span>}
                      </span>
                      <span class="instance-link">
-                        <Link class="urilink" to={iUrl}>{I18n.t("misc.browse")}</Link>                     
-                        <emph style={{margin:"0 5px"}}> {I18n.t("misc.or")} </emph>
+                        { nb > 3 && <>
+                           <Link class="urilink" to={iUrl}>{I18n.t("misc.browseA",{count:nb})}</Link>                     
+                           <emph style={{margin:"0 5px"}}> {I18n.t("misc.or")} </emph>
+                        </> }
                         <span class="instance-collapse" onClick={(e) => { 
                            if(!instances) this.props.onGetInstances(shortUri(id)) ; 
                            this.setState({...this.state,collapse:{...this.state.collapse,[id]:!this.state.collapse[id] },repage:true })
-                        } } >{!this.state.collapse[id]?<span>{I18n.t("misc.preview")}</span>:<span>{I18n.t("misc.hide").toLowerCase()}</span>}{!this.state.collapse[id]?<ExpandMore/>:<ExpandLess/>}</span>
+                        } } >{!this.state.collapse[id]?<span>{I18n.t(nb > 3 ? "misc.preview3":"misc.seeI",{count:nb})}</span>:<span>{nb > 3?I18n.t("misc.hide").toLowerCase():I18n.t("misc.hide")}</span>}{!this.state.collapse[id]?<ExpandMore/>:<ExpandLess/>}</span>
                      </span>
                   </div>
                   {ret}
+                  { (nb > 3 && this.props.loading == false && this.state.collapse[id] == true) && 
+                     <div class="match" style={{marginBottom:0}}>
+                        <span class="instance-link">
+                           <Link class="urilink" to={iUrl}>{I18n.t("misc.seeM",{count:nb-3})}</Link>    
+                        </span> 
+                     </div>
+                  }
                </div>
                   
                      

@@ -337,7 +337,13 @@
       "seeR": "See result",
       "seeR_plural": "See results",
       "link": "Link:",
-      "link_plural": "Links:"
+      "link_plural": "Links:",
+      "preview3": "preview 3",
+      "browseA": "Browse all {{count}}",
+      "seeI": "See {{count}} version",
+      "seeI_plural": "See {{count}} versions",
+      "seeM": "{{count}} more version available, browse all",
+      "seeM_plural": "{{count}} more versions available, browse all"
    },
    "lang": {
       "en": "English",
