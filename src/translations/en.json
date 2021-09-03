@@ -342,8 +342,8 @@
       "browseA": "Browse all {{count}}",
       "seeI": "See {{count}} version",
       "seeI_plural": "See {{count}} versions",
-      "seeM": "{{count}} more version available, browse all",
-      "seeM_plural": "{{count}} more versions available, browse all"
+      "seeM": "{{count}} more version available",
+      "seeM_plural": "{{count}} more versions available"
    },
    "lang": {
       "en": "English",

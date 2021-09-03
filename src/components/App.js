@@ -2602,9 +2602,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   {ret}
                   { (nb > 3 && this.state.collapse[id]) && //!this.props.loading && 
                      <div class="match" style={{marginBottom:0}}>
-                        <span class="instance-link">
-                           <Link class="urilink" to={iUrl}>{I18n.t("misc.seeM",{count:nb-3})}</Link>    
-                        </span> 
+                        <span class="label" style={{textTransform:"none"}}>{I18n.t("misc.seeM", {count:nb-3+7})}:</span>&nbsp;
+                        <span class="instance-link"><Link class="urilink" to={iUrl}>{I18n.t("misc.browse").toLowerCase()}</Link></span> 
                      </div>
                   }
                </div>
