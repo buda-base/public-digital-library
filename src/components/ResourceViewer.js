@@ -5478,6 +5478,42 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
             let showIm = ((this.state.showEtextImages && !(this.state.collapse["image-"+this.props.IRI+"-"+e.seq] === false)) || this.state.collapse["image-"+this.props.IRI+"-"+e.seq])
 
+            const that = this
+            const handleImageError = (evt, src, num) => {
+               //console.log("Image URL '" + src + "' is invalid.");
+               $.ajax({
+                  type: 'GET',
+                  url: src,
+                  data: null,
+                  error:function (xhr, ajaxOptions, thrownError){
+                     //console.log("code:",xhr.status)
+                     switch (xhr.status) {
+                        case 401:
+                        case 403:
+                           let errors = that.state.errors[that.props.IRI]
+                           if(!errors) errors = {}
+                           if(!errors[num]) errors[num] = {} 
+                           errors[num][src] = xhr.status
+                           that.setState({errors:{...that.state.errors, [that.props.IRI]:errors}})
+                           // Take action, referencing xhr.responseText as needed.
+                           break;
+                        case 404:
+                           // Take action, referencing xhr.responseText as needed.
+                           break;
+
+                        case 500:
+                           // Take action, referencing xhr.responseText as needed.
+                           break;
+                        default:
+                           break;
+                     }
+                  }
+               });
+            }
+
+            let imgErr = that.state.errors[that.props.IRI]
+            if(imgErr) imgErr = imgErr[e.seq]
+
             return (
             <div class={"etextPage"+(this.props.manifestError&&!imageLinks?" manifest-error":"")+ (!e.value.match(/[\n\r]/)?" unformated":"") + (e.seq?" hasSeq":"")/*+(e.language === "bo"?" lang-bo":"")*/ }>
                {/*                                          
@@ -5487,9 +5523,9 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                {
                   e.seq && showIm && Object.keys(imageLinks).sort().map(id => {
                      if(!this.state.collapse["imageVolume-"+id] && imageLinks[id][e.seq]) 
-                        return (
+                        if(!imgErr || !imgErr[imageLinks[id][e.seq].image]) return (
                            <div class="imagePage">
-                              <img class="page" title="Open image+text reading view" src={imageLinks[id][e.seq].image} onClick={eve => { 
+                              <img class="page" title="Open image+text reading view" src={imageLinks[id][e.seq].image} onError={(ev)=> handleImageError(ev,imageLinks[id][e.seq].image,e.seq)} onClick={eve => { 
                                  let manif = this.props.imageVolumeManifests[id]
                                  window.MiradorUseEtext = "open" ;                                 
                                  this.showMirador(imageLinks[id][e.seq].id,manif["@id"]);
@@ -5511,10 +5547,11 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                               */}        
                            </div>
                         )
+                        //else return <p class="copyrighted">copyrighted</p>
                   })
                }
                { e.seq && <div> 
-                  { !unpag && <span class="button" title={I18n.t("misc."+(!showIm?"show":"hide"))+" "+I18n.t("available scans for this page")} 
+                  { !unpag && !imgErr && <span class="button" title={I18n.t("misc."+(!showIm?"show":"hide"))+" "+I18n.t("available scans for this page")} 
                   onClick={(eve) => {
                         let id = "image-"+this.props.IRI+"-"+e.seq
                         this.setState({...this.state, collapse:{...this.state.collapse, [id]:!showIm}}) 
@@ -5522,12 +5559,12 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                      <img src="/icons/image.svg"/>
                   </span> }
                   {/* { <h5><a title="Open image+text view in Mirador" onClick={eve => { openMiradorAtPage(imageLinks[e.seq].id) }}>p.{e.seq}</a></h5> } */}
-                  {   !unpag && <h5><a title={I18n.t("misc."+(!showIm?"show":"hide"))+" "+I18n.t("available scans for this page")} onClick={(eve) => {
+                  {   !unpag && !imgErr && <h5><a title={I18n.t("misc."+(!showIm?"show":"hide"))+" "+I18n.t("available scans for this page")} onClick={(eve) => {
                         let id = "image-"+this.props.IRI+"-"+e.seq
                         this.setState({...this.state, collapse:{...this.state.collapse, [id]:!showIm}}) 
                      }}>{I18n.t("resource.page",{num:e.seq})}</a>                                             
                      </h5> }
-                     { unpag && <h5><a class="unpag" title={I18n.t("resource.unpag")}>{I18n.t("resource.pageN",{num:e.seq})}</a></h5>}
+                     { (unpag || imgErr ) && <h5><a class="unpag" title={I18n.t("resource.unpag")}>{I18n.t("resource.pageN",{num:e.seq})}</a></h5>}
                      &nbsp;
                      { Object.keys(imageLinks).sort().map(id => {
                         if( /* !this.state.collapse["imageVolume-"+id] &&*/ imageLinks[id][e.seq]) 
@@ -5535,7 +5572,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                                  <h5>{I18n.t("misc.from")} {this.uriformat(null,{noid:true,value:id.replace(/bdr:/,bdr).replace(/[/]V([^_]+)_I.+$/,"/W$1")})}</h5>
                            )
                      })}
-
+                     {imgErr &&  Object.values(imgErr).some(v => [401,403].includes(v)) && <span class="copyrighted">{I18n.t("access.imageN")}</span>}
                      { imageLinks && Object.keys(imageLinks).length > 1 && <span class="button close" data-seq={"image-"+this.props.IRI+"-"+e.seq} title="Configure which image volumes to display" 
                         onClick={e => { 
                            $(e.target).closest(".button").addClass("show");

@@ -2984,6 +2984,8 @@ html[lang="en"] .resource .data > [data-prop="bdo:creator"] h4[data-prop="bdo:ro
 .etextPage h5 a.unpag { color: #343434; cursor:auto;}
 .etextPage h5 a.unpag:hover { border:none; }
 
+.etextPage h5 + .copyrighted { font-size:14px; font-weight:600; padding-left:10px ;} 
+
 .etextPage .overpage + div { margin:20px 0 5px 0; }
 
 
