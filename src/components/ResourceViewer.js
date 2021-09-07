@@ -1260,6 +1260,12 @@ class ResourceViewer extends Component<Props,State>
       }
    }
 
+   browseByWithGenderLabel() {
+      let gender = this.getResourceElem(bdo+"personGender")
+      if(gender && gender.length && gender[0].value && gender[0].value === bdr + "GenderFemale") return I18n.t("misc.her")
+      else return I18n.t("misc.his")
+   }
+
    isEtext() {
       let etext = this.getResourceElem(rdf+"type")
       if(etext && etext.filter(e=> e.value.startsWith(bdo+"Etext")).length) etext = true
@@ -7772,8 +7778,8 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                   { this.renderWithdrawn() }             
                   <div class="title">{ wTitle }{ iTitle }{ rTitle }</div>
                   { this.renderHeader(kZprop.filter(k => mapProps.includes(k)), _T, etextUT) }
-                  { (etext && !orig) && <div class="data" id="open-etext"><div><Link to={etextUT+(etextUT.includes("?")?"&":"?")+"backToEtext="+this.props.IRI+"#open-viewer"}>{etextLoca}</Link></div></div> }
-                  { (etext && orig) && <div class="data" id="open-etext"><div><a target="_blank" href={orig}>{I18n.t("resource.openO",{src:prov})}<img src="/icons/link-out_.svg"/></a></div></div> }
+                  { (etext && !orig) && <div class="data open-etext"><div><Link to={etextUT+(etextUT.includes("?")?"&":"?")+"backToEtext="+this.props.IRI+"#open-viewer"}>{etextLoca}</Link></div></div> }
+                  { (etext && orig) && <div class="data open-etext"><div><a target="_blank" href={orig}>{I18n.t("resource.openO",{src:prov})}<img src="/icons/link-out_.svg"/></a></div></div> }
                   <div class={"data" + (_T === "Etext"?" etext-title":"")+(_T === "Images"?" images-title":"")}>
                      {_T === "Images" && iTitle?[<h2 class="on intro">{I18n.t("resource.scanF")}</h2>,iTitle]
                       :(_T === "Etext" && iTitle?[<h2 class="on intro">{I18n.t("resource.etextF")}</h2>,iTitle]
@@ -7781,6 +7787,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                        :title))}
                      {inTitle}
                      {dates}
+                     { ( _T === "Person" && createdBy && createdBy.length > 0 ) && <div class="browse-by"><Link to={"/search?r="+this.props.IRI+"&t=Work"}>{this.browseByWithGenderLabel()}</Link></div> }
                   </div>
                   { this.renderQuality() }
                   { this.renderOCR() }

@@ -319,7 +319,9 @@
       "seeR": "བཙལ་འབྲས་ལ་གཟིགས།",
       "seeR_plural": "བཙལ་འབྲས་ལ་གཟིགས།",
       "link": "དྲ་ཐག:",
-      "link_plural": "དྲ་ཐག་ཁག:"
+      "link_plural": "དྲ་ཐག་ཁག:",
+      "his":"Browse all his works",
+      "her":"Browse all her works"
    },
    "lang": {
       "en": "ཨིན་སྐད།",
@@ -475,14 +477,11 @@
       "mustLogin": "ཁྱེད་ཀྱིས་PDFs དང་ZIPs གང་རུང་ཕབ་ལེན་བྱེད་པར་ཐོ་འགོད་ངེས་པར་བྱ་དགོས།",
       "commitV": "View commit history",
       "commitH": "Hide commit history",
-      "citation": [
-         "bibliographic citation",
-         {
-            "mla": "Modern Language Association",
-            "chicago": "Chicago Manual of Style",
-            "apa": "American Psychological Association"
-         }
-      ],
+      "citation": {
+         "mla": "Modern Language Association",
+         "chicago": "Chicago Manual of Style",
+         "apa": "American Psychological Association"
+      },
       "citationI": "{{lg}} ཁུངས་འདྲེན།",
       "citationS": "ཡོང་ཁུངས་ཀྱི་ཁྱད་ཆོས།",
       "cite": "འདིའི་ཡོང་ཁུངས།",

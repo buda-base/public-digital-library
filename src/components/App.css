@@ -1172,12 +1172,16 @@ h4:not(:hover) > .lang
 /* -+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ resource */
 
 
-#open-etext { position:absolute; right:140px; margin-top:0px; z-index:10;}
-#open-etext > div { }
-#open-etext > div::after { content:none !important; }
-#open-etext + .data h2 { max-width:calc(100% - 30px); }  /*- 150px */ 
-#open-etext > div a { color:white; background-color: #d73449; border-radius:5px;display:flex;align-items: center;justify-content: center; height:40px;
+.open-etext { position:absolute; right:140px; margin-top:0px; z-index:10;}
+.open-etext > div { }
+.open-etext > div::after { content:none !important; }
+.open-etext + .data h2 { max-width:calc(100% - 30px); }  /*- 150px */ 
+.browse-by a,
+.open-etext > div a { color:white !important; background-color: #d73449; border-radius:5px;display:flex;align-items: center;justify-content: center; height:40px;
    padding: 0 15px; border:none !important; font-weight:600; font-size:13px; cursor:pointer;}
+
+.browse-by { margin-top:10px; }
+.browse-by::after { content:none !important ;}
 
 .resource > .index { width:15%; padding-top:10px; position:fixed; }
 .resource:not(.etext-view):not(.static) > :not(.index):not(.ariane) { width:85%; margin-left:15%; /*position:relative;*/ }
@@ -1674,7 +1678,7 @@ span[lang^='sa-']:not([lang$='-ewts']) { text-transform: capitalize;}
 .resource .data h2,
 .resource .title h2 { /*font-family: "Noto Sans", "Roboto", "Helvetica", "Arial", sans-serif; */ margin:0; color:#343434; }
 
-.resource .data#open-etext + .data { padding-bottom:60px; } 
+.resource .data.open-etext + .data { padding-bottom:60px; } 
 
 .resource .data *,
 .resource .related div { /*font-family: "Noto Sans", "Roboto", "Helvetica", "Arial", sans-serif;*/ }
@@ -2316,6 +2320,7 @@ h4:hover a.no-bdrc img { opacity:1; }
 
 
 .resource .data.images-title { display:flex; /*align-items: end;*/ position:relative; flex-wrap:wrap;}
+
 .resource .data.etext-title { padding-right:270px; display:flex; align-items: flex-start;position:relative;}
 
 .resource .data h2.intro,
@@ -3826,7 +3831,7 @@ a.result .contenu ul > div:last-child h3[lang=bo] span { font-size:18px;}
 {
 
 
-   #open-etext { right:0px; }
+   .open-etext { right:0px; }
 
    .resource > .ariane { margin-left:0; padding-left:16.7%; }
 
