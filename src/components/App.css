@@ -1182,7 +1182,7 @@ h4:not(:hover) > .lang
 
 .browse-by { margin-top:10px; }
 .browse-by::after { content:none !important ;}
-.browse-by img { filter: invert(100%) brightness(135%); width:30px; display: inline-block; margin-right:13px; }
+.browse-by img { filter: invert(100%) brightness(135%); width:27px; display: inline-block; margin-right:13px; }
 
 
 .resource > .index { width:15%; padding-top:10px; position:fixed; }
