@@ -494,7 +494,8 @@
       "clipT": "ཡིག་རྐྱང་ངོ་བཤུ་བྱས་ཡོད།",
       "orderVT": "Copy the text below, click on the following link and paste it in the comments box:",
       "contactVT": "Contact Vimala Treasures",
-      "contactVTcopy": "I wish to order 1 copy of {{uri}}"
+      "contactVTcopy": "I wish to order 1 copy of {{uri}}",
+      "assoc":"Associated works"
    },
    "mirador": {
       "return": "བུདྡྷ་ལ་ཕྱིར་ལོག",
