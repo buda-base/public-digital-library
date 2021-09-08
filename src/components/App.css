@@ -1182,6 +1182,8 @@ h4:not(:hover) > .lang
 
 .browse-by { margin-top:10px; }
 .browse-by::after { content:none !important ;}
+.browse-by img { filter: invert(100%) brightness(135%); width:30px; display: inline-block; margin-right:10px; }
+
 
 .resource > .index { width:15%; padding-top:10px; position:fixed; }
 .resource:not(.etext-view):not(.static) > :not(.index):not(.ariane) { width:85%; margin-left:15%; /*position:relative;*/ }

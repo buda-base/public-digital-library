@@ -343,9 +343,7 @@
       "seeI": "See {{count}} version",
       "seeI_plural": "See {{count}} versions",
       "seeM": "{{count}} more version available",
-      "seeM_plural": "{{count}} more versions available",
-      "his":"Browse all his works",
-      "her":"Browse all her works"
+      "seeM_plural": "{{count}} more versions available"
    },
    "lang": {
       "en": "English",
@@ -529,7 +527,8 @@
       "clipT": "Text copied",
       "orderVT": "Copy the text below, click on the following link and paste it in the comments box:",
       "contactVT": "Contact Vimala Treasures",
-      "contactVTcopy": "I wish to order 1 copy of {{uri}}"
+      "contactVTcopy": "I wish to order 1 copy of {{uri}}",
+      "assoc":"Browse associated works"
    },
    "mirador": {
       "return": "return to BUDA",

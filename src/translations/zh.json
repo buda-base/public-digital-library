@@ -292,9 +292,7 @@
       "seeR": "See result",
       "seeR_plural": "See results",
       "link": "Link:",
-      "link_plural": "Links:",
-      "his":"Browse all his works",
-      "her":"Browse all her works"
+      "link_plural": "Links:"
    },
    "lang": {
       "en": "英语",
@@ -461,7 +459,8 @@
       "clipT": "Text copied",
       "orderVT": "Copy the text below, click on the following link and paste it in the comments box:",
       "contactVT": "Contact Vimala Treasures",
-      "contactVTcopy": "I wish to order 1 copy of {{uri}}"
+      "contactVTcopy": "I wish to order 1 copy of {{uri}}",
+      "assoc":"Browse associated works"
    },
    "mirador": {
       "return": "回到BUDA",

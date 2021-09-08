@@ -7787,7 +7787,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                        :title))}
                      {inTitle}
                      {dates}
-                     { ( _T === "Person" && createdBy && createdBy.length > 0 ) && <div class="browse-by"><Link to={"/search?r="+this.props.IRI+"&t=Work"}>{this.browseByWithGenderLabel()}</Link></div> }
+                     { ( _T === "Person" && createdBy && createdBy.length > 0 ) && <div class="browse-by"><Link to={"/search?r="+this.props.IRI+"&t=Work"}><img src="/icons/sidebar/work_white.svg"/>{I18n.t("resource.assoc")}</Link></div> }
                   </div>
                   { this.renderQuality() }
                   { this.renderOCR() }
