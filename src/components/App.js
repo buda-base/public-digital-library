@@ -1380,6 +1380,17 @@ class App extends Component<Props,State> {
                      s.collapse[q] = true
       }
 
+      if(props.topicParents && state.filters.facets && state.filters.facets[bdo+"workIsAbout"]) {
+         if(!s) s = { ...state }
+         let genre = state.filters.facets[bdo+"workIsAbout"]
+         if(genre.val) genre = genre.val
+         for(let p of genre) 
+            if(props.topicParents[p]) 
+               for(let q of props.topicParents[p]) 
+                  if(s.collapse[q] === undefined) 
+                     s.collapse[q] = true
+      }
+
       if(state.filters.preload && state.sortBy && !props.sortBy) { 
          
          if(!s) s = { ...state }
@@ -1419,7 +1430,7 @@ class App extends Component<Props,State> {
             facets = Object.keys(facets).reduce((acc,f) => {
                   if(facets[f].indexOf && facets[f].indexOf("Any") !== -1) return acc ;
                   else if(facets[f].val && facets[f].val.indexOf("Any") !== -1) return acc ;
-                  else if(f !== bdo+"workGenre" || facets[f].alt) return { ...acc, [f]:facets[f] }
+                  else if(f !== bdo+"workGenre" && f !== bdo+"workIsAbout" || facets[f].alt) return { ...acc, [f]:facets[f] }
                   else return { ...acc, [f]:{alt:[bdo+"workGenre",bdo+"workIsAbout"],val:facets[f]} }
                },{})
 
@@ -1994,7 +2005,7 @@ class App extends Component<Props,State> {
 
       let facets = state.filters.facets ;
       if(!facets) facets = {}
-      if(prop == bdo+"workGenre") {
+      if(prop == bdo+"workGenre" || prop == bdo+"workIsAbout") {
 
          facets = { ...facets, [prop] : { alt : [ prop, bdo + "workIsAbout", tmp + "etextAbout" ], val : propSet } }
       }
@@ -4888,11 +4899,11 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
    }
 
    treeWidget(j,meta,counts,jlabel,jpre) {
-      if(j == "tree" ) { // && meta[j]["@graph"]) { //
+      if(j == "tree" || j == "genres") { // && meta[j]["@graph"]) { //
          let tree ;
          if(meta[j]) tree = meta[j]["@graph"]
 
-         //loggergen.log("meta tree",tree,meta[j],counts)
+         loggergen.log("meta tree",tree,meta[j],counts)
 
          if(tree && tree[0]
             && this.state.filters && this.state.filters.datatype
@@ -5522,7 +5533,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                else jlabel = jlabel.value
             }
             // need to fix this after info is not in ontology anymore... make tree from relation/langScript 
-            if(["tree","relation","langScript","versionType"].indexOf(j) !== -1) {
+            if(["genres","tree","relation","langScript","versionType"].indexOf(j) !== -1) {
 
                //loggergen.log("widgeTree",j,jpre,meta[j],counts["datatype"],this.state.filters.datatype[0])
 

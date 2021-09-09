@@ -1220,7 +1220,7 @@ function getData(result,inMeta,outMeta)  {
 }
 
 
-function getStats(cat:string,data:{},tree:{})
+function getStats(cat:string,data:{},tree:{},genres:{})
 {
    let stat={}
    let config = store.getState().data.config
@@ -1229,7 +1229,7 @@ function getStats(cat:string,data:{},tree:{})
    if(config.facets[cat])
       keys = Object.keys(config.facets[cat])
 
-   loggergen.log("stat/keys",keys,tree)
+   loggergen.log("stat/keys",keys,tree,genres)
    
    if(auth && !auth.isAuthenticated()) {
       let hide = config["facets-hide-unlogged"][cat]
@@ -1280,6 +1280,37 @@ function getStats(cat:string,data:{},tree:{})
 
       if(treeParents) tree["parents"] = treeParents
    }
+
+   let genresParents = {}
+   if(genres && genres["@graph"] && genres["@graph"].length > 1) {
+      parents = {}
+      for(let node of genres["@graph"]) parents[node["@id"]] = node
+
+      for(let node of Object.keys(parents)) { 
+         if(parents[node]["taxHasSubClass"] && parents[node]["taxHasSubClass"].length) {
+            for(let sub of parents[node]["taxHasSubClass"]) { 
+               if(!parents[sub]) parents[sub] = {}
+               parents[sub].ancestor = node
+            }
+         }
+      }
+
+      for(let node of Object.keys(parents)) { 
+         if(!parents[node]["taxHasSubClass"] && parents[node].ancestor){
+            genresParents[node] = []
+            let root = parents[node].ancestor
+            do {
+               genresParents[node].push(root)
+               root = parents[root]
+               if(root) root = root.ancestor
+            } while(root)
+         }
+      }
+
+      loggergen.log("parents",parents,genresParents)
+
+      if(genresParents) genres["parents"] = genresParents
+   }
    
    let unspecTag = "unspecified"
 
@@ -1295,7 +1326,7 @@ function getStats(cat:string,data:{},tree:{})
          let genre = [bdo+"workGenre", bdo + "workIsAbout", _tmp + "etextAbout" ]
          let tmp ;
          
-         if(f === "tree") tmp = p.filter((e) => (genre.indexOf(e.type) !== -1))
+         if(f === "tree" || f == "genres") tmp = p.filter((e) => (genre.indexOf(e.type) !== -1))
          else tmp = p.filter((e) => (e.type == config.facets[cat][f] && (f !== "about" || !e.value.match(/resource[/]T/) )))
 
          if(tmp.length > 0) for(let t of tmp) 
@@ -1310,6 +1341,15 @@ function getStats(cat:string,data:{},tree:{})
                         
             if(f === "tree" && treeParents && treeParents[t.value]) {
                for(let node of treeParents[t.value]) { 
+                  if(!stat[f][node]) stat[f][node] = { n:0, dict:{} }
+                  stat[f][node].n ++
+                  if(!stat[f][node].dict[_p]) stat[f][node].dict[_p] = []
+                  stat[f][node].dict[_p] = stat[f][node].dict[_p].concat(p)
+               }
+            }
+
+            if(f === "genres" && genresParents && genresParents[t.value]) {
+               for(let node of genresParents[t.value]) { 
                   if(!stat[f][node]) stat[f][node] = { n:0, dict:{} }
                   stat[f][node].n ++
                   if(!stat[f][node].dict[_p]) stat[f][node].dict[_p] = []
@@ -1376,7 +1416,7 @@ function getStats(cat:string,data:{},tree:{})
    return stat
 }
 
-function addMeta(keyword:string,language:string,data:{},t:string,tree:{},found:boolean=true,facets:boolean=true,inEtext)
+function addMeta(keyword:string,language:string,data:{},t:string,tree:{},found:boolean=true,facets:boolean=true,inEtext,genres:{})
 {
    loggergen.log("aM:",data,data["results"],t,inEtext)
 
@@ -1404,6 +1444,26 @@ function addMeta(keyword:string,language:string,data:{},t:string,tree:{},found:b
          }
          tree["@metadata"] = stat.tree
          stat = { ...stat, tree }
+      }
+
+      if(genres)
+      {
+         if(stat["genres"] && stat["genres"]["unspecified"]) {
+
+            let elem = data["results"]["bindings"][t.toLowerCase()+"s"]
+
+            //loggergen.log("elem genres",genres["@graph"][0]) ; //elem,stat)
+
+            if(!genres["@graph"].length) genres["@graph"] = []
+            //if(!genres["@graph"][0].length) genres["@graph"][0] = {}
+            if(!genres["@graph"][0]["taxHasSubClass"]) genres["@graph"][0]["taxHasSubClass"] = []
+            else if(!Array.isArray(genres["@graph"][0]["taxHasSubClass"])) genres["@graph"][0]["taxHasSubClass"] = [ genres["@graph"][0]["taxHasSubClass"] ]
+            genres["@graph"][0]["taxHasSubClass"].push("unspecified")
+            genres["@graph"].push({"@id":"unspecified","taxHasSubClass":[],"tmp:count":stat["genres"]["unspecified"].n})
+         
+         }
+         genres["@metadata"] = stat.genres
+         stat = { ...stat, genres }
       }
 
       loggergen.log("stat:",stat)
@@ -1926,16 +1986,25 @@ function rewriteAuxMain(result,keyword,datatype,sortBy,language)
          store.dispatch(dataActions.gotAssocResources(keyword,{ data: result[e] } ) )
       }
       else if(e === "facets") {
-         let cat = "http://purl.bdrc.io/resource/O9TAXTBRC201605"
+         let cat = "http://purl.bdrc.io/resource/O9TAXTBRC201605", root, tree, genres
          if(result[e].topics && result[e].topics[cat]) {
-            let root = result[e].topics[cat]
-            let tree = [ { "@id": cat, taxHasSubClass: root.subclasses }, ...Object.keys(result[e].topics).reduce( (acc,k) =>  { 
+            root = result[e].topics[cat]
+            tree = [ { "@id": cat, taxHasSubClass: root.subclasses }, ...Object.keys(result[e].topics).reduce( (acc,k) =>  { 
                let elem = result[e].topics[k] 
                return ([ ...acc, { "@id":k, taxHasSubClass: elem.subclasses, "skos:prefLabel": elem["skos:prefLabel"], "tmp:count":elem["count"] } ])
             }, []) ]
-            return { ...acc, ["tree"]: { "@graph" : tree  } }
          }
-         return acc
+         cat = "http://purl.bdrc.io/resource/O3JW5309"
+         if(result[e].genres && result[e].genres[cat]) {
+            root = result[e].genres[cat]
+            genres = [ { "@id": cat, taxHasSubClass: root.subclasses }, ...Object.keys(result[e].genres).reduce( (acc,k) =>  { 
+               let elem = result[e].genres[k] 
+               return ([ ...acc, { "@id":k, taxHasSubClass: elem.subclasses, "skos:prefLabel": elem["skos:prefLabel"], "tmp:count":elem["count"] } ])
+            }, []) ]
+
+
+         }
+         return { ...acc, ...(tree?{["tree"]: { "@graph" : tree  } }:{}), ...(genres?{["genres"]: { "@graph" : genres  } }:{}) }
       }
       else return acc
    }, {})
@@ -2030,7 +2099,7 @@ async function startSearch(keyword,language,datatype,sourcetype,dontGetDT,inEtex
 
       let newMeta = {}
 
-      if(["Work","Instance","Scan"].includes(datatype[0])) addMeta(keyword,language,data,datatype[0],result.tree);      
+      if(["Work","Instance","Scan"].includes(datatype[0])) addMeta(keyword,language,data,datatype[0],result.tree,undefined,undefined,undefined,result.genres);      
       else addMeta(keyword,language,data,datatype[0]);      
 
       /* // deprecated
@@ -2079,12 +2148,12 @@ else {
       }
       else if(["Instance","Work","Etext","Scan"].indexOf(datatype[0]) !== -1) {
 
-         metadata = { ...metadata, tree:result.tree}
+         metadata = { ...metadata, tree:result.tree, genres:result.genres}
 
          let dt = "Etext" ;
-         if(datatype.indexOf("Work") !== -1 ) { dt="Work" ; addMeta(keyword,language,data,"Work",result.tree,false); }
-         else if(datatype.indexOf("Instance") !== -1 ) { dt="Instance" ; addMeta(keyword,language,data,"Instance",result.tree,false); }
-         else if(datatype.indexOf("Scan") !== -1 ) { dt="Scan" ; addMeta(keyword,language,data,"Scan",result.tree,false); }
+         if(datatype.indexOf("Work") !== -1 ) { dt="Work" ; addMeta(keyword,language,data,"Work",result.tree,false,undefined,undefined,result.genres); }
+         else if(datatype.indexOf("Instance") !== -1 ) { dt="Instance" ; addMeta(keyword,language,data,"Instance",result.tree,false,undefined,undefined,result.genres); }
+         else if(datatype.indexOf("Scan") !== -1 ) { dt="Scan" ; addMeta(keyword,language,data,"Scan",result.tree,false,undefined,undefined,result.genres); }
          else store.dispatch(dataActions.foundFacetInfo(keyword,language,datatype,metadata))
 
          //store.dispatch(dataActions.foundDatatypes(keyword,language,{ metadata:{ [bdo+dt]:data.numResults } } ));

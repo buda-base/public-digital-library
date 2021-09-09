@@ -92,7 +92,7 @@
       "widgets": {
          "unknown": "unknown",
          "root": "In $t(types.instance)",
-         "tree": "Genre / Topic",
+         "tree": "Topic",
          "relationInv": "Inverse Relation Type",
          "new": "NEW!"
       },
