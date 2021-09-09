@@ -1369,22 +1369,22 @@ class App extends Component<Props,State> {
          s.repage = true
       }
 
-      if(props.topicParents && state.filters.facets && state.filters.facets[bdo+"workGenre"]) {
+      if(props.genresParents && state.filters.facets && state.filters.facets[bdo+"workGenre"]) {
          if(!s) s = { ...state }
          let genre = state.filters.facets[bdo+"workGenre"]
          if(genre.val) genre = genre.val
          for(let p of genre) 
-            if(props.topicParents[p]) 
-               for(let q of props.topicParents[p]) 
+            if(props.genresParents[p]) 
+               for(let q of props.genresParents[p]) 
                   if(s.collapse[q] === undefined) 
                      s.collapse[q] = true
       }
 
       if(props.topicParents && state.filters.facets && state.filters.facets[bdo+"workIsAbout"]) {
          if(!s) s = { ...state }
-         let genre = state.filters.facets[bdo+"workIsAbout"]
-         if(genre.val) genre = genre.val
-         for(let p of genre) 
+         let topic = state.filters.facets[bdo+"workIsAbout"]
+         if(topic.val) topic = topic.val
+         for(let p of topic) 
             if(props.topicParents[p]) 
                for(let q of props.topicParents[p]) 
                   if(s.collapse[q] === undefined) 
@@ -4903,7 +4903,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          let tree ;
          if(meta[j]) tree = meta[j]["@graph"]
 
-         loggergen.log("meta tree",tree,meta[j],counts)
+         //loggergen.log("meta tree",tree,meta[j],counts)
 
          if(tree && tree[0]
             && this.state.filters && this.state.filters.datatype

@@ -172,7 +172,7 @@ export const updateFacets = (state: UIState, action: actions.LoadingAction) => {
     let t = action.meta.datatype
     let key = action.meta.key
     let update = {}
-    let topicParents 
+    let topicParents, genresParents
 
     // #548
     const _tmp = "http://purl.bdrc.io/ontology/tmp/"
@@ -188,8 +188,13 @@ export const updateFacets = (state: UIState, action: actions.LoadingAction) => {
 
             let meta = action.meta.facets[k]
             let props = Object.keys(meta)
-            if(k === "tree" && meta["@graph"] || k === "genres" && meta["@graph"]) { 
-                topicParents = meta["0parents"]
+            if(k === "tree" && meta["@graph"]) { 
+                topicParents = meta["parents"]
+                props = meta["@graph"].map(i => i["@id"].replace(/bdr:/,"http://purl.bdrc.io/resource/"))
+                meta = meta["@metadata"]
+            }
+            if(k === "genres" && meta["@graph"]) { 
+                genresParents = meta["parents"]
                 props = meta["@graph"].map(i => i["@id"].replace(/bdr:/,"http://purl.bdrc.io/resource/"))
                 meta = meta["@metadata"]
             }
@@ -322,7 +327,8 @@ export const updateFacets = (state: UIState, action: actions.LoadingAction) => {
     return {
         ...state,
         metadata:{ ... update },
-        topicParents
+        topicParents,
+        genresParents
     }
 }
 reducers[actions.TYPES.updateFacets] = updateFacets;

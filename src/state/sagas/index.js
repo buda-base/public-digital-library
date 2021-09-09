@@ -1276,7 +1276,7 @@ function getStats(cat:string,data:{},tree:{},genres:{})
          }
       }
 
-      loggergen.log("parents",parents,treeParents)
+      //loggergen.log("Tparents",parents,treeParents)
 
       if(treeParents) tree["parents"] = treeParents
    }
@@ -1307,7 +1307,7 @@ function getStats(cat:string,data:{},tree:{},genres:{})
          }
       }
 
-      loggergen.log("parents",parents,genresParents)
+      //loggergen.log("Gparents",parents,genresParents)
 
       if(genresParents) genres["parents"] = genresParents
    }
@@ -1422,7 +1422,7 @@ function addMeta(keyword:string,language:string,data:{},t:string,tree:{},found:b
 
    if(data["results"] &&  data["results"]["bindings"] && data["results"]["bindings"][t.toLowerCase()+"s"]){
       loggergen.log("FOUND",data);
-      let stat = getStats(t,data,tree);
+      let stat = getStats(t,data,tree,genres);
 
       if(inEtext) data.inEtext = inEtext
 
