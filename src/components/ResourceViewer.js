@@ -7291,7 +7291,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          }).filter(k => k)
          related = _.orderBy(related, ["n","m"], ["desc","asc"])
 
-         serial = this.getResourceElem(bdo+"serialHasMember");
+         serial = this.getResourceElem(bdo+"serialHasInstance");
          if(!serial) serial = this.getResourceElem(bdo+"collectionMember");
          if(!serial) serial = this.getResourceElem(bdo+"corporationHasMember");
          
@@ -7365,7 +7365,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
             let searchUrl = "/search?r="+this.props.IRI
             if(_T === "Person") {
                searchUrl += "&t=Work&f=relation,inc,bdo:creator"
-            } else if(_T === "Place" ) {
+            } else if(_T === "Place" || serial && _T === "Work") {
                searchUrl += "&t=Instance"
             } else if( _T === "Product") {
                searchUrl += "&t=Scan"
