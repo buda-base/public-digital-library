@@ -4515,7 +4515,7 @@ class ResourceViewer extends Component<Props,State>
          let eL = loca("EndLine")
 
          let oneP = false
-         if( (eV === vol || !vol ) && p === eP) oneP = true
+         if( (eV === vol || !vol || !eV ) && p == eP) oneP = true
 
          if(vol) str = I18n.t("resource.volume",{num:vol})+" " ;
          else monoVol = true
@@ -4534,7 +4534,13 @@ class ResourceViewer extends Component<Props,State>
    
             if(stat) { 
                if(Array.isArray(stat)) str = stat.join(" / ")
-               else str = stat
+               else { 
+                  str = stat
+                  if(p) {
+                     if(vol) str += I18n.t("resource.location"+(oneP?"1":"M"),{vol,page:p,endPage:eP})
+                     else str += I18n.t("resource.location1vol"+(oneP?"1":"M"),{page:p,endPage:eP})
+                  }
+               }
             }
 
 

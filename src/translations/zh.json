@@ -460,7 +460,11 @@
       "orderVT": "Copy the text below, click on the following link and paste it in the comments box:",
       "contactVT": "Contact Vimala Treasures",
       "contactVTcopy": "I wish to order 1 copy of {{uri}}",
-      "assoc":"Associated works"
+      "assoc":"Associated works",
+      "location1": " (v. {{vol}}, img. {{page}})",
+      "locationM": " (v. {{vol}}, img. {{page}}-{{endPage}})",
+      "location1vol1": " (img. {{page}})",
+      "location1volM": " (img. {{page}}-{{endPage}})"
    },
    "mirador": {
       "return": "回到BUDA",
