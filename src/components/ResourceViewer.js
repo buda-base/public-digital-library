@@ -6687,6 +6687,11 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                   elem = elem["@graph"]
                   
                   const time = Date.now()
+                  let last = Date.now(), subtimes = [0,0,0,0,0,0,0,0,0,0]              
+                  const subtime = (n) => {
+                     subtimes[n] += Date.now() - last
+                     last = Date.now()
+                  }
 
                   let elem_map = {}, elem_val ;
                   elem.map( e => elem_map[e["@id"]] = [e] )
@@ -6707,6 +6712,8 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
                      for(let e of node[0].hasPart) {
                         
+                        subtime(0)
+
                         //loggergen.log("node:",e)  
 
                         //let w_idx = elem.filter(f => f["@id"] === e) 
@@ -6741,6 +6748,10 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                                  nav.push(<Link to={g.hasImg} class="ulink">{I18n.t("copyright.view")}</Link>)  
                               }
 
+
+                              subtime(1)
+
+
                               if(g["@id"] !== this.props.IRI || (g["@id"] === opart && opart !== this.props.IRI)) {
                                  if(nav.length) nav.push(<span>|</span>)
                                  nav.push(<Link to={"/show/"+g["@id"]} class="ulink">{I18n.t("resource.openR")}</Link>)
@@ -6770,6 +6781,9 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                                  }
                               }
 
+
+                              subtime(2)
+
                               
                               if(g.contentLocation) {
                                  if(!g.details) g.details = []
@@ -6786,6 +6800,9 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                                  }
                                  g.details.push(<div class="sub loca"><h4 class="first type">{this.proplink(bdo+"contentLocation")}{I18n.t("punc.colon")} </h4>{this.getWorkLocation([{value:loca["@id"]}],true, jLoca)}</div>)
                               }
+
+
+                              subtime(3)
 
                               /*
                               if(osearch && g["tmp:titleMatch"]) {
@@ -6832,6 +6849,9 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                               }
 
 
+                              subtime(4)
+
+
                               if(g.instanceOf) {
                                  //if(Array.isArray(g.instanceOf)) g.instanceOf = 
                                  if(!g.details) g.details = []
@@ -6849,6 +6869,9 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                               }
 
 
+                              subtime(5)
+
+
                               if(g["tmp:author"]) {
                                  //console.log("g:",g["tmp:author"],g["@id"]);
                                  if(!Array.isArray(g["tmp:author"])) g["tmp:author"] = [ g["tmp:author"] ]
@@ -6857,6 +6880,8 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                                  )}</div>)
                               }
 
+                              subtime(6)
+
                               for(let p of [ "colophon", "authorshipStatement", "incipit", "explicit" ]) {
                                  node = g[p]
                                  if(!node) continue;
@@ -6864,6 +6889,9 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                                  if(!p.includes(":")) p = bdo+p
                                  g.hidden.push(<div class="sub"><h4 class="first type">{this.proplink(p)}{I18n.t("punc.colon")} </h4><div>{node.map(n => this.format("h4","","",false, "sub",[{ value:n["@value"], lang:n["@language"], type:"literal"}]))}</div></div>)
                               }
+
+
+                              subtime(7)
 
 
                               // WIP sameAs icon / seeAlso link
@@ -6893,12 +6921,15 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                                     //if(prefix && url) g.same.push(<a href={url} target="_blank" class={"provider "+prefix}>{provImg[prefix]?<img src={provImg[prefix]}/>:<span class="img">{prefix.replace(/^cbc.$/,"cbc@").toUpperCase()}</span>}</a>)
                                  }
                               }
+
+
+                              subtime(8)
                            }
                            outline.push(g);
                         }
                      }
 
-                     loggergen.log("end loop:",(Date.now() - time)/1000)
+                     loggergen.log("end loop:",(Date.now() - time)/1000, subtimes)
 
                      //loggergen.log("outline?",elem,outline)
 
