@@ -6685,14 +6685,33 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                let outline = []
                if(elem && elem["@graph"]) { 
                   elem = elem["@graph"]
-                  let node = elem.filter(e => e["@id"] === top)                  
+                  
+                  const time = Date.now()
+
+                  let elem_map = {}, elem_val ;
+                  elem.map( e => elem_map[e["@id"]] = [e] )
+                  const mapElem = (i) => {
+                     elem_val = elem_map[i]
+                     if(elem_val) return elem_val
+                     else return []
+                  }
+                  loggergen.log("mapelem:",Date.now() - time)  
+
+                  //let node = elem.filter(e => e["@id"] === top)                  
+                  let node = mapElem(top)
+
                   if(node.length && node[0].hasPart) { 
                      if(!Array.isArray(node[0].hasPart)) node[0].hasPart = [ node[0].hasPart ]
+                     
+                     loggergen.log("loop:")  
+
                      for(let e of node[0].hasPart) {
                         
                         //loggergen.log("node:",e)  
 
-                        let w_idx = elem.filter(f => f["@id"] === e) 
+                        //let w_idx = elem.filter(f => f["@id"] === e) 
+                        let w_idx = mapElem(e)
+
                         if(w_idx.length) {
                            //loggergen.log("found:",w_idx[0])  
                            let g = w_idx[0]
@@ -6741,7 +6760,9 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                                  if(g["bf:identifiedBy"].length) { 
                                     g.id = []
                                     for(let node of g["bf:identifiedBy"]) {
-                                       let id = elem.filter(f => f["@id"] === node["@id"]) 
+                                       //let id = elem.filter(f => f["@id"] === node["@id"]) 
+                                       let id = mapElem(node["@id"])
+
                                        //console.log("idBy:",g["bf:identifiedBy"],g,id,elem,node)
                                        // TODO add prefix letter (either in value or from ontology property)
                                        if(id.length) g.id.push(<span class="id" title={this.fullname(id[0].type,false,false,true,false)}>{id[0]["rdf:value"]}</span>)
@@ -6752,7 +6773,9 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                               
                               if(g.contentLocation) {
                                  if(!g.details) g.details = []
-                                 let loca = elem.filter(f => f["@id"] === g.contentLocation), jLoca = {}
+                                 // let loca = elem.filter(f => f["@id"] === g.contentLocation), 
+                                 let loca = mapElem(g.contentLocation),
+                                    jLoca = {}
                                  if(loca && loca.length) loca = loca[0]
                                  for(let k of Object.keys(loca)) {
                                     let val = "" + loca[k]
@@ -6780,7 +6803,8 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                                  if(!Array.isArray(g.hasTitle)) g.hasTitle = [ g.hasTitle ]
                                  let lasTy
                                  for(let t of g.hasTitle) { 
-                                    let title = elem.filter(f => f["@id"] === t)
+                                    //let title = elem.filter(f => f["@id"] === t)
+                                    let title = mapElem(t)
                                     if(title.length) {                                        
                                        title = { ...title[0] }
                                        let titleT = bdo + title.type
@@ -6812,7 +6836,8 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                                  //if(Array.isArray(g.instanceOf)) g.instanceOf = 
                                  if(!g.details) g.details = []
                                  g.details.push(<div class="sub"><h4 class="first type">{this.proplink(tmp+"instanceOfWork")}{I18n.t("punc.colon")} </h4>{this.format("h4","instacO","",false, "sub", [{type:"uri",value:fullUri(g.instanceOf)}])}</div>)
-                                 let instOf = elem.filter(f => f["@id"] === g.instanceOf)
+                                 //let instOf = elem.filter(f => f["@id"] === g.instanceOf)
+                                 let instOf = mapElem(g.instanceOf)
                                  if(instOf.length && instOf[0]["tmp:labelMatch"]) {
                                     g.hasMatch = true
                                     let node = instOf[0]["tmp:labelMatch"]
@@ -6872,7 +6897,9 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                            outline.push(g);
                         }
                      }
-                     
+
+                     loggergen.log("end loop:",(Date.now() - time)/1000)
+
                      //loggergen.log("outline?",elem,outline)
 
                      outline = _.orderBy(outline,["partIndex"],["asc"]).map(e => {
