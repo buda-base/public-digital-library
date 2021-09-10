@@ -6680,7 +6680,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                   }
                }
                
-               //loggergen.log("makeNode/elem:",elem,top,parent)
+               loggergen.log("makeNode/elem:",osearch,elem,top,parent)
 
                let outline = []
                if(elem && elem["@graph"]) { 
@@ -6700,7 +6700,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                      if(elem_val) return elem_val
                      else return []
                   }
-                  loggergen.log("mapelem:",Date.now() - time)  
+                  //loggergen.log("mapelem:",Date.now() - time)  
 
                   //let node = elem.filter(e => e["@id"] === top)                  
                   let node = mapElem(top)
@@ -6708,7 +6708,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                   if(node.length && node[0].hasPart) { 
                      if(!Array.isArray(node[0].hasPart)) node[0].hasPart = [ node[0].hasPart ]
                      
-                     loggergen.log("loop:")  
+                     //loggergen.log("loop:")  
 
                      for(let e of node[0].hasPart) {
                         
@@ -6734,12 +6734,10 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
                               g.rid = this.props.IRI
                               g.lang = this.props.locale
-                              if(showDetails && !g.hidden) g.hidden = []
                               // deprecated
                               // if(! (["bdr:PartTypeSection", "bdr:PartTypeVolume"].includes(g.partType)) ) {
 
                               let nav = [] ;
-
 
                               if(g["tmp:titleMatch"] || g["tmp:labelMatch"]) {
                                  g.hasMatch = true
@@ -6754,6 +6752,9 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                               }
 
                               showDetails = showDetails || (osearch && g.hasMatch && this.state.collapse[tag+"-details"] !== false) 
+                              if(showDetails && !g.hidden) g.hidden = []
+
+                              console.log("showD:",g["@id"], g.hasMatch, g)
 
 
                               subtime(1)
@@ -6863,16 +6864,16 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                                        //loggergen.log("title?",JSON.stringify(title,null,3))
                                        
                                        // TODO which to show or not ? in outline search results ?
-                                       let addTo = g.hidden, useT
+                                       let useT
                                        if(g["tmp:titleMatch"]) useT = g["tmp:titleMatch"].filter(tm => title[0].value == tm["@value"].replace(/[↦↤]/g,""))
                                        if(titleT === bdo+"Title"|| 
                                           //(title.length && title[0].value && title[0].value == .includes("↦"))) 
                                           title.length && title[0].value && g["tmp:titleMatch"] && useT.length) {
 
-                                          addTo = g.details 
-                                          if(addTo) addTo.push(<div class={"sub " + (hideT?"hideT":"")}><h4 class="first type">{this.proplink(titleT)}{I18n.t("punc.colon")} </h4>{this.format("h4", "", "", false, "sub", useT?useT:title)}</div>)
+                                          if(!g.details) g.details = []
+                                          g.details.push(<div class={"sub " + (hideT?"hideT":"")}><h4 class="first type">{this.proplink(titleT)}{I18n.t("punc.colon")} </h4>{this.format("h4", "", "", false, "sub", useT?useT:title)}</div>)
                                        } else {
-                                          if(addTo) addTo.push(<div class={"sub " + (hideT?"hideT":"")}><h4 class="first type">{this.proplink(titleT)}{I18n.t("punc.colon")} </h4>{this.format("h4", "", "", false, "sub", title)}</div>)
+                                          g.hidden.push(<div class={"sub " + (hideT?"hideT":"")}><h4 class="first type">{this.proplink(titleT)}{I18n.t("punc.colon")} </h4>{this.format("h4", "", "", false, "sub", title)}</div>)
                                        }
                                     }
                                  }
@@ -6891,7 +6892,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                                     //loggergen.log("instOf",instOf,node)
                                     if(showDetails) {
                                        let node = instOf[0]["tmp:labelMatch"]
-                                       if(!Array.isArray(node)) node = [node]                                    
+                                       if(!Array.isArray(node)) node = [node]  
                                        g.hidden.push(<div class="sub"><h4 class="first type">{this.proplink(tmp+"instanceLabel")}{I18n.t("punc.colon")} </h4><div>{node.map(n => this.format("h4","","",false, "sub",[{ value:n["@value"], lang:n["@language"], type:"literal"}]))}</div></div>)
                                     }
                                  }
@@ -6960,7 +6961,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                         }
                      }
 
-                     loggergen.log("end loop:",(Date.now() - time)/1000, subtimes)
+                     loggergen.log("end/loop:",(Date.now() - time)/1000, subtimes)
 
                      //loggergen.log("outline?",elem,outline)
 
@@ -7046,7 +7047,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                               
                               </div>
                            </span>)
-                        if(((osearch && e.hasMatch && this.state.collapse[tag+"-details"] !== false) || this.state.collapse[tag+"-details"]) && e.hasDetails) 
+                        if(((osearch && e.hasMatch && this.state.collapse[tag+"-details"] !== false) || this.state.collapse[tag+"-details"]) && e.details) 
                            ret.push(<div class="details">
                               {e.details}
                               { (e.hidden && e.hidden.length > 0) && [
