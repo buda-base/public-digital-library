@@ -638,7 +638,7 @@ function formatUrl(url) {
          .replace(/([=&])/giu, '<wbr>$1<wbr>')
       ).join('//<wbr>')
 
-   console.log("fU:",formatted)
+   //console.log("fU:",formatted)
 
    return formatted
 }
@@ -917,7 +917,7 @@ class ResourceViewer extends Component<Props,State>
          if(Cite && Cite.plugins && Cite.plugins.config) {
 
             if(!citationConfig) citationConfig = Cite.plugins.config.get('@csl')
-            console.log("_cite:",citationConfig,props.citationData)
+            //console.log("_cite:",citationConfig,props.citationData)
             
             let citaSty = "mla"
             if(state.citationStyle) citaSty = state.citationStyle
@@ -1019,7 +1019,7 @@ class ResourceViewer extends Component<Props,State>
             let logs = props.resources[props.IRI][bda+props.IRI.replace(/bdr:/,"")]
             if(logs && logs[adm+"logEntry"]) {
                logs = logs[adm+"logEntry"]
-               console.log("logs:",logs)
+               //console.log("logs:",logs)
             }
          }
       }
@@ -1576,7 +1576,7 @@ class ResourceViewer extends Component<Props,State>
                         extData.push({...p, from, to})                        
                      }
                   }
-                  console.log("lh:",extData)
+                  //console.log("lh:",extData)
                   for(let p of extData) {
                      if(!sorted.length) sorted.push(p)
                      else {   
@@ -1591,7 +1591,7 @@ class ResourceViewer extends Component<Props,State>
                         sorted.splice( idx, 0, p );
                      }
                   }
-                  console.log("sorted:",sorted)
+                  //console.log("sorted:",sorted)
                   return sorted.reverse()
                }
                return parts ;
@@ -3743,7 +3743,7 @@ class ResourceViewer extends Component<Props,State>
                                  code = "en-US-u-nu-tibt"; 
                                  opt = { year:'numeric', day:'2-digit', month:'2-digit' } 
                                  let dtf = new Intl.DateTimeFormat(code, opt).formatToParts(new Date(v.value))
-                                 console.log("dtf:",dtf)
+                                 //console.log("dtf:",dtf)
                                  txt = "སྤྱི་ལོ་"+dtf[4].value + " ཟླ་" + dtf[0].value + " ཚེས་" +  dtf[2].value 
                                  //txt = 'ཟླ་' + (new Intl.DateTimeFormat(code, opt).formatToParts(new Date(v.value)).map(p => p.type === 'literal'?' ཚེས་':p.value).join(''))
                               }
@@ -4001,7 +4001,7 @@ class ResourceViewer extends Component<Props,State>
 
          if(!tiMir) tiMir = setInterval( async () => {
 
-            console.log("tiMir")
+            //console.log("tiMir")
 
             if(window.Mirador && $("#viewer").length && window.Mirador.Viewer.prototype.setupViewer.toString().match(/going to previous page/) && !window.mirador) {
 
@@ -4790,7 +4790,7 @@ class ResourceViewer extends Component<Props,State>
 
 renderPopupCitation(IRI) {
 
-   console.log("rPc:",IRI)
+   //console.log("rPc:",IRI)
    
    let citation = "", citaD, popupCitation = [];
    if(this.state.collapse.citation && IRI && (citaD = this.props.citationData)) {
@@ -4803,13 +4803,13 @@ renderPopupCitation(IRI) {
       let citaSty = "mla"
       if(this.state.citationStyle) citaSty = this.state.citationStyle
 
-      console.log("citaD:",citaD,citaSty,citaLg,supportedLocales[citaLg],citationConfig)
+      //console.log("citaD:",citaD,citaSty,citaLg,supportedLocales[citaLg],citationConfig)
 
       if(citationConfig.templates.data[citaSty] && supportedLocales[citaLg] && citationConfig.locales.data[supportedLocales[citaLg]] && citaD.data && citaD.data[IRI]&& citaD.data[IRI][citaLg]) {
 
          let cite = new Cite(citaD.data[IRI][citaLg], { 'forceType': '@csl/object' })
 
-         console.log("cite:",cite,citaD.data[IRI][citaLg])
+         //console.log("cite:",cite,citaD.data[IRI][citaLg])
 
          if(cite) citation = cite.format('bibliography', {
             format: 'html',
@@ -6098,7 +6098,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
          let fairTxt, hasIA, elem = this.getResourceElem(bdo+"digitalLendingPossible");
          if(this.props.config && !this.props.config.chineseMirror) {
-            console.log("elemIA:",elem)
+            //console.log("elemIA:",elem)
             if(!elem || elem.length && elem[0].value == "true" ) { 
                hasIA = true
             }
@@ -6133,7 +6133,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
    renderQuality = () => {
       let elem = this.getResourceElem(bdo+"qualityGrade");
-      console.log("QG:",elem)
+      //console.log("QG:",elem)
       if(elem && elem.length) elem = elem[0].value ;
       if(elem === "0") {
          return <div class="data access"><h3><span style={{textTransform:"none"}}>{I18n.t("access.quality0")}</span></h3></div>
@@ -6142,7 +6142,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
    renderOCR = () => {
       let elem = this.getResourceElem(bdo+"contentMethod");
-      console.log("OCR:",elem)
+      //console.log("OCR:",elem)
       if(elem && elem.length) elem = elem[0].value ;
       if(elem === bdr+"ContentMethod_OCR") {
          return <div class="data access"><h3><span style={{textTransform:"none"}}>{I18n.t("access.OCR")}</span></h3></div>
@@ -6277,7 +6277,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          if(elem) node = elem.filter(e => e["@id"] === top) 
          let etextrefs = []
 
-         console.log("node:",this.props.eTextRefs,node,top)
+         //console.log("node:",this.props.eTextRefs,node,top)
 
          if(node.length && (node[0].instanceHasVolume || node[0].volumeHasEtext))
          {
@@ -6825,7 +6825,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
 
                               if(g["tmp:author"]) {
-                                 console.log("g:",g["tmp:author"],g["@id"]);
+                                 //console.log("g:",g["tmp:author"],g["@id"]);
                                  if(!Array.isArray(g["tmp:author"])) g["tmp:author"] = [ g["tmp:author"] ]
                                  g.hidden.push(<div class="sub"><h4 class="first type">{this.proplink(tmp+"author", undefined, g["tmp:author"].length)}{I18n.t("punc.colon")} </h4>{this.format("h4","instacO","",false, "sub", 
                                     g["tmp:author"].map(aut => ({type:"uri",value:fullUri(aut["@id"])}))
@@ -6935,7 +6935,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                                           if(!s.initCitation) s.initCitation = []
                                           s.initCitation.push(e["@id"])
                                        } else if(this.props.citationData && this.props.citationData.data && this.props.citationData.data[e["@id"]]){
-                                          console.log("added:",this.props.citationData.data[e["@id"]])
+                                          //console.log("added:",this.props.citationData.data[e["@id"]])
                                        }
                                     } 
                                     this.setState(s)
@@ -7233,7 +7233,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          }
       }
       
-      console.log("_T!!",_T)
+      //console.log("_T!!",_T)
       if(this.props.resources && this.props.resources[this.props.IRI] && _T !== "Etext") this.setManifest(kZprop,iiifpres)    
 
 
@@ -7333,7 +7333,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          }).filter(k => k)
          createdBy = _.orderBy(createdBy, ["n","m"], ["desc","asc"])
 
-         console.log("rel:",related,createdBy)
+         //console.log("rel:",related,createdBy)
 
          related = related.map( ({s,k,n,m,label},i) => {            
             this._refs["rel-"+i] = React.createRef();
@@ -7636,7 +7636,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
             else i-=4 ;
             if(i > max) i = max
             else if(i < 0) i = 0
-            console.log("i:",next,i,max,idx,this._refs[i],this._refs)
+            //console.log("i:",next,i,max,idx,this._refs[i],this._refs)
             if(this._refs[ idx + "-" + i ]) {
                this._refs[ idx + "-" + i ].current.scrollIntoView({behavior:"smooth",block:"nearest",inline:"start"})
                this.setState({["i"+idx]:i})
@@ -7659,7 +7659,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                if(birth.length) birth = birth[0]
                let death = elem.filter(e => e.k && e.k.endsWith("PersonDeath")).map(e => this.getResourceBNode(e.value));
                if(death.length) death = death[0]
-               console.log("dates:",birth,death,elem)
+               //console.log("dates:",birth,death,elem)
                //elem = elem.filter(e => )
                
                let vals = []
@@ -7751,7 +7751,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                   +',"tmp:propid":"'+this.props.propid+'"'
                   +(otherData?',"tmp:otherData":'+JSON.stringify(otherData):'')
                   +'}'
-               console.log("(MSG)",this.props.propid,JSON.stringify(otherData,null,3),msg)
+               //console.log("(MSG)",this.props.propid,JSON.stringify(otherData,null,3),msg)
                window.top.postMessage(msg, "*") // TODO set target url for message
                if(prevent) {
                   ev.preventDefault()
