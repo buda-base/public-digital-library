@@ -1067,10 +1067,26 @@ class ResourceViewer extends Component<Props,State>
 
       }
 
+      /* // no need
+      if(props.outlines) {
+         if(!state.outlines) {
+            if(!s) s = { ...state }
+            s.outlines = {}
+         }
+         for(let k of Object.keys(props.outlines)) {
+            if(!state.outlines || !state.outlines[k] || props.outlines[k] != state.outlines[k]) {
+               if(!s) s = { ...state }
+               s.outlines[k] = props.outlines[k]
+            }
+         }
+      }
+      */
+      
       if(props.resources && props.resources[props.IRI]) {
 
          if(props.IRI && !props.outline && getEntiType(props.IRI) === "Instance" && props.config) props.onGetOutline(props.IRI)
          if(state.outlinePart && props.outlines && !props.outlines[state.outlinePart] && props.config) props.onGetOutline(state.outlinePart)
+
 
          let root = getElem(bdo+"inRootInstance",props.IRI)
          if(root && root.length) {
@@ -6680,12 +6696,12 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                   }
                }
                
-               loggergen.log("makeNode/elem:",osearch,elem,top,parent)
+               //loggergen.log("makeNode/elem:",osearch,elem,top,parent)
 
-               let outline = []
+               let outline = [], showPrev = null, showNext = null
                if(elem && elem["@graph"]) { 
                   elem = elem["@graph"]
-                  
+
                   const time = Date.now()
                   let last = Date.now(), subtimes = [0,0,0,0,0,0,0,0,0,0]              
                   const subtime = (n) => {
@@ -6707,10 +6723,48 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
                   if(node.length && node[0].hasPart) { 
                      if(!Array.isArray(node[0].hasPart)) node[0].hasPart = [ node[0].hasPart ]
-                     
-                     //loggergen.log("loop:")  
 
-                     for(let e of node[0].hasPart) {
+                     // keep only ~50 children and everything inside
+                     const ShowNbChildren = 40
+                     let subparts = [], sorted = _.orderBy(node[0].hasPart.map(n => {
+                        const e = mapElem(n)
+                        if(e && e.length && e[0].partIndex !== undefined) return { id:n, partIndex: e[0].partIndex }
+                        else return { id:n, partIndex:999999}
+                     }),["partIndex"],["asc"])
+
+                     // TODO: case of a search 
+                     let isParent = sorted.filter(n => n.id === opart), start = 0, end = start + ShowNbChildren
+                     if(isParent.length) {                     
+                        let mustBe = sorted.map( (n,i) => {
+                           if(isParent.some(m => m.id === n.id)) return i
+                        }).filter(e => e)
+                        if(mustBe.length) { 
+                           // TODO: case of multiple/matches
+                           start = Math.max(0, mustBe[0] - Math.floor(ShowNbChildren / 2))
+                           end = start + ShowNbChildren + 1
+                        }                        
+                     }
+                     
+                     if(start > 0) {
+                        let tag = "outline-"+root+"-"+top+"-prev"
+                        let prev = this.state.collapse[tag]?this.state.collapse[tag]:[]
+                        if(prev.length) start = prev[prev.length - 1]
+                        if(start > 0) showPrev = <span class="node-nav" onClick={
+                           () => this.setState({collapse:{...this.state.collapse, [tag]:[...prev, Math.max(0,start-ShowNbChildren)]}})
+                        }>{I18n.t("resource.showPnodes")}</span>
+                     }
+                     if(end < sorted.length - 1) {
+                        let tag = "outline-"+root+"-"+top+"-next"
+                        let next = this.state.collapse[tag]?this.state.collapse[tag]:[]
+                        if(next.length) end = next[next.length - 1]
+                        if(end < sorted.length - 1) showNext = <span class="node-nav" onClick={
+                           () => this.setState({collapse:{...this.state.collapse, [tag]:[...next, end+ShowNbChildren]}})
+                        }>{I18n.t("resource.showNnodes")}</span>
+                     }
+
+                     subparts = sorted.slice(start,end).map(n => n.id)
+
+                     for(let e of subparts) {
                         
                         subtime(0)
 
@@ -6754,7 +6808,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                               showDetails = showDetails || (osearch && g.hasMatch && this.state.collapse[tag+"-details"] !== false) 
                               if(showDetails && !g.hidden) g.hidden = []
 
-                              console.log("showD:",g["@id"], g.hasMatch, g)
+                              //console.log("showD:",g["@id"], g.hasMatch, g)
 
 
                               subtime(1)
@@ -6965,7 +7019,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
                      //loggergen.log("outline?",elem,outline)
 
-                     outline = _.orderBy(outline,["partIndex"],["asc"]).map(e => {
+                     outline = outline.map(e => {
                         let tag = "outline-"+root+"-"+e['@id']
                         let ret = []
                         let pType = e["partType"], fUri = fullUri(e["@id"])
@@ -7064,12 +7118,13 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                                        </span>
                                  </span>] }</div>
                            )
-                        if((osearch && this.state.collapse[tag] !== false) || (this.props.outlines[e["@id"]] && this.props.outlines[e["@id"]] !== true && this.state.collapse[tag]) ) ret.push(<div style={{paddingLeft:"25px"}}>{makeNodes(e["@id"],top)}</div>)                        
+                        if((osearch && this.state.collapse[tag] !== false) || (this.props.outlines[e["@id"]] && this.props.outlines[e["@id"]] !== true && this.state.collapse[tag]) ) 
+                           ret.push(<div style={{paddingLeft:"25px"}}>{makeNodes(e["@id"],top)}</div>)                        
                         return ( ret )
                      })
                   }
                }
-               return outline
+               return [ showPrev, outline, showNext ]
             }
 
             outline = makeNodes(root,root)

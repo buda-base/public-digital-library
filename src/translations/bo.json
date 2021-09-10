@@ -499,7 +499,9 @@
       "location1": " (v. {{vol}}, img. {{page}})",
       "locationM": " (v. {{vol}}, img. {{page}}-{{endPage}})",
       "location1vol1": " (img. {{page}})",
-      "location1volM": " (img. {{page}}-{{endPage}})"
+      "location1volM": " (img. {{page}}-{{endPage}})",
+      "showPnodes":"Previous",
+      "showNnodes":"Next"
    },
    "mirador": {
       "return": "བུདྡྷ་ལ་ཕྱིར་ལོག",
