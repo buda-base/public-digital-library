@@ -6633,7 +6633,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                }
 
                this.setState( { collapse } )               
-               //loggergen.log("collapse?",JSON.stringify(collapse,null,3))
+               loggergen.log("collapse?",JSON.stringify(collapse,null,3))
 
                
                if(opart && this.state.outlinePart) {
@@ -6729,43 +6729,73 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                            }
 
                            if(!g.details) {
+                              let tag = "outline-"+root+"-"+g['@id']
+                              let showDetails = this.state.collapse[tag+"-details"]                              
+
                               g.rid = this.props.IRI
                               g.lang = this.props.locale
-                              if(!g.hidden) g.hidden = []
+                              if(showDetails && !g.hidden) g.hidden = []
                               // deprecated
                               // if(! (["bdr:PartTypeSection", "bdr:PartTypeVolume"].includes(g.partType)) ) {
 
-                              let nav = []
+                              let nav = [] ;
 
-                              if(g.contentLocation && (!this.state.catalogOnly || !this.state.catalogOnly[this.props.IRI])) {
-                                 if(!g.details) g.details = []
-                                 g.hasImg = "/show/"+g["@id"].replace(/^((bdr:MW[^_]+)_[^_]+)$/,"$1")+"?s="+encodeURIComponent(this.props.history.location.pathname+this.props.history.location.search)+"#open-viewer"
-                                 nav.push(<Link to={g.hasImg} class="ulink">{I18n.t("copyright.view")}</Link>)
-                              }
-                              else if (g.instanceHasReproduction) {
-                                 if(!g.details) g.details = []
-                                 g.hasImg = "/show/"+g.instanceHasReproduction+"?s="+encodeURIComponent(this.props.history.location.pathname+this.props.history.location.search)+"#open-viewer"
-                                 nav.push(<Link to={g.hasImg} class="ulink">{I18n.t("copyright.view")}</Link>)  
-                              }
-
-
-                              subtime(1)
-
-
-                              if(g["@id"] !== this.props.IRI || (g["@id"] === opart && opart !== this.props.IRI)) {
-                                 if(nav.length) nav.push(<span>|</span>)
-                                 nav.push(<Link to={"/show/"+g["@id"]} class="ulink">{I18n.t("resource.openR")}</Link>)
-                              }
-
-                              if(nav.length) { 
-                                 if(!g.details) g.details = []
-                                 g.details.push(<div class="sub view">{nav}</div>)
-                              }
 
                               if(g["tmp:titleMatch"] || g["tmp:labelMatch"]) {
                                  g.hasMatch = true
                                  if(g["tmp:titleMatch"] && !Array.isArray(g["tmp:titleMatch"])) g["tmp:titleMatch"] = [ g["tmp:titleMatch"] ]
                               }
+
+                              if(g.instanceOf) {
+                                 let instOf = mapElem(g.instanceOf)
+                                 if(instOf.length && instOf[0]["tmp:labelMatch"]) {
+                                    g.hasMatch = true
+                                 }   
+                              }
+
+                              showDetails = showDetails || (osearch && g.hasMatch && this.state.collapse[tag+"-details"] !== false) 
+
+
+                              subtime(1)
+
+
+                              if(g.contentLocation && (!this.state.catalogOnly || !this.state.catalogOnly[this.props.IRI])) {
+                                 g.hasImg = "/show/"+g["@id"].replace(/^((bdr:MW[^_]+)_[^_]+)$/,"$1")+"?s="+encodeURIComponent(this.props.history.location.pathname+this.props.history.location.search)+"#open-viewer"
+                                 g.hasDetails = true
+                                 if(showDetails) {
+                                    if(!g.details) g.details = []
+                                    nav.push(<Link to={g.hasImg} class="ulink">{I18n.t("copyright.view")}</Link>)
+                                 }
+                              }
+                              else if (g.instanceHasReproduction) {
+                                 g.hasImg = "/show/"+g.instanceHasReproduction+"?s="+encodeURIComponent(this.props.history.location.pathname+this.props.history.location.search)+"#open-viewer"
+                                 g.hasDetails = true
+                                 if(showDetails) {
+                                    if(!g.details) g.details = []
+                                    nav.push(<Link to={g.hasImg} class="ulink">{I18n.t("copyright.view")}</Link>)  
+                                 }
+                              }
+
+
+                              subtime(2)
+
+
+                              if(g["@id"] !== this.props.IRI || (g["@id"] === opart && opart !== this.props.IRI)){
+                                 g.hasDetails = true
+                                 if(showDetails) {
+                                    if(nav.length) nav.push(<span>|</span>)
+                                    nav.push(<Link to={"/show/"+g["@id"]} class="ulink">{I18n.t("resource.openR")}</Link>)
+                                 }
+                              }
+
+                              if(nav.length) { 
+                                 g.hasDetails = true
+                                 if(showDetails) {
+                                    if(!g.details) g.details = []
+                                    g.details.push(<div class="sub view">{nav}</div>)
+                                 }
+                              }
+
                               if(g["bf:identifiedBy"]) {
                                  if(!Array.isArray(g["bf:identifiedBy"])) g["bf:identifiedBy"] = [ g["bf:identifiedBy"] ]
                                  if(g["bf:identifiedBy"].length) { 
@@ -6782,10 +6812,10 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                               }
 
 
-                              subtime(2)
+                              subtime(3)
 
                               
-                              if(g.contentLocation) {
+                              if(showDetails && g.contentLocation) {
                                  if(!g.details) g.details = []
                                  // let loca = elem.filter(f => f["@id"] === g.contentLocation), 
                                  let loca = mapElem(g.contentLocation),
@@ -6802,7 +6832,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                               }
 
 
-                              subtime(3)
+                              subtime(4)
 
                               /*
                               if(osearch && g["tmp:titleMatch"]) {
@@ -6815,7 +6845,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
 
                               
-                              if(g.hasTitle) {
+                              if(showDetails && g.hasTitle) {
                                  if(!g.details) g.details = []
                                  if(!Array.isArray(g.hasTitle)) g.hasTitle = [ g.hasTitle ]
                                  let lasTy
@@ -6840,39 +6870,40 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                                           title.length && title[0].value && g["tmp:titleMatch"] && useT.length) {
 
                                           addTo = g.details 
-                                          addTo.push(<div class={"sub " + (hideT?"hideT":"")}><h4 class="first type">{this.proplink(titleT)}{I18n.t("punc.colon")} </h4>{this.format("h4", "", "", false, "sub", useT?useT:title)}</div>)
+                                          if(addTo) addTo.push(<div class={"sub " + (hideT?"hideT":"")}><h4 class="first type">{this.proplink(titleT)}{I18n.t("punc.colon")} </h4>{this.format("h4", "", "", false, "sub", useT?useT:title)}</div>)
                                        } else {
-                                          addTo.push(<div class={"sub " + (hideT?"hideT":"")}><h4 class="first type">{this.proplink(titleT)}{I18n.t("punc.colon")} </h4>{this.format("h4", "", "", false, "sub", title)}</div>)
+                                          if(addTo) addTo.push(<div class={"sub " + (hideT?"hideT":"")}><h4 class="first type">{this.proplink(titleT)}{I18n.t("punc.colon")} </h4>{this.format("h4", "", "", false, "sub", title)}</div>)
                                        }
                                     }
                                  }
                               }
 
-
-                              subtime(4)
-
-
                               if(g.instanceOf) {
                                  //if(Array.isArray(g.instanceOf)) g.instanceOf = 
-                                 if(!g.details) g.details = []
-                                 g.details.push(<div class="sub"><h4 class="first type">{this.proplink(tmp+"instanceOfWork")}{I18n.t("punc.colon")} </h4>{this.format("h4","instacO","",false, "sub", [{type:"uri",value:fullUri(g.instanceOf)}])}</div>)
+                                 if(showDetails) {
+                                    if(!g.details) g.details = []
+                                    g.details.push(<div class="sub"><h4 class="first type">{this.proplink(tmp+"instanceOfWork")}{I18n.t("punc.colon")} </h4>{this.format("h4","instacO","",false, "sub", [{type:"uri",value:fullUri(g.instanceOf)}])}</div>)
+                                 }
                                  //let instOf = elem.filter(f => f["@id"] === g.instanceOf)
                                  let instOf = mapElem(g.instanceOf)
                                  if(instOf.length && instOf[0]["tmp:labelMatch"]) {
                                     g.hasMatch = true
-                                    let node = instOf[0]["tmp:labelMatch"]
-                                    if(!Array.isArray(node)) node = [node]                                    
                                     //loggergen.log("instOf",instOf,node)
-                                    g.hidden.push(<div class="sub"><h4 class="first type">{this.proplink(tmp+"instanceLabel")}{I18n.t("punc.colon")} </h4><div>{node.map(n => this.format("h4","","",false, "sub",[{ value:n["@value"], lang:n["@language"], type:"literal"}]))}</div></div>)
+                                    if(showDetails) {
+                                       let node = instOf[0]["tmp:labelMatch"]
+                                       if(!Array.isArray(node)) node = [node]                                    
+                                       g.hidden.push(<div class="sub"><h4 class="first type">{this.proplink(tmp+"instanceLabel")}{I18n.t("punc.colon")} </h4><div>{node.map(n => this.format("h4","","",false, "sub",[{ value:n["@value"], lang:n["@language"], type:"literal"}]))}</div></div>)
+                                    }
                                  }
    
                               }
 
 
+
                               subtime(5)
 
 
-                              if(g["tmp:author"]) {
+                              if(showDetails && g["tmp:author"]) {
                                  //console.log("g:",g["tmp:author"],g["@id"]);
                                  if(!Array.isArray(g["tmp:author"])) g["tmp:author"] = [ g["tmp:author"] ]
                                  g.hidden.push(<div class="sub"><h4 class="first type">{this.proplink(tmp+"author", undefined, g["tmp:author"].length)}{I18n.t("punc.colon")} </h4>{this.format("h4","instacO","",false, "sub", 
@@ -6882,7 +6913,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
                               subtime(6)
 
-                              for(let p of [ "colophon", "authorshipStatement", "incipit", "explicit" ]) {
+                              if(showDetails) for(let p of [ "colophon", "authorshipStatement", "incipit", "explicit" ]) {
                                  node = g[p]
                                  if(!node) continue;
                                  if(!Array.isArray(node)) node = [node]
@@ -6895,7 +6926,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
 
                               // WIP sameAs icon / seeAlso link
-                              if(g["owl:sameAs"] || g["rdfs:seeAlso"]){
+                              if(showDetails && (g["owl:sameAs"] || g["rdfs:seeAlso"])){
                                  g.same = []
                                  if(g["owl:sameAs"] && !Array.isArray(g["owl:sameAs"])) g["owl:sameAs"] = [ g["owl:sameAs"] ]
                                  if(g["rdfs:seeAlso"] && !Array.isArray(g["rdfs:seeAlso"])) g["rdfs:seeAlso"] = [ g["rdfs:seeAlso"] ]
@@ -6969,7 +7000,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                                        { !this.state.collapse[tag+"-details"] && <ExpandMore className="details"/>}
                                        {  this.state.collapse[tag+"-details"] && <ExpandLess className="details"/>}
                                     </span> */ }
-                                 { e.details && <span id="anchor" title={/*tLabel+" - "+*/I18n.t("resource."+(this.state.collapse[tag+"-details"]?"hideD":"showD"))} onClick={(ev) => toggle(ev,root,e["@id"],"details",false,e)}>
+                                 { e.hasDetails && <span id="anchor" title={/*tLabel+" - "+*/I18n.t("resource."+(this.state.collapse[tag+"-details"]?"hideD":"showD"))} onClick={(ev) => toggle(ev,root,e["@id"],"details",false,e)}>
                                     <img src="/icons/info.svg"/>
                                  </span> }
                                  <CopyToClipboard text={fUri} onCopy={(e) => prompt(I18n.t("misc.clipboard"),fUri)}>
@@ -7015,7 +7046,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                               
                               </div>
                            </span>)
-                        if(((osearch && e.hasMatch && this.state.collapse[tag+"-details"] !== false) || this.state.collapse[tag+"-details"]) && e.details) 
+                        if(((osearch && e.hasMatch && this.state.collapse[tag+"-details"] !== false) || this.state.collapse[tag+"-details"]) && e.hasDetails) 
                            ret.push(<div class="details">
                               {e.details}
                               { (e.hidden && e.hidden.length > 0) && [
