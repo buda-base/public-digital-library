@@ -1081,6 +1081,17 @@ class ResourceViewer extends Component<Props,State>
          }
       }
       */
+
+      // fix Volume toggle not possible because volume id not known 
+      if(props.outlines && props.IRI) {
+         for(let k of Object.keys(props.outlines)) {
+            if(props.outlines[k] !== true && state.collapse["outline-"+props.IRI+"-"+k] === undefined) {
+               //console.warn("strange:",k)
+               if(!s) s = { ...state }
+               s.collapse["outline-"+props.IRI+"-"+k] = true
+            }
+         }
+      }
       
       if(props.resources && props.resources[props.IRI]) {
 
@@ -6630,7 +6641,18 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
             loggergen.log("collapse!",root,opart,JSON.stringify(collapse,null,3),this.props.outlines[opart])
 
+
             if(!this.props.outlines[opart]) this.props.onGetOutline(opart);
+               
+               /*
+               // no need
+               && this.props.outlines[this.props.IRI]  && this.props.outlines[this.props.IRI] !== true) {
+               let opart_node = elem.filter(o => o["@id"] === opart)
+               if(!opart_node.length) opart_node = null
+               let opart_parent = elem.filter(o => o.hasPart && (o.hasPart === opart || o.hasParent.includes(opart)))
+               if(opart_parent.length) opart_parent = opart_parent[0]["@id"]
+               else opart_parent = null
+               */
 
             if(this.props.outlines[opart] && this.props.outlines[opart] !== true && this.state.collapse["outline-"+root+"-"+opart+"-details"] === undefined) {
 
@@ -6641,18 +6663,39 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                let nodes = this.props.outlines[opart]
                if(nodes && nodes["@graph"]) nodes = nodes["@graph"]
                if(root !== opart && nodes && nodes.length) {
-                  let head = opart
+                  let head = opart, done_opart = false
                   do {
-                     head = nodes.filter(n => n.hasPart && (n.hasPart === head || n.hasPart.includes(head)))
-                     loggergen.log("head?",head)
+                     let head_node = nodes.filter(n => n.hasPart && (n.hasPart === head || n.hasPart.includes(head)))
+                     head = head_node
+                     loggergen.log("head?",head, head_node)
                      if(head && head.length) { 
                         head = head[0]["@id"]
+                        head_node = head_node[0]
                         if(collapse["outline-"+root+"-"+head] === undefined) { //} && (opart !== root || head !== root)) {
                            collapse["outline-"+root+"-"+head] = true ;
-                           if(!this.props.outlines[head]) this.props.onGetOutline(head);
+                           console.log("outline:",head,head_node)
+                           let parent_head = nodes.filter(n => n.hasPart && (n.hasPart === head || n.hasPart.includes(head)))
+                           if(parent_head.length) {
+                              if(!done_opart && parent_head[0]["tmp:hasNonVolumeParts"]) {
+                                 let opart_node = nodes.filter(n => n["@id"] === opart)
+                                 console.log("opart_n:",opart_node,nodes)
+                                 if(opart_node.length) {
+                                    let vol = nodes.filter(n => n["@id"] === opart_node[0].contentLocation)
+                                    if(vol.length) { 
+                                       vol = vol[0].contentLocationVolume
+                                       //console.log("ready for vol."+vol+" in "+head+ " /                                     
+                                       this.props.onGetOutline("tmp:uri", { partType: "bdr:PartTypeVolume", "tmp:hasNonVolumeParts": true, volumeNumber: vol }, head);
+                                    }
+                                 }
+                              }
+                              parent_head = parent_head[0]["@id"]
+                           }
+                           else parent_head = null
+                           if(!this.props.outlines[head]) this.props.onGetOutline(head, head_node, parent_head);
                         }
+                        done_opart = true
                      }
-                  } while(head !== root && head.length); 
+                  } while(head !== root && head.length);
                }
 
                this.setState( { collapse } )               
@@ -6731,13 +6774,18 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                   if(node.length && node[0].hasPart) { 
                      if(!Array.isArray(node[0].hasPart)) node[0].hasPart = [ node[0].hasPart ]
 
-                     // keep only ~50 children and everything inside
-                     const ShowNbChildren = 40
                      let subparts = [], sorted = _.orderBy(node[0].hasPart.map(n => {
                         const e = mapElem(n)
                         if(e && e.length && e[0].partIndex !== undefined) return { id:n, partIndex: e[0].partIndex }
                         else return { id:n, partIndex:999999}
                      }),["partIndex"],["asc"])
+
+                     
+                     //subparts = sorted.map(n => n.id)
+                     
+                     
+                     // keep only ~50 children and everything inside
+                     const ShowNbChildren = 40
 
                      // TODO: case of a search 
                      let isParent = sorted.filter(n => n.id === opart), start = 0, end = start + ShowNbChildren
@@ -6750,6 +6798,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                            start = Math.max(0, mustBe[0] - Math.floor(ShowNbChildren / 2))
                            end = start + ShowNbChildren + 1
                         }                        
+                        //console.log("mB:",mustBe,start,end)
                      }
 
                      let min = sorted.findIndex(s => s.partIndex !== 999999)
@@ -6772,9 +6821,10 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                         }>{I18n.t("resource.showNnodes")}</span>
                      }
 
-                     console.log("next/prev:",start,end,max,sorted)
+                     //console.log("next/prev:",start,end,min,max,sorted)
 
                      subparts = sorted.slice(start,end).map(n => n.id)
+                     
 
                      for(let e of subparts) {
                         

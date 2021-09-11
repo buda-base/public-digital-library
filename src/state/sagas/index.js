@@ -2501,6 +2501,10 @@ async function getOutline(iri,node?,volFromUri?) {
    if(res && res["@graph"] && volFromUri) res["@graph"].map(r => { 
       // patch main node
       if(r.id == volFromUri) { 
+
+         // patching the patch :-)
+         if(iri === "tmp:uri" && r["tmp:firstImageGroup"] && r["tmp:firstImageGroup"]["id"]) iri = r["tmp:firstImageGroup"]["id"]
+
          r.id = iri
          if(r["skos:prefLabel"]) delete r["skos:prefLabel"]
       }
