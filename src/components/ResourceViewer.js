@@ -2227,7 +2227,7 @@ class ResourceViewer extends Component<Props,State>
          
          info = [ getLangLabel(this, prop, infoBase) ]
 
-         loggergen.log("info?",info,infoBase)
+         //loggergen.log("info?",info,infoBase)
 
          if(info && info[0] && (info[0]["xml:lang"] || info[0]["lang"]) && !info[0].datatype) {
             lang = info[0]["xml:lang"]
@@ -2531,7 +2531,7 @@ class ResourceViewer extends Component<Props,State>
                   //if(pI) uri = this.props.IRI+"?part="+uri
                   //else uri = uri.replace(/^((bdr:MW[^_]+)_[^_]+)/,"$2?part=$1")
 
-                  console.log("inOutL:",elem,info,uri,dico)
+                  //console.log("inOutL:",elem,info,uri,dico)
 
                   if(info === uri) {                      
                      if(elem.volume) {
@@ -6551,7 +6551,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          let osearch 
          if(this.props.outlineKW) osearch = this.props.outlineKW
 
-         let toggle = (e,r,i,x = "",force = false, node) => {
+         let toggle = (e,r,i,x = "",force = false, node, volFromUri) => {
             let tag = "outline-"+r+"-"+i+(x?"-"+x:"")
             let val = this.state.collapse[tag]
             if(osearch) {
@@ -6566,7 +6566,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
             loggergen.log("toggle!",tag,val)
 
             this.setState( { collapse:{...this.state.collapse, [tag]:!val } })
-            if(/*this.state.outlinePart  &&*/ (!this.props.outlineKW || force || node && node.notMatch) &&  !x && this.props.outlines && (!this.props.outlines[i] || force && r === i) )this.props.onGetOutline(i,node);
+            if(/*this.state.outlinePart  &&*/ (!this.props.outlineKW || force || node && node.notMatch) &&  !x && this.props.outlines && (!this.props.outlines[i] || force && r === i) )this.props.onGetOutline(i,node,volFromUri);
          }
 
 
@@ -6751,23 +6751,28 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                            end = start + ShowNbChildren + 1
                         }                        
                      }
+
+                     let min = sorted.findIndex(s => s.partIndex !== 999999)
+                     let max = sorted.filter(s => s.partIndex !== 999999).length
                      
-                     if(start > 0) {
+                     if(start > min) {
                         let tag = "outline-"+root+"-"+top+"-prev"
                         let prev = this.state.collapse[tag]?this.state.collapse[tag]:[]
                         if(prev.length) start = prev[prev.length - 1]
-                        if(start > 0) showPrev = <span class="node-nav" onClick={
+                        if(start > min) showPrev = <span class="node-nav" onClick={
                            () => this.setState({collapse:{...this.state.collapse, [tag]:[...prev, Math.max(0,start-ShowNbChildren)]}})
                         }>{I18n.t("resource.showPnodes")}</span>
                      }
-                     if(end < sorted.length - 1) {
+                     if(end < max - 1) {
                         let tag = "outline-"+root+"-"+top+"-next"
                         let next = this.state.collapse[tag]?this.state.collapse[tag]:[]
                         if(next.length) end = next[next.length - 1]
-                        if(end < sorted.length - 1) showNext = <span class="node-nav" onClick={
+                        if(end < max - 1) showNext = <span class="node-nav" onClick={
                            () => this.setState({collapse:{...this.state.collapse, [tag]:[...next, end+ShowNbChildren]}})
                         }>{I18n.t("resource.showNnodes")}</span>
                      }
+
+                     console.log("next/prev:",start,end,max,sorted)
 
                      subparts = sorted.slice(start,end).map(n => n.id)
 
@@ -7051,7 +7056,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                               <span class={"parTy "+(e.details?"on":"")}  ref={citeRef} {...e.details?{title:/*tLabel+" - "+*/ I18n.t("resource."+(this.state.collapse[tag+"-details"]?"hideD":"showD")), onClick:(ev) => toggle(ev,root,e["@id"],"details",false,e)}:{title:tLabel}} >
                                  {pType && parts[pType] ? <div>{parts[pType]}</div> : <div>{parts["?"]}</div> }
                               </span>
-                              <span>{this.uriformat(null,{type:'uri', value:fUri, ...(e.partType==="bdr:PartTypeVolume"?{volumeNumber:e.volumeNumber}:{}), inOutline: (!e.hasPart?tag+"-details":tag), url:"/show/"+root+"?part="+e["@id"], debug:false, toggle:() => toggle(null,root,e["@id"],!e.hasPart?"details":"",false,e)})}</span>
+                              <span>{this.uriformat(null,{type:'uri', value:fUri, ...(e.partType==="bdr:PartTypeVolume"?{volumeNumber:e.volumeNumber}:{}), inOutline: (!e.hasPart?tag+"-details":tag), url:"/show/"+root+"?part="+e["@id"], debug:false, toggle:() => toggle(null,root,e["@id"],!e.hasPart&&!e["tmp:hasNonVolumeParts"]?"details":"",false,e,top)})}</span>
                               {e.id}
                               {this.samePopup(e.same,fUri)}
                               <div class="abs">

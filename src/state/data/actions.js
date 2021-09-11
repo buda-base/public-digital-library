@@ -300,11 +300,11 @@ export const gotLatestSyncs = (res,nb): Action => {
 }
 
 TYPES.getOutline = 'GET_OUTLINE';
-export const getOutline = (iri: string,node:{}): Action => {
+export const getOutline = (iri: string,node?:{},volFromUri?:string): Action => {
     return {
         type: TYPES.getOutline,
         payload: iri,
-        meta:node
+        meta:{node, volFromUri}
     }
 }
 

@@ -347,14 +347,26 @@ export default class API {
    }
 
 
-    async loadOutline(IRI:string,node?:{}): Promise<string>
+    async loadOutline(IRI:string,node?:{},volFromUri?:string): Promise<string>
     {
          try {
             
             if(!IRI.indexOf(':') === -1 ) IRI = "bdr:"+IRI
             let config = store.getState().data.config.ldspdi
             let url = config.endpoints[config.index]+"/query/graph" ;            
-            let param = {"searchType":"Outline_root"+(node&&node["tmp:hasNonVolumeParts"]?"_volumes":""),"R_RES":IRI,"L_NAME":"","LG_NAME":"", "I_LIM":"" }
+            let searchType = "Outline_root", extraParam
+            if(node) {
+               if(node["tmp:hasNonVolumeParts"]) {
+                  if(node.partType === "bdr:PartTypeVolume") { 
+                     searchType += "_pervolume"
+                     extraParam = { I_VNUM: node.volumeNumber }
+                     IRI = volFromUri                     
+                  }
+                  else searchType += "_volumes"
+               }
+            }
+            let param = {searchType,"R_RES":IRI,"L_NAME":"","LG_NAME":"", "I_LIM":"" }
+            if(extraParam) param = { ...param, ...extraParam }
             let data = await this.getQueryResults(url, IRI, param,"GET","application/jsonld");         
 
             return data ;

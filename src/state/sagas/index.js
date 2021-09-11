@@ -2494,10 +2494,18 @@ export function* watchGetLatestSyncs() {
    );
 }
 
-async function getOutline(iri,node?) {
+async function getOutline(iri,node?,volFromUri?) {
 
    store.dispatch(uiActions.loading(iri, "outline"));
-   let res = await api.loadOutline(iri,node) 
+   let res = await api.loadOutline(iri,node,volFromUri) 
+   if(res && res["@graph"] && volFromUri) res["@graph"].map(r => { 
+      // patch main node
+      if(r.id == volFromUri) { 
+         r.id = iri
+         if(r["skos:prefLabel"]) delete r["skos:prefLabel"]
+      }
+      //console.log("foundem?",r,volFromUri)
+   })
    store.dispatch(uiActions.loading(iri, false));
    
    loggergen.log("outline",res)
@@ -2532,7 +2540,7 @@ export function* watchGetOutline() {
 
    yield takeLatest(
       dataActions.TYPES.getOutline,
-      (action) => getOutline(action.payload, action.meta)
+      (action) => getOutline(action.payload, action.meta.node?action.meta.node:undefined,action.meta.volFromUri?action.meta.volFromUri:undefined)
    );
 }
 
