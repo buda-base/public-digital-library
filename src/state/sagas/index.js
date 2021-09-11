@@ -2494,10 +2494,10 @@ export function* watchGetLatestSyncs() {
    );
 }
 
-async function getOutline(iri) {
+async function getOutline(iri,node?) {
 
    store.dispatch(uiActions.loading(iri, "outline"));
-   let res = await api.loadOutline(iri) 
+   let res = await api.loadOutline(iri,node) 
    store.dispatch(uiActions.loading(iri, false));
    
    loggergen.log("outline",res)
@@ -2532,7 +2532,7 @@ export function* watchGetOutline() {
 
    yield takeLatest(
       dataActions.TYPES.getOutline,
-      (action) => getOutline(action.payload)
+      (action) => getOutline(action.payload, action.meta)
    );
 }
 
