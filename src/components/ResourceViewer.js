@@ -1085,7 +1085,7 @@ class ResourceViewer extends Component<Props,State>
       // fix Volume toggle not possible because volume id not known 
       if(props.outlines && props.IRI) {
          for(let k of Object.keys(props.outlines)) {
-            if(props.outlines[k] !== true && state.collapse["outline-"+props.IRI+"-"+k] === undefined) {
+            if(props.outlines[k] && props.outlines[k] !== true && state.collapse["outline-"+props.IRI+"-"+k] === undefined) {
                //console.warn("strange:",k)
                if(!s) s = { ...state }
                s.collapse["outline-"+props.IRI+"-"+k] = true

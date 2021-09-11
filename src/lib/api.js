@@ -356,8 +356,8 @@ export default class API {
             let url = config.endpoints[config.index]+"/query/graph" ;            
             let searchType = "Outline_root", extraParam
             if(node) {
-               if(node["tmp:hasNonVolumeParts"]) {
-                  if(node.partType === "bdr:PartTypeVolume") { 
+               if(node["tmp:hasNonVolumeParts"] == true) {
+                  if(node.volumeNumber !== undefined && node.partType === "bdr:PartTypeVolume") { 
                      searchType += "_pervolume"
                      extraParam = { I_VNUM: node.volumeNumber }
                      IRI = volFromUri                     
