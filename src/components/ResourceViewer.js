@@ -1096,8 +1096,6 @@ class ResourceViewer extends Component<Props,State>
       if(props.resources && props.resources[props.IRI]) {
 
          if(props.IRI && !props.outline && getEntiType(props.IRI) === "Instance" && props.config) props.onGetOutline(props.IRI)
-         if(state.outlinePart && props.outlines && !props.outlines[state.outlinePart] && props.config) props.onGetOutline(state.outlinePart)
-
 
          let root = getElem(bdo+"inRootInstance",props.IRI)
          if(root && root.length) {
@@ -6642,7 +6640,28 @@ perma_menu(pdfLink,monoVol,fairUse,other)
             loggergen.log("collapse!",root,opart,JSON.stringify(collapse,null,3),this.props.outlines[opart])
 
 
-            if(!this.props.outlines[opart]) this.props.onGetOutline(opart);
+            if(!this.props.outlines[opart]) {             
+               let nodes = Object.values(this.props.outlines).reduce( (acc,v) => ([...acc, ...(v["@graph"]?v["@graph"]:[v])]), [])
+               let parent_nodes = nodes.filter(n => n["@id"] === opart) //n => n.hasPart && (n.hasPart === opart || n.hasPart.includes(opart)))
+               let opart_node = nodes.filter(n => n["@id"] === opart)
+               //console.log("pNode:",nodes,parent_nodes)
+               if(opart_node.length && opart_node[0] !== true && opart_node[0]["tmp:hasNonVolumeParts"] && parent_nodes.length && parent_nodes[0] !== true) {
+                  
+                  this.props.onGetOutline(parent_nodes[0]["@id"], parent_nodes[0]);
+
+                  /* // no need
+                  if(opart_node.length) {
+                     let vol = nodes.filter(n => n["@id"] === opart_node[0].contentLocation)
+                     if(vol.length) { 
+                        vol = vol[0].contentLocationVolume
+                        this.props.onGetOutline("tmp:uri", { partType: "bdr:PartTypeVolume", "tmp:hasNonVolumeParts": true, volumeNumber: vol }, nodes[0]["@id"]);
+                     }
+                  }
+                  */
+               } else {                     
+                  this.props.onGetOutline(opart);
+               }
+            }
                
                /*
                // no need
