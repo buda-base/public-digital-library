@@ -356,7 +356,9 @@ export default class API {
             let url = config.endpoints[config.index]+"/query/graph" ;            
             let searchType = "Outline_root", extraParam
             console.log("loadO:",IRI,node,volFromUri)
-            if(node) {
+            if(node 
+               && node.id && !node.id.match(/bdr:MW0T[ST]0/) // quickfix for Taisho to keep working
+            ) {
                if(node["tmp:hasNonVolumeParts"] == true) { 
                   if(node.volumeNumber !== undefined && node.partType === "bdr:PartTypeVolume") { 
                      searchType += "_pervolume"

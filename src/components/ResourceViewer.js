@@ -7067,7 +7067,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
 
                               // WIP sameAs icon / seeAlso link
-                              if(showDetails && (g["owl:sameAs"] || g["rdfs:seeAlso"])){
+                              if(/*showDetails &&*/ (g["owl:sameAs"] || g["rdfs:seeAlso"])){
                                  g.same = []
                                  if(g["owl:sameAs"] && !Array.isArray(g["owl:sameAs"])) g["owl:sameAs"] = [ g["owl:sameAs"] ]
                                  if(g["rdfs:seeAlso"] && !Array.isArray(g["rdfs:seeAlso"])) g["rdfs:seeAlso"] = [ g["rdfs:seeAlso"] ]
@@ -7084,8 +7084,10 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                                        if(providers[prefix]) {
                                           g.same.push({value:node["@value"]})                                             
                                        } else {
-                                          if(!g.details) g.details = [] 
-                                          g.details.push(<div class="sub"><h4 class="first type">{this.proplink(rdfs+"seeAlso")}{I18n.t("punc.colon")} </h4><div>{this.format("h4","","",false, "sub",[{ value:node["@value"], type:"xsd:anyUri"}])}</div></div>)
+                                          if(showDetails) {
+                                             if(!g.details) g.details = [] 
+                                             g.details.push(<div class="sub"><h4 class="first type">{this.proplink(rdfs+"seeAlso")}{I18n.t("punc.colon")} </h4><div>{this.format("h4","","",false, "sub",[{ value:node["@value"], type:"xsd:anyUri"}])}</div></div>)
+                                          }
                                        }                                 
                                     }
                                     

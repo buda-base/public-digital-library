@@ -2498,6 +2498,9 @@ async function getOutline(iri,node?,volFromUri?) {
 
    store.dispatch(uiActions.loading(iri, "outline"));
    let res = await api.loadOutline(iri,node,volFromUri) 
+
+   console.log("gotO:",res,node,volFromUri)
+
    if(res && res["@graph"] && volFromUri) res["@graph"].map(r => { 
       // patch main node
       if(r.id == volFromUri
