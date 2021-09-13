@@ -7123,6 +7123,9 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
                         const citeRef = React.createRef(), printRef = React.createRef()
 
+                        let url = "/show/"+root+"?part="+e["@id"]
+                        if(e["@id"] && e["@id"].startsWith("bdr:I")) url = "/show/"+e["@id"]
+
                         ret.push(<span class={'top'+ (this.state.outlinePart === e['@id'] || (!this.state.outlinePart && this.props.IRI===e['@id']) ?" is-root":"")+(this.state.collapse[tag]||osearch&&e.hasMatch?" on":"") }>
                               {(e.hasPart && open && osearch && !this.props.outlines[e['@id']]) && <span onClick={(ev) => toggle(ev,root,e["@id"],"",true)} className="xpd" title={I18n.t("resource.otherN")}><RefreshIcon /></span>}
                               {(e.hasPart && !open && this.props.outlines[e['@id']] !== true) && <img src="/icons/triangle_.png" onClick={(ev) => toggle(ev,root,e["@id"],"",false,e)} className="xpd"/>}
@@ -7130,7 +7133,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                               <span class={"parTy "+(e.details?"on":"")}  ref={citeRef} {...e.details?{title:/*tLabel+" - "+*/ I18n.t("resource."+(this.state.collapse[tag+"-details"]?"hideD":"showD")), onClick:(ev) => toggle(ev,root,e["@id"],"details",false,e)}:{title:tLabel}} >
                                  {pType && parts[pType] ? <div>{parts[pType]}</div> : <div>{parts["?"]}</div> }
                               </span>
-                              <span>{this.uriformat(null,{type:'uri', value:fUri, ...(e.partType==="bdr:PartTypeVolume"?{volumeNumber:e.volumeNumber}:{}), inOutline: (!e.hasPart?tag+"-details":tag), url:"/show/"+root+"?part="+e["@id"], debug:false, toggle:() => toggle(null,root,e["@id"],!e.hasPart&&!e["tmp:hasNonVolumeParts"]?"details":"",false,e,top)})}</span>
+                              <span>{this.uriformat(null,{type:'uri', value:fUri, ...(e.partType==="bdr:PartTypeVolume"?{volumeNumber:e.volumeNumber}:{}), inOutline: (!e.hasPart?tag+"-details":tag), url, debug:false, toggle:() => toggle(null,root,e["@id"],!e.hasPart&&!e["tmp:hasNonVolumeParts"]?"details":"",false,e,top)})}</span>
                               {e.id}
                               {this.samePopup(e.same,fUri)}
                               <div class="abs">
