@@ -2500,10 +2500,20 @@ async function getOutline(iri,node?,volFromUri?) {
    let res = await api.loadOutline(iri,node,volFromUri) 
    if(res && res["@graph"] && volFromUri) res["@graph"].map(r => { 
       // patch main node
-      if(r.id == volFromUri) { 
+      if(r.id == volFromUri
+         && r.hasPart && r.hasPart !== iri && !r.hasPart.includes(iri) // quickfix for loop/crash in bdr:MW12827
+      ) { 
 
          // patching the patch :-)
-         if(iri === "tmp:uri" && r["tmp:firstImageGroup"] && r["tmp:firstImageGroup"]["id"]) iri = r["tmp:firstImageGroup"]["id"]
+         if(iri === "tmp:uri" && r["tmp:firstImageGroup"] && r["tmp:firstImageGroup"]["id"]) {
+            iri = r["tmp:firstImageGroup"]["id"]
+         }
+
+         // keep only parts that are in current volume data
+         if(r.hasPart) {
+            if(!Array.isArray(r.hasPart)) r.hasPart = [ r.hasPart ]
+            r.hasPart = r.hasPart.filter(h => res["@graph"].some(n => n.id === h))
+         }
 
          r.id = iri
          if(r["skos:prefLabel"]) delete r["skos:prefLabel"]

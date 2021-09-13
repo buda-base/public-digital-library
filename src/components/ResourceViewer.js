@@ -6574,7 +6574,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                if(force && val && !x) val = false
             }
 
-            loggergen.log("toggle!",tag,val)
+            loggergen.log("toggle!",tag,val,node)
 
             this.setState( { collapse:{...this.state.collapse, [tag]:!val } })
             if(/*this.state.outlinePart  &&*/ (!this.props.outlineKW || force || node && node.notMatch) &&  !x && this.props.outlines && (!this.props.outlines[i] || force && r === i) )this.props.onGetOutline(i,node,volFromUri);
@@ -6663,7 +6663,8 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                let nodes = this.props.outlines[opart]
                if(nodes && nodes["@graph"]) nodes = nodes["@graph"]
                if(root !== opart && nodes && nodes.length) {
-                  let head = opart, done_opart = false
+                  let head = opart, done_opart = false, parent_head = null
+                  console.log("opart??",opart,head)
                   do {
                      let head_node = nodes.filter(n => n.hasPart && (n.hasPart === head || n.hasPart.includes(head)))
                      head = head_node
@@ -6674,9 +6675,9 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                         if(collapse["outline-"+root+"-"+head] === undefined) { //} && (opart !== root || head !== root)) {
                            collapse["outline-"+root+"-"+head] = true ;
                            console.log("outline:",head,head_node)
-                           let parent_head = nodes.filter(n => n.hasPart && (n.hasPart === head || n.hasPart.includes(head)))
-                           if(parent_head.length) {
-                              if(!done_opart && parent_head[0]["tmp:hasNonVolumeParts"]) {
+                           if(!done_opart && head_node["tmp:hasNonVolumeParts"]) {
+                              let parent_head = nodes.filter(n => n.hasPart && (n.hasPart === head || n.hasPart.includes(head)))
+                              if(parent_head.length) {
                                  let opart_node = nodes.filter(n => n["@id"] === opart)
                                  console.log("opart_n:",opart_node,nodes)
                                  if(opart_node.length) {
@@ -6771,6 +6772,8 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                   //let node = elem.filter(e => e["@id"] === top)                  
                   let node = mapElem(top)
 
+                  //console.log("node:",node)
+
                   if(node.length && node[0].hasPart) { 
                      if(!Array.isArray(node[0].hasPart)) node[0].hasPart = [ node[0].hasPart ]
 
@@ -6801,8 +6804,8 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                         //console.log("mB:",mustBe,start,end)
                      }
 
-                     let min = sorted.findIndex(s => s.partIndex !== 999999)
-                     let max = sorted.filter(s => s.partIndex !== 999999).length
+                     let min = 0 //sorted.findIndex(s => s.partIndex !== 999999)
+                     let max = sorted.length //sorted.filter(s => s.partIndex !== 999999).length
                      
                      if(start > min) {
                         let tag = "outline-"+root+"-"+top+"-prev"
@@ -6821,9 +6824,10 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                         }>{I18n.t("resource.showNnodes")}</span>
                      }
 
-                     //console.log("next/prev:",start,end,min,max,sorted)
-
                      subparts = sorted.slice(start,end).map(n => n.id)
+
+
+                     //console.log("next/prev:",start,end,min,max,subparts,sorted)
                      
 
                      for(let e of subparts) {
@@ -7281,7 +7285,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                   </div>
                </div>
                <div>
-                  <Loader loaded={this.props.loading !== "outline"}/>
+                  <Loader  options={{position:"fixed",left:"calc(50% + 100px)",top:"calc(50% - 20px)"}} loaded={this.props.loading !== "outline"}/>
                   <div class={"root " +(this.state.outlinePart === root || (!this.state.outlinePart && this.props.IRI===root)?"is-root":"")} >
                      { (osearch && open && (this.props.outlines[root] && !this.props.outlines[osearch].reloaded)) && <span onClick={(ev) => toggle(ev,root,root,"",true)} className="xpd" title={I18n.t("resource.otherN")}><RefreshIcon /></span>}
                      { !open && [<img src="/icons/triangle_.png" className="xpd" onClick={(e) => toggle(e,root,root)} />,colT,<span onClick={rootClick}>{title}</span>]}
