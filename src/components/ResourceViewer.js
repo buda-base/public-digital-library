@@ -6830,7 +6830,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                         let tag = "outline-"+root+"-"+top+"-prev"
                         let prev = this.state.collapse[tag]?this.state.collapse[tag]:[]
                         if(prev.length) start = prev[prev.length - 1]
-                        if(start > min) showPrev = <span class="node-nav" onClick={
+                        if(start > min && !osearch) showPrev = <span class="node-nav" onClick={
                            () => this.setState({collapse:{...this.state.collapse, [tag]:[...prev, Math.max(0,start-ShowNbChildren)]}})
                         }>{I18n.t("resource.showPnodes")}</span>
                      }
@@ -6838,12 +6838,13 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                         let tag = "outline-"+root+"-"+top+"-next"
                         let next = this.state.collapse[tag]?this.state.collapse[tag]:[]
                         if(next.length) end = next[next.length - 1]
-                        if(end < max - 1) showNext = <span class="node-nav" onClick={
+                        if(end < max - 1 && !osearch) showNext = <span class="node-nav" onClick={
                            () => this.setState({collapse:{...this.state.collapse, [tag]:[...next, end+ShowNbChildren]}})
                         }>{I18n.t("resource.showNnodes")}</span>
                      }
 
-                     subparts = sorted.slice(start,end).map(n => n.id)
+                     if(!osearch) subparts = sorted.slice(start,end).map(n => n.id)
+                     else subparts = sorted.map(n => n.id)
 
 
                      //console.log("next/prev:",start,end,min,max,subparts,sorted)
