@@ -355,14 +355,15 @@ export default class API {
             let config = store.getState().data.config.ldspdi
             let url = config.endpoints[config.index]+"/query/graph" ;            
             let searchType = "Outline_root", extraParam
+            console.log("loadO:",IRI,node,volFromUri)
             if(node) {
-               if(node["tmp:hasNonVolumeParts"] == true) {
+               if(node["tmp:hasNonVolumeParts"] == true) { 
                   if(node.volumeNumber !== undefined && node.partType === "bdr:PartTypeVolume") { 
                      searchType += "_pervolume"
                      extraParam = { I_VNUM: node.volumeNumber }
                      IRI = volFromUri                     
                   }
-                  else searchType += "_volumes"
+                  else if(node["partType"] !== "bdr:PartTypeVolume") searchType += "_volumes"
                }
             }
             let param = {searchType,"R_RES":IRI,"L_NAME":"","LG_NAME":"", "I_LIM":"" }
