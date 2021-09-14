@@ -6622,7 +6622,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          else {
             title = this.getWtitle([{value:fullUri(this.props.IRI)}], rootClick)
          }
-         let opart 
+         let opart, opartInVol
          if(this.state.outlinePart) opart = this.state.outlinePart         
          else if(root !== this.props.IRI) opart = this.props.IRI
          else opart = root
@@ -6632,18 +6632,17 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
          if(opart && opart !== root && this.state.collapse["outline-"+root+"-"+root] === undefined) toggle(null,root,root)         
 
-
          if((this.state.collapse["outline-"+root+"-"+root] || opart === root || osearch) && this.props.outlines  && this.props.dictionary) {
 
             let collapse = {...this.state.collapse }
 
             loggergen.log("collapse!",root,opart,JSON.stringify(collapse,null,3),this.props.outlines[opart])
 
+            let nodes = Object.values(this.props.outlines).reduce( (acc,v) => ([...acc, ...(v["@graph"]?v["@graph"]:[v])]), [])
+            let opart_node = nodes.filter(n => n["@id"] === opart)
 
             if(!this.props.outlines[opart]) {             
-               let nodes = Object.values(this.props.outlines).reduce( (acc,v) => ([...acc, ...(v["@graph"]?v["@graph"]:[v])]), [])
                let parent_nodes = nodes.filter(n => n["@id"] === opart) //n => n.hasPart && (n.hasPart === opart || n.hasPart.includes(opart)))
-               let opart_node = nodes.filter(n => n["@id"] === opart)
                //console.log("pNode:",nodes,parent_nodes)
                if(opart_node.length && opart_node[0] !== true && opart_node[0]["tmp:hasNonVolumeParts"] && parent_nodes.length && parent_nodes[0] !== true) {
                   
@@ -6661,7 +6660,15 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                } else {                     
                   this.props.onGetOutline(opart);
                }
+
             }
+            
+            if(opart_node && opart_node.length && opart_node[0].contentLocation) {
+               let hasContentLoc = nodes.filter(o => o["@id"] === opart_node[0].contentLocation)
+               if(hasContentLoc.length) {
+                  opartInVol = hasContentLoc[0].contentLocationVolume
+               }
+            }               
                
                /*
                // no need
@@ -6766,7 +6773,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                   }
                }
                
-               //loggergen.log("makeNode/elem:",osearch,elem,top,parent)
+               loggergen.log("makeNode/elem:",osearch,elem,top,parent)
 
                let outline = [], showPrev = null, showNext = null
                if(elem && elem["@graph"]) { 
@@ -6810,7 +6817,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                      const ShowNbChildren = 40
 
                      // TODO: case of a search 
-                     let isParent = sorted.filter(n => n.id === opart), start = 0, end = start + ShowNbChildren
+                     let isParent = sorted.filter(n => n.id === opart || n.partIndex === opartInVol), start = 0, end = start + ShowNbChildren
                      if(isParent.length) {                     
                         let mustBe = sorted.map( (n,i) => {
                            if(isParent.some(m => m.id === n.id)) return i
@@ -6820,7 +6827,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                            start = Math.max(0, mustBe[0] - Math.floor(ShowNbChildren / 2))
                            end = start + ShowNbChildren + 1
                         }                        
-                        //console.log("mB:",mustBe,start,end)
+                        console.log("mB:",isParent,mustBe,start,end)
                      }
 
                      let min = 0 //sorted.findIndex(s => s.partIndex !== 999999)
@@ -6847,7 +6854,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                      else subparts = sorted.map(n => n.id)
 
 
-                     //console.log("next/prev:",start,end,min,max,subparts,sorted)
+                     console.log("next/prev:",start,end,min,max,subparts,sorted)
                      
 
                      for(let e of subparts) {
