@@ -6690,27 +6690,27 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                if(nodes && nodes["@graph"]) nodes = nodes["@graph"]
                if(root !== opart && nodes && nodes.length) {
                   let head = opart, done_opart = false, parent_head = null
-                  console.log("opart??",opart,head)
+                  //console.log("opart??",opart,head)
                   do {
                      let head_node = nodes.filter(n => n.hasPart && (n.hasPart === head || n.hasPart.includes(head)))
                      head = head_node
-                     loggergen.log("head?",head, head_node)
+                     //loggergen.log("head?",head, head_node)
                      if(head && head.length) { 
                         head = head[0]["@id"]
                         head_node = head_node[0]
                         if(collapse["outline-"+root+"-"+head] === undefined) { //} && (opart !== root || head !== root)) {
                            collapse["outline-"+root+"-"+head] = true ;
-                           console.log("outline:",head,head_node)
-                           if(!done_opart && head_node["tmp:hasNonVolumeParts"]) {
+                           //console.log("outline:",head,head_node)
+                           if(!done_opart && head_node["tmp:hasNonVolumeParts"] && head_node.partType === "bdr:PartTypeSection") {
                               let parent_head = nodes.filter(n => n.hasPart && (n.hasPart === head || n.hasPart.includes(head)))
                               if(parent_head.length) {
                                  let opart_node = nodes.filter(n => n["@id"] === opart)
-                                 console.log("opart_n:",opart_node,nodes)
+                                 //console.log("opart_n:",opart_node,nodes)
                                  if(opart_node.length) {
                                     let vol = nodes.filter(n => n["@id"] === opart_node[0].contentLocation)
                                     if(vol.length) { 
                                        vol = vol[0].contentLocationVolume
-                                       //console.log("ready for vol."+vol+" in "+head+ " /                                     
+                                       //console.log("ready for vol."+vol+" in "+head,head_node)
                                        this.props.onGetOutline("tmp:uri", { partType: "bdr:PartTypeVolume", "tmp:hasNonVolumeParts": true, volumeNumber: vol }, head);
                                     }
                                  }
@@ -6773,7 +6773,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                   }
                }
                
-               loggergen.log("makeNode/elem:",osearch,elem,top,parent)
+               //loggergen.log("makeNode/elem:",osearch,elem,top,parent)
 
                let outline = [], showPrev = null, showNext = null
                if(elem && elem["@graph"]) { 
@@ -6827,7 +6827,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                            start = Math.max(0, mustBe[0] - Math.floor(ShowNbChildren / 2))
                            end = start + ShowNbChildren + 1
                         }                        
-                        console.log("mB:",isParent,mustBe,start,end)
+                        //console.log("mB:",isParent,mustBe,start,end)
                      }
 
                      let min = 0 //sorted.findIndex(s => s.partIndex !== 999999)
@@ -6854,7 +6854,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                      else subparts = sorted.map(n => n.id)
 
 
-                     console.log("next/prev:",start,end,min,max,subparts,sorted)
+                     //console.log("next/prev:",start,end,min,max,subparts,sorted)
                      
 
                      for(let e of subparts) {
@@ -7110,7 +7110,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                         }
                      }
 
-                     loggergen.log("end/loop:",(Date.now() - time)/1000, subtimes)
+                     //loggergen.log("end/loop:",(Date.now() - time)/1000, subtimes)
 
                      //loggergen.log("outline?",elem,outline)
 

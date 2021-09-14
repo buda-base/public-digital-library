@@ -364,7 +364,7 @@ export default class API {
                      extraParam = { I_VNUM: node.volumeNumber }
                      IRI = volFromUri                     
                   }
-                  else if(node["partType"] !== "bdr:PartTypeVolume") searchType += "_volumes"
+                  else if(node["partType"] !== "bdr:PartTypeVolume" && node["partType"] !== "bdr:PartTypeText") searchType += "_volumes"
                }
             }
             let param = {searchType,"R_RES":IRI,"L_NAME":"","LG_NAME":"", "I_LIM":"" }
