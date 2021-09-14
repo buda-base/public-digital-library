@@ -9117,7 +9117,7 @@ minipass@^3.0.0, minipass@^3.1.1:
 
 "mirador@https://github.com/buda-base/mirador#2.7.0-bdrc":
   version "2.7.0"
-  resolved "https://github.com/buda-base/mirador#930f656a435ca8c6bb3dd2a06c26364b4ce9754d"
+  resolved "https://github.com/buda-base/mirador#1a19f477542d5dc87a6528769a2fcf07b1977b05"
   dependencies:
     bootbox "^4.4.0"
     bootstrap "^3.3.7"
