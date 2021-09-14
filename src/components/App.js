@@ -3194,7 +3194,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             quality = allProps.filter(a => [ bdo+"qualityGrade", tmp+"hasReproQuality" ].includes(a.type))
             if(quality.length) quality = quality[0].value            
 
-            loggergen.log("access",access,quality)
+            //loggergen.log("access",access,quality)
 
             if(access) {
                hasCopyR = "unknown"            
@@ -5077,6 +5077,11 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          return ({str,index})
       })
       subs = _.orderBy(subs,'index','desc').map(e => e.str)
+      let unspec = subs.indexOf("unspecified")
+      if(unspec != -1) { 
+         subs.splice(unspec, 1) 
+         subs.push("unspecified")
+      }
 
       //loggergen.log("subW",tree,subs,jpre,tag)
 
