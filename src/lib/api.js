@@ -354,11 +354,10 @@ export default class API {
             if(!IRI.indexOf(':') === -1 ) IRI = "bdr:"+IRI
             let config = store.getState().data.config.ldspdi
             let url = config.endpoints[config.index]+"/query/graph" ;            
-            let searchType = "Outline_root", extraParam
+            let searchType = "Outline_root", extraParam, isTaishoNode
             console.log("loadO:",IRI,node,volFromUri)
-            if(node 
-               && (!node.id || !node.id.match(/bdr:MW0T[ST]0/)) // quickfix for Taisho to keep working
-            ) {
+            if(IRI.match(/bdr:MW0T[ST]0/)) isTaishoNode = true; // quickfix for Taisho to keep working
+            if(node && !isTaishoNode) {
                if(node["tmp:hasNonVolumeParts"] == true) { 
                   if(node.volumeNumber !== undefined && node.partType === "bdr:PartTypeVolume") { 
                      searchType += "_pervolume"
