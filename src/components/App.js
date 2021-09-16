@@ -2807,7 +2807,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          }
          else if(useAux && findProp) {
             
-            //loggergen.log("uA2",id,useAux,findProp)
+            loggergen.log("uA2",id,useAux,findProp)
             
             let vals = []
 

@@ -1532,7 +1532,7 @@ function mergeSameAs(result,withSameAs,init = true,rootRes = result, force = fal
          let hasSameK 
          if(result[r.t] && result[r.t][k] && (result[r.t][s] || isRid)) {
             
-            loggergen.log("same?",isRid,k,r.t,s,result[r.t][k],result[r.t][s],assoR)
+            //loggergen.log("same?",isRid,k,r.t,s,result[r.t][k],result[r.t][s],assoR)
 
             if(!isRid) { 
                hasSameK = false
@@ -1744,22 +1744,45 @@ function sortResultsByYear(results,reverse) {
 
    if(!results) return 
 
+   /* // not needed
+   if(!aux) {
+      let state = store.getState()
+      aux = state.data.assocResources
+      if(aux) aux = aux[state.data.keyword]
+   }
+   */
+
    let keys = Object.keys(results)
    if(keys && keys.length) {
       keys = keys.map(k => {
          let n = 1000000, score, p = results[k].length
          if(reverse) n = -1000000
+         let multi_n = []
          for(let i in results[k]) {
             let v = results[k][i]
+
+            /* // not useful
+            let obj
+            if(v.type === bdo+"personEvent" && aux && (obj = aux[v.value]) && obj.some(o => o.type === rdf+"type" && o.value === bdo+"PersonBirth")) {
+               obj = _.orderBy(obj.filter(o => o.type === bdo+"notBefore" || o.type === bdo+"notAfter" || o.type === bdo+"onYear").map(o => Number(o.value)))
+               //console.log("birth:",obj)
+               if(obj.length) n = obj[0]
+            } else  
+            */
+            
             if(v.type === tmp+"yearStart") {
-               n = Number(v.value)
-            }
+               multi_n.push(Number(v.value))
+            } 
+         }
+         if(multi_n.length) { 
+            multi_n = _.orderBy(multi_n, [reverse?'desc':'asc'])
+            n = multi_n[0]
          }
          return ({k, n, p})
       },{})
       keys = _.orderBy(keys,['n','p'],[(reverse?'desc':'asc'), (reverse?'asc':'desc')])
       
-      //loggergen.log("keysY",keys)
+      loggergen.log("keysY:",keys)
 
       let sortRes = {}
       for(let k of keys) sortRes[k.k] = results[k.k]
