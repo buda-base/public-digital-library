@@ -198,8 +198,8 @@
       "inEtext": "Results for <key>{{- keyword}}<\/key> <key>[{{language}}]<\/key><br/>in <res href='/show/{{- rid}}'>{{- name}}<\/res>",
       "openO": "Open in Outline",
       "bdDate":"{{birth}} – {{death}}",
-      "bDate":"b. {{num}}",
-      "dDate":"d. {{num}}"
+      "bDate":"出生{{num}}",
+      "dDate":"过世{{num}}"
    },
    "map": {
       "touch": "Use two fingers to move the map",
@@ -288,7 +288,7 @@
       "of": "属",
       "please": "请",
       "seeO": "See on",
-      "ord": "{{num,ordinal}}",
+      "ord": "{{num}}世纪",
       "all": "All",
       "allC": "All ({{count}})",
       "allT": "{{type}} ({{count}})",
@@ -298,7 +298,7 @@
       "link_plural": "Links:",
       "card": "{{num}}",
       "inter": "{{min}}~{{max}}",
-      "ordInter": "{{min}}-{{max,ordinal}} c."
+      "ordInter": "{{min}}-{{max,ordinal}}世纪"
    },
    "lang": {
       "en": "英语",

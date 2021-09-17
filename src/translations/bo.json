@@ -221,8 +221,8 @@
       "inEtext": "Results for <key>{{- keyword}}<\/key> <key>[{{language}}]<\/key><br/>in <res href='/show/{{- rid}}'>{{- name}}<\/res>",
       "openO": "དཀར་ཆག་ནང་སྒོ་ཕྱེ།",
       "bdDate":"{{birth}} – {{death}}",
-      "bDate":"b. {{num}}",
-      "dDate":"d. {{num}}"
+      "bDate":"འཁྲུངས་དུས། {{num}}",
+      "dDate":"འདས་དུས། {{num}}"
    },
    "map": {
       "touch": "Use two fingers to move the map",
@@ -315,7 +315,7 @@
       "of": "",
       "please": "",
       "seeO": "See on",
-      "ord": "{{num,ordinal}}",
+      "ord": "དུས་རབས་{{num,ordinal}}",
       "all": "ཡོངས།",
       "allC": "ཡོངས། ({{count}})",
       "allT": "{{type}} ({{count}})",
@@ -325,7 +325,7 @@
       "link_plural": "དྲ་ཐག་ཁག:",
       "card": "{{num,counttobo}}",
       "inter": "{{min,counttobo}}~{{max,counttobo}}",
-      "ordInter": "དུས་རབས་{{min,counttobo}} ནས་ {{max,counttobo}} བར།"
+      "ordInter": "དུས་རབས་{{min,counttobo}} ནས་{{max,counttobo}} བར།"
    },
    "lang": {
       "en": "ཨིན་སྐད།",
