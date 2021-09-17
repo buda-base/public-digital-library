@@ -2723,11 +2723,11 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          if(!useAux) id = allProps.filter( e => fromProp.includes(e.type) && (!exclude || exclude !== e.value) )
          else if(findProp) id = allProps.filter(e => useAux.includes(e.type)).map(e => this.props.assoRes[e.value]).filter(e=>e).reduce( (acc,e) =>{
             let t = e.filter(f => f.type === rdf+"type")
-            if(t.length) return { ...acc, [t[0].value]:e}
+            if(t.length) return { ...acc, [t[0].value]:[ ...acc[t[0].value]?acc[t[0].value]:[], ...e ]}
             else return acc
          },{}) 
          
-         //loggergen.log("labels/prop",prop,id,exclude) //,useAux,fromProp,allProps) //,this.props.assoRes)         
+         //loggergen.log("labels/prop",iri,prop,id,exclude,useAux,fromProp,allProps) //,this.props.assoRes)         
 
          if(useAux && !findProp) { // etext
 
@@ -2807,26 +2807,33 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          }
          else if(useAux && findProp) {
             
-            loggergen.log("uA2",id,useAux,findProp)
+            //loggergen.log("uA2",id,useAux,findProp)
             
-            let vals = []
+            let vals = [], birth = [], death = []
 
             for(let p of findProp) {
                
                if(id[p]) {
- 
-                  let val = id[p].filter(e => e.type === bdo+"onYear")
-                  if(val.length) val = <span>{(""+val[0].value).replace(/^([^0-9]*)0+/,"$1")}</span>
-                  else {
-                     let bef = id[p].filter(e => e.type === bdo+"notBefore")
-                     let aft = id[p].filter(e => e.type === bdo+"notAfter")
-                     if(bef.length && aft.length) val = <span>{(""+bef[0].value).replace(/^([^0-9]*)0+/,"$1")+"~" +(""+aft[0].value).replace(/^([^0-9]*)0+/,"$1")}</span>
-                     else val = null
+                  
+                  let val = id[p].filter(e => [bdo+"onYear", bdo+"notBefore", bdo+"notAfter"].includes(e.type) )
+                  //console.log("p:",p,val)
+                  if(val.length) {
+                     if(p.endsWith("Death")) death = death.concat(val)
+                     else if(p.endsWith("Birth")) birth = birth.concat(val)
                   }
 
-                  if(p.includes("Death") && !vals.length) { /*vals.push(<span>?</span>);*/ vals.push(<span>&nbsp;&ndash;&nbsp;</span>) }
-                  if(val) vals.push(val)
-                  if(p.includes("Birth")) vals.push(<span>&nbsp;&ndash;&nbsp;</span>)
+                  // let val = id[p].filter(e => e.type === bdo+"onYear")
+                  // if(val.length) val = <span>{(""+val[0].value).replace(/^([^0-9]*)0+/,"$1")}</span>
+                  // else {
+                  //    let bef = id[p].filter(e => e.type === bdo+"notBefore")
+                  //    let aft = id[p].filter(e => e.type === bdo+"notAfter")
+                  //    if(bef.length && aft.length) val = <span>{(""+bef[0].value).replace(/^([^0-9]*)0+/,"$1")+"~" +(""+aft[0].value).replace(/^([^0-9]*)0+/,"$1")}</span>
+                  //    else val = null
+                  // }
+
+                  // if(p.includes("Death") && !vals.length) { /*vals.push(<span>?</span>);*/ vals.push(<span>&nbsp;&ndash;&nbsp;</span>) }
+                  // if(val) vals.push(val)
+                  // if(p.includes("Birth")) vals.push(<span>&nbsp;&ndash;&nbsp;</span>)
 
                   /*
                   ret.push(<div class="match">
@@ -2838,7 +2845,52 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                }
             }
 
-            if(vals.length > 1) ret.push(<div class="match dates">{vals}</div>)
+            //console.log("B/D:",JSON.stringify(birth,null,3),JSON.stringify(death,null,3))
+
+            const renderDate = (dates) => {
+               const clean = (d) => (""+d).replace(/^([^0-9]*)0+/,"$1")
+               let date = "", min, max, val
+               for(let d of dates) {
+                  val = clean(d.value)
+                  //console.log("d:",min,max,val,JSON.stringify(d))
+                  if(d.type === bdo+"notBefore") {
+                     if(min === undefined || val < min) min = val
+                     if(max === undefined) max = val
+                  } else if(d.type === bdo+"notAfter") {
+                     if(max === undefined || val > max) max = val
+                     if(min === undefined) min = val
+                  } else if(d.type === bdo+"onYear") {
+                     if(max === undefined || val > max) max = val
+                     if(min === undefined || val < min) min = val
+                  }
+               }
+               if(min !== undefined && max != undefined) {
+                  if(min === max) date = min
+                  else date = min + "~" + max
+               }
+
+               //console.log("date:",dates,date);
+
+               return date
+            }
+            const useAbbr = (!birth.length || !death.length)
+            if(birth) {
+               let d = renderDate(birth)
+               if(d) {
+                  if(useAbbr) vals.push(<span>b.&nbsp;</span>)
+                  vals.push(d)
+               }
+            }
+            if(death) {
+               let d = renderDate(death)
+               if(d) {
+                  if(useAbbr) vals.push(<span>d.&nbsp;</span>)
+                  else vals.push(<span>&nbsp;&ndash;&nbsp;</span>)
+                  vals.push(d)
+               }
+            }
+
+            if(vals.length >= 1) ret.push(<div class="match dates">{vals}</div>)
             
             return ret
          }
