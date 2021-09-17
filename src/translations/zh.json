@@ -295,7 +295,10 @@
       "seeR": "See result",
       "seeR_plural": "See results",
       "link": "Link:",
-      "link_plural": "Links:"
+      "link_plural": "Links:",
+      "card": "{{num}}",
+      "inter": "{{min}}~{{max}}",
+      "ordInter": "{{min}}-{{max,ordinal}} c."
    },
    "lang": {
       "en": "英语",

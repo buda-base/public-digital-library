@@ -2865,8 +2865,14 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   }
                }
                if(min !== undefined && max != undefined) {
-                  if(min === max) date = min
-                  else date = min + "~" + max
+                  if(min === max) date = I18n.t("misc.card", { num: min })
+                  else if(min%100 == 0 && max%100 == 99) { 
+                     let cmin = Math.ceil(min/100+1)
+                     let cmax = Math.ceil(max/100)
+                     if(cmin == cmax) date = I18n.t("misc.ord", { num: cmin })
+                     else date = I18n.t("misc.ordInter", { min: cmin, max:cmax })
+                  }
+                  else date = I18n.t("misc.inter", { min, max }) 
                }
 
                //console.log("date:",dates,date);
