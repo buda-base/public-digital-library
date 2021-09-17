@@ -219,7 +219,10 @@
       "moreres": "འདི་ལས་' {{txt}} མང་བ་འདུག, དེ་དག་ལ་བལྟ་འདོད་ཡོད་དམ།",
       "openEin": "འཕྲུལ་ཡིག་ནང་སྟོན།",
       "inEtext": "Results for <key>{{- keyword}}<\/key> <key>[{{language}}]<\/key><br/>in <res href='/show/{{- rid}}'>{{- name}}<\/res>",
-      "openO": "དཀར་ཆག་ནང་སྒོ་ཕྱེ།"
+      "openO": "དཀར་ཆག་ནང་སྒོ་ཕྱེ།",
+      "bdDate":"{{birth,counttobo}} – {{death,counttobo}}",
+      "bDate":"b. {{num,counttobo}}",
+      "dDate":"d. {{num,counttobo}}"
    },
    "map": {
       "touch": "Use two fingers to move the map",

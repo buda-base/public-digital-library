@@ -2874,20 +2874,17 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                return date
             }
             const useAbbr = (!birth.length || !death.length)
+            let b,d
             if(birth) {
-               let d = renderDate(birth)
-               if(d) {
-                  if(useAbbr) vals.push(<span>b.&nbsp;</span>)
-                  vals.push(d)
-               }
+               b = renderDate(birth)
+               if(b != "" && useAbbr) vals.push(<span>{I18n.t("result.bDate", { num:b })}</span>)
             }
             if(death) {
-               let d = renderDate(death)
-               if(d) {
-                  if(useAbbr) vals.push(<span>d.&nbsp;</span>)
-                  else vals.push(<span>&nbsp;&ndash;&nbsp;</span>)
-                  vals.push(d)
-               }
+               d = renderDate(death)
+               if(d != "" && useAbbr) vals.push(<span>{I18n.t("result.dDate", { num:d })} </span>)
+            }
+            if(!useAbbr && b != "" && d != "") {
+               vals.push(<span>{I18n.t("result.bdDate", { birth:b, death:d })} </span>)
             }
 
             if(vals.length >= 1) ret.push(<div class="match dates">{vals}</div>)
