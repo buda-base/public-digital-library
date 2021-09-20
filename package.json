@@ -83,7 +83,7 @@
       "postinstall": "yarn cp-mirador-to-public && yarn link-embed-iframe && yarn deploy-budax",
       "prebuild": "yarn run generate-build-meta",
       "generate-build-meta": "./node_modules/react-clear-cache/bin/cli.js",
-      "deploy-budax":"budax=$(pwd); if [ -d $budax/../budax/ ] ; then budax=$budax/../budax/ ; elif [ -d $budax/../../budax/ ] ; then budax=$budax/../../budax/ ; else budax=\"\" ; fi ; if [ \"$budax\" != \"\" ] ; then cd public/static/ && rm budax/ -rf && cp -rf $budax . && find budax/ -name \"index.html\" | while read fic ; do base=$(basename \"$fic\" .html); dir=$(dirname \"$fic\"); cp -f \"$fic\" \"$dir\"/\"$base\".en.html ; cp -f \"$fic\" \"$dir\"/\"$base\".bo.html ; cp -f \"$fic\" \"$dir\"/\"$base\".zh.html ; done ; cd ../scripts ; ln -nsf ../static . ; else echo \"budax missing in root dir\" ; fi"
+      "deploy-budax":"budax=$(pwd); if [ -d $budax/../budax/ ] ; then budax=$budax/../budax/ ; elif [ -d $budax/../../budax/ ] ; then budax=$budax/../../budax/ ; else budax=\"\" ; fi ; if [ \"$budax\" != \"\" ] ; then cd public/static/ && rm budax/ -rf && cp -rf $budax . && find budax/ -name \"*.html\" | while read fic ; do base=$(basename \"$fic\" .html); dir=$(dirname \"$fic\"); cp -f \"$fic\" \"$dir\"/\"$base\".en.html ; cp -f \"$fic\" \"$dir\"/\"$base\".bo.html ; cp -f \"$fic\" \"$dir\"/\"$base\".zh.html ; done ; cd ../scripts ; ln -nsf ../static . ; else echo \"budax missing in root dir\" ; fi"
    },
    "devDependencies": {
       "@babel/cli": "^7.0.0",

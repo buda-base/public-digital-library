@@ -1,7 +1,8 @@
 
 import React, { Component } from 'react';
 import Loader from 'react-loader';
-import {Markup} from "interweave"
+//import {Markup} from "interweave"
+import HTMLparse from 'html-react-parser';
 
 import qs from 'query-string'
 import I18n from 'i18next';
@@ -58,7 +59,7 @@ export class StaticRouteNoExt extends Component<State, Props>
                     <div class="SearchPane">
                         <div className="static-container">
                             <div id="samples">
-                                <Markup content={this.state.content}/>
+                                {HTMLparse(this.state.content)}
                             </div>
                         </div> 
                     </div>
