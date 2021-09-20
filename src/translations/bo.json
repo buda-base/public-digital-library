@@ -221,8 +221,9 @@
       "inEtext": "Results for <key>{{- keyword}}<\/key> <key>[{{language}}]<\/key><br/>in <res href='/show/{{- rid}}'>{{- name}}<\/res>",
       "openO": "དཀར་ཆག་ནང་སྒོ་ཕྱེ།",
       "bdDate":"{{birth}} – {{death}}",
-      "bDate":"འཁྲུངས་དུས། {{num}}",
-      "dDate":"འདས་དུས། {{num}}"
+      "bDate":"འཁྲུངས་དུས། {{num,counttobo}}",
+      "dDate":"འདས་དུས། {{num,counttobo}}",
+      "fDate":"fl. {{num,counttobo}}"
    },
    "map": {
       "touch": "Use two fingers to move the map",

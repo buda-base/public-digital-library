@@ -199,7 +199,8 @@
       "openO": "Open in Outline",
       "bdDate":"{{birth}} – {{death}}",
       "bDate":"出生{{num}}",
-      "dDate":"过世{{num}}"
+      "dDate":"过世{{num}}",
+      "fDate":"fl. {{num}}"
    },
    "map": {
       "touch": "Use two fingers to move the map",

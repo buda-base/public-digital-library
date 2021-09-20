@@ -239,7 +239,8 @@
       "openO": "Open in Outline",
       "bdDate":"{{birth}} – {{death}}",
       "bDate":"b. {{num}}",
-      "dDate":"d. {{num}}"
+      "dDate":"d. {{num}}",
+      "fDate":"fl. {{num}}"
    },
    "map": {
       "touch": "Use two fingers to move the map",

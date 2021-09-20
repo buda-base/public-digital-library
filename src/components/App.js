@@ -2809,7 +2809,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             
             //loggergen.log("uA2",id,useAux,findProp)
             
-            let vals = [], birth = [], death = []
+            let vals = [], birth = [], death = [], floruit = []
 
             for(let p of findProp) {
                
@@ -2820,6 +2820,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   if(val.length) {
                      if(p.endsWith("Death")) death = death.concat(val)
                      else if(p.endsWith("Birth")) birth = birth.concat(val)
+                     else if(p.endsWith("Floruit")) floruit = floruit.concat(val)
                   }
 
                   // let val = id[p].filter(e => e.type === bdo+"onYear")
@@ -2880,17 +2881,22 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                return date
             }
             const useAbbr = (!birth.length || !death.length)
-            let b,d
-            if(birth) {
+            let b,d,f
+            if(birth.length) {
                b = renderDate(birth)
                if(b != "" && useAbbr) vals.push(<span>{I18n.t("result.bDate", { num:b })}</span>)
             }
-            if(death) {
+            if(death.length) {
                d = renderDate(death)
                if(d != "" && useAbbr) vals.push(<span>{I18n.t("result.dDate", { num:d })} </span>)
             }
             if(!useAbbr && b != "" && d != "") {
                vals.push(<span>{I18n.t("result.bdDate", { birth:b, death:d })} </span>)
+            }
+            // TODO: check if this is ok when data available
+            if(floruit.length) {
+               f = renderDate(floruit)
+               if(f) vals.push(<span>{I18n.t("result.fDate", { num:f })} </span>)
             }
 
             if(vals.length >= 1) ret.push(<div class="match dates">{vals}</div>)
