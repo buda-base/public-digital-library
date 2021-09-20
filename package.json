@@ -83,7 +83,7 @@
       "postinstall": "yarn cp-mirador-to-public && yarn link-embed-iframe && yarn deploy-budax",
       "prebuild": "yarn run generate-build-meta",
       "generate-build-meta": "./node_modules/react-clear-cache/bin/cli.js",
-      "deploy-budax":"root=$(pwd); if [ -d $root/../budax/ ] ; then cd public/static/ && rm budax/ -rf && cp -rf $root/../budax/ . && find budax/ -name \"index.html\" | while read fic ; do base=$(basename \"$fic\" .html); dir=$(dirname \"$fic\"); cp -f \"$fic\" \"$dir\"/\"$base\".bo.html ; cp -f \"$fic\" \"$dir\"/\"$base\".zh.html ; done ; else echo \"budax missing in root dir\" ; fi"
+      "deploy-budax":"root=$(pwd); if [ -d $root/../../budax/ ] ; then cd public/static/ && rm budax/ -rf && cp -rf $root/../../budax/ . && find budax/ -name \"index.html\" | while read fic ; do base=$(basename \"$fic\" .html); dir=$(dirname \"$fic\"); cp -f \"$fic\" \"$dir\"/\"$base\".bo.html ; cp -f \"$fic\" \"$dir\"/\"$base\".zh.html ; done ; else echo \"budax missing in root dir\" ; fi"
    },
    "devDependencies": {
       "@babel/cli": "^7.0.0",
