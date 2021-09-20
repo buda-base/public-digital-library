@@ -80,9 +80,10 @@
       "flow": "flow",
       "cp-mirador-to-public": "rm -rf public/scripts/mirador && cp -R node_modules/mirador/dist public/scripts/mirador",
       "link-embed-iframe": "ln -nsf ../embed-iframe.html public/scripts/ && ln -nsf ../miradorInit.js public/scripts/ &&  ln -nsf ../tibcolldemo2.json public/scripts/ && ln -nsf ../../src/ public/scripts/  && cd public/scripts/src/lib && ln -nsf ../../public/scripts/mirador",
-      "postinstall": "yarn cp-mirador-to-public && yarn link-embed-iframe",
+      "postinstall": "yarn cp-mirador-to-public && yarn link-embed-iframe && yarn deploy-budax",
       "prebuild": "yarn run generate-build-meta",
-      "generate-build-meta": "./node_modules/react-clear-cache/bin/cli.js"
+      "generate-build-meta": "./node_modules/react-clear-cache/bin/cli.js",
+      "deploy-budax":"cd public/static/ && rm budax/ -rf && git clone git@github.com:buda-base/budax.git && find budax/ -name \"index.html\" | while read fic ; do base=$(basename \"$fic\" .html); dir=$(dirname \"$fic\"); cp -f \"$fic\" \"$dir\"/\"$base\".bo.html ; cp -f \"$fic\" \"$dir\"/\"$base\".zh.html ; done"
    },
    "devDependencies": {
       "@babel/cli": "^7.0.0",
