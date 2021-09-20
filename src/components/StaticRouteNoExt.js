@@ -41,7 +41,7 @@ export class StaticRouteNoExt extends Component<State, Props>
     }
 
     async updateContent() {
-        window.fetch("/static/"+this.props.dir+"/"+this.props.page+"."+I18n.language+".html").then(async (data) => {        
+        window.fetch("/scripts/static/"+this.props.dir+"/"+this.props.page+"."+I18n.language+".html").then(async (data) => {        
             let content = await data.text()
             console.log("data?",data,content)
             if(!content.includes("You need to enable JavaScript to run this app.")) this.setState({content,locale:I18n.language})

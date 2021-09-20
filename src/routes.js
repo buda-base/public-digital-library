@@ -144,10 +144,15 @@ const makeMainRoutes = () => {
            <MuiThemeProvider theme={theme}>
               <Router history={history}>
                 <Switch>
-                     <Route path="/static/:DIR/:PAGE" render={(props) => 
+                     <Route exact path="/static/:DIR1/:DIR2/:DIR3/:PAGE" render={(props) => {
+                           console.log("static?",props)
+                           return <StaticRouteContainer dir={props.match.params.DIR1+"/"+props.match.params.DIR2+"/"+props.match.params.DIR3} page={props.match.params.PAGE} history={history}/>
+                        }
+                     }/>
+                     <Route exact path="/static/:DIR/:PAGE" render={(props) => 
                         <StaticRouteContainer dir={props.match.params.DIR} page={props.match.params.PAGE} history={history}/>
                      }/>
-                     <Route path="/static/:PAGE" render={(props) => 
+                     <Route exact path="/static/:PAGE" render={(props) => 
                         <StaticRouteContainer dir={""} page={props.match.params.PAGE} history={history}/>
                      }/>                                                
                      <Route path="/testToken" render={(props) => {
