@@ -44,7 +44,7 @@ export class StaticRouteNoExt extends Component<State, Props>
     async updateContent() {
         window.fetch("/scripts/static/"+this.props.dir+"/"+this.props.page+"."+I18n.language+".html").then(async (data) => {        
             let content = await data.text()
-            console.log("data?",data,content)
+            //console.log("data?",data,content)
             if(!content.includes("You need to enable JavaScript to run this app.")) this.setState({content,locale:I18n.language})
             else this.setState({error:true,locale:I18n.language})
         })
@@ -57,9 +57,9 @@ export class StaticRouteNoExt extends Component<State, Props>
                 { (!I18n.language || !this.props.locale || !this.state.content) && <Loader loaded={false} /> }
                 <div class="App home static">
                     <div class="SearchPane">
-                        <div className="static-container">
-                            <div id="samples">
-                                {HTMLparse(this.state.content)}
+                        <div className="static-container" data-dir={this.props.dir} data-page={this.props.page}>
+                            <div id="samples" >
+                                {HTMLparse(this.props.dir.includes("budax/")?"<div>"+this.state.content+"</div>":this.state.content)}
                             </div>
                         </div> 
                     </div>

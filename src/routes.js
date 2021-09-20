@@ -145,8 +145,11 @@ const makeMainRoutes = () => {
               <Router history={history}>
                 <Switch>
                      <Route exact path="/static/:DIR1/:DIR2/:DIR3/:PAGE" render={(props) => {
-                           console.log("static?",props)
                            return <StaticRouteContainer dir={props.match.params.DIR1+"/"+props.match.params.DIR2+"/"+props.match.params.DIR3} page={props.match.params.PAGE} history={history}/>
+                        }
+                     }/>
+                     <Route exact path="/static/:DIR1/:DIR2/:PAGE" render={(props) => {
+                           return <StaticRouteContainer dir={props.match.params.DIR1+"/"+props.match.params.DIR2} page={props.match.params.PAGE} history={history}/>
                         }
                      }/>
                      <Route exact path="/static/:DIR/:PAGE" render={(props) => 
