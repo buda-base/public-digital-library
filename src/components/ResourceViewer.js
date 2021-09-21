@@ -3133,6 +3133,12 @@ class ResourceViewer extends Component<Props,State>
       )
    }
 
+   isTransitiveSame(id) {
+      const same = this.getResourceElem(tmp+"withSameAs")
+      return same && same.length && same.some(s => s.type === "uri" && s.value === id)
+   }
+
+
    format(Tag,prop:string,txt:string="",bnode:boolean=false,div:string="sub",otherElem:[],grandPa)
    {
       //console.group("FORMAT")
@@ -3186,17 +3192,18 @@ class ResourceViewer extends Component<Props,State>
 
       let nbN = 1, T, lastT
 
-
       let viewAnno = false, iKeep = -1, _elem = elem ;
       if(elem) for(const _e of elem) 
       {
          iKeep++   
          let e = { ..._e } ;
 
-
          if(prop === bdo+"workHasInstance" && e.value && e.value.match(new RegExp(bdr+"W"))) continue ;
 
          //loggergen.log("iK",iKeep,e,elem,elem.length)
+
+         // #562 skip circular property value
+         if(_e.type === "uri" && this.isTransitiveSame(_e.value)) continue
 
          let value = ""+e
          if(e.value || e.value === "") value = e.value
@@ -4688,7 +4695,7 @@ class ResourceViewer extends Component<Props,State>
       if(hasMaxDisplay) maxDisplay = hasMaxDisplay ;
 
       let n = 0
-      if(elem && elem.filter) n = elem.filter(t=>t && ( (t.type === "uri" && (k !== bdo+"workHasInstance" || t.value.match(/[/]MW[^/]+$/))) || t.type === "literal")).length
+      if(elem && elem.filter) n = elem.filter(t=>t && ( (t.type === "uri" && !this.isTransitiveSame(t.value) && (k !== bdo+"workHasInstance" || t.value.match(/[/]MW[^/]+$/))) || t.type === "literal")).length
       ret = this.insertPreprop(k, n, ret)
 
       //loggergen.log("genP",elem,k,maxDisplay,n)
