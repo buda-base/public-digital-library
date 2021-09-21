@@ -1,6 +1,6 @@
 
 
-let tibetSort,hanziConv,jsEWTS,Sanscript,pinyin4js,__,htmlEntities
+let tibetSort,hanziConv,jsEWTS,Sanscript,pinyin4js,__ 
 
 
 export const importModules = async () => {
@@ -14,7 +14,7 @@ export const importModules = async () => {
        hanziConv = window["hanzi-tsconv"].conv
        tibetSort = await require("tibetan-sort-js")
        tibetSort = window["tibetan-sort-js"].default
-       htmlEntities = await require("html-entities") ;
+       //htmlEntities = await require("html-entities") ;
    }
    catch(f) { // in embed iframe
       //console.log("exception",f)
@@ -204,7 +204,7 @@ export function sortLangScriptLabels(data,preset,translit)
    return data_
 }
 
-
+/* //no need
 export function htmlEntitiesDecode(val) {
    // TODO: can't load module in embedded/iframe viewer
    if(htmlEntities && val) {  
@@ -217,6 +217,7 @@ export function htmlEntitiesDecode(val) {
    }
    return val
 }
+*/
 
 export function getMainLabel(data,extpreset)
 {
@@ -250,7 +251,8 @@ export function getMainLabel(data,extpreset)
    } else if (bestlt.endsWith("ewts")) {
       val = ewtsToDisplay(val)
    }
-   val = htmlEntitiesDecode(val)
+   // no need, data should not have entities
+   // val = htmlEntitiesDecode(val) 
    return {"value": val, "lang": bestlt}
 }
 
@@ -290,7 +292,8 @@ export function getMainLabels(data,extpreset)
      } else if (bestlt.endsWith("ewts")) {
         val = ewtsToDisplay(val)
      }
-     val = htmlEntitiesDecode(val)
+     // no need, data should not have entities
+     // val = htmlEntitiesDecode(val)
      vals.push(val)
    }
    

@@ -80,7 +80,6 @@ import { faLanguage } from '@fortawesome/free-solid-svg-icons'
 //import {MapComponent} from './Map';
 import {getEntiType,dPrefix,RISexportPath} from '../lib/api';
 import {numtobo} from '../lib/language';
-import {htmlEntitiesDecode} from '../lib/transliterators';
 import {languages,getLangLabel,top_right_menu,prefixesMap as prefixes,sameAsMap,shortUri,fullUri,highlight,lang_selec,etext_lang_selec,langSelect,searchLangSelec,report_GA,getGDPRconsent} from './App';
 import {narrowWithString} from "../lib/langdetect"
 import Popover from '@material-ui/core/Popover';
@@ -1507,7 +1506,8 @@ class ResourceViewer extends Component<Props,State>
 
       //if(stripuri) {
       
-      str = htmlEntitiesDecode(str)
+      // no need, data should not have entities
+      // str = htmlEntitiesDecode(str)
 
       if(!str.match(/ /) && !str.match(/^http[s]?:/)) str = str.replace(/([a-z])([A-Z])/g,"$1"+(isUrl?"":' ')+"$2")
 
