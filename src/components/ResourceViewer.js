@@ -98,6 +98,7 @@ import {svgEtextS,svgInstanceS,svgImageS} from "./icons"
 import {keywordtolucenequery,lucenequerytokeyword,lucenequerytokeywordmulti, isAdmin} from './App';
 
 import HTMLparse from 'html-react-parser';
+import {decode} from "html-entities" ;
 
 import logdown from 'logdown'
 
@@ -1505,6 +1506,8 @@ class ResourceViewer extends Component<Props,State>
       //loggergen.log("pretty",str)
 
       //if(stripuri) {
+      
+      if(str.match(/&#[0-9]+;/)) str = str.replace(/&#[0-9]+;/g,(m) => decode(m))
 
       if(!str.match(/ /) && !str.match(/^http[s]?:/)) str = str.replace(/([a-z])([A-Z])/g,"$1"+(isUrl?"":' ')+"$2")
 
