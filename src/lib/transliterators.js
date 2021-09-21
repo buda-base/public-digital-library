@@ -290,16 +290,7 @@ export function getMainLabels(data,extpreset)
      } else if (bestlt.endsWith("ewts")) {
         val = ewtsToDisplay(val)
      }
-      // TODO: can't load module in embedded/iframe viewer
-      if(htmlEntities && val) {  
-         if(!Array.isArray(val)) { 
-            if(typeof val === "string" && val.match(/&#[0-9]+;/)) {
-               val = val.replace(/&#[0-9]+;/g,(m) => htmlEntities.decode(m))
-            }
-         }
-         else val = val.map(v => !v.match(/&#[0-9]+;/)?v:v.replace(/&#[0-9]+;/g,(m) => htmlEntities.decode(m)))
-      }
-      val = htmlEntitiesDecode(val)
+     val = htmlEntitiesDecode(val)
      vals.push(val)
    }
    
