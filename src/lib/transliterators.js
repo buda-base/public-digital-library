@@ -204,6 +204,20 @@ export function sortLangScriptLabels(data,preset,translit)
    return data_
 }
 
+
+export function htmlEntitiesDecode(val) {
+   // TODO: can't load module in embedded/iframe viewer
+   if(htmlEntities && val) {  
+      if(!Array.isArray(val)) { 
+         if(typeof val === "string" && val.match(/&#[0-9]+;/)) {
+            val = val.replace(/&#[0-9]+;/g,(m) => htmlEntities.decode(m))
+         }
+      }
+      else val = val.map(v => !v.match(/&#[0-9]+;/)?v:v.replace(/&#[0-9]+;/g,(m) => htmlEntities.decode(m)))
+   }
+   return val
+}
+
 export function getMainLabel(data,extpreset)
 {
    if(!data) return ;
@@ -236,8 +250,7 @@ export function getMainLabel(data,extpreset)
    } else if (bestlt.endsWith("ewts")) {
       val = ewtsToDisplay(val)
    }
-   // TODO: can't load module in embedded/iframe viewer
-   if(htmlEntities && val.match(/&#[0-9]+;/)) val = val.replace(/&#[0-9]+;/g,(m) => htmlEntities.decode(m))
+   val = htmlEntitiesDecode(val)
    return {"value": val, "lang": bestlt}
 }
 
@@ -278,7 +291,15 @@ export function getMainLabels(data,extpreset)
         val = ewtsToDisplay(val)
      }
       // TODO: can't load module in embedded/iframe viewer
-     if(htmlEntities && val.match(/&#[0-9]+;/)) val = val.replace(/&#[0-9]+;/g,(m) => htmlEntities.decode(m))
+      if(htmlEntities && val) {  
+         if(!Array.isArray(val)) { 
+            if(typeof val === "string" && val.match(/&#[0-9]+;/)) {
+               val = val.replace(/&#[0-9]+;/g,(m) => htmlEntities.decode(m))
+            }
+         }
+         else val = val.map(v => !v.match(/&#[0-9]+;/)?v:v.replace(/&#[0-9]+;/g,(m) => htmlEntities.decode(m)))
+      }
+      val = htmlEntitiesDecode(val)
      vals.push(val)
    }
    
