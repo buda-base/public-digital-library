@@ -1235,6 +1235,7 @@ h4:not(:hover) > .lang
 .static-container #samples h3 { margin-bottom:32px;}
 .static-container #samples p + h3 { margin-top:65px;}
 
+.static-container iframe { border:none; }
 
 .static-container .hide.top { position:relative; overflow:hidden;}
 .static-container .hide.top { top:-70px; margin-bottom:-70px;}
