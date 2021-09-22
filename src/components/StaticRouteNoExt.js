@@ -13,6 +13,7 @@ import { top_right_menu } from './App'
 import { auth, Redirect404 } from '../routes'
 import { initiateApp } from '../state/actions';
 
+//import $ from 'jquery' ;
 
 
 type State = { content:any, error:integer, collapse:{} }
@@ -21,10 +22,13 @@ type Props = { history:{}, locale:string, config:{} }
 
 export class StaticRouteNoExt extends Component<State, Props>
 {
+    _urlParams = {}
+
     constructor(props) {
         super(props);
+        this._urlParams = qs.parse(history.location.search) 
         this.state = { content: "", collapse:{} } //"loading..."+props.dir+"/"+props.page }
-        store.dispatch(initiateApp(qs.parse(history.location.search),null,null,"static"))
+        store.dispatch(initiateApp(this._urlParams,null,null,"static"))
 
         let i18nLoaded = setInterval(() => {
             console.log("i18n",I18n,I18n.language,I18n.languages);
@@ -35,16 +39,38 @@ export class StaticRouteNoExt extends Component<State, Props>
         }, 10);
     }
 
-    componentDidUpdate() {
+    componentDidUpdate() { 
+        this._urlParams = qs.parse(history.location.search) 
         if(I18n.language && this.state.locale !== this.props.locale) {
             this.updateContent();  
         }
+        /* // impossible to get iframe content height without js code server-side
+        $("iframe[src*=shimowendang]").off('load').on("load",(ev)=>{
+            let h = ev.target.contentWindow.document.body.scrollHeight;
+        })
+        */
     }
 
     async updateContent() {
+
+        const budaxIframePatch = (html) => {
+            html = html.replace(/src="(https:\/\/shimowendang.com\/[^?"]+)[^"]*/g, (m,g1) => {
+                //console.log("replaced:",m)
+                let channel
+                if((channel = this._urlParams.budaxChannel) != undefined) return "src=\""+g1+"?channel="+channel
+                else return "src=\""+g1
+            })
+            return html
+        }
+
         window.fetch("/scripts/static/"+this.props.dir+"/"+this.props.page+"."+I18n.language+".html").then(async (data) => {        
             let content = await data.text()
             //console.log("data?",data,content)
+            // #561
+            if(this.props.dir.includes("budax/")) {
+                content = budaxIframePatch(content)
+                //console.log("patched:",content)
+            }
             if(!content.includes("You need to enable JavaScript to run this app.")) this.setState({content,locale:I18n.language})
             else this.setState({error:true,locale:I18n.language})
         })
