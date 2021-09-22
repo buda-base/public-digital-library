@@ -13,7 +13,7 @@ import { top_right_menu } from './App'
 import { auth, Redirect404 } from '../routes'
 import { initiateApp } from '../state/actions';
 
-//import $ from 'jquery' ;
+import $ from 'jquery' ;
 
 
 type State = { content:any, error:integer, collapse:{} }
@@ -49,6 +49,15 @@ export class StaticRouteNoExt extends Component<State, Props>
             let h = ev.target.contentWindow.document.body.scrollHeight;
         })
         */
+        //$("html").addClass("static")
+        if(this.props.dir.includes("budax/")) $("html").addClass("budax")
+        if(window.innerWidth <= 840) {
+            $("iframe[src*=shimowendang]").off('load').on("load",(ev)=>{
+                let f = $(ev.target), h = f.height() 
+                //console.log("h:",f,h)
+                f.height(h*1.1)
+            })
+        }
     }
 
     async updateContent() {
