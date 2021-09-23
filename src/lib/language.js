@@ -34,9 +34,8 @@ export function ordinal_en(number) {
 }
 
 
-export function ordinal_bo(number) {
-	
-	return ("དུས་རབས་ "+numtobo(number));
+export function ordinal_bo(number) {	
+	return ("དུས་རབས་"+numtobo(number)); // #561 removed དུས་རབས་ in bo translation/"misc.ord" to prevent double display
 }
 
 

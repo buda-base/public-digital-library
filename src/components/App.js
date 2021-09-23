@@ -905,7 +905,7 @@ export function renderDates(birth,death,floruit) {
 
    const formatDate = (dates) => {
       const clean = (d) => (""+d).replace(/^([^0-9]*)0+/,"$1")
-      let date = "", min, max, val
+      let date = "", min, max, val, isCentury
       for(let d of dates) {
          val = clean(d.value)
          //console.log("d:",min,max,val,JSON.stringify(d))
@@ -923,6 +923,7 @@ export function renderDates(birth,death,floruit) {
       if(min !== undefined && max != undefined) {
          if(min === max) date = I18n.t("misc.card", { num: min })
          else if(min%100 == 0 && max%100 == 99) { 
+            isCentury = true
             let cmin = Math.ceil(min/100+1)
             let cmax = Math.ceil(max/100)
             if(cmin == cmax) date = I18n.t("misc.ord", { num: cmin })
@@ -933,18 +934,23 @@ export function renderDates(birth,death,floruit) {
 
       console.log("date:",dates,date);
 
-      return date
+      return { date, isCentury }
    }
 
    let vals = []
    const useAbbr = (!birth.length || !death.length)
-   let b,d,f
+   let b,d,f,date
    if(birth.length) {
-      b = formatDate(birth)
-      if(b != "" && useAbbr) vals.push(<span>{I18n.t("result.bDate", { num:b })}</span>)
+      date = formatDate(birth)
+      b = date.date
+      if(b != "" && useAbbr) {
+         if(!date.isCentury) vals.push(<span>{I18n.t("result.bDate", { num:b })}</span>)
+         else vals.push(<span>{I18n.t("result.bDateCentury", { num:b })}</span>)
+      }
    }
    if(death.length) {
-      d = formatDate(death)
+      date = formatDate(death)
+      d = date.date
       if(d != "" && useAbbr) vals.push(<span>{I18n.t("result.dDate", { num:d })} </span>)
    }
    if(!useAbbr && b != "" && d != "") {
@@ -952,8 +958,9 @@ export function renderDates(birth,death,floruit) {
    }
    // TODO: check if this is ok when data available
    if(floruit.length) {
-      f = formatDate(floruit)
-      if(f) vals.push(<span>{I18n.t("result.fDate", { num:f })} </span>)
+      date = formatDate(floruit)
+      f = date.date
+      if(f != "") vals.push(<span>{I18n.t("result.fDate", { num:f })} </span>)
    }
    return vals
 }

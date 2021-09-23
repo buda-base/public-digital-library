@@ -221,7 +221,8 @@
       "inEtext": "Results for <key>{{- keyword}}<\/key> <key>[{{language}}]<\/key><br/>in <res href='/show/{{- rid}}'>{{- name}}<\/res>",
       "openO": "དཀར་ཆག་ནང་སྒོ་ཕྱེ།",
       "bdDate":"{{birth}} – {{death}}",
-      "bDate":"འཁྲུངས་དུས། {{num,counttobo}}",
+      "bDate":"འཁྲུངས་ལོ། {{num,counttobo}}",
+      "bDateCentury":"འཁྲུངས་དུས། {{num,countobo}}",
       "dDate":"འདས་དུས། {{num,counttobo}}",
       "fDate":"fl. {{num,counttobo}}"
    },
@@ -316,7 +317,7 @@
       "of": "",
       "please": "",
       "seeO": "See on",
-      "ord": "དུས་རབས་{{num,ordinal}}",
+      "ord": "{{num,ordinal}}",
       "all": "ཡོངས།",
       "allC": "ཡོངས། ({{count}})",
       "allT": "{{type}} ({{count}})",

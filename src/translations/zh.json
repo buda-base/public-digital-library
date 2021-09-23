@@ -199,6 +199,7 @@
       "openO": "Open in Outline",
       "bdDate":"{{birth}} – {{death}}",
       "bDate":"出生{{num}}",
+      "bDateCentury":"出生{{num}}",
       "dDate":"过世{{num}}",
       "fDate":"fl. {{num}}"
    },

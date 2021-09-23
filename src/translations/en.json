@@ -239,6 +239,7 @@
       "openO": "Open in Outline",
       "bdDate":"{{birth}} – {{death}}",
       "bDate":"b. {{num}}",
+      "bDateCentury":"b. {{num}}",
       "dDate":"d. {{num}}",
       "fDate":"fl. {{num}}"
    },
