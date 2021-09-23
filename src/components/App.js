@@ -899,6 +899,66 @@ export function isAdmin(auth) {
 }
 
 
+export function renderDates(birth,death,floruit) {
+      
+   console.log("b/d/f:",birth,death,floruit)
+
+   const formatDate = (dates) => {
+      const clean = (d) => (""+d).replace(/^([^0-9]*)0+/,"$1")
+      let date = "", min, max, val
+      for(let d of dates) {
+         val = clean(d.value)
+         //console.log("d:",min,max,val,JSON.stringify(d))
+         if(d.type === bdo+"notBefore") {
+            if(min === undefined || val < min) min = val
+            if(max === undefined) max = val
+         } else if(d.type === bdo+"notAfter") {
+            if(max === undefined || val > max) max = val
+            if(min === undefined) min = val
+         } else if(d.type === bdo+"onYear") {
+            if(max === undefined || val > max) max = val
+            if(min === undefined || val < min) min = val
+         }
+      }
+      if(min !== undefined && max != undefined) {
+         if(min === max) date = I18n.t("misc.card", { num: min })
+         else if(min%100 == 0 && max%100 == 99) { 
+            let cmin = Math.ceil(min/100+1)
+            let cmax = Math.ceil(max/100)
+            if(cmin == cmax) date = I18n.t("misc.ord", { num: cmin })
+            else date = I18n.t("misc.ordInter", { min: cmin, max:cmax })
+         }
+         else date = I18n.t("misc.inter", { min, max }) 
+      }
+
+      console.log("date:",dates,date);
+
+      return date
+   }
+
+   let vals = []
+   const useAbbr = (!birth.length || !death.length)
+   let b,d,f
+   if(birth.length) {
+      b = formatDate(birth)
+      if(b != "" && useAbbr) vals.push(<span>{I18n.t("result.bDate", { num:b })}</span>)
+   }
+   if(death.length) {
+      d = formatDate(death)
+      if(d != "" && useAbbr) vals.push(<span>{I18n.t("result.dDate", { num:d })} </span>)
+   }
+   if(!useAbbr && b != "" && d != "") {
+      vals.push(<span>{I18n.t("result.bdDate", { birth:b, death:d })} </span>)
+   }
+   // TODO: check if this is ok when data available
+   if(floruit.length) {
+      f = formatDate(floruit)
+      if(f) vals.push(<span>{I18n.t("result.fDate", { num:f })} </span>)
+   }
+   return vals
+}
+
+
 const TagTab = {
    "Abstract Work":CropFreeIcon,
    "Work Has Expression":CenterFocusStrong,
@@ -2809,7 +2869,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             
             //loggergen.log("uA2",id,useAux,findProp)
             
-            let vals = [], birth = [], death = [], floruit = []
+            let birth = [], death = [], floruit = []
 
             for(let p of findProp) {
                
@@ -2848,57 +2908,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
             //console.log("B/D:",JSON.stringify(birth,null,3),JSON.stringify(death,null,3))
 
-            const renderDate = (dates) => {
-               const clean = (d) => (""+d).replace(/^([^0-9]*)0+/,"$1")
-               let date = "", min, max, val
-               for(let d of dates) {
-                  val = clean(d.value)
-                  //console.log("d:",min,max,val,JSON.stringify(d))
-                  if(d.type === bdo+"notBefore") {
-                     if(min === undefined || val < min) min = val
-                     if(max === undefined) max = val
-                  } else if(d.type === bdo+"notAfter") {
-                     if(max === undefined || val > max) max = val
-                     if(min === undefined) min = val
-                  } else if(d.type === bdo+"onYear") {
-                     if(max === undefined || val > max) max = val
-                     if(min === undefined || val < min) min = val
-                  }
-               }
-               if(min !== undefined && max != undefined) {
-                  if(min === max) date = I18n.t("misc.card", { num: min })
-                  else if(min%100 == 0 && max%100 == 99) { 
-                     let cmin = Math.ceil(min/100+1)
-                     let cmax = Math.ceil(max/100)
-                     if(cmin == cmax) date = I18n.t("misc.ord", { num: cmin })
-                     else date = I18n.t("misc.ordInter", { min: cmin, max:cmax })
-                  }
-                  else date = I18n.t("misc.inter", { min, max }) 
-               }
-
-               //console.log("date:",dates,date);
-
-               return date
-            }
-            const useAbbr = (!birth.length || !death.length)
-            let b,d,f
-            if(birth.length) {
-               b = renderDate(birth)
-               if(b != "" && useAbbr) vals.push(<span>{I18n.t("result.bDate", { num:b })}</span>)
-            }
-            if(death.length) {
-               d = renderDate(death)
-               if(d != "" && useAbbr) vals.push(<span>{I18n.t("result.dDate", { num:d })} </span>)
-            }
-            if(!useAbbr && b != "" && d != "") {
-               vals.push(<span>{I18n.t("result.bdDate", { birth:b, death:d })} </span>)
-            }
-            // TODO: check if this is ok when data available
-            if(floruit.length) {
-               f = renderDate(floruit)
-               if(f) vals.push(<span>{I18n.t("result.fDate", { num:f })} </span>)
-            }
-
+            const vals = renderDates(birth, death, floruit)
             if(vals.length >= 1) ret.push(<div class="match dates">{vals}</div>)
             
             return ret

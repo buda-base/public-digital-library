@@ -80,7 +80,7 @@ import { faLanguage } from '@fortawesome/free-solid-svg-icons'
 //import {MapComponent} from './Map';
 import {getEntiType,dPrefix,RISexportPath} from '../lib/api';
 import {numtobo} from '../lib/language';
-import {languages,getLangLabel,top_right_menu,prefixesMap as prefixes,sameAsMap,shortUri,fullUri,highlight,lang_selec,etext_lang_selec,langSelect,searchLangSelec,report_GA,getGDPRconsent} from './App';
+import {languages,getLangLabel,top_right_menu,prefixesMap as prefixes,sameAsMap,shortUri,fullUri,highlight,lang_selec,etext_lang_selec,langSelect,searchLangSelec,report_GA,getGDPRconsent,renderDates} from './App';
 import {narrowWithString} from "../lib/langdetect"
 import Popover from '@material-ui/core/Popover';
 import Popper from '@material-ui/core/Popper';
@@ -7906,6 +7906,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
          let dates ;
          if(_T === "Person") {
+            /*
             let elem = this.getResourceElem(bdo+"personEvent")
             if(elem && elem.length) {
                let birth = elem.filter(e => e.k && e.k.endsWith("PersonBirth")).map(e => this.getResourceBNode(e.value));
@@ -7932,6 +7933,31 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                   if(p.includes("Birth")) vals.push(<span>&nbsp;&ndash;&nbsp;</span>)
                }
                if(vals.length > 1) dates = <span class='date'>{vals}</span> ;
+            }
+            */
+
+            const prep = (obj) => {
+               let ret = []
+               for(let k of [ bdo+"onYear", bdo+"notBefore", bdo+"notAfter" ]) {
+                  if(obj[k]) for(let v of obj[k]) {
+                     ret.push({ type:k, value: v.value })
+                  }   
+               }
+               return ret
+            }
+
+            let elem = this.getResourceElem(bdo+"personEvent")
+            if(elem && elem.length) {
+               let birth = [], death = [], floruit = [] 
+               for(let e of elem) {
+                  if(e.k) {
+                     if(e.k.endsWith("Birth")) birth = birth.concat(prep(this.getResourceBNode(e.value)))
+                     else if(e.k.endsWith("Death")) death = death.concat(prep(this.getResourceBNode(e.value)))
+                     else if(e.k.endsWith("Floruit")) floruit = floruit.concat(prep(this.getResourceBNode(e.value)))
+                  }                  
+               }
+               const vals = renderDates(birth, death, floruit)
+               if(vals.length >= 1) dates = <span class='date'>{vals}</span> ;
             }
          }
 
