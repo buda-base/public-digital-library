@@ -4,6 +4,8 @@ import store from '../../index';
 import type { Action } from '../actions';
 import createReducer from '../../lib/createReducer';
 import * as actions from './actions';
+import {auth} from '../../routes';
+import {isAdmin} from '../../components/App';
 
 let reducers = {};
 
@@ -106,6 +108,16 @@ export const setPrefLang = (state: UIState, action: Action) => {
 reducers[actions.TYPES.setPrefLang] = setPrefLang;
 
 
+export const setEtextLang = (state: UIState, action: Action) => {
+
+      return {
+      ...state,
+      etextLang:action.payload
+   }
+}
+reducers[actions.TYPES.setEtextLang] = setEtextLang;
+
+
 export const showResults = (state: UIState, action: Action) => {
 
       return {
@@ -160,7 +172,13 @@ export const updateFacets = (state: UIState, action: actions.LoadingAction) => {
     let t = action.meta.datatype
     let key = action.meta.key
     let update = {}
-    let topicParents 
+    let topicParents, genresParents
+
+    // #548
+    const _tmp = "http://purl.bdrc.io/ontology/tmp/"
+    const removeUnreleased = !isAdmin(auth) || !action.payload[_tmp+"nonReleasedItems"]
+    console.log("removeU:",removeUnreleased)
+
     let facets = Object.keys(action.meta.facets).map(k => {
         let prop = action.meta.config[k]
         let keys = Object.keys(action.payload)        
@@ -171,7 +189,12 @@ export const updateFacets = (state: UIState, action: actions.LoadingAction) => {
             let meta = action.meta.facets[k]
             let props = Object.keys(meta)
             if(k === "tree" && meta["@graph"]) { 
-                topicParents = meta["0parents"]
+                topicParents = meta["parents"]
+                props = meta["@graph"].map(i => i["@id"].replace(/bdr:/,"http://purl.bdrc.io/resource/"))
+                meta = meta["@metadata"]
+            }
+            if(k === "genres" && meta["@graph"]) { 
+                genresParents = meta["parents"]
                 props = meta["@graph"].map(i => i["@id"].replace(/bdr:/,"http://purl.bdrc.io/resource/"))
                 meta = meta["@metadata"]
             }
@@ -188,7 +211,7 @@ export const updateFacets = (state: UIState, action: actions.LoadingAction) => {
                         let e = meta[q].dict[_e]
                         let flat = {}
                         
-                        //console.log("e",_e, e);
+                        //console.log("_e:",_e, e);
 
                         for(let f of e)  {
                             
@@ -200,8 +223,12 @@ export const updateFacets = (state: UIState, action: actions.LoadingAction) => {
                             flat[f.type] = val 
                         }
                         //console.log("f",flat)
-                        let hasAllProp = true
-                        for(let p of Object.keys(action.payload)) {
+
+                        // #548
+                        let hasAllProp = true 
+                        if(removeUnreleased && e.some( a => a.type === _tmp+"status" &&  a.value && !a.value.endsWith("Released")))  hasAllProp = false
+
+                        if(hasAllProp) for(let p of Object.keys(action.payload)) {
 
                             //console.log("p",p)
 
@@ -300,7 +327,8 @@ export const updateFacets = (state: UIState, action: actions.LoadingAction) => {
     return {
         ...state,
         metadata:{ ... update },
-        topicParents
+        topicParents,
+        genresParents
     }
 }
 reducers[actions.TYPES.updateFacets] = updateFacets;

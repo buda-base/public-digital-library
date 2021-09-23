@@ -111,6 +111,10 @@ async function initiateApp(params,iri,myprops,route,isAuthCallback) {
          //store.dispatch(dataActions.choosingHost(config.ldspdi.endpoints[config.ldspdi.index]));
 
 
+         if(val = localStorage.getItem('etextlang')) {
+            store.dispatch(uiActions.setEtextLang(val))
+         }
+
       }
 
       if(route === "static" || route === "mirador") {
@@ -458,7 +462,10 @@ function extractAssoRes(iri,res) {
    let assocRes = {}, _res = {}
    let allowK = [ skos+"prefLabel", skos+"altLabel", tmp+"withSameAs", bdo+"inRootInstance", bdo+"language", adm+"canonicalHtml", bdo+"partIndex", bdo+"volumeNumber", tmp+"thumbnailIIIFService", bdo+"instanceHasReproduction",
                   tmp+"nbTranslations", tmp+"provider", rdfs+"comment", rdf+"type", bdo+"note", bdo+"script", bdo+"partOf", bdo+"partType", bdo+"isComplete", bdo+"instanceOf", bdo+"instanceEvent", bdo+"instanceHasItem",
-                  bdo+"material", bdo+"biblioNote", bdo+"sponsoshipStatement", bdo+"sponsorshipStatement", bdo+"ownershipStatement" ]
+                  bdo+"material", bdo+"biblioNote", bdo+"sponsoshipStatement", bdo+"sponsorshipStatement", bdo+"ownershipStatement", rdfs+"seeAlso",
+                  // #562 there must be something weird in the data here... but can't apply same fix as usual because it removes data (from ToL)
+                  //bdo+"personGender", bdo+"personName", bdo+"personStudentOf", bdo+"personTeacherOf", tmp+"hasAdminData", owl+"sameAs"
+                   ]
    let allowR = [ skos+"prefLabel", bdo+"partIndex", bdo+"volumeNumber",  tmp+"thumbnailIIIFService" ]
 
    for(let k of Object.keys(res)) {                  
@@ -1216,7 +1223,7 @@ function getData(result,inMeta,outMeta)  {
 }
 
 
-function getStats(cat:string,data:{},tree:{})
+function getStats(cat:string,data:{},tree:{},genres:{})
 {
    let stat={}
    let config = store.getState().data.config
@@ -1225,7 +1232,7 @@ function getStats(cat:string,data:{},tree:{})
    if(config.facets[cat])
       keys = Object.keys(config.facets[cat])
 
-   loggergen.log("stat/keys",keys,tree)
+   loggergen.log("stat/keys",keys,tree,genres)
    
    if(auth && !auth.isAuthenticated()) {
       let hide = config["facets-hide-unlogged"][cat]
@@ -1272,9 +1279,40 @@ function getStats(cat:string,data:{},tree:{})
          }
       }
 
-      loggergen.log("parents",parents,treeParents)
+      //loggergen.log("Tparents",parents,treeParents)
 
       if(treeParents) tree["parents"] = treeParents
+   }
+
+   let genresParents = {}
+   if(genres && genres["@graph"] && genres["@graph"].length > 1) {
+      parents = {}
+      for(let node of genres["@graph"]) parents[node["@id"]] = node
+
+      for(let node of Object.keys(parents)) { 
+         if(parents[node]["taxHasSubClass"] && parents[node]["taxHasSubClass"].length) {
+            for(let sub of parents[node]["taxHasSubClass"]) { 
+               if(!parents[sub]) parents[sub] = {}
+               parents[sub].ancestor = node
+            }
+         }
+      }
+
+      for(let node of Object.keys(parents)) { 
+         if(!parents[node]["taxHasSubClass"] && parents[node].ancestor){
+            genresParents[node] = []
+            let root = parents[node].ancestor
+            do {
+               genresParents[node].push(root)
+               root = parents[root]
+               if(root) root = root.ancestor
+            } while(root)
+         }
+      }
+
+      //loggergen.log("Gparents",parents,genresParents)
+
+      if(genresParents) genres["parents"] = genresParents
    }
    
    let unspecTag = "unspecified"
@@ -1291,7 +1329,7 @@ function getStats(cat:string,data:{},tree:{})
          let genre = [bdo+"workGenre", bdo + "workIsAbout", _tmp + "etextAbout" ]
          let tmp ;
          
-         if(f === "tree") tmp = p.filter((e) => (genre.indexOf(e.type) !== -1))
+         if(f === "tree" || f == "genres") tmp = p.filter((e) => (genre.indexOf(e.type) !== -1))
          else tmp = p.filter((e) => (e.type == config.facets[cat][f] && (f !== "about" || !e.value.match(/resource[/]T/) )))
 
          if(tmp.length > 0) for(let t of tmp) 
@@ -1306,6 +1344,15 @@ function getStats(cat:string,data:{},tree:{})
                         
             if(f === "tree" && treeParents && treeParents[t.value]) {
                for(let node of treeParents[t.value]) { 
+                  if(!stat[f][node]) stat[f][node] = { n:0, dict:{} }
+                  stat[f][node].n ++
+                  if(!stat[f][node].dict[_p]) stat[f][node].dict[_p] = []
+                  stat[f][node].dict[_p] = stat[f][node].dict[_p].concat(p)
+               }
+            }
+
+            if(f === "genres" && genresParents && genresParents[t.value]) {
+               for(let node of genresParents[t.value]) { 
                   if(!stat[f][node]) stat[f][node] = { n:0, dict:{} }
                   stat[f][node].n ++
                   if(!stat[f][node].dict[_p]) stat[f][node].dict[_p] = []
@@ -1372,13 +1419,13 @@ function getStats(cat:string,data:{},tree:{})
    return stat
 }
 
-function addMeta(keyword:string,language:string,data:{},t:string,tree:{},found:boolean=true,facets:boolean=true,inEtext)
+function addMeta(keyword:string,language:string,data:{},t:string,tree:{},found:boolean=true,facets:boolean=true,inEtext,genres:{})
 {
    loggergen.log("aM:",data,data["results"],t,inEtext)
 
    if(data["results"] &&  data["results"]["bindings"] && data["results"]["bindings"][t.toLowerCase()+"s"]){
       loggergen.log("FOUND",data);
-      let stat = getStats(t,data,tree);
+      let stat = getStats(t,data,tree,genres);
 
       if(inEtext) data.inEtext = inEtext
 
@@ -1400,6 +1447,26 @@ function addMeta(keyword:string,language:string,data:{},t:string,tree:{},found:b
          }
          tree["@metadata"] = stat.tree
          stat = { ...stat, tree }
+      }
+
+      if(genres)
+      {
+         if(stat["genres"] && stat["genres"]["unspecified"]) {
+
+            let elem = data["results"]["bindings"][t.toLowerCase()+"s"]
+
+            //loggergen.log("elem genres",genres["@graph"][0]) ; //elem,stat)
+
+            if(!genres["@graph"].length) genres["@graph"] = []
+            //if(!genres["@graph"][0].length) genres["@graph"][0] = {}
+            if(!genres["@graph"][0]["taxHasSubClass"]) genres["@graph"][0]["taxHasSubClass"] = []
+            else if(!Array.isArray(genres["@graph"][0]["taxHasSubClass"])) genres["@graph"][0]["taxHasSubClass"] = [ genres["@graph"][0]["taxHasSubClass"] ]
+            genres["@graph"][0]["taxHasSubClass"].push("unspecified")
+            genres["@graph"].push({"@id":"unspecified","taxHasSubClass":[],"tmp:count":stat["genres"]["unspecified"].n})
+         
+         }
+         genres["@metadata"] = stat.genres
+         stat = { ...stat, genres }
       }
 
       loggergen.log("stat:",stat)
@@ -1468,7 +1535,7 @@ function mergeSameAs(result,withSameAs,init = true,rootRes = result, force = fal
          let hasSameK 
          if(result[r.t] && result[r.t][k] && (result[r.t][s] || isRid)) {
             
-            loggergen.log("same?",isRid,k,r.t,s,result[r.t][k],result[r.t][s],assoR)
+            //loggergen.log("same?",isRid,k,r.t,s,result[r.t][k],result[r.t][s],assoR)
 
             if(!isRid) { 
                hasSameK = false
@@ -1680,22 +1747,45 @@ function sortResultsByYear(results,reverse) {
 
    if(!results) return 
 
+   /* // not needed
+   if(!aux) {
+      let state = store.getState()
+      aux = state.data.assocResources
+      if(aux) aux = aux[state.data.keyword]
+   }
+   */
+
    let keys = Object.keys(results)
    if(keys && keys.length) {
       keys = keys.map(k => {
          let n = 1000000, score, p = results[k].length
          if(reverse) n = -1000000
+         let multi_n = []
          for(let i in results[k]) {
             let v = results[k][i]
+
+            /* // not useful
+            let obj
+            if(v.type === bdo+"personEvent" && aux && (obj = aux[v.value]) && obj.some(o => o.type === rdf+"type" && o.value === bdo+"PersonBirth")) {
+               obj = _.orderBy(obj.filter(o => o.type === bdo+"notBefore" || o.type === bdo+"notAfter" || o.type === bdo+"onYear").map(o => Number(o.value)))
+               //console.log("birth:",obj)
+               if(obj.length) n = obj[0]
+            } else  
+            */
+            
             if(v.type === tmp+"yearStart") {
-               n = Number(v.value)
-            }
+               multi_n.push(Number(v.value))
+            } 
+         }
+         if(multi_n.length) { 
+            multi_n = _.orderBy(multi_n, [reverse?'desc':'asc'])
+            n = multi_n[0]
          }
          return ({k, n, p})
       },{})
       keys = _.orderBy(keys,['n','p'],[(reverse?'desc':'asc'), (reverse?'asc':'desc')])
       
-      //loggergen.log("keysY",keys)
+      loggergen.log("keysY:",keys)
 
       let sortRes = {}
       for(let k of keys) sortRes[k.k] = results[k.k]
@@ -1922,16 +2012,25 @@ function rewriteAuxMain(result,keyword,datatype,sortBy,language)
          store.dispatch(dataActions.gotAssocResources(keyword,{ data: result[e] } ) )
       }
       else if(e === "facets") {
-         let cat = "http://purl.bdrc.io/resource/O9TAXTBRC201605"
+         let cat = "http://purl.bdrc.io/resource/O9TAXTBRC201605", root, tree, genres
          if(result[e].topics && result[e].topics[cat]) {
-            let root = result[e].topics[cat]
-            let tree = [ { "@id": cat, taxHasSubClass: root.subclasses }, ...Object.keys(result[e].topics).reduce( (acc,k) =>  { 
+            root = result[e].topics[cat]
+            tree = [ { "@id": cat, taxHasSubClass: root.subclasses }, ...Object.keys(result[e].topics).reduce( (acc,k) =>  { 
                let elem = result[e].topics[k] 
                return ([ ...acc, { "@id":k, taxHasSubClass: elem.subclasses, "skos:prefLabel": elem["skos:prefLabel"], "tmp:count":elem["count"] } ])
             }, []) ]
-            return { ...acc, ["tree"]: { "@graph" : tree  } }
          }
-         return acc
+         cat = "http://purl.bdrc.io/resource/O3JW5309"
+         if(result[e].genres && result[e].genres[cat]) {
+            root = result[e].genres[cat]
+            genres = [ { "@id": cat, taxHasSubClass: root.subclasses }, ...Object.keys(result[e].genres).reduce( (acc,k) =>  { 
+               let elem = result[e].genres[k] 
+               return ([ ...acc, { "@id":k, taxHasSubClass: elem.subclasses, "skos:prefLabel": elem["skos:prefLabel"], "tmp:count":elem["count"] } ])
+            }, []) ]
+
+
+         }
+         return { ...acc, ...(tree?{["tree"]: { "@graph" : tree  } }:{}), ...(genres?{["genres"]: { "@graph" : genres  } }:{}) }
       }
       else return acc
    }, {})
@@ -2026,7 +2125,7 @@ async function startSearch(keyword,language,datatype,sourcetype,dontGetDT,inEtex
 
       let newMeta = {}
 
-      if(["Work","Instance","Scan"].includes(datatype[0])) addMeta(keyword,language,data,datatype[0],result.tree);      
+      if(["Work","Instance","Scan"].includes(datatype[0])) addMeta(keyword,language,data,datatype[0],result.tree,undefined,undefined,undefined,result.genres);      
       else addMeta(keyword,language,data,datatype[0]);      
 
       /* // deprecated
@@ -2075,12 +2174,12 @@ else {
       }
       else if(["Instance","Work","Etext","Scan"].indexOf(datatype[0]) !== -1) {
 
-         metadata = { ...metadata, tree:result.tree}
+         metadata = { ...metadata, tree:result.tree, genres:result.genres}
 
          let dt = "Etext" ;
-         if(datatype.indexOf("Work") !== -1 ) { dt="Work" ; addMeta(keyword,language,data,"Work",result.tree,false); }
-         else if(datatype.indexOf("Instance") !== -1 ) { dt="Instance" ; addMeta(keyword,language,data,"Instance",result.tree,false); }
-         else if(datatype.indexOf("Scan") !== -1 ) { dt="Scan" ; addMeta(keyword,language,data,"Scan",result.tree,false); }
+         if(datatype.indexOf("Work") !== -1 ) { dt="Work" ; addMeta(keyword,language,data,"Work",result.tree,false,undefined,undefined,result.genres); }
+         else if(datatype.indexOf("Instance") !== -1 ) { dt="Instance" ; addMeta(keyword,language,data,"Instance",result.tree,false,undefined,undefined,result.genres); }
+         else if(datatype.indexOf("Scan") !== -1 ) { dt="Scan" ; addMeta(keyword,language,data,"Scan",result.tree,false,undefined,undefined,result.genres); }
          else store.dispatch(dataActions.foundFacetInfo(keyword,language,datatype,metadata))
 
          //store.dispatch(dataActions.foundDatatypes(keyword,language,{ metadata:{ [bdo+dt]:data.numResults } } ));
@@ -2421,10 +2520,35 @@ export function* watchGetLatestSyncs() {
    );
 }
 
-async function getOutline(iri) {
+async function getOutline(iri,node?,volFromUri?) {
 
    store.dispatch(uiActions.loading(iri, "outline"));
-   let res = await api.loadOutline(iri) 
+   let res = await api.loadOutline(iri,node,volFromUri) 
+
+   console.log("gotO:",res,node,volFromUri)
+
+   if(res && res["@graph"] && volFromUri) res["@graph"].map(r => { 
+      // patch main node
+      if(r.id == volFromUri
+         && r.hasPart && r.hasPart !== iri && !r.hasPart.includes(iri) // quickfix for loop/crash in bdr:MW12827
+      ) { 
+
+         // patching the patch :-)
+         if(iri === "tmp:uri" && r["tmp:firstImageGroup"] && r["tmp:firstImageGroup"]["id"]) {
+            iri = r["tmp:firstImageGroup"]["id"]
+         }
+
+         // keep only parts that are in current volume data
+         if(r.hasPart) {
+            if(!Array.isArray(r.hasPart)) r.hasPart = [ r.hasPart ]
+            r.hasPart = r.hasPart.filter(h => res["@graph"].some(n => n.id === h))
+         }
+
+         r.id = iri
+         if(r["skos:prefLabel"]) delete r["skos:prefLabel"]
+      }
+      //console.log("foundem?",r,volFromUri)
+   })
    store.dispatch(uiActions.loading(iri, false));
    
    loggergen.log("outline",res)
@@ -2459,7 +2583,7 @@ export function* watchGetOutline() {
 
    yield takeLatest(
       dataActions.TYPES.getOutline,
-      (action) => getOutline(action.payload)
+      (action) => getOutline(action.payload, action.meta.node?action.meta.node:undefined,action.meta.volFromUri?action.meta.volFromUri:undefined)
    );
 }
 

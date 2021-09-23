@@ -219,7 +219,12 @@
       "moreres": "འདི་ལས་' {{txt}} མང་བ་འདུག, དེ་དག་ལ་བལྟ་འདོད་ཡོད་དམ།",
       "openEin": "འཕྲུལ་ཡིག་ནང་སྟོན།",
       "inEtext": "Results for <key>{{- keyword}}<\/key> <key>[{{language}}]<\/key><br/>in <res href='/show/{{- rid}}'>{{- name}}<\/res>",
-      "openO": "དཀར་ཆག་ནང་སྒོ་ཕྱེ།"
+      "openO": "དཀར་ཆག་ནང་སྒོ་ཕྱེ།",
+      "bdDate":"{{birth}} – {{death}}",
+      "bDate":"འཁྲུངས་ལོ། {{num,counttobo}}",
+      "bDateCentury":"འཁྲུངས་དུས། {{num,countobo}}",
+      "dDate":"འདས་དུས། {{num,counttobo}}",
+      "fDate":"fl. {{num,counttobo}}"
    },
    "map": {
       "touch": "Use two fingers to move the map",
@@ -319,7 +324,10 @@
       "seeR": "བཙལ་འབྲས་ལ་གཟིགས།",
       "seeR_plural": "བཙལ་འབྲས་ལ་གཟིགས།",
       "link": "དྲ་ཐག:",
-      "link_plural": "དྲ་ཐག་ཁག:"
+      "link_plural": "དྲ་ཐག་ཁག:",
+      "card": "{{num,counttobo}}",
+      "inter": "{{min,counttobo}}~{{max,counttobo}}",
+      "ordInter": "དུས་རབས་{{min,counttobo}} ནས་{{max,counttobo}} བར།"
    },
    "lang": {
       "en": "ཨིན་སྐད།",
@@ -475,14 +483,11 @@
       "mustLogin": "ཁྱེད་ཀྱིས་PDFs དང་ZIPs གང་རུང་ཕབ་ལེན་བྱེད་པར་ཐོ་འགོད་ངེས་པར་བྱ་དགོས།",
       "commitV": "བཀོལ་སྤྱོད་ཀྱི་ལོ་རྒྱུས་སྟོན།",
       "commitH": "བཀོལ་སྤྱོད་ཀྱི་ལོ་རྒྱུས་སྦེད།",
-      "citation": [
-         "bibliographic citation",
-         {
-            "mla": "Modern Language Association",
-            "chicago": "Chicago Manual of Style",
-            "apa": "American Psychological Association"
-         }
-      ],
+      "citation": {
+         "mla": "Modern Language Association",
+         "chicago": "Chicago Manual of Style",
+         "apa": "American Psychological Association"
+      },
       "citationI": "{{lg}} ཁུངས་འདྲེན།",
       "citationS": "ཡོང་ཁུངས་ཀྱི་ཁྱད་ཆོས།",
       "cite": "འདིའི་ཡོང་ཁུངས།",
@@ -497,7 +502,14 @@
       "clipT": "ཡིག་རྐྱང་ངོ་བཤུ་བྱས་ཡོད།",
       "orderVT": "Copy the text below, click on the following link and paste it in the comments box:",
       "contactVT": "Contact Vimala Treasures",
-      "contactVTcopy": "I wish to order 1 copy of {{uri}}"
+      "contactVTcopy": "I wish to order 1 copy of {{uri}}",
+      "assoc":"Associated works",
+      "location1": " (v. {{vol}}, img. {{page}})",
+      "locationM": " (v. {{vol}}, img. {{page}}-{{endPage}})",
+      "location1vol1": " (img. {{page}})",
+      "location1volM": " (img. {{page}}-{{endPage}})",
+      "showPnodes":"Previous",
+      "showNnodes":"Next"
    },
    "mirador": {
       "return": "བུདྡྷ་ལ་ཕྱིར་ལོག",

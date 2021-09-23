@@ -1,6 +1,7 @@
 
 
-let tibetSort,hanziConv,jsEWTS,Sanscript,pinyin4js,__
+let tibetSort,hanziConv,jsEWTS,Sanscript,pinyin4js,__ 
+
 
 export const importModules = async () => {
 
@@ -13,6 +14,7 @@ export const importModules = async () => {
        hanziConv = window["hanzi-tsconv"].conv
        tibetSort = await require("tibetan-sort-js")
        tibetSort = window["tibetan-sort-js"].default
+       //htmlEntities = await require("html-entities") ;
    }
    catch(f) { // in embed iframe
       //console.log("exception",f)
@@ -23,6 +25,8 @@ export const importModules = async () => {
        eval('require(["https://cdn.jsdelivr.net/npm/pinyin4js@1.3.18/dist/pinyin4js.js"],(obj) => { pinyin4js = PinyinHelper; window.moduleLoaded.pinyin4js = PinyinHelper ; })')       
        eval('require(["https://cdn.jsdelivr.net/npm/hanzi-tsconv@0.1.2/dist/main.js"],(obj) => { hanziConv = window["hanzi-tsconv"].conv ; console.log("obj/hzCv",hanziConv); window.moduleLoaded.hanziConv = hanziConv ; })')
        eval('require(["https://cdn.jsdelivr.net/npm/tibetan-sort-js@2.1.2"],(obj) => { tibetSort = window["tibetan-sort-js"].default ; console.log("obj/tS",obj,tibetSort); window.moduleLoaded.tibetSort = tibetSort ; })')
+       // TODO: can't load module in embedded/iframe viewer
+       //eval('require(["https://cdn.jsdelivr.net/npm/html-entities@2.3.2/lib/index.min.js"],(obj) => { htmlEntities = obj; console.log("obj htmlE",obj); window.moduleLoaded.htmlEntities = obj ; })')
    }
 }
 importModules();
@@ -200,6 +204,21 @@ export function sortLangScriptLabels(data,preset,translit)
    return data_
 }
 
+/* //no need
+export function htmlEntitiesDecode(val) {
+   // TODO: can't load module in embedded/iframe viewer
+   if(htmlEntities && val) {  
+      if(!Array.isArray(val)) { 
+         if(typeof val === "string" && val.match(/&#[0-9]+;/)) {
+            val = val.replace(/&#[0-9]+;/g,(m) => htmlEntities.decode(m))
+         }
+      }
+      else val = val.map(v => !v.match(/&#[0-9]+;/)?v:v.replace(/&#[0-9]+;/g,(m) => htmlEntities.decode(m)))
+   }
+   return val
+}
+*/
+
 export function getMainLabel(data,extpreset)
 {
    if(!data) return ;
@@ -232,7 +251,8 @@ export function getMainLabel(data,extpreset)
    } else if (bestlt.endsWith("ewts")) {
       val = ewtsToDisplay(val)
    }
-
+   // no need, data should not have entities
+   // val = htmlEntitiesDecode(val) 
    return {"value": val, "lang": bestlt}
 }
 
@@ -272,6 +292,8 @@ export function getMainLabels(data,extpreset)
      } else if (bestlt.endsWith("ewts")) {
         val = ewtsToDisplay(val)
      }
+     // no need, data should not have entities
+     // val = htmlEntitiesDecode(val)
      vals.push(val)
    }
    

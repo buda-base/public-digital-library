@@ -52,6 +52,7 @@ const mapStateToProps = (state) => {
    let sortBy = state.ui.sortBy
    
    let topicParents = state.ui.topicParents
+   let genresParents = state.ui.genresParents
 
    let instances = state.data.instances   
    let isInstance = state.data.isInstance
@@ -68,7 +69,7 @@ const mapStateToProps = (state) => {
 
    let newState = { logged,config, hostFailure, searches, keyword, language,loading,datatypes,ontology,facets,
       locale,prefLang,resources,ontoSearch,rightPanel,langPreset, langIndex, langExt, failures,dictionary,metadata, assoRes, 
-      sortBy, topicParents, instances, isInstance,
+      sortBy, topicParents, genresParents, instances, isInstance,
       latestSyncs,latestSyncsNb, profileName }
 
    if(config && !config.auth) newState.auth = false

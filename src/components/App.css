@@ -1172,12 +1172,18 @@ h4:not(:hover) > .lang
 /* -+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ resource */
 
 
-#open-etext { position:absolute; right:140px; margin-top:0px; z-index:10;}
-#open-etext > div { }
-#open-etext > div::after { content:none !important; }
-#open-etext + .data h2 { max-width:calc(100% - 30px); }  /*- 150px */ 
-#open-etext > div a { color:white; background-color: #d73449; border-radius:5px;display:flex;align-items: center;justify-content: center; height:40px;
+.open-etext { position:absolute; right:140px; margin-top:0px; z-index:10;}
+.open-etext > div { }
+.open-etext > div::after { content:none !important; }
+.open-etext + .data h2 { max-width:calc(100% - 30px); }  /*- 150px */ 
+.browse-by a,
+.open-etext > div a { color:white !important; background-color: #d73449; border-radius:5px;display:flex;align-items: center;justify-content: center; height:40px;
    padding: 0 15px; border:none !important; font-weight:600; font-size:13px; cursor:pointer;}
+
+.browse-by { margin-top:10px; }
+.browse-by::after { content:none !important ;}
+.browse-by img { filter: invert(100%) brightness(135%); width:27px; display: inline-block; margin-right:13px; }
+
 
 .resource > .index { width:15%; padding-top:10px; position:fixed; }
 .resource:not(.etext-view):not(.static) > :not(.index):not(.ariane) { width:85%; margin-left:15%; /*position:relative;*/ }
@@ -1222,20 +1228,51 @@ h4:not(:hover) > .lang
 /* ------------------------------------------------------------------------------------------------------------------------ static pages */
 
 .static-container > #samples { padding-top:65px;}
-.static-container > #samples > div { padding-left:70px; padding-right:70px; }
+.static-container > #samples > div { padding-left:75px; padding-right:75px; }
 .static-container #samples a { color:#d73449;}
 .static-container #samples a:hover { text-decoration: underline;}
 
 .static-container #samples h3 { margin-bottom:32px;}
 .static-container #samples p + h3 { margin-top:65px;}
 
-
 .nav.zhMirror a#about { margin-right:0; margin-left:20px;  }
 .nav.zhMirror a#about + a { margin-left:-95px;  }
 
 
+.budax .static-container .center { text-align: center; }
+
+.budax .static-container .hide.top { position:relative; overflow:hidden; display:block;}
+.budax .static-container .hide.top iframe { border:none; z-index:-1; display:block; margin-top:-150px; margin-bottom:-150px;}
+/* no need for this actually: */
+/* .static-container .hide.top::before { content:'';display: inline-block; background:white;width:100%;height:145px;position: absolute;}  */
+
+.budax .static-container .over,
+.budax .static-container h2 { z-index:1; position:relative; }
+
+.budax .static-container iframe,
+.budax .static-container img { max-width:100%; } 
+
+@media only screen and (max-device-width:1440px) {
+   .budax body { min-width:840px; }
+   .budax .static-container #samples > div { padding:0 20px;}
+
+   .budax .static-container #samples .hide.top iframe { margin-top:-100px; margin-bottom:-130px;  }
+}
+
+
 /* ------------------------------------------------------------------------------------------------------------------------ outline */
 
+.resource .data#outline div .node-nav:not(#a) {
+   display:inline-block;
+   text-transform: uppercase;
+   color: white;
+   background-color: #d73449;
+   font-size: 10px;
+   font-weight: 700;
+   padding: 2px 4px;
+   border-radius: 3px;
+   cursor: pointer;
+}
 
 
 .resource .data#main-info,
@@ -1674,7 +1711,7 @@ span[lang^='sa-']:not([lang$='-ewts']) { text-transform: capitalize;}
 .resource .data h2,
 .resource .title h2 { /*font-family: "Noto Sans", "Roboto", "Helvetica", "Arial", sans-serif; */ margin:0; color:#343434; }
 
-.resource .data#open-etext + .data { padding-bottom:60px; } 
+.resource .data.open-etext + .data { padding-bottom:60px; } 
 
 .resource .data *,
 .resource .related div { /*font-family: "Noto Sans", "Roboto", "Helvetica", "Arial", sans-serif;*/ }
@@ -2316,6 +2353,7 @@ h4:hover a.no-bdrc img { opacity:1; }
 
 
 .resource .data.images-title { display:flex; /*align-items: end;*/ position:relative; flex-wrap:wrap;}
+
 .resource .data.etext-title { padding-right:270px; display:flex; align-items: flex-start;position:relative;}
 
 .resource .data h2.intro,
@@ -2772,6 +2810,12 @@ html[lang="en"] .resource .data > [data-prop="bdo:creator"] h4[data-prop="bdo:ro
 
 .resource .data.related > div div.rel-or-crea > div { scroll-margin:20px;}
 
+.resource .data.related .react-tabs .rel-or-crea { padding-bottom:60px; }
+
+.resource .data.related .rel-or-crea .search { position:absolute; right:55px; bottom:65px; text-transform: uppercase; font-weight:700; 
+   color:white; background-color: #d73449; padding:5px 10px !important; font-size:12px; border-radius:4px; border:none !important;
+}
+
 /* ------------------------------------------------------------------------------------------------------------------------ extended properties */
 
 
@@ -2983,6 +3027,8 @@ html[lang="en"] .resource .data > [data-prop="bdo:creator"] h4[data-prop="bdo:ro
 
 .etextPage h5 a.unpag { color: #343434; cursor:auto;}
 .etextPage h5 a.unpag:hover { border:none; }
+
+.etextPage h5 + .copyrighted { font-size:14px; font-weight:600; padding-left:10px ;} 
 
 .etextPage .overpage + div { margin:20px 0 5px 0; }
 
@@ -3824,7 +3870,7 @@ a.result .contenu ul > div:last-child h3[lang=bo] span { font-size:18px;}
 {
 
 
-   #open-etext { right:0px; }
+   .open-etext { right:0px; }
 
    .resource > .ariane { margin-left:0; padding-left:16.7%; }
 

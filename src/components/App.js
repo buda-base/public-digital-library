@@ -487,6 +487,13 @@ export function getLangLabel(that:{},prop:string="",labels:[],proplang:boolean=f
          langs = [ ...langs, that.props.locale ]
       }            
 
+      
+      if(that.props.etextLang && (prop == bdo+"eTextHasPage" || prop == bdo+"eTextHasChunk")) { 
+         langs = [ that.props.etextLang ]
+         //console.log("prop:",langs,prop)
+      }
+      
+
       // TODO move that to redux state 
       // not that simple because UI lang has to be used first or not
       /*
@@ -647,6 +654,64 @@ export function lang_selec(that,black:boolean = false)
          </Popover>
    ]
 }
+export function etext_lang_selec(that,black:boolean = false)
+{
+   
+   let text = { "bo":"lang.tip.bo","bo-x-ewts":"lang.tip.boXEwts" }, prio = ["bo", "bo-x-ewts" ]
+
+   let current = that.props.etextLang
+   if(!current || !text[current]) {
+      if(that.props.locale === "en") current = "bo-x-ewts"
+      else current = "bo"
+   }
+
+   return [
+         <span id="lang" title={I18n.t("home.choose")} onClick={(e) => that.setState({...that.state,anchorLang:e.currentTarget, collapse: {...that.state.collapse, lang:!that.state.collapse.lang } } ) }><img src={"/icons/LANGUE"+(black?"b":"")+".svg"}/></span>
+         ,
+         <Popover
+            id="popLang"
+            open={that.state.collapse&&that.state.collapse.lang?true:false}
+            transformOrigin={{vertical:(!black?'top':'bottom'),horizontal:(!black?'right':'left')}}
+            anchorOrigin={{vertical:(!black?'bottom':'top'),horizontal:(!black?'right':'left')}}
+            anchorEl={that.state.anchorLang}
+            onClose={e => { that.setState({...that.state,anchorLang:null,collapse: {...that.state.collapse, lang:false } } ) }}
+            className={black?"black":""}
+            >
+
+              <FormControl className="formControl">
+                {/* <InputLabel htmlFor="datatype">In</InputLabel> */}
+                  
+                  { prio.map((i) => {
+
+                        let label = I18n.t(text[i]);
+
+                        // TODO add link to user profile / language preferences
+
+                        return ( <MenuItem
+                                    className={current===i?"is-locale":""}     
+                                    value={i}
+                                    onClick={(event) => { 
+
+                                       localStorage.setItem('etextlang', i);
+
+                                       that.setState({...that.state,anchorLang:null,collapse: {...that.state.collapse, lang:false } }); 
+
+                                       that.props.onSetEtextLang(i)
+
+                                       /*
+                                       // not sure we need a url param
+                                       let loca = { ...that.props.history.location }
+                                       if(loca.search.includes("etextlang")) loca.search = loca.search.replace(/etextlang=[^&]+/,"etextlang="+i)
+                                       else loca.search += (loca.search&&loca.search.match(/[?]./)?"&":"?")+"etextlang="+i
+                                       that.props.history.push(loca)
+                                       */
+                                    }} >{label}</MenuItem> ) 
+                  } ) } 
+                  
+            </FormControl>
+         </Popover>
+   ]
+}
 
 export function getGDPRconsent(that) {
 
@@ -730,7 +795,7 @@ export function top_right_menu(that,etextTitle,backUrl,etextres)
                            delete loca.hash
                            that.props.history.push(loca) ; 
                         }                        
-                        // that.setState({...that.state, openEtext: false });
+                        if(that.state.openEtext) that.setState({...that.state, openEtext: false });
                      } else {
                         that.props.history.push({pathname:"/search",search:"?"+backUrl}) ; 
                      }
@@ -831,6 +896,73 @@ export function isAdmin(auth) {
    let groups, result = auth && auth.isAuthenticated() && auth.userProfile && (groups = auth.userProfile["https://auth.bdrc.io/groups"]) && groups.includes("admin")
    //console.log("isAdm:",result)
    return result
+}
+
+
+export function renderDates(birth,death,floruit) {
+      
+   console.log("b/d/f:",birth,death,floruit)
+
+   const formatDate = (dates) => {
+      const clean = (d) => (""+d).replace(/^([^0-9]*)0+/,"$1")
+      let date = "", min, max, val, isCentury
+      for(let d of dates) {
+         val = clean(d.value)
+         //console.log("d:",min,max,val,JSON.stringify(d))
+         if(d.type === bdo+"notBefore") {
+            if(min === undefined || val < min) min = val
+            if(max === undefined) max = val
+         } else if(d.type === bdo+"notAfter") {
+            if(max === undefined || val > max) max = val
+            if(min === undefined) min = val
+         } else if(d.type === bdo+"onYear") {
+            if(max === undefined || val > max) max = val
+            if(min === undefined || val < min) min = val
+         }
+      }
+      if(min !== undefined && max != undefined) {
+         if(min === max) date = I18n.t("misc.card", { num: min })
+         else if(min%100 == 0 && max%100 == 99) { 
+            isCentury = true
+            let cmin = Math.ceil(min/100+1)
+            let cmax = Math.ceil(max/100)
+            if(cmin == cmax) date = I18n.t("misc.ord", { num: cmin })
+            else date = I18n.t("misc.ordInter", { min: cmin, max:cmax })
+         }
+         else date = I18n.t("misc.inter", { min, max }) 
+      }
+
+      console.log("date:",dates,date);
+
+      return { date, isCentury }
+   }
+
+   let vals = []
+   const useAbbr = (!birth.length || !death.length)
+   let b,d,f,date
+   if(birth.length) {
+      date = formatDate(birth)
+      b = date.date
+      if(b != "" && useAbbr) {
+         if(!date.isCentury) vals.push(<span>{I18n.t("result.bDate", { num:b })}</span>)
+         else vals.push(<span>{I18n.t("result.bDateCentury", { num:b })}</span>)
+      }
+   }
+   if(death.length) {
+      date = formatDate(death)
+      d = date.date
+      if(d != "" && useAbbr) vals.push(<span>{I18n.t("result.dDate", { num:d })} </span>)
+   }
+   if(!useAbbr && b != "" && d != "") {
+      vals.push(<span>{I18n.t("result.bdDate", { birth:b, death:d })} </span>)
+   }
+   // TODO: check if this is ok when data available
+   if(floruit.length) {
+      date = formatDate(floruit)
+      f = date.date
+      if(f != "") vals.push(<span>{I18n.t("result.fDate", { num:f })} </span>)
+   }
+   return vals
 }
 
 
@@ -1304,11 +1436,22 @@ class App extends Component<Props,State> {
          s.repage = true
       }
 
-      if(props.topicParents && state.filters.facets && state.filters.facets[bdo+"workGenre"]) {
+      if(props.genresParents && state.filters.facets && state.filters.facets[bdo+"workGenre"]) {
          if(!s) s = { ...state }
          let genre = state.filters.facets[bdo+"workGenre"]
          if(genre.val) genre = genre.val
          for(let p of genre) 
+            if(props.genresParents[p]) 
+               for(let q of props.genresParents[p]) 
+                  if(s.collapse[q] === undefined) 
+                     s.collapse[q] = true
+      }
+
+      if(props.topicParents && state.filters.facets && state.filters.facets[bdo+"workIsAbout"]) {
+         if(!s) s = { ...state }
+         let topic = state.filters.facets[bdo+"workIsAbout"]
+         if(topic.val) topic = topic.val
+         for(let p of topic) 
             if(props.topicParents[p]) 
                for(let q of props.topicParents[p]) 
                   if(s.collapse[q] === undefined) 
@@ -1354,7 +1497,7 @@ class App extends Component<Props,State> {
             facets = Object.keys(facets).reduce((acc,f) => {
                   if(facets[f].indexOf && facets[f].indexOf("Any") !== -1) return acc ;
                   else if(facets[f].val && facets[f].val.indexOf("Any") !== -1) return acc ;
-                  else if(f !== bdo+"workGenre" || facets[f].alt) return { ...acc, [f]:facets[f] }
+                  else if(f !== bdo+"workGenre" && f !== bdo+"workIsAbout" || facets[f].alt) return { ...acc, [f]:facets[f] }
                   else return { ...acc, [f]:{alt:[bdo+"workGenre",bdo+"workIsAbout"],val:facets[f]} }
                },{})
 
@@ -1929,7 +2072,7 @@ class App extends Component<Props,State> {
 
       let facets = state.filters.facets ;
       if(!facets) facets = {}
-      if(prop == bdo+"workGenre") {
+      if(prop == bdo+"workGenre" || prop == bdo+"workIsAbout") {
 
          facets = { ...facets, [prop] : { alt : [ prop, bdo + "workIsAbout", tmp + "etextAbout" ], val : propSet } }
       }
@@ -2524,15 +2667,23 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      { (hasEtext.length > 0) && <span title={getPropLabel(this,tmp+"assetAvailability",false)+": "+getPropLabel(this,tmp+"hasEtext",false)}>{svgEtextS}</span>}
                      </span>
                      <span class="instance-link">
-                        <Link class="urilink" to={iUrl}>{I18n.t("misc.browse")}</Link>                     
-                        <emph style={{margin:"0 5px"}}> {I18n.t("misc.or")} </emph>
+                        { nb > 3 && <>
+                           <Link class="urilink" to={iUrl}>{I18n.t("misc.browseA",{count:nb})}</Link>                     
+                           <emph style={{margin:"0 5px"}}> {I18n.t("misc.or")} </emph>
+                        </> }
                         <span class="instance-collapse" onClick={(e) => { 
                            if(!instances) this.props.onGetInstances(shortUri(id)) ; 
                            this.setState({...this.state,collapse:{...this.state.collapse,[id]:!this.state.collapse[id] },repage:true })
-                        } } >{!this.state.collapse[id]?<span>{I18n.t("misc.preview")}</span>:<span>{I18n.t("misc.hide").toLowerCase()}</span>}{!this.state.collapse[id]?<ExpandMore/>:<ExpandLess/>}</span>
+                        } } >{!this.state.collapse[id]?<span>{I18n.t(nb > 3 ? "misc.preview3":"misc.seeI",{count:nb})}</span>:<span>{nb > 3?I18n.t("misc.hide").toLowerCase():I18n.t("misc.hide")}</span>}{!this.state.collapse[id]?<ExpandMore/>:<ExpandLess/>}</span>
                      </span>
                   </div>
                   {ret}
+                  { (nb > 3 && this.state.collapse[id]) && //!this.props.loading && 
+                     <div class="match" style={{marginBottom:0}}>
+                        <span class="label" style={{textTransform:"none"}}>{I18n.t("misc.seeM", {count:nb-3})}:</span>&nbsp;
+                        <span class="instance-link"><Link class="urilink" to={iUrl}>{I18n.t("misc.browse").toLowerCase()}</Link></span> 
+                     </div>
+                  }
                </div>
                   
                      
@@ -2639,11 +2790,11 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          if(!useAux) id = allProps.filter( e => fromProp.includes(e.type) && (!exclude || exclude !== e.value) )
          else if(findProp) id = allProps.filter(e => useAux.includes(e.type)).map(e => this.props.assoRes[e.value]).filter(e=>e).reduce( (acc,e) =>{
             let t = e.filter(f => f.type === rdf+"type")
-            if(t.length) return { ...acc, [t[0].value]:e}
+            if(t.length) return { ...acc, [t[0].value]:[ ...acc[t[0].value]?acc[t[0].value]:[], ...e ]}
             else return acc
          },{}) 
          
-         //loggergen.log("labels/prop",prop,id,exclude) //,useAux,fromProp,allProps) //,this.props.assoRes)         
+         //loggergen.log("labels/prop",iri,prop,id,exclude,useAux,fromProp,allProps) //,this.props.assoRes)         
 
          if(useAux && !findProp) { // etext
 
@@ -2725,24 +2876,32 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             
             //loggergen.log("uA2",id,useAux,findProp)
             
-            let vals = []
+            let birth = [], death = [], floruit = []
 
             for(let p of findProp) {
                
                if(id[p]) {
- 
-                  let val = id[p].filter(e => e.type === bdo+"onYear")
-                  if(val.length) val = <span>{(""+val[0].value).replace(/^([^0-9]*)0+/,"$1")}</span>
-                  else {
-                     let bef = id[p].filter(e => e.type === bdo+"notBefore")
-                     let aft = id[p].filter(e => e.type === bdo+"notAfter")
-                     if(bef.length && aft.length) val = <span>{(""+bef[0].value).replace(/^([^0-9]*)0+/,"$1")+"~" +(""+aft[0].value).replace(/^([^0-9]*)0+/,"$1")}</span>
-                     else val = null
+                  
+                  let val = id[p].filter(e => [bdo+"onYear", bdo+"notBefore", bdo+"notAfter"].includes(e.type) )
+                  //console.log("p:",p,val)
+                  if(val.length) {
+                     if(p.endsWith("Death")) death = death.concat(val)
+                     else if(p.endsWith("Birth")) birth = birth.concat(val)
+                     else if(p.endsWith("Floruit")) floruit = floruit.concat(val)
                   }
 
-                  if(p.includes("Death") && !vals.length) { /*vals.push(<span>?</span>);*/ vals.push(<span>&nbsp;&ndash;&nbsp;</span>) }
-                  if(val) vals.push(val)
-                  if(p.includes("Birth")) vals.push(<span>&nbsp;&ndash;&nbsp;</span>)
+                  // let val = id[p].filter(e => e.type === bdo+"onYear")
+                  // if(val.length) val = <span>{(""+val[0].value).replace(/^([^0-9]*)0+/,"$1")}</span>
+                  // else {
+                  //    let bef = id[p].filter(e => e.type === bdo+"notBefore")
+                  //    let aft = id[p].filter(e => e.type === bdo+"notAfter")
+                  //    if(bef.length && aft.length) val = <span>{(""+bef[0].value).replace(/^([^0-9]*)0+/,"$1")+"~" +(""+aft[0].value).replace(/^([^0-9]*)0+/,"$1")}</span>
+                  //    else val = null
+                  // }
+
+                  // if(p.includes("Death") && !vals.length) { /*vals.push(<span>?</span>);*/ vals.push(<span>&nbsp;&ndash;&nbsp;</span>) }
+                  // if(val) vals.push(val)
+                  // if(p.includes("Birth")) vals.push(<span>&nbsp;&ndash;&nbsp;</span>)
 
                   /*
                   ret.push(<div class="match">
@@ -2754,7 +2913,10 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                }
             }
 
-            if(vals.length > 1) ret.push(<div class="match dates">{vals}</div>)
+            //console.log("B/D:",JSON.stringify(birth,null,3),JSON.stringify(death,null,3))
+
+            const vals = renderDates(birth, death, floruit)
+            if(vals.length >= 1) ret.push(<div class="match dates">{vals}</div>)
             
             return ret
          }
@@ -3110,7 +3272,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             quality = allProps.filter(a => [ bdo+"qualityGrade", tmp+"hasReproQuality" ].includes(a.type))
             if(quality.length) quality = quality[0].value            
 
-            loggergen.log("access",access,quality)
+            //loggergen.log("access",access,quality)
 
             if(access) {
                hasCopyR = "unknown"            
@@ -3546,6 +3708,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
          let allLabels = [ ], allLabelsNoMatch = [ ]
          allProps.filter(a => a.type.match(/([Ll]abel|[Mm]atch)$/)).map(a => {   
+            if(!a || !a.value) return
             let labelNoMatch = a.value.replace(/[↦↤]/g,"")
             if(!allLabelsNoMatch.filter(b => slashEq(b.value,labelNoMatch)).length) { 
                allLabels.push(a)
@@ -4814,7 +4977,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
    }
 
    treeWidget(j,meta,counts,jlabel,jpre) {
-      if(j == "tree" ) { // && meta[j]["@graph"]) { //
+      if(j == "tree" || j == "genres") { // && meta[j]["@graph"]) { //
          let tree ;
          if(meta[j]) tree = meta[j]["@graph"]
 
@@ -4992,6 +5155,11 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          return ({str,index})
       })
       subs = _.orderBy(subs,'index','desc').map(e => e.str)
+      let unspec = subs.indexOf("unspecified")
+      if(unspec != -1) { 
+         subs.splice(unspec, 1) 
+         subs.push("unspecified")
+      }
 
       //loggergen.log("subW",tree,subs,jpre,tag)
 
@@ -5448,7 +5616,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                else jlabel = jlabel.value
             }
             // need to fix this after info is not in ontology anymore... make tree from relation/langScript 
-            if(["tree","relation","langScript","versionType"].indexOf(j) !== -1) {
+            if(["genres","tree","relation","langScript","versionType"].indexOf(j) !== -1) {
 
                //loggergen.log("widgeTree",j,jpre,meta[j],counts["datatype"],this.state.filters.datatype[0])
 

@@ -92,7 +92,7 @@
       "widgets": {
          "unknown": "unknown",
          "root": "In $t(types.instance)",
-         "tree": "Genre / Topic",
+         "tree": "Topic",
          "relationInv": "Inverse Relation Type",
          "new": "NEW!"
       },
@@ -236,7 +236,12 @@
       "assoc": "{{type}} associated with: <res href='/show/{{- rid}}'>{{- name}}<\/res>",
       "moreres": "More {{txt}} are cataloged, do you want to see them?",
       "inEtext": "Results for <key>{{- keyword}}<\/key> <key>[{{language}}]<\/key><br/>in <res href='/show/{{- rid}}'>{{- name}}<\/res>",
-      "openO": "Open in Outline"
+      "openO": "Open in Outline",
+      "bdDate":"{{birth}} – {{death}}",
+      "bDate":"b. {{num}}",
+      "bDateCentury":"b. {{num}}",
+      "dDate":"d. {{num}}",
+      "fDate":"fl. {{num}}"
    },
    "map": {
       "touch": "Use two fingers to move the map",
@@ -337,7 +342,16 @@
       "seeR": "See result",
       "seeR_plural": "See results",
       "link": "Link:",
-      "link_plural": "Links:"
+      "link_plural": "Links:",
+      "preview3": "preview 3",
+      "browseA": "Browse all {{count}}",
+      "seeI": "See {{count}} version",
+      "seeI_plural": "See {{count}} versions",
+      "seeM": "{{count}} more version available",
+      "seeM_plural": "{{count}} more versions available",
+      "card": "{{num}}",
+      "inter": "{{min}}~{{max}}",
+      "ordInter": "{{min}}-{{max,ordinal}} c."
    },
    "lang": {
       "en": "English",
@@ -502,14 +516,11 @@
       "mustLogin": "You must be logged in to download PDFs or image files.",
       "commitV": "View commit history",
       "commitH": "Hide commit history",
-      "citation": [
-         "bibliographic citation",
-         {
-            "mla": "Modern Language Association",
-            "chicago": "Chicago Manual of Style",
-            "apa": "American Psychological Association"
-         }
-      ],
+      "citation": {
+         "mla": "Modern Language Association",
+         "chicago": "Chicago Manual of Style",
+         "apa": "American Psychological Association"
+      },
       "citationI": "{{lg}} citation",
       "citationS": "Citation style",
       "cite": "Cite this item",
@@ -524,7 +535,14 @@
       "clipT": "Text copied",
       "orderVT": "Copy the text below, click on the following link and paste it in the comments box:",
       "contactVT": "Contact Vimala Treasures",
-      "contactVTcopy": "I wish to order 1 copy of {{uri}}"
+      "contactVTcopy": "I wish to order 1 copy of {{uri}}",
+      "assoc":"Associated works",
+      "location1": " (v. {{vol}}, img. {{page}})",
+      "locationM": " (v. {{vol}}, img. {{page}}-{{endPage}})",
+      "location1vol1": " (img. {{page}})",
+      "location1volM": " (img. {{page}}-{{endPage}})",
+      "showPnodes":"Previous",
+      "showNnodes":"Next"
    },
    "mirador": {
       "return": "return to BUDA",
@@ -555,7 +573,8 @@
       "quality0": "We acknowledge the poor quality of these scans, which might be difficult to read or in the wrong order, and we apologize for it. We think these might still be useful for scholarship and make them available, while searching for higher quality ones.",
       "fairUseIA1": "This work is <bold>copyrighted<\/bold>. As a result, BDRC can only make very limited portions available for private research and study. The full text of the work is viewable on Internet Archive, a close partner of ours, through their Open Library program.",
       "fairUseIA2": "Access this work on Internet Archive",
-      "not": "Images not available."
+      "not": "Images not available.",
+      "imageN":"(this image is copyrighted and not available)"
    },
    "location": {
       "beginV": "Begin volume: {{num}}",

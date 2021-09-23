@@ -323,7 +323,7 @@ async function hasEtextPage(manifest) {
          let id = canvas.label ;
          if(id && !Array.isArray(id)) id = [ id ] 
          if(id) for(let i of id) {
-            if(i["@value"].includes("i.")){ 
+            if(i["@value"].includes("i.") || i["@value"].includes("img.")){ 
                id = i["@value"].replace(/[^0-9]/g,"")
             }
          } 
@@ -358,12 +358,20 @@ async function hasEtextPage(manifest) {
          else if(!etextPages[ut][id]) {            
             
             //console.log("loading DATA",id);
+            const id_token = localStorage.getItem('id_token');
+            const expires_at = localStorage.getItem('expires_at');
+            console.log("token:", id_token, expires_at, Date.now());
 
             let start = id ;
             while(id > 0 && start - id < NB_PAGES && !etextPages[ut][id - 1] ) { id -- ; } 
             for(let i = id ; i <= id+NB_PAGES-1 ; i++) etextPages[ut][i] = true ;
 
-            let data = await window.fetch(ldspdi+"/lib/ChunksByPage?R_RES="+ut+"&I_START="+id+"&I_END="+(id+NB_PAGES-1), { headers:new Headers({accept:"application/ld+json"})}) ;
+            let data = await window.fetch(ldspdi+"/lib/ChunksByPage?R_RES="+ut+"&I_START="+id+"&I_END="+(id+NB_PAGES-1), { 
+               headers:new Headers({
+                  accept:"application/ld+json",               
+                  ...( id_token && expires_at > Date.now() ? { Authorization:"Bearer "+id_token }:{} )
+               })
+            }) ;
             
             let json = await data.json() ;
 

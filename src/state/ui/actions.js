@@ -64,6 +64,14 @@ export const setPrefLang = (lang: string): Action => {
    }
 }
 
+TYPES.setEtextLang = 'SET_ETEXTLANG';
+export const setEtextLang = (lang: string): Action => {
+   return {
+      type: TYPES.setEtextLang,
+      payload: lang
+   }
+}
+
 TYPES.loadingGallery = 'LOADING_GALLERY';
 export const loadingGallery = (manifest: string): Action => {
    return {
