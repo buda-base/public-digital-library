@@ -901,7 +901,7 @@ export function isAdmin(auth) {
 
 export function renderDates(birth,death,floruit) {
       
-   console.log("b/d/f:",birth,death,floruit)
+   //console.log("b/d/f:",birth,death,floruit)
 
    const formatDate = (dates) => {
       const clean = (d) => (""+d).replace(/^([^0-9]*)0+/,"$1")
@@ -932,7 +932,7 @@ export function renderDates(birth,death,floruit) {
          else date = I18n.t("misc.inter", { min, max }) 
       }
 
-      console.log("date:",dates,date);
+      //console.log("date:",dates,date);
 
       return { date, isCentury }
    }

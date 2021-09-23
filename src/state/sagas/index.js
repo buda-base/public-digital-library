@@ -1597,18 +1597,20 @@ function sortResultsByVolumeNb(results,reverse) {
    let keys = Object.keys(results)
    if(keys && keys.length) {
       keys = keys.map(k => {
-         let n = 0, score, p = results[k].length
+         let n = 0, score, p = results[k].length, ctx = 1
          for(let i in results[k]) {
             let v = results[k][i]
             if(v.type === bdo+"eTextIsVolume") {
                n = Number(v.value)
             } else if(v.type === bdo+"eTextInVolume") {
                n = Number(v.value)
+            } else if(v.type === tmp+"matchContext" && v.value === tmp+"titleContext") {
+               ctx = 1
             }
          }
-         return ({k, n, p})
+         return ({k, n, p, ctx})
       },{})
-      keys = _.orderBy(keys,['n','p'],[(reverse?'desc':'asc'), (reverse?'asc':'desc')])
+      keys = _.orderBy(keys,['ctx','n','p'],[(reverse?'asc':'desc'), (reverse?'desc':'asc'), (reverse?'asc':'desc')])
 
       //loggergen.log("sortK",keys)
 
@@ -1669,7 +1671,7 @@ function sortResultsByRelevance(results,reverse) {
    let keys = Object.keys(results)
    if(keys && keys.length) {
       keys = keys.map(k => {
-         let n = 0, score, p = results[k].length, scoreDel = [],last, max = 0
+         let n = 0, score, p = results[k].length, scoreDel = [],last, max = 0, ctx = 0
          for(let i in results[k]) {
             let v = results[k][i]
             if(v.type === tmp+"matchScore") {
@@ -1688,6 +1690,8 @@ function sortResultsByRelevance(results,reverse) {
                max = Number(v.value)
             } else if(v.type === tmp+"nbChunks") {
                n = Number(v.value)
+            } else if(v.type === tmp+"matchContext" && v.value === tmp+"titleContext") {
+               ctx = 1
             }
          }
          // TODO no need to keep all scores (needs to be elsewhere more generic)
@@ -1695,11 +1699,11 @@ function sortResultsByRelevance(results,reverse) {
             for(let i of scoreDel) delete results[k][i]
             results[k] = results[k].filter(e=>e)
          }
-         return ({k, max, n, p})
+         return ({k, max, n, p, ctx})
       },{})
-      keys = _.orderBy(keys,[ 'max', 'n','p'],[(reverse?'asc':'desc'), (reverse?'asc':'desc')])
+      keys = _.orderBy(keys,[ 'ctx', 'max', 'n','p'],[(reverse?'asc':'desc'), (reverse?'asc':'desc'), (reverse?'asc':'desc'), (reverse?'asc':'desc')])
       
-      //loggergen.log("sortK",JSON.stringify(keys,null,3))
+      //loggergen.log("sortK:",JSON.stringify(keys,null,3))
 
       let sortRes = {}
       for(let k of keys) sortRes[k.k] = results[k.k]
@@ -1720,17 +1724,19 @@ function sortResultsByPopularity(results,reverse) {
    let keys = Object.keys(results)
    if(keys && keys.length) {
       keys = keys.map(k => {
-         let n = 0, score, p = results[k].length
+         let n = 0, score, p = results[k].length, ctx = 0
          for(let i in results[k]) {
             let v = results[k][i]
             if(v.type === tmp+"entityScore") {
                n = Number(v.value)
+            } else if(v.type === tmp+"matchContext" && v.value === tmp+"titleContext") {
+               ctx = 1
             }
          }
-         return ({k, n, p})
+         return ({k, n, p, ctx})
       },{})
-      keys = _.orderBy(keys,['n','p'],[(reverse?'asc':'desc'), (reverse?'asc':'desc')])
-      //loggergen.log("sortK",keys)
+      keys = _.orderBy(keys,['ctx','n','p'],[(reverse?'asc':'desc'), (reverse?'asc':'desc'), (reverse?'asc':'desc')])
+      //loggergen.log("sortK:",keys)
 
       let sortRes = {}
       for(let k of keys) sortRes[k.k] = results[k.k]
@@ -1758,7 +1764,7 @@ function sortResultsByYear(results,reverse) {
    let keys = Object.keys(results)
    if(keys && keys.length) {
       keys = keys.map(k => {
-         let n = 1000000, score, p = results[k].length
+         let n = 1000000, score, p = results[k].lengthn, ctx = 0
          if(reverse) n = -1000000
          let multi_n = []
          for(let i in results[k]) {
@@ -1775,15 +1781,17 @@ function sortResultsByYear(results,reverse) {
             
             if(v.type === tmp+"yearStart") {
                multi_n.push(Number(v.value))
-            } 
+            } else if(v.type === tmp+"matchContext" && v.value === tmp+"titleContext") {
+               ctx = 1
+            }
          }
          if(multi_n.length) { 
             multi_n = _.orderBy(multi_n, [reverse?'desc':'asc'])
             n = multi_n[0]
          }
-         return ({k, n, p})
+         return ({k, n, p, ctx})
       },{})
-      keys = _.orderBy(keys,['n','p'],[(reverse?'desc':'asc'), (reverse?'asc':'desc')])
+      keys = _.orderBy(keys,['ctx','n','p'],[(reverse?'asc':'desc'), (reverse?'desc':'asc'), (reverse?'asc':'desc')])
       
       loggergen.log("keysY:",keys)
 
@@ -1804,19 +1812,21 @@ function sortResultsByLastSync(results,reverse) {
    let keys = Object.keys(results)
    if(keys && keys.length) {
       keys = keys.map(k => {
-         let n = "9999-99-99T99:99:99.999Z", score, p = results[k].length
+         let n = "9999-99-99T99:99:99.999Z", score, p = results[k].length, ctx = 0
          if(reverse) n = "0000-00-00T00:00:00.000Z"
          for(let i in results[k]) {
             let v = results[k][i]
             if(v.type === tmp+"lastSync") {
                n = v.value
+            } else if(v.type === tmp+"matchContext" && v.value === tmp+"titleContext") {
+               ctx = 1
             }
          }
-         return ({k, n, p})
+         return ({k, n, p, ctx})
       },{})
-      keys = _.orderBy(keys,['n','p'],[(reverse?'asc':'desc'), (reverse?'desc':'asc')])
+      keys = _.orderBy(keys,['ctx','n','p'],[(reverse?'asc':'desc'), (reverse?'asc':'desc'), (reverse?'desc':'asc')])
       
-      //loggergen.log("keysY",keys)
+      //loggergen.log("keysY:",keys)
 
       let sortRes = {}
       for(let k of keys) sortRes[k.k] = results[k.k]
@@ -1836,7 +1846,7 @@ function sortResultsByNbChunks(results,reverse) {
    let keys = Object.keys(results)
    if(keys && keys.length) {
       keys = keys.map(k => {
-         let n = 0, score, p = results[k].length, max = 0
+         let n = 0, score, p = results[k].length, max = 0, ctx = 0
          for(let i in results[k]) {
             let v = results[k][i]
             if(v.type === tmp+"nbChunks") {
@@ -1844,13 +1854,15 @@ function sortResultsByNbChunks(results,reverse) {
             }
             else if(v.type === tmp+"maxScore") {
                max = Number(v.value)
+            } else if(v.type === tmp+"matchContext" && v.value === tmp+"titleContext") {
+               ctx = 1
             }
          }
-         return ({k, n, max, p})
+         return ({k, n, max, p, ctx})
       },{})
-      keys = _.orderBy(keys,['n','max','p'],[(reverse?'asc':'desc'), (reverse?'asc':'desc')])
+      keys = _.orderBy(keys,['ctx','n','max','p'],[(reverse?'asc':'desc'), (reverse?'asc':'desc'), (reverse?'asc':'desc'), (reverse?'asc':'desc')])
       
-      loggergen.log("sortK",JSON.stringify(keys,null,3))
+      //loggergen.log("sortK:",JSON.stringify(keys,null,3))
 
       let sortRes = {}
       for(let k of keys) sortRes[k.k] = results[k.k]
