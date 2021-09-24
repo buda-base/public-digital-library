@@ -1604,7 +1604,7 @@ function sortResultsByVolumeNb(results,reverse) {
                n = Number(v.value)
             } else if(v.type === bdo+"eTextInVolume") {
                n = Number(v.value)
-            } else if(v.type === tmp+"matchContext" && v.value === tmp+"titleContext") {
+            } else if(v.type === tmp+"matchContext" && (v.value === tmp+"nameContext" || v.value === tmp+"titleContext")) {
                ctx = 1
             }
          }
@@ -1632,28 +1632,43 @@ function sortResultsByTitle(results, userLangs, reverse) {
    let langs = extendedPresets(userLangs)
    let state = store.getState(), assoR
    if(keys && keys.length) {
-      keys = keys.map(k => {
-         let lang,value,labels = results[k].filter(e => e.type && e.type.endsWith("abelMatch") ).map(e => ({ ...e, value:e.value.replace(/[↦]/g,"")})) 
-         if(!labels.length) labels = results[k].filter(r => r.type && r.type === skos+"prefLabel") //r.value && r.value.match(/↦/))
-         if(!labels.length && (assoR = state.data.assocResources[state.data.keyword]) && assoR[k]) labels = assoR[k].filter(r => r.type && r.type === skos+"prefLabel") 
-         //loggergen.log("labels?",labels,assoR,k,assoR[k],results[k])
-         if(labels.length) { 
-            labels = sortLangScriptLabels(labels,langs.flat,langs.translit)
-            labels = labels[0]
-            if(labels)  { 
-               lang = labels.lang
-               if(!lang) lang = labels["xml:lang"]
-               value  = labels.value
+      let keysTitle = [], keysOther = []
+      keys.map(k => {
+         for(let v of results[k]) {
+            if(v.type === tmp+"matchContext" && (v.value === tmp+"nameContext" || v.value === tmp+"titleContext")) {
+               keysTitle.push(k)
             }
          }
-         return { k, lang, value }
-      },{})
-      //loggergen.log("keys1", keys)
-      let sortKeys = sortLangScriptLabels(keys,langs.flat,langs.translit)
-      if(reverse) sortKeys = sortKeys.reverse()
-      //loggergen.log("keys2", sortKeys)
+         keysOther.push(k)
+      })
+      const partSort = (partKeys) => {
+         partKeys = partKeys.map(k => {
+            let lang,value,labels = results[k].filter(e => e.type && e.type.endsWith("abelMatch") ).map(e => ({ ...e, value:e.value.replace(/[↦]/g,"")})) 
+            if(!labels.length) labels = results[k].filter(r => r.type && r.type === skos+"prefLabel") //r.value && r.value.match(/↦/))
+            if(!labels.length && (assoR = state.data.assocResources[state.data.keyword]) && assoR[k]) labels = assoR[k].filter(r => r.type && r.type === skos+"prefLabel") 
+            //loggergen.log("labels?",labels,assoR,k,assoR[k],results[k])
+            if(labels.length) { 
+               labels = sortLangScriptLabels(labels,langs.flat,langs.translit)
+               labels = labels[0]
+               if(labels)  { 
+                  lang = labels.lang
+                  if(!lang) lang = labels["xml:lang"]
+                  value  = labels.value
+               }
+            }
+            return { k, lang, value }
+         },{})
+         //loggergen.log("keys1", keys)
+         let sortKeys = sortLangScriptLabels(partKeys,langs.flat,langs.translit)
+         if(reverse) sortKeys = sortKeys.reverse()
+         //loggergen.log("keys2", sortKeys)
+         return sortKeys
+      }
+      keysTitle = partSort(keysTitle)
+      keysOther = partSort(keysOther)
+      keys = [ ...keysTitle, ...keysOther ]
       let sortRes = {}
-      for(let k of sortKeys) sortRes[k.k] = results[k.k]
+      for(let k of keys) sortRes[k.k] = results[k.k]
 
       //loggergen.log("sortResT",sortRes)
 
@@ -1690,7 +1705,7 @@ function sortResultsByRelevance(results,reverse) {
                max = Number(v.value)
             } else if(v.type === tmp+"nbChunks") {
                n = Number(v.value)
-            } else if(v.type === tmp+"matchContext" && v.value === tmp+"titleContext") {
+            } else if(v.type === tmp+"matchContext" && (v.value === tmp+"nameContext" || v.value === tmp+"titleContext")) {
                ctx = 1
             }
          }
@@ -1729,7 +1744,7 @@ function sortResultsByPopularity(results,reverse) {
             let v = results[k][i]
             if(v.type === tmp+"entityScore") {
                n = Number(v.value)
-            } else if(v.type === tmp+"matchContext" && v.value === tmp+"titleContext") {
+            } else if(v.type === tmp+"matchContext" && (v.value === tmp+"nameContext" || v.value === tmp+"titleContext")) {
                ctx = 1
             }
          }
@@ -1781,7 +1796,7 @@ function sortResultsByYear(results,reverse) {
             
             if(v.type === tmp+"yearStart") {
                multi_n.push(Number(v.value))
-            } else if(v.type === tmp+"matchContext" && v.value === tmp+"titleContext") {
+            } else if(v.type === tmp+"matchContext" && (v.value === tmp+"nameContext" || v.value === tmp+"titleContext")) {
                ctx = 1
             }
          }
@@ -1818,7 +1833,7 @@ function sortResultsByLastSync(results,reverse) {
             let v = results[k][i]
             if(v.type === tmp+"lastSync") {
                n = v.value
-            } else if(v.type === tmp+"matchContext" && v.value === tmp+"titleContext") {
+            } else if(v.type === tmp+"matchContext" && (v.value === tmp+"nameContext" || v.value === tmp+"titleContext")) {
                ctx = 1
             }
          }
@@ -1854,7 +1869,7 @@ function sortResultsByNbChunks(results,reverse) {
             }
             else if(v.type === tmp+"maxScore") {
                max = Number(v.value)
-            } else if(v.type === tmp+"matchContext" && v.value === tmp+"titleContext") {
+            } else if(v.type === tmp+"matchContext" && (v.value === tmp+"nameContext" || v.value === tmp+"titleContext")) {
                ctx = 1
             }
          }
