@@ -2552,7 +2552,7 @@ async function getOutline(iri,node?,volFromUri?) {
    store.dispatch(uiActions.loading(iri, "outline"));
    let res = await api.loadOutline(iri,node,volFromUri) 
 
-   console.log("gotO:",res,node,volFromUri)
+   console.log("gotO:",iri,res,node,volFromUri)
 
    if(res && res["@graph"] && volFromUri) res["@graph"].map(r => { 
       // patch main node
@@ -2562,7 +2562,7 @@ async function getOutline(iri,node?,volFromUri?) {
 
          // patching the patch :-)
          if(iri === "tmp:uri" && r["tmp:firstImageGroup"] && r["tmp:firstImageGroup"]["id"]) {
-            iri = r["tmp:firstImageGroup"]["id"]
+            iri = r["tmp:firstImageGroup"]["id"]+";"+volFromUri
          }
 
          // keep only parts that are in current volume data

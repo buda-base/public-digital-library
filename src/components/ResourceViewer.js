@@ -6720,7 +6720,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                                     let vol = nodes.filter(n => n["@id"] === opart_node[0].contentLocation)
                                     if(vol.length) { 
                                        vol = vol[0].contentLocationVolume
-                                       //console.log("ready for vol."+vol+" in "+head,head_node)
+                                       console.log("ready for vol."+vol+" in "+head,head_node)
                                        this.props.onGetOutline("tmp:uri", { partType: "bdr:PartTypeVolume", "tmp:hasNonVolumeParts": true, volumeNumber: vol }, head);
                                     }
                                  }
@@ -6886,11 +6886,14 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                            }
 
                            if(!g.details) {
-                              let tag = "outline-"+root+"-"+g['@id']
+                              let tag = "outline-"+root+"-"+g['@id'] 
+                              if(g["@id"] && g["@id"].startsWith("bdr:I") && !g["@id"].includes(";")) tag += ";"+top
+                              
                               let showDetails = this.state.collapse[tag+"-details"]                              
 
                               g.rid = this.props.IRI
                               g.lang = this.props.locale
+                              g.parent = top
                               // deprecated
                               // if(! (["bdr:PartTypeSection", "bdr:PartTypeVolume"].includes(g.partType)) ) {
 
@@ -7125,7 +7128,14 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                      //loggergen.log("outline?",elem,outline)
 
                      outline = outline.map(e => {
-                        let tag = "outline-"+root+"-"+e['@id']
+                        let url = "/show/"+root+"?part="+e["@id"]
+                        let togId = e["@id"]
+                        if(e["@id"] && e["@id"].startsWith("bdr:I")) {                           
+                           url = "/show/"+e["@id"]
+                           if(e.parent && !togId.includes(";")) togId += ";"+e.parent
+                        }
+
+                        let tag = "outline-"+root+"-"+togId
                         let ret = []
                         let pType = e["partType"], fUri = fullUri(e["@id"])
                         let tLabel 
@@ -7142,8 +7152,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
                         const citeRef = React.createRef(), printRef = React.createRef()
 
-                        let url = "/show/"+root+"?part="+e["@id"]
-                        if(e["@id"] && e["@id"].startsWith("bdr:I")) url = "/show/"+e["@id"]
+
 
                         ret.push(<span class={'top'+ (this.state.outlinePart === e['@id'] || (!this.state.outlinePart && this.props.IRI===e['@id']) ?" is-root":"")+(this.state.collapse[tag]||osearch&&e.hasMatch?" on":"") }>
                               {(e.hasPart && open && osearch && !this.props.outlines[e['@id']]) && <span onClick={(ev) => toggle(ev,root,e["@id"],"",true)} className="xpd" title={I18n.t("resource.otherN")}><RefreshIcon /></span>}
@@ -7152,7 +7161,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                               <span class={"parTy "+(e.details?"on":"")}  ref={citeRef} {...e.details?{title:/*tLabel+" - "+*/ I18n.t("resource."+(this.state.collapse[tag+"-details"]?"hideD":"showD")), onClick:(ev) => toggle(ev,root,e["@id"],"details",false,e)}:{title:tLabel}} >
                                  {pType && parts[pType] ? <div>{parts[pType]}</div> : <div>{parts["?"]}</div> }
                               </span>
-                              <span>{this.uriformat(null,{noid:true, type:'uri', value:fUri, ...(e.partType==="bdr:PartTypeVolume"?{volumeNumber:e.volumeNumber}:{}), inOutline: (!e.hasPart?tag+"-details":tag), url, debug:false, toggle:() => toggle(null,root,e["@id"],!e.hasPart&&!e["tmp:hasNonVolumeParts"]?"details":"",false,e,top)})}</span>
+                              <span>{this.uriformat(null,{noid:true, type:'uri', value:fUri, ...(e.partType==="bdr:PartTypeVolume"?{volumeNumber:e.volumeNumber}:{}), inOutline: (!e.hasPart?tag+"-details":tag), url, debug:false, toggle:() => toggle(null,root,togId,!e.hasPart&&!e["tmp:hasNonVolumeParts"]?"details":"",false,e,top)})}</span>
                               {e.id}
                               {this.samePopup(e.same,fUri)}
                               <div class="abs">

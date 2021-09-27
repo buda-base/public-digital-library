@@ -370,6 +370,27 @@ export default class API {
             let param = {searchType,"R_RES":IRI,"L_NAME":"","LG_NAME":"", "I_LIM":"" }
             if(extraParam) param = { ...param, ...extraParam }
             let data = await this.getQueryResults(url, IRI, param,"GET","application/jsonld");         
+            // use "local" node id for volume
+            if(searchType.endsWith("_volumes") && data["@graph"]  && data["@graph"].length) {
+               let volumes = []
+               data["@graph"] = data["@graph"].map(e => {
+                  if(e.id === IRI && e.hasPart) {
+                     if(!Array.isArray(e.hasPart)) e.hasPart = [ e.hasPart ]
+                     e.hasPart = e.hasPart.map(n => { 
+                        volumes.push(n)
+                        return n+";"+IRI 
+                     })                     
+                  }                  
+                  return e
+               })
+               if(volumes.length) {
+                  data["@graph"] = data["@graph"].map(e => {
+                     if(e.id && volumes.includes(e.id) && !e.id.includes(";")) e.id += ";"+IRI
+                     return e
+                  })
+               }
+               console.log("graph?",data["@graph"])
+            }
 
             return data ;
          }
