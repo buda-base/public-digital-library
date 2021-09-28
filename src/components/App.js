@@ -1081,6 +1081,38 @@ type State = {
    syncsSlided?:boolean
 }
 
+
+let start = Date.now(), last_t = start
+let sublabels = {}
+const timesToString = () => {
+   let keys = Object.keys(sublabels) 
+   return keys.map(k => k+": "+sublabels[k].total+(sublabels[k].tmp!==undefined?" ("+sublabels[k].tmp+")":"") ).join("\n")
+}
+export const subtime = (label = "", init) => {         
+   const time = Date.now()
+   if(label) { 
+      if(sublabels[label] === undefined) { 
+         sublabels[label] = { total:0, start:time, tmp:0, last:time }
+      }
+      if(init !== 0) {
+         sublabels[label].total += time - sublabels[label].start
+         if(sublabels[label].tmp !== undefined) delete sublabels[label].tmp
+      } else { 
+         sublabels[label].start = time
+         sublabels[label].tmp = 0  
+      }
+      sublabels[label].last = time
+   }
+   for(let k of Object.keys(sublabels)) {
+      if(sublabels[k].tmp !== undefined) {
+         sublabels[k].tmp += time - sublabels[k].last
+         sublabels[k].last = time
+      }
+   }
+   if(init !== 0) console.log("subtime:", label, init, "\n"+timesToString(),"\nsubtime;"+(time - start))
+}
+
+
 class App extends Component<Props,State> {
    _facetsRequested = false;
    _customLang = null ;
@@ -1411,6 +1443,8 @@ class App extends Component<Props,State> {
 
    static getDerivedStateFromProps(prop:Props,state:State)
    {
+      subtime("getDerivedState",0)
+
       let s ;
 
       let props = { ...prop }
@@ -1664,6 +1698,9 @@ class App extends Component<Props,State> {
          }
       }
 
+
+      subtime("getDerivedState:needRefresh",0)
+
       let needRefresh, time, current ;
       if(state.id && !newid && !props.loading) { 
          let inEtext 
@@ -1752,28 +1789,47 @@ class App extends Component<Props,State> {
             }
             else {
 
+               subtime("getDerivedState:needRefresh:merge",0)
+               
 
-               merge[dts] = { 
-                  ...Object.keys(res.results.bindings[dts]).reduce( (acc,k) =>{
+               // >5sec!
+               //
+               // merge[dts] = { 
+               //    ...Object.keys(res.results.bindings[dts]).reduce( (acc,k) =>{
 
-                        let m = [ ...res.results.bindings[dts][k].map(p => (p.type === tmp+"labelMatch"?{...p, type:tmp+/*pref*/"labelMatch"}:p)), //.filter(p => (!p.value || !p.value.match( /*/([Aa]bstract)*/ /([↦↤])/)) /*&& (!p.type || !p.type.match(/[Mm]atch|[Ee]xpression/))*/ ), 
-                                 ...(!results.results.bindings[dts]||!results.results.bindings[dts][k]||!props.language?[]:results.results.bindings[dts][k]) ]
+               //          let m = [ ...res.results.bindings[dts][k].map(p => (p.type === tmp+"labelMatch"?{...p, type:tmp+/*pref*/"labelMatch"}:p)), //.filter(p => (!p.value || !p.value.match( /*/([Aa]bstract)*/ /([↦↤])/)) /*&& (!p.type || !p.type.match(/[Mm]atch|[Ee]xpression/))*/ ), 
+               //                   ...(!results.results.bindings[dts]||!results.results.bindings[dts][k]||!props.language?[]:results.results.bindings[dts][k]) ]
 
-                        //loggergen.log("m?",dts,k,m.length) //,m)
+               //          //loggergen.log("m?",dts,k,m.length) //,m)
 
-                        return {
-                           ...acc, 
-                           [k]:m 
-                        }
-                     }, {}),
+               //          return {
+               //             ...acc, 
+               //             [k]:m 
+               //          }
+               //       }, {}),
 
-                  ...(!results.results.bindings[dts]||!props.language?[]:Object.keys(results.results.bindings[dts]).reduce( (acc,k) => {
-                        return {
-                           ...acc, 
-                           ...(!res.results.bindings[dts][k]?{[k]:results.results.bindings[dts][k]}:{})
-                        }
-                  },{}))
-               } 
+               //    ...(!results.results.bindings[dts]||!props.language?[]:Object.keys(results.results.bindings[dts]).reduce( (acc,k) => {
+               //          return {
+               //             ...acc, 
+               //             ...(!res.results.bindings[dts][k]?{[k]:results.results.bindings[dts][k]}:{})
+               //          }
+               //    },{}))
+               // } 
+
+               merge[dts] = {}
+               for(let k1 of Object.keys(res.results.bindings[dts])) {
+                  let m = [ ...res.results.bindings[dts][k1].map(p => (p.type === tmp+"labelMatch"?{...p, type:tmp+"labelMatch"}:p)), 
+                           ...(!results.results.bindings[dts]||!results.results.bindings[dts][k1]||!props.language?[]:results.results.bindings[dts][k1]) ]
+
+                  merge[dts][k1] = m 
+               }
+               for(let k2 of (!results.results.bindings[dts]||!props.language?[]:Object.keys(results.results.bindings[dts]))) {
+                  if(!res.results.bindings[dts][k2]) {
+                     merge[dts][k2] = results.results.bindings[dts][k2]
+                  }
+               }                  
+
+               subtime("getDerivedState:needRefresh:merge")
 
                // merge[dts] = { ...merge[dts], ...res.results.bindings[dts] } 
                /*...Object.keys(res.results.bindings[dts]).reduce( (acc,k) =>{
@@ -1868,6 +1924,7 @@ class App extends Component<Props,State> {
 
          //console.groupEnd()
       }
+      subtime("getDerivedState:needRefresh")
 
 
       if(props.instances) {
@@ -1898,6 +1955,8 @@ class App extends Component<Props,State> {
          s.filters = { ...s.filters, instance: props.keyword }
 
       }
+
+      subtime("getDerivedState")
 
       if(s) { 
          loggergen.log("newS",s)
@@ -5415,6 +5474,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
    render() {
 
+      subtime("render",0)
+
       let results
       let message = [],messageD = [];
       //let results ;
@@ -5426,7 +5487,6 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
       const { isAuthenticated } = this.props.auth;
       let id ;
 
-      
       if(!global.inTest) loggergen.log("render",this.props.keyword,this.props,this.state,isAuthenticated && isAuthenticated(),this._customLang) //,JSON.stringify(this.state.filters,null,3))
       // no search yet --> sample data
       if(!this.props.keyword || this.props.keyword == "")
@@ -5505,7 +5565,6 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
 
       }
-
 
       let meta,metaK = [] ;
       if(this.state.filters.datatype && this.state.filters.datatype.indexOf("Any") === -1) {
@@ -5962,7 +6021,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
 
 
-      return (
+      const ret = (
 <div className={(this.props.simple?"simpleSearch":"")}>
    {getGDPRconsent(this)}
    {/* <Link to="/about">About</Link> */}
@@ -6333,6 +6392,10 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          { message.length == 0 && !this.props.loading && !this.props.keyword && (!this.props.config || !this.props.config.chineseMirror) && <Footer locale={this.props.locale} hasSyncs={this.props.latestSyncsNb > 0}/> }
       </div>
       );
+
+      subtime("render")
+
+      return ret 
    }
 }
 

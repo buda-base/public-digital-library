@@ -11,7 +11,7 @@ import store from '../../index';
 import bdrcApi, { getEntiType, ResourceNotFound } from '../../lib/api';
 import {sortLangScriptLabels, extendedPresets} from '../../lib/transliterators';
 import {auth} from '../../routes';
-import {shortUri,fullUri,isAdmin} from '../../components/App'
+import {shortUri,fullUri,isAdmin,sublabels,subtime} from '../../components/App'
 import qs from 'query-string'
 import history from '../../history.js'
 
@@ -1891,6 +1891,9 @@ function sortResultsByNbChunks(results,reverse) {
 
 function rewriteAuxMain(result,keyword,datatype,sortBy,language)
 {
+
+   subtime("rewriteAuxMain",0)
+
    let asset = [  _tmp+"possibleAccess", _tmp+"hasOpen", _tmp+"hasEtext", _tmp+"hasImage", _tmp+"catalogOnly"]
    let state = store.getState()
    let langPreset = state.ui.langPreset
@@ -1900,14 +1903,22 @@ function rewriteAuxMain(result,keyword,datatype,sortBy,language)
 
    result = Object.keys(result).reduce((acc,e)=>{
       if(e === "main") {
+
          let keys = Object.keys(result[e])
          if(keys) {
-            store.dispatch(dataActions.gotAssocResources(keyword,{ data: keys.reduce( (acc,k) => ({...acc, [k]: result[e][k].filter(e => e.type === skos+"altLabel" || e.type === skos+"prefLabel") }),{})  }))
+            //const dataVar = keys.reduce( (acc,k) => ({...acc, [k]: result[e][k].filter(e => e.type === skos+"altLabel" || e.type === skos+"prefLabel") }),{})  // > 4sec!
+            let dataVar = {} 
+            for(let k of keys) { 
+              dataVar[k] = result[e][k].filter(e => e.type === skos+"altLabel" || e.type === skos+"prefLabel")  // < 0.05sec!
+            }
+            store.dispatch(dataActions.gotAssocResources(keyword,{ data: dataVar  }))
          }
          let t = datatype[0].toLowerCase()+"s"
 
          canPopuSort = false 
-         let dataWithAsset = keys.reduce( (acc,k) => { 
+         //let dataWithAsset = keys.reduce( (acc,k) => { // > 4sec!
+         let dataWithAsset = {}
+         for(let k of keys) { // < 0.05sec!
 
             isScan = false       
             inRoot = false
@@ -1921,7 +1932,7 @@ function rewriteAuxMain(result,keyword,datatype,sortBy,language)
                else status = null	
 
                if(status && !status.match(/Released/)) 	
-                  return acc ;	
+                  continue; //return acc ;	
 
             }
             
@@ -2012,8 +2023,13 @@ function rewriteAuxMain(result,keyword,datatype,sortBy,language)
             
             //if(isTypeScan && !isScan) return ({...acc})
             //else 
-            return ({...acc, [k]:res})
-         },{})
+
+            
+            // return ({...acc, [k]:res})
+            dataWithAsset[k] = res
+
+         //},{})
+         }
         
          //loggergen.log("dWa:",language,t,dataWithAsset,sortBy,reverse,canPopuSort)
 
@@ -2062,11 +2078,23 @@ function rewriteAuxMain(result,keyword,datatype,sortBy,language)
       else return acc
    }, {})
 
+   subtime("rewriteAuxMain")
+
    return result
 }
 
 
 async function startSearch(keyword,language,datatype,sourcetype,dontGetDT,inEtext) {
+
+   const time = Date.now()
+   let last = Date.now(), subtimes = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]              
+   const subT = (n) => {
+      subtimes[n] += Date.now() - last
+      console.log("subT["+n+"]:",subtimes[n])
+      last = Date.now()
+   }
+      
+   subtime("startSearch",0)
 
    loggergen.log("sSsearch",keyword,language,datatype,sourcetype,inEtext);
 
@@ -2078,10 +2106,17 @@ async function startSearch(keyword,language,datatype,sourcetype,dontGetDT,inEtex
    try {
       let result ;
 
+      subtime("getResults",0)
+
       if(!sourcetype)
       result = await api.getStartResults(keyword,language,datatype,inEtext);
       else
       result = await api.getAssocResults(keyword,sourcetype,datatype[0]);
+
+      subtime("getResults")
+
+
+      subT(0)
 
       // adapt to new new JSON format
       if(result) {
@@ -2101,7 +2136,7 @@ async function startSearch(keyword,language,datatype,sourcetype,dontGetDT,inEtex
       loggergen.log("newRes1",Object.keys(result[datatype[0].toLowerCase()+"s"],null,3))
       */
 
-
+      subT(1)
 
 
       if(result.metadata && result.metadata[bdo+"Etext"] == 0)
@@ -2126,6 +2161,9 @@ async function startSearch(keyword,language,datatype,sourcetype,dontGetDT,inEtex
    */
 
 
+   subT(2)
+
+
    if(sourcetype)
    {
       let metaSav = result.metadata
@@ -2139,16 +2177,32 @@ async function startSearch(keyword,language,datatype,sourcetype,dontGetDT,inEtex
          }
       }
 
+
+      subT(3)
+
       loggergen.log("data",data,result)
 
       let metaD = {}
       data = getData(data,metadata,metaD);
       store.dispatch(dataActions.foundResults(keyword, language, data, datatype));
 
+
+      subT(4)
+
+
+      subtime("getDatatypes",0)
       metadata = await api.getDatatypesOnly(keyword, language);
+      subtime("getDatatypes")
+
+
+      subT(5)
+
       let sorted = Object.keys(metadata).map(m => ({m,k:Number(metadata[m])}))
       metadata = _.orderBy(sorted,["k"],["desc"]).reduce( (acc,m) => ({...acc,[m.m]:metadata[m.m]}),{})
       store.dispatch(dataActions.foundDatatypes(keyword,language,{ metadata, hash:true}));
+
+
+      subT(6)
 
       let newMeta = {}
 
@@ -2161,6 +2215,8 @@ async function startSearch(keyword,language,datatype,sourcetype,dontGetDT,inEtex
       addMeta(keyword,language,data,"Lineage");
       addMeta(keyword,language,data,"Place");
       */
+
+      subT(7)
 
       loggergen.log("sourcetype",data,datatype)
 
@@ -2253,6 +2309,9 @@ else {
    }
 }
 
+
+subT(8)
+
 store.dispatch(uiActions.loading(keyword, false));
 
 // store.dispatch(dataActions.foundDatatypes(keyword, JSON.parse(result.metadata).results));
@@ -2266,6 +2325,11 @@ store.dispatch(uiActions.loading(keyword, false));
    store.dispatch(dataActions.searchFailed(keyword, e.message));
    store.dispatch(uiActions.loading(keyword, false));
 }
+
+subT(9)
+console.log("subT:",subtimes)
+subtime("startSearch")
+
 }
 
 
