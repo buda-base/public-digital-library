@@ -4785,7 +4785,9 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             loggergen.log("other:",other)
             
             //if(other && other.length) 
-            if(!this.props.loading && this.state.filters.datatype[0] !== "Any" ) {
+            if(this.props.loading && this.state.filters.datatype[0] !== "Any" || !this.props.datatypes || !this.props.datatypes.hash) {
+               message.push(<Typography className="loading"></Typography>)
+            } else {
                message.push(<Typography className="no-result">
                   { lang && I18n.t("search.filters.noresults",{ 
                      keyword:'"'+lucenequerytokeyword(this.props.keyword)+'"', 
@@ -5872,7 +5874,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          let dataSource = [] 
          let language = this.state.language
          
-         if(value.match(/(^([^:]+:)?[UWPGRCTILE][A-Z0-9_]+$)|(^([^:]+:)?([cpgwrt]|mw|wa|ws)\d[^ ]*$)/)) {
+         if(value.match(/(^([^:]+:)?[UWPGRCTILE][A-Z0-9_]+$)|(^([^:]+:)?([cpgwrt]|mw|wa|ws)\d[^ ]*$)/i)) {
             dataSource = [ value+"@Find resource with this RID", value+"@Find associated resources" ]
          }
          else {
@@ -6283,7 +6285,9 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             </div>
            }
             
+           {/* <span>{ ""+this.props.loading }</span> */}
            <div id="res-container">
+           { (!this.props.simple && (this.props.loading || this.props.keyword && (!this.props.datatypes || !this.props.datatypes.hash))) && <Loader className="fixloader"/> }
            {  (message.length > 0 || message.length == 0 && !this.props.loading) && this.render_filters(types,counts,sortByList,reverseSort,facetWidgets) }
                { /*false && this.state.keyword.length > 0 && this.state.dataSource.length > 0 &&
                   <div style={{
@@ -6304,8 +6308,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      </Paper>
                   </div> */
                }
-               { (this.props.simple && !this.props.keyword || (this.props.keyword && (this.props.loading || (this.props.datatypes && !this.props.datatypes.hash)))) && <Loader className="mainloader"/> }
-               { message.length == 0 && !this.props.loading && !this.props.keyword && 
+               { (this.props.simple && !this.props.keyword || (this.props.keyword && (this.props.loading || (this.props.datatypes && !this.props.datatypes.hash)))) && <Loader className="mainloader" /> }
+               { message.length == 0 && !this.props.loading && !this.props.keyword && !this.props.datatypes &&
                   <List id="samples">
                      {/* { messageD } */}
                      <h3>{ I18n.t("home.message") }</h3>

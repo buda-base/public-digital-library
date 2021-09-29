@@ -623,7 +623,12 @@ p.no-result {
 
 #res-header #pagine #nb:first-child { border:none; }
 
+#res-container > .fixloader,
 #res-container > .loader { position:fixed; top:calc(50vh - 40px); z-index:10000; }
+
+
+.fond-logo ~ #res-container > .fixloader,
+.fond-logo ~ #res-container > .loader:first-child:last-child { position:absolute; top:calc(50vh + 140px); }
 
 .SearchPane:not(.resultPage) #res-header { display:none; }
 

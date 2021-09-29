@@ -66,11 +66,8 @@ async function initiateApp(params,iri,myprops,route,isAuthCallback) {
       localStorage.removeItem('auth0_redirect_logout')
       if(redirect && redirect.startsWith && redirect.startsWith("http")) window.location.href = redirect
       
-      store.dispatch(uiActions.loading(null, true));
-
       if(!state.data.config)
       {
-
          const config = await api.loadConfig();
 
          //I18n.setHandleMissingTranslation((key, replacements) => key);
@@ -125,9 +122,7 @@ async function initiateApp(params,iri,myprops,route,isAuthCallback) {
          if(route === "mirador" && params.backToViewer) {
             if(!auth.isAuthenticated()) auth.login(decodeURIComponent(params.backToViewer))
          }
-
-         store.dispatch(uiActions.loading(null, false));
-
+         
          return ;
       }
 
@@ -450,8 +445,6 @@ else if(!iri) {
    console.error('initiateApp error: %o', e);
    // TODO: add action for initiation failure
 }
-
-store.dispatch(uiActions.loading(null, false));
 }
 
 function* watchInitiateApp() {
@@ -2106,7 +2099,7 @@ async function startSearch(keyword,language,datatype,sourcetype,dontGetDT,inEtex
    loggergen.log("sSsearch",keyword,language,datatype,sourcetype,inEtext);
 
    // why is this action dispatched twice ???
-   //store.dispatch(uiActions.loading(keyword, true));
+   store.dispatch(uiActions.loading(keyword, true));
    if(!datatype || datatype.indexOf("Any") !== -1) {
       store.dispatch(dataActions.getDatatypes());
    }
