@@ -1816,7 +1816,7 @@ class App extends Component<Props,State> {
                //    },{}))
                // } 
 
-               merge[dts] = {}
+               merge[dts] = {} // < 0.2sec!
                for(let k1 of Object.keys(res.results.bindings[dts])) {
                   let m = [ ...res.results.bindings[dts][k1].map(p => (p.type === tmp+"labelMatch"?{...p, type:tmp+"labelMatch"}:p)), 
                            ...(!results.results.bindings[dts]||!results.results.bindings[dts][k1]||!props.language?[]:results.results.bindings[dts][k1]) ]
@@ -2087,6 +2087,10 @@ class App extends Component<Props,State> {
    }
 
    handleCheckFacet = (ev:Event,prop:string,lab:string[],val:boolean,excl:boolean=false) => {
+
+      start = Date.now()
+      last_t = start
+      sublabels = {}
 
       loggergen.log("hCf:",ev,prop,lab,val,excl)
 
@@ -4350,7 +4354,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             label = getLangLabel(this,"",sList) // ,true)
             if(label && label.length > 0) label = label[0]
 
-            if(!label) label = { lang:"?", value:"?" }
+            if(!label) label = { value:  I18n.t("resource.noT"), lang: this.props.locale }
 
             let preProps = sublist[o].filter((e) => e.type && e.type.match(/relationType$/ )).map(e => this.props.dictionary[e.value])
 
@@ -6358,7 +6362,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                                  //console.log("s:",s);
                                  let label = getLangLabel(this,"",this.props.latestSyncs[s][skos+"prefLabel"])
                                  let uri = "/show/"+shortUri(s), value = I18n.t("resource.noT"), lang = this.props.locale
-                                 if(label) {
+                                 if(label && label.value != "") {
                                     lang = label.lang;
                                     value = label.value;
                                  }
