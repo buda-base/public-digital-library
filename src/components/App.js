@@ -136,6 +136,7 @@ const loc   = "http://lccn.loc.gov/"
 const lul   = "http://hdl.handle.net/"
 const ngmpp = "https://catalogue.ngmcp.uni-hamburg.de/receive/"
 const sat   = "http://21dzk.l.u-tokyo.ac.jp/SAT2018/"
+const sats   = "https://dzkimgs.l.u-tokyo.ac.jp/"
 const sbb   = "http://resolver.staatsbibliothek-berlin.de/"
 const src   = "https://sakyaresearch.org/"
 const tol   = "http://api.treasuryoflives.org/resource/";
@@ -143,7 +144,7 @@ const wc    = "https://www.worldcat.org/identities/";
 
 
 export const prefixesMap = { adm, bda, bdac, bdan, bdo, bdou, bdr, bdu, bf, cbcp, cbct, dila, eftr, foaf, oa, mbbt, owl, rdf, rdfs, rkts, skos, wd, ola, viaf, xsd, tmp, 
-   bn, cbeta, har, idp, loc, lul, ngmpp, sat, sbb, src, tol, wc }
+   bn, cbeta, har, idp, loc, lul, ngmpp, sat, sats, sbb, src, tol, wc }
 export const prefixes = Object.values(prefixesMap) ;
 export const sameAsMap = { wd:"WikiData", ol:"Open Library", ola:"Open Library", bdr:"BDRC", mbbt:"Marcus Bingenheimer", eftr:"84000" }
 

@@ -1615,6 +1615,16 @@ h4:not(:hover) > .lang
 .resource .data#first-image .src.orig,
 .resource .data .header .src.orig { cursor:pointer;}
 
+
+.resource .data .header .src.SAT::before,
+.resource .data#first-image .src.SAT::before,
+.resource .data .header .src.SAT:not(#a)::after,
+.resource .data#first-image .src.SAT:not(#a)::after { content:''; background:white;width:30px;height:30px; display:block;margin:15px 2px;position: absolute;}
+.resource .data .header .src.SAT:not(#a)::after,
+.resource .data#first-image .src.SAT:not(#a)::after { content:'SAT'; border:2px solid green;margin:16px 3px; width:24px;height:24px; font-size:12px; font-weight:700;
+   display:flex; align-items: center; justify-content: center; color:rgba(0,0,0,0.75); border-radius: 4px;
+}
+
 .resource .data#first-image { position:relative; }
 
 .resource .data#first-image .src:not(#a) { margin-right:35px; margin-bottom: 70px; z-index:10; display:block !important;}
@@ -2850,6 +2860,7 @@ html[lang="en"] .resource .data > [data-prop="bdo:creator"] h4[data-prop="bdo:ro
 .resource .data.legal-props > div h4 a {  display:flex; align-items: center; }
 
 
+.resource .data.legal-props > div h4 > .ulink > a[href*="LD_SAT_metadata"]::before,
 .resource .data.legal-props > div h4 > .ulink > a[href*="LD_LULDC_metadata"]::before,
 .resource .data.legal-props > div h4 > .ulink > a[href*="LD_SBB_metadata"]::before,
 .resource .data.legal-props > div h4 > .ulink > a[href*="LD_IDP_metadata"]::before,
@@ -2874,6 +2885,9 @@ html[lang="en"] .resource .data > [data-prop="bdo:creator"] h4[data-prop="bdo:ro
 
 .resource .data.legal-props > div h4 > .ulink.src .bdr { display:none; }
 
+.resource .data.legal-props > div h4 > .ulink > a[href*="LD_SAT_metadata"]::before { content:'SAT'; background-image:none; color:green; font-weight:700; font-size:12px;
+   display:flex; align-items: center; justify-content: center; margin-top:4px;
+}
 .resource .data.legal-props > div h4 > .ulink > a[href*="LD_LULDC_metadata"]::before { background-image:url("/LULDC.png"); background-size:auto 24px;}
 .resource .data.legal-props > div h4 > .ulink > a[href*="LD_SBB_metadata"]::before { background-image:url("/SBB.png"); background-size:auto 19px;}
 .resource .data.legal-props > div h4 > .ulink > a[href*="LD_IDP_metadata"]::before { background-image:url("/IDP.jpg"); background-size:auto 21px;}

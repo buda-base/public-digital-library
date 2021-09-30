@@ -2316,6 +2316,7 @@ class ResourceViewer extends Component<Props,State>
       if(prov) prov = prov.replace(/Staatsbibliothek zu Berlin/g,"SBB")
       if(prov) prov = prov.replace(/Library of Congress/g,"LOC")
       if(prov) prov = prov.replace(/Leiden University Libraries/g,"LUL")      
+      if(prov) prov = prov.replace(/The SAT .*/g,"SAT")      
       return prov
    } 
 
@@ -4780,7 +4781,8 @@ class ResourceViewer extends Component<Props,State>
          let mapSame = same.map(s => {
             //loggergen.log("s.val:",s.value)
 
-            let prefix = shortUri(s.value).split(":")[0]
+            let prefix = shortUri(s.value).split(":")[0]            
+            if(prefix === "sats") prefix = "sat" // #570
             if(prefix.startsWith("http") && s.fromSeeOther) prefix = s.fromSeeOther
             // TODO fix Sakya Research Center
             if(!list.includes(prefix)) {
@@ -4808,6 +4810,7 @@ class ResourceViewer extends Component<Props,State>
                >
                { same.map(s => { 
                      let link = s.value, prov = shortUri(s.value).split(":")[0], name = I18n.t("result.resource")
+                     if(prov === "sats") prov = "sat" // #570
                      if(prov.startsWith("http") && s.fromSeeOther) prov = s.fromSeeOther
                      let data,tab ;
                      if(this.props.assocResources) data = this.props.assocResources[s.value]                  
@@ -5992,7 +5995,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
       let prov,orig
       if(sameLegalD) { 
          prov = sameLegalD[adm+"provider"]
-         prov = this.getProviderID(prov)
+         prov = this.getProviderID(prov) 
          //else prov = ""
 
          orig = this.getResourceElem(adm+"originalRecord")
@@ -6002,14 +6005,14 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          loggergen.log("prov x orig",prov,orig)
 
          if(prov !== "BDRC" && prov) {
-
+            const img = provImg[prov.toLowerCase()]
             if(orig) 
-               src = <div class="src orig" onClick={(e) => this.setState({...this.state,anchorPermaSame:e.currentTarget, collapse: {...this.state.collapse, ["permaSame-permalink"]:!this.state.collapse["permaSame-permalink"] } } ) }>
-                  <img src={provImg[prov.toLowerCase()]}/>
+               src = <div class={"src orig "+(!img?prov:"")} onClick={(e) => this.setState({...this.state,anchorPermaSame:e.currentTarget, collapse: {...this.state.collapse, ["permaSame-permalink"]:!this.state.collapse["permaSame-permalink"] } } ) }>
+                  {img && <img src={img}/>}
                </div> 
             else  
-               src = <div class="src">
-                  <img src={provImg[prov.toLowerCase()]}/>
+               src = <div class={"src "+(!img?prov:"")}>
+                  {img && <img src={img}/>}
                </div> 
 
          }
