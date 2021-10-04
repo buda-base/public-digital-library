@@ -4355,7 +4355,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             label = getLangLabel(this,"",sList) // ,true)
             if(label && label.length > 0) label = label[0]
 
-            if(!label) label = { value:  I18n.t("resource.noT"), lang: this.props.locale }
+            if(!label) label = { value:  t != "Etext"?I18n.t("resource.noT"):" ", lang: this.props.locale }
 
             let preProps = sublist[o].filter((e) => e.type && e.type.match(/relationType$/ )).map(e => this.props.dictionary[e.value])
 
