@@ -9641,7 +9641,7 @@ open@^7.0.2:
 
 "openseadragon@https://github.com/openseadragon/openseadragon#master":
   version "2.4.2"
-  resolved "https://github.com/openseadragon/openseadragon#577622a210956b0ed84b25f2e5f15b619aedc64a"
+  resolved "https://github.com/openseadragon/openseadragon#d1a5e926c6b3d0e380855c07bd667d75463c110b"
 
 opn@^5.5.0:
   version "5.5.0"
