@@ -1122,14 +1122,20 @@ export async function miradorInitView(work,lang,callerURI,locale,extManif) {
       console.log("work",work)
 
       const resData = await(await fetch(ldspdi+"/query/graph/ResInfo?R_RES="+work+"&format=jsonld")).json()
-      console.log(resData)
+      console.warn(resData, resData["@graph"]?resData["@graph"]:"", resData["@graph"]?resData["@graph"].filter(d => d["id"] == work):"")
 
       if(resData["qualityGrade"] != undefined) opt["qualityGrade"] = resData["qualityGrade"]
 
       let propK ;
       if(resData.status && resData.status == 404) { console.log("echec",work)}
-      else if(resData["@graph"]) propK = resData["@graph"].filter(d => d["id"] == work)[0]
-      else propK = resData
+      else if(resData["@graph"]) {          
+         propK = resData["@graph"].filter(d => d["id"] == work)[0]
+         console.warn("else1",propK,resData,resData["@graph"],resData["@graph"].filter(d => d["id"] == work),resData["@graph"].filter(d => d["id"] == work)[0])
+      }
+      else {
+         propK = resData
+         console.warn("else2")
+      }
       console.log("pK",propK)
       if(propK)
       {
