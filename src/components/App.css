@@ -1481,7 +1481,7 @@ h4:not(:hover) > .lang
 .resource .data#outline .root + div .top + .details .sub h4,
 .resource .data#outline .root + div .top + .details .sub a,
 .resource .data#outline .root + div .top + .details .sub h4 span { font-size:12px;line-height:16px; }
-.resource .data#outline .root + div .top + .details .sub h4.first { width:120px; align-self: end; }
+.resource .data#outline .root + div .top + .details .sub h4.first { width:120px; align-self: baseline; }
 .resource .data#outline .root + div .top + .details .sub h4.first span { font-weight:700;}
 .resource .data#outline .root + div .top + .details .sub h4.first + * { width:calc(100% - 180px); }
 
