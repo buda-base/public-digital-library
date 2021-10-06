@@ -7029,7 +7029,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                                        // TODO which to show or not ? in outline search results ?
                                        let useT
                                        if(g["tmp:titleMatch"]) useT = g["tmp:titleMatch"].filter(tm => title[0].value.replace(/[↦↤]/g,"") == tm["@value"].replace(/[↦↤]/g,""))
-                                       if(useT.length || 
+                                       if(useT && useT.length || 
                                           titleT === bdo+"Title"|| 
                                           //(title.length && title[0].value && title[0].value == .includes("↦"))) 
                                           title.length && title[0].value && g["tmp:titleMatch"] && useT.length) {
