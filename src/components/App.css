@@ -4403,7 +4403,7 @@ a.result + #matches.mobile,
       overflow:hidden;
    }
    
-   html:not(.supports) body:not(.auto_rela) {
+   html:not(.supports):not(.budax) body:not(.auto_rela) {
      width: 100vh;
      height: 100vw;
      transform: rotate(90deg) translateY(-100vw);
