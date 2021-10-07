@@ -37,6 +37,14 @@ export class StaticRouteNoExt extends Component<State, Props>
                 this.updateContent();
             } 
         }, 10);
+        const isMobile = window.matchMedia("only screen and (max-width: 800px)").matches;
+        if (isMobile) {
+            var viewport = document.querySelector('meta[name="viewport"]');
+            if ( viewport ) {
+                viewport.content = "initial-scale=0.1";
+                viewport.content = "width=800";
+            }
+        }
     }
 
     componentDidUpdate() { 
