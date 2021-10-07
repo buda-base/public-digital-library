@@ -1254,6 +1254,11 @@ h4:not(:hover) > .lang
 .budax .static-container .over,
 .budax .static-container h2 { z-index:1; position:relative; }
 
+.budax .static-container #samples h1 { font-size:32px; }
+.budax .static-container #samples h2 { font-size:28px; }
+.budax .static-container #samples h3 { font-size:24px; text-align:left;}
+.budax .static-container #samples h4 { font-size:20px; }
+
 .budax .static-container iframe,
 .budax .static-container img { max-width:100%; } 
 
