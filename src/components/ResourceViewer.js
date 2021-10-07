@@ -6998,16 +6998,13 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
                               subtime(4)
 
-                              /*
-                              if(osearch && g["tmp:titleMatch"]) {
-                                 if(!g.details) g.details = []
-                                 if(!Array.isArray(g["tmp:titleMatch"])) g["tmp:titleMatch"] = [ g["tmp:titleMatch"] ]
-                                 g.details.push(<div class="sub"><h4 class="first type">{this.proplink(tmp+"titleMatch")}: </h4><div>{g["tmp:titleMatch"].map(t => <h4>{highlight(t["@value"])}</h4>)}</div></div>)
+                              if(g.instanceOf) {
+                                 //if(Array.isArray(g.instanceOf)) g.instanceOf = 
+                                 if(showDetails) {
+                                    if(!g.details) g.details = []
+                                    g.details.push(<div class="sub"><h4 class="first type">{this.proplink(tmp+"instanceOfWork")}{I18n.t("punc.colon")} </h4>{this.format("h4","instacO","",false, "sub", [{type:"uri",value:fullUri(g.instanceOf)}])}</div>)
+                                 }
                               }
-                              else 
-                              */
-
-
                               
                               if(showDetails && g.hasTitle) {
                                  if(!g.details) g.details = []
@@ -7044,11 +7041,6 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                               }
 
                               if(g.instanceOf) {
-                                 //if(Array.isArray(g.instanceOf)) g.instanceOf = 
-                                 if(showDetails) {
-                                    if(!g.details) g.details = []
-                                    g.details.push(<div class="sub"><h4 class="first type">{this.proplink(tmp+"instanceOfWork")}{I18n.t("punc.colon")} </h4>{this.format("h4","instacO","",false, "sub", [{type:"uri",value:fullUri(g.instanceOf)}])}</div>)
-                                 }
                                  //let instOf = elem.filter(f => f["@id"] === g.instanceOf)
                                  let instOf = mapElem(g.instanceOf)
                                  if(instOf.length && instOf[0]["tmp:labelMatch"]) {
@@ -7062,6 +7054,12 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                                     }
                                  }
    
+                              }
+                              
+                              if(showDetails && osearch && g["tmp:colophonMatch"]) {
+                                 if(!g.details) g.details = []
+                                 if(!Array.isArray(g["tmp:colophonMatch"])) g["tmp:colophonMatch"] = [ g["tmp:colophonMatch"] ]
+                                 g.details.push(<div class="sub"><h4 class="first type">{this.proplink(tmp+"colophonMatch")}: </h4><div>{g["tmp:colophonMatch"].map(t => <h4>{highlight(t["@value"])}</h4>)}</div></div>)
                               }
 
 
@@ -7083,8 +7081,12 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                                  node = g[p]
                                  if(!node) continue;
                                  if(!Array.isArray(node)) node = [node]
+                                 if(p === "colophon" && osearch && g["tmp:colophonMatch"]) {
+                                    node = node.filter(n => !g["tmp:colophonMatch"].some(t => n["@value"] && t["@value"] && t["@value"].replace(/[↦↤]/g,"") === n["@value"].replace(/[↦↤]/g,"")))
+                                    //console.log("coloph:",node,g["tmp:colophonMatch"])
+                                 }
                                  if(!p.includes(":")) p = bdo+p
-                                 g.hidden.push(<div class="sub"><h4 class="first type">{this.proplink(p)}{I18n.t("punc.colon")} </h4><div>{node.map(n => this.format("h4","","",false, "sub",[{ value:n["@value"], lang:n["@language"], type:"literal"}]))}</div></div>)
+                                 if(node.length) g.hidden.push(<div class="sub"><h4 class="first type">{this.proplink(p)}{I18n.t("punc.colon")} </h4><div>{node.map(n => this.format("h4","","",false, "sub",[{ value:n["@value"], lang:n["@language"], type:"literal"}]))}</div></div>)
                               }
 
 
