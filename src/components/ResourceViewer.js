@@ -5311,6 +5311,8 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                                  zipMsg = "server error (" + e.zipError + ")"
                               }
 
+                              //console.log("pdfMenu:",e)
+
                               return (<ListItem className="pdfMenu">
                                      <b>{(e.volume !== undefined?(!e.volume.match || e.volume.match(/^[0-9]+$/)?"Volume ":"")+(e.volume):monoVol)}{I18n.t("punc.colon")}</b>
                                      <a onClick={ev => that.handlePdfClick(ev,e.link,e.pdfFile)}

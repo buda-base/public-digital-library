@@ -827,7 +827,7 @@ async function createPdf(url,iri) {
    {
 
       let nUrl = url.replace(/(pdf|zip)/,iri.file)
-      loggergen.log("creaP",url,nUrl,iri,iri.file)
+      //loggergen.log("creaP",url,nUrl,iri,iri.file)
       url = nUrl
 
       let config = store.getState()
@@ -835,13 +835,15 @@ async function createPdf(url,iri) {
       if(config) config = config.config
       if(config) config = config.iiif
       if(config) IIIFurl = config.endpoints[config.index]
-      loggergen.log("IIIFu",IIIFurl,config)
+      //loggergen.log("IIIFu",IIIFurl,config)
       let checkPdf = async () => {
          let link = iri.link, data
+         //loggergen.log("iri?",IIIFurl,url,iri,data)         
          if(!link) {
             try { 
+               // how is pdf being downloading when polling for perdentdone???
                data = JSON.parse(await api.getURLContents((url.startsWith("/")?IIIFurl:"")+url,false,"application/json"))
-               loggergen.log("pdf:",data)
+               //loggergen.log("pdf:",data)
                link = data.link
             } catch(e) {
                console.warn("PDF code",e.code)
@@ -852,7 +854,7 @@ async function createPdf(url,iri) {
          }
          if(link && !link.match(/^(https?:)?\/\//)) link = IIIFurl+link
 
-         loggergen.log("link:",link)
+         //loggergen.log("link:",link)
          if(link) {
             clearInterval(pdfCheck)
             store.dispatch(dataActions.pdfReady(link,{url,iri:iri.iri}))
@@ -888,10 +890,8 @@ async function requestPdf(url,iri) {
 
       loggergen.log("reqP",url,iri)
 
-
       let data = JSON.parse(await api.getURLContents(url,false,"application/json"))
-
-      loggergen.log("pdf",url,iri,data) //,_data)
+      loggergen.log("reqPdf:",url,iri,data) //,_data)
 
       /* // deprecated - better use original "monoVol" code
 
@@ -905,20 +905,26 @@ async function requestPdf(url,iri) {
          */
          
          // volume number starting at 0 (#496)
-         data = _.sortBy(Object.keys(data).map(e => ({...data[e],volume:Number(data[e].volnum) /* +1 */,id:e})),["volume"])
-         store.dispatch(dataActions.pdfVolumes(iri,data))
+         if(data && data.percentdone) { } // #575
+         else { 
+            if(data && data.link) data = [ { id: iri, volume:1, link:url } ]         
+            else data = _.sortBy(Object.keys(data).map(e => ({...data[e],volume:Number(data[e].volnum) /* +1 */,id:e})),["volume"])
+            store.dispatch(dataActions.pdfVolumes(iri,data))
+         }
 
          /*
       }
          */
 
-
-
-
-
    }
    catch(e){
-      console.error("ERRROR with pdf",e)
+
+      if(e.code == 401 || e.code == 403) {
+         console.warn("PDF request error",e.code)
+         store.dispatch(dataActions.pdfError(e.code,{url,iri}))
+      } else {      
+         console.error("ERRROR with pdf",e)
+      }
 
       //store.dispatch(dataActions.manifestError(url,e,iri))
    }

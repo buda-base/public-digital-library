@@ -1341,10 +1341,20 @@ export const pdfError = (state: DataState, action: Action) => {
 
       if(pdfVolumes) pdfVolumes = pdfVolumes[action.meta.iri]
       if(pdfVolumes) pdfVolumes = pdfVolumes.pdfVolumes
-      if(pdfVolumes) pdfVolumes = pdfVolumes.map(e => {
-         if(e.link.match(id)) return { ...e, [fileT+"Error"]: action.payload } 
-         return e ;
-      })
+      if(pdfVolumes) { 
+         let found = false
+         pdfVolumes = pdfVolumes.map(e => {
+            console.log("e/lnk:",e.link,e)
+            if(e.link && e.link.match && e.link.match(id)) {
+               found = true ;
+               return { ...e, [fileT+"Error"]: action.payload } 
+            }
+            return e ;
+         })
+         if(!found) {
+            pdfVolumes.push({ link:action.meta.url, [fileT+"Error"]: action.payload } )
+         }
+      }
       
       return {
       ...state,
