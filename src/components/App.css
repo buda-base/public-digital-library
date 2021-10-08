@@ -2018,6 +2018,7 @@ span[lang^='sa-']:not([lang$='-ewts']) { text-transform: capitalize;}
 #popDL { margin-top:30px; }
 
 body > [id^="menu-"] { z-index:10010; }
+body > [id^="menu-cita"] { z-index:1001000; }
 #menu-interest ul li { padding-left:48px}
 #menu-interest ul li::after { content:'';display:inline-block;position:absolute;background: url(/icons/check-blank.svg); width:20px; height:20px; 
    left:16px; opacity:0.65;
@@ -2103,7 +2104,7 @@ body > [id^="menu-"] > div:last-child,
 
 .poPdf > div:last-child { max-height:30vh; box-shadow:0 1px 4px #cecece; }
 .poPdf > div b,
-.poPdf > div a { font-size:12px; font-family: "Noto Sans"; color:#4d4d4d;}
+.poPdf > div a { font-size:12px; font-family: "Noto Sans"; color:#4d4d4d; white-space: nowrap;}
 .poPdf > div li { padding:6px 17px; }
 .poPdf > div a { padding:0 6px; display:flex;}
 .poPdf > div a + a { border-left:1px solid rgba(0,0,0,0.35); }
