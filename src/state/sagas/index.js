@@ -2759,7 +2759,33 @@ async function outlineSearch(iri,kw,lg) {
 
    store.dispatch(uiActions.loading(iri, false));
    
-   loggergen.log("outlineSearch",iri,kw,lg,res)
+   loggergen.log("oSearch:",iri,kw,lg,res)
+      
+   let matches = [], volid, volnum = 1
+   if(res && res["@graph"] && res["@graph"].length) for(let n of res["@graph"]) {
+      if(n["tmp:titleMatch"] || n["tmp:labelMatch"]|| n["tmp:colophonMatch"]) matches.push(n)
+   }
+   console.log("matches:",JSON.stringify(matches,null,3))
+   for(let m of matches) {
+      let loca 
+      if(m.contentLocation) {
+         loca = res["@graph"].filter(r => r.id === m.contentLocation)
+         if(loca.length && loca[0].contentLocationVolume) volnum = loca[0].contentLocationVolume
+      }
+      let p = m.partOf
+      let p_node = res["@graph"].filter(r => r.id === p)
+      while(p) {
+         if(p_node[0]["tmp:hasNonVolumeParts"] && p_node[0]["partType"] === "bdr:PartTypeSection") {
+            volid = "bdr:I0000"+volnum+";"+p_node[0].id
+            //console.log("gotcha:",p_node)
+            p_node[0].hasPart = volid
+            //res["@graph"].push({id:"bdr:WL0000_"+volid, type:"ContentLocation", contentLocationVolume:volnum})
+            res["@graph"].push({id:volid, hasPart:m.id, volumeNumber:volnum, partType:"bdr:PartTypeVolume", "tmp:hasNonVolumeParts": true }) //, contentLocation:"bdr:WL0000_"+volid})
+         }
+         p = p_node[0].partOf
+         if(p) p_node = res["@graph"].filter(r => r.id === p)
+      }
+   }
 
    store.dispatch(dataActions.gotOutline(iri+"/"+kw+"@"+lg,res))
 

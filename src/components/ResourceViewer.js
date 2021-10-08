@@ -6904,7 +6904,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
                               let nav = [] ;
 
-                              if(g["tmp:titleMatch"] || g["tmp:labelMatch"]) {
+                              if(g["tmp:titleMatch"] || g["tmp:labelMatch"]|| g["tmp:colophonMatch"]) {
                                  g.hasMatch = true
                                  if(g["tmp:titleMatch"] && !Array.isArray(g["tmp:titleMatch"])) g["tmp:titleMatch"] = [ g["tmp:titleMatch"] ]
                               }
@@ -7164,7 +7164,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
 
                         ret.push(<span class={'top'+ (this.state.outlinePart === e['@id'] || (!this.state.outlinePart && this.props.IRI===e['@id']) ?" is-root":"")+(this.state.collapse[tag]||osearch&&e.hasMatch?" on":"") }>
-                              {(e.hasPart && open && osearch && !this.props.outlines[e['@id']]) && <span onClick={(ev) => toggle(ev,root,e["@id"],"",true)} className="xpd" title={I18n.t("resource.otherN")}><RefreshIcon /></span>}
+                              {(e.hasPart && open && osearch && !this.props.outlines[e['@id']]) && <span onClick={(ev) => toggle(ev,root,e["@id"],"",true,e,top)} className="xpd" title={I18n.t("resource.otherN")}><RefreshIcon /></span>}
                               {(e.hasPart && !open && this.props.outlines[e['@id']] !== true) && <img src="/icons/triangle_.png" onClick={(ev) => toggle(ev,root,e["@id"],"",false,e)} className="xpd"/>}
                               {(e.hasPart && open && this.props.outlines[e['@id']] !== true) && <img src="/icons/triangle.png" onClick={(ev) => toggle(ev,root,e["@id"],"",false,e)} className="xpd"/>}
                               <span class={"parTy "+(e.details?"on":"")}  ref={citeRef} {...e.details?{title:/*tLabel+" - "+*/ I18n.t("resource."+(this.state.collapse[tag+"-details"]?"hideD":"showD")), onClick:(ev) => toggle(ev,root,e["@id"],"details",false,e)}:{title:tLabel}} >
