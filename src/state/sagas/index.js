@@ -905,12 +905,13 @@ async function requestPdf(url,iri) {
          */
          
          // volume number starting at 0 (#496)
-         if(data && data.percentdone) { } // #575
-         else { 
+         if(data && data.percentdone !== undefined) { // #575
+            data = [ { id: iri, volume:1, link:url } ]         
+         } else { 
             if(data && data.link) data = [ { id: iri, volume:1, link:url } ]         
             else data = _.sortBy(Object.keys(data).map(e => ({...data[e],volume:Number(data[e].volnum) /* +1 */,id:e})),["volume"])
-            store.dispatch(dataActions.pdfVolumes(iri,data))
          }
+         store.dispatch(dataActions.pdfVolumes(iri,data))
 
          /*
       }
