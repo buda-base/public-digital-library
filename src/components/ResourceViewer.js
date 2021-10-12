@@ -7023,7 +7023,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                                        if(title && title["rdfs:label"]) title = title["rdfs:label"]
                                        if(!Array.isArray(title)) title = [ title ]                                      
                                        title = title.map(f => ({value:f["@value"],lang:f["@language"], type:"literal"}))                                       
-                                       loggergen.log("title?",JSON.stringify(title,null,3),g)
+                                       //loggergen.log("title?",JSON.stringify(title,null,3),g)
                                        
                                        // TODO which to show or not ? in outline search results ?
                                        let useT

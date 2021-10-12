@@ -2765,7 +2765,7 @@ async function outlineSearch(iri,kw,lg) {
    if(res && res["@graph"] && res["@graph"].length) for(let n of res["@graph"]) {
       if(n["tmp:titleMatch"] || n["tmp:labelMatch"]|| n["tmp:colophonMatch"]) matches.push(n)
    }
-   console.log("matches:",JSON.stringify(matches,null,3))
+   //console.log("matches:",JSON.stringify(matches,null,3))
    for(let m of matches) {
       let loca 
       if(m.contentLocation) {

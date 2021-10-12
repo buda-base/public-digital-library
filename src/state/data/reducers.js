@@ -1034,9 +1034,37 @@ export const gotOutline = (state: DataState, action: Action) => {
    let outlineKW = state.outlineKW
    if(action.payload.includes("@")) outlineKW = action.payload
    else if(state.outlineKW) { // add siblings to given node
-      let root = outlines[state.outlineKW]
+      let root = outlines[state.outlineKW], root_map = {}, elem_map = {}
       if(root) root = root["@graph"]
-      elem.map(e => { e.notMatch = true ; root.push(e); })
+      if(root) {
+         root.map( e => root_map[e["@id"]] = e )
+         console.log("root_map:",root_map)
+      }
+      for(let i in elem) {
+         let e = elem[i]
+
+         /*
+         // data must be patched to handle hasNonVolumeParts after a search 
+         if(e["@id"] && e["@id"].includes(";")) {
+            e.hasPart = [ e["@id"] ]
+            e["@id"] = e["@id"].split(";")[1]
+         } 
+         */
+
+         e.notMatch = true ; 
+
+         // merging with match results data
+         let f = root_map[e["@id"]] 
+         if(f) {
+            elem[i] = { ...f, ...e, ...(f.partType!=e.partType?{partType:f.partType}:{}) }
+            if(f["tmp:matchScore"] !== undefined) delete e.notMatch
+         }       
+         
+         root.push(elem[i]); 
+
+         elem_map[e["@id"]] = [ elem[i] ]
+      }
+      console.log("elem_map:",elem_map)
 
       root = state.outlineKW.split("/")
       if(root.length > 0) {
