@@ -1166,7 +1166,7 @@ export default class API {
         let path = DICTIONARY_PATH
 
        let config = store.getState().data.config
-       let url = config.ldspdi.endpoints[config.index] ;
+       let url = config.ldspdi.endpoints[config.ldspdi.index] ;
 
          path = url +  DICTIONARY_PATH;
 
