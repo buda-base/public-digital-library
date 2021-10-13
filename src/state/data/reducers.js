@@ -1034,24 +1034,36 @@ export const gotOutline = (state: DataState, action: Action) => {
    let outlineKW = state.outlineKW
    if(action.payload.includes("@")) outlineKW = action.payload
    else if(state.outlineKW) { // add siblings to given node
-      let root = outlines[state.outlineKW], root_map = {}, elem_map = {}
+      let root = outlines[state.outlineKW], root_map = {}, elem_map = {}, volumesToUpdate = []
       if(root) root = root["@graph"]
       if(root) {
-         root.map( e => root_map[e["@id"]] = e )
+         root.map( e => { 
+            root_map[e["@id"]] = e 
+            if(e["@id"] && e["@id"].includes(";")) {
+               let parent = e["@id"].split(";")[1]
+               if(parent === action.payload && !e.contentLocation) volumesToUpdate.push(e)
+            }
+         })
          console.log("root_map:",root_map)
       }
+         
       for(let i in elem) {
          let e = elem[i]
-
-         /*
-         // data must be patched to handle hasNonVolumeParts after a search 
-         if(e["@id"] && e["@id"].includes(";")) {
-            e.hasPart = [ e["@id"] ]
-            e["@id"] = e["@id"].split(";")[1]
-         } 
-         */
-
          e.notMatch = true ; 
+
+         let parent = e["@id"].split(";")[1]
+         if(parent === action.payload && volumesToUpdate.length) {
+            let vol = volumesToUpdate.findIndex(v => v.volumeNumber === e.volumeNumber)
+            if(vol > -1) {
+               let v = root_map[volumesToUpdate[vol]["@id"]]
+               if(v) {
+                  v["@id"] = e["@id"]
+                  // to be continued... sort volumes + open volume if in path of search result
+                  console.log("vol:",volumesToUpdate,vol,v)
+               }
+               volumesToUpdate.splice(vol,1)
+            }
+         }
 
          // merging with match results data
          let f = root_map[e["@id"]] 
