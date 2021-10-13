@@ -835,7 +835,7 @@ export function top_right_menu(that,etextTitle,backUrl,etextres)
          </div>
 
          { that.props.auth && <div id="login" {...(
-               that.props.config && that.props.config.primaryUrl && that.props.config.primaryUrl != window.location.host ? {class:"proxied", title:I18n.t("topbar.proxied")}:{}
+               !window.location.host.includes("localhost") && that.props.config && that.props.config.primaryUrl && that.props.config.primaryUrl != window.location.host ? {class:"proxied", title:I18n.t("topbar.proxied")}:{}
             )}>
          {/* <IconButton style={{marginLeft:"15px"}}  onClick={e => that.props.onToggleLanguagePanel()}>
             <FontAwesomeIcon style={{fontSize:"28px"}} icon={faLanguage} title="Display Preferences"/>
