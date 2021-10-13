@@ -81,7 +81,8 @@
       "history": "Search history",
       "bookmarks": "Bookmarks",
       "results": "Search results for",
-      "instances": "versions of"
+      "instances": "versions of",
+      "proxied":"This is a proxied version provided by your institution's\nlibrary subscription; login is disabled. If you are part\nof a subscribing institution, you can download PDFs of\ntexts in the subscribed collections."
    },
    "Lsidebar": {
       "sortBy": {

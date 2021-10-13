@@ -458,6 +458,8 @@ footer #donate,
 .nav #login > div { display: flex;  }
 .nav #login > div > span:first-child { max-width:150px ; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;}
 
+.nav #login.proxied > * { opacity:0.5; pointer-events:none; }
+
 .nav #logo #by span { padding-top:7px; text-transform:none; letter-spacing: 1px; font-weight:600;}
 
 .nav a#about { color: hsl(206, 24%, 13%);}
