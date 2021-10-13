@@ -875,7 +875,9 @@ a.result + #matches .result-content #icon > :not(.thumb) img { width:40px; }
 .result-content .contenu h3 > span:first-of-type:empty + span.highlight { margin-left:-10px;}
 */
 
-.samePop, [role=tooltip] { z-index:10000 !important;}
+.samePop, [role=tooltip] { z-index:100000 !important;}
+
+#hoverLogin[role=tooltip] > div > span { white-space:normal; }
 
 #results > li + .result-content { scroll-margin:430px; }
 

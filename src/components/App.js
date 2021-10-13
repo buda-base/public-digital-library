@@ -817,7 +817,41 @@ export function top_right_menu(that,etextTitle,backUrl,etextres)
             </span>
          </div>
       </div>)
-   else 
+   else {
+
+      const toggleHoverLogin = (hoverLogin,e) => {
+         //console.warn("hoverLogin:",hoverLogin,e.target,e)
+         if(hoverLogin === undefined) hoverLogin = !that.state.collapse.hoverLogin
+         that.setState({collapse:{...that.state.collapse, hoverLogin } } )
+      }
+
+      let proxied = !window.location.host.includes("localhost") && 
+            that.props.config && that.props.config.primaryUrl && that.props.config.primaryUrl != window.location.host
+
+      let login = <div id="login" {...(proxied?{class:"proxied"}:{})}>
+         {
+            !that.props.auth.isAuthenticated() && // TODO check redirection
+               <div>
+               <span onClick={() => that.props.auth.login(that.props.history.location,true)} >{I18n.t("topbar.register")}</span>
+               <span onClick={() => that.props.auth.login(that.props.history.location)} >{I18n.t("topbar.login")}</span>
+               </div>
+         }
+         {
+            that.props.auth.isAuthenticated() && 
+               <div>
+               <span onClick={(e) => { that.props.onUserProfile(that.props.history.location); that.props.history.push("/user");    }}>{profileName}</span>
+               <span onClick={(e) => { that.props.auth.logout(that.props.history.location.pathname!=="/user"?window.location.href:window.location.origin) }} >{I18n.t("topbar.logout")}</span>
+               </div>
+         }
+      </div>
+
+      if(proxied) {
+         login = <Tooltip id="hoverLogin" open={that.state.collapse.hoverLogin === undefined?false:that.state.collapse.hoverLogin} 
+                     placement="center" 
+                     onOpen={(e)=>toggleHoverLogin(true,e)} onClose={(e)=>toggleHoverLogin(false,e)} 
+                     title={<span onMouseEnter={(e)=>toggleHoverLogin(true, e)} onMouseLeave={(e)=>toggleHoverLogin(false,e)}><Trans i18nKey="topbar.proxied" components={{ tag: <a /> }} /></span>}  >{login}</Tooltip>
+      }
+
       return ([
       <div class="mobile-button top" onClick={()=>that.setState({collapse:{...that.state.collapse,navMenu:!that.state.collapse.navMenu}})}><img src="/icons/burger.svg" /></div>,
          <div class={"nav"+(onZhMirror?" zhMirror":"")+ (that.state.collapse.navMenu?" on":"")}>
@@ -834,39 +868,7 @@ export function top_right_menu(that,etextTitle,backUrl,etextres)
             <span title={I18n.t("topbar.bookmarks")}><img src="/icons/fav.svg"/></span>
          </div>
 
-         { that.props.auth && <div id="login" {...(
-               !window.location.host.includes("localhost") && that.props.config && that.props.config.primaryUrl && that.props.config.primaryUrl != window.location.host ? {class:"proxied", title:I18n.t("topbar.proxied")}:{}
-            )}>
-         {/* <IconButton style={{marginLeft:"15px"}}  onClick={e => that.props.onToggleLanguagePanel()}>
-            <FontAwesomeIcon style={{fontSize:"28px"}} icon={faLanguage} title="Display Preferences"/>
-         </IconButton>  */}
-            {
-               !that.props.auth.isAuthenticated() && // TODO check redirection
-                  <div>
-                  <span onClick={() => that.props.auth.login(that.props.history.location,true)} >{I18n.t("topbar.register")}</span>
-                  <span onClick={() => that.props.auth.login(that.props.history.location)} >{I18n.t("topbar.login")}</span>
-                  </div>
-            }
-            {
-               that.props.auth.isAuthenticated() && 
-                  <div>
-                  <span onClick={(e) => { that.props.onUserProfile(that.props.history.location); that.props.history.push("/user");    }}>{profileName}</span>
-                  <span onClick={(e) => { that.props.auth.logout(that.props.history.location.pathname!=="/user"?window.location.href:window.location.origin) }} >{I18n.t("topbar.logout")}</span>
-                  </div>
-            }
-        { /*
-          that.props.auth.isAuthenticated() && (
-              [<IconButton title="User Profile" onClick={(e) => { that.props.onUserProfile(that.props.history.location); that.props.history.push("/user");    }}>
-                  <FontAwesomeIcon style={{fontSize:"28px"}} icon={faUserCircle} />
-              </IconButton>,
-         
-              <IconButton onClick={that.props.auth.logout.bind(that,that.props.history.location.pathname!=="/user"?that.props.history.location:"/")} title="Log out">
-                <FontAwesomeIcon style={{fontSize:"28px"}} icon={faSignOutAlt} />
-              </IconButton> ]
-            )
-        */}
-            </div>
-         }
+         { that.props.auth && login }
 
          { lang_selec(that) }
 
@@ -875,7 +877,7 @@ export function top_right_menu(that,etextTitle,backUrl,etextres)
          { <div class="close" onClick={()=>that.setState({collapse:{...that.state.collapse,navMenu:false}})}>+</div> }
        </div>
      </div>]
-  )
+   )}
 }
 
 function getLang(label) 
