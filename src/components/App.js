@@ -725,15 +725,15 @@ export function getGDPRconsent(that) {
          onAccept={() => { loggergen.log("accept!"); if(that) { report_GA(that.props.config,that.props.history.location); that.forceUpdate(); } } }
          cookieName="BDRC-GDPR-consent"
          style={{ background: "#2B373B",zIndex:100000,  }}
-         buttonText="I agree"
+         buttonText={I18n.t("cookies.yes")}
          buttonStyle={{ background:"#fce08e", color: "#4a4a4a", fontSize: "13px", marginLeft:0, marginRight:"30px" }}
          enableDeclineButton={true}
-         declineButtonText="I decline"
+         declineButtonText={I18n.t("cookies.no")}
          declineButtonStyle={{ background:"#d73449", color: "white", fontSize: "13px" }}
          expires={150}
          debug={false /**/ } 
       >
-         This website uses cookies to enhance the user experience.
+         {I18n.t("cookies.message")}
       </CookieConsent>
    )
 }
