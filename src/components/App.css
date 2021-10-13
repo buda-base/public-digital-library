@@ -1515,11 +1515,13 @@ h4:not(:hover) > .lang
 
 .resource .data#outline .root + div .top + .details .sub h4.first + div h4:not(:first-child) { margin-top:5px;}
 
-.resource .data#outline .root + div .top + .details .sub h4 .highlight { padding:0; background:none; margin:0 3px;}
+.resource .data#outline .root + div .top + .details .sub h4 .highlight { padding:0; background:none; padding:1px 3px; background-color: #fce08e;}
+/*
 .resource .data#outline .root + div .top + .details .sub h4 .highlight::before { background-color: #fce08e;font-weight:700; height:100%;
    border-radius:2px;padding:3px 3px; position:relative;z-index:-1; position:absolute; content:' ';display:inline-block; width:100%; left:-5px; top:-3px;
    margin:0 3px;
 }
+*/
 .resource .data#outline .root + div .top + .details .sub h4 .highlight:first-child { margin-left:0; }
 .resource .data#outline .root + div .top + .details .sub h4 .highlight:first-child::before  { margin-left:0; }
 
