@@ -6637,7 +6637,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          else {
             title = this.getWtitle([{value:fullUri(this.props.IRI)}], rootClick)
          }
-         let opart, opartInVol
+         let opart, opartInVol = [], osearchIds = []
          if(this.state.outlinePart) opart = this.state.outlinePart         
          else if(root !== this.props.IRI) opart = this.props.IRI
          else opart = root
@@ -6681,9 +6681,18 @@ perma_menu(pdfLink,monoVol,fairUse,other)
             if(!osearch && opart_node && opart_node.length && opart_node[0].contentLocation) {
                let hasContentLoc = nodes.filter(o => o["@id"] === opart_node[0].contentLocation)
                if(hasContentLoc.length) {
-                  opartInVol = hasContentLoc[0].contentLocationVolume
+                  opartInVol = hasContentLoc.map(v => v.contentLocationVolume)
+                  //console.log("opiv:",opartInVol,hasContentLoc)
                }
-            }               
+            } else if(osearch) {
+               let matches = nodes.filter(o => o.hasMatch)
+               let hasContentLoc = nodes.filter(o => matches.some(m => m.contentLocation === o["@id"]))
+               if(hasContentLoc.length) {
+                  opartInVol = hasContentLoc.map(v => v.contentLocationVolume)
+               }
+               osearchIds = nodes.filter(o => matches.some(m => m["@id"] === o["@id"])).map(o => o["@id"])
+               //console.log("opiv:",opartInVol,matches,hasContentLoc,osearchIds)
+            }  
                
                /*
                // no need
@@ -6808,20 +6817,21 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                      if(elem_val) return elem_val
                      else return []
                   }
-                  //loggergen.log("mapelem:",Date.now() - time)  
 
                   //let node = elem.filter(e => e["@id"] === top)                  
                   let node = mapElem(top)
 
-                  //console.log("node:",node)
+                  //loggergen.log("mapelem:",top,elem_map,node)
 
                   if(node.length && node[0].hasPart) { 
                      if(!Array.isArray(node[0].hasPart)) node[0].hasPart = [ node[0].hasPart ]
 
                      let subparts = [], sorted = _.orderBy(node[0].hasPart.map(n => {
                         const e = mapElem(n)
-                        if(e && e.length && e[0].partIndex !== undefined) return { id:n, partIndex: e[0].partIndex }
-                        else return { id:n, partIndex:999999}
+                        if(e && e.length && (e[0].partIndex !== undefined  || e[0].volumeNumber !== undefined)) 
+                           return { id:n, partIndex: ( e[0].partIndex != undefined ? e[0].partIndex : e[0].volumeNumber ) }
+                        else 
+                           return { id:n, partIndex:999999 }
                      }),["partIndex"],["asc"])
 
                      
@@ -6832,27 +6842,31 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                      const ShowNbChildren = 40
 
                      // TODO: case of a search 
-                     let isParent = sorted.filter(n => n.id === opart || n.partIndex === opartInVol), start = 0, end = start + ShowNbChildren
+                     let isParent = sorted.filter(n => n.id === opart || opartInVol.includes(n.partIndex) || osearchIds.includes(n.id) ), start = 0, end = start + ShowNbChildren
                      if(isParent.length) {                     
                         let mustBe = sorted.map( (n,i) => {
-                           if(isParent.some(m => m.id === n.id)) return i
+                           //console.log("isP?",n,i)
+                           if(isParent.some(m => m.id === n.id)) {
+                              return i
+                           }
                         }).filter(e => e)
                         if(mustBe.length) { 
                            // TODO: case of multiple/matches
                            start = Math.max(0, mustBe[0] - Math.floor(ShowNbChildren / 2))
-                           end = start + ShowNbChildren + 1
+                           end = Math.max(start + ShowNbChildren + 1, mustBe[mustBe.length - 1] - Math.floor(ShowNbChildren / 2))
                         }                        
                         //console.log("mB:",isParent,mustBe,start,end)
                      }
 
                      let min = 0 //sorted.findIndex(s => s.partIndex !== 999999)
                      let max = sorted.length //sorted.filter(s => s.partIndex !== 999999).length
-                     
+                     let isOpen = !osearch || this.state.collapse["outline-"+root+"-"+top] && !this.props.loading
+
                      if(start > min) {
                         let tag = "outline-"+root+"-"+top+"-prev"
                         let prev = this.state.collapse[tag]?this.state.collapse[tag]:[]
                         if(prev.length) start = prev[prev.length - 1]
-                        if(start > min && !osearch) showPrev = <span class="node-nav" onClick={
+                        if(start > min && isOpen) showPrev = <span class="node-nav" onClick={
                            () => this.setState({collapse:{...this.state.collapse, [tag]:[...prev, Math.max(0,start-ShowNbChildren)]}})
                         }>{I18n.t("resource.showPnodes")}</span>
                      }
@@ -6860,16 +6874,19 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                         let tag = "outline-"+root+"-"+top+"-next"
                         let next = this.state.collapse[tag]?this.state.collapse[tag]:[]
                         if(next.length) end = next[next.length - 1]
-                        if(end < max - 1 && !osearch) showNext = <span class="node-nav" onClick={
+                        if(end < max - 1 && isOpen) showNext = <span class="node-nav" onClick={
                            () => this.setState({collapse:{...this.state.collapse, [tag]:[...next, end+ShowNbChildren]}})
                         }>{I18n.t("resource.showNnodes")}</span>
                      }
 
+                     /*
                      if(!osearch) subparts = sorted.slice(start,end).map(n => n.id)
                      else subparts = sorted.map(n => n.id)
+                     */
 
+                     subparts = sorted.slice(start,end).map(n => n.id)
 
-                     //console.log("next/prev:",start,end,min,max,subparts,sorted)
+                     console.log("next/prev:",start,end,min,max,subparts,sorted,isParent)
                      
 
                      for(let e of subparts) {
