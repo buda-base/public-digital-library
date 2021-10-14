@@ -2761,7 +2761,7 @@ async function outlineSearch(iri,kw,lg) {
    
    loggergen.log("oSearch:",iri,kw,lg,res)
       
-   let matches = [], volid, volnum = 1
+   let matches = [], volid, volnum = 1, newVol = {}
    if(res && res["@graph"] && res["@graph"].length) for(let n of res["@graph"]) {
       if(n["tmp:titleMatch"] || n["tmp:labelMatch"]|| n["tmp:colophonMatch"]) matches.push(n)
    }
@@ -2779,13 +2779,20 @@ async function outlineSearch(iri,kw,lg) {
             volid = "bdr:I0000"+volnum+";"+p_node[0].id
             //console.log("gotcha:",p_node)
             p_node[0].hasPart = volid
-            //res["@graph"].push({id:"bdr:WL0000_"+volid, type:"ContentLocation", contentLocationVolume:volnum})
-            res["@graph"].push({id:volid, hasPart:m.id, volumeNumber:volnum, partType:"bdr:PartTypeVolume", "tmp:hasNonVolumeParts": true }) //, contentLocation:"bdr:WL0000_"+volid})
+            if(!newVol[volid]) { 
+               newVol[volid] = {id:volid, hasPart:m.id, volumeNumber:volnum, partType:"bdr:PartTypeVolume", "tmp:hasNonVolumeParts": true } //, contentLocation:"bdr:WL0000_"+volid}
+               //console.log("newV1:",volid,newVol[volid])
+            } else {
+               if(!Array.isArray(newVol[volid].hasPart)) newVol[volid].hasPart = [ newVol[volid].hasPart ]
+               newVol[volid].hasPart.push(m.id)
+               //console.log("newV2:",volid,newVol[volid])
+            }
          }
          p = p_node[0].partOf
          if(p) p_node = res["@graph"].filter(r => r.id === p)
       }
    }
+   res["@graph"] = res["@graph"].concat(Object.values(newVol))
 
    store.dispatch(dataActions.gotOutline(iri+"/"+kw+"@"+lg,res))
 
