@@ -2765,7 +2765,9 @@ async function outlineSearch(iri,kw,lg) {
    if(res && res["@graph"] && res["@graph"].length) for(let n of res["@graph"]) {
       if(n["tmp:titleMatch"] || n["tmp:labelMatch"]|| n["tmp:colophonMatch"]) matches.push(n)
    }
-   //console.log("matches:",JSON.stringify(matches,null,3))
+   
+   console.log("matches:",JSON.stringify(matches,null,3))
+
    for(let m of matches) {
       let loca 
       if(m.contentLocation) {
@@ -2777,15 +2779,21 @@ async function outlineSearch(iri,kw,lg) {
       while(p) {
          if(p_node[0]["tmp:hasNonVolumeParts"] && p_node[0]["partType"] === "bdr:PartTypeSection") {
             volid = "bdr:I0000"+volnum+";"+p_node[0].id
-            //console.log("gotcha:",p_node)
-            p_node[0].hasPart = volid
+            console.log("gotcha:",p_node)
+
+            if(!p_node[0].hasPartSav) { 
+               p_node[0].hasPartSav = p_node[0].hasPart               
+               p_node[0].hasPart = []
+            }
+            if(!p_node[0].hasPart.includes(volid)) p_node[0].hasPart.push(volid)
+
             if(!newVol[volid]) { 
                newVol[volid] = {id:volid, hasPart:m.id, volumeNumber:volnum, partType:"bdr:PartTypeVolume", "tmp:hasNonVolumeParts": true } //, contentLocation:"bdr:WL0000_"+volid}
-               //console.log("newV1:",volid,newVol[volid])
+               console.log("newV1:",volid,newVol[volid])
             } else {
                if(!Array.isArray(newVol[volid].hasPart)) newVol[volid].hasPart = [ newVol[volid].hasPart ]
                newVol[volid].hasPart.push(m.id)
-               //console.log("newV2:",volid,newVol[volid])
+               console.log("newV2:",volid,newVol[volid])
             }
          }
          p = p_node[0].partOf

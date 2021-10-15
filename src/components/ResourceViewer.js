@@ -6653,7 +6653,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
             loggergen.log("collapse!",root,opart,JSON.stringify(collapse,null,3),this.props.outlines[opart])
 
-            let nodes = Object.values(this.props.outlines).reduce( (acc,v) => ([...acc, ...(v["@graph"]?v["@graph"]:[v])]), [])
+            let nodes = Object.values(this.props.outlines).reduce( (acc,v) => ([...acc, ...(v["@graph"]?v["@graph"]:[v])]), []), matches = []
             let opart_node = nodes.filter(n => n["@id"] === opart)
 
             if(!osearch && !this.props.outlines[opart]) {             
@@ -6685,7 +6685,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                   //console.log("opiv:",opartInVol,hasContentLoc)
                }
             } else if(osearch) {
-               let matches = nodes.filter(o => o.hasMatch)
+               matches = nodes.filter(g => g["tmp:titleMatch"] || g["tmp:labelMatch"]|| g["tmp:colophonMatch"])
                let hasContentLoc = nodes.filter(o => matches.some(m => m.contentLocation === o["@id"]))
                if(hasContentLoc.length) {
                   opartInVol = hasContentLoc.map(v => v.contentLocationVolume)
@@ -6704,7 +6704,23 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                else opart_parent = null
                */
 
-            if(!osearch && this.props.outlines[opart] && this.props.outlines[opart] !== true && this.state.collapse["outline-"+root+"-"+opart+"-details"] === undefined) {
+            if(osearch && this.props.outlines[osearch] && this.props.outlines[osearch] !== true) {
+
+               let parents = nodes.filter(n => matches.some(m => n.hasPart === m["@id"] || Array.isArray(n.hasPart) && n.hasPart.includes(m["@id"]) )), update
+               while(parents.length) {
+                  let head = parents.pop()
+                  //console.log("parents:",head,parents) 
+                  if(collapse["outline-"+root+"-"+head["@id"]] === undefined) { 
+                     update = true
+                     collapse["outline-"+root+"-"+head["@id"]] = true
+                  }
+                  parents = parents.concat(nodes.filter(n => n.hasPart === head["@id"] || Array.isArray(n.hasPart) && n.hasPart.includes(head["@id"])))
+               } 
+
+               if(update) this.setState( { collapse } )           
+
+            }
+            else  if(!osearch && this.props.outlines[opart] && this.props.outlines[opart] !== true && this.state.collapse["outline-"+root+"-"+opart+"-details"] === undefined) {
 
                Object.keys(collapse).filter(k => k.startsWith("outline-"+root)).map(k => { delete collapse[k]; })
                collapse["outline-"+root+"-"+opart] = true
@@ -6784,16 +6800,27 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                "bdr:PartTypeText":"txt",
                "?":"unk",
             }
-            
+
+            let osearch_map
+
             let makeNodes = (top,parent) => {               
-               let elem 
-               if(!osearch) elem = this.props.outlines[top]
-               else { 
-                  elem = this.props.outlines[osearch]
-                  if(elem === true) {
+               let elem, osearchElem
+               elem = this.props.outlines[top]               
+               if(osearch) { 
+                  osearchElem = this.props.outlines[osearch]
+                  if(osearchElem === true) {
                      let tmp = this.props.outlineKW.split("/")
                      if(tmp && tmp.length >= 2) tmp = tmp[1].split("@")
                      return <span class="top is-root"><span>No result found for {tmp[0]}.{ /* in {(I18n.t(""+(searchLangSelec[tmp[1]]?searchLangSelec[tmp[1]]:languages[tmp[1]])))}. */ }</span></span>
+                  } else if(osearchElem) {
+                     if(top === root && !this.props.outlines[osearch].reloaded || !elem || !elem["@graph"] || !elem["@graph"].length) elem = osearchElem
+                     /* // not needed
+                     else if(osearchElem["@graph"] && !osearch_map) {
+                        osearch_map = {}
+                        osearchElem["@graph"].map( e => osearch_map[e["@id"]] = [e] )
+                        console.log("init:osm:",osearch_map,osearchElem)
+                     }
+                     */
                   }
                }
                
@@ -6821,7 +6848,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                   //let node = elem.filter(e => e["@id"] === top)                  
                   let node = mapElem(top)
 
-                  //loggergen.log("mapelem:",top,elem_map,node)
+                  //loggergen.log("mapelem:",top,node,elem_map)
 
                   if(node.length && node[0].hasPart) { 
                      if(!Array.isArray(node[0].hasPart)) node[0].hasPart = [ node[0].hasPart ]
@@ -6842,8 +6869,8 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                      const ShowNbChildren = 40
 
                      // TODO: case of a search 
-                     let isParent = sorted.filter(n => n.id === opart || opartInVol.includes(n.partIndex) || osearchIds.includes(n.id) ), start = 0, end = start + ShowNbChildren
-                     if(isParent.length) {                     
+                     let isParent = sorted.filter(n => n.id === opart || !osearch && opartInVol.includes(n.partIndex) || osearchIds.includes(n.id) ), start = 0, end = start + ShowNbChildren
+                     if(isParent.length) {                                             
                         let mustBe = sorted.map( (n,i) => {
                            //console.log("isP?",n,i)
                            if(isParent.some(m => m.id === n.id)) {
@@ -6860,7 +6887,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
                      let min = 0 //sorted.findIndex(s => s.partIndex !== 999999)
                      let max = sorted.length //sorted.filter(s => s.partIndex !== 999999).length
-                     let isOpen = !osearch || this.state.collapse["outline-"+root+"-"+top] && !this.props.loading
+                     let isOpen = !osearch || this.state.collapse["outline-"+root+"-"+top] //&& !this.props.loading
 
                      if(start > min) {
                         let tag = "outline-"+root+"-"+top+"-prev"
@@ -6886,7 +6913,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
                      subparts = sorted.slice(start,end).map(n => n.id)
 
-                     console.log("next/prev:",start,end,min,max,subparts,sorted,isParent)
+                     //console.log("next/prev:",start,end,min,max,subparts,sorted,isParent)
                      
 
                      for(let e of subparts) {
@@ -7178,12 +7205,12 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
                         const citeRef = React.createRef(), printRef = React.createRef()
 
-
+                        //console.log("reload?",e,e.hasPart,this.props.outlines[e['@id']])
 
                         ret.push(<span class={'top'+ (this.state.outlinePart === e['@id'] || (!this.state.outlinePart && this.props.IRI===e['@id']) ?" is-root":"")+(this.state.collapse[tag]||osearch&&e.hasMatch?" on":"") }>
-                              {(e.hasPart && open && osearch && !this.props.outlines[e['@id']]) && <span onClick={(ev) => toggle(ev,root,e["@id"],"",true,e,top)} className="xpd" title={I18n.t("resource.otherN")}><RefreshIcon /></span>}
-                              {(e.hasPart && !open && this.props.outlines[e['@id']] !== true) && <img src="/icons/triangle_.png" onClick={(ev) => toggle(ev,root,e["@id"],"",false,e)} className="xpd"/>}
-                              {(e.hasPart && open && this.props.outlines[e['@id']] !== true) && <img src="/icons/triangle.png" onClick={(ev) => toggle(ev,root,e["@id"],"",false,e)} className="xpd"/>}
+                              {((e.hasPart || e["tmp:hasNonVolumeParts"]) && open && osearch && !this.props.outlines[e['@id']]) && <span onClick={(ev) => toggle(ev,root,e["@id"],"",true,e,top)} className="xpd" title={I18n.t("resource.otherN")}><RefreshIcon /></span>}
+                              {((e.hasPart || e["tmp:hasNonVolumeParts"]) && !open && this.props.outlines[e['@id']] !== true) && <img src="/icons/triangle_.png" onClick={(ev) => toggle(ev,root,e["@id"],"",false,e)} className="xpd"/>}
+                              {((e.hasPart || e["tmp:hasNonVolumeParts"])&& open && this.props.outlines[e['@id']] !== true) && <img src="/icons/triangle.png" onClick={(ev) => toggle(ev,root,e["@id"],"",false,e)} className="xpd"/>}
                               <span class={"parTy "+(e.details?"on":"")}  ref={citeRef} {...e.details?{title:/*tLabel+" - "+*/ I18n.t("resource."+(this.state.collapse[tag+"-details"]?"hideD":"showD")), onClick:(ev) => toggle(ev,root,e["@id"],"details",false,e)}:{title:tLabel}} >
                                  {pType && parts[pType] ? <div>{parts[pType]}</div> : <div>{parts["?"]}</div> }
                               </span>

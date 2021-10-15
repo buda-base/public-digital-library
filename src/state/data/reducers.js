@@ -988,7 +988,7 @@ export const gotOutline = (state: DataState, action: Action) => {
    let assoR = {}
    if(state.assocResources) assoR = { ...state.assocResources }
 
-   let elem = action.meta
+   let elem = action.meta, realId = action.payload, realIdElem
    if(elem && elem["@graph"]) elem = patchId(elem["@graph"], action)
    if(elem && elem.length) for(let e of elem) {
 
@@ -1029,7 +1029,12 @@ export const gotOutline = (state: DataState, action: Action) => {
          e.hasTitle = _.orderBy(hT, ["k"], ["asc"]).map(t => t.id);
       }
 
+      if(action.payload.match(/bdr:I000[0-9]+;/) && e["tmp:firstImageGroup"] && e["tmp:firstImageGroup"]["@id"]) {
+         realId = action.payload.replace(/^bdr:I000[0-9]+;/,e["tmp:firstImageGroup"]["@id"]+";")
+         realIdElem = { ...e, "@id": realId }
+      }
    }
+   if(realIdElem) elem.push(realIdElem)
 
    let outlineKW = state.outlineKW
    if(action.payload.includes("@")) outlineKW = action.payload
@@ -1065,14 +1070,17 @@ export const gotOutline = (state: DataState, action: Action) => {
             }
          }
 
+
          // merging with match results data
          let f = root_map[e["@id"]] 
          if(f) {
-            elem[i] = { ...f, ...e, ...(f.partType!=e.partType?{partType:f.partType}:{}) }
+            // blank nodes must be discarded from merging
+            elem[i] = { ...(!f["@id"].startsWith("_:")?f:{}), ...e, ...(!f["@id"].startsWith("_:")&&f.partType!=e.partType?{partType:f.partType}:{}) }
             if(f["tmp:matchScore"] !== undefined) delete e.notMatch
          }       
          
-         root.push(elem[i]); 
+         // must not do this because of blank nodes
+         //root.push(elem[i]); 
 
          elem_map[e["@id"]] = [ elem[i] ]
       }
@@ -1090,6 +1098,7 @@ export const gotOutline = (state: DataState, action: Action) => {
          outlines:{
             ...outlines,
             [action.payload]:action.meta,
+            ...(realId !== action.payload?{[realId]:action.meta}:{})
          },
          outlineKW,
          assocResources:assoR
