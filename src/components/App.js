@@ -317,7 +317,7 @@ export const langSelect = [
 ]
 
 //const searchTypes = ["All","Work","Etext","Topic","Person","Place","Lineage","Corporation","Role"]
-const searchTypes = [ "Work", "Instance","Scan", "Etext", "Person","Place","Topic","Lineage","Role","Corporation", "Product" ]
+const searchTypes = [ "Work", "Instance","Scan", "Etext", "Person","Place","Topic", "Product", /*"Lineage","Role","Corporation"*/ ]
 
 /*
 export const langProfile = [
