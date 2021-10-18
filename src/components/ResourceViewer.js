@@ -7365,6 +7365,14 @@ perma_menu(pdfLink,monoVol,fairUse,other)
             }, 250)
          } 
 
+         let cleanOutlineCollapse = () => {
+            let collapse = this.state.collapse
+            for(let k of Object.keys(collapse)) {
+               if(k.startsWith("outline-")) delete collapse[k]
+            }
+            return collapse
+         }
+
          return ( 
          <div class="data" id="outline">
             <h2>{I18n.t("index.outline")}</h2>
@@ -7372,13 +7380,18 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                   <div>
                      <input type="text" placeholder={I18n.t("resource.searchO")} value={this.state.outlineKW} onChange={this.changeOutlineKW.bind(this)} onKeyPress={ (e) => { 
                         if(e.key === 'Enter' && this.state.outlineKW) { 
-                           if(this.state.dataSource&&this.state.dataSource.length) outlineSearch(e,this.state.dataSource[0].split("@")[1])
+                           if(this.state.dataSource&&this.state.dataSource.length) {
+                              let collapse = cleanOutlineCollapse()
+                              this.setState({dataSource:[], collapse});
+                              outlineSearch(e,this.state.dataSource[0].split("@")[1])
+                           }
                            else this.changeOutlineKW(null,this.state.outlineKW)
                         }
                      }}/>
                      <span class="button" onClick={outlineSearch}  title={I18n.t("resource.start")}></span>
                      { (this.props.outlineKW || this.state.outlineKW) && <span class="button" title={I18n.t("resource.reset")} onClick={(e) => { 
-                        this.setState({outlineKW:"",dataSource:[]})
+                        let collapse = cleanOutlineCollapse()
+                        this.setState({outlineKW:"",dataSource:[],collapse})
                         if(this.props.outlineKW) {
                            this.props.onResetOutlineKW()
                            let loca = { ...this.props.history.location }
@@ -7393,10 +7406,11 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                               let tab = v.split("@")
                               return (
                                  <MenuItem key={v} style={{lineHeight:"1em"}} onClick={(e)=>{ 
-                                    this.setState({dataSource:[]});
+                                    let collapse = cleanOutlineCollapse()
+                                    this.setState({dataSource:[], collapse});
                                     outlineSearch(e,tab[1]);
                                     //this.requestSearch(tab[0],null,tab[1])
-                                 }}>{ tab[0].replace(/["]/g,"")} <SearchIcon style={{padding:"0 10px"}}/><span class="lang">{(I18n.t(""+(searchLangSelec[tab[1]]?searchLangSelec[tab[1]]:languages[tab[1]]))) }</span></MenuItem> ) 
+                                 }}><span class="maxW">{ tab[0].replace(/["]/g,"")}</span> <SearchIcon style={{padding:"0 10px"}}/><span class="lang">{(I18n.t(""+(searchLangSelec[tab[1]]?searchLangSelec[tab[1]]:languages[tab[1]]))) }</span></MenuItem> ) 
                               } ) }
                         </Paper></div> }
                   </div>

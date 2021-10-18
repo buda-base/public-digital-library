@@ -393,6 +393,7 @@ body { overflow:auto !important;padding-right:0 !important; /*font-family:"Robot
 #suggestions li.active { color:black; font-weight:700; }
 
 #suggestions li .maxW { /*background:yellow; */ max-width:calc(100% - 250px); overflow: hidden; text-overflow: ellipsis; padding:10px 0; } 
+#outline #suggestions li .maxW { max-width:calc(100% - 165px);  } 
 
 /*
 #suggestions { z-index:10000; } 
@@ -1297,7 +1298,7 @@ h4:not(:hover) > .lang
 .resource .data#outline > .search > div { display:inline-block; position: relative;}
 .resource .data#outline > .search::after { content:none !important; }
 .resource .data#outline > .search input { display:inline-block;width:375px;height:40px;line-height:40px;font-weight:600;border:none;outline:none; 
-   padding-left:20px; color:black; box-shadow: 0 2px 4px rgba(187, 187, 187, 0.5); padding-right:35px; position:relative;   
+   padding-left:20px; color:black; box-shadow: 0 2px 4px rgba(187, 187, 187, 0.5); padding-right:70px; position:relative;   
 }
 .resource .data#outline > .search input ~ span { display: inline-block; position:absolute; height:40px;width:40px; cursor:pointer; border-radius:50%; }
 .resource .data#outline > .search input + span { background-image:url(/icons/loupe.png); background-position:center; background-repeat:no-repeat; 
