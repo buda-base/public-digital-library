@@ -5701,8 +5701,15 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                // - trigger foundFacetInfo when language preference changed (labels displayed/sorted depend on language)
 
 
+               // #580 auto add facet value with count 0 when selected from url but no occurrence in data
+               if(this.state.filters.facets && this.state.filters.facets[jpre]) for(let f of this.state.filters.facets[jpre]) {
+                  if(meta[j] && !meta[j][f]) {                
+                     meta[j][f] = { dict:{}, n:0 }
+                  }
+               }
 
                let meta_sort = Object.keys(meta[j])
+               //console.log("meta:",j,jpre,meta_sort,meta)
 
                /* // deprecated 
                .sort((a,b) => {
