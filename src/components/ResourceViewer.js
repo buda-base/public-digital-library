@@ -6970,7 +6970,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
 
                               if(g.contentLocation && (!this.state.catalogOnly || !this.state.catalogOnly[this.props.IRI])) {
-                                 g.hasImg = "/show/"+g["@id"].replace(/^((bdr:MW[^_]+)_[^_]+)$/,"$1")+"?s="+encodeURIComponent(this.props.history.location.pathname+this.props.history.location.search)+"#open-viewer"
+                                 g.hasImg = "/show/"+g["@id"].split(";")[0].replace(/^((bdr:MW[^_]+)_[^_]+)$/,"$1")+"?s="+encodeURIComponent(this.props.history.location.pathname+this.props.history.location.search)+"#open-viewer"
                                  g.hasDetails = true
                                  if(showDetails) {
                                     if(!g.details) g.details = []
@@ -6978,7 +6978,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                                  }
                               }
                               else if (g.instanceHasReproduction) {
-                                 g.hasImg = "/show/"+g.instanceHasReproduction+"?s="+encodeURIComponent(this.props.history.location.pathname+this.props.history.location.search)+"#open-viewer"
+                                 g.hasImg = "/show/"+g.instanceHasReproduction.split(";")[0]+"?s="+encodeURIComponent(this.props.history.location.pathname+this.props.history.location.search)+"#open-viewer"
                                  g.hasDetails = true
                                  if(showDetails) {
                                     if(!g.details) g.details = []
@@ -7184,13 +7184,14 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                         let url = "/show/"+root+"?part="+e["@id"]
                         let togId = e["@id"]
                         if(e["@id"] && e["@id"].startsWith("bdr:I")) {                           
-                           url = "/show/"+e["@id"]
+                           url = "/show/"+e["@id"].split(";")[0]
                            if(e.parent && !togId.includes(";")) togId += ";"+e.parent
                         }
 
                         let tag = "outline-"+root+"-"+togId
                         let ret = []
                         let pType = e["partType"], fUri = fullUri(e["@id"])
+                        if(e["@id"].includes(";")) fUri = fullUri(e["@id"].split(";")[0])
                         let tLabel 
                         if(pType) {
 
@@ -7339,7 +7340,19 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
          let colT = <span class={"parTy"} title={I18n.t("Lsidebar.collection.title")}><div>COL</div></span>
 
-         if(opart && this.state.outlinePart) { 
+
+         if(osearch) { 
+            let _this = this, timinter = setInterval(()=>{
+               const el = document.querySelector("#outline .is-root")
+               if(el) { 
+                  clearInterval(timinter)
+                  if(_this.state.opartinview != osearch) {
+                     el.scrollIntoView()      
+                     _this.setState({opartinview: osearch})
+                  }
+               }
+            }, 250)
+         } else if(opart && this.state.outlinePart) { 
             let _this = this, timinter = setInterval(()=>{
                const el = document.querySelector("#outline .is-root")
                if(el) { 
@@ -7350,7 +7363,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                   }
                }
             }, 250)
-         }
+         } 
 
          return ( 
          <div class="data" id="outline">
