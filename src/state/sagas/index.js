@@ -2800,7 +2800,7 @@ async function outlineSearch(iri,kw,lg) {
          if(p) p_node = res["@graph"].filter(r => r.id === p)
       }
    }
-   res["@graph"] = res["@graph"].concat(Object.values(newVol))
+   if(res["@graph"]) res["@graph"] = res["@graph"].concat(Object.values(newVol))
 
    store.dispatch(dataActions.gotOutline(iri+"/"+kw+"@"+lg,res))
 

@@ -148,6 +148,9 @@ export const prefixesMap = { adm, bda, bdac, bdan, bdo, bdou, bdr, bdu, bf, cbcp
 export const prefixes = Object.values(prefixesMap) ;
 export const sameAsMap = { wd:"WikiData", ol:"Open Library", ola:"Open Library", bdr:"BDRC", mbbt:"Marcus Bingenheimer", eftr:"84000" }
 
+// TODO: example C1 P1 G10 W1 WA1 MW1 R37 IE23703 I1KG9127 UT4CZ5369_I1KG9127_0000 (with bda:)PR0ET003
+export const RIDregexp = /(^([^:]+:)?([cpgwrti]|mw|wa|ws|ut|ie|pr)(\d|eap)[^ ]*$)/i
+
 export function fullUri(id:string, force:boolean=false) {   
    if(id && !id.replace) {
       console.warn("id:?:",id)
@@ -1359,7 +1362,7 @@ class App extends Component<Props,State> {
 
          this.props.history.push({pathname:"/search",search:"?"+(dataInfo==="date"?"date":"id")+"="+key+"&t="+label})
       }
-      else if(_key.match(/(^[UWPGRCTILE][A-Z0-9_]+$)|(^([cpgwrt]|mw|wa|ws)\d[^ ]*$)/) || prefixesMap[key.replace(/^([^:]+):.*$/,"$1")])
+      else if(_key.match(RIDregexp) || prefixesMap[key.replace(/^([^:]+):.*$/,"$1")])
       {
          if(_key.indexOf(":") === -1) _key = "bdr:"+_key
          let uc = _key.split(":")
@@ -4810,7 +4813,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
                if(!this.state.filters.facets && other && other.length && !this.props.simple)   
                   message.push(<Typography className="no-result"><span>{I18n.t("search.seeO")}{I18n.t("misc.colon")} {other.map(o => <a onClick={(event) => this.handleCheck(event,o,true)} class="uri-link">{I18n.t("types."+o.toLowerCase(),{count:2})}</a>)}</span></Typography>)
-               else if(this.props.language === "id" && this.props.keyword.match(/(^\"?([^:]+:)?[UWPGRCTILE][A-Z0-9_]+\"?$)|(^\"?([^:]+:)?([cpgwrt]|mw|wa|ws)\d[^ ]*\"?$)/)) {
+               else if(this.props.language === "id" && this.props.keyword.match(RIDregexp)) {
                   let rid = this.props.keyword //
                   if(rid.includes(":")) { 
                      rid = this.props.keyword.split(":")
@@ -5887,7 +5890,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          let dataSource = [] 
          let language = this.state.language
          
-         if(value.match(/(^([^:]+:)?[UWPGRCTILE][A-Z0-9_]+$)|(^([^:]+:)?([cpgwrt]|mw|wa|ws)\d[^ ]*$)/i)) {
+         if(value.match(RIDregexp)) {
             dataSource = [ value+"@Find resource with this RID", value+"@Find associated resources" ]
          }
          else {
