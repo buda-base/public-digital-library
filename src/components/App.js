@@ -4271,7 +4271,9 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
                   const map =  (this.props.config && 
                      <Map ref={this._refs["map"]}
-                        center={[0,0]} zoom={18}
+                        center={[0,0]} zoom={18} 
+                        // attempt to fix #584 (see https://github.com/Leaflet/Leaflet/issues/7255 + https://stackoverflow.com/questions/67406533/react-leaflet-popups-not-working-on-mobile-devices/67422057#67422057)
+                        tap={false} 
                         className={"placeMap resultsMap"}                         
                         gestureHandling={window.innerWidth < 800}
                         gestureHandlingOptions={{
