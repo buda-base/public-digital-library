@@ -30,7 +30,7 @@
       "js-cookies": "^1.0.4",
       "js-file-download": "^0.4.1",
       "jsewts": "^1.0.3",
-      "leaflet": "https://github.com/Leaflet/Leaflet/",
+      "leaflet": "^1.7.1",
       "leaflet-gesture-handling": "^1.2.1",
       "lodash": "^4.17.10",
       "logdown": "^3.3.1",
