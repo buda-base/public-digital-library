@@ -4634,6 +4634,10 @@ class ResourceViewer extends Component<Props,State>
                   className={"placeMap"} // + (this.state.largeMap?" large":"")}
                   // style={{boxShadow: "0 0 5px 0px rgba(0,0,0,0.5)"}}
                   center={doMap} zoom={5} bounds={doRegion?regBox:null}
+
+                  // attempt to fix #584 (see https://github.com/Leaflet/Leaflet/issues/7255 + https://stackoverflow.com/questions/67406533/react-leaflet-popups-not-working-on-mobile-devices/67422057#67422057)
+                  tap={false} 
+
                   //attributionControl={false}
                   >
                   <LayersControl position="topright">
