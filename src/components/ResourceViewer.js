@@ -6769,7 +6769,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                loggergen.log("collapse?",JSON.stringify(collapse,null,3))
 
                
-               if(opart && this.state.outlinePart) {
+               if(opart && this.state.outlinePart && !osearch) {
                   const el = document.querySelector("#outline")
                   if(el) el.scrollIntoView()      
                }
@@ -7324,11 +7324,11 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                if(!loca.search) loca.search = "?"
                else if(loca.search !== "?") loca.search += "&"
 
-               loca.search += "osearch="+keywordtolucenequery(this.state.outlineKW, lg)+"@"+lg
+               loca.search += "osearch="+keywordtolucenequery(this.state.outlineKW.trim(), lg)+"@"+lg
 
                loggergen.log("loca!",loca)
 
-               this.setState({dataSource:[]});
+               this.setState({dataSource:[], outlineKW:this.state.outlineKW.trim()});
                this.props.history.push(loca)
                
                //this.props.onOutlineSearch(root, this.state.outlineKW,lg)
@@ -7343,7 +7343,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
          if(osearch) { 
             let _this = this, timinter = setInterval(()=>{
-               const el = document.querySelector("#outline .is-root")
+               const el = document.querySelector("#outline")
                if(el) { 
                   clearInterval(timinter)
                   if(_this.state.opartinview != osearch) {

@@ -988,6 +988,9 @@ export const gotOutline = (state: DataState, action: Action) => {
    let assoR = {}
    if(state.assocResources) assoR = { ...state.assocResources }
 
+   let isSearchQuery = action.payload.includes("@"), rootId
+   if(isSearchQuery) rootId = action.payload.replace(/^([^/]+)\/.*$/,"$1")
+
    let elem = action.meta, realId = action.payload, realIdElem
    if(elem && elem["@graph"]) elem = patchId(elem["@graph"], action)
    if(elem && elem.length) for(let e of elem) {
@@ -1033,11 +1036,15 @@ export const gotOutline = (state: DataState, action: Action) => {
          realId = action.payload.replace(/^bdr:I000[0-9]+;/,e["tmp:firstImageGroup"]["@id"]+";")
          realIdElem = { ...e, "@id": realId }
       }
+
+      if(isSearchQuery) {
+         if(e["@id"] != rootId && outlines && outlines[e["@id"]]) delete outlines[e["@id"]]
+      }
    }
    if(realIdElem) elem.push(realIdElem)
 
    let outlineKW = state.outlineKW
-   if(action.payload.includes("@")) outlineKW = action.payload
+   if(isSearchQuery) outlineKW = action.payload
    else if(state.outlineKW) { // add siblings to given node
       let root = outlines[state.outlineKW], root_map = {}, elem_map = {}, volumesToUpdate = []
       if(root) root = root["@graph"]
@@ -1049,7 +1056,7 @@ export const gotOutline = (state: DataState, action: Action) => {
                if(parent === action.payload && !e.contentLocation) volumesToUpdate.push(e)
             }
          })
-         console.log("root_map:",root_map)
+         //console.log("root_map:",root_map)
       }
          
       for(let i in elem) {
@@ -1084,7 +1091,7 @@ export const gotOutline = (state: DataState, action: Action) => {
 
          elem_map[e["@id"]] = [ elem[i] ]
       }
-      console.log("elem_map:",elem_map)
+      //console.log("elem_map:",elem_map)
 
       root = state.outlineKW.split("/")
       if(root.length > 0) {

@@ -228,7 +228,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
          dispatch(ui.setEtextLang(lang))
       },
       onOutlineSearch:(iri:string,keyword:string,language:string) => {
-         dispatch(data.outlineSearch(iri, keywordtolucenequery(keyword, language), language));
+         dispatch(data.outlineSearch(iri, keywordtolucenequery(keyword.trim(), language), language));
       },
       onResetOutlineKW:() => {
          dispatch(data.resetOutlineSearch());
