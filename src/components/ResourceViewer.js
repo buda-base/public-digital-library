@@ -6647,7 +6647,8 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          else opart = root
 
          loggergen.log("renderO?",osearch,opart,title)
-
+         
+         let get = qs.parse(this.props.history.location.search)
 
          if(opart && opart !== root && this.state.collapse["outline-"+root+"-"+root] === undefined) toggle(null,root,root)         
 
@@ -6655,12 +6656,12 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
             let collapse = {...this.state.collapse }
 
-            loggergen.log("collapse!",root,opart,JSON.stringify(collapse,null,3),this.props.outlines[opart])
+            loggergen.log("collapse!",osearch,root,opart,JSON.stringify(collapse,null,3),this.props.outlines[opart])
 
             let nodes = Object.values(this.props.outlines).reduce( (acc,v) => ([...acc, ...(v["@graph"]?v["@graph"]:[v])]), []), matches = []
             let opart_node = nodes.filter(n => n["@id"] === opart)
 
-            if(!osearch && !this.props.outlines[opart]) {             
+            if(!osearch && !get.osearch && !this.props.outlines[opart]) {             
                let parent_nodes = nodes.filter(n => n["@id"] === opart) //n => n.hasPart && (n.hasPart === opart || n.hasPart.includes(opart)))
                //console.log("pNode:",nodes,parent_nodes)
                if(opart_node.length && opart_node[0] !== true && opart_node[0]["tmp:hasNonVolumeParts"] && parent_nodes.length && parent_nodes[0] !== true) {
@@ -6724,7 +6725,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                if(update) this.setState( { collapse } )           
 
             }
-            else  if(!osearch && this.props.outlines[opart] && this.props.outlines[opart] !== true && this.state.collapse["outline-"+root+"-"+opart+"-details"] === undefined) {
+            else  if(!osearch && !get.osearch && this.props.outlines[opart] && this.props.outlines[opart] !== true && this.state.collapse["outline-"+root+"-"+opart+"-details"] === undefined) {
 
                Object.keys(collapse).filter(k => k.startsWith("outline-"+root)).map(k => { delete collapse[k]; })
                collapse["outline-"+root+"-"+opart] = true
@@ -6884,7 +6885,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                         if(mustBe.length) { 
                            // TODO: case of multiple/matches
                            start = Math.max(0, mustBe[0] - Math.floor(ShowNbChildren / 2))
-                           end = Math.max(start + ShowNbChildren + 1, mustBe[mustBe.length - 1] - Math.floor(ShowNbChildren / 2))
+                           end = Math.max(start + ShowNbChildren + 1, mustBe[mustBe.length - 1] + Math.floor(ShowNbChildren / 2))
                         }                        
                         //console.log("mB:",isParent,mustBe,start,end)
                      }
