@@ -5857,26 +5857,29 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                   }
 
                   logs = sortByTypeAndDate(logs);
-
-                  //console.log("logs:",logs)
                   
                   let tags = this.format("h4",adm+"logEntry","",false,"sub",logs)
-                  logs = this.renderGenericProp(logs, adm+"logEntry", tags, -1) 
-                  if(this.state.collapse["commit"]) data.push(logs)
-                  else if(logs && logs.length) data.push(<div></div>)
+                  logs = this.renderGenericProp(logs, adm+"logEntry", tags, -1)                   
 
-                  if(logs && logs.length) {
+                  if(this.state.collapse["commit"]) data.push(logs)
+                  else if(logs /*&& logs.length*/ ) data.push(<div></div>)
+
+                  //console.log("logs:",logs, data)
+                  
+                  if(logs /*&& logs.length*/) {
                      data.unshift(
                         <a class="" onClick={() => this.setState({collapse:{...this.state.collapse, commit:!this.state.collapse["commit"]}})}>
                            {I18n.t(this.state.collapse["commit"]?"resource.commitH":"resource.commitV")}
                         </a>
                      )
                   }
+
                }
             }
          }
       }
 
+      //console.log("data:",data)      
 
       if(data && data.length) return <div className={div!=="header"?"data "+div:div} {...hash?{id:hash}:{}}>
          {data}
