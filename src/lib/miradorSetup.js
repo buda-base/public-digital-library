@@ -320,7 +320,7 @@ async function hasEtextPage(manifest) {
          if(!canvas || !ut) return "(issue with canvas data: "+JSON.stringify(canvas,null,3)+")" ;
 
          
-         let id = canvas.label ;
+         let id = canvas.label, id_sav ;
          if(id && !Array.isArray(id)) id = [ id ] 
          if(id) for(let i of id) {
             if(i["@value"].includes("i.") || i["@value"].includes("img.")){ 
@@ -335,6 +335,7 @@ async function hasEtextPage(manifest) {
 
          if(!id || id.match(/[^0-9]/)) return "(issue with canvas label: "+JSON.stringify(canvas.label,null,3)+")" ;
          else id = Number(id)
+         id_sav = id
 
          if(!etextPages[ut]) etextPages[ut] = {}
 
@@ -343,16 +344,17 @@ async function hasEtextPage(manifest) {
          if(etextPages[ut][id] === true) {            
             return new Promise((resolve,reject) => {
                let timer = setInterval(()=>{
-                  console.log("id?",id,etextPages[ut][id])
-                  if(etextPages[ut][id] && etextPages[ut][id] !== true) {
-                     resolve(etextPages[ut][id].chunks);
+                  //console.log("id?",id_sav,etextPages[ut][id_sav])
+                  if(etextPages[ut][id_sav] && etextPages[ut][id_sav] !== true) {
+                     //console.log("resolve:",id_sav,id,etextPages[ut][id_sav])
+                     resolve(etextPages[ut][id_sav].chunks);
                      clearInterval(timer);
                      timer = 0 ;
                   }
                },100);   
                setTimeout(() => {
                   if(timer) clearInterval(timer);
-               },3000)
+               },10000)
             })
          }
          else if(!etextPages[ut][id]) {            
@@ -362,7 +364,7 @@ async function hasEtextPage(manifest) {
             const expires_at = localStorage.getItem('expires_at');
             console.log("token:", id_token, expires_at, Date.now());
 
-            let start = id ;
+            let start = id;
             while(id > 0 && start - id < NB_PAGES && !etextPages[ut][id - 1] ) { id -- ; } 
             for(let i = id ; i <= id+NB_PAGES-1 ; i++) etextPages[ut][i] = true ;
 
@@ -419,8 +421,10 @@ async function hasEtextPage(manifest) {
             }
          }
 
-         if(etextPages[ut][id] && etextPages[ut][id] !== true && etextPages[ut][id].chunks && etextPages[ut][id].chunks.length) 
-            return etextPages[ut][id].chunks ;
+         if(etextPages[ut][id_sav] && etextPages[ut][id_sav] !== true && etextPages[ut][id_sav].chunks && etextPages[ut][id_sav].chunks.length) {
+            console.log("return:",ut,id_sav,etextPages[ut][id_sav].chunks,etextPages[ut][id_sav])
+            return etextPages[ut][id_sav].chunks ;
+         }
 
          //return [{"@language":"en","@value":"no data found (yet !?)"}]
 
