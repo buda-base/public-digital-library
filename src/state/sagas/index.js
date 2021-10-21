@@ -1010,7 +1010,7 @@ async function getManifest(url,iri,thumb) {
 
       let collecManif
       let manif = await api.loadManifest(url);
-      store.dispatch(dataActions.gotManifest(manif,iri))
+
       let manifests, noVol1 = false
       //collection ?
       if(!manif.sequences ) {
@@ -1022,7 +1022,10 @@ async function getManifest(url,iri,thumb) {
             let isSingle ;
             if(!collecManif && manif.manifests.length === 1) isSingle = true ;
             else manifests = manif.manifests
-            if(!collecManif) collecManif = manif.manifests[0]["@id"]
+            if(!collecManif) { 
+               collecManif = manif.manifests[0]["@id"]
+               store.dispatch(dataActions.gotManifest(manif,iri,collecManif))
+            }
             if(!isSingle) collecManif = null  //manif.manifests[0]["@id"]
 
             // missing 1st volume (#370)
@@ -1040,7 +1043,9 @@ async function getManifest(url,iri,thumb) {
             //throw new Error("collection without manifest list")
             throw new ResourceNotFound('The resource does not exist.',444);
          }
-      }      
+      } else {
+         store.dispatch(dataActions.gotManifest(manif,iri))
+      }
 
       if(manif && manif.sequences && manif.sequences[0] && manif.sequences[0].canvases) {
          if(manif.sequences[0].canvases[0] && manif.sequences[0].canvases[0].images[0] &&

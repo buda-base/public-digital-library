@@ -4063,6 +4063,8 @@ class ResourceViewer extends Component<Props,State>
                }
                else if(this.props.imageAsset) 
                {
+                  console.log("here:",this.props.collecManif)
+
                   if(this.props.imageAsset.match(/[/]collection[/]/) && !this.props.collecManif)
                   {
                      data.push({"collectionUri": this.props.imageAsset +"?continuous=true", location:"Test Collection Location" })

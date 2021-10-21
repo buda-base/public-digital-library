@@ -47,11 +47,11 @@ export const getManifest = (url: string,IRI:string,thumb:string): Action => {
 }
 
 TYPES.gotManifest = 'GOT_MANIFEST';
-export const gotManifest = (manifest: {},IRI:string): Action => {
+export const gotManifest = (manifest: {},IRI:string,collecManif?: {}): Action => {
     return {
         type: TYPES.gotManifest,
         payload: manifest,
-        meta:IRI
+        meta:{IRI, collecManif}
     }
 }
 
