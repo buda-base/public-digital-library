@@ -816,7 +816,13 @@ async function getPages(iri,next) {
       store.dispatch(dataActions.gotNextPages(iri,data,next < 0))
    }
    catch(e){
-      console.error("ERRROR with pages",iri,next,e)
+
+      if(e.code == 401 || e.code == 403) {
+         console.warn("etext request error",e.code)
+         store.dispatch(dataActions.etextError(e.code,iri))
+      } else {      
+         console.error("ERRROR with pages",iri,next,e)
+      }
    }
 
 }

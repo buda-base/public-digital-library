@@ -697,6 +697,7 @@ export default class API {
 
       //console.log("apres fetch",response)
 
+      /*
       if (!response.ok) {
          if (response.status === '404') {
              throw new ResourceNotFound('The search server '+url+' seem to have moved...');
@@ -705,7 +706,26 @@ export default class API {
             console.log("FETCH pb",response)
              throw new ResourceNotFound('Problem fetching the results ['+response.message+']');
          }
-     }
+      }
+      */
+
+
+      if (!response.ok) {
+         if (response.status === 404) {
+            throw new ResourceNotFound('The resource does not exist.',404);
+         }
+         else if (response.status === 401) {
+            throw new ResourceNotFound('Restricted access',401);
+         }
+         else if (response.status === 403) {
+            throw new ResourceNotFound('Forbidden access',403);
+         }
+         else {
+            console.error("FETCH pb",response)
+            throw new ResourceNotFound('Problem fetching the resource (code:'+response.status+')',500);
+         }
+      }
+
      //console.log("FETCH ok",url,response)
 
      let txt = await response.text()

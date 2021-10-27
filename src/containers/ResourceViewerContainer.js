@@ -149,6 +149,10 @@ const mapStateToProps = (state,ownProps) => {
 
    let etextLang = state.ui.etextLang
 
+
+   let etextError 
+   if(state.data.etextErrors) etextError = state.data.etextErrors[ownProps.IRI]
+
    let props = { logged,config,resources, ontology, dictionary, keyword, language, datatype, assocResources, prefLang, failures, loading,
       imageAsset,firstImage,canvasID,collecManif,manifests,manifestError,pdfVolumes,createPdf,pdfUrl, manifestWpdf,
       annoCollec,rightPanel,locale,langPreset,langExt,imgData, nextChunk, nextPage, resourceManifest, imageVolumeManifests, imageLists, userEditPolicies, highlight,
@@ -158,7 +162,8 @@ const mapStateToProps = (state,ownProps) => {
       IIIFerrors,
       citationData,
       profileName,
-      etextLang }
+      etextLang,
+      etextError }
 
    if(config && !config.auth) props.auth = false
 

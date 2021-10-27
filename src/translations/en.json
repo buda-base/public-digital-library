@@ -580,7 +580,8 @@
       "fairUseIA1": "This work is <bold>copyrighted<\/bold>. As a result, BDRC can only make very limited portions available for private research and study. The full text of the work is viewable on Internet Archive, a close partner of ours, through their Open Library program.",
       "fairUseIA2": "Access this work on Internet Archive",
       "not": "Images not available.",
-      "imageN":"(this image is copyrighted and not available)"
+      "imageN":"(this image is copyrighted and not available)",
+      "fairuseEtext": "BDRC <bold>restricts access<\/bold> to this work because the work is under <bold>copyright<\/bold>."
    },
    "location": {
       "beginV": "Begin volume: {{num}}",

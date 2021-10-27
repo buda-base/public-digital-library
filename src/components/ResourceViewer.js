@@ -6264,7 +6264,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
    // to be redefined in subclass
    renderPostData = () => {}
 
-   renderEtextNav = () => {
+   renderEtextNav = (accessError) => {
     
       let etextSize = (inc:boolean=true) => {
          let size = this.state.etextSize ;
@@ -6284,7 +6284,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
       return (
          <div id="etext-nav">
             <div>
-               <a id="DL" class="on" target="_blank" rel="alternate" type="text" download href={this.props.IRI?fullUri(this.props.IRI).replace(/^http:/,"https:")+".txt":""}>{I18n.t("mirador.downloadE")}<img src="/icons/DLw.png"/></a>
+               <a id="DL" class={!accessError?"on":""} target="_blank" rel="alternate" type="text" download href={this.props.IRI?fullUri(this.props.IRI).replace(/^http:/,"https:")+".txt":""}>{I18n.t("mirador.downloadE")}<img src="/icons/DLw.png"/></a>
                <div id="control">
                   <span title={I18n.t("mirador.decrease")} class={!size||size > 0.6?"on":""} onClick={(e)=>etextSize(false)}><img src="/icons/Zm.svg"/></span>
                   <span title={I18n.t("mirador.increase")} class={!size||size < 2.4?"on":""} onClick={(e)=>etextSize(true)}><img src="/icons/Zp.svg"/></span>
@@ -7866,6 +7866,8 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
       //loggergen.log("chunks?",hasChunks)
 
+      const etextAccessError = this.props.etextError && [401, 403].includes(this.props.etextError)
+
       if(hasChunks && hasChunks.length && this.state.openEtext) {
          
          let hasPages = this.getResourceElem(bdo+"eTextHasPage")
@@ -7886,10 +7888,13 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                   <Loader loaded={!this.props.loading}  options={{position:"fixed",left:"50%",top:"50%"}} />      
                   <div class="">
                      { this.unpaginated() && <h4 style={{fontSize:"16px",fontWeight:600,textAlign:"center", marginBottom:"50px",top:"-15px"}}>{I18n.t("resource.unpag")}</h4>}
-                     { etext_data }
+                     { etextAccessError && <h4 style={{fontSize:"16px",fontWeight:600,textAlign:"center",marginTop:"80px"}}>
+                        <><img style={{height:"50px", verticalAlign:"middle", marginRight:"10px"}} src="/icons/unknown.svg"/><Trans i18nKey="access.fairuseEtext" components={{ bold: <u /> }} /></>
+                     </h4> }
+                     { !etextAccessError && etext_data }
                   </div>                  
                </div>
-               { this.renderEtextNav() }
+               { this.renderEtextNav(etextAccessError) }
             </div>
          ])
       }

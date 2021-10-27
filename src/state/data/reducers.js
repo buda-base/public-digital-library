@@ -48,7 +48,8 @@ export type DataState = {
    isInstance?:boolean,
    outlines?:{},
    eTextRefs?:{},
-   citationData?:{}
+   citationData?:{},
+   etextErrors?: {[string]: string},
 }
 
 const DEFAULT_STATE: DataState = {
@@ -1425,6 +1426,16 @@ export const pdfError = (state: DataState, action: Action) => {
 reducers[actions.TYPES.pdfError] = pdfError;
 
 
+export const etextError = (state: DataState, action: Action) => {
+   let etextErrors = state.etextErrors
+   if(!etextErrors) etextErrors = {}
+   etextErrors[action.meta] = action.payload
+   return {
+      ...state,
+      etextErrors 
+   }
+}
+reducers[actions.TYPES.etextError] = etextError;
 
 
 export const pdfNotReady = (state: DataState, action: Action) => {

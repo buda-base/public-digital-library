@@ -173,6 +173,17 @@ export const pdfNotReady = (url: string, iri:string): Action => {
     }
 }
 
+
+TYPES.etextError = 'ETEXT_ERROR';
+export const etextError = (code: string, iri:string): Action => {
+    return {
+        type: TYPES.etextError,
+        payload: code,
+        meta:iri
+    }
+}
+
+
 TYPES.getCitationLocale = 'GET_CITATION_LOCALE';
 export const getCitationLocale = (lg: string): Action => {
     return {
