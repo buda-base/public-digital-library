@@ -1186,7 +1186,9 @@ h4:not(:hover) > .lang
 .open-etext + .data h2 { max-width:calc(100% - 30px); }  /*- 150px */ 
 .browse-by a,
 .open-etext > div a { color:white !important; background-color: #d73449; border-radius:5px;display:flex;align-items: center;justify-content: center; height:40px;
-   padding: 0 15px; border:none !important; font-weight:600; font-size:13px; cursor:pointer;}
+   padding: 0 15px; border:none !important; font-weight:600; font-size:13px; cursor:pointer;
+}
+.open-etext.disable > div a { opacity:0.5; pointer-events: none; }
 
 .browse-by { margin-top:10px; }
 .browse-by::after { content:none !important ;}

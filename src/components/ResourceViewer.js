@@ -6205,6 +6205,12 @@ perma_menu(pdfLink,monoVol,fairUse,other)
       }
    }
 
+   renderEtextAccess = (error) => {
+      if(error) {
+         return <div class="data access"><h3><span style={{textTransform:"none"}}><Trans i18nKey="access.fairuseEtext" components={{ bold: <u /> }} /></span></h3></div>
+      }
+   }
+
    // DONE check if this is actually used (it is)
    renderAccess = () => {
 
@@ -7866,7 +7872,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
       //loggergen.log("chunks?",hasChunks)
 
-      const etextAccessError = this.props.etextError && [401, 403].includes(this.props.etextError)
+      let etextAccessError = this.props.etextErrors && this.props.etextErrors[this.props.IRI] && [401, 403].includes(this.props.etextErrors[this.props.IRI])
 
       if(hasChunks && hasChunks.length && this.state.openEtext) {
          
@@ -7975,7 +7981,11 @@ perma_menu(pdfLink,monoVol,fairUse,other)
             let fTxt = this.getResourceElem(tmp+"firstTextN")
             if(fTxt && fTxt.length) etextTxtN = fTxt[0].value
             let fUT = this.getResourceElem(tmp+"firstText")
-            if(fUT && fUT.length) etextUT = "/show/"+shortUri(fUT[0].value)
+            if(fUT && fUT.length) { 
+               let shUri = shortUri(fUT[0].value)
+               etextUT = "/show/"+shUri
+               etextAccessError = etextAccessError || this.props.etextErrors && this.props.etextErrors[shUri] && [401, 403].includes(this.props.etextErrors[shUri])
+            }
             if(fVol && fTxt && (this.props.eTextRefs && this.props.eTextRefs !== true && !this.props.eTextRefs.mono)) etextLoca = I18n.t("resource.openVolViewer", {VolN:etextVolN}) // not sure we need this:  TxtN:etextTxtN
             if(this.props.history.location.hash == "#open-reader") { //} && this.state.fromSearch) {
 
@@ -8189,7 +8199,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                   { this.renderWithdrawn() }             
                   <div class="title">{ wTitle }{ iTitle }{ rTitle }</div>
                   { this.renderHeader(kZprop.filter(k => mapProps.includes(k)), _T, etextUT) }
-                  { (etext && !orig) && <div class="data open-etext"><div><Link to={etextUT+(etextUT.includes("?")?"&":"?")+"backToEtext="+this.props.IRI+"#open-viewer"}>{etextLoca}</Link></div></div> }
+                  { (etext && !orig) && <div class={"data open-etext"+(etextAccessError?" disable":"")}><div><Link to={etextUT+(etextUT.includes("?")?"&":"?")+"backToEtext="+this.props.IRI+"#open-viewer"}>{etextLoca}</Link></div></div> }
                   { (etext && orig) && <div class="data open-etext"><div><a target="_blank" href={orig}>{I18n.t("resource.openO",{src:prov})}<img src="/icons/link-out_.svg"/></a></div></div> }
                   <div class={"data" + (_T === "Etext"?" etext-title":"")+(_T === "Images"?" images-title":"")}>
                      {_T === "Images" && iTitle?[<h2 class="on intro">{I18n.t("resource.scanF")}</h2>,iTitle]
@@ -8200,10 +8210,11 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                      {dates}
                      { ( _T === "Person" && createdBy && createdBy.length > 0 ) && <div class="browse-by"><Link to={"/search?r="+this.props.IRI+"&t=Work"}><img src="/icons/sidebar/work_white.svg"/>{I18n.t("resource.assoc")}</Link></div> }
                   </div>
-                  { this.renderQuality() }
-                  { this.renderOCR() }
-                  { this.renderNoAccess(fairUse) }
-                  { this.renderAccess() }
+                  { _T !== "Etext" && this.renderQuality() }
+                  { _T === "Etext" && this.renderEtextAccess(etextAccessError) }
+                  { _T === "Etext" && this.renderOCR() }
+                  { _T !== "Etext" && this.renderNoAccess(fairUse) }
+                  { _T !== "Etext" && this.renderAccess() }
                   { this.renderMirador(isMirador) }           
                   { theDataTop }
                   <div class="data" id="perma">{ this.perma_menu(pdfLink,monoVol,fairUse,kZprop.filter(k => k.startsWith(adm+"seeOther")))  }</div>

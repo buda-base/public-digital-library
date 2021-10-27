@@ -150,8 +150,7 @@ const mapStateToProps = (state,ownProps) => {
    let etextLang = state.ui.etextLang
 
 
-   let etextError 
-   if(state.data.etextErrors) etextError = state.data.etextErrors[ownProps.IRI]
+   let etextErrors = state.data.etextErrors
 
    let props = { logged,config,resources, ontology, dictionary, keyword, language, datatype, assocResources, prefLang, failures, loading,
       imageAsset,firstImage,canvasID,collecManif,manifests,manifestError,pdfVolumes,createPdf,pdfUrl, manifestWpdf,
@@ -163,7 +162,7 @@ const mapStateToProps = (state,ownProps) => {
       citationData,
       profileName,
       etextLang,
-      etextError }
+      etextErrors }
 
    if(config && !config.auth) props.auth = false
 
