@@ -261,7 +261,7 @@ export default class API {
 
     async loadUser()
     {
-         let user =  JSON.parse(await this.getURLContents(this._userPath,false));
+         let user =  JSON.parse(await this.getURLContents(this._userPath,false,"application/json"));
          return user ;
    }
 
