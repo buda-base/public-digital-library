@@ -408,7 +408,8 @@
          "alalc97": "ALA-LC",
          "latnPinyin": "ཕིན་ཡིག"
       },
-      "x": "Transliterated"
+      "x": "སྒྲ་ཐད་བསྒྱུར།"
+      "latn": "སྒྲ་ཐད་བསྒྱུར།"
    },
    "search": {
       "page": "ཤོག་ངོས།",
@@ -458,6 +459,8 @@
       "volume": "པོད། {{num,counttobo}}",
       "availableScans": "ཤོག་ངོས་འདིའི་བཤེར་པར་གང་ཡོད།",
       "about": "ཁོང་གི་སྐོར།",
+      "wAbout": "སྐོར་གྱི་བརྩམས་ཆོས། {{resLabel.value}}",
+      "wAbout_plural": "སྐོར་གྱི་བརྩམས་ཆོས། {{resLabel.value}}",
       "createdB": "ཁོང་གི་བརྩམས་ཆོས།",
       "printedA": "དཔར་ཐེངས། {{resLabel.value}}",
       "printedA_plural": "དཔར་ཐེངས། {{resLabel.value}}",
