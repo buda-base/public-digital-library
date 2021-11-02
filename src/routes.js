@@ -25,6 +25,7 @@ import ProfileContainer from './containers/ProfileContainer';
 import StaticRouteContainer from './containers/StaticRouteContainer';
 import Profile from './components/ProfileStatic';
 import { top_right_menu } from './components/App'
+import EWTSConverter from './components/EWTSConverter'
 
 import ClearCache from "react-clear-cache";
 
@@ -152,6 +153,10 @@ const makeMainRoutes = () => {
                            return <StaticRouteContainer dir={props.match.params.DIR1+"/"+props.match.params.DIR2} page={props.match.params.PAGE} history={history}/>
                         }
                      }/>
+                     <Route exact path="/static/ewtsconverter" render={(props) => 
+                        // TODO: use redux container to fix language switcher
+                        <EWTSConverter /> 
+                     }/> 
                      <Route exact path="/static/:DIR/:PAGE" render={(props) => 
                         <StaticRouteContainer dir={props.match.params.DIR} page={props.match.params.PAGE} history={history}/>
                      }/>
