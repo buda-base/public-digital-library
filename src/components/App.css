@@ -468,7 +468,11 @@ footer #donate,
 .nav #logo.khmer + .links a { color:#192229; margin:0 20px; }
 
 .nav #login > div { display: flex;  }
+.nav #login > div.logged { flex-direction: column; align-items: center; }
+
 .nav #login > div > span:first-child { max-width:150px ; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;}
+
+.nav #login > div.logged > span:first-child { margin-bottom:5px; }
 
 .nav #login.proxied > * { opacity:0.5; pointer-events:none; }
 

@@ -850,7 +850,7 @@ export function top_right_menu(that,etextTitle,backUrl,etextres)
          }
          {
             that.props.auth.isAuthenticated() && 
-               <div>
+               <div class="logged">
                <span onClick={(e) => { that.props.onUserProfile(that.props.history.location); that.props.history.push("/user");    }}>{profileName}</span>
                <span onClick={(e) => { that.props.auth.logout(that.props.history.location.pathname!=="/user"?window.location.href:window.location.origin) }} >{I18n.t("topbar.logout")}</span>
                </div>
@@ -895,7 +895,7 @@ export function top_right_menu(that,etextTitle,backUrl,etextres)
             <span title={I18n.t("topbar.bookmarks")}><img src="/icons/fav.svg"/></span>
          </div>
 
-         { /*that.props.auth &&*/ login }
+         { that.props.auth && login }
 
          { lang_selec(that) }
 
