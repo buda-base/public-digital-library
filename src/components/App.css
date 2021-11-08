@@ -447,16 +447,25 @@ body { overflow:auto !important;padding-right:0 !important; /*font-family:"Robot
 
 .nav #logo a#BDRC + a img { height:40px;}
 
+.nav #logo.khmer > a:first-child img { height:50px;}
+
 .nav #logo > a:first-child img { height:65px; display: inline-block; margin-right:10px;}
 .nav #logo > a:first-child * { vertical-align: middle;}
 
 .nav a { text-decoration: none; font-size:0; display:inline-block; }
 
+.nav #logo.khmer + .links a,
 footer #donate,
 .nav a#about,
 .nav a > span,
 .nav #donate, 
 .nav #login { font-weight:700; font-size:14px;letter-spacing: 0.29px; text-transform: uppercase; text-decoration: none; }
+
+
+.nav #logo.khmer + .links  { margin-left:60px; }
+
+
+.nav #logo.khmer + .links a { color:#192229; margin:0 20px; }
 
 .nav #login > div { display: flex;  }
 .nav #login > div > span:first-child { max-width:150px ; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;}
@@ -465,12 +474,12 @@ footer #donate,
 
 .nav #logo #by span { padding-top:7px; text-transform:none; letter-spacing: 1px; font-weight:600;}
 
-.nav a#about { color: hsl(206, 24%, 13%);}
+/* .nav a#about { color: hsl(206, 24%, 13%);} */
 
 #login { top:0;right:0;z-index:1; display:inline-block; margin-left:auto;  color:#d73449; }
 #login button {color:rgba(0,0,0,0.54); }
 
-.nav #logo + a { margin-left:52px; margin-right:52px; }
+.nav #logo:not(.khmer)  + a { margin-left:52px; margin-right:52px; }
 /* .nav #about  { margin-left:105px; margin-right:105px;  } */
 
 .nav a > span { color:#192229; display:inline-block;   }

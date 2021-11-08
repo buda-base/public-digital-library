@@ -16,7 +16,7 @@ import { initiateApp } from '../state/actions';
 import $ from 'jquery' ;
 
 
-type State = { content:any, error:integer, collapse:{} }
+type State = { content:any, error:integer, collapse:{}, route:"" }
 
 type Props = { history:{}, locale:string, config:{} }
 
@@ -49,7 +49,8 @@ export class StaticRouteNoExt extends Component<State, Props>
 
     componentDidUpdate() { 
         this._urlParams = qs.parse(history.location.search) 
-        if(I18n.language && this.state.locale !== this.props.locale) {
+        if(I18n.language && this.state.locale !== this.props.locale || this.state.route != this.props.dir+"/"+this.props.page ) {
+            if(this.state.route != this.props.dir+"/"+this.props.page) this.setState({ route: this.props.dir+"/"+this.props.page })
             this.updateContent();  
         }
         /* // impossible to get iframe content height without js code server-side

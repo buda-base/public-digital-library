@@ -6,6 +6,8 @@ import * as ui from '../state/ui/actions';
 import store from '../index';
 import { i18nextChangeLanguage } from 'i18next-redux-saga';
 
+import {auth} from '../routes';
+
 // import selectors from 'state/selectors';
 
 import StaticRouteNoExt from '../components/StaticRouteNoExt';
@@ -16,7 +18,12 @@ const mapStateToProps = (state,ownProps) => {
    let config = state.data.config
    let locale = state.i18next.lang   
 
-   let props = { config, locale }
+   let profileName
+   if(auth && auth.userProfile) {
+      if(auth.userProfile.name) profileName = auth.userProfile.name
+   }
+
+   let props = { config, locale, profileName }
 
    return props
 
@@ -31,6 +38,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
          localStorage.setItem('lang', langs);
          dispatch(ui.langPreset(langs,i))
       },
+      onUserProfile:(url:{}) => {
+         dispatch(ui.userProfile(url));
+      }
    }
 }
 

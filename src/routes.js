@@ -145,19 +145,21 @@ const makeMainRoutes = () => {
               <Router history={history}>
                 <Switch>
                      <Route exact path="/static/:DIR1/:DIR2/:DIR3/:PAGE" render={(props) => {
-                           return <StaticRouteContainer dir={props.match.params.DIR1+"/"+props.match.params.DIR2+"/"+props.match.params.DIR3} page={props.match.params.PAGE} history={history}/>
-                        }
-                     }/>
+                        store.dispatch(initiateApp(qs.parse(history.location.search), null, null, "static"))
+                        return <StaticRouteContainer dir={props.match.params.DIR1+"/"+props.match.params.DIR2+"/"+props.match.params.DIR3} page={props.match.params.PAGE} history={history} auth={auth}/>
+                     }}/>
                      <Route exact path="/static/:DIR1/:DIR2/:PAGE" render={(props) => {
-                           return <StaticRouteContainer dir={props.match.params.DIR1+"/"+props.match.params.DIR2} page={props.match.params.PAGE} history={history}/>
-                        }
-                     }/>
-                     <Route exact path="/static/:DIR/:PAGE" render={(props) => 
-                        <StaticRouteContainer dir={props.match.params.DIR} page={props.match.params.PAGE} history={history}/>
-                     }/>
-                     <Route exact path="/static/:PAGE" render={(props) => 
-                        <StaticRouteContainer dir={""} page={props.match.params.PAGE} history={history}/>
-                     }/>                                                
+                        store.dispatch(initiateApp(qs.parse(history.location.search), null, null, "static"))
+                        return <StaticRouteContainer dir={props.match.params.DIR1+"/"+props.match.params.DIR2} page={props.match.params.PAGE} history={history} auth={auth}/>                        
+                     }}/>
+                     <Route exact path="/static/:DIR/:PAGE" render={(props) => {
+                        store.dispatch(initiateApp(qs.parse(history.location.search), null, null, "static"))
+                        return <StaticRouteContainer dir={props.match.params.DIR} page={props.match.params.PAGE} history={history} auth={auth}/>
+                     }}/>
+                     <Route exact path="/static/:PAGE" render={(props) => {
+                        store.dispatch(initiateApp(qs.parse(history.location.search), null, null, "static"))
+                        return <StaticRouteContainer dir={""} page={props.match.params.PAGE} history={history}  auth={auth}/>
+                     }}/>                                                
                      <Route path="/testToken" render={(props) => {
                         store.dispatch(initiateApp());
                         return (<TestToken auth={auth} history={history} />)
@@ -261,6 +263,13 @@ const makeMainRoutes = () => {
                               {({ isLatestVersion, emptyCacheStorage }) => (<AppContainer history={history} auth={auth}/> )}
                            </ClearCache>
                         )}}/>
+
+                     <Route exact path="/guidedsearch" render={(props) => (
+                        <div>guided search</div>
+                     )} />
+                     <Route exact path="/browse" render={(props) => (
+                        <div>browse</div>
+                     )} />
                      <Route path="/search" render={(props) => {
                         let get = qs.parse(history.location.search)
                         //if(!store.getState().data.ontology)

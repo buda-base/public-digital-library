@@ -762,6 +762,12 @@ export function top_right_menu(that,etextTitle,backUrl,etextres)
             </div>,
 
    ]
+   if(onKhmerServer) {
+      logo = <div id="logo" class="khmer">                              
+               <a href={"https://bdrc.io/"} target="_blank"><img src="/BDRC-Logo_.png"/></a>
+               <a href={"https://bdrc.io/"} target="_blank" id="BDRC"><span>BDRC</span></a>               
+            </div> 
+   }
 
    let profileName = I18n.t("topbar.profile")
    if(that.props.profileName) profileName = that.props.profileName
@@ -858,23 +864,38 @@ export function top_right_menu(that,etextTitle,backUrl,etextres)
                      title={<span style={{ whiteSpace:"normal" }} onMouseEnter={(e)=>toggleHoverLogin(true, e)} onMouseLeave={(e)=>toggleHoverLogin(false,e)}><Trans i18nKey="topbar.proxied" components={{ tag: <a /> }} /></span>}  >{login}</Tooltip>
       }
 
+      let khmerLinks 
+      if(onKhmerServer) {
+         khmerLinks = <div class="links">
+            <Link to={"/guidedsearch"} >{I18n.t("topbar.guided")}</Link> 
+            <Link to={"/browse"} >{I18n.t("topbar.browse")}</Link> 
+            <Link to={"/static/aboutkm"} >{I18n.t("topbar.about")}</Link> 
+            <Link to={"/static/resources"} >{I18n.t("topbar.resources")}</Link> 
+         </div>
+      }
+
       return ([
       <div class="mobile-button top" onClick={()=>that.setState({collapse:{...that.state.collapse,navMenu:!that.state.collapse.navMenu}})}><img src="/icons/burger.svg" /></div>,
          <div class={"nav"+(onZhMirror?" zhMirror":"")+ (that.state.collapse.navMenu?" on":"")}>
           <div>
          {logo}
 
-         {!onZhMirror && <a id="about" href={"https://bdrc.io"} target="_blank">{I18n.t("topbar.about")}</a> }
-         {onZhMirror  && <Link id="about" to={"/static/about"} >{I18n.t("topbar.about")}</Link> }  
+         { !onKhmerServer && [
+            !onZhMirror &&  <a id="about" href={"https://bdrc.io"} target="_blank">{I18n.t("topbar.about")}</a> 
+            ,
+            onZhMirror  && <Link id="about" to={"/static/about"} >{I18n.t("topbar.about")}</Link> 
+         ] }
 
-         <Link to="/"  onClick={() => { that.props.history.push({pathname:"/",search:""}); if(that.props.keyword) { that.props.onResetSearch();} } }><span>{I18n.t("topbar.search")}</span></Link>
+         { !onKhmerServer && <Link to="/"  onClick={() => { that.props.history.push({pathname:"/",search:""}); if(that.props.keyword) { that.props.onResetSearch();} } }><span>{I18n.t("topbar.search")}</span></Link> }         
+         
+         { onKhmerServer && khmerLinks }
 
          <div class="history">
             <span title={I18n.t("topbar.history")}><img src="/icons/histo.svg"/></span>
             <span title={I18n.t("topbar.bookmarks")}><img src="/icons/fav.svg"/></span>
          </div>
 
-         { that.props.auth && login }
+         { /*that.props.auth &&*/ login }
 
          { lang_selec(that) }
 
@@ -5493,6 +5514,9 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
    render() {
 
+      // avoid loading home page until we know where we are supposed to be
+      if(!this.props.config) return <div><Loader loading={true}/></div>
+
       subtime("render",0)
 
       let results
@@ -6071,21 +6095,23 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          <div className={"App "+(message.length == 0 && !this.props.loading && !this.props.keyword ? "home":"")} style={{display:"flex"}}>
             <div className={"SearchPane"+(this.props.keyword ?" resultPage":"") }  ref={this._refs["logo"]}>            
             { showMenus }
-               <div class="fond-logo">
-                  <a id="logo" target="_blank" old-href="https://www.tbrc.org/">
-                     {/* <img src="/logo.svg" style={{width:"200px"}} /> */}
-                     <img src="/pichome.jpg" />
-                     <div>
+               { !this.props.config.khmerServer && 
+                  <div class="fond-logo">
+                     <a id="logo" target="_blank" old-href="https://www.tbrc.org/">
+                        {/* <img src="/logo.svg" style={{width:"200px"}} /> */}
+                        <img src="/pichome.jpg" />
                         <div>
-                           {/* { I18n.t("home.BUDA") } */}
-                           {/* <h1>{ I18n.t("home.titleBDRC1") }<br/>{ I18n.t("home.titleBDRC2") }<br/>{ I18n.t("home.titleBDRC3") }</h1> */}
-                           <h1 lang={this.props.locale}>{ I18n.t("home.archives1") }{this.props.locale==="en" && <br/>}{ I18n.t("home.archives2") }</h1>
-                           <div>{ I18n.t("home.by") }</div>
-                           <span>{ I18n.t("home.subtitle") }</span>
+                           <div>
+                              {/* { I18n.t("home.BUDA") } */}
+                              {/* <h1>{ I18n.t("home.titleBDRC1") }<br/>{ I18n.t("home.titleBDRC2") }<br/>{ I18n.t("home.titleBDRC3") }</h1> */}
+                              <h1 lang={this.props.locale}>{ I18n.t("home.archives1") }{this.props.locale==="en" && <br/>}{ I18n.t("home.archives2") }</h1>
+                              <div>{ I18n.t("home.by") }</div>
+                              <span>{ I18n.t("home.subtitle") }</span>
+                           </div>
                         </div>
-                     </div>
-                  </a>
-               </div>
+                     </a>
+                  </div>
+               }
                { infoPanelH }
                {/* <h2>BUDA Platform</h2> */}
                {/* <h3>Buddhist Digital Resource Center</h3> */}
@@ -6330,19 +6356,20 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                }
                { (this.props.simple && !this.props.keyword || (this.props.keyword && (this.props.loading || (this.props.datatypes && !this.props.datatypes.hash)))) && <Loader className="mainloader" /> }
                { message.length == 0 && !this.props.loading && !this.props.keyword && !this.props.datatypes &&
-                  <List id="samples">
-                     {/* { messageD } */}
-                     <h3>{ I18n.t("home.message") }</h3>
-                     <h4>{ I18n.t("home.submessage") }</h4>
-                     { (!this.props.config || !this.props.config.chineseMirror) && <h4 class="subsubtitleFront">
-                        { I18n.t("home.subsubmessage_account1")}
-                        {this.props.locale==="bo"?<span> </span>:""}
-                        <span class="uri-link" onClick={() => this.props.auth.login(this.props.history.location,true)} >{I18n.t("home.subsubmessage_account4")}</span>
-                        { I18n.t("home.subsubmessage_account2")}
-                        <span class="uri-link" style={{textTransform:"capitalize"}} onClick={() => this.props.auth.login(this.props.history.location,true)} >{I18n.t("home.subsubmessage_account5")}</span>
-                        { I18n.t("home.subsubmessage_account3")}</h4> }
-                     <h4 class="subsubtitleFront">{ I18n.t("home.subsubmessage") }<a title="email us" href="mailto:help@bdrc.io" lang={this.props.locale}>help@bdrc.io</a>{ I18n.t("home.subsubmessage_afteremail") }</h4>
-                  </List> }
+                  !this.props.config.khmerServer && 
+                     <List id="samples">
+                        {/* { messageD } */}
+                        <h3>{ I18n.t("home.message") }</h3>
+                        <h4>{ I18n.t("home.submessage") }</h4>
+                        { (!this.props.config || !this.props.config.chineseMirror) && <h4 class="subsubtitleFront">
+                           { I18n.t("home.subsubmessage_account1")}
+                           {this.props.locale==="bo"?<span> </span>:""}
+                           <span class="uri-link" onClick={() => this.props.auth.login(this.props.history.location,true)} >{I18n.t("home.subsubmessage_account4")}</span>
+                           { I18n.t("home.subsubmessage_account2")}
+                           <span class="uri-link" style={{textTransform:"capitalize"}} onClick={() => this.props.auth.login(this.props.history.location,true)} >{I18n.t("home.subsubmessage_account5")}</span>
+                           { I18n.t("home.subsubmessage_account3")}</h4> }
+                        <h4 class="subsubtitleFront">{ I18n.t("home.subsubmessage") }<a title="email us" href="mailto:help@bdrc.io" lang={this.props.locale}>help@bdrc.io</a>{ I18n.t("home.subsubmessage_afteremail") }</h4>
+                     </List> }
                { /* (this.props.datatypes && this.props.datatypes.hash && this.props.datatypes.metadata[bdo+this.state.filters.datatype[0]] && message.length === 0 && !this.props.loading) && 
                   <List id="results">
                      <h3 style={{marginLeft:"21px"}}>No result found.</h3>             
@@ -6370,7 +6397,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   </List>
                }
                </div>
-               { message.length == 0 && !this.props.loading && !this.props.keyword && (!this.props.config || !this.props.config.chineseMirror) && this.props.latestSyncsNb > 0 &&
+               { !this.props.config.khmerServer && message.length == 0 && !this.props.loading && !this.props.keyword && (!this.props.config || !this.props.config.chineseMirror) && this.props.latestSyncsNb > 0 &&
                   <div id="latest">
                      <h3>{I18n.t("home.new")}</h3>
                      <Link class="seeAll" to="/latest" onClick={()=>this.setState({filters:{...this.state.filters,datatype:["Scan"]}})}>{I18n.t("misc.seeAnum",{count:this.props.latestSyncsNb})}</Link>
