@@ -12,6 +12,7 @@ import store from '../index';
 import { top_right_menu } from './App'
 import { auth, Redirect404 } from '../routes'
 import { initiateApp } from '../state/actions';
+import Footer from "./Footer"
 
 import $ from 'jquery' ;
 
@@ -109,6 +110,7 @@ export class StaticRouteNoExt extends Component<State, Props>
                     </div>
                 </div>
                 { top_right_menu(this) }
+                { this.props.config && this.props.config.khmerServer && <Footer locale={this.props.locale} hasSyncs={false}/> }
             </div>
         );
     }
