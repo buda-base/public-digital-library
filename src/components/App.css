@@ -7,6 +7,8 @@
 
 @import url('//fonts.googleapis.com/css2?family=Noto+Sans+TC&display=swap');
 
+@import url('//fonts.googleapis.com/css2?family=Noto+Sans+Khmer&display=swap');
+
 
 @import url('//fonts.googleapis.com/earlyaccess/notosanstibetan.css');
 
@@ -144,7 +146,7 @@ footer#site-footer.no-syncs > div.head::before { background-color:#efefef; }
 
 [role='tooltip'] *, .App *,.nav *,.App *::before,.App *::after, .react-tabs *, .resource *:not(.fa):not(.material-icons), .resource + * *,
 .inRes *, #popDL.cite *, #menu-citationLang * { 
-   font-family:"Noto Sans", "Roboto", "Helvetica", "Arial", sans-serif !important;
+   font-family:"Noto Sans", "Noto Sans Khmer", "Roboto", "Helvetica", "Arial", sans-serif !important;
 }
 
 .SearchPane { width:1000px; margin:auto;margin-top:80px;max-width:90%; z-index:0;background:white;padding:50px; padding-bottom:0;
