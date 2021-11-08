@@ -627,6 +627,7 @@ export function lang_selec(that,black:boolean = false)
                         if (i === "bo") label="བོད་ཡིག";
                         if (i === "zh") label="中文";;
                         if (i === "fr") label="Français";
+                        if (i === "km") label = "ភាសាខ្មែរ";
                         let disab = false ; //["en","bo"].indexOf(i) === -1
 
                         // TODO add link to user profile / language preferences

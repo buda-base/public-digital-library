@@ -2060,7 +2060,7 @@ body > [id^="menu-"] > div:last-child,
 #popHoverM li,
 #popLang li,
 #popSame a li,
-#popDL a li { font-family:"Noto Sans";color:#4a4a4a;font-weight:600;font-size:12px;  }
+#popDL a li { font-family:"Noto Sans", "Noto Sans Tibetan", "Noto Sans Khmer";color:#4a4a4a;font-weight:600;font-size:12px;  }
 
 #popSame a b { font-weight:900; }
 #popSame a img { display: inline-block; margin-bottom:2px;margin-left:2px;}
