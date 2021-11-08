@@ -625,7 +625,8 @@ export function lang_selec(that,black:boolean = false)
 
                         let label = "English";
                         if (i === "bo") label="བོད་ཡིག";
-                        if (i === "zh") label="中文";
+                        if (i === "zh") label="中文";;
+                        if (i === "fr") label="Français";
                         let disab = false ; //["en","bo"].indexOf(i) === -1
 
                         // TODO add link to user profile / language preferences
@@ -744,6 +745,7 @@ export function getGDPRconsent(that) {
 export function top_right_menu(that,etextTitle,backUrl,etextres)
 {
    let onZhMirror = (that.props.config && that.props.config.chineseMirror)
+   let onKhmerServer = (that.props.config && that.props.config.khmerServer)
 
    let logo = [
             <div id="logo">

@@ -1112,7 +1112,8 @@ export async function miradorInitView(work,lang,callerURI,locale,extManif) {
       { "collectionUri": "../tibcolldemo2.json", location: "BDRC - Palpung Collection"}
    ]
 
-   let conf = await (await fetch("/config.json")).json()
+   // TODO invert test before move to prod
+   let conf = await (await fetch(!window.location.href.startsWith("khmer-manuscripts")?'/config-khmer.json':'/config.json')).json()
    //console.log("conf:",conf)
    if(conf.iiifpres) iiifpres = conf.iiifpres.endpoints[conf.iiifpres.index]
    

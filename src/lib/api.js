@@ -7,7 +7,8 @@ import {shortUri} from '../components/App';
 
 require('formdata-polyfill')
 
-const CONFIG_PATH = '/config.json'
+// TODO invert test before move to prod
+const CONFIG_PATH = !window.location.href.startsWith("khmer-manuscripts")?'/config-khmer.json':'/config.json'
 const CONFIGDEFAULTS_PATH = '/config-defaults.json'
 const ONTOLOGY_PATH = '/ontology/core.json'
 const DICTIONARY_PATH = '/ontology/data/json' //  '/graph/ontologySchema.json'

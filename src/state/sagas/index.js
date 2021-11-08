@@ -70,6 +70,8 @@ async function initiateApp(params,iri,myprops,route,isAuthCallback) {
       {
          const config = await api.loadConfig();
 
+         console.log("is khmer server ?",config.khmerServer)
+
          //I18n.setHandleMissingTranslation((key, replacements) => key);
 
          if(config.auth) {

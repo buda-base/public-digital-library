@@ -2,6 +2,7 @@
 
 public/meta.json
 public/config.json
+public/config-khmer.json
 
 # dependencies
 /node_modules
