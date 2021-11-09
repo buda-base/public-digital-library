@@ -447,7 +447,7 @@ body { overflow:auto !important;padding-right:0 !important; /*font-family:"Robot
 
 .nav #logo a#BDRC + a img { height:40px;}
 
-.nav #logo.khmer > a:first-child img { height:50px;}
+.nav #logo.khmer > a:first-child img { width:70px; height:auto;}
 
 .nav #logo > a:first-child img { height:65px; display: inline-block; margin-right:10px;}
 .nav #logo > a:first-child * { vertical-align: middle;}
@@ -464,7 +464,6 @@ footer #donate,
 
 .nav #logo.khmer + .links  { margin-left:60px; }
 
-
 .nav #logo.khmer + .links a { color:#192229; margin:0 20px; }
 
 .nav #login > div { display: flex;  }
@@ -478,7 +477,7 @@ footer #donate,
 
 .nav #logo #by span { padding-top:7px; text-transform:none; letter-spacing: 1px; font-weight:600;}
 
-/* .nav a#about { color: hsl(206, 24%, 13%);} */
+.nav a#about { color: #192229;} 
 
 #login { top:0;right:0;z-index:1; display:inline-block; margin-left:auto;  color:#d73449; }
 #login button {color:rgba(0,0,0,0.54); }
@@ -506,7 +505,9 @@ footer #donate,
 .nav .history span img { opacity:0.5; }
 .nav .history {visibility:hidden; display:none; }
 
+/* ---------------------------------------------------------------------------------------------------------------------- Cambodia website */
 
+.App.home.khmer:not(.static) h1 { text-align:left; }
 
 /* ---------------------------------------------------------------------------------------------------------------------- "sidepanes" */
 

@@ -7,7 +7,7 @@ import {shortUri} from '../components/App';
 
 require('formdata-polyfill')
 
-// TODO invert test before move to prod
+// TODO invert test before moving to prod (see also miradorSetup.js)
 const CONFIG_PATH = !window.location.href.startsWith("khmer-manuscripts")?'/config-khmer.json':'/config.json'
 const CONFIGDEFAULTS_PATH = '/config-defaults.json'
 const ONTOLOGY_PATH = '/ontology/core.json'

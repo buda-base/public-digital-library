@@ -119,7 +119,7 @@ async function initiateApp(params,iri,myprops,route,isAuthCallback) {
 
       }
 
-      if(route === "static" || route === "mirador") {
+      if( ["static", "mirador", "guidedsearch", "browse" ].includes(route)) {
          
          if(route === "mirador" && params.backToViewer) {
             if(!auth.isAuthenticated()) auth.login(decodeURIComponent(params.backToViewer))
