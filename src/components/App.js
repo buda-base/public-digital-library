@@ -6336,6 +6336,39 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                */ }
             </FormGroup>
            </div>
+           { this.props.config.khmerServer && !this.props.keyword && 
+            <>
+               <section>
+                  <div>
+                     <div class="float"><img src="/khmerhome-pic.jpg"/><p>{I18n.t("home.khmer.section1.caption")}</p></div>
+                     <h2>{I18n.t("home.khmer.section1.title")}</h2>
+                     <Trans i18nKey="home.khmer.section1.text" components={{ newline: <br />, parag: <p />, note: <span className="note" />}} />
+                     <div>
+                        <span className="noteText"><Trans i18nKey="home.khmer.section1.noteA" components={{ note: <span className="note" />}} /></span>
+                        <span className="noteText"><Trans i18nKey="home.khmer.section1.noteB" components={{ note: <span className="note" />}} /></span>
+                     </div>
+                     <div>
+                        <div class="abs"><Link to="/static/aboutkm">{I18n.t("topbar.about")}</Link></div>
+                     </div>
+                  </div>
+               </section>
+               <section class="white-bg">
+                  <div>
+                     <h2>{I18n.t("home.khmer.section2.title")}</h2>
+                     <Trans i18nKey="home.khmer.section2.text" components={{ newline: <br />, parag: <p />, note: <span className="note" />}} />
+                  </div>
+               </section>
+               <section class="white-bg">
+                  <div>
+                     <div class="abs"><Link to="/static/resources">{I18n.t("topbar.resources")}</Link></div>
+                  </div>
+                  <div>
+                     <img height="145" src="/WAT.png"/>
+                     <img height="145" style={{mixBlendMode:"darken"}} src="/EFEO.png"/>
+                  </div>
+               </section>
+            </>
+           }
            { infoPanelR }
            {  (message.length > 0 || message.length == 0 && !this.props.loading ) && <div id="res-header">
                <div>
@@ -6467,7 +6500,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             </div>
             {/* <LanguageSidePaneContainer /> */}
          </div>
-         { message.length == 0 && !this.props.loading && !this.props.keyword && (!this.props.config || !this.props.config.chineseMirror) && <Footer locale={this.props.locale} hasSyncs={!this.props.config.khmerServer && this.props.latestSyncsNb > 0}/> }
+         { message.length == 0 && !this.props.loading && !this.props.keyword && (!this.props.config || !this.props.config.chineseMirror) && <Footer locale={this.props.locale} hasSyncs={this.props.config.khmerServer || this.props.latestSyncsNb > 0}/> }
       </div>
       );
 
