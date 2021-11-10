@@ -6347,8 +6347,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                         <span className="noteText"><Trans i18nKey="home.khmer.section1.noteA" components={{ note: <span className="note" />}} /></span>
                         <span className="noteText"><Trans i18nKey="home.khmer.section1.noteB" components={{ note: <span className="note" />}} /></span>
                      </div>
-                     <div>
-                        <div class="abs"><Link to="/static/aboutkm">{I18n.t("topbar.about")}</Link></div>
+                     <div class="abs">
+                        <div><Link to="/static/aboutkm">{I18n.t("topbar.about")}</Link></div>
                      </div>
                   </div>
                </section>
@@ -6360,7 +6360,9 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                </section>
                <section class="white-bg">
                   <div>
-                     <div class="abs"><Link to="/static/resources">{I18n.t("topbar.resources")}</Link></div>
+                     <div class="abs">
+                        <div><Link to="/static/resources">{I18n.t("topbar.resources")}</Link></div>
+                     </div>
                   </div>
                   <div>
                      <img height="145" src="/WAT.png"/>
