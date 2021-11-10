@@ -33,7 +33,11 @@
       "search": "Search",
       "choose": "Choose language",
       "start": "Start typing then select search language",
-      "new": "New Scans Released This Week"
+      "new": "New Scans Released This Week",
+      "khmer":{
+         "title":"Khmer<newline/>Manuscript<newline/>Heritage Project",
+         "subtitle":"Explore etexts, catalogs, and millions of pages of scanned …"
+      }
    },
    "types": {
       "any": "Any",

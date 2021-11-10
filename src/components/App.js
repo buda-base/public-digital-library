@@ -6093,7 +6093,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
           { top_right_menu(this) }
 
-         <div className={"App "+(message.length == 0 && !this.props.loading && !this.props.keyword ? "home":"")} style={{display:"flex"}}>
+         <div className={"App "+(message.length == 0 && !this.props.loading && !this.props.keyword ? "home":"") + (this.props.config.khmerServer?" khmerServer":"")} style={{display:"flex"}}>
             <div className={"SearchPane"+(this.props.keyword ?" resultPage":"") }  ref={this._refs["logo"]}>            
             { showMenus }
                { !this.props.config.khmerServer && 
@@ -6113,10 +6113,32 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      </a>
                   </div>
                }
+               { this.props.config.khmerServer && 
+                  <div class="fond-logo">
+                     <a id="logo" target="_blank" old-href="https://www.tbrc.org/">
+                        {/* <img src="/logo.svg" style={{width:"200px"}} /> */}
+                        <img src="/pichome_khmer.jpg" />
+                        <div>
+                           <div>
+                              {/* { I18n.t("home.BUDA") } */}
+                              {/* <h1>{ I18n.t("home.titleBDRC1") }<br/>{ I18n.t("home.titleBDRC2") }<br/>{ I18n.t("home.titleBDRC3") }</h1> */}
+                              <h1 lang={this.props.locale}><Trans i18nKey="home.khmer.title" components={{ newline: <br /> }} /></h1>
+                              <p>{ I18n.t("home.khmer.subtitle") }</p>
+                           </div>
+                        </div>
+                     </a>
+                  </div>
+               }
                { infoPanelH }
                {/* <h2>BUDA Platform</h2> */}
                {/* <h3>Buddhist Digital Resource Center</h3> */}
                <div id="search-bar">
+               { this.props.config.khmerServer && !this.props.keyword && 
+                  <span class="links">
+                     <span><Link to="/guidedsearch">{I18n.t("topbar.guided")}</Link></span>
+                     <span><Link to="/browse">{I18n.t("topbar.browse")}</Link></span>
+                  </span>
+               }
                {/* <IconButton style={{marginRight:"15px"}} className={this.state.leftPane?"hidden":""} onClick={e => this.setState({...this.state,leftPane:!this.state.leftPane,closeLeftPane:!this.state.closeLeftPane})}>                  
                   <FontAwesomeIcon style={{fontSize:"21px"}} icon={faSlidersH} title="Refine Your Search"/>
                </IconButton> */}
@@ -6144,7 +6166,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      value={this.props.latest&&this.state.keyword==="(latest)"?"":(this.props.hostFailure?"Endpoint error: "+this.props.hostFailure+" ("+this.getEndpoint()+")":this.state.keyword !== undefined && this.state.keyword!==this.state.newKW?this.state.keyword:this.props.keyword&&this.state.newKW?lucenequerytokeyword(this.state.newKW):"")}
                      style={{
                         marginTop: '0px',
-                        width: "700px",
+                        width: (this.props.config.khmerServer&&!this.props.keyword?"400px":"700px"),
                         height:"60px",
                         boxShadow: "0 2px 4px rgba(187, 187, 187, 0.5)"
                      }}
@@ -6207,7 +6229,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   margin="normal"
                /> */}
 
-              <FormControl className={"formControl "+this.state.searchTypes[0].toLowerCase()} style={{textAlign:"right"}}>
+              { !this.props.config.khmerServer && <FormControl className={"formControl "+this.state.searchTypes[0].toLowerCase()} style={{textAlign:"right"}}>
                 {/* <InputLabel htmlFor="datatype">In</InputLabel> */}
 
                 <Select
@@ -6230,7 +6252,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                         </span>
                      </MenuItem>))}
                </Select>
-              </FormControl> 
+              </FormControl> }
 
 
             {/*  //deprecated
@@ -6445,7 +6467,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             </div>
             {/* <LanguageSidePaneContainer /> */}
          </div>
-         { message.length == 0 && !this.props.loading && !this.props.keyword && (!this.props.config || !this.props.config.chineseMirror) && <Footer locale={this.props.locale} hasSyncs={this.props.latestSyncsNb > 0}/> }
+         { message.length == 0 && !this.props.loading && !this.props.keyword && (!this.props.config || !this.props.config.chineseMirror) && <Footer locale={this.props.locale} hasSyncs={!this.props.config.khmerServer && this.props.latestSyncsNb > 0}/> }
       </div>
       );
 
