@@ -507,8 +507,6 @@ footer #donate,
 
 /* ---------------------------------------------------------------------------------------------------------------------- Cambodia website */
 
-.App.home.khmer:not(.static) h1 { text-align:left; }
-
 .App.home.khmerServer #search-bar { background-image: linear-gradient(249deg, #0c5f89 0%, #9ccab4 100%, #a5d0b6 100%); padding: 55px 0;}
 .App.home.khmerServer #search-bar > div:first-child { width:400px; } 
 .App.home.khmerServer #search-bar > div:first-child > div:first-child >  div:first-child { margin-right:0px; width:100%;}
@@ -525,13 +523,14 @@ footer #donate,
 
 .App.home.khmerServer .SearchPane #logo > div { justify-content: flex-start; padding-left:calc(135px + (100% - 1440px) / 2); box-sizing: border-box;}
 .App.home.khmerServer .SearchPane #logo > div > div { padding:50px; height:auto; }
-.App.home.khmerServer .SearchPane #logo > div > div h1 { font-family:"Noto Sans", "Noto Sans Khmer" !important; font-weight:900;} 
+.App.home.khmer.static h1,
+.App.home.khmerServer .SearchPane #logo > div > div h1 { font-family:"Noto Sans", "Noto Sans Khmer" !important; font-weight:900; font-size:46px; line-height:53px;text-align:left;} 
 .App.home.khmerServer .SearchPane #logo > div > div p { text-align: left; font-size:16px;margin-bottom: 0;}
 
 .App.home.khmerServer #data-checkbox { display:none; }
 
 .App.home.khmerServer section.white-bg + .white-bg { padding-top:0 ;}
-.App.home.khmerServer section.white-bg { background: white; }
+.App.home:is(.khmerServer,.static.khmer) section.white-bg { background: white; }
 .App.home.khmerServer section p:last-child { margin-bottom: 0; } 
 .App.home.khmerServer section > div { width: 1222px; max-width:100%; margin:0 auto; text-align: left; padding-left:80px; box-sizing: border-box; position: relative;}
 .App.home.khmerServer section { padding:80px 0 80px 0; clear:both; }
@@ -539,10 +538,10 @@ footer #donate,
 .App.home.khmerServer section h2 { margin-top:0;  width:635px; font-size:34px; font-weight:700; color:#152631; margin-bottom:0;}
 .App.home.khmerServer section h2::after { content:''; border-bottom: 2px solid #e9665c; height:0px; width: 95px; display: block; margin-top:40px;margin-bottom: 25px; }
 .App.home.khmerServer section p { width:570px; font-size:16px; color:#4a4a4a; } 
-.App.home.khmerServer section .note { color:#d73449; }
-.App.home.khmerServer section .noteText:first-child { margin-top:120px; }
-.App.home.khmerServer section .noteText { display:block; font-size:12px; vertical-align: baseline; color:#4a4a4a;}
-.App.home.khmerServer section .noteText .note { font-size:16px; padding-right:10px; }
+.App.home:is(.khmerServer,.static.khmer) section .note { color:#d73449; }
+.App.home:is(.khmerServer,.static.khmer) section .noteText:first-child { margin-top:120px; }
+.App.home:is(.khmerServer,.static.khmer) section .noteText { display:block; font-size:12px; vertical-align: baseline; color:#4a4a4a;}
+.App.home:is(.khmerServer,.static.khmer) section .noteText .note { font-size:16px; padding-right:10px; }
 
 .App.home.khmerServer section .float { float:right; text-align: center; padding-bottom:50px;}
 .App.home.khmerServer section .float img { width:485px;height:485px; object-position: center; object-fit: none; border-radius:50%; margin-top:125px; }
@@ -550,12 +549,65 @@ footer #donate,
 
 .App.home.khmerServer section .abs { padding:0; position:relative; }
 .App.home.khmerServer section .abs div { position:absolute; text-align: center; width:100%; box-sizing: border-box; margin-top:-30px; padding-right:80px;}
+.App.home.khmer.static section.orange-gradient > div > div > div a,
 .App.home.khmerServer section .abs div a { text-transform:uppercase; font-size:14px; overflow: hidden; color:#111312; padding-bottom:5px; position: relative; display: inline-block;}
+.App.home.khmer.static section.orange-gradient > div > div > div a::before,
 .App.home.khmerServer section .abs div a::before { content:''; display:block; width:110%; height:100%;box-shadow:inset 0 -1.5px 1px #152631; position: absolute;left:-5%;}
 
+
+.App.home.khmer.static header { display:flex; justify-content: space-between; align-items: stretch;}
+.App.home.khmer.static header > * { width:50%; }
+.App.home.khmer.static header img + div { padding-left:65px; display: flex; flex-direction: column; justify-content: center;}
+.App.home.khmer.static header img + div > * { width:435px; max-width:100%; }
+.App.home.khmer.static header img + div p { color:#4a4a4a; font-size:16px; line-height: 28px;text-align: left; }
+
+.App.home.khmer.static section :is(h2,p) { margin:0; }
+.App.home.khmer.static section img { max-width:100%;}
+
+.App.home.khmer.static section.orange-gradient { background-image: linear-gradient(258deg, #e9665c 0%, #ffd965 100%); justify-content: center; }
+.App.home.khmer.static section.orange-gradient > div { justify-content: flex-end;}
+.App.home.khmer.static section.orange-gradient > div > div { width:500px; justify-content: flex-start;}
+.App.home.khmer.static section.orange-gradient > div > div { font-size:19px; color:white; display:flex;align-items: stretch;}
+.App.home.khmer.static section.orange-gradient > div > div > div { display:flex;flex-direction: column; justify-content: space-between; padding:5px 0 5px 30px;}
+.App.home.khmer.static section.orange-gradient > div > div > div span { letter-spacing: 1px;}
+.App.home.khmer.static section.orange-gradient > div > div > div a { color:white; align-self: flex-start; font-size: 12px; font-weight: 700; letter-spacing:1px;}
+.App.home.khmer.static section.orange-gradient > div > div > div a::before { box-shadow:inset 0 -1.5px 1px white; }
+
+.App.home.khmer.static section > div { width:1222px; padding:85px 0px 85px 80px; box-sizing: border-box; margin:auto; text-align: left; display:flex; align-items: stretch; font-size:0; 
+   justify-content: space-between;
+}
+.App.home.khmer.static section > div .baseline { display:flex; align-items: baseline;}
+.App.home.khmer.static section > div .col { display: flex; flex-direction: column; justify-content: space-between; width:475px; max-width:100%; padding-right:45px; }
+.App.home.khmer.static section > div .col + .col { padding-right:0; padding-left:45px; }
+.App.home.khmer.static section > div h2 { font-size:33px; width: 200px; color:#152631; ;}
+.App.home.khmer.static section > div h2.small { font-size:15px; }
+.App.home.khmer.static section > div h2:not(.small) { line-height:16px; }
+.App.home.khmer.static section > div p { font-size:15px; line-height:24px; color:#4a4a4a; letter-spacing: 0.75px;}
+.App.home.khmer.static section:first-of-type > div p { font-size:18px; line-height:28px;}
+
+.App.home.khmer.static section > div .note { font-style: normal; font-weight: 700;}
+
+.App.home.khmer.static section > div .col p + p { margin-top:20px; }
+
+.App.home.khmer.static section > div .col .img-caption:not(:first-child) { margin-top:60px; }
+.App.home.khmer.static section > div .col .img-caption p { text-align: right; font-style: italic; font-size:12px; margin-top:40px; line-height:20px;}
+
+.App.home.khmer.static section > div .col .img-caption.border img { width:80%; margin-left:10%;}
+.App.home.khmer.static section > div .col .img-caption.border > span { padding:24px 0; background:#efefef;display:block;}
+.App.home.khmer.static section:not(.white-bg) > div .col .img-caption.border > span { background:white;}
+
+.App.home.khmer.static section.footnote > div { padding: 50px 0 50px 80px; }
+.App.home.khmer.static section.footnote > div > div { width:calc((100% - 80px) /3); }
+.App.home.khmer.static section.footnote .noteText { margin-top: 0; }
+.App.home.khmer.static section.footnote .noteText + .noteText { margin-top:10px; }
+.App.home.khmer.static section.footnote .noteText .note { width:15px; display: inline-block;}
+
+.App.home.khmer.static section > div h2 { flex-shrink:0; }
 @media(max-width:1280px) {
    .App.home.khmerServer .SearchPane #logo > div { padding-left:50px;  }
 }
+
+
 
 /* ---------------------------------------------------------------------------------------------------------------------- "sidepanes" */
 

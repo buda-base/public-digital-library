@@ -103,14 +103,14 @@ export class StaticRouteNoExt extends Component<State, Props>
                 <div class={"App home static"+(this.props.config && this.props.config.khmerServer ? " khmer":"")}>
                     <div class="SearchPane">
                         <div className="static-container" data-dir={this.props.dir} data-page={this.props.page}>
-                            <div id="samples" >
+                            <div {...!this.props.config || !this.props.config.khmerServer?{id:"samples"}:{}} >
                                 {HTMLparse(this.props.dir.includes("budax/")?"<div>"+this.state.content+"</div>":this.state.content)}
                             </div>
                         </div> 
                     </div>
                 </div>
                 { top_right_menu(this) }
-                { this.props.config && this.props.config.khmerServer && <Footer locale={this.props.locale} hasSyncs={false}/> }
+                { this.props.config && this.props.config.khmerServer && <Footer locale={this.props.locale} hasSyncs={true}/> }
             </div>
         );
     }
