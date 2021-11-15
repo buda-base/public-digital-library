@@ -552,7 +552,7 @@ footer #donate,
 .App.home.khmer.static section.orange-gradient > div > div > div a,
 .App.home.khmerServer section .abs div a { text-transform:uppercase; font-size:14px; overflow: hidden; color:#111312; padding-bottom:5px; position: relative; display: inline-block;}
 
-.nav #logo.khmer + .links a { position: relative; overflow: hidden; margin-top:5px;}
+.nav #logo.khmer + .links a { position: relative; overflow: hidden; margin-top:10px; padding-bottom:5px;}
 
 .nav #logo.khmer + .links a.current::before,
 .App.home.khmer.static section.orange-gradient > div > div > div a::before,
