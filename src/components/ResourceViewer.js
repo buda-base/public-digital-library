@@ -7728,7 +7728,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          if(createdBy.length && createdBy.length > 4) { 
             let searchUrl = "/search?r="+this.props.IRI
             if(_T === "Person") {
-               searchUrl += "&t=Work&f=relation,inc,bdo:creator"
+               searchUrl += "&t=Work&f=relation,exc,bdo:workIsAbout"
             } else if(_T === "Place" || serial && _T === "Work") {
                searchUrl += "&t=Instance"
             } else if( _T === "Product") {
