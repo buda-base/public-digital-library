@@ -610,6 +610,74 @@ footer #donate,
    .App.home.khmerServer .SearchPane #logo > div { padding-left:50px;  }
 }
 
+.App.guidedsearch.khmer button.red { cursor:pointer; background:#d73449; color:white; border:none; text-transform: uppercase; font-size:12px; font-weight: 800; padding:7px 12px; border-radius: 2px;} 
+
+.App.guidedsearch.khmer .static-container.sticky { display: block; text-align:left;}
+
+.App.guidedsearch.khmer .static-container.sticky > div {
+   width:calc(1440px - (1440px - 1222px) - 150px - 80px - 35px);
+   margin-left:calc((1440px - 1222px) / 2 + 80px);
+   text-align: left;
+   padding-left:35px;
+   box-sizing: border-box;
+   padding-right:90px;
+}
+
+.App.guidedsearch.khmer .static-container.sticky > div:first-child {
+   position:sticky;
+   padding-top:0px;
+   top:80px;
+   background:#efefef;
+   padding-bottom:40px;
+}
+
+.App.guidedsearch.khmer .static-container.sticky > div:first-child h1 { padding-top:80px; font-size:34px; margin:0;}
+.App.guidedsearch.khmer .static-container.sticky h2 { font-size:16px; color:#343434; text-transform: uppercase; padding-top:45px;margin:0;}
+
+.App.guidedsearch.khmer .static-container.sticky > div:first-child + div h2 { border-bottom:2px solid #e3e3e3; padding-bottom:10px; }
+
+.App.guidedsearch.khmer .static-container.sticky > div:first-child + div {
+   margin-top:10px;
+   background:white;
+}
+.App.guidedsearch.khmer .static-container.sticky > div:last-child { padding:35px 0;}
+
+.App.guidedsearch.khmer .static-container.sticky + div { 
+   position:fixed; 
+   right:calc((100% - 1222px) / 2 - (250px - 150px));
+   top:80px;
+   width:250px;
+   text-align: left;
+   display: block;
+   height:100%; 
+   background-color: #efefef;
+}
+.App.guidedsearch.khmer .static-container.sticky + div nav a { display: block; font-size:11px; text-transform: uppercase; color:#4a4a4a; font-weight: 700; margin-bottom:20px; }
+
+.App.guidedsearch.khmer .static-container.sticky + div h3 { color:#152631; font-size: 14; font-weight: 900; margin-bottom:35px; margin-top:90px;}
+
+@media(max-width:1440px) {
+   /* .App.guidedsearch.khmer .static-container.sticky + div { right:calc((100% - 1222px) / 2); } */
+
+      
+   .App.guidedsearch.khmer .static-container.sticky > div {
+      margin-left:calc((100% - 1222px) / 2 + 80px);
+   }
+}
+
+
+
+@media(max-width:1280px) {
+   .App.guidedsearch.khmer .static-container.sticky + div { right:24px; }
+
+   .App.guidedsearch.khmer .static-container.sticky > div {
+      width:calc(100% - 185px - 104px - 60px);
+      margin-left:104px;
+   }
+   .App.guidedsearch.khmer .static-container.sticky + div { width:185px; }
+
+}
+
 
 
 /* ---------------------------------------------------------------------------------------------------------------------- "sidepanes" */
