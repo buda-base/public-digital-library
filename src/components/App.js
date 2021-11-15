@@ -867,11 +867,12 @@ export function top_right_menu(that,etextTitle,backUrl,etextres)
 
       let khmerLinks 
       if(onKhmerServer) {
+         const setCurrent = (route) => (window.location.pathname === route ? {className:"current"}:{})
          khmerLinks = <div class="links">
-            <Link to={"/guidedsearch"} >{I18n.t("topbar.guided")}</Link> 
-            <Link to={"/browse"} >{I18n.t("topbar.browse")}</Link> 
-            <Link to={"/static/aboutkm"} >{I18n.t("topbar.about")}</Link> 
-            <Link to={"/static/resources"} >{I18n.t("topbar.resources")}</Link> 
+            <Link {...setCurrent("/guidedsearch")} to={"/guidedsearch"} >{I18n.t("topbar.guided")}</Link> 
+            <Link {...setCurrent("/browse")} to={"/browse"} >{I18n.t("topbar.browse")}</Link> 
+            <Link {...setCurrent("/static/aboutkm")} to={"/static/aboutkm"} >{I18n.t("topbar.about")}</Link> 
+            <Link {...setCurrent("/static/resources")} to={"/static/resources"} >{I18n.t("topbar.resources")}</Link> 
          </div>
       }
 
