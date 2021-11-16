@@ -33,12 +33,15 @@ class GuidedSearch extends Component<Props,State> {
   
   render() {
 
+    let settings = data
+    if(this.props.config && this.props.config.guided) settings = this.props.config.guided
+
 
     const selectors = Object.keys(data).map(k => {
       return <>
         <h2>{getPropLabel(this, fullUri(k), true, true)}</h2>
         <div data-prop={k}>
-          { data[k].map(o => (
+          { settings[k].map(o => (
             <span class="option">
               <FormControlLabel
                   control={
@@ -63,7 +66,7 @@ class GuidedSearch extends Component<Props,State> {
       return <Link to={"#"+k.split(":")[1]}>{getPropLabel(this, fullUri(k), true, true)}</Link>
     })  
 
-    console.log("render:", this.props, data, selectors)
+    console.log("render:", this.props, this.state, settings)
 
     return (
       <div>

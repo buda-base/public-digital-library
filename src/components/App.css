@@ -612,7 +612,7 @@ footer #donate,
 
 .App.guidedsearch.khmer button.red { cursor:pointer; background:#d73449; color:white; border:none; text-transform: uppercase; font-size:12px; font-weight: 800; padding:7px 12px; border-radius: 2px;} 
 
-.App.guidedsearch.khmer .static-container.sticky { display: block; text-align:left;}
+.App.guidedsearch.khmer .static-container.sticky { display: block; text-align:left; padding-bottom:80px;}
 
 .App.guidedsearch.khmer .static-container.sticky > div {
    width:calc(1440px - (1440px - 1222px) - 150px - 80px - 35px);
@@ -646,7 +646,7 @@ footer #donate,
 
 .App.guidedsearch.khmer .static-container.sticky > div:first-child + div [data-prop] { display:flex; flex-wrap: wrap; padding:15px 0 0px 0; }
 .App.guidedsearch.khmer .static-container.sticky > div:first-child + div [data-prop] .option { display:block; margin-bottom:5px; }
-.App.guidedsearch.khmer .static-container.sticky > div:first-child + div [data-prop="bdo:language"] .option { padding-right:25px; }
+.App.guidedsearch.khmer .static-container.sticky > div:first-child + div [data-prop="bdo:language"] .option { padding-right:20px; }
 .App.guidedsearch.khmer .static-container.sticky > div:first-child + div [data-prop="bdo:workGenre"] .option { width:30%; }
 .App.guidedsearch.khmer .static-container.sticky > div:first-child + div [data-prop="bdo:workIsAbout"] .option { width:50%; }
 .App.guidedsearch.khmer .static-container.sticky > div:first-child + div [data-prop] .option label span { font-size:15px; }

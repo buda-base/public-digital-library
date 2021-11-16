@@ -561,16 +561,10 @@ function pretty(str:string) {
 
 export function getPropLabel(that, i, withSpan = true, withLang = false) {
 
-   console.log("prop1")
-
    if(!that.props.dictionary) return 
-
-   console.log("prop2")
 
    let sTmp = shortUri(i), trad = I18n.t("prop."+sTmp)
    if("prop."+sTmp !== trad) return trad
-
-   console.log("prop3")
 
    let label = that.props.dictionary[i], labels
    if(label) {
@@ -584,13 +578,11 @@ export function getPropLabel(that, i, withSpan = true, withLang = false) {
       if(labels) labels = labels[skos+"prefLabel"]
    }
 
-   console.log("prop4", label, labels)
-
    let lang
    if(labels) {
       label = getLangLabel(that,"",labels,true)
 
-      loggergen.log("label",i,label)
+      //loggergen.log("label",i,label)
 
       if(label) {
          if(label.lang) lang = label.lang
