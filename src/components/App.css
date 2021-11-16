@@ -654,7 +654,8 @@ footer #donate,
 
 
 .App.guidedsearch.khmer .static-container.sticky > div:first-child + div [data-prop] .option .empty-checkbox { font-size:0; position: relative;}
-.App.guidedsearch.khmer .static-container.sticky > div:first-child + div [data-prop] .option .empty-checkbox svg { font-size:22px; opacity:0;box-shadow: none;}
+.App.guidedsearch.khmer .static-container.sticky > div:first-child + div [data-prop] .option svg { font-size:22px; }
+.App.guidedsearch.khmer .static-container.sticky > div:first-child + div [data-prop] .option .empty-checkbox svg { opacity:0; }
 .App.guidedsearch.khmer .static-container.sticky > div:first-child + div [data-prop] .option .empty-checkbox::after {
    content:''; position: absolute; display: block;width:14px;height:14px;background:white; top:3px;left:3px;border:1px solid rgba(0,0,0,0.45);
 }
