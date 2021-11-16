@@ -646,10 +646,12 @@ footer #donate,
 
 .App.guidedsearch.khmer .static-container.sticky > div:first-child + div [data-prop] { display:flex; flex-wrap: wrap; padding:15px 0 0px 0; }
 .App.guidedsearch.khmer .static-container.sticky > div:first-child + div [data-prop] .option { display:block; margin-bottom:-5px; }
-.App.guidedsearch.khmer .static-container.sticky > div:first-child + div [data-prop="bdo:language"] .option { padding-right:20px; }
-.App.guidedsearch.khmer .static-container.sticky > div:first-child + div [data-prop="bdo:workGenre"] .option { width:30%; }
-.App.guidedsearch.khmer .static-container.sticky > div:first-child + div [data-prop="bdo:workIsAbout"] .option { width:50%; }
-.App.guidedsearch.khmer .static-container.sticky > div:first-child + div [data-prop] .option label span { font-size:15px; }
+.App.guidedsearch.khmer .static-container.sticky > div:first-child + div [data-prop="language"] .option { padding-right:20px; }
+.App.guidedsearch.khmer .static-container.sticky > div:first-child + div [data-prop="style"] .option { width:30%; }
+.App.guidedsearch.khmer .static-container.sticky > div:first-child + div [data-prop="topic"] .option { width:50%; }
+.App.guidedsearch.khmer .static-container.sticky > div:first-child + div [data-prop] .option label > span > span { font-size:15px; font-weight:500; color:#343434; 
+   vertical-align: 2px; 
+}
 
 
 
@@ -671,7 +673,8 @@ footer #donate,
    background-color: #efefef;
 }
 .App.guidedsearch.khmer .static-container.sticky + div nav a { display: block; font-size:11px; text-transform: uppercase; color:#4a4a4a; font-weight: 700; margin-bottom:20px; }
-.App.guidedsearch.khmer .static-container.sticky + div nav a:last-of-type { margin-bottom:30px;}
+.App.guidedsearch.khmer .static-container.sticky + div nav a:nth-last-child(2) { margin-bottom:30px;}
+.App.guidedsearch.khmer .static-container.sticky + div nav a:last-child {  display: inline-block;}
 
 .App.guidedsearch.khmer .static-container.sticky + div h3 { color:#152631; font-size: 14; font-weight: 900; margin-bottom:35px; margin-top:90px;}
 

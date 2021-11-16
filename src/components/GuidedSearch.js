@@ -9,16 +9,58 @@ import CheckBoxOutlineBlankSharp from '@material-ui/icons/CheckBoxOutlineBlankSh
 import CheckBoxSharp from '@material-ui/icons/CheckBoxSharp';
 
 type Props = { auth:{}, history:{}, dictionary:{} }
-type State = { collapse:{}, checked:{} }
+type State = { collapse:{}, checked:{}, type:string }
 
 
-// TODO load from url
+/* // v1
 const data = {
   "bdo:language": [ "bdr:LangPi", "bdr:LangKm", "bdr:LangPiKm", "tmp:LangPiThai", "tmp:LangThai", "tmp:other" ], 
   "bdo:workGenre": [ "bdr:FEMC_Scheme_I", "bdr:FEMC_Scheme_II", "bdr:FEMC_Scheme_III" ],
   "bdo:workIsAbout": [ "bdr:FEMC_Scheme_I_1", "bdr:FEMC_Scheme_I_2", "bdr:FEMC_Scheme_I_3" ]
 }
+*/
+// v2
+const data = {
+  "filters": [ "language", "style", "topic"],
+  "language": {
+    "label": { "en": "language" },
+    "values": [ { 
+      "label": {"en": "Pali" },
+      "facet": {"property": "language", "relation": "inc", "value": "bdr:LangPi" }
+    },{ 
+      "label": {"en": "Khmer" },
+      "facet": {"property": "language", "relation": "inc", "value": "bdr:LangKm" }
+    }]
+  },
+  "style": {
+    "label": { "en": "style" },
+    "values": [ { 
+      "label": {"en": "Didactic verse texts" },
+      "facet": {"property": "genres", "relation": "inc", "value": "bdr:FEMC_Scheme_I" }
+    },{ 
+      "label": {"en": "Entertaining verse texts" },
+      "facet": {"property": "genres", "relation": "inc", "value": "bdr:FEMC_Scheme_II" }
+    },{ 
+      "label": {"en": "Religious prose texts" },
+      "facet": {"property": "genres", "relation": "inc", "value": "bdr:FEMC_Scheme_III" }
+    }]
+  },
+  "topic": {
+    "label": { "en": "topic" },
+    "values": [ { 
+      "label": {"en": "Moral codes" },
+      "facet": {"property": "about", "relation": "inc", "value": "bdr:FEMC_Scheme_I_1" }
+    }, { 
+      "label": {"en": "Proverbs" },
+      "facet": {"property": "about", "relation": "inc", "value": "bdr:FEMC_Scheme_I_2" }
+    }, { 
+      "label": {"en": "Buddhist poems" },
+      "facet": {"property": "about", "relation": "inc", "value": "bdr:FEMC_Scheme_I_3" }
+    }] 
+  }
+}
 
+// TODO v3 / load from url?
 
 class GuidedSearch extends Component<Props,State> {
   _selectors = []
@@ -26,7 +68,7 @@ class GuidedSearch extends Component<Props,State> {
   constructor(props : Props) {
     super(props);      
 
-    this.state = { collapse:"", checked:{} }
+    this.state = { collapse:"", checked:{}, type:"Work" }
 
     if(!this.props.config) this.props.onInitiateApp(qs.parse(this.props.history.location.search), null, null, "guidedsearch")
   }
@@ -36,37 +78,48 @@ class GuidedSearch extends Component<Props,State> {
     let settings = data
     if(this.props.config && this.props.config.guided) settings = this.props.config.guided
 
+    const getLocaleLabel = (o) => {
+      if(o.label[this.props.locale]) return o.label[this.props.locale]
+      else if(o.label.en) return o.label.en
+      else return "[no label]"
+    }
 
-    const selectors = Object.keys(data).map(k => {
+    const selectors = settings.filters.map(k => {
       return <>
-        <h2>{getPropLabel(this, fullUri(k), true, true)}</h2>
-        <div data-prop={k}>
-          { settings[k].map(o => (
-            <span class="option">
-              <FormControlLabel
+          <h2>{getLocaleLabel(settings[k])}</h2>
+          <div data-prop={k}>
+            { settings[k].values.map( (o,i) => (
+              <span class="option">
+                <FormControlLabel
                   control={
                     <Checkbox
-                      checked={this.state.checked[k] && this.state.checked[k][o]}
+                      checked={this.state.checked[k] && this.state.checked[k][i]}
                       className="checkbox"
                       icon={<span className="empty-checkbox"><CheckBoxOutlineBlankSharp /></span>}
                       checkedIcon={<CheckBoxSharp  style={{color:"#d73449"}}/>}
-                      onChange={(event, checked) => this.setState({checked:{...checked, [k]:{...(this.state.checked[k]?this.state.checked[k]:{}), [o]:checked}}})}
-                    />
+                      onChange={(event, checked) => this.setState({checked:{...this.state.checked, [k]:{...(this.state.checked[k]?this.state.checked[k]:{}), [i]:checked}}})}
+                    />}
+                  label={getLocaleLabel(o)}
+                />            
+              </span>))}
+          </div>
+        </>                        
+    })
 
-                  }
-                  label={getPropLabel(this, fullUri(o), true, true)}
-              />            
-            </span>
-          ))}
-        </div>
-      </>                        
-    })  
-
-    const links = Object.keys(data).map(k => {
+    const links = data.filters.map(k => {
       return <Link to={"#"+k.split(":")[1]}>{getPropLabel(this, fullUri(k), true, true)}</Link>
     })  
 
     console.log("render:", this.props, this.state, settings)
+
+
+    const searchRoute = "search?t=" +this.state.type+"&r=bdr:PR1KDPP00&"+Object.keys(this.state.checked).map( k => {
+      console.log("k:",k)
+      return Object.keys(this.state.checked[k]).map(i => {
+        console.log("i:",i,settings[k].values[i].facet)
+        return "f="+settings[k].values[i].facet.property+","+settings[k].values[i].facet.relation+","+settings[k].values[i].facet.value
+      }).join("&")
+    }).join("&")
 
     return (
       <div>
@@ -83,7 +136,7 @@ class GuidedSearch extends Component<Props,State> {
                     { this.props.dictionary && selectors }
                   </div>
                   <div>
-                    <button class="red">Search</button>
+                    <Link to={searchRoute}><button class="red">Search</button></Link>
                   </div>
                 </div>
                 <div>
@@ -92,7 +145,7 @@ class GuidedSearch extends Component<Props,State> {
                     {/* <Link to="#types">Search type</Link> */}
                     <Link to="#direct">Direct access</Link>
                     { links }
-                    <button class="red">Search</button>
+                    <Link to={searchRoute}><button class="red">Search</button></Link>
                   </nav>
                 </div>
             </div>
