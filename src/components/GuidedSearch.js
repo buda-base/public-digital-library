@@ -48,7 +48,7 @@ class GuidedSearch extends Component<Props,State> {
                     <Checkbox
                       checked={this.state.checked[k] && this.state.checked[k][o]}
                       className="checkbox"
-                      icon={<CheckBoxOutlineBlankSharp/>}
+                      icon={<span className="empty-checkbox"><CheckBoxOutlineBlankSharp /></span>}
                       checkedIcon={<CheckBoxSharp  style={{color:"#d73449"}}/>}
                       onChange={(event, checked) => this.setState({checked:{...checked, [k]:{...(this.state.checked[k]?this.state.checked[k]:{}), [o]:checked}}})}
                     />
