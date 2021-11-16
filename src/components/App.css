@@ -649,8 +649,8 @@ footer #donate,
 .App.guidedsearch.khmer .static-container.sticky > div:first-child + div [data-prop="language"] .option { padding-right:20px; }
 .App.guidedsearch.khmer .static-container.sticky > div:first-child + div [data-prop="style"] .option { width:30%; }
 .App.guidedsearch.khmer .static-container.sticky > div:first-child + div [data-prop="topic"] .option { width:50%; }
-.App.guidedsearch.khmer .static-container.sticky > div:first-child + div [data-prop] .option label > span > span { font-size:15px; font-weight:500; color:#343434; 
-   vertical-align: 2px; 
+.App.guidedsearch.khmer .static-container.sticky > div:first-child + div [data-prop] .option label > span:not(.checkbox) { font-size:15px; font-weight:500; color:#343434; 
+   padding-bottom: 2px; 
 }
 
 

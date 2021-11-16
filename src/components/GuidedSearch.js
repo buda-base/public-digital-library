@@ -49,13 +49,13 @@ const data = {
     "label": { "en": "topic" },
     "values": [ { 
       "label": {"en": "Moral codes" },
-      "facet": {"property": "about", "relation": "inc", "value": "bdr:FEMC_Scheme_I_1" }
+      "facet": {"property": "tree", "relation": "inc", "value": "bdr:FEMC_Scheme_I_1" }
     }, { 
       "label": {"en": "Proverbs" },
-      "facet": {"property": "about", "relation": "inc", "value": "bdr:FEMC_Scheme_I_2" }
+      "facet": {"property": "tree", "relation": "inc", "value": "bdr:FEMC_Scheme_I_2" }
     }, { 
       "label": {"en": "Buddhist poems" },
-      "facet": {"property": "about", "relation": "inc", "value": "bdr:FEMC_Scheme_I_3" }
+      "facet": {"property": "tree", "relation": "inc", "value": "bdr:FEMC_Scheme_I_3" }
     }] 
   }
 }
