@@ -629,6 +629,7 @@ footer #donate,
    top:80px;
    background:#efefef;
    padding-bottom:40px;
+   z-index:100;
 }
 
 .App.guidedsearch.khmer .static-container.sticky > div:first-child h1 { padding-top:80px; font-size:34px; margin:0;}
@@ -636,23 +637,33 @@ footer #donate,
 
 .App.guidedsearch.khmer .static-container.sticky > div:first-child + div h2 { border-bottom:2px solid #e3e3e3; padding-bottom:10px; }
 
-.App.guidedsearch.khmer .static-container.sticky > div:first-child + div {
-   margin-top:10px;
+.App.guidedsearch.khmer .static-container.sticky > div:first-child + div {   
    background:white;
+   min-height:calc(100vh - 415px);
+   padding-bottom:100px;
 }
 .App.guidedsearch.khmer .static-container.sticky > div:last-child { padding:35px 0;}
 
+.App.guidedsearch.khmer .static-container.sticky > div:first-child + div [data-prop] { display:flex; flex-wrap: wrap; padding:15px 0 0px 0; }
+.App.guidedsearch.khmer .static-container.sticky > div:first-child + div [data-prop] .option { display:block; margin-bottom:5px; }
+.App.guidedsearch.khmer .static-container.sticky > div:first-child + div [data-prop="bdo:language"] .option { padding-right:25px; }
+.App.guidedsearch.khmer .static-container.sticky > div:first-child + div [data-prop="bdo:workGenre"] .option { width:30%; }
+.App.guidedsearch.khmer .static-container.sticky > div:first-child + div [data-prop="bdo:workIsAbout"] .option { width:50%; }
+.App.guidedsearch.khmer .static-container.sticky > div:first-child + div [data-prop] .option label span { font-size:15px; }
+
+
 .App.guidedsearch.khmer .static-container.sticky + div { 
    position:fixed; 
-   right:calc((100% - 1222px) / 2 - (250px - 150px));
+   right:calc((100% - 1222px) / 2 - (260px - 150px));
    top:80px;
-   width:250px;
+   width:260px;
    text-align: left;
    display: block;
    height:100%; 
    background-color: #efefef;
 }
 .App.guidedsearch.khmer .static-container.sticky + div nav a { display: block; font-size:11px; text-transform: uppercase; color:#4a4a4a; font-weight: 700; margin-bottom:20px; }
+.App.guidedsearch.khmer .static-container.sticky + div nav a:last-of-type { margin-bottom:30px;}
 
 .App.guidedsearch.khmer .static-container.sticky + div h3 { color:#152631; font-size: 14; font-weight: 900; margin-bottom:35px; margin-top:90px;}
 
@@ -668,13 +679,12 @@ footer #donate,
 
 
 @media(max-width:1280px) {
-   .App.guidedsearch.khmer .static-container.sticky + div { right:24px; }
 
    .App.guidedsearch.khmer .static-container.sticky > div {
       width:calc(100% - 185px - 104px - 60px);
       margin-left:104px;
    }
-   .App.guidedsearch.khmer .static-container.sticky + div { width:185px; }
+   .App.guidedsearch.khmer .static-container.sticky + div { width:200px; right:0;  }
 
 }
 

@@ -124,6 +124,13 @@ async function initiateApp(params,iri,myprops,route,isAuthCallback) {
          if(route === "mirador" && params.backToViewer) {
             if(!auth.isAuthenticated()) auth.login(decodeURIComponent(params.backToViewer))
          }
+
+         if(route === "guidedsearch") {
+            if(!state.data.dictionary) {
+               const dico = await api.loadDictionary()
+               store.dispatch(dataActions.loadedDictionary(dico));                       
+            }
+         }
          
          return ;
       }

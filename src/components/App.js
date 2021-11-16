@@ -546,11 +546,31 @@ export function getLangLabel(that:{},prop:string="",labels:[],proplang:boolean=f
    }
 };
 
-function getPropLabel(that, i, withSpan = true, withLang = false) {
+
+function pretty(str:string) {
+   //loggergen.log("str",str)
+   if(!str || !str.length) return 
+
+   for(let p of prefixes) { str = str.replace(new RegExp(p,"g"),"") }
+
+   str = str.replace(/([a-z])([A-Z])/g,"$1 $2")
+
+   return str ;
+}
+
+
+export function getPropLabel(that, i, withSpan = true, withLang = false) {
+
+   console.log("prop1")
+
    if(!that.props.dictionary) return 
+
+   console.log("prop2")
 
    let sTmp = shortUri(i), trad = I18n.t("prop."+sTmp)
    if("prop."+sTmp !== trad) return trad
+
+   console.log("prop3")
 
    let label = that.props.dictionary[i], labels
    if(label) {
@@ -564,11 +584,13 @@ function getPropLabel(that, i, withSpan = true, withLang = false) {
       if(labels) labels = labels[skos+"prefLabel"]
    }
 
+   console.log("prop4", label, labels)
+
    let lang
    if(labels) {
       label = getLangLabel(that,"",labels,true)
 
-      //loggergen.log("label",i,label)
+      loggergen.log("label",i,label)
 
       if(label) {
          if(label.lang) lang = label.lang
@@ -580,7 +602,7 @@ function getPropLabel(that, i, withSpan = true, withLang = false) {
 
       }
    }
-   else label = that.pretty(i)
+   else label = that.pretty?that.pretty(i):pretty(i)
 
    if(withSpan) return <span {...lang?{lang}:{}} >{label}</span>
    else if(!withLang) return label
@@ -2451,18 +2473,6 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
      }
 */
 
-   pretty(str:string)
-   {
-      //loggergen.log("str",str)
-      if(!str || !str.length) return 
-
-      for(let p of prefixes) { str = str.replace(new RegExp(p,"g"),"") }
-
-      str = str.replace(/([a-z])([A-Z])/g,"$1 $2")
-
-      return str ;
-   }
-
    fullname(prop:string,preflabs:[],useUIlang:boolean=false,count)
    {
       if(!prop||prop.length === 0) return 
@@ -2510,7 +2520,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          //return preflabs[0][value]
       }
 
-      return this.pretty(prop)
+      return pretty(prop)
    }
 
 

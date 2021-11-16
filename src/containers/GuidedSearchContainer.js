@@ -23,8 +23,10 @@ const mapStateToProps = (state,ownProps) => {
    if(auth && auth.userProfile) {
       if(auth.userProfile.name) profileName = auth.userProfile.name
    }
+   
+   let dictionary = state.data.dictionary ;
 
-   let props = { config, locale, profileName }
+   let props = { config, locale, profileName, dictionary }
 
    return props
 
