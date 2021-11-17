@@ -462,16 +462,19 @@ footer #donate,
 .nav #login { font-weight:700; font-size:14px;letter-spacing: 0.29px; text-transform: uppercase; text-decoration: none; }
 
 
-.nav #logo.khmer + .links  { margin-left:60px; }
+.nav #logo.khmer + .links  { margin-left:15px; }
 
 .nav #logo.khmer + .links a { color:#192229; margin:0 20px; }
 
 .nav #login > div { display: flex;  }
-.nav #login > div.logged { flex-direction: column; align-items: center; }
+.nav #logo.khmer ~ #lang { margin-left:35px;}
+.nav #logo.khmer ~ #login > div.logged { flex-direction: column; align-items: center; }
+.nav #logo.khmer ~ #login > div.logged > span:first-child { margin-bottom:10px; }
+.nav #logo.khmer ~ #login > div.logged > span { margin-left: 0;}
+
 
 .nav #login > div > span:first-child { max-width:150px ; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;}
 
-.nav #login > div.logged > span:first-child { margin-bottom:5px; }
 
 .nav #login.proxied > * { opacity:0.5; pointer-events:none; }
 
@@ -551,6 +554,9 @@ footer #donate,
 .App.home.khmerServer section .abs div { position:absolute; text-align: center; width:100%; box-sizing: border-box; margin-top:-30px; padding-right:80px;}
 .App.home.khmer.static section.orange-gradient > div > div > div a,
 .App.home.khmerServer section .abs div a { text-transform:uppercase; font-size:14px; overflow: hidden; color:#111312; padding-bottom:5px; position: relative; display: inline-block;}
+
+.App.home.khmerServer section .imgs { padding-top:70px; }
+.App.home.khmerServer section .imgs img { vertical-align: middle; display: inline-block; margin-right:40px;}
 
 .nav #logo.khmer + .links a { position: relative; overflow: hidden; margin-top:10px; padding-bottom:5px;}
 

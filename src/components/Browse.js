@@ -24,6 +24,7 @@ class Browse extends Component<Props,State> {
                   <div>
                     <h1>Browse</h1>                                          
                     <div id="samples">
+                    <p style={{"text-align":"center"}}>Coming soon</p>
                     </div>
                   </div>
                 </div> 

@@ -106,8 +106,8 @@ class GuidedSearch extends Component<Props,State> {
         </>                        
     })
 
-    const links = data.filters.map(k => {
-      return <Link to={"#"+k.split(":")[1]}>{getPropLabel(this, fullUri(k), true, true)}</Link>
+    const links = settings.filters.map(k => {
+      return <Link to={"#"+k.split(":")[1]}>{getLocaleLabel(settings[k])}</Link>
     })  
 
     console.log("render:", this.props, this.state, settings)
@@ -128,12 +128,14 @@ class GuidedSearch extends Component<Props,State> {
                 <div className="static-container sticky">
                   <div>
                     <h1>Guided Search</h1>                                          
+                    <p>Coming soon</p>
                     <h2 id="types">Search type</h2>
                   </div>
                   <div>
                     <h2 id="direct">Direct access</h2>
-                    { !this.props.dictionary && <Loader />}
-                    { this.props.dictionary && selectors }
+                    {/* { !this.props.dictionary && <Loader />}
+                    { this.props.dictionary && selectors } */}
+                    { selectors }
                   </div>
                   <div>
                     <Link to={searchRoute}><button class="red">Search</button></Link>

@@ -883,6 +883,7 @@ export function top_right_menu(that,etextTitle,backUrl,etextres)
       if(onKhmerServer) {
          const setCurrent = (route) => (window.location.pathname === route ? {className:"current"}:{})
          khmerLinks = <div class="links">
+            <Link {...setCurrent("/")} to={"/"} >{I18n.t("topbar.home")}</Link> 
             <Link {...setCurrent("/guidedsearch")} to={"/guidedsearch"} >{I18n.t("topbar.guided")}</Link> 
             <Link {...setCurrent("/browse")} to={"/browse"} >{I18n.t("topbar.browse")}</Link> 
             <Link {...setCurrent("/static/aboutkm")} to={"/static/aboutkm"} >{I18n.t("topbar.about")}</Link> 
@@ -6367,9 +6368,9 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                         <div><Link to="/static/resources">{I18n.t("topbar.resources")}</Link></div>
                      </div>
                   </div>
-                  <div>
-                     <img height="145" src="/WAT.png"/>
-                     <img height="145" style={{mixBlendMode:"darken"}} src="/EFEO.png"/>
+                  <div class="imgs">
+                     <img src="/scripts/static/images/AKBF.jpg"/>
+                     <img src="/scripts/static/images/EFEO.jpg"/>
                   </div>
                </section>
             </>
