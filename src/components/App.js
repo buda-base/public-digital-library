@@ -6117,7 +6117,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      </a>
                   </div>
                }
-               { this.props.config.khmerServer && 
+               { this.props.config.khmerServer &&  !this.props.loading && !this.props.keyword && 
                   <div class="fond-logo">
                      <a id="logo" target="_blank" old-href="https://www.tbrc.org/">
                         {/* <img src="/logo.svg" style={{width:"200px"}} /> */}
@@ -6137,7 +6137,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                {/* <h2>BUDA Platform</h2> */}
                {/* <h3>Buddhist Digital Resource Center</h3> */}
                <div id="search-bar">
-               { this.props.config.khmerServer && !this.props.keyword && 
+               { this.props.config.khmerServer && !this.props.keyword &&  !this.props.loading && 
                   <span class="links">
                      <span><Link to="/guidedsearch">{I18n.t("topbar.guided")}</Link></span>
                      <span><Link to="/browse">{I18n.t("topbar.browse")}</Link></span>

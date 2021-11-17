@@ -117,7 +117,7 @@ class GuidedSearch extends Component<Props,State> {
       console.log("k:",k)
       return Object.keys(this.state.checked[k]).map(i => {
         console.log("i:",i,settings[k].values[i].facet)
-        return "f="+settings[k].values[i].facet.property+","+settings[k].values[i].facet.relation+","+settings[k].values[i].facet.value
+        if(this.state.checked[k][i]) return "f="+settings[k].values[i].facet.property+","+settings[k].values[i].facet.relation+","+settings[k].values[i].facet.value
       }).join("&")
     }).join("&")
 
