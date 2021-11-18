@@ -2083,6 +2083,7 @@ function rewriteAuxMain(result,keyword,datatype,sortBy,language)
       }
       else if(e === "facets") {
          let cat = "http://purl.bdrc.io/resource/O9TAXTBRC201605", root, tree, genres
+         if(result[e].topics && !result[e].topics[cat]) cat = "http://purl.bdrc.io/resource/FEMCScheme"
          if(result[e].topics && result[e].topics[cat]) {
             root = result[e].topics[cat]
             tree = [ { "@id": cat, taxHasSubClass: root.subclasses }, ...Object.keys(result[e].topics).reduce( (acc,k) =>  { 
