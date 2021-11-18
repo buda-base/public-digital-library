@@ -279,7 +279,7 @@ body { overflow:auto !important;padding-right:0 !important; /*font-family:"Robot
 #search-bar > div:first-child { box-shadow: 0 2px 4px rgba(187, 187, 187, 0.5); border-radius:2px; font-weight:600;  }
 #search-bar > div:first-child  > div:first-child  > div:first-child { width:calc(100% - 160px); margin-right:200px; }
 
-#search-bar { background-color: #fce08e; padding-top:30px;padding-bottom:30px; display:block;}
+#search-bar { background-color: #fce08e; padding-top:30px;padding-bottom:5px; display:block;}
 #search-bar > div { display:inline-flex;}
 .SearchPane > div {display:flex;justify-content: center;}
 .SearchPane .formControl { margin-top:14px; margin-left:-240px; /*margin-left:calc(800px - 150px - 100px);*/ width:200px; position:absolute;}
@@ -319,13 +319,22 @@ body { overflow:auto !important;padding-right:0 !important; /*font-family:"Robot
 /* .active-filter > span > b { margin-left:10px;} */
 
 
-#filters-UI { padding-bottom:0px; text-align:left; background-color: #fce08e; margin-top:-5px; height:auto;}
+#filters-UI { padding-bottom:0px; text-align:left; background-color: #fce08e; margin-top:-5px; height:auto; position:sticky;top:80px;z-index:1000;}
 #filters-UI > div {  width:700px; min-height:30px; overflow:hidden; /*white-space: nowrap; position:absolute; */ max-height:120px; height:auto;
-   padding-bottom:15px;
+   padding-bottom:15px; padding-top:25px;
 }
 
-#filters-UI #clear-filters { vertical-align:-2px; }
-#filters-UI #clear-filters > span { font-size:11px; font-weight:600;color:#4a4a4a; vertical-align: 8px; padding-right:5px; }
+.fond-logo + #filters-UI,
+#filters-UI:first-child { margin-top:0;  }
+.fond-logo + #filters-UI > div,
+#filters-UI:first-child > div { }
+
+
+
+#filters-UI #clear-filters { vertical-align:-2px; white-space: nowrap;}
+#filters-UI #clear-filters > span { font-size:11px; font-weight:600;color:#4a4a4a; vertical-align: 8px; padding-right:5px;  }
+
+
 
 .SearchPane:not(.resultPage) #filters-UI { display:none; }
 
@@ -510,7 +519,12 @@ footer #donate,
 
 /* ---------------------------------------------------------------------------------------------------------------------- Cambodia website */
 
-.App.home.khmerServer #search-bar { background-image: linear-gradient(249deg, #0c5f89 0%, #9ccab4 100%, #a5d0b6 100%); padding: 55px 0;}
+.App.khmerServer #filters-UI #clear-filters,
+.App.khmerServer #filters-UI #clear-filters > span { color:white; }
+
+.App.khmerServer #filters-UI,
+.App.khmerServer #search-bar  { background-image: linear-gradient(270deg, #0c5f89 0%, #9ccab4 100%, #a5d0b6 100%); }
+.App.home.khmerServer #search-bar { padding: 55px 0;  background-image: linear-gradient(249deg, #0c5f89 0%, #9ccab4 100%, #a5d0b6 100%); }
 .App.home.khmerServer #search-bar > div:first-child { width:400px; } 
 .App.home.khmerServer #search-bar > div:first-child > div:first-child >  div:first-child { margin-right:0px; width:100%;}
 .App.home.khmerServer #search-bar button:first-of-type { margin-right:-48px; }
@@ -710,7 +724,7 @@ footer #donate,
 /* ---------------------------------------------------------------------------------------------------------------------- "sidepanes" */
 
 
-.SidePane > div { padding-bottom:50px; }
+/* .SidePane > div { padding-bottom:50px; } */
 .SidePane > div > ul { align-items: center; }
 .SidePane > .close { position:absolute; top:-6px;right:-6px;}
 .SidePane > .hide { position:absolute; top:-6px;left:-6px;}
@@ -750,7 +764,26 @@ footer #donate,
  
 .SearchPane:not(.resultPage) .SidePane.left { display:none; }
 
-.SidePane.left { position:relative; display:inline-block; width:230px;min-width:230px;  padding:0 35px 35px 35px;box-sizing: content-box; background:#efefef;}
+.SidePane.left { position:relative; display:inline-block; width:300px;min-width:300px;  box-sizing: content-box; background:#efefef; padding:0;}
+
+.SidePane.left .simplebar-track.simplebar-vertical { right:12px; opacity:0.5;}
+
+.SidePane.left > [data-simplebar] { height:100%; padding:0 35px 35px 35px; width:300px; box-sizing: border-box;}
+
+/*
+.SidePane.left {
+   scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.SidePane.left::-webkit-scrollbar {
+  display: none;
+}
+*/
+
+.SidePane.left { position:sticky; top:230px; align-self: flex-start; min-height:0; overflow-y: auto; }
+/* .SidePane.left.isTop {height:calc(100vh - 355px); } */
+
 
 .SidePane.left .sidebar-title { color: rgba(17, 19, 18, 0.9); font-weight:800; font-size:18px; text-align:left; margin-bottom:20px; 
    /* font-family:"Noto Sans"; */
@@ -798,7 +831,8 @@ p.no-result {
 .no-result.more-result { display:flex; align-items: baseline; margin-bottom:10px;}
 .no-result.more-result #clear-filters { display:inline-flex; margin:0; margin-left:5px; }
 
-.SearchPane.resultPage { overflow-y:auto;}
+/* sticky's parent must not have overflow set */
+/* .SearchPane.resultPage { overflow-y:auto;} */
 
 
 #res-container > ul li h4 span { text-transform: none; font-weight:500;}
@@ -816,7 +850,7 @@ p.no-result {
 /* .SearchPane.resultPage #res-container { padding-top:70px;} */
 
 /* #res-header { justify-content: flex-end;} */
-#res-header { height:70px; position:relative;z-index:1;}
+#res-header { height:70px; position:relative;z-index:1; position:sticky;top:160px;z-index:1000; background-color:rgb(239,239,239)}
 #res-header > div { /*width:calc(930px + 130px + 40px - 100px); margin-left:calc(230px + 35px + 35px); margin-right:100px; */ 
    width:960px; margin-left:calc(960px - 700px); text-align:left; display:flex; 
    align-items: center; justify-content: space-between;}

@@ -93,6 +93,10 @@ import {svgEtextS,svgImageS} from "./icons"
 
 import logdown from 'logdown'
 
+import SimpleBar from 'simplebar-react';
+import 'simplebar/dist/simplebar.min.css';
+
+
 // for full debug, type this in the console:
 // window.localStorage.debug = 'gen'
 
@@ -1158,7 +1162,7 @@ export const subtime = (label = "", init) => {
          sublabels[k].last = time
       }
    }
-   if(init !== 0) console.log("subtime:", label, init, "\n"+timesToString(),"\nsubtime;"+(time - start))
+   //if(init !== 0) console.log("subtime:", label, init, "\n"+timesToString(),"\nsubtime;"+(time - start))
 }
 
 
@@ -1245,10 +1249,33 @@ class App extends Component<Props,State> {
       */ 
    }
 
-
-
    componentDidUpdate() {
       
+      // TODO check how this behave with smaller screen width/height
+      let ref
+      if((ref = this._refs["sidepane"].current) /*&& this.props.language*/) {                     
+         $(window).off("scroll").on("scroll", () => {
+            const rect = ref.getBoundingClientRect()
+            const stuck = rect.y > 230
+            if(stuck !== this.state.stuck) {
+               //console.log("stuck?",stuck,ref,rect.y)
+               this.setState({stuck})
+            } 
+            const toph = $("#filters-UI").height() 
+            const navh = $(".nav").height()
+            const headh = $("#res-header").height()
+            if(this._refs["header"].current) $(this._refs["header"].current).css("top",(toph+navh)+"px") //
+            
+            $(ref)
+            .height(window.innerHeight - rect.y)
+            .css("top",(toph+navh+headh)+"px")
+
+            if(this._refs["simplebar"].current) this._refs["simplebar"].current.recalculate()
+            
+         }).scroll()
+         
+      }
+
       loggergen.log("didU:",this.state,this.state.uriPage,this._refs["markers"]) //,this._refs)
 
       if(this._refs.map && this._refs.map.current) {
@@ -5414,7 +5441,11 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
    // TODO add providers icons
 
    render_filters(types,counts,sortByList,reverseSort,facetWidgets) {
-      return ( <div className={"SidePane left "+(!this.state.collapse.settings?"closed":"")}>
+      this._refs["sidepane"] = React.createRef()
+      this._refs["simplebar"] = React.createRef()
+      
+      return ( <div ref={this._refs["sidepane"]} className={"SidePane left "+(!this.state.collapse.settings?"closed":"") + (this.state.stuck?" isTop":"")}>
+            <SimpleBar ref={this._refs["simplebar"]} /*forceVisible="y" autoHide={false}*/ >
                   {/* <IconButton className="close" onClick={e => this.setState({...this.state,leftPane:false,closeLeftPane:true})}><Close/></IconButton> */}
                { //this.props.datatypes && (results ? results.numResults > 0:true) &&
                   <div style={{ /*minWidth:"335px",*/ position:"relative"}}>                 
@@ -5509,6 +5540,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   
                   </div>
                }
+                </SimpleBar>
                </div>
             )
    }
@@ -6075,6 +6107,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
 
 
+      this._refs["header"] = React.createRef()
+      this._refs["container"] = React.createRef()
 
       const ret = (
 <div className={(this.props.simple?"simpleSearch":"")}>
@@ -6136,6 +6170,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                { infoPanelH }
                {/* <h2>BUDA Platform</h2> */}
                {/* <h3>Buddhist Digital Resource Center</h3> */}
+               { (this.props.language || !this.props.keyword) && 
                <div id="search-bar">
                { this.props.config.khmerServer && !this.props.keyword &&  !this.props.loading && 
                   <span class="links">
@@ -6221,7 +6256,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                               }
                         </Paper>
                   }
-               </div>
+               </div> 
                {/* work in progress
                <TextField
                   className="formControl"
@@ -6298,7 +6333,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   inputRef={(str) => { this._customLang = str }}
                   onKeyPress={(e) => this.handleCustomLanguage(e)}
                /> */ }
-               </div>
+               </div> }
               { ( this.state.filters.facets || this.state.filters.datatype.indexOf("Any") === -1 )&& 
                         [ /*<Typography style={{fontSize:"23px",marginBottom:"20px",textAlign:"center"}}>
                            <Translate value="Lsidebar.activeF.title" />
@@ -6376,7 +6411,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             </>
            }
            { infoPanelR }
-           {  (message.length > 0 || message.length == 0 && !this.props.loading ) && <div id="res-header">
+           {  (message.length > 0 || message.length == 0 && !this.props.loading ) && <div id="res-header" ref={this._refs["header"]}>
                <div>
                   <div id="settings" onClick={() => this.setState({collapse:{...this.state.collapse, settings:!this.state.collapse.settings}})}><img src="/icons/settings.svg"/></div>
                   {  // DONE change to popover style open/close
@@ -6394,7 +6429,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
            }
             
            {/* <span>{ ""+this.props.loading }</span> */}
-           <div id="res-container">
+           <div id="res-container" >
            { (!this.props.simple && (this.props.loading || this.props.keyword && (!this.props.datatypes || !this.props.datatypes.hash))) && <Loader className="fixloader"/> }
            {  (message.length > 0 || message.length == 0 && !this.props.loading) && this.render_filters(types,counts,sortByList,reverseSort,facetWidgets) }
                { /*false && this.state.keyword.length > 0 && this.state.dataSource.length > 0 &&
