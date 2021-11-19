@@ -78,6 +78,7 @@ const mapStateToProps = (state,ownProps) => {
    let IIIFinfo = state.data.IIIFinfo
    let manifestWpdf
    let IIIFerrors
+   let monovolume
 
    if(IIIFinfo) {
 
@@ -97,6 +98,7 @@ const mapStateToProps = (state,ownProps) => {
          imageVolumeManifests = IIIFinfo.imageVolumeManifests
          imageLists = IIIFinfo.imageLists
          manifestWpdf = IIIFinfo.manifestWpdf
+         monovolume = IIIFinfo.single
 
          //console.log("IIIF",pdfVolumes,IIIFinfo)
       }
@@ -153,7 +155,7 @@ const mapStateToProps = (state,ownProps) => {
    let etextErrors = state.data.etextErrors
 
    let props = { logged,config,resources, ontology, dictionary, keyword, language, datatype, assocResources, prefLang, failures, loading,
-      imageAsset,firstImage,canvasID,collecManif,manifests,manifestError,pdfVolumes,createPdf,pdfUrl, manifestWpdf,
+      imageAsset,firstImage,canvasID,collecManif,manifests,manifestError,pdfVolumes,createPdf,pdfUrl, manifestWpdf, monovolume,
       annoCollec,rightPanel,locale,langPreset,langExt,imgData, nextChunk, nextPage, resourceManifest, imageVolumeManifests, imageLists, userEditPolicies, highlight,
       outline,outlines,outlineKW,      
       eTextRefs,

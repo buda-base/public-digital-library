@@ -4040,7 +4040,7 @@ class ResourceViewer extends Component<Props,State>
 
          if(this.state.UVcanLoad) { window.location.hash = "mirador"; window.location.reload(); }
 
-         loggergen.log("num",num,useManifest)
+         loggergen.log("showM:",num,useManifest)
 
          if(!tiMir) tiMir = setInterval( async () => {
 
@@ -4065,7 +4065,7 @@ class ResourceViewer extends Component<Props,State>
                {
                   console.log("here:",this.props.collecManif)
 
-                  if(this.props.imageAsset.match(/[/]collection[/]/) && !this.props.collecManif)
+                  if(this.props.imageAsset.match(/[/]collection[/]/) && (!this.props.collecManif || this.props.monovolume === false))
                   {
                      data.push({"collectionUri": this.props.imageAsset +"?continuous=true", location:"Test Collection Location" })
                      //if(this.props.manifests) data = data.concat(this.props.manifests.map(m => ({manifestUri:m["@id"],label:m["label"]})))
