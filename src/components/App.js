@@ -6175,7 +6175,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                { infoPanelH }
                {/* <h2>BUDA Platform</h2> */}
                {/* <h3>Buddhist Digital Resource Center</h3> */}
-               { (this.props.language || !this.props.keyword) && 
+               { (this.props.language || !this.props.keyword && !this.props.loading) && 
                <div id="search-bar">
                { this.props.config.khmerServer && !this.props.keyword &&  !this.props.loading && 
                   <span class="links">
@@ -6380,7 +6380,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                */ }
             </FormGroup>
            </div>
-           { this.props.config.khmerServer && !this.props.keyword && 
+           { this.props.config.khmerServer && !this.props.keyword && !this.props.loading &&
             <>
                <section>
                   <div>
