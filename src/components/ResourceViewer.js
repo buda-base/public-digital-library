@@ -4187,11 +4187,13 @@ class ResourceViewer extends Component<Props,State>
             tooltip = this.props.dictionary[k][rdfs+"comment"].filter(comm => !comm.value.match(/^([Mm]igration|[Dd]eprecated)/))
       }
 
+      if(tooltip) tooltip = getLangLabel(this, "", tooltip, false, true)
+
       if(k === bdo+'note') txt = I18n.t("popover.notes") ;
 
       let ret = (<a class="propref" {...(k.match(/purl[.]bdrc[.]io/) && !k.match(/[/]tmp[/]/) ? {"href":k}:{})} target="_blank">{txt?txt:this.fullname(k,false,false,true,true,count)}</a>)
 
-      if(tooltip && tooltip.length > 0) ret = <Tooltip placement="bottom-start" classes={{tooltip:"commentT",popper:"commentP"}} style={{marginLeft:"50px"}} title={<div>{tooltip.map(tip => tip.value.split("\n").map(e => [e,<br/>]))}</div>}>{ret}</Tooltip>
+      if(tooltip && tooltip.value) ret = <Tooltip placement="bottom-start" classes={{tooltip:"commentT",popper:"commentP"}} style={{marginLeft:"50px"}} title={<div>{tooltip.value}</div>}>{ret}</Tooltip>
 
       return ret;
    }
