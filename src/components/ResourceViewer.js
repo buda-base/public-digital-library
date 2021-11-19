@@ -4283,7 +4283,7 @@ class ResourceViewer extends Component<Props,State>
 
       //console.log("kZprop:",kZprop,iiifpres,rid)
 
-      let iiifThumb = this.getResourceElem(tmp+"thumbnailIIIFService")
+      let iiifThumb = this.getResourceElem(tmp+"thumbnailIIIFService"), assetUrl
       if(!iiifThumb || !iiifThumb.length) iiifThumb = this.getResourceElem(tmp+"thumbnailIIIFSelected")
       if(iiifThumb && iiifThumb.length) iiifThumb = iiifThumb[0].value
 
@@ -4291,7 +4291,8 @@ class ResourceViewer extends Component<Props,State>
       {
          if(!this.props.imageAsset && !this.props.manifestError) {
             if(rid !== this.props.IRI) this.setState({...this.state, imageLoaded:false})
-            this.props.onHasImageAsset(iiifpres+"/v:"+ rid+ "/manifest",rid,iiifThumb);
+            //this.props.onHasImageAsset(iiifpres+"/v:"+ rid+ "/manifest",rid,iiifThumb);
+            assetUrl = iiifpres+"/v:"+ rid+ "/manifest"
          }
       }/*
       else if(kZprop.indexOf(tmp+"imageVolumeId") !== -1)
@@ -4303,23 +4304,6 @@ class ResourceViewer extends Component<Props,State>
             this.props.onGetResource("bdr:"+this.pretty(elem[0].value));
          }
       }*/
-      else if(kZprop.indexOf(bdo+"instanceHasVolume") !== -1)
-      {
-         let elem = this.getResourceElem(bdo+"instanceHasVolume",rid,this.props.resources,fullRid)
-         let nbVol = this.getResourceElem(bdo+"itemVolumes",rid,this.props.resources,fullRid)
-         let work = this.getResourceElem(bdo+"instanceReproductionOf",rid,this.props.resources,fullRid)
-
-         if(elem[0] && elem[0].value && !this.props.imageAsset && !this.props.manifestError) {
-            
-            //console.log("iHv:",elem,nbVol,work)
-
-            if(rid !== this.props.IRI)this.setState({...this.state, imageLoaded:false})
-            let manif = iiifpres + "/vo:"+elem[0].value.replace(new RegExp(bdr),"bdr:")+"/manifest"
-            if(nbVol && nbVol[0] && nbVol[0].value && nbVol[0].value > 1 && work && work[0] && work[0].value)
-              manif = iiifpres + "/collection/wio:"+work[0].value.replace(new RegExp(bdr),"bdr:")
-            this.props.onHasImageAsset(manif,rid,iiifThumb)
-         }
-      }
       else if(kZprop.indexOf(bdo+"instanceReproductionOf") !== -1)
       {
          let elem = [{value:rid}] 
@@ -4336,8 +4320,9 @@ class ResourceViewer extends Component<Props,State>
             if(rid !== this.props.IRI)this.setState({...this.state, imageLoaded:false})
             let manif = iiifpres + "/wv:"+elem[0].value.replace(new RegExp(bdr),"bdr:")+"/manifest"
             if(nbVol && nbVol[0] && nbVol[0].value && nbVol[0].value >= 1 && work && work[0] && work[0].value)
-              manif = iiifpres + "/collection/wio:"+work[0].value.replace(new RegExp(bdr),"bdr:")
-            this.props.onHasImageAsset(manif,rid,iiifThumb)
+              manif = iiifpres + "/collection/wio:"+work[0].value.replace(new RegExp(bdr),"bdr:")+"::"+rid
+            //this.props.onHasImageAsset(manif,rid,iiifThumb)
+            assetUrl = manif
          }
       }
       else if(kZprop.indexOf(bdo+"volumeOf") !== -1)
@@ -4345,7 +4330,8 @@ class ResourceViewer extends Component<Props,State>
          let elem = this.getResourceElem(bdo+"volumeHasEtext",rid,this.props.resources,fullRid)
          if(!elem && !this.props.imageAsset && !this.props.manifestError) {
             this.setState({...this.state, imageLoaded:false})
-            this.props.onHasImageAsset(iiifpres+"/vo:"+ rid + "/manifest",rid,iiifThumb);
+            //this.props.onHasImageAsset(iiifpres+"/vo:"+ rid + "/manifest",rid,iiifThumb);
+            assetUrl = iiifpres+"/vo:"+ rid + "/manifest"
          }
       }
       else if(kZprop.indexOf(bdo+"hasIIIFManifest") !== -1)
@@ -4353,14 +4339,35 @@ class ResourceViewer extends Component<Props,State>
          let elem = this.getResourceElem(bdo+"hasIIIFManifest",rid,this.props.resources,fullRid)
          if(elem[0] && elem[0].value && !this.props.manifestError && !this.props.imageAsset) {
             if(rid !== this.props.IRI) this.setState({...this.state, imageLoaded:false})
-            this.props.onHasImageAsset(elem[0].value,rid,iiifThumb);
+            //this.props.onHasImageAsset(elem[0].value,rid,iiifThumb);
+            assetUrl = elem[0].value
          }
       }
       else if(kZprop.indexOf(bdo+"contentLocation") !== -1)
       {
          if(!this.props.imageAsset && !this.props.manifestError) {
             if(rid !== this.props.IRI) this.setState({...this.state, imageLoaded:false})
-            this.props.onHasImageAsset(iiifpres+"/collection/wio:"+rid,rid,iiifThumb)
+            //this.props.onHasImageAsset(iiifpres+"/collection/wio:"+rid,rid,iiifThumb)
+            assetUrl = iiifpres+"/collection/wio:"+rid
+         }
+      }      
+       else if(kZprop.indexOf(bdo+"instanceHasVolume") !== -1)
+      {
+         let elem = this.getResourceElem(bdo+"instanceHasVolume",rid,this.props.resources,fullRid)
+         let nbVol = this.getResourceElem(bdo+"itemVolumes",rid,this.props.resources,fullRid)
+         let work = this.getResourceElem(bdo+"instanceReproductionOf",rid,this.props.resources,fullRid)
+
+         if(elem[0] && elem[0].value && !this.props.imageAsset && !this.props.manifestError) {
+            
+            //console.log("iHv:",elem,nbVol,work)
+
+            if(rid !== this.props.IRI)this.setState({...this.state, imageLoaded:false})
+            let manif = iiifpres + "/vo:"+elem[0].value.replace(new RegExp(bdr),"bdr:")+"/manifest"
+            if(nbVol && nbVol[0] && nbVol[0].value && nbVol[0].value > 1 && work && work[0] && work[0].value)
+              manif = iiifpres + "/collection/wio:"+work[0].value.replace(new RegExp(bdr),"bdr:")
+            //this.props.onHasImageAsset(manif,rid,iiifThumb)
+            assetUrl = manif
+
          }
       }      
       else if(kZprop.indexOf(bdo+"itemHasVolume") !== -1)
@@ -4373,7 +4380,8 @@ class ResourceViewer extends Component<Props,State>
             let manif = iiifpres + "/v:"+elem[0].value.replace(new RegExp(bdr),"bdr:")+"/manifest"
             if(nbVol && nbVol[0] && nbVol[0].value && nbVol[0].value > 1 && work && work[0] && work[0].value)
               manif = iiifpres + "/collection/wio:"+work[0].value.replace(new RegExp(bdr),"bdr:")
-            this.props.onHasImageAsset(manif,rid,iiifThumb)
+            //this.props.onHasImageAsset(manif,rid,iiifThumb)
+            assetUrl = manif
          }
       }
       else {
@@ -4393,13 +4401,23 @@ class ResourceViewer extends Component<Props,State>
 
                   if(rid !== this.props.IRI) this.setState({...this.state, imageLoaded:false})
 
-                  if(assoc.length == 1) { this.props.onHasImageAsset(iiifpres + "/v:bdr:"+this.pretty(imItem[0].value,true)+"/manifest",rid,iiifThumb); }
-                  else { this.props.onHasImageAsset(iiifpres + "/collection/wio:"+this.pretty(rid,true),rid,iiifThumb);  }
+                  if(assoc.length == 1) { 
+                     //this.props.onHasImageAsset(iiifpres + "/v:bdr:"+this.pretty(imItem[0].value,true)+"/manifest",rid,iiifThumb); 
+                     assetUrl = iiifpres + "/v:bdr:"+this.pretty(imItem[0].value,true)+"/manifest"
+                  }
+                  else { 
+                     //this.props.onHasImageAsset(iiifpres + "/collection/wio:"+this.pretty(rid,true),rid,iiifThumb);  
+                     assetUrl = iiifpres + "/collection/wio:"+this.pretty(rid,true)
+                  }
 
                }
             }
          }
          
+      }
+
+      if(assetUrl) {
+         this.props.onHasImageAsset(assetUrl,rid,iiifThumb); 
       }
    }
 
