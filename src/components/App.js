@@ -740,7 +740,7 @@ export function etext_lang_selec(that,black:boolean = false)
 export function getGDPRconsent(that) {
 
    //ReactGA.pageview('/homepage');
-   loggergen.log("cookie?",document.cookie)
+   //loggergen.log("cookie?",document.cookie)
 
    if(that.props.config && that.props.config.GA && !that.props.simple) return (
       <CookieConsent
@@ -1553,19 +1553,24 @@ class App extends Component<Props,State> {
          for(let p of genre) 
             if(props.genresParents[p]) 
                for(let q of props.genresParents[p]) 
-                  if(s.collapse[q] === undefined) 
+                  if(s.collapse[q] === undefined) {
+                     //console.log("genres:collapse",q,p)
                      s.collapse[q] = true
+                  }
       }
 
       if(props.topicParents && state.filters.facets && state.filters.facets[bdo+"workIsAbout"]) {
+         console.log("topicParents",props.topicParents)
          if(!s) s = { ...state }
          let topic = state.filters.facets[bdo+"workIsAbout"]
          if(topic.val) topic = topic.val
          for(let p of topic) 
             if(props.topicParents[p]) 
                for(let q of props.topicParents[p]) 
-                  if(s.collapse[q] === undefined) 
+                  if(s.collapse[q] === undefined) {
+                     //console.log("topic:collapse",q,p)
                      s.collapse[q] = true
+                  }
       }
 
       if(state.filters.preload && state.sortBy && !props.sortBy) { 
@@ -1613,7 +1618,7 @@ class App extends Component<Props,State> {
 
             s.filters.facets = facets
 
-            loggergen.log("facets?",facets,props.loading)
+            //loggergen.log("facets?",facets,props.loading)
 
             if(!props.loading) 
                props.onUpdateFacets(

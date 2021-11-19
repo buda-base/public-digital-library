@@ -177,17 +177,19 @@ export const updateFacets = (state: UIState, action: actions.LoadingAction) => {
     // #548
     const _tmp = "http://purl.bdrc.io/ontology/tmp/"
     const removeUnreleased = !isAdmin(auth) || !action.payload[_tmp+"nonReleasedItems"]
-    console.log("removeU:",removeUnreleased)
+    //console.log("removeU:",removeUnreleased,facets)
 
-    let facets = Object.keys(action.meta.facets).map(k => {
+    let facets = Object.keys(action.meta.facets)
+    facets.map(k => {
         let prop = action.meta.config[k]
         let keys = Object.keys(action.payload)        
-        if(keys.length > 0 && (!action.payload[prop] || keys.length > 1)) {
-            update[k] = {}
-            //console.log("k",k,prop)
+        if(keys.length > 0 && (!action.payload[prop] || keys.length >= 1)) {
 
             let meta = action.meta.facets[k]
             let props = Object.keys(meta)
+            
+            //console.log("k:",k,prop,meta,props)
+
             if(k === "tree" && meta["@graph"]) { 
                 topicParents = meta["parents"]
                 props = meta["@graph"].map(i => i["@id"].replace(/bdr:/,"http://purl.bdrc.io/resource/"))
@@ -199,6 +201,9 @@ export const updateFacets = (state: UIState, action: actions.LoadingAction) => {
                 meta = meta["@metadata"]
             }
 
+            if(action.payload[prop] && keys.length == 1) return
+
+            update[k] = {}
             let total_i = {}
 
             for(let q of props) {

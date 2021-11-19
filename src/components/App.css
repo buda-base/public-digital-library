@@ -522,6 +522,8 @@ footer #donate,
 .App.khmerServer #filters-UI #clear-filters,
 .App.khmerServer #filters-UI #clear-filters > span { color:white; }
 
+.App.khmerServer .searchWidget.datatype:not(.instance,.work,.scan) { display:none; }
+
 .App.khmerServer #filters-UI,
 .App.khmerServer #search-bar  { background-image: linear-gradient(270deg, #0c5f89 0%, #9ccab4 100%, #a5d0b6 100%); }
 .App.home.khmerServer #search-bar { padding: 55px 0;  background-image: linear-gradient(249deg, #0c5f89 0%, #9ccab4 100%, #a5d0b6 100%); }
