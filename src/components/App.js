@@ -1253,7 +1253,7 @@ class App extends Component<Props,State> {
       
       // TODO check how this behave with smaller screen width/height
       let ref
-      if((ref = this._refs["sidepane"].current) /*&& this.props.language*/) {                     
+      if(this._refs["sidepane"] && (ref = this._refs["sidepane"].current) /*&& this.props.language*/) {                     
          $(window).off("scroll").on("scroll", () => {
             const rect = ref.getBoundingClientRect()
             const stuck = rect.y > 230

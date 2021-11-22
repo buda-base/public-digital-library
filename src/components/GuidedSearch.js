@@ -193,7 +193,7 @@ class GuidedSearch extends Component<Props,State> {
     console.log("render:", this.props, this.state, settings)
 
 
-    const searchRoute = "search?t=" +this.state.type+"&r=bdr:PR1KDPP00&"+Object.keys(this.state.checked).map( k => {
+    const searchRoute = "search?t=" + (this.state.type[0].toUpperCase()+this.state.type.substring(1)) + "&r=bdr:PR1KDPP00&"+Object.keys(this.state.checked).map( k => {
       console.log("k:",k)
       return Object.keys(this.state.checked[k]).map(i => {
         console.log("i:",i,settings[k].values[i].facet)
