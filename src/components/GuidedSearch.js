@@ -147,7 +147,7 @@ class GuidedSearch extends Component<Props,State> {
                 <FormControlLabel
                   control={
                     <Checkbox
-                      checked={this.state.checked[k] && this.state.checked[k][i]}
+                      checked={this.state.checked[k] === undefined ? false : this.state.checked[k] && this.state.checked[k][i] === true}
                       className="checkbox"
                       icon={<span className="empty-checkbox"><CheckBoxOutlineBlankSharp /></span>}
                       checkedIcon={<CheckBoxSharp  style={{color:"#d73449"}}/>}
@@ -183,9 +183,11 @@ class GuidedSearch extends Component<Props,State> {
       }).join("&")
     }).join("&")
 
-    const handleType = (event,checked) => this.setState({type:(checked?"instance":"work")})
+    const handleType = (event,checked) => this.setState({type:(checked?"instance":"work"), checked:{}})
 
     const { classes } = this.props
+
+    const canReset = !Object.keys(this.state.checked).reduce( (acc,k) => acc || Object.keys(this.state.checked[k]).reduce( (accv,v) => accv || this.state.checked[k][v], false), this.state.type !== "work")
 
     return (
       <div>
@@ -194,8 +196,8 @@ class GuidedSearch extends Component<Props,State> {
                 <div className="static-container sticky">
                   <div>
                     <h1>Guided Search</h1>                                          
-                    <p>Coming soon</p>
                     { settings?.types && renderSelector("types", true, <>
+                      <button {...canReset?{disabled:true}:{}} onClick={() => this.setState({checked:{}, type:"work"})}>{I18n.t("search.reset")}</button>
                       <label onClick={(event) => handleType(event,this.state.type === "work")}><span>{I18n.t("types.work")}</span></label>
                       <FormControlLabel
                         control={
