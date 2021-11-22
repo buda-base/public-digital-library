@@ -464,7 +464,8 @@
       },
       "seeO": "See results in other data types",
       "backToW": "Back to Works",
-      "any":"(Select any)"
+      "any":"(Select any)",
+      "one":"(Select one)"
    },
    "Rsidebar": {
       "title": "Display Preferences",

@@ -86,9 +86,9 @@ class GuidedSearch extends Component<Props,State> {
       else return "[no "+arg+"]"
     }
  
-    const renderSelector = (k) => {
+    const renderSelector = (k, unique) => {
       return <div class="selector">
-          <h2>{getLocaleLabel(settings[k])}<span>{I18n.t("search.any")}</span><Tooltip key={"tip"} placement="bottom-end" title={
+          <h2>{getLocaleLabel(settings[k])}<span>{I18n.t("search."+(unique?"one":"any"))}</span><Tooltip key={"tip"} placement="bottom-end" title={
                                             <div style={{margin:"10px"}}>{getLocaleLabel(settings[k], "tooltip")}</div>
                                           } > 
                                           <img src="/icons/help.svg"/>
@@ -137,7 +137,7 @@ class GuidedSearch extends Component<Props,State> {
                   <div>
                     <h1>Guided Search</h1>                                          
                     <p>Coming soon</p>
-                    { settings?.types && renderSelector("types") }
+                    { settings?.types && renderSelector("types", true) }
                   </div>
                   <div>
                     {/* { !this.props.dictionary && <Loader />}
