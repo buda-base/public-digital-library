@@ -650,13 +650,17 @@ footer #donate,
    padding-top:0px;
    top:80px;
    background:#efefef;
-   padding-bottom:40px;
+   padding-bottom:55px;
    z-index:100;
    transition:all 100ms ease-in-out;
 }
 
+.App.guidedsearch.khmer .static-container.sticky > div:first-child::after {
+   content:""; height:15px; width:100%; margin-left:-35px; display: block; background:white; bottom:0px;position: absolute;
+}
+
 .App.guidedsearch.khmer.scrolled .static-container.sticky > div:first-child {
-   padding-bottom:20px;
+   padding-bottom:35px;
 }
 
 
@@ -692,7 +696,7 @@ footer #donate,
    background:white;
    min-height:calc(100vh - 480px);
    padding-bottom:55px;
-   padding-top:45px;
+   padding-top:30px;
 }
 .App.guidedsearch.khmer .static-container.sticky > div:last-child { padding:35px 0;}
 
