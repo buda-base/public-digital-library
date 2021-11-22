@@ -642,7 +642,7 @@ footer #donate,
    text-align: left;
    padding-left:35px;
    box-sizing: border-box;
-   padding-right:90px;
+   padding-right:35px;
 }
 
 .App.guidedsearch.khmer .static-container.sticky > div:first-child {
@@ -655,23 +655,35 @@ footer #donate,
 }
 
 .App.guidedsearch.khmer .static-container.sticky > div:first-child h1 { padding-top:80px; font-size:34px; margin:0;}
-.App.guidedsearch.khmer .static-container.sticky h2 { font-size:16px; color:#343434; text-transform: uppercase; padding-top:45px;margin:0; position: relative;}
+.App.guidedsearch.khmer .static-container.sticky h2 { font-size:16px; color:#343434; text-transform: uppercase; margin:0; position: relative;}
 
-.App.guidedsearch.khmer .static-container.sticky .selector:hover h2 > * { visibility: visible;}
+.App.guidedsearch.khmer .static-container.sticky .selector { padding-bottom:45px; scroll-margin-top: 380px;}
 .App.guidedsearch.khmer .static-container.sticky .selector h2 > * { visibility:hidden; }
 .App.guidedsearch.khmer .static-container.sticky .selector h2 > img { width:22px; vertical-align: -6px;/*position: absolute; right:0;*/ margin-left:20px;}
 .App.guidedsearch.khmer .static-container.sticky .selector h2 > span { font-weight: 400; font-size:10px; vertical-align: 2px; text-transform: none; padding-left:20px;}
+.App.guidedsearch.khmer .static-container.sticky .selector:hover h2 > * { visibility: visible;}
+
+.App.guidedsearch.khmer .static-container.sticky > div:first-child .selector {padding-bottom:0; padding-top:20px;  position: relative; display: flex; }
+
+.App.guidedsearch.khmer .static-container.sticky > div:first-child .selector [data-prop] { position: absolute; right:0 /*-70px;*/;  bottom:-16px; }
+.App.guidedsearch.khmer .static-container.sticky > div:first-child .selector label { margin:0; cursor: pointer; }
+.App.guidedsearch.khmer .static-container.sticky > div:first-child .selector label:first-child > span{ vertical-align:-2px; padding-right:12px;}
+
+.App.guidedsearch.khmer .static-container.sticky > div:first-child .selector label > span:last-child { font-size:15px; line-height: 20px; font-weight:500; color:#343434; }
+.App.guidedsearch.khmer .static-container.sticky > div:first-child .selector label > span:first-child:not(:last-child) { margin-right:30px; margin-top:4px; }
 
 .App.guidedsearch.khmer .static-container.sticky > div:first-child + div h2 { border-bottom:2px solid #e3e3e3; padding-bottom:10px; }
 
+
 .App.guidedsearch.khmer .static-container.sticky > div:first-child + div {   
    background:white;
-   min-height:calc(100vh - 415px);
-   padding-bottom:100px;
+   min-height:calc(100vh - 520px);
+   padding-bottom:55px;
+   padding-top:45px;
 }
 .App.guidedsearch.khmer .static-container.sticky > div:last-child { padding:35px 0;}
 
-.App.guidedsearch.khmer .static-container.sticky > div:first-child + div [data-prop] { display:flex; flex-wrap: wrap; padding:15px 0 0px 0; }
+.App.guidedsearch.khmer .static-container.sticky > div:first-child + div [data-prop] { display:flex; flex-wrap: wrap; padding:15px 0 0px 0; justify-content: space-between;}
 .App.guidedsearch.khmer .static-container.sticky > div:first-child + div [data-prop] .option { display:block; margin-bottom:-5px; }
 .App.guidedsearch.khmer .static-container.sticky > div:first-child + div [data-prop="language"] .option { padding-right:20px; }
 .App.guidedsearch.khmer .static-container.sticky > div:first-child + div [data-prop="style"] .option { width:30%; }
@@ -679,7 +691,7 @@ footer #donate,
 .App.guidedsearch.khmer .static-container.sticky > div:first-child + div [data-prop] .option label > span:not(.checkbox) { font-size:15px; font-weight:500; color:#343434; 
    padding-bottom: 2px; 
 }
-
+.App.guidedsearch.khmer .static-container.sticky > div:first-child + div [data-prop="language"] { justify-content: flex-start; }
 
 
 .App.guidedsearch.khmer .static-container.sticky > div:first-child + div [data-prop] .option .empty-checkbox { font-size:0; position: relative;}

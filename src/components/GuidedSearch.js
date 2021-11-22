@@ -4,13 +4,16 @@ import qs from 'query-string'
 import { top_right_menu, getPropLabel, fullUri } from './App'
 import {Link} from "react-router-dom"
 import Loader from 'react-loader';
+import Switch from '@material-ui/core/Switch';
+import { withStyles } from '@material-ui/core/styles';
 import Checkbox from '@material-ui/core/Checkbox';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import CheckBoxOutlineBlankSharp from '@material-ui/icons/CheckBoxOutlineBlankSharp';
 import CheckBoxSharp from '@material-ui/icons/CheckBoxSharp';
 import Tooltip from '@material-ui/core/Tooltip';
+import purple from '@material-ui/core/colors/purple';
 
-type Props = { auth:{}, history:{}, dictionary:{} }
+type Props = { auth:{}, history:{}, dictionary:{}, classes:{} }
 type State = { collapse:{}, checked:{}, type:string }
 
 
@@ -64,13 +67,58 @@ const data = {
 
 // TODO v3 / load from url?
 
+
+
+const styles = theme => ({  
+  iOSSwitchBase: {
+    '&$iOSChecked': {
+      color: theme.palette.common.white,
+      '& + $iOSBar': {
+        backgroundColor:theme.palette.common.white ,
+      },
+    },
+    transition: theme.transitions.create('transform', {
+      duration: theme.transitions.duration.shortest,
+      easing: theme.transitions.easing.sharp,
+    }),
+  },
+  iOSChecked: {
+    transform:"translateX(30px)",
+    '& + $iOSBar': {
+      opacity: 1,
+    },
+  },
+  iOSBar: {
+    borderRadius: 10,
+    width: 62,
+    height: 20,
+    marginTop: -11,
+    marginLeft: -21,
+    border: 'solid 1px',
+    borderColor: theme.palette.grey[400],
+    backgroundColor: theme.palette.grey[50],
+    opacity: 1,
+    transition: theme.transitions.create(['background-color', 'border']),
+  },
+  iOSIcon: {
+    width: 34,
+    height: 20,
+    borderRadius:11,
+    color:"#d73449",
+    boxShadow:"none",
+    border:"1px solid #a3a3a3",
+    transform: "translateX(3px)"
+  },
+  iOSIconChecked: {},
+})
+
 class GuidedSearch extends Component<Props,State> {
   _selectors = []
 
   constructor(props : Props) {
     super(props);      
 
-    this.state = { collapse:"", checked:{}, type:"Work" }
+    this.state = { collapse:"", checked:{}, type:"work" }
 
     if(!this.props.config) this.props.onInitiateApp(qs.parse(this.props.history.location.search), null, null, "guidedsearch")
   }
@@ -78,7 +126,7 @@ class GuidedSearch extends Component<Props,State> {
   render() {
 
     let settings = data
-    if(this.props.config && this.props.config.guided) settings = this.props.config.guided
+    if(this.props?.config?.guided && this.props.config.guided[this.state.type]) settings = this.props.config.guided[this.state.type]
 
     const getLocaleLabel = (o, arg = "label") => {
       if(o[arg] && o[arg][this.props.locale]) return o[arg][this.props.locale]
@@ -86,8 +134,8 @@ class GuidedSearch extends Component<Props,State> {
       else return "[no "+arg+"]"
     }
  
-    const renderSelector = (k, unique) => {
-      return <div class="selector">
+    const renderSelector = (k, unique, props) => {
+      return <div class="selector" id={k}>
           <h2>{getLocaleLabel(settings[k])}<span>{I18n.t("search."+(unique?"one":"any"))}</span><Tooltip key={"tip"} placement="bottom-end" title={
                                             <div style={{margin:"10px"}}>{getLocaleLabel(settings[k], "tooltip")}</div>
                                           } > 
@@ -108,15 +156,21 @@ class GuidedSearch extends Component<Props,State> {
                   label={getLocaleLabel(o)}
                 />            
               </span>))}
+            { props }
           </div>
         </div>                        
     }
+      
+    const renderLink = (k) => {
+      return <Link to={"#"+k} onClick={event => {
+        document.querySelector("#"+k).scrollIntoView({block: "start", inline: "nearest", behavior:"smooth"})
+        event.stopPropagation()
+      }}>{getLocaleLabel(settings[k])}</Link>
+    }
 
-    const selectors = settings.filters.map(renderSelector)
-     
-    const links = settings.filters.map(k => {
-      return <Link to={"#"+k.split(":")[1]}>{getLocaleLabel(settings[k])}</Link>
-    })  
+    const selectors = settings.filters.map(k => renderSelector(k))     
+    const links = settings.filters.map(renderLink)
+
 
     console.log("render:", this.props, this.state, settings)
 
@@ -129,6 +183,10 @@ class GuidedSearch extends Component<Props,State> {
       }).join("&")
     }).join("&")
 
+    const handleType = (event,checked) => this.setState({type:(checked?"instance":"work")})
+
+    const { classes } = this.props
+
     return (
       <div>
           <div class={"App home guidedsearch khmer"}>
@@ -137,7 +195,27 @@ class GuidedSearch extends Component<Props,State> {
                   <div>
                     <h1>Guided Search</h1>                                          
                     <p>Coming soon</p>
-                    { settings?.types && renderSelector("types", true) }
+                    { settings?.types && renderSelector("types", true, <>
+                      <label onClick={(event) => handleType(event,this.state.type === "work")}><span>{I18n.t("types.work")}</span></label>
+                      <FormControlLabel
+                        control={
+                          <Switch
+                            classes={{
+                              switchBase: classes.iOSSwitchBase,
+                              bar: classes.iOSBar,
+                              icon: classes.iOSIcon,
+                              iconChecked: classes.iOSIconChecked,
+                              checked: classes.iOSChecked,
+                            }}
+                            disableRipple
+                            checked={!(this.state.type === "work")}
+                            onChange={handleType}
+                            value="checkedB"
+                          />
+                        }
+                        label={I18n.t("types.instance")}
+                      />
+                    </>) }
                   </div>
                   <div>
                     {/* { !this.props.dictionary && <Loader />}
@@ -152,8 +230,7 @@ class GuidedSearch extends Component<Props,State> {
                 <div>
                   <nav>
                     <h3>Navigation</h3>
-                    {/* <Link to="#types">Search type</Link> */}
-                    <Link to="#direct">Direct access</Link>
+                    { settings?.direct && renderLink("direct") }                    
                     { links }
                     <Link to={searchRoute}><button class="red">Search</button></Link>
                   </nav>
@@ -166,4 +243,4 @@ class GuidedSearch extends Component<Props,State> {
 }
 }
 
-export default GuidedSearch
+export default withStyles(styles)(GuidedSearch)
