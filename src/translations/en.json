@@ -463,7 +463,8 @@
          "noresultsAsso": "No result associated with {{keyword}} {{type}}"
       },
       "seeO": "See results in other data types",
-      "backToW": "Back to Works"
+      "backToW": "Back to Works",
+      "any":"(Select any)"
    },
    "Rsidebar": {
       "title": "Display Preferences",

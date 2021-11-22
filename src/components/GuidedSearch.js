@@ -1,4 +1,5 @@
 import React, {Component} from "react"
+import I18n from 'i18next';
 import qs from 'query-string'
 import { top_right_menu, getPropLabel, fullUri } from './App'
 import {Link} from "react-router-dom"
@@ -7,6 +8,7 @@ import Checkbox from '@material-ui/core/Checkbox';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import CheckBoxOutlineBlankSharp from '@material-ui/icons/CheckBoxOutlineBlankSharp';
 import CheckBoxSharp from '@material-ui/icons/CheckBoxSharp';
+import Tooltip from '@material-ui/core/Tooltip';
 
 type Props = { auth:{}, history:{}, dictionary:{} }
 type State = { collapse:{}, checked:{}, type:string }
@@ -19,7 +21,7 @@ const data = {
   "bdo:workIsAbout": [ "bdr:FEMC_Scheme_I_1", "bdr:FEMC_Scheme_I_2", "bdr:FEMC_Scheme_I_3" ]
 }
 */
-// v2
+// v2 - see config-khmer.json
 const data = {
   "filters": [ "language", "style", "topic"],
   "language": {
@@ -78,15 +80,19 @@ class GuidedSearch extends Component<Props,State> {
     let settings = data
     if(this.props.config && this.props.config.guided) settings = this.props.config.guided
 
-    const getLocaleLabel = (o) => {
-      if(o.label[this.props.locale]) return o.label[this.props.locale]
-      else if(o.label.en) return o.label.en
-      else return "[no label]"
+    const getLocaleLabel = (o, arg = "label") => {
+      if(o[arg] && o[arg][this.props.locale]) return o[arg][this.props.locale]
+      else if(o[arg] && o[arg].en) return o[arg].en
+      else return "[no "+arg+"]"
     }
-
-    const selectors = settings.filters.map(k => {
-      return <>
-          <h2>{getLocaleLabel(settings[k])}</h2>
+ 
+    const renderSelector = (k) => {
+      return <div class="selector">
+          <h2>{getLocaleLabel(settings[k])}<span>{I18n.t("search.any")}</span><Tooltip key={"tip"} placement="bottom-end" title={
+                                            <div style={{margin:"10px"}}>{getLocaleLabel(settings[k], "tooltip")}</div>
+                                          } > 
+                                          <img src="/icons/help.svg"/>
+                                       </Tooltip></h2>
           <div data-prop={k}>
             { settings[k].values.map( (o,i) => (
               <span class="option">
@@ -103,9 +109,11 @@ class GuidedSearch extends Component<Props,State> {
                 />            
               </span>))}
           </div>
-        </>                        
-    })
+        </div>                        
+    }
 
+    const selectors = settings.filters.map(renderSelector)
+     
     const links = settings.filters.map(k => {
       return <Link to={"#"+k.split(":")[1]}>{getLocaleLabel(settings[k])}</Link>
     })  
@@ -129,12 +137,12 @@ class GuidedSearch extends Component<Props,State> {
                   <div>
                     <h1>Guided Search</h1>                                          
                     <p>Coming soon</p>
-                    <h2 id="types">Search type</h2>
+                    { settings?.types && renderSelector("types") }
                   </div>
                   <div>
-                    <h2 id="direct">Direct access</h2>
                     {/* { !this.props.dictionary && <Loader />}
                     { this.props.dictionary && selectors } */}
+                    { settings?.direct && renderSelector("direct") }
                     { selectors }
                   </div>
                   <div>
