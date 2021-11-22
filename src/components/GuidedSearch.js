@@ -12,6 +12,7 @@ import CheckBoxOutlineBlankSharp from '@material-ui/icons/CheckBoxOutlineBlankSh
 import CheckBoxSharp from '@material-ui/icons/CheckBoxSharp';
 import Tooltip from '@material-ui/core/Tooltip';
 import purple from '@material-ui/core/colors/purple';
+import $ from 'jquery' ;
 
 type Props = { auth:{}, history:{}, dictionary:{}, classes:{} }
 type State = { collapse:{}, checked:{}, type:string }
@@ -112,6 +113,8 @@ const styles = theme => ({
   iOSIconChecked: {},
 })
 
+let oldScrollTop = 0
+
 class GuidedSearch extends Component<Props,State> {
   _selectors = []
 
@@ -121,6 +124,21 @@ class GuidedSearch extends Component<Props,State> {
     this.state = { collapse:"", checked:{}, type:"work" }
 
     if(!this.props.config) this.props.onInitiateApp(qs.parse(this.props.history.location.search), null, null, "guidedsearch")
+
+    $(window).off("scroll").on("scroll", (ev) => {
+      if(ev.currentTarget){
+        let down = false
+        if(oldScrollTop < ev.currentTarget.scrollY) down = true
+        
+        if(down) {
+          if(ev.currentTarget.scrollY >= 100) $(".guidedsearch").addClass("scrolled")
+        } else {
+          if(ev.currentTarget.scrollY <= 0) $(".guidedsearch").removeClass("scrolled")
+        }
+
+        oldScrollTop = ev.currentTarget.scrollY
+      }
+    })
   }
   
   render() {
