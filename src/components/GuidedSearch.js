@@ -122,12 +122,16 @@ const fetchFEMCTopics = async () => {
   fetch("http://purl.bdrc.io/ontology/schemes/taxonomy/FEMCScheme.json").then(async (data) => {
     const json = await data.json()
     for(let k of Object.keys(json).sort()){
-      if(json[k][skos+"narrower"] || json[k][skos+"broader"]) topics.push({ 
-        label: json[k][skos+"prefLabel"].reduce( (acc,l) => ({...acc, [l.lang]:l.value }), {}) , 
-        facet: { property: "tree", relation: "inc", value: k.replace(new RegExp(bdr), "bdr:") 
-      }}) 
+      if(json[k][skos+"narrower"] || json[k][skos+"broader"]) {
+        let value = k.replace(new RegExp(bdr), "bdr:")
+        if(json[k][skos+"narrower"]) value = [ value, ...json[k][skos+"narrower"].reduce( (acc,n) => [...acc, n.value.replace(new RegExp(bdr), "bdr:")], []) ]
+        topics.push({ 
+          label: json[k][skos+"prefLabel"].reduce( (acc,l) => ({...acc, [l.lang]:l.value }), {}) , 
+          facet: { property: "tree", relation: "inc", value } 
+        })
+      }
     }
-    //console.log("FEMCTopics:",json,JSON.stringify(topics, null,3))
+    console.log("FEMCTopics:",json,JSON.stringify(topics, null,3))
   }) 
 }
 
@@ -219,7 +223,11 @@ class GuidedSearch extends Component<Props,State> {
       console.log("k:",k)
       return Object.keys(this.state.checked[k]).map(i => {
         console.log("i:",i,settings[k].values[i].facet)
-        if(this.state.checked[k][i]) return "f="+settings[k].values[i].facet.property+","+settings[k].values[i].facet.relation+","+settings[k].values[i].facet.value
+        if(this.state.checked[k][i]) { 
+          let val = settings[k].values[i].facet.value
+          if(!Array.isArray(val)) val = [val] 
+          return val.map(v => "f="+settings[k].values[i].facet.property+","+settings[k].values[i].facet.relation+","+v).join("&")
+        }
       }).join("&")
     }).join("&")
 
