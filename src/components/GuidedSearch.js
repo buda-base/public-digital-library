@@ -133,6 +133,13 @@ const selectStyles = {
     ...provided,
     fontWeight: 500,
     color: "#343434"
+  }),
+  noOptionsMessage: (provided, state) => ({
+    ...provided,
+    textAlign:"left",
+    fontSize:"14px",
+    fontWeight: 500,
+    color: "#343434"
   })
 };
 
@@ -321,13 +328,12 @@ class GuidedSearch extends Component<Props,State> {
                       <Select
                         styles={selectStyles}
                         options={this.state.titles}
-                        // components={components}
-                        value={""}
                         onChange={(v) => { 
                           console.log("val:",v)
                           this.props.history.push("/show/"+v.value)
                         }}
                         placeholder={I18n.t("search."+this.state.type+"title")}
+                        noOptionsMessage={() => I18n.t("search.nothing")}
                       />
                     </>) }
                     { selectors }

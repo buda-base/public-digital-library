@@ -468,7 +468,8 @@
       "one":"(Select one)",
       "reset":"Reset",
       "worktitle":"Work title...",
-      "instancetitle":"Version title..."
+      "instancetitle":"Version title...",
+      "nothing":"No match"
    },
    "Rsidebar": {
       "title": "Display Preferences",
