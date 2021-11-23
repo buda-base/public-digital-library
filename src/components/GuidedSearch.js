@@ -113,6 +113,27 @@ const styles = theme => ({
   iOSIconChecked: {},
 })
 
+
+let topics = []
+
+const fetchFEMCTopics = async () => {
+  const skos = "http://www.w3.org/2004/02/skos/core#";
+  const bdr = "http://purl.bdrc.io/resource/";
+  fetch("http://purl.bdrc.io/ontology/schemes/taxonomy/FEMCScheme.json").then(async (data) => {
+    const json = await data.json()
+    for(let k of Object.keys(json).sort()){
+      if(json[k][skos+"narrower"] || json[k][skos+"broader"]) topics.push({ 
+        label: json[k][skos+"prefLabel"].reduce( (acc,l) => ({...acc, [l.lang]:l.value }), {}) , 
+        facet: { property: "tree", relation: "inc", value: k.replace(new RegExp(bdr), "bdr:") 
+      }}) 
+    }
+    //console.log("FEMCTopics:",json,JSON.stringify(topics, null,3))
+  }) 
+}
+
+fetchFEMCTopics()
+
+
 let oldScrollTop = 0
 
 class GuidedSearch extends Component<Props,State> {
@@ -145,6 +166,7 @@ class GuidedSearch extends Component<Props,State> {
 
     let settings = data
     if(this.props?.config?.guided && this.props.config.guided[this.state.type]) settings = this.props.config.guided[this.state.type]
+    // if(topics.length) settings["topic"].values = topics // better dump it then copy-paste (+hand sort?)
 
     const getLocaleLabel = (o, arg = "label") => {
       if(o[arg] && o[arg][this.props.locale]) return o[arg][this.props.locale]
