@@ -12,10 +12,11 @@ import CheckBoxOutlineBlankSharp from '@material-ui/icons/CheckBoxOutlineBlankSh
 import CheckBoxSharp from '@material-ui/icons/CheckBoxSharp';
 import Tooltip from '@material-ui/core/Tooltip';
 import purple from '@material-ui/core/colors/purple';
+import Select from 'react-select';
 import $ from 'jquery' ;
 
 type Props = { auth:{}, history:{}, dictionary:{}, classes:{} }
-type State = { collapse:{}, checked:{}, type:string }
+type State = { collapse:{}, checked:{}, type:string, titles:[] }
 
 
 /* // v1
@@ -114,8 +115,29 @@ const styles = theme => ({
 })
 
 
-let topics = []
+const selectStyles = {
+  input: base => ({
+    ...base,
+    color: "#343434",
+    fontWeight:500,
+    cursor:"text",
+  }),
+  option: (provided, state) => ({
+    ...provided,
+    fontSize: "14px",
+    fontWeight: state.isFocused ? '600' : '400',
+    backgroundColor: state.isFocused ? '#efefef' : 'white',
+    cursor:"pointer",
+  }),
+  placeholder: (provided, state) => ({
+    ...provided,
+    fontWeight: 500,
+    color: "#343434"
+  })
+};
 
+
+let topics = []
 const fetchFEMCTopics = async () => {
   const skos = "http://www.w3.org/2004/02/skos/core#";
   const bdr = "http://purl.bdrc.io/resource/";
@@ -131,11 +153,10 @@ const fetchFEMCTopics = async () => {
         })
       }
     }
-    console.log("FEMCTopics:",json,JSON.stringify(topics, null,3))
+    //console.log("FEMCTopics:",json,JSON.stringify(topics, null,3))
   }) 
 }
-
-fetchFEMCTopics()
+//fetchFEMCTopics()
 
 
 let oldScrollTop = 0
@@ -149,6 +170,8 @@ class GuidedSearch extends Component<Props,State> {
     this.state = { collapse:"", checked:{}, type:"work" }
 
     if(!this.props.config) this.props.onInitiateApp(qs.parse(this.props.history.location.search), null, null, "guidedsearch")
+
+    this.fetchFEMCTitles();
 
     $(window).off("scroll").on("scroll", (ev) => {
       if(ev.currentTarget){
@@ -166,6 +189,28 @@ class GuidedSearch extends Component<Props,State> {
     })
   }
   
+  async fetchFEMCTitles() {
+    let titles = []
+    const skos = "http://www.w3.org/2004/02/skos/core#";
+    const bdr = "http://purl.bdrc.io/resource/";
+    fetch("http://purl.bdrc.io/lib/worksInCollection?R_RES=bdr%3APR1KDPP00&format=json").then(async (data) => {
+      const json = await data.json()
+      for(let k of Object.keys(json.main)) {
+        let labels = json.main[k].filter(w => w.value && w.type === skos+"prefLabel").map(w => ({ value: k.replace(new RegExp(bdr), "bdr:"), label: w.value }))
+        titles = titles.concat(labels)
+      }
+      titles = titles.sort( (a,b) => {
+        if(a.label < b.label) return -1
+        else if(a.label > b.label) return 1
+        return 0
+      })
+      //console.log("FEMCTitles:",titles)
+      this.setState({titles})
+    })
+  }
+  
+
+
   render() {
 
     let settings = data
@@ -180,7 +225,7 @@ class GuidedSearch extends Component<Props,State> {
  
     const renderSelector = (k, unique, props) => {
       return <div class="selector" id={k}>
-          <h2>{getLocaleLabel(settings[k])}<span>{I18n.t("search."+(unique?"one":"any"))}</span><Tooltip key={"tip"} placement="bottom-end" title={
+          <h2>{getLocaleLabel(settings[k])}{ unique !== undefined && <span>{I18n.t("search."+(unique?"one":"any"))}</span>}<Tooltip key={"tip"} placement="bottom-end" title={
                                             <div style={{margin:"10px"}}>{getLocaleLabel(settings[k], "tooltip")}</div>
                                           } > 
                                           <img src="/icons/help.svg"/>
@@ -212,7 +257,7 @@ class GuidedSearch extends Component<Props,State> {
       }}>{getLocaleLabel(settings[k])}</Link>
     }
 
-    const selectors = settings.filters.map(k => renderSelector(k))     
+    const selectors = settings.filters.map(k => renderSelector(k, true))     
     const links = settings.filters.map(renderLink)
 
 
@@ -236,6 +281,8 @@ class GuidedSearch extends Component<Props,State> {
     const { classes } = this.props
 
     const canReset = !Object.keys(this.state.checked).reduce( (acc,k) => acc || Object.keys(this.state.checked[k]).reduce( (accv,v) => accv || this.state.checked[k][v], false), this.state.type !== "work")
+
+
 
     return (
       <div>
@@ -270,7 +317,19 @@ class GuidedSearch extends Component<Props,State> {
                   <div>
                     {/* { !this.props.dictionary && <Loader />}
                     { this.props.dictionary && selectors } */}
-                    { settings?.direct && renderSelector("direct") }
+                    { settings?.direct && renderSelector("direct", true, <>
+                      <Select
+                        styles={selectStyles}
+                        options={this.state.titles}
+                        // components={components}
+                        value={""}
+                        onChange={(v) => { 
+                          console.log("val:",v)
+                          this.props.history.push("/show/"+v.value)
+                        }}
+                        placeholder={I18n.t("search."+this.state.type+"title")}
+                      />
+                    </>) }
                     { selectors }
                   </div>
                   <div>

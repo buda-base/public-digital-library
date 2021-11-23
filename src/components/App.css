@@ -715,6 +715,12 @@ footer #donate,
 }
 .App.guidedsearch.khmer .static-container.sticky > div:first-child + div [data-prop="language"] { justify-content: flex-start; }
 
+.App.guidedsearch.khmer .static-container.sticky > div:first-child + div [data-prop="direct"] > div > div:first-of-type { border:none; box-shadow: none; border-radius: 0;
+   background-color:#efefef; min-width:400px; box-shadow: inset 0 0 4px rgba(0,0,0,0.25); font-size:14px; 
+}
+.App.guidedsearch.khmer .static-container.sticky > div:first-child + div [data-prop="direct"] > div > div:first-of-type { color:#343434; }
+
+[class$="-indicatorSeparator"] { display: none; }
 
 .App.guidedsearch.khmer .static-container.sticky > div:first-child + div [data-prop] .option .empty-checkbox { font-size:0; position: relative;}
 .App.guidedsearch.khmer .static-container.sticky > div:first-child + div [data-prop] .option svg { font-size:22px; }

@@ -466,7 +466,9 @@
       "backToW": "Back to Works",
       "any":"(Select any)",
       "one":"(Select one)",
-      "reset":"Reset"
+      "reset":"Reset",
+      "worktitle":"Work title...",
+      "instancetitle":"Version title..."
    },
    "Rsidebar": {
       "title": "Display Preferences",
