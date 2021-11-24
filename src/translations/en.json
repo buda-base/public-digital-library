@@ -376,7 +376,8 @@
       "seeM_plural": "{{count}} more versions available",
       "card": "{{num}}",
       "inter": "{{min}}~{{max}}",
-      "ordInter": "{{min}}-{{max,ordinal}} c."
+      "ordInter": "{{min}}-{{max,ordinal}} c.",
+      "see10More": "See 10 More"
    },
    "lang": {
       "en": "English",

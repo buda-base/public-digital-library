@@ -4718,23 +4718,30 @@ class ResourceViewer extends Component<Props,State>
          let show = this.state.collapse[k]
          if(hasMaxDisplay === -1 /*&& ![bf+"identifiedBy",bdo+"note"].includes(k)*/ && this.state.collapse[k] === undefined) show = true ; 
 
+         let linkToVersions, maxVersions = 20
+         if(ret.length > maxVersions) {
+            linkToVersions = <span class="expand"><Link to={"/search?i="+this.props.IRI+"&t=Work"}>{I18n.t("misc.browseA",{count: ret.length})}</Link></span>
+         }
+
          return (
             <div data-prop={shortUri(k)} class={"has-collapse custom max-"+(maxDisplay)+" "+(n%2===0?"even":"odd") }>
                <h3><span>{this.proplink(k,null,n)}{I18n.t("punc.colon")}</span></h3>
                <div className={"propCollapseHeader in-"+(this.state.collapse[k]===true)}>
                   {ret.slice(0,maxDisplay)}
-                  { (false || (!this.state.collapse[k] && hasMaxDisplay !== -1) ) && <span
+                  { (false || (!this.state.collapse[k] && hasMaxDisplay !== -1) ) && <><span
                      onClick={(e) => this.setState({...this.state,collapse:{...this.state.collapse,[k]:!this.state.collapse[k]}})}
                      className="expand">
-                        {I18n.t("misc."+(this.state.collapse[k]?"hide":"seeMore")).toLowerCase()}&nbsp;<span
+                        {I18n.t("misc."+(this.state.collapse[k]?"hide":"see"+(linkToVersions?"10":"")+"More")).toLowerCase()}&nbsp;<span
                         className="toggle-expand">
                            { this.state.collapse[k] && <ExpandLess/>}
                            { !this.state.collapse[k] && <ExpandMore/>}
                      </span>
-                  </span> }
+                  </span>
+                  { linkToVersions }
+                  </> }
                </div> 
                <Collapse timeout={{enter:0,exit:0}} className={"propCollapse in-"+(show===true)} in={show}>
-                  {ret}
+                  {k === bdo+"workHasInstance"?ret.slice(0,maxVersions):ret}
                </Collapse>
                {/* // failure with CSS columns
                <div className={"propCollapseHeader in-"+(this.state.collapse[k]===true)}>
@@ -4745,15 +4752,17 @@ class ResourceViewer extends Component<Props,State>
                   {ret.slice(i1,i1+nb1)}
                   {ret.slice(i2,n)}
                </Collapse> */}
-               { (this.state.collapse[k] || hasMaxDisplay === -1) && <span
+               { (this.state.collapse[k] || hasMaxDisplay === -1) && <><span
                onClick={(e) => this.setState({...this.state,collapse:{...this.state.collapse,[k]:!show}})}
                className="expand">
-                  {I18n.t("misc."+(show?"hide":"seeMore")).toLowerCase()}&nbsp;<span
+                  {I18n.t("misc."+(show?"hide":"see"+(linkToVersions?"10":"")+"More")).toLowerCase()}&nbsp;<span
                   className="toggle-expand">
                      { show && <ExpandLess/>}
                      { !show && <ExpandMore/>}
                   </span>
-               </span> }
+               </span>
+               { linkToVersions }
+               </> }               
             </div>
          )
       }
