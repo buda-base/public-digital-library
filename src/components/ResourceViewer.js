@@ -4707,6 +4707,11 @@ class ResourceViewer extends Component<Props,State>
 
       //loggergen.log("genP",elem,k,maxDisplay,n)
 
+      let linkToVersions, maxVersions = 20
+      if(ret.length > 2) {
+         linkToVersions = <span class="expand linkToVersions"><Link to={"/search?i="+this.props.IRI+"&t=Work"}>{I18n.t("misc.browseA",{count: ret.length})}</Link></span>
+      }
+      
       if(!isSub && n > maxDisplay) {      
          /* CSS columns won't balance evenly
          let nb = Math.ceil(maxDisplay / 2)
@@ -4718,11 +4723,6 @@ class ResourceViewer extends Component<Props,State>
          let show = this.state.collapse[k]
          if(hasMaxDisplay === -1 /*&& ![bf+"identifiedBy",bdo+"note"].includes(k)*/ && this.state.collapse[k] === undefined) show = true ; 
 
-         let linkToVersions, maxVersions = 20
-         if(ret.length > maxVersions) {
-            linkToVersions = <span class="expand"><Link to={"/search?i="+this.props.IRI+"&t=Work"}>{I18n.t("misc.browseA",{count: ret.length})}</Link></span>
-         }
-
          return (
             <div data-prop={shortUri(k)} class={"has-collapse custom max-"+(maxDisplay)+" "+(n%2===0?"even":"odd") }>
                <h3><span>{this.proplink(k,null,n)}{I18n.t("punc.colon")}</span></h3>
@@ -4731,7 +4731,7 @@ class ResourceViewer extends Component<Props,State>
                   { (false || (!this.state.collapse[k] && hasMaxDisplay !== -1) ) && <><span
                      onClick={(e) => this.setState({...this.state,collapse:{...this.state.collapse,[k]:!this.state.collapse[k]}})}
                      className="expand">
-                        {I18n.t("misc."+(this.state.collapse[k]?"hide":"see"+(linkToVersions?"10":"")+"More")).toLowerCase()}&nbsp;<span
+                        {I18n.t("misc."+(this.state.collapse[k]?"hide":"see"+(linkToVersions&&ret.length > maxVersions?"10":"")+"More")).toLowerCase()}&nbsp;<span
                         className="toggle-expand">
                            { this.state.collapse[k] && <ExpandLess/>}
                            { !this.state.collapse[k] && <ExpandMore/>}
@@ -4755,7 +4755,7 @@ class ResourceViewer extends Component<Props,State>
                { (this.state.collapse[k] || hasMaxDisplay === -1) && <><span
                onClick={(e) => this.setState({...this.state,collapse:{...this.state.collapse,[k]:!show}})}
                className="expand">
-                  {I18n.t("misc."+(show?"hide":"see"+(linkToVersions?"10":"")+"More")).toLowerCase()}&nbsp;<span
+                  {I18n.t("misc."+(show?"hide":"see"+(linkToVersions&&ret.length > maxVersions?"10":"")+"More")).toLowerCase()}&nbsp;<span
                   className="toggle-expand">
                      { show && <ExpandLess/>}
                      { !show && <ExpandMore/>}
@@ -4774,6 +4774,7 @@ class ResourceViewer extends Component<Props,State>
                <div className={k === bdo+"personTeacherOf" || k === bdo + "personStudentOf" ? "propCollapseHeader in-false":"group"}>
                {ret}               
                </div>
+               { linkToVersions }
             </div>
          )
       }
