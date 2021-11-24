@@ -239,7 +239,12 @@
       "tmp:noteMatch": "Note",
       "tmp:possibleAccess": "Access Possible",
       "tmp:catalogOnly": "Catalog Only",
-      "tmp:nonReleasedItems": "Non-released items"
+      "tmp:nonReleasedItems": "Non-released items",
+      "tmp:FEMCManuscriptCode": "FEMC Manuscript Code",
+      "tmp:completion":"Completion",
+      "tmp:complete":"Complete",
+      "tmp:incomplete":"Incomplete",
+      "tmp:scans":"scans"
    },
    "result": {
       "open": "Open",

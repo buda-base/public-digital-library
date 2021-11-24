@@ -2920,11 +2920,13 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          let ret = []
          let id ;
          if(!useAux) id = allProps.filter( e => fromProp.includes(e.type) && (!exclude || exclude !== e.value) )
-         else if(findProp) id = allProps.filter(e => useAux.includes(e.type)).map(e => this.props.assoRes[e.value]).filter(e=>e).reduce( (acc,e) =>{
-            let t = e.filter(f => f.type === rdf+"type")
-            if(t.length) return { ...acc, [t[0].value]:[ ...acc[t[0].value]?acc[t[0].value]:[], ...e ]}
-            else return acc
-         },{}) 
+         else if(findProp) { 
+            id = allProps.filter(e => useAux.includes(e.type)).map(e => this.props.assoRes[e.value]).filter(e=>e).reduce( (acc,e) =>{
+               let t = e.filter(f => f.type === rdf+"type")
+               if(t.length) return { ...acc, [t[0].value]:[ ...acc[t[0].value]?acc[t[0].value]:[], ...e ]}
+               else return acc
+            },{}) 
+         }
          
          //loggergen.log("labels/prop",iri,prop,id,exclude,useAux,fromProp,allProps) //,this.props.assoRes)         
 
@@ -3006,21 +3008,22 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          }
          else if(useAux && findProp) {
             
-            //loggergen.log("uA2",id,useAux,findProp)
+            loggergen.log("uA2",id,useAux,findProp)
             
-            let birth = [], death = [], floruit = []
+            let birth = [], death = [], floruit = [], other = []
 
             for(let p of findProp) {
                
                if(id[p]) {
                   
-                  let val = id[p].filter(e => [bdo+"onYear", bdo+"notBefore", bdo+"notAfter"].includes(e.type) )
+                  let val = id[p].filter(e => fromProp.includes(e.type) )
                   //console.log("p:",p,val)
                   if(val.length) {
                      if(p.endsWith("Death")) death = death.concat(val)
                      else if(p.endsWith("Birth")) birth = birth.concat(val)
                      else if(p.endsWith("Floruit")) floruit = floruit.concat(val)
-                  }
+                     else other = other.concat(val)
+                  } 
 
                   // let val = id[p].filter(e => e.type === bdo+"onYear")
                   // if(val.length) val = <span>{(""+val[0].value).replace(/^([^0-9]*)0+/,"$1")}</span>
@@ -3047,8 +3050,16 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
             //console.log("B/D:",JSON.stringify(birth,null,3),JSON.stringify(death,null,3))
 
-            const vals = renderDates(birth, death, floruit)
-            if(vals.length >= 1) ret.push(<div class="match dates">{vals}</div>)
+            if(!other.length) {
+               const vals = renderDates(birth, death, floruit)
+               if(vals.length >= 1) ret.push(<div class="match dates">{vals}</div>)
+            } else {
+
+               ret.push(<div class="match">
+                  <span class="label">{this.fullname(prop,[],true,(plural && ret.length > 1 ?2:1))}{I18n.t("punc.colon")}&nbsp;</span>
+                  <div class="multi">{other.map(o => <span>{o.value}</span>)}</div>
+               </div>)
+            }
             
             return ret
          }
@@ -3193,8 +3204,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          if(fromProp) by = fromProp.filter(p => p.includes("/author")).length > 0
          if(fromProp) inRoo = fromProp.filter(p => p.includes("/inRootInstance")).length > 0
 
-         if(ret.length && !useAux) return <div class={"match"+(by?" by":(inRoo?" inRootInst":""))}>
-                  <span class="label">{this.fullname(prop,[],true,(plural && ret.length > 1 ?2:1))}{I18n.t("punc.colon")}&nbsp;</span>
+         if(ret.length && !useAux) return <div class={"match"+(by?" by":(inRoo?" inRootInst":""))} data-prop={prop}>
+                  <span class="label">{this.fullname(prop,[],true,(plural && ret.length > 1 ?2:1))}<span class="colon">{I18n.t("punc.colon")}</span>&nbsp;</span>
                   <div class="multi">{ret}</div>
                 </div>
       }
@@ -3859,6 +3870,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             }
          }
 
+         let onKhmerServer = (this.props.config && this.props.config.khmerServer)
+
          //console.log("allM:",allLabels)
 
          retList.push( <div id='matches'>         
@@ -3935,6 +3948,13 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             {/* { this.getResultProp(tmp+"provider",allProps) } */}
             {/* { this.getResultProp(tmp+"popularity",allProps,false,false, [tmp+"entityScore"]) } */}
             
+
+            { onKhmerServer && ["Work", "Instance"].includes(type) && <>
+               {this.getResultProp(tmp+"FEMCManuscriptCode",allProps,false,false, [ rdf+"value" ], null, [ bf+"identifiedBy"  ], [ bdr+"FEMCManuscriptCode" ]) }
+               {this.getResultProp(tmp+"incomplete", allProps.filter(a => a.type == tmp+"completion" && a.value == tmp+"incomplete").map(a => ({...a, value:" "})), false,false, [ tmp+"completion"]) }
+               {this.getResultProp(bdo+"hasFascicles",allProps,false,false) }
+               {this.getResultProp(tmp+"scans", allProps.filter(a => a.type === tmp+"nbImageReproductions" && a.value > 1), false, false, [ tmp+"nbImageReproductions" ]) }
+            </> }
             
             {/* { hasThumb.length > 0 && <div class="match">{getIconLink(viewUrl?viewUrl:resUrl+"#open-viewer",<span class="urilink"><b>View Images</b></span>)}</div>} // maybe a bit overkill...? */ }
 
