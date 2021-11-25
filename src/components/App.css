@@ -1997,6 +1997,10 @@ vertical-align:middle;}
 
 .resource .data.related .rel-or-crea.all.noAssoc { display:flex; align-items: center; justify-content: center;}
 
+.resource .data.related[data-all="0"] h2 { margin-bottom:30px;}
+.resource .data.related[data-all="0"] > div > div > .react-tabs > ul { display:none; }
+.resource .data.related .rel-or-crea.all.noAssoc { padding:20px; min-height:0; }
+
 /*
 .resource .data [data-prop^="adm:seeOther"]:not(#a):not(.a):not(#b),
 .resource .data [data-prop^="adm:original"]:not(#a):not(.a):not(#b),
