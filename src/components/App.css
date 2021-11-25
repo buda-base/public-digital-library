@@ -3699,7 +3699,7 @@ h3 .expand svg { position:absolute; margin-top:-18px; }*/
 .resource .data [data-prop="bdo:workHasInstance"] .propCollapseHeader .expand { position:absolute;left:0;bottom:-30px;top:auto;}
 
 .resource .data [data-prop="bdo:workHasInstance"] .expand.linkToVersions,
-.resource .data [data-prop="bdo:workHasInstance"] .expand + .expand { right:0; left:auto; text-align: right; position: absolute; bottom:-25px;}
+.resource .data [data-prop="bdo:workHasInstance"] .expand + .expand { right:0; left:auto; text-align: right; position: absolute; bottom:-25px; border:none; cursor:auto;}
 
 .resource .data [data-prop="bdo:workHasInstance"] .expand.linkToVersions a,
 .resource .data [data-prop="bdo:workHasInstance"] .expand + .expand a { color:white; background-color: #d73449; font-weight: 500; padding:10px 15px; border-radius: 5px; border:none;}

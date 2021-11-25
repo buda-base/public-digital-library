@@ -7756,7 +7756,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
       let hasRel = ((related && related.length > 0)||(createdBy && createdBy.length > 0))
       if((!hasRel || this.state.relatedTabAll) && !["Instance","Images","Etext"].includes(_T)) {
-         if(this.props.assocResources && this.props.config &&  (!this.props.assocTypes || !this.props.assocTypes[this.props.IRI+"@"])) this.props.onGetAssocTypes(this.props.IRI)
+         if(this.props.assocResources && this.props.config &&  !this.props.assocTypes) this.props.onGetAssocTypes(this.props.IRI, "assocTypes")
       }  
       
       let onKhmerServer = (this.props.config && this.props.config.khmerServer)

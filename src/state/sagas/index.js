@@ -2367,12 +2367,12 @@ export function* watchGetAssocTypes() {
 
    yield takeLatest(
       dataActions.TYPES.getAssocTypes,
-      (action) => getAssocTypes(action.payload)
+      (action) => getAssocTypes(action.payload, action.meta)
    );
 }
 
 
-async function getAssocTypes(rid) {
+async function getAssocTypes(rid, tag) {
 
    store.dispatch(uiActions.loading("assocTypes", true));
 
@@ -2380,7 +2380,7 @@ async function getAssocTypes(rid) {
    let metadata = await api.getDatatypesOnly(rid, "");
    let sorted = Object.keys(metadata).map(m => ({m,k:Number(metadata[m])}))
    metadata = _.orderBy(sorted,["k"],["desc"]).reduce( (acc,m) => ({...acc,[m.m]:metadata[m.m]}),{})
-   store.dispatch(dataActions.foundDatatypes(rid,"",{ metadata, hash:true}));
+   store.dispatch(dataActions.foundDatatypes(rid,"",{ metadata, hash:true}, tag));
 
    store.dispatch(uiActions.loading("assocTypes", false));
 

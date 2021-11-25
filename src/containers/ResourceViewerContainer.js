@@ -137,8 +137,8 @@ const mapStateToProps = (state,ownProps) => {
    let outlineKW = state.data.outlineKW
 
    let assocTypes
-   let datatypes = state.data.datatypes ;
-   if(datatypes /*&& datatypes[ownProps.IRI+"@"]*/) assocTypes = datatypes
+   let datatypes = state.data.assocTypes ;
+   if(datatypes && datatypes[ownProps.IRI+"@"]) assocTypes = datatypes
 
    let citationData = state.data.citationData
       
@@ -177,8 +177,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       onResetSearch:() => {
          dispatch(data.resetSearch())
       },
-      onGetAssocTypes:(rid:string) => {
-         dispatch(data.getAssocTypes(rid))
+      onGetAssocTypes:(rid:string, tag?:string) => {
+         dispatch(data.getAssocTypes(rid,tag))
       },
       onRequestPdf:(iri:string,url:string) => {
          dispatch(data.requestPdf(iri,url.replace(/zip/,"pdf")));

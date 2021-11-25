@@ -1207,10 +1207,11 @@ reducers[actions.TYPES.getOneDatatype] = getOneDatatype;
 
 export const getAssocTypes = (state: DataState, action: Action) => {
 
+   const k = action.meta?action.meta:"datatypes"
     return {
         ...state,
-      datatypes : {
-         ...state.datatypes,
+      [k] : {
+         ...state[k],
          [action.payload+"@"]: true
       }
     }
@@ -1334,6 +1335,7 @@ export const foundDatatypes = (state: DataState, action: actions.FoundResultsAct
    let DT = state.datatypes;
    if(DT) DT = DT[action.payload.keyword+"@"+action.payload.language]
 
+   const tag = action.payload.tag?action.payload.tag:"datatypes"
 
    //console.log("DT2",JSON.stringify(DT))
 
@@ -1342,8 +1344,8 @@ export const foundDatatypes = (state: DataState, action: actions.FoundResultsAct
 
    return {
       ...state,
-      datatypes : {
-         ...state.datatypes,
+      [tag] : {
+         ...state[tag],
          [action.payload.keyword+"@"+action.payload.language]: {
             ...DT,
             ...action.payload.results,
