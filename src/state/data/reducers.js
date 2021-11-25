@@ -1332,10 +1332,12 @@ reducers[actions.TYPES.foundResults] = foundResults;
 
 export const foundDatatypes = (state: DataState, action: actions.FoundResultsAction) => {
 
+   const tag = action.payload.tag?action.payload.tag:"datatypes"
+
    let DT = state.datatypes;
    if(DT) DT = DT[action.payload.keyword+"@"+action.payload.language]
 
-   const tag = action.payload.tag?action.payload.tag:"datatypes"
+   if(tag !== "datatypes") DT = {}
 
    //console.log("DT2",JSON.stringify(DT))
 
