@@ -7758,16 +7758,27 @@ perma_menu(pdfLink,monoVol,fairUse,other)
       if((!hasRel || this.state.relatedTabAll) && !["Instance","Images","Etext"].includes(_T)) {
          if(this.props.assocResources && this.props.config &&  (!this.props.assocTypes || !this.props.assocTypes[this.props.IRI+"@"])) this.props.onGetAssocTypes(this.props.IRI)
       }  
+      
+      let onKhmerServer = (this.props.config && this.props.config.khmerServer)
+
       let all    
       if(this.props.assocTypes && this.props.assocTypes[this.props.IRI+"@"] && this.props.assocTypes[this.props.IRI+"@"].metadata) {
-         all = Object.values(this.props.assocTypes[this.props.IRI+"@"].metadata).reduce( (acc,c) => acc+Number(c), 0)
+         if(/* !onKhmerServer || */ _T !== "Work") all = Object.values(this.props.assocTypes[this.props.IRI+"@"].metadata).reduce( (acc,c) => acc+Number(c), 0)
+         else {
+            all = 0
+            for(let k of Object.keys(this.props.assocTypes[this.props.IRI+"@"].metadata)) {
+               if(!k.endsWith("Instance")) all += Number(this.props.assocTypes[this.props.IRI+"@"].metadata[k])
+            }
+         }
       }
+
 
       let allRel, t1 ;
       if(this.props.assocTypes && this.props.assocTypes[this.props.IRI+"@"] && this.props.assocTypes[this.props.IRI+"@"].metadata) {
          allRel = Object.keys(this.props.assocTypes[this.props.IRI+"@"].metadata).map(r => { 
             let v = Number(this.props.assocTypes[this.props.IRI+"@"].metadata[r])
             let t = r.replace(/^.*\/([^/]+)$/,"$1")
+            if(/* onKhmerServer && */ t === "Instance" && _T === "Work") return 
             let url = "/search?r="+this.props.IRI+"&t="+t
             if(!t1) t1 = url
             return (<div>                                                                           
@@ -7775,7 +7786,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                <div><Link to={url}><span lang={this.props.locale}>{I18n.t("misc.allT",{count:v,type:I18n.t("types."+t.toLowerCase(),{count:v})})}</span></Link></div>
                {/* <Link to={url}>{I18n.t("misc.seeR",{count:v})}</Link> */}
             </div>)
-         })         
+         }).filter(a => a)         
       }
 
    /* //deprecated
