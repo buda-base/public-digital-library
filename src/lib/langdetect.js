@@ -15,12 +15,12 @@ var nativeranges = [
 	{"range": [0x0900, 0x097F], "lt": "deva"},
 	{"range": [0x0F00, 0x0FFF], "lt": "tibt"},
 	{"range": [0x1780, 0x17FF], "lt": "khmr"},
+	{"range": [0x19E0, 0x19FF], "lt": "khmr"},  // https://en.wikipedia.org/wiki/Khmer_Symbols
 	{"range": [0x2E80, 0x2EFF], "lt": "hani"},
 	{"range": [0x3000, 0x303F], "lt": "hani"},
 	{"range": [0x3200, 0x9FFF], "lt": "hani"},
 	{"range": [0xF900, 0xFAFF], "lt": "hani"},
 	{"range": [0x20000, 0x2CEAF], "lt": "hani"},
-	{"range": [0x0900, 0x097F], "lt": "hani"}
 ];
 
 var transinfos = {
@@ -71,6 +71,7 @@ function narrowWithChar(char, wordlen, lttotest) {
 }
 
 export function narrowWithString(strtoguess, transtotest) {
+	//console.log("nWs:",strtoguess,transtotest)
 	var wordlen = 0;
 	var triedrange = false;
 	for (let char of strtoguess) { // iterates on Unicode code points, not code units
