@@ -287,6 +287,7 @@ export const languages = {
    "pi":"lang.search.pi",
    "pi-x-iast": "lang.search.piXIast",
    "pi-x-ndia":"lang.search.piXNdia",
+   "pi-khmr":"lang.search.piKhmr",
    "bo":"lang.search.bo",
    "bo-x-ewts":"lang.search.boXEwts",
    "bo-x-ewts_lower":"lang.search.boXEwtsLower",
@@ -1701,10 +1702,10 @@ class App extends Component<Props,State> {
       else eq = false ;
       if(!eq) {
          if(!s) s = { ...state }
-         let langDetect = [ "ewts", "iast", "pinyin", "khmr" ]
+         let langDetect = [ "ewts", "iast", "pinyin" ]
          let langP = [], i
          if(props.langPreset) { 
-            langP = props.langPreset.map(p => p.replace(/^.*?(ewts|iast|pinyin|khmr)?$/,"$1")).filter(e => e)
+            langP = props.langPreset.map(p => p.replace(/^.*?(ewts|iast|pinyin)?$/,"$1")).filter(e => e)
             langDetect = langDetect.map(d => ({d,i:(i=langP.indexOf(d))!==-1?i:99}))
             loggergen.log("langP",langDetect,langP,props.langPreset)         
             langDetect = _.orderBy(langDetect, ["i","d"],["asc","asc"]).map(v => v.d)
@@ -5991,11 +5992,11 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             if(detec && detec.length < 3) { 
                if(detec[0] === "tibt") for(let p of possible) { if(p === "bo" || p.match(/-[Tt]ibt$/)) { language = p ; break ; } }
                else if(detec[0] === "hani") for(let p of possible) { if(p.match(/^zh((-[Hh])|$)/)) { language = p ; break ; } }
-               else if(["ewts","iast","deva","pinyin","khmr"].indexOf(detec[0]) !== -1) for(let p of possible) { if(p.match(new RegExp(detec[0]+"$"))) { language = p ; break ; } }
+               else if(["ewts","iast","deva","pinyin"].indexOf(detec[0]) !== -1) for(let p of possible) { if(p.match(new RegExp(detec[0]+"$"))) { language = p ; break ; } }
             }
 
             possible = [ ...this.state.langPreset, ...langSelect.filter(l => !this.state.langPreset || !this.state.langPreset.includes(l))]
-            loggergen.log("detec:",possible,detec,this.state.langPreset,this.state.langDetect)
+            loggergen.log("detec:",language,possible,detec,this.state.langPreset,this.state.langDetect)
             
             if(detec) { 
                dataSource = detec.reduce( (acc,d) => {
@@ -6003,7 +6004,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   let presets = []
                   if(d === "tibt") for(let p of possible) { if(p === "bo" || p.match(/-[Tt]ibt$/)) { presets.push(p); } }
                   else if(d === "hani") for(let p of possible) { if(p.match(/^zh((-[Hh])|$)/)) { presets.push(p); } }
-                  else if(["ewts","iast","deva","pinyin","khmr"].indexOf(d) !== -1) for(let p of possible) { 
+                  else if(detec[0] === "khmr") for(let p of possible) { if(p.match(/(^km$)|(-khmr$)/i)) { presets.push(p);  } }
+                  else if(["ewts","iast","deva","pinyin"].indexOf(d) !== -1) for(let p of possible) { 
                      if(p.match(new RegExp(d+"$"))) { 
                         
                         // disable lower case Wylie
