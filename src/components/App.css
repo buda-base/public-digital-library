@@ -1273,6 +1273,9 @@ a.result + #matches .result-content #icon > :not(.thumb) img { width:40px; }
 
 .instance-collapse { display:inline-flex !important; align-items:flex-end; margin-top:-2px; cursor:pointer; height:18px; overflow:hidden; }
 
+.instance-collapse.repro  { margin-top:5px; align-items: center;}
+.instance-collapse.repro > span { font-size:12px;}
+
 .instance-collapse > span { border-bottom:1px solid transparent; }
 .instance-collapse:hover > span { border-color:#d73449; }
 

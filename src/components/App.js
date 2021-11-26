@@ -2863,7 +2863,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
             if(!instances) {
 
-               setTimeout(() => this.props.onGetReproductions(shortUri(id)), 150) ; 
+               //setTimeout(() => this.props.onGetReproductions(shortUri(id)), 150) ; 
                
             } else { 
                
@@ -2878,10 +2878,26 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   ret.push(this.makeResult(k,-n,null,label.value,label["xml:lang"],null,null,null,[],null,instances[k],label.value,true))
                   n++
                }
+
+               if(ret.length) { 
+
+                  ret = <Collapse className="res-collapse" in={this.state.collapse[id]}>
+                     {ret}
+                  </Collapse>
+               }
             }
 
             ret = 
                <div style={{display:"block"}}>
+                  <div class="match" style={{marginBottom:0}}>
+                     <span class="instance-link">
+                        <span class="instance-collapse repro" onClick={(e) => { 
+                           if(!instances) this.props.onGetReproductions(shortUri(id)) 
+                           this.setState({...this.state,collapse:{...this.state.collapse,[id]:!this.state.collapse[id] },repage:true })
+                        } } >{!this.state.collapse[id]?<span>{I18n.t("misc.showR",{count:nb})}</span>:<span>{I18n.t("misc.hideR")}</span>}{!this.state.collapse[id]?<ExpandMore/>:<ExpandLess/>}</span>
+                     </span>
+                  </div>
+
                   {ret}
                </div>
 
@@ -4003,7 +4019,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                {this.getResultProp(tmp+"incomplete", allProps.filter(a => a.type == tmp+"completion" && a.value == tmp+"incomplete").map(a => ({...a, value:" "})), false,false, [ tmp+"completion"]) }
                {this.getResultProp(bdo+"hasFascicles",allProps,false,false) }
                { (hasNbRepro = allProps.filter(a => a.type === tmp+"nbImageReproductions" && a.value > 1).length > 0) && <>
-                  { this.getResultProp(tmp+"reproductions", allProps, false, false, [ tmp+"nbImageReproductions" ]) }
+                  {/* { this.getResultProp(tmp+"reproductions", allProps, false, false, [ tmp+"nbImageReproductions" ]) } */}
                   { this.getReproductionsNoLink(id,n,allProps) }
                </>}
             </> }

@@ -382,7 +382,9 @@
       "card": "{{num}}",
       "inter": "{{min}}~{{max}}",
       "ordInter": "{{min}}-{{max,ordinal}} c.",
-      "see10More": "See 10 More"
+      "see10More": "See 10 More",
+      "showR": "Show {{count}} reproductions",
+      "hideR": "Hide reproductions"
    },
    "lang": {
       "en": "English",
