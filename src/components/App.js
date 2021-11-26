@@ -2012,13 +2012,15 @@ class App extends Component<Props,State> {
       if(props.instances) {
 
          let refresh = false
-         if( !state.instances || (Object.keys(props.instances).length !== Object.keys(state.instances).length) ) {
+         if( !state.instances || (Object.keys(props.instances).length !== Object.keys(state.instances).length) 
+            || Object.values(state.instances).filter(i => i === true).length !== Object.values(props.instances).filter(i => i === true).length
+            ) {
             refresh = true
          }
 
          /*
-         loggergen.log("inst ref",refresh,JSON.stringify(Object.keys(props.instances)))
-         if(state.instances) loggergen.log(JSON.stringify(Object.keys(state.instances)))
+         loggergen.log("inst ref",refresh,JSON.stringify(Object.keys(props.instances)), Object.values(props.instances).filter(i => i === true).length)
+         if(state.instances) loggergen.log(JSON.stringify(Object.keys(state.instances)), Object.values(state.instances).filter(i => i === true).length)
          */
          
          if(refresh)
@@ -2763,7 +2765,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             //loggergen.log("inst",instances)
 
             if(instances) { 
-               let instK = Object.keys(instances), n = 1,  seeAll 
+               let instK = Object.keys(instances).sort(), n = 1,  seeAll 
 
                for(let k of instK) {
                   let label = getLangLabel(this,"",instances[k].filter(e => e.type === skos+"prefLabel"))
@@ -2845,6 +2847,50 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          }
                 */
       
+
+   getReproductionsNoLink(id,n,allProps:[]=[]) {
+      let nb = allProps.filter(p => p.type === tmp+"nbImageReproductions"), ret = []
+      if(nb.length) {
+         nb = Number(nb[0].value)
+         if(nb >= 2) {
+            let instances = this.props.instances
+            if(instances) instances = instances[fullUri(id)]
+
+            let iUrl = "/search?i="+shortUri(id)+"&t=Work&w="+ encodeURIComponent(window.location.href.replace(/^https?:[/][/][^?]+[?]?/gi,"").replace(/(&n=[^&]*)/g,"")+"&n="+n) //"/search?q="+this.props.keyword+"&lg="+this.props.language+"&t=Work&s="+this.props.sortBy+"&i="+shortUri(id)
+
+            loggergen.log("inst:",instances,this.props.instances,this.state.collapse[id],id)
+
+
+            if(!instances) {
+
+               setTimeout(() => this.props.onGetReproductions(shortUri(id)), 150) ; 
+               
+            } else { 
+               
+               let instK = Object.keys(instances).sort(), n = 1,  seeAll 
+
+               for(let k of instK) {
+                  let label = getLangLabel(this,"",allProps.filter(e => e.type === skos+"prefLabel"))
+                  
+                  if(!label) label = { value:"","xml:lang":"?"}
+                  // TODO etext instance ?
+
+                  ret.push(this.makeResult(k,-n,null,label.value,label["xml:lang"],null,null,null,[],null,instances[k],label.value,true))
+                  n++
+               }
+            }
+
+            ret = 
+               <div style={{display:"block"}}>
+                  {ret}
+               </div>
+
+            return ret
+         }
+      }
+   }
+
+
    
    getVal(prop,allProps) {
 
@@ -3009,7 +3055,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          }
          else if(useAux && findProp) {
             
-            loggergen.log("uA2",id,useAux,findProp)
+            //loggergen.log("uA2",id,useAux,findProp)
             
             let birth = [], death = [], floruit = [], other = []
 
@@ -3406,7 +3452,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             else if(viewUrl) viewUrl = fullUri(viewUrl)
 
 
-            access = allProps.filter(a => [tmp+"hasReproAccess", adm+"access"].includes(a.type))
+            access = allProps.filter(a => [tmp+"hasReproAccess", adm+"access", tmp+"access"].includes(a.type))
             if(access.length) access = access[0].value            
             
             if(this.props.config && this.props.config.iiif && this.props.config.iiif.endpoints[this.props.config.iiif.index].match(/iiif-dev/)) hasThumb = hasThumb.replace(/iiif([.]bdrc[.]io)/, "iiif-dev$1")
@@ -3875,6 +3921,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
          //console.log("allM:",allLabels)
 
+         let hasNbRepro
+
          retList.push( <div id='matches'>         
 
             { typeisbiblio && inRoo } 
@@ -3954,7 +4002,10 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                {this.getResultProp(tmp+"FEMCManuscriptCode",allProps,false,false, [ rdf+"value" ], null, [ bf+"identifiedBy"  ], [ bdr+"FEMCManuscriptCode" ]) }
                {this.getResultProp(tmp+"incomplete", allProps.filter(a => a.type == tmp+"completion" && a.value == tmp+"incomplete").map(a => ({...a, value:" "})), false,false, [ tmp+"completion"]) }
                {this.getResultProp(bdo+"hasFascicles",allProps,false,false) }
-               {this.getResultProp(tmp+"scans", allProps.filter(a => a.type === tmp+"nbImageReproductions" && a.value > 1), false, false, [ tmp+"nbImageReproductions" ]) }
+               { (hasNbRepro = allProps.filter(a => a.type === tmp+"nbImageReproductions" && a.value > 1).length > 0) && <>
+                  { this.getResultProp(tmp+"reproductions", allProps, false, false, [ tmp+"nbImageReproductions" ]) }
+                  { this.getReproductionsNoLink(id,n,allProps) }
+               </>}
             </> }
             
             {/* { hasThumb.length > 0 && <div class="match">{getIconLink(viewUrl?viewUrl:resUrl+"#open-viewer",<span class="urilink"><b>View Images</b></span>)}</div>} // maybe a bit overkill...? */ }
@@ -3981,7 +4032,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                 prompt(I18n.t("misc.clipboard"),fullUri(prettId))
           }>
 
-          <a id="permalink" {...this.state.collapse[id]?{class:"wInstance"}:{}} style={{marginLeft:"0px"}} title={I18n.t("misc.permalink")}>
+          <a id="permalink" {...this.state.collapse[id] || hasNbRepro?{class:"wInstance"}:{}} style={{marginLeft:"0px"}} title={I18n.t("misc.permalink")}>
              <img src="/icons/PLINK.svg"/>
           </a>
        </CopyToClipboard> )
@@ -6004,7 +6055,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   let presets = []
                   if(d === "tibt") for(let p of possible) { if(p === "bo" || p.match(/-[Tt]ibt$/)) { presets.push(p); } }
                   else if(d === "hani") for(let p of possible) { if(p.match(/^zh((-[Hh])|$)/)) { presets.push(p); } }
-                  else if(detec[0] === "khmr") for(let p of possible) { if(p.match(/(^km$)|(-khmr$)/i)) { presets.push(p);  } }
+                  else if(detec[0] === "khmr") for(let p of possible) { if(p.match(/(^km$)/i)) { presets.push(p);  } }
                   else if(["ewts","iast","deva","pinyin"].indexOf(d) !== -1) for(let p of possible) { 
                      if(p.match(new RegExp(d+"$"))) { 
                         

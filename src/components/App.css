@@ -1179,7 +1179,7 @@ a.result + #matches .result-content #icon > :not(.thumb) img { width:40px; }
 .result-content #permalink.wInstance { top:100px; }
 
 
-.result-content { position:relative;  scroll-margin:80px; margin:0 0px; padding: 35px 25px; min-height:90px; } 
+.result-content { position:relative;  scroll-margin:250px; margin:0 0px; padding: 35px 25px; min-height:90px; } 
 .result-content+.result-content::before { content:" ";width:calc(100% - 80px - 50px);display:block;position:absolute;
    border-top: 4px solid rgba(239,238,238,0.6); left:80px; top:-2px; 
 }
@@ -1419,13 +1419,14 @@ a.result .contenu ul > div:last-child p {
 a.result .contenu ul > div:first-child { position:relative;}
 a.result .contenu ul > div:first-child > svg { position:absolute; top:-16px; right:16px;font-size:14px; }
 
-[data-prop$="tmp/scans"] .colon,
+/* [data-prop$="tmp/reproductions"] .colon, */
+
 [data-prop$="tmp/incomplete"] .colon { display:none; }
 
 
-[data-prop$="tmp/scans"] span { font-size:13px; font-weight:700; text-transform: lowercase !important;}
-[data-prop$="tmp/scans"] > :nth-child(1) { order:2; padding-left:5px; }
-[data-prop$="tmp/scans"] > :nth-child(2) { order:1; }
+[data-prop$="tmp/reproductions"] span { font-size:13px; font-weight:700; text-transform: lowercase !important;}
+[data-prop$="tmp/reproductions"] > :nth-child(1) { order:2; padding-left:5px; }
+[data-prop$="tmp/reproductions"] > :nth-child(2) { order:1; }
 
 iframe.ontoSearch { width:calc(100% - 10px); border:none; margin-left:10px; height:500px;
    box-shadow:0 0 5px rgba(0,0,0,0.5); background-color:rgba(0,0,0,0.015);}

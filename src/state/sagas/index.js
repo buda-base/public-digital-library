@@ -2500,6 +2500,35 @@ export function* watchGetInstances() {
 
 
 
+async function getReproductions(uri,init=false) {
+
+   store.dispatch(uiActions.loading(uri, true));
+   let state = store.getState()
+
+   let keyword = store.getState().data.keyword
+   
+   let results = await api.getReproductions(uri);
+   console.log("repro:",results)
+
+   let sortBy = "year of publication reverse" 
+
+   results = rewriteAuxMain(results,keyword,["Instance"],sortBy)
+
+   store.dispatch(dataActions.gotReproductions(uri,results.instances))
+
+   store.dispatch(uiActions.loading(uri, false));
+}
+
+export function* watchGetReproductions() {
+
+   yield takeLatest(
+      dataActions.TYPES.getReproductions,
+      (action) => getReproductions(action.payload,action.meta)
+   );
+}
+
+
+
 async function getResultsByDateOrId(date, t, dateOrId) {
 
    let state = store.getState(), res, data
@@ -3062,6 +3091,7 @@ export default function* rootSaga() {
       watchGetResetLink(),
       watchUpdateSortBy(),
       watchGetInstances(),
+      watchGetReproductions(),
       watchGetContext(),
       watchGetCitationStyle(),
       watchGetCitationLocale(),

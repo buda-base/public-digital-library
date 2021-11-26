@@ -157,6 +157,35 @@ export const gotInstances = (state: DataState, action: Action) => {
 reducers[actions.TYPES.gotInstances] = gotInstances;
 
 
+export const getReproductions = (state: DataState, action: Action) => {
+
+   let instances = state.instances
+   if(!instances) instances = {}
+   instances[fullUri(action.payload)] = true
+
+   return {
+       ...state,
+       instances
+   }
+}
+reducers[actions.TYPES.getReproductions] = getReproductions;
+
+
+
+export const gotReproductions = (state: DataState, action: Action) => {
+
+   let instances = state.instances
+   if(!instances) instances = {}
+   instances[fullUri(action.payload)] = action.meta
+
+   return {
+       ...state,
+       instances
+   }
+}
+reducers[actions.TYPES.gotReproductions] = gotReproductions;
+
+
 export const gotCitationStyle = (state: DataState, action: Action) => {
    
    let citationData = state.citationData

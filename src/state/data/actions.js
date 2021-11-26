@@ -382,6 +382,25 @@ export const gotInstances = (uri: string, data: {}): Action => {
     }
 }
 
+
+TYPES.getReproductions = 'GET_REPRODUCTIONS';
+export const getReproductions = (uri: string,init?:boolean): Action => {
+    return {
+        type: TYPES.getReproductions,
+        payload: uri,
+        meta:init
+    }
+}
+
+TYPES.gotReproductions = 'GOT_REPRODUCTIONS';
+export const gotReproductions = (uri: string, data: {}): Action => {
+    return {
+        type: TYPES.gotReproductions,
+        payload: uri,
+        meta: data
+    }
+}
+
 TYPES.getResetLink = 'GET_RESET_LINK';
 export const getResetLink = (userID: string, user:{}, profile: {}): Action => {
     return {

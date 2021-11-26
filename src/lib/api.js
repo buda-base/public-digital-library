@@ -1074,6 +1074,23 @@ export default class API {
         }
     }
 
+     async getReproductions(IRI: string): Promise<{} | null> {
+
+       let data = [];
+
+       try {
+             let config = store.getState().data.config.ldspdi
+             let url = config.endpoints[config.index]+"/lib" ;
+             let param = {"searchType":"instanceReproductionsGraph","R_RES":IRI, "L_NAME":"", "I_LIM":""}
+
+             let data = this.getQueryResults(url, IRI, param,"GET");
+
+
+            return data ;
+        } catch(e) {
+           throw e;
+        }
+    }
      async getStartResults(key: string,lang:string,types:string[],inEtext?:string): Promise<{} | null> {
        let data = [];
 
