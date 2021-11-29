@@ -384,7 +384,8 @@
       "ordInter": "{{min}}-{{max,ordinal}} c.",
       "see10More": "See 10 More",
       "showR": "Show {{count}} reproductions",
-      "hideR": "Hide reproductions"
+      "hideR": "Hide reproductions",
+      "previewN": "preview {{count}}"
    },
    "lang": {
       "en": "English",

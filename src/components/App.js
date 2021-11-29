@@ -2762,12 +2762,18 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             let instances = this.props.instances
             if(instances) instances = instances[fullUri(id)]
 
+
+            const maxNbPreview = 10
+            const normalNbPreview = 6
+            let n = 0
+
+
             let iUrl = "/search?i="+shortUri(id)+"&t=Work&w="+ encodeURIComponent(window.location.href.replace(/^https?:[/][/][^?]+[?]?/gi,"").replace(/(&n=[^&]*)/g,"")+"&n="+n) //"/search?q="+this.props.keyword+"&lg="+this.props.language+"&t=Work&s="+this.props.sortBy+"&i="+shortUri(id)
 
             //loggergen.log("inst",instances)
 
             if(instances) { 
-               let instK = Object.keys(instances).sort(), n = 1,  seeAll 
+               let instK = Object.keys(instances).sort()
 
                for(let k of instK) {
                   let label = getLangLabel(this,"",instances[k].filter(e => e.type === skos+"prefLabel"))
@@ -2775,10 +2781,10 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   if(!label) label = { value:"","xml:lang":"?"}
                   // TODO etext instance ?
 
-                  ret.push(this.makeResult(k,-n,null,label.value,label["xml:lang"],null,null,null,[],null,instances[k],label.value,true))
                   n++
-                  if(n>3) { 
-                     seeAll = true
+                  ret.push(this.makeResult(k,-n,null,label.value,label["xml:lang"],null,null,null,[],null,instances[k],label.value,true))
+
+                  if(nb > maxNbPreview && n >= normalNbPreview) {                     
                      break ;
                   }
                }
@@ -2804,20 +2810,26 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      { (hasEtext.length > 0) && <span title={getPropLabel(this,tmp+"assetAvailability",false)+": "+getPropLabel(this,tmp+"hasEtext",false)}>{svgEtextS}</span>}
                      </span>
                      <span class="instance-link">
-                        { nb > 3 && <>
+                        { nb >= maxNbPreview && <>
                            <Link class="urilink" to={iUrl}>{I18n.t("misc.browseA",{count:nb})}</Link>                     
                            <emph style={{margin:"0 5px"}}> {I18n.t("misc.or")} </emph>
                         </> }
                         <span class="instance-collapse" onClick={(e) => { 
                            if(!instances) this.props.onGetInstances(shortUri(id)) ; 
                            this.setState({...this.state,collapse:{...this.state.collapse,[id]:!this.state.collapse[id] },repage:true })
-                        } } >{!this.state.collapse[id]?<span>{I18n.t(nb > 3 ? "misc.preview3":"misc.seeI",{count:nb})}</span>:<span>{nb > 3?I18n.t("misc.hide").toLowerCase():I18n.t("misc.hide")}</span>}{!this.state.collapse[id]?<ExpandMore/>:<ExpandLess/>}</span>
+                        } } >{!this.state.collapse[id]
+                                 ? (nb > maxNbPreview
+                                    ? <span>{I18n.t("misc.previewN",{count:normalNbPreview})}</span>
+                                    : <span>{I18n.t("misc.seeI",{count: nb})}</span>)
+                                 : <span>{nb > maxNbPreview?I18n.t("misc.hide").toLowerCase():I18n.t("misc.hide")}</span>}
+                           {!this.state.collapse[id]?<ExpandMore/>:<ExpandLess/>}
+                        </span>
                      </span>
                   </div>
                   {ret}
-                  { (nb > 3 && this.state.collapse[id]) && //!this.props.loading && 
+                  { (nb > maxNbPreview && this.state.collapse[id]) && //!this.props.loading && 
                      <div class="match" style={{marginBottom:0}}>
-                        <span class="label" style={{textTransform:"none"}}>{I18n.t("misc.seeM", {count:nb-3})}:</span>&nbsp;
+                        <span class="label" style={{textTransform:"none"}}>{I18n.t("misc.seeM", {count:nb - normalNbPreview})}:</span>&nbsp;
                         <span class="instance-link"><Link class="urilink" to={iUrl}>{I18n.t("misc.browse").toLowerCase()}</Link></span> 
                      </div>
                   }
