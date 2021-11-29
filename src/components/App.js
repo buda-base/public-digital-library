@@ -1530,6 +1530,8 @@ class App extends Component<Props,State> {
          if(props.keyword === "(latest)") document.title = I18n.t("home.new") + " - Buddhist Digital Archives"
          else document.title = /*""+*/ props.keyword+" search results - Buddhist Digital Archives"
          
+      } else {
+         document.title = "Buddhist Digital Archives"
       }
 
       if(!props.language && props.keyword) {
@@ -6259,6 +6261,9 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                            </div>
                         </div>
                      </a>
+                     <div class="abs"><ExpandMore onClick={() => {
+                        document.querySelector("#search-bar").scrollIntoView({block: "start", inline: "nearest", behavior:"smooth"})
+                     }}/></div>
                   </div>
                }
                { infoPanelH }

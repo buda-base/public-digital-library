@@ -195,7 +195,7 @@ body { overflow:auto !important;padding-right:0 !important; /*font-family:"Robot
    top:0;
 }
 .SearchPane #logo > div > div {
-   width:590px; height:300px; background:white;padding:0px 50px;box-sizing: border-box;
+   width:585px; height:300px; background:white;padding:0px 50px;box-sizing: border-box;
    font-size:24px;color:black;line-height:28px; display:flex; flex-direction: column; justify-content: center; align-items: flex-start;
 }
 
@@ -274,7 +274,7 @@ body { overflow:auto !important;padding-right:0 !important; /*font-family:"Robot
 #root ~ #menu-datatype ul,
 #root ~ #menu-language ul { padding:0 !important;}
 
-#search-bar { width:100%; }
+#search-bar { width:100%; scroll-margin: 80px; }
 #search-bar button { margin-top:6px; }
 #search-bar > div:first-child { box-shadow: 0 2px 4px rgba(187, 187, 187, 0.5); border-radius:2px; font-weight:600;  }
 #search-bar > div:first-child  > div:first-child  > div:first-child { width:calc(100% - 160px); margin-right:200px; }
@@ -565,6 +565,22 @@ footer #donate,
 .App.home.khmerServer section .float { float:right; text-align: center; padding-bottom:50px;}
 .App.home.khmerServer section .float img { width:485px;height:485px; object-position: center; object-fit: none; border-radius:50%; margin-top:125px; }
 .App.home.khmerServer section .float p { width: 160px ; margin:0 auto; display:block; text-align: left; font-style: italic; font-size:12px;margin-top:40px;}
+
+.App.home.khmerServer .fond-logo { position: relative;}
+
+.App.home.khmerServer .fond-logo .abs { display:none; }
+
+@media(max-height:860px) {
+
+   .App.home.khmerServer .fond-logo .abs { position: absolute; bottom:8px; animation: move 1.35s ease-in-out 0s infinite; display: block;}
+   .App.home.khmerServer .fond-logo .abs svg { color:white; font-size:64px;  }
+   
+   @keyframes move {
+      0% { bottom:0px; }
+      50% { bottom:8px; } 
+      100% { bottom:0px; }
+   }
+}
 
 .App.home.khmerServer section .abs { padding:0; position:relative; }
 .App.home.khmerServer section .abs div { position:absolute; text-align: center; width:100%; box-sizing: border-box; margin-top:-30px; padding-right:80px;}
