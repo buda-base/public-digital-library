@@ -4269,7 +4269,9 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   this._refs["map"] = React.createRef()
                   this._refs["markers"] = latLongs                                    
 
-                  const map =  (this.props.config && latLongs.length && 
+                  console.log("latlongs:",latLongs)
+
+                  const map =  (this.props.config && // latLongs.length && 
                      <Map ref={this._refs["map"]}
                         center={[0,0]} zoom={18} 
                         // attempt to fix #584 (see https://github.com/Leaflet/Leaflet/issues/7255 + https://stackoverflow.com/questions/67406533/react-leaflet-popups-not-working-on-mobile-devices/67422057#67422057)
