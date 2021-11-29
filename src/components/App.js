@@ -3043,7 +3043,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                         if(!lang) lang = i["xml:lang"]
                      }
                   } else {
-                     if(val.value) val = val.value
+                     if(val?.value) val = val.value
                      else val = i.value
                   }
                }
