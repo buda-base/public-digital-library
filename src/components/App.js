@@ -2810,7 +2810,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      { (hasEtext.length > 0) && <span title={getPropLabel(this,tmp+"assetAvailability",false)+": "+getPropLabel(this,tmp+"hasEtext",false)}>{svgEtextS}</span>}
                      </span>
                      <span class="instance-link">
-                        { nb >= maxNbPreview && <>
+                        { nb > maxNbPreview && <>
                            <Link class="urilink" to={iUrl}>{I18n.t("misc.browseA",{count:nb})}</Link>                     
                            <emph style={{margin:"0 5px"}}> {I18n.t("misc.or")} </emph>
                         </> }
