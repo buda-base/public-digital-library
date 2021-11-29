@@ -6436,7 +6436,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                            ,*/
                            <div id="filters-UI">
                               <div>
-                              { this.state.filters.datatype.filter(k => k !== "Any").map(k => this.renderFilterTag(true, I18n.t("Lsidebar.tags.type"), I18n.t("types."+k.toLowerCase()), (event, checked) => this.handleCheck(event, k, false) ) )}                              
+                              { /* this.props.language && this.state.filters.datatype.filter(k => k !== "Any").map(k => this.renderFilterTag(true, I18n.t("Lsidebar.tags.type"), I18n.t("types."+k.toLowerCase()), (event, checked) => this.handleCheck(event, k, false) ) ) */ }                              
                               { this.props.isInstance && this.state.backToWorks && this.state.filters.instance && this.renderFilterTag(false, I18n.t("Lsidebar.tags.instanceOf"), this.state.filters.instance, (event, checked) => {
                                  this.resetFilters(event)
                               } )  } 
