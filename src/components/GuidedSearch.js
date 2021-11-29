@@ -15,8 +15,8 @@ import purple from '@material-ui/core/colors/purple';
 import Select from 'react-select';
 import $ from 'jquery' ;
 
-type Props = { auth:{}, history:{}, dictionary:{}, classes:{} }
-type State = { collapse:{}, checked:{}, type:string, titles:[] }
+type Props = { auth:{}, history:{}, dictionary:{}, classes:{}, type:string }
+type State = { collapse:{}, checked:{}, titles:[] }
 
 
 /* // v1
@@ -221,7 +221,7 @@ class GuidedSearch extends Component<Props,State> {
   render() {
 
     let settings = data
-    if(this.props?.config?.guided && this.props.config.guided[this.state.type]) settings = this.props.config.guided[this.state.type]
+    if(this.props?.config?.guided && this.props.config.guided[this.props.type]) settings = this.props.config.guided[this.props.type]
     // if(topics.length) settings["topic"].values = topics // better dump it then copy-paste (+hand sort?)
 
     const getLocaleLabel = (o, arg = "label") => {
@@ -271,7 +271,7 @@ class GuidedSearch extends Component<Props,State> {
     console.log("render:", this.props, this.state, settings)
 
 
-    const searchRoute = "search?t=" + (this.state.type[0].toUpperCase()+this.state.type.substring(1)) + "&r=bdr:PR1KDPP00&"+Object.keys(this.state.checked).map( k => {
+    const searchRoute = "search?t=" + (this.props.type[0].toUpperCase()+this.props.type.substring(1)) + "&r=bdr:PR1KDPP00&"+Object.keys(this.state.checked).map( k => {
       console.log("k:",k)
       return Object.keys(this.state.checked[k]).map(i => {
         console.log("i:",i,settings[k].values[i].facet)
@@ -283,11 +283,14 @@ class GuidedSearch extends Component<Props,State> {
       }).join("&")
     }).join("&")
 
-    const handleType = (event,checked) => this.setState({type:(checked?"instance":"work"), checked:{}})
+    const handleType = (event,checked) => {
+      this.props.onSetType(checked?"instance":"work")
+      this.setState({ checked:{} })
+    }
 
     const { classes } = this.props
 
-    const canReset = !Object.keys(this.state.checked).reduce( (acc,k) => acc || Object.keys(this.state.checked[k]).reduce( (accv,v) => accv || this.state.checked[k][v], false), this.state.type !== "work")
+    const canReset = !Object.keys(this.state.checked).reduce( (acc,k) => acc || Object.keys(this.state.checked[k]).reduce( (accv,v) => accv || this.state.checked[k][v], false), this.props.type !== "work")
 
 
 
@@ -300,7 +303,7 @@ class GuidedSearch extends Component<Props,State> {
                     <h1>Guided Search</h1>                                          
                     { settings?.types && renderSelector("types", true, <>
                       <button {...canReset?{disabled:true}:{}} onClick={() => this.setState({checked:{}, type:"work"})}>{I18n.t("search.reset")}</button>
-                      <label onClick={(event) => handleType(event,this.state.type === "work")}><span>{I18n.t("types.work")}</span></label>
+                      <label onClick={(event) => handleType(event,this.props.type === "work")}><span>{I18n.t("types.work")}</span></label>
                       <FormControlLabel
                         control={
                           <Switch
@@ -312,7 +315,7 @@ class GuidedSearch extends Component<Props,State> {
                               checked: classes.iOSChecked,
                             }}
                             disableRipple
-                            checked={!(this.state.type === "work")}
+                            checked={!(this.props.type === "work")}
                             onChange={handleType}
                             value="checkedB"
                           />
@@ -332,7 +335,7 @@ class GuidedSearch extends Component<Props,State> {
                           console.log("val:",v)
                           this.props.history.push("/show/"+v.value)
                         }}
-                        placeholder={I18n.t("search."+this.state.type+"title")}
+                        placeholder={I18n.t("search.choose")}
                         noOptionsMessage={() => I18n.t("search.nothing")}
                       />
                     </>) }

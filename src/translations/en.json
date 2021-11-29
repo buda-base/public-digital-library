@@ -476,9 +476,8 @@
       "any":"(Select any)",
       "one":"(Select one)",
       "reset":"Reset",
-      "worktitle":"Work title...",
-      "instancetitle":"Version title...",
-      "nothing":"No match"
+      "nothing":"No match",
+      "choose":"Choose..."
    },
    "Rsidebar": {
       "title": "Display Preferences",

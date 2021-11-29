@@ -29,12 +29,14 @@ export type UIState = {
        uri:string,
        key:lang,
        lang:string 
-    }
+    },
+    type?:string
 }
 
 const DEFAULT_STATE: UIState = {
    prefLang:"bo-x-ewts",
    collapse:{"locale":true,"priority":true},
+   type:"work"
    //rightPanel:true
 }
 
@@ -106,6 +108,17 @@ export const setPrefLang = (state: UIState, action: Action) => {
    }
 }
 reducers[actions.TYPES.setPrefLang] = setPrefLang;
+
+
+export const setType = (state: UIState, action: Action) => {
+
+      return {
+      ...state,
+      type:action.payload
+   }
+}
+reducers[actions.TYPES.setType] = setType;
+
 
 
 export const setEtextLang = (state: UIState, action: Action) => {

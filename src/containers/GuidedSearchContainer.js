@@ -18,6 +18,7 @@ const mapStateToProps = (state,ownProps) => {
 
    let config = state.data.config
    let locale = state.i18next.lang   
+   let type = state.ui.type
 
    let profileName
    if(auth && auth.userProfile) {
@@ -27,7 +28,7 @@ const mapStateToProps = (state,ownProps) => {
    // not needed
    //let dictionary = state.data.dictionary ;
 
-   let props = { config, locale, profileName }  //dictionary }
+   let props = { config, locale, profileName, type }  //dictionary }
 
    return props
 
@@ -40,6 +41,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       },
       onSetLocale:(lg:string) => {
          dispatch(i18nextChangeLanguage(lg));
+      },
+      onSetType:(t:string) => {
+         dispatch(ui.setType(t));
       },
       onSetLangPreset:(langs:string[],i?:number) => {
          localStorage.setItem('lang', langs);

@@ -55,6 +55,14 @@ export const logEvent = (login: boolean): Action => {
    }
 }
 
+TYPES.setType = 'SET_TYPE';
+export const setType = (t: string): Action => {
+   return {
+      type: TYPES.setType,
+      payload: t
+   }
+}
+
 
 TYPES.setPrefLang = 'SET_PREFLANG';
 export const setPrefLang = (lang: string): Action => {
