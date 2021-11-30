@@ -3464,7 +3464,11 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
       }
       else if(T === "Instance") langT = allProps.filter(p => p.type === bdo+"script")
 
-      if(langT && langT.length) for(let l of langT) { 
+      if(langT && langT.length) for(let l of langT.sort((a,b)=>{
+         if(a.value > b.value) return 1
+         else if(a.value < b.value) return -1
+         else return 0
+      })) { 
          langs.push(<span title={getPropLabel(this,bdo+(T==='Work'?'language':'script'),false)+I18n.t("punc.colon")+" "+getPropLabel(this,l.value,false)} data-lang={l.value}>
             {T==='Instance'?<span>{l.value.replace(/^.*[/]Script([^/]+)$/,"$1")}</span>:null}
          </span>)

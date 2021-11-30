@@ -1419,6 +1419,7 @@ a.result .T span[data-lang$='Km']::before { content:'Km'; }
 a.result .T span[data-lang$='Mn']::before { content:'Mn'; }
 a.result .T span[data-lang$='Ne']::before { content:'Ne'; }
 a.result .T span[data-lang$='Ur']::before { content:'Ur'; }
+a.result .T span[data-lang$='My']::before { content:'My'; }
 
 /* TODO exhaustive support of languages/script */
 
