@@ -696,11 +696,14 @@ footer #donate,
 .App.guidedsearch.khmer .static-container.sticky .selector:hover h2 > * { visibility: visible;}
 
 .App.guidedsearch.khmer .static-container.sticky > div:first-child .selector {padding-bottom:0; padding-top:40px;  position: relative; display: flex;
-   transition:all 100ms ease-in-out;
+   transition:all 100ms ease-in-out; align-items: center;
 }
-.App.guidedsearch.khmer.scrolled .static-container.sticky > div:first-child .selector { padding-top:20px; }
+.App.guidedsearch.khmer.scrolled .static-container.sticky > div:first-child .selector { padding-top:20px;  }
 
-.App.guidedsearch.khmer .static-container.sticky > div:first-child .selector [data-prop] { position: absolute; right:0;  bottom:-12px; }
+.App.guidedsearch.khmer .static-container.sticky > div:first-child .selector [data-prop] { position: absolute; right:0;  bottom:-14px; width:100%; text-align: center; 
+   pointer-events:none;
+}
+.App.guidedsearch.khmer .static-container.sticky > div:first-child .selector [data-prop] > * { pointer-events: auto;}
 .App.guidedsearch.khmer .static-container.sticky > div:first-child .selector label { margin:0; cursor: pointer; }
 .App.guidedsearch.khmer .static-container.sticky > div:first-child .selector label:first-of-type > span{ vertical-align:-2px; padding-right:12px;}
 
@@ -718,10 +721,10 @@ footer #donate,
 }
 .App.guidedsearch.khmer .static-container.sticky > div:last-child { padding:35px 0;}
 
-.App.guidedsearch.khmer .static-container.sticky > div:first-child [data-prop] button  { position: absolute; right:0; top:-45px; color:#2f2f2f; font-weight: 600; 
-   border-radius: 5px;  background-color: #fbfafa;  border: 1px solid #e7e7e7; padding:5px 20px; font-size:14px;
+.App.guidedsearch.khmer .static-container.sticky + div button.reset  { color:#2f2f2f; font-weight: 600; cursor:pointer;
+   border-radius: 2px;  background-color: #fbfafa;  border: 1px solid #e7e7e7; padding:7px 12px; font-size:12px; text-transform: uppercase;
 }
-.App.guidedsearch.khmer .static-container.sticky > div:first-child [data-prop] button:disabled { opacity:0.5; }
+.App.guidedsearch.khmer .static-container.sticky + div button.reset:disabled { opacity:0.5; cursor:auto; }
 
 .App.guidedsearch.khmer .static-container.sticky > div:first-child + div [data-prop] { display:flex; flex-wrap: wrap; padding:15px 0 0px 0; justify-content: space-between;}
 .App.guidedsearch.khmer .static-container.sticky > div:first-child + div [data-prop] .option { display:block; margin-bottom:-5px; }
@@ -759,7 +762,8 @@ footer #donate,
 }
 .App.guidedsearch.khmer .static-container.sticky + div nav a { display: block; font-size:11px; text-transform: uppercase; color:#4a4a4a; font-weight: 700; margin-bottom:20px; }
 .App.guidedsearch.khmer .static-container.sticky + div nav a:nth-last-child(2) { margin-bottom:30px;}
-.App.guidedsearch.khmer .static-container.sticky + div nav a:last-child {  display: inline-block;}
+.App.guidedsearch.khmer .static-container.sticky + div nav .buttons * {  display: inline-block;min-width: 72px;}
+.App.guidedsearch.khmer .static-container.sticky + div nav .buttons .reset { margin-left:20px; }
 
 .App.guidedsearch.khmer .static-container.sticky + div h3 { color:#152631; font-size: 14; font-weight: 900; margin-bottom:35px; margin-top:90px;}
 

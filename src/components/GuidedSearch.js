@@ -194,6 +194,8 @@ class GuidedSearch extends Component<Props,State> {
         oldScrollTop = ev.currentTarget.scrollY
       }
     })
+
+    document.title = I18n.t("topbar.guided") + " - Buddhist Digital Archives"
   }
   
   async fetchFEMCTitles() {
@@ -301,8 +303,7 @@ class GuidedSearch extends Component<Props,State> {
                 <div className="static-container sticky">
                   <div>
                     <h1>Guided Search</h1>                                          
-                    { settings?.types && renderSelector("types", true, <>
-                      <button {...canReset?{disabled:true}:{}} onClick={() => this.setState({checked:{}, type:"work"})}>{I18n.t("search.reset")}</button>
+                    { settings?.types && renderSelector("types", true, <>                      
                       <label onClick={(event) => handleType(event,this.props.type === "work")}><span>{I18n.t("types.work")}</span></label>
                       <FormControlLabel
                         control={
@@ -342,7 +343,7 @@ class GuidedSearch extends Component<Props,State> {
                     { selectors }
                   </div>
                   <div>
-                    <Link to={searchRoute}><button class="red">Search</button></Link>
+                    {/* <Link to={searchRoute}><button class="red">Search</button></Link> */}
                   </div>
                 </div>
                 <div>
@@ -350,7 +351,13 @@ class GuidedSearch extends Component<Props,State> {
                     <h3>Navigation</h3>
                     { settings?.direct && renderLink("direct") }                    
                     { links }
-                    <Link to={searchRoute}><button class="red">Search</button></Link>
+                    <div class="buttons">
+                      <Link to={searchRoute}><button class="red">Search</button></Link>
+                      <button class="reset" {...canReset?{disabled:true}:{}} onClick={() => {
+                        this.setState({checked:{}});
+                        this.props.onSetType("work");
+                      }}>{I18n.t("search.reset")}</button>
+                    </div>
                   </nav>
                 </div>
             </div>
