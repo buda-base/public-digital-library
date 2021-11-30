@@ -274,7 +274,7 @@ body { overflow:auto !important;padding-right:0 !important; /*font-family:"Robot
 #root ~ #menu-datatype ul,
 #root ~ #menu-language ul { padding:0 !important;}
 
-#search-bar { width:100%; scroll-margin: 80px; }
+#search-bar { width:100%; /*scroll-margin: 80px;*/ }
 #search-bar button { margin-top:6px; }
 #search-bar > div:first-child { box-shadow: 0 2px 4px rgba(187, 187, 187, 0.5); border-radius:2px; font-weight:600;  }
 #search-bar > div:first-child  > div:first-child  > div:first-child { width:calc(100% - 160px); margin-right:200px; }
@@ -550,13 +550,15 @@ footer #donate,
 
 .App.home.khmerServer #data-checkbox { display:none; }
 
+.App.home.khmerServer section#learn { scroll-margin: 80px;}
+
 .App.home.khmerServer section.white-bg + .white-bg { padding-top:0 ;}
 .App.home:is(.khmerServer,.static.khmer) section.white-bg { background: white; }
 .App.home.khmerServer section p:last-child { margin-bottom: 0; } 
 .App.home.khmerServer section > div { width: 1222px; max-width:100%; margin:0 auto; text-align: left; padding-left:80px; box-sizing: border-box; position: relative;}
 .App.home.khmerServer section { padding:80px 0 80px 0; clear:both; }
 
-.App.home.khmerServer section h2 { margin-top:0;  width:635px; font-size:34px; font-weight:700; color:#152631; margin-bottom:0;}
+.App.home.khmerServer section h2 { margin-top:0;  /*width:635px; */ font-size:34px; font-weight:700; color:#152631; margin-bottom:0;}
 .App.home.khmerServer section h2::after { content:''; border-bottom: 2px solid #e9665c; height:0px; width: 95px; display: block; margin-top:40px;margin-bottom: 25px; }
 .App.home.khmerServer section p { width:570px; font-size:16px; color:#4a4a4a; } 
 .App.home:is(.khmerServer,.static.khmer) section .note { color:#d73449; }
@@ -565,12 +567,12 @@ footer #donate,
 .App.home:is(.khmerServer,.static.khmer) section .noteText .note { font-size:16px; padding-right:10px; }
 
 .App.home.khmerServer section .float { float:right; text-align: center; padding-bottom:50px;}
-.App.home.khmerServer section .float img { width:485px;height:485px; object-position: center; object-fit: none; border-radius:50%; margin-top:125px; }
+.App.home.khmerServer section .float img { width:485px;height:485px; object-position: center; object-fit: none; border-radius:50%; margin-top:-65px; }
 .App.home.khmerServer section .float p { width: 160px ; margin:0 auto; display:block; text-align: left; font-style: italic; font-size:12px;margin-top:40px;}
 
 .App.home.khmerServer .fond-logo { position: relative;}
-
 .App.home.khmerServer .fond-logo .abs { display:none; }
+.App.home.khmerServer .fond-logo .link { color:#d73449; display: inline-block;font-weight:600;cursor: pointer; font-size:13px;}
 
 @media(max-height:860px) {
 

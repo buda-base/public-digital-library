@@ -6279,12 +6279,14 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                               {/* { I18n.t("home.BUDA") } */}
                               {/* <h1>{ I18n.t("home.titleBDRC1") }<br/>{ I18n.t("home.titleBDRC2") }<br/>{ I18n.t("home.titleBDRC3") }</h1> */}
                               <h1 lang={this.props.locale}><Trans i18nKey="home.khmer.title" components={{ newline: <br /> }} /></h1>
-                              <p>{ I18n.t("home.khmer.subtitle") }</p>
+                              <p>{ I18n.t("home.khmer.subtitle") }<br/><span class="link" onClick={() => {
+                                 document.querySelector("#learn").scrollIntoView({block: "start", inline: "nearest", behavior:"smooth"})
+                              }}>{ I18n.t("home.khmer.anchor") }</span></p>
                            </div>
                         </div>
                      </a>
                      <div class="abs"><ExpandMore onClick={() => {
-                        document.querySelector("#search-bar").scrollIntoView({block: "start", inline: "nearest", behavior:"smooth"})
+                        document.querySelector("#learn").scrollIntoView({block: "start", inline: "nearest", behavior:"smooth"})
                      }}/></div>
                   </div>
                }
@@ -6498,10 +6500,10 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
            </div>
            { this.props.config.khmerServer && !this.props.keyword && !this.props.loading &&
             <>
-               <section>
+               <section id="learn">
                   <div>
-                     <div class="float"><img src="/khmerhome-pic.jpg"/><p>{I18n.t("home.khmer.section1.caption")}</p></div>
                      <h2>{I18n.t("home.khmer.section1.title")}</h2>
+                     <div class="float"><img src="/khmerhome-pic.jpg"/><p>{I18n.t("home.khmer.section1.caption")}</p></div>
                      <Trans i18nKey="home.khmer.section1.text" components={{ newline: <br />, parag: <p />, note: <span className="note" />}} />
                      <div>
                         <span className="noteText"><Trans i18nKey="home.khmer.section1.noteA" components={{ note: <span className="note" />}} /></span>
