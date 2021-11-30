@@ -16,7 +16,7 @@ import Select from 'react-select';
 import $ from 'jquery' ;
 
 type Props = { auth:{}, history:{}, dictionary:{}, classes:{}, type:string }
-type State = { collapse:{}, checked:{}, titles:[] }
+type State = { collapse:{}, checked:{}, titles:[], codes:[] }
 
 
 /* // v1
@@ -179,6 +179,7 @@ class GuidedSearch extends Component<Props,State> {
     if(!this.props.config) this.props.onInitiateApp(qs.parse(this.props.history.location.search), null, null, "guidedsearch")
 
     this.fetchFEMCTitles();
+    this.fetchFEMCCodes();
 
     $(window).off("scroll").on("scroll", (ev) => {
       if(ev.currentTarget){
@@ -213,8 +214,25 @@ class GuidedSearch extends Component<Props,State> {
         else if(a.label > b.label) return 1
         return 0
       })
-      //console.log("FEMCTitles:",titles)
+      console.log("FEMCTitles:",titles)
       this.setState({titles})
+    })
+  }
+  
+  async fetchFEMCCodes() {
+    let codes = []
+    const skos = "http://www.w3.org/2004/02/skos/core#";
+    const bdr = "http://purl.bdrc.io/resource/";
+    fetch("https://purl.bdrc.io/query/table/idsByType?R_TYPE=bdr%3AFEMCManuscriptCode&pageSize=20000&format=json").then(async (data) => {
+      const json = await data.json()
+      if(json?.results?.bindings) codes = json.results.bindings.map(elem => ({label: elem.value.value, value: elem.e.value.replace(new RegExp(bdr), "bdr:")}))
+      codes = codes.sort( (a,b) => {
+        if(a.label < b.label) return -1
+        else if(a.label > b.label) return 1
+        return 0
+      })
+      console.log("FEMCCodes:",codes)
+      this.setState({codes})
     })
   }
   
@@ -328,10 +346,22 @@ class GuidedSearch extends Component<Props,State> {
                   <div>
                     {/* { !this.props.dictionary && <Loader />}
                     { this.props.dictionary && selectors } */}
-                    { settings?.direct && renderSelector("direct", true, <>
+                    { (settings?.direct && this.props.type === "work") && renderSelector("direct", true, <>
                       <Select
                         styles={selectStyles}
                         options={this.state.titles}
+                        onChange={(v) => { 
+                          console.log("val:",v)
+                          this.props.history.push("/show/"+v.value)
+                        }}
+                        placeholder={I18n.t("search.choose")}
+                        noOptionsMessage={() => I18n.t("search.nothing")}
+                      />
+                    </>) }
+                    { (settings?.direct && this.props.type === "instance") && renderSelector("direct", true, <>
+                      <Select
+                        styles={selectStyles}
+                        options={this.state.codes}
                         onChange={(v) => { 
                           console.log("val:",v)
                           this.props.history.push("/show/"+v.value)

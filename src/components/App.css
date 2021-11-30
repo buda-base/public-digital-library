@@ -702,7 +702,7 @@ footer #donate,
 }
 .App.guidedsearch.khmer.scrolled .static-container.sticky > div:first-child .selector { padding-top:20px;  }
 
-.App.guidedsearch.khmer .static-container.sticky > div:first-child .selector [data-prop] { position: absolute; right:0;  bottom:-14px; width:100%; text-align: center; 
+.App.guidedsearch.khmer .static-container.sticky > div:first-child .selector [data-prop] { position: absolute; right:0;  bottom:-13px; width:100%; text-align: center; 
    pointer-events:none;
 }
 .App.guidedsearch.khmer .static-container.sticky > div:first-child .selector [data-prop] > * { pointer-events: auto;}
