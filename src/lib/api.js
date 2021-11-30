@@ -3,12 +3,13 @@ import store from '../index';
 import {auth} from '../routes'
 import qs from 'query-string'
 import history from '../history';
-import {shortUri} from '../components/App';
+import {shortUri, onKhmerUrl} from '../components/App';
+
+
 
 require('formdata-polyfill')
 
-// TODO invert test before moving to prod (see also miradorSetup.js)
-const CONFIG_PATH = !window.location.href.startsWith("khmer-manuscripts")?'/config-khmer.json':'/config.json'
+const CONFIG_PATH = onKhmerUrl?'/config-khmer.json':'/config.json'
 const CONFIGDEFAULTS_PATH = '/config-defaults.json'
 const ONTOLOGY_PATH = '/ontology/core.json'
 const DICTIONARY_PATH = '/ontology/data/json' //  '/graph/ontologySchema.json'

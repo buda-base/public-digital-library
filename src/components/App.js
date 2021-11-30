@@ -176,6 +176,13 @@ export function shortUri(id:string, nobdo?:boolean=false) {
 }
 
 
+export const onKhmerUrl = (
+      window.location.host.startsWith("khmer-manuscripts")
+   || window.location.host.startsWith("library-dev")
+   || window.location.host.startsWith("localhost")
+)
+
+
 
 /*
 // can also be used for display purposes (in the breadcrumbs)
@@ -322,7 +329,8 @@ export const langSelect = [
 ]
 
 //const searchTypes = ["All","Work","Etext","Topic","Person","Place","Lineage","Corporation","Role"]
-const searchTypes = [ "Work", "Instance","Scan", "Etext", "Person","Place","Topic", "Product", /*"Lineage","Role","Corporation"*/ ]
+const searchTypes = onKhmerUrl ? [ "Work", "Instance" ] : [ "Work", "Instance","Scan", "Etext", "Person","Place","Topic", "Product", /*"Lineage","Role","Corporation"*/ ]
+
 
 /*
 export const langProfile = [
@@ -1198,6 +1206,7 @@ class App extends Component<Props,State> {
       if(kw) newKW = kw
 
       let types = [ "Instance" ] //[ ...searchTypes.slice(1) ]
+      if(onKhmerUrl) types = [ "Work" ]
       let e = types.indexOf("Etext")
       if(e !== -1) { 
          delete types[e]
@@ -6379,7 +6388,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   margin="normal"
                /> */}
 
-              { !this.props.config.khmerServer && <FormControl className={"formControl "+this.state.searchTypes[0].toLowerCase()} style={{textAlign:"right"}}>
+              { (!this.props.config.khmerServer || this.props.keyword) && <FormControl className={"formControl "+this.state.searchTypes[0].toLowerCase()} style={{textAlign:"right"}}>
                 {/* <InputLabel htmlFor="datatype">In</InputLabel> */}
 
                 <Select
