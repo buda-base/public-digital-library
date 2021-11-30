@@ -3,9 +3,13 @@ import store from '../index';
 import {auth} from '../routes'
 import qs from 'query-string'
 import history from '../history';
-import {shortUri, onKhmerUrl} from '../components/App';
+import {shortUri} from '../components/App';
 
-
+const onKhmerUrl = (
+      window.location.host.startsWith("khmer-manuscripts")
+   || window.location.host.startsWith("library-dev")
+   || window.location.host.startsWith("localhost")
+)
 
 require('formdata-polyfill')
 

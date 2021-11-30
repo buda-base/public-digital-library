@@ -175,8 +175,9 @@ export function shortUri(id:string, nobdo?:boolean=false) {
    return id.replace(/[/]$/,"") ;
 }
 
+console.log("loca:",window.location.hostname)
 
-export const onKhmerUrl = (
+const onKhmerUrl = (
       window.location.host.startsWith("khmer-manuscripts")
    || window.location.host.startsWith("library-dev")
    || window.location.host.startsWith("localhost")
@@ -4963,7 +4964,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             if(other) other = other.counts
             if(other) other = other.datatype
             //loggergen.log("other:",other)
-            if(other) other = Object.keys(other).filter(k => k !== "Any" && k !== t && other[k] !== 0)
+            if(other) other = Object.keys(other).filter(k => k !== "Any" && k !== t && other[k] !== 0 && searchTypes.includes(k))
             loggergen.log("other:",other)
             
             //if(other && other.length) 
