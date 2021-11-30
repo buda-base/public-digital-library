@@ -266,7 +266,7 @@ class GuidedSearch extends Component<Props,State> {
       }}>{getLocaleLabel(settings[k])}</Link>
     }
 
-    const selectors = settings.filters.map(k => renderSelector(k, true))     
+    const selectors = settings.filters.map(k => renderSelector(k, false))     
     const links = settings.filters.map(renderLink)
 
 
