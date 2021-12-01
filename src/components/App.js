@@ -315,7 +315,10 @@ export const searchLangSelec = {
    "zh-hant":"lang.search.zh"
 }
 
-export const langSelect = [
+export const langSelect = onKhmerUrl ? [
+   "pi-x-ndia",
+   "en",   
+] : [
    "zh-hant",
    "zh-latn-pinyin",
    "bo",
