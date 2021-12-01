@@ -6923,13 +6923,13 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
                      let min = 0 //sorted.findIndex(s => s.partIndex !== 999999)
                      let max = sorted.length //sorted.filter(s => s.partIndex !== 999999).length
-                     let isOpen = !osearch || this.state.collapse["outline-"+root+"-"+top] //&& !this.props.loading
+                     let isOpen = !osearch || this.state.collapse["outline-"+root+"-"+top]  //&& !this.props.loading
 
                      if(start > min) {
                         let tag = "outline-"+root+"-"+top+"-prev"
                         let prev = this.state.collapse[tag]?this.state.collapse[tag]:[]
                         if(prev.length) start = prev[prev.length - 1]
-                        if(start > min && isOpen) showPrev = <span class="node-nav" onClick={
+                        if(start > min && isOpen && this.props.outlines[top]) showPrev = <span class="node-nav" onClick={
                            () => this.setState({collapse:{...this.state.collapse, [tag]:[...prev, Math.max(0,start-ShowNbChildren)]}})
                         }>{I18n.t("resource.showPnodes")}</span>
                      }
@@ -6937,7 +6937,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                         let tag = "outline-"+root+"-"+top+"-next"
                         let next = this.state.collapse[tag]?this.state.collapse[tag]:[]
                         if(next.length) end = next[next.length - 1]
-                        if(end < max - 1 && isOpen) showNext = <span class="node-nav" onClick={
+                        if(end < max - 1 && isOpen && this.props.outlines[top]) showNext = <span class="node-nav" onClick={
                            () => this.setState({collapse:{...this.state.collapse, [tag]:[...next, end+ShowNbChildren]}})
                         }>{I18n.t("resource.showNnodes")}</span>
                      }
@@ -7141,7 +7141,10 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                               if(showDetails && osearch && g["tmp:colophonMatch"]) {
                                  if(!g.details) g.details = []
                                  if(!Array.isArray(g["tmp:colophonMatch"])) g["tmp:colophonMatch"] = [ g["tmp:colophonMatch"] ]
-                                 g.details.push(<div class="sub"><h4 class="first type">{this.proplink(tmp+"colophonMatch")}: </h4><div>{g["tmp:colophonMatch"].map(t => <h4>{highlight(t["@value"])}</h4>)}</div></div>)
+                                 g.details.push(<div class="sub"><h4 class="first type">{this.proplink(tmp+"colophonMatch")}: </h4><div>{g["tmp:colophonMatch"].map(t => <h4>{
+                                    this.format("h4","","",false, "sub",[{ value:t["@value"], lang:t["@language"], type:"literal"}])
+                                    //highlight(t["@value"])
+                                 }</h4>)}</div></div>)
                               }
 
 

@@ -214,7 +214,8 @@
       "tmp:noteMatch": "ཟུར་མཆན།",
       "tmp:possibleAccess": "བལྟ་ཀློག་ཐུབ་པ།",
       "tmp:catalogOnly": "དཀར་ཆག་ཁོ་ན།",
-      "tmp:nonReleasedItems": "ད་དུང་སྤེལ་མེད་པ་ཁག"
+      "tmp:nonReleasedItems": "ད་དུང་སྤེལ་མེད་པ་ཁག",
+      "tmp:colophonMatch":"Colophon Match"
    },
    "result": {
       "open": "ཁ་ཕྱེ།",
