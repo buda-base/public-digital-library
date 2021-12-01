@@ -448,7 +448,7 @@ let etextPages = {};
 
 export async function miradorConfig(data, manifest, canvasID, useCredentials, langList, cornerButton, resID, locale)
 {
-   console.log("cB",cornerButton,data,resID)
+   console.log("mConf:",cornerButton,data,resID,manifest)
 
    if(cornerButton === undefined) cornerButton = 
    { 

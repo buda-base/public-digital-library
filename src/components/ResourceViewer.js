@@ -4040,7 +4040,7 @@ class ResourceViewer extends Component<Props,State>
 
          if(this.state.UVcanLoad) { window.location.hash = "mirador"; window.location.reload(); }
 
-         loggergen.log("num",num,useManifest)
+         loggergen.log("showM:",num,useManifest)
 
          if(!tiMir) tiMir = setInterval( async () => {
 
@@ -4065,7 +4065,7 @@ class ResourceViewer extends Component<Props,State>
                {
                   console.log("here:",this.props.collecManif)
 
-                  if(this.props.imageAsset.match(/[/]collection[/]/) && !this.props.collecManif)
+                  if(this.props.imageAsset.match(/[/]collection[/]/) && (!this.props.collecManif || this.props.monovolume === false))
                   {
                      data.push({"collectionUri": this.props.imageAsset +"?continuous=true", location:"Test Collection Location" })
                      //if(this.props.manifests) data = data.concat(this.props.manifests.map(m => ({manifestUri:m["@id"],label:m["label"]})))
@@ -4187,11 +4187,13 @@ class ResourceViewer extends Component<Props,State>
             tooltip = this.props.dictionary[k][rdfs+"comment"].filter(comm => !comm.value.match(/^([Mm]igration|[Dd]eprecated)/))
       }
 
+      if(tooltip) tooltip = getLangLabel(this, "", tooltip, false, true)
+
       if(k === bdo+'note') txt = I18n.t("popover.notes") ;
 
       let ret = (<a class="propref" {...(k.match(/purl[.]bdrc[.]io/) && !k.match(/[/]tmp[/]/) ? {"href":k}:{})} target="_blank">{txt?txt:this.fullname(k,false,false,true,true,count)}</a>)
 
-      if(tooltip && tooltip.length > 0) ret = <Tooltip placement="bottom-start" classes={{tooltip:"commentT",popper:"commentP"}} style={{marginLeft:"50px"}} title={<div>{tooltip.map(tip => tip.value.split("\n").map(e => [e,<br/>]))}</div>}>{ret}</Tooltip>
+      if(tooltip && tooltip.value) ret = <Tooltip placement="bottom-start" classes={{tooltip:"commentT",popper:"commentP"}} style={{marginLeft:"50px"}} title={<div>{tooltip.value}</div>}>{ret}</Tooltip>
 
       return ret;
    }
@@ -4281,7 +4283,7 @@ class ResourceViewer extends Component<Props,State>
 
       //console.log("kZprop:",kZprop,iiifpres,rid)
 
-      let iiifThumb = this.getResourceElem(tmp+"thumbnailIIIFService")
+      let iiifThumb = this.getResourceElem(tmp+"thumbnailIIIFService"), assetUrl
       if(!iiifThumb || !iiifThumb.length) iiifThumb = this.getResourceElem(tmp+"thumbnailIIIFSelected")
       if(iiifThumb && iiifThumb.length) iiifThumb = iiifThumb[0].value
 
@@ -4289,7 +4291,8 @@ class ResourceViewer extends Component<Props,State>
       {
          if(!this.props.imageAsset && !this.props.manifestError) {
             if(rid !== this.props.IRI) this.setState({...this.state, imageLoaded:false})
-            this.props.onHasImageAsset(iiifpres+"/v:"+ rid+ "/manifest",rid,iiifThumb);
+            //this.props.onHasImageAsset(iiifpres+"/v:"+ rid+ "/manifest",rid,iiifThumb);
+            assetUrl = iiifpres+"/v:"+ rid+ "/manifest"
          }
       }/*
       else if(kZprop.indexOf(tmp+"imageVolumeId") !== -1)
@@ -4317,8 +4320,9 @@ class ResourceViewer extends Component<Props,State>
             if(rid !== this.props.IRI)this.setState({...this.state, imageLoaded:false})
             let manif = iiifpres + "/wv:"+elem[0].value.replace(new RegExp(bdr),"bdr:")+"/manifest"
             if(nbVol && nbVol[0] && nbVol[0].value && nbVol[0].value >= 1 && work && work[0] && work[0].value)
-              manif = iiifpres + "/collection/wio:"+work[0].value.replace(new RegExp(bdr),"bdr:")
-            this.props.onHasImageAsset(manif,rid,iiifThumb)
+              manif = iiifpres + "/collection/wio:"+work[0].value.replace(new RegExp(bdr),"bdr:")+"::"+rid
+            //this.props.onHasImageAsset(manif,rid,iiifThumb)
+            assetUrl = manif
          }
       }
       else if(kZprop.indexOf(bdo+"volumeOf") !== -1)
@@ -4326,7 +4330,8 @@ class ResourceViewer extends Component<Props,State>
          let elem = this.getResourceElem(bdo+"volumeHasEtext",rid,this.props.resources,fullRid)
          if(!elem && !this.props.imageAsset && !this.props.manifestError) {
             this.setState({...this.state, imageLoaded:false})
-            this.props.onHasImageAsset(iiifpres+"/vo:"+ rid + "/manifest",rid,iiifThumb);
+            //this.props.onHasImageAsset(iiifpres+"/vo:"+ rid + "/manifest",rid,iiifThumb);
+            assetUrl = iiifpres+"/vo:"+ rid + "/manifest"
          }
       }
       else if(kZprop.indexOf(bdo+"hasIIIFManifest") !== -1)
@@ -4334,14 +4339,16 @@ class ResourceViewer extends Component<Props,State>
          let elem = this.getResourceElem(bdo+"hasIIIFManifest",rid,this.props.resources,fullRid)
          if(elem[0] && elem[0].value && !this.props.manifestError && !this.props.imageAsset) {
             if(rid !== this.props.IRI) this.setState({...this.state, imageLoaded:false})
-            this.props.onHasImageAsset(elem[0].value,rid,iiifThumb);
+            //this.props.onHasImageAsset(elem[0].value,rid,iiifThumb);
+            assetUrl = elem[0].value
          }
       }
       else if(kZprop.indexOf(bdo+"contentLocation") !== -1)
       {
          if(!this.props.imageAsset && !this.props.manifestError) {
             if(rid !== this.props.IRI) this.setState({...this.state, imageLoaded:false})
-            this.props.onHasImageAsset(iiifpres+"/collection/wio:"+rid,rid,iiifThumb)
+            //this.props.onHasImageAsset(iiifpres+"/collection/wio:"+rid,rid,iiifThumb)
+            assetUrl = iiifpres+"/collection/wio:"+rid
          }
       }      
        else if(kZprop.indexOf(bdo+"instanceHasVolume") !== -1)
@@ -4358,7 +4365,9 @@ class ResourceViewer extends Component<Props,State>
             let manif = iiifpres + "/vo:"+elem[0].value.replace(new RegExp(bdr),"bdr:")+"/manifest"
             if(nbVol && nbVol[0] && nbVol[0].value && nbVol[0].value > 1 && work && work[0] && work[0].value)
               manif = iiifpres + "/collection/wio:"+work[0].value.replace(new RegExp(bdr),"bdr:")
-            this.props.onHasImageAsset(manif,rid,iiifThumb)
+            //this.props.onHasImageAsset(manif,rid,iiifThumb)
+            assetUrl = manif
+
          }
       }      
       else if(kZprop.indexOf(bdo+"itemHasVolume") !== -1)
@@ -4371,7 +4380,8 @@ class ResourceViewer extends Component<Props,State>
             let manif = iiifpres + "/v:"+elem[0].value.replace(new RegExp(bdr),"bdr:")+"/manifest"
             if(nbVol && nbVol[0] && nbVol[0].value && nbVol[0].value > 1 && work && work[0] && work[0].value)
               manif = iiifpres + "/collection/wio:"+work[0].value.replace(new RegExp(bdr),"bdr:")
-            this.props.onHasImageAsset(manif,rid,iiifThumb)
+            //this.props.onHasImageAsset(manif,rid,iiifThumb)
+            assetUrl = manif
          }
       }
       else {
@@ -4391,13 +4401,23 @@ class ResourceViewer extends Component<Props,State>
 
                   if(rid !== this.props.IRI) this.setState({...this.state, imageLoaded:false})
 
-                  if(assoc.length == 1) { this.props.onHasImageAsset(iiifpres + "/v:bdr:"+this.pretty(imItem[0].value,true)+"/manifest",rid,iiifThumb); }
-                  else { this.props.onHasImageAsset(iiifpres + "/collection/wio:"+this.pretty(rid,true),rid,iiifThumb);  }
+                  if(assoc.length == 1) { 
+                     //this.props.onHasImageAsset(iiifpres + "/v:bdr:"+this.pretty(imItem[0].value,true)+"/manifest",rid,iiifThumb); 
+                     assetUrl = iiifpres + "/v:bdr:"+this.pretty(imItem[0].value,true)+"/manifest"
+                  }
+                  else { 
+                     //this.props.onHasImageAsset(iiifpres + "/collection/wio:"+this.pretty(rid,true),rid,iiifThumb);  
+                     assetUrl = iiifpres + "/collection/wio:"+this.pretty(rid,true)
+                  }
 
                }
             }
          }
          
+      }
+
+      if(assetUrl) {
+         this.props.onHasImageAsset(assetUrl,rid,iiifThumb); 
       }
    }
 
@@ -6913,13 +6933,13 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
                      let min = 0 //sorted.findIndex(s => s.partIndex !== 999999)
                      let max = sorted.length //sorted.filter(s => s.partIndex !== 999999).length
-                     let isOpen = !osearch || this.state.collapse["outline-"+root+"-"+top] //&& !this.props.loading
+                     let isOpen = !osearch || this.state.collapse["outline-"+root+"-"+top]  //&& !this.props.loading
 
                      if(start > min) {
                         let tag = "outline-"+root+"-"+top+"-prev"
                         let prev = this.state.collapse[tag]?this.state.collapse[tag]:[]
                         if(prev.length) start = prev[prev.length - 1]
-                        if(start > min && isOpen) showPrev = <span class="node-nav" onClick={
+                        if(start > min && isOpen && this.props.outlines[top]) showPrev = <span class="node-nav" onClick={
                            () => this.setState({collapse:{...this.state.collapse, [tag]:[...prev, Math.max(0,start-ShowNbChildren)]}})
                         }>{I18n.t("resource.showPnodes")}</span>
                      }
@@ -6927,7 +6947,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                         let tag = "outline-"+root+"-"+top+"-next"
                         let next = this.state.collapse[tag]?this.state.collapse[tag]:[]
                         if(next.length) end = next[next.length - 1]
-                        if(end < max - 1 && isOpen) showNext = <span class="node-nav" onClick={
+                        if(end < max - 1 && isOpen && this.props.outlines[top]) showNext = <span class="node-nav" onClick={
                            () => this.setState({collapse:{...this.state.collapse, [tag]:[...next, end+ShowNbChildren]}})
                         }>{I18n.t("resource.showNnodes")}</span>
                      }
@@ -7131,7 +7151,10 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                               if(showDetails && osearch && g["tmp:colophonMatch"]) {
                                  if(!g.details) g.details = []
                                  if(!Array.isArray(g["tmp:colophonMatch"])) g["tmp:colophonMatch"] = [ g["tmp:colophonMatch"] ]
-                                 g.details.push(<div class="sub"><h4 class="first type">{this.proplink(tmp+"colophonMatch")}: </h4><div>{g["tmp:colophonMatch"].map(t => <h4>{highlight(t["@value"])}</h4>)}</div></div>)
+                                 g.details.push(<div class="sub"><h4 class="first type">{this.proplink(tmp+"colophonMatch")}: </h4><div>{g["tmp:colophonMatch"].map(t => <h4>{
+                                    this.format("h4","","",false, "sub",[{ value:t["@value"], lang:t["@language"], type:"literal"}])
+                                    //highlight(t["@value"])
+                                 }</h4>)}</div></div>)
                               }
 
 
@@ -7738,7 +7761,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          if(createdBy.length && createdBy.length > 4) { 
             let searchUrl = "/search?r="+this.props.IRI
             if(_T === "Person") {
-               searchUrl += "&t=Work&f=relation,inc,bdo:creator"
+               searchUrl += "&t=Work&f=relation,exc,bdo:workIsAbout"
             } else if(_T === "Place" || serial && _T === "Work") {
                searchUrl += "&t=Instance"
             } else if( _T === "Product") {

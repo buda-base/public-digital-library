@@ -189,8 +189,8 @@ export const updateFacets = (state: UIState, action: actions.LoadingAction) => {
 
     // #548
     const _tmp = "http://purl.bdrc.io/ontology/tmp/"
-    const removeUnreleased = !isAdmin(auth) || !action.payload[_tmp+"nonReleasedItems"]
-    //console.log("removeU:",removeUnreleased,facets)
+    const removeUnreleased = !isAdmin(auth)  // || !action.payload[_tmp+"nonReleasedItems"]
+    console.log("removeU:",removeUnreleased)
 
     let facets = Object.keys(action.meta.facets)
     facets.map(k => {

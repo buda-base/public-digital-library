@@ -181,7 +181,8 @@
       "tmp:noteMatch": "Note",
       "tmp:possibleAccess": "Access Possible",
       "tmp:catalogOnly": "Catalog Only",
-      "tmp:nonReleasedItems": "Non-released items"
+      "tmp:nonReleasedItems": "Non-released items",
+      "tmp:colophonMatch":"Colophon Match"
    },
    "result": {
       "open": "开放",

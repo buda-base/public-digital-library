@@ -245,7 +245,8 @@
       "tmp:completion":"Completion",
       "tmp:complete":"Complete",
       "tmp:incomplete":"Incomplete",
-      "tmp:scans":"scans"
+      "tmp:scans":"scans",
+      "tmp:colophonMatch":"Colophon Match"
    },
    "result": {
       "open": "Open",

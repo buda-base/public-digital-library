@@ -1728,7 +1728,8 @@ export const gotManifest = (state: DataState, action: Action) => {
         IIIFinfo:{ ...state.IIIFinfo,
            [action.meta.IRI]:{ ...state.IIIFinfo?state.IIIFinfo[action.meta.IRI]:{},
                resourceManifest:action.payload,
-               collecManif:action.meta.collecManif
+               collecManif:action.meta.collecManif,
+               single:action.meta.single
             }
          }
     }
