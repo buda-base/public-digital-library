@@ -479,7 +479,8 @@
       "one":"(Select one)",
       "reset":"Reset",
       "nothing":"No match",
-      "choose":"Choose..."
+      "choose":"Choose...",
+      "more":"Enter at least 2 characters..."
    },
    "Rsidebar": {
       "title": "Display Preferences",

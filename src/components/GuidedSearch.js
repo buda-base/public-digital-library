@@ -362,12 +362,20 @@ class GuidedSearch extends Component<Props,State> {
                       <Select
                         styles={selectStyles}
                         options={this.state.codes}
+                        filterOption={ ({label}, input) => {
+                          //console.log("input",input)
+                          if(input.length < 2) return false
+                          else return label.includes(input)
+                        }}
                         onChange={(v) => { 
                           console.log("val:",v)
                           this.props.history.push("/show/"+v.value)
                         }}
                         placeholder={I18n.t("search.choose")}
-                        noOptionsMessage={() => I18n.t("search.nothing")}
+                        noOptionsMessage={(input) => { 
+                          if(input.length >= 2) return I18n.t("search.nothing") 
+                          else return I18n.t("search.more") 
+                        }}
                       />
                     </>) }
                     { selectors }
