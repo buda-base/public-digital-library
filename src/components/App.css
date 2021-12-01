@@ -736,6 +736,7 @@ footer #donate,
 .App.guidedsearch.khmer .static-container.sticky > div:first-child + div [data-prop] .option label > span:not(.checkbox) { font-size:15px; font-weight:500; color:#343434; 
    padding-bottom: 2px; 
 }
+.App.guidedsearch.khmer .static-container.sticky > div:first-child + div [data-prop="completion"],
 .App.guidedsearch.khmer .static-container.sticky > div:first-child + div [data-prop="language"] { justify-content: flex-start; }
 
 .App.guidedsearch.khmer .static-container.sticky > div:first-child + div [data-prop="direct"] > div > div:first-of-type { border:none; box-shadow: none; border-radius: 0;
