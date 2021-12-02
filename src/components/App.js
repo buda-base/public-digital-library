@@ -1432,6 +1432,8 @@ class App extends Component<Props,State> {
          label = [ "Instance" ] 
       }
 
+      let khmerCollec = ""
+      if(onKhmerUrl) khmerCollec = "&f=collection,inc,bdr:PR1KDPP00"
 
       loggergen.log("search::",key,_key,label,searchDT) //,this.state,!global.inTest ? this.props:null)
 
@@ -1441,7 +1443,7 @@ class App extends Component<Props,State> {
       if(dataInfo) {
          console.log("new route:",dataInfo)
 
-         this.props.history.push({pathname:"/search",search:"?"+(dataInfo==="date"?"date":"id")+"="+key+"&t="+label})
+         this.props.history.push({pathname:"/search",search:"?"+(dataInfo==="date"?"date":"id")+"="+key+"&t="+label+khmerCollec})
       }
       else if(_key.match(RIDregexp) || prefixesMap[key.replace(/^([^:]+):.*$/,"$1")])
       {
@@ -1455,12 +1457,12 @@ class App extends Component<Props,State> {
          }
          else {
             if(!label) label = this.state.filters.datatype.filter((f)=>["Person","Work"].indexOf(f) !== -1)[0]
-            this.props.history.push({pathname:"/search",search:"?r="+_key+(label?"&t="+label+hasOpenPossibly:"")})
+            this.props.history.push({pathname:"/search",search:"?r="+_key+(label?"&t="+label+hasOpenPossibly:"")+khmerCollec})
          }
       }
       else if(key.match(/^[^:]*:[^ ]+/))
       {
-         this.props.history.push({pathname:"/search",search:"?p="+key})
+         this.props.history.push({pathname:"/search",search:"?p="+key+khmerCollec})
 
       }
       else {
@@ -1474,7 +1476,7 @@ class App extends Component<Props,State> {
          if(this.props.searches && this.props.searches[this.state.filters.datatype[0]] && this.props.searches[this.state.filters.datatype[0]][this.props.keyword+"@"+this.props.language] && this.props.searches[this.state.filters.datatype[0]][this.props.keyword+"@"+this.props.language].inEtext) {
             inEtext = this.props.searches[this.state.filters.datatype[0]][this.props.keyword+"@"+this.props.language].inEtext
          }
-         this.props.history.push({pathname:"/search",search:"?q="+key+"&lg="+lang+"&t="+label+hasOpenPossibly+(inEtext?"&r="+inEtext:"")})
+         this.props.history.push({pathname:"/search",search:"?q="+key+"&lg="+lang+"&t="+label+hasOpenPossibly+(inEtext?"&r="+inEtext:"")+khmerCollec})
          
          // TODO add permanent filters (here ?)
       }

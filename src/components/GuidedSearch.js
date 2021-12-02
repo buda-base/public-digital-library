@@ -301,7 +301,7 @@ class GuidedSearch extends Component<Props,State> {
           return val.map(v => "f="+settings[k].values[i].facet.property+","+settings[k].values[i].facet.relation+","+v).join("&")
         }
       }).join("&")
-    }).join("&")
+    }).join("&")+"&f=collection,inc,bdr:PR1KDPP00"
 
     const handleType = (event,checked) => {
       this.props.onSetType(checked?"instance":"work")

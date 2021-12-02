@@ -679,7 +679,7 @@ footer #donate,
    content:""; height:15px; width:100%; margin-left:-35px; display: block; background:white; bottom:0px;position: absolute;
 }
 
-.App.guidedsearch.khmer.scrolled .static-container.sticky > div:first-child {
+.App.guidedsearch.khmer .static-container.sticky > div:first-child {
    padding-bottom:35px;
 }
 
@@ -687,7 +687,7 @@ footer #donate,
 .App.guidedsearch.khmer .static-container.sticky > div:first-child h1 { padding-top:80px; font-size:34px; margin:0;
    transition:all 100ms ease-in-out;
 }
-.App.guidedsearch.khmer.scrolled .static-container.sticky > div:first-child h1 { padding-top:20px; }
+.App.guidedsearch.khmer .static-container.sticky > div:first-child h1 { padding-top:20px; }
 
 .App.guidedsearch.khmer .static-container.sticky h2 { font-size:16px; color:#343434; text-transform: uppercase; margin:0; position: relative;}
 
@@ -700,7 +700,7 @@ footer #donate,
 .App.guidedsearch.khmer .static-container.sticky > div:first-child .selector {padding-bottom:0; padding-top:40px;  position: relative; display: flex;
    transition:all 100ms ease-in-out; align-items: center;
 }
-.App.guidedsearch.khmer.scrolled .static-container.sticky > div:first-child .selector { padding-top:0px;  }
+.App.guidedsearch.khmer .static-container.sticky > div:first-child .selector { padding-top:0px;  }
 
 .App.guidedsearch.khmer .static-container.sticky > div:first-child .selector [data-prop] { position: absolute; right:0;  top:-50px; width:100%; text-align: right; 
    pointer-events:none;
