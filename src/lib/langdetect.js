@@ -70,7 +70,7 @@ function narrowWithChar(char, wordlen, lttotest) {
 	return lttotest.filter(lt => okforlt(char, wordlen, lt));
 }
 
-export function narrowWithString(strtoguess, transtotest) {
+export function narrowWithString(strtoguess, transtotest = ['ewts', 'iast', 'pinyin']) {
 	//console.log("nWs:",strtoguess,transtotest)
 	var wordlen = 0;
 	var triedrange = false;

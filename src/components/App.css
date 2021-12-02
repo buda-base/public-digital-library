@@ -294,7 +294,7 @@ body { overflow:auto !important;padding-right:0 !important; /*font-family:"Robot
 
 #clear-filters { vertical-align:-5px; margin-left: 5px; cursor:pointer; color:rgba(0,0,0,0.55)}
 
-.active-filter span { display:inline-block; padding-left:5px; font-size:11px; color:#d73449; font-weight:500; display: inline-flex;  }
+.active-filter > span { display:inline-block; padding-left:5px; font-size:11px; color:#d73449; font-weight:500; display: inline-flex;  }
 .active-filter { background:rgba(196, 164, 164, 0.55); padding:0 5px; border-radius: 15px; box-shadow:3px 3px 10px rgba(0,0,0,0.35);  text-transform:capitalize;
    margin:0 10px 0 0; display:inline-block; line-height:100%;border:1px solid transparent; display: inline-flex; align-items: baseline;
 }
@@ -308,8 +308,10 @@ body { overflow:auto !important;padding-right:0 !important; /*font-family:"Robot
 
 /* .active-filter > span > span:first-child { display:none; } */
 
-.active-filter.disabled > a:last-child,
-.active-filter:first-child > a:last-child { opacity:0.5; pointer-events: none;  }
+
+.active-filter.disabled > a:last-child
+/* .active-filter:first-child > a:last-child  */
+{ opacity:0.5; pointer-events: none;  }
 
 .active-filter { font-size:0; box-shadow: 0 2px 4px rgba(187, 187, 187, 0.5); border-radius: 2px;background:white; height:28px;line-height:28px;}
 .active-filter,#clear-filters  {  margin-bottom:10px;  }
@@ -691,7 +693,7 @@ footer #donate,
 
 .App.guidedsearch.khmer .static-container.sticky h2 { font-size:16px; color:#343434; text-transform: uppercase; margin:0; position: relative;}
 
-.App.guidedsearch.khmer .static-container.sticky .selector { padding-bottom:45px; scroll-margin-top: 380px;}
+.App.guidedsearch.khmer .static-container.sticky .selector { padding-bottom:45px; scroll-margin-top: 200px;}
 .App.guidedsearch.khmer .static-container.sticky .selector h2 > * { visibility:hidden; }
 .App.guidedsearch.khmer .static-container.sticky .selector h2 > img { width:22px; vertical-align: -6px;/*position: absolute; right:0;*/ margin-left:20px;}
 .App.guidedsearch.khmer .static-container.sticky .selector h2 > span { font-weight: 400; font-size:10px; vertical-align: 2px; text-transform: none; padding-left:20px;}
@@ -726,6 +728,9 @@ footer #donate,
 }
 .App.guidedsearch.khmer .static-container.sticky > div:last-child { padding:35px 0;}
 
+.App.guidedsearch.khmer .static-container.sticky > div:first-child + div .flex { display:flex; justify-content: space-between; }
+.App.guidedsearch.khmer .static-container.sticky > div:first-child + div .flex > div { width:415px;}
+
 .App.guidedsearch.khmer .static-container.sticky + div button.reset  { color:#2f2f2f; font-weight: 600; cursor:pointer;
    border-radius: 2px;  background-color: #fbfafa;  border: 1px solid #e7e7e7; padding:7px 12px; font-size:12px; text-transform: uppercase;
 }
@@ -742,10 +747,17 @@ footer #donate,
 .App.guidedsearch.khmer .static-container.sticky > div:first-child + div [data-prop="completion"],
 .App.guidedsearch.khmer .static-container.sticky > div:first-child + div [data-prop="language"] { justify-content: flex-start; }
 
+.App.guidedsearch.khmer .static-container.sticky > div:first-child + div [data-prop="keyword"] input,
 .App.guidedsearch.khmer .static-container.sticky > div:first-child + div [data-prop="direct"] > div > div:first-of-type { border:none; box-shadow: none; border-radius: 0;
-   background-color:#efefef; min-width:400px; box-shadow: inset 0 0 4px rgba(0,0,0,0.25); font-size:14px; 
+   background-color:#efefef; min-width:415px; box-shadow: inset 0 0 4px rgba(0,0,0,0.25); font-size:14px; 
 }
-.App.guidedsearch.khmer .static-container.sticky > div:first-child + div [data-prop="direct"] > div > div:first-of-type { color:#343434; }
+
+.App.guidedsearch.khmer .static-container.sticky > div:first-child + div [data-prop="direct"] > div > div:first-of-type { color:#343434 !important; }
+
+.App.guidedsearch.khmer .static-container.sticky > div:first-child + div [data-prop="keyword"] input { padding:10px; box-sizing: border-box;}
+
+.App.guidedsearch.khmer .static-container.sticky > div:first-child + div [data-prop="keyword"] > div > div::after,
+.App.guidedsearch.khmer .static-container.sticky > div:first-child + div [data-prop="keyword"] > div > div::before { display: none;}
 
 [class$="-indicatorSeparator"] { display: none; }
 

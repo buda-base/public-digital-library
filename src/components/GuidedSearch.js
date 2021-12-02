@@ -11,12 +11,15 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import CheckBoxOutlineBlankSharp from '@material-ui/icons/CheckBoxOutlineBlankSharp';
 import CheckBoxSharp from '@material-ui/icons/CheckBoxSharp';
 import Tooltip from '@material-ui/core/Tooltip';
+import TextField from '@material-ui/core/TextField';
 import purple from '@material-ui/core/colors/purple';
 import Select from 'react-select';
 import $ from 'jquery' ;
 
+import {narrowWithString} from "../lib/langdetect"
+
 type Props = { auth:{}, history:{}, dictionary:{}, classes:{}, type:string }
-type State = { collapse:{}, checked:{}, titles:[], codes:[] }
+type State = { collapse:{}, checked:{}, titles:[], codes:[], keyword:string }
 
 
 /* // v1
@@ -112,6 +115,13 @@ const styles = theme => ({
     transform: "translateX(3px)"
   },
   iOSIconChecked: {},
+  input: {
+    '&::placeholder': {
+      color: '#343434',
+      opacity:1,
+      fontWeight:500
+    }
+  }
 })
 
 
@@ -174,7 +184,7 @@ class GuidedSearch extends Component<Props,State> {
   constructor(props : Props) {
     super(props);      
 
-    this.state = { collapse:"", checked:{}, type:"work" }
+    this.state = { collapse:"", checked:{}, type:"work", keyword:"" }
 
     if(!this.props.config) this.props.onInitiateApp(qs.parse(this.props.history.location.search), null, null, "guidedsearch")
 
@@ -214,7 +224,7 @@ class GuidedSearch extends Component<Props,State> {
         else if(a.label > b.label) return 1
         return 0
       })
-      console.log("FEMCTitles:",titles)
+      //console.log("FEMCTitles:",titles)
       this.setState({titles})
     })
   }
@@ -231,7 +241,7 @@ class GuidedSearch extends Component<Props,State> {
         else if(a.label > b.label) return 1
         return 0
       })
-      console.log("FEMCCodes:",codes)
+      //console.log("FEMCCodes:",codes)
       this.setState({codes})
     })
   }
@@ -291,17 +301,19 @@ class GuidedSearch extends Component<Props,State> {
     console.log("render:", this.props, this.state, settings)
 
 
-    const searchRoute = "search?t=" + (this.props.type[0].toUpperCase()+this.props.type.substring(1)) + "&r=bdr:PR1KDPP00&"+Object.keys(this.state.checked).map( k => {
-      console.log("k:",k)
-      return Object.keys(this.state.checked[k]).map(i => {
-        console.log("i:",i,settings[k].values[i].facet)
-        if(this.state.checked[k][i]) { 
-          let val = settings[k].values[i].facet.value
-          if(!Array.isArray(val)) val = [val] 
-          return val.map(v => "f="+settings[k].values[i].facet.property+","+settings[k].values[i].facet.relation+","+v).join("&")
-        }
-      }).join("&")
-    }).join("&")+"&f=collection,inc,bdr:PR1KDPP00"
+    const searchRoute = "search?t=" + (this.props.type[0].toUpperCase()+this.props.type.substring(1)) 
+      + (this.state.keyword&&this.state.language?"&q="+this.state.keyword+"&lg="+this.state.language:"&r=bdr:PR1KDPP00&")
+      + Object.keys(this.state.checked).map( k => {
+        console.log("k:",k)
+        return Object.keys(this.state.checked[k]).map(i => {
+          console.log("i:",i,settings[k].values[i].facet)
+          if(this.state.checked[k][i]) { 
+            let val = settings[k].values[i].facet.value
+            if(!Array.isArray(val)) val = [val] 
+            return val.map(v => "f="+settings[k].values[i].facet.property+","+settings[k].values[i].facet.relation+","+v).join("&")
+          }
+        }).join("&")
+      }).join("&")+(this.props.type === "instance" ? "&f=collection,inc,bdr:PR1KDPP00":"")
 
     const handleType = (event,checked) => {
       this.props.onSetType(checked?"instance":"work")
@@ -358,7 +370,30 @@ class GuidedSearch extends Component<Props,State> {
                         noOptionsMessage={() => I18n.t("search.nothing")}
                       />
                     </>) }
-                    { (settings?.direct && this.props.type === "instance") && renderSelector("direct", true, <>
+                    { this.props.type === "instance" && <div class="flex">
+                    { settings?.keyword && renderSelector("keyword", true, <>
+                      <TextField 
+                        placeholder={"Search..."}
+                        InputProps={{ classes: { input: classes.input } }}
+                        value={this.state.keyword}
+                        onKeyDown={(event)=>{
+                          if(event.key == "Enter") this.props.history.push(searchRoute)
+                        }}
+                        onChange={(event) => {
+                          let keyword = event.target.value, language = "pi-x-ndia", detec
+                          if(keyword) {
+                            detec = narrowWithString(keyword)
+                            //console.log("detec:",detec) 
+                            if(detec.length && detec[0] === "khmr") language = "km"
+                          } else {
+                            language = ""
+                            keyword = ""
+                          }
+                          this.setState({keyword, language})
+                        }}
+                      />
+                    </>) }
+                    { settings?.direct && renderSelector("direct", true, <>
                       <Select
                         styles={selectStyles}
                         options={this.state.codes}
@@ -378,6 +413,7 @@ class GuidedSearch extends Component<Props,State> {
                         }}
                       />
                     </>) }
+                    </div>}
                     { selectors }
                   </div>
                   <div>
