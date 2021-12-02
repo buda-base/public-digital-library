@@ -302,7 +302,8 @@ class GuidedSearch extends Component<Props,State> {
 
 
     const searchRoute = "search?t=" + (this.props.type[0].toUpperCase()+this.props.type.substring(1)) 
-      + (this.state.keyword&&this.state.language?"&q="+this.state.keyword+"&lg="+this.state.language:"&r=bdr:PR1KDPP00&")
+      + (this.props.type === "instance" ? "&f=collection,inc,bdr:PR1KDPP00":"")
+      + (this.state.keyword&&this.state.language?"&q="+this.state.keyword+"&lg="+this.state.language+"&":"&r=bdr:PR1KDPP00&")
       + Object.keys(this.state.checked).map( k => {
         console.log("k:",k)
         return Object.keys(this.state.checked[k]).map(i => {
@@ -313,7 +314,7 @@ class GuidedSearch extends Component<Props,State> {
             return val.map(v => "f="+settings[k].values[i].facet.property+","+settings[k].values[i].facet.relation+","+v).join("&")
           }
         }).join("&")
-      }).join("&")+(this.props.type === "instance" ? "&f=collection,inc,bdr:PR1KDPP00":"")
+      }).join("&")
 
     const handleType = (event,checked) => {
       this.props.onSetType(checked?"instance":"work")
