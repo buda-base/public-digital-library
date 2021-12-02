@@ -702,11 +702,12 @@ footer #donate,
 }
 .App.guidedsearch.khmer.scrolled .static-container.sticky > div:first-child .selector { padding-top:0px;  }
 
-.App.guidedsearch.khmer .static-container.sticky > div:first-child .selector [data-prop] { position: absolute; right:0;  top:-45px; width:100%; text-align: right; 
+.App.guidedsearch.khmer .static-container.sticky > div:first-child .selector [data-prop] { position: absolute; right:0;  top:-50px; width:100%; text-align: right; 
    pointer-events:none;
 }
 .App.guidedsearch.khmer .static-container.sticky > div:first-child .selector [data-prop] > * { pointer-events: auto;}
 
+/* .App.guidedsearch.khmer.scrolled .static-container.sticky > div:first-child .selector [data-prop] { top:-60px; } */
 
 .App.guidedsearch.khmer .static-container.sticky > div:first-child .selector label { margin:0; cursor: pointer; }
 .App.guidedsearch.khmer .static-container.sticky > div:first-child .selector label:first-of-type > span{ vertical-align:-2px; padding-right:12px;}
