@@ -1964,8 +1964,8 @@ function rewriteAuxMain(result,keyword,datatype,sortBy,language)
             }
             
             let res = result[e][k].map(e => { 
-               if(e.type === bdo+"isComplete") {
-                  return ({type:_tmp+"completion", value:(e.value=="true"?_tmp+"complete":_tmp+"incomplete")})
+               if(e.type === bdo+"isComplete" && e.value=="true") {
+                  return ({type:_tmp+"completion", value:_tmp+"complete"})
                } else if(asset.includes(e.type) && e.value == "true") {
                   if(isTypeScan && e.type === _tmp+"hasImage") isScan = true ; 
                   return ({type:_tmp+"assetAvailability",value:e.type})

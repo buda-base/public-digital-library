@@ -4047,7 +4047,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
             { onKhmerServer && ["Work", "Instance"].includes(type) && <>
                {this.getResultProp(tmp+"FEMCManuscriptCode",allProps,false,false, [ rdf+"value" ], null, [ bf+"identifiedBy"  ], [ bdr+"FEMCManuscriptCode" ]) }
-               {this.getResultProp(tmp+"incomplete", allProps.filter(a => a.type == tmp+"completion" && a.value == tmp+"incomplete").map(a => ({...a, value:" "})), false,false, [ tmp+"completion"]) }
+               {this.getResultProp(tmp+"incomplete", allProps.filter(a => a.type == bdo+"isComplete" && a.value == "false").map(a => ({...a, value:" "})), false,false, [ bdo+"isComplete"]) }
                {this.getResultProp(bdo+"hasFascicles",allProps,false,false) }
                { (hasNbRepro = allProps.filter(a => a.type === tmp+"nbImageReproductions" && a.value > 1).length > 0) && <>
                   {/* { this.getResultProp(tmp+"reproductions", allProps, false, false, [ tmp+"nbImageReproductions" ]) } */}
