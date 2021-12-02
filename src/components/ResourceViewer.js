@@ -6170,6 +6170,9 @@ perma_menu(pdfLink,monoVol,fairUse,other)
    // TODO case of part of instance after p.20 (see bdr:MW1KG2733_65CFB8)
 
    renderNoAccess = (fairUse) => {
+      
+      if ( this.props.manifestError && [404, 444].includes(this.props.manifestError.error.code)) return
+
       if(fairUse) { // && (!this.props.auth || this.props.auth && !this.props.auth.isAuthenticated()) ) { 
 
          let fairTxt, hasIA, elem = this.getResourceElem(bdo+"digitalLendingPossible");
