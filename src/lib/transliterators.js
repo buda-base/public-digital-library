@@ -182,7 +182,7 @@ export function sortLangScriptLabels(data,preset,translit)
 
    //console.log("data",data)
 
-   // #622 WIP: cant tell yet if it actually sorts anything?? 
+   // #622 WIP: cant tell yet if it actually sorts anything?? actually it does once altLabels are not wrongly used anymore!
    const khmerSort = (a,b) => {
       const collator = new Intl.Collator('km')
       if(collator) return collator.compare(a._val,b._val)
@@ -198,13 +198,16 @@ export function sortLangScriptLabels(data,preset,translit)
       data[k] = data[k].map(e =>({...e, _val:(e.value !== undefined?e.value:(e["@value"]?e["@value"]:"")).replace(/[↦↤]/g,"")}))
 
       if(k === "bo" || k === "bo-Tibt") {
+         //console.log("sorting bo:",JSON.stringify(data[k],null,3))
          data_ = data_.concat(data[k].sort((a,b) => tibetSort.compare(a._val,b._val)))
       } else if(k.endsWith("ewts")) {
+         //console.log("sorting ewts:",JSON.stringify(data[k],null,3))
          data_ = data_.concat(data[k].sort((a,b) => tibetSort.compareEwts(a._val,b._val)))
-      } else if(k === "km" || k.endsWith("khmr")) {
+      } else if(k.startsWith("km") || k.endsWith("khmr")) {
          //console.log("sorting km:",JSON.stringify(data[k],null,3))
          data_ = data_.concat(data[k].sort(khmerSort))
       } else {
+         //console.log("sorting ?:",k,JSON.stringify(data[k],null,3))
          data_ = data_.concat(__.orderBy(data[k],[ "_val" ],['asc']))
       }
    }

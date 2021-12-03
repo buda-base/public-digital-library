@@ -1664,13 +1664,14 @@ function sortResultsByTitle(results, userLangs, reverse) {
          for(let v of results[k]) {
             if(v.type === tmp+"matchContext" && (v.value === tmp+"nameContext" || v.value === tmp+"titleContext")) {
                keysTitle.push(k)
+               return
             }
          }
          keysOther.push(k)
       })
       const partSort = (partKeys) => {
          partKeys = partKeys.map(k => {
-            let lang,value,labels = results[k].filter(e => e.type && e.type.endsWith("abelMatch") ).map(e => ({ ...e, value:e.value.replace(/[↦]/g,"")})) 
+            let lang,value,labels = results[k].filter(e => e.type && e.type.endsWith("abelMatch") && results[k].some(f => f.type === skos + "prefLabel" && e.value.replace(/[↦↤]/g,"") === f.value)).map(e => ({ ...e, value:e.value.replace(/[↦↤]/g,"")})) 
             if(!labels.length) labels = results[k].filter(r => r.type && r.type === skos+"prefLabel") //r.value && r.value.match(/↦/))
             if(!labels.length && (assoR = state.data.assocResources[state.data.keyword]) && assoR[k]) labels = assoR[k].filter(r => r.type && r.type === skos+"prefLabel") 
             //loggergen.log("labels?",labels,assoR,k,assoR[k],results[k])
@@ -1697,7 +1698,7 @@ function sortResultsByTitle(results, userLangs, reverse) {
       let sortRes = {}
       for(let k of keys) sortRes[k.k] = results[k.k]
 
-      //loggergen.log("sortResT",sortRes)
+      //loggergen.log("sortResT",keys,sortRes)
 
       return sortRes
    }
