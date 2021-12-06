@@ -102,7 +102,7 @@
       "resources":"resources",
       "guided":"Guided search",
       "browse":"browse",
-      "home":"home"
+      "home":"home"      
    },
    "Lsidebar": {
       "sortBy": {
@@ -481,7 +481,10 @@
       "reset":"Reset",
       "nothing":"No match",
       "choose":"Choose...",
-      "more":"Enter at least 2 characters..."
+      "more":"Enter at least 2 characters...",
+      "many": "Too many results ({{count}})",
+      "load": "Loading results ({{count}})",
+      "no": "No result"
    },
    "Rsidebar": {
       "title": "Display Preferences",

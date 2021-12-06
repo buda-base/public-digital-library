@@ -19,6 +19,7 @@ const mapStateToProps = (state,ownProps) => {
    let config = state.data.config
    let locale = state.i18next.lang   
    let type = state.ui.type
+   let checkResults = state.data.checkResults
 
    let profileName
    if(auth && auth.userProfile) {
@@ -28,7 +29,7 @@ const mapStateToProps = (state,ownProps) => {
    // not needed
    //let dictionary = state.data.dictionary ;
 
-   let props = { config, locale, profileName, type }  //dictionary }
+   let props = { config, locale, profileName, type,checkResults }  //dictionary }
 
    return props
 
@@ -51,6 +52,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       },
       onUserProfile:(url:{}) => {
          dispatch(ui.userProfile(url));
+      },
+      onCheckResults:(params:"") => {
+         dispatch(data.checkResults(params));
       }
    }
 }

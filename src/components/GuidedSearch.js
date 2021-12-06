@@ -18,8 +18,8 @@ import $ from 'jquery' ;
 
 import {narrowWithString} from "../lib/langdetect"
 
-type Props = { auth:{}, history:{}, dictionary:{}, classes:{}, type:string }
-type State = { collapse:{}, checked:{}, titles:[], codes:[], keyword:string }
+type Props = { auth:{}, history:{}, dictionary:{}, classes:{}, type:string, checkResults:boolean|{} }
+type State = { collapse:{}, checked:{}, titles:[], codes:[], keyword:string, searchRoute:string, checkParams:string }
 
 
 /* // v1
@@ -208,6 +208,61 @@ class GuidedSearch extends Component<Props,State> {
 
     document.title = I18n.t("topbar.guided") + " - Buddhist Digital Archives"
   }
+
+  componentDidUpdate() {
+
+    let settings = data
+    if(this.props?.config?.guided && this.props.config.guided[this.props.type]) settings = this.props.config.guided[this.props.type]
+
+    const getQueryParam = (param) => {
+      let pref = "R_", suf = "_LIST"
+      if(param == "tree") param = "about"
+      else if(param == "language") param = "lang"
+      else if(param == "completion") { 
+        param = "complete"
+        pref = "B_"
+        suf = ""
+      }
+      return pref+param.toUpperCase()+suf
+    }
+
+    let searchRoute = "", checkParams = ""
+    if(this.props.type === "work" || this.state.keyword) {
+      searchRoute = "search?t=" + (this.props.type[0].toUpperCase()+this.props.type.substring(1)) 
+        + (this.props.type === "instance" ? "&f=collection,inc,bdr:PR1KDPP00":"")
+        + (this.state.keyword&&this.state.language?"&q="+this.state.keyword+"&lg="+this.state.language+"&":"&r=bdr:PR1KDPP00&")
+        + Object.keys(this.state.checked).map( k => {
+          //console.log("k:",k)
+          return Object.keys(this.state.checked[k]).map(i => {
+            //console.log("i:",i,settings[k].values[i].facet)
+            if(this.state.checked[k][i]) { 
+              let val = settings[k].values[i].facet.value              
+              //if(!Array.isArray(val)) val = [val] 
+              //return val.map(v => "f="+settings[k].values[i].facet.property+","+settings[k].values[i].facet.relation+","+v).join("&")
+              return "f="+settings[k].values[i].facet.property+","+settings[k].values[i].facet.relation+","+val
+            }
+          }).filter(p => p).join("&")
+        }).join("&")
+    } else {
+      checkParams = "/query/table/countInstancesInCollectionWithProperties?R_COLLECTION=bdr:PR1KDPP00&"
+       + Object.keys(this.state.checked).map( k => {
+          //console.log("k:",k)
+          let param = ""
+          let list = Object.keys(this.state.checked[k]).map(i => {
+            //console.log("i:",i,settings[k].values[i].facet.property)
+            if(!param) param = getQueryParam(settings[k].values[i].facet.property)
+            if(this.state.checked[k][i]) { 
+              return ( k == "completion" ? "true" : settings[k].values[i].facet.value)
+            }
+          }).filter(p => p).join(",")
+          //console.log("param:",param+list)
+          if(list) return param+"="+list
+       }).filter(p => p).join("&")+"&format=json"
+    }
+
+    if(searchRoute != this.state.searchRoute || checkParams != this.state.checkParams) 
+      this.setState({ searchRoute, checkParams })
+  }
   
   async fetchFEMCTitles() {
     let titles = []
@@ -301,20 +356,8 @@ class GuidedSearch extends Component<Props,State> {
     console.log("render:", this.props, this.state, settings)
 
 
-    const searchRoute = "search?t=" + (this.props.type[0].toUpperCase()+this.props.type.substring(1)) 
-      + (this.props.type === "instance" ? "&f=collection,inc,bdr:PR1KDPP00":"")
-      + (this.state.keyword&&this.state.language?"&q="+this.state.keyword+"&lg="+this.state.language+"&":"&r=bdr:PR1KDPP00&")
-      + Object.keys(this.state.checked).map( k => {
-        console.log("k:",k)
-        return Object.keys(this.state.checked[k]).map(i => {
-          console.log("i:",i,settings[k].values[i].facet)
-          if(this.state.checked[k][i]) { 
-            let val = settings[k].values[i].facet.value
-            if(!Array.isArray(val)) val = [val] 
-            return val.map(v => "f="+settings[k].values[i].facet.property+","+settings[k].values[i].facet.relation+","+v).join("&")
-          }
-        }).join("&")
-      }).join("&")
+    let { searchRoute, checkParams } = this.state
+
 
     const handleType = (event,checked) => {
       this.props.onSetType(checked?"instance":"work")
@@ -427,11 +470,31 @@ class GuidedSearch extends Component<Props,State> {
                     { settings?.direct && renderLink("direct") }                    
                     { links }
                     <div class="buttons">
-                      <Link to={searchRoute}><button class="red">Search</button></Link>
+                      {searchRoute 
+                        ? <Link to={searchRoute}><button class="red">
+                            {I18n.t("home.search")}
+                          </button></Link>
+                        : <button {...this.props.checkResults === true ? {disabled:true}:{}} class="red" onClick={() => this.props.onCheckResults(checkParams)}>
+                            { this.props.checkResults === true 
+                              ? <Loader scale={0.5} top={"15px"} color="white" loaded={false}/>
+                              : I18n.t("home.search") }
+                        </button>}
                       <button class="reset" {...canReset?{disabled:true}:{}} onClick={() => {
                         this.setState({checked:{}});
                         this.props.onSetType("work");
+                        this.props.onCheckResults(false);
                       }}>{I18n.t("search.reset")}</button>
+                    </div>
+                    <div class="log">
+                    { this.props.checkResults && this.props.checkResults.count && this.props.checkResults.count >= 1000 && 
+                        <p class="error">{I18n.t("search.many", { count: this.props.checkResults.count })}</p>
+                    }
+                    { this.props.checkResults && this.props.checkResults.count != 0 && this.props.checkResults.count < 1000 && 
+                        <p class="info">{I18n.t("search.load", { count: this.props.checkResults.count})}</p>
+                    }
+                    { this.props.checkResults && this.props.checkResults.count && this.props.checkResults.count == 0 && 
+                        <p class="error">{I18n.t("search.no")}</p>
+                    }
                     </div>
                   </nav>
                 </div>

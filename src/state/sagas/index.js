@@ -2364,6 +2364,30 @@ subtime("startSearch")
 }
 
 
+export function* watchCheckResults() {
+      yield takeLatest(
+         dataActions.TYPES.checkResults,
+         (action) => checkResults(action.payload)
+      );
+}
+
+
+async function checkResults(params) {
+   
+   if(!params || params.count) return
+
+   let count = await api.loadCheckResults(params);
+   console.log("ckR params:",params,count)   
+   if(count?.results?.bindings?.length && (count = count.results.bindings[0].c?.value) !== undefined) {      
+      store.dispatch(dataActions.checkResults({count}));
+   } else {
+      store.dispatch(dataActions.checkResults(false));
+   }
+
+}
+
+
+
 export function* watchGetAssocTypes() {
 
    yield takeLatest(
@@ -3105,6 +3129,7 @@ export default function* rootSaga() {
       watchGetOneDatatype(),
       watchGetOneFacet(),
       watchGetManifest(),
+      watchCheckResults(),
       watchGetImageVolumeManifest(),
       watchGetAnnotations(),
       watchRequestPdf(),

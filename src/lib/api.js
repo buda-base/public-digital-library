@@ -286,6 +286,16 @@ export default class API {
    }
 
 
+    async loadCheckResults(params): Promise<string>
+    {
+         let config = store.getState().data.config.ldspdi
+         let url = config.endpoints[config.index] + params
+         let count=  JSON.parse(await this.getURLContents(url,false));
+         console.log("count:",count)
+         return count ;
+   }
+
+
     async loadResultsByDateOrId(date,t, dateOrId): Promise<string>
     {
          try {

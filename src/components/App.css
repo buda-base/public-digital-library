@@ -738,12 +738,16 @@ footer #donate,
 
 .App.guidedsearch.khmer .static-container.sticky > div:first-child + div [data-prop] { display:flex; flex-wrap: wrap; padding:15px 0 0px 0; justify-content: space-between;}
 .App.guidedsearch.khmer .static-container.sticky > div:first-child + div [data-prop] .option { display:block; margin-bottom:-5px; }
+.App.guidedsearch.khmer .static-container.sticky > div:first-child + div [data-prop="binding"] .option,
+.App.guidedsearch.khmer .static-container.sticky > div:first-child + div [data-prop="format"] .option,
 .App.guidedsearch.khmer .static-container.sticky > div:first-child + div [data-prop="language"] .option { padding-right:20px; }
 .App.guidedsearch.khmer .static-container.sticky > div:first-child + div [data-prop="style"] .option { width:30%; }
 .App.guidedsearch.khmer .static-container.sticky > div:first-child + div [data-prop="topic"] .option { width:50%; }
 .App.guidedsearch.khmer .static-container.sticky > div:first-child + div [data-prop] .option label > span:not(.checkbox) { font-size:15px; font-weight:500; color:#343434; 
    padding-bottom: 2px; 
 }
+.App.guidedsearch.khmer .static-container.sticky > div:first-child + div [data-prop="binding"],
+.App.guidedsearch.khmer .static-container.sticky > div:first-child + div [data-prop="format"],
 .App.guidedsearch.khmer .static-container.sticky > div:first-child + div [data-prop="completion"],
 .App.guidedsearch.khmer .static-container.sticky > div:first-child + div [data-prop="language"] { justify-content: flex-start; }
 
@@ -780,8 +784,14 @@ footer #donate,
 }
 .App.guidedsearch.khmer .static-container.sticky + div nav a { display: block; font-size:11px; text-transform: uppercase; color:#4a4a4a; font-weight: 700; margin-bottom:20px; }
 .App.guidedsearch.khmer .static-container.sticky + div nav a:nth-last-child(2) { margin-bottom:30px;}
-.App.guidedsearch.khmer .static-container.sticky + div nav .buttons * {  display: inline-block;min-width: 72px;}
+.App.guidedsearch.khmer .static-container.sticky + div nav .buttons > * {  display: inline-block;min-width: 72px; position: relative; }
 .App.guidedsearch.khmer .static-container.sticky + div nav .buttons .reset { margin-left:20px; }
+.App.guidedsearch.khmer .static-container.sticky + div nav .buttons > button {min-height:31px; vertical-align: middle; box-sizing: border-box;}
+.App.guidedsearch.khmer .static-container.sticky + div nav .buttons button[disabled] { /*background-color: #d7344990;*/ pointer-events:none; overflow: hidden; }
+
+.App.guidedsearch.khmer .static-container.sticky + div nav .log  { font-size:14px; font-weight:500; }
+.App.guidedsearch.khmer .static-container.sticky + div nav .log .error { color:#d73449; }
+.App.guidedsearch.khmer .static-container.sticky + div nav .log .info { opacity:0.35; }
 
 .App.guidedsearch.khmer .static-container.sticky + div h3 { color:#152631; font-size: 14; font-weight: 900; margin-bottom:35px; margin-top:90px;}
 

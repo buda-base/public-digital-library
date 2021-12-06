@@ -157,6 +157,17 @@ export const gotInstances = (state: DataState, action: Action) => {
 reducers[actions.TYPES.gotInstances] = gotInstances;
 
 
+export const checkResults = (state: DataState, action: Action) => {
+
+   return {
+       ...state,
+       checkResults:action.payload===false?false:(action.payload.count?action.payload:true)
+   }
+}
+reducers[actions.TYPES.checkResults] = checkResults;
+
+
+
 export const getReproductions = (state: DataState, action: Action) => {
 
    let instances = state.instances
