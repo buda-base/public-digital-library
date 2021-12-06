@@ -1373,7 +1373,16 @@ class App extends Component<Props,State> {
          uriPage = 0
       }
 
-      if(this.state.uriPage !== uriPage || this.state.backToWorks !== backToWorks || (encoded !== this.state.filters.encoded ) || (scrolled && this.state.scrolled !== scrolled) )
+
+      let updatePagin = false      
+      if(pg && this.state.paginate?.nMax && this.state.paginate?.index != pg) {
+            updatePagin = true
+      }
+      
+
+      //console.log("uriP:",uriPage,updatePagin)
+
+      if(this.state.uriPage !== uriPage || updatePagin || this.state.backToWorks !== backToWorks || (encoded !== this.state.filters.encoded ) || (scrolled && this.state.scrolled !== scrolled) )
          this.setState({...this.state, repage:true, uriPage, backToWorks, scrolled, collapse, ...(filters?{filters}:{})})
       else if(get.t) {
          let dt = get.t.split(",").filter(d => !this.state.filters.datatype.includes(d))
