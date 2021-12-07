@@ -12,7 +12,7 @@ import bdrcApi, { getEntiType, ResourceNotFound } from '../../lib/api';
 import {sortLangScriptLabels, extendedPresets} from '../../lib/transliterators';
 import {auth} from '../../routes';
 import {shortUri,fullUri,isAdmin,sublabels,subtime} from '../../components/App'
-import {getQueryParam} from '../../components/GuidedSearch'
+import {getQueryParam, GUIDED_LIMIT} from '../../components/GuidedSearch'
 import qs from 'query-string'
 import history from '../../history.js'
 
@@ -2403,11 +2403,13 @@ async function checkResults(params, route) {
    let count 
    if(!params.init) count = await api.loadCheckResults(params);
    if(params.init || count?.results?.bindings?.length && (count = count.results.bindings[0].c?.value) !== undefined) {      
-      let loading = params.init || count != 0 && count < 1000
+      let loading = params.init || count != 0 && count < GUIDED_LIMIT
       
       if(!params.init) store.dispatch(dataActions.checkResults({count,loading}));
 
       if(loading) {
+         store.dispatch(uiActions.loading("-@-", true))
+
          let results = await api.loadResultsWithFacets(params.url?params.url:params)
 
          let data = getData(results), dataSav = data
@@ -2431,11 +2433,11 @@ async function checkResults(params, route) {
             store.dispatch(dataActions.checkResults(false));         
          }
 
+         store.dispatch(uiActions.loading("-@-",false))
       }
    } else {
       store.dispatch(dataActions.checkResults(false));
    }
-
 }
 
 

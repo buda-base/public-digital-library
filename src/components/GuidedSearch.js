@@ -189,6 +189,8 @@ export const getQueryParam = (param) => {
   return pref+param.toUpperCase()+suf
 }
 
+export const GUIDED_LIMIT = 500
+
 let oldScrollTop = 0
 
 class GuidedSearch extends Component<Props,State> {
@@ -482,17 +484,17 @@ class GuidedSearch extends Component<Props,State> {
                         ? <Link to={searchRoute?searchRoute:""}><button class="red">
                             {I18n.t("home.search")}
                           </button></Link>
-                        : <button {...this.props.checkResults === true || this.props.checkResults?.count != 0 && this.props.checkResults?.count < 1000  && this.props.checkResults.loading? {disabled:true}:{}} 
+                        : <button {...this.props.checkResults === true || this.props.checkResults?.count != 0 && this.props.checkResults?.count < GUIDED_LIMIT  && this.props.checkResults.loading? {disabled:true}:{}} 
                             class="red" onClick={() => {
                               this.setState({mustRecheck: false})
                               this.props.onCheckResults(checkParams, searchRoute)
                             }}>
-                            { this.props.checkResults === true || this.props.checkResults?.count != 0 && this.props.checkResults?.count < 1000 && this.props.checkResults.loading
+                            { this.props.checkResults === true || this.props.checkResults?.count != 0 && this.props.checkResults?.count < GUIDED_LIMIT && this.props.checkResults.loading
                               ? <Loader scale={0.5} top={"15px"} color="white" loaded={false}/>
                               : I18n.t("home.search") }
                         </button>}
                       <button class="reset" {...canReset?{disabled:true}:{}} onClick={() => {
-                        if(this.props.checkResults === true || this.props.checkResults?.count != 0 && this.props.checkResults?.count < 1000 && this.props.checkResults.loading) {
+                        if(this.props.checkResults === true || this.props.checkResults?.count != 0 && this.props.checkResults?.count < GUIDED_LIMIT && this.props.checkResults.loading) {
                           this.setState({mustRecheck: false});  
                           this.props.onCheckResults(false);
                         } else {
@@ -500,13 +502,13 @@ class GuidedSearch extends Component<Props,State> {
                           this.props.onSetType("work");
                           this.props.onCheckResults(false);
                         }
-                      }}>{I18n.t(!this.props.checkResults?.loading?"search.reset":"search.cancel")}</button>
+                      }}>{I18n.t(this.props.checkResults !== true && !this.props.checkResults?.loading ?"search.reset":"search.cancel")}</button>
                     </div>
                     <div class={"log "+ (this.state.mustRecheck? " recheck":"")}>
-                      { this.props.checkResults && this.props.checkResults.count && this.props.checkResults.count >= 1000 && 
+                      { this.props.checkResults && this.props.checkResults.count && this.props.checkResults.count >= GUIDED_LIMIT && 
                           <p class="error">{I18n.t("search.many", { count: this.props.checkResults.count })}</p>
                       }
-                      { this.props.checkResults && this.props.checkResults.count != 0 && this.props.checkResults.count < 1000 && this.props.checkResults.loading && 
+                      { this.props.checkResults && this.props.checkResults.count != 0 && this.props.checkResults.count < GUIDED_LIMIT && this.props.checkResults.loading && 
                           <p class="info"><Trans i18nKey="search.load" components={{ newline: <br /> }} values={{count: this.props.checkResults.count}} /></p>
                       }
                       { this.props.checkResults && this.props.checkResults.count && this.props.checkResults.count == 0 && 

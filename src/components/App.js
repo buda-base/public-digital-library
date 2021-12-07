@@ -407,6 +407,8 @@ export function report_GA(config,location) {
 
 export function highlight(val,k,expand,newline)
 {
+   if(k == "-") return val
+
    //loggergen.log("hi:",val,k,expand)
 
    if(expand && expand.value) val = expand.value
