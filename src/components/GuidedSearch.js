@@ -1,5 +1,6 @@
 import React, {Component} from "react"
 import I18n from 'i18next';
+import { Trans } from 'react-i18next'
 import qs from 'query-string'
 import { top_right_menu, getPropLabel, fullUri } from './App'
 import {Link} from "react-router-dom"
@@ -19,7 +20,7 @@ import $ from 'jquery' ;
 import {narrowWithString} from "../lib/langdetect"
 
 type Props = { auth:{}, history:{}, dictionary:{}, classes:{}, type:string, checkResults:boolean|{} }
-type State = { collapse:{}, checked:{}, titles:[], codes:[], keyword:string, searchRoute:string, checkParams:string }
+type State = { collapse:{}, checked:{}, titles:[], codes:[], keyword:string, searchRoute:string, checkParams:string, mustRecheck: boolean }
 
 
 /* // v1
@@ -175,6 +176,17 @@ const fetchFEMCTopics = async () => {
 }
 //fetchFEMCTopics()
 
+export const getQueryParam = (param) => {
+  let pref = "R_", suf = "_LIST"
+  if(param == "tree") param = "about"
+  else if(param == "language") param = "lang"
+  else if(param == "completion") { 
+    param = "complete"
+    pref = "B_"
+    suf = ""
+  }
+  return pref+param.toUpperCase()+suf
+}
 
 let oldScrollTop = 0
 
@@ -214,23 +226,12 @@ class GuidedSearch extends Component<Props,State> {
     let settings = data
     if(this.props?.config?.guided && this.props.config.guided[this.props.type]) settings = this.props.config.guided[this.props.type]
 
-    const getQueryParam = (param) => {
-      let pref = "R_", suf = "_LIST"
-      if(param == "tree") param = "about"
-      else if(param == "language") param = "lang"
-      else if(param == "completion") { 
-        param = "complete"
-        pref = "B_"
-        suf = ""
-      }
-      return pref+param.toUpperCase()+suf
-    }
 
-    let searchRoute = "", checkParams = ""
-    if(this.props.type === "work" || this.state.keyword) {
-      searchRoute = "search?t=" + (this.props.type[0].toUpperCase()+this.props.type.substring(1)) 
-        + (this.props.type === "instance" ? "&f=collection,inc,bdr:PR1KDPP00":"")
-        + (this.state.keyword&&this.state.language?"&q="+this.state.keyword+"&lg="+this.state.language+"&":"&r=bdr:PR1KDPP00&")
+    let route = "", searchRoute = "", checkParams = ""
+    
+    searchRoute = "search?t=" + (this.props.type[0].toUpperCase()+this.props.type.substring(1)) 
+        + (this.props.type === "instance"&&this.state.keyword&&this.state.language ? "&f=collection,inc,bdr:PR1KDPP00":"")
+        + (this.state.keyword&&this.state.language?"&q="+this.state.keyword+"&lg="+this.state.language+"&":(this.props.type==="work"?"&r=bdr:PR1KDPP00&":"&"))
         + Object.keys(this.state.checked).map( k => {
           //console.log("k:",k)
           return Object.keys(this.state.checked[k]).map(i => {
@@ -244,8 +245,11 @@ class GuidedSearch extends Component<Props,State> {
             }
           }).filter(p => p).join("&")
         }).join("&")
+      
+    if(this.props.type === "work" || this.state.keyword) {
+      
     } else {
-      checkParams = "/query/table/countInstancesInCollectionWithProperties?R_COLLECTION=bdr:PR1KDPP00&"
+      checkParams = "?R_COLLECTION=bdr:PR1KDPP00&"
        + Object.keys(this.state.checked).map( k => {
           //console.log("k:",k)
           let param = ""
@@ -333,7 +337,9 @@ class GuidedSearch extends Component<Props,State> {
                       className="checkbox"
                       icon={<span className="empty-checkbox"><CheckBoxOutlineBlankSharp /></span>}
                       checkedIcon={<CheckBoxSharp  style={{color:"#d73449"}}/>}
-                      onChange={(event, checked) => this.setState({checked:{...this.state.checked, [k]:{...(this.state.checked[k]?this.state.checked[k]:{}), [i]:checked}}})}
+                      onChange={(event, checked) => { 
+                        this.setState({mustRecheck: true, checked:{...this.state.checked, [k]:{...(this.state.checked[k]?this.state.checked[k]:{}), [i]:checked}}})
+                      }}
                     />}
                   label={getLocaleLabel(o)}
                 />            
@@ -362,7 +368,7 @@ class GuidedSearch extends Component<Props,State> {
 
     const handleType = (event,checked) => {
       this.props.onSetType(checked?"instance":"work")
-      this.setState({ checked:{} })
+      this.setState({ checked:{}, mustRecheck: false })
     }
 
     const { classes } = this.props
@@ -471,32 +477,41 @@ class GuidedSearch extends Component<Props,State> {
                     { settings?.direct && renderLink("direct") }                    
                     { links }
                     <div class="buttons">
-                      {searchRoute 
-                        ? <Link to={searchRoute}><button class="red">
+                      { this.props.type === "work"
+                        ? <Link to={searchRoute?searchRoute:""}><button class="red">
                             {I18n.t("home.search")}
                           </button></Link>
-                        : <button {...this.props.checkResults === true ? {disabled:true}:{}} class="red" onClick={() => this.props.onCheckResults(checkParams)}>
-                            { this.props.checkResults === true 
+                        : <button {...this.props.checkResults === true || this.props.checkResults?.count != 0 && this.props.checkResults?.count < 1000  && this.props.checkResults.loading? {disabled:true}:{}} 
+                            class="red" onClick={() => {
+                              this.setState({mustRecheck: false})
+                              this.props.onCheckResults(checkParams, searchRoute)
+                            }}>
+                            { this.props.checkResults === true || this.props.checkResults?.count != 0 && this.props.checkResults?.count < 1000 && this.props.checkResults.loading
                               ? <Loader scale={0.5} top={"15px"} color="white" loaded={false}/>
                               : I18n.t("home.search") }
                         </button>}
                       <button class="reset" {...canReset?{disabled:true}:{}} onClick={() => {
-                        this.setState({checked:{}});
-                        this.props.onSetType("work");
-                        this.props.onCheckResults(false);
-                      }}>{I18n.t("search.reset")}</button>
+                        if(this.props.checkResults === true || this.props.checkResults?.count != 0 && this.props.checkResults?.count < 1000 && this.props.checkResults.loading) {
+                          this.setState({mustRecheck: false});  
+                          this.props.onCheckResults(false);
+                        } else {
+                          this.setState({checked:{},mustRecheck: false});
+                          this.props.onSetType("work");
+                          this.props.onCheckResults(false);
+                        }
+                      }}>{I18n.t(!this.props.checkResults?.loading?"search.reset":"search.cancel")}</button>
                     </div>
-                    <div class="log">
-                    { this.props.checkResults && this.props.checkResults.count && this.props.checkResults.count >= 1000 && 
-                        <p class="error">{I18n.t("search.many", { count: this.props.checkResults.count })}</p>
-                    }
-                    { this.props.checkResults && this.props.checkResults.count != 0 && this.props.checkResults.count < 1000 && 
-                        <p class="info">{I18n.t("search.load", { count: this.props.checkResults.count})}</p>
-                    }
-                    { this.props.checkResults && this.props.checkResults.count && this.props.checkResults.count == 0 && 
-                        <p class="error">{I18n.t("search.no")}</p>
-                    }
-                    </div>
+                    <div class={"log "+ (this.state.mustRecheck? " recheck":"")}>
+                      { this.props.checkResults && this.props.checkResults.count && this.props.checkResults.count >= 1000 && 
+                          <p class="error">{I18n.t("search.many", { count: this.props.checkResults.count })}</p>
+                      }
+                      { this.props.checkResults && this.props.checkResults.count != 0 && this.props.checkResults.count < 1000 && this.props.checkResults.loading && 
+                          <p class="info"><Trans i18nKey="search.load" components={{ newline: <br /> }} values={{count: this.props.checkResults.count}} /></p>
+                      }
+                      { this.props.checkResults && this.props.checkResults.count && this.props.checkResults.count == 0 && 
+                          <p class="error">{I18n.t("search.no")}</p>
+                      }
+                    </div> 
                   </nav>
                 </div>
             </div>

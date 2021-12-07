@@ -483,8 +483,9 @@
       "choose":"Choose...",
       "more":"Enter at least 2 characters...",
       "many": "Too many results ({{count}})",
-      "load": "Loading results ({{count}})",
-      "no": "No result"
+      "load": "Loading {{count}} results<newline/>Please wait...",
+      "no": "No result",
+      "cancel":"Cancel"
    },
    "Rsidebar": {
       "title": "Display Preferences",

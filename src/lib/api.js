@@ -289,10 +289,19 @@ export default class API {
     async loadCheckResults(params): Promise<string>
     {
          let config = store.getState().data.config.ldspdi
-         let url = config.endpoints[config.index] + params
+         let url = config.endpoints[config.index] + "/query/table/countInstancesInCollectionWithProperties" + params
          let count=  JSON.parse(await this.getURLContents(url,false));
          console.log("count:",count)
          return count ;
+   }
+
+    async loadResultsWithFacets(params): Promise<string>
+    {
+         let config = store.getState().data.config.ldspdi
+         let url = config.endpoints[config.index] + "/lib/instancesInCollectionWithProperties" + params
+         let results =  JSON.parse(await this.getURLContents(url,false));
+         console.log("results:",results)
+         return results ;
    }
 
 

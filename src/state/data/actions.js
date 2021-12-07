@@ -384,10 +384,11 @@ export const gotInstances = (uri: string, data: {}): Action => {
 
 
 TYPES.checkResults = 'CHECK_RESULTS';
-export const checkResults = (params: string): Action => {
+export const checkResults = (params: string, route: string): Action => {
     return {
         type: TYPES.checkResults,
-        payload: params
+        payload: params,
+        meta: { route }
     }
 }
 

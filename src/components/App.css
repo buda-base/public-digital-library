@@ -790,6 +790,7 @@ footer #donate,
 .App.guidedsearch.khmer .static-container.sticky + div nav .buttons button[disabled] { /*background-color: #d7344990;*/ pointer-events:none; overflow: hidden; }
 
 .App.guidedsearch.khmer .static-container.sticky + div nav .log  { font-size:14px; font-weight:500; }
+.App.guidedsearch.khmer .static-container.sticky + div nav .log.recheck > * { visibility: hidden;}
 .App.guidedsearch.khmer .static-container.sticky + div nav .log .error { color:#d73449; }
 .App.guidedsearch.khmer .static-container.sticky + div nav .log .info { opacity:0.35; }
 

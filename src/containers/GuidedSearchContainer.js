@@ -29,7 +29,7 @@ const mapStateToProps = (state,ownProps) => {
    // not needed
    //let dictionary = state.data.dictionary ;
 
-   let props = { config, locale, profileName, type,checkResults }  //dictionary }
+   let props = { config, locale, profileName, type, checkResults }  //dictionary }
 
    return props
 
@@ -53,8 +53,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       onUserProfile:(url:{}) => {
          dispatch(ui.userProfile(url));
       },
-      onCheckResults:(params:"") => {
-         dispatch(data.checkResults(params));
+      onCheckResults:(params:"", route:"") => {
+         dispatch(data.checkResults(params,route));
       }
    }
 }

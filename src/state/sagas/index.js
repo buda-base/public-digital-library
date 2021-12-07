@@ -12,6 +12,7 @@ import bdrcApi, { getEntiType, ResourceNotFound } from '../../lib/api';
 import {sortLangScriptLabels, extendedPresets} from '../../lib/transliterators';
 import {auth} from '../../routes';
 import {shortUri,fullUri,isAdmin,sublabels,subtime} from '../../components/App'
+import {getQueryParam} from '../../components/GuidedSearch'
 import qs from 'query-string'
 import history from '../../history.js'
 
@@ -344,6 +345,26 @@ else if(params && params.p) {
    store.dispatch(dataActions.ontoSearch(params.p));
 }
 else if(params && params.q) {
+
+   
+   if(params.q == "-" && !state.data.searches["-@-"]) {
+      let url = "?format=json&R_COLLECTION=bdr:PR1KDPP00&", facets = {}
+      if(!Array.isArray(params.f)) params.f = [ params.f ]
+      if(params.f) {
+         params.f.map(p => {
+            let args = p.split(",")
+            if(!facets[args[0]]) facets[args[0]] = []
+            facets[args[0]].push(args[2])
+         })
+         for(let k of Object.keys(facets)) {
+            url += getQueryParam(k)+"="+facets[k].join(",")
+         }
+         console.log("facets:",url,params.f, facets)
+         store.dispatch(dataActions.checkResults({init:true,url}))
+         return
+      }
+   }
+   
 
    if(!params.lg) params.lg = "bo-x-ewts"
    
@@ -2367,19 +2388,47 @@ subtime("startSearch")
 export function* watchCheckResults() {
       yield takeLatest(
          dataActions.TYPES.checkResults,
-         (action) => checkResults(action.payload)
+         (action) => checkResults(action.payload, action.meta.route)
       );
 }
 
 
-async function checkResults(params) {
+async function checkResults(params, route) {
+   
+   console.log("ckR params:",params,route)
    
    if(!params || params.count) return
 
-   let count = await api.loadCheckResults(params);
-   console.log("ckR params:",params,count)   
-   if(count?.results?.bindings?.length && (count = count.results.bindings[0].c?.value) !== undefined) {      
-      store.dispatch(dataActions.checkResults({count}));
+   let count 
+   if(!params.init) count = await api.loadCheckResults(params);
+   if(params.init || count?.results?.bindings?.length && (count = count.results.bindings[0].c?.value) !== undefined) {      
+      let loading = params.init || count != 0 && count < 1000
+      
+      if(!params.init) store.dispatch(dataActions.checkResults({count,loading}));
+
+      if(loading) {
+         let results = await api.loadResultsWithFacets(params.url?params.url:params)
+
+         let data = getData(results), dataSav = data
+         data = data.results.bindings
+                  
+         let numResults = Object.keys(results.main)
+         if(numResults.length) numResults = numResults.length
+
+         let sortBy = "popularity"
+         results = rewriteAuxMain(results,"-",["Instance"],sortBy)
+
+         let metadata = addMeta("-","-",{results:{bindings:results} }, "Instance", null, false, false )      
+         store.dispatch(dataActions.foundResults("-","-", { metadata, numResults, results:{bindings:results}},["Instance"]))         
+         store.dispatch(dataActions.foundResults("-","-", { results: { bindings: { } } } ) ) //data));
+         store.dispatch(dataActions.foundDatatypes("-","-",{ metadata:{[bdo+"Instance"]:numResults}, hash:true}));
+
+         if(!params.init) {
+            store.dispatch(dataActions.checkResults({count, loading:false}));         
+            if(route) history.push(route+"&q=-&lg=-")
+         }
+
+      }
    } else {
       store.dispatch(dataActions.checkResults(false));
    }
