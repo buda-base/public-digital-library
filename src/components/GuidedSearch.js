@@ -177,6 +177,7 @@ const fetchFEMCTopics = async () => {
 //fetchFEMCTopics()
 
 export const getQueryParam = (param) => {
+  if(!["language","tree","completion","format","binding"].includes(param)) return
   let pref = "R_", suf = "_LIST"
   if(param == "tree") param = "about"
   else if(param == "language") param = "lang"
@@ -184,7 +185,7 @@ export const getQueryParam = (param) => {
     param = "complete"
     pref = "B_"
     suf = ""
-  }
+  } 
   return pref+param.toUpperCase()+suf
 }
 

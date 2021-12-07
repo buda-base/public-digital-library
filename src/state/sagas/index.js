@@ -348,7 +348,7 @@ else if(params && params.q) {
 
    
    if(params.q == "-" && !state.data.searches["-@-"]) {
-      let url = "?format=json&R_COLLECTION=bdr:PR1KDPP00&", facets = {}
+      let url = "?format=json&R_COLLECTION=bdr:PR1KDPP00", facets = {}
       if(!Array.isArray(params.f)) params.f = [ params.f ]
       if(params.f) {
          params.f.map(p => {
@@ -357,7 +357,8 @@ else if(params && params.q) {
             facets[args[0]].push(args[2])
          })
          for(let k of Object.keys(facets)) {
-            url += getQueryParam(k)+"="+facets[k].join(",")
+            let p = getQueryParam(k)
+            if(p) url += "&"+p+"="+facets[k].join(",")
          }
          console.log("facets:",url,params.f, facets)
          store.dispatch(dataActions.checkResults({init:true,url}))
