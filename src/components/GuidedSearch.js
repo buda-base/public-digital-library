@@ -237,9 +237,10 @@ class GuidedSearch extends Component<Props,State> {
             //console.log("i:",i,settings[k].values[i].facet)
             if(this.state.checked[k][i]) { 
               let val = settings[k].values[i].facet.value              
-              //if(!Array.isArray(val)) val = [val] 
-              //return val.map(v => "f="+settings[k].values[i].facet.property+","+settings[k].values[i].facet.relation+","+v).join("&")
-              return "f="+settings[k].values[i].facet.property+","+settings[k].values[i].facet.relation+","+val
+              if(!Array.isArray(val)) val = [val] 
+              return val.map(v => "f="+settings[k].values[i].facet.property+","+settings[k].values[i].facet.relation+","+v).join("&")
+              // can't do just that (case of topics with multiple values)
+              //return "f="+settings[k].values[i].facet.property+","+settings[k].values[i].facet.relation+","+val
             }
           }).filter(p => p).join("&")
         }).join("&")
