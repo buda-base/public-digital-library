@@ -2427,6 +2427,8 @@ async function checkResults(params, route) {
          if(!params.init) {
             store.dispatch(dataActions.checkResults({count, loading:false}));         
             if(route) history.push(route+"&q=-&lg=-")
+         } else {
+            store.dispatch(dataActions.checkResults(false));         
          }
 
       }
