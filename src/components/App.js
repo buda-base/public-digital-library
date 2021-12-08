@@ -5257,7 +5257,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             && this.state.filters && this.state.filters.datatype
             && counts["datatype"][this.state.filters.datatype[0]])
          {
-            if(tree[0]["taxHasSubClass"].indexOf("Any") === -1)
+            if(tree[0]["taxHasSubClass"] && tree[0]["taxHasSubClass"].indexOf("Any") === -1)
             {
                tree[0]['taxHasSubClass'] = ['Any'].concat(tree[0]['taxHasSubClass'])
                tree.splice(1,0,{"@id":"Any",

@@ -349,7 +349,7 @@ else if(params && params.q) {
    
    if(params.q == "-" && !state.data.searches["-@-"]) {
       let url = "?format=json&R_COLLECTION=bdr:PR1KDPP00", facets = {}
-      if(!Array.isArray(params.f)) params.f = [ params.f ]
+      if(params.f && !Array.isArray(params.f)) params.f = [ params.f ]
       if(params.f) {
          params.f.map(p => {
             let args = p.split(",")
@@ -362,6 +362,9 @@ else if(params && params.q) {
          }
          console.log("facets:",url,params.f, facets)
          store.dispatch(dataActions.checkResults({init:true,url}))
+         return
+      } else {
+         history.push("/guidedsearch")
          return
       }
    }
