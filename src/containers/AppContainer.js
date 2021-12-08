@@ -67,10 +67,13 @@ const mapStateToProps = (state) => {
       if(auth.userProfile.name) profileName = auth.userProfile.name
    }
 
+   let checkResults = state.data.checkResults
+
    let newState = { logged,config, hostFailure, searches, keyword, language,loading,datatypes,ontology,facets,
       locale,prefLang,resources,ontoSearch,rightPanel,langPreset, langIndex, langExt, failures,dictionary,metadata, assoRes, 
       sortBy, topicParents, genresParents, instances, isInstance,
-      latestSyncs,latestSyncsNb, profileName }
+      latestSyncs,latestSyncsNb, profileName,
+      checkResults }
 
    if(config && !config.auth) newState.auth = false
 

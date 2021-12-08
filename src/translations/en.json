@@ -127,7 +127,8 @@
          "instanceOf": "$t(types.instance) Of",
          "reset": "Reset filters",
          "include": "Include results with",
-         "exclude": "Exclude results with"
+         "exclude": "Exclude results with",
+         "try": "Try another search"
       },
       "activeF": {
          "title": "Active Filters",
@@ -471,6 +472,7 @@
       "result": "{{count}} Result",
       "result_plural": "{{count}} Results",
       "filters": {
+         "noresult-": "No result",
          "noresults": "No result for {{keyword}} [{{language}}] {{type}}",
          "noresultsAsso": "No result associated with {{keyword}} {{type}}"
       },

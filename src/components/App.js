@@ -83,6 +83,7 @@ import { Trans } from 'react-i18next'
 import LanguageSidePaneContainer from '../containers/LanguageSidePaneContainer';
 import ResourceViewerContainer from '../containers/ResourceViewerContainer';
 import {getOntoLabel,provImg as img,providers} from './ResourceViewer';
+import {getQueryParam} from './GuidedSearch';
 import {getEntiType} from '../lib/api';
 import {narrowWithString} from "../lib/langdetect"
 import {sortLangScriptLabels, extendedPresets, getMainLabel} from '../lib/transliterators';
@@ -4995,7 +4996,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                message.push(<Typography className="loading"></Typography>)
             } else {
                message.push(<Typography className="no-result">
-                  { lang && I18n.t("search.filters.noresults",{ 
+                  { lang && I18n.t("search.filters.noresult"+(this.props.keyword=="-"?"-":"s"),{ 
                      keyword:'"'+lucenequerytokeyword(this.props.keyword)+'"', 
                      language:"$t("+lang+")", 
                      type:I18n.t("types.searchIn", { type:I18n.t("types."+this.state.filters.datatype[0].toLowerCase(),{count:2}).toLowerCase() }),  
@@ -5005,7 +5006,13 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      type:I18n.t("types.searchIn", { type:I18n.t("types."+this.state.filters.datatype[0].toLowerCase(),{count:2}).toLowerCase() }),  
                      interpolation: {escapeValue: false} }) }
                   {  this.state.filters.facets && " with the filters you set"}
-                  {  this.state.filters.facets && <span><br/>{this.renderResetF()}</span>}
+                  {  this.state.filters.facets && <span class="reset-khmer"><br/>{this.renderResetF()}{onKhmerUrl&&<>
+                     &nbsp;{I18n.t("misc.or")}&nbsp;
+                     <Link to={"/guidedsearch"} id="clear-filters">
+                        <span>{I18n.t("Lsidebar.tags.try")}</span>
+                        <SearchIcon />                        
+                     </Link>
+                  </>}</span>}
                </Typography>);
 
                if(!this.state.filters.facets && other && other.length && !this.props.simple)   
@@ -5238,6 +5245,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             inEtext = this.props.searches[this.state.filters.datatype[0]][this.props.keyword+"@"+this.props.language].inEtext
             if(inEtext) search = search.replace(/((&|(\?))([r])=[^&]+)/g,"$3")
          }
+         if(onKhmerUrl && this.props.keyword === "-" && this.props.checkResults?.route) search = this.props.checkResults?.route.replace(/^[^?]+[?]/,"?")
          this.props.history.push({pathname,search:search.replace(/\?&/,"?")})
       }
       else this.props.history.push({pathname,search:this.state.backToWorks})

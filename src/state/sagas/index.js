@@ -361,7 +361,7 @@ else if(params && params.q) {
             if(p) url += "&"+p+"="+facets[k].join(",")
          }
          console.log("facets:",url,params.f, facets)
-         store.dispatch(dataActions.checkResults({init:true,url}))
+         store.dispatch(dataActions.checkResults({init:true,url,route:history.location.pathname+history.location.search}))
          return
       } else {
          history.push("/guidedsearch")
@@ -2401,7 +2401,7 @@ async function checkResults(params, route) {
    
    console.log("ckR params:",params,route)   
 
-   if(!params || params.count) return
+   if(!params || params.count || params.init && params.route && !params.url) return
 
    let count 
    if(!params.init) count = await api.loadCheckResults(params);
@@ -2436,10 +2436,11 @@ async function checkResults(params, route) {
             }
 
             if(!params.init && store.getState().data.checkResults !== false) {
-               store.dispatch(dataActions.checkResults({count, loading:false}));                     
+               store.dispatch(dataActions.checkResults({count, loading:false, route: route+"&q=-&lg=-"}));                     
                if(route) history.push(route+"&q=-&lg=-")
             } else {
-               store.dispatch(dataActions.checkResults(false));         
+               if(params.init) store.dispatch(dataActions.checkResults({init:true, route:params.route}));         
+               else store.dispatch(dataActions.checkResults(false));         
             }
          }
 
