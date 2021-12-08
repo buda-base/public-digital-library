@@ -3524,7 +3524,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
             //loggergen.log("access",access,quality)
 
-            if(access) {
+            if(access && access.length) {
                hasCopyR = "unknown"            
                if(access.includes("FairUse")) hasCopyR = "fair_use"
                else if(access.includes("Temporarily")) { hasCopyR = "temporarily";  hasThumb = []; }
