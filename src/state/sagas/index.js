@@ -2396,8 +2396,8 @@ export function* watchCheckResults() {
 
 async function checkResults(params, route) {
    
-   console.log("ckR params:",params,route)
-   
+   console.log("ckR params:",params,route)   
+
    if(!params || params.count) return
 
    let count 
@@ -2405,32 +2405,39 @@ async function checkResults(params, route) {
    if(params.init || count?.results?.bindings?.length && (count = count.results.bindings[0].c?.value) !== undefined) {      
       let loading = params.init || count != 0 && count < GUIDED_LIMIT
       
-      if(!params.init) store.dispatch(dataActions.checkResults({count,loading}));
+      // DONE check if cancelled
+
+      if(!params.init) { 
+         if(store.getState().data.checkResults !== false) {
+            store.dispatch(dataActions.checkResults({count,loading}));
+         }
+      }
 
       if(loading) {
          store.dispatch(uiActions.loading("-@-", true))
 
-         let results = await api.loadResultsWithFacets(params.url?params.url:params)
+         if(store.getState().data.checkResults !== false) {
+            let results = await api.loadResultsWithFacets(params.url?params.url:params)
 
-         let data = getData(results), dataSav = data
-         data = data.results.bindings
-                  
-         let numResults = Object.keys(results.main)
-         if(numResults.length) numResults = numResults.length
+            let numResults = Object.keys(results.main)
+            if(numResults.length) numResults = numResults.length
 
-         let sortBy = "popularity"
-         results = rewriteAuxMain(results,"-",["Instance"],sortBy)
+            let sortBy = "popularity"
+            results = rewriteAuxMain(results,"-",["Instance"],sortBy)
 
-         let metadata = addMeta("-","-",{results:{bindings:results} }, "Instance", null, false, false )      
-         store.dispatch(dataActions.foundResults("-","-", { metadata, numResults, results:{bindings:results}},["Instance"]))         
-         store.dispatch(dataActions.foundResults("-","-", { results: { bindings: { } } } ) ) //data));
-         store.dispatch(dataActions.foundDatatypes("-","-",{ metadata:{[bdo+"Instance"]:numResults}, hash:true}));
+            if(store.getState().data.checkResults !== false) {
+               let metadata = addMeta("-","-",{results:{bindings:results} }, "Instance", results.tree, false, false)      
+               store.dispatch(dataActions.foundResults("-","-", { metadata, numResults, results:{bindings:results}},["Instance"]))         
+               store.dispatch(dataActions.foundResults("-","-", { results: { bindings: { } } } ) ) 
+               store.dispatch(dataActions.foundDatatypes("-","-",{ metadata:{[bdo+"Instance"]:numResults}, hash:true}));
+            }
 
-         if(!params.init) {
-            store.dispatch(dataActions.checkResults({count, loading:false}));         
-            if(route) history.push(route+"&q=-&lg=-")
-         } else {
-            store.dispatch(dataActions.checkResults(false));         
+            if(!params.init && store.getState().data.checkResults !== false) {
+               store.dispatch(dataActions.checkResults({count, loading:false}));                     
+               if(route) history.push(route+"&q=-&lg=-")
+            } else {
+               store.dispatch(dataActions.checkResults(false));         
+            }
          }
 
          store.dispatch(uiActions.loading("-@-",false))
