@@ -221,7 +221,7 @@ class GuidedSearch extends Component<Props,State> {
       }
     })
 
-    document.title = I18n.t("topbar.guided") + " - Buddhist Digital Archives"
+    document.title = I18n.t("topbar.guided") + " - " + "Khmer Manuscript Heritage Project"
   }
 
   componentDidUpdate() {

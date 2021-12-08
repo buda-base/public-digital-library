@@ -1550,15 +1550,16 @@ class App extends Component<Props,State> {
 
       let s ;
 
-      let props = { ...prop }
+      let props = { ...prop }, title = ""
 
       if(props.keyword) { 
-         if(props.keyword === "(latest)") document.title = I18n.t("home.new") + " - Buddhist Digital Archives"
-         else document.title = /*""+*/ props.keyword+" search results - Buddhist Digital Archives"
-         
-      } else {
-         document.title = "Buddhist Digital Archives"
+         if(props.keyword === "(latest)") title = I18n.t("home.new") + " - "
+         else title = /*""+*/ (props.keyword==="-"?"Version":"")+" search results - "
       }
+      if(props.config?.khmerServer) title += "Khmer Manuscript Heritage Project"
+      else title += "Buddhist Digital Archives"
+
+      document.title = title
 
       if(!props.language && props.keyword) {
          if(state.resReceived !== props.keyword && props.resources[props.keyword] && props.resources[props.keyword] !== true) {
