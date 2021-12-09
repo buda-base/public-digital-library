@@ -321,9 +321,9 @@ body { overflow:auto !important;padding-right:0 !important; /*font-family:"Robot
 /* .active-filter > span > b { margin-left:10px;} */
 
 
-#filters-UI { padding-bottom:0px; text-align:left; background-color: #fce08e; margin-top:-5px; height:auto; position:sticky;top:80px;z-index:1000;}
-#filters-UI > div {  width:700px; min-height:30px; overflow:hidden; /*white-space: nowrap; position:absolute; */ max-height:120px; height:auto;
-   padding-bottom:15px; padding-top:25px;
+#filters-UI { padding-bottom:15px; text-align:left; background-color: #fce08e; margin-top:-5px; height:auto; position:sticky;top:80px;z-index:1000;}
+#filters-UI > div {  width:700px; min-height:30px; overflow:hidden; /*white-space: nowrap; position:absolute; */ max-height:135px; height:auto;
+   padding-bottom:0px; padding-top:25px;
 }
 
 #filters-UI > div:empty { min-height:0; padding:0 0 30px 0;}
@@ -338,6 +338,10 @@ body { overflow:auto !important;padding-right:0 !important; /*font-family:"Robot
 #filters-UI #clear-filters { vertical-align:-2px; white-space: nowrap;}
 #filters-UI #clear-filters > span { font-size:11px; font-weight:600;color:#4a4a4a; vertical-align: 8px; padding-right:5px;  }
 
+
+#filters-UI > div { width:960px; margin-left: calc(960px - 700px); }
+#filters-UI [data-simplebar] { height:100%; }
+#filters-UI > div:empty { padding:15px 0 0 0; }
 
 
 .SearchPane:not(.resultPage) #filters-UI { display:none; }

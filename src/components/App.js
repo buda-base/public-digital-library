@@ -1281,17 +1281,21 @@ class App extends Component<Props,State> {
             const toph = $("#filters-UI").height() 
             const navh = $(".nav").height()
             const headh = $("#res-header").height()
-            if(this._refs["header"].current) $(this._refs["header"].current).css("top",(toph+navh)+"px") //
+            if(this._refs["header"].current) $(this._refs["header"].current).css("top",(toph+navh+15)+"px") //
             
             $(ref)
             .height(window.innerHeight - rect.y)
-            .css("top",(toph+navh+headh)+"px")
+            .css("top",(toph+navh+headh+15)+"px")
 
             if(this._refs["simplebar"].current) this._refs["simplebar"].current.recalculate()
+            if(this._refs["filters-UI"].current) this._refs["filters-UI"].current.recalculate()
             
          }).scroll()
          
       }
+
+      if(this._refs["filters-UI"].current) this._refs["filters-UI"].current.recalculate()
+      if(this._refs["filters-UI-scrollable"].current) this._refs["filters-UI-scrollable"].current.scrollTop = 500
 
       loggergen.log("didU:",this.state,this.state.uriPage,this._refs["markers"]) //,this._refs)
 
@@ -6258,6 +6262,26 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
       this._refs["header"] = React.createRef()
       this._refs["container"] = React.createRef()
+      this._refs["filters-UI"] = React.createRef()
+      this._refs["filters-UI-scrollable"] = React.createRef();
+
+
+      let tags = <>
+         { /* this.props.language && this.state.filters.datatype.filter(k => k !== "Any").map(k => this.renderFilterTag(true, I18n.t("Lsidebar.tags.type"), I18n.t("types."+k.toLowerCase()), (event, checked) => this.handleCheck(event, k, false) ) ) */ }                              
+         { this.props.isInstance && this.state.backToWorks && this.state.filters.instance && this.renderFilterTag(false, I18n.t("Lsidebar.tags.instanceOf"), this.state.filters.instance, (event, checked) => {
+            this.resetFilters(event)
+         } )  } 
+         { inEtext && this.renderFilterTag(false, I18n.t("Lsidebar.widgets.root"), fullUri(inEtext), (event, checked) => {
+            this.resetFilters(event)
+         } )  } 
+         { facetTags }
+         { (this.state.filters.facets || this.state.backToWorks )&& this.renderResetF() }
+      </>
+      if(tags && tags.props?.children?.length && !tags.props?.children?.some(e=>e)) tags = null
+
+
+      console.log("tags:",tags)
+
 
       const ret = (
 <div className={(this.props.simple?"simpleSearch":"")}>
@@ -6496,15 +6520,9 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                            ,*/
                            <div id="filters-UI">
                               <div>
-                              { /* this.props.language && this.state.filters.datatype.filter(k => k !== "Any").map(k => this.renderFilterTag(true, I18n.t("Lsidebar.tags.type"), I18n.t("types."+k.toLowerCase()), (event, checked) => this.handleCheck(event, k, false) ) ) */ }                              
-                              { this.props.isInstance && this.state.backToWorks && this.state.filters.instance && this.renderFilterTag(false, I18n.t("Lsidebar.tags.instanceOf"), this.state.filters.instance, (event, checked) => {
-                                 this.resetFilters(event)
-                              } )  } 
-                              { inEtext && this.renderFilterTag(false, I18n.t("Lsidebar.widgets.root"), fullUri(inEtext), (event, checked) => {
-                                 this.resetFilters(event)
-                              } )  } 
-                              { facetTags }
-                              { (this.state.filters.facets || this.state.backToWorks )&& this.renderResetF() }
+                                 { tags && <SimpleBar ref={this._refs["filters-UI"]}  scrollableNodeProps={{ ref: this._refs["filters-UI-scrollable"] }}>
+                                    <div>{tags}</div>
+                                 </SimpleBar> }
                               </div>
                            </div>
                         ]

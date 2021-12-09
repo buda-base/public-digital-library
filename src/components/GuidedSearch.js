@@ -478,10 +478,11 @@ class GuidedSearch extends Component<Props,State> {
                 <div>
                   <nav>
                     <h3>Navigation</h3>
+                    { settings?.keyword && renderLink("keyword") }                    
                     { settings?.direct && renderLink("direct") }                    
                     { links }
                     <div class="buttons">
-                      { this.props.type === "work"
+                      { this.props.type === "work" || this.state.keyword
                         ? <Link to={searchRoute?searchRoute:""}><button class="red">
                             {I18n.t("home.search")}
                           </button></Link>
