@@ -2251,11 +2251,19 @@ class App extends Component<Props,State> {
          if(excl && exclude[prop]) propSet = propSet.filter(v => exclude[prop].indexOf(v) !== -1)
       }
 
+
+
+
       let facets = state.filters.facets ;
       if(!facets) facets = {}
       if(prop == bdo+"workGenre" || prop == bdo+"workIsAbout") {
-
-         facets = { ...facets, [prop] : { alt : [ prop, bdo + "workIsAbout", tmp + "etextAbout" ], val : propSet } }
+         facets = { ...facets, [prop] : { alt : [ prop, bdo + "workIsAbout", tmp + "etextAbout" ], val : Array.from(new Set(propSet.filter(p => {
+            if(val) return true 
+            else {
+               // must remove ancestor topic if any
+               return true
+            }
+         }))) } }
       }
       else
       {
@@ -5505,15 +5513,16 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
                delete tmp[0]
                tmp = tmp.filter(String)
-               //loggergen.log("tmp",tmp,checkable)
+               //loggergen.log("tmp:",tmp,checkable)
             }
          }
-
+            
          checkable = checkable.map(e => e.replace(/bdr:/,bdr))
+         //if(!checkable.includes(id)) checkable.unshift(id)
 
          let checked = this.state.filters.facets && this.state.filters.facets[jpre],partial
 
-         //loggergen.log("checked1",jpre,e,checked)
+         loggergen.log("checked1",jpre,e,checked,checkable)
 
 
          if(!checked) {
@@ -5555,7 +5564,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                            className={"checkbox "+(partial&&!checked?"partial":"")}
                            icon={<CheckBoxOutlineBlank/>}
                            checkedIcon={isExclu ? <Close className="excl"/>:<CheckBox  style={{color:"#d73449"}}/>}
-                           onChange={(event, checked) => this.handleCheckFacet(event,jpre,checkable,checked)}
+                           onChange={(event, checked) => this.handleCheckFacet(event,jpre,[id, ...checkable],checked)}
                         />
 
                      }
