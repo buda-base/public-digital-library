@@ -6632,7 +6632,16 @@ perma_menu(pdfLink,monoVol,fairUse,other)
             loggergen.log("toggle!",tag,val,node)
 
             this.setState( { collapse:{...this.state.collapse, [tag]:!val } })
-            if(/*this.state.outlinePart  &&*/ (!this.props.outlineKW || force || node && node.notMatch) &&  !x && this.props.outlines && (!this.props.outlines[i] || force && r === i) )this.props.onGetOutline(i,node,volFromUri);
+            if(/*this.state.outlinePart  &&*/ (!this.props.outlineKW || force || node && node.notMatch) &&  !x && this.props.outlines && (!this.props.outlines[i] || force && r === i) ) {
+
+               if(i === root) {
+                  let hasPartB = this.getResourceElem(tmp+"hasNonVolumeParts")
+                  //console.log("hasPartB:",hasPartB,i)
+                  if(hasPartB?.length && hasPartB[0].value == "true") this.props.onGetOutline(i, { "tmp:hasNonVolumeParts": true})
+                  else this.props.onGetOutline(i,node,volFromUri);
+               } 
+               else this.props.onGetOutline(i,node,volFromUri);
+            }
          }
 
 
