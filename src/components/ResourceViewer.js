@@ -1095,7 +1095,11 @@ class ResourceViewer extends Component<Props,State>
       
       if(props.resources && props.resources[props.IRI]) {
 
-         if(props.IRI && !props.outline && getEntiType(props.IRI) === "Instance" && props.config) props.onGetOutline(props.IRI)
+         if(props.IRI && !props.outline && getEntiType(props.IRI) === "Instance" && props.config) {             
+            let hasPartB = getElem(tmp+"hasNonVolumeParts",props.IRI)
+            if(hasPartB?.length && hasPartB[0].value == "true") props.onGetOutline(props.IRI, { "tmp:hasNonVolumeParts": true})
+            else props.onGetOutline(props.IRI)
+         }
 
          let root = getElem(bdo+"inRootInstance",props.IRI)
          if(root && root.length) {
