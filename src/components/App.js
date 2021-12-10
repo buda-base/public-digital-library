@@ -720,7 +720,7 @@ export function etext_lang_selec(that,black:boolean = false)
 export function getGDPRconsent(that) {
 
    //ReactGA.pageview('/homepage');
-   loggergen.log("cookie?",document.cookie)
+   //loggergen.log("cookie?",document.cookie)
 
    if(that.props.config && that.props.config.GA && !that.props.simple) return (
       <CookieConsent

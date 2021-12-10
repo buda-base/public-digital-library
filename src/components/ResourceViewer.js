@@ -6506,7 +6506,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                ret.push(<div class="details">
                      {e.details}
                   </div>)
-            if(e.hasPart && open) ret.push(<div style={{paddingLeft:"25px"}}>{makeNodes(e["@id"],top)}</div>)
+            if(e.hasPart && open) ret.push(<div style={{paddingLeft:"33px"}}>{makeNodes(e["@id"],top)}</div>)
             return ret
          })
 
@@ -6784,8 +6784,10 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                         if(collapse["outline-"+root+"-"+head] === undefined) { //} && (opart !== root || head !== root)) {
                            collapse["outline-"+root+"-"+head] = true ;
                            //console.log("outline:",head,head_node)
-                           if(!done_opart && head_node["tmp:hasNonVolumeParts"] && head_node.partType === "bdr:PartTypeSection") {
-                              let parent_head = nodes.filter(n => n.hasPart && (n.hasPart === head || n.hasPart.includes(head)))
+                           if(!done_opart && head_node["tmp:hasNonVolumeParts"] && (head_node.partType === "bdr:PartTypeSection" || head === root)) {
+                              let parent_head = []
+                              if(head === root) parent_head = [ head_node ]
+                              else parent_head = nodes.filter(n => n.hasPart && (n.hasPart === head || n.hasPart.includes(head)))
                               if(parent_head.length) {
                                  let opart_node = nodes.filter(n => n["@id"] === opart)
                                  //console.log("opart_n:",opart_node,nodes)
@@ -6797,8 +6799,8 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                                        this.props.onGetOutline("tmp:uri", { partType: "bdr:PartTypeVolume", "tmp:hasNonVolumeParts": true, volumeNumber: vol }, head);
                                     }
                                  }
+                                 parent_head = parent_head[0]["@id"]
                               }
-                              parent_head = parent_head[0]["@id"]
                            }
                            else parent_head = null
                            if(!this.props.outlines[head]) this.props.onGetOutline(head, head_node, parent_head);
@@ -6827,6 +6829,23 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                   */
                
 
+            } else {
+               let parent_nodes = nodes.filter(n => n.hasPart && (n.hasPart === opart || n.hasPart.includes(opart)))
+               console.log("parent:",parent_nodes)
+               if(parent_nodes.length) { 
+                  for(let n of parent_nodes) {
+                     if(n["@id"].startsWith("bdr:I")) { 
+                        if(collapse["outline-"+root+"-"+opart+";"+n["@id"]+"-details"]) {
+                           break ;
+                        } else if(collapse["outline-"+root+"-"+opart+";"+n["@id"]+"-details"] === undefined) {
+                           collapse["outline-"+root+"-"+opart+";"+n["@id"]+"-details"] = true
+                           console.log("hello:","outline-"+root+"-"+opart+";"+n["@id"]+"-details")
+                           this.setState({ collapse })
+                           break ;
+                        }
+                     }
+                  }
+               }
             }
             /*
             else { 
@@ -6844,7 +6863,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                "?":"unk",
             }
 
-            let osearch_map
+            let osearch_map, already = false
 
             let makeNodes = (top,parent) => {               
                let elem, osearchElem
@@ -6979,7 +6998,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
                            if(!g.details) {
                               let tag = "outline-"+root+"-"+g['@id'] 
-                              if(g["@id"] && g["@id"].startsWith("bdr:I") && !g["@id"].includes(";")) tag += ";"+top
+                              if(g["@id"] && g["@id"].startsWith("bdr:I") && !g["@id"].includes(";") || top.startsWith("bdr:I")) tag += ";"+top
                               
                               let showDetails = this.state.collapse[tag+"-details"]                              
 
@@ -7232,6 +7251,8 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                         if(e["@id"] && e["@id"].startsWith("bdr:I")) {                           
                            url = "/show/"+e["@id"].split(";")[0]
                            if(e.parent && !togId.includes(";")) togId += ";"+e.parent
+                        } else if(e.parent && e.parent.startsWith("bdr:I")) {
+                           togId += ";"+e.parent
                         }
 
                         let tag = "outline-"+root+"-"+togId
@@ -7254,7 +7275,10 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
                         //console.log("reload?",e,e.hasPart,this.props.outlines[e['@id']])
 
-                        ret.push(<span class={'top'+ (this.state.outlinePart === e['@id'] || (!this.state.outlinePart && this.props.IRI===e['@id']) ?" is-root":"")+(this.state.collapse[tag]||osearch&&e.hasMatch?" on":"") }>
+                        let isRoot = this.state.outlinePart === e['@id'] && !already || (!this.state.outlinePart && this.props.IRI===e['@id'] && !already)
+                        if(isRoot) already = true
+
+                        ret.push(<span class={'top'+ (isRoot ?" is-root":"")+(this.state.collapse[tag]||osearch&&e.hasMatch?" on":"") }>
                               {((e.hasPart || e["tmp:hasNonVolumeParts"]) && open && osearch && !this.props.outlines[e['@id']]) && <span onClick={(ev) => toggle(ev,root,e["@id"],"",true,e,top)} className="xpd" title={I18n.t("resource.otherN")}><RefreshIcon /></span>}
                               {((e.hasPart || e["tmp:hasNonVolumeParts"]) && !open && this.props.outlines[e['@id']] !== true) && <img src="/icons/triangle_.png" onClick={(ev) => toggle(null,root,togId,!e.hasPart&&!e["tmp:hasNonVolumeParts"]?"details":"",false,e,top)} className="xpd"/>}
                               {((e.hasPart || e["tmp:hasNonVolumeParts"])&& open && this.props.outlines[e['@id']] !== true) && <img src="/icons/triangle.png" onClick={(ev) => toggle(null,root,togId,!e.hasPart&&!e["tmp:hasNonVolumeParts"]?"details":"",false,e,top)} className="xpd"/>}
@@ -7272,7 +7296,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                                        { !this.state.collapse[tag+"-details"] && <ExpandMore className="details"/>}
                                        {  this.state.collapse[tag+"-details"] && <ExpandLess className="details"/>}
                                     </span> */ }
-                                 { e.hasDetails && <span id="anchor" title={/*tLabel+" - "+*/I18n.t("resource."+(this.state.collapse[tag+"-details"]?"hideD":"showD"))} onClick={(ev) => toggle(ev,root,e["@id"],"details",false,e)}>
+                                 { e.hasDetails && <span id="anchor" title={/*tLabel+" - "+*/I18n.t("resource."+(this.state.collapse[tag+"-details"]?"hideD":"showD"))} onClick={(ev) => toggle(ev,root,togId,"details",false,e)}>
                                     <img src="/icons/info.svg"/>
                                  </span> }
                                  <CopyToClipboard text={fUri} onCopy={(e) => prompt(I18n.t("misc.clipboard"),fUri)}>
@@ -7336,7 +7360,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                                  </span>] }</div>
                            )
                         if((osearch && this.state.collapse[tag] !== false) || (this.props.outlines[e["@id"]] && this.props.outlines[e["@id"]] !== true && this.state.collapse[tag]) ) 
-                           ret.push(<div style={{paddingLeft:"25px"}}>{makeNodes(e["@id"],top)}</div>)                        
+                           ret.push(<div style={{paddingLeft:"33px"}}>{makeNodes(e["@id"],top)}</div>)                        
                         return ( ret )
                      })
                   }
@@ -7974,7 +7998,10 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                if(this.props.outlines[sRid]["@graph"] &&  this.props.outlines[sRid]["@graph"].filter &&  this.props.outlines[sRid]["@graph"].filter(n => n.hasPart).length) iOutline = true
             }
             else if(this.props.config && this.state.outlinePart) {
-               this.props.onGetOutline(sRid);
+               let hasPartB = this.getResourceElem(tmp+"hasNonVolumeParts")
+               console.log("hasPartB:",hasPartB,sRid)
+               if(hasPartB?.length && hasPartB[0].value == "true") this.props.onGetOutline(sRid, { "tmp:hasNonVolumeParts": true})
+               else this.props.onGetOutline(sRid)
             }
          }
          if(this.state.title.images && this.state.title.images[0].value) {
