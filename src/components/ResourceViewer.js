@@ -6640,7 +6640,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                   if(hasPartB?.length && hasPartB[0].value == "true") this.props.onGetOutline(i, { "tmp:hasNonVolumeParts": true})
                   else this.props.onGetOutline(i,node,volFromUri);
                } 
-               else this.props.onGetOutline(i,node,volFromUri);
+               else this.props.onGetOutline((i.startsWith("bdr:I")?i:i.replace(/;.*/,"")),node,volFromUri);
             }
          }
 
