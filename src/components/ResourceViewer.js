@@ -7139,8 +7139,10 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                                           //(title.length && title[0].value && title[0].value == .includes("↦"))) 
                                           title.length && title[0].value && g["tmp:titleMatch"] && useT.length) {
 
+                                          //console.log("useT:",useT,title,g["tmp:titleMatch"], titleT)
+
                                           if(!g.details) g.details = []
-                                          g.details.push(<div class={"sub " + (hideT?"hideT":"")}><h4 class="first type">{this.proplink(titleT)}{I18n.t("punc.colon")} </h4>{this.format("h4", "", "", false, "sub", useT?useT:title)}</div>)
+                                          g.details.push(<div class={"sub " + (hideT?"hideT":"")}><h4 class="first type">{this.proplink(titleT)}{I18n.t("punc.colon")} </h4>{this.format("h4", "", "", false, "sub", useT?.length?useT:title)}</div>)
                                        } else {
                                           g.hidden.push(<div class={"sub " + (hideT?"hideT":"")}><h4 class="first type">{this.proplink(titleT)}{I18n.t("punc.colon")} </h4>{this.format("h4", "", "", false, "sub", title)}</div>)
                                        }
