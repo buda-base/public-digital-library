@@ -6778,21 +6778,33 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                collapse["outline-"+root+"-"+opart] = true
                collapse["outline-"+root+"-"+opart+"-details"] = true          
 
-               let nodes = this.props.outlines[opart]
+               let nodes = this.props.outlines[opart], preloading = false
                if(nodes && nodes["@graph"]) nodes = nodes["@graph"]
                if(root !== opart && nodes && nodes.length) {
-                  let head = opart, done_opart = false, parent_head = null
+                  let head = opart, done_opart = false, parent_head = null, child_node
                   //console.log("opart??",opart,head)
                   do {
                      let head_node = nodes.filter(n => n.hasPart && (n.hasPart === head || n.hasPart.includes(head)))
-                     head = head_node
                      //loggergen.log("head?",head, head_node)
+                     head = head_node
                      if(head && head.length) { 
                         head = head[0]["@id"]
                         head_node = head_node[0]
+                        // #641 need to load/open volume in root node as well
+                        if(head === root && head_node["tmp:hasNonVolumeParts"] && child_node) {
+                           if(!this.props.outlines[child_node["@id"]] || !this.props.outlines[child_node["@id"]]["@graph"]) {
+                              preloading = true
+                              break ;
+                           } else {
+                              let vol = this.props.outlines[child_node["@id"]]["@graph"].filter(n => n["@id"] === child_node["@id"])
+                              if(vol.length) vol = this.props.outlines[child_node["@id"]]["@graph"].filter(n => n["@id"] === vol[0].contentLocation)
+                              if(vol.length) vol = vol[0].contentLocationVolume
+                              //console.log("#641",head_node,child_node,vol)
+                              this.props.onGetOutline("tmp:uri", { partType: "bdr:PartTypeVolume", "tmp:hasNonVolumeParts": true, volumeNumber: vol }, head);
+                           }
+                        }
                         if(collapse["outline-"+root+"-"+head] === undefined) { //} && (opart !== root || head !== root)) {
-                           collapse["outline-"+root+"-"+head] = true ;
-                           //console.log("outline:",head,head_node)
+                           collapse["outline-"+root+"-"+head] = true ;                           
                            if(!done_opart && head_node["tmp:hasNonVolumeParts"] && (head_node.partType === "bdr:PartTypeSection" || head === root)) {
                               let parent_head = []
                               if(head === root) parent_head = [ head_node ]
@@ -6804,7 +6816,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                                     let vol = nodes.filter(n => n["@id"] === opart_node[0].contentLocation)
                                     if(vol.length) { 
                                        vol = vol[0].contentLocationVolume
-                                       console.log("ready for vol."+vol+" in "+head,head_node)
+                                       //console.log("ready for vol."+vol+" in "+head,head_node)
                                        this.props.onGetOutline("tmp:uri", { partType: "bdr:PartTypeVolume", "tmp:hasNonVolumeParts": true, volumeNumber: vol }, head);
                                     }
                                  }
@@ -6813,13 +6825,14 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                            }
                            else parent_head = null
                            if(!this.props.outlines[head]) this.props.onGetOutline(head, head_node, parent_head);
+                           child_node = head_node
                         }
                         done_opart = true
                      }
                   } while(head !== root && head.length);
                }
 
-               this.setState( { collapse } )               
+               if(!preloading) this.setState( { collapse } )               
                loggergen.log("collapse?",JSON.stringify(collapse,null,3))
 
                
@@ -6840,20 +6853,25 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
             } else {
                let parent_nodes = nodes.filter(n => n.hasPart && (n.hasPart === opart || n.hasPart.includes(opart)))
-               console.log("parent:",parent_nodes)
+               //console.log("parent:",parent_nodes)
                if(parent_nodes.length) { 
+                  let update = false
                   for(let n of parent_nodes) {
                      if(n["@id"].startsWith("bdr:I")) { 
                         if(collapse["outline-"+root+"-"+opart+";"+n["@id"]+"-details"]) {
-                           break ;
+                           //break ;
                         } else if(collapse["outline-"+root+"-"+opart+";"+n["@id"]+"-details"] === undefined) {
                            collapse["outline-"+root+"-"+opart+";"+n["@id"]+"-details"] = true
-                           console.log("hello:","outline-"+root+"-"+opart+";"+n["@id"]+"-details")
-                           this.setState({ collapse })
-                           break ;
+                           //console.log("hello:","outline-"+root+"-"+opart+";"+n["@id"]+"-details")
+                           update = true
+                           //break ;
                         }
+                     } else if(n.parent?.startsWith("bdr:I") && collapse["outline-"+root+"-"+n["@id"]+";"+n.parent] === undefined){
+                        collapse["outline-"+root+"-"+n["@id"]+";"+n.parent] = true
+                        update = true
                      }
                   }
+                  if(update) this.setState({ collapse })
                }
             }
             /*
