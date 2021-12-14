@@ -153,3 +153,14 @@ export const loading = (key: string, isLoading: boolean): LoadingAction => {
         }
     }
 }
+
+
+
+TYPES.browse = 'BROWSE';
+export const browse = (param:string,value?:string,checked?:boolean): Action => {
+   return {
+      type: TYPES.browse,
+      payload:  param,
+      meta: { value, checked }
+   }
+}

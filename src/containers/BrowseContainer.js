@@ -24,8 +24,16 @@ const mapStateToProps = (state,ownProps) => {
       if(auth.userProfile.name) profileName = auth.userProfile.name
    }
 
-   let props = { config, locale, profileName }
+   let browse = state.ui.browse, path, checked
+   if(browse) {
+      path = browse.path
+      checked = browse.checked
+   }
 
+   const time = Date.now()
+
+   let props = { config, locale, profileName, path, checked, time }
+   console.log("props:",props)
    return props
 
 };
@@ -44,6 +52,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       },
       onUserProfile:(url:{}) => {
          dispatch(ui.userProfile(url));
+      },
+      onBrowse:(param:string,value?:string,checked?:boolean) => {
+         dispatch(ui.browse(param,value,checked));
       }
    }
 }
