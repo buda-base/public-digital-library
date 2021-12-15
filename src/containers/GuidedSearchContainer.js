@@ -19,6 +19,7 @@ const mapStateToProps = (state,ownProps) => {
    let config = state.data.config
    let locale = state.i18next.lang   
    let type = state.ui.type
+   let langPreset = state.ui.langPreset
    let checkResults = state.data.checkResults
 
    let profileName
@@ -29,7 +30,7 @@ const mapStateToProps = (state,ownProps) => {
    // not needed
    //let dictionary = state.data.dictionary ;
 
-   let props = { config, locale, profileName, type, checkResults }  //dictionary }
+   let props = { config, locale, profileName, type, checkResults, langPreset }  //dictionary }
 
    return props
 

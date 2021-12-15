@@ -2,8 +2,7 @@ import React, {Component} from "react"
 import I18n from 'i18next';
 import { Trans } from 'react-i18next'
 import qs from 'query-string'
-import { top_right_menu, getPropLabel, fullUri } from './App'
-import {Link} from "react-router-dom"
+import { Link } from "react-router-dom"
 import Loader from 'react-loader';
 import Switch from '@material-ui/core/Switch';
 import { withStyles } from '@material-ui/core/styles';
@@ -17,9 +16,11 @@ import purple from '@material-ui/core/colors/purple';
 import Select from 'react-select';
 import $ from 'jquery' ;
 
-import {narrowWithString} from "../lib/langdetect"
+import { top_right_menu, getPropLabel, fullUri, getLangLabel } from './App'
+import { sortResultsByTitle } from '../state/sagas/index'
+import { narrowWithString } from "../lib/langdetect"
 
-type Props = { auth:{}, history:{}, dictionary:{}, classes:{}, type:string, checkResults:boolean|{} }
+type Props = { auth:{}, history:{}, dictionary:{}, classes:{}, type:string, checkResults:boolean|{}, langPreset: [] }
 type State = { collapse:{}, checked:{}, titles:[], codes:[], keyword:string, searchRoute:string, checkParams:string, mustRecheck: boolean }
 
 
@@ -281,15 +282,20 @@ class GuidedSearch extends Component<Props,State> {
     let titles = []
     fetch("http://purl.bdrc.io/lib/worksInCollection?R_RES=bdr%3APR1KDPP00&format=json").then(async (data) => {
       const json = await data.json()
+      json.main = sortResultsByTitle(json.main, this.props.langPreset)
       for(let k of Object.keys(json.main)) {
-        let labels = json.main[k].filter(w => w.value && w.type === skos+"prefLabel").map(w => ({ value: k.replace(new RegExp(bdr), "bdr:"), label: w.value }))
-        titles = titles.concat(labels)
+        //let labels = json.main[k].filter(w => w.value && w.type === skos+"prefLabel").map(w => ({ value: k.replace(new RegExp(bdr), "bdr:"), label: w.value }))
+        //titles = titles.concat(labels)
+        let label = getLangLabel(this,"",json.main[k].filter(w => w.value && w.type === skos+"prefLabel"))
+        if(!label) { 
+          label = { value: I18n.t("resource.noT") }
+          /*
+          let alt = getLangLabel(this, "", json.main[k].filter(t => t.type?.endsWith("altLabel")))
+          if(alt?.value) label += " ("+alt.value+")"
+          */
+        }
+        titles.push({ value: k.replace(new RegExp(bdr), "bdr:"), label: label.value })
       }
-      titles = titles.sort( (a,b) => {
-        if(a.label < b.label) return -1
-        else if(a.label > b.label) return 1
-        return 0
-      })
       //console.log("FEMCTitles:",titles)
       this.setState({titles})
     })

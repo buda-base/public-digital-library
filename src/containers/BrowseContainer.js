@@ -18,6 +18,7 @@ const mapStateToProps = (state,ownProps) => {
 
    let config = state.data.config
    let locale = state.i18next.lang   
+   let langPreset = state.ui.langPreset
 
    let profileName
    if(auth && auth.userProfile) {
@@ -32,7 +33,7 @@ const mapStateToProps = (state,ownProps) => {
 
    const time = Date.now()
 
-   let props = { config, locale, profileName, path, checked, time }
+   let props = { config, locale, profileName, path, checked, time, langPreset }
    console.log("props:",props)
    return props
 

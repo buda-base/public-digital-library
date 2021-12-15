@@ -1,12 +1,18 @@
 import React, {Component} from "react"
+import I18n from 'i18next';
 import qs from 'query-string'
+import Loader from 'react-loader'
 import RemoveIcon from '@material-ui/icons/RemoveCircle';
 import SimpleBar from 'simplebar-react';
+import { Link } from "react-router-dom"
 import 'simplebar/dist/simplebar.min.css';
-import { top_right_menu } from './App'
+import $ from 'jquery' ;
+import { top_right_menu, getLangLabel, shortUri, fullUri } from './App'
+import { fetchFEMCTitles } from './GuidedSearch'
+import { sortResultsByTitle } from '../state/sagas/index'
 
-type Props = { auth:{}, history:{}, config:{}, path?:[], checked?: {}, time:number }
-type State = { collapse:{} }
+type Props = { auth:{}, history:{}, config:{}, path?:[], checked?: {}, time:number, langPreset:[] }
+type State = { collapse:{}, titles:{} }
 
 class Browse extends Component<Props,State> {
 
@@ -16,14 +22,20 @@ class Browse extends Component<Props,State> {
     this.state = { collapse:{}, params:[], data:{} }
 
     if(!this.props.config) this.props.onInitiateApp(qs.parse(this.props.history.location.search), null, null, "browse")
+
+    setTimeout(() => {
+      const elem = $(".param .param .param .val.on")[0]
+      console.log("scroll:",elem)
+      if(elem) elem.scrollIntoView({block: "start", inline: "nearest", behavior:"smooth"})
+    }, 350) 
   }
 
   static getDerivedStateFromProps(props, state){
 
-    console.log("g2sfp")
+    console.log("g2sfp",state)
 
     let settings, params = [ ], data = {}, s;
-    if(props.config?.guided && props.config.guided.work && !props.path) { 
+    if(props.config?.guided && props.config.guided.work && (!props.path || !state.params?.length)) { 
       settings = props.config.guided.work
       params.push("language")
       data.language = settings.language
@@ -37,6 +49,8 @@ class Browse extends Component<Props,State> {
           values: settings.style.values.filter(v => !Array.isArray(v.facet.value) && v.facet.value.startsWith(s.facet.value+"_"))
         }
       }), { ...settings.substyle }) 
+      params.push("title")
+      data.title = settings.title
       s = { ...state, params, data}
       props.onBrowse(params[0])
       console.log("params:",params,data,settings)
@@ -64,24 +78,77 @@ class Browse extends Component<Props,State> {
       if(data && path?.length > i) data = this.state.data[path[i]]
       if(data && pre) data = data[pre]
       
-      //console.log("i?",i,pre,data,checked,path)
+      console.log("i?",i,pre,data,checked,path)
 
       const setParamValue = (ev, val, checked) => {
+        console.log("to?",i)
+        if(i === 2) {
+          setTimeout(() => {
+            const elem = $(".param .param .param .val.on")[0]
+            console.log("scroll:",elem)
+            if(elem) elem.scrollIntoView({block: "start", inline: "nearest", behavior:"smooth"})
+          }, 150) 
+        }
         this.props.onBrowse(path[i], val.facet.value, checked)
       }
 
       let sub
       if(checked && checked[path[i]]) { 
-        if(path.length === i+1 && path.length < 3) {
+        if(path.length === i+1 && path.length < 4) {
           this.props.onBrowse(this.state.params[i+1])
-        } else if(i == 0) {
+        } else if(i == 0) {          
           sub = paramValues(i+1)
-        } else if(i == 1) {
+        } else if(i <= 2) {
           sub = paramValues(i+1, checked[path[i]])
         }
       }
 
-      return (
+      const fetchResults = async () => {
+        let titles = []
+        fetch("http://purl.bdrc.io/lib/worksInCollection?R_RES=bdr%3APR1KDPP00&format=json").then(async (data) => {
+          const json = await data.json()
+          titles = sortResultsByTitle(json.main, this.props.langPreset)
+          //console.log("FEMCTitles:",titles)
+          this.setState({titles})
+        })
+      }
+      
+
+      if(path && path[i] === "title") {
+        let results = []
+        if(!this.state.titles) fetchResults();
+        else if(checked?.language && checked?.substyle) {
+          let keys = Object.keys(this.state.titles)
+          const facets = { 
+            tree: "http://purl.bdrc.io/ontology/core/workIsAbout",
+            language: "http://purl.bdrc.io/ontology/core/language"
+          }
+          const lang = fullUri(checked.language), subT = fullUri(checked.substyle)
+          console.log("lang:",lang,subT)
+          keys.map(k => {
+            let label = getLangLabel(this, "", this.state.titles[k].filter(t => t.type?.endsWith("prefLabel")))
+            if(!label) { 
+              label =  { value: I18n.t("resource.noT") }
+              /*
+              let alt = getLangLabel(this, "", this.state.titles[k].filter(t => t.type?.endsWith("altLabel")))
+              if(alt?.value) label += " ("+alt.value+")"
+              */
+            }
+            if( this.state.titles[k].filter(t => t.type === facets.language && t.value === lang || t.type === facets.tree && t.value === subT).length === 2) {
+              results.push(<div class="val"><Link to={"/show/"+shortUri(k)}>{label.value}</Link></div>)
+            }
+          })
+        }
+        return (
+          <SimpleBar style={{ maxHeight:700 }}>          
+            <div class="param title"  style={{ minHeight:100, position: "relative" }}>
+              { !this.state.titles && <Loader loading={true} /> }
+              { results }              
+            </div>
+          </SimpleBar>
+        )
+      }
+      else return (
         <div class="param">
         { data?.values && data.values.map(v => <>
           <div class={"val "+(checked && checked[path[i]] === v.facet.value ?"on":"")}>
@@ -103,47 +170,11 @@ class Browse extends Component<Props,State> {
                     <h1>Browse</h1>                                          
                     <div id="samples">
                       <div class="head">
-                        {data && path?.map(p => <div>{capitalize(getLocaleLabel(data[p]))}</div>)}
-                      </div>
+                        {/* // no need
+                        {data && path?.map(p => <div>{capitalize(getLocaleLabel(data[p]))}</div>)} 
+                        */}
+                      </div> 
                       { paramValues() }
-                      {/*
-                      <div class="param">
-                        <div class="val on">value1</div>
-                        <div class="param">
-                          <div class="val">value1</div>
-                          <div class="val on">value2</div>
-                          <div class="param">
-                            <div class="val">value1</div>
-                            <div class="val">value2</div>
-                            <div class="val on">value3</div>
-                            <SimpleBar style={{ maxHeight:700 }}>
-                              <div class="param title">
-                                <div class="val">title1</div>
-                                <div class="val">title2</div>
-                                <div class="val">title3</div>
-                                <div class="val">title4</div>
-                                <div class="val">title5</div>
-                                <div class="val">title6</div>
-                                <div class="val">title1</div>
-                                <div class="val">title2</div>
-                                <div class="val">title3</div>
-                                <div class="val">title4</div>
-                                <div class="val">title5</div>
-                                <div class="val">title6</div>
-                                <div class="val">title1</div>
-                                <div class="val">title2</div>
-                                <div class="val">title3</div>
-                                <div class="val">title4</div>
-                                <div class="val">title5</div>
-                                <div class="val">title6</div>
-                              </div>
-                            </SimpleBar>
-                          </div>
-                          <div class="val">value3</div>
-                        </div>
-                        <div class="val">value2</div>
-                        <div class="val">value3</div>
-                      </div> */}
                     </div>
                   </div>
                 </div> 

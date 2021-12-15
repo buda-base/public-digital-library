@@ -1676,7 +1676,7 @@ function sortResultsByVolumeNb(results,reverse) {
    return results
 }
 
-function sortResultsByTitle(results, userLangs, reverse) {
+export function sortResultsByTitle(results, userLangs, reverse) {
 
    if(!results) return 
 
@@ -1698,7 +1698,7 @@ function sortResultsByTitle(results, userLangs, reverse) {
          partKeys = partKeys.map(k => {
             let lang,value,labels = results[k].filter(e => e.type && e.type.endsWith("abelMatch") && results[k].some(f => f.type === skos + "prefLabel" && e.value.replace(/[↦↤]/g,"") === f.value)).map(e => ({ ...e, value:e.value.replace(/[↦↤]/g,"")})) 
             if(!labels.length) labels = results[k].filter(r => r.type && r.type === skos+"prefLabel") //r.value && r.value.match(/↦/))
-            if(!labels.length && (assoR = state.data.assocResources[state.data.keyword]) && assoR[k]) labels = assoR[k].filter(r => r.type && r.type === skos+"prefLabel") 
+            if(!labels.length && state.data.assocResources && (assoR = state.data.assocResources[state.data.keyword]) && assoR[k]) labels = assoR[k].filter(r => r.type && r.type === skos+"prefLabel") 
             //loggergen.log("labels?",labels,assoR,k,assoR[k],results[k])
             if(labels.length) { 
                labels = sortLangScriptLabels(labels,langs.flat,langs.translit)

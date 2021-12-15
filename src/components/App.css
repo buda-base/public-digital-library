@@ -864,6 +864,7 @@ footer #donate,
    font-size: 16px;
    color:#172832;
    position: relative;
+   scroll-margin:150px;
 }
 
 .App.browse.khmer .SearchPane > div > div .param .val > span { cursor: pointer;}
@@ -899,6 +900,7 @@ footer #donate,
    z-index:0;
 }
 
+.App.browse.khmer .SearchPane > div > div .param  .val + [data-simplebar]:not(:last-child)::before,
 .App.browse.khmer .SearchPane > div > div .param > .val.on + .param:not(:last-child)::before {
    content:'';
    display: block;
@@ -907,7 +909,7 @@ footer #donate,
    height:100%;
    position: absolute;
    left:-80px;
-   top:-30px;
+   top:-32px;
 }
 
 .App.browse.khmer .SearchPane > div > div .param  .val + [data-simplebar],
@@ -916,6 +918,19 @@ footer #donate,
 .App.browse.khmer .SearchPane > div > div > div > .param > .param > .param > .param {
    padding-left:120px;
 }
+
+.App.browse.khmer .SearchPane > div > div .param  .val + [data-simplebar] .val {
+   width:100%;
+}
+
+.App.browse.khmer .SearchPane > div > div .param  .val + [data-simplebar] .val a {
+   color:#152631;   
+}
+
+.App.browse.khmer .SearchPane > div > div .param  .val + [data-simplebar] .val a:hover {
+   color: #d73449;
+}
+
 
 .App.browse.khmer .SearchPane > div > div .param  .val + [data-simplebar] {
    /* padding-top:20px; */
@@ -934,13 +949,16 @@ footer #donate,
    height:65px;
    position: absolute;
    left:-80px;
-   top:-30px;
+   top:-32px;
 }
 
 .App.browse.khmer .SearchPane > div > div .param > .val:first-child::before {
    height:35px;
    top:0px;
 }
+
+.App.browse.khmer .SearchPane > div > div .head +.param > .param { padding-left:100px; }
+
 
 /*
 .App.browse.khmer .SearchPane > div > div .param ~ .val::before,

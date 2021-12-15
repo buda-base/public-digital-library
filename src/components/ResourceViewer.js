@@ -4249,6 +4249,7 @@ class ResourceViewer extends Component<Props,State>
           else  title = <h2 class="on" lang={this.props.locale}>{_T}<span>{loaded && (T_ === "Work" || T_ === "Instance")?I18n.t("resource.noT"):shortUri(other?other:this.props.IRI)}</span></h2>
       }
       
+      
       if(!title) {
          if(titlElem) {
             if(typeof titlElem !== 'object') titlElem =  { "value" : titlElem, "lang":""}
@@ -4260,7 +4261,7 @@ class ResourceViewer extends Component<Props,State>
             title = getLangLabel(this,"", titlElem, false, false, otherLabels)            
          }
          
-         //loggergen.log("titl",kZprop,titlElem,title,otherLabels,other)
+         loggergen.log("titl:",title,kZprop,titlElem,otherLabels,other)
 
          let _befo
          if(title && title.value) {
