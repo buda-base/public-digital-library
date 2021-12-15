@@ -62,6 +62,8 @@ class Browse extends Component<Props,State> {
 
   render() {
 
+    if(!this.props.config) return <Loader loading={true}/>
+
     const path = this.props.path, checked = this.props.checked, data = this.state.data
     console.log("browse:",path,checked,this.state)
 
@@ -137,11 +139,12 @@ class Browse extends Component<Props,State> {
             if( this.state.titles[k].filter(t => t.type === facets.language && t.value === lang || t.type === facets.tree && t.value === subT).length === 2) {
               results.push(<div class="val"><Link to={"/show/"+shortUri(k)}>{label.value}</Link></div>)
             }
-          })
+          })          
         }
+        if(!results.length) results.push(<div class="val">{I18n.t("search.filters.noresult-")}</div>)
         return (
           <SimpleBar style={{ maxHeight:700 }}>          
-            <div class="param title"  style={{ minHeight:100, position: "relative" }}>
+            <div class="param title"  style={{ minHeight:65, position: "relative" }}>
               { !this.state.titles && <Loader loading={true} /> }
               { results }              
             </div>
