@@ -160,7 +160,7 @@ let topics = []
 const fetchFEMCTopics = async () => {
   const skos = "http://www.w3.org/2004/02/skos/core#";
   const bdr = "http://purl.bdrc.io/resource/";
-  fetch("http://purl.bdrc.io/ontology/schemes/taxonomy/FEMCScheme.json").then(async (data) => {
+  fetch("//purl.bdrc.io/ontology/schemes/taxonomy/FEMCScheme.json").then(async (data) => {
     const json = await data.json()
     for(let k of Object.keys(json).sort()){
       if(json[k][skos+"narrower"] || json[k][skos+"broader"]) {
@@ -280,7 +280,7 @@ class GuidedSearch extends Component<Props,State> {
   
   async fetchFEMCTitles() {
     let titles = []
-    fetch("http://purl.bdrc.io/lib/worksInCollection?R_RES=bdr%3APR1KDPP00&format=json").then(async (data) => {
+    fetch("//purl.bdrc.io/lib/worksInCollection?R_RES=bdr%3APR1KDPP00&format=json").then(async (data) => {
       const json = await data.json()
       json.main = sortResultsByTitle(json.main, this.props.langPreset)
       for(let k of Object.keys(json.main)) {
@@ -303,7 +303,7 @@ class GuidedSearch extends Component<Props,State> {
   
   async fetchFEMCCodes() {
     let codes = []
-    fetch("https://purl.bdrc.io/query/table/idsByType?R_TYPE=bdr%3AFEMCManuscriptCode&pageSize=20000&format=json").then(async (data) => {
+    fetch("//purl.bdrc.io/query/table/idsByType?R_TYPE=bdr%3AFEMCManuscriptCode&pageSize=20000&format=json").then(async (data) => {
       const json = await data.json()
       if(json?.results?.bindings) codes = json.results.bindings.map(elem => ({label: elem.value.value, value: elem.e.value.replace(new RegExp(bdr), "bdr:")}))
       codes = codes.sort( (a,b) => {

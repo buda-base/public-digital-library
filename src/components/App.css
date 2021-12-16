@@ -857,7 +857,7 @@ footer #donate,
 }
 
 .App.browse.khmer .SearchPane > div > div .param .val {
-   width:120px;
+   width:140px;
    height:65px;
    display: flex;
    align-items: center;
@@ -865,10 +865,12 @@ footer #donate,
    color:#172832;
    position: relative;
    scroll-margin:150px;
+
 }
 
-.App.browse.khmer .SearchPane > div > div .param .val > span { cursor: pointer;}
+.App.browse.khmer .SearchPane > div > div .param .val > span { cursor: pointer; }
 .App.browse.khmer .SearchPane > div > div .param .val > span:hover { color:#d73449; }
+.App.browse.khmer .SearchPane > div > div .param .val > span:hover + span { color:#d73449; }
 
 .App.browse.khmer .SearchPane > div > div .head + .param > .val {
    font-weight: 700;
@@ -877,6 +879,10 @@ footer #donate,
 .App.browse.khmer .SearchPane > div > div .param > .val.on {
    color:#d73449;
    font-weight: 700;
+}
+
+.App.browse.khmer .SearchPane > div > div .param > .val > span svg {
+   vertical-align: -7px;
 }
 
 .App.browse.khmer .SearchPane > div > div .param > .val.on > svg {

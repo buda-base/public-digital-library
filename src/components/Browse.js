@@ -3,6 +3,8 @@ import I18n from 'i18next';
 import qs from 'query-string'
 import Loader from 'react-loader'
 import RemoveIcon from '@material-ui/icons/RemoveCircle';
+import ExpandLess from '@material-ui/icons/ExpandLess';
+import ExpandMore from '@material-ui/icons/ExpandMore';
 import SimpleBar from 'simplebar-react';
 import { Link } from "react-router-dom"
 import 'simplebar/dist/simplebar.min.css';
@@ -107,7 +109,7 @@ class Browse extends Component<Props,State> {
 
       const fetchResults = async () => {
         let titles = []
-        fetch("http://purl.bdrc.io/lib/worksInCollection?R_RES=bdr%3APR1KDPP00&format=json").then(async (data) => {
+        fetch("//purl.bdrc.io/lib/worksInCollection?R_RES=bdr%3APR1KDPP00&format=json").then(async (data) => {
           const json = await data.json()
           titles = sortResultsByTitle(json.main, this.props.langPreset)
           //console.log("FEMCTitles:",titles)
@@ -140,8 +142,8 @@ class Browse extends Component<Props,State> {
               results.push(<div class="val"><Link to={"/show/"+shortUri(k)}>{label.value}</Link></div>)
             }
           })          
+          if(!results.length) results.push(<div class="val">{I18n.t("search.filters.noresult-")}</div>)
         }
-        if(!results.length) results.push(<div class="val">{I18n.t("search.filters.noresult-")}</div>)
         return (
           <SimpleBar style={{ maxHeight:700 }}>          
             <div class="param title"  style={{ minHeight:65, position: "relative" }}>
@@ -155,8 +157,14 @@ class Browse extends Component<Props,State> {
         <div class="param">
         { data?.values && data.values.map(v => <>
           <div class={"val "+(checked && checked[path[i]] === v.facet.value ?"on":"")}>
-            <span onClick={(ev) => setParamValue(ev, v, true)}>{getLocaleLabel(v)}</span>
-            { checked && checked[path[i]] === v.facet.value && <RemoveIcon onClick={(ev) => setParamValue(ev, v, false)}/>}
+            <span onClick={(ev) => setParamValue(ev, v, checked&&checked[path[i]] === v.facet.value?false:true)}>{getLocaleLabel(v)} 
+            {/* &nbsp;{ 
+                !(checked && checked[path[i]] === v.facet.value) 
+                  ? <span onClick={(ev) => setParamValue(ev, v, true)}><ExpandMore /></span>
+                  : <span onClick={(ev) => setParamValue(ev, v, false)}><ExpandLess /></span>
+              } */}
+            </span>            
+            { checked && checked[path[i]] === v.facet.value && <RemoveIcon onClick={(ev) => setParamValue(ev, v, false)}/> }
           </div>
           { checked && checked[path[i]] === v.facet.value && sub }
         </>)}
