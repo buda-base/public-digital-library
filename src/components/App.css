@@ -822,6 +822,9 @@ footer #donate,
 
 }
 
+a.result .contenu ul > div:last-child h3[lang="km"] { font-size:16px; }
+
+[lang="km"] { font-size:115%;}
 
 
 .App.browse.khmer .SearchPane > div > div { 

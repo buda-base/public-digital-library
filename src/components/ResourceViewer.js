@@ -2714,7 +2714,7 @@ class ResourceViewer extends Component<Props,State>
                bdrcData = null
             }
             
-            ret.push([<span class={"ulink " + (sameAsPrefix?sameAsPrefix:'')  }>{befo}{link}</span>,lang?<Tooltip placement="bottom-end" title={
+            ret.push([<span lang={lang} class={"ulink " + (sameAsPrefix?sameAsPrefix:'')  }>{befo}{link}</span>,lang?<Tooltip placement="bottom-end" title={
                <div style={{margin:"10px"}}>
                   {I18n.t(languages[lang]?languages[lang].replace(/search/,"tip"):lang)}
                </div>
@@ -3099,7 +3099,7 @@ class ResourceViewer extends Component<Props,State>
 
                               <TabPanel>
                               { lang && <div><span class='first'>{I18n.t("popover.lang")}</span><span>{I18n.t("punc.colon")}&nbsp;</span><span>{I18n.t(languages[lang]?languages[lang].replace(/search/,"tip"):lang)}</span></div> }
-                              { (other.length > 0) && <div><span class='first'>{I18n.t("popover.otherLang",{count:other.length})}</span><span>{I18n.t("punc.colon")}&nbsp;</span><div>{other.map(o => <span class="label">{o.value}{this.tooltip(o.lang)}</span>)}</div></div> }
+                              { (other.length > 0) && <div><span class='first'>{I18n.t("popover.otherLang",{count:other.length})}</span><span>{I18n.t("punc.colon")}&nbsp;</span><div>{other.map(o => <span class="label" lang={o.lang}>{o.value}{this.tooltip(o.lang)}</span>)}</div></div> }
                               { (e.datatype && e.datatype.endsWith("#gYear")) && <div><span class='first'>{I18n.t("popover.calendar")}</span><span>{I18n.t("punc.colon")}&nbsp;</span><span>{I18n.t("popover.gregorian")}</span></div>}
                               { (era && era.length > 0) &&  <div><span class='first'>{this.proplink(bdo+"yearInEra")}</span><span>{I18n.t("punc.colon")}&nbsp;</span><span>{this.proplink(era[0].value)}</span></div>  }
                               { (e.start !== undefined) &&  <div><span class='first'>{this.proplink(bdo+"startChar")}</span><span>{I18n.t("punc.colon")}&nbsp;</span><span>{e.start}</span></div>  }

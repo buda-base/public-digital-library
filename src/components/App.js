@@ -3235,8 +3235,10 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      else val = i.value
                   }
                }
+               //console.log("1 val:",val,lang,i)
 
                if(!lang) lang = i["lang"]
+               if(!lang) lang = i["xml:lang"]
                ret.push(<span {...lang?{lang}:{}}>{val}{
                   lang && <Tooltip placement="bottom-end" title={
                                     <div style={{margin:"10px"}}>
@@ -3305,7 +3307,9 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      outlineB.push(<Link class="rec" to={iri.replace(/(show[/]).*?part=([^&]+)&/,"$1$2?")}><img src="/icons/rec.svg"/>{I18n.t("resource.openR")}</Link>)
                   }
 
-                  ret.push(<span>{urilink}{outlineB}
+                  //console.log("2 val:",i.lang,i)
+
+                  ret.push(<span {...i.lang?{lang:i.lang}:{}}>{urilink}{outlineB}
                      {
                      i.lang && <Tooltip placement="bottom-end" title={
                                        <div style={{margin:"10px"}}>

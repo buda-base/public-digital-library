@@ -136,7 +136,7 @@ const selectStyles = {
   }),
   option: (provided, state) => ({
     ...provided,
-    fontSize: "14px",
+    fontSize: "16px",
     fontWeight: state.isFocused ? '600' : '400',
     backgroundColor: state.isFocused ? '#efefef' : 'white',
     cursor:"pointer",
@@ -324,9 +324,14 @@ class GuidedSearch extends Component<Props,State> {
     if(this.props?.config?.guided && this.props.config.guided[this.props.type]) settings = this.props.config.guided[this.props.type]
     // if(topics.length) settings["topic"].values = topics // better dump it then copy-paste (+hand sort?)
 
-    const getLocaleLabel = (o, arg = "label") => {
-      if(o[arg] && o[arg][this.props.locale]) return o[arg][this.props.locale]
-      else if(o[arg] && o[arg].en) return o[arg].en
+    const getLocaleLabel = (o, arg = "label", withLang = false) => {
+      if(o[arg] && o[arg][this.props.locale]) { 
+        if(withLang) return <span lang={this.props.locale}>{o[arg][this.props.locale]}</span>
+        else return o[arg][this.props.locale]
+      }
+      else if(o[arg] && o[arg].en) {
+        return o[arg].en
+      }
       else return "[no "+arg+"]"
     }
  
@@ -351,7 +356,7 @@ class GuidedSearch extends Component<Props,State> {
                         this.setState({mustRecheck: true, checked:{...this.state.checked, [k]:{...(this.state.checked[k]?this.state.checked[k]:{}), [i]:checked}}})
                       }}
                     />}
-                  label={getLocaleLabel(o)}
+                  label={getLocaleLabel(o,"label",true)}
                 />            
               </span>))}
             { props }
