@@ -14,7 +14,7 @@ import { fetchFEMCTitles } from './GuidedSearch'
 import { sortResultsByTitle } from '../state/sagas/index'
 
 type Props = { auth:{}, history:{}, config:{}, path?:[], checked?: {}, time:number, langPreset:[] }
-type State = { collapse:{}, titles:{} }
+type State = { collapse:{}, titles:{}, ldspdi?: string }
 
 class Browse extends Component<Props,State> {
 
@@ -30,6 +30,27 @@ class Browse extends Component<Props,State> {
       console.log("scroll:",elem)
       if(elem) elem.scrollIntoView({block: "start", inline: "nearest", behavior:"smooth"})
     }, 350) 
+  }
+
+
+  initLdspdi() {
+    if(this.props.config?.ldspdi) { 
+      if(!this.state.ldspdi) {
+        let ldspdi = this.props.config?.ldspdi?.endpoints[this.props.config?.ldspdi?.index]
+        console.log("ldspdi:",ldspdi)
+        this.fetchResults(ldspdi);
+        this.setState({ ldspdi })
+      }
+    }
+  }
+
+  componentDidMount() {
+    this.initLdspdi()
+  }
+
+
+  componentDidUpdate() {
+    this.initLdspdi()
   }
 
   static getDerivedStateFromProps(props, state){
@@ -61,6 +82,17 @@ class Browse extends Component<Props,State> {
     if(s) return s
     else return null
   }
+
+
+  async fetchResults(ldspdi) {
+    let titles = []
+    fetch(ldspdi+"/lib/worksInCollection?R_RES=bdr%3APR1KDPP00&format=json").then(async (data) => {
+      const json = await data.json()
+      titles = sortResultsByTitle(json.main, this.props.langPreset)
+      //console.log("FEMCTitles:",titles)
+      this.setState({titles})
+    })
+  }      
 
   paramValues (i = 0, pre = "") {
 
@@ -98,20 +130,9 @@ class Browse extends Component<Props,State> {
       }
     }
 
-    const fetchResults = async () => {
-      let titles = []
-      fetch("//purl.bdrc.io/lib/worksInCollection?R_RES=bdr%3APR1KDPP00&format=json").then(async (data) => {
-        const json = await data.json()
-        titles = sortResultsByTitle(json.main, this.props.langPreset)
-        //console.log("FEMCTitles:",titles)
-        this.setState({titles})
-      })
-    }      
-
     if(path && path[i] === "title") {
       let results = []
-      if(!this.state.titles) fetchResults();
-      else if(checked?.language && checked?.substyle) {
+      if(this.state.titles && checked?.language && checked?.substyle) {
         let keys = Object.keys(this.state.titles)
         const facets = { 
           tree: "http://purl.bdrc.io/ontology/core/workIsAbout",

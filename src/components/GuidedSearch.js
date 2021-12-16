@@ -21,7 +21,7 @@ import { sortResultsByTitle } from '../state/sagas/index'
 import { narrowWithString } from "../lib/langdetect"
 
 type Props = { auth:{}, history:{}, dictionary:{}, classes:{}, type:string, checkResults:boolean|{}, langPreset: [] }
-type State = { collapse:{}, checked:{}, titles:[], codes:[], keyword:string, searchRoute:string, checkParams:string, mustRecheck: boolean }
+type State = { collapse:{}, checked:{}, titles:[], codes:[], keyword:string, searchRoute:string, checkParams:string, mustRecheck: boolean, ldspdi?: string }
 
 
 /* // v1
@@ -155,7 +155,7 @@ const selectStyles = {
   })
 };
 
-
+/* // this was used to build config data from ontology
 let topics = []
 const fetchFEMCTopics = async () => {
   const skos = "http://www.w3.org/2004/02/skos/core#";
@@ -176,6 +176,7 @@ const fetchFEMCTopics = async () => {
   }) 
 }
 //fetchFEMCTopics()
+*/
 
 const skos = "http://www.w3.org/2004/02/skos/core#";
 const bdr = "http://purl.bdrc.io/resource/";
@@ -209,9 +210,6 @@ class GuidedSearch extends Component<Props,State> {
 
     if(!this.props.config) this.props.onInitiateApp(qs.parse(this.props.history.location.search), null, null, "guidedsearch")
 
-    this.fetchFEMCTitles();
-    this.fetchFEMCCodes();
-
     $(window).off("scroll").on("scroll", (ev) => {
       if(ev.currentTarget){
         let down = false
@@ -230,11 +228,29 @@ class GuidedSearch extends Component<Props,State> {
     document.title = I18n.t("topbar.guided") + " - " + "Khmer Manuscript Heritage Project"
   }
 
+
+  initLdspdi() {
+    if(this.props.config?.ldspdi) { 
+      if(!this.state.ldspdi) {
+        let ldspdi = this.props.config?.ldspdi?.endpoints[this.props.config?.ldspdi?.index]
+        console.log("ldspdi:",ldspdi)
+        this.fetchFEMCTitles(ldspdi);
+        this.fetchFEMCCodes(ldspdi);
+        this.setState({ ldspdi })
+      }
+    }
+  }
+
+  componentDidMount() {
+    this.initLdspdi()
+  }
+
   componentDidUpdate() {
+
+    this.initLdspdi()
 
     let settings = data
     if(this.props?.config?.guided && this.props.config.guided[this.props.type]) settings = this.props.config.guided[this.props.type]
-
 
     let route = "", searchRoute = "", checkParams = ""
     
@@ -278,12 +294,12 @@ class GuidedSearch extends Component<Props,State> {
       this.setState({ searchRoute, checkParams })
   }
   
-  async fetchFEMCTitles() {
+  async fetchFEMCTitles(ldspdi) {
     let titles = []
-    fetch("//purl.bdrc.io/lib/worksInCollection?R_RES=bdr%3APR1KDPP00&format=json").then(async (data) => {
+    fetch(ldspdi+ "/lib/worksInCollection?R_RES=bdr%3APR1KDPP00&format=json").then(async (data) => {
       const json = await data.json()
       json.main = sortResultsByTitle(json.main, this.props.langPreset)
-      for(let k of Object.keys(json.main)) {
+      if(json.main) for(let k of Object.keys(json.main)) {
         //let labels = json.main[k].filter(w => w.value && w.type === skos+"prefLabel").map(w => ({ value: k.replace(new RegExp(bdr), "bdr:"), label: w.value }))
         //titles = titles.concat(labels)
         let label = getLangLabel(this,"",json.main[k].filter(w => w.value && w.type === skos+"prefLabel"))
@@ -301,9 +317,9 @@ class GuidedSearch extends Component<Props,State> {
     })
   }
   
-  async fetchFEMCCodes() {
+  async fetchFEMCCodes(ldspdi) {
     let codes = []
-    fetch("//purl.bdrc.io/query/table/idsByType?R_TYPE=bdr%3AFEMCManuscriptCode&pageSize=20000&format=json").then(async (data) => {
+    fetch(ldspdi+ "/query/table/idsByType?R_TYPE=bdr%3AFEMCManuscriptCode&pageSize=20000&format=json").then(async (data) => {
       const json = await data.json()
       if(json?.results?.bindings) codes = json.results.bindings.map(elem => ({label: elem.value.value, value: elem.e.value.replace(new RegExp(bdr), "bdr:")}))
       codes = codes.sort( (a,b) => {
