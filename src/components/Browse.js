@@ -153,8 +153,8 @@ class Browse extends Component<Props,State> {
           <span onClick={(ev) => setParamValue(ev, v, checked&&checked[path[i]] === v.facet.value?false:true)}><span>{getLocaleLabel(v)}</span> 
           { 
               !(checked && checked[path[i]] === v.facet.value) 
-                ? <span onClick={(ev) => setParamValue(ev, v, true)}><ExpandMore /></span>
-                : <span onClick={(ev) => setParamValue(ev, v, false)}><ExpandLess /></span>
+                ? <span><ExpandMore /></span>
+                : <span><ExpandLess /></span>
           }
           </span>            
           { checked && checked[path[i]] === v.facet.value && <RemoveIcon onClick={(ev) => setParamValue(ev, v, false)}/> }
