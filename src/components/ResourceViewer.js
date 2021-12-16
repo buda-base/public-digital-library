@@ -1095,7 +1095,11 @@ class ResourceViewer extends Component<Props,State>
       
       if(props.resources && props.resources[props.IRI]) {
 
-         if(props.IRI && !props.outline && getEntiType(props.IRI) === "Instance" && props.config) props.onGetOutline(props.IRI)
+         if(props.IRI && !props.outline && getEntiType(props.IRI) === "Instance" && props.config) {             
+            let hasPartB = getElem(tmp+"hasNonVolumeParts",props.IRI)
+            if(hasPartB?.length && hasPartB[0].value == "true") props.onGetOutline(props.IRI, { "tmp:hasNonVolumeParts": true})
+            else props.onGetOutline(props.IRI)
+         }
 
          let root = getElem(bdo+"inRootInstance",props.IRI)
          if(root && root.length) {
@@ -5770,7 +5774,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
             //if(!k.match(new RegExp("Revision|Entry|prefLabel|"+rdf+"|toberemoved"))) {
             if(elem && 
-               (!k.match(new RegExp(adm+"|adm:|isRoot$|SourcePath|"+rdf+"|toberemoved|entityScore|associatedCentury|lastSync|dateCreated|qualityGrade|digitalLendingPossible|inRootInstance|workPagination|partIndex|partTreeIndex|legacyOutlineNodeRID|sameAs|thumbnailIIIFSe|instanceOf|instanceReproductionOf|instanceHasReproduction|seeOther|(Has|ction)Member$|serialHasInstance|withSameAs|first(Text|Vol)N?"+(this._dontMatchProp?"|"+this._dontMatchProp:"")))
+               (!k.match(new RegExp(adm+"|adm:|isRoot$|SourcePath|"+rdf+"|toberemoved|entityScore|associatedCentury|lastSync|dateCreated|qualityGrade|digitalLendingPossible|inRootInstance|workPagination|partIndex|partTreeIndex|legacyOutlineNodeRID|sameAs|thumbnailIIIFSe|instanceOf|instanceReproductionOf|instanceHasReproduction|seeOther|(Has|ction)Member$|serialHasInstance|withSameAs|hasNonVolumeParts|hasPartB|first(Text|Vol)N?"+(this._dontMatchProp?"|"+this._dontMatchProp:"")))
                ||k.match(/(metadataLegal|contentProvider|replaceWith)$/)
                //||k.match(/([/]see|[/]sameAs)[^/]*$/) // quickfix [TODO] test property ancestors
                || (this.props.IRI.match(/^bda:/) && (k.match(new RegExp(adm+"|adm:"))) && !k.match(/\/(git[RP]|adminAbout|logEntry|graphId|facetIndex)/)))
@@ -6181,6 +6185,9 @@ perma_menu(pdfLink,monoVol,fairUse,other)
    // TODO case of part of instance after p.20 (see bdr:MW1KG2733_65CFB8)
 
    renderNoAccess = (fairUse) => {
+      
+      if ( this.props.manifestError && [404, 444].includes(this.props.manifestError.error.code)) return
+
       if(fairUse) { // && (!this.props.auth || this.props.auth && !this.props.auth.isAuthenticated()) ) { 
 
          let fairTxt, hasIA, elem = this.getResourceElem(bdo+"digitalLendingPossible");
@@ -6510,7 +6517,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                ret.push(<div class="details">
                      {e.details}
                   </div>)
-            if(e.hasPart && open) ret.push(<div style={{paddingLeft:"25px"}}>{makeNodes(e["@id"],top)}</div>)
+            if(e.hasPart && open) ret.push(<div style={{paddingLeft:"33px"}}>{makeNodes(e["@id"],top)}</div>)
             return ret
          })
 
@@ -6636,7 +6643,16 @@ perma_menu(pdfLink,monoVol,fairUse,other)
             loggergen.log("toggle!",tag,val,node)
 
             this.setState( { collapse:{...this.state.collapse, [tag]:!val } })
-            if(/*this.state.outlinePart  &&*/ (!this.props.outlineKW || force || node && node.notMatch) &&  !x && this.props.outlines && (!this.props.outlines[i] || force && r === i) )this.props.onGetOutline(i,node,volFromUri);
+            if(/*this.state.outlinePart  &&*/ (!this.props.outlineKW || force || node && node.notMatch) &&  !x && this.props.outlines && (!this.props.outlines[i] || force && r === i) ) {
+
+               if(i === root) {
+                  let hasPartB = this.getResourceElem(tmp+"hasNonVolumeParts")
+                  //console.log("hasPartB:",hasPartB,i)
+                  if(hasPartB?.length && hasPartB[0].value == "true") this.props.onGetOutline(i, { "tmp:hasNonVolumeParts": true})
+                  else this.props.onGetOutline(i,node,volFromUri);
+               } 
+               else this.props.onGetOutline((i.startsWith("bdr:I")?i:i.replace(/;.*/,"")),node,volFromUri);
+            }
          }
 
 
@@ -6773,23 +6789,37 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                collapse["outline-"+root+"-"+opart] = true
                collapse["outline-"+root+"-"+opart+"-details"] = true          
 
-               let nodes = this.props.outlines[opart]
+               let nodes = this.props.outlines[opart], preloading = false
                if(nodes && nodes["@graph"]) nodes = nodes["@graph"]
                if(root !== opart && nodes && nodes.length) {
-                  let head = opart, done_opart = false, parent_head = null
+                  let head = opart, done_opart = false, parent_head = null, child_node
                   //console.log("opart??",opart,head)
                   do {
                      let head_node = nodes.filter(n => n.hasPart && (n.hasPart === head || n.hasPart.includes(head)))
-                     head = head_node
                      //loggergen.log("head?",head, head_node)
+                     head = head_node
                      if(head && head.length) { 
                         head = head[0]["@id"]
                         head_node = head_node[0]
+                        // #641 need to load/open volume in root node as well
+                        if(head === root && head_node["tmp:hasNonVolumeParts"] && child_node) {
+                           if(!this.props.outlines[child_node["@id"]] || !this.props.outlines[child_node["@id"]]["@graph"]) {
+                              preloading = true
+                              break ;
+                           } else {
+                              let vol = this.props.outlines[child_node["@id"]]["@graph"].filter(n => n["@id"] === child_node["@id"])
+                              if(vol.length) vol = this.props.outlines[child_node["@id"]]["@graph"].filter(n => n["@id"] === vol[0].contentLocation)
+                              if(vol.length) vol = vol[0].contentLocationVolume
+                              //console.log("#641",head_node,child_node,vol)
+                              this.props.onGetOutline("tmp:uri", { partType: "bdr:PartTypeVolume", "tmp:hasNonVolumeParts": true, volumeNumber: vol }, head);
+                           }
+                        }
                         if(collapse["outline-"+root+"-"+head] === undefined) { //} && (opart !== root || head !== root)) {
-                           collapse["outline-"+root+"-"+head] = true ;
-                           //console.log("outline:",head,head_node)
-                           if(!done_opart && head_node["tmp:hasNonVolumeParts"] && head_node.partType === "bdr:PartTypeSection") {
-                              let parent_head = nodes.filter(n => n.hasPart && (n.hasPart === head || n.hasPart.includes(head)))
+                           collapse["outline-"+root+"-"+head] = true ;                           
+                           if(!done_opart && head_node["tmp:hasNonVolumeParts"] && (head_node.partType === "bdr:PartTypeSection" || head === root)) {
+                              let parent_head = []
+                              if(head === root) parent_head = [ head_node ]
+                              else parent_head = nodes.filter(n => n.hasPart && (n.hasPart === head || n.hasPart.includes(head)))
                               if(parent_head.length) {
                                  let opart_node = nodes.filter(n => n["@id"] === opart)
                                  //console.log("opart_n:",opart_node,nodes)
@@ -6797,22 +6827,23 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                                     let vol = nodes.filter(n => n["@id"] === opart_node[0].contentLocation)
                                     if(vol.length) { 
                                        vol = vol[0].contentLocationVolume
-                                       console.log("ready for vol."+vol+" in "+head,head_node)
+                                       //console.log("ready for vol."+vol+" in "+head,head_node)
                                        this.props.onGetOutline("tmp:uri", { partType: "bdr:PartTypeVolume", "tmp:hasNonVolumeParts": true, volumeNumber: vol }, head);
                                     }
                                  }
+                                 parent_head = parent_head[0]["@id"]
                               }
-                              parent_head = parent_head[0]["@id"]
                            }
                            else parent_head = null
                            if(!this.props.outlines[head]) this.props.onGetOutline(head, head_node, parent_head);
+                           child_node = head_node
                         }
                         done_opart = true
                      }
                   } while(head !== root && head.length);
                }
 
-               this.setState( { collapse } )               
+               if(!preloading) this.setState( { collapse } )               
                loggergen.log("collapse?",JSON.stringify(collapse,null,3))
 
                
@@ -6831,6 +6862,28 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                   */
                
 
+            } else {
+               let parent_nodes = nodes.filter(n => n.hasPart && (n.hasPart === opart || n.hasPart.includes(opart)))
+               //console.log("parent:",parent_nodes)
+               if(parent_nodes.length) { 
+                  let update = false
+                  for(let n of parent_nodes) {
+                     if(n["@id"].startsWith("bdr:I")) { 
+                        if(collapse["outline-"+root+"-"+opart+";"+n["@id"]+"-details"]) {
+                           //break ;
+                        } else if(collapse["outline-"+root+"-"+opart+";"+n["@id"]+"-details"] === undefined) {
+                           collapse["outline-"+root+"-"+opart+";"+n["@id"]+"-details"] = true
+                           //console.log("hello:","outline-"+root+"-"+opart+";"+n["@id"]+"-details")
+                           update = true
+                           //break ;
+                        }
+                     } else if(n.parent?.startsWith("bdr:I") && collapse["outline-"+root+"-"+n["@id"]+";"+n.parent] === undefined){
+                        collapse["outline-"+root+"-"+n["@id"]+";"+n.parent] = true
+                        update = true
+                     }
+                  }
+                  if(update) this.setState({ collapse })
+               }
             }
             /*
             else { 
@@ -6848,7 +6901,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                "?":"unk",
             }
 
-            let osearch_map
+            let osearch_map, already = false
 
             let makeNodes = (top,parent) => {               
                let elem, osearchElem
@@ -6983,7 +7036,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
                            if(!g.details) {
                               let tag = "outline-"+root+"-"+g['@id'] 
-                              if(g["@id"] && g["@id"].startsWith("bdr:I") && !g["@id"].includes(";")) tag += ";"+top
+                              if(g["@id"] && g["@id"].startsWith("bdr:I") && !g["@id"].includes(";") || top.startsWith("bdr:I")) tag += ";"+top
                               
                               let showDetails = this.state.collapse[tag+"-details"]                              
 
@@ -7124,8 +7177,10 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                                           //(title.length && title[0].value && title[0].value == .includes("↦"))) 
                                           title.length && title[0].value && g["tmp:titleMatch"] && useT.length) {
 
+                                          //console.log("useT:",useT,title,g["tmp:titleMatch"], titleT)
+
                                           if(!g.details) g.details = []
-                                          g.details.push(<div class={"sub " + (hideT?"hideT":"")}><h4 class="first type">{this.proplink(titleT)}{I18n.t("punc.colon")} </h4>{this.format("h4", "", "", false, "sub", useT?useT:title)}</div>)
+                                          g.details.push(<div class={"sub " + (hideT?"hideT":"")}><h4 class="first type">{this.proplink(titleT)}{I18n.t("punc.colon")} </h4>{this.format("h4", "", "", false, "sub", useT?.length?useT:title)}</div>)
                                        } else {
                                           g.hidden.push(<div class={"sub " + (hideT?"hideT":"")}><h4 class="first type">{this.proplink(titleT)}{I18n.t("punc.colon")} </h4>{this.format("h4", "", "", false, "sub", title)}</div>)
                                        }
@@ -7236,6 +7291,8 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                         if(e["@id"] && e["@id"].startsWith("bdr:I")) {                           
                            url = "/show/"+e["@id"].split(";")[0]
                            if(e.parent && !togId.includes(";")) togId += ";"+e.parent
+                        } else if(e.parent && e.parent.startsWith("bdr:I")) {
+                           togId += ";"+e.parent
                         }
 
                         let tag = "outline-"+root+"-"+togId
@@ -7258,7 +7315,10 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
                         //console.log("reload?",e,e.hasPart,this.props.outlines[e['@id']])
 
-                        ret.push(<span class={'top'+ (this.state.outlinePart === e['@id'] || (!this.state.outlinePart && this.props.IRI===e['@id']) ?" is-root":"")+(this.state.collapse[tag]||osearch&&e.hasMatch?" on":"") }>
+                        let isRoot = this.state.outlinePart === e['@id'] && !already || (!this.state.outlinePart && this.props.IRI===e['@id'] && !already)
+                        if(isRoot) already = true
+
+                        ret.push(<span class={'top'+ (isRoot ?" is-root":"")+(this.state.collapse[tag]||osearch&&e.hasMatch?" on":"") }>
                               {((e.hasPart || e["tmp:hasNonVolumeParts"]) && open && osearch && !this.props.outlines[e['@id']]) && <span onClick={(ev) => toggle(ev,root,e["@id"],"",true,e,top)} className="xpd" title={I18n.t("resource.otherN")}><RefreshIcon /></span>}
                               {((e.hasPart || e["tmp:hasNonVolumeParts"]) && !open && this.props.outlines[e['@id']] !== true) && <img src="/icons/triangle_.png" onClick={(ev) => toggle(null,root,togId,!e.hasPart&&!e["tmp:hasNonVolumeParts"]?"details":"",false,e,top)} className="xpd"/>}
                               {((e.hasPart || e["tmp:hasNonVolumeParts"])&& open && this.props.outlines[e['@id']] !== true) && <img src="/icons/triangle.png" onClick={(ev) => toggle(null,root,togId,!e.hasPart&&!e["tmp:hasNonVolumeParts"]?"details":"",false,e,top)} className="xpd"/>}
@@ -7276,7 +7336,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                                        { !this.state.collapse[tag+"-details"] && <ExpandMore className="details"/>}
                                        {  this.state.collapse[tag+"-details"] && <ExpandLess className="details"/>}
                                     </span> */ }
-                                 { e.hasDetails && <span id="anchor" title={/*tLabel+" - "+*/I18n.t("resource."+(this.state.collapse[tag+"-details"]?"hideD":"showD"))} onClick={(ev) => toggle(ev,root,e["@id"],"details",false,e)}>
+                                 { e.hasDetails && <span id="anchor" title={/*tLabel+" - "+*/I18n.t("resource."+(this.state.collapse[tag+"-details"]?"hideD":"showD"))} onClick={(ev) => toggle(ev,root,togId,"details",false,e)}>
                                     <img src="/icons/info.svg"/>
                                  </span> }
                                  <CopyToClipboard text={fUri} onCopy={(e) => prompt(I18n.t("misc.clipboard"),fUri)}>
@@ -7340,7 +7400,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                                  </span>] }</div>
                            )
                         if((osearch && this.state.collapse[tag] !== false) || (this.props.outlines[e["@id"]] && this.props.outlines[e["@id"]] !== true && this.state.collapse[tag]) ) 
-                           ret.push(<div style={{paddingLeft:"25px"}}>{makeNodes(e["@id"],top)}</div>)                        
+                           ret.push(<div style={{paddingLeft:"33px"}}>{makeNodes(e["@id"],top)}</div>)                        
                         return ( ret )
                      })
                   }
@@ -7990,7 +8050,10 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                if(this.props.outlines[sRid]["@graph"] &&  this.props.outlines[sRid]["@graph"].filter &&  this.props.outlines[sRid]["@graph"].filter(n => n.hasPart).length) iOutline = true
             }
             else if(this.props.config && this.state.outlinePart) {
-               this.props.onGetOutline(sRid);
+               let hasPartB = this.getResourceElem(tmp+"hasNonVolumeParts")
+               console.log("hasPartB:",hasPartB,sRid)
+               if(hasPartB?.length && hasPartB[0].value == "true") this.props.onGetOutline(sRid, { "tmp:hasNonVolumeParts": true})
+               else this.props.onGetOutline(sRid)
             }
          }
          if(this.state.title.images && this.state.title.images[0].value) {

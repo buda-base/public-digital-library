@@ -2919,7 +2919,7 @@ async function outlineSearch(iri,kw,lg) {
       let p = m.partOf
       let p_node = res["@graph"].filter(r => r.id === p)
       while(p) {
-         if(p_node[0]["tmp:hasNonVolumeParts"] && p_node[0]["partType"] === "bdr:PartTypeSection") {
+         if(p_node[0]["tmp:hasNonVolumeParts"] && p_node[0]["partType"] === "bdr:PartTypeSection" || p_node[0].id === iri) {
             volid = "bdr:I0000"+volnum+";"+p_node[0].id
             //console.log("gotcha:",p_node)
 
