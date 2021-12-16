@@ -113,7 +113,7 @@ export function sortLangScriptLabels(data,preset,translit)
    
    //console.log("sort",JSON.stringify(data,null,3)); //preset,translit,data)
 
-   let data_ = data.filter(e => e && (e.value || e["@value"])).map(e => {
+   let data_ = data.filter(e => e && (e.value || e["@value"] || e.k)).map(e => {
       let k = e["lang"]
       if(!k) k = e["xml:lang"]
       if(!k) k = e["@language"]

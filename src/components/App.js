@@ -6293,7 +6293,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
       if(tags && tags.props?.children?.length && !tags.props?.children?.some(e=>e)) tags = null
 
 
-      console.log("tags:",tags)
+      //console.log("tags:",tags)
 
 
       const ret = (
