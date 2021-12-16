@@ -428,7 +428,7 @@ class GuidedSearch extends Component<Props,State> {
                           this.props.history.push("/show/"+v.value)
                         }}
                         placeholder={I18n.t("search.choose")}
-                        noOptionsMessage={() => I18n.t("search.nothing")}
+                        noOptionsMessage={() => I18n.t(!this.state.titles?.length?"search.loading":"search.nothing")}
                       />
                     </>) }
                     { this.props.type === "instance" && <div class="flex">

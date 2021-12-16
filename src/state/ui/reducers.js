@@ -175,23 +175,31 @@ export const browse = (state: UIState, action: actions.Action) => {
     let browse = state.browse
     if(!browse) browse = {}
     if(!browse.path) browse.path = []
-    if(!browse.path.includes(action.payload)) browse.path.push(action.payload)
+    if(!browse.path.includes(action.payload)) browse.path.push(action.payload)    
 
-    let j = browse.path.indexOf(action.payload)
+    let j = browse.path.indexOf(action.payload)    
     if(action.meta?.checked === false || j < browse.path.length - 1 && j > 0) {
         
-        for(let i = j ; i < browse.path.length ; i ++) {
+        for(let i = j+1 ; i < browse.path.length ; i ++) {
             if(browse.checked[browse.path[i]]) delete browse.checked[browse.path[i]]
             if(i > 0) delete browse.path[i]
         }
         browse.path = browse.path.filter(p => p)
+
     }
+    
+    if(action.meta.next && !browse.path.includes(action.meta.next)) browse.path.push(action.meta.next)
 
     if(action.meta?.checked !== undefined) {
         if(!browse.checked) browse.checked = {}
         if(action.meta.checked) browse.checked[action.payload] = action.meta.value
         else if(browse.checked[action.payload]) delete browse.checked[action.payload]
     }
+
+    browse.time = Date.now()
+
+
+    console.log("redu:",browse.path,state.browse?.path)
 
     return {
         ...state,

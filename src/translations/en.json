@@ -487,7 +487,8 @@
       "many": "Too many results ({{count}})",
       "load": "Loading {{count}} results<newline/>Please wait...",
       "no": "No result",
-      "cancel":"Cancel"
+      "cancel":"Cancel",
+      "loading":"Loading..."
    },
    "Rsidebar": {
       "title": "Display Preferences",

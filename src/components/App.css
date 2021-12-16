@@ -883,6 +883,7 @@ footer #donate,
 
 .App.browse.khmer .SearchPane > div > div .param > .val > span svg {
    vertical-align: -7px;
+   position: absolute;
 }
 
 .App.browse.khmer .SearchPane > div > div .param > .val.on > svg {

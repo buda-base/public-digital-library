@@ -157,10 +157,10 @@ export const loading = (key: string, isLoading: boolean): LoadingAction => {
 
 
 TYPES.browse = 'BROWSE';
-export const browse = (param:string,value?:string,checked?:boolean): Action => {
+export const browse = (param:string,value?:string,checked?:boolean,next?:string): Action => {
    return {
       type: TYPES.browse,
       payload:  param,
-      meta: { value, checked }
+      meta: { value, checked, next }
    }
 }
