@@ -857,7 +857,7 @@ footer #donate,
 }
 
 .App.browse.khmer .SearchPane > div > div .param .val {
-   width:140px;
+   width:250px;
    height:65px;
    display: flex;
    align-items: center;
@@ -882,6 +882,7 @@ footer #donate,
 }
 
 .App.browse.khmer .SearchPane > div > div .param > .val > span svg {
+   margin-left:5px;
    vertical-align: -7px;
    position: absolute;
 }
@@ -964,7 +965,10 @@ footer #donate,
    top:0px;
 }
 
-.App.browse.khmer .SearchPane > div > div .head +.param > .param { padding-left:100px; }
+
+.App.browse.khmer .SearchPane > div > div .head +.param > .param { 
+   padding-left:105px; 
+}
 
 
 /*
