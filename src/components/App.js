@@ -663,7 +663,7 @@ export function lang_selec(that,black:boolean = false,inPopup:false)
                                        localStorage.setItem('uilang', i);
                                        localStorage.setItem('langpreset', i);
 
-                                       that.setState({...that.state,anchorLang:null,collapse: {...that.state.collapse, lang:false, uiLangPopup:true }, ldspdi:false }); 
+                                       that.setState({...that.state,anchorLang:null,collapse: {...that.state.collapse, lang:false, uiLangPopup:true }, titles:false, ldspdi:false }); 
                                        document.documentElement.lang = i
 
                                        that.props.onSetLocale(i);
