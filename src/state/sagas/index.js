@@ -90,11 +90,11 @@ async function initiateApp(params,iri,myprops,route,isAuthCallback) {
          if(config && config.chineseMirror) locale = "zh"
 
          // 1-url param
-         if(params && params.uilang && ['bo','en','zh'].includes(params.uilang)) locale = params.uilang
+         if(params && params.uilang && ['bo','en','zh','km','fr'].includes(params.uilang)) locale = params.uilang
          // 2-saved preference
          else if(val = localStorage.getItem('uilang')) locale = val
          // 3-browser default
-         else if(['bo','en','zh'].includes(val = window.navigator.language.slice(0, 2))) locale = val
+         else if(['bo','en','zh','km','fr'].includes(val = window.navigator.language.slice(0, 2))) locale = val
          // 4-config file
          else locale = config.language.data.index
 

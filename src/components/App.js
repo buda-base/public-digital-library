@@ -634,25 +634,12 @@ export function getFacetUrl(filters,dic){
    loggergen.log("gFu",str,filters,dic)
    return str
 }
-export function lang_selec(that,black:boolean = false)
+export function lang_selec(that,black:boolean = false,inPopup:false)
 {
    let prio = ["zh", "en", "bo" ]
    if(that.props.config && that.props.config.language && that.props.config.language.menu) prio = that.props.config.language.menu
 
-   return [
-         <span id="lang" title={I18n.t("home.choose")} onClick={(e) => that.setState({...that.state,anchorLang:e.currentTarget, collapse: {...that.state.collapse, lang:!that.state.collapse.lang } } ) }><img src={"/icons/LANGUE"+(black?"b":"")+".svg"}/></span>
-         ,
-         <Popover
-            id="popLang"
-            open={that.state.collapse&&that.state.collapse.lang?true:false}
-            transformOrigin={{vertical:(!black?'top':'bottom'),horizontal:(!black?'right':'left')}}
-            anchorOrigin={{vertical:(!black?'bottom':'top'),horizontal:(!black?'right':'left')}}
-            anchorEl={that.state.anchorLang}
-            onClose={e => { that.setState({...that.state,anchorLang:null,collapse: {...that.state.collapse, lang:false } } ) }}
-            className={black?"black":""}
-            >
-
-              <FormControl className="formControl">
+   let form =  <FormControl className="formControl">
                 {/* <InputLabel htmlFor="datatype">In</InputLabel> */}
                   
                   { prio.map((i) => {
@@ -669,13 +656,14 @@ export function lang_selec(that,black:boolean = false)
                         return ( <MenuItem
                                     className={that.props.locale===i?"is-locale":""}     
                                     value={i}
+                                    lang={i}
                                     disabled={disab}
                                     onClick={(event) => { 
 
                                        localStorage.setItem('uilang', i);
                                        localStorage.setItem('langpreset', i);
 
-                                       that.setState({...that.state,anchorLang:null,collapse: {...that.state.collapse, lang:false } }); 
+                                       that.setState({...that.state,anchorLang:null,collapse: {...that.state.collapse, lang:false, uiLangPopup:true } }); 
                                        document.documentElement.lang = i
 
                                        that.props.onSetLocale(i);
@@ -691,6 +679,22 @@ export function lang_selec(that,black:boolean = false)
                   } ) } 
                   
             </FormControl>
+
+   if(inPopup) return form
+   else return [
+         <span id="lang" title={I18n.t("home.choose")} onClick={(e) => that.setState({...that.state,anchorLang:e.currentTarget, collapse: {...that.state.collapse, lang:!that.state.collapse.lang } } ) }><img src={"/icons/LANGUE"+(black?"b":"")+".svg"}/></span>
+         ,
+         <Popover
+            id="popLang"
+            open={that.state.collapse&&that.state.collapse.lang?true:false}
+            transformOrigin={{vertical:(!black?'top':'bottom'),horizontal:(!black?'right':'left')}}
+            anchorOrigin={{vertical:(!black?'bottom':'top'),horizontal:(!black?'right':'left')}}
+            anchorEl={that.state.anchorLang}
+            onClose={e => { that.setState({...that.state,anchorLang:null,collapse: {...that.state.collapse, lang:false } } ) }}
+            className={black?"black":""}
+            >
+
+             {form}
          </Popover>
    ]
 }
@@ -807,9 +811,26 @@ export function top_right_menu(that,etextTitle,backUrl,etextres)
    let profileName = I18n.t("topbar.profile")
    if(that.props.profileName) profileName = that.props.profileName
 
+
+   let uiLangPopup
+   if(!that.state?.collapse?.uiLangPopup && !localStorage.getItem('uilang')) {
+      uiLangPopup = <div id="uiLangPopup">
+         <div class="bg" onClick={() => that.setState({collapse:{...that.state?.collapse,uiLangPopup:true}})}></div>
+         <div class="fg">
+            <div>
+               {I18n.t("home.choose")}
+               <span id="lang"  style={{filter:"invert(100%)",margin:"0 0 0 10px"}}><img src={"/icons/LANGUEb.svg"}/></span>
+            </div>
+            <div>{ lang_selec(that, false, true) }</div>
+         </div>
+      </div>
+   }
+
+
    if(etextTitle)
       return (
       <div class={"nav"+(onZhMirror?" zhMirror":"")}>
+         {uiLangPopup}
          <div>
             {logo}
 
@@ -914,6 +935,7 @@ export function top_right_menu(that,etextTitle,backUrl,etextres)
       return ([
       <div class="mobile-button top" onClick={()=>that.setState({collapse:{...that.state.collapse,navMenu:!that.state.collapse.navMenu}})}><img src="/icons/burger.svg" /></div>,
          <div class={"nav"+(onZhMirror?" zhMirror":"")+ (that.state.collapse.navMenu?" on":"")}>
+         {uiLangPopup}
           <div>
          {logo}
 
