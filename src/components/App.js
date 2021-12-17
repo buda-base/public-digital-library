@@ -682,7 +682,7 @@ export function lang_selec(that,black:boolean = false,inPopup:false)
 
    if(inPopup) return form
    else return [
-         <span id="lang" title={I18n.t("home.choose")} onClick={(e) => that.setState({...that.state,anchorLang:e.currentTarget, collapse: {...that.state.collapse, lang:!that.state.collapse.lang } } ) }><img src={"/icons/LANGUE"+(black?"b":"")+".svg"}/></span>
+         <span id="lang" title={I18n.t("home.choose")} onClick={(e) => that.setState({...that.state,anchorLang:e.currentTarget, collapse: {...that.state.collapse, lang:!that.state.collapse.lang } } ) }><img src={"/icons/LANGUE"+(onKhmerUrl?"km":"")+(black?"b":"")+".svg"}/></span>
          ,
          <Popover
             id="popLang"
@@ -819,7 +819,7 @@ export function top_right_menu(that,etextTitle,backUrl,etextres)
          <div class="fg">
             <div>
                {I18n.t("home.choose")}
-               <span id="lang"  style={{filter:"invert(100%)",margin:"0 0 0 10px"}}><img src={"/icons/LANGUEb.svg"}/></span>
+               <span id="lang"  style={{margin:"0 0 0 10px"}}><img src={"/icons/LANGUE"+(onKhmerUrl?"km":"")+".svg"}/></span>
             </div>
             <div>{ lang_selec(that, false, true) }</div>
          </div>
