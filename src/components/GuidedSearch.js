@@ -252,7 +252,7 @@ class GuidedSearch extends Component<Props,State> {
     let settings = data
     if(this.props?.config?.guided && this.props.config.guided[this.props.type]) settings = this.props.config.guided[this.props.type]
 
-    let route = "", searchRoute = "", checkParams = ""
+    let route = "", searchRoute = "", checkParams = "", unique = {}
     
     searchRoute = "search?t=" + (this.props.type[0].toUpperCase()+this.props.type.substring(1)) 
         + (this.props.type === "instance"&&this.state.keyword&&this.state.language ? "&f=collection,inc,bdr:PR1KDPP00":"")
@@ -261,10 +261,16 @@ class GuidedSearch extends Component<Props,State> {
           //console.log("k:",k)
           return Object.keys(this.state.checked[k]).map(i => {
             //console.log("i:",i,settings[k].values[i].facet)
-            if(this.state.checked[k][i]) { 
+            if(this.state.checked[k][i] ) { 
               let val = settings[k].values[i].facet.value              
               if(!Array.isArray(val)) val = [val] 
-              return val.map(v => "f="+settings[k].values[i].facet.property+","+settings[k].values[i].facet.relation+","+v).join("&")
+              return val.map(v => { 
+                const str = "f="+settings[k].values[i].facet.property+","+settings[k].values[i].facet.relation+","+v 
+                if(!unique[str]) {
+                  unique[str] = true
+                  return str
+                }
+              }).filter(p => p).join("&")
               // can't do just that (case of topics with multiple values)
               //return "f="+settings[k].values[i].facet.property+","+settings[k].values[i].facet.relation+","+val
             }

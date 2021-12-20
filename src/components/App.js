@@ -1604,6 +1604,7 @@ class App extends Component<Props,State> {
       }
 
       if(props.genresParents && state.filters.facets && state.filters.facets[bdo+"workGenre"]) {
+         console.log("genresParents",props.genresParents)
          if(!s) s = { ...state }
          let genre = state.filters.facets[bdo+"workGenre"]
          if(genre.val) genre = genre.val
@@ -2279,17 +2280,51 @@ class App extends Component<Props,State> {
       let facets = state.filters.facets ;
       if(!facets) facets = {}
       if(prop == bdo+"workGenre" || prop == bdo+"workIsAbout") {
-         facets = { ...facets, [prop] : { alt : [ prop, bdo + "workIsAbout", tmp + "etextAbout" ], val : Array.from(new Set(propSet.filter(p => {
-            if(val) return true 
-            else {
-               // must remove ancestor topic if any
-               return true
+         facets = { ...facets, [prop] : { alt : [ prop, bdo + "workIsAbout", tmp + "etextAbout" ], val : Array.from(new Set(propSet.reduce( (acc,p) => {
+            let ret = false
+            if(val) {
+               ret = true 
+               let meta = this.props.searches[this.state.filters.datatype[0]][this.props.keyword+"@"+this.props.language]
+               if(meta) meta = meta.metadata
+               const checkParent = (p) => {
+                  let node 
+                  if(meta.tree && meta.tree["@graph"]) node =  meta.tree["@graph"].filter(n => n["@id"] === p)
+                  else if(meta.genres && meta.genres["@graph"]) node =  meta.genres["@graph"].filter(n => n["@id"] === p)
+                  if(node?.length && !node.some(n => n.taxHasSubClass?.includes("Any"))) {
+                     //console.log("check:",p,meta,node)
+                     if(!node[0].taxHasSubClass.some(n => !lab.includes(n) && !propSet.includes(n))) {
+                        acc.push(node[0]["@id"])
+                     }
+                  }
+               }
+               if(meta && lab) { 
+                  // must add ancestor topic if all its subtopic checked
+                  lab.map(k => {
+                     if(this.props.topicParents && this.props.topicParents[k] && this.props.topicParents[k]) this.props.topicParents[k].map(checkParent)
+                     else if(this.props.genresParents && this.props.genresParents[k] && this.props.genresParents[k]) this.props.genresParents[k].map(checkParent)
+                  })
+               }
             }
-         }))) } }
+            else {
+               if(lab) { 
+                  // must remove all ancestor topic if any => filter ones that are not ancestor of current unchecked
+                  ret = lab.some(k => {
+                     let isAncestor =  this.props.topicParents && this.props.topicParents[k] && this.props.topicParents[k].includes(p)
+                                    || this.props.genresParents && this.props.genresParents[k] && this.props.genresParents[k].includes(p) 
+                     //console.log("isAnc:",k,isAncestor)
+                     return !isAncestor
+                  })
+               } else {
+                  ret = true
+               }              
+            }
+            if(ret) acc.push(p)
+            return acc
+         },[]))) } }
       }
       else
       {
-         facets = { ...facets, [prop] : propSet }
+         facets = { ...facets, [prop] : Array.from(new Set(propSet)) }
       }
 
       state = { ...state, paginate:{index:0,pages:[0],n:[0]}, repage: true, filters:{ ...state.filters, facets, exclude }  }      
@@ -5548,7 +5583,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
          let checked = this.state.filters.facets && this.state.filters.facets[jpre],partial
 
-         loggergen.log("checked1",jpre,e,checked,checkable)
+         //loggergen.log("checked1",jpre,e,checked,checkable)
 
 
          if(!checked) {
@@ -5958,7 +5993,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
                // #580 auto add facet value with count 0 when selected from url but no occurrence in data
                if(this.state.filters.facets && this.state.filters.facets[jpre]) for(let f of this.state.filters.facets[jpre]) {
-                  if(meta[j] && !meta[j][f]) {                
+                  if(meta[j] && !meta[j][f] && !meta[j][" "+f] /* case of century facet js numerical key sort hack */ ) {        
+                     console.log("new:",j,f,meta,jpre,this.state.filters.facets[jpre])        
                      meta[j][f] = { dict:{}, n:0 }
                   }
                }
@@ -6203,17 +6239,26 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
       let nbResu = this.state.paginate && this.state.paginate.nMax ? this.state.paginate.nMax:(this.state.results&&this.state.results[this.state.id]?this.state.results[this.state.id].resLength:"--")
 
       let facetTags 
-      if(this.state.filters.facets)
+      if(this.state.filters.facets) {
+
+         // do not use leaf but top-level topics if possible
+         const subsumed = (k, all) => {
+            if(!this.props.topicParents && !this.props.genresParents) return true
+            else if(this.props.topicParents && this.props.topicParents[k] && this.props.topicParents[k].some(t => all.includes(t))) return true
+            else if(this.props.genresParents && this.props.genresParents[k] && this.props.genresParents[k].some(t => all.includes(t))) return true
+            return false
+         }
+
          facetTags  = Object.keys(this.state.filters.facets).map(f => {
             let vals = this.state.filters.facets[f]
             if(vals.val) { 
                vals = vals.val
-               // do not use leaf but top-level topics
             }
-            return vals.filter(k => k !== "Any").map(v => 
+            return vals.filter(k => k !== "Any" && !subsumed(k,vals)).map(v => 
                this.renderFilterTag(false, f, v, (event, checked) => this.handleCheckFacet(event, f, [ v ], false) ) 
             ) }
          )
+      }
 
 
       let syncSlide = (e) => {
