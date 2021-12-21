@@ -1320,7 +1320,7 @@ function getStats(cat:string,data:{},tree:{},genres:{})
       }
 
       for(let node of Object.keys(parents)) { 
-         if(!parents[node]["taxHasSubClass"] && parents[node].ancestor){
+         if( /*!parents[node]["taxHasSubClass"] &&*/ parents[node].ancestor){
             treeParents[node] = []
             let root = parents[node].ancestor
             do {
@@ -1331,7 +1331,7 @@ function getStats(cat:string,data:{},tree:{},genres:{})
          }
       }
 
-      //loggergen.log("Tparents",parents,treeParents)
+      loggergen.log("Tparents",parents,treeParents)
 
       if(treeParents) tree["parents"] = treeParents
    }
@@ -1351,7 +1351,7 @@ function getStats(cat:string,data:{},tree:{},genres:{})
       }
 
       for(let node of Object.keys(parents)) { 
-         if(!parents[node]["taxHasSubClass"] && parents[node].ancestor){
+         if( /*!parents[node]["taxHasSubClass"] &&*/  parents[node].ancestor){
             genresParents[node] = []
             let root = parents[node].ancestor
             do {

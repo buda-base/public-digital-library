@@ -2233,7 +2233,6 @@ class App extends Component<Props,State> {
       last_t = start
       sublabels = {}
 
-      loggergen.log("hCf:",ev,prop,lab,val,excl)
 
       let state =  this.state
 
@@ -2247,6 +2246,7 @@ class App extends Component<Props,State> {
 
       if(!propSet.length) propSet = [ "Any" ] ;
 
+
       if(lab.indexOf("Any") !== -1) {
          if(val) propSet = [ "Any" ]
       }
@@ -2254,6 +2254,7 @@ class App extends Component<Props,State> {
          if(propSet.indexOf("Any") !== -1) propSet = propSet.filter(v => v !== "Any")
          if(!propSet.length) propSet = [ "Any" ] ;
       }
+
       
       if(!state.filters.exclude) state.filters.exclude = {}
       let exclude = state.filters.exclude ;
@@ -2275,6 +2276,7 @@ class App extends Component<Props,State> {
       }
 
 
+      loggergen.log("hCf:",ev,prop,lab,val,excl,propSet)
 
 
       let facets = state.filters.facets ;
@@ -2285,15 +2287,25 @@ class App extends Component<Props,State> {
             if(val) {
                ret = true 
                let meta = this.props.searches[this.state.filters.datatype[0]][this.props.keyword+"@"+this.props.language]
-               if(meta) meta = meta.metadata
+               if(meta) meta = meta.metadata                  
+               let already = []
                const checkParent = (p) => {
-                  let node 
+                  console.log("check:",p,meta)
+                  let node                  
                   if(meta.tree && meta.tree["@graph"]) node =  meta.tree["@graph"].filter(n => n["@id"] === p)
                   else if(meta.genres && meta.genres["@graph"]) node =  meta.genres["@graph"].filter(n => n["@id"] === p)
                   if(node?.length && !node.some(n => n.taxHasSubClass?.includes("Any"))) {
-                     //console.log("check:",p,meta,node)
-                     if(!node[0].taxHasSubClass.some(n => !lab.includes(n) && !propSet.includes(n))) {
-                        acc.push(node[0]["@id"])
+                     console.log("check?",node[0]["@id"])
+                     if(!node[0].taxHasSubClass.some(n => !lab.includes(n) && !propSet.includes(n) && !already.includes(n)) ){
+                        if(!node[0].taxHasSubClass.some(n => !lab.includes(n) && !propSet.includes(n) && !already.includes(n)) ){
+                           console.log("check!")
+                           if(excl) exclude[prop].push(node[0]["@id"])
+                           acc.push(node[0]["@id"])
+                           let k = node[0]["@id"]
+                           if(this.props.topicParents && this.props.topicParents[k] && this.props.topicParents[k]) this.props.topicParents[k].map(checkParent)
+                           else if(this.props.genresParents && this.props.genresParents[k] && this.props.genresParents[k]) this.props.genresParents[k].map(checkParent)
+                           already.push(node[0]["@id"])
+                        }
                      }
                   }
                }
@@ -2307,18 +2319,30 @@ class App extends Component<Props,State> {
             }
             else {
                if(lab) { 
-                  // must remove all ancestor topic if any => filter ones that are not ancestor of current unchecked
                   ret = lab.some(k => {
+                     // must remove all ancestor topic if any => keep ones that are not ancestor of current unchecked   
                      let isAncestor =  this.props.topicParents && this.props.topicParents[k] && this.props.topicParents[k].includes(p)
                                     || this.props.genresParents && this.props.genresParents[k] && this.props.genresParents[k].includes(p) 
-                     //console.log("isAnc:",k,isAncestor)
-                     return !isAncestor
-                  })
+                                    
+                     // remove subtopics with subsubtopics too => keep topics that are not subtopic of unchecked topic (check Nyingma + uncheck/check Kama + uncheck Nyingma)
+                     let isSubtopic = isAncestor // skip if already ancestor 
+                                 || lab.reduce( (acc, q) =>  (acc 
+                                                               || this.props.topicParents && this.props.topicParents[q] && this.props.topicParents[q].includes(p)
+                                                               || this.props.genresParents && this.props.genresParents[q] && this.props.genresParents[q].includes(p)                                     
+                                             ), false)
+
+                     return !isAncestor && !isSubtopic
+                  }) 
+
+
                } else {
                   ret = true
                }              
             }
-            if(ret) acc.push(p)
+            if(ret) {
+               if(excl) exclude[prop].push(p)
+               acc.push(p)                           
+            }
             return acc
          },[]))) } }
       }
@@ -2326,6 +2350,8 @@ class App extends Component<Props,State> {
       {
          facets = { ...facets, [prop] : Array.from(new Set(propSet)) }
       }
+
+      if(exclude[prop]) exclude[prop] = Array.from(new Set(exclude[prop]))
 
       state = { ...state, paginate:{index:0,pages:[0],n:[0]}, repage: true, filters:{ ...state.filters, facets, exclude }  }      
 
@@ -5635,7 +5661,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                            onClick={(ev) => { this.setState({collapse:{ ...this.state.collapse, [e]:!this.state.collapse[e]} }); } }>
                      { this.state.collapse[e] ? <ExpandLess /> : <ExpandMore />}
                      </span> }
-                  { !isExclu && label !== "Any" && <div class="exclude"><Close onClick={(event, checked) => this.handleCheckFacet(event,jpre,checkable,true,true)} /></div> }
+                  { !isExclu && label !== "Any" && <div class="exclude"><Close onClick={(event, checked) => this.handleCheckFacet(event,jpre,[id, ...checkable],true,true)} /></div> }
                   {
                      elem && elem["taxHasSubClass"] && elem["taxHasSubClass"].length > 0 &&
                      [
@@ -6249,13 +6275,34 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             return false
          }
 
+         const taxWithSubClasses = (k) => {
+            let ret = [ k ]
+            let meta = this.props.searches[this.state.filters.datatype[0]][this.props.keyword+"@"+this.props.language]
+            if(meta) meta = meta.metadata
+            let node, queue = [ k ]
+            if(meta) {
+               do {        
+                  let q = queue.shift()
+                  if(meta.tree && meta.tree["@graph"]) node =  meta.tree["@graph"].filter(n => n["@id"] === q)
+                  else if(meta.genres && meta.genres["@graph"]) node =  meta.genres["@graph"].filter(n => n["@id"] === q)
+                  node.map(n => {
+                     if(n.taxHasSubClass) n.taxHasSubClass.map(t => {
+                        ret.push(t)   
+                        queue = queue.concat(n.taxHasSubClass)
+                     })
+                  })
+               } while(queue.length)
+            }
+            return ret
+         }
+
          facetTags  = Object.keys(this.state.filters.facets).map(f => {
             let vals = this.state.filters.facets[f]
             if(vals.val) { 
                vals = vals.val
             }
             return vals.filter(k => k !== "Any" && !subsumed(k,vals)).map(v => 
-               this.renderFilterTag(false, f, v, (event, checked) => this.handleCheckFacet(event, f, [ v ], false) ) 
+               this.renderFilterTag(false, f, v, (event, checked) => this.handleCheckFacet(event, f, taxWithSubClasses(v), false) ) 
             ) }
          )
       }
