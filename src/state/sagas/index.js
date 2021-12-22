@@ -2117,7 +2117,7 @@ function rewriteAuxMain(result,keyword,datatype,sortBy,language)
             tree = [ { "@id": cat, taxHasSubClass: root.subclasses }, ...Object.keys(result[e].topics).reduce( (acc,k) =>  { 
                let elem = result[e].topics[k] 
                return ([ ...acc, { "@id":k, taxHasSubClass: elem.subclasses, "skos:prefLabel": elem["skos:prefLabel"], "tmp:count":elem["count"] } ])
-            }, []) ]
+            }, []) ]            
          }
          cat = "http://purl.bdrc.io/resource/O3JW5309"
          if(result[e].genres && result[e].genres[cat]) {
@@ -2126,8 +2126,16 @@ function rewriteAuxMain(result,keyword,datatype,sortBy,language)
                let elem = result[e].genres[k] 
                return ([ ...acc, { "@id":k, taxHasSubClass: elem.subclasses, "skos:prefLabel": elem["skos:prefLabel"], "tmp:count":elem["count"] } ])
             }, []) ]
-
-
+            let aux 
+            Object.keys(result[e].genres).map( k => {               
+               let labels = result[e].genres[k]["skos:prefLabel"]
+               if(labels){
+                  if(!Array.isArray(labels)) labels = [ labels ]
+                  if(!aux) aux = {}
+                  aux[k] = labels.map(l => ({ type: skos+"prefLabel", value:l["@value"], "xml:lang":l["@language"]}))
+               }
+            })
+            if(aux) store.dispatch(dataActions.gotAssocResources(keyword,{ data: aux }))
          }
          return { ...acc, ...(tree?{["tree"]: { "@graph" : tree  } }:{}), ...(genres?{["genres"]: { "@graph" : genres  } }:{}) }
       }

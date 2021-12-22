@@ -2290,15 +2290,15 @@ class App extends Component<Props,State> {
                if(meta) meta = meta.metadata                  
                let already = []
                const checkParent = (p) => {
-                  console.log("check:",p,meta)
                   let node                  
-                  if(meta.tree && meta.tree["@graph"]) node =  meta.tree["@graph"].filter(n => n["@id"] === p)
-                  else if(meta.genres && meta.genres["@graph"]) node =  meta.genres["@graph"].filter(n => n["@id"] === p)
+                  if(prop == bdo+"workIsAbout" && meta.tree && meta.tree["@graph"]) node =  meta.tree["@graph"].filter(n => n["@id"] === p)
+                  else if(prop == bdo+"workGenre" && meta.genres && meta.genres["@graph"]) node =  meta.genres["@graph"].filter(n => n["@id"] === p)
+                  //console.log("check:",p,meta,node)
                   if(node?.length && !node.some(n => n.taxHasSubClass?.includes("Any"))) {
-                     console.log("check?",node[0]["@id"])
+                     //console.log("check?",node[0]["@id"])
                      if(!node[0].taxHasSubClass.some(n => !lab.includes(n) && !propSet.includes(n) && !already.includes(n)) ){
                         if(!node[0].taxHasSubClass.some(n => !lab.includes(n) && !propSet.includes(n) && !already.includes(n)) ){
-                           console.log("check!")
+                           //console.log("check!")
                            if(excl) exclude[prop].push(node[0]["@id"])
                            acc.push(node[0]["@id"])
                            let k = node[0]["@id"]
@@ -2312,8 +2312,8 @@ class App extends Component<Props,State> {
                if(meta && lab) { 
                   // must add ancestor topic if all its subtopic checked
                   lab.map(k => {
-                     if(this.props.topicParents && this.props.topicParents[k] && this.props.topicParents[k]) this.props.topicParents[k].map(checkParent)
-                     else if(this.props.genresParents && this.props.genresParents[k] && this.props.genresParents[k]) this.props.genresParents[k].map(checkParent)
+                     if(prop == bdo+"workIsAbout" && this.props.topicParents && this.props.topicParents[k] && this.props.topicParents[k]) this.props.topicParents[k].map(checkParent)
+                     else if(prop == bdo+"workGenre" && this.props.genresParents && this.props.genresParents[k] && this.props.genresParents[k]) this.props.genresParents[k].map(checkParent)
                   })
                }
             }
@@ -6275,7 +6275,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             return false
          }
 
-         const taxWithSubClasses = (k) => {
+         const taxWithSubClasses = (f,k) => {
             let ret = [ k ]
             let meta = this.props.searches[this.state.filters.datatype[0]][this.props.keyword+"@"+this.props.language]
             if(meta) meta = meta.metadata
@@ -6283,8 +6283,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             if(meta) {
                do {        
                   let q = queue.shift()
-                  if(meta.tree && meta.tree["@graph"]) node =  meta.tree["@graph"].filter(n => n["@id"] === q)
-                  else if(meta.genres && meta.genres["@graph"]) node =  meta.genres["@graph"].filter(n => n["@id"] === q)
+                  if(f === bdo+"workIsAbout" && meta.tree && meta.tree["@graph"]) node =  meta.tree["@graph"].filter(n => n["@id"] === q)
+                  else if(f === bdo+"workGenre" && meta.genres && meta.genres["@graph"]) node =  meta.genres["@graph"].filter(n => n["@id"] === q)
                   node.map(n => {
                      if(n.taxHasSubClass) n.taxHasSubClass.map(t => {
                         ret.push(t)   
@@ -6302,7 +6302,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                vals = vals.val
             }
             return vals.filter(k => k !== "Any" && !subsumed(k,vals)).map(v => 
-               this.renderFilterTag(false, f, v, (event, checked) => this.handleCheckFacet(event, f, taxWithSubClasses(v), false) ) 
+               this.renderFilterTag(false, f, v, (event, checked) => this.handleCheckFacet(event, f, taxWithSubClasses(f,v), false) ) 
             ) }
          )
       }
