@@ -934,7 +934,7 @@ export function top_right_menu(that,etextTitle,backUrl,etextres)
 
       return ([
       <div class="mobile-button top" onClick={()=>that.setState({collapse:{...that.state.collapse,navMenu:!that.state.collapse.navMenu}})}><img src="/icons/burger.svg" /></div>,
-         <div class={"nav"+(onZhMirror?" zhMirror":"")+ (that.state.collapse.navMenu?" on":"")}>
+         <div class={"nav"+(onZhMirror?" zhMirror":"")+ (that.state.collapse.navMenu?" on":"")+(onKhmerServer||onKhmerUrl?" khmerServer":"")}>
          {uiLangPopup}
           <div>
          {logo}
@@ -1301,7 +1301,7 @@ class App extends Component<Props,State> {
                this.setState({stuck})
             } 
             const toph = $("#filters-UI").height() 
-            const navh = $(".nav").height()
+            const navh = window.innerWidth <= 1024 ? -10 : $(".nav").height()
             const headh = $("#res-header").height()
             if(this._refs["header"].current) $(this._refs["header"].current).css("top",(toph+navh+15)+"px") //
             

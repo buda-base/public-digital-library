@@ -412,7 +412,33 @@ class GuidedSearch extends Component<Props,State> {
 
     const canReset = !Object.keys(this.state.checked).reduce( (acc,k) => acc || Object.keys(this.state.checked[k]).reduce( (accv,v) => accv || this.state.checked[k][v], false), this.props.type !== "work")
 
-
+    const buttons = (
+      <div class="buttons">
+        { this.props.type === "work" || this.state.keyword
+          ? <Link to={searchRoute?searchRoute:""}><button class="red">
+              {I18n.t("home.search")}
+            </button></Link>
+          : <button {...this.props.checkResults === true || this.props.checkResults?.count != 0 && this.props.checkResults?.count < GUIDED_LIMIT  && this.props.checkResults.loading? {disabled:true}:{}} 
+              class="red" onClick={() => {
+                this.setState({mustRecheck: false})
+                this.props.onCheckResults(checkParams, searchRoute)
+              }}>
+              { this.props.checkResults === true || this.props.checkResults?.count != 0 && this.props.checkResults?.count < GUIDED_LIMIT && this.props.checkResults.loading
+                ? <Loader scale={0.5} top={"15px"} color="white" loaded={false}/>
+                : I18n.t("home.search") }
+          </button>}
+        <button class="reset" {...canReset?{disabled:true}:{}} onClick={() => {
+          if(this.props.checkResults === true || this.props.checkResults?.count != 0 && this.props.checkResults?.count < GUIDED_LIMIT && this.props.checkResults.loading) {
+            this.setState({mustRecheck: false});  
+            this.props.onCheckResults(false);
+          } else {
+            this.setState({checked:{},mustRecheck: false});
+            this.props.onSetType("work");
+            this.props.onCheckResults(false);
+          }
+        }}>{I18n.t(this.props.checkResults !== true && !this.props.checkResults?.loading ?"search.reset":"search.cancel")}</button>
+      </div>
+    )
 
     return (
       <div>
@@ -442,6 +468,7 @@ class GuidedSearch extends Component<Props,State> {
                         label={I18n.t("types.instance")}
                       />
                     </>, true) }
+                    { buttons }
                   </div>
                   <div>
                     {/* { !this.props.dictionary && <Loader />}
@@ -505,7 +532,7 @@ class GuidedSearch extends Component<Props,State> {
                     { selectors }
                   </div>
                   <div>
-                    {/* <Link to={searchRoute}><button class="red">Search</button></Link> */}
+                    { searchRoute && <Link to={searchRoute}><button class="red mobile">Search</button></Link> }
                   </div>
                 </div>
                 <div>
@@ -514,31 +541,7 @@ class GuidedSearch extends Component<Props,State> {
                     { settings?.keyword && renderLink("keyword") }                    
                     { settings?.direct && renderLink("direct") }                    
                     { links }
-                    <div class="buttons">
-                      { this.props.type === "work" || this.state.keyword
-                        ? <Link to={searchRoute?searchRoute:""}><button class="red">
-                            {I18n.t("home.search")}
-                          </button></Link>
-                        : <button {...this.props.checkResults === true || this.props.checkResults?.count != 0 && this.props.checkResults?.count < GUIDED_LIMIT  && this.props.checkResults.loading? {disabled:true}:{}} 
-                            class="red" onClick={() => {
-                              this.setState({mustRecheck: false})
-                              this.props.onCheckResults(checkParams, searchRoute)
-                            }}>
-                            { this.props.checkResults === true || this.props.checkResults?.count != 0 && this.props.checkResults?.count < GUIDED_LIMIT && this.props.checkResults.loading
-                              ? <Loader scale={0.5} top={"15px"} color="white" loaded={false}/>
-                              : I18n.t("home.search") }
-                        </button>}
-                      <button class="reset" {...canReset?{disabled:true}:{}} onClick={() => {
-                        if(this.props.checkResults === true || this.props.checkResults?.count != 0 && this.props.checkResults?.count < GUIDED_LIMIT && this.props.checkResults.loading) {
-                          this.setState({mustRecheck: false});  
-                          this.props.onCheckResults(false);
-                        } else {
-                          this.setState({checked:{},mustRecheck: false});
-                          this.props.onSetType("work");
-                          this.props.onCheckResults(false);
-                        }
-                      }}>{I18n.t(this.props.checkResults !== true && !this.props.checkResults?.loading ?"search.reset":"search.cancel")}</button>
-                    </div>
+                    { buttons }
                     <div class={"log "+ (this.state.mustRecheck? " recheck":"")}>
                       { this.props.checkResults && this.props.checkResults.count && this.props.checkResults.count >= GUIDED_LIMIT && 
                           <p class="error">{I18n.t("search.many", { count: this.props.checkResults.count })}</p>

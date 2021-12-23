@@ -742,11 +742,6 @@ footer #donate,
 .App.guidedsearch.khmer .static-container.sticky > div:first-child + div .flex { display:flex; justify-content: space-between; }
 .App.guidedsearch.khmer .static-container.sticky > div:first-child + div .flex > div { width:415px; max-width:calc(50% - 15px); }
 
-.App.guidedsearch.khmer .static-container.sticky + div button.reset  { color:#2f2f2f; font-weight: 600; cursor:pointer;
-   border-radius: 2px;  background-color: #fbfafa;  border: 1px solid #e7e7e7; padding:7px 12px; font-size:12px; text-transform: uppercase;
-}
-.App.guidedsearch.khmer .static-container.sticky + div button.reset:disabled { opacity:0.5; cursor:auto; }
-
 .App.guidedsearch.khmer .static-container.sticky > div:first-child + div [data-prop] { display:flex; flex-wrap: wrap; padding:15px 0 0px 0; justify-content: space-between;}
 .App.guidedsearch.khmer .static-container.sticky > div:first-child + div [data-prop] .option { display:block; margin-bottom:-5px; }
 .App.guidedsearch.khmer .static-container.sticky > div:first-child + div [data-prop="binding"] .option,
@@ -796,10 +791,18 @@ footer #donate,
 }
 .App.guidedsearch.khmer .static-container.sticky + div nav a { display: block; font-size:11px; text-transform: uppercase; color:#4a4a4a; font-weight: 700; margin-bottom:20px; }
 .App.guidedsearch.khmer .static-container.sticky + div nav a:nth-last-child(2) { margin-bottom:30px;}
-.App.guidedsearch.khmer .static-container.sticky + div nav .buttons > * {  display: inline-block;min-width: 72px; position: relative; }
+
+.App.guidedsearch.khmer .buttons > *,
+.App.guidedsearch.khmer .static-container.sticky + div nav .buttons > * {  display: inline-block;min-width: 72px; position: relative; width:72px;}
 .App.guidedsearch.khmer .static-container.sticky + div nav .buttons .reset { margin-left:20px; }
 .App.guidedsearch.khmer .static-container.sticky + div nav .buttons > button {min-height:31px; vertical-align: middle; box-sizing: border-box;}
 .App.guidedsearch.khmer .static-container.sticky + div nav .buttons button[disabled] { /*background-color: #d7344990;*/ pointer-events:none; overflow: hidden; }
+
+.App.guidedsearch.khmer .buttons button.reset  { color:#2f2f2f; font-weight: 600; cursor:pointer;
+   border-radius: 2px;  background-color: #fbfafa;  border: 1px solid #e7e7e7; padding:7px 12px; font-size:12px; text-transform: uppercase;
+}
+.App.guidedsearch.khmer .buttons button.reset:disabled { opacity:0.5; cursor:auto; }
+
 
 .App.guidedsearch.khmer .static-container.sticky + div nav .log  { font-size:14px; font-weight:500; }
 .App.guidedsearch.khmer .static-container.sticky + div nav .log.recheck > * { visibility: hidden;}
@@ -807,6 +810,8 @@ footer #donate,
 .App.guidedsearch.khmer .static-container.sticky + div nav .log .info { opacity:0.35; }
 
 .App.guidedsearch.khmer .static-container.sticky + div h3 { color:#152631; font-size: 14; font-weight: 900; margin-bottom:35px; margin-top:90px;}
+
+.App.guidedsearch.khmer .red.mobile { display:none;}
 
 @media(max-width:1440px) {
    /* .App.guidedsearch.khmer .static-container.sticky + div { right:calc((100% - 1222px) / 2); } */
@@ -837,15 +842,6 @@ footer #donate,
    .App.guidedsearch.khmer .static-container.sticky > div { margin:auto; width:1024px;max-width:calc(100% - 20px); }
 }
 
-
-@media(max-width:1024px) {
-   .App.guidedsearch.khmer .static-container.sticky > div:first-child + div [data-prop="style"] .option { width:50%; }
-
-   .App.guidedsearch.khmer .static-container.sticky > div:first-child { top:0; }
-
-   .App.guidedsearch.khmer .static-container.sticky > div:first-child + div .flex { flex-wrap:wrap; }
-   .App.guidedsearch.khmer .static-container.sticky > div:first-child + div .flex > div { width:100%; max-width:100%; }
-}
 
 a.result .contenu ul > div:last-child h3:is([lang$="-khmr"],[lang="km"]) { font-size:16px; }
 
@@ -1114,6 +1110,71 @@ a.result .contenu ul > div:last-child h3:is([lang$="-khmr"],[lang="km"]) { font-
    .SidePane.left { padding-left:0 };
 }
 */
+
+
+.App.guidedsearch.khmer .static-container.sticky .buttons { display:none; }
+
+@media(max-width:1024px) {
+   .App.guidedsearch.khmer .static-container.sticky > div:first-child + div [data-prop="style"] .option { width:50%; }
+
+   .App.guidedsearch.khmer .static-container.sticky > div:first-child { top:0; }
+
+   .App.guidedsearch.khmer .static-container.sticky > div:first-child + div .flex { flex-wrap:wrap; }
+   .App.guidedsearch.khmer .static-container.sticky > div:first-child + div .flex > div { width:100%; max-width:100%; }
+   
+   #root .nav.khmerServer { height:220px; }
+   #root .nav.khmerServer:not(.on) { top:-220px; }
+   .nav #logo.khmer + .links { width:150px; }
+
+   .App.guidedsearch.khmer .static-container.sticky .buttons { display:inline-flex; flex-direction: column; width:75px; justify-content: space-between; height:70px; align-items: flex-end;}
+
+   .App.guidedsearch.khmer .static-container.sticky > div:first-child h1 { padding-top:0; padding-bottom:5px;}
+   .App.guidedsearch.khmer .static-container.sticky > div:first-child { display:flex; align-items: center; padding-top:10px;padding-bottom:25px;justify-content: space-between;
+      padding-right:0;
+   }
+
+   .App.guidedsearch.khmer .static-container.sticky > div:first-child .selector [data-prop] { position: relative; top:auto; right:auto;}
+
+   .App.browse.khmer .SearchPane   {min-height:calc(100vh - 100px); padding-bottom:100px; box-sizing: border-box;}
+ 
+   .App.browse.khmer div h1 { margin-top:20px; margin-bottom:20px;}
+
+   .App.browse.khmer .SearchPane > div > div h1 + #samples { padding-left:36px; }
+
+   .App.browse.khmer .SearchPane > div > div .param .val + [data-simplebar], 
+   .App.browse.khmer .SearchPane > div > div > div > .param > .param, 
+   .App.browse.khmer .SearchPane > div > div > div > .param > .param > .param, 
+   .App.browse.khmer .SearchPane > div > div > div > .param > .param > .param > .param {
+      padding-left:80px;
+   }
+
+   .App.browse.khmer .SearchPane > div > div .param .val + [data-simplebar]:not(:last-child)::before, 
+   .App.browse.khmer .SearchPane > div > div .param > .val.on + .param:not(:last-child)::before,
+   .App.browse.khmer .SearchPane > div > div .param > .val::before { left:-60px;}
+
+   .App.browse.khmer .SearchPane > div > div .head +.param > .param { padding-left:80px;}
+
+   .App.home.khmerServer section .float img { 
+      width: 40vw;
+      height: 40vw;
+      margin-left: 30px;
+      margin-top:0;
+   }
+
+   .App.home.khmerServer section > div { padding:60px;}
+
+   .App.home.khmerServer #search-bar .links { margin-bottom:20px;}
+
+   div #filters-UI { top:0px; padding-bottom:5px; }
+
+   .SidePane.left .widget-header { align-items: center; }
+
+   div #res-header { height:40px; }
+
+   #root div .App .resultPage #filters-UI > div { margin-left:0px; padding-top:15px; max-height:80px; padding-right:15px;}
+}
+
+
 
 /* ----------------------------------------------------------------------------------------------------------------------- samples/results */
 
@@ -4695,6 +4756,7 @@ a.result + #matches.mobile,
 
    #root .nav .close { font-size:40px; transform:rotate(45deg); margin-left:35px;}
    #root .nav:not(.on) { top:-60px; }
+   
 
    .fond-logo img { height:100vh; }
 
