@@ -572,6 +572,8 @@ footer #donate,
 .App.home:is(.khmerServer,.static.khmer) section .noteText { display:block; font-size:12px; vertical-align: baseline; color:#4a4a4a;}
 .App.home:is(.khmerServer,.static.khmer) section .noteText .note { font-size:16px; padding-right:10px; }
 
+.App.home:is(.khmerServer,.static.khmer) section .khmer-link { color:#d73449; font-weight:600;}
+
 .App.home.khmerServer section .float { float:right; text-align: center; padding-bottom:50px;}
 .App.home.khmerServer section .float img { width:485px;height:485px; object-position: center; object-fit: none; border-radius:50%; margin-top:-65px; }
 .App.home.khmerServer section .float p { width: 160px ; margin:0 auto; display:block; text-align: left; font-style: italic; font-size:12px;margin-top:40px;}
@@ -609,7 +611,7 @@ footer #donate,
 .App.home.khmer.static header { display:flex; justify-content: space-between; align-items: stretch;}
 .App.home.khmer.static header > * { width:50%; }
 .App.home.khmer.static header img + div { padding-left:65px; display: flex; flex-direction: column; justify-content: center;}
-.App.home.khmer.static header img + div > * { width:435px; max-width:100%; }
+.App.home.khmer.static header img + div > * { width:445px; max-width:100%; }
 .App.home.khmer.static header img + div p { color:#4a4a4a; font-size:16px; line-height: 28px;text-align: left; }
 
 .App.home.khmer.static section :is(h2,p) { margin:0; }
@@ -630,9 +632,9 @@ footer #donate,
 .App.home.khmer.static section > div .baseline { display:flex; align-items: baseline;}
 .App.home.khmer.static section > div .col { display: flex; flex-direction: column; justify-content: space-between; width:475px; max-width:100%; padding-right:45px; }
 .App.home.khmer.static section > div .col + .col { padding-right:0; padding-left:45px; }
-.App.home.khmer.static section > div h2 { font-size:33px; width: 200px; color:#152631; ;}
+.App.home.khmer.static section > div h2 { font-size:22px; width: 200px; color:#152631; box-sizing: border-box; padding-right:25px;}
 .App.home.khmer.static section > div h2.small { font-size:15px; }
-.App.home.khmer.static section > div h2:not(.small) { line-height:16px; }
+.App.home.khmer.static section > div h2:not(.small) { line-height:24px;margin-top:-3px; }
 .App.home.khmer.static section > div p { font-size:15px; line-height:24px; color:#4a4a4a; letter-spacing: 0.75px;}
 .App.home.khmer.static section:first-of-type > div p { font-size:18px; line-height:28px;}
 
@@ -646,6 +648,12 @@ footer #donate,
 .App.home.khmer.static section > div .col .img-caption.border img { width:80%; margin-left:10%;}
 .App.home.khmer.static section > div .col .img-caption.border > span { padding:24px 0; background:#efefef;display:block;}
 .App.home.khmer.static section:not(.white-bg) > div .col .img-caption.border > span { background:white;}
+
+.App.home.khmer.static section > div .col2 { column-count:2;column-gap:90px; }
+.App.home.khmer.static section > div .col2 h3 { font-size:15px; margin-top:0; line-height:24px; margin-bottom: 24px;}
+
+.App.home.khmer.static section > div .col2 p + h3,
+.App.home.khmer.static section > div .col2 p + p { margin-top:24px;}
 
 .App.home.khmer.static section.footnote > div { padding: 50px 0 50px 80px; }
 .App.home.khmer.static section.footnote > div > div { width:calc((100% - 80px) /3); }
@@ -864,6 +872,8 @@ footer #donate,
 
    .App.home.khmer.static section > div .col { padding-right:18px; }
    .App.home.khmer.static section > div .col + .col { padding-left:18px; }
+
+   .App.home.khmer.static section > div .col2 { column-gap:36px;}
 }
 
 @media(max-width:800px) {
@@ -887,6 +897,9 @@ footer #donate,
    */
 
    /* .SearchPane #logo > div { transform:none;} */
+
+
+   .App.home.khmer.static section > div .col2 { column-count:1;}
 }
 
 @media(max-width:1100px) {

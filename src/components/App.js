@@ -6680,8 +6680,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   <div>
                      <h2>{I18n.t("home.khmer.section1.title")}</h2>
                      <div class="float"><img src="/khmerhome-pic.jpg"/><p>{I18n.t("home.khmer.section1.caption")}</p></div>
-                     <Trans i18nKey="home.khmer.section1.text" components={{ newline: <br />, parag: <p />, note: <span className="note" />}} />
-                     <div>
+                     <Trans i18nKey="home.khmer.section1.text" components={{ newline: <br />, parag: <p />, note: <span className="note" />, lk:<a class="khmer-link" />, nbsp:<span style={{whiteSpace:"nowrap"}} />}} />
+                     <div style={{visibility:"hidden"}}>
                         <span className="noteText"><Trans i18nKey="home.khmer.section1.noteA" components={{ note: <span className="note" />}} /></span>
                         <span className="noteText"><Trans i18nKey="home.khmer.section1.noteB" components={{ note: <span className="note" />}} /></span>
                      </div>
@@ -6693,7 +6693,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                <section class="white-bg">
                   <div>
                      <h2>{I18n.t("home.khmer.section2.title")}</h2>
-                     <Trans i18nKey="home.khmer.section2.text" components={{ newline: <br />, parag: <p />, note: <span className="note" />}} />
+                     <Trans i18nKey="home.khmer.section2.text" components={{ newline: <br />, parag: <p />, note: <span className="note" />,nbsp:<span style={{whiteSpace:"nowrap"}} />}} />
                   </div>
                </section>
                <section class="white-bg">
@@ -6703,8 +6703,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      </div>
                   </div>
                   <div class="imgs">
-                     <img src="/scripts/static/images/AKBF.jpg"/>
-                     <img src="/scripts/static/images/EFEO.jpg"/>
+                     <a href="https://www.akhmerbuddhistfoundation.org/" target="_blank"><img src="/scripts/static/images/AKBF.jpg"/></a>
+                     <a href="https://www.efeo.fr/" target="_blank"><img src="/scripts/static/images/EFEO.jpg"/></a>
                   </div>
                </section>
             </>

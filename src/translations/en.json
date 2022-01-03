@@ -40,14 +40,14 @@
          "anchor": "Learn more about the project",
          "section1":{
             "title":"The Khmer Manuscript Heritage Project",
-            "text":"<parag>The Buddhist Digital Resource Center launched the Khmer Manuscript   Heritage Project in 2019 to safeguard the literary heritage of Cambodia through the digitization of surviving traditional palm-leaf manuscripts.    In two years, BDRC, in collaboration with Digital Divide Data, the Fonds   pour l’Edition des Manuscrits du Cambodge, and the École française   d’Extrême-Orient, sought out significant collections in Phnom Penh and    the surrounding provinces. Trained by manuscript and digitization experts,   local Cambodian college students cleaned, organized, and digitized    the manuscript collections, and the digital files were archived in BDRC’s   repository for long-term preservation.</parag><parag>The resulting digital collection—X<note>[a]</note> terabytes consisting of X<note>[b]</note>   images—represents the vast majority of manuscripts that have survived to   the modern day and provides the world with free access to an unparalleled   collection of traditional Cambodian literature.</parag><parag>The Khmer Manuscript Heritage Project was made possible with generous   support from A Khmer Buddhist Temple Foundation.</parag>",
+            "text":"<parag>The Buddhist Digital Resource Center launched the Khmer Manuscript Heritage Project in 2019 to safeguard the literary heritage of Cambodia through the digitization of surviving traditional palm-leaf manuscripts. In two and a half years, in collaboration with Digital Divide Data, The Brechin Group Inc., the Fonds pour l'Édition des Manuscrits du Cambodge, and the École française d’Extrême-Orient, BDRC sought out significant collections in Phnom Penh and surrounding provinces. Trained by manuscript and digitization experts, local Cambodian youth cleaned, organized, and digitized the manuscript collections, and the digital files were archived in BDRC’s repository for long-term preservation.</parag><parag>The resulting digital collection <nbsp>—56</nbsp> terabytes consisting of 1,456,341 <nbsp>pages—</nbsp> represents the vast majority of manuscripts that have survived to the modern day and provides the world with free access to an unparalleled collection of traditional Cambodian literature.</parag><parag>The Khmer Manuscript Heritage Project was made possible with generous support from <lk target='_blank' href='https://www.akhmerbuddhistfoundation.org/'>A Khmer Buddhist Temple Foundation</lk>.</parag>",
             "noteA":"<note>[a]</note> Lorem ipsum dolor sit amet",
             "noteB":"<note>[b]</note> Consectetur adipiscing elit.",
             "caption":"Lorem ipsum dolor sit amet, consectetur adipiscing elit."
          }, 
          "section2":{
             "title": "Resources",
-            "text":"<parag>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque   finibus, libero a cursus scelerisque, metus risus eleifend augue, vel   accumsan magna purus vitae turpis. Aenean condimentum nisi vitae.</parag>"
+            "text":"<parag>Relevant bibliographies and secondary sources concerning Cambodian manuscripts <nbsp>—coming soon</nbsp>. </parag>"
          }
       }
    },
