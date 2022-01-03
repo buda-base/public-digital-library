@@ -11,7 +11,8 @@ export const langScripts = {
    "latn":"lang.langscript.ltn",
    "x-ewts":"lang.langscript.xEwts","x-dts":"lang.langscript.sDts","alalc97":"lang.langscript.alalc97","latn-pinyin":"lang.langscript.latnPinyin",
    "x-iast":"lang.langscript.xIast",
-   "khmr":"lang.langscript.km"
+   "khmr":"lang.langscript.km",
+   "x-twktt":"lang.langscript.xTwktt",
 }
 
 const dataLangUI = {

@@ -462,7 +462,8 @@
          "xDts": "DTS",
          "xIast": "IAST",
          "alalc97": "ALA-LC",
-         "latnPinyin": "Pinyin"
+         "latnPinyin": "Pinyin",
+         "xTwktt":"Trent Walker Khmer-Tai Translit."
       },
       "x": "Transliterated",
       "latn": "Transliterated"
