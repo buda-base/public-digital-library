@@ -625,7 +625,7 @@ footer #donate,
 .App.home.khmer.static section.orange-gradient > div > div > div a::before { box-shadow:inset 0 -1.5px 1px white; }
 
 .App.home.khmer.static section > div { width:1222px; padding:85px 0px 85px 80px; box-sizing: border-box; margin:auto; text-align: left; display:flex; align-items: stretch; font-size:0; 
-   justify-content: space-between;
+   justify-content: space-between; max-width:100%;
 }
 .App.home.khmer.static section > div .baseline { display:flex; align-items: baseline;}
 .App.home.khmer.static section > div .col { display: flex; flex-direction: column; justify-content: space-between; width:475px; max-width:100%; padding-right:45px; }
@@ -663,6 +663,8 @@ footer #donate,
    .nav #logo.khmer + .links a { margin:10px 10px 0 15px; }
 
    .nav #logo.khmer > a:first-child { margin-right:0; }
+
+
 }
 
 .App.guidedsearch.khmer button.red { cursor:pointer; background:#d73449; color:white; border:none; text-transform: uppercase; font-size:12px; font-weight: 800; padding:7px 12px; border-radius: 2px;} 
@@ -832,9 +834,60 @@ footer #donate,
    }
    .App.guidedsearch.khmer .static-container.sticky + div { width:200px; right:0;  }
 
+   .App.home.khmer.static section > div > div,
+   .App.home.khmer.static section > div { align-items: flex-start; flex-wrap: wrap;}
+   .App.home.khmer.static section > div h2 { width:100%; font-size:32px !important; line-height: 38px !important; margin-bottom:20px;}
 
+   .App.home.khmer.static section > div { padding:80px 24px; width:100%;box-sizing: border-box;}
+
+   .App.home.khmer.static section.orange-gradient > div { justify-content: space-around;}
+
+   .App.home.khmer.static section > div .col { width:50%; box-sizing: border-box;}
+
+   .App.home.khmer.static section.footnote > div { padding:50px 24px;}
+
+   .App.home.khmer.static section.orange-gradient > div > div { width:auto;  }
 }
 
+
+@media(max-width:1024px) {
+
+   .App.home.khmer.static section.orange-gradient > div > div { width:100%; padding-left:calc((100% - 500px) / 2);  }
+
+   .App.home.khmer.static section.orange-gradient > div > div + div { margin-top:80px; }
+
+   .App.home.khmer.static header img + div > * { width:100%; }
+
+   .App.home.khmer.static header > img { object-fit: cover;}
+
+   .App.home.khmer.static header img + div { padding-left:24px;}
+
+   .App.home.khmer.static section > div .col { padding-right:18px; }
+   .App.home.khmer.static section > div .col + .col { padding-left:18px; }
+}
+
+@media(max-width:800px) {
+
+   .App.home.khmerServer section > div:not(#a),
+   .App.home.khmer.static section.footnote > div,
+   .App.home.khmer.static section > div  { width:100%; padding-left:90px;padding-right:90px;  box-sizing: border-box;}
+   .App.home.khmer.static section > div .col:not(#a) { width:100%;  padding-left:0; padding-right:0;}
+   .App.home.khmer.static section > div .col + .col { padding-top:80px;}
+
+   .App.home.khmer.static section > div .col .img-caption p { text-align: center; }
+
+   .App.home.khmer.static section.footnote > div > div { padding-top:10px;
+      width:100%; 
+   }
+
+   .App.home.khmer.static h1, .App.home.khmerServer .SearchPane #logo > div > div h1 { font-size:42px; line-height: 48px;}
+   .App.home.khmer.static header { height:45vh; }
+/*
+   .App.home.khmer.static header > * { width:100%; }
+   */
+
+   /* .SearchPane #logo > div { transform:none;} */
+}
 
 @media(max-width:1100px) {
    .App.guidedsearch.khmer .static-container.sticky + div { display:none; }
@@ -4738,7 +4791,7 @@ a.result + #matches.mobile,
 
 @media (max-width:1024px)
 {
-
+   .nav .close { display:block; }
    
    /* ------------------------------------------------------------------------------------------------------------------------ home/topbar */ 
    #root .nav {  height:60px; padding:0 10px; top:0px; transition:all 400ms ease-in-out; 
