@@ -6679,7 +6679,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                <section id="learn">
                   <div>
                      <h2>{I18n.t("home.khmer.section1.title")}</h2>
-                     <div class="float"><img src="/khmerhome-pic.jpg"/><p>{I18n.t("home.khmer.section1.caption")}</p></div>
+                     <div class="float"><img src="/khmerhome-pic.jpg"/><p><Trans i18nKey="home.khmer.section1.caption" components={{lk:<Link className="khmer-link" />}}/></p></div>
                      <Trans i18nKey="home.khmer.section1.text" components={{ newline: <br />, parag: <p />, note: <span className="note" />, lk:<a class="khmer-link" />, nbsp:<span style={{whiteSpace:"nowrap"}} />}} />
                      <div style={{visibility:"hidden"}}>
                         <span className="noteText"><Trans i18nKey="home.khmer.section1.noteA" components={{ note: <span className="note" />}} /></span>

@@ -576,7 +576,7 @@ footer #donate,
 
 .App.home.khmerServer section .float { float:right; text-align: center; padding-bottom:50px;}
 .App.home.khmerServer section .float img { width:485px;height:485px; object-position: center; object-fit: none; border-radius:50%; margin-top:-65px; }
-.App.home.khmerServer section .float p { width: 160px ; margin:0 auto; display:block; text-align: left; font-style: italic; font-size:12px;margin-top:40px;}
+.App.home.khmerServer section .float p { width: 180px ; margin:0 auto; display:block; text-align: center; font-style: italic; font-size:12px;margin-top:40px;}
 
 .App.home.khmerServer .fond-logo { position: relative;}
 .App.home.khmerServer .fond-logo .abs { display:none; }
@@ -621,6 +621,7 @@ footer #donate,
 .App.home.khmer.static section.orange-gradient > div { justify-content: flex-end;}
 .App.home.khmer.static section.orange-gradient > div > div { width:500px; justify-content: flex-start;}
 .App.home.khmer.static section.orange-gradient > div > div { font-size:19px; color:white; display:flex;align-items: stretch;}
+.App.home.khmer.static section.orange-gradient > div > div > img { width:155px; }
 .App.home.khmer.static section.orange-gradient > div > div > div { display:flex;flex-direction: column; justify-content: space-between; padding:5px 0 5px 30px;}
 .App.home.khmer.static section.orange-gradient > div > div > div span { letter-spacing: 1px;}
 .App.home.khmer.static section.orange-gradient > div > div > div a { color:white; align-self: flex-start; font-size: 12px; font-weight: 700; letter-spacing:1px;}
