@@ -6284,8 +6284,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                do {        
                   let q = queue.shift()
                   if(f === bdo+"workIsAbout" && meta.tree && meta.tree["@graph"]) node =  meta.tree["@graph"].filter(n => n["@id"] === q)
-                  else if(f === bdo+"workGenre" && meta.genres && meta.genres["@graph"]) node =  meta.genres["@graph"].filter(n => n["@id"] === q)
-                  node.map(n => {
+                  else if(f === bdo+"workGenre" && meta.genres && meta.genres["@graph"]) node =  meta.genres["@graph"].filter(n => n["@id"] === q);
+                  if(node) node.map(n => {
                      if(n.taxHasSubClass) n.taxHasSubClass.map(t => {
                         ret.push(t)   
                         queue = queue.concat(n.taxHasSubClass)

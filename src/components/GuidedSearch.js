@@ -280,20 +280,23 @@ class GuidedSearch extends Component<Props,State> {
     if(this.props.type === "work" || this.state.keyword) {
       
     } else {
+      let params = {}
       checkParams = "?R_COLLECTION=bdr:PR1KDPP00&"
-       + Object.keys(this.state.checked).map( k => {
-          //console.log("k:",k)
-          let param = ""
-          let list = Object.keys(this.state.checked[k]).map(i => {
-            //console.log("i:",i,settings[k].values[i].facet.property)
-            if(!param) param = getQueryParam(settings[k].values[i].facet.property)
-            if(this.state.checked[k][i]) { 
-              return ( k == "completion" ? "true" : settings[k].values[i].facet.value)
-            }
-          }).filter(p => p).join(",")
-          //console.log("param:",param+list)
-          if(list) return param+"="+list
-       }).filter(p => p).join("&")+"&format=json"
+      Object.keys(this.state.checked).map( k => {
+        //console.log("k:",k)
+        let param = ""
+        Object.keys(this.state.checked[k]).map(i => {
+          //console.log("i:",i,settings[k].values[i].facet.property)
+          param = getQueryParam(settings[k].values[i].facet.property)
+          if(!params[param]) params[param] = []
+          if(this.state.checked[k][i]) { 
+            params[param].push( k == "completion" ? "true" : settings[k].values[i].facet.value)
+          }
+        })          
+      })
+      checkParams += Object.keys(params).map(k => {
+        if(params[k].length) return k+"="+params[k].join(",")
+      }).filter(p => p).join("&")+"&format=json"
     }
 
     if(searchRoute != this.state.searchRoute || checkParams != this.state.checkParams) 
