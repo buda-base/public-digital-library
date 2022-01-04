@@ -1589,7 +1589,7 @@ class ResourceViewer extends Component<Props,State>
       {
 
          let customSort = [ bdo+"hasPart", bdo+"instanceHasVolume", bdo+"workHasInstance", tmp+"siblingInstances", bdo+"hasTitle", bdo+"personName", bdo+"volumeHasEtext",
-                            bdo+"personEvent", bdo+"placeEvent", bdo+"workEvent", bdo+"instanceEvent", bf+"identifiedBy", bdo+"lineageHolder" ]
+                            bdo+"personEvent", bdo+"placeEvent", bdo+"workEvent", bdo+"instanceEvent", bf+"identifiedBy", bdo+"lineageHolder", bdo+"creator" ]
 
          let sortLineageHolder = () => {
             let parts = prop[bdo+"lineageHolder"]
@@ -1663,6 +1663,7 @@ class ResourceViewer extends Component<Props,State>
          if(prop[bf+"identifiedBy"]) prop[bf+"identifiedBy"] = sortByPropSubType(bf+"identifiedBy");
 
 
+
          let sortBySubPropNumber = (tag:string,idx:string) => {
             let parts = prop[tag]
             if(parts) {
@@ -1733,6 +1734,46 @@ class ResourceViewer extends Component<Props,State>
          if(prop[bdo+'hasTitle']) prop[bdo+'hasTitle'] = sortBySubPropURI("hasTitle") ;
          
          if(prop[bdo+'personName']) prop[bdo+'personName'] = sortBySubPropURI("personName") ;
+
+
+         let sortByEventType = (tagEnd:string) => {
+            let valSort = prop[bdo+tagEnd] 
+
+            if(this.props.dictionary && this.props.resources && this.props.assocResources) {
+               let assoR = this.props.resources[this.props.IRI]
+               if(assoR) { 
+                  valSort = valSort.map(v => {
+                     if(assoR[v.value]) {
+                        //console.log("assoR:",assoR[v.value],assoR[v.value][bdo+"agent"][0].value,assoR[assoR[v.value][bdo+"agent"][0].value])
+
+                        let evT = assoR[v.value][bdo+"creationEventType"]
+                        if(!evT) evT = [{ value: "1" }]
+                        evT = evT.map(v => v.value).join(";")
+
+                        let role = assoR[v.value][bdo+"role"]
+                        if(!role) role = [{ value: "1" }]
+                        role = role.map(r => r.value).join(";")
+
+                        let label,lang 
+                        if(assoR[v.value][bdo+"agent"] && assoR[v.value][bdo+"agent"].length && this.props.assocResources[assoR[v.value][bdo+"agent"][0].value]) {
+                           label = getLangLabel(this, "", this.props.assocResources[assoR[v.value][bdo+"agent"][0].value])
+                           if(label) {
+                              lang = label.lang
+                              label = label.value
+                           }
+                        }
+
+                        return { ...v, evT, role, lang, label }
+                     }
+                  })
+                  console.log("vS:",valSort)
+                  valSort = _.orderBy(valSort,['role','evT','lang','label'],['asc']).map(v => ({value:v.value, type:v.type}))
+               }
+            }
+            return valSort
+         }
+
+         if(prop[bdo+"creator"]) prop[bdo+"creator"] = sortByEventType("creator");
 
 
          let sortByEventDate = (tagEnd:string) => {

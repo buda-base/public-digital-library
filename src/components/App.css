@@ -2552,7 +2552,16 @@ span.in { font-weight:500;padding-left:0px; padding-right:10px; margin-left:36px
    width: calc(100% - 160px - 15px - 5px ) !important; 
 }
 
+.resource .data [data-prop="bdo:creator"] + div div h4[data-prop="bdo:creationEventType"] + h4>span { font-style: italic; }
+
 .resource .data > [data-prop="bdo:creator"] .subgroup > .subsub { display:inline-block; }
+
+#popHoverM[data-id*="core/agent-"] .resource .data .sub > .subgroup { width:100%; }
+#popHoverM[data-id*="core/agent-"] .resource .data .sub > .subgroup > .subsub  { width:100%; }
+
+#popHoverM [data-prop="bdo:creationEventType"] .subsub:nth-child(n-2) { display: none;}
+
+.data:not(.legal-props) > [data-prop='bdo:creator'] .subsub:not(:first-child) + .subsub { width:calc(100% - 5px); }
 
 
 .resource .data:not(.top-props) > [data-prop]:last-child::after { content:none !important;display:none; } 

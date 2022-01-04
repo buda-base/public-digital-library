@@ -474,7 +474,8 @@ const preferUIlang = [ bdo+"placeType", bdo+"workIsAbout", bdo+"workGenre", bdo+
    tmp+"relationType", bdo+"material", adm+"status", adm+"access", adm+"contentLegal", bdo+"partType", adm+"contentLegal",
    bdo+"binding",
    bdo+"tradition", tmp+"hasRole",
-   adm+"logWho" ]
+   adm+"logWho",
+   bdo+"creationEventType" ]
 
 export function getLangLabel(that:{},prop:string="",labels:[],proplang:boolean=false,uilang:boolean=false,otherLabels:[],dontUseUI:boolean=false)
 {
