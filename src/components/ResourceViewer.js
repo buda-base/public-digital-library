@@ -1741,18 +1741,39 @@ class ResourceViewer extends Component<Props,State>
 
             if(this.props.dictionary && this.props.resources && this.props.assocResources) {
                let assoR = this.props.resources[this.props.IRI]
+               const order = {
+                  evT: [ 
+                     "ThirdRevisedEvent",
+                     "ThirdTranslatedEvent", 
+                     "SecondRevisedEvent", 
+                     "SecondTranslatedEvent", 
+                     "RevisedEvent", 
+                     "TranslatedEvent", 
+                  ],
+                  role: [ 
+                     "R0ER0020", //oral translator
+                     "R0ER0026", //translator
+                     "R0ER0023", //reviser
+                     "R0ER0018", //Source Language Scholar
+                     "R0ER0011", //attributed author
+                     "R0ER0016", //contributing author
+                     "R0ER0019", //main author
+                  ] 
+               }
                if(assoR) { 
                   valSort = valSort.map(v => {
                      if(assoR[v.value]) {
                         //console.log("assoR:",assoR[v.value],assoR[v.value][bdo+"agent"][0].value,assoR[assoR[v.value][bdo+"agent"][0].value])
 
                         let evT = assoR[v.value][bdo+"creationEventType"]
-                        if(!evT) evT = [{ value: "1" }]
-                        evT = evT.map(v => v.value).join(";")
+                        if(!evT) evT = [{ idx:9, value: "" }]
+                        else evT = evT.map(e => ({...e, idx:order.evT.findIndex(w => e.value.endsWith(w))}))
+                        evT = evT.map(v => v.idx+";"+v.value).join(";")
 
                         let role = assoR[v.value][bdo+"role"]
-                        if(!role) role = [{ value: "1" }]
-                        role = role.map(r => r.value).join(";")
+                        if(!role) role = [{ idx:0, value: "" }]
+                        else role = role.map(e => ({...e, idx:order.role.findIndex(w => e.value.endsWith(w))}))
+                        role = role.map(r => r.idx+";"+r.value).join(";")
 
                         let label,lang 
                         if(assoR[v.value][bdo+"agent"] && assoR[v.value][bdo+"agent"].length && this.props.assocResources[assoR[v.value][bdo+"agent"][0].value]) {
@@ -1766,8 +1787,8 @@ class ResourceViewer extends Component<Props,State>
                         return { ...v, evT, role, lang, label }
                      }
                   })
-                  console.log("vS:",valSort)
-                  valSort = _.orderBy(valSort,['role','evT','lang','label'],['asc']).map(v => ({value:v.value, type:v.type}))
+                  //console.log("vS:",valSort)
+                  valSort = _.orderBy(valSort,['evT', 'role', 'lang','label'],['desc','desc','asc','asc']).map(v => ({value:v.value, type:v.type}))
                }
             }
             return valSort
