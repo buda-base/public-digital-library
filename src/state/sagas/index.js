@@ -783,7 +783,7 @@ async function getPages(iri,next) {
             }
 
             if(start >= 0 && end >= 0) {
-               acc += content["@value"].substring(start,end) ;
+               acc += content["@value"].substring(start,end+1) ;
             }
 
             return acc ; 
