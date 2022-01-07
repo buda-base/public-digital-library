@@ -1310,7 +1310,7 @@ class ResourceViewer extends Component<Props,State>
       // TODO scroll to top when IRI changed (and not on collapse open/close)
       // window.scrollTo(0, 0)
 
-      loggergen.log("histo?",JSON.stringify(history.location),this.state.openEtext)
+      //loggergen.log("histo?",JSON.stringify(history.location),this.state.openEtext)
 
       if(!history) return
 
@@ -5511,7 +5511,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
             let imageList = this.props.imageLists, iiifpres = "//iiifpres.bdrc.io", iiif = "//iiif.bdrc.io"            
             if(imageList) imageList = imageList[id]
             
-            loggergen.log("k:",id,manif,imageList)
+            //loggergen.log("k:",id,manif,imageList)
 
             if(this.props.config && this.props.config.iiifpres) iiifpres = this.props.config.iiifpres.endpoints[this.props.config.iiifpres.index]      
             if(this.props.config && this.props.config.iiif) iiif = this.props.config.iiif.endpoints[this.props.config.iiif.index]      
@@ -5716,11 +5716,11 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
                </div> }
                <div class="overpage">
-                  <h4 class="page">{!e.value.match(/[\n\r]/) && !e.seq ?[<span class="startChar"><span>[&nbsp;<Link to={"/show/"+this.props.IRI+"?startChar="+e.start+"#open-viewer"}>@{e.start}</Link>&nbsp;]</span></span>]:null}{e.value.split("\n").map(f => {
+                  <h4 class="page">{!e.value.match(/[\n\r]/) && !e.seq ?[<span class="startChar"><span>[&nbsp;<Link to={"/show/"+this.props.IRI+"?startChar="+e.start+"#open-viewer"}>@{e.start}</Link>&nbsp;]</span></span>]:null}{[ e.value ].map(f => {
                         let label = getLangLabel(this,bdo+"eTextHasPage",[{"lang":e.language,"value":f}]), lang
                         if(label) { lang = label["lang"] ; if(!pageLang) pageLang = lang }
                         if(label) { label = label["value"]; pageVal += " "+label ; }
-                        if(label && this.props.highlight && this.props.highlight.key) { label = highlight(label,kw); current.push(label); }
+                        if(label && this.props.highlight && this.props.highlight.key) { label = highlight(label,kw.map(k => k.replace(/(.)/g,"$1\\n?")),null,false,true); current.push(label); }
                         //label = f
                         let size = this.state.etextSize
                         if(lang === "bo") { size += 0.4 ; }
@@ -7972,7 +7972,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          let backTo = this.state.fromSearch
          if(!decodeURIComponent(backTo).startsWith("/show/")) {
             let withW = backTo.replace(/^.*[?&](w=[^&]+)&?.*$/,"$1")
-            loggergen.log("fromS",this.state.fromSearch,backTo,withW)
+            //loggergen.log("fromS",this.state.fromSearch,backTo,withW)
             if(backTo === withW) { 
                backTo = decodeURIComponent(backTo)
                searchUrl = backTo

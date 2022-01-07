@@ -388,11 +388,11 @@ export function report_GA(config,location) {
 
 
 
-export function highlight(val,k,expand,newline)
+export function highlight(val,k,expand,newline,force)
 {
    //loggergen.log("hi:",val,k,expand)
 
-   if(expand && expand.value) val = expand.value
+   if(expand && expand.value) val = expand.value.replace(/([^\n])[\n]([^\n])/g,"$1$2")
 
    if(!val.match(/↤/) && k ) { 
 
@@ -428,8 +428,17 @@ export function highlight(val,k,expand,newline)
 
    val = val.split(/↦/)
    val = val.map((e,_idx) => { 
-      
-      //loggergen.log("e:",_idx,e,e.length)
+            
+      //loggergen.log("e:",_idx,e,e.length,newline,force)
+
+      const prepNewL = (w) => {
+         return w.split("\n").reduce( (acc,k) => {
+            let ret = [ ]
+            if(acc.length && k?.match(/[^ \n\r]/)) ret.push(<br/>)
+            ret.push(k)
+            return acc.concat(ret)
+         },[])
+      }
 
       if(e.length) {
          let f = e.split(/↤/)
@@ -439,8 +448,8 @@ export function highlight(val,k,expand,newline)
                tail = f[1].split(/\n\n/)
                tail = tail.map((i,idx) => [<span>{i}</span>, ...(idx==tail.length - 1 ?[]:[<br data-last={_idx >= val.length - 1 && idx === tail.length - 1}/>,<br/>]) ])
             }
-            else tail = [ <span>{f[1]}</span> ]
-            return [<span className="highlight">{f[0]}</span>,...tail,<span></span>]
+            else tail = [ <span>{force?prepNewL(f[1]):f[1]}</span> ]
+            return [<span className="highlight">{force?prepNewL(f[0]):f[0]}</span>,...tail,<span></span>]
          }
          else {
             let tail 
@@ -448,7 +457,7 @@ export function highlight(val,k,expand,newline)
                tail = f[0].split(/\n\n/)
                tail = tail.map( (i,idx) => [<span>{i}</span>, ...(idx==tail.length - 1 ?[]:[<br data-last={_idx >= val.length - 1 && idx === tail.length - 1}/>,<br/>]) ])
             }
-            else tail = [ <span>{f[0]}</span> ]
+            else tail = [ <span>{force?prepNewL(f[0]):f[0]}</span> ]
             return [...tail,<span></span>]
          }
       }
@@ -3818,7 +3827,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             { type === "Etext" && this.getResultProp(I18n.t("result.inInstance"),allProps,false,true,[tmp+"inInstance"]) }
             { type === "Etext" && this.getResultProp(I18n.t("result.inInstancePart"),allProps,false,true,[tmp+"inInstancePart"]) }
 
-            { type === "Etext" && this.getEtextMatches(prettId,startC,endC,bestM,rmatch,facet,nsub) }
+            { type === "Etext" && this.getEtextMatches(prettId,startC,endC,bestM,rmatch,null,nsub) }
 
             {/* { this.getResultProp("tmp:nameMatch",allLabels,true,false,[ tmp+"nameMatch" ], !preLit?preLit:preLit.replace(/[↦↤]/g,"") ) } */}
 
