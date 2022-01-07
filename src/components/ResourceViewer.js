@@ -1751,10 +1751,10 @@ class ResourceViewer extends Component<Props,State>
                      "TranslatedEvent", 
                   ],
                   role: [ 
-                     "R0ER0020", //oral translator
-                     "R0ER0026", //translator
                      "R0ER0023", //reviser
                      "R0ER0018", //Source Language Scholar
+                     "R0ER0020", //oral translator
+                     "R0ER0026", //translator
                      "R0ER0011", //attributed author
                      "R0ER0016", //contributing author
                      "R0ER0019", //main author
