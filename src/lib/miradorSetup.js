@@ -3,6 +3,12 @@
 const ldspdi = "//ldspdi.bdrc.io"
 let iiifpres = "//iiifpres.bdrc.io"
 
+const onKhmerUrl = (
+      window.location.host.startsWith("khmer-manuscripts")
+   //|| window.location.host.startsWith("library-dev")
+   //|| window.location.host.startsWith("localhost")
+)
+
 let jQ,extendedPresets,sortLangScriptLabels,getMainLabel,getMainLabels,__
 
 let importModules = async () => {
@@ -1112,7 +1118,7 @@ export async function miradorInitView(work,lang,callerURI,locale,extManif) {
       { "collectionUri": "../tibcolldemo2.json", location: "BDRC - Palpung Collection"}
    ]
 
-   let conf = await (await fetch("/config.json")).json()
+   let conf = await (await fetch(onKhmerUrl?'/config-khmer.json':'/config.json')).json()
    //console.log("conf:",conf)
    if(conf.iiifpres) iiifpres = conf.iiifpres.endpoints[conf.iiifpres.index]
    

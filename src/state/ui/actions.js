@@ -55,6 +55,14 @@ export const logEvent = (login: boolean): Action => {
    }
 }
 
+TYPES.setType = 'SET_TYPE';
+export const setType = (t: string): Action => {
+   return {
+      type: TYPES.setType,
+      payload: t
+   }
+}
+
 
 TYPES.setPrefLang = 'SET_PREFLANG';
 export const setPrefLang = (lang: string): Action => {
@@ -144,4 +152,15 @@ export const loading = (key: string, isLoading: boolean): LoadingAction => {
             isLoading
         }
     }
+}
+
+
+
+TYPES.browse = 'BROWSE';
+export const browse = (param:string,value?:string,checked?:boolean,next?:string): Action => {
+   return {
+      type: TYPES.browse,
+      payload:  param,
+      meta: { value, checked, next }
+   }
 }

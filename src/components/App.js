@@ -83,6 +83,7 @@ import { Trans } from 'react-i18next'
 import LanguageSidePaneContainer from '../containers/LanguageSidePaneContainer';
 import ResourceViewerContainer from '../containers/ResourceViewerContainer';
 import {getOntoLabel,provImg as img,providers} from './ResourceViewer';
+import {getQueryParam} from './GuidedSearch';
 import {getEntiType} from '../lib/api';
 import {narrowWithString} from "../lib/langdetect"
 import {sortLangScriptLabels, extendedPresets, getMainLabel} from '../lib/transliterators';
@@ -92,6 +93,10 @@ import Footer from "./Footer"
 import {svgEtextS,svgImageS} from "./icons"
 
 import logdown from 'logdown'
+
+import SimpleBar from 'simplebar-react';
+import 'simplebar/dist/simplebar.min.css';
+
 
 // for full debug, type this in the console:
 // window.localStorage.debug = 'gen'
@@ -170,6 +175,14 @@ export function shortUri(id:string, nobdo?:boolean=false) {
    if(nobdo) id = id.replace(/^bdo:/,"")
    return id.replace(/[/]$/,"") ;
 }
+
+console.log("loca:",window.location.hostname)
+
+const onKhmerUrl = (
+      window.location.host.startsWith("khmer-manuscripts")
+  // || window.location.host.startsWith("library-dev")
+  // || window.location.host.startsWith("localhost")
+)
 
 
 
@@ -283,6 +296,7 @@ export const languages = {
    "pi":"lang.search.pi",
    "pi-x-iast": "lang.search.piXIast",
    "pi-x-ndia":"lang.search.piXNdia",
+   "pi-khmr":"lang.search.piKhmr",
    "bo":"lang.search.bo",
    "bo-x-ewts":"lang.search.boXEwts",
    "bo-x-ewts_lower":"lang.search.boXEwtsLower",
@@ -302,7 +316,10 @@ export const searchLangSelec = {
    "zh-hant":"lang.search.zh"
 }
 
-export const langSelect = [
+export const langSelect = onKhmerUrl ? [
+   "pi-x-ndia",
+   "en",   
+] : [
    "zh-hant",
    "zh-latn-pinyin",
    "bo",
@@ -317,7 +334,8 @@ export const langSelect = [
 ]
 
 //const searchTypes = ["All","Work","Etext","Topic","Person","Place","Lineage","Corporation","Role"]
-const searchTypes = [ "Work", "Instance","Scan", "Etext", "Person","Place","Topic", "Product", /*"Lineage","Role","Corporation"*/ ]
+const searchTypes = onKhmerUrl ? [ "Work", "Instance" ] : [ "Work", "Instance","Scan", "Etext", "Person","Place","Topic", "Product", /*"Lineage","Role","Corporation"*/ ]
+
 
 /*
 export const langProfile = [
@@ -390,6 +408,8 @@ export function report_GA(config,location) {
 
 export function highlight(val,k,expand,newline,force)
 {
+   if(k == "-") return val
+
    //loggergen.log("hi:",val,k,expand)
 
    if(expand && expand.value) val = expand.value.replace(/([^\n])[\n]([^\n])/g,"$1$2")
@@ -556,7 +576,21 @@ export function getLangLabel(that:{},prop:string="",labels:[],proplang:boolean=f
    }
 };
 
-function getPropLabel(that, i, withSpan = true, withLang = false) {
+
+function pretty(str:string) {
+   //loggergen.log("str",str)
+   if(!str || !str.length) return 
+
+   for(let p of prefixes) { str = str.replace(new RegExp(p,"g"),"") }
+
+   str = str.replace(/([a-z])([A-Z])/g,"$1 $2")
+
+   return str ;
+}
+
+
+export function getPropLabel(that, i, withSpan = true, withLang = false) {
+
    if(!that.props.dictionary) return 
 
    let sTmp = shortUri(i), trad = I18n.t("prop."+sTmp)
@@ -590,7 +624,7 @@ function getPropLabel(that, i, withSpan = true, withLang = false) {
 
       }
    }
-   else label = that.pretty(i)
+   else label = that.pretty?that.pretty(i):pretty(i)
 
    if(withSpan) return <span {...lang?{lang}:{}} >{label}</span>
    else if(!withLang) return label
@@ -610,32 +644,21 @@ export function getFacetUrl(filters,dic){
    loggergen.log("gFu",str,filters,dic)
    return str
 }
-export function lang_selec(that,black:boolean = false)
+export function lang_selec(that,black:boolean = false,inPopup:false)
 {
    let prio = ["zh", "en", "bo" ]
    if(that.props.config && that.props.config.language && that.props.config.language.menu) prio = that.props.config.language.menu
 
-   return [
-         <span id="lang" title={I18n.t("home.choose")} onClick={(e) => that.setState({...that.state,anchorLang:e.currentTarget, collapse: {...that.state.collapse, lang:!that.state.collapse.lang } } ) }><img src={"/icons/LANGUE"+(black?"b":"")+".svg"}/></span>
-         ,
-         <Popover
-            id="popLang"
-            open={that.state.collapse&&that.state.collapse.lang?true:false}
-            transformOrigin={{vertical:(!black?'top':'bottom'),horizontal:(!black?'right':'left')}}
-            anchorOrigin={{vertical:(!black?'bottom':'top'),horizontal:(!black?'right':'left')}}
-            anchorEl={that.state.anchorLang}
-            onClose={e => { that.setState({...that.state,anchorLang:null,collapse: {...that.state.collapse, lang:false } } ) }}
-            className={black?"black":""}
-            >
-
-              <FormControl className="formControl">
+   let form =  <FormControl className="formControl">
                 {/* <InputLabel htmlFor="datatype">In</InputLabel> */}
                   
                   { prio.map((i) => {
 
                         let label = "English";
                         if (i === "bo") label="བོད་ཡིག";
-                        if (i === "zh") label="中文";
+                        if (i === "zh") label="中文";;
+                        if (i === "fr") label="Français";
+                        if (i === "km") label = "ភាសាខ្មែរ";
                         let disab = false ; //["en","bo"].indexOf(i) === -1
 
                         // TODO add link to user profile / language preferences
@@ -643,13 +666,14 @@ export function lang_selec(that,black:boolean = false)
                         return ( <MenuItem
                                     className={that.props.locale===i?"is-locale":""}     
                                     value={i}
+                                    lang={i}
                                     disabled={disab}
                                     onClick={(event) => { 
 
                                        localStorage.setItem('uilang', i);
                                        localStorage.setItem('langpreset', i);
 
-                                       that.setState({...that.state,anchorLang:null,collapse: {...that.state.collapse, lang:false } }); 
+                                       that.setState({...that.state,anchorLang:null,collapse: {...that.state.collapse, lang:false, uiLangPopup:true }, titles:false, ldspdi:false }); 
                                        document.documentElement.lang = i
 
                                        that.props.onSetLocale(i);
@@ -665,6 +689,22 @@ export function lang_selec(that,black:boolean = false)
                   } ) } 
                   
             </FormControl>
+
+   if(inPopup) return form
+   else return [
+         <span id="lang" title={I18n.t("home.choose")} onClick={(e) => that.setState({...that.state,anchorLang:e.currentTarget, collapse: {...that.state.collapse, lang:!that.state.collapse.lang } } ) }><img src={"/icons/LANGUE"+(onKhmerUrl?"km":"")+(black?"b":"")+".svg"}/></span>
+         ,
+         <Popover
+            id="popLang"
+            open={that.state.collapse&&that.state.collapse.lang?true:false}
+            transformOrigin={{vertical:(!black?'top':'bottom'),horizontal:(!black?'right':'left')}}
+            anchorOrigin={{vertical:(!black?'bottom':'top'),horizontal:(!black?'right':'left')}}
+            anchorEl={that.state.anchorLang}
+            onClose={e => { that.setState({...that.state,anchorLang:null,collapse: {...that.state.collapse, lang:false } } ) }}
+            className={black?"black":""}
+            >
+
+             {form}
          </Popover>
    ]
 }
@@ -754,6 +794,7 @@ export function getGDPRconsent(that) {
 export function top_right_menu(that,etextTitle,backUrl,etextres)
 {
    let onZhMirror = (that.props.config && that.props.config.chineseMirror)
+   let onKhmerServer = (that.props.config && that.props.config.khmerServer)
 
    let logo = [
             <div id="logo">
@@ -770,13 +811,36 @@ export function top_right_menu(that,etextTitle,backUrl,etextres)
             </div>,
 
    ]
+   if(onKhmerServer) {
+      logo = <div id="logo" class="khmer">                              
+               <a href={"https://bdrc.io/"} target="_blank"><img src="/BDRC-Logo_.png"/></a>
+               <a href={"https://bdrc.io/"} target="_blank" id="BDRC"><span>BDRC</span></a>               
+            </div> 
+   }
 
    let profileName = I18n.t("topbar.profile")
    if(that.props.profileName) profileName = that.props.profileName
 
+
+   let uiLangPopup
+   if(!that.state?.collapse?.uiLangPopup && !localStorage.getItem('uilang')) {
+      uiLangPopup = <div id="uiLangPopup">
+         <div class="bg" onClick={() => that.setState({collapse:{...that.state?.collapse,uiLangPopup:true}})}></div>
+         <div class="fg">
+            <div>
+               {I18n.t("home.choose")}
+               <span id="lang"  style={{margin:"0 0 0 10px"}}><img src={"/icons/LANGUE"+(onKhmerUrl?"km":"")+".svg"}/></span>
+            </div>
+            <div>{ lang_selec(that, false, true) }</div>
+         </div>
+      </div>
+   }
+
+
    if(etextTitle)
       return (
       <div class={"nav"+(onZhMirror?" zhMirror":"")}>
+         {uiLangPopup}
          <div>
             {logo}
 
@@ -852,7 +916,7 @@ export function top_right_menu(that,etextTitle,backUrl,etextres)
          }
          {
             that.props.auth.isAuthenticated() && 
-               <div>
+               <div class="logged">
                <span onClick={(e) => { that.props.onUserProfile(that.props.history.location); that.props.history.push("/user");    }}>{profileName}</span>
                <span onClick={(e) => { that.props.auth.logout(that.props.history.location.pathname!=="/user"?window.location.href:window.location.origin) }} >{I18n.t("topbar.logout")}</span>
                </div>
@@ -866,16 +930,34 @@ export function top_right_menu(that,etextTitle,backUrl,etextres)
                      title={<span style={{ whiteSpace:"normal" }} onMouseEnter={(e)=>toggleHoverLogin(true, e)} onMouseLeave={(e)=>toggleHoverLogin(false,e)}><Trans i18nKey="topbar.proxied" components={{ tag: <a /> }} /></span>}  >{login}</Tooltip>
       }
 
+      let khmerLinks 
+      if(onKhmerServer) {
+         const setCurrent = (route) => (window.location.pathname === route ? {className:"current"}:{})
+         khmerLinks = <div class="links">
+            <Link {...setCurrent("/")} to={"/"} >{I18n.t("topbar.home")}</Link> 
+            <Link {...setCurrent("/guidedsearch")} to={"/guidedsearch"} >{I18n.t("topbar.guided")}</Link> 
+            <Link {...setCurrent("/browse")} to={"/browse"} >{I18n.t("topbar.browse")}</Link> 
+            <Link {...setCurrent("/static/aboutkm")} to={"/static/aboutkm"} >{I18n.t("topbar.about")}</Link> 
+            <Link {...setCurrent("/static/resources")} to={"/static/resources"} >{I18n.t("topbar.resources")}</Link> 
+         </div>
+      }
+
       return ([
       <div class="mobile-button top" onClick={()=>that.setState({collapse:{...that.state.collapse,navMenu:!that.state.collapse.navMenu}})}><img src="/icons/burger.svg" /></div>,
-         <div class={"nav"+(onZhMirror?" zhMirror":"")+ (that.state.collapse.navMenu?" on":"")}>
+         <div class={"nav"+(onZhMirror?" zhMirror":"")+ (that.state.collapse.navMenu?" on":"")+(onKhmerServer||onKhmerUrl?" khmerServer":"")}>
+         {uiLangPopup}
           <div>
          {logo}
 
-         {!onZhMirror && <a id="about" href={"https://bdrc.io"} target="_blank">{I18n.t("topbar.about")}</a> }
-         {onZhMirror  && <Link id="about" to={"/static/about"} >{I18n.t("topbar.about")}</Link> }  
+         { !onKhmerServer && [
+            !onZhMirror &&  <a id="about" href={"https://bdrc.io"} target="_blank">{I18n.t("topbar.about")}</a> 
+            ,
+            onZhMirror  && <Link id="about" to={"/static/about"} >{I18n.t("topbar.about")}</Link> 
+         ] }
 
-         <Link to="/"  onClick={() => { that.props.history.push({pathname:"/",search:""}); if(that.props.keyword) { that.props.onResetSearch();} } }><span>{I18n.t("topbar.search")}</span></Link>
+         { !onKhmerServer && <Link to="/"  onClick={() => { that.props.history.push({pathname:"/",search:""}); if(that.props.keyword) { that.props.onResetSearch();} } }><span>{I18n.t("topbar.search")}</span></Link> }         
+         
+         { onKhmerServer && khmerLinks }
 
          <div class="history">
             <span title={I18n.t("topbar.history")}><img src="/icons/histo.svg"/></span>
@@ -1163,6 +1245,7 @@ class App extends Component<Props,State> {
       if(kw) newKW = kw
 
       let types = [ "Instance" ] //[ ...searchTypes.slice(1) ]
+      if(onKhmerUrl) types = [ "Work" ]
       let e = types.indexOf("Etext")
       if(e !== -1) { 
          delete types[e]
@@ -1215,10 +1298,37 @@ class App extends Component<Props,State> {
       */ 
    }
 
-
-
    componentDidUpdate() {
       
+      // TODO check how this behave with smaller screen width/height
+      let ref
+      if(this._refs["sidepane"] && (ref = this._refs["sidepane"].current) /*&& this.props.language*/) {                     
+         $(window).off("scroll").on("scroll", () => {
+            const rect = ref.getBoundingClientRect()
+            const stuck = rect.y > 230
+            if(stuck !== this.state.stuck) {
+               //console.log("stuck?",stuck,ref,rect.y)
+               this.setState({stuck})
+            } 
+            const toph = $("#filters-UI").height() 
+            const navh = window.innerWidth <= 1024 ? -10 : $(".nav").height()
+            const headh = $("#res-header").height()
+            if(this._refs["header"].current) $(this._refs["header"].current).css("top",(toph+navh+15)+"px") //
+            
+            $(ref)
+            .height(window.innerHeight - rect.y)
+            .css("top",(toph+navh+headh+15)+"px")
+
+            if(this._refs["simplebar"].current) this._refs["simplebar"].current.recalculate()
+            if(this._refs["filters-UI"].current) this._refs["filters-UI"].current.recalculate()
+            
+         }).scroll()
+         
+      }
+
+      if(this._refs["filters-UI"].current) this._refs["filters-UI"].current.recalculate()
+      if(this._refs["filters-UI-scrollable"].current) this._refs["filters-UI-scrollable"].current.scrollTop = 500
+
       loggergen.log("didU:",this.state,this.state.uriPage,this._refs["markers"]) //,this._refs)
 
       if(this._refs.map && this._refs.map.current) {
@@ -1302,7 +1412,16 @@ class App extends Component<Props,State> {
          uriPage = 0
       }
 
-      if(this.state.uriPage !== uriPage || this.state.backToWorks !== backToWorks || (encoded !== this.state.filters.encoded ) || (scrolled && this.state.scrolled !== scrolled) )
+
+      let updatePagin = false      
+      if(pg && this.state.paginate?.nMax && this.state.paginate?.index != pg) {
+            updatePagin = true
+      }
+      
+
+      //console.log("uriP:",uriPage,updatePagin)
+
+      if(this.state.uriPage !== uriPage || updatePagin || this.state.backToWorks !== backToWorks || (encoded !== this.state.filters.encoded ) || (scrolled && this.state.scrolled !== scrolled) )
          this.setState({...this.state, repage:true, uriPage, backToWorks, scrolled, collapse, ...(filters?{filters}:{})})
       else if(get.t) {
          let dt = get.t.split(",").filter(d => !this.state.filters.datatype.includes(d))
@@ -1361,6 +1480,8 @@ class App extends Component<Props,State> {
          label = [ "Instance" ] 
       }
 
+      let khmerCollec = ""
+      if(onKhmerUrl && label.includes("Instance")) khmerCollec = "&f=collection,inc,bdr:PR1KDPP00" // not working for Works yet
 
       loggergen.log("search::",key,_key,label,searchDT) //,this.state,!global.inTest ? this.props:null)
 
@@ -1370,7 +1491,7 @@ class App extends Component<Props,State> {
       if(dataInfo) {
          console.log("new route:",dataInfo)
 
-         this.props.history.push({pathname:"/search",search:"?"+(dataInfo==="date"?"date":"id")+"="+key+"&t="+label})
+         this.props.history.push({pathname:"/search",search:"?"+(dataInfo==="date"?"date":"id")+"="+key+"&t="+label+khmerCollec})
       }
       else if(_key.match(RIDregexp) || prefixesMap[key.replace(/^([^:]+):.*$/,"$1")])
       {
@@ -1384,12 +1505,12 @@ class App extends Component<Props,State> {
          }
          else {
             if(!label) label = this.state.filters.datatype.filter((f)=>["Person","Work"].indexOf(f) !== -1)[0]
-            this.props.history.push({pathname:"/search",search:"?r="+_key+(label?"&t="+label+hasOpenPossibly:"")})
+            this.props.history.push({pathname:"/search",search:"?r="+_key+(label?"&t="+label+khmerCollec+hasOpenPossibly:"")})
          }
       }
       else if(key.match(/^[^:]*:[^ ]+/))
       {
-         this.props.history.push({pathname:"/search",search:"?p="+key})
+         this.props.history.push({pathname:"/search",search:"?p="+key+khmerCollec})
 
       }
       else {
@@ -1403,7 +1524,7 @@ class App extends Component<Props,State> {
          if(this.props.searches && this.props.searches[this.state.filters.datatype[0]] && this.props.searches[this.state.filters.datatype[0]][this.props.keyword+"@"+this.props.language] && this.props.searches[this.state.filters.datatype[0]][this.props.keyword+"@"+this.props.language].inEtext) {
             inEtext = this.props.searches[this.state.filters.datatype[0]][this.props.keyword+"@"+this.props.language].inEtext
          }
-         this.props.history.push({pathname:"/search",search:"?q="+key+"&lg="+lang+"&t="+label+hasOpenPossibly+(inEtext?"&r="+inEtext:"")})
+         this.props.history.push({pathname:"/search",search:"?q="+key+"&lg="+lang+"&t="+label+khmerCollec+hasOpenPossibly+(inEtext?"&r="+inEtext:"")})
          
          // TODO add permanent filters (here ?)
       }
@@ -1466,13 +1587,16 @@ class App extends Component<Props,State> {
 
       let s ;
 
-      let props = { ...prop }
+      let props = { ...prop }, title = ""
 
       if(props.keyword) { 
-         if(props.keyword === "(latest)") document.title = I18n.t("home.new") + " - Buddhist Digital Archives"
-         else document.title = /*""+*/ props.keyword+" search results - Buddhist Digital Archives"
-         
+         if(props.keyword === "(latest)") title = I18n.t("home.new") + " - "
+         else title = /*""+*/ (props.keyword==="-"?"Version":"")+" search results - "
       }
+      if(props.config?.khmerServer) title += "Khmer Manuscript Heritage Project"
+      else title += "Buddhist Digital Archives"
+
+      document.title = title
 
       if(!props.language && props.keyword) {
          if(state.resReceived !== props.keyword && props.resources[props.keyword] && props.resources[props.keyword] !== true) {
@@ -1490,25 +1614,31 @@ class App extends Component<Props,State> {
       }
 
       if(props.genresParents && state.filters.facets && state.filters.facets[bdo+"workGenre"]) {
+         console.log("genresParents",props.genresParents)
          if(!s) s = { ...state }
          let genre = state.filters.facets[bdo+"workGenre"]
          if(genre.val) genre = genre.val
          for(let p of genre) 
             if(props.genresParents[p]) 
                for(let q of props.genresParents[p]) 
-                  if(s.collapse[q] === undefined) 
+                  if(s.collapse[q] === undefined) {
+                     //console.log("genres:collapse",q,p)
                      s.collapse[q] = true
+                  }
       }
 
       if(props.topicParents && state.filters.facets && state.filters.facets[bdo+"workIsAbout"]) {
+         console.log("topicParents",props.topicParents)
          if(!s) s = { ...state }
          let topic = state.filters.facets[bdo+"workIsAbout"]
          if(topic.val) topic = topic.val
          for(let p of topic) 
             if(props.topicParents[p]) 
                for(let q of props.topicParents[p]) 
-                  if(s.collapse[q] === undefined) 
+                  if(s.collapse[q] === undefined) {
+                     //console.log("topic:collapse",q,p)
                      s.collapse[q] = true
+                  }
       }
 
       if(state.filters.preload && state.sortBy && !props.sortBy) { 
@@ -1556,7 +1686,7 @@ class App extends Component<Props,State> {
 
             s.filters.facets = facets
 
-            loggergen.log("facets?",facets,props.loading)
+            //loggergen.log("facets?",facets,props.loading)
 
             if(!props.loading) 
                props.onUpdateFacets(
@@ -1949,13 +2079,15 @@ class App extends Component<Props,State> {
       if(props.instances) {
 
          let refresh = false
-         if( !state.instances || (Object.keys(props.instances).length !== Object.keys(state.instances).length) ) {
+         if( !state.instances || (Object.keys(props.instances).length !== Object.keys(state.instances).length) 
+            || Object.values(state.instances).filter(i => i === true).length !== Object.values(props.instances).filter(i => i === true).length
+            ) {
             refresh = true
          }
 
          /*
-         loggergen.log("inst ref",refresh,JSON.stringify(Object.keys(props.instances)))
-         if(state.instances) loggergen.log(JSON.stringify(Object.keys(state.instances)))
+         loggergen.log("inst ref",refresh,JSON.stringify(Object.keys(props.instances)), Object.values(props.instances).filter(i => i === true).length)
+         if(state.instances) loggergen.log(JSON.stringify(Object.keys(state.instances)), Object.values(state.instances).filter(i => i === true).length)
          */
          
          if(refresh)
@@ -2111,7 +2243,6 @@ class App extends Component<Props,State> {
       last_t = start
       sublabels = {}
 
-      loggergen.log("hCf:",ev,prop,lab,val,excl)
 
       let state =  this.state
 
@@ -2125,6 +2256,7 @@ class App extends Component<Props,State> {
 
       if(!propSet.length) propSet = [ "Any" ] ;
 
+
       if(lab.indexOf("Any") !== -1) {
          if(val) propSet = [ "Any" ]
       }
@@ -2132,6 +2264,7 @@ class App extends Component<Props,State> {
          if(propSet.indexOf("Any") !== -1) propSet = propSet.filter(v => v !== "Any")
          if(!propSet.length) propSet = [ "Any" ] ;
       }
+
       
       if(!state.filters.exclude) state.filters.exclude = {}
       let exclude = state.filters.exclude ;
@@ -2152,16 +2285,83 @@ class App extends Component<Props,State> {
          if(excl && exclude[prop]) propSet = propSet.filter(v => exclude[prop].indexOf(v) !== -1)
       }
 
+
+      loggergen.log("hCf:",ev,prop,lab,val,excl,propSet)
+
+
       let facets = state.filters.facets ;
       if(!facets) facets = {}
       if(prop == bdo+"workGenre" || prop == bdo+"workIsAbout") {
+         facets = { ...facets, [prop] : { alt : [ prop, bdo + "workIsAbout", tmp + "etextAbout" ], val : Array.from(new Set(propSet.reduce( (acc,p) => {
+            let ret = false
+            if(val) {
+               ret = true 
+               let meta = this.props.searches[this.state.filters.datatype[0]][this.props.keyword+"@"+this.props.language]
+               if(meta) meta = meta.metadata                  
+               let already = []
+               const checkParent = (p) => {
+                  let node                  
+                  if(prop == bdo+"workIsAbout" && meta.tree && meta.tree["@graph"]) node =  meta.tree["@graph"].filter(n => n["@id"] === p)
+                  else if(prop == bdo+"workGenre" && meta.genres && meta.genres["@graph"]) node =  meta.genres["@graph"].filter(n => n["@id"] === p)
+                  //console.log("check:",p,meta,node)
+                  if(node?.length && !node.some(n => n.taxHasSubClass?.includes("Any"))) {
+                     //console.log("check?",node[0]["@id"])
+                     if(!node[0].taxHasSubClass.some(n => !lab.includes(n) && !propSet.includes(n) && !already.includes(n)) ){
+                        if(!node[0].taxHasSubClass.some(n => !lab.includes(n) && !propSet.includes(n) && !already.includes(n)) ){
+                           //console.log("check!")
+                           if(excl) exclude[prop].push(node[0]["@id"])
+                           acc.push(node[0]["@id"])
+                           let k = node[0]["@id"]
+                           if(this.props.topicParents && this.props.topicParents[k] && this.props.topicParents[k]) this.props.topicParents[k].map(checkParent)
+                           else if(this.props.genresParents && this.props.genresParents[k] && this.props.genresParents[k]) this.props.genresParents[k].map(checkParent)
+                           already.push(node[0]["@id"])
+                        }
+                     }
+                  }
+               }
+               if(meta && lab) { 
+                  // must add ancestor topic if all its subtopic checked
+                  lab.map(k => {
+                     if(prop == bdo+"workIsAbout" && this.props.topicParents && this.props.topicParents[k] && this.props.topicParents[k]) this.props.topicParents[k].map(checkParent)
+                     else if(prop == bdo+"workGenre" && this.props.genresParents && this.props.genresParents[k] && this.props.genresParents[k]) this.props.genresParents[k].map(checkParent)
+                  })
+               }
+            }
+            else {
+               if(lab) { 
+                  ret = lab.some(k => {
+                     // must remove all ancestor topic if any => keep ones that are not ancestor of current unchecked   
+                     let isAncestor =  this.props.topicParents && this.props.topicParents[k] && this.props.topicParents[k].includes(p)
+                                    || this.props.genresParents && this.props.genresParents[k] && this.props.genresParents[k].includes(p) 
+                                    
+                     // remove subtopics with subsubtopics too => keep topics that are not subtopic of unchecked topic (check Nyingma + uncheck/check Kama + uncheck Nyingma)
+                     let isSubtopic = isAncestor // skip if already ancestor 
+                                 || lab.reduce( (acc, q) =>  (acc 
+                                                               || this.props.topicParents && this.props.topicParents[q] && this.props.topicParents[q].includes(p)
+                                                               || this.props.genresParents && this.props.genresParents[q] && this.props.genresParents[q].includes(p)                                     
+                                             ), false)
 
-         facets = { ...facets, [prop] : { alt : [ prop, bdo + "workIsAbout", tmp + "etextAbout" ], val : propSet } }
+                     return !isAncestor && !isSubtopic
+                  }) 
+
+
+               } else {
+                  ret = true
+               }              
+            }
+            if(ret) {
+               if(excl) exclude[prop].push(p)
+               acc.push(p)                           
+            }
+            return acc
+         },[]))) } }
       }
       else
       {
-         facets = { ...facets, [prop] : propSet }
+         facets = { ...facets, [prop] : Array.from(new Set(propSet)) }
       }
+
+      if(exclude[prop]) exclude[prop] = Array.from(new Set(exclude[prop]))
 
       state = { ...state, paginate:{index:0,pages:[0],n:[0]}, repage: true, filters:{ ...state.filters, facets, exclude }  }      
 
@@ -2436,18 +2636,6 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
      }
 */
 
-   pretty(str:string)
-   {
-      //loggergen.log("str",str)
-      if(!str || !str.length) return 
-
-      for(let p of prefixes) { str = str.replace(new RegExp(p,"g"),"") }
-
-      str = str.replace(/([a-z])([A-Z])/g,"$1 $2")
-
-      return str ;
-   }
-
    fullname(prop:string,preflabs:[],useUIlang:boolean=false,count)
    {
       if(!prop||prop.length === 0) return 
@@ -2495,7 +2683,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          //return preflabs[0][value]
       }
 
-      return this.pretty(prop)
+      return pretty(prop)
    }
 
 
@@ -2707,12 +2895,18 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             let instances = this.props.instances
             if(instances) instances = instances[fullUri(id)]
 
+
+            const maxNbPreview = 10
+            const normalNbPreview = 6
+            let n = 0
+
+
             let iUrl = "/search?i="+shortUri(id)+"&t=Work&w="+ encodeURIComponent(window.location.href.replace(/^https?:[/][/][^?]+[?]?/gi,"").replace(/(&n=[^&]*)/g,"")+"&n="+n) //"/search?q="+this.props.keyword+"&lg="+this.props.language+"&t=Work&s="+this.props.sortBy+"&i="+shortUri(id)
 
             //loggergen.log("inst",instances)
 
             if(instances) { 
-               let instK = Object.keys(instances), n = 1,  seeAll 
+               let instK = Object.keys(instances).sort()
 
                for(let k of instK) {
                   let label = getLangLabel(this,"",instances[k].filter(e => e.type === skos+"prefLabel"))
@@ -2720,10 +2914,10 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   if(!label) label = { value:"","xml:lang":"?"}
                   // TODO etext instance ?
 
-                  ret.push(this.makeResult(k,-n,null,label.value,label["xml:lang"],null,null,null,[],null,instances[k],label.value,true))
                   n++
-                  if(n>3) { 
-                     seeAll = true
+                  ret.push(this.makeResult(k,-n,null,label.value,label["xml:lang"],null,null,null,[],null,instances[k],label.value,true))
+
+                  if(nb > maxNbPreview && n >= normalNbPreview) {                     
                      break ;
                   }
                }
@@ -2749,20 +2943,26 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      { (hasEtext.length > 0) && <span title={getPropLabel(this,tmp+"assetAvailability",false)+": "+getPropLabel(this,tmp+"hasEtext",false)}>{svgEtextS}</span>}
                      </span>
                      <span class="instance-link">
-                        { nb > 3 && <>
+                        { nb > maxNbPreview && <>
                            <Link class="urilink" to={iUrl}>{I18n.t("misc.browseA",{count:nb})}</Link>                     
                            <emph style={{margin:"0 5px"}}> {I18n.t("misc.or")} </emph>
                         </> }
                         <span class="instance-collapse" onClick={(e) => { 
                            if(!instances) this.props.onGetInstances(shortUri(id)) ; 
                            this.setState({...this.state,collapse:{...this.state.collapse,[id]:!this.state.collapse[id] },repage:true })
-                        } } >{!this.state.collapse[id]?<span>{I18n.t(nb > 3 ? "misc.preview3":"misc.seeI",{count:nb})}</span>:<span>{nb > 3?I18n.t("misc.hide").toLowerCase():I18n.t("misc.hide")}</span>}{!this.state.collapse[id]?<ExpandMore/>:<ExpandLess/>}</span>
+                        } } >{!this.state.collapse[id]
+                                 ? (nb > maxNbPreview
+                                    ? <span>{I18n.t("misc.previewN",{count:normalNbPreview})}</span>
+                                    : <span>{I18n.t("misc.seeI",{count: nb})}</span>)
+                                 : <span>{nb > maxNbPreview?I18n.t("misc.hide").toLowerCase():I18n.t("misc.hide")}</span>}
+                           {!this.state.collapse[id]?<ExpandMore/>:<ExpandLess/>}
+                        </span>
                      </span>
                   </div>
                   {ret}
-                  { (nb > 3 && this.state.collapse[id]) && //!this.props.loading && 
+                  { (nb > maxNbPreview && this.state.collapse[id]) && //!this.props.loading && 
                      <div class="match" style={{marginBottom:0}}>
-                        <span class="label" style={{textTransform:"none"}}>{I18n.t("misc.seeM", {count:nb-3})}:</span>&nbsp;
+                        <span class="label" style={{textTransform:"none"}}>{I18n.t("misc.seeM", {count:nb - normalNbPreview})}:</span>&nbsp;
                         <span class="instance-link"><Link class="urilink" to={iUrl}>{I18n.t("misc.browse").toLowerCase()}</Link></span> 
                      </div>
                   }
@@ -2794,6 +2994,66 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          }
                 */
       
+
+   getReproductionsNoLink(id,n,allProps:[]=[]) {
+      let nb = allProps.filter(p => p.type === tmp+"nbImageReproductions"), ret = []
+      if(nb.length) {
+         nb = Number(nb[0].value)
+         if(nb >= 2) {
+            let instances = this.props.instances
+            if(instances) instances = instances[fullUri(id)]
+
+            let iUrl = "/search?i="+shortUri(id)+"&t=Work&w="+ encodeURIComponent(window.location.href.replace(/^https?:[/][/][^?]+[?]?/gi,"").replace(/(&n=[^&]*)/g,"")+"&n="+n) //"/search?q="+this.props.keyword+"&lg="+this.props.language+"&t=Work&s="+this.props.sortBy+"&i="+shortUri(id)
+
+            loggergen.log("inst:",instances,this.props.instances,this.state.collapse[id],id)
+
+
+            if(!instances) {
+
+               //setTimeout(() => this.props.onGetReproductions(shortUri(id)), 150) ; 
+               
+            } else { 
+               
+               let instK = Object.keys(instances).sort(), n = 1,  seeAll 
+
+               for(let k of instK) {
+                  let label = getLangLabel(this,"",allProps.filter(e => e.type === skos+"prefLabel"))
+                  
+                  if(!label) label = { value:"","xml:lang":"?"}
+                  // TODO etext instance ?
+
+                  ret.push(this.makeResult(k,-n,null,label.value,label["xml:lang"],null,null,null,[],null,instances[k],label.value,true))
+                  n++
+               }
+
+               if(ret.length) { 
+
+                  ret = <Collapse className="res-collapse" in={this.state.collapse[id]}>
+                     {ret}
+                  </Collapse>
+               }
+            }
+
+            ret = 
+               <div style={{display:"block"}}>
+                  <div class="match" style={{marginBottom:0}}>
+                     <span class="instance-link">
+                        <span class="instance-collapse repro" onClick={(e) => { 
+                           if(!instances) this.props.onGetReproductions(shortUri(id)) 
+                           this.setState({...this.state,collapse:{...this.state.collapse,[id]:!this.state.collapse[id] },repage:true })
+                        } } >{!this.state.collapse[id]?<span>{I18n.t("misc.showR",{count:nb})}</span>:<span>{I18n.t("misc.hideR")}</span>}{!this.state.collapse[id]?<ExpandMore/>:<ExpandLess/>}</span>
+                     </span>
+                  </div>
+
+                  {ret}
+               </div>
+
+            return ret
+         }
+      }
+   }
+
+
    
    getVal(prop,allProps) {
 
@@ -2870,11 +3130,13 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          let ret = []
          let id ;
          if(!useAux) id = allProps.filter( e => fromProp.includes(e.type) && (!exclude || exclude !== e.value) )
-         else if(findProp) id = allProps.filter(e => useAux.includes(e.type)).map(e => this.props.assoRes[e.value]).filter(e=>e).reduce( (acc,e) =>{
-            let t = e.filter(f => f.type === rdf+"type")
-            if(t.length) return { ...acc, [t[0].value]:[ ...acc[t[0].value]?acc[t[0].value]:[], ...e ]}
-            else return acc
-         },{}) 
+         else if(findProp) { 
+            id = allProps.filter(e => useAux.includes(e.type)).map(e => this.props.assoRes[e.value]).filter(e=>e).reduce( (acc,e) =>{
+               let t = e.filter(f => f.type === rdf+"type")
+               if(t.length) return { ...acc, [t[0].value]:[ ...acc[t[0].value]?acc[t[0].value]:[], ...e ]}
+               else return acc
+            },{}) 
+         }
          
          //loggergen.log("labels/prop",iri,prop,id,exclude,useAux,fromProp,allProps) //,this.props.assoRes)         
 
@@ -2958,19 +3220,20 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             
             //loggergen.log("uA2",id,useAux,findProp)
             
-            let birth = [], death = [], floruit = []
+            let birth = [], death = [], floruit = [], other = []
 
             for(let p of findProp) {
                
                if(id[p]) {
                   
-                  let val = id[p].filter(e => [bdo+"onYear", bdo+"notBefore", bdo+"notAfter"].includes(e.type) )
+                  let val = id[p].filter(e => fromProp.includes(e.type) )
                   //console.log("p:",p,val)
                   if(val.length) {
                      if(p.endsWith("Death")) death = death.concat(val)
                      else if(p.endsWith("Birth")) birth = birth.concat(val)
                      else if(p.endsWith("Floruit")) floruit = floruit.concat(val)
-                  }
+                     else other = other.concat(val)
+                  } 
 
                   // let val = id[p].filter(e => e.type === bdo+"onYear")
                   // if(val.length) val = <span>{(""+val[0].value).replace(/^([^0-9]*)0+/,"$1")}</span>
@@ -2997,8 +3260,16 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
             //console.log("B/D:",JSON.stringify(birth,null,3),JSON.stringify(death,null,3))
 
-            const vals = renderDates(birth, death, floruit)
-            if(vals.length >= 1) ret.push(<div class="match dates">{vals}</div>)
+            if(!other.length) {
+               const vals = renderDates(birth, death, floruit)
+               if(vals.length >= 1) ret.push(<div class="match dates">{vals}</div>)
+            } else {
+
+               ret.push(<div class="match">
+                  <span class="label">{this.fullname(prop,[],true,(plural && ret.length > 1 ?2:1))}{I18n.t("punc.colon")}&nbsp;</span>
+                  <div class="multi">{other.map(o => <span>{o.value}</span>)}</div>
+               </div>)
+            }
             
             return ret
          }
@@ -3057,8 +3328,10 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      else val = i.value
                   }
                }
+               //console.log("1 val:",val,lang,i)
 
                if(!lang) lang = i["lang"]
+               if(!lang) lang = i["xml:lang"]
                ret.push(<span {...lang?{lang}:{}}>{val}{
                   lang && <Tooltip placement="bottom-end" title={
                                     <div style={{margin:"10px"}}>
@@ -3127,7 +3400,9 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      outlineB.push(<Link class="rec" to={iri.replace(/(show[/]).*?part=([^&]+)&/,"$1$2?")}><img src="/icons/rec.svg"/>{I18n.t("resource.openR")}</Link>)
                   }
 
-                  ret.push(<span>{urilink}{outlineB}
+                  //console.log("2 val:",i.lang,i)
+
+                  ret.push(<span {...i.lang?{lang:i.lang}:{}}>{urilink}{outlineB}
                      {
                      i.lang && <Tooltip placement="bottom-end" title={
                                        <div style={{margin:"10px"}}>
@@ -3143,8 +3418,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          if(fromProp) by = fromProp.filter(p => p.includes("/author")).length > 0
          if(fromProp) inRoo = fromProp.filter(p => p.includes("/inRootInstance")).length > 0
 
-         if(ret.length && !useAux) return <div class={"match"+(by?" by":(inRoo?" inRootInst":""))}>
-                  <span class="label">{this.fullname(prop,[],true,(plural && ret.length > 1 ?2:1))}{I18n.t("punc.colon")}&nbsp;</span>
+         if(ret.length && !useAux) return <div class={"match"+(by?" by":(inRoo?" inRootInst":""))} data-prop={prop}>
+                  <span class="label">{this.fullname(prop,[],true,(plural && ret.length > 1 ?2:1))}<span class="colon">{I18n.t("punc.colon")}</span>&nbsp;</span>
                   <div class="multi">{ret}</div>
                 </div>
       }
@@ -3316,7 +3591,11 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
       }
       else if(T === "Instance") langT = allProps.filter(p => p.type === bdo+"script")
 
-      if(langT && langT.length) for(let l of langT) { 
+      if(langT && langT.length) for(let l of langT.sort((a,b)=>{
+         if(a.value > b.value) return 1
+         else if(a.value < b.value) return -1
+         else return 0
+      })) { 
          langs.push(<span title={getPropLabel(this,bdo+(T==='Work'?'language':'script'),false)+I18n.t("punc.colon")+" "+getPropLabel(this,l.value,false)} data-lang={l.value}>
             {T==='Instance'?<span>{l.value.replace(/^.*[/]Script([^/]+)$/,"$1")}</span>:null}
          </span>)
@@ -3344,7 +3623,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             else if(viewUrl) viewUrl = fullUri(viewUrl)
 
 
-            access = allProps.filter(a => [tmp+"hasReproAccess", adm+"access"].includes(a.type))
+            access = allProps.filter(a => [tmp+"hasReproAccess", adm+"access", tmp+"access"].includes(a.type))
             if(access.length) access = access[0].value            
             
             if(this.props.config && this.props.config.iiif && this.props.config.iiif.endpoints[this.props.config.iiif.index].match(/iiif-dev/)) hasThumb = hasThumb.replace(/iiif([.]bdrc[.]io)/, "iiif-dev$1")
@@ -3356,7 +3635,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
             //loggergen.log("access",access,quality)
 
-            if(access) {
+            if(access && access.length) {
                hasCopyR = "unknown"            
                if(access.includes("FairUse")) hasCopyR = "fair_use"
                else if(access.includes("Temporarily")) { hasCopyR = "temporarily";  hasThumb = []; }
@@ -3809,7 +4088,11 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             }
          }
 
+         let onKhmerServer = (this.props.config && this.props.config.khmerServer)
+
          //console.log("allM:",allLabels)
+
+         let hasNbRepro
 
          retList.push( <div id='matches'>         
 
@@ -3885,6 +4168,16 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             {/* { this.getResultProp(tmp+"provider",allProps) } */}
             {/* { this.getResultProp(tmp+"popularity",allProps,false,false, [tmp+"entityScore"]) } */}
             
+
+            { onKhmerServer && ["Work", "Instance"].includes(type) && <>
+               {this.getResultProp(tmp+"FEMCManuscriptCode",allProps,false,false, [ rdf+"value" ], null, [ bf+"identifiedBy"  ], [ bdr+"FEMCManuscriptCode" ]) }
+               {this.getResultProp(tmp+"incomplete", allProps.filter(a => a.type == bdo+"isComplete" && a.value == "false").map(a => ({...a, value:" "})), false,false, [ bdo+"isComplete"]) }
+               {this.getResultProp(bdo+"hasFascicles",allProps,false,false) }
+               { (hasNbRepro = allProps.filter(a => a.type === tmp+"nbImageReproductions" && a.value > 1).length > 0) && <>
+                  {/* { this.getResultProp(tmp+"reproductions", allProps, false, false, [ tmp+"nbImageReproductions" ]) } */}
+                  { this.getReproductionsNoLink(id,n,allProps) }
+               </>}
+            </> }
             
             {/* { hasThumb.length > 0 && <div class="match">{getIconLink(viewUrl?viewUrl:resUrl+"#open-viewer",<span class="urilink"><b>View Images</b></span>)}</div>} // maybe a bit overkill...? */ }
 
@@ -3910,7 +4203,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                 prompt(I18n.t("misc.clipboard"),fullUri(prettId))
           }>
 
-          <a id="permalink" {...this.state.collapse[id]?{class:"wInstance"}:{}} style={{marginLeft:"0px"}} title={I18n.t("misc.permalink")}>
+          <a id="permalink" {...this.state.collapse[id] || hasNbRepro?{class:"wInstance"}:{}} style={{marginLeft:"0px"}} title={I18n.t("misc.permalink")}>
              <img src="/icons/PLINK.svg"/>
           </a>
        </CopyToClipboard> )
@@ -4259,13 +4552,13 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      if(label) label = getLangLabel(this,"",label)
                      if(!label || !label.value) label = { value: this.props.keyword }
                      //txt = I18n.t("result.assoc",{type:txt,name:label.value})
-                     txt = <Trans i18nKey="result.assoc" components={{ res: <a /> }} values={{type:txt,name:label.value,rid:this.props.keyword}} /> 
+                     txt = <Trans i18nKey="result.assoc" components={{ res: <Link /> }} values={{type:txt,name:label.value,rid:this.props.keyword}} /> 
                   } else if(this.props.searches[this.state.filters.datatype[0]][this.props.keyword+"@"+this.props.language].inEtext) {
                      let inEtext = this.props.searches[this.state.filters.datatype[0]][this.props.keyword+"@"+this.props.language].inEtext
                      let label = getPropLabel(this,fullUri(inEtext),false,true)
                      
                      if(!label) label = inEtext
-                     txt = <Trans i18nKey="result.inEtext" components={{ res: <a />, key: <span /> }} values={{keyword:this.props.keyword, language:"$t("+languages[this.props.language]+")", name:label.value,rid:inEtext}} /> 
+                     txt = <Trans i18nKey="result.inEtext" components={{ res: <Link />, key: <span /> }} values={{keyword:this.props.keyword, language:"$t("+languages[this.props.language]+")", name:label.value,rid:inEtext}} /> 
                   }
                   //(false && displayTypes.length>=1&&counts["datatype"][t]?" ("+counts["datatype"][t]+")":""))}
                   message.push(<MenuItem><h4>{txt}</h4></MenuItem>);
@@ -4804,7 +5097,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             if(other) other = other.counts
             if(other) other = other.datatype
             //loggergen.log("other:",other)
-            if(other) other = Object.keys(other).filter(k => k !== "Any" && k !== t && other[k] !== 0)
+            if(other) other = Object.keys(other).filter(k => k !== "Any" && k !== t && other[k] !== 0 && searchTypes.includes(k))
             loggergen.log("other:",other)
             
             //if(other && other.length) 
@@ -4812,7 +5105,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                message.push(<Typography className="loading"></Typography>)
             } else {
                message.push(<Typography className="no-result">
-                  { lang && I18n.t("search.filters.noresults",{ 
+                  { lang && I18n.t("search.filters.noresult"+(this.props.keyword=="-"?"-":"s"),{ 
                      keyword:'"'+lucenequerytokeyword(this.props.keyword)+'"', 
                      language:"$t("+lang+")", 
                      type:I18n.t("types.searchIn", { type:I18n.t("types."+this.state.filters.datatype[0].toLowerCase(),{count:2}).toLowerCase() }),  
@@ -4822,7 +5115,13 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      type:I18n.t("types.searchIn", { type:I18n.t("types."+this.state.filters.datatype[0].toLowerCase(),{count:2}).toLowerCase() }),  
                      interpolation: {escapeValue: false} }) }
                   {  this.state.filters.facets && " with the filters you set"}
-                  {  this.state.filters.facets && <span><br/>{this.renderResetF()}</span>}
+                  {  this.state.filters.facets && <span class="reset-khmer"><br/>{this.renderResetF()}{onKhmerUrl&&<>
+                     &nbsp;{I18n.t("misc.or")}&nbsp;
+                     <Link to={"/guidedsearch"} id="clear-filters">
+                        <span>{I18n.t("Lsidebar.tags.try")}</span>
+                        <SearchIcon />                        
+                     </Link>
+                  </>}</span>}
                </Typography>);
 
                if(!this.state.filters.facets && other && other.length && !this.props.simple)   
@@ -5055,6 +5354,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             inEtext = this.props.searches[this.state.filters.datatype[0]][this.props.keyword+"@"+this.props.language].inEtext
             if(inEtext) search = search.replace(/((&|(\?))([r])=[^&]+)/g,"$3")
          }
+         if(onKhmerUrl && this.props.keyword === "-" && this.props.checkResults?.route) search = this.props.checkResults?.route.replace(/^[^?]+[?]/,"?")
          this.props.history.push({pathname,search:search.replace(/\?&/,"?")})
       }
       else this.props.history.push({pathname,search:this.state.backToWorks})
@@ -5075,7 +5375,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             && this.state.filters && this.state.filters.datatype
             && counts["datatype"][this.state.filters.datatype[0]])
          {
-            if(tree[0]["taxHasSubClass"].indexOf("Any") === -1)
+            if(tree[0]["taxHasSubClass"] && tree[0]["taxHasSubClass"].indexOf("Any") === -1)
             {
                tree[0]['taxHasSubClass'] = ['Any'].concat(tree[0]['taxHasSubClass'])
                tree.splice(1,0,{"@id":"Any",
@@ -5310,15 +5610,16 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
                delete tmp[0]
                tmp = tmp.filter(String)
-               //loggergen.log("tmp",tmp,checkable)
+               //loggergen.log("tmp:",tmp,checkable)
             }
          }
-
+            
          checkable = checkable.map(e => e.replace(/bdr:/,bdr))
+         //if(!checkable.includes(id)) checkable.unshift(id)
 
          let checked = this.state.filters.facets && this.state.filters.facets[jpre],partial
 
-         //loggergen.log("checked1",jpre,e,checked)
+         //loggergen.log("checked1",jpre,e,checked,checkable)
 
 
          if(!checked) {
@@ -5360,7 +5661,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                            className={"checkbox "+(partial&&!checked?"partial":"")}
                            icon={<CheckBoxOutlineBlank/>}
                            checkedIcon={isExclu ? <Close className="excl"/>:<CheckBox  style={{color:"#d73449"}}/>}
-                           onChange={(event, checked) => this.handleCheckFacet(event,jpre,checkable,checked)}
+                           onChange={(event, checked) => this.handleCheckFacet(event,jpre,[id, ...checkable],checked)}
                         />
 
                      }
@@ -5370,7 +5671,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                            onClick={(ev) => { this.setState({collapse:{ ...this.state.collapse, [e]:!this.state.collapse[e]} }); } }>
                      { this.state.collapse[e] ? <ExpandLess /> : <ExpandMore />}
                      </span> }
-                  { !isExclu && label !== "Any" && <div class="exclude"><Close onClick={(event, checked) => this.handleCheckFacet(event,jpre,checkable,true,true)} /></div> }
+                  { !isExclu && label !== "Any" && <div class="exclude"><Close onClick={(event, checked) => this.handleCheckFacet(event,jpre,[id, ...checkable],true,true)} /></div> }
                   {
                      elem && elem["taxHasSubClass"] && elem["taxHasSubClass"].length > 0 &&
                      [
@@ -5398,7 +5699,11 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
    // TODO add providers icons
 
    render_filters(types,counts,sortByList,reverseSort,facetWidgets) {
-      return ( <div className={"SidePane left "+(!this.state.collapse.settings?"closed":"")}>
+      this._refs["sidepane"] = React.createRef()
+      this._refs["simplebar"] = React.createRef()
+      
+      return ( <div ref={this._refs["sidepane"]} className={"SidePane left "+(!this.state.collapse.settings?"closed":"") + (this.state.stuck?" isTop":"")}>
+            <SimpleBar ref={this._refs["simplebar"]} /*forceVisible="y" autoHide={false}*/ >
                   {/* <IconButton className="close" onClick={e => this.setState({...this.state,leftPane:false,closeLeftPane:true})}><Close/></IconButton> */}
                { //this.props.datatypes && (results ? results.numResults > 0:true) &&
                   <div style={{ /*minWidth:"335px",*/ position:"relative"}}>                 
@@ -5493,6 +5798,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   
                   </div>
                }
+                </SimpleBar>
                </div>
             )
    }
@@ -5502,6 +5808,9 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
    }
 
    render() {
+
+      // avoid loading home page until we know where we are supposed to be
+      if(!this.props.config) return <div><Loader loading={true}/></div>
 
       subtime("render",0)
 
@@ -5720,7 +6029,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
                // #580 auto add facet value with count 0 when selected from url but no occurrence in data
                if(this.state.filters.facets && this.state.filters.facets[jpre]) for(let f of this.state.filters.facets[jpre]) {
-                  if(meta[j] && !meta[j][f]) {                
+                  if(meta[j] && !meta[j][f] && !meta[j][" "+f] /* case of century facet js numerical key sort hack */ ) {        
+                     console.log("new:",j,f,meta,jpre,this.state.filters.facets[jpre])        
                      meta[j][f] = { dict:{}, n:0 }
                   }
                }
@@ -5919,7 +6229,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             }
 
             possible = [ ...this.state.langPreset, ...langSelect.filter(l => !this.state.langPreset || !this.state.langPreset.includes(l))]
-            loggergen.log("detec",possible,detec,this.state.langPreset,this.state.langDetect)
+            loggergen.log("detec:",language,possible,detec,this.state.langPreset,this.state.langDetect)
             
             if(detec) { 
                dataSource = detec.reduce( (acc,d) => {
@@ -5927,6 +6237,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   let presets = []
                   if(d === "tibt") for(let p of possible) { if(p === "bo" || p.match(/-[Tt]ibt$/)) { presets.push(p); } }
                   else if(d === "hani") for(let p of possible) { if(p.match(/^zh((-[Hh])|$)/)) { presets.push(p); } }
+                  else if(detec[0] === "khmr") for(let p of possible) { if(p.match(/(^km$)/i)) { presets.push(p);  } }
                   else if(["ewts","iast","deva","pinyin"].indexOf(d) !== -1) for(let p of possible) { 
                      if(p.match(new RegExp(d+"$"))) { 
                         
@@ -5964,17 +6275,47 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
       let nbResu = this.state.paginate && this.state.paginate.nMax ? this.state.paginate.nMax:(this.state.results&&this.state.results[this.state.id]?this.state.results[this.state.id].resLength:"--")
 
       let facetTags 
-      if(this.state.filters.facets)
+      if(this.state.filters.facets) {
+
+         // do not use leaf but top-level topics if possible
+         const subsumed = (k, all) => {
+            if(!this.props.topicParents && !this.props.genresParents) return true
+            else if(this.props.topicParents && this.props.topicParents[k] && this.props.topicParents[k].some(t => all.includes(t))) return true
+            else if(this.props.genresParents && this.props.genresParents[k] && this.props.genresParents[k].some(t => all.includes(t))) return true
+            return false
+         }
+
+         const taxWithSubClasses = (f,k) => {
+            let ret = [ k ]
+            let meta = this.props.searches[this.state.filters.datatype[0]][this.props.keyword+"@"+this.props.language]
+            if(meta) meta = meta.metadata
+            let node, queue = [ k ]
+            if(meta) {
+               do {        
+                  let q = queue.shift()
+                  if(f === bdo+"workIsAbout" && meta.tree && meta.tree["@graph"]) node =  meta.tree["@graph"].filter(n => n["@id"] === q)
+                  else if(f === bdo+"workGenre" && meta.genres && meta.genres["@graph"]) node =  meta.genres["@graph"].filter(n => n["@id"] === q);
+                  if(node) node.map(n => {
+                     if(n.taxHasSubClass) n.taxHasSubClass.map(t => {
+                        ret.push(t)   
+                        queue = queue.concat(n.taxHasSubClass)
+                     })
+                  })
+               } while(queue.length)
+            }
+            return ret
+         }
+
          facetTags  = Object.keys(this.state.filters.facets).map(f => {
             let vals = this.state.filters.facets[f]
             if(vals.val) { 
                vals = vals.val
-               // do not use leaf but top-level topics
             }
-            return vals.filter(k => k !== "Any").map(v => 
-               this.renderFilterTag(false, f, v, (event, checked) => this.handleCheckFacet(event, f, [ v ], false) ) 
+            return vals.filter(k => k !== "Any" && !subsumed(k,vals)).map(v => 
+               this.renderFilterTag(false, f, v, (event, checked) => this.handleCheckFacet(event, f, taxWithSubClasses(f,v), false) ) 
             ) }
          )
+      }
 
 
       let syncSlide = (e) => {
@@ -6056,6 +6397,28 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
 
 
+      this._refs["header"] = React.createRef()
+      this._refs["container"] = React.createRef()
+      this._refs["filters-UI"] = React.createRef()
+      this._refs["filters-UI-scrollable"] = React.createRef();
+
+
+      let tags = <>
+         { /* this.props.language && this.state.filters.datatype.filter(k => k !== "Any").map(k => this.renderFilterTag(true, I18n.t("Lsidebar.tags.type"), I18n.t("types."+k.toLowerCase()), (event, checked) => this.handleCheck(event, k, false) ) ) */ }                              
+         { this.props.isInstance && this.state.backToWorks && this.state.filters.instance && this.renderFilterTag(false, I18n.t("Lsidebar.tags.instanceOf"), this.state.filters.instance, (event, checked) => {
+            this.resetFilters(event)
+         } )  } 
+         { inEtext && this.renderFilterTag(false, I18n.t("Lsidebar.widgets.root"), fullUri(inEtext), (event, checked) => {
+            this.resetFilters(event)
+         } )  } 
+         { facetTags }
+         { (this.state.filters.facets || this.state.backToWorks )&& this.renderResetF() }
+      </>
+      if(tags && tags.props?.children?.length && !tags.props?.children?.some(e=>e)) tags = null
+
+
+      //console.log("tags:",tags)
+
 
       const ret = (
 <div className={(this.props.simple?"simpleSearch":"")}>
@@ -6078,28 +6441,58 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
           { top_right_menu(this) }
 
-         <div className={"App "+(message.length == 0 && !this.props.loading && !this.props.keyword ? "home":"")} style={{display:"flex"}}>
+         <div className={"App "+(message.length == 0 && !this.props.loading && !this.props.keyword ? "home":"") + (this.props.config.khmerServer?" khmerServer":"")} style={{display:"flex"}}>
             <div className={"SearchPane"+(this.props.keyword ?" resultPage":"") }  ref={this._refs["logo"]}>            
             { showMenus }
-               <div class="fond-logo">
-                  <a id="logo" target="_blank" old-href="https://www.tbrc.org/">
-                     {/* <img src="/logo.svg" style={{width:"200px"}} /> */}
-                     <img src="/pichome.jpg" />
-                     <div>
+               { !this.props.config.khmerServer && 
+                  <div class="fond-logo">
+                     <a id="logo" target="_blank" old-href="https://www.tbrc.org/">
+                        {/* <img src="/logo.svg" style={{width:"200px"}} /> */}
+                        <img src="/pichome.jpg" />
                         <div>
-                           {/* { I18n.t("home.BUDA") } */}
-                           {/* <h1>{ I18n.t("home.titleBDRC1") }<br/>{ I18n.t("home.titleBDRC2") }<br/>{ I18n.t("home.titleBDRC3") }</h1> */}
-                           <h1 lang={this.props.locale}>{ I18n.t("home.archives1") }{this.props.locale==="en" && <br/>}{ I18n.t("home.archives2") }</h1>
-                           <div>{ I18n.t("home.by") }</div>
-                           <span>{ I18n.t("home.subtitle") }</span>
+                           <div>
+                              {/* { I18n.t("home.BUDA") } */}
+                              {/* <h1>{ I18n.t("home.titleBDRC1") }<br/>{ I18n.t("home.titleBDRC2") }<br/>{ I18n.t("home.titleBDRC3") }</h1> */}
+                              <h1 lang={this.props.locale}>{ I18n.t("home.archives1") }{this.props.locale==="en" && <br/>}{ I18n.t("home.archives2") }</h1>
+                              <div>{ I18n.t("home.by") }</div>
+                              <span>{ I18n.t("home.subtitle") }</span>
+                           </div>
                         </div>
-                     </div>
-                  </a>
-               </div>
+                     </a>
+                  </div>
+               }
+               { this.props.config.khmerServer &&  !this.props.loading && !this.props.keyword && 
+                  <div class="fond-logo">
+                     <a id="logo" target="_blank" old-href="https://www.tbrc.org/">
+                        {/* <img src="/logo.svg" style={{width:"200px"}} /> */}
+                        <img src="/pichome_khmer.jpg" />
+                        <div>
+                           <div>
+                              {/* { I18n.t("home.BUDA") } */}
+                              {/* <h1>{ I18n.t("home.titleBDRC1") }<br/>{ I18n.t("home.titleBDRC2") }<br/>{ I18n.t("home.titleBDRC3") }</h1> */}
+                              <h1 lang={this.props.locale}><Trans i18nKey="home.khmer.title" components={{ newline: <br /> }} /></h1>
+                              <p>{ I18n.t("home.khmer.subtitle") }<br/><span class="link" onClick={() => {
+                                 document.querySelector("#learn").scrollIntoView({block: "start", inline: "nearest", behavior:"smooth"})
+                              }}>{ I18n.t("home.khmer.anchor") }</span></p>
+                           </div>
+                        </div>
+                     </a>
+                     <div class="abs"><ExpandMore onClick={() => {
+                        document.querySelector("#learn").scrollIntoView({block: "start", inline: "nearest", behavior:"smooth"})
+                     }}/></div>
+                  </div>
+               }
                { infoPanelH }
                {/* <h2>BUDA Platform</h2> */}
                {/* <h3>Buddhist Digital Resource Center</h3> */}
+               { (this.props.language && this.props.language != "-" || !this.props.keyword && !this.props.loading) && 
                <div id="search-bar">
+               { this.props.config.khmerServer && !this.props.keyword &&  !this.props.loading && 
+                  <span class="links">
+                     <span><Link to="/guidedsearch">{I18n.t("topbar.guided")}</Link></span>
+                     <span><Link to="/browse">{I18n.t("topbar.browse")}</Link></span>
+                  </span>
+               }
                {/* <IconButton style={{marginRight:"15px"}} className={this.state.leftPane?"hidden":""} onClick={e => this.setState({...this.state,leftPane:!this.state.leftPane,closeLeftPane:!this.state.closeLeftPane})}>                  
                   <FontAwesomeIcon style={{fontSize:"21px"}} icon={faSlidersH} title="Refine Your Search"/>
                </IconButton> */}
@@ -6127,7 +6520,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      value={this.props.latest&&this.state.keyword==="(latest)"?"":(this.props.hostFailure?"Endpoint error: "+this.props.hostFailure+" ("+this.getEndpoint()+")":this.state.keyword !== undefined && this.state.keyword!==this.state.newKW?this.state.keyword:this.props.keyword&&this.state.newKW?lucenequerytokeyword(this.state.newKW):"")}
                      style={{
                         marginTop: '0px',
-                        width: "700px",
+                        width: (this.props.config.khmerServer&&!this.props.keyword?"400px":"700px"),
                         height:"60px",
                         boxShadow: "0 2px 4px rgba(187, 187, 187, 0.5)"
                      }}
@@ -6178,7 +6571,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                               }
                         </Paper>
                   }
-               </div>
+               </div> 
                {/* work in progress
                <TextField
                   className="formControl"
@@ -6190,7 +6583,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   margin="normal"
                /> */}
 
-              <FormControl className={"formControl "+this.state.searchTypes[0].toLowerCase()} style={{textAlign:"right"}}>
+              { (!this.props.config.khmerServer || this.props.keyword) && <FormControl className={"formControl "+this.state.searchTypes[0].toLowerCase()} style={{textAlign:"right"}}>
                 {/* <InputLabel htmlFor="datatype">In</InputLabel> */}
 
                 <Select
@@ -6213,7 +6606,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                         </span>
                      </MenuItem>))}
                </Select>
-              </FormControl> 
+              </FormControl> }
 
 
             {/*  //deprecated
@@ -6255,7 +6648,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   inputRef={(str) => { this._customLang = str }}
                   onKeyPress={(e) => this.handleCustomLanguage(e)}
                /> */ }
-               </div>
+               </div> }
               { ( this.state.filters.facets || this.state.filters.datatype.indexOf("Any") === -1 )&& 
                         [ /*<Typography style={{fontSize:"23px",marginBottom:"20px",textAlign:"center"}}>
                            <Translate value="Lsidebar.activeF.title" />
@@ -6264,15 +6657,9 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                            ,*/
                            <div id="filters-UI">
                               <div>
-                              { this.state.filters.datatype.filter(k => k !== "Any").map(k => this.renderFilterTag(true, I18n.t("Lsidebar.tags.type"), I18n.t("types."+k.toLowerCase()), (event, checked) => this.handleCheck(event, k, false) ) )}                              
-                              { this.props.isInstance && this.state.backToWorks && this.state.filters.instance && this.renderFilterTag(false, I18n.t("Lsidebar.tags.instanceOf"), this.state.filters.instance, (event, checked) => {
-                                 this.resetFilters(event)
-                              } )  } 
-                              { inEtext && this.renderFilterTag(false, I18n.t("Lsidebar.widgets.root"), fullUri(inEtext), (event, checked) => {
-                                 this.resetFilters(event)
-                              } )  } 
-                              { facetTags }
-                              { (this.state.filters.facets || this.state.backToWorks )&& this.renderResetF() }
+                                 { tags && <SimpleBar ref={this._refs["filters-UI"]}  scrollableNodeProps={{ ref: this._refs["filters-UI-scrollable"] }}>
+                                    <div>{tags}</div>
+                                 </SimpleBar> }
                               </div>
                            </div>
                         ]
@@ -6297,8 +6684,43 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                */ }
             </FormGroup>
            </div>
+           { this.props.config.khmerServer && !this.props.keyword && !this.props.loading &&
+            <>
+               <section id="learn">
+                  <div>
+                     <h2>{I18n.t("home.khmer.section1.title")}</h2>
+                     <div class="float"><img src="/khmerhome-pic.jpg"/><p><Trans i18nKey="home.khmer.section1.caption" components={{lk:<Link className="khmer-link" />}}/></p></div>
+                     <Trans i18nKey="home.khmer.section1.text" components={{ newline: <br />, parag: <p />, note: <span className="note" />, lk:<a class="khmer-link" />, nbsp:<span style={{whiteSpace:"nowrap"}} />}} />
+                     <div style={{visibility:"hidden"}}>
+                        <span className="noteText"><Trans i18nKey="home.khmer.section1.noteA" components={{ note: <span className="note" />}} /></span>
+                        <span className="noteText"><Trans i18nKey="home.khmer.section1.noteB" components={{ note: <span className="note" />}} /></span>
+                     </div>
+                     <div class="abs">
+                        <div><Link to="/static/aboutkm">{I18n.t("topbar.about")}</Link></div>
+                     </div>
+                  </div>
+               </section>
+               <section class="white-bg">
+                  <div>
+                     <h2>{I18n.t("home.khmer.section2.title")}</h2>
+                     <Trans i18nKey="home.khmer.section2.text" components={{ newline: <br />, parag: <p />, note: <span className="note" />,nbsp:<span style={{whiteSpace:"nowrap"}} />}} />
+                  </div>
+               </section>
+               <section class="white-bg">
+                  <div>
+                     <div class="abs">
+                        <div><Link to="/static/resources">{I18n.t("topbar.resources")}</Link></div>
+                     </div>
+                  </div>
+                  <div class="imgs">
+                     <a href="https://www.akhmerbuddhistfoundation.org/" target="_blank"><img src="/scripts/static/images/AKBF.jpg"/></a>
+                     <a href="https://www.efeo.fr/" target="_blank"><img src="/scripts/static/images/EFEO.jpg"/></a>
+                  </div>
+               </section>
+            </>
+           }
            { infoPanelR }
-           {  (message.length > 0 || message.length == 0 && !this.props.loading ) && <div id="res-header">
+           {  (message.length > 0 || message.length == 0 && !this.props.loading ) && <div id="res-header" ref={this._refs["header"]}>
                <div>
                   <div id="settings" onClick={() => this.setState({collapse:{...this.state.collapse, settings:!this.state.collapse.settings}})}><img src="/icons/settings.svg"/></div>
                   {  // DONE change to popover style open/close
@@ -6316,7 +6738,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
            }
             
            {/* <span>{ ""+this.props.loading }</span> */}
-           <div id="res-container">
+           <div id="res-container" >
            { (!this.props.simple && (this.props.loading || this.props.keyword && (!this.props.datatypes || !this.props.datatypes.hash))) && <Loader className="fixloader"/> }
            {  (message.length > 0 || message.length == 0 && !this.props.loading) && this.render_filters(types,counts,sortByList,reverseSort,facetWidgets) }
                { /*false && this.state.keyword.length > 0 && this.state.dataSource.length > 0 &&
@@ -6340,19 +6762,20 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                }
                { (this.props.simple && !this.props.keyword || (this.props.keyword && (this.props.loading || (this.props.datatypes && !this.props.datatypes.hash)))) && <Loader className="mainloader" /> }
                { message.length == 0 && !this.props.loading && !this.props.keyword && !this.props.datatypes &&
-                  <List id="samples">
-                     {/* { messageD } */}
-                     <h3>{ I18n.t("home.message") }</h3>
-                     <h4>{ I18n.t("home.submessage") }</h4>
-                     { (!this.props.config || !this.props.config.chineseMirror) && <h4 class="subsubtitleFront">
-                        { I18n.t("home.subsubmessage_account1")}
-                        {this.props.locale==="bo"?<span> </span>:""}
-                        <span class="uri-link" onClick={() => this.props.auth.login(this.props.history.location,true)} >{I18n.t("home.subsubmessage_account4")}</span>
-                        { I18n.t("home.subsubmessage_account2")}
-                        <span class="uri-link" style={{textTransform:"capitalize"}} onClick={() => this.props.auth.login(this.props.history.location,true)} >{I18n.t("home.subsubmessage_account5")}</span>
-                        { I18n.t("home.subsubmessage_account3")}</h4> }
-                     <h4 class="subsubtitleFront">{ I18n.t("home.subsubmessage") }<a title="email us" href="mailto:help@bdrc.io" lang={this.props.locale}>help@bdrc.io</a>{ I18n.t("home.subsubmessage_afteremail") }</h4>
-                  </List> }
+                  !this.props.config.khmerServer && 
+                     <List id="samples">
+                        {/* { messageD } */}
+                        <h3>{ I18n.t("home.message") }</h3>
+                        <h4>{ I18n.t("home.submessage") }</h4>
+                        { (!this.props.config || !this.props.config.chineseMirror) && <h4 class="subsubtitleFront">
+                           { I18n.t("home.subsubmessage_account1")}
+                           {this.props.locale==="bo"?<span> </span>:""}
+                           <span class="uri-link" onClick={() => this.props.auth.login(this.props.history.location,true)} >{I18n.t("home.subsubmessage_account4")}</span>
+                           { I18n.t("home.subsubmessage_account2")}
+                           <span class="uri-link" style={{textTransform:"capitalize"}} onClick={() => this.props.auth.login(this.props.history.location,true)} >{I18n.t("home.subsubmessage_account5")}</span>
+                           { I18n.t("home.subsubmessage_account3")}</h4> }
+                        <h4 class="subsubtitleFront">{ I18n.t("home.subsubmessage") }<a title="email us" href="mailto:help@bdrc.io" lang={this.props.locale}>help@bdrc.io</a>{ I18n.t("home.subsubmessage_afteremail") }</h4>
+                     </List> }
                { /* (this.props.datatypes && this.props.datatypes.hash && this.props.datatypes.metadata[bdo+this.state.filters.datatype[0]] && message.length === 0 && !this.props.loading) && 
                   <List id="results">
                      <h3 style={{marginLeft:"21px"}}>No result found.</h3>             
@@ -6380,7 +6803,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   </List>
                }
                </div>
-               { message.length == 0 && !this.props.loading && !this.props.keyword && (!this.props.config || !this.props.config.chineseMirror) && this.props.latestSyncsNb > 0 &&
+               { !this.props.config.khmerServer && message.length == 0 && !this.props.loading && !this.props.keyword && (!this.props.config || !this.props.config.chineseMirror) && this.props.latestSyncsNb > 0 &&
                   <div id="latest">
                      <h3>{I18n.t("home.new")}</h3>
                      <Link class="seeAll" to="/latest" onClick={()=>this.setState({filters:{...this.state.filters,datatype:["Scan"]}})}>{I18n.t("misc.seeAnum",{count:this.props.latestSyncsNb})}</Link>
@@ -6427,7 +6850,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             </div>
             {/* <LanguageSidePaneContainer /> */}
          </div>
-         { message.length == 0 && !this.props.loading && !this.props.keyword && (!this.props.config || !this.props.config.chineseMirror) && <Footer locale={this.props.locale} hasSyncs={this.props.latestSyncsNb > 0}/> }
+         { message.length == 0 && !this.props.loading && !this.props.keyword && (!this.props.config || !this.props.config.chineseMirror) && <Footer locale={this.props.locale} hasSyncs={this.props.config.khmerServer || this.props.latestSyncsNb > 0}/> }
       </div>
       );
 

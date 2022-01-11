@@ -101,10 +101,11 @@ export const noResource = (iri: string, error:string): Action => {
 
 
 TYPES.getAssocTypes = 'GET_ASSOC_TYPES';
-export const getAssocTypes = (rid: string): Action => {
+export const getAssocTypes = (rid: string, tag?:string): Action => {
     return {
         type: TYPES.getAssocTypes,
-        payload: rid
+        payload: rid,
+        meta:tag
     }
 }
 
@@ -376,6 +377,35 @@ TYPES.gotInstances = 'GOT_INSTANCES';
 export const gotInstances = (uri: string, data: {}): Action => {
     return {
         type: TYPES.gotInstances,
+        payload: uri,
+        meta: data
+    }
+}
+
+
+TYPES.checkResults = 'CHECK_RESULTS';
+export const checkResults = (params: string, route: string): Action => {
+    return {
+        type: TYPES.checkResults,
+        payload: params,
+        meta: { route }
+    }
+}
+
+
+TYPES.getReproductions = 'GET_REPRODUCTIONS';
+export const getReproductions = (uri: string,init?:boolean): Action => {
+    return {
+        type: TYPES.getReproductions,
+        payload: uri,
+        meta:init
+    }
+}
+
+TYPES.gotReproductions = 'GOT_REPRODUCTIONS';
+export const gotReproductions = (uri: string, data: {}): Action => {
+    return {
+        type: TYPES.gotReproductions,
         payload: uri,
         meta: data
     }
@@ -674,13 +704,14 @@ export const foundResults = (keyword: string, language:string, results: [], data
 }
 
 TYPES.foundDatatypes = 'FOUND_DATATYPES';
-export const foundDatatypes = (keyword: string, language:"",results: []): FoundResultsAction => {
+export const foundDatatypes = (keyword: string, language:"",results: [], tag?:string): FoundResultsAction => {
     return {
         type: TYPES.foundDatatypes,
         payload: {
             keyword,
             language,
-            results
+            results,
+            tag
         }
     }
 }

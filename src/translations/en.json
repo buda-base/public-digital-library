@@ -33,7 +33,23 @@
       "search": "Search",
       "choose": "Choose language",
       "start": "Start typing then select search language",
-      "new": "New Scans Released This Week"
+      "new": "New Scans Released This Week",
+      "khmer":{
+         "title":"Khmer<newline/>Manuscript<newline/>Heritage Project",
+         "subtitle":"Explore Cambodia's traditional literature.",
+         "anchor": "Learn more about the project",
+         "section1":{
+            "title":"The Khmer Manuscript Heritage Project",
+            "text":"<parag>The Buddhist Digital Resource Center launched the Khmer Manuscript Heritage Project in 2019 to safeguard the literary heritage of Cambodia through the digitization of surviving traditional palm-leaf manuscripts. In two and a half years, in collaboration with Digital Divide Data, The Brechin Group Inc., the Fonds pour l'Édition des Manuscrits du Cambodge, and the École française d’Extrême-Orient, BDRC sought out significant collections in Phnom Penh and surrounding provinces. Trained by manuscript and digitization experts, local Cambodian youth cleaned, organized, and digitized the manuscript collections, and the digital files were archived in BDRC’s repository for long-term preservation.</parag><parag>The resulting digital collection <nbsp>—56</nbsp> terabytes consisting of 1,456,341 <nbsp>pages—</nbsp> represents the vast majority of manuscripts that have survived to the modern day and provides the world with free access to an unparalleled collection of traditional Cambodian literature.</parag><parag>The Khmer Manuscript Heritage Project was made possible with generous support from <lk target='_blank' href='https://www.akhmerbuddhistfoundation.org/'>A Khmer Buddhist Temple Foundation</lk>.</parag>",
+            "noteA":"<note>[a]</note> Lorem ipsum dolor sit amet",
+            "noteB":"<note>[b]</note> Consectetur adipiscing elit.",
+            "caption":"Illustrated leporello manuscript from Siem Reap (<lk to='/show/bdr:W1FEMC039097'>link</lk>)"
+         }, 
+         "section2":{
+            "title": "Resources",
+            "text":"<parag>Relevant bibliographies and secondary sources concerning Cambodian manuscripts <nbsp>—coming soon</nbsp>. </parag>"
+         }
+      }
    },
    "types": {
       "any": "Any",
@@ -82,7 +98,11 @@
       "bookmarks": "Bookmarks",
       "results": "Search results for",
       "instances": "versions of",
-      "proxied":"This is a proxied version provided by your institution's library subscription; login is disabled. If you are part of a subscribing institution, you can download PDFs of texts in the subscribed collections. If you have an account and wish to use it, please go to <tag href='https://library.bdrc.io' target='_blank'>https://library.bdrc.io<\/tag>"
+      "proxied":"This is a proxied version provided by your institution's library subscription; login is disabled. If you are part of a subscribing institution, you can download PDFs of texts in the subscribed collections. If you have an account and wish to use it, please go to <tag href='https://library.bdrc.io' target='_blank'>https://library.bdrc.io<\/tag>",
+      "resources":"resources",
+      "guided":"Guided search",
+      "browse":"browse",
+      "home":"home"      
    },
    "Lsidebar": {
       "sortBy": {
@@ -107,7 +127,8 @@
          "instanceOf": "$t(types.instance) Of",
          "reset": "Reset filters",
          "include": "Include results with",
-         "exclude": "Exclude results with"
+         "exclude": "Exclude results with",
+         "try": "Try another search"
       },
       "activeF": {
          "title": "Active Filters",
@@ -221,6 +242,11 @@
       "tmp:possibleAccess": "Access Possible",
       "tmp:catalogOnly": "Catalog Only",
       "tmp:nonReleasedItems": "Non-released items",
+      "tmp:FEMCManuscriptCode": "FEMC Manuscript Code",
+      "tmp:completion":"Completion",
+      "tmp:complete":"Complete",
+      "tmp:incomplete":"Incomplete",
+      "tmp:scans":"scans",
       "tmp:colophonMatch":"Colophon Match"
    },
    "result": {
@@ -240,9 +266,9 @@
       "openEin": "Open in Etext",
       "hasInstance": "Has {{count}} $t(types.instance)",
       "hasInstance_plural": "Has {{count}} $t(types.instance_plural)",
-      "assoc": "{{type}} associated with: <res href='/show/{{- rid}}'>{{- name}}<\/res>",
+      "assoc": "{{type}} associated with: <res to='/show/{{- rid}}'>{{- name}}<\/res>",
       "moreres": "More {{txt}} are cataloged, do you want to see them?",
-      "inEtext": "Results for <key>{{- keyword}}<\/key> <key>[{{language}}]<\/key><br/>in <res href='/show/{{- rid}}'>{{- name}}<\/res>",
+      "inEtext": "Results for <key>{{- keyword}}<\/key> <key>[{{language}}]<\/key><br/>in <res to='/show/{{- rid}}'>{{- name}}<\/res>",
       "openO": "Open in Outline",
       "bdDate":"{{birth}} – {{death}}",
       "bDate":"b. {{num}}",
@@ -358,7 +384,11 @@
       "seeM_plural": "{{count}} more versions available",
       "card": "{{num}}",
       "inter": "{{min}}~{{max}}",
-      "ordInter": "{{min}}-{{max,ordinal}} c."
+      "ordInter": "{{min}}-{{max,ordinal}} c.",
+      "see10More": "See 10 More",
+      "showR": "Show {{count}} reproductions",
+      "hideR": "Hide reproductions",
+      "previewN": "preview {{count}}"
    },
    "lang": {
       "en": "English",
@@ -399,7 +429,8 @@
          "xDts": "DTS",
          "alalc97": "ALA-LC",
          "latnPinyin": "Pinyin",
-         "piXNdia": "Pali / Burmese / Khmer (transliterated)"
+         "piXNdia": "Pali / Burmese / Khmer (transliterated)",
+         "piKhmr": "Pali in Khmer"
       },
       "tip": {
          "zh": "Chinese",
@@ -431,7 +462,8 @@
          "xDts": "DTS",
          "xIast": "IAST",
          "alalc97": "ALA-LC",
-         "latnPinyin": "Pinyin"
+         "latnPinyin": "Pinyin",
+         "xTwktt":"Trent Walker Khmer-Tai Translit."
       },
       "x": "Transliterated",
       "latn": "Transliterated"
@@ -441,11 +473,23 @@
       "result": "{{count}} Result",
       "result_plural": "{{count}} Results",
       "filters": {
+         "noresult-": "No result",
          "noresults": "No result for {{keyword}} [{{language}}] {{type}}",
          "noresultsAsso": "No result associated with {{keyword}} {{type}}"
       },
       "seeO": "See results in other data types",
-      "backToW": "Back to Works"
+      "backToW": "Back to Works",
+      "any":"(Select any)",
+      "one":"(Select one)",
+      "reset":"Reset",
+      "nothing":"No match",
+      "choose":"Choose...",
+      "more":"Enter at least 2 characters...",
+      "many": "Too many results ({{count}})",
+      "load": "Loading {{count}} results<newline/>Please wait...",
+      "no": "No result",
+      "cancel":"Cancel",
+      "loading":"Loading..."
    },
    "Rsidebar": {
       "title": "Display Preferences",

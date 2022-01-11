@@ -2776,7 +2776,7 @@ class ResourceViewer extends Component<Props,State>
                bdrcData = null
             }
             
-            ret.push([<span class={"ulink " + (sameAsPrefix?sameAsPrefix:'')  }>{befo}{link}</span>,lang?<Tooltip placement="bottom-end" title={
+            ret.push([<span lang={lang} class={"ulink " + (sameAsPrefix?sameAsPrefix:'')  }>{befo}{link}</span>,lang?<Tooltip placement="bottom-end" title={
                <div style={{margin:"10px"}}>
                   {I18n.t(languages[lang]?languages[lang].replace(/search/,"tip"):lang)}
                </div>
@@ -3161,7 +3161,7 @@ class ResourceViewer extends Component<Props,State>
 
                               <TabPanel>
                               { lang && <div><span class='first'>{I18n.t("popover.lang")}</span><span>{I18n.t("punc.colon")}&nbsp;</span><span>{I18n.t(languages[lang]?languages[lang].replace(/search/,"tip"):lang)}</span></div> }
-                              { (other.length > 0) && <div><span class='first'>{I18n.t("popover.otherLang",{count:other.length})}</span><span>{I18n.t("punc.colon")}&nbsp;</span><div>{other.map(o => <span class="label">{o.value}{this.tooltip(o.lang)}</span>)}</div></div> }
+                              { (other.length > 0) && <div><span class='first'>{I18n.t("popover.otherLang",{count:other.length})}</span><span>{I18n.t("punc.colon")}&nbsp;</span><div>{other.map(o => <span class="label" lang={o.lang}>{o.value}{this.tooltip(o.lang)}</span>)}</div></div> }
                               { (e.datatype && e.datatype.endsWith("#gYear")) && <div><span class='first'>{I18n.t("popover.calendar")}</span><span>{I18n.t("punc.colon")}&nbsp;</span><span>{I18n.t("popover.gregorian")}</span></div>}
                               { (era && era.length > 0) &&  <div><span class='first'>{this.proplink(bdo+"yearInEra")}</span><span>{I18n.t("punc.colon")}&nbsp;</span><span>{this.proplink(era[0].value)}</span></div>  }
                               { (e.start !== undefined) &&  <div><span class='first'>{this.proplink(bdo+"startChar")}</span><span>{I18n.t("punc.colon")}&nbsp;</span><span>{e.start}</span></div>  }
@@ -4315,6 +4315,7 @@ class ResourceViewer extends Component<Props,State>
           else  title = <h2 class="on" lang={this.props.locale}>{_T}<span>{loaded && (T_ === "Work" || T_ === "Instance")?I18n.t("resource.noT"):shortUri(other?other:this.props.IRI)}</span></h2>
       }
       
+      
       if(!title) {
          if(titlElem) {
             if(typeof titlElem !== 'object') titlElem =  { "value" : titlElem, "lang":""}
@@ -4326,11 +4327,11 @@ class ResourceViewer extends Component<Props,State>
             title = getLangLabel(this,"", titlElem, false, false, otherLabels)            
          }
          
-         //loggergen.log("titl",kZprop,titlElem,title,otherLabels,other)
+         loggergen.log("titl:",title,kZprop,titlElem,otherLabels,other)
 
          let _befo
          if(title && title.value) {
-            if(!other && !document.title.includes(title.value) ) document.title = title.value + " - Buddhist Digital Archives"
+            if(!other && !document.title.includes(title.value) ) document.title = title.value + " - " + (this.props.config?.khmerServer?"Khmer Manuscript Heritage Project":"Buddhist Digital Archives")
             if(title.fromSameAs && !title.fromSameAs.match(new RegExp(bdr))) {
                const {befo,bdrcData} = this.getSameLink(title,shortUri(title.fromSameAs).split(":")[0]+" sameAs hasIcon")            
                _befo = befo
@@ -4793,6 +4794,11 @@ class ResourceViewer extends Component<Props,State>
 
       //loggergen.log("genP",elem,k,maxDisplay,n)
 
+      let linkToVersions, maxVersions = 20
+      if(k === bdo+"workHasInstance" && ret.length > 2) {
+         linkToVersions = <span class="expand linkToVersions"><Link to={"/search?i="+this.props.IRI+"&t=Work"}>{I18n.t("misc.browseA",{count: ret.length})}</Link></span>
+      }
+      
       if(!isSub && n > maxDisplay) {      
          /* CSS columns won't balance evenly
          let nb = Math.ceil(maxDisplay / 2)
@@ -4809,18 +4815,20 @@ class ResourceViewer extends Component<Props,State>
                <h3><span>{this.proplink(k,null,n)}{I18n.t("punc.colon")}</span></h3>
                <div className={"propCollapseHeader in-"+(this.state.collapse[k]===true)}>
                   {ret.slice(0,maxDisplay)}
-                  { (false || (!this.state.collapse[k] && hasMaxDisplay !== -1) ) && <span
+                  { (false || (!this.state.collapse[k] && hasMaxDisplay !== -1) ) && <><span
                      onClick={(e) => this.setState({...this.state,collapse:{...this.state.collapse,[k]:!this.state.collapse[k]}})}
                      className="expand">
-                        {I18n.t("misc."+(this.state.collapse[k]?"hide":"seeMore")).toLowerCase()}&nbsp;<span
+                        {I18n.t("misc."+(this.state.collapse[k]?"hide":"see"+(linkToVersions&&ret.length > maxVersions?"10":"")+"More")).toLowerCase()}&nbsp;<span
                         className="toggle-expand">
                            { this.state.collapse[k] && <ExpandLess/>}
                            { !this.state.collapse[k] && <ExpandMore/>}
                      </span>
-                  </span> }
+                  </span>
+                  { linkToVersions }
+                  </> }
                </div> 
                <Collapse timeout={{enter:0,exit:0}} className={"propCollapse in-"+(show===true)} in={show}>
-                  {ret}
+                  {k === bdo+"workHasInstance"?ret.slice(0,maxVersions):ret}
                </Collapse>
                {/* // failure with CSS columns
                <div className={"propCollapseHeader in-"+(this.state.collapse[k]===true)}>
@@ -4831,15 +4839,17 @@ class ResourceViewer extends Component<Props,State>
                   {ret.slice(i1,i1+nb1)}
                   {ret.slice(i2,n)}
                </Collapse> */}
-               { (this.state.collapse[k] || hasMaxDisplay === -1) && <span
+               { (this.state.collapse[k] || hasMaxDisplay === -1) && <><span
                onClick={(e) => this.setState({...this.state,collapse:{...this.state.collapse,[k]:!show}})}
                className="expand">
-                  {I18n.t("misc."+(show?"hide":"seeMore")).toLowerCase()}&nbsp;<span
+                  {I18n.t("misc."+(show?"hide":"see"+(linkToVersions&&ret.length > maxVersions?"10":"")+"More")).toLowerCase()}&nbsp;<span
                   className="toggle-expand">
                      { show && <ExpandLess/>}
                      { !show && <ExpandMore/>}
                   </span>
-               </span> }
+               </span>
+               { linkToVersions }
+               </> }               
             </div>
          )
       }
@@ -4851,6 +4861,7 @@ class ResourceViewer extends Component<Props,State>
                <div className={k === bdo+"personTeacherOf" || k === bdo + "personStudentOf" ? "propCollapseHeader in-false":"group"}>
                {ret}               
                </div>
+               { linkToVersions }
             </div>
          )
       }
@@ -7891,18 +7902,29 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
       let hasRel = ((related && related.length > 0)||(createdBy && createdBy.length > 0))
       if((!hasRel || this.state.relatedTabAll) && !["Instance","Images","Etext"].includes(_T)) {
-         if(this.props.assocResources && this.props.config &&  (!this.props.assocTypes || !this.props.assocTypes[this.props.IRI+"@"])) this.props.onGetAssocTypes(this.props.IRI)
+         if(this.props.assocResources && this.props.config &&  !this.props.assocTypes) this.props.onGetAssocTypes(this.props.IRI, "assocTypes")
       }  
+      
+      let onKhmerServer = (this.props.config && this.props.config.khmerServer)
+
       let all    
       if(this.props.assocTypes && this.props.assocTypes[this.props.IRI+"@"] && this.props.assocTypes[this.props.IRI+"@"].metadata) {
-         all = Object.values(this.props.assocTypes[this.props.IRI+"@"].metadata).reduce( (acc,c) => acc+Number(c), 0)
+         if(/* !onKhmerServer || */ _T !== "Work") all = Object.values(this.props.assocTypes[this.props.IRI+"@"].metadata).reduce( (acc,c) => acc+Number(c), 0)
+         else {
+            all = 0
+            for(let k of Object.keys(this.props.assocTypes[this.props.IRI+"@"].metadata)) {
+               if(!k.endsWith("Instance")) all += Number(this.props.assocTypes[this.props.IRI+"@"].metadata[k])
+            }
+         }
       }
+
 
       let allRel, t1 ;
       if(this.props.assocTypes && this.props.assocTypes[this.props.IRI+"@"] && this.props.assocTypes[this.props.IRI+"@"].metadata) {
          allRel = Object.keys(this.props.assocTypes[this.props.IRI+"@"].metadata).map(r => { 
             let v = Number(this.props.assocTypes[this.props.IRI+"@"].metadata[r])
             let t = r.replace(/^.*\/([^/]+)$/,"$1")
+            if(/* onKhmerServer && */ t === "Instance" && _T === "Work") return 
             let url = "/search?r="+this.props.IRI+"&t="+t
             if(!t1) t1 = url
             return (<div>                                                                           
@@ -7910,7 +7932,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                <div><Link to={url}><span lang={this.props.locale}>{I18n.t("misc.allT",{count:v,type:I18n.t("types."+t.toLowerCase(),{count:v})})}</span></Link></div>
                {/* <Link to={url}>{I18n.t("misc.seeR",{count:v})}</Link> */}
             </div>)
-         })         
+         }).filter(a => a)         
       }
 
    /* //deprecated
@@ -8001,7 +8023,8 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                   searchTerm = lucenequerytokeyword(searchUrl.replace(/.*q=([^&]+).*/,"$1")) 
                else if(searchUrl.match(/r=/))               
                   searchTerm = lucenequerytokeyword(searchUrl.replace(/.*r=([^&]+).*/,"$1")) 
-
+               else if(searchUrl.match(/i=/))               
+                  searchTerm = I18n.t("topbar.instances")+" "+searchUrl.replace(/.*i=([^&]+).*/,"$1") 
             }
             else { 
                backTo = decodeURIComponent(backTo.replace(new RegExp("(([?])|&)"+withW),"$2"))+"&"+withW
@@ -8368,7 +8391,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                   <div class="data" id="perma">{ this.perma_menu(pdfLink,monoVol,fairUse,kZprop.filter(k => k.startsWith(adm+"seeOther")))  }</div>
                   { theDataBot }
                   { ( /*hasRel &&*/ this.props.assocResources && !["Instance","Images","Etext"].includes(_T)) &&
-                     <div class="data related" id="resources">
+                     <div class="data related" id="resources" data-all={all}>
                         <div>
                            <div><h2>{I18n.t(true || _T=== "Place"||_T==="Corporation"?"index.relatedR":(_T==="Product"?"index.relatedM":(_T==="Work"&&serial?"index.relatedS":"index.related")))}</h2>{/* ( ( (this.state.relatedTabAll||!related.length&&!createdBy.length)&&t1) || related && related.length > 4 || createdBy && createdBy.length > 4) && <Link to={(this.state.relatedTabAll||!related.length&&!createdBy.length)&&t1?t1:("/search?t="+(_T==="Corporation"&&(this.state.relatedTab||!related.length)?"Person":(_T==="Place"&&this.state.relatedTab?"Instance":(_T==="Product"?"Scan":"Work")))+"&r="+this.props.IRI)}>{I18n.t("misc.seeA")}</Link> */}</div>
                            { /*(related && related.length > 0 && (!createdBy  || !createdBy.length)) && <div class="rel-or-crea">{related}</div>*/}

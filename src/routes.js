@@ -23,9 +23,11 @@ import Auth,{TestToken} from './Auth.js';
 import UserViewerContainer from './containers/UserViewerContainer';
 import ProfileContainer from './containers/ProfileContainer';
 import StaticRouteContainer from './containers/StaticRouteContainer';
-import Profile from './components/ProfileStatic';
+import GuidedSearchContainer from './containers/GuidedSearchContainer'
+import BrowseContainer from './containers/BrowseContainer'
 import { top_right_menu } from './components/App'
 
+import Profile from './components/ProfileStatic';
 import ClearCache from "react-clear-cache";
 
 import I18n from 'i18next';
@@ -145,19 +147,17 @@ const makeMainRoutes = () => {
               <Router history={history}>
                 <Switch>
                      <Route exact path="/static/:DIR1/:DIR2/:DIR3/:PAGE" render={(props) => {
-                           return <StaticRouteContainer dir={props.match.params.DIR1+"/"+props.match.params.DIR2+"/"+props.match.params.DIR3} page={props.match.params.PAGE} history={history}/>
-                        }
-                     }/>
+                        return <StaticRouteContainer dir={props.match.params.DIR1+"/"+props.match.params.DIR2+"/"+props.match.params.DIR3} page={props.match.params.PAGE} history={history} auth={auth}/>
+                     }}/>
                      <Route exact path="/static/:DIR1/:DIR2/:PAGE" render={(props) => {
-                           return <StaticRouteContainer dir={props.match.params.DIR1+"/"+props.match.params.DIR2} page={props.match.params.PAGE} history={history}/>
-                        }
-                     }/>
-                     <Route exact path="/static/:DIR/:PAGE" render={(props) => 
-                        <StaticRouteContainer dir={props.match.params.DIR} page={props.match.params.PAGE} history={history}/>
-                     }/>
-                     <Route exact path="/static/:PAGE" render={(props) => 
-                        <StaticRouteContainer dir={""} page={props.match.params.PAGE} history={history}/>
-                     }/>                                                
+                        return <StaticRouteContainer dir={props.match.params.DIR1+"/"+props.match.params.DIR2} page={props.match.params.PAGE} history={history} auth={auth}/>                        
+                     }}/>
+                     <Route exact path="/static/:DIR/:PAGE" render={(props) => {
+                        return <StaticRouteContainer dir={props.match.params.DIR} page={props.match.params.PAGE} history={history} auth={auth}/>
+                     }}/>
+                     <Route exact path="/static/:PAGE" render={(props) => {
+                        return <StaticRouteContainer dir={""} page={props.match.params.PAGE} history={history}  auth={auth}/>
+                     }}/>                                                
                      <Route path="/testToken" render={(props) => {
                         store.dispatch(initiateApp());
                         return (<TestToken auth={auth} history={history} />)
@@ -261,6 +261,21 @@ const makeMainRoutes = () => {
                               {({ isLatestVersion, emptyCacheStorage }) => (<AppContainer history={history} auth={auth}/> )}
                            </ClearCache>
                         )}}/>
+
+                     <Route exact path="/guidedsearch" render={(props) => {                        
+                        return ( 
+                           <ClearCache auto={true}  duration={20*60*1000}>
+                              {({ isLatestVersion, emptyCacheStorage }) => (<GuidedSearchContainer history={history} auth={auth}/> )}
+                           </ClearCache>
+                        )
+                     }} />
+                     <Route exact path="/browse" render={(props) => {
+                        return ( 
+                           <ClearCache auto={true}  duration={20*60*1000}>
+                              {({ isLatestVersion, emptyCacheStorage }) => (<BrowseContainer history={history} auth={auth}/> )}
+                           </ClearCache>
+                        )
+                     }} />
                      <Route path="/search" render={(props) => {
                         let get = qs.parse(history.location.search)
                         //if(!store.getState().data.ontology)

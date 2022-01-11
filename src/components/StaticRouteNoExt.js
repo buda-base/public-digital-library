@@ -12,11 +12,12 @@ import store from '../index';
 import { top_right_menu } from './App'
 import { auth, Redirect404 } from '../routes'
 import { initiateApp } from '../state/actions';
+import Footer from "./Footer"
 
 import $ from 'jquery' ;
 
 
-type State = { content:any, error:integer, collapse:{} }
+type State = { content:any, error:integer, collapse:{}, route:"" }
 
 type Props = { history:{}, locale:string, config:{} }
 
@@ -28,7 +29,7 @@ export class StaticRouteNoExt extends Component<State, Props>
         super(props);
         this._urlParams = qs.parse(history.location.search) 
         this.state = { content: "", collapse:{} } //"loading..."+props.dir+"/"+props.page }
-        store.dispatch(initiateApp(this._urlParams,null,null,"static"))
+        if(!this.props.config) store.dispatch(initiateApp(this._urlParams,null,null,"static"))
 
         let i18nLoaded = setInterval(() => {
             console.log("i18n",I18n,I18n.language,I18n.languages);
@@ -49,7 +50,8 @@ export class StaticRouteNoExt extends Component<State, Props>
 
     componentDidUpdate() { 
         this._urlParams = qs.parse(history.location.search) 
-        if(I18n.language && this.state.locale !== this.props.locale) {
+        if(I18n.language && this.state.locale !== this.props.locale || this.state.route != this.props.dir+"/"+this.props.page ) {
+            if(this.state.route != this.props.dir+"/"+this.props.page) this.setState({ route: this.props.dir+"/"+this.props.page })
             this.updateContent();  
         }
         /* // impossible to get iframe content height without js code server-side
@@ -98,16 +100,17 @@ export class StaticRouteNoExt extends Component<State, Props>
         else return (
             <div>
                 { (!I18n.language || !this.props.locale || !this.state.content) && <Loader loaded={false} /> }
-                <div class="App home static">
+                <div class={"App home static"+(this.props.config && this.props.config.khmerServer ? " khmer":"")}>
                     <div class="SearchPane">
                         <div className="static-container" data-dir={this.props.dir} data-page={this.props.page}>
-                            <div id="samples" >
+                            <div {...!this.props.config || !this.props.config.khmerServer?{id:"samples"}:{}} >
                                 {HTMLparse(this.props.dir.includes("budax/")?"<div>"+this.state.content+"</div>":this.state.content)}
                             </div>
                         </div> 
                     </div>
                 </div>
                 { top_right_menu(this) }
+                { this.props.config && this.props.config.khmerServer && <Footer locale={this.props.locale} hasSyncs={true}/> }
             </div>
         );
     }

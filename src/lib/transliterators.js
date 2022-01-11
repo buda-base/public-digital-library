@@ -113,7 +113,7 @@ export function sortLangScriptLabels(data,preset,translit)
    
    //console.log("sort",JSON.stringify(data,null,3)); //preset,translit,data)
 
-   let data_ = data.filter(e => e).map(e => {
+   let data_ = data.filter(e => e && (e.value || e["@value"] || e.k)).map(e => {
       let k = e["lang"]
       if(!k) k = e["xml:lang"]
       if(!k) k = e["@language"]
@@ -182,6 +182,15 @@ export function sortLangScriptLabels(data,preset,translit)
 
    //console.log("data",data)
 
+   // #622 WIP: cant tell yet if it actually sorts anything?? actually it does once altLabels are not wrongly used anymore!
+   const khmerSort = (a,b) => {
+      const collator = new Intl.Collator('km')
+      if(collator) return collator.compare(a._val,b._val)
+      else if(a._val < b._val) return -1
+      else if(a._val > b._val) return 1
+      else return 0
+   }
+
    for(let k of Object.keys(data)) {
 
       //console.log("k",k)
@@ -189,12 +198,16 @@ export function sortLangScriptLabels(data,preset,translit)
       data[k] = data[k].map(e =>({...e, _val:(e.value !== undefined?e.value:(e["@value"]?e["@value"]:"")).replace(/[↦↤]/g,"")}))
 
       if(k === "bo" || k === "bo-Tibt") {
+         //console.log("sorting bo:",JSON.stringify(data[k],null,3))
          data_ = data_.concat(data[k].sort((a,b) => tibetSort.compare(a._val,b._val)))
-      }
-      else if(k.endsWith("ewts")) {
+      } else if(k.endsWith("ewts")) {
+         //console.log("sorting ewts:",JSON.stringify(data[k],null,3))
          data_ = data_.concat(data[k].sort((a,b) => tibetSort.compareEwts(a._val,b._val)))
-      }
-      else {
+      } else if(k.startsWith("km") || k.endsWith("khmr")) {
+         //console.log("sorting km:",JSON.stringify(data[k],null,3))
+         data_ = data_.concat(data[k].sort(khmerSort))
+      } else {
+         //console.log("sorting ?:",k,JSON.stringify(data[k],null,3))
          data_ = data_.concat(__.orderBy(data[k],[ "_val" ],['asc']))
       }
    }
@@ -228,7 +241,7 @@ export function getMainLabel(data,extpreset)
    let bestlt = null;
    let bestscore = 99;
    for(let e of data) {
-      if(!e) continue ;
+      if(!e || !e.value && !e["@value"]) continue ;
       let k = e["lang"]
       if(!k) k = e["@language"]
       if(!k) k = e["xml:lang"]

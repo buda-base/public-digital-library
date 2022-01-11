@@ -5,13 +5,14 @@ import I18n from 'i18next';
 import 'intl-pluralrules' // #400
 
 export const langScripts = {
-   "zh":"lang.langscript.zh", "en":"lang.langscript.en", "pi":"lang.langscript.pi", "bo":"lang.langscript.bo", "sa":"lang.langscript.sa", "inc":"lang.langscript.inc",
+   "zh":"lang.langscript.zh", "en":"lang.langscript.en", "pi":"lang.langscript.pi", "bo":"lang.langscript.bo", "sa":"lang.langscript.sa", "inc":"lang.langscript.inc", "km":"lang.langscript.km",
    "hans":"lang.langscript.hans","hant":"lang.langscript.hant",
    "deva":"lang.langscript.deva","newa":"lang.langscript.newa","sinh":"lang.langscript.sinh",
    "latn":"lang.langscript.ltn",
    "x-ewts":"lang.langscript.xEwts","x-dts":"lang.langscript.sDts","alalc97":"lang.langscript.alalc97","latn-pinyin":"lang.langscript.latnPinyin",
    "x-iast":"lang.langscript.xIast",
-
+   "khmr":"lang.langscript.km",
+   "x-twktt":"lang.langscript.xTwktt",
 }
 
 const dataLangUI = {

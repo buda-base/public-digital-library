@@ -12,6 +12,7 @@ import bdrcApi, { getEntiType, ResourceNotFound } from '../../lib/api';
 import {sortLangScriptLabels, extendedPresets} from '../../lib/transliterators';
 import {auth} from '../../routes';
 import {shortUri,fullUri,isAdmin,sublabels,subtime} from '../../components/App'
+import {getQueryParam, GUIDED_LIMIT} from '../../components/GuidedSearch'
 import qs from 'query-string'
 import history from '../../history.js'
 
@@ -70,6 +71,8 @@ async function initiateApp(params,iri,myprops,route,isAuthCallback) {
       {
          const config = await api.loadConfig();
 
+         console.log("is khmer server ?",config.khmerServer)
+
          //I18n.setHandleMissingTranslation((key, replacements) => key);
 
          if(config.auth) {
@@ -87,11 +90,11 @@ async function initiateApp(params,iri,myprops,route,isAuthCallback) {
          if(config && config.chineseMirror) locale = "zh"
 
          // 1-url param
-         if(params && params.uilang && ['bo','en','zh'].includes(params.uilang)) locale = params.uilang
+         if(params && params.uilang && ['bo','en','zh','km','fr'].includes(params.uilang)) locale = params.uilang
          // 2-saved preference
          else if(val = localStorage.getItem('uilang')) locale = val
          // 3-browser default
-         else if(['bo','en','zh'].includes(val = window.navigator.language.slice(0, 2))) locale = val
+         else if(['bo','en','zh','km','fr'].includes(val = window.navigator.language.slice(0, 2))) locale = val
          // 4-config file
          else locale = config.language.data.index
 
@@ -117,10 +120,17 @@ async function initiateApp(params,iri,myprops,route,isAuthCallback) {
 
       }
 
-      if(route === "static" || route === "mirador") {
+      if( ["static", "mirador", "guidedsearch", "browse" ].includes(route)) {
          
          if(route === "mirador" && params.backToViewer) {
             if(!auth.isAuthenticated()) auth.login(decodeURIComponent(params.backToViewer))
+         }
+
+         if(route === "guidedsearch") {
+            if(!state.data.dictionary) {
+               const dico = await api.loadDictionary()
+               store.dispatch(dataActions.loadedDictionary(dico));                       
+            }
          }
          
          return ;
@@ -335,6 +345,30 @@ else if(params && params.p) {
    store.dispatch(dataActions.ontoSearch(params.p));
 }
 else if(params && params.q) {
+
+   
+   if(params.q == "-" && !state.data.searches["-@-"]) {
+      let url = "?format=json&R_COLLECTION=bdr:PR1KDPP00", facets = {}
+      if(params.f && !Array.isArray(params.f)) params.f = [ params.f ]
+      if(params.f) {
+         params.f.map(p => {
+            let args = p.split(",")
+            if(!facets[args[0]]) facets[args[0]] = []
+            facets[args[0]].push(args[2])
+         })
+         for(let k of Object.keys(facets)) {
+            let p = getQueryParam(k)
+            if(p) url += "&"+p+"="+facets[k].join(",")
+         }
+         console.log("facets:",url,params.f, facets)
+         store.dispatch(dataActions.checkResults({init:true,url,route:history.location.pathname+history.location.search}))
+         return
+      } else {
+         history.push("/guidedsearch")
+         return
+      }
+   }
+   
 
    if(!params.lg) params.lg = "bo-x-ewts"
    
@@ -1286,7 +1320,7 @@ function getStats(cat:string,data:{},tree:{},genres:{})
       }
 
       for(let node of Object.keys(parents)) { 
-         if(!parents[node]["taxHasSubClass"] && parents[node].ancestor){
+         if( /*!parents[node]["taxHasSubClass"] &&*/ parents[node].ancestor){
             treeParents[node] = []
             let root = parents[node].ancestor
             do {
@@ -1297,7 +1331,7 @@ function getStats(cat:string,data:{},tree:{},genres:{})
          }
       }
 
-      //loggergen.log("Tparents",parents,treeParents)
+      loggergen.log("Tparents",parents,treeParents)
 
       if(treeParents) tree["parents"] = treeParents
    }
@@ -1317,7 +1351,7 @@ function getStats(cat:string,data:{},tree:{},genres:{})
       }
 
       for(let node of Object.keys(parents)) { 
-         if(!parents[node]["taxHasSubClass"] && parents[node].ancestor){
+         if( /*!parents[node]["taxHasSubClass"] &&*/  parents[node].ancestor){
             genresParents[node] = []
             let root = parents[node].ancestor
             do {
@@ -1642,7 +1676,7 @@ function sortResultsByVolumeNb(results,reverse) {
    return results
 }
 
-function sortResultsByTitle(results, userLangs, reverse) {
+export function sortResultsByTitle(results, userLangs, reverse) {
 
    if(!results) return 
 
@@ -1655,15 +1689,16 @@ function sortResultsByTitle(results, userLangs, reverse) {
          for(let v of results[k]) {
             if(v.type === tmp+"matchContext" && (v.value === tmp+"nameContext" || v.value === tmp+"titleContext")) {
                keysTitle.push(k)
+               return
             }
          }
          keysOther.push(k)
       })
       const partSort = (partKeys) => {
          partKeys = partKeys.map(k => {
-            let lang,value,labels = results[k].filter(e => e.type && e.type.endsWith("abelMatch") ).map(e => ({ ...e, value:e.value.replace(/[↦]/g,"")})) 
+            let lang,value,labels = results[k].filter(e => e.type && e.type.endsWith("abelMatch") && results[k].some(f => f.type === skos + "prefLabel" && e.value.replace(/[↦↤]/g,"") === f.value)).map(e => ({ ...e, value:e.value.replace(/[↦↤]/g,"")})) 
             if(!labels.length) labels = results[k].filter(r => r.type && r.type === skos+"prefLabel") //r.value && r.value.match(/↦/))
-            if(!labels.length && (assoR = state.data.assocResources[state.data.keyword]) && assoR[k]) labels = assoR[k].filter(r => r.type && r.type === skos+"prefLabel") 
+            if(!labels.length && state.data.assocResources && (assoR = state.data.assocResources[state.data.keyword]) && assoR[k]) labels = assoR[k].filter(r => r.type && r.type === skos+"prefLabel") 
             //loggergen.log("labels?",labels,assoR,k,assoR[k],results[k])
             if(labels.length) { 
                labels = sortLangScriptLabels(labels,langs.flat,langs.translit)
@@ -1688,7 +1723,7 @@ function sortResultsByTitle(results, userLangs, reverse) {
       let sortRes = {}
       for(let k of keys) sortRes[k.k] = results[k.k]
 
-      //loggergen.log("sortResT",sortRes)
+      //loggergen.log("sortResT",keys,sortRes)
 
       return sortRes
    }
@@ -1955,7 +1990,9 @@ function rewriteAuxMain(result,keyword,datatype,sortBy,language)
             }
             
             let res = result[e][k].map(e => { 
-               if(asset.includes(e.type) && e.value == "true") {
+               if(e.type === bdo+"isComplete" && e.value=="true") {
+                  return ({type:_tmp+"completion", value:_tmp+"complete"})
+               } else if(asset.includes(e.type) && e.value == "true") {
                   if(isTypeScan && e.type === _tmp+"hasImage") isScan = true ; 
                   return ({type:_tmp+"assetAvailability",value:e.type})
                } else if(e.type === bdo+"inRootInstance") {
@@ -2074,12 +2111,13 @@ function rewriteAuxMain(result,keyword,datatype,sortBy,language)
       }
       else if(e === "facets") {
          let cat = "http://purl.bdrc.io/resource/O9TAXTBRC201605", root, tree, genres
+         if(result[e].topics && !result[e].topics[cat]) cat = "http://purl.bdrc.io/resource/FEMCScheme"
          if(result[e].topics && result[e].topics[cat]) {
             root = result[e].topics[cat]
             tree = [ { "@id": cat, taxHasSubClass: root.subclasses }, ...Object.keys(result[e].topics).reduce( (acc,k) =>  { 
                let elem = result[e].topics[k] 
                return ([ ...acc, { "@id":k, taxHasSubClass: elem.subclasses, "skos:prefLabel": elem["skos:prefLabel"], "tmp:count":elem["count"] } ])
-            }, []) ]
+            }, []) ]            
          }
          cat = "http://purl.bdrc.io/resource/O3JW5309"
          if(result[e].genres && result[e].genres[cat]) {
@@ -2088,8 +2126,16 @@ function rewriteAuxMain(result,keyword,datatype,sortBy,language)
                let elem = result[e].genres[k] 
                return ([ ...acc, { "@id":k, taxHasSubClass: elem.subclasses, "skos:prefLabel": elem["skos:prefLabel"], "tmp:count":elem["count"] } ])
             }, []) ]
-
-
+            let aux 
+            Object.keys(result[e].genres).map( k => {               
+               let labels = result[e].genres[k]["skos:prefLabel"]
+               if(labels){
+                  if(!Array.isArray(labels)) labels = [ labels ]
+                  if(!aux) aux = {}
+                  aux[k] = labels.map(l => ({ type: skos+"prefLabel", value:l["@value"], "xml:lang":l["@language"]}))
+               }
+            })
+            if(aux) store.dispatch(dataActions.gotAssocResources(keyword,{ data: aux }))
          }
          return { ...acc, ...(tree?{["tree"]: { "@graph" : tree  } }:{}), ...(genres?{["genres"]: { "@graph" : genres  } }:{}) }
       }
@@ -2351,16 +2397,80 @@ subtime("startSearch")
 }
 
 
+export function* watchCheckResults() {
+      yield takeLatest(
+         dataActions.TYPES.checkResults,
+         (action) => checkResults(action.payload, action.meta.route)
+      );
+}
+
+
+async function checkResults(params, route) {
+   
+   console.log("ckR params:",params,route)   
+
+   if(!params || params.count || params.init && params.route && !params.url) return
+
+   let count 
+   if(!params.init) count = await api.loadCheckResults(params);
+   if(params.init || count?.results?.bindings?.length && (count = count.results.bindings[0].c?.value) !== undefined) {      
+      let loading = params.init || count != 0 && count < GUIDED_LIMIT
+      
+      // DONE check if cancelled
+
+      if(!params.init) { 
+         if(store.getState().data.checkResults !== false) {
+            store.dispatch(dataActions.checkResults({count,loading}));
+         }
+      }
+
+      if(loading) {
+         store.dispatch(uiActions.loading("-@-", true))
+
+         if(store.getState().data.checkResults !== false) {
+            let results = await api.loadResultsWithFacets(params.url?params.url:params)
+
+            let numResults = Object.keys(results.main)
+            if(numResults.length) numResults = numResults.length
+
+            let sortBy = "popularity"
+            results = rewriteAuxMain(results,"-",["Instance"],sortBy)
+
+            if(store.getState().data.checkResults !== false) {
+               let metadata = addMeta("-","-",{results:{bindings:results} }, "Instance", results.tree, false, false)      
+               store.dispatch(dataActions.foundResults("-","-", { metadata, numResults, results:{bindings:results}},["Instance"]))         
+               store.dispatch(dataActions.foundResults("-","-", { results: { bindings: { } } } ) ) 
+               store.dispatch(dataActions.foundDatatypes("-","-",{ metadata:{[bdo+"Instance"]:numResults}, hash:true}));
+            }
+
+            if(!params.init && store.getState().data.checkResults !== false) {
+               store.dispatch(dataActions.checkResults({count, loading:false, route: route+"&q=-&lg=-"}));                     
+               if(route) history.push(route+"&q=-&lg=-")
+            } else {
+               if(params.init) store.dispatch(dataActions.checkResults({init:true, route:params.route}));         
+               else store.dispatch(dataActions.checkResults(false));         
+            }
+         }
+
+         store.dispatch(uiActions.loading("-@-",false))
+      }
+   } else {
+      store.dispatch(dataActions.checkResults(false));
+   }
+}
+
+
+
 export function* watchGetAssocTypes() {
 
    yield takeLatest(
       dataActions.TYPES.getAssocTypes,
-      (action) => getAssocTypes(action.payload)
+      (action) => getAssocTypes(action.payload, action.meta)
    );
 }
 
 
-async function getAssocTypes(rid) {
+async function getAssocTypes(rid, tag) {
 
    store.dispatch(uiActions.loading("assocTypes", true));
 
@@ -2368,7 +2478,7 @@ async function getAssocTypes(rid) {
    let metadata = await api.getDatatypesOnly(rid, "");
    let sorted = Object.keys(metadata).map(m => ({m,k:Number(metadata[m])}))
    metadata = _.orderBy(sorted,["k"],["desc"]).reduce( (acc,m) => ({...acc,[m.m]:metadata[m.m]}),{})
-   store.dispatch(dataActions.foundDatatypes(rid,"",{ metadata, hash:true}));
+   store.dispatch(dataActions.foundDatatypes(rid,"",{ metadata, hash:true}, tag));
 
    store.dispatch(uiActions.loading("assocTypes", false));
 
@@ -2485,6 +2595,35 @@ export function* watchGetInstances() {
    );
 }
 
+
+
+
+async function getReproductions(uri,init=false) {
+
+   store.dispatch(uiActions.loading(uri, true));
+   let state = store.getState()
+
+   let keyword = store.getState().data.keyword
+   
+   let results = await api.getReproductions(uri);
+   console.log("repro:",results)
+
+   let sortBy = "year of publication reverse" 
+
+   results = rewriteAuxMain(results,keyword,["Instance"],sortBy)
+
+   store.dispatch(dataActions.gotReproductions(uri,results.instances))
+
+   store.dispatch(uiActions.loading(uri, false));
+}
+
+export function* watchGetReproductions() {
+
+   yield takeLatest(
+      dataActions.TYPES.getReproductions,
+      (action) => getReproductions(action.payload,action.meta)
+   );
+}
 
 
 
@@ -3050,6 +3189,7 @@ export default function* rootSaga() {
       watchGetResetLink(),
       watchUpdateSortBy(),
       watchGetInstances(),
+      watchGetReproductions(),
       watchGetContext(),
       watchGetCitationStyle(),
       watchGetCitationLocale(),
@@ -3062,6 +3202,7 @@ export default function* rootSaga() {
       watchGetOneDatatype(),
       watchGetOneFacet(),
       watchGetManifest(),
+      watchCheckResults(),
       watchGetImageVolumeManifest(),
       watchGetAnnotations(),
       watchRequestPdf(),

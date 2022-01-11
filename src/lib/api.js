@@ -5,9 +5,15 @@ import qs from 'query-string'
 import history from '../history';
 import {shortUri} from '../components/App';
 
+const onKhmerUrl = (
+      window.location.host.startsWith("khmer-manuscripts")
+   //|| window.location.host.startsWith("library-dev")
+   //|| window.location.host.startsWith("localhost")
+)
+
 require('formdata-polyfill')
 
-const CONFIG_PATH = '/config.json'
+const CONFIG_PATH = onKhmerUrl?'/config-khmer.json':'/config.json'
 const CONFIGDEFAULTS_PATH = '/config-defaults.json'
 const ONTOLOGY_PATH = '/ontology/core.json'
 const DICTIONARY_PATH = '/ontology/data/json' //  '/graph/ontologySchema.json'
@@ -277,6 +283,25 @@ export default class API {
          let dico =  JSON.parse(await this.getURLContents(this._dictionaryPath,false));
          console.log("dico",dico)
          return dico ;
+   }
+
+
+    async loadCheckResults(params): Promise<string>
+    {
+         let config = store.getState().data.config.ldspdi
+         let url = config.endpoints[config.index] + "/query/table/countInstancesInCollectionWithProperties" + params
+         let count=  JSON.parse(await this.getURLContents(url,false));
+         console.log("count:",count)
+         return count ;
+   }
+
+    async loadResultsWithFacets(params): Promise<string>
+    {
+         let config = store.getState().data.config.ldspdi
+         let url = config.endpoints[config.index] + "/lib/instancesInCollectionWithProperties" + params
+         let results =  JSON.parse(await this.getURLContents(url,false));
+         console.log("results:",results)
+         return results ;
    }
 
 
@@ -837,10 +862,19 @@ export default class API {
 
       async _getAssocResultsData(key: string,styp:string,dtyp:string): Promise<{} | null> {
          try {
-              let config = store.getState().data.config.ldspdi
-              let url = config.endpoints[config.index]+"/lib" ;
-              let simple = !["Work","Person","Place","Instance"].includes(dtyp)
-              let param = {"searchType":"associated"+(!simple?dtyp:(styp=="Product"&&dtyp=="Scan"?"IInstance":"SimpleType"))+"s",...(simple?{R_TYPE:(["Product"].includes(dtyp)?"bdo:Collection":"bdo:"+dtyp)}:{}),"R_RES":key,"L_NAME":"","LG_NAME":"", "I_LIM":"" }
+              let config = store.getState().data.config
+              let url = config.ldspdi.endpoints[config.ldspdi.index]+"/lib" ;
+              let simple = !["Work","Person","Place","Instance"].includes(dtyp)              
+              let param = {
+                 "R_RES":key,
+                  ...(
+                     config.khmerServer && styp === "Product" && dtyp === "Work"
+                     ?{"searchType":"worksInCollection","R_RES":"bdr:PR1KDPP00"}
+                     :{"searchType":"associated"+(!simple?dtyp:(styp=="Product"&&dtyp=="Scan"?"IInstance":"SimpleType"))+"s"}
+                  ),
+                  ...(simple?{R_TYPE:(["Product"].includes(dtyp)?"bdo:Collection":"bdo:"+dtyp)}:{}),
+                  "L_NAME":"","LG_NAME":"", "I_LIM":"" }
+               console.log("param:",param, key, styp, dtyp)
               let data = this.getQueryResults(url, key, param,"GET");
               // let data = this.getSearchContents(url, key);
 
@@ -1064,6 +1098,23 @@ export default class API {
         }
     }
 
+     async getReproductions(IRI: string): Promise<{} | null> {
+
+       let data = [];
+
+       try {
+             let config = store.getState().data.config.ldspdi
+             let url = config.endpoints[config.index]+"/lib" ;
+             let param = {"searchType":"instanceReproductionsGraph","R_RES":IRI, "L_NAME":"", "I_LIM":""}
+
+             let data = this.getQueryResults(url, IRI, param,"GET");
+
+
+            return data ;
+        } catch(e) {
+           throw e;
+        }
+    }
      async getStartResults(key: string,lang:string,types:string[],inEtext?:string): Promise<{} | null> {
        let data = [];
 

@@ -29,12 +29,15 @@ export type UIState = {
        uri:string,
        key:lang,
        lang:string 
-    }
+    },
+    type?:string,
+    browse?:{}
 }
 
 const DEFAULT_STATE: UIState = {
    prefLang:"bo-x-ewts",
    collapse:{"locale":true,"priority":true},
+   type:"work"
    //rightPanel:true
 }
 
@@ -108,6 +111,17 @@ export const setPrefLang = (state: UIState, action: Action) => {
 reducers[actions.TYPES.setPrefLang] = setPrefLang;
 
 
+export const setType = (state: UIState, action: Action) => {
+
+      return {
+      ...state,
+      type:action.payload
+   }
+}
+reducers[actions.TYPES.setType] = setType;
+
+
+
 export const setEtextLang = (state: UIState, action: Action) => {
 
       return {
@@ -157,6 +171,45 @@ export const loading = (state: UIState, action: actions.LoadingAction) => {
 reducers[actions.TYPES.loading] = loading;
 
 
+export const browse = (state: UIState, action: actions.Action) => {
+    let browse = state.browse
+    if(!browse) browse = {}
+    if(!browse.path) browse.path = []
+    if(!browse.path.includes(action.payload)) browse.path.push(action.payload)    
+
+    let j = browse.path.indexOf(action.payload)    
+    if(action.meta?.checked === false || j < browse.path.length - 1 && j > 0) {
+        
+        for(let i = j+1 ; i < browse.path.length ; i ++) {
+            if(browse.checked[browse.path[i]]) delete browse.checked[browse.path[i]]
+            if(i > 0) delete browse.path[i]
+        }
+        browse.path = browse.path.filter(p => p)
+
+    }
+    
+    if(action.meta.next && !browse.path.includes(action.meta.next)) browse.path.push(action.meta.next)
+
+    if(action.meta?.checked !== undefined) {
+        if(!browse.checked) browse.checked = {}
+        if(action.meta.checked) browse.checked[action.payload] = action.meta.value
+        else if(browse.checked[action.payload]) delete browse.checked[action.payload]
+    }
+
+    browse.time = Date.now()
+
+
+    console.log("redu:",browse.path,state.browse?.path)
+
+    return {
+        ...state,
+        browse
+    }
+}
+reducers[actions.TYPES.browse] = browse;
+
+
+
 export const updateSortBy = (state: UIState, action: Action) => {
 
     return {
@@ -179,15 +232,17 @@ export const updateFacets = (state: UIState, action: actions.LoadingAction) => {
     const removeUnreleased = !isAdmin(auth)  // || !action.payload[_tmp+"nonReleasedItems"]
     console.log("removeU:",removeUnreleased)
 
-    let facets = Object.keys(action.meta.facets).map(k => {
+    let facets = Object.keys(action.meta.facets)
+    facets.map(k => {
         let prop = action.meta.config[k]
         let keys = Object.keys(action.payload)        
-        if(keys.length > 0 && (!action.payload[prop] || keys.length > 1)) {
-            update[k] = {}
-            //console.log("k",k,prop)
+        if(keys.length > 0 && (!action.payload[prop] || keys.length >= 1)) {
 
             let meta = action.meta.facets[k]
             let props = Object.keys(meta)
+            
+            //console.log("k:",k,prop,meta,props)
+
             if(k === "tree" && meta["@graph"]) { 
                 topicParents = meta["parents"]
                 props = meta["@graph"].map(i => i["@id"].replace(/bdr:/,"http://purl.bdrc.io/resource/"))
@@ -199,6 +254,9 @@ export const updateFacets = (state: UIState, action: actions.LoadingAction) => {
                 meta = meta["@metadata"]
             }
 
+            if(action.payload[prop] && keys.length == 1) return
+
+            update[k] = {}
             let total_i = {}
 
             for(let q of props) {

@@ -3,6 +3,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import * as data from '../state/data/actions';
 import * as ui from '../state/ui/actions';
+import {initiateApp} from '../state/actions';
 import store from '../index';
 import { i18nextChangeLanguage } from 'i18next-redux-saga';
 
@@ -10,21 +11,29 @@ import {auth} from '../routes';
 
 // import selectors from 'state/selectors';
 
-import StaticRouteNoExt from '../components/StaticRouteNoExt';
+import Browse from '../components/Browse';
 
 
 const mapStateToProps = (state,ownProps) => {
 
    let config = state.data.config
    let locale = state.i18next.lang   
+   let langPreset = state.ui.langPreset
 
    let profileName
    if(auth && auth.userProfile) {
       if(auth.userProfile.name) profileName = auth.userProfile.name
    }
 
-   let props = { config, locale, profileName }
+   let browse = state.ui.browse, path, checked, time
+   if(browse) {
+      path = browse.path
+      checked = browse.checked
+      time = browse.time
+   }
 
+   let props = { config, locale, profileName, path, checked, langPreset, time }
+   console.log("props:",props,JSON.stringify(props.path),JSON.stringify(ownProps.path))
    return props
 
 };
@@ -32,7 +41,7 @@ const mapStateToProps = (state,ownProps) => {
 const mapDispatchToProps = (dispatch, ownProps) => {
    return {
       onInitiateApp:(params,iri,auth,route)=>{
-        dispatch(params,iri,auth,route)
+        dispatch(initiateApp(params,iri,auth,route))
       },
       onSetLocale:(lg:string) => {
          dispatch(i18nextChangeLanguage(lg));
@@ -43,13 +52,16 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       },
       onUserProfile:(url:{}) => {
          dispatch(ui.userProfile(url));
+      },
+      onBrowse:(param:string,value?:string,checked?:boolean,next?:string) => {
+         dispatch(ui.browse(param,value,checked,next));
       }
    }
 }
 
-const StaticRouteContainer = connect(
+const BrowseContainer = connect(
     mapStateToProps,
     mapDispatchToProps
-)(StaticRouteNoExt);
+)(Browse);
 
-export default StaticRouteContainer;
+export default BrowseContainer;

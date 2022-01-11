@@ -157,6 +157,46 @@ export const gotInstances = (state: DataState, action: Action) => {
 reducers[actions.TYPES.gotInstances] = gotInstances;
 
 
+export const checkResults = (state: DataState, action: Action) => {
+
+   return {
+       ...state,
+       checkResults:action.payload===false?false:(action.payload.count||action.payload.route?action.payload:true)
+   }
+}
+reducers[actions.TYPES.checkResults] = checkResults;
+
+
+
+export const getReproductions = (state: DataState, action: Action) => {
+
+   let instances = state.instances
+   if(!instances) instances = {}
+   instances[fullUri(action.payload)] = true
+
+   return {
+       ...state,
+       instances
+   }
+}
+reducers[actions.TYPES.getReproductions] = getReproductions;
+
+
+
+export const gotReproductions = (state: DataState, action: Action) => {
+
+   let instances = state.instances
+   if(!instances) instances = {}
+   instances[fullUri(action.payload)] = action.meta
+
+   return {
+       ...state,
+       instances
+   }
+}
+reducers[actions.TYPES.gotReproductions] = gotReproductions;
+
+
 export const gotCitationStyle = (state: DataState, action: Action) => {
    
    let citationData = state.citationData
@@ -1207,10 +1247,11 @@ reducers[actions.TYPES.getOneDatatype] = getOneDatatype;
 
 export const getAssocTypes = (state: DataState, action: Action) => {
 
+   const k = action.meta?action.meta:"datatypes"
     return {
         ...state,
-      datatypes : {
-         ...state.datatypes,
+      [k] : {
+         ...state[k],
          [action.payload+"@"]: true
       }
     }
@@ -1331,9 +1372,12 @@ reducers[actions.TYPES.foundResults] = foundResults;
 
 export const foundDatatypes = (state: DataState, action: actions.FoundResultsAction) => {
 
+   const tag = action.payload.tag?action.payload.tag:"datatypes"
+
    let DT = state.datatypes;
    if(DT) DT = DT[action.payload.keyword+"@"+action.payload.language]
 
+   if(tag !== "datatypes") DT = {}
 
    //console.log("DT2",JSON.stringify(DT))
 
@@ -1342,8 +1386,8 @@ export const foundDatatypes = (state: DataState, action: actions.FoundResultsAct
 
    return {
       ...state,
-      datatypes : {
-         ...state.datatypes,
+      [tag] : {
+         ...state[tag],
          [action.payload.keyword+"@"+action.payload.language]: {
             ...DT,
             ...action.payload.results,
