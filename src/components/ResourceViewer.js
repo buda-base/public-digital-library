@@ -8385,7 +8385,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                   { _T === "Etext" && this.renderEtextAccess(etextAccessError) }
                   { _T === "Etext" && this.renderOCR() }
                   { _T !== "Etext" && this.renderNoAccess(fairUse) }
-                  { _T !== "Etext" && this.renderAccess() }
+                  { _T !== "Etext" && !fairUse && this.renderAccess() }
                   { this.renderMirador(isMirador) }           
                   { theDataTop }
                   <div class="data" id="perma">{ this.perma_menu(pdfLink,monoVol,fairUse,kZprop.filter(k => k.startsWith(adm+"seeOther")))  }</div>
