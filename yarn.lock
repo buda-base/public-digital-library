@@ -6892,10 +6892,12 @@ i18next-browser-languagedetector@^1.0.1:
   version "1.1.0"
   resolved "git+https://github.com/alexiusp/i18next-redux-saga.git#b3b20532ab23ed47f6d305b3465d6367291ec2c1"
 
-i18next-xhr-backend@^1.3.0:
-  version "1.5.1"
-  resolved "https://registry.yarnpkg.com/i18next-xhr-backend/-/i18next-xhr-backend-1.5.1.tgz#50282610780c6a696d880dfa7f4ac1d01e8c3ad5"
-  integrity sha512-9OLdC/9YxDvTFcgsH5t2BHCODHEotHCa6h7Ly0EUlUC7Y2GS09UeoHOGj3gWKQ3HCqXz8NlH4gOrK3NNc9vPuw==
+i18next-xhr-backend@^3.2.2:
+  version "3.2.2"
+  resolved "https://registry.yarnpkg.com/i18next-xhr-backend/-/i18next-xhr-backend-3.2.2.tgz#769124441461b085291f539d91864e3691199178"
+  integrity sha512-OtRf2Vo3IqAxsttQbpjYnmMML12IMB5e0fc5B7qKJFLScitYaXa1OhMX0n0X/3vrfFlpHL9Ro/H+ps4Ej2j7QQ==
+  dependencies:
+    "@babel/runtime" "^7.5.5"
 
 i18next@^19.4.5:
   version "19.9.2"
@@ -8183,9 +8185,11 @@ jquery-migrate@^3.0.0:
   resolved "git+https://github.com/cowboy/jquery-tiny-pubsub.git#d9b4a093221f43d1119aac088258c8d0ea2b183b"
 
 jquery-ui-dist@^1.12.1:
-  version "1.12.1"
-  resolved "https://registry.yarnpkg.com/jquery-ui-dist/-/jquery-ui-dist-1.12.1.tgz#5c0815d3cc6f90ff5faaf5b268a6e23b4ca904fa"
-  integrity sha1-XAgV08xvkP9fqvWyaKbiO0ypBPo=
+  version "1.13.0"
+  resolved "https://registry.yarnpkg.com/jquery-ui-dist/-/jquery-ui-dist-1.13.0.tgz#d6e9b88275605c08c5a806781b1967ecf921a248"
+  integrity sha512-fgpGOW098swRvTLglH3RLyAjW/8Ecxd35fO7Z1WtBidhZgnPDvTJzZ+XFybAFzv3zZiEESI8TkK6oYXbzu/rKw==
+  dependencies:
+    jquery ">=1.8.0 <4.0.0"
 
 jquery.scrollto@^1.4.12:
   version "1.4.14"
@@ -8194,7 +8198,7 @@ jquery.scrollto@^1.4.12:
   dependencies:
     jquery ">=1.4"
 
-jquery@>=1.4, jquery@>=1.6.0, jquery@^3.1.1, jquery@^3.3.1:
+jquery@>=1.4, jquery@>=1.6.0, "jquery@>=1.8.0 <4.0.0", jquery@^3.1.1, jquery@^3.3.1:
   version "3.6.0"
   resolved "https://registry.yarnpkg.com/jquery/-/jquery-3.6.0.tgz#c72a09f15c1bdce142f49dbf1170bdf8adac2470"
   integrity sha512-JVzAR/AjBvVt2BmYhxRCSYysDsPcssdmTFnzyLEts9qNwmjmu4JTAMYubEfwVOSwpQ1I1sKKFcxhZCI2buerfw==
@@ -9236,7 +9240,7 @@ minipass@^3.0.0, minipass@^3.1.1:
 
 "mirador@https://github.com/buda-base/mirador#2.7.0-bdrc":
   version "2.7.0"
-  resolved "https://github.com/buda-base/mirador#bd53dbfbdca67be8cd1c54903ff722b6650153d4"
+  resolved "https://github.com/buda-base/mirador#3af4f1183b007b8121e905ef6e60da5eb1797574"
   dependencies:
     bootbox "^4.4.0"
     bootstrap "^3.3.7"
@@ -9245,7 +9249,7 @@ minipass@^3.0.0, minipass@^3.1.1:
     handlebars "^4.0.11"
     i18next "^4.2.0"
     i18next-browser-languagedetector "^1.0.1"
-    i18next-xhr-backend "^1.3.0"
+    i18next-xhr-backend "^3.2.2"
     iiif-evented-canvas "https://github.com/buda-base/iiif-evented-canvas"
     iiif-layout-functions "0.0.2-alpha"
     javascript-state-machine "^2.3.4"
@@ -9260,7 +9264,7 @@ minipass@^3.0.0, minipass@^3.1.1:
     paper "^0.11.2"
     perfect-scrollbar "^1.5.0"
     qtip2 "^3.0.3"
-    sanitize-html practicefusion/sanitize-html#include-dist-files
+    sanitize-html practicefusion-old/sanitize-html#include-dist-files
     select2 "^4.0.3"
     simple-pagination.js "^1.6.0"
     spectrum-colorpicker "^1.8.0"
@@ -9759,8 +9763,8 @@ open@^7.0.2:
     is-wsl "^2.1.1"
 
 "openseadragon@https://github.com/openseadragon/openseadragon#master":
-  version "2.4.2"
-  resolved "https://github.com/openseadragon/openseadragon#b3196a9756044fa81064147850c4089efe1e85a2"
+  version "3.0.0"
+  resolved "https://github.com/openseadragon/openseadragon#055699a00aeae886582a3e7f9db2f9f2edf83809"
 
 opn@^5.5.0:
   version "5.5.0"
@@ -12300,9 +12304,9 @@ sane@^4.0.3:
     minimist "^1.1.1"
     walker "~1.0.5"
 
-sanitize-html@practicefusion/sanitize-html#include-dist-files:
+sanitize-html@practicefusion-old/sanitize-html#include-dist-files:
   version "1.13.0"
-  resolved "https://codeload.github.com/practicefusion/sanitize-html/tar.gz/d6e3e04794c802bc88086349d5a4837dda1ffff7"
+  resolved "https://codeload.github.com/practicefusion-old/sanitize-html/tar.gz/d6e3e04794c802bc88086349d5a4837dda1ffff7"
   dependencies:
     htmlparser2 "^3.9.0"
     regexp-quote "0.0.0"
@@ -13600,9 +13604,9 @@ ua-parser-js@^0.7.18:
   integrity sha512-6Gurc1n//gjp9eQNXjD9O3M/sMwVtN5S8Lv9bvOYBfKfDNiIIhqiyi01vMBO45u4zkDE420w/e0se7Vs+sIg+g==
 
 uglify-js@^3.1.4:
-  version "3.14.3"
-  resolved "https://registry.yarnpkg.com/uglify-js/-/uglify-js-3.14.3.tgz#c0f25dfea1e8e5323eccf59610be08b6043c15cf"
-  integrity sha512-mic3aOdiq01DuSVx0TseaEzMIVqebMZ0Z3vaeDhFEh9bsc24hV1TFvN74reA2vs08D0ZWfNjAcJ3UbVLaBss+g==
+  version "3.14.5"
+  resolved "https://registry.yarnpkg.com/uglify-js/-/uglify-js-3.14.5.tgz#cdabb7d4954231d80cb4a927654c4655e51f4859"
+  integrity sha512-qZukoSxOG0urUTvjc2ERMTcAy+BiFh3weWAkeurLwjrCba73poHmG3E36XEjd/JGukMzwTL7uCxZiAexj8ppvQ==
 
 unbox-primitive@^1.0.1:
   version "1.0.1"

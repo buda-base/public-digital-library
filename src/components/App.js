@@ -6311,7 +6311,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             if(vals.val) { 
                vals = vals.val
             }
-            return vals.filter(k => k !== "Any" && !subsumed(k,vals)).map(v => 
+            return vals.filter(k => k !== "Any" && (![bdo+"workIsAbout", bdo+"workGenre"].includes(f) || !subsumed(k,vals))).map(v => 
                this.renderFilterTag(false, f, v, (event, checked) => this.handleCheckFacet(event, f, taxWithSubClasses(f,v), false) ) 
             ) }
          )
