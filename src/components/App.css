@@ -280,6 +280,8 @@ body { overflow:auto !important;padding-right:0 !important; /*font-family:"Robot
 #search-bar > div:first-child  > div:first-child  > div:first-child { width:calc(100% - 160px); margin-right:200px; }
 
 #search-bar { background-color: #fce08e; padding-top:30px;padding-bottom:5px; display:block;}
+.App.home:not(.khmerServer) #search-bar { padding-bottom:30px; }
+
 #search-bar > div { display:inline-flex;}
 .SearchPane > div {display:flex;justify-content: center;}
 .SearchPane .formControl { margin-top:14px; margin-left:-240px; /*margin-left:calc(800px - 150px - 100px);*/ width:200px; position:absolute;}
