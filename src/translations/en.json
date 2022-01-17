@@ -634,7 +634,8 @@
       "beginL": "Begin line: {{num}}",
       "endV": "End volume: {{num}}",
       "endP": "End image: {{num}}",
-      "endL": "End line: {{num}}"
+      "endL": "End line: {{num}}",
+      "tooltip": "No image indication found.<newL/>You might have to find the right page by yourself."
    },
    "footer": {
       "BDRC": "Buddhist Digital Resource Center",

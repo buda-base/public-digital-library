@@ -24,6 +24,7 @@ import Layers from '@material-ui/icons/Layers';
 import PlayArrow from '@material-ui/icons/PlayArrow';
 import Visibility from '@material-ui/icons/Visibility';
 import WarnIcon from '@material-ui/icons/Warning';
+import ErrorOutlineIcon from '@material-ui/icons/Error';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import SpeakerNotes from '@material-ui/icons/SpeakerNotes';
 import SpeakerNotesOff from '@material-ui/icons/SpeakerNotesOff';
@@ -6086,7 +6087,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          )
    }
 
-   renderHeader = (kZprop, T, etextUT) => {
+   renderHeader = (kZprop, T, etextUT, root) => {
 
       let imageLabel = "images"
       if(!this.props.collecManif && this.props.imageAsset && this.props.imageAsset.match(/[/]collection[/]/)) imageLabel = "collection"
@@ -6167,6 +6168,23 @@ perma_menu(pdfLink,monoVol,fairUse,other)
       else if(hasCopyR === "sealed") copyRicon = <img class="access-icon" title={I18n.t("copyright.sealed")} src="/icons/sealed.svg"/>
       else if(hasCopyR === "quality") copyRicon = <img class="access-icon" title={I18n.t("copyright.quality")} src="/icons/unknown.svg"/>
       
+
+      let rootWarn
+      if(T === "Instance" && root?.length) {
+
+         let loca = this.getResourceElem(bdo+"contentLocation")
+         if(loca?.length) loca = this.getResourceBNode(loca[0].value)
+         if(root?.length && loca && loca[bdo+"contentLocationVolume"] && !loca[bdo+"contentLocationPage"]) {
+            let ptype = this.getResourceElem(bdo+"partType")
+            console.log("root:",root,loca,ptype)
+            if(ptype?.length && ![bdr+"PartTypeVolume",bdr+"PartTypeSection"].includes(ptype[0].value)) {
+               rootWarn =  <div class="outline-warn"><Tooltip placement="top-end" title={
+                  <div style={{margin:"10px"}}><Trans i18nKey="location.tooltip" components={{ newL: <br /> }} /></div>
+               }><WarnIcon/></Tooltip></div>
+            } 
+         }
+      }
+
       if(!this.state.imageError && iiifThumb && T === "Images") 
          return  ( 
             <div class="data simple" id="first-image">
@@ -6176,6 +6194,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                   <Loader className="uvLoader" loaded={this.state.imageLoaded} color="#fff"/>
                   <img onError={(e)=>this.setState({...this.state,imageError:"!"})} onLoad={(e)=>this.setState({...this.state,imageLoaded:true,imageError:false})} src={iiifThumb+"/full/!1000,500/0/default.jpg"} /> 
                </a>
+               { rootWarn }
             </div>
          )
       else if(this.state.imageError === "!" && iiifThumb && T === "Images") 
@@ -6185,8 +6204,9 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                <a onClick={handleViewer} onContextMenu={handleViewer}  href={viewUrl.pathname+viewUrl.search} target="_blank" className={"firstImage "+(this.state.imageLoaded?"loaded":"")} 
                /*{...(this.props.config.hideViewers?{"onClick":() => this.showMirador(null,null,true),"style":{cursor:"pointer"}}:{})}*/ >
                   <Loader className="uvLoader" loaded={this.state.imageLoaded} color="#fff"/>
-                  <img onError={(e)=>this.setState({...this.state,imageError:true})} onLoad={(e)=>this.setState({...this.state,imageLoaded:true})} src={iiifThumb+"/full/,500/0/default.jpg"} /> 
+                  <img onError={(e)=>this.setState({...this.state,imageError:true})} onLoad={(e)=>this.setState({...this.state,imageLoaded:true})} src={iiifThumb+"/full/,500/0/default.jpg"} />                   
                </a>
+               { rootWarn }
             </div>
          )
       else if(!this.props.manifestError && this.props.imageAsset && !etext)
@@ -6230,6 +6250,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                   </div>
                */}
             </a>
+            { rootWarn }
          </div>
          )
       else if(kZprop.length && (!this.props.config || !this.props.config.chineseMirror))
@@ -6243,6 +6264,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
       else 
          return <div class="data" id="head"><div class={"header "+(!this.state.ready?"loading":"")}>{ !this.state.ready && <Loader loaded={false} /> }{src}{copyRicon}</div></div>   
    }
+   
 
    // TODO case of part of instance after p.20 (see bdr:MW1KG2733_65CFB8)
 
@@ -6331,6 +6353,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          return  <div class="data access error"><h3><span style={{textTransform:"none"}}>{I18n.t("access.error")}</span></h3></div>
       
    }
+
 
    renderPdfLink = (pdfLink, monoVol, fairUse) => {
       if( (pdfLink) &&
@@ -8369,7 +8392,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                   {/* { this.renderAnnoPanel() } */}
                   { this.renderWithdrawn() }             
                   <div class="title">{ wTitle }{ iTitle }{ rTitle }</div>
-                  { this.renderHeader(kZprop.filter(k => mapProps.includes(k)), _T, etextUT) }
+                  { this.renderHeader(kZprop.filter(k => mapProps.includes(k)), _T, etextUT, root) }
                   { (etext && !orig) && <div class={"data open-etext"+(etextAccessError?" disable":"")}><div><Link to={etextUT+(etextUT.includes("?")?"&":"?")+"backToEtext="+this.props.IRI+"#open-viewer"}>{etextLoca}</Link></div></div> }
                   { (etext && orig) && <div class="data open-etext"><div><a target="_blank" href={orig}>{I18n.t("resource.openO",{src:prov})}<img src="/icons/link-out_.svg"/></a></div></div> }
                   <div class={"data" + (_T === "Etext"?" etext-title":"")+(_T === "Images"?" images-title":"")}>

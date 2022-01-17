@@ -2357,6 +2357,22 @@ vertical-align:middle;}
 .resource .data .header .src img[src^="/BL."] { padding:0;margin:0;width:100%;}
    /* background-size:90% auto;background-position:center;background-repeat:no-repeat; } */
 
+.resource .data#first-image .outline-warn {
+    position: absolute;
+    right: 40px;
+    bottom: 40px;
+    background: white;
+    line-height: 0;
+    border-radius: 50%;
+    width: 26px;
+    height: 26px;
+    align-items: center;
+    justify-content: center;
+}
+
+.resource .data#first-image .outline-warn svg { color:#d73449; margin-top:-1px; }
+
+
 .resource .data.related .rel-or-crea.all .header.work::before,
 .resource .data.related .header::before,
 .resource.work .data .header::before { background-image:url("/icons/work.png");  }

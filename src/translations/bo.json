@@ -583,7 +583,8 @@
       "beginL": "ཐིག་ཕྲེང་ {{num,counttobo}} ནས་",
       "endV": "པོད་ {{num,counttobo}} བར།",
       "endP": "ཤོག་ངོས་ {{num,counttobo}} ནས་",
-      "endL": "ཐིག་ཕྲེང་ {{num,counttobo}} བར།"
+      "endL": "ཐིག་ཕྲེང་ {{num,counttobo}} བར།",
+      "tooltip": "No image indication found.<newL/>You might have to find the right page by yourself."
    },
    "footer": {
          "BDRC": "Buddhist Digital Resource Center",
