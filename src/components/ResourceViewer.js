@@ -7153,13 +7153,14 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
                               subtime(1)
 
-
+                              let warn
                               if(g.contentLocation && (!this.state.catalogOnly || !this.state.catalogOnly[this.props.IRI])) {
                                  g.hasImg = "/show/"+g["@id"].split(";")[0].replace(/^((bdr:MW[^_]+)_[^_]+)$/,"$1")+"?s="+encodeURIComponent(this.props.history.location.pathname+this.props.history.location.search)+"#open-viewer"
                                  g.hasDetails = true
                                  if(showDetails) {
                                     if(!g.details) g.details = []
-                                    nav.push(<Link to={g.hasImg} class="ulink">{I18n.t("copyright.view")}</Link>)
+                                    nav.push(<Link to={g.hasImg} class="ulink">{I18n.t("copyright.view")}</Link>)                                    
+                                    warn = true
                                  }
                               }
                               else if (g.instanceHasReproduction) {
@@ -7168,6 +7169,20 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                                  if(showDetails) {
                                     if(!g.details) g.details = []
                                     nav.push(<Link to={g.hasImg} class="ulink">{I18n.t("copyright.view")}</Link>)  
+                                    warn = true
+                                 }
+                              }
+                              if(warn) {
+                                 let loca = mapElem(g.contentLocation)
+                                 if(loca?.length) loca = loca[0]
+                                 if(loca && loca.contentLocationVolume && !loca.contentLocationPage) {
+                                    let ptype = g.partType
+                                    console.log("root:",loca,ptype,g)
+                                    if(ptype && !["bdr:PartTypeVolume","bdr:PartTypeSection"].includes(ptype)) {
+                                       nav.push(<div class="outline-warn"><Tooltip placement="top-end" title={
+                                          <div style={{margin:"10px"}}><Trans i18nKey="location.tooltip" components={{ newL: <br /> }} /></div>
+                                       }><WarnIcon/></Tooltip></div>)
+                                    } 
                                  }
                               }
 

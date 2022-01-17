@@ -2232,6 +2232,9 @@ h4:not(:hover) > .lang
 .resource .data#outline .root + div .top + .details .sub h4 .highlight:first-child { margin-left:0; }
 .resource .data#outline .root + div .top + .details .sub h4 .highlight:first-child::before  { margin-left:0; }
 
+.resource .data#outline .outline-warn { color: #d73449; display: inline; vertical-align: middle;}
+.resource .data#outline .outline-warn svg { vertical-align: middle;  font-size:19px; margin-left:5px;}
+
 #outline a.no-bdrc img { vertical-align: -7px;}
 #outline .hover-menu { display:none; }
 
