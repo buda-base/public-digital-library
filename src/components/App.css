@@ -2373,7 +2373,9 @@ vertical-align:middle;}
     justify-content: center;
 }
 
-.resource .data#first-image .outline-warn svg { color:#d73449; margin-top:-1px; }
+.resource .data#first-image .outline-warn::after { content:none !important;  }
+
+.resource .data#first-image .outline-warn svg { color:#d73449; margin-top:-5px; }
 
 
 .resource .data.related .rel-or-crea.all .header.work::before,

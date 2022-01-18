@@ -6178,9 +6178,9 @@ perma_menu(pdfLink,monoVol,fairUse,other)
             let ptype = this.getResourceElem(bdo+"partType")
             console.log("root:",root,loca,ptype)
             if(ptype?.length && ![bdr+"PartTypeVolume",bdr+"PartTypeSection"].includes(ptype[0].value)) {
-               rootWarn =  <div class="outline-warn"><Tooltip placement="top-end" title={
+               rootWarn =  <Tooltip placement="top-end" title={
                   <div style={{margin:"10px"}}><Trans i18nKey="location.tooltip" components={{ newL: <br /> }} /></div>
-               }><WarnIcon/></Tooltip></div>
+               }><div class="outline-warn"><WarnIcon/></div></Tooltip>
             } 
          }
       }
