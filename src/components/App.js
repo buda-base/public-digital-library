@@ -5825,6 +5825,9 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
       const { isAuthenticated } = this.props.auth;
       let id ;
 
+      let nbResu = this.state.paginate && this.state.paginate.nMax ? this.state.paginate.nMax:(this.state.results&&this.state.results[this.state.id]?this.state.results[this.state.id].resLength:"--")
+      
+
       if(!global.inTest) loggergen.log("render",this.props.keyword,this.props,this.state,isAuthenticated && isAuthenticated(),this._customLang) //,JSON.stringify(this.state.filters,null,3))
       // no search yet --> sample data
       if(!this.props.keyword || this.props.keyword == "")
@@ -5864,6 +5867,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
          if(this.state.results && this.state.results[id])
          {
+      
             results = this.state.results[id].results
             message = this.state.results[id].message
             counts = this.state.results[id].counts
@@ -5880,8 +5884,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                }
 
                if(min > 1) pageLinks.push([<a onClick={this.goPage.bind(this,id,1)}>{I18n.t("punc.num",{num:1})}</a>," ... "]) 
-               for(let i = min ; i <= max ; i++) { pageLinks.push(<a onClick={this.goPage.bind(this,id,i)}>{((i-1)===this.state.paginate.index?<b><u>{I18n.t("punc.num",{num:i})}</u></b>:I18n.t("punc.num",{num:i}))}</a>) }
-               if(max < paginate.pages.length) pageLinks.push([" ... ",<a onClick={this.goPage.bind(this,id,paginate.pages.length)}>{I18n.t("punc.num",{num:paginate.pages.length})}</a>]) 
+               for(let i = min ; i <= max ; i++) { if(nbResu >= paginate.pages[i-1]) pageLinks.push(<a onClick={this.goPage.bind(this,id,i)}>{((i-1)===this.state.paginate.index?<b><u>{I18n.t("punc.num",{num:i})}</u></b>:I18n.t("punc.num",{num:i}))}</a>) }
+               if(max < paginate.pages.length && nbResu >= paginate.pages[paginate.pages.length-1]) pageLinks.push([" ... ",<a onClick={this.goPage.bind(this,id,paginate.pages.length)}>{I18n.t("punc.num",{num:paginate.pages.length})}</a>]) 
             }
             
             //loggergen.log("prep",message,counts,types,paginate)
@@ -6272,8 +6276,6 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
       }
 
       this._refs["searchBar"] = React.createRef();
-
-      let nbResu = this.state.paginate && this.state.paginate.nMax ? this.state.paginate.nMax:(this.state.results&&this.state.results[this.state.id]?this.state.results[this.state.id].resLength:"--")
 
       let facetTags 
       if(this.state.filters.facets) {
