@@ -1640,6 +1640,8 @@ a.result + #matches .result-content #icon > :not(.thumb) img { width:40px; }
 .result-content:hover .match .rec img,
 .result-content:hover .match .outL img { background: #f5f5f5;}
 
+.match .inRoot + .sepa { display:block; height: 0; border:none; }
+
 .resource a.outL { float:none; background: #d73449; border:none !important; border-radius:5px; padding:0px 15px;  color:white !important;
    margin-top:-5px; margin-left:15px; font-size:13px; height:40px;line-height: 40px; display: inline-block;
 }
