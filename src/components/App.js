@@ -4533,6 +4533,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
          const markers = [], latLongs = []
 
+         let hasUnreleased = false
+
          if(sublist) { for(let o of Object.keys(sublist))
          {
             if(!iniTitle) {
@@ -4996,7 +4998,10 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      if(status && status.length) status = status[0].value
                      else status = null
 
-                     if(status && !status.match(/Released/)) unreleased = true
+                     if(status && !status.match(/Released/)) {
+                        unreleased = true
+                        hasUnreleased = true
+                     }
                   }
 
 
@@ -5142,6 +5147,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             }
          } 
 
+
          if(pagin.index == pagin.pages.length - 1) {
 
             //  // deprecated
@@ -5185,6 +5191,18 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
             if(pagin.gotoCateg !== undefined && paginate[0]) { paginate.length = 0; delete pagin.gotoCateg ; }
             if(paginate.length == 0) { paginate.push(pagin); }
+         }
+
+         if(hasUnreleased) {
+            const f = this.props.config?.facets[this.state.filters.datatype[0]] 
+            message.push(
+               <Typography className="no-result">
+                  <span>
+                     {I18n.t("search.hidden")}<br/>
+                     <a onClick={(event) => this.handleCheckFacet(event,f?.nonReleased,["tmp:show"],true)} class="uri-link" style={{marginLeft:0}}>{I18n.t("search.showU")}</a>
+                  </span>
+               </Typography>
+            )
          }
       }
 
@@ -6800,7 +6818,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                         </div>
                         <NavigateNext
                            title="Next page"
-                           className={!paginate || paginate.index == paginate.pages.length - 1 ? "hide":""}
+                           className={!paginate || paginate.index == paginate.pages.length - 1 || nbResu < paginate.pages[paginate.index+1]? "hide":""}
                            onClick={this.nextPage.bind(this,id)} />
                      </div> }
                   </List>

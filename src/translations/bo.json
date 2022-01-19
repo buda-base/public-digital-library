@@ -439,7 +439,9 @@
          "noresultsAsso": "འདི་དང་འབྲེལ་བའི་བཙལ་འབྲས་མི་འདུག {{keyword}} {{type}}"
       },
       "seeO": "གཞི་གྲངས་རིགས་གཞན་པའི་བཙལ་འབྲས་ལ་ལྟོས།",
-      "backToW": "བརྩམས་ཆོས་སྟེང་ཕྱིར་ལོག"
+      "backToW": "བརྩམས་ཆོས་སྟེང་ཕྱིར་ལོག",
+      "hidden":"Some results were hidden because they currently are not released.",
+      "showU":"Show non-released items"
    },
    "Rsidebar": {
       "title": "རྣམ་པ་སྒྲིག་ས།",

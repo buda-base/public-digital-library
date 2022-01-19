@@ -388,7 +388,9 @@
       "filters": {
          "noresults": "没有符合条件的结果",
          "noresultsAsso": "No result associated with {{keyword}} {{type}}"
-      }
+      },
+      "hidden":"Some results were hidden because they currently are not released.",
+      "showU":"Show non-released items"
    },
    "Rsidebar": {
       "title": "现实设置",

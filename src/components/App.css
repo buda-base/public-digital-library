@@ -1274,6 +1274,8 @@ p.no-result {
 .no-result.more-result { display:flex; align-items: baseline; margin-bottom:10px;}
 .no-result.more-result #clear-filters { display:inline-flex; margin:0; margin-left:5px; }
 
+.no-result + #pagine { margin-top:30px;}
+
 /* sticky's parent must not have overflow set */
 /* .SearchPane.resultPage { overflow-y:auto;} */
 
