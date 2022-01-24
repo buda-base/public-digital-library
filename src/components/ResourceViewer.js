@@ -1763,7 +1763,7 @@ class ResourceViewer extends Component<Props,State>
                }
                if(assoR) { 
                   valSort = valSort.map(v => {
-                     if(assoR[v.value]) {
+                     if(assoR[v?.value]) {
                         //console.log("assoR:",assoR[v.value],assoR[v.value][bdo+"agent"][0].value,assoR[assoR[v.value][bdo+"agent"][0].value])
 
                         let evT = assoR[v.value][bdo+"creationEventType"]
@@ -1786,6 +1786,8 @@ class ResourceViewer extends Component<Props,State>
                         }
 
                         return { ...v, evT, role, lang, label }
+                     } else {
+                        return v
                      }
                   })
                   //console.log("vS:",valSort)
