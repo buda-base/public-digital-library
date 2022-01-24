@@ -956,7 +956,17 @@ export function top_right_menu(that,etextTitle,backUrl,etextres)
             onZhMirror  && <Link id="about" to={"/static/about"} >{I18n.t("topbar.about")}</Link> 
          ] }
 
-         { !onKhmerServer && <Link to="/"  onClick={() => { that.props.history.push({pathname:"/",search:""}); if(that.props.keyword) { that.props.onResetSearch();} } }><span>{I18n.t("topbar.search")}</span></Link> }         
+         { !onKhmerServer && <Link to="/"  onClick={() => { 
+               that.props.history.push({pathname:"/",search:""}); 
+               if(that.props.keyword) { that.props.onResetSearch();}
+               $("#search-bar").addClass("scroll")
+               setTimeout(() => {
+                  $("#search-bar input").click()
+                  document.querySelector("#search-bar input").focus()
+                  document.querySelector("#search-bar").scrollIntoView({block: "start", inline: "nearest", behavior:"smooth"})
+                  $("#search-bar").removeClass("scroll")
+               },350)
+            } }><span>{I18n.t("topbar.search")}</span></Link> }         
          
          { onKhmerServer && khmerLinks }
 
@@ -1300,7 +1310,6 @@ class App extends Component<Props,State> {
    }
 
    componentDidUpdate() {
-      
       // TODO check how this behave with smaller screen width/height
       let ref
       if(this._refs["sidepane"] && (ref = this._refs["sidepane"].current) /*&& this.props.language*/) {                     
@@ -6792,7 +6801,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   </div> */
                }
                { (this.props.simple && !this.props.keyword || (this.props.keyword && (this.props.loading || (this.props.datatypes && !this.props.datatypes.hash)))) && <Loader className="mainloader" /> }
-               { message.length == 0 && !this.props.loading && !this.props.keyword && !this.props.datatypes &&
+               { message.length == 0 && !this.props.loading && !this.props.keyword && (!this.props.datatypes || this.props.keyword === null) &&
                   !this.props.config.khmerServer && 
                      <List id="samples">
                         {/* { messageD } */}
