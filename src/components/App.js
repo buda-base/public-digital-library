@@ -956,7 +956,7 @@ export function top_right_menu(that,etextTitle,backUrl,etextres)
             onZhMirror  && <Link id="about" to={"/static/about"} >{I18n.t("topbar.about")}</Link> 
          ] }
 
-         { !onKhmerServer && <Link to="/"  onClick={() => { 
+         { !onKhmerServer && <Link to="/"  onClick={(ev) => { 
                that.props.history.push({pathname:"/",search:""}); 
                if(that.props.keyword) { that.props.onResetSearch();}
                $("#search-bar").addClass("scroll")
@@ -966,6 +966,7 @@ export function top_right_menu(that,etextTitle,backUrl,etextres)
                   document.querySelector("#search-bar").scrollIntoView({block: "start", inline: "nearest", behavior:"smooth"})
                   $("#search-bar").removeClass("scroll")
                },350)
+               ev.preventDefault()
             } }><span>{I18n.t("topbar.search")}</span></Link> }         
          
          { onKhmerServer && khmerLinks }
