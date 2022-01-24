@@ -5901,9 +5901,18 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   if(max > paginate.pages.length) max = paginate.pages.length
                }
 
+               //console.log("pages:",min,max, nbResu, paginate.pages[paginate.pages.length-1], paginate.pages )
+
                if(min > 1) pageLinks.push([<a onClick={this.goPage.bind(this,id,1)}>{I18n.t("punc.num",{num:1})}</a>," ... "]) 
-               for(let i = min ; i <= max ; i++) { if(nbResu >= paginate.pages[i-1]) pageLinks.push(<a onClick={this.goPage.bind(this,id,i)}>{((i-1)===this.state.paginate.index?<b><u>{I18n.t("punc.num",{num:i})}</u></b>:I18n.t("punc.num",{num:i}))}</a>) }
-               if(max < paginate.pages.length && nbResu >= paginate.pages[paginate.pages.length-1]) pageLinks.push([" ... ",<a onClick={this.goPage.bind(this,id,paginate.pages.length)}>{I18n.t("punc.num",{num:paginate.pages.length})}</a>]) 
+               for(let i = min ; i <= max ; i++) { /*if(nbResu >= paginate.pages[i-1])*/ pageLinks.push(<a onClick={this.goPage.bind(this,id,i)}>{((i-1)===this.state.paginate.index?<b><u>{I18n.t("punc.num",{num:i})}</u></b>:I18n.t("punc.num",{num:i}))}</a>) }
+               if(max < paginate.pages.length) {  
+                  for(let i = paginate.pages.length-1 ; i >= min ; i--) {
+                     if(nbResu >= paginate.pages[i]) {
+                        pageLinks.push([" ... ",<a onClick={this.goPage.bind(this,id,paginate.pages.length)}>{I18n.t("punc.num",{num:paginate.pages.length})}</a>]) 
+                        break;
+                     }
+                  }
+               }
             }
             
             //loggergen.log("prep",message,counts,types,paginate)

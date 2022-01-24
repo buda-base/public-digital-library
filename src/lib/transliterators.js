@@ -254,8 +254,11 @@ export function getMainLabel(data,extpreset)
         bestlt = k;
       }
    }
-   let val = bestelt["value"]
-   if (!val) val = bestelt["@value"]
+   let val
+   if(bestelt) {
+      val = bestelt["value"]
+      if (!val) val = bestelt["@value"]
+   }
    if (!val) return null;
 
    if (extpreset.translit[bestlt] && transliterators[bestlt] && transliterators[bestlt][extpreset.translit[bestlt]]) {
