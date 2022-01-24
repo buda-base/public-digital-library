@@ -1310,6 +1310,11 @@ class App extends Component<Props,State> {
    }
 
    componentDidUpdate() {
+      if(!this.state.blurSearch) {
+         $("#search-bar input[type=text][placeholder]").attr("placeholder",I18n.t("home.start"));
+         document.querySelector("#search-bar input").focus()
+      }
+
       // TODO check how this behave with smaller screen width/height
       let ref
       if(this._refs["sidepane"] && (ref = this._refs["sidepane"].current) /*&& this.props.language*/) {                     
@@ -6301,7 +6306,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          if(value.match(/(^[0-9]{3,4}$)/) && Number(value) < 2100)  dataSource.unshift(value+"@find as a date")         
          if(value) dataSource.push(value.replace(/^d([0-9]+)/,"D$1")+"@find as an identifier")
 
-         this.setState({...this.state,keyword:value, language, dataSource   } ) 
+         this.setState({...this.state,keyword:value, language, dataSource,blurSearch:false   } ) 
          
          /*
          if(changeKWtimer) clearTimeout(changeKWtimer)
@@ -6542,7 +6547,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      closeIcon={<Close className="searchClose" style={ {color:"rgba(0,0,0,1.0)",opacity:1} } onClick={() => { this.props.history.push({pathname:"/",search:""}); this.props.onResetSearch();} }/>}
                      disabled={this.props.hostFailure}
                      onClick={(ev) => { changeKW(this.state.keyword?lucenequerytokeyword(this.state.keyword):""); $("#search-bar input[type=text][placeholder]").attr("placeholder",I18n.t("home.start"));  } }
-                     onBlur={(ev) => { loggergen.log("BLUR"); setTimeout(() => this.setState({...this.state,dataSource:[]}),100); $("#search-bar input[type=text][placeholder]").attr("placeholder", I18n.t("home.search"));  } }
+                     onBlur={(ev) => { loggergen.log("BLUR"); setTimeout(() => this.setState({...this.state,dataSource:[],blurSearch:true}),100); $("#search-bar input[type=text][placeholder]").attr("placeholder", I18n.t("home.search"));  } }
                      onChange={(value:string) => changeKW(value)}
                      onKeyDown={(ev) => { 
                         //console.log("kd:",ev)
