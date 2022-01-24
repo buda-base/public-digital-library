@@ -3831,7 +3831,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             <div id="num-box" class={(this.state.checked[prettId] === true?"checked":"")} style={{flexShrink:0}} onClick={(e) => this.setState({repage:true,checked:{...this.state.checked,[prettId]:!this.state.checked[prettId]}})}>{warnStatus}{I18n.t("punc.num",{num:n})}</div>,         
             <div id="icon" class={enType + (hasCopyR?" wCopyR":"")}>
                { hasThumb.length > 0  && <div class="thumb" title={I18n.t("copyright.view")}>{
-                   getIconLink(viewUrl?viewUrl:resUrl+"#open-viewer", <img src={hasThumb}/>)
+                   getIconLink(viewUrl?viewUrl:resUrl+"#open-viewer", <img loading="lazy" src={hasThumb}/>)
                   }</div> }
                { hasThumb.length === 0 && [
                   <div>{
