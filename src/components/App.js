@@ -1312,7 +1312,8 @@ class App extends Component<Props,State> {
    componentDidUpdate() {
       if(!this.state.blurSearch) {
          $("#search-bar input[type=text][placeholder]").attr("placeholder",I18n.t("home.start"));
-         document.querySelector("#search-bar input").focus()
+         let elem = document.querySelector("#search-bar input")
+         if(elem) elem.focus()
       }
 
       // TODO check how this behave with smaller screen width/height
