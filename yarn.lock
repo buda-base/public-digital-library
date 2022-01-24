@@ -11456,6 +11456,11 @@ react-jss@^8.1.0:
     prop-types "^15.6.0"
     theming "^1.3.0"
 
+react-lazyload@^3.2.0:
+  version "3.2.0"
+  resolved "https://registry.yarnpkg.com/react-lazyload/-/react-lazyload-3.2.0.tgz#497bd06a6dbd7015e3376e1137a67dc47d2dd021"
+  integrity sha512-zJlrG8QyVZz4+xkYZH5v1w3YaP5wEFaYSUWC4CT9UXfK75IfRAIEdnyIUF+dXr3kX2MOtL1lUaZmaQZqrETwgw==
+
 "react-leaflet-google@https://github.com/danieldunderfelt/react-leaflet-google.git":
   version "3.3.1"
   resolved "https://github.com/danieldunderfelt/react-leaflet-google.git#7c7590470ba4b2214be243cc313e6d58bd649a64"

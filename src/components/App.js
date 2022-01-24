@@ -63,6 +63,7 @@ import FormGroup from '@material-ui/core/FormGroup';
 import Popover from '@material-ui/core/Popover';
 import $ from 'jquery' ;
 import {CopyToClipboard} from 'react-copy-to-clipboard' ;
+import LazyLoad from 'react-lazyload';
 
 import {Map,TileLayer,LayersControl,Marker,Popup,GeoJSON,Popup as MapPopup} from 'react-leaflet' ;
 import { GoogleLayer } from "react-leaflet-google" ;
@@ -3831,7 +3832,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             <div id="num-box" class={(this.state.checked[prettId] === true?"checked":"")} style={{flexShrink:0}} onClick={(e) => this.setState({repage:true,checked:{...this.state.checked,[prettId]:!this.state.checked[prettId]}})}>{warnStatus}{I18n.t("punc.num",{num:n})}</div>,         
             <div id="icon" class={enType + (hasCopyR?" wCopyR":"")}>
                { hasThumb.length > 0  && <div class="thumb" title={I18n.t("copyright.view")}>{
-                   getIconLink(viewUrl?viewUrl:resUrl+"#open-viewer", <img loading="lazy" src={hasThumb}/>)
+                   getIconLink(viewUrl?viewUrl:resUrl+"#open-viewer", <LazyLoad height={130} offset={500}><img src={hasThumb}/></LazyLoad>)
                   }</div> }
                { hasThumb.length === 0 && [
                   <div>{
