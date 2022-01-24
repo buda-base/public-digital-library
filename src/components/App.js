@@ -968,7 +968,7 @@ export function top_right_menu(that,etextTitle,backUrl,etextres)
                   $("#search-bar input").click()
                   document.querySelector("#search-bar input").focus()
                   document.querySelector("#search-bar").scrollIntoView({block: "start", inline: "nearest", behavior:"smooth"})
-                  $("#search-bar").removeClass("scroll")
+                  setTimeout(() => { $("#search-bar").removeClass("scroll") },1000)
                },350)
                ev.preventDefault()
             } }><span>{I18n.t("topbar.search")}</span></Link> }         
@@ -6499,7 +6499,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   <div class="fond-logo">
                      <a id="logo" target="_blank" old-href="https://www.tbrc.org/">
                         {/* <img src="/logo.svg" style={{width:"200px"}} /> */}
-                        <img src="/pichome.jpg" />
+                        <img style={{minHeight:400}} src="/pichome.jpg" />
                         <div>
                            <div>
                               {/* { I18n.t("home.BUDA") } */}
@@ -6516,7 +6516,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   <div class="fond-logo">
                      <a id="logo" target="_blank" old-href="https://www.tbrc.org/">
                         {/* <img src="/logo.svg" style={{width:"200px"}} /> */}
-                        <img src="/pichome_khmer.jpg" />
+                        <img  style={{minHeight:400}} src="/pichome_khmer.jpg" />
                         <div>
                            <div>
                               {/* { I18n.t("home.BUDA") } */}
