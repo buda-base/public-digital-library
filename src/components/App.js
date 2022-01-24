@@ -963,12 +963,10 @@ export function top_right_menu(that,etextTitle,backUrl,etextres)
          { !onKhmerServer && <Link to="/"  onClick={(ev) => { 
                that.props.history.push({pathname:"/",search:""}); 
                if(that.props.keyword) { that.props.onResetSearch();}
-               $("#search-bar").addClass("scroll")
                setTimeout(() => {
                   $("#search-bar input").click()
                   document.querySelector("#search-bar input").focus()
                   document.querySelector("#search-bar").scrollIntoView({block: "start", inline: "nearest", behavior:"smooth"})
-                  setTimeout(() => { $("#search-bar").removeClass("scroll") },1000)
                },350)
                ev.preventDefault()
             } }><span>{I18n.t("topbar.search")}</span></Link> }         
@@ -6499,7 +6497,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   <div class="fond-logo">
                      <a id="logo" target="_blank" old-href="https://www.tbrc.org/">
                         {/* <img src="/logo.svg" style={{width:"200px"}} /> */}
-                        <img style={{minHeight:400}} src="/pichome.jpg" />
+                        <img src="/pichome.jpg" />
                         <div>
                            <div>
                               {/* { I18n.t("home.BUDA") } */}
@@ -6516,7 +6514,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   <div class="fond-logo">
                      <a id="logo" target="_blank" old-href="https://www.tbrc.org/">
                         {/* <img src="/logo.svg" style={{width:"200px"}} /> */}
-                        <img  style={{minHeight:400}} src="/pichome_khmer.jpg" />
+                        <img src="/pichome_khmer.jpg" />
                         <div>
                            <div>
                               {/* { I18n.t("home.BUDA") } */}

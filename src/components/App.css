@@ -274,8 +274,7 @@ body { overflow:auto !important;padding-right:0 !important; /*font-family:"Robot
 #root ~ #menu-datatype ul,
 #root ~ #menu-language ul { padding:0 !important;}
 
-#search-bar { width:100%;}
-#search-bar.scroll { scroll-margin-top: 80px; }
+#search-bar { width:100%; scroll-margin-top: 80px; }
 #search-bar button { margin-top:6px; }
 #search-bar > div:first-child { box-shadow: 0 2px 4px rgba(187, 187, 187, 0.5); border-radius:2px; font-weight:600;  }
 #search-bar > div:first-child  > div:first-child  > div:first-child { width:calc(100% - 160px); margin-right:200px; }
