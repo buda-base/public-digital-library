@@ -799,7 +799,11 @@ export function top_right_menu(that,etextTitle,backUrl,etextres)
 
    let logo = [
             <div id="logo">
-               <Link to="/"  onClick={() => { that.props.history.push({pathname:"/",search:""}); if(that.props.keyword) { that.props.onResetSearch(); } } }><img src="/icons/BUDA-small.svg"/><span>BUDA</span></Link>                                  
+               <Link to="/"  onClick={() => { 
+                  that.props.history.push({pathname:"/",search:""}); 
+                  if(that.props.keyword) { that.props.onResetSearch(); } 
+                  that.setState({blurSearch:false})
+               } }><img src="/icons/BUDA-small.svg"/><span>BUDA</span></Link>                                  
                <a id="by"><span>by</span></a>
                { !onZhMirror && [
                   <a href={"https://bdrc.io/"} target="_blank" id="BDRC"><span>BDRC</span></a>,
