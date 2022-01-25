@@ -5220,6 +5220,10 @@ a.result + #matches.mobile,
 
 .simpleSearch .result-content+.result-content::before { width:calc(100% - 2 * 20px); left:20px; }
 
+.simpleSearch #res-header { top:0px !important; position: relative;}
+
 .simpleSearch #res-header #pagine #nb:first-child { margin:0; padding:0; }
 
 .simpleSearch .nav { box-shadow:none; }
+
+.SidePane.left.closed { right:-350px; }
