@@ -5756,6 +5756,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                         if(label) { lang = label["lang"] ; if(!pageLang) pageLang = lang }
                         if(label) { label = label["value"]; pageVal += " "+label ; }
                         if(label && this.props.highlight && this.props.highlight.key) { label = highlight(label,kw.map(k => k.replace(/(.)/g,"$1\\n?")),null,false,true); current.push(label); }
+                        else if(label) label = label.split(/[\n\r]/).map(e =>([e,<br/>]))
                         //label = f
                         let size = this.state.etextSize
                         if(lang === "bo") { size += 0.4 ; }
