@@ -2792,7 +2792,7 @@ class ResourceViewer extends Component<Props,State>
          else if(pretty.toString().match(/^([A-Z]+[v_0-9-]*[A-Z]*)+$/)){ 
 
             if(!thumb && !thumbV) {
-               ret = (<Link className={"urilink "+ prefix} to={"/"+show+"/"+prefix+":"+pretty}><span lang="">{ret}{enti!="Etext"?prefix+":"+pretty:""}</span></Link>)
+               ret = (<Link className={"urilink "+ prefix} to={"/"+show+"/"+prefix+":"+pretty}><span lang="">{ret}{enti!="Etext"||prop?.endsWith("eTextInInstance")?prefix+":"+pretty:""}</span></Link>)
             }
             else if(thumb && thumb.length) {
                let thumbUrl = thumb[0].value
