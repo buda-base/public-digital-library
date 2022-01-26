@@ -521,7 +521,7 @@
       "citation": {
          "mla": "དེང་དུས་ཀྱི་སྐད་ཡིག་ཁག",
          "chicago": "Chicago Manual of Style",
-         "apa": "American Psychological Association"
+         "apa": "ཨ་རིའི་སེམས་ཁམས་རིག་པའི་མཐུན་ཚོགས།(APA)"
       },
       "citationI": "{{lg}} ཁུངས་འདྲེན།",
       "citationS": "ཡོང་ཁུངས་ཀྱི་ཁྱད་ཆོས།",
@@ -537,8 +537,8 @@
       "clipT": "ཡིག་རྐྱང་ངོ་བཤུ་བྱས་ཡོད།",
       "orderVT": "གཤམ་བཀོད་ཡི་གེ་རྣམས་ངོ་བཤུ་བྱས་ཏེ་དེའི་འོག་གི་དྲ་ཐག་སྒང་ལ་བསྣུན་ནས་མཆན་འགོད་སའི་ནང་ཞོག",
       "contactVT": "Vimala Treasures ཚོགས་པར་འབྲེལ་བ་བྱོས།",
-      "contactVTcopy": "ངས་ {{uri}}",
-      "assoc":"ཡི་ཕྱོགས་བསྒྲིགས་འདྲ་བཤུས་ཤིག་མངགས་ན་འདོད།",
+      "contactVTcopy": "ངས་ {{uri}} ཡི་འདྲ་བཤུས་ཤིག་མངགས་ན་འདོད།",
+      "assoc":"འབྲེལ་ཡོད་བརྩམས་ཆོས།",
       "location1": " (v. {{vol}}, img. {{page}})",
       "locationM": " (v. {{vol}}, img. {{page}}-{{endPage}})",
       "location1vol1": " (img. {{page}})",
