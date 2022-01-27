@@ -40,8 +40,8 @@ class Footer extends Component<Props,State> {
                         <div id="f2" class="p65"><div>
                             <span lang={this.props.locale}>{I18n.t("footer.connect")}</span>
                             <div id="s1">
-                                <SocialIcon target="_blank" url="https://www.facebook.com/TBRC.org" fgColor="#111312" bgColor="transparent" />
-                                <SocialIcon target="_blank" url="https://www.linkedin.com/company/tibetan-buddhist-resource-center/"  fgColor="#111312" bgColor="transparent" />
+                                <SocialIcon target="_blank" url="https://www.facebook.com/BDRC.io" fgColor="#111312" bgColor="transparent" />
+                                <SocialIcon target="_blank" url="https://www.linkedin.com/company/buddhist-digital-resource-center/"  fgColor="#111312" bgColor="transparent" />
                                 <a href="https://www.instagram.com/buddhist_archive/" target="_blank"><img src="/icons/instagram.svg" style={{ height: "18px"}} /></a>
                             </div>
                         </div></div>
