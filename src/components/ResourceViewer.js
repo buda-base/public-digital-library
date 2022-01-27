@@ -6291,7 +6291,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
             fairTxt = <>
                <Trans i18nKey="access.fairUseIA1" components={{ bold: <u /> }} />
                <br/><br/>
-               <a class="fairuse-IA-link" target="_blank" href={"https://archive.org/details/bdrc-"+this.props.IRI.replace(/^bdr:/,"")}>
+               <a class="fairuse-IA-link" target="_blank" href={"https://archive.org/details/bdrc-"+this.props.IRI.replace(/^(bdr:M?)|(_[A-Z0-9]+)$/g,"")}>
                   <img class="ia" src="/IA.svg"/>
                   {I18n.t("access.fairUseIA2")}
                   <img class="link-out" src="/icons/link-out_fit.svg"/>
