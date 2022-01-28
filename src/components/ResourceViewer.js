@@ -6646,12 +6646,12 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                   }}><Close/></span> }                  
                   { (this.state.outlineKW && this.state.dataSource && this.state.dataSource.length > 0) &&   
                      <div><Paper id="suggestions">
-                     { this.state.dataSource.map( (v) =>  {
+                     { this.state.dataSource.map( (v,i) =>  {
                            let tab = v.split("@")
                            return (
                               <MenuItem key={v} style={{lineHeight:"1em"}} onClick={(e)=>{ 
                                  this.setState({dataSource:[]});
-                                 let param = this.state.dataSource[0].split("@")
+                                 let param = this.state.dataSource[i].split("@")
                                  let loca = { pathname:"/search", search:"?q="+keywordtolucenequery(param[0])+"&lg="+param[1]+"&r="+this.props.IRI+"&t=Etext" }
                                  this.props.history.push(loca)
                               }}>{ tab[0].replace(/["]/g,"")} <SearchIcon style={{padding:"0 10px"}}/><span class="lang">{(I18n.t(""+(searchLangSelec[tab[1]]?searchLangSelec[tab[1]]:languages[tab[1]]))) }</span></MenuItem> ) 
@@ -8465,7 +8465,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                         }
                      </div> 
                   }         
-                  { theEtext }
+                  { (!(etext && orig)) && theEtext }
                   { theOutline }
                   { theDataLegal }
                   { theDataExt && 

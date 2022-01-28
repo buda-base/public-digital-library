@@ -2526,6 +2526,8 @@ span[lang^='sa-']:not([lang$='-ewts']) { text-transform: capitalize;}
 
 .resource h4 .nbTrans { font-size:14px; color:#555; font-weight:400;}
 
+.resource  #outline h4 .nbTrans { display:none; }
+
 /* ------------------------------------------------------------------------------------------------------------------------ permalink */
 
 .resource .data#perma { background-color:#ffffff; padding:0 35px 50px 35px;}
@@ -2910,6 +2912,8 @@ body > [id^="menu-"] > div:last-child,
 }
 .resource .data [data-prop="bdo:workHasInstance"] .images-thumb { width:100px;height:100px;z-index:1;position:relative;}
 .resource .data [data-prop="bdo:workHasInstance"] .images-thumb-links { margin-left:10px;}
+
+.resource .data [data-prop="bdo:workHasInstance"] .images-thumb-links ~ .provider { display:none;  }
 
 .resource .data > [data-prop="bdo:workHasInstance"] > h3 ~ .group > h4.multiple { display:inline-block; margin-top:4px;}
 
