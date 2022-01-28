@@ -2293,6 +2293,8 @@ h4:not(:hover) > .lang
 .resource.user .data .FC > label { transform: translate(0, 7px) scale(1); }
 .resource.user .data [data-props="tmp:cultural"][lang="en"] a span { display:inline-block; width:140px; }
 
+.resource.user .data [data-props="foaf:mbox"] .FC > label { display:none; }
+
 .resource.user .data #validate { position:absolute; right:0; display:inline-flex; align-items:center;}
 .resource.user .data #validate > svg { opacity:0.55; margin-right:20px; color:#d73449; }
 .resource.user .data #validate .error { position:absolute; top:100%;right:0;font-size:14px;font-weight:600;color:#d73449;text-align:center;

@@ -420,7 +420,7 @@ export class Profile extends Component<Props,State> {
               { 
                  this.state.profile && !this.state.profile.sub.match(/^auth0[|]/) && 
 
-                  <div data-props>
+                  <div data-props="foaf:mbox">
                     <h3><span><a class="propref"><span>{I18n.t("user.email")}{I18n.t("punc.colon")}</span></a></span></h3>
                       <div class="group">
                         {/* <h4>{this.props.profile && this.props.profile[foaf+"mbox"] && this.props.profile[foaf+"mbox"][0].value}</h4> */}
