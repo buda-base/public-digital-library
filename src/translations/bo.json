@@ -436,7 +436,10 @@
       "result_plural": "བཙལ་འབྲས། {{count,counttobo}}",
       "filters": {
          "noresults": "འདེམས་སྒྲུག་བྱས་པའི་བཙལ་འབྲས་མི་འདུག",
-         "noresultsAsso": "འདི་དང་འབྲེལ་བའི་བཙལ་འབྲས་མི་འདུག {{keyword}} {{type}}"
+         "noresultsAsso": "འདི་དང་འབྲེལ་བའི་བཙལ་འབྲས་མི་འདུག {{keyword}} {{type}}",
+         "facets":" with the filters you set",
+         "persons":"<parag>BDRC contains thousands of person records, you may want to try modifying your search to get the best results.<newline/><list>Search on a shorter string of syllables by eliminating titles, geographical names, and so on<newline/>Ex: <ita>'jam dbyangs nor bu</ita> instead of <ita>co ne sa skyong 'jam dbyangs nor bu</ita></list><list>Double check your search for typos</list></parag>",
+         "instances":"<parag>BDRC contains thousands of texts, you may want to try modifying your search to get the best results.<newline/><list>Search on a shorter string of syllables, preferably the core part of the title<newline/>Ex: <ita>lam rim chung ngu'i zin brisw</ita> instead of <ita>lam rim chung ngu'i zin bris blo gsal rgya mtsho'i 'jug ngogs</ita></list><list>Double check your search for typos</list></parag>"
       },
       "seeO": "གཞི་གྲངས་རིགས་གཞན་པའི་བཙལ་འབྲས་ལ་ལྟོས།",
       "backToW": "བརྩམས་ཆོས་སྟེང་ཕྱིར་ལོག",

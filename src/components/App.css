@@ -1261,6 +1261,9 @@ p.no-result {
    margin: 20px 22px 0 22px;
 }
 
+.no-result .noR { display:block; margin-top:25px; }
+.no-result .noR li:not(#a) { list-style-type: disc; margin-left:30px;margin-top:6px;}
+
 .no-result #clear-filters { margin-left:0; margin-top:5px; display:flex;align-items: center;}
 .no-result #clear-filters * { color:#d73449; }
 .no-result + .no-result { margin-top:0px;}

@@ -5139,7 +5139,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      keyword:lucenequerytokeyword(this.props.keyword), 
                      type:I18n.t("types.searchIn", { type:I18n.t("types."+this.state.filters.datatype[0].toLowerCase(),{count:2}).toLowerCase() }),  
                      interpolation: {escapeValue: false} }) }
-                  {  this.state.filters.facets && " with the filters you set"}
+                  {  this.state.filters.facets && I18n.t("search.filters.facets")}
                   {  this.state.filters.facets && <span class="reset-khmer"><br/>{this.renderResetF()}{onKhmerUrl&&<>
                      &nbsp;{I18n.t("misc.or")}&nbsp;
                      <Link to={"/guidedsearch"} id="clear-filters">
@@ -5147,6 +5147,9 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                         <SearchIcon />                        
                      </Link>
                   </>}</span>}
+                  { this.state.filters.datatype[0] === "Person" && <Trans i18nKey="search.filters.persons" components={{ newline: <br />, parag: <span class="noR"/>, list:<li/>, ita:<i/> }} />}
+                  { this.state.filters.datatype[0] === "Instance" && <Trans i18nKey="search.filters.instances" components={{ newline: <br />, parag: <span class="noR"/>, list:<li/>, ita:<i/> }} />}
+                  { this.state.filters.datatype[0] === "Work" && <Trans i18nKey="search.filters.instances" components={{ newline: <br />, parag: <span class="noR"/>, list:<li/>, ita:<i/> }} />}
                </Typography>);
 
                if(!this.state.filters.facets && other && other.length && !this.props.simple)   
