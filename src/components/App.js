@@ -3227,10 +3227,10 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             if(ret.length) return ([
                         <span class="instance-collapse" onClick={(e) => { 
                            this.setState({...this.state,collapse:{...this.state.collapse,[iri]:!this.state.collapse[iri] },repage:true })
-                        }}>{!this.state.collapse[iri]?<ExpandMore/>:<ExpandLess/>}</span>,
+                        }}>{this.state.collapse[iri]?<ExpandMore/>:<ExpandLess/>}</span>,
                         <span class="label">{this.fullname(prop,[],true,(plural && ret.length > 1 ?2:1))}{I18n.t("punc.colon")}&nbsp;</span>,
                         <div style={{clear:"both"}}></div>,
-                        <Collapse in={this.state.collapse[iri]} >
+                        <Collapse in={!this.state.collapse[iri]} >
                            {ret}
                         </Collapse>
                      ])
