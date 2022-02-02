@@ -150,7 +150,9 @@
       "lastS": "Release Date",
       "reverseS": "(reverse order)",
       "volumeN": "Volume Number",
-      "roleN": "Role Name"
+      "roleN": "Role Name",
+      "showAll":"show all matches",
+      "hideAll":"best matches only"
    },
    "copyright": {
       "open": "Open Access",

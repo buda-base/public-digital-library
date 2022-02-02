@@ -108,7 +108,9 @@
       "lastS": "发布时间",
       "reverseS": "(逆序)",
       "volumeN": "Volume Number",
-      "roleN": "Role Name"
+      "roleN": "Role Name",
+      "showAll":"show all matches",
+      "hideAll":"best matches only"
    },
    "copyright": {
       "open": "开放访问",
