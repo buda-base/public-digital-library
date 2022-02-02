@@ -1,0 +1,2 @@
+cp ./build/index.html ./build/index-sav.html
+cat ./build/index-sav.html | sed "s/<head>/<head><script src=\"\/scripts\/scriptError.js\"><\/script>/"| sed "s/<script src=\"\/static/<script onerror=\"scriptError(this)\" src=\"\/static/g" > ./build/index.html

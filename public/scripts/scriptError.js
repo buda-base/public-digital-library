@@ -1,0 +1,1 @@
+function scriptError(e){var dbg=document.createElement("div");dbg.innerHTML = "Could not find "+e.src+"<br/>Page will reload in a few seconds<br/>If this still occurs, try <a href='https://en.wikipedia.org/wiki/Wikipedia:Bypass_your_cache' target='_blank'>bypassing your browser's cache</a>";document.body.appendChild(dbg);setTimeout(function(){location.reload(true);},3000);}

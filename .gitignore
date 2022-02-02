@@ -16,6 +16,8 @@ public/config-khmer.json
 
 # static files
 /public/scripts/*
+!/public/scripts/scriptError.js
+!/public/scripts/patch-build.sh
 !/public/scripts/silent_callback.html
 !/public/scripts/citation-js/
 /public/scripts/citation-js/*
