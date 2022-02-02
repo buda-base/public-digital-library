@@ -49,7 +49,8 @@
             "title": "Resources",
             "text":"<parag>Relevant bibliographies and secondary sources concerning Cambodian manuscripts <nbsp>—coming soon</nbsp>. </parag>"
          }
-      }
+      },
+      "help":"<bold>Please consult the <lk href='https://www.bdrc.io/buda-user-guide/'>user guide</lk> and <lk href='https://www.bdrc.io/buda-user-guide/frequently-asked-questions/'>FAQ</lk> to learn more about BUDA</bold>"
    },
    "types": {
       "any": "Any",

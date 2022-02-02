@@ -6828,6 +6828,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                            <span class="uri-link" style={{textTransform:"capitalize"}} onClick={() => this.props.auth.login(this.props.history.location,true)} >{I18n.t("home.subsubmessage_account5")}</span>
                            { I18n.t("home.subsubmessage_account3")}</h4> }
                         <h4 class="subsubtitleFront">{ I18n.t("home.subsubmessage") }<a title="email us" href="mailto:help@bdrc.io" lang={this.props.locale}>help@bdrc.io</a>{ I18n.t("home.subsubmessage_afteremail") }</h4>
+                        <h4 class="subsubtitleFront"><Trans i18nKey="home.help" components={{bold:<b/>, lk:<a class='uri-link' target='_blank' />}}/></h4>
                      </List> }
                { /* (this.props.datatypes && this.props.datatypes.hash && this.props.datatypes.metadata[bdo+this.state.filters.datatype[0]] && message.length === 0 && !this.props.loading) && 
                   <List id="results">
