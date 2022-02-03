@@ -675,7 +675,8 @@ footer #donate,
 
    .nav #logo.khmer > a:first-child { margin-right:0; }
 
-
+   
+   #etext-nav { padding:0 24px; box-sizing: border-box;}
 }
 
 .App.guidedsearch.khmer button.red { cursor:pointer; background:#d73449; color:white; border:none; text-transform: uppercase; font-size:12px; font-weight: 800; padding:7px 12px; border-radius: 2px;} 
@@ -3847,6 +3848,41 @@ html[lang="en"] .resource .data > [data-prop="bdo:creator"] h4[data-prop="bdo:ro
 #etext-nav a #check { margin-left:10px;margin-right:20px; display:inline-block;vertical-align: middle; min-width:19px;}
 #etext-nav a span#check { width:19px;height:19px;background:white;border-radius:10px;}
 
+
+#etext-nav .X { display:none; }
+
+
+
+@media(max-width:1024px) {
+   #etext-nav { height:60px; transition:left 400ms ease-in-out; }
+   #etext-nav:not(.on) { left:calc(100% + 10px); }
+
+
+   #etext-nav .X { 
+      display:block;
+      width: 15px;
+      height: 60px;
+      background-color: #d73449;
+      position: absolute;
+      right: 0;
+      padding: 0 !important;
+   }
+
+   #etext-nav .X::before {
+      content: ' ';
+      position: absolute;
+      top: calc(50% - 6px);
+      left: 5px;
+      width: 0;
+      height: 0;
+      border-top: 6px solid transparent;
+      border-bottom: 6px solid transparent;
+      border-right: 6px solid white;
+      transition: all 400ms ease-in-out;
+      transform: rotate(180deg);
+   }
+}
+
 @font-face {
    font-family: 'Tibetan Machine Uni';
    src: url('/Tibetan_Machine_Uni.woff2') format('woff2'),
@@ -4740,6 +4776,9 @@ a.result .contenu ul > div:last-child h3[lang=bo] span { font-size:18px;}
 
 @media (max-width:1024px)
 {
+
+   #root > div > .resource.etext-view { padding-top:100px; }
+   .nav #back { margin-left:auto;}
    
    /* #res-header > div .widget-header {  margin-left: 98px; } */
 
@@ -4812,8 +4851,7 @@ a.result .contenu ul > div:last-child h3[lang=bo] span { font-size:18px;}
 
    .nav { padding:0 calc((100% - 700px) / 2); }
    .nav #lang { margin-left:20px; }
-   .nav #donate { width:40px; margin-left:15px; } 
-   .nav #logo a img {  height:40px !important; }
+   .nav #donate { width:40px; margin-left:15px; }
 
    #res-header > div .widget-header { 
       margin-left: 145px;
@@ -4850,6 +4888,9 @@ a.result + #matches.mobile,
 
 @media (max-width:1024px)
 {
+   
+   .nav #logo a img {  height:40px !important; }
+
    .nav .close { display:block; }
    
    /* ------------------------------------------------------------------------------------------------------------------------ home/topbar */ 

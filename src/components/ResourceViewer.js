@@ -6413,8 +6413,9 @@ perma_menu(pdfLink,monoVol,fairUse,other)
       if(showToggleScan && showToggleScan.length && !this.unpaginated()) showToggleScan = (showToggleScan[0].seq !== undefined)
       else showToggleScan = false
 
-      return (
-         <div id="etext-nav">
+      return (<>
+         <div id="settings" onClick={() => this.setState({collapse:{...this.state.collapse, etextNav:!this.state.collapse.etextNav}})}><img src="/icons/settings.svg"/></div>
+         <div id="etext-nav" class={this.state.collapse.etextNav?"on":""}>
             <div>
                <a id="DL" class={!accessError?"on":""} target="_blank" rel="alternate" type="text" download href={this.props.IRI?fullUri(this.props.IRI).replace(/^http:/,"https:")+".txt":""}>{I18n.t("mirador.downloadE")}<img src="/icons/DLw.png"/></a>
                <div id="control">
@@ -6423,9 +6424,10 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                   {etext_lang_selec(this,true)}
                </div>
                <a class={showToggleScan?"on":""} onClick={(e) => this.setState({showEtextImages:!this.state.showEtextImages})}>{this.state.showEtextImages?<img id="check" src="/icons/check.svg"/>:<span id="check"></span>}{I18n.t("mirador.showI")}<img width="42" src="/icons/search/images_b.svg"/></a>
+               <span class="X" onClick={() => this.setState({ collapse:{ ...this.state.collapse, etextNav:!this.state.collapse.etextNav }})}></span>
             </div>
          </div>
-      )
+      </>)
    }
 
 

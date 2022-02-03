@@ -843,8 +843,9 @@ export function top_right_menu(that,etextTitle,backUrl,etextres)
 
 
    if(etextTitle)
-      return (
-      <div class={"nav"+(onZhMirror?" zhMirror":"")}>
+      return (<>
+      <div class="mobile-button top" onClick={()=>that.setState({collapse:{...that.state.collapse,navMenu:!that.state.collapse.navMenu}})}><img src="/icons/burger.svg" /></div>
+      <div class={"nav"+(onZhMirror?" zhMirror":"")+(that.state.collapse.navMenu?" on":"")}>
          {uiLangPopup}
          <div>
             {logo}
@@ -897,8 +898,9 @@ export function top_right_menu(that,etextTitle,backUrl,etextres)
                }}><span style={{verticalAlign:"-3px"}}>{I18n.t("topbar.closeEtext")}</span></a>
                <span>{etextTitle}</span>
             </span>
+            <div class="close" onClick={()=>that.setState({collapse:{...that.state.collapse,navMenu:false}})}>+</div> 
          </div>
-      </div>)
+      </div></>)
    else {
 
       const toggleHoverLogin = (hoverLogin,e) => {
