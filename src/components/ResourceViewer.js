@@ -824,7 +824,11 @@ class OutlineSearchBar extends Component<Props,State>
    constructor(props:Props) {
       super(props);
 
-      this.state = { value: "", language:"", dataSource:[] }
+      this.state = { 
+         value: props.that.state.outlineKW?props.that.state.outlineKW:"", 
+         language: props.that.state.outlineKWlang?props.that.state.outlineKWlang:"", 
+         dataSource:[] 
+      }
    }
 
    changeOutlineKW(e, value) {
@@ -896,7 +900,8 @@ class OutlineSearchBar extends Component<Props,State>
                <span class="button" onClick={(e) => { if(this.state.dataSource?.length) { search(e,this.state.dataSource[0].split("@")[1]) } }}  title={I18n.t("resource.start")}></span>
                { (this.props.that.props.outlineKW || this.props.that.state.outlineKW) && <span class="button" title={I18n.t("resource.reset")} onClick={(e) => { 
                   let collapse = cleanOutlineCollapse()
-                  this.props.that.setState({outlineKW:"",dataSource:[],collapse})
+                  this.setState({value:""})
+                  this.props.that.setState({outlineKW:"",collapse})
                   if(this.props.that.props.outlineKW) {
                      this.props.that.props.onResetOutlineKW()
                      let loca = { ...this.props.that.props.history.location }
