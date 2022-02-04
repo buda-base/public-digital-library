@@ -86,7 +86,7 @@ body.auto_rela .inApp.mirador-container .slotIconContainer { position:absolute !
 
 /* TODO show only one scroll bar whern mirador is open & no horizontal scroll when non need*/
 
-#viewer.mirador-container { position:fixed;width:100%;height:100%;top:0;left:0;z-index:100000; }
+#viewer.mirador-container { position:fixed;width:100%;height:100%;top:0;left:0;z-index:100000; overflow:auto; }
 #collection-tree > ul > li[role=treeitem]:nth-child(-n+2) { display:none; }
 /* .jstree-default .jstree-anchor {  line-height: 42px; height: 42px;  font-size: 20px; } */
 .jstree-default .jstree-icon:empty { line-height: 42px;  padding-right: 4px; }
@@ -120,7 +120,7 @@ body.auto_rela .inApp.mirador-container .slotIconContainer { position:absolute !
 .mirador-container .mirador-viewer ul.scroll-listing-thumbs li {  width:auto;display:block;position:relative; padding:0; margin-bottom:0; }
 .mirador-container .mirador-viewer ul.scroll-listing-thumbs li img { position:relative; }
 .mirador-container ul.scroll-listing-thumbs li .thumb-label { display:inline-block; border:none !important; }
-@media(max-width:800px) { 
+@media(max-width:1024px) { 
     .mirador-container ul.scroll-listing-thumbs li .thumb-label { font-size:14px; }
     .mirador-container ul.scroll-listing-thumbs li .thumb-label[lang=bo] { font-size:16px; }
 }
