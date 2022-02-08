@@ -119,7 +119,9 @@
       "lastS": "སྤེལ་དུས།",
       "reverseS": "(reverse)",
       "volumeN": "པོད་གྲངས།",
-      "roleN": "མི་སྣའི་མཚན།"
+      "roleN": "མི་སྣའི་མཚན།",
+      "showAll":"show all matches",
+      "hideAll":"best matches only"
    },
    "copyright": {
       "open": "བཀག་རྒྱ་མེད་པ།",

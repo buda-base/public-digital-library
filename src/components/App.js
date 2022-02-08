@@ -55,6 +55,8 @@ import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import Select from '@material-ui/core/Select';
+import Visibility from '@material-ui/icons/Visibility';
+import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faLanguage,faUserCircle,faSignOutAlt,faSlidersH } from '@fortawesome/free-solid-svg-icons'
 import qs from 'query-string'
@@ -3228,11 +3230,19 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
             if(ret.length) return ([
                         <span class="instance-collapse" onClick={(e) => { 
-                           this.setState({...this.state,collapse:{...this.state.collapse,[iri]:!this.state.collapse[iri] },repage:true })
-                        }}>{!this.state.collapse[iri]?<ExpandMore/>:<ExpandLess/>}</span>,
+                           this.setState({...this.state,collapse:{
+                              ...this.state.collapse,
+                              [iri]: this.state.collapse.etextOtherM
+                                     ? ( this.state.collapse[iri] === undefined
+                                       ? false                                  
+                                       : !this.state.collapse[iri] 
+                                     )
+                                     : !this.state.collapse[iri] 
+                           }, repage:true })
+                        }}>{!this.state.collapse[iri]&&(!this.state.collapse.etextOtherM||this.state.collapse[iri]===false)?<ExpandMore/>:<ExpandLess/>}</span>,
                         <span class="label">{this.fullname(prop,[],true,(plural && ret.length > 1 ?2:1))}{I18n.t("punc.colon")}&nbsp;</span>,
                         <div style={{clear:"both"}}></div>,
-                        <Collapse in={this.state.collapse[iri]} >
+                        <Collapse in={this.state.collapse.etextOtherM && this.state.collapse[iri] !== false || this.state.collapse[iri]} >
                            {ret}
                         </Collapse>
                      ])
@@ -6781,7 +6791,15 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   {  // DONE change to popover style open/close
                      sortByList && this.popwidget(I18n.t("Lsidebar.sortBy.title",{by,reverse}),"sortBy",sortByPopup, <ImportExport className="header-icon"/> ) 
                   }
-
+                  { this.state.filters.datatype.includes("Etext") && <div class="widget-header" style={{marginRight:"auto"}} onClick={
+                           () => this.setState({repage:true, collapse:{...this.state.collapse,"etextOtherM":!this.state.collapse.etextOtherM}})
+                     }>
+                        <p class="widget-title" >
+                           { this.state.collapse.etextOtherM 
+                              ? [<VisibilityOff style={{verticalAlign:"-4px",marginRight:"8px"}}/>,I18n.t("sort.hideAll")]
+                              : [<Visibility style={{verticalAlign:"-4px",marginRight:"8px"}}/>,I18n.t("sort.showAll")] }
+                        </p>
+                     </div>}
                   <div id="pagine" lang={this.props.locale}>
                      <div>
                            { pageLinks && <span>{I18n.t("search.page")} { pageLinks }</span>}
