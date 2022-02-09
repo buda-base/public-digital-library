@@ -819,6 +819,34 @@ export function top_left_menu(that,pdfLink,monoVol,fairUse)
 }
 
 
+class PdfZipSelector extends Component<Props,State> {
+
+   
+   constructor(props:Props)
+   {
+      super(props);
+
+      this.state = { ranges: {} }
+   }
+
+   render() {
+
+      let e = this.props.elem
+      let that = this.props.that
+
+      return <>
+         <emph>Full</emph>
+         <span onClick={(ev) => ev.stopPropagation()}> or Range: <input type="text" onChange={(ev) => this.setState({ranges:{...this.state.ranges,[this.props.type+"_"+e.link]:ev.target.value}})}
+               value={this.state.ranges[this.props.type+"_"+e.link]!==undefined?this.state.ranges[this.props.type+"_"+e.link]:"1-"}/>
+            <button onClick={ev => that.handlePdfClick(ev,e.link,e[this.props.type+"File"],this.props.type,this.state.ranges[this.props.type+"_"+e.link])}>OK</button>
+            <Close onClick={ev => that.setState({collapse:{...that.state.collapse, [this.props.type+"_"+e.link]:false}})} />
+         </span>
+      </>
+   }
+}
+
+
+
 class OutlineSearchBar extends Component<Props,State>
 {
    constructor(props:Props) {
@@ -4286,7 +4314,7 @@ class ResourceViewer extends Component<Props,State>
 
 
 
-   handlePdfClick = (event,pdf,askPdf,file = "pdf") => {
+   handlePdfClick = (event,pdf,askPdf,file = "pdf", range = "1-") => {
       // This prevents ghost click.
 
       // trick to prevent popup warning
@@ -4294,11 +4322,14 @@ class ResourceViewer extends Component<Props,State>
       //let win = window.open("","pdf");
       //window.focus(current)
 
-      if(!askPdf)
+      if(!this.state.collapse[file+"_"+pdf]){
+         this.setState({collapse:{...this.state.collapse, [file+"_"+pdf]:true}})
+      }
+      else if(!askPdf)
       {
          event.preventDefault();
          //loggergen.log("pdf",pdf,file)
-         this.props.onCreatePdf(pdf,{iri:this.props.IRI,file});
+         this.props.onCreatePdf(pdf.replace(/1-$/,range),{iri:this.props.IRI,file});
       }
 
       /*
@@ -4437,7 +4468,7 @@ class ResourceViewer extends Component<Props,State>
             title = getLangLabel(this,"", titlElem, false, false, otherLabels)            
          }
          
-         loggergen.log("titl:",title,kZprop,titlElem,otherLabels,other)
+         //loggergen.log("titl:",title,kZprop,titlElem,otherLabels,other)
 
          let _befo
          if(title && title.value) {
@@ -5488,13 +5519,20 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                               let Ploading = e.pdfFile && e.pdfFile == true
                               let Ploaded = e.pdfFile && e.pdfFile != true
                               let Perror = e.pdfFile && e.pdfError
+                              let Prange = this.state.collapse["pdf_"+e.link]
+
                               let Zloading = e.zipFile && e.zipFile == true
                               let Zloaded = e.zipFile && e.zipFile != true
                               let Zerror = e.zipFile && e.zipError
+                              let Zrange = this.state.collapse["zip_"+e.link]
 
 
                               let pdfMsg = I18n.t("resource.gener1pdf")
                               let zipMsg = I18n.t("resource.gener0zip")
+
+                              if(Prange) {
+                                 pdfMsg = <PdfZipSelector type="pdf" that={that} elem={e}/>                                 
+                              }
 
                               if(Ploading) {
                                  pdfMsg = I18n.t("resource.gener2pdf")
@@ -5502,7 +5540,11 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                               }
 
                               if(Ploaded) {
-                                 pdfMsg = I18n.t("resource.gener3pdf")
+                                 pdfMsg = <>{I18n.t("resource.gener3pdf")}<Close onClick={(ev) => {
+                                    this.props.onResetPdf(e,"pdf")
+                                    ev.preventDefault()
+                                    ev.stopPropagation()
+                                 }}/></>
                                  zipMsg =  I18n.t("resource.gener1zip")
                               }
 
@@ -5511,12 +5553,20 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                                  pdfMsg = "server error (" + e.pdfError + ")"
                               }
 
+                              if(Zrange) {
+                                 zipMsg = <PdfZipSelector type="zip" that={that} elem={e}/>
+                              }
+
                               if(Zloading) {
                                  zipMsg = I18n.t("resource.gener2zip")
                               }
 
                               if(Zloaded) {                                 
-                                 zipMsg =  (Ploaded?I18n.t("resource.gener0zip"):I18n.t("resource.gener3zip"))
+                                 zipMsg =  <>{(Ploaded?I18n.t("resource.gener0zip"):I18n.t("resource.gener3zip"))}<Close  onClick={(ev) => { 
+                                    this.props.onResetPdf(e,"zip")
+                                    ev.preventDefault()
+                                    ev.stopPropagation()
+                                 }}/></>
                               }
 
                               if(Zerror) {
@@ -5532,14 +5582,14 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                                         {...(Ploaded ?{href:e.pdfFile}:{})}
                                      >
                                         { Ploading && <Loader className="pdfSpinner" loaded={Ploaded} scale={0.35}/> }
-                                        <span {... (Ploading?{className:"pdfLoading"}:{})}>{pdfMsg}</span>
+                                        <span {... (Ploading?{className:"pdfLoading"}:{className: this.state.collapse["pdf_"+e.link]?"on":""})} >{pdfMsg}</span>
                                         { Ploading && e.pdfPercent !== undefined && <span>&nbsp;{e.pdfPercent}%</span>}
                                      </a>
                                      <a onClick={ev => that.handlePdfClick(ev,e.link,e.zipFile,"zip")}
                                         {...(Zloaded ?{href:e.zipFile}:{})}
                                      >
                                         { Zloading && <Loader className="zipSpinner" loaded={Zloaded} scale={0.35}/> }
-                                        <span {... (Zloading?{className:"zipLoading"}:{})}>{zipMsg}</span>
+                                        <span {... (Zloading?{className:"zipLoading"}:{className:this.state.collapse["zip_"+e.link]?"on":""})}>{zipMsg}</span>
                                         { Zloading && e.zipPercent !== undefined && <span>&nbsp;{e.zipPercent}%</span>}
                                        </a>
                                        { that.props.IRI && getEntiType(that.props.IRI) === "Etext" && // TODO fix download etext

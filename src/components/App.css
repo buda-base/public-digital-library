@@ -2869,6 +2869,21 @@ body > [id^="menu-"] > div:last-child,
 #popDL a li:hover { background-color:#f5f5f5;}
 
 
+
+.pdfMenu > a > span { display: inline-flex;  align-items: center; }
+.pdfMenu > a > span.on { padding-right:14px;  }
+.pdfMenu > a > span > svg { font-size: 20px; margin-left: 2px; color: black; position:absolute; right:0px; }
+
+.pdfMenu > a > span > emph { text-decoration: underline; color:#d73449;}
+.pdfMenu > a > span > span { cursor: auto; padding-left:4px; display: inline-flex; }
+.pdfMenu > a > span > span > input { width:35px; border:none; border-radius:0; border-bottom: 1px solid #777; margin:0 4px; outline:none; padding:0;}
+.pdfMenu > a > span > span > button { background:#d73449; color:white; border:none; font-weight: 600; font-size: 10px; padding:2px 7px; border-radius: 2px; text-transform: uppercase; 
+   cursor: pointer;
+}
+.pdfMenu > a > span > span > button+svg { position: absolute; right: 0; margin-top: -2px; font-size: 20px; color:black; cursor: pointer;}
+
+
+
 .mustLogin:hover { text-decoration: underline;}
 
 /* ------------------------------------------------------------------------------------------------------------------------ hover panel */
