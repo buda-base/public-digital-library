@@ -1412,7 +1412,9 @@ export const pdfReady = (state: DataState, action: Action) => {
          if(e.link.replace(/[-0-9]+$/,"1-").match(id)) { 
             if(action.meta.reset) {
                let elem = { ...e }
+               let fileE = fileT.replace(/File/,"Error")
                if(elem[fileT]) delete elem[fileT]
+               if(elem[fileE]) delete elem[fileE]
                return elem
             } else {
                return { ...e, [fileT]:action.payload }
@@ -1444,7 +1446,7 @@ reducers[actions.TYPES.pdfReady] = pdfReady;
 
 export const pdfError = (state: DataState, action: Action) => {
 
-      let id = new RegExp(action.meta.url.replace(/[/](zip|pdf)[/]/,"/.../"))
+      let id = new RegExp(action.meta.url.replace(/[/](zip|pdf)[/]/,"/.../").replace(/[-0-9]+$/,"1-"))
       let fileT = action.meta.url.replace(/^.*[/](zip|pdf)[/].*$/,"$1")
       let pdfVolumes = state.IIIFinfo
 
@@ -1453,15 +1455,15 @@ export const pdfError = (state: DataState, action: Action) => {
       if(pdfVolumes) { 
          let found = false
          pdfVolumes = pdfVolumes.map(e => {
-            console.log("e/lnk:",e.link,e)
-            if(e.link && e.link.match && e.link.match(id)) {
+            //console.log("e/lnk:",e.link,e)
+            if(e.link && e.link.match && e.link.replace(/[-0-9]+$/,"1-").match(id)) {
                found = true ;
-               return { ...e, [fileT+"Error"]: action.payload } 
+               return { ...e, [fileT+"Error"]: action.payload, [fileT+"Range"]:action.meta.url.replace(/^.*?([-0-9]+)$/,"$1") } 
             }
             return e ;
          })
          if(!found) {
-            pdfVolumes.push({ link:action.meta.url, [fileT+"Error"]: action.payload } )
+            pdfVolumes.push({ link:action.meta.url, [fileT+"Error"]: action.payload, [fileT+"Range"]:action.meta.url.replace(/^.*?([-0-9]+)$/,"$1") } )
          }
       }
       

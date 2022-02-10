@@ -601,7 +601,12 @@
       "location1vol1": " (img. {{page}})",
       "location1volM": " (img. {{page}}-{{endPage}})",
       "showPnodes":"Previous",
-      "showNnodes":"Next"
+      "showNnodes":"Next",
+      "pdferror1":"Incorrect image range",
+      "pdferror2":"Server error",
+      "range":"range",
+      "full":"Full",
+      "ok":"ok"
    },
    "mirador": {
       "return": "return to BUDA",

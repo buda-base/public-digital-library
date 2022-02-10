@@ -193,8 +193,10 @@ const mapDispatchToProps = (dispatch, ownProps) => {
          dispatch(data.createPdf(url,iri));
       },
       onResetPdf:(e:{},t:string) => {
-         console.log("e:",e,t)
-         dispatch(data.pdfReady(e[t+"File"],{url:e.link,iri:ownProps.IRI,reset:true}));
+         dispatch(data.pdfReady(!e[t+"File"]||e[t+"File"]===true?e.link.replace(/zip/,"file/"+t):e[t+"File"],{url:e.link,iri:ownProps.IRI,reset:true}));
+      },
+      onErrorPdf:(code:number,url:string,iri:string) => {
+         dispatch(data.pdfError(code,{url,iri}));
       },
       onHasImageAsset:(url:string,IRI:string,thumb:string) => {
          dispatch(data.getManifest(url,IRI,thumb));

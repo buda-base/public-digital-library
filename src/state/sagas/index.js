@@ -886,9 +886,9 @@ async function createPdf(url,iri) {
                //loggergen.log("pdf:",data)
                link = data.link
             } catch(e) {
-               console.warn("PDF code",e.code)
+               console.warn("PDF code",e.code,e)
                clearInterval(pdfCheck)
-               store.dispatch(dataActions.pdfError(e.code,{url,iri:iri.iri}))
+               store.dispatch(dataActions.pdfError(e.code?e.code:502,{url,iri:iri.iri}))
                return
             }
          }

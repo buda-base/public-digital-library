@@ -835,10 +835,16 @@ class PdfZipSelector extends Component<Props,State> {
       let that = this.props.that
 
       return <>
-         <emph>Full</emph>
-         <span onClick={(ev) => ev.stopPropagation()}> or Range: <input type="text" onChange={(ev) => this.setState({ranges:{...this.state.ranges,[this.props.type+"_"+e.link]:ev.target.value}})}
+         <emph>{I18n.t("resource.full")}</emph>
+         <span onClick={(ev) => ev.stopPropagation()}>{I18n.t("misc.or")} {I18n.t("resource.range")[0].toUpperCase()+I18n.t("resource.range").substring(1)}: <input type="text" onKeyPress={ (ev) => { 
+                  //console.log("key:",ev,this.state.ranges[this.props.type+"_"+e.link])
+                  if(ev.key === 'Enter' && this.state.ranges[this.props.type+"_"+e.link]) {
+                     that.handlePdfClick(ev,e.link,e[this.props.type+"File"],this.props.type,this.state.ranges[this.props.type+"_"+e.link])
+                  } 
+               }}
+               onChange={(ev) => this.setState({ranges:{...this.state.ranges,[this.props.type+"_"+e.link]:ev.target.value}})}
                value={this.state.ranges[this.props.type+"_"+e.link]!==undefined?this.state.ranges[this.props.type+"_"+e.link]:"1-"}/>
-            <button onClick={ev => that.handlePdfClick(ev,e.link,e[this.props.type+"File"],this.props.type,this.state.ranges[this.props.type+"_"+e.link])}>OK</button>
+            <button onClick={ev => that.handlePdfClick(ev,e.link,e[this.props.type+"File"],this.props.type,this.state.ranges[this.props.type+"_"+e.link])}>{I18n.t("resource.ok")}</button>
             <Close onClick={ev => that.setState({collapse:{...that.state.collapse, [this.props.type+"_"+e.link]:false}})} />
          </span>
       </>
@@ -4328,8 +4334,13 @@ class ResourceViewer extends Component<Props,State>
       else if(!askPdf)
       {
          event.preventDefault();
-         //loggergen.log("pdf",pdf,file)
-         this.props.onCreatePdf(pdf.replace(/1-$/,range),{iri:this.props.IRI,file});
+         const ok = range.match(/^([0-9]*)-([0-9]*)$/)
+         loggergen.log("pdf:",pdf,file,ok)
+         if(range !== "-" && ok && (ok[1] != '' && ok[2] != '' && Number(ok[1]) <= Number(ok[2]) || ok[1] === '' && ok[2] !== '' || ok[1] !== '' && ok[2] === '')) {
+            this.props.onCreatePdf(pdf.replace(/1-$/,range),{iri:this.props.IRI,file});
+         } else {
+            this.props.onErrorPdf(501,pdf.replace(/zip/,file).replace(/1-$/,range),this.props.IRI) ;
+         }
       }
 
       /*
@@ -5361,7 +5372,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
    let authError = false ;
    if(this.props.pdfVolumes && this.props.pdfVolumes.length > 0) {
       for(let v of this.props.pdfVolumes) {
-         if(v.pdfError || v.zipError) { 
+         if([401,403].includes(v.pdfError) || [401,403].includes(v.pdfError)) { 
             authError = true 
             //setImmediate(() => window.dispatchEvent(new CustomEvent('resize')))
             break;
@@ -5376,6 +5387,18 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
    //loggergen.log("same:",same)
 
+
+   let pdfZipError = (e, code, t) => <>
+      {  [404,501].includes(code)
+         ? I18n.t("resource.pdferror1")+(e[t+"Range"]?": "+e[t+"Range"]+"":"")
+         : I18n.t("resource.pdferror2")+(e[t+"Range"]?" ("+I18n.t("resource.range")+": "+e[t+"Range"]+")":"")} 
+         <Close  onClick={(ev) => { 
+         this.props.onResetPdf(e,t)
+         ev.preventDefault()
+         ev.stopPropagation()
+      }}/>
+   </>
+   
    // TODO 
    // + fix bdr:G3176 (sameAs Shakya Research Center)
    // + use <Tooltip/> instead of title="""
@@ -5518,12 +5541,12 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
                               let Ploading = e.pdfFile && e.pdfFile == true
                               let Ploaded = e.pdfFile && e.pdfFile != true
-                              let Perror = e.pdfFile && e.pdfError
+                              let Perror = e.pdfFile && e.pdfError || e.pdfError === 501
                               let Prange = this.state.collapse["pdf_"+e.link]
 
                               let Zloading = e.zipFile && e.zipFile == true
                               let Zloaded = e.zipFile && e.zipFile != true
-                              let Zerror = e.zipFile && e.zipError
+                              let Zerror = e.zipFile && e.zipError || e.zipError === 501
                               let Zrange = this.state.collapse["zip_"+e.link]
 
 
@@ -5550,7 +5573,8 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
                               if(Perror) {
                                  Ploading = false
-                                 pdfMsg = "server error (" + e.pdfError + ")"
+                                 pdfMsg = pdfZipError(e,e.pdfError,"pdf")
+                                 
                               }
 
                               if(Zrange) {
@@ -5571,7 +5595,8 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
                               if(Zerror) {
                                  Zloading = false
-                                 zipMsg = "server error (" + e.zipError + ")"
+                                 zipMsg = pdfZipError(e,e.zipError,"zip")
+                                 
                               }
 
                               //console.log("pdfMenu:",e)

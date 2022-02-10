@@ -549,7 +549,12 @@
       "location1vol1": " (img. {{page}})",
       "location1volM": " (img. {{page}}-{{endPage}})",
       "showPnodes":"སྔོན་མ།",
-      "showNnodes":"རྗེས་མ།"
+      "showNnodes":"རྗེས་མ།",
+      "pdferror1":"Incorrect image range",
+      "pdferror2":"Server error",
+      "range":"range",
+      "full":"Full",
+      "ok":"ok"
    },
    "mirador": {
       "return": "བུདྡྷ་ལ་ཕྱིར་ལོག",
