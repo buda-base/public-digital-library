@@ -1402,14 +1402,24 @@ reducers[actions.TYPES.foundDatatypes] = foundDatatypes;
 
 export const pdfReady = (state: DataState, action: Action) => {
 
-      let id = new RegExp(action.meta.url.replace(/[/](zip|pdf)[/]/,"/.../"))
+      let id = new RegExp(action.meta.url.replace(/[/](zip|pdf)[/]/,"/.../").replace(/[-0-9]+$/,"1-"))
       //let fileT = action.payload.replace(/^.*[.](...)$/,"$1File")
       let fileT = action.payload.replace(/^.*[/]file[/](...)[/].*$/,"$1File")
       let pdfVolumes = state.IIIFinfo
       if(pdfVolumes) pdfVolumes = pdfVolumes[action.meta.iri]
       if(pdfVolumes) pdfVolumes = pdfVolumes.pdfVolumes
       if(pdfVolumes) pdfVolumes = pdfVolumes.map(e => {
-         if(e.link.match(id)) return { ...e, [fileT]:action.payload }
+         if(e.link.replace(/[-0-9]+$/,"1-").match(id)) { 
+            if(action.meta.reset) {
+               let elem = { ...e }
+               let fileE = fileT.replace(/File/,"Error")
+               if(elem[fileT]) delete elem[fileT]
+               if(elem[fileE]) delete elem[fileE]
+               return elem
+            } else {
+               return { ...e, [fileT]:action.payload }
+            }
+         }  
          return e ;
       })
       console.log("pdfV",pdfVolumes,action,id)
@@ -1436,7 +1446,7 @@ reducers[actions.TYPES.pdfReady] = pdfReady;
 
 export const pdfError = (state: DataState, action: Action) => {
 
-      let id = new RegExp(action.meta.url.replace(/[/](zip|pdf)[/]/,"/.../"))
+      let id = new RegExp(action.meta.url.replace(/[/](zip|pdf)[/]/,"/.../").replace(/[-0-9]+$/,"1-"))
       let fileT = action.meta.url.replace(/^.*[/](zip|pdf)[/].*$/,"$1")
       let pdfVolumes = state.IIIFinfo
 
@@ -1445,15 +1455,15 @@ export const pdfError = (state: DataState, action: Action) => {
       if(pdfVolumes) { 
          let found = false
          pdfVolumes = pdfVolumes.map(e => {
-            console.log("e/lnk:",e.link,e)
-            if(e.link && e.link.match && e.link.match(id)) {
+            //console.log("e/lnk:",e.link,e)
+            if(e.link && e.link.match && e.link.replace(/[-0-9]+$/,"1-").match(id)) {
                found = true ;
-               return { ...e, [fileT+"Error"]: action.payload } 
+               return { ...e, [fileT+"Error"]: action.payload, [fileT+"Range"]:action.meta.url.replace(/^.*?([-0-9]+)$/,"$1") } 
             }
             return e ;
          })
          if(!found) {
-            pdfVolumes.push({ link:action.meta.url, [fileT+"Error"]: action.payload } )
+            pdfVolumes.push({ link:action.meta.url, [fileT+"Error"]: action.payload, [fileT+"Range"]:action.meta.url.replace(/^.*?([-0-9]+)$/,"$1") } )
          }
       }
       
@@ -1484,14 +1494,14 @@ reducers[actions.TYPES.etextError] = etextError;
 
 export const pdfNotReady = (state: DataState, action: Action) => {
 
-      let id = new RegExp(action.meta.url.replace(/[/](zip|pdf)[/]/,"/.../"))
+      let id = new RegExp(action.meta.url.replace(/[/](zip|pdf)[/]/,"/.../").replace(/[-0-9]+$/,"1-"))
       let fileT = action.meta.url.replace(/^.*[/](zip|pdf)[/].*$/,"$1")
       let pdfVolumes = state.IIIFinfo
 
       if(pdfVolumes) pdfVolumes = pdfVolumes[action.meta.iri]
       if(pdfVolumes) pdfVolumes = pdfVolumes.pdfVolumes
       if(pdfVolumes) pdfVolumes = pdfVolumes.map(e => {
-         if(e.link.match(id)) return { ...e, [fileT+"Percent"]: action.meta.percent } 
+         if(e.link.replace(/[-0-9]+$/,"1-").match(id)) return { ...e, [fileT+"Percent"]: action.meta.percent } 
          return e ;
       })
       
@@ -1511,13 +1521,13 @@ reducers[actions.TYPES.pdfNotReady] = pdfNotReady;
 
 export const createPdf = (state: DataState, action: Action) => {
 
-         let id = new RegExp(action.payload.replace(/[/](zip|pdf)[/]/,"/.../"))
+         let id = new RegExp(action.payload.replace(/[/](zip|pdf)[/]/,"/.../").replace(/[-0-9]+$/,"1-"))
          let fileT = action.meta.file + "File"
          let pdfVolumes = state.IIIFinfo
          if(pdfVolumes) pdfVolumes = pdfVolumes[action.meta.iri]
          if(pdfVolumes) pdfVolumes = pdfVolumes.pdfVolumes
          if(pdfVolumes) pdfVolumes = pdfVolumes.map(e => {
-            if(e.link.match(id)) return { ...e, [fileT]:true }
+            if(e.link.replace(/[-0-9]+$/,"1-").match(id)) return { ...e, [fileT]:true }
             return e ;
          })
 
