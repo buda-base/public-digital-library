@@ -1088,8 +1088,8 @@ async function getManifest(url,iri,thumb) {
       }
 
       if(manif && manif.sequences && manif.sequences[0] && manif.sequences[0].canvases) {
-         if(manif.sequences[0].canvases[0] && manif.sequences[0].canvases[0].images[0] &&
-            manif.sequences[0].canvases[0].images[0].resource["@id"])
+         if(manif.sequences[0].canvases[0] && manif.sequences[0].canvases[0].images && manif.sequences[0].canvases[0].images[0] &&
+            manif.sequences[0].canvases[0].images[0].resource && manif.sequences[0].canvases[0].images[0].resource["@id"])
          {
             let imageres = manif.sequences[0].canvases[0].images[0].resource
             
