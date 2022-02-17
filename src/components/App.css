@@ -162,6 +162,7 @@ footer#site-footer.no-syncs > div.head::before { background-color:#efefef; }
 .subsubtitleFront > a {text-decoration: none; color: #d73449; }
 .subsubtitleFront > a[lang="bo"] { padding-left:5px; }
 
+h4:not(.subsubtitleFront) + .subsubtitleFront.feedB,
 .subsubtitleFront:last-of-type,
 .subsubtitleFront + .subsubtitleFront { font-weight:400 !important;}
 
