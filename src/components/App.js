@@ -4607,9 +4607,11 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   this._refs["markers"] = latLongs                                    
 
                   console.log("latlongs:",latLongs)
-
-                  const map =  (this.props.config && // latLongs.length && 
-                     <Map ref={this._refs["map"]}
+                  
+                  // latLongs.length && 
+                  const map =  (this.props.config && <> 
+                     
+                     { (!this.props.simple || this.state.collapse.placeMap) && <><Map ref={this._refs["map"]}
                         center={[0,0]} zoom={18} 
                         // attempt to fix #584 (see https://github.com/Leaflet/Leaflet/issues/7255 + https://stackoverflow.com/questions/67406533/react-leaflet-popups-not-working-on-mobile-devices/67422057#67422057)
                         tap={false} 
@@ -4661,7 +4663,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                            </BaseLayer> }
                         </LayersControl>
                         { markers } 
-                     </Map>)
+                     </Map>
+                  </>}</>)
                   
                   if(map) message.push(map)
                }
@@ -6791,6 +6794,11 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   {  // DONE change to popover style open/close
                      sortByList && this.popwidget(I18n.t("Lsidebar.sortBy.title",{by,reverse}),"sortBy",sortByPopup, <ImportExport className="header-icon"/> ) 
                   }
+                  { this.state.filters.datatype.includes("Place") && this.props.simple && <div class="widget-header" style={{marginRight:"auto"}} onClick={
+                        () => this.setState({ repage:true, collapse:{...this.state.collapse, placeMap:!this.state.collapse.placeMap}})
+                     }>
+                     <p class="widget-title" ><Visibility style={{verticalAlign:"-4px",marginRight:"8px"}}/>{I18n.t("search.toggleM")}</p>
+                  </div> }
                   { this.state.filters.datatype.includes("Etext") && <div class="widget-header" style={{marginRight:"auto"}} onClick={
                            () => this.setState({repage:true, collapse:{...this.state.collapse,"etextOtherM":!this.state.collapse.etextOtherM}})
                      }>

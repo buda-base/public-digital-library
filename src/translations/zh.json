@@ -395,7 +395,8 @@
          "instances":"<parag>BDRC contains thousands of texts, you may want to try modifying your search to get the best results.<newline/><list>Search on a shorter string of syllables, preferably the core part of the title<newline/>Ex: <ita>lam rim chung ngu'i zin bris</ita> instead of <ita>lam rim chung ngu'i zin bris blo gsal rgya mtsho'i 'jug ngogs</ita></list><list>Double check your search for typos</list></parag>"
       },
       "hidden":"Some results were hidden because they currently are not released.",
-      "showU":"Show non-released items"
+      "showU":"Show non-released items",
+      "toggleM": "Toggle Map"
    },
    "Rsidebar": {
       "title": "现实设置",
