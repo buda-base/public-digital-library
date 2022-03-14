@@ -354,7 +354,7 @@ const makeMainRoutes = () => {
                         store.dispatch(initiateApp(get,IRI));                     
                         return (
                            <ClearCache auto={true} duration={20*60*1000}>
-                              {({ isLatestVersion, emptyCacheStorage }) => (<ResourceViewerContainer  auth={auth} history={history} IRI={IRI} simple={true} propid={get.for}/> )}
+                              {({ isLatestVersion, emptyCacheStorage }) => (<ResourceViewerContainer  auth={auth} history={history} IRI={IRI} simple={true} propid={get.for}  onlyView={get.view}/> )}
                            </ClearCache>
                         )}}/>
                      <Route render={(props) => { return <Redirect404  history={history}  auth={auth}/> }}/>

@@ -8457,8 +8457,6 @@ perma_menu(pdfLink,monoVol,fairUse,other)
    
          let sendMsg = (ev,prevent = false) => {
 
-            if(this.props.loading || !this.props.resources || !this.props.resources[this.props.IRI] || !this.props.resources[this.props.IRI][fullUri(this.props.IRI)]) return ;
-
             if(this.props.simple /*&& this.props.propid*/) {
                let otherData = { "tmp:type": this.getResourceElem(rdf+"type").map(e => shortUri(e.value)) }, prettId = this.props.IRI;
                
@@ -8497,7 +8495,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                   +'}'
                //console.log("(MSG)",this.props.propid,JSON.stringify(otherData,null,3),msg)
                window.top.postMessage(msg, "*") // TODO set target url for message
-               if(prevent) {
+               if(ev && prevent) {
                   ev.preventDefault()
                   ev.stopPropagation()
                   return false;
@@ -8505,12 +8503,35 @@ perma_menu(pdfLink,monoVol,fairUse,other)
             }
          }
 
+         
+         if(this.props.loading || !this.props.resources || !this.props.resources[this.props.IRI] || !this.props.resources[this.props.IRI][fullUri(this.props.IRI)]) {
+            
+         } else {
+            // DONE: automatically select when close popup
+         
+            if(this.props.simple && !this.props.onlyView && !this.state.onlyView) { 
+               
+               window.addEventListener("message",(mesg) => {
+                  console.log("MSG:",mesg)
+                  if(mesg?.data === "click") sendMsg()
+               })
+               this.setState({ onlyView: true})
+               
+               /*
+               setTimeout(() => { 
+                  $(".resource.simple").click() 
+               }, 1500)
+               */
+            }
+         }
+
+
          return (
          [getGDPRconsent(this),   
          <div class={isMirador?"H100vh OF0":""}>
             { ["Images","Instance"].includes(_T) && <abbr class="unapi-id" title={this.props.IRI}></abbr> }
             { infoPanelR }
-            <div className={"resource "+getEntiType(this.props.IRI).toLowerCase() + (this.props.simple?" simple":"")} {...this.props.simple?{onClick:sendMsg}:{}}>                              
+            <div className={"resource "+getEntiType(this.props.IRI).toLowerCase() + (this.props.simple?" simple":"")} /*{...this.props.simple?{onClick:sendMsg}:{}}*/ >                              
                {searchUrl && <div class="ariane">
                   <Link to={searchUrl.startsWith("latest")?searchUrl:"/search?"+searchUrl} onClick={(ev) => {
                      this.props.onLoading("search",true)                     
