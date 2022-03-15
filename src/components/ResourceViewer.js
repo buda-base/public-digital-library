@@ -2074,21 +2074,24 @@ class ResourceViewer extends Component<Props,State>
                            }
                            if(notBefore !== undefined|| notAfter !== undefined) value = intervalToEDTF(notBefore, notAfter)
 
-                           let obj, edtfObj, readable = value
-                           try {
-                              obj = parse(value)
-                              edtfObj = edtf(value)
-                              readable = humanizeEDTF(obj, value)
-                           } catch(e) {
-                              console.warn("EDTF error:",e,value,obj,edtfObj,readable)
-                           }
+                           if(value) {
 
-                           assoR[w.value][bdo+"eventWhen"] = [ { 
-                              parsed: true,
-                              value: readable, 
-                              datatype:"http://id.loc.gov/datatypes/edtf",
-                              ...sameAsData
-                           } ]
+                              let obj, edtfObj, readable = value
+                              try {
+                                 obj = parse(value)
+                                 edtfObj = edtf(value)
+                                 readable = humanizeEDTF(obj, value)
+                              } catch(e) {
+                                 console.warn("EDTF error:",e,value,obj,edtfObj,readable)
+                              }
+
+                              assoR[w.value][bdo+"eventWhen"] = [ { 
+                                 parsed: true,
+                                 value: readable, 
+                                 datatype:"http://id.loc.gov/datatypes/edtf",
+                                 ...sameAsData
+                              } ]
+                           }
                         }
 
                         // DONE: keep fromSameAs
@@ -2341,7 +2344,7 @@ class ResourceViewer extends Component<Props,State>
    fullname(prop:string,isUrl:boolean=false,noNewline:boolean=false,useUIlang:boolean=false,canSpan = true,count?:integer=1,lang?:string="")
    {
       if(prop && !prop.replace) {
-         console.warn("prop:?:",prop)
+         //console.warn("prop:?:",prop)
          return prop
       }
 
