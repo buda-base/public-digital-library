@@ -1966,12 +1966,12 @@ class ResourceViewer extends Component<Props,State>
             if (!obj) return ""
          
             const conc = (values, sepa) => {
-            sepa = sepa ? " " + sepa + " " : ""
-            return values.reduce((acc, v, i, array) => {
-               if (i > 0) acc += i < array.length - 1 ? ", " : sepa
-               acc += humanizeEDTF(v)
-               return acc
-            }, "")
+               sepa = sepa ? " " + sepa + " " : ""
+               return values.reduce((acc, v, i, array) => {
+                  if (i > 0) acc += i < array.length - 1 ? ", " : sepa
+                  acc += humanizeEDTF(v)
+                  return acc
+               }, "")
             }
          
             // just output EDTF object
@@ -2035,20 +2035,25 @@ class ResourceViewer extends Component<Props,State>
                            if(d) d = d.value
                         }
 
-                        if(assoR[w.value][bdo+"eventWhen"] && !assoR[w.value][bdo+"eventWhen"][0].parsed){
+                        if(assoR[w.value][bdo+"eventWhen"]){
                            
-                           assoR[w.value][bdo+"eventWhen"][0].parsed = true
+                           if(!assoR[w.value][bdo+"eventWhen"][0].parsed) {
 
-                           let value = assoR[w.value][bdo+"eventWhen"][0].value, obj, edtfObj, readable = value
-                           try {
-                              obj = parse(value)
-                              edtfObj = edtf(value)
-                              readable = humanizeEDTF(obj, value)
-                           } catch(e) {
-                              console.warn("EDTF error:",e,value,obj,edtfObj,readable)
+                              assoR[w.value][bdo+"eventWhen"][0].parsed = true
+                              
+                              console.log("eW:",JSON.stringify(assoR[w.value][bdo+"eventWhen"][0], null,3))
+                              
+                              let value = assoR[w.value][bdo+"eventWhen"][0].value, obj, edtfObj, readable = value
+                              try {
+                                 obj = parse(value)
+                                 edtfObj = edtf(value)
+                                 readable = humanizeEDTF(obj, value)
+                              } catch(e) {
+                                 console.warn("EDTF error:",e,value,obj,edtfObj,readable)
+                              }
+                              
+                              assoR[w.value][bdo+"eventWhen"][0].value = readable
                            }
-
-                           assoR[w.value][bdo+"eventWhen"][0].value = readable
 
                         } else {
                            let sameAsData = {}, value = "", notBefore, notAfter
