@@ -2035,7 +2035,22 @@ class ResourceViewer extends Component<Props,State>
                            if(d) d = d.value
                         }
 
-                        if(!assoR[w.value][bdo+"eventWhen"]){
+                        if(assoR[w.value][bdo+"eventWhen"] && !assoR[w.value][bdo+"eventWhen"][0].parsed){
+                           
+                           assoR[w.value][bdo+"eventWhen"][0].parsed = true
+
+                           let value = assoR[w.value][bdo+"eventWhen"][0].value, obj, edtfObj, readable = value
+                           try {
+                              obj = parse(value)
+                              edtfObj = edtf(value)
+                              readable = humanizeEDTF(obj, value)
+                           } catch(e) {
+                              console.warn("EDTF error:",e,value,obj,edtfObj,readable)
+                           }
+
+                           assoR[w.value][bdo+"eventWhen"][0].value = readable
+
+                        } else {
                            let sameAsData = {}, value = "", notBefore, notAfter
                            if(assoR[w.value][bdo+"onYear"]) { 
                               value = assoR[w.value][bdo+"onYear"][0].value
@@ -2064,6 +2079,7 @@ class ResourceViewer extends Component<Props,State>
                            }
 
                            assoR[w.value][bdo+"eventWhen"] = [ { 
+                              parsed: true,
                               value: readable, 
                               datatype:"http://id.loc.gov/datatypes/edtf",
                               ...sameAsData
