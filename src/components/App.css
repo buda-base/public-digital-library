@@ -3413,6 +3413,13 @@ TODO
 
 .resource  .data [data-prop="bdo:personEvent"] .sub.keep  { margin-top:-10px; }
 
+.resource  .data .subsub  [data-prop="bdo:notAfter"] , 
+.resource  .data .subsub  [data-prop="bdo:notAfter"] + *,
+.resource  .data .subsub  [data-prop="bdo:notBefore"] , 
+.resource  .data .subsub  [data-prop="bdo:notBefore"] + *,
+.resource  .data .subsub  [data-prop="bdo:onYear"] , 
+.resource  .data .subsub  [data-prop="bdo:onYear"] + * { display:none; }
+
 .resource .data > div > .sub { line-height:28px; }
 .resource .data > div > .sub + .sub { width:calc(100% - 190px); margin-left:190px; } 
 .resource .data > div > .sub:empty { display:none; }

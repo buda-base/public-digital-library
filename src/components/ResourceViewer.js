@@ -102,6 +102,8 @@ import HTMLparse from 'html-react-parser';
 
 import logdown from 'logdown'
 
+import edtf, { parse } from "edtf/dist/../index.js" // finally got it to work!!  
+
 // error when using after build: "Uncaught ReferenceError: s is not defined"
 // => fixed by upgrading react-scripts
 import Cite from 'citation-js'
@@ -1940,6 +1942,60 @@ class ResourceViewer extends Component<Props,State>
 
          if(prop[bdo+"creator"]) prop[bdo+"creator"] = sortByEventType("creator");
 
+         const intervalToEDTF = (notBefore = null, notAfter = null) => {
+            console.log("inter2edtf:", notBefore, notAfter)
+            if (notBefore == null && notAfter == null)
+                return null;
+            if (notBefore == null)
+                return "/"+notAfter;
+            if (notAfter == null)
+                return notBefore+"/";
+            if (notBefore[0] == notAfter[0] && notBefore[1] == notAfter[1]) {
+                if (notBefore[2] == notAfter[2]) {
+                    if (notBefore[3] == '0' && notAfter[3] == '9')
+                        return notBefore.substring(0,3)+"X";
+                } else if (notBefore[2] == '0' && notAfter[2] == '9' && notBefore[3] == '0' && notAfter[3] == '9') {
+                    return notBefore.substring(0, 2)+"XX";
+                }
+            }
+            return notBefore+"/"+notAfter;
+         }
+
+         const humanizeEDTF = (obj, str, debug = false) => {
+            console.log("edtf2H:", obj, str, debug)
+            if (!obj) return ""
+         
+            const conc = (values, sepa) => {
+            sepa = sepa ? " " + sepa + " " : ""
+            return values.reduce((acc, v, i, array) => {
+               if (i > 0) acc += i < array.length - 1 ? ", " : sepa
+               acc += humanizeEDTF(v)
+               return acc
+            }, "")
+            }
+         
+            // just output EDTF object
+            if (debug /*|| true*/) return JSON.stringify(obj, null, 3)
+         
+            if (obj.type === "Set") return conc(obj.values, "or")
+            else if (obj.type === "List") return conc(obj.values, "and")
+            else if (obj.type === "Interval" && !obj.values[0]) return "not after " + conc([obj.values[1]])
+            else if (obj.type === "Interval" && !obj.values[1]) return "not before " + conc([obj.values[0]])
+            else if (obj.type === "Interval") return "between " + conc(obj.values, "and")
+            else if (obj.approximate) {
+            if (obj.type === "Century") return "circa " + (Number(obj.values[0]) + 1) + "th c."
+            return "circa " + humanizeEDTF({ ...obj, approximate: false })
+            } else if (obj.uncertain) {
+            if (obj.type === "Century") return Number(obj.values[0]) + 1 + "th c. ?"
+            return humanizeEDTF({ ...obj, uncertain: false }) + "?"
+            } else if (obj.unspecified === 12) return obj.values[0] / 100 + 1 + "th c."
+            else if (obj.type === "Century") return Number(obj.values[0]) + 1 + "th c."
+            else if (obj.unspecified === 8) return obj.values[0] + "s"
+            else if (obj.type === "Decade") return obj.values[0] + "0s"
+            else if (!obj.unspecified) return obj.values[0]
+            // to be continued?
+            else return str
+         }
 
          let sortByEventDate = (tagEnd:string) => {
             
@@ -1969,6 +2025,7 @@ class ResourceViewer extends Component<Props,State>
                               }
                            }
                         }
+
                         if(assoR[w.value][bdo+"onYear"]) { 
                            d = assoR[w.value][bdo+"onYear"][0]
                            if(d) d = d.value
@@ -1977,6 +2034,52 @@ class ResourceViewer extends Component<Props,State>
                            d = assoR[w.value][bdo+"notBefore"][0]
                            if(d) d = d.value
                         }
+
+                        if(!assoR[w.value][bdo+"eventWhen"]){
+                           let sameAsData = {}, value = "", notBefore, notAfter
+                           if(assoR[w.value][bdo+"onYear"]) { 
+                              value = assoR[w.value][bdo+"onYear"][0].value
+                              if(assoR[w.value][bdo+"onYear"][0].fromSameAs) sameAsData.fromSameAs = assoR[w.value][bdo+"onYear"][0].fromSameAs
+                              if(assoR[w.value][bdo+"onYear"][0].allSameAs) sameAsData.allSameAs = [ ...assoR[w.value][bdo+"onYear"][0].allSameAs ]
+                           } 
+                           if(assoR[w.value][bdo+"notBefore"]) { 
+                              notBefore = assoR[w.value][bdo+"notBefore"][0].value
+                              if(assoR[w.value][bdo+"notBefore"][0].fromSameAs) sameAsData.fromSameAs = assoR[w.value][bdo+"notBefore"][0].fromSameAs
+                              if(assoR[w.value][bdo+"notBefore"][0].allSameAs) sameAsData.allSameAs = [ ...assoR[w.value][bdo+"notBefore"][0].allSameAs ]
+                           } 
+                           if(assoR[w.value][bdo+"notAfter"]) { 
+                              notAfter = assoR[w.value][bdo+"notAfter"][0].value
+                              if(assoR[w.value][bdo+"notAfter"][0].fromSameAs) sameAsData.fromSameAs = assoR[w.value][bdo+"notAfter"][0].fromSameAs
+                              if(assoR[w.value][bdo+"notAfter"][0].allSameAs) sameAsData.allSameAs = [ ...assoR[w.value][bdo+"notAfter"][0].allSameAs ]
+                           }
+                           if(notBefore !== undefined|| notAfter !== undefined) value = intervalToEDTF(notBefore, notAfter)
+
+                           let obj, edtfObj, readable = value
+                           try {
+                              obj = parse(value)
+                              edtfObj = edtf(value)
+                              readable = humanizeEDTF(obj, value)
+                           } catch(e) {
+                              console.warn("EDTF error:",e,value,obj,edtfObj,readable)
+                           }
+
+                           assoR[w.value][bdo+"eventWhen"] = [ { 
+                              value: readable, 
+                              datatype:"http://id.loc.gov/datatypes/edtf",
+                              ...sameAsData
+                           } ]
+                        }
+
+                        // DONE: keep fromSameAs
+                        /*
+                        if(assoR[w.value][bdo+"eventWhen"]) {
+                           console.log("del?",w.value,JSON.stringify(assoR[w.value],null,3))
+                           if(assoR[w.value][bdo+"onYear"]) delete assoR[w.value][bdo+"onYear"]
+                           if(assoR[w.value][bdo+"notBefore"]) delete assoR[w.value][bdo+"notBefore"]
+                           if(assoR[w.value][bdo+"notAfter"]) delete assoR[w.value][bdo+"notAfter"]
+                        } 
+                        */
+                        
                      }  
                      if(!d) d = 100000
                      if(w.type!=='bnode'||!assoR[w.value]) return w
