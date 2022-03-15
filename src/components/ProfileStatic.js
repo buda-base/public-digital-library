@@ -292,8 +292,10 @@ export class Profile extends Component<Props,State> {
     else {
         if(this.tO) clearTimeout(this.tO)
 
+        
         let handleChange = (e,val1,val2,forceText:boolean=false) => {
-
+          
+          console.log("change:",e,val1,val2,forceText)
 
           let type = this.state[e.target.name].type
           if(!type) type = 'uri'
@@ -309,7 +311,7 @@ export class Profile extends Component<Props,State> {
 
           let state = {...this.state, [e.target.name]:{ type, value, lang } } 
 
-          state = this.preparePatch(state)
+          //state = this.preparePatch(state)
           
           this.setState(state)
         }

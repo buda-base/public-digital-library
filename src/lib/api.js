@@ -17,7 +17,7 @@ const CONFIG_PATH = onKhmerUrl?'/config-khmer.json':'/config.json'
 const CONFIGDEFAULTS_PATH = '/config-defaults.json'
 const ONTOLOGY_PATH = '/ontology/core.json'
 const DICTIONARY_PATH = '/ontology/data/json' //  '/graph/ontologySchema.json'
-const USER_PATH = '/resource-nc/user/me'
+const USER_PATH = '/me/focusgraph' //'/resource-nc/user/me'
 const USER_EDIT_POLICIES_PATH = '/userEditPolicies'
 
 export const dPrefix = {
@@ -1211,7 +1211,7 @@ export default class API {
          path = url +  USER_PATH;
 
          // to use with ldspdi running locally
-         path = "//editserv.bdrc.io" + USER_PATH
+         path = "//editserv-dev.bdrc.io" + USER_PATH
          
         return path;
     }
