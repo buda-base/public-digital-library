@@ -222,7 +222,7 @@ export class Profile extends Component<Props,State> {
 
   preparePatch = (state:{}) =>{
 
-      let mods = Object.keys(state).filter(k => k !== "patch" && state[k] && state[k].type && state[k].value !== undefined).reduce( (acc,k) => ({ ...acc, [propsMap[k]]: [ state[k] ] } ), {} )
+      let mods = Object.keys(state).filter(k => k !== "patch" && state[k] && state[k].type /*&& state[k].value !== undefined*/).reduce( (acc,k) => ({ ...acc, [propsMap[k]]: [ state[k] ] } ), {} )
       let id = shortUri(this.props.userID).split(':')[1]
       let that = { state: { resource:this.props.profile, updates:mods}, props:{ dictionary:this.props.dictionary, IRI:this.props.userID, locale:this.props.locale } }
 
@@ -311,7 +311,7 @@ export class Profile extends Component<Props,State> {
 
           let state = {...this.state, [e.target.name]:{ type, value, lang } } 
 
-          //state = this.preparePatch(state)
+          state = this.preparePatch(state)
           
           this.setState(state)
         }
@@ -616,12 +616,12 @@ export class Profile extends Component<Props,State> {
                 </FormControl>
                  */}
                  
-              { /*
+              { 
                 this.state.patch && 
                    <pre id="patch" contentEditable="true">
                     { this.state.patch }
                    </pre>
-              */ }
+              }
               
 
               {/*               

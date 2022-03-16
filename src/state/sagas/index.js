@@ -16,6 +16,8 @@ import {getQueryParam, GUIDED_LIMIT} from '../../components/GuidedSearch'
 import qs from 'query-string'
 import history from '../../history.js'
 
+import * as rdflib from "rdflib"
+
 import logdown from 'logdown'
 
 //import { setHandleMissingTranslation } from 'react-i18nify';
@@ -33,6 +35,8 @@ const loggergen = new logdown('gen', { markdown: false });
 const adm  = "http://purl.bdrc.io/ontology/admin/" ;
 const bda  = "http://purl.bdrc.io/admindata/"
 const bdo  = "http://purl.bdrc.io/ontology/core/";
+const bdou  = "http://purl.bdrc.io/ontology/ext/user/" ;
+const bdu   = "http://purl.bdrc.io/resource-nc/user/";
 const bdr  = "http://purl.bdrc.io/resource/";
 const owl   = "http://www.w3.org/2002/07/owl#" ;
 const rdf   = "http://www.w3.org/1999/02/22-rdf-syntax-ns#";
@@ -562,6 +566,31 @@ function* watchGetResetLink() {
    );
 }
 
+function turtle2jsonld( turtleString, rdfStore, uri ){
+   return new Promise(resolve=>{
+      rdflib.parse( turtleString, rdfStore, uri, "text/turtle", e => {
+         if(e) { console.log("Parse Error! "); return resolve(e) }
+         rdflib.serialize(null,rdfStore, uri,'application/ld+json',(e,s)=>{
+            if(e) { console.log("Serialize Error! "); return resolve(e) }
+            return resolve(s)
+         })
+      })
+   })
+}
+
+function jsonld2turtle( jsonldString, rdfStore, uri ){
+   return new Promise(resolve=>{
+     rdflib.parse( jsonldString, rdfStore, uri, "application/ld+json", e => {
+         if(e) { console.log("Parse Error! "); return resolve(e) }
+         rdflib.serialize(null,rdfStore, uri,'text/turtle',(e,s)=>{
+             if(e) { console.log("Serialize Error! "); return resolve(e) }
+             return resolve(s)
+         })
+     })
+   })
+ }
+
+
 async function getUser(profile)
 {
    let props = store.getState()
@@ -572,12 +601,48 @@ async function getUser(profile)
       store.dispatch(dataActions.gotUserEditPolicies(userEditPolicies))
    }
 
-   let user = await api.loadUser()
+   let user = await api.loadUser(), rdfStore, json, myjsonld
+   let ttl, ttl0, ttl1
+   const prefixes = { bdo, bdou, bdr, bdu, skos, tmp }
+
+   try {
+      var uri = "http://";
+
+      /*
+      ttl0 = user
+      user = await api.loadUser("text/turtle")
+      rdfStore = rdflib.graph();
+      json = JSON.parse(await turtle2jsonld(user, rdfStore, uri))
+      
+      user = await api.loadUser()
+      rdfStore = rdflib.graph();
+      for(const k of Object.keys(prefixes)) rdfStore.setPrefixForURI(k, prefixes[k])
+      ttl = await jsonld2turtle(JSON.stringify(json), rdfStore, uri) 
+      */
+     
+      myjsonld = Object.keys(user).map(k => {
+         return ({ "@id": k, ...Object.keys(user[k]).reduce( (acc,p) => {
+            return { ...acc, [p]: user[k][p].map(o => {
+               if(o.type === "uri") return { "@id" : o.value }
+               if(o.type === "bnode") return { "@id" : o.value }
+               else return { "@value" : o.value, ...o.language?{"@language":o.language}:{} }
+            })}
+         }, {}) })
+      })
+
+      rdfStore = rdflib.graph();
+      for(const k of Object.keys(prefixes)) rdfStore.setPrefixForURI(k, prefixes[k])
+      ttl1 = await jsonld2turtle(JSON.stringify(myjsonld), rdfStore, uri) 
+   } catch(e) {
+      console.warn("RDF parse error:",e)
+   }
+
+   console.log("user:",user,ttl1) //,JSON.stringify(json,null,3),JSON.stringify(user,null,3), JSON.stringify(myjsonld,null,3))
 
    if(user) {
       
       let id = user["@id"] ;
-      if(!id) id = Object.keys(user)[0]
+      if(!id) id = Object.keys(user).filter(k => k.includes("user/U"))[0]
       else user = { [id] : Object.keys(user).reduce( (acc,k) => {
 
          let val = user[k]

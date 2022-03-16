@@ -265,10 +265,14 @@ export default class API {
    }
 
 
-    async loadUser()
-    {
-         let user =  JSON.parse(await this.getURLContents(this._userPath,false,"application/json"));
+    async loadUser(mime) {
+       if(!mime) {
+          let user =  JSON.parse(await this.getURLContents(this._userPath,false,"application/json"));
+          return user ;
+       } else {
+         let user =  await this.getURLContents(this._userPath,false,mime);
          return user ;
+       }
    }
 
     async loadOntology(): Promise<string>
