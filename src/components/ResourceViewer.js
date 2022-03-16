@@ -1960,42 +1960,58 @@ class ResourceViewer extends Component<Props,State>
             }
             return notBefore+"/"+notAfter;
          }
+         const humanizeEDTF = (obj, str, locale = "en-US", dbg = false) => {
 
-         const humanizeEDTF = (obj, str, debug = false) => {
-            console.log("edtf2H:", obj, str, debug)
+            console.log("edtf2H:", obj, str, locale, dbg)
             if (!obj) return ""
-         
+          
             const conc = (values, sepa) => {
-               sepa = sepa ? " " + sepa + " " : ""
-               return values.reduce((acc, v, i, array) => {
-                  if (i > 0) acc += i < array.length - 1 ? ", " : sepa
-                  acc += humanizeEDTF(v)
-                  return acc
-               }, "")
+              sepa = sepa ? " " + sepa + " " : ""
+              return values.reduce((acc, v, i, array) => {
+                if (i > 0) acc += i < array.length - 1 ? ", " : sepa
+                acc += humanizeEDTF(v)
+                return acc
+              }, "")
             }
-         
+          
             // just output EDTF object
-            if (debug /*|| true*/) return JSON.stringify(obj, null, 3)
-         
+            if (dbg /*|| true*/) return JSON.stringify(obj, null, 3)
+          
             if (obj.type === "Set") return conc(obj.values, "or")
             else if (obj.type === "List") return conc(obj.values, "and")
             else if (obj.type === "Interval" && !obj.values[0]) return "not after " + conc([obj.values[1]])
             else if (obj.type === "Interval" && !obj.values[1]) return "not before " + conc([obj.values[0]])
             else if (obj.type === "Interval") return "between " + conc(obj.values, "and")
             else if (obj.approximate) {
-            if (obj.type === "Century") return "circa " + (Number(obj.values[0]) + 1) + "th c."
-            return "circa " + humanizeEDTF({ ...obj, approximate: false })
+              if (obj.type === "Century") return "circa " + (Number(obj.values[0]) + 1) + "th c."
+              return "circa " + humanizeEDTF({ ...obj, approximate: false }, str, locale, dbg)
             } else if (obj.uncertain) {
-            if (obj.type === "Century") return Number(obj.values[0]) + 1 + "th c. ?"
-            return humanizeEDTF({ ...obj, uncertain: false }) + "?"
+              if (obj.type === "Century") return Number(obj.values[0]) + 1 + "th c. ?"
+              return humanizeEDTF({ ...obj, uncertain: false }, str, locale, dbg) + "?"
             } else if (obj.unspecified === 12) return obj.values[0] / 100 + 1 + "th c."
             else if (obj.type === "Century") return Number(obj.values[0]) + 1 + "th c."
             else if (obj.unspecified === 8) return obj.values[0] + "s"
             else if (obj.type === "Decade") return obj.values[0] + "0s"
-            else if (!obj.unspecified) return obj.values[0]
-            // to be continued?
-            else return str
-         }
+            else if (!obj.unspecified && obj.values.length === 1) return obj.values[0]
+            else if (!obj.unspecified && obj.values.length === 3) {
+              try {
+                const event = new Date(Date.UTC(obj.values[0], obj.values[1], obj.values[2], 0, 0, 0))
+                const options = { year: "numeric", month: "numeric", day: "numeric" }
+                const val = event.toLocaleDateString(locale, options)
+                console.log("val:",locale,val)
+                return val
+              } catch (e) {
+                console.warn("locale error:", e, str, obj)
+              }
+              return str
+            } else {
+              return str
+            }
+          }
+
+
+
+         const locales = { en: "en-US", zh: "zh-Hans-CN", bo: "bo-CN", km:"km-KH" }
 
          let sortByEventDate = (tagEnd:string) => {
             
@@ -2047,7 +2063,7 @@ class ResourceViewer extends Component<Props,State>
                               try {
                                  obj = parse(value)
                                  edtfObj = edtf(value)
-                                 readable = humanizeEDTF(obj, value)
+                                 readable = humanizeEDTF(obj, value, locales[this.props.locale])
                               } catch(e) {
                                  console.warn("EDTF error:",e,value,obj,edtfObj,readable)
                               }
@@ -2062,33 +2078,43 @@ class ResourceViewer extends Component<Props,State>
                               if(assoR[w.value][bdo+"onYear"][0].fromSameAs) sameAsData.fromSameAs = assoR[w.value][bdo+"onYear"][0].fromSameAs
                               if(assoR[w.value][bdo+"onYear"][0].allSameAs) sameAsData.allSameAs = [ ...assoR[w.value][bdo+"onYear"][0].allSameAs ]
                            } 
-                           if(assoR[w.value][bdo+"notBefore"]) { 
-                              notBefore = assoR[w.value][bdo+"notBefore"][0].value
-                              if(assoR[w.value][bdo+"notBefore"][0].fromSameAs) sameAsData.fromSameAs = assoR[w.value][bdo+"notBefore"][0].fromSameAs
-                              if(assoR[w.value][bdo+"notBefore"][0].allSameAs) sameAsData.allSameAs = [ ...assoR[w.value][bdo+"notBefore"][0].allSameAs ]
-                           } 
-                           if(assoR[w.value][bdo+"notAfter"]) { 
-                              notAfter = assoR[w.value][bdo+"notAfter"][0].value
-                              if(assoR[w.value][bdo+"notAfter"][0].fromSameAs) sameAsData.fromSameAs = assoR[w.value][bdo+"notAfter"][0].fromSameAs
-                              if(assoR[w.value][bdo+"notAfter"][0].allSameAs) sameAsData.allSameAs = [ ...assoR[w.value][bdo+"notAfter"][0].allSameAs ]
-                           }
-                           if(notBefore !== undefined|| notAfter !== undefined) value = intervalToEDTF(notBefore, notAfter)
+                           else if(assoR[w.value][bdo+"onDate"]) { 
+                              value = assoR[w.value][bdo+"onDate"][0].value
+                              if(assoR[w.value][bdo+"onDate"][0].fromSameAs) sameAsData.fromSameAs = assoR[w.value][bdo+"onDate"][0].fromSameAs
+                              if(assoR[w.value][bdo+"onDate"][0].allSameAs) sameAsData.allSameAs = [ ...assoR[w.value][bdo+"onDate"][0].allSameAs ]
+                           } else {
+                              if(assoR[w.value][bdo+"notBefore"]) { 
+                                 notBefore = assoR[w.value][bdo+"notBefore"][0].value
+                                 if(assoR[w.value][bdo+"notBefore"][0].fromSameAs) sameAsData.fromSameAs = assoR[w.value][bdo+"notBefore"][0].fromSameAs
+                                 if(assoR[w.value][bdo+"notBefore"][0].allSameAs) sameAsData.allSameAs = [ ...assoR[w.value][bdo+"notBefore"][0].allSameAs ]
+                              } 
+                              if(assoR[w.value][bdo+"notAfter"]) { 
+                                 notAfter = assoR[w.value][bdo+"notAfter"][0].value
+                                 if(assoR[w.value][bdo+"notAfter"][0].fromSameAs) sameAsData.fromSameAs = assoR[w.value][bdo+"notAfter"][0].fromSameAs
+                                 if(assoR[w.value][bdo+"notAfter"][0].allSameAs) sameAsData.allSameAs = [ ...assoR[w.value][bdo+"notAfter"][0].allSameAs ]
+                              }
+                              if(notBefore !== undefined|| notAfter !== undefined) value = intervalToEDTF(notBefore, notAfter)
+                           }                          
 
-                           let obj, edtfObj, readable = value
-                           try {
-                              obj = parse(value)
-                              edtfObj = edtf(value)
-                              readable = humanizeEDTF(obj, value)
-                           } catch(e) {
-                              console.warn("EDTF error:",e,value,obj,edtfObj,readable)
-                           }
 
-                           assoR[w.value][bdo+"eventWhen"] = [ { 
-                              parsed: true,
-                              value: readable, 
-                              datatype:"http://id.loc.gov/datatypes/edtf",
-                              ...sameAsData
-                           } ]
+                           if(value) {
+
+                              let obj, edtfObj, readable = value
+                              try {
+                                 obj = parse(value)
+                                 edtfObj = edtf(value)
+                                 readable = humanizeEDTF(obj, value, locales[this.props.locale])
+                              } catch(e) {
+                                 console.warn("EDTF error:",e,value,obj,edtfObj,readable)
+                              }
+
+                              assoR[w.value][bdo+"eventWhen"] = [ { 
+                                 parsed: true,
+                                 value: readable, 
+                                 datatype:"http://id.loc.gov/datatypes/edtf",
+                                 ...sameAsData
+                              } ]
+                           }
                         }
 
                         // DONE: keep fromSameAs
@@ -2341,7 +2367,7 @@ class ResourceViewer extends Component<Props,State>
    fullname(prop:string,isUrl:boolean=false,noNewline:boolean=false,useUIlang:boolean=false,canSpan = true,count?:integer=1,lang?:string="")
    {
       if(prop && !prop.replace) {
-         console.warn("prop:?:",prop)
+         //console.warn("prop:?:",prop)
          return prop
       }
 

@@ -3413,6 +3413,8 @@ TODO
 
 .resource  .data [data-prop="bdo:personEvent"] .sub.keep  { margin-top:-10px; }
 
+.resource  .data .subsub  [data-prop="bdo:onDate"] , 
+.resource  .data .subsub  [data-prop="bdo:onDate"] + *,
 .resource  .data .subsub  [data-prop="bdo:notAfter"] , 
 .resource  .data .subsub  [data-prop="bdo:notAfter"] + *,
 .resource  .data .subsub  [data-prop="bdo:notBefore"] , 
