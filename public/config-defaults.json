@@ -12,6 +12,11 @@
       "audience":"https://bdrc-io.auth0.com/api/v2/",
       "grant_type":"client_credentials"
    },
+   "editserv":
+   {
+      "endpoints":["//editserv.bdrc.io","//editserv-dev.bdrc.io"],
+      "index":0
+   },
    "ldspdi":
    {
       "endpoints":["//localhost:8080","//localhost:13280","//buda1.bdrc.io:13280","//purl.bdrc.io","//localhost:5555/test"],
