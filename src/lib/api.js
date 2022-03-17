@@ -999,7 +999,7 @@ export default class API {
       let response,  etag = props.ui.etag
       try {
          let token = localStorage.getItem('id_token')
-         response = await (await this._fetch(url,  {
+         response = await this._fetch(url,  {
             method: 'POST',
             body: ttl,
             headers:new Headers({ 
@@ -1008,7 +1008,7 @@ export default class API {
                "x-change-message": '"user profile page in library"@en', 
                "if-match": etag
             })
-         })).text()
+         })
 
       } catch(e) {
          console.log("patch",e)

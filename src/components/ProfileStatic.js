@@ -80,7 +80,7 @@ export class Profile extends Component<Props,State> {
 
   constructor(props : Props) {
     super(props);
-    this.state = { name:{type:"literal"}, picture:{type:"literal"}, gender:{}, region:{}, interest:{},  otherInterest:{}, agree:{type:"literal"}, errors:{}, collapse:{} }
+    this.state = { email:{type:"literal"},name:{type:"literal"}, picture:{type:"literal"}, gender:{}, region:{}, interest:{},  otherInterest:{}, agree:{type:"literal"}, errors:{}, collapse:{} }
     this.validateURI = this.validateURI.bind(this);
   }
   
@@ -159,7 +159,7 @@ export class Profile extends Component<Props,State> {
         }
       }
 
-      if(s.profile.sub.match(/^auth0[|]/) && props.profile[foaf+"mbox"] && s.email === undefined)  s.email = { value: props.profile[foaf+"mbox"][0].value }
+      if(s.profile.sub.match(/^auth0[|]/) && props.profile[foaf+"mbox"] && s.email === undefined)  s.email = { type:"literal", value: props.profile[foaf+"mbox"][0].value }
 
 
     }
@@ -209,20 +209,22 @@ export class Profile extends Component<Props,State> {
     if(!response) { 
       response = await api.updateProfile(this.state.newUserValues, shortUri(this.props.userID))                       
 
-      /*
+      
       //response = await api.submitPatch(this.props.userID, this.state.patch)                       
-      if(response) response = JSON.parse(response)
+      //if(response) response = JSON.parse(response)
+
 
       if(response) {
         if(!s) s = { ...this.state, updating:false }
-        if(response.message === "OK") { 
+        if(response.status === 200) { 
           store.dispatch(data.getUser(this.state.profile))
           s.patch = '' 
+          s.newUserValues = null
         } else  {
           s.errors.server = response.message
         }
       }
-      */
+      
     }
 
     if(s) this.setState(s)
@@ -250,6 +252,7 @@ export class Profile extends Component<Props,State> {
 
       state.newUserValues = { ...this.props.profileJson, [this.props.userID]:{  ...this.props.profileJson[this.props.userID], ...user } }
       if(state.newUserValues[this.props.userID].profile) delete state.newUserValues[this.props.userID].profile
+      if(state.newUserValues[this.props.userID][tmp+"passwordResetLink"]) delete state.newUserValues[this.props.userID][tmp+"passwordResetLink"]
       
       //state.patch = renderPatch(that, Object.keys(mods), id)
 
