@@ -10,6 +10,7 @@ import {isAdmin} from '../../components/App';
 let reducers = {};
 
 export type UIState = {
+   etag?:string,
    userID?:url,
    anchor?:{},
    keyword?:string,
@@ -145,7 +146,8 @@ export const gotUserID = (state: UIState, action: Action) => {
 
       return {
       ...state,
-      userID:action.payload
+      userID:action.payload,
+      etag:action.meta
    }
 }
 reducers[actions.TYPES.gotUserID] = gotUserID ;

@@ -55,6 +55,7 @@ type Props = {
     config:{},
     rightPanel?:boolean,
     passwordReset?:url,
+    profileJson?:{},
     onToggleLanguagePanel:() => void,
     onUserProfile:() => void
 }
@@ -79,7 +80,7 @@ export class Profile extends Component<Props,State> {
 
   constructor(props : Props) {
     super(props);
-    this.state = { name:{type:"literal"}, picture:{}, gender:{}, region:{}, interest:{},  otherInterest:{}, agree:{type:"literal"}, errors:{}, collapse:{} }
+    this.state = { name:{type:"literal"}, picture:{type:"literal"}, gender:{}, region:{}, interest:{},  otherInterest:{}, agree:{type:"literal"}, errors:{}, collapse:{} }
     this.validateURI = this.validateURI.bind(this);
   }
   
@@ -146,6 +147,7 @@ export class Profile extends Component<Props,State> {
             if(["name", "gender", "region", "interest"].includes(k)) {
                 s[k] =  props.profile[p].map(e => e.value).filter(v => k === "name" || vs.includes(v)).map(v => ({ type, value:fullUri(v)}))
 
+                
                 if(k !== "interest") s[k] = s[k][0] 
                 else s[k] = s[k].map(e => e.value)
             }
@@ -168,6 +170,8 @@ export class Profile extends Component<Props,State> {
 
   handlePatch(e) {
 
+    
+
     let hasError = !_.isEmpty(this.state.errors)
     let errKeys,byPass ;
     if(hasError) { 
@@ -178,6 +182,7 @@ export class Profile extends Component<Props,State> {
     if(hasError && !byPass) return 
 
     this.executePatch(e);
+    
     this.setState({...this.state, updating:true })
   }
 
@@ -202,7 +207,10 @@ export class Profile extends Component<Props,State> {
     }
     
     if(!response) { 
-      response = await api.submitPatch(this.props.userID, this.state.patch)                 
+      response = await api.updateProfile(this.state.newUserValues, shortUri(this.props.userID))                       
+
+      /*
+      //response = await api.submitPatch(this.props.userID, this.state.patch)                       
       if(response) response = JSON.parse(response)
 
       if(response) {
@@ -214,6 +222,7 @@ export class Profile extends Component<Props,State> {
           s.errors.server = response.message
         }
       }
+      */
     }
 
     if(s) this.setState(s)
@@ -222,13 +231,27 @@ export class Profile extends Component<Props,State> {
 
   preparePatch = (state:{}) =>{
 
-      let mods = Object.keys(state).filter(k => k !== "patch" && state[k] && state[k].type /*&& state[k].value !== undefined*/).reduce( (acc,k) => ({ ...acc, [propsMap[k]]: [ state[k] ] } ), {} )
+      let mods = Object.keys(state).filter(k => k !== "patch" && state[k] && state[k].type && state[k].value !== undefined).reduce( (acc,k) => { 
+        let val = state[k]
+        if(Array.isArray(val.value)) {
+          val = val.value.map(v => ({ ...val, value:v }))
+        }
+        else val = [ val ]
+        return ({ ...acc, 
+          [propsMap[k]]: val 
+        })
+      }, {} )
       let id = shortUri(this.props.userID).split(':')[1]
       let that = { state: { resource:this.props.profile, updates:mods}, props:{ dictionary:this.props.dictionary, IRI:this.props.userID, locale:this.props.locale } }
+            
+      let user = { ...that.state.resource, ...mods }
+      
+      console.log("new user:", user, mods, id, that)
 
-      console.log("mods", mods, id, that)
-
-      state.patch = renderPatch(that, Object.keys(mods), id)
+      state.newUserValues = { ...this.props.profileJson, [this.props.userID]:{  ...this.props.profileJson[this.props.userID], ...user } }
+      if(state.newUserValues[this.props.userID].profile) delete state.newUserValues[this.props.userID].profile
+      
+      //state.patch = renderPatch(that, Object.keys(mods), id)
 
       return state
   }
@@ -584,7 +607,7 @@ export class Profile extends Component<Props,State> {
                       />
                       <div id="validate">
                         { hasError && <WarningIcon/>}
-                        <a class={"ulink "+(this.state.patch&&(!hasError||byPass)&&!this.state.updating?"on":"")} id="upd" {... this.state.patch?{onClick:this.handlePatch.bind(this)}:{}}>{this.state.updating?I18n.t("user.updating"):I18n.t("user.update")}</a>
+                        <a class={"ulink "+(this.state.newUserValues&&(!hasError||byPass)&&!this.state.updating?"on":"")} id="upd" {... this.state.newUserValues?{onClick:this.handlePatch.bind(this)}:{}}>{this.state.updating?I18n.t("user.updating"):I18n.t("user.update")}</a>
                         { servErr }
                       </div>
                   </div>
@@ -616,12 +639,12 @@ export class Profile extends Component<Props,State> {
                 </FormControl>
                  */}
                  
-              { 
+              { /*
                 this.state.patch && 
                    <pre id="patch" contentEditable="true">
                     { this.state.patch }
                    </pre>
-              }
+                */ }
               
 
               {/*               

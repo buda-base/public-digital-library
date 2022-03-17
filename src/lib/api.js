@@ -5,6 +5,8 @@ import qs from 'query-string'
 import history from '../history';
 import {shortUri} from '../components/App';
 
+import * as rdflib from "rdflib"
+
 const onKhmerUrl = (
       window.location.host.startsWith("khmer-manuscripts")
    //|| window.location.host.startsWith("library-dev")
@@ -19,6 +21,14 @@ const ONTOLOGY_PATH = '/ontology/core.json'
 const DICTIONARY_PATH = '/ontology/data/json' //  '/graph/ontologySchema.json'
 const USER_PATH = '/me/focusgraph' //'/resource-nc/user/me'
 const USER_EDIT_POLICIES_PATH = '/userEditPolicies'
+
+
+const bdo  = "http://purl.bdrc.io/ontology/core/";
+const bdou  = "http://purl.bdrc.io/ontology/ext/user/" ;
+const bdu   = "http://purl.bdrc.io/resource-nc/user/";
+const bdr  = "http://purl.bdrc.io/resource/";
+const skos = "http://www.w3.org/2004/02/skos/core#";
+const tmp = "http://purl.bdrc.io/ontology/tmp/" ;
 
 export const dPrefix = {
    "bda": {
@@ -133,7 +143,7 @@ export default class API {
         //console.log("api options",options,this,process.env.NODE_ENV)
       }
 
-     async getURLContents(url: string, minSize : boolean = true,acc?:string,lang?:string[],binary:boolean=false,cookie:string): Promise<string> {
+     async getURLContents(url: string, minSize : boolean = true,acc?:string,lang?:string[],binary:boolean=false,cookie:string,etag = false): Promise<string> {
 
          const { isAuthenticated } = auth;
 
@@ -157,23 +167,24 @@ export default class API {
          //console.log("access:",{id_token,access_token,isAuth:isAuthenticated(),url,minSize,acc,cookie,xhrArgs,head});
 
          let response = await this._fetch( url, { method:"GET",headers:new Headers(head), ...xhrArgs } )
-
+         //console.log("response:",response,etag)
+         
          if (!response.ok) {
-             if (response.status === 404) {
-                 throw new ResourceNotFound('The resource does not exist.',404);
-             }
-             else if (response.status === 401) {
-                 throw new ResourceNotFound('Restricted access',401);
-             }
-             else if (response.status === 403) {
-                 throw new ResourceNotFound('Forbidden access',403);
-             }
-             else {
-                console.error("FETCH pb",response)
-                 throw new ResourceNotFound('Problem fetching the resource (code:'+response.status+')',500);
-             }
+            if (response.status === 404) {
+               throw new ResourceNotFound('The resource does not exist.',404);
+            }
+            else if (response.status === 401) {
+               throw new ResourceNotFound('Restricted access',401);
+            }
+            else if (response.status === 403) {
+               throw new ResourceNotFound('Forbidden access',403);
+            }
+            else {
+               console.error("FETCH pb",response)
+               throw new ResourceNotFound('Problem fetching the resource (code:'+response.status+')',500);
+            }
          }
-
+            
          console.log("FETCH ok",url,response )
          /*
          for(let c of response.headers.keys()) {
@@ -186,8 +197,11 @@ export default class API {
             console.log("cookie!",cookie)
          }
          */
-
-         if(!binary) {
+         if(etag) {
+            etag = response.headers.get("etag")
+            let text = await response.text()
+            return { text, etag }
+         } else if(!binary) {
             let text = await response.text()
             //console.log("RESPONSE text",text)
             if(minSize && text.length <= 553) { throw new ResourceNotFound('The resource does not exist.'); }
@@ -267,8 +281,10 @@ export default class API {
 
     async loadUser(mime) {
        if(!mime) {
-          let user =  JSON.parse(await this.getURLContents(this._userPath,false,"application/json"));
-          return user ;
+          let { text, etag } =  await this.getURLContents(this._userPath,false,"application/json", undefined, undefined, undefined, true);
+          console.log("user:etag",etag)
+          let user = JSON.parse(text)
+          return { user, etag }
        } else {
          let user =  await this.getURLContents(this._userPath,false,mime);
          return user ;
@@ -919,6 +935,88 @@ export default class API {
            throw e;
       }
   }
+
+
+
+
+   async updateProfile(user, RID) {
+
+      const jsonld2turtle = ( jsonldString, rdfStore, uri ) => {
+         return new Promise(resolve=>{
+            rdflib.parse( jsonldString, rdfStore, uri, "application/ld+json", e => {
+                  if(e) { console.log("Parse Error! "); return resolve(e) }
+                  rdflib.serialize(null,rdfStore, uri,'text/turtle',(e,s)=>{
+                     if(e) { console.log("Serialize Error! "); return resolve(e) }
+                     return resolve(s)
+                  })
+            })
+         })
+      }
+
+      let ttl, myjsonld, rdfStore
+      const prefixes = { bdo, bdou, bdr, bdu, skos, tmp }
+      let props = store.getState()
+   
+      try {
+         var uri = "http://";
+   
+         let ttl0 = await this.loadUser("text/turtle")
+
+         /*
+         rdfStore = rdflib.graph();
+         json = JSON.parse(await turtle2jsonld(user, rdfStore, uri))
+         
+         user = await api.loadUser()
+         rdfStore = rdflib.graph();
+         for(const k of Object.keys(prefixes)) rdfStore.setPrefixForURI(k, prefixes[k])
+         ttl = await jsonld2turtle(JSON.stringify(json), rdfStore, uri) 
+         */
+        
+         myjsonld = Object.keys(user).map(k => {
+            return ({ "@id": k, ...Object.keys(user[k]).reduce( (acc,p) => {
+               return { ...acc, [p]: user[k][p].map(o => {
+                  if(o.type === "uri") return { "@id" : o.value }
+                  if(o.type === "bnode") return { "@id" : o.value }
+                  else return { "@value" : o.value, ...o.language?{"@language":o.language}:{} }
+               })}
+            }, {}) })
+         })
+   
+         rdfStore = rdflib.graph();
+         for(const k of Object.keys(prefixes)) rdfStore.setPrefixForURI(k, prefixes[k])
+         ttl = await jsonld2turtle(JSON.stringify(myjsonld), rdfStore, uri) 
+
+         console.log("upload:",ttl,ttl0)
+      } catch(e) {
+         console.warn("RDF parse error:",e)
+      }
+   
+
+      let config = props.data.config.editserv
+      let url = "https:" + config.endpoints[config.index] + "/" + RID + "/focusgraph";
+            
+
+      let response,  etag = props.ui.etag
+      try {
+         let token = localStorage.getItem('id_token')
+         response = await (await this._fetch(url,  {
+            method: 'POST',
+            body: ttl,
+            headers:new Headers({ 
+               'content-type': 'text/turtle', 
+               'authorization': "Bearer " + token,  
+               "x-change-message": '"user profile page in library"@en', 
+               "if-match": etag
+            })
+         })).text()
+
+      } catch(e) {
+         console.log("patch",e)
+      }
+
+      return response
+   }
+
 
    async submitPatch(id,patch) {
       let response

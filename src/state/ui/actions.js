@@ -109,10 +109,11 @@ export const userProfile = (url: {}): Action => {
 
 
 TYPES.gotUserID = 'GOT_USER_ID';
-export const gotUserID = (userID: url): Action => {
+export const gotUserID = (userID: url, etag: string): Action => {
    return {
       type: TYPES.gotUserID,
-      payload: userID
+      payload: userID,
+      meta: etag
    }
 }
 

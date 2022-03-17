@@ -16,8 +16,6 @@ import {getQueryParam, GUIDED_LIMIT} from '../../components/GuidedSearch'
 import qs from 'query-string'
 import history from '../../history.js'
 
-import * as rdflib from "rdflib"
-
 import logdown from 'logdown'
 
 //import { setHandleMissingTranslation } from 'react-i18nify';
@@ -565,7 +563,7 @@ function* watchGetResetLink() {
       (action) => getResetLink(action.payload,action.meta.user,action.meta.profile)
    );
 }
-
+/*
 function turtle2jsonld( turtleString, rdfStore, uri ){
    return new Promise(resolve=>{
       rdflib.parse( turtleString, rdfStore, uri, "text/turtle", e => {
@@ -589,7 +587,7 @@ function jsonld2turtle( jsonldString, rdfStore, uri ){
      })
    })
  }
-
+*/
 
 async function getUser(profile)
 {
@@ -601,43 +599,9 @@ async function getUser(profile)
       store.dispatch(dataActions.gotUserEditPolicies(userEditPolicies))
    }
 
-   let user = await api.loadUser(), rdfStore, json, myjsonld
-   let ttl, ttl0, ttl1
-   const prefixes = { bdo, bdou, bdr, bdu, skos, tmp }
-
-   try {
-      var uri = "http://";
-
-      /*
-      ttl0 = user
-      user = await api.loadUser("text/turtle")
-      rdfStore = rdflib.graph();
-      json = JSON.parse(await turtle2jsonld(user, rdfStore, uri))
-      
-      user = await api.loadUser()
-      rdfStore = rdflib.graph();
-      for(const k of Object.keys(prefixes)) rdfStore.setPrefixForURI(k, prefixes[k])
-      ttl = await jsonld2turtle(JSON.stringify(json), rdfStore, uri) 
-      */
-     
-      myjsonld = Object.keys(user).map(k => {
-         return ({ "@id": k, ...Object.keys(user[k]).reduce( (acc,p) => {
-            return { ...acc, [p]: user[k][p].map(o => {
-               if(o.type === "uri") return { "@id" : o.value }
-               if(o.type === "bnode") return { "@id" : o.value }
-               else return { "@value" : o.value, ...o.language?{"@language":o.language}:{} }
-            })}
-         }, {}) })
-      })
-
-      rdfStore = rdflib.graph();
-      for(const k of Object.keys(prefixes)) rdfStore.setPrefixForURI(k, prefixes[k])
-      ttl1 = await jsonld2turtle(JSON.stringify(myjsonld), rdfStore, uri) 
-   } catch(e) {
-      console.warn("RDF parse error:",e)
-   }
-
-   console.log("user:",user,ttl1) //,JSON.stringify(json,null,3),JSON.stringify(user,null,3), JSON.stringify(myjsonld,null,3))
+   let { user, etag } = await api.loadUser()
+   
+   console.log("user:",etag, user) //,JSON.stringify(json,null,3),JSON.stringify(user,null,3), JSON.stringify(myjsonld,null,3))
 
    if(user) {
       
@@ -682,7 +646,7 @@ async function getUser(profile)
 
       user[id].profile = profile
 
-      store.dispatch(uiActions.gotUserID(id));
+      store.dispatch(uiActions.gotUserID(id, etag));
       store.dispatch(dataActions.gotResource(id, user));
       loggergen.log("user",id,profile,user)
    }

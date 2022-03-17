@@ -22,7 +22,13 @@ const mapStateToProps = (state,ownProps) => {
    
    let profile = state.data.resources
    if(profile && userID) profile = profile[userID]
-   if(profile) profile = profile[userID]
+   let profileJson 
+   if(profile) { 
+      profileJson = profile
+      profile = profile[userID]
+
+      console.log("profileJson?",profileJson)
+   }
    else profile = null
 
    let dictionary = state.data.dictionary ;
@@ -40,7 +46,7 @@ const mapStateToProps = (state,ownProps) => {
       if(auth.userProfile.name) profileName = auth.userProfile.name
    }
 
-   let props = { userID, profile, dictionary, rightPanel, resetLink, config, locale, profileName }
+   let props = { userID, profile, dictionary, rightPanel, resetLink, config, locale, profileName, profileJson }
 
    return props
 
