@@ -40,13 +40,15 @@ const mapStateToProps = (state,ownProps) => {
    let locale = state.i18next.lang
    
    if(profile && resetLink && !profile[tmp+"passwordResetLink"]) resetLink = false
-
+   
    let profileName
    if(auth && auth.userProfile) {
       if(auth.userProfile.name) profileName = auth.userProfile.name
    }
 
-   let props = { userID, profile, dictionary, rightPanel, resetLink, config, locale, profileName, profileJson }
+   let langPreset = state.ui.langPreset
+
+   let props = { userID, profile, dictionary, rightPanel, resetLink, config, locale, profileName, profileJson, langPreset }
 
    return props
 

@@ -985,6 +985,11 @@ export default class API {
          rdfStore = rdflib.graph();
          for(const k of Object.keys(prefixes)) rdfStore.setPrefixForURI(k, prefixes[k])
          ttl = await jsonld2turtle(JSON.stringify(myjsonld), rdfStore, uri) 
+         // fast hack for easy list handling
+         for(const p of ["bdou:preferredUiLiteralLangs"]) {
+            ttl = ttl.replace(new RegExp(p+" *(.*?) *; *\n","m"),(m,g1) => p+" ( "+g1.replace(/,/g," ")+" ); \n")
+                     
+         } 
 
          console.log("upload:",ttl,ttl0)
       } catch(e) {

@@ -246,11 +246,14 @@ export class Profile extends Component<Props,State> {
       let id = shortUri(this.props.userID).split(':')[1]
       let that = { state: { resource:this.props.profile, updates:mods}, props:{ dictionary:this.props.dictionary, IRI:this.props.userID, locale:this.props.locale } }
             
-      let user = { ...that.state.resource, ...mods }
-      
+      let user = { ...that.state.resource, ...mods, 
+          [bdou+"preferredUiLang"]:[{ "type": "literal", "value": this.props.locale.replace(/zh/,"zh-Hans") }],
+          [bdou+"preferredUiLiteralLangs"]: this.props.langPreset.map(p => ({ "type": "literal", "value": p })) 
+        }      
+
       console.log("new user:", user, mods, id, that)
 
-      state.newUserValues = { ...this.props.profileJson, [this.props.userID]:{  ...this.props.profileJson[this.props.userID], ...user } }
+      state.newUserValues = { /*...this.props.profileJson,*/ [this.props.userID]:{  /*...this.props.profileJson[this.props.userID],*/  ...user } }
       if(state.newUserValues[this.props.userID].profile) delete state.newUserValues[this.props.userID].profile
       if(state.newUserValues[this.props.userID][tmp+"passwordResetLink"]) delete state.newUserValues[this.props.userID][tmp+"passwordResetLink"]
       
