@@ -960,7 +960,7 @@ export default class API {
       try {
          var uri = "http://";
    
-         let ttl0 = await this.loadUser("text/turtle")
+         //let ttl0 = await this.loadUser("text/turtle")
 
          /*
          rdfStore = rdflib.graph();
@@ -985,13 +985,14 @@ export default class API {
          rdfStore = rdflib.graph();
          for(const k of Object.keys(prefixes)) rdfStore.setPrefixForURI(k, prefixes[k])
          ttl = await jsonld2turtle(JSON.stringify(myjsonld), rdfStore, uri) 
-         // fast hack for easy list handling
+         // fast hack for easy rdf list handling + not working, have to create a list and use it as bnode
+         // => smarter hack 
          for(const p of ["bdou:preferredUiLiteralLangs"]) {
-            ttl = ttl.replace(new RegExp(p+" *(.*?) *; *\n","m"),(m,g1) => p+" ( "+g1.replace(/,/g," ")+" ); \n")
-                     
+            //ttl = ttl.replace(new RegExp(p+" *(.*?) *; *\n","m"),(m,g1) => p+" ( "+g1.replace(/,/g," ")+" ); \n")
+            ttl = ttl.replace(new RegExp(p+" *(.*?) *; *\n","m"),(m,g1) => p+" ( "+user[RID.replace(/bdu:/,bdu)][bdou+"preferredUiLiteralLangs"].map(v => '"'+v.value+'"').join(" ") +" ); \n")                     
          } 
 
-         console.log("upload:",ttl,ttl0)
+         console.log("upload:",RID,ttl,user) //,ttl0)
       } catch(e) {
          console.warn("RDF parse error:",e)
       }

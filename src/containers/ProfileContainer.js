@@ -22,12 +22,8 @@ const mapStateToProps = (state,ownProps) => {
    
    let profile = state.data.resources
    if(profile && userID) profile = profile[userID]
-   let profileJson 
    if(profile) { 
-      profileJson = profile
       profile = profile[userID]
-
-      console.log("profileJson?",profileJson)
    }
    else profile = null
 
@@ -48,7 +44,7 @@ const mapStateToProps = (state,ownProps) => {
 
    let langPreset = state.ui.langPreset
 
-   let props = { userID, profile, dictionary, rightPanel, resetLink, config, locale, profileName, profileJson, langPreset }
+   let props = { userID, profile, dictionary, rightPanel, resetLink, config, locale, profileName, langPreset }
 
    return props
 

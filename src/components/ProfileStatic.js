@@ -55,7 +55,6 @@ type Props = {
     config:{},
     rightPanel?:boolean,
     passwordReset?:url,
-    profileJson?:{},
     onToggleLanguagePanel:() => void,
     onUserProfile:() => void
 }
@@ -164,6 +163,11 @@ export class Profile extends Component<Props,State> {
 
     }
 
+    if(props.userID) {
+      if(!s) s = { ...state }
+      s = Profile.preparePatch(s,props)
+    }
+
     if(s) return s
     else return null
   }
@@ -231,7 +235,7 @@ export class Profile extends Component<Props,State> {
     else this.setState({ ...this.state, updating:false })
   }
 
-  preparePatch = (state:{}) =>{
+  static preparePatch = (state:{},props:{}) =>{
 
       let mods = Object.keys(state).filter(k => k !== "patch" && state[k] && state[k].type && state[k].value !== undefined).reduce( (acc,k) => { 
         let val = state[k]
@@ -243,19 +247,19 @@ export class Profile extends Component<Props,State> {
           [propsMap[k]]: val 
         })
       }, {} )
-      let id = shortUri(this.props.userID).split(':')[1]
-      let that = { state: { resource:this.props.profile, updates:mods}, props:{ dictionary:this.props.dictionary, IRI:this.props.userID, locale:this.props.locale } }
+      let id = shortUri(props.userID).split(':')[1]
+      let that = { state: { resource:props.profile, updates:mods}, props:{ dictionary:props.dictionary, IRI:props.userID, locale:props.locale } }
             
       let user = { ...that.state.resource, ...mods, 
-          [bdou+"preferredUiLang"]:[{ "type": "literal", "value": this.props.locale.replace(/zh/,"zh-Hans") }],
-          [bdou+"preferredUiLiteralLangs"]: this.props.langPreset.map(p => ({ "type": "literal", "value": p })) 
+          [bdou+"preferredUiLang"]:[{ "type": "literal", "value": props.locale.replace(/zh/,"zh-Hans") }],
+          [bdou+"preferredUiLiteralLangs"]: props.langPreset.map(p => ({ "type": "literal", "value": p })) 
         }      
 
-      console.log("new user:", user, mods, id, that)
+      console.log("new user:", props.langPreset, user, mods, id, that)
 
-      state.newUserValues = { /*...this.props.profileJson,*/ [this.props.userID]:{  /*...this.props.profileJson[this.props.userID],*/  ...user } }
-      if(state.newUserValues[this.props.userID].profile) delete state.newUserValues[this.props.userID].profile
-      if(state.newUserValues[this.props.userID][tmp+"passwordResetLink"]) delete state.newUserValues[this.props.userID][tmp+"passwordResetLink"]
+      state.newUserValues = {  [props.userID]:{  ...user } }
+      if(state.newUserValues[props.userID].profile) delete state.newUserValues[props.userID].profile
+      if(state.newUserValues[props.userID][tmp+"passwordResetLink"]) delete state.newUserValues[props.userID][tmp+"passwordResetLink"]
       
       //state.patch = renderPatch(that, Object.keys(mods), id)
 
@@ -340,7 +344,7 @@ export class Profile extends Component<Props,State> {
 
           let state = {...this.state, [e.target.name]:{ type, value, lang } } 
 
-          state = this.preparePatch(state)
+          state = Profile.preparePatch(state, this.props)
           
           this.setState(state)
         }
@@ -629,7 +633,7 @@ export class Profile extends Component<Props,State> {
                   </div>
                   <div>
                     <div class="help">{I18n.t('Rsidebar.priority.help')}{I18n.t("punc.colon")}</div>
-                    <LangPrefTreeContainer/>
+                    <LangPrefTreeContainer />
                   </div>
                 </div>
 

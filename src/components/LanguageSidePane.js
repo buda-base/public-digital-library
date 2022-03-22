@@ -42,6 +42,8 @@ type Props = {
 type State = {
 }
 
+const bdou  = "http://purl.bdrc.io/ontology/ext/user/" ;
+
 class LanguageSidePane extends Component<Props,State> {
    _sorting = false ;
 
@@ -63,7 +65,7 @@ class LanguageSidePane extends Component<Props,State> {
          else if(prop === "priority") {
             if(!list && this.props.langPriority && this.props.langPriority.presets) list = this.props.langPriority.presets[lab]
             if(list) { 
-               localStorage.setItem('langpreset', lab);
+               //localStorage.setItem('langpreset', lab);
                this.props.onSetLangPreset(list,lab);
             }
          }
