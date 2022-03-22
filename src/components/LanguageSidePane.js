@@ -67,6 +67,7 @@ class LanguageSidePane extends Component<Props,State> {
             if(list) { 
                //localStorage.setItem('langpreset', lab);
                this.props.onSetLangPreset(list,lab);
+               if(this.props.that) this.props.that.setState({ needsUpdate: true})
             }
          }
       }

@@ -163,7 +163,7 @@ export class Profile extends Component<Props,State> {
 
     }
 
-    if(props.userID) {
+    if(props.userID && state.needsUpdate) {
       if(!s) s = { ...state }
       s = Profile.preparePatch(s,props)
     }
@@ -187,7 +187,7 @@ export class Profile extends Component<Props,State> {
 
     this.executePatch(e);
     
-    this.setState({...this.state, updating:true })
+    this.setState({...this.state, updating:true, needsUpdate: false })
   }
 
   async executePatch(e) {
@@ -342,7 +342,7 @@ export class Profile extends Component<Props,State> {
           let lang
           if(type === "literal") lang = this.props.locale
 
-          let state = {...this.state, [e.target.name]:{ type, value, lang } } 
+          let state = {...this.state, [e.target.name]:{ type, value, lang }, needsUpdate: true } 
 
           state = Profile.preparePatch(state, this.props)
           
@@ -633,7 +633,7 @@ export class Profile extends Component<Props,State> {
                   </div>
                   <div>
                     <div class="help">{I18n.t('Rsidebar.priority.help')}{I18n.t("punc.colon")}</div>
-                    <LangPrefTreeContainer />
+                    <LangPrefTreeContainer that={this}/>
                   </div>
                 </div>
 
