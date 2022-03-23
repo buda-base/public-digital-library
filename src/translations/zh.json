@@ -380,7 +380,8 @@
          "xDts": "DTS转写",
          "xIast": "IAST转写",
          "alalc97": "ALA-LC转写",
-         "latnPinyin": "拼音"
+         "latnPinyin": "拼音",
+         "incHelper": "Sanskrit or Pāli"
       },
       "x": "Transliterated"
    },

@@ -64,8 +64,10 @@ class LanguageSidePane extends Component<Props,State> {
          if(prop === "locale") this.props.onSetLocale(lab);
          else if(prop === "priority") {
             if(!list && this.props.langPriority && this.props.langPriority.presets) list = this.props.langPriority.presets[lab]
+            if(lab === "custom" && list[this.props.locale]) list = list[this.props.locale]
             if(list) { 
-               //localStorage.setItem('langpreset', lab);
+               localStorage.setItem('langpreset', lab);
+               localStorage.setItem('customlangpreset', list);
                this.props.onSetLangPreset(list,lab);
                if(this.props.that) this.props.that.setState({ needsUpdate: true})
             }
@@ -78,9 +80,10 @@ class LanguageSidePane extends Component<Props,State> {
        else return Object.keys(this.props.langPriority.presets).filter(k => ["bo","en","zh","custom"].includes(k)).map((k,i) => {
 
          let list = this.props.langPriority.presets[k]
+         if(k == "custom" && list[this.props.locale]) list = list[this.props.locale]
          let label,subcollapse
          let disab = false ;
-         if(k !== "custom") label = list.map(l => makeLangScriptLabel(l,true)) //.join(" + ");
+         if(k !== "custom") label = list.map(l => makeLangScriptLabel(l,true,true)) //.join(" + ");
          /*
          else if(k === "custom") { 
             label = I18n.t("Rsidebar.priority.user")
@@ -89,7 +92,7 @@ class LanguageSidePane extends Component<Props,State> {
          */
          else { //if(false) {
             label = I18n.t("Rsidebar.priority.user")+I18n.t("punc.colon");
-            disab = true
+            //disab = true
 
             const SortableItem = SortableElement((args) =>  {
                   const { value } = args
@@ -98,9 +101,9 @@ class LanguageSidePane extends Component<Props,State> {
                      <div class="ol-li-lang">
                         <a title="Reorder"><DragIndicator className="drag"/></a>
                         <li>
-                           <label><span>{makeLangScriptLabel(value,true)}</span></label>
+                           <label><span>{makeLangScriptLabel(value,true,true)}</span></label>
                            <a title="Modify" onClick={(ev) => {  this.props.onToggleCollapse("popover-lang",$(ev.currentTarget).closest(".widget")[0])  } } ><Settings className="modify"/></a>
-                           <a title="Delete"><Delete className="delete" onClick={(ev) => this.props.onSetLangPreset(this.props.langPriority.presets[k].filter(v=>v!==value),"custom")}/></a>
+                           {/* <a title="Delete"><Delete className="delete" onClick={(ev) => this.props.onSetLangPreset(this.props.langPriority.presets[k].filter(v=>v!==value),"custom")}/></a> */}
                         </li> 
                      </div>
                      )
@@ -108,12 +111,13 @@ class LanguageSidePane extends Component<Props,State> {
                );
 
             const SortableList = SortableContainer(({items}) => {
+               console.log("items:",items)
                return ([
                   <ol>
                      {items.map((value, index) => (
                         <SortableItem key={`item-${value}`} index={index} value={value} />
                      ))}
-                     <div class="ol-li-lang"><li><a title="Add" onClick={(ev) => { this.props.onToggleCollapse("popover-lang",$(ev.currentTarget).closest(".widget")[0]) } }><AddBox className="add"/></a><label><span>{I18n.t("Rsidebar.priority.more")}</span></label></li></div>
+                     {/* <div class="ol-li-lang"><li><a title="Add" onClick={(ev) => { this.props.onToggleCollapse("popover-lang",$(ev.currentTarget).closest(".widget")[0]) } }><AddBox className="add"/></a><label><span>{I18n.t("Rsidebar.priority.more")}</span></label></li></div> */}
                   </ol>
                ]);
             });
@@ -132,7 +136,13 @@ class LanguageSidePane extends Component<Props,State> {
                   >
                      <SortableList lockAxis="y" items={list} shouldCancelStart={(ev)=>$(ev.target).closest("svg:not(.drag)").length}
                         onSortStart={ () => $(".subcollapse.custom-lang").addClass("sorting") } 
-                        onSortEnd={({oldIndex, newIndex}) => { $(".subcollapse.custom-lang").removeClass("sorting"); this.props.onSetLangPreset(arrayMove(list, oldIndex, newIndex),"custom") }} />
+                        onSortEnd={({oldIndex, newIndex}) => { 
+                           $(".subcollapse.custom-lang").removeClass("sorting"); 
+                           let newList = arrayMove(list, oldIndex, newIndex)
+                           this.props.onSetLangPreset(newList,"custom"); 
+                           localStorage.setItem('customlangpreset', newList);
+                           if(this.props.that) this.props.that.setState({ needsUpdate: true}); 
+                        }} />
 
                </Collapse>,
                <Popover 
@@ -146,6 +156,8 @@ class LanguageSidePane extends Component<Props,State> {
                </Popover>
             ]
          }
+
+         console.log("props:", this.props, k, i, this.props.langIndex)
 
          let checked = k === this.props.langIndex || i === this.props.langIndex  
 

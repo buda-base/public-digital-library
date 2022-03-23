@@ -466,7 +466,9 @@
          "xIast": "IAST",
          "alalc97": "ALA-LC",
          "latnPinyin": "Pinyin",
-         "xTwktt":"Trent Walker Khmer-Tai Translit."
+         "xTwktt":"Trent Walker Khmer-Tai Translit.",
+         "xNdia":"Sanskrit or Pāli, Lenient",
+         "incHelper": "Sanskrit or Pāli"
       },
       "x": "Transliterated",
       "latn": "Transliterated"

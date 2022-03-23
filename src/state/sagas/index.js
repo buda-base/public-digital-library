@@ -107,10 +107,16 @@ async function initiateApp(params,iri,myprops,route,isAuthCallback) {
          
          // set data language preferences
          // 1-saved preference
-         if((val = localStorage.getItem('langpreset')) && config.language.data.presets[val]) store.dispatch(uiActions.langPreset(config.language.data.presets[val], val))
+         let list 
+         if((val = localStorage.getItem('langpreset')) && ((list = localStorage.getItem('customlangpreset')) || (list = config.language.data.presets[val]))) {
+            if(!Array.isArray(list)) list = list.split(/ *, */)
+            if(list[locale]) list = list[locale]
+            store.dispatch(uiActions.langPreset(list, val))
+         }
          // 2- locale
          else if(config.language.data.presets[locale]) store.dispatch(uiActions.langPreset(config.language.data.presets[locale], locale))
          else store.dispatch(uiActions.langPreset(["bo-x-ewts,sa-x-iast"]))
+         
 
          //loggergen.log("preset",config.language.data.presets[config.language.data.index])
          //store.dispatch(dataActions.choosingHost(config.ldspdi.endpoints[config.ldspdi.index]));

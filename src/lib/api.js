@@ -989,10 +989,10 @@ export default class API {
          // => smarter hack 
          for(const p of ["bdou:preferredUiLiteralLangs"]) {
             //ttl = ttl.replace(new RegExp(p+" *(.*?) *; *\n","m"),(m,g1) => p+" ( "+g1.replace(/,/g," ")+" ); \n")
-            ttl = ttl.replace(new RegExp(p+" *(.*?) *; *\n","m"),(m,g1) => p+" ( "+user[RID.replace(/bdu:/,bdu)][bdou+"preferredUiLiteralLangs"].map(v => '"'+v.value+'"').join(" ") +" ); \n")                     
+            ttl = ttl.replace(new RegExp(p+" *([^;]+) *;","m"),(m,g1) => p+" ( "+user[RID.replace(/bdu:/,bdu)][bdou+"preferredUiLiteralLangs"].map(v => '"'+v.value+'"').join(" ") +" );")                     
          } 
-
          console.log("upload:",RID,ttl,user) //,ttl0)
+
       } catch(e) {
          console.warn("RDF parse error:",e)
       }

@@ -42,6 +42,8 @@ export const transliterators = {
    
    "sa-deva":{ "sa-x-iast": (val) => Sanscript.t(val,"devanagari","iast") },
    "sa-x-iast":{ "sa-deva": (val) => Sanscript.t(val.toLowerCase(),"iast","devanagari") },
+   "pi-deva":{ "pi-x-iast": (val) => Sanscript.t(val,"devanagari","iast") },
+   "pi-x-iast":{ "pi-deva": (val) => Sanscript.t(val.toLowerCase(),"iast","devanagari") },
    
    "zh-hans":{ "zh-latn-pinyin" : (val) => pinyin4js.convertToPinyinString(val, ' ', pinyin4js.WITH_TONE_MARK) , "zh-hant" : (val) => hanziConv.sc2tc(val) },
    "zh-hant":{ "zh-latn-pinyin" : (val) => pinyin4js.convertToPinyinString(val, ' ', pinyin4js.WITH_TONE_MARK) , "zh-hans" : (val) => hanziConv.tc2sc(val) },
@@ -70,6 +72,16 @@ export function extendedPresets(preset)
    // being slightly higher, 98. Also we start at 1 to avoid unfortunate comparisons with 0 as being null
    let extPreset = { flat:[], translit:{}, invscores: { "": 98 } }
    let curscore = 1;
+
+   // use sa-..., pi-... instead of inc-...
+   let presetNoInc = []
+   for(const p of preset) {
+      if(p.startsWith("inc")) { 
+         presetNoInc.push(p.replace(/^inc/,"sa"))
+         presetNoInc.push(p.replace(/^inc/,"pi"))
+      } else presetNoInc.push(p)
+   }
+   preset = presetNoInc
 
    for(let lg of preset) {
       extPreset.flat.push(lg)

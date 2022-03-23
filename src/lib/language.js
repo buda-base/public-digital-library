@@ -13,6 +13,7 @@ export const langScripts = {
    "x-iast":"lang.langscript.xIast",
    "khmr":"lang.langscript.km",
    "x-twktt":"lang.langscript.xTwktt",
+   "x-ndia":"lang.langscript.xNdia",
 }
 
 const dataLangUI = {
@@ -63,22 +64,25 @@ export function numtobo(c) {
    return res;
 }
 
-export function makeLangScriptLabel(code:string,span:boolean=false)
+export function makeLangScriptLabel(code:string,span:boolean=false,incAsSaPi:false)
 {
-   if(!code.match(/^[a-z]{2}(-[a-z0-9-]+)?$/)) throw new Error("Malformed Code ("+code+")");
+   if(!code.match(/^[a-z]{2,3}(-[a-z0-9-]+)?$/)) throw new Error("Malformed Code ("+code+")");
 
-   let lang = code.substr(0,2)
-   let script = code.substr(3)
+   let lang = code.replace(/^([^-]+).*?$/,"$1")
+   let script = code.replace(/^[^-]+(-(.+))?$/,"$2")
 
    if(!langScripts[lang]) throw new Error("Unknown lang code ("+lang+")")
    if(script && !langScripts[script]) throw new Error("Unknown script code ("+script+")")
    //console.log("code",code,lang,script)
-
+   
    let langLabel = I18n.t(langScripts[lang])
    let scriptLabel ; //= "Unicode"
    if(script.length) scriptLabel = I18n.t(langScripts[script])
    //console.log("label",langLabel,scriptLabel)
 
+   let incHelper = ""
+   if(incAsSaPi && lang == "inc") incHelper = I18n.t("lang.langscript.incHelper")+", "
+
    if(!span) return langLabel + (scriptLabel?" (" + scriptLabel + ")":"")
-   else return <span>{[langLabel, (scriptLabel?<span class="lang-info"> ({scriptLabel})</span>:null)].filter(e => e)}</span>
+   else return <span>{[langLabel, (scriptLabel?<span class="lang-info"> ({incHelper}{scriptLabel})</span>:null)].filter(e => e)}</span>
 }
