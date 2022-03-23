@@ -61,7 +61,10 @@ class LanguageSidePane extends Component<Props,State> {
       
       if(val)
       {
-         if(prop === "locale") this.props.onSetLocale(lab);
+         if(prop === "locale") { 
+            this.props.onSetLocale(lab);
+            this.props.onSetLangPreset(this.props.config.language.data.preset.custom[lab], lab);
+         }
          else if(prop === "priority") {
             if(!list && this.props.langPriority && this.props.langPriority.presets) list = this.props.langPriority.presets[lab]
             if(lab === "custom" && list[this.props.locale]) list = list[this.props.locale]
@@ -140,6 +143,7 @@ class LanguageSidePane extends Component<Props,State> {
                            $(".subcollapse.custom-lang").removeClass("sorting"); 
                            let newList = arrayMove(list, oldIndex, newIndex)
                            this.props.onSetLangPreset(newList,"custom"); 
+                           localStorage.setItem('langpreset', "custom");
                            localStorage.setItem('customlangpreset', newList);
                            if(this.props.that) this.props.that.setState({ needsUpdate: true}); 
                         }} />
