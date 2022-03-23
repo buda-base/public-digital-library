@@ -308,6 +308,7 @@ export const languages = {
    //"other":"lang.search.other"
    "inc":"lang.search.inc",
    "inc-x-ndia":"lang.search.incXNdia",
+   "inc-x-iast":"lang.search.incXIast",
    "sa":"lang.search.sa",
    "hans":"lang.search.hans","hant":"lang.search.hant",
    "deva":"lang.search.deva","newa":"lang.search.newa","sinh":"lang.search.sinh",
@@ -675,6 +676,7 @@ export function lang_selec(that,black:boolean = false,inPopup:false)
 
                                        localStorage.setItem('uilang', i);
                                        localStorage.setItem('langpreset', i);
+                                       localStorage.setItem("customlangpreset",that.props.config.language.data.presets.custom[i])
 
                                        that.setState({...that.state,anchorLang:null,collapse: {...that.state.collapse, lang:false, uiLangPopup:true }, titles:false, ldspdi:false }); 
                                        document.documentElement.lang = i

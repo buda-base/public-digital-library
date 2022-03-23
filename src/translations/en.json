@@ -409,6 +409,7 @@
          "saXIast": "Sanskrit (IAST)",
          "saXNdia": "Sanskrit (Lenient)",
          "saDeva": "Sanskrit (Devanagari)",
+         "incXIast": "Indic (Sanskrit or Pāli, IAST)",
          "incXNdia": "Indic (Sanskrit or Pāli, Lenient)",
          "en": "English",
          "pi": "Pāli",

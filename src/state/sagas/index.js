@@ -108,7 +108,7 @@ async function initiateApp(params,iri,myprops,route,isAuthCallback) {
          // set data language preferences
          // 1-saved preference
          let list 
-         if((val = localStorage.getItem('langpreset')) && ((list = localStorage.getItem('customlangpreset')) || (list = config.language.data.presets[val]))) {
+         if((val = localStorage.getItem('langpreset')) && ((list = localStorage.getItem('lang')) || (list = config.language.data.presets[val]))) {
             if(!Array.isArray(list)) list = list.split(/ *, */)
             if(list[locale]) list = list[locale]
             store.dispatch(uiActions.langPreset(list, val))

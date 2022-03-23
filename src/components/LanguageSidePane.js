@@ -63,14 +63,12 @@ class LanguageSidePane extends Component<Props,State> {
       {
          if(prop === "locale") { 
             this.props.onSetLocale(lab);
-            this.props.onSetLangPreset(this.props.config.language.data.preset.custom[lab], lab);
+            localStorage.setItem("customlangpreset",this.props.config.language.data.preset.custom[lab])
          }
          else if(prop === "priority") {
             if(!list && this.props.langPriority && this.props.langPriority.presets) list = this.props.langPriority.presets[lab]
             if(lab === "custom" && list[this.props.locale]) list = list[this.props.locale]
             if(list) { 
-               localStorage.setItem('langpreset', lab);
-               localStorage.setItem('customlangpreset', list);
                this.props.onSetLangPreset(list,lab);
                if(this.props.that) this.props.that.setState({ needsUpdate: true})
             }
@@ -83,7 +81,11 @@ class LanguageSidePane extends Component<Props,State> {
        else return Object.keys(this.props.langPriority.presets).filter(k => ["bo","en","zh","custom"].includes(k)).map((k,i) => {
 
          let list = this.props.langPriority.presets[k]
-         if(k == "custom" && list[this.props.locale]) list = list[this.props.locale]
+         if(k == "custom") { 
+            let customlist = localStorage.getItem("customlangpreset")
+            if(customlist) list = customlist.split(/ *, */)
+            else list = list[this.props.locale]
+         }
          let label,subcollapse
          let disab = false ;
          if(k !== "custom") label = list.map(l => makeLangScriptLabel(l,true,true)) //.join(" + ");
@@ -143,8 +145,6 @@ class LanguageSidePane extends Component<Props,State> {
                            $(".subcollapse.custom-lang").removeClass("sorting"); 
                            let newList = arrayMove(list, oldIndex, newIndex)
                            this.props.onSetLangPreset(newList,"custom"); 
-                           localStorage.setItem('langpreset', "custom");
-                           localStorage.setItem('customlangpreset', newList);
                            if(this.props.that) this.props.that.setState({ needsUpdate: true}); 
                         }} />
 
