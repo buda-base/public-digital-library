@@ -41,13 +41,28 @@ export const transliterators = {
    "sa-x-ewts": { "bo": (val) => jsEWTS.toWylie(val) },
    
    "sa-deva":{ "sa-x-iast": (val) => Sanscript.t(val,"devanagari","iast") },
-   "sa-x-iast":{ "sa-deva": (val) => Sanscript.t(val.toLowerCase(),"iast","devanagari") },
    "pi-deva":{ "pi-x-iast": (val) => Sanscript.t(val,"devanagari","iast") },
-   "pi-x-iast":{ "pi-deva": (val) => Sanscript.t(val.toLowerCase(),"iast","devanagari") },
+   "sa-newa":{ "sa-x-iast": (val) => Sanscript.t(val,"newa","iast") },
+   "pi-newa":{ "pi-x-iast": (val) => Sanscript.t(val,"newa","iast") },
+   "sa-sinh":{ "sa-x-iast": (val) => Sanscript.t(val,"sinhala","iast") },
+   "pi-sinh":{ "pi-x-iast": (val) => Sanscript.t(val,"sinhala","iast") },
+   "sa-x-iast":{ 
+      "sa-deva": (val) => Sanscript.t(val.toLowerCase(),"iast","devanagari"),
+      "sa-newa": (val) => Sanscript.t(val.toLowerCase(),"iast","newa"), 
+      "sa-sinh": (val) => Sanscript.t(val.toLowerCase(),"iast","sinhala") 
+   },
+   "pi-x-iast":{ 
+      "pi-deva": (val) => Sanscript.t(val.toLowerCase(),"iast","devanagari") ,
+      "pi-newa": (val) => Sanscript.t(val.toLowerCase(),"iast","newa"),
+      "pi-sinh": (val) => Sanscript.t(val.toLowerCase(),"iast","sinhala"),
+      "pi-khmr": (val) => Sanscript.t(val.toLowerCase(),"iast","khmer") 
+   },
    
    "zh-hans":{ "zh-latn-pinyin" : (val) => pinyin4js.convertToPinyinString(val, ' ', pinyin4js.WITH_TONE_MARK) , "zh-hant" : (val) => hanziConv.sc2tc(val) },
    "zh-hant":{ "zh-latn-pinyin" : (val) => pinyin4js.convertToPinyinString(val, ' ', pinyin4js.WITH_TONE_MARK) , "zh-hans" : (val) => hanziConv.tc2sc(val) },
    "zh-hani":{ "zh-latn-pinyin" : (val) => pinyin4js.convertToPinyinString(val, ' ', pinyin4js.WITH_TONE_MARK) , "zh-hant" : (val) => hanziConv.sc2tc(val) , "zh-hans" : (val) => hanziConv.tc2sc(val) },
+
+   "pi-khmr":{ "pi-x-iast": (val) => Sanscript.t(val,"khmer","iast") },
 }
 
 export function translitHelper(src,dst) {
@@ -115,6 +130,9 @@ export function extendedPresets(preset)
       }
       curscore += 1;
    }
+
+   console.log("extP:",JSON.stringify(extPreset, null, 3),preset)
+
    return extPreset
 }
 
@@ -246,6 +264,7 @@ export function htmlEntitiesDecode(val) {
 
 export function getMainLabel(data,extpreset)
 {
+   console.log("gMl:",data,extpreset)
    if(!data) return ;
    else if(!Array.isArray(data)) data = [ data ]
 
@@ -279,6 +298,9 @@ export function getMainLabel(data,extpreset)
    } else if (bestlt.endsWith("ewts")) {
       val = ewtsToDisplay(val)
    }
+
+   console.log("ret:",val,bestlt)
+
    // no need, data should not have entities
    // val = htmlEntitiesDecode(val) 
    return {"value": val, "lang": bestlt}
@@ -286,6 +308,9 @@ export function getMainLabel(data,extpreset)
 
 export function getMainLabels(data,extpreset)
 {
+
+   console.log("gMs:",data,extpreset)
+
    if(!data) return ;
    else if(!Array.isArray(data)) data = [ data ]
 
@@ -319,7 +344,10 @@ export function getMainLabels(data,extpreset)
         destlt = extpreset.translit[bestlt]
      } else if (bestlt.endsWith("ewts")) {
         val = ewtsToDisplay(val)
-     }
+     }   
+     
+     console.log("ret:",val,bestlt)
+
      // no need, data should not have entities
      // val = htmlEntitiesDecode(val)
      vals.push(val)
