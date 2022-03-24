@@ -143,6 +143,7 @@ class LanguageSidePane extends Component<Props,State> {
                                  newList[index] = lang
                                  this.props.onSetLangPreset(newList, "custom")
                                  this.setState({  collapse:{ ...this.state.collapse, [value]:false }})
+                                 if(this.props.that) this.props.that.setState({ needsUpdate: true}); 
                               }}>{ makeLangScriptLabel(p, false, true, part[0]) }</MenuItem>)}
                         </Popover>
                      </li> 
