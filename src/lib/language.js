@@ -64,13 +64,14 @@ export function numtobo(c) {
    return res;
 }
 
-export function makeLangScriptLabel(code:string,span:boolean=false,incAsSaPi:false)
+export function makeLangScriptLabel(code:string,span:boolean=false,incAsSaPi:false,useLang?:string)
 {
-   if(!code.match(/^[a-z]{2,3}(-[a-z0-9-]+)?$/)) throw new Error("Malformed Code ("+code+")");
+   if(!useLang && !code.match(/^[a-z]{2,3}(-[a-z0-9-]+)?$/)) throw new Error("Malformed Code ("+code+")");
 
-   let lang = code.replace(/^([^-]+).*?$/,"$1")
-   let script = code.replace(/^[^-]+(-(.+))?$/,"$2")
+   let lang = useLang || code.replace(/^([^-]+).*?$/,"$1")
+   let script = useLang ? code : code.replace(/^[^-]+(-(.+))?$/,"$2")
 
+   if(useLang && code == "-") return I18n.t("lang.langscript.unicode")
    if(!langScripts[lang]) throw new Error("Unknown lang code ("+lang+")")
    if(script && !langScripts[script]) throw new Error("Unknown script code ("+script+")")
    //console.log("code",code,lang,script)
@@ -83,6 +84,7 @@ export function makeLangScriptLabel(code:string,span:boolean=false,incAsSaPi:fal
    let incHelper = ""
    if(incAsSaPi && lang == "inc") incHelper = I18n.t("lang.langscript.incHelper")+", "
 
-   if(!span) return langLabel + (scriptLabel?" (" + scriptLabel + ")":"")
+   if(useLang) return scriptLabel 
+   else if(!span) return langLabel + (scriptLabel?" (" + scriptLabel + ")":"")
    else return <span>{[langLabel, (scriptLabel?<span class="lang-info"> ({incHelper}{scriptLabel})</span>:null)].filter(e => e)}</span>
 }

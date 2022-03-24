@@ -519,7 +519,7 @@ export function getLangLabel(that:{},prop:string="",labels:[],proplang:boolean=f
       let langs = []
       if(that.state.langPreset) langs = that.state.langPreset
       else if(that.props.langPreset) langs = that.props.langPreset
-      if(proplang || uilang || preferUIlang.indexOf(prop) !== -1) langs = [ that.props.locale, ...langs ]
+      if(proplang || uilang || preferUIlang.indexOf(prop) !== -1) langs = [ that.props.locale, ...langs.filter(l => l != that.props.locale) ]
 
       if(langs.indexOf(that.props.locale) === -1 && !dontUseUI) { 
          langs = [ ...langs, that.props.locale ]
@@ -676,7 +676,12 @@ export function lang_selec(that,black:boolean = false,inPopup:false)
 
                                        localStorage.setItem('uilang', i);
                                        localStorage.setItem('langpreset', i);
-                                       localStorage.setItem("customlangpreset",that.props.config.language.data.presets.custom[i])
+                                       const list = that.props.config.language.data.presets.custom[i]
+                                       
+                                       if(list) localStorage.setItem("customlangpreset",list)
+                                       else {
+                                          console.log("WHAT??",that.props.config)
+                                       }
 
                                        that.setState({...that.state,anchorLang:null,collapse: {...that.state.collapse, lang:false, uiLangPopup:true }, titles:false, ldspdi:false }); 
                                        document.documentElement.lang = i

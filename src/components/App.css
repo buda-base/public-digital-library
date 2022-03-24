@@ -4460,7 +4460,7 @@ body {overflow-x:hidden; }
 }
 .searchWidget.datatype.corporation .img { width:45px; margin-left:-17px; margin-right:7px;}
 
-[lang="sa-x-iast"] { word-break: break-all; }
+[lang$="-x-iast"] { word-break: break-all; }
 
 .widget label { text-transform:capitalize; /*word-break: break-all;*/ }
 .searchWidget > label > span,
@@ -4498,12 +4498,16 @@ body > .ol-li-lang:last-child li { font-size:13px; list-style-type: none; }
 body > .ol-li-lang:last-child svg { opacity:1;}
 body > .ol-li-lang:last-child li::before { content:'(--)';}
 
+#resetCustom { opacity: 0;  vertical-align: -3px !important; cursor:pointer; }
+#resetCustom svg { font-size:20px;  }
+.dataWidget:hover #resetCustom { opacity:0.55; }
 
 #outline .widget { min-width:100%; }
 #outline .widget .disabled + span { opacity:0.55;}
 #outline .widget .ol-li-lang li label span:not(.a) { font-size:13px;}
 #outline .widget > label {display:inline-flex;}
 #outline  .dataWidget > label > span:first-child { margin-right:5px;}
+#outline  .dataWidget:last-child > label { margin-right:5px;}
 #outline .widget ol { margin-left:4px;}
 #outline .widget label span:not(#a) { font-weight:700; }
 #outline .widget label span:not(#a) .lang-info { font-weight:400; text-transform:none; }

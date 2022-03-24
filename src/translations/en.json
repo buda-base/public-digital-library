@@ -469,7 +469,8 @@
          "latnPinyin": "Pinyin",
          "xTwktt":"Trent Walker Khmer-Tai Translit.",
          "xNdia":"Sanskrit or Pāli, Lenient",
-         "incHelper": "Sanskrit or Pāli"
+         "incHelper": "Sanskrit or Pāli",
+         "unicode": "Unicode"
       },
       "x": "Transliterated",
       "latn": "Transliterated"

@@ -381,7 +381,8 @@
          "xIast": "IAST转写",
          "alalc97": "ALA-LC转写",
          "latnPinyin": "拼音",
-         "incHelper": "Sanskrit or Pāli"
+         "incHelper": "Sanskrit or Pāli",
+         "unicode": "Unicode"
       },
       "x": "Transliterated"
    },

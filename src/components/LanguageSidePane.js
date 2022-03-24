@@ -25,6 +25,7 @@ import arrayMove from 'array-move';
 import $ from 'jquery' ;
 import Popover from '@material-ui/core/Popover';
 import MenuItem from '@material-ui/core/MenuItem';
+import RefreshIcon from '@material-ui/icons/Refresh';
 
 type Props = {
    anchor?:{},
@@ -44,13 +45,22 @@ type State = {
 
 const bdou  = "http://purl.bdrc.io/ontology/ext/user/" ;
 
+const langSettings = {
+   "bo":  [ "-", "x-ewts" ],
+   "zh":  [ "hans", "hant", "latn-pinyin" ],
+   "inc": [ "deva", "newa", "sinh", "khmr", "x-iast" ],
+   "km":  [ "-", "x-twktt" ],
+   "en":  [ "-" ]
+}
+
+
 class LanguageSidePane extends Component<Props,State> {
    _sorting = false ;
 
    constructor(props : Props) {
       super(props);
 
-      this.state = {}
+      this.state = { collapse: {} }
    }
 
    handleCheckUI = (ev:Event,prop:string,lab:string,val:boolean,list:string[]) => {
@@ -63,11 +73,11 @@ class LanguageSidePane extends Component<Props,State> {
       {
          if(prop === "locale") { 
             this.props.onSetLocale(lab);
-            localStorage.setItem("customlangpreset",this.props.config.language.data.preset.custom[lab])
+            localStorage.setItem("customlangpreset",this.props.config.language.data.presets.custom[lab])
          }
          else if(prop === "priority") {
             if(!list && this.props.langPriority && this.props.langPriority.presets) list = this.props.langPriority.presets[lab]
-            if(lab === "custom" && list[this.props.locale]) list = list[this.props.locale]
+            if(lab === "custom" && list[this.props.locale]) list = list[this.props.locale] 
             if(list) { 
                this.props.onSetLangPreset(list,lab);
                if(this.props.that) this.props.that.setState({ needsUpdate: true})
@@ -77,6 +87,8 @@ class LanguageSidePane extends Component<Props,State> {
    }
 
    prefTree() {
+      if(!this._refs) this._refs = {}
+
        if(!this.props.langPriority) return <div></div>
        else return Object.keys(this.props.langPriority.presets).filter(k => ["bo","en","zh","custom"].includes(k)).map((k,i) => {
 
@@ -85,6 +97,8 @@ class LanguageSidePane extends Component<Props,State> {
             let customlist = localStorage.getItem("customlangpreset")
             if(customlist) list = customlist.split(/ *, */)
             else list = list[this.props.locale]
+
+            // console.log("list:",list,this.props.locale,customlist)
          }
          let label,subcollapse
          let disab = false ;
@@ -99,21 +113,43 @@ class LanguageSidePane extends Component<Props,State> {
             label = I18n.t("Rsidebar.priority.user")+I18n.t("punc.colon");
             //disab = true
 
-            const SortableItem = SortableElement((args) =>  {
-                  const { value } = args
-                  
-                  return  (
-                     <div class="ol-li-lang">
-                        <a title="Reorder"><DragIndicator className="drag"/></a>
-                        <li>
-                           <label><span>{makeLangScriptLabel(value,true,true)}</span></label>
-                           <a title="Modify" onClick={(ev) => {  this.props.onToggleCollapse("popover-lang",$(ev.currentTarget).closest(".widget")[0])  } } ><Settings className="modify"/></a>
-                           {/* <a title="Delete"><Delete className="delete" onClick={(ev) => this.props.onSetLangPreset(this.props.langPriority.presets[k].filter(v=>v!==value),"custom")}/></a> */}
-                        </li> 
-                     </div>
-                     )
-                  }
-               );
+            
+            const SortableItem = SortableElement(({ value }) =>  {
+
+               const part = value.split("-")
+               const index = list.indexOf(value)
+
+               return  (
+                  <div class={"ol-li-lang"+(this.state.collapse[value]?" active":"")}>
+                     <a title="Reorder"><DragIndicator className="drag"/></a>
+                     <li>
+                        <label><span>{makeLangScriptLabel(value,true,true)}</span></label>
+                        <a title="Modify" onClick={(ev) => {  
+                           //this.props.onToggleCollapse("popover-lang",$(ev.currentTarget).closest(".widget")[0])  
+                           this.setState({ collapse:{ ...this.state.collapse, [value]:!this.state.collapse[value]} })
+                        } } ><Settings className="modify"/></a>
+                        {/* <a title="Delete"><Delete className="delete" onClick={(ev) => this.props.onSetLangPreset(this.props.langPriority.presets[k].filter(v=>v!==value),"custom")}/></a> */}
+                        <Popover 
+                           transformOrigin={{ vertical: 'bottom', horizontal: 'left'}} 
+                           anchorOrigin={{vertical: 'bottom', horizontal: 'left'}} 
+                           open={this.state.collapse[value] }
+                           anchorEl={() => $(".ol-li-lang.active svg.modify")[0] }               
+                           onClose={ (ev) => this.setState({  collapse:{ ...this.state.collapse, [value]:false }}) }
+                           >
+                              {langSettings[part[0]].map(p => <MenuItem onClick={() => {
+                                 const newList = [ ...list ]
+                                 let lang = part[0]
+                                 if(p != '-') lang += "-" + p
+                                 newList[index] = lang
+                                 this.props.onSetLangPreset(newList, "custom")
+                                 this.setState({  collapse:{ ...this.state.collapse, [value]:false }})
+                              }}>{ makeLangScriptLabel(p, false, true, part[0]) }</MenuItem>)}
+                        </Popover>
+                     </li> 
+                  </div>
+                  )
+               }
+            );
 
             const SortableList = SortableContainer(({items}) => {
                console.log("items:",items)
@@ -129,11 +165,16 @@ class LanguageSidePane extends Component<Props,State> {
 
             //disab = true
             subcollapse = [
-               <span className="subcollapse" /*style={{width:"335px"}}*/
+               /*<span className="subcollapse" //style={{width:"335px"}}
                      onClick={(ev) => {  this.props.onToggleCollapse("custom-lang"); }}
                   >
                   { this.props.collapse["custom-lang"] ? <ExpandLess /> : <ExpandMore />}
-               </span>,
+               </span>,*/
+
+               <span id={"resetCustom"} title={I18n.t("search.reset")} onClick={()=>{                  
+                  const newList = [ ...this.props.config.language.data.presets.custom[this.props.locale] ]
+                  this.props.onSetLangPreset(newList,"custom"); 
+               }} ><RefreshIcon/></span>,               
                <Collapse key={2}
                   in={!this.props.collapse["custom-lang"]}
                   className={["subcollapse custom-lang",this.props.collapse["custom-lang"]?"open":"close"].join(" ")}
@@ -149,15 +190,6 @@ class LanguageSidePane extends Component<Props,State> {
                         }} />
 
                </Collapse>,
-               <Popover 
-                  transformOrigin={{ vertical: 'bottom', horizontal: 'right'}} 
-                  anchorOrigin={{vertical: 'bottom', horizontal: 'left'}} 
-                  open={this.props.collapse["popover-lang"]}
-                  anchorEl={() => {console.log("anchor",this.props.anchor); return this.props.anchor; }}               
-                  onClose={ (ev) => this.props.onToggleCollapse("popover-lang") }
-               >
-                  <MenuItem>Work in progress...</MenuItem>
-               </Popover>
             ]
          }
 
