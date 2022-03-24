@@ -4502,6 +4502,9 @@ body > .ol-li-lang:last-child li::before { content:'(--)';}
 #resetCustom svg { font-size:20px;  }
 .dataWidget:hover #resetCustom { opacity:0.55; }
 
+#translitPopup li.selected { background-color:#eeeeee;}
+
+
 #outline .widget { min-width:100%; }
 #outline .widget .disabled + span { opacity:0.55;}
 #outline .widget .ol-li-lang li label span:not(.a) { font-size:13px;}

@@ -49,7 +49,7 @@ const langSettings = {
    "bo":  [ "-", "x-ewts" ],
    "zh":  [ "hans", "hant", "latn-pinyin" ],
    "inc": [ "deva", "newa", "sinh", "khmr", "x-iast" ],
-   "km":  [ "-", "x-twktt" ],
+   "km":  [ "-", "x-twktt", "x-iast" ],
    "en":  [ "-" ]
 }
 
@@ -130,13 +130,14 @@ class LanguageSidePane extends Component<Props,State> {
                         } } ><Settings className="modify"/></a>
                         {/* <a title="Delete"><Delete className="delete" onClick={(ev) => this.props.onSetLangPreset(this.props.langPriority.presets[k].filter(v=>v!==value),"custom")}/></a> */}
                         <Popover 
-                           transformOrigin={{ vertical: 'bottom', horizontal: 'left'}} 
+                           id="translitPopup"
+                           transformOrigin={{ vertical: 'bottom', horizontal: -30}} 
                            anchorOrigin={{vertical: 'bottom', horizontal: 'left'}} 
                            open={this.state.collapse[value] }
                            anchorEl={() => $(".ol-li-lang.active svg.modify")[0] }               
                            onClose={ (ev) => this.setState({  collapse:{ ...this.state.collapse, [value]:false }}) }
                            >
-                              {langSettings[part[0]].map(p => <MenuItem onClick={() => {
+                              {langSettings[part[0]].map(p => <MenuItem className={ p === value.replace(/^([^-]+)(-(.+))?$/, (m,g1,g2,g3) => g1&&!g2 ? "-" : g3 ) ? "selected" : ""} onClick={() => {
                                  const newList = [ ...list ]
                                  let lang = part[0]
                                  if(p != '-') lang += "-" + p
@@ -175,6 +176,7 @@ class LanguageSidePane extends Component<Props,State> {
                <span id={"resetCustom"} title={I18n.t("search.reset")} onClick={()=>{                  
                   const newList = [ ...this.props.config.language.data.presets.custom[this.props.locale] ]
                   this.props.onSetLangPreset(newList,"custom"); 
+                  if(this.props.that) this.props.that.setState({ needsUpdate: true}); 
                }} ><RefreshIcon/></span>,               
                <Collapse key={2}
                   in={!this.props.collapse["custom-lang"]}

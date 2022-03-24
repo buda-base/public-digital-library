@@ -51,7 +51,8 @@ export const transliterators = {
    "sa-x-iast":{ 
       "sa-deva": (val) => Sanscript.t(val.toLowerCase(),"iast","devanagari"),
       "sa-newa": (val) => Sanscript.t(val.toLowerCase(),"iast","newa"), 
-      "sa-sinh": (val) => Sanscript.t(val.toLowerCase(),"iast","sinhala") 
+      "sa-sinh": (val) => Sanscript.t(val.toLowerCase(),"iast","sinhala"), 
+      "sa-khmr": (val) => Sanscript.t(val.toLowerCase(),"iast","khmer") 
    },
    "pi-x-iast":{ 
       "pi-deva": (val) => Sanscript.t(val.toLowerCase(),"iast","devanagari") ,
@@ -64,6 +65,8 @@ export const transliterators = {
    "zh-hant":{ "zh-latn-pinyin" : (val) => pinyin4js.convertToPinyinString(val, ' ', pinyin4js.WITH_TONE_MARK) , "zh-hans" : (val) => hanziConv.tc2sc(val) },
    "zh-hani":{ "zh-latn-pinyin" : (val) => pinyin4js.convertToPinyinString(val, ' ', pinyin4js.WITH_TONE_MARK) , "zh-hant" : (val) => hanziConv.sc2tc(val) , "zh-hans" : (val) => hanziConv.tc2sc(val) },
 
+   "km":{ "km-x-iast": (val) => Sanscript.t(val,"khmer","iast") },
+   "km-x-iast":{ "km": (val) => Sanscript.t(val,"iast","khmer") },
 }
 
 export function translitHelper(src,dst) {
