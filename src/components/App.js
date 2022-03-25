@@ -282,6 +282,7 @@ const facetLabel = {
 }
 
 export const languages = {
+   "km-x-iast":"lang.search.kmXIast",
    "km":"lang.search.km",
    "zh":"lang.search.zh",
    "zhHani":"lang.search.zh",
@@ -6314,7 +6315,6 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   let presets = []
                   if(d === "tibt") for(let p of possible) { if(p === "bo" || p.match(/-[Tt]ibt$/)) { presets.push(p); } }
                   else if(d === "hani") for(let p of possible) { if(p.match(/^zh((-[Hh])|$)/)) { presets.push(p); } }
-                  else if(detec[0] === "khmr") for(let p of possible) { if(p.match(/(^km$)/i)) { presets.push(p);  } }
                   else if(["ewts","iast","deva","pinyin"].indexOf(d) !== -1) for(let p of possible) { 
                      if(p.match(new RegExp(d+"$"))) { 
                         
@@ -6324,7 +6324,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                         presets.push(p); 
                      } 
                   }
-
+                  else if(d === "khmr") { presets.push("km");  } 
+                  
                   // #509
                   if(d === "iast") presets.push("pi-x-ndia")                  
                   

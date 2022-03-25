@@ -395,7 +395,8 @@
          "xDts": "DTS",
          "alalc97": "ALA-LC",
          "latnPinyin": "ཕིན་ཡིག",
-         "piXNdia": "Pali / Burmese / Khmer (transliterated)"
+         "piXNdia": "Pali / Burmese / Khmer (transliterated)",
+         "kmXIast":"Khmer (IAST)"
       },
       "tip": {
          "zh": "རྒྱ་ཡིག",
