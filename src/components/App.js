@@ -3320,7 +3320,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                let val = i["value"] 
                if(val === exclude) continue
                let langval = getLangLabel(this,prop,[ i ])
-               if(langval.value === exclude) continue
+               if(langval.value?.replace(/[↦↤]/g,"") === exclude) continue
                let lang = i["xml:lang"]
 
                if((""+val).match(/^[0-9-]+T[0-9:.]+Z+$/)) {
