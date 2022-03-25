@@ -81,6 +81,17 @@ export class Profile extends Component<Props,State> {
     super(props);
     this.state = { email:{type:"literal"},name:{type:"literal"}, picture:{type:"literal"}, gender:{}, region:{}, interest:{},  otherInterest:{}, agree:{type:"literal"}, errors:{}, collapse:{} }
     this.validateURI = this.validateURI.bind(this);
+
+    window.addEventListener("beforeunload", (event) => {
+      if(!this.state.needsUpdate) return;
+
+      const go = window.confirm("unsaved data will be lost")
+      if(!go) {
+        event.preventDefault()
+        // Chrome requires returnValue to be set.
+        event.returnValue = ""
+      }
+    }, true)
   }
   
   /*
@@ -113,15 +124,17 @@ export class Profile extends Component<Props,State> {
     if(!state.profile) {
       s = { ...state, profile: {} }
       const { userProfile, getProfile } = props.auth;
-      if (!userProfile) {
-        getProfile((err, profile) => {
-          //this.setState({ profile });
-          store.dispatch(data.getUser(profile))
-        });
-      } else {
+      /*
+      getProfile((err, profile) => {
+        //this.setState({ profile });
+        store.dispatch(data.getUser(profile))
+      });
+    } else {
+      if (userProfile) {
         s.profile = userProfile
         store.dispatch(data.getUser(userProfile))
       }
+      */
     }
 
     if((!state.profile || !state.profile.profile) && props.profile && props.profile.profile && props.userID) {
@@ -191,6 +204,11 @@ export class Profile extends Component<Props,State> {
   }
 
   async executePatch(e) {
+
+
+    localStorage.setItem('lang', this.props.langPreset);
+    if( this.props.langIndex !== undefined) localStorage.setItem('langpreset', this.props.langIndex);
+    if( this.props.langIndex == "custom") localStorage.setItem('customlangpreset', this.props.langPreset);
 
     let response, s 
     

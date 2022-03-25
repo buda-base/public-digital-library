@@ -47,7 +47,7 @@ let IIIFurl = "//iiif.bdrc.io" ;
 
 const handleAuthentication = (nextState, isAuthCallback) => {
    if (nextState && /access_token|id_token|error/.test(nextState.location.hash)) {
-      auth.handleAuthentication();
+      auth.handleAuthentication();      
    } else if(auth && !isAuthCallback && !auth.isAuthenticated()) { 
       auth.handleAuthentication(true)
    } else if(auth && auth.isAuthenticated()) {
@@ -73,6 +73,7 @@ async function initiateApp(params,iri,myprops,route,isAuthCallback) {
       {
          const config = await api.loadConfig();
 
+
          console.log("is khmer server ?",config.khmerServer)
 
          //I18n.setHandleMissingTranslation((key, replacements) => key);
@@ -85,7 +86,7 @@ async function initiateApp(params,iri,myprops,route,isAuthCallback) {
          }
          store.dispatch(dataActions.loadedConfig(config));
          
-         loggergen.log("config?",config,params)
+         loggergen.log("config?",auth.isAuthenticated(),config,params)
          
          // DONE UI language
          let locale = "en", val
@@ -595,6 +596,59 @@ function jsonld2turtle( jsonldString, rdfStore, uri ){
  }
 */
 
+
+  
+export async function updateConfigFromProfile() {
+   if(/*history.location.pathname === "/user" ||*/ store.getState().data.profile) return 
+   const { userProfile, getProfile } = auth;
+
+   const toArray = (allNodes, node) => {
+      let head = allNodes[node[0]?.value], rest = []
+      if(head[rdf+"rest"] && head[rdf+"rest"][0].value !== rdf + "nil") rest = toArray(allNodes, head[rdf+"rest"])
+      if(head[rdf+"first"]) head = head[rdf+"first"][0].value
+      //console.log("n:",head, rest, head[rdf+"rest"], node[0]?.value,allNodes[node[0]?.value],allNodes)
+      return [ head ].concat(rest)
+   }
+
+   const handleUser = () => {
+      const state = store.getState()
+      const id = state.ui.userID
+      const res = state.data.resources[id][id]
+      let locale = res[bdou+"preferredUiLang"][0]?.value
+      if(locale) locale = locale.replace(/^zh.*$/,"zh")
+      const litLangs = toArray(state.data.resources[id], res[bdou+"preferredUiLiteralLangs"])
+      let preset = locale
+      const isCustom = litLangs.toString() != state.data.config.language.data.presets.custom[locale].toString() // longest object path ever :-)
+      if(isCustom) { 
+         preset = "custom"
+         localStorage.setItem('customlangpreset', litLangs)
+      }
+
+      localStorage.setItem('uilang', locale);
+      store.dispatch(i18nextChangeLanguage(locale));
+
+      localStorage.setItem('lang', litLangs);
+      
+      localStorage.setItem('langpreset', preset);
+      store.dispatch(uiActions.langPreset(litLangs, preset));
+
+
+      console.log("state:", state, res, litLangs, locale, isCustom)
+   }
+
+   if (!userProfile) {
+      getProfile(async (err, profile) => {
+         await getUser(profile) 
+         handleUser()        
+      });
+   } else {
+      await getUser(userProfile)
+      handleUser()        
+   }
+}
+  
+
+
 async function getUser(profile)
 {
    let props = store.getState()
@@ -654,7 +708,7 @@ async function getUser(profile)
 
       store.dispatch(uiActions.gotUserID(id, etag));
       store.dispatch(dataActions.gotResource(id, user));
-      loggergen.log("user",id,profile,user)
+      loggergen.log("user!",id,profile,user)
    }
 
 }

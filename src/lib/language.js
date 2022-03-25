@@ -77,7 +77,7 @@ export function makeLangScriptLabel(code:string,span:boolean=false,incAsSaPi:fal
    //console.log("code",code,lang,script)
    
    let langLabel = I18n.t(langScripts[lang])
-   let scriptLabel ; //= "Unicode"
+   let scriptLabel = lang != "en" ? "Unicode" : ""
    if(script.length) scriptLabel = I18n.t(langScripts[script])
    //console.log("label",langLabel,scriptLabel)
 

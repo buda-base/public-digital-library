@@ -93,11 +93,12 @@ class LanguageSidePane extends Component<Props,State> {
 
          let list = this.props.langPriority.presets[k]
          if(k == "custom") { 
-            let customlist = localStorage.getItem("customlangpreset")
-            if(customlist) list = customlist.split(/ *, */)
+            let customlist = this.props.langPriority.presets[k]
+            if(customlist[this.props.locale]) customlist = customlist[this.props.locale]
+            if(customlist) list = customlist
             else list = list[this.props.locale]
 
-            // console.log("list:",list,this.props.locale,customlist)
+            console.log("list:",list,this.props.locale,customlist)
          }
          let label,subcollapse
          let disab = false ;

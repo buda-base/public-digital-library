@@ -11,6 +11,7 @@ import Glyphicon from 'react-bootstrap/lib/Glyphicon';
 import { Link } from 'react-router-dom';
 import {top_right_menu, isAdmin} from './components/App';
 import ResourceViewerContainer,{ UserViewerContainer } from './containers/ResourceViewerContainer'
+import { updateConfigFromProfile } from './state/sagas/index.js' 
 
 import bdrcApi from './lib/api';
 
@@ -93,6 +94,7 @@ export default class Auth {
             let val = "profile", groups
             if((groups = profile["https://auth.bdrc.io/groups"]) && groups.includes("admin")) val = "admin"     
             if(store.getState().ui.logged !== val) store.dispatch(ui.logEvent(val))
+            updateConfigFromProfile()
           }
           cb(err, profile);
         });
@@ -138,6 +140,7 @@ export default class Auth {
     this.setConfig.bind(this)
     this.getProfile = this.getProfile.bind(this);
   }
+
 
   handleAuthentication(silent = false) {
     if(silent) { 
