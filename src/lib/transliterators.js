@@ -157,7 +157,7 @@ export function sortLangScriptLabels(data,preset,translit,mergeXs = false)
       if(!k) k = e["xml:lang"]
       if(!k) k = e["@language"]
       if(!k) k = ""
-      if(mergeXs) k = k.replace(/-x-.*$/,"-x")
+      if(mergeXs) k = k.replace(/-x-.*$/,"-x.*")
       let v = e["value"]
       if(!v) v = e["@value"]
       if(!v) v = ""
@@ -180,12 +180,12 @@ export function sortLangScriptLabels(data,preset,translit,mergeXs = false)
 
       //console.log("k v",k,v,translit[k],e) //,transliterators)
 
-      let tLit
-      if (translit[k]) {
+      let tLit, transL = k && translit[k] ? translitHelper(k,translit[k]) : false
+      if (transL) {
          tLit = { ...e }
          let val = "@value", lan = "@language"
          if(!e["@value"]) {  val = "value" ; lan = "lang" ; tLit["type"] = "literal" ; }
-         tLit[val] = translitHelper(k,translit[k])(v)
+         tLit[val] = transL(v)
          tLit[lan] = translit[k]
          if(tLit["xml:lang"]) delete tLit["xml:lang"]
       } else if (k.endsWith("ewts")) {
@@ -278,6 +278,8 @@ export function getMainLabel(data,extpreset)
    if(!data) return ;
    else if(!Array.isArray(data)) data = [ data ]
 
+   let useKmIast = extpreset.flat.includes("km-x-iast")
+
    let bestelt = null;
    let bestlt = null;
    let bestscore = 99;
@@ -302,7 +304,7 @@ export function getMainLabel(data,extpreset)
    }
    if (!val) return null;
 
-   if (extpreset.translit[bestlt] && transliterators[bestlt] && transliterators[bestlt][extpreset.translit[bestlt]]) {
+   if ((useKmIast || !bestlt.endsWith("khmr")) && extpreset.translit[bestlt] && transliterators[bestlt] && transliterators[bestlt][extpreset.translit[bestlt]]) {
       val = transliterators[bestlt][extpreset.translit[bestlt]](val)
       bestlt = extpreset.translit[bestlt]
    } else if (bestlt.endsWith("ewts")) {
@@ -318,11 +320,11 @@ export function getMainLabel(data,extpreset)
 
 export function getMainLabels(data,extpreset)
 {
-
    //console.log("gMs:",data,extpreset)
-
    if(!data) return ;
    else if(!Array.isArray(data)) data = [ data ]
+
+   let useKmIast = extpreset.flat.includes("km-x-iast")
 
    let bestelts = null;
    let bestlt = null;
@@ -349,7 +351,7 @@ export function getMainLabels(data,extpreset)
      if (!val) val = e["@value"]
      if (!val) continue;
 
-     if (extpreset.translit[bestlt] && transliterators[bestlt] && transliterators[bestlt][extpreset.translit[bestlt]]) {
+     if ((useKmIast || !bestlt.endsWith("khmr")) && extpreset.translit[bestlt] && transliterators[bestlt] && transliterators[bestlt][extpreset.translit[bestlt]]) {
         val = transliterators[bestlt][extpreset.translit[bestlt]](val)
         destlt = extpreset.translit[bestlt]
      } else if (bestlt.endsWith("ewts")) {
