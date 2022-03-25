@@ -408,7 +408,11 @@
          "saXIast": "IASTནང་ཕབ་པའི་ལེགས་སྦྱར་ཡི་གེ།",
          "saDeva": "དེ་བ་ན་ག་རི་ནང་བྲིས་པའི་ལེགས་སྦྱར་ཡི་གེ།",
          "bo": "གཅིག་འགྱུར་ཨང་དུ་བྲིས་པའི་བོད་ཡིག",
-         "boXEwts": "ཝའི་ལི་ནང་བྲིས་པའི་བོད་ཡིག"
+         "boXEwts": "ཝའི་ལི་ནང་བྲིས་པའི་བོད་ཡིག",
+         "piXIast": "Pāli transliterated in IAST",
+         "piKhmr": "Pāli in Khmer",
+         "kmXIast": "Khmer transliterated in IAST",
+         "kmXTwktt":"Khmer transliterated with Trent Walker Khmer-Tai Transliteration scheme"
       },
       "langscript": {
          "zh": "རྒྱ་ཡིག",

@@ -447,7 +447,11 @@
          "saXIast": "Sanskrit transliterated in IAST",
          "saDeva": "Sanskrit in Devanagari",
          "bo": "Tibetan in Unicode",
-         "boXEwts": "Tibetan transliterated in Wylie"
+         "boXEwts": "Tibetan transliterated in Wylie",
+         "piXIast": "Pāli transliterated in IAST",
+         "piKhmr": "Pāli in Khmer",
+         "kmXIast": "Khmer transliterated in IAST",
+         "kmXTwktt":"Khmer transliterated with Trent Walker Khmer-Tai Transliteration scheme"
       },
       "langscript": {
          "zh": "Chinese",

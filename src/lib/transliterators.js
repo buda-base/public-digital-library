@@ -93,11 +93,16 @@ export function extendedPresets(preset)
    let curscore = 1;
 
    // use sa-..., pi-... instead of inc-...
-   let presetNoInc = []
+   // + force khmer iast transliteration as fallback for x-twktt 
+   let presetNoInc = [], handledKm = false
    for(const p of preset) {
       if(p.startsWith("inc")) { 
          presetNoInc.push(p.replace(/^inc/,"sa"))
          presetNoInc.push(p.replace(/^inc/,"pi"))
+      } else if(!handledKm && p.startsWith("km-x")) {
+         presetNoInc.push(p)
+         if(p == "km-x-twktt") presetNoInc.push("km-x-iast")         
+         handledKm = true
       } else presetNoInc.push(p)
    }
    preset = presetNoInc
@@ -140,7 +145,7 @@ export function extendedPresets(preset)
    return extPreset
 }
 
-export function sortLangScriptLabels(data,preset,translit)
+export function sortLangScriptLabels(data,preset,translit,mergeXs = false)
 {
    if(translit == undefined) translit={}
    if(!Array.isArray(data)) data = [ data ]
@@ -152,6 +157,7 @@ export function sortLangScriptLabels(data,preset,translit)
       if(!k) k = e["xml:lang"]
       if(!k) k = e["@language"]
       if(!k) k = ""
+      if(mergeXs) k = k.replace(/^km-x-.*$/,"km-x")
       let v = e["value"]
       if(!v) v = e["@value"]
       if(!v) v = ""

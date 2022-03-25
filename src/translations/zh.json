@@ -361,7 +361,11 @@
          "saXIast": "梵语（IAST转写）",
          "saDeva": "梵语（天城体）",
          "bo": "藏语（Unicode）",
-         "boXEwts": "藏语（Wylie转写）"
+         "boXEwts": "藏语（Wylie转写）",
+         "piXIast": "Pāli transliterated in IAST",
+         "piKhmr": "Pāli in Khmer",
+         "kmXIast": "Khmer transliterated in IAST",
+         "kmXTwktt":"Khmer transliterated with Trent Walker Khmer-Tai Transliteration scheme"
       },
       "langscript": {
          "zh": "中文",

@@ -49,7 +49,7 @@ const langSettings = {
    "bo":  [ "-", "x-ewts" ],
    "zh":  [ "hans", "hant", "latn-pinyin" ],
    "inc": [ "deva", "newa", "sinh", "khmr", "x-iast" ],
-   "km":  [ "-", "x-twktt", "x-iast" ],
+   "km":  [ "-", "x-twktt", "x-iast" ],  
    "en":  [ "-" ]
 }
 

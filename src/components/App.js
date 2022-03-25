@@ -282,6 +282,7 @@ const facetLabel = {
 }
 
 export const languages = {
+   "km-x-twktt":"lang.search.kmXTwktt",
    "km-x-iast":"lang.search.kmXIast",
    "km":"lang.search.km",
    "zh":"lang.search.zh",
@@ -3318,6 +3319,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             for(let i of labels) {
                let val = i["value"] 
                if(val === exclude) continue
+               let langval = getLangLabel(this,prop,[ i ])
+               if(langval.value === exclude) continue
                let lang = i["xml:lang"]
 
                if((""+val).match(/^[0-9-]+T[0-9:.]+Z+$/)) {
