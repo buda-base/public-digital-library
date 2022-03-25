@@ -93,15 +93,15 @@ export function extendedPresets(preset)
    let curscore = 1;
 
    // use sa-..., pi-... instead of inc-...
-   // + force khmer iast transliteration as fallback for x-twktt 
    let presetNoInc = [], handledKm = false
    for(const p of preset) {
       if(p.startsWith("inc")) { 
          presetNoInc.push(p.replace(/^inc/,"sa"))
          presetNoInc.push(p.replace(/^inc/,"pi"))
       } else if(!handledKm && p.startsWith("km-x")) {
+         // if user selected km-x-iast, force khmer iast transliteration as fallback for x-twktt 
+         if(p == "km-x-iast") presetNoInc.push("km-x-twktt")         
          presetNoInc.push(p)
-         if(p == "km-x-twktt") presetNoInc.push("km-x-iast")         
          handledKm = true
       } else presetNoInc.push(p)
    }
@@ -150,14 +150,14 @@ export function sortLangScriptLabels(data,preset,translit,mergeXs = false)
    if(translit == undefined) translit={}
    if(!Array.isArray(data)) data = [ data ]
    
-   //console.log("sort",JSON.stringify(data,null,3)); //preset,translit,data)
+   //console.log("sort", JSON.stringify(data,null,3), preset,translit,data)
 
    let data_ = data.filter(e => e && (e.value || e["@value"] || e.k)).map(e => {
       let k = e["lang"]
       if(!k) k = e["xml:lang"]
       if(!k) k = e["@language"]
       if(!k) k = ""
-      if(mergeXs) k = k.replace(/^km-x-.*$/,"km-x")
+      if(mergeXs) k = k.replace(/-x-.*$/,"-x")
       let v = e["value"]
       if(!v) v = e["@value"]
       if(!v) v = ""
